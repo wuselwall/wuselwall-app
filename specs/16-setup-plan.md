@@ -26,6 +26,7 @@ change and a tag producing installable builds. Once that works, every module aft
 | 6 | M0.2 | The shopping list, online only — the first real feature | 1–2 evenings |
 | 7 | M0.4 | `release-mobile.yml`: a tag puts builds on the family's devices | 1 weekend |
 | 8 | M0.3 | The one environment ([ADR-013](adr/ADR-013-one-self-hosted-environment.md)): own keys, nginx allow-list, backups | 1 evening |
+| 9 | M1.0 | Onboarding ([ADR-014](adr/ADR-014-self-service-onboarding.md)): Apple, Google, email code and password; households, invitations, pairing, getting started, deletion | 2–3 weekends |
 
 Steps 1–4 can be done in a single long weekend. Step 7 waits on the Apple and Google
 accounts from step 0, which is why those are applied for first.
@@ -73,6 +74,10 @@ and no Xcode debugger. See [Q35](14-open-questions.md).
 | **Second private GitHub repository** `wuselwall-certificates` | `fastlane match` storage for iOS signing | — | Minutes |
 | Domain `goomba.ch` and Cloudflare | The public URL `wusel.goomba.ch` | already owned | in place |
 | Firebase project | Android push via FCM — not needed until push is built, and only if [Q38](14-open-questions.md) settles on FCM | free | Minutes |
+| **Sign in with Apple** (in the Developer account): the capability on `ch.goomba.wuselwall`, a Services ID, a key | Step 9 — Apple sign-in on iOS, Android and the web | — | Minutes, after the programme is active |
+| **Google Cloud project** with an OAuth consent screen and three OAuth clients (web, iOS, Android) | Step 9 — Google sign-in | free | Minutes; the consent screen's branding review can take a few days |
+| **Scaleway account** with Transactional Email ([Q41](14-open-questions.md), decided): one project for Unraid now, one for Cloud later; sending domains verified with SPF/DKIM/DMARC ([10](10-deployment-and-ops.md#email-setup)) | Step 9 — email codes | 300 mails/month free, then €0.25 per 1,000 | An evening, plus DNS propagation |
+| **Supabase organisation** on the Pro plan, project in Frankfurt ([ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md)) | WuselWall Cloud — needed at the opening gate, not before | ≈ $25 / month | Minutes |
 
 ---
 
@@ -102,7 +107,7 @@ and no Xcode debugger. See [Q35](14-open-questions.md).
 
 1. `supabase init`. In `supabase/config.toml`:
    - `[api] schemas = ["api"]` — PostgREST exposes the `api` schema and nothing else.
-   - `[auth] enable_signup = false`, anonymous sign-ins off, `jwt_expiry = 3600`,
+   - `[auth] enable_signup = false` (*`true` from step 9*), anonymous sign-ins off, `jwt_expiry = 3600`,
      refresh-token rotation on, `site_url` set to the dev web build.
    - `[auth.hook.custom_access_token]` pointing at `app.custom_access_token_hook`
      (written in step 5; leave it disabled until then).
@@ -258,6 +263,11 @@ string or the formatting is blocked.
 > devices, TOTP, QR enrolment and rate limiting added; passkeys wired but waiting on the
 > production domain) — see
 > [ADR-010 implementation notes](adr/ADR-010-flutter-and-self-hosted-supabase.md#implementation-notes-m01m02-2026-10-11).
+>
+> **Partly superseded by step 9** ([ADR-014](adr/ADR-014-self-service-onboarding.md)): the
+> setup wizard and its token, guardian accounts created by the wizard, and enrolment codes
+> typed on the new device give way to sign-up, household creation, invitations and
+> reverse pairing. Tap-to-switch, the PIN, revocation and the access-token hook stay.
 
 The model is [08](08-users-auth-permissions.md); the Supabase mechanics are
 [ADR-010](adr/ADR-010-flutter-and-self-hosted-supabase.md#identity-on-supabase-auth).
@@ -432,8 +442,9 @@ without anyone touching a cable.
    (Unraid User Scripts), optional restic off-site and healthchecks ping;
    `scripts/remote-backup.sh` on demand; [`infra/backup/restore-drill.sh`](../infra/backup/restore-drill.sh)
    restores into a scratch database and counts rows.
-4. **Setup token**: `scripts/remote-setup-token.sh` replaces the seed's `dev-setup` with a
-   random token before the family sets up its household.
+4. **Setup token** (*a single-use founder code from step 9*):
+   `scripts/remote-setup-token.sh` replaces the seed's `dev-setup` with a random token
+   before the family sets up its household.
 5. **Changing the database**: CI first, then `scripts/remote-migrate.sh` (backup →
    pending migrations through `docker exec` → pgTAP). No deploy
    workflow: GitHub's runners cannot reach the home network, and one environment does not
@@ -442,6 +453,70 @@ without anyone touching a cable.
 **Done when** the public URL answers only on the API prefixes, the stack runs on its own
 keys, and the restore drill has restored a nightly dump once. *(Restore drill first run
 2026-10-11, on test data: 0 errors.)*
+
+---
+
+## Step 9 — Onboarding (M1.0)
+
+*Added 2026-10-11.* The experience is [20](20-onboarding.md); the decision
+[ADR-014](adr/ADR-014-self-service-onboarding.md). Mechanics in [10 §4](10-deployment-and-ops.md#4-sign-in-providers-and-mail).
+Order chosen so that each slice is usable on its own:
+
+1. **Sign-in, all four ways.** `config.toml`: `enable_signup = true`,
+   `enable_manual_linking = true`, `[auth.email]` OTP settings, `[auth.external.apple]`
+   and `[auth.external.google]` from `env(...)`, `[auth.rate_limit]`, `[auth.email.smtp]`.
+   App: the front door, E1–E3, `sign_in_with_apple` and `google_sign_in` with
+   `signInWithIdToken`, OAuth redirect on the web; Einstellungen → Konto → Anmeldung
+   (link, unlink, set password). Strings in both ARB files.
+2. **Households.** Migration: `app.instance_setting` (`code`), `profile.kind`,
+   `household.created_by_profile_id`/`deleted_at`, founder codes in `app.setup_token`.
+   `api.my_account`, `api.household_create` (registers this session as the personal
+   device, auto-named), `api.household_add_members`, the seed of examples. App: H0–H2.
+   `setup_household` and the wizard stay for one release, then go.
+3. **Invitations.** `app.invitation`, `api.invitation_create/_revoke/_preview/_accept`, the
+   share sheet and QR, the join confirmation, the guardian notice. nginx: `/i/` landing page
+   and the `/.well-known/` files from `infra/web/`; universal links (Associated Domains
+   `applinks:` alongside `webcredentials:`) and Android App Links.
+4. **Pairing.** `app.pairing_request`, `api.pairing_start/_poll/_approve` (reusing
+   `app.create_auth_user` and the attempt log), P1 on the device, G1/G2 on the phone,
+   the kiosk checklist and the kid welcome; `/p/` landing page. `api.enrol_device` and the
+   code-entry screen stay for one release.
+5. **Getting started and deferral.** `api.getting_started`, dismissals, the card on Today;
+   the PIN prompt moved to the first pairing; empty states per module as they are built.
+6. **Leaving.** `api.account_leave`, `api.household_delete/_restore` and the 14-day purge
+   job (`pg_cron`), the `account-delete` Edge Function (Admin API, Apple revocation), the
+   Apple authorisation-code exchange, `guardian_reset_mfa`, data export.
+7. **Localised mail.** The send-email hook in `supabase/functions/` with the message files
+   in `_shared/`, sending through Scaleway TEM's HTTP API, on Cloud and on the Unraid stack
+   (whose compose stack runs Edge Functions since A11 was fixed). A bilingual GoTrue
+   template over SMTP remains the fallback for self-hosted stacks without the hook.
+7a. **Two flavours in the app** ([ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md),
+   [20](20-onboarding.md#on-a-self-hosted-server)):
+   - `app/env/cloud.json` for store builds;
+   - "Eigener Server" on the front door, reading `/.well-known/wuselwall.json` (served
+     from `infra/web/` on self-hosted stacks), remembering the server, and showing its
+     host;
+   - the server carried in invitation and pairing links;
+   - native Apple/Google and passkeys hidden except on Cloud and `WW_FIRST_PARTY_HOSTS`
+     (Unraid);
+   - `min_app_version` honoured.
+8. **Tests.**
+   - pgTAP: a fresh account sees nothing; `code` mode refuses without a founder code; an
+     invitation is single use, expires and cannot be accepted into a second household; a
+     pairing request cannot be claimed without its secret or approved by a member or from
+     a shared device; deletion leaves no rows reachable.
+   - The catalogue test's anon list becomes `health, invitation_preview, pairing_poll,
+     pairing_start` plus `enrol_device` for one release.
+   - E2E: J1 by email code through Mailpit, J2, J3 (typed code), each with a screen-count
+     assertion.
+   - Manual: Apple and Google on real devices.
+9. **User documentation:** rewrite `docs/guide/setup.md` (and `/en/`) and regenerate the
+   screenshots: the front door, H1, H2, an invitation, P1 and G1.
+
+**Done when** a new family is started on an iPhone with Apple and on an Android phone with
+an email code, the second adult joins from a messenger link, a tablet is paired without
+typing on it, the J1/J2/J3 times on the release checklist meet NFR-17, and a deleted
+account leaves nothing reachable.
 
 ---
 
@@ -481,6 +556,10 @@ manager.
 | `RESTIC_PASSWORD`, backup-target credentials, healthchecks URL | `/mnt/user/appdata/wuselwall/backup.env` on the server | backups |
 | Cloudflare origin certificate and key | nginx container on the server | TLS between Cloudflare and nginx |
 | Push credentials (APNs key, FCM service account) | Edge Function secrets | `push-send` |
+| `WW_APPLE_SECRET` (the six-monthly client-secret JWT), the Sign in with Apple `.p8` key | The home server's stack `.env` (`GOTRUE_EXTERNAL_APPLE_*`) and the Cloud project's Auth settings; the `.p8` in the password manager only | Supabase Auth (Apple via OAuth); the `account-delete` and code-exchange functions |
+| `WW_GOOGLE_CLIENT_SECRET` (web client) | The home server's stack `.env` (`GOTRUE_EXTERNAL_GOOGLE_*`) and the Cloud project's Auth settings | Supabase Auth (Google via OAuth) |
+| Scaleway TEM credentials: project ID and the secret key of an IAM application limited to Transactional Email, one pair per environment | The home server's stack `.env` (`SMTP_USER`, `SMTP_PASS`) and Edge Function secrets; the Cloud project's Auth settings and Edge Function secrets. Throwaway stacks use Mailpit | Supabase Auth email ([10](10-deployment-and-ops.md#email-setup)), the send-email hook |
+| Supabase access token for `supabase link`/`db push` to Cloud | The developer's password manager; never in CI until a deploy job exists | Cloud migrations and functions |
 
 The **publishable key** (`WW_PUBLISHABLE_KEY`) is not a secret — it is compiled into every
 app via `app/env/dev.json` — and the **secret key never leaves `supabase/.env`**: not in

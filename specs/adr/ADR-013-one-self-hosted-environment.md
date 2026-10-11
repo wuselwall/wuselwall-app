@@ -4,10 +4,12 @@
 [ADR-010](ADR-010-flutter-and-self-hosted-supabase.md) and
 [ADR-011](ADR-011-native-distribution-and-ci-cd.md) · Amended by
 [ADR-014](ADR-014-self-service-onboarding.md) on 2026-10-11: self-service households share
-**one** project instead of one project per tenant; where it runs is
-[Q40](../14-open-questions.md) · **Amended 2026-10-11:** the one environment runs
-Supabase's official self-hosting compose file instead of the CLI's stack — see
-[Amendment](#amendment-2026-10-11-the-official-compose-stack)
+**one** project instead of one project per tenant · **Amended 2026-10-11:** the one
+environment runs Supabase's official self-hosting compose file instead of the CLI's stack —
+see [Amendment](#amendment-2026-10-11-the-official-compose-stack) · Superseded in part by
+[ADR-015](ADR-015-saas-and-self-hosted-flavours.md) on 2026-10-11: once *WuselWall Cloud*
+(hosted Supabase) exists it holds every self-service household; this stack stays the
+family's home and the self-hosted flavour for development and testing. Its safety rules stay
 
 ## Context
 

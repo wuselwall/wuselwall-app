@@ -224,3 +224,28 @@ household starts fresh. Recorded as the
 grows with each module. **What it bought.** Point values, jokers, rollover and the meal rule
 no longer block a module's build; they are data that can be tuned after two weeks of real
 use without a release — and a second household needs no code change.
+
+### 2026-10-11 — Hosting flavours, stores, captcha, domain
+
+> When it comes to hosting there is the self-host flavor (which I personally do on my
+> unraid server for development and testing) but there should also be the option to use
+> a SaaS via Supabase, which I will own as an account. If we will ever charge for that is
+> another story. […] We will roll out the app in the Google and App Store once we have the
+> Android dev account and Apple developer account. No captcha. Final public domain is not
+> yet decided. For now we use wusel.goomba.ch.
+
+| Change | Answer | Where |
+|---|---|---|
+| Hosting | Two flavours from one codebase. **WuselWall Cloud** is a hosted Supabase project in the user's account (Frankfurt, Pro) and the store app's default. **Self-hosted** is any server, including the Unraid stack for development and testing, reached through "Eigener Server" | [ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md), [10](10-deployment-and-ops.md#wuselwall-cloud) |
+| Sign-in on custom servers | Email code and password; Apple/Google only via the operator's own redirect clients. Native Apple/Google and passkeys on Cloud only, so that a hostile server cannot replay tokens to Cloud | [ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md), [20](20-onboarding.md#on-a-self-hosted-server) |
+| Email | Decided: Scaleway Transactional Email, one project per environment, a sending subdomain with SPF/DKIM/DMARC, the code in the subject | [10](10-deployment-and-ops.md#email-setup), [Q41](14-open-questions.md) |
+| Distribution | Public App Store and Google Play listings once the developer accounts exist | [ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md), Q42 |
+| Captcha | None | Q44 |
+| Domain | `wusel.goomba.ch` for now; final domain open | Q45 |
+| The family's data | Stays on the Unraid stack, next to development and testing (user, 2026-10-11). Unraid is a first-party server, so the family keeps native Apple/Google sign-in and passkeys | [Q46](14-open-questions.md), [ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md) |
+
+**What this costs.** Supabase Pro (≈ $25/month, later ≈ $10 for a custom domain), a
+US-headquartered processor for Cloud's households, two schemas to keep in step, and a
+plainer front door on self-hosted servers. **What it buys.** Strangers' data and uptime
+are off the home server, Edge Functions deploy normally on Cloud, and self-hosting stays a
+real option in the same app.
