@@ -1,5 +1,5 @@
 begin;
-select plan(11);
+select plan(28);
 
 -- Start from an empty system, whatever the database already holds (all rolled back).
 delete from app.household;
@@ -49,14 +49,43 @@ select is((select checked_by from api.shopping_items where id = (select m from i
 select is(api.shopping_toggle_item(null, (select m from items)), false, 'toggle again unticks');
 
 select api.shopping_toggle_item(null, (select m from items));
-select is(api.shopping_finish(null), '{"bought": 1, "carried_over": 1}'::jsonb, 'finish reports bought and carried-over');
+create temp table fin as select api.shopping_finish(null) r;
+grant all on fin to public;
+select is((select r - 'trip_id' from fin), '{"bought": 1, "carried_over": 1}'::jsonb, 'finish reports bought and carried-over');
+select is((select count(*)::int from api.shopping_trips), 1, 'the trip is recorded');
+select is((select purchase_count from api.shopping_catalog where name = 'Milch'), 1, 'purchase teaches the catalogue');
+select is((select count(*)::int from api.shopping_catalog where name = 'Brot'), 0, 'unbought items stay out of the catalogue');
 select is((select name from api.shopping_items), 'Brot', 'unticked items carry over to the new list');
+
+
+-- counts, merging, catalogue reuse
+create temp table cnt as select api.shopping_add_item(null, 'milch') id;
+grant all on cnt to public;
+select is((select name from api.shopping_items where id = (select id from cnt)), 'Milch', 'a catalogue match takes the catalogue spelling');
+select is(api.shopping_add_item(null, 'MILCH'), (select id from cnt), 'adding an open name again merges');
+select is((select count from api.shopping_items where id = (select id from cnt)), 2, 'merging raises the count');
+select is(api.shopping_adjust_count(null, (select id from cnt), -1), 1, 'minus lowers the count');
+select is(api.shopping_adjust_count(null, (select id from cnt), -1), 0, 'minus at one removes the item');
+select is((select count(*)::int from api.shopping_items where name = 'Milch'), 0, 'the removed item is gone');
+
+-- lists
+create temp table lst as select api.shopping_list_create(null, 'Drogerie', 'drugstore') id;
+grant all on lst to public;
+select is((select count(*)::int from api.shopping_lists), 2, 'a second list exists');
+select throws_ok($$ select api.shopping_list_create(null, 'drogerie') $$, '23505', 'list exists', 'list names are unique, folded');
+select is((select count(*)::int from api.shopping_categories where list_id = (select id from lst)), 5, 'a new list is seeded with its categories');
+select is((select api.shopping_add_item(null, 'Zahnpasta', null, (select id from lst)) is not null), true, 'items can target another list');
+select is((select count(*)::int from api.shopping_items), 2, 'both lists show their open items');
+select throws_ok($$ select api.shopping_set_item_spec(null, gen_random_uuid(), 'Bio') $$, 'P0002', 'item not found', 'unknown items are rejected');
+select api.shopping_list_set_default(null, (select id from lst));
+select is((select name from api.shopping_lists where is_default), 'Drogerie', 'the default can move');
 
 -- Another household sees nothing and cannot touch the item.
 reset role;
 select pg_temp.act_as((select usr from b), jsonb_build_object(
   'household_id', (select hh from b), 'device_id', (select id from app.device where auth_user_id = (select usr from b)), 'device_class', 'personal'));
 select is((select count(*)::int from api.shopping_items), 0, 'other households see nothing (RLS)');
+select is((select count(*)::int from api.shopping_lists) + (select count(*)::int from api.shopping_catalog) + (select count(*)::int from api.shopping_trips), 0, 'lists, catalogue and trips are isolated (RLS)');
 select throws_ok(
   format($$ select api.shopping_toggle_item(null, %L) $$, (select br from items)),
   'P0002', 'item not found', 'other households cannot toggle foreign items');

@@ -45,13 +45,17 @@ that question is answerable on the home network, without a domain, a VPS or a
 certificate. Standing up production infrastructure for a system the household has not
 yet tried is building the wrong thing carefully.
 
+*Superseded 2026-10-11 by [ADR-013](adr/ADR-013-one-self-hosted-environment.md): the home
+server already had a public URL, so M0.3 shrank to securing that one environment and was
+built straight away.*
+
 | | Status |
 |---|---|
 | **M0.0** Repository skeleton · local Supabase with the first migration, RLS and pgTAP harness · Flutter shell with three registers and German l10n · `ci.yml` ([16](16-setup-plan.md) steps 1–4) | In progress — Flutter shell, first migration, pgTAP test and `ci.yml` written (CI not yet run on GitHub); RLS catalogue test still open |
 | **M0.1** Identity: setup wizard, guardian accounts, device enrolment, tap-to-switch, guardian PIN, revocation (step 5) | Built and tested (pgTAP + end-to-end), incl. per-phone devices, TOTP, QR enrolment, rate limiting; passkeys wired, untested until the production domain exists — see ADR-010 implementation notes |
 | **M0.2** The shopping list, online only: add, tick, finish, live across devices (step 6) | Built and tested; not yet tried on the family's real devices |
 | **M0.4** Mobile release pipeline: signing, `release-mobile.yml`, TestFlight and the Play internal track (step 7) | Not started — needs the Apple and Google accounts |
-| **M0.3** Production stack, Caddy, backups, `deploy.yml` — built and tested on a disposable VM (step 8) | Not started — deployment held for M1.6 |
+| **M0.3** The one environment ([ADR-013](adr/ADR-013-one-self-hosted-environment.md)): own keys, `wusel.example.org` through Cloudflare and nginx, nightly backups, restore drill (step 8) | Built 2026-10-11 — the stack restart with the new keys and the nginx allow-list are applied by the user |
 
 M0.4 is new and comes **before** M0.3. A PWA reached the phones by URL; a native app
 reaches an iPhone only through a signed build, and without a Mac the release pipeline is
@@ -59,31 +63,24 @@ the only way to get one there. So distribution is proven during M0, while deploy
 the backend can still wait.
 
 **Done when:** the shopping list is used on both parents' phones for one real supermarket
-trip — installed from TestFlight or Play, talking to Supabase on the laptop over the home
-network.
+trip — installed from TestFlight or Play, talking to the home server at
+`https://wusel.example.org`.
 
-### Trialling on the home network
+### One environment from the start
 
-Supabase runs on the laptop (`supabase start`), reachable from the home wifi through
-WSL's mirrored networking at a reserved address, and the family's devices run builds
-configured for that address ([16](16-setup-plan.md#before-production-exists)). That is
-enough to answer the adoption question, and it is what M1.1–M1.5 are built against.
+*Rewritten 2026-10-11 for [ADR-013](adr/ADR-013-one-self-hosted-environment.md).* The plan
+used to trial on the home network against a laptop stack and stand up production at
+M1.6. Now the stack runs on the home server and is public at `https://wusel.example.org`
+from day one, so the trial and the real thing are the same environment. What the LAN
+trial could not show is no longer blocked by infrastructure:
 
-Native apps remove one limit of the original plan — **installation now works on day one**,
-because TestFlight and Play deliver real apps without a public server. Three things a LAN
-trial still cannot show, all deferred rather than lost:
+- **Use outside the house** works as soon as the apps are installed.
+- **The ICS feed into Outlook** can be tested as soon as the feed exists (M1.3a).
+- **Push** needs only its credentials (Q38) and the `push-send` function.
 
-- **Push.** The `push-send` function could reach APNs and FCM from the laptop, but push
-  credentials and notification preferences are M1.6 work. The morning summary (Q13)
-  waits.
-- **The ICS feed into Outlook.** Needs a public URL, so the calendar's whole outbound
-  half stays untested until deployment.
-- **Availability, and use outside the house.** The laptop has to be awake and the phone
-  on the home wifi. A wall display is not worth mounting until that stops being true —
-  and a shopping list that only syncs at home leans entirely on the offline outbox.
-
-These are the reasons M1.6 is a milestone rather than an afterthought. None of them
-block finding out whether the family wants the thing.
+The price is that development and the family share one database; see ADR-013 for the
+safeguards (a dump before every migration, no `db reset`, the integration test kept on
+throwaway stacks).
 
 ## M1 — The four modules, thin
 
@@ -93,6 +90,13 @@ Stundenplan third, meals last because it depends on shopping's catalogue. The we
 is assembled in M1.5, once all of its sources exist.
 
 ### M1.1 Shopping, complete
+
+> **Built 2026-10-11 (online):** several lists with a default, categories per list as the
+> store layout, the catalogue learned on purchase, the tile picker with folded ranked
+> typeahead and tap-again counts, long-press notes and category correction, the trolley
+> section, trips and the history page. **Still open:** the offline outbox (drift mirror,
+> `api.shopping_apply`), the self-hosted icon set beyond category icons, and the kiosk
+> tile layout polish.
 
 **Scope (as reached in BretApp, 2026-09-12, on the old stack — the mechanisms map to
 drift and Supabase Realtime as described in [07](07-module-meals-shopping.md)):** Categories and store layouts (a category belongs to a list rather
@@ -148,7 +152,8 @@ emphasis, degradation rules, tap-through detail, night variant · three UI regis
 finished · seed data including one real term's timetable for each child
 
 Everything here is verifiable on the home network. What is not — push, installability,
-the feed, the mounted display — moved to M1.6.
+the feed, the mounted display — moved to M1.6 (since ADR-013 only the mounted display
+and push still wait for it).
 
 The week board comes last on purpose: it is a composition of all four modules plus the
 Stundenplan, and building it before its sources exist means building it twice. It is also
@@ -157,22 +162,22 @@ real data to put on it — and the
 [mockup](mockups/kiosk-week-board.html) agreed with the family beforehand is what keeps
 that session short.
 
-### M1.6 Deployment and launch
+### M1.6 Launch
 
-*The M0.3 artefacts, finally used. Held until here on purpose.*
+*Re-scoped 2026-10-11 by [ADR-013](adr/ADR-013-one-self-hosted-environment.md): there is
+no separate deployment any more, so this is the launch checklist on the one environment.*
 
-Domain (Q1) · Hetzner server (8 GB), provisioned and hardened · the self-hosted Supabase
-stack with fresh keys · `deploy.yml` switched from manual to on-push · first deploy and
-the setup wizard behind its token · TLS on the real hostname · **a production release of
-the apps** (`env/prod.json`) on every family device · push credentials (Q38) and
+The setup token replaced (`scripts/remote-setup-token.sh`) and the family's real household
+set up · the development data cleared before that, once · push credentials (Q38) and
 notification preferences · the ICS feed verified against real Outlook and real iOS ·
-nightly backups with the dead-man's switch · **a restore drill, with the date written
-down** · the pre-launch checklist in [11](11-security-and-privacy.md) · wall display
-mounted in the kitchen, the app pinned in kiosk mode.
+nightly backups with the dead-man's switch and an off-site copy (Q14) · **a restore drill
+on the real data, with the date written down** · the pre-launch checklist in
+[11](11-security-and-privacy.md) · wall display mounted in the kitchen, the app pinned in
+kiosk mode.
 
 Guardian accounts already exist from M0.1. What is still missing is account *recovery*
-for a guardian who loses their phone and password — today that means Studio over an SSH
-tunnel. That is acceptable while the developer is the only operator and worth revisiting
+for a guardian who loses their phone and password — today that means Studio on the home
+network. That is acceptable while the developer is the only operator and worth revisiting
 before anyone else depends on it.
 
 **Done when:** all four members use it daily for two weeks without asking you to fix
@@ -222,7 +227,7 @@ order-of-magnitude, not commitment.
 | M1.3b | 1–2 weeks | The projection function: A/B weeks × holidays × exceptions is where the edge cases live. Write the tests first, genuinely. |
 | M1.4 | 1–2 weeks | Quantity aggregation and unit handling is fiddlier than it looks. |
 | M1.5 | 2–3 weeks | Always underestimated, and now carries the week board. Three registers plus one screen that has to be right. |
-| M1.6 | 1 weekend | TLS, DNS, the first real run of the Supabase stack on the VPS, push credentials. The release pipeline is already proven from M0.4, which removes the biggest risk of the old plan. |
+| M1.6 | 1–2 evenings | Push credentials, the real household, the restore drill on real data. TLS, DNS and the stack already exist (ADR-013), and the release pipeline is proven from M0.4. |
 | **M1 total** | **~3–4 months** | The A5 addition (Stundenplan, presence, week board) added roughly a month. Supabase saves the auth, realtime and job plumbing; PL/pgSQL and pgTAP cost some of that back. |
 | M2 | 2–3 weeks | |
 

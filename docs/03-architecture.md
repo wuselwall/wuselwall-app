@@ -7,9 +7,11 @@ architecture it replaces is recorded in [ADR-003](adr/ADR-003-technology-stack.m
 ## System shape
 
 **One Flutter codebase** producing native apps for iOS/iPadOS and Android plus a web
-build, talking to **one self-hosted Supabase stack** on a single VPS. PostgreSQL is the
-domain core: tables, rules, authorisation and audit all live in it. A small number of
-Edge Functions handle what SQL does badly. Caddy terminates TLS in front of everything.
+build, talking to **one self-hosted Supabase stack** on the home server
+([ADR-013](adr/ADR-013-one-self-hosted-environment.md)). PostgreSQL is the domain core:
+tables, rules, authorisation and audit all live in it. A small number of Edge Functions
+handle what SQL does badly. Cloudflare terminates TLS at the edge, and the home server's
+nginx forwards only the API paths.
 
 ```
    iPhones · iPads            wall tablet (Android)          laptop browser
@@ -18,15 +20,17 @@ Edge Functions handle what SQL does badly. Caddy terminates TLS in front of ever
           └──────────────┬───────────┴──────────────────────────────┘
                          │ HTTPS 443 only
                 ┌────────▼─────────┐
-                │      Caddy       │  TLS, security headers, rate limits,
-                │                  │  serves the web build, path allow-list
+                │ Cloudflare proxy │  TLS at the edge, hides the home address
+                └────────┬─────────┘
+                         │ HTTPS (origin certificate), router → home server
+                ┌────────▼─────────┐
+                │      nginx       │  path allow-list, WebSocket upgrade
                 └───┬──────────┬───┘
-   home.example.de  │          │  mcp.home.example.de (M2)
-   /                │          │
+   wusel.example.org  │          │  MCP host (M2)
    /auth/v1 /rest/v1│          │
    /realtime/v1     │          │
    /functions/v1    │          │
-   /ics/*           │          │
+   /ics/* (M1.3a)   │          │
                 ┌───▼──────────▼───┐
                 │  Kong (gateway)  │  Supabase's API gateway, key checks
                 └─┬────┬────┬────┬─┘
@@ -47,8 +51,8 @@ Edge Functions handle what SQL does badly. Caddy terminates TLS in front of ever
                          │ nightly pg_dump  │──► restic ──► off-site storage (encrypted)
                          └──────────────────┘
 
-   Studio (admin UI) runs on the server but is never routed by Caddy —
-   reachable only through an SSH tunnel.
+   Studio (admin UI) runs on the server but is never proxied by nginx —
+   reachable only on the home network.
 ```
 
 ### Why the database is the core
@@ -101,7 +105,7 @@ wuselwall/
 │  ├─ l10n/app_en.arb  app_de.arb   every user-facing string, in both languages
 │  ├─ test/                    unit and widget tests
 │  ├─ integration_test/        on-device flows (later)
-│  ├─ env/                     dev.json, prod.json — --dart-define-from-file
+│  ├─ env/                     dev.json (wusel.example.org), ci.json — --dart-define-from-file
 │  ├─ android/  ios/  web/     platform shells; fastlane/ inside android/ and ios/
 ├─ supabase/
 │  ├─ config.toml              local stack configuration (Supabase CLI)
@@ -113,11 +117,10 @@ wuselwall/
 │  ├─ tests/                   pgTAP: one file per module, RLS tests for every table
 │  └─ seed.sql                 a development household
 ├─ infra/
-│  ├─ supabase/                pinned, trimmed copy of the official self-hosting compose
-│  ├─ Caddyfile
-│  ├─ backup/                  backup.sh, restore-drill.sh
-│  └─ provision.sh
-├─ .github/workflows/          ci.yml, deploy.yml, release-mobile.yml
+│  ├─ nginx/                   the wusel.example.org site file for the home server's nginx
+│  └─ backup/                  backup.sh, restore-drill.sh (run on the home server)
+├─ scripts/                    remote-supabase / -pgtap / -backup / -setup-token
+├─ .github/workflows/          ci.yml, release-mobile.yml
 └─ docs/
 ```
 
@@ -277,7 +280,7 @@ tracking becomes necessary, self-host GlitchTip.
 ### Outlook seeing a new family event
 
 1. Event created in the app → `api.calendar_save_event` → stored.
-2. Outlook requests `GET /ics/{token}.ics` on its own schedule (every 3–24 hours). Caddy
+2. Outlook requests `GET /ics/{token}.ics` on its own schedule (every 3–24 hours). nginx
    rewrites it to the `ics` Edge Function.
 3. The function looks the token up by hash with the service role, renders the
    subscriber's filtered event set, and honours `If-None-Match` with an ETag derived from

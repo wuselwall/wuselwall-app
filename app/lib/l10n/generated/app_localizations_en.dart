@@ -414,4 +414,131 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get passkeyAdded => 'Passkey added.';
+
+  @override
+  String get shoppingHistory => 'History';
+
+  @override
+  String get shoppingHistoryEmpty => 'No finished trips yet';
+
+  @override
+  String get shoppingSearchHint => 'Search or add';
+
+  @override
+  String get shoppingTilesEmpty =>
+      'Tiles appear here once you have bought something. Type a name to add an item.';
+
+  @override
+  String shoppingInTrolley(int count) {
+    return 'In the trolley ($count)';
+  }
+
+  @override
+  String get shoppingUncategorised => 'Uncategorised';
+
+  @override
+  String get shoppingNewList => 'New list';
+
+  @override
+  String get shoppingListName => 'Name';
+
+  @override
+  String get shoppingListKind => 'Layout';
+
+  @override
+  String get shoppingKindSupermarket => 'Supermarket';
+
+  @override
+  String get shoppingKindDrugstore => 'Drugstore';
+
+  @override
+  String get shoppingKindHardware => 'Hardware store';
+
+  @override
+  String get shoppingKindOther => 'Other';
+
+  @override
+  String get shoppingMakeDefault => 'Make default list';
+
+  @override
+  String get shoppingEditItem => 'Edit item';
+
+  @override
+  String get shoppingSpecHint => 'Note, e.g. organic or 500 g';
+
+  @override
+  String get shoppingCategory => 'Category';
+
+  @override
+  String get shoppingRemoveOne => 'One less';
+
+  @override
+  String get errListExists => 'A list with that name already exists.';
+
+  @override
+  String get errSpecTooLong => 'That note is too long (40 characters at most).';
+
+  @override
+  String get errKioskForbidden => 'This can\'t be done on the wall display.';
+
+  @override
+  String get shoppingCat_produce => 'Fruit & vegetables';
+
+  @override
+  String get shoppingCat_bakery => 'Bread & bakery';
+
+  @override
+  String get shoppingCat_dairy => 'Dairy & cheese';
+
+  @override
+  String get shoppingCat_meat_fish => 'Meat & fish';
+
+  @override
+  String get shoppingCat_pantry => 'Pantry';
+
+  @override
+  String get shoppingCat_frozen => 'Frozen';
+
+  @override
+  String get shoppingCat_drinks => 'Drinks';
+
+  @override
+  String get shoppingCat_household => 'Household';
+
+  @override
+  String get shoppingCat_other => 'Other';
+
+  @override
+  String get shoppingCat_care => 'Body care';
+
+  @override
+  String get shoppingCat_baby => 'Baby & kids';
+
+  @override
+  String get shoppingCat_cleaning => 'Cleaning';
+
+  @override
+  String get shoppingCat_health => 'Health';
+
+  @override
+  String get shoppingCat_tools => 'Tools';
+
+  @override
+  String get shoppingCat_screws => 'Screws & fixings';
+
+  @override
+  String get shoppingCat_electrical => 'Electrical';
+
+  @override
+  String get shoppingCat_garden => 'Garden';
+
+  @override
+  String shoppingCreateTile(String name) {
+    return 'Add “$name”';
+  }
+
+  @override
+  String shoppingAddedBy(String name) {
+    return 'Added by $name';
+  }
 }

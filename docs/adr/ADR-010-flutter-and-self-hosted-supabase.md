@@ -3,7 +3,9 @@
 **Status:** Accepted · 2026-10-11 · Supersedes [ADR-003](ADR-003-technology-stack.md);
 amends [ADR-004](ADR-004-identity-model.md), [ADR-005](ADR-005-hosting.md),
 [ADR-006](ADR-006-offline-strategy.md) and [ADR-007](ADR-007-assistant-integration.md)
-in their implementation, not in their intent.
+in their implementation, not in their intent. Amended by
+[ADR-013](ADR-013-one-self-hosted-environment.md) (one environment on the home server;
+further tenants on hosted Supabase).
 
 ## Context
 
@@ -22,7 +24,8 @@ which parts are bought rather than built.
 ADR-005 had rejected "Supabase or Firebase" outright, but the objection was to the
 **hosted** service: family data held by a US cloud provider. Self-hosting removes that
 objection completely. Supabase's Docker stack runs on the same German VPS, the data never
-leaves it, and no Supabase-the-company service is contacted at runtime.
+leaves it, and no Supabase-the-company service is contacted at runtime. *(Since
+[ADR-013](ADR-013-one-self-hosted-environment.md): the home server instead of a VPS.)*
 
 ## Decision
 
@@ -51,14 +54,16 @@ leaves it, and no Supabase-the-company service is contacted at runtime.
   (tables in `app`, clients only touch `api`). They exist to prove the wiring — magic-link
   sign-in, a round trip to the database — and are replaced by the setup-plan migrations
   ([16](../16-setup-plan.md)). Do not build features on them.
-- **Application ID, bundle ID and URL scheme are all `ch.wuselwall.app`**: Android
+- **Application ID, bundle ID and URL scheme are all `ch.goomba.wuselwall`** (chosen by the
+  user on 2026-10-11, replacing `ch.wuselwall.app` before any store record existed): Android
   `applicationId`/`namespace` and Kotlin package, iOS `PRODUCT_BUNDLE_IDENTIFIER`, and the
-  auth deep link `ch.wuselwall.app://login-callback/`, which is also listed in
+  auth deep link `ch.goomba.wuselwall://login-callback/`, which is also listed in
   `supabase/config.toml` under `additional_redirect_urls`. The identifier is permanent
   once an app is registered with Apple and Google, so it is fixed now, before the first
   store record exists. Display name: `WuselWall`.
-- **Configuration** is `--dart-define-from-file=env/<name>.json` (`dev.json`, `ci.json`;
-  `prod.json` at M1.6), holding only public values: `ENV`, `SUPABASE_URL`,
+- **Configuration** is `--dart-define-from-file=env/<name>.json` (`dev.json` for the one
+  environment at `https://wusel.example.org`, `ci.json` for CI's throwaway stack; no
+  `prod.json`, see ADR-013), holding only public values: `ENV`, `SUPABASE_URL`,
   `SUPABASE_PUBLISHABLE_KEY`. The starter's `flutter_dotenv` and `.env` were removed. The
   client is initialised with `publishableKey` (the starter's `anonKey` is deprecated in
   `supabase_flutter`), the default PostgREST schema `api`, and the session persisted in
@@ -202,6 +207,8 @@ auth, a REST layer, realtime, a job runner — are exactly what Supabase provide
 
 **Hosted Supabase (supabase.com).** Least operational work. Rejected for the same reason
 ADR-005 gave: it puts the family's data with a US-headquartered provider (NFR-8).
+*Amended by ADR-013:* still rejected for this family's data, but the intended home for any
+further tenant — so `supabase/` must stay portable to a hosted project.
 
 **Firebase / Appwrite / PocketBase.** Firebase is not self-hostable. Appwrite is, but its
 document model gives up the relational data, `rrule`-style range queries and the
@@ -249,10 +256,8 @@ module, and a bespoke outbox for one module is smaller than a sync engine for al
 - **RLS becomes the primary authorisation layer**, not defence in depth. The anon key is
   in every app binary by design, so a missing policy is an open door. Every table ships
   with policy tests, without exception.
-- **A heavier server.** Self-hosted Supabase is about a dozen containers. It wants about
-  8 GB of RAM on the VPS — one size above the CX22 planned in [10](../10-deployment-and-ops.md).
-  Trimming unused services (analytics/log shipping, image proxy, and Storage until needed)
-  helps but does not change the class.
+- **A heavier server.** Self-hosted Supabase is about a dozen containers and wants about
+  8 GB of RAM. *(Moot since ADR-013: the home server has 62 GB.)*
 - **Self-hosted Supabase lags the hosted product** and is upgraded by pulling new pinned
   images and following its changelog. Budget a quarterly upgrade evening.
 - **Native distribution costs money and time** — see [ADR-011](ADR-011-native-distribution-and-ci-cd.md).
