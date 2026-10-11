@@ -4,8 +4,8 @@ This repository holds both the planning documents and the code for WuselWall (se
 [README.md](README.md)). `specs/` is the specification; `app/` (Flutter), `supabase/`
 (migrations, Edge Functions, tests) and `infra/` hold the implementation. Setup-plan steps 3, 5,
 6 and 8 are built (app shell, identity, online shopping list, the one environment) and M1.1
-is built except the offline outbox; continue with the outbox, step 7 once the Apple and
-Google accounts exist, or the next M1 module.
+is built except the offline outbox. Next: the outbox; step 7 once the Apple and Google accounts
+exist.
 
 ## Architecture rules
 
@@ -37,6 +37,12 @@ See [specs/03-architecture.md](specs/03-architecture.md),
 - Edge Functions forward the caller's JWT. The service-role key is only for functions
   without a user (ICS, enrolment, jobs), with a comment at each use.
 - Migrations are forward-only and must stay compatible with the previous app release.
+- **No household is hard-coded.** Anything one household would answer differently from
+  another is a setting with a curated default ([specs/20](specs/21-household-settings.md)):
+  a `setting_definition` row written by a migration, read through `api.settings`. Never
+  assume the number of members, their ages, the region or the schools. Lukas, Sabine, Lotta
+  and Hanna are the reference household — fine in examples, mockups, demo and seed data,
+  never in logic or tests that would fail for another family.
 
 ## App conventions (`app/lib`)
 

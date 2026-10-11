@@ -1,25 +1,27 @@
 # WuselWall — Family Organiser
 
-Planning workspace for a self-hosted family organiser: shared calendar, the children's
-school timetables, chores with gamification, meal planning and a shopping list, usable by
-two adults and two children (7 and 9) on phones, tablets, a laptop and a wall-mounted
-kitchen display — whose standard screen is a seven-day week board.
+A self-hosted family organiser: shared calendar, the children's school timetables, chores
+with gamification, meal planning and a shopping list, used by every member of a household
+on phones, tablets, a laptop and a wall-mounted kitchen display — whose standard screen is
+a seven-day week board. Designed against a reference household of two adults and two
+children (7 and 9); everything that differs between households is a setting with a
+curated default ([21](specs/21-household-settings.md)).
 
 Built as **native Flutter apps** for iOS, iPadOS and Android (plus a web build for the
 laptop) on a **self-hosted Supabase** backend.
 
 This repository holds **both the planning documents and the code**. `specs/` is the
-specification; `app/`, `supabase/` and `infra/` will hold the implementation.
+specification; `app/`, `supabase/` and `infra/` hold the implementation.
 
 ## Status
 
 | | |
 |---|---|
-| Phase | Planning complete — starting implementation at M0.0 ([16 — Setup Plan](specs/16-setup-plan.md)) |
+| Phase | M0.0–M0.3 built; M1.1 shopping built online. Next: the offline outbox. M0.4 waits for the Apple and Google accounts ([13 — Roadmap](specs/13-roadmap.md)) |
 | Started | 2026-10-11 |
 | Decision set | Locked for v1 (see `specs/adr/`) |
 | Origin | Specification carried over from BretApp; code starts from scratch |
-| Latest change | 2026-10-11 — one self-hosted environment on the home server, `wusel.goomba.ch` ([ADR-013](specs/adr/ADR-013-one-self-hosted-environment.md)) |
+| Latest change | 2026-10-11 — household settings with curated defaults ([21](specs/21-household-settings.md)); the one environment on the official compose stack ([ADR-013](specs/adr/ADR-013-one-self-hosted-environment.md#amendment-2026-10-11-the-official-compose-stack)) |
 
 ## Planned layout
 
@@ -64,6 +66,7 @@ specifications you hand to a coding session, one at a time.
 | 16 | [Setup Plan](specs/16-setup-plan.md) | **The build order for M0**: tools and accounts, repository, local Supabase, app shell, identity, CI, mobile releases, deployment — with the workflows and the secrets inventory |
 | 19 | [Security & Architecture Review](specs/19-security-and-architecture-review.md) | Findings of the 2026-10-11 review, what is fixed and what the operator still has to do |
 | 17 | [Design System](specs/17-design-system.md) | Colour, type and form: the member palette (colour-blind-checked), presence treatments, night theme, three design directions, A "Küchentisch" chosen |
+| 21 | [Household Settings](specs/21-household-settings.md) | The reference household, the settings model, the setup wizard and every curated default with its reasoning |
 | 18 | [Testing Strategy](specs/18-testing-strategy.md) | The nine test layers from pgTAP to the family's devices: widget and golden matrices, Patrol on device, Playwright for the web build only, the manual release check, and where each runs |
 | — | [Market Research](specs/market-research.md) | Family planners with meal planning in the German-speaking market: feature matrix, pros and cons, open-source and self-hosted options, implications for ADR-002 |
 | — | [Design system mockup](specs/mockups/design-system.html) | The three directions on the same Monday, switchable between light, dark and night, with simulated colour-blindness |

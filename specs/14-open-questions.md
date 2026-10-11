@@ -4,6 +4,12 @@ Decisions deliberately deferred. Each has a point by which it must be answered, 
 none of them quietly becomes a blocker. Anything that surfaces during implementation
 lands here rather than in the module being built.
 
+**Since 2026-10-11, a question whose answer differs between households is a setting.**
+What stays open here is only the *curated default*; each household sets its own value in
+Einstellungen ([21 — Household settings](21-household-settings.md)). All proposed defaults
+are collected for review in [#10](https://github.com/wuselwall/wuselwall-app/issues/10). Facts about the reference household (its
+schools, its rota, where its display hangs) are setup data, not product decisions.
+
 ## Before M0
 
 | # | Question | Why it matters | Leaning |
@@ -40,44 +46,44 @@ lands here rather than in the module being built.
 | # | Question | Why it matters | Leaning |
 |---|---|---|---|
 | Q39 | Which design direction — A Küchentisch, B Pausenhof or C Fjord? | Sets the theme tokens before the first real screens (M1.2) are built; changing later is cheap in code but means re-reviewing every screen **Decided 2026-10-11: A "Küchentisch"**, in every register ([17](17-design-system.md)). B's outlines for the kid register remain the fallback if the children find it too plain |
-| Q4 | What is a point actually worth? | The exchange rate sets the entire economy's feel. Too generous and rewards are meaningless; too stingy and the children disengage in week two. | Start with: duty 1–3 points, bonus 5–15, cheapest reward ~5, mid ~15, big ~50. Expect to recalibrate once. |
-| Q5 | Which chores are duties and which are bonuses? | The intrinsic-motivation argument in [06](06-module-tasks.md) hinges on this line | Decide it with the children present — participation in the rules is most of the buy-in |
-| Q6 | Do points convert to pocket money? | Changes the psychology significantly and is very hard to walk back | Not in v1. Non-monetary rewards first; see how it lands. |
-| Q7 | How many joker days per month? | Anti-frustration tuning for the 7-year-old | Start at 1, raise if there are tears |
+| Q4 | What is a point actually worth? | The exchange rate sets the entire economy's feel. Too generous and rewards are meaningless; too stingy and the children disengage in week two. | *Since 2026-10-11 a setting* (`tasks.points.*`); open is the default. Proposed: duty 1 (0–3), bonus 5, starter rewards 5 / 15 / 50. Expect to recalibrate once. → [#6](https://github.com/wuselwall/wuselwall-app/issues/6) |
+| Q5 | Which chores are duties and which are bonuses? | The intrinsic-motivation argument in [06](06-module-tasks.md) hinges on this line | *Since 2026-10-11:* the default kind is `duty` (a setting), and the starter chores carry a proposed kind each. Each household sorts its own chores with the children present — participation in the rules is most of the buy-in. → [#7](https://github.com/wuselwall/wuselwall-app/issues/7) |
+| Q6 | Do points convert to pocket money? | Changes the psychology significantly and is very hard to walk back | Not in v1, as a design rule rather than a setting; no money items in the starter rewards. → [#8](https://github.com/wuselwall/wuselwall-app/issues/8) |
+| Q7 | How many joker days per month? | Anti-frustration tuning for younger children | *Since 2026-10-11 a setting* (`tasks.jokers_per_month`, overridable per member). Proposed: 1 per streak per calendar month, used automatically. → [#9](https://github.com/wuselwall/wuselwall-app/issues/9) |
 
 ## Before M1.3 (calendar, presence and Stundenplan)
 
 | # | Question | Why it matters | Leaning |
 |---|---|---|---|
-| Q8 | Do the children get calendar write access? | Affects the kid register and the permission matrix | Yes, for their own events. It is theirs too. |
-| Q9 | Should chore due dates appear in the ICS feed? | An Outlook calendar full of "empty the dishwasher" is unhelpful at work | No by default; make it a per-token filter option |
-| Q10 | Which external calendars will you import in M2? | Determines how much the import feature actually needs to handle | Sports club and bin collection. Ferien come from the Bundesland feed ([15](15-module-school-timetable.md#holidays)); the timetable itself is not an import |
+| Q8 | Do the children get calendar write access? | Affects the kid register and the permission matrix | **Decided 2026-10-11: yes, for events they attend themselves**; deleting another member's event stays a guardian action. A household setting (`calendar.members_edit_own_events`), default on |
+| Q9 | Should chore due dates appear in the ICS feed? | An Outlook calendar full of "empty the dishwasher" is unhelpful at work | **Decided 2026-10-11: no by default**; a per-token filter option, off for every new token |
+| Q10 | Which external calendars should the M2 import handle first? | Determines how much the import feature actually needs to handle | Sports club and bin collection (plain ICS URLs). Ferien come from the regional feed ([15](15-module-school-timetable.md#holidays)); the timetable itself is not an import |
 
 *Q18–Q24 were added 2026-08-30 with the A5 requirement. Most are answerable in one
 conversation with the family — and that conversation is worth having before the grid
 editor is built, not after.*
 
-| Q18 | Which schools, and which Bundesland? | The Ferien import is per-Bundesland, and bell times differ per school | **Decided 2026-09-02: Berlin.** Lotta is in Klasse 5a, Hanna in the Schulanfangsphase (SAPh E). Ferien and bewegliche Ferientage therefore come from the Berlin feed; still to collect: both schools' Stundenraster and the term dates |
-| Q19 | Do either of the schools use A/B weeks (Doppelwochen)? | If neither does, `week_cycle` stays `'weekly'` and a whole layer of UI never has to be drawn | Ask before building the grid editor. Primary schools usually do not |
+| Q18 | Which regions does the product support, and how is a school's region chosen? | The Ferien import is per region (Bundesland), and bell times differ per school | *Generalised 2026-10-11:* `household.region` (country + subdivision) is asked with the first school and proposed for every further one; hand-entered holidays work anywhere, and the M2 import starts with the German Bundesländer. The reference household is in Berlin (one child in Klasse 5, one in the Schulanfangsphase) — that is setup data |
+| Q19 | Do schools use A/B weeks (Doppelwochen)? | If not, a whole layer of UI never has to be drawn | *Resolved 2026-10-11 by generalisation:* A/B weeks stay in v1 and are switched on per timetable; a new timetable is `weekly`, so households without them never see the concept |
 | Q20 | Does either school publish a timetable or substitution feed (WebUntis, IServ, Schulmanager)? | Decides whether manual entry is a stopgap or the permanent answer | Assume manual for v1 either way — an import is an M3 addition, not a v1 dependency |
-| Q21 | How does Sabine's Dienstplan actually arrive — paper, PDF, an employer app? And how far ahead? | Decides whether the `rdates` month grid is sufficient or whether it needs a bulk-paste path | Month grid first. Revisit only if entering a month takes more than a minute |
-| Q22 | Is Hort/Betreuung a timetable row or a presence entry? | Affects both the grid editor and the "isst mit" defaulting | Timetable row with `kind='care'` — it is part of the child's school day and the parent reads it there |
-| Q23 | Who maintains the Stundenplan, and may the children enter an Entfall? | Guardian-only is simpler; a nine-year-old reporting "Mathe fällt aus" is also genuinely useful | Guardian-only in v1. Revisit once the children are actually using the app |
-| Q24 | Does the timetable go into the ICS feed at all, and collapsed or per lesson? | An Outlook calendar with sixty lessons a week is an unsubscribed calendar | Off by default; the collapsed school-day block available per token; per-lesson only if someone asks |
+| Q21 | How does a shift rota typically arrive — paper, PDF, an employer app? And how far ahead? | Decides whether the `rdates` month grid is sufficient or whether it needs a bulk-paste path | Month grid first (the reference household's rota arrives monthly). Revisit only if entering a month takes more than a minute |
+| Q22 | Is Hort/Betreuung a timetable row or a presence entry? | Affects both the grid editor and the "isst mit" defaulting | **Decided 2026-10-11: a timetable row with `kind='care'`** — it is part of the child's school day and the parent reads it there |
+| Q23 | Who maintains the Stundenplan, and may the children enter an Entfall? | Guardian-only is simpler; a nine-year-old reporting "Mathe fällt aus" is also genuinely useful | **Decided 2026-10-11: guardian-only in v1.** Kept as a household setting (`school.members_report_changes`, default off) so it can be opened per household later |
+| Q24 | Does the timetable go into the ICS feed at all, and collapsed or per lesson? | An Outlook calendar with sixty lessons a week is an unsubscribed calendar | **Decided 2026-10-11: off for every new token**; the collapsed school-day block is one checkbox per token, per-lesson available but never default |
 
 ## Before M1.5 (launch)
 
 | # | Question | Why it matters | Leaning |
 |---|---|---|---|
-| Q11 | Which wall-display hardware? | Constrains the kiosk register and needs lead time to order | Cheap Android tablet (≥ 1280×800, landscape) running the native app in kiosk mode; Fully Kiosk with the web build only as a fallback — see [09](09-clients-and-ux.md#the-wall-display). *Revised 2026-10-11* |
-| Q12 | Where does the display go? | Needs power and a viewing angle from where people stand | Kitchen, at adult eye level, with the children's columns reachable |
-| Q13 | Which notifications are on by default? | Over-notifying in week one trains the family to ignore the app permanently | Morning summary only; everything else opt-in |
+| Q11 | Which wall-display hardware does the product recommend? | Constrains the kiosk register and needs lead time to order | Cheap Android tablet (≥ 1280×800, landscape) running the native app in kiosk mode; Fully Kiosk with the web build only as a fallback — see [09](09-clients-and-ux.md#the-wall-display). *Revised 2026-10-11* |
+| Q12 | Where does the display go? | Needs power and a viewing angle from where people stand | *Not a product decision (2026-10-11):* guidance for every household in the user documentation — kitchen, adult eye level, children's columns reachable |
+| Q13 | Which notifications are on by default? | Over-notifying in week one trains the family to ignore the app permanently | *A member setting since 2026-10-11.* Proposed: morning summary at 07:00 only; everything else opt-in — see [#10](https://github.com/wuselwall/wuselwall-app/issues/10) |
 | Q14 | Backup target: Backblaze B2 or Hetzner Storage Box? | Cost versus keeping everything in Germany | B2 is cheaper; the Storage Box keeps data in-country. Both encrypted client-side, so either is defensible. *Since ADR-013:* the dumps land on the home server first (`/mnt/user/backups/wuselwall`); the off-site copy via restic is still to choose — B2, or any second location away from the house. Decide before M1.6. |
 | Q38 | Push: FCM for both platforms, or FCM for Android and APNs directly for iOS? | FCM for both is one code path and one Flutter plugin, but routes iOS notifications through Google as well as Apple. APNs direct keeps iOS pushes away from Google at the cost of a second sender | *Added 2026-10-11.* APNs direct for iOS, FCM for Android, both sent by one `push-send` Edge Function; payloads minimal either way. Revisit if the iOS-only plumbing in Flutter proves fragile |
 | Q28 | Should `busy_until` ("Termine bis 17:00") be typed in daily, or is that the moment a private work-calendar subscription earns its place? | Typing it every morning is exactly the kind of chore that lapses in week three | Hand-entered in v1; if it lapses, subscribe to the work calendar read-only in M3 and take **only** the end of the last meeting from it |
-| Q25 | What counts as a "key appointment" that reaches the kitchen display? | The week board is only trusted if it is complete, and only readable if it is not | Explicit flag, defaulted on for whole-family events and off for personal ones. Review after two weeks of real use — if things are missing, widen the default |
-| Q26 | When should the week board roll over to the coming week? | Sunday-evening planning wants next week; Saturday morning still wants today | Saturday 12:00, configurable. Watch what actually gets asked at the display |
-| Q27 | Are the children's names on the wall display, or initials and colours? | The display is visible to anyone in the kitchen, including visitors | Names. It is a private kitchen, and initials are harder to read at two metres |
+| Q25 | What counts as a "key appointment" that reaches the kitchen display? | The week board is only trusted if it is complete, and only readable if it is not | Explicit flag; its default is a household setting (`calendar.key_default`), proposed: on for whole-family events, off for personal ones. Review after two weeks of real use |
+| Q26 | When should the week board roll over to the coming week? | Sunday-evening planning wants next week; Saturday morning still wants today | A household setting (`board.rollover`), proposed default Saturday 12:00. Watch what actually gets asked at the display |
+| Q27 | Are the children's names on the wall display, or initials and colours? | The display is visible to anyone in the kitchen, including visitors | A household setting (`board.member_label`), proposed default: names. Initials are harder to read at two metres |
 
 ## Answered by the mockups
 

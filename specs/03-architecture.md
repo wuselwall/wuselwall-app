@@ -216,7 +216,7 @@ mutation. No role has `UPDATE` or `DELETE` on the table.
 ### Time and timezones
 
 - Store all instants as `timestamptz` (UTC).
-- Store the household timezone once (`Europe/Berlin`) and each recurring event's own
+- Store the household timezone once (`household.timezone`, e.g. `Europe/Berlin`) and each recurring event's own
   IANA timezone, because a 07:00 recurring alarm must stay at 07:00 across a DST change.
 - All-day events are stored as a date, never as a midnight timestamp. This is the single
   most common source of off-by-one-day bugs in calendar code.

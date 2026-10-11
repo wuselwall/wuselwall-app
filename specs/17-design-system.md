@@ -19,10 +19,10 @@ The palette was derived from five constraints, not from taste:
 1. **People are ink, things are paper.** A member's colour is a saturated *ink*: a
    band, a dot, an avatar ring, the accent while that person is active. Subjects,
    shopping categories and chores get pale *paper* tints with one shared dark ink. A
-   seven-year-old can then tell "this is Lotta's" from "this is Mathe" without anyone
+   seven-year-old can then tell "this is my sister's" from "this is Mathe" without anyone
    explaining the rule.
 2. **Green means done, and nobody is green.** Green is reserved for the brand and for
-   success (a ticked task, an approved reward). If a member could pick green, Lukas's
+   success (a ticked task, an approved reward). If a member could pick green, their
    tasks would look already finished.
 3. **No member is red.** Red is reserved for destructive and error states, which the kid
    register does not even have.
@@ -40,7 +40,7 @@ choice, because a free choice cannot be guaranteed to pass AA or to stay disting
 swatch (`MemberPalette.resolve`); a value that matches no swatch snaps to the nearest.
 No migration was needed.
 
-| # | Key | Name (de) | Light ink | Dark ink | Light tint | Dark tint | Default for |
+| # | Key | Name (de) | Light ink | Dark ink | Light tint | Dark tint | Reference household |
 |---|---|---|---|---|---|---|---|
 | 1 | `violet` | Violett | `#7B3FE4` | `#C3A6FF` | `#EDE4FB` | `#3D3B50` | Lotta |
 | 2 | `petrol` | Petrol | `#08737F` | `#4FCBD6` | `#DCEBED` | `#264248` | Hanna |
@@ -51,7 +51,8 @@ No migration was needed.
 | 7 | `mustard` | Senf | `#736200` | `#E3C83A` | `#EBE9DB` | `#444228` | — |
 | 8 | `orchid` | Orchidee | `#A0309E` | `#F08AE8` | `#F2E2F1` | `#46354B` | — |
 
-- The four defaults are the colours the kiosk mockup already uses, kept because they are
+- New members get the swatches in this order as they are added, so every household starts
+  with the most separable set. The first four are the colours the kiosk mockup already uses, kept because they are
   also the **most separable set of four** the search found. The worst pair is violet
   against petrol under deuteranopia in dark mode, at ΔE<sub>OK</sub> 5.9.
 - Swatch 5 keeps five members distinct (worst case ΔE<sub>OK</sub> 4.0). From the sixth

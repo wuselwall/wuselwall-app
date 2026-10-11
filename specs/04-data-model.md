@@ -17,7 +17,16 @@ only where undo matters (events, shopping items) — everywhere else, delete for
 household
   id, name, timezone, locale,                    -- timezone/locale from the founder's device
   created_by_profile_id, created_at,
-  deleted_at NULL                                -- J6: purged 14 days later
+  deleted_at NULL,                               -- J6: purged 14 days later
+  region NULL                                    -- ISO 3166-2, e.g. 'DE-BE'; asked with the first school
+
+setting_definition               -- the catalogue of settings and curated defaults,
+  key, scope, type, default_value JSONB,        -- written by migrations only; see
+  constraints JSONB                             -- 21 — Household settings
+
+household_setting                -- only what a household changed from the default
+  household_id, key, profile_id NULL, device_id NULL,
+  value JSONB, updated_at, updated_by_profile_id
 
 profile                          -- a family member
   id, household_id, display_name, short_name, avatar_key, colour_hex,
@@ -83,6 +92,11 @@ audit_entry                      -- append-only, never updated or deleted
   actor_profile_id, device_id NULL, origin, on_behalf_of JSONB NULL,
   entity_type, entity_id, action, diff JSONB
 ```
+
+Tunable behaviour — point defaults, jokers, rollover, night hours, notification
+defaults — is never a column: it is a setting with a curated default, resolved as the
+override row if one exists and the definition's default otherwise
+([21](21-household-settings.md#model)). Columns hold what identifies an entity.
 
 ## Calendar
 

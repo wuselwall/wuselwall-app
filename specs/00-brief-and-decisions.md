@@ -44,7 +44,7 @@ what was inferred.
 | Build vs. assemble | **Build one application from scratch** | [ADR-002](adr/ADR-002-build-vs-assemble.md) |
 | Hosting | **Small VPS in Germany** — with the note "I'll need more guidance here" | [ADR-005](adr/ADR-005-hosting.md), [10](10-deployment-and-ops.md) |
 | Technology | ~~TypeScript end to end~~ → **Flutter apps on self-hosted Supabase** (changed 2026-10-11) | [ADR-010](adr/ADR-010-flutter-and-self-hosted-supabase.md), superseding [ADR-003](adr/ADR-003-technology-stack.md) |
-| Household | **2 adults, 2 children aged 7 and 9** | [01](01-vision-and-scope.md) |
+| Household | **2 adults, 2 children aged 7 and 9** — since 2026-10-11 the *reference household*: the design case and the demo data, while every household-specific choice is a setting | [01](01-vision-and-scope.md), [21](21-household-settings.md) |
 | Login model | **Device session with tap-to-switch profiles** | [ADR-004](adr/ADR-004-identity-model.md) |
 | Gamification | **Points with redeemable rewards, plus streaks and badges** | [06](06-module-tasks.md) |
 | Devices | **Parents' iPhones, children's iPads, laptop browser, fixed wall display** | [09](09-clients-and-ux.md) |
@@ -101,8 +101,10 @@ five columns, feed tokens gained a kind filter and now default to appointments o
 and the security model's most sensitive asset is no longer the calendar but a child's
 timetable combined with an adult's absence pattern ([11](11-security-and-privacy.md)).
 
-**Naming note.** The examples throughout the documents use the household's own names:
-*Lukas* and *Sabine* for the adults, *Lotta* (9) and *Hanna* (7) for the children.
+**Naming note.** The examples throughout the documents use the reference household's
+names: *Lukas* and *Sabine* for the adults, *Lotta* (9) and *Hanna* (7) for the children.
+Since 2026-10-11 they are examples, not assumptions — see the entry below and
+[21](21-household-settings.md#the-reference-household).
 
 **Refined 2026-09-02, from the first review of the mockup:** the wall carries only each
 child's school-day span and the lessons worth packing for, with the full Stundenplan one
@@ -204,3 +206,21 @@ the home network, Studio behind a login, its own secrets, and the CLI's image ve
 CI and the server agree. The development data was not carried over — the family's
 household starts fresh. Recorded as the
 [ADR-013 amendment](adr/ADR-013-one-self-hosted-environment.md#amendment-2026-10-11-the-official-compose-stack).
+
+### 2026-10-11 — A generic household setup with curated defaults
+
+> You need to abstract from the specific family to a more generic setup, so the user can
+> define those settings while still using carefully curated defaults. […] Update the
+> specs to not lean so heavily into the demo family.
+
+| Change | Answer | Where |
+|---|---|---|
+| The family | Becomes the **reference household**: the design case, the names in examples and mockups, and the demo and seed data. Nothing in code, schema or tests may depend on its size, ages, region or schools | [21](21-household-settings.md#the-reference-household), [01](01-vision-and-scope.md#users) |
+| Household-specific choices | A **setting with a curated default**: a catalogue of definitions written by migrations, an override row only where a household changed something, reset to default always possible | [21](21-household-settings.md#model) |
+| Setup | Household creation stays as [20, J1](20-onboarding.md#j1--start-a-family) defines it and asks nothing more: the region is asked when the first school is added; J1's starter examples are the curated starter content (chores, rewards, badges, lists) | [21](21-household-settings.md#household-creation), [08](08-users-auth-permissions.md#bootstrapping-a-new-household) |
+| Open questions | A question that differs per household now only decides the default. Q8, Q9 and Q22–Q24 decided; Q4–Q7 tracked as issues #6–#9; every proposed default collected in #10 | [14](14-open-questions.md) |
+
+**What this cost.** One settings table and two `api` functions, and a settings screen that
+grows with each module. **What it bought.** Point values, jokers, rollover and the meal rule
+no longer block a module's build; they are data that can be tuned after two weeks of real
+use without a release — and a second household needs no code change.

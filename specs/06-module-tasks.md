@@ -6,11 +6,14 @@ mechanics.
 
 ## Design position
 
-You chose **points with redeemable rewards** plus **streaks and badges**, and you have a
-7-year-old and a 9-year-old. Three consequences follow, and they are worth accepting
-deliberately rather than discovering later.
+You chose **points with redeemable rewards** plus **streaks and badges**, for households
+whose children are usually of different ages — the reference household
+([21](21-household-settings.md#the-reference-household)) has a 7-year-old and a
+9-year-old. Three consequences follow, and they are worth accepting deliberately rather
+than discovering later. The numbers below are curated defaults; every one of them is a
+household setting ([21](21-household-settings.md#tasks-and-gamification-m12)).
 
-**1. The two-year age gap is the hard part.** A nine-year-old understands a savings
+**1. The age gap is the hard part.** A nine-year-old understands a savings
 economy: 40 points now, cinema trip in three weeks. A seven-year-old largely does not —
 the reward has to be visible within days or the points stop meaning anything. The
 mechanism that handles this without two separate systems is **rewards at different price
@@ -106,8 +109,9 @@ requested ──▶ approved ──▶ fulfilled
 - Declining should carry an optional note. "Not this week — we're away" lands very
   differently from a silent rejection.
 
-Seed the reward catalogue with roughly a 1 : 3 : 10 cost ratio so both children can
-engage: something at 5 points, something at 15, something at 50.
+Seed the reward catalogue with roughly a 1 : 3 : 10 cost ratio so younger and older
+children can both engage: something at 5 points, something at 15, something at 50. The
+starter rewards are offered when a household is created ([21](21-household-settings.md), [Q4](14-open-questions.md)).
 
 ## Streaks
 
@@ -115,8 +119,11 @@ Per `(profile, definition)`, advanced by the nightly job.
 
 - A streak counts consecutive **due** days completed, not consecutive calendar days —
   a weekly chore builds a streak of weeks.
-- **Joker days** are the anti-frustration mechanism: a configurable number per period
-  (start with 1 per calendar month) that absorb a miss without breaking the chain. A
+- **Joker days** are the anti-frustration mechanism: a household setting
+  (`tasks.jokers_per_month`, default 1, overridable per member — [Q7](14-open-questions.md))
+  that absorbs a miss without breaking the chain. Jokers count **per streak** and per
+  calendar month, and the nightly job uses them automatically: a sick day misses every
+  chore that day, and each chain survives it. A
   seven-year-old losing a 22-day streak to one sick day is a real, avoidable source of
   tears.
 - Streaks never go negative and are never displayed comparatively. The framing is
@@ -151,7 +158,7 @@ and adds a parental bottleneck that will quietly kill adoption within a fortnigh
 |---|---|---|
 | My tasks | kid | Today's instances as large cards with icons; one tap to complete; points fly into the balance |
 | Balance & rewards | kid | Current balance, reward shop with affordability clearly shown, redemption history |
-| Family board | kiosk | Today's tasks for all four members in columns, done items visibly struck through, streak indicators |
+| Family board | kiosk | Today's tasks for every member in columns, done items visibly struck through, streak indicators |
 | Chore admin | adult | Definition CRUD, rotation pools, points, verification flags — laptop-oriented, dense |
 | Approvals | adult | Pending redemptions and verifications, with a PIN gate |
 
