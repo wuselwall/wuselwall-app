@@ -192,3 +192,15 @@ all become things to operate. A cross-household bug stops being theoretical.
 **What it buys.** A family starts in under two minutes without a server in sight, the
 second parent joins in one, nobody types on the wall display, and a lost password no
 longer needs the operator.
+
+### 2026-10-11 — The official self-hosting compose stack
+
+> Yes, move to the official self-hosting compose file.
+
+The answer to S10 and A8 in [19](19-security-and-architecture-review.md), and the first
+condition of [Q40](14-open-questions.md). The one environment now runs Supabase's
+official compose file (`infra/supabase/`) instead of the CLI's stack: no database port on
+the home network, Studio behind a login, its own secrets, and the CLI's image versions so
+CI and the server agree. The development data was not carried over — the family's
+household starts fresh. Recorded as the
+[ADR-013 amendment](adr/ADR-013-one-self-hosted-environment.md#amendment-2026-10-11-the-official-compose-stack).

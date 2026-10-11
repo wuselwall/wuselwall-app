@@ -419,21 +419,23 @@ without anyone touching a cable.
 > the earlier plan of a production VPS, Caddy and `deploy.yml`. The operating guide is
 > [10](10-deployment-and-ops.md).
 
-1. **Own keys** for the CLI stack on the home server: `auth.jwt_secret`,
-   `auth.publishable_key` and `auth.secret_key` in `supabase/config.toml`, read from the
-   git-ignored `supabase/.env` (`supabase/.env.example` lists the names). CI writes the
-   CLI's public defaults into its own throwaway `supabase/.env`.
+1. **Own keys** for the stack on the home server. First built as the CLI's stack with
+   `auth.jwt_secret`, `auth.publishable_key` and `auth.secret_key` read from the
+   git-ignored `supabase/.env`; **since the ADR-013 amendment** the official compose stack
+   in [`infra/supabase/`](../infra/supabase/), whose server-side `.env` keeps those three
+   values and adds its own (`scripts/remote-stack.sh init-env`). CI writes the CLI's public
+   defaults into its own throwaway `supabase/.env`.
 2. **Public entry**: Cloudflare proxied record `wusel.example.org` → the home server's nginx
    with [`infra/nginx/wusel.example.org.conf`](../infra/nginx/wusel.example.org.conf): the four
-   API prefixes to Kong on 54321, everything else 404.
+   API prefixes to the gateway on `172.17.0.1:54421`, everything else 404.
 3. **Backups**: [`infra/backup/backup.sh`](../infra/backup/backup.sh) nightly on the server
    (homeserver User Scripts), optional restic off-site and healthchecks ping;
    `scripts/remote-backup.sh` on demand; [`infra/backup/restore-drill.sh`](../infra/backup/restore-drill.sh)
    restores into a scratch database and counts rows.
 4. **Setup token**: `scripts/remote-setup-token.sh` replaces the seed's `dev-setup` with a
    random token before the family sets up its household.
-5. **Changing the database**: CI first, then `scripts/remote-backup.sh` →
-   `scripts/remote-supabase.sh migration up` → `scripts/remote-pgtap.sh`. No deploy
+5. **Changing the database**: CI first, then `scripts/remote-migrate.sh` (backup →
+   pending migrations through `docker exec` → pgTAP). No deploy
    workflow: GitHub's runners cannot reach the home network, and one environment does not
    need one.
 

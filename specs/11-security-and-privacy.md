@@ -50,7 +50,7 @@ insiders. If a threat model does not exclude anything it is not a threat model.
 - **nginx forwards exactly four API prefixes** to Kong
   ([`infra/nginx/wusel.example.org.conf`](../infra/nginx/wusel.example.org.conf)); Kong's
   dashboard, the `/pg/` metadata API and everything else answer 404.
-- **Postgres (54322), Studio (54323) and Mailpit (54324) are never forwarded or proxied.**
+- **Postgres (127.0.0.1:54422) and Studio (behind the gateway, reached by SSH tunnel) are never forwarded or proxied.**
   The CLI stack publishes them on the home network only; anyone on the home wifi can reach
   them, which is accepted for a household network and must not be extended.
 - **Anonymous users are disabled; public sign-up is enabled for adults** (since

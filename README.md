@@ -28,7 +28,7 @@ app/               Flutter — iOS, Android and web; three UI registers, German 
 supabase/          migrations (tables in `app`, views and functions in `api`, RLS),
                    Edge Functions, pgTAP tests, seed
 infra/             the nginx site file and the backup scripts for the home server
-scripts/           remote-supabase, -pgtap, -backup, -setup-token (the home server)
+scripts/           remote-stack, -migrate, -pgtap, -backup, -setup-token (the home server)
 .github/workflows/ ci.yml, release-mobile.yml
 specs/             the specification — read 01, 02 and 03 before writing code
 ```

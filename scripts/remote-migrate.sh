@@ -7,6 +7,6 @@ cd "$(dirname "$0")/.."
 echo "== 1/3 backup"
 scripts/remote-backup.sh pre-migration
 echo "== 2/3 migrations"
-scripts/remote-supabase.sh migration up
+scripts/remote-migrations.sh
 echo "== 3/3 pgTAP"
 scripts/remote-pgtap.sh
