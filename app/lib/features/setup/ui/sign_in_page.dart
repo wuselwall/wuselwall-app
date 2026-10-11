@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
@@ -72,12 +73,16 @@ class _SignInPageState extends ConsumerState<SignInPage> {
           onPressed: _busy ? null : _submit,
           child: Text(l10n.signInAction),
         ),
-        const SizedBox(height: Tokens.space3),
-        OutlinedButton.icon(
-          onPressed: _busy ? null : _passkey,
-          icon: const Icon(Icons.fingerprint),
-          label: Text(l10n.signInPasskey),
-        ),
+        // Passkeys need a JavaScript SDK on the web that is not self-hosted yet
+        // (web/index.html); the native apps have them.
+        if (!kIsWeb) ...[
+          const SizedBox(height: Tokens.space3),
+          OutlinedButton.icon(
+            onPressed: _busy ? null : _passkey,
+            icon: const Icon(Icons.fingerprint),
+            label: Text(l10n.signInPasskey),
+          ),
+        ],
       ],
     );
   }

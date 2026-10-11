@@ -5,6 +5,7 @@ const sidebar = (p: string, t: Record<string, string>) => [
     text: t.start,
     items: [
       { text: t.concepts, link: `${p}/guide/concepts` },
+      { text: t.install, link: `${p}/guide/install` },
       { text: t.setup, link: `${p}/guide/setup` },
       { text: t.who, link: `${p}/guide/who-are-you` },
     ],
@@ -54,7 +55,7 @@ export default defineConfig({
           { text: 'Häufige Fragen', link: '/faq' },
         ],
         sidebar: sidebar('', {
-          start: 'Erste Schritte', concepts: 'So funktioniert WuselWall', setup: 'Einrichten', who: 'Wer bist du?',
+          start: 'Erste Schritte', concepts: 'So funktioniert WuselWall', install: 'App installieren', setup: 'Einrichten', who: 'Wer bist du?',
           shopping: 'Einkaufsliste', add: 'Artikel hinzufügen', lists: 'Mehrere Listen', store: 'Im Laden', history: 'Verlauf',
           devices: 'Geräte und Sicherheit', wall: 'Wandbildschirm und Kinder', members: 'Mitglieder und Geräte', security: 'Sicherheit', faq: 'Häufige Fragen',
         }),
@@ -78,7 +79,7 @@ export default defineConfig({
           { text: 'FAQ', link: '/en/faq' },
         ],
         sidebar: sidebar('/en', {
-          start: 'Getting started', concepts: 'How WuselWall works', setup: 'Setting up', who: 'Who are you?',
+          start: 'Getting started', concepts: 'How WuselWall works', install: 'Installing the app', setup: 'Setting up', who: 'Who are you?',
           shopping: 'Shopping list', add: 'Adding items', lists: 'Several lists', store: 'In the store', history: 'History',
           devices: 'Devices and security', wall: 'Wall display and kids', members: 'Members and devices', security: 'Security', faq: 'FAQ',
         }),
