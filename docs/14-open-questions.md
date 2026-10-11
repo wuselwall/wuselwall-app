@@ -9,13 +9,17 @@ lands here rather than in the module being built.
 | # | Question | Why it matters | Leaning |
 |---|---|---|---|
 | Q1 | Which domain? | Needed for TLS, feed URLs, the OAuth issuer and the PWA scope. Changing it later invalidates every subscribed ICS feed. | **Decided 2026-08-30: own `.de` domain** (not a free dyndns subdomain), with `home.` and `mcp.` subdomains. Use a wildcard cert (DNS-01) so subdomains don't appear individually in CT logs. Pick the actual domain name next. |
-| Q2 | SvelteKit or Next.js? | [ADR-003](adr/ADR-003-technology-stack.md) recommends SvelteKit; you may prefer the larger ecosystem | **Decided 2026-08-30: SvelteKit.** |
-| Q3 | GitHub or a self-hosted forge? | Determines the CI and registry path | **Decided 2026-08-30: GitHub + GHCR.** |
+| Q2 | SvelteKit or Next.js? | [ADR-003](adr/ADR-003-technology-stack.md) recommends SvelteKit; you may prefer the larger ecosystem | ~~Decided 2026-08-30: SvelteKit.~~ **Superseded 2026-10-11: Flutter clients on self-hosted Supabase** ([ADR-010](adr/ADR-010-flutter-and-self-hosted-supabase.md)). |
+| Q3 | GitHub or a self-hosted forge? | Determines the CI and registry path | **Decided 2026-08-30: GitHub.** GHCR is no longer needed — Supabase's images are pulled from upstream and nothing is built into an image ([16](16-setup-plan.md)). |
+| Q35 | Is a Mac available — own, borrowed, or a second-hand Mac mini? | Without one, iOS builds exist only in CI: no simulator, no Xcode debugger, iOS-only bugs diagnosed from TestFlight crash reports ([ADR-011](adr/ADR-011-native-distribution-and-ci-cd.md)) | *Added 2026-10-11.* Start without; buy or borrow one if the first iOS-specific bug costs more than an evening |
+| Q36 | Accept the higher running cost? | The Apple Developer Program (€99/year) and an 8 GB server for Supabase put the total at ≈ €18–21/month, against the original ≤ €10 target (NFR-7) | *Added 2026-10-11.* Accept: the €99 is the price of native apps on iOS at all, and a 4 GB server would make Supabase the thing that stalls. NFR-7 is revised as *proposed* until confirmed |
+| Q37 | Can the children's Apple accounts be TestFlight testers? | Child accounts under Family Sharing may not be addable as App Store Connect users or may not be allowed to run TestFlight | *Added 2026-10-11.* Try it with one iPad as soon as the developer account is active (M0.4). If it fails: Ad Hoc builds to the iPads' registered UDIDs, installed from a page on the VPS |
 
 ## Before M1.2 (tasks)
 
 | # | Question | Why it matters | Leaning |
 |---|---|---|---|
+| Q39 | Which design direction — A Küchentisch, B Pausenhof or C Fjord? | Sets the theme tokens before the first real screens (M1.2) are built; changing later is cheap in code but means re-reviewing every screen **Decided 2026-10-11: A "Küchentisch"**, in every register ([17](17-design-system.md)). B's outlines for the kid register remain the fallback if the children find it too plain |
 | Q4 | What is a point actually worth? | The exchange rate sets the entire economy's feel. Too generous and rewards are meaningless; too stingy and the children disengage in week two. | Start with: duty 1–3 points, bonus 5–15, cheapest reward ~5, mid ~15, big ~50. Expect to recalibrate once. |
 | Q5 | Which chores are duties and which are bonuses? | The intrinsic-motivation argument in [06](06-module-tasks.md) hinges on this line | Decide it with the children present — participation in the rules is most of the buy-in |
 | Q6 | Do points convert to pocket money? | Changes the psychology significantly and is very hard to walk back | Not in v1. Non-monetary rewards first; see how it lands. |
@@ -45,10 +49,11 @@ editor is built, not after.*
 
 | # | Question | Why it matters | Leaning |
 |---|---|---|---|
-| Q11 | Which wall-display hardware? | Constrains the kiosk register and needs lead time to order | Cheap Android tablet + Fully Kiosk Browser — see [09](09-clients-and-ux.md) |
+| Q11 | Which wall-display hardware? | Constrains the kiosk register and needs lead time to order | Cheap Android tablet (≥ 1280×800, landscape) running the native app in kiosk mode; Fully Kiosk with the web build only as a fallback — see [09](09-clients-and-ux.md#the-wall-display). *Revised 2026-10-11* |
 | Q12 | Where does the display go? | Needs power and a viewing angle from where people stand | Kitchen, at adult eye level, with the children's columns reachable |
 | Q13 | Which notifications are on by default? | Over-notifying in week one trains the family to ignore the app permanently | Morning summary only; everything else opt-in |
 | Q14 | Backup target: Backblaze B2 or Hetzner Storage Box? | Cost versus keeping everything in Germany | B2 is cheaper; the Storage Box keeps data in-country. Both encrypted client-side, so either is defensible. |
+| Q38 | Push: FCM for both platforms, or FCM for Android and APNs directly for iOS? | FCM for both is one code path and one Flutter plugin, but routes iOS notifications through Google as well as Apple. APNs direct keeps iOS pushes away from Google at the cost of a second sender | *Added 2026-10-11.* APNs direct for iOS, FCM for Android, both sent by one `push-send` Edge Function; payloads minimal either way. Revisit if the iOS-only plumbing in Flutter proves fragile |
 | Q28 | Should `busy_until` ("Termine bis 17:00") be typed in daily, or is that the moment a private work-calendar subscription earns its place? | Typing it every morning is exactly the kind of chore that lapses in week three | Hand-entered in v1; if it lapses, subscribe to the work calendar read-only in M3 and take **only** the end of the last meeting from it |
 | Q25 | What counts as a "key appointment" that reaches the kitchen display? | The week board is only trusted if it is complete, and only readable if it is not | Explicit flag, defaulted on for whole-family events and off for personal ones. Review after two weeks of real use — if things are missing, widen the default |
 | Q26 | When should the week board roll over to the coming week? | Sunday-evening planning wants next week; Saturday morning still wants today | Saturday 12:00, configurable. Watch what actually gets asked at the display |
@@ -69,7 +74,7 @@ editor is built, not after.*
 
 | # | Question | Why it matters | Leaning |
 |---|---|---|---|
-| Q15 | Does Better Auth's OIDC provider cover MCP's OAuth requirements as of the 2026-07-28 spec? | Determines whether OAuth is a plugin configuration or a build | Verify early; if not, `family:read` over a static bearer token is an acceptable interim |
+| Q15 | Does self-hosted Supabase Auth's OAuth 2.1 server cover MCP's requirements as of the 2026-07-28 spec? *(was: Better Auth's OIDC provider; revised 2026-10-11)* | Determines whether OAuth is configuration or a build | Verify early; if not, `family:read` over a static bearer token is an acceptable interim |
 | Q16 | Which assistant gets write access first, and to what? | Sets the blast radius of a misunderstanding | Shopping only. It is the most useful and the least destructive. |
 | Q17 | Should assistant-created items look different in the UI? | Trust and reviewability | Yes — a small marker, and a filter in the audit view |
 
@@ -81,7 +86,9 @@ Recorded so they are not re-litigated every time they occur to someone.
 - **A sibling leaderboard.** No. See [06](06-module-tasks.md).
 - **Two-way Outlook/Google sync.** No. See [ADR-001](adr/ADR-001-calendar-backbone.md).
 - **Per-item privacy between family members.** No, unless a concrete need appears.
-- **A native iOS app.** Only if a specific capability forces it.
+- **A public App Store or Play Store listing.** No — internal distribution only
+  ([ADR-011](adr/ADR-011-native-distribution-and-ci-cd.md)). *(Replaces "a native iOS
+  app — only if a capability forces it", which the move to Flutter on 2026-10-11 settled.)*
 
 ## How to use this file
 

@@ -168,13 +168,14 @@ worthless. This module, and only this module, gets full offline support
 
 **Mechanism:**
 
-1. The service worker keeps the current list mirrored in IndexedDB.
-2. Every mutation is applied locally first and appended to an **outbox** with a
+1. The app keeps the current list mirrored in a local SQLite database (drift).
+2. Every mutation is applied locally first and appended to an **outbox** table with a
    client-generated UUIDv7.
-3. The UI renders from IndexedDB, so it is identical online and offline.
-4. On reconnect, the outbox drains to the API in order. The client UUID is the
-   idempotency key: replaying a request cannot duplicate an item.
-5. The server responds with authoritative state; the client reconciles.
+3. The UI renders from the local database, so it is identical online and offline.
+4. On reconnect or app resume, the outbox drains in order to
+   `api.shopping_apply(p_actor, p_ops)`. The client UUID is the idempotency key:
+   replaying a batch cannot duplicate an item.
+5. The function returns authoritative state; the client reconciles.
 
 **Conflict handling**, in ascending order of interest:
 
@@ -187,19 +188,20 @@ worthless. This module, and only this module, gets full offline support
 - *One person deletes while another edits.* Tombstone wins. The editor sees it vanish on
   sync. Acceptable for a shopping list; it would not be for a bank ledger.
 
-Important limitation to design around: **iOS has no Background Sync API.** The outbox
-cannot drain while the PWA is closed. It drains when the app is next opened with a
-connection. So the UI must show unsynced state honestly — a small "3 changes pending"
-indicator — rather than pretending everything is saved.
+Important limitation to design around: **iOS gives no reliable background execution.**
+The outbox may not drain while the app is closed; it drains when the app is next resumed
+with a connection (Android may drain it earlier via a background job, but nothing relies
+on that). So the UI must show unsynced state honestly — a small "3 Änderungen
+ausstehend" indicator — rather than pretending everything is saved.
 
-Equally: **Safari evicts storage.** IndexedDB is a cache, never the store of record.
-The outbox is the only thing in it that is not reconstructible from the server, so keep
-it small and drain it eagerly.
+Native storage is not evicted the way Safari's was, but the local database is still a
+cache, never the store of record. The outbox is the only thing in it that is not
+reconstructible from the server, so keep it small and drain it eagerly.
 
 ## Live updates
 
-While online, `LISTEN/NOTIFY` → SSE pushes list changes to every connected device
-within a couple of seconds (FR-4.6). Two people shopping in different aisles is a real
+While online, a trigger broadcasts `shopping:changed` over Supabase Realtime and every
+connected device refetches within a couple of seconds (FR-4.6). Two people shopping in different aisles is a real
 use case and one of the moments the app visibly earns its keep.
 
 ---

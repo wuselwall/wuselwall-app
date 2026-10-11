@@ -1,0 +1,677 @@
+<title>WuselWall Farbwelt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Figtree:wght@400;500;600;700&display=swap">
+
+<style>
+/* ─────────────────────────────────────────────────────────────
+   WuselWall — Farbwelt (design proposal, docs/17-design-system.md)
+   Layout: a sticky control bar drives one "stage" of three device
+   specimens; below it, the fixed parts (members, presence, tints,
+   type) that every direction shares. Page chrome = direction A.
+   ───────────────────────────────────────────────────────────── */
+:root {
+  --bg:        #F7F4EE;
+  --surface:   #FFFFFF;
+  --sunken:    #EFEBE3;
+  --line:      #DDD8CF;
+  --ink:       #1C1F23;
+  --ink-2:     #4A5058;
+  --ink-3:     #656B75;
+  --brand:     #2D6A4F;
+  --on-brand:  #FFFFFF;
+  --brand-tint:#DCEBE2;
+  --on-tint:   #133A2A;
+
+  --f-ui:  "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --f-num: "Barlow Semi Condensed", "Arial Narrow", "Segoe UI", system-ui, sans-serif;
+  --sim: none;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#14171A; --surface:#1C2024; --sunken:#101315; --line:#2E343A;
+    --ink:#ECE8E1; --ink-2:#B5B2AB; --ink-3:#8E8B85;
+    --brand:#6CC79A; --on-brand:#0C2A1D; --brand-tint:#1D3A2C; --on-tint:#BDE8D0;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#14171A; --surface:#1C2024; --sunken:#101315; --line:#2E343A;
+  --ink:#ECE8E1; --ink-2:#B5B2AB; --ink-3:#8E8B85;
+  --brand:#6CC79A; --on-brand:#0C2A1D; --brand-tint:#1D3A2C; --on-tint:#BDE8D0;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--f-ui); font-size: 16px; line-height: 1.55;
+}
+.wrap { max-width: 1160px; margin: 0 auto; padding-inline: clamp(16px, 4vw, 40px); padding-block: 0 72px; }
+h1, h2, h3 { text-wrap: balance; line-height: 1.15; margin: 0; }
+h1 { font-size: clamp(34px, 5.4vw, 56px); font-weight: 800; letter-spacing: -0.02em; }
+h2 { font-size: clamp(24px, 3vw, 32px); font-weight: 800; letter-spacing: -0.01em; }
+h3 { font-size: 18px; font-weight: 700; }
+p { margin: 0; max-width: 66ch; }
+.lede { font-size: 19px; color: var(--ink-2); }
+.eyebrow { font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+.mono { font-family: var(--f-num); font-variant-numeric: tabular-nums; letter-spacing: .01em; }
+code { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: .88em; background: var(--sunken); padding: 1px 5px; border-radius: 5px; }
+section { display: grid; gap: 20px; padding-block: 48px 8px; }
+.note { font-size: 14.5px; color: var(--ink-2); }
+
+/* ── hero ─────────────────────────────────────────────── */
+.hero { display: grid; gap: 20px; padding-block: 48px 28px; }
+.hero-dots { display: flex; gap: 10px; align-items: center; }
+.hero-dots span { width: 22px; height: 22px; border-radius: 50%; background: var(--c); }
+.rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 8px 0 0; padding: 0; list-style: none; }
+.rules li { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; font-size: 15px; color: var(--ink-2); display: grid; gap: 4px; align-content: start; }
+.rules b { color: var(--ink); font-size: 16px; }
+
+/* ── control bar ─────────────────────────────────────── */
+.bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.bar-in { max-width: 1160px; margin: 0 auto; padding: 10px clamp(16px, 4vw, 40px); display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: center; }
+.ctl { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ctl > span { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+.seg { display: inline-flex; background: var(--sunken); border: 1px solid var(--line); border-radius: 999px; padding: 3px; gap: 2px; flex-wrap: wrap; }
+.seg button {
+  font: inherit; font-size: 14px; font-weight: 600; color: var(--ink-2);
+  background: transparent; border: 0; border-radius: 999px; padding: 6px 12px; min-height: 34px; cursor: pointer;
+}
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 0 0 1px var(--line); }
+.seg button:focus-visible, .copy:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.seg .rec { color: var(--brand); }
+
+/* ── direction text ─────────────────────────────────── */
+.dir-info { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+.dir-info > div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; display: grid; gap: 6px; align-content: start; min-width: 0; }
+.dir-info ul { margin: 0; padding-left: 18px; color: var(--ink-2); font-size: 15px; display: grid; gap: 4px; }
+.badge { justify-self: start; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; background: var(--brand-tint); color: var(--on-tint); }
+@media (max-width: 820px) { .dir-info { grid-template-columns: 1fr; } }
+
+/* ═════════════ STAGE: the app as each direction draws it ═════════════ */
+.sim { filter: var(--sim); }
+.stage {
+  /* direction A, light (defaults) */
+  --s-bg:#F7F4EE; --s-surface:#FFFFFF; --s-sunken:#EFEBE3; --s-line:#DDD8CF;
+  --s-ink:#1C1F23; --s-ink-2:#4A5058; --s-ink-3:#656B75;
+  --s-brand:#2D6A4F; --s-on-brand:#FFFFFF; --s-ok:#2D6A4F; --s-ok-tint:#DCEBE2;
+  --s-gold:#F2B705; --s-on-gold:#3E2A00;
+  --s-font: var(--f-ui); --s-head: var(--f-ui); --s-head-w: 800;
+  --s-bw: 1px; --s-outline: var(--s-line); --s-shadow: none; --s-r: 10px; --s-r-kid: 18px; --s-r-band: 999px;
+  /* members, light */
+  --vi:#7B3FE4; --vi-t:#EDE4FB; --pe:#08737F; --pe-t:#DCEBED;
+  --am:#9A5300; --am-t:#F1E7DB; --ra:#C2255C; --ra-t:#F6E0E8; --on-m:#FFFFFF;
+  /* subject tints */
+  --t-blue:#DCE8FA; --t-rose:#F9DDE3; --t-peach:#FCE2CA; --t-leaf:#DCEFD8; --t-lemon:#F6ECB6;
+
+  background: var(--s-bg); color: var(--s-ink);
+  border: 1px solid var(--line); border-radius: 18px;
+  padding: clamp(14px, 3vw, 28px);
+  display: grid; gap: 20px;
+  font-family: var(--s-font);
+}
+.stage[data-mode="dark"] {
+  --s-bg:#14171A; --s-surface:#1C2024; --s-sunken:#101315; --s-line:#2E343A;
+  --s-ink:#ECE8E1; --s-ink-2:#B5B2AB; --s-ink-3:#8E8B85;
+  --s-brand:#6CC79A; --s-on-brand:#0C2A1D; --s-ok:#6CC79A; --s-ok-tint:#1D3A2C;
+  --vi:#C3A6FF; --vi-t:#3D3B50; --pe:#4FCBD6; --pe-t:#264248;
+  --am:#F0A84E; --am-t:#463B2C; --ra:#FF85AE; --ra-t:#493440; --on-m:#14171A;
+  --t-blue:#1D2A3D; --t-rose:#3A1F26; --t-peach:#3D2817; --t-leaf:#1F3220; --t-lemon:#373011;
+}
+/* direction B — Pausenhof */
+.stage[data-dir="b"] {
+  --s-bg:#FFF8E7; --s-sunken:#FBEFD0; --s-line:#E6D9B8; --s-ink:#1F1A14; --s-ink-2:#4D4438; --s-ink-3:#6B6052;
+  --s-brand:#F2B705; --s-on-brand:#3E2A00;
+  --s-font: "Nunito", var(--f-ui); --s-head: "Fredoka", "Nunito", var(--f-ui); --s-head-w: 600;
+  --s-bw: 2px; --s-outline: var(--s-ink); --s-shadow: 3px 3px 0 var(--s-ink); --s-r: 20px; --s-r-kid: 28px;
+}
+.stage[data-dir="b"][data-mode="dark"] {
+  --s-bg:#1A1714; --s-surface:#24201B; --s-sunken:#14110E; --s-line:#3D362D;
+  --s-ink:#F3ECDF; --s-ink-2:#C9BFAE; --s-ink-3:#9D9282; --s-outline:#8A7F6E; --s-shadow: 3px 3px 0 #000000;
+}
+/* direction C — Fjord */
+.stage[data-dir="c"] {
+  --s-bg:#EEF2F5; --s-sunken:#E3E9EE; --s-line:#D5DDE4; --s-ink:#16202A; --s-ink-2:#3F4D5B; --s-ink-3:#5B6976;
+  --s-brand:#2F5D8A; --s-on-brand:#FFFFFF;
+  --s-font: "Figtree", var(--f-ui); --s-head: "Figtree", var(--f-ui); --s-head-w: 600;
+  --s-r: 6px; --s-r-kid: 10px; --s-r-band: 6px;
+}
+.stage[data-dir="c"][data-mode="dark"] {
+  --s-bg:#0F151B; --s-surface:#161E26; --s-sunken:#0B1015; --s-line:#26313C;
+  --s-ink:#E3E9EF; --s-ink-2:#A9B6C2; --s-ink-3:#7F8D9A; --s-brand:#8DB8E6; --s-on-brand:#0E2235;
+}
+/* considered, not adopted: A everywhere, B's shapes inside the kid register only */
+.stage[data-dir="ab"] .kid {
+  --s-bw: 2px; --s-outline: var(--s-ink); --s-shadow: 3px 3px 0 var(--s-ink); --s-r: 20px; --s-r-kid: 26px;
+}
+.stage[data-dir="ab"][data-mode="dark"] .kid, .stage[data-dir="ab"][data-mode="night"] .kid { --s-outline: var(--s-line); --s-shadow: 3px 3px 0 #000000; }
+/* night — kiosk after 21:00, the same in every direction */
+.stage[data-mode="night"] {
+  --s-bg:#0B0A09; --s-surface:#15130F; --s-sunken:#080706; --s-line:#2B261F;
+  --s-ink:#CDB994; --s-ink-2:#A8977A; --s-ink-3:#938366;
+  --s-brand:#E0A458; --s-on-brand:#1E1406; --s-ok:#B07C3B; --s-ok-tint:#3C2D1A;
+  --vi:#8F7ABA; --vi-t:#342D3A; --pe:#3C959D; --pe-t:#1F3433;
+  --am:#B07C3B; --am-t:#3C2D1A; --ra:#BB6380; --ra-t:#3E272B; --on-m:#0B0A09;
+  --t-blue:#1C2026; --t-rose:#251A1B; --t-peach:#271D14; --t-leaf:#1A2119; --t-lemon:#25210F;
+  --s-outline: var(--s-line); --s-shadow: none;
+}
+
+.stage-row { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 860px) { .stage-row { grid-template-columns: 1fr; } }
+.frame { display: grid; gap: 8px; min-width: 0; }
+.frame-label { font-family: var(--f-ui); font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--s-ink-3); }
+.screen { background: var(--s-bg); border: 1px solid var(--s-line); border-radius: 22px; padding: 16px; display: grid; gap: 14px; min-width: 0; }
+.s-card {
+  background: var(--s-surface); border: var(--s-bw) solid var(--s-outline);
+  border-radius: var(--s-r); box-shadow: var(--s-shadow);
+}
+.s-h { font-family: var(--s-head); font-weight: var(--s-head-w); }
+.av {
+  --c: var(--vi); --on: var(--on-m);
+  width: 30px; height: 30px; border-radius: 50%; flex: none;
+  display: grid; place-items: center; font-weight: 700; font-size: 14px;
+  background: var(--c); color: var(--on);
+}
+.dot { width: 10px; height: 10px; border-radius: 50%; background: var(--c); flex: none; }
+.dot.hollow { background: transparent; box-shadow: inset 0 0 0 2px var(--c); }
+.btn {
+  font: inherit; font-weight: 700; font-size: 15px; min-height: 44px; padding: 0 18px;
+  border-radius: var(--s-r); border: var(--s-bw) solid var(--s-outline); box-shadow: var(--s-shadow);
+  background: var(--s-brand); color: var(--s-on-brand); cursor: default;
+}
+.stage[data-dir="a"] .btn, .stage[data-dir="ab"] .btn, .stage[data-dir="c"] .btn { border-color: transparent; }
+
+/* adult phone */
+.a-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.a-head small { display: block; color: var(--s-ink-3); font-size: 13px; }
+.a-head h4 { margin: 0; font-size: 24px; }
+.next { display: flex; gap: 10px; align-items: center; padding: 10px 12px; font-size: 14px; background: var(--s-sunken); border-radius: var(--s-r); }
+.next b { color: var(--s-ink); }
+.next span { color: var(--s-ink-2); }
+.list { padding: 4px 0; }
+.li { display: grid; grid-template-columns: 48px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 9px 12px; font-size: 14.5px; }
+.li + .li { border-top: 1px solid var(--s-line); }
+.li .t { font-family: var(--f-num); font-variant-numeric: tabular-nums; font-weight: 600; color: var(--s-ink-2); font-size: 15px; }
+.li .who { display: flex; gap: 4px; }
+.li small { display: block; color: var(--s-ink-3); font-size: 12.5px; }
+.sec-t { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--s-ink-3); padding: 0 4px; }
+.chk { width: 22px; height: 22px; border-radius: 7px; border: 2px solid var(--s-ink-3); display: grid; place-items: center; font-size: 13px; font-weight: 800; }
+.chk.on { background: var(--s-ok); border-color: var(--s-ok); color: var(--s-surface); }
+.li.done .task { color: var(--s-ink-3); text-decoration: line-through; }
+.meal { display: flex; align-items: center; gap: 10px; padding: 10px 12px; font-size: 14.5px; }
+.meal .em { font-size: 22px; }
+
+/* kid tablet */
+.kid .screen { padding: 20px; gap: 16px; }
+.k-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.k-top h4 { margin: 0; font-size: 30px; }
+.k-top .av { width: 48px; height: 48px; font-size: 22px; box-shadow: 0 0 0 3px var(--s-bg), 0 0 0 6px var(--vi); }
+.coins { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px 6px 8px; border-radius: 999px; background: var(--s-gold); color: var(--s-on-gold); font-weight: 800; font-size: 22px; border: var(--s-bw) solid var(--s-outline); box-shadow: var(--s-shadow); }
+.coins i { font-style: normal; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: var(--s-on-gold); color: var(--s-gold); font-size: 16px; }
+.tasks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 560px) { .tasks { grid-template-columns: 1fr; } }
+.task-c { border-radius: var(--s-r-kid); padding: 14px; display: grid; gap: 8px; align-content: start; min-height: 150px; }
+.task-c .em { font-size: 40px; line-height: 1; }
+.task-c b { font-size: 18px; line-height: 1.2; }
+.task-c .pts { justify-self: start; font-weight: 800; font-size: 15px; padding: 2px 10px; border-radius: 999px; background: var(--s-gold); color: var(--s-on-gold); }
+.task-c.done { background: var(--s-ok-tint); }
+.task-c.done .pts { background: var(--s-ok); color: var(--s-surface); }
+.lessons { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+@media (max-width: 560px) { .lessons { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.les { border-radius: calc(var(--s-r-kid) * .6); padding: 10px 6px; text-align: center; background: var(--tint); border: 1px solid var(--s-line); display: grid; gap: 2px; font-size: 14px; font-weight: 700; color: var(--s-ink); }
+.les .em { font-size: 26px; }
+.les small { font-family: var(--f-num); font-weight: 500; color: var(--s-ink-2); font-variant-numeric: tabular-nums; }
+.les.pack { box-shadow: inset 0 0 0 2px var(--s-ink); }
+
+/* kiosk strip */
+.kiosk .screen { padding: 14px; border-radius: 14px; }
+.k-scroll { overflow-x: auto; }
+.board {
+  min-width: 720px; display: grid; grid-template-columns: 96px repeat(5, minmax(0, 1fr));
+  column-gap: 6px; row-gap: 8px; font-size: 14px; align-items: center;
+}
+.board .dh { font-family: var(--f-num); font-weight: 600; font-size: 16px; color: var(--s-ink-2); padding: 0 6px 4px; border-bottom: 1px solid var(--s-line); }
+.board .dh.today { color: var(--s-ink); }
+.board .dh b { font-weight: 700; }
+.board .rl { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 15px; }
+.board .rl .av { width: 26px; height: 26px; font-size: 13px; }
+.band {
+  --c: var(--am); --t: var(--am-t);
+  height: 34px; border-radius: var(--s-r-band); display: flex; align-items: center; gap: 6px;
+  padding: 0 12px; font-weight: 700; font-size: 14px; white-space: nowrap; overflow: hidden; min-width: 0;
+}
+.band .lab { overflow: hidden; text-overflow: ellipsis; }
+.p-working { background: var(--c); color: var(--on-m); }
+.p-home { background: repeating-linear-gradient(135deg, var(--c) 0 3px, var(--t) 3px 9px); color: var(--s-ink); }
+.p-home .lab, .p-care .lab { background: var(--t); padding: 1px 8px; border-radius: 999px; }
+.p-travel { background: var(--c); color: var(--on-m); clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 50%, calc(100% - 16px) 100%, 0 100%); border-radius: var(--s-r-band) 0 0 var(--s-r-band); padding-right: 22px; }
+.p-away { background: var(--t); color: var(--s-ink); border: 2px dashed var(--c); }
+.p-off { background: transparent; color: var(--s-ink-3); border: 1.5px solid var(--c); }
+.p-care { background: radial-gradient(circle, var(--c) 1.7px, transparent 2.2px) 0 0 / 8px 8px, var(--t); color: var(--s-ink); }
+.chip { justify-self: start; display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 999px; background: var(--s-sunken); color: var(--s-ink-2); font-size: 13px; font-weight: 600; }
+.chip .dot { width: 7px; height: 7px; }
+.eat { display: flex; gap: 5px; padding-left: 6px; }
+.eat .dot { width: 12px; height: 12px; }
+.board .rl.small { font-size: 13px; color: var(--s-ink-2); font-weight: 600; }
+
+/* ═════════════ fixed parts ═════════════ */
+.members { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
+.m { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; display: grid; }
+.m-sw { display: grid; grid-template-columns: 1.3fr 1fr 1fr; height: 76px; }
+.m-sw > div { display: grid; place-items: center; font-weight: 800; font-size: 26px; }
+.m-meta { padding: 10px 14px 12px; display: grid; gap: 2px; }
+.m-meta .top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.m-meta small { color: var(--ink-3); font-size: 13px; }
+.m-meta .hex { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12.5px; color: var(--ink-2); }
+.tag { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; background: var(--brand-tint); color: var(--on-tint); }
+.tag.warn { background: var(--sunken); color: var(--ink-2); }
+
+.pres { display: grid; grid-template-columns: minmax(130px, .9fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.4fr); gap: 10px 14px; align-items: center; }
+.pres .hd { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+.pres .st b { display: block; }
+.pres .st code { font-size: 12px; }
+.pres .why { font-size: 14px; color: var(--ink-2); }
+.pres-stage { border-radius: 14px; padding: 18px; }
+@media (max-width: 720px) {
+  .pres { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .pres .hd.why-h, .pres .why { grid-column: 1 / -1; }
+  .pres .st { grid-column: 1 / -1; padding-top: 6px; border-top: 1px solid var(--s-line); }
+  .pres .hd:first-child { display: none; }
+}
+
+.tints { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 10px; }
+.tint { border: 1px solid var(--line); border-radius: 12px; padding: 12px; display: grid; gap: 4px; }
+.tint .em { font-size: 28px; }
+.tint b { font-size: 15px; }
+.tint .hex { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; opacity: .8; }
+.tint.l { background: var(--tl); color: #1C1F23; }
+.tint.d { background: var(--td); color: #ECE8E1; border-color: #2E343A; }
+
+.neutral-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+.ng { border-radius: 14px; padding: 16px; display: grid; gap: 10px; border: 1px solid var(--line); }
+.ng h3 { font-size: 15px; }
+.ng .row { display: flex; flex-wrap: wrap; gap: 6px; }
+.ng .sw { width: 42px; height: 42px; border-radius: 10px; border: 1px solid rgba(127,127,127,.35); }
+.ng .ex { font-size: 14px; display: grid; gap: 2px; }
+
+.type { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+.type > div { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: grid; gap: 10px; min-width: 0; }
+.glyphs { font-size: 46px; font-weight: 700; line-height: 1; letter-spacing: .02em; }
+.scale { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; color: var(--ink-2); }
+.scale span { line-height: 1; }
+
+.foot { padding-block: 40px 0; color: var(--ink-3); font-size: 14px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .stage, .stage * { transition: background-color .25s ease, color .25s ease, border-color .25s ease, border-radius .25s ease; }
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <!-- Machado et al. 2009, full severity, applied in linear RGB -->
+  <filter id="cvd-protan" color-interpolation-filters="linearRGB"><feColorMatrix type="matrix" values="0.152286 1.052583 -0.204868 0 0  0.114503 0.786281 0.099216 0 0  -0.003882 -0.048116 1.051998 0 0  0 0 0 1 0"/></filter>
+  <filter id="cvd-deutan" color-interpolation-filters="linearRGB"><feColorMatrix type="matrix" values="0.367322 0.860646 -0.227968 0 0  0.280085 0.672501 0.047413 0 0  -0.011820 0.042940 0.968881 0 0  0 0 0 1 0"/></filter>
+  <filter id="cvd-tritan" color-interpolation-filters="linearRGB"><feColorMatrix type="matrix" values="1.255528 -0.076749 -0.178779 0 0  -0.078411 0.930809 0.147602 0 0  0.004733 0.691367 0.303900 0 0  0 0 0 1 0"/></filter>
+</svg>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="hero-dots" aria-hidden="true">
+      <span style="--c:#7B3FE4"></span><span style="--c:#08737F"></span><span style="--c:#9A5300"></span><span style="--c:#C2255C"></span>
+    </div>
+    <p class="eyebrow">WuselWall · design proposal · docs/17</p>
+    <h1>Each person gets a colour. Everything else stays calm.</h1>
+    <p class="lede">The palette is built so a seven-year-old, a parent with a coffee and a visitor reading the wall from 2.5 m all find their own things first. These five rules hold in every direction below; only the ground, shape and type change.</p>
+    <ul class="rules">
+      <li><b>People are ink</b>Saturated member colours for bands, dots, avatars and the active accent.</li>
+      <li><b>Things are paper</b>Subjects, chores and shop categories get pale tints with one dark text colour.</li>
+      <li><b>Green means done</b>Green is reserved for the brand and success, so no member can be green.</li>
+      <li><b>Never colour alone</b>Every colour comes with an initial, an icon or a pattern. Try the vision switch.</li>
+      <li><b>AA in three themes</b>Every text pair is ≥ 4.5 : 1 in light, dark and the kitchen's night mode.</li>
+    </ul>
+  </header>
+</div>
+
+<div class="bar" role="toolbar" aria-label="Preview controls">
+  <div class="bar-in">
+    <div class="ctl"><span id="lbl-dir">Direction</span>
+      <div class="seg" data-key="dir" aria-labelledby="lbl-dir">
+        <button type="button" id="dir-a" data-v="a" class="rec" aria-pressed="true">★ A Küchentisch</button>
+        <button type="button" id="dir-ab" data-v="ab" aria-pressed="false">A + kid outlines</button>
+        <button type="button" id="dir-b" data-v="b" aria-pressed="false">B Pausenhof</button>
+        <button type="button" id="dir-c" data-v="c" aria-pressed="false">C Fjord</button>
+      </div>
+    </div>
+    <div class="ctl"><span id="lbl-mode">Theme</span>
+      <div class="seg" data-key="mode" aria-labelledby="lbl-mode">
+        <button type="button" id="mode-auto" data-v="auto" aria-pressed="true">Auto</button>
+        <button type="button" id="mode-light" data-v="light" aria-pressed="false">Hell</button>
+        <button type="button" id="mode-dark" data-v="dark" aria-pressed="false">Dunkel</button>
+        <button type="button" id="mode-night" data-v="night" aria-pressed="false">Nacht</button>
+      </div>
+    </div>
+    <div class="ctl"><span id="lbl-sim">Vision</span>
+      <div class="seg" data-key="sim" aria-labelledby="lbl-sim">
+        <button type="button" id="sim-none" data-v="none" aria-pressed="true">Normal</button>
+        <button type="button" id="sim-protan" data-v="protan" aria-pressed="false">Protan</button>
+        <button type="button" id="sim-deutan" data-v="deutan" aria-pressed="false">Deutan</button>
+        <button type="button" id="sim-tritan" data-v="tritan" aria-pressed="false">Tritan</button>
+        <button type="button" id="sim-grey" data-v="grey" aria-pressed="false">Grau</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <section aria-labelledby="h-dirs">
+    <p class="eyebrow">Three directions, one family</p>
+    <h2 id="h-dirs">The same Monday in each direction</h2>
+
+    <div class="dir-info" data-for="ab" hidden>
+      <div><span class="badge">Considered, not adopted</span><h3>A Küchentisch, with Pausenhof shapes on the kids' iPads</h3><p class="note">Warm paper and a pine-green brand keep the shared screens calm, so the member colours are the loudest thing on the board. The kid register borrows B's chunky outlines and sticker shadows, which is what the registers exist for.</p></div>
+      <div><h3>Why</h3><ul><li>Works on the work laptop without feeling childish</li><li>Kids still get a playful, tactile screen of their own</li><li>Continuous with the two existing mockups</li></ul></div>
+      <div><h3>Watch</h3><ul><li>Two shape sets to maintain, one per register</li><li>The night theme needs testing on the real tablet panel</li></ul></div>
+    </div>
+    <div class="dir-info" data-for="a">
+      <div><span class="badge">Chosen 2026-10-11</span><h3>A — Küchentisch</h3><p class="note">A calm, warm kitchen table that the members' colours bring to life. Warm paper ground, Tanne green brand, hairline borders, Atkinson Hyperlegible Next throughout.</p></div>
+      <div><h3>Strengths</h3><ul><li>Grown-up on the laptop, warm on the iPads</li><li>The member colours stay dominant</li><li>Most legible typeface for early readers</li></ul></div>
+      <div><h3>Weaknesses</h3><ul><li>The least exciting for a 7-year-old on its own</li></ul></div>
+    </div>
+    <div class="dir-info" data-for="b" hidden>
+      <div><h3>B — Pausenhof</h3><p class="note">A schoolyard sticker book. Sunny cream, Sonnengelb brand inside 2 px ink outlines, offset shadows, Fredoka headings over Nunito.</p></div>
+      <div><h3>Strengths</h3><ul><li>Kids love it on sight</li><li>Outlines make every object read clearly at a distance</li></ul></div>
+      <div><h3>Weaknesses</h3><ul><li>Tiring on the adult laptop</li><li>Yellow on cream is 1.7 : 1, so the outline can never be dropped</li><li>Fredoka is less legible than Atkinson for early readers</li></ul></div>
+    </div>
+    <div class="dir-info" data-for="c" hidden>
+      <div><h3>C — Fjord</h3><p class="note">Nordic quiet. A cool fog ground, slate-blue brand, small radii, Figtree, lots of air.</p></div>
+      <div><h3>Strengths</h3><ul><li>Most restful on the wall at night</li><li>The most "designed" look</li></ul></div>
+      <div><h3>Weaknesses</h3><ul><li>The slate brand sits close to the Ozean member</li><li>Feels like an office, not a kitchen</li><li>The pale ground weakens the member bands</li></ul></div>
+    </div>
+
+    <div class="stage sim" id="stage" data-dir="a" data-mode="light">
+      <div class="stage-row">
+        <!-- adult: Lukas's iPhone -->
+        <div class="frame adult">
+          <div class="frame-label">Adult · Lukas' iPhone</div>
+          <div class="screen">
+            <div class="a-head">
+              <div><small>Montag, 12. Oktober · KW 42</small><h4 class="s-h">Heute</h4></div>
+              <div class="av" style="--c:var(--ra)">L</div>
+            </div>
+            <div class="next"><span class="dot" style="--c:var(--pe)"></span><span>in 25 Min</span><b>Zahnarzt, Hanna</b></div>
+            <div class="sec-t">Termine</div>
+            <div class="s-card list">
+              <div class="li"><span class="t">08:00</span><div>Schule<small>Lotta · Hanna</small></div><span class="who"><span class="dot" style="--c:var(--vi)"></span><span class="dot" style="--c:var(--pe)"></span></span></div>
+              <div class="li"><span class="t">15:30</span><div>Zahnarzt Dr. Weber<small>Hanna · Lukas</small></div><span class="who"><span class="dot" style="--c:var(--pe)"></span><span class="dot" style="--c:var(--ra)"></span></span></div>
+              <div class="li"><span class="t">19:00</span><div>Elternabend 5a<small>Sabine</small></div><span class="who"><span class="dot" style="--c:var(--am)"></span></span></div>
+            </div>
+            <div class="sec-t">Aufgaben</div>
+            <div class="s-card list">
+              <div class="li done"><span class="chk on">✓</span><div class="task">Spülmaschine ausräumen<small>Lotta · 5 Punkte</small></div><span class="av" style="--c:var(--vi);width:24px;height:24px;font-size:12px">L</span></div>
+              <div class="li"><span class="chk"></span><div class="task">Altpapier rausbringen<small>Lukas</small></div><span class="av" style="--c:var(--ra);width:24px;height:24px;font-size:12px">L</span></div>
+            </div>
+            <div class="s-card meal"><span class="em" aria-hidden="true">🍛</span><div><b>Linsen-Dal</b> · Abend<br><span style="color:var(--s-ink-3);font-size:13px">kocht Lukas · 4 essen mit</span></div></div>
+            <button class="btn" type="button" tabindex="-1">Termin anlegen</button>
+          </div>
+        </div>
+
+        <!-- kid: Lotta's iPad -->
+        <div class="frame kid">
+          <div class="frame-label">Kid · Lottas iPad</div>
+          <div class="screen">
+            <div class="k-top">
+              <div style="display:flex;align-items:center;gap:14px"><div class="av">L</div><h4 class="s-h">Hallo Lotta!</h4></div>
+              <span class="coins"><i>★</i>128</span>
+            </div>
+            <div class="tasks">
+              <div class="s-card task-c"><span class="em" aria-hidden="true">🧸</span><b class="s-h">Zimmer aufräumen</b><span class="pts">+10</span></div>
+              <div class="s-card task-c done"><span class="em" aria-hidden="true">🐰</span><b class="s-h">Hasen füttern</b><span class="pts">✓ +5</span></div>
+              <div class="s-card task-c"><span class="em" aria-hidden="true">✏️</span><b class="s-h">Mathe-Hausaufgabe</b><span class="pts">+5</span></div>
+            </div>
+            <div class="sec-t">Heute in der Schule</div>
+            <div class="lessons">
+              <div class="les" style="--tint:var(--t-blue)"><span class="em" aria-hidden="true">🔢</span>Mathe<small>08:00</small></div>
+              <div class="les" style="--tint:var(--t-rose)"><span class="em" aria-hidden="true">📖</span>Deutsch<small>08:50</small></div>
+              <div class="les" style="--tint:var(--t-leaf)"><span class="em" aria-hidden="true">🌱</span>Sachkunde<small>09:55</small></div>
+              <div class="les pack" style="--tint:var(--t-peach)"><span class="em" aria-hidden="true">⚽</span>Sport 🎒<small>10:45</small></div>
+              <div class="les" style="--tint:var(--t-lemon)"><span class="em" aria-hidden="true">🎵</span>Musik<small>11:35</small></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- kiosk: week board, "Wer ist wo" -->
+      <div class="frame kiosk">
+        <div class="frame-label">Kiosk · Küchendisplay, "Wer ist wo" (shown at about 55 %)</div>
+        <div class="screen">
+          <div class="k-scroll">
+            <div class="board">
+              <span></span>
+              <span class="dh today"><b>Mo</b> 12.</span><span class="dh">Di 13.</span><span class="dh">Mi 14.</span><span class="dh">Do 15.</span><span class="dh">Fr 16.</span>
+
+              <span class="rl"><span class="av" style="--c:var(--vi)">L</span>Lotta</span>
+              <span class="band p-working" style="--c:var(--vi)"><span class="lab">8–13:15</span></span>
+              <span class="band p-working" style="--c:var(--vi)"><span class="lab">8–13:15</span></span>
+              <span class="band p-working" style="--c:var(--vi)"><span class="lab">8–12:15 · Sport</span></span>
+              <span class="band p-working" style="--c:var(--vi)"><span class="lab">8–13:15</span></span>
+              <span class="band p-working" style="--c:var(--vi)"><span class="lab">8–11:30</span></span>
+
+              <span class="rl"><span class="av" style="--c:var(--pe)">H</span>Hanna</span>
+              <span class="band p-working" style="--c:var(--pe)"><span class="lab">8–12 · Hort 16</span></span>
+              <span class="band p-working" style="--c:var(--pe)"><span class="lab">8–12 · Hort 16</span></span>
+              <span class="band p-working" style="--c:var(--pe)"><span class="lab">8–12 · Schwimmen</span></span>
+              <span class="band p-working" style="--c:var(--pe)"><span class="lab">8–12 · Hort 16</span></span>
+              <span class="band p-working" style="--c:var(--pe)"><span class="lab">8–12</span></span>
+
+              <span class="rl"><span class="av" style="--c:var(--am)">S</span>Sabine</span>
+              <span class="band p-working" style="--c:var(--am)"><span class="lab">Dienst</span></span>
+              <span class="chip"><span class="dot" style="--c:var(--am)"></span>zu Hause</span>
+              <span class="band p-working" style="--c:var(--am)"><span class="lab">Dienst</span></span>
+              <span class="band p-care" style="--c:var(--am);--t:var(--am-t)"><span class="lab">🧒 Betreuung</span></span>
+              <span class="chip"><span class="dot" style="--c:var(--am)"></span>zu Hause</span>
+
+              <span class="rl"><span class="av" style="--c:var(--ra)">L</span>Lukas</span>
+              <span class="chip"><span class="dot" style="--c:var(--ra)"></span>Homeoffice</span>
+              <span class="band p-working" style="--c:var(--ra)"><span class="lab">Büro</span></span>
+              <span class="chip"><span class="dot" style="--c:var(--ra)"></span>Homeoffice</span>
+              <span class="band p-travel" style="--c:var(--ra);grid-column:span 2"><span class="lab">✈ Dienstreise Hamburg</span></span>
+
+              <span class="rl small">isst mit</span>
+              <span class="eat"><span class="dot" style="--c:var(--vi)"></span><span class="dot" style="--c:var(--pe)"></span><span class="dot" style="--c:var(--am)"></span><span class="dot" style="--c:var(--ra)"></span></span>
+              <span class="eat"><span class="dot" style="--c:var(--vi)"></span><span class="dot" style="--c:var(--pe)"></span><span class="dot" style="--c:var(--am)"></span><span class="dot" style="--c:var(--ra)"></span></span>
+              <span class="eat"><span class="dot" style="--c:var(--vi)"></span><span class="dot" style="--c:var(--pe)"></span><span class="dot hollow" style="--c:var(--am)"></span><span class="dot" style="--c:var(--ra)"></span></span>
+              <span class="eat"><span class="dot" style="--c:var(--vi)"></span><span class="dot" style="--c:var(--pe)"></span><span class="dot" style="--c:var(--am)"></span><span class="dot hollow" style="--c:var(--ra)"></span></span>
+              <span class="eat"><span class="dot" style="--c:var(--vi)"></span><span class="dot" style="--c:var(--pe)"></span><span class="dot" style="--c:var(--am)"></span><span class="dot hollow" style="--c:var(--ra)"></span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="note">Shared by every direction: member colours, presence treatments, subject tints and points gold. Use <b>Vision</b> to see the board as roughly 8 % of men do; the initials and patterns keep working when the hues stop.</p>
+  </section>
+
+  <section aria-labelledby="h-members">
+    <p class="eyebrow">Fixed · profile.colour_hex stores the key</p>
+    <h2 id="h-members">Eight member colours, handed out in order</h2>
+    <p class="note">Each card shows the light ink with white text, the dark ink with dark text, and the tint. The first four are the most separable set of four for every kind of colour vision. Kakao keeps five apart; from the sixth member on, the initial carries identity, and the picker says so.</p>
+    <div class="members sim" id="members"></div>
+  </section>
+
+  <section aria-labelledby="h-pres">
+    <p class="eyebrow">Fixed · ADR-009</p>
+    <h2 id="h-pres">Six presence states, readable in grey</h2>
+    <p class="note">Colour says <i>who</i>, the treatment says <i>what</i>. Switch Vision to <b>Grau</b>: each row should still be obvious.</p>
+    <div class="stage sim pres-stage" id="pres-stage" data-dir="a" data-mode="light">
+      <div class="pres" id="pres"></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-tints">
+    <p class="eyebrow">Fixed · things are paper</p>
+    <h2 id="h-tints">Subject and category tints</h2>
+    <p class="note">These are pale grounds with one shared text colour. The icon identifies the subject; the tint only groups. A tint never belongs to a person.</p>
+    <div class="tints" id="tints"></div>
+  </section>
+
+  <section aria-labelledby="h-neutral">
+    <p class="eyebrow">Direction A tokens</p>
+    <h2 id="h-neutral">Ground, ink, brand and the night shift</h2>
+    <div class="neutral-grid">
+      <div class="ng" style="background:#F7F4EE;color:#1C1F23;border-color:#DDD8CF">
+        <h3>Hell</h3>
+        <div class="row"><span class="sw" style="background:#F7F4EE" title="bg #F7F4EE"></span><span class="sw" style="background:#FFFFFF" title="surface #FFFFFF"></span><span class="sw" style="background:#EFEBE3" title="sunken #EFEBE3"></span><span class="sw" style="background:#1C1F23" title="ink #1C1F23"></span><span class="sw" style="background:#4A5058" title="ink-2 #4A5058"></span><span class="sw" style="background:#656B75" title="ink-3 #656B75"></span><span class="sw" style="background:#2D6A4F" title="brand #2D6A4F"></span><span class="sw" style="background:#F2B705" title="points #F2B705"></span></div>
+        <div class="ex"><b>Tanne #2D6A4F</b><span style="color:#4A5058">ink 15.1 : 1 · ink-3 4.8 : 1 · brand 5.8 : 1</span></div>
+      </div>
+      <div class="ng" style="background:#14171A;color:#ECE8E1;border-color:#2E343A">
+        <h3>Dunkel</h3>
+        <div class="row"><span class="sw" style="background:#14171A"></span><span class="sw" style="background:#1C2024"></span><span class="sw" style="background:#101315"></span><span class="sw" style="background:#ECE8E1"></span><span class="sw" style="background:#B5B2AB"></span><span class="sw" style="background:#8E8B85"></span><span class="sw" style="background:#6CC79A"></span><span class="sw" style="background:#F2B705"></span></div>
+        <div class="ex"><b>Tanne #6CC79A</b><span style="color:#B5B2AB">ink 14.7 : 1 · ink-3 4.8 : 1 · brand 8.8 : 1</span></div>
+      </div>
+      <div class="ng" style="background:#0B0A09;color:#CDB994;border-color:#2B261F">
+        <h3>Nacht · Küchendisplay ab 21:00</h3>
+        <div class="row"><span class="sw" style="background:#0B0A09"></span><span class="sw" style="background:#15130F"></span><span class="sw" style="background:#CDB994"></span><span class="sw" style="background:#A8977A"></span><span class="sw" style="background:#938366"></span><span class="sw" style="background:#E0A458"></span></div>
+        <div class="ex"><b>Warm amber, no blue light</b><span style="color:#A8977A">ink 10.3 : 1, deliberately below the 15 : 1 of day mode so the wall doesn't glare</span></div>
+      </div>
+    </div>
+    <p class="note">Semantics: <b>danger</b> #B3261E / #FF8A80 is used in the adult register only. <b>Warning</b> #8A5A00 on #FCEFD2 always comes with an icon, because amber is also a member colour. There is no info blue; neutral ink plus an icon does that job.</p>
+  </section>
+
+  <section aria-labelledby="h-type">
+    <p class="eyebrow">Self-hosted, never from a CDN in the app</p>
+    <h2 id="h-type">Type made for early readers</h2>
+    <div class="type">
+      <div>
+        <p class="eyebrow">UI · every register</p>
+        <div class="glyphs">Il1 O0 ß ä</div>
+        <p style="font-size:22px;font-weight:700">Atkinson Hyperlegible Next</p>
+        <p class="note">Drawn by the Braille Institute so that easily confused letters look different. That helps a child learning to read and anyone across the kitchen.</p>
+        <div class="scale"><span style="font-size:12px">12</span><span style="font-size:15px">15</span><span style="font-size:19px">19</span><span style="font-size:24px">24</span><span style="font-size:28px">28</span><span style="font-size:40px">40</span></div>
+      </div>
+      <div>
+        <p class="eyebrow">Kiosk · days, times, numbers</p>
+        <div class="glyphs mono">Mo 12. · 15:30</div>
+        <p style="font-size:22px;font-weight:700" class="mono">Barlow Semi Condensed</p>
+        <p class="note">Seven columns at a 24 px minimum need a narrow face. It is already used in the week-board mockup; set with tabular figures so times line up.</p>
+        <div class="scale mono"><span style="font-size:24px">24</span><span style="font-size:28px">28</span><span style="font-size:34px">34</span><span style="font-size:40px">40</span><span style="font-size:48px">48</span></div>
+      </div>
+    </div>
+    <p class="note">Icons: <b>Phosphor</b> (MIT) for interface actions, Regular for adults and Bold for kid and kiosk. <b>Fluent Emoji Flat</b> (MIT, self-hosted SVG) for content: chores, groceries, subjects, rewards. The emoji in this preview stand in for that set.</p>
+  </section>
+
+  <p class="foot">Spec: <code>docs/17-design-system.md</code>. Contrast is WCAG 2.x. The colour-vision preview uses the Machado 2009 matrices, the same ones used to choose the palette.</p>
+</div>
+
+<script>
+(function () {
+  var MEMBERS = [
+    ["Violett", "violet", "#7B3FE4", "#C3A6FF", "#EDE4FB", "L", "Lotta", "safe"],
+    ["Petrol", "petrol", "#08737F", "#4FCBD6", "#DCEBED", "H", "Hanna", "safe"],
+    ["Bernstein", "amber", "#9A5300", "#F0A84E", "#F1E7DB", "S", "Sabine", "safe"],
+    ["Himbeere", "raspberry", "#C2255C", "#FF85AE", "#F6E0E8", "L", "Lukas", "safe"],
+    ["Kakao", "cocoa", "#7A4A2A", "#D9A684", "#ECE6E1", "G", "5. Person · Gäste", "safe"],
+    ["Ozean", "ocean", "#1A4FA8", "#86B4FF", "#DFE6F3", "M", "", "initial"],
+    ["Senf", "mustard", "#736200", "#E3C83A", "#EBE9DB", "M", "", "initial"],
+    ["Orchidee", "orchid", "#A0309E", "#F08AE8", "#F2E2F1", "O", "", "initial"]
+  ];
+  var mHtml = MEMBERS.map(function (m, i) {
+    var tag = m[7] === "safe"
+      ? '<span class="tag">' + (i < 4 ? "Core" : "Safe 5th") + "</span>"
+      : '<span class="tag warn">Needs initial</span>';
+    return '<div class="m"><div class="m-sw">' +
+      '<div style="background:' + m[2] + ';color:#FFFFFF">' + m[5] + "</div>" +
+      '<div style="background:' + m[3] + ';color:#14171A">' + m[5] + "</div>" +
+      '<div style="background:' + m[4] + ';color:' + m[2] + '">' + m[5] + "</div></div>" +
+      '<div class="m-meta"><div class="top"><b>' + (i + 1) + " · " + m[0] + "</b>" + tag + "</div>" +
+      '<span class="hex">' + m[1] + " · " + m[2] + " / " + m[3] + "</span>" +
+      "<small>" + (m[6] || "&nbsp;") + "</small></div></div>";
+  }).join("");
+  document.getElementById("members").innerHTML = mHtml;
+
+  var STATES = [
+    ["Arbeitet · Dienst", "working", "p-working", "Dienst", "Solid fill, the heaviest weight"],
+    ["Homeoffice", "home_office", "p-home", "Homeoffice", "45° hatch"],
+    ["Dienstreise", "travel", "p-travel", "✈ Hamburg", "Arrow-shaped end and a plane glyph; spans days"],
+    ["Auswärts", "away", "p-away", "Auswärts", "Tint with a dashed edge"],
+    ["Frei", "off", "p-off", "frei", "Outline only, quiet text"],
+    ["Betreuung", "childcare", "p-care", "🧒 Betreuung", "Dot grid and a child glyph"]
+  ];
+  var p = '<span class="hd">State</span><span class="hd">Sabine</span><span class="hd">Lukas</span><span class="hd why-h">Second channel</span>';
+  STATES.forEach(function (s) {
+    p += '<div class="st"><b>' + s[0] + "</b><code>" + s[1] + "</code></div>" +
+      '<span class="band ' + s[2] + '" style="--c:var(--am);--t:var(--am-t)"><span class="lab">' + s[3] + "</span></span>" +
+      '<span class="band ' + s[2] + '" style="--c:var(--ra);--t:var(--ra-t)"><span class="lab">' + s[3] + "</span></span>" +
+      '<span class="why">' + s[4] + "</span>";
+  });
+  document.getElementById("pres").innerHTML = p;
+
+  var TINTS = [
+    ["Mathe", "blue", "🔢", "#DCE8FA", "#1D2A3D"], ["Deutsch", "rose", "📖", "#F9DDE3", "#3A1F26"],
+    ["Englisch", "lilac", "💬", "#E6DEFA", "#2A2140"], ["Sachkunde", "leaf", "🌱", "#DCEFD8", "#1F3220"],
+    ["Sport", "peach", "⚽", "#FCE2CA", "#3D2817"], ["Musik", "lemon", "🎵", "#F6ECB6", "#373011"],
+    ["Kunst", "mint", "🎨", "#D2EEEA", "#173431"], ["Religion", "stone", "🕊️", "#E8E4DC", "#2C2A26"]
+  ];
+  var t = "";
+  TINTS.forEach(function (x) {
+    t += '<div class="tint l" style="--tl:' + x[3] + '"><span class="em" aria-hidden="true">' + x[2] + "</span><b>" + x[0] + '</b><span class="hex">' + x[1] + " " + x[3] + "</span></div>";
+  });
+  TINTS.forEach(function (x) {
+    t += '<div class="tint d" style="--td:' + x[4] + '"><span class="em" aria-hidden="true">' + x[2] + "</span><b>" + x[0] + '</b><span class="hex">' + x[1] + " " + x[4] + "</span></div>";
+  });
+  document.getElementById("tints").innerHTML = t;
+
+  var root = document.documentElement;
+  var stage = document.getElementById("stage");
+  var presStage = document.getElementById("pres-stage");
+  var state = { dir: "a", mode: "auto", sim: "none" };
+  try {
+    var saved = JSON.parse(localStorage.getItem("ww-farbwelt-2") || "{}");
+    ["dir", "mode", "sim"].forEach(function (k) { if (saved[k]) state[k] = saved[k]; });
+  } catch (e) {}
+
+  function pageIsDark() {
+    var th = root.getAttribute("data-theme");
+    if (th === "dark") return true;
+    if (th === "light") return false;
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+  function apply() {
+    var mode = state.mode === "auto" ? (pageIsDark() ? "dark" : "light") : state.mode;
+    stage.setAttribute("data-dir", state.dir);
+    stage.setAttribute("data-mode", mode);
+    presStage.setAttribute("data-mode", mode);
+    var dirForPres = state.dir === "ab" ? "a" : state.dir;
+    presStage.setAttribute("data-dir", dirForPres);
+    var f = { none: "none", grey: "grayscale(1)", protan: "url(#cvd-protan)", deutan: "url(#cvd-deutan)", tritan: "url(#cvd-tritan)" }[state.sim];
+    root.style.setProperty("--sim", f || "none");
+    document.querySelectorAll(".dir-info").forEach(function (el) { el.hidden = el.getAttribute("data-for") !== state.dir; });
+    document.querySelectorAll(".seg").forEach(function (seg) {
+      var k = seg.getAttribute("data-key");
+      seg.querySelectorAll("button").forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-v") === state[k])); });
+    });
+    try { localStorage.setItem("ww-farbwelt-2", JSON.stringify(state)); } catch (e) {}
+  }
+  document.querySelectorAll(".seg").forEach(function (seg) {
+    seg.addEventListener("click", function (ev) {
+      var b = ev.target.closest("button");
+      if (!b) return;
+      state[seg.getAttribute("data-key")] = b.getAttribute("data-v");
+      apply();
+    });
+  });
+  if (window.matchMedia) {
+    var mq = window.matchMedia("(prefers-color-scheme: dark)");
+    if (mq.addEventListener) mq.addEventListener("change", apply);
+  }
+  new MutationObserver(apply).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+  apply();
+})();
+</script>

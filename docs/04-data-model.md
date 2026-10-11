@@ -3,7 +3,8 @@
 Conceptual model. Column lists are indicative, not a migration script — but the
 invariants at the end are binding.
 
-Conventions across every table: `id` is a UUIDv7 (time-sortable, safe to generate
+Conventions across every table: tables live in the `app` schema and are reached by
+clients only through `api` views and functions ([03](03-architecture.md#repository-layout)); `id` is a UUIDv7 (time-sortable, safe to generate
 client-side for idempotency), `household_id` is present on every domain table,
 `created_at` / `updated_at` are `timestamptz`, and soft deletion uses `deleted_at`
 only where undo matters (events, shopping items) — everywhere else, delete for real.
@@ -24,17 +25,21 @@ profile                          -- a family member
   pin_hash NULL, pin_failed_count, pin_locked_until,
   is_active, sort_order
 
-account                          -- Better Auth: only guardians have one
-  id, profile_id, email, password_hash NULL, ...
-  (+ Better Auth's own tables: session, verification, passkey)
+guardian_account                 -- links a Supabase Auth user to a guardian profile
+  auth_user_id → auth.users, profile_id
+  (credentials, sessions and MFA factors live in Supabase's own auth schema)
 
 device
   id, household_id, label,                       -- "Kitchen display", "Papa iPhone"
   class ENUM('personal','shared','kiosk'),
   bound_profile_id NULL,                         -- set for class='personal'
   ui_register ENUM('adult','kid','kiosk'),
-  token_hash, token_issued_at, last_seen_at, revoked_at,
-  push_subscription JSONB NULL
+  auth_user_id → auth.users,                     -- the device's own Auth user;
+                                                 -- for a guardian's personal device,
+                                                 -- the guardian's Auth user
+  guardian_verified_until timestamptz NULL,      -- PIN step-up, server-side only
+  enrolled_at, last_seen_at, revoked_at,
+  push_platform ENUM('apns','fcm') NULL, push_token TEXT NULL
 
 device_enrolment_code
   id, household_id, code_hash, created_by_profile_id,
@@ -344,8 +349,8 @@ household ─┬─< profile ─┬─< account
 
 ## Invariants
 
-Enforce these in the database where a constraint can express them, and in
-`packages/core` where it cannot. Each one should have a test.
+Enforce these in the database where a constraint can express them, and in the `api`
+functions where it cannot. Each one should have a pgTAP test.
 
 1. Every domain row belongs to exactly one `household_id`, and every query filters on it.
 2. `event`: exactly one of (`starts_at`,`ends_at`) or (`start_date`,`end_date`) is

@@ -15,7 +15,7 @@ a resource someone else could use.
 The A5 addition raised the value of the first two assets materially. A calendar says a
 family has a dentist appointment; a timetable plus presence bands says which child is at
 which school between which hours and which adult is not at home that week. Nothing about
-the controls below changes — but the defaults do, in [T2](#t2-feed-tokens).
+the controls below changes — but the defaults do, in [T2](#t2--feed-tokens).
 
 **In scope:**
 
@@ -25,10 +25,12 @@ the controls below changes — but the defaults do, in [T2](#t2-feed-tokens).
 | T2 | A leaked ICS feed URL (pasted into a support ticket, synced to a third-party calendar service, in a browser history on a shared machine) | Plausible. Bearer URLs leak. |
 | T3 | A lost or stolen device holding a year-long device session | Plausible. Children lose iPads. |
 | T4 | Credential stuffing against a guardian account | Likely to be attempted, cheap to defeat. |
-| T5 | Supply-chain compromise of an npm dependency | Real and rising; the hardest one on this list. |
+| T5 | Supply-chain compromise of a dependency — a `pub` or Deno package, a container image, a CI action | Real and rising; the hardest one on this list. |
 | T6 | Data loss through disk failure, a bad migration, or `DROP TABLE` at 23:00 | The most likely damaging event of all. |
 | T7 | Silent data harvesting by embedded third parties (analytics, fonts, CDNs, error trackers) | Certain, if you let them in. Entirely preventable. |
 | T8 | A child escalating to guardian rights | Low stakes, moderate likelihood, worth a speed bump. |
+| T9 | **A missing or wrong RLS policy** — the anon key is in every app binary, so anyone who extracts it can call the API directly *(added 2026-10-11, [ADR-010](adr/ADR-010-flutter-and-self-hosted-supabase.md))* | The most likely way data leaks from this stack. |
+| T10 | Leaked signing material — the iOS certificate, the Android upload key, the App Store Connect API key | Low likelihood, high annoyance: someone could ship a build under your name. |
 
 **Out of scope**, stated so effort is not wasted: a targeted attacker with a specific
 interest in this household, a state actor, physical seizure of the server, and malicious
@@ -41,12 +43,20 @@ insiders. If a threat model does not exclude anything it is not a threat model.
 - Only ports 80 and 443 open. SSH restricted by `ufw`; consider moving SSH behind
   **Tailscale** and closing 22 entirely — a genuine improvement for roughly twenty
   minutes of work.
-- **Postgres has no published port.** It is reachable only from the Docker network.
+- **Postgres has no published port** on any public interface; the pooler is bound to
+  `127.0.0.1` and reached from CI only through an SSH tunnel.
+- **Studio and Kong's dashboard routes are never routed by Caddy.** Studio is reached
+  through `ssh -L` only. Caddy forwards exactly four API prefixes plus the feed path
+  ([10](10-deployment-and-ops.md#6-caddyfile)); everything else is the static web build.
+- **Public sign-up and anonymous users are disabled** in Supabase Auth. Accounts exist
+  only because the setup wizard, a guardian or the enrolment function created them.
+- **Never run with the upstream example keys.** `JWT_SECRET`, the anon and service-role
+  keys, and every password in `.env` are generated fresh for production.
 - `unattended-upgrades` for OS patches; monthly image pulls; `fail2ban` on SSH.
 - Caddy terminates TLS with modern defaults and HSTS. No legacy protocol support to
   configure, because there is none.
-- A minimal container image (distroless or alpine), running as a non-root user, with no
-  shell in the production image.
+- Supabase's images are used as published, pinned by digest; nothing is built on the
+  server.
 
 ### T2 — feed tokens
 
@@ -66,32 +76,40 @@ insiders. If a threat model does not exclude anything it is not a threat model.
 
 ### T3 — device loss
 
-- Every device has its own token. Revoking one affects nothing else.
+- Every device is its own Auth user. Revoking one affects nothing else.
 - Settings → Devices shows last-seen times, which is how you notice a device you forgot
   about.
 - A shared or kiosk device holds **no** guardian rights: the PIN elevation is server-side
   and expires in 15 minutes, so a stolen iPad grants a child's view and nothing more.
+- Revocation is effective on the very next request, because every RLS policy checks
+  `device.revoked_at` rather than trusting a still-valid JWT.
+- Device sessions live in the Keychain or Android Keystore-backed storage, not in plain
+  app files.
 - Consider auto-revoking a device unseen for 180 days.
 
 ### T4 — account attacks
 
-- Passkeys as the primary guardian credential: nothing phishable, nothing to stuff.
-- Argon2id for passwords and PINs, with per-account rate limiting and exponential
-  backoff.
+- TOTP as a mandatory second factor on guardian accounts; passkeys as the primary
+  credential if Supabase Auth supports them when M0.1 is built.
+- Supabase Auth's rate limits on sign-in, plus a rate limit at Caddy; PINs hashed with
+  bcrypt, with exponential backoff per profile.
 - PIN lockout after 10 failures, released only by a full guardian login.
 - Generic error messages on login. No "unknown email" hints.
-- Sessions are `httpOnly`, `Secure`, `SameSite=Lax`; CSRF tokens on state-changing
-  form posts.
+- The native apps send bearer tokens, so there are no cookies to steal and no CSRF
+  surface. The web build keeps its session in browser storage, which makes a strict CSP
+  the guard against script injection there.
 
 ### T5 — supply chain
 
-- A lockfile, committed, with `npm ci` / `pnpm install --frozen-lockfile` in CI.
+- Lockfiles committed (`pubspec.lock`, `deno.lock`); CI installs exactly what they say.
 - Keep the dependency count deliberately low. Every package is a party you have invited
-  into your family's data.
-- `npm audit` (or `osv-scanner`) in CI; Renovate PRs reviewed rather than auto-merged.
-- Pin base images by digest, not by floating tag.
-- A strict Content-Security-Policy limits what a compromised front-end dependency can
-  exfiltrate — which is one more reason to self-host every asset.
+  into your family's data — and in a Flutter app, every plugin is native code too.
+- `osv-scanner` over both lockfiles in CI; Dependabot PRs reviewed rather than
+  auto-merged.
+- Container images pinned by digest, not by floating tag; GitHub Actions pinned by
+  version (by commit SHA for anything outside GitHub's and Supabase's own).
+- No analytics, crash-reporting or ad SDK in the app, ever — they are the most common
+  supply-chain leak in mobile apps.
 
 ### T6 — data loss
 
@@ -107,20 +125,21 @@ This is where a self-hosted app usually leaks, quietly, through convenience:
 | Tempting | Instead |
 |---|---|
 | Google Fonts | Self-host WOFF2 files. Also faster. |
-| A CDN for a JS library | Bundle it. |
-| Sentry / LogRocket / PostHog | Nothing in v1. Self-host GlitchTip later if you must. |
+| A CDN for a JS library, Google Fonts in Flutter web | Bundle it; ship fonts as assets. |
+| Sentry / Crashlytics / PostHog / Firebase Analytics | Nothing in v1. TestFlight and Play Console already report crashes. Self-host GlitchTip later if you must. |
 | Google Analytics / Plausible Cloud | Nothing. You have four users and you know all of them. |
-| A Ferien import from a public API ([15](15-module-school-timetable.md#holidays)) | Fetched by the worker, server-side only, with the host pinned in configuration and the result cached in the database. The browser never contacts it, and a failed fetch degrades to hand-entered holidays rather than to an error. |
-| An external map or weather widget | If you want weather on the wall display, proxy it server-side so browsers never contact a third party directly, and cache aggressively. |
+| A Ferien import from a public API ([15](15-module-school-timetable.md#holidays)) | Fetched by a scheduled Edge Function, server-side only, with the host pinned in configuration and the result cached in the database. The browser never contacts it, and a failed fetch degrades to hand-entered holidays rather than to an error. |
+| An external map or weather widget | If you want weather on the wall display, proxy it server-side so the app never contacts a third party directly, and cache aggressively. |
 | Avatar images from Gravatar | Local uploads or generated initials. |
 
-Enforce it with `Content-Security-Policy: default-src 'self'`. A CSP that blocks
-third-party origins converts a policy into a mechanism, and mechanisms survive
-temptation on a Friday evening.
+For the web build, enforce it with `Content-Security-Policy: default-src 'self'`. For
+the native apps, enforce it in review: the app talks to exactly one host, and a new
+outbound host in a pull request is a question to answer, not a detail. A policy that is a
+mechanism survives temptation on a Friday evening.
 
 Outbound connections from the server should be enumerable on one hand: Let's Encrypt,
-the container registry, the backup target, Apple's and Google's push endpoints (for web
-push), and the OS package mirrors.
+the container registry, the backup target, APNs and FCM (for push), and the OS package
+mirrors.
 
 ### T8 — a curious nine-year-old
 
@@ -129,24 +148,51 @@ push), and the OS package mirrors.
 - The audit log means escalation is at worst noticed. That is a proportionate response
   to a proportionate threat.
 
+### T9 — the RLS perimeter
+
+With Supabase, row-level security is not defence in depth; it is the perimeter.
+
+- **Clients can reach only the `api` schema.** Tables in `app` are not exposed, so a
+  forgotten policy on a table is not directly reachable — but a view or function on top of
+  it is, which is why both layers are tested.
+- **Every `app` table has RLS enabled and forced**, enforced by a catalogue test in CI
+  that fails the build when a new table forgets.
+- **Every policy has a pgTAP test** for the cross-household case, the revoked-device case
+  and the unauthenticated case.
+- `api` views are `security_invoker`; `api` functions run as a role without `BYPASSRLS`,
+  so neither silently widens access.
+- The **service-role key** exists only in the server's `.env`. It is used by the Edge
+  Functions that have no user (ICS, enrolment, jobs), each such use commented; it is
+  never in CI, never in the app and never on a laptop.
+
+### T10 — signing material
+
+- iOS certificates live encrypted in a private `fastlane match` repository; the
+  passphrase is in GitHub secrets and the password manager only.
+- The Android upload key is enrolled in Play App Signing, so a leaked or lost upload key
+  can be reset by Google without losing the app.
+- The App Store Connect API key has the narrowest role that can upload builds.
+
 ## Application-level practice
 
-- **Validate at every boundary** with Zod: HTTP handlers, MCP tool inputs, job payloads.
-  Parse into typed values; never pass raw request bodies into service functions.
-- **Parameterised queries only.** Drizzle does this by default; the risk is the one hand-
-  written query someone adds later under time pressure.
-- **Household scoping is a repository concern**, not a per-query discipline, with
-  PostgreSQL row-level security behind it as a second net.
-- **Authorisation in the service layer, never in the UI.** Hiding a button is a courtesy;
-  the check happens server-side, always.
-- **No secrets in the client bundle.** Only `PUBLIC_` prefixed variables cross that line,
-  and review what they are before each release.
-- **Escape on output.** Svelte escapes by default; the danger is `{@html}`. Treat every
-  use of it as requiring a comment explaining why it is safe.
-- **Uploads** (avatars, recipe photos): validate the magic bytes rather than the
-  extension, re-encode server-side, cap the size, and serve from a path that cannot
-  execute anything.
-- **Rate limit** login, PIN entry, feed fetches and the MCP endpoint at the proxy.
+- **Validate at every boundary.** `api` functions check their arguments and rely on
+  `CHECK` constraints and enums underneath; Edge Functions validate request bodies with
+  Zod before touching anything. Never pass a raw JSON body into SQL.
+- **No dynamic SQL from strings.** Where PL/pgSQL needs `EXECUTE`, parameters go through
+  `USING` and identifiers through `format('%I')` — never concatenation.
+- **Household scoping is RLS's job**, and RLS is tested (T9). No query relies on a
+  hand-written `WHERE household_id`.
+- **Authorisation in the database, never in the UI.** Hiding a button is a courtesy; the
+  check happens in the `api` function and the policy, always.
+- **No secrets in the app.** Only the Supabase URL and anon key are compiled in, both
+  public by design. Review `env/prod.json` before each release.
+- **No raw HTML.** Flutter does not interpret HTML by default; do not add a widget that
+  does without a comment explaining why the content is safe.
+- **Uploads** (avatars, recipe photos, if Storage is ever enabled): validate the magic
+  bytes rather than the extension, cap the size, and store them in a private bucket with
+  RLS on `storage.objects`.
+- **Rate limit** sign-in, PIN entry, enrolment, feed fetches and the MCP endpoint — at
+  Caddy, and in the function where it is a domain rule (PIN backoff).
 
 ## Privacy and legal
 
@@ -167,15 +213,19 @@ push), and the OS package mirrors.
 ## Pre-launch checklist
 
 - [ ] SSH: keys only, root login disabled, `ufw` active
-- [ ] Postgres not reachable from outside the Docker network
-- [ ] TLS working on both hostnames; HSTS present
+- [ ] Postgres not reachable from outside the server; Studio and Kong dashboards not routed
+- [ ] Public sign-up and anonymous users disabled; no upstream example key in `.env`
+- [ ] RLS catalogue test and every policy test green against the production schema
+- [ ] TLS working; HSTS present
 - [ ] Content-Security-Policy set, and verified to break nothing
-- [ ] No third-party origin loaded by any page (check the network tab with a clear cache)
+- [ ] No third-party origin contacted by the web build (network tab, clear cache) or the
+      apps (a proxy such as mitmproxy on the LAN for one session)
 - [ ] Every secret in `.env`, mode 600, not in git; a copy in the password manager
 - [ ] Nightly backup running, dead-man's switch configured
 - [ ] **A restore performed successfully at least once** — date: ____________
 - [ ] Device revocation tested from a second device
 - [ ] Feed token revocation tested against a real Outlook subscription
 - [ ] PIN lockout tested
-- [ ] `npm audit` clean, or every finding consciously accepted
+- [ ] `osv-scanner` clean, or every finding consciously accepted
+- [ ] Signing material and its passphrases in the password manager
 - [ ] Audit log written for a sample of every mutation type
