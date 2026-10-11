@@ -5,7 +5,7 @@
 
 <style>
 /* ─────────────────────────────────────────────────────────────
-   GoombaWall — Einkaufsliste, Schnellerfassung (Mockup)
+   WuselWall — Einkaufsliste, Schnellerfassung (Mockup)
    Same type and accent as the kitchen-display mockup: one product.
    The phone screen keeps its own palette; the page follows the
    viewer's theme.
@@ -377,7 +377,7 @@ footer.page {
 </style>
 
 <div class="wrap">
-  <p class="eyebrow">GoombaWall · Mockup fürs Telefon</p>
+  <p class="eyebrow">WuselWall · Mockup fürs Telefon</p>
   <h1>„Kitchen roll" in drei Sekunden</h1>
   <p class="lede">
     Erfassen ist die Stelle, an der eine Einkaufsliste gewonnen oder verloren wird: Wenn
@@ -396,7 +396,7 @@ footer.page {
     <div class="phone">
       <div class="app" id="app" data-mode="hell">
         <div class="status">
-          <span id="net-label">GoombaWall · online</span>
+          <span id="net-label">WuselWall · online</span>
           <span class="right"><span id="queued"></span><span>17:42</span></span>
         </div>
 
@@ -823,7 +823,7 @@ function renderList() {
   $("count").textContent = `${total} offen`;
   $("drawer-sub").textContent = `${items.length} Artikel${pending ? ` · ${pending} wartend` : ""}`;
   $("queued").innerHTML = pending ? `<span class="queued">${pending} wartend ⧗</span>` : "";
-  $("net-label").textContent = offline ? "GoombaWall · offline" : "GoombaWall · online";
+  $("net-label").textContent = offline ? "WuselWall · offline" : "WuselWall · online";
 
   let html = "";
   CATS.forEach(c => {

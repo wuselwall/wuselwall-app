@@ -9,12 +9,15 @@ editing it. The value is in the trail.
 |---|---|---|
 | [001](ADR-001-calendar-backbone.md) | Own database as calendar source of truth, ICS feed outward | Accepted |
 | [002](ADR-002-build-vs-assemble.md) | One self-built application rather than composed open-source services | Accepted |
-| [003](ADR-003-technology-stack.md) | TypeScript end to end: SvelteKit, Drizzle, PostgreSQL | Accepted |
-| [004](ADR-004-identity-model.md) | Device sessions with tap-to-switch profiles and a guardian PIN | Accepted |
-| [005](ADR-005-hosting.md) | Self-hosted on a German VPS with Docker Compose and Caddy | Accepted |
-| [006](ADR-006-offline-strategy.md) | Server-authoritative data; an offline queue for the shopping list only | Accepted |
-| [007](ADR-007-assistant-integration.md) | Remote MCP server over Streamable HTTP; Shortcuts for Siri today | Accepted |
+| [003](ADR-003-technology-stack.md) | TypeScript end to end: SvelteKit, Drizzle, PostgreSQL | Superseded by 010 |
+| [004](ADR-004-identity-model.md) | Device sessions with tap-to-switch profiles and a guardian PIN | Accepted, amended by 010 |
+| [005](ADR-005-hosting.md) | Self-hosted on a German VPS with Docker Compose and Caddy | Accepted, amended by 010 |
+| [006](ADR-006-offline-strategy.md) | Server-authoritative data; an offline queue for the shopping list only | Accepted, amended by 010 |
+| [007](ADR-007-assistant-integration.md) | Remote MCP server over Streamable HTTP; Shortcuts for Siri today | Accepted, amended by 010 |
 | [008](ADR-008-school-timetable-model.md) | Stundenplan as a projected pattern, not stored events | Accepted |
 | [009](ADR-009-event-kinds-and-presence.md) | Presence as an event kind; the week board driven by an explicit flag | Accepted |
+| [010](ADR-010-flutter-and-self-hosted-supabase.md) | Flutter clients on a self-hosted Supabase backend | Accepted, amended by 012 |
+| [011](ADR-011-native-distribution-and-ci-cd.md) | Native app distribution (TestFlight, Play internal) and the CI/CD pipeline | Accepted, amended by 012 |
+| [012](ADR-012-product-name.md) | Product name WuselWall, its identifiers, logo and mascot | Accepted |
 
 Format: Context · Decision · Alternatives considered · Consequences.

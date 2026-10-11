@@ -1,6 +1,6 @@
 # ADR-006 — Server-authoritative data, with an offline queue for the shopping list only
 
-**Status:** Accepted · 2026-08-29
+**Status:** Accepted · 2026-08-29 · Mechanism amended by [ADR-010](ADR-010-flutter-and-self-hosted-supabase.md) on 2026-10-11 — the decision stands; IndexedDB and the service worker become drift (SQLite) in the Flutter app, SSE becomes Supabase Realtime
 
 ## Context
 

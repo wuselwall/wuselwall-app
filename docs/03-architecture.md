@@ -1,124 +1,149 @@
 # 03 — Architecture
 
+*Rewritten 2026-10-11 for Flutter clients on a self-hosted Supabase backend —
+[ADR-010](adr/ADR-010-flutter-and-self-hosted-supabase.md). The TypeScript/SvelteKit
+architecture it replaces is recorded in [ADR-003](adr/ADR-003-technology-stack.md).*
+
 ## System shape
 
-A **modular monolith**: one deployable web application containing all four domain
-modules, plus a second small process for the MCP server, both talking to one
-PostgreSQL database. A reverse proxy terminates TLS in front of them.
+**One Flutter codebase** producing native apps for iOS/iPadOS and Android plus a web
+build, talking to **one self-hosted Supabase stack** on a single VPS. PostgreSQL is the
+domain core: tables, rules, authorisation and audit all live in it. A small number of
+Edge Functions handle what SQL does badly. Caddy terminates TLS in front of everything.
 
 ```
-                     Internet (443 only)
-                            │
-                   ┌────────▼────────┐
-                   │      Caddy      │  automatic TLS, security headers,
-                   │  reverse proxy  │  rate limiting, static asset caching
-                   └────┬───────┬────┘
-                        │       │
-          home.example.de     mcp.home.example.de
-                        │       │
-        ┌───────────────▼──┐  ┌─▼──────────────────┐
-        │   apps/web       │  │   apps/mcp         │
-        │   SvelteKit      │  │   MCP server       │
-        │  ─────────────   │  │  Streamable HTTP   │
-        │  UI (3 registers)│  │  OAuth 2.1         │
-        │  /api  REST      │  │  read + write tools│
-        │  /ics  feeds     │  └─────────┬──────────┘
-        │  /events SSE     │            │
-        │  web push        │            │
-        └────────┬─────────┘            │
-                 │                      │
-                 └──────┬───────────────┘
-                        │  imports
-                ┌───────▼─────────┐
-                │ packages/core   │  domain logic, Drizzle schema,
-                │                 │  service functions, validation,
-                │                 │  audit logging, authorisation
-                └───────┬─────────┘
-                        │
-                ┌───────▼─────────┐        ┌──────────────────┐
-                │  PostgreSQL 18  │◄───────┤ apps/worker      │
-                │  (Docker net    │        │ pg-boss jobs:    │
-                │   only, never   │        │ materialise      │
-                │   exposed)      │        │ tasks, streaks,  │
-                └───────┬─────────┘        │ reminders, feeds │
-                        │                  └──────────────────┘
-                ┌───────▼─────────┐
-                │ nightly pg_dump │──► restic ──► off-site object storage (encrypted)
-                └─────────────────┘
+   iPhones · iPads            wall tablet (Android)          laptop browser
+   Flutter iOS app            Flutter Android app            Flutter web build
+          │                          │                              │
+          └──────────────┬───────────┴──────────────────────────────┘
+                         │ HTTPS 443 only
+                ┌────────▼─────────┐
+                │      Caddy       │  TLS, security headers, rate limits,
+                │                  │  serves the web build, path allow-list
+                └───┬──────────┬───┘
+   home.example.de  │          │  mcp.home.example.de (M2)
+   /                │          │
+   /auth/v1 /rest/v1│          │
+   /realtime/v1     │          │
+   /functions/v1    │          │
+   /ics/*           │          │
+                ┌───▼──────────▼───┐
+                │  Kong (gateway)  │  Supabase's API gateway, key checks
+                └─┬────┬────┬────┬─┘
+                  │    │    │    │
+        ┌─────────▼┐ ┌─▼────┴──┐ ┌▼──────────┐ ┌──────────────────┐
+        │  Auth    │ │PostgREST│ │ Realtime  │ │  Edge Functions  │
+        │ (GoTrue) │ │ api.*   │ │ broadcast │ │  (Deno, TS)      │
+        │ devices, │ │ views + │ │ household │ │  board-week, ics,│
+        │ guardians│ │ RPC     │ │ channels  │ │  enrol-device …  │
+        └────┬─────┘ └────┬────┘ └─────┬─────┘ └────────┬─────────┘
+             └────────────┴───────┬────┴────────────────┘
+                         ┌────────▼─────────┐
+                         │   PostgreSQL     │  schema app: tables + RLS
+                         │  (Supabase image)│  schema api: views + functions
+                         │  Docker net only │  pg_cron · pg_net · pgcrypto
+                         └────────┬─────────┘
+                         ┌────────▼─────────┐
+                         │ nightly pg_dump  │──► restic ──► off-site storage (encrypted)
+                         └──────────────────┘
+
+   Studio (admin UI) runs on the server but is never routed by Caddy —
+   reachable only through an SSH tunnel.
 ```
 
-### Why a monolith and not services
+### Why the database is the core
 
 Four modules that constantly reference each other — a meal generates shopping items, a
-task appears on the calendar, a completed chore moves a point balance — would spend all
-their time doing distributed transactions. One process, one database, one transaction
-boundary. Deployment is `docker compose up -d`. See [ADR-002](adr/ADR-002-build-vs-assemble.md).
+chore moves a point balance — need one transaction boundary. In the TypeScript plan that
+boundary was a service layer in `packages/core`. With Supabase the natural boundary is
+PostgreSQL itself: **one `api` function call is one transaction**, and everything that
+must happen together happens inside it. See
+[ADR-010](adr/ADR-010-flutter-and-self-hosted-supabase.md#decision) for the alternatives.
 
-The MCP server is a separate process only because it has a different lifecycle and a
-different authentication model; it shares the same `packages/core` and the same database
-connection, so business rules are never duplicated.
+The client is deliberately thin. It renders, caches and — for the shopping list only —
+queues. It holds no business rules.
 
 ## Technology stack
 
 | Layer | Choice | Reasoning |
 |---|---|---|
-| Language | **TypeScript** (strict) | User decision. One language for UI, API, jobs and MCP server. |
-| Frontend + BFF | **SvelteKit 2 / Svelte 5** | Small bundles matter on a cheap wall tablet; one file-based router for pages *and* API endpoints; a single `adapter-node` build that drops straight into a container. Fewer moving parts than the Next.js App Router for a solo maintainer. |
-| Styling | **Tailwind CSS** + a small component set | The three UI registers are largely a matter of spacing and type scale — trivial with design tokens, tedious without. |
-| Database | **PostgreSQL 18** | Recurrence maths, ledgers, `LISTEN/NOTIFY`, JSONB where useful, and a job queue — all in one dependency. |
-| Query layer | **Drizzle ORM** | SQL-shaped, fully typed, migrations as plain SQL you can read. Avoids the "what query did the ORM just run" problem. |
-| Validation | **Zod v4** | One schema per boundary, reused for API input, MCP tool schemas (JSON Schema 2020-12) and form validation. |
-| Auth | **Better Auth** | Actively maintained self-hosted auth for TypeScript, with passkey and OIDC-provider plugins. Lucia, the previous default, was deprecated in 2025. The device-session and PIN layer sits on top as custom code. |
-| Background jobs | **pg-boss** | Postgres-backed queue: no Redis, no extra container, jobs survive restarts and are visible in SQL. |
-| Realtime | **Server-Sent Events** over `LISTEN/NOTIFY` | One-directional updates are all this app needs. SSE traverses proxies cleanly and reconnects on its own; WebSockets would be a bidirectional solution to a unidirectional problem. |
-| Push notifications | **Web Push (VAPID)** via `web-push` | The only push channel available to an iOS PWA, and it is enough. |
-| Recurrence | **`rrule`** | RFC 5545 is not a wheel worth reinventing; it is also exactly what the ICS feed must emit. |
-| ICS generation | **`ical-generator`** | Correct escaping, folding and timezone handling. |
-| MCP | **`@modelcontextprotocol/sdk`** (TypeScript) | Spec revision `2026-07-28`: stateless, Streamable HTTP, hardened OAuth. |
-| Tests | **Vitest** (unit + integration) · **Playwright** (end-to-end) | Integration tests run against a throwaway Postgres in Docker — recurrence and ledger logic must be tested against the real database. |
-| Container | **Docker Compose** | See [10](10-deployment-and-ops.md). |
-
-### If you would rather use Next.js
-
-Everything above holds except the frontend framework. Substitute Next.js 15+ with the
-App Router, `next/server` route handlers for the API, and the standalone output mode
-for Docker. You gain the largest ecosystem and the best AI code-generation coverage;
-you pay in bundle size on the wall tablet and in framework surface area to keep in your
-head. It is a defensible choice — just make it once and record it in [ADR-003](adr/ADR-003-technology-stack.md).
+| Client | **Flutter** (stable, pinned) | User decision. One codebase for iOS, iPadOS, Android and web; native rendering on a cheap wall tablet; real push and kiosk mode. |
+| State and navigation | **Riverpod** · **go_router** | The most common pairing in current Flutter code; compile-time-safe providers; declarative routes that can switch per UI register. |
+| Models | **freezed** + `json_serializable` | Immutable value types and JSON mapping without hand-written boilerplate. |
+| Offline store | **drift** (SQLite) | The shopping list's mirror and outbox ([07](07-module-meals-shopping.md#offline--the-one-place-it-is-non-negotiable)). Typed queries, migrations, reactive streams. |
+| Secrets on device | `flutter_secure_storage` | Keychain on iOS, Keystore-backed on Android — where the device session lives. |
+| Localisation | Flutter **gen-l10n**, ARB files | German and English, always both (NFR-14); generated, type-safe message accessors. |
+| Backend platform | **Supabase, self-hosted** (Docker Compose) | User decision. Auth, a REST layer, realtime and functions around PostgreSQL. |
+| Database | **PostgreSQL** (the version Supabase's image ships — pin the tag) | Recurrence ranges, ledgers, arrays, `pg_trgm` for shopping capture, `pg_cron` for jobs. |
+| Domain logic | **SQL and PL/pgSQL** in the `api` schema | Transactional writes, guardian checks and audit in one place. |
+| Authorisation | **Row-level security**, forced on every table | The primary control: the anon key ships in every app. |
+| Auth | **Supabase Auth** (GoTrue) + a custom access-token hook | Guardian accounts and per-device users; household and device in the JWT. |
+| Composed reads, public endpoints | **Supabase Edge Functions** (Deno, TypeScript) | RFC 5545 via `rrule`, the timetable projection, ICS output via `ical-generator`, device enrolment; later MCP and Shortcuts. |
+| Background jobs | **pg_cron**, with **pg_net** to invoke Edge Functions | No worker container. Jobs and their history are visible in SQL. |
+| Realtime | **Supabase Realtime**, broadcast from triggers on a private per-household channel | Invalidations, not data: the client refetches. |
+| Push | **FCM** (Android) and **APNs** (iOS), sent from an Edge Function | Native push channels; provider choice is [Q38](14-open-questions.md). |
+| Tests | Dart `test`/`flutter_test` · **pgTAP** via `supabase test db` · `deno test` | Domain rules and RLS are tested against a real database, always. |
+| CI/CD | **GitHub Actions**, **fastlane** for signing and upload | [ADR-011](adr/ADR-011-native-distribution-and-ci-cd.md), [16](16-setup-plan.md). |
 
 ## Repository layout
 
-A pnpm workspace monorepo:
-
 ```
-goombawall/
-├─ apps/
-│  ├─ web/                  SvelteKit — UI, REST API, ICS feeds, SSE, push
-│  ├─ mcp/                  MCP server (Streamable HTTP + OAuth)
-│  └─ worker/               pg-boss job runner
-├─ packages/
-│  ├─ core/                 domain services, Drizzle schema + migrations,
-│  │                        authorisation, audit log, Zod schemas
-│  └─ ui/                   shared Svelte components and design tokens
+wuselwall/
+├─ app/                        Flutter — iOS, Android, web
+│  ├─ lib/
+│  │  ├─ main.dart
+│  │  ├─ app/                  bootstrap, router, theme per UI register, l10n wiring
+│  │  ├─ core/                 Supabase client, device session, acting profile,
+│  │  │                        error mapping, realtime, connectivity
+│  │  └─ features/
+│  │     ├─ setup/  devices/  shopping/  tasks/  calendar/  school/  meals/  board/
+│  │     │   each: data/ (repository: api views + RPC)  domain/ (models)  ui/
+│  ├─ l10n/app_en.arb  app_de.arb   every user-facing string, in both languages
+│  ├─ test/                    unit and widget tests
+│  ├─ integration_test/        on-device flows (later)
+│  ├─ env/                     dev.json, prod.json — --dart-define-from-file
+│  ├─ android/  ios/  web/     platform shells; fastlane/ inside android/ and ios/
+├─ supabase/
+│  ├─ config.toml              local stack configuration (Supabase CLI)
+│  ├─ migrations/              timestamped plain SQL — schema, RLS, api functions
+│  ├─ functions/
+│  │  ├─ _shared/              recurrence, timetable projection, auth, German strings
+│  │  ├─ enrol-device/  board-week/  ics/  health/
+│  │  └─ (later) push-send/  materialise-tasks/  shortcuts/  mcp/
+│  ├─ tests/                   pgTAP: one file per module, RLS tests for every table
+│  └─ seed.sql                 a development household
 ├─ infra/
-│  ├─ docker-compose.yml
+│  ├─ supabase/                pinned, trimmed copy of the official self-hosting compose
 │  ├─ Caddyfile
-│  └─ backup/
-└─ docs/                    copied from this planning folder once code starts
+│  ├─ backup/                  backup.sh, restore-drill.sh
+│  └─ provision.sh
+├─ .github/workflows/          ci.yml, deploy.yml, release-mobile.yml
+└─ docs/
 ```
 
-**The rule that keeps this maintainable:** `apps/*` may not contain business logic and
-may not import Drizzle directly. They translate transport (HTTP request, MCP tool call,
-scheduled job) into calls on `packages/core` services and translate the result back.
-Every service function takes an explicit `ActorContext` (see below).
+**The rules that keep this maintainable:**
+
+- **PostgREST exposes only the `api` schema.** Tables live in `app` and are unreachable
+  from any client. Reads go through `api` views declared `security_invoker`, so the
+  caller's RLS applies; writes go through `api` functions.
+- **One write use case, one `api` function.** `api.complete_task(p_actor, p_instance)`,
+  not an UPDATE from Dart. The function validates, mutates, writes the audit row and
+  emits the realtime invalidation in one transaction.
+- **The Flutter app contains no business rules.** Feature repositories translate between
+  Dart models and `api` calls; widgets never call Supabase directly.
+- **Edge Functions never bypass RLS for user requests.** They forward the caller's JWT.
+  The service-role key is used only by functions with no user (ICS, enrolment, jobs),
+  and each such use is commented with why.
 
 ## Module boundaries
 
-Inside `packages/core`, one folder per bounded context:
+The same six bounded contexts as before, now expressed as groups of tables, views and
+functions in the database (prefixed by module: `app.shopping_item`,
+`api.shopping_add_item`) plus the matching `features/` folder in the app:
 
 | Module | Owns | May read from | Never touches |
 |---|---|---|---|
-| `identity` | household, members, devices, sessions, PINs, audit log | — | anything |
+| `identity` | household, members, devices, PINs, audit log | — | anything |
 | `calendar` | calendars, events, occurrences, feed tokens, the composed occurrence read model | `identity`, `school` (read-only, for projection) | tasks, meals |
 | `school` | schools, bell times, terms, subjects, timetables, lessons, exceptions, holidays | `identity` | calendar, tasks, meals, shopping |
 | `tasks` | task definitions, instances, points ledger, rewards, streaks, badges | `identity` | calendar, meals |
@@ -126,57 +151,63 @@ Inside `packages/core`, one folder per bounded context:
 | `shopping` | lists, items, catalogue, store layouts | `identity`, `meals` (read-only, for generation) | tasks, calendar |
 
 `school` is a *source*, not a peer: it never writes an event and never learns that a
-calendar exists. `calendar.getOccurrences()` asks it for projected lessons for a window
-and merges them with expanded events (see [05](05-module-calendar.md#occurrence-sources)).
-The same seam takes imported ICS feeds in M2 and task due dates whenever they are wanted,
-which is the reason to build it as composition rather than as a special case for school.
+calendar exists. The calendar's occurrence read model (an Edge Function using the shared
+recurrence code) asks it for projected lessons for a window and merges them with expanded
+events (see [05](05-module-calendar.md#occurrence-sources)). The same seam takes imported
+ICS feeds in M2.
 
-Cross-module effects go through **domain events**, not direct calls. "Meal plan
-generated shopping items" is `meals` emitting `MealPlanCommitted` and `shopping`
-subscribing. In v1 this is an in-process event bus with synchronous handlers inside the
-same database transaction — not a message broker. It costs almost nothing now and means
-the modules can be understood independently later.
+Cross-module effects stay inside one transaction: "meal plan generated shopping items" is
+`api.meals_commit_plan` calling the shopping module's internal function
+(`app.shopping_add_generated`), not a client making two calls. Internal functions live in
+`app` and are not callable from outside.
 
 ## Cross-cutting concerns
 
-### Actor context
+### The acting profile — ActorContext in SQL
 
-Every service function's first parameter:
+Every `api` write function establishes who is acting before it does anything else:
 
-```ts
-type ActorContext = {
-  householdId: HouseholdId;
-  actorProfileId: ProfileId;      // who is acting
-  deviceId: DeviceId | null;      // null for jobs
-  origin: 'ui' | 'api' | 'mcp' | 'shortcut' | 'job';
-  guardianVerifiedUntil: Date | null;  // set by a successful PIN step-up
-  onBehalfOf?: { principal: string; assistant: string };  // MCP/assistant calls
-};
+```sql
+-- first line of every api write function
+v_actor := app.actor(p_actor_profile_id);   -- raises if not usable on this device
 ```
 
-This single object drives authorisation, audit logging and assistant attribution.
-Because it is a required parameter rather than ambient state, it is impossible to write
-a service function that forgets who is calling it.
+`app.actor()` reads the JWT claims — `household_id`, `device_id`, `device_class` — set by
+the access-token hook, then:
+
+- on a `personal` device, ignores the parameter and uses the device's bound profile;
+- on a `shared` or `kiosk` device, checks that the requested profile belongs to the
+  household and is active;
+- refuses outright if the device has been revoked;
+- returns a record with household, profile, device, `origin` and
+  `guardian_verified_until`, which the rest of the function uses for checks and audit.
+
+`origin` is `ui` for app calls; Edge Functions acting for Shortcuts, MCP or jobs pass
+`shortcut`, `mcp` or `job` along with `on_behalf_of`. Because the actor is the first thing
+established and the audit row needs it, it is impossible to write a mutation that forgets
+who is calling.
 
 ### Authorisation
 
-Three layers, deliberately redundant:
+Three layers, and since ADR-010 the database ones carry the weight:
 
-1. **Household scoping.** Every table carries `household_id`. Every query filters on it,
-   enforced by a repository helper rather than by discipline.
-2. **Role and step-up checks** in the service layer: a guardian action throws unless
-   `guardianVerifiedUntil` is in the future.
-3. **PostgreSQL row-level security** as defence in depth, using a session variable set
-   per transaction. With one household this is nearly free; it means an SQL-injection
-   bug in one endpoint cannot read another household's data — and more usefully today,
-   it catches missing `WHERE household_id` clauses in development.
+1. **Row-level security on every `app` table**, with `FORCE ROW LEVEL SECURITY` so it
+   also binds the role that owns the `api` functions. Every policy checks the JWT's
+   household and that the calling device is not revoked. RLS is the control that stands
+   between the public anon key and the family's data.
+2. **Role and step-up checks** inside `api` functions: `app.require_guardian(v_actor)`
+   raises unless `guardian_verified_until` is in the future or the caller is a guardian
+   on their own personal device.
+3. **Schema exposure**: only `api` is reachable; `app`, `auth` and everything else are not
+   in PostgREST's exposed schemas, and Studio is never published.
+
+Hiding a button in Flutter is a courtesy, never a control.
 
 ### Audit log
 
 Append-only, one row per mutation: actor, device, origin, entity type and id, action,
-JSON diff, timestamp. Written inside the same transaction as the mutation. This is what
-makes the points economy defensible ("I did do the dishes!") and what makes assistant
-actions reviewable.
+JSON diff, timestamp. Written by `app.audit()` inside the same transaction as the
+mutation. No role has `UPDATE` or `DELETE` on the table.
 
 ### Time and timezones
 
@@ -185,60 +216,71 @@ actions reviewable.
   IANA timezone, because a 07:00 recurring alarm must stay at 07:00 across a DST change.
 - All-day events are stored as a date, never as a midnight timestamp. This is the single
   most common source of off-by-one-day bugs in calendar code.
-- Never compute "today" on the client for anything that gets written.
+- Never compute "today" on the client for anything that gets written. `api` functions use
+  `now() at time zone household.timezone`.
 
 ### Error handling
 
-Domain errors are typed values, not thrown strings: `Result<T, DomainError>` at service
-boundaries, with HTTP status mapping in one place per app. The UI is written on the
-assumption that any request can fail and any device can be offline.
+`api` functions raise domain errors with a stable code as the message (`WW-SHOP-001`)
+and any parameters as JSON in `DETAIL`; unexpected errors keep their native `SQLSTATE`.
+The app maps codes to
+typed failures in one place (`core/errors.dart`) and failures to German messages through
+ARB — never by showing a database message to a family member. Repository methods return
+a `Result<T, Failure>`; widgets are written on the assumption that any call can fail and
+any device can be offline.
 
 ### Observability
 
-Structured JSON logs to stdout, collected by Docker. One self-hosted uptime check and
-a nightly backup-success ping. No external APM — see NFR-9. If error tracking becomes
-necessary, self-host GlitchTip rather than adopting a SaaS.
+Structured logs from every container to Docker's json-file driver with rotation. One
+uptime check on `/functions/v1/health` and a nightly backup ping. No external APM and no
+crash-reporting SDK in the app (NFR-9) — iOS crash reports come from TestFlight, Android
+ones from Play Console's vitals, both already part of the distribution path. If error
+tracking becomes necessary, self-host GlitchTip.
 
 ## Key data flows
 
 ### Adding a shopping item from a phone in a shop, offline
 
-1. UI writes the item to IndexedDB and renders it immediately (optimistic).
-2. A mutation record goes into an outbox queue with a client-generated UUID.
-3. On reconnect, the service worker drains the outbox to `POST /api/shopping/items`,
-   sending the client UUID as an idempotency key.
-4. The server upserts by that key, so a retried request cannot create a duplicate.
-5. Postgres `NOTIFY` → SSE → every other connected device updates.
+1. The repository writes the item to the local drift database and the UI shows it
+   immediately (optimistic).
+2. An outbox row is written with a client-generated UUIDv7.
+3. When connectivity returns — or the app resumes — the outbox drains in order to
+   `api.shopping_apply(p_actor, p_ops)`, the client UUIDs serving as idempotency keys.
+4. The function upserts by those keys, so a replayed batch cannot duplicate anything,
+   and returns the authoritative rows, which replace the local ones.
+5. A trigger broadcasts `shopping:changed` on the household channel; every other open
+   client refetches the list.
 
 ### Ticking off a chore on the wall tablet
 
-1. Tap avatar → active profile set for this interaction (device session already valid).
-2. Tap task → `POST /api/tasks/instances/:id/complete` with the active profile.
-3. Service: mark complete, append a point-ledger entry, recompute the streak, write the
-   audit row, emit `TaskCompleted` — all in one transaction.
-4. `NOTIFY` → SSE → the child's iPad shows the new balance; a badge animation fires if
-   `BadgeAwarded` was emitted.
+1. Tap avatar → acting profile set in app state for this interaction.
+2. Tap task → `api.complete_task(p_actor, p_instance_id)`.
+3. In one transaction: mark complete, append the point-ledger entry, recompute the
+   streak, award any badge, write the audit row, broadcast `tasks:changed`.
+4. The child's iPad refetches and shows the new balance; the badge animation fires if
+   the function returned an awarded badge.
 
 ### The kitchen display rendering a week
 
-1. The kiosk requests `GET /api/board/week?from=…` — **one** endpoint, not four.
-2. `packages/core` composes it in a single transaction: expanded events filtered to
-   `importance='key'` and `kind='presence'`, projected school days from `school`, meal
-   entries with their attendees, and per-member open-task counts.
+1. The kiosk calls the `board-week` Edge Function with its JWT — **one** call, not four.
+2. The function reads events, presence, timetable, holidays, meals and open-task counts
+   through `api` views (RLS applies), expands recurrences and projects school days with
+   the shared `_shared/` code, and composes the result.
 3. The response is shaped exactly as the board renders it — seven day objects, each with
    the same four zones — so the client does no merging and no date arithmetic. A wall
-   display that computes "which lessons fall on Wednesday" in the browser is a wall
-   display that will be subtly wrong twice a year, at the DST boundaries.
-4. SSE pushes an invalidation on any change to an event, timetable, holiday, meal entry or
-   task instance; the board refetches the whole week, because it is small and merging
-   deltas on a device nobody debugs is not worth the risk.
+   display that computes "which lessons fall on Wednesday" on the device is one that will
+   be subtly wrong twice a year, at the DST boundaries.
+4. Any change to an event, timetable, holiday, meal or task broadcasts `board:changed`;
+   the board refetches the whole week, plus a full refetch every five minutes as a belt
+   and braces.
 
 ### Outlook seeing a new family event
 
-1. Event created in the UI → stored in Postgres.
-2. Outlook requests `GET /ics/{token}.ics` on its own schedule (every 3–24 hours).
-3. The endpoint renders the subscriber's filtered event set, honours `If-None-Match`
-   with an ETag derived from the household's latest event revision, and returns 304 when
-   nothing changed.
-4. The event appears in Outlook — eventually. Anything urgent goes out as a web push in
+1. Event created in the app → `api.calendar_save_event` → stored.
+2. Outlook requests `GET /ics/{token}.ics` on its own schedule (every 3–24 hours). Caddy
+   rewrites it to the `ics` Edge Function.
+3. The function looks the token up by hash with the service role, renders the
+   subscriber's filtered event set, and honours `If-None-Match` with an ETag derived from
+   the household's latest event revision.
+4. The event appears in Outlook — eventually. Anything urgent goes out as a push in
    parallel, because the ICS path is not a notification channel. See [05](05-module-calendar.md).

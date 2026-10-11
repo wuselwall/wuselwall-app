@@ -1,0 +1,70 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wuselwall/app/router.dart';
+import 'package:wuselwall/app/theme/app_theme.dart';
+import 'package:wuselwall/app/theme/night.dart';
+import 'package:wuselwall/app/theme/palette.dart';
+import 'package:wuselwall/app/theme/ui_register.dart';
+import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/features/identity/application/acting_profile.dart';
+import 'package:wuselwall/features/identity/application/device_providers.dart';
+import 'package:wuselwall/features/identity/domain/models.dart';
+
+/// Locales in priority order. German is first because it is the fallback for any
+/// device language the app does not support (docs/09, CLAUDE.md).
+const supportedLocales = [Locale('de'), Locale('en')];
+
+const localizationsDelegates = <LocalizationsDelegate<dynamic>>[
+  AppLocalizations.delegate,
+  GlobalMaterialLocalizations.delegate,
+  GlobalWidgetsLocalizations.delegate,
+  GlobalCupertinoLocalizations.delegate,
+];
+
+class WuselWallApp extends ConsumerWidget {
+  const WuselWallApp({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final register = ref.watch(uiRegisterProvider);
+    // The wall display switches to its night shade from 21:00 whatever the OS says;
+    // everything else follows the OS between light and dark.
+    final night = register == UiRegister.kiosk && ref.watch(nightProvider);
+
+    return MaterialApp.router(
+      onGenerateTitle: (context) => context.l10n.appTitle,
+      routerConfig: ref.watch(routerProvider),
+      supportedLocales: supportedLocales,
+      localizationsDelegates: localizationsDelegates,
+      theme: AppTheme.build(register, night ? Shade.night : Shade.light),
+      darkTheme: AppTheme.build(register, night ? Shade.night : Shade.dark),
+      themeMode: ThemeMode.system,
+      builder: (context, child) => _MemberAccent(child: child!),
+    );
+  }
+}
+
+/// On shared and kiosk devices, the acting member's colour becomes the accent of the
+/// whole interface (docs/08). Personal devices keep the brand accent.
+class _MemberAccent extends ConsumerWidget {
+  const _MemberAccent({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final device = ref.watch(deviceProvider).value;
+    final acting = ref.watch(actingProfileProvider);
+    if (device == null || !device.deviceClass.isTapToSwitch || acting == null) {
+      return child;
+    }
+    final members = ref.watch(membersProvider).value ?? const <Member>[];
+    final member = members.where((m) => m.id == acting).firstOrNull;
+    if (member == null) return child;
+    return Theme(
+      data: AppTheme.forMember(Theme.of(context), member.color),
+      child: child,
+    );
+  }
+}

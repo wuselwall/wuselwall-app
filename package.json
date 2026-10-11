@@ -1,0 +1,19 @@
+{
+  "devDependencies": {
+    "sharp": "^0.33.5",
+    "supabase": "^2.120.0"
+  },
+  "private": true,
+  "name": "wuselwall",
+  "scripts": {
+    "db:start": "supabase start",
+    "db:stop": "supabase stop",
+    "db:reset": "supabase db reset",
+    "db:test": "supabase test db",
+    "remote:start": "scripts/remote-supabase.sh start",
+    "remote:stop": "scripts/remote-supabase.sh stop",
+    "remote:status": "scripts/remote-supabase.sh status",
+    "remote:reset": "scripts/remote-supabase.sh db reset",
+    "brand": "node scripts/brand-assets.js"
+  }
+}

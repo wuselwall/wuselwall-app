@@ -5,7 +5,7 @@
 ## Context
 
 A requirement added on 2026-08-30 (A5, → FR-7.x): the children's school timetables must
-be in GoombaWall, visible in the calendar, and present on the kitchen wall display as part
+be in WuselWall, visible in the calendar, and present on the kitchen wall display as part
 of the standard view.
 
 Two children, five days, five to six lessons a day, plus Hort and an AG. The timetable is

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="1024" height="1024">
+  <title>WuselWall</title>
+    <circle cx="16" cy="25" r="9" fill="#000000"/>
+    <circle cx="23.5" cy="49" r="6.5" fill="#000000"/>
+    <circle cx="32" cy="75" r="9" fill="#000000"/>
+    <circle cx="41.5" cy="55" r="6.5" fill="#000000"/>
+    <circle cx="50" cy="37" r="9" fill="#000000"/>
+    <circle cx="59" cy="57" r="6.5" fill="#000000"/>
+    <circle cx="68" cy="76" r="9" fill="#000000"/>
+    <circle cx="76.5" cy="50" r="6.5" fill="#000000"/>
+    <circle cx="84" cy="24" r="9" fill="#000000"/>
+    <circle cx="92" cy="12" r="3.2" fill="#000000" opacity=".55"/>
+    <circle cx="96" cy="4.5" r="2" fill="#000000" opacity=".35"/>
+</svg>

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <title>Wuselchen</title>
+    <g fill="none" stroke-linecap="round" stroke-width="6.5">
+      <path d="M37 32 Q31 22 33 13" stroke="#7B3FE4"/>
+      <path d="M46 28 Q44 18 47 9" stroke="#0B8793"/>
+      <path d="M55 28 Q58 18 57 9" stroke="#F29A2E"/>
+      <path d="M64 32 Q71 23 70 14" stroke="#D8336B"/>
+    </g>
+    <path d="M50 27 C75 27 88 42 88 61 C88 81 72 90 50 90 C28 90 12 81 12 61 C12 42 25 27 50 27 Z" fill="#2D6A4F"/>
+    <ellipse cx="27" cy="70" rx="6" ry="3.6" fill="#FF85AE" opacity=".6"/>
+    <ellipse cx="73" cy="70" rx="6" ry="3.6" fill="#FF85AE" opacity=".6"/>
+    <circle cx="37" cy="56" r="9.5" fill="#FFFFFF"/>
+    <circle cx="63" cy="56" r="9.5" fill="#FFFFFF"/>
+    <circle cx="39" cy="54" r="5" fill="#1C1F23"/>
+    <circle cx="65" cy="54" r="5" fill="#1C1F23"/>
+    <path d="M40 71 q5 7 10 0 q5 7 10 0" fill="none" stroke="#F7F4EE" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -1,0 +1,79 @@
+name: wuselwall
+description: WuselWall household app.
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.13.0
+  flutter: 3.47.7
+
+dependencies:
+  characters: ^1.4.0
+  connectivity_plus: ^6.1.0
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  flutter_riverpod: ^3.0.0
+  flutter_secure_storage: ^9.2.2
+  go_router: ^16.0.0
+  http: ^1.2.0
+  intl: any
+  mobile_scanner: ^7.4.2
+  passkeys: ^2.23.1
+  qr_flutter: ^4.1.0
+  supabase_flutter: ^2.0.0
+
+dev_dependencies:
+  flutter_launcher_icons: ^0.14.4
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
+  otp: ^3.2.1
+
+flutter:
+  uses-material-design: true
+  generate: true
+
+  # Self-hosted, never fetched at runtime (NFR-9). Licences: assets/fonts/OFL-*.txt,
+  # registered with LicenseRegistry in app/licenses.dart.
+  assets:
+    - assets/fonts/OFL-AtkinsonHyperlegibleNext.txt
+    - assets/fonts/OFL-BarlowSemiCondensed.txt
+  fonts:
+    - family: AtkinsonHyperlegibleNext
+      fonts:
+        - asset: assets/fonts/AtkinsonHyperlegibleNext-Regular.ttf
+        - asset: assets/fonts/AtkinsonHyperlegibleNext-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/AtkinsonHyperlegibleNext-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/AtkinsonHyperlegibleNext-ExtraBold.ttf
+          weight: 800
+    - family: BarlowSemiCondensed
+      fonts:
+        - asset: assets/fonts/BarlowSemiCondensed-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/BarlowSemiCondensed-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/BarlowSemiCondensed-Bold.ttf
+          weight: 700
+
+# App icons from the Wuselpunkte mark (docs/brand, ADR-012). Regenerate with
+# `dart run flutter_launcher_icons` after changing anything in assets/icon/.
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: assets/icon/icon.png
+  image_path_ios: assets/icon/icon-ios.png
+  remove_alpha_ios: true
+  adaptive_icon_background: "#F7F4EE"
+  adaptive_icon_foreground: assets/icon/adaptive-foreground.png
+  adaptive_icon_monochrome: assets/icon/monochrome.png
+  web:
+    generate: true
+    image_path: assets/icon/icon.png
+    background_color: "#F7F4EE"
+    theme_color: "#2D6A4F"

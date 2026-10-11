@@ -1,0 +1,182 @@
+{
+  "@@locale": "de",
+  "appTitle": "WuselWall",
+  "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten",
+  "retry": "Erneut versuchen",
+  "errorNetwork": "Keine Verbindung zum Server. Prüfe dein Netzwerk und versuche es erneut.",
+  "errorAuth": "Du bist nicht angemeldet oder deine Sitzung ist abgelaufen.",
+  "errorPermission": "Das darfst du nicht.",
+  "errorNotFound": "Das wurde nicht gefunden.",
+  "errorConflict": "Das steht im Konflikt mit etwas, das schon existiert.",
+  "errorValidation": "Diese Eingabe ist ungültig.",
+  "errorUnknown": "Etwas ist schiefgelaufen.",
+  "configMissing": "Diesem Build fehlt die Konfiguration: {missing}",
+  "setupTitle": "Einrichtung",
+  "registerAdult": "Erwachsene",
+  "registerKid": "Kind",
+  "registerKiosk": "Wandanzeige",
+  "systemTitle": "System",
+  "systemBuild": "Build",
+  "systemEnvironment": "Umgebung",
+  "systemBackendUrl": "Backend-URL",
+  "systemConnectivity": "Konnektivität",
+  "systemNetwork": "Netzwerk",
+  "systemOnline": "Online",
+  "systemOffline": "Offline",
+  "systemUnknown": "Unbekannt",
+  "systemBackend": "Backend",
+  "systemStatus": "Status",
+  "systemStatusOk": "OK",
+  "systemDbVersion": "Datenbankversion",
+  "systemServerTime": "Serverzeit",
+  "@configMissing": {
+    "placeholders": {
+      "missing": {
+        "type": "String"
+      }
+    }
+  },
+  "setupHeadline": "Dieses Gerät ist noch nicht eingerichtet",
+  "setupBody": "Richte dieses Gerät mit einem Code von einem Erziehungsberechtigten ein, melde dich als Erziehungsberechtigter an oder lege einen neuen Haushalt an.",
+  "setupEnrolAction": "Dieses Gerät mit Code einrichten",
+  "setupSignInAction": "Als Erziehungsberechtigter anmelden",
+  "setupHouseholdAction": "Neuen Haushalt einrichten",
+  "wizardTitle": "Neuer Haushalt",
+  "wizardCreate": "Haushalt anlegen",
+  "fieldSetupToken": "Einrichtungs-Token",
+  "fieldHouseholdName": "Haushaltsname",
+  "fieldYourName": "Dein Name",
+  "fieldEmail": "E-Mail",
+  "fieldPassword": "Passwort (mindestens 10 Zeichen)",
+  "fieldPasswordSimple": "Passwort",
+  "fieldPin": "6-stellige PIN",
+  "fieldRequired": "Pflichtfeld",
+  "signInTitle": "Anmelden",
+  "signInAction": "Anmelden",
+  "enrolTitle": "Gerät einrichten",
+  "enrolBody": "Gib den Code ein, der auf einem bereits eingerichteten Gerät angezeigt wird.",
+  "enrolCodeLabel": "Einrichtungscode",
+  "enrolAction": "Einrichten",
+  "errSetupTokenInvalid": "Das Einrichtungs-Token ist ungültig.",
+  "errSetupClosed": "Dieses System ist bereits eingerichtet.",
+  "errPasswordTooShort": "Das Passwort braucht mindestens 10 Zeichen.",
+  "errPinFormat": "Die PIN muss genau 6 Ziffern haben.",
+  "errCodeInvalid": "Dieser Code ist falsch oder abgelaufen.",
+  "errGuardianRequired": "Das darf nur ein Erziehungsberechtigter.",
+  "errDeviceRevoked": "Dieses Gerät wurde gesperrt.",
+  "errActorRequired": "Tippe zuerst auf deinen Namen.",
+  "errNameRequired": "Bitte gib einen Namen ein.",
+  "errInvalidLogin": "E-Mail oder Passwort ist falsch.",
+  "cancel": "Abbrechen",
+  "save": "Speichern",
+  "close": "Schließen",
+  "delete": "Löschen",
+  "yes": "Ja",
+  "no": "Nein",
+  "shoppingTitle": "Einkaufsliste",
+  "shoppingAddHint": "Artikel hinzufügen",
+  "shoppingQuantityHint": "Menge",
+  "shoppingEmpty": "Nichts zu kaufen",
+  "shoppingFinish": "Einkauf beenden",
+  "shoppingFinishConfirm": "Einkauf beenden? Abgehakte Artikel werden entfernt, der Rest bleibt auf der Liste.",
+  "shoppingFinished": "{bought} gekauft, {left} übernommen",
+  "@shoppingFinished": {
+    "placeholders": {
+      "bought": {
+        "type": "int"
+      },
+      "left": {
+        "type": "int"
+      }
+    }
+  },
+  "actingWho": "Wer bist du?",
+  "pinTitle": "PIN für Erziehungsberechtigte",
+  "pinPrompt": "PIN für {name} eingeben",
+  "@pinPrompt": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pinWrong": "Falsche PIN. Noch {left} Versuche.",
+  "@pinWrong": {
+    "placeholders": {
+      "left": {
+        "type": "int"
+      }
+    }
+  },
+  "pinBackoff": "Zu viele Versuche. Bitte warte einen Moment.",
+  "pinLocked": "PIN gesperrt. Ein Erziehungsberechtigter muss sich zum Entsperren anmelden.",
+  "settingsTitle": "Einstellungen",
+  "settingsMembers": "Mitglieder",
+  "settingsDevices": "Geräte",
+  "addMember": "Mitglied hinzufügen",
+  "memberName": "Name",
+  "roleGuardian": "Erziehungsberechtigter",
+  "roleMember": "Mitglied",
+  "addDevice": "Gerät hinzufügen",
+  "deviceLabel": "Gerätename",
+  "createCode": "Code erzeugen",
+  "enrolmentCodeTitle": "Einrichtungscode",
+  "enrolmentCodeHint": "Gib diesen Code innerhalb von 10 Minuten auf dem neuen Gerät ein. Er gilt nur einmal.",
+  "thisDevice": "dieses Gerät",
+  "deviceRevoked": "gesperrt",
+  "revoke": "Sperren",
+  "revokeConfirm": "„{device}“ sperren? Es verliert sofort den Zugriff.",
+  "@revokeConfirm": {
+    "placeholders": {
+      "device": {
+        "type": "String"
+      }
+    }
+  },
+  "signOutDevice": "Dieses Gerät abmelden",
+  "classPersonal": "Persönlich",
+  "classShared": "Geteilt (Antippen zum Wechseln)",
+  "classKiosk": "Wandanzeige",
+  "systemDevice": "Dieses Gerät",
+  "systemRegister": "Ansicht",
+  "systemEnrolled": "Eingerichtet",
+  "errRateLimited": "Zu viele Versuche. Bitte warte ein paar Minuten und versuche es erneut.",
+  "errMfaRequired": "Gib zuerst den Code aus deiner Authenticator-App ein.",
+  "scanQr": "QR-Code scannen",
+  "scanTitle": "Einrichtungscode scannen",
+  "enrolmentQrLabel": "QR-Code für den Einrichtungscode",
+  "mfaTitle": "Zweiter Faktor",
+  "mfaBody": "Gib den 6-stelligen Code aus deiner Authenticator-App ein.",
+  "mfaCodeLabel": "6-stelliger Code",
+  "mfaVerify": "Bestätigen",
+  "registerTitle": "Dieses Gerät benennen",
+  "registerBody": "{name}, dieses Handy ist neu im Haushalt. Gib ihm einen Namen, damit du es später erkennen (und sperren) kannst.",
+  "@registerBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "registerDefaultLabel": "Handy von {name}",
+  "@registerDefaultLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "registerAction": "Dieses Gerät verwenden",
+  "signInPasskey": "Mit Passkey anmelden",
+  "settingsSecurity": "Sicherheit",
+  "totpTitle": "Zwei-Faktor-Anmeldung",
+  "totpOn": "An: bei jeder Anmeldung wird ein Code verlangt.",
+  "totpOff": "Aus",
+  "totpEnable": "Einschalten",
+  "totpDisable": "Ausschalten",
+  "totpScanBody": "Scanne diesen Code mit einer Authenticator-App und gib dann den angezeigten 6-stelligen Code ein.",
+  "passkeyTitle": "Passkey",
+  "passkeyBody": "Mit Fingerabdruck oder Gesicht statt mit Passwort anmelden.",
+  "passkeyAdd": "Hinzufügen",
+  "passkeyAdded": "Passkey hinzugefügt."
+}

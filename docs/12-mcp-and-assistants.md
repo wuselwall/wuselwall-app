@@ -1,11 +1,12 @@
 # 12 — MCP & Assistant Integration (B4)
 
-Implements FR-6.1 – FR-6.6. Decision context: [ADR-007](adr/ADR-007-assistant-integration.md).
+Implements FR-6.1 – FR-6.6. Decision context: [ADR-007](adr/ADR-007-assistant-integration.md);
+both endpoints run as Supabase Edge Functions since [ADR-010](adr/ADR-010-flutter-and-self-hosted-supabase.md).
 
 Two separate things, on different timelines:
 
-- **Today: Siri**, via Apple Shortcuts calling a REST endpoint. Works now, needs no App
-  Store, no developer account, and about an hour of work.
+- **Today: Siri**, via Apple Shortcuts calling a REST endpoint. Works now, needs no
+  native Siri code in the app, and about an hour of work.
 - **Now and later: MCP**, so Claude or any other MCP-speaking assistant can read and act
   on family data on your behalf.
 
@@ -15,14 +16,15 @@ Two separate things, on different timelines:
 
 Apple's Shortcuts app has a **Get Contents of URL** action that performs authenticated
 HTTP requests, and any shortcut can be triggered by a spoken phrase. That is the whole
-mechanism. A PWA cannot register App Intents, but it does not need to: the shortcut talks
-to the API directly.
+mechanism. The native app could register App Intents — with Swift code alongside
+Flutter — but it does not need to: the shortcut talks to the API directly. App Intents
+remain an M3+ option if a spoken phrase stops being enough.
 
 **"Hey Siri, Einkaufsliste"**
 
 1. Ask for Input (text) → "Was brauchst du?"
 2. Get Contents of URL
-   - `POST https://home.example.de/api/shortcuts/shopping/add`
+   - `POST https://home.example.de/functions/v1/shortcuts/shopping/add`
    - Header `Authorization: Bearer <shortcut token>`
    - JSON body `{ "text": <Provided Input>, "clientUuid": <UUID> }`
 3. Show Result → "Auf der Liste."
@@ -66,16 +68,20 @@ Target spec revision **`2026-07-28`**, the largest revision since MCP launched:
 
 Verify the final published spec and the TypeScript SDK's support level when you start
 this module; it landed recently enough that SDK coverage is worth checking rather than
-assuming.
+assuming. The server is an Edge Function (Deno), so also check that the SDK runs there —
+a stateless protocol suits a function runtime well.
 
 ### Deployment and authorisation
 
 ```
-https://mcp.home.example.de/mcp     Streamable HTTP
+https://mcp.home.example.de/mcp     Streamable HTTP → Caddy → the mcp Edge Function
 ```
 
-GoombaWall acts as the OAuth 2.1 authorisation server (Better Auth has an OIDC-provider
-plugin; confirm current MCP-specific support before committing). Flow: authorization code
+WuselWall acts as the OAuth 2.1 authorisation server. Supabase Auth has been gaining
+OAuth 2.1 server capabilities; confirm that the self-hosted version covers MCP's
+requirements before committing ([Q15](14-open-questions.md)). The function forwards the
+resulting user token to Postgres, so RLS and the `api` functions apply to assistant calls
+exactly as to app calls. Flow: authorization code
 with PKCE, a consent screen that names the assistant and the scopes, refresh tokens, and
 a settings page listing active grants with a revoke button next to each.
 
@@ -145,8 +151,8 @@ intentions than forty that match database tables.
 
 ### Attribution and audit
 
-Every MCP call carries an `ActorContext` with `origin: 'mcp'` and `onBehalfOf: { principal,
-assistant }`. The audit log therefore distinguishes "Papa ticked this off" from "Claude
+Every MCP call reaches the `api` functions with `origin = 'mcp'` and
+`on_behalf_of = { principal, assistant }`, which `app.actor()` records ([03](03-architecture.md#the-acting-profile--actorcontext-in-sql)). The audit log therefore distinguishes "Papa ticked this off" from "Claude
 ticked this off on Papa's behalf", and the UI can show a small assistant marker. When you
 later find an event you do not remember creating, this is the difference between a mystery
 and an answer.
