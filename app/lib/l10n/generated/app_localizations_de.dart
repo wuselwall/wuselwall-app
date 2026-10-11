@@ -547,7 +547,7 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get pinChangeTitle => 'Wächter-PIN';
+  String get pinChangeTitle => 'PIN für Erziehungsberechtigte';
 
   @override
   String get pinChangeBody =>
