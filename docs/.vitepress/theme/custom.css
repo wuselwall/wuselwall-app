@@ -1,0 +1,17 @@
+/* WuselWall's green (the app's primary) on VitePress's brand variables. */
+:root {
+  --vp-c-brand-1: #2e7d6b;
+  --vp-c-brand-2: #3a9580;
+  --vp-c-brand-3: #2e7d6b;
+  --vp-c-brand-soft: rgba(46, 125, 107, 0.14);
+}
+.dark {
+  --vp-c-brand-1: #6cc4ad;
+  --vp-c-brand-2: #54b199;
+  --vp-c-brand-3: #2e7d6b;
+}
+/* Phone screenshots: a soft frame and a sensible width, centred. */
+.shot { display: block; margin: 1.5rem auto; max-width: 320px; width: 100%; border-radius: 18px; border: 1px solid var(--vp-c-divider); box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12); }
+.shot.wide { max-width: 100%; border-radius: 10px; }
+.shots { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
+.shots .shot { margin: 0.5rem 0; max-width: 260px; }

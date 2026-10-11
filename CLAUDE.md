@@ -63,6 +63,16 @@ See [specs/03-architecture.md](specs/03-architecture.md),
   one (`npx supabase start` with Docker on the laptop) — never against the home server.
   Remote CLI commands go through `scripts/remote-supabase.sh` (see specs/10).
 
+## End-user documentation (`docs/`)
+
+VitePress site in German (root) and English (`/en/`), written for the family, not for
+developers (the specification is `specs/`). Screenshots come from the Flutter web demo
+(`app/lib/main_demo.dart`, in-memory data) driven by Playwright: `npm run docs:screenshots`
+regenerates every image in both languages; `npm run docs:dev` previews, `npm run docs:build`
+checks links. **When a screen or a label changes, update the matching page in both
+languages and regenerate the screenshots.** Playwright's Chromium needs
+`sudo npx playwright install-deps chromium` once on the development machine.
+
 ## Localization
 
 All user-facing text in the built application must exist in **both English and German**,

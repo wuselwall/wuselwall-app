@@ -1,7 +1,9 @@
 {
   "devDependencies": {
+    "playwright": "^1.64.0",
     "sharp": "^0.33.5",
-    "supabase": "^2.120.0"
+    "supabase": "^2.120.0",
+    "vitepress": "^1.6.4"
   },
   "private": true,
   "name": "wuselwall",
@@ -14,6 +16,11 @@
     "remote:stop": "scripts/remote-supabase.sh stop",
     "remote:status": "scripts/remote-supabase.sh status",
     "remote:reset": "scripts/remote-supabase.sh db reset",
-    "brand": "node scripts/brand-assets.js"
+    "brand": "node scripts/brand-assets.js",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
+    "docs:demo": "cd app && flutter build web -t lib/main_demo.dart --release -o build/web-demo",
+    "docs:screenshots": "npm run docs:demo && node docs/tools/screenshots.mjs"
   }
 }
