@@ -89,6 +89,24 @@ first because it is already started, tasks second because it is the heaviest, ca
 Stundenplan third, meals last because it depends on shopping's catalogue. The week board
 is assembled in M1.5, once all of its sources exist.
 
+### M1.0 Onboarding
+
+*Added 2026-10-11 ([ADR-014](adr/ADR-014-self-service-onboarding.md),
+[20](20-onboarding.md), [16 step 9](16-setup-plan.md#step-9--onboarding-m10)).* Can be built
+alongside M1.1–M1.4 and must be finished **before M1.6**, because the family's real
+household is set up through it.
+
+The front door (Apple, Google, email code, password) · household creation in `code` mode
+with H1/H2 and seeded examples · invitations by link, code, QR and email match ·
+reverse pairing for shared devices, with the PIN deferred to the first one · the
+getting-started card · account and household deletion, leave, data export · localised
+auth mail · the landing pages and `/.well-known` files · M0.1's setup wizard and code
+entry retired one release later.
+
+**Done when** the second parent joins from a WhatsApp message in under a minute, the wall
+tablet is connected without anyone touching its keyboard, and both are timed on the
+release checklist.
+
 ### M1.1 Shopping, complete
 
 > **Built 2026-10-11 (online):** several lists with a default, categories per list as the
@@ -167,23 +185,49 @@ that session short.
 *Re-scoped 2026-10-11 by [ADR-013](adr/ADR-013-one-self-hosted-environment.md): there is
 no separate deployment any more, so this is the launch checklist on the one environment.*
 
-The setup token replaced (`scripts/remote-setup-token.sh`) and the family's real household
-set up · the development data cleared before that, once · push credentials (Q38) and
+The family's real household set up through the M1.0 flow with a founder code
+(`scripts/remote-setup-token.sh`), the second parent joined by invitation and the devices
+paired · the development data cleared before that, once · push credentials (Q38) and
 notification preferences · the ICS feed verified against real Outlook and real iOS ·
 nightly backups with the dead-man's switch and an off-site copy (Q14) · **a restore drill
 on the real data, with the date written down** · the pre-launch checklist in
 [11](11-security-and-privacy.md) · wall display mounted in the kitchen, the app pinned in
 kiosk mode.
 
-Guardian accounts already exist from M0.1. What is still missing is account *recovery*
-for a guardian who loses their phone and password — today that means Studio on the home
-network. That is acceptable while the developer is the only operator and worth revisiting
-before anyone else depends on it.
+Account *recovery*, the gap this paragraph used to record, is closed by M1.0: an email
+code replaces a forgotten password, and a co-guardian resets a lost second factor. Studio
+remains the last resort only for an adult who has lost both their mailbox and every
+linked provider.
 
 **Done when:** all four members use it daily for two weeks without asking you to fix
 anything.
 
 ---
+
+## Opening to other households
+
+*Added 2026-10-11 ([ADR-014](adr/ADR-014-self-service-onboarding.md)).* Not a milestone
+with features but a **gate**: the instance stays in `code` mode, and strangers cannot
+start a household, until every line below is true. It sits after M1.6 on purpose. The
+family uses the flows for weeks first, and their hesitations are fixed before anyone else
+meets them.
+
+- **Where it runs** decided and done ([Q40](14-open-questions.md)): at the least, the
+  official self-hosting stack instead of the CLI's (A8 in [19](19-security-and-architecture-review.md)),
+  no database port on the network (S10), monitoring and alerting (A9).
+- **The final domain** chosen before any stranger holds an invitation link or a passkey
+  bound to it ([Q45](14-open-questions.md)).
+- **Public distribution** ([Q42](14-open-questions.md)): App Store / TestFlight public link
+  and Play open testing or production; store privacy labels and the Data safety form
+  filled in honestly; a demo account with a password for App Review.
+- **Legal:** privacy policy, record of processing, processor agreements, breach
+  procedure, a contact address ([11](11-security-and-privacy.md#privacy-and-legal)).
+- **Abuse controls** live: Auth and Cloudflare rate limits, the 30-day clean-up of empty
+  accounts, the attempt logs ([11, T11](11-security-and-privacy.md#t11--the-open-front-door)).
+- **Deletion and export** tested on a real household, including Apple token revocation.
+- **The cross-household pgTAP suite** reviewed once more with "a stranger is on the other
+  side" in mind.
+- Then: `household_creation = 'open'`.
 
 ## M2 — Assistants and the obvious gaps
 

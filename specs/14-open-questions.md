@@ -15,6 +15,26 @@ lands here rather than in the module being built.
 | Q36 | Accept the higher running cost? | The Apple Developer Program (€99/year) and an 8 GB server for Supabase put the total at ≈ €18–21/month, against the original ≤ €10 target (NFR-7) | *Added 2026-10-11.* Accept: the €99 is the price of native apps on iOS at all, and a 4 GB server would make Supabase the thing that stalls. NFR-7 is revised as *proposed* until confirmed **Resolved 2026-10-11 by [ADR-013](adr/ADR-013-one-self-hosted-environment.md):** no rented server, so the total is ≈ €8–12/month and NFR-7's €10 target roughly holds. |
 | Q37 | Can the children's Apple accounts be TestFlight testers? | Child accounts under Family Sharing may not be addable as App Store Connect users or may not be allowed to run TestFlight | *Added 2026-10-11.* Try it with one iPad as soon as the developer account is active (M0.4). If it fails: Ad Hoc builds to the iPads' registered UDIDs, installed from a page on the VPS |
 
+## Before M1.0 (onboarding)
+
+*Added 2026-10-11 with [ADR-014](adr/ADR-014-self-service-onboarding.md).*
+
+| # | Question | Why it matters | Leaning |
+|---|---|---|---|
+| Q41 | Which SMTP provider sends the sign-in codes? | Email codes do not work without one (Mailpit only catches mail on the home network); the provider sees addresses and codes (NFR-9), and deliverability decides whether people get in at all | An EU provider with a free tier and DKIM on our domain (Brevo, Mailjet or Scaleway TEM); not the home server's own mail, whose IP will be on blocklists. Decide before the email path is built; Apple and Google sign-in do not depend on it |
+| Q43 | One household per account — what about separated parents, or a grandparent in two families? | `profile.auth_user_id` is unique, so an adult can be in one household. Patchwork families are common, and a child living in two homes is the hardest case | One household per account in v1; the data model does not prevent a later household switcher (a second linked profile per account, the household chosen per session). Revisit when a real family asks, not before |
+
+## Before opening to other households
+
+*The gate in [13](13-roadmap.md#opening-to-other-households).*
+
+| # | Question | Why it matters | Leaning |
+|---|---|---|---|
+| Q40 | Where does the one project with everyone's households run? | ADR-014 puts all households in one project, and the app has one backend URL. The home server costs nothing but makes the operator's house the data centre for strangers (availability, power cuts, GDPR controller duties); hosted Supabase in Frankfurt is EU-resident but US-owned, which ADR-010 rejected for this family's data | Keep one stack for all households, this family included. Before opening, move from the CLI stack to the official self-hosting compose stack (A8) — at home, or on a rented EU server if availability or the operator's appetite for strangers' data at home says so. Hosted Supabase only if the family's own data may move too |
+| Q42 | How do strangers install the app — TestFlight public link and Play open testing, or full store listings? | Internal testing reaches only App Store Connect users and listed Play testers. A public link still needs Beta App Review, and a store listing needs metadata, screenshots, privacy labels and a review account | TestFlight public link + Play open testing first (quick, honest "beta" label), store listings once the first outside families have used it for a month |
+| Q44 | Captcha on sign-up? | Supabase Auth supports hCaptcha and Turnstile; both are third parties in the sign-up path and awkward in native apps | No. Rate limits, `code` mode and the empty-account clean-up first; Turnstile on the email step only if abuse appears |
+| Q45 | Which domain do other families see? | Invitation links, universal links, App Links and the passkey relying-party ID are bound to it; changing it later breaks every passkey and every outstanding link | Decide before the first passkey or invitation leaves the family. `wusel.example.org` is fine for the family; a product domain (e.g. `wuselwall.de`/`.app`, availability to check) is the better public face |
+
 ## Before M1.2 (tasks)
 
 | # | Question | Why it matters | Leaning |
@@ -82,7 +102,9 @@ editor is built, not after.*
 
 Recorded so they are not re-litigated every time they occur to someone.
 
-- **Multi-household support.** No. See [01](01-vision-and-scope.md).
+- ~~**Multi-household support.** No. See [01](01-vision-and-scope.md).~~ **Reversed
+  2026-10-11 by [ADR-014](adr/ADR-014-self-service-onboarding.md)**: self-service
+  households. Still deferred: anything *between* households (Q43).
 - **A sibling leaderboard.** No. See [06](06-module-tasks.md).
 - **Two-way Outlook/Google sync.** No. See [ADR-001](adr/ADR-001-calendar-backbone.md).
 - **Per-item privacy between family members.** No, unless a concrete need appears.
