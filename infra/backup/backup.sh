@@ -8,7 +8,7 @@
 #   HEALTHCHECK_URL=https://hc-ping.com/<uuid>
 set -euo pipefail
 
-DB=${DB_CONTAINER:-supabase_db_wuselwall}
+DB=${DB_CONTAINER:-supabase-db}
 OUT=${BACKUP_DIR:-/mnt/user/backups/wuselwall}
 KEEP_DAYS=${KEEP_DAYS:-14}
 LABEL=${1:-nightly}

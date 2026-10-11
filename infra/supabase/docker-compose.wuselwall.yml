@@ -1,0 +1,88 @@
+# WuselWall's layer over Supabase's official self-hosting compose file (ADR-013 amendment).
+#
+# docker-compose.yml and volumes/ are upstream, copied verbatim from
+#   https://github.com/supabase/supabase/tree/3fc8af387ec4dfb449510828a938e1f6e57a9575/docker
+# Never edit them; every change lives here, so an upstream update is a copy plus a diff
+# of this file (specs/10#updates).
+#
+# What this file changes, and why:
+# - Images: the exact versions the pinned Supabase CLI (package.json) runs, so the home
+#   server, CI and a laptop stack run the same Postgres 15, GoTrue, PostgREST and Realtime.
+# - Exposure: the gateway listens on the Docker bridge address only (nginx reaches it,
+#   the home network does not); Postgres on 127.0.0.1 only; no pooler, no Mailpit.
+# - Auth: the settings of supabase/config.toml's [auth] section, as GoTrue variables.
+# - Keys: JWKS everywhere, so tokens signed with the old HS256 secret stay valid next to
+#   the ES256 key pair (infra/supabase/make-env.mjs).
+
+name: wuselwall
+
+services:
+  studio:
+    image: public.ecr.aws/supabase/studio:2026.10.05-sha-94b8b06
+
+  api-gw:
+    ports: !override
+      - ${GATEWAY_BIND:-172.17.0.1}:${GATEWAY_PORT:-54421}:8000/tcp
+
+  auth:
+    image: ghcr.io/supabase/gotrue:v2.197.0
+    environment:
+      # Sign with the EC key, verify the legacy HS256 secret too.
+      GOTRUE_JWT_KEYS: ${JWT_KEYS}
+      GOTRUE_PASSWORD_MIN_LENGTH: 10
+      GOTRUE_SECURITY_MANUAL_LINKING_ENABLED: "false"
+      GOTRUE_SECURITY_REFRESH_TOKEN_ROTATION_ENABLED: "true"
+      GOTRUE_SECURITY_REFRESH_TOKEN_REUSE_INTERVAL: 10
+      GOTRUE_MAILER_SECURE_EMAIL_CHANGE_ENABLED: "true"
+      GOTRUE_MFA_TOTP_ENROLL_ENABLED: "true"
+      GOTRUE_MFA_TOTP_VERIFY_ENABLED: "true"
+      GOTRUE_MFA_PHONE_ENROLL_ENABLED: "false"
+      GOTRUE_MFA_PHONE_VERIFY_ENABLED: "false"
+      GOTRUE_MFA_MAX_ENROLLED_FACTORS: 10
+      GOTRUE_HOOK_CUSTOM_ACCESS_TOKEN_ENABLED: "true"
+      GOTRUE_HOOK_CUSTOM_ACCESS_TOKEN_URI: pg-functions://postgres/app/custom_access_token_hook
+      # Passkeys: bound to the public domain (the CLI's "localhost" never worked here).
+      GOTRUE_PASSKEY_ENABLED: "true"
+      GOTRUE_WEBAUTHN_RP_DISPLAY_NAME: WuselWall
+      GOTRUE_WEBAUTHN_RP_ID: ${PASSKEY_RP_ID}
+      GOTRUE_WEBAUTHN_RP_ORIGINS: ${PASSKEY_RP_ORIGINS}
+      # The CLI's limits, except e-mail: no SMTP is configured yet, so nothing is sent.
+      GOTRUE_RATE_LIMIT_TOKEN_REFRESH: 150
+      GOTRUE_RATE_LIMIT_VERIFY: 30
+      GOTRUE_RATE_LIMIT_OTP: 30
+      GOTRUE_RATE_LIMIT_SMS_SENT: 30
+      GOTRUE_RATE_LIMIT_ANONYMOUS_USERS: 30
+      GOTRUE_RATE_LIMIT_WEB3: 30
+      GOTRUE_RATE_LIMIT_EMAIL_SENT: 30
+
+  rest:
+    image: public.ecr.aws/supabase/postgrest:v16.4
+
+  realtime:
+    image: ghcr.io/supabase/realtime:v2.140.10
+    environment:
+      API_JWT_JWKS: ${JWT_JWKS}
+
+  storage:
+    image: public.ecr.aws/supabase/storage-api:v1.79.36
+    environment:
+      JWT_JWKS: ${JWT_JWKS}
+
+  meta:
+    image: ghcr.io/supabase/postgres-meta:v0.100.0
+
+  functions:
+    image: public.ecr.aws/supabase/edge-runtime:v1.77.4
+    environment:
+      SUPABASE_JWKS: ${JWT_JWKS}
+
+  db:
+    # Postgres 15, as supabase/config.toml ([db] major_version) and CI.
+    image: public.ecr.aws/supabase/postgres:15.19.0.004
+    ports:
+      # For migrations, pgTAP and Studio through an SSH tunnel; never on the network.
+      - 127.0.0.1:${DB_PORT:-54422}:5432/tcp
+
+  # The pooler is not needed for one household and would publish 5432 and 6543.
+  supavisor:
+    profiles: [disabled]

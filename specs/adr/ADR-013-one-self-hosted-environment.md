@@ -5,7 +5,9 @@
 [ADR-011](ADR-011-native-distribution-and-ci-cd.md) · Amended by
 [ADR-014](ADR-014-self-service-onboarding.md) on 2026-10-11: self-service households share
 **one** project instead of one project per tenant; where it runs is
-[Q40](../14-open-questions.md)
+[Q40](../14-open-questions.md) · **Amended 2026-10-11:** the one environment runs
+Supabase's official self-hosting compose file instead of the CLI's stack — see
+[Amendment](#amendment-2026-10-11-the-official-compose-stack)
 
 ## Context
 
@@ -33,7 +35,7 @@ the user's own nginx.
   port 54321. nginx forwards the four API prefixes only
   ([`infra/nginx/wusel.goomba.ch.conf`](../../infra/nginx/wusel.goomba.ch.conf)).
   Caddy is dropped.
-- **The stack stays the Supabase CLI's** (`supabase start`, driven remotely through
+- *(Superseded by the amendment below.)* **The stack stays the Supabase CLI's** (`supabase start`, driven remotely through
   `scripts/remote-supabase.sh`), with **its own secrets**: `auth.jwt_secret`,
   `auth.publishable_key` and `auth.secret_key` in `supabase/config.toml` read from the
   git-ignored `supabase/.env`. The CLI's defaults are public, and anyone who has them
@@ -99,7 +101,7 @@ already exists.
   `supabase db reset` reaches the household directly. Mitigations: a dump before every
   migration (`scripts/remote-backup.sh`), `db reset` reserved for disposable stacks,
   migrations rehearsed in CI first, and the integration test kept off the home server.
-- **The CLI stack is a development tool.** It publishes Postgres (54322, password
+- *(Resolved by the amendment below.)* **The CLI stack is a development tool.** It publishes Postgres (54322, password
   `postgres`), Studio (54323, no login) and Mailpit (54324) on the home network. Only
   Kong is forwarded to the internet, so they are reachable only inside the house. Keep it
   that way: never forward those ports, and keep Studio off any nginx host.
@@ -114,3 +116,46 @@ already exists.
 appears. The first step back is a separate stack on the same server (the official
 self-hosting compose file, own secrets), with this one returning to a development
 sandbox.
+
+## Amendment 2026-10-11: the official compose stack
+
+**Decision (the user, answering S10 and A8 in [19](../19-security-and-architecture-review.md),
+and the first condition of [Q40](../14-open-questions.md)):** the one environment moves
+from the Supabase CLI's stack to Supabase's **official self-hosting compose file**. It
+stays **one** environment: the compose stack replaces the CLI stack on the home server,
+and experiments run on throwaway stacks (CI, the laptop).
+
+**Why.** The CLI stack publishes Postgres (password `postgres`), Studio (no login) and
+Mailpit on every interface of the home server, and `config.toml` cannot change that. The
+compose file takes every secret from its own `.env` and leaves the ports to us. It also
+runs Edge Functions from a directory on the server, which the CLI cannot do against a
+remote Docker host (A11). And it is the stack Q40 needs before anyone else's household
+could live on it, wherever that ends up running.
+
+**As built**
+
+| Area | CLI stack (before) | Compose stack |
+|---|---|---|
+| Definition | `supabase/config.toml`, `supabase start` over `DOCKER_HOST=ssh://unraid` | [`infra/supabase/`](../../infra/supabase/): upstream `docker/` at commit `3fc8af38`, copied verbatim, plus `docker-compose.wuselwall.yml`; run from `/mnt/cache/appdata/wuselwall/supabase` by `scripts/remote-stack.sh` |
+| Images | Chosen by the pinned CLI | **The same tags**, pinned in our layer (Postgres 15.19, GoTrue 2.197, PostgREST 16.4, Realtime 2.140) — CI and the home server agree |
+| Gateway | Kong on `0.0.0.0:54321` | Envoy (upstream's default) on `172.17.0.1:54421`: reachable from the nginx container, not from the home network |
+| Postgres | `0.0.0.0:54322`, password `postgres` | `127.0.0.1:54422`, a 48-character password; no pooler |
+| Studio, Mailpit | `0.0.0.0:54323` without login, `0.0.0.0:54324` | Studio behind the gateway with basic auth, by SSH tunnel only; no Mailpit |
+| Secrets | `supabase/.env` → `config.toml` | The server's `.env` only (`make-env.mjs`, `init-env`): JWT secret and opaque keys **kept**, so the installed apps work without a rebuild; new EC P-256 signing key, the old HS256 secret still verified through the JWKS |
+| Auth settings | `[auth]` in `config.toml` | The same values as GoTrue variables in our layer: sign-up off, TOTP, the access-token hook, refresh rotation, the CLI's rate limits; passkeys bound to `wusel.goomba.ch` instead of `localhost`; minimum password length 10 (S14) |
+| Migrations | `supabase migration up` through SSH tunnels | `scripts/remote-migrations.sh`: each pending file in one transaction with its `schema_migrations` row, through `docker exec` — no password leaves the server |
+| pgTAP, backups, setup token | `docker exec supabase_db_wuselwall` | The same scripts against `supabase-db` |
+
+**Data.** Not carried over, by the user's choice: the CLI stack held only development data
+(one test household, 30 devices from testing). The new database got the six migrations,
+pgTAP passed (85 tests), and the family's household is set up fresh with a new setup token.
+Devices enrolled on the CLI stack fall back to the enrolment screen.
+
+`supabase/config.toml` stays: it defines the throwaway stacks in CI and on the laptop. A
+setting changed in one of the two definitions must be changed in the other.
+
+**Rollback**, while the CLI stack's Docker volumes still exist: point nginx back at
+`192.168.1.4:54321` and run `DOCKER_HOST=ssh://unraid npx supabase start`. The volumes are
+removed once the compose stack has run for two weeks without needing it.
+
+**Revisit if** the compose file's upgrade path proves more painful than the CLI's.
