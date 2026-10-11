@@ -1,7 +1,7 @@
 # CLAUDE.md
 
 This repository holds both the planning documents and the code for WuselWall (see
-[README.md](README.md)). `docs/` is the specification; `app/` (Flutter), `supabase/`
+[README.md](README.md)). `specs/` is the specification; `app/` (Flutter), `supabase/`
 (migrations, Edge Functions, tests) and `infra/` hold the implementation. Setup-plan steps 3, 5,
 6 and 8 are built (app shell, identity, online shopping list, the one environment) and M1.1
 is built except the offline outbox; continue with the outbox, step 7 once the Apple and
@@ -9,9 +9,9 @@ Google accounts exist, or the next M1 module.
 
 ## Architecture rules
 
-See [docs/03-architecture.md](docs/03-architecture.md),
-[ADR-010](docs/adr/ADR-010-flutter-and-self-hosted-supabase.md) and
-[ADR-013](docs/adr/ADR-013-one-self-hosted-environment.md).
+See [specs/03-architecture.md](specs/03-architecture.md),
+[ADR-010](specs/adr/ADR-010-flutter-and-self-hosted-supabase.md) and
+[ADR-013](specs/adr/ADR-013-one-self-hosted-environment.md).
 
 - **There is one environment**: the CLI stack on the home server (Unraid, `ssh unraid`),
   public at `https://wusel.goomba.ch`. The family's data lives there. Before any migration
@@ -49,7 +49,7 @@ See [docs/03-architecture.md](docs/03-architecture.md),
   the `Failure`. Render with `AsyncValueView`.
 - Colours come from `app/theme/palette.dart` through `Theme.of(context).colorScheme` and
   `context.ww` (member colours, paper tints, points) — never a `Color` literal in a
-  widget. Values and rules: [docs/17-design-system.md](docs/17-design-system.md).
+  widget. Values and rules: [specs/17-design-system.md](specs/17-design-system.md).
 - Configuration comes from `--dart-define-from-file=env/<name>.json` — never `dotenv`,
   never `kDebugMode` branches for URLs or keys.
 - Developer-only screens are gated with `kDebugMode` and must not exist in release.
@@ -61,7 +61,7 @@ See [docs/03-architecture.md](docs/03-architecture.md),
   after backend changes. The integration tests (`flutter test test/integration
   --dart-define-from-file=env/ci.json`) run in CI on a throwaway stack, or locally against
   one (`npx supabase start` with Docker on the laptop) — never against the home server.
-  Remote CLI commands go through `scripts/remote-supabase.sh` (see docs/10).
+  Remote CLI commands go through `scripts/remote-supabase.sh` (see specs/10).
 
 ## Localization
 
@@ -69,14 +69,14 @@ All user-facing text in the built application must exist in **both English and G
 always. This is not optional and not deferred to a later milestone — it applies as soon as
 any UI work starts. Never add a string in one language only.
 
-- Shipped locales are `de` and `en` (NFR-14, see [docs/02-requirements.md](docs/02-requirements.md)).
+- Shipped locales are `de` and `en` (NFR-14, see [specs/02-requirements.md](specs/02-requirements.md)).
   German is the default and the fallback for unsupported device locales.
 - Code, comments and documentation stay in English — only user-facing strings are localized.
 - Strings live in `app/l10n/app_en.arb` (template) and `app/l10n/app_de.arb`, generated with
   Flutter `gen-l10n` and read through `context.l10n` (see
-  [docs/09-clients-and-ux.md](docs/09-clients-and-ux.md#language)). No literal string may land
+  [specs/09-clients-and-ux.md](specs/09-clients-and-ux.md#language)). No literal string may land
   in a widget, even as a placeholder — add the key to both ARB files in the same change.
 - This covers UI copy, error messages, notifications, ICS summaries, and the MCP and
-  Shortcuts responses (see [docs/12-mcp-and-assistants.md](docs/12-mcp-and-assistants.md)) —
+  Shortcuts responses (see [specs/12-mcp-and-assistants.md](specs/12-mcp-and-assistants.md)) —
   anything a household member reads or hears from the app. Server-side strings live in
   `supabase/functions/_shared/`, one message file per language.

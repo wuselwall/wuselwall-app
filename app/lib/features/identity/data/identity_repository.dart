@@ -218,7 +218,7 @@ class IdentityRepository {
 
   // ---------------------------------------------------------------- passkeys (beta)
   // Needs platform setup that waits for the production domain (associated domains,
-  // Digital Asset Links); see docs/16-setup-plan.md.
+  // Digital Asset Links); see specs/16-setup-plan.md.
 
   Future<Result<void>> registerPasskey(String friendlyName) =>
       Result.guard(() async {
@@ -231,6 +231,13 @@ class IdentityRepository {
   Future<Result<void>> signInWithPasskey() => Result.guard(() async {
     await _auth.signInWithPasskey(PasskeyAuthenticator());
   });
+
+  /// Sets a new guardian PIN and clears a lockout. Only a guardian's own phone may.
+  Future<Result<void>> setPin({required String pin}) => _api.rpc(
+    'guardian_set_pin',
+    params: {'p_actor': null, 'p_new_pin': pin},
+    parse: (_) {},
+  );
 
   Future<Result<PinResult>> verifyPin({
     required String profileId,

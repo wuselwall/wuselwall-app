@@ -12,7 +12,7 @@ import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 
 /// Locales in priority order. German is first because it is the fallback for any
-/// device language the app does not support (docs/09, CLAUDE.md).
+/// device language the app does not support (specs/09, CLAUDE.md).
 const supportedLocales = [Locale('de'), Locale('en')];
 
 const localizationsDelegates = <LocalizationsDelegate<dynamic>>[
@@ -46,7 +46,7 @@ class WuselWallApp extends ConsumerWidget {
 }
 
 /// On shared and kiosk devices, the acting member's colour becomes the accent of the
-/// whole interface (docs/08). Personal devices keep the brand accent.
+/// whole interface (specs/08). Personal devices keep the brand accent.
 class _MemberAccent extends ConsumerWidget {
   const _MemberAccent({required this.child});
 

@@ -33,7 +33,7 @@ is the kitchen display that shows the household's busy week at a glance.
 ### Logo and mascot
 
 *Added 2026-10-11*, chosen from the four concepts in
-[docs/mockups/logo.html](../mockups/logo.html):
+[specs/mockups/logo.html](../mockups/logo.html):
 
 - **Logo and app icon: Wuselpunkte** (concept C). A W made of nine dots in the member
   colours, like magnets on the fridge or the "isst mit" dots on the board, with Tanne
@@ -45,7 +45,7 @@ is the kitchen display that shows the household's busy week at a glance.
   the children's register, and the sleepy night display. It never replaces the logo on
   an icon, a splash screen or the web title.
 
-The source files are in [docs/brand/](../brand/): `wuselwall-mark[-dark].svg`,
+The source files are in [specs/brand/](../brand/): `wuselwall-mark[-dark].svg`,
 `wuselwall-icon[-dark].svg`, the Android adaptive layers, and `wuselchen[-dark].svg`.
 `npm run brand` (`scripts/brand-assets.js`) regenerates them and the PNGs in
 `app/assets/icon/`. `dart run flutter_launcher_icons` in `app/` then rebuilds the iOS,

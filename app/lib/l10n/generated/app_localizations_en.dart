@@ -541,4 +541,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String shoppingAddedBy(String name) {
     return 'Added by $name';
   }
+
+  @override
+  String get pinChangeTitle => 'Guardian PIN';
+
+  @override
+  String get pinChangeBody =>
+      'Set a new 6-digit PIN. This also unlocks a PIN that was locked by too many wrong tries.';
+
+  @override
+  String get pinChangeAction => 'Change';
+
+  @override
+  String get pinChangeField => 'New PIN (6 digits)';
+
+  @override
+  String get pinChanged => 'PIN changed.';
 }

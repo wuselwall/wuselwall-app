@@ -57,7 +57,7 @@ and needs a defaulting rule rather than an empty multi-select nobody fills in.
 
 ## Capture: the tile picker
 
-*Added 2026-09-02. Mockup: [`docs/mockups/shopping-quick-add.html`](mockups/shopping-quick-add.html)
+*Added 2026-09-02. Mockup: [`specs/mockups/shopping-quick-add.html`](mockups/shopping-quick-add.html)
 — published at https://claude.ai/code/artifact/bad8116b-8bfc-424a-b045-2e8b58f83e3a*
 
 FR-4.1 asks for three seconds. A text field with an autocomplete dropdown does not get

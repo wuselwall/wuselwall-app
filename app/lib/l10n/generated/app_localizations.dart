@@ -1099,6 +1099,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Added by {name}'**
   String shoppingAddedBy(String name);
+
+  /// No description provided for @pinChangeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Guardian PIN'**
+  String get pinChangeTitle;
+
+  /// No description provided for @pinChangeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a new 6-digit PIN. This also unlocks a PIN that was locked by too many wrong tries.'**
+  String get pinChangeBody;
+
+  /// No description provided for @pinChangeAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get pinChangeAction;
+
+  /// No description provided for @pinChangeField.
+  ///
+  /// In en, this message translates to:
+  /// **'New PIN (6 digits)'**
+  String get pinChangeField;
+
+  /// No description provided for @pinChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN changed.'**
+  String get pinChanged;
 }
 
 class _AppLocalizationsDelegate
