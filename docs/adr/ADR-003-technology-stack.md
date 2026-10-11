@@ -1,6 +1,6 @@
 # ADR-003 — TypeScript end to end: SvelteKit, Drizzle, PostgreSQL
 
-**Status:** Accepted · 2026-08-29 · Framework choice confirmed 2026-08-30 — see [Q2](../14-open-questions.md)
+**Status:** Superseded by [ADR-010](ADR-010-flutter-and-self-hosted-supabase.md) on 2026-10-11 · was Accepted 2026-08-29, framework choice confirmed 2026-08-30
 
 ## Context
 

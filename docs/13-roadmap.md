@@ -1,8 +1,11 @@
 # 13 — Roadmap
 
-> **GoombaWall restart, 2026-10-11.** This roadmap was carried over from BretApp, where
-> M0 and M1.1 had been built. GoombaWall starts again from M0.0; the scope notes below
-> describe what each milestone means, and the status column tracks this repository only.
+> **WuselWall restart, 2026-10-11.** This roadmap was carried over from BretApp, where
+> M0 and M1.1 had been built on the TypeScript stack. WuselWall starts again from M0.0 on
+> Flutter and self-hosted Supabase ([ADR-010](adr/ADR-010-flutter-and-self-hosted-supabase.md)).
+> M0 has been re-cut for the new stack and gained a release-pipeline step (M0.4); the
+> step-by-step build order is [16 — Setup Plan](16-setup-plan.md). The status column
+> tracks this repository only.
 
 ## A note on the "all four modules at once" decision
 
@@ -44,30 +47,40 @@ yet tried is building the wrong thing carefully.
 
 | | Status |
 |---|---|
-| **M0.0** Monorepo, TypeScript strict, Drizzle, first migration, PWA-ready shell, i18n | Not started |
-| **M0.1a** Household and profiles seeded; a development actor stand-in | Not started (BretApp: superseded by M0.1b) |
-| **M0.2** The shopping list, online only: add, tick, finish | Not started |
-| **M0.1b** Device enrolment, tap-to-switch, guardian PIN, row-level security | Not started |
-| **M0.3** Docker image, production compose, Caddy, CI, backups, CSP, setup gate | Not started — deployment held for M1.6 |
+| **M0.0** Repository skeleton · local Supabase with the first migration, RLS and pgTAP harness · Flutter shell with three registers and German l10n · `ci.yml` ([16](16-setup-plan.md) steps 1–4) | In progress — Flutter shell, first migration, pgTAP test and `ci.yml` written (CI not yet run on GitHub); RLS catalogue test still open |
+| **M0.1** Identity: setup wizard, guardian accounts, device enrolment, tap-to-switch, guardian PIN, revocation (step 5) | Built and tested (pgTAP + end-to-end), incl. per-phone devices, TOTP, QR enrolment, rate limiting; passkeys wired, untested until the production domain exists — see ADR-010 implementation notes |
+| **M0.2** The shopping list, online only: add, tick, finish, live across devices (step 6) | Built and tested; not yet tried on the family's real devices |
+| **M0.4** Mobile release pipeline: signing, `release-mobile.yml`, TestFlight and the Play internal track (step 7) | Not started — needs the Apple and Google accounts |
+| **M0.3** Production stack, Caddy, backups, `deploy.yml` — built and tested on a disposable VM (step 8) | Not started — deployment held for M1.6 |
+
+M0.4 is new and comes **before** M0.3. A PWA reached the phones by URL; a native app
+reaches an iPhone only through a signed build, and without a Mac the release pipeline is
+the only way to get one there. So distribution is proven during M0, while deployment of
+the backend can still wait.
 
 **Done when:** the shopping list is used on both parents' phones for one real supermarket
-trip — over the home network, against the laptop.
+trip — installed from TestFlight or Play, talking to Supabase on the laptop over the home
+network.
 
 ### Trialling on the home network
 
-The dev server already binds to `0.0.0.0`, so a phone on the same wifi reaches it at
-`http://<laptop-ip>:5173` and enrols like any other device. That is enough to answer the
-adoption question, and it is what M1.1–M1.5 are now built against.
+Supabase runs on the laptop (`supabase start`), reachable from the home wifi through
+WSL's mirrored networking at a reserved address, and the family's devices run builds
+configured for that address ([16](16-setup-plan.md#before-production-exists)). That is
+enough to answer the adoption question, and it is what M1.1–M1.5 are built against.
 
-Four things a LAN trial cannot show, all deferred rather than lost:
+Native apps remove one limit of the original plan — **installation now works on day one**,
+because TestFlight and Play deliver real apps without a public server. Three things a LAN
+trial still cannot show, all deferred rather than lost:
 
-- **iOS home-screen install.** A PWA needs a secure origin, so the app runs in a Safari
-  tab rather than as an installed app. Installability is proven at M1.6, not before.
-- **Web push.** Same constraint. The morning summary (Q13) cannot be trialled.
+- **Push.** The `push-send` function could reach APNs and FCM from the laptop, but push
+  credentials and notification preferences are M1.6 work. The morning summary (Q13)
+  waits.
 - **The ICS feed into Outlook.** Needs a public URL, so the calendar's whole outbound
   half stays untested until deployment.
-- **Availability.** The laptop has to be awake and on the network. A wall display is not
-  worth mounting until that stops being true.
+- **Availability, and use outside the house.** The laptop has to be awake and the phone
+  on the home wifi. A wall display is not worth mounting until that stops being true —
+  and a shopping list that only syncs at home leans entirely on the offline outbox.
 
 These are the reasons M1.6 is a milestone rather than an afterthought. None of them
 block finding out whether the family wants the thing.
@@ -81,7 +94,8 @@ is assembled in M1.5, once all of its sources exist.
 
 ### M1.1 Shopping, complete
 
-**Scope (as reached in BretApp, 2026-09-12):** Categories and store layouts (a category belongs to a list rather
+**Scope (as reached in BretApp, 2026-09-12, on the old stack — the mechanisms map to
+drift and Supabase Realtime as described in [07](07-module-meals-shopping.md)):** Categories and store layouts (a category belongs to a list rather
 than a separate `store` entity — v1's three lists already map onto real venues, so the
 category *is* the layout) · catalogue with a self-hosted icon set, populated lazily on
 purchase rather than on capture · **the tile picker** with folded, ranked typeahead and
@@ -147,18 +161,19 @@ that session short.
 
 *The M0.3 artefacts, finally used. Held until here on purpose.*
 
-Domain (Q1) · Hetzner CX22, provisioned and hardened · GitHub repository, CI and GHCR ·
-first deploy and the setup wizard behind its token · TLS on the real hostname · **iOS
-home-screen install proven on both parents' phones** · web push and notification
-preferences · the ICS feed verified against real Outlook and real iOS · nightly backups
-with the dead-man's switch · **a restore drill, with the date written down** · the
-pre-launch checklist in [11](11-security-and-privacy.md) · wall display mounted in the
-kitchen.
+Domain (Q1) · Hetzner server (8 GB), provisioned and hardened · the self-hosted Supabase
+stack with fresh keys · `deploy.yml` switched from manual to on-push · first deploy and
+the setup wizard behind its token · TLS on the real hostname · **a production release of
+the apps** (`env/prod.json`) on every family device · push credentials (Q38) and
+notification preferences · the ICS feed verified against real Outlook and real iOS ·
+nightly backups with the dead-man's switch · **a restore drill, with the date written
+down** · the pre-launch checklist in [11](11-security-and-privacy.md) · wall display
+mounted in the kitchen, the app pinned in kiosk mode.
 
-Guardian accounts (Better Auth: passkey and email/password) belong here too, or are
-consciously deferred again. Device tokens protect the running app, so what is missing is
-account *recovery* — today that means SSH and `pnpm db:enrol`. That is acceptable while
-the developer is the only operator and worth revisiting before anyone else depends on it.
+Guardian accounts already exist from M0.1. What is still missing is account *recovery*
+for a guardian who loses their phone and password — today that means Studio over an SSH
+tunnel. That is acceptable while the developer is the only operator and worth revisiting
+before anyone else depends on it.
 
 **Done when:** all four members use it daily for two weeks without asking you to fix
 anything.
@@ -200,15 +215,15 @@ order-of-magnitude, not commitment.
 
 | Milestone | Calendar time | Where it goes wrong |
 |---|---|---|
-| M0 | 1–2 weekends | TLS, DNS, iOS PWA installability. Budget an evening for surprises. |
+| M0 | 3–4 weekends, plus waiting for Apple and Google | Signing and the first TestFlight build without a Mac; WSL networking for the LAN trial; writing the first RLS policies and `api` functions well enough to serve as templates. |
 | M1.1 | 2 weeks | The offline outbox is the whole cost; the tile picker and several lists add a few days. |
 | M1.2 | 2–3 weeks | The largest module. The materialiser and rotation logic need real tests. |
 | M1.3a | 2–3 weeks | Recurrence and ICS correctness. Timezones and all-day events will each cost you a day. |
 | M1.3b | 1–2 weeks | The projection function: A/B weeks × holidays × exceptions is where the edge cases live. Write the tests first, genuinely. |
 | M1.4 | 1–2 weeks | Quantity aggregation and unit handling is fiddlier than it looks. |
 | M1.5 | 2–3 weeks | Always underestimated, and now carries the week board. Three registers plus one screen that has to be right. |
-| M1.6 | 1 weekend | TLS, DNS, iOS installability — the M0 risks, deferred rather than removed, and now landing on top of four modules instead of one thin slice. Budget an evening for surprises, and expect the first `docker compose up` to be a debugging session: the images have never been built. |
-| **M1 total** | **~3–4 months** | The A5 addition (Stundenplan, presence, week board) added roughly a month. |
+| M1.6 | 1 weekend | TLS, DNS, the first real run of the Supabase stack on the VPS, push credentials. The release pipeline is already proven from M0.4, which removes the biggest risk of the old plan. |
+| **M1 total** | **~3–4 months** | The A5 addition (Stundenplan, presence, week board) added roughly a month. Supabase saves the auth, realtime and job plumbing; PL/pgSQL and pgTAP cost some of that back. |
 | M2 | 2–3 weeks | |
 
 ## Milestone discipline

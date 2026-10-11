@@ -1,6 +1,6 @@
 # ADR-004 — Device sessions with tap-to-switch profiles and a guardian PIN
 
-**Status:** Accepted · 2026-08-29
+**Status:** Accepted · 2026-08-29 · Mechanism amended by [ADR-010](ADR-010-flutter-and-self-hosted-supabase.md#identity-on-supabase-auth) on 2026-10-11 — the model stands; cookies and Better Auth become per-device Supabase Auth users
 
 ## Context
 

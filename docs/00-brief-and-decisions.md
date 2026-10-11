@@ -43,7 +43,7 @@ what was inferred.
 | Calendar backbone | **Own database with an outbound ICS feed** | [ADR-001](adr/ADR-001-calendar-backbone.md) |
 | Build vs. assemble | **Build one application from scratch** | [ADR-002](adr/ADR-002-build-vs-assemble.md) |
 | Hosting | **Small VPS in Germany** — with the note "I'll need more guidance here" | [ADR-005](adr/ADR-005-hosting.md), [10](10-deployment-and-ops.md) |
-| Technology | **TypeScript end to end** | [ADR-003](adr/ADR-003-technology-stack.md) |
+| Technology | ~~TypeScript end to end~~ → **Flutter apps on self-hosted Supabase** (changed 2026-10-11) | [ADR-010](adr/ADR-010-flutter-and-self-hosted-supabase.md), superseding [ADR-003](adr/ADR-003-technology-stack.md) |
 | Household | **2 adults, 2 children aged 7 and 9** | [01](01-vision-and-scope.md) |
 | Login model | **Device session with tap-to-switch profiles** | [ADR-004](adr/ADR-004-identity-model.md) |
 | Gamification | **Points with redeemable rewards, plus streaks and badges** | [06](06-module-tasks.md) |
@@ -62,12 +62,12 @@ of the brief. Each is argued in full at the link; flagged here so they are not m
    — but treats attribution as cooperative bookkeeping and gates every action that moves
    points behind a guardian PIN. → [ADR-004](adr/ADR-004-identity-model.md)
 2. **"All four modules at once" needs a walking skeleton in front of it.** Milestone 0
-   ships one thin slice to production in the first fortnight so that TLS, auth, the PWA
-   and deployment are proven before four modules of domain logic land on top.
+   ships one thin slice end to end so that auth, the apps' distribution and the
+   deployment path are proven before four modules of domain logic land on top.
    → [13](13-roadmap.md)
 3. **Outlook will lag by 3–24 hours.** This is a Microsoft limitation on subscribed
    internet calendars with no configuration and no manual refresh. The ICS feed is an
-   awareness channel; anything time-critical goes out as a web push instead.
+   awareness channel; anything time-critical goes out as a push instead.
    → [05](05-module-calendar.md)
 
 ## Later additions
@@ -111,3 +111,39 @@ axis, with a dot per attendee (FR-8.3b); the meal zone shows one warm meal a day
 adult gained a **baseline presence** so that only deviations are entered and only
 deviations are emphasised (FR-1.18). Lotta's timetable in the mockup is the real one from
 the class's paper plan.
+
+### 2026-10-11 — Technology stack: Flutter and self-hosted Supabase
+
+> For the TechStack: I want a self-hosted Supabase (docker) as backend and Flutter as
+> frontend to be able to build native Apps for Android and iOS. So please adjust
+> everything related to that and prepare a plan how to build out the basic setup,
+> including ci/cd, etc.
+
+Recorded as a change of decision, not a new requirement: the brief (B2, B3) is unchanged,
+the way it is met is not.
+
+| Change | Answer | Where |
+|---|---|---|
+| Backend | Self-hosted Supabase on the same German VPS. PostgreSQL becomes the domain core: an `api` schema of views and functions over RLS-protected tables; Edge Functions for recurrence, the week board, ICS, enrolment; `pg_cron` for jobs; Realtime for live updates | [ADR-010](adr/ADR-010-flutter-and-self-hosted-supabase.md), [03](03-architecture.md) |
+| Clients | One Flutter codebase: native iOS/iPadOS and Android apps, plus a web build for the laptop | [ADR-010](adr/ADR-010-flutter-and-self-hosted-supabase.md), [09](09-clients-and-ux.md) |
+| Distribution and CI/CD | TestFlight and the Play internal track; GitHub Actions with fastlane; deploy by SSH with a backup first | [ADR-011](adr/ADR-011-native-distribution-and-ci-cd.md), [16](16-setup-plan.md) |
+| Build order | M0 re-cut, with a new M0.4 for the release pipeline before production | [13](13-roadmap.md), [16](16-setup-plan.md) |
+
+**What this cost.** The Apple Developer Program (€99/year) and a server one size larger
+take the running cost to roughly €18–21/month, past the original €10 target — NFR-7 is
+marked *proposed* until confirmed ([Q36](14-open-questions.md)). Three languages (Dart,
+SQL, TypeScript) instead of one. **What it bought.** Native apps on every device, with real
+push and a real kiosk mode; auth, realtime and jobs without writing them; and ADR-005's
+objection to Supabase, which was about the hosted service, does not apply to a
+self-hosted one.
+
+### 2026-10-11 — Product name: WuselWall
+
+> Can you work on getting a logo and a proper name for our Family Planning app. We don't
+> want any generic name, but something unique.
+
+After a market check of the shortlisted names, the household chose **WuselWall**:
+*wuseln* (bustling about) plus the kitchen wall display. It replaces the working title
+GoombaWall everywhere, including the bundle ID (`ch.wuselwall.app`), the Dart package and
+the Supabase project ID. Names considered and rejected, and the consequences, are in
+[ADR-012](adr/ADR-012-product-name.md).

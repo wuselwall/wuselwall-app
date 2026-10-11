@@ -4,13 +4,14 @@ Implements NFR-1 – NFR-5, NFR-13, NFR-14 and FR-5.4.
 
 ## One application, three registers
 
-There is one PWA. It presents itself in three registers, chosen by the **device's**
+There is one Flutter app — native on iOS, iPadOS and Android, plus a web build for the
+laptop ([ADR-010](adr/ADR-010-flutter-and-self-hosted-supabase.md)). It presents itself in three registers, chosen by the **device's**
 configuration (`device.ui_register`), not by screen width. A child's iPad and a parent's
 laptop can be the same physical size and still need different interfaces.
 
 | Register | Devices | Character |
 |---|---|---|
-| **adult** | Laptop browser, parents' iPhones | Dense. Full navigation, keyboard shortcuts, bulk editing, all administrative screens. This is where planning happens. |
+| **adult** | Laptop browser (web build), parents' iPhones | Dense. Full navigation, keyboard shortcuts, bulk editing, all administrative screens. This is where planning happens. |
 | **kid** | Children's iPads | Large. Icons before words, four or five destinations maximum, no destructive actions, generous animation and feedback. |
 | **kiosk** | Wall display | Glanceable. A read-first **week board**, no navigation chrome, huge type, tap-to-act on a small set of things, auto-revert to home after 60 s. |
 
@@ -199,7 +200,7 @@ it.
 
 ### Freshness and failure
 
-- Live via SSE; a full refetch every 5 minutes as a belt-and-braces measure, because a
+- Live via Supabase Realtime invalidations; a full refetch every 5 minutes as a belt-and-braces measure, because a
   wall display that has silently stopped updating is worse than one that is obviously
   offline.
 - A subtle "aktualisiert vor 4 s" in the header, which turns into "zuletzt aktualisiert
@@ -208,31 +209,33 @@ it.
 - Night variant from 21:00: dark ground, reduced contrast, meals and tomorrow's first
   appointment emphasised, everything else calmed down.
 
-## PWA
+## Platforms and distribution
 
-- Web app manifest: `display: standalone`, portrait and landscape, maskable icons,
-  `theme_color` matching the app chrome.
-- Service worker: precache the application shell, stale-while-revalidate for data reads,
-  and the shopping outbox described in [07](07-module-meals-shopping.md).
-- Installability verified on real hardware before v1 is called done — an iOS PWA that
-  "should work" and one that does are different things.
+*Rewritten 2026-10-11: native apps replace the PWA. The constraints that shaped the old
+section — no install prompt, push only from the home screen, no background sync, storage
+eviction — no longer apply to the phones, iPads or wall tablet.*
 
-### iOS reality, current as of 2026
+| Device | Build | Arrives via |
+|---|---|---|
+| Parents' iPhones, children's iPads | Flutter iOS app | TestFlight ([ADR-011](adr/ADR-011-native-distribution-and-ci-cd.md)) |
+| Wall tablet, any Android phone | Flutter Android app | Play internal testing track |
+| Work laptop | Flutter web build | `https://home.example.de` |
 
-These constrain the design and are not negotiable:
+### Native reality, current as of 2026
 
-| Constraint | Consequence for GoombaWall |
+These still constrain the design:
+
+| Constraint | Consequence for WuselWall |
 |---|---|
-| No install prompt; the user must tap Share → Add to Home Screen | Ship a short illustrated instruction card, shown once per iOS device. Nobody discovers this by themselves. |
-| Web push works **only after** the PWA is on the home screen, and needs a permission prompt triggered by a user gesture | Ask for notification permission from an explicit "Turn on reminders" button inside the app, never on first load. Do this **after** add-to-home-screen, or the request silently fails. |
-| Web push **does** work in the EU. Apple's 2024 plan to remove home-screen web apps there was reversed. | No fallback plan needed on this point. |
-| No Background Sync, no Periodic Background Sync, no Background Fetch | Every reminder is a server-side push. Never schedule anything client-side. The shopping outbox drains on next open, not in the background — so show pending state honestly. |
-| Storage is evicted under pressure and after long disuse | IndexedDB is a cache. The outbox is the only irreplaceable thing in it; drain it eagerly. Request persistent storage where available, but do not rely on the grant. |
-| Badging API works on iOS 16.4+ | Use it for the open-task count. Cheap, and genuinely nice on a home screen. |
+| iOS gives apps **no reliable background execution**; background fetch is opportunistic and often skipped | Every reminder is still a server-side push. Never schedule anything important on the device. The shopping outbox drains when the app resumes or connectivity returns, so pending state is still shown honestly. |
+| Push needs **permission**, asked once; a refusal is hard to undo | Ask from an explicit "Erinnerungen einschalten" button, never at first launch. |
+| Push travels through **Apple (APNs)** and, on Android, **Google (FCM)** | Payloads carry as little as the notification needs; nothing is sent that would not be fine on a lock screen. Provider choice: [Q38](14-open-questions.md). |
+| **TestFlight builds expire** after 90 days | Release at least quarterly; the pipeline makes that a tag. |
+| The **web build** is a Flutter canvas, not HTML: a larger first download, no browser find-in-page, weaker screen-reader support than native | Acceptable for one adult on a laptop. The web build is the adult register only; it is never the kiosk and never a child's device. |
+| iOS **App Intents, widgets and Live Activities** are now possible, but need native Swift alongside Flutter | Not in v1. Shortcuts still covers Siri ([12](12-mcp-and-assistants.md)); a widget for the open-task count is a natural M3 candidate. |
 
-Nothing here forces a native app. Revisit only if you later want Siri App Intents,
-Lock Screen widgets, or Live Activities — see [12](12-mcp-and-assistants.md) for why
-Shortcuts covers the Siri case without them.
+The app badge (open-task count) is available natively on both platforms and replaces the
+Badging API plan.
 
 ## The wall display
 
@@ -240,13 +243,13 @@ The hardware is a decision worth making early because it constrains the UI.
 
 | Option | Pros | Cons |
 |---|---|---|
-| **Cheap Android tablet + Fully Kiosk Browser** *(recommended)* | Real kiosk mode, scheduled screen on/off, motion-wake, remote admin, auto-restart, brightness control. €120–180 all in. | Another Android device to keep patched. |
-| Old iPad in Guided Access | Free if you have one; excellent screen | Guided Access is a poor kiosk mode: no scheduled wake, no motion detection, awkward recovery after a reboot. Also the 7-day storage-eviction rule bites if it sits unused. |
-| Raspberry Pi + touchscreen + Chromium kiosk | Fully controllable, cheap to run | Fiddly to build, mediocre touch panels at this price, one more Linux box to maintain |
+| **Cheap Android tablet running the WuselWall app pinned in kiosk mode** *(recommended)* | The native app, updated automatically from the Play internal track. Android's lock-task (screen pinning) keeps it in the foreground; the app keeps the screen on and dims for the night variant, and set as the tablet's home app it is what appears after a reboot. €120–180. | Scheduled screen-off and motion wake are no longer provided by a kiosk browser — the app does the dimming itself, and true screen-off needs device-owner provisioning or a smart plug. Another Android device to keep patched. |
+| Android tablet + Fully Kiosk Browser showing the **web build** | Fully Kiosk's remote admin, motion wake and scheduling | The kiosk then runs the Flutter web build, which is heavier on a cheap tablet than the native app, and loses native push and offline. A fallback, not the plan. |
+| Old iPad in Guided Access, running the iOS app | Free if you have one; excellent screen | Guided Access is a poor kiosk mode: no scheduled wake, awkward recovery after a reboot, and a TestFlight build that lapses after 90 days without a release. |
 
-Whatever the hardware, the kiosk register needs: no scrollbars, no browser chrome, a
-polled or SSE-driven refresh so it is never stale, a dark variant after 21:00, and
-resilience to losing the network — a wall display showing a Chrome error page is worse
+Whatever the hardware, the kiosk register needs: no scrollbars, no system chrome, a
+realtime-driven refresh with a periodic fallback so it is never stale, a dark variant after 21:00, and
+resilience to losing the network — a wall display showing an error screen is worse
 than one showing yesterday's slightly stale plan.
 
 **Landscape, and at least 1280×800.** The week board needs seven columns plus a row label
@@ -257,17 +260,24 @@ ordering, not the marketing diagonal — cheap 10" tablets in this price range a
 
 ## Realtime and notifications
 
-- **SSE** (`/events`) delivers live updates while a client is open. Auto-reconnect with
-  backoff; on reconnect, refetch rather than replaying missed messages.
-- **Web Push (VAPID)** for anything that must reach a closed app:
+- **Supabase Realtime** delivers live updates while the app is open: database triggers
+  broadcast small invalidation messages (`board:changed`, `shopping:changed`) on a
+  private per-household channel, and the client refetches. On reconnect, refetch rather
+  than replaying missed messages.
+- **Native push** (APNs on iOS, FCM on Android), sent by the `push-send` Edge Function,
+  for anything that must reach a closed app:
   - morning summary of today's tasks and events (per member, configurable time)
   - an event starting in N minutes
   - a reward redemption awaiting guardian approval
   - a task verified and points credited
 - Each member controls their own notification set. Default to few: the fastest way to
   train a family to ignore an app is to notify them about everything in week one.
+- The web build gets realtime but no push; the laptop has Outlook for that.
 
 ## Design system
+
+Concrete values — palette, typefaces, icon sets, shape and motion tokens — are in
+[17 — Design System](17-design-system.md); the rules below are what they implement.
 
 - **Member colour is the primary wayfinding device.** Each person has a colour used
   consistently across calendar, tasks and board. Always paired with an initial or avatar,
@@ -292,8 +302,11 @@ ordering, not the marketing diagonal — cheap 10" tablets in this price range a
 
 ## Language
 
-German UI, English code and documentation (NFR-14). Put an i18n layer in from day one
-(`svelte-i18n` or equivalent) with German as the only shipped locale. Retrofitting i18n
-into a finished UI is tedious; adding a second locale to a prepared one is trivial. It
-also keeps user-facing strings out of components, which makes them easier to review for
-tone — and tone matters when the reader is seven.
+German and English UI, English code and documentation (NFR-14). Flutter's `gen-l10n` with
+`app/l10n/app_en.arb` and `app/l10n/app_de.arb` from the first widget — every string is
+always written in both, German is the default locale — and CI failing on any message
+missing from either file. Retrofitting i18n into a finished UI is tedious. It also keeps user-facing strings
+out of widgets, which makes them easier to review for tone — and tone matters when the
+reader is seven. Strings produced on the server — push notifications, ICS summaries, MCP
+and Shortcuts responses — live in one message file per language (German, English) in
+`supabase/functions/_shared/`.
