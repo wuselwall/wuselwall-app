@@ -1,0 +1,22 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "WuselWall (web, dev)",
+      "request": "launch",
+      "type": "dart",
+      "args": [
+        "--dart-define-from-file=env/dev.json",
+        "-d", "web-server",
+        "--web-hostname", "localhost",
+        "--web-port", "3000"
+      ]
+    },
+    {
+      "name": "WuselWall (device, dev)",
+      "request": "launch",
+      "type": "dart",
+      "args": ["--dart-define-from-file=env/dev.json"]
+    }
+  ]
+}
