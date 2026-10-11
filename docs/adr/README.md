@@ -1,0 +1,20 @@
+# Architecture Decision Records
+
+Short records of the decisions that constrain everything else, kept so that a future
+session — yours or an AI's — can see not just what was chosen but what was rejected and
+why. When a decision changes, add a new ADR that supersedes the old one rather than
+editing it. The value is in the trail.
+
+| # | Decision | Status |
+|---|---|---|
+| [001](ADR-001-calendar-backbone.md) | Own database as calendar source of truth, ICS feed outward | Accepted |
+| [002](ADR-002-build-vs-assemble.md) | One self-built application rather than composed open-source services | Accepted |
+| [003](ADR-003-technology-stack.md) | TypeScript end to end: SvelteKit, Drizzle, PostgreSQL | Accepted |
+| [004](ADR-004-identity-model.md) | Device sessions with tap-to-switch profiles and a guardian PIN | Accepted |
+| [005](ADR-005-hosting.md) | Self-hosted on a German VPS with Docker Compose and Caddy | Accepted |
+| [006](ADR-006-offline-strategy.md) | Server-authoritative data; an offline queue for the shopping list only | Accepted |
+| [007](ADR-007-assistant-integration.md) | Remote MCP server over Streamable HTTP; Shortcuts for Siri today | Accepted |
+| [008](ADR-008-school-timetable-model.md) | Stundenplan as a projected pattern, not stored events | Accepted |
+| [009](ADR-009-event-kinds-and-presence.md) | Presence as an event kind; the week board driven by an explicit flag | Accepted |
+
+Format: Context · Decision · Alternatives considered · Consequences.

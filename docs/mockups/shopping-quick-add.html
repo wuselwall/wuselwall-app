@@ -1,0 +1,1017 @@
+<title>Einkaufsliste Schnellerfassung</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Barlow+Semi+Condensed:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600&display=swap">
+
+<style>
+/* ─────────────────────────────────────────────────────────────
+   GoombaWall — Einkaufsliste, Schnellerfassung (Mockup)
+   Same type and accent as the kitchen-display mockup: one product.
+   The phone screen keeps its own palette; the page follows the
+   viewer's theme.
+   ───────────────────────────────────────────────────────────── */
+
+:root {
+  --ink:      #14181d;
+  --ink-2:    #414b57;
+  --ink-3:    #6d7885;
+  --paper:    #f2f1ee;
+  --paper-2:  #ffffff;
+  --line:     #d9d7d1;
+  --line-2:   #e8e6e1;
+  --accent:   #0b6e6a;
+  --accent-2: #e8f2f1;
+  --shadow:   0 1px 2px rgba(20,24,29,.05), 0 12px 34px -18px rgba(20,24,29,.28);
+
+  --f-ui:   "Archivo", "Segoe UI", system-ui, sans-serif;
+  --f-scr:  "Barlow Semi Condensed", "Archivo Narrow", "Segoe UI", system-ui, sans-serif;
+  --f-body: "Source Serif 4", Georgia, "Times New Roman", serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ink: #e9e7e2; --ink-2: #b3b0a8; --ink-3: #8c8a83;
+    --paper: #16181a; --paper-2: #1e2124;
+    --line: #33363a; --line-2: #26292c;
+    --accent: #4dc7bd; --accent-2: #12312f;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 14px 40px -20px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"] {
+  --ink: #e9e7e2; --ink-2: #b3b0a8; --ink-3: #8c8a83;
+  --paper: #16181a; --paper-2: #1e2124;
+  --line: #33363a; --line-2: #26292c;
+  --accent: #4dc7bd; --accent-2: #12312f;
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 14px 40px -20px rgba(0,0,0,.8);
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: var(--f-body); font-size: 16px; line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1240px; margin: 0 auto; padding: 40px 24px 96px; }
+
+.eyebrow {
+  font-family: var(--f-ui); font-size: 12px; font-weight: 600;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin: 0 0 10px;
+}
+h1 {
+  font-family: var(--f-ui); font-size: clamp(30px, 4.2vw, 44px);
+  font-weight: 700; letter-spacing: -.02em; line-height: 1.05; margin: 0 0 14px; text-wrap: balance;
+}
+.lede { max-width: 60ch; margin: 0; font-size: 18px; color: var(--ink-2); }
+.lede strong { color: var(--ink); font-weight: 600; }
+.meta {
+  font-family: var(--f-ui); font-size: 12.5px; color: var(--ink-3);
+  margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px 18px;
+}
+
+/* ── stage: phone + notes side by side ───────────────────── */
+
+.stage {
+  display: grid; grid-template-columns: minmax(340px, 400px) 1fr;
+  gap: 40px; align-items: start; margin-top: 34px;
+}
+@media (max-width: 900px) { .stage { grid-template-columns: 1fr; } }
+
+.phone {
+  background: linear-gradient(#2a2d31, #1a1c1f);
+  border-radius: 34px; padding: 11px; box-shadow: var(--shadow);
+  position: sticky; top: 24px;
+}
+.phone::before {
+  content: ""; position: absolute; left: 50%; top: 18px; transform: translateX(-50%);
+  width: 88px; height: 22px; border-radius: 999px; background: #101214; z-index: 5;
+}
+
+/* ── the app screen ──────────────────────────────────────── */
+
+.app {
+  --a-bg:     #f6f4f0;
+  --a-panel:  #ffffff;
+  --a-band:   #ecebe6;
+  --a-ink:    #14181d;
+  --a-ink-2:  #4c545e;
+  --a-ink-3:  #7b838d;
+  --a-line:   #dcdad4;
+  --a-accent: #0b6e6a;
+  --a-warn:   #a35a08;
+
+  background: var(--a-bg); color: var(--a-ink);
+  font-family: var(--f-scr);
+  border-radius: 25px; overflow: hidden;
+  height: 720px; display: flex; flex-direction: column;
+  position: relative;
+}
+.app[data-mode="dunkel"] {
+  --a-bg: #0d1116; --a-panel: #151b21; --a-band: #111820;
+  --a-ink: #e7edf3; --a-ink-2: #9aa6b2; --a-ink-3: #6b7682;
+  --a-line: #232b33; --a-accent: #35c4ba; --a-warn: #e0a04b;
+}
+
+.status {
+  padding: 32px 20px 6px; display: flex; align-items: center; gap: 10px;
+  background: var(--a-panel); font-size: 12.5px; font-weight: 600; color: var(--a-ink-3);
+}
+.status .right { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+.status .queued { color: var(--a-warn); }
+
+.app-head {
+  padding: 4px 18px 12px; background: var(--a-panel);
+  display: flex; align-items: baseline; gap: 10px;
+}
+.app-head h2 { font-size: 27px; font-weight: 600; margin: 0; letter-spacing: -.01em; }
+.app-head .list-chip {
+  font-size: 13px; font-weight: 600; color: var(--a-ink-2);
+  background: var(--a-band); border-radius: 999px; padding: 3px 10px;
+}
+.app-head .count { margin-left: auto; font-size: 14px; font-weight: 700; color: var(--a-accent); }
+
+.lists {
+  display: flex; gap: 6px; padding: 0 14px 10px; background: var(--a-panel);
+}
+.lists button {
+  flex: 1; font-family: var(--f-scr); font-size: 14.5px; font-weight: 600;
+  padding: 7px 6px; border-radius: 9px; cursor: pointer;
+  border: 1px solid var(--a-line); background: var(--a-bg); color: var(--a-ink-2);
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.lists button[aria-pressed="true"] {
+  background: var(--a-accent); border-color: var(--a-accent); color: #fff;
+}
+.app[data-mode="dunkel"] .lists button[aria-pressed="true"] { color: #0a0d11; }
+.lists button .n {
+  font-family: var(--f-ui); font-size: 10.5px; font-weight: 700;
+  background: color-mix(in srgb, currentColor 18%, transparent);
+  border-radius: 999px; padding: 0 5px;
+}
+
+/* the long-press sheet: a free-text addition, not a form */
+.note-pop {
+  position: absolute; left: 14px; right: 14px; bottom: 74px; z-index: 8;
+  background: var(--a-panel); border: 1px solid var(--a-line);
+  border-radius: 14px; padding: 14px; box-shadow: 0 20px 50px -20px rgba(0,0,0,.55);
+  display: grid; gap: 10px;
+}
+.note-pop[hidden] { display: none; }
+.np-head { display: flex; align-items: center; gap: 9px; font-size: 19px; }
+.np-head b { font-weight: 600; }
+.note-pop input {
+  font-family: var(--f-scr); font-size: 18px; padding: 10px 12px;
+  border-radius: 10px; border: 1.5px solid var(--a-line);
+  background: var(--a-bg); color: var(--a-ink);
+}
+.note-pop input:focus { outline: none; border-color: var(--a-accent); }
+.np-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.np-chips button {
+  font-family: var(--f-scr); font-size: 14px; font-weight: 600;
+  border: 1px solid var(--a-line); background: var(--a-bg); color: var(--a-ink-2);
+  border-radius: 999px; padding: 5px 11px; cursor: pointer;
+}
+.np-chips button:hover { border-color: var(--a-accent); color: var(--a-accent); }
+.np-actions { display: flex; gap: 8px; }
+.np-actions button {
+  flex: 1; font-family: var(--f-ui); font-size: 14px; font-weight: 600;
+  border-radius: 10px; padding: 10px; cursor: pointer;
+}
+.np-cancel { border: 1px solid var(--a-line); background: transparent; color: var(--a-ink-2); }
+.np-ok { border: 0; background: var(--a-accent); color: #fff; }
+.app[data-mode="dunkel"] .np-ok { color: #0a0d11; }
+
+.searchbar { padding: 0 14px 10px; background: var(--a-panel); position: relative; }
+.searchbar input {
+  width: 100%; font-family: var(--f-scr); font-size: 21px; font-weight: 500;
+  padding: 12px 40px 12px 42px; border-radius: 12px;
+  border: 1.5px solid var(--a-line); background: var(--a-bg); color: var(--a-ink);
+}
+.searchbar input::placeholder { color: var(--a-ink-3); }
+.searchbar input:focus { outline: none; border-color: var(--a-accent); }
+.searchbar .icon {
+  position: absolute; left: 27px; top: 50%; transform: translateY(-58%);
+  font-size: 17px; opacity: .55; pointer-events: none;
+}
+.searchbar .clear {
+  position: absolute; right: 26px; top: 50%; transform: translateY(-58%);
+  border: 0; background: var(--a-band); color: var(--a-ink-2);
+  width: 24px; height: 24px; border-radius: 50%; cursor: pointer;
+  font-family: var(--f-ui); font-size: 13px; line-height: 1; display: none;
+}
+.searchbar .clear.on { display: block; }
+
+.chips {
+  display: flex; gap: 6px; overflow-x: auto; padding: 0 14px 11px;
+  background: var(--a-panel); border-bottom: 1px solid var(--a-line);
+  scrollbar-width: none;
+}
+.chips::-webkit-scrollbar { display: none; }
+.chip {
+  flex: none; font-family: var(--f-scr); font-size: 14.5px; font-weight: 600;
+  padding: 6px 12px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--a-line); background: var(--a-bg); color: var(--a-ink-2);
+}
+.chip[aria-pressed="true"] { background: var(--a-accent); border-color: var(--a-accent); color: #fff; }
+.app[data-mode="dunkel"] .chip[aria-pressed="true"] { color: #0a0d11; }
+
+.results { flex: 1; overflow-y: auto; padding: 12px 14px 96px; }
+.sec-label {
+  font-size: 11.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--a-ink-3); margin: 14px 2px 8px; display: flex; align-items: center; gap: 8px;
+}
+.sec-label:first-child { margin-top: 0; }
+.sec-label .hintlet { font-size: 11px; letter-spacing: 0; text-transform: none; font-weight: 500; opacity: .8; }
+
+.grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
+.tile {
+  position: relative; border: 1px solid var(--a-line); border-radius: 12px;
+  background: var(--a-panel); cursor: pointer; padding: 9px 4px 7px;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  font-family: var(--f-scr); color: var(--a-ink);
+  transition: transform .09s ease, border-color .12s;
+}
+.tile:hover { border-color: var(--a-accent); }
+.tile:active { transform: scale(.94); }
+.tile .em { font-size: 25px; line-height: 1.1; }
+.tile .nm { font-size: 13px; font-weight: 600; line-height: 1.15; text-align: center; }
+.tile .unit { font-size: 10.5px; color: var(--a-ink-3); font-weight: 500; }
+.tile .note-flag {
+  position: absolute; bottom: 3px; right: 5px; font-size: 9px;
+  color: var(--a-accent); font-family: var(--f-ui); font-weight: 700;
+}
+.tile.on { border-color: var(--a-accent); background: color-mix(in srgb, var(--a-accent) 10%, var(--a-panel)); }
+.tile .badge {
+  position: absolute; top: -6px; right: -6px; min-width: 21px; height: 21px;
+  border-radius: 999px; background: var(--a-accent); color: #fff;
+  font-family: var(--f-ui); font-size: 11.5px; font-weight: 700;
+  display: grid; place-items: center; padding: 0 5px;
+}
+.app[data-mode="dunkel"] .tile .badge { color: #0a0d11; }
+.tile .minus {
+  position: absolute; top: -6px; left: -6px; width: 21px; height: 21px;
+  border-radius: 999px; border: 1px solid var(--a-line); background: var(--a-panel);
+  color: var(--a-ink-2); font-family: var(--f-ui); font-size: 13px; font-weight: 700;
+  display: grid; place-items: center; cursor: pointer; padding: 0;
+}
+.tile.new {
+  border-style: dashed; border-color: var(--a-accent);
+  background: color-mix(in srgb, var(--a-accent) 7%, var(--a-panel));
+}
+.tile.new .nm { color: var(--a-accent); }
+.nohit { font-size: 15px; color: var(--a-ink-3); padding: 10px 2px; }
+
+/* the list drawer */
+.drawer {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  background: var(--a-panel); border-top: 1px solid var(--a-line);
+  border-radius: 16px 16px 0 0; box-shadow: 0 -12px 30px -20px rgba(0,0,0,.5);
+  max-height: 72%; display: flex; flex-direction: column;
+  transform: translateY(calc(100% - 62px)); transition: transform .22s ease;
+}
+.drawer.open { transform: translateY(0); }
+.drawer-handle {
+  display: flex; align-items: center; gap: 10px; padding: 14px 18px 12px;
+  cursor: pointer; border: 0; background: transparent; width: 100%;
+  font-family: var(--f-scr); color: var(--a-ink); text-align: left;
+}
+.drawer-handle b { font-size: 17px; font-weight: 600; }
+.drawer-handle .sub { font-size: 13px; color: var(--a-ink-3); font-weight: 500; }
+.drawer-handle .caret { margin-left: auto; font-size: 13px; color: var(--a-ink-3); }
+.drawer-body { overflow-y: auto; padding: 0 16px 18px; }
+.cat-head {
+  font-size: 11.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--a-ink-3); margin: 12px 0 6px;
+}
+.li {
+  display: flex; align-items: center; gap: 10px; padding: 8px 2px;
+  border-bottom: 1px solid var(--a-line); font-size: 16.5px;
+}
+.li .em { font-size: 19px; }
+.li .q { font-weight: 700; color: var(--a-accent); font-variant-numeric: tabular-nums; }
+.li .note { font-size: 13px; color: var(--a-ink-3); font-weight: 500; }
+.li .by {
+  width: 9px; height: 9px; border-radius: 50%; background: var(--c); flex: none;
+}
+.li .rm {
+  margin-left: auto; border: 0; background: transparent; color: var(--a-ink-3);
+  font-family: var(--f-ui); font-size: 15px; cursor: pointer; padding: 4px 6px;
+}
+.li.pending .q { color: var(--a-warn); }
+.li .wait { font-size: 11px; color: var(--a-warn); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+
+/* toast */
+.toast {
+  position: absolute; left: 14px; right: 14px; bottom: 74px; z-index: 6;
+  background: var(--a-ink); color: var(--a-bg);
+  border-radius: 11px; padding: 11px 14px;
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--f-scr); font-size: 15.5px; font-weight: 600;
+  opacity: 0; transform: translateY(8px); transition: opacity .18s, transform .18s;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.toast button {
+  margin-left: auto; border: 0; background: transparent; color: var(--a-accent);
+  font-family: var(--f-ui); font-size: 13.5px; font-weight: 700; cursor: pointer;
+}
+
+/* ── notes column ────────────────────────────────────────── */
+
+.notes { display: grid; gap: 18px; }
+.controls { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 4px; }
+.btn {
+  font-family: var(--f-ui); font-size: 13.5px; font-weight: 600;
+  color: var(--ink); background: var(--paper-2);
+  border: 1px solid var(--line); border-radius: 999px;
+  padding: 9px 16px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+}
+.btn:hover { border-color: var(--accent); }
+.btn[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+:root[data-theme="dark"] .btn[aria-pressed="true"],
+:root:not([data-theme="light"]) .btn[aria-pressed="true"] { color: #06201f; }
+.btn .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; opacity: .55; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+.note {
+  background: var(--paper-2); border: 1px solid var(--line);
+  border-radius: 10px; padding: 17px 19px;
+}
+.note h3 { font-family: var(--f-ui); font-size: 17px; font-weight: 700; margin: 0 0 6px; }
+.note p { margin: 0; font-size: 15.5px; color: var(--ink-2); }
+.note p + p { margin-top: 8px; }
+.note .try {
+  font-family: var(--f-ui); font-size: 12.5px; color: var(--accent);
+  margin-top: 10px; display: block; font-weight: 600;
+}
+kbd {
+  font-family: var(--f-ui); font-size: 12px; font-weight: 600;
+  background: var(--paper); border: 1px solid var(--line); border-bottom-width: 2px;
+  border-radius: 5px; padding: 1px 6px;
+}
+
+section { margin-top: 60px; }
+h2.sec { font-family: var(--f-ui); font-size: 26px; font-weight: 700; letter-spacing: -.02em; margin: 0 0 8px; }
+.sec-lede { max-width: 66ch; color: var(--ink-2); margin: 0 0 24px; }
+.qs { display: grid; gap: 12px; }
+.q {
+  background: var(--paper-2); border: 1px solid var(--line); border-radius: 10px;
+  padding: 16px 18px; display: grid; grid-template-columns: 34px 1fr; gap: 4px 14px;
+}
+.q .qn {
+  font-family: var(--f-ui); font-size: 12px; font-weight: 700; color: #fff;
+  background: var(--accent); border-radius: 6px; height: 26px; display: grid; place-items: center;
+}
+:root[data-theme="dark"] .q .qn,
+:root:not([data-theme="light"]) .q .qn { color: #06201f; }
+.q h3 { font-family: var(--f-ui); font-size: 17px; font-weight: 600; margin: 0; align-self: center; }
+.q p { grid-column: 2; margin: 6px 0 0; font-size: 15px; color: var(--ink-2); }
+.q .lean {
+  grid-column: 2; margin-top: 8px; font-family: var(--f-ui); font-size: 13.5px;
+  color: var(--ink-2); background: var(--accent-2); border-radius: 6px; padding: 7px 11px;
+}
+.q .lean b { color: var(--accent); }
+footer.page {
+  margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--line);
+  font-family: var(--f-ui); font-size: 13px; color: var(--ink-3);
+  display: flex; flex-wrap: wrap; gap: 8px 20px;
+}
+</style>
+
+<div class="wrap">
+  <p class="eyebrow">GoombaWall · Mockup fürs Telefon</p>
+  <h1>„Kitchen roll" in drei Sekunden</h1>
+  <p class="lede">
+    Erfassen ist die Stelle, an der eine Einkaufsliste gewonnen oder verloren wird: Wenn
+    das Aufschreiben länger dauert als der Griff zum Zettel, wird die Liste nicht benutzt —
+    und eine unvollständige Liste ist schlimmer als gar keine. Deshalb <strong>tippt man
+    nicht, man tippt an</strong>: die üblichen Verdächtigen liegen als Kacheln da, die
+    Suche engt sie ein, und ein Tipp legt an.
+  </p>
+  <div class="meta">
+    <span>Umsetzt FR-4.1 – FR-4.5 aus <em>02 — Requirements</em></span>
+    <span>Katalog, Kategorien und Offline-Verhalten: <em>07 — Meals &amp; Shopping</em></span>
+    <span>Echtes Prototyp-Verhalten: suchen, antippen, lange drücken, wieder wegnehmen</span>
+  </div>
+
+  <div class="stage">
+    <div class="phone">
+      <div class="app" id="app" data-mode="hell">
+        <div class="status">
+          <span id="net-label">GoombaWall · online</span>
+          <span class="right"><span id="queued"></span><span>17:42</span></span>
+        </div>
+
+        <div class="app-head">
+          <h2 id="list-title">Supermarkt</h2>
+          <span class="count" id="count">7 offen</span>
+        </div>
+        <div class="lists" id="lists"></div>
+
+        <div class="searchbar">
+          <span class="icon">⌕</span>
+          <input id="q" type="search" placeholder="Was brauchen wir?" autocomplete="off"
+                 aria-label="Artikel suchen">
+          <button class="clear" id="clear" aria-label="Suche löschen">✕</button>
+        </div>
+
+        <div class="chips" id="chips"></div>
+        <div class="results" id="results"></div>
+
+        <div class="note-pop" id="note-pop" hidden>
+          <div class="np-head"><span id="np-em"></span><b id="np-name"></b></div>
+          <input id="np-input" type="text" placeholder="Bio · 500 g · Dose · welche Sorte?"
+                 aria-label="Zusatz zum Artikel">
+          <div class="np-chips" id="np-chips"></div>
+          <div class="np-actions">
+            <button class="np-cancel" id="np-cancel">Abbrechen</button>
+            <button class="np-ok" id="np-ok">Auf die Liste</button>
+          </div>
+        </div>
+
+        <div class="toast" id="toast">
+          <span id="toast-text"></span>
+          <button id="undo">Rückgängig</button>
+        </div>
+
+        <div class="drawer" id="drawer">
+          <button class="drawer-handle" id="drawer-handle">
+            <b>Auf der Liste</b>
+            <span class="sub" id="drawer-sub">7 Artikel</span>
+            <span class="caret" id="caret">▲ öffnen</span>
+          </button>
+          <div class="drawer-body" id="drawer-body"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="notes">
+      <div class="controls">
+        <button class="btn" id="tgl-offline" aria-pressed="false"><span class="dot"></span>Offline simulieren</button>
+        <button class="btn" id="tgl-dark" aria-pressed="false"><span class="dot"></span>Dunkel</button>
+        <button class="btn" id="reset">Zurücksetzen</button>
+      </div>
+
+      <div class="note">
+        <h3>Zuerst das, was ihr sowieso kauft</h3>
+        <p>Ohne Eingabe zeigt der Bildschirm <b>Zuletzt</b> und <b>Oft gekauft</b> — beides
+        lernt die App aus der Kaufhistorie, niemand pflegt das. In einem Haushalt sind das
+        praktisch immer dieselben dreißig Dinge; für die soll man gar nicht erst tippen
+        müssen.</p>
+        <span class="try">Antippen fügt hinzu · nochmal antippen macht 2 × · das kleine − nimmt wieder weg</span>
+      </div>
+
+      <div class="note">
+        <h3>Tippen engt ein, statt eine Liste zu bauen</h3>
+        <p>Die Suche filtert die Kacheln live und ist absichtlich nachsichtig: Umlaute,
+        Groß- und Kleinschreibung und Zweitnamen sind egal — <em>klopapier</em> findet
+        Toilettenpapier, <em>haferd</em> findet den Haferdrink, <em>passata</em> die
+        passierten Tomaten.</p>
+        <p>Was der Katalog nicht kennt, steht als letzte Kachel: <b>„… neu anlegen"</b>.
+        Beim ersten Kauf wandert es in den Katalog und ist beim nächsten Mal eine Kachel wie
+        jede andere.</p>
+        <span class="try">Ausprobieren: „milc" · „hafer" · „klo" · „kürbis"</span>
+      </div>
+
+      <div class="note">
+        <h3>Drei Listen, eine Standardliste</h3>
+        <p>Supermarkt, Drogerie, Baumarkt — jede mit eigenem Vorrat an Kacheln, damit auf
+        der Baumarktliste keine Bananen vorgeschlagen werden. <b>Supermarkt ist die
+        Standardliste</b>; sie ist es auch, die das Küchendisplay öffnet.</p>
+        <span class="try">Oben umschalten — die Kacheln wechseln mit</span>
+      </div>
+
+      <div class="note">
+        <h3>Lange drücken für den Zusatz</h3>
+        <p>Kurz antippen legt an. <b>Lange drücken</b> öffnet ein Feld für freien Text:
+        „Bio", „500 g", „Dose", „der mit Erdbeere". Kein Mengenfeld, keine Einheitenliste —
+        ein Satz, den der Mensch im Laden liest und versteht.</p>
+        <p>Aus „500 g" macht der Server beim Speichern still Menge und Einheit, wenn es
+        eindeutig ist; alles andere bleibt einfach als Notiz stehen.</p>
+        <span class="try">Auf einer Kachel die Maustaste gedrückt halten (oder rechtsklicken)</span>
+      </div>
+
+      <div class="note">
+        <h3>Am Regal, nicht am Schreibtisch</h3>
+        <p>Erfasst wird meistens im Stehen, einhändig, während man in den Kühlschrank
+        schaut. Deshalb große Ziele, keine Pflichtfelder und keine Mengenabfrage: Menge und
+        Einheit sind optional (FR-4.2), ein bloßer Name ist ein gültiger Artikel.</p>
+        <p>Der Streifen unten zeigt jederzeit, was schon draufsteht — antippen zum
+        Aufklappen, ohne den Erfassungsmodus zu verlassen. Am Ende jeder Zeile steht ein
+        Punkt in der Farbe dessen, der sie eingetragen hat.</p>
+      </div>
+
+      <div class="note">
+        <h3>Im Supermarkt ist kein Netz</h3>
+        <p>Deshalb ist genau dieser Bildschirm der eine Teil der App, der vollständig
+        offline funktioniert. Neu Erfasstes landet in einer Warteschlange und wird beim
+        nächsten Netz gesendet — sichtbar, nicht heimlich, denn iOS darf im Hintergrund
+        nichts nachschicken.</p>
+        <span class="try">„Offline simulieren" einschalten und etwas hinzufügen</span>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <h2 class="sec">Entschieden am 2. September</h2>
+    <p class="sec-lede">
+      Die vier offenen Punkte sind beantwortet und hier festgehalten, damit sie nicht in
+      drei Monaten noch einmal aufgemacht werden. Sie stehen so auch in
+      <em>02 — Requirements</em> und <em>07 — Meals &amp; Shopping</em>.
+    </p>
+    <div class="qs">
+      <div class="q">
+        <span class="qn">✓</span>
+        <h3>Kacheln mit Bild, nicht Text</h3>
+        <p>Vier pro Reihe, Bild über Namen. Das Bild ist ein selbst gehostetes Icon- bzw.
+        Emoji-Set — keine Produktfotos: die müssten von einem fremden Server kommen, und
+        genau das soll die App nicht tun (NFR-9).</p>
+        <span class="lean"><b>Folge:</b> Jeder Katalogeintrag braucht ein Icon. Neu angelegte bekommen 🛒, bis jemand eins zuweist.</span>
+      </div>
+      <div class="q">
+        <span class="qn">✓</span>
+        <h3>Lotta und Hanna dürfen eintragen</h3>
+        <p>Beide lesen — sie brauchen keine Sonderrolle, sondern denselben Bildschirm.
+        Jede Zeile trägt einen Punkt in der Farbe dessen, der sie eingetragen hat.</p>
+        <span class="lean"><b>Folge:</b> Keine Kindersperre auf der Einkaufsliste. Wenn Gummibärchen auftauchen, sieht man, von wem — das reicht.</span>
+      </div>
+      <div class="q">
+        <span class="qn">✓</span>
+        <h3>Mehrere Listen, Supermarkt als Standard</h3>
+        <p>Supermarkt, Drogerie, Baumarkt. Jede Liste zeigt nur die Kategorien, die zu ihr
+        gehören. Das Küchendisplay öffnet immer die Supermarktliste.</p>
+        <span class="lean"><b>Folge:</b> FR-4.8 steigt von „könnte" auf „muss" und wandert nach M1.1 — es ist eine Zeile mehr im Datenmodell, aber es muss von Anfang an drin sein.</span>
+      </div>
+      <div class="q">
+        <span class="qn">✓</span>
+        <h3>Menge als freier Text, per Langdruck</h3>
+        <p>Kein Zahlenfeld auf dem schnellen Weg. Wer mehr sagen will, drückt lange und
+        schreibt es hin: „Bio", „500 g", „Dose", „E14, warmweiß".</p>
+        <span class="lean"><b>Folge:</b> Antippen zählt weiter hoch (2 ×, 3 ×). Der Zusatz ist ein Freitextfeld, das der Server nur dann in Menge und Einheit zerlegt, wenn es eindeutig ist.</span>
+      </div>
+      <div class="q">
+        <span class="qn">+</span>
+        <h3>Und: dasselbe auf dem Küchendisplay</h3>
+        <p>Die Fußzeile des Wanddisplays führt jetzt in dieselbe Kachelauswahl — mit
+        größeren Kacheln und <b>ohne Suchfeld</b>, denn auf einer Wand tippt niemand Text.
+        Es bleibt bei „Zuletzt", „Oft gekauft" und den Kategorien.</p>
+        <span class="lean"><b>Zu sehen im</b> <a href="https://claude.ai/code/artifact/748ae563-53fa-4645-8c9a-302d42011e76">Küchendisplay-Mockup</a> — unten rechts auf „Einkaufsliste" tippen.</span>
+      </div>
+    </div>
+  </section>
+
+  <footer class="page">
+    <span>Mockup, kein Screenshot — der Katalog ist Beispieldaten.</span>
+    <span>Spezifikation: docs/07-module-meals-shopping.md</span>
+    <span>Offline-Entscheidung: docs/adr/ADR-006-offline-strategy.md</span>
+  </footer>
+</div>
+
+<script>
+/* ── the learned catalogue ───────────────────────────────────
+   In the real app these rows are `catalog_item`: canonical name,
+   aliases, default category and unit, purchase_count and
+   last_purchased_at. Nobody maintains it — buying things fills it. */
+const CATS = [
+  { id: "obst",     name: "Obst & Gemüse",   em: "🥕" },
+  { id: "brot",     name: "Brot & Backwaren", em: "🥐" },
+  { id: "kuehl",    name: "Kühlregal",        em: "🧀" },
+  { id: "vorrat",   name: "Vorrat",           em: "🥫" },
+  { id: "tk",       name: "Tiefkühl",         em: "🧊" },
+  { id: "getraenk", name: "Getränke",         em: "🧃" },
+  { id: "haushalt", name: "Haushalt",         em: "🧻" },
+  { id: "drogerie", name: "Drogerie",         em: "🪥" }
+];
+
+const CATALOG = [
+  ["Milch", "🥛", "kuehl", 42, 1, ["vollmilch"]],
+  ["Hafermilch", "🥛", "kuehl", 18, 3, ["haferdrink", "oatly"]],
+  ["Butter", "🧈", "kuehl", 31, 2, []],
+  ["Käse", "🧀", "kuehl", 27, 2, ["gouda", "schnittkäse"]],
+  ["Frischkäse", "🧀", "kuehl", 12, 6, []],
+  ["Mozzarella", "🧀", "kuehl", 9, 9, []],
+  ["Joghurt", "🥣", "kuehl", 24, 1, ["naturjoghurt"]],
+  ["Quark", "🥣", "kuehl", 11, 8, []],
+  ["Sahne", "🥛", "kuehl", 14, 5, []],
+  ["Eier", "🥚", "kuehl", 35, 1, []],
+  ["Schinken", "🥓", "kuehl", 13, 4, ["wurst", "aufschnitt"]],
+  ["Brot", "🍞", "brot", 38, 1, []],
+  ["Brötchen", "🥐", "brot", 21, 3, ["semmeln"]],
+  ["Toast", "🍞", "brot", 10, 7, ["toastbrot"]],
+  ["Äpfel", "🍎", "obst", 33, 2, ["apfel"]],
+  ["Bananen", "🍌", "obst", 36, 1, ["banane"]],
+  ["Tomaten", "🍅", "obst", 25, 2, ["tomate"]],
+  ["Gurke", "🥒", "obst", 22, 2, ["salatgurke"]],
+  ["Paprika", "🫑", "obst", 17, 4, []],
+  ["Karotten", "🥕", "obst", 19, 3, ["möhren"]],
+  ["Zwiebeln", "🧅", "obst", 20, 5, ["zwiebel"]],
+  ["Kartoffeln", "🥔", "obst", 16, 6, []],
+  ["Salat", "🥬", "obst", 15, 3, ["kopfsalat"]],
+  ["Zitronen", "🍋", "obst", 8, 11, ["zitrone"]],
+  ["Avocado", "🥑", "obst", 7, 9, []],
+  ["Champignons", "🍄", "obst", 9, 7, ["pilze"]],
+  ["Brokkoli", "🥦", "obst", 8, 8, []],
+  ["Trauben", "🍇", "obst", 10, 5, []],
+  ["Erdbeeren", "🍓", "obst", 6, 14, []],
+  ["Nudeln", "🍝", "vorrat", 29, 3, ["pasta", "spaghetti"]],
+  ["Reis", "🍚", "vorrat", 15, 12, []],
+  ["Haferflocken", "🥣", "vorrat", 18, 6, []],
+  ["Müsli", "🥣", "vorrat", 12, 8, []],
+  ["Mehl", "🌾", "vorrat", 11, 15, []],
+  ["Zucker", "🍬", "vorrat", 9, 20, []],
+  ["Salz", "🧂", "vorrat", 5, 40, []],
+  ["Olivenöl", "🫒", "vorrat", 8, 18, ["öl"]],
+  ["Passierte Tomaten", "🥫", "vorrat", 16, 4, ["passata", "tomaten passiert"]],
+  ["Mais", "🥫", "vorrat", 7, 10, ["dosenmais"]],
+  ["Kichererbsen", "🥫", "vorrat", 9, 7, []],
+  ["Nutella", "🍫", "vorrat", 13, 5, ["nussnougatcreme"]],
+  ["Honig", "🍯", "vorrat", 6, 16, []],
+  ["Erdnussbutter", "🥜", "vorrat", 5, 13, []],
+  ["Kaffee", "☕", "vorrat", 23, 4, []],
+  ["Tee", "🍵", "vorrat", 8, 12, []],
+  ["Pizza", "🍕", "tk", 14, 5, ["tiefkühlpizza"]],
+  ["Fischstäbchen", "🐟", "tk", 12, 4, []],
+  ["Erbsen", "🫛", "tk", 10, 6, ["tk-erbsen"]],
+  ["Eis", "🍦", "tk", 11, 7, ["speiseeis"]],
+  ["Pommes", "🍟", "tk", 9, 9, []],
+  ["Wasser", "💧", "getraenk", 30, 2, ["mineralwasser", "sprudel"]],
+  ["Apfelsaft", "🧃", "getraenk", 17, 4, ["saft"]],
+  ["Orangensaft", "🍊", "getraenk", 10, 8, ["o-saft"]],
+  ["Cola", "🥤", "getraenk", 6, 15, []],
+  ["Bier", "🍺", "getraenk", 12, 6, []],
+  ["Wein", "🍷", "getraenk", 8, 10, []],
+  ["Küchenrolle", "🧻", "haushalt", 19, 5, ["küchentücher", "papiertücher"]],
+  ["Toilettenpapier", "🧻", "haushalt", 22, 6, ["klopapier", "klo"]],
+  ["Spülmittel", "🧴", "haushalt", 13, 9, []],
+  ["Müllbeutel", "🗑️", "haushalt", 11, 12, ["müllsäcke"]],
+  ["Waschmittel", "🧺", "haushalt", 9, 14, []],
+  ["Schwämme", "🧽", "haushalt", 6, 18, ["spülschwamm"]],
+  ["Zahnpasta", "🪥", "drogerie", 8, 21, []],
+  ["Shampoo", "🧴", "drogerie", 7, 24, []],
+  ["Duschgel", "🧴", "drogerie", 7, 19, []],
+  ["Taschentücher", "🤧", "drogerie", 12, 8, []],
+  ["Pflaster", "🩹", "drogerie", 4, 30, []],
+  ["Glühbirnen", "💡", "baumarkt", 6, 40, ["leuchtmittel", "birne"]],
+  ["Batterien", "🔋", "baumarkt", 8, 25, ["aa", "aaa"]],
+  ["Klebeband", "🩹", "baumarkt", 5, 35, ["panzertape", "tape"]],
+  ["Schrauben", "🔩", "baumarkt", 7, 28, []],
+  ["Dübel", "🔩", "baumarkt", 5, 30, []],
+  ["Blumenerde", "🪴", "baumarkt", 4, 60, ["erde"]],
+  ["Kabelbinder", "🧵", "baumarkt", 3, 45, []],
+  ["Silikon", "🧴", "baumarkt", 2, 70, ["fugensilikon"]],
+  ["Schleifpapier", "📄", "baumarkt", 2, 80, []],
+  ["Pinsel", "🖌️", "baumarkt", 3, 55, []]
+].map(([name, em, cat, freq, days, aliases]) => ({ name, em, cat, freq, days, aliases }));
+
+/* the household, for "wer hat das eingetragen" */
+const PEOPLE = {
+  lukas:  { name: "Lukas",  c: "#c2255c" },
+  sabine: { name: "Sabine", c: "#b5610a" },
+  lotta:  { name: "Lotta",  c: "#6d4aff" },
+  hanna:  { name: "Hanna",  c: "#0e8f9c" }
+};
+const ME = "lukas";   /* a personal phone has a fixed profile */
+
+/* several lists — the kiosk always opens on Supermarkt */
+const LISTS = [
+  { id: "supermarkt", name: "Supermarkt", cats: ["obst","brot","kuehl","vorrat","tk","getraenk","haushalt","drogerie"] },
+  { id: "drogerie",   name: "Drogerie",   cats: ["drogerie","haushalt"] },
+  { id: "baumarkt",   name: "Baumarkt",   cats: ["baumarkt"] }
+];
+
+/* what is already on the list when the screen opens */
+const START = {
+  supermarkt: [
+    { name: "Milch", q: 2, by: "sabine" }, { name: "Brot", q: 1, by: "sabine" },
+    { name: "Bananen", q: 1, by: "lotta" }, { name: "Butter", q: 1, by: "lukas" },
+    { name: "Toilettenpapier", q: 1, by: "lukas" }, { name: "Kaffee", q: 1, by: "lukas" },
+    { name: "Joghurt", q: 1, by: "hanna", note: "der mit Erdbeere" }
+  ],
+  drogerie: [
+    { name: "Zahnpasta", q: 2, by: "sabine" }, { name: "Pflaster", q: 1, by: "lukas", note: "Kindermotive" }
+  ],
+  baumarkt: [
+    { name: "Glühbirnen", q: 1, by: "lukas", note: "E14, warmweiß" }
+  ]
+};
+
+/* ── state ───────────────────────────────────────────────── */
+let lists = {};            /* listId → Map(name → { item, q, pending, by, note }) */
+let activeList = "supermarkt";
+let cat = "alle";
+let query = "";
+let offline = false;
+let lastAdded = null;
+
+const list = () => lists[activeList];
+const listCfg = () => LISTS.find(l => l.id === activeList);
+
+function resetList() {
+  lists = {};
+  LISTS.forEach(l => {
+    const m = new Map();
+    (START[l.id] || []).forEach(s => {
+      const item = CATALOG.find(c => c.name === s.name);
+      if (item) m.set(item.name, { item, q: s.q, pending: false, by: s.by, note: s.note || "" });
+    });
+    lists[l.id] = m;
+  });
+}
+resetList();
+
+/* ── search ──────────────────────────────────────────────── */
+const norm = s => s.toLowerCase()
+  .replace(/ä/g, "a").replace(/ö/g, "o").replace(/ü/g, "u").replace(/ß/g, "ss")
+  .replace(/[^a-z0-9 ]/g, "");
+
+function score(item, q) {
+  const n = norm(item.name), all = [n].concat(item.aliases.map(norm));
+  let best = -1;
+  all.forEach(cand => {
+    if (cand.startsWith(q)) best = Math.max(best, 3);
+    else if (cand.split(" ").some(w => w.startsWith(q))) best = Math.max(best, 2);
+    else if (cand.includes(q)) best = Math.max(best, 1);
+  });
+  return best;
+}
+
+function matches() {
+  const q = norm(query);
+  if (!q) return null;
+  return CATALOG
+    .map(item => ({ item, s: score(item, q) }))
+    .filter(r => r.s > 0)
+    .sort((a, b) => b.s - a.s || b.item.freq - a.item.freq)
+    .map(r => r.item);
+}
+
+/* ── rendering ───────────────────────────────────────────── */
+const $ = id => document.getElementById(id);
+const results = $("results");
+
+function tile(item) {
+  const on = list().get(item.name);
+  return `<button class="tile ${on ? "on" : ""}" data-add="${item.name}"
+      title="Antippen = auf die Liste · lange drücken = mit Zusatz">
+    ${on ? `<span class="badge">${on.q > 1 ? on.q + " ×" : "✓"}</span>
+            <span class="minus" data-remove="${item.name}" role="button" aria-label="weniger">−</span>` : ""}
+    <span class="em">${item.em}</span>
+    <span class="nm">${item.name}</span>
+    ${on && on.note ? `<span class="note-flag">Zusatz</span>` : ""}
+  </button>`;
+}
+
+function section(label, items, hint) {
+  if (!items.length) return "";
+  return `<div class="sec-label">${label}${hint ? `<span class="hintlet">${hint}</span>` : ""}</div>
+    <div class="grid">${items.map(tile).join("")}</div>`;
+}
+
+function renderChips() {
+  const allowed = CATS.filter(c => listCfg().cats.includes(c.id));
+  $("chips").innerHTML = [{ id: "alle", name: "Alle", em: "" }].concat(allowed).map(c =>
+    `<button class="chip" data-cat="${c.id}" aria-pressed="${cat === c.id}">
+      ${c.em ? c.em + " " : ""}${c.name}</button>`).join("");
+}
+
+function renderLists() {
+  $("lists").innerHTML = LISTS.map(l => {
+    const n = [...lists[l.id].values()].reduce((a, e) => a + e.q, 0);
+    return `<button data-list="${l.id}" aria-pressed="${activeList === l.id}">
+      ${l.name}${n ? `<span class="n">${n}</span>` : ""}</button>`;
+  }).join("");
+  $("list-title").textContent = listCfg().name;
+}
+
+function render() {
+  const onList = i => listCfg().cats.includes(i.cat);
+  const inCat = i => onList(i) && (cat === "alle" || i.cat === cat);
+  let html = "";
+  const hits = matches();
+
+  if (hits) {
+    const shown = hits.filter(inCat);
+    html += section(`Treffer für „${query}"`, shown, shown.length ? "" : "");
+    if (!shown.length) html += `<div class="nohit">Nichts im Katalog gefunden.</div>`;
+    const exact = hits.some(i => norm(i.name) === norm(query));
+    if (!exact) {
+      html += `<div class="sec-label">Nicht dabei?</div><div class="grid">
+        <button class="tile new" data-new="1" style="grid-column: span 2">
+          <span class="em">＋</span>
+          <span class="nm">„${query}" neu anlegen</span>
+          <span class="unit">landet im Katalog</span>
+        </button></div>`;
+    }
+  } else {
+    const recent = CATALOG.filter(inCat).slice().sort((a, b) => a.days - b.days).slice(0, 8);
+    const often  = CATALOG.filter(inCat).slice().sort((a, b) => b.freq - a.freq)
+                    .filter(i => !recent.includes(i)).slice(0, 12);
+    html += section("Zuletzt", recent, "aus der Kaufhistorie");
+    html += section("Oft gekauft", often);
+    CATS.filter(c => listCfg().cats.includes(c.id) && (cat === "alle" || c.id === cat)).forEach(c => {
+      const rest = CATALOG.filter(i => i.cat === c.id && !recent.includes(i) && !often.includes(i));
+      html += section(`${c.em} ${c.name}`, rest);
+    });
+  }
+
+  results.innerHTML = html;
+  renderList();
+}
+
+function renderList() {
+  const items = [...list().values()];
+  const total = items.reduce((n, e) => n + e.q, 0);
+  const pending = items.filter(e => e.pending).length;
+  $("count").textContent = `${total} offen`;
+  $("drawer-sub").textContent = `${items.length} Artikel${pending ? ` · ${pending} wartend` : ""}`;
+  $("queued").innerHTML = pending ? `<span class="queued">${pending} wartend ⧗</span>` : "";
+  $("net-label").textContent = offline ? "GoombaWall · offline" : "GoombaWall · online";
+
+  let html = "";
+  CATS.forEach(c => {
+    const rows = items.filter(e => e.item.cat === c.id);
+    if (!rows.length) return;
+    html += `<div class="cat-head">${c.em} ${c.name}</div>`;
+    rows.forEach(e => {
+      const who = PEOPLE[e.by] || PEOPLE[ME];
+      html += `<div class="li ${e.pending ? "pending" : ""}">
+        <span class="em">${e.item.em}</span>
+        <span>${e.item.name}${e.note ? ` <span class="note">${e.note}</span>` : ""}</span>
+        ${e.q > 1 ? `<span class="q">${e.q} ×</span>` : ""}
+        ${e.pending ? `<span class="wait">wartet</span>` : ""}
+        <span class="by" style="--c:${who.c}" title="von ${who.name}"></span>
+        <button class="rm" data-drop="${e.item.name}" aria-label="entfernen">✕</button>
+      </div>`;
+    });
+  });
+  $("drawer-body").innerHTML = html || `<p class="nohit">Diese Liste ist leer.</p>`;
+  renderLists();
+}
+
+/* ── actions ─────────────────────────────────────────────── */
+let toastTimer;
+function toast(text, undoable) {
+  $("toast-text").textContent = text;
+  $("undo").style.display = undoable ? "" : "none";
+  $("toast").classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => $("toast").classList.remove("show"), 2600);
+}
+
+function add(item, note) {
+  const cur = list().get(item.name);
+  if (cur) {
+    cur.q += 1;
+    if (note) cur.note = note;
+    if (offline) cur.pending = true;
+  } else {
+    list().set(item.name, { item, q: 1, pending: offline, by: ME, note: note || "" });
+  }
+  lastAdded = item.name;
+  const q = list().get(item.name).q;
+  toast(`${item.em}  ${item.name}${note ? " · " + note : ""}${q > 1 ? ` · jetzt ${q} ×` : " hinzugefügt"}${offline ? " · wartet auf Netz" : ""}`, true);
+  render();
+}
+
+function remove(name, all) {
+  const cur = list().get(name);
+  if (!cur) return;
+  if (all || cur.q <= 1) list().delete(name); else cur.q -= 1;
+  render();
+}
+
+/* long press (or right-click) opens the free-text addition */
+const NOTE_CHIPS = ["Bio", "500 g", "1 kg", "Dose", "groß", "2 Packungen", "zuckerfrei"];
+let pressTimer = null, pressed = null, longFired = false, noteTarget = null;
+
+function openNote(item) {
+  noteTarget = item;
+  $("np-em").textContent = item.em;
+  $("np-name").textContent = item.name;
+  $("np-input").value = (list().get(item.name) || {}).note || "";
+  $("np-chips").innerHTML = NOTE_CHIPS.map(c => `<button data-np="${c}">${c}</button>`).join("");
+  $("note-pop").hidden = false;
+  $("np-input").focus();
+}
+function closeNote() { $("note-pop").hidden = true; noteTarget = null; }
+
+results.addEventListener("pointerdown", e => {
+  const t = e.target.closest("[data-add]");
+  if (!t || e.target.closest("[data-remove]")) return;
+  pressed = t; longFired = false;
+  pressTimer = setTimeout(() => {
+    longFired = true;
+    openNote(CATALOG.find(i => i.name === pressed.dataset.add));
+  }, 450);
+});
+["pointerup", "pointerleave", "pointercancel"].forEach(ev =>
+  results.addEventListener(ev, () => clearTimeout(pressTimer)));
+results.addEventListener("contextmenu", e => {
+  const t = e.target.closest("[data-add]");
+  if (!t) return;
+  e.preventDefault(); longFired = true;
+  openNote(CATALOG.find(i => i.name === t.dataset.add));
+});
+
+$("np-chips").addEventListener("click", e => {
+  const c = e.target.closest("[data-np]");
+  if (!c) return;
+  const inp = $("np-input");
+  inp.value = inp.value ? `${inp.value}, ${c.dataset.np}` : c.dataset.np;
+  inp.focus();
+});
+$("np-ok").addEventListener("click", () => {
+  if (noteTarget) add(noteTarget, $("np-input").value.trim());
+  closeNote();
+});
+$("np-cancel").addEventListener("click", closeNote);
+$("np-input").addEventListener("keydown", e => {
+  if (e.key === "Enter") $("np-ok").click();
+  if (e.key === "Escape") closeNote();
+});
+
+results.addEventListener("click", e => {
+  if (longFired) { longFired = false; return; }
+  const minus = e.target.closest("[data-remove]");
+  if (minus) { e.stopPropagation(); remove(minus.dataset.remove); return; }
+  const t = e.target.closest("[data-add]");
+  if (t) { add(CATALOG.find(i => i.name === t.dataset.add)); return; }
+  if (e.target.closest("[data-new]")) {
+    const name = query.trim().replace(/^./, c => c.toUpperCase());
+    const item = { name, em: "🛒", cat: listCfg().cats[0], freq: 1, days: 0, aliases: [] };
+    CATALOG.push(item);
+    add(item);
+    $("q").value = ""; query = ""; render(); $("q").focus();
+  }
+});
+
+$("drawer-body").addEventListener("click", e => {
+  const d = e.target.closest("[data-drop]");
+  if (d) remove(d.dataset.drop, true);
+});
+
+$("lists").addEventListener("click", e => {
+  const b = e.target.closest("[data-list]");
+  if (!b) return;
+  activeList = b.dataset.list; cat = "alle";
+  $("q").value = ""; query = ""; $("clear").classList.remove("on");
+  renderLists(); renderChips(); render();
+});
+
+$("chips").addEventListener("click", e => {
+  const c = e.target.closest("[data-cat]");
+  if (!c) return;
+  cat = c.dataset.cat;
+  renderChips(); render();
+});
+
+$("q").addEventListener("input", e => {
+  query = e.target.value;
+  $("clear").classList.toggle("on", !!query);
+  render();
+});
+$("q").addEventListener("keydown", e => {
+  if (e.key === "Enter") {
+    const hits = matches();
+    if (hits && hits.length) { add(hits[0]); e.target.value = ""; query = ""; $("clear").classList.remove("on"); render(); }
+  }
+  if (e.key === "Escape") { e.target.value = ""; query = ""; $("clear").classList.remove("on"); render(); }
+});
+$("clear").addEventListener("click", () => {
+  $("q").value = ""; query = ""; $("clear").classList.remove("on"); render(); $("q").focus();
+});
+
+$("undo").addEventListener("click", () => {
+  if (lastAdded) remove(lastAdded);
+  $("toast").classList.remove("show");
+});
+
+$("drawer-handle").addEventListener("click", () => {
+  const open = $("drawer").classList.toggle("open");
+  $("caret").textContent = open ? "▼ schließen" : "▲ öffnen";
+});
+
+$("tgl-offline").addEventListener("click", e => {
+  offline = e.currentTarget.getAttribute("aria-pressed") !== "true";
+  e.currentTarget.setAttribute("aria-pressed", String(offline));
+  if (!offline) {
+    LISTS.forEach(l => [...lists[l.id].values()].forEach(x => x.pending = false));
+    toast("Wieder online · alles gesendet", false);
+  } else {
+    toast("Offline — Neues wartet in der Warteschlange", false);
+  }
+  renderList();
+});
+$("tgl-dark").addEventListener("click", e => {
+  const on = e.currentTarget.getAttribute("aria-pressed") !== "true";
+  e.currentTarget.setAttribute("aria-pressed", String(on));
+  $("app").dataset.mode = on ? "dunkel" : "hell";
+});
+$("reset").addEventListener("click", () => {
+  resetList(); $("q").value = ""; query = ""; cat = "alle"; activeList = "supermarkt";
+  $("clear").classList.remove("on");
+  renderLists(); renderChips(); render();
+});
+
+renderLists();
+renderChips();
+render();
+</script>

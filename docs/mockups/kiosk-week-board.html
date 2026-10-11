@@ -1,0 +1,1415 @@
+<title>Küchendisplay Wochenübersicht</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Barlow+Semi+Condensed:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+
+<style>
+/* ─────────────────────────────────────────────────────────────
+   GoombaWall — Küchendisplay, Wochenübersicht (Mockup)
+   Page chrome follows the viewer's theme.
+   The "screen" (and the detail sheets that belong to it) has its
+   own Tag/Nacht palette: it is a display on a kitchen wall,
+   not a document.
+   ───────────────────────────────────────────────────────────── */
+
+:root {
+  --ink:      #14181d;
+  --ink-2:    #414b57;
+  --ink-3:    #6d7885;
+  --paper:    #f2f1ee;
+  --paper-2:  #ffffff;
+  --line:     #d9d7d1;
+  --line-2:   #e8e6e1;
+  --accent:   #0b6e6a;
+  --accent-2: #e8f2f1;
+  --shadow:   0 1px 2px rgba(20,24,29,.05), 0 12px 34px -18px rgba(20,24,29,.28);
+
+  --f-ui:   "Archivo", "Segoe UI", system-ui, sans-serif;
+  --f-scr:  "Barlow Semi Condensed", "Archivo Narrow", "Segoe UI", system-ui, sans-serif;
+  --f-body: "Source Serif 4", Georgia, "Times New Roman", serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ink:      #e9e7e2;
+    --ink-2:    #b3b0a8;
+    --ink-3:    #8c8a83;
+    --paper:    #16181a;
+    --paper-2:  #1e2124;
+    --line:     #33363a;
+    --line-2:   #26292c;
+    --accent:   #4dc7bd;
+    --accent-2: #12312f;
+    --shadow:   0 1px 2px rgba(0,0,0,.4), 0 14px 40px -20px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"] {
+  --ink:      #e9e7e2;
+  --ink-2:    #b3b0a8;
+  --ink-3:    #8c8a83;
+  --paper:    #16181a;
+  --paper-2:  #1e2124;
+  --line:     #33363a;
+  --line-2:   #26292c;
+  --accent:   #4dc7bd;
+  --accent-2: #12312f;
+  --shadow:   0 1px 2px rgba(0,0,0,.4), 0 14px 40px -20px rgba(0,0,0,.8);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 1380px; margin: 0 auto; padding: 40px 24px 96px; }
+
+/* ── page header ─────────────────────────────────────────── */
+
+.eyebrow {
+  font-family: var(--f-ui);
+  font-size: 12px; font-weight: 600;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--accent); margin: 0 0 10px;
+}
+h1 {
+  font-family: var(--f-ui);
+  font-size: clamp(30px, 4.2vw, 46px);
+  font-weight: 700; letter-spacing: -.02em; line-height: 1.05;
+  margin: 0 0 14px; text-wrap: balance;
+}
+.lede { max-width: 62ch; margin: 0 0 6px; font-size: 18px; color: var(--ink-2); }
+.lede strong { color: var(--ink); font-weight: 600; }
+
+.meta {
+  font-family: var(--f-ui);
+  font-size: 12.5px; color: var(--ink-3);
+  margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px 18px;
+}
+
+/* ── controls ────────────────────────────────────────────── */
+
+.controls { display: flex; flex-wrap: wrap; gap: 10px; margin: 30px 0 16px; align-items: center; }
+.btn {
+  font-family: var(--f-ui); font-size: 13.5px; font-weight: 600;
+  color: var(--ink); background: var(--paper-2);
+  border: 1px solid var(--line); border-radius: 999px;
+  padding: 9px 16px; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 8px;
+  transition: border-color .15s, background .15s, color .15s;
+}
+.btn:hover { border-color: var(--accent); }
+.btn[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+:root[data-theme="dark"] .btn[aria-pressed="true"],
+:root:not([data-theme="light"]) .btn[aria-pressed="true"] { color: #06201f; }
+.btn .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; opacity: .55; }
+.hint { font-family: var(--f-ui); font-size: 12.5px; color: var(--ink-3); margin-left: auto; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+/* ── the device ──────────────────────────────────────────── */
+
+.device {
+  background: linear-gradient(#2a2d31, #1a1c1f);
+  border-radius: 18px; padding: 14px;
+  box-shadow: var(--shadow); position: relative;
+}
+.device::after {
+  content: ""; position: absolute; left: 50%; bottom: 5px; transform: translateX(-50%);
+  width: 44px; height: 3px; border-radius: 2px; background: #3d4147;
+}
+.screen-scroll { overflow-x: auto; border-radius: 8px; }
+
+/* ── screen palette — shared by the board and its detail sheets ── */
+
+.screen, .overlay {
+  --scr-bg:     #f6f4f0;
+  --scr-panel:  #ffffff;
+  --scr-band:   #ecebe6;
+  --scr-ink:    #14181d;
+  --scr-ink-2:  #4c545e;
+  --scr-ink-3:  #7b838d;
+  --scr-line:   #dcdad4;
+  --scr-today:  #ffffff;
+  --scr-accent: #0b6e6a;
+  --scr-past:   .46;
+  --lotta:  #6d4aff;
+  --hanna:  #0e8f9c;
+  --sabine: #b5610a;
+  --lukas:  #c2255c;
+}
+.screen[data-mode="nacht"], .overlay[data-mode="nacht"] {
+  --scr-bg:     #0a0d11;
+  --scr-panel:  #12171c;
+  --scr-band:   #0e1319;
+  --scr-ink:    #e7edf3;
+  --scr-ink-2:  #9aa6b2;
+  --scr-ink-3:  #6b7682;
+  --scr-line:   #222a32;
+  --scr-today:  #161d24;
+  --scr-accent: #35c4ba;
+  --scr-past:   .32;
+  --lotta:  #a894ff;
+  --hanna:  #3fc3d0;
+  --sabine: #e6a04b;
+  --lukas:  #ff7ba3;
+}
+
+.screen {
+  min-width: 1060px;
+  background: var(--scr-bg); color: var(--scr-ink);
+  font-family: var(--f-scr);
+  border-radius: 8px; overflow: hidden;
+  display: flex; flex-direction: column;
+  font-variant-numeric: tabular-nums;
+}
+
+/* screen header */
+.scr-top {
+  display: flex; align-items: baseline; gap: 18px;
+  padding: 14px 20px 12px;
+  border-bottom: 1px solid var(--scr-line);
+  background: var(--scr-panel);
+}
+.scr-date { font-size: 26px; font-weight: 600; letter-spacing: -.01em; }
+.scr-clock { font-size: 26px; font-weight: 700; letter-spacing: -.01em; }
+.scr-kw { font-size: 14px; font-weight: 600; color: var(--scr-ink-3); letter-spacing: .08em; text-transform: uppercase; }
+.scr-next {
+  margin-left: auto; display: flex; align-items: center; gap: 10px;
+  font-size: 19px; font-weight: 500; color: var(--scr-ink-2);
+}
+.scr-next b { color: var(--scr-ink); font-weight: 600; }
+.pulse {
+  width: 9px; height: 9px; border-radius: 50%; flex: none;
+  background: var(--scr-accent);
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--scr-accent) 60%, transparent);
+  animation: pulse 2.6s ease-out infinite;
+}
+@keyframes pulse {
+  70%  { box-shadow: 0 0 0 9px color-mix(in srgb, var(--scr-accent) 0%, transparent); }
+  100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--scr-accent) 0%, transparent); }
+}
+@media (prefers-reduced-motion: reduce) { .pulse { animation: none; } }
+
+/* ── the board grid ──────────────────────────────────────── */
+
+.board {
+  display: grid;
+  grid-template-columns: 116px 1fr 1fr 1.28fr 1fr 1fr .92fr .92fr;
+  flex: 1;
+}
+.board > * { border-right: 1px solid var(--scr-line); }
+.board > .full { border-right: 0; }
+
+.cell { padding: 7px 9px; min-height: 40px; display: flex; flex-direction: column; gap: 4px; }
+.cell.tappable { cursor: pointer; }
+.cell.tappable:hover { background: color-mix(in srgb, var(--scr-accent) 7%, transparent); }
+.cell.tappable:hover .school { background: color-mix(in srgb, var(--c) 26%, transparent); }
+.gut {
+  padding: 7px 10px 7px 13px; background: var(--scr-band);
+  display: flex; align-items: center; gap: 9px;
+  font-family: inherit; text-align: left; border: 0;
+  border-right: 1px solid var(--scr-line);
+  color: var(--scr-ink);
+}
+button.gut { cursor: pointer; }
+button.gut:hover { background: color-mix(in srgb, var(--scr-accent) 10%, var(--scr-band)); }
+.gut-label { font-size: 15px; font-weight: 600; color: var(--scr-ink-2); }
+.gut-time { font-size: 12.5px; font-weight: 500; color: var(--scr-ink-3); }
+
+/* day headers */
+.dayhead {
+  padding: 9px 10px 8px; background: var(--scr-panel);
+  border: 0; border-bottom: 1px solid var(--scr-line);
+  display: flex; flex-direction: column; gap: 1px;
+  cursor: pointer; text-align: left;
+  font-family: inherit; color: inherit;
+}
+.dayhead:hover { background: color-mix(in srgb, var(--scr-accent) 8%, var(--scr-panel)); }
+.dayhead .dow { font-size: 19px; font-weight: 600; }
+.dayhead .date { font-size: 14px; color: var(--scr-ink-3); font-weight: 500; }
+.corner {
+  background: var(--scr-panel); border-bottom: 1px solid var(--scr-line);
+  display: flex; align-items: center; padding: 9px 13px;
+}
+.corner b { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--scr-ink-3); font-weight: 600; }
+
+.is-today { background: var(--scr-today); }
+.dayhead.is-today { box-shadow: inset 0 3px 0 var(--scr-accent); background: var(--scr-today); }
+.dayhead.is-today .dow { color: var(--scr-accent); }
+.today-tag { font-size: 11px; font-weight: 700; letter-spacing: .12em; color: var(--scr-accent); text-transform: uppercase; }
+.is-past { opacity: var(--scr-past); }
+
+/* zone bands */
+.zone {
+  grid-column: 1 / -1; background: var(--scr-band);
+  border-top: 1px solid var(--scr-line); border-bottom: 1px solid var(--scr-line);
+  padding: 5px 13px; display: flex; align-items: center; gap: 10px;
+  font-size: 11.5px; font-weight: 700; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--scr-ink-3);
+}
+.zone .why {
+  font-family: var(--f-ui); letter-spacing: 0; text-transform: none;
+  font-weight: 500; font-size: 12px; color: var(--scr-ink-3); opacity: .85;
+}
+
+/* member rows */
+.avatar {
+  width: 26px; height: 26px; border-radius: 50%;
+  display: grid; place-items: center; flex: none;
+  font-size: 13px; font-weight: 700; color: #fff; font-family: var(--f-ui);
+}
+.screen[data-mode="nacht"] .avatar { color: #0a0d11; }
+.name { font-size: 16px; font-weight: 600; line-height: 1.1; display: block; }
+.role { font-size: 11.5px; color: var(--scr-ink-3); font-weight: 500; }
+
+/* school pill */
+.school {
+  display: flex; align-items: baseline; gap: 8px;
+  padding: 4px 9px; border-radius: 5px;
+  background: color-mix(in srgb, var(--c) 15%, transparent);
+  border-left: 3px solid var(--c);
+  font-size: 16.5px; font-weight: 600; line-height: 1.2;
+}
+.school .badges { font-size: 13.5px; font-weight: 600; color: var(--scr-ink-2); }
+.after { font-size: 13.5px; color: var(--scr-ink-2); font-weight: 500; padding-left: 3px; }
+/* "Termine bis 17:00" — when this person is out of meetings, not when
+   they stop working. The single most asked question about a home-office day. */
+.busy {
+  font-size: 13.5px; font-weight: 600; color: var(--scr-ink-2);
+  padding-left: 3px; display: flex; align-items: center; gap: 5px;
+}
+.busy::before {
+  content: ""; width: 5px; height: 5px; border-radius: 50%;
+  background: var(--scr-ink-3); flex: none;
+}
+.is-today .busy { color: var(--scr-accent); }
+.empty { font-size: 15px; color: var(--scr-ink-3); opacity: .55; }
+
+/* presence bands */
+.pres {
+  display: flex; align-items: center; gap: 7px;
+  padding: 5px 10px; border-radius: 5px;
+  font-size: 15.5px; font-weight: 600; line-height: 1.15;
+  color: #fff; background: var(--c); white-space: nowrap; overflow: hidden;
+}
+.screen[data-mode="nacht"] .pres { color: #0a0d11; }
+.pres small { font-weight: 500; font-size: 13px; opacity: .85; }
+.pres.home { background: repeating-linear-gradient(135deg, var(--c) 0 5px, color-mix(in srgb, var(--c) 72%, #fff) 5px 10px); }
+.screen[data-mode="nacht"] .pres.home { background: repeating-linear-gradient(135deg, var(--c) 0 5px, color-mix(in srgb, var(--c) 68%, #000) 5px 10px); }
+.pres.travel { justify-content: center; }
+.pres.travel::before { content: "◀"; font-size: 10px; opacity: .8; }
+.pres.travel::after  { content: "▶"; font-size: 10px; opacity: .8; }
+.pres.off { background: transparent; color: var(--scr-ink-2); border: 1.5px dashed color-mix(in srgb, var(--c) 60%, transparent); }
+/* the baseline — where a person normally is. Deliberately quiet: only
+   deviations from it earn a filled band. */
+.pres.quiet {
+  background: transparent; color: var(--scr-ink-3);
+  font-size: 14.5px; font-weight: 500; padding: 4px 0 4px 2px;
+}
+.pres.quiet::before {
+  content: ""; width: 8px; height: 8px; border-radius: 50%;
+  background: color-mix(in srgb, var(--c) 55%, transparent); flex: none;
+}
+
+/* appointments, in three day parts */
+.slot { min-height: 46px; }
+.appt {
+  display: flex; align-items: flex-start; gap: 7px;
+  padding: 4px 7px 5px; border-radius: 5px;
+  background: var(--scr-panel); border: 1px solid var(--scr-line);
+}
+.appt .t { font-size: 14px; font-weight: 700; color: var(--scr-ink-2); flex: none; padding-top: 1px; }
+.appt .n { font-size: 15.5px; font-weight: 600; line-height: 1.15; display: block; }
+.appt .sub { font-size: 12.5px; color: var(--scr-ink-3); font-weight: 500; }
+.appt.tentative { border-style: dashed; background: transparent; opacity: .78; }
+.who-dots { display: inline-flex; gap: 3px; margin-left: auto; padding-top: 3px; flex: none; }
+.wd { width: 11px; height: 11px; border-radius: 50%; background: var(--c); }
+.more { font-size: 13px; color: var(--scr-ink-3); font-weight: 600; padding-left: 3px; }
+
+/* warm meal */
+.meal { min-height: 56px; justify-content: center; gap: 3px; }
+.meal .when { font-size: 12.5px; font-weight: 600; color: var(--scr-ink-3); letter-spacing: .04em; text-transform: uppercase; }
+.meal .dish { font-size: 17px; font-weight: 600; line-height: 1.15; }
+.eaters { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.eater { width: 13px; height: 13px; border-radius: 50%; background: var(--c); flex: none; }
+.eater.out { background: transparent; border: 1.5px solid color-mix(in srgb, var(--c) 55%, transparent); }
+.cook { font-size: 12.5px; color: var(--scr-ink-3); font-weight: 600; margin-left: 4px; }
+.guests { font-size: 12.5px; color: var(--scr-ink-3); font-weight: 600; }
+
+/* footer */
+.scr-foot {
+  grid-column: 1 / -1; display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  padding: 9px 16px; border-top: 1px solid var(--scr-line);
+  background: var(--scr-panel); font-size: 15px; color: var(--scr-ink-2); font-weight: 500;
+}
+.scr-foot b { color: var(--scr-ink); font-weight: 600; }
+.chipcount { display: inline-flex; align-items: center; gap: 6px; }
+.mini { width: 10px; height: 10px; border-radius: 50%; background: var(--c); }
+.stale { margin-left: auto; font-size: 13.5px; color: var(--scr-ink-3); }
+.shop-btn {
+  font-family: var(--f-scr); font-size: 15px; font-weight: 500;
+  color: var(--scr-ink-2); background: transparent;
+  border: 1px solid var(--scr-line); border-radius: 999px;
+  padding: 4px 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 7px;
+}
+.shop-btn:hover { border-color: var(--scr-accent); color: var(--scr-accent); }
+.shop-btn b { color: var(--scr-ink); font-weight: 700; }
+.shop-btn .plus { font-size: 13px; font-weight: 600; color: var(--scr-accent); }
+
+/* the wall's own capture: tiles only, no keyboard */
+.shop-cats { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 4px; }
+.scat {
+  font-family: var(--f-scr); font-size: 15px; font-weight: 600;
+  border: 1px solid var(--scr-line); background: var(--scr-panel); color: var(--scr-ink-2);
+  border-radius: 999px; padding: 7px 14px; cursor: pointer;
+}
+.scat[aria-pressed="true"] { background: var(--scr-accent); border-color: var(--scr-accent); color: #fff; }
+.overlay[data-mode="nacht"] .scat[aria-pressed="true"] { color: #0a0d11; }
+.stiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(126px, 1fr)); gap: 9px; }
+.stile {
+  position: relative; font-family: var(--f-scr); color: var(--scr-ink);
+  border: 1px solid var(--scr-line); border-radius: 12px; background: var(--scr-panel);
+  padding: 13px 6px 11px; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  font-size: 16px; font-weight: 600;
+}
+.stile:hover { border-color: var(--scr-accent); }
+.stile:active { transform: scale(.96); }
+.stile .em { font-size: 30px; line-height: 1; }
+.stile.on { border-color: var(--scr-accent); background: color-mix(in srgb, var(--scr-accent) 12%, var(--scr-panel)); }
+.stile .tick {
+  position: absolute; top: -7px; right: -7px; width: 23px; height: 23px;
+  border-radius: 50%; background: var(--scr-accent); color: #fff;
+  font-family: var(--f-ui); font-size: 12px; font-weight: 700; display: grid; place-items: center;
+}
+.overlay[data-mode="nacht"] .stile .tick { color: #0a0d11; }
+
+/* annotation badges */
+.anno {
+  display: none; font-family: var(--f-ui);
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--scr-accent); color: #fff;
+  font-size: 11.5px; font-weight: 700; place-items: center; flex: none;
+}
+.screen[data-mode="nacht"] .anno { color: #0a0d11; }
+body.show-anno .anno { display: grid; }
+body.show-anno .zone .why { opacity: 1; color: var(--scr-ink-2); }
+
+/* ── detail sheets — styled as part of the display ───────── */
+
+.overlay {
+  position: fixed; inset: 0; z-index: 50;
+  background: rgba(6, 9, 12, .66);
+  display: grid; place-items: center; padding: 22px;
+}
+.overlay[hidden] { display: none; }
+.sheet {
+  background: var(--scr-bg); color: var(--scr-ink);
+  border: 1px solid var(--scr-line);
+  border-radius: 12px; box-shadow: 0 30px 80px -30px rgba(0,0,0,.7);
+  width: min(1000px, 100%); max-height: 88vh; overflow-y: auto;
+  font-family: var(--f-scr); font-variant-numeric: tabular-nums;
+}
+.sheet-head {
+  position: sticky; top: 0; z-index: 2;
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  padding: 16px 22px 14px; background: var(--scr-panel);
+  border-bottom: 1px solid var(--scr-line);
+}
+.sheet-head h2 { font-size: 25px; font-weight: 600; margin: 0; letter-spacing: -.01em; }
+.sheet-head .sub { font-size: 14.5px; color: var(--scr-ink-3); font-weight: 500; }
+.sheet-body { padding: 18px 22px 24px; display: grid; gap: 22px; }
+.sheet-close {
+  margin-left: auto; font-family: var(--f-ui); font-size: 13px; font-weight: 600;
+  background: transparent; color: var(--scr-ink-2);
+  border: 1px solid var(--scr-line); border-radius: 999px;
+  padding: 8px 15px; cursor: pointer;
+}
+.sheet-close:hover { border-color: var(--scr-accent); color: var(--scr-accent); }
+.sheet h3 {
+  font-size: 11.5px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--scr-ink-3); margin: 0 0 9px;
+}
+
+/* the day at a glance */
+.daylist { display: grid; gap: 4px; }
+.dl-row {
+  display: grid; grid-template-columns: 30px 58px 1fr auto;
+  align-items: center; gap: 12px;
+  padding: 8px 12px; border: 1px solid var(--scr-line); border-radius: 8px;
+  background: var(--scr-panel);
+}
+.dl-no { font-size: 17px; font-weight: 700; color: var(--scr-ink-3); }
+.dl-time { font-size: 12.5px; font-weight: 600; color: var(--scr-ink-2); line-height: 1.2; }
+.dl-subj { font-size: 19px; font-weight: 600; }
+.dl-subj em { font-style: normal; font-size: 13px; font-weight: 500; color: var(--scr-ink-3); margin-left: 8px; }
+.dl-flag { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--scr-ink-3); }
+.dl-row.past { opacity: .5; }
+.dl-row.now { border-color: var(--scr-accent); box-shadow: inset 3px 0 0 var(--scr-accent); }
+.dl-row.now .dl-flag { color: var(--scr-accent); }
+.dl-row.entfall .dl-subj b { text-decoration: line-through; }
+.dl-row.entfall { opacity: .55; }
+.dl-row.vertretung { border-color: color-mix(in srgb, var(--scr-accent) 45%, var(--scr-line)); }
+.dl-row.vertretung .dl-flag { color: var(--scr-accent); }
+.dl-break {
+  font-size: 12.5px; font-weight: 500; color: var(--scr-ink-3);
+  padding: 1px 12px 1px 42px;
+}
+
+/* the Stundenplan grid, after the paper original */
+.plan {
+  display: grid; grid-template-columns: 92px repeat(5, 1fr);
+  border: 1px solid var(--scr-line); border-radius: 8px; overflow: hidden;
+  background: var(--scr-line); gap: 1px;
+}
+.plan > * { background: var(--scr-panel); padding: 7px 8px; min-height: 46px; }
+.plan .ph {
+  background: var(--scr-band); font-size: 15.5px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.plan .ph.today { color: var(--scr-accent); }
+.plan .pt {
+  background: var(--scr-band); display: flex; align-items: center; gap: 7px;
+  font-size: 13px; color: var(--scr-ink-2); font-weight: 600;
+}
+.plan .pt .no { font-size: 16px; font-weight: 700; color: var(--scr-ink-3); }
+.plan .pt .times { display: flex; flex-direction: column; line-height: 1.15; }
+.plan .pt .times span:last-child { border-top: 1px solid var(--scr-ink-3); }
+.plan .sub {
+  display: flex; flex-direction: column; justify-content: center; gap: 2px;
+  font-size: 18px; font-weight: 600;
+}
+.plan .sub .room { font-size: 12px; font-weight: 500; color: var(--scr-ink-3); }
+.plan .sub.col-today { background: color-mix(in srgb, var(--scr-accent) 7%, var(--scr-panel)); }
+.plan .sub.col-focus { background: color-mix(in srgb, var(--scr-accent) 14%, var(--scr-panel)); }
+.plan .ph.focus { color: var(--scr-accent); box-shadow: inset 0 -2px 0 var(--scr-accent); }
+.plan .sub.now { box-shadow: inset 3px 0 0 var(--scr-accent); }
+.plan .sub.entfall { color: var(--scr-ink-3); }
+.plan .sub.entfall .s { text-decoration: line-through; }
+.plan .sub.vertretung .s::after {
+  content: "Vertretung"; display: block;
+  font-size: 11px; font-weight: 700; letter-spacing: .06em;
+  color: var(--scr-accent); text-transform: uppercase;
+}
+.plan .sub.free { background: color-mix(in srgb, var(--scr-ink-3) 7%, var(--scr-panel)); }
+.plan .empty-cell { background: var(--scr-bg); }
+
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13.5px; color: var(--scr-ink-2); }
+.legend b { color: var(--scr-ink); font-weight: 700; }
+
+.callout {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 11px 14px; border-radius: 8px;
+  background: color-mix(in srgb, var(--scr-accent) 10%, transparent);
+  border-left: 3px solid var(--scr-accent);
+  font-size: 15.5px; font-weight: 500; color: var(--scr-ink);
+}
+.callout b { font-weight: 700; }
+
+.rows { display: grid; gap: 6px; }
+.row {
+  display: flex; gap: 11px; align-items: baseline;
+  padding: 7px 11px; border: 1px solid var(--scr-line); border-radius: 7px;
+  background: var(--scr-panel); font-size: 16px;
+}
+.row .t { font-weight: 700; color: var(--scr-ink-2); flex: none; min-width: 96px; }
+.row .tail { margin-left: auto; font-size: 13px; color: var(--scr-ink-3); font-weight: 500; }
+.row .who-dots { margin-left: 0; padding-top: 0; align-self: center; }
+.row.dim { opacity: .62; }
+.sheet-note {
+  font-family: var(--f-ui); font-size: 13px; color: var(--scr-ink-3);
+  border-top: 1px solid var(--scr-line); padding-top: 14px;
+}
+
+/* ── explanatory sections ────────────────────────────────── */
+
+section { margin-top: 64px; }
+h2.sec { font-family: var(--f-ui); font-size: 26px; font-weight: 700; letter-spacing: -.02em; margin: 0 0 8px; text-wrap: balance; }
+.sec-lede { max-width: 66ch; color: var(--ink-2); margin: 0 0 26px; }
+
+.zones { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+.zonecard {
+  background: var(--paper-2); border: 1px solid var(--line);
+  border-radius: 10px; padding: 18px 18px 20px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.zonecard .num { font-family: var(--f-ui); font-size: 11.5px; font-weight: 700; letter-spacing: .14em; color: var(--accent); }
+.zonecard h3 { font-family: var(--f-ui); font-size: 17.5px; font-weight: 700; margin: 0; }
+.zonecard p { margin: 0; font-size: 15px; color: var(--ink-2); }
+.zonecard .src { font-family: var(--f-ui); font-size: 12px; color: var(--ink-3); margin-top: auto; padding-top: 8px; border-top: 1px solid var(--line-2); }
+
+.qs { display: grid; gap: 12px; }
+.q {
+  background: var(--paper-2); border: 1px solid var(--line);
+  border-radius: 10px; padding: 16px 18px;
+  display: grid; grid-template-columns: 34px 1fr; gap: 4px 14px;
+}
+.q .qn {
+  font-family: var(--f-ui); font-size: 12px; font-weight: 700;
+  color: #fff; background: var(--accent); border-radius: 6px;
+  height: 26px; display: grid; place-items: center;
+}
+:root[data-theme="dark"] .q .qn,
+:root:not([data-theme="light"]) .q .qn { color: #06201f; }
+.q h3 { font-family: var(--f-ui); font-size: 17px; font-weight: 600; margin: 0; align-self: center; }
+.q p { grid-column: 2; margin: 6px 0 0; font-size: 15px; color: var(--ink-2); }
+.q .lean {
+  grid-column: 2; margin-top: 8px; font-family: var(--f-ui); font-size: 13.5px;
+  color: var(--ink-2); background: var(--accent-2); border-radius: 6px; padding: 7px 11px;
+}
+.q .lean b { color: var(--accent); }
+
+footer.page {
+  margin-top: 64px; padding-top: 20px; border-top: 1px solid var(--line);
+  font-family: var(--f-ui); font-size: 13px; color: var(--ink-3);
+  display: flex; flex-wrap: wrap; gap: 8px 20px;
+}
+
+@media (max-width: 720px) {
+  .wrap { padding: 28px 16px 72px; }
+  .hint { margin-left: 0; width: 100%; }
+  .plan { grid-template-columns: 76px repeat(5, minmax(72px, 1fr)); font-size: 14px; }
+  .sheet { max-height: 92vh; }
+}
+</style>
+
+<div class="wrap">
+
+  <p class="eyebrow">GoombaWall · Mockup für die Küche</p>
+  <h1>Wochenübersicht auf dem Küchendisplay</h1>
+  <p class="lede">
+    Der Standardbildschirm des Wanddisplays: <strong>sieben Tage nebeneinander</strong>, in jeder
+    Spalte dieselben Bereiche in derselben Reihenfolge — wer ist wo, was steht vormittags,
+    nachmittags und abends an, und was es warm zu essen gibt. Auf der Wand steht vom
+    Stundenplan nur die Schulzeit und das Besondere; <strong>der volle Stundenplan ist einen
+    Tipp entfernt</strong>: auf die Schulzeit eines Tages tippen — etwa Lottas
+    <em>8:00–14:25</em> am Mittwoch — und der Tag steht Stunde für Stunde da, mit Pausen,
+    Vertretung und Entfall, darunter die ganze Woche. Bei den Erwachsenen zeigt das Display
+    nur, was vom Normalfall abweicht: <strong>blass ist der Grundzustand, kräftig ist die
+    Ausnahme.</strong>
+  </p>
+  <div class="meta">
+    <span>Beispielwoche KW 36 · 31.08.–06.09.2026</span>
+    <span>Vorlage für FR-7 und FR-8 in <em>02 — Requirements</em></span>
+    <span>Tippen: Schulzeit → der Schultag · Name → die Woche · Tagesspalte → der ganze Tag</span>
+    <span>Maßstab verkleinert: die kleinste Schrift entspricht auf dem echten Panel 24 px</span>
+  </div>
+
+  <div class="controls">
+    <button class="btn" id="tgl-mode" aria-pressed="false"><span class="dot"></span>Nachtansicht ab 21 Uhr</button>
+    <button class="btn" id="tgl-anno" aria-pressed="false"><span class="dot"></span>Bereiche erklären</button>
+    <button class="btn" id="open-plan"><span class="dot"></span>Lottas Schultag ansehen</button>
+    <span class="hint">Das Display hat Tag- und Nachtmodus — unabhängig davon, wie diese Seite gerade aussieht.</span>
+  </div>
+
+  <div class="device">
+    <div class="screen-scroll">
+      <div class="screen" id="screen" data-mode="tag">
+        <div class="scr-top">
+          <span class="scr-date">Mittwoch, 2. September</span>
+          <span class="scr-clock">17:42</span>
+          <span class="scr-kw">KW 36</span>
+          <span class="scr-next">
+            <span class="pulse"></span>
+            Als Nächstes: <b>18:30 Chili sin Carne</b> · danach <b>19:30 Elternabend</b>
+          </span>
+        </div>
+        <div class="board" id="board"></div>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <h2 class="sec">Warum die Spalten so aufgebaut sind</h2>
+    <p class="sec-lede">
+      Die Regel, die das Display lesbar hält: <em>jede Tagesspalte enthält dieselben Bereiche,
+      in derselben Reihenfolge, auf derselben Höhe.</em> Das Auge lernt die Geometrie einmal und
+      liest danach über die Position statt zu suchen. Ein leerer Bereich verschwindet nicht —
+      „nichts geplant" ist auch eine Information. Das gilt für alle drei Aufbauten; was sich
+      unterscheidet, ist nur, ob Zustand und Termine denselben Bereich teilen.
+    </p>
+    <div class="zones">
+      <div class="zonecard">
+        <span class="num">Bereich 1</span>
+        <h3>Wer ist wo</h3>
+        <p>Eine Zeile pro Person. Bei den Kindern die Schulzeit plus das, was man abends
+        vorher wissen muss: Sport, Schwimmen, FreiDay, Hort. Bei den Erwachsenen gilt ein
+        <em>Grundzustand</em> — Lukas ist normalerweise im Homeoffice, Sabine normalerweise
+        zu Hause. Der steht blass da; kräftig wird nur, was davon abweicht: Sabines Dienst
+        Montag und Mittwoch, ein Bürotag in Berlin, eine Dienstreise nach Hamburg über zwei
+        Tage. Darunter steht, <b>bis wann jemand in Terminen ist</b> — „Termine bis 17:00"
+        beantwortet die Frage, die bei Homeoffice tatsächlich gestellt wird: nicht <em>ob</em>
+        er da ist, sondern <em>ab wann</em> er ansprechbar ist. Ein Tipp auf den Namen öffnet
+        den vollen Stundenplan bzw. die Woche.</p>
+        <span class="src">Quelle: Stundenplan + Anwesenheiten</span>
+      </div>
+      <div class="zonecard">
+        <span class="num">Bereich 2</span>
+        <h3>Vormittag · Nachmittag · Abend</h3>
+        <p>Termine liegen in drei festen Bändern statt an einer Uhrzeitachse — so sieht man
+        auf einen Blick, welcher Nachmittag voll ist. Die Punkte rechts am Termin sagen in
+        den Personenfarben, wen es betrifft; vier Punkte heißen die ganze Familie.
+        Gestrichelt = noch nicht sicher.</p>
+        <span class="src">Quelle: Kalender, Häkchen „Auf dem Küchendisplay zeigen"</span>
+      </div>
+      <div class="zonecard">
+        <span class="num">Bereich 3</span>
+        <h3>Warmes Essen</h3>
+        <p>Eine warme Mahlzeit pro Tag — mittags am Wochenende, sonst abends. Darunter vier
+        Punkte: gefüllt heißt „isst mit", offen heißt „nicht da". Die Punkte stellen sich
+        selbst: wer auf Dienstreise ist, ist automatisch raus. Wer kocht, steht daneben.</p>
+        <span class="src">Quelle: Essensplan + Anwesenheiten</span>
+      </div>
+      <div class="zonecard">
+        <span class="num">Bereich 4</span>
+        <h3>Die Fußzeile</h3>
+        <p>Was heute noch offen ist: Aufgaben pro Person, Einkaufsliste, und wann das
+        Display zuletzt aktualisiert hat. Bewusst klein — es ist der Rest des Systems,
+        nicht der Grund, warum man hinschaut.</p>
+        <p><b>„Einkaufsliste ＋" ist antippbar</b> und öffnet dieselbe Kachelauswahl wie das
+        Telefon, nur größer und ohne Suchfeld: Zuletzt, Oft gekauft, Kategorien. Es ist neben
+        dem Abhaken einer Aufgabe das Einzige, was man an der Wand wirklich verändern kann.</p>
+        <span class="src">Quelle: Aufgaben + Einkaufsliste</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="sec">Was wir zusammen entscheiden sollten</h2>
+    <p class="sec-lede">
+      Fünf Fragen, bei denen das Mockup eine Meinung hat, die aber wir beide beantworten
+      müssen — am besten bevor irgendetwas gebaut wird. Die Antworten landen danach in
+      <em>14 — Open Questions</em>.
+    </p>
+    <div class="qs">
+      <div class="q">
+        <span class="qn">1</span>
+        <h3>Welche Termine schaffen es an die Wand?</h3>
+        <p>Wenn alles drauf ist, liest es keiner. Wenn zu wenig drauf ist, glaubt es keiner.
+        Der Vorschlag: ein Häkchen am Termin, bei Familienterminen von vornherein gesetzt,
+        bei persönlichen nicht.</p>
+        <span class="lean"><b>Vorschlag:</b> Häkchen statt Automatik — nach zwei Wochen echter Nutzung nachjustieren.</span>
+      </div>
+      <div class="q">
+        <span class="qn">2</span>
+        <h3>Reicht auf der Wand die Schulzeit — oder wollt ihr die Stunden sehen?</h3>
+        <p>Sieben Fächer pro Tag mal zwei Kinder ergeben aus zwei Metern nur ein graues
+        Rechteck. Deshalb steht auf der Wand die Zeitspanne plus das Besondere — und ein Tipp
+        auf genau diese Zeitspanne öffnet den Schultag: jede Stunde mit Uhrzeit, Fach und
+        Raum, die großen Pausen dazwischen, was schon vorbei ist, und darunter die ganze
+        Woche.</p>
+        <span class="lean"><b>Vorschlag:</b> Wand = Zeitspanne + Sport/Schwimmen/FreiDay. Details per Tipp und auf den iPads der Kinder.</span>
+      </div>
+      <div class="q">
+        <span class="qn">3</span>
+        <h3>Wann springt die Ansicht auf die nächste Woche?</h3>
+        <p>Sonntagabend planen wir die kommende Woche, Samstagfrüh interessiert noch der
+        heutige Tag. Irgendwo dazwischen muss das Display umschalten.</p>
+        <span class="lean"><b>Vorschlag:</b> Samstag 12:00, einstellbar.</span>
+      </div>
+      <div class="q">
+        <span class="qn">4</span>
+        <h3>Stimmen die Grundzustände — und sollen Dienstzeiten mit Uhrzeit dastehen?</h3>
+        <p>Hinterlegt ist: Lukas normalerweise Homeoffice, Sabine normalerweise zu Hause,
+        Dienst Montag und Mittwoch 8:30–14:00. Eingetragen wird dann nur noch die Ausnahme —
+        ein Bürotag, eine Dienstreise, ein zusätzlicher Dienst. Uhrzeiten sind praktisch für
+        die Planung, aber auch das, was ein Besuch in der Küche als Erstes mitliest.</p>
+        <span class="lean"><b>Vorschlag:</b> Grundzustand pro Person hinterlegen, Uhrzeiten auf der Wand zeigen; nach außen (geteilte Kalender, Feeds) sind Anwesenheiten standardmäßig aus.</span>
+      </div>
+      <div class="q">
+        <span class="qn">5</span>
+        <h3>Wer pflegt den Stundenplan — und wer trägt einen Entfall ein?</h3>
+        <p>Der Plan wird zweimal im Jahr eingegeben, das ist schnell. Vertretungen und
+        Entfall kommen unter der Woche und sind die eigentliche Arbeit.</p>
+        <span class="lean"><b>Vorschlag:</b> Eltern pflegen den Plan; ob Lotta ihren Entfall selbst eintragen darf, entscheiden wir, wenn sie die App wirklich nutzt.</span>
+      </div>
+    </div>
+  </section>
+
+  <footer class="page">
+    <span>Mockup, kein Screenshot — Beispieldaten für eine Diskussion.</span>
+    <span>Lottas Stundenplan (5a) ist der echte aus dem Foto; Hannas SAPh-Plan ist erfunden.</span>
+    <span>Spezifikation: docs/09-clients-and-ux.md · docs/15-module-school-timetable.md</span>
+  </footer>
+</div>
+
+<div class="overlay" id="overlay" data-mode="tag" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+    <div class="sheet-head">
+      <h2 id="sheet-title"></h2>
+      <span class="sub" id="sheet-sub"></span>
+      <button class="sheet-close" id="sheet-close">Zurück zur Woche</button>
+    </div>
+    <div class="sheet-body" id="sheet-body"></div>
+  </div>
+</div>
+
+<script>
+/* ── household ───────────────────────────────────────────── */
+const members = [
+  { id: "lotta",  name: "Lotta",  role: "9 · Klasse 5a",  initial: "L", kind: "kid",   colour: "var(--lotta)" },
+  { id: "hanna",  name: "Hanna",  role: "7 · SAPh E",     initial: "H", kind: "kid",   colour: "var(--hanna)" },
+  { id: "sabine", name: "Sabine", role: "Mo + Mi Dienst", initial: "S", kind: "adult", colour: "var(--sabine)",
+    baseline: { label: "zu Hause" } },
+  { id: "lukas",  name: "Lukas",  role: "meist Homeoffice", initial: "L", kind: "adult", colour: "var(--lukas)",
+    baseline: { label: "Homeoffice" } }
+];
+const byId = Object.fromEntries(members.map(m => [m.id, m]));
+const DAYS = ["mo", "di", "mi", "do", "fr"];
+
+/* ── bell times ──────────────────────────────────────────── */
+const bells = [
+  { n: 1, from: "8:00",  to: "8:45"  },
+  { n: 2, from: "8:50",  to: "9:35"  },
+  { n: 3, from: "9:55",  to: "10:40" },
+  { n: 4, from: "10:45", to: "11:30" },
+  { n: 5, from: "12:00", to: "12:45" },
+  { n: 6, from: "12:50", to: "13:35" },
+  { n: 7, from: "13:40", to: "14:25" }
+];
+
+/* ── timetables ──────────────────────────────────────────── */
+/* Lotta: the plan from the paper original. Hanna: a shorter one. */
+const timetables = {
+  lotta: {
+    klasse: "5a", term: "Schuljahr 2026/27 · 1. Halbjahr",
+    grid: {
+      mo: ["Ma", "D",       "D",   "E/F", "E/F", "BK",     "BK"],
+      di: ["Fö", "Ma",      "FreiDay", "FreiDay", "FreiDay", "FreiDay", "Rel/LK"],
+      mi: ["Sp", "Mu",      "Ma",  "Ma",  "GeWi", "GeWi",  "NaWi"],
+      do: ["Fö", "Mu",      "D",   "D",   "Sp",   "Rel/LK", "Ma"],
+      fr: ["NaWi", "NaWi",  "F/E", "F/E", "Sp",   "D",      null]
+    },
+    rooms: { "Sp": "Turnhalle", "BK": "Kunstraum", "NaWi": "NaWi-Raum" },
+    exceptions: [
+      { day: "mi", period: 3, kind: "vertretung", subject: "Ma", note: "Frau Klein" },
+      { day: "fr", period: 6, kind: "entfall",    subject: "D",  note: "fällt aus" }
+    ],
+    hort: {}
+  },
+  hanna: {
+    klasse: "SAPh E", term: "Schuljahr 2026/27 · 1. Halbjahr",
+    grid: {
+      mo: ["D",  "Ma", "SU", "Sp", null, null, null],
+      di: ["Ma", "D",  "Mu", "Lernzeit", "SU", null, null],
+      mi: ["Sw", "Sw", "D",  "Ma", null, null, null],
+      do: ["D",  "Ma", "SU", "Mu", "Sp", null, null],
+      fr: ["Ma", "D",  "Ku", "Ku", null, null, null]
+    },
+    rooms: { "Sp": "Turnhalle", "Sw": "Schwimmbad" },
+    exceptions: [],
+    hort: { mo: "15:00", di: "15:00", do: "15:00" }
+  }
+};
+
+const subjects = {
+  "Ma": "Mathematik", "D": "Deutsch", "Fö": "Förderunterricht", "Sp": "Sport",
+  "Sw": "Schwimmen", "NaWi": "Naturwissenschaften", "Mu": "Musik",
+  "GeWi": "Gesellschaftswissenschaften", "BK": "Bildende Kunst", "Ku": "Kunst",
+  "Rel/LK": "Religion / Lebenskunde", "E/F": "Englisch / Französisch",
+  "F/E": "Französisch / Englisch", "SU": "Sachunterricht", "Lernzeit": "Lernzeit",
+  "FreiDay": "FreiDay — Projektlernen"
+};
+/* subjects worth seeing on the wall the evening before */
+const notable = { "Sp": "Sport", "Sw": "Schwimmen", "FreiDay": "FreiDay" };
+
+/* what the wall shows for one child on one weekday */
+function schoolDay(childId, day) {
+  const tt = timetables[childId];
+  if (!tt || !tt.grid[day]) return null;
+  const row = tt.grid[day];
+  const first = row.findIndex(s => s);
+  let last = -1;
+  row.forEach((s, i) => { if (s) last = i; });
+  if (first < 0) return null;
+  const tags = [];
+  row.forEach(s => { if (s && notable[s] && !tags.includes(notable[s])) tags.push(notable[s]); });
+  return {
+    from: bells[first].from,
+    to: bells[last].to,
+    tags,
+    hort: tt.hort[day] || null
+  };
+}
+
+/* ── the week ────────────────────────────────────────────── */
+const week = [
+  {
+    key: "mo", dow: "Montag", short: "Mo", date: "31.08.", state: "past",
+    presence: { sabine: { state: "working", label: "Dienst", time: "8:30–14:00" } },
+    busyUntil: { lukas: "16:30" },
+    appts: [
+      { time: "10:00", title: "Heizung wird gewartet", who: ["lukas"] },
+      { time: "15:00", title: "Turnen", who: ["hanna"], place: "TSV-Halle" }
+    ],
+    meal: { when: "Abend 18:30", dish: "Kürbissuppe", cook: "sabine", eaters: ["lotta","hanna","sabine","lukas"] }
+  },
+  {
+    key: "di", dow: "Dienstag", short: "Di", date: "01.09.", state: "past",
+    presence: { lukas: { state: "working", label: "Büro Berlin", time: "ab 8:00" } },
+    busyUntil: { lukas: "18:00" },
+    appts: [
+      { time: "14:30", title: "Zahnarzt", who: ["lotta"], place: "Dr. Behrens" }
+    ],
+    meal: { when: "Abend 18:30", dish: "Nudelauflauf", cook: "lukas", eaters: ["lotta","hanna","sabine","lukas"] }
+  },
+  {
+    key: "mi", dow: "Mittwoch", short: "Mi", date: "02.09.", state: "today",
+    presence: { sabine: { state: "working", label: "Dienst", time: "8:30–14:00" } },
+    busyUntil: { lukas: "17:00" },
+    appts: [
+      { time: "16:00", title: "Turnen", who: ["hanna"], place: "TSV-Halle" },
+      { time: "19:30", title: "Elternabend", who: ["sabine"], place: "Klasse 5a" }
+    ],
+    meal: { when: "Abend 18:30", dish: "Chili sin Carne", cook: "sabine", eaters: ["lotta","hanna","sabine","lukas"] }
+  },
+  {
+    key: "do", dow: "Donnerstag", short: "Do", date: "03.09.", state: "future",
+    presence: { lukas: { state: "travel", label: "Dienstreise Hamburg", span: 2 } },
+    busyUntil: { lukas: "16:00" },
+    appts: [
+      { time: "15:30", title: "Klavier", who: ["lotta"], place: "Musikschule" }
+    ],
+    meal: { when: "Abend 18:30", dish: "Fischstäbchen", cook: "sabine", eaters: ["lotta","hanna","sabine"] }
+  },
+  {
+    key: "fr", dow: "Freitag", short: "Fr", date: "04.09.", state: "future",
+    presence: {},
+    busyUntil: { lukas: "15:30" },
+    appts: [
+      { time: "18:00", title: "Kinoabend", who: ["lotta","hanna","sabine"] }
+    ],
+    meal: { when: "Abend 18:00", dish: "Flammkuchen", cook: "sabine", eaters: ["lotta","hanna","sabine"] }
+  },
+  {
+    key: "sa", dow: "Samstag", short: "Sa", date: "05.09.", state: "future",
+    presence: {},
+    appts: [
+      { time: "10:00", title: "Fußballturnier", who: ["hanna","sabine"], place: "Sportplatz Ost" },
+      { time: "16:00", title: "Grillen bei Webers", who: ["lotta","hanna","sabine","lukas"], tentative: true }
+    ],
+    meal: { when: "Mittag 12:30", dish: "Nudeln mit Pesto", cook: "lukas", eaters: ["lotta","lukas"] }
+  },
+  {
+    key: "so", dow: "Sonntag", short: "So", date: "06.09.", state: "future",
+    presence: {},
+    appts: [
+      { time: "11:00", title: "Oma & Opa kommen", who: ["lotta","hanna","sabine","lukas"] }
+    ],
+    meal: { when: "Mittag 12:30", dish: "Rinderbraten", cook: "sabine", eaters: ["lotta","hanna","sabine","lukas"], guests: 2 }
+  }
+];
+
+/* ── the shopping catalogue, as far as the wall needs it ──
+   Same `catalog_item` rows as the phone; the wall shows recents,
+   frequents and categories — and deliberately no search field,
+   because nobody types on a wall. */
+const SHOP_CATS = [
+  { id: "obst",     name: "Obst & Gemüse", em: "🥕" },
+  { id: "kuehl",    name: "Kühlregal",     em: "🧀" },
+  { id: "brot",     name: "Brot",          em: "🥐" },
+  { id: "vorrat",   name: "Vorrat",        em: "🥫" },
+  { id: "getraenk", name: "Getränke",      em: "🧃" },
+  { id: "haushalt", name: "Haushalt",      em: "🧻" }
+];
+const SHOP = [
+  ["Milch", "🥛", "kuehl", 42, 1], ["Butter", "🧈", "kuehl", 31, 2],
+  ["Eier", "🥚", "kuehl", 35, 1], ["Joghurt", "🥣", "kuehl", 24, 1],
+  ["Käse", "🧀", "kuehl", 27, 2], ["Sahne", "🥛", "kuehl", 14, 5],
+  ["Brot", "🍞", "brot", 38, 1], ["Brötchen", "🥐", "brot", 21, 3],
+  ["Bananen", "🍌", "obst", 36, 1], ["Äpfel", "🍎", "obst", 33, 2],
+  ["Tomaten", "🍅", "obst", 25, 2], ["Gurke", "🥒", "obst", 22, 2],
+  ["Karotten", "🥕", "obst", 19, 3], ["Zwiebeln", "🧅", "obst", 20, 5],
+  ["Kartoffeln", "🥔", "obst", 16, 6], ["Salat", "🥬", "obst", 15, 3],
+  ["Nudeln", "🍝", "vorrat", 29, 3], ["Reis", "🍚", "vorrat", 15, 12],
+  ["Haferflocken", "🥣", "vorrat", 18, 6], ["Passierte Tomaten", "🥫", "vorrat", 16, 4],
+  ["Kaffee", "☕", "vorrat", 23, 4], ["Müsli", "🥣", "vorrat", 12, 8],
+  ["Wasser", "💧", "getraenk", 30, 2], ["Apfelsaft", "🧃", "getraenk", 17, 4],
+  ["Küchenrolle", "🧻", "haushalt", 19, 5], ["Toilettenpapier", "🧻", "haushalt", 22, 6],
+  ["Spülmittel", "🧴", "haushalt", 13, 9], ["Müllbeutel", "🗑️", "haushalt", 11, 12]
+].map(([name, em, cat, freq, days]) => ({ name, em, cat, freq, days }));
+
+let shopCount = 7;
+let shopAdded = [];
+let shopCat = "alle";
+
+/* ── helpers ─────────────────────────────────────────────── */
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
+const cls = d => d.state === "today" ? " is-today" : (d.state === "past" ? " is-past" : "");
+const hour = t => Number(t.split(":")[0]);
+const band = a => hour(a.time) < 12 ? "vormittag" : (hour(a.time) < 17 ? "nachmittag" : "abend");
+const dots = ids => `<span class="who-dots">${ids.map(id =>
+  `<span class="wd" style="--c:${byId[id].colour}" title="${byId[id].name}"></span>`).join("")}</span>`;
+
+function el(html) {
+  const t = document.createElement("template");
+  t.innerHTML = html.trim();
+  return t.content.firstElementChild;
+}
+
+/* ── the board ───────────────────────────────────────────── */
+const board = document.getElementById("board");
+
+/* presence expanded per day, so a multi-day band can still be read per column */
+const presenceByDay = {};
+week.forEach((d, i) => {
+  Object.entries(d.presence).forEach(([id, p]) => {
+    const n = p.span || 1;
+    for (let k = 0; k < n; k++) {
+      (presenceByDay[id] = presenceByDay[id] || {})[i + k] = Object.assign({}, p, { cont: k > 0 });
+    }
+  });
+});
+
+function schoolChip(m, d) {
+  const s = schoolDay(m.id, d.key);
+  if (!s) return `<span class="empty">frei</span>`;
+  return `<span class="school" style="--c:${m.colour}">${s.from}–${s.to}
+      ${s.tags.length ? `<span class="badges">${s.tags.join(" · ")}</span>` : ""}</span>` +
+    (s.hort ? `<span class="after">Hort bis ${s.hort}</span>` : "");
+}
+
+function busyLine(m, dayIdx) {
+  const b = (week[dayIdx].busyUntil || {})[m.id];
+  return b ? `<span class="busy">Termine bis ${b}</span>` : "";
+}
+
+function presChip(m, dayIdx) {
+  const p = (presenceByDay[m.id] || {})[dayIdx];
+  if (!p) return m.baseline
+    ? `<span class="pres quiet" style="--c:${m.colour}">${esc(m.baseline.label)}</span>`
+      + busyLine(m, dayIdx) : busyLine(m, dayIdx);
+  const kind = p.state === "travel" ? "travel"
+             : p.state === "home_office" ? "home"
+             : p.state === "off" ? "off" : "";
+  return `<span class="pres ${kind}" style="--c:${m.colour}">${p.cont ? "…" : ""}${esc(p.label)}
+    ${p.time && !p.cont ? `<small>${p.time}</small>` : ""}</span>` + busyLine(m, dayIdx);
+}
+
+function apptChip(a) {
+  return `<div class="appt ${a.tentative ? "tentative" : ""}">
+      <span class="t">${a.time}</span>
+      <span><span class="n">${esc(a.title)}${a.tentative ? " ?" : ""}</span>
+      ${a.place ? `<span class="sub">${esc(a.place)}</span>` : ""}</span>
+      ${dots(a.who)}
+    </div>`;
+}
+
+function render() {
+  board.innerHTML = "";
+
+  /* day headers */
+  board.append(el(`<div class="corner"><b>KW 36</b></div>`));
+  week.forEach((d, i) => board.append(el(`<button class="dayhead${cls(d)}" data-day="${i}">
+      <span class="dow">${d.short}</span>
+      <span class="date">${d.date}</span>
+      ${d.state === "today" ? '<span class="today-tag">heute</span>' : ""}
+    </button>`)));
+
+  /* zone 1 — who is where */
+  board.append(el(`<div class="zone full"><span class="anno">1</span>Wer ist wo
+    <span class="why">Schulzeit antippen für den Tag · blass = Grundzustand, kräftig = Abweichung</span></div>`));
+
+  members.forEach(m => {
+    board.append(el(`<button class="gut" data-member="${m.id}">
+      <span class="avatar" style="background:${m.colour}">${m.initial}</span>
+      <span><span class="name">${m.name}</span><span class="role">${m.role}</span></span>
+    </button>`));
+
+    let skip = 0;
+    week.forEach((d, i) => {
+      if (skip > 0) { skip--; return; }
+      let inner, span = 1, attr = "";
+      if (m.kind === "kid") {
+        inner = schoolChip(m, d);
+        if (schoolDay(m.id, d.key)) attr = ` data-school="${m.id}" data-schoolday="${d.key}" role="button" tabindex="0"`;
+      } else {
+        const p = d.presence[m.id];
+        if (p) { span = p.span || 1; skip = span - 1; }
+        inner = presChip(m, i);
+      }
+      if (span > 1) {
+        const extra = [];
+        for (let k = 1; k < span; k++) {
+          const b = (week[i + k].busyUntil || {})[m.id];
+          if (b) extra.push(`${week[i + k].short} bis ${b}`);
+        }
+        if (extra.length) inner += `<span class="busy">${extra.join(" · ")}</span>`;
+      }
+      const style = span > 1 ? ` style="grid-column: span ${span}"` : "";
+      board.append(el(`<div class="cell${span > 1 ? "" : cls(d)}${attr ? " tappable" : ""}"${style}${attr}>${inner}</div>`));
+    });
+  });
+
+  /* zone 2 — appointments in three day parts */
+  board.append(el(`<div class="zone full"><span class="anno">2</span>Termine
+    <span class="why">Punkte = wer betroffen ist · gestrichelt = noch nicht sicher</span></div>`));
+  [["vormittag", "Vormittag", "bis 12:00"],
+   ["nachmittag", "Nachmittag", "12–17 Uhr"],
+   ["abend", "Abend", "ab 17:00"]].forEach(([key, label, time]) => {
+    board.append(el(`<div class="gut">
+      <span><span class="gut-label">${label}</span><br><span class="gut-time">${time}</span></span>
+    </div>`));
+    week.forEach(d => {
+      const list = d.appts.filter(a => band(a) === key);
+      const shown = list.slice(0, 2), rest = list.length - shown.length;
+      board.append(el(`<div class="cell slot${cls(d)}">${shown.map(apptChip).join("")}
+        ${rest > 0 ? `<span class="more">+${rest} weitere</span>` : ""}</div>`));
+    });
+  });
+
+  /* zone 3 — one warm meal */
+  board.append(el(`<div class="zone full"><span class="anno">3</span>Warmes Essen
+    <span class="why">voller Punkt = isst mit · offener Punkt = nicht da</span></div>`));
+  board.append(el(`<div class="gut"><span><span class="gut-label">Essen</span><br>
+    <span class="gut-time">eine warme Mahlzeit</span></span></div>`));
+  week.forEach(d => {
+    const meal = d.meal;
+    const eaters = members.map(m => {
+      const inside = meal.eaters.includes(m.id);
+      return `<span class="eater ${inside ? "" : "out"}" style="--c:${m.colour}"
+        title="${m.name} ${inside ? "isst mit" : "ist nicht da"}"></span>`;
+    }).join("");
+    board.append(el(`<div class="cell meal${cls(d)}">
+      <span class="when">${meal.when}</span>
+      <span class="dish">${esc(meal.dish)}</span>
+      <span class="eaters">${eaters}
+        ${meal.cook ? `<span class="cook">kocht ${byId[meal.cook].name}</span>` : ""}
+        ${meal.guests ? `<span class="guests">+${meal.guests} Gäste</span>` : ""}</span>
+    </div>`));
+  });
+
+  /* footer */
+  board.append(el(`<div class="scr-foot full">
+    <span class="anno">4</span>
+    <span>Heute offen:</span>
+    <span class="chipcount"><span class="mini" style="--c:var(--lotta)"></span><b>Lotta 2</b></span>
+    <span class="chipcount"><span class="mini" style="--c:var(--hanna)"></span><b>Hanna 1</b></span>
+    <span class="chipcount"><span class="mini" style="--c:var(--sabine)"></span><b>Sabine 1</b></span>
+    <span class="chipcount"><span class="mini" style="--c:var(--lukas)"></span><b>Lukas 0</b></span>
+    <button class="shop-btn" data-shop="1">Einkaufsliste <b id="shop-count">${shopCount}</b>
+      <span class="plus">＋ etwas drauf</span></button>
+    <span class="stale">aktualisiert vor 4 s</span>
+  </div>`));
+}
+render();
+
+/* ── detail sheets ───────────────────────────────────────── */
+const overlay = document.getElementById("overlay");
+const sheetTitle = document.getElementById("sheet-title");
+const sheetSub = document.getElementById("sheet-sub");
+const sheetBody = document.getElementById("sheet-body");
+
+function openSheet(title, sub, html) {
+  sheetTitle.textContent = title;
+  sheetSub.textContent = sub;
+  sheetBody.innerHTML = html;
+  overlay.hidden = false;
+  document.getElementById("sheet-close").focus();
+}
+
+/* the Stundenplan, in the shape of the paper original */
+function planHtml(childId, todayKey, focusKey) {
+  const tt = timetables[childId];
+  const m = byId[childId];
+  const exFor = (day, period) => tt.exceptions.find(e => e.day === day && e.period === period);
+  const labels = { mo: "Montag", di: "Dienstag", mi: "Mittwoch", do: "Donnerstag", fr: "Freitag" };
+
+  let html = `<div><h3>Die ganze Woche · Klasse ${tt.klasse}</h3><div class="plan">`;
+  html += `<div class="ph"></div>`;
+  DAYS.forEach(d => html += `<div class="ph ${d === todayKey ? "today" : ""} ${d === focusKey ? "focus" : ""}">${labels[d]}</div>`);
+
+  bells.forEach((b, i) => {
+    html += `<div class="pt"><span class="no">${b.n}.</span>
+      <span class="times"><span>${b.from}</span><span>${b.to}</span></span></div>`;
+    DAYS.forEach(d => {
+      const subj = tt.grid[d][i];
+      const ex = exFor(d, b.n);
+      if (!subj && !ex) { html += `<div class="empty-cell"></div>`; return; }
+      const label = ex && ex.kind === "vertretung" ? (ex.subject || subj) : subj;
+      const kindCls = ex ? ex.kind : "";
+      const isFree = label === "FreiDay";
+      const room = tt.rooms[label];
+      html += `<div class="sub ${d === todayKey ? "col-today" : ""} ${d === focusKey ? "col-focus" : ""} ${kindCls} ${isFree ? "free" : ""}">
+        <span class="s">${esc(label)}</span>
+        ${ex && ex.note ? `<span class="room">${esc(ex.note)}</span>` : (room ? `<span class="room">${esc(room)}</span>` : "")}
+      </div>`;
+    });
+  });
+  html += `</div></div>`;
+
+  /* legend */
+  const used = new Set();
+  DAYS.forEach(d => tt.grid[d].forEach(s => { if (s) used.add(s); }));
+  html += `<div><h3>Fächer</h3><div class="legend">` +
+    [...used].map(s => `<span><b>${esc(s)}</b> ${esc(subjects[s] || "")}</span>`).join("") +
+    `</div></div>`;
+
+  /* tomorrow's packing note — the reason this screen exists at 21:00 */
+  const order = DAYS.concat(["sa", "so"]);
+  const idx = order.indexOf(todayKey);
+  const nextKey = order[idx + 1];
+  const next = DAYS.includes(nextKey) ? schoolDay(childId, nextKey) : null;
+  if (next) {
+    html += `<div class="callout"><span>📌</span><span>
+      <b>Morgen (${labels[nextKey]}): ${next.from}–${next.to}.</b>
+      ${next.tags.length ? next.tags.map(t => t === "Sport" ? "Sportsachen einpacken"
+        : t === "Schwimmen" ? "Schwimmsachen einpacken" : t + " — kein normaler Unterricht").join(" · ")
+        : "Nichts Besonderes einzupacken."}
+      ${next.hort ? ` · Hort bis ${next.hort}.` : ""}
+    </span></div>`;
+  }
+
+  html += `<p class="sheet-note">Änderungen — Entfall, Vertretung, Raumwechsel — trägt ein
+    Elternteil mit zwei Tipps ein; sie gelten nur für dieses eine Datum und lassen den
+    Plan selbst unberührt. Der Plan als Ganzes wird einmal pro Halbjahr eingegeben und
+    kann vom vorigen Halbjahr oder vom Geschwisterkind kopiert werden.
+    ${m.name}s Plan: ${tt.term}.</p>`;
+  return html;
+}
+
+const DAY_LABEL = { mo: "Montag", di: "Dienstag", mi: "Mittwoch", do: "Donnerstag", fr: "Freitag" };
+const mins = t => { const [h, m] = String(t).split(":").map(Number); return h * 60 + m; };
+const NOW = mins("17:42");   /* the mockup's fixed clock */
+
+/* the day at a glance: lessons in order, real breaks shown, past ones dimmed */
+function dayListHtml(childId, dayKey, isToday) {
+  const tt = timetables[childId];
+  const row = tt.grid[dayKey] || [];
+  const items = [];
+  bells.forEach((b, i) => {
+    if (!row[i]) return;
+    const ex = tt.exceptions.find(e => e.day === dayKey && e.period === b.n);
+    items.push({ b, subj: row[i], ex });
+  });
+  if (!items.length) return "";
+
+  let html = `<div class="daylist">`;
+  items.forEach((it, idx) => {
+    const past = isToday && mins(it.b.to) < NOW;
+    const now = isToday && mins(it.b.from) <= NOW && NOW < mins(it.b.to);
+    const kind = it.ex ? it.ex.kind : "";
+    const label = it.ex && it.ex.kind === "vertretung" ? (it.ex.subject || it.subj) : it.subj;
+    html += `<div class="dl-row ${past ? "past" : ""} ${now ? "now" : ""} ${kind}">
+      <span class="dl-no">${it.b.n}.</span>
+      <span class="dl-time">${it.b.from}<br>${it.b.to}</span>
+      <span class="dl-subj"><b>${esc(subjects[label] || label)}</b>
+        ${tt.rooms[label] ? `<em>${esc(tt.rooms[label])}</em>` : ""}</span>
+      <span class="dl-flag">${
+        it.ex ? (it.ex.kind === "entfall" ? "fällt aus" : "Vertretung " + esc(it.ex.note || "")) :
+        now ? "läuft" : (past ? "vorbei" : "")}</span>
+    </div>`;
+    const next = items[idx + 1];
+    if (next) {
+      const gap = mins(next.b.from) - mins(it.b.to);
+      if (gap >= 15) html += `<div class="dl-break">${gap} Min Pause · ${it.b.to}–${next.b.from}</div>`;
+    }
+  });
+  html += `</div>`;
+  return html;
+}
+
+function openTimetable(childId, dayKey) {
+  const m = byId[childId];
+  const tt = timetables[childId];
+  const focus = DAYS.includes(dayKey) ? dayKey : null;
+  const sd = focus ? schoolDay(childId, focus) : null;
+  const isToday = focus === "mi";
+
+  let body = "";
+  if (focus) {
+    body += `<div><h3>${isToday ? "Heute" : DAY_LABEL[focus]} · ${sd.from}–${sd.to}${
+      sd.hort ? " · Hort bis " + sd.hort : ""}</h3>
+      ${dayListHtml(childId, focus, isToday)}</div>`;
+  }
+  body += planHtml(childId, "mi", focus);
+
+  openSheet(
+    `${m.name}${focus ? " · " + DAY_LABEL[focus] : " · Stundenplan"}`,
+    `Klasse ${tt.klasse} · ${focus ? "angetippt auf der Wochenübersicht" : "die ganze Woche"}`,
+    body);
+}
+
+function openDay(i) {
+  const d = week[i];
+  let html = "";
+
+  /* school, per Stunde — this is the day-level detail */
+  const kids = members.filter(m => m.kind === "kid");
+  const labels = { mo: "Montag", di: "Dienstag", mi: "Mittwoch", do: "Donnerstag", fr: "Freitag" };
+  if (DAYS.includes(d.key)) {
+    kids.forEach(m => {
+      const tt = timetables[m.id];
+      const row = tt.grid[d.key] || [];
+      const s = schoolDay(m.id, d.key);
+      if (!s) return;
+      html += `<div><h3>${m.name} · Schule ${s.from}–${s.to}${s.hort ? ` · Hort bis ${s.hort}` : ""}</h3><div class="rows">`;
+      bells.forEach((b, i2) => {
+        const subj = row[i2];
+        if (!subj) return;
+        const ex = tt.exceptions.find(e => e.day === d.key && e.period === b.n);
+        html += `<div class="row ${ex && ex.kind === "entfall" ? "dim" : ""}">
+          <span class="t">${b.n}. ${b.from}–${b.to}</span>
+          <span>${esc(subjects[subj] || subj)}${ex ? ` — ${esc(ex.note)}` : ""}</span>
+          <span class="tail">${esc(tt.rooms[subj] || "")}</span>
+        </div>`;
+      });
+      html += `</div></div>`;
+    });
+  } else {
+    html += `<div><h3>Schule</h3><div class="rows"><div class="row"><span>Keine Schule</span></div></div></div>`;
+  }
+
+  /* presence */
+  const pres = Object.entries(d.presence);
+  html += `<div><h3>Wer ist wo</h3><div class="rows">`;
+  members.filter(m => m.kind === "adult").forEach(m => {
+    const p = d.presence[m.id];
+    const busy = (d.busyUntil || {})[m.id];
+    html += `<div class="row ${p ? "" : "dim"}"><span class="t">${m.name}</span>
+      <span>${p ? esc(p.label) + (p.time ? " · " + p.time : "")
+                : (m.baseline ? esc(m.baseline.label) + " (wie immer)" : "zu Hause")}</span>
+      ${busy ? `<span class="tail">Termine bis ${busy}</span>` : ""}</div>`;
+  });
+  html += `</div></div>`;
+
+  /* appointments by day part */
+  html += `<div><h3>Termine</h3><div class="rows">`;
+  const parts = [["vormittag", "Vormittag"], ["nachmittag", "Nachmittag"], ["abend", "Abend"]];
+  let any = false;
+  parts.forEach(([key, label]) => {
+    d.appts.filter(a => band(a) === key).forEach(a => {
+      any = true;
+      html += `<div class="row"><span class="t">${label} ${a.time}</span>
+        <span>${esc(a.title)}${a.tentative ? " · noch nicht sicher" : ""}${a.place ? " · " + esc(a.place) : ""}</span>
+        ${dots(a.who)}</div>`;
+    });
+  });
+  if (!any) html += `<div class="row"><span>Nichts eingetragen</span></div>`;
+  html += `</div></div>`;
+
+  /* meal */
+  const inN = members.filter(m => d.meal.eaters.includes(m.id)).map(m => m.name);
+  const outN = members.filter(m => !d.meal.eaters.includes(m.id)).map(m => m.name);
+  html += `<div><h3>Warmes Essen</h3><div class="rows">
+    <div class="row"><span class="t">${esc(d.meal.when)}</span>
+      <span>${esc(d.meal.dish)}${d.meal.cook ? " · kocht " + byId[d.meal.cook].name : ""}</span></div>
+    <div class="row"><span class="t">Isst mit</span>
+      <span>${inN.join(", ") || "niemand"}${outN.length ? ` · nicht da: ${outN.join(", ")}` : ""}${d.meal.guests ? ` · +${d.meal.guests} Gäste` : ""}</span></div>
+  </div></div>`;
+
+  html += `<p class="sheet-note">Auf dem echten Display springt diese Ansicht nach 60 Sekunden
+    ohne Berührung von selbst zurück auf die Woche. Geändert wird hier nichts — dafür sind
+    die Telefone da.</p>`;
+
+  openSheet(`${d.dow}, ${d.date}2026`, "Was das Display zeigt, wenn jemand auf die Tagesspalte tippt.", html);
+}
+
+function shopTiles() {
+  const inCat = i => shopCat === "alle" || i.cat === shopCat;
+  const recent = SHOP.filter(inCat).slice().sort((a, b) => a.days - b.days).slice(0, 8);
+  const often = SHOP.filter(inCat).slice().sort((a, b) => b.freq - a.freq)
+    .filter(i => !recent.includes(i)).slice(0, 8);
+  const tile = i => `<button class="stile ${shopAdded.includes(i.name) ? "on" : ""}"
+      data-item="${i.name}"><span class="em">${i.em}</span><span>${i.name}</span>
+      ${shopAdded.includes(i.name) ? '<span class="tick">✓</span>' : ""}</button>`;
+
+  let html = `<div class="shop-cats">` +
+    [{ id: "alle", name: "Zuletzt & oft", em: "★" }].concat(SHOP_CATS).map(c =>
+      `<button class="scat" data-scat="${c.id}" aria-pressed="${shopCat === c.id}">
+        ${c.em} ${c.name}</button>`).join("") + `</div>`;
+
+  if (shopCat === "alle") {
+    html += `<h3>Zuletzt</h3><div class="stiles">${recent.map(tile).join("")}</div>`;
+    html += `<h3>Oft gekauft</h3><div class="stiles">${often.map(tile).join("")}</div>`;
+  } else {
+    html += `<div class="stiles">${SHOP.filter(inCat).map(tile).join("")}</div>`;
+  }
+  html += `<p class="sheet-note">Kein Suchfeld: auf einer Wand tippt niemand Text. Was hier
+    nicht als Kachel liegt, kommt vom Telefon — dort gibt es die Suche und den Langdruck
+    für Zusätze wie „Bio" oder „500 g". Diese Auswahl geht immer auf die
+    <b>Supermarktliste</b>; die anderen Listen führt das Telefon.
+    ${shopAdded.length ? `<br><br><b>Gerade hinzugefügt:</b> ${shopAdded.join(" · ")}` : ""}</p>`;
+  return html;
+}
+
+function openShop() {
+  openSheet("Einkaufsliste · Supermarkt", `${shopCount} Artikel offen · antippen legt drauf`, shopTiles());
+}
+
+function openMember(id) {
+  const m = byId[id];
+  if (m.kind === "kid") { openTimetable(id, "mi"); return; }
+  let html = `<div><h3>Die Woche von ${m.name}</h3><div class="rows">`;
+  week.forEach(d => {
+    const p = d.presence[m.id];
+    const own = d.appts.filter(a => a.who.includes(m.id)).map(a => `${a.time} ${a.title}`);
+    const parts = [];
+    if (p) parts.push(p.label + (p.time ? " " + p.time : ""));
+    if (own.length) parts.push(own.join(" · "));
+    if (d.meal.cook === m.id) parts.push("kocht " + d.meal.dish);
+    html += `<div class="row ${d.state === "past" ? "dim" : ""}">
+      <span class="t">${d.short} ${d.date}</span>
+      <span>${esc(parts.join(" · ") || "nichts eingetragen")}</span></div>`;
+  });
+  html += `</div></div><p class="sheet-note">Grundzustand von ${m.name}:
+    <b>${m.baseline ? esc(m.baseline.label) : "zu Hause"}</b> — der steht bewusst blass da.
+    Eingetragen und hervorgehoben wird nur, was davon abweicht. Wiederkehrendes wie
+    „Mo + Mi Dienst" ist eine einzige Serie; unregelmäßige Dienste trägt man einmal im
+    Monat in einem Monatsraster ein, statt dreizehn Einzeltermine anzulegen.</p>`;
+  openSheet(m.name, "Was das Display zeigt, wenn jemand auf den Namen tippt.", html);
+}
+
+board.addEventListener("click", e => {
+  const day = e.target.closest("[data-day]");
+  if (day) { openDay(Number(day.dataset.day)); return; }
+  if (e.target.closest("[data-shop]")) { openShop(); return; }
+  const school = e.target.closest("[data-school]");
+  if (school) { openTimetable(school.dataset.school, school.dataset.schoolday); return; }
+  const mem = e.target.closest("[data-member]");
+  if (mem) openMember(mem.dataset.member);
+});
+document.getElementById("open-plan").addEventListener("click", () => openTimetable("lotta", "mi"));
+sheetBody.addEventListener("click", e => {
+  const t = e.target.closest("[data-item]");
+  if (t) {
+    const name = t.dataset.item;
+    if (!shopAdded.includes(name)) { shopAdded.push(name); shopCount += 1; }
+    document.getElementById("shop-count").textContent = shopCount;
+    sheetBody.innerHTML = shopTiles();
+    return;
+  }
+  const c = e.target.closest("[data-scat]");
+  if (c) { shopCat = c.dataset.scat; sheetBody.innerHTML = shopTiles(); }
+});
+
+document.getElementById("sheet-close").addEventListener("click", () => { overlay.hidden = true; });
+overlay.addEventListener("click", e => { if (e.target === overlay) overlay.hidden = true; });
+document.addEventListener("keydown", e => { if (e.key === "Escape") overlay.hidden = true; });
+board.addEventListener("keydown", e => {
+  const t = e.target.closest("[data-school]");
+  if (t && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); t.click(); }
+});
+
+/* ── toggles ─────────────────────────────────────────────── */
+const screen = document.getElementById("screen");
+const tglMode = document.getElementById("tgl-mode");
+tglMode.addEventListener("click", () => {
+  const on = tglMode.getAttribute("aria-pressed") === "true";
+  tglMode.setAttribute("aria-pressed", String(!on));
+  screen.dataset.mode = on ? "tag" : "nacht";
+  overlay.dataset.mode = on ? "tag" : "nacht";
+});
+const tglAnno = document.getElementById("tgl-anno");
+tglAnno.addEventListener("click", () => {
+  const on = tglAnno.getAttribute("aria-pressed") === "true";
+  tglAnno.setAttribute("aria-pressed", String(!on));
+  document.body.classList.toggle("show-anno", !on);
+});
+</script>

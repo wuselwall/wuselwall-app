@@ -1,0 +1,232 @@
+# 07 — Modules: Meal Plan (A3) & Shopping List (A4)
+
+Two modules in one document because the interesting part is the seam between them.
+
+---
+
+# Meal Plan (A3)
+
+Implements FR-3.1 – FR-3.9.
+
+## Deliberate minimalism
+
+The failure mode of family meal planners is that they become recipe managers. Recipe
+management is a large, satisfying problem to build and a small one to have. What this
+household needs is an answer to "what are we eating on Thursday" that everyone can see.
+
+So: **free text is a first-class citizen.** A meal plan entry with `free_text = "Pizza"`
+is complete and valid. Recipes are an optional enrichment that unlock quantity-accurate
+shopping generation. If recipes are mandatory, the plan will not get filled in, and an
+empty meal plan is worse than a scribbled note on the fridge.
+
+## Model
+
+```
+meal_plan_entry: (date, slot) ──▶ recipe  OR  free text
+                 + servings, who cooks, who's eating
+```
+
+Slots are breakfast, lunch, dinner, snack. Most households only ever fill dinner; the
+others cost nothing to have and stay collapsed in the UI until used.
+
+`cook_profile_id` is the quietly useful field: it turns the meal plan into a fairness
+instrument and, later, into an automatic calendar entry ("Papa cooks Thursday").
+
+`attendee_profile_ids` was a "should have" (FR-3.3) until the wall display's week board
+made it structural: the meal zone shows who is eating at home, so the field is now `M`
+and needs a defaulting rule rather than an empty multi-select nobody fills in.
+
+## Views
+
+- **Week grid** (laptop, adult register): seven columns, editable inline, drag a meal to
+  another day. This is where planning actually happens, once a week, on a real keyboard.
+- **Meal zone of the week board** (wall display): the bottom band of every day column,
+  seven days at once — **one warm meal per day** (Mittag at the weekend, Abend on school
+  days, with the slot named in the cell) plus, per member, whether they are eating at home
+  (FR-8.4). The household eats one cooked meal a day; showing four slots on the wall would
+  be three rows of "Hort" and "Schulbrot". Read-only, and the reason `attendee_profile_ids` and `cook_profile_id` are
+  worth filling in: on the wall they answer "wie viele koche ich heute?" without anyone
+  asking. See [09](09-clients-and-ux.md#the-week-board).
+  **Defaulting rule:** everyone is eating at home unless something says otherwise. A
+  presence entry of `travel` or `away` that covers the meal's slot flips that member to
+  "not eating" automatically, and the child whose Stundenplan has Hort past 14:00 is
+  automatically out for Mittagessen. Both defaults are overridable per meal — the point
+  is that the common case needs no input at all.
+- **Recipe detail** (tablet): ingredients scaled to the planned servings, steps in large
+  type — the tablet is propped against the toaster while someone cooks.
+
+## Capture: the tile picker
+
+*Added 2026-09-02. Mockup: [`docs/mockups/shopping-quick-add.html`](mockups/shopping-quick-add.html)
+— published at https://claude.ai/code/artifact/bad8116b-8bfc-424a-b045-2e8b58f83e3a*
+
+FR-4.1 asks for three seconds. A text field with an autocomplete dropdown does not get
+there one-handed in front of an open fridge, because it demands typing before it offers
+anything. The picker inverts that, in the shape people already know from choosing an emoji:
+
+- **Recents and frequents first, before any input.** Both come straight out of
+  `catalog_item.last_purchased_at` and `purchase_count`; nobody curates a list of favourites.
+  A household buys the same thirty things, and those thirty should cost one tap.
+- **Typing narrows the tiles** rather than building a dropdown. Matching is deliberately
+  forgiving — case, umlauts and aliases all fold together, so `klopapier` finds
+  Toilettenpapier, `passata` finds passierte Tomaten. Prefix beats word-start beats
+  substring, ties broken by purchase count.
+- **`Enter` adds the top hit**, for the times someone does have a keyboard.
+- **A "… neu anlegen" tile** closes the loop: an unknown name is added as free text and
+  enters the catalogue on purchase, so it is an ordinary tile next time.
+- **Quantity without a field.** Tap again for 2 ×, the small − takes one off. Anything more
+  precise ("500 g Hackfleisch") is a long-press, or dictation via Shortcuts, which parses
+  quantities anyway ([12](12-mcp-and-assistants.md)).
+- **The list itself is a drawer**, not a separate screen: what is already on it stays
+  visible without leaving capture.
+- **Offline is the normal case, not the error case.** Newly captured items show a
+  "wartet" state until the outbox drains ([ADR-006](adr/ADR-006-offline-strategy.md)); iOS
+  cannot send in the background, so the pending state is shown honestly rather than implied
+  away.
+
+### Settled on 2026-09-02
+
+| Question | Decision | Consequence |
+|---|---|---|
+| Tiles with a picture, or a text list? | **Tiles**, four per row | Every `catalog_item` needs an `icon_key`. The pictures are a self-hosted icon set, never product photos — those would mean an outbound request per tile, which NFR-9 rules out |
+| May the children add items? | **Yes**, on the same screen as everyone else | No kid mode on this path. Each row shows a dot in the adder's colour (FR-4.10), which settles "who put Gummibärchen on the list" without a rule |
+| One list or several? | **Several** — Supermarkt, Drogerie, Baumarkt | FR-4.8 rises from `C` to `M` and moves into M1.1. Each list offers only its own categories, so the Baumarkt list never suggests bananas. Supermarkt is `is_default` |
+| How do quantities work? | **Long press → free text** | No numeric field on the fast path. Tap counts up (2 ×, 3 ×); a long press opens one text field for "Bio", "500 g", "Dose", "E14 warmweiß". Parsed into quantity and unit only where unambiguous, kept verbatim regardless (FR-4.9) |
+
+### On the wall
+
+The same picker runs on the kitchen display, reached from the footer's shopping count
+(FR-8.12), with two deliberate differences: the tiles are bigger, and **there is no search
+field** — nobody types on a wall, so what the wall offers is recents, frequents and
+categories, and anything else comes from a phone. It writes to the default list only.
+
+Together with ticking a task and correcting who is eating, this is the third and last
+mutation the kiosk allows.
+
+The children can use this before they can spell — which is the argument for tiles over a
+text field on its own, and the reason each item records who added it.
+
+## Recipes
+
+`recipe` + `recipe_ingredient`. Ingredients hold a `raw_name`, an optional quantity and
+unit, and an optional `catalog_item_id` link. That link is what makes shopping generation
+accurate; without it, generation still works but falls back to string matching.
+
+Scaling: `servings` on the plan entry versus `servings_default` on the recipe gives a
+ratio applied to every quantity. Round sensibly — nobody buys 1.33 onions. Round up to
+sane purchase units and note the residue.
+
+**Not in v1:** nutrition data, photos beyond one image, step timers, shopping by
+supermarket availability, meal-plan templates, AI meal suggestion. FR-3.8 (suggest from
+history, "not cooked in 60 days") is the highest-value follow-up and needs no AI at all —
+just a query.
+
+---
+
+# Shopping List (A4)
+
+Implements FR-4.1 – FR-4.8. This is the module the family will touch most often, and the
+only one with a hard offline requirement.
+
+## The three-second rule
+
+FR-4.1 says an item must be capturable in under three seconds. Everything below follows
+from it.
+
+- A single always-focused input at the top of the list. Type, press enter, it is added.
+  No modal, no category picker, no quantity field in the way.
+- Autocomplete from `catalog_item`, ranked by purchase frequency and recency, using a
+  trigram index. Typing "mil" offers "Milch" as the first suggestion by the third
+  keystroke.
+- Category and default unit are inferred from the matched catalogue entry. The user is
+  never asked; they can correct it afterwards if they care, and they usually will not.
+- A "recent items" grid of the twenty most-bought items as tappable chips — for the wall
+  display and for the children, tapping beats typing.
+- No confirmation, no toast that steals focus. The item appears in the list and the input
+  is ready for the next one.
+
+Anything that adds a step here costs more than it looks like it does, because it is paid
+several times a day, usually while doing something else.
+
+## Shopping in the store
+
+- Items grouped by category; categories ordered by `store_section_order` for the selected
+  store, so the list reads in walking order. Setting this up once per store takes five
+  minutes and removes most of the backtracking from a shopping trip.
+- Tick targets at least 56 px tall — this is used one-handed, with a trolley, in a coat.
+- Ticking moves the item to a collapsed "in the trolley" section with an undo, rather
+  than removing it. An accidental tick must be recoverable without thought.
+- A "finish shopping" action archives everything ticked: status `bought`, catalogue
+  counters incremented, list cleared. Archived items are the training data for
+  autocomplete.
+
+## Offline — the one place it is non-negotiable
+
+Supermarket connectivity is unreliable, and a shopping list that fails in a shop is
+worthless. This module, and only this module, gets full offline support
+([ADR-006](adr/ADR-006-offline-strategy.md)).
+
+**Mechanism:**
+
+1. The service worker keeps the current list mirrored in IndexedDB.
+2. Every mutation is applied locally first and appended to an **outbox** with a
+   client-generated UUIDv7.
+3. The UI renders from IndexedDB, so it is identical online and offline.
+4. On reconnect, the outbox drains to the API in order. The client UUID is the
+   idempotency key: replaying a request cannot duplicate an item.
+5. The server responds with authoritative state; the client reconciles.
+
+**Conflict handling**, in ascending order of interest:
+
+- *Two people add the same item.* Both rows are created; a duplicate detector merges by
+  canonical name and shows one entry with a subtle "×2 added" marker.
+- *Two people tick the same item.* Idempotent. Last writer records `checked_by`; nobody
+  notices or cares.
+- *One person edits a quantity while another ticks it.* Field-level last-write-wins on
+  `updated_seq`. Different fields, no conflict.
+- *One person deletes while another edits.* Tombstone wins. The editor sees it vanish on
+  sync. Acceptable for a shopping list; it would not be for a bank ledger.
+
+Important limitation to design around: **iOS has no Background Sync API.** The outbox
+cannot drain while the PWA is closed. It drains when the app is next opened with a
+connection. So the UI must show unsynced state honestly — a small "3 changes pending"
+indicator — rather than pretending everything is saved.
+
+Equally: **Safari evicts storage.** IndexedDB is a cache, never the store of record.
+The outbox is the only thing in it that is not reconstructible from the server, so keep
+it small and drain it eagerly.
+
+## Live updates
+
+While online, `LISTEN/NOTIFY` → SSE pushes list changes to every connected device
+within a couple of seconds (FR-4.6). Two people shopping in different aisles is a real
+use case and one of the moments the app visibly earns its keep.
+
+---
+
+# The seam: meal plan → shopping list
+
+The feature that makes both modules worth more than the sum of their parts.
+
+**Flow:** in the week grid, select a date range → "Generate shopping list" → a preview
+appears → adjust → commit.
+
+**What generation does:**
+
+1. Collect ingredients from every recipe-linked entry in the range, scaled by servings.
+2. Aggregate by `catalog_item_id` where linked, by normalised name otherwise, converting
+   within a dimension (500 g + 0.5 kg = 1 kg; ml and l; pieces stay pieces). Never
+   convert across dimensions.
+3. Present a **preview with checkboxes**, pre-unchecking staples ("salt", "olive oil")
+   that the household almost certainly has. Which items are staples is learned from a
+   flag on `catalog_item`.
+4. On commit, create `shopping_item` rows with `source_meal_plan_entry_id` set, and stamp
+   `shopping_generated_at` on the entries so a second run does not duplicate them.
+5. In the list, generated items show a small icon; tapping it reveals "for Thursday's
+   lasagne" (FR-3.7). This is what makes it safe to delete something from the list —
+   you can see what you are about to leave out.
+
+**The preview step is mandatory, not optional.** Fully automatic generation dumps thirty
+items including four kinds of flour into the list, the human has to weed it, and after
+two attempts the feature is never used again. The preview is the difference between a
+feature that works and one that is technically present.

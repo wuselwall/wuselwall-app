@@ -1,0 +1,91 @@
+# 14 — Open Questions
+
+Decisions deliberately deferred. Each has a point by which it must be answered, so that
+none of them quietly becomes a blocker. Anything that surfaces during implementation
+lands here rather than in the module being built.
+
+## Before M0
+
+| # | Question | Why it matters | Leaning |
+|---|---|---|---|
+| Q1 | Which domain? | Needed for TLS, feed URLs, the OAuth issuer and the PWA scope. Changing it later invalidates every subscribed ICS feed. | **Decided 2026-08-30: own `.de` domain** (not a free dyndns subdomain), with `home.` and `mcp.` subdomains. Use a wildcard cert (DNS-01) so subdomains don't appear individually in CT logs. Pick the actual domain name next. |
+| Q2 | SvelteKit or Next.js? | [ADR-003](adr/ADR-003-technology-stack.md) recommends SvelteKit; you may prefer the larger ecosystem | **Decided 2026-08-30: SvelteKit.** |
+| Q3 | GitHub or a self-hosted forge? | Determines the CI and registry path | **Decided 2026-08-30: GitHub + GHCR.** |
+
+## Before M1.2 (tasks)
+
+| # | Question | Why it matters | Leaning |
+|---|---|---|---|
+| Q4 | What is a point actually worth? | The exchange rate sets the entire economy's feel. Too generous and rewards are meaningless; too stingy and the children disengage in week two. | Start with: duty 1–3 points, bonus 5–15, cheapest reward ~5, mid ~15, big ~50. Expect to recalibrate once. |
+| Q5 | Which chores are duties and which are bonuses? | The intrinsic-motivation argument in [06](06-module-tasks.md) hinges on this line | Decide it with the children present — participation in the rules is most of the buy-in |
+| Q6 | Do points convert to pocket money? | Changes the psychology significantly and is very hard to walk back | Not in v1. Non-monetary rewards first; see how it lands. |
+| Q7 | How many joker days per month? | Anti-frustration tuning for the 7-year-old | Start at 1, raise if there are tears |
+
+## Before M1.3 (calendar, presence and Stundenplan)
+
+| # | Question | Why it matters | Leaning |
+|---|---|---|---|
+| Q8 | Do the children get calendar write access? | Affects the kid register and the permission matrix | Yes, for their own events. It is theirs too. |
+| Q9 | Should chore due dates appear in the ICS feed? | An Outlook calendar full of "empty the dishwasher" is unhelpful at work | No by default; make it a per-token filter option |
+| Q10 | Which external calendars will you import in M2? | Determines how much the import feature actually needs to handle | Sports club and bin collection. Ferien come from the Bundesland feed ([15](15-module-school-timetable.md#holidays)); the timetable itself is not an import |
+
+*Q18–Q24 were added 2026-08-30 with the A5 requirement. Most are answerable in one
+conversation with the family — and that conversation is worth having before the grid
+editor is built, not after.*
+
+| Q18 | Which schools, and which Bundesland? | The Ferien import is per-Bundesland, and bell times differ per school | **Decided 2026-09-02: Berlin.** Lotta is in Klasse 5a, Hanna in the Schulanfangsphase (SAPh E). Ferien and bewegliche Ferientage therefore come from the Berlin feed; still to collect: both schools' Stundenraster and the term dates |
+| Q19 | Do either of the schools use A/B weeks (Doppelwochen)? | If neither does, `week_cycle` stays `'weekly'` and a whole layer of UI never has to be drawn | Ask before building the grid editor. Primary schools usually do not |
+| Q20 | Does either school publish a timetable or substitution feed (WebUntis, IServ, Schulmanager)? | Decides whether manual entry is a stopgap or the permanent answer | Assume manual for v1 either way — an import is an M3 addition, not a v1 dependency |
+| Q21 | How does Sabine's Dienstplan actually arrive — paper, PDF, an employer app? And how far ahead? | Decides whether the `rdates` month grid is sufficient or whether it needs a bulk-paste path | Month grid first. Revisit only if entering a month takes more than a minute |
+| Q22 | Is Hort/Betreuung a timetable row or a presence entry? | Affects both the grid editor and the "isst mit" defaulting | Timetable row with `kind='care'` — it is part of the child's school day and the parent reads it there |
+| Q23 | Who maintains the Stundenplan, and may the children enter an Entfall? | Guardian-only is simpler; a nine-year-old reporting "Mathe fällt aus" is also genuinely useful | Guardian-only in v1. Revisit once the children are actually using the app |
+| Q24 | Does the timetable go into the ICS feed at all, and collapsed or per lesson? | An Outlook calendar with sixty lessons a week is an unsubscribed calendar | Off by default; the collapsed school-day block available per token; per-lesson only if someone asks |
+
+## Before M1.5 (launch)
+
+| # | Question | Why it matters | Leaning |
+|---|---|---|---|
+| Q11 | Which wall-display hardware? | Constrains the kiosk register and needs lead time to order | Cheap Android tablet + Fully Kiosk Browser — see [09](09-clients-and-ux.md) |
+| Q12 | Where does the display go? | Needs power and a viewing angle from where people stand | Kitchen, at adult eye level, with the children's columns reachable |
+| Q13 | Which notifications are on by default? | Over-notifying in week one trains the family to ignore the app permanently | Morning summary only; everything else opt-in |
+| Q14 | Backup target: Backblaze B2 or Hetzner Storage Box? | Cost versus keeping everything in Germany | B2 is cheaper; the Storage Box keeps data in-country. Both encrypted client-side, so either is defensible. |
+| Q28 | Should `busy_until` ("Termine bis 17:00") be typed in daily, or is that the moment a private work-calendar subscription earns its place? | Typing it every morning is exactly the kind of chore that lapses in week three | Hand-entered in v1; if it lapses, subscribe to the work calendar read-only in M3 and take **only** the end of the last meeting from it |
+| Q25 | What counts as a "key appointment" that reaches the kitchen display? | The week board is only trusted if it is complete, and only readable if it is not | Explicit flag, defaulted on for whole-family events and off for personal ones. Review after two weeks of real use — if things are missing, widen the default |
+| Q26 | When should the week board roll over to the coming week? | Sunday-evening planning wants next week; Saturday morning still wants today | Saturday 12:00, configurable. Watch what actually gets asked at the display |
+| Q27 | Are the children's names on the wall display, or initials and colours? | The display is visible to anyone in the kitchen, including visitors | Names. It is a private kitchen, and initials are harder to read at two metres |
+
+## Answered by the mockups
+
+| # | Question | Answer |
+|---|---|---|
+| Q29 | Tiles with pictures, or a text list, for capture? | **Decided 2026-09-02: tiles**, with a self-hosted icon set. See [07](07-module-meals-shopping.md#settled-on-2026-09-02) |
+| Q30 | May the children add shopping items? | **Decided 2026-09-02: yes**, same screen as everyone else, with the adder's colour on each row |
+| Q31 | One shopping list or several? | **Decided 2026-09-02: several**, with Supermarkt as the default and the only one on the wall |
+| Q32 | How is quantity captured without a numeric field? | **Decided 2026-09-02:** tap counts up; long press opens one free-text field ("Bio", "500 g", "Dose") |
+| Q33 | Should the kiosk be able to add to the shopping list? | **Decided 2026-09-02: yes**, tiles only, no search field, default list only (FR-8.12) |
+| Q34 | Merge "wer ist wo" and "Termine" on the week board? | **Decided 2026-09-02: no** — see the rejected layouts in [09](09-clients-and-ux.md#considered-and-rejected-merging-the-zones) |
+
+## Before M2 (assistants)
+
+| # | Question | Why it matters | Leaning |
+|---|---|---|---|
+| Q15 | Does Better Auth's OIDC provider cover MCP's OAuth requirements as of the 2026-07-28 spec? | Determines whether OAuth is a plugin configuration or a build | Verify early; if not, `family:read` over a static bearer token is an acceptable interim |
+| Q16 | Which assistant gets write access first, and to what? | Sets the blast radius of a misunderstanding | Shopping only. It is the most useful and the least destructive. |
+| Q17 | Should assistant-created items look different in the UI? | Trust and reviewability | Yes — a small marker, and a filter in the audit view |
+
+## Deferred indefinitely
+
+Recorded so they are not re-litigated every time they occur to someone.
+
+- **Multi-household support.** No. See [01](01-vision-and-scope.md).
+- **A sibling leaderboard.** No. See [06](06-module-tasks.md).
+- **Two-way Outlook/Google sync.** No. See [ADR-001](adr/ADR-001-calendar-backbone.md).
+- **Per-item privacy between family members.** No, unless a concrete need appears.
+- **A native iOS app.** Only if a specific capability forces it.
+
+## How to use this file
+
+When something comes up mid-build that is not required by the module in front of you,
+write it here with the milestone by which it must be decided, and carry on. That is the
+mechanism that keeps [13 — Roadmap](13-roadmap.md)'s cut lines from eroding — and cut
+lines eroding, not technical difficulty, is what usually ends projects like this one.
