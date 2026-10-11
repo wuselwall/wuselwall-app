@@ -8,7 +8,7 @@ Implemented in `app/lib/app/theme/` — `palette.dart` holds every value below, 
 `test/app/theme_test.dart` re-checks each contrast pair. The member palette, presence
 treatments and accessibility rules were never part of the choice.*
 
-**Mockup:** [`docs/mockups/design-system.html`](mockups/design-system.html). Switch
+**Mockup:** [`specs/mockups/design-system.html`](mockups/design-system.html). Switch
 between the directions, the light, dark and night themes, and four simulated kinds of
 colour vision.
 
@@ -86,9 +86,9 @@ No migration was needed.
   free for the member palette.
 - The night theme is not a dimmed dark theme: it switches to warm amber on near-black,
   with contrast reduced to about 10:1 instead of 15:1, so that a lit wall in a dark
-  kitchen does not glare (docs/09).
+  kitchen does not glare (specs/09).
 - When a profile becomes active on a shared or kiosk device, `primary` becomes that
-  member's ink (docs/08). With no profile active, `primary` is `brand`.
+  member's ink (specs/08). With no profile active, `primary` is `brand`.
 
 ### Subject and category tints ("paper")
 
@@ -121,7 +121,7 @@ member ink, `T` its tint.
 | `off` | No fill, 1.5 px solid `C` outline, text in `ink-3` | Empty, quiet |
 | `childcare` | Dot grid of `C` over `T`, with a child glyph | Dots and glyph |
 
-The baseline chip (docs/09, "only the deviation is loud") is `sunken` with `ink-2` text
+The baseline chip (specs/09, "only the deviation is loud") is `sunken` with `ink-2` text
 and a 6 px dot in `C`. It is never a band.
 
 ## Typography
@@ -139,7 +139,7 @@ values match `UiRegister.baseFontSize` and `minFontSize`.
 
 ## Icons
 
-There are two sets, each used for one job only, as docs/09 asks ("one coherent set"):
+There are two sets, each used for one job only, as specs/09 asks ("one coherent set"):
 
 - **Interface icons: Phosphor** (MIT). These are navigation, actions and status. Use the
   *Regular* weight in the adult register, *Bold* in kid and kiosk, and *Fill* for the
@@ -151,7 +151,7 @@ There are two sets, each used for one job only, as docs/09 asks ("one coherent s
   `task_definition` and `reward`.
 
 The **logo** (Wuselpunkte) and the **mascot** (Wuselchen) are neither: they are brand
-assets in [docs/brand/](brand/), with their rules in
+assets in [specs/brand/](brand/), with their rules in
 [ADR-012](adr/ADR-012-product-name.md#logo-and-mascot). Wuselchen is drawn only from
 member colours and `brand`, so it follows the theme like everything else.
 

@@ -1,4 +1,4 @@
--- M0.1 Identity (docs/08, ADR-004, ADR-010).
+-- M0.1 Identity (specs/08, ADR-004, ADR-010).
 -- Two layers: a device session (one Auth user per device) and an acting profile chosen
 -- by tapping. Guardian actions need a PIN step-up recorded server-side on the device row.
 
@@ -55,7 +55,7 @@ create table app.enrolment_code (
   consumed_at  timestamptz
 );
 
--- One row at deploy time; the setup call must present the matching token (docs/08).
+-- One row at deploy time; the setup call must present the matching token (specs/08).
 create table app.setup_token (
   token_hash  text primary key,
   consumed_at timestamptz

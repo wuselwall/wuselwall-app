@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// The kiosk's night variant runs from 21:00 to 06:00 local time (docs/09).
+/// The kiosk's night variant runs from 21:00 to 06:00 local time (specs/09).
 bool isNightAt(DateTime time) => time.hour >= 21 || time.hour < 6;
 
 /// The next 06:00 or 21:00 strictly after [time].

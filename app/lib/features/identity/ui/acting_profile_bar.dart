@@ -118,7 +118,7 @@ class _Avatar extends StatelessWidget {
   }
 }
 
-/// Reverts a kiosk to "nobody" after [timeout] without any touch (docs/08: 60 s).
+/// Reverts a kiosk to "nobody" after [timeout] without any touch (specs/08: 60 s).
 /// Wrap the kiosk's home screen in it.
 class IdleReverter extends ConsumerStatefulWidget {
   const IdleReverter({

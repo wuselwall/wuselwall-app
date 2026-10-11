@@ -239,5 +239,10 @@
         "type": "String"
       }
     }
-  }
+  },
+  "pinChangeTitle": "Wächter-PIN",
+  "pinChangeBody": "Lege eine neue 6-stellige PIN fest. Das entsperrt auch eine PIN, die nach zu vielen Fehlversuchen gesperrt wurde.",
+  "pinChangeAction": "Ändern",
+  "pinChangeField": "Neue PIN (6 Ziffern)",
+  "pinChanged": "PIN geändert."
 }

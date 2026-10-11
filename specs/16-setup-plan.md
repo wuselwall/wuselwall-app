@@ -79,7 +79,7 @@ and no Xcode debugger. See [Q35](14-open-questions.md).
 ## Step 1 — Repository skeleton (M0.0)
 
 1. Create the layout from [03](03-architecture.md#repository-layout): `app/`, `supabase/`,
-   `infra/`, `.github/workflows/`, `docs/`.
+   `infra/`, `.github/workflows/`, `specs/`, `docs/`.
 2. `.gitignore` covering Flutter (`build/`, `.dart_tool/`), Supabase (`supabase/.temp/`,
    `.branches/`), environment files (`.env`, `*.env` except `*.env.example`), signing
    material (`*.jks`, `*.keystore`, `*.p8`, `*.mobileprovision`, `key.properties`).
@@ -449,7 +449,7 @@ keys, and the restore drill has restored a nightly dump once. *(Restore drill fi
  feature branch ──PR──► ci.yml ─────────────── app · backend · functions · audit
                          │ green + review
                          ▼
-                       main ──► by hand: backup → migration up → pgTAP (docs/10)
+                       main ──► by hand: backup → migration up → pgTAP (specs/10)
                          │
                          │ tag vX.Y.Z
                          ▼

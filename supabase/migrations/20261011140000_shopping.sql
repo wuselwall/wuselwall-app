@@ -1,4 +1,4 @@
--- M0.2 Shopping list, online only (docs/07, docs/16 step 6).
+-- M0.2 Shopping list, online only (specs/07, specs/16 step 6).
 -- Offline outbox, catalogue and tile picker are M1.1.
 
 create table app.shopping_list (

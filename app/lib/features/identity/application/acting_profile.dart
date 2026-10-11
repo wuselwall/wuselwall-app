@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 
-/// Who is acting right now (docs/08, "tap to switch").
+/// Who is acting right now (specs/08, "tap to switch").
 ///
 /// Personal devices are fixed to their profile. Shared and kiosk devices start with
 /// nobody and become whoever taps their avatar; the kiosk reverts after 60 s idle.

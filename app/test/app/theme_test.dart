@@ -27,7 +27,7 @@ void expectAA(Color fg, Color bg, String reason) => expect(
 );
 
 void main() {
-  test('type scale and touch targets step up per register (docs/09)', () {
+  test('type scale and touch targets step up per register (specs/09)', () {
     final adult = AppTheme.build(UiRegister.adult, Shade.light);
     final kid = AppTheme.build(UiRegister.kid, Shade.light);
     final kiosk = AppTheme.build(UiRegister.kiosk, Shade.light);
@@ -66,7 +66,7 @@ void main() {
     }
   });
 
-  group('WCAG AA in every shade (docs/17)', () {
+  group('WCAG AA in every shade (specs/17)', () {
     for (final shade in Shade.values) {
       test(shade.name, () {
         final c = Palette.of(shade);

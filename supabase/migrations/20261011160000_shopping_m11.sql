@@ -1,4 +1,4 @@
--- M1.1 Shopping, complete (docs/07, docs/13): several lists, categories as store layout,
+-- M1.1 Shopping, complete (specs/07, specs/13): several lists, categories as store layout,
 -- a catalogue learned on purchase, counts ("tap again for 2x"), trips as history.
 --
 -- Until now `shopping_list` was a *trip* (status active/done). It becomes the stable
