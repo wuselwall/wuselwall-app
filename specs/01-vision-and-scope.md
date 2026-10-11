@@ -2,10 +2,10 @@
 
 ## The problem
 
-A household of four runs on information that currently lives in four incompatible
+A family household runs on information that currently lives in four incompatible
 places: appointments in individual calendars, chores in someone's head, meals decided
 at 17:30 in front of an open fridge, and shopping needs remembered until the moment
-the supermarket doors close behind you. Nobody has the whole picture, and the two
+the supermarket doors close behind you. Nobody has the whole picture, and the
 adults carry the coordination load asymmetrically.
 
 ## The vision
@@ -21,20 +21,25 @@ Three properties make or break this:
   untrusted list is worse than no list.
 - **The wall display must be glanceable.** The kitchen screen is read from two metres
   away while carrying a saucepan. It is a display first and an input device second.
-- **The week must be visible without asking for it.** Two school timetables, one shift
-  rota and one travelling parent do not fit in anyone's head, and the questions they
+- **The week must be visible without asking for it.** Several school timetables, a shift
+  rota and a parent who travels do not fit in anyone's head, and the questions they
   generate — *hat sie morgen Sport? arbeitest du Donnerstag? wer isst mit?* — are asked
   daily. A screen that answers them before they are asked is the difference between an
   app the family uses and one they remember to open.
 
 ## Users
 
+A household has one or more guardians and any number of children. The design case is the
+**reference household** — two adults, children of 9 and 7 — whose members appear by name
+in the examples, the mockups and the demo data
+([21](21-household-settings.md#the-reference-household)). Everything that differs between
+households is a setting with a curated default, not an assumption.
+
 | Persona | Devices | What they need |
 |---|---|---|
-| **Lukas** (parent) | iPhone (primary), work laptop (browser + Outlook), wall display | Full control. Plan the week, set up recurring chores, approve rewards. See family appointments inside Outlook on the work laptop without installing anything. Travels for work irregularly, so his weeks need to be **enterable in seconds and visible to everyone else**. |
-| **Sabine** (parent) | iPhone, wall display | The same rights, a different rhythm: a working pattern that repeats but is revised, and needs **maintaining once rather than entering weekly**. |
-| **Child, 9** | iPad, wall display | See own tasks, own Stundenplan and today's plan, tick things off, watch points grow, redeem rewards. Can read fluently, understands a points economy. |
-| **Child, 7** | iPad, wall display | Same, but icon-led. Reads slowly — the subject icon on the timetable does more work than its name. Needs immediate, unambiguous feedback and no way to break anything. Frustration tolerance is the design constraint. |
+| **Guardian** — an adult (Lukas, Sabine) | Phone (primary), work laptop (browser + Outlook), wall display | Full control. Plan the week, set up recurring chores, approve rewards. See family appointments inside Outlook on the work laptop without installing anything. Two working rhythms are designed for: **travel at short notice**, which must be enterable in seconds and visible to everyone else, and **a pattern that repeats but is revised** (a shift rota), which needs maintaining once rather than entering weekly. |
+| **Older child** (Lotta, 9) | Tablet, wall display | See own tasks, own Stundenplan and today's plan, tick things off, watch points grow, redeem rewards. Can read fluently, understands a points economy. |
+| **Younger child** (Hanna, 7) | Tablet, wall display | Same, but icon-led. Reads slowly — the subject icon on the timetable does more work than its name. Needs immediate, unambiguous feedback and no way to break anything. Frustration tolerance is the design constraint. |
 | **Assistant** (Siri today, an AI agent later) | — | Read the agenda, add shopping items, mark tasks done, on behalf of a named person. |
 | **Another family** *(added 2026-10-11, [ADR-014](adr/ADR-014-self-service-onboarding.md))* | Whatever they own | Install the app, start their household in under two minutes without talking to anyone, get the other parent in with one message, set up the kitchen tablet without typing on it ([20](20-onboarding.md)). They have never heard of the operator and owe them nothing. |
 
@@ -63,13 +68,13 @@ Naming these now prevents them being argued about later.
 
 | Not building | Why |
 |---|---|
-| ~~Multi-tenancy / other families~~ | **Reversed 2026-10-11 by [ADR-014](adr/ADR-014-self-service-onboarding.md):** other families can create their own household. It costs less than this row once feared, because every row already carries `household_id` and RLS already scopes every query by it. What remains out of scope is anything *between* households: sharing, federation, one person in two households ([Q43](14-open-questions.md)). |
+| ~~Multi-tenancy / other families~~ | **Reversed 2026-10-11 by [ADR-014](adr/ADR-014-self-service-onboarding.md):** other families can create their own household. It costs less than this row once feared, because every row already carries `household_id` and RLS already scopes every query by it. What differs between households is configuration — settings with curated defaults ([21](21-household-settings.md)), never code. What remains out of scope is anything *between* households: sharing, federation, one person in two households ([Q43](14-open-questions.md)). |
 | Commercialisation, billing | Personal project, stated non-goal. Self-service does not change it: no plans, no payments, no ads. The only public web presence is the landing pages, the privacy policy and the deletion page ([20](20-onboarding.md#universal-links-and-the-landing-pages)). |
 | A public App Store or Play Store listing | The apps are native since 2026-10-11 ([ADR-010](adr/ADR-010-flutter-and-self-hosted-supabase.md)) and distributed internally through TestFlight and the Play internal track ([ADR-011](adr/ADR-011-native-distribution-and-ci-cd.md)). *Since ADR-014 this holds only until the opening gate. Strangers need a public route in ([Q42](14-open-questions.md)).* |
 | Budgeting / expense tracking | Different problem, different data model. Possible Phase 4. |
 | Photo sharing, family chat, document storage | Solved better elsewhere. Do not become a second Nextcloud. |
 | Two-way calendar sync with Outlook or Google | Technically possible, disproportionately expensive, and the failure modes (duplicate and ghost events) are miserable. See [ADR-001](adr/ADR-001-calendar-backbone.md). |
-| Fine-grained privacy between family members | Everyone in the household sees everything except a small set of guardian-only settings. Adding per-item ACLs would double the complexity of every read path for a benefit this household does not need. |
+| Fine-grained privacy between family members | Everyone in the household sees everything except a small set of guardian-only settings. Adding per-item ACLs would double the complexity of every read path for a benefit a family household does not need. |
 | Offline support outside the shopping list | See [ADR-006](adr/ADR-006-offline-strategy.md). |
 
 ## What success looks like

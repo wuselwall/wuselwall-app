@@ -43,8 +43,8 @@ Store RFC 5545 directly. Do not invent a recurrence format.
   Never materialise recurring occurrences into rows: the calendar has no equivalent of
   the task materialiser, because unlike tasks, occurrences carry no state.
 
-**Timezone rule:** a weekly 07:00 event is stored with `timezone = 'Europe/Berlin'` and
-expanded in that zone, so it stays at 07:00 across the DST boundary. Storing only a UTC
+**Timezone rule:** a weekly 07:00 event is stored with the household's zone (e.g.
+`timezone = 'Europe/Berlin'`) and expanded in that zone, so it stays at 07:00 across the DST boundary. Storing only a UTC
 instant and expanding in UTC shifts it by an hour every March and October. This is the
 single bug most likely to make the family distrust the calendar.
 

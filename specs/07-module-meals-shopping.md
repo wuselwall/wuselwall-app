@@ -51,7 +51,8 @@ and needs a defaulting rule rather than an empty multi-select nobody fills in.
   presence entry of `travel` or `away` that covers the meal's slot flips that member to
   "not eating" automatically, and the child whose Stundenplan has Hort past 14:00 is
   automatically out for Mittagessen. Both defaults are overridable per meal — the point
-  is that the common case needs no input at all.
+  is that the common case needs no input at all. The rule itself, the cutoff and which
+  meal is the warm one are household settings ([21](21-household-settings.md#meals-m14)).
 - **Recipe detail** (tablet): ingredients scaled to the planned servings, steps in large
   type — the tablet is propped against the toaster while someone cooks.
 
@@ -90,7 +91,7 @@ anything. The picker inverts that, in the shape people already know from choosin
 |---|---|---|
 | Tiles with a picture, or a text list? | **Tiles**, four per row | Every `catalog_item` needs an `icon_key`. The pictures are a self-hosted icon set, never product photos — those would mean an outbound request per tile, which NFR-9 rules out |
 | May the children add items? | **Yes**, on the same screen as everyone else | No kid mode on this path. Each row shows a dot in the adder's colour (FR-4.10), which settles "who put Gummibärchen on the list" without a rule |
-| One list or several? | **Several** — Supermarkt, Drogerie, Baumarkt | FR-4.8 rises from `C` to `M` and moves into M1.1. Each list offers only its own categories, so the Baumarkt list never suggests bananas. Supermarkt is `is_default` |
+| One list or several? | **Several** — the starter set is Supermarkt, Drogerie, Baumarkt; households rename, add and remove lists ([21](21-household-settings.md#shopping)) | FR-4.8 rises from `C` to `M` and moves into M1.1. Each list offers only its own categories, so the Baumarkt list never suggests bananas. Supermarkt is `is_default` |
 | How do quantities work? | **Long press → free text** | No numeric field on the fast path. Tap counts up (2 ×, 3 ×); a long press opens one text field for "Bio", "500 g", "Dose", "E14 warmweiß". Parsed into quantity and unit only where unambiguous, kept verbatim regardless (FR-4.9) |
 
 ### On the wall

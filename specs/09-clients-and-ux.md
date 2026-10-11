@@ -75,6 +75,11 @@ eye learns the geometry once and then reads by position rather than by searching
 that reflows because Wednesday happens to be busy destroys that, so zones keep their band
 even when empty — an empty meal zone says "nothing planned", which is itself information.
 
+The board below shows the reference household
+([21](21-household-settings.md#the-reference-household)): two children, two adults. Another
+household gets one row per member, and the time boundaries, rollover and night hours are
+household settings with these values as defaults.
+
 ```
 ┌────────────────────────────────────────────────────────────────────────────────────┐
 │ Mittwoch, 2. September · 17:42     KW 36     ● Als Nächstes: 18:30 Chili sin Carne  │
@@ -117,26 +122,27 @@ even when empty — an empty meal zone says "nothing planned", which is itself i
 | Zone | Height | Contents | Source |
 |---|---|---|---|
 | **Header** | 1 line | Full date, clock, calendar week, freshness marker | — |
-| **Wer ist wo** | 4 rows, one per member, always in the same order | Children: the school-day span from the Stundenplan, plus the lessons worth knowing about the evening before (Sport, Schwimmen, FreiDay) and the Hort end time — never the individual subjects. Adults: the **deviation** from their baseline, as a filled band; the baseline itself stays a quiet muted chip, and under either a "Termine bis 17:00" line (FR-1.19) saying when that person is out of meetings. Bands span multiple columns where they span multiple days. | [15](15-module-school-timetable.md) |
+| **Wer ist wo** | One row per member, always in the household's member order (`profile.sort_order`) | Children: the school-day span from the Stundenplan, plus the lessons worth knowing about the evening before (Sport, Schwimmen, FreiDay) and the Hort end time — never the individual subjects. Adults: the **deviation** from their baseline, as a filled band; the baseline itself stays a quiet muted chip, and under either a "Termine bis 17:00" line (FR-1.19) saying when that person is out of meetings. Bands span multiple columns where they span multiple days. | [15](15-module-school-timetable.md) |
 | **Termine** | 3 fixed bands — Vormittag (< 12:00), Nachmittag (12–17), Abend (≥ 17:00) — 2 slots each, then "+n weitere" | Key appointments only (`importance='key'`), time above title, and a **dot per attendee** in their member colour at the right edge; four dots means the whole family. Day parts rather than a time axis: a wall display is read for "which afternoon is full", not for "what happens at 14:15". | [05](05-module-calendar.md) |
 | **Warmes Essen** | 1 row | One warm meal a day — Mittag at the weekend, Abend on school days, with the slot named in the cell. Under it, one dot per member, filled when they are eating, hollow when not, plus who is cooking (as a name, not an icon) and a guest count. | [07](07-module-meals-shopping.md) |
 | **Footer** | 1 line | Open tasks per member, shopping-list count, night-mode indicator | [06](06-module-tasks.md) |
 
-**Why the dot row matters.** "Wer isst mit?" is the single most-asked question in this
-household's afternoon, and it is answerable from the presence and school data the system
-already holds: `travel` or `away` over the meal slot means not eating; Hort past 14:00
-means the child is out. The dots are therefore mostly correct without anyone touching
+**Why the dot row matters.** "Wer isst mit?" is the single most-asked question in a
+family's afternoon, and it is answerable from the presence and school data the system
+already holds: `travel` or `away` over the meal slot means not eating; Hort past the care cutoff
+(`meals.care_lunch_cutoff`, default 14:00) means the child is out for lunch. The dots are therefore mostly correct without anyone touching
 them, and tapping the zone corrects a day in two taps. A multi-select that must be filled
 in by hand would be empty by week three.
 
-**Why only the deviation is loud.** Lukas works from home most days and Sabine is at home
-on the days she is not on Dienst; drawing that as four filled bands a day would make the
+**Why only the deviation is loud.** In the reference household Lukas works from home most
+days and Sabine is at home on the days she is not on Dienst; drawing that as a filled band
+per member per day would make the
 zone one solid block of colour in which the Tuesday office day and the two-day Dienstreise
 disappear. So each member carries a **baseline** (`profile.default_presence`), rendered as
 a muted chip, and only what departs from it gets a band. This also halves what has to be
 entered: "Mo + Mi Dienst" is one series, and nothing at all is entered for a normal day.
 
-**Why the school zone stays short.** Seven Stunden × two children is a grey rectangle at
+**Why the school zone stays short.** Seven Stunden per child is a grey rectangle at
 two metres. The wall carries the span plus what has to be packed the evening before; the
 full grid is one tap away and lives on the children's iPads.
 
@@ -148,8 +154,8 @@ full grid is one tap away and lives on the children's iPads.
   board carries; everything else is context.
 - Past days this week are dimmed rather than removed. Monday still explains why the
   laundry basket is full.
-- The week rolls over at a configurable point at the weekend (leaning: Saturday 12:00,
-  Q23) so that Sunday evening's planning session is looking at the week it is planning.
+- The week rolls over at a configurable point at the weekend (`board.rollover`, default
+  Saturday 12:00, Q26) so that Sunday evening's planning session is looking at the week it is planning.
 
 ### Considered and rejected: merging the zones
 
@@ -193,7 +199,7 @@ place to type, and a mis-tap while cooking must not be able to change data.
 
 | Tap | Opens | Reverts |
 |---|---|---|
-| A day column | That day in full: every appointment, both children's lessons, both meals | 60 s |
+| A day column | That day in full: every appointment, every child's lessons, every meal | 60 s |
 | A child's row | That child's **Stundenplan for the week** — the paper timetable's own shape: numbered Stunden down the left with their bell times, weekdays across the top, today's column marked, Entfall struck through, Vertretung labelled, and a "morgen einpacken" line at the bottom | 60 s |
 | An adult's row | That person's week: baseline, deviations, their appointments and what they are cooking | 60 s |
 | The meal zone | The week's meal plan; two taps to correct who is eating | 60 s |
@@ -215,7 +221,7 @@ it.
 - A subtle "aktualisiert vor 4 s" in the header, which turns into "zuletzt aktualisiert
   17:05" and a muted banner when the connection is lost. The last good board stays on
   screen (FR-8.10).
-- Night variant from 21:00: dark ground, reduced contrast, meals and tomorrow's first
+- Night variant from 21:00 (`device.night_hours`, per kiosk, default 21:00–06:00): dark ground, reduced contrast, meals and tomorrow's first
   appointment emphasised, everything else calmed down.
 
 ## Platforms and distribution
@@ -280,7 +286,9 @@ ordering, not the marketing diagonal — cheap 10" tablets in this price range a
   - a reward redemption awaiting guardian approval
   - a task verified and points credited
 - Each member controls their own notification set. Default to few: the fastest way to
-  train a family to ignore an app is to notify them about everything in week one.
+  train a family to ignore an app is to notify them about everything in week one. The
+  defaults — morning summary at 07:00 on, everything else off — are in
+  [21](21-household-settings.md#notifications).
 - The web build gets realtime but no push; the laptop has Outlook for that.
 
 ## Design system
@@ -295,16 +303,16 @@ Concrete values — palette, typefaces, icon sets, shape and motion tokens — a
 - Touch targets: 44 px adult, 56 px kid and kiosk.
 - Contrast WCAG AA minimum; the kitchen is bright in the morning and dim at night, so a
   dark variant is not cosmetic.
-- Icons carry meaning for the 7-year-old, so pick one coherent set and use it for chores,
+- Icons carry meaning for children who are still learning to read, so pick one coherent set and use it for chores,
   categories and rewards consistently.
 - Motion: brief and purposeful — the points-fly-to-balance animation on task completion
   is doing real motivational work and deserves care.
-- **Presence needs a second channel besides colour.** Six states on four members is more
-  than colour can carry, so each state has a fill treatment as well: solid (arbeitet),
+- **Presence needs a second channel besides colour.** Six states across a household's
+  members is more than colour can carry, so each state has a fill treatment as well: solid (arbeitet),
   hatched (Homeoffice), arrow-ended (Dienstreise), outlined (frei). Verified in greyscale
   before it ships (NFR-13).
-- **Subjects get an icon each**, chosen from the same set as chores and categories. The
-  seven-year-old reads 🏃 long before he reads "Sport", and the icon is what survives being
+- **Subjects get an icon each**, chosen from the same set as chores and categories. A
+  first-grader reads 🏃 long before "Sport", and the icon is what survives being
   seen from two metres.
 - Nothing in the kiosk register is smaller than 24 px (NFR-16). If a zone does not fit at
   that size, it loses content, not type size.
