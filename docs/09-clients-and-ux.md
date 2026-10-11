@@ -219,7 +219,7 @@ eviction — no longer apply to the phones, iPads or wall tablet.*
 |---|---|---|
 | Parents' iPhones, children's iPads | Flutter iOS app | TestFlight ([ADR-011](adr/ADR-011-native-distribution-and-ci-cd.md)) |
 | Wall tablet, any Android phone | Flutter Android app | Play internal testing track |
-| Work laptop | Flutter web build | `https://home.example.de` |
+| Work laptop | Flutter web build | `https://wusel.example.org` |
 
 ### Native reality, current as of 2026
 

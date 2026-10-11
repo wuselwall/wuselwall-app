@@ -24,7 +24,7 @@ remain an M3+ option if a spoken phrase stops being enough.
 
 1. Ask for Input (text) → "Was brauchst du?"
 2. Get Contents of URL
-   - `POST https://home.example.de/functions/v1/shortcuts/shopping/add`
+   - `POST https://wusel.example.org/functions/v1/shortcuts/shopping/add`
    - Header `Authorization: Bearer <shortcut token>`
    - JSON body `{ "text": <Provided Input>, "clientUuid": <UUID> }`
 3. Show Result → "Auf der Liste."
@@ -74,7 +74,7 @@ a stateless protocol suits a function runtime well.
 ### Deployment and authorisation
 
 ```
-https://mcp.home.example.de/mcp     Streamable HTTP → Caddy → the mcp Edge Function
+https://<mcp host>/mcp              Streamable HTTP → nginx → the mcp Edge Function
 ```
 
 WuselWall acts as the OAuth 2.1 authorisation server. Supabase Auth has been gaining

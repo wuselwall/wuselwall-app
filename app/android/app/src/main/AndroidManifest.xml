@@ -34,7 +34,7 @@
               <category android:name="android.intent.category.BROWSABLE" />
               <!-- Accepts URIs that begin with YOUR_SCHEME://YOUR_HOST -->
               <data
-                android:scheme="ch.wuselwall.app"
+                android:scheme="ch.goomba.wuselwall"
                 android:host="login-callback" />
             </intent-filter>
         </activity>

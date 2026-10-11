@@ -22,7 +22,7 @@ is the kitchen display that shows the household's busy week at a glance.
 | Identifier | Value |
 |---|---|
 | Display name (both locales, iOS, Android, web) | `WuselWall` |
-| Application ID, bundle ID, auth deep-link scheme | `ch.wuselwall.app` |
+| Application ID, bundle ID, auth deep-link scheme | `ch.goomba.wuselwall` |
 | Dart package | `wuselwall` |
 | Supabase project ID (local and dev stack) | `wuselwall` |
 | Server user, deploy path, backup path | `wuselwall`, `/opt/wuselwall`, `/var/backups/wuselwall` |

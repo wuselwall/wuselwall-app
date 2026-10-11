@@ -1,6 +1,7 @@
 # ADR-011 — Native app distribution and the CI/CD pipeline
 
-**Status:** Accepted · 2026-10-11 · Follows from [ADR-010](ADR-010-flutter-and-self-hosted-supabase.md)
+**Status:** Accepted · 2026-10-11 · Follows from [ADR-010](ADR-010-flutter-and-self-hosted-supabase.md) ·
+Amended by [ADR-013](ADR-013-one-self-hosted-environment.md): one environment, no `deploy.yml`
 
 ## Context
 
@@ -16,21 +17,20 @@ open ([Q35](../14-open-questions.md)).
 ### Application identity
 
 *Amended 2026-10-11.* The application ID on Android and the bundle ID on iOS are both
-**`ch.wuselwall.app`** (see [ADR-010](ADR-010-flutter-and-self-hosted-supabase.md#starting-point-and-identifiers)).
+**`ch.goomba.wuselwall`** (see [ADR-010](ADR-010-flutter-and-self-hosted-supabase.md#starting-point-and-identifiers)).
 They replace the placeholder `de.<domain>.wuselwall` used in earlier drafts and the
 starter's `com.example.*` values. Consequences for this pipeline:
 
 - One identifier on both platforms: the App Store Connect app record, the Google Play
   Console app, the `fastlane match` provisioning profiles (`match` type `appstore`, app
-  identifier `ch.wuselwall.app`) and the Android upload keystore all refer to it.
+  identifier `ch.goomba.wuselwall`) and the Android upload keystore all refer to it.
 - It cannot be changed after the first upload to either store, which is why it was fixed
   before any record was created.
-- The auth deep link `ch.wuselwall.app://login-callback/` is registered in the iOS
+- The auth deep link `ch.goomba.wuselwall://login-callback/` is registered in the iOS
   `Info.plist` URL types and the Android manifest intent filter, and allow-listed in the
-  Supabase redirect URLs. Self-hosted production needs the same entry in the stack's
-  `ADDITIONAL_REDIRECT_URLS`.
+  Supabase redirect URLs (`additional_redirect_urls` in `supabase/config.toml`).
 - Marketing and build metadata: display name `WuselWall`; the iOS `RunnerTests` target
-  uses `ch.wuselwall.app.RunnerTests`.
+  uses `ch.goomba.wuselwall.RunnerTests`.
 - Release builds must run `flutter gen-l10n` (implicit in `flutter build`) and CI fails
   on any message missing from either `app_en.arb` or `app_de.arb`.
 
@@ -40,20 +40,20 @@ starter's `com.example.*` values. Consequences for this pipeline:
 |---|---|---|
 | **iOS / iPadOS** | **TestFlight**, internal testing, via the **Apple Developer Program** | The only route that installs on a family member's device without a cable or a Mac, updates itself, and needs no App Review for internal testers. Builds expire after 90 days, which a release every few weeks makes irrelevant. |
 | **Android** (wall tablet, any Android phone) | **Google Play internal testing track** | Automatic updates on the wall tablet without touching it, no review for internal tracks, a one-time registration fee. A signed APK attached to a GitHub Release remains the fallback. |
-| **Laptop browser** | The Flutter **web build**, served as static files by Caddy from the VPS | Nothing to install, deployed with the backend. |
+| **Laptop browser** | The Flutter **web build**, served as static files by the home server's nginx | Nothing to install. |
 
 Fallback for iOS if TestFlight proves awkward for the children's accounts: **Ad Hoc**
 distribution to the registered UDIDs of the household's devices, installed from a page on
-the VPS. Decided in [Q37](../14-open-questions.md) once both are tried on a real iPad.
+the home server. Decided in [Q37](../14-open-questions.md) once both are tried on a real iPad.
 
 ### CI/CD on GitHub Actions
 
-Three workflows, one responsibility each. Detail in [16](../16-setup-plan.md#cicd-at-a-glance).
+Two workflows, one responsibility each (`deploy.yml` was dropped by ADR-013: migrations
+are applied to the one environment by script, after a backup). Detail in [16](../16-setup-plan.md#cicd-at-a-glance).
 
 | Workflow | Trigger | Does |
 |---|---|---|
 | `ci.yml` | Every pull request and push to `main` | Flutter format, analyse, unit and widget tests; `supabase start` → apply every migration from zero → pgTAP tests (RLS included) → schema lint; Deno format, lint and test for Edge Functions; dependency audit |
-| `deploy.yml` | Push to `main` once production exists (M1.6); manual before | Back up the database → apply migrations → sync Edge Functions → build and publish the web build → smoke-test `/health`. Gated by a GitHub Environment that needs the developer's approval |
 | `release-mobile.yml` | A tag `v*.*.*` | Android: signed App Bundle → Play internal track. iOS (macOS runner): `fastlane match` for signing → `flutter build ipa` → TestFlight |
 
 - **Signing material never lives on a laptop alone.** iOS certificates and profiles live
@@ -64,7 +64,7 @@ Three workflows, one responsibility each. Detail in [16](../16-setup-plan.md#cic
 - **iOS builds only run on tags**, never on pull requests: macOS runner minutes on a
   private repository are billed at ten times the Linux rate and the free allowance
   covers roughly ten iOS builds a month.
-- **No staging environment.** One household, one production. Migrations are instead
+- **No staging environment.** One household, one environment (ADR-013). Migrations are instead
   rehearsed in CI against an empty database on every pull request and, before risky
   releases, against last night's restored backup (the restore drill doing double duty).
 
@@ -103,8 +103,8 @@ Complements CI rather than replacing it, if a Mac is available (Q35).
 **Negative**
 
 - **Recurring cost**: the Apple Developer Program is €99 a year, roughly €8 a month on its
-  own. Together with a larger VPS this breaks the original €10/month target; NFR-7 is
-  revised accordingly ([Q36](../14-open-questions.md)).
+  own. With no rented server (ADR-013) the total stays inside the original €10/month
+  target ([Q36](../14-open-questions.md)).
 - **iOS without a Mac is CI-only**: no simulator, no Xcode debugger. iOS-specific bugs
   are diagnosed from logs and TestFlight crash reports. A borrowed or second-hand Mac
   mini is the remedy if this hurts.
@@ -112,4 +112,4 @@ Complements CI rather than replacing it, if a Mac is available (Q35).
   never be lost, TestFlight builds lapse after 90 days. Each is a calendar reminder,
   listed in [10](../10-deployment-and-ops.md#updates).
 - Apple and Google become parties to the build and update process — not to the family's
-  data, which stays on the VPS.
+  data, which stays on the home server.

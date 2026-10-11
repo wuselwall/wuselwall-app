@@ -40,23 +40,27 @@ insiders. If a threat model does not exclude anything it is not a threat model.
 
 ### T1 — internet-facing exposure
 
-- Only ports 80 and 443 open. SSH restricted by `ufw`; consider moving SSH behind
-  **Tailscale** and closing 22 entirely — a genuine improvement for roughly twenty
-  minutes of work.
-- **Postgres has no published port** on any public interface; the pooler is bound to
-  `127.0.0.1` and reached from CI only through an SSH tunnel.
-- **Studio and Kong's dashboard routes are never routed by Caddy.** Studio is reached
-  through `ssh -L` only. Caddy forwards exactly four API prefixes plus the feed path
-  ([10](10-deployment-and-ops.md#6-caddyfile)); everything else is the static web build.
+*Revised 2026-10-11 for the home server ([ADR-013](adr/ADR-013-one-self-hosted-environment.md)).*
+
+- **Only 443 is forwarded** from the router, to nginx. The DNS record is proxied by
+  Cloudflare, so the home address is not published in DNS.
+- **nginx forwards exactly four API prefixes** to Kong
+  ([`infra/nginx/wusel.example.org.conf`](../infra/nginx/wusel.example.org.conf)); Kong's
+  dashboard, the `/pg/` metadata API and everything else answer 404.
+- **Postgres (54322), Studio (54323) and Mailpit (54324) are never forwarded or proxied.**
+  The CLI stack publishes them on the home network only; anyone on the home wifi can reach
+  them, which is accepted for a household network and must not be extended.
 - **Public sign-up and anonymous users are disabled** in Supabase Auth. Accounts exist
   only because the setup wizard, a guardian or the enrolment function created them.
-- **Never run with the upstream example keys.** `JWT_SECRET`, the anon and service-role
-  keys, and every password in `.env` are generated fresh for production.
-- `unattended-upgrades` for OS patches; monthly image pulls; `fail2ban` on SSH.
-- Caddy terminates TLS with modern defaults and HSTS. No legacy protocol support to
-  configure, because there is none.
-- Supabase's images are used as published, pinned by digest; nothing is built on the
-  server.
+- **Never run with the CLI's default keys.** `auth.jwt_secret`, `auth.publishable_key` and
+  `auth.secret_key` come from the git-ignored `supabase/.env`. The defaults are public;
+  with them, anyone holds the service role.
+- **The setup token is random** before the household exists (`scripts/remote-setup-token.sh`);
+  the seed's `dev-setup` is in git.
+- Cloudflare terminates TLS with modern defaults; set *Always Use HTTPS* and HSTS in its
+  dashboard. Between Cloudflare and nginx: the origin certificate, SSL mode Full (strict).
+- Supabase's images are used as published, pinned through the Supabase CLI version in
+  `package.json`; nothing is built on the server, and no auto-updater touches them.
 
 ### T2 — feed tokens
 
@@ -91,7 +95,7 @@ insiders. If a threat model does not exclude anything it is not a threat model.
 
 - TOTP as a mandatory second factor on guardian accounts; passkeys as the primary
   credential if Supabase Auth supports them when M0.1 is built.
-- Supabase Auth's rate limits on sign-in, plus a rate limit at Caddy; PINs hashed with
+- Supabase Auth's rate limits on sign-in, plus a rate limit at nginx or Cloudflare; PINs hashed with
   bcrypt, with exponential backoff per profile.
 - PIN lockout after 10 failures, released only by a full guardian login.
 - Generic error messages on login. No "unknown email" hints.
@@ -185,14 +189,14 @@ With Supabase, row-level security is not defence in depth; it is the perimeter.
 - **Authorisation in the database, never in the UI.** Hiding a button is a courtesy; the
   check happens in the `api` function and the policy, always.
 - **No secrets in the app.** Only the Supabase URL and anon key are compiled in, both
-  public by design. Review `env/prod.json` before each release.
+  public by design. Review `env/dev.json` before each release.
 - **No raw HTML.** Flutter does not interpret HTML by default; do not add a widget that
   does without a comment explaining why the content is safe.
 - **Uploads** (avatars, recipe photos, if Storage is ever enabled): validate the magic
   bytes rather than the extension, cap the size, and store them in a private bucket with
   RLS on `storage.objects`.
 - **Rate limit** sign-in, PIN entry, enrolment, feed fetches and the MCP endpoint — at
-  Caddy, and in the function where it is a domain rule (PIN backoff).
+  nginx or Cloudflare, and in the function where it is a domain rule (PIN backoff).
 
 ## Privacy and legal
 
@@ -212,15 +216,16 @@ With Supabase, row-level security is not defence in depth; it is the perimeter.
 
 ## Pre-launch checklist
 
-- [ ] SSH: keys only, root login disabled, `ufw` active
-- [ ] Postgres not reachable from outside the server; Studio and Kong dashboards not routed
-- [ ] Public sign-up and anonymous users disabled; no upstream example key in `.env`
-- [ ] RLS catalogue test and every policy test green against the production schema
-- [ ] TLS working; HSTS present
+- [ ] Router forwards 443 only; Postgres, Studio and Mailpit not reachable from outside the home
+- [ ] nginx answers 404 outside the four API prefixes
+- [ ] Public sign-up and anonymous users disabled; the stack runs on its own keys, not the CLI defaults
+- [ ] Setup token replaced by a random one before the household is set up
+- [ ] RLS catalogue test and every policy test green against the live schema
+- [ ] TLS working; HSTS and Always Use HTTPS on in Cloudflare
 - [ ] Content-Security-Policy set, and verified to break nothing
 - [ ] No third-party origin contacted by the web build (network tab, clear cache) or the
       apps (a proxy such as mitmproxy on the LAN for one session)
-- [ ] Every secret in `.env`, mode 600, not in git; a copy in the password manager
+- [ ] `supabase/.env` mode 600, not in git; a copy in the password manager
 - [ ] Nightly backup running, dead-man's switch configured
 - [ ] **A restore performed successfully at least once** — date: ____________
 - [ ] Device revocation tested from a second device
