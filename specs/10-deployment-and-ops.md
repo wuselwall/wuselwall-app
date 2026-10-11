@@ -137,7 +137,7 @@ nightly, from the homeserver *User Scripts* plugin (schedule: daily, e.g. 03:30)
 
 - `pg_dumpall --roles-only` and a custom-format `pg_dump` of the whole database, written
   to `/srv/backups/wuselwall/`, 14 days kept.
-- If `RESTIC_REPOSITORY` is set in `/boot/config/wuselwall-backup.env`, the dumps go to an
+- If `RESTIC_REPOSITORY` is set in `/srv/appdata/wuselwall/backup.env`, the dumps go to an
   encrypted off-site repository too (restic runs from its Docker image, so nothing is
   installed on homeserver).
 - If `HEALTHCHECK_URL` is set, a ping to healthchecks.io afterwards. A backup that

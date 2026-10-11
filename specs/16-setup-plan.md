@@ -476,7 +476,7 @@ manager.
 | `ANDROID_KEYSTORE_B64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, `ANDROID_KEY_PASSWORD` | GitHub secrets | Android signing |
 | `PLAY_SERVICE_ACCOUNT_JSON` | GitHub secrets | Play upload |
 | `WW_JWT_SECRET`, `WW_SECRET_KEY` | `supabase/.env` on the development machine | the Supabase stack (CLI) |
-| `RESTIC_PASSWORD`, backup-target credentials, healthchecks URL | `/boot/config/wuselwall-backup.env` on the server | backups |
+| `RESTIC_PASSWORD`, backup-target credentials, healthchecks URL | `/srv/appdata/wuselwall/backup.env` on the server | backups |
 | Cloudflare origin certificate and key | nginx container on the server | TLS between Cloudflare and nginx |
 | Push credentials (APNs key, FCM service account) | Edge Function secrets | `push-send` |
 
