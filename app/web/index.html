@@ -33,6 +33,13 @@
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
+  <script>
+    // The passkeys plugin initialises a JavaScript SDK at start-up and throws without it,
+    // which blanks the whole web build. Until the SDK is self-hosted (specs/16, step 5.7;
+    // no third-party origin, NFR-9) this no-op keeps the app starting; a passkey call then
+    // fails like any other error.
+    window.PasskeyAuthenticator = window.PasskeyAuthenticator || { init() {} };
+  </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

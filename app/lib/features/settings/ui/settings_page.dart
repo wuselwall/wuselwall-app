@@ -349,12 +349,17 @@ class _CodeDialog extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SelectableText(
-              code.code,
-              key: const ValueKey('enrolment-code'),
-              style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                letterSpacing: 6,
-                fontFeatures: const [FontFeature.tabularFigures()],
+            // One line whatever the width: a code broken over two lines gets misread.
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: SelectableText(
+                code.code,
+                key: const ValueKey('enrolment-code'),
+                maxLines: 1,
+                style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                  letterSpacing: 6,
+                  fontFeatures: const [FontFeature.tabularFigures()],
+                ),
               ),
             ),
             const SizedBox(height: Tokens.space4),
