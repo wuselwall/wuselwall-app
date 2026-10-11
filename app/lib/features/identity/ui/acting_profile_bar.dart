@@ -83,35 +83,55 @@ class _Avatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.ww.member(member.color);
+    // The name under the circle: two members may share an initial (Lukas, Lotta), and
+    // children recognise their written name before they read anyone else's.
     return Semantics(
       button: true,
       selected: selected,
       label: member.displayName,
+      excludeSemantics: true,
       child: InkResponse(
         onTap: onTap,
-        child: Container(
-          key: ValueKey('avatar-${member.id}'),
-          width: size,
-          height: size,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: colors.ink,
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: selected
-                  ? Theme.of(context).colorScheme.onSurface
-                  : Colors.transparent,
-              width: 4,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              key: ValueKey('avatar-${member.id}'),
+              width: size,
+              height: size,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: colors.ink,
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: selected
+                      ? Theme.of(context).colorScheme.onSurface
+                      : Colors.transparent,
+                  width: 4,
+                ),
+              ),
+              child: Text(
+                member.initial,
+                style: TextStyle(
+                  color: colors.onInk,
+                  fontSize: size * 0.45,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
-          ),
-          child: Text(
-            member.initial,
-            style: TextStyle(
-              color: colors.onInk,
-              fontSize: size * 0.45,
-              fontWeight: FontWeight.bold,
+            const SizedBox(height: Tokens.space1),
+            SizedBox(
+              width: size + Tokens.space4,
+              child: Text(
+                member.displayName,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.labelMedium
+                    ?.copyWith(fontWeight: selected ? FontWeight.bold : null),
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
