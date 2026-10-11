@@ -1,6 +1,6 @@
 # ADR-004 — Device sessions with tap-to-switch profiles and a guardian PIN
 
-**Status:** Accepted · 2026-08-29 · Mechanism amended by [ADR-010](ADR-010-flutter-and-self-hosted-supabase.md#identity-on-supabase-auth) on 2026-10-11 — the model stands; cookies and Better Auth become per-device Supabase Auth users
+**Status:** Accepted · 2026-08-29 · Mechanism amended by [ADR-010](ADR-010-flutter-and-self-hosted-supabase.md#identity-on-supabase-auth) on 2026-10-11 — the model stands; cookies and Better Auth become per-device Supabase Auth users · Amended by [ADR-014](ADR-014-self-service-onboarding.md) on 2026-10-11 — adults sign in with Apple, Google or email; shared devices pair by showing a code that a guardian approves
 
 ## Context
 
@@ -23,7 +23,8 @@ Two-layer identity:
 
 Guardian actions require a **6-digit PIN step-up**, valid for 15 minutes on that device.
 Guardians additionally hold real accounts (passkey or password) for settings, setup and
-device management.
+device management. *(Since ADR-014: Apple, Google, an email code or a password; the
+second factor is optional.)*
 
 ## Alternatives considered
 

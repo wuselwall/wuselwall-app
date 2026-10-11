@@ -36,6 +36,7 @@ Three properties make or break this:
 | **Child, 9** | iPad, wall display | See own tasks, own Stundenplan and today's plan, tick things off, watch points grow, redeem rewards. Can read fluently, understands a points economy. |
 | **Child, 7** | iPad, wall display | Same, but icon-led. Reads slowly — the subject icon on the timetable does more work than its name. Needs immediate, unambiguous feedback and no way to break anything. Frustration tolerance is the design constraint. |
 | **Assistant** (Siri today, an AI agent later) | — | Read the agenda, add shopping items, mark tasks done, on behalf of a named person. |
+| **Another family** *(added 2026-10-11, [ADR-014](adr/ADR-014-self-service-onboarding.md))* | Whatever they own | Install the app, start their household in under two minutes without talking to anyone, get the other parent in with one message, set up the kitchen tablet without typing on it ([20](20-onboarding.md)). They have never heard of the operator and owe them nothing. |
 
 ## In scope for v1
 
@@ -52,7 +53,9 @@ cut lines):
   entries; both feeding the kitchen display's seven-day week board
 
 Plus the cross-cutting essentials: per-person identity, four device classes, a secure
-self-hosted deployment, and an MCP endpoint for assistants.
+self-hosted deployment, an MCP endpoint for assistants, and *(since 2026-10-11)*
+**self-service onboarding**: adults sign up with Apple, Google or email, create or join a
+household, and connect shared devices from their phone ([20](20-onboarding.md)).
 
 ## Explicitly out of scope
 
@@ -60,9 +63,9 @@ Naming these now prevents them being argued about later.
 
 | Not building | Why |
 |---|---|
-| Multi-tenancy / other families | Single household. This removes an enormous amount of complexity from every query, every screen and every deployment decision. Do not "leave room for it". |
-| Commercialisation, billing, marketing site | Personal project, stated non-goal. |
-| A public App Store or Play Store listing | The apps are native since 2026-10-11 ([ADR-010](adr/ADR-010-flutter-and-self-hosted-supabase.md)), but distributed internally through TestFlight and the Play internal track only ([ADR-011](adr/ADR-011-native-distribution-and-ci-cd.md)). |
+| ~~Multi-tenancy / other families~~ | **Reversed 2026-10-11 by [ADR-014](adr/ADR-014-self-service-onboarding.md):** other families can create their own household. It costs less than this row once feared, because every row already carries `household_id` and RLS already scopes every query by it. What remains out of scope is anything *between* households: sharing, federation, one person in two households ([Q43](14-open-questions.md)). |
+| Commercialisation, billing | Personal project, stated non-goal. Self-service does not change it: no plans, no payments, no ads. The only public web presence is the landing pages, the privacy policy and the deletion page ([20](20-onboarding.md#universal-links-and-the-landing-pages)). |
+| A public App Store or Play Store listing | The apps are native since 2026-10-11 ([ADR-010](adr/ADR-010-flutter-and-self-hosted-supabase.md)) and distributed internally through TestFlight and the Play internal track ([ADR-011](adr/ADR-011-native-distribution-and-ci-cd.md)). *Since ADR-014 this holds only until the opening gate. Strangers need a public route in ([Q42](14-open-questions.md)).* |
 | Budgeting / expense tracking | Different problem, different data model. Possible Phase 4. |
 | Photo sharing, family chat, document storage | Solved better elsewhere. Do not become a second Nextcloud. |
 | Two-way calendar sync with Outlook or Google | Technically possible, disproportionately expensive, and the failure modes (duplicate and ghost events) are miserable. See [ADR-001](adr/ADR-001-calendar-backbone.md). |
