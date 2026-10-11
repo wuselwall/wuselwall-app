@@ -5,7 +5,7 @@ This repository holds both the planning documents and the code for WuselWall (se
 (migrations, Edge Functions, tests) and `infra/` hold the implementation. Setup-plan steps 3, 5,
 6 and 8 are built (app shell, identity, online shopping list, the one environment) and M1.1
 is built except the offline outbox. Next: the outbox; step 7 once the Apple and Google accounts
-exist.
+exist; onboarding (step 9, [specs/20](specs/20-onboarding.md), ADR-014 and ADR-015).
 
 ## Architecture rules
 
@@ -13,12 +13,16 @@ See [specs/03-architecture.md](specs/03-architecture.md),
 [ADR-010](specs/adr/ADR-010-flutter-and-self-hosted-supabase.md) and
 [ADR-013](specs/adr/ADR-013-one-self-hosted-environment.md).
 
-- **There is one environment**: the CLI stack on the home server (homeserver, `ssh homeserver`),
-  public at `https://wusel.example.org`. The family's data lives there. Before any migration
+- **There is one environment** today: the official compose stack (`infra/supabase`) on the home server (homeserver, `ssh homeserver`),
+  public at `https://wusel.example.org`. The family's data lives there. *Planned
+  ([ADR-015](specs/adr/ADR-015-saas-and-self-hosted-flavours.md)): WuselWall Cloud, a hosted
+  Supabase project, for self-service households. Once it exists: no `db reset`, a backup
+  point before `db push`, never the integration test. homeserver stays the family's home and
+  the development and test stack (Q46), so its rules below stay for good.* Before any migration
   run `scripts/remote-backup.sh`; never run `supabase db reset` against it; never run the
   Dart integration test against it (it creates households and revokes devices — CI and
   throwaway stacks only). Keys come from the git-ignored `supabase/.env`.
-- Keep `supabase/` portable to hosted Supabase (further tenants, ADR-013): no dependence on
+- Keep `supabase/` portable to hosted Supabase (WuselWall Cloud, ADR-015): no dependence on
   superuser rights or on self-hosted-only features without noting it in ADR-013.
 
 - Tables live in the `app` schema and are never exposed. PostgREST exposes only `api`:
@@ -35,7 +39,9 @@ See [specs/03-architecture.md](specs/03-architecture.md),
 - The Flutter app contains no business rules. Widgets call repositories; repositories
   call `api` views, `api` functions or Edge Functions — never a table.
 - Edge Functions forward the caller's JWT. The service-role key is only for functions
-  without a user (ICS, enrolment, jobs), with a comment at each use.
+  without a user (ICS, enrolment, jobs) and for the two account-administration functions
+  of ADR-014 (`account-delete`, MFA reset), which verify the caller's JWT and act only on
+  that caller (or, for the reset, a co-guardian), with a comment at each use.
 - Migrations are forward-only and must stay compatible with the previous app release.
 - **No household is hard-coded.** Anything one household would answer differently from
   another is a setting with a curated default ([specs/20](specs/21-household-settings.md)):

@@ -216,14 +216,22 @@ start a household, until every line below is true. It sits after M1.6 on purpose
 family uses the flows for weeks first, and their hesitations are fixed before anyone else
 meets them.
 
-- **Where it runs** decided and done ([Q40](14-open-questions.md)): at the least, the
-  official self-hosting stack instead of the CLI's (A8 in [19](19-security-and-architecture-review.md)),
-  no database port on the network (S10), monitoring and alerting (A9).
+- **WuselWall Cloud live** ([ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md),
+  [10](10-deployment-and-ops.md#wuselwall-cloud)): the hosted project in Frankfurt on Pro,
+  migrations and functions deployed from the repository, backups and the weekly off-site
+  dump, Supabase's DPA accepted; store builds on `env/cloud.json`; the links site on
+  Cloudflare Pages.
+- **The self-hosted flavour usable by others:** `/.well-known/wuselwall.json`, "Eigener
+  Server" in the app, and a self-hosting guide in `docs/` (including the email-only
+  sign-in and how to register one's own Apple/Google clients).
 - **The final domain** chosen before any stranger holds an invitation link or a passkey
-  bound to it ([Q45](14-open-questions.md)).
-- **Public distribution** ([Q42](14-open-questions.md)): App Store / TestFlight public link
-  and Play open testing or production; store privacy labels and the Data safety form
-  filled in honestly; a demo account with a password for App Review.
+  bound to it ([Q45](14-open-questions.md); `wusel.example.org` until then), with Cloud's
+  custom domain.
+- **Email** ([Q41](14-open-questions.md)): the sending domain verified, and the
+  deliverability check in [10](10-deployment-and-ops.md#email-setup) passed.
+- **Store listings** ([Q42](14-open-questions.md), decided: App Store and Google Play):
+  store privacy labels and the Data safety form filled in honestly, and a demo account
+  with a password for App Review.
 - **Legal:** privacy policy, record of processing, processor agreements, breach
   procedure, a contact address ([11](11-security-and-privacy.md#privacy-and-legal)).
 - **Abuse controls** live: Auth and Cloudflare rate limits, the 30-day clean-up of empty

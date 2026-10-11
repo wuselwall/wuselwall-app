@@ -10,9 +10,14 @@ home server's nginx. The family uses it, and development happens against it. A n
 dump protects the data.
 
 *Rewritten 2026-10-11 for ADR-013. The VPS, Caddy and `deploy.yml` of the previous
-version are gone. Further tenants, if any, would get their own hosted Supabase project
-instead (see ADR-013). The same day the stack moved from the Supabase CLI's to the
+version are gone. The same day the stack moved from the Supabase CLI's to the
 official self-hosting compose file ([ADR-013 amendment](adr/ADR-013-one-self-hosted-environment.md#amendment-2026-10-11-the-official-compose-stack)).*
+
+*Since [ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md) (2026-10-11) there are two
+flavours. This document's step-by-step path is the **self-hosted** one: the homeserver stack,
+home to the family's household and to development and testing. **WuselWall Cloud**, the
+hosted Supabase project that holds every self-service household, has
+[its own section](#wuselwall-cloud).*
 
 ---
 
@@ -26,8 +31,15 @@ official self-hosting compose file ([ADR-013 amendment](adr/ADR-013-one-self-hos
 | Apple Developer Program | Apple | €99 / year ≈ €8.25 |
 | Google Play Console | Google | $25 once |
 | Off-site copy of the backups (optional) | Backblaze B2 or similar | €0.50 – €3.50 |
-| SMTP for sign-in codes ([Q41](14-open-questions.md)) | An EU provider's free tier | €0 at household scale |
-| **Total** | | **≈ €8 – 12 / month** |
+| SMTP for sign-in codes ([Q41](14-open-questions.md)) | Scaleway Transactional Email | €0 up to 300 mails/month, then €0.25 per 1,000 |
+| **Total, self-hosted flavour** | | **≈ €8 – 12 / month** |
+| **WuselWall Cloud** ([ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md)) | Supabase Pro (organisation, one small project's compute included) | ≈ $25 |
+| Cloud's custom domain, once [Q45](14-open-questions.md) is decided | Supabase add-on | ≈ $10 |
+| Static links site (landing pages, `/.well-known/`) | Cloudflare Pages free plan | €0 |
+| **Total with Cloud** | | **≈ €40 – 50 / month** |
+
+Supabase's prices are as known on 2026-10-11. Check the pricing page before the project
+is created.
 
 ## The path a request takes
 
@@ -156,12 +168,66 @@ from `config.toml` as `env(...)`:
   the `serverClientId` in the app), **iOS** (bundle ID; its reversed client ID becomes a
   URL scheme) and **Android** (package name and the SHA-1 of the Play app-signing key *and*
   of the debug key).
-- **SMTP** ([Q41](14-open-questions.md)): host, user and password in `[auth.email.smtp]`.
-  On `example.org` (or the final domain, [Q45](14-open-questions.md)) publish SPF, DKIM and
-  DMARC for the provider, or the codes land in spam. Mailpit stays the sink on throwaway
-  stacks.
+- **Email**: see [Email setup](#email-setup) below.
+
+On WuselWall Cloud the same Apple and Google values are entered in the project's Auth
+settings. Native sign-in works there and on the first-party homeserver stack (whose
+`config.toml` carries the same client IDs). Other self-hosted servers offer email, plus
+Apple and Google through the web redirect if their operator registers their own clients
+([ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md), decision 4).
+
+### Email setup
+
+*Decided 2026-10-11 ([Q41](14-open-questions.md)).* Sign-in codes
+are the only mail WuselWall sends, apart from the "new sign-in" notice. So the setup is
+built for one thing: a six-digit code in the inbox within seconds, never in spam.
+
+| Decision | Choice | Why |
+|---|---|---|
+| Provider | **Scaleway Transactional Email** (TEM) | EU company and data centres (Paris); transactional only, so its shared IPs are not dragged down by newsletter senders; 300 mails/month free, then €0.25 per 1,000; no branding footer; SMTP and an HTTP API |
+| One Scaleway project per environment | **Cloud** and **homeserver**, each with its own domain and API key | A test run that sends a burst of mail, or a leaked dev key, cannot hurt Cloud's reputation; either key can be revoked alone |
+| Sending domain | `example.org` itself, verified in the homeserver project (2026-10-11); Cloud gets its own when it is set up, on the final domain once [Q45](14-open-questions.md) is decided | `example.org` has no mailboxes, so its MX points at Scaleway's blackhole and its SPF names only Scaleway; a domain that receives personal mail would need a sending subdomain instead |
+| Sender | `WuselWall <noreply@example.org>`, Reply-To a read support address | A recognisable name in the inbox list; replies reach a person, which App Review and GDPR both expect |
+| DNS (Cloudflare) | The SPF, DKIM and DMARC records Scaleway shows when the domain is added; DMARC starts at `p=none` with `rua` reports, moves to `p=quarantine` after two clean weeks | Without SPF and DKIM the codes go to spam; Gmail and Yahoo require SPF or DKIM from every sender and DMARC from bulk senders |
+| Content | Plain text plus minimal HTML, no images, no tracking pixels, no link tracking (switched off in TEM). **Subject carries the code:** "123456 ist dein WuselWall-Code" / "123456 is your WuselWall code" | The code readable from the notification is the fastest path into the app; tracking would contradict NFR-9 |
+| Language | Per recipient (`locale` from sign-in), via the send-email hook; bilingual GoTrue template where the hook is not running | The localisation rule in [CLAUDE.md](../CLAUDE.md) |
+| How it is sent | **Cloud:** the send-email hook (Edge Function) calls TEM's HTTP API; the project's SMTP settings point at TEM as the fallback. **homeserver:** the same hook (the compose stack runs Edge Functions); GoTrue's SMTP as the fallback, through the stack's `.env`: `SMTP_HOST=smtp.tem.scaleway.com`, `SMTP_PORT=587` (STARTTLS), `SMTP_USER` = the Scaleway project ID, `SMTP_PASS` = the secret key of an IAM application whose only policy is Transactional Email on that project. Throwaway stacks keep Mailpit | One code path on both servers |
+| Rate limits | Auth's email limit raised to fit (e.g. 60/hour per project) and per-address resend at most every 60 s | Hosted Supabase's default email limit is meant for testing and fails silently when reached |
+| One provider, no pooling of free tiers | Scaleway alone; a second provider only as a failover, and only after a real outage | Every extra provider is another processor seeing addresses and codes (NFR-9), another SPF/DKIM setup, and splits the sending reputation — to save cents |
+| Self-hosters | Bring their own SMTP; the self-hosting guide names TEM as one option | Their mail, their reputation |
+| Throwaway stacks | Mailpit, as today | The integration tests read the code from it |
+
+**Checks, before the first stranger signs up:** a code to a Gmail, an Outlook.com, a GMX
+and an iCloud address. Each lands in the inbox and passes SPF, DKIM and DMARC (visible in
+"show original"). Then quarterly, and after any DNS change ([Updates](#updates)).
 
 ---
+
+## WuselWall Cloud
+
+*Added 2026-10-11 ([ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md)).* Not created
+yet. It goes live with the opening gate in [13](13-roadmap.md#opening-to-other-households).
+
+- **Project:** in the user's own Supabase organisation, region **Frankfurt
+  (eu-central-1)**, Pro plan. Supabase's DPA accepted for the organisation. MFA on every
+  organisation member's Supabase login.
+- **Configuration from the repository:** `supabase link --project-ref ‹ref›`, then
+  migrations with `supabase db push` and functions with `supabase functions deploy`. Auth
+  settings (providers, OTP, rate limits, hooks) follow `supabase/config.toml` and are
+  checked in the dashboard after each change. Nothing is configured only by clicking.
+- **Order of a change:** CI → homeserver (`scripts/remote-migrate.sh`) → Cloud. Cloud gets a
+  manual backup point before `db push`, and never `db reset` or the integration test.
+- **Backups:** Supabase's daily backups on Pro, plus point-in-time recovery once
+  strangers depend on it. A weekly `pg_dump` from the project into the off-site restic
+  repository makes sure the data never lives with one provider only.
+- **The app:** store builds use `app/env/cloud.json` (URL and publishable key; public
+  values only). Development builds keep `env/dev.json` (homeserver).
+- **Links site:** the landing pages, `/.well-known/` files, privacy policy and deletion
+  page move from the homeserver nginx to Cloudflare Pages when Cloud goes live, so that
+  invitations to Cloud do not depend on the home server.
+- **Self-hosted discovery:** each self-hosted server serves
+  `/.well-known/wuselwall.json` (Supabase URL, publishable key, enabled sign-in methods,
+  `min_app_version`). Cloud needs none, because it is compiled into the store app.
 
 ## Changing the database
 
@@ -230,7 +296,8 @@ acceptable; losing everything is not.
 | Apple Developer Program | Renewal | Yearly — lapsing removes TestFlight builds |
 | **Sign in with Apple client secret** (a JWT from the `.p8` key) | Regenerate, put in the stack's `.env`, `scripts/remote-stack.sh up -d auth` | **Every six months at the latest** — calendar reminder; an expired secret breaks Apple sign-in on Android and the web |
 | Google OAuth clients | Add the SHA-1 of any new signing key | When a signing key changes |
-| SMTP provider | Check deliverability (a test code to a Gmail and an Outlook address) | Quarterly, and after any DNS change |
+| SMTP provider | Check deliverability (a test code to Gmail, Outlook.com, GMX and iCloud; SPF/DKIM/DMARC pass) | Quarterly, and after any DNS change |
+| Supabase Pro (Cloud) | Review usage and the invoice; Postgres and Auth upgrades are scheduled by Supabase, read their notices | Monthly glance |
 | TestFlight builds | Any new release | Expire after 90 days — release at least quarterly |
 
 Do **not** let a container auto-updater (Watchtower, homeserver's auto-update plugin) touch
