@@ -244,5 +244,13 @@
   "pinChangeBody": "Set a new 6-digit PIN. This also unlocks a PIN that was locked by too many wrong tries.",
   "pinChangeAction": "Change",
   "pinChangeField": "New PIN (6 digits)",
-  "pinChanged": "PIN changed."
+  "pinChanged": "PIN changed.",
+  "shoppingTripItems": "{count, plural, =1{1 item} other{{count} items}}",
+  "@shoppingTripItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

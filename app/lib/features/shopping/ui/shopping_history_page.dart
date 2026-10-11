@@ -66,7 +66,7 @@ class _TripTile extends ConsumerWidget {
         .formatMediumDate(trip.finishedAt.toLocal());
     return ExpansionTile(
       title: Text(date),
-      subtitle: Text('${trip.itemCount}'),
+      subtitle: Text(context.l10n.shoppingTripItems(trip.itemCount)),
       children: [
         Consumer(
           builder: (context, ref, _) {

@@ -1129,6 +1129,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'PIN changed.'**
   String get pinChanged;
+
+  /// No description provided for @shoppingTripItems.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 item} other{{count} items}}'**
+  String shoppingTripItems(int count);
 }
 
 class _AppLocalizationsDelegate
