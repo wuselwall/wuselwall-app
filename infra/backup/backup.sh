@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Nightly backup of the WuselWall database, run ON the home server (docs/10#backups).
+# Nightly backup of the WuselWall database, run ON the home server (specs/10#backups).
 # homeserver: User Scripts plugin, schedule daily. On demand: scripts/remote-backup.sh.
 #
 # Optional settings in /boot/config/wuselwall-backup.env (root-only, survives reboots):

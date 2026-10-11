@@ -1,12 +1,12 @@
-// Writes docs/brand/*.svg and app/assets/icon/*.png from the Wuselpunkte and Wuselchen
-// symbols in docs/mockups/logo.html (ADR-012). Usage: node scripts/brand-assets.js, then
+// Writes specs/brand/*.svg and app/assets/icon/*.png from the Wuselpunkte and Wuselchen
+// symbols in specs/mockups/logo.html (ADR-012). Usage: node scripts/brand-assets.js, then
 // `dart run flutter_launcher_icons` in app/.
 const fs = require('fs');
 const path = require('path');
 const sharp = require('sharp');
 
 const root = path.join(__dirname, "..");
-const brand = path.join(root, 'docs/brand');
+const brand = path.join(root, 'specs/brand');
 const icons = path.join(root, 'app/assets/icon');
 fs.mkdirSync(brand, { recursive: true });
 fs.mkdirSync(icons, { recursive: true });

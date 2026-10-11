@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Restore drill, run ON the home server (docs/10#backups): restores the newest dump into a
+# Restore drill, run ON the home server (specs/10#backups): restores the newest dump into a
 # scratch database next to the live one, counts rows in the main tables, drops it again.
 # The live database is only read. Usage: restore-drill.sh [dump-file]
 set -euo pipefail
@@ -30,4 +30,4 @@ docker exec "$DB" psql -U supabase_admin -X -q -t -A -F ' ' -d "$SCRATCH" -c "
   union all select 'auth users', count(*) from auth.users
   union all select 'shopping items', count(*) from app.shopping_item
   union all select 'audit rows', count(*) from app.audit_log" < /dev/null
-echo "restore drill done — write the date into docs/10#backups"
+echo "restore drill done — write the date into specs/10#backups"

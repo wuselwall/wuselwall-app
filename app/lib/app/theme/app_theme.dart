@@ -4,9 +4,9 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 
-/// Builds the [ThemeData] for a register and shade (docs/17, direction A
+/// Builds the [ThemeData] for a register and shade (specs/17, direction A
 /// "Küchentisch"). Dark is not cosmetic: the kitchen is bright in the morning and dim
-/// at night (docs/09); night is the kiosk's own third shade.
+/// at night (specs/09); night is the kiosk's own third shade.
 abstract final class AppTheme {
   static ThemeData build(UiRegister register, Shade shade) {
     final c = Palette.of(shade);
@@ -108,7 +108,7 @@ abstract final class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(borderRadius: radius),
       ),
-      // Borders separate; shadows are for sheets and dialogs only (docs/17).
+      // Borders separate; shadows are for sheets and dialogs only (specs/17).
       cardTheme: CardThemeData(
         color: c.surface,
         elevation: 0,
@@ -130,7 +130,7 @@ abstract final class AppTheme {
 
   /// [base] with a member's colour as the accent. On shared and kiosk devices the
   /// whole interface takes the acting member's colour, so "who am I right now" is
-  /// answerable from across the room (docs/08).
+  /// answerable from across the room (specs/08).
   static ThemeData forMember(ThemeData base, Color stored) {
     final m = base.extension<WwColors>()!.member(stored);
     return base.copyWith(

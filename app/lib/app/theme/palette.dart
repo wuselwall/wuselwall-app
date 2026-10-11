@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Colour values of direction A "Küchentisch" (docs/17-design-system.md). Every text
+/// Colour values of direction A "Küchentisch" (specs/17-design-system.md). Every text
 /// pair here was checked for WCAG AA; `test/app/theme_test.dart` re-checks them, so
 /// change a value there first and let the test tell you whether it still passes.
 ///
@@ -126,7 +126,7 @@ abstract final class Palette {
   static const onPoints = Color(0xFF3E2A00);
 }
 
-/// One member colour in all three shades. People are ink (docs/17): saturated, used
+/// One member colour in all three shades. People are ink (specs/17): saturated, used
 /// for bands, dots, avatars and the active accent — always next to an initial.
 @immutable
 class MemberSwatch {
@@ -171,7 +171,7 @@ class MemberSwatch {
 abstract final class MemberPalette {
   /// In the order the picker offers them. The first four are the most separable set
   /// for every kind of colour vision; the fifth keeps five members apart; from the
-  /// sixth on, the initial carries identity (docs/17, "Member colours").
+  /// sixth on, the initial carries identity (specs/17, "Member colours").
   static const swatches = <MemberSwatch>[
     MemberSwatch(
       key: 'violet',

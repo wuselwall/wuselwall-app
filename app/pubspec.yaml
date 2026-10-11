@@ -61,7 +61,7 @@ flutter:
         - asset: assets/fonts/BarlowSemiCondensed-Bold.ttf
           weight: 700
 
-# App icons from the Wuselpunkte mark (docs/brand, ADR-012). Regenerate with
+# App icons from the Wuselpunkte mark (specs/brand, ADR-012). Regenerate with
 # `dart run flutter_launcher_icons` after changing anything in assets/icon/.
 flutter_launcher_icons:
   android: true
