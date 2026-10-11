@@ -50,6 +50,9 @@ household; the setup call closes for good. These are now asserted by pgTAP
 | A9 | No monitoring | **Open:** an uptime check on `/auth/v1/health` and the backup ping (specs/10) — twenty minutes with healthchecks.io or Uptime Kuma, which Unraid can host |
 | A10 | The ICS feed and the MCP endpoint will be unauthenticated-by-JWT public routes | **Open (M1.3a / M2):** they will use the service role legitimately. Each gets its own nginx location, its own rate limit and a token hash lookup; never route `/functions/v1/*` blindly once they exist |
 | A11 | Edge Functions cannot be deployed to a remote Docker host (bind mounts) | **Open:** matters at M1.3a. Either run the CLI on the Unraid box itself, or sync `supabase/functions` to it and bind-mount there |
+| A12 | **The web build was blank.** The `passkeys` plugin initialises a JavaScript SDK at start-up and throws without it — found while taking the documentation's screenshots | **Fixed:** a no-op stand-in in `web/index.html`; passkeys on web stay unavailable until the SDK is self-hosted |
+| A13 | Accessibility of the list: each row was announced as "Hinzugefügt von Lotta, Bananen", and its checkbox was a separate node with no label | **Fixed:** the row is one checkbox named after the item; who added it is a hint |
+| A14 | Usability, found in the screenshots: the enrolment code wrapped onto two lines at phone width; tile labels broke mid-word ("Toilettenpa‑pier"); the who-are-you bar showed only initials, so Lukas and Lotta were both "L"; trips showed a bare number | **Fixed:** code on one line, single words shrink to fit, names under the avatars, "14 Artikel" |
 
 ## Order of work from here
 

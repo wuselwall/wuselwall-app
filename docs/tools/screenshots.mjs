@@ -40,18 +40,33 @@ const T = {
 
 async function open(page, scenario) {
   await page.goto(`${base}/?scenario=${scenario}`);
-  await page.waitForSelector('flt-glass-pane', { timeout: 90000 });
+  await page.waitForSelector('flt-glass-pane', { state: 'attached', timeout: 90000 });
   await page.locator('flt-semantics-placeholder').evaluate((e) => e.click()).catch(() => {});
-  await page.waitForSelector('flt-semantics', { timeout: 30000 });
+  await page.waitForSelector('flt-semantics', { state: 'attached', timeout: 30000 });
   await page.waitForTimeout(1500);
 }
 const settle = (page, ms = 700) => page.waitForTimeout(ms);
 const press = async (page, name, opts = {}) => {
-  await page.getByRole(opts.role ?? 'button', { name, exact: opts.exact ?? false }).first().click();
+  await page.getByRole(opts.role ?? 'button', { name, exact: opts.exact ?? true }).first().click();
   await settle(page);
 };
+// A click on the semantics node itself: works for widgets scrolled out of view (Flutter
+// performs the tap action), where a pointer click would miss.
+const tapNode = async (page, role, name) => {
+  await page.getByRole(role, { name, exact: true }).first().dispatchEvent('click');
+  await settle(page);
+};
+const scrollDown = async (page, px = 600) => {
+  const vp = page.viewportSize();
+  await page.mouse.move(vp.width / 2, vp.height * 0.6);
+  await page.mouse.wheel(0, px);
+  await settle(page);
+};
+// The semantics layer turns any pointer press into a tap, so for a long press the
+// pointer goes straight to Flutter's canvas.
 const longPress = async (page, locator) => {
   const box = await locator.boundingBox();
+  await page.addStyleTag({ content: 'flt-semantics, flt-semantics-container, flt-semantics-host { pointer-events: none !important; }' });
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
   await page.mouse.down();
   await page.waitForTimeout(700);
@@ -72,11 +87,11 @@ const shots = [
   { name: 'shopping-phone', scenario: 'adult', viewport: PHONE },
   { name: 'shopping-phone-dark', scenario: 'adult', viewport: PHONE, scheme: 'dark' },
   { name: 'shopping-search', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await p.getByRole('textbox', { name: t.search }).fill('mil'); await settle(p); } },
-  { name: 'shopping-new-list', scenario: 'adult', viewport: PHONE, steps: async (p, t) => press(p, t.newList) },
+  { name: 'shopping-new-list', scenario: 'adult', viewport: PHONE, steps: async (p, t) => tapNode(p, 'checkbox', t.newList) },
   { name: 'shopping-laptop', scenario: 'adult', viewport: TABLET },
-  { name: 'shopping-edit-item', scenario: 'adult', viewport: PHONE, steps: async (p) => longPress(p, p.getByText('Vollkorn').or(p.getByText('Brot')).first()) },
-  { name: 'shopping-trolley', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await p.getByText(t.trolley).first().scrollIntoViewIfNeeded(); await press(p, t.trolley); } },
-  { name: 'shopping-history', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await press(p, t.history); await p.getByText('14').first().click().catch(() => {}); await settle(p); } },
+  { name: 'shopping-edit-item', scenario: 'adult', viewport: PHONE, steps: async (p) => longPress(p, p.getByRole('checkbox', { name: /Vollkorn/ }).first()) },
+  { name: 'shopping-trolley', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await press(p, new RegExp(t.trolley), { exact: false }); await scrollDown(p, 3000); } },
+  { name: 'shopping-history', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await press(p, t.history); await p.getByRole('button', { name: /14/ }).first().click().catch(() => {}); await settle(p); } },
   { name: 'kid-who', scenario: 'kid', viewport: TABLET },
   { name: 'kid-shopping', scenario: 'kid', viewport: TABLET, steps: async (p, t) => { await press(p, t.lotta); } },
   { name: 'wall-shopping', scenario: 'kiosk', viewport: WALL, steps: async (p, t) => { await press(p, t.lotta); } },
@@ -86,7 +101,10 @@ const shots = [
 ];
 
 const only = process.argv.slice(2);
-const browser = await chromium.launch();
+// Software GL: headless Chromium has no GPU here, and CanvasKit needs WebGL.
+const browser = await chromium.launch({
+  args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'],
+});
 let failed = 0;
 for (const lang of ['de', 'en']) {
   fs.mkdirSync(path.join(out, lang), { recursive: true });

@@ -455,13 +455,25 @@ class _Tile extends StatelessWidget {
                   child: Icon(icon, size: 28),
                 ),
                 const SizedBox(height: Tokens.space1),
-                Text(
-                  label,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.labelMedium,
-                ),
+                // Flutter cannot hyphenate: a single long word ("Toilettenpapier")
+                // shrinks to fit rather than breaking mid-word; phrases wrap.
+                if (label.trim().contains(' '))
+                  Text(
+                    label,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.labelMedium,
+                  )
+                else
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      label,
+                      maxLines: 1,
+                      style: Theme.of(context).textTheme.labelMedium,
+                    ),
+                  ),
               ],
             ),
           ),
@@ -586,35 +598,45 @@ class _ItemTile extends StatelessWidget {
     ].join(' · ');
 
     // Tick targets are at least 56 high: this is used one-handed, in a coat.
-    return ListTile(
-      minTileHeight: 56,
-      onTap: onToggle,
-      onLongPress: onEdit,
-      leading: Checkbox(value: item.checked, onChanged: (_) => onToggle()),
-      title: Text(item.name, style: style),
-      subtitle: detail.isEmpty ? null : Text(detail, style: style),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (adder != null)
-            Tooltip(
-              message: l10n.shoppingAddedBy(adder!.displayName),
-              child: Container(
-                width: 12,
-                height: 12,
-                decoration: BoxDecoration(
-                  color: adder!.color,
-                  shape: BoxShape.circle,
+    // For screen readers the row is one checkbox named after the item; who added it
+    // is a hint after the name, not a label before it.
+    return Semantics(
+      checked: item.checked,
+      hint: adder == null ? null : l10n.shoppingAddedBy(adder!.displayName),
+      child: ListTile(
+        minTileHeight: 56,
+        onTap: onToggle,
+        onLongPress: onEdit,
+        leading: ExcludeSemantics(
+          child: Checkbox(value: item.checked, onChanged: (_) => onToggle()),
+        ),
+        title: Text(item.name, style: style),
+        subtitle: detail.isEmpty ? null : Text(detail, style: style),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (adder != null)
+              ExcludeSemantics(
+                child: Tooltip(
+                  message: l10n.shoppingAddedBy(adder!.displayName),
+                  child: Container(
+                    width: 12,
+                    height: 12,
+                    decoration: BoxDecoration(
+                      color: adder!.color,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
                 ),
               ),
-            ),
-          if (item.count > 1 && !item.checked)
-            IconButton(
-              tooltip: l10n.shoppingRemoveOne,
-              onPressed: onLess,
-              icon: const Icon(Icons.remove_circle_outline),
-            ),
-        ],
+            if (item.count > 1 && !item.checked)
+              IconButton(
+                tooltip: l10n.shoppingRemoveOne,
+                onPressed: onLess,
+                icon: const Icon(Icons.remove_circle_outline),
+              ),
+          ],
+        ),
       ),
     );
   }

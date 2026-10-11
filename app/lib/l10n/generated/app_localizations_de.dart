@@ -561,4 +561,15 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get pinChanged => 'PIN geändert.';
+
+  @override
+  String shoppingTripItems(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Artikel',
+      one: '1 Artikel',
+    );
+    return '$_temp0';
+  }
 }
