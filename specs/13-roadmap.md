@@ -55,7 +55,7 @@ built straight away.*
 | **M0.1** Identity: setup wizard, guardian accounts, device enrolment, tap-to-switch, guardian PIN, revocation (step 5) | Built and tested (pgTAP + end-to-end), incl. per-phone devices, TOTP, QR enrolment, rate limiting; passkeys wired, untested until the production domain exists — see ADR-010 implementation notes |
 | **M0.2** The shopping list, online only: add, tick, finish, live across devices (step 6) | Built and tested; not yet tried on the family's real devices |
 | **M0.4** Mobile release pipeline: signing, `release-mobile.yml`, TestFlight and the Play internal track (step 7) | Not started — needs the Apple and Google accounts |
-| **M0.3** The one environment ([ADR-013](adr/ADR-013-one-self-hosted-environment.md)): own keys, `wusel.goomba.ch` through Cloudflare and nginx, nightly backups, restore drill (step 8) | Built 2026-10-11 — the stack restart with the new keys and the nginx allow-list are applied by the user |
+| **M0.3** The one environment ([ADR-013](adr/ADR-013-one-self-hosted-environment.md)): own keys, `wusel.goomba.ch` through Cloudflare and nginx, nightly backups, restore drill (step 8) | Built 2026-10-11; **moved the same day to the official compose stack** ([ADR-013 amendment](adr/ADR-013-one-self-hosted-environment.md#amendment-2026-10-11-the-official-compose-stack)). The household starts fresh on it: the development data stayed behind in the stopped CLI stack |
 
 M0.4 is new and comes **before** M0.3. A PWA reached the phones by URL; a native app
 reaches an iPhone only through a signed build, and without a Mac the release pipeline is

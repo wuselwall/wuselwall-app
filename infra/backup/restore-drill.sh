@@ -4,7 +4,7 @@
 # The live database is only read. Usage: restore-drill.sh [dump-file]
 set -euo pipefail
 
-DB=${DB_CONTAINER:-supabase_db_wuselwall}
+DB=${DB_CONTAINER:-supabase-db}
 OUT=${BACKUP_DIR:-/mnt/user/backups/wuselwall}
 DUMP=${1:-$(ls -t "$OUT"/db-*.dump | head -1)}
 SCRATCH=restore_drill
