@@ -178,5 +178,66 @@
   "passkeyTitle": "Passkey",
   "passkeyBody": "Sign in with fingerprint or face instead of a password.",
   "passkeyAdd": "Add",
-  "passkeyAdded": "Passkey added."
+  "passkeyAdded": "Passkey added.",
+  "shoppingHistory": "History",
+  "shoppingHistoryEmpty": "No finished trips yet",
+  "shoppingSearchHint": "Search or add",
+  "shoppingTilesEmpty": "Tiles appear here once you have bought something. Type a name to add an item.",
+  "shoppingInTrolley": "In the trolley ({count})",
+  "@shoppingInTrolley": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shoppingUncategorised": "Uncategorised",
+  "shoppingNewList": "New list",
+  "shoppingListName": "Name",
+  "shoppingListKind": "Layout",
+  "shoppingKindSupermarket": "Supermarket",
+  "shoppingKindDrugstore": "Drugstore",
+  "shoppingKindHardware": "Hardware store",
+  "shoppingKindOther": "Other",
+  "shoppingMakeDefault": "Make default list",
+  "shoppingEditItem": "Edit item",
+  "shoppingSpecHint": "Note, e.g. organic or 500 g",
+  "shoppingCategory": "Category",
+  "shoppingRemoveOne": "One less",
+  "errListExists": "A list with that name already exists.",
+  "errSpecTooLong": "That note is too long (40 characters at most).",
+  "errKioskForbidden": "This can't be done on the wall display.",
+  "shoppingCat_produce": "Fruit & vegetables",
+  "shoppingCat_bakery": "Bread & bakery",
+  "shoppingCat_dairy": "Dairy & cheese",
+  "shoppingCat_meat_fish": "Meat & fish",
+  "shoppingCat_pantry": "Pantry",
+  "shoppingCat_frozen": "Frozen",
+  "shoppingCat_drinks": "Drinks",
+  "shoppingCat_household": "Household",
+  "shoppingCat_other": "Other",
+  "shoppingCat_care": "Body care",
+  "shoppingCat_baby": "Baby & kids",
+  "shoppingCat_cleaning": "Cleaning",
+  "shoppingCat_health": "Health",
+  "shoppingCat_tools": "Tools",
+  "shoppingCat_screws": "Screws & fixings",
+  "shoppingCat_electrical": "Electrical",
+  "shoppingCat_garden": "Garden",
+  "shoppingCreateTile": "Add “{name}”",
+  "@shoppingCreateTile": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shoppingAddedBy": "Added by {name}",
+  "@shoppingAddedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

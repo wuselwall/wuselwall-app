@@ -197,6 +197,27 @@ void main() {
         isTrue,
       );
 
+      // --- M1.1: finishing teaches the catalogue; adding again merges into a count ------
+      final trip = (await guardianShop.finish(actor: null)).unwrap();
+      expect(trip.bought, greaterThanOrEqualTo(1));
+      final lists = (await guardianShop.lists()).unwrap();
+      final defaultList = lists.firstWhere((l) => l.isDefault);
+      final catalog = (await guardianShop.catalog()).unwrap();
+      expect(catalog.map((c) => c.name), contains('Milch $stamp'));
+      expect((await guardianShop.trips(defaultList.id)).unwrap(), isNotEmpty);
+      final again = (await ipadShop.add(
+        actor: kid.id,
+        name: 'milch $stamp',
+      )).unwrap();
+      expect(
+        (await ipadShop.add(actor: kid.id, name: 'MILCH $stamp')).unwrap(),
+        again,
+      );
+      final merged = (await guardianShop.items()).unwrap().firstWhere(
+        (i) => i.id == again,
+      );
+      expect((merged.name, merged.count), ('Milch $stamp', 2));
+
       // --- PIN step-up on the shared device, then a guardian action ----------------------
       final wrong = (await ipadRepo.verifyPin(
         profileId: guardian.id,
