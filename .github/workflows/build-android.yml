@@ -38,8 +38,10 @@ jobs:
           --dart-define-from-file=env/dev.json
       - run: |
           mv build/app/outputs/flutter-apk/app-release.apk build/wuselwall.apk
-          # The signature Android will check on every update — must never change.
-          keytool -printcert -jarfile build/wuselwall.apk | grep -E 'SHA256:|Owner:'
+          # The signature Android checks on every update — must never change. apksigner,
+          # because the APK carries only the v2/v3 scheme, which keytool cannot read.
+          apksigner=$(ls -d "$ANDROID_HOME"/build-tools/*/ | sort -V | tail -1)apksigner
+          "$apksigner" verify --print-certs build/wuselwall.apk | grep -E 'DN:|SHA-256'
       - uses: actions/upload-artifact@v4
         with:
           name: wuselwall-apk
