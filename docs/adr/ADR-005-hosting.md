@@ -1,6 +1,6 @@
 # ADR-005 — Self-hosted on a German VPS with Docker Compose and Caddy
 
-**Status:** Accepted · 2026-08-29 · Amended by [ADR-010](ADR-010-flutter-and-self-hosted-supabase.md) on 2026-10-11 — the VPS, Compose and Caddy stand; the containers are now the self-hosted Supabase stack on a larger server, and the rejection of Supabase below applied to its hosted service
+**Status:** Superseded by [ADR-013](ADR-013-one-self-hosted-environment.md) on 2026-10-11 — one self-hosted environment on the home server, no VPS. Previously: Accepted · 2026-08-29 · Amended by [ADR-010](ADR-010-flutter-and-self-hosted-supabase.md) on 2026-10-11 — the VPS, Compose and Caddy stand; the containers are now the self-hosted Supabase stack on a larger server, and the rejection of Supabase below applied to its hosted service
 
 ## Context
 

@@ -11,6 +11,7 @@ import 'package:wuselwall/features/setup/ui/setup_page.dart';
 import 'package:wuselwall/features/setup/ui/sign_in_page.dart';
 import 'package:wuselwall/features/setup/ui/splash_page.dart';
 import 'package:wuselwall/features/setup/ui/wizard_page.dart';
+import 'package:wuselwall/features/shopping/ui/shopping_history_page.dart';
 import 'package:wuselwall/features/system/ui/system_page.dart';
 
 abstract final class Routes {
@@ -24,6 +25,7 @@ abstract final class Routes {
   static const home = '/';
   static const settings = '/settings';
   static const system = '/system';
+  static const shoppingHistory = '/shopping/history';
 
   static bool isSetup(String path) =>
       path == setup || path.startsWith('$setup/');
@@ -103,6 +105,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(path: Routes.settings, builder: (_, _) => const SettingsPage()),
       GoRoute(path: Routes.system, builder: (_, _) => const SystemPage()),
+      GoRoute(
+        path: Routes.shoppingHistory,
+        builder: (_, _) => const ShoppingHistoryPage(),
+      ),
     ],
   );
 });

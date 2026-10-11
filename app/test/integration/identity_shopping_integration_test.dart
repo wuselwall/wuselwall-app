@@ -16,14 +16,22 @@ import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 
 /// The whole M0.1 + M0.2 story against a real backend:
-/// `flutter test test/integration --dart-define-from-file=env/dev.json`
+/// `flutter test test/integration --dart-define-from-file=env/ci.json` against a throwaway
+/// stack (CI starts one; locally `npx supabase start`).
 ///
 /// Idempotent on a database that already has the household (setup is then skipped and
 /// the guardian just signs in), so it can run repeatedly without a reset.
 void main() {
   const url = String.fromEnvironment('SUPABASE_URL');
   const key = String.fromEnvironment('SUPABASE_PUBLISHABLE_KEY');
-  final skip = url.isEmpty ? 'no backend configured (SUPABASE_URL)' : null;
+  // It creates a household, devices and items and revokes devices: throwaway stacks
+  // only (CI, or a local `supabase start`), never the family's environment (ADR-013).
+  final host = Uri.tryParse(url)?.host;
+  final skip = url.isEmpty
+      ? 'no backend configured (SUPABASE_URL)'
+      : !{'127.0.0.1', 'localhost'}.contains(host)
+      ? 'refusing to run against $host: throwaway stacks only (ADR-013)'
+      : null;
 
   const email = 'papa@example.org';
   const password = 'correct-horse-battery';
@@ -142,7 +150,8 @@ void main() {
       expect(denied.failureOrNull?.code, 'guardian_required');
 
       // --- realtime: the guardian's phone hears the iPad's change -----------------------
-      final heard = Completer<void>();
+      final topics = StreamController<String>.broadcast();
+      addTearDown(topics.close);
       // A second phone of the same guardian: its own session, its own device row.
       final (guardianClient, phone2Repo, _) = stack();
       expect((await phone2Repo.signIn(email, password)).isOk, isTrue);
@@ -161,9 +170,8 @@ void main() {
             event: 'invalidate',
             callback: (message) {
               final body = message['payload'] as Map<String, dynamic>?;
-              if (body?['topic'] == 'shopping' && !heard.isCompleted) {
-                heard.complete();
-              }
+              final topic = body?['topic'];
+              if (topic is String) topics.add(topic);
             },
           );
       final subscribed = Completer<void>();
@@ -175,13 +183,39 @@ void main() {
       });
       await subscribed.future.timeout(const Duration(seconds: 10));
 
-      // --- shopping from the iPad as the child ------------------------------------------
+      // Realtime sets up its database replication lazily on the first join, so on a
+      // freshly started stack (every CI run) the first broadcasts can be lost. Poke with
+      // a throwaway item until one arrives, then remove it.
+      String? warmUp;
+      for (var attempt = 1; ; attempt++) {
+        final next = topics.stream.firstWhere((t) => t == 'shopping');
+        warmUp = (await ipadShop.add(
+          actor: kid.id,
+          name: 'Warm-up $stamp',
+        )).unwrap();
+        try {
+          await next.timeout(const Duration(seconds: 5));
+          break;
+        } on TimeoutException {
+          if (attempt == 6) rethrow;
+        }
+      }
+      final removed = topics.stream.firstWhere((t) => t == 'shopping');
+      (await ipadShop.adjustCount(
+        actor: kid.id,
+        itemId: warmUp,
+        delta: -99,
+      )).unwrap();
+      await removed.timeout(const Duration(seconds: 5));
+
+      // --- shopping from the iPad as the child: seen live by the guardian (NFR-5) --------
+      final heard = topics.stream.firstWhere((t) => t == 'shopping');
       (await ipadShop.add(
         actor: kid.id,
         name: 'Milch $stamp',
         quantity: '2 l',
       )).unwrap();
-      await heard.future.timeout(const Duration(seconds: 5));
+      await heard.timeout(const Duration(seconds: 5));
 
       final items = (await guardianShop.items()).unwrap();
       final milk = items.firstWhere((i) => i.name == 'Milch $stamp');
@@ -196,6 +230,27 @@ void main() {
             .checked,
         isTrue,
       );
+
+      // --- M1.1: finishing teaches the catalogue; adding again merges into a count ------
+      final trip = (await guardianShop.finish(actor: null)).unwrap();
+      expect(trip.bought, greaterThanOrEqualTo(1));
+      final lists = (await guardianShop.lists()).unwrap();
+      final defaultList = lists.firstWhere((l) => l.isDefault);
+      final catalog = (await guardianShop.catalog()).unwrap();
+      expect(catalog.map((c) => c.name), contains('Milch $stamp'));
+      expect((await guardianShop.trips(defaultList.id)).unwrap(), isNotEmpty);
+      final again = (await ipadShop.add(
+        actor: kid.id,
+        name: 'milch $stamp',
+      )).unwrap();
+      expect(
+        (await ipadShop.add(actor: kid.id, name: 'MILCH $stamp')).unwrap(),
+        again,
+      );
+      final merged = (await guardianShop.items()).unwrap().firstWhere(
+        (i) => i.id == again,
+      );
+      expect((merged.name, merged.count), ('Milch $stamp', 2));
 
       // --- PIN step-up on the shared device, then a guardian action ----------------------
       final wrong = (await ipadRepo.verifyPin(

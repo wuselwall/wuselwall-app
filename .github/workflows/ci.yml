@@ -31,6 +31,14 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 22, cache: npm }
       - run: npm ci
+      # config.toml reads its keys from supabase/.env (ADR-013). This stack is throwaway,
+      # so it gets the CLI's public defaults, which env/ci.json expects.
+      - run: |
+          cat > supabase/.env <<'EOF'
+          WW_JWT_SECRET=super-secret-jwt-token-with-at-least-32-characters-long
+          WW_PUBLISHABLE_KEY=sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH
+          WW_SECRET_KEY=sb_secret_N7UND0UgjKTVK-Uodkm0Hg_xSvEMPvz
+          EOF
       - run: npx supabase start -x studio,imgproxy,logflare,vector
       - run: npx supabase db reset      # every migration from zero, plus seed
       - run: npx supabase test db       # pgTAP

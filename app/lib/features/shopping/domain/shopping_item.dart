@@ -5,6 +5,10 @@ class ShoppingItem {
     required this.quantity,
     required this.checked,
     required this.createdAt,
+    this.listId,
+    this.categoryId,
+    this.addedBy,
+    this.count = 1,
   });
 
   factory ShoppingItem.fromJson(Map<String, dynamic> json) => ShoppingItem(
@@ -13,24 +17,160 @@ class ShoppingItem {
     quantity: json['quantity'] as String?,
     checked: json['checked'] as bool,
     createdAt: DateTime.parse(json['created_at'] as String),
+    listId: json['list_id'] as String?,
+    categoryId: json['category_id'] as String?,
+    addedBy: json['added_by'] as String?,
+    count: json['count'] as int? ?? 1,
   );
 
   final String id;
   final String name;
+
+  /// The free-text specification ("Bio", "500 g"), verbatim.
   final String? quantity;
   final bool checked;
   final DateTime createdAt;
+  final String? listId;
+  final String? categoryId;
+  final String? addedBy;
+
+  /// How many times the tile was tapped ("2 ×").
+  final int count;
+}
+
+/// A named list (Supermarkt, Drogerie, …). One is the default.
+class ShoppingList {
+  const ShoppingList({
+    required this.id,
+    required this.name,
+    required this.isDefault,
+    required this.openCount,
+  });
+
+  factory ShoppingList.fromJson(Map<String, dynamic> json) => ShoppingList(
+    id: json['id'] as String,
+    name: json['name'] as String,
+    isDefault: json['is_default'] as bool,
+    openCount: json['open_count'] as int,
+  );
+
+  final String id;
+  final String name;
+  final bool isDefault;
+  final int openCount;
+}
+
+/// A category of a list: its order is the walking order of the store. Seeded ones carry
+/// a [key] the app localises; custom ones carry a [name].
+class ShoppingCategory {
+  const ShoppingCategory({
+    required this.id,
+    required this.listId,
+    required this.key,
+    required this.name,
+    required this.sortOrder,
+  });
+
+  factory ShoppingCategory.fromJson(Map<String, dynamic> json) =>
+      ShoppingCategory(
+        id: json['id'] as String,
+        listId: json['list_id'] as String,
+        key: json['key'] as String?,
+        name: json['name'] as String?,
+        sortOrder: json['sort_order'] as int,
+      );
+
+  final String id;
+  final String listId;
+  final String? key;
+  final String? name;
+  final int sortOrder;
+}
+
+/// What the household has bought on a list before; a tile in the picker.
+class CatalogEntry {
+  const CatalogEntry({
+    required this.id,
+    required this.listId,
+    required this.name,
+    required this.foldedName,
+    required this.categoryId,
+    required this.purchaseCount,
+    required this.lastPurchasedAt,
+  });
+
+  factory CatalogEntry.fromJson(Map<String, dynamic> json) => CatalogEntry(
+    id: json['id'] as String,
+    listId: json['list_id'] as String,
+    name: json['name'] as String,
+    foldedName: json['folded_name'] as String,
+    categoryId: json['category_id'] as String?,
+    purchaseCount: json['purchase_count'] as int,
+    lastPurchasedAt: json['last_purchased_at'] == null
+        ? null
+        : DateTime.parse(json['last_purchased_at'] as String),
+  );
+
+  final String id;
+  final String listId;
+  final String name;
+  final String foldedName;
+  final String? categoryId;
+  final int purchaseCount;
+  final DateTime? lastPurchasedAt;
+}
+
+/// One finished shopping trip.
+class ShoppingTrip {
+  const ShoppingTrip({
+    required this.id,
+    required this.listId,
+    required this.finishedAt,
+    required this.itemCount,
+  });
+
+  factory ShoppingTrip.fromJson(Map<String, dynamic> json) => ShoppingTrip(
+    id: json['id'] as String,
+    listId: json['list_id'] as String,
+    finishedAt: DateTime.parse(json['finished_at'] as String),
+    itemCount: json['item_count'] as int,
+  );
+
+  final String id;
+  final String listId;
+  final DateTime finishedAt;
+  final int itemCount;
 }
 
 /// What `api.shopping_finish` reports.
-class ShoppingTrip {
-  const ShoppingTrip({required this.bought, required this.carriedOver});
+class ShoppingFinishResult {
+  const ShoppingFinishResult({required this.bought, required this.carriedOver});
 
-  factory ShoppingTrip.fromJson(Map<String, dynamic> json) => ShoppingTrip(
-    bought: json['bought'] as int,
-    carriedOver: json['carried_over'] as int,
-  );
+  factory ShoppingFinishResult.fromJson(Map<String, dynamic> json) =>
+      ShoppingFinishResult(
+        bought: json['bought'] as int,
+        carriedOver: json['carried_over'] as int,
+      );
 
   final int bought;
   final int carriedOver;
+}
+
+/// An item as it was bought on a trip.
+class TripItem {
+  const TripItem({
+    required this.name,
+    required this.quantity,
+    required this.count,
+  });
+
+  factory TripItem.fromJson(Map<String, dynamic> json) => TripItem(
+    name: json['name'] as String,
+    quantity: json['quantity'] as String?,
+    count: json['count'] as int,
+  );
+
+  final String name;
+  final String? quantity;
+  final int count;
 }

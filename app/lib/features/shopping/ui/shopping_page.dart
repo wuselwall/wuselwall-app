@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
+import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/text/fold.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
+import 'package:wuselwall/features/identity/application/device_providers.dart';
+import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/shopping/application/shopping_providers.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
+import 'package:wuselwall/features/shopping/ui/shopping_labels.dart';
 
-/// The shared list: add, tick, finish. Offline use, the catalogue and the tile picker
-/// are M1.1.
+/// The shared lists: pick a list, tap tiles to add, tick off while shopping, finish the
+/// trip. The offline outbox is the next M1.1 piece.
 class ShoppingBody extends ConsumerStatefulWidget {
   const ShoppingBody({super.key});
 
@@ -20,49 +27,100 @@ class ShoppingBody extends ConsumerStatefulWidget {
 }
 
 class _ShoppingBodyState extends ConsumerState<ShoppingBody> {
-  final _name = TextEditingController();
-  final _quantity = TextEditingController();
+  final _search = TextEditingController();
   bool _busy = false;
 
   @override
   void dispose() {
-    _name.dispose();
-    _quantity.dispose();
+    _search.dispose();
     super.dispose();
   }
 
   String? get _actor => ref.read(actingProfileProvider);
+  ShoppingRepository get _repo => ref.read(shoppingRepositoryProvider);
 
-  Future<void> _run(Future<Result<Object?>> Function() action) async {
+  void _refresh() {
+    ref
+      ..invalidate(shoppingItemsProvider)
+      ..invalidate(shoppingListsProvider)
+      ..invalidate(shoppingCatalogProvider);
+  }
+
+  Future<T?> _run<T>(Future<Result<T>> Function() action) async {
     setState(() => _busy = true);
     final result = await action();
-    if (!mounted) return;
+    if (!mounted) return null;
     setState(() => _busy = false);
-    result.when(
-      ok: (_) => ref.invalidate(shoppingItemsProvider),
-      err: context.showFailure,
+    return result.when(
+      ok: (value) {
+        _refresh();
+        return value;
+      },
+      err: (failure) {
+        context.showFailure(failure);
+        return null;
+      },
     );
   }
 
-  Future<void> _add() async {
-    final name = _name.text.trim();
-    if (name.isEmpty) return;
-    final quantity = _quantity.text.trim();
-    await _run(
-      () => ref
-          .read(shoppingRepositoryProvider)
-          .add(
-            actor: _actor,
-            name: name,
-            quantity: quantity.isEmpty ? null : quantity,
-          ),
+  Future<void> _addName(String name, ShoppingList list) async {
+    final trimmed = name.trim();
+    if (trimmed.isEmpty) return;
+    await _run(() => _repo.add(actor: _actor, name: trimmed, listId: list.id));
+    if (mounted) _search.clear();
+  }
+
+  /// Long press on a tile: make sure the item is on the list, then edit it.
+  Future<void> _addAndEdit(String name, ShoppingList list) async {
+    final id = await _run(
+      () => _repo.add(actor: _actor, name: name, listId: list.id),
     );
+    if (id == null || !mounted) return;
+    final items = await ref.read(shoppingItemsProvider.future);
+    final item = items.where((i) => i.id == id).firstOrNull;
+    if (item != null && mounted) await _edit(item);
+  }
+
+  Future<void> _edit(ShoppingItem item) async {
+    final categories = (await ref.read(shoppingCategoriesProvider.future))
+        .where((c) => c.listId == item.listId)
+        .toList();
     if (!mounted) return;
-    _name.clear();
-    _quantity.clear();
+    final result = await showDialog<_ItemEdit>(
+      context: context,
+      builder: (_) => _EditItemDialog(item: item, categories: categories),
+    );
+    if (result == null) return;
+    if (result.spec != (item.quantity ?? '')) {
+      await _run(
+        () => _repo.setSpec(actor: _actor, itemId: item.id, text: result.spec),
+      );
+    }
+    if (result.categoryId != item.categoryId) {
+      await _run(
+        () => _repo.setCategory(
+          actor: _actor,
+          itemId: item.id,
+          categoryId: result.categoryId,
+        ),
+      );
+    }
   }
 
-  Future<void> _finish() async {
+  Future<void> _newList() async {
+    final result = await showDialog<({String name, String kind})>(
+      context: context,
+      builder: (_) => const _NewListDialog(),
+    );
+    if (result == null) return;
+    final id = await _run(
+      () =>
+          _repo.createList(actor: _actor, name: result.name, kind: result.kind),
+    );
+    if (id != null) ref.read(selectedListIdProvider.notifier).select(id);
+  }
+
+  Future<void> _finish(ShoppingList list) async {
     final l10n = context.l10n;
     final ok = await showDialog<bool>(
       context: context,
@@ -81,125 +139,629 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody> {
       ),
     );
     if (ok != true || !mounted) return;
-
-    setState(() => _busy = true);
-    final result = await ref
-        .read(shoppingRepositoryProvider)
-        .finish(actor: _actor);
-    if (!mounted) return;
-    setState(() => _busy = false);
-    result.when(
-      ok: (trip) {
-        ref.invalidate(shoppingItemsProvider);
-        context.showMessage(
-          l10n.shoppingFinished(trip.bought, trip.carriedOver),
-        );
-      },
-      err: context.showFailure,
-    );
+    final trip = await _run(() => _repo.finish(actor: _actor, listId: list.id));
+    if (trip != null && mounted) {
+      context.showMessage(l10n.shoppingFinished(trip.bought, trip.carriedOver));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final items = ref.watch(shoppingItemsProvider);
+    final kiosk = ref.watch(uiRegisterProvider) == UiRegister.kiosk;
+    final current = ref.watch(currentListProvider);
 
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(Tokens.space4),
-          child: Row(
-            children: [
-              Expanded(
-                flex: 3,
-                child: TextField(
-                  controller: _name,
-                  decoration: InputDecoration(labelText: l10n.shoppingAddHint),
-                  textInputAction: TextInputAction.next,
+    return AsyncValueView<ShoppingList?>(
+      value: current,
+      onRetry: _refresh,
+      data: (list) {
+        if (list == null) return Center(child: Text(l10n.shoppingEmpty));
+        final all = ref.watch(shoppingItemsProvider);
+        final items = all.whenData(
+          (v) =>
+              v.where((i) => i.listId == null || i.listId == list.id).toList(),
+        );
+        return Column(
+          children: [
+            if (!kiosk)
+              _ListSwitcher(
+                selected: list.id,
+                onNew: _newList,
+                onDefault: () => _run(
+                  () => _repo.setDefaultList(actor: _actor, listId: list.id),
                 ),
               ),
-              const SizedBox(width: Tokens.space2),
-              Expanded(
-                flex: 2,
-                child: TextField(
-                  controller: _quantity,
-                  decoration: InputDecoration(
-                    labelText: l10n.shoppingQuantityHint,
-                  ),
-                  onSubmitted: (_) => _add(),
-                ),
+            _TilePicker(
+              list: list,
+              items: items.value ?? const [],
+              search: _search,
+              showSearch: !kiosk,
+              busy: _busy,
+              onAdd: (name) => _addName(name, list),
+              onLongPress: (name) => _addAndEdit(name, list),
+            ),
+            const Divider(height: 1),
+            Expanded(
+              child: AsyncValueView<List<ShoppingItem>>(
+                value: items,
+                onRetry: _refresh,
+                data: (open) => open.isEmpty
+                    ? Center(child: Text(l10n.shoppingEmpty))
+                    : _ItemList(
+                        items: open,
+                        listId: list.id,
+                        onToggle: (i) => _run(
+                          () => _repo.toggle(actor: _actor, itemId: i.id),
+                        ),
+                        onLess: (i) => _run(
+                          () => _repo.adjustCount(
+                            actor: _actor,
+                            itemId: i.id,
+                            delta: -1,
+                          ),
+                        ),
+                        onEdit: _edit,
+                      ),
               ),
-              const SizedBox(width: Tokens.space2),
-              IconButton.filled(
-                tooltip: l10n.shoppingAddHint,
-                onPressed: _busy ? null : _add,
-                icon: const Icon(Icons.add),
-              ),
-            ],
-          ),
-        ),
-        Expanded(
-          child: AsyncValueView<List<ShoppingItem>>(
-            value: items,
-            onRetry: () => ref.invalidate(shoppingItemsProvider),
-            data: (list) => list.isEmpty
-                ? Center(child: Text(l10n.shoppingEmpty))
-                : ListView.builder(
-                    itemCount: list.length,
-                    itemBuilder: (context, i) => _ItemTile(
-                      item: list[i],
-                      onToggle: () => _run(
-                        () => ref
-                            .read(shoppingRepositoryProvider)
-                            .toggle(actor: _actor, itemId: list[i].id),
+            ),
+            SafeArea(
+              top: false,
+              child: Padding(
+                padding: const EdgeInsets.all(Tokens.space4),
+                child: Row(
+                  children: [
+                    if (!kiosk)
+                      IconButton(
+                        tooltip: l10n.shoppingHistory,
+                        onPressed: () => context.push(Routes.shoppingHistory),
+                        icon: const Icon(Icons.history),
+                      ),
+                    Expanded(
+                      child: FilledButton.icon(
+                        onPressed:
+                            _busy ||
+                                !(items.value?.any((i) => i.checked) ?? false)
+                            ? null
+                            : () => _finish(list),
+                        icon: const Icon(Icons.shopping_cart_checkout),
+                        label: Text(l10n.shoppingFinish),
                       ),
                     ),
-                  ),
-          ),
-        ),
-        SafeArea(
-          top: false,
-          child: Padding(
-            padding: const EdgeInsets.all(Tokens.space4),
-            child: SizedBox(
-              width: double.infinity,
-              child: FilledButton.icon(
-                onPressed: _busy || (items.value?.isEmpty ?? true)
-                    ? null
-                    : _finish,
-                icon: const Icon(Icons.shopping_cart_checkout),
-                label: Text(l10n.shoppingFinish),
+                  ],
+                ),
               ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _ListSwitcher extends ConsumerWidget {
+  const _ListSwitcher({
+    required this.selected,
+    required this.onNew,
+    required this.onDefault,
+  });
+
+  final String selected;
+  final VoidCallback onNew;
+  final VoidCallback onDefault;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final lists = ref.watch(shoppingListsProvider).value ?? const [];
+    return SizedBox(
+      height: 56,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(
+          horizontal: Tokens.space4,
+          vertical: Tokens.space2,
+        ),
+        children: [
+          for (final l in lists)
+            Padding(
+              padding: const EdgeInsets.only(right: Tokens.space2),
+              child: GestureDetector(
+                onLongPress: l.id == selected && !l.isDefault
+                    ? onDefault
+                    : null,
+                child: ChoiceChip(
+                  selected: l.id == selected,
+                  avatar: l.isDefault ? const Icon(Icons.star, size: 18) : null,
+                  label: Text(
+                    l.openCount == 0 ? l.name : '${l.name} · ${l.openCount}',
+                  ),
+                  onSelected: (_) =>
+                      ref.read(selectedListIdProvider.notifier).select(l.id),
+                ),
+              ),
+            ),
+          ActionChip(
+            avatar: const Icon(Icons.add, size: 18),
+            label: Text(l10n.shoppingNewList),
+            onPressed: onNew,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Recents and frequents before any input; typing narrows them; "neu anlegen" closes
+/// the loop for names the catalogue does not know. On the wall there is no search field.
+class _TilePicker extends ConsumerStatefulWidget {
+  const _TilePicker({
+    required this.list,
+    required this.items,
+    required this.search,
+    required this.showSearch,
+    required this.busy,
+    required this.onAdd,
+    required this.onLongPress,
+  });
+
+  final ShoppingList list;
+  final List<ShoppingItem> items;
+  final TextEditingController search;
+  final bool showSearch;
+  final bool busy;
+  final void Function(String name) onAdd;
+  final void Function(String name) onLongPress;
+
+  @override
+  ConsumerState<_TilePicker> createState() => _TilePickerState();
+}
+
+class _TilePickerState extends ConsumerState<_TilePicker> {
+  @override
+  void initState() {
+    super.initState();
+    widget.search.addListener(_changed);
+  }
+
+  @override
+  void dispose() {
+    widget.search.removeListener(_changed);
+    super.dispose();
+  }
+
+  void _changed() => setState(() {});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final kiosk = ref.watch(uiRegisterProvider) == UiRegister.kiosk;
+    final catalog = (ref.watch(shoppingCatalogProvider).value ?? const [])
+        .where((c) => c.listId == widget.list.id)
+        .toList();
+    final categories = {
+      for (final c
+          in ref.watch(shoppingCategoriesProvider).value ??
+              const <ShoppingCategory>[])
+        c.id: c,
+    };
+    final query = widget.search.text.trim();
+    final tiles = rankTiles(catalog, query);
+    final folded = fold(query);
+    final exact = tiles.any((t) => t.foldedName == folded);
+    final width = kiosk ? 148.0 : 104.0;
+
+    int countOf(String foldedName) => widget.items
+        .where((i) => !i.checked && fold(i.name) == foldedName)
+        .map((i) => i.count)
+        .fold(0, (a, b) => a + b);
+
+    return Padding(
+      padding: const EdgeInsets.all(Tokens.space4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (widget.showSearch)
+            TextField(
+              controller: widget.search,
+              decoration: InputDecoration(
+                labelText: l10n.shoppingSearchHint,
+                prefixIcon: const Icon(Icons.search),
+              ),
+              textInputAction: TextInputAction.done,
+              // Enter adds the top hit, else the typed name as a new item.
+              onSubmitted: (value) =>
+                  widget.onAdd(tiles.isNotEmpty ? tiles.first.name : value),
+            ),
+          const SizedBox(height: Tokens.space2),
+          if (tiles.isEmpty && query.isEmpty)
+            Text(
+              l10n.shoppingTilesEmpty,
+              style: Theme.of(context).textTheme.bodySmall,
+            )
+          else
+            ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: kiosk ? 320 : 176),
+              child: SingleChildScrollView(
+                child: Wrap(
+                  spacing: Tokens.space2,
+                  runSpacing: Tokens.space2,
+                  children: [
+                    for (final t in tiles)
+                      _Tile(
+                        width: width,
+                        icon: categoryIcon(categories[t.categoryId]),
+                        label: t.name,
+                        count: countOf(t.foldedName),
+                        onTap: widget.busy ? null : () => widget.onAdd(t.name),
+                        onLongPress: () => widget.onLongPress(t.name),
+                      ),
+                    if (query.isNotEmpty && !exact)
+                      _Tile(
+                        width: width,
+                        icon: Icons.add_circle_outline,
+                        label: l10n.shoppingCreateTile(query),
+                        count: 0,
+                        onTap: widget.busy ? null : () => widget.onAdd(query),
+                        onLongPress: () => widget.onLongPress(query),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Tile extends StatelessWidget {
+  const _Tile({
+    required this.width,
+    required this.icon,
+    required this.label,
+    required this.count,
+    required this.onTap,
+    required this.onLongPress,
+  });
+
+  final double width;
+  final IconData icon;
+  final String label;
+  final int count;
+  final VoidCallback? onTap;
+  final VoidCallback onLongPress;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final onList = count > 0;
+    return SizedBox(
+      width: width,
+      child: Card(
+        margin: EdgeInsets.zero,
+        color: onList ? scheme.primaryContainer : null,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: onTap,
+          onLongPress: onLongPress,
+          child: Padding(
+            padding: const EdgeInsets.all(Tokens.space2),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Badge(
+                  isLabelVisible: count > 1,
+                  label: Text('$count×'),
+                  child: Icon(icon, size: 28),
+                ),
+                const SizedBox(height: Tokens.space1),
+                Text(
+                  label,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.labelMedium,
+                ),
+              ],
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _ItemList extends ConsumerWidget {
+  const _ItemList({
+    required this.items,
+    required this.listId,
+    required this.onToggle,
+    required this.onLess,
+    required this.onEdit,
+  });
+
+  final List<ShoppingItem> items;
+  final String listId;
+  final void Function(ShoppingItem) onToggle;
+  final void Function(ShoppingItem) onLess;
+  final void Function(ShoppingItem) onEdit;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final categories = [
+      for (final c
+          in ref.watch(shoppingCategoriesProvider).value ??
+              const <ShoppingCategory>[])
+        if (c.listId == listId) c,
+    ];
+    final members = {
+      for (final m in ref.watch(membersProvider).value ?? const <Member>[])
+        m.id: m,
+    };
+    final open = items.where((i) => !i.checked).toList();
+    final trolley = items.where((i) => i.checked).toList();
+
+    Widget tile(ShoppingItem i) => _ItemTile(
+      item: i,
+      adder: members[i.addedBy],
+      onToggle: () => onToggle(i),
+      onLess: () => onLess(i),
+      onEdit: () => onEdit(i),
+    );
+
+    final known = categories.map((c) => c.id).toSet();
+    final groups = <Widget>[];
+    for (final c in categories) {
+      final inGroup = open.where((i) => i.categoryId == c.id).toList();
+      if (inGroup.isEmpty) continue;
+      groups
+        ..add(_Header(categoryLabel(l10n, c)))
+        ..addAll(inGroup.map(tile));
+    }
+    final loose = open.where((i) => !known.contains(i.categoryId)).toList();
+    if (loose.isNotEmpty) {
+      groups
+        ..add(_Header(l10n.shoppingUncategorised))
+        ..addAll(loose.map(tile));
+    }
+
+    return ListView(
+      children: [
+        ...groups,
+        if (trolley.isNotEmpty)
+          ExpansionTile(
+            title: Text(l10n.shoppingInTrolley(trolley.length)),
+            children: trolley.map(tile).toList(),
+          ),
       ],
     );
   }
 }
 
+class _Header extends StatelessWidget {
+  const _Header(this.label);
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.fromLTRB(
+      Tokens.space4,
+      Tokens.space4,
+      Tokens.space4,
+      Tokens.space1,
+    ),
+    child: Text(label, style: Theme.of(context).textTheme.titleSmall),
+  );
+}
+
 class _ItemTile extends StatelessWidget {
-  const _ItemTile({required this.item, required this.onToggle});
+  const _ItemTile({
+    required this.item,
+    required this.adder,
+    required this.onToggle,
+    required this.onLess,
+    required this.onEdit,
+  });
 
   final ShoppingItem item;
+  final Member? adder;
   final VoidCallback onToggle;
+  final VoidCallback onLess;
+  final VoidCallback onEdit;
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final style = item.checked
         ? TextStyle(
             decoration: TextDecoration.lineThrough,
             color: Theme.of(context).disabledColor,
           )
         : null;
-    return CheckboxListTile(
-      value: item.checked,
-      onChanged: (_) => onToggle(),
-      controlAffinity: ListTileControlAffinity.leading,
+    final detail = [
+      if (item.count > 1) '${item.count} ×',
+      ?item.quantity,
+    ].join(' · ');
+
+    // Tick targets are at least 56 high: this is used one-handed, in a coat.
+    return ListTile(
+      minTileHeight: 56,
+      onTap: onToggle,
+      onLongPress: onEdit,
+      leading: Checkbox(value: item.checked, onChanged: (_) => onToggle()),
       title: Text(item.name, style: style),
-      secondary: item.quantity == null
-          ? null
-          : Text(item.quantity!, style: style),
+      subtitle: detail.isEmpty ? null : Text(detail, style: style),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (adder != null)
+            Tooltip(
+              message: l10n.shoppingAddedBy(adder!.displayName),
+              child: Container(
+                width: 12,
+                height: 12,
+                decoration: BoxDecoration(
+                  color: adder!.color,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+          if (item.count > 1 && !item.checked)
+            IconButton(
+              tooltip: l10n.shoppingRemoveOne,
+              onPressed: onLess,
+              icon: const Icon(Icons.remove_circle_outline),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+typedef _ItemEdit = ({String spec, String? categoryId});
+
+class _EditItemDialog extends StatefulWidget {
+  const _EditItemDialog({required this.item, required this.categories});
+
+  final ShoppingItem item;
+  final List<ShoppingCategory> categories;
+
+  @override
+  State<_EditItemDialog> createState() => _EditItemDialogState();
+}
+
+class _EditItemDialogState extends State<_EditItemDialog> {
+  late final _spec = TextEditingController(text: widget.item.quantity);
+  late String? _category = widget.item.categoryId;
+
+  @override
+  void dispose() {
+    _spec.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return AlertDialog(
+      title: Text(widget.item.name),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            controller: _spec,
+            autofocus: true,
+            maxLength: 40,
+            decoration: InputDecoration(labelText: l10n.shoppingSpecHint),
+          ),
+          DropdownButtonFormField<String?>(
+            initialValue: widget.categories.any((c) => c.id == _category)
+                ? _category
+                : null,
+            decoration: InputDecoration(labelText: l10n.shoppingCategory),
+            items: [
+              DropdownMenuItem<String?>(
+                child: Text(l10n.shoppingUncategorised),
+              ),
+              for (final c in widget.categories)
+                DropdownMenuItem<String?>(
+                  value: c.id,
+                  child: Text(categoryLabel(l10n, c)),
+                ),
+            ],
+            onChanged: (v) => setState(() => _category = v),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(l10n.cancel),
+        ),
+        FilledButton(
+          onPressed: () => Navigator.pop(context, (
+            spec: _spec.text.trim(),
+            categoryId: _category,
+          )),
+          child: Text(l10n.save),
+        ),
+      ],
+    );
+  }
+}
+
+class _NewListDialog extends StatefulWidget {
+  const _NewListDialog();
+
+  @override
+  State<_NewListDialog> createState() => _NewListDialogState();
+}
+
+class _NewListDialogState extends State<_NewListDialog> {
+  final _name = TextEditingController();
+  String _kind = 'supermarket';
+
+  @override
+  void dispose() {
+    _name.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return AlertDialog(
+      title: Text(l10n.shoppingNewList),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            controller: _name,
+            autofocus: true,
+            maxLength: 40,
+            decoration: InputDecoration(labelText: l10n.shoppingListName),
+          ),
+          DropdownButtonFormField<String>(
+            initialValue: _kind,
+            decoration: InputDecoration(labelText: l10n.shoppingListKind),
+            items: [
+              DropdownMenuItem(
+                value: 'supermarket',
+                child: Text(l10n.shoppingKindSupermarket),
+              ),
+              DropdownMenuItem(
+                value: 'drugstore',
+                child: Text(l10n.shoppingKindDrugstore),
+              ),
+              DropdownMenuItem(
+                value: 'hardware',
+                child: Text(l10n.shoppingKindHardware),
+              ),
+              DropdownMenuItem(
+                value: 'other',
+                child: Text(l10n.shoppingKindOther),
+              ),
+            ],
+            onChanged: (v) => setState(() => _kind = v ?? _kind),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(l10n.cancel),
+        ),
+        FilledButton(
+          onPressed: () {
+            final name = _name.text.trim();
+            if (name.isEmpty) return;
+            Navigator.pop(context, (name: name, kind: _kind));
+          },
+          child: Text(l10n.save),
+        ),
+      ],
     );
   }
 }

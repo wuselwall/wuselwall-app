@@ -59,7 +59,7 @@ void main() {
     await t.tap(find.byKey(const ValueKey('avatar-$kidId')));
     await t.pump();
 
-    await t.tap(find.byType(CheckboxListTile));
+    await t.tap(find.text('Milch'));
     await t.pumpAndSettle();
     expect(shopping.toggles.single, (actor: kidId, id: '1'));
   });
