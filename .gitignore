@@ -1,7 +1,5 @@
 *.log
 .DS_Store
-.env
-.env.*
 .svelte-kit/
 build/
 coverage/
@@ -10,3 +8,6 @@ node_modules/
 playwright-report/
 test-results/
 !.env.example
+.env
+.env.local
+app/untranslated.json
