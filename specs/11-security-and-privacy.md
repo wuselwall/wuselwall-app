@@ -10,7 +10,9 @@ get there is to be specific about what you are defending against.
 routines (the calendar, and since 2026-08-30 the presence entries that say who is away
 overnight), the children's data (now including school, class and a term's timetable), the
 shopping and meal history (a detailed picture of household life), and the server itself as
-a resource someone else could use.
+a resource someone else could use. *Since [ADR-014](adr/ADR-014-self-service-onboarding.md)
+(2026-10-11):* **other families' data**, all of the above for households the operator does
+not know. Losing that costs more than losing one's own, legally and otherwise.
 
 The A5 addition raised the value of the first two assets materially. A calendar says a
 family has a dentist appointment; a timetable plus presence bands says which child is at
@@ -24,13 +26,14 @@ the controls below changes — but the defaults do, in [T2](#t2--feed-tokens).
 | T1 | Automated scanning and exploitation of a known CVE in an exposed service | Constantly. This is the baseline of running anything on the public internet. |
 | T2 | A leaked ICS feed URL (pasted into a support ticket, synced to a third-party calendar service, in a browser history on a shared machine) | Plausible. Bearer URLs leak. |
 | T3 | A lost or stolen device holding a year-long device session | Plausible. Children lose iPads. |
-| T4 | Credential stuffing against a guardian account | Likely to be attempted, cheap to defeat. |
+| T4 | Credential stuffing against an adult account; a phished email code | Likely to be attempted, cheap to defeat. |
 | T5 | Supply-chain compromise of a dependency — a `pub` or Deno package, a container image, a CI action | Real and rising; the hardest one on this list. |
 | T6 | Data loss through disk failure, a bad migration, or `DROP TABLE` at 23:00 | The most likely damaging event of all. |
 | T7 | Silent data harvesting by embedded third parties (analytics, fonts, CDNs, error trackers) | Certain, if you let them in. Entirely preventable. |
 | T8 | A child escalating to guardian rights | Low stakes, moderate likelihood, worth a speed bump. |
 | T9 | **A missing or wrong RLS policy** — the anon key is in every app binary, so anyone who extracts it can call the API directly *(added 2026-10-11, [ADR-010](adr/ADR-010-flutter-and-self-hosted-supabase.md))* | The most likely way data leaks from this stack. |
 | T10 | Leaked signing material — the iOS certificate, the Android upload key, the App Store Connect API key | Low likelihood, high annoyance: someone could ship a build under your name. |
+| T11 | **Abuse of the open front door** — scripted sign-ups, email-code floods at someone else's address, guessing invitation or pairing codes, talking a guardian into approving a stranger's pairing request *(added 2026-10-11, ADR-014)* | Certain once sign-up is public; cheap to contain. |
 
 **Out of scope**, stated so effort is not wasted: a targeted attacker with a specific
 interest in this household, a state actor, physical seizure of the server, and malicious
@@ -50,13 +53,16 @@ insiders. If a threat model does not exclude anything it is not a threat model.
 - **Postgres (54322), Studio (54323) and Mailpit (54324) are never forwarded or proxied.**
   The CLI stack publishes them on the home network only; anyone on the home wifi can reach
   them, which is accepted for a household network and must not be extended.
-- **Public sign-up and anonymous users are disabled** in Supabase Auth. Accounts exist
-  only because the setup wizard, a guardian or the enrolment function created them.
+- **Anonymous users are disabled; public sign-up is enabled for adults** (since
+  ADR-014). A new account has no household claim and therefore reads and writes nothing
+  (RLS), and it can create a household only in the instance's `household_creation` mode
+  (T11).
 - **Never run with the CLI's default keys.** `auth.jwt_secret`, `auth.publishable_key` and
   `auth.secret_key` come from the git-ignored `supabase/.env`. The defaults are public;
   with them, anyone holds the service role.
-- **The setup token is random** before the household exists (`scripts/remote-setup-token.sh`);
-  the seed's `dev-setup` is in git.
+- **Founder codes are random and single use** (`scripts/remote-setup-token.sh`); the
+  seed's `dev-setup` is in git and must never exist on the home server (S3 in
+  [19](19-security-and-architecture-review.md)).
 - Cloudflare terminates TLS with modern defaults; set *Always Use HTTPS* and HSTS in its
   dashboard. Between Cloudflare and nginx: the origin certificate, SSL mode Full (strict).
 - Supabase's images are used as published, pinned through the Supabase CLI version in
@@ -93,12 +99,22 @@ insiders. If a threat model does not exclude anything it is not a threat model.
 
 ### T4 — account attacks
 
-- TOTP as a mandatory second factor on guardian accounts; passkeys as the primary
-  credential if Supabase Auth supports them when M0.1 is built.
+- **Most adults have no password at all.** Apple, Google and email codes leave nothing
+  to stuff. Passwords that exist are at least 10 characters, with a strength meter in the
+  app (S14 in [19](19-security-and-architecture-review.md)).
+- **TOTP is optional**, never part of sign-up (ADR-014: Apple and Google enforce their
+  own second factors; a mandatory one locks out a sole guardian who loses a phone).
+  Passkeys are offered from the getting-started card once verified on hardware.
+- Email codes: 6 digits, 10 minutes, single use, a resend at most every 60 s, and
+  verification attempts rate-limited per IP by Supabase Auth. The mail says what the code
+  is for, in the recipient's language, and that nobody from WuselWall will ever ask for it.
+- A new sign-in on an account notifies its other devices.
 - Supabase Auth's rate limits on sign-in, plus a rate limit at nginx or Cloudflare; PINs hashed with
   bcrypt, with exponential backoff per profile.
 - PIN lockout after 10 failures, released only by a full guardian login.
-- Generic error messages on login. No "unknown email" hints.
+- Generic error messages on login. No "unknown email" hints. The email step behaves the
+  same for registered and unregistered addresses (a code is sent either way), so it
+  cannot be used to probe who has an account.
 - The native apps send bearer tokens, so there are no cookies to steal and no CSRF
   surface. The web build keeps its session in browser storage, which makes a strict CSP
   the guard against script injection there.
@@ -131,7 +147,14 @@ This is where a self-hosted app usually leaks, quietly, through convenience:
 | Google Fonts | Self-host WOFF2 files. Also faster. |
 | A CDN for a JS library, Google Fonts in Flutter web | Bundle it; ship fonts as assets. |
 | Sentry / Crashlytics / PostHog / Firebase Analytics | Nothing in v1. TestFlight and Play Console already report crashes. Self-host GlitchTip later if you must. |
-| Google Analytics / Plausible Cloud | Nothing. You have four users and you know all of them. |
+| Google Analytics / Plausible Cloud | Nothing. You have four users and you know all of them. *(Still nothing with other families: onboarding is measured by timed walk-throughs, [20](20-onboarding.md#how-smooth-is-checked).)* |
+| A deferred-deep-link or attribution SDK so invitations survive installation | The invitation code and the email match ([20, J2](20-onboarding.md#j2--join-a-family)). |
+| A captcha on sign-up | Rate limits and `code` mode first; Turnstile only if abuse is observed ([Q44](14-open-questions.md)). |
+
+**Accepted since ADR-014**, each only for those who use it: **Apple** and **Google** as
+sign-in providers (they learn that the person signs in to WuselWall; scopes are
+`email`/`name`/`profile` only), and **one SMTP provider** ([Q41](14-open-questions.md)),
+which sees email addresses and sign-in codes and nothing from the household.
 | A Ferien import from a public API ([15](15-module-school-timetable.md#holidays)) | Fetched by a scheduled Edge Function, server-side only, with the host pinned in configuration and the result cached in the database. The browser never contacts it, and a failed fetch degrades to hand-entered holidays rather than to an error. |
 | An external map or weather widget | If you want weather on the wall display, proxy it server-side so the app never contacts a third party directly, and cache aggressively. |
 | Avatar images from Gravatar | Local uploads or generated initials. |
@@ -142,8 +165,8 @@ outbound host in a pull request is a question to answer, not a detail. A policy 
 mechanism survives temptation on a Friday evening.
 
 Outbound connections from the server should be enumerable on one hand: Let's Encrypt,
-the container registry, the backup target, APNs and FCM (for push), and the OS package
-mirrors.
+the container registry, the backup target, APNs and FCM (for push), the OS package
+mirrors, and since ADR-014 the SMTP provider and Apple's and Google's token endpoints.
 
 ### T8 — a curious nine-year-old
 
@@ -168,6 +191,32 @@ With Supabase, row-level security is not defence in depth; it is the perimeter.
 - The **service-role key** exists only in the server's `.env`. It is used by the Edge
   Functions that have no user (ICS, enrolment, jobs), each such use commented; it is
   never in CI, never in the app and never on a laptop.
+
+### T11 — the open front door
+
+*Added 2026-10-11 ([ADR-014](adr/ADR-014-self-service-onboarding.md)).*
+
+- **`code` mode until the opening gate.** Strangers can sign up, but cannot create a
+  household without a founder code. An account with no household costs one row and
+  reaches nothing. Accounts that never join or create a household are deleted after 30
+  days by a job.
+- **Rate limits in three places:** Supabase Auth's own (`[auth.rate_limit]`: email sends,
+  verifications, sign-ins per IP), Cloudflare rules for `/auth/v1/otp`, `/auth/v1/token*`
+  and the anon RPCs (S9 in [19](19-security-and-architecture-review.md)), and the
+  attempt log that already guards `enrol_device`, extended to `invitation_preview` and
+  `pairing_start`.
+- **Invitations:** a 128-bit token in the link, an 8-character code with attempt
+  limits, 7 days, single use, revocable. Accepting notifies every guardian, and the
+  audit log records inviter and invitee. An invitation never reveals more than the
+  household's name and the inviter's first name.
+- **Pairing:** the display code alone grants nothing. Binding needs a guardian's approval
+  from a personal device, and collecting the credentials needs the secret held only by
+  the requesting device. The approval screen repeats the code and warns against
+  approving a device that is not in front of you. That is the one social-engineering
+  path, and it ends in a shared device a guardian can see and revoke in Geräte.
+- **Cross-household isolation is now about strangers.** The pgTAP cross-household cases
+  (T9) are release-blocking, and the catalogue test pins the exact list of
+  anon-callable functions.
 
 ### T10 — signing material
 
@@ -206,6 +255,21 @@ With Supabase, row-level security is not defence in depth; it is the perimeter.
   you let another family use it — at which point you become a controller with all the
   obligations that follow. It is worth knowing exactly where that line is before you
   generously offer an account to a friend.
+- **With self-service ([ADR-014](adr/ADR-014-self-service-onboarding.md)) that line is
+  the opening gate** ([13](13-roadmap.md#opening-to-other-households)). Before it,
+  households other than this one exist only by founder code, given to people the operator
+  knows. From it, the operator is a controller and needs:
+  - a privacy policy (linked from the front door, the landing pages and the stores);
+  - a record of processing (Art. 30);
+  - processor agreements with the SMTP provider, Cloudflare and, if [Q40](14-open-questions.md)
+    lands there, the hosting provider;
+  - deletion and export in the app (FR-5.16);
+  - a 72-hour breach procedure (Art. 33);
+  - a contact address that is read.
+
+  Children never sign up and never have accounts: their data is entered by their parents,
+  which keeps Art. 8 (a child's own consent) out of the picture but not the duty of care
+  below.
 - **Children's data** deserves care independent of any legal duty. Collect the minimum:
   a name, a colour, an avatar. No location tracking, no photographs of children reachable
   from the internet, no behavioural data leaving the server. Their chore history is a
@@ -218,8 +282,13 @@ With Supabase, row-level security is not defence in depth; it is the perimeter.
 
 - [ ] Router forwards 443 only; Postgres, Studio and Mailpit not reachable from outside the home
 - [ ] nginx answers 404 outside the four API prefixes
-- [ ] Public sign-up and anonymous users disabled; the stack runs on its own keys, not the CLI defaults
-- [ ] Setup token replaced by a random one before the household is set up
+- [ ] Anonymous users disabled; `household_creation` is `code`; the stack runs on its own keys, not the CLI defaults
+- [ ] No `dev-setup` founder code on the home server; the family's own founder code used and consumed
+- [ ] Sign-in with Apple, Google, email code and password each tested on a real device; the
+      email-code mail arrives (not in spam) in both languages
+- [ ] A stranger's fresh account sees nothing: one manual probe of `api` with its token
+- [ ] Invitation and pairing tested end to end, including an expired and a withdrawn invitation
+- [ ] Account deletion tested, including Apple token revocation
 - [ ] RLS catalogue test and every policy test green against the live schema
 - [ ] TLS working; HSTS and Always Use HTTPS on in Cloudflare
 - [ ] Content-Security-Policy set, and verified to break nothing

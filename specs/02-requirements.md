@@ -87,10 +87,19 @@ Priority: **M** = must have in v1 · **S** = should have · **C** = could have �
 | FR-5.3 | A device holds a long-lived session; the acting profile is switched by tapping an avatar | M | B1, user decision |
 | FR-5.4 | Devices are classified as personal (single fixed profile) or shared (profile switching enabled) | M | D |
 | FR-5.5 | Guardian-only actions require a PIN step-up, valid for a short window on that device | M | D |
-| FR-5.6 | Enrol a new device via a one-time code or QR generated on an already-trusted device | M | D |
+| FR-5.6 | Connect a shared device by **pairing**: the new device shows a code and QR, a guardian approves it on their personal device and chooses its kind there; nothing is typed on the shared device *(revised 2026-10-11, was: a code generated on a trusted device and typed on the new one)* | M | D, [20](20-onboarding.md#j3--connect-a-shared-device) |
 | FR-5.7 | List all enrolled devices and revoke any of them remotely | M | D |
-| FR-5.8 | Guardians authenticate with a passkey or password for the settings area and initial setup | M | D |
+| FR-5.8 | Adults authenticate with **Sign in with Apple, Sign in with Google, an email one-time code, or email and password**; passkeys as an optional extra. One screen serves sign-up and sign-in *(revised 2026-10-11, was: passkey or password, accounts created by the setup wizard)* | M | D, user 2026-10-11 |
 | FR-5.9 | Append-only audit log of every mutation: actor profile, device, timestamp, before/after | M | D |
+| FR-5.10 | Public sign-up for adults; a new account sees nothing until it creates or joins a household. Children never have accounts | M | user 2026-10-11 |
+| FR-5.11 | A signed-in adult without a household creates one with a family name; timezone and locale come from the device. Household creation is `open` or requires a single-use founder code (`code`), per instance | M | user 2026-10-11 |
+| FR-5.12 | A guardian invites another adult by link, code or QR, bound to a profile and a role, valid 7 days, single use, revocable; an invitation naming an email is offered automatically to that verified address | M | D |
+| FR-5.13 | One account can hold several sign-in methods; adults add and remove them in Settings, never the last one | S | D |
+| FR-5.14 | Account recovery without the operator: an email code replaces a forgotten password; a guardian can reset another guardian's second factor | M | D |
+| FR-5.15 | A second factor (TOTP) is optional per account and never part of sign-up | M | D |
+| FR-5.16 | Delete one's account, leave the household, delete the household (restorable for 14 days) and export its data, from inside the app; Sign in with Apple tokens are revoked on deletion | M | App Store 5.1.1(v), Play, GDPR |
+| FR-5.17 | A getting-started card on the adult Today screen, shared by the household and derived from data (invite partner, connect tablet and wall display, set PIN, reminders, feed, passkey) | S | D |
+| FR-5.18 | The guardian PIN is asked for when the first shared or kiosk device is connected, not during household creation | M | D |
 
 ## FR-6 Assistant Integration (B4)
 
@@ -163,7 +172,7 @@ Added 2026-08-30. The kitchen display's standard view. Specified in
 | NFR-6 | **Availability** — self-hosted, single node, no HA | ~99% is fine; scheduled downtime acceptable | B3 |
 | NFR-7 | **Cost** — total recurring spend | Hosting ≤ €13 / month, plus the Apple Developer Program (€99 / year). *Proposed 2026-10-11 — the native apps and a larger server for Supabase break the original ≤ €10 target; confirm in [Q36](14-open-questions.md)* | B3 |
 | NFR-8 | **Data residency** — all data stored in Germany or the EU | Hard requirement | B3 |
-| NFR-9 | **Third-party exposure** — outbound connections from server and client | Zero analytics, zero external fonts, zero CDN, zero error-reporting or crash-reporting SDKs in the app. Push via APNs/FCM and distribution via Apple/Google are the accepted exceptions, and carry no data beyond the notification itself | B3 |
+| NFR-9 | **Third-party exposure** — outbound connections from server and client | Zero analytics, zero external fonts, zero CDN, zero error-reporting or crash-reporting SDKs in the app. Push via APNs/FCM and distribution via Apple/Google are the accepted exceptions, and carry no data beyond the notification itself. *Since 2026-10-11 ([ADR-014](adr/ADR-014-self-service-onboarding.md)):* Sign in with Apple/Google, for adults who choose them, and one SMTP provider for sign-in codes are also accepted. No deferred-deep-link, attribution or captcha service | B3 |
 | NFR-10 | **Transport security** — HTTPS everywhere, HSTS, modern TLS only | Enforced by the reverse proxy | B3 |
 | NFR-11 | **Backups** — nightly, encrypted, off-site, with a tested restore | RPO 24 h, RTO 4 h | D |
 | NFR-12 | **Patching** — OS and dependency updates | Unattended OS security updates; dependency review monthly | B3 |
@@ -171,6 +180,7 @@ Added 2026-08-30. The kitchen display's standard view. Specified in
 | NFR-14 | **Localisation** — German and English UI, English codebase and documentation | i18n structure in place from day one; every string shipped in both German and English, German the default; school vocabulary fixed once in the catalogue ([15](15-module-school-timetable.md#german-glossary)) | D |
 | NFR-15 | **Maintainability** — a solo developer must be able to return after two months away | One database as the domain core, typed at every layer (Dart, SQL, TypeScript), every rule and policy covered by a test, ADRs kept current | D |
 | NFR-16 | **Wall-display legibility** — the week board is read from across the kitchen | Readable at 2.5 m; no text below 24 px in the kiosk register; seven days fit without scrolling on a 10–15" landscape screen | late |
+| NFR-17 | **Onboarding effort** *(added 2026-10-11)* | Start a family: ≤ 3 screens after sign-in, ≤ 90 s with Apple/Google. Join by invitation: ≤ 2 screens after sign-in, ≤ 60 s. Connect a shared device: no typing on it, ≤ 30 s of a guardian's time. Never ask for what can be inferred or deferred. Checked by timed walk-throughs and screen-count tests, not analytics ([20](20-onboarding.md#how-smooth-is-checked)) | user 2026-10-11 |
 
 ## Constraints inherited from the platform
 

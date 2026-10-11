@@ -5,7 +5,8 @@ amends [ADR-004](ADR-004-identity-model.md), [ADR-005](ADR-005-hosting.md),
 [ADR-006](ADR-006-offline-strategy.md) and [ADR-007](ADR-007-assistant-integration.md)
 in their implementation, not in their intent. Amended by
 [ADR-013](ADR-013-one-self-hosted-environment.md) (one environment on the home server;
-further tenants on hosted Supabase).
+further tenants on hosted Supabase) and [ADR-014](ADR-014-self-service-onboarding.md)
+(public sign-up for adults, self-service households, device pairing).
 
 ## Context
 
@@ -119,8 +120,13 @@ rule gave, now enforced by configuration instead of by code review.
 ADR-004's two-layer model is kept exactly; only the mechanism changes.
 
 - **Public sign-up is disabled.** No one can create an account from outside.
+  *Reversed by [ADR-014](ADR-014-self-service-onboarding.md): adults sign up with Apple,
+  Google, an email code or a password; a new account sees nothing until it creates or
+  joins a household.*
 - **Guardians** are Supabase Auth users (email + password, TOTP as the second factor;
   passkeys if Supabase Auth offers them when M0.1 is built), created by the setup wizard.
+  *Since ADR-014: they create their own account; the setup wizard and its token give way
+  to household creation in `code` or `open` mode.*
   A guardian's own phone is signed in as that guardian — a `personal` device.
 - **Shared and kiosk devices** are enrolled with the one-time code from ADR-004. The
   `enrol-device` Edge Function validates the code, creates a dedicated Auth user for that

@@ -81,8 +81,8 @@ queues. It holds no business rules.
 | Database | **PostgreSQL** (the version Supabase's image ships — pin the tag) | Recurrence ranges, ledgers, arrays, `pg_trgm` for shopping capture, `pg_cron` for jobs. |
 | Domain logic | **SQL and PL/pgSQL** in the `api` schema | Transactional writes, guardian checks and audit in one place. |
 | Authorisation | **Row-level security**, forced on every table | The primary control: the anon key ships in every app. |
-| Auth | **Supabase Auth** (GoTrue) + a custom access-token hook | Guardian accounts and per-device users; household and device in the JWT. |
-| Composed reads, public endpoints | **Supabase Edge Functions** (Deno, TypeScript) | RFC 5545 via `rrule`, the timetable projection, ICS output via `ical-generator`, device enrolment; later MCP and Shortcuts. |
+| Auth | **Supabase Auth** (GoTrue) + a custom access-token hook | Adult accounts (Sign in with Apple, Google, email code, password; [ADR-014](adr/ADR-014-self-service-onboarding.md)) and per-device users; household and device in the JWT. A send-email hook localises auth mail. |
+| Composed reads, public endpoints | **Supabase Edge Functions** (Deno, TypeScript) | RFC 5545 via `rrule`, the timetable projection, ICS output via `ical-generator`, device enrolment, the send-email hook, account deletion with Apple token revocation; later MCP and Shortcuts. |
 | Background jobs | **pg_cron**, with **pg_net** to invoke Edge Functions | No worker container. Jobs and their history are visible in SQL. |
 | Realtime | **Supabase Realtime**, broadcast from triggers on a private per-household channel | Invalidations, not data: the client refetches. |
 | Push | **FCM** (Android) and **APNs** (iOS), sent from an Edge Function | Native push channels; provider choice is [Q38](14-open-questions.md). |

@@ -2,7 +2,10 @@
 
 **Status:** Accepted · 2026-10-11 · Supersedes [ADR-005](ADR-005-hosting.md); amends
 [ADR-010](ADR-010-flutter-and-self-hosted-supabase.md) and
-[ADR-011](ADR-011-native-distribution-and-ci-cd.md)
+[ADR-011](ADR-011-native-distribution-and-ci-cd.md) · Amended by
+[ADR-014](ADR-014-self-service-onboarding.md) on 2026-10-11: self-service households share
+**one** project instead of one project per tenant; where it runs is
+[Q40](../14-open-questions.md)
 
 ## Context
 
@@ -43,7 +46,8 @@ the user's own nginx.
 - **Backups protect the family's data**: a nightly dump on the server
   ([`infra/backup/`](../../infra/backup/)), and a manual dump before every migration.
 - **Further tenants run on hosted Supabase (supabase.com)**, one project per tenant, if
-  and when they exist. This reverses ADR-010's rejection of the hosted service *for other
+  and when they exist. *Superseded by [ADR-014](ADR-014-self-service-onboarding.md): with
+  self-service sign-up all households share one project, isolated by RLS.* This reverses ADR-010's rejection of the hosted service *for other
   households*. Each household's data stays wherever that household chooses. This family's
   data stays on the home server.
 
