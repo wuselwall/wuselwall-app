@@ -40,7 +40,7 @@ deployment work (M0.3) is held back until the app is worth
 deploying.
 
 The reason is not cost (€7–9/month is not the risk here). It is that the open question
-is no longer *"can this be operated?"* but *"will four people actually use it?"* — and
+is no longer *"can this be operated?"* but *"will the family actually use it?"* — and
 that question is answerable on the home network, without a domain, a VPS or a
 certificate. Standing up production infrastructure for a system the household has not
 yet tried is building the wrong thing carefully.
@@ -51,7 +51,7 @@ built straight away.*
 
 | | Status |
 |---|---|
-| **M0.0** Repository skeleton · local Supabase with the first migration, RLS and pgTAP harness · Flutter shell with three registers and German l10n · `ci.yml` ([16](16-setup-plan.md) steps 1–4) | In progress — Flutter shell, first migration, pgTAP test and `ci.yml` written (CI not yet run on GitHub); RLS catalogue test still open |
+| **M0.0** Repository skeleton · local Supabase with the first migration, RLS and pgTAP harness · Flutter shell with three registers and German l10n · `ci.yml` ([16](16-setup-plan.md) steps 1–4) | Built — CI green on `main` since PR #3; the RLS catalogue test (`040_catalogue`) exists |
 | **M0.1** Identity: setup wizard, guardian accounts, device enrolment, tap-to-switch, guardian PIN, revocation (step 5) | Built and tested (pgTAP + end-to-end), incl. per-phone devices, TOTP, QR enrolment, rate limiting; passkeys wired, untested until the production domain exists — see ADR-010 implementation notes |
 | **M0.2** The shopping list, online only: add, tick, finish, live across devices (step 6) | Built and tested; not yet tried on the family's real devices |
 | **M0.4** Mobile release pipeline: signing, `release-mobile.yml`, TestFlight and the Play internal track (step 7) | Not started — needs the Apple and Google accounts |
@@ -113,7 +113,7 @@ release checklist.
 > store layout, the catalogue learned on purchase, the tile picker with folded ranked
 > typeahead and tap-again counts, long-press notes and category correction, the trolley
 > section, trips and the history page. **Still open:** the offline outbox (drift mirror,
-> `api.shopping_apply`), the self-hosted icon set beyond category icons, and the kiosk
+> `api.shopping_apply`) — **the next build, decided 2026-10-11** — the self-hosted icon set beyond category icons, and the kiosk
 > tile layout polish.
 
 **Scope (as reached in BretApp, 2026-09-12, on the old stack — the mechanisms map to
@@ -137,6 +137,10 @@ so there is no separate trip entity to keep in sync. Reachable per list from the
 screen and from its own list switcher.
 
 ### M1.2 Tasks and gamification
+**Household settings first** ([21](21-household-settings.md)): `setting_definition`, the
+override table, `api.settings` / `api.set_setting`, and the Einstellungen screen — M1.2 is
+the first module whose behaviour is tuned per household. Its defaults (Q4–Q7, issues
+#6–#9) are data, so the build does not wait for them ·
 Definitions with RRULE · the materialiser job · four assignment policies · the point
 ledger · rewards with the approval flow · streaks with jokers · three or four badges ·
 kid task screen · the family task board (reached from the week board's footer in M1.5) ·
@@ -199,7 +203,7 @@ code replaces a forgotten password, and a co-guardian resets a lost second facto
 remains the last resort only for an adult who has lost both their mailbox and every
 linked provider.
 
-**Done when:** all four members use it daily for two weeks without asking you to fix
+**Done when:** every member of the household uses it daily for two weeks without asking you to fix
 anything.
 
 ---

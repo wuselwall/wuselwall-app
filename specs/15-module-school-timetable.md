@@ -13,8 +13,8 @@ like?" — has three different answers depending on who is asking:
 | Question | Asked by | Answered by |
 |---|---|---|
 | "Does she need her sports kit tomorrow?" | A parent, at 21:00 | The **Stundenplan** |
-| "Is Sabine working on Thursday?" | The other parent, planning | A **presence** entry, maintained as a pattern |
-| "When is Lukas back?" | Everyone, constantly | A **presence** entry, entered ad hoc |
+| "Are you working on Thursday?" | The other parent, planning | A **presence** entry, maintained as a pattern |
+| "When are you back?" | Everyone, constantly | A **presence** entry, entered ad hoc |
 | "What is on this week?" | The kitchen, at a glance | The **week board** ([09](09-clients-and-ux.md)) |
 
 ---
@@ -57,7 +57,7 @@ Columns are in [04 — Data Model](04-data-model.md#school-stundenplan).
 
 **Bell times are shared, not repeated per lesson.** A lesson stores a period index, not a
 clock time. When the school moves first period from 08:00 to 07:55 — which happens — you
-change one row and both children's entire timetables move with it.
+change one row and every child's timetable at that school moves with it.
 
 **A/B weeks.** Many German schools alternate a Doppelwoche. `timetable.week_cycle` is
 `'weekly'` or `'ab'`, and each lesson carries `week_parity` of `all`, `a` or `b`. The
@@ -181,13 +181,17 @@ Realistically this is done twice a year, in a hurry, on a laptop, from a sheet o
 - **Column and row operations**: clear a day, shift a day, swap two days.
 - **Exceptions are entered from the calendar or the grid** in two taps — long-press a
   lesson → "Fällt aus" / "Vertretung" / "Raum geändert".
-- Guardian-only in v1 (Q25). Children read their timetable; they do not maintain it.
+- Guardian-only in v1 (Q23, decided; the household setting `school.members_report_changes`
+  can open it later). Children read their timetable; they do not maintain it.
+- **Starter content** when a school is added: a bell-time template and a German subject
+  list with colours and icons ([21](21-household-settings.md#calendar-presence-and-school-m13)).
 
 ### Holidays
 
 Ferien and bewegliche Ferientage are entered by hand in v1 and imported in M2. The import
 is a public dataset (`ferien-api.de` and the Kultusministerien's own ICS files), it is
-per-Bundesland, and it must be fetched **server-side by a scheduled Edge Function**, cached, and never
+per region — a school's region defaults to the household's (`household.region`), and the
+import starts with the German Bundesländer — and it must be fetched **server-side by a scheduled Edge Function**, cached, and never
 requested from the app — NFR-9 is not suspended for convenience.
 
 Bewegliche Ferientage are school-specific and are never in the public feed. They will
@@ -198,14 +202,14 @@ letter.
 
 ## Part 2 — presence: regular and flexible
 
-The requirement, in the user's words: *"Appointments in general should be flexible, e.g.
-regular to maintain when Sabine is working or flexible to show when Lukas is travelling
-for work."*
+The requirement, in the user's words (the names are the reference household's): *"Appointments
+in general should be flexible, e.g. regular to maintain when Sabine is working or flexible
+to show when Lukas is travelling for work."*
 
 Two shapes of the same underlying fact — **where is this person, and are they available**
 — and they need different input mechanics, not different data models.
 
-| | Regular (Sabine's Dienstplan) | Flexible (Lukas's Dienstreise) |
+| | Regular (a shift rota, a Dienstplan) | Flexible (a business trip, a Dienstreise) |
 |---|---|---|
 | Changes | Rarely; a pattern that holds for months | Constantly; every trip is its own thing |
 | Entry | Once, then adjusted per occurrence | Ad hoc, often at short notice, often uncertain |
@@ -218,8 +222,8 @@ Both are `event` rows with `kind='presence'`. See
 ### The baseline, and why most days are empty
 
 Before the states: each adult carries a **baseline** on their profile — where they
-normally are. In this household that is `home_office` for one and `off` (at home) for the
-other. It is not an event, it generates no occurrences, and it never reaches the ICS feed.
+normally are — set per member, and empty until someone sets it. In the reference household
+it is `home_office` for one adult and `off` (at home) for the other. It is not an event, it generates no occurrences, and it never reaches the ICS feed.
 
 Two things follow, and both matter more than they look:
 
@@ -290,13 +294,14 @@ property:
   `STATUS:CANCELLED` so subscribers actually remove it.
 
 A tentative entry that nobody confirms is worse than nothing, so the reminder job nudges
-the owner the evening before a tentative entry starts: *"Fährst du morgen nach Berlin?"*
+the owner the evening before a tentative entry starts (`calendar.tentative_nudge`, default
+19:00): *"Fährst du morgen nach Berlin?"*
 with confirm and delete as the two actions.
 
 ### What presence must never do
 
 - **Never appear in the appointment lane.** A presence band is context, not an item on
-  the agenda. If "Sabine arbeitet" competes for space with "Zahnarzt 14:30", the board
+  the agenda. If "Sabine arbeitet" (reference household) competes for space with "Zahnarzt 14:30", the board
   stops being readable.
 - **Never generate a notification on its own.** The pattern is known; nobody needs a push
   saying that Thursday is a working day. The exception is the tentative-confirmation

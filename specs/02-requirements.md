@@ -74,7 +74,7 @@ Priority: **M** = must have in v1 · **S** = should have · **C** = could have �
 | FR-4.5 | Full offline operation: add, tick and edit with no connectivity, syncing on reconnect | M | A4, B2 |
 | FR-4.6 | Multiple people shopping simultaneously see each other's ticks within seconds when online | S | D |
 | FR-4.7 | Completed shopping is archived rather than deleted, feeding the autocomplete catalogue | M | D |
-| FR-4.8 | Several lists — Supermarkt, Drogerie, Baumarkt — each offering only the catalogue categories that belong to it; **Supermarkt is the default** and the only one the wall display opens | M | late — decided 2026-09-02 |
+| FR-4.8 | Several lists, each offering only the catalogue categories that belong to it; **one is the default** and the only one the wall display opens. Starter set: Supermarkt (default), Drogerie, Baumarkt ([21](21-household-settings.md#shopping)) | M |
 | FR-4.9 | A free-text specification per item ("Bio", "500 g", "Dose", "E14 warmweiß"), entered by long-pressing a tile; the server splits it into quantity and unit only where that is unambiguous | M | late |
 | FR-4.10 | Every item records who added it, shown in the list as a dot in that member's colour. Children add items on the same screen as everyone else — no separate kid mode | M | late |
 
@@ -100,6 +100,7 @@ Priority: **M** = must have in v1 · **S** = should have · **C** = could have �
 | FR-5.16 | Delete one's account, leave the household, delete the household (restorable for 14 days) and export its data, from inside the app; Sign in with Apple tokens are revoked on deletion | M | App Store 5.1.1(v), Play, GDPR |
 | FR-5.17 | A getting-started card on the adult Today screen, shared by the household and derived from data (invite partner, connect tablet and wall display, set PIN, reminders, feed, passkey) | S | D |
 | FR-5.18 | The guardian PIN is asked for when the first shared or kiosk device is connected, not during household creation | M | D |
+| FR-5.20 | Every household-specific behaviour is a **setting with a curated default**: guardians change it in Einstellungen, see whether it still is the default, and reset it; household creation asks nothing beyond [20, J1](20-onboarding.md#j1--start-a-family), and its starter examples are the curated starter content ([21](21-household-settings.md)) | M | late, 2026-10-11 |
 
 ## FR-6 Assistant Integration (B4)
 
@@ -122,7 +123,7 @@ Added 2026-08-30. Specified in [15](15-module-school-timetable.md); decision con
 |---|---|---|---|
 | FR-7.1 | Define a school with its bell times (Stundenraster) and its terms (Halbjahre) | M | late |
 | FR-7.2 | Maintain one weekly timetable per child per term as an editable grid: weekday × Stunde → Fach, Lehrkraft, Raum | M | late |
-| FR-7.3 | Subjects carry a colour **and** an icon, legible for a 7-year-old and at two metres | M | late |
+| FR-7.3 | Subjects carry a colour **and** an icon, legible for an early reader and at two metres | M | late |
 | FR-7.4 | Support A/B weeks (Doppelwochen), derived from an anchor week — no per-week table | S | late |
 | FR-7.5 | Timetable rows may be lessons, after-school care (Hort/Betreuung) or clubs (AG) | M | late |
 | FR-7.6 | Per-date exceptions: Entfall, Vertretung, Raumänderung, Zusatzstunde | M | late |
@@ -176,7 +177,7 @@ Added 2026-08-30. The kitchen display's standard view. Specified in
 | NFR-10 | **Transport security** — HTTPS everywhere, HSTS, modern TLS only | Enforced by the reverse proxy | B3 |
 | NFR-11 | **Backups** — nightly, encrypted, off-site, with a tested restore | RPO 24 h, RTO 4 h | D |
 | NFR-12 | **Patching** — OS and dependency updates | Unattended OS security updates; dependency review monthly | B3 |
-| NFR-13 | **Accessibility** — usable by a 7-year-old and readable across a kitchen | Touch targets ≥ 56 px in kid and kiosk modes; WCAG AA contrast; never colour alone | D |
+| NFR-13 | **Accessibility** — usable by a child from about six and readable across a kitchen | Touch targets ≥ 56 px in kid and kiosk modes; WCAG AA contrast; never colour alone | D |
 | NFR-14 | **Localisation** — German and English UI, English codebase and documentation | i18n structure in place from day one; every string shipped in both German and English, German the default; school vocabulary fixed once in the catalogue ([15](15-module-school-timetable.md#german-glossary)) | D |
 | NFR-15 | **Maintainability** — a solo developer must be able to return after two months away | One database as the domain core, typed at every layer (Dart, SQL, TypeScript), every rule and policy covered by a test, ADRs kept current | D |
 | NFR-16 | **Wall-display legibility** — the week board is read from across the kitchen | Readable at 2.5 m; no text below 24 px in the kiosk register; seven days fit without scrolling on a 10–15" landscape screen | late |

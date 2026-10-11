@@ -213,6 +213,8 @@ on their own phone and creates it ([20, J1](20-onboarding.md#j1--start-a-family)
    display, set the PIN when the first shared device arrives.
 
 Seed data still matters as much as it did: a category set and the default list for
-shopping (always), five starter chores and three rewards (unless switched off).
+shopping (always), five starter chores, three rewards and four badges (unless switched
+off) — the curated starter content of [21](21-household-settings.md#starter-content).
+Every other behaviour starts at its curated default; nothing else is asked.
 Good seed data is the difference between a system that gets used in week one and one that
 sits empty waiting to be configured.
