@@ -45,7 +45,8 @@ task_definition                        task_instance
   points: 3, kind: duty
 ```
 
-A **materialiser job** runs nightly and creates instances for a rolling 14-day horizon.
+A **materialiser job** (`pg_cron` invoking the `materialise-tasks` Edge Function, which
+needs the shared RRULE code) runs nightly and creates instances for a rolling 14-day horizon.
 Reasons this beats computing occurrences on the fly:
 
 - Instances carry state (done, by whom, when, verified) that has nowhere to live otherwise.

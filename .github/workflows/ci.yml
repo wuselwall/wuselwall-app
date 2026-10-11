@@ -1,0 +1,43 @@
+name: ci
+on:
+  pull_request:
+  push:
+    branches: [main]
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+
+jobs:
+  app:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: app } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with: { flutter-version-file: app/pubspec.yaml, cache: true }
+      - run: flutter pub get
+      - run: flutter gen-l10n
+      - run: dart format --output=none --set-exit-if-changed lib test
+      - run: flutter analyze --fatal-infos
+      - run: flutter test --coverage   # includes the en/de ARB parity test
+      - run: flutter build web --release --dart-define-from-file=env/ci.json
+
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - run: npx supabase start -x studio,imgproxy,logflare,vector
+      - run: npx supabase db reset      # every migration from zero, plus seed
+      - run: npx supabase test db       # pgTAP
+      - run: npx supabase db lint --level warning
+      # The app's repositories against the real stack: identity, enrolment, shopping,
+      # realtime. Needs studio-less start from above; uses the public local dev key.
+      - uses: subosito/flutter-action@v2
+        with: { flutter-version-file: app/pubspec.yaml, cache: true }
+      - run: flutter pub get && flutter test test/integration --dart-define-from-file=env/ci.json
+        working-directory: app

@@ -1,0 +1,360 @@
+<title>WuselWall Logo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+
+<style>
+/* ─────────────────────────────────────────────────────────────
+   WuselWall — logo proposal. Page chrome = design direction A.
+   Layout: one card per concept — big mark, wordmark lockup, the
+   icon at real sizes, on a home screen — then the recommendation.
+   Logo tones are brand constants; each tile sets its own ground.
+   ───────────────────────────────────────────────────────────── */
+:root {
+  --bg:#F7F4EE; --surface:#FFFFFF; --sunken:#EFEBE3; --line:#DDD8CF;
+  --ink:#1C1F23; --ink-2:#4A5058; --ink-3:#656B75;
+  --brand:#2D6A4F; --brand-tint:#DCEBE2; --on-tint:#133A2A;
+  --f-ui:"Atkinson Hyperlegible Next","Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#14171A; --surface:#1C2024; --sunken:#101315; --line:#2E343A;
+    --ink:#ECE8E1; --ink-2:#B5B2AB; --ink-3:#8E8B85;
+    --brand:#6CC79A; --brand-tint:#1D3A2C; --on-tint:#BDE8D0; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#14171A; --surface:#1C2024; --sunken:#101315; --line:#2E343A;
+  --ink:#ECE8E1; --ink-2:#B5B2AB; --ink-3:#8E8B85;
+  --brand:#6CC79A; --brand-tint:#1D3A2C; --on-tint:#BDE8D0; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-ui); font-size: 16px; line-height: 1.55; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: clamp(16px, 4vw, 40px); padding-block: 0 72px; }
+h1, h2, h3 { margin: 0; line-height: 1.12; text-wrap: balance; }
+h1 { font-size: clamp(34px, 5.4vw, 54px); font-weight: 800; letter-spacing: -0.02em; }
+h2 { font-size: clamp(24px, 3vw, 30px); font-weight: 800; letter-spacing: -0.01em; }
+h3 { font-size: 17px; font-weight: 700; }
+p { margin: 0; max-width: 66ch; }
+.lede { font-size: 19px; color: var(--ink-2); }
+.eyebrow { font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+.note { font-size: 15px; color: var(--ink-2); }
+.badge { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; background: var(--brand-tint); color: var(--on-tint); }
+
+.hero { display: grid; gap: 18px; padding-block: 48px 24px; }
+.def { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; max-width: 760px; }
+.def dt { font-weight: 800; }
+.def dd { margin: 0; color: var(--ink-2); }
+.reqs { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.reqs li { font-size: 14px; padding: 5px 12px; border-radius: 999px; background: var(--sunken); color: var(--ink-2); }
+
+/* ── concept cards ── */
+.concept { display: grid; gap: 22px; padding: clamp(18px, 3vw, 30px); margin-top: 28px; background: var(--surface); border: 1px solid var(--line); border-radius: 20px; }
+.c-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px 16px; }
+.c-head .letter { font-size: 15px; font-weight: 800; color: var(--ink-3); margin-right: 8px; }
+.c-top { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 24px; align-items: center; }
+@media (max-width: 760px) { .c-top { grid-template-columns: 1fr; } }
+.hero-mark { aspect-ratio: 1; max-width: 100%; border-radius: 18px; display: grid; place-items: center; }
+.hero-mark svg { width: 80%; height: 80%; }
+.c-text { display: grid; gap: 12px; min-width: 0; }
+.pros { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 560px) { .pros { grid-template-columns: 1fr; } }
+.pros ul { margin: 4px 0 0; padding-left: 18px; color: var(--ink-2); font-size: 15px; display: grid; gap: 3px; }
+
+.lockups { display: flex; flex-wrap: wrap; gap: 14px; }
+.lockup { display: flex; align-items: center; gap: 12px; padding: 14px 20px; border-radius: 14px; border: 1px solid var(--line); }
+.lockup svg { width: 52px; height: 52px; flex: none; }
+.wm { font-weight: 800; font-size: 34px; letter-spacing: -0.015em; line-height: 1; }
+.wm .w2 { color: var(--wm2); }
+.lockup.ondark .wm { color: #ECE8E1; }
+.lockup.onpaper .wm { color: #1C1F23; }
+.lockup.merged { gap: 2px; }
+.lockup.merged svg { width: 46px; height: 46px; margin-top: -4px; }
+
+.icons { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; }
+.icon-cell { display: grid; gap: 8px; justify-items: center; text-align: center; padding: 14px 8px; border-radius: 14px; background: var(--sunken); min-width: 0; }
+.icon-cell svg { width: 96px; height: 96px; }
+.icon-cell small { font-size: 13px; color: var(--ink-3); line-height: 1.3; }
+.sizes { display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap; padding: 14px 16px; border-radius: 14px; background: var(--sunken); }
+.sizes figure { margin: 0; display: grid; gap: 4px; justify-items: center; }
+.sizes figcaption { font-size: 12px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+
+.home { border-radius: 18px; padding: 18px 14px 14px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px 8px; justify-items: center; max-width: 340px; }
+.home.day { background: linear-gradient(160deg, #CFE0EA, #E9D9C9); }
+.home.night { background: linear-gradient(160deg, #1B2330, #2A2030); }
+.home figure { margin: 0; display: grid; gap: 5px; justify-items: center; }
+.home figcaption { font-size: 11px; font-family: system-ui, sans-serif; }
+.home.day figcaption { color: #1C1F23; }
+.home.night figcaption { color: #ECE8E1; }
+.home svg { width: 58px; height: 58px; }
+.home .ph { width: 58px; height: 58px; border-radius: 13px; }
+.home.day .ph { background: #FFFFFF; opacity: .55; }
+.home.night .ph { background: #FFFFFF; opacity: .12; }
+.homes { display: flex; flex-wrap: wrap; gap: 14px; }
+
+/* ── recommendation ── */
+.rec { margin-top: 40px; display: grid; gap: 18px; }
+.rec-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+@media (max-width: 760px) { .rec-grid { grid-template-columns: 1fr; } }
+.scene { border-radius: 20px; padding: 22px; display: grid; gap: 10px; justify-items: center; text-align: center; background: #EDE4FB; color: #1C1F23; border: 1px solid var(--line); }
+.scene svg { width: 132px; height: 132px; }
+.scene b { font-size: 26px; font-weight: 800; }
+.scene .pts { font-weight: 800; font-size: 18px; padding: 4px 14px; border-radius: 999px; background: #F2B705; color: #3E2A00; }
+.uses { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 20px 22px; display: grid; gap: 10px; align-content: start; }
+.uses table { border-collapse: collapse; font-size: 15px; width: 100%; }
+.uses td { padding: 8px 0; border-top: 1px solid var(--line); vertical-align: top; }
+.uses td:first-child { font-weight: 700; padding-right: 14px; white-space: nowrap; }
+.uses td:last-child { color: var(--ink-2); }
+.foot { padding-block: 36px 0; font-size: 14px; color: var(--ink-3); }
+
+/* ── logo tones: brand constants, set per tile ── */
+.t-paper { --tile:#F7F4EE; --m1:#7B3FE4; --m2:#0B8793; --m3:#F29A2E; --m4:#D8336B; --mb:#2D6A4F;
+  --body:#2D6A4F; --sclera:#FFFFFF; --pupil:#1C1F23; --mouth:#F7F4EE; --cheek:#FF85AE; --blend:multiply; }
+.t-dark { --tile:#14171A; --m1:#B39BFF; --m2:#4FCBD6; --m3:#F0A84E; --m4:#FF7FA8; --mb:#6CC79A;
+  --body:#6CC79A; --sclera:#FFFFFF; --pupil:#14171A; --mouth:#14171A; --cheek:#FF85AE; --blend:screen; }
+.t-brand { --tile:#2D6A4F; --m1:#F7F4EE; --m2:#F7F4EE; --m3:#F7F4EE; --m4:#F7F4EE; --mb:#F7F4EE;
+  --body:#F7F4EE; --sclera:#F7F4EE; --pupil:#2D6A4F; --mouth:#2D6A4F; --cheek:transparent; --blend:normal; }
+.t-mono { --tile:transparent; --m1:var(--ink); --m2:var(--ink); --m3:var(--ink); --m4:var(--ink); --mb:var(--ink);
+  --body:var(--ink); --sclera:var(--ink); --pupil:var(--sunken); --mouth:var(--sunken); --cheek:transparent; --blend:normal; }
+.wm2-brand { --wm2:#2D6A4F; }
+.ondark.wm2-brand { --wm2:#6CC79A; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- A · Familien-W: four strokes, one per family member, overprinted where they meet -->
+    <symbol id="mark-a" viewBox="0 0 100 100">
+      <g fill="none" stroke-linecap="round" stroke-width="14">
+        <line x1="16" y1="26" x2="32" y2="75" stroke="var(--m1)" style="mix-blend-mode:var(--blend)"/>
+        <line x1="32" y1="75" x2="50" y2="38" stroke="var(--m2)" style="mix-blend-mode:var(--blend)"/>
+        <line x1="50" y1="38" x2="68" y2="77" stroke="var(--m3)" style="mix-blend-mode:var(--blend)"/>
+        <line x1="68" y1="77" x2="84" y2="23" stroke="var(--m4)" style="mix-blend-mode:var(--blend)"/>
+      </g>
+    </symbol>
+    <!-- B · Wuselchen: a round critter with four hair tufts (the family) and a "w" mouth -->
+    <symbol id="mark-b" viewBox="0 0 100 100">
+      <g fill="none" stroke-linecap="round" stroke-width="6.5">
+        <path d="M37 32 Q31 22 33 13" stroke="var(--m1)"/>
+        <path d="M46 28 Q44 18 47 9" stroke="var(--m2)"/>
+        <path d="M55 28 Q58 18 57 9" stroke="var(--m3)"/>
+        <path d="M64 32 Q71 23 70 14" stroke="var(--m4)"/>
+      </g>
+      <path d="M50 27 C75 27 88 42 88 61 C88 81 72 90 50 90 C28 90 12 81 12 61 C12 42 25 27 50 27 Z" fill="var(--body)"/>
+      <ellipse cx="27" cy="70" rx="6" ry="3.6" fill="var(--cheek)" opacity=".6"/>
+      <ellipse cx="73" cy="70" rx="6" ry="3.6" fill="var(--cheek)" opacity=".6"/>
+      <circle cx="37" cy="56" r="9.5" fill="var(--sclera)"/>
+      <circle cx="63" cy="56" r="9.5" fill="var(--sclera)"/>
+      <circle cx="39" cy="54" r="5" fill="var(--pupil)"/>
+      <circle cx="65" cy="54" r="5" fill="var(--pupil)"/>
+      <path d="M40 71 q5 7 10 0 q5 7 10 0" fill="none" stroke="var(--mouth)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <!-- C · Wuselpunkte: a W made of bustling dots, like magnets on the fridge -->
+    <symbol id="mark-c" viewBox="0 0 100 100">
+      <circle cx="16" cy="25" r="9" fill="var(--m1)"/>
+      <circle cx="23.5" cy="49" r="6.5" fill="var(--m2)"/>
+      <circle cx="32" cy="75" r="9" fill="var(--m3)"/>
+      <circle cx="41.5" cy="55" r="6.5" fill="var(--m4)"/>
+      <circle cx="50" cy="37" r="9" fill="var(--mb)"/>
+      <circle cx="59" cy="57" r="6.5" fill="var(--m1)"/>
+      <circle cx="68" cy="76" r="9" fill="var(--m2)"/>
+      <circle cx="76.5" cy="50" r="6.5" fill="var(--m3)"/>
+      <circle cx="84" cy="24" r="9" fill="var(--m4)"/>
+      <circle cx="92" cy="12" r="3.2" fill="var(--m4)" opacity=".55"/>
+      <circle cx="96" cy="4.5" r="2" fill="var(--m4)" opacity=".35"/>
+    </symbol>
+    <!-- D · Vier Figuren: the mark from docs/brand/wuselwall-icon.svg (ADR-012), tile drawn separately -->
+    <symbol id="mark-d" viewBox="0 0 100 100">
+      <g fill="#f6f4f0" opacity=".28">
+        <rect x="14" y="80" width="9" height="6" rx="2"/><rect x="24.5" y="80" width="9" height="6" rx="2"/>
+        <rect x="35" y="80" width="9" height="6" rx="2"/><rect x="45.5" y="80" width="9" height="6" rx="2"/>
+        <rect x="56" y="80" width="9" height="6" rx="2"/><rect x="66.5" y="80" width="9" height="6" rx="2"/>
+        <rect x="77" y="80" width="9" height="6" rx="2"/>
+      </g>
+      <g transform="rotate(-7 26 66)"><rect x="18" y="45" width="15" height="31" rx="7.5" fill="#ff8fb4"/><circle cx="25.5" cy="36" r="7" fill="#ff8fb4"/></g>
+      <g transform="rotate(5 43 68)"><rect x="35.5" y="48" width="15" height="28" rx="7.5" fill="#f2a33a"/><circle cx="43" cy="39" r="7" fill="#f2a33a"/></g>
+      <g transform="rotate(-5 59 70)"><rect x="52.5" y="56" width="13" height="20" rx="6.5" fill="#f6f4f0"/><circle cx="59" cy="48" r="6" fill="#f6f4f0"/></g>
+      <g transform="rotate(9 75 71)"><rect x="69" y="59" width="12" height="17" rx="6" fill="#7fe0e6"/><circle cx="75" cy="52" r="5.5" fill="#7fe0e6"/></g>
+      <circle cx="36" cy="19" r="2.4" fill="#f6f4f0"/><circle cx="68" cy="26" r="2.8" fill="#ff8fb4"/><circle cx="82" cy="37" r="2" fill="#7fe0e6"/>
+    </symbol>
+    <!-- tiles: iOS squircle-ish rounded square, Android adaptive circle -->
+  </defs>
+</svg>
+
+<div class="wrap">
+  <header class="hero">
+    <p class="eyebrow">WuselWall · logo proposal</p>
+    <h1>A logo for a busy family kitchen</h1>
+    <p class="lede">Three new concepts drawn from the app's own palette (the four member colours, Tanne green and warm paper), compared with D, the icon already in the repo. Each is shown where it has to work: as an app icon at real size, in dark mode, as a single-colour themed icon, and next to other apps on a home screen.</p>
+    <dl class="def">
+      <dt>wuseln</dt><dd>to bustle about, the way small children and busy families do</dd>
+      <dt>der Wusel</dt><dd>a little bustling creature; what you call a toddler who won't sit still</dd>
+      <dt>die Wall</dt><dd>the kitchen display where the whole family's week hangs</dd>
+    </dl>
+    <ul class="reqs" aria-label="Requirements every concept meets">
+      <li>Readable at 24 px</li><li>Works in one colour (Android themed, iOS tinted)</li>
+      <li>Fits Android's 66 % safe circle</li><li>Uses the four default member colours</li><li>No text inside the icon</li>
+    </ul>
+  </header>
+
+  <!-- ═════════ A ═════════ -->
+  <article class="concept t-paper" aria-labelledby="h-a">
+    <div class="c-head"><h2 id="h-a"><span class="letter">A</span>Familien-W</h2><span class="badge">Recommended as logo &amp; app icon</span></div>
+    <div class="c-top">
+      <div class="hero-mark" style="background:#F7F4EE;border:1px solid var(--line)"><svg role="img" aria-label="Familien-W mark"><use href="#mark-a"/></svg></div>
+      <div class="c-text">
+        <p>The W is drawn with four strokes, one per family member, in their colours. Where two strokes meet they overprint, so the joints are where the family overlaps. It is the same idea as the dots on the week board: everyone has a colour, and together they make one thing.</p>
+        <div class="pros">
+          <div><h3>Strengths</h3><ul><li>Reads as a W at every size</li><li>Explains the member-colour system at a glance</li><li>Calm enough for the work laptop</li></ul></div>
+          <div><h3>Weaknesses</h3><ul><li>Less playful for the kids on its own</li><li>A family of 3 or 5 still sees 4 strokes</li></ul></div>
+        </div>
+      </div>
+    </div>
+    <div class="lockups">
+      <div class="lockup onpaper wm2-brand" style="background:#F7F4EE"><svg class="t-paper"><use href="#mark-a"/></svg><span class="wm">Wusel<span class="w2">Wall</span></span></div>
+      <div class="lockup ondark wm2-brand t-dark" style="background:#14171A;border-color:#2E343A"><svg><use href="#mark-a"/></svg><span class="wm">Wusel<span class="w2">Wall</span></span></div>
+      <div class="lockup onpaper merged" style="background:#F7F4EE"><svg class="t-paper" aria-label="W"><use href="#mark-a"/></svg><span class="wm">usel<span style="color:#2D6A4F">Wall</span></span></div>
+    </div>
+    <div class="icons">
+      <div class="icon-cell"><svg class="t-paper" viewBox="0 0 100 100"><rect width="100" height="100" rx="22.4" fill="var(--tile)"/><use href="#mark-a" x="12" y="12" width="76" height="76"/></svg><small>iOS · light</small></div>
+      <div class="icon-cell"><svg class="t-dark" viewBox="0 0 100 100"><rect width="100" height="100" rx="22.4" fill="var(--tile)"/><use href="#mark-a" x="12" y="12" width="76" height="76"/></svg><small>iOS · dark</small></div>
+      <div class="icon-cell"><svg class="t-paper" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="var(--tile)"/><use href="#mark-a" x="19" y="19" width="62" height="62"/></svg><small>Android adaptive</small></div>
+      <div class="icon-cell"><svg class="t-brand" viewBox="0 0 100 100"><rect width="100" height="100" rx="22.4" fill="var(--tile)"/><use href="#mark-a" x="12" y="12" width="76" height="76"/></svg><small>One colour on Tanne</small></div>
+      <div class="icon-cell"><svg class="t-mono" viewBox="0 0 100 100"><circle cx="50" cy="50" r="49" fill="none" stroke="var(--line)" stroke-dasharray="4 4"/><use href="#mark-a" x="19" y="19" width="62" height="62"/></svg><small>Themed / tinted</small></div>
+    </div>
+    <div class="sizes t-paper" aria-label="Icon at real sizes">
+      <figure><svg width="120" height="120" viewBox="0 0 100 100"><rect width="100" height="100" rx="22.4" fill="var(--tile)"/><use href="#mark-a" x="12" y="12" width="76" height="76"/></svg><figcaption>120 px</figcaption></figure>
+      <figure><svg width="60" height="60" viewBox="0 0 100 100"><rect width="100" height="100" rx="22.4" fill="var(--tile)"/><use href="#mark-a" x="12" y="12" width="76" height="76"/></svg><figcaption>60</figcaption></figure>
+      <figure><svg width="40" height="40" viewBox="0 0 100 100"><rect width="100" height="100" rx="22.4" fill="var(--tile)"/><use href="#mark-a" x="12" y="12" width="76" height="76"/></svg><figcaption>40</figcaption></figure>
+      <figure><svg width="24" height="24" viewBox="0 0 100 100"><rect width="100" height="100" rx="22.4" fill="var(--tile)"/><use href="#mark-a" x="10" y="10" width="80" height="80"/></svg><figcaption>24</figcaption></figure>
+      <figure><svg width="16" height="16" viewBox="0 0 100 100"><use href="#mark-a"/></svg><figcaption>16 favicon</figcaption></figure>
+    </div>
+    <div class="homes">
+      <div class="home day"><figure><div class="ph"></div><figcaption>Kalender</figcaption></figure><figure><svg class="t-paper" viewBox="0 0 100 100"><rect width="100" height="100" rx="22.4" fill="var(--tile)"/><use href="#mark-a" x="12" y="12" width="76" height="76"/></svg><figcaption>WuselWall</figcaption></figure><figure><div class="ph"></div><figcaption>Fotos</figcaption></figure><figure><div class="ph"></div><figcaption>Uhr</figcaption></figure></div>
+      <div class="home night"><figure><div class="ph"></div><figcaption>Kalender</figcaption></figure><figure><svg class="t-dark" viewBox="0 0 100 100"><rect width="100" height="100" rx="22.4" fill="var(--tile)"/><use href="#mark-a" x="12" y="12" width="76" height="76"/></svg><figcaption>WuselWall</figcaption></figure><figure><div class="ph"></div><figcaption>Fotos</figcaption></figure><figure><div class="ph"></div><figcaption>Uhr</figcaption></figure></div>
+    </div>
+  </article>
+
+  <!-- ═════════ B ═════════ -->
+  <article class="concept t-paper" aria-labelledby="h-b">
+    <div class="c-head"><h2 id="h-b"><span class="letter">B</span>Wuselchen</h2><span class="badge">Recommended as mascot</span></div>
+    <div class="c-top">
+      <div class="hero-mark" style="background:#F7F4EE;border:1px solid var(--line)"><svg role="img" aria-label="Wuselchen mascot"><use href="#mark-b"/></svg></div>
+      <div class="c-text">
+        <p>The name, taken literally: a round little Wusel in Tanne green with a "w" for a mouth and four tufts of hair in the family's colours. The 7-year-old will name it within a day.</p>
+        <div class="pros">
+          <div><h3>Strengths</h3><ul><li>Strongest appeal for the children</li><li>Can carry emotion: cheering when tasks are done, sleepy on the night display</li><li>Memorable among dozens of icons</li></ul></div>
+          <div><h3>Weaknesses</h3><ul><li>Reads as a kids' app on a parent's work laptop</li><li>The face needs care at 24 px; the tufts disappear first</li><li>A character means more drawing: poses, states</li></ul></div>
+        </div>
+      </div>
+    </div>
+    <div class="lockups">
+      <div class="lockup onpaper wm2-brand" style="background:#F7F4EE"><svg class="t-paper"><use href="#mark-b"/></svg><span class="wm">Wusel<span class="w2">Wall</span></span></div>
+      <div class="lockup ondark wm2-brand t-dark" style="background:#14171A;border-color:#2E343A"><svg><use href="#mark-b"/></svg><span class="wm">Wusel<span class="w2">Wall</span></span></div>
+    </div>
+    <div class="icons">
+      <div class="icon-cell"><svg class="t-paper" viewBox="0 0 100 100"><rect width="100" height="100" rx="22.4" fill="var(--tile)"/><use href="#mark-b" x="10" y="9" width="80" height="80"/></svg><small>iOS · light</small></div>
+      <div class="icon-cell"><svg class="t-dark" viewBox="0 0 100 100"><rect width="100" height="100" rx="22.4" fill="var(--tile)"/><use href="#mark-b" x="10" y="9" width="80" height="80"/></svg><small>iOS · dark</small></div>
+      <div class="icon-cell"><svg class="t-paper" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="var(--tile)"/><use href="#mark-b" x="18" y="17" width="64" height="64"/></svg><small>Android adaptive</small></div>
+      <div class="icon-cell"><svg class="t-brand" viewBox="0 0 100 100"><rect width="100" height="100" rx="22.4" fill="var(--tile)"/><use href="#mark-b" x="10" y="9" width="80" height="80"/></svg><small>One colour on Tanne</small></div>
+      <div class="icon-cell"><svg class="t-mono" viewBox="0 0 100 100"><circle cx="50" cy="50" r="49" fill="none" stroke="var(--line)" stroke-dasharray="4 4"/><use href="#mark-b" x="18" y="17" width="64" height="64"/></svg><small>Themed / tinted</small></div>
+    </div>
+    <div class="sizes t-paper" aria-label="Icon at real sizes">
+      <figure><svg width="120" height="120" viewBox="0 0 100 100"><rect width="100" height="100" rx="22.4" fill="var(--tile)"/><use href="#mark-b" x="10" y="9" width="80" height="80"/></svg><figcaption>120 px</figcaption></figure>
+      <figure><svg width="60" height="60" viewBox="0 0 100 100"><rect width="100" height="100" rx="22.4" fill="var(--tile)"/><use href="#mark-b" x="10" y="9" width="80" height="80"/></svg><figcaption>60</figcaption></figure>
+      <figure><svg width="40" height="40" viewBox="0 0 100 100"><rect width="100" height="100" rx="22.4" fill="var(--tile)"/><use href="#mark-b" x="10" y="9" width="80" height="80"/></svg><figcaption>40</figcaption></figure>
+      <figure><svg width="24" height="24" viewBox="0 0 100 100"><rect width="100" height="100" rx="22.4" fill="var(--tile)"/><use href="#mark-b" x="6" y="5" width="88" height="88"/></svg><figcaption>24</figcaption></figure>
+      <figure><svg width="16" height="16" viewBox="0 0 100 100"><use href="#mark-b"/></svg><figcaption>16 favicon</figcaption></figure>
+    </div>
+    <div class="homes">
+      <div class="home day"><figure><div class="ph"></div><figcaption>Kalender</figcaption></figure><figure><svg class="t-paper" viewBox="0 0 100 100"><rect width="100" height="100" rx="22.4" fill="var(--tile)"/><use href="#mark-b" x="10" y="9" width="80" height="80"/></svg><figcaption>WuselWall</figcaption></figure><figure><div class="ph"></div><figcaption>Fotos</figcaption></figure><figure><div class="ph"></div><figcaption>Uhr</figcaption></figure></div>
+      <div class="home night"><figure><div class="ph"></div><figcaption>Kalender</figcaption></figure><figure><svg class="t-dark" viewBox="0 0 100 100"><rect width="100" height="100" rx="22.4" fill="var(--tile)"/><use href="#mark-b" x="10" y="9" width="80" height="80"/></svg><figcaption>WuselWall</figcaption></figure><figure><div class="ph"></div><figcaption>Fotos</figcaption></figure><figure><div class="ph"></div><figcaption>Uhr</figcaption></figure></div>
+    </div>
+  </article>
+
+  <!-- ═════════ C ═════════ -->
+  <article class="concept t-paper" aria-labelledby="h-c">
+    <div class="c-head"><h2 id="h-c"><span class="letter">C</span>Wuselpunkte</h2></div>
+    <div class="c-top">
+      <div class="hero-mark" style="background:#F7F4EE;border:1px solid var(--line)"><svg role="img" aria-label="Wuselpunkte mark"><use href="#mark-c"/></svg></div>
+      <div class="c-text">
+        <p>A W made of nine dots, like magnets on the fridge or the "isst mit" dots on the board. Tanne green sits at the centre peak, and two small dots fly off to the top right: the bustle.</p>
+        <div class="pros">
+          <div><h3>Strengths</h3><ul><li>Lively and light; "Wusel" without a character</li><li>Ties directly to the board's dot language</li></ul></div>
+          <div><h3>Weaknesses</h3><ul><li>Breaks up below 40 px: at 24 px it is confetti, not a W</li><li>Dotted letter marks are common; less ownable</li><li>No overlap story; colours repeat at random</li></ul></div>
+        </div>
+      </div>
+    </div>
+    <div class="lockups">
+      <div class="lockup onpaper wm2-brand" style="background:#F7F4EE"><svg class="t-paper"><use href="#mark-c"/></svg><span class="wm">Wusel<span class="w2">Wall</span></span></div>
+      <div class="lockup ondark wm2-brand t-dark" style="background:#14171A;border-color:#2E343A"><svg><use href="#mark-c"/></svg><span class="wm">Wusel<span class="w2">Wall</span></span></div>
+    </div>
+    <div class="icons">
+      <div class="icon-cell"><svg class="t-paper" viewBox="0 0 100 100"><rect width="100" height="100" rx="22.4" fill="var(--tile)"/><use href="#mark-c" x="12" y="12" width="76" height="76"/></svg><small>iOS · light</small></div>
+      <div class="icon-cell"><svg class="t-dark" viewBox="0 0 100 100"><rect width="100" height="100" rx="22.4" fill="var(--tile)"/><use href="#mark-c" x="12" y="12" width="76" height="76"/></svg><small>iOS · dark</small></div>
+      <div class="icon-cell"><svg class="t-paper" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="var(--tile)"/><use href="#mark-c" x="19" y="19" width="62" height="62"/></svg><small>Android adaptive</small></div>
+      <div class="icon-cell"><svg class="t-brand" viewBox="0 0 100 100"><rect width="100" height="100" rx="22.4" fill="var(--tile)"/><use href="#mark-c" x="12" y="12" width="76" height="76"/></svg><small>One colour on Tanne</small></div>
+      <div class="icon-cell"><svg class="t-mono" viewBox="0 0 100 100"><circle cx="50" cy="50" r="49" fill="none" stroke="var(--line)" stroke-dasharray="4 4"/><use href="#mark-c" x="19" y="19" width="62" height="62"/></svg><small>Themed / tinted</small></div>
+    </div>
+    <div class="sizes t-paper" aria-label="Icon at real sizes">
+      <figure><svg width="120" height="120" viewBox="0 0 100 100"><rect width="100" height="100" rx="22.4" fill="var(--tile)"/><use href="#mark-c" x="12" y="12" width="76" height="76"/></svg><figcaption>120 px</figcaption></figure>
+      <figure><svg width="60" height="60" viewBox="0 0 100 100"><rect width="100" height="100" rx="22.4" fill="var(--tile)"/><use href="#mark-c" x="12" y="12" width="76" height="76"/></svg><figcaption>60</figcaption></figure>
+      <figure><svg width="40" height="40" viewBox="0 0 100 100"><rect width="100" height="100" rx="22.4" fill="var(--tile)"/><use href="#mark-c" x="12" y="12" width="76" height="76"/></svg><figcaption>40</figcaption></figure>
+      <figure><svg width="24" height="24" viewBox="0 0 100 100"><rect width="100" height="100" rx="22.4" fill="var(--tile)"/><use href="#mark-c" x="8" y="8" width="84" height="84"/></svg><figcaption>24</figcaption></figure>
+      <figure><svg width="16" height="16" viewBox="0 0 100 100"><use href="#mark-c"/></svg><figcaption>16 favicon</figcaption></figure>
+    </div>
+  </article>
+
+  <!-- ═════════ D ═════════ -->
+  <article class="concept" aria-labelledby="h-d">
+    <div class="c-head"><h2 id="h-d"><span class="letter">D</span>Vier Figuren</h2><span class="badge">Already in the repo · ADR-012</span></div>
+    <div class="c-top">
+      <div class="hero-mark" style="background:#6d4aff"><svg viewBox="0 0 100 100"><rect width="100" height="100" rx="23" fill="#6d4aff"/><use href="#mark-d"/></svg></div>
+      <div class="c-text">
+        <p>The icon added with the rename, <code>docs/brand/wuselwall-icon.svg</code>: four figures of different heights (two adults, two children) bustling above a strip of seven days, on a violet tile.</p>
+        <div class="pros">
+          <div><h3>Strengths</h3><ul><li>Literally a family, and literally a week</li><li>Warm and immediately friendly</li><li>Distinctive tile colour on a home screen</li></ul></div>
+          <div><h3>Weaknesses</h3><ul><li>Off-palette: the violet tile, pink and cyan aren't the docs/17 values, and the fourth figure is white instead of a member colour</li><li>The seven-day strip disappears below 60 px</li><li>The tile is Lotta's violet, so the brand looks like one member's</li><li>No W, so it doesn't spell the name</li></ul></div>
+        </div>
+      </div>
+    </div>
+    <div class="sizes" aria-label="Icon at real sizes">
+      <figure><svg width="120" height="120" viewBox="0 0 100 100"><rect width="100" height="100" rx="23" fill="#6d4aff"/><use href="#mark-d"/></svg><figcaption>120 px</figcaption></figure>
+      <figure><svg width="60" height="60" viewBox="0 0 100 100"><rect width="100" height="100" rx="23" fill="#6d4aff"/><use href="#mark-d"/></svg><figcaption>60</figcaption></figure>
+      <figure><svg width="40" height="40" viewBox="0 0 100 100"><rect width="100" height="100" rx="23" fill="#6d4aff"/><use href="#mark-d"/></svg><figcaption>40</figcaption></figure>
+      <figure><svg width="24" height="24" viewBox="0 0 100 100"><rect width="100" height="100" rx="23" fill="#6d4aff"/><use href="#mark-d"/></svg><figcaption>24</figcaption></figure>
+      <figure><svg width="16" height="16" viewBox="0 0 100 100"><rect width="100" height="100" rx="23" fill="#6d4aff"/><use href="#mark-d"/></svg><figcaption>16 favicon</figcaption></figure>
+    </div>
+    <div class="homes">
+      <div class="home day"><figure><div class="ph"></div><figcaption>Kalender</figcaption></figure><figure><svg width="58" height="58" viewBox="0 0 100 100"><rect width="100" height="100" rx="23" fill="#6d4aff"/><use href="#mark-d"/></svg><figcaption>WuselWall</figcaption></figure><figure><div class="ph"></div><figcaption>Fotos</figcaption></figure><figure><div class="ph"></div><figcaption>Uhr</figcaption></figure></div>
+      <div class="home night"><figure><div class="ph"></div><figcaption>Kalender</figcaption></figure><figure><svg width="58" height="58" viewBox="0 0 100 100"><rect width="100" height="100" rx="23" fill="#6d4aff"/><use href="#mark-d"/></svg><figcaption>WuselWall</figcaption></figure><figure><div class="ph"></div><figcaption>Fotos</figcaption></figure><figure><div class="ph"></div><figcaption>Uhr</figcaption></figure></div>
+    </div>
+  </article>
+
+  <!-- ═════════ recommendation ═════════ -->
+  <section class="rec" aria-labelledby="h-rec">
+    <p class="eyebrow">Recommendation</p>
+    <h2 id="h-rec">Familien-W as the logo, Wuselchen as the mascot</h2>
+    <p class="note">They share the same four colours, so they read as one family. The W is the app icon, favicon and splash screen; it holds up at 16 px and on the work laptop. The Wuselchen lives inside the app, on the children's screens and on the wall, where it can react to things. That gives the kids the character without putting a cartoon on a parent's iPhone home screen.</p>
+    <div class="rec-grid">
+      <div class="scene t-paper">
+        <svg role="img" aria-label="Wuselchen cheering"><use href="#mark-b"/></svg>
+        <b>Alles erledigt!</b>
+        <span class="pts">+20 Punkte</span>
+        <span style="font-size:14px;color:#4A5058">Kid register: Lotta's iPad after the last task</span>
+      </div>
+      <div class="uses">
+        <h3>Where each one appears</h3>
+        <table>
+          <tr><td>App icon</td><td>Familien-W on paper; dark and tinted variants as shown above</td></tr>
+          <tr><td>Splash, login</td><td>Familien-W with the wordmark</td></tr>
+          <tr><td>Kid register</td><td>Wuselchen in empty states, task-done moments and the reward shop</td></tr>
+          <tr><td>Wall display</td><td>Wuselchen, asleep in the night theme; no logo on the board itself</td></tr>
+          <tr><td>Web build</td><td>Familien-W as the favicon; the wordmark in the sidebar</td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <p class="foot">Wordmark set in Atkinson Hyperlegible Next ExtraBold, the app's own typeface: "Wusel" in ink, "Wall" in Tanne. Colours come from docs/17. Once a concept is chosen, the final mark becomes flat SVG files with the text converted to outlines, plus the iOS and Android icon sets generated from it.</p>
+</div>

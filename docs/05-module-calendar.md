@@ -9,7 +9,7 @@ what the calendar itself stores, renders and publishes.
 
 ## The shape of the decision
 
-GoombaWall owns the events. Its database is the single source of truth. Everything else —
+WuselWall owns the events. Its database is the single source of truth. Everything else —
 Outlook on the work laptop, the iPhone calendar, a grandparent's Google Calendar —
 **subscribes** to a read-only ICS feed.
 
@@ -17,16 +17,16 @@ This buys simplicity at a real price, and the price should be stated plainly:
 
 | You get | You give up |
 |---|---|
-| One place where an event exists. No sync conflicts, ever. | Events can only be created and edited inside GoombaWall. |
+| One place where an event exists. No sync conflicts, ever. | Events can only be created and edited inside WuselWall. |
 | No third-party API credentials, quotas, or deprecations to track. | Outlook shows changes with a delay of **3–24 hours**. |
-| No family data at Google or Microsoft. | An event created in Outlook does not appear in GoombaWall. |
+| No family data at Google or Microsoft. | An event created in Outlook does not appear in WuselWall. |
 | A feed URL is trivially revocable and can be filtered per subscriber. | Feed URLs are bearer credentials — anyone with the link reads the calendar. |
 
 The Outlook refresh delay is the part worth internalising now: Microsoft does not
 document a fixed interval, does not let you configure one, and does not offer a manual
 refresh button for subscribed internet calendars. Reports cluster around 3–4 hours and
 occasionally stretch to 24. **The ICS feed is an awareness channel, not a notification
-channel.** Anything time-critical is delivered by web push from GoombaWall itself.
+channel.** Anything time-critical is delivered by push from WuselWall itself.
 
 iOS Calendar is better behaved: subscribed calendars can be set to refresh as often as
 every 15 minutes, and the phone is the device that actually needs to be current.
@@ -166,7 +166,7 @@ These are the things that silently break subscribers:
 - `STATUS` emitted for tentative and cancelled entries. A cancelled event must keep being
   emitted with `STATUS:CANCELLED` for a while — dropping it silently leaves it on the
   subscriber's calendar forever.
-- Presence entries carry `TRANSP:TRANSPARENT` and a `X-GOOMBAWALL-KIND:presence` marker, so
+- Presence entries carry `TRANSP:TRANSPARENT` and a `X-WUSELWALL-KIND:presence` marker, so
   a subscriber's free/busy is not blocked by "Sabine arbeitet".
 - Projected school days use deterministic UIDs (`schoolday-{profileId}-{date}@domain`) and
   a `SEQUENCE` derived from the timetable's `updated_at`. Random UIDs here mean a fresh
@@ -195,10 +195,10 @@ generating that link form in the UI.
 ## Later: two-way for the phones
 
 If read-only proves too limiting on the phones (creating an event has to happen in
-GoombaWall, which is fine at a desk and annoying on the move), the upgrade path is a
+WuselWall, which is fine at a desk and annoying on the move), the upgrade path is a
 **CalDAV endpoint**, not a Google integration. Either implement CalDAV on top of the
 existing event tables, or run Radicale alongside and treat one Radicale collection as a
-writable inbox that GoombaWall polls. Both are Phase 3 or later. Outlook is not part of
+writable inbox that WuselWall polls. Both are Phase 3 or later. Outlook is not part of
 this path — it has no meaningful CalDAV support, which is precisely why the ICS feed
 exists.
 
@@ -206,7 +206,7 @@ exists.
 
 Ferien (via the Bundesland feeds, see [15](15-module-school-timetable.md#holidays)),
 sports fixtures and rubbish collection are all published as ICS. `calendar.kind = 'imported'` with a `source_url`, polled hourly by the
-worker, rendered read-only in a distinct colour, and included in the outbound feed so
+scheduled job (`pg_cron` → an Edge Function), rendered read-only in a distinct colour, and included in the outbound feed so
 they reach Outlook too. Low effort, high perceived value — a good early Phase 2 item.
 
 ## v1 scope cut

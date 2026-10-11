@@ -14,8 +14,8 @@ subscribed internet calendar.
 
 ## Decision
 
-Events live in GoombaWall's PostgreSQL database, which is the single source of truth.
-GoombaWall publishes signed, unguessable, read-only ICS feeds. Outlook, iOS Calendar and any
+Events live in WuselWall's PostgreSQL database, which is the single source of truth.
+WuselWall publishes signed, unguessable, read-only ICS feeds. Outlook, iOS Calendar and any
 other subscriber consume those feeds. No inbound sync in v1.
 
 ## Alternatives considered
@@ -47,7 +47,7 @@ store to keep consistent with the application's own. It stays the natural upgrad
 
 **Negative**
 
-- Events can only be created and edited inside GoombaWall. Creating one from the phone means
+- Events can only be created and edited inside WuselWall. Creating one from the phone means
   opening the app rather than the native calendar.
 - **Outlook refreshes subscribed calendars every 3–24 hours**, not configurably, with no
   manual refresh. The feed is an awareness channel; anything urgent goes out as web push.

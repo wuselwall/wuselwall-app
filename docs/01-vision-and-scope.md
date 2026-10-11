@@ -62,7 +62,7 @@ Naming these now prevents them being argued about later.
 |---|---|
 | Multi-tenancy / other families | Single household. This removes an enormous amount of complexity from every query, every screen and every deployment decision. Do not "leave room for it". |
 | Commercialisation, billing, marketing site | Personal project, stated non-goal. |
-| A native iOS app in v1 | PWA covers all four device classes. Revisit only if a specific capability forces it (see [09](09-clients-and-ux.md)). |
+| A public App Store or Play Store listing | The apps are native since 2026-10-11 ([ADR-010](adr/ADR-010-flutter-and-self-hosted-supabase.md)), but distributed internally through TestFlight and the Play internal track only ([ADR-011](adr/ADR-011-native-distribution-and-ci-cd.md)). |
 | Budgeting / expense tracking | Different problem, different data model. Possible Phase 4. |
 | Photo sharing, family chat, document storage | Solved better elsewhere. Do not become a second Nextcloud. |
 | Two-way calendar sync with Outlook or Google | Technically possible, disproportionately expensive, and the failure modes (duplicate and ghost events) are miserable. See [ADR-001](adr/ADR-001-calendar-backbone.md). |
@@ -82,7 +82,8 @@ Concrete enough to check honestly three months after launch:
    week — because of the points, not because they were told to.
 4. The family calendar appears in Outlook on the work laptop and is accurate enough to
    be used for scheduling work meetings around family commitments.
-5. Total running cost stays under €10/month.
+5. Total running cost stays within NFR-7 — originally under €10/month, under revision
+   since the move to native apps ([Q36](14-open-questions.md)).
 6. No unplanned data loss, ever. A restore has been tested at least once.
 
 ## Principles
@@ -99,6 +100,7 @@ These are the tie-breakers when a design question has no obvious answer.
 4. **Every mutation is attributable.** An append-only audit trail is cheap now and
    irreplaceable later, particularly for the points economy.
 5. **Data minimalism as a default.** No third-party analytics, no external fonts, no
-   error-reporting SaaS. Every outbound connection must justify itself.
+   error-reporting SaaS, no tracking SDK in the apps. Every outbound connection must
+   justify itself.
 6. **Ship thin slices end to end.** A module that is 60% done in all four layers beats
    two modules perfect in the database and absent from the screen.

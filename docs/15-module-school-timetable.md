@@ -187,8 +187,8 @@ Realistically this is done twice a year, in a hurry, on a laptop, from a sheet o
 
 Ferien and bewegliche Ferientage are entered by hand in v1 and imported in M2. The import
 is a public dataset (`ferien-api.de` and the Kultusministerien's own ICS files), it is
-per-Bundesland, and it must be fetched **server-side by the worker**, cached, and never
-requested from the browser — NFR-9 is not suspended for convenience.
+per-Bundesland, and it must be fetched **server-side by a scheduled Edge Function**, cached, and never
+requested from the app — NFR-9 is not suspended for convenience.
 
 Bewegliche Ferientage are school-specific and are never in the public feed. They will
 always be hand-entered, which is fine: it is four or five dates a year, announced in a
@@ -240,7 +240,7 @@ is the one calendar this system deliberately does not own.
 
 - Entered by hand in v1: one time, on the day, from the person's phone.
 - In M3 it can be derived from that person's work calendar, subscribed privately and
-  read-only. Only the end of the last meeting would cross into GoombaWall — not titles, not
+  read-only. Only the end of the last meeting would cross into WuselWall — not titles, not
   attendees, not the meetings themselves. That narrow projection is the whole reason the
   field is a single `TIME` and not a nested calendar.
 - It renders as a muted second line under the presence chip, and never as an appointment:
@@ -309,7 +309,7 @@ with confirm and delete as the two actions.
 
 ## German glossary
 
-The UI is German (NFR-14, [CLAUDE.md](../CLAUDE.md)); the code is English. Fix the pairing
+The UI is German and English (NFR-14, [CLAUDE.md](../CLAUDE.md)), German by default; the code is English. This table is the German side. Fix the pairing
 once, in the i18n catalogue, before any of these strings reaches a component:
 
 | Code | UI (de-DE) |

@@ -145,7 +145,7 @@ Added 2026-08-30. The kitchen display's standard view. Specified in
 | FR-8.7 | The displayed week rolls over to the coming week at a configurable point in the weekend | S | late |
 | FR-8.8 | Tapping a day or a member opens detail — full day, full Stundenplan, that person's tasks — and reverts after 60 s | M | late, FR-5.3 |
 | FR-8.9 | A footer strip retains today's operational numbers: open tasks per member, shopping-list count | S | late |
-| FR-8.10 | Offline or stale data is shown honestly with a last-updated marker; never a browser error page | M | late, NFR-6 |
+| FR-8.10 | Offline or stale data is shown honestly with a last-updated marker; never an error screen | M | late, NFR-6 |
 | FR-8.11 | A night variant after 21:00, and a "alle Termine zeigen" tap for the case where a key flag was forgotten | S | late |
 | FR-8.12 | The footer's shopping count opens the same tile capture as the phone — larger tiles, categories, and **no search field**, because nobody types on a wall. It always writes to the default list (FR-4.8) | M | late |
 
@@ -155,33 +155,37 @@ Added 2026-08-30. The kitchen display's standard view. Specified in
 
 | ID | Requirement | Target | Origin |
 |---|---|---|---|
-| NFR-1 | **Multi-device** — works on iPhone, iPad, desktop browser and a wall tablet from one codebase | All four verified before v1 is called done | B2 |
-| NFR-2 | **Installability** — add-to-home-screen on iOS/iPadOS, standalone display mode | PWA manifest, verified on a real device | B2 |
-| NFR-3 | **Performance** — wall display first contentful paint on a low-end tablet | < 2 s on the household LAN | D |
+| NFR-1 | **Multi-device** — works on iPhone, iPad, desktop browser and a wall tablet from one codebase | One Flutter codebase: native iOS/iPadOS and Android apps plus a web build; all four device classes verified before v1 is called done | B2 |
+| NFR-2 | **Installability** — a native app on every phone, iPad and the wall tablet, updated without touching the device *(revised 2026-10-11, was: PWA add-to-home-screen)* | TestFlight and the Play internal track, verified on a real device of each kind ([ADR-011](adr/ADR-011-native-distribution-and-ci-cd.md)) | B2 |
+| NFR-3 | **Performance** — the week board on a low-end wall tablet | Cold start to a rendered board < 3 s, refresh after a change < 1 s, on the household LAN | D |
 | NFR-4 | **Interaction latency** — ticking an item feels instant | Optimistic UI, < 100 ms perceived | D |
 | NFR-5 | **Live updates** — a change on one device appears on the others | < 3 s while online | FR-4.6 |
 | NFR-6 | **Availability** — self-hosted, single node, no HA | ~99% is fine; scheduled downtime acceptable | B3 |
-| NFR-7 | **Cost** — total recurring spend | ≤ €10 / month | B3 |
+| NFR-7 | **Cost** — total recurring spend | Hosting ≤ €13 / month, plus the Apple Developer Program (€99 / year). *Proposed 2026-10-11 — the native apps and a larger server for Supabase break the original ≤ €10 target; confirm in [Q36](14-open-questions.md)* | B3 |
 | NFR-8 | **Data residency** — all data stored in Germany or the EU | Hard requirement | B3 |
-| NFR-9 | **Third-party exposure** — outbound connections from server and client | Zero analytics, zero external fonts, zero CDN, zero error-reporting SaaS | B3 |
+| NFR-9 | **Third-party exposure** — outbound connections from server and client | Zero analytics, zero external fonts, zero CDN, zero error-reporting or crash-reporting SDKs in the app. Push via APNs/FCM and distribution via Apple/Google are the accepted exceptions, and carry no data beyond the notification itself | B3 |
 | NFR-10 | **Transport security** — HTTPS everywhere, HSTS, modern TLS only | Enforced by the reverse proxy | B3 |
 | NFR-11 | **Backups** — nightly, encrypted, off-site, with a tested restore | RPO 24 h, RTO 4 h | D |
 | NFR-12 | **Patching** — OS and dependency updates | Unattended OS security updates; dependency review monthly | B3 |
 | NFR-13 | **Accessibility** — usable by a 7-year-old and readable across a kitchen | Touch targets ≥ 56 px in kid and kiosk modes; WCAG AA contrast; never colour alone | D |
-| NFR-14 | **Localisation** — German UI, English codebase and documentation | i18n structure in place from day one, German the only shipped locale; school vocabulary fixed once in the catalogue ([15](15-module-school-timetable.md#german-glossary)) | D |
-| NFR-15 | **Maintainability** — a solo developer must be able to return after two months away | Modular monolith, typed end to end, ADRs kept current | D |
+| NFR-14 | **Localisation** — German and English UI, English codebase and documentation | i18n structure in place from day one; every string shipped in both German and English, German the default; school vocabulary fixed once in the catalogue ([15](15-module-school-timetable.md#german-glossary)) | D |
+| NFR-15 | **Maintainability** — a solo developer must be able to return after two months away | One database as the domain core, typed at every layer (Dart, SQL, TypeScript), every rule and policy covered by a test, ADRs kept current | D |
 | NFR-16 | **Wall-display legibility** — the week board is read from across the kitchen | Readable at 2.5 m; no text below 24 px in the kiosk register; seven days fit without scrolling on a 10–15" landscape screen | late |
 
 ## Constraints inherited from the platform
 
 These are not choices; they are facts to design around. Detail in [09](09-clients-and-ux.md).
+*Revised 2026-10-11 for native apps; the PWA constraints that stood here no longer apply.*
 
-- iOS PWAs get **no background sync and no periodic background sync**. Any reminder
-  must be a server-sent push, never a client-scheduled timer.
-- iOS **web push requires** the PWA to be added to the home screen first, plus an
-  explicit permission prompt triggered by a user gesture. (This does work in the EU —
-  Apple reversed the 2024 plan to remove home-screen web apps there.)
-- Safari **evicts storage** under pressure and for unused sites. Local data is a cache,
-  never a store of record.
+- iOS gives apps **no reliable background execution**. Any reminder must be a
+  server-sent push, never a device-scheduled timer, and the shopping outbox drains on
+  resume rather than in the background.
+- **Push needs a one-time permission** and travels through Apple's and Google's push
+  services.
+- **Every iOS build must be signed** and distributed through an Apple channel; TestFlight
+  builds expire after 90 days. An Apple Developer Program membership is a hard
+  prerequisite.
+- **The anon key ships inside every app.** Row-level security, not obscurity, is what
+  protects the data.
 - **Outlook refreshes subscribed ICS calendars every 3–24 hours**, is not configurable,
   and offers no manual refresh. This bounds what FR-1.5 can promise.
