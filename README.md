@@ -62,6 +62,7 @@ specifications you hand to a coding session, one at a time.
 | 14 | [Open Questions](docs/14-open-questions.md) | Decisions deliberately deferred, with the deadline for each |
 | 16 | [Setup Plan](docs/16-setup-plan.md) | **The build order for M0**: tools and accounts, repository, local Supabase, app shell, identity, CI, mobile releases, deployment — with the workflows and the secrets inventory |
 | 17 | [Design System](docs/17-design-system.md) | Colour, type and form: the member palette (colour-blind-checked), presence treatments, night theme, three design directions, A "Küchentisch" chosen |
+| — | [Market Research](docs/market-research.md) | Family planners with meal planning in the German-speaking market: feature matrix, pros and cons, open-source and self-hosted options, implications for ADR-002 |
 | — | [Design system mockup](docs/mockups/design-system.html) | The three directions on the same Monday, switchable between light, dark and night, with simulated colour-blindness |
 | — | [Logo proposal](docs/mockups/logo.html) | Logo concepts (Familien-W, Wuselchen, Wuselpunkte) next to the ADR-012 icon, as app icons at real sizes, in dark and themed variants |
 | — | [Kiosk mockup](docs/mockups/kiosk-week-board.html) | The kitchen display's week board, interactive and in German — the asset for agreeing the layout with the family before it is built |
