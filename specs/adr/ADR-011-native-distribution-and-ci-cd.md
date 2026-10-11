@@ -1,7 +1,10 @@
 # ADR-011 — Native app distribution and the CI/CD pipeline
 
 **Status:** Accepted · 2026-10-11 · Follows from [ADR-010](ADR-010-flutter-and-self-hosted-supabase.md) ·
-Amended by [ADR-013](ADR-013-one-self-hosted-environment.md): one environment, no `deploy.yml`
+Amended by [ADR-013](ADR-013-one-self-hosted-environment.md): one environment, no `deploy.yml` ·
+Amended by [ADR-014](ADR-014-self-service-onboarding.md): opening the app to other
+households needs public distribution (TestFlight public link or the App Store, Play open
+testing or production), decided in [Q42](../14-open-questions.md)
 
 ## Context
 

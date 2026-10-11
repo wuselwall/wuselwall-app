@@ -1,6 +1,8 @@
 # 09 — Clients & User Experience (B2)
 
-Implements NFR-1 – NFR-5, NFR-13, NFR-14 and FR-5.4.
+Implements NFR-1 – NFR-5, NFR-13, NFR-14 and FR-5.4. How people and devices get into
+the app (sign-up, invitations, pairing, the getting-started card) is
+[20 — Onboarding](20-onboarding.md).
 
 ## One application, three registers
 
@@ -18,6 +20,12 @@ laptop can be the same physical size and still need different interfaces.
 Responsive layout still applies within each register — the adult register must work on a
 phone — but the register itself is a device property.
 
+Before a device belongs to a household it shows the **front door**
+([20](20-onboarding.md#the-front-door)), the same on every device: continue with Apple,
+Google or email, or connect this device as a family tablet or wall display. The register
+is decided by what happens there: an adult's sign-in gives `adult`, and the pairing choice
+on the parent's phone gives `kid` or `kiosk`.
+
 ## Screens by register
 
 **adult**
@@ -27,8 +35,9 @@ phone — but the register itself is a device property.
 - Tasks: my tasks, family board, definitions admin, approvals
 - Meals: week grid, recipes
 - Shopping: list, catalogue, stores
-- Settings: members, devices, feed tokens, rewards, assistants, audit log, school and
-  subjects
+- Settings: account and sign-in methods, members and invitations, devices (connect,
+  revoke), feed tokens, rewards, assistants, audit log, school and subjects, getting
+  started, family (export, delete)
 
 **kid**
 - My day (my tasks + today's meal + my events + today's lessons)
@@ -228,7 +237,7 @@ These still constrain the design:
 | Constraint | Consequence for WuselWall |
 |---|---|
 | iOS gives apps **no reliable background execution**; background fetch is opportunistic and often skipped | Every reminder is still a server-side push. Never schedule anything important on the device. The shopping outbox drains when the app resumes or connectivity returns, so pending state is still shown honestly. |
-| Push needs **permission**, asked once; a refusal is hard to undo | Ask from an explicit "Erinnerungen einschalten" button, never at first launch. |
+| Push needs **permission**, asked once; a refusal is hard to undo | Ask from an explicit "Erinnerungen einschalten" button (an item on the getting-started card, [20](20-onboarding.md#the-getting-started-card)), never at first launch. |
 | Push travels through **Apple (APNs)** and, on Android, **Google (FCM)** | Payloads carry as little as the notification needs; nothing is sent that would not be fine on a lock screen. Provider choice: [Q38](14-open-questions.md). |
 | **TestFlight builds expire** after 90 days | Release at least quarterly; the pipeline makes that a tag. |
 | The **web build** is a Flutter canvas, not HTML: a larger first download, no browser find-in-page, weaker screen-reader support than native | Acceptable for one adult on a laptop. The web build is the adult register only; it is never the kiosk and never a child's device. |

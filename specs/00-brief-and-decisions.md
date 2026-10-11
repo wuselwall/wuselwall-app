@@ -165,3 +165,30 @@ the Supabase project ID. Names considered and rejected, and the consequences, ar
 before every migration and by keeping `db reset` and the integration test away from it.
 **What it bought.** No hosting bill, no second stack to keep in step, and push, the
 Outlook feed and use outside the house no longer wait for a deployment milestone.
+
+### 2026-10-11 — Onboarding, social sign-in and self-service households
+
+> Check all specs about the onboarding experience and iterate on it and improve it, so
+> it is as smooth as possible. Include these social login providers: Apple & Google (no
+> Facebook, etc). Allow email signup flow with one time passwords, but also allow normal
+> passwords, etc.
+
+Asked whether sign-up is for invited adults of this household or for any family, the user
+chose **self-service households**.
+
+| Change | Answer | Where |
+|---|---|---|
+| Adult sign-in | Sign in with Apple, Sign in with Google, email one-time code, email + password (chosen after the first code). One screen for sign-up and sign-in. No other providers, no SMS, no magic links | [ADR-014](adr/ADR-014-self-service-onboarding.md), [20](20-onboarding.md#the-front-door) |
+| Households | Any adult can create one: `code` mode (founder code from the operator) until the opening gate, then `open`. One household per account. All households in one project, isolated by RLS | [20](20-onboarding.md#household-creation-open-or-by-code), [13](13-roadmap.md#opening-to-other-households) |
+| Other adults | Invitation by link, code or QR, bound to a profile, 7 days; matched automatically by email | [20, J2](20-onboarding.md#j2--join-a-family) |
+| Shared devices | Reverse pairing: the device shows a code, a parent's phone approves it; no typing on the device | [20, J3](20-onboarding.md#j3--connect-a-shared-device), [08](08-users-auth-permissions.md#device-pairing) |
+| Deferred setup | PIN at the first shared device; avatars, second factor, passkeys and push from a getting-started card | [20](20-onboarding.md#the-getting-started-card) |
+| Leaving | Delete account, leave or delete the household, export data, all in the app | [20, J6](20-onboarding.md#j6--leave) |
+| Non-goals reversed | Multi-tenancy; a public store listing (at the opening gate) | [01](01-vision-and-scope.md#explicitly-out-of-scope) |
+
+**What this costs.** Once other families are let in, the operator is a GDPR controller for
+their data. The domain, the Apple and Google client setup, SMTP and public distribution
+all become things to operate. A cross-household bug stops being theoretical.
+**What it buys.** A family starts in under two minutes without a server in sight, the
+second parent joins in one, nobody types on the wall display, and a lost password no
+longer needs the operator.

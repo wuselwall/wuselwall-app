@@ -15,19 +15,25 @@ only where undo matters (events, shopping items) — everywhere else, delete for
 
 ```
 household
-  id, name, timezone, locale, created_at
+  id, name, timezone, locale,                    -- timezone/locale from the founder's device
+  created_by_profile_id, created_at,
+  deleted_at NULL                                -- J6: purged 14 days later
 
 profile                          -- a family member
   id, household_id, display_name, short_name, avatar_key, colour_hex,
   role ENUM('guardian','member'), birthday DATE NULL,
+  kind ENUM('adult','child'),                   -- ADR-014: role says what you may do,
+                                                -- kind whether you can have an account;
+                                                -- a guardian is always an adult
   default_presence_state ENUM(...) NULL,        -- the baseline: 'home_office' for one
   default_presence_label TEXT NULL,             -- adult, 'off' for the other. FR-1.18
   pin_hash NULL, pin_failed_count, pin_locked_until,
+  auth_user_id → auth.users NULL UNIQUE,         -- the adult's account; NULL for children
+                                                 -- and for adults without one. UNIQUE =
+                                                 -- one household per account (Q43)
   is_active, sort_order
-
-guardian_account                 -- links a Supabase Auth user to a guardian profile
-  auth_user_id → auth.users, profile_id
-  (credentials, sessions and MFA factors live in Supabase's own auth schema)
+  (credentials, identities — Apple, Google, email, password, passkeys — sessions and MFA
+   factors live in Supabase's own auth schema)
 
 device
   id, household_id, label,                       -- "Kitchen display", "Papa iPhone"
@@ -35,15 +41,42 @@ device
   bound_profile_id NULL,                         -- set for class='personal'
   ui_register ENUM('adult','kid','kiosk'),
   auth_user_id → auth.users,                     -- the device's own Auth user;
-                                                 -- for a guardian's personal device,
-                                                 -- the guardian's Auth user
+                                                 -- for an adult's personal device,
+                                                 -- the adult's Auth user …
+  auth_session_id NULL,                          -- … and the session it is bound to
   guardian_verified_until timestamptz NULL,      -- PIN step-up, server-side only
   enrolled_at, last_seen_at, revoked_at,
   push_platform ENUM('apns','fcm') NULL, push_token TEXT NULL
 
-device_enrolment_code
-  id, household_id, code_hash, created_by_profile_id,
-  expires_at, consumed_at, consumed_by_device_id
+enrolment_code                   -- M0.1 direction; kept one release after pairing ships
+  id, household_id, code_hash, label, class, register, created_by,
+  expires_at, consumed_at
+
+pairing_request                  -- J3: the new device asks, a guardian approves (ADR-014)
+  id, code_hash,                                 -- the 8-character display code
+  secret_hash,                                   -- only the requesting device knows it
+  client_ip, created_at, expires_at,             -- 10 minutes
+  approved_at NULL, approved_by_profile_id NULL,
+  household_id NULL, label NULL, class NULL, register NULL, bound_profile_id NULL,
+  claimed_at NULL, device_id NULL
+
+invitation                       -- J2: an adult joins a household
+  id, household_id, profile_id,                  -- the profile the invitee will become
+  role ENUM('guardian','member'),
+  email NULL,                                    -- matched against verified addresses
+  token_hash, code_hash,                         -- link token (128 bit) and typed code
+  created_by_profile_id, created_at, expires_at, -- 7 days
+  accepted_at NULL, accepted_by_auth_user NULL, revoked_at NULL
+
+getting_started_dismissal        -- items are derived from data; only "not needed" is stored
+  household_id, item_key, profile_id NULL,       -- NULL = for the whole household
+  device_id NULL, dismissed_at
+
+instance_setting                 -- one row per instance, not per household
+  household_creation ENUM('code','open')         -- 'code' until the opening gate
+
+setup_token                      -- the founder codes in 'code' mode (old name kept)
+  token_hash, created_at, consumed_at, consumed_by_household NULL
 
 audit_entry                      -- append-only, never updated or deleted
   id, household_id, occurred_at,
@@ -323,11 +356,13 @@ wall display opens, and the wall never offers the others.
 ## Relationship overview
 
 ```
-household ─┬─< profile ─┬─< account
+household ─┬─< profile ─┬── auth.users (0..1, adults only)
            │            ├─< point_transaction
            │            ├─< streak
            │            └─< badge_award
-           ├─< device ──< device_enrolment_code
+           ├─< device ──< enrolment_code
+           ├─< invitation ──> profile
+           ├─< getting_started_dismissal
            ├─< audit_entry
            ├─< calendar ──< event ─┬─< event_attendee
            │                       └─< event_override
@@ -376,6 +411,11 @@ functions where it cannot. Each one should have a pgTAP test.
 12. `audit_entry` rows are never updated or deleted. Revoke `UPDATE`/`DELETE` on the
     table for the application role.
 13. `device.bound_profile_id` is non-null exactly when `class = 'personal'`.
+13a. An Auth user is linked to at most one profile (`profile.auth_user_id` unique), and only
+    to a profile with `kind = 'adult'`. `role = 'guardian'` implies `kind = 'adult'`. An invitation is
+    accepted at most once, and never after `expires_at` or `revoked_at`.
+13b. A `pairing_request` is approved at most once and claimed at most once, and only with
+    its secret; an approved request that is not claimed before `expires_at` binds nothing.
 14. `calendar_feed_token.token_hash` stores a hash; the plaintext token is shown once at
     creation and never retrievable afterwards.
 15. `event.presence_state` is non-null exactly when `kind = 'presence'`, and null

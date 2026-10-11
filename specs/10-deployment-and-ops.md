@@ -25,6 +25,7 @@ instead (see ADR-013).*
 | Apple Developer Program | Apple | €99 / year ≈ €8.25 |
 | Google Play Console | Google | $25 once |
 | Off-site copy of the backups (optional) | Backblaze B2 or similar | €0.50 – €3.50 |
+| SMTP for sign-in codes ([Q41](14-open-questions.md)) | An EU provider's free tier | €0 at household scale |
 | **Total** | | **≈ €8 – 12 / month** |
 
 ## The path a request takes
@@ -40,6 +41,7 @@ instead (see ADR-013).*
    │
    ▼
  nginx (home server): only /auth/v1, /rest/v1, /realtime/v1, /functions/v1
+   │                    + static: /.well-known/*, /i/*, /p/*, /privacy, /delete (ADR-014)
    │ HTTP, LAN
    ▼
  Kong :54321 ─► Auth · PostgREST · Realtime · Edge runtime · Storage
@@ -63,6 +65,12 @@ published by the CLI stack on the home network and **must never be forwarded or 
   the nginx container's site directory, then `nginx -t && nginx -s reload`. It forwards the
   four API prefixes and refuses everything else, including Kong's dashboard and the
   `/pg/` metadata API.
+- *Since [ADR-014](adr/ADR-014-self-service-onboarding.md):* nginx also serves a handful
+  of **static files** from `infra/web/` (no proxying, no scripts):
+  `/.well-known/apple-app-site-association` and `/.well-known/assetlinks.json` (universal
+  links, App Links and passkeys), the bilingual landing pages for `/i/‹token›`
+  (invitations) and `/p/‹code›` (pairing), the privacy policy, and the account-deletion
+  page Google Play requires.
 
 ### 2. The stack and its secrets
 
@@ -94,16 +102,48 @@ is never run against the home server.
 
 ### 3. First household
 
-Setup is guarded by a one-time token (ADR-010 implementation notes). The development seed
-creates the token `dev-setup`; before the family sets up its real household, replace it
-with a random one:
+*Rewritten 2026-10-11 for [ADR-014](adr/ADR-014-self-service-onboarding.md).* Households
+are created from the app by any signed-in adult. While `household_creation` is `code` (the
+default until the opening gate), creating one also needs a **founder code**:
 
 ```bash
-scripts/remote-setup-token.sh       # prints a fresh token once, stores only its hash
+scripts/remote-setup-token.sh       # prints a fresh single-use founder code, stores only its hash
 ```
 
-Then open the app, choose "set up a new household" and enter the token. Setup closes for
-good once a household exists.
+The founder signs in on their phone (Apple, Google or email), enters the family name and
+the code, and the rest follows [20, J1](20-onboarding.md#j1--start-a-family). Issue one code
+per household you want to allow. The development seed's `dev-setup` must not exist on the
+home server.
+
+Switching to self-service is one statement, run only once the opening gate in
+[13](13-roadmap.md#opening-to-other-households) is passed:
+
+```sql
+update app.instance_setting set household_creation = 'open';
+```
+
+### 4. Sign-in providers and mail
+
+Needed before the onboarding flows work outside a throwaway stack. All secrets go into
+`supabase/.env` and are referenced from `config.toml` as `env(...)`:
+
+- **Apple:**
+  - the App ID `ch.goomba.wuselwall` with the *Sign in with Apple* capability;
+  - a **Services ID** for the web and Android redirect, with
+    `https://‹domain›/auth/v1/callback` as its return URL;
+  - a **Sign in with Apple key** (`.p8`).
+
+  The client secret Supabase needs is a JWT signed with that key, and **it expires after
+  at most six months**: regenerate it on the date in the table below.
+- **Google:** a Google Cloud project with an OAuth consent screen (scopes `openid email
+  profile`) and three OAuth clients: **Web** (its ID and secret go to Supabase, its ID is
+  the `serverClientId` in the app), **iOS** (bundle ID; its reversed client ID becomes a
+  URL scheme) and **Android** (package name and the SHA-1 of the Play app-signing key *and*
+  of the debug key).
+- **SMTP** ([Q41](14-open-questions.md)): host, user and password in `[auth.email.smtp]`.
+  On `goomba.ch` (or the final domain, [Q45](14-open-questions.md)) publish SPF, DKIM and
+  DMARC for the provider, or the codes land in spam. Mailpit stays the sink on throwaway
+  stacks.
 
 ---
 
@@ -137,7 +177,7 @@ nightly, from the Unraid *User Scripts* plugin (schedule: daily, e.g. 03:30):
 
 - `pg_dumpall --roles-only` and a custom-format `pg_dump` of the whole database, written
   to `/mnt/user/backups/wuselwall/`, 14 days kept.
-- If `RESTIC_REPOSITORY` is set in `/boot/config/wuselwall-backup.env`, the dumps go to an
+- If `RESTIC_REPOSITORY` is set in `/mnt/user/appdata/wuselwall/backup.env`, the dumps go to an
   encrypted off-site repository too (restic runs from its Docker image, so nothing is
   installed on Unraid).
 - If `HEALTHCHECK_URL` is set, a ping to healthchecks.io afterwards. A backup that
@@ -170,6 +210,9 @@ acceptable; losing everything is not.
 | Flutter, `pub` and Deno dependencies | Dependabot PRs, reviewed | Weekly PRs, merged monthly |
 | iOS signing certificate | `fastlane match` renewal | Yearly — calendar reminder |
 | Apple Developer Program | Renewal | Yearly — lapsing removes TestFlight builds |
+| **Sign in with Apple client secret** (a JWT from the `.p8` key) | Regenerate, put in `supabase/.env`, restart Auth | **Every six months at the latest** — calendar reminder; an expired secret breaks Apple sign-in on Android and the web |
+| Google OAuth clients | Add the SHA-1 of any new signing key | When a signing key changes |
+| SMTP provider | Check deliverability (a test code to a Gmail and an Outlook address) | Quarterly, and after any DNS change |
 | TestFlight builds | Any new release | Expire after 90 days — release at least quarterly |
 
 Do **not** let a container auto-updater (Watchtower, Unraid's auto-update plugin) touch

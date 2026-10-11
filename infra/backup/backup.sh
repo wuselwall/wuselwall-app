@@ -2,7 +2,8 @@
 # Nightly backup of the WuselWall database, run ON the home server (specs/10#backups).
 # Unraid: User Scripts plugin, schedule daily. On demand: scripts/remote-backup.sh.
 #
-# Optional settings in /boot/config/wuselwall-backup.env (root-only, survives reboots):
+# Optional settings in /mnt/user/appdata/wuselwall/backup.env (chmod 600):
+#   (not on /boot: the flash drive is often exported over SMB)
 #   RESTIC_REPOSITORY=b2:bucket:wuselwall   RESTIC_PASSWORD=...   (+ B2_ACCOUNT_ID/KEY, ...)
 #   HEALTHCHECK_URL=https://hc-ping.com/<uuid>
 set -euo pipefail
@@ -11,7 +12,7 @@ DB=${DB_CONTAINER:-supabase_db_wuselwall}
 OUT=${BACKUP_DIR:-/mnt/user/backups/wuselwall}
 KEEP_DAYS=${KEEP_DAYS:-14}
 LABEL=${1:-nightly}
-ENV_FILE=/boot/config/wuselwall-backup.env
+ENV_FILE=/mnt/user/appdata/wuselwall/backup.env
 [ -f "$ENV_FILE" ] && . "$ENV_FILE"
 
 STAMP=$(date +%F-%H%M)
