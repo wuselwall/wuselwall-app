@@ -2,7 +2,8 @@
 
 *Added 2026-10-11 with the move to Flutter and self-hosted Supabase
 ([ADR-010](adr/ADR-010-flutter-and-self-hosted-supabase.md),
-[ADR-011](adr/ADR-011-native-distribution-and-ci-cd.md)). This is the build order for
+[ADR-011](adr/ADR-011-native-distribution-and-ci-cd.md)); step 8 rewritten the same day
+for one environment on the home server ([ADR-013](adr/ADR-013-one-self-hosted-environment.md)). This is the build order for
 milestone M0 in [13](13-roadmap.md): everything that has to exist before the first
 module is worth building.*
 
@@ -24,7 +25,7 @@ change and a tag producing installable builds. Once that works, every module aft
 | 5 | M0.1 | Identity: setup wizard, guardian accounts, device enrolment, tap-to-switch, PIN | 1 weekend |
 | 6 | M0.2 | The shopping list, online only — the first real feature | 1–2 evenings |
 | 7 | M0.4 | `release-mobile.yml`: a tag puts builds on the family's devices | 1 weekend |
-| 8 | M0.3 | Production stack and `deploy.yml`, written and tested locally, deployed in M1.6 | 1 weekend |
+| 8 | M0.3 | The one environment ([ADR-013](adr/ADR-013-one-self-hosted-environment.md)): own keys, nginx allow-list, backups | 1 evening |
 
 Steps 1–4 can be done in a single long weekend. Step 7 waits on the Apple and Google
 accounts from step 0, which is why those are applied for first.
@@ -45,6 +46,10 @@ accounts from step 0, which is why those are applied for first.
 | `gh` | GitHub from the terminal | Already installed and authenticated |
 | A physical Android device | Running the app | Use wireless debugging (`adb pair` / `adb connect`) — USB and the Android emulator are both awkward from WSL2 |
 
+*Since [ADR-013](adr/ADR-013-one-self-hosted-environment.md) the stack runs on the home
+server and phones reach it at `https://wusel.goomba.ch`, so the two WSL traps below only
+matter for a throwaway stack on the laptop.*
+
 Two WSL-specific traps worth solving on day one:
 
 - **Reaching WSL from the LAN.** Phones on the home wifi must reach Supabase running in
@@ -63,11 +68,11 @@ and no Xcode debugger. See [Q35](14-open-questions.md).
 | Account | Needed for | Cost | Lead time |
 |---|---|---|---|
 | **Apple Developer Program** (individual) | Any iOS build on a real device beyond seven days; TestFlight | €99 / year | Usually 1–2 days, occasionally longer with identity checks |
-| **App Store Connect**: the app record, bundle ID `ch.wuselwall.app`, an **API key** (App Manager role) | Uploads from CI without a password or 2FA prompt | — | Minutes, after the programme is active |
+| **App Store Connect**: the app record, bundle ID `ch.goomba.wuselwall`, an **API key** (App Manager role) | Uploads from CI without a password or 2FA prompt | — | Minutes, after the programme is active |
 | **Google Play Console** (personal) | Internal testing track for the wall tablet and Android phones | $25 once | Identity verification can take several days |
 | **Second private GitHub repository** `wuselwall-certificates` | `fastlane match` storage for iOS signing | — | Minutes |
-| Hetzner Cloud, domain, backup target | Production — not needed until M1.6 | see [10](10-deployment-and-ops.md#costs) | — |
-| Firebase project | Android push via FCM — not needed until M1.6, and only if [Q38](14-open-questions.md) settles on FCM | free | Minutes |
+| Domain `goomba.ch` and Cloudflare | The public URL `wusel.goomba.ch` | already owned | in place |
+| Firebase project | Android push via FCM — not needed until push is built, and only if [Q38](14-open-questions.md) settles on FCM | free | Minutes |
 
 ---
 
@@ -133,7 +138,7 @@ and no Xcode debugger. See [Q35](14-open-questions.md).
 ## Step 3 — Flutter app shell (M0.0)
 
 1. The shell already exists in `app/`, started from Supabase's Flutter starter and renamed
-   (package `wuselwall`, application/bundle ID `ch.wuselwall.app` — see
+   (package `wuselwall`, application/bundle ID `ch.goomba.wuselwall` — see
    [ADR-010](adr/ADR-010-flutter-and-self-hosted-supabase.md#starting-point-and-identifiers)).
    Remove the starter's `profiles` demo pages and migration as the real schema lands.
 2. Pin the Flutter version in `pubspec.yaml` (`environment: flutter: x.y.z`); enable
@@ -142,13 +147,15 @@ and no Xcode debugger. See [Q35](14-open-questions.md).
    `freezed`/`json_serializable`, `flutter_secure_storage`, `intl` and
    `flutter_localizations`. Add `drift` in step 6, not before.
 4. **Configuration per environment** with `--dart-define-from-file`:
-   `env/dev.json` (the laptop's LAN address, the local anon key) and `env/prod.json`
-   (filled in at M1.6). No `if (kDebugMode)` branches for configuration. The anon key is
-   public by design; nothing else secret goes in either file.
-5. **Platform networking for the LAN trial**: iOS `NSAppTransportSecurity →
+   `env/dev.json` (the one environment, `https://wusel.goomba.ch`, and its publishable
+   key) and `env/ci.json` (CI's throwaway stack); no `prod.json`
+   ([ADR-013](adr/ADR-013-one-self-hosted-environment.md)). No `if (kDebugMode)` branches
+   for configuration. The publishable key is public by design; nothing else secret goes
+   in either file.
+5. **Platform networking for a local stack**: iOS `NSAppTransportSecurity →
    NSAllowsLocalNetworking` and an Android network-security config permitting cleartext
-   to the private address range — both **in the dev configuration only**; production
-   builds accept HTTPS only.
+   to the private address range, for a throwaway stack on the laptop. The one
+   environment is HTTPS (`wusel.goomba.ch`).
 6. **Localisation from the first widget**: `app/l10n.yaml` with `app/l10n/app_en.arb`
    (template) and `app/l10n/app_de.arb`, both locales supported with German first, and
    `untranslated-messages-file` so CI can fail on a string missing from either. No string literal is ever shown to a user (see `CLAUDE.md`).
@@ -280,8 +287,8 @@ The model is [08](08-users-auth-permissions.md); the Supabase mechanics are
    `revoke-device` Edge Function signs that Auth user out. The app treats a 401/403 from
    a revoked device by wiping its session and showing enrolment.
 7. **Guardian account features**: TOTP enrolment for the second factor (done). Passkeys
-   (Supabase Auth beta): the code is in; at M1.6, once the domain exists, set
-   `[auth.webauthn] rp_id`/`rp_origins` to it, add iOS Associated Domains
+   (Supabase Auth beta): the code is in; now that the domain exists, set
+   `[auth.webauthn] rp_id`/`rp_origins` to `wusel.goomba.ch`, add iOS Associated Domains
    (`webcredentials:<domain>`), publish `/.well-known/assetlinks.json` for Android and the
    `passkeys` web SDK script in `web/index.html`, then test on a real device.
 8. Tests: pgTAP for every function and policy (including "a member cannot create an
@@ -360,7 +367,7 @@ jobs:
       - run: >
           flutter build appbundle --release
           --build-name=${GITHUB_REF_NAME#v} --build-number=${{ github.run_number }}
-          --dart-define-from-file=env/prod.json
+          --dart-define-from-file=env/dev.json
         working-directory: app
       - run: bundle exec fastlane android internal   # upload_to_play_store, track: internal
         working-directory: app/android
@@ -375,7 +382,7 @@ jobs:
       - run: >
           flutter build ios --release --no-codesign
           --build-name=${GITHUB_REF_NAME#v} --build-number=${{ github.run_number }}
-          --dart-define-from-file=env/prod.json
+          --dart-define-from-file=env/dev.json
         working-directory: app
       - run: bundle exec fastlane ios beta   # match(readonly) → build_app → upload_to_testflight
         working-directory: app/ios
@@ -385,12 +392,11 @@ jobs:
 Each platform's `Fastfile` holds two or three short lanes; the workflow stays thin, so a
 release can also be run from a Mac with the same lanes if one becomes available.
 
-### Before production exists
+### Server address
 
-Until M1.6, `env/prod.json` does not exist yet, so the first releases are built from a
-`lan.json` that points at the laptop's reserved LAN address. Those builds are what the
-family uses during the home-network trial; switching to the production address at M1.6 is
-one new release.
+Releases are built with `env/dev.json`, the one environment at `https://wusel.goomba.ch`
+([ADR-013](adr/ADR-013-one-self-hosted-environment.md)). It is reachable from anywhere over
+HTTPS, so the apps need no cleartext exception and work outside the home wifi too.
 
 ### Getting it onto the devices
 
@@ -407,43 +413,33 @@ without anyone touching a cable.
 
 ---
 
-## Step 8 — Production stack and deployment (M0.3, deployed at M1.6)
+## Step 8 — The one environment: secrets, proxy, backups (M0.3)
 
-Built now, tested against a throw-away VM or local Docker, and held back until the app is
-worth deploying — the reasoning in [13](13-roadmap.md#m0--walking-skeleton) still holds.
-The server setup itself is [10](10-deployment-and-ops.md).
+> **Built 2026-10-11** ([ADR-013](adr/ADR-013-one-self-hosted-environment.md)). It replaces
+> the earlier plan of a production VPS, Caddy and `deploy.yml`. The operating guide is
+> [10](10-deployment-and-ops.md).
 
-1. `infra/supabase/` — a pinned copy of Supabase's official self-hosting
-   `docker-compose.yml` and `.env.example`, trimmed: analytics and log shipping (Logflare,
-   Vector) and the image proxy removed; Storage kept but unused until avatars need it;
-   every image pinned by digest; the pooler bound to `127.0.0.1` only; no other published
-   ports except Caddy's.
-2. `infra/Caddyfile` — the path allow-list from [10](10-deployment-and-ops.md#6-caddyfile):
-   four API prefixes to Kong, `/ics/*` rewritten to the `ics` function, everything else
-   the static web build — Kong's dashboard routes are never proxied.
-3. `infra/backup/` — `backup.sh` and `restore-drill.sh`, including the Auth schema and
-   roles, tested locally against the dev stack.
-4. `.github/workflows/deploy.yml`, manual (`workflow_dispatch`) until M1.6, then on push
-   to `main`:
+1. **Own keys** for the CLI stack on the home server: `auth.jwt_secret`,
+   `auth.publishable_key` and `auth.secret_key` in `supabase/config.toml`, read from the
+   git-ignored `supabase/.env` (`supabase/.env.example` lists the names). CI writes the
+   CLI's public defaults into its own throwaway `supabase/.env`.
+2. **Public entry**: Cloudflare proxied record `wusel.goomba.ch` → the home server's nginx
+   with [`infra/nginx/wusel.goomba.ch.conf`](../infra/nginx/wusel.goomba.ch.conf): the four
+   API prefixes to Kong on 54321, everything else 404.
+3. **Backups**: [`infra/backup/backup.sh`](../infra/backup/backup.sh) nightly on the server
+   (Unraid User Scripts), optional restic off-site and healthchecks ping;
+   `scripts/remote-backup.sh` on demand; [`infra/backup/restore-drill.sh`](../infra/backup/restore-drill.sh)
+   restores into a scratch database and counts rows.
+4. **Setup token**: `scripts/remote-setup-token.sh` replaces the seed's `dev-setup` with a
+   random token before the family sets up its household.
+5. **Changing the database**: CI first, then `scripts/remote-backup.sh` →
+   `scripts/remote-supabase.sh migration up` → `scripts/remote-pgtap.sh`. No deploy
+   workflow: GitHub's runners cannot reach the home network, and one environment does not
+   need one.
 
-```
-deploy (environment: production — requires approval)
-  1. ssh: run backup.sh                    — never migrate without a fresh dump
-  2. ssh -L tunnel to the pooler on 127.0.0.1
-     supabase db push --db-url <tunnel>    — the same migrations CI just tested
-  3. rsync supabase/functions/ → /opt/wuselwall/supabase/volumes/functions/
-     ssh: docker compose restart functions
-  4. flutter build web --release --dart-define-from-file=env/prod.json
-     rsync build/web/ → /opt/wuselwall/web/
-  5. curl https://home.example.de/functions/v1/health — fail the run if it does not answer
-```
-
-**Rollback**: the web build and functions are redeployed from the previous commit;
-migrations are forward-only, which is why step 1 always runs. A migration that must be
-undone is a new migration, or a restore from the dump taken a minute earlier.
-
-**Done when** `deploy.yml` runs green against a disposable VM built with
-`infra/provision.sh`, and the restore drill has restored that VM's database once.
+**Done when** the public URL answers only on the API prefixes, the stack runs on its own
+keys, and the restore drill has restored a nightly dump once. *(Restore drill first run
+2026-10-11, on test data: 0 errors.)*
 
 ---
 
@@ -453,17 +449,17 @@ undone is a new migration, or a restore from the dump taken a minute earlier.
  feature branch ──PR──► ci.yml ─────────────── app · backend · functions · audit
                          │ green + review
                          ▼
-                       main ──► deploy.yml (approval) ── backup → migrate → functions
-                         │                                → web build → health check
+                       main ──► by hand: backup → migration up → pgTAP (docs/10)
+                         │
                          │ tag vX.Y.Z
                          ▼
                  release-mobile.yml ── Android AAB → Play internal track
                                     └─ iOS IPA     → TestFlight
 ```
 
-- **Trunk-based**: short branches, squash merges, `main` always deployable.
-- **One version for everything**: the tag. The web build deployed from `main` reports its
-  commit SHA on the System page; mobile builds report version and build number.
+- **Trunk-based**: short branches, squash merges, `main` always applicable to the one
+  environment.
+- **One version for everything**: the tag. Mobile builds report version and build number.
 - **Backend before apps**: migrations must stay backwards-compatible with the previous
   app release, because phones update on their own schedule. Add columns and functions
   first, ship the app that uses them, remove old ones a release later.
@@ -479,15 +475,14 @@ manager.
 | `MATCH_PASSWORD`, `MATCH_GIT_BASIC_AUTHORIZATION` | GitHub secrets | iOS signing |
 | `ANDROID_KEYSTORE_B64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, `ANDROID_KEY_PASSWORD` | GitHub secrets | Android signing |
 | `PLAY_SERVICE_ACCOUNT_JSON` | GitHub secrets | Play upload |
-| `DEPLOY_SSH_KEY`, `DEPLOY_HOST`, `DEPLOY_KNOWN_HOSTS` | GitHub environment `production` | `deploy.yml` |
-| `PROD_DB_URL` (via the tunnel) | GitHub environment `production` | migrations |
-| `POSTGRES_PASSWORD`, `JWT_SECRET`, `ANON_KEY`, `SERVICE_ROLE_KEY`, `DASHBOARD_PASSWORD`, `SECRET_KEY_BASE`, `VAULT_ENC_KEY` | Server `.env` only | Supabase containers |
-| `RESTIC_PASSWORD`, backup-target credentials, healthchecks URL | Server, backup script env | backups |
-| Push credentials (APNs key, FCM service account) | Server `.env` | `push-send` (M1.6) |
+| `WW_JWT_SECRET`, `WW_SECRET_KEY` | `supabase/.env` on the development machine | the Supabase stack (CLI) |
+| `RESTIC_PASSWORD`, backup-target credentials, healthchecks URL | `/boot/config/wuselwall-backup.env` on the server | backups |
+| Cloudflare origin certificate and key | nginx container on the server | TLS between Cloudflare and nginx |
+| Push credentials (APNs key, FCM service account) | Edge Function secrets | `push-send` |
 
-The **anon key** is not a secret — it is compiled into every app — and the
-**service-role key never leaves the server**: not in CI, not in the app, not in a
-developer's shell history.
+The **publishable key** (`WW_PUBLISHABLE_KEY`) is not a secret — it is compiled into every
+app via `app/env/dev.json` — and the **secret key never leaves `supabase/.env`**: not in
+CI, not in the app, not in a shell history.
 
 ---
 
@@ -497,7 +492,7 @@ developer's shell history.
 |---|---|---|
 | Apple or Google account verification stalls | Step 7 blocked | Steps 1–6 and 8 do not depend on it; Android sideloading of a debug APK keeps the trial going |
 | No Mac makes iOS problems opaque | A TestFlight build crashes on launch with nothing in the logs | TestFlight crash reports; a borrowed Mac for one evening; Codemagic's build logs as a second opinion |
-| WSL networking fights the LAN trial | Phones cannot reach Supabase | Mirrored networking; or run the dev stack on a small always-on box instead of the laptop |
+| ~~WSL networking fights the LAN trial~~ | — | Resolved by ADR-013: the stack runs on the home server, reached over HTTPS |
 | PL/pgSQL slows feature work | Simple functions take an evening each | Write the first three carefully as templates; generate the rest from them; revisit the escape hatch in ADR-010 |
 | macOS CI minutes run out | Billing warning | iOS builds only on tags already; Codemagic's free tier as an overflow |
 | Self-hosted Supabase upgrade breaks something | Containers fail after `pull` | Images pinned by digest; upgrades only deliberately, after a backup, following the self-hosting changelog |

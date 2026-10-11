@@ -147,3 +147,21 @@ After a market check of the shortlisted names, the household chose **WuselWall**
 GoombaWall everywhere, including the bundle ID (`ch.wuselwall.app`), the Dart package and
 the Supabase project ID. Names considered and rejected, and the consequences, are in
 [ADR-012](adr/ADR-012-product-name.md).
+
+### 2026-10-11 — One environment on the home server
+
+> For now we only build one tenant, not two (dev and prod) landscapes. We run the dev
+> environment self-hosted on the private server. Any further tenants might be run on the
+> Supabase SaaS service itself.
+
+| Change | Answer | Where |
+|---|---|---|
+| Hosting | The Supabase stack on the home server (Unraid) is the only environment: the family uses it and development happens against it. No VPS, no `deploy.yml`, no `env/prod.json` | [ADR-013](adr/ADR-013-one-self-hosted-environment.md), [10](10-deployment-and-ops.md) |
+| Public entry | `https://wusel.goomba.ch` → Cloudflare proxy → the home server's nginx (four API prefixes) → Kong | [10](10-deployment-and-ops.md), `infra/nginx/` |
+| Further tenants | Hosted Supabase, one project per tenant; `supabase/` stays portable | [ADR-013](adr/ADR-013-one-self-hosted-environment.md#keeping-the-code-portable-to-hosted-supabase) |
+| Identifiers | Application and bundle ID `ch.goomba.wuselwall` (chosen by the user before any store record existed); the GitHub repository moved to the `wuselwall` organisation as `wuselwall-app`, with `wuselwall-certificates` for iOS signing | [ADR-010](adr/ADR-010-flutter-and-self-hosted-supabase.md#starting-point-and-identifiers), [ADR-011](adr/ADR-011-native-distribution-and-ci-cd.md) |
+
+**What this cost.** Development and the family share one database, protected by a dump
+before every migration and by keeping `db reset` and the integration test away from it.
+**What it bought.** No hosting bill, no second stack to keep in step, and push, the
+Outlook feed and use outside the house no longer wait for a deployment milestone.

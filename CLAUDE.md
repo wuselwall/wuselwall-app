@@ -2,14 +2,24 @@
 
 This repository holds both the planning documents and the code for WuselWall (see
 [README.md](README.md)). `docs/` is the specification; `app/` (Flutter), `supabase/`
-(migrations, Edge Functions, tests) and `infra/` hold the implementation. Setup-plan steps 3, 5 and 6 are built (app shell,
-identity, online shopping list); continue from [docs/16-setup-plan.md](docs/16-setup-plan.md)
-step 7, or deepen M1 modules.
+(migrations, Edge Functions, tests) and `infra/` hold the implementation. Setup-plan steps 3, 5,
+6 and 8 are built (app shell, identity, online shopping list, the one environment) and M1.1
+is built except the offline outbox; continue with the outbox, step 7 once the Apple and
+Google accounts exist, or the next M1 module.
 
 ## Architecture rules
 
-See [docs/03-architecture.md](docs/03-architecture.md) and
-[ADR-010](docs/adr/ADR-010-flutter-and-self-hosted-supabase.md).
+See [docs/03-architecture.md](docs/03-architecture.md),
+[ADR-010](docs/adr/ADR-010-flutter-and-self-hosted-supabase.md) and
+[ADR-013](docs/adr/ADR-013-one-self-hosted-environment.md).
+
+- **There is one environment**: the CLI stack on the home server (Unraid, `ssh unraid`),
+  public at `https://wusel.goomba.ch`. The family's data lives there. Before any migration
+  run `scripts/remote-backup.sh`; never run `supabase db reset` against it; never run the
+  Dart integration test against it (it creates households and revokes devices — CI and
+  throwaway stacks only). Keys come from the git-ignored `supabase/.env`.
+- Keep `supabase/` portable to hosted Supabase (further tenants, ADR-013): no dependence on
+  superuser rights or on self-hosted-only features without noting it in ADR-013.
 
 - Tables live in the `app` schema and are never exposed. PostgREST exposes only `api`:
   `security_invoker` views for reads, one function per write use case.
@@ -47,9 +57,11 @@ See [docs/03-architecture.md](docs/03-architecture.md) and
 - pgTAP against the Unraid stack: `scripts/remote-pgtap.sh` (`supabase test db` cannot mount
   local files into a remote Docker host). Tests clear their own state inside a rolled-back
   transaction, so they pass on a database that already has data.
-- Run `flutter analyze`, `flutter test` and (with a backend) `flutter test test/integration
-  --dart-define-from-file=env/dev.json` before finishing. The Supabase stack may run on the
-  Unraid Docker host: `scripts/remote-supabase.sh` (see `docs/16-setup-plan.md`).
+- Run `flutter analyze` and `flutter test` before finishing, and `scripts/remote-pgtap.sh`
+  after backend changes. The integration tests (`flutter test test/integration
+  --dart-define-from-file=env/ci.json`) run in CI on a throwaway stack, or locally against
+  one (`npx supabase start` with Docker on the laptop) — never against the home server.
+  Remote CLI commands go through `scripts/remote-supabase.sh` (see docs/10).
 
 ## Localization
 

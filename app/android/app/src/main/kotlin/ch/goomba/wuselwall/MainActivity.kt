@@ -1,4 +1,4 @@
-package ch.wuselwall.app
+package ch.goomba.wuselwall
 
 import io.flutter.embedding.android.FlutterActivity
 
