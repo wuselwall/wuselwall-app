@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -430,22 +431,24 @@ class _SecuritySection extends ConsumerWidget {
             child: Text(l10n.pinChangeAction),
           ),
         ),
-        ListTile(
-          leading: const Icon(Icons.fingerprint),
-          title: Text(l10n.passkeyTitle),
-          subtitle: Text(l10n.passkeyBody),
-          trailing: OutlinedButton(
-            onPressed: () async {
-              final result = await repo.registerPasskey(l10n.appTitle);
-              if (!context.mounted) return;
-              result.when(
-                ok: (_) => context.showMessage(l10n.passkeyAdded),
-                err: context.showFailure,
-              );
-            },
-            child: Text(l10n.passkeyAdd),
+        // Not on the web until the passkeys SDK is self-hosted (web/index.html).
+        if (!kIsWeb)
+          ListTile(
+            leading: const Icon(Icons.fingerprint),
+            title: Text(l10n.passkeyTitle),
+            subtitle: Text(l10n.passkeyBody),
+            trailing: OutlinedButton(
+              onPressed: () async {
+                final result = await repo.registerPasskey(l10n.appTitle);
+                if (!context.mounted) return;
+                result.when(
+                  ok: (_) => context.showMessage(l10n.passkeyAdded),
+                  err: context.showFailure,
+                );
+              },
+              child: Text(l10n.passkeyAdd),
+            ),
           ),
-        ),
       ],
     );
   }
