@@ -1,0 +1,182 @@
+{
+  "@@locale": "en",
+  "appTitle": "WuselWall",
+  "unexpectedError": "An unexpected error occurred",
+  "retry": "Try again",
+  "errorNetwork": "No connection to the server. Check your network and try again.",
+  "errorAuth": "You are not signed in, or your session has expired.",
+  "errorPermission": "You are not allowed to do that.",
+  "errorNotFound": "That could not be found.",
+  "errorConflict": "That clashes with something that already exists.",
+  "errorValidation": "That input is not valid.",
+  "errorUnknown": "Something went wrong.",
+  "configMissing": "This build is missing its configuration: {missing}",
+  "setupTitle": "Set up",
+  "registerAdult": "Adult",
+  "registerKid": "Kid",
+  "registerKiosk": "Wall display",
+  "systemTitle": "System",
+  "systemBuild": "Build",
+  "systemEnvironment": "Environment",
+  "systemBackendUrl": "Backend URL",
+  "systemConnectivity": "Connectivity",
+  "systemNetwork": "Network",
+  "systemOnline": "Online",
+  "systemOffline": "Offline",
+  "systemUnknown": "Unknown",
+  "systemBackend": "Backend",
+  "systemStatus": "Status",
+  "systemStatusOk": "OK",
+  "systemDbVersion": "Database version",
+  "systemServerTime": "Server time",
+  "@configMissing": {
+    "placeholders": {
+      "missing": {
+        "type": "String"
+      }
+    }
+  },
+  "setupHeadline": "This device is not set up yet",
+  "setupBody": "Enrol this device with a code from a guardian, sign in as a guardian, or set up a new household.",
+  "setupEnrolAction": "Set up this device with a code",
+  "setupSignInAction": "Sign in as guardian",
+  "setupHouseholdAction": "Set up a new household",
+  "wizardTitle": "New household",
+  "wizardCreate": "Create household",
+  "fieldSetupToken": "Setup token",
+  "fieldHouseholdName": "Household name",
+  "fieldYourName": "Your name",
+  "fieldEmail": "Email",
+  "fieldPassword": "Password (at least 10 characters)",
+  "fieldPasswordSimple": "Password",
+  "fieldPin": "6-digit PIN",
+  "fieldRequired": "Required",
+  "signInTitle": "Sign in",
+  "signInAction": "Sign in",
+  "enrolTitle": "Set up this device",
+  "enrolBody": "Enter the code shown on a device that is already set up.",
+  "enrolCodeLabel": "Enrolment code",
+  "enrolAction": "Set up",
+  "errSetupTokenInvalid": "The setup token is not valid.",
+  "errSetupClosed": "This system is already set up.",
+  "errPasswordTooShort": "The password needs at least 10 characters.",
+  "errPinFormat": "The PIN must be exactly 6 digits.",
+  "errCodeInvalid": "That code is wrong or has expired.",
+  "errGuardianRequired": "Only a guardian can do that.",
+  "errDeviceRevoked": "This device has been blocked.",
+  "errActorRequired": "Tap your name first.",
+  "errNameRequired": "Please enter a name.",
+  "errInvalidLogin": "Email or password is wrong.",
+  "cancel": "Cancel",
+  "save": "Save",
+  "close": "Close",
+  "delete": "Delete",
+  "yes": "Yes",
+  "no": "No",
+  "shoppingTitle": "Shopping list",
+  "shoppingAddHint": "Add item",
+  "shoppingQuantityHint": "Quantity",
+  "shoppingEmpty": "Nothing to buy",
+  "shoppingFinish": "Finish shopping",
+  "shoppingFinishConfirm": "Finish this trip? Ticked items are removed, the rest stays on the list.",
+  "shoppingFinished": "{bought} bought, {left} carried over",
+  "@shoppingFinished": {
+    "placeholders": {
+      "bought": {
+        "type": "int"
+      },
+      "left": {
+        "type": "int"
+      }
+    }
+  },
+  "actingWho": "Who are you?",
+  "pinTitle": "Guardian PIN",
+  "pinPrompt": "Enter the PIN for {name}",
+  "@pinPrompt": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pinWrong": "Wrong PIN. {left} attempts left.",
+  "@pinWrong": {
+    "placeholders": {
+      "left": {
+        "type": "int"
+      }
+    }
+  },
+  "pinBackoff": "Too many attempts. Please wait a moment.",
+  "pinLocked": "PIN locked. A guardian must sign in to unlock it.",
+  "settingsTitle": "Settings",
+  "settingsMembers": "Members",
+  "settingsDevices": "Devices",
+  "addMember": "Add member",
+  "memberName": "Name",
+  "roleGuardian": "Guardian",
+  "roleMember": "Member",
+  "addDevice": "Add device",
+  "deviceLabel": "Device name",
+  "createCode": "Create code",
+  "enrolmentCodeTitle": "Enrolment code",
+  "enrolmentCodeHint": "Enter this code on the new device within 10 minutes. It works once.",
+  "thisDevice": "this device",
+  "deviceRevoked": "blocked",
+  "revoke": "Block",
+  "revokeConfirm": "Block \"{device}\"? It loses access immediately.",
+  "@revokeConfirm": {
+    "placeholders": {
+      "device": {
+        "type": "String"
+      }
+    }
+  },
+  "signOutDevice": "Sign out this device",
+  "classPersonal": "Personal",
+  "classShared": "Shared (tap to switch)",
+  "classKiosk": "Wall display",
+  "systemDevice": "This device",
+  "systemRegister": "Register",
+  "systemEnrolled": "Enrolled",
+  "errRateLimited": "Too many attempts. Please wait a few minutes and try again.",
+  "errMfaRequired": "Enter the code from your authenticator app first.",
+  "scanQr": "Scan QR code",
+  "scanTitle": "Scan the setup code",
+  "enrolmentQrLabel": "QR code for the enrolment code",
+  "mfaTitle": "Second factor",
+  "mfaBody": "Enter the 6-digit code from your authenticator app.",
+  "mfaCodeLabel": "6-digit code",
+  "mfaVerify": "Confirm",
+  "registerTitle": "Name this device",
+  "registerBody": "{name}, this phone is new to the household. Give it a name so you can recognise (and block) it later.",
+  "@registerBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "registerDefaultLabel": "{name}'s phone",
+  "@registerDefaultLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "registerAction": "Use this device",
+  "signInPasskey": "Sign in with passkey",
+  "settingsSecurity": "Security",
+  "totpTitle": "Two-factor sign-in",
+  "totpOn": "On: a code is needed at every sign-in.",
+  "totpOff": "Off",
+  "totpEnable": "Turn on",
+  "totpDisable": "Turn off",
+  "totpScanBody": "Scan this code with an authenticator app, then enter the 6-digit code it shows.",
+  "passkeyTitle": "Passkey",
+  "passkeyBody": "Sign in with fingerprint or face instead of a password.",
+  "passkeyAdd": "Add",
+  "passkeyAdded": "Passkey added."
+}

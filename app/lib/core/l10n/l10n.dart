@@ -1,0 +1,43 @@
+import 'package:flutter/widgets.dart';
+import 'package:wuselwall/core/error/failure.dart';
+import 'package:wuselwall/l10n/generated/app_localizations.dart';
+
+export 'package:wuselwall/l10n/generated/app_localizations.dart';
+
+extension L10nContext on BuildContext {
+  AppLocalizations get l10n => AppLocalizations.of(this);
+}
+
+extension FailureL10n on Failure {
+  /// A message fit for a household member, in the current language. A stable domain
+  /// code from the backend (the `hint` of an `api` function's exception) wins over the
+  /// generic message for the failure's kind.
+  String message(AppLocalizations l10n) {
+    final byCode = switch (code) {
+      'setup_token_invalid' => l10n.errSetupTokenInvalid,
+      'setup_closed' => l10n.errSetupClosed,
+      'password_too_short' => l10n.errPasswordTooShort,
+      'pin_format' => l10n.errPinFormat,
+      'code_invalid' => l10n.errCodeInvalid,
+      'guardian_required' => l10n.errGuardianRequired,
+      'device_revoked' => l10n.errDeviceRevoked,
+      'actor_required' => l10n.errActorRequired,
+      'name_required' => l10n.errNameRequired,
+      'invalid_credentials' => l10n.errInvalidLogin,
+      'rate_limited' => l10n.errRateLimited,
+      'mfa_required' => l10n.errMfaRequired,
+      'session_invalid' => l10n.errorAuth,
+      _ => null,
+    };
+    if (byCode != null) return byCode;
+    return switch (this) {
+      NetworkFailure() => l10n.errorNetwork,
+      AuthFailure() => l10n.errorAuth,
+      PermissionFailure() => l10n.errorPermission,
+      NotFoundFailure() => l10n.errorNotFound,
+      ConflictFailure() => l10n.errorConflict,
+      ValidationFailure() => l10n.errorValidation,
+      UnknownFailure() => l10n.errorUnknown,
+    };
+  }
+}
