@@ -33,7 +33,7 @@ nothing is tested twice at an expensive layer if a cheap one already covers it.
 | 6 | Repository integration: Dart repositories against a real stack | `flutter test --tags integration` | `app/test/integration` | Every PR (`backend` job) | Exists |
 | 7 | On-device E2E: the real app on a simulator, emulator or phone | `integration_test` + **Patrol** | `app/integration_test/` | Nightly (Android), before a release (iOS, devices) | New |
 | 8 | Web smoke: the release web build in a browser | **Playwright** | `e2e/web/` | Every PR | New, small |
-| 9 | Manual device check: what automation cannot reach | Checklist | [`docs/release-checklist.md`](release-checklist.md) | Before promoting a TestFlight/Play build | New |
+| 9 | Manual device check: what automation cannot reach | Checklist | [`specs/release-checklist.md`](release-checklist.md) | Before promoting a TestFlight/Play build | New |
 
 Note the naming: `app/test/integration/` stays the host-VM repository tests (layer 6).
 Flutter's on-device tests go in `app/integration_test/` (layer 7), the directory the
@@ -134,7 +134,7 @@ It runs in the `backend` job after the repository integration tests, against
 ### Layer 9 — the manual device check
 
 Some things only a real device on the home wifi can show. Before a TestFlight or Play
-build is promoted to the family, run [`docs/release-checklist.md`](release-checklist.md)
+build is promoted to the family, run [`specs/release-checklist.md`](release-checklist.md)
 (≈ 20 minutes) on the iPhone, the iPad and the Samsung:
 
 - Passkeys with the real providers: iCloud Keychain (iPhone, iPad), Samsung Pass and
@@ -176,7 +176,7 @@ bug ever shows up; its free tier allows a few physical-device runs a day.
 | T2 | Patrol set up on iOS and Android; `test_ids.dart`; flows 3 and 5 hermetic, green on simulator, emulator and the three devices | 1 weekend |
 | T3 | Backed flows 1, 2, 4, 6; `e2e.yml` nightly on the Android emulator | 1 weekend |
 | T4 | Playwright web smoke with the virtual authenticator, added to the `backend` job | 1 evening |
-| T5 | `docs/release-checklist.md`, used for the first TestFlight/Play build (M0.4, setup step 7) | 1 evening, with step 7 |
+| T5 | `specs/release-checklist.md`, used for the first TestFlight/Play build (M0.4, setup step 7) | 1 evening, with step 7 |
 
 From then on, each new module comes with layers 1, 3, 4 and 6 in the same change, adds
 goldens for the screens it introduces, and adds an on-device flow only for what crosses

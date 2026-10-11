@@ -121,7 +121,8 @@ wuselwall/
 │  └─ backup/                  backup.sh, restore-drill.sh (run on the home server)
 ├─ scripts/                    remote-supabase / -pgtap / -backup / -setup-token
 ├─ .github/workflows/          ci.yml, release-mobile.yml
-└─ docs/
+├─ specs/                      the specification (this folder)
+└─ docs/                       the end-user documentation (VitePress)
 ```
 
 **The rules that keep this maintainable:**

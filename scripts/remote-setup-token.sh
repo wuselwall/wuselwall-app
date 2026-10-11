@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Replaces the setup token on the home server with a fresh random one and prints it once
-# (docs/10#3-first-household). Only the hash is stored. The dev seed's "dev-setup" is in
+# (specs/10#3-first-household). Only the hash is stored. The dev seed's "dev-setup" is in
 # git and must not guard a stack that is reachable from the internet.
 set -euo pipefail
 token=$(openssl rand -hex 12)

@@ -9,7 +9,7 @@ import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 
 /// Numeric pad for the 6-digit guardian PIN. The digits are never echoed — only dots —
-/// because the pad sits on a wall display in a busy kitchen (docs/08).
+/// because the pad sits on a wall display in a busy kitchen (specs/08).
 class PinPadDialog extends ConsumerStatefulWidget {
   const PinPadDialog({required this.guardian, super.key});
 

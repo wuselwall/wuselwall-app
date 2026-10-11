@@ -116,10 +116,10 @@ feature branch ──PR──► ci.yml: every migration from zero on a throwawa
                        pgTAP, Flutter tests, the integration test
       │ green
       ▼
-scripts/remote-backup.sh        — a dump first, always
-scripts/remote-supabase.sh migration up
-scripts/remote-pgtap.sh         — rolled-back transactions; safe on the live data
+scripts/remote-migrate.sh       — backup, `migration up`, pgTAP; stops at the first failure
 ```
+
+pgTAP runs in rolled-back transactions, so it is safe on the live data.
 
 Migrations are forward-only and must keep working with the previous app release, because
 phones update on their own schedule.

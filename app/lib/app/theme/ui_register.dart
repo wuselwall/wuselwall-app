@@ -1,11 +1,11 @@
-/// The three ways the same app presents itself (docs/09): a dense adult UI, a large and
+/// The three ways the same app presents itself (specs/09): a dense adult UI, a large and
 /// friendly kid UI, and the read-from-across-the-room wall display.
 enum UiRegister {
   adult,
   kid,
   kiosk;
 
-  /// Base body text size in logical pixels (docs/09 design system).
+  /// Base body text size in logical pixels (specs/09 design system).
   double get baseFontSize => switch (this) {
     adult => 15,
     kid => 19,
@@ -26,7 +26,7 @@ enum UiRegister {
     kiosk => 24,
   };
 
-  /// Corner radius of controls and cards (docs/17, "Shape, depth and motion").
+  /// Corner radius of controls and cards (specs/17, "Shape, depth and motion").
   double get radius => switch (this) {
     adult => 10,
     kid => 18,

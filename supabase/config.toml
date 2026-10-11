@@ -75,7 +75,7 @@ site_url = "https://wusel.goomba.ch"
 # A list of *exact* URLs that auth providers are permitted to redirect to post authentication.
 additional_redirect_urls = ["https://127.0.0.1:3000", "ch.goomba.wuselwall://login-callback/"]
 # Our own keys: the CLI defaults are public and this stack is reachable from the internet.
-# Values come from supabase/.env (git-ignored); CI writes throwaway ones (docs/16).
+# Values come from supabase/.env (git-ignored); CI writes throwaway ones (specs/16).
 jwt_secret = "env(WW_JWT_SECRET)"
 publishable_key = "env(WW_PUBLISHABLE_KEY)"
 secret_key = "env(WW_SECRET_KEY)"

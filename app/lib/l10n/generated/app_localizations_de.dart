@@ -545,4 +545,20 @@ class AppLocalizationsDe extends AppLocalizations {
   String shoppingAddedBy(String name) {
     return 'Hinzugefügt von $name';
   }
+
+  @override
+  String get pinChangeTitle => 'PIN für Erziehungsberechtigte';
+
+  @override
+  String get pinChangeBody =>
+      'Lege eine neue 6-stellige PIN fest. Das entsperrt auch eine PIN, die nach zu vielen Fehlversuchen gesperrt wurde.';
+
+  @override
+  String get pinChangeAction => 'Ändern';
+
+  @override
+  String get pinChangeField => 'Neue PIN (6 Ziffern)';
+
+  @override
+  String get pinChanged => 'PIN geändert.';
 }

@@ -47,7 +47,7 @@ phone — but the register itself is a device property.
 *Added 2026-08-30 (FR-8.1 – FR-8.11). This replaces the earlier "today dashboard" as the
 kiosk's standard screen.*
 
-**Mockup:** [`docs/mockups/kiosk-week-board.html`](mockups/kiosk-week-board.html) —
+**Mockup:** [`specs/mockups/kiosk-week-board.html`](mockups/kiosk-week-board.html) —
 interactive, German, with a Tag/Nacht toggle and working tap-through; published at
 https://claude.ai/code/artifact/748ae563-53fa-4645-8c9a-302d42011e76. Built to be argued with before anything is coded: it carries the
 five decisions the family has to make (Q23, Q25–Q27 in [14](14-open-questions.md)) as

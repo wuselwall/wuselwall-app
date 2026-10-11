@@ -1,7 +1,7 @@
 # WuselWall app
 
 Flutter client (iOS, Android, web). Started from Supabase's `flutter-user-management`
-example; see [ADR-010](../docs/adr/ADR-010-flutter-and-self-hosted-supabase.md).
+example; see [ADR-010](../specs/adr/ADR-010-flutter-and-self-hosted-supabase.md).
 Application/bundle ID and auth deep-link scheme: `ch.goomba.wuselwall`.
 
 ## Run
@@ -12,7 +12,7 @@ flutter run --dart-define-from-file=env/dev.json -d web-server --web-hostname lo
 ```
 
 `env/dev.json` points at the one environment, `https://wusel.goomba.ch`
-([ADR-013](../docs/adr/ADR-013-one-self-hosted-environment.md)) — the family's data, so
+([ADR-013](../specs/adr/ADR-013-one-self-hosted-environment.md)) — the family's data, so
 develop with care. `env/ci.json` points at a throwaway stack on `http://127.0.0.1:54321`
 (`npm run db:start` with Docker on the laptop); the integration tests use only that.
 

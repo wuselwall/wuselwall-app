@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -416,6 +417,15 @@ class _SecuritySection extends ConsumerWidget {
           ),
         ),
         ListTile(
+          leading: const Icon(Icons.pin_outlined),
+          title: Text(l10n.pinChangeTitle),
+          subtitle: Text(l10n.pinChangeBody),
+          trailing: OutlinedButton(
+            onPressed: () => _changePin(context, repo),
+            child: Text(l10n.pinChangeAction),
+          ),
+        ),
+        ListTile(
           leading: const Icon(Icons.fingerprint),
           title: Text(l10n.passkeyTitle),
           subtitle: Text(l10n.passkeyBody),
@@ -432,6 +442,44 @@ class _SecuritySection extends ConsumerWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Future<void> _changePin(BuildContext context, IdentityRepository repo) async {
+    final l10n = context.l10n;
+    final controller = TextEditingController();
+    final pin = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.pinChangeTitle),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          obscureText: true,
+          keyboardType: TextInputType.number,
+          maxLength: 6,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          decoration: InputDecoration(labelText: l10n.pinChangeField),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(l10n.cancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, controller.text),
+            child: Text(l10n.pinChangeAction),
+          ),
+        ],
+      ),
+    );
+    controller.dispose();
+    if (pin == null || !context.mounted) return;
+    final result = await repo.setPin(pin: pin);
+    if (!context.mounted) return;
+    result.when(
+      ok: (_) => context.showMessage(l10n.pinChanged),
+      err: context.showFailure,
     );
   }
 

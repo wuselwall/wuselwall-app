@@ -1,4 +1,4 @@
-/// Shared design tokens (docs/17-design-system.md). Registers scale these; they do
+/// Shared design tokens (specs/17-design-system.md). Registers scale these; they do
 /// not redefine them. Colours live in `palette.dart`.
 abstract final class Tokens {
   /// UI face for every register: drawn for legibility (distinct `I l 1`, `O 0`),
@@ -17,7 +17,7 @@ abstract final class Tokens {
   static const double space6 = 24;
   static const double space8 = 32;
 
-  /// Motion (docs/17): brief, and off when the system asks for reduced motion.
+  /// Motion (specs/17): brief, and off when the system asks for reduced motion.
   static const Duration motionStandard = Duration(milliseconds: 150);
   static const Duration motionEmphasised = Duration(milliseconds: 250);
 }
