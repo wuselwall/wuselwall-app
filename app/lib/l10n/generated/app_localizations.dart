@@ -859,6 +859,246 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Passkey added.'**
   String get passkeyAdded;
+
+  /// No description provided for @shoppingHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get shoppingHistory;
+
+  /// No description provided for @shoppingHistoryEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No finished trips yet'**
+  String get shoppingHistoryEmpty;
+
+  /// No description provided for @shoppingSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search or add'**
+  String get shoppingSearchHint;
+
+  /// No description provided for @shoppingTilesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Tiles appear here once you have bought something. Type a name to add an item.'**
+  String get shoppingTilesEmpty;
+
+  /// No description provided for @shoppingInTrolley.
+  ///
+  /// In en, this message translates to:
+  /// **'In the trolley ({count})'**
+  String shoppingInTrolley(int count);
+
+  /// No description provided for @shoppingUncategorised.
+  ///
+  /// In en, this message translates to:
+  /// **'Uncategorised'**
+  String get shoppingUncategorised;
+
+  /// No description provided for @shoppingNewList.
+  ///
+  /// In en, this message translates to:
+  /// **'New list'**
+  String get shoppingNewList;
+
+  /// No description provided for @shoppingListName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get shoppingListName;
+
+  /// No description provided for @shoppingListKind.
+  ///
+  /// In en, this message translates to:
+  /// **'Layout'**
+  String get shoppingListKind;
+
+  /// No description provided for @shoppingKindSupermarket.
+  ///
+  /// In en, this message translates to:
+  /// **'Supermarket'**
+  String get shoppingKindSupermarket;
+
+  /// No description provided for @shoppingKindDrugstore.
+  ///
+  /// In en, this message translates to:
+  /// **'Drugstore'**
+  String get shoppingKindDrugstore;
+
+  /// No description provided for @shoppingKindHardware.
+  ///
+  /// In en, this message translates to:
+  /// **'Hardware store'**
+  String get shoppingKindHardware;
+
+  /// No description provided for @shoppingKindOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get shoppingKindOther;
+
+  /// No description provided for @shoppingMakeDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Make default list'**
+  String get shoppingMakeDefault;
+
+  /// No description provided for @shoppingEditItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit item'**
+  String get shoppingEditItem;
+
+  /// No description provided for @shoppingSpecHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Note, e.g. organic or 500 g'**
+  String get shoppingSpecHint;
+
+  /// No description provided for @shoppingCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get shoppingCategory;
+
+  /// No description provided for @shoppingRemoveOne.
+  ///
+  /// In en, this message translates to:
+  /// **'One less'**
+  String get shoppingRemoveOne;
+
+  /// No description provided for @errListExists.
+  ///
+  /// In en, this message translates to:
+  /// **'A list with that name already exists.'**
+  String get errListExists;
+
+  /// No description provided for @errSpecTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'That note is too long (40 characters at most).'**
+  String get errSpecTooLong;
+
+  /// No description provided for @errKioskForbidden.
+  ///
+  /// In en, this message translates to:
+  /// **'This can\'t be done on the wall display.'**
+  String get errKioskForbidden;
+
+  /// No description provided for @shoppingCat_produce.
+  ///
+  /// In en, this message translates to:
+  /// **'Fruit & vegetables'**
+  String get shoppingCat_produce;
+
+  /// No description provided for @shoppingCat_bakery.
+  ///
+  /// In en, this message translates to:
+  /// **'Bread & bakery'**
+  String get shoppingCat_bakery;
+
+  /// No description provided for @shoppingCat_dairy.
+  ///
+  /// In en, this message translates to:
+  /// **'Dairy & cheese'**
+  String get shoppingCat_dairy;
+
+  /// No description provided for @shoppingCat_meat_fish.
+  ///
+  /// In en, this message translates to:
+  /// **'Meat & fish'**
+  String get shoppingCat_meat_fish;
+
+  /// No description provided for @shoppingCat_pantry.
+  ///
+  /// In en, this message translates to:
+  /// **'Pantry'**
+  String get shoppingCat_pantry;
+
+  /// No description provided for @shoppingCat_frozen.
+  ///
+  /// In en, this message translates to:
+  /// **'Frozen'**
+  String get shoppingCat_frozen;
+
+  /// No description provided for @shoppingCat_drinks.
+  ///
+  /// In en, this message translates to:
+  /// **'Drinks'**
+  String get shoppingCat_drinks;
+
+  /// No description provided for @shoppingCat_household.
+  ///
+  /// In en, this message translates to:
+  /// **'Household'**
+  String get shoppingCat_household;
+
+  /// No description provided for @shoppingCat_other.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get shoppingCat_other;
+
+  /// No description provided for @shoppingCat_care.
+  ///
+  /// In en, this message translates to:
+  /// **'Body care'**
+  String get shoppingCat_care;
+
+  /// No description provided for @shoppingCat_baby.
+  ///
+  /// In en, this message translates to:
+  /// **'Baby & kids'**
+  String get shoppingCat_baby;
+
+  /// No description provided for @shoppingCat_cleaning.
+  ///
+  /// In en, this message translates to:
+  /// **'Cleaning'**
+  String get shoppingCat_cleaning;
+
+  /// No description provided for @shoppingCat_health.
+  ///
+  /// In en, this message translates to:
+  /// **'Health'**
+  String get shoppingCat_health;
+
+  /// No description provided for @shoppingCat_tools.
+  ///
+  /// In en, this message translates to:
+  /// **'Tools'**
+  String get shoppingCat_tools;
+
+  /// No description provided for @shoppingCat_screws.
+  ///
+  /// In en, this message translates to:
+  /// **'Screws & fixings'**
+  String get shoppingCat_screws;
+
+  /// No description provided for @shoppingCat_electrical.
+  ///
+  /// In en, this message translates to:
+  /// **'Electrical'**
+  String get shoppingCat_electrical;
+
+  /// No description provided for @shoppingCat_garden.
+  ///
+  /// In en, this message translates to:
+  /// **'Garden'**
+  String get shoppingCat_garden;
+
+  /// No description provided for @shoppingCreateTile.
+  ///
+  /// In en, this message translates to:
+  /// **'Add “{name}”'**
+  String shoppingCreateTile(String name);
+
+  /// No description provided for @shoppingAddedBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Added by {name}'**
+  String shoppingAddedBy(String name);
 }
 
 class _AppLocalizationsDelegate

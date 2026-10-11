@@ -417,4 +417,132 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get passkeyAdded => 'Passkey hinzugefügt.';
+
+  @override
+  String get shoppingHistory => 'Verlauf';
+
+  @override
+  String get shoppingHistoryEmpty => 'Noch keine abgeschlossenen Einkäufe';
+
+  @override
+  String get shoppingSearchHint => 'Suchen oder hinzufügen';
+
+  @override
+  String get shoppingTilesEmpty =>
+      'Kacheln erscheinen hier, sobald ihr etwas gekauft habt. Tippe einen Namen, um einen Artikel hinzuzufügen.';
+
+  @override
+  String shoppingInTrolley(int count) {
+    return 'Im Wagen ($count)';
+  }
+
+  @override
+  String get shoppingUncategorised => 'Ohne Kategorie';
+
+  @override
+  String get shoppingNewList => 'Neue Liste';
+
+  @override
+  String get shoppingListName => 'Name';
+
+  @override
+  String get shoppingListKind => 'Aufteilung';
+
+  @override
+  String get shoppingKindSupermarket => 'Supermarkt';
+
+  @override
+  String get shoppingKindDrugstore => 'Drogerie';
+
+  @override
+  String get shoppingKindHardware => 'Baumarkt';
+
+  @override
+  String get shoppingKindOther => 'Sonstiges';
+
+  @override
+  String get shoppingMakeDefault => 'Als Standardliste festlegen';
+
+  @override
+  String get shoppingEditItem => 'Artikel bearbeiten';
+
+  @override
+  String get shoppingSpecHint => 'Hinweis, z. B. Bio oder 500 g';
+
+  @override
+  String get shoppingCategory => 'Kategorie';
+
+  @override
+  String get shoppingRemoveOne => 'Eins weniger';
+
+  @override
+  String get errListExists => 'Eine Liste mit diesem Namen gibt es schon.';
+
+  @override
+  String get errSpecTooLong =>
+      'Der Hinweis ist zu lang (höchstens 40 Zeichen).';
+
+  @override
+  String get errKioskForbidden => 'Das geht am Wandbildschirm nicht.';
+
+  @override
+  String get shoppingCat_produce => 'Obst & Gemüse';
+
+  @override
+  String get shoppingCat_bakery => 'Brot & Backwaren';
+
+  @override
+  String get shoppingCat_dairy => 'Milch & Käse';
+
+  @override
+  String get shoppingCat_meat_fish => 'Fleisch & Fisch';
+
+  @override
+  String get shoppingCat_pantry => 'Vorrat';
+
+  @override
+  String get shoppingCat_frozen => 'Tiefkühl';
+
+  @override
+  String get shoppingCat_drinks => 'Getränke';
+
+  @override
+  String get shoppingCat_household => 'Haushalt';
+
+  @override
+  String get shoppingCat_other => 'Sonstiges';
+
+  @override
+  String get shoppingCat_care => 'Körperpflege';
+
+  @override
+  String get shoppingCat_baby => 'Baby & Kind';
+
+  @override
+  String get shoppingCat_cleaning => 'Reinigung';
+
+  @override
+  String get shoppingCat_health => 'Gesundheit';
+
+  @override
+  String get shoppingCat_tools => 'Werkzeug';
+
+  @override
+  String get shoppingCat_screws => 'Schrauben & Befestigung';
+
+  @override
+  String get shoppingCat_electrical => 'Elektro';
+
+  @override
+  String get shoppingCat_garden => 'Garten';
+
+  @override
+  String shoppingCreateTile(String name) {
+    return '„$name“ neu anlegen';
+  }
+
+  @override
+  String shoppingAddedBy(String name) {
+    return 'Hinzugefügt von $name';
+  }
 }

@@ -151,6 +151,17 @@ class FakeShoppingRepository implements ShoppingRepository {
   Future<Result<List<ShoppingItem>>> items() async => Ok(list);
 
   @override
+  Future<Result<List<ShoppingList>>> lists() async => const Ok([
+    ShoppingList(id: 'l1', name: 'Supermarkt', isDefault: true, openCount: 0),
+  ]);
+
+  @override
+  Future<Result<List<ShoppingCategory>>> categories() async => const Ok([]);
+
+  @override
+  Future<Result<List<CatalogEntry>>> catalog() async => const Ok([]);
+
+  @override
   Future<Result<void>> toggle({
     required String? actor,
     required String itemId,

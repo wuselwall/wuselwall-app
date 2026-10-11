@@ -178,5 +178,66 @@
   "passkeyTitle": "Passkey",
   "passkeyBody": "Mit Fingerabdruck oder Gesicht statt mit Passwort anmelden.",
   "passkeyAdd": "Hinzufügen",
-  "passkeyAdded": "Passkey hinzugefügt."
+  "passkeyAdded": "Passkey hinzugefügt.",
+  "shoppingHistory": "Verlauf",
+  "shoppingHistoryEmpty": "Noch keine abgeschlossenen Einkäufe",
+  "shoppingSearchHint": "Suchen oder hinzufügen",
+  "shoppingTilesEmpty": "Kacheln erscheinen hier, sobald ihr etwas gekauft habt. Tippe einen Namen, um einen Artikel hinzuzufügen.",
+  "shoppingInTrolley": "Im Wagen ({count})",
+  "@shoppingInTrolley": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shoppingUncategorised": "Ohne Kategorie",
+  "shoppingNewList": "Neue Liste",
+  "shoppingListName": "Name",
+  "shoppingListKind": "Aufteilung",
+  "shoppingKindSupermarket": "Supermarkt",
+  "shoppingKindDrugstore": "Drogerie",
+  "shoppingKindHardware": "Baumarkt",
+  "shoppingKindOther": "Sonstiges",
+  "shoppingMakeDefault": "Als Standardliste festlegen",
+  "shoppingEditItem": "Artikel bearbeiten",
+  "shoppingSpecHint": "Hinweis, z. B. Bio oder 500 g",
+  "shoppingCategory": "Kategorie",
+  "shoppingRemoveOne": "Eins weniger",
+  "errListExists": "Eine Liste mit diesem Namen gibt es schon.",
+  "errSpecTooLong": "Der Hinweis ist zu lang (höchstens 40 Zeichen).",
+  "errKioskForbidden": "Das geht am Wandbildschirm nicht.",
+  "shoppingCat_produce": "Obst & Gemüse",
+  "shoppingCat_bakery": "Brot & Backwaren",
+  "shoppingCat_dairy": "Milch & Käse",
+  "shoppingCat_meat_fish": "Fleisch & Fisch",
+  "shoppingCat_pantry": "Vorrat",
+  "shoppingCat_frozen": "Tiefkühl",
+  "shoppingCat_drinks": "Getränke",
+  "shoppingCat_household": "Haushalt",
+  "shoppingCat_other": "Sonstiges",
+  "shoppingCat_care": "Körperpflege",
+  "shoppingCat_baby": "Baby & Kind",
+  "shoppingCat_cleaning": "Reinigung",
+  "shoppingCat_health": "Gesundheit",
+  "shoppingCat_tools": "Werkzeug",
+  "shoppingCat_screws": "Schrauben & Befestigung",
+  "shoppingCat_electrical": "Elektro",
+  "shoppingCat_garden": "Garten",
+  "shoppingCreateTile": "„{name}“ neu anlegen",
+  "@shoppingCreateTile": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shoppingAddedBy": "Hinzugefügt von {name}",
+  "@shoppingAddedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

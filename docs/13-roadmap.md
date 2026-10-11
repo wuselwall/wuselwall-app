@@ -94,6 +94,13 @@ is assembled in M1.5, once all of its sources exist.
 
 ### M1.1 Shopping, complete
 
+> **Built 2026-10-11 (online):** several lists with a default, categories per list as the
+> store layout, the catalogue learned on purchase, the tile picker with folded ranked
+> typeahead and tap-again counts, long-press notes and category correction, the trolley
+> section, trips and the history page. **Still open:** the offline outbox (drift mirror,
+> `api.shopping_apply`), the self-hosted icon set beyond category icons, and the kiosk
+> tile layout polish.
+
 **Scope (as reached in BretApp, 2026-09-12, on the old stack — the mechanisms map to
 drift and Supabase Realtime as described in [07](07-module-meals-shopping.md)):** Categories and store layouts (a category belongs to a list rather
 than a separate `store` entity — v1's three lists already map onto real venues, so the
