@@ -61,7 +61,8 @@ See [specs/03-architecture.md](specs/03-architecture.md),
   after backend changes. The integration tests (`flutter test test/integration
   --dart-define-from-file=env/ci.json`) run in CI on a throwaway stack, or locally against
   one (`npx supabase start` with Docker on the laptop) — never against the home server.
-  Remote CLI commands go through `scripts/remote-supabase.sh` (see specs/10).
+  The home server runs the official compose stack (`infra/supabase`), driven by
+  `scripts/remote-stack.sh`; migrations go through `scripts/remote-migrate.sh` (see specs/10).
 
 ## End-user documentation (`docs/`)
 

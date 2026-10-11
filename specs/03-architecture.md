@@ -119,7 +119,7 @@ wuselwall/
 ├─ infra/
 │  ├─ nginx/                   the wusel.example.org site file for the home server's nginx
 │  └─ backup/                  backup.sh, restore-drill.sh (run on the home server)
-├─ scripts/                    remote-supabase / -pgtap / -backup / -setup-token
+├─ scripts/                    remote-stack / -migrate / -pgtap / -backup / -setup-token
 ├─ .github/workflows/          ci.yml, release-mobile.yml
 ├─ specs/                      the specification (this folder)
 └─ docs/                       the end-user documentation (VitePress)

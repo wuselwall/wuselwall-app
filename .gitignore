@@ -14,3 +14,8 @@ app/untranslated.json
 
 docs/.vitepress/cache/
 docs/.vitepress/dist/
+
+# Compose stack data, if it is ever started from this directory
+infra/supabase/volumes/db/data/
+infra/supabase/volumes/storage/*
+!infra/supabase/volumes/storage/.gitkeep
