@@ -1,0 +1,5 @@
+source "https://rubygems.org"
+
+# fastlane for the iOS release lanes (specs/16, step 7). CI installs it with
+# ruby/setup-ruby; on a Mac, Homebrew's fastlane works without this file.
+gem "fastlane", "~> 2.228"
