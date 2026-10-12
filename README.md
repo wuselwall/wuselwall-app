@@ -29,8 +29,9 @@ specification; `app/`, `supabase/` and `infra/` hold the implementation.
 app/               Flutter — iOS, Android and web; three UI registers, German l10n
 supabase/          migrations (tables in `app`, views and functions in `api`, RLS),
                    Edge Functions, pgTAP tests, seed
-infra/             the nginx site file and the backup scripts for the home server
-scripts/           remote-stack, -migrate, -pgtap, -backup, -setup-token (the home server)
+website/           Astro site at wusel.goomba.ch/ — landing page, Impressum, Datenschutz (de/en)
+infra/             nginx site file, the website's compose project, backup scripts (home server)
+scripts/           remote-web, remote-stack, -migrate, -pgtap, -backup, -setup-token (the home server)
 .github/workflows/ ci.yml, release-mobile.yml
 specs/             the specification — read 01, 02 and 03 before writing code
 ```

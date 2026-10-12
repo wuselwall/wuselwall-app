@@ -53,7 +53,8 @@ is created.
  router: TCP 443 → home server
    │
    ▼
- nginx (home server): only /auth/v1, /rest/v1, /realtime/v1, /functions/v1
+ nginx (home server): /auth/v1, /rest/v1, /realtime/v1, /functions/v1 → gateway
+   │                    /app/ → Flutter web app (static) · everything else → the website
    │                    + static: /.well-known/*, /i/*, /p/*, /privacy, /delete (ADR-014)
    │ HTTP, Docker bridge (172.17.0.1 — not reachable from the home network)
    ▼
@@ -282,6 +283,33 @@ RPO 24 h, RTO a few hours (NFR-11). For a family organiser, losing at most one d
 acceptable; losing everything is not.
 
 ---
+
+## Updating one part
+
+Every part has its own command and can be rebuilt, restarted or rolled back without
+touching the others. None of them needs the database to go down.
+
+| Part | Command | Touches |
+|---|---|---|
+| Website (landing page, Impressum, Datenschutz) | `scripts/remote-web.sh deploy` | Only the `wuselwall-site` container (`infra/web`, its own compose project). `--draft` allows an unfilled Impressum |
+| Flutter web app (`/app/`) | `scripts/deploy-web.sh` | Static files; swapped by rename |
+| Android APK download | `scripts/deploy-apk.sh` | Static file |
+| Edge Functions | `scripts/remote-stack.sh functions` | Syncs `supabase/functions`, restarts the Edge runtime only |
+| One Supabase service (auth, rest, realtime, storage, …) | `scripts/remote-stack.sh up -d --no-deps auth` after editing `.env` or the layer; `… restart rest` for a plain restart | That container only |
+| The whole Supabase stack | `scripts/remote-stack.sh deploy` | Everything `docker compose up -d` finds changed |
+| Database schema | `scripts/remote-migrate.sh` (backup, migrate, pgTAP) | Postgres |
+| nginx routes | Copy `infra/nginx/wusel.goomba.ch.conf`, `nginx -t && nginx -s reload` | Routing only |
+
+Logs and status per part: `scripts/remote-web.sh logs -f site`,
+`scripts/remote-stack.sh logs -f auth`. The website's container healthcheck is
+`/healthz/`; point the uptime monitor at it too.
+
+**Moving the web app to `/app/` (ADR-016), once:** deploy the Flutter app with
+`scripts/deploy-web.sh` (it now builds with `--base-href /app/`), then
+`scripts/remote-web.sh deploy`, then replace the nginx site file and reload. In the
+stack's `.env` on the server set `SITE_URL=https://wusel.goomba.ch/app/` and run
+`scripts/remote-stack.sh up -d --no-deps auth`. Fill in `website/src/config/site.ts` first
+(or deploy with `--draft`).
 
 ## Updates
 

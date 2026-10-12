@@ -85,7 +85,8 @@ const out = {
   // URLs
   SUPABASE_PUBLIC_URL: 'https://wusel.goomba.ch',
   API_EXTERNAL_URL: 'https://wusel.goomba.ch/auth/v1',
-  SITE_URL: 'https://wusel.goomba.ch',
+  // Where GoTrue's e-mail links land: the web app, not the landing page.
+  SITE_URL: 'https://wusel.goomba.ch/app/',
   ADDITIONAL_REDIRECT_URLS: 'https://127.0.0.1:3000,ch.goomba.wuselwall://login-callback/',
   PASSKEY_RP_ID: 'wusel.goomba.ch',
   PASSKEY_RP_ORIGINS: 'https://wusel.goomba.ch',

@@ -22,5 +22,6 @@ editing it. The value is in the trail.
 | [013](ADR-013-one-self-hosted-environment.md) | One self-hosted environment on the home server; further tenants on hosted Supabase | Accepted, amended by 014, superseded in part by 015 |
 | [014](ADR-014-self-service-onboarding.md) | Self-service households; adults sign in with Apple, Google or email; devices pair from a parent's phone | Accepted, amended by 015 |
 | [015](ADR-015-saas-and-self-hosted-flavours.md) | Two flavours: WuselWall Cloud on hosted Supabase, and self-hosted; public store listings | Accepted |
+| [016](ADR-016-public-website.md) | A public website at the root (Astro, own compose project); the Flutter web app moves to /app/ | Accepted |
 
 Format: Context · Decision · Alternatives considered · Consequences.

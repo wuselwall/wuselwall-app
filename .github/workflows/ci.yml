@@ -24,6 +24,21 @@ jobs:
       - run: flutter test --coverage   # includes the en/de ARB parity test
       - run: flutter build web --release --dart-define-from-file=env/ci.json
 
+  website:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: website } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: website/package-lock.json }
+      - run: npm ci
+      - run: npm run build   # placeholders in the Impressum are allowed here; remote-web.sh deploy refuses them
+      - name: Built pages carry their content (SSR/SEO smoke test)
+        run: |
+          grep -q '<h1>' dist/client/index.html
+          grep -q 'hreflang="de-CH"' dist/client/en/index.html
+          test -s dist/client/sitemap-index.xml
+
   backend:
     runs-on: ubuntu-latest
     steps:
