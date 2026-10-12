@@ -3,15 +3,46 @@
 # this lane only signs, archives and uploads.
 default_platform(:ios)
 
+# The App Store Connect API key secrets, checked before use so that a mix-up fails in
+# seconds with a message that names the secret, never printing its value.
+def asc_key_id
+  id = ENV.fetch("ASC_KEY_ID").strip
+  UI.user_error!("ASC_KEY_ID must be the 10-character Key ID from App Store Connect → Integrations") unless id.match?(/\A[A-Z0-9]{10}\z/)
+  UI.user_error!("ASC_KEY_ID holds the Team ID, not the Key ID") if id == CredentialsManager::AppfileConfig.try_fetch_value(:team_id)
+  id
+end
+
+def asc_issuer_id
+  id = ENV.fetch("ASC_ISSUER_ID").strip
+  UI.user_error!("ASC_ISSUER_ID must be the Issuer ID (a UUID) from the top of the Team Keys page") unless id.match?(/\A\h{8}-\h{4}-\h{4}-\h{4}-\h{12}\z/)
+  id
+end
+
+# The .p8 often loses its line breaks on the way into a secret (a password manager's
+# single-line field, spaces or literal "\n"), which OpenSSL rejects as "invalid curve
+# name". Rebuild the PEM from its base64 body.
+def asc_key_pem
+  raw = ENV.fetch("ASC_KEY_P8")
+  UI.user_error!("ASC_KEY_P8 must be the whole .p8 file, from -----BEGIN PRIVATE KEY----- to -----END PRIVATE KEY-----") unless raw.include?("BEGIN PRIVATE KEY") && raw.include?("END PRIVATE KEY")
+  body = raw.gsub(/-----(BEGIN|END) PRIVATE KEY-----/, "").gsub(/\\n|\s/, "")
+  pem = "-----BEGIN PRIVATE KEY-----\n#{body.scan(/.{1,64}/).join("\n")}\n-----END PRIVATE KEY-----\n"
+  begin
+    OpenSSL::PKey.read(pem)
+  rescue OpenSSL::PKey::PKeyError
+    UI.user_error!("ASC_KEY_P8 is not a readable private key: copy the .p8 again, all of it")
+  end
+  pem
+end
+
 platform :ios do
   desc "Sign with the match profile, archive and upload to TestFlight"
   lane :beta do
     setup_ci if is_ci # temporary keychain, match read-only
 
     api_key = app_store_connect_api_key(
-      key_id: ENV.fetch("ASC_KEY_ID"),
-      issuer_id: ENV.fetch("ASC_ISSUER_ID"),
-      key_content: ENV.fetch("ASC_KEY_P8"),
+      key_id: asc_key_id,
+      issuer_id: asc_issuer_id,
+      key_content: asc_key_pem,
     )
 
     match(readonly: true, api_key: api_key)
