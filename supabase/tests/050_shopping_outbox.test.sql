@@ -97,8 +97,11 @@ grant all on r3 to public;
 select is((select jsonb_agg(x - 'op_id') from r3, jsonb_array_elements(r -> 'results') x),
   '[{"code": "category_not_found", "status": "rejected"}, {"code": "op_unknown", "status": "rejected"}, {"status": "applied"}]',
   'rejected ops carry their code; the rest of the batch still applies');
+reset role;
 select is((select status from app.shopping_op where op_id = (select o7 from ids)), 'rejected',
   'a rejected op is recorded, so it is not retried forever');
+select pg_temp.act_as((select usr from ctx), jsonb_build_object(
+  'household_id', (select hh from ctx), 'device_id', (select phone from ctx), 'device_class', 'personal'));
 
 -- Ops on items that are gone are skipped: the tombstone wins.
 select is((select api.shopping_apply(null, jsonb_build_array(
