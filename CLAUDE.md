@@ -4,8 +4,9 @@ This repository holds both the planning documents and the code for WuselWall (se
 [README.md](README.md)). `specs/` is the specification; `app/` (Flutter), `supabase/`
 (migrations, Edge Functions, tests) and `infra/` hold the implementation. Setup-plan steps 3, 5,
 6 and 8 are built (app shell, identity, online shopping list, the one environment) and M1.1
-is built except the offline outbox. Next: the outbox; step 7 once the Apple and Google accounts
-exist; onboarding (step 9, [specs/20](specs/20-onboarding.md), ADR-014 and ADR-015).
+is built, offline outbox included. Next: onboarding (step 9, [specs/20](specs/20-onboarding.md),
+ADR-014 and ADR-015) or M1.2, which starts with household settings (specs/21); step 7 once
+the Apple and Google accounts exist.
 
 ## Architecture rules
 

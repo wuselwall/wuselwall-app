@@ -572,4 +572,29 @@ class AppLocalizationsDe extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String shoppingPending(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Änderungen warten aufs Senden',
+      one: '1 Änderung wartet aufs Senden',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get shoppingItemPending => 'Wartet aufs Senden';
+
+  @override
+  String get errCategoryNotFound =>
+      'Diese Kategorie gibt es nicht mehr. Die Änderung wurde nicht gespeichert.';
+
+  @override
+  String get errNameTooLong => 'Der Name ist zu lang.';
+
+  @override
+  String get errActorInvalid =>
+      'Diese Person gehört nicht mehr zum Haushalt. Die Änderung wurde nicht gespeichert.';
 }

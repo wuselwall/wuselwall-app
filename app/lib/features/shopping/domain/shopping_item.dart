@@ -9,6 +9,7 @@ class ShoppingItem {
     this.categoryId,
     this.addedBy,
     this.count = 1,
+    this.pending = false,
   });
 
   factory ShoppingItem.fromJson(Map<String, dynamic> json) => ShoppingItem(
@@ -36,6 +37,42 @@ class ShoppingItem {
 
   /// How many times the tile was tapped ("2 ×").
   final int count;
+
+  /// Changed on this device and not yet confirmed by the server ("wartet").
+  final bool pending;
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'name': name,
+    'quantity': quantity,
+    'checked': checked,
+    'created_at': createdAt.toIso8601String(),
+    'list_id': listId,
+    'category_id': categoryId,
+    'added_by': addedBy,
+    'count': count,
+  };
+
+  ShoppingItem copyWith({
+    bool? checked,
+    String? quantity,
+    bool clearQuantity = false,
+    String? categoryId,
+    bool clearCategory = false,
+    int? count,
+    bool? pending,
+  }) => ShoppingItem(
+    id: id,
+    name: name,
+    quantity: clearQuantity ? null : quantity ?? this.quantity,
+    checked: checked ?? this.checked,
+    createdAt: createdAt,
+    listId: listId,
+    categoryId: clearCategory ? null : categoryId ?? this.categoryId,
+    addedBy: addedBy,
+    count: count ?? this.count,
+    pending: pending ?? this.pending,
+  );
 }
 
 /// A named list (Supermarkt, Drogerie, …). One is the default.
@@ -58,6 +95,16 @@ class ShoppingList {
   final String name;
   final bool isDefault;
   final int openCount;
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'name': name,
+    'is_default': isDefault,
+    'open_count': openCount,
+  };
+
+  ShoppingList withOpenCount(int count) =>
+      ShoppingList(id: id, name: name, isDefault: isDefault, openCount: count);
 }
 
 /// A category of a list: its order is the walking order of the store. Seeded ones carry
@@ -85,6 +132,14 @@ class ShoppingCategory {
   final String? key;
   final String? name;
   final int sortOrder;
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'list_id': listId,
+    'key': key,
+    'name': name,
+    'sort_order': sortOrder,
+  };
 }
 
 /// What the household has bought on a list before; a tile in the picker.
@@ -118,6 +173,16 @@ class CatalogEntry {
   final String? categoryId;
   final int purchaseCount;
   final DateTime? lastPurchasedAt;
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'list_id': listId,
+    'name': name,
+    'folded_name': foldedName,
+    'category_id': categoryId,
+    'purchase_count': purchaseCount,
+    'last_purchased_at': lastPurchasedAt?.toIso8601String(),
+  };
 }
 
 /// One finished shopping trip.

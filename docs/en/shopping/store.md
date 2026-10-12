@@ -25,6 +25,8 @@ When you're done, tap **Finish shopping** at the bottom.
 
 The button is only active once at least one item is ticked.
 
-::: warning Offline
-For now the list needs a connection to the server. Without one WuselWall shows an error and you can try again. Offline use in the supermarket is being worked on.
-:::
+## Offline
+
+The list works without signal too: adding, ticking, changing the count and **Finish shopping** carry on as usual. Anything the server has not received yet carries a small cloud icon, and the top of the list says, for example, **"2 changes waiting to be sent"**. As soon as there is a connection again, WuselWall sends everything by itself, in the right order.
+
+On an iPhone this only happens while the app is open: if you closed it in the shop without signal, it sends the next time you open it. Creating a list and changing the default list need a connection.

@@ -45,7 +45,7 @@ household; the setup call closes for good. These are now asserted by pgTAP
 | A3 | The fold function exists twice (SQL and Dart) and drifted silently in other projects | **Fixed:** the same cases are asserted on both sides (`fold_test.dart`, `030_hardening`) |
 | A4 | The RLS catalogue test was open since M0 | **Fixed:** `040_catalogue.test.sql` |
 | A5 | CI's integration test had never passed (a Realtime cold-start race) and could run against the family's database | **Fixed:** warm-up loop; the test refuses any host but localhost |
-| A6 | Offline shopping is the one hard requirement and is not built | **Next:** drift mirror + outbox, replayed through one idempotent `api.shopping_apply(p_actor, p_ops jsonb)`. Every write the outbox can carry needs a client-generated id; today `add_item` merges by name, which is already idempotent for the common double-send, but toggle and finish are not |
+| A6 | Offline shopping is the one hard requirement and is not built | **Fixed 2026-10-12:** drift mirror and outbox, replayed through one idempotent `api.shopping_apply(p_actor, p_ops)`; every op carries a client `op_id`, new items and trips a client id; a replay is recognised per op, a bad op rejects only itself (specs/07#offline, pgTAP `050_shopping_outbox`) |
 | A7 | `api.shopping_items` returns every list's open items and the app filters | Fine at household scale; revisit if lists grow past a few hundred rows |
 | A8 | The CLI stack is a development tool serving a family | **Fixed 2026-10-11:** the one environment runs the official self-hosting compose file ([ADR-013 amendment](adr/ADR-013-one-self-hosted-environment.md#amendment-2026-10-11-the-official-compose-stack)); the CLI stack is stopped, its volumes kept for rollback for two weeks |
 | A9 | No monitoring | **Open:** an uptime check on `/auth/v1/health` (with the publishable key as `apikey` header — the gateway answers 401 without it) and the backup ping (specs/10) — twenty minutes with healthchecks.io or Uptime Kuma, which homeserver can host |
@@ -59,7 +59,6 @@ household; the setup call closes for good. These are now asserted by pgTAP
 
 *Revised 2026-10-11, after the compose stack replaced the CLI stack.*
 
-1. **The offline outbox (A6)** — the largest remaining M1.1 item, and the next build.
-2. By the operator: the backup job (A2), edge rate limits (S9), the uptime check (A9).
-3. After two weeks on the compose stack: remove the CLI stack's Docker volumes
+1. By the operator: the backup job (A2), edge rate limits (S9), the uptime check (A9).
+2. After two weeks on the compose stack: remove the CLI stack's Docker volumes
    (`supabase_db_wuselwall`, `supabase_storage_wuselwall`, `supabase_edge_runtime_wuselwall`).

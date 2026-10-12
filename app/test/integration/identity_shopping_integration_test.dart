@@ -7,6 +7,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:otp/otp.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
@@ -14,6 +15,7 @@ import 'package:wuselwall/core/supabase/api_client.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
+import 'package:wuselwall/features/shopping/domain/shopping_sync_model.dart';
 
 /// The whole M0.1 + M0.2 story against a real backend:
 /// `flutter test test/integration --dart-define-from-file=env/ci.json` against a throwaway
@@ -251,6 +253,31 @@ void main() {
         (i) => i.id == again,
       );
       expect((merged.name, merged.count), ('Milch $stamp', 2));
+
+      // --- the offline outbox: one batch, an id chosen on the device, then a replay -----
+      final saftId = const Uuid().v7();
+      final batch = <ShoppingOp>[
+        AddItemOp(
+          opId: const Uuid().v7(),
+          actor: kid.id,
+          itemId: saftId,
+          listId: defaultList.id,
+          name: 'Saft $stamp',
+        ),
+        CheckItemOp(
+          opId: const Uuid().v7(),
+          actor: kid.id,
+          itemId: saftId,
+          checked: true,
+        ),
+      ];
+      final first = (await ipadShop.apply(actor: kid.id, ops: batch)).unwrap();
+      expect(first.results.map((r) => r.status), ['applied', 'applied']);
+      final saft = first.items.firstWhere((i) => i.id == saftId);
+      expect((saft.checked, saft.addedBy), (true, kid.id));
+      final replay = (await ipadShop.apply(actor: kid.id, ops: batch)).unwrap();
+      expect(replay.results.map((r) => r.status), ['duplicate', 'duplicate']);
+      expect(replay.items.where((i) => i.name == 'Saft $stamp'), hasLength(1));
 
       // --- PIN step-up on the shared device, then a guardian action ----------------------
       final wrong = (await ipadRepo.verifyPin(
