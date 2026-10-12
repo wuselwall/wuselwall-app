@@ -45,3 +45,8 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+
+# fastlane output
+/ios/fastlane/report.xml
+/ios/fastlane/README.md
+/ios/fastlane/test_output/

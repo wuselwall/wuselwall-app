@@ -1,0 +1,42 @@
+# iOS release lanes (specs/16, step 7). The workflow runs `flutter build ios --no-codesign`
+# first, which writes the version, build number and dart-defines into Generated.xcconfig;
+# this lane only signs, archives and uploads.
+default_platform(:ios)
+
+platform :ios do
+  desc "Sign with the match profile, archive and upload to TestFlight"
+  lane :beta do
+    setup_ci if is_ci # temporary keychain, match read-only
+
+    api_key = app_store_connect_api_key(
+      key_id: ENV.fetch("ASC_KEY_ID"),
+      issuer_id: ENV.fetch("ASC_ISSUER_ID"),
+      key_content: ENV.fetch("ASC_KEY_P8"),
+    )
+
+    match(readonly: true, api_key: api_key)
+
+    # The project keeps automatic signing for local development; the release archive
+    # uses the distribution certificate and profile from match.
+    update_code_signing_settings(
+      path: "Runner.xcodeproj",
+      targets: ["Runner"],
+      build_configurations: ["Release"],
+      use_automatic_signing: false,
+      team_id: "JSX2VQXW7G",
+      code_sign_identity: "Apple Distribution",
+      profile_name: ENV.fetch("sigh_ch.goomba.wuselwall_appstore_profile-name"),
+    )
+
+    build_app(
+      workspace: "Runner.xcworkspace",
+      scheme: "Runner",
+      configuration: "Release",
+      export_method: "app-store",
+      output_directory: "../build/ios/ipa",
+    )
+
+    # Internal testers receive the build once Apple has processed it; CI does not wait.
+    upload_to_testflight(api_key: api_key, skip_waiting_for_build_processing: true)
+  end
+end

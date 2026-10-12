@@ -1,0 +1,2 @@
+/* System permission prompts, shown by iOS in the device language. Keep in step with de.lproj. */
+"NSCameraUsageDescription" = "The camera scans the QR code that sets up this device.";

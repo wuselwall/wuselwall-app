@@ -384,7 +384,7 @@ jobs:
         env: { PLAY_SERVICE_ACCOUNT_JSON: ... }
 
   ios:
-    runs-on: macos-latest
+    runs-on: macos-26   # Xcode 26: App Store Connect requires the iOS 26 SDK
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
@@ -398,6 +398,11 @@ jobs:
         working-directory: app/ios
         env: { MATCH_PASSWORD: ..., MATCH_GIT_BASIC_AUTHORIZATION: ..., ASC_KEY_ID: ..., ... }
 ```
+
+*Built 2026-10-12:* the iOS job, also startable by hand (`workflow_dispatch`, which keeps
+the pubspec version), with `app/ios/Gemfile` and `app/ios/fastlane/` (`Appfile`, `Matchfile`,
+`Fastfile`; team `JSX2VQXW7G`). The Android job follows once the Play Console account
+exists; until then `build-android.yml` builds the APK.
 
 Each platform's `Fastfile` holds two or three short lanes; the workflow stays thin, so a
 release can also be run from a Mac with the same lanes if one becomes available.

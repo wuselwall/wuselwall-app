@@ -1,0 +1,46 @@
+# Signed builds for the family's devices (specs/16, step 7). A tag v*.*.* releases;
+# "Run workflow" builds the pubspec version from any branch, for testing the pipeline.
+# The Android job (Play internal track) joins once the Play Console account exists;
+# until then build-android.yml produces the APK.
+name: release-mobile
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*.*.*']
+concurrency:
+  group: release-mobile
+  cancel-in-progress: false
+permissions:
+  contents: read
+
+jobs:
+  ios:
+    # Xcode 26: App Store Connect accepts only builds made with the iOS 26 SDK or later.
+    runs-on: macos-26
+    defaults: { run: { working-directory: app } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with: { flutter-version-file: app/pubspec.yaml, cache: true }
+      - uses: ruby/setup-ruby@v1
+        with: { ruby-version: '3.3', bundler-cache: true, working-directory: app/ios }
+      - run: xcodebuild -version
+      # A tag sets the version name; a manual run keeps the one in pubspec.yaml. The run
+      # number is the build number, so every upload is newer than the last.
+      - run: |
+          args=(--build-number=${{ github.run_number }})
+          if [[ "$GITHUB_REF_TYPE" == tag ]]; then args+=(--build-name="${GITHUB_REF_NAME#v}"); fi
+          flutter build ios --release --no-codesign "${args[@]}" --dart-define-from-file=env/dev.json
+      - run: bundle exec fastlane ios beta
+        working-directory: app/ios
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wuselwall-ipa
+          path: app/build/ios/ipa/*.ipa
+          retention-days: 30
