@@ -1,0 +1,85 @@
+---
+import '../styles/global.css';
+import { site } from '../config/site';
+import { alternate, paths, strings, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  page: 'home' | 'imprint' | 'privacy';
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+}
+
+const { lang, page, noindex = false } = Astro.props;
+const t = strings[lang];
+const title = Astro.props.title ?? t.title;
+const description = Astro.props.description ?? t.description;
+const here = paths[lang][page];
+const other = lang === 'de' ? 'en' : 'de';
+const canonical = new URL(here, site.url).toString();
+const alt = new URL(alternate(lang, page), site.url).toString();
+const image = new URL('/og-image.png', site.url).toString();
+---
+
+<!doctype html>
+<html lang={t.htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#2D6A4F" />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang={lang === 'de' ? 'de-CH' : 'en'} href={canonical} />
+    <link rel="alternate" hreflang={other === 'de' ? 'de-CH' : 'en'} href={alt} />
+    <link rel="alternate" hreflang="x-default" href={new URL(paths.de[page], site.url).toString()} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={image} />
+    <meta property="og:locale" content={lang === 'de' ? 'de_CH' : 'en_US'} />
+    <meta name="twitter:card" content="summary" />
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip" href="#main">{lang === 'de' ? 'Zum Inhalt' : 'Skip to content'}</a>
+    <header class="bar">
+      <div class="wrap bar-inner">
+        <a class="brand" href={paths[lang].home} aria-label={site.name}>
+          <img src="/logo.svg" alt="" width="40" height="40" />
+          <span>{site.name}</span>
+        </a>
+        <nav aria-label="Main">
+          {page === 'home' && (
+            <>
+              <a href="#funktionen" class="hide-sm">{t.nav.features}</a>
+              <a href="#stand" class="hide-sm">{t.nav.status}</a>
+              <a href="#open-source" class="hide-sm">{t.nav.openSource}</a>
+            </>
+          )}
+          <a class="btn btn-small" href={site.webApp}>{t.nav.webApp}</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main"><slot /></main>
+
+    <footer class="foot">
+      <div class="wrap foot-inner">
+        <p>© {new Date().getFullYear()} {site.name} · {t.footer.note}</p>
+        <nav aria-label="Footer">
+          <a href={paths[lang].imprint}>{t.footer.imprint}</a>
+          <a href={paths[lang].privacy}>{t.footer.privacy}</a>
+          <a href={site.github} rel="noopener">{t.footer.source}</a>
+          <a href={alternate(lang, page)} hreflang={other} lang={other}>{t.footer.langSwitch}</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

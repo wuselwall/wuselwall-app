@@ -118,8 +118,10 @@ wuselwall/
 │  └─ seed.sql                 a development household
 ├─ infra/
 │  ├─ nginx/                   the wusel.example.org site file for the home server's nginx
+│  ├─ web/                     compose project for the website container (ADR-016)
 │  └─ backup/                  backup.sh, restore-drill.sh (run on the home server)
-├─ scripts/                    remote-stack / -migrate / -pgtap / -backup / -setup-token
+├─ website/                    Astro site: landing page, Impressum, Datenschutz (ADR-016)
+├─ scripts/                    remote-web / remote-stack / -migrate / -pgtap / -backup / -setup-token
 ├─ .github/workflows/          ci.yml, release-mobile.yml
 ├─ specs/                      the specification (this folder)
 └─ docs/                       the end-user documentation (VitePress)
