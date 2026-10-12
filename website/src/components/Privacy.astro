@@ -1,0 +1,57 @@
+---
+import Base from '../layouts/Base.astro';
+import { legal, site, unfilledLegal } from '../config/site';
+import { strings, type Lang } from '../i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = strings[lang];
+const de = lang === 'de';
+---
+
+<Base lang={lang} page="privacy" title={`${t.legal.privacyTitle} – WuselWall`} description={t.legal.privacyDescription} noindex={unfilledLegal.length > 0}>
+  <div class="wrap prose legal">
+    <h1>{t.legal.privacyTitle}</h1>
+    {unfilledLegal.length > 0 && <p class="warn" role="alert">{t.legal.placeholderWarning}</p>}
+
+    {de ? (
+      <>
+        <h2>Verantwortlich</h2>
+        <p>{legal.operator}, {legal.street}, {legal.city}, {legal.country}. E-Mail: <a href={`mailto:${legal.email}`}>{legal.email}</a>.</p>
+
+        <h2>Diese Website</h2>
+        <p>Diese Website setzt keine Cookies, bindet keine Analyse-, Werbe- oder Social-Media-Dienste ein und lädt keine Schriften oder Skripte von Dritten. Beim Aufruf verarbeitet der Webserver technisch notwendige Daten (IP-Adresse, Zeitpunkt, aufgerufene Seite, Browserkennung) in Server-Logdateien, um den Betrieb und die Sicherheit zu gewährleisten. Sie werden nicht mit anderen Daten zusammengeführt und nach kurzer Zeit gelöscht.</p>
+        <p>Die Website wird über Cloudflare ausgeliefert (Verschlüsselung, Schutz vor Missbrauch, Zwischenspeicherung). Dabei verarbeitet Cloudflare als Auftragsverarbeiter Ihre IP-Adresse.</p>
+
+        <h2>Die App und die Web-App</h2>
+        <p>Wer WuselWall nutzt, legt eine Familie an und erfasst darin Angaben wie Namen und Farben der Mitglieder, Termine, Aufgaben, Essenspläne und Einkaufslisten. Diese Daten werden ausschliesslich zur Bereitstellung der Funktionen verarbeitet und auf dem Server des Betreibers gespeichert. Sie werden nicht verkauft, nicht für Werbung genutzt und nicht an Analyse- oder Absturzberichtsdienste übermittelt. Die Apps enthalten keine Tracking-SDKs.</p>
+        <p>Für die Anmeldung werden Zugangsdaten verarbeitet (E-Mail-Adresse oder das Konto bei Apple bzw. Google, wenn Sie diese Anmeldung wählen). Geräte erhalten ein eigenes Zugangstoken, das jederzeit gesperrt werden kann.</p>
+
+        <h2>Ihre Rechte</h2>
+        <p>Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch. In der App können Sie Ihr Konto und Ihre Familie löschen und Ihre Daten exportieren. Für alles Weitere schreiben Sie an <a href={`mailto:${legal.email}`}>{legal.email}</a>. Sie können sich ausserdem bei der zuständigen Datenschutzbehörde beschweren.</p>
+
+        <h2>Selbst betreiben</h2>
+        <p>WuselWall ist Open Source (<a href={site.github} rel="noopener">GitHub</a>). Wer WuselWall auf einem eigenen Server betreibt, ist für diese Daten selbst verantwortlich; diese Erklärung gilt dann nicht für diesen Server.</p>
+      </>
+    ) : (
+      <>
+        <h2>Controller</h2>
+        <p>{legal.operator}, {legal.street}, {legal.city}, {legal.country}. E-mail: <a href={`mailto:${legal.email}`}>{legal.email}</a>.</p>
+
+        <h2>This website</h2>
+        <p>This website sets no cookies, embeds no analytics, advertising or social-media services and loads no fonts or scripts from third parties. When you visit, the web server processes technically necessary data (IP address, time, page requested, browser identifier) in server logs to keep the service running and secure. It is not combined with other data and is deleted after a short time.</p>
+        <p>The website is delivered through Cloudflare (encryption, abuse protection, caching). Cloudflare processes your IP address as a processor.</p>
+
+        <h2>The app and the web app</h2>
+        <p>People who use WuselWall create a family and record details in it such as members’ names and colours, events, chores, meal plans and shopping lists. This data is processed only to provide the features and is stored on the operator’s server. It is not sold, not used for advertising and not sent to analytics or crash-reporting services. The apps contain no tracking SDKs.</p>
+        <p>Signing in processes credentials (an e-mail address, or your Apple or Google account if you choose that sign-in). Each device receives its own access token, which can be revoked at any time.</p>
+
+        <h2>Your rights</h2>
+        <p>You have the right of access, rectification, erasure, restriction of processing, data portability and objection. In the app you can delete your account and your family and export your data. For anything else write to <a href={`mailto:${legal.email}`}>{legal.email}</a>. You may also complain to your data protection authority.</p>
+
+        <h2>Self-hosting</h2>
+        <p>WuselWall is open source (<a href={site.github} rel="noopener">GitHub</a>). Whoever runs WuselWall on their own server is responsible for that data; this statement does not apply to such a server.</p>
+      </>
+    )}
+  </div>
+</Base>

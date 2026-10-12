@@ -1,0 +1,33 @@
+---
+import Base from '../layouts/Base.astro';
+import { legal, unfilledLegal } from '../config/site';
+import { strings, type Lang } from '../i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = strings[lang];
+---
+
+<Base lang={lang} page="imprint" title={`${t.legal.imprintTitle} – WuselWall`} description={t.legal.imprintDescription} noindex={unfilledLegal.length > 0}>
+  <div class="wrap prose legal">
+    <h1>{t.legal.imprintTitle}</h1>
+    {unfilledLegal.length > 0 && <p class="warn" role="alert">{t.legal.placeholderWarning}</p>}
+
+    <h2>{t.legal.operator}</h2>
+    <address>
+      {legal.operator}<br />
+      {legal.street}<br />
+      {legal.city}<br />
+      {legal.country}
+    </address>
+
+    <h2>{t.legal.contact}</h2>
+    <p>
+      E-Mail: <a href={`mailto:${legal.email}`}>{legal.email}</a>
+      {legal.phone && <><br />{lang === 'de' ? 'Telefon' : 'Phone'}: {legal.phone}</>}
+    </p>
+
+    <h2>{t.legal.liability}</h2>
+    <p>{t.legal.liabilityText}</p>
+  </div>
+</Base>

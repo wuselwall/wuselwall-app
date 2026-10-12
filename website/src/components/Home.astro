@@ -1,0 +1,106 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../config/site';
+import { strings, type Lang } from '../i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = strings[lang];
+
+const ld = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'SoftwareApplication',
+      name: site.name,
+      applicationCategory: 'LifestyleApplication',
+      operatingSystem: 'iOS, Android, Web',
+      description: t.description,
+      url: new URL(lang === 'de' ? '/' : '/en/', site.url).toString(),
+      inLanguage: ['de', 'en'],
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'CHF' },
+      codeRepository: site.github,
+    },
+    { '@type': 'Organization', name: site.name, url: site.url, logo: `${site.url}/logo.svg`, sameAs: [site.github] },
+  ],
+};
+---
+
+<Base lang={lang} page="home">
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(ld)} />
+
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="kicker">{t.hero.kicker}</p>
+        <h1>{t.hero.title}</h1>
+        <p class="lead">{t.hero.lead}</p>
+        <div class="cta">
+          <a class="btn" href={site.webApp}>{t.hero.webApp}</a>
+          <a class="btn btn-ghost" href={site.github} rel="noopener">{t.hero.github}</a>
+        </div>
+        <div class="stores" role="group" aria-label={t.hero.stores}>
+          <a class="store" href={site.stores.ios} rel="noopener" aria-label={t.badges.iosAlt}>
+            <span><small>{lang === 'de' ? 'Laden im' : 'Download on the'}</small><strong>App Store</strong></span>
+          </a>
+          <a class="store" href={site.stores.android} rel="noopener" aria-label={t.badges.androidAlt}>
+            <span><small>{lang === 'de' ? 'Jetzt bei' : 'Get it on'}</small><strong>Google Play</strong></span>
+          </a>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <img src="/logo.svg" alt="" width="400" height="400" />
+      </div>
+    </div>
+  </section>
+
+  <section id="funktionen" class="tinted">
+    <div class="wrap">
+      <h2>{t.featuresTitle}</h2>
+      <div class="grid">
+        {t.features.map((f) => (
+          <article class="card"><h3>{f.title}</h3><p>{f.text}</p></article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>{t.principlesTitle}</h2>
+      <div class="grid">
+        {t.principles.map((f) => (
+          <article class="card"><h3>{f.title}</h3><p>{f.text}</p></article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="stand" class="tinted">
+    <div class="wrap">
+      <h2>{t.statusTitle}</h2>
+      <p>{t.statusLead}</p>
+      <ul class="status">
+        {t.status.map((s) => (
+          <li><span>{s.label}</span><span class:list={['pill', { done: s.done }]}>{s.state}</span></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section id="open-source">
+    <div class="wrap prose">
+      <h2>{t.openTitle}</h2>
+      <p>{t.openText}</p>
+      <div class="cta">
+        <a class="btn" href={site.github} rel="noopener">{t.openCta}</a>
+        <a class="btn btn-ghost" href={site.docs} rel="noopener">{t.docsCta}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bookmarks and installed copies from when the web app lived at "/" (#/route). -->
+  <script is:inline>
+    if (location.hash.startsWith('#/')) location.replace('/app/' + location.hash);
+  </script>
+</Base>

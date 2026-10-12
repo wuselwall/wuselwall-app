@@ -1,0 +1,25 @@
+# The WuselWall website (landing page, Impressum, Datenschutz): its own compose project,
+# separate from the Supabase stack (infra/supabase), so it is built, updated and rolled back
+# on its own (specs/10#updating-one-part). Driven by scripts/remote-web.sh.
+#
+# Exposure: like the Supabase gateway, the site listens on the Docker bridge address only.
+# nginx (infra/nginx/wusel.goomba.ch.conf) reaches it, the home network does not.
+
+name: wuselwall-web
+
+services:
+  site:
+    container_name: wuselwall-site
+    build:
+      context: ./site
+      args:
+        # 1 = the build fails while the Impressum still has placeholders (website/src/config/site.ts)
+        LEGAL_STRICT: ${LEGAL_STRICT:-1}
+    image: wuselwall-site:latest
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    ports:
+      - ${SITE_BIND:-172.17.0.1}:${SITE_PORT:-54480}:4321/tcp
+    mem_limit: 256m
