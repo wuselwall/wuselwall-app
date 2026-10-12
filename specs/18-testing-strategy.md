@@ -104,8 +104,11 @@ First flows:
    seconds. One phone plus a side-channel client proves the realtime path without driving
    two devices at once.
 5. Acting-profile switch changes the accent colour and the register (hermetic).
-6. Offline: Patrol turns off wifi; the connectivity banner appears, writes are refused
-   with the localized message, and recover when wifi returns (backed).
+6. Offline: Patrol turns off wifi; an item added and one ticked show at once with the
+   "wartet" mark and the pending banner, and both reach the server when wifi returns
+   (backed). The outbox's rules are covered below that, without a device: the projection
+   and both stores in `shopping_outbox_model_test`, the drain, replay and rejection paths
+   in `shopping_sync_test`, and `050_shopping_outbox` in pgTAP.
 
 Selectors are `ValueKey`s from a single `core/testing/test_ids.dart`, never localized text,
 so the same test runs in both locales.

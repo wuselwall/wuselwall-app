@@ -13,7 +13,7 @@ On shared devices you have to say who you are before changing anything ([Who are
 Ten wrong tries lock the PIN. Set a new one on your own phone ([Security](/en/settings/security#guardian-pin)).
 
 ## "No connection to the server"
-Check Wi-Fi or mobile data and tap **Try again**. Offline use of the shopping list is still being worked on.
+Check Wi-Fi or mobile data and tap **Try again**. The shopping list keeps working offline and sends later ([Offline](/en/shopping/store#offline)); there you only see this message if the device has never loaded the list.
 
 ## An item is on the list twice
 Adding the same name a second time makes WuselWall count it up to **2×** instead of adding a second row. To keep it separate for once, give it a slightly different name.

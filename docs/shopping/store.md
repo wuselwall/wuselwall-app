@@ -25,6 +25,8 @@ Wenn ihr fertig seid, tippt ihr unten auf **Einkauf beenden**.
 
 Der Knopf ist erst aktiv, wenn mindestens ein Artikel abgehakt ist.
 
-::: warning Ohne Netz
-Noch braucht die Liste eine Verbindung zum Server. Ohne Netz zeigt WuselWall einen Fehler und du kannst es erneut versuchen. Der Offline-Betrieb für den Supermarkt ist in Arbeit.
-:::
+## Ohne Netz
+
+Die Liste funktioniert auch ohne Empfang: Hinzufügen, Abhaken, Anzahl ändern und **Einkauf beenden** gehen weiter wie gewohnt. Was noch nicht beim Server angekommen ist, trägt ein kleines Wolken-Symbol, und oben steht zum Beispiel **„2 Änderungen warten aufs Senden“**. Sobald wieder Netz da ist, schickt WuselWall alles von selbst und in der richtigen Reihenfolge.
+
+Auf dem iPhone geht das nur, solange die App offen ist: Hast du sie im Laden ohne Netz geschlossen, wird beim nächsten Öffnen gesendet. Neue Listen anlegen und die Standardliste ändern geht nur mit Verbindung.

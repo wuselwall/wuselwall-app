@@ -1,49 +1,45 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
-import 'package:wuselwall/core/realtime/household_channel.dart';
 import 'package:wuselwall/core/text/fold.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
-import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
+import 'package:wuselwall/features/shopping/application/shopping_sync.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
+import 'package:wuselwall/features/shopping/domain/shopping_sync_model.dart';
 
-/// Declares that a provider is live: a change on any device re-fetches within a moment
-/// (NFR-5). Fetching again, rather than patching, means a missed message can never
-/// leave the screen wrong.
-void _live(Ref ref) {
-  final household = ref.watch(deviceProvider).value?.householdId;
-  if (household != null) {
-    refreshOnInvalidation(ref, householdId: household, topic: 'shopping');
+/// What the list screen shows: the server's last state with this device's pending
+/// changes replayed on top, so it looks the same online and offline (specs/07#offline).
+/// Live: another device's change refetches within a moment (NFR-5).
+final shoppingViewProvider = Provider<AsyncValue<ShoppingView>>((ref) {
+  final sync = ref.watch(shoppingSyncProvider);
+  final view = sync.view;
+  if (view != null) return AsyncData(view);
+  if (sync.failure case final failure?) {
+    return AsyncError(failure, StackTrace.empty);
   }
-}
+  return const AsyncLoading();
+});
 
 /// Open items of every list.
-final shoppingItemsProvider = FutureProvider.autoDispose<List<ShoppingItem>>((
-  ref,
-) async {
-  _live(ref);
-  return (await ref.watch(shoppingRepositoryProvider).items()).unwrap();
-});
+final shoppingItemsProvider = Provider<AsyncValue<List<ShoppingItem>>>(
+  (ref) => ref.watch(shoppingViewProvider).whenData((v) => v.items),
+);
 
-final shoppingListsProvider = FutureProvider.autoDispose<List<ShoppingList>>((
-  ref,
-) async {
-  _live(ref);
-  return (await ref.watch(shoppingRepositoryProvider).lists()).unwrap();
-});
+final shoppingListsProvider = Provider<AsyncValue<List<ShoppingList>>>(
+  (ref) => ref.watch(shoppingViewProvider).whenData((v) => v.lists),
+);
 
-final shoppingCategoriesProvider =
-    FutureProvider.autoDispose<List<ShoppingCategory>>((ref) async {
-      _live(ref);
-      return (await ref.watch(shoppingRepositoryProvider).categories())
-          .unwrap();
-    });
+final shoppingCategoriesProvider = Provider<AsyncValue<List<ShoppingCategory>>>(
+  (ref) => ref.watch(shoppingViewProvider).whenData((v) => v.categories),
+);
 
-final shoppingCatalogProvider = FutureProvider.autoDispose<List<CatalogEntry>>((
-  ref,
-) async {
-  _live(ref);
-  return (await ref.watch(shoppingRepositoryProvider).catalog()).unwrap();
-});
+final shoppingCatalogProvider = Provider<AsyncValue<List<CatalogEntry>>>(
+  (ref) => ref.watch(shoppingViewProvider).whenData((v) => v.catalog),
+);
+
+/// Changes made on this device that the server has not confirmed yet.
+final shoppingPendingProvider = Provider<int>(
+  (ref) => ref.watch(shoppingSyncProvider.select((s) => s.outbox.length)),
+);
 
 /// The list the user picked; null means the household default.
 final selectedListIdProvider = NotifierProvider<SelectedListNotifier, String?>(

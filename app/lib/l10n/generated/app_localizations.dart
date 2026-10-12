@@ -1135,6 +1135,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{1 item} other{{count} items}}'**
   String shoppingTripItems(int count);
+
+  /// Banner while the offline outbox holds changes the server has not confirmed yet
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 change waiting to be sent} other{{count} changes waiting to be sent}}'**
+  String shoppingPending(int count);
+
+  /// No description provided for @shoppingItemPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting to be sent'**
+  String get shoppingItemPending;
+
+  /// No description provided for @errCategoryNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'That category no longer exists. The change was not saved.'**
+  String get errCategoryNotFound;
+
+  /// No description provided for @errNameTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'That name is too long.'**
+  String get errNameTooLong;
+
+  /// No description provided for @errActorInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'That person is no longer part of the household. The change was not saved.'**
+  String get errActorInvalid;
 }
 
 class _AppLocalizationsDelegate

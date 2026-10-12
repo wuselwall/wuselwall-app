@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -13,12 +15,14 @@ import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/shopping/application/shopping_providers.dart';
+import 'package:wuselwall/features/shopping/application/shopping_sync.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_labels.dart';
 
 /// The shared lists: pick a list, tap tiles to add, tick off while shopping, finish the
-/// trip. The offline outbox is the next M1.1 piece.
+/// trip. Every item change goes through the offline outbox and shows at once; creating a
+/// list and moving the default need the network (specs/07#offline).
 class ShoppingBody extends ConsumerStatefulWidget {
   const ShoppingBody({super.key});
 
@@ -38,14 +42,11 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody> {
 
   String? get _actor => ref.read(actingProfileProvider);
   ShoppingRepository get _repo => ref.read(shoppingRepositoryProvider);
+  ShoppingSync get _sync => ref.read(shoppingSyncProvider.notifier);
 
-  void _refresh() {
-    ref
-      ..invalidate(shoppingItemsProvider)
-      ..invalidate(shoppingListsProvider)
-      ..invalidate(shoppingCatalogProvider);
-  }
+  void _refresh() => unawaited(_sync.sync());
 
+  /// For the online-only writes: lists and the default.
   Future<T?> _run<T>(Future<Result<T>> Function() action) async {
     setState(() => _busy = true);
     final result = await action();
@@ -66,43 +67,44 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody> {
   Future<void> _addName(String name, ShoppingList list) async {
     final trimmed = name.trim();
     if (trimmed.isEmpty) return;
-    await _run(() => _repo.add(actor: _actor, name: trimmed, listId: list.id));
-    if (mounted) _search.clear();
+    _search.clear();
+    await _sync.add(actor: _actor, listId: list.id, name: trimmed);
   }
 
-  /// Long press on a tile: make sure the item is on the list, then edit it.
+  /// Long press on a tile: edit the item if it is on the list, else add it first.
   Future<void> _addAndEdit(String name, ShoppingList list) async {
-    final id = await _run(
-      () => _repo.add(actor: _actor, name: name, listId: list.id),
-    );
-    if (id == null || !mounted) return;
-    final items = await ref.read(shoppingItemsProvider.future);
-    final item = items.where((i) => i.id == id).firstOrNull;
+    ShoppingItem? open() => (ref.read(shoppingItemsProvider).value ?? const [])
+        .where(
+          (i) =>
+              i.listId == list.id &&
+              !i.checked &&
+              fold(i.name) == fold(name.trim()),
+        )
+        .firstOrNull;
+    if (open() == null) {
+      await _sync.add(actor: _actor, listId: list.id, name: name.trim());
+    }
+    final item = open();
     if (item != null && mounted) await _edit(item);
   }
 
   Future<void> _edit(ShoppingItem item) async {
-    final categories = (await ref.read(shoppingCategoriesProvider.future))
+    final categories = (ref.read(shoppingCategoriesProvider).value ?? const [])
         .where((c) => c.listId == item.listId)
         .toList();
-    if (!mounted) return;
     final result = await showDialog<_ItemEdit>(
       context: context,
       builder: (_) => _EditItemDialog(item: item, categories: categories),
     );
     if (result == null) return;
     if (result.spec != (item.quantity ?? '')) {
-      await _run(
-        () => _repo.setSpec(actor: _actor, itemId: item.id, text: result.spec),
-      );
+      await _sync.setSpec(actor: _actor, itemId: item.id, text: result.spec);
     }
     if (result.categoryId != item.categoryId) {
-      await _run(
-        () => _repo.setCategory(
-          actor: _actor,
-          itemId: item.id,
-          categoryId: result.categoryId,
-        ),
+      await _sync.setCategory(
+        actor: _actor,
+        itemId: item.id,
+        categoryId: result.categoryId,
       );
     }
   }
@@ -139,9 +141,15 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody> {
       ),
     );
     if (ok != true || !mounted) return;
-    final trip = await _run(() => _repo.finish(actor: _actor, listId: list.id));
-    if (trip != null && mounted) {
-      context.showMessage(l10n.shoppingFinished(trip.bought, trip.carriedOver));
+    final onList = (ref.read(shoppingItemsProvider).value ?? const [])
+        .where((i) => i.listId == list.id)
+        .toList();
+    final bought = onList.where((i) => i.checked).length;
+    await _sync.finish(actor: _actor, listId: list.id);
+    if (mounted) {
+      context.showMessage(
+        l10n.shoppingFinished(bought, onList.length - bought),
+      );
     }
   }
 
@@ -150,6 +158,10 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody> {
     final l10n = context.l10n;
     final kiosk = ref.watch(uiRegisterProvider) == UiRegister.kiosk;
     final current = ref.watch(currentListProvider);
+    final pending = ref.watch(shoppingPendingProvider);
+    ref.listen(shoppingSyncProvider.select((s) => s.rejection), (_, next) {
+      if (next != null && mounted) context.showFailure(next.failure);
+    });
 
     return AsyncValueView<ShoppingList?>(
       value: current,
@@ -171,6 +183,7 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody> {
                   () => _repo.setDefaultList(actor: _actor, listId: list.id),
                 ),
               ),
+            if (pending > 0) _PendingBanner(count: pending),
             _TilePicker(
               list: list,
               items: items.value ?? const [],
@@ -190,15 +203,15 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody> {
                     : _ItemList(
                         items: open,
                         listId: list.id,
-                        onToggle: (i) => _run(
-                          () => _repo.toggle(actor: _actor, itemId: i.id),
+                        onToggle: (i) => _sync.check(
+                          actor: _actor,
+                          itemId: i.id,
+                          checked: !i.checked,
                         ),
-                        onLess: (i) => _run(
-                          () => _repo.adjustCount(
-                            actor: _actor,
-                            itemId: i.id,
-                            delta: -1,
-                          ),
+                        onLess: (i) => _sync.adjustCount(
+                          actor: _actor,
+                          itemId: i.id,
+                          delta: -1,
                         ),
                         onEdit: _edit,
                       ),
@@ -219,8 +232,7 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody> {
                     Expanded(
                       child: FilledButton.icon(
                         onPressed:
-                            _busy ||
-                                !(items.value?.any((i) => i.checked) ?? false)
+                            !(items.value?.any((i) => i.checked) ?? false)
                             ? null
                             : () => _finish(list),
                         icon: const Icon(Icons.shopping_cart_checkout),
@@ -234,6 +246,44 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody> {
           ],
         );
       },
+    );
+  }
+}
+
+/// Shown honestly rather than implied away: iOS sends nothing while the app is closed,
+/// so changes made offline wait until it is next opened with a connection.
+class _PendingBanner extends StatelessWidget {
+  const _PendingBanner({required this.count});
+
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Material(
+      color: scheme.secondaryContainer,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: Tokens.space4,
+          vertical: Tokens.space2,
+        ),
+        child: Row(
+          children: [
+            Icon(
+              Icons.cloud_upload_outlined,
+              size: 20,
+              color: scheme.onSecondaryContainer,
+            ),
+            const SizedBox(width: Tokens.space2),
+            Expanded(
+              child: Text(
+                context.l10n.shoppingPending(count),
+                style: TextStyle(color: scheme.onSecondaryContainer),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -602,6 +652,7 @@ class _ItemTile extends StatelessWidget {
     // is a hint after the name, not a label before it.
     return Semantics(
       checked: item.checked,
+      value: item.pending ? l10n.shoppingItemPending : null,
       hint: adder == null ? null : l10n.shoppingAddedBy(adder!.displayName),
       child: ListTile(
         minTileHeight: 56,
@@ -615,6 +666,20 @@ class _ItemTile extends StatelessWidget {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
+            if (item.pending)
+              Padding(
+                padding: const EdgeInsets.only(right: Tokens.space2),
+                child: ExcludeSemantics(
+                  child: Tooltip(
+                    message: l10n.shoppingItemPending,
+                    child: Icon(
+                      Icons.cloud_upload_outlined,
+                      size: 18,
+                      color: Theme.of(context).colorScheme.outline,
+                    ),
+                  ),
+                ),
+              ),
             if (adder != null)
               ExcludeSemantics(
                 child: Tooltip(

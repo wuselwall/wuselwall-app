@@ -17,7 +17,7 @@ specification; `app/`, `supabase/` and `infra/` hold the implementation.
 
 | | |
 |---|---|
-| Phase | M0.0–M0.3 built; M1.1 shopping built online. Next: the offline outbox. M0.4 waits for the Apple and Google accounts ([13 — Roadmap](specs/13-roadmap.md)) |
+| Phase | M0.0–M0.3 built; M1.1 shopping built, offline included. Next: M1.2 tasks, starting with household settings. M0.4 waits for the Apple and Google accounts ([13 — Roadmap](specs/13-roadmap.md)) |
 | Started | 2026-10-11 |
 | Decision set | Locked for v1 (see `specs/adr/`) |
 | Origin | Specification carried over from BretApp; code starts from scratch |
