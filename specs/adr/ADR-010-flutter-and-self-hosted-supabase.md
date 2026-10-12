@@ -6,7 +6,9 @@ amends [ADR-004](ADR-004-identity-model.md), [ADR-005](ADR-005-hosting.md),
 in their implementation, not in their intent. Amended by
 [ADR-013](ADR-013-one-self-hosted-environment.md) (one environment on the home server;
 further tenants on hosted Supabase) and [ADR-014](ADR-014-self-service-onboarding.md)
-(public sign-up for adults, self-service households, device pairing).
+(public sign-up for adults, self-service households, device pairing) and
+[ADR-015](ADR-015-saas-and-self-hosted-flavours.md) (a hosted *WuselWall Cloud* next to the
+self-hosted flavour).
 
 ## Context
 
@@ -189,7 +191,8 @@ Where the first implementation departs from, or narrows, the decision above:
   on phones, the platform association with the production domain (iOS Associated Domains,
   Android Digital Asset Links, the web SDK script) — none of which exists before M1.6, so
   the flow has not been exercised. Treat it as a skeleton.
-- **Still open:** guardians created after setup (only members can be added in Settings);
+- **Still open:** guardians created after setup (only members can be added in Settings;
+  *answered by ADR-014's invitations*);
   per-IP rate limiting is only as good as the proxy's `X-Forwarded-For`.
 - **RLS caveat:** in Supabase the `postgres` role carries `BYPASSRLS`, so `FORCE ROW LEVEL
   SECURITY` does not bind the function owner. Every `api` write function therefore
