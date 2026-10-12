@@ -167,33 +167,64 @@ Supermarket connectivity is unreliable, and a shopping list that fails in a shop
 worthless. This module, and only this module, gets full offline support
 ([ADR-006](adr/ADR-006-offline-strategy.md)).
 
-**Mechanism:**
+**Mechanism** *(built 2026-10-12)*:
 
-1. The app keeps the current list mirrored in a local SQLite database (drift).
-2. Every mutation is applied locally first and appended to an **outbox** table with a
-   client-generated UUIDv7.
-3. The UI renders from the local database, so it is identical online and offline.
-4. On reconnect or app resume, the outbox drains in order to
-   `api.shopping_apply(p_actor, p_ops)`. The client UUID is the idempotency key:
-   replaying a batch cannot duplicate an item.
-5. The function returns authoritative state; the client reconciles.
+1. The app keeps the server's last state mirrored in a local SQLite database (drift):
+   the open items, lists, categories and catalogue, as the JSON the `api` views return.
+2. Every item change is appended to an **outbox** table first. An op carries a
+   client-generated UUIDv7 `op_id` and the acting profile at the moment it was made (a
+   shared tablet queues several people's changes). A new item also gets its id on the
+   device, so ticking an item added offline needs no round trip.
+3. The UI renders the mirror with the outbox replayed on top (`projectShopping`, one pure
+   function with the server's rules), so it is identical online and offline. Items touched
+   by a pending op are marked "wartet".
+4. The outbox drains in order to `api.shopping_apply(p_actor, p_ops)` on every change,
+   when the network returns, on app resume and on a `shopping` invalidation; failed sends
+   retry after 2, 5, 15, 30 and 60 seconds. The server records each `op_id` once
+   (`app.shopping_op`), so a resent batch — the response was lost, the app was killed
+   mid-request — comes back as `duplicate` and changes nothing.
+5. The function returns a status per op and the household's open items; those replace the
+   mirror's, and every reported op leaves the outbox.
+
+| Op | Effect | Idempotent because |
+|---|---|---|
+| `add` | New item under the client's id, or +1 on an open item of the same folded name (then the client id becomes an alias of it) | `op_id`; an existing id is skipped |
+| `check` | Sets ticked or unticked — absolute, not a toggle | It is absolute |
+| `count` | ±n; at zero the item is removed | `op_id` |
+| `spec`, `category` | The free-text note, the category | They are absolute |
+| `finish` | Ends the trip under a client-generated trip id | `op_id`; an existing trip is skipped |
+
+Lists, the default list and history stay online-only: they are rare, and none of them is
+done in the aisle.
+
+**Outcomes per op:** `applied`; `duplicate` (seen before); `skipped`, when there is
+nothing left to act on — the item was removed or bought meanwhile, the tombstone wins;
+`rejected`, with its domain code (a category deleted meanwhile, a profile no longer in the
+household). A rejected op affects only itself and is reported once as a message; the rest of
+the batch goes through, so one bad op can never block the outbox behind it.
 
 **Conflict handling**, in ascending order of interest:
 
-- *Two people add the same item.* Both rows are created; a duplicate detector merges by
-  canonical name and shows one entry with a subtle "×2 added" marker.
+- *Two people add the same item.* Whichever add reaches the server second merges into the
+  first: one entry, "2 ×", and the second device's id keeps working as an alias.
 - *Two people tick the same item.* Idempotent. Last writer records `checked_by`; nobody
   notices or cares.
-- *One person edits a quantity while another ticks it.* Field-level last-write-wins on
-  `updated_seq`. Different fields, no conflict.
+- *One person edits a quantity while another ticks it.* Different fields, no conflict.
+- *Two people change the same field.* The op that reaches the server last wins. The order
+  is the server's arrival order, not device clocks, which drift; for a shopping list that is
+  the honest choice, and it is what everyone sees on the next refresh.
 - *One person deletes while another edits.* Tombstone wins. The editor sees it vanish on
   sync. Acceptable for a shopping list; it would not be for a bank ledger.
+
+**The web build** (the laptop) keeps the mirror and outbox in memory: the laptop is online,
+a reload refetches, and an unsent change survives a dropped request but not a closed tab.
+The phones and tablets keep both in SQLite across restarts.
 
 Important limitation to design around: **iOS gives no reliable background execution.**
 The outbox may not drain while the app is closed; it drains when the app is next resumed
 with a connection (Android may drain it earlier via a background job, but nothing relies
-on that). So the UI must show unsynced state honestly — a small "3 Änderungen
-ausstehend" indicator — rather than pretending everything is saved.
+on that). So the UI shows unsynced state honestly — a banner "3 Änderungen warten aufs Senden"
+and a mark on each waiting item — rather than pretending everything is saved.
 
 Native storage is not evicted the way Safari's was, but the local database is still a
 cache, never the store of record. The outbox is the only thing in it that is not

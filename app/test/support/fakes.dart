@@ -9,6 +9,7 @@ import 'package:wuselwall/app/theme/night.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/config/app_config.dart';
 import 'package:wuselwall/core/config/config_providers.dart';
+import 'package:wuselwall/core/connectivity/connectivity_provider.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/realtime/household_channel.dart';
@@ -16,7 +17,9 @@ import 'package:wuselwall/core/supabase/supabase_providers.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
+import 'package:wuselwall/features/shopping/data/shopping_store.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
+import 'package:wuselwall/features/shopping/domain/shopping_sync_model.dart';
 
 const guardianId = 'p-guardian';
 const kidId = 'p-kid';
@@ -151,6 +154,37 @@ class FakeShoppingRepository implements ShoppingRepository {
   Future<Result<List<ShoppingItem>>> items() async => Ok(list);
 
   @override
+  Future<Result<ShoppingSnapshot>> snapshot() async => Ok(
+    ShoppingSnapshot(
+      items: list,
+      lists: (await lists()).valueOrNull!,
+      categories: const [],
+      catalog: const [],
+    ),
+  );
+
+  /// Applies the batch with the app's projection; ticks are recorded as [toggles].
+  @override
+  Future<Result<ApplyResult>> apply({
+    required String? actor,
+    required List<ShoppingOp> ops,
+  }) async {
+    for (final op in ops.whereType<CheckItemOp>()) {
+      toggles.add((actor: op.actor, id: op.itemId));
+    }
+    final view = projectShopping((await snapshot()).valueOrNull!, ops);
+    list = [for (final i in view.items) i.copyWith(pending: false)];
+    return Ok(
+      ApplyResult(
+        results: [
+          for (final op in ops) OpResult(opId: op.opId, status: 'applied'),
+        ],
+        items: list,
+      ),
+    );
+  }
+
+  @override
   Future<Result<List<ShoppingList>>> lists() async => const Ok([
     ShoppingList(id: 'l1', name: 'Supermarkt', isDefault: true, openCount: 0),
   ]);
@@ -198,6 +232,8 @@ List<Override> baseOverrides({
   sessionUserIdProvider.overrideWithValue(signedIn ? 'user-1' : null),
   identityRepositoryProvider.overrideWithValue(identity),
   if (shopping != null) shoppingRepositoryProvider.overrideWithValue(shopping),
+  shoppingStoreProvider.overrideWith((ref) => MemoryShoppingStore()),
+  connectivityProvider.overrideWith((ref) => Stream.value(true)),
   householdInvalidationsProvider.overrideWith(
     (ref, id) => const Stream<Invalidation>.empty(),
   ),

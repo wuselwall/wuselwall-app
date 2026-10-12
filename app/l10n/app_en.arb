@@ -252,5 +252,18 @@
         "type": "int"
       }
     }
-  }
+  },
+  "shoppingPending": "{count, plural, =1{1 change waiting to be sent} other{{count} changes waiting to be sent}}",
+  "@shoppingPending": {
+    "description": "Banner while the offline outbox holds changes the server has not confirmed yet",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shoppingItemPending": "Waiting to be sent",
+  "errCategoryNotFound": "That category no longer exists. The change was not saved.",
+  "errNameTooLong": "That name is too long.",
+  "errActorInvalid": "That person is no longer part of the household. The change was not saved."
 }

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/features/shopping/application/shopping_providers.dart';
+import 'package:wuselwall/features/shopping/application/shopping_sync.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 
@@ -35,7 +36,7 @@ class ShoppingHistoryPage extends ConsumerWidget {
       ),
       body: AsyncValueView<ShoppingList?>(
         value: list,
-        onRetry: () => ref.invalidate(shoppingListsProvider),
+        onRetry: () => ref.read(shoppingSyncProvider.notifier).sync(),
         data: (current) {
           if (current == null) {
             return Center(child: Text(l10n.shoppingHistoryEmpty));

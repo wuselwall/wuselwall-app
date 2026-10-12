@@ -6,6 +6,7 @@ import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
+import 'package:wuselwall/features/shopping/domain/shopping_sync_model.dart';
 
 /// In-memory stand-ins for the backend, used only by `lib/main_demo.dart` to take
 /// the screenshots of the user documentation. The PIN is 123456; nothing leaves the page.
@@ -101,6 +102,36 @@ class DemoShoppingRepository implements ShoppingRepository {
 
   @override
   Future<Result<List<ShoppingItem>>> items() async => Ok(List.of(_items));
+
+  @override
+  Future<Result<ShoppingSnapshot>> snapshot() async => Ok(
+    ShoppingSnapshot(
+      items: List.of(_items),
+      lists: (await lists()).valueOrNull!,
+      categories: DemoData.categories(),
+      catalog: DemoData.catalogue(),
+    ),
+  );
+
+  /// The outbox's batch, applied with the app's own projection.
+  @override
+  Future<Result<ApplyResult>> apply({
+    required String? actor,
+    required List<ShoppingOp> ops,
+  }) async {
+    final view = projectShopping((await snapshot()).valueOrNull!, ops);
+    _items
+      ..clear()
+      ..addAll([for (final i in view.items) i.copyWith(pending: false)]);
+    return Ok(
+      ApplyResult(
+        results: [
+          for (final op in ops) OpResult(opId: op.opId, status: 'applied'),
+        ],
+        items: List.of(_items),
+      ),
+    );
+  }
 
   @override
   Future<Result<List<ShoppingList>>> lists() async => Ok([
