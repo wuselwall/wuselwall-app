@@ -115,10 +115,10 @@ select api.shopping_apply(null, jsonb_build_array(
 select is((select item_count from api.shopping_trips where id = (select trip from ids)), 2, 'finish creates the trip under the client''s id');
 select is((select count(*)::int from api.shopping_items), 0, 'ticked items left the list');
 select is((select api.shopping_apply(null, jsonb_build_array(
-  jsonb_build_object('op_id', o11, 'kind', 'finish', 'trip_id', trip))) -> 'results' -> 0 ->> 'status') from ids,
+  jsonb_build_object('op_id', o11, 'kind', 'finish', 'trip_id', trip))) -> 'results' -> 0 ->> 'status' from ids),
   'skipped', 'a second finish for the same trip is skipped');
 select is((select api.shopping_apply(null, jsonb_build_array(
-  jsonb_build_object('op_id', o12, 'kind', 'check', 'item_id', milk, 'checked', false))) -> 'results' -> 0 ->> 'status') from ids,
+  jsonb_build_object('op_id', o12, 'kind', 'check', 'item_id', milk, 'checked', false))) -> 'results' -> 0 ->> 'status' from ids),
   'skipped', 'an op on a bought item is skipped');
 
 select throws_ok($$ select api.shopping_apply(null, '[{"op_id": "nope", "kind": "add"}]') $$,
