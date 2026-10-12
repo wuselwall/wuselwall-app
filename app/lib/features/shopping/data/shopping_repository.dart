@@ -3,9 +3,13 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/supabase/api_client.dart';
 import 'package:wuselwall/core/supabase/supabase_providers.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
+import 'package:wuselwall/features/shopping/domain/shopping_sync_model.dart';
 
 /// Reads `api.shopping_*` views, writes through `api.shopping_*` functions. Every write
 /// names the acting profile; the server validates it against the device.
+///
+/// Item changes and finishing a trip go through the outbox and [apply]
+/// (specs/07#offline); creating a list and moving the default stay online-only.
 class ShoppingRepository {
   const ShoppingRepository(this._api);
 
@@ -34,6 +38,41 @@ class ShoppingRepository {
     'shopping_catalog',
     parse: CatalogEntry.fromJson,
     build: (q) => q.order('purchase_count', ascending: false),
+  );
+
+  /// Everything the list screen shows, fetched together: the outbox's mirror.
+  Future<Result<ShoppingSnapshot>> snapshot() async {
+    final (items, lists, categories, catalog) = await (
+      this.items(),
+      this.lists(),
+      this.categories(),
+      this.catalog(),
+    ).wait;
+    for (final r in [items, lists, categories, catalog]) {
+      if (r case Err(:final failure)) return Err(failure);
+    }
+    return Ok(
+      ShoppingSnapshot(
+        items: items.valueOrNull!,
+        lists: lists.valueOrNull!,
+        categories: categories.valueOrNull!,
+        catalog: catalog.valueOrNull!,
+      ),
+    );
+  }
+
+  /// Sends a batch of the outbox to `api.shopping_apply`. [actor] establishes the
+  /// device; each op carries its own acting profile.
+  Future<Result<ApplyResult>> apply({
+    required String? actor,
+    required List<ShoppingOp> ops,
+  }) => _api.rpc(
+    'shopping_apply',
+    params: {
+      'p_actor': actor,
+      'p_ops': [for (final op in ops) op.toJson()],
+    },
+    parse: (json) => ApplyResult.fromJson(json! as Map<String, dynamic>),
   );
 
   Future<Result<List<ShoppingTrip>>> trips(String listId) => _api.select(

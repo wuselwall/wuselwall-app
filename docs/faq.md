@@ -13,7 +13,7 @@ Auf geteilten Geräten musst du sagen, wer du bist, bevor du etwas änderst ([We
 Zehn falsche Versuche sperren die PIN. Setze auf deinem eigenen Handy eine neue ([Sicherheit](/settings/security#pin-fur-erziehungsberechtigte)).
 
 ## „Keine Verbindung zum Server“
-Prüfe WLAN oder Mobilfunk und tippe auf **Erneut versuchen**. Der Offline-Betrieb für die Einkaufsliste ist noch in Arbeit.
+Prüfe WLAN oder Mobilfunk und tippe auf **Erneut versuchen**. Die Einkaufsliste funktioniert auch ohne Netz weiter und sendet später ([Ohne Netz](/shopping/store#ohne-netz)); diese Meldung siehst du dort nur, wenn das Gerät die Liste noch nie geladen hat.
 
 ## Ein Artikel steht doppelt auf der Liste
 Wird derselbe Name ein zweites Mal hinzugefügt, zählt WuselWall ihn als **2×** hoch, statt eine zweite Zeile anzulegen. Möchtest du ihn ausnahmsweise getrennt führen, gib ihm einen leicht anderen Namen.

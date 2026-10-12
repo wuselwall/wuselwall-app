@@ -12,6 +12,8 @@ environment:
 dependencies:
   characters: ^1.4.0
   connectivity_plus: ^6.1.0
+  drift: ^2.35.2
+  drift_flutter: ^0.3.1
   flutter:
     sdk: flutter
   flutter_localizations:
@@ -25,6 +27,7 @@ dependencies:
   passkeys: ^2.23.1
   qr_flutter: ^4.1.0
   supabase_flutter: ^2.0.0
+  uuid: ^4.6.0
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.4

@@ -252,5 +252,17 @@
         "type": "int"
       }
     }
-  }
+  },
+  "shoppingPending": "{count, plural, =1{1 Änderung wartet aufs Senden} other{{count} Änderungen warten aufs Senden}}",
+  "@shoppingPending": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shoppingItemPending": "Wartet aufs Senden",
+  "errCategoryNotFound": "Diese Kategorie gibt es nicht mehr. Die Änderung wurde nicht gespeichert.",
+  "errNameTooLong": "Der Name ist zu lang.",
+  "errActorInvalid": "Diese Person gehört nicht mehr zum Haushalt. Die Änderung wurde nicht gespeichert."
 }

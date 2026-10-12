@@ -65,5 +65,13 @@ that will be used most, in the one place where the network is worst.
   with a connection. The UI must show pending state honestly rather than implying that
   everything is saved.
 
+**As built (2026-10-12).** drift on the phones and tablets, with a codeless schema of two
+tables (the server snapshot as JSON, and the outbox); memory in the web build, where the
+laptop is online and a reload refetches. "Field-level last-write-wins" became the server's
+arrival order per op, not device clocks: ops are absolute where they can be (`check`,
+`spec`, `category`), counted once by their `op_id` where they cannot (`count`, `add`), and a
+removed item is a tombstone for every later op. Details in
+[07](../07-module-meals-shopping.md#offline--the-one-place-it-is-non-negotiable).
+
 **Revisit if** a second genuinely offline-first module appears. One is a feature; three
 would be an argument for an engine.
