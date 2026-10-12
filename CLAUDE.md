@@ -77,6 +77,17 @@ See [specs/03-architecture.md](specs/03-architecture.md),
   The home server runs the official compose stack (`infra/supabase`), driven by
   `scripts/remote-stack.sh`; migrations go through `scripts/remote-migrate.sh` (see specs/10).
 
+## Website (`website/`)
+
+Astro site at `https://wusel.example.org/` ([ADR-016](specs/adr/ADR-016-public-website.md)): marketing
+page, Impressum, Datenschutz, German at `/` and English at `/en/`. The Flutter web app is at
+`/app/`. Every user-facing string lives in `website/src/i18n/index.ts` in **both** languages;
+operator and legal data only in `website/src/config/site.ts` (`TODO` values fail
+`LEGAL_STRICT=1` builds). No cookies, no third-party requests, no analytics. Deploy with
+`scripts/remote-web.sh deploy`, independent of the Supabase stack. Check with
+`cd website && npm run build`. When you add a page, add its route in both languages and its
+`paths` entry so `hreflang` and the sitemap stay right.
+
 ## End-user documentation (`docs/`)
 
 VitePress site in German (root) and English (`/en/`), written for the family, not for

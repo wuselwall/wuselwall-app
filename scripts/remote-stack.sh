@@ -5,6 +5,7 @@
 #
 #   scripts/remote-stack.sh init-env     create the server's .env once (refuses to overwrite)
 #   scripts/remote-stack.sh deploy       sync infra/supabase and supabase/functions, then up -d
+#   scripts/remote-stack.sh functions    sync only supabase/functions and restart the Edge runtime
 #   scripts/remote-stack.sh tunnel       127.0.0.1:54422 → Postgres, 127.0.0.1:54421 → gateway
 #                                        (Studio at http://127.0.0.1:54421, DASHBOARD_* login)
 #   scripts/remote-stack.sh <args>       any docker compose command: ps, logs -f auth, restart rest
@@ -41,12 +42,19 @@ case "${1:-}" in
       "$HOST:$DIR/volumes/functions/"
     ssh "$HOST" "cd '$DIR' && docker compose up -d --remove-orphans && docker compose ps"
     ;;
+  functions)
+    # Edge Functions only: Postgres, Auth and the gateway are not touched.
+    rsync -rlt --delete --chmod=D755,F644 \
+      infra/supabase/volumes/functions/ $( [ -d supabase/functions ] && echo supabase/functions/ ) \
+      "$HOST:$DIR/volumes/functions/"
+    ssh "$HOST" "cd '$DIR' && docker compose restart functions"
+    ;;
   tunnel)
     exec ssh -N -o ExitOnForwardFailure=yes \
       -L 54422:127.0.0.1:54422 -L 54421:172.17.0.1:54421 "$HOST"
     ;;
   "")
-    sed -n '2,13p' "$0"
+    sed -n '2,14p' "$0"
     ;;
   *)
     ssh -t "$HOST" "cd '$DIR' && docker compose $(printf '%q ' "$@")"
