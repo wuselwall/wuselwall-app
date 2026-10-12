@@ -77,7 +77,7 @@ queues. It holds no business rules.
 | Offline store | **drift** (SQLite) | The shopping list's mirror and outbox ([07](07-module-meals-shopping.md#offline--the-one-place-it-is-non-negotiable)). Typed queries, migrations, reactive streams. |
 | Secrets on device | `flutter_secure_storage` | Keychain on iOS, Keystore-backed on Android — where the device session lives. |
 | Localisation | Flutter **gen-l10n**, ARB files | German and English, always both (NFR-14); generated, type-safe message accessors. |
-| Backend platform | **Supabase, self-hosted** (Docker Compose) | User decision. Auth, a REST layer, realtime and functions around PostgreSQL. |
+| Backend platform | **Supabase**, in two flavours: **WuselWall Cloud** (a hosted project in the user's account, Frankfurt) and **self-hosted** (Docker; the Unraid stack) | User decision. Auth, a REST layer, realtime and functions around PostgreSQL. One `supabase/` directory serves both ([ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md)). |
 | Database | **PostgreSQL** (the version Supabase's image ships — pin the tag) | Recurrence ranges, ledgers, arrays, `pg_trgm` for shopping capture, `pg_cron` for jobs. |
 | Domain logic | **SQL and PL/pgSQL** in the `api` schema | Transactional writes, guardian checks and audit in one place. |
 | Authorisation | **Row-level security**, forced on every table | The primary control: the anon key ships in every app. |
@@ -136,7 +136,9 @@ wuselwall/
 - **The Flutter app contains no business rules.** Feature repositories translate between
   Dart models and `api` calls; widgets never call Supabase directly.
 - **Edge Functions never bypass RLS for user requests.** They forward the caller's JWT.
-  The service-role key is used only by functions with no user (ICS, enrolment, jobs),
+  The service-role key is used only by functions with no user (ICS, enrolment, jobs)
+  and by the account-administration functions of [ADR-014](adr/ADR-014-self-service-onboarding.md)
+  (`account-delete`, MFA reset), which verify the caller's JWT before acting on that one account,
   and each such use is commented with why.
 
 ## Module boundaries

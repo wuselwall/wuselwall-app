@@ -4,7 +4,9 @@
 Amended by [ADR-013](ADR-013-one-self-hosted-environment.md): one environment, no `deploy.yml` ·
 Amended by [ADR-014](ADR-014-self-service-onboarding.md): opening the app to other
 households needs public distribution (TestFlight public link or the App Store, Play open
-testing or production), decided in [Q42](../14-open-questions.md)
+testing or production), decided in [Q42](../14-open-questions.md) · Amended by
+[ADR-015](ADR-015-saas-and-self-hosted-flavours.md): **public App Store and Google Play
+listings** once the developer accounts exist; store builds use `env/cloud.json`
 
 ## Context
 

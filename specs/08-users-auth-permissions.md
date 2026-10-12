@@ -214,7 +214,7 @@ on their own phone and creates it ([20, J1](20-onboarding.md#j1--start-a-family)
 
 Seed data still matters as much as it did: a category set and the default list for
 shopping (always), five starter chores, three rewards and four badges (unless switched
-off) — the curated starter content of [21](21-household-settings.md#starter-content).
+off) — the curated starter content of [21](21-household-settings.md#household-creation).
 Every other behaviour starts at its curated default; nothing else is asked.
 Good seed data is the difference between a system that gets used in week one and one that
 sits empty waiting to be configured.

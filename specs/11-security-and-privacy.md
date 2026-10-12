@@ -149,12 +149,16 @@ This is where a self-hosted app usually leaks, quietly, through convenience:
 | Sentry / Crashlytics / PostHog / Firebase Analytics | Nothing in v1. TestFlight and Play Console already report crashes. Self-host GlitchTip later if you must. |
 | Google Analytics / Plausible Cloud | Nothing. You have four users and you know all of them. *(Still nothing with other families: onboarding is measured by timed walk-throughs, [20](20-onboarding.md#how-smooth-is-checked).)* |
 | A deferred-deep-link or attribution SDK so invitations survive installation | The invitation code and the email match ([20, J2](20-onboarding.md#j2--join-a-family)). |
-| A captcha on sign-up | Rate limits and `code` mode first; Turnstile only if abuse is observed ([Q44](14-open-questions.md)). |
+| A captcha on sign-up | None, decided 2026-10-11 ([Q44](14-open-questions.md)): rate limits, `code` mode until the gate, and the empty-account clean-up. |
+| Open and click tracking in sign-in mail | Switched off at the mail provider; plain text plus minimal HTML ([10](10-deployment-and-ops.md#email-setup)). |
 
 **Accepted since ADR-014**, each only for those who use it: **Apple** and **Google** as
 sign-in providers (they learn that the person signs in to WuselWall; scopes are
-`email`/`name`/`profile` only), and **one SMTP provider** ([Q41](14-open-questions.md)),
-which sees email addresses and sign-in codes and nothing from the household.
+`email`/`name`/`profile` only), and **one SMTP provider** ([Q41](14-open-questions.md);
+decided: Scaleway, EU), which sees email addresses and sign-in codes and nothing from
+the household. **Since ADR-015**, for households on WuselWall Cloud: **Supabase Inc.** as
+the hosting processor (data stored in Frankfurt; a US-headquartered company, which is why
+the self-hosted flavour remains for those who want none).
 | A Ferien import from a public API ([15](15-module-school-timetable.md#holidays)) | Fetched by a scheduled Edge Function, server-side only, with the host pinned in configuration and the result cached in the database. The browser never contacts it, and a failed fetch degrades to hand-entered holidays rather than to an error. |
 | An external map or weather widget | If you want weather on the wall display, proxy it server-side so the app never contacts a third party directly, and cache aggressively. |
 | Avatar images from Gravatar | Local uploads or generated initials. |
@@ -189,7 +193,9 @@ With Supabase, row-level security is not defence in depth; it is the perimeter.
 - `api` views are `security_invoker`; `api` functions run as a role without `BYPASSRLS`,
   so neither silently widens access.
 - The **service-role key** exists only in the server's `.env`. It is used by the Edge
-  Functions that have no user (ICS, enrolment, jobs), each such use commented; it is
+  Functions that have no user (ICS, enrolment, jobs) and by `account-delete` and the MFA
+  reset (ADR-014), which need the Auth Admin API and act only on the verified caller or
+  their co-guardian; each such use commented; it is
   never in CI, never in the app and never on a laptop.
 
 ### T11 — the open front door
@@ -214,6 +220,13 @@ With Supabase, row-level security is not defence in depth; it is the perimeter.
   the requesting device. The approval screen repeats the code and warns against
   approving a device that is not in front of you. That is the one social-engineering
   path, and it ends in a shared device a guardian can see and revoke in Geräte.
+- **Custom servers cannot harvest Cloud sign-ins** ([ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md),
+  decision 4). The store app uses native Apple and Google sign-in, whose ID tokens are
+  addressed to our app, only against WuselWall Cloud and the first-party servers
+  compiled into the app (the user's Unraid stack). Against a server someone typed in,
+  it offers email and the operator's own redirect clients. A hostile self-hosted server
+  therefore never receives a token that Cloud would accept. The app shows the server's
+  host on every sign-in screen that is not Cloud.
 - **Cross-household isolation is now about strangers.** The pgTAP cross-household cases
   (T9) are release-blocking, and the catalogue test pins the exact list of
   anon-callable functions.
@@ -261,8 +274,8 @@ With Supabase, row-level security is not defence in depth; it is the perimeter.
   knows. From it, the operator is a controller and needs:
   - a privacy policy (linked from the front door, the landing pages and the stores);
   - a record of processing (Art. 30);
-  - processor agreements with the SMTP provider, Cloudflare and, if [Q40](14-open-questions.md)
-    lands there, the hosting provider;
+  - processor agreements with Supabase (WuselWall Cloud), the SMTP provider and
+    Cloudflare (the links site);
   - deletion and export in the app (FR-5.16);
   - a 72-hour breach procedure (Art. 33);
   - a contact address that is read.
