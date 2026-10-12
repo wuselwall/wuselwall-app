@@ -146,13 +146,16 @@ select throws_ok($$ select api.shopping_apply(null, '[]') $$, '22023', 'acting p
 reset role;
 insert into app.shopping_item (id, list_id, household_id, name, folded_name)
   select gen_random_uuid(), (select id from app.shopping_list where household_id = ctx.hh and is_default), hh, 'Käse', 'kaese' from ctx;
+-- B learns the id somehow; RLS would hide it from B, so take it as the owner.
+create temp table kaese as select id from app.shopping_item where name = 'Käse';
+grant all on kaese to public;
 select pg_temp.act_as((select usr from b), jsonb_build_object(
   'household_id', (select hh from b), 'device_id', (select dev from b), 'device_class', 'personal'));
 create temp table r5 as select api.shopping_apply(null, jsonb_build_array(
   jsonb_build_object('op_id', gen_random_uuid(), 'kind', 'check', 'checked', true,
-                     'item_id', (select id from app.shopping_item where name = 'Käse')),
+                     'item_id', (select id from kaese)),
   jsonb_build_object('op_id', gen_random_uuid(), 'kind', 'add', 'name', 'Käse',
-                     'item_id', (select id from app.shopping_item where name = 'Käse'))
+                     'item_id', (select id from kaese))
 )) r;
 grant all on r5 to public;
 select is((select r -> 'results' -> 0 ->> 'status' from r5), 'skipped', 'a foreign item is invisible to another household');
