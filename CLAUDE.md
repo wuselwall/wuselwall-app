@@ -114,4 +114,5 @@ any UI work starts. Never add a string in one language only.
 - This covers UI copy, error messages, notifications, ICS summaries, and the MCP and
   Shortcuts responses (see [specs/12-mcp-and-assistants.md](specs/12-mcp-and-assistants.md)) —
   anything a household member reads or hears from the app. Server-side strings live in
-  `supabase/functions/_shared/`, one message file per language.
+  `supabase/functions/_shared/`, one message file per language. iOS permission prompts live
+  in `app/ios/Runner/{de,en}.lproj/InfoPlist.strings` (Info.plist keeps the German text).

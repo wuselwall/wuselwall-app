@@ -1,0 +1,7 @@
+# Signing assets live encrypted in the private wuselwall-certificates repository.
+# MATCH_PASSWORD decrypts them; CI reaches the repository with MATCH_GIT_BASIC_AUTHORIZATION.
+git_url("https://github.com/wuselwall/wuselwall-certificates.git")
+storage_mode("git")
+type("appstore")
+app_identifier(["ch.goomba.wuselwall"])
+team_id("JSX2VQXW7G")
