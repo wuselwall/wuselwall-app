@@ -55,7 +55,7 @@ built straight away.*
 | **M0.1** Identity: setup wizard, guardian accounts, device enrolment, tap-to-switch, guardian PIN, revocation (step 5) | Built and tested (pgTAP + end-to-end), incl. per-phone devices, TOTP, QR enrolment, rate limiting; passkeys wired, untested until the production domain exists — see ADR-010 implementation notes |
 | **M0.2** The shopping list, online only: add, tick, finish, live across devices (step 6) | Built and tested; not yet tried on the family's real devices |
 | **M0.4** Mobile release pipeline: signing, `release-mobile.yml`, TestFlight and the Play internal track (step 7) | In progress — Apple account active, iOS signing and `release-mobile.yml` (iOS job) written 2026-10-12; first TestFlight build pending; Play needs the Google account |
-| **M0.3** The one environment ([ADR-013](adr/ADR-013-one-self-hosted-environment.md)): own keys, `wusel.goomba.ch` through Cloudflare and nginx, nightly backups, restore drill (step 8) | Built 2026-10-11; **moved the same day to the official compose stack** ([ADR-013 amendment](adr/ADR-013-one-self-hosted-environment.md#amendment-2026-10-11-the-official-compose-stack)). The household starts fresh on it: the development data stayed behind in the stopped CLI stack |
+| **M0.3** The one environment ([ADR-013](adr/ADR-013-one-self-hosted-environment.md)): own keys, `wusel.goomba.ch` (since 2026-10-13 `wuselwall.app`, ADR-017) through Cloudflare and nginx, nightly backups, restore drill (step 8) | Built 2026-10-11; **moved the same day to the official compose stack** ([ADR-013 amendment](adr/ADR-013-one-self-hosted-environment.md#amendment-2026-10-11-the-official-compose-stack)). The household starts fresh on it: the development data stayed behind in the stopped CLI stack |
 
 M0.4 is new and comes **before** M0.3. A PWA reached the phones by URL; a native app
 reaches an iPhone only through a signed build, and without a Mac the release pipeline is
@@ -64,14 +64,14 @@ the backend can still wait.
 
 **Done when:** the shopping list is used on both parents' phones for one real supermarket
 trip — installed from TestFlight or Play, talking to the home server at
-`https://wusel.goomba.ch`.
+`https://api.wuselwall.app`.
 
 ### One environment from the start
 
 *Rewritten 2026-10-11 for [ADR-013](adr/ADR-013-one-self-hosted-environment.md).* The plan
 used to trial on the home network against a laptop stack and stand up production at
-M1.6. Now the stack runs on the home server and is public at `https://wusel.goomba.ch`
-from day one, so the trial and the real thing are the same environment. What the LAN
+M1.6. Now the stack runs on the home server and is public (since 2026-10-13 at `https://api.wuselwall.app`,
+[ADR-017](adr/ADR-017-wuselwall-app-domain.md)) from day one, so the trial and the real thing are the same environment. What the LAN
 trial could not show is no longer blocked by infrastructure:
 
 - **Use outside the house** works as soon as the apps are installed.
@@ -227,9 +227,9 @@ meets them.
 - **The self-hosted flavour usable by others:** `/.well-known/wuselwall.json`, "Eigener
   Server" in the app, and a self-hosting guide in `docs/` (including the email-only
   sign-in and how to register one's own Apple/Google clients).
-- **The final domain** chosen before any stranger holds an invitation link or a passkey
-  bound to it ([Q45](14-open-questions.md); `wusel.goomba.ch` until then), with Cloud's
-  custom domain.
+- **The domain** — decided 2026-10-13: `wuselwall.app`
+  ([ADR-017](adr/ADR-017-wuselwall-app-domain.md), [Q45](14-open-questions.md)). Still to do:
+  Cloud's custom domain (a subdomain of it) and retiring the `wusel.goomba.ch` bridge.
 - **Email** ([Q41](14-open-questions.md)): the sending domain verified, and the
   deliverability check in [10](10-deployment-and-ops.md#email-setup) passed.
 - **Store listings** ([Q42](14-open-questions.md), decided: App Store and Google Play):

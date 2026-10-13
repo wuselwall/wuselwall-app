@@ -4,9 +4,9 @@
 
 export const site = {
   name: 'WuselWall',
-  url: 'https://wusel.goomba.ch',
-  // The Flutter web app, served by nginx beside this site (specs/10).
-  webApp: '/app/',
+  url: 'https://wuselwall.app',
+  // The Flutter web app, on its own host (ADR-017).
+  webApp: 'https://web.wuselwall.app/',
   github: 'https://github.com/wuselwall/wuselwall-app',
   // The user documentation (docs/), also served by nginx; English under /docs/en/.
   docs: '/docs/',

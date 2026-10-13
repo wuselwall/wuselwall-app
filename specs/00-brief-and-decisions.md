@@ -249,3 +249,20 @@ US-headquartered processor for Cloud's households, two schemas to keep in step, 
 plainer front door on self-hosted servers. **What it buys.** Strangers' data and uptime
 are off the home server, Edge Functions deploy normally on Cloud, and self-hosting stays a
 real option in the same app.
+
+### 2026-10-13 — The domain: wuselwall.app
+
+> I just bought the domain wuselwall.app. […] The web-version of the app should run on
+> web.wuselwall.app, the website directly on wuselwall.app, the api for the backend can run
+> on api.wuselwall.app.
+
+| Change | Answer | Where |
+|---|---|---|
+| Domain | **`wuselwall.app`** decides Q45: invitation and pairing links, universal links and App Links, the passkey RP ID | [ADR-017](adr/ADR-017-wuselwall-app-domain.md), [Q45](14-open-questions.md) |
+| Public entry | `wuselwall.app` the website, `/docs/` and `/download/`; `web.wuselwall.app` the Flutter web app; `api.wuselwall.app` the gateway (four API prefixes). Cloudflare proxy, origin certificate, the home server's nginx | [ADR-017](adr/ADR-017-wuselwall-app-domain.md), [10](10-deployment-and-ops.md), `infra/nginx/wuselwall.app.conf` |
+| The old address | `wusel.goomba.ch` forwards the API for app builds that carry it and redirects everything else, until every installed app uses the new one | [ADR-017](adr/ADR-017-wuselwall-app-domain.md) |
+| Unchanged | Application and bundle ID `ch.goomba.wuselwall`; the home server's mail sender on `goomba.ch` | [ADR-012](adr/ADR-012-product-name.md), [10](10-deployment-and-ops.md#email-setup) |
+
+**What this costs.** Two origins (CORS, which the gateway already allows) and one fresh
+sign-in in each browser that used the web app. **What it buys.** The product's own name
+in every link, and a website, web app and API that can each move without the others.

@@ -29,7 +29,7 @@ specification; `app/`, `supabase/` and `infra/` hold the implementation.
 app/               Flutter — iOS, Android and web; three UI registers, German l10n
 supabase/          migrations (tables in `app`, views and functions in `api`, RLS),
                    Edge Functions, pgTAP tests, seed
-website/           Astro site at wusel.goomba.ch/ — landing page, Impressum, Datenschutz (de/en)
+website/           Astro site at wuselwall.app — landing page, Impressum, Datenschutz (de/en)
 infra/             nginx site file, the website's compose project, backup scripts (home server)
 scripts/           remote-web, remote-stack, -migrate, -pgtap, -backup, -setup-token (the home server)
 .github/workflows/ ci.yml, release-mobile.yml
@@ -87,9 +87,10 @@ specifications you hand to a coding session, one at a time.
    TypeScript stack. → [ADR-010](specs/adr/ADR-010-flutter-and-self-hosted-supabase.md)
 4. **Device sessions with tap-to-switch profiles**, guardian PIN for anything that
    moves points or deletes other people's data. → [ADR-004](specs/adr/ADR-004-identity-model.md)
-5. **One self-hosted environment on the home server**, public at `wusel.goomba.ch` through
-   Cloudflare and nginx; further tenants, if any, on hosted Supabase. Supersedes the VPS
-   plan. → [ADR-013](specs/adr/ADR-013-one-self-hosted-environment.md)
+5. **One self-hosted environment on the home server**, public through Cloudflare and nginx
+   on `wuselwall.app` (website), `web.wuselwall.app` (web app) and `api.wuselwall.app`;
+   further tenants, if any, on hosted Supabase. Supersedes the VPS plan.
+   → [ADR-013](specs/adr/ADR-013-one-self-hosted-environment.md), [ADR-017](specs/adr/ADR-017-wuselwall-app-domain.md)
 6. **Server-authoritative data**, with a narrow offline queue for the shopping list only —
    no general-purpose sync engine. → [ADR-006](specs/adr/ADR-006-offline-strategy.md)
 7. **A remote MCP server** over Streamable HTTP with OAuth; Apple Shortcuts is the

@@ -166,8 +166,8 @@ talks to **WuselWall Cloud** unless told otherwise. For a self-hosted household:
     their own clients with Apple and Google.
 
   Native Apple and Google sign-in and passkeys are offered on WuselWall Cloud and on the
-  first-party servers compiled into the app (today `wusel.goomba.ch`, the family's Unraid
-  stack) only. Tokens addressed to our app could otherwise be replayed from a hostile
+  first-party servers compiled into the app (today `api.wuselwall.app`, the family's
+  Unraid stack) only. Tokens addressed to our app could otherwise be replayed from a hostile
   server to Cloud (ADR-015, decision 4). The front door simply shows fewer buttons; it never shows a
   button that will fail.
 
@@ -267,7 +267,7 @@ which creates the profile on the way):
 
 The result is one invitation with three equivalent forms:
 
-- a **link** `https://‹domain›/i/‹token›` (128-bit token; `?s=‹host›` added for a
+- a **link** `https://wuselwall.app/i/‹token›` (128-bit token; `?s=‹host›` added for a
   self-hosted household), handed to the share sheet with
   a ready message in the inviter's language ("Komm zu Familie Huser in WuselWall: ‹link›
   — oder gib in der App den Code K7QM‑3XRP ein.");
@@ -316,7 +316,7 @@ guardian's phone approves it.*
        │  QR code    │   "Öffne WuselWall auf     Einstellungen → Geräte → Gerät verbinden
        └─────────────┘    deinem Handy und        → scan (or type K7QM-3XRP)
        polls every 2 s    scanne diesen Code"     (or the phone's own camera: the QR is
-                                                   the link https://‹domain›/p/K7QM3XRP)
+                                                   the link https://wuselwall.app/p/K7QM3XRP)
                                                   G1  Was ist das für ein Gerät?
                                                       ▣ Wanddisplay
                                                       ▣ Kinder-Tablet
@@ -529,13 +529,13 @@ with German and English in the same mail, German first.
 
 ### Universal links and the landing pages
 
-`https://‹domain›/i/‹token›` (invitations), `/p/‹code›` (pairing, so the phone's own
+`https://wuselwall.app/i/‹token›` (invitations), `/p/‹code›` (pairing, so the phone's own
 camera works) and `/.well-known/apple-app-site-association` plus `assetlinks.json` (also
 needed by passkeys) form the **links site**. It is static and belongs to no backend. Until
-WuselWall Cloud is live, nginx on the Unraid server serves it next to the four API
-prefixes under `wusel.goomba.ch`. From then on Cloudflare Pages serves it, under
-`wusel.goomba.ch` or the final domain ([Q45](14-open-questions.md)), so that Cloud's
-invitations do not depend on the home server. Self-hosted invitations use the same links
+WuselWall Cloud is live, nginx on the Unraid server serves it on `wuselwall.app`, beside
+the website ([ADR-017](adr/ADR-017-wuselwall-app-domain.md)). From then on Cloudflare
+Pages serves it, on the same domain, so that Cloud's invitations do not depend on the home
+server. Self-hosted invitations use the same links
 site, with the server in the link. The
 landing pages are bilingual, script-free HTML: what this is, the store buttons, the code
 in large type, and a link to the privacy policy. The deletion-request page (Play) sits

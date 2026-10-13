@@ -30,7 +30,7 @@ const sidebar = (p: string, t: Record<string, string>) => [
   { text: t.faq, link: `${p}/faq` },
 ]
 
-// Published under https://wusel.goomba.ch/docs/ (.github/workflows/docs.yml sets
+// Published under https://wuselwall.app/docs/ (.github/workflows/docs.yml sets
 // DOCS_BASE=/docs/); "/" for npm run docs:dev.
 const base = process.env.DOCS_BASE ?? '/'
 

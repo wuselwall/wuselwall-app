@@ -1,7 +1,7 @@
 # The user documentation (docs/): the Flutter web demo, its screenshots in both languages
 # and both themes, the VitePress site. A pull request that touches the app or the docs gets
 # the build as a check (screenshots as an artifact to look at); a push to main also
-# publishes it at https://wusel.goomba.ch/docs/ through the home server's runner
+# publishes it at https://wuselwall.app/docs/ through the home server's runner
 # (label wuselwall-deploy, CI Runner Farm plugin) and infra/docs/receive-docs.sh (specs/10).
 name: docs
 on:
@@ -62,4 +62,4 @@ jobs:
           tar -czf - -C site . | ssh -i "$d/key" -o IdentitiesOnly=yes -o BatchMode=yes \
             -o StrictHostKeyChecking=yes -o UserKnownHostsFile="$d/known_hosts" root@runner-farm.host
       - name: The published site answers
-        run: curl -fsS https://wusel.goomba.ch/docs/ | grep -q 'WuselWall'
+        run: curl -fsS https://wuselwall.app/docs/ | grep -q 'WuselWall'
