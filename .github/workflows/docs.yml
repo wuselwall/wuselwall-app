@@ -21,23 +21,23 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with: { fetch-depth: 0 }   # "last updated" on each page comes from git history
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with: { flutter-version-file: app/pubspec.yaml, cache: true }
-      - uses: actions/setup-node@v7
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with: { node-version: 22, cache: npm }
       - run: npm ci
       - run: npx playwright install --with-deps chromium
-      - run: flutter pub get && flutter gen-l10n
+      - run: flutter pub get --enforce-lockfile && flutter gen-l10n
         working-directory: app
       - run: npm run docs:screenshots   # fails in CI when a step could not reach its screen
       - run: npm run docs:check
       - run: npm run docs:build
         env: { DOCS_BASE: /docs/ }
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with: { name: docs-site, path: docs/.vitepress/dist, retention-days: 7 }
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with: { name: docs-screenshots, path: docs/public/screenshots, retention-days: 7 }
 
   deploy:
@@ -46,7 +46,7 @@ jobs:
     runs-on: [self-hosted, wuselwall-deploy]
     concurrency: { group: docs-deploy, cancel-in-progress: false }
     steps:
-      - uses: actions/download-artifact@v8
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with: { name: docs-site, path: site }
       # The key can only run receive-docs.sh on the server (forced command in
       # authorized_keys); the pinned host key keeps it from talking to anything else.

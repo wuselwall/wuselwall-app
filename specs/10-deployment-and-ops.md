@@ -361,7 +361,7 @@ On the server: the script in `/srv/appdata/wuselwall/bin/`, the builds in
 | Upstream compose file | Copy `docker/` from a newer upstream commit into `infra/supabase/` (never edit it), update the commit in the layer's header, diff the rendered config (`scripts/remote-stack.sh config`), deploy | When an image bump needs it, or yearly |
 | homeserver, Docker | homeserver's own update path | As homeserver releases |
 | nginx container, Cloudflare origin certificate | Container updates; the origin certificate is valid for up to 15 years | As needed |
-| Flutter, `pub` and Deno dependencies | Dependabot PRs, reviewed | Weekly PRs, merged monthly |
+| `pub`, npm, fastlane, GitHub Actions, the website's Node image (Deno once there are Edge Functions) | Dependabot PRs, reviewed; `osv-scanner` in CI flags known vulnerabilities | Weekly PRs, merged monthly; security fixes at once |
 | iOS signing certificate | `fastlane match` renewal | Yearly — calendar reminder |
 | Apple Developer Program | Renewal | Yearly — lapsing removes TestFlight builds |
 | **Sign in with Apple client secret** (a JWT from the `.p8` key) | `node scripts/apple-client-secret.mjs … \| scripts/remote-stack.sh set-env APPLE_SECRET`, then `scripts/remote-stack.sh up -d auth` | **Every six months at the latest** — calendar reminder; an expired secret breaks Apple sign-in on Android and the web |
