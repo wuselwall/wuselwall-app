@@ -45,7 +45,8 @@ asked for three hosts:
   pairing links (`https://wuselwall.app/i/…`, `/p/…`), universal links and App Links, the
   passkey RP ID, the sender domain of WuselWall Cloud's mail. WuselWall Cloud's API gets its
   own subdomain of `wuselwall.app` when Cloud is created; which name (and whether the
-  family's server keeps `api.`) is decided then.
+  family's server keeps `api.`) is decided then. *(2026-10-13, [ADR-018](ADR-018-self-hosted-only.md):
+  there will be no Cloud; `api.` stays the family's server.)*
 - **The old address stays as a bridge.** `wusel.example.org` still forwards the four API
   prefixes, because the APK and the TestFlight builds installed today carry it; its pages,
   `/app/`, `/docs/` and `/download/` answer `301` to their new homes. The bridge is removed

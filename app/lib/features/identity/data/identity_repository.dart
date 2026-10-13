@@ -26,7 +26,8 @@ class IdentityRepository {
   Future<Result<List<Member>>> members() => _api.select(
     'members',
     parse: Member.fromJson,
-    build: (q) => q.order('display_name'),
+    // The household's own order (specs/21): every member list follows it.
+    build: (q) => q.order('sort_order').order('display_name'),
   );
 
   Future<Result<List<DeviceEntry>>> devices() => _api.select(

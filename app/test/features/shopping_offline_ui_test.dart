@@ -35,6 +35,9 @@ void main() {
         shopping: shopping,
       ),
     );
+    // The adult home opens on the calendar: go to the shopping tab first.
+    await t.tap(find.text('Einkaufsliste'));
+    await t.pumpAndSettle();
     shopping.online = false;
 
     await t.enterText(find.byType(TextField), 'Brot');

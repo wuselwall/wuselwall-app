@@ -10,6 +10,8 @@ The experience is specified in [20 — Onboarding](../20-onboarding.md). Amended
 *WuselWall Cloud* or a self-hosted server; native Apple/Google sign-in only on Cloud; no
 captcha; public store listings.
 
+**Amended 2026-10-13 by [ADR-018](ADR-018-self-hosted-only.md):** self-service happens on self-hosted servers only — the store app has no default server, and the family's server stays in `code` mode for good.
+
 **Amended 2026-10-13 by [ADR-017](ADR-017-wuselwall-app-domain.md):** the links domain is decided — `wuselwall.app` ([Q45](../14-open-questions.md)).
 
 ## Context

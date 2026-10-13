@@ -1,0 +1,193 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:wuselwall/app/theme/ww_colors.dart';
+import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/features/board/domain/week_board.dart';
+import 'package:wuselwall/features/board/ui/board_detail.dart';
+import 'package:wuselwall/features/board/ui/board_format.dart';
+import 'package:wuselwall/features/board/ui/board_grid.dart';
+import 'package:wuselwall/features/board/ui/board_primitives.dart';
+import 'package:wuselwall/features/board/ui/details/task_board_detail.dart';
+import 'package:wuselwall/features/identity/ui/acting_profile_bar.dart';
+import 'package:wuselwall/features/shopping/ui/shopping_page.dart';
+
+/// The bottom line: open tasks per member, the night indicator, and the shopping count.
+/// The shopping count opens the tile picker; the task count only says what is coming.
+class BoardFooter extends StatelessWidget {
+  const BoardFooter({required this.board, required this.night, super.key});
+
+  static const height = 56.0;
+
+  final WeekBoard board;
+  final bool night;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final ww = context.ww;
+    final scheme = Theme.of(context).colorScheme;
+
+    return Container(
+      height: height,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: ww.sunken,
+        border: Border(top: BorderSide(color: ww.line)),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: BoardTap(
+              label: l10n.boardOpenToday,
+              onTap: () => unawaited(
+                showBoardDetail(
+                  context,
+                  title: l10n.boardOpenToday,
+                  body: const TaskBoardDetailBody(),
+                ),
+              ),
+              child: ClipFit(
+                alignment: Alignment.centerLeft,
+                child: _OpenTasks(board: board),
+              ),
+            ),
+          ),
+          if (night) ...[
+            Icon(Icons.nightlight_round, size: 28, color: ww.ink3),
+            const SizedBox(width: 8),
+            Text(
+              l10n.boardNightMode,
+              style: boardUi(24, weight: FontWeight.w600, color: ww.ink3),
+              maxLines: 1,
+              softWrap: false,
+            ),
+            const SizedBox(width: 16),
+          ],
+          BoardTap(
+            label: l10n.boardShoppingList,
+            onTap: () => unawaited(
+              showBoardDetail(
+                context,
+                title: l10n.boardShoppingList,
+                body: const Column(
+                  children: [
+                    Expanded(child: ShoppingBody()),
+                    ActingProfileBar(),
+                  ],
+                ),
+              ),
+            ),
+            child: SizedBox(
+              height: height,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.shopping_basket_outlined,
+                    size: 32,
+                    color: scheme.onSurface,
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    l10n.boardShoppingList,
+                    style: boardUi(
+                      26,
+                      weight: FontWeight.w600,
+                      color: scheme.onSurface,
+                    ),
+                    maxLines: 1,
+                    softWrap: false,
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    '${board.shoppingCount}',
+                    style: boardNum(
+                      26,
+                      weight: FontWeight.w800,
+                      color: scheme.onSurface,
+                    ),
+                    maxLines: 1,
+                    softWrap: false,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// "Heute offen: Lotta 2 · Hanna 1", or a tick when nothing is open.
+class _OpenTasks extends StatelessWidget {
+  const _OpenTasks({required this.board});
+
+  final WeekBoard board;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final ww = context.ww;
+    final ink = Theme.of(context).colorScheme.onSurface;
+    final open = [
+      for (final m in board.members)
+        if ((board.openTasks[m.id] ?? 0) > 0) (m, board.openTasks[m.id]!),
+    ];
+
+    if (open.isEmpty) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.check_circle, size: 30, color: ww.success),
+          const SizedBox(width: 10),
+          Text(
+            l10n.boardAllDone,
+            style: boardUi(26, weight: FontWeight.w600, color: ink),
+            maxLines: 1,
+            softWrap: false,
+          ),
+        ],
+      );
+    }
+
+    return Wrap(
+      crossAxisAlignment: WrapCrossAlignment.center,
+      spacing: 20,
+      children: [
+        Text(
+          l10n.boardOpenToday,
+          style: boardUi(26, weight: FontWeight.w600, color: ww.ink2),
+          maxLines: 1,
+          softWrap: false,
+        ),
+        for (final (m, count) in open)
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              MemberDot(
+                memberColor: m.color,
+                semanticLabel: context.memberName(board, m),
+                size: 14,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                context.memberName(board, m),
+                style: boardUi(26, weight: FontWeight.w600, color: ink),
+                maxLines: 1,
+                softWrap: false,
+              ),
+              const SizedBox(width: 4),
+              Text(
+                '$count',
+                style: boardNum(26, weight: FontWeight.w700, color: ink),
+                maxLines: 1,
+                softWrap: false,
+              ),
+            ],
+          ),
+      ],
+    );
+  }
+}

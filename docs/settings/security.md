@@ -35,4 +35,4 @@ Mit einem **Passkey** meldest du dich per Fingerabdruck oder Gesicht statt mit d
 
 - **Passwort**: mindestens 10 Zeichen, besser ein ganzer Satz.
 - **Verlorenes Handy**: sofort von einem anderen Gerät aus **sperren** (siehe [Mitglieder und Geräte](/settings/members-devices#gerat-sperren)).
-- **Eure Daten** liegen auf dem Server der Familie, nicht bei einem Cloud-Anbieter. Den Verkehr zwischen Handy und Server leitet ein Schutzdienst (Cloudflare) durch, der ihn aber nicht speichert.
+- **Eure Daten** liegen auf dem Server eurer Familie, nicht bei uns und nicht bei einem Cloud-Anbieter.

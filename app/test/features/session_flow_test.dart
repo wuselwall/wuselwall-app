@@ -71,10 +71,10 @@ void main() {
       t,
       overrides: baseOverrides(identity: identity, signedIn: false),
     );
-    await t.tap(find.text('Dieses Gerät mit Code einrichten'));
+    await t.tap(find.text('Mit Code verbinden'));
     await t.pumpAndSettle();
     await t.enterText(find.byType(TextField), 'ABCD2345');
-    await t.tap(find.text('Einrichten'));
+    await t.tap(find.text('Verbinden'));
     await t.pumpAndSettle();
     expect(find.textContaining('Zu viele Versuche'), findsOneWidget);
   });
@@ -87,10 +87,10 @@ void main() {
         signedIn: false,
       ),
     );
-    await t.tap(find.text('Dieses Gerät mit Code einrichten'));
+    await t.tap(find.text('Mit Code verbinden'));
     await t.pumpAndSettle();
     await t.enterText(find.byType(TextField), 'nope');
-    await t.tap(find.text('Einrichten'));
+    await t.tap(find.text('Verbinden'));
     await t.pumpAndSettle();
     expect(
       find.text('Dieser Code ist falsch oder abgelaufen.'),

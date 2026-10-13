@@ -42,6 +42,28 @@ class SettingsPage extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(Tokens.space4),
         children: [
+          ListTile(
+            leading: const Icon(Icons.tune),
+            title: Text(l10n.householdSettingsTitle),
+            subtitle: Text(l10n.householdSettingsSubtitle),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.go(Routes.householdSettings),
+          ),
+          ListTile(
+            leading: const Icon(Icons.rss_feed),
+            title: Text(l10n.feedTitle),
+            subtitle: Text(l10n.feedSettingsSubtitle),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.go(Routes.feedTokens),
+          ),
+          ListTile(
+            leading: const Icon(Icons.home_outlined),
+            title: Text(l10n.baselineTitle),
+            subtitle: Text(l10n.baselineSettingsSubtitle),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.go(Routes.baselines),
+          ),
+          const SizedBox(height: Tokens.space6),
           _Header(
             title: l10n.settingsMembers,
             action: IconButton(

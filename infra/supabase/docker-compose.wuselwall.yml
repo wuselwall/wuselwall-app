@@ -88,6 +88,9 @@ services:
     image: public.ecr.aws/supabase/edge-runtime:v1.77.4
     environment:
       SUPABASE_JWKS: ${JWT_JWKS}
+      # The shared secret of the nightly task job (supabase/functions/tasks-nightly): the
+      # host's cron sends it as x-cron-secret. Empty = the job refuses every call.
+      CRON_SECRET: ${CRON_SECRET:-}
 
   db:
     # Postgres 15, as supabase/config.toml ([db] major_version) and CI.

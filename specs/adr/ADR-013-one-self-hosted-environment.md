@@ -11,6 +11,8 @@ see [Amendment](#amendment-2026-10-11-the-official-compose-stack) · Superseded 
 (hosted Supabase) exists it holds every self-service household; this stack stays the
 family's home and the self-hosted flavour for development and testing. Its safety rules stay
 
+**Amended 2026-10-13 by [ADR-018](ADR-018-self-hosted-only.md):** there will be no WuselWall Cloud, so "one environment" holds for good; other families' households live on their own servers, never on this one.
+
 **Amended 2026-10-13 by [ADR-017](ADR-017-wuselwall-app-domain.md):** the public address is now `wuselwall.app` (website), `web.wuselwall.app` (web app) and `api.wuselwall.app` (API); `wusel.example.org` below is the address of the time, kept as a bridge for old app builds.
 
 ## Context

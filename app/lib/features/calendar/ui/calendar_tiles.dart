@@ -1,0 +1,278 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:wuselwall/app/router.dart';
+import 'package:wuselwall/app/theme/tokens.dart';
+import 'package:wuselwall/app/theme/ww_colors.dart';
+import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/features/board/ui/board_format.dart';
+import 'package:wuselwall/features/board/ui/board_primitives.dart';
+import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
+import 'package:wuselwall/features/calendar/ui/event_edit_args.dart';
+import 'package:wuselwall/features/identity/domain/models.dart';
+
+/// Below this column width a timed block shows only its first attendee's initial: a
+/// word would break mid-syllable otherwise (specs/09, "never break").
+const _initialsBelow = 60.0;
+
+/// Below this width a title stays on one line: two lines of a narrow column break
+/// inside long words.
+const _oneTitleLineBelow = 90.0;
+
+/// Blocks shorter than this show the time and title on one line ("16:00 Klavier").
+const _oneLineBelow = 44.0;
+
+/// An appointment as the calendar draws it: a block on the time grid ([compact] false,
+/// with its [width] and [height]) or a one-line chip in the all-day row ([compact]).
+/// The first attendee's tint is the ground and their ink the bar; with nobody attending
+/// it is brand-coloured. Tentative ones are dashed and faded; ones already over too.
+class OccurrenceTile extends StatelessWidget {
+  const OccurrenceTile({
+    required this.occurrence,
+    required this.members,
+    required this.now,
+    this.compact = false,
+    this.width,
+    this.height,
+    super.key,
+  });
+
+  final Occurrence occurrence;
+
+  /// Household members; the occurrence's attendees are looked up here.
+  final List<Member> members;
+  final DateTime now;
+
+  /// One line: a chip in the all-day row.
+  final bool compact;
+
+  /// The block's size on the grid; null for a chip.
+  final double? width;
+  final double? height;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final cs = Theme.of(context).colorScheme;
+    final ww = context.ww;
+    final text = Theme.of(context).textTheme;
+    final attendees = [
+      for (final id in occurrence.attendeeIds)
+        for (final m in members)
+          if (m.id == id) m,
+    ];
+    final lead = attendees.isEmpty ? null : ww.member(attendees.first.color);
+    final ground = lead?.tint ?? cs.surfaceContainerHigh;
+    final bar = lead?.ink ?? cs.primary;
+    final past = occurrence.end.isBefore(now);
+    final opacity = (occurrence.isTentative ? 0.6 : 1.0) * (past ? 0.5 : 1.0);
+
+    final start = occurrence.localStarts;
+    final end = occurrence.localEnds;
+    final startText = start == null ? null : context.time(start);
+    final spanText = start == null
+        ? null
+        : end == null
+        ? startText
+        : context.span(start, end);
+
+    final titleStyle = text.labelMedium?.copyWith(
+      color: cs.onSurface,
+      fontWeight: FontWeight.w600,
+    );
+    final timeStyle = text.labelSmall?.copyWith(
+      color: ww.ink2,
+      fontFamily: Tokens.fontNumeric,
+      fontFeatures: const [FontFeature.tabularFigures()],
+    );
+    final dots = MemberDots(
+      size: 8,
+      dots: [
+        for (final m in attendees)
+          MemberDot(
+            memberColor: m.color,
+            size: 8,
+            semanticLabel: m.displayName,
+          ),
+      ],
+    );
+
+    final Widget content;
+    if (compact) {
+      content = Row(
+        children: [
+          Expanded(
+            child: Text(
+              occurrence.title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              softWrap: false,
+              style: titleStyle,
+            ),
+          ),
+          if (attendees.isNotEmpty) ...[const SizedBox(width: 4), dots],
+        ],
+      );
+    } else {
+      final w = width ?? double.infinity;
+      final h = height ?? double.infinity;
+      if (w < _initialsBelow) {
+        content = Center(
+          child: Text(
+            attendees.isEmpty ? '' : _initial(attendees.first.displayName),
+            maxLines: 1,
+            softWrap: false,
+            overflow: TextOverflow.clip,
+            style: titleStyle,
+          ),
+        );
+      } else if (h < _oneLineBelow) {
+        content = Text.rich(
+          TextSpan(
+            children: [
+              if (startText != null)
+                TextSpan(text: '$startText ', style: timeStyle),
+              TextSpan(text: occurrence.title, style: titleStyle),
+            ],
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          softWrap: false,
+        );
+      } else {
+        final titleLines = w < _oneTitleLineBelow || h < 60 ? 1 : 2;
+        content = Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              occurrence.title,
+              maxLines: titleLines,
+              overflow: TextOverflow.ellipsis,
+              softWrap: titleLines > 1,
+              style: titleStyle,
+            ),
+            if (spanText != null)
+              Text(
+                spanText,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                softWrap: false,
+                style: timeStyle,
+              ),
+            if (h >= 80 && occurrence.location != null)
+              Text(
+                occurrence.location!,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                softWrap: false,
+                style: text.labelSmall?.copyWith(color: ww.ink2),
+              ),
+            if (h >= 96 && attendees.isNotEmpty) ...[
+              const SizedBox(height: 2),
+              dots,
+            ],
+          ],
+        );
+      }
+    }
+
+    final label = [
+      occurrence.title,
+      ?spanText,
+      if (occurrence.isTentative) l10n.boardTentative,
+    ].join(', ');
+
+    return Opacity(
+      opacity: opacity,
+      child: Semantics(
+        button: true,
+        label: label,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(6),
+            onTap: () => context.push(
+              Routes.eventEdit,
+              extra: EventEditArgs(
+                eventId: occurrence.eventId,
+                occurrence: occurrence,
+              ),
+            ),
+            child: CustomPaint(
+              foregroundPainter: occurrence.isTentative
+                  ? _DashedOutlinePainter(color: bar, radius: 6)
+                  : null,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: ground,
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(6),
+                  child: IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        ColoredBox(color: bar, child: const SizedBox(width: 3)),
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: compact ? 5 : 4,
+                              vertical: compact ? 2 : 3,
+                            ),
+                            child: content,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// The first letter of a name, upper-cased; by code point, so no half characters.
+String _initial(String name) {
+  if (name.isEmpty) return '';
+  return String.fromCharCode(name.runes.first).toUpperCase();
+}
+
+/// A dashed outline for a tentative appointment (specs/05: "dashed, at 60 % opacity").
+class _DashedOutlinePainter extends CustomPainter {
+  const _DashedOutlinePainter({required this.color, required this.radius});
+
+  final Color color;
+  final double radius;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final path = Path()
+      ..addRRect(
+        RRect.fromRectAndRadius(
+          Offset.zero & size,
+          Radius.circular(radius),
+        ).deflate(0.75),
+      );
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5;
+    for (final metric in path.computeMetrics()) {
+      var distance = 0.0;
+      while (distance < metric.length) {
+        final end = distance + 4 < metric.length ? distance + 4 : metric.length;
+        canvas.drawPath(metric.extractPath(distance, end), paint);
+        distance += 7;
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _DashedOutlinePainter old) =>
+      old.color != color || old.radius != radius;
+}

@@ -1,25 +1,12 @@
-# Setting up
+# Signing in and connecting
 
-There are three ways onto a new device. The start screen shows them:
+There are three ways onto a new device. At the top of the start screen you sign in with your account; below “or” you connect a shared device with a code or start a new family:
 
-<Shot name="setup-start" alt="Start screen of a device that is not set up yet" />
+<Shot name="setup-start" alt="WuselWall start screen" />
 
-## 1. Set up a new household (once)
+## 1. Sign in
 
-This is done by whoever installed WuselWall for the family — **once**, at the very beginning.
-
-1. Tap **Set up a new household**.
-2. Enter the **setup token**. The person who runs the server gives it to you. It works once.
-3. Choose a **household name** and enter **your name**, your **email** and a **password** (at least 10 characters).
-4. Pick a **6-digit PIN**. Later you use it to confirm important actions on shared devices.
-
-<Shot name="setup-household" alt="The “New household” form" />
-
-After that, setup is closed for good: nobody else can create a second household.
-
-## 2. Sign in as a guardian
-
-On your **own phone** you sign in with email and password. The first time, WuselWall asks for a **name for the device** ("Lukas's phone") — that is how you recognise it in the device list and can block it if it is lost.
+On your **own phone** tap **Continue with email** and sign in with email and password. The first time, WuselWall asks for a **name for the device** ("Lukas's phone") — that is how you recognise it in the device list and can block it if it is lost.
 
 <Shot name="setup-sign-in" alt="Sign-in screen" />
 
@@ -27,13 +14,26 @@ Instead of email and password you can also use **Continue with Apple** or **Cont
 
 If you turned on two-factor sign-in, the 6-digit code from your authenticator app follows (see [Security](/en/settings/security)).
 
-## 3. Set up a device with a code
+## 2. Connect a device with a code
 
 This is how **kids' tablets**, the **wall display** and other shared devices join the household:
 
 1. A guardian opens **Settings → Add device** on their phone and creates a code (see [Members and devices](/en/settings/members-devices)).
-2. On the new device, tap **Set up this device with a code** and enter the code — or scan the QR code.
+2. On the new device, tap **Connect with a code** and enter the code — or scan the QR code.
 
 <Shot name="setup-enrol" alt="Entering a code" />
 
 A code is valid for **10 minutes** and works **once**. If it doesn't match, create a new one.
+
+## 3. Start a new family (once)
+
+This is done by whoever installed WuselWall for the family — **once**, at the very beginning.
+
+1. Tap **Start a new family**.
+2. Enter the **setup token**. The person who runs the server gives it to you. It works once.
+3. Choose a **household name** and enter **your name**, your **email** and a **password** (at least 10 characters).
+4. Pick a **6-digit PIN**. Later you use it to confirm important actions on shared devices.
+
+<Shot name="setup-household" alt="The “New household” form" />
+
+After that, this route is closed for good: nobody else can create a second household.

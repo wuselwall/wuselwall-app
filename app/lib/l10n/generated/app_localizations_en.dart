@@ -47,9 +47,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get setupTitle => 'Set up';
-
-  @override
   String get registerAdult => 'Adult';
 
   @override
@@ -101,20 +98,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get systemServerTime => 'Server time';
 
   @override
-  String get setupHeadline => 'This device is not set up yet';
+  String get setupHeadline => 'Welcome to WuselWall';
 
   @override
-  String get setupBody =>
-      'Enrol this device with a code from a guardian, sign in as a guardian, or set up a new household.';
+  String get doorTagline => 'The family plan for the kitchen wall';
 
   @override
-  String get setupEnrolAction => 'Set up this device with a code';
+  String get setupEnrolAction => 'Connect with a code';
 
   @override
-  String get setupSignInAction => 'Sign in as guardian';
-
-  @override
-  String get setupHouseholdAction => 'Set up a new household';
+  String get setupHouseholdAction => 'Start a new family';
 
   @override
   String get wizardTitle => 'New household';
@@ -153,23 +146,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signInAction => 'Sign in';
 
   @override
-  String get enrolTitle => 'Set up this device';
+  String get enrolTitle => 'Connect this device';
 
   @override
   String get enrolBody =>
-      'Enter the code shown on a device that is already set up.';
+      'Enter the code shown on a device that is already connected.';
 
   @override
   String get enrolCodeLabel => 'Enrolment code';
 
   @override
-  String get enrolAction => 'Set up';
+  String get enrolAction => 'Connect';
 
   @override
   String get errSetupTokenInvalid => 'The setup token is not valid.';
 
   @override
-  String get errSetupClosed => 'This system is already set up.';
+  String get errSetupClosed => 'This system is already connected.';
 
   @override
   String get errPasswordTooShort =>
@@ -604,6 +597,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get doorGoogle => 'Continue with Google';
 
   @override
+  String get doorEmail => 'Continue with email';
+
+  @override
   String get doorOr => 'or';
 
   @override
@@ -660,4 +656,2077 @@ class AppLocalizationsEn extends AppLocalizations {
   String signInMethodRemoveConfirm(String provider) {
     return 'Remove $provider? You will no longer be able to sign in with it.';
   }
+
+  @override
+  String boardWeekNumber(int week) {
+    return 'Week $week';
+  }
+
+  @override
+  String get boardToday => 'Today';
+
+  @override
+  String get boardNow => 'Now';
+
+  @override
+  String get boardNextUp => 'Next';
+
+  @override
+  String get boardThen => 'then';
+
+  @override
+  String boardInMinutes(int minutes) {
+    return 'in $minutes min';
+  }
+
+  @override
+  String boardInHours(int hours, int minutes) {
+    return 'in $hours h $minutes min';
+  }
+
+  @override
+  String get boardNothingMoreToday => 'Nothing else planned today';
+
+  @override
+  String boardUpdatedSecondsAgo(int seconds) {
+    return 'updated $seconds s ago';
+  }
+
+  @override
+  String boardUpdatedMinutesAgo(int minutes) {
+    return 'updated $minutes min ago';
+  }
+
+  @override
+  String boardLastUpdatedAt(String time) {
+    return 'last updated $time';
+  }
+
+  @override
+  String get boardOffline => 'No connection – this is the last known plan.';
+
+  @override
+  String get boardLoading => 'Loading the week …';
+
+  @override
+  String get boardZoneWhere => 'Who is where';
+
+  @override
+  String get boardZoneWhereHint => 'pale = as usual · bold = different';
+
+  @override
+  String get boardZoneEvents => 'Appointments';
+
+  @override
+  String get boardZoneEventsHint =>
+      'dots = who is involved · dashed = not certain yet';
+
+  @override
+  String get boardZoneMeal => 'Hot meal';
+
+  @override
+  String get boardZoneMealHint => 'filled dot = eating · open dot = not there';
+
+  @override
+  String get boardMorning => 'Morning';
+
+  @override
+  String get boardAfternoon => 'Afternoon';
+
+  @override
+  String get boardEvening => 'Evening';
+
+  @override
+  String boardUntil(String time) {
+    return 'until $time';
+  }
+
+  @override
+  String boardFrom(String time) {
+    return 'from $time';
+  }
+
+  @override
+  String get boardAllDay => 'all day';
+
+  @override
+  String boardMoreEvents(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '+$count more',
+      one: '+1 more',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String boardMoreCount(int count) {
+    return '+$count';
+  }
+
+  @override
+  String get boardNoSchool => 'free';
+
+  @override
+  String boardCareUntil(String label, String time) {
+    return '$label until $time';
+  }
+
+  @override
+  String get boardCareDefault => 'Care';
+
+  @override
+  String boardBusyUntil(String time) {
+    return 'Meetings until $time';
+  }
+
+  @override
+  String get boardMealLunch => 'Lunch';
+
+  @override
+  String get boardMealDinner => 'Dinner';
+
+  @override
+  String get boardMealNothingPlanned => 'nothing planned';
+
+  @override
+  String boardMealCook(String name) {
+    return '$name cooks';
+  }
+
+  @override
+  String boardMealGuests(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '+$count guests',
+      one: '+1 guest',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String boardEating(String name) {
+    return '$name is eating';
+  }
+
+  @override
+  String boardNotEating(String name) {
+    return '$name is not eating';
+  }
+
+  @override
+  String get boardOpenToday => 'Open today';
+
+  @override
+  String get boardAllDone => 'All done today';
+
+  @override
+  String get boardShoppingList => 'Shopping list';
+
+  @override
+  String get boardNightMode => 'Night view';
+
+  @override
+  String get boardBackToWeek => 'Back to the week';
+
+  @override
+  String get boardTentative => 'not certain yet';
+
+  @override
+  String get boardNoAppointments => 'No appointments';
+
+  @override
+  String get boardSchool => 'School';
+
+  @override
+  String boardSchoolSpan(String span) {
+    return 'School $span';
+  }
+
+  @override
+  String get boardNoSchoolToday => 'No school';
+
+  @override
+  String get boardWeekend => 'Weekend';
+
+  @override
+  String boardWeekOf(String name) {
+    return '$name\'s week';
+  }
+
+  @override
+  String boardTimetableTitle(String name) {
+    return '$name\'s timetable';
+  }
+
+  @override
+  String boardClass(String label) {
+    return 'Class $label';
+  }
+
+  @override
+  String boardPeriod(int index) {
+    return 'Period $index';
+  }
+
+  @override
+  String get boardBreak => 'Break';
+
+  @override
+  String get boardLessonOver => 'over';
+
+  @override
+  String get boardLessonNow => 'now';
+
+  @override
+  String get boardLessonCancelled => 'Cancelled';
+
+  @override
+  String get boardLessonSubstituted => 'Substitute';
+
+  @override
+  String get boardLessonRoomChange => 'Room change';
+
+  @override
+  String get boardLessonExtra => 'Extra';
+
+  @override
+  String boardPackTomorrow(String items) {
+    return 'Pack for tomorrow: $items';
+  }
+
+  @override
+  String boardPackToday(String items) {
+    return 'Pack for today: $items';
+  }
+
+  @override
+  String get boardWholeWeek => 'The whole week';
+
+  @override
+  String get boardMealWeek => 'This week\'s meals';
+
+  @override
+  String boardBaseline(String label) {
+    return 'Usually: $label';
+  }
+
+  @override
+  String get boardNoDeviation => 'as usual';
+
+  @override
+  String get boardCooking => 'Cooking';
+
+  @override
+  String get boardAppointmentsOf => 'Appointments';
+
+  @override
+  String boardTasksOf(String name) {
+    return '$name\'s tasks';
+  }
+
+  @override
+  String get boardTasksComingSoon => 'Tasks arrive with the next update.';
+
+  @override
+  String get presenceWorking => 'At work';
+
+  @override
+  String get presenceHomeOffice => 'Home office';
+
+  @override
+  String get presenceTravel => 'Travelling';
+
+  @override
+  String get presenceAway => 'Away';
+
+  @override
+  String get presenceOff => 'Off';
+
+  @override
+  String get presenceChildcare => 'Childcare';
+
+  @override
+  String get errSettingInvalid => 'That value is outside the allowed range.';
+
+  @override
+  String get errSettingUnknown => 'That setting does not exist.';
+
+  @override
+  String get errSettingTarget =>
+      'That setting cannot be changed for this person or device.';
+
+  @override
+  String get householdSettingsTitle => 'Household settings';
+
+  @override
+  String get householdSettingsSubtitle =>
+      'Defaults for tasks, calendar, meals and the kitchen display';
+
+  @override
+  String get settingsSectionHousehold => 'Household and members';
+
+  @override
+  String get settingsSectionTasks => 'Tasks';
+
+  @override
+  String get settingsSectionCalendar => 'Calendar and school';
+
+  @override
+  String get settingsSectionMeals => 'Meals';
+
+  @override
+  String get settingsSectionKitchen => 'Kitchen display';
+
+  @override
+  String get settingsSectionDevice => 'This device';
+
+  @override
+  String get settingsSectionMine => 'My settings';
+
+  @override
+  String get settingPickPersonFirst =>
+      'Choose who you are first. Your own settings appear here then.';
+
+  @override
+  String get settingIsDefault => 'Default';
+
+  @override
+  String get settingIsCustom => 'Customised';
+
+  @override
+  String get settingReset => 'Reset to default';
+
+  @override
+  String get settingOn => 'On';
+
+  @override
+  String get settingOff => 'Off';
+
+  @override
+  String get settingFrom => 'from';
+
+  @override
+  String get settingTo => 'to';
+
+  @override
+  String get settingIncrease => 'Increase';
+
+  @override
+  String get settingDecrease => 'Decrease';
+
+  @override
+  String get settingDayPartsMorningEnds => 'Morning until';
+
+  @override
+  String get settingDayPartsEveningStarts => 'Evening from';
+
+  @override
+  String settingUnitPoints(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count points',
+      one: '1 point',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String settingUnitMinutes(int count) {
+    return '$count min';
+  }
+
+  @override
+  String settingUnitSeconds(int count) {
+    return '$count s';
+  }
+
+  @override
+  String get settingValueName => 'Full name';
+
+  @override
+  String get settingValueInitial => 'Initial';
+
+  @override
+  String get settingValueDuty => 'Duty';
+
+  @override
+  String get settingValueBonus => 'Bonus';
+
+  @override
+  String get settingValueRequired => 'Approval';
+
+  @override
+  String get settingValueSelfServe => 'Self-serve';
+
+  @override
+  String get settingValueWholeFamily => 'Whole family';
+
+  @override
+  String get settingValueAll => 'All';
+
+  @override
+  String get settingValueNone => 'None';
+
+  @override
+  String get settingValueLunch => 'Lunch';
+
+  @override
+  String get settingValueDinner => 'Dinner';
+
+  @override
+  String get settingBoardMemberLabelTitle => 'Names on the board';
+
+  @override
+  String get settingBoardMemberLabelHelp =>
+      'A name reads better than an initial from two metres. Pick initials if visitors are often in the kitchen.';
+
+  @override
+  String get settingTasksDutyPointsTitle => 'Points for a duty';
+
+  @override
+  String get settingTasksDutyPointsHelp =>
+      'Duties are expected of everyone, so they earn little or nothing. The streak is their reward.';
+
+  @override
+  String get settingTasksBonusPointsTitle => 'Points for a bonus task';
+
+  @override
+  String get settingTasksBonusPointsHelp =>
+      'One bonus task buys the cheapest starter reward, so a younger child gets there within days.';
+
+  @override
+  String get settingTasksKindTitle => 'New tasks are';
+
+  @override
+  String get settingTasksKindHelp =>
+      'A new chore is a duty unless someone deliberately makes it a bonus. That keeps the earning surface narrow.';
+
+  @override
+  String get settingTasksVerificationTitle => 'Guardians check chores';
+
+  @override
+  String get settingTasksVerificationHelp =>
+      'Checking turns every chore into an inspection, so use it only for valuable bonus tasks.';
+
+  @override
+  String get settingTasksJokersTitle => 'Streak jokers per month';
+
+  @override
+  String get settingTasksJokersHelp =>
+      'A joker keeps a streak alive on a missed day, so one sick day does not wipe out a three-week streak.';
+
+  @override
+  String get settingTasksRewardApprovalTitle => 'Rewards need approval';
+
+  @override
+  String get settingTasksRewardApprovalHelp =>
+      'A guardian approves each redemption with the PIN. Self-serve suits only trivial rewards.';
+
+  @override
+  String get settingCalendarMembersEditTitle => 'Members edit their own events';
+
+  @override
+  String get settingCalendarMembersEditHelp =>
+      'Children create and edit events they attend themselves. Deleting someone else\'s event stays a guardian action.';
+
+  @override
+  String get settingCalendarKeyDefaultTitle => 'New events on the kitchen wall';
+
+  @override
+  String get settingCalendarKeyDefaultHelp =>
+      'Decides which new events appear on the kitchen wall without anyone ticking the box. Review it after two weeks of use.';
+
+  @override
+  String get settingSchoolReportTitle => 'Members report timetable changes';
+
+  @override
+  String get settingSchoolReportHelp =>
+      'Only guardians maintain the timetable. With this on, a child can report a cancelled lesson for a guardian to confirm.';
+
+  @override
+  String get settingSchoolEquipmentTitle => 'Equipment hint for tomorrow';
+
+  @override
+  String get settingSchoolEquipmentHelp =>
+      'Shows what to bring tomorrow, such as sports kit, from tomorrow\'s subjects.';
+
+  @override
+  String get settingMealsSchoolDayTitle => 'Warm meal on school days';
+
+  @override
+  String get settingMealsSchoolDayHelp =>
+      'The one warm meal on the kitchen wall. On school days children eat lunch at school or in the Hort.';
+
+  @override
+  String get settingMealsFreeDayTitle => 'Warm meal on free days';
+
+  @override
+  String get settingMealsFreeDayHelp => 'For weekends and holidays.';
+
+  @override
+  String get settingMealsAwayTitle => 'Away means not eating';
+
+  @override
+  String get settingMealsAwayHelp =>
+      'Travelling or away over a meal\'s time marks that person as not eating, so most days need no input.';
+
+  @override
+  String get settingMealsCareCutoffTitle => 'Lunch cut-off for care';
+
+  @override
+  String get settingMealsCareCutoffHelp =>
+      'A child whose care runs past this time is out for lunch.';
+
+  @override
+  String get settingBoardRolloverTitle => 'Kitchen wall moves on';
+
+  @override
+  String get settingBoardRolloverHelp =>
+      'When the wall moves to the coming week. Sunday evening planning wants next week; Saturday morning still wants this one.';
+
+  @override
+  String get settingBoardDayPartsTitle => 'Morning, afternoon, evening';
+
+  @override
+  String get settingBoardDayPartsHelp =>
+      'Where the appointment zone splits into morning, afternoon and evening.';
+
+  @override
+  String get settingDeviceNightHoursTitle => 'Night theme hours';
+
+  @override
+  String get settingDeviceNightHoursHelp =>
+      'When the kiosk switches to the amber night theme.';
+
+  @override
+  String get settingDeviceIdleRevertTitle => 'Back to the wall after';
+
+  @override
+  String get settingDeviceIdleRevertHelp =>
+      'How long an opened profile or detail view stays open before the kiosk returns to the wall.';
+
+  @override
+  String get settingMemberCompletionSoundTitle =>
+      'Sound when a chore is ticked';
+
+  @override
+  String get settingMemberCompletionSoundHelp =>
+      'Ticking a chore off makes a short sound. Switch it off if you do not want it.';
+
+  @override
+  String get settingCalendarTentativeTitle => 'Check uncertain events at';
+
+  @override
+  String get settingCalendarTentativeHelp =>
+      'Asks whether a tentative entry is happening, so it does not stay uncertain until it starts.';
+
+  @override
+  String get settingNotifyMorningTitle => 'Morning summary';
+
+  @override
+  String get settingNotifyMorningHelp =>
+      'Today\'s tasks and events for you. Pending redemptions appear here for guardians.';
+
+  @override
+  String get settingNotifyEventReminderTitle => 'Reminder before events';
+
+  @override
+  String get settingNotifyEventReminderHelp =>
+      'A notification before an event starts.';
+
+  @override
+  String get settingNotifyTaskVerifiedTitle => 'When a chore is verified';
+
+  @override
+  String get settingNotifyTaskVerifiedHelp =>
+      'A notification when a guardian verifies a chore and its points are credited.';
+
+  @override
+  String get settingNotifyRedemptionTitle => 'When a reward is requested';
+
+  @override
+  String get settingNotifyRedemptionHelp =>
+      'An immediate notification when a child asks for a reward.';
+
+  @override
+  String boardCareShort(String label, String time) {
+    return '$label $time';
+  }
+
+  @override
+  String get calendarTitle => 'Calendar';
+
+  @override
+  String get calendarDay => 'Day';
+
+  @override
+  String get calendarThreeDays => '3 days';
+
+  @override
+  String get calendarWeek => 'Week';
+
+  @override
+  String get calendarPrevious => 'Previous';
+
+  @override
+  String get calendarNext => 'Next';
+
+  @override
+  String get calendarToday => 'Today';
+
+  @override
+  String calendarRange(String from, String to) {
+    return '$from – $to';
+  }
+
+  @override
+  String get calendarNewEvent => 'New event';
+
+  @override
+  String get calendarEmpty => 'Nothing planned';
+
+  @override
+  String get calendarEditorPlaceholder => 'The event editor is coming soon.';
+
+  @override
+  String get eventEditTitle => 'Edit event';
+
+  @override
+  String get eventTitleLabel => 'Title';
+
+  @override
+  String get eventTitleRequired => 'Enter a title.';
+
+  @override
+  String get eventKindAppointment => 'Appointment';
+
+  @override
+  String get eventKindPresence => 'Presence';
+
+  @override
+  String get eventPresenceState => 'State';
+
+  @override
+  String get eventPresenceStateRequired => 'Choose a state.';
+
+  @override
+  String get eventAllDay => 'All day';
+
+  @override
+  String get eventStarts => 'Starts';
+
+  @override
+  String get eventEnds => 'Ends';
+
+  @override
+  String get eventEndBeforeStart => 'The end must be after the start.';
+
+  @override
+  String get eventAttendees => 'Who';
+
+  @override
+  String get eventAttendeesWholeFamily =>
+      'Nobody picked: this is for the whole family.';
+
+  @override
+  String get eventLocation => 'Location';
+
+  @override
+  String get eventNotes => 'Notes';
+
+  @override
+  String get eventTentative => 'Not sure yet';
+
+  @override
+  String get eventKeyDisplay => 'Show on the kitchen display';
+
+  @override
+  String get eventRepeat => 'Repeat';
+
+  @override
+  String get eventRepeatNever => 'Never';
+
+  @override
+  String get eventRepeatDaily => 'Daily';
+
+  @override
+  String get eventRepeatWeekly => 'Weekly';
+
+  @override
+  String get eventRepeatBiweekly => 'Every 2 weeks';
+
+  @override
+  String get eventRepeatMonthly => 'Monthly';
+
+  @override
+  String get eventRepeatSpecificDays => 'Specific days (shift plan)';
+
+  @override
+  String eventRepeatMonthlyDay(int day) {
+    return 'on the $day.';
+  }
+
+  @override
+  String eventRepeatMonthlyNth(int n, String weekday) {
+    return 'the $n. $weekday of the month';
+  }
+
+  @override
+  String eventRepeatMonthlyLast(String weekday) {
+    return 'the last $weekday';
+  }
+
+  @override
+  String get eventRepeatDays => 'On these days';
+
+  @override
+  String get eventRepeatEnds => 'Repeat ends';
+
+  @override
+  String get eventRepeatUntil => 'on a date';
+
+  @override
+  String eventRepeatCount(int count) {
+    return 'after $count times';
+  }
+
+  @override
+  String eventDaysPicked(int count) {
+    return '$count days';
+  }
+
+  @override
+  String get eventDienstplanHelp =>
+      'Tap the days that count. The start day is always included.';
+
+  @override
+  String get eventCustomRule => 'Custom rule';
+
+  @override
+  String get eventCustomRuleHelp =>
+      'This repeat pattern cannot be edited here. It stays as it is.';
+
+  @override
+  String get eventWeekdaysRequired => 'Choose at least one weekday.';
+
+  @override
+  String get eventDeleteConfirm => 'Delete this event?';
+
+  @override
+  String get eventScopeTitle => 'Which events?';
+
+  @override
+  String get eventScopeDeleteTitle => 'Delete which events?';
+
+  @override
+  String get eventScopeThis => 'Only this event';
+
+  @override
+  String get eventScopeSeries => 'All events in the series';
+
+  @override
+  String get errEventInvalid => 'This event is not valid.';
+
+  @override
+  String get errRruleInvalid => 'This repeat pattern cannot be saved.';
+
+  @override
+  String get errAttendeeInvalid =>
+      'Someone you chose does not belong to this household.';
+
+  @override
+  String get errEventNotFound => 'This event no longer exists.';
+
+  @override
+  String get scheduleTitle => 'Timetable';
+
+  @override
+  String get tasksTitle => 'Tasks';
+
+  @override
+  String get mealsTitle => 'Meals';
+
+  @override
+  String get comingSoon => 'This part is being built.';
+
+  @override
+  String mealsWeekRange(String from, String to) {
+    return '$from – $to';
+  }
+
+  @override
+  String get mealsPrevWeek => 'Previous week';
+
+  @override
+  String get mealsNextWeek => 'Next week';
+
+  @override
+  String get mealsThisWeek => 'This week';
+
+  @override
+  String get mealsRecipes => 'Recipes';
+
+  @override
+  String get mealsFillShopping => 'Fill shopping list';
+
+  @override
+  String get mealsSlotBreakfast => 'Breakfast';
+
+  @override
+  String get mealsSlotLunch => 'Lunch';
+
+  @override
+  String get mealsSlotDinner => 'Dinner';
+
+  @override
+  String get mealsSlotSnack => 'Snack';
+
+  @override
+  String get mealsNothingYet => 'Nothing planned yet';
+
+  @override
+  String get mealsAddOther => 'Add meal';
+
+  @override
+  String get mealsDragHint =>
+      'Long-press a meal and drop it on another day to move it.';
+
+  @override
+  String mealsEditTitle(String day) {
+    return 'Meal on $day';
+  }
+
+  @override
+  String get mealsFieldLabel => 'Dish or note';
+
+  @override
+  String get mealsFieldHint => 'Pizza, leftovers, a recipe name …';
+
+  @override
+  String get mealsSuggestionHelp =>
+      'Matching recipes. Tap one to use it; its ingredients then go on the shopping list.';
+
+  @override
+  String get mealsServings => 'Servings';
+
+  @override
+  String get mealsCook => 'Cooks';
+
+  @override
+  String get mealsCookNobody => 'Nobody';
+
+  @override
+  String get mealsTime => 'Time';
+
+  @override
+  String get mealsTimeNone => 'No time';
+
+  @override
+  String get mealsGuests => 'Guests';
+
+  @override
+  String get mealsEatingTitle => 'Who is eating';
+
+  @override
+  String get mealsEatingHelp =>
+      'Someone who is away or travelling over the meal, or who has Hort past the cut-off, is switched off automatically. Set it by hand only when that is not true.';
+
+  @override
+  String get mealsEatingAuto => 'Automatic';
+
+  @override
+  String get mealsEatingYes => 'Eating';
+
+  @override
+  String get mealsEatingNo => 'Not eating';
+
+  @override
+  String get mealsDelete => 'Delete meal';
+
+  @override
+  String get mealsPreviewTitle => 'Fill shopping list';
+
+  @override
+  String get mealsPreviewEmpty =>
+      'Nothing to add. Free-text meals have no ingredients; recipes put theirs on the list.';
+
+  @override
+  String get mealsPreviewOnList => 'Already on the list';
+
+  @override
+  String mealsPreviewFor(String meals) {
+    return 'For $meals';
+  }
+
+  @override
+  String mealsPreviewAdd(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items',
+      one: '1 item',
+      zero: 'nothing',
+    );
+    return 'Add $_temp0';
+  }
+
+  @override
+  String mealsPreviewAdded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items added to the shopping list',
+      one: '1 item added to the shopping list',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get mealsRecipesTitle => 'Recipes';
+
+  @override
+  String get mealsRecipeSearch => 'Search recipes';
+
+  @override
+  String get mealsRecipesEmpty =>
+      'No recipes yet. A dish name is enough for a meal; a recipe adds its ingredients to the shopping list.';
+
+  @override
+  String get mealsRecipeNew => 'New recipe';
+
+  @override
+  String get mealsRecipeEdit => 'Edit recipe';
+
+  @override
+  String get mealsRecipeTitleField => 'Title';
+
+  @override
+  String get mealsIngredients => 'Ingredients';
+
+  @override
+  String get mealsIngredientName => 'Ingredient';
+
+  @override
+  String get mealsIngredientQuantity => 'Amount';
+
+  @override
+  String get mealsIngredientUnit => 'Unit';
+
+  @override
+  String get mealsIngredientNote => 'Note';
+
+  @override
+  String get mealsIngredientAdd => 'Add ingredient';
+
+  @override
+  String get mealsIngredientRemove => 'Remove ingredient';
+
+  @override
+  String get mealsIngredientMove => 'Drag to reorder';
+
+  @override
+  String get mealsNoIngredients => 'No ingredients listed.';
+
+  @override
+  String get mealsSteps => 'Steps';
+
+  @override
+  String get mealsStepsHint => 'One step per line';
+
+  @override
+  String get mealsTags => 'Tags';
+
+  @override
+  String get mealsTagsHint => 'Separated by commas, e.g. quick, vegetarian';
+
+  @override
+  String get mealsSourceUrl => 'Source link';
+
+  @override
+  String get mealsSource => 'Source';
+
+  @override
+  String get mealsRecipeSave => 'Save recipe';
+
+  @override
+  String get mealsRecipeDelete => 'Delete recipe';
+
+  @override
+  String mealsRecipeDeleteConfirm(String title) {
+    return 'Delete “$title”? Meals that use it keep their name.';
+  }
+
+  @override
+  String get mealsRecipeTitleRequired => 'A recipe needs a title.';
+
+  @override
+  String get mealsKioskHint => 'Tap a dot to change who is eating';
+
+  @override
+  String get errMealInvalid =>
+      'That meal could not be saved. Check the entry and try again.';
+
+  @override
+  String get schoolSetupCardTitle => 'Set up the school';
+
+  @override
+  String get schoolSetupCardBody =>
+      'Add the school, its bell times and the terms. Then the timetable can be entered.';
+
+  @override
+  String get schoolSetupAction => 'Set up school';
+
+  @override
+  String get schoolEnterTimetableTitle => 'Enter the timetable';
+
+  @override
+  String schoolEnterTimetableBody(String name) {
+    return '$name has no timetable for this term yet.';
+  }
+
+  @override
+  String get schoolEnterTimetableAction => 'Enter timetable';
+
+  @override
+  String get schoolNoChildren => 'No child in the household yet.';
+
+  @override
+  String get schoolEditSchool => 'Edit school';
+
+  @override
+  String get schoolEditTimetable => 'Edit timetable';
+
+  @override
+  String get schoolPrevWeek => 'Previous week';
+
+  @override
+  String get schoolNextWeek => 'Next week';
+
+  @override
+  String get schoolThisWeek => 'This week';
+
+  @override
+  String schoolWeekLabel(int week, String from, String to) {
+    return 'Week $week · $from – $to';
+  }
+
+  @override
+  String get schoolChooseChild => 'Choose child';
+
+  @override
+  String schoolHolidayBand(String name, String range) {
+    return '$name · $range';
+  }
+
+  @override
+  String get schoolNoLessonsToday => 'No lessons';
+
+  @override
+  String get schoolPackTomorrowNone => 'Nothing to pack for tomorrow.';
+
+  @override
+  String schoolLessonActions(String subject, String day, String period) {
+    return '$subject, $day, $period';
+  }
+
+  @override
+  String get schoolCancelLesson => 'Cancelled';
+
+  @override
+  String get schoolSubstitute => 'Substitute';
+
+  @override
+  String get schoolRoomChange => 'Room changed';
+
+  @override
+  String get schoolResetException => 'Reset';
+
+  @override
+  String get schoolPickSubject => 'Subject';
+
+  @override
+  String get schoolSearchSubject => 'Find subject';
+
+  @override
+  String get schoolTeacher => 'Teacher';
+
+  @override
+  String get schoolNote => 'Note';
+
+  @override
+  String get schoolRoom => 'Room';
+
+  @override
+  String get schoolApply => 'Apply';
+
+  @override
+  String get schoolSaved => 'Saved.';
+
+  @override
+  String get schoolNoSubjects =>
+      'No subjects yet. Add them in the school setup.';
+
+  @override
+  String get schoolSetupTitle => 'School';
+
+  @override
+  String get schoolSectionSchool => 'School';
+
+  @override
+  String get schoolName => 'Name of the school';
+
+  @override
+  String get schoolState => 'State';
+
+  @override
+  String get schoolStateNone => 'Not given';
+
+  @override
+  String get schoolStateBW => 'Baden-Württemberg';
+
+  @override
+  String get schoolStateBY => 'Bavaria';
+
+  @override
+  String get schoolStateBE => 'Berlin';
+
+  @override
+  String get schoolStateBB => 'Brandenburg';
+
+  @override
+  String get schoolStateHB => 'Bremen';
+
+  @override
+  String get schoolStateHH => 'Hamburg';
+
+  @override
+  String get schoolStateHE => 'Hesse';
+
+  @override
+  String get schoolStateMV => 'Mecklenburg-Western Pomerania';
+
+  @override
+  String get schoolStateNI => 'Lower Saxony';
+
+  @override
+  String get schoolStateNW => 'North Rhine-Westphalia';
+
+  @override
+  String get schoolStateRP => 'Rhineland-Palatinate';
+
+  @override
+  String get schoolStateSL => 'Saarland';
+
+  @override
+  String get schoolStateSN => 'Saxony';
+
+  @override
+  String get schoolStateST => 'Saxony-Anhalt';
+
+  @override
+  String get schoolStateSH => 'Schleswig-Holstein';
+
+  @override
+  String get schoolStateTH => 'Thuringia';
+
+  @override
+  String get schoolBellTimes => 'Bell times';
+
+  @override
+  String get schoolAddLesson => 'Add lesson';
+
+  @override
+  String get schoolAddBreak => 'Add break';
+
+  @override
+  String get schoolRemove => 'Remove';
+
+  @override
+  String get schoolStart => 'Start';
+
+  @override
+  String get schoolEnd => 'End';
+
+  @override
+  String get schoolTerms => 'Terms';
+
+  @override
+  String get schoolAddTerm => 'Add term';
+
+  @override
+  String get schoolTermEdit => 'Term';
+
+  @override
+  String get schoolTermName => 'Name';
+
+  @override
+  String get schoolFrom => 'From';
+
+  @override
+  String get schoolTo => 'To';
+
+  @override
+  String get schoolAbWeek => 'A/B anchor week (calendar week)';
+
+  @override
+  String get schoolAbWeekHint =>
+      'A week that is an A week. Empty: every week is the same.';
+
+  @override
+  String get schoolCurrent => 'current';
+
+  @override
+  String get schoolSubjects => 'Subjects';
+
+  @override
+  String get schoolAddSubject => 'Add subject';
+
+  @override
+  String get schoolSubjectEdit => 'Subject';
+
+  @override
+  String get schoolSubjectShort => 'Short name';
+
+  @override
+  String get schoolTint => 'Colour';
+
+  @override
+  String get schoolEquipment => 'Things to bring';
+
+  @override
+  String get schoolNotable => 'Show on the wall';
+
+  @override
+  String get schoolSubjectInUse =>
+      'This subject is still in a timetable. Remove it there first.';
+
+  @override
+  String get schoolInvalid => 'These details do not fit together.';
+
+  @override
+  String get schoolHolidays => 'Holidays and free days';
+
+  @override
+  String get schoolAddHoliday => 'Add holiday';
+
+  @override
+  String get schoolHolidayEdit => 'Holiday';
+
+  @override
+  String get schoolHolidayName => 'Name';
+
+  @override
+  String get schoolEditorClass => 'Class';
+
+  @override
+  String get schoolWeekCycle => 'Week rhythm';
+
+  @override
+  String get schoolCycleWeekly => 'Every week';
+
+  @override
+  String get schoolCycleAb => 'A/B weeks';
+
+  @override
+  String get schoolParityAll => 'Every week';
+
+  @override
+  String get schoolParityA => 'A week';
+
+  @override
+  String get schoolParityB => 'B week';
+
+  @override
+  String get schoolClearDay => 'Clear day';
+
+  @override
+  String get schoolClearCell => 'Clear';
+
+  @override
+  String get schoolCopyFrom => 'Copy from…';
+
+  @override
+  String get schoolCopyPick => 'Copy timetable from';
+
+  @override
+  String get schoolCareRows => 'After school care';
+
+  @override
+  String get schoolAddCare => 'Add care';
+
+  @override
+  String get schoolCareTitle => 'Name';
+
+  @override
+  String get schoolCareDays => 'On';
+
+  @override
+  String get schoolSaveTimetable => 'Save timetable';
+
+  @override
+  String get schoolWeekdayPick => 'Days';
+
+  @override
+  String get feedTitle => 'Calendar subscriptions';
+
+  @override
+  String get feedSettingsSubtitle =>
+      'The family calendar in Outlook or on an iPhone';
+
+  @override
+  String get feedNew => 'New subscription';
+
+  @override
+  String get feedEmpty =>
+      'No subscriptions yet. A subscription shows appointments in Outlook or on an iPhone, read-only.';
+
+  @override
+  String get feedRevoked => 'Revoked';
+
+  @override
+  String get feedNeverFetched => 'Never fetched';
+
+  @override
+  String feedLastFetched(String when) {
+    return 'Last fetched: $when';
+  }
+
+  @override
+  String get feedAgoJustNow => 'just now';
+
+  @override
+  String feedAgoMinutes(int count) {
+    return '$count min ago';
+  }
+
+  @override
+  String feedAgoHours(int count) {
+    return '$count h ago';
+  }
+
+  @override
+  String feedAgoDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days ago',
+      one: '1 day ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String feedFetchCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'fetched $count times',
+      one: 'fetched once',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get feedSummaryAppointments => 'Appointments';
+
+  @override
+  String get feedSummaryPresence => 'Presence';
+
+  @override
+  String get feedSummaryEveryone => 'All members';
+
+  @override
+  String get feedSummarySchoolDay => 'School day';
+
+  @override
+  String get feedSummarySchoolLessons => 'Lessons';
+
+  @override
+  String get feedWhoseTitle => 'Whose events';
+
+  @override
+  String get feedWhoseHelp => 'Nothing selected: everyone';
+
+  @override
+  String get feedLabelField => 'Subscription name';
+
+  @override
+  String get feedLabelHint => 'e.g. work laptop Outlook';
+
+  @override
+  String get feedWhatTitle => 'What';
+
+  @override
+  String get feedKindPresenceTitle => 'Presence';
+
+  @override
+  String get feedPresenceHint =>
+      'Shows who is where and when (work, home office, off …). Better left off for work devices and children.';
+
+  @override
+  String get feedSchoolTitle => 'School';
+
+  @override
+  String get feedSchoolOff => 'Off';
+
+  @override
+  String get feedSchoolHint =>
+      'School days as one all-day entry, or every lesson.';
+
+  @override
+  String get feedCreate => 'Create subscription';
+
+  @override
+  String get feedUrlTitle => 'Subscription address';
+
+  @override
+  String get feedUrlOnce =>
+      'This address is shown only once. Anyone who has it can see the events, so treat it like a password.';
+
+  @override
+  String get feedCopyUrl => 'Copy address';
+
+  @override
+  String get feedCopyWebcal => 'Copy webcal link';
+
+  @override
+  String get feedWebcalLabel => 'webcal link (opens the iPhone dialog)';
+
+  @override
+  String get feedCopied => 'Address copied.';
+
+  @override
+  String get feedQrLabel => 'QR code with the subscription address';
+
+  @override
+  String get feedHowTitle => 'How to subscribe';
+
+  @override
+  String get feedHowOutlook =>
+      'Outlook on the web: Calendar → Add calendar → Subscribe from web → paste the address → name it “Family”.';
+
+  @override
+  String get feedHowIphone =>
+      'iPhone: Settings → Apps → Calendar → Accounts → Add Account → Other → Add Subscribed Calendar → paste the address. Or tap the webcal link.';
+
+  @override
+  String get feedRevokeAction => 'Revoke';
+
+  @override
+  String feedRevokeConfirm(String label) {
+    return 'Revoke “$label”? It stops receiving events at once.';
+  }
+
+  @override
+  String get baselineTitle => 'Usual place';
+
+  @override
+  String get baselineSettingsSubtitle => 'Where everyone usually is';
+
+  @override
+  String get baselineHelp =>
+      'Where you usually are. Only deviations get entered, so a normal day stays empty.';
+
+  @override
+  String get baselineNone => 'Nothing set';
+
+  @override
+  String get baselineLabelField => 'Own label (optional)';
+
+  @override
+  String get baselineLabelHint => 'e.g. at home';
+
+  @override
+  String get baselineSaved => 'Saved.';
+
+  @override
+  String get busyTitle => 'Meetings until';
+
+  @override
+  String get busyPickTime => 'Choose a time';
+
+  @override
+  String get busyThisDay => 'This day only';
+
+  @override
+  String get busyWholeWeek => 'Apply to the whole week (Mon–Fri)';
+
+  @override
+  String get busyRemove => 'Remove';
+
+  @override
+  String get busyHelp =>
+      'Until when you are not available. Just the time: no appointments, no details.';
+
+  @override
+  String get busyFor => 'For';
+
+  @override
+  String get tasksTabToday => 'Today';
+
+  @override
+  String get tasksTabApprovals => 'Approvals';
+
+  @override
+  String get tasksTabChores => 'Chores';
+
+  @override
+  String get tasksTabRewards => 'Rewards';
+
+  @override
+  String get tasksTabPoints => 'Points';
+
+  @override
+  String get tasksNothingToday => 'Nothing due today.';
+
+  @override
+  String get tasksOpenForAnyone => 'Open for anyone';
+
+  @override
+  String get tasksWaitingApproval => 'waiting for approval';
+
+  @override
+  String get tasksDone => 'Done';
+
+  @override
+  String get tasksUndo => 'Undo';
+
+  @override
+  String tasksCompletedSnack(String title) {
+    return '$title done';
+  }
+
+  @override
+  String tasksPointsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count points',
+      one: '1 point',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tasksStreakBadge(int count) {
+    return '🔥 $count';
+  }
+
+  @override
+  String tasksStreakDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days in a row',
+      one: '1 day in a row',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tasksOpenCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count open',
+      one: '1 open',
+      zero: 'none open',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tasksKindDuty => 'Duty';
+
+  @override
+  String get tasksKindBonus => 'Bonus';
+
+  @override
+  String get tasksApprovalsEmpty => 'Nothing to check.';
+
+  @override
+  String get tasksCheckChores => 'Chores to check';
+
+  @override
+  String get tasksRewardRequests => 'Reward requests';
+
+  @override
+  String get tasksApprove => 'Approve';
+
+  @override
+  String get tasksDecline => 'Decline';
+
+  @override
+  String tasksRequestedBy(String name, String reward) {
+    return '$name wants $reward';
+  }
+
+  @override
+  String tasksDoneBy(String name) {
+    return 'Done by $name';
+  }
+
+  @override
+  String get tasksNoteOptional => 'Note (optional)';
+
+  @override
+  String get tasksNoChores => 'No chores yet.';
+
+  @override
+  String get tasksStarterTitle => 'Start with the starter pack';
+
+  @override
+  String get tasksStarterHelp =>
+      'Five chores, three rewards and four badges to begin with. Everything can be changed afterwards.';
+
+  @override
+  String get tasksStarterAdd => 'Add starter pack';
+
+  @override
+  String get tasksStarterDone => 'Starter pack added.';
+
+  @override
+  String get tasksNewChore => 'New chore';
+
+  @override
+  String get tasksEditChore => 'Edit chore';
+
+  @override
+  String get tasksFieldTitle => 'Title';
+
+  @override
+  String get tasksTitleRequired => 'Please enter a title.';
+
+  @override
+  String get tasksFieldIcon => 'Icon';
+
+  @override
+  String get tasksNoIcon => 'No icon';
+
+  @override
+  String get tasksFieldKind => 'Type';
+
+  @override
+  String get tasksKindDutyHelp => 'Expected of everyone; earns little.';
+
+  @override
+  String get tasksKindBonusHelp => 'Optional extra work; earns points.';
+
+  @override
+  String get tasksFieldPoints => 'Points';
+
+  @override
+  String get tasksFieldRepeat => 'Repeat';
+
+  @override
+  String get tasksRepeatOnce => 'Once';
+
+  @override
+  String get tasksRepeatDaily => 'Daily';
+
+  @override
+  String get tasksRepeatWeekdays => 'On weekdays';
+
+  @override
+  String get tasksRepeatWeekly => 'Weekly';
+
+  @override
+  String get tasksRepeatBiweekly => 'Every 2 weeks';
+
+  @override
+  String get tasksRepeatMonthly => 'Monthly';
+
+  @override
+  String get tasksWeekdayOne => 'Weekday';
+
+  @override
+  String get tasksWeekdayMany => 'Weekdays';
+
+  @override
+  String get tasksWeekdaysRequired => 'Pick at least one weekday.';
+
+  @override
+  String get tasksFieldStarts => 'Starts on';
+
+  @override
+  String get tasksFieldWindow => 'Can be done';
+
+  @override
+  String tasksWindowDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days from the due day',
+      one: 'Only on the due day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tasksFieldWho => 'Who';
+
+  @override
+  String get tasksWhoFixed => 'One person';
+
+  @override
+  String get tasksWhoRotating => 'Taking turns';
+
+  @override
+  String get tasksWhoOpen => 'Whoever wants';
+
+  @override
+  String get tasksWhoEach => 'Everyone';
+
+  @override
+  String get tasksPickOne => 'Who does it?';
+
+  @override
+  String get tasksPickPool => 'Who takes part?';
+
+  @override
+  String get tasksPickOpenPool => 'Who may take it? Empty means everyone.';
+
+  @override
+  String get tasksPoolRequired => 'Pick at least one person.';
+
+  @override
+  String get tasksFieldVerification => 'Approval by a grown-up';
+
+  @override
+  String get tasksVerificationHelp => 'Points come after a check.';
+
+  @override
+  String get tasksArchive => 'Archive';
+
+  @override
+  String get tasksArchiveHelp =>
+      'The chore disappears. Its open entries in the future are removed.';
+
+  @override
+  String get tasksNoRewards => 'No rewards yet.';
+
+  @override
+  String get tasksNewReward => 'New reward';
+
+  @override
+  String get tasksEditReward => 'Edit reward';
+
+  @override
+  String get tasksFieldCost => 'Cost in points';
+
+  @override
+  String get tasksFieldStock => 'Stock (empty means unlimited)';
+
+  @override
+  String get tasksFieldNeedsApproval => 'Needs approval first';
+
+  @override
+  String get tasksNeedsApprovalHelp => 'Off only suits small things.';
+
+  @override
+  String get tasksAskForReward => 'Ask for it';
+
+  @override
+  String get tasksRequestSent => 'Request sent.';
+
+  @override
+  String get tasksRedeemed => 'Redeemed.';
+
+  @override
+  String get tasksSoldOut => 'Sold out';
+
+  @override
+  String tasksMissingPoints(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count points short',
+      one: '1 point short',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tasksHistory => 'History';
+
+  @override
+  String get tasksNoHistory => 'Nothing redeemed yet.';
+
+  @override
+  String get tasksRedemptionRequested => 'Waiting for approval';
+
+  @override
+  String get tasksRedemptionApproved => 'Redeemed, not handed over yet';
+
+  @override
+  String get tasksRedemptionDeclined => 'Declined';
+
+  @override
+  String get tasksRedemptionFulfilled => 'Handed over';
+
+  @override
+  String get tasksHandOver => 'Mark as handed over';
+
+  @override
+  String get tasksNoLedger => 'No movements yet.';
+
+  @override
+  String get tasksLedgerTask => 'Chore done';
+
+  @override
+  String get tasksLedgerUndo => 'Taken back';
+
+  @override
+  String get tasksLedgerRedemption => 'Reward';
+
+  @override
+  String get tasksLedgerAdjustment => 'Correction';
+
+  @override
+  String get tasksLedgerBadge => 'Badge';
+
+  @override
+  String get tasksLedgerBonus => 'Bonus';
+
+  @override
+  String get tasksAdjust => 'Correct';
+
+  @override
+  String tasksAdjustTitle(String name) {
+    return 'Correct points for $name';
+  }
+
+  @override
+  String get tasksFieldAmount => 'Points (+ or −)';
+
+  @override
+  String get tasksAmountInvalid => 'Enter a number other than 0.';
+
+  @override
+  String get tasksFieldReason => 'Reason (required)';
+
+  @override
+  String get tasksReasonRequired => 'Please give a reason.';
+
+  @override
+  String get tasksBalanceTitle => 'Balance';
+
+  @override
+  String get tasksBoardStreakLabel => 'Streak';
+
+  @override
+  String get errTaskInvalid => 'That chore is not valid.';
+
+  @override
+  String get errTaskNotYours => 'Only the person it is for can do that.';
+
+  @override
+  String get errBalanceInsufficient => 'Not enough points for that.';
+
+  @override
+  String get errRewardOutOfStock => 'That reward is sold out.';
+
+  @override
+  String get errTaskNotOpen => 'This chore is no longer open.';
+
+  @override
+  String get tasksActionTick => 'Tick off';
+
+  @override
+  String get tasksPointsInvalid => 'Enter a whole number, 0 or more.';
+
+  @override
+  String get kidTabToday => 'My day';
+
+  @override
+  String get kidTabSchool => 'Timetable';
+
+  @override
+  String get kidTabPoints => 'Points';
+
+  @override
+  String get kidTabShopping => 'Shopping';
+
+  @override
+  String get kidTabFamily => 'Family';
+
+  @override
+  String get kidWhoAreYou => 'Hi! Tap your name.';
+
+  @override
+  String kidGreeting(String name) {
+    return 'Hi, $name!';
+  }
+
+  @override
+  String get kidTasksTitle => 'My chores';
+
+  @override
+  String get kidTasksNone => 'You have no chores today.';
+
+  @override
+  String get kidTasksAllDone => 'All done! 🎉';
+
+  @override
+  String get kidTasksAllDoneBody => 'Well done, you did everything for today.';
+
+  @override
+  String get kidAwaitsCheck => 'being checked';
+
+  @override
+  String get kidDone => 'Done';
+
+  @override
+  String kidTaskDoneSnack(String title) {
+    return '$title done!';
+  }
+
+  @override
+  String get kidUndo => 'Undo';
+
+  @override
+  String get kidSchoolTitle => 'School today';
+
+  @override
+  String get kidNoSchoolToday => 'No school today.';
+
+  @override
+  String kidHoliday(String name) {
+    return 'Holidays: $name';
+  }
+
+  @override
+  String get kidNoTimetable => 'No timetable has been entered for you yet.';
+
+  @override
+  String kidRoom(String room) {
+    return 'Room $room';
+  }
+
+  @override
+  String get kidNow => 'Now';
+
+  @override
+  String get kidLessonCancelled => 'cancelled';
+
+  @override
+  String get kidLessonSubstituted => 'substitute teacher';
+
+  @override
+  String get kidLessonRoomChange => 'different room';
+
+  @override
+  String kidCareUntil(String time) {
+    return 'Care until $time';
+  }
+
+  @override
+  String kidTomorrowNeeds(String items) {
+    return 'Tomorrow you need: $items';
+  }
+
+  @override
+  String kidMealDinner(String dish) {
+    return 'Tonight we are having $dish';
+  }
+
+  @override
+  String kidMealLunch(String dish) {
+    return 'Lunch today is $dish';
+  }
+
+  @override
+  String get kidMealNoneDinner => 'Nothing is planned for tonight yet.';
+
+  @override
+  String get kidMealNoneLunch => 'Nothing is planned for lunch yet.';
+
+  @override
+  String get kidMealEatingYou => 'You are eating too.';
+
+  @override
+  String get kidEventsTitle => 'My appointments today';
+
+  @override
+  String get kidNoEvents => 'No appointments today.';
+
+  @override
+  String get kidAllDay => 'all day';
+
+  @override
+  String get kidTimetableTitle => 'My timetable';
+
+  @override
+  String get kidTodayMarker => 'Today';
+
+  @override
+  String get kidYourPoints => 'Your points';
+
+  @override
+  String get kidRewardsTitle => 'Rewards';
+
+  @override
+  String get kidRedeem => 'Redeem';
+
+  @override
+  String kidNeedMore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count points to go',
+      one: '1 point to go',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get kidWaitsApproval => 'waiting for approval';
+
+  @override
+  String get kidRequestSent => 'Your reward is waiting for approval.';
+
+  @override
+  String get kidRedeemed => 'Redeemed! 🎉';
+
+  @override
+  String get kidSoldOut => 'Sold out for now';
+
+  @override
+  String get kidBadgesTitle => 'My badges';
+
+  @override
+  String get kidStreaksTitle => 'My streaks';
+
+  @override
+  String kidStreak(int days, String title) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days $title 🔥',
+      one: '1 day $title 🔥',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get kidFamilyTitle => 'Family today';
+
+  @override
+  String kidOpenTasks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count chores open',
+      one: '1 chore open',
+      zero: 'No chores open',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get kidNoPlanToday => 'Nothing planned today';
 }

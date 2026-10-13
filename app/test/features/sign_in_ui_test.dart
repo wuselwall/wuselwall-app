@@ -42,7 +42,9 @@ void main() {
         ),
       );
       expect(find.text('Mit Apple fortfahren'), findsNothing);
-      expect(find.text('oder'), findsNothing);
+      // Email is always offered, so the group and the divider stay.
+      expect(find.text('Mit E-Mail fortfahren'), findsOneWidget);
+      expect(find.text('oder'), findsOneWidget);
     });
 
     testWidgets('explains an address without an account', (t) async {

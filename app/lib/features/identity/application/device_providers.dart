@@ -70,11 +70,19 @@ final sessionStateProvider = FutureProvider<SessionState>((ref) async {
 });
 
 /// The device behind the current session, or null while there is none.
-final deviceProvider = Provider<AsyncValue<DeviceInfo?>>(
-  (ref) => ref
-      .watch(sessionStateProvider)
-      .whenData((s) => s is Ready ? s.device : null),
-);
+///
+/// While the session state is re-evaluated (every auth event, including the token
+/// refresh `mfa.listFactors()` triggers) the last known device is kept: `whenData` on a
+/// reloading value would drop it, reset every provider keyed on the device and make
+/// Settings flicker in a loop.
+final deviceProvider = Provider<AsyncValue<DeviceInfo?>>((ref) {
+  final session = ref.watch(sessionStateProvider);
+  DeviceInfo? deviceOf(SessionState s) => s is Ready ? s.device : null;
+  if (session.isLoading && session.hasValue) {
+    return AsyncData(deviceOf(session.requireValue));
+  }
+  return session.whenData(deviceOf);
+});
 
 /// Whether this device is enrolled in a household.
 final isEnrolledProvider = Provider<bool>(

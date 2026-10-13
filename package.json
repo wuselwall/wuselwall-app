@@ -6,6 +6,7 @@
     "vitepress": "^1.6.4"
   },
   "private": true,
+  "license": "Apache-2.0",
   "name": "wuselwall",
   "scripts": {
     "db:start": "supabase start",

@@ -35,4 +35,4 @@ With a **passkey** you sign in by fingerprint or face instead of a password. The
 
 - **Password**: at least 10 characters; a whole sentence is better.
 - **Lost phone**: **block** it at once from another device (see [Members and devices](/en/settings/members-devices#blocking-a-device)).
-- **Your data** lives on the family's server, not with a cloud provider. Traffic between phone and server passes through a protective service (Cloudflare), which does not store it.
+- **Your data** lives on your family's server, not with us and not with a cloud provider.

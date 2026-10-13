@@ -5,11 +5,18 @@ This repository holds both the planning documents and the code for WuselWall (se
 (migrations, Edge Functions, tests) and `infra/` hold the implementation. Setup-plan steps 3, 5,
 6 and 8 are built (app shell, identity, online shopping list, the one environment) and M1.1
 is built, offline outbox included. Onboarding (step 9, [specs/20](specs/20-onboarding.md),
-ADR-014 and ADR-015) has started: Sign in with Apple and Google are built and switched on (9.1).
+ADR-014 and ADR-018 — self-hosted only, no WuselWall Cloud) has started: Sign in with Apple and Google are built and switched on (9.1).
 M0.4: the first TestFlight build is uploaded; Android is an APK by hand until the Play
 account exists. Since 2026-10-13 the public hosts are `wuselwall.app`, `web.` and `api.`
-(ADR-017). Next: the rest of 9.1 (email code, set password) and 9.2 (households), then
-M1.2, which starts with household settings (specs/21).
+(ADR-017). Built on `feature/week-board`, **migrations not yet on the server**: household
+settings (specs/21), the kiosk week board (specs/09), M1.3a calendar (events, presence,
+recurrence expanded in Edge Functions, the ICS feed with tokens), M1.3b Stundenplan (the
+projection in `supabase/functions/_shared/school.ts`), M1.2 tasks and points, M1.4 meals, and
+the kid register. `scripts/local-pgtap` runs every migration and pgTAP suite on a throwaway
+local Postgres (no Docker); `scripts/remote-pgtap-dry.sh` tries new migrations on the server
+inside a rolled-back transaction. Next: apply the migrations and deploy the Edge Functions
+(`scripts/remote-migrate.sh`, `scripts/remote-stack.sh functions`), schedule `tasks-nightly`,
+then the rest of 9.1/9.2 and M1.6.
 
 ## Architecture rules
 
@@ -20,16 +27,20 @@ See [specs/03-architecture.md](specs/03-architecture.md),
 - **There is one environment** today: the official compose stack (`infra/supabase`) on the home server (homeserver, `ssh homeserver`),
   public at `https://api.wuselwall.app` ([ADR-017](specs/adr/ADR-017-wuselwall-app-domain.md);
   the web app is `https://web.wuselwall.app`, the website `https://wuselwall.app`, and
-  `wusel.example.org` is only a bridge for old app builds). The family's data lives there. *Planned
-  ([ADR-015](specs/adr/ADR-015-saas-and-self-hosted-flavours.md)): WuselWall Cloud, a hosted
-  Supabase project, for self-service households. Once it exists: no `db reset`, a backup
-  point before `db push`, never the integration test. homeserver stays the family's home and
-  the development and test stack (Q46), so its rules below stay for good.* Before any migration
+  `wusel.example.org` is only a bridge for old app builds). The family's data lives there, next to development
+  and testing (Q46), and it stays the only environment: **the project runs no hosted
+  service** ([ADR-018](specs/adr/ADR-018-self-hosted-only.md)). Other families run their own
+  server, and the store app connects to whichever server a household chooses. Before any migration
   run `scripts/remote-backup.sh`; never run `supabase db reset` against it; never run the
   Dart integration test against it (it creates households and revokes devices — CI and
   throwaway stacks only). Keys come from the git-ignored `supabase/.env`.
-- Keep `supabase/` portable to hosted Supabase (WuselWall Cloud, ADR-015): no dependence on
-  superuser rights or on self-hosted-only features without noting it in ADR-013.
+- `supabase/` is the server other families install (ADR-018): keep it portable to any
+  Supabase stack, including an operator's own hosted project — no dependence on superuser
+  rights or on self-hosted-only features without noting it in ADR-013. A migration that
+  changes the app–server contract raises `api_version`; each app release supports the
+  current and the previous one, so never assume every server runs the latest release.
+- No household's server is hard-coded in the app either: the store app has no default
+  backend. Native Apple/Google sign-in and passkeys only for `WW_FIRST_PARTY_HOSTS`.
 
 - Tables live in the `app` schema and are never exposed. PostgREST exposes only `api`:
   `security_invoker` views for reads, one function per write use case.
@@ -90,7 +101,13 @@ German at `/` and English at `/en/`. The Flutter web app has its own host,
 `https://web.wuselwall.app/` (`scripts/deploy-web.sh`). Every user-facing string lives in `website/src/i18n/index.ts` in **both** languages;
 operator and legal data only in `website/src/config/site.ts` (`TODO` values fail
 `LEGAL_STRICT=1` builds). No cookies, no third-party requests, no analytics. Deploy with
-`scripts/remote-web.sh deploy`, independent of the Supabase stack. Check with
+`scripts/remote-web.sh deploy`, independent of the Supabase stack. App screenshots on the
+home page are WebP copies of the docs' shots (`npm run sync-screens` in `website/`, after
+`npm run docs:screenshots`); the link-preview images come from `node scripts/og-image.mjs`.
+The official App Store and Google Play badges (`public/badges/`, unmodified artwork) appear
+only once `site.stores` holds the real listing URLs. The privacy policy describes every
+third party the apps or the site talk to: a new SDK or outbound host updates it, in both
+languages, in the same change. Check with
 `cd website && npm run build`. When you add a page, add its route in both languages and its
 `paths` entry so `hreflang` and the sitemap stay right.
 
