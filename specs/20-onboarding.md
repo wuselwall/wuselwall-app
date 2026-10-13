@@ -69,7 +69,7 @@ What every device shows before it belongs to a household:
 │  verbinden →                         │
 │                                      │
 │  Ich habe einen Einladungscode       │
-│  Datenschutz · Eigener Server        │
+│  Datenschutz · Server ändern         │
 └──────────────────────────────────────┘
 ```
 
@@ -83,9 +83,16 @@ What every device shows before it belongs to a household:
   the link was lost or the app was installed afterwards), keeps it, and returns here.
 - Offline: the buttons are disabled under a "Keine Verbindung" banner, so nothing fails
   later with an error.
-- **"Eigener Server"** is the self-hosted flavour's door ([below](#on-a-self-hosted-server)).
-  It is deliberately the quietest element on the screen: almost everyone uses WuselWall
-  Cloud and never sees the word "server".
+- **"Server ändern"** replaces ADR-015's "Eigener Server" (2026-10-13, [ADR-018](adr/ADR-018-self-hosted-only.md)):
+  the server is chosen before the front door ([below](#choosing-the-server)), whose header
+  shows its host; this quiet link corrects a wrong choice.
+- **Until the rest of step 9 is built** ([16](16-setup-plan.md#step-9--onboarding-m10)),
+  the M0.1 paths stand where their replacements will, so the layout does not change twice:
+  "Mit E-Mail fortfahren" opens email + password sign-in until E1 replaces it; below
+  "oder", "Dieses Gerät mit Code einrichten" (the guardian-generated code) stands where
+  "verbinden" (9.4) will; and "Neuen Haushalt einrichten" (the founder wizard with its
+  setup token) comes last, until H1 after sign-in (9.2) takes its place. There is no
+  separate "Als Erziehungsberechtigter anmelden": every adult sign-in is in the top group.
 
 ### With Apple
 
@@ -146,30 +153,46 @@ What every device shows before it belongs to a household:
 - No code after 60 s: E2 shows "Schau im Spam-Ordner nach", the resend button and
   "Andere Methode wählen".
 
-### On a self-hosted server
+### Choosing the server
 
-*Added 2026-10-11 ([ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md)).* The store app
-talks to **WuselWall Cloud** unless told otherwise. For a self-hosted household:
+*Rewritten 2026-10-13 ([ADR-018](adr/ADR-018-self-hosted-only.md); was "On a self-hosted
+server" under ADR-015).* There is no WuselWall Cloud, and the store app has **no default
+server**. On first start, before the front door, it asks for one, unless it was opened from
+an invitation or pairing link, which carries the server:
 
-- **The founder** taps "Eigener Server" and types the address (`familie.example.org`). The
-  app fetches `https://‹host›/.well-known/wuselwall.json`. If it is not there, or the
-  server needs a newer app (`min_app_version`), the message says exactly that. The app
-  then remembers the server, and the front door shows its host under the logo ("Server:
-  familie.example.org · ändern") on every screen until someone is signed in.
-- **Everyone else** never types it: invitation and pairing links from that household
-  carry the server (`/i/‹token›?s=‹host›`, the same for `/p/`). Only someone who types
-  an invitation code instead of tapping the link also types the server first; the
+```
+ S0  Mit welchem Server verbindest du WuselWall?
+     [ QR-Code des Servers scannen ]
+     Adresse  [familie.example.org      ]  [ Weiter ]
+     Ich habe eine Einladung (Link oder Code)
+     Ohne Server ausprobieren ›
+```
+
+- **Invited people never see S0.** Invitation and pairing links carry the server in the
+  fragment, `https://wuselwall.app/i/#‹token›@‹host›` (the same for `/p/`). The links site
+  therefore never sees the token or the address (ADR-018, decision 8). Only someone who
+  types an invitation code instead of tapping the link types the server too, and the
   inviter's share message and screen name it next to the code.
-- **Sign-in methods on a self-hosted server** are what its discovery document lists:
-  - always email code and password;
-  - Apple and Google only through the web redirect, and only if the operator registered
-    their own clients with Apple and Google.
+- **The founder** scans the QR code that the server's install script printed, or types the
+  address. The app fetches `https://‹host›/.well-known/wuselwall.json`. If the file is
+  missing, if the server is outside the app's `api_version` window, or if the server needs a
+  newer app (`min_app_version`), the message says exactly which. The app then remembers the
+  server, and the front door shows its host under the logo until someone is signed in.
+- **"Ohne Server ausprobieren"** opens the in-memory demo with the reference household.
+  Nothing leaves the device. App Review uses it too, because no server of ours takes
+  strangers.
+- **Sign-in methods** are what the server's discovery document lists:
+  - always email and password;
+  - an email code if the operator configured SMTP (servers without it:
+    [Q48](14-open-questions.md));
+  - Apple and Google through the web redirect, if the operator registered their own
+    clients with Apple and Google.
 
-  Native Apple and Google sign-in and passkeys are offered on WuselWall Cloud and on the
-  first-party servers compiled into the app (today `api.wuselwall.app`, the family's
-  Unraid stack) only. Tokens addressed to our app could otherwise be replayed from a hostile
-  server to Cloud (ADR-015, decision 4). The front door simply shows fewer buttons; it never shows a
-  button that will fail.
+  Native Apple and Google sign-in and passkeys appear only on the first-party servers
+  compiled into the app (`WW_FIRST_PARTY_HOSTS`: `api.wuselwall.app`, the family's Unraid
+  stack). Otherwise a hostile server could replay tokens addressed to our app to the
+  family's server (ADR-018, decision 6). The front door simply shows fewer buttons. It never
+  shows a button that will fail.
 
 ### Several ways into one account
 
@@ -473,7 +496,7 @@ Indicative. Migrations, functions and policies follow the rules in
 **Supabase Auth configuration.**
 - `enable_signup = true`, `enable_anonymous_sign_ins = false`, `enable_manual_linking = true`.
 - `[auth.email]`: `otp_length = 6`, `otp_expiry = 600`, `max_frequency = "60s"`.
-- `[auth.external.apple]` and `[auth.external.google]` enabled on the home server and on Cloud.
+- `[auth.external.apple]` and `[auth.external.google]` enabled on the home server. Other servers enable them only with their operator's own clients (redirect only, [ADR-018](adr/ADR-018-self-hosted-only.md)).
   Client IDs list the web client *and* the native app identifiers. Secrets come from the
   stack's `.env` ([10 §4](10-deployment-and-ops.md#4-sign-in-providers-and-mail)). CLI stacks
   keep them off: CI has no clients, and neither provider redirects to 127.0.0.1.
@@ -522,8 +545,8 @@ Every email the system sends is localised. A Supabase **send-email hook** (an Ed
 reading the message files in `supabase/functions/_shared/`) renders the code mail and the
 "new sign-in" notice in the language the app passed as `locale` at sign-in, and sends it
 through Scaleway Transactional Email ([Q41](14-open-questions.md); the setup, sender and
-subject line are in [10](10-deployment-and-ops.md#email-setup)). This runs on WuselWall Cloud
-and on the Unraid stack, whose compose stack runs Edge Functions ([A11](19-security-and-architecture-review.md),
+subject line are in [10](10-deployment-and-ops.md#email-setup)). This runs on the Unraid stack
+and on every server release (other operators send through their own provider), because the compose stack runs Edge Functions ([A11](19-security-and-architecture-review.md),
 fixed). **On self-hosted stacks without the hook**, the GoTrue template is used instead,
 with German and English in the same mail, German first.
 
@@ -531,12 +554,11 @@ with German and English in the same mail, German first.
 
 `https://wuselwall.app/i/‹token›` (invitations), `/p/‹code›` (pairing, so the phone's own
 camera works) and `/.well-known/apple-app-site-association` plus `assetlinks.json` (also
-needed by passkeys) form the **links site**. It is static and belongs to no backend. Until
-WuselWall Cloud is live, nginx on the Unraid server serves it on `wuselwall.app`, beside
-the website ([ADR-017](adr/ADR-017-wuselwall-app-domain.md)). From then on Cloudflare
-Pages serves it, on the same domain, so that Cloud's invitations do not depend on the home
-server. Self-hosted invitations use the same links
-site, with the server in the link. The
+needed by passkeys) form the **links site**. It is static and belongs to no backend. Nginx on the Unraid server serves it on
+`wuselwall.app`, beside the website ([ADR-017](adr/ADR-017-wuselwall-app-domain.md)). Every
+server's invitations use it. The token and the server travel in the fragment, so the site
+never receives them ([ADR-018](adr/ADR-018-self-hosted-only.md), decision 8). The landing
+page reads the fragment in the browser, and the app gets the whole URL. The
 landing pages are bilingual, script-free HTML: what this is, the store buttons, the code
 in large type, and a link to the privacy policy. The deletion-request page (Play) sits
 alongside.
@@ -554,8 +576,7 @@ There is no analytics (NFR-9), so the targets in NFR-17 are checked by hand and 
 ## Not in onboarding v1
 
 Facebook, Microsoft, GitHub or any other provider; SMS codes (cost, and phone numbers
-with a third party); magic links (see [above](#with-email)); a "look around first" guest
-mode (the in-memory demo build exists and could be offered on the web later); accounts for
+with a third party); magic links (see [above](#with-email)); *(a "look around first" mode is in since ADR-018: "Ohne Server ausprobieren")*; accounts for
 children; several households per account ([Q43](14-open-questions.md)); importing from
 other family apps (Cozi, FamCal), which would make switching easier but belongs in M3 at
 the earliest.

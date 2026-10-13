@@ -1,6 +1,18 @@
 # How WuselWall works
 
-WuselWall is a planner for family life. Today it has the **shopping list**; calendar, tasks and the meal plan are coming.
+WuselWall is a planner for family life. It has a **calendar**, a **timetable**, **chores**, a **meal plan** and the **shopping list**, and it shows everything together on the kitchen wall.
+
+## The areas
+
+The adults' view has these areas:
+
+| Area | What for |
+|---|---|
+| [Calendar](/en/calendar/) | Appointments and presence: who is where |
+| [Timetable](/en/school/) | School, timetable and holidays for each child |
+| [Tasks](/en/tasks/) | Chores, points and rewards |
+| [Meals](/en/meals/) | Meal plan, recipes, filling the shopping list |
+| [Shopping list](/en/shopping/add) | Items, tiles, ticking off in the shop |
 
 ## The household
 
@@ -10,7 +22,7 @@ Everything belongs to one **household**: your family. A household has **members*
 
 | | May |
 |---|---|
-| **Guardians** | everything: add members, set up and block devices, manage security |
+| **Guardians** | everything: add members, connect and block devices, manage security |
 | **Members** (the children, for example) | use the shopping list: add items, tick them, finish the trip |
 
 ## Three kinds of devices

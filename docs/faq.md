@@ -1,7 +1,7 @@
 # Häufige Fragen
 
 ## „Dieses Gerät wurde gesperrt“
-Ein Erziehungsberechtigter hat das Gerät gesperrt. Richte es neu ein – mit einem neuen [Code](/guide/setup#_3-gerat-mit-code-einrichten) oder per Anmeldung.
+Ein Erziehungsberechtigter hat das Gerät gesperrt. Verbinde es neu – mit einem neuen [Code](/guide/setup#_2-gerat-mit-code-verbinden) oder per Anmeldung.
 
 ## „Dieser Code ist falsch oder abgelaufen“
 Codes gelten 10 Minuten und nur einmal. Lass dir in den Einstellungen einen neuen erzeugen. Nach mehreren Fehlversuchen musst du ein paar Minuten warten.

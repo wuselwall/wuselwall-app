@@ -1,0 +1,489 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:wuselwall/app/app.dart';
+import 'package:wuselwall/app/theme/app_theme.dart';
+import 'package:wuselwall/app/theme/night.dart';
+import 'package:wuselwall/app/theme/palette.dart';
+import 'package:wuselwall/app/theme/ui_register.dart';
+import 'package:wuselwall/core/error/failure.dart';
+import 'package:wuselwall/features/board/application/board_providers.dart';
+import 'package:wuselwall/features/board/domain/week_board.dart';
+import 'package:wuselwall/features/board/ui/board_geometry.dart';
+import 'package:wuselwall/features/board/ui/week_board_page.dart';
+
+// The reference household (specs/21) in test data only: nothing below is logic.
+// Week of Mon 12 Oct 2026; today is Wed 14 Oct, 14:05.
+
+String _iso(DateTime d) =>
+    '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
+
+DateTime _day(int i) => DateTime(2026, 10, 12 + i);
+
+Map<String, Object?> _event(
+  String id,
+  String title, {
+  String? starts,
+  String? ends,
+  List<String> who = const [],
+  bool key = false,
+  bool tentative = false,
+}) => {
+  'id': id,
+  'title': title,
+  'starts': starts,
+  'ends': ends,
+  'attendee_ids': who,
+  'key': key,
+  'tentative': tentative,
+};
+
+Map<String, Object?> _school(
+  String member, {
+  String? starts,
+  String? ends,
+  List<String> notable = const [],
+  String? careUntil,
+  String? careLabel,
+  String? free,
+  String? holidayName,
+}) => {
+  'member_id': member,
+  'starts': starts,
+  'ends': ends,
+  'notable': notable,
+  'care_until': careUntil,
+  'care_label': careLabel,
+  'free': free,
+  'holiday_name': holidayName,
+  'lessons': <Object>[],
+};
+
+Map<String, Object?> _meal(
+  String slot, {
+  String? time,
+  String? title,
+  String? cook,
+  List<String> eating = const [],
+  int guests = 0,
+}) => {
+  'slot': slot,
+  'time': time,
+  'title': title,
+  'cook_id': cook,
+  'eating': eating,
+  'guests': guests,
+};
+
+Map<String, Object?> _dayJson(
+  int i, {
+  List<Map<String, Object?>> events = const [],
+  List<Map<String, Object?>> school = const [],
+  List<Map<String, Object?>> busy = const [],
+  Map<String, Object?>? meal,
+}) => {
+  'date': _iso(_day(i)),
+  'events': events,
+  'busy_until': busy,
+  'school': school,
+  'meal': meal,
+};
+
+WeekBoard _board() => WeekBoard.fromJson({
+  'week_start': '2026-10-12',
+  'today': '2026-10-14',
+  'generated_at': '2026-10-14T14:05:00',
+  'settings': {
+    'day_parts': ['12:00', '17:00'],
+    'member_label': 'name',
+  },
+  'members': [
+    {
+      'id': 'lotta',
+      'display_name': 'Lotta',
+      'color': '#7B3FE4',
+      'kind': 'child',
+    },
+    {
+      'id': 'hanna',
+      'display_name': 'Hanna',
+      'color': '#1F8A70',
+      'kind': 'child',
+    },
+    {
+      'id': 'sabine',
+      'display_name': 'Sabine',
+      'color': '#D9622B',
+      'kind': 'adult',
+      'baseline': {'state': 'home_office', 'label': 'zu Hause'},
+    },
+    {
+      'id': 'lukas',
+      'display_name': 'Lukas',
+      'color': '#2F6FD6',
+      'kind': 'adult',
+      'baseline': {'state': 'home_office', 'label': 'Homeoffice'},
+    },
+  ],
+  // A two-day trip: one band, drawn once across Wednesday and Thursday.
+  'presence': [
+    {
+      'id': 'trip',
+      'member_id': 'lukas',
+      'state': 'travel',
+      'label': 'Dienstreise Berlin',
+      'first_day': '2026-10-14',
+      'last_day': '2026-10-15',
+    },
+  ],
+  'timetables': <Object>[],
+  'days': [
+    _dayJson(
+      0,
+      school: [
+        _school(
+          'lotta',
+          starts: '08:00',
+          ends: '14:25',
+          notable: ['Sport'],
+          careUntil: '15:00',
+          careLabel: 'Hort',
+        ),
+        _school('hanna', starts: '08:00', ends: '11:30'),
+      ],
+      meal: _meal(
+        'dinner',
+        time: '18:30',
+        title: 'Kürbissuppe',
+        cook: 'sabine',
+        eating: ['sabine', 'lukas', 'lotta', 'hanna'],
+      ),
+    ),
+    _dayJson(
+      1,
+      school: [
+        _school('lotta', starts: '08:00', ends: '13:35'),
+        _school('hanna', free: 'holiday', holidayName: 'Herbstferien'),
+      ],
+      busy: [
+        {'member_id': 'sabine', 'until': '17:00'},
+      ],
+      // The empty meal: its zone stays and says so.
+      meal: _meal('lunch', time: '12:00', eating: const []),
+    ),
+    _dayJson(
+      2,
+      events: [
+        _event(
+          'h',
+          'Heizungswartung',
+          starts: '10:00',
+          ends: '11:00',
+          who: ['sabine'],
+        ),
+        _event(
+          'z',
+          'Zahnarzt',
+          starts: '13:00',
+          ends: '13:30',
+          who: ['hanna'],
+          key: true,
+        ),
+        _event(
+          't',
+          'Turnen',
+          starts: '14:30',
+          ends: '15:15',
+          who: ['lotta'],
+          key: true,
+        ),
+        _event(
+          'k',
+          'Klavier',
+          starts: '15:30',
+          ends: '16:00',
+          who: ['lotta', 'hanna'],
+          key: true,
+        ),
+        _event(
+          'g',
+          'Grillen',
+          starts: '16:00',
+          ends: '17:00',
+          who: ['sabine', 'lukas'],
+          key: true,
+          tentative: true,
+        ),
+        _event(
+          'e',
+          'Elternabend',
+          starts: '19:30',
+          who: ['sabine', 'lukas'],
+          key: true,
+        ),
+      ],
+      school: [
+        _school(
+          'lotta',
+          starts: '08:00',
+          ends: '14:25',
+          notable: ['Sport'],
+          careUntil: '15:00',
+          careLabel: 'Hort',
+        ),
+        _school(
+          'hanna',
+          starts: '08:00',
+          ends: '12:45',
+          notable: ['Schwimmen'],
+        ),
+      ],
+      busy: [
+        {'member_id': 'sabine', 'until': '17:00'},
+      ],
+      meal: _meal(
+        'dinner',
+        time: '18:30',
+        title: 'Chili sin Carne',
+        cook: 'sabine',
+        eating: ['sabine', 'lukas', 'lotta', 'hanna'],
+        guests: 2,
+      ),
+    ),
+    _dayJson(
+      3,
+      school: [
+        _school('lotta', starts: '08:00', ends: '13:35'),
+        _school('hanna', starts: '08:00', ends: '11:30'),
+      ],
+      meal: _meal(
+        'dinner',
+        time: '18:30',
+        title: 'Fischstäbchen',
+        cook: 'lukas',
+        eating: ['sabine', 'lotta'],
+      ),
+    ),
+    _dayJson(
+      4,
+      meal: _meal(
+        'dinner',
+        time: '18:30',
+        title: 'Nudeln',
+        cook: 'sabine',
+        eating: ['sabine', 'lukas'],
+      ),
+    ),
+    _dayJson(
+      5,
+      meal: _meal(
+        'lunch',
+        time: '12:00',
+        title: 'Pesto',
+        cook: 'lukas',
+        eating: ['lukas', 'sabine'],
+      ),
+    ),
+    _dayJson(
+      6,
+      meal: _meal(
+        'lunch',
+        time: '12:00',
+        title: 'Braten',
+        cook: 'sabine',
+        eating: ['sabine', 'lukas', 'lotta', 'hanna'],
+        guests: 2,
+      ),
+    ),
+  ],
+  'open_tasks': [
+    {'member_id': 'lotta', 'count': 2},
+    {'member_id': 'hanna', 'count': 1},
+  ],
+  'shopping_count': 17,
+});
+
+final _snapshot = BoardSnapshot(
+  board: _board(),
+  fetchedAt: DateTime(2026, 10, 14, 14, 4),
+);
+
+class _FixedBoard extends BoardNotifier {
+  _FixedBoard(this.value);
+
+  final BoardSnapshot value;
+
+  @override
+  BoardSnapshot build() => value;
+}
+
+class _FixedNight extends NightNotifier {
+  _FixedNight(this.night);
+
+  final bool night;
+
+  @override
+  bool build() => night;
+}
+
+Future<void> _pumpBoard(
+  WidgetTester t, {
+  BoardSnapshot? snapshot,
+  Size size = const Size(1280, 800),
+  Shade shade = Shade.light,
+  Locale locale = const Locale('de'),
+  bool night = false,
+}) async {
+  t.view.physicalSize = size;
+  t.view.devicePixelRatio = 1;
+  addTearDown(t.view.resetPhysicalSize);
+  addTearDown(t.view.resetDevicePixelRatio);
+
+  await t.pumpWidget(
+    ProviderScope(
+      overrides: [
+        boardProvider.overrideWith(() => _FixedBoard(snapshot ?? _snapshot)),
+        nowProvider.overrideWithValue(DateTime(2026, 10, 14, 14, 5)),
+        nightProvider.overrideWith(() => _FixedNight(night)),
+      ],
+      child: MaterialApp(
+        theme: AppTheme.build(UiRegister.kiosk, shade),
+        localizationsDelegates: localizationsDelegates,
+        supportedLocales: supportedLocales,
+        locale: locale,
+        home: const Scaffold(body: SafeArea(child: WeekBoardPage())),
+      ),
+    ),
+  );
+  await t.pump();
+}
+
+void main() {
+  group('the week board', () {
+    testWidgets('lays out the week at 1280x800 without exceptions', (t) async {
+      await _pumpBoard(t);
+      expect(t.takeException(), isNull);
+
+      // Today's column says "Heute" in place of its weekday.
+      final today = _board().todayIndex!;
+      const days = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+      for (final (i, dow) in days.indexed) {
+        expect(
+          find.text(dow),
+          i == today ? findsNothing : findsOneWidget,
+          reason: dow,
+        );
+      }
+      expect(find.text('Heute'), findsOneWidget);
+    });
+
+    testWidgets('draws a two-day trip once across its days', (t) async {
+      await _pumpBoard(t);
+      expect(find.text('Dienstreise Berlin'), findsOneWidget);
+    });
+
+    testWidgets('counts the appointments that do not fit a day part', (
+      t,
+    ) async {
+      await _pumpBoard(t);
+      // Four key events in the afternoon: one shown, three counted.
+      expect(find.text('+3 weitere'), findsOneWidget);
+    });
+
+    testWidgets('keeps the empty meal zone and says nothing is planned', (
+      t,
+    ) async {
+      await _pumpBoard(t);
+      expect(find.text('nichts geplant'), findsOneWidget);
+    });
+
+    testWidgets('shows the shopping count in the footer', (t) async {
+      await _pumpBoard(t);
+      expect(find.text('17'), findsOneWidget);
+    });
+
+    testWidgets('says so when the connection is lost, keeping the last board', (
+      t,
+    ) async {
+      await _pumpBoard(
+        t,
+        snapshot: BoardSnapshot(
+          board: _board(),
+          fetchedAt: DateTime(2026, 10, 14, 14, 4),
+          failure: const NetworkFailure(),
+        ),
+      );
+      expect(find.textContaining('Keine Verbindung'), findsOneWidget);
+      expect(find.text('Dienstreise Berlin'), findsOneWidget);
+      expect(t.takeException(), isNull);
+    });
+
+    testWidgets('fits 1280x720 and 1920x1200 without exceptions', (t) async {
+      await _pumpBoard(t, size: const Size(1280, 720));
+      expect(t.takeException(), isNull);
+
+      await _pumpBoard(t, size: const Size(1920, 1200));
+      expect(t.takeException(), isNull);
+      expect(find.text('Heute'), findsOneWidget);
+    });
+
+    testWidgets('fits the night shade with the night dimming', (t) async {
+      await _pumpBoard(t, shade: Shade.night, night: true);
+      expect(t.takeException(), isNull);
+      expect(find.text('Nachtansicht'), findsOneWidget);
+    });
+
+    testWidgets('reads in English', (t) async {
+      await _pumpBoard(t, locale: const Locale('en'));
+      expect(t.takeException(), isNull);
+      expect(find.text('Today'), findsOneWidget);
+      expect(find.text('+3 more'), findsOneWidget);
+    });
+
+    testWidgets('opens the family task board from the footer', (t) async {
+      await _pumpBoard(t);
+      await t.tap(find.text('Heute offen'));
+      await t.pump(const Duration(milliseconds: 400));
+      expect(t.takeException(), isNull);
+      expect(find.text('Zurück zur Woche'), findsOneWidget);
+
+      await t.tap(find.text('Zurück zur Woche'));
+      await t.pump(const Duration(milliseconds: 400));
+      expect(t.takeException(), isNull);
+    });
+
+    testWidgets(
+      'opens the day detail stub from a column header without throwing',
+      (t) async {
+        await _pumpBoard(t);
+        await t.tap(find.text('Do'));
+        await t.pump(const Duration(milliseconds: 400));
+        expect(t.takeException(), isNull);
+      },
+    );
+  });
+
+  group('BoardGeometry', () {
+    test(
+      'gives today 1.45 times the width of another day and fills the canvas',
+      () {
+        const g = BoardGeometry(canvasWidth: 1280, todayIndex: 2);
+        final total = [for (var i = 0; i < 7; i++) g.width(i)]
+            .reduce((a, b) => a + b);
+        expect(total, closeTo(1280 - BoardGeometry.gutter, 0.001));
+        expect(g.width(2) / g.width(0), closeTo(1.45, 0.001));
+        expect(g.left(0), BoardGeometry.gutter);
+        expect(g.spanLeft(3), closeTo(g.left(3), 0.001));
+        expect(
+          g.spanWidth(1, 3),
+          closeTo(g.width(1) + g.width(2) + g.width(3), 0.001),
+        );
+      },
+    );
+
+    test('makes every column equal when today is outside the week', () {
+      const g = BoardGeometry(canvasWidth: 1280);
+      expect(g.width(0), closeTo(g.width(6), 0.001));
+    });
+  });
+}

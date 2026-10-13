@@ -1,0 +1,49 @@
+# Calendar
+
+The calendar is the adults' home screen: everyone's appointments and, at a glance, who is where.
+
+<Shot name="calendar-week" alt="Week view of the calendar with presence at the top and appointments below" wide />
+
+## Views
+
+At the top you choose **Day**, **3 days** or **Week**. Move with **Previous**, **Next** and **Today**. Two rows stay visible at the top:
+
+- **Presence**: one row per person. It shows who is at work, working from home, travelling, away, off or in childcare.
+- **All day**: appointments that last the whole day.
+
+Below them, the appointments follow by time.
+
+## Creating an appointment
+
+Tap **New event**. You can:
+
+- enter a **Title**, a **Location** and **Notes**
+- choose between **Appointment** and **Presence**. Presence has six states: At work, Home office, Travelling, Away, Off and Childcare
+- make it **All day**, or set **Starts** and **Ends**
+- pick people under **Who**. If nobody is picked, the event is for the whole family
+- tick **Not sure yet** if it is still unclear whether it happens
+- tick **Show on the kitchen display**. What new events do by default is set under [Household settings](/en/settings/household)
+
+<Shot name="calendar-editor" alt="Editor for a new event with title, who and repeat" />
+
+### Repeating
+
+Under **Repeat** you choose **Daily**, **Weekly**, **Every 2 weeks** or **Monthly**. For shift plans there is **Specific days (shift plan)**: you tap the days you work in a month grid. **Repeat ends** sets a date or a number of times.
+
+When you change or delete an event that repeats, WuselWall asks: **Only this event** or **All events in the series**.
+
+## Meetings until …
+
+Tap a day's heading to set **Meetings until**: from that time on you are not available. It shows on the kitchen wall, for example as "Meetings until 17". It shows only the time, no appointments and no details. With **Apply to the whole week (Mon–Fri)** it applies to every weekday of that week.
+
+## Usual place
+
+Under **Settings → Usual place** you record where you normally are, for example at home or in the office. After that you only enter the exceptions. A normal day stays empty.
+
+## Children and appointments
+
+You decide under [Household settings](/en/settings/household) whether children may create and change appointments. Deleting someone else's appointment stays with the guardians.
+
+## Appointments in Outlook or on an iPhone
+
+The family calendar can be shown as a **subscription** in Outlook or on an iPhone, read-only. See [Calendar subscriptions](/en/calendar/feeds).

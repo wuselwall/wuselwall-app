@@ -1,29 +1,21 @@
 # Installing the app
 
-WuselWall comes in three ways. Which one fits depends on the device.
+WuselWall runs in the browser, on Android and on iPhone and iPad. Each one connects to **your family's server**: that is where your data lives, not with us.
 
 ## In the browser — on any device
 
-Open **[web.wuselwall.app](https://web.wuselwall.app)** in the browser, on a laptop as well as on a phone. There is nothing to install.
+Your server comes with its own web app. Open its address in the browser, on a laptop as well as on a phone. You get the address from whoever set up your server, or with an invitation. There is nothing to install.
 
 ::: tip On the home screen
 On iPhone: **Share → Add to Home Screen**. On Android: **⋮ → Add to Home screen**. WuselWall then opens like an app.
-:::
-
-::: info New address
-Until October 2026 WuselWall was at `wusel.goomba.ch`. The old address forwards you, but the browser doesn't know your device at the new address yet: set it up once more, and create bookmarks or the home-screen icon again. The apps on phones and tablets stay signed in.
 :::
 
 Passkeys aren't available in the browser yet; sign in with email and password.
 
 ## Android app — tablet and Android phones
 
-1. On the device, open **[wuselwall.app/download/wuselwall.apk](https://wuselwall.app/download/wuselwall.apk)**.
-2. The first time, Android asks whether the browser may install **apps from unknown sources**. Allow it for the browser.
-3. Tap **Install**.
-
-**Updates:** open the same address again and install. You stay signed in.
+The Android app is coming to **Google Play**. Until it is there, WuselWall works in the browser (see above).
 
 ## iPhone and iPad
 
-The iPhone and iPad app arrives through **TestFlight** once the Apple account is approved. Until then WuselWall works in the browser (see above).
+The iPhone and iPad app is coming to the **App Store**. Until then WuselWall works in the browser (see above).

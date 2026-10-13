@@ -77,7 +77,7 @@ queues. It holds no business rules.
 | Offline store | **drift** (SQLite) | The shopping list's mirror and outbox ([07](07-module-meals-shopping.md#offline--the-one-place-it-is-non-negotiable)). Typed queries, migrations, reactive streams. |
 | Secrets on device | `flutter_secure_storage` | Keychain on iOS, Keystore-backed on Android — where the device session lives. |
 | Localisation | Flutter **gen-l10n**, ARB files | German and English, always both (NFR-14); generated, type-safe message accessors. |
-| Backend platform | **Supabase**, in two flavours: **WuselWall Cloud** (a hosted project in the user's account, Frankfurt) and **self-hosted** (Docker; the Unraid stack) | User decision. Auth, a REST layer, realtime and functions around PostgreSQL. One `supabase/` directory serves both ([ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md)). |
+| Backend platform | **Supabase, self-hosted only**: the Unraid stack for the family, and any household's own stack (or own Supabase project) for everyone else | User decision. Auth, a REST layer, realtime and functions around PostgreSQL. `supabase/` is the server release other families install; the store app has no default backend ([ADR-018](adr/ADR-018-self-hosted-only.md), replacing ADR-015's Cloud). |
 | Database | **PostgreSQL** (the version Supabase's image ships — pin the tag) | Recurrence ranges, ledgers, arrays, `pg_trgm` for shopping capture, `pg_cron` for jobs. |
 | Domain logic | **SQL and PL/pgSQL** in the `api` schema | Transactional writes, guardian checks and audit in one place. |
 | Authorisation | **Row-level security**, forced on every table | The primary control: the anon key ships in every app. |

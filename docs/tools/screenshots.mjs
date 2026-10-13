@@ -31,12 +31,12 @@ const base = `http://localhost:${server.address().port}`;
 
 const PHONE = { width: 390, height: 844 };
 const TABLET = { width: 1024, height: 768 };
-const WALL = { width: 1280, height: 720 };
+const WALL = { width: 1280, height: 800 }; // the recommended wall resolution
 
 /** Labels differ per language; the steps look them up here. */
 const T = {
-  de: { newList: 'Neue Liste', name: 'Name', save: 'Speichern', search: 'Suchen oder hinzufügen', settings: 'Einstellungen', addDevice: 'Gerät hinzufügen', deviceName: 'Gerätename', createCode: 'Code erzeugen', addMember: 'Mitglied hinzufügen', history: 'Verlauf', trolley: 'Im Wagen', household: 'Neuen Haushalt einrichten', signIn: 'Als Erziehungsberechtigter anmelden', enrol: 'Dieses Gerät mit Code einrichten', lukas: 'Lukas', lotta: 'Lotta', close: 'Schließen' },
-  en: { newList: 'New list', name: 'Name', save: 'Save', search: 'Search or add', settings: 'Settings', addDevice: 'Add device', deviceName: 'Device name', createCode: 'Create code', addMember: 'Add member', history: 'History', trolley: 'In the trolley', household: 'Set up a new household', signIn: 'Sign in as guardian', enrol: 'Set up this device with a code', lukas: 'Lukas', lotta: 'Lotta', close: 'Close' },
+  de: { newList: 'Neue Liste', name: 'Name', save: 'Speichern', search: 'Suchen oder hinzufügen', settings: 'Einstellungen', addDevice: 'Gerät hinzufügen', deviceName: 'Gerätename', createCode: 'Code erzeugen', addMember: 'Mitglied hinzufügen', history: 'Verlauf', trolley: 'Im Wagen', household: 'Neue Familie anlegen', signIn: 'Mit E-Mail fortfahren', enrol: 'Mit Code verbinden', lukas: 'Lukas', lotta: 'Lotta', close: 'Schließen', shopping: 'Einkaufsliste', calendar: 'Kalender', week: 'Woche', newEvent: 'Neuer Termin', schedule: 'Stundenplan', tasks: 'Aufgaben', meals: 'Essen', householdSettings: 'Haushalt einstellen' },
+  en: { newList: 'New list', name: 'Name', save: 'Save', search: 'Search or add', settings: 'Settings', addDevice: 'Add device', deviceName: 'Device name', createCode: 'Create code', addMember: 'Add member', history: 'History', trolley: 'In the trolley', household: 'Start a new family', signIn: 'Continue with email', enrol: 'Connect with a code', lukas: 'Lukas', lotta: 'Lotta', close: 'Close', shopping: 'Shopping list', calendar: 'Calendar', week: 'Week', newEvent: 'New event', schedule: 'Timetable', tasks: 'Tasks', meals: 'Meals', householdSettings: 'Household settings' },
 };
 
 async function open(page, scenario) {
@@ -55,6 +55,14 @@ const press = async (page, name, opts = {}) => {
 // performs the tap action), where a pointer click would miss.
 const tapNode = async (page, role, name) => {
   await page.getByRole(role, { name, exact: true }).first().dispatchEvent('click');
+  await settle(page);
+};
+// Adult navigation destinations are in the bottom bar (a NavigationBar, role depends on the
+// Flutter version), and list tiles may have no button role: match by name in both roles,
+// and by aria-label when the role is missing. A substring match tolerates a suffix such as "Tab 2 of 5".
+const tapAny = async (page, name, { exact = true } = {}) => {
+  const byLabel = page.locator(`flt-semantics[aria-label${exact ? '=' : '*='}"${name}"]`);
+  await page.getByRole('button', { name, exact }).or(page.getByRole('tab', { name, exact })).or(byLabel).first().dispatchEvent('click');
   await settle(page);
 };
 const scrollDown = async (page, px = 600) => {
@@ -85,16 +93,28 @@ const shots = [
   { name: 'setup-household', scenario: 'setup', viewport: PHONE, steps: async (p, t) => press(p, t.household) },
   { name: 'setup-enrol', scenario: 'setup', viewport: PHONE, steps: async (p, t) => press(p, t.enrol) },
   { name: 'setup-sign-in', scenario: 'setup', viewport: PHONE, steps: async (p, t) => press(p, t.signIn) },
-  { name: 'shopping-phone', scenario: 'adult', viewport: PHONE },
-  { name: 'shopping-search', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await p.getByRole('textbox', { name: t.search }).fill('mil'); await settle(p); } },
-  { name: 'shopping-new-list', scenario: 'adult', viewport: PHONE, steps: async (p, t) => tapNode(p, 'checkbox', t.newList) },
-  { name: 'shopping-laptop', scenario: 'adult', viewport: TABLET },
-  { name: 'shopping-edit-item', scenario: 'adult', viewport: PHONE, steps: async (p) => longPress(p, p.getByRole('checkbox', { name: /Vollkorn/ }).first()) },
-  { name: 'shopping-trolley', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await press(p, new RegExp(t.trolley), { exact: false }); await scrollDown(p, 3000); } },
-  { name: 'shopping-history', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await press(p, t.history); await p.getByRole('button', { name: /14/ }).first().click().catch(() => {}); await settle(p); } },
+  // The adult home opens on the calendar, so the shopping shots first press its nav destination.
+  { name: 'shopping-phone', scenario: 'adult', viewport: PHONE, steps: async (p, t) => tapAny(p, t.shopping, { exact: false }) },
+  { name: 'shopping-search', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.shopping, { exact: false }); await p.getByRole('textbox', { name: t.search }).fill('mil'); await settle(p); } },
+  { name: 'shopping-new-list', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.shopping, { exact: false }); await tapNode(p, 'checkbox', t.newList); } },
+  { name: 'shopping-laptop', scenario: 'adult', viewport: TABLET, steps: async (p, t) => tapAny(p, t.shopping, { exact: false }) },
+  { name: 'shopping-edit-item', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.shopping, { exact: false }); await longPress(p, p.getByRole('checkbox', { name: /Vollkorn/ }).first()); } },
+  { name: 'shopping-trolley', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.shopping, { exact: false }); await scrollDown(p, 1500); await tapAny(p, t.trolley, { exact: false }); await scrollDown(p, 3000); } },
+  { name: 'shopping-history', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.shopping, { exact: false }); await press(p, t.history); await p.getByRole('button', { name: /14/ }).first().click().catch(() => {}); await settle(p); } },
+  // Calendar, timetable, tasks, meals and household settings.
+  { name: 'calendar-week', scenario: 'adult', viewport: TABLET, steps: async (p, t) => tapAny(p, t.week) },
+  { name: 'calendar-editor', scenario: 'adult', viewport: PHONE, steps: async (p, t) => tapAny(p, t.newEvent) },
+  { name: 'school-week', scenario: 'adult', viewport: TABLET, steps: async (p, t) => tapAny(p, t.schedule, { exact: false }) },
+  { name: 'tasks-today', scenario: 'adult', viewport: TABLET, steps: async (p, t) => tapAny(p, t.tasks, { exact: false }) },
+  { name: 'meals-week', scenario: 'adult', viewport: TABLET, steps: async (p, t) => tapAny(p, t.meals, { exact: false }) },
+  { name: 'settings-household', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await press(p, t.settings); await tapAny(p, t.householdSettings, { exact: false }); } },
   { name: 'kid-who', scenario: 'kid', viewport: TABLET },
   { name: 'kid-shopping', scenario: 'kid', viewport: TABLET, steps: async (p, t) => { await press(p, t.lotta); } },
-  { name: 'wall-shopping', scenario: 'kiosk', viewport: WALL, steps: async (p, t) => { await press(p, t.lotta); } },
+  { name: 'wall-board', scenario: 'kiosk', viewport: WALL },
+  { name: 'wall-child-week', scenario: 'kiosk', viewport: WALL, steps: async (p, t) => press(p, t.lotta) },
+  { name: 'wall-day', scenario: 'kiosk', viewport: WALL, steps: async (p) => { await p.getByRole('button', { name: /^(Mittwoch|Wednesday)/ }).first().click(); await settle(p); } },
+  // The board has no avatars: open the footer's shopping list first, then tap the name in its bar.
+  { name: 'wall-shopping', scenario: 'kiosk', viewport: WALL, steps: async (p, t) => { await p.getByRole('button', { name: t.shopping }).first().click(); await settle(p); await p.getByRole('button', { name: t.lotta, exact: true }).last().click(); await settle(p); } },
   { name: 'settings-phone', scenario: 'adult', viewport: PHONE, steps: async (p, t) => press(p, t.settings) },
   { name: 'settings-add-device', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await press(p, t.settings); await press(p, t.addDevice); } },
   { name: 'settings-sign-in', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await press(p, t.settings); await scrollDown(p, 700); } },

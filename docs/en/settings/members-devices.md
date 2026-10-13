@@ -12,7 +12,7 @@ Tap **Add member** and enter a **name**. WuselWall assigns the next free **colou
 
 1. Tap **Add device**.
 2. Enter a **device name**, choose the **type** (shared or wall display) and tap **Create code**.
-3. On the new device, enter the code or scan the QR code ([Setting up](/en/guide/setup#_3-set-up-a-device-with-a-code)).
+3. On the new device, enter the code or scan the QR code ([Signing in and connecting](/en/guide/setup#_2-connect-a-device-with-a-code)).
 
 <div class="shots">
 <Shot name="settings-add-device" alt="The “Add device” dialog" />

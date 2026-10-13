@@ -1,0 +1,49 @@
+# Kalender
+
+Der Kalender ist die Startseite der Erwachsenen: alle Termine der Familie und, wer wo ist, auf einen Blick.
+
+<Shot name="calendar-week" alt="Wochenansicht des Kalenders mit Anwesenheit oben und Terminen darunter" wide />
+
+## Ansichten
+
+Oben wählst du **Tag**, **3 Tage** oder **Woche**. Mit **Zurück**, **Weiter** und **Heute** blätterst du. Ganz oben bleiben zwei Zeilen immer sichtbar:
+
+- **Anwesenheit**: eine Zeile pro Person. Dort steht, wer arbeitet, im Homeoffice ist, unterwegs ist, weg ist, frei hat oder betreut wird.
+- **Ganztägig**: Termine, die den ganzen Tag gelten.
+
+Darunter stehen die Termine nach Uhrzeit.
+
+## Termin anlegen
+
+Tippe auf **Neuer Termin**. Du kannst:
+
+- einen **Titel**, einen **Ort** und **Notizen** eintragen
+- zwischen **Termin** und **Anwesenheit** wählen. Anwesenheit hat sechs Zustände: Arbeit, Homeoffice, Unterwegs, Weg, Frei und Betreuung
+- den Termin **ganztägig** machen oder **Beginn** und **Ende** setzen
+- unter **Wer** Personen auswählen. Ist niemand ausgewählt, gilt der Termin für die ganze Familie
+- **Noch nicht sicher** ankreuzen, wenn noch unklar ist, ob er stattfindet
+- **Auf dem Küchendisplay zeigen** ankreuzen. Was neue Termine standardmäßig tun, legt ihr unter [Haushalt einstellen](/settings/household) fest
+
+<Shot name="calendar-editor" alt="Editor für einen neuen Termin mit Titel, Wer und Wiederholung" />
+
+### Wiederholen
+
+Unter **Wiederholung** wählst du **Täglich**, **Wöchentlich**, **Alle 2 Wochen** oder **Monatlich**. Für Schichtpläne gibt es **Bestimmte Tage (Dienstplan)**: Du tippst im Monatsraster die Tage an, an denen gearbeitet wird. Mit **Ende der Wiederholung** setzt du ein Datum oder eine Anzahl von Malen.
+
+Änderst oder löschst du einen Termin einer Wiederholung, fragt WuselWall: **Nur dieser Termin** oder **Alle Termine der Serie**.
+
+## Termine bis …
+
+Tippe auf die Überschrift eines Tages, um **Termine bis** zu setzen: Ab dieser Uhrzeit bist du nicht verfügbar. Das erscheint auf der Küchenwand, zum Beispiel als „Termine bis 17“. Es zeigt nur die Uhrzeit, keine Termine und keine Details. Mit **Für die ganze Woche übernehmen (Mo–Fr)** gilt es für jeden Werktag der Woche.
+
+## Grundzustand
+
+Unter **Einstellungen → Grundzustand** tragt ihr ein, wo ihr normalerweise seid, zum Beispiel zu Hause oder im Büro. Danach tragt ihr nur noch Abweichungen ein. Ein normaler Tag bleibt leer.
+
+## Kinder und Termine
+
+Ob Kinder Termine anlegen und ändern dürfen, legt ihr unter [Haushalt einstellen](/settings/household) fest. Fremde Termine löschen bleibt Sache der Erziehungsberechtigten.
+
+## Termine in Outlook oder auf dem iPhone
+
+Der Familienkalender lässt sich als **Abo** in Outlook oder auf dem iPhone anzeigen, nur zum Lesen. Siehe [Kalender-Abos](/calendar/feeds).

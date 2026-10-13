@@ -1,0 +1,337 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wuselwall/app/theme/tokens.dart';
+import 'package:wuselwall/app/theme/ui_register.dart';
+import 'package:wuselwall/app/theme/ww_colors.dart';
+import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/snackbars.dart';
+import 'package:wuselwall/features/kid/application/kid_logic.dart';
+import 'package:wuselwall/features/kid/application/kid_providers.dart';
+import 'package:wuselwall/features/kid/data/kid_badges_repository.dart';
+import 'package:wuselwall/features/kid/ui/kid_widgets.dart';
+import 'package:wuselwall/features/tasks/application/tasks_providers.dart';
+import 'package:wuselwall/features/tasks/data/tasks_repository.dart';
+import 'package:wuselwall/features/tasks/domain/tasks_models.dart';
+import 'package:wuselwall/features/tasks/ui/task_widgets.dart';
+
+/// "Punkte": the acting child's balance, the reward shop, badges and streaks. Only this
+/// child's numbers are read here; no other balance, streak or ranking appears.
+class KidPointsPage extends ConsumerStatefulWidget {
+  const KidPointsPage({required this.actor, super.key});
+
+  final String actor;
+
+  @override
+  ConsumerState<KidPointsPage> createState() => _KidPointsPageState();
+}
+
+class _KidPointsPageState extends ConsumerState<KidPointsPage> {
+  final _asking = <String>{};
+
+  Future<void> _ask(Reward reward) async {
+    final l10n = context.l10n;
+    final container = ProviderScope.containerOf(context);
+    setState(() => _asking.add(reward.id));
+    final result = await container
+        .read(tasksRepositoryProvider)
+        .requestReward(actor: widget.actor, rewardId: reward.id);
+    invalidateTasks(container.invalidate);
+    if (!mounted) return;
+    setState(() => _asking.remove(reward.id));
+    switch (result) {
+      case Ok(:final value):
+        context.showMessage(
+          value == RedemptionStatus.requested
+              ? l10n.kidRequestSent
+              : l10n.kidRedeemed,
+        );
+      case Err(:final failure):
+        context.showFailure(failure);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final balances = ref.watch(pointBalancesProvider).value ?? const {};
+    final balance = kidBalanceOf(balances, widget.actor);
+    final rewards = ref.watch(rewardsProvider);
+    final redemptions = ref.watch(redemptionsProvider).value ?? const [];
+    final waiting = {
+      for (final r in redemptions)
+        if (r.profileId == widget.actor &&
+            r.status == RedemptionStatus.requested)
+          r.rewardId,
+    };
+    final streaks = kidStreakRows(
+      streaks: ref.watch(streaksProvider).value ?? const [],
+      definitions: ref.watch(taskDefinitionsProvider).value ?? const [],
+      actor: widget.actor,
+    );
+
+    return ListView(
+      padding: const EdgeInsets.all(Tokens.space4),
+      children: [
+        _BalanceCard(balance: balance),
+        KidSectionTitle(l10n.kidRewardsTitle),
+        AsyncValueView<List<Reward>>(
+          value: rewards,
+          onRetry: () => ref.invalidate(rewardsProvider),
+          data: (list) => Column(
+            children: [
+              for (final r in list)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: Tokens.space2),
+                  child: _RewardCard(
+                    reward: r,
+                    balance: balance,
+                    waiting: waiting.contains(r.id),
+                    busy: _asking.contains(r.id),
+                    onAsk: () => _ask(r),
+                  ),
+                ),
+            ],
+          ),
+        ),
+        KidSectionTitle(l10n.kidBadgesTitle),
+        ref
+            .watch(kidBadgesProvider(widget.actor))
+            .when(
+              loading: () => const SizedBox.shrink(),
+              error: (_, _) => const SizedBox.shrink(),
+              data: (badges) => Wrap(
+                spacing: Tokens.space4,
+                runSpacing: Tokens.space4,
+                children: [
+                  for (final b in kidBadgeRow(badges)) _BadgeTile(badge: b),
+                ],
+              ),
+            ),
+        if (streaks.isNotEmpty) ...[
+          KidSectionTitle(l10n.kidStreaksTitle),
+          for (final s in streaks)
+            Padding(
+              padding: const EdgeInsets.only(bottom: Tokens.space2),
+              child: KidCard(
+                child: Text(
+                  l10n.kidStreak(s.days, s.title),
+                  style: Theme.of(context).textTheme.titleMedium
+                      ?.copyWith(fontWeight: FontWeight.w700),
+                ),
+              ),
+            ),
+        ],
+      ],
+    );
+  }
+}
+
+class _BalanceCard extends StatelessWidget {
+  const _BalanceCard({required this.balance});
+
+  final int balance;
+
+  @override
+  Widget build(BuildContext context) {
+    final ww = context.ww;
+    final l10n = context.l10n;
+    return Container(
+      padding: const EdgeInsets.all(Tokens.space6),
+      decoration: BoxDecoration(
+        color: ww.points,
+        borderRadius: BorderRadius.circular(UiRegister.kid.radius),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.star_rounded, size: 56, color: ww.onPoints),
+          const SizedBox(width: Tokens.space4),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '$balance',
+                style: TextStyle(
+                  fontFamily: Tokens.fontNumeric,
+                  fontFeatures: const [FontFeature.tabularFigures()],
+                  fontSize: 56,
+                  fontWeight: FontWeight.w800,
+                  height: 1,
+                  color: ww.onPoints,
+                ),
+              ),
+              Text(
+                l10n.kidYourPoints,
+                style: Theme.of(context).textTheme.titleMedium
+                    ?.copyWith(color: ww.onPoints, fontWeight: FontWeight.w700),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// One reward. Not affordable yet: a bar and "Noch N Punkte", never a red mark.
+class _RewardCard extends StatelessWidget {
+  const _RewardCard({
+    required this.reward,
+    required this.balance,
+    required this.waiting,
+    required this.busy,
+    required this.onAsk,
+  });
+
+  final Reward reward;
+  final int balance;
+  final bool waiting;
+  final bool busy;
+  final VoidCallback onAsk;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+    final state = kidRewardState(
+      costPoints: reward.costPoints,
+      balance: balance,
+      waiting: waiting,
+      soldOut: reward.soldOut,
+    );
+    final touch = UiRegister.kid.touchTarget;
+    return KidCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              ExcludeSemantics(
+                child: Text(
+                  taskIconGlyph(reward.iconKey) ?? '🎁',
+                  style: const TextStyle(fontSize: 40),
+                ),
+              ),
+              const SizedBox(width: Tokens.space3),
+              Expanded(
+                child: Text(
+                  reward.title,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+              PointsCoin(points: reward.costPoints, fontSize: 19),
+            ],
+          ),
+          const SizedBox(height: Tokens.space3),
+          switch (state) {
+            KidRewardState.needMore => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                LinearProgressIndicator(
+                  value: reward.costPoints == 0
+                      ? 1
+                      : (balance / reward.costPoints).clamp(0.0, 1.0),
+                  minHeight: 10,
+                ),
+                const SizedBox(height: Tokens.space2),
+                Text(
+                  l10n.kidNeedMore(
+                    kidPointsMissing(reward.costPoints, balance),
+                  ),
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+            KidRewardState.waiting => Row(
+              children: [
+                const Icon(Icons.hourglass_top_rounded),
+                const SizedBox(width: Tokens.space2),
+                Text(l10n.kidWaitsApproval, style: theme.textTheme.bodyLarge),
+              ],
+            ),
+            KidRewardState.soldOut => Text(
+              l10n.kidSoldOut,
+              style: theme.textTheme.bodyLarge,
+            ),
+            KidRewardState.ready => FilledButton(
+              style: FilledButton.styleFrom(
+                minimumSize: Size.fromHeight(touch),
+              ),
+              onPressed: busy ? null : onAsk,
+              child: Text(
+                l10n.kidRedeem,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ),
+          },
+        ],
+      ),
+    );
+  }
+}
+
+/// A badge: bright when earned, faint while it is still to come.
+class _BadgeTile extends StatelessWidget {
+  const _BadgeTile({required this.badge});
+
+  final KidBadge badge;
+
+  @override
+  Widget build(BuildContext context) {
+    final ww = context.ww;
+    final glyph = taskIconGlyph(badge.iconKey);
+    return Semantics(
+      label: badge.earned ? badge.title : '${badge.title} ·',
+      child: SizedBox(
+        width: 104,
+        child: Opacity(
+          opacity: badge.earned ? 1 : 0.35,
+          child: Column(
+            children: [
+              Container(
+                width: 64,
+                height: 64,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: badge.earned
+                      ? ww.points
+                      : Theme.of(context).colorScheme.surfaceContainerHighest,
+                  shape: BoxShape.circle,
+                ),
+                child: glyph != null
+                    ? ExcludeSemantics(
+                        child: Text(
+                          glyph,
+                          style: const TextStyle(fontSize: 30),
+                        ),
+                      )
+                    : Icon(
+                        Icons.workspace_premium_rounded,
+                        size: 32,
+                        color: badge.earned
+                            ? ww.onPoints
+                            : Theme.of(context).colorScheme.onSurface,
+                      ),
+              ),
+              const SizedBox(height: Tokens.space1),
+              Text(
+                badge.title,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.labelLarge,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

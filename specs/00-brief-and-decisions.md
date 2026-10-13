@@ -266,3 +266,35 @@ real option in the same app.
 **What this costs.** Two origins (CORS, which the gateway already allows) and one fresh
 sign-in in each browser that used the web app. **What it buys.** The product's own name
 in every link, and a website, web app and API that can each move without the others.
+
+### 2026-10-13 — Self-hosted only
+
+> Also in general I think we should refrain from using a hosted variant of the app.
+> Is it possible to seperate the frontend from the backend in a way, that the
+> frontend/app can be plugged into ANY self-hosted backend? So ONLY self-hosted. No
+> hosted Saas from our side?
+
+| Change | Answer | Where |
+|---|---|---|
+| Hosting | **No WuselWall Cloud.** The project runs no service holding another family's data; the family's own server stays closed (`code` mode). Others run a server release on their own hardware or their own Supabase project | [ADR-018](adr/ADR-018-self-hosted-only.md) |
+| The app | No default server: invitation link, the server's QR code or a typed address, discovered through `/.well-known/wuselwall.json`. A demo mode without any server, also for App Review | [ADR-018](adr/ADR-018-self-hosted-only.md), [20](20-onboarding.md#choosing-the-server) |
+| Compatibility | `api_version` in the discovery document; each app release supports the current and the previous one; CI tests against the previous server release | [ADR-018](adr/ADR-018-self-hosted-only.md), [10](10-deployment-and-ops.md#other-families-servers) |
+| Apple and Google | Native sign-in only on the family's server (user, 2026-10-13); other servers get email, plus the redirect with their operator's own clients. The privacy policy names Google's iOS sign-in library, which declares device ID and usage data for analytics | [ADR-018](adr/ADR-018-self-hosted-only.md), [11](11-security-and-privacy.md) |
+| Open | Push to self-hosted servers ([Q47](14-open-questions.md)); sign-up without SMTP (Q48) | [14](14-open-questions.md) |
+
+**What this costs.** Families need a server, version skew between store apps and servers
+is permanent, and push needs its own answer. **What it buys.** No other family's data
+on the project's infrastructure, no Supabase bill, and a privacy policy that can say so.
+
+### 2026-10-13 — Licence: Apache 2.0
+
+> I pick Apache 2.0.
+
+Chosen over MIT for the explicit patent grant, contributions under the same licence
+without a separate agreement (section 5), and section 6, which keeps the name and logo
+from being used by forks. AGPL-3.0 was set aside: it would stop closed hosted copies, but
+GPL terms clash with App Store distribution once other people's code is in the app. The
+licence lets anyone run WuselWall as a hosted service, which fits
+[ADR-018](adr/ADR-018-self-hosted-only.md). `LICENSE` and `NOTICE` (third-party material:
+the Supabase compose files, the fonts, store badges, the GitHub mark and the Google "G")
+are at the repository root.

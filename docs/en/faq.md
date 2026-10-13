@@ -1,7 +1,7 @@
 # FAQ
 
 ## "This device has been blocked"
-A guardian blocked the device. Set it up again — with a new [code](/en/guide/setup#_3-set-up-a-device-with-a-code) or by signing in.
+A guardian blocked the device. Connect it again — with a new [code](/en/guide/setup#_2-connect-a-device-with-a-code) or by signing in.
 
 ## "That code is wrong or has expired"
 Codes last 10 minutes and work once. Create a new one in Settings. After several wrong tries you have to wait a few minutes.
