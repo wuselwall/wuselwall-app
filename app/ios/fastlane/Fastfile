@@ -45,7 +45,11 @@ platform :ios do
       key_content: asc_key_pem,
     )
 
-    match(readonly: true, api_key: api_key)
+    # Read-only, except once after a capability changes on the App ID (Sign in with
+    # Apple, associated domains): "Run workflow" with renew_profile regenerates the
+    # App Store profile so that it carries the new entitlement.
+    renew = ENV["MATCH_RENEW"] == "1"
+    match(readonly: !renew, force: renew, api_key: api_key)
 
     # The project keeps automatic signing for local development; the release archive
     # uses the distribution certificate and profile from match.

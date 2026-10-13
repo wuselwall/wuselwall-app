@@ -2,7 +2,7 @@
 
 **Shared devices** and the **wall display** are used by several people. So WuselWall asks at the bottom: **Who are you?** Tap your name (your colour) and your actions are yours — the list shows, for example, who added an item.
 
-<img class="shot wide" src="/screenshots/en/kid-who.png" alt="Kids' tablet with the family's names at the bottom">
+<Shot name="kid-who" alt="Kids' tablet with the family's names at the bottom" wide />
 
 - Without a name nothing can be changed. The device tells you: "Tap your name first."
 - On the **wall display**, the device goes back to "nobody" after **one minute without a touch**, so the next person doesn't act as you by accident.

@@ -15,7 +15,9 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/realtime/household_channel.dart';
 import 'package:wuselwall/core/supabase/supabase_providers.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
+import 'package:wuselwall/features/identity/data/sign_in_methods_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
+import 'package:wuselwall/features/identity/domain/sign_in_method.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 import 'package:wuselwall/features/shopping/data/shopping_store.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
@@ -208,6 +210,65 @@ class FakeShoppingRepository implements ShoppingRepository {
   dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
 }
 
+/// Apple and Google without platform sheets. Offers nothing unless told to.
+class FakeSignInMethods implements SignInMethodsRepository {
+  FakeSignInMethods({
+    this.offered = const [],
+    this.linkable = const {},
+    List<SignInMethod>? linked,
+    this.signInResult = const Ok(null),
+  }) : linked = linked ?? [];
+
+  List<SignInProvider> offered;
+  Set<SignInProvider> linkable;
+  List<SignInMethod> linked;
+  Result<void> signInResult;
+  final signIns = <SignInProvider>[];
+  final links = <SignInProvider>[];
+  final unlinked = <String>[];
+  final redirectErrors = StreamController<Failure>.broadcast();
+
+  @override
+  List<SignInProvider> available() => offered;
+
+  @override
+  bool canLink(SignInProvider provider) => linkable.contains(provider);
+
+  @override
+  Future<Result<void>> signIn(SignInProvider provider) async {
+    signIns.add(provider);
+    return signInResult;
+  }
+
+  @override
+  Stream<Failure> authErrors() => redirectErrors.stream;
+
+  @override
+  Future<Result<List<SignInMethod>>> methods() async => Ok([...linked]);
+
+  @override
+  Future<Result<bool>> link(SignInProvider provider) async {
+    links.add(provider);
+    linked.add(
+      SignInMethod(
+        identityId: 'identity-${provider.name}',
+        provider: provider.kind,
+      ),
+    );
+    return const Ok(true);
+  }
+
+  @override
+  Future<Result<void>> unlink(String identityId) async {
+    unlinked.add(identityId);
+    linked.removeWhere((m) => m.identityId == identityId);
+    return const Ok(null);
+  }
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
+}
+
 ShoppingItem item(String id, String name, {bool checked = false}) =>
     ShoppingItem(
       id: id,
@@ -220,6 +281,7 @@ ShoppingItem item(String id, String name, {bool checked = false}) =>
 List<Override> baseOverrides({
   required FakeIdentityRepository identity,
   FakeShoppingRepository? shopping,
+  FakeSignInMethods? signInMethods,
   bool signedIn = true,
 }) => [
   appConfigProvider.overrideWithValue(
@@ -231,6 +293,9 @@ List<Override> baseOverrides({
   ),
   sessionUserIdProvider.overrideWithValue(signedIn ? 'user-1' : null),
   identityRepositoryProvider.overrideWithValue(identity),
+  signInMethodsRepositoryProvider.overrideWithValue(
+    signInMethods ?? FakeSignInMethods(),
+  ),
   if (shopping != null) shoppingRepositoryProvider.overrideWithValue(shopping),
   shoppingStoreProvider.overrideWith((ref) => MemoryShoppingStore()),
   connectivityProvider.overrideWith((ref) => Stream.value(true)),

@@ -2,7 +2,7 @@
 
 Nicht alles gibt es im selben Laden. Deshalb hat WuselWall mehrere Listen, zum Beispiel **Supermarkt**, **Drogerie** und **Baumarkt**. Oben wählst du die Liste aus; die Zahl dahinter zeigt, wie viele Artikel noch offen sind.
 
-<img class="shot" src="/screenshots/de/shopping-new-list.png" alt="Dialog „Neue Liste“">
+<Shot name="shopping-new-list" alt="Dialog „Neue Liste“" />
 
 ## Eine neue Liste anlegen
 

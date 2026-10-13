@@ -4,7 +4,9 @@ import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/supabase/supabase_providers.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
+import 'package:wuselwall/features/identity/data/sign_in_methods_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
+import 'package:wuselwall/features/identity/domain/sign_in_method.dart';
 
 /// Where the app stands, which decides what it shows (the router just follows this).
 sealed class SessionState {
@@ -118,4 +120,12 @@ final devicesProvider = FutureProvider.autoDispose<List<DeviceEntry>>((
 final totpFactorProvider = FutureProvider.autoDispose<String?>((ref) async {
   ref.watch(deviceKeyProvider);
   return (await ref.watch(identityRepositoryProvider).totpFactorId()).unwrap();
+});
+
+/// The signed-in account's ways in (Apple, Google, email), for Settings → Sign-in.
+final signInMethodsProvider = FutureProvider.autoDispose<List<SignInMethod>>((
+  ref,
+) async {
+  ref.watch(deviceKeyProvider);
+  return (await ref.watch(signInMethodsRepositoryProvider).methods()).unwrap();
 });

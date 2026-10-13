@@ -181,15 +181,18 @@ text, and the System page reports the database round-trip.
 
 ## Step 4 — Continuous integration (M0.0)
 
-`.github/workflows/ci.yml`, triggered on pull requests and pushes to `main`. Three
-parallel jobs, each one fast enough to wait for.
+`.github/workflows/ci.yml`. Three parallel jobs, each one fast enough to wait for. A pull
+request runs only the fast checks (format, analyse, unit and widget tests); the web build
+and the backend job run on a tag `v*.*.*` or by hand ("Run workflow"), and by hand before a
+migration goes to the one environment ([10](10-deployment-and-ops.md#changing-the-database)).
 
 ```yaml
 name: ci
 on:
+  workflow_dispatch:
   pull_request:
   push:
-    branches: [main]
+    tags: ['v*.*.*']
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
@@ -211,8 +214,10 @@ jobs:
       - run: flutter gen-l10n && test ! -s untranslated.json
       - run: flutter test --coverage
       - run: flutter build web --release --dart-define-from-file=env/ci.json
+        if: github.event_name != 'pull_request'
 
   backend:
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -473,6 +478,12 @@ Order chosen so that each slice is usable on its own:
    App: the front door, E1–E3, `sign_in_with_apple` and `google_sign_in` with
    `signInWithIdToken`, OAuth redirect on the web; Einstellungen → Konto → Anmeldung
    (link, unlink, set password). Strings in both ARB files.
+   *Apple and Google built 2026-10-12:* native sheets on iOS (both) and Android (Google), the
+   redirect elsewhere; Einstellungen → Anmeldung links and unlinks them (native sheet only:
+   the redirect would replace the device's session). `enable_signup` stays `false` until
+   households (9.2) give a new account somewhere to go, so Apple and Google sign in only
+   accounts whose verified email already exists. CLI stacks keep both providers off. Still
+   open in 9.1: the email code, E1–E3, set password.
 2. **Households.** Migration: `app.instance_setting` (`code`), `profile.kind`,
    `household.created_by_profile_id`/`deleted_at`, founder codes in `app.setup_token`.
    `api.my_account`, `api.household_create` (registers this session as the personal
@@ -528,15 +539,19 @@ account leaves nothing reachable.
 ## CI/CD at a glance
 
 ```
- feature branch ──PR──► ci.yml ─────────────── app · backend · functions · audit
-                         │ green + review
-                         ▼
-                       main ──► by hand: backup → migration up → pgTAP (specs/10)
-                         │
-                         │ tag vX.Y.Z
-                         ▼
-                 release-mobile.yml ── Android AAB → Play internal track
-                                    └─ iOS IPA     → TestFlight
+ feature branch ──PR──► ci.yml ─────────────── fast checks: format · analyse · unit · widget
+       │                 │ green + review
+       │                 ▼
+       │               main
+       │                 │ tag vX.Y.Z
+       │                 ▼
+       │         ci.yml ─────────────── app · web build · backend · functions · audit
+       │         build-android.yml ──── signed APK (until the Play job exists)
+       │         release-mobile.yml ─── Android AAB → Play internal track
+       │                             └─ iOS IPA     → TestFlight
+       │
+       └─ carries a migration: "Run workflow" → ci.yml, all jobs green
+              → merged → by hand: backup → migration up → pgTAP (specs/10)
 ```
 
 - **Trunk-based**: short branches, squash merges, `main` always applicable to the one
