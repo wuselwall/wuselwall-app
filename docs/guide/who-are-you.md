@@ -2,7 +2,7 @@
 
 Auf **geteilten Geräten** und an der **Wandanzeige** benutzen mehrere Personen dasselbe Gerät. Deshalb fragt WuselWall unten: **Wer bist du?** Tippe auf deinen Namen (deine Farbe), dann gehören deine Aktionen dir – zum Beispiel sieht man in der Liste, wer einen Artikel hinzugefügt hat.
 
-<img class="shot wide" src="/screenshots/de/kid-who.png" alt="Kinder-Tablet mit den Namen der Familie unten">
+<Shot name="kid-who" alt="Kinder-Tablet mit den Namen der Familie unten" wide />
 
 - Ohne Namen kann man nichts ändern. Das Gerät fordert dazu auf: „Tippe zuerst auf deinen Namen.“
 - An der **Wandanzeige** springt das Gerät nach **einer Minute ohne Berührung** auf „niemand“ zurück, damit die nächste Person nicht aus Versehen als du handelt.

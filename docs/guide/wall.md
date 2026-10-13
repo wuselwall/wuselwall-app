@@ -4,7 +4,7 @@
 
 Ein Kinder-Gerät zeigt die Liste **größer und einfacher**. Die Kinder tippen auf ihren Namen und können dann wie alle anderen Artikel hinzufügen und abhaken – auch bevor sie schreiben können, denn die Kacheln brauchen keine Tastatur.
 
-<img class="shot wide" src="/screenshots/de/kid-shopping.png" alt="Kinder-Ansicht der Einkaufsliste">
+<Shot name="kid-shopping" alt="Kinder-Ansicht der Einkaufsliste" wide />
 
 Kinder können keine Geräte oder Mitglieder verwalten; das bleibt Erziehungsberechtigten vorbehalten.
 
@@ -12,7 +12,7 @@ Kinder können keine Geräte oder Mitglieder verwalten; das bleibt Erziehungsber
 
 Die Wandanzeige ist für den Blick aus zweieinhalb Metern gemacht: große Schrift, große Kacheln – und **kein Suchfeld**, denn an der Wand tippt niemand. Sie bietet die häufigsten Kacheln, und alles andere kommt vom Handy.
 
-<img class="shot wide" src="/screenshots/de/wall-shopping.png" alt="Wandanzeige mit Einkaufsliste">
+<Shot name="wall-shopping" alt="Wandanzeige mit Einkaufsliste" wide />
 
 - Sie schreibt immer auf die **Standardliste**.
 - Nach einer Minute ohne Berührung geht sie wieder auf „niemand“ zurück.

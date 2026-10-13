@@ -8,7 +8,8 @@ export const site = {
   // The Flutter web app, served by nginx beside this site (specs/10).
   webApp: '/app/',
   github: 'https://github.com/wuselwall/wuselwall-app',
-  docs: 'https://github.com/wuselwall/wuselwall-app/tree/main/docs',
+  // The user documentation (docs/), also served by nginx; English under /docs/en/.
+  docs: '/docs/',
   license: 'TODO: licence name (e.g. AGPL-3.0)',
   // Store listings. Assumed URLs until the apps are published (specs/16 step 7).
   stores: {

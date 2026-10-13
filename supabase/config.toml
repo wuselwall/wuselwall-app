@@ -89,7 +89,8 @@ refresh_token_reuse_interval = 10
 # Allow/disallow new user signups to your project.
 enable_signup = false
 # Allow/disallow testing manual linking of accounts
-enable_manual_linking = false
+# On: Settings → Sign-in connects Apple or Google to an existing account (specs/20).
+enable_manual_linking = true
 
 [auth.email]
 # Must stay true: it enables the email *provider* (password sign-in). Public sign-up is blocked by the top-level enable_signup = false above.
@@ -135,15 +136,25 @@ auth_token = "env(SUPABASE_AUTH_SMS_TWILIO_AUTH_TOKEN)"
 # Use an external OAuth provider. The full list of providers are: `apple`, `azure`, `bitbucket`,
 # `discord`, `facebook`, `github`, `gitlab`, `google`, `keycloak`, `linkedin_oidc`, `notion`, `twitch`,
 # `twitter`, `slack`, `spotify`, `workos`, `zoom`.
+# Sign in with Apple and Google (ADR-014, specs/10 §4). Off on CLI stacks: CI and laptops
+# have no Apple or Google clients, and neither provider can redirect to 127.0.0.1. The
+# home server enables both in infra/supabase/docker-compose.wuselwall.yml. To try them on
+# a laptop stack, set enabled = true and the WW_* values in supabase/.env.
+# client_id lists every accepted audience, comma-separated, redirect client first:
+# Apple "<Services ID>,ch.goomba.wuselwall"; Google "<web client>,<iOS client>".
 [auth.external.apple]
 enabled = false
-client_id = ""
-# DO NOT commit your OAuth provider secret to git. Use environment variable substitution instead:
-secret = "env(SUPABASE_AUTH_EXTERNAL_APPLE_SECRET)"
-# Overrides the default auth redirectUrl.
+client_id = "env(WW_APPLE_CLIENT_IDS)"
+# The six-monthly client-secret JWT from scripts/apple-client-secret.mjs.
+secret = "env(WW_APPLE_SECRET)"
 redirect_uri = ""
-# Overrides the default auth provider URL. Used to support self-hosted gitlab, single-tenant Azure,
-# or any other third-party OIDC providers.
+url = ""
+
+[auth.external.google]
+enabled = false
+client_id = "env(WW_GOOGLE_CLIENT_IDS)"
+secret = "env(WW_GOOGLE_CLIENT_SECRET)"
+redirect_uri = ""
 url = ""
 
 [analytics]

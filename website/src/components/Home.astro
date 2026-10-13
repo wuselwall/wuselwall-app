@@ -94,7 +94,7 @@ const ld = {
       <p>{t.openText}</p>
       <div class="cta">
         <a class="btn" href={site.github} rel="noopener">{t.openCta}</a>
-        <a class="btn btn-ghost" href={site.docs} rel="noopener">{t.docsCta}</a>
+        <a class="btn btn-ghost" href={lang === 'de' ? site.docs : `${site.docs}en/`}>{t.docsCta}</a>
       </div>
     </div>
   </section>

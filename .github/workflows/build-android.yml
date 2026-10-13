@@ -1,14 +1,12 @@
 # A signed APK for the family's Android devices, installed by hand until the Play
 # internal track exists (specs/16, step 7). scripts/deploy-apk.sh publishes it at
-# https://wusel.goomba.ch/download/wuselwall.apk.
+# https://wusel.goomba.ch/download/wuselwall.apk. A tag v*.*.* builds it, like
+# release-mobile.yml; "Run workflow" builds the pubspec version from any branch.
 name: build-android
 on:
   workflow_dispatch:
-  pull_request:
-    paths: ['app/**', '.github/workflows/build-android.yml']
   push:
-    branches: [main]
-    paths: ['app/**', '.github/workflows/build-android.yml']
+    tags: ['v*.*.*']
 concurrency:
   group: build-android-${{ github.ref }}
   cancel-in-progress: true
@@ -20,8 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     defaults: { run: { working-directory: app } }
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
         with: { distribution: temurin, java-version: '17' }
       - uses: subosito/flutter-action@v2
         with: { flutter-version-file: app/pubspec.yaml, cache: true }
@@ -31,18 +29,19 @@ jobs:
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-      # The run number as versionCode: every build installs over the previous one.
-      - run: >
-          flutter build apk --release
-          --build-number=${{ github.run_number }}
-          --dart-define-from-file=env/dev.json
+      # The run number as versionCode: every build installs over the previous one. A tag
+      # sets the version name; a manual run keeps the one in pubspec.yaml.
+      - run: |
+          args=(--build-number=${{ github.run_number }})
+          if [[ "$GITHUB_REF_TYPE" == tag ]]; then args+=(--build-name="${GITHUB_REF_NAME#v}"); fi
+          flutter build apk --release "${args[@]}" --dart-define-from-file=env/dev.json
       - run: |
           mv build/app/outputs/flutter-apk/app-release.apk build/wuselwall.apk
           # The signature Android checks on every update — must never change. apksigner,
           # because the APK carries only the v2/v3 scheme, which keytool cannot read.
           apksigner=$(ls -d "$ANDROID_HOME"/build-tools/*/ | sort -V | tail -1)apksigner
           "$apksigner" verify --print-certs build/wuselwall.apk | grep -E 'DN:|SHA-256'
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: wuselwall-apk
           path: app/build/wuselwall.apk

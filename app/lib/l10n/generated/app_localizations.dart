@@ -1165,6 +1165,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'That person is no longer part of the household. The change was not saved.'**
   String get errActorInvalid;
+
+  /// No description provided for @doorApple.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Apple'**
+  String get doorApple;
+
+  /// No description provided for @doorGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get doorGoogle;
+
+  /// No description provided for @doorOr.
+  ///
+  /// In en, this message translates to:
+  /// **'or'**
+  String get doorOr;
+
+  /// No description provided for @errProviderFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'That did not work. Try again, or sign in with your email.'**
+  String get errProviderFailed;
+
+  /// No description provided for @errSignupDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'There is no WuselWall account for this address yet. Sign in with your email and password, then connect Apple or Google under Settings → Sign-in.'**
+  String get errSignupDisabled;
+
+  /// No description provided for @errIdentityAlreadyExists.
+  ///
+  /// In en, this message translates to:
+  /// **'This Apple or Google account is already connected to another WuselWall account.'**
+  String get errIdentityAlreadyExists;
+
+  /// No description provided for @errLastSignInMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'This is your only way to sign in, so it cannot be removed.'**
+  String get errLastSignInMethod;
+
+  /// No description provided for @errEmailExists.
+  ///
+  /// In en, this message translates to:
+  /// **'This email address already belongs to another account.'**
+  String get errEmailExists;
+
+  /// No description provided for @signInMethodsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-in'**
+  String get signInMethodsTitle;
+
+  /// No description provided for @signInMethodEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email and password'**
+  String get signInMethodEmail;
+
+  /// No description provided for @signInMethodApple.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple'**
+  String get signInMethodApple;
+
+  /// No description provided for @signInMethodGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Google'**
+  String get signInMethodGoogle;
+
+  /// No description provided for @signInMethodNotConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Not connected'**
+  String get signInMethodNotConnected;
+
+  /// No description provided for @signInMethodConnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect'**
+  String get signInMethodConnect;
+
+  /// No description provided for @signInMethodRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get signInMethodRemove;
+
+  /// No description provided for @signInMethodLinkElsewhere.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect it in the app on your phone.'**
+  String get signInMethodLinkElsewhere;
+
+  /// No description provided for @signInMethodConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'{provider} is connected.'**
+  String signInMethodConnected(String provider);
+
+  /// No description provided for @signInMethodRemoveConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {provider}? You will no longer be able to sign in with it.'**
+  String signInMethodRemoveConfirm(String provider);
 }
 
 class _AppLocalizationsDelegate

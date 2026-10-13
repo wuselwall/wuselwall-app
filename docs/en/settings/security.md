@@ -1,6 +1,17 @@
 # Security
 
-The security settings exist only on a guardian's **personal phone**: **Settings → Security**.
+Sign-in and security settings exist only on a guardian's **personal phone**: **Settings → Sign-in** and **Settings → Security**.
+
+## Sign-in
+
+This lists the ways you can sign in: **Email and password**, **Apple**, **Google**.
+
+<Shot name="settings-sign-in" alt="Settings → Sign-in" />
+
+- **Connect**: next to Apple or Google, tap **Connect** and confirm in Apple's or Google's window. From then on that account gets you in too, on any device. Connecting works only in the app on your phone, not in the browser.
+- **Remove**: takes a method away again. The last one always stays, so you cannot lock yourself out.
+
+Apple and Google learn that you use WuselWall and pass on your name and email address – nothing else. WuselWall never asks Google for your calendar or contacts.
 
 ## Two-factor sign-in
 

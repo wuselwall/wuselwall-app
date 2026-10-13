@@ -54,7 +54,8 @@ is created.
    │
    ▼
  nginx (home server): /auth/v1, /rest/v1, /realtime/v1, /functions/v1 → gateway
-   │                    /app/ → Flutter web app (static) · everything else → the website
+   │                    /app/ → Flutter web app (static) · /docs/ → user documentation (static)
+   │                    everything else → the website
    │                    + static: /.well-known/*, /i/*, /p/*, /privacy, /delete (ADR-014)
    │ HTTP, Docker bridge (172.17.0.1 — not reachable from the home network)
    ▼
@@ -171,6 +172,23 @@ from `config.toml` as `env(...)`:
   of the debug key).
 - **Email**: see [Email setup](#email-setup) below.
 
+**Wiring them up** (built 2026-10-12):
+
+| Value | Where it goes |
+|---|---|
+| Apple: `<Services ID>,ch.goomba.wuselwall` (the redirect client first) | Stack `.env`: `APPLE_CLIENT_IDS`, plus `APPLE_ENABLED=true` |
+| Apple client secret | Stack `.env`: `APPLE_SECRET`, from `scripts/apple-client-secret.mjs --client-id <Services ID> --key-id <key> --p8 <file>` |
+| Google: `<web client ID>,<iOS client ID>` | Stack `.env`: `GOOGLE_CLIENT_IDS`, plus `GOOGLE_ENABLED=true` |
+| Google web client secret | Stack `.env`: `GOOGLE_CLIENT_SECRET` |
+| `APPLE_SIGN_IN: true`, `GOOGLE_WEB_CLIENT_ID`, `GOOGLE_IOS_CLIENT_ID` | `app/env/dev.json` (not secrets). A button shows only when its value is set, so a build never offers a provider the server lacks |
+| The iOS client ID reversed (`com.googleusercontent.apps.…`) | `app/ios/Flutter/SignIn.xcconfig`: the URL scheme Google's iOS sheet returns through |
+
+Each stack variable is set with `… | scripts/remote-stack.sh set-env <KEY>` (the value on
+stdin, never on the command line), then `scripts/remote-stack.sh up -d auth`. Enabling *Sign
+in with Apple* on the App ID changes its capabilities, so the App Store profile has to be
+regenerated once: run `release-mobile` by hand with **renew_profile** ticked. That run writes
+to the certificates repository, so `MATCH_GIT_BASIC_AUTHORIZATION` needs write access for it.
+
 On WuselWall Cloud the same Apple and Google values are entered in the project's Auth
 settings. Native sign-in works there and on the first-party Unraid stack (whose
 `config.toml` carries the same client IDs). Other self-hosted servers offer email, plus
@@ -235,12 +253,16 @@ yet. It goes live with the opening gate in [13](13-roadmap.md#opening-to-other-h
 There is no deployment pipeline: a migration is applied once, to the one environment.
 
 ```
-feature branch ──PR──► ci.yml: every migration from zero on a throwaway stack,
-                       pgTAP, Flutter tests, the integration test
+feature branch ──"Run workflow"──► ci.yml: every migration from zero on a throwaway stack,
+                                   pgTAP, Flutter tests, the integration test
       │ green
       ▼
 scripts/remote-migrate.sh       — backup, pending migrations, pgTAP; stops at the first failure
 ```
+
+A pull request runs only the fast checks; the backend job runs on a tag or by hand. So a
+branch with a migration gets `ci` started by hand ("Run workflow", or
+`gh workflow run ci.yml --ref <branch>`) before `remote-migrate.sh`.
 
 pgTAP runs in rolled-back transactions, so it is safe on the live data.
 
@@ -294,6 +316,7 @@ touching the others. None of them needs the database to go down.
 | Website (landing page, Impressum, Datenschutz) | `scripts/remote-web.sh deploy` | Only the `wuselwall-site` container (`infra/web`, its own compose project). `--draft` allows an unfilled Impressum |
 | Flutter web app (`/app/`) | `scripts/deploy-web.sh` | Static files; swapped by rename |
 | Android APK download | `scripts/deploy-apk.sh` | Static file |
+| User documentation (`/docs/`) | Automatic: `.github/workflows/docs.yml` on every push to `main` (or "Run workflow") | Static files; swapped by a link. See [The user documentation](#the-user-documentation) |
 | Edge Functions | `scripts/remote-stack.sh functions` | Syncs `supabase/functions`, restarts the Edge runtime only |
 | One Supabase service (auth, rest, realtime, storage, …) | `scripts/remote-stack.sh up -d --no-deps auth` after editing `.env` or the layer; `… restart rest` for a plain restart | That container only |
 | The whole Supabase stack | `scripts/remote-stack.sh deploy` | Everything `docker compose up -d` finds changed |
@@ -311,6 +334,25 @@ stack's `.env` on the server set `SITE_URL=https://wusel.goomba.ch/app/` and run
 `scripts/remote-stack.sh up -d --no-deps auth`. Fill in `website/src/config/site.ts` first
 (or deploy with `--draft`).
 
+## The user documentation
+
+`docs/` is built on GitHub's machines (Flutter web demo, Playwright screenshots in both
+languages and themes, VitePress with `DOCS_BASE=/docs/`) and published by a self-hosted
+runner on the home server: the CI Runner Farm plugin (Unraid), with
+`wuselwall/wuselwall-app` among its target repositories and the label `wuselwall-deploy`.
+The runner holds no access of its own. The deploy job pipes the site as a tarball over SSH
+to `root@runner-farm.host` with a key that may run only
+[`infra/docs/receive-docs.sh`](../infra/docs/receive-docs.sh) (a forced `command=` with
+`restrict` in root's `authorized_keys`); the server's host key is pinned. Secrets:
+`DOCS_DEPLOY_KEY` (the private key) and `DOCS_DEPLOY_KNOWN_HOSTS`
+(`runner-farm.host <host key>`).
+
+On the server: the script in `/mnt/user/appdata/wuselwall/bin/`, the builds in
+`/mnt/user/appdata/nginx/www/wuselwall-docs/releases/<stamp>/`, the newest three kept, and
+`current` linking to the live one; nginx serves `/docs/` from `current`. Roll back with
+`ln -sfn releases/<stamp> current` in that folder. After changing the script, copy it again
+(`scp infra/docs/receive-docs.sh unraid:/mnt/user/appdata/wuselwall/bin/`).
+
 ## Updates
 
 | What | How | Cadence |
@@ -322,7 +364,7 @@ stack's `.env` on the server set `SITE_URL=https://wusel.goomba.ch/app/` and run
 | Flutter, `pub` and Deno dependencies | Dependabot PRs, reviewed | Weekly PRs, merged monthly |
 | iOS signing certificate | `fastlane match` renewal | Yearly — calendar reminder |
 | Apple Developer Program | Renewal | Yearly — lapsing removes TestFlight builds |
-| **Sign in with Apple client secret** (a JWT from the `.p8` key) | Regenerate, put in the stack's `.env`, `scripts/remote-stack.sh up -d auth` | **Every six months at the latest** — calendar reminder; an expired secret breaks Apple sign-in on Android and the web |
+| **Sign in with Apple client secret** (a JWT from the `.p8` key) | `node scripts/apple-client-secret.mjs … \| scripts/remote-stack.sh set-env APPLE_SECRET`, then `scripts/remote-stack.sh up -d auth` | **Every six months at the latest** — calendar reminder; an expired secret breaks Apple sign-in on Android and the web |
 | Google OAuth clients | Add the SHA-1 of any new signing key | When a signing key changes |
 | SMTP provider | Check deliverability (a test code to Gmail, Outlook.com, GMX and iCloud; SPF/DKIM/DMARC pass) | Quarterly, and after any DNS change |
 | Supabase Pro (Cloud) | Review usage and the invoice; Postgres and Auth upgrades are scheduled by Supabase, read their notices | Monthly glance |

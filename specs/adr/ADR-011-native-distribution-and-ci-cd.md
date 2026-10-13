@@ -58,7 +58,7 @@ are applied to the one environment by script, after a backup). Detail in [16](..
 
 | Workflow | Trigger | Does |
 |---|---|---|
-| `ci.yml` | Every pull request and push to `main` | Flutter format, analyse, unit and widget tests; `supabase start` → apply every migration from zero → pgTAP tests (RLS included) → schema lint; Deno format, lint and test for Edge Functions; dependency audit |
+| `ci.yml` | Every pull request: the fast checks. A tag `v*.*.*`, or "Run workflow" on a branch: everything | Pull requests: Flutter format, analyse, unit and widget tests. Tag or by hand, additionally: web build; `supabase start` → apply every migration from zero → pgTAP tests (RLS included) → schema lint; Deno format, lint and test for Edge Functions; dependency audit |
 | `release-mobile.yml` | A tag `v*.*.*` | Android: signed App Bundle → Play internal track. iOS (macOS runner): `fastlane match` for signing → `flutter build ipa` → TestFlight |
 
 - **Signing material never lives on a laptop alone.** iOS certificates and profiles live

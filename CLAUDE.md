@@ -4,9 +4,10 @@ This repository holds both the planning documents and the code for WuselWall (se
 [README.md](README.md)). `specs/` is the specification; `app/` (Flutter), `supabase/`
 (migrations, Edge Functions, tests) and `infra/` hold the implementation. Setup-plan steps 3, 5,
 6 and 8 are built (app shell, identity, online shopping list, the one environment) and M1.1
-is built, offline outbox included. Next: onboarding (step 9, [specs/20](specs/20-onboarding.md),
-ADR-014 and ADR-015) or M1.2, which starts with household settings (specs/21); step 7 once
-the Apple and Google accounts exist.
+is built, offline outbox included. Onboarding (step 9, [specs/20](specs/20-onboarding.md),
+ADR-014 and ADR-015) has started: Sign in with Apple and Google are built (9.1), waiting for
+their client IDs and secrets on the server. Next: the rest of 9.1 (email code) and 9.2
+(households), or M1.2, which starts with household settings (specs/21).
 
 ## Architecture rules
 
@@ -88,14 +89,26 @@ operator and legal data only in `website/src/config/site.ts` (`TODO` values fail
 `cd website && npm run build`. When you add a page, add its route in both languages and its
 `paths` entry so `hreflang` and the sitemap stay right.
 
+**When a feature is finished or the next step changes, update the "Where we are" list in the
+same change** — `status` in `website/src/i18n/index.ts`, both languages, states `fertig`/`done`,
+`als Nächstes`/`up next`, `geplant`/`planned`. It is the public progress, written for
+families: features they can use, not setup-plan steps or milestone numbers. Keep it in step
+with the status line at the top of this file and the roadmap ([specs/13](specs/13-roadmap.md)).
+The live site changes only after `scripts/remote-web.sh deploy`.
+
 ## End-user documentation (`docs/`)
 
 VitePress site in German (root) and English (`/en/`), written for the family, not for
-developers (the specification is `specs/`). Screenshots come from the Flutter web demo
-(`app/lib/main_demo.dart`, in-memory data) driven by Playwright: `npm run docs:screenshots`
-regenerates every image in both languages; `npm run docs:dev` previews, `npm run docs:build`
-checks links. **When a screen or a label changes, update the matching page in both
-languages and regenerate the screenshots.** Playwright's Chromium needs
+developers (the specification is `specs/`), published at `https://wusel.goomba.ch/docs/` by
+`.github/workflows/docs.yml` on every push to `main`. Screenshots come from the Flutter web
+demo (`app/lib/main_demo.dart`, in-memory data) driven by Playwright
+(`docs/tools/screenshots.mjs`): every shot in both languages and both themes (`name.png`,
+`name-dark.png`). They are build output, not committed: `npm run docs:screenshots` makes
+them locally. Pages show them with `<Shot name="…" alt="…" />` (add `wide` for tablet and
+wall shots), never a plain `<img>`; `npm run docs:check` fails when a page uses a shot the
+script does not take. `npm run docs:dev` previews, `npm run docs:build` checks links.
+**When a screen or a label changes, update the matching page in both languages; a new
+screen gets its shot in `screenshots.mjs`.** Playwright's Chromium needs
 `sudo npx playwright install-deps chromium` once on the development machine.
 
 ## Localization
