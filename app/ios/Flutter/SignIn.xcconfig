@@ -1,4 +1,4 @@
 // Google's iOS OAuth client, reversed (specs/10 §4): the URL scheme its sign-in sheet
 // returns through (Info.plist). Not a secret. Keep in step with GOOGLE_IOS_CLIENT_ID in
 // app/env/*.json: com.googleusercontent.apps.<the part before .apps.googleusercontent.com>.
-GOOGLE_REVERSED_CLIENT_ID = com.googleusercontent.apps.REPLACE-WITH-IOS-CLIENT
+GOOGLE_REVERSED_CLIENT_ID = com.googleusercontent.apps.81490193668-1ek7pn55teu3gsb2isttgp8govb94396
