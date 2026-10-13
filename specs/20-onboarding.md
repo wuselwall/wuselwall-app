@@ -179,6 +179,11 @@ adult sees their methods (Apple, Google, email code, password, passkeys), adds a
 (manual identity linking, which also covers an Apple relay address), sets or changes a
 password, and removes any method but the last.
 
+A personal device is bound to its Auth session ([08](08-users-auth-permissions.md)), and
+Supabase answers a link with a *new* session. The app therefore links through the native
+sheet only, keeps its own session, signs the new one out at once and refreshes. On the web,
+and for Apple on Android, Settings says to link from the phone app instead.
+
 ## J1 — Start a family
 
 ```
@@ -468,8 +473,10 @@ Indicative. Migrations, functions and policies follow the rules in
 **Supabase Auth configuration.**
 - `enable_signup = true`, `enable_anonymous_sign_ins = false`, `enable_manual_linking = true`.
 - `[auth.email]`: `otp_length = 6`, `otp_expiry = 600`, `max_frequency = "60s"`.
-- `[auth.external.apple]` and `[auth.external.google]` enabled. Client IDs list the native
-  app identifiers *and* the web client. Secrets come from `supabase/.env`.
+- `[auth.external.apple]` and `[auth.external.google]` enabled on the home server and on Cloud.
+  Client IDs list the web client *and* the native app identifiers. Secrets come from the
+  stack's `.env` ([10 §4](10-deployment-and-ops.md#4-sign-in-providers-and-mail)). CLI stacks
+  keep them off: CI has no clients, and neither provider redirects to 127.0.0.1.
 - `[auth.rate_limit]` set deliberately: email sends, verifications and sign-ins per IP.
   These come on top of the Cloudflare rules (S9 in [19](19-security-and-architecture-review.md)).
 - `[auth.email.smtp]` pointing at the provider chosen in [Q41](14-open-questions.md).

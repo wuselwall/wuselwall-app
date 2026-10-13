@@ -131,6 +131,15 @@ const out = {
   SMTP_PASS: '',
   SMTP_SENDER_NAME: 'WuselWall',
 
+  // Sign in with Apple and Google (specs/10 §4), from supabase/.env when it has them; off
+  // otherwise. Later changes go through `scripts/remote-stack.sh set-env`.
+  APPLE_ENABLED: vars.WW_APPLE_CLIENT_IDS ? 'true' : 'false',
+  APPLE_CLIENT_IDS: vars.WW_APPLE_CLIENT_IDS ?? '',
+  APPLE_SECRET: vars.WW_APPLE_SECRET ?? '',
+  GOOGLE_ENABLED: vars.WW_GOOGLE_CLIENT_IDS ? 'true' : 'false',
+  GOOGLE_CLIENT_IDS: vars.WW_GOOGLE_CLIENT_IDS ?? '',
+  GOOGLE_CLIENT_SECRET: vars.WW_GOOGLE_CLIENT_SECRET ?? '',
+
   // Storage
   GLOBAL_S3_BUCKET: 'stub',
   REGION: 'stub',

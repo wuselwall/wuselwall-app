@@ -33,6 +33,11 @@ extension FailureL10n on Failure {
       'rate_limited' => l10n.errRateLimited,
       'mfa_required' => l10n.errMfaRequired,
       'session_invalid' => l10n.errorAuth,
+      'provider_failed' => l10n.errProviderFailed,
+      'signup_disabled' => l10n.errSignupDisabled,
+      'identity_already_exists' => l10n.errIdentityAlreadyExists,
+      'single_identity_not_deletable' => l10n.errLastSignInMethod,
+      'email_exists' => l10n.errEmailExists,
       _ => null,
     };
     if (byCode != null) return byCode;

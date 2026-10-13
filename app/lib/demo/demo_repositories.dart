@@ -3,7 +3,9 @@ import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
+import 'package:wuselwall/features/identity/data/sign_in_methods_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
+import 'package:wuselwall/features/identity/domain/sign_in_method.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_sync_model.dart';
@@ -90,6 +92,60 @@ class DemoIdentityRepository implements IdentityRepository {
   dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError(
     '${invocation.memberName} is not part of the demo',
   );
+}
+
+/// Apple and Google as on an iPhone: both offered, Apple already connected.
+class DemoSignInMethodsRepository implements SignInMethodsRepository {
+  final _linked = [
+    const SignInMethod(
+      identityId: 'demo-email',
+      provider: SignInMethodKind.email,
+      email: 'lukas@example.org',
+    ),
+    const SignInMethod(
+      identityId: 'demo-apple',
+      provider: SignInMethodKind.apple,
+      email: 'lukas@example.org',
+    ),
+  ];
+
+  @override
+  List<SignInProvider> available() => const [
+    SignInProvider.apple,
+    SignInProvider.google,
+  ];
+
+  @override
+  ProviderRoute? route(SignInProvider provider) => ProviderRoute.native;
+
+  @override
+  bool canLink(SignInProvider provider) => true;
+
+  @override
+  Future<Result<void>> signIn(SignInProvider provider) async => const Ok(null);
+
+  @override
+  Stream<Failure> authErrors() => const Stream.empty();
+
+  @override
+  Future<Result<List<SignInMethod>>> methods() async => Ok(List.of(_linked));
+
+  @override
+  Future<Result<bool>> link(SignInProvider provider) async {
+    _linked.add(
+      SignInMethod(
+        identityId: 'demo-${provider.name}',
+        provider: provider.kind,
+      ),
+    );
+    return const Ok(true);
+  }
+
+  @override
+  Future<Result<void>> unlink(String identityId) async {
+    _linked.removeWhere((m) => m.identityId == identityId);
+    return const Ok(null);
+  }
 }
 
 class DemoShoppingRepository implements ShoppingRepository {

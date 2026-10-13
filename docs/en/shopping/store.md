@@ -2,14 +2,14 @@
 
 The list is built for shopping: big targets, usable one-handed and with gloves.
 
-<img class="shot" src="/screenshots/en/shopping-phone.png" alt="Shopping list in the store">
+<Shot name="shopping-phone" alt="Shopping list in the store" />
 
 ## Ticking
 
 - Tap anywhere on a row (at least 56 pixels tall) to tick an item.
 - Ticked items don't disappear; they move to the collapsed **"In the trolley"** section at the end. An accidental tick is undone with one tap.
 
-<img class="shot" src="/screenshots/en/shopping-trolley.png" alt="The expanded “In the trolley” section">
+<Shot name="shopping-trolley" alt="The expanded “In the trolley” section" />
 
 ## Shopping at the same time
 

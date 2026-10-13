@@ -1,6 +1,17 @@
 # Sicherheit
 
-Die Sicherheitseinstellungen gibt es nur auf dem **persönlichen Handy** eines Erziehungsberechtigten: **Einstellungen → Sicherheit**.
+Anmeldung und Sicherheit gibt es nur auf dem **persönlichen Handy** eines Erziehungsberechtigten: **Einstellungen → Anmeldung** und **Einstellungen → Sicherheit**.
+
+## Anmeldung
+
+Hier steht, womit du dich anmelden kannst: **E-Mail und Passwort**, **Apple**, **Google**.
+
+<Shot name="settings-sign-in" alt="Einstellungen → Anmeldung" />
+
+- **Verbinden**: Tippe bei Apple oder Google auf **Verbinden** und bestätige im Fenster von Apple bzw. Google. Ab dann kommst du auch mit diesem Konto hinein, auf jedem Gerät. Verbinden geht nur in der App auf dem Handy, nicht im Browser.
+- **Entfernen**: nimmt eine Methode wieder weg. Die letzte bleibt immer, damit du dich nicht aussperrst.
+
+Apple und Google erfahren dabei, dass du WuselWall nutzt, und geben deinen Namen und deine E-Mail-Adresse weiter – sonst nichts. WuselWall fragt bei Google nie nach Kalender oder Kontakten.
 
 ## Zwei-Faktor-Anmeldung
 

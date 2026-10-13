@@ -5,6 +5,11 @@
 name: release-mobile
 on:
   workflow_dispatch:
+    inputs:
+      renew_profile:
+        description: Renew the App Store profile (once, after a capability changed on the App ID)
+        type: boolean
+        default: false
   push:
     tags: ['v*.*.*']
 concurrency:
@@ -19,7 +24,7 @@ jobs:
     runs-on: macos-26
     defaults: { run: { working-directory: app } }
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: subosito/flutter-action@v2
         with: { flutter-version-file: app/pubspec.yaml, cache: true }
       - uses: ruby/setup-ruby@v1
@@ -39,7 +44,8 @@ jobs:
           ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
-      - uses: actions/upload-artifact@v4
+          MATCH_RENEW: ${{ inputs.renew_profile && '1' || '' }}
+      - uses: actions/upload-artifact@v7
         with:
           name: wuselwall-ipa
           path: app/build/ios/ipa/*.ipa

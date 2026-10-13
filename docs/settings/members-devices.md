@@ -2,7 +2,7 @@
 
 Das gehört den **Erziehungsberechtigten**. Öffne dazu auf deinem Handy das Zahnrad oben rechts (**Einstellungen**).
 
-<img class="shot" src="/screenshots/de/settings-phone.png" alt="Einstellungen mit Mitgliedern und Geräten">
+<Shot name="settings-phone" alt="Einstellungen mit Mitgliedern und Geräten" />
 
 ## Mitglied hinzufügen
 
@@ -15,8 +15,8 @@ Tippe auf **Mitglied hinzufügen** und gib einen **Namen** ein. WuselWall vergib
 3. Auf dem neuen Gerät gibst du den Code ein oder scannst den QR-Code ([Einrichten](/guide/setup#_3-gerat-mit-code-einrichten)).
 
 <div class="shots">
-<img class="shot" src="/screenshots/de/settings-add-device.png" alt="Dialog „Gerät hinzufügen“">
-<img class="shot" src="/screenshots/de/settings-code.png" alt="Der erzeugte Code mit QR-Code">
+<Shot name="settings-add-device" alt="Dialog „Gerät hinzufügen“" />
+<Shot name="settings-code" alt="Der erzeugte Code mit QR-Code" />
 </div>
 
 Der Code gilt **10 Minuten** und funktioniert **einmal**.

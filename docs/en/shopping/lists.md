@@ -2,7 +2,7 @@
 
 Not everything comes from the same shop. WuselWall therefore has several lists, such as **Supermarket**, **Drugstore** and **Hardware store**. Pick one at the top; the number after the name shows how many items are still open.
 
-<img class="shot" src="/screenshots/en/shopping-new-list.png" alt="The “New list” dialog">
+<Shot name="shopping-new-list" alt="The “New list” dialog" />
 
 ## Creating a list
 
