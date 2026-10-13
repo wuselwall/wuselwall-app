@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/register_labels.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
@@ -11,6 +10,7 @@ import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/qr_code_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
@@ -696,10 +696,9 @@ class _TotpEnrolDialogState extends ConsumerState<_TotpEnrolDialog> {
             children: [
               Text(l10n.totpScanBody),
               const SizedBox(height: Tokens.space3),
-              Container(
-                color: Colors.white,
-                padding: const EdgeInsets.all(Tokens.space3),
-                child: QrImageView(data: widget.enrolment.uri, size: 200),
+              QrCodeView(
+                data: widget.enrolment.uri,
+                semanticsLabel: l10n.totpQrLabel,
               ),
               const SizedBox(height: Tokens.space3),
               SelectableText(

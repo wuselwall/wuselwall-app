@@ -406,6 +406,9 @@ class AppLocalizationsDe extends AppLocalizations {
       'Scanne diesen Code mit einer Authenticator-App und gib dann den angezeigten 6-stelligen Code ein.';
 
   @override
+  String get totpQrLabel => 'QR-Code zum Einrichten der Authenticator-App';
+
+  @override
   String get passkeyTitle => 'Passkey';
 
   @override

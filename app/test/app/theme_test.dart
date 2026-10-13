@@ -142,6 +142,22 @@ void main() {
     });
   });
 
+  test('QR codes are dark on light with strong contrast in every shade', () {
+    for (final shade in Shade.values) {
+      final ww = WwColors(shade: shade);
+      expect(
+        ww.qrInk.computeLuminance(),
+        lessThan(ww.qrPaper.computeLuminance()),
+        reason: shade.name,
+      );
+      expect(
+        contrast(ww.qrInk, ww.qrPaper),
+        greaterThanOrEqualTo(7),
+        reason: '${shade.name}: ${contrast(ww.qrInk, ww.qrPaper)} : 1',
+      );
+    }
+  });
+
   group('night', () {
     test('runs from 21:00 to 06:00', () {
       expect(isNightAt(DateTime(2026, 10, 12, 20, 59)), isFalse);
