@@ -403,6 +403,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Scan this code with an authenticator app, then enter the 6-digit code it shows.';
 
   @override
+  String get totpQrLabel => 'QR code for setting up the authenticator app';
+
+  @override
   String get passkeyTitle => 'Passkey';
 
   @override

@@ -1,5 +1,5 @@
 # WuselWall website: Astro, prerendered pages served by the Node standalone adapter.
-FROM node:22-alpine AS build
+FROM node:22-alpine@sha256:0a7108bf6c7bf5de370ffb1a3ed6be93d405b43ff159f681a8d18c0e2bc2e402 AS build
 WORKDIR /site
 COPY package.json package-lock.json ./
 RUN npm ci
@@ -10,7 +10,7 @@ ARG LEGAL_STRICT=0
 ENV LEGAL_STRICT=$LEGAL_STRICT
 RUN npm run build
 
-FROM node:22-alpine
+FROM node:22-alpine@sha256:0a7108bf6c7bf5de370ffb1a3ed6be93d405b43ff159f681a8d18c0e2bc2e402
 WORKDIR /site
 ENV NODE_ENV=production HOST=0.0.0.0 PORT=4321
 COPY --from=build /site/dist ./dist

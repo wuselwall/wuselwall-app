@@ -24,10 +24,13 @@ jobs:
     runs-on: macos-26
     defaults: { run: { working-directory: app } }
     steps:
-      - uses: actions/checkout@v7
-      - uses: subosito/flutter-action@v2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with: { flutter-version-file: app/pubspec.yaml, cache: true }
-      - uses: ruby/setup-ruby@v1
+      # Exactly the packages in pubspec.lock, checked against their hashes, before the
+      # signing secrets come near the build.
+      - run: flutter pub get --enforce-lockfile
+      - uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
         with: { ruby-version: '3.3', bundler-cache: true, working-directory: app/ios }
       - run: xcodebuild -version
       # A tag sets the version name; a manual run keeps the one in pubspec.yaml. The run
@@ -45,7 +48,7 @@ jobs:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
           MATCH_RENEW: ${{ inputs.renew_profile && '1' || '' }}
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: wuselwall-ipa
           path: app/build/ios/ipa/*.ipa

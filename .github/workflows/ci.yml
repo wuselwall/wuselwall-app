@@ -1,5 +1,5 @@
 # Pull requests get the fast checks: format, analyse, unit and widget tests, the website
-# build. A tag v*.*.* (the release, next to release-mobile.yml and build-android.yml) or
+# build, the dependency audit. A tag v*.*.* (the release, next to release-mobile.yml and build-android.yml) or
 # "Run workflow" adds the web build and the backend: every migration from zero, pgTAP, the
 # integration test. Run it by hand on a branch before its migration goes to Unraid (specs/10).
 name: ci
@@ -19,10 +19,10 @@ jobs:
     runs-on: ubuntu-latest
     defaults: { run: { working-directory: app } }
     steps:
-      - uses: actions/checkout@v7
-      - uses: subosito/flutter-action@v2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with: { flutter-version-file: app/pubspec.yaml, cache: true }
-      - run: flutter pub get
+      - run: flutter pub get --enforce-lockfile
       - run: flutter gen-l10n
       - run: dart format --output=none --set-exit-if-changed lib test
       - run: flutter analyze --fatal-infos
@@ -34,8 +34,8 @@ jobs:
     runs-on: ubuntu-latest
     defaults: { run: { working-directory: website } }
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with: { node-version: 22, cache: npm, cache-dependency-path: website/package-lock.json }
       - run: npm ci
       - run: npm run build   # placeholders in the Impressum are allowed here; remote-web.sh deploy refuses them
@@ -45,12 +45,29 @@ jobs:
           grep -q 'hreflang="de-CH"' dist/client/en/index.html
           test -s dist/client/sitemap-index.xml
 
+  # Known vulnerabilities in every lockfile (specs/11, T5). Accepted ones, each with a
+  # reason and an expiry, live in osv-scanner.toml next to the lockfile.
+  audit:
+    runs-on: ubuntu-latest
+    env:
+      OSV_VERSION: v2.6.0
+      OSV_SHA256: ca69b3d3cd08f889a49dc0a383122f71cc528b83803671df5fd874d97485b108
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: |
+          curl -fsSLo osv-scanner "https://github.com/google/osv-scanner/releases/download/$OSV_VERSION/osv-scanner_linux_amd64"
+          echo "$OSV_SHA256  osv-scanner" | sha256sum -c
+          chmod +x osv-scanner
+          ./osv-scanner scan source --lockfile=app/pubspec.lock \
+            --lockfile=app/ios/Gemfile.lock --lockfile=package-lock.json \
+            --lockfile=website/package-lock.json
+
   backend:
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with: { node-version: 22, cache: npm }
       - run: npm ci
       # config.toml reads its keys from supabase/.env (ADR-013). This stack is throwaway,
@@ -67,7 +84,7 @@ jobs:
       - run: npx supabase db lint --level warning
       # The app's repositories against the real stack: identity, enrolment, shopping,
       # realtime. Needs studio-less start from above; uses the public local dev key.
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with: { flutter-version-file: app/pubspec.yaml, cache: true }
-      - run: flutter pub get && flutter test test/integration --dart-define-from-file=env/ci.json
+      - run: flutter pub get --enforce-lockfile && flutter test test/integration --dart-define-from-file=env/ci.json
         working-directory: app

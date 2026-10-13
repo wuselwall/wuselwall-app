@@ -836,6 +836,12 @@ abstract class AppLocalizations {
   /// **'Scan this code with an authenticator app, then enter the 6-digit code it shows.'**
   String get totpScanBody;
 
+  /// No description provided for @totpQrLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'QR code for setting up the authenticator app'**
+  String get totpQrLabel;
+
   /// No description provided for @passkeyTitle.
   ///
   /// In en, this message translates to:

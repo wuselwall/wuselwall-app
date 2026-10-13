@@ -1,7 +1,7 @@
 {
   "devDependencies": {
     "playwright": "^1.64.0",
-    "sharp": "^0.33.5",
+    "sharp": "^0.35.5",
     "supabase": "^2.120.0",
     "vitepress": "^1.6.4"
   },
