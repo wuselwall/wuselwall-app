@@ -2,15 +2,17 @@
   "name": "wuselwall-website",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22.12"
+  },
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
     "start": "node dist/server/entry.mjs"
   },
   "dependencies": {
-    "@astrojs/node": "9.5.5",
+    "@astrojs/node": "11.1.7",
     "@astrojs/sitemap": "3.7.4",
-    "astro": "5.18.2"
+    "astro": "7.3.8"
   }
 }

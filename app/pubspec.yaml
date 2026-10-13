@@ -11,7 +11,7 @@ environment:
 
 dependencies:
   characters: ^1.4.0
-  connectivity_plus: ^6.1.0
+  connectivity_plus: ^7.3.2
   crypto: ^3.0.7
   drift: ^2.35.2
   drift_flutter: ^0.3.1
@@ -20,16 +20,16 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_riverpod: ^3.0.0
-  flutter_secure_storage: ^9.2.2
-  go_router: ^16.0.0
+  flutter_secure_storage: ^11.2.0
+  go_router: ^18.0.2
   google_sign_in: ^7.2.0
   http: ^1.2.0
   intl: any
   mobile_scanner: ^7.4.2
   passkeys: ^2.23.1
-  qr_flutter: ^4.1.0
+  qr: ^4.0.0
   sign_in_with_apple: ^8.2.0
-  supabase_flutter: ^2.0.0
+  supabase_flutter: ^2.18.3
   uuid: ^4.6.0
 
 dev_dependencies:
