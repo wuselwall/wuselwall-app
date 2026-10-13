@@ -15,3 +15,5 @@
 .shot.wide { max-width: 100%; border-radius: 10px; }
 .shots { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
 .shots .shot { margin: 0.5rem 0; max-width: 260px; }
+/* <Shot> renders both themes; VitePress sets .dark on <html>. */
+.dark .shot-light, html:not(.dark) .shot-dark { display: none; }

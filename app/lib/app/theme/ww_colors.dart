@@ -22,6 +22,8 @@ class WwColors extends ThemeExtension<WwColors> {
   Color get onWarningContainer => _c.onWarningContainer;
   Color get points => Palette.points;
   Color get onPoints => Palette.onPoints;
+  ProviderButtonColors get appleButton => ProviderBrand.apple(shade);
+  ProviderButtonColors get googleButton => ProviderBrand.google(shade);
 
   /// A member's colours for this shade, from their stored `colour_hex`.
   MemberColors member(Color stored) {

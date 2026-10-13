@@ -17,6 +17,7 @@ import 'package:wuselwall/core/supabase/supabase_providers.dart';
 import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/demo/demo_repositories.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
+import 'package:wuselwall/features/identity/data/sign_in_methods_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 
@@ -82,6 +83,9 @@ void main() {
         ),
         identityRepositoryProvider.overrideWithValue(
           DemoIdentityRepository(device: _device(scenario)),
+        ),
+        signInMethodsRepositoryProvider.overrideWithValue(
+          DemoSignInMethodsRepository(),
         ),
         shoppingRepositoryProvider.overrideWithValue(DemoShoppingRepository()),
         householdInvalidationsProvider.overrideWith(

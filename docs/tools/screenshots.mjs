@@ -1,7 +1,8 @@
 // Takes the user documentation's screenshots from the Flutter web demo build
 // (app/lib/main_demo.dart, in-memory data, no backend):
 //   npm run docs:screenshots
-// Each shot is rendered in German and English, in the light theme unless stated.
+// Each shot is rendered in German and English, and in the light (name.png) and dark
+// (name-dark.png) theme: the docs' <Shot> component shows the one matching the reader's.
 // Flutter draws to a canvas, so the script switches on the accessibility tree
 // (Flutter's semantics) and drives the page by the same labels a screen reader gets.
 import { chromium } from 'playwright';
@@ -75,7 +76,7 @@ const longPress = async (page, locator) => {
 };
 
 /**
- * name: file name · scenario · viewport · scheme · steps(page, t)
+ * name: file name · scenario · viewport · steps(page, t)
  * Steps that fail log a warning and the shot is still taken, so one fragile step does
  * not lose the others.
  */
@@ -85,7 +86,6 @@ const shots = [
   { name: 'setup-enrol', scenario: 'setup', viewport: PHONE, steps: async (p, t) => press(p, t.enrol) },
   { name: 'setup-sign-in', scenario: 'setup', viewport: PHONE, steps: async (p, t) => press(p, t.signIn) },
   { name: 'shopping-phone', scenario: 'adult', viewport: PHONE },
-  { name: 'shopping-phone-dark', scenario: 'adult', viewport: PHONE, scheme: 'dark' },
   { name: 'shopping-search', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await p.getByRole('textbox', { name: t.search }).fill('mil'); await settle(p); } },
   { name: 'shopping-new-list', scenario: 'adult', viewport: PHONE, steps: async (p, t) => tapNode(p, 'checkbox', t.newList) },
   { name: 'shopping-laptop', scenario: 'adult', viewport: TABLET },
@@ -97,6 +97,7 @@ const shots = [
   { name: 'wall-shopping', scenario: 'kiosk', viewport: WALL, steps: async (p, t) => { await press(p, t.lotta); } },
   { name: 'settings-phone', scenario: 'adult', viewport: PHONE, steps: async (p, t) => press(p, t.settings) },
   { name: 'settings-add-device', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await press(p, t.settings); await press(p, t.addDevice); } },
+  { name: 'settings-sign-in', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await press(p, t.settings); await scrollDown(p, 700); } },
   { name: 'settings-code', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await press(p, t.settings); await press(p, t.addDevice); await p.getByRole('textbox', { name: t.deviceName }).fill('Küchen-Tablet'); await press(p, t.createCode); } },
 ];
 
@@ -112,7 +113,7 @@ for (const lang of ['de', 'en']) {
     if (only.length && !only.includes(shot.name)) continue;
     const ctx = await browser.newContext({
       viewport: shot.viewport, deviceScaleFactor: 2, locale: lang === 'de' ? 'de-DE' : 'en-US',
-      colorScheme: shot.scheme ?? 'light', timezoneId: 'Europe/Berlin',
+      colorScheme: 'light', timezoneId: 'Europe/Berlin',
     });
     const page = await ctx.newPage();
     try {
@@ -123,10 +124,18 @@ for (const lang of ['de', 'en']) {
       console.warn(`! ${lang}/${shot.name}: ${e.message.split('\n')[0]}`);
     }
     await page.screenshot({ path: path.join(out, lang, `${shot.name}.png`) });
+    // The app follows the browser's scheme live, so the same state is shot again in dark.
+    await page.emulateMedia({ colorScheme: 'dark' });
+    await settle(page, 1000);
+    await page.screenshot({ path: path.join(out, lang, `${shot.name}-dark.png`) });
     console.log(`${lang}/${shot.name}`);
     await ctx.close();
   }
 }
 await browser.close();
 server.close();
-if (failed) console.warn(`${failed} step(s) failed — check the images above before committing.`);
+if (failed) {
+  console.warn(`${failed} step(s) failed — check the images above.`);
+  // In CI a failed step would publish a wrong picture.
+  if (process.env.CI) process.exit(1);
+}

@@ -2,7 +2,7 @@
 
 This belongs to the **guardians**. On your phone, open the gear at the top right (**Settings**).
 
-<img class="shot" src="/screenshots/en/settings-phone.png" alt="Settings with members and devices">
+<Shot name="settings-phone" alt="Settings with members and devices" />
 
 ## Adding a member
 
@@ -15,8 +15,8 @@ Tap **Add member** and enter a **name**. WuselWall assigns the next free **colou
 3. On the new device, enter the code or scan the QR code ([Setting up](/en/guide/setup#_3-set-up-a-device-with-a-code)).
 
 <div class="shots">
-<img class="shot" src="/screenshots/en/settings-add-device.png" alt="The “Add device” dialog">
-<img class="shot" src="/screenshots/en/settings-code.png" alt="The generated code with its QR code">
+<Shot name="settings-add-device" alt="The “Add device” dialog" />
+<Shot name="settings-code" alt="The generated code with its QR code" />
 </div>
 
 The code is valid for **10 minutes** and works **once**.

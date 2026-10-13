@@ -25,14 +25,14 @@ nothing is tested twice at an expensive layer if a cheap one already covers it.
 
 | # | Layer | Tool | Lives in | Runs | Status |
 |---|---|---|---|---|---|
-| 1 | Database: RLS, `api` functions, error codes | pgTAP | `supabase/tests/` | Every PR | Exists |
-| 2 | Edge Functions: ICS, recurrence, projection | `deno test` | `supabase/functions/**` | Every PR | When the first function lands |
+| 1 | Database: RLS, `api` functions, error codes | pgTAP | `supabase/tests/` | Tag or by hand | Exists |
+| 2 | Edge Functions: ICS, recurrence, projection | `deno test` | `supabase/functions/**` | Tag or by hand | When the first function lands |
 | 3 | Dart unit: domain, error mapper, `Result` | `flutter test` | `app/test/core`, `…/domain` | Every PR | Exists |
 | 4 | Widget: screens with fake repositories | `flutter test` | `app/test/features`, `app/test/app` | Every PR | Exists — extend (below) |
 | 5 | Golden: pixels per locale × theme × form factor | `flutter test` + `matchesGoldenFile` | `app/test/golden` | Every PR | New |
-| 6 | Repository integration: Dart repositories against a real stack | `flutter test --tags integration` | `app/test/integration` | Every PR (`backend` job) | Exists |
+| 6 | Repository integration: Dart repositories against a real stack | `flutter test --tags integration` | `app/test/integration` | Tag or by hand (`backend` job) | Exists |
 | 7 | On-device E2E: the real app on a simulator, emulator or phone | `integration_test` + **Patrol** | `app/integration_test/` | Nightly (Android), before a release (iOS, devices) | New |
-| 8 | Web smoke: the release web build in a browser | **Playwright** | `e2e/web/` | Every PR | New, small |
+| 8 | Web smoke: the release web build in a browser | **Playwright** | `e2e/web/` | Tag or by hand | New, small |
 | 9 | Manual device check: what automation cannot reach | Checklist | [`specs/release-checklist.md`](release-checklist.md) | Before promoting a TestFlight/Play build | New |
 
 Note the naming: `app/test/integration/` stays the host-VM repository tests (layer 6).
@@ -169,7 +169,8 @@ build is promoted to the family, run [`specs/release-checklist.md`](release-chec
 
 | When | Where | What |
 |---|---|---|
-| Every PR | GitHub Actions, `ubuntu-latest` (`ci.yml`) | Layers 1–6 and 8. Target: under 10 minutes. |
+| Every PR | GitHub Actions, `ubuntu-latest` (`ci.yml`) | Layers 3–5. |
+| A tag `v*.*.*`, or "Run workflow" on a branch (always before a migration) | GitHub Actions, `ubuntu-latest` (`ci.yml`) | Layers 1–6 and 8. Target: under 10 minutes. |
 | Nightly on `main` | GitHub Actions, `ubuntu-latest` with KVM, Android Emulator (`e2e.yml`) | Layer 7, hermetic and backed, on a phone AVD and a 10" tablet AVD |
 | Before a release | The MacBook: `scripts/e2e.sh ios` | Layer 7 on iPhone and iPad simulators, then on the physical iPhone, iPad and Samsung over USB |
 | Before promoting a build | The three devices, by hand | Layer 9 |

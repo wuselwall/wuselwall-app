@@ -2,14 +2,14 @@
 
 Die Liste ist für den Einkauf gebaut: große Flächen, einhändig und mit Handschuhen zu bedienen.
 
-<img class="shot" src="/screenshots/de/shopping-phone.png" alt="Einkaufsliste im Laden">
+<Shot name="shopping-phone" alt="Einkaufsliste im Laden" />
 
 ## Abhaken
 
 - Tippe irgendwo auf die Zeile (mindestens 56 Pixel hoch), um einen Artikel abzuhaken.
 - Abgehakte Artikel wandern nicht weg, sondern in den eingeklappten Bereich **„Im Wagen“** am Ende. So lässt sich ein versehentliches Abhaken mit einem Tipp rückgängig machen.
 
-<img class="shot" src="/screenshots/de/shopping-trolley.png" alt="Aufgeklappter Bereich „Im Wagen“">
+<Shot name="shopping-trolley" alt="Aufgeklappter Bereich „Im Wagen“" />
 
 ## Gleichzeitig einkaufen
 

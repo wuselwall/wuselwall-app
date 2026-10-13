@@ -19,3 +19,6 @@ docs/.vitepress/dist/
 infra/supabase/volumes/db/data/
 infra/supabase/volumes/storage/*
 !infra/supabase/volumes/storage/.gitkeep
+
+# The docs screenshots are build output (npm run docs:screenshots, CI)
+docs/public/screenshots/
