@@ -24,7 +24,7 @@ remain an M3+ option if a spoken phrase stops being enough.
 
 1. Ask for Input (text) → "Was brauchst du?"
 2. Get Contents of URL
-   - `POST https://wusel.example.org/functions/v1/shortcuts/shopping/add`
+   - `POST https://api.wuselwall.app/functions/v1/shortcuts/shopping/add`
    - Header `Authorization: Bearer <shortcut token>`
    - JSON body `{ "text": <Provided Input>, "clientUuid": <UUID> }`
 3. Show Result → "Auf der Liste."

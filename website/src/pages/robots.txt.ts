@@ -1,9 +1,9 @@
 import type { APIRoute } from 'astro';
 import { site } from '../config/site';
 
-// /app/ is the Flutter web app (a different program, behind a sign-in): keep it out of search.
+// The web app is on its own host (web.wuselwall.app) with its own robots.txt (app/web/).
 export const GET: APIRoute = () =>
   new Response(
-    `User-agent: *\nAllow: /\nDisallow: /app/\n\nSitemap: ${site.url}/sitemap-index.xml\n`,
+    `User-agent: *\nAllow: /\n\nSitemap: ${site.url}/sitemap-index.xml\n`,
     { headers: { 'content-type': 'text/plain; charset=utf-8' } },
   );

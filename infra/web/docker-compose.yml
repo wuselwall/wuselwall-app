@@ -3,7 +3,7 @@
 # on its own (specs/10#updating-one-part). Driven by scripts/remote-web.sh.
 #
 # Exposure: like the Supabase gateway, the site listens on the Docker bridge address only.
-# nginx (infra/nginx/wusel.example.org.conf) reaches it, the home network does not.
+# nginx (infra/nginx/wuselwall.app.conf) reaches it, the home network does not.
 
 name: wuselwall-web
 

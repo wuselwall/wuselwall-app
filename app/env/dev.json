@@ -1,6 +1,6 @@
 {
   "ENV": "dev",
-  "SUPABASE_URL": "https://wusel.example.org",
+  "SUPABASE_URL": "https://api.wuselwall.app",
   "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_REDACTED",
   "APPLE_SIGN_IN": true,
   "GOOGLE_WEB_CLIENT_ID": "81490193668-hsfddbkmfgtv800qqv3bv8802ds9i1ca.apps.googleusercontent.com",

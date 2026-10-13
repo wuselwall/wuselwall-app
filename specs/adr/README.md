@@ -19,9 +19,10 @@ editing it. The value is in the trail.
 | [010](ADR-010-flutter-and-self-hosted-supabase.md) | Flutter clients on a self-hosted Supabase backend | Accepted, amended by 012, 013, 014 and 015 |
 | [011](ADR-011-native-distribution-and-ci-cd.md) | Native app distribution (TestFlight, Play internal) and the CI/CD pipeline | Accepted, amended by 012, 013, 014 and 015 |
 | [012](ADR-012-product-name.md) | Product name WuselWall, its identifiers, logo and mascot | Accepted |
-| [013](ADR-013-one-self-hosted-environment.md) | One self-hosted environment on the home server; further tenants on hosted Supabase | Accepted, amended by 014, superseded in part by 015 |
+| [013](ADR-013-one-self-hosted-environment.md) | One self-hosted environment on the home server; further tenants on hosted Supabase | Accepted, amended by 014 and 017, superseded in part by 015 |
 | [014](ADR-014-self-service-onboarding.md) | Self-service households; adults sign in with Apple, Google or email; devices pair from a parent's phone | Accepted, amended by 015 |
 | [015](ADR-015-saas-and-self-hosted-flavours.md) | Two flavours: WuselWall Cloud on hosted Supabase, and self-hosted; public store listings | Accepted |
-| [016](ADR-016-public-website.md) | A public website at the root (Astro, own compose project); the Flutter web app moves to /app/ | Accepted |
+| [016](ADR-016-public-website.md) | A public website at the root (Astro, own compose project); the Flutter web app moves to /app/ | Accepted, superseded in part by 017 |
+| [017](ADR-017-wuselwall-app-domain.md) | The domain wuselwall.app: website, web app (`web.`) and API (`api.`) on their own hosts | Accepted |
 
 Format: Context · Decision · Alternatives considered · Consequences.

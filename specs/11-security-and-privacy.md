@@ -47,9 +47,10 @@ insiders. If a threat model does not exclude anything it is not a threat model.
 
 - **Only 443 is forwarded** from the router, to nginx. The DNS record is proxied by
   Cloudflare, so the home address is not published in DNS.
-- **nginx forwards exactly four API prefixes** to Kong
-  ([`infra/nginx/wusel.example.org.conf`](../infra/nginx/wusel.example.org.conf)); Kong's
-  dashboard, the `/pg/` metadata API and everything else answer 404.
+- **nginx forwards exactly four API prefixes** to the gateway, on `api.wuselwall.app`
+  (and, until old app builds are gone, on `wusel.example.org`)
+  ([`infra/nginx/wuselwall.app.conf`](../infra/nginx/wuselwall.app.conf)); Studio, the
+  `/pg/` metadata API and everything else answer 404.
 - **Postgres (127.0.0.1:54422) and Studio (behind the gateway, reached by SSH tunnel) are never forwarded or proxied.**
   The CLI stack publishes them on the home network only; anyone on the home wifi can reach
   them, which is accepted for a household network and must not be extended.

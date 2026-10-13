@@ -1,6 +1,6 @@
 # A signed APK for the family's Android devices, installed by hand until the Play
 # internal track exists (specs/16, step 7). scripts/deploy-apk.sh publishes it at
-# https://wusel.example.org/download/wuselwall.apk. A tag v*.*.* builds it, like
+# https://wuselwall.app/download/wuselwall.apk. A tag v*.*.* builds it, like
 # release-mobile.yml; "Run workflow" builds the pubspec version from any branch.
 name: build-android
 on:

@@ -26,7 +26,7 @@ nginx forwards only the API paths.
                 ┌────────▼─────────┐
                 │      nginx       │  path allow-list, WebSocket upgrade
                 └───┬──────────┬───┘
-   wusel.example.org  │          │  MCP host (M2)
+api.wuselwall.app │          │  MCP host (M2)
    /auth/v1 /rest/v1│          │
    /realtime/v1     │          │
    /functions/v1    │          │
@@ -105,7 +105,7 @@ wuselwall/
 │  ├─ l10n/app_en.arb  app_de.arb   every user-facing string, in both languages
 │  ├─ test/                    unit and widget tests
 │  ├─ integration_test/        on-device flows (later)
-│  ├─ env/                     dev.json (wusel.example.org), ci.json — --dart-define-from-file
+│  ├─ env/                     dev.json (api.wuselwall.app), ci.json — --dart-define-from-file
 │  ├─ android/  ios/  web/     platform shells; fastlane/ inside android/ and ios/
 ├─ supabase/
 │  ├─ config.toml              local stack configuration (Supabase CLI)
@@ -117,7 +117,7 @@ wuselwall/
 │  ├─ tests/                   pgTAP: one file per module, RLS tests for every table
 │  └─ seed.sql                 a development household
 ├─ infra/
-│  ├─ nginx/                   the wusel.example.org site file for the home server's nginx
+│  ├─ nginx/                   the wuselwall.app site file for the home server's nginx
 │  ├─ web/                     compose project for the website container (ADR-016)
 │  └─ backup/                  backup.sh, restore-drill.sh (run on the home server)
 ├─ website/                    Astro site: landing page, Impressum, Datenschutz (ADR-016)

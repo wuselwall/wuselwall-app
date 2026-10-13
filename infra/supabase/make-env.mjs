@@ -83,13 +83,15 @@ const out = {
   S3_PROTOCOL_ACCESS_KEY_SECRET: hex(32),
 
   // URLs
-  SUPABASE_PUBLIC_URL: 'https://wusel.example.org',
-  API_EXTERNAL_URL: 'https://wusel.example.org/auth/v1',
-  // Where GoTrue's e-mail links land: the web app, not the landing page.
-  SITE_URL: 'https://wusel.example.org/app/',
-  ADDITIONAL_REDIRECT_URLS: 'https://127.0.0.1:3000,ch.goomba.wuselwall://login-callback/',
-  PASSKEY_RP_ID: 'wusel.example.org',
-  PASSKEY_RP_ORIGINS: 'https://wusel.example.org',
+  SUPABASE_PUBLIC_URL: 'https://api.wuselwall.app',
+  API_EXTERNAL_URL: 'https://api.wuselwall.app/auth/v1',
+  // Where GoTrue's e-mail links land: the web app, not the website (ADR-017).
+  SITE_URL: 'https://web.wuselwall.app/',
+  ADDITIONAL_REDIRECT_URLS: 'https://web.wuselwall.app/**,https://127.0.0.1:3000,ch.goomba.wuselwall://login-callback/',
+  // The registrable domain, so a passkey serves the web app and (through the website's
+  // /.well-known/ files) the native apps alike.
+  PASSKEY_RP_ID: 'wuselwall.app',
+  PASSKEY_RP_ORIGINS: 'https://web.wuselwall.app',
 
   // Ports (docker-compose.wuselwall.yml)
   GATEWAY_BIND: '172.17.0.1',
@@ -124,7 +126,7 @@ const out = {
   MAILER_URLPATHS_RECOVERY: '/auth/v1/verify',
   MAILER_URLPATHS_EMAIL_CHANGE: '/auth/v1/verify',
   // No SMTP yet: nothing sends mail today. Set a real relay before e-mail codes ship.
-  SMTP_ADMIN_EMAIL: 'admin@wusel.example.org',
+  SMTP_ADMIN_EMAIL: 'noreply@example.org',
   SMTP_HOST: 'localhost',
   SMTP_PORT: '25',
   SMTP_USER: '',

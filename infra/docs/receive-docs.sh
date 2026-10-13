@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Receives a build of the user documentation (docs/) on the home server and publishes it,
-# where nginx serves it at https://wusel.example.org/docs/ (alias .../wuselwall-docs/current/).
+# where nginx serves it at https://wuselwall.app/docs/ (alias .../wuselwall-docs/current/).
 #
 # It is the forced command of the CI deploy key in root's authorized_keys, so that key can
 # do nothing but this, whatever command the client asks for:

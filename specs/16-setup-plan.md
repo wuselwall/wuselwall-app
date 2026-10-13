@@ -48,7 +48,7 @@ accounts from step 0, which is why those are applied for first.
 | A physical Android device | Running the app | Use wireless debugging (`adb pair` / `adb connect`) — USB and the Android emulator are both awkward from WSL2 |
 
 *Since [ADR-013](adr/ADR-013-one-self-hosted-environment.md) the stack runs on the home
-server and phones reach it at `https://wusel.example.org`, so the two WSL traps below only
+server and phones reach it at `https://api.wuselwall.app`, so the two WSL traps below only
 matter for a throwaway stack on the laptop.*
 
 Two WSL-specific traps worth solving on day one:
@@ -72,7 +72,8 @@ and no Xcode debugger. See [Q35](14-open-questions.md).
 | **App Store Connect**: the app record, bundle ID `ch.goomba.wuselwall`, an **API key** (App Manager role) | Uploads from CI without a password or 2FA prompt | — | Minutes, after the programme is active |
 | **Google Play Console** (personal) | Internal testing track for the wall tablet and Android phones | $25 once | Identity verification can take several days |
 | **Second private GitHub repository** `wuselwall-certificates` | `fastlane match` storage for iOS signing | — | Minutes |
-| Domain `example.org` and Cloudflare | The public URL `wusel.example.org` | already owned | in place |
+| Domain `wuselwall.app` and Cloudflare ([ADR-017](adr/ADR-017-wuselwall-app-domain.md)) | The public hosts `wuselwall.app`, `web.` and `api.`; a Cloudflare origin certificate for them | ≈ €14 / year | in place 2026-10-13 |
+| Domain `example.org` | The mail sender and the old address `wusel.example.org` (a bridge for old app builds) | already owned | in place |
 | Firebase project | Android push via FCM — not needed until push is built, and only if [Q38](14-open-questions.md) settles on FCM | free | Minutes |
 | **Sign in with Apple** (in the Developer account): the capability on `ch.goomba.wuselwall`, a Services ID, a key | Step 9 — Apple sign-in on iOS, Android and the web | — | Minutes, after the programme is active |
 | **Google Cloud project** with an OAuth consent screen and three OAuth clients (web, iOS, Android) | Step 9 — Google sign-in | free | Minutes; the consent screen's branding review can take a few days |
@@ -152,7 +153,7 @@ and no Xcode debugger. See [Q35](14-open-questions.md).
    `freezed`/`json_serializable`, `flutter_secure_storage`, `intl` and
    `flutter_localizations`. Add `drift` in step 6, not before.
 4. **Configuration per environment** with `--dart-define-from-file`:
-   `env/dev.json` (the one environment, `https://wusel.example.org`, and its publishable
+   `env/dev.json` (the one environment, `https://api.wuselwall.app`, and its publishable
    key) and `env/ci.json` (CI's throwaway stack); no `prod.json`
    ([ADR-013](adr/ADR-013-one-self-hosted-environment.md)). No `if (kDebugMode)` branches
    for configuration. The publishable key is public by design; nothing else secret goes
@@ -160,7 +161,7 @@ and no Xcode debugger. See [Q35](14-open-questions.md).
 5. **Platform networking for a local stack**: iOS `NSAppTransportSecurity →
    NSAllowsLocalNetworking` and an Android network-security config permitting cleartext
    to the private address range, for a throwaway stack on the laptop. The one
-   environment is HTTPS (`wusel.example.org`).
+   environment is HTTPS (`api.wuselwall.app`).
 6. **Localisation from the first widget**: `app/l10n.yaml` with `app/l10n/app_en.arb`
    (template) and `app/l10n/app_de.arb`, both locales supported with German first, and
    `untranslated-messages-file` so CI can fail on a string missing from either. No string literal is ever shown to a user (see `CLAUDE.md`).
@@ -302,9 +303,11 @@ The model is [08](08-users-auth-permissions.md); the Supabase mechanics are
    `revoke-device` Edge Function signs that Auth user out. The app treats a 401/403 from
    a revoked device by wiping its session and showing enrolment.
 7. **Guardian account features**: TOTP enrolment for the second factor (done). Passkeys
-   (Supabase Auth beta): the code is in; now that the domain exists, set
-   `[auth.webauthn] rp_id`/`rp_origins` to `wusel.example.org`, add iOS Associated Domains
-   (`webcredentials:<domain>`), publish `/.well-known/assetlinks.json` for Android and the
+   (Supabase Auth beta): the code is in; the domain is decided
+   ([ADR-017](adr/ADR-017-wuselwall-app-domain.md)) and the server already uses RP ID
+   `wuselwall.app` with origin `https://web.wuselwall.app`; add iOS Associated Domains
+   (`webcredentials:wuselwall.app`), publish `/.well-known/apple-app-site-association`
+   and `/.well-known/assetlinks.json` on `wuselwall.app` and add the
    `passkeys` web SDK script in `web/index.html`, then test on a real device.
 8. Tests: pgTAP for every function and policy (including "a member cannot create an
    enrolment code", "a PIN elevation expires"), Deno tests for `enrol-device`, widget
@@ -414,7 +417,7 @@ release can also be run from a Mac with the same lanes if one becomes available.
 
 ### Server address
 
-Releases are built with `env/dev.json`, the one environment at `https://wusel.example.org`
+Releases are built with `env/dev.json`, the one environment at `https://api.wuselwall.app`
 ([ADR-013](adr/ADR-013-one-self-hosted-environment.md)). It is reachable from anywhere over
 HTTPS, so the apps need no cleartext exception and work outside the home wifi too.
 
@@ -445,9 +448,12 @@ without anyone touching a cable.
    in [`infra/supabase/`](../infra/supabase/), whose server-side `.env` keeps those three
    values and adds its own (`scripts/remote-stack.sh init-env`). CI writes the CLI's public
    defaults into its own throwaway `supabase/.env`.
-2. **Public entry**: Cloudflare proxied record `wusel.example.org` → the home server's nginx
-   with [`infra/nginx/wusel.example.org.conf`](../infra/nginx/wusel.example.org.conf): the four
-   API prefixes to the gateway on `172.17.0.1:54421`, everything else 404.
+2. **Public entry**: Cloudflare proxied record `wusel.example.org` → the home server's nginx:
+   the four API prefixes to the gateway on `172.17.0.1:54421`, everything else 404.
+   *Since 2026-10-13 ([ADR-017](adr/ADR-017-wuselwall-app-domain.md)):* `api.wuselwall.app`
+   for the API, `web.wuselwall.app` for the web app, `wuselwall.app` for the website, all in
+   [`infra/nginx/wuselwall.app.conf`](../infra/nginx/wuselwall.app.conf); the old record
+   forwards the API for old app builds and redirects the rest.
 3. **Backups**: [`infra/backup/backup.sh`](../infra/backup/backup.sh) nightly on the server
    (homeserver User Scripts), optional restic off-site and healthchecks ping;
    `scripts/remote-backup.sh` on demand; [`infra/backup/restore-drill.sh`](../infra/backup/restore-drill.sh)
@@ -514,7 +520,7 @@ Order chosen so that each slice is usable on its own:
      host;
    - the server carried in invitation and pairing links;
    - native Apple/Google and passkeys hidden except on Cloud and `WW_FIRST_PARTY_HOSTS`
-     (homeserver);
+     (homeserver: `api.wuselwall.app`);
    - `min_app_version` honoured.
 8. **Tests.**
    - pgTAP: a fresh account sees nothing; `code` mode refuses without a founder code; an

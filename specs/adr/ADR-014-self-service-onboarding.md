@@ -10,6 +10,8 @@ The experience is specified in [20 — Onboarding](../20-onboarding.md). Amended
 *WuselWall Cloud* or a self-hosted server; native Apple/Google sign-in only on Cloud; no
 captcha; public store listings.
 
+**Amended 2026-10-13 by [ADR-017](ADR-017-wuselwall-app-domain.md):** the links domain is decided — `wuselwall.app` ([Q45](../14-open-questions.md)).
+
 ## Context
 
 M0.1 built onboarding for exactly one household run by its own developer:

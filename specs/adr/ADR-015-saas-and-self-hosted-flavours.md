@@ -7,6 +7,8 @@ amends [ADR-010](ADR-010-flutter-and-self-hosted-supabase.md),
 [ADR-014](ADR-014-self-service-onboarding.md); answers Q40, Q42 and Q44 in
 [14](../14-open-questions.md)
 
+**Amended 2026-10-13 by [ADR-017](ADR-017-wuselwall-app-domain.md):** the domain is decided — `wuselwall.app`; the family's homeserver stack is `api.wuselwall.app` (read it where this record says `wusel.example.org`).
+
 ## Context
 
 ADR-014 opened sign-up to other families and left open where their households live

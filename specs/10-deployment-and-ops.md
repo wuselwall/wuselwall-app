@@ -5,8 +5,9 @@ rather than a set of options to weigh. Decision context:
 [ADR-013](adr/ADR-013-one-self-hosted-environment.md).
 
 **The shape of it:** one environment. The Supabase stack runs on the home server (homeserver,
-Docker) and is reached at `https://wusel.example.org` through Cloudflare's proxy and the
-home server's nginx. The family uses it, and development happens against it. A nightly
+Docker) and is reached at `https://api.wuselwall.app` through Cloudflare's proxy and the
+home server's nginx, which also serves the website (`wuselwall.app`) and the web app
+(`web.wuselwall.app`) ([ADR-017](adr/ADR-017-wuselwall-app-domain.md)). The family uses it, and development happens against it. A nightly
 dump protects the data.
 
 *Rewritten 2026-10-11 for ADR-013. The VPS, Caddy and `deploy.yml` of the previous
@@ -26,7 +27,8 @@ hosted Supabase project that holds every self-service household, has
 | Item | Provider | ~Cost / month |
 |---|---|---|
 | Server | The home server, already running | €0 (electricity) |
-| Domain `example.org` | already owned | €0 extra |
+| Domain `wuselwall.app` (bought 2026-10-13) | Cloudflare DNS | ≈ €1 (yearly renewal) |
+| Domain `example.org` (mail sender, the old address) | already owned | €0 extra |
 | TLS and proxy | Cloudflare free plan | €0 |
 | Apple Developer Program | Apple | €99 / year ≈ €8.25 |
 | Google Play Console | Google | $25 once |
@@ -34,7 +36,7 @@ hosted Supabase project that holds every self-service household, has
 | SMTP for sign-in codes ([Q41](14-open-questions.md)) | Scaleway Transactional Email | €0 up to 300 mails/month, then €0.25 per 1,000 |
 | **Total, self-hosted flavour** | | **≈ €8 – 12 / month** |
 | **WuselWall Cloud** ([ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md)) | Supabase Pro (organisation, one small project's compute included) | ≈ $25 |
-| Cloud's custom domain, once [Q45](14-open-questions.md) is decided | Supabase add-on | ≈ $10 |
+| Cloud's custom domain (a subdomain of `wuselwall.app`, [ADR-017](adr/ADR-017-wuselwall-app-domain.md)) | Supabase add-on | ≈ $10 |
 | Static links site (landing pages, `/.well-known/`) | Cloudflare Pages free plan | €0 |
 | **Total with Cloud** | | **≈ €40 – 50 / month** |
 
@@ -47,16 +49,19 @@ is created.
  phone / laptop
    │ HTTPS
    ▼
- Cloudflare edge (proxied DNS record wusel.example.org, TLS)
+ Cloudflare edge (proxied DNS records wuselwall.app, web. and api., TLS)
    │ HTTPS, Cloudflare origin certificate
    ▼
  router: TCP 443 → home server
    │
    ▼
- nginx (home server): /auth/v1, /rest/v1, /realtime/v1, /functions/v1 → gateway
-   │                    /app/ → Flutter web app (static) · /docs/ → user documentation (static)
-   │                    everything else → the website
-   │                    + static: /.well-known/*, /i/*, /p/*, /privacy, /delete (ADR-014)
+ nginx (home server)
+   │  api.wuselwall.app  /auth/v1, /rest/v1, /realtime/v1, /functions/v1 → gateway; else 404
+   │  web.wuselwall.app  → Flutter web app (static)
+   │  wuselwall.app      /docs/ → user documentation (static) · /download/ → APK (static)
+   │                     everything else → the website
+   │                     + static: /.well-known/*, /i/*, /p/*, /privacy, /delete (ADR-014)
+   │  wusel.example.org    the old address: the four API prefixes → gateway, the rest 301
    │ HTTP, Docker bridge (172.17.0.1 — not reachable from the home network)
    ▼
  Envoy :54421 ─► Auth · PostgREST · Realtime · Edge runtime · Storage · (Studio, /pg/)
@@ -75,13 +80,18 @@ login and is reached by SSH tunnel (`scripts/remote-stack.sh tunnel`, then
 
 ### 1. DNS and nginx
 
-- Cloudflare: a **proxied** (orange-cloud) record for `wusel.example.org`, pointing at the
-  same origin as the other subdomains. SSL mode **Full (strict)**, using the Cloudflare
-  origin certificate nginx already holds.
+- Cloudflare: the zone `wuselwall.app` with **proxied** (orange-cloud) records for the
+  apex, `web` and `api`, pointing at the home server like the `example.org` subdomains. SSL
+  mode **Full (strict)**, with a Cloudflare **origin certificate** for `wuselwall.app` and
+  `*.wuselwall.app` (SSL/TLS → Origin Server → Create certificate, 15 years), stored in the
+  nginx container as `/config/keys/wuselwall.app.pem` and `.key`. The old record
+  `wusel.example.org` stays until no installed app uses it
+  ([ADR-017](adr/ADR-017-wuselwall-app-domain.md)).
 - nginx: the site file in the repository,
-  [`infra/nginx/wusel.example.org.conf`](../infra/nginx/wusel.example.org.conf), copied into
-  the nginx container's site directory, then `nginx -t && nginx -s reload`. It forwards the
-  four API prefixes and refuses everything else, including Studio and the `/pg/`
+  [`infra/nginx/wuselwall.app.conf`](../infra/nginx/wuselwall.app.conf), copied into the
+  nginx container's site directory (`/srv/appdata/nginx/nginx/site-confs/`), then
+  `docker exec nginx nginx -t && docker exec nginx nginx -s reload`. On `api.` it forwards
+  the four API prefixes and refuses everything else, including Studio and the `/pg/`
   metadata API.
 - *Since [ADR-014](adr/ADR-014-self-service-onboarding.md):* nginx also serves a handful
   of **static files** from `infra/web/` (no proxying, no scripts):
@@ -159,15 +169,17 @@ from `config.toml` as `env(...)`:
 
 - **Apple:**
   - the App ID `ch.goomba.wuselwall` with the *Sign in with Apple* capability;
-  - a **Services ID** for the web and Android redirect, with
-    `https://‹domain›/auth/v1/callback` as its return URL;
+  - a **Services ID** for the web and Android redirect, with the domains `wuselwall.app`
+    and `api.wuselwall.app` and `https://api.wuselwall.app/auth/v1/callback` as its return
+    URL;
   - a **Sign in with Apple key** (`.p8`).
 
   The client secret Supabase needs is a JWT signed with that key, and **it expires after
   at most six months**: regenerate it on the date in the table below.
 - **Google:** a Google Cloud project with an OAuth consent screen (scopes `openid email
   profile`) and three OAuth clients: **Web** (its ID and secret go to Supabase, its ID is
-  the `serverClientId` in the app), **iOS** (bundle ID; its reversed client ID becomes a
+  the `serverClientId` in the app; authorised JavaScript origin `https://web.wuselwall.app`,
+  redirect URI `https://api.wuselwall.app/auth/v1/callback`), **iOS** (bundle ID; its reversed client ID becomes a
   URL scheme) and **Android** (package name and the SHA-1 of the Play app-signing key *and*
   of the debug key).
 - **Email**: see [Email setup](#email-setup) below.
@@ -205,7 +217,7 @@ built for one thing: a six-digit code in the inbox within seconds, never in spam
 |---|---|---|
 | Provider | **Scaleway Transactional Email** (TEM) | EU company and data centres (Paris); transactional only, so its shared IPs are not dragged down by newsletter senders; 300 mails/month free, then €0.25 per 1,000; no branding footer; SMTP and an HTTP API |
 | One Scaleway project per environment | **Cloud** and **homeserver**, each with its own domain and API key | A test run that sends a burst of mail, or a leaked dev key, cannot hurt Cloud's reputation; either key can be revoked alone |
-| Sending domain | `example.org` itself, verified in the homeserver project (2026-10-11); Cloud gets its own when it is set up, on the final domain once [Q45](14-open-questions.md) is decided | `example.org` has no mailboxes, so its MX points at Scaleway's blackhole and its SPF names only Scaleway; a domain that receives personal mail would need a sending subdomain instead |
+| Sending domain | `example.org` itself, verified in the homeserver project (2026-10-11); Cloud gets its own when it is set up, on `wuselwall.app` ([ADR-017](adr/ADR-017-wuselwall-app-domain.md)); the homeserver project may move to it too | `example.org` has no mailboxes, so its MX points at Scaleway's blackhole and its SPF names only Scaleway; a domain that receives personal mail would need a sending subdomain instead |
 | Sender | `WuselWall <noreply@example.org>`, Reply-To a read support address | A recognisable name in the inbox list; replies reach a person, which App Review and GDPR both expect |
 | DNS (Cloudflare) | The SPF, DKIM and DMARC records Scaleway shows when the domain is added; DMARC starts at `p=none` with `rua` reports, moves to `p=quarantine` after two clean weeks | Without SPF and DKIM the codes go to spam; Gmail and Yahoo require SPF or DKIM from every sender and DMARC from bulk senders |
 | Content | Plain text plus minimal HTML, no images, no tracking pixels, no link tracking (switched off in TEM). **Subject carries the code:** "123456 ist dein WuselWall-Code" / "123456 is your WuselWall code" | The code readable from the notification is the fastest path into the app; tracking would contradict NFR-9 |
@@ -314,25 +326,29 @@ touching the others. None of them needs the database to go down.
 | Part | Command | Touches |
 |---|---|---|
 | Website (landing page, Impressum, Datenschutz) | `scripts/remote-web.sh deploy` | Only the `wuselwall-site` container (`infra/web`, its own compose project). `--draft` allows an unfilled Impressum |
-| Flutter web app (`/app/`) | `scripts/deploy-web.sh` | Static files; swapped by rename |
-| Android APK download | `scripts/deploy-apk.sh` | Static file |
-| User documentation (`/docs/`) | Automatic: `.github/workflows/docs.yml` on every push to `main` (or "Run workflow") | Static files; swapped by a link. See [The user documentation](#the-user-documentation) |
+| Flutter web app (`web.wuselwall.app`) | `scripts/deploy-web.sh` | Static files; swapped by rename |
+| Android APK download (`wuselwall.app/download/`) | `scripts/deploy-apk.sh` | Static file |
+| User documentation (`wuselwall.app/docs/`) | Automatic: `.github/workflows/docs.yml` on every push to `main` (or "Run workflow") | Static files; swapped by a link. See [The user documentation](#the-user-documentation) |
 | Edge Functions | `scripts/remote-stack.sh functions` | Syncs `supabase/functions`, restarts the Edge runtime only |
 | One Supabase service (auth, rest, realtime, storage, …) | `scripts/remote-stack.sh up -d --no-deps auth` after editing `.env` or the layer; `… restart rest` for a plain restart | That container only |
 | The whole Supabase stack | `scripts/remote-stack.sh deploy` | Everything `docker compose up -d` finds changed |
 | Database schema | `scripts/remote-migrate.sh` (backup, migrate, pgTAP) | Postgres |
-| nginx routes | Copy `infra/nginx/wusel.example.org.conf`, `nginx -t && nginx -s reload` | Routing only |
+| nginx routes | Copy `infra/nginx/wuselwall.app.conf`, `nginx -t && nginx -s reload` | Routing only |
 
 Logs and status per part: `scripts/remote-web.sh logs -f site`,
 `scripts/remote-stack.sh logs -f auth`. The website's container healthcheck is
 `/healthz/`; point the uptime monitor at it too.
 
-**Moving the web app to `/app/` (ADR-016), once:** deploy the Flutter app with
-`scripts/deploy-web.sh` (it now builds with `--base-href /app/`), then
-`scripts/remote-web.sh deploy`, then replace the nginx site file and reload. In the
-stack's `.env` on the server set `SITE_URL=https://wusel.example.org/app/` and run
-`scripts/remote-stack.sh up -d --no-deps auth`. Fill in `website/src/config/site.ts` first
-(or deploy with `--draft`).
+**Moving to `wuselwall.app` ([ADR-017](adr/ADR-017-wuselwall-app-domain.md)), once:**
+put the origin certificate into the nginx container's `keys/`, replace the site file
+(`wusel.conf` → `wuselwall.app.conf`) and reload. In the stack's `.env` on the server set
+`SUPABASE_PUBLIC_URL=https://api.wuselwall.app`,
+`API_EXTERNAL_URL=https://api.wuselwall.app/auth/v1`, `SITE_URL=https://web.wuselwall.app/`,
+`ADDITIONAL_REDIRECT_URLS` with `https://web.wuselwall.app/**`,
+`PASSKEY_RP_ID=wuselwall.app` and `PASSKEY_RP_ORIGINS=https://web.wuselwall.app`, then
+`scripts/remote-stack.sh up -d` (auth, studio and the gateway pick them up). Then
+`scripts/deploy-web.sh` (now `--base-href /`), `scripts/remote-web.sh deploy` and a run of
+the docs workflow. New app builds carry `api.wuselwall.app` from `app/env/dev.json`.
 
 ## The user documentation
 
@@ -382,6 +398,6 @@ Keep it proportionate — this is a family app, not a service with an SLA.
 
 - **healthchecks.io** free tier: the nightly backup ping, plus later a ping from a
   `pg_cron` job (via `pg_net`) so you learn if scheduled jobs have stopped.
-- **Uptime monitoring** on `https://wusel.example.org/auth/v1/health` with the publishable
+- **Uptime monitoring** on `https://api.wuselwall.app/auth/v1/health` with the publishable
   key as `apikey` header (the gateway answers 401 without it), alerting to email.
 - **Logs**: `scripts/remote-stack.sh logs -f <service>` (auth, rest, realtime, db, …).

@@ -11,7 +11,7 @@ flutter pub get
 flutter run --dart-define-from-file=env/dev.json -d web-server --web-hostname localhost --web-port 3000
 ```
 
-`env/dev.json` points at the one environment, `https://wusel.example.org`
+`env/dev.json` points at the one environment, `https://api.wuselwall.app`
 ([ADR-013](../specs/adr/ADR-013-one-self-hosted-environment.md)) — the family's data, so
 develop with care. `env/ci.json` points at a throwaway stack on `http://127.0.0.1:54321`
 (`npm run db:start` with Docker on the laptop); the integration tests use only that.

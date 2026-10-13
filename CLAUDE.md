@@ -16,7 +16,9 @@ See [specs/03-architecture.md](specs/03-architecture.md),
 [ADR-013](specs/adr/ADR-013-one-self-hosted-environment.md).
 
 - **There is one environment** today: the official compose stack (`infra/supabase`) on the home server (homeserver, `ssh homeserver`),
-  public at `https://wusel.example.org`. The family's data lives there. *Planned
+  public at `https://api.wuselwall.app` ([ADR-017](specs/adr/ADR-017-wuselwall-app-domain.md);
+  the web app is `https://web.wuselwall.app`, the website `https://wuselwall.app`, and
+  `wusel.example.org` is only a bridge for old app builds). The family's data lives there. *Planned
   ([ADR-015](specs/adr/ADR-015-saas-and-self-hosted-flavours.md)): WuselWall Cloud, a hosted
   Supabase project, for self-service households. Once it exists: no `db reset`, a backup
   point before `db push`, never the integration test. homeserver stays the family's home and
@@ -80,9 +82,10 @@ See [specs/03-architecture.md](specs/03-architecture.md),
 
 ## Website (`website/`)
 
-Astro site at `https://wusel.example.org/` ([ADR-016](specs/adr/ADR-016-public-website.md)): marketing
-page, Impressum, Datenschutz, German at `/` and English at `/en/`. The Flutter web app is at
-`/app/`. Every user-facing string lives in `website/src/i18n/index.ts` in **both** languages;
+Astro site at `https://wuselwall.app/` ([ADR-016](specs/adr/ADR-016-public-website.md),
+[ADR-017](specs/adr/ADR-017-wuselwall-app-domain.md)): marketing page, Impressum, Datenschutz,
+German at `/` and English at `/en/`. The Flutter web app has its own host,
+`https://web.wuselwall.app/` (`scripts/deploy-web.sh`). Every user-facing string lives in `website/src/i18n/index.ts` in **both** languages;
 operator and legal data only in `website/src/config/site.ts` (`TODO` values fail
 `LEGAL_STRICT=1` builds). No cookies, no third-party requests, no analytics. Deploy with
 `scripts/remote-web.sh deploy`, independent of the Supabase stack. Check with
@@ -99,7 +102,7 @@ The live site changes only after `scripts/remote-web.sh deploy`.
 ## End-user documentation (`docs/`)
 
 VitePress site in German (root) and English (`/en/`), written for the family, not for
-developers (the specification is `specs/`), published at `https://wusel.example.org/docs/` by
+developers (the specification is `specs/`), published at `https://wuselwall.app/docs/` by
 `.github/workflows/docs.yml` on every push to `main`. Screenshots come from the Flutter web
 demo (`app/lib/main_demo.dart`, in-memory data) driven by Playwright
 (`docs/tools/screenshots.mjs`): every shot in both languages and both themes (`name.png`,
