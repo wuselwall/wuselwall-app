@@ -140,6 +140,10 @@ so there is no separate trip entity to keep in sync. Reachable per list from the
 screen and from its own list switcher.
 
 ### M1.2 Tasks and gamification
+> **Built 2026-10-13 on `feature/week-board`, not yet on the server:** household settings with the Einstellungen screen; definitions with RRULE, the four policies, the materialiser (`tasks-materialise`, `tasks-nightly`), the ledger, rewards with approval, streaks with jokers, four badges, the starter pack, the adult screens and the kiosk family task board; the kid screens. **Open:** scheduling `tasks-nightly` (pg_cron/pg_net or host cron).
+> pgTAP green on a local throwaway Postgres (`scripts/local-pgtap`); not yet run on the
+> compose stack or with real devices.
+
 **Household settings first** ([21](21-household-settings.md)): `setting_definition`, the
 override table, `api.settings` / `api.set_setting`, and the Einstellungen screen — M1.2 is
 the first module whose behaviour is tuned per household. Its defaults (Q4–Q7, issues
@@ -150,6 +154,10 @@ kid task screen · the family task board (reached from the week board's footer i
 guardian PIN and approvals
 
 ### M1.3 Calendar, presence and Stundenplan
+> **Built 2026-10-13 on `feature/week-board`, not yet on the server:** M1.3a — events, attendees, presence with six states, recurrence with overrides and `rdates` (the Dienstplan grid), tentative, the key flag, busy-until, day/3-day/week views and the editor, the signed ICS feed with per-token filters (school day or lessons included). M1.3b — schools, bell times, terms, subjects, A/B weeks, care rows, exceptions, holidays, the projection (`_shared/school.ts`) and the grid editor. **Open:** the feed verified against real Outlook and real iOS.
+> pgTAP green on a local throwaway Postgres (`scripts/local-pgtap`); not yet run on the
+> compose stack or with real devices.
+
 *Grew on 2026-08-30 with the A5 addition; the largest single block after tasks.*
 
 **M1.3a — Calendar core.** Events, all-day and timed · attendees · recurrence with
@@ -167,11 +175,22 @@ Build 1.3a fully before starting 1.3b: the projection has nowhere to render unti
 calendar's occurrence-source seam exists.
 
 ### M1.4 Meals
+> **Built 2026-10-13 on `feature/week-board`, not yet on the server:** the week plan (free text or recipe, cook, guests), recipes, who-is-eating with the defaulting rule (computed with the board in `board-week`), shopping generation with the mandatory preview, the kiosk correction dots.
+> pgTAP green on a local throwaway Postgres (`scripts/local-pgtap`); not yet run on the
+> compose stack or with real devices.
+
 Meal plan week grid · recipes with ingredients · who is eating at home, with the defaulting
 rule from presence and Hort · generation into the shopping list, with the mandatory
 preview · the meal zone of the week board
 
 ### M1.5 Polish
+> **Week board built early, 2026-10-13:** the board, its tap-through details and the
+> `api.board_week` read model exist before their sources. The read model's JSON is the
+> contract (`app/lib/features/board/domain/week_board.dart`): each module fills its own
+> part — presence and events (M1.3a, through the `board-week` Edge Function), school days
+> (M1.3b), meals (M1.4), open tasks (M1.2) — so the board is built once, not twice. Until
+> then its zones are present and empty, as the degradation rules require.
+
 **The week board** — the composed `/api/board/week` read model, the four zones, today
 emphasis, degradation rules, tap-through detail, night variant · three UI registers
 finished · seed data including one real term's timetable for each child
@@ -219,30 +238,34 @@ start a household, until every line below is true. It sits after M1.6 on purpose
 family uses the flows for weeks first, and their hesitations are fixed before anyone else
 meets them.
 
-- **WuselWall Cloud live** ([ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md),
-  [10](10-deployment-and-ops.md#wuselwall-cloud)): the hosted project in Frankfurt on Pro,
-  migrations and functions deployed from the repository, backups and the weekly off-site
-  dump, Supabase's DPA accepted; store builds on `env/cloud.json`; the links site on
-  Cloudflare Pages.
-- **The self-hosted flavour usable by others:** `/.well-known/wuselwall.json`, "Eigener
-  Server" in the app, and a self-hosting guide in `docs/` (including the email-only
-  sign-in and how to register one's own Apple/Google clients).
+- ~~WuselWall Cloud live~~ — dropped 2026-10-13 ([ADR-018](adr/ADR-018-self-hosted-only.md)):
+  no instance of ours opens; the family's server stays in `code` mode for good.
+- **The self-hosting kit** ([ADR-018](adr/ADR-018-self-hosted-only.md),
+  [10](10-deployment-and-ops.md#other-families-servers)): tagged server releases with
+  install, migrate and update scripts and the server's QR code; `/.well-known/wuselwall.json`
+  with `api_version`; the app's server choice (S0), demo mode and the `api_version`
+  window, tested against the previous server release in CI; a self-hosting guide in
+  `docs/` for a parent with a NAS (email-only sign-in, SMTP, one's own Apple/Google
+  clients).
 - **The domain** — decided 2026-10-13: `wuselwall.app`
   ([ADR-017](adr/ADR-017-wuselwall-app-domain.md), [Q45](14-open-questions.md)). Still to do:
-  Cloud's custom domain (a subdomain of it) and retiring the `wusel.example.org` bridge.
+  retiring the `wusel.example.org` bridge.
 - **Email** ([Q41](14-open-questions.md)): the sending domain verified, and the
   deliverability check in [10](10-deployment-and-ops.md#email-setup) passed.
 - **Store listings** ([Q42](14-open-questions.md), decided: App Store and Google Play):
-  store privacy labels and the Data safety form filled in honestly, and a demo account
-  with a password for App Review.
-- **Legal:** privacy policy, record of processing, processor agreements, breach
-  procedure, a contact address ([11](11-security-and-privacy.md#privacy-and-legal)).
+  store privacy labels and the Data safety form filled in honestly (Google's iOS sign-in
+  library included), and App Review pointed at the demo mode.
+- **Legal:** the privacy policy for the website, the apps and the sign-in providers
+  (published 2026-10-13, operator details still to fill in), and a contact address. The
+  record of processing and processor agreements cover the family's server only; each
+  operator is the controller for their own ([11](11-security-and-privacy.md#privacy-and-legal)).
 - **Abuse controls** live: Auth and Cloudflare rate limits, the 30-day clean-up of empty
   accounts, the attempt logs ([11, T11](11-security-and-privacy.md#t11--the-open-front-door)).
 - **Deletion and export** tested on a real household, including Apple token revocation.
 - **The cross-household pgTAP suite** reviewed once more with "a stranger is on the other
   side" in mind.
-- Then: `household_creation = 'open'`.
+- Then: the store listings go public. `household_creation` stays `code` on the family's
+  server. Other operators choose their own mode.
 
 ## M2 — Assistants and the obvious gaps
 

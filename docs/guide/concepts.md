@@ -1,6 +1,18 @@
 # So funktioniert WuselWall
 
-WuselWall ist ein Planer für den Familienalltag. Im Moment gibt es die **Einkaufsliste**; Kalender, Aufgaben und der Essensplan folgen.
+WuselWall ist ein Planer für den Familienalltag. Er hat einen **Kalender**, einen **Stundenplan**, **Aufgaben**, einen **Essensplan** und die **Einkaufsliste**, und er zeigt alles zusammen auf der Küchenwand.
+
+## Die Bereiche
+
+Die Erwachsenen-Ansicht hat diese Bereiche:
+
+| Bereich | Wofür |
+|---|---|
+| [Kalender](/calendar/) | Termine, Anwesenheit: wer wo ist |
+| [Stundenplan](/school/) | Schule, Stundenplan und Ferien für jedes Kind |
+| [Aufgaben](/tasks/) | Aufgaben, Punkte und Belohnungen |
+| [Essen](/meals/) | Essensplan, Rezepte, Einkaufsliste füllen |
+| [Einkaufsliste](/shopping/add) | Artikel, Kacheln, im Laden abhaken |
 
 ## Der Haushalt
 
@@ -10,7 +22,7 @@ Alles gehört zu einem **Haushalt**: eurer Familie. Der Haushalt hat **Mitgliede
 
 | | Darf |
 |---|---|
-| **Erziehungsberechtigte** | alles: Mitglieder hinzufügen, Geräte einrichten und sperren, Sicherheit einstellen |
+| **Erziehungsberechtigte** | alles: Mitglieder hinzufügen, Geräte verbinden und sperren, Sicherheit einstellen |
 | **Mitglieder** (zum Beispiel die Kinder) | die Einkaufsliste benutzen: Artikel hinzufügen, abhaken, Einkauf beenden |
 
 ## Drei Arten von Geräten
@@ -23,7 +35,7 @@ Alles gehört zu einem **Haushalt**: eurer Familie. Der Haushalt hat **Mitgliede
 
 ## Drei Ansichten
 
-Jedes Gerät zeigt WuselWall in der passenden **Ansicht**: für Erwachsene kompakt, für Kinder größer und einfacher, für die Wand besonders groß. Welche Ansicht ein Gerät hat, legen die Erziehungsberechtigten beim Einrichten fest.
+Jedes Gerät zeigt WuselWall in der passenden **Ansicht**: für Erwachsene kompakt, für Kinder größer und einfacher, für die Wand besonders groß. Welche Ansicht ein Gerät hat, legen die Erziehungsberechtigten beim Verbinden fest.
 
 ::: tip Sprache und Design
 WuselWall spricht Deutsch und Englisch und folgt der Sprache und dem hellen oder dunklen Design deines Geräts. Auf der Wand wird es ab 21 Uhr automatisch dunkel.

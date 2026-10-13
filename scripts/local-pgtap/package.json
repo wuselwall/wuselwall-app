@@ -1,0 +1,10 @@
+{
+  "name": "wuselwall-local-pgtap",
+  "private": true,
+  "type": "module",
+  "description": "Runs supabase/migrations and supabase/tests on a throwaway local Postgres 15 (no Docker, no sudo).",
+  "dependencies": {
+    "@embedded-postgres/linux-x64": "15.18.0-beta.17",
+    "pg": "8.16.3"
+  }
+}

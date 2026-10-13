@@ -1,8 +1,19 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wuselwall/features/calendar/ui/event_edit_args.dart';
+import 'package:wuselwall/features/calendar/ui/event_editor_page.dart';
+import 'package:wuselwall/features/calendar/ui/settings/baseline_page.dart';
+import 'package:wuselwall/features/calendar/ui/settings/feed_tokens_page.dart';
 import 'package:wuselwall/features/home/ui/register_home_page.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
+import 'package:wuselwall/features/meals/domain/meal_models.dart';
+import 'package:wuselwall/features/meals/ui/recipe_editor_page.dart';
+import 'package:wuselwall/features/meals/ui/recipe_view_page.dart';
+import 'package:wuselwall/features/meals/ui/recipes_page.dart';
+import 'package:wuselwall/features/school/ui/school_setup_page.dart';
+import 'package:wuselwall/features/school/ui/timetable_editor_page.dart';
+import 'package:wuselwall/features/settings/ui/household_settings_page.dart';
 import 'package:wuselwall/features/settings/ui/settings_page.dart';
 import 'package:wuselwall/features/setup/ui/enrol_page.dart';
 import 'package:wuselwall/features/setup/ui/mfa_challenge_page.dart';
@@ -24,8 +35,18 @@ abstract final class Routes {
   static const register = '/setup/register';
   static const home = '/';
   static const settings = '/settings';
+  static const householdSettings = '/settings/household';
   static const system = '/system';
   static const shoppingHistory = '/shopping/history';
+  static const eventNew = '/calendar/new';
+  static const eventEdit = '/calendar/edit';
+  static const recipes = '/meals/recipes';
+  static const recipeEdit = '/meals/recipes/edit';
+  static const recipeView = '/meals/recipes/view';
+  static const schoolSetup = '/school/setup';
+  static const timetableEdit = '/school/timetable';
+  static const feedTokens = '/settings/feeds';
+  static const baselines = '/settings/baselines';
 
   static bool isSetup(String path) =>
       path == setup || path.startsWith('$setup/');
@@ -104,10 +125,47 @@ final routerProvider = Provider<GoRouter>((ref) {
         ),
       ),
       GoRoute(path: Routes.settings, builder: (_, _) => const SettingsPage()),
+      GoRoute(
+        path: Routes.householdSettings,
+        builder: (_, _) => const HouseholdSettingsPage(),
+      ),
       GoRoute(path: Routes.system, builder: (_, _) => const SystemPage()),
+      GoRoute(
+        path: Routes.feedTokens,
+        builder: (_, _) => const FeedTokensPage(),
+      ),
+      GoRoute(path: Routes.baselines, builder: (_, _) => const BaselinePage()),
       GoRoute(
         path: Routes.shoppingHistory,
         builder: (_, _) => const ShoppingHistoryPage(),
+      ),
+      GoRoute(
+        path: Routes.eventNew,
+        builder: (_, state) =>
+            EventEditorPage(args: state.extra as EventEditArgs?),
+      ),
+      GoRoute(
+        path: Routes.eventEdit,
+        builder: (_, state) =>
+            EventEditorPage(args: state.extra as EventEditArgs?),
+      ),
+      GoRoute(path: Routes.recipes, builder: (_, _) => const RecipesPage()),
+      GoRoute(
+        path: Routes.recipeEdit,
+        builder: (_, state) => RecipeEditorPage(recipe: state.extra as Recipe?),
+      ),
+      GoRoute(
+        path: Routes.recipeView,
+        builder: (_, state) => RecipeViewPage(initial: state.extra! as Recipe),
+      ),
+      GoRoute(
+        path: Routes.schoolSetup,
+        builder: (_, _) => const SchoolSetupPage(),
+      ),
+      GoRoute(
+        path: Routes.timetableEdit,
+        builder: (_, state) =>
+            TimetableEditorPage(args: state.extra as TimetableEditArgs?),
       ),
     ],
   );

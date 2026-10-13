@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import GitHubMark from '../components/GitHubMark.astro';
 import { site } from '../config/site';
 import { alternate, paths, strings, type Lang } from '../i18n';
 
@@ -19,7 +20,8 @@ const here = paths[lang][page];
 const other = lang === 'de' ? 'en' : 'de';
 const canonical = new URL(here, site.url).toString();
 const alt = new URL(alternate(lang, page), site.url).toString();
-const image = new URL('/og-image.png', site.url).toString();
+const home = paths[lang].home;
+const image = new URL(lang === 'de' ? '/og-image.png' : '/og-image-en.png', site.url).toString();
 ---
 
 <!doctype html>
@@ -30,7 +32,9 @@ const image = new URL('/og-image.png', site.url).toString();
     <title>{title}</title>
     <meta name="description" content={description} />
     {noindex && <meta name="robots" content="noindex" />}
-    <meta name="theme-color" content="#2D6A4F" />
+    <meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#14171a" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
     <link rel="canonical" href={canonical} />
     <link rel="alternate" hreflang={lang === 'de' ? 'de-CH' : 'en'} href={canonical} />
     <link rel="alternate" hreflang={other === 'de' ? 'de-CH' : 'en'} href={alt} />
@@ -44,26 +48,24 @@ const image = new URL('/og-image.png', site.url).toString();
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={image} />
     <meta property="og:locale" content={lang === 'de' ? 'de_CH' : 'en_US'} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
     <slot name="head" />
   </head>
   <body>
-    <a class="skip" href="#main">{lang === 'de' ? 'Zum Inhalt' : 'Skip to content'}</a>
+    <a class="skip" href="#main">{t.skip}</a>
     <header class="bar">
       <div class="wrap bar-inner">
         <a class="brand" href={paths[lang].home} aria-label={site.name}>
           <img src="/logo.svg" alt="" width="40" height="40" />
           <span>{site.name}</span>
         </a>
-        <nav aria-label="Main">
-          {page === 'home' && (
-            <>
-              <a href="#funktionen" class="hide-sm">{t.nav.features}</a>
-              <a href="#stand" class="hide-sm">{t.nav.status}</a>
-              <a href="#open-source" class="hide-sm">{t.nav.openSource}</a>
-            </>
-          )}
-          <a class="btn btn-small" href={site.webApp}>{t.nav.webApp}</a>
+        <nav aria-label={t.nav.label}>
+          <a href={`${home}#funktionen`} class="hide-sm">{t.nav.features}</a>
+          <a href={`${home}#eigener-server`} class="hide-sm">{t.nav.selfHost}</a>
+          <a href={`${home}#stand`} class="hide-sm">{t.nav.status}</a>
+          <a class="btn btn-small btn-ghost" href={site.github} rel="noopener"><GitHubMark size={18} />{t.nav.github}</a>
         </nav>
       </div>
     </header>
@@ -72,11 +74,12 @@ const image = new URL('/og-image.png', site.url).toString();
 
     <footer class="foot">
       <div class="wrap foot-inner">
-        <p>© {new Date().getFullYear()} {site.name} · {t.footer.note}</p>
-        <nav aria-label="Footer">
+        <p>© {new Date().getFullYear()} {site.name} · {t.footer.note} · <a href={site.license.url} rel="noopener license">{t.footer.license}</a></p>
+        <nav aria-label={t.footer.label}>
           <a href={paths[lang].imprint}>{t.footer.imprint}</a>
           <a href={paths[lang].privacy}>{t.footer.privacy}</a>
-          <a href={site.github} rel="noopener">{t.footer.source}</a>
+          <a href={lang === 'de' ? site.docs : `${site.docs}en/`}>{t.footer.docs}</a>
+          <a href={site.github} rel="noopener" class="foot-gh"><GitHubMark size={16} />{t.footer.source}</a>
           <a href={alternate(lang, page)} hreflang={other} lang={other}>{t.footer.langSwitch}</a>
         </nav>
       </div>

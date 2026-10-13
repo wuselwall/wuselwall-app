@@ -67,6 +67,8 @@ class Member {
     required this.color,
     required this.role,
     required this.active,
+    this.isChild = false,
+    this.sortOrder = 0,
   });
 
   factory Member.fromJson(Map<String, dynamic> json) => Member(
@@ -75,6 +77,8 @@ class Member {
     color: parseHexColor(json['color'] as String),
     role: Role.parse(json['role'] as String),
     active: json['active'] as bool,
+    isChild: json['kind'] == 'child',
+    sortOrder: json['sort_order'] as int? ?? 0,
   );
 
   final String id;
@@ -82,6 +86,13 @@ class Member {
   final Color color;
   final Role role;
   final bool active;
+
+  /// `profile.kind` (ADR-014): role says what someone may do, kind whether they are a
+  /// child — the kid register, starter chores and the Stundenplan use it.
+  final bool isChild;
+
+  /// The household's member order (`profile.sort_order`).
+  final int sortOrder;
 
   bool get isGuardian => role == Role.guardian;
 

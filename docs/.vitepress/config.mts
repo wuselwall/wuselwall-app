@@ -11,6 +11,16 @@ const sidebar = (p: string, t: Record<string, string>) => [
     ],
   },
   {
+    text: t.modules,
+    items: [
+      { text: t.calendar, link: `${p}/calendar/` },
+      { text: t.feeds, link: `${p}/calendar/feeds` },
+      { text: t.school, link: `${p}/school/` },
+      { text: t.tasks, link: `${p}/tasks/` },
+      { text: t.meals, link: `${p}/meals/` },
+    ],
+  },
+  {
     text: t.shopping,
     items: [
       { text: t.add, link: `${p}/shopping/add` },
@@ -23,6 +33,7 @@ const sidebar = (p: string, t: Record<string, string>) => [
     text: t.devices,
     items: [
       { text: t.wall, link: `${p}/guide/wall` },
+      { text: t.household, link: `${p}/settings/household` },
       { text: t.members, link: `${p}/settings/members-devices` },
       { text: t.security, link: `${p}/settings/security` },
     ],
@@ -56,13 +67,18 @@ export default defineConfig({
       themeConfig: {
         nav: [
           { text: 'Erste Schritte', link: '/guide/concepts' },
+          { text: 'Kalender', link: '/calendar/' },
+          { text: 'Stundenplan', link: '/school/' },
+          { text: 'Aufgaben', link: '/tasks/' },
+          { text: 'Essen', link: '/meals/' },
           { text: 'Einkaufsliste', link: '/shopping/add' },
           { text: 'Häufige Fragen', link: '/faq' },
         ],
         sidebar: sidebar('', {
-          start: 'Erste Schritte', concepts: 'So funktioniert WuselWall', install: 'App installieren', setup: 'Einrichten', who: 'Wer bist du?',
+          start: 'Erste Schritte', concepts: 'So funktioniert WuselWall', install: 'App installieren', setup: 'Anmelden und verbinden', who: 'Wer bist du?',
+          modules: 'Module', calendar: 'Kalender', feeds: 'Kalender-Abos für Outlook und iPhone', school: 'Stundenplan', tasks: 'Aufgaben', meals: 'Essen',
           shopping: 'Einkaufsliste', add: 'Artikel hinzufügen', lists: 'Mehrere Listen', store: 'Im Laden', history: 'Verlauf',
-          devices: 'Geräte und Sicherheit', wall: 'Wandbildschirm und Kinder', members: 'Mitglieder und Geräte', security: 'Sicherheit', faq: 'Häufige Fragen',
+          devices: 'Geräte und Sicherheit', wall: 'Wandbildschirm und Kinder', household: 'Haushalt einstellen', members: 'Mitglieder und Geräte', security: 'Sicherheit', faq: 'Häufige Fragen',
         }),
         docFooter: { prev: 'Zurück', next: 'Weiter' },
         outlineTitle: 'Auf dieser Seite',
@@ -80,13 +96,18 @@ export default defineConfig({
       themeConfig: {
         nav: [
           { text: 'Getting started', link: '/en/guide/concepts' },
+          { text: 'Calendar', link: '/en/calendar/' },
+          { text: 'Timetable', link: '/en/school/' },
+          { text: 'Tasks', link: '/en/tasks/' },
+          { text: 'Meals', link: '/en/meals/' },
           { text: 'Shopping list', link: '/en/shopping/add' },
           { text: 'FAQ', link: '/en/faq' },
         ],
         sidebar: sidebar('/en', {
-          start: 'Getting started', concepts: 'How WuselWall works', install: 'Installing the app', setup: 'Setting up', who: 'Who are you?',
+          start: 'Getting started', concepts: 'How WuselWall works', install: 'Installing the app', setup: 'Signing in and connecting', who: 'Who are you?',
+          modules: 'Modules', calendar: 'Calendar', feeds: 'Calendar subscriptions for Outlook and iPhone', school: 'Timetable', tasks: 'Tasks', meals: 'Meals',
           shopping: 'Shopping list', add: 'Adding items', lists: 'Several lists', store: 'In the store', history: 'History',
-          devices: 'Devices and security', wall: 'Wall display and kids', members: 'Members and devices', security: 'Security', faq: 'FAQ',
+          devices: 'Devices and security', wall: 'Wall display and kids', household: 'Household settings', members: 'Members and devices', security: 'Security', faq: 'FAQ',
         }),
       },
     },

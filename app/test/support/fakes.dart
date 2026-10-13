@@ -14,14 +14,25 @@ import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/realtime/household_channel.dart';
 import 'package:wuselwall/core/supabase/supabase_providers.dart';
+import 'package:wuselwall/features/board/application/board_providers.dart';
+import 'package:wuselwall/features/board/data/board_repository.dart';
+import 'package:wuselwall/features/board/domain/week_board.dart';
+import 'package:wuselwall/features/calendar/data/calendar_repository.dart';
+import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/data/sign_in_methods_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/identity/domain/sign_in_method.dart';
+import 'package:wuselwall/features/meals/data/meals_repository.dart';
+import 'package:wuselwall/features/school/data/school_repository.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 import 'package:wuselwall/features/shopping/data/shopping_store.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_sync_model.dart';
+
+import 'fake_meals.dart';
+import 'fake_school.dart';
+import 'fake_tasks.dart';
 
 const guardianId = 'p-guardian';
 const kidId = 'p-kid';
@@ -40,6 +51,7 @@ final testMembers = [
     color: Color(0xFFFF8800),
     role: Role.member,
     active: true,
+    isChild: true,
   ),
 ];
 
@@ -269,6 +281,151 @@ class FakeSignInMethods implements SignInMethodsRepository {
   dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
 }
 
+/// An empty week board for this week: no members, events or presence. Enough for the
+/// kiosk home to draw its zones without reaching Supabase.
+WeekBoard emptyWeekBoard([DateTime? now]) {
+  final today = now ?? DateTime.now();
+  final monday = DateTime(
+    today.year,
+    today.month,
+    today.day,
+  ).subtract(Duration(days: today.weekday - 1));
+  String ymd(DateTime d) =>
+      '${d.year.toString().padLeft(4, '0')}-'
+      '${d.month.toString().padLeft(2, '0')}-'
+      '${d.day.toString().padLeft(2, '0')}';
+  return WeekBoard.fromJson({
+    'week_start': ymd(monday),
+    'today': ymd(today),
+    'generated_at': today.toUtc().toIso8601String(),
+    'members': <Map<String, dynamic>>[],
+    'presence': <Map<String, dynamic>>[],
+    'timetables': <Map<String, dynamic>>[],
+    'days': [
+      for (var i = 0; i < 7; i++)
+        {
+          'date': ymd(monday.add(Duration(days: i))),
+          'events': <Map<String, dynamic>>[],
+          'busy_until': <Map<String, dynamic>>[],
+          'school': <Map<String, dynamic>>[],
+        },
+    ],
+    'open_tasks': <Map<String, dynamic>>[],
+    'shopping_count': 0,
+  });
+}
+
+/// Serves [board] (by default an empty week board) for the kiosk home.
+class FakeBoardRepository implements BoardRepository {
+  FakeBoardRepository([WeekBoard? board]) : board = board ?? emptyWeekBoard();
+
+  WeekBoard board;
+
+  @override
+  Future<Result<WeekBoard>> week({DateTime? weekStart}) async => Ok(board);
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
+}
+
+/// Serves the occurrences it was given that fall inside the asked window; empty by
+/// default, so a test that does not care about the calendar does not reach Supabase.
+/// In-memory calendar. Records every write with its actor, so tests can assert the
+/// `p_event` and the override calls the editor makes.
+class FakeCalendarRepository implements CalendarRepository {
+  FakeCalendarRepository([
+    List<Occurrence> items = const [],
+    Map<String, CalendarEvent> events = const {},
+  ]) : items = [...items],
+       events = {...events};
+
+  final List<Occurrence> items;
+
+  /// The events the editor can load, by id.
+  final Map<String, CalendarEvent> events;
+
+  /// The events the editor has saved, in order.
+  final saved = <CalendarEvent>[];
+
+  /// The actor of each save, in the same order as [saved].
+  final savedActors = <String?>[];
+
+  final overrides =
+      <
+        ({
+          String eventId,
+          DateTime recurrenceId,
+          bool cancelled,
+          Map<String, dynamic> patch,
+        })
+      >[];
+
+  final deleted = <String>[];
+
+  @override
+  Future<Result<OccurrenceWindow>> occurrences(
+    DateTime from,
+    DateTime to,
+  ) async => Ok(
+    OccurrenceWindow(
+      timezone: 'Europe/Berlin',
+      occurrences: [
+        for (final o in items)
+          if (!o.localEndDate.isBefore(dateOnly(from)) &&
+              !o.localStartDate.isAfter(dateOnly(to)))
+            o,
+      ],
+    ),
+  );
+
+  @override
+  Future<Result<CalendarEvent>> event(String id) async {
+    final event = events[id];
+    return event == null
+        ? const Err(NotFoundFailure(code: 'event_not_found'))
+        : Ok(event);
+  }
+
+  @override
+  Future<Result<String>> save({
+    required String? actor,
+    required CalendarEvent event,
+  }) async {
+    saved.add(event);
+    savedActors.add(actor);
+    return Ok(event.id ?? 'new-event');
+  }
+
+  @override
+  Future<Result<void>> delete({
+    required String? actor,
+    required String id,
+  }) async {
+    deleted.add(id);
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<String>> saveOverride({
+    required String? actor,
+    required String eventId,
+    required DateTime recurrenceId,
+    bool cancelled = false,
+    Map<String, dynamic> patch = const {},
+  }) async {
+    overrides.add((
+      eventId: eventId,
+      recurrenceId: recurrenceId,
+      cancelled: cancelled,
+      patch: patch,
+    ));
+    return Ok('override-${overrides.length}');
+  }
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
+}
+
 ShoppingItem item(String id, String name, {bool checked = false}) =>
     ShoppingItem(
       id: id,
@@ -304,6 +461,8 @@ List<Override> baseOverrides({
   ),
   // Daytime, and no boundary timer outliving the widget tree.
   nightProvider.overrideWith(DayNight.new),
+  // One tick, not a per-second stream: the kiosk clock would keep pumpAndSettle busy.
+  clockProvider.overrideWith((ref) => Stream.value(DateTime.now())),
 ];
 
 class DayNight extends NightNotifier {
@@ -311,20 +470,47 @@ class DayNight extends NightNotifier {
   bool build() => false;
 }
 
+/// Pumps the app with [overrides] plus a board backend: [board] when given, otherwise
+/// an empty week board, so no test reaches Supabase through the kiosk home.
 Future<ProviderContainer> pumpApp(
   WidgetTester tester, {
   required List<Override> overrides,
   Locale locale = const Locale('de'),
+  FakeBoardRepository? board,
+  FakeCalendarRepository? calendar,
+  FakeTasksApi? tasks,
+  FakeMealsRepository? meals,
+  FakeSchoolRepository? school,
+  Size size = const Size(1000, 1600),
 }) async {
-  tester.view.physicalSize = const Size(1000, 1600);
+  tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
   tester.platformDispatcher.localesTestValue = [locale];
+  // Reduced motion: the board's repeating "next up" pulse would otherwise keep
+  // pumpAndSettle from ever settling. Motion itself is not under test here.
+  tester.platformDispatcher.accessibilityFeaturesTestValue =
+      const FakeAccessibilityFeatures(disableAnimations: true);
   addTearDown(() {
     tester.view.reset();
     tester.platformDispatcher.clearLocalesTestValue();
+    tester.platformDispatcher.clearAccessibilityFeaturesTestValue();
   });
 
-  final container = ProviderContainer(overrides: overrides);
+  final container = ProviderContainer(
+    overrides: [
+      ...overrides,
+      boardRepositoryProvider.overrideWithValue(board ?? FakeBoardRepository()),
+      calendarRepositoryProvider.overrideWithValue(
+        calendar ?? FakeCalendarRepository(),
+      ),
+      // The tasks repository runs on a fake `api` layer when a test asks for one.
+      if (tasks != null) apiClientProvider.overrideWithValue(tasks),
+      mealsRepositoryProvider.overrideWithValue(meals ?? FakeMealsRepository()),
+      schoolRepositoryProvider.overrideWithValue(
+        school ?? FakeSchoolRepository(),
+      ),
+    ],
+  );
   addTearDown(container.dispose);
   await tester.pumpWidget(
     UncontrolledProviderScope(
@@ -334,4 +520,15 @@ Future<ProviderContainer> pumpApp(
   );
   await tester.pumpAndSettle();
   return container;
+}
+
+/// Unmounts the app and disposes its container inside the test. The kiosk board keeps
+/// a timer in its container (the midnight refresh), and Flutter checks for pending
+/// timers before the container's own teardown runs.
+Future<void> unmountApp(
+  WidgetTester tester,
+  ProviderContainer container,
+) async {
+  await tester.pumpWidget(const SizedBox());
+  container.dispose();
 }

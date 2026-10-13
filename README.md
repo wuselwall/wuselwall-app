@@ -89,8 +89,9 @@ specifications you hand to a coding session, one at a time.
    moves points or deletes other people's data. → [ADR-004](specs/adr/ADR-004-identity-model.md)
 5. **One self-hosted environment on the home server**, public through Cloudflare and nginx
    on `wuselwall.app` (website), `web.wuselwall.app` (web app) and `api.wuselwall.app`;
-   further tenants, if any, on hosted Supabase. Supersedes the VPS plan.
-   → [ADR-013](specs/adr/ADR-013-one-self-hosted-environment.md), [ADR-017](specs/adr/ADR-017-wuselwall-app-domain.md)
+   no hosted service for other families: every household runs its own server, and the
+   store app connects to whichever one it chooses. Supersedes the VPS plan.
+   → [ADR-013](specs/adr/ADR-013-one-self-hosted-environment.md), [ADR-017](specs/adr/ADR-017-wuselwall-app-domain.md), [ADR-018](specs/adr/ADR-018-self-hosted-only.md)
 6. **Server-authoritative data**, with a narrow offline queue for the shopping list only —
    no general-purpose sync engine. → [ADR-006](specs/adr/ADR-006-offline-strategy.md)
 7. **A remote MCP server** over Streamable HTTP with OAuth; Apple Shortcuts is the
@@ -101,5 +102,13 @@ specifications you hand to a coding session, one at a time.
 9. **Presence is an event kind**, so "Sabine arbeitet" and "Lukas ist in Berlin" reuse
    recurrence, overrides and the feed; what reaches the kitchen display is an explicit
    flag, never a heuristic. → [ADR-009](specs/adr/ADR-009-event-kinds-and-presence.md)
-10. **Internal distribution only** — TestFlight and the Play internal track, fed by
-    GitHub Actions and fastlane; no public store listing. → [ADR-011](specs/adr/ADR-011-native-distribution-and-ci-cd.md)
+10. **Public App Store and Google Play listings**, fed by GitHub Actions and fastlane;
+    TestFlight and the Play internal track stay as pre-release channels.
+    → [ADR-011](specs/adr/ADR-011-native-distribution-and-ci-cd.md), [ADR-018](specs/adr/ADR-018-self-hosted-only.md)
+
+## Licence
+
+WuselWall is licensed under the [Apache License, Version 2.0](LICENSE). Contributions are
+accepted under the same licence (section 5). The name and the logo are not licensed for
+other products (section 6). Third-party material in the repository keeps its own terms;
+[NOTICE](NOTICE) lists it.
