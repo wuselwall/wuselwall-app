@@ -175,6 +175,7 @@
   "totpEnable": "Einschalten",
   "totpDisable": "Ausschalten",
   "totpScanBody": "Scanne diesen Code mit einer Authenticator-App und gib dann den angezeigten 6-stelligen Code ein.",
+  "totpQrLabel": "QR-Code zum Einrichten der Authenticator-App",
   "passkeyTitle": "Passkey",
   "passkeyBody": "Mit Fingerabdruck oder Gesicht statt mit Passwort anmelden.",
   "passkeyAdd": "Hinzufügen",

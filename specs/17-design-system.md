@@ -202,7 +202,10 @@ As implemented:
   and cards use `surfaceContainerLow`, which is white.
 - `WwColors` (a `ThemeExtension`, read with `context.ww`) carries what Material has no
   slot for: `ink2`/`ink3`, `sunken`, `line`, success, warning, points, member colours
-  (`context.ww.member(member.color)` → ink, onInk, tint) and paper tints.
+  (`context.ww.member(member.color)` → ink, onInk, tint), paper tints, and `qrInk` /
+  `qrPaper` for QR codes (`core/ui/qr_code_view.dart`): the shade's own text pair with
+  the darker side as ink, since scanners need dark on light — `ink` on `surface` in
+  light, `bg` on `ink` in dark and night, so a code never glares at night.
 - `Shade` is `light | dark | night`. Night is a third `ThemeData`, used by the kiosk
   register from 21:00 to 06:00 (`nightProvider`, which rebuilds at each boundary)
   regardless of the OS setting.

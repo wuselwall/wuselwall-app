@@ -22,6 +22,12 @@ class WwColors extends ThemeExtension<WwColors> {
   Color get onWarningContainer => _c.onWarningContainer;
   Color get points => Palette.points;
   Color get onPoints => Palette.onPoints;
+
+  /// A QR code's modules and ground: the shade's own text pair, darker side as ink,
+  /// because scanners need dark on light. Paper, not white, in dark and night, so the
+  /// code does not glare (night stays at its ~10:1).
+  Color get qrInk => shade == Shade.light ? _c.ink : _c.bg;
+  Color get qrPaper => shade == Shade.light ? _c.surface : _c.ink;
   ProviderButtonColors get appleButton => ProviderBrand.apple(shade);
   ProviderButtonColors get googleButton => ProviderBrand.google(shade);
 
