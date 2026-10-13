@@ -121,13 +121,18 @@ insiders. If a threat model does not exclude anything it is not a threat model.
 
 ### T5 — supply chain
 
-- Lockfiles committed (`pubspec.lock`, `deno.lock`); CI installs exactly what they say.
+- Lockfiles committed (`pubspec.lock`, both `package-lock.json`, `Gemfile.lock`, and
+  `deno.lock` once there are Edge Functions); CI installs exactly what they say
+  (`flutter pub get --enforce-lockfile`, `npm ci`), and the release jobs do so before any
+  signing secret is in reach.
 - Keep the dependency count deliberately low. Every package is a party you have invited
   into your family's data — and in a Flutter app, every plugin is native code too.
-- `osv-scanner` over both lockfiles in CI; Dependabot PRs reviewed rather than
-  auto-merged.
-- Container images pinned by digest, not by floating tag; GitHub Actions pinned by
-  version (by commit SHA for anything outside GitHub's and Supabase's own).
+- `osv-scanner` over every lockfile in CI (`ci.yml`, job `audit`); accepted advisories
+  sit in `osv-scanner.toml` with a reason and an expiry. Dependabot PRs
+  (`.github/dependabot.yml`, with a seven-day cooldown) reviewed rather than auto-merged.
+- Container images pinned by digest, not by floating tag (the website's Node image is;
+  the Supabase images are still pinned by exact tag, following the CLI); GitHub Actions
+  pinned by commit SHA with the version as a comment; the Gradle wrapper by checksum.
 - No analytics, crash-reporting or ad SDK in the app, ever — they are the most common
   supply-chain leak in mobile apps.
 
