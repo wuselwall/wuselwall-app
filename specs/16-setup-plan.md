@@ -484,7 +484,9 @@ Order chosen so that each slice is usable on its own:
    App: the front door, E1–E3, `sign_in_with_apple` and `google_sign_in` with
    `signInWithIdToken`, OAuth redirect on the web; Einstellungen → Konto → Anmeldung
    (link, unlink, set password). Strings in both ARB files.
-   *Apple and Google built 2026-10-12:* native sheets on iOS (both) and Android (Google), the
+   *Apple and Google built 2026-10-12, switched on 2026-10-13* (client IDs on the server and
+   in `env/dev.json`; their return URL is `https://api.wuselwall.app/auth/v1/callback`
+   since ADR-017): native sheets on iOS (both) and Android (Google), the
    redirect elsewhere; Einstellungen → Anmeldung links and unlinks them (native sheet only:
    the redirect would replace the device's session). `enable_signup` stays `false` until
    households (9.2) give a new account somewhere to go, so Apple and Google sign in only

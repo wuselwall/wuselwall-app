@@ -17,11 +17,11 @@ specification; `app/`, `supabase/` and `infra/` hold the implementation.
 
 | | |
 |---|---|
-| Phase | M0.0–M0.3 built; M1.1 shopping built, offline included. Next: M1.2 tasks, starting with household settings. M0.4 waits for the Apple and Google accounts ([13 — Roadmap](specs/13-roadmap.md)) |
+| Phase | M0.0–M0.3 built; M0.4: first TestFlight upload done, Play waits for the Google account; M1.1 shopping built, offline included; M1.0 onboarding started (Apple and Google sign-in live). Next: the rest of 9.1 and 9.2 (households), then M1.2 tasks, starting with household settings ([13 — Roadmap](specs/13-roadmap.md)) |
 | Started | 2026-10-11 |
 | Decision set | Locked for v1 (see `specs/adr/`) |
 | Origin | Specification carried over from BretApp; code starts from scratch |
-| Latest change | 2026-10-11 — household settings with curated defaults ([21](specs/21-household-settings.md)); the one environment on the official compose stack ([ADR-013](specs/adr/ADR-013-one-self-hosted-environment.md#amendment-2026-10-11-the-official-compose-stack)) |
+| Latest change | 2026-10-13 — the domain `wuselwall.app`: website, `web.` and `api.` ([ADR-017](specs/adr/ADR-017-wuselwall-app-domain.md)). Before: 2026-10-11 — household settings with curated defaults ([21](specs/21-household-settings.md)); the one environment on the official compose stack ([ADR-013](specs/adr/ADR-013-one-self-hosted-environment.md#amendment-2026-10-11-the-official-compose-stack)) |
 
 ## Planned layout
 

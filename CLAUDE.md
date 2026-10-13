@@ -5,9 +5,11 @@ This repository holds both the planning documents and the code for WuselWall (se
 (migrations, Edge Functions, tests) and `infra/` hold the implementation. Setup-plan steps 3, 5,
 6 and 8 are built (app shell, identity, online shopping list, the one environment) and M1.1
 is built, offline outbox included. Onboarding (step 9, [specs/20](specs/20-onboarding.md),
-ADR-014 and ADR-015) has started: Sign in with Apple and Google are built (9.1), waiting for
-their client IDs and secrets on the server. Next: the rest of 9.1 (email code) and 9.2
-(households), or M1.2, which starts with household settings (specs/21).
+ADR-014 and ADR-015) has started: Sign in with Apple and Google are built and switched on (9.1).
+M0.4: the first TestFlight build is uploaded; Android is an APK by hand until the Play
+account exists. Since 2026-10-13 the public hosts are `wuselwall.app`, `web.` and `api.`
+(ADR-017). Next: the rest of 9.1 (email code, set password) and 9.2 (households), then
+M1.2, which starts with household settings (specs/21).
 
 ## Architecture rules
 
