@@ -1,5 +1,10 @@
 # ADR-015 — Two flavours: WuselWall Cloud on hosted Supabase, and self-hosted
 
+**Superseded 2026-10-13 by [ADR-018](ADR-018-self-hosted-only.md):** there is no WuselWall
+Cloud; the store app has no default server and connects to any self-hosted one. Decisions 6
+(public store listings) and 7 (no captcha) stand; decision 4's replay argument carries over
+with the family's server in Cloud's place.
+
 **Status:** Accepted · 2026-10-11 · Supersedes [ADR-013](ADR-013-one-self-hosted-environment.md)'s
 "one environment" once the SaaS project exists (the rules for the home server stay);
 amends [ADR-010](ADR-010-flutter-and-self-hosted-supabase.md),

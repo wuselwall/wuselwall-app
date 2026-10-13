@@ -12,7 +12,7 @@ Tippe auf **Mitglied hinzufügen** und gib einen **Namen** ein. WuselWall vergib
 
 1. Tippe auf **Gerät hinzufügen**.
 2. Gib einen **Gerätenamen** ein, wähle die **Art** (geteilt oder Wandanzeige) und tippe auf **Code erzeugen**.
-3. Auf dem neuen Gerät gibst du den Code ein oder scannst den QR-Code ([Einrichten](/guide/setup#_3-gerat-mit-code-einrichten)).
+3. Auf dem neuen Gerät gibst du den Code ein oder scannst den QR-Code ([Verbinden](/guide/setup#_2-gerat-mit-code-verbinden)).
 
 <div class="shots">
 <Shot name="settings-add-device" alt="Dialog „Gerät hinzufügen“" />

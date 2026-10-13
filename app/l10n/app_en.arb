@@ -11,7 +11,6 @@
   "errorValidation": "That input is not valid.",
   "errorUnknown": "Something went wrong.",
   "configMissing": "This build is missing its configuration: {missing}",
-  "setupTitle": "Set up",
   "registerAdult": "Adult",
   "registerKid": "Kid",
   "registerKiosk": "Wall display",
@@ -36,11 +35,10 @@
       }
     }
   },
-  "setupHeadline": "This device is not set up yet",
-  "setupBody": "Enrol this device with a code from a guardian, sign in as a guardian, or set up a new household.",
-  "setupEnrolAction": "Set up this device with a code",
-  "setupSignInAction": "Sign in as guardian",
-  "setupHouseholdAction": "Set up a new household",
+  "setupHeadline": "Welcome to WuselWall",
+  "doorTagline": "The family plan for the kitchen wall",
+  "setupEnrolAction": "Connect with a code",
+  "setupHouseholdAction": "Start a new family",
   "wizardTitle": "New household",
   "wizardCreate": "Create household",
   "fieldSetupToken": "Setup token",
@@ -53,12 +51,12 @@
   "fieldRequired": "Required",
   "signInTitle": "Sign in",
   "signInAction": "Sign in",
-  "enrolTitle": "Set up this device",
-  "enrolBody": "Enter the code shown on a device that is already set up.",
+  "enrolTitle": "Connect this device",
+  "enrolBody": "Enter the code shown on a device that is already connected.",
   "enrolCodeLabel": "Enrolment code",
-  "enrolAction": "Set up",
+  "enrolAction": "Connect",
   "errSetupTokenInvalid": "The setup token is not valid.",
-  "errSetupClosed": "This system is already set up.",
+  "errSetupClosed": "This system is already connected.",
   "errPasswordTooShort": "The password needs at least 10 characters.",
   "errPinFormat": "The PIN must be exactly 6 digits.",
   "errCodeInvalid": "That code is wrong or has expired.",
@@ -269,6 +267,7 @@
   "errActorInvalid": "That person is no longer part of the household. The change was not saved.",
   "doorApple": "Continue with Apple",
   "doorGoogle": "Continue with Google",
+  "doorEmail": "Continue with email",
   "doorOr": "or",
   "errProviderFailed": "That did not work. Try again, or sign in with your email.",
   "errSignupDisabled": "There is no WuselWall account for this address yet. Sign in with your email and password, then connect Apple or Google under Settings → Sign-in.",
@@ -300,5 +299,1193 @@
         "example": "Google"
       }
     }
-  }
+  },
+  "boardWeekNumber": "Week {week}",
+  "@boardWeekNumber": {
+    "placeholders": {
+      "week": {
+        "type": "int"
+      }
+    }
+  },
+  "boardToday": "Today",
+  "boardNow": "Now",
+  "boardNextUp": "Next",
+  "boardThen": "then",
+  "boardInMinutes": "in {minutes} min",
+  "@boardInMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "boardInHours": "in {hours} h {minutes} min",
+  "@boardInHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "boardNothingMoreToday": "Nothing else planned today",
+  "boardUpdatedSecondsAgo": "updated {seconds} s ago",
+  "@boardUpdatedSecondsAgo": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "boardUpdatedMinutesAgo": "updated {minutes} min ago",
+  "@boardUpdatedMinutesAgo": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "boardLastUpdatedAt": "last updated {time}",
+  "@boardLastUpdatedAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "boardOffline": "No connection – this is the last known plan.",
+  "boardLoading": "Loading the week …",
+  "boardZoneWhere": "Who is where",
+  "boardZoneWhereHint": "pale = as usual · bold = different",
+  "boardZoneEvents": "Appointments",
+  "boardZoneEventsHint": "dots = who is involved · dashed = not certain yet",
+  "boardZoneMeal": "Hot meal",
+  "boardZoneMealHint": "filled dot = eating · open dot = not there",
+  "boardMorning": "Morning",
+  "boardAfternoon": "Afternoon",
+  "boardEvening": "Evening",
+  "boardUntil": "until {time}",
+  "@boardUntil": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "boardFrom": "from {time}",
+  "@boardFrom": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "boardAllDay": "all day",
+  "boardMoreEvents": "{count, plural, =1{+1 more} other{+{count} more}}",
+  "@boardMoreEvents": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "boardMoreCount": "+{count}",
+  "@boardMoreCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "boardNoSchool": "free",
+  "boardCareUntil": "{label} until {time}",
+  "@boardCareUntil": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "boardCareDefault": "Care",
+  "boardBusyUntil": "Meetings until {time}",
+  "@boardBusyUntil": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "boardMealLunch": "Lunch",
+  "boardMealDinner": "Dinner",
+  "boardMealNothingPlanned": "nothing planned",
+  "boardMealCook": "{name} cooks",
+  "@boardMealCook": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "boardMealGuests": "{count, plural, =1{+1 guest} other{+{count} guests}}",
+  "@boardMealGuests": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "boardEating": "{name} is eating",
+  "@boardEating": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "boardNotEating": "{name} is not eating",
+  "@boardNotEating": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "boardOpenToday": "Open today",
+  "boardAllDone": "All done today",
+  "boardShoppingList": "Shopping list",
+  "boardNightMode": "Night view",
+  "boardBackToWeek": "Back to the week",
+  "boardTentative": "not certain yet",
+  "boardNoAppointments": "No appointments",
+  "boardSchool": "School",
+  "boardSchoolSpan": "School {span}",
+  "@boardSchoolSpan": {
+    "placeholders": {
+      "span": {
+        "type": "String"
+      }
+    }
+  },
+  "boardNoSchoolToday": "No school",
+  "boardWeekend": "Weekend",
+  "boardWeekOf": "{name}'s week",
+  "@boardWeekOf": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "boardTimetableTitle": "{name}'s timetable",
+  "@boardTimetableTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "boardClass": "Class {label}",
+  "@boardClass": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "boardPeriod": "Period {index}",
+  "@boardPeriod": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      }
+    }
+  },
+  "boardBreak": "Break",
+  "boardLessonOver": "over",
+  "boardLessonNow": "now",
+  "boardLessonCancelled": "Cancelled",
+  "boardLessonSubstituted": "Substitute",
+  "boardLessonRoomChange": "Room change",
+  "boardLessonExtra": "Extra",
+  "boardPackTomorrow": "Pack for tomorrow: {items}",
+  "@boardPackTomorrow": {
+    "placeholders": {
+      "items": {
+        "type": "String"
+      }
+    }
+  },
+  "boardPackToday": "Pack for today: {items}",
+  "@boardPackToday": {
+    "placeholders": {
+      "items": {
+        "type": "String"
+      }
+    }
+  },
+  "boardWholeWeek": "The whole week",
+  "boardMealWeek": "This week's meals",
+  "boardBaseline": "Usually: {label}",
+  "@boardBaseline": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "boardNoDeviation": "as usual",
+  "boardCooking": "Cooking",
+  "boardAppointmentsOf": "Appointments",
+  "boardTasksOf": "{name}'s tasks",
+  "@boardTasksOf": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "boardTasksComingSoon": "Tasks arrive with the next update.",
+  "presenceWorking": "At work",
+  "presenceHomeOffice": "Home office",
+  "presenceTravel": "Travelling",
+  "presenceAway": "Away",
+  "presenceOff": "Off",
+  "presenceChildcare": "Childcare",
+  "errSettingInvalid": "That value is outside the allowed range.",
+  "errSettingUnknown": "That setting does not exist.",
+  "errSettingTarget": "That setting cannot be changed for this person or device.",
+  "householdSettingsTitle": "Household settings",
+  "householdSettingsSubtitle": "Defaults for tasks, calendar, meals and the kitchen display",
+  "settingsSectionHousehold": "Household and members",
+  "settingsSectionTasks": "Tasks",
+  "settingsSectionCalendar": "Calendar and school",
+  "settingsSectionMeals": "Meals",
+  "settingsSectionKitchen": "Kitchen display",
+  "settingsSectionDevice": "This device",
+  "settingsSectionMine": "My settings",
+  "settingPickPersonFirst": "Choose who you are first. Your own settings appear here then.",
+  "settingIsDefault": "Default",
+  "settingIsCustom": "Customised",
+  "settingReset": "Reset to default",
+  "settingOn": "On",
+  "settingOff": "Off",
+  "settingFrom": "from",
+  "settingTo": "to",
+  "settingIncrease": "Increase",
+  "settingDecrease": "Decrease",
+  "settingDayPartsMorningEnds": "Morning until",
+  "settingDayPartsEveningStarts": "Evening from",
+  "settingUnitPoints": "{count, plural, =1{1 point} other{{count} points}}",
+  "@settingUnitPoints": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingUnitMinutes": "{count} min",
+  "@settingUnitMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingUnitSeconds": "{count} s",
+  "@settingUnitSeconds": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingValueName": "Full name",
+  "settingValueInitial": "Initial",
+  "settingValueDuty": "Duty",
+  "settingValueBonus": "Bonus",
+  "settingValueRequired": "Approval",
+  "settingValueSelfServe": "Self-serve",
+  "settingValueWholeFamily": "Whole family",
+  "settingValueAll": "All",
+  "settingValueNone": "None",
+  "settingValueLunch": "Lunch",
+  "settingValueDinner": "Dinner",
+  "settingBoardMemberLabelTitle": "Names on the board",
+  "settingBoardMemberLabelHelp": "A name reads better than an initial from two metres. Pick initials if visitors are often in the kitchen.",
+  "settingTasksDutyPointsTitle": "Points for a duty",
+  "settingTasksDutyPointsHelp": "Duties are expected of everyone, so they earn little or nothing. The streak is their reward.",
+  "settingTasksBonusPointsTitle": "Points for a bonus task",
+  "settingTasksBonusPointsHelp": "One bonus task buys the cheapest starter reward, so a younger child gets there within days.",
+  "settingTasksKindTitle": "New tasks are",
+  "settingTasksKindHelp": "A new chore is a duty unless someone deliberately makes it a bonus. That keeps the earning surface narrow.",
+  "settingTasksVerificationTitle": "Guardians check chores",
+  "settingTasksVerificationHelp": "Checking turns every chore into an inspection, so use it only for valuable bonus tasks.",
+  "settingTasksJokersTitle": "Streak jokers per month",
+  "settingTasksJokersHelp": "A joker keeps a streak alive on a missed day, so one sick day does not wipe out a three-week streak.",
+  "settingTasksRewardApprovalTitle": "Rewards need approval",
+  "settingTasksRewardApprovalHelp": "A guardian approves each redemption with the PIN. Self-serve suits only trivial rewards.",
+  "settingCalendarMembersEditTitle": "Members edit their own events",
+  "settingCalendarMembersEditHelp": "Children create and edit events they attend themselves. Deleting someone else's event stays a guardian action.",
+  "settingCalendarKeyDefaultTitle": "New events on the kitchen wall",
+  "settingCalendarKeyDefaultHelp": "Decides which new events appear on the kitchen wall without anyone ticking the box. Review it after two weeks of use.",
+  "settingSchoolReportTitle": "Members report timetable changes",
+  "settingSchoolReportHelp": "Only guardians maintain the timetable. With this on, a child can report a cancelled lesson for a guardian to confirm.",
+  "settingSchoolEquipmentTitle": "Equipment hint for tomorrow",
+  "settingSchoolEquipmentHelp": "Shows what to bring tomorrow, such as sports kit, from tomorrow's subjects.",
+  "settingMealsSchoolDayTitle": "Warm meal on school days",
+  "settingMealsSchoolDayHelp": "The one warm meal on the kitchen wall. On school days children eat lunch at school or in the Hort.",
+  "settingMealsFreeDayTitle": "Warm meal on free days",
+  "settingMealsFreeDayHelp": "For weekends and holidays.",
+  "settingMealsAwayTitle": "Away means not eating",
+  "settingMealsAwayHelp": "Travelling or away over a meal's time marks that person as not eating, so most days need no input.",
+  "settingMealsCareCutoffTitle": "Lunch cut-off for care",
+  "settingMealsCareCutoffHelp": "A child whose care runs past this time is out for lunch.",
+  "settingBoardRolloverTitle": "Kitchen wall moves on",
+  "settingBoardRolloverHelp": "When the wall moves to the coming week. Sunday evening planning wants next week; Saturday morning still wants this one.",
+  "settingBoardDayPartsTitle": "Morning, afternoon, evening",
+  "settingBoardDayPartsHelp": "Where the appointment zone splits into morning, afternoon and evening.",
+  "settingDeviceNightHoursTitle": "Night theme hours",
+  "settingDeviceNightHoursHelp": "When the kiosk switches to the amber night theme.",
+  "settingDeviceIdleRevertTitle": "Back to the wall after",
+  "settingDeviceIdleRevertHelp": "How long an opened profile or detail view stays open before the kiosk returns to the wall.",
+  "settingMemberCompletionSoundTitle": "Sound when a chore is ticked",
+  "settingMemberCompletionSoundHelp": "Ticking a chore off makes a short sound. Switch it off if you do not want it.",
+  "settingCalendarTentativeTitle": "Check uncertain events at",
+  "settingCalendarTentativeHelp": "Asks whether a tentative entry is happening, so it does not stay uncertain until it starts.",
+  "settingNotifyMorningTitle": "Morning summary",
+  "settingNotifyMorningHelp": "Today's tasks and events for you. Pending redemptions appear here for guardians.",
+  "settingNotifyEventReminderTitle": "Reminder before events",
+  "settingNotifyEventReminderHelp": "A notification before an event starts.",
+  "settingNotifyTaskVerifiedTitle": "When a chore is verified",
+  "settingNotifyTaskVerifiedHelp": "A notification when a guardian verifies a chore and its points are credited.",
+  "settingNotifyRedemptionTitle": "When a reward is requested",
+  "settingNotifyRedemptionHelp": "An immediate notification when a child asks for a reward.",
+  "boardCareShort": "{label} {time}",
+  "@boardCareShort": {
+    "description": "Care end next to notable lessons on the wall, e.g. 'Hort 15'",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "calendarTitle": "Calendar",
+  "@calendarTitle": {},
+  "calendarDay": "Day",
+  "@calendarDay": {},
+  "calendarThreeDays": "3 days",
+  "@calendarThreeDays": {},
+  "calendarWeek": "Week",
+  "@calendarWeek": {},
+  "calendarPrevious": "Previous",
+  "@calendarPrevious": {},
+  "calendarNext": "Next",
+  "@calendarNext": {},
+  "calendarToday": "Today",
+  "@calendarToday": {},
+  "calendarRange": "{from} – {to}",
+  "@calendarRange": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "calendarNewEvent": "New event",
+  "@calendarNewEvent": {},
+  "calendarEmpty": "Nothing planned",
+  "@calendarEmpty": {},
+  "calendarEditorPlaceholder": "The event editor is coming soon.",
+  "@calendarEditorPlaceholder": {},
+  "eventEditTitle": "Edit event",
+  "@eventEditTitle": {},
+  "eventTitleLabel": "Title",
+  "@eventTitleLabel": {},
+  "eventTitleRequired": "Enter a title.",
+  "@eventTitleRequired": {},
+  "eventKindAppointment": "Appointment",
+  "@eventKindAppointment": {},
+  "eventKindPresence": "Presence",
+  "@eventKindPresence": {},
+  "eventPresenceState": "State",
+  "@eventPresenceState": {},
+  "eventPresenceStateRequired": "Choose a state.",
+  "@eventPresenceStateRequired": {},
+  "eventAllDay": "All day",
+  "@eventAllDay": {},
+  "eventStarts": "Starts",
+  "@eventStarts": {},
+  "eventEnds": "Ends",
+  "@eventEnds": {},
+  "eventEndBeforeStart": "The end must be after the start.",
+  "@eventEndBeforeStart": {},
+  "eventAttendees": "Who",
+  "@eventAttendees": {},
+  "eventAttendeesWholeFamily": "Nobody picked: this is for the whole family.",
+  "@eventAttendeesWholeFamily": {},
+  "eventLocation": "Location",
+  "@eventLocation": {},
+  "eventNotes": "Notes",
+  "@eventNotes": {},
+  "eventTentative": "Not sure yet",
+  "@eventTentative": {},
+  "eventKeyDisplay": "Show on the kitchen display",
+  "@eventKeyDisplay": {},
+  "eventRepeat": "Repeat",
+  "@eventRepeat": {},
+  "eventRepeatNever": "Never",
+  "@eventRepeatNever": {},
+  "eventRepeatDaily": "Daily",
+  "@eventRepeatDaily": {},
+  "eventRepeatWeekly": "Weekly",
+  "@eventRepeatWeekly": {},
+  "eventRepeatBiweekly": "Every 2 weeks",
+  "@eventRepeatBiweekly": {},
+  "eventRepeatMonthly": "Monthly",
+  "@eventRepeatMonthly": {},
+  "eventRepeatSpecificDays": "Specific days (shift plan)",
+  "@eventRepeatSpecificDays": {},
+  "eventRepeatMonthlyDay": "on the {day}.",
+  "@eventRepeatMonthlyDay": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "eventRepeatMonthlyNth": "the {n}. {weekday} of the month",
+  "@eventRepeatMonthlyNth": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "weekday": {
+        "type": "String"
+      }
+    }
+  },
+  "eventRepeatMonthlyLast": "the last {weekday}",
+  "@eventRepeatMonthlyLast": {
+    "placeholders": {
+      "weekday": {
+        "type": "String"
+      }
+    }
+  },
+  "eventRepeatDays": "On these days",
+  "@eventRepeatDays": {},
+  "eventRepeatEnds": "Repeat ends",
+  "@eventRepeatEnds": {},
+  "eventRepeatUntil": "on a date",
+  "@eventRepeatUntil": {},
+  "eventRepeatCount": "after {count} times",
+  "@eventRepeatCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eventDaysPicked": "{count} days",
+  "@eventDaysPicked": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eventDienstplanHelp": "Tap the days that count. The start day is always included.",
+  "@eventDienstplanHelp": {},
+  "eventCustomRule": "Custom rule",
+  "@eventCustomRule": {},
+  "eventCustomRuleHelp": "This repeat pattern cannot be edited here. It stays as it is.",
+  "@eventCustomRuleHelp": {},
+  "eventWeekdaysRequired": "Choose at least one weekday.",
+  "@eventWeekdaysRequired": {},
+  "eventDeleteConfirm": "Delete this event?",
+  "@eventDeleteConfirm": {},
+  "eventScopeTitle": "Which events?",
+  "@eventScopeTitle": {},
+  "eventScopeDeleteTitle": "Delete which events?",
+  "@eventScopeDeleteTitle": {},
+  "eventScopeThis": "Only this event",
+  "@eventScopeThis": {},
+  "eventScopeSeries": "All events in the series",
+  "@eventScopeSeries": {},
+  "errEventInvalid": "This event is not valid.",
+  "@errEventInvalid": {},
+  "errRruleInvalid": "This repeat pattern cannot be saved.",
+  "@errRruleInvalid": {},
+  "errAttendeeInvalid": "Someone you chose does not belong to this household.",
+  "@errAttendeeInvalid": {},
+  "errEventNotFound": "This event no longer exists.",
+  "@errEventNotFound": {},
+  "scheduleTitle": "Timetable",
+  "tasksTitle": "Tasks",
+  "mealsTitle": "Meals",
+  "comingSoon": "This part is being built.",
+  "mealsWeekRange": "{from} – {to}",
+  "@mealsWeekRange": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "mealsPrevWeek": "Previous week",
+  "mealsNextWeek": "Next week",
+  "mealsThisWeek": "This week",
+  "mealsRecipes": "Recipes",
+  "mealsFillShopping": "Fill shopping list",
+  "mealsSlotBreakfast": "Breakfast",
+  "mealsSlotLunch": "Lunch",
+  "mealsSlotDinner": "Dinner",
+  "mealsSlotSnack": "Snack",
+  "mealsNothingYet": "Nothing planned yet",
+  "mealsAddOther": "Add meal",
+  "mealsDragHint": "Long-press a meal and drop it on another day to move it.",
+  "mealsEditTitle": "Meal on {day}",
+  "@mealsEditTitle": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "mealsFieldLabel": "Dish or note",
+  "mealsFieldHint": "Pizza, leftovers, a recipe name …",
+  "mealsSuggestionHelp": "Matching recipes. Tap one to use it; its ingredients then go on the shopping list.",
+  "mealsServings": "Servings",
+  "mealsCook": "Cooks",
+  "mealsCookNobody": "Nobody",
+  "mealsTime": "Time",
+  "mealsTimeNone": "No time",
+  "mealsGuests": "Guests",
+  "mealsEatingTitle": "Who is eating",
+  "mealsEatingHelp": "Someone who is away or travelling over the meal, or who has Hort past the cut-off, is switched off automatically. Set it by hand only when that is not true.",
+  "mealsEatingAuto": "Automatic",
+  "mealsEatingYes": "Eating",
+  "mealsEatingNo": "Not eating",
+  "mealsDelete": "Delete meal",
+  "mealsPreviewTitle": "Fill shopping list",
+  "mealsPreviewEmpty": "Nothing to add. Free-text meals have no ingredients; recipes put theirs on the list.",
+  "mealsPreviewOnList": "Already on the list",
+  "mealsPreviewFor": "For {meals}",
+  "@mealsPreviewFor": {
+    "placeholders": {
+      "meals": {
+        "type": "String"
+      }
+    }
+  },
+  "mealsPreviewAdd": "Add {count, plural, =0{nothing} =1{1 item} other{{count} items}}",
+  "@mealsPreviewAdd": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mealsPreviewAdded": "{count, plural, =1{1 item added to the shopping list} other{{count} items added to the shopping list}}",
+  "@mealsPreviewAdded": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mealsRecipesTitle": "Recipes",
+  "mealsRecipeSearch": "Search recipes",
+  "mealsRecipesEmpty": "No recipes yet. A dish name is enough for a meal; a recipe adds its ingredients to the shopping list.",
+  "mealsRecipeNew": "New recipe",
+  "mealsRecipeEdit": "Edit recipe",
+  "mealsRecipeTitleField": "Title",
+  "mealsIngredients": "Ingredients",
+  "mealsIngredientName": "Ingredient",
+  "mealsIngredientQuantity": "Amount",
+  "mealsIngredientUnit": "Unit",
+  "mealsIngredientNote": "Note",
+  "mealsIngredientAdd": "Add ingredient",
+  "mealsIngredientRemove": "Remove ingredient",
+  "mealsIngredientMove": "Drag to reorder",
+  "mealsNoIngredients": "No ingredients listed.",
+  "mealsSteps": "Steps",
+  "mealsStepsHint": "One step per line",
+  "mealsTags": "Tags",
+  "mealsTagsHint": "Separated by commas, e.g. quick, vegetarian",
+  "mealsSourceUrl": "Source link",
+  "mealsSource": "Source",
+  "mealsRecipeSave": "Save recipe",
+  "mealsRecipeDelete": "Delete recipe",
+  "mealsRecipeDeleteConfirm": "Delete “{title}”? Meals that use it keep their name.",
+  "@mealsRecipeDeleteConfirm": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "mealsRecipeTitleRequired": "A recipe needs a title.",
+  "mealsKioskHint": "Tap a dot to change who is eating",
+  "errMealInvalid": "That meal could not be saved. Check the entry and try again.",
+  "schoolSetupCardTitle": "Set up the school",
+  "schoolSetupCardBody": "Add the school, its bell times and the terms. Then the timetable can be entered.",
+  "schoolSetupAction": "Set up school",
+  "schoolEnterTimetableTitle": "Enter the timetable",
+  "schoolEnterTimetableBody": "{name} has no timetable for this term yet.",
+  "@schoolEnterTimetableBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "schoolEnterTimetableAction": "Enter timetable",
+  "schoolNoChildren": "No child in the household yet.",
+  "schoolEditSchool": "Edit school",
+  "schoolEditTimetable": "Edit timetable",
+  "schoolPrevWeek": "Previous week",
+  "schoolNextWeek": "Next week",
+  "schoolThisWeek": "This week",
+  "schoolWeekLabel": "Week {week} · {from} – {to}",
+  "@schoolWeekLabel": {
+    "placeholders": {
+      "week": {
+        "type": "int"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "schoolChooseChild": "Choose child",
+  "schoolHolidayBand": "{name} · {range}",
+  "@schoolHolidayBand": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "range": {
+        "type": "String"
+      }
+    }
+  },
+  "schoolNoLessonsToday": "No lessons",
+  "schoolPackTomorrowNone": "Nothing to pack for tomorrow.",
+  "schoolLessonActions": "{subject}, {day}, {period}",
+  "@schoolLessonActions": {
+    "placeholders": {
+      "subject": {
+        "type": "String"
+      },
+      "day": {
+        "type": "String"
+      },
+      "period": {
+        "type": "String"
+      }
+    }
+  },
+  "schoolCancelLesson": "Cancelled",
+  "schoolSubstitute": "Substitute",
+  "schoolRoomChange": "Room changed",
+  "schoolResetException": "Reset",
+  "schoolPickSubject": "Subject",
+  "schoolSearchSubject": "Find subject",
+  "schoolTeacher": "Teacher",
+  "schoolNote": "Note",
+  "schoolRoom": "Room",
+  "schoolApply": "Apply",
+  "schoolSaved": "Saved.",
+  "schoolNoSubjects": "No subjects yet. Add them in the school setup.",
+  "schoolSetupTitle": "School",
+  "schoolSectionSchool": "School",
+  "schoolName": "Name of the school",
+  "schoolState": "State",
+  "schoolStateNone": "Not given",
+  "schoolStateBW": "Baden-Württemberg",
+  "schoolStateBY": "Bavaria",
+  "schoolStateBE": "Berlin",
+  "schoolStateBB": "Brandenburg",
+  "schoolStateHB": "Bremen",
+  "schoolStateHH": "Hamburg",
+  "schoolStateHE": "Hesse",
+  "schoolStateMV": "Mecklenburg-Western Pomerania",
+  "schoolStateNI": "Lower Saxony",
+  "schoolStateNW": "North Rhine-Westphalia",
+  "schoolStateRP": "Rhineland-Palatinate",
+  "schoolStateSL": "Saarland",
+  "schoolStateSN": "Saxony",
+  "schoolStateST": "Saxony-Anhalt",
+  "schoolStateSH": "Schleswig-Holstein",
+  "schoolStateTH": "Thuringia",
+  "schoolBellTimes": "Bell times",
+  "schoolAddLesson": "Add lesson",
+  "schoolAddBreak": "Add break",
+  "schoolRemove": "Remove",
+  "schoolStart": "Start",
+  "schoolEnd": "End",
+  "schoolTerms": "Terms",
+  "schoolAddTerm": "Add term",
+  "schoolTermEdit": "Term",
+  "schoolTermName": "Name",
+  "schoolFrom": "From",
+  "schoolTo": "To",
+  "schoolAbWeek": "A/B anchor week (calendar week)",
+  "schoolAbWeekHint": "A week that is an A week. Empty: every week is the same.",
+  "schoolCurrent": "current",
+  "schoolSubjects": "Subjects",
+  "schoolAddSubject": "Add subject",
+  "schoolSubjectEdit": "Subject",
+  "schoolSubjectShort": "Short name",
+  "schoolTint": "Colour",
+  "schoolEquipment": "Things to bring",
+  "schoolNotable": "Show on the wall",
+  "schoolSubjectInUse": "This subject is still in a timetable. Remove it there first.",
+  "schoolInvalid": "These details do not fit together.",
+  "schoolHolidays": "Holidays and free days",
+  "schoolAddHoliday": "Add holiday",
+  "schoolHolidayEdit": "Holiday",
+  "schoolHolidayName": "Name",
+  "schoolEditorClass": "Class",
+  "schoolWeekCycle": "Week rhythm",
+  "schoolCycleWeekly": "Every week",
+  "schoolCycleAb": "A/B weeks",
+  "schoolParityAll": "Every week",
+  "schoolParityA": "A week",
+  "schoolParityB": "B week",
+  "schoolClearDay": "Clear day",
+  "schoolClearCell": "Clear",
+  "schoolCopyFrom": "Copy from…",
+  "schoolCopyPick": "Copy timetable from",
+  "schoolCareRows": "After school care",
+  "schoolAddCare": "Add care",
+  "schoolCareTitle": "Name",
+  "schoolCareDays": "On",
+  "schoolSaveTimetable": "Save timetable",
+  "schoolWeekdayPick": "Days",
+  "feedTitle": "Calendar subscriptions",
+  "feedSettingsSubtitle": "The family calendar in Outlook or on an iPhone",
+  "feedNew": "New subscription",
+  "feedEmpty": "No subscriptions yet. A subscription shows appointments in Outlook or on an iPhone, read-only.",
+  "feedRevoked": "Revoked",
+  "feedNeverFetched": "Never fetched",
+  "feedLastFetched": "Last fetched: {when}",
+  "@feedLastFetched": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "feedAgoJustNow": "just now",
+  "feedAgoMinutes": "{count} min ago",
+  "@feedAgoMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "feedAgoHours": "{count} h ago",
+  "@feedAgoHours": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "feedAgoDays": "{count, plural, =1{1 day ago} other{{count} days ago}}",
+  "@feedAgoDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "feedFetchCount": "{count, plural, =1{fetched once} other{fetched {count} times}}",
+  "@feedFetchCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "feedSummaryAppointments": "Appointments",
+  "feedSummaryPresence": "Presence",
+  "feedSummaryEveryone": "All members",
+  "feedSummarySchoolDay": "School day",
+  "feedSummarySchoolLessons": "Lessons",
+  "feedWhoseTitle": "Whose events",
+  "feedWhoseHelp": "Nothing selected: everyone",
+  "feedLabelField": "Subscription name",
+  "feedLabelHint": "e.g. work laptop Outlook",
+  "feedWhatTitle": "What",
+  "feedKindPresenceTitle": "Presence",
+  "feedPresenceHint": "Shows who is where and when (work, home office, off …). Better left off for work devices and children.",
+  "feedSchoolTitle": "School",
+  "feedSchoolOff": "Off",
+  "feedSchoolHint": "School days as one all-day entry, or every lesson.",
+  "feedCreate": "Create subscription",
+  "feedUrlTitle": "Subscription address",
+  "feedUrlOnce": "This address is shown only once. Anyone who has it can see the events, so treat it like a password.",
+  "feedCopyUrl": "Copy address",
+  "feedCopyWebcal": "Copy webcal link",
+  "feedWebcalLabel": "webcal link (opens the iPhone dialog)",
+  "feedCopied": "Address copied.",
+  "feedQrLabel": "QR code with the subscription address",
+  "feedHowTitle": "How to subscribe",
+  "feedHowOutlook": "Outlook on the web: Calendar → Add calendar → Subscribe from web → paste the address → name it “Family”.",
+  "feedHowIphone": "iPhone: Settings → Apps → Calendar → Accounts → Add Account → Other → Add Subscribed Calendar → paste the address. Or tap the webcal link.",
+  "feedRevokeAction": "Revoke",
+  "feedRevokeConfirm": "Revoke “{label}”? It stops receiving events at once.",
+  "@feedRevokeConfirm": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "baselineTitle": "Usual place",
+  "baselineSettingsSubtitle": "Where everyone usually is",
+  "baselineHelp": "Where you usually are. Only deviations get entered, so a normal day stays empty.",
+  "baselineNone": "Nothing set",
+  "baselineLabelField": "Own label (optional)",
+  "baselineLabelHint": "e.g. at home",
+  "baselineSaved": "Saved.",
+  "busyTitle": "Meetings until",
+  "busyPickTime": "Choose a time",
+  "busyThisDay": "This day only",
+  "busyWholeWeek": "Apply to the whole week (Mon–Fri)",
+  "busyRemove": "Remove",
+  "busyHelp": "Until when you are not available. Just the time: no appointments, no details.",
+  "busyFor": "For",
+  "tasksTabToday": "Today",
+  "tasksTabApprovals": "Approvals",
+  "tasksTabChores": "Chores",
+  "tasksTabRewards": "Rewards",
+  "tasksTabPoints": "Points",
+  "tasksNothingToday": "Nothing due today.",
+  "tasksOpenForAnyone": "Open for anyone",
+  "tasksWaitingApproval": "waiting for approval",
+  "tasksDone": "Done",
+  "tasksUndo": "Undo",
+  "tasksCompletedSnack": "{title} done",
+  "@tasksCompletedSnack": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "tasksPointsCount": "{count, plural, =1{1 point} other{{count} points}}",
+  "@tasksPointsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tasksStreakBadge": "🔥 {count}",
+  "@tasksStreakBadge": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tasksStreakDays": "{count, plural, =1{1 day in a row} other{{count} days in a row}}",
+  "@tasksStreakDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tasksOpenCount": "{count, plural, =0{none open} =1{1 open} other{{count} open}}",
+  "@tasksOpenCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tasksKindDuty": "Duty",
+  "tasksKindBonus": "Bonus",
+  "tasksApprovalsEmpty": "Nothing to check.",
+  "tasksCheckChores": "Chores to check",
+  "tasksRewardRequests": "Reward requests",
+  "tasksApprove": "Approve",
+  "tasksDecline": "Decline",
+  "tasksRequestedBy": "{name} wants {reward}",
+  "@tasksRequestedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "reward": {
+        "type": "String"
+      }
+    }
+  },
+  "tasksDoneBy": "Done by {name}",
+  "@tasksDoneBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tasksNoteOptional": "Note (optional)",
+  "tasksNoChores": "No chores yet.",
+  "tasksStarterTitle": "Start with the starter pack",
+  "tasksStarterHelp": "Five chores, three rewards and four badges to begin with. Everything can be changed afterwards.",
+  "tasksStarterAdd": "Add starter pack",
+  "tasksStarterDone": "Starter pack added.",
+  "tasksNewChore": "New chore",
+  "tasksEditChore": "Edit chore",
+  "tasksFieldTitle": "Title",
+  "tasksTitleRequired": "Please enter a title.",
+  "tasksFieldIcon": "Icon",
+  "tasksNoIcon": "No icon",
+  "tasksFieldKind": "Type",
+  "tasksKindDutyHelp": "Expected of everyone; earns little.",
+  "tasksKindBonusHelp": "Optional extra work; earns points.",
+  "tasksFieldPoints": "Points",
+  "tasksFieldRepeat": "Repeat",
+  "tasksRepeatOnce": "Once",
+  "tasksRepeatDaily": "Daily",
+  "tasksRepeatWeekdays": "On weekdays",
+  "tasksRepeatWeekly": "Weekly",
+  "tasksRepeatBiweekly": "Every 2 weeks",
+  "tasksRepeatMonthly": "Monthly",
+  "tasksWeekdayOne": "Weekday",
+  "tasksWeekdayMany": "Weekdays",
+  "tasksWeekdaysRequired": "Pick at least one weekday.",
+  "tasksFieldStarts": "Starts on",
+  "tasksFieldWindow": "Can be done",
+  "tasksWindowDays": "{count, plural, =1{Only on the due day} other{{count} days from the due day}}",
+  "@tasksWindowDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tasksFieldWho": "Who",
+  "tasksWhoFixed": "One person",
+  "tasksWhoRotating": "Taking turns",
+  "tasksWhoOpen": "Whoever wants",
+  "tasksWhoEach": "Everyone",
+  "tasksPickOne": "Who does it?",
+  "tasksPickPool": "Who takes part?",
+  "tasksPickOpenPool": "Who may take it? Empty means everyone.",
+  "tasksPoolRequired": "Pick at least one person.",
+  "tasksFieldVerification": "Approval by a grown-up",
+  "tasksVerificationHelp": "Points come after a check.",
+  "tasksArchive": "Archive",
+  "tasksArchiveHelp": "The chore disappears. Its open entries in the future are removed.",
+  "tasksNoRewards": "No rewards yet.",
+  "tasksNewReward": "New reward",
+  "tasksEditReward": "Edit reward",
+  "tasksFieldCost": "Cost in points",
+  "tasksFieldStock": "Stock (empty means unlimited)",
+  "tasksFieldNeedsApproval": "Needs approval first",
+  "tasksNeedsApprovalHelp": "Off only suits small things.",
+  "tasksAskForReward": "Ask for it",
+  "tasksRequestSent": "Request sent.",
+  "tasksRedeemed": "Redeemed.",
+  "tasksSoldOut": "Sold out",
+  "tasksMissingPoints": "{count, plural, =1{1 point short} other{{count} points short}}",
+  "@tasksMissingPoints": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tasksHistory": "History",
+  "tasksNoHistory": "Nothing redeemed yet.",
+  "tasksRedemptionRequested": "Waiting for approval",
+  "tasksRedemptionApproved": "Redeemed, not handed over yet",
+  "tasksRedemptionDeclined": "Declined",
+  "tasksRedemptionFulfilled": "Handed over",
+  "tasksHandOver": "Mark as handed over",
+  "tasksNoLedger": "No movements yet.",
+  "tasksLedgerTask": "Chore done",
+  "tasksLedgerUndo": "Taken back",
+  "tasksLedgerRedemption": "Reward",
+  "tasksLedgerAdjustment": "Correction",
+  "tasksLedgerBadge": "Badge",
+  "tasksLedgerBonus": "Bonus",
+  "tasksAdjust": "Correct",
+  "tasksAdjustTitle": "Correct points for {name}",
+  "@tasksAdjustTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tasksFieldAmount": "Points (+ or −)",
+  "tasksAmountInvalid": "Enter a number other than 0.",
+  "tasksFieldReason": "Reason (required)",
+  "tasksReasonRequired": "Please give a reason.",
+  "tasksBalanceTitle": "Balance",
+  "tasksBoardStreakLabel": "Streak",
+  "errTaskInvalid": "That chore is not valid.",
+  "errTaskNotYours": "Only the person it is for can do that.",
+  "errBalanceInsufficient": "Not enough points for that.",
+  "errRewardOutOfStock": "That reward is sold out.",
+  "errTaskNotOpen": "This chore is no longer open.",
+  "tasksActionTick": "Tick off",
+  "tasksPointsInvalid": "Enter a whole number, 0 or more.",
+  "kidTabToday": "My day",
+  "kidTabSchool": "Timetable",
+  "kidTabPoints": "Points",
+  "kidTabShopping": "Shopping",
+  "kidTabFamily": "Family",
+  "kidWhoAreYou": "Hi! Tap your name.",
+  "kidGreeting": "Hi, {name}!",
+  "@kidGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "kidTasksTitle": "My chores",
+  "kidTasksNone": "You have no chores today.",
+  "kidTasksAllDone": "All done! 🎉",
+  "kidTasksAllDoneBody": "Well done, you did everything for today.",
+  "kidAwaitsCheck": "being checked",
+  "kidDone": "Done",
+  "kidTaskDoneSnack": "{title} done!",
+  "@kidTaskDoneSnack": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "kidUndo": "Undo",
+  "kidSchoolTitle": "School today",
+  "kidNoSchoolToday": "No school today.",
+  "kidHoliday": "Holidays: {name}",
+  "@kidHoliday": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "kidNoTimetable": "No timetable has been entered for you yet.",
+  "kidRoom": "Room {room}",
+  "@kidRoom": {
+    "placeholders": {
+      "room": {
+        "type": "String"
+      }
+    }
+  },
+  "kidNow": "Now",
+  "kidLessonCancelled": "cancelled",
+  "kidLessonSubstituted": "substitute teacher",
+  "kidLessonRoomChange": "different room",
+  "kidCareUntil": "Care until {time}",
+  "@kidCareUntil": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "kidTomorrowNeeds": "Tomorrow you need: {items}",
+  "@kidTomorrowNeeds": {
+    "placeholders": {
+      "items": {
+        "type": "String"
+      }
+    }
+  },
+  "kidMealDinner": "Tonight we are having {dish}",
+  "@kidMealDinner": {
+    "placeholders": {
+      "dish": {
+        "type": "String"
+      }
+    }
+  },
+  "kidMealLunch": "Lunch today is {dish}",
+  "@kidMealLunch": {
+    "placeholders": {
+      "dish": {
+        "type": "String"
+      }
+    }
+  },
+  "kidMealNoneDinner": "Nothing is planned for tonight yet.",
+  "kidMealNoneLunch": "Nothing is planned for lunch yet.",
+  "kidMealEatingYou": "You are eating too.",
+  "kidEventsTitle": "My appointments today",
+  "kidNoEvents": "No appointments today.",
+  "kidAllDay": "all day",
+  "kidTimetableTitle": "My timetable",
+  "kidTodayMarker": "Today",
+  "kidYourPoints": "Your points",
+  "kidRewardsTitle": "Rewards",
+  "kidRedeem": "Redeem",
+  "kidNeedMore": "{count, plural, =1{1 point to go} other{{count} points to go}}",
+  "@kidNeedMore": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "kidWaitsApproval": "waiting for approval",
+  "kidRequestSent": "Your reward is waiting for approval.",
+  "kidRedeemed": "Redeemed! 🎉",
+  "kidSoldOut": "Sold out for now",
+  "kidBadgesTitle": "My badges",
+  "kidStreaksTitle": "My streaks",
+  "kidStreak": "{days, plural, =1{1 day {title} 🔥} other{{days} days {title} 🔥}}",
+  "@kidStreak": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "kidFamilyTitle": "Family today",
+  "kidOpenTasks": "{count, plural, =0{No chores open} =1{1 chore open} other{{count} chores open}}",
+  "@kidOpenTasks": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "kidNoPlanToday": "Nothing planned today"
 }

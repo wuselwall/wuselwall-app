@@ -10,12 +10,52 @@ Children cannot manage devices or members; that stays with guardians.
 
 ## Wall display in the kitchen
 
-The wall display is made to be read from two and a half metres: big type, big tiles — and **no search field**, because nobody types on a wall. It offers the most common tiles; anything else comes from a phone.
+The wall display is made to be read from two and a half metres: big type, clear areas — and **no input needed**, because nobody types on a wall. Its home screen is the **week board**: the whole week at a glance.
+
+<Shot name="wall-board" alt="Week board on the wall display: seven days side by side" wide />
+
+### At the top
+
+The clock, the date and the calendar week. Below it is **Up next**: the next appointment of today, with a countdown.
+
+### One column per day
+
+The seven days stand side by side, Monday to Sunday. Today's column is wider and framed, past days are paler. Every column has the same three areas in the same order:
+
+- **Who is where**: one row per family member. For children, this shows school time (for example 8–14:25), notable lessons such as sport or swimming, and the end of after-school care. For adults, a pale strip shows their usual state, such as home office. Anything different — duty, business trip, office — appears as a coloured band; a multi-day trip is one continuous band. A small clock with "until 17" means appointments until 17:00. **Pale = as usual, bold = different.**
+- **Appointments**: morning, afternoon and evening. Only appointments marked for the kitchen display are shown. A dot shows who is involved. Dashed means not certain yet. If there is no room left, it says "+2 more".
+- **Warm meal**: the one warm meal of the day — sun for lunch, moon for dinner — with the dish. A dot per person shows who eats with us (filled) and who is not there (hollow). It also shows who cooks.
+- **Footer**: each person's open tasks for today; a tap on **Open today** opens the family's chore board. Also the number of items on the shopping list.
+
+### Tap for details
+
+A tap shows more, and after a minute the display returns to the week by itself:
+
+- on a **day header**: that whole day
+- on a **child's name**: the timetable for the week. Cancelled lessons are struck through, substitutions are marked, and "Pack for tomorrow" is shown.
+- on a **school time**: that school day, lesson by lesson
+- on an **adult's name**: their week
+- on the **meal area**: the meals of the week
+
+<Shot name="wall-day" alt="Wall display: details of one day" wide />
+
+<Shot name="wall-child-week" alt="Wall display: a child's timetable for the week" wide />
+
+### Shopping list
+
+Tap the shopping list in the footer to open the tiles. Tap your name first: the wall always writes to the **default list**.
 
 <Shot name="wall-shopping" alt="Wall display with the shopping list" wide />
 
-- It always writes to the **default list**.
-- After a minute without a touch it goes back to "nobody".
-- From 21:00 it turns dark by itself.
+The wall can do no more than that: it adds items to the shopping list and corrects who is eating (tap the meal area, then a dot). This way nothing can be changed by accident.
 
-It is set up like any shared device with a [code](/en/guide/setup#_3-set-up-a-device-with-a-code); choose the device type **Wall display**.
+### Night and no connection
+
+- From 21:00 the display switches by itself to a calm night view.
+- If the connection drops, the last plan stays visible with the note "No connection".
+
+::: tip Kids' tablet
+The children's view is getting **My day**, **Timetable** and **Points** soon.
+:::
+
+It is connected like any shared device with a [code](/en/guide/setup#_2-connect-a-device-with-a-code); choose the device type **Wall display**.

@@ -1,6 +1,7 @@
 {
   "name": "wuselwall-website",
   "private": true,
+  "license": "Apache-2.0",
   "type": "module",
   "engines": {
     "node": ">=22.12"
@@ -8,7 +9,8 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "start": "node dist/server/entry.mjs"
+    "start": "node dist/server/entry.mjs",
+    "sync-screens": "node scripts/sync-screens.mjs"
   },
   "dependencies": {
     "@astrojs/node": "11.1.7",

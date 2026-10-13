@@ -77,7 +77,7 @@ and no Xcode debugger. See [Q35](14-open-questions.md).
 | Firebase project | Android push via FCM — not needed until push is built, and only if [Q38](14-open-questions.md) settles on FCM | free | Minutes |
 | **Sign in with Apple** (in the Developer account): the capability on `ch.goomba.wuselwall`, a Services ID, a key | Step 9 — Apple sign-in on iOS, Android and the web | — | Minutes, after the programme is active |
 | **Google Cloud project** with an OAuth consent screen and three OAuth clients (web, iOS, Android) | Step 9 — Google sign-in | free | Minutes; the consent screen's branding review can take a few days |
-| **Scaleway account** with Transactional Email ([Q41](14-open-questions.md), decided): one project for Unraid now, one for Cloud later; sending domains verified with SPF/DKIM/DMARC ([10](10-deployment-and-ops.md#email-setup)) | Step 9 — email codes | 300 mails/month free, then €0.25 per 1,000 | An evening, plus DNS propagation |
+| **Scaleway account** with Transactional Email ([Q41](14-open-questions.md), decided): one project, for the Unraid stack (no Cloud since ADR-018); sending domains verified with SPF/DKIM/DMARC ([10](10-deployment-and-ops.md#email-setup)) | Step 9 — email codes | 300 mails/month free, then €0.25 per 1,000 | An evening, plus DNS propagation |
 | **Supabase organisation** on the Pro plan, project in Frankfurt ([ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md)) | WuselWall Cloud — needed at the opening gate, not before | ≈ $25 / month | Minutes |
 
 ---
@@ -511,19 +511,19 @@ Order chosen so that each slice is usable on its own:
    job (`pg_cron`), the `account-delete` Edge Function (Admin API, Apple revocation), the
    Apple authorisation-code exchange, `guardian_reset_mfa`, data export.
 7. **Localised mail.** The send-email hook in `supabase/functions/` with the message files
-   in `_shared/`, sending through Scaleway TEM's HTTP API, on Cloud and on the Unraid stack
+   in `_shared/`, sending through Scaleway TEM's HTTP API, on the Unraid stack
    (whose compose stack runs Edge Functions since A11 was fixed). A bilingual GoTrue
    template over SMTP remains the fallback for self-hosted stacks without the hook.
-7a. **Two flavours in the app** ([ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md),
-   [20](20-onboarding.md#on-a-self-hosted-server)):
-   - `app/env/cloud.json` for store builds;
-   - "Eigener Server" on the front door, reading `/.well-known/wuselwall.json` (served
-     from `infra/web/` on self-hosted stacks), remembering the server, and showing its
-     host;
-   - the server carried in invitation and pairing links;
-   - native Apple/Google and passkeys hidden except on Cloud and `WW_FIRST_PARTY_HOSTS`
+7a. **Any server, chosen in the app** ([ADR-018](adr/ADR-018-self-hosted-only.md), replacing
+   ADR-015's two flavours; [20](20-onboarding.md#choosing-the-server)):
+   - store builds without a default backend; S0 before the front door (QR code, typed
+     address, invitation), reading `/.well-known/wuselwall.json` (served from `infra/web/`
+     on every server), remembering the server, and showing its host;
+   - "Ohne Server ausprobieren": the in-memory demo, also for App Review;
+   - the server carried in the fragment of invitation and pairing links;
+   - native Apple/Google and passkeys hidden except on `WW_FIRST_PARTY_HOSTS`
      (Unraid: `api.wuselwall.app`);
-   - `min_app_version` honoured.
+   - `min_app_version` and the `api_version` window honoured.
 8. **Tests.**
    - pgTAP: a fresh account sees nothing; `code` mode refuses without a founder code; an
      invitation is single use, expires and cannot be accepted into a second household; a
@@ -584,10 +584,9 @@ manager.
 | `RESTIC_PASSWORD`, backup-target credentials, healthchecks URL | `/mnt/user/appdata/wuselwall/backup.env` on the server | backups |
 | Cloudflare origin certificate and key | nginx container on the server | TLS between Cloudflare and nginx |
 | Push credentials (APNs key, FCM service account) | Edge Function secrets | `push-send` |
-| `WW_APPLE_SECRET` (the six-monthly client-secret JWT), the Sign in with Apple `.p8` key | The home server's stack `.env` (`GOTRUE_EXTERNAL_APPLE_*`) and the Cloud project's Auth settings; the `.p8` in the password manager only | Supabase Auth (Apple via OAuth); the `account-delete` and code-exchange functions |
-| `WW_GOOGLE_CLIENT_SECRET` (web client) | The home server's stack `.env` (`GOTRUE_EXTERNAL_GOOGLE_*`) and the Cloud project's Auth settings | Supabase Auth (Google via OAuth) |
+| `WW_APPLE_SECRET` (the six-monthly client-secret JWT), the Sign in with Apple `.p8` key | The home server's stack `.env` (`GOTRUE_EXTERNAL_APPLE_*`); the `.p8` in the password manager only | Supabase Auth (Apple via OAuth); the `account-delete` and code-exchange functions |
+| `WW_GOOGLE_CLIENT_SECRET` (web client) | The home server's stack `.env` (`GOTRUE_EXTERNAL_GOOGLE_*`) | Supabase Auth (Google via OAuth) |
 | Scaleway TEM credentials: project ID and the secret key of an IAM application limited to Transactional Email, one pair per environment | The home server's stack `.env` (`SMTP_USER`, `SMTP_PASS`) and Edge Function secrets; the Cloud project's Auth settings and Edge Function secrets. Throwaway stacks use Mailpit | Supabase Auth email ([10](10-deployment-and-ops.md#email-setup)), the send-email hook |
-| Supabase access token for `supabase link`/`db push` to Cloud | The developer's password manager; never in CI until a deploy job exists | Cloud migrations and functions |
 
 The **publishable key** (`WW_PUBLISHABLE_KEY`) is not a secret — it is compiled into every
 app via `app/env/dev.json` — and the **secret key never leaves `supabase/.env`**: not in

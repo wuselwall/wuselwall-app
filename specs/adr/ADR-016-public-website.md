@@ -3,6 +3,8 @@
 **Status:** Accepted · 2026-10-12 · Amends [ADR-013](ADR-013-one-self-hosted-environment.md)
 (what nginx serves) and [ADR-014](ADR-014-self-service-onboarding.md) (the "links site")
 
+**Amended 2026-10-13 by [ADR-018](ADR-018-self-hosted-only.md):** no move to Cloudflare Pages; the website and links site stay on the home server, and links carry secrets and server addresses in the fragment.
+
 **Superseded in part 2026-10-13 by [ADR-017](ADR-017-wuselwall-app-domain.md):** the website, the web app and the API moved to their own hosts on `wuselwall.app`; the "same origin, `/app/`" decision below no longer holds. The rest stands.
 
 ## Context

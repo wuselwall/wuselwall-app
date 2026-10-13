@@ -15,30 +15,32 @@ abstract final class DemoData {
     Member(
       id: papa,
       displayName: 'Lukas',
-      color: Color(0xFF2E7D6B),
+      color: Color(0xFFC2255C),
       role: Role.guardian,
       active: true,
     ),
     Member(
       id: mama,
       displayName: 'Sabine',
-      color: Color(0xFFD9822B),
+      color: Color(0xFF9A5300),
       role: Role.guardian,
       active: true,
     ),
     Member(
       id: lotta,
       displayName: 'Lotta',
-      color: Color(0xFF5B6CC9),
+      color: Color(0xFF7B3FE4),
       role: Role.member,
       active: true,
+      isChild: true,
     ),
     Member(
       id: hanna,
       displayName: 'Hanna',
-      color: Color(0xFFC2527A),
+      color: Color(0xFF08737F),
       role: Role.member,
       active: true,
+      isChild: true,
     ),
   ];
 

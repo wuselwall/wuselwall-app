@@ -7,6 +7,12 @@ const SUPABASE_JWKS = parseJwks(Deno.env.get('SUPABASE_JWKS'))
 const LOCAL_JWKS = SUPABASE_JWKS ? jose.createLocalJWKSet(SUPABASE_JWKS) : null
 const VERIFY_JWT = Deno.env.get('VERIFY_JWT') === 'true'
 
+// WuselWall: functions called without a user, which authenticate the request themselves.
+// The ICS feed is fetched by Outlook and Apple Calendar with nothing but the token in
+// its URL; `api.ics_feed` checks that token (specs/05 "The ICS feed"). The nightly task
+// job is called by the host's cron with a shared secret it checks in constant time.
+const NO_USER_FUNCTIONS = new Set(['ics', 'tasks-nightly'])
+
 type AuthFailure = {
   code: RequestErrors
   message?: string
@@ -280,7 +286,8 @@ async function isValidHybridJWT(jwt: string): Promise<AuthFailure | null> {
 }
 
 Deno.serve(async (req: Request) => {
-  if (req.method !== 'OPTIONS' && VERIFY_JWT) {
+  const requested = new URL(req.url).pathname.split('/')[1] ?? ''
+  if (req.method !== 'OPTIONS' && VERIFY_JWT && !NO_USER_FUNCTIONS.has(requested)) {
     try {
       const token = getAuthToken(req)
       if (typeof token !== 'string') {

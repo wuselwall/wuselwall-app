@@ -18,29 +18,26 @@ void main() {
 
     testWidgets('shows the German setup screen', (t) async {
       await pump(t);
-      expect(
-        find.text('Dieses Gerät ist noch nicht eingerichtet'),
-        findsOneWidget,
-      );
-      expect(find.text('Dieses Gerät mit Code einrichten'), findsOneWidget);
+      expect(find.text('Willkommen bei WuselWall'), findsOneWidget);
+      expect(find.text('Mit Code verbinden'), findsOneWidget);
     });
 
     testWidgets('shows English on an English device', (t) async {
       await pump(t, locale: const Locale('en'));
-      expect(find.text('This device is not set up yet'), findsOneWidget);
+      expect(find.text('Welcome to WuselWall'), findsOneWidget);
     });
 
     testWidgets('falls back to German for unsupported locales', (t) async {
       await pump(t, locale: const Locale('fr'));
-      expect(find.text('Einrichtung'), findsWidgets);
+      expect(find.text('Willkommen bei WuselWall'), findsOneWidget);
     });
 
     testWidgets('a wrong enrolment code shows a localized error', (t) async {
       await pump(t);
-      await t.tap(find.text('Dieses Gerät mit Code einrichten'));
+      await t.tap(find.text('Mit Code verbinden'));
       await t.pumpAndSettle();
       await t.enterText(find.byType(TextField), 'ABCD2345');
-      await t.tap(find.text('Einrichten'));
+      await t.tap(find.text('Verbinden'));
       await t.pumpAndSettle();
       expect(
         find.text('Dieser Code ist falsch oder abgelaufen.'),
@@ -60,7 +57,11 @@ void main() {
           shopping: FakeShoppingRepository([item('1', 'Milch')]),
         ),
       );
-      expect(find.text('Einkaufsliste'), findsOneWidget);
+      // The adult home opens on the calendar; the shopping tab is one tap away. Its
+      // label is the same text as the app bar title, so the title is found in the bar.
+      await t.tap(find.text('Einkaufsliste'));
+      await t.pumpAndSettle();
+      expect(find.widgetWithText(AppBar, 'Einkaufsliste'), findsOneWidget);
       expect(find.text('Milch'), findsOneWidget);
       expect(find.text('Wer bist du?'), findsNothing);
     });
@@ -82,10 +83,7 @@ void main() {
       );
       await pumpApp(t, overrides: baseOverrides(identity: identity));
       expect(identity.signedOut, isTrue);
-      expect(
-        find.text('Dieses Gerät ist noch nicht eingerichtet'),
-        findsOneWidget,
-      );
+      expect(find.text('Willkommen bei WuselWall'), findsOneWidget);
     });
   });
 }

@@ -13,8 +13,9 @@ import 'package:wuselwall/features/identity/data/sign_in_methods_repository.dart
 import 'package:wuselwall/features/identity/domain/sign_in_method.dart';
 import 'package:wuselwall/features/setup/ui/provider_buttons.dart';
 
-/// What every un-enrolled device shows: Apple and Google where this build offers
-/// them, then the device code, guardian sign-in and a new household.
+/// What every un-enrolled device shows (specs/20, "The front door"): the sign-in
+/// group (Apple and Google where this build offers them, then email), then below
+/// "or" the device code and a new household.
 class SetupPage extends ConsumerStatefulWidget {
   const SetupPage({super.key});
 
@@ -64,7 +65,6 @@ class _SetupPageState extends ConsumerState<SetupPage> {
     final online = ref.watch(connectivityProvider).value ?? true;
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.setupTitle)),
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
@@ -80,46 +80,45 @@ class _SetupPageState extends ConsumerState<SetupPage> {
                 const SizedBox(height: Tokens.space4),
                 Text(l10n.setupHeadline, style: theme.textTheme.headlineSmall),
                 const SizedBox(height: Tokens.space2),
-                Text(l10n.setupBody),
+                Text(l10n.doorTagline),
                 const SizedBox(height: Tokens.space6),
-                if (providers.isNotEmpty) ...[
-                  for (final p in providers) ...[
-                    ProviderButton(
-                      provider: p,
-                      onPressed: _busy || !online ? null : () => _signIn(p),
-                    ),
-                    const SizedBox(height: Tokens.space3),
-                  ],
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: Tokens.space3,
-                    ),
-                    child: Row(
-                      children: [
-                        const Expanded(child: Divider()),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: Tokens.space3,
-                          ),
-                          child: Text(l10n.doorOr),
-                        ),
-                        const Expanded(child: Divider()),
-                      ],
-                    ),
+                for (final p in providers) ...[
+                  ProviderButton(
+                    provider: p,
+                    onPressed: _busy || !online ? null : () => _signIn(p),
                   ),
+                  const SizedBox(height: Tokens.space3),
                 ],
-                FilledButton.icon(
+                // Email + password until the email code (E1–E3) replaces it.
+                OutlinedButton.icon(
+                  onPressed: _busy || !online
+                      ? null
+                      : () => context.go(Routes.signIn),
+                  icon: const Icon(Icons.mail_outline),
+                  label: Text(l10n.doorEmail),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: Tokens.space4),
+                  child: Row(
+                    children: [
+                      const Expanded(child: Divider()),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: Tokens.space3,
+                        ),
+                        child: Text(l10n.doorOr),
+                      ),
+                      const Expanded(child: Divider()),
+                    ],
+                  ),
+                ),
+                // The M0.1 code entry, where pairing (J3) will stand.
+                TextButton.icon(
                   onPressed: () => context.go(Routes.enrol),
                   icon: const Icon(Icons.pin_outlined),
                   label: Text(l10n.setupEnrolAction),
                 ),
-                const SizedBox(height: Tokens.space3),
-                OutlinedButton.icon(
-                  onPressed: () => context.go(Routes.signIn),
-                  icon: const Icon(Icons.login),
-                  label: Text(l10n.setupSignInAction),
-                ),
-                const SizedBox(height: Tokens.space3),
+                // The founder wizard, until H1 after sign-in replaces it.
                 TextButton(
                   onPressed: () => context.go(Routes.wizard),
                   child: Text(l10n.setupHouseholdAction),

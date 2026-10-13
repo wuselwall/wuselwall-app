@@ -162,9 +162,16 @@ This is where a self-hosted app usually leaks, quietly, through convenience:
 sign-in providers (they learn that the person signs in to WuselWall; scopes are
 `email`/`name`/`profile` only), and **one SMTP provider** ([Q41](14-open-questions.md);
 decided: Scaleway, EU), which sees email addresses and sign-in codes and nothing from
-the household. **Since ADR-015**, for households on WuselWall Cloud: **Supabase Inc.** as
-the hosting processor (data stored in Frankfurt; a US-headquartered company, which is why
-the self-hosted flavour remains for those who want none).
+the household. *(ADR-015's Supabase Inc. as Cloud's processor is gone with Cloud, [ADR-018](adr/ADR-018-self-hosted-only.md).)*
+**Since ADR-018**, the store app carries **Google's iOS sign-in library** for the family's
+server. Its privacy manifest declares device ID and usage data for analytics (Google's,
+not tracking), and the privacy policy and store labels say so. Apple's sign-in is part of
+iOS and adds no code.
+**Found 2026-10-13, not accepted:** on Android, `mobile_scanner` decodes QR codes with
+Google's **ML Kit**, which sends device, app and performance data with a per-installation
+identifier to Google for diagnostics and usage analytics (Google's ML Kit data disclosure).
+That breaks NFR-9. The privacy policy discloses it until the Android scanner is replaced
+by an on-device decoder without telemetry ([Q49](14-open-questions.md)).
 | A Ferien import from a public API ([15](15-module-school-timetable.md#holidays)) | Fetched by a scheduled Edge Function, server-side only, with the host pinned in configuration and the result cached in the database. The browser never contacts it, and a failed fetch degrades to hand-entered holidays rather than to an error. |
 | An external map or weather widget | If you want weather on the wall display, proxy it server-side so the app never contacts a third party directly, and cache aggressively. |
 | Avatar images from Gravatar | Local uploads or generated initials. |
@@ -226,13 +233,13 @@ With Supabase, row-level security is not defence in depth; it is the perimeter.
   the requesting device. The approval screen repeats the code and warns against
   approving a device that is not in front of you. That is the one social-engineering
   path, and it ends in a shared device a guardian can see and revoke in Geräte.
-- **Custom servers cannot harvest Cloud sign-ins** ([ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md),
-  decision 4). The store app uses native Apple and Google sign-in, whose ID tokens are
-  addressed to our app, only against WuselWall Cloud and the first-party servers
-  compiled into the app (the user's Unraid stack). Against a server someone typed in,
-  it offers email and the operator's own redirect clients. A hostile self-hosted server
-  therefore never receives a token that Cloud would accept. The app shows the server's
-  host on every sign-in screen that is not Cloud.
+- **Other servers cannot harvest the family's sign-ins** ([ADR-018](adr/ADR-018-self-hosted-only.md),
+  decision 6; first argued for Cloud in ADR-015). The store app uses native Apple and
+  Google sign-in, whose ID tokens are addressed to our app, only against the first-party
+  servers compiled into the app (the user's Unraid stack). Against any other server it
+  offers email and the operator's own redirect clients. A hostile server therefore never
+  receives a token that the family's server would accept. The app shows the server's host
+  on every sign-in screen.
 - **Cross-household isolation is now about strangers.** The pgTAP cross-household cases
   (T9) are release-blocking, and the catalogue test pins the exact list of
   anon-callable functions.
@@ -280,8 +287,7 @@ With Supabase, row-level security is not defence in depth; it is the perimeter.
   knows. From it, the operator is a controller and needs:
   - a privacy policy (linked from the front door, the landing pages and the stores);
   - a record of processing (Art. 30);
-  - processor agreements with Supabase (WuselWall Cloud), the SMTP provider and
-    Cloudflare (the links site);
+  - processor agreements with the SMTP provider and Cloudflare (the links site);
   - deletion and export in the app (FR-5.16);
   - a 72-hour breach procedure (Art. 33);
   - a contact address that is read.
