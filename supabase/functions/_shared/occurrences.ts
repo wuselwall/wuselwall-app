@@ -71,6 +71,28 @@ export type Occurrence = {
   attendee_ids: string[];
   is_recurring: boolean;
   is_override: boolean;
+  /** 'event': the household's own event (editable). 'imported': an external ICS feed (read-only). */
+  source: "event" | "imported";
+  /** The imported calendar's colour; null for the household's events (they take member colours). */
+  colour_hex: string | null;
+};
+
+/** A row of api.external_occurrences (migrations/20261014150000_external_calendars.sql). */
+export type ExternalOccurrenceRow = {
+  id: string;
+  calendar_id: string;
+  calendar_name: string;
+  colour_hex: string;
+  member_ids: string[];
+  show_on_board: boolean;
+  uid: string;
+  starts_at: string | null;
+  ends_at: string | null;
+  all_day: boolean;
+  start_date: string | null;
+  end_date: string | null;
+  title: string;
+  location: string | null;
 };
 
 /** Hard cap on occurrences emitted for one event in one call. */
@@ -401,6 +423,11 @@ export function expand(
   return out.sort(compareOccurrences);
 }
 
+/** The order every calendar read uses: start instant, all-day first, title, id. */
+export function sortOccurrences(occurrences: Occurrence[]): Occurrence[] {
+  return occurrences.sort(compareOccurrences);
+}
+
 function compareOccurrences(a: Occurrence, b: Occurrence): number {
   return (
     Date.parse(a.start) - Date.parse(b.start) ||
@@ -606,8 +633,68 @@ function expandEvent(
       attendee_ids: ev.attendee_ids,
       is_recurring: isRecurring,
       is_override: isOverride,
+      source: "event",
+      colour_hex: null,
     });
     if (out.length >= MAX_PER_EVENT) break;
   }
   return out;
+}
+
+/**
+ * One stored row of an imported calendar as an Occurrence: read-only, in the calendar's colour,
+ * with the calendar's members. Times are local to the household's timezone `tz`. An imported
+ * occurrence is a key appointment on the week board when its calendar shows on the board.
+ */
+export function importedOccurrence(row: ExternalOccurrenceRow, tz: string): Occurrence {
+  let start: string;
+  let end: string;
+  let localStartDate: string;
+  let localEndDate: string;
+  let localStarts: string | null = null;
+  let localEnds: string | null = null;
+  if (row.all_day) {
+    const sd = row.start_date ?? "";
+    const ed = row.end_date ?? sd;
+    start = isoOf(startOfDayMs(sd, tz));
+    end = isoOf(startOfDayMs(addDays(ed, 1), tz));
+    localStartDate = sd;
+    localEndDate = ed;
+  } else {
+    const startMs = Date.parse(row.starts_at ?? "");
+    const endMs = Date.parse(row.ends_at ?? "");
+    start = isoOf(startMs);
+    end = isoOf(endMs);
+    const s = toLocal(startMs, tz);
+    const e = toLocal(endMs, tz);
+    localEndDate = toLocal(endMs > startMs ? endMs - 1 : startMs, tz).toPlainDate().toString();
+    localStartDate = s.toPlainDate().toString();
+    localStarts = hhmm(s);
+    localEnds = hhmm(e);
+  }
+  return {
+    id: `imported|${row.id}`,
+    event_id: `${row.calendar_id}|${row.uid}`,
+    recurrence_id: null,
+    calendar_id: row.calendar_id,
+    title: row.title,
+    location: row.location,
+    description: null,
+    kind: "appointment",
+    presence_state: null,
+    status: "confirmed",
+    importance: row.show_on_board ? "key" : "normal",
+    all_day: row.all_day,
+    start,
+    end,
+    local_start_date: localStartDate,
+    local_end_date: localEndDate,
+    local_starts: localStarts,
+    local_ends: localEnds,
+    attendee_ids: row.member_ids,
+    is_recurring: false,
+    is_override: false,
+    source: "imported",
+    colour_hex: row.colour_hex,
+  };
 }
