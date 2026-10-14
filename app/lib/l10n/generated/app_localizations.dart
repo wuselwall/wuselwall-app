@@ -4927,6 +4927,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Undo'**
   String get schoolsUiUndo;
+
+  /// No description provided for @exportFamilyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Family'**
+  String get exportFamilyTitle;
+
+  /// No description provided for @exportAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Export data'**
+  String get exportAction;
+
+  /// No description provided for @exportExplanation.
+  ///
+  /// In en, this message translates to:
+  /// **'All your family\'s data as a file, for example for a move to another server.'**
+  String get exportExplanation;
+
+  /// No description provided for @exportInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Exporting data'**
+  String get exportInProgress;
+
+  /// No description provided for @exportPersonalDeviceRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'The export works from your own phone only.'**
+  String get exportPersonalDeviceRequired;
 }
 
 class _AppLocalizationsDelegate

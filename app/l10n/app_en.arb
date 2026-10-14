@@ -1523,5 +1523,10 @@
   "schoolsUiDayCleared": "Day cleared",
   "schoolsUiDayCopied": "Day copied",
   "schoolsUiDaySwapped": "Days swapped",
-  "schoolsUiUndo": "Undo"
+  "schoolsUiUndo": "Undo",
+  "exportFamilyTitle": "Family",
+  "exportAction": "Export data",
+  "exportExplanation": "All your family's data as a file, for example for a move to another server.",
+  "exportInProgress": "Exporting data",
+  "exportPersonalDeviceRequired": "The export works from your own phone only."
 }

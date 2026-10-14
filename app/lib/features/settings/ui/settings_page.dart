@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,6 +22,8 @@ import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/identity/domain/sign_in_method.dart';
 import 'package:wuselwall/features/identity/ui/enrolment_qr.dart';
 import 'package:wuselwall/features/identity/ui/guardian_gate.dart';
+import 'package:wuselwall/features/settings/application/household_export_providers.dart';
+import 'package:wuselwall/features/settings/data/household_export_repository.dart';
 import 'package:wuselwall/features/system/ui/class_labels.dart';
 
 /// Members and devices. Reading is open to the household; every change is a guardian
@@ -128,6 +132,7 @@ class SettingsPage extends ConsumerWidget {
             ),
           ),
           if (thisDevice?.deviceClass == DeviceClass.personal) ...[
+            const _FamilySection(),
             const SizedBox(height: Tokens.space6),
             const _SignInMethodsSection(),
             const SizedBox(height: Tokens.space6),
@@ -403,6 +408,93 @@ class _CodeDialog extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+/// Family-wide actions. Only a guardian on their own phone sees the export (GDPR Art. 20);
+/// the server refuses everyone else too.
+class _FamilySection extends ConsumerStatefulWidget {
+  const _FamilySection();
+
+  @override
+  ConsumerState<_FamilySection> createState() => _FamilySectionState();
+}
+
+class _FamilySectionState extends ConsumerState<_FamilySection> {
+  var _exporting = false;
+
+  bool get _canExport {
+    final device = ref.watch(deviceProvider).value;
+    if (device?.deviceClass != DeviceClass.personal) return false;
+    final acting = ref.watch(actingProfileProvider);
+    final members = ref.watch(membersProvider).value ?? const <Member>[];
+    return members.any((m) => m.id == acting && m.isGuardian);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_canExport) return const SizedBox.shrink();
+    final l10n = context.l10n;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: Tokens.space6),
+        Text(
+          l10n.exportFamilyTitle,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        ListTile(
+          key: const ValueKey('export-data'),
+          leading: const Icon(Icons.download_outlined),
+          title: Text(l10n.exportAction),
+          subtitle: Text(l10n.exportExplanation),
+          trailing: _exporting
+              ? Semantics(
+                  label: l10n.exportInProgress,
+                  child: const SizedBox.square(
+                    dimension: 24,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                )
+              : null,
+          onTap: _exporting ? null : _export,
+        ),
+      ],
+    );
+  }
+
+  Future<void> _export() async {
+    if (!await ensureGuardian(context, ref) || !mounted) return;
+    // Read before the first await: the share sheet is anchored to this tile on iPad.
+    final box = context.findRenderObject() as RenderBox?;
+    final origin = box == null
+        ? null
+        : box.localToGlobal(Offset.zero) & box.size;
+    final actor = ref.read(actingProfileProvider);
+
+    setState(() => _exporting = true);
+    try {
+      final result = await ref
+          .read(householdExportRepositoryProvider)
+          .export(actor: actor);
+      if (!mounted) return;
+      switch (result) {
+        case Err(:final failure):
+          context.showFailure(failure);
+        case Ok(:final value):
+          final shared = await Result.guard(
+            () => ref.read(shareExportProvider)(
+              fileName: householdExportFileName(DateTime.now()),
+              bytes: Uint8List.fromList(utf8.encode(value)),
+              origin: origin,
+            ),
+          );
+          if (!mounted) return;
+          shared.when(ok: (_) {}, err: context.showFailure);
+      }
+    } finally {
+      if (mounted) setState(() => _exporting = false);
+    }
   }
 }
 

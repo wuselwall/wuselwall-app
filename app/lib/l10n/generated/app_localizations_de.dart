@@ -2798,4 +2798,21 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get schoolsUiUndo => 'Rückgängig';
+
+  @override
+  String get exportFamilyTitle => 'Familie';
+
+  @override
+  String get exportAction => 'Daten exportieren';
+
+  @override
+  String get exportExplanation =>
+      'Alle Daten eurer Familie als Datei, z. B. für einen Umzug auf einen anderen Server.';
+
+  @override
+  String get exportInProgress => 'Daten werden exportiert';
+
+  @override
+  String get exportPersonalDeviceRequired =>
+      'Der Export geht nur vom eigenen Telefon aus.';
 }
