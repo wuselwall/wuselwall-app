@@ -196,7 +196,7 @@ const de: Strings = {
         title: 'Diese Website und die Anleitung',
         body: [
           'Die Website wuselwall.app und die Anleitung unter wuselwall.app/docs setzen keine Cookies, speichern nichts in Ihrem Browser und laden keine Schriften, Skripte oder Bilder von Dritten.',
-          'Beim Aufruf verarbeitet unser Webserver technisch notwendige Angaben: IP-Adresse, Zeitpunkt, aufgerufene Adresse, Browserkennung und die Seite, von der Sie kommen. Wir nutzen sie nur, um die Seiten auszuliefern und Angriffe abzuwehren, führen sie nicht mit anderen Daten zusammen und löschen sie nach spätestens {logDays} Tagen.',
+          'Unser Webserver führt keine Zugriffsprotokolle: Wer welche Seite aufruft, wird nicht gespeichert. Nur wenn beim Ausliefern ein Fehler auftritt, hält er IP-Adresse, Zeitpunkt und aufgerufene Adresse in einem Fehlerprotokoll fest. Wir nutzen es nur, um Fehler zu beheben und Angriffe abzuwehren, führen es nicht mit anderen Daten zusammen und löschen es nach spätestens {logDays} Tagen.',
           'Die Website wird über Cloudflare ausgeliefert (Cloudflare, Inc., USA), das die Verbindung verschlüsselt, vor Missbrauch schützt und Inhalte zwischenspeichert. Cloudflare verarbeitet dabei Ihre IP-Adresse in unserem Auftrag und ist nach dem Data Privacy Framework (EU–USA und Schweiz–USA) zertifiziert. <a href="https://www.cloudflare.com/de-de/privacypolicy/" rel="noopener">Datenschutzerklärung von Cloudflare</a>.',
         ],
       },
@@ -385,7 +385,7 @@ const en: Strings = {
         title: 'This website and the guide',
         body: [
           'The website wuselwall.app and the guide at wuselwall.app/docs set no cookies, store nothing in your browser and load no fonts, scripts or images from third parties.',
-          'When you visit, our web server processes technically necessary data: IP address, time, the address requested, browser identifier and the page you came from. We use it only to deliver the pages and fend off attacks, do not combine it with other data and delete it after {logDays} days at the latest.',
+          'Our web server keeps no access logs: who visits which page is not stored. Only when an error occurs while delivering a page does it record the IP address, time and address requested in an error log. We use it only to fix errors and fend off attacks, do not combine it with other data and delete it after {logDays} days at the latest.',
           'The website is delivered through Cloudflare (Cloudflare, Inc., USA), which encrypts the connection, protects against abuse and caches content. Cloudflare processes your IP address on our behalf and is certified under the Data Privacy Framework (EU–U.S. and Swiss–U.S.). <a href="https://www.cloudflare.com/privacypolicy/" rel="noopener">Cloudflare’s privacy policy</a>.',
         ],
       },
