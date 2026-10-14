@@ -3175,4 +3175,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get extCalActive => 'Aktiv';
+
+  @override
+  String get extCalUrlLoading => 'Adresse wird geladen';
 }

@@ -5527,6 +5527,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Active'**
   String get extCalActive;
+
+  /// No description provided for @extCalUrlLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading the address'**
+  String get extCalUrlLoading;
 }
 
 class _AppLocalizationsDelegate

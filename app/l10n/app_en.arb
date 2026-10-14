@@ -1719,5 +1719,6 @@
   "extCalAllDay": "All day",
   "extCalSheetTitle": "Appointment from a subscription",
   "extCalSettingsRefreshHint": "The server fetches each calendar about once an hour.",
-  "extCalActive": "Active"
+  "extCalActive": "Active",
+  "extCalUrlLoading": "Loading the address"
 }

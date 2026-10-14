@@ -19,7 +19,7 @@ class DemoExternalCalendarsRepository implements ExternalCalendarsRepository {
     ExternalCalendar(
       id: demoBinCalendarId,
       name: 'Abfuhrkalender',
-      url: 'https://abfuhr.example.de/kalender.ics',
+      urlHost: 'abfuhr.example.de',
       colourHex: '#9A5300',
       memberIds: const [],
       showOnBoard: true,
@@ -29,7 +29,7 @@ class DemoExternalCalendarsRepository implements ExternalCalendarsRepository {
     ExternalCalendar(
       id: demoFootballCalendarId,
       name: 'FC Spielplan',
-      url: 'https://fc-beispiel.example.de/spielplan.ics',
+      urlHost: 'fc-beispiel.example.de',
       colourHex: '#1A4FA8',
       memberIds: const [DemoData.hanna],
       showOnBoard: false,
@@ -52,13 +52,14 @@ class DemoExternalCalendarsRepository implements ExternalCalendarsRepository {
       final created = ExternalCalendar(
         id: 'demo-ext-${_nextId++}',
         name: draft.name ?? '',
-        url: draft.url ?? '',
+        urlHost: _hostOf(draft.url),
         colourHex: draft.colourHex ?? '#9A5300',
         memberIds: draft.memberIds ?? const [],
         showOnBoard: draft.showOnBoard ?? false,
         active: draft.active ?? true,
       );
       _calendars.add(created);
+      _urls[created.id] = draft.url ?? '';
       return Ok(created.id);
     }
     final index = _calendars.indexWhere((c) => c.id == id);
@@ -66,10 +67,11 @@ class DemoExternalCalendarsRepository implements ExternalCalendarsRepository {
       return const Err(NotFoundFailure(code: 'external_calendar_not_found'));
     }
     final old = _calendars[index];
+    if (draft.url != null) _urls[id] = draft.url!;
     _calendars[index] = ExternalCalendar(
       id: old.id,
       name: draft.name ?? old.name,
-      url: draft.url ?? old.url,
+      urlHost: draft.url == null ? old.urlHost : _hostOf(draft.url),
       colourHex: draft.colourHex ?? old.colourHex,
       memberIds: draft.memberIds ?? old.memberIds,
       showOnBoard: draft.showOnBoard ?? old.showOnBoard,
@@ -88,6 +90,26 @@ class DemoExternalCalendarsRepository implements ExternalCalendarsRepository {
     _calendars.removeWhere((c) => c.id == id);
     return const Ok(null);
   }
+
+  /// The demo keeps the full address per calendar, so the edit form can load it.
+  final _urls = <String, String>{
+    demoBinCalendarId: 'https://abfuhr.example.de/kalender.ics',
+    demoFootballCalendarId: 'https://fc-beispiel.example.de/spielplan.ics',
+  };
+
+  @override
+  Future<Result<String>> url({
+    required String? actor,
+    required String id,
+  }) async {
+    final url = _urls[id];
+    if (url == null) {
+      return const Err(NotFoundFailure(code: 'external_calendar_not_found'));
+    }
+    return Ok(url);
+  }
+
+  static String _hostOf(String? url) => Uri.tryParse(url ?? '')?.host ?? '';
 
   @override
   Future<Result<CalendarRefresh>> refresh({

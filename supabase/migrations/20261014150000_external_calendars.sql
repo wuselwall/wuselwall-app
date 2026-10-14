@@ -12,10 +12,18 @@
 --
 -- Read (authenticated, live device of the household; RLS as everywhere):
 --
---   api.external_calendars   id, name, url, colour_hex, member_ids uuid[], show_on_board,
+--   api.external_calendars   id, name, url_host, colour_hex, member_ids uuid[], show_on_board,
 --                            active, last_fetched_at, last_error, created_at, updated_at
---                            (etag is not exposed). last_fetched_at is the last ATTEMPT, success or
---                            failure; last_error is a short code (see below) or null after success.
+--                            (etag and the full url are not exposed). url_host is only the host name
+--                            (www.fc-beispiel.de), for display: a feed address often carries a secret
+--                            token, so every live device of the household sees the host and no more.
+--                            last_fetched_at is the last ATTEMPT, success or failure; last_error is a
+--                            short code (see below) or null after success.
+--
+--   api.external_calendar_url(p_actor uuid, p_id uuid) returns text
+--       The full feed address, for the guardian's edit form. Guardians only (a child's device and
+--       a kiosk are refused, a member gets guardian_required); the calendar must belong to the
+--       actor's household (else WW-CAL-007). Read-only: writes no audit row.
 --
 --   api.external_occurrences id, calendar_id, calendar_name, colour_hex, member_ids,
 --                            show_on_board, uid, starts_at, ends_at, all_day, start_date,
@@ -33,7 +41,8 @@
 --       show_on_board and active to false and true. url is https only; webcal:// is stored as
 --       https://. Returns {id}. Changing the URL deletes the calendar's occurrences and clears
 --       last_fetched_at, etag and last_error, so the next hourly run fetches it at once.
---       Audit entity 'external_calendar' (the URL is not written to the audit log).
+--       Audit entity 'external_calendar' (the URL is not written to the audit log). A save that does
+--       not send "url" keeps the stored address, so the apps leave the key out unless it was edited.
 --
 --   api.external_calendar_delete(p_actor uuid, p_id uuid) returns void
 --       Deletes the calendar and its occurrences.
@@ -160,9 +169,10 @@ grant select on app.external_calendar, app.external_occurrence to authenticated;
 
 -- ------------------------------------------------------------------ api: reads
 
+-- url_host is the only part of the feed address every device may see (see the contract above).
 create view api.external_calendars with (security_invoker = true) as
-  select id, name, url, colour_hex, member_ids, show_on_board, active, last_fetched_at, last_error,
-         created_at, updated_at
+  select id, name, substring(url from '^https://([^/?#:]+)') as url_host, colour_hex, member_ids,
+         show_on_board, active, last_fetched_at, last_error, created_at, updated_at
     from app.external_calendar;
 
 create view api.external_occurrences with (security_invoker = true) as
@@ -307,6 +317,25 @@ begin
                     jsonb_build_object('name', v_name, 'active', v_active));
   perform app.broadcast(a.household_id, 'calendar');
   return jsonb_build_object('id', v_id);
+end $$;
+
+-- The full feed address, for the guardian's edit form. Reads only; no audit row.
+create function api.external_calendar_url(p_actor uuid, p_id uuid) returns text
+language plpgsql security definer set search_path = '' as $$
+declare
+  a     app.actor_t := app.actor(p_actor);
+  v_url text;
+begin
+  if a.device_class = 'kiosk' then
+    raise exception 'not allowed on a kiosk' using errcode = '42501', hint = 'kiosk_forbidden';
+  end if;
+  perform app.require_guardian(a);
+  select c.url into v_url from app.external_calendar c
+   where c.id = p_id and c.household_id = a.household_id;
+  if not found then
+    raise exception 'external calendar not found' using errcode = 'P0002', hint = 'external_calendar_not_found';
+  end if;
+  return v_url;
 end $$;
 
 -- Deletes one imported calendar and its occurrences.
@@ -454,9 +483,9 @@ end $$;
 
 -- Guardian writes and the guardian gate: authenticated only.
 revoke all on function api.external_calendar_save(uuid, jsonb), api.external_calendar_delete(uuid, uuid),
-  api.external_calendar_refresh_request(uuid, uuid) from public, anon;
+  api.external_calendar_refresh_request(uuid, uuid), api.external_calendar_url(uuid, uuid) from public, anon;
 grant execute on function api.external_calendar_save(uuid, jsonb), api.external_calendar_delete(uuid, uuid),
-  api.external_calendar_refresh_request(uuid, uuid) to authenticated;
+  api.external_calendar_refresh_request(uuid, uuid), api.external_calendar_url(uuid, uuid) to authenticated;
 
 -- The fetch job: the service role only. New functions are executable by PUBLIC unless revoked.
 revoke all on function api.external_calendar_due(int), api.external_calendar_get(uuid),

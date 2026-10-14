@@ -7,7 +7,7 @@ class ExternalCalendar {
   const ExternalCalendar({
     required this.id,
     required this.name,
-    required this.url,
+    required this.urlHost,
     required this.colourHex,
     required this.memberIds,
     required this.showOnBoard,
@@ -20,7 +20,7 @@ class ExternalCalendar {
       ExternalCalendar(
         id: json['id'] as String,
         name: json['name'] as String,
-        url: json['url'] as String,
+        urlHost: json['url_host'] as String? ?? '',
         colourHex: json['colour_hex'] as String,
         memberIds: ((json['member_ids'] as List?) ?? const []).cast<String>(),
         showOnBoard: json['show_on_board'] as bool? ?? false,
@@ -33,7 +33,10 @@ class ExternalCalendar {
 
   final String id;
   final String name;
-  final String url;
+
+  /// The host of the feed address only (`www.fc-beispiel.de`). The full address is
+  /// never sent to a device: it is a secret for guardians (`external_calendar_url`).
+  final String urlHost;
   final String colourHex;
 
   /// Empty: the whole family.

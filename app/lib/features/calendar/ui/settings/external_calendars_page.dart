@@ -263,6 +263,10 @@ class _CalendarCard extends StatelessWidget {
                       children: [
                         Text(calendar.name, style: text.titleMedium),
                         Text(
+                          calendar.urlHost,
+                          style: text.bodySmall?.copyWith(color: ww.ink2),
+                        ),
+                        Text(
                           membersLabel,
                           style: text.bodySmall?.copyWith(color: ww.ink2),
                         ),

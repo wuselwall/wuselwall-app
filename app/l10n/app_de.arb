@@ -1091,5 +1091,6 @@
   "extCalAllDay": "Ganztägig",
   "extCalSheetTitle": "Termin aus einem Abo",
   "extCalSettingsRefreshHint": "Der Server ruft jeden Kalender etwa einmal pro Stunde ab.",
-  "extCalActive": "Aktiv"
+  "extCalActive": "Aktiv",
+  "extCalUrlLoading": "Adresse wird geladen"
 }
