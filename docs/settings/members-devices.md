@@ -26,3 +26,13 @@ Der Code gilt **10 Minuten** und funktioniert **einmal**.
 Geht ein Handy verloren oder wird ein Tablet weitergegeben: Tippe in der Geräteliste auf **Sperren**. Das Gerät verliert **sofort** den Zugriff – auch wenn es gerade offen ist. Gesperrte Geräte bleiben in der Liste, damit nachvollziehbar ist, was passiert ist.
 
 Auf deinem eigenen Handy kannst du dich mit **Dieses Gerät abmelden** auch selbst abmelden.
+
+## Daten exportieren
+
+Erziehungsberechtigte können alle Daten eurer Familie als eine Datei speichern, zum Beispiel für einen Umzug auf einen anderen Server. Das geht unten in den Einstellungen im Bereich **Familie** mit **Daten exportieren**, und nur vom eigenen Handy eines Erziehungsberechtigten aus.
+
+Die Datei enthält die Angaben, die ihr eingegeben habt: Mitglieder, Termine, Stundenpläne, Aufgaben, Rezepte, Einkaufslisten und so weiter. Passwörter, PINs und Anmeldedaten sind **nicht** enthalten, und Geräte erscheinen nur mit Namen und Datum.
+
+## Erste Schritte wieder anzeigen
+
+Hast du die Karte **Erste Schritte** auf dem Heute-Tab ausgeblendet, holst du sie unter **Einstellungen → Erste Schritte** zurück.

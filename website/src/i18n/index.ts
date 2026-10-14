@@ -129,6 +129,11 @@ const de: Strings = {
   status: [
     { label: 'Geräte verbinden und Familie einrichten', state: 'fertig', done: true },
     { label: 'Einkaufsliste mit Offline-Modus', state: 'fertig', done: true },
+    { label: 'Heute-Ansicht mit ersten Schritten', state: 'fertig', done: true },
+    { label: 'Essensvorschläge aus eurem Verlauf', state: 'fertig', done: true },
+    { label: 'Datenexport für die Familie', state: 'fertig', done: true },
+    { label: 'Feiertage und Schulferien für Deutschland, Österreich, die Schweiz und Liechtenstein – bis zur Gemeinde', state: 'fertig', done: true },
+    { label: 'Mehrere Schulen pro Familie', state: 'fertig', done: true },
     { label: 'Kalender und Wochentafel', state: 'als Nächstes', done: false },
     { label: 'Aufgaben und Punkte', state: 'als Nächstes', done: false },
     { label: 'Stundenplan und Essensplan', state: 'als Nächstes', done: false },
@@ -177,7 +182,7 @@ const de: Strings = {
     privacyDescription: 'Wie WuselWall mit Daten umgeht: diese Website, die Apps und die Anmeldung mit Apple oder Google.',
   },
   privacy: {
-    updated: 'Stand: 13. Oktober 2026',
+    updated: 'Stand: 14. Oktober 2026',
     summaryTitle: 'Das Wichtigste in Kürze',
     summary: [
       'Wir betreiben keinen Dienst, auf dem die Daten Ihrer Familie liegen. Die App speichert alles auf dem WuselWall-Server, mit dem Ihre Familie sie verbunden hat.',
@@ -206,6 +211,13 @@ const de: Strings = {
           'WuselWall gibt es für iPhone und iPad, für Android und als Web-App. Alles, was Sie darin eingeben – Namen und Farben der Familienmitglieder, Termine, Stundenpläne, Aufgaben, Essenspläne, Einkaufslisten –, speichert die App auf dem WuselWall-Server, mit dem Ihre Familie sie verbunden hat, und als Zwischenspeicher auf Ihrem Gerät, damit sie auch ohne Netz funktioniert. Verantwortlich für diese Daten ist, wer den Server betreibt: oft Sie selbst oder jemand aus Ihrer Familie.',
           'Wir als Herausgeber der App erhalten keine dieser Daten. Die Apps enthalten keine Werbung und keine Tracking- oder Absturzberichtsdienste und verbinden sich nur mit Ihrem Server – ausgenommen die beiden Google-Bausteine, die unten beschrieben sind.',
           'Ihre Anmeldung legt die App im geschützten Speicher des Betriebssystems ab (Schlüsselbund auf iPhone und iPad, Keystore auf Android). Jedes Gerät hat seinen eigenen Zugang, den Erwachsene in der App jederzeit sperren können.',
+        ],
+      },
+      {
+        title: 'Feiertage und Schulferien',
+        body: [
+          'Damit die App Feiertage und Schulferien kennt, holt der WuselWall-Server die Daten aus dem öffentlichen Datensatz von OpenHolidays (openholidaysapi.org): einmal pro Woche und, wenn jemand in der App ein Land auswählt. Die App selbst verbindet sich nicht damit. Für diese Abfrage ist der Betreiber Ihres Servers verantwortlich.',
+          'Dabei gehen nur Ländercodes und Datumsbereiche an OpenHolidays, dazu wie bei jeder Anfrage die IP-Adresse Ihres Servers. Nichts über Ihre Familie, ihre Mitglieder, Schulen oder Ihre Region wird übermittelt. Die Antworten liegen als öffentliche Daten auf dem Server, nicht bei uns. Die Daten stehen unter der Open Database License 1.0.',
         ],
       },
       {
@@ -318,6 +330,11 @@ const en: Strings = {
   status: [
     { label: 'Connecting devices and setting up a family', state: 'done', done: true },
     { label: 'Shopping list with offline mode', state: 'done', done: true },
+    { label: 'Today view with first steps', state: 'done', done: true },
+    { label: 'Meal suggestions from your history', state: 'done', done: true },
+    { label: 'Data export for the family', state: 'done', done: true },
+    { label: 'Public and school holidays for Germany, Austria, Switzerland and Liechtenstein – down to the municipality', state: 'done', done: true },
+    { label: 'Several schools per family', state: 'done', done: true },
     { label: 'Calendar and week board', state: 'up next', done: false },
     { label: 'Chores and points', state: 'up next', done: false },
     { label: 'School timetable and meal plan', state: 'up next', done: false },
@@ -366,7 +383,7 @@ const en: Strings = {
     privacyDescription: 'How WuselWall handles data: this website, the apps and signing in with Apple or Google.',
   },
   privacy: {
-    updated: 'Last updated: 13 October 2026',
+    updated: 'Last updated: 14 October 2026',
     summaryTitle: 'In short',
     summary: [
       'We run no service that holds your family’s data. The app stores everything on the WuselWall server your family connected it to.',
@@ -395,6 +412,13 @@ const en: Strings = {
           'WuselWall is available for iPhone and iPad, for Android and as a web app. Everything you enter – family members’ names and colours, events, timetables, chores, meal plans, shopping lists – is stored by the app on the WuselWall server your family connected it to, and cached on your device so that it keeps working without a connection. Whoever runs that server is responsible for this data: often you or someone in your family.',
           'We, the publishers of the app, receive none of this data. The apps contain no ads and no tracking or crash-reporting services, and connect only to your server – except for the two Google components described below.',
           'The app keeps your sign-in in the operating system’s protected storage (the keychain on iPhone and iPad, the keystore on Android). Every device has its own access, which adults can revoke in the app at any time.',
+        ],
+      },
+      {
+        title: 'Public and school holidays',
+        body: [
+          'So that the app knows public and school holidays, your WuselWall server fetches the data from the public OpenHolidays dataset (openholidaysapi.org): once a week, and when someone in the app picks a country. The app itself does not connect to it. The operator of your server is responsible for this request.',
+          'Only country codes and date ranges go to OpenHolidays, and, as with every request, the IP address of your server. Nothing about your family, its members, schools or region is sent. The answers are stored on the server as public data, not with us. The data is under the Open Database License 1.0.',
         ],
       },
       {

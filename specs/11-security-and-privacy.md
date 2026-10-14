@@ -172,7 +172,7 @@ Google's **ML Kit**, which sends device, app and performance data with a per-ins
 identifier to Google for diagnostics and usage analytics (Google's ML Kit data disclosure).
 That breaks NFR-9. The privacy policy discloses it until the Android scanner is replaced
 by an on-device decoder without telemetry ([Q49](14-open-questions.md)).
-| A Ferien import from a public API ([15](15-module-school-timetable.md#holidays)) | Fetched by a scheduled Edge Function, server-side only, with the host pinned in configuration and the result cached in the database. The browser never contacts it, and a failed fetch degrades to hand-entered holidays rather than to an error. |
+| A holiday import from a public API ([15](15-module-school-timetable.md#holidays)) | Fetched by the server only, with the host pinned in configuration and the result cached in the database. The browser never contacts it, and a failed fetch keeps the last good data (hand-entered holidays always work) rather than raising an error. Built 2026-10-14: the host is `openholidaysapi.org`, see the outbound list below. |
 | An external map or weather widget | If you want weather on the wall display, proxy it server-side so the app never contacts a third party directly, and cache aggressively. |
 | Avatar images from Gravatar | Local uploads or generated initials. |
 
@@ -184,6 +184,12 @@ mechanism survives temptation on a Friday evening.
 Outbound connections from the server should be enumerable on one hand: Let's Encrypt,
 the container registry, the backup target, APNs and FCM (for push), the OS package
 mirrors, and since ADR-014 the SMTP provider and Apple's and Google's token endpoints.
+
+Added 2026-10-14: `openholidaysapi.org` (OpenHolidays, the public holiday dataset). The server
+calls it weekly (`holidays-sync`) and when a member picks a country in the app. The request
+carries only the country codes, date ranges and the server's own IP address, like any HTTPS
+request; nothing about the household, its members, its schools or its region choice is sent.
+The results are cached as public reference data.
 
 ### T8 — a curious nine-year-old
 
