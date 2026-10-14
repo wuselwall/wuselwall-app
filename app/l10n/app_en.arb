@@ -1598,5 +1598,14 @@
   "exportAction": "Export data",
   "exportExplanation": "All your family's data as a file, for example for a move to another server.",
   "exportInProgress": "Exporting data",
-  "exportPersonalDeviceRequired": "The export works from your own phone only."
+  "exportPersonalDeviceRequired": "The export works from your own phone only.",
+  "boardHolidayLabel": "Public holiday · {name}",
+  "@boardHolidayLabel": {
+    "description": "A public holiday on a day of the week board and its details; {name} is the holiday, e.g. Ascension Day.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

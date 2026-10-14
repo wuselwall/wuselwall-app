@@ -5113,6 +5113,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The export works from your own phone only.'**
   String get exportPersonalDeviceRequired;
+
+  /// A public holiday on a day of the week board and its details; {name} is the holiday, e.g. Ascension Day.
+  ///
+  /// In en, this message translates to:
+  /// **'Public holiday · {name}'**
+  String boardHolidayLabel(String name);
 }
 
 class _AppLocalizationsDelegate

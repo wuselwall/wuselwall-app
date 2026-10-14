@@ -2910,4 +2910,9 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get exportPersonalDeviceRequired =>
       'Der Export geht nur vom eigenen Telefon aus.';
+
+  @override
+  String boardHolidayLabel(String name) {
+    return 'Feiertag · $name';
+  }
 }

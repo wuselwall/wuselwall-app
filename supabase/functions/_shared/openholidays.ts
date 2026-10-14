@@ -278,3 +278,32 @@ export function countriesFromRegions(codes: string[]): string[] {
   }
   return [...found].sort();
 }
+
+/**
+ * Does a holiday of `country` (nationwide, or for these subdivisions) apply to `region`?
+ * The same rule as app.region_covers in SQL: the same country, and either nationwide or the
+ * region equals a subdivision code or starts with it and a dash ("CH-ZH" covers
+ * "CH-ZH-ZH-ZH", "CH-AG" does not cover "CH-AGX").
+ */
+export function regionCovers(
+  region: string,
+  country: string,
+  nationwide: boolean,
+  subdivisions: string[],
+): boolean {
+  if (region.split("-")[0] !== country) return false;
+  if (nationwide) return true;
+  return subdivisions.some((s) => region === s || region.startsWith(`${s}-`));
+}
+
+/**
+ * The name of a holiday in a language: the language of the locale ("de-DE" → "de"), else
+ * German, else the first name there is. "" when the holiday has no names at all.
+ */
+export function holidayName(
+  names: Record<string, string>,
+  lang: string,
+): string {
+  const base = lang.split(/[-_]/)[0].toLowerCase();
+  return names[base] ?? names.de ?? Object.values(names)[0] ?? "";
+}

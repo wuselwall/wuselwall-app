@@ -6,12 +6,15 @@ import {
   type LessonRow,
   type PeriodRow,
   projectSchoolDays,
+  publicHolidayRows,
   type SchoolData,
   type SchoolDayJson,
+  type SchoolRow,
   type SubjectRow,
   type TimetableRow,
   timetablesJson,
 } from "./school.ts";
+import type { HolidayFeedRow } from "./openholidays.ts";
 
 // Fixtures use the api views' shapes ('HH:MM:SS' times, 'YYYY-MM-DD' dates) and
 // neutral names. Dates: 2026-09-07 is the Monday of ISO week 37 (the anchor week);
@@ -175,6 +178,7 @@ function holiday(
     kind: "holiday",
     source: "manual",
     source_url: null,
+    feed_id: null,
   };
 }
 
@@ -189,6 +193,7 @@ function data(over: Partial<SchoolData> = {}): SchoolData {
       id: SCHOOL,
       name: "Grundschule Musterweg",
       state_code: "DE-BE",
+      region_code: "DE-BE",
       timezone: "Europe/Berlin",
       created_at: "2026-09-01T00:00:00Z",
     }],
@@ -618,4 +623,115 @@ Deno.test("the day and lesson keys are exactly the contract's", () => {
     "teacher",
     "tint",
   ]);
+});
+
+// ── public holidays from the region (publicHolidayRows, the cache rows of api.holiday_feed) ──
+
+function feedRow(p: Partial<HolidayFeedRow> & { id: string }): HolidayFeedRow {
+  return {
+    country: "CH",
+    kind: "public",
+    starts_on: MON,
+    ends_on: MON,
+    names: { de: "Auffahrt", en: "Ascension Day" },
+    nationwide: true,
+    subdivisions: [],
+    ...p,
+  };
+}
+
+function school(id: string, regionCode: string | null): SchoolRow {
+  return {
+    id,
+    name: id,
+    state_code: null,
+    region_code: regionCode,
+    timezone: "Europe/Berlin",
+    created_at: "2026-09-01T00:00:00Z",
+  };
+}
+
+Deno.test("a public holiday covering the school's region is a school holiday of that school", () => {
+  const rows = publicHolidayRows(
+    [school(SCHOOL, "CH-ZH-ZH-ZH")],
+    [feedRow({ id: "f-auffahrt" })],
+    [],
+    "de-DE",
+  );
+  assertEquals(rows, [{
+    id: `feed:f-auffahrt:${SCHOOL}`,
+    school_id: SCHOOL,
+    name: "Auffahrt",
+    starts_on: MON,
+    ends_on: MON,
+    kind: "public_holiday",
+    source: "imported",
+    source_url: null,
+    feed_id: "f-auffahrt",
+  }]);
+});
+
+Deno.test("the school's region decides: another canton's holiday does not reach it", () => {
+  const rows = publicHolidayRows(
+    [school(SCHOOL, "CH-AG")],
+    [feedRow({ id: "f-zh", nationwide: false, subdivisions: ["CH-ZH"] })],
+    [],
+    "de-DE",
+  );
+  assertEquals(rows, []);
+});
+
+Deno.test("a school without a region gets no public holidays", () => {
+  assertEquals(
+    publicHolidayRows([school(SCHOOL, null)], [feedRow({ id: "f" })], [], "de-DE"),
+    [],
+  );
+});
+
+Deno.test("the name follows the household's language, German when there is none", () => {
+  const feed = [feedRow({ id: "f", names: { de: "Auffahrt", en: "Ascension Day" } })];
+  assertEquals(publicHolidayRows([school(SCHOOL, "CH")], feed, [], "en-GB")[0].name, "Ascension Day");
+  assertEquals(publicHolidayRows([school(SCHOOL, "CH")], feed, [], "it-IT")[0].name, "Auffahrt");
+});
+
+Deno.test("a holiday the family already has for this feed id is not duplicated", () => {
+  const family: HolidayRow = {
+    ...holiday("h-own", "Auffahrt (eigener Name)", MON, MON, null),
+    kind: "public_holiday",
+    source: "imported",
+    feed_id: "f",
+  };
+  assertEquals(
+    publicHolidayRows([school(SCHOOL, "CH")], [feedRow({ id: "f" })], [family], "de-DE"),
+    [],
+  );
+});
+
+Deno.test("a family row for one school skips only that school's copy of the feed holiday", () => {
+  const schoolB = "school2";
+  const family: HolidayRow = {
+    ...holiday("h-own", "Auffahrt", MON, MON, SCHOOL),
+    kind: "public_holiday",
+    source: "imported",
+    feed_id: "f",
+  };
+  const rows = publicHolidayRows(
+    [school(SCHOOL, "CH"), school(schoolB, "CH")],
+    [feedRow({ id: "f" })],
+    [family],
+    "de-DE",
+  );
+  assertEquals(rows.map((r) => r.school_id), [schoolB]);
+});
+
+Deno.test("a public holiday from the region frees the school day in the projection", () => {
+  const feed = feedRow({ id: "f-auffahrt", starts_on: TUE, ends_on: TUE });
+  const d = data({
+    holidays: publicHolidayRows([school(SCHOOL, "CH-ZH")], [feed], [], "de-DE"),
+  });
+  const tue = dayOf(d, TUE);
+  assertEquals(tue.free, "holiday");
+  assertEquals(tue.holiday_name, "Auffahrt");
+  assertEquals(tue.lessons, []);
+  assertEquals(dayOf(d, WED).free, null);
 });

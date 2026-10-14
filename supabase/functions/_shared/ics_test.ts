@@ -391,6 +391,7 @@ function schoolData(over: Partial<SchoolData> = {}): SchoolData {
       id: "s1",
       name: "Grundschule am Park",
       state_code: "DE-BE",
+      region_code: "DE-BE",
       timezone: "Europe/Berlin",
       created_at: "2026-09-01T00:00:00Z",
     }],
@@ -622,6 +623,7 @@ Deno.test("holidays and weekends emit nothing", () => {
       kind: "holiday",
       source: "manual",
       source_url: null,
+      feed_id: null,
     }],
   });
   const out = render(schoolFeed("day", data));
