@@ -11,13 +11,16 @@ class FakeMealsRepository implements MealsRepository {
     List<MealEntry> entries = const [],
     List<Recipe> recipes = const [],
     List<MealShoppingItem> preview = const [],
+    List<MealHistoryEntry> history = const [],
   }) : _entries = [...entries],
        _recipes = [...recipes],
-       _preview = [...preview];
+       _preview = [...preview],
+       _history = [...history];
 
   final List<MealEntry> _entries;
   final List<Recipe> _recipes;
   final List<MealShoppingItem> _preview;
+  final List<MealHistoryEntry> _history;
 
   final setMeals =
       <({DateTime date, PlanSlot slot, String? recipeId, String? freeText})>[];
@@ -54,6 +57,9 @@ class FakeMealsRepository implements MealsRepository {
     for (final e in _entries)
       if (!e.onDate.isBefore(from) && !e.onDate.isAfter(to)) e,
   ]);
+
+  @override
+  Future<Result<List<MealHistoryEntry>>> history() async => Ok(_history);
 
   @override
   Future<Result<List<Recipe>>> recipes() async => Ok(List.of(_recipes));

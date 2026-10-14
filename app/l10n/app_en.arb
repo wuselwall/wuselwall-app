@@ -1523,5 +1523,28 @@
   "schoolsUiDayCleared": "Day cleared",
   "schoolsUiDayCopied": "Day copied",
   "schoolsUiDaySwapped": "Days swapped",
-  "schoolsUiUndo": "Undo"
+  "schoolsUiUndo": "Undo",
+  "mealsUxSuggestOften": "Family favourites",
+  "mealsUxSuggestRare": "Not had in a while",
+  "mealsUxClearedSnack": "{title} removed",
+  "@mealsUxClearedSnack": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "mealsUxUndo": "Undo",
+  "mealsUxFromMealPlan": "From the meal plan",
+  "mealsUxForMeal": "For: {meal} · {day}",
+  "@mealsUxForMeal": {
+    "placeholders": {
+      "meal": {
+        "type": "String"
+      },
+      "day": {
+        "type": "String"
+      }
+    }
+  }
 }

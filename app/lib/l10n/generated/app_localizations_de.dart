@@ -2798,4 +2798,26 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get schoolsUiUndo => 'Rückgängig';
+
+  @override
+  String get mealsUxSuggestOften => 'Oft bei uns';
+
+  @override
+  String get mealsUxSuggestRare => 'Lange nicht gegessen';
+
+  @override
+  String mealsUxClearedSnack(String title) {
+    return '„$title“ entfernt';
+  }
+
+  @override
+  String get mealsUxUndo => 'Rückgängig';
+
+  @override
+  String get mealsUxFromMealPlan => 'Kommt aus dem Essensplan';
+
+  @override
+  String mealsUxForMeal(String meal, String day) {
+    return 'Für: $meal · $day';
+  }
 }
