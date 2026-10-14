@@ -2729,4 +2729,55 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get kidNoPlanToday => 'Nothing planned today';
+
+  @override
+  String get schoolsUiAddSchool => 'Another school';
+
+  @override
+  String get schoolsUiNewSchool => 'New school';
+
+  @override
+  String get schoolsUiPickSchool => 'Choose school';
+
+  @override
+  String get schoolsUiAskSchool => 'Which school?';
+
+  @override
+  String schoolsUiSchoolOf(String name) {
+    return 'School: $name';
+  }
+
+  @override
+  String get schoolsUiDayMenu => 'Day actions';
+
+  @override
+  String get schoolsUiCopyDay => 'Copy day to…';
+
+  @override
+  String schoolsUiCopyDayTitle(String day) {
+    return 'Copy $day to';
+  }
+
+  @override
+  String get schoolsUiCopyDayApply => 'Copy';
+
+  @override
+  String get schoolsUiSwapDay => 'Swap with…';
+
+  @override
+  String schoolsUiSwapDayTitle(String day) {
+    return 'Swap $day with';
+  }
+
+  @override
+  String get schoolsUiDayCleared => 'Day cleared';
+
+  @override
+  String get schoolsUiDayCopied => 'Day copied';
+
+  @override
+  String get schoolsUiDaySwapped => 'Days swapped';
+
+  @override
+  String get schoolsUiUndo => 'Undo';
 }

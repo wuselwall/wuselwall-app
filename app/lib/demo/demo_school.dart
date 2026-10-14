@@ -299,7 +299,7 @@ class DemoSchoolRepository implements SchoolRepository {
     String? id,
     required String name,
     String? stateCode,
-    String timezone = 'Europe/Berlin',
+    String? timezone,
   }) async => Ok(id ?? 'school-new');
 
   @override
