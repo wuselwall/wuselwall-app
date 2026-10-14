@@ -59,6 +59,9 @@ begin
                       from app.school_term r where r.household_id = a.household_id),
     'school_holiday', (select coalesce(jsonb_agg(to_jsonb(r) - v_secret order by r.id), '[]')
                          from app.school_holiday r where r.household_id = a.household_id),
+    -- Subscribed calendars, without the fetch bookkeeping; their occurrences are a cache of the URL.
+    'external_calendar', (select coalesce(jsonb_agg(to_jsonb(r) - v_secret - 'etag' order by r.id), '[]')
+                            from app.external_calendar r where r.household_id = a.household_id),
     'subject', (select coalesce(jsonb_agg(to_jsonb(r) - v_secret order by r.id), '[]')
                   from app.subject r where r.household_id = a.household_id),
     'timetable', (select coalesce(jsonb_agg(to_jsonb(r) - v_secret order by r.id), '[]')
