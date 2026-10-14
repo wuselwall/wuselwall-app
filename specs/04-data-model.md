@@ -289,6 +289,25 @@ and leaves out secrets (password and PIN hashes, token and code hashes, Auth ids
 technical bookkeeping listed in migration `160`. A pgTAP guard fails when a new household
 table is neither exported nor listed there.
 
+### External calendars
+
+Added 2026-10-14, with FR-1.9 ([05](05-module-calendar.md#external-calendars-subscribed-ics-fr-19)).
+
+```
+external_calendar                -- a subscription of the household
+  id, household_id, name, url (https only, webcal:// stored as https://),
+  colour_hex, member_ids UUID[] ([] = whole family), show_on_board BOOLEAN,
+  active BOOLEAN, etag, timezone, last_fetched_at (the last attempt),
+  last_error (a short code or NULL), created_at, updated_at
+
+external_occurrence              -- the expanded feed, replaced as a whole on each fetch
+  id, calendar_id, household_id, uid, starts_at, ends_at, all_day,
+  start_date, end_date (all-day, inclusive), title, location
+```
+
+Only the server writes the occurrences; the apps read them through `api.external_occurrences`
+and never write them. The URL is not written to the audit log.
+
 ### Views over existing tables
 
 Added 2026-10-14, no new storage. `api.meal_history` (the cooked meals of the last 365 days,

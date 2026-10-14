@@ -181,9 +181,34 @@ the native apps, enforce it in review: the app talks to exactly one host, and a 
 outbound host in a pull request is a question to answer, not a detail. A policy that is a
 mechanism survives temptation on a Friday evening.
 
+### Outbound calendar subscriptions
+
+Added 2026-10-14 with FR-1.9. A guardian types the address of a calendar (a club's fixture list,
+the bin collection), and the server fetches it. That makes the server a fetcher of arbitrary
+addresses, which is the classic server-side request forgery risk, so `_shared/safe_fetch.ts`
+enforces, on the first address and on every redirect:
+
+- **https only** (`webcal://` is rewritten to `https://` when the address is saved);
+- **public addresses only**: a host that resolves to a private, loopback, link-local or
+  otherwise reserved address is refused, IPv4 and IPv6;
+- **redirects are followed by hand**, each hop checked again, at most three;
+- **15 seconds** in total, **2 MB** of body, and the answer must be an iCalendar document.
+
+Residual risk, stated plainly: the address is resolved once for the check and again by the
+HTTP client, so a hostile DNS server that answers differently the second time (DNS rebinding)
+could still reach an internal address. Closing it fully needs a connection pinned to the checked
+address, which the runtime does not offer yet. The address is chosen by a guardian, which limits
+who could do this, but does not prevent it.
+
+The requests carry the User-Agent `WuselWall calendar-import (+https://wuselwall.app)`, and the
+third party sees the server's IP address and the request time, like any HTTPS request. Nothing about
+the household is sent, except what is in the address the family typed.
+
 Outbound connections from the server should be enumerable on one hand: Let's Encrypt,
 the container registry, the backup target, APNs and FCM (for push), the OS package
-mirrors, and since ADR-014 the SMTP provider and Apple's and Google's token endpoints.
+mirrors, and since ADR-014 the SMTP provider and Apple's and Google's token endpoints. Added
+2026-10-14: the calendar addresses that guardians subscribe to (see above), chosen by the family,
+and `openholidaysapi.org` for the holiday cache.
 
 Added 2026-10-14: `openholidaysapi.org` (OpenHolidays, the public holiday dataset). The server
 calls it weekly (`holidays-sync`) and when a member picks a country in the app. The request

@@ -47,3 +47,18 @@ Ob Kinder Termine anlegen und ändern dürfen, legt ihr unter [Haushalt einstell
 ## Termine in Outlook oder auf dem iPhone
 
 Der Familienkalender lässt sich als **Abo** in Outlook oder auf dem iPhone anzeigen, nur zum Lesen. Siehe [Kalender-Abos](/calendar/feeds).
+
+## Abonnierte Kalender
+
+Termine von außen kommen mit einem **Abo** in den Familienkalender: der Spielplan des Vereins, der Abfuhrkalender der Gemeinde, Schulveranstaltungen. Ihr braucht dafür nur die Adresse des Kalenders, meist eine Datei, die auf **.ics** endet. Adressen mit **webcal://** gehen auch.
+
+Abos verwaltet ein Erziehungsberechtigter unter **Einstellungen → Abonnierte Kalender**. **Kalender abonnieren** öffnet das Formular mit Name, Adresse, Farbe, **Für wen?** (ohne Auswahl gilt der Kalender für die ganze Familie) und **Auf dem Küchendisplay zeigen**. Die Termine erscheinen im Kalender in der Farbe des Kalenders, mit einem Abo-Symbol. Sie sind nur zum Lesen: Änderungen kommen von der Quelle.
+
+Euer Server holt jeden Kalender etwa einmal pro Stunde. Mit **Jetzt aktualisieren** geht es sofort. Schlägt der Abruf fehl, steht der Grund bei dem Kalender, zum Beispiel „Die Adresse ist gerade nicht erreichbar“.
+
+Wissenswert:
+
+- Es gehen nur Adressen mit **https://**. Adressen, die auf Rechner im eigenen Netz zeigen, nimmt WuselWall nicht an.
+- Ein Kalender darf höchstens 2 MB groß sein. Der Abruf bricht nach 15 Sekunden ab.
+- Die Adresse sehen alle Geräte des Haushalts, auch die der Kinder. Enthält sie einen geheimen Schlüssel, gilt sie wie ein Passwort.
+- Die abonnierten Termine sind noch nicht im Abo für Outlook und iPhone enthalten.

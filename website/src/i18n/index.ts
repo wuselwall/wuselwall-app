@@ -134,6 +134,7 @@ const de: Strings = {
     { label: 'Datenexport für die Familie', state: 'fertig', done: true },
     { label: 'Feiertage und Schulferien für Deutschland, Österreich, die Schweiz und Liechtenstein – bis zur Gemeinde', state: 'fertig', done: true },
     { label: 'Mehrere Schulen pro Familie', state: 'fertig', done: true },
+    { label: 'Kalender abonnieren: Verein, Abfuhr, Schule', state: 'fertig', done: true },
     { label: 'Kalender und Wochentafel', state: 'als Nächstes', done: false },
     { label: 'Aufgaben und Punkte', state: 'als Nächstes', done: false },
     { label: 'Stundenplan und Essensplan', state: 'als Nächstes', done: false },
@@ -218,6 +219,13 @@ const de: Strings = {
         body: [
           'Damit die App Feiertage und Schulferien kennt, holt der WuselWall-Server die Daten aus dem öffentlichen Datensatz von OpenHolidays (openholidaysapi.org): einmal pro Woche und, wenn jemand in der App ein Land auswählt. Die App selbst verbindet sich nicht damit. Für diese Abfrage ist der Betreiber Ihres Servers verantwortlich.',
           'Dabei gehen nur Ländercodes und Datumsbereiche an OpenHolidays, dazu wie bei jeder Anfrage die IP-Adresse Ihres Servers. Nichts über Ihre Familie, ihre Mitglieder, Schulen oder Ihre Region wird übermittelt. Die Antworten liegen als öffentliche Daten auf dem Server, nicht bei uns. Die Daten stehen unter der Open Database License 1.0.',
+        ],
+      },
+      {
+        title: 'Kalender-Abos',
+        body: [
+          'Abonniert eure Familie einen Kalender von außen – etwa den Spielplan eines Vereins oder den Abfuhrkalender –, holt der WuselWall-Server die Datei unter der Adresse, die ihr eingegeben habt, etwa einmal pro Stunde. Die App selbst verbindet sich nicht damit. Für diese Abfragen ist der Betreiber eures Servers verantwortlich.',
+          'Der Anbieter des Kalenders erfährt dabei die IP-Adresse eures Servers, den Zeitpunkt und die Kennung „WuselWall calendar-import“ im Anfragekopf. Nichts über eure Familie wird übermittelt, außer was in der Adresse selbst steht. Die Adressen sehen alle Geräte eures Haushalts.',
         ],
       },
       {
@@ -335,6 +343,7 @@ const en: Strings = {
     { label: 'Data export for the family', state: 'done', done: true },
     { label: 'Public and school holidays for Germany, Austria, Switzerland and Liechtenstein – down to the municipality', state: 'done', done: true },
     { label: 'Several schools per family', state: 'done', done: true },
+    { label: 'Subscribe to club, bin and school calendars', state: 'done', done: true },
     { label: 'Calendar and week board', state: 'up next', done: false },
     { label: 'Chores and points', state: 'up next', done: false },
     { label: 'School timetable and meal plan', state: 'up next', done: false },
@@ -419,6 +428,13 @@ const en: Strings = {
         body: [
           'So that the app knows public and school holidays, your WuselWall server fetches the data from the public OpenHolidays dataset (openholidaysapi.org): once a week, and when someone in the app picks a country. The app itself does not connect to it. The operator of your server is responsible for this request.',
           'Only country codes and date ranges go to OpenHolidays, and, as with every request, the IP address of your server. Nothing about your family, its members, schools or region is sent. The answers are stored on the server as public data, not with us. The data is under the Open Database License 1.0.',
+        ],
+      },
+      {
+        title: 'Subscribed calendars',
+        body: [
+          'If your family subscribes to a calendar from outside – such as a club’s fixture list or the bin collection calendar –, your WuselWall server fetches the file from the address you entered, about once an hour. The app itself does not connect to it. The operator of your server is responsible for these requests.',
+          'The calendar’s provider learns the IP address of your server, the time, and the identifier “WuselWall calendar-import” in the request header. Nothing about your family is sent, except what is in the address itself. Every device of your household can see the addresses.',
         ],
       },
       {

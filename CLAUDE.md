@@ -11,14 +11,15 @@ account exists. Since 2026-10-13 the public hosts are `wuselwall.app`, `web.` an
 (ADR-017). Built on `feature/regions-and-ux`, **migrations not yet on the server**: regions to any depth
 and holidays (DE/AT/CH/LI from OpenHolidays, fetched by the server: public holidays automatic,
 Ferien imported), several schools, the timetable's day operations, meal suggestions, the Today
-tab with the getting-started card, and the data export; before them household
+tab with the getting-started card, the data export, and subscribed ICS calendars (FR-1.9:
+`calendar-import`, read-only occurrences in their own tables); before them household
 settings (specs/21), the kiosk week board (specs/09), M1.3a calendar (events, presence,
 recurrence expanded in Edge Functions, the ICS feed with tokens), M1.3b Stundenplan (the
 projection in `supabase/functions/_shared/school.ts`), M1.2 tasks and points, M1.4 meals, and
 the kid register. `scripts/local-pgtap` runs every migration and pgTAP suite on a throwaway
 local Postgres (no Docker); `scripts/remote-pgtap-dry.sh` tries new migrations on the server
 inside a rolled-back transaction. Next: apply the migrations and deploy the Edge Functions
-(`scripts/remote-migrate.sh`, `scripts/remote-stack.sh functions`), schedule `tasks-nightly` and `holidays-sync`,
+(`scripts/remote-migrate.sh`, `scripts/remote-stack.sh functions`), schedule `tasks-nightly`, `holidays-sync` and `calendar-import` (hourly),
 then the rest of 9.1/9.2 and M1.6.
 
 ## Architecture rules
@@ -62,8 +63,9 @@ See [specs/03-architecture.md](specs/03-architecture.md),
   without a user (ICS, enrolment, jobs) and for the two account-administration functions
   of ADR-014 (`account-delete`, MFA reset), which verify the caller's JWT and act only on
   that caller (or, for the reset, a co-guardian), with a comment at each use. The one
-  exception in a user request: `holidays-sync`'s on-demand refresh verifies the JWT and writes
-  only the public holiday cache (no household data).
+  exceptions in a user request: `holidays-sync`'s on-demand refresh verifies the JWT and writes
+  only the public holiday cache, and `calendar-import`'s on-demand refresh verifies the guardian's
+  JWT and uses the service role only to fetch and store that one calendar.
 - Migrations are forward-only and must stay compatible with the previous app release.
 - **No household is hard-coded.** Anything one household would answer differently from
   another is a setting with a curated default ([specs/20](specs/21-household-settings.md)):

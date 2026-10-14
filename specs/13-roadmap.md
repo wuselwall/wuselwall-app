@@ -279,6 +279,7 @@ meets them.
 - MCP server, `family:read` scope
 - Imported external calendars (sports club, bin collection)
 - ~~Ferien import for the Bundesland, so holidays stop being hand-entered~~ — built early on `feature/regions-and-ux` (2026-10-14), see M1.3
+- ~~Imported external calendars (sports club, bin collection)~~ — FR-1.9 built early on `feature/regions-and-ux` (2026-10-14), see [05](05-module-calendar.md#external-calendars-subscribed-ics-fr-19). Open: the imported occurrences in the outbound ICS feed
 - Equipment reminders from tomorrow's subjects ("Morgen brauchst du: Sportsachen")
 - ~~Meal suggestions from history ("not cooked in 60 days")~~ — built early on `feature/regions-and-ux` (2026-10-14), see M1.4
 - Whatever the first two weeks of real use made obviously necessary — reserve capacity

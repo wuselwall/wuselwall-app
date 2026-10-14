@@ -33,6 +33,10 @@ Erziehungsberechtigte können alle Daten eurer Familie als eine Datei speichern,
 
 Die Datei enthält die Angaben, die ihr eingegeben habt: Mitglieder, Termine, Stundenpläne, Aufgaben, Rezepte, Einkaufslisten und so weiter. Passwörter, PINs und Anmeldedaten sind **nicht** enthalten, und Geräte erscheinen nur mit Namen und Datum.
 
+## Abonnierte Kalender
+
+Kalender von Vereinen oder der Gemeinde abonnierst du unter **Einstellungen → Abonnierte Kalender**. Wie das funktioniert und was zu beachten ist, steht unter [Kalender](/calendar/#abonnierte-kalender).
+
 ## Erste Schritte wieder anzeigen
 
 Hast du die Karte **Erste Schritte** auf dem Heute-Tab ausgeblendet, holst du sie unter **Einstellungen → Erste Schritte** zurück.
