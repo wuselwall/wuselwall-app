@@ -84,12 +84,14 @@ class SchoolRepository {
     parse: (json) => SchoolWeek.fromJson(json! as Map<String, dynamic>),
   );
 
+  /// [timezone] is sent only when given: the server takes the household's for a new
+  /// school and keeps the stored value of an existing one.
   Future<Result<String>> saveSchool({
     required String? actor,
     String? id,
     required String name,
     String? stateCode,
-    String timezone = 'Europe/Berlin',
+    String? timezone,
   }) => _api.rpc(
     'school_save',
     params: {
@@ -98,7 +100,7 @@ class SchoolRepository {
         'id': ?id,
         'name': name,
         'state_code': stateCode,
-        'timezone': timezone,
+        'timezone': ?timezone,
       },
     },
     parse: _id,

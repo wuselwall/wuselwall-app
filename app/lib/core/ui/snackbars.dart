@@ -9,6 +9,22 @@ extension SnackBars on BuildContext {
       ..showSnackBar(SnackBar(content: Text(message)));
   }
 
+  /// A success message with one action, such as "Rückgängig"; replaces the current one.
+  void showMessageWithAction(
+    String message, {
+    required String actionLabel,
+    required VoidCallback onAction,
+  }) {
+    ScaffoldMessenger.of(this)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(message),
+          action: SnackBarAction(label: actionLabel, onPressed: onAction),
+        ),
+      );
+  }
+
   void showFailure(Failure failure) {
     ScaffoldMessenger.of(this)
       ..hideCurrentSnackBar()

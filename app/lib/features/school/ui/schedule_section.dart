@@ -282,8 +282,9 @@ class _Week extends ConsumerWidget {
 }
 
 /// Opens the timetable editor for [profileId] on the term of [monday] (default: the
-/// week on screen), after the guardian check. Without any term, the setup page comes
-/// first, since a term is what a timetable is entered for.
+/// week on screen), after the guardian check. With siblings at several schools, the
+/// household first says which school the timetable is for. Without a term for that
+/// school, the setup page comes first, since a term is what a timetable is entered for.
 Future<void> openTimetableEditor(
   BuildContext context,
   WidgetRef ref, {
@@ -292,9 +293,39 @@ Future<void> openTimetableEditor(
   DateTime? monday,
 }) async {
   if (!await ensureGuardian(context, ref) || !context.mounted) return;
-  final term = data.termFor(monday ?? ref.read(selectedWeekProvider));
+  String? schoolId;
+  if (data.schools.length > 1) {
+    final picked = await showDialog<SchoolRecord>(
+      context: context,
+      builder: (dialogContext) => SimpleDialog(
+        title: Text(dialogContext.l10n.schoolsUiAskSchool),
+        children: [
+          for (final s in data.schools)
+            SimpleDialogOption(
+              onPressed: () => Navigator.of(dialogContext).pop(s),
+              child: Text(s.name),
+            ),
+        ],
+      ),
+    );
+    if (picked == null || !context.mounted) return;
+    schoolId = picked.id;
+  }
+  final term = data.termFor(
+    monday ?? ref.read(selectedWeekProvider),
+    schoolId: schoolId,
+  );
   if (term == null) {
-    unawaited(context.push(Routes.schoolSetup));
+    unawaited(
+      context.push(
+        schoolId == null
+            ? Routes.schoolSetup
+            : Uri(
+                path: Routes.schoolSetup,
+                queryParameters: {'school': schoolId},
+              ).toString(),
+      ),
+    );
     return;
   }
   unawaited(

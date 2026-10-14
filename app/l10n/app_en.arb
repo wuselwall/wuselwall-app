@@ -1487,5 +1487,41 @@
       }
     }
   },
-  "kidNoPlanToday": "Nothing planned today"
+  "kidNoPlanToday": "Nothing planned today",
+  "schoolsUiAddSchool": "Another school",
+  "schoolsUiNewSchool": "New school",
+  "schoolsUiPickSchool": "Choose school",
+  "schoolsUiAskSchool": "Which school?",
+  "schoolsUiSchoolOf": "School: {name}",
+  "@schoolsUiSchoolOf": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "schoolsUiDayMenu": "Day actions",
+  "schoolsUiCopyDay": "Copy day to…",
+  "schoolsUiCopyDayTitle": "Copy {day} to",
+  "@schoolsUiCopyDayTitle": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "schoolsUiCopyDayApply": "Copy",
+  "schoolsUiSwapDay": "Swap with…",
+  "schoolsUiSwapDayTitle": "Swap {day} with",
+  "@schoolsUiSwapDayTitle": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "schoolsUiDayCleared": "Day cleared",
+  "schoolsUiDayCopied": "Day copied",
+  "schoolsUiDaySwapped": "Days swapped",
+  "schoolsUiUndo": "Undo"
 }
