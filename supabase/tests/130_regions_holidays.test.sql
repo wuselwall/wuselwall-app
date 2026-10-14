@@ -1,5 +1,5 @@
 begin;
-select plan(77);
+select plan(92);
 
 -- Start from an empty system, whatever the database already holds (all rolled back).
 delete from app.household;
@@ -315,13 +315,47 @@ select throws_ok($$ select api.set_setting(null, 'household.region', '"CH"'::jso
 select lives_ok($$ select api.set_setting(null, 'household.region', 'null'::jsonb) $$,
   'the household region can be cleared');
 
--- ---- the feed is written by the sync (service role), never by a member -----------------------------
+-- ---- a revoked device reads no reference data either ---------------------------------------------
 reset role;
+select pg_temp.act_as_dev('old');
+select is((select count(*)::int from api.regions), 0, 'a revoked device reads no regions');
+select is((select count(*)::int from api.holiday_feed_status), 0, 'a revoked device reads no feed status');
+
+-- ---- the cache is written by the sync, through service-role-only functions -----------------------
+reset role;
+select pg_temp.act_as_dev('papa');
+select throws_ok($$ select api.holiday_cache_put_regions('[]'::jsonb) $$, '42501', null,
+  'a member cannot write the region cache');
+select throws_ok($$ select api.holiday_cache_claim('CH', now(), now()) $$, '42501', null,
+  'a member cannot claim a cache refresh');
+reset role;
+select set_config('request.jwt.claims', '{"role":"service_role"}', true);
 set local role service_role;
-select lives_ok($$ insert into app.holiday_feed (id, country, kind, starts_on, ends_on, names, nationwide)
-  values ('feed-svc', 'CH', 'public', '2026-12-25', '2026-12-25', '{"de":"Weihnachten"}', true) $$,
-  'the service role writes the holiday feed');
+select is(api.holiday_cache_put_regions('[{"code":"AT-9","country":"AT","parent_code":null,"level":1,
+  "category":"Bundesland","short_name":"W","names":{"de":"Wien"},"fetched_at":"2026-10-14T00:00:00Z"}]'::jsonb),
+  1, 'the service role upserts regions');
+select is(api.holiday_cache_put_holidays('[{"id":"feed-at","country":"AT","kind":"public","starts_on":"2026-10-26",
+  "ends_on":"2026-10-26","names":{"de":"Nationalfeiertag"},"nationwide":false,"subdivisions":["AT-9"],
+  "fetched_at":"2026-10-14T00:00:00Z"}]'::jsonb),
+  1, 'the service role upserts holidays, subdivisions from a JSON array');
+select ok(api.holiday_cache_claim('AT', now(), now() - interval '10 minutes'), 'a first refresh is claimed');
+select ok(not api.holiday_cache_claim('AT', now(), now() - interval '10 minutes'),
+  'a second refresh within ten minutes is refused');
+select is(api.holiday_cache_prune('CH', 'school', '2026-01-01', '2027-12-31', array['feed-zh-ferien']), 1,
+  'pruning removes the school holidays the API no longer returns');
+select is((api.holiday_cache_state('CH') ->> 'holidays')::int, 3, 'the other Swiss holidays stay');
+select lives_ok($$ select api.holiday_cache_finish('AT', now(), '2025-01-01', '2027-12-31') $$,
+  'a refresh is recorded');
+select is((api.holiday_cache_state('AT') ->> 'regions')::int, 1, 'the cache state counts the regions');
+select ok('AT' = any (api.holiday_cache_countries()), 'a fetched country is refreshed again');
+select lives_ok($$ select api.holiday_cache_fail('AT', 'timeout') $$, 'a failed refresh is recorded');
 reset role;
+select pg_temp.act_as_dev('papa');
+select is((select last_error from api.holiday_feed_status where country = 'AT'), 'timeout',
+  'members see that the last refresh failed');
+reset role;
+select ok((select app.region_covers('AT-9', h.country, h.nationwide, h.subdivisions)
+             from app.holiday_feed h where h.id = 'feed-at'), 'the stored subdivisions are a text array');
 
 select * from finish();
 rollback;

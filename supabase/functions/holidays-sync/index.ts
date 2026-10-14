@@ -15,7 +15,8 @@
 //   counts: {country, fetched_at, regions, holidays}.
 //
 // The service role is used for the cache only: app.region, app.holiday_feed and
-// app.holiday_feed_sync (through the api.holiday_cache_* functions of NEEDS_SQL.md). The cache holds
+// app.holiday_feed_sync (through the service-role-only api.holiday_cache_* functions of
+// supabase/migrations/20261014120000_regions_holidays.sql). The cache holds
 // no household data; the countries of the overrides are read as codes only, and the
 // service role never reads a household's own rows here.
 import {
