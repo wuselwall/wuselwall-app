@@ -53,6 +53,7 @@ extension FailureL10n on Failure {
       'reward_out_of_stock' => l10n.errRewardOutOfStock,
       'task_not_open' => l10n.errTaskNotOpen,
       'meal_invalid' => l10n.errMealInvalid,
+      'personal_device_required' => l10n.exportPersonalDeviceRequired,
       _ => null,
     };
     if (byCode != null) return byCode;
