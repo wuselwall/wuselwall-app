@@ -60,5 +60,5 @@ Good to know:
 
 - Only **https://** addresses are accepted. Addresses that point to machines on your own network are refused.
 - A calendar may be at most 2 MB. A fetch gives up after 15 seconds.
-- Every device of your household can see the address, including the children's. If it contains a secret key, treat it like a password.
+- Every device of your household sees only the host name of the address, for example "abfuhr.example.de". The full address is shown only to guardians, when they edit the calendar. If it contains a secret key, treat it like a password.
 - The subscribed appointments are not yet part of the subscription for Outlook and iPhone.
