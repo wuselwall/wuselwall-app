@@ -16,6 +16,7 @@ import 'package:wuselwall/core/realtime/household_channel.dart';
 import 'package:wuselwall/core/supabase/supabase_providers.dart';
 import 'package:wuselwall/demo/demo_board.dart';
 import 'package:wuselwall/demo/demo_data.dart';
+import 'package:wuselwall/demo/demo_export.dart';
 import 'package:wuselwall/demo/demo_getting_started.dart';
 import 'package:wuselwall/demo/demo_kid.dart';
 import 'package:wuselwall/demo/demo_meals.dart';
@@ -30,6 +31,7 @@ import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/kid/data/kid_badges_repository.dart';
 import 'package:wuselwall/features/meals/data/meals_repository.dart';
 import 'package:wuselwall/features/school/data/school_repository.dart';
+import 'package:wuselwall/features/settings/data/household_export_repository.dart';
 import 'package:wuselwall/features/settings/data/household_settings_repository.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 import 'package:wuselwall/features/tasks/data/tasks_repository.dart';
@@ -104,6 +106,9 @@ void main() {
         shoppingRepositoryProvider.overrideWithValue(DemoShoppingRepository()),
         householdSettingsRepositoryProvider.overrideWithValue(
           DemoHouseholdSettingsRepository(),
+        ),
+        householdExportRepositoryProvider.overrideWithValue(
+          DemoHouseholdExportRepository(),
         ),
         boardRepositoryProvider.overrideWithValue(DemoBoardRepository()),
         schoolRepositoryProvider.overrideWithValue(DemoSchoolRepository()),

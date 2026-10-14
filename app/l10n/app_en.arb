@@ -1593,5 +1593,10 @@
   "todayStartSubscribeFeed": "Subscribe to the calendar",
   "todayStartSchool": "Add the timetable",
   "settingsGettingStarted": "Getting started",
-  "settingsGettingStartedSubtitle": "Show the setup card on the Today tab again"
+  "settingsGettingStartedSubtitle": "Show the setup card on the Today tab again",
+  "exportFamilyTitle": "Family",
+  "exportAction": "Export data",
+  "exportExplanation": "All your family's data as a file, for example for a move to another server.",
+  "exportInProgress": "Exporting data",
+  "exportPersonalDeviceRequired": "The export works from your own phone only."
 }

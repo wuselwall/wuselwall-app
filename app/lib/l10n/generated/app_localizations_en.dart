@@ -2875,4 +2875,21 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get settingsGettingStartedSubtitle =>
       'Show the setup card on the Today tab again';
+
+  @override
+  String get exportFamilyTitle => 'Family';
+
+  @override
+  String get exportAction => 'Export data';
+
+  @override
+  String get exportExplanation =>
+      'All your family\'s data as a file, for example for a move to another server.';
+
+  @override
+  String get exportInProgress => 'Exporting data';
+
+  @override
+  String get exportPersonalDeviceRequired =>
+      'The export works from your own phone only.';
 }
