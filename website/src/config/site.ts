@@ -33,9 +33,10 @@ export const legal = {
   country: 'CH', // ISO 3166 code; pages show its name in their own language
   email: 'contact@wuselwall.app',
   phone: '',
-  // How many days the web server keeps the website's access logs (visitors' IP
-  // addresses). The privacy policy promises this number, so it must match the server's
-  // log rotation.
+  // The web server keeps no access logs; its error log (which holds a client's IP
+  // address) is deleted after this many days at the latest. The privacy policy promises
+  // it: nginx rotates weekly and a daily job on the home server deletes files last
+  // written 21 or more days ago, so no entry outlives 29 days (specs/10).
   logRetentionDays: '30',
 } as const;
 

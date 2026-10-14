@@ -89,6 +89,16 @@ login and is reached by SSH tunnel (`scripts/remote-stack.sh tunnel`, then
   `docker exec nginx nginx -t && docker exec nginx nginx -s reload`. On `api.` it forwards
   the four API prefixes and refuses everything else, including Studio and the `/pg/`
   metadata API.
+- **Logs, as the privacy policy promises them** (set up 2026-10-14). Every WuselWall host has
+  `access_log off`. The container's `nginx.conf` (`/mnt/user/appdata/nginx/nginx/`, not in
+  the repository, because other sites share it) sends `access_log` and `error_log` to the
+  mounted `/config/log/nginx/`, where the image's logrotate turns them over weekly. Without
+  those two lines, nginx writes to `/var/log/nginx/` inside the container, where nothing
+  rotates. The host job `/boot/config/plugins/dynamix/wuselwall-logs.cron` (installed with
+  `update_cron`) deletes files there at 03:17 once they were last written 21 or more days
+  ago, so no entry outlives 29 days. The policy promises 30 (`logRetentionDays` in
+  `website/src/config/site.ts`). After a fresh nginx container or a new Unraid stick, check
+  both again.
 - *Since [ADR-014](adr/ADR-014-self-service-onboarding.md):* nginx also serves a handful
   of **static files** from `infra/web/` (no proxying, no scripts):
   `/.well-known/apple-app-site-association` and `/.well-known/assetlinks.json` (universal
