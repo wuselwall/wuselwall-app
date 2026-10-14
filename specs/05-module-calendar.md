@@ -219,9 +219,12 @@ the calendar's colour with an RSS mark.
   "Jetzt aktualisieren" fetches one feed at once. The apps never contact the address.
 - **Who manages:** guardians, on a personal device or with a current step-up on a shared one;
   Einstellungen → Abonnierte Kalender. Add, edit, delete, pause, "Jetzt aktualisieren". A kiosk
-  cannot. Members see the imported occurrences. **Known gap:** `api.external_calendars` is readable
-  by every live device of the household, so the address itself (which may carry a secret token)
-  is visible to members too; restricting the column to guardians is open.
+  cannot. Members see the imported occurrences. The address is a secret when it carries a token,
+  so it is split: `api.external_calendars` (readable by every live device of the household) shows
+  only `url_host`, the host name for display; the full address comes from `api.external_calendar_url`,
+  which answers guardians on a personal device or with a current step-up, and nobody else (a child's
+  device, the kiosk, a revoked device and other households are refused). The edit form loads it that way
+  and sends the address only when it was changed.
 - **Parsing:** the feed is expanded on the server (`_shared/ical_parse.ts`): recurrence, all-day
   entries, and the feed's own time zone. Changing the address deletes the calendar's occurrences
   and fetches at once.

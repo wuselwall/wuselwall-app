@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/palette.dart';
+import 'package:wuselwall/core/error/failure.dart';
+import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 import 'package:wuselwall/features/calendar/domain/external_calendar.dart';
 import 'package:wuselwall/features/calendar/ui/calendar_tiles.dart';
@@ -48,6 +50,7 @@ Occurrence _imported({
 ExternalCalendar _calendar({
   String id = _binId,
   String name = 'Abfuhrkalender',
+  String urlHost = 'abfuhr.example.de',
   bool active = true,
   List<String> memberIds = const [],
   DateTime? lastFetchedAt,
@@ -55,7 +58,7 @@ ExternalCalendar _calendar({
 }) => ExternalCalendar(
   id: id,
   name: name,
-  url: 'https://abfuhr.example.de/k.ics',
+  urlHost: urlHost,
   colourHex: '#9A5300',
   memberIds: memberIds,
   showOnBoard: true,
@@ -63,6 +66,9 @@ ExternalCalendar _calendar({
   lastFetchedAt: lastFetchedAt,
   lastError: lastError,
 );
+
+/// The full feed address of the bin calendar, as the server holds it.
+const _binUrl = 'https://abfuhr.example.de/k.ics';
 
 Future<ProviderContainer> _open(
   WidgetTester tester, {
@@ -171,6 +177,7 @@ void main() {
       );
 
       expect(find.text('Abfuhrkalender'), findsOneWidget);
+      expect(find.text('abfuhr.example.de'), findsNWidgets(3));
       expect(find.text('Ganze Familie'), findsNWidgets(2));
       expect(find.text('Aktualisiert vor 12 Min.'), findsOneWidget);
       expect(find.text('Adresse nicht gefunden (404).'), findsOneWidget);
@@ -280,32 +287,94 @@ void main() {
       expect(find.text('3 Termine geladen'), findsOneWidget);
     });
 
-    testWidgets('an edit sends the id and keeps the rest as stored', (
+    testWidgets(
+      'an edit loads the full address and sends no url unless it changed',
+      (tester) async {
+        final calendars = FakeExternalCalendarsRepository(
+          calendars: [_calendar()],
+          urls: {_binId: _binUrl},
+        );
+        await _open(
+          tester,
+          route: Routes.externalCalendarEdit,
+          extra: _calendar(name: 'Abfuhr 2027'),
+          calendars: calendars,
+        );
+
+        expect(calendars.urlRequested, [_binId]);
+        expect(find.text('Abfuhr 2027'), findsOneWidget);
+        expect(find.text(_binUrl), findsOneWidget);
+        await tester.tap(find.widgetWithText(FilledButton, 'Speichern'));
+        await tester.pumpAndSettle();
+
+        expect(calendars.saved.single.draft.toJson(), {
+          'id': _binId,
+          'name': 'Abfuhr 2027',
+          'colour_hex': '#9A5300',
+          'member_ids': <String>[],
+          'show_on_board': true,
+        });
+      },
+    );
+
+    testWidgets('an edit that changes the address sends the new one', (
       tester,
     ) async {
       final calendars = FakeExternalCalendarsRepository(
         calendars: [_calendar()],
+        urls: {_binId: _binUrl},
       );
       await _open(
         tester,
         route: Routes.externalCalendarEdit,
-        extra: _calendar(name: 'Abfuhr 2027'),
+        extra: _calendar(),
         calendars: calendars,
       );
 
-      expect(find.text('Abfuhr 2027'), findsOneWidget);
+      await tester.enterText(
+        find.byType(TextField).at(1),
+        'webcal://abfuhr.example.de/neu.ics',
+      );
       await tester.tap(find.widgetWithText(FilledButton, 'Speichern'));
       await tester.pumpAndSettle();
 
-      expect(calendars.saved.single.draft.toJson(), {
-        'id': _binId,
-        'name': 'Abfuhr 2027',
-        'url': 'https://abfuhr.example.de/k.ics',
-        'colour_hex': '#9A5300',
-        'member_ids': <String>[],
-        'show_on_board': true,
-      });
+      expect(
+        calendars.saved.single.draft.url,
+        'https://abfuhr.example.de/neu.ics',
+      );
     });
+
+    testWidgets(
+      'when the address cannot be loaded the field stays empty and the failure shows',
+      (tester) async {
+        final calendars = FakeExternalCalendarsRepository(
+          calendars: [_calendar()],
+          urlResult: const Err(
+            NotFoundFailure(code: 'external_calendar_not_found'),
+          ),
+        );
+        await _open(
+          tester,
+          route: Routes.externalCalendarEdit,
+          extra: _calendar(),
+          calendars: calendars,
+        );
+
+        expect(find.byType(SnackBar), findsOneWidget);
+        expect(find.text(_binUrl), findsNothing);
+        expect(
+          tester
+              .widget<TextField>(find.byType(TextField).at(1))
+              .controller!
+              .text,
+          isEmpty,
+        );
+        expect(
+          tester.widget<TextField>(find.byType(TextField).at(1)).enabled,
+          isTrue,
+        );
+      },
+    );
 
     testWidgets('an address that is not https is refused before saving', (
       tester,

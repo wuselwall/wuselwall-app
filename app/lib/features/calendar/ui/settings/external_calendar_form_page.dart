@@ -1,3 +1,5 @@
+import 'dart:async' show unawaited;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -35,7 +37,15 @@ class ExternalCalendarFormPage extends ConsumerStatefulWidget {
 class _ExternalCalendarFormPageState
     extends ConsumerState<ExternalCalendarFormPage> {
   late final _name = TextEditingController(text: widget.calendar?.name ?? '');
-  late final _url = TextEditingController(text: widget.calendar?.url ?? '');
+  final _url = TextEditingController();
+
+  /// The address the server holds, once a guardian's edit form has loaded it. Null for a
+  /// new subscription or when the load failed; a save sends the address only when it
+  /// differs from this, so an untouched address is never sent back.
+  String? _storedUrl;
+
+  /// Editing: the full address is still being fetched from `external_calendar_url`.
+  late bool _urlLoading = widget.calendar != null;
   late String _colour =
       widget.calendar?.colourHex ?? toHex(MemberPalette.swatches.first.light);
   late final Set<String> _members = {...?widget.calendar?.memberIds};
@@ -43,6 +53,30 @@ class _ExternalCalendarFormPageState
   String? _nameError;
   String? _urlError;
   bool _saving = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.calendar != null) unawaited(_loadUrl());
+  }
+
+  Future<void> _loadUrl() async {
+    final result = await ref
+        .read(externalCalendarsRepositoryProvider)
+        .url(actor: ref.read(actingProfileProvider), id: widget.calendar!.id);
+    if (!mounted) return;
+    switch (result) {
+      case Ok(:final value):
+        setState(() {
+          _storedUrl = value;
+          _url.text = value;
+          _urlLoading = false;
+        });
+      case Err(:final failure):
+        setState(() => _urlLoading = false);
+        context.showFailure(failure);
+    }
+  }
 
   @override
   void dispose() {
@@ -70,7 +104,7 @@ class _ExternalCalendarFormPageState
       draft: ExternalCalendarDraft(
         id: widget.calendar?.id,
         name: name,
-        url: url,
+        url: url == _storedUrl ? null : url,
         colourHex: _colour,
         memberIds: _members.toList(),
         showOnBoard: _showOnBoard,
@@ -132,6 +166,7 @@ class _ExternalCalendarFormPageState
           const SizedBox(height: Tokens.space3),
           TextField(
             controller: _url,
+            enabled: !_urlLoading,
             keyboardType: TextInputType.url,
             autocorrect: false,
             enableSuggestions: false,
@@ -139,6 +174,19 @@ class _ExternalCalendarFormPageState
             decoration: InputDecoration(
               labelText: l10n.extCalUrlLabel,
               errorText: _urlError,
+              suffixIcon: _urlLoading
+                  ? Semantics(
+                      label: l10n.extCalUrlLoading,
+                      child: const Padding(
+                        padding: EdgeInsets.all(12),
+                        child: SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                      ),
+                    )
+                  : null,
             ),
           ),
           const SizedBox(height: Tokens.space1),
@@ -199,7 +247,7 @@ class _ExternalCalendarFormPageState
           ),
           const SizedBox(height: Tokens.space4),
           FilledButton(
-            onPressed: _saving ? null : _save,
+            onPressed: _saving || _urlLoading ? null : _save,
             style: FilledButton.styleFrom(
               minimumSize: const Size.fromHeight(48),
             ),
