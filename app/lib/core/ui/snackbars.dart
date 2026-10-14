@@ -20,3 +20,21 @@ extension SnackBars on BuildContext {
       );
   }
 }
+
+/// A snackbar with one action, such as "Rückgängig". Takes the messenger rather than a
+/// context, so the action still works after the sheet that showed it has closed.
+void showUndoSnack(
+  ScaffoldMessengerState messenger, {
+  required String message,
+  required String actionLabel,
+  required VoidCallback onAction,
+}) {
+  messenger
+    ..hideCurrentSnackBar()
+    ..showSnackBar(
+      SnackBar(
+        content: Text(message),
+        action: SnackBarAction(label: actionLabel, onPressed: onAction),
+      ),
+    );
+}

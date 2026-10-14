@@ -2729,4 +2729,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get kidNoPlanToday => 'Nothing planned today';
+
+  @override
+  String get mealsUxSuggestOften => 'Family favourites';
+
+  @override
+  String get mealsUxSuggestRare => 'Not had in a while';
+
+  @override
+  String mealsUxClearedSnack(String title) {
+    return '$title removed';
+  }
+
+  @override
+  String get mealsUxUndo => 'Undo';
+
+  @override
+  String get mealsUxFromMealPlan => 'From the meal plan';
+
+  @override
+  String mealsUxForMeal(String meal, String day) {
+    return 'For: $meal · $day';
+  }
 }

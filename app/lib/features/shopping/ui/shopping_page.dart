@@ -11,6 +11,7 @@ import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/text/fold.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
+import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
@@ -661,7 +662,26 @@ class _ItemTile extends StatelessWidget {
         leading: ExcludeSemantics(
           child: Checkbox(value: item.checked, onChanged: (_) => onToggle()),
         ),
-        title: Text(item.name, style: style),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(child: Text(item.name, style: style)),
+            if (item.sourceMealEntryIds.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(left: Tokens.space2),
+                child: ExcludeSemantics(
+                  child: Tooltip(
+                    message: l10n.mealsUxFromMealPlan,
+                    child: Icon(
+                      Icons.restaurant_menu,
+                      size: 18,
+                      color: Theme.of(context).colorScheme.outline,
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
         subtitle: detail.isEmpty ? null : Text(detail, style: style),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
@@ -709,17 +729,17 @@ class _ItemTile extends StatelessWidget {
 
 typedef _ItemEdit = ({String spec, String? categoryId});
 
-class _EditItemDialog extends StatefulWidget {
+class _EditItemDialog extends ConsumerStatefulWidget {
   const _EditItemDialog({required this.item, required this.categories});
 
   final ShoppingItem item;
   final List<ShoppingCategory> categories;
 
   @override
-  State<_EditItemDialog> createState() => _EditItemDialogState();
+  ConsumerState<_EditItemDialog> createState() => _EditItemDialogState();
 }
 
-class _EditItemDialogState extends State<_EditItemDialog> {
+class _EditItemDialogState extends ConsumerState<_EditItemDialog> {
   late final _spec = TextEditingController(text: widget.item.quantity);
   late String? _category = widget.item.categoryId;
 
@@ -732,6 +752,10 @@ class _EditItemDialogState extends State<_EditItemDialog> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    // Online only: while loading or when the request fails, no meal lines.
+    final meals =
+        ref.watch(shoppingItemMealsProvider(widget.item.id)).value ??
+        const <ShoppingItemMeal>[];
     return AlertDialog(
       title: Text(widget.item.name),
       content: Column(
@@ -760,6 +784,21 @@ class _EditItemDialogState extends State<_EditItemDialog> {
             ],
             onChanged: (v) => setState(() => _category = v),
           ),
+          for (final meal in meals)
+            if (meal.title != null)
+              Padding(
+                padding: const EdgeInsets.only(top: Tokens.space2),
+                child: Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Text(
+                    l10n.mealsUxForMeal(
+                      meal.title!,
+                      '${context.weekdayShort(meal.onDate)} '
+                      '${context.dayMonth(meal.onDate)}',
+                    ),
+                  ),
+                ),
+              ),
         ],
       ),
       actions: [
