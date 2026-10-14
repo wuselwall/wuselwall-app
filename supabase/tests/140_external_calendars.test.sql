@@ -1,5 +1,5 @@
 begin;
-select plan(69);
+select plan(76);
 
 -- Imported external calendars (migrations/20261014150000_external_calendars.sql). Start from an
 -- empty system, whatever the database already holds (all rolled back).
@@ -196,16 +196,42 @@ reset role;
 -- Reads: a live device of the household reads; a revoked device and the anon role read nothing.
 select pg_temp.act_as_dev('papa');
 select is((select count(*)::int from api.external_calendars), 2, 'a guardian reads the household calendars');
-select is((select count(*)::int from api.external_calendars where url like 'https://%'), 2,
-  'the calendars are https');
+select is((select string_agg(url_host, ',' order by url_host) from api.external_calendars),
+  'bins.example.ch,club.example.org', 'the view shows only the host of each calendar');
 select ok(not exists (select 1 from information_schema.columns
-                       where table_schema = 'api' and table_name = 'external_calendars' and column_name = 'etag'),
-  'the api view does not expose the etag');
+                       where table_schema = 'api' and table_name = 'external_calendars'
+                         and column_name in ('etag', 'url')),
+  'the api view exposes neither the etag nor the full url');
+reset role;
+
+-- The full address: a guardian gets it from the function; everyone else is refused.
+select pg_temp.act_as_dev('papa');
+select is(api.external_calendar_url(pg_temp.pid('papa'), (select id from cal where name = 'bins')),
+  'https://bins.example.ch/abfall.ics', 'a guardian gets the full address of an imported calendar');
+select throws_like($$ select api.external_calendar_url(pg_temp.pid('papa'), '00000000-0000-0000-0000-000000000000') $$,
+  '%external calendar not found%', 'an unknown calendar has no address');
+reset role;
+
+select pg_temp.act_as_dev('ipad');
+select throws_like($$ select api.external_calendar_url(pg_temp.pid('lotta'), (select id from cal where name = 'bins')) $$,
+  '%guardian required%', 'a child on the shared iPad gets no address');
+reset role;
+
+select pg_temp.act_as_dev('kiosk');
+select throws_like($$ select api.external_calendar_url(pg_temp.pid('papa'), (select id from cal where name = 'bins')) $$,
+  '%not allowed on a kiosk%', 'a kiosk gets no address');
+reset role;
+
+select pg_temp.act_as_dev('b');
+select throws_like($$ select api.external_calendar_url(pg_temp.pid('b_profile'), (select id from cal where name = 'bins')) $$,
+  '%external calendar not found%', 'another household gets no address');
 reset role;
 
 select pg_temp.act_as_dev('old');
 select is((select count(*)::int from api.external_calendars), 0, 'a revoked device reads no imported calendar');
 select is((select count(*)::int from api.external_occurrences), 0, 'a revoked device reads no imported occurrence');
+select throws_like($$ select api.external_calendar_url(pg_temp.pid('papa'), (select id from cal where name = 'bins')) $$,
+  '%device not usable%', 'a revoked device gets no address');
 reset role;
 
 select set_config('request.jwt.claims', '', true);
@@ -214,6 +240,8 @@ select throws_like($$ select count(*) from api.external_calendars $$, '%permissi
   'anon reads no imported calendar');
 select throws_like($$ select count(*) from api.external_occurrences $$, '%permission denied%',
   'anon reads no imported occurrence');
+select throws_like($$ select api.external_calendar_url(null, (select id from cal where name = 'bins')) $$,
+  '%permission denied%', 'anon gets no address');
 reset role;
 select throws_like($$ select api.external_calendar_save(null, '{"name":"X","url":"https://a.example.org/a.ics"}') $$,
   '%device not usable%', 'an unauthenticated write is refused');

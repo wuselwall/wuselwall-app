@@ -3156,4 +3156,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get extCalActive => 'Active';
+
+  @override
+  String get extCalUrlLoading => 'Loading the address';
 }

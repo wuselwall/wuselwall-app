@@ -17,6 +17,9 @@ abstract interface class ExternalCalendarsRepository {
 
   Future<Result<void>> delete({required String? actor, required String id});
 
+  /// The full feed address of a calendar, for a guardian's edit form.
+  Future<Result<String>> url({required String? actor, required String id});
+
   /// Fetches the feed now, unless it was fetched less than five minutes ago.
   Future<Result<CalendarRefresh>> refresh({
     required String? actor,
@@ -53,6 +56,14 @@ class SupabaseExternalCalendarsRepository
         'external_calendar_delete',
         params: {'p_actor': actor, 'p_id': id},
         parse: (_) {},
+      );
+
+  @override
+  Future<Result<String>> url({required String? actor, required String id}) =>
+      _api.rpc(
+        'external_calendar_url',
+        params: {'p_actor': actor, 'p_id': id},
+        parse: (json) => json! as String,
       );
 
   @override

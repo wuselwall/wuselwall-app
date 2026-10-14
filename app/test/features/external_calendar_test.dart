@@ -104,6 +104,11 @@ void main() {
       expect(draft.toJson(), {'id': 'ext-1', 'active': false});
     });
 
+    test('a save that does not touch the address sends no url key', () {
+      const draft = ExternalCalendarDraft(id: 'ext-1', name: 'Abfuhr 2027');
+      expect(draft.toJson(), {'id': 'ext-1', 'name': 'Abfuhr 2027'});
+    });
+
     test('an empty member list is sent: the whole family', () {
       const draft = ExternalCalendarDraft(memberIds: []);
       expect(draft.toJson(), {'member_ids': <String>[]});
@@ -115,7 +120,7 @@ void main() {
       final c = ExternalCalendar.fromJson({
         'id': 'ext-1',
         'name': 'Abfuhrkalender',
-        'url': 'https://abfuhr.example.de/k.ics',
+        'url_host': 'abfuhr.example.de',
         'colour_hex': '#9A5300',
         'member_ids': <String>[],
         'show_on_board': true,
@@ -126,6 +131,7 @@ void main() {
         'updated_at': '2026-10-01T00:00:00Z',
       });
       expect(c.wholeFamily, isTrue);
+      expect(c.urlHost, 'abfuhr.example.de');
       expect(c.showOnBoard, isTrue);
       expect(c.lastFetchedAt, DateTime.parse('2026-10-14T08:00:00Z'));
       expect(c.lastError, isNull);

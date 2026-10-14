@@ -204,6 +204,11 @@ The requests carry the User-Agent `WuselWall calendar-import (+https://wuselwall
 third party sees the server's IP address and the request time, like any HTTPS request. Nothing about
 the household is sent, except what is in the address the family typed.
 
+Who may read the address: only guardians. The subscription list that every live device of the
+household reads (`api.external_calendars`) carries the host name only (`url_host`). The full address
+comes from `api.external_calendar_url`, which refuses children's devices, kiosks, revoked devices and
+other households, and writes no audit row. The household export, which is guardian-only, includes it.
+
 Outbound connections from the server should be enumerable on one hand: Let's Encrypt,
 the container registry, the backup target, APNs and FCM (for push), the OS package
 mirrors, and since ADR-014 the SMTP provider and Apple's and Google's token endpoints. Added
