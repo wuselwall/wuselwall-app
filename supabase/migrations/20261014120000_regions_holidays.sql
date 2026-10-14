@@ -66,19 +66,18 @@ alter table app.region            force row level security;
 alter table app.holiday_feed      force row level security;
 alter table app.holiday_feed_sync force row level security;
 
--- Public data: any authenticated session reads it, nobody but the sync writes it.
-create policy region_read on app.region for select to authenticated using (true);
-create policy holiday_feed_read on app.holiday_feed for select to authenticated using (true);
-create policy holiday_feed_sync_read on app.holiday_feed_sync for select to authenticated using (true);
+-- Public data, not household data: any session on a live device reads it (a revoked device
+-- reads nothing, as everywhere). Nobody writes it but the sync, through the service-role-only
+-- api.holiday_cache_* functions below.
+create policy region_read on app.region for select to authenticated using (app.device_ok());
+create policy holiday_feed_read on app.holiday_feed for select to authenticated using (app.device_ok());
+create policy holiday_feed_sync_read on app.holiday_feed_sync for select to authenticated using (app.device_ok());
 create policy owner_all on app.region            to postgres using (true) with check (true);
 create policy owner_all on app.holiday_feed      to postgres using (true) with check (true);
 create policy owner_all on app.holiday_feed_sync to postgres using (true) with check (true);
 
 revoke all on app.region, app.holiday_feed, app.holiday_feed_sync from public, anon, authenticated;
 grant select on app.region, app.holiday_feed, app.holiday_feed_sync to authenticated;
--- The holidays sync runs with the service role (it bypasses RLS there, as on every table).
-grant usage on schema app to service_role;
-grant select, insert, update, delete on app.region, app.holiday_feed, app.holiday_feed_sync to service_role;
 
 -- ------------------------------------------------------------------ school region
 
@@ -533,3 +532,169 @@ grant execute on function api.school_save(uuid, jsonb), api.school_holiday_save(
 
 -- Internal: PUBLIC may execute new app functions unless revoked here.
 revoke all on function app.region_covers(text, text, boolean, text[]) from public, anon, authenticated;
+
+-- ---------------------------------------------------------------- holiday cache (service role)
+-- Service-role-only functions for holidays-sync. The cache holds no household data.
+
+-- Countries to refresh: those in the sync table, the schools' region codes and the household
+-- region overrides. Country = the two-letter prefix of a region code ("CH-ZH" -> "CH").
+create function api.holiday_cache_countries() returns text[]
+language plpgsql stable security definer set search_path = '' as $$
+begin
+  if not app.is_service_role() then
+    raise exception 'service role required' using errcode = '42501', hint = 'service_role_required';
+  end if;
+  return coalesce((
+    select array_agg(distinct c order by c)
+      from (
+        select s.country as c from app.holiday_feed_sync s
+        union
+        select split_part(sc.region_code, '-', 1) from app.school sc where sc.region_code is not null
+        union
+        select split_part(hs.value #>> '{}', '-', 1)
+          from app.household_setting hs
+         where hs.key = 'household.region' and jsonb_typeof(hs.value) = 'string'
+      ) x
+     where x.c ~ '^[A-Z]{2}$'
+  ), '{}'::text[]);
+end $$;
+
+-- The cache state of one country: {fetched_at, regions, holidays}. fetched_at is null when the
+-- country was never fetched.
+create function api.holiday_cache_state(p_country text) returns jsonb
+language plpgsql stable security definer set search_path = '' as $$
+begin
+  if not app.is_service_role() then
+    raise exception 'service role required' using errcode = '42501', hint = 'service_role_required';
+  end if;
+  return jsonb_build_object(
+    'fetched_at', (select s.fetched_at from app.holiday_feed_sync s where s.country = p_country),
+    'regions',    (select count(*) from app.region r where r.country = p_country),
+    'holidays',   (select count(*) from app.holiday_feed h where h.country = p_country));
+end $$;
+
+-- Claims a refresh attempt: sets requested_at to p_at unless an attempt is recorded at or after
+-- p_retry_before. Returns false when the claim was refused (a recent attempt is on record).
+-- The on-demand call passes p_retry_before = now - 10 minutes; the scheduled job passes now.
+create function api.holiday_cache_claim(p_country text, p_at timestamptz, p_retry_before timestamptz)
+returns boolean
+language plpgsql security definer set search_path = '' as $$
+begin
+  if not app.is_service_role() then
+    raise exception 'service role required' using errcode = '42501', hint = 'service_role_required';
+  end if;
+  insert into app.holiday_feed_sync (country, requested_at) values (p_country, p_at)
+  on conflict (country) do update set requested_at = excluded.requested_at
+    where app.holiday_feed_sync.requested_at is null
+       or app.holiday_feed_sync.requested_at < p_retry_before;
+  return found;
+end $$;
+
+-- Upserts regions: p_rows is a JSON array of {code, country, parent_code, level, category,
+-- short_name, names, fetched_at}. Returns the number of rows written.
+create function api.holiday_cache_put_regions(p_rows jsonb) returns int
+language plpgsql security definer set search_path = '' as $$
+declare
+  n int;
+begin
+  if not app.is_service_role() then
+    raise exception 'service role required' using errcode = '42501', hint = 'service_role_required';
+  end if;
+  if jsonb_typeof(p_rows) is distinct from 'array' then
+    raise exception 'holiday cache rows invalid' using errcode = '22023', hint = 'holiday_cache_invalid';
+  end if;
+  insert into app.region (code, country, parent_code, level, category, short_name, names, fetched_at)
+  select r.code, r.country, r.parent_code, r.level, r.category, r.short_name, r.names, r.fetched_at
+    from jsonb_to_recordset(p_rows) as r(code text, country text, parent_code text, level smallint,
+         category text, short_name text, names jsonb, fetched_at timestamptz)
+  on conflict (code) do update set
+    country = excluded.country, parent_code = excluded.parent_code, level = excluded.level,
+    category = excluded.category, short_name = excluded.short_name, names = excluded.names,
+    fetched_at = excluded.fetched_at;
+  get diagnostics n = row_count;
+  return n;
+end $$;
+
+-- Upserts holidays: p_rows is a JSON array of {id, country, kind, starts_on, ends_on, names,
+-- nationwide, subdivisions, fetched_at}. Returns the number of rows written.
+create function api.holiday_cache_put_holidays(p_rows jsonb) returns int
+language plpgsql security definer set search_path = '' as $$
+declare
+  n int;
+begin
+  if not app.is_service_role() then
+    raise exception 'service role required' using errcode = '42501', hint = 'service_role_required';
+  end if;
+  if jsonb_typeof(p_rows) is distinct from 'array' then
+    raise exception 'holiday cache rows invalid' using errcode = '22023', hint = 'holiday_cache_invalid';
+  end if;
+  insert into app.holiday_feed (id, country, kind, starts_on, ends_on, names, nationwide, subdivisions, fetched_at)
+  select h.id, h.country, h.kind, h.starts_on, h.ends_on, h.names, h.nationwide, h.subdivisions, h.fetched_at
+    from jsonb_to_recordset(p_rows) as h(id text, country text, kind text, starts_on date, ends_on date,
+         names jsonb, nationwide boolean, subdivisions text[], fetched_at timestamptz)
+  on conflict (id) do update set
+    country = excluded.country, kind = excluded.kind, starts_on = excluded.starts_on,
+    ends_on = excluded.ends_on, names = excluded.names, nationwide = excluded.nationwide,
+    subdivisions = excluded.subdivisions, fetched_at = excluded.fetched_at;
+  get diagnostics n = row_count;
+  return n;
+end $$;
+
+-- Removes the country's holidays of one kind that start in [p_from, p_to] and are not in p_keep
+-- (the ids the API returned): corrections propagate. Returns the number removed.
+create function api.holiday_cache_prune(p_country text, p_kind text, p_from date, p_to date, p_keep text[])
+returns int
+language plpgsql security definer set search_path = '' as $$
+declare
+  n int;
+begin
+  if not app.is_service_role() then
+    raise exception 'service role required' using errcode = '42501', hint = 'service_role_required';
+  end if;
+  delete from app.holiday_feed h
+   where h.country = p_country
+     and h.kind = p_kind
+     and h.starts_on between p_from and p_to
+     and not (h.id = any (coalesce(p_keep, '{}'::text[])));
+  get diagnostics n = row_count;
+  return n;
+end $$;
+
+-- Records a successful refresh: fetched_at, the window, and last_error cleared.
+create function api.holiday_cache_finish(p_country text, p_fetched_at timestamptz, p_from date, p_to date)
+returns void
+language plpgsql security definer set search_path = '' as $$
+begin
+  if not app.is_service_role() then
+    raise exception 'service role required' using errcode = '42501', hint = 'service_role_required';
+  end if;
+  insert into app.holiday_feed_sync (country, fetched_at, valid_from, valid_to, last_error)
+  values (p_country, p_fetched_at, p_from, p_to, null)
+  on conflict (country) do update set
+    fetched_at = excluded.fetched_at, valid_from = excluded.valid_from,
+    valid_to = excluded.valid_to, last_error = null;
+end $$;
+
+-- Records a failed refresh in last_error (fetched_at is kept, so the last good data stays).
+create function api.holiday_cache_fail(p_country text, p_error text) returns void
+language plpgsql security definer set search_path = '' as $$
+begin
+  if not app.is_service_role() then
+    raise exception 'service role required' using errcode = '42501', hint = 'service_role_required';
+  end if;
+  insert into app.holiday_feed_sync (country, last_error) values (p_country, left(p_error, 200))
+  on conflict (country) do update set last_error = excluded.last_error;
+end $$;
+
+-- Grants: the service role only, never the apps. New functions are executable by PUBLIC unless
+-- revoked.
+revoke all on function api.holiday_cache_countries(), api.holiday_cache_state(text),
+  api.holiday_cache_claim(text, timestamptz, timestamptz), api.holiday_cache_put_regions(jsonb),
+  api.holiday_cache_put_holidays(jsonb), api.holiday_cache_prune(text, text, date, date, text[]),
+  api.holiday_cache_finish(text, timestamptz, date, date), api.holiday_cache_fail(text, text)
+  from public, anon, authenticated;
+grant execute on function api.holiday_cache_countries(), api.holiday_cache_state(text),
+  api.holiday_cache_claim(text, timestamptz, timestamptz), api.holiday_cache_put_regions(jsonb),
+  api.holiday_cache_put_holidays(jsonb), api.holiday_cache_prune(text, text, date, date, text[]),
+  api.holiday_cache_finish(text, timestamptz, date, date), api.holiday_cache_fail(text, text)
+  to service_role;
