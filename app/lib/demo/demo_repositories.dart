@@ -362,6 +362,14 @@ typedef _Definition = ({
 /// nothing sees it (`api.settings` without overrides).
 const _catalogue = <_Definition>[
   (
+    key: 'household.region',
+    scope: SettingScope.household,
+    type: SettingType.region,
+    defaultValue: null,
+    constraints: {'nullable': true},
+    selfService: false,
+  ),
+  (
     key: 'board.member_label',
     scope: SettingScope.household,
     type: SettingType.enumeration,

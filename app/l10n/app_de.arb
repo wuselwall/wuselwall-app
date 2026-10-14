@@ -603,24 +603,6 @@
   "schoolSetupTitle": "Schule",
   "schoolSectionSchool": "Schule",
   "schoolName": "Name der Schule",
-  "schoolState": "Bundesland",
-  "schoolStateNone": "Nicht angegeben",
-  "schoolStateBW": "Baden-Württemberg",
-  "schoolStateBY": "Bayern",
-  "schoolStateBE": "Berlin",
-  "schoolStateBB": "Brandenburg",
-  "schoolStateHB": "Bremen",
-  "schoolStateHH": "Hamburg",
-  "schoolStateHE": "Hessen",
-  "schoolStateMV": "Mecklenburg-Vorpommern",
-  "schoolStateNI": "Niedersachsen",
-  "schoolStateNW": "Nordrhein-Westfalen",
-  "schoolStateRP": "Rheinland-Pfalz",
-  "schoolStateSL": "Saarland",
-  "schoolStateSN": "Sachsen",
-  "schoolStateST": "Sachsen-Anhalt",
-  "schoolStateSH": "Schleswig-Holstein",
-  "schoolStateTH": "Thüringen",
   "schoolBellTimes": "Klingelzeiten",
   "schoolAddLesson": "Stunde hinzufügen",
   "schoolAddBreak": "Pause hinzufügen",
@@ -912,5 +894,78 @@
   "schoolsUiDayCleared": "Tag geleert",
   "schoolsUiDayCopied": "Tag kopiert",
   "schoolsUiDaySwapped": "Tage getauscht",
-  "schoolsUiUndo": "Rückgängig"
+  "schoolsUiUndo": "Rückgängig",
+  "regionSettingTitle": "Region",
+  "regionSettingHelp": "Bestimmt, welche Feiertage gelten und welche Schulferien du übernehmen kannst. Wähle Kanton, Bundesland oder Gemeinde.",
+  "regionFieldLabel": "Region",
+  "regionFieldEmpty": "Keine Region gewählt",
+  "regionFieldClear": "Region entfernen",
+  "regionCountryDE": "Deutschland",
+  "regionCountryAT": "Österreich",
+  "regionCountryCH": "Schweiz",
+  "regionCountryLI": "Liechtenstein",
+  "regionCountryOther": "Anderes Land (ohne Region)",
+  "regionPickCountryTitle": "Land",
+  "regionPickRegionTitle": "Kanton oder Bundesland",
+  "regionPickSearch": "Suchen",
+  "regionPickWholeRegion": "Ganze Region: {name}",
+  "@regionPickWholeRegion": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "regionPickDeeperTitle": "Genauer wählen (Bezirk/Gemeinde)",
+  "regionPickDeeperSearch": "Gemeinde oder Bezirk eingeben",
+  "regionPickNoMatch": "Nichts gefunden",
+  "regionPickLoading": "Regionen werden geladen…",
+  "regionPickRetry": "Erneut versuchen",
+  "regionPickSkip": "Ohne Region weiter",
+  "regionPickEmpty": "Keine Regionen für dieses Land gefunden.",
+  "regionUnavailable": "Die Regionsliste ist gerade nicht verfügbar. Prüfe die Verbindung und versuche es erneut.",
+  "regionNameTop": "{category} {name}",
+  "@regionNameTop": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "regionNameDeeper": "{name} ({category}), {parent}",
+  "@regionNameDeeper": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "category": {
+        "type": "String"
+      },
+      "parent": {
+        "type": "String"
+      }
+    }
+  },
+  "regionImportAction": "Ferien übernehmen",
+  "regionImportNeedsRegion": "Wähle zuerst eine Region für die Schule.",
+  "regionImportTitle": "Schulferien",
+  "regionImportIntro": "Feiertage der Region gelten automatisch. Hier übernimmst du die Schulferien.",
+  "regionImportSwissHint": "In der Schweiz können die Schulferien je Gemeinde abweichen. Bitte die Daten prüfen.",
+  "regionImportNone": "Keine Schulferien in den nächsten 18 Monaten gefunden.",
+  "regionImportAlready": "schon übernommen",
+  "regionImportOverlaps": "überschneidet sich mit einem eigenen Eintrag",
+  "regionImportButton": "Übernehmen",
+  "regionImportDone": "{count, plural, =0{Keine Ferien übernommen} =1{1 Ferien übernommen} other{{count} Ferien übernommen}}",
+  "@regionImportDone": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "regionImportAttribution": "Daten: OpenHolidays API · ODbL",
+  "regionImported": "importiert"
 }

@@ -1019,24 +1019,6 @@
   "schoolSetupTitle": "School",
   "schoolSectionSchool": "School",
   "schoolName": "Name of the school",
-  "schoolState": "State",
-  "schoolStateNone": "Not given",
-  "schoolStateBW": "Baden-Württemberg",
-  "schoolStateBY": "Bavaria",
-  "schoolStateBE": "Berlin",
-  "schoolStateBB": "Brandenburg",
-  "schoolStateHB": "Bremen",
-  "schoolStateHH": "Hamburg",
-  "schoolStateHE": "Hesse",
-  "schoolStateMV": "Mecklenburg-Western Pomerania",
-  "schoolStateNI": "Lower Saxony",
-  "schoolStateNW": "North Rhine-Westphalia",
-  "schoolStateRP": "Rhineland-Palatinate",
-  "schoolStateSL": "Saarland",
-  "schoolStateSN": "Saxony",
-  "schoolStateST": "Saxony-Anhalt",
-  "schoolStateSH": "Schleswig-Holstein",
-  "schoolStateTH": "Thuringia",
   "schoolBellTimes": "Bell times",
   "schoolAddLesson": "Add lesson",
   "schoolAddBreak": "Add break",
@@ -1523,5 +1505,78 @@
   "schoolsUiDayCleared": "Day cleared",
   "schoolsUiDayCopied": "Day copied",
   "schoolsUiDaySwapped": "Days swapped",
-  "schoolsUiUndo": "Undo"
+  "schoolsUiUndo": "Undo",
+  "regionSettingTitle": "Region",
+  "regionSettingHelp": "Decides which public holidays apply and which school holidays you can import. Choose the canton, state or municipality.",
+  "regionFieldLabel": "Region",
+  "regionFieldEmpty": "No region chosen",
+  "regionFieldClear": "Remove region",
+  "regionCountryDE": "Germany",
+  "regionCountryAT": "Austria",
+  "regionCountryCH": "Switzerland",
+  "regionCountryLI": "Liechtenstein",
+  "regionCountryOther": "Other country (no region)",
+  "regionPickCountryTitle": "Country",
+  "regionPickRegionTitle": "Canton or state",
+  "regionPickSearch": "Search",
+  "regionPickWholeRegion": "All of {name}",
+  "@regionPickWholeRegion": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "regionPickDeeperTitle": "Choose more precisely (district or municipality)",
+  "regionPickDeeperSearch": "Type a municipality or district",
+  "regionPickNoMatch": "Nothing found",
+  "regionPickLoading": "Loading regions…",
+  "regionPickRetry": "Try again",
+  "regionPickSkip": "Continue without a region",
+  "regionPickEmpty": "No regions for this country.",
+  "regionUnavailable": "The region list is not available right now. Check the connection and try again.",
+  "regionNameTop": "{category} {name}",
+  "@regionNameTop": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "regionNameDeeper": "{name} ({category}), {parent}",
+  "@regionNameDeeper": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "category": {
+        "type": "String"
+      },
+      "parent": {
+        "type": "String"
+      }
+    }
+  },
+  "regionImportAction": "Import school holidays",
+  "regionImportNeedsRegion": "Choose a region for the school first.",
+  "regionImportTitle": "School holidays",
+  "regionImportIntro": "Public holidays of the region apply automatically. Here you bring in the school holidays.",
+  "regionImportSwissHint": "School holidays in Switzerland can differ by municipality. Check the dates.",
+  "regionImportNone": "No school holidays found for the next 18 months.",
+  "regionImportAlready": "already imported",
+  "regionImportOverlaps": "overlaps an entry of your own",
+  "regionImportButton": "Import",
+  "regionImportDone": "{count, plural, =0{No holidays imported} =1{1 holiday imported} other{{count} holidays imported}}",
+  "@regionImportDone": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "regionImportAttribution": "Data: OpenHolidays API · ODbL",
+  "regionImported": "imported"
 }

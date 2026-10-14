@@ -9,10 +9,15 @@ import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
+import 'package:wuselwall/features/region/ui/holiday_import_sheet.dart';
+import 'package:wuselwall/features/region/ui/region_field.dart';
 import 'package:wuselwall/features/school/application/school_providers.dart';
 import 'package:wuselwall/features/school/data/school_repository.dart';
 import 'package:wuselwall/features/school/domain/school_models.dart';
 import 'package:wuselwall/features/school/ui/school_icons.dart';
+import 'package:wuselwall/features/settings/application/household_settings_providers.dart';
+import 'package:wuselwall/features/settings/data/household_settings_repository.dart';
+import 'package:wuselwall/features/settings/domain/household_setting.dart';
 
 /// The schools of the household, their bell times, terms and holidays, and the subjects
 /// they share (specs/15 "Maintaining it"). One school is on screen at a time; a
@@ -193,48 +198,10 @@ class _Section extends StatelessWidget {
   );
 }
 
-/// The Bundesland's name for an ISO 3166-2 code (`DE-BE`).
-String stateName(AppLocalizations l10n, String code) => switch (code) {
-  'DE-BW' => l10n.schoolStateBW,
-  'DE-BY' => l10n.schoolStateBY,
-  'DE-BE' => l10n.schoolStateBE,
-  'DE-BB' => l10n.schoolStateBB,
-  'DE-HB' => l10n.schoolStateHB,
-  'DE-HH' => l10n.schoolStateHH,
-  'DE-HE' => l10n.schoolStateHE,
-  'DE-MV' => l10n.schoolStateMV,
-  'DE-NI' => l10n.schoolStateNI,
-  'DE-NW' => l10n.schoolStateNW,
-  'DE-RP' => l10n.schoolStateRP,
-  'DE-SL' => l10n.schoolStateSL,
-  'DE-SN' => l10n.schoolStateSN,
-  'DE-ST' => l10n.schoolStateST,
-  'DE-SH' => l10n.schoolStateSH,
-  _ => l10n.schoolStateTH,
-};
-
-const _states = [
-  'DE-BW',
-  'DE-BY',
-  'DE-BE',
-  'DE-BB',
-  'DE-HB',
-  'DE-HH',
-  'DE-HE',
-  'DE-MV',
-  'DE-NI',
-  'DE-NW',
-  'DE-RP',
-  'DE-SL',
-  'DE-SN',
-  'DE-ST',
-  'DE-SH',
-  'DE-TH',
-];
-
-/// The school's name and state. Keyed by the school's id by the page, so switching
+/// The school's name and region. Keyed by the school's id by the page, so switching
 /// schools starts from that school's values. [school] null is the empty form for a new
-/// school; [onCreated] receives the new id once it is saved.
+/// school, which proposes the household's region; [onCreated] receives the new id once it
+/// is saved.
 class _SchoolForm extends ConsumerStatefulWidget {
   const _SchoolForm({required this.school, required this.onCreated, super.key});
 
@@ -247,7 +214,10 @@ class _SchoolForm extends ConsumerStatefulWidget {
 
 class _SchoolFormState extends ConsumerState<_SchoolForm> {
   late final _name = TextEditingController(text: widget.school?.name ?? '');
-  late String? _state = widget.school?.stateCode;
+
+  /// What the user picked or cleared; used once [_touched] is set.
+  String? _picked;
+  bool _touched = false;
 
   @override
   void dispose() {
@@ -255,9 +225,34 @@ class _SchoolFormState extends ConsumerState<_SchoolForm> {
     super.dispose();
   }
 
+  /// The region on screen: the school's own, or for a new school the household's.
+  String? _regionOn(List<SettingEntry> settings) {
+    if (_touched) return _picked;
+    final school = widget.school;
+    if (school != null) return school.regionCode;
+    return resolveSetting(settings, 'household.region')?.value as String?;
+  }
+
+  /// The first school with a region also sets the household's region, when it has none
+  /// yet (specs/04: the region is asked with the first school). A region already set stays.
+  Future<void> _proposeHouseholdRegion(String region) async {
+    final repository = ref.read(householdSettingsRepositoryProvider);
+    final entries = (await repository.all()).valueOrNull ?? const [];
+    if (resolveSetting(entries, 'household.region')?.value != null) return;
+    final result = await repository.set(
+      actor: ref.read(actingProfileProvider),
+      key: 'household.region',
+      value: region,
+    );
+    if (!mounted) return;
+    if (result.isOk) ref.invalidate(householdSettingsProvider);
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final settings =
+        ref.watch(householdSettingsProvider).value ?? const <SettingEntry>[];
     return _Section(
       title: widget.school == null
           ? l10n.schoolsUiNewSchool
@@ -268,21 +263,12 @@ class _SchoolFormState extends ConsumerState<_SchoolForm> {
           decoration: InputDecoration(labelText: l10n.schoolName),
         ),
         const SizedBox(height: 12),
-        DropdownButtonFormField<String?>(
-          initialValue: _state,
-          decoration: InputDecoration(labelText: l10n.schoolState),
-          items: [
-            DropdownMenuItem<String?>(
-              value: null,
-              child: Text(l10n.schoolStateNone),
-            ),
-            for (final code in _states)
-              DropdownMenuItem<String?>(
-                value: code,
-                child: Text(stateName(l10n, code)),
-              ),
-          ],
-          onChanged: (v) => setState(() => _state = v),
+        RegionField(
+          code: _regionOn(settings),
+          onChanged: (code) => setState(() {
+            _touched = true;
+            _picked = code;
+          }),
         ),
         const SizedBox(height: 12),
         Align(
@@ -291,6 +277,7 @@ class _SchoolFormState extends ConsumerState<_SchoolForm> {
             onPressed: () async {
               final name = _name.text.trim();
               if (name.isEmpty) return;
+              final region = _regionOn(settings);
               String? savedId;
               final saved = await _write(context, ref, (actor) async {
                 final result = await ref
@@ -299,7 +286,7 @@ class _SchoolFormState extends ConsumerState<_SchoolForm> {
                       actor: actor,
                       id: widget.school?.id,
                       name: name,
-                      stateCode: _state,
+                      regionCode: region,
                       // A new school takes the household's timezone on the server;
                       // an existing one keeps its own.
                       timezone: widget.school?.timezone,
@@ -307,6 +294,9 @@ class _SchoolFormState extends ConsumerState<_SchoolForm> {
                 savedId = result.valueOrNull;
                 return result;
               });
+              if (saved && region != null) {
+                await _proposeHouseholdRegion(region);
+              }
               final id = savedId;
               if (saved && widget.school == null && id != null) {
                 widget.onCreated(id);
@@ -874,6 +864,7 @@ class _Holidays extends ConsumerWidget {
     final holidays = data.holidays
         .where((h) => h.schoolId == null || h.schoolId == school.id)
         .toList();
+    final region = school.regionCode;
     return _Section(
       title: l10n.schoolHolidays,
       action: IconButton(
@@ -895,12 +886,28 @@ class _Holidays extends ConsumerWidget {
         },
       ),
       children: [
+        OutlinedButton.icon(
+          onPressed: region == null
+              ? null
+              : () => _importHolidays(context, ref, school),
+          icon: const Icon(Icons.download_outlined),
+          label: Text(l10n.regionImportAction),
+        ),
+        if (region == null)
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Text(l10n.regionImportNeedsRegion),
+          ),
+        const SizedBox(height: 8),
         for (final h in holidays)
           Card(
             child: ListTile(
               title: Text(h.name),
               subtitle: Text(
-                '${context.dayMonth(h.startsOn)} – ${context.dayMonth(h.endsOn)}',
+                [
+                  '${context.dayMonth(h.startsOn)} – ${context.dayMonth(h.endsOn)}',
+                  if (h.isImported) l10n.regionImported,
+                ].join(' · '),
               ),
               trailing: IconButton(
                 tooltip: l10n.delete,
@@ -920,6 +927,24 @@ class _Holidays extends ConsumerWidget {
       ],
     );
   }
+}
+
+/// Opens the import sheet for [school]'s region; a successful import refetches the data.
+Future<void> _importHolidays(
+  BuildContext context,
+  WidgetRef ref,
+  SchoolRecord school,
+) async {
+  final region = school.regionCode;
+  if (region == null) return;
+  final count = await showHolidayImportSheet(context, (
+    schoolId: school.id,
+    region: region,
+  ));
+  if (count == null || !context.mounted) return;
+  context.showMessage(context.l10n.regionImportDone(count));
+  ref.invalidate(schoolDataProvider);
+  ref.invalidate(schoolWeekProvider);
 }
 
 class _HolidayDialog extends StatefulWidget {

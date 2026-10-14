@@ -3194,114 +3194,6 @@ abstract class AppLocalizations {
   /// **'Name of the school'**
   String get schoolName;
 
-  /// No description provided for @schoolState.
-  ///
-  /// In en, this message translates to:
-  /// **'State'**
-  String get schoolState;
-
-  /// No description provided for @schoolStateNone.
-  ///
-  /// In en, this message translates to:
-  /// **'Not given'**
-  String get schoolStateNone;
-
-  /// No description provided for @schoolStateBW.
-  ///
-  /// In en, this message translates to:
-  /// **'Baden-Württemberg'**
-  String get schoolStateBW;
-
-  /// No description provided for @schoolStateBY.
-  ///
-  /// In en, this message translates to:
-  /// **'Bavaria'**
-  String get schoolStateBY;
-
-  /// No description provided for @schoolStateBE.
-  ///
-  /// In en, this message translates to:
-  /// **'Berlin'**
-  String get schoolStateBE;
-
-  /// No description provided for @schoolStateBB.
-  ///
-  /// In en, this message translates to:
-  /// **'Brandenburg'**
-  String get schoolStateBB;
-
-  /// No description provided for @schoolStateHB.
-  ///
-  /// In en, this message translates to:
-  /// **'Bremen'**
-  String get schoolStateHB;
-
-  /// No description provided for @schoolStateHH.
-  ///
-  /// In en, this message translates to:
-  /// **'Hamburg'**
-  String get schoolStateHH;
-
-  /// No description provided for @schoolStateHE.
-  ///
-  /// In en, this message translates to:
-  /// **'Hesse'**
-  String get schoolStateHE;
-
-  /// No description provided for @schoolStateMV.
-  ///
-  /// In en, this message translates to:
-  /// **'Mecklenburg-Western Pomerania'**
-  String get schoolStateMV;
-
-  /// No description provided for @schoolStateNI.
-  ///
-  /// In en, this message translates to:
-  /// **'Lower Saxony'**
-  String get schoolStateNI;
-
-  /// No description provided for @schoolStateNW.
-  ///
-  /// In en, this message translates to:
-  /// **'North Rhine-Westphalia'**
-  String get schoolStateNW;
-
-  /// No description provided for @schoolStateRP.
-  ///
-  /// In en, this message translates to:
-  /// **'Rhineland-Palatinate'**
-  String get schoolStateRP;
-
-  /// No description provided for @schoolStateSL.
-  ///
-  /// In en, this message translates to:
-  /// **'Saarland'**
-  String get schoolStateSL;
-
-  /// No description provided for @schoolStateSN.
-  ///
-  /// In en, this message translates to:
-  /// **'Saxony'**
-  String get schoolStateSN;
-
-  /// No description provided for @schoolStateST.
-  ///
-  /// In en, this message translates to:
-  /// **'Saxony-Anhalt'**
-  String get schoolStateST;
-
-  /// No description provided for @schoolStateSH.
-  ///
-  /// In en, this message translates to:
-  /// **'Schleswig-Holstein'**
-  String get schoolStateSH;
-
-  /// No description provided for @schoolStateTH.
-  ///
-  /// In en, this message translates to:
-  /// **'Thuringia'**
-  String get schoolStateTH;
-
   /// No description provided for @schoolBellTimes.
   ///
   /// In en, this message translates to:
@@ -4927,6 +4819,222 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Undo'**
   String get schoolsUiUndo;
+
+  /// No description provided for @regionSettingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Region'**
+  String get regionSettingTitle;
+
+  /// No description provided for @regionSettingHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Decides which public holidays apply and which school holidays you can import. Choose the canton, state or municipality.'**
+  String get regionSettingHelp;
+
+  /// No description provided for @regionFieldLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Region'**
+  String get regionFieldLabel;
+
+  /// No description provided for @regionFieldEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No region chosen'**
+  String get regionFieldEmpty;
+
+  /// No description provided for @regionFieldClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove region'**
+  String get regionFieldClear;
+
+  /// No description provided for @regionCountryDE.
+  ///
+  /// In en, this message translates to:
+  /// **'Germany'**
+  String get regionCountryDE;
+
+  /// No description provided for @regionCountryAT.
+  ///
+  /// In en, this message translates to:
+  /// **'Austria'**
+  String get regionCountryAT;
+
+  /// No description provided for @regionCountryCH.
+  ///
+  /// In en, this message translates to:
+  /// **'Switzerland'**
+  String get regionCountryCH;
+
+  /// No description provided for @regionCountryLI.
+  ///
+  /// In en, this message translates to:
+  /// **'Liechtenstein'**
+  String get regionCountryLI;
+
+  /// No description provided for @regionCountryOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other country (no region)'**
+  String get regionCountryOther;
+
+  /// No description provided for @regionPickCountryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Country'**
+  String get regionPickCountryTitle;
+
+  /// No description provided for @regionPickRegionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Canton or state'**
+  String get regionPickRegionTitle;
+
+  /// No description provided for @regionPickSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get regionPickSearch;
+
+  /// No description provided for @regionPickWholeRegion.
+  ///
+  /// In en, this message translates to:
+  /// **'All of {name}'**
+  String regionPickWholeRegion(String name);
+
+  /// No description provided for @regionPickDeeperTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose more precisely (district or municipality)'**
+  String get regionPickDeeperTitle;
+
+  /// No description provided for @regionPickDeeperSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Type a municipality or district'**
+  String get regionPickDeeperSearch;
+
+  /// No description provided for @regionPickNoMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing found'**
+  String get regionPickNoMatch;
+
+  /// No description provided for @regionPickLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading regions…'**
+  String get regionPickLoading;
+
+  /// No description provided for @regionPickRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get regionPickRetry;
+
+  /// No description provided for @regionPickSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue without a region'**
+  String get regionPickSkip;
+
+  /// No description provided for @regionPickEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No regions for this country.'**
+  String get regionPickEmpty;
+
+  /// No description provided for @regionUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'The region list is not available right now. Check the connection and try again.'**
+  String get regionUnavailable;
+
+  /// No description provided for @regionNameTop.
+  ///
+  /// In en, this message translates to:
+  /// **'{category} {name}'**
+  String regionNameTop(String category, String name);
+
+  /// No description provided for @regionNameDeeper.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} ({category}), {parent}'**
+  String regionNameDeeper(String name, String category, String parent);
+
+  /// No description provided for @regionImportAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Import school holidays'**
+  String get regionImportAction;
+
+  /// No description provided for @regionImportNeedsRegion.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a region for the school first.'**
+  String get regionImportNeedsRegion;
+
+  /// No description provided for @regionImportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'School holidays'**
+  String get regionImportTitle;
+
+  /// No description provided for @regionImportIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Public holidays of the region apply automatically. Here you bring in the school holidays.'**
+  String get regionImportIntro;
+
+  /// No description provided for @regionImportSwissHint.
+  ///
+  /// In en, this message translates to:
+  /// **'School holidays in Switzerland can differ by municipality. Check the dates.'**
+  String get regionImportSwissHint;
+
+  /// No description provided for @regionImportNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No school holidays found for the next 18 months.'**
+  String get regionImportNone;
+
+  /// No description provided for @regionImportAlready.
+  ///
+  /// In en, this message translates to:
+  /// **'already imported'**
+  String get regionImportAlready;
+
+  /// No description provided for @regionImportOverlaps.
+  ///
+  /// In en, this message translates to:
+  /// **'overlaps an entry of your own'**
+  String get regionImportOverlaps;
+
+  /// No description provided for @regionImportButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Import'**
+  String get regionImportButton;
+
+  /// No description provided for @regionImportDone.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No holidays imported} =1{1 holiday imported} other{{count} holidays imported}}'**
+  String regionImportDone(int count);
+
+  /// No description provided for @regionImportAttribution.
+  ///
+  /// In en, this message translates to:
+  /// **'Data: OpenHolidays API · ODbL'**
+  String get regionImportAttribution;
+
+  /// No description provided for @regionImported.
+  ///
+  /// In en, this message translates to:
+  /// **'imported'**
+  String get regionImported;
 }
 
 class _AppLocalizationsDelegate
