@@ -2,7 +2,10 @@ import { assert, assertEquals, assertFalse } from "jsr:@std/assert@1.0.13";
 import {
   type EventRow,
   expand,
+  type ExternalOccurrenceRow,
+  importedOccurrence,
   type OverrideRow,
+  sortOccurrences,
   validateRrule,
 } from "./occurrences.ts";
 
@@ -545,4 +548,90 @@ Deno.test("window is interpreted in the household timezone", () => {
     expand([late], [], "2026-10-14", "2026-10-14", "America/New_York").length,
     0,
   );
+});
+
+function imported(p: Partial<ExternalOccurrenceRow>): ExternalOccurrenceRow {
+  return {
+    id: "row-1",
+    calendar_id: "cal-fussball",
+    calendar_name: "Fussball",
+    colour_hex: "#1E88E5",
+    member_ids: ["lotta"],
+    show_on_board: false,
+    uid: "match-1@club",
+    starts_at: "2026-10-17T13:00:00Z",
+    ends_at: "2026-10-17T14:50:00Z",
+    all_day: false,
+    start_date: null,
+    end_date: null,
+    title: "FC Stern - FC Mond",
+    location: "Sportplatz",
+    ...p,
+  };
+}
+
+Deno.test("imported: a timed row is read-only, in the calendar's colour, with its members", () => {
+  const occ = importedOccurrence(imported({}), TZ);
+  assertEquals(occ.source, "imported");
+  assertEquals(occ.colour_hex, "#1E88E5");
+  assertEquals(occ.id, "imported|row-1");
+  assertEquals(occ.event_id, "cal-fussball|match-1@club");
+  assertEquals(occ.calendar_id, "cal-fussball");
+  assertEquals(occ.attendee_ids, ["lotta"]);
+  assertEquals(occ.start, "2026-10-17T13:00:00Z");
+  assertEquals(occ.end, "2026-10-17T14:50:00Z");
+  assertEquals(occ.local_start_date, "2026-10-17");
+  assertEquals(occ.local_starts, "15:00");
+  assertEquals(occ.local_ends, "16:50");
+  assertEquals(occ.kind, "appointment");
+  assertEquals(occ.importance, "normal");
+  assertEquals(occ.is_recurring, false);
+  assertEquals(occ.location, "Sportplatz");
+});
+
+Deno.test("imported: a calendar on the board makes its rows key appointments", () => {
+  assertEquals(importedOccurrence(imported({ show_on_board: true }), TZ).importance, "key");
+});
+
+Deno.test("imported: an all-day row keeps its inclusive dates, the instants are local midnights", () => {
+  const occ = importedOccurrence(
+    imported({
+      all_day: true,
+      starts_at: null,
+      ends_at: null,
+      start_date: "2026-10-20",
+      end_date: "2026-10-22",
+      title: "Sperrung",
+      member_ids: [],
+    }),
+    TZ,
+  );
+  assertEquals(occ.all_day, true);
+  assertEquals(occ.local_start_date, "2026-10-20");
+  assertEquals(occ.local_end_date, "2026-10-22");
+  assertEquals(occ.start, "2026-10-19T22:00:00Z", "Berlin midnight in summer time");
+  assertEquals(occ.end, "2026-10-22T22:00:00Z", "midnight of 23 October, still summer time");
+  assertEquals(occ.local_starts, null);
+  assertEquals(occ.attendee_ids, []);
+});
+
+Deno.test("events are source 'event' with no colour of their own", () => {
+  const [occ] = expand([ev({ id: "e1", starts_at: "2026-10-14T10:00:00Z", ends_at: "2026-10-14T11:00:00Z", is_all_day: false })], [], "2026-10-14", "2026-10-14", TZ);
+  assertEquals(occ.source, "event");
+  assertEquals(occ.colour_hex, null);
+});
+
+Deno.test("sortOccurrences merges events and imported rows by start, all-day first", () => {
+  const event = expand(
+    [ev({ id: "e1", title: "Zahnarzt", starts_at: "2026-10-14T16:00:00Z", ends_at: "2026-10-14T17:00:00Z", is_all_day: false })],
+    [],
+    "2026-10-14",
+    "2026-10-14",
+    TZ,
+  );
+  const rows = [
+    importedOccurrence(imported({ id: "a", title: "Abfall", all_day: true, starts_at: null, ends_at: null, start_date: "2026-10-14", end_date: "2026-10-14" }), TZ),
+    importedOccurrence(imported({ id: "b", title: "Spiel", starts_at: "2026-10-14T10:00:00Z", ends_at: "2026-10-14T11:00:00Z" }), TZ),
+  ];
+  assertEquals(sortOccurrences([...event, ...rows]).map((o) => o.title), ["Abfall", "Spiel", "Zahnarzt"]);
 });

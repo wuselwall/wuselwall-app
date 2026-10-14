@@ -6,8 +6,11 @@ import {
   addDays,
   type EventRow,
   expand,
+  type ExternalOccurrenceRow,
+  importedOccurrence,
   type Occurrence,
   type OverrideRow,
+  sortOccurrences,
 } from "./occurrences.ts";
 
 /** The most local days one call may expand. */
@@ -48,12 +51,14 @@ export function checkWindow(
 }
 
 /**
- * The occurrences of every event that can fall in [from, to] (both inclusive local
- * dates in `timezone`) and the busy_until rows of those dates.
+ * The occurrences of every event and imported calendar that can fall in [from, to] (both
+ * inclusive local dates in `timezone`) and the busy_until rows of those dates.
  *
  * The SQL filter only narrows the rows: recurring and rdate series always come back,
  * everything else only when its own dates or instants touch the window. Instants are
  * widened by a day on each side so a timezone never drops an event; `expand` clips.
+ * Imported occurrences (api.external_occurrences, already expanded) are read by the same
+ * window and kept when their local dates touch it. Sorted as one list.
  */
 export async function loadCalendar(
   client: Client,
@@ -85,6 +90,18 @@ export async function loadCalendar(
     overrides = (data ?? []) as OverrideRow[];
   }
 
+  const { data: externalData, error: externalError } = await client
+    .from("external_occurrences")
+    .select("*")
+    .or([
+      `and(starts_at.lt.${instantsTo},ends_at.gt.${instantsFrom})`,
+      `and(start_date.lte.${to},end_date.gte.${from})`,
+    ].join(","));
+  if (externalError) throw externalError;
+  const imported = ((externalData ?? []) as ExternalOccurrenceRow[])
+    .map((row) => importedOccurrence(row, timezone))
+    .filter((occ) => occ.local_start_date <= to && occ.local_end_date >= from);
+
   const { data: busyData, error: busyError } = await client
     .from("busy_until")
     .select("profile_id, on_date, until")
@@ -93,7 +110,10 @@ export async function loadCalendar(
   if (busyError) throw busyError;
 
   return {
-    occurrences: expand(events, overrides, from, to, timezone),
+    occurrences: sortOccurrences([
+      ...expand(events, overrides, from, to, timezone),
+      ...imported,
+    ]),
     busy_until: (busyData ?? []) as BusyRow[],
   };
 }

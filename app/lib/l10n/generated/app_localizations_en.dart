@@ -2972,4 +2972,188 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get regionImported => 'imported';
+
+  @override
+  String get extCalTitle => 'Subscribed calendars';
+
+  @override
+  String get extCalSettingsSubtitle =>
+      'Appointments from club and bin calendars';
+
+  @override
+  String get extCalEmpty =>
+      'No calendar subscribed yet. A subscription brings outside appointments into the family calendar, such as a club’s fixture list.';
+
+  @override
+  String get extCalNew => 'Subscribe to a calendar';
+
+  @override
+  String get extCalNewTitle => 'New calendar';
+
+  @override
+  String get extCalEditTitle => 'Edit calendar';
+
+  @override
+  String get extCalEdit => 'Edit';
+
+  @override
+  String get extCalNameLabel => 'Name';
+
+  @override
+  String get extCalNameHint => 'e.g. FC fixtures';
+
+  @override
+  String get extCalNameRequired => 'Give the calendar a name.';
+
+  @override
+  String get extCalUrlLabel => 'Address (ICS)';
+
+  @override
+  String get extCalUrlHelp =>
+      'The address the calendar is published at, usually ending in .ics. Examples: your town’s bin collection calendar, a club’s fixture list. webcal:// addresses work too.';
+
+  @override
+  String get extCalUrlInvalid =>
+      'That does not look like a web address (https://…).';
+
+  @override
+  String get extCalColourLabel => 'Colour';
+
+  @override
+  String extCalColourOption(int number) {
+    return 'Colour $number';
+  }
+
+  @override
+  String get extCalMembersLabel => 'Who?';
+
+  @override
+  String get extCalMembersHelp =>
+      'Without a choice, the calendar is for the whole family.';
+
+  @override
+  String get extCalMembersWhole => 'Whole family';
+
+  @override
+  String get extCalShowOnBoard => 'Show on the kitchen display';
+
+  @override
+  String get extCalShowOnBoardHelp =>
+      'Its appointments appear as key appointments on the kitchen display’s week board.';
+
+  @override
+  String extCalDeleteConfirm(String name) {
+    return '“$name” and all its appointments will be removed.';
+  }
+
+  @override
+  String get extCalDeleted => 'Calendar removed.';
+
+  @override
+  String get extCalRefreshNow => 'Refresh now';
+
+  @override
+  String extCalRefreshed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count appointments loaded',
+      one: '1 appointment loaded',
+      zero: 'No appointments found',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get extCalNotModified => 'No changes since the last fetch.';
+
+  @override
+  String get extCalRecent =>
+      'Fetched a moment ago. Try again in a few minutes.';
+
+  @override
+  String extCalRefreshFailed(String reason) {
+    return 'The calendar could not be loaded: $reason';
+  }
+
+  @override
+  String get extCalStatusPaused => 'Paused';
+
+  @override
+  String get extCalStatusNever => 'Loading for the first time …';
+
+  @override
+  String extCalStatusUpdated(String when) {
+    return 'Updated $when';
+  }
+
+  @override
+  String get extCalReadOnlyHint =>
+      'Only guardians can subscribe to calendars or change them.';
+
+  @override
+  String get extCalErrUnreachable => 'The address cannot be reached right now.';
+
+  @override
+  String get extCalErrTimeout => 'The address answers too slowly.';
+
+  @override
+  String get extCalErrForbiddenHost => 'This address is not allowed.';
+
+  @override
+  String get extCalErrTooLarge => 'The calendar is too large (over 2 MB).';
+
+  @override
+  String get extCalErrNotIcs => 'That is not a calendar (ICS).';
+
+  @override
+  String get extCalErrHttp404 => 'Address not found (404).';
+
+  @override
+  String extCalErrHttp(int status) {
+    return 'The address answers with error $status.';
+  }
+
+  @override
+  String get extCalErrInternal =>
+      'Something went wrong on the server. Try again later.';
+
+  @override
+  String get extCalErrDb => 'The appointments could not be stored.';
+
+  @override
+  String get extCalErrUnknown => 'The fetch did not work.';
+
+  @override
+  String get extCalErrInvalid =>
+      'The calendar does not fit: check the name and colour.';
+
+  @override
+  String get extCalErrUrlInvalid =>
+      'This address cannot be saved. It must start with https://.';
+
+  @override
+  String get extCalErrNotFound => 'This calendar no longer exists.';
+
+  @override
+  String get extCalImportedNote =>
+      'Subscribed calendar — changes come from the source';
+
+  @override
+  String extCalFromCalendar(String name) {
+    return 'From $name';
+  }
+
+  @override
+  String get extCalAllDay => 'All day';
+
+  @override
+  String get extCalSheetTitle => 'Appointment from a subscription';
+
+  @override
+  String get extCalSettingsRefreshHint =>
+      'The server fetches each calendar about once an hour.';
+
+  @override
+  String get extCalActive => 'Active';
 }
