@@ -918,5 +918,52 @@
   "mealsUxClearedSnack": "„{title}“ entfernt",
   "mealsUxUndo": "Rückgängig",
   "mealsUxFromMealPlan": "Kommt aus dem Essensplan",
-  "mealsUxForMeal": "Für: {meal} · {day}"
+  "mealsUxForMeal": "Für: {meal} · {day}",
+  "todayTitle": "Heute",
+  "todayEmpty": "Heute ist noch nichts geplant. Genieß die Ruhe.",
+  "todayAgendaTitle": "Termine",
+  "todayAllDay": "ganztägig",
+  "todayTasksTitle": "Deine Aufgaben heute",
+  "todayMealTitle": "Warmes Essen",
+  "todayMealLine": "{slot}: {dish}",
+  "@todayMealLine": {
+    "placeholders": {
+      "slot": {
+        "type": "String"
+      },
+      "dish": {
+        "type": "String"
+      }
+    }
+  },
+  "todayShoppingTitle": "Einkaufsliste",
+  "todayShoppingOpen": "{count, plural, =1{1 Artikel offen} other{{count} Artikel offen}}",
+  "@todayShoppingOpen": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "todayStartTitle": "Erste Schritte",
+  "todayStartProgress": "{done} von {total}",
+  "@todayStartProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "todayStartNotNeeded": "Brauchen wir nicht",
+  "todayStartInvitePartner": "Partner:in einladen",
+  "todayStartConnectTablet": "Familien-Tablet verbinden",
+  "todayStartWallDisplay": "Wandanzeige einrichten",
+  "todayStartSetPin": "Deine PIN festlegen",
+  "todayStartSubscribeFeed": "Kalender abonnieren",
+  "todayStartSchool": "Stundenplan eintragen",
+  "settingsGettingStarted": "Erste Schritte",
+  "settingsGettingStartedSubtitle": "Die Einrichtungskarte wieder auf dem Heute-Tab zeigen"
 }

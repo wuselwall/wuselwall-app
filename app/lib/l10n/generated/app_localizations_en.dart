@@ -2802,4 +2802,77 @@ class AppLocalizationsEn extends AppLocalizations {
   String mealsUxForMeal(String meal, String day) {
     return 'For: $meal · $day';
   }
+
+  @override
+  String get todayTitle => 'Today';
+
+  @override
+  String get todayEmpty => 'Nothing is planned for today yet. Enjoy the quiet.';
+
+  @override
+  String get todayAgendaTitle => 'Appointments';
+
+  @override
+  String get todayAllDay => 'all day';
+
+  @override
+  String get todayTasksTitle => 'Your chores today';
+
+  @override
+  String get todayMealTitle => 'Warm meal';
+
+  @override
+  String todayMealLine(String slot, String dish) {
+    return '$slot: $dish';
+  }
+
+  @override
+  String get todayShoppingTitle => 'Shopping list';
+
+  @override
+  String todayShoppingOpen(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items still open',
+      one: '1 item still open',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get todayStartTitle => 'Getting started';
+
+  @override
+  String todayStartProgress(int done, int total) {
+    return '$done of $total';
+  }
+
+  @override
+  String get todayStartNotNeeded => 'Not needed';
+
+  @override
+  String get todayStartInvitePartner => 'Invite your partner';
+
+  @override
+  String get todayStartConnectTablet => 'Connect the family tablet';
+
+  @override
+  String get todayStartWallDisplay => 'Set up the wall display';
+
+  @override
+  String get todayStartSetPin => 'Set your PIN';
+
+  @override
+  String get todayStartSubscribeFeed => 'Subscribe to the calendar';
+
+  @override
+  String get todayStartSchool => 'Add the timetable';
+
+  @override
+  String get settingsGettingStarted => 'Getting started';
+
+  @override
+  String get settingsGettingStartedSubtitle =>
+      'Show the setup card on the Today tab again';
 }

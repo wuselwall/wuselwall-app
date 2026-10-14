@@ -76,6 +76,7 @@ void main() {
         ),
       ]),
     );
+    await openTab(t, 'Kalender');
 
     expect(find.byType(PresenceBandView), findsOneWidget);
     expect(find.text('Dienst'), findsOneWidget);
@@ -96,6 +97,7 @@ void main() {
         ),
       ]),
     );
+    await openTab(t, 'Kalender');
 
     expect(find.text('Ferien am See'), findsOneWidget);
     expect(t.takeException(), isNull);
@@ -119,6 +121,7 @@ void main() {
         ),
       ]),
     );
+    await openTab(t, 'Kalender');
 
     final block = textWith('Klavier');
     expect(block, findsOneWidget);
@@ -156,6 +159,7 @@ void main() {
         ),
       ]),
     );
+    await openTab(t, 'Kalender');
 
     expect(t.takeException(), isNull);
     expect(find.text('Elternabend'), findsOneWidget);
@@ -183,6 +187,7 @@ void main() {
         ),
       ]),
     );
+    await openTab(t, 'Kalender');
 
     // The grid starts at 06:00, one row of 52 px per hour: 07:00 is 52 px down.
     final grid = t.state<ScrollableState>(

@@ -12,6 +12,7 @@ import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/qr_code_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
+import 'package:wuselwall/features/home/application/home_tab.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
@@ -21,6 +22,8 @@ import 'package:wuselwall/features/identity/domain/sign_in_method.dart';
 import 'package:wuselwall/features/identity/ui/enrolment_qr.dart';
 import 'package:wuselwall/features/identity/ui/guardian_gate.dart';
 import 'package:wuselwall/features/system/ui/class_labels.dart';
+import 'package:wuselwall/features/today/application/today_providers.dart';
+import 'package:wuselwall/features/today/data/getting_started_repository.dart';
 
 /// Members and devices. Reading is open to the household; every change is a guardian
 /// action and goes through [ensureGuardian] (PIN step-up on shared devices).
@@ -62,6 +65,12 @@ class SettingsPage extends ConsumerWidget {
             subtitle: Text(l10n.baselineSettingsSubtitle),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => context.go(Routes.baselines),
+          ),
+          ListTile(
+            leading: const Icon(Icons.flag_outlined),
+            title: Text(l10n.settingsGettingStarted),
+            subtitle: Text(l10n.settingsGettingStartedSubtitle),
+            onTap: () => _showGettingStarted(context, ref),
           ),
           const SizedBox(height: Tokens.space6),
           _Header(
@@ -147,6 +156,25 @@ class SettingsPage extends ConsumerWidget {
   }
 
   String? _actor(WidgetRef ref) => ref.read(actingProfileProvider);
+
+  /// Brings the setup card back and shows it on the Today tab.
+  Future<void> _showGettingStarted(BuildContext context, WidgetRef ref) async {
+    final container = ProviderScope.containerOf(context);
+    final repository = ref.read(gettingStartedRepositoryProvider);
+    if (!await ensureGuardian(context, ref) || !context.mounted) return;
+    final actor = container.read(actingProfileProvider);
+    if (actor == null) return;
+    final result = await repository.restore(actor: actor);
+    container
+      ..invalidate(gettingStartedProvider)
+      ..read(homeTabProvider.notifier).select(HomeTab.today);
+    if (!context.mounted) return;
+    if (result case Err(:final failure)) {
+      context.showFailure(failure);
+      return;
+    }
+    context.go(Routes.home);
+  }
 
   Future<void> _addMember(BuildContext context, WidgetRef ref) async {
     if (!await ensureGuardian(context, ref) || !context.mounted) return;

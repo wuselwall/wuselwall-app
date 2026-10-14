@@ -29,7 +29,9 @@ import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 import 'package:wuselwall/features/shopping/data/shopping_store.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_sync_model.dart';
+import 'package:wuselwall/features/today/data/getting_started_repository.dart';
 
+import 'fake_getting_started.dart';
 import 'fake_meals.dart';
 import 'fake_school.dart';
 import 'fake_tasks.dart';
@@ -488,6 +490,7 @@ Future<ProviderContainer> pumpApp(
   FakeTasksApi? tasks,
   FakeMealsRepository? meals,
   FakeSchoolRepository? school,
+  FakeGettingStartedRepository? gettingStarted,
   Size size = const Size(1000, 1600),
 }) async {
   tester.view.physicalSize = size;
@@ -510,8 +513,12 @@ Future<ProviderContainer> pumpApp(
       calendarRepositoryProvider.overrideWithValue(
         calendar ?? FakeCalendarRepository(),
       ),
-      // The tasks repository runs on a fake `api` layer when a test asks for one.
-      if (tasks != null) apiClientProvider.overrideWithValue(tasks),
+      // The tasks repository runs on a fake `api` layer; an empty one when a test does not
+      // ask for one, so the Today tab never reaches Supabase.
+      apiClientProvider.overrideWithValue(tasks ?? FakeTasksApi()),
+      gettingStartedRepositoryProvider.overrideWithValue(
+        gettingStarted ?? FakeGettingStartedRepository(),
+      ),
       mealsRepositoryProvider.overrideWithValue(meals ?? FakeMealsRepository()),
       schoolRepositoryProvider.overrideWithValue(
         school ?? FakeSchoolRepository(),
@@ -527,6 +534,15 @@ Future<ProviderContainer> pumpApp(
   );
   await tester.pumpAndSettle();
   return container;
+}
+
+/// Switches the adult home to the tab with [label] (its navigation bar label). Today is
+/// the default tab, so tests about another tab start by tapping it.
+Future<void> openTab(WidgetTester tester, String label) async {
+  await tester.tap(
+    find.descendant(of: find.byType(NavigationBar), matching: find.text(label)),
+  );
+  await tester.pumpAndSettle();
 }
 
 /// Unmounts the app and disposes its container inside the test. The kiosk board keeps
