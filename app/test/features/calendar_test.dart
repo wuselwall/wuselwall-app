@@ -339,6 +339,7 @@ void main() {
             ),
           ]),
         );
+        await openTab(t, 'Kalender');
 
         expect(find.text('Turnen'), findsOneWidget);
         expect(find.text('Fotografin in der Schule'), findsOneWidget);
@@ -355,6 +356,7 @@ void main() {
           identity: FakeIdentityRepository(current: device()),
         ),
       );
+      await openTab(t, 'Kalender');
       expect(find.text('Nichts geplant'), findsOneWidget);
     });
 
@@ -368,6 +370,7 @@ void main() {
           shopping: FakeShoppingRepository([item('1', 'Milch')]),
         ),
       );
+      await openTab(t, 'Kalender');
       final bar = find.byType(NavigationBar);
       expect(bar, findsOneWidget);
       expect(find.text('Milch'), findsNothing);
@@ -402,6 +405,7 @@ void main() {
             ),
           ]),
         );
+        await openTab(t, 'Kalender');
 
         await t.tap(find.text('Turnen'));
         await t.pumpAndSettle();
