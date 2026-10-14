@@ -5227,6 +5227,306 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'imported'**
   String get regionImported;
+
+  /// No description provided for @extCalTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribed calendars'**
+  String get extCalTitle;
+
+  /// No description provided for @extCalSettingsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Appointments from club and bin calendars'**
+  String get extCalSettingsSubtitle;
+
+  /// No description provided for @extCalEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No calendar subscribed yet. A subscription brings outside appointments into the family calendar, such as a club’s fixture list.'**
+  String get extCalEmpty;
+
+  /// No description provided for @extCalNew.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribe to a calendar'**
+  String get extCalNew;
+
+  /// No description provided for @extCalNewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New calendar'**
+  String get extCalNewTitle;
+
+  /// No description provided for @extCalEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit calendar'**
+  String get extCalEditTitle;
+
+  /// No description provided for @extCalEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get extCalEdit;
+
+  /// No description provided for @extCalNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get extCalNameLabel;
+
+  /// No description provided for @extCalNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. FC fixtures'**
+  String get extCalNameHint;
+
+  /// No description provided for @extCalNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Give the calendar a name.'**
+  String get extCalNameRequired;
+
+  /// No description provided for @extCalUrlLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Address (ICS)'**
+  String get extCalUrlLabel;
+
+  /// No description provided for @extCalUrlHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The address the calendar is published at, usually ending in .ics. Examples: your town’s bin collection calendar, a club’s fixture list. webcal:// addresses work too.'**
+  String get extCalUrlHelp;
+
+  /// No description provided for @extCalUrlInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'That does not look like a web address (https://…).'**
+  String get extCalUrlInvalid;
+
+  /// No description provided for @extCalColourLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour'**
+  String get extCalColourLabel;
+
+  /// No description provided for @extCalColourOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour {number}'**
+  String extCalColourOption(int number);
+
+  /// No description provided for @extCalMembersLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Who?'**
+  String get extCalMembersLabel;
+
+  /// No description provided for @extCalMembersHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Without a choice, the calendar is for the whole family.'**
+  String get extCalMembersHelp;
+
+  /// No description provided for @extCalMembersWhole.
+  ///
+  /// In en, this message translates to:
+  /// **'Whole family'**
+  String get extCalMembersWhole;
+
+  /// No description provided for @extCalShowOnBoard.
+  ///
+  /// In en, this message translates to:
+  /// **'Show on the kitchen display'**
+  String get extCalShowOnBoard;
+
+  /// No description provided for @extCalShowOnBoardHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Its appointments appear as key appointments on the kitchen display’s week board.'**
+  String get extCalShowOnBoardHelp;
+
+  /// No description provided for @extCalDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'“{name}” and all its appointments will be removed.'**
+  String extCalDeleteConfirm(String name);
+
+  /// No description provided for @extCalDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar removed.'**
+  String get extCalDeleted;
+
+  /// No description provided for @extCalRefreshNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh now'**
+  String get extCalRefreshNow;
+
+  /// No description provided for @extCalRefreshed.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No appointments found} =1{1 appointment loaded} other{{count} appointments loaded}}'**
+  String extCalRefreshed(int count);
+
+  /// No description provided for @extCalNotModified.
+  ///
+  /// In en, this message translates to:
+  /// **'No changes since the last fetch.'**
+  String get extCalNotModified;
+
+  /// No description provided for @extCalRecent.
+  ///
+  /// In en, this message translates to:
+  /// **'Fetched a moment ago. Try again in a few minutes.'**
+  String get extCalRecent;
+
+  /// No description provided for @extCalRefreshFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The calendar could not be loaded: {reason}'**
+  String extCalRefreshFailed(String reason);
+
+  /// No description provided for @extCalStatusPaused.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get extCalStatusPaused;
+
+  /// No description provided for @extCalStatusNever.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading for the first time …'**
+  String get extCalStatusNever;
+
+  /// No description provided for @extCalStatusUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated {when}'**
+  String extCalStatusUpdated(String when);
+
+  /// No description provided for @extCalReadOnlyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Only guardians can subscribe to calendars or change them.'**
+  String get extCalReadOnlyHint;
+
+  /// No description provided for @extCalErrUnreachable.
+  ///
+  /// In en, this message translates to:
+  /// **'The address cannot be reached right now.'**
+  String get extCalErrUnreachable;
+
+  /// No description provided for @extCalErrTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'The address answers too slowly.'**
+  String get extCalErrTimeout;
+
+  /// No description provided for @extCalErrForbiddenHost.
+  ///
+  /// In en, this message translates to:
+  /// **'This address is not allowed.'**
+  String get extCalErrForbiddenHost;
+
+  /// No description provided for @extCalErrTooLarge.
+  ///
+  /// In en, this message translates to:
+  /// **'The calendar is too large (over 2 MB).'**
+  String get extCalErrTooLarge;
+
+  /// No description provided for @extCalErrNotIcs.
+  ///
+  /// In en, this message translates to:
+  /// **'That is not a calendar (ICS).'**
+  String get extCalErrNotIcs;
+
+  /// No description provided for @extCalErrHttp404.
+  ///
+  /// In en, this message translates to:
+  /// **'Address not found (404).'**
+  String get extCalErrHttp404;
+
+  /// No description provided for @extCalErrHttp.
+  ///
+  /// In en, this message translates to:
+  /// **'The address answers with error {status}.'**
+  String extCalErrHttp(int status);
+
+  /// No description provided for @extCalErrInternal.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong on the server. Try again later.'**
+  String get extCalErrInternal;
+
+  /// No description provided for @extCalErrDb.
+  ///
+  /// In en, this message translates to:
+  /// **'The appointments could not be stored.'**
+  String get extCalErrDb;
+
+  /// No description provided for @extCalErrUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'The fetch did not work.'**
+  String get extCalErrUnknown;
+
+  /// No description provided for @extCalErrInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'The calendar does not fit: check the name and colour.'**
+  String get extCalErrInvalid;
+
+  /// No description provided for @extCalErrUrlInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'This address cannot be saved. It must start with https://.'**
+  String get extCalErrUrlInvalid;
+
+  /// No description provided for @extCalErrNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'This calendar no longer exists.'**
+  String get extCalErrNotFound;
+
+  /// No description provided for @extCalImportedNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribed calendar — changes come from the source'**
+  String get extCalImportedNote;
+
+  /// No description provided for @extCalFromCalendar.
+  ///
+  /// In en, this message translates to:
+  /// **'From {name}'**
+  String extCalFromCalendar(String name);
+
+  /// No description provided for @extCalAllDay.
+  ///
+  /// In en, this message translates to:
+  /// **'All day'**
+  String get extCalAllDay;
+
+  /// No description provided for @extCalSheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Appointment from a subscription'**
+  String get extCalSheetTitle;
+
+  /// No description provided for @extCalSettingsRefreshHint.
+  ///
+  /// In en, this message translates to:
+  /// **'The server fetches each calendar about once an hour.'**
+  String get extCalSettingsRefreshHint;
+
+  /// No description provided for @extCalActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get extCalActive;
 }
 
 class _AppLocalizationsDelegate

@@ -17,6 +17,7 @@ import 'package:wuselwall/core/supabase/supabase_providers.dart';
 import 'package:wuselwall/demo/demo_board.dart';
 import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/demo/demo_export.dart';
+import 'package:wuselwall/demo/demo_external_calendars.dart';
 import 'package:wuselwall/demo/demo_getting_started.dart';
 import 'package:wuselwall/demo/demo_kid.dart';
 import 'package:wuselwall/demo/demo_meals.dart';
@@ -26,6 +27,7 @@ import 'package:wuselwall/demo/demo_school.dart';
 import 'package:wuselwall/demo/demo_tasks.dart';
 import 'package:wuselwall/features/board/data/board_repository.dart';
 import 'package:wuselwall/features/calendar/data/calendar_repository.dart';
+import 'package:wuselwall/features/calendar/data/external_calendars_repository.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/data/sign_in_methods_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
@@ -117,6 +119,9 @@ void main() {
         regionRepositoryProvider.overrideWithValue(DemoRegionRepository()),
         mealsRepositoryProvider.overrideWithValue(DemoMealsRepository()),
         calendarRepositoryProvider.overrideWithValue(DemoCalendarRepository()),
+        externalCalendarsRepositoryProvider.overrideWithValue(
+          DemoExternalCalendarsRepository(),
+        ),
         tasksRepositoryProvider.overrideWithValue(DemoTasksRepository()),
         gettingStartedRepositoryProvider.overrideWithValue(
           DemoGettingStartedRepository(),

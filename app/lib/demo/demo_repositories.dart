@@ -3,6 +3,7 @@ import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/demo/demo_data.dart';
+import 'package:wuselwall/demo/demo_external_calendars.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/calendar/data/calendar_repository.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
@@ -721,6 +722,7 @@ class DemoCalendarRepository implements CalendarRepository {
       if (_deleted.contains(event.id)) continue;
       out.addAll(_expand(event, first, last).expand(_visible));
     }
+    out.addAll(demoImportedOccurrences(monday, first, last));
     out.sort((a, b) => a.start.compareTo(b.start));
     return Ok(OccurrenceWindow(timezone: 'Europe/Berlin', occurrences: out));
   }
