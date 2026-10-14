@@ -13,7 +13,9 @@ const VERIFY_JWT = Deno.env.get('VERIFY_JWT') === 'true'
 // job is called by the host's cron with a shared secret it checks in constant time.
 // holidays-sync is listed too: its weekly run is called by the host's cron with the secret,
 // while the region picker's call carries a user JWT and is verified by the function itself.
-const NO_USER_FUNCTIONS = new Set(['ics', 'tasks-nightly', 'holidays-sync'])
+// calendar-import is the same: the hourly run carries the secret, and a guardian's "fetch now"
+// carries a user JWT that the function verifies itself (getUser, then the database's guardian gate).
+const NO_USER_FUNCTIONS = new Set(['ics', 'tasks-nightly', 'holidays-sync', 'calendar-import'])
 
 type AuthFailure = {
   code: RequestErrors
