@@ -62,10 +62,10 @@ See [specs/03-architecture.md](specs/03-architecture.md),
 - Edge Functions forward the caller's JWT. The service-role key is only for functions
   without a user (ICS, enrolment, jobs) and for the two account-administration functions
   of ADR-014 (`account-delete`, MFA reset), which verify the caller's JWT and act only on
-  that caller (or, for the reset, a co-guardian), with a comment at each use. The one
-  exceptions in a user request: `holidays-sync`'s on-demand refresh verifies the JWT and writes
-  only the public holiday cache, and `calendar-import`'s on-demand refresh verifies the guardian's
-  JWT and uses the service role only to fetch and store that one calendar.
+  that caller (or, for the reset, a co-guardian), with a comment at each use. Two more,
+  inside a user's request: `holidays-sync` verifies the member's JWT and writes only the
+  public holiday cache; `calendar-import` verifies the guardian's JWT and stores only that
+  one calendar.
 - Migrations are forward-only and must stay compatible with the previous app release.
 - **No household is hard-coded.** Anything one household would answer differently from
   another is a setting with a curated default ([specs/20](specs/21-household-settings.md)):
