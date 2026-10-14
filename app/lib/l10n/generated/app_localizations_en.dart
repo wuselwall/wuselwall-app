@@ -3159,4 +3159,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get extCalUrlLoading => 'Loading the address';
+
+  @override
+  String get shoppingNavLabel => 'Shopping';
 }

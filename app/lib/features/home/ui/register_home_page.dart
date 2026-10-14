@@ -83,7 +83,9 @@ class RegisterHomePage extends ConsumerWidget {
                 for (final t in HomeTab.values)
                   NavigationDestination(
                     icon: Icon(homeSections[t]!.icon),
-                    label: homeSections[t]!.label(l10n),
+                    label: (homeSections[t]!.navLabel ?? homeSections[t]!.label)(
+                      l10n,
+                    ),
                     tooltip: homeSections[t]!.label(l10n),
                   ),
               ],

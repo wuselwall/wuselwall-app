@@ -5533,6 +5533,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Loading the address'**
   String get extCalUrlLoading;
+
+  /// Short label of the shopping list in the bottom navigation bar; the page title stays shoppingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping'**
+  String get shoppingNavLabel;
 }
 
 class _AppLocalizationsDelegate
