@@ -5,8 +5,10 @@ import {
   fetchCountry,
   flattenSubdivisions,
   isCountry,
+  holidayName,
   OpenHolidaysError,
   parseHolidays,
+  regionCovers,
   syncWindow,
 } from "./openholidays.ts";
 
@@ -419,4 +421,49 @@ Deno.test("countriesFromRegions: distinct, sorted, valid prefixes only", () => {
 
 Deno.test("countriesFromRegions: no codes, no countries", () => {
   assertEquals(countriesFromRegions([]), []);
+});
+
+// ------------------------------------------------------------------ regionCovers
+
+Deno.test("regionCovers: a nationwide holiday covers every region of its country", () => {
+  assertEquals(regionCovers("DE-BY", "DE", true, []), true);
+  assertEquals(regionCovers("CH-ZH-ZH-ZH", "CH", true, []), true);
+});
+
+Deno.test("regionCovers: a nationwide holiday does not cover another country", () => {
+  assertEquals(regionCovers("AT-9", "CH", true, []), false);
+});
+
+Deno.test("regionCovers: a canton covers the districts and municipalities in it", () => {
+  assertEquals(regionCovers("CH-ZH-ZH-ZH", "CH", false, ["CH-ZH"]), true);
+  assertEquals(regionCovers("CH-ZH-ZH", "CH", false, ["CH-ZH"]), true);
+  assertEquals(regionCovers("CH-ZH", "CH", false, ["CH-ZH"]), true);
+});
+
+Deno.test("regionCovers: a municipality does not cover its canton", () => {
+  assertEquals(regionCovers("CH-ZH", "CH", false, ["CH-ZH-ZH-ZH"]), false);
+});
+
+Deno.test("regionCovers: the boundary is a dash, so CH-AG does not cover CH-AGX", () => {
+  assertEquals(regionCovers("CH-AGX", "CH", false, ["CH-AG"]), false);
+  assertEquals(regionCovers("CH-AG-ZZ", "CH", false, ["CH-AG"]), true);
+});
+
+Deno.test("regionCovers: not nationwide and no subdivisions covers nothing", () => {
+  assertEquals(regionCovers("CH-ZH", "CH", false, []), false);
+});
+
+// ------------------------------------------------------------------ holidayName
+
+Deno.test("holidayName: the locale's language, then German, then the first name", () => {
+  const names = { de: "Auffahrt", fr: "Ascension", en: "Ascension Day" };
+  assertEquals(holidayName(names, "de-DE"), "Auffahrt");
+  assertEquals(holidayName(names, "en-GB"), "Ascension Day");
+  assertEquals(holidayName(names, "fr_CH"), "Ascension");
+  assertEquals(holidayName(names, "it-IT"), "Auffahrt");
+  assertEquals(holidayName({ fr: "Ascension" }, "it-IT"), "Ascension");
+});
+
+Deno.test("holidayName: no names is the empty text", () => {
+  assertEquals(holidayName({}, "de-DE"), "");
 });

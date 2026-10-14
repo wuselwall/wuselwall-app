@@ -3,7 +3,12 @@
 // the occurrences and busy rows, this only shapes them into the WeekBoard JSON that
 // app/lib/features/board/domain/week_board.dart reads.
 import { addDays, type Occurrence } from "./occurrences.ts";
-import type { SchoolDayJson, TimetableJson } from "./school.ts";
+import {
+  type HolidayFeedRow,
+  holidayName,
+  regionCovers,
+} from "./openholidays.ts";
+import type { HolidayRow, SchoolDayJson, TimetableJson } from "./school.ts";
 
 /** A row of `api.busy_until` (profile_id, on_date, until). */
 export type BusyRow = { profile_id: string; on_date: string; until: string };
@@ -35,11 +40,19 @@ export type BoardEventJson = {
 
 export type BusyUntilJson = { member_id: string; until: string };
 
+/** A public holiday on a day: from the household's own rows, or the region's cache. */
+export type DayHolidayJson = {
+  name: string;
+  source: "region" | "household";
+};
+
 export type BoardDayJson = {
   date: string;
   events: BoardEventJson[];
   busy_until: BusyUntilJson[];
   school?: SchoolDayJson[];
+  /** null on an ordinary day; absent from servers before public holidays. */
+  holiday?: DayHolidayJson | null;
   [key: string]: unknown;
 };
 
@@ -84,6 +97,50 @@ export function fillBoard(
   }));
 
   return { ...base, presence, days };
+}
+
+/**
+ * Returns a new board whose every day has `holiday` filled: the household's own public
+ * holiday row covering the day (source household) first, else the cache's public holiday
+ * covering the household's region (source region, named in the household's language).
+ * `base` is not mutated.
+ */
+export function fillHolidays(
+  base: BoardJson,
+  holidays: HolidayRow[],
+  feed: HolidayFeedRow[],
+  region: string | null,
+  locale: string,
+): BoardJson {
+  return {
+    ...base,
+    days: base.days.map((day) => ({
+      ...day,
+      holiday: holidayOn(day.date, holidays, feed, region, locale),
+    })),
+  };
+}
+
+function holidayOn(
+  date: string,
+  holidays: HolidayRow[],
+  feed: HolidayFeedRow[],
+  region: string | null,
+  locale: string,
+): DayHolidayJson | null {
+  const own = holidays.find((h) =>
+    h.school_id === null && h.kind === "public_holiday" &&
+    h.starts_on <= date && date <= h.ends_on
+  );
+  if (own) return { name: own.name, source: "household" };
+  if (region === null) return null;
+  for (const f of feed) {
+    if (f.kind !== "public" || date < f.starts_on || date > f.ends_on) continue;
+    if (!regionCovers(region, f.country, f.nationwide, f.subdivisions)) continue;
+    const name = holidayName(f.names, locale);
+    if (name !== "") return { name, source: "region" };
+  }
+  return null;
 }
 
 /**
@@ -267,7 +324,8 @@ export function fillMeals(base: BoardJson, input: MealInput): BoardJson {
     ...base,
     days: base.days.map((day) => {
       const date = day.date;
-      const school = isSchoolDay(date, schoolDays);
+      // A public holiday of the household's region is a free day too, for everyone.
+      const school = day.holiday == null && isSchoolDay(date, schoolDays);
       const slot = school ? settings.schoolDaySlot : settings.freeDaySlot;
       const entry = entries.find((e) => e.on_date === date && e.slot === slot);
       const time = entry?.at_time ? hhmm(entry.at_time) : null;
@@ -314,7 +372,10 @@ export function fillMeals(base: BoardJson, input: MealInput): BoardJson {
   };
 }
 
-/** Mon–Fri, and no child with a timetable has a holiday that day (no timetables: Mon–Fri). */
+/**
+ * Mon–Fri, and no child with a timetable has a holiday that day (no timetables: Mon–Fri).
+ * The caller also treats a public holiday of the household's region as a free day.
+ */
 function isSchoolDay(date: string, schoolDays: SchoolDayJson[]): boolean {
   const weekday = new Date(`${date}T00:00:00Z`).getUTCDay();
   if (weekday === 0 || weekday === 6) return false;
