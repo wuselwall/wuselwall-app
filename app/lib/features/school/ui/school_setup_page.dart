@@ -14,14 +14,35 @@ import 'package:wuselwall/features/school/data/school_repository.dart';
 import 'package:wuselwall/features/school/domain/school_models.dart';
 import 'package:wuselwall/features/school/ui/school_icons.dart';
 
-/// The school, its bell times, terms, subjects and holidays (specs/15 "Maintaining it").
-/// Guardian only; the server refuses the writes of anyone else. The starter content
-/// (bell times, subjects) is example data the family renames.
-class SchoolSetupPage extends ConsumerWidget {
-  const SchoolSetupPage({super.key});
+/// The schools of the household, their bell times, terms and holidays, and the subjects
+/// they share (specs/15 "Maintaining it"). One school is on screen at a time; a
+/// household with siblings at different schools adds the others here. Guardian only;
+/// the server refuses the writes of anyone else. The starter content (bell times,
+/// subjects) is example data the family renames.
+class SchoolSetupPage extends ConsumerStatefulWidget {
+  const SchoolSetupPage({this.initialSchoolId, super.key});
+
+  /// The school to open on (the `school` query parameter); null means the first.
+  final String? initialSchoolId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SchoolSetupPage> createState() => _SchoolSetupPageState();
+}
+
+class _SchoolSetupPageState extends ConsumerState<SchoolSetupPage> {
+  String? _selectedId;
+
+  /// True while the empty form for another school is on screen.
+  bool _adding = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedId = widget.initialSchoolId;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final data = ref.watch(schoolDataProvider);
     return Scaffold(
@@ -30,17 +51,49 @@ class SchoolSetupPage extends ConsumerWidget {
         value: data,
         onRetry: () => ref.invalidate(schoolDataProvider),
         data: (d) {
-          final school = d.schools.firstOrNull;
+          final school = _adding
+              ? null
+              : d.schools.where((s) => s.id == _selectedId).firstOrNull ??
+                    d.schools.firstOrNull;
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              _SchoolForm(school: school),
+              if (d.schools.length > 1)
+                _SchoolSwitcher(
+                  schools: d.schools,
+                  selected: school,
+                  onSelected: (id) => setState(() {
+                    _adding = false;
+                    _selectedId = id;
+                  }),
+                ),
+              if (!_adding)
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton.icon(
+                    onPressed: () => setState(() => _adding = true),
+                    icon: const Icon(Icons.add),
+                    label: Text(l10n.schoolsUiAddSchool),
+                  ),
+                ),
+              _SchoolForm(
+                key: ValueKey('school-form-${school?.id ?? 'new'}'),
+                school: school,
+                onCreated: (id) => setState(() {
+                  _adding = false;
+                  _selectedId = id;
+                }),
+              ),
               if (school != null) ...[
-                _BellTimes(data: d, school: school),
+                _BellTimes(
+                  key: ValueKey('bells-${school.id}'),
+                  data: d,
+                  school: school,
+                ),
                 _Terms(data: d, school: school),
-                _Subjects(data: d),
                 _Holidays(data: d, school: school),
               ],
+              _Subjects(data: d),
             ],
           );
         },
@@ -49,21 +102,66 @@ class SchoolSetupPage extends ConsumerWidget {
   }
 }
 
+/// Two to four schools as segments, more as a dropdown.
+class _SchoolSwitcher extends StatelessWidget {
+  const _SchoolSwitcher({
+    required this.schools,
+    required this.selected,
+    required this.onSelected,
+  });
+
+  final List<SchoolRecord> schools;
+  final SchoolRecord? selected;
+  final ValueChanged<String> onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final switcher = schools.length <= 4
+        ? SegmentedButton<String>(
+            segments: [
+              for (final s in schools)
+                ButtonSegment(value: s.id, label: Text(s.name)),
+            ],
+            selected: {?selected?.id},
+            emptySelectionAllowed: true,
+            showSelectedIcon: false,
+            onSelectionChanged: (s) => onSelected(s.first),
+          )
+        : DropdownButtonFormField<String>(
+            key: ValueKey('school-dropdown-${selected?.id}'),
+            initialValue: selected?.id,
+            decoration: InputDecoration(labelText: l10n.schoolsUiPickSchool),
+            items: [
+              for (final s in schools)
+                DropdownMenuItem<String>(value: s.id, child: Text(s.name)),
+            ],
+            onChanged: (v) {
+              if (v != null) onSelected(v);
+            },
+          );
+    return Padding(padding: const EdgeInsets.only(bottom: 16), child: switcher);
+  }
+}
+
 /// Saves the change through [action]; a failure is shown, a success refetches the data.
-Future<void> _write(
+/// Returns whether the write went through.
+Future<bool> _write(
   BuildContext context,
   WidgetRef ref,
   Future<Result<Object?>> Function(String? actor) action,
 ) async {
   final result = await action(ref.read(actingProfileProvider));
-  if (!context.mounted) return;
+  if (!context.mounted) return false;
   switch (result) {
     case Err(:final failure):
       context.showFailure(failure);
+      return false;
     case Ok():
       ref.invalidate(schoolDataProvider);
       ref.invalidate(schoolWeekProvider);
       context.showMessage(context.l10n.schoolSaved);
+      return true;
   }
 }
 
@@ -134,10 +232,14 @@ const _states = [
   'DE-TH',
 ];
 
+/// The school's name and state. Keyed by the school's id by the page, so switching
+/// schools starts from that school's values. [school] null is the empty form for a new
+/// school; [onCreated] receives the new id once it is saved.
 class _SchoolForm extends ConsumerStatefulWidget {
-  const _SchoolForm({required this.school});
+  const _SchoolForm({required this.school, required this.onCreated, super.key});
 
   final SchoolRecord? school;
+  final ValueChanged<String> onCreated;
 
   @override
   ConsumerState<_SchoolForm> createState() => _SchoolFormState();
@@ -157,7 +259,9 @@ class _SchoolFormState extends ConsumerState<_SchoolForm> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return _Section(
-      title: l10n.schoolSectionSchool,
+      title: widget.school == null
+          ? l10n.schoolsUiNewSchool
+          : l10n.schoolSectionSchool,
       children: [
         TextField(
           controller: _name,
@@ -184,24 +288,29 @@ class _SchoolFormState extends ConsumerState<_SchoolForm> {
         Align(
           alignment: Alignment.centerRight,
           child: FilledButton(
-            onPressed: () {
+            onPressed: () async {
               final name = _name.text.trim();
               if (name.isEmpty) return;
-              unawaited(
-                _write(
-                  context,
-                  ref,
-                  (actor) => ref
-                      .read(schoolRepositoryProvider)
-                      .saveSchool(
-                        actor: actor,
-                        id: widget.school?.id,
-                        name: name,
-                        stateCode: _state,
-                        timezone: widget.school?.timezone ?? 'Europe/Berlin',
-                      ),
-                ),
-              );
+              String? savedId;
+              final saved = await _write(context, ref, (actor) async {
+                final result = await ref
+                    .read(schoolRepositoryProvider)
+                    .saveSchool(
+                      actor: actor,
+                      id: widget.school?.id,
+                      name: name,
+                      stateCode: _state,
+                      // A new school takes the household's timezone on the server;
+                      // an existing one keeps its own.
+                      timezone: widget.school?.timezone,
+                    );
+                savedId = result.valueOrNull;
+                return result;
+              });
+              final id = savedId;
+              if (saved && widget.school == null && id != null) {
+                widget.onCreated(id);
+              }
             },
             child: Text(l10n.save),
           ),
@@ -213,7 +322,7 @@ class _SchoolFormState extends ConsumerState<_SchoolForm> {
 
 /// Bell times in order: a lesson (its index counts up) and the break after it.
 class _BellTimes extends ConsumerStatefulWidget {
-  const _BellTimes({required this.data, required this.school});
+  const _BellTimes({required this.data, required this.school, super.key});
 
   final SchoolData data;
   final SchoolRecord school;

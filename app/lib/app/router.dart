@@ -160,7 +160,9 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: Routes.schoolSetup,
-        builder: (_, _) => const SchoolSetupPage(),
+        builder: (_, state) => SchoolSetupPage(
+          initialSchoolId: state.uri.queryParameters['school'],
+        ),
       ),
       GoRoute(
         path: Routes.timetableEdit,
