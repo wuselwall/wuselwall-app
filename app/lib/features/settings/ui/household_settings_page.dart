@@ -60,7 +60,10 @@ class _SettingsList extends ConsumerWidget {
     final acting = ref.watch(actingProfileProvider);
 
     final sections = [
-      _SectionSpec(l10n.settingsSectionHousehold, const ['board.member_label']),
+      _SectionSpec(l10n.settingsSectionHousehold, const [
+        'household.region',
+        'board.member_label',
+      ]),
       _SectionSpec(l10n.settingsSectionTasks, const [
         'tasks.points.duty_default',
         'tasks.points.bonus_default',

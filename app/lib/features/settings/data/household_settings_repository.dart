@@ -12,11 +12,16 @@ class HouseholdSettingsRepository {
 
   final ApiClient _api;
 
-  Future<Result<List<SettingEntry>>> all() => _api.select(
-    'settings',
-    parse: SettingEntry.fromJson,
-    build: (q) => q.order('key'),
-  );
+  /// Rows of a type or scope this app does not know are skipped, so a newer server's
+  /// catalogue never breaks the page.
+  Future<Result<List<SettingEntry>>> all() async {
+    final rows = await _api.select<Map<String, dynamic>>(
+      'settings',
+      parse: (row) => row,
+      build: (q) => q.order('key'),
+    );
+    return rows.map(SettingEntry.fromRows);
+  }
 
   /// [value] is the JSON encoding of the setting type (see the migration's header).
   Future<Result<void>> set({
