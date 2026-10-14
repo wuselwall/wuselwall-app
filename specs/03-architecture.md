@@ -141,7 +141,13 @@ wuselwall/
   The service-role key is used only by functions with no user (ICS, enrolment, jobs)
   and by the account-administration functions of [ADR-014](adr/ADR-014-self-service-onboarding.md)
   (`account-delete`, MFA reset), which verify the caller's JWT before acting on that one account,
-  and each such use is commented with why.
+  and each such use is commented with why. Added 2026-10-14: the on-demand holiday cache
+  refresh (`holidays-sync`, called with a member's JWT when a country is picked) uses the
+  service role only to write the public holiday cache, which holds no household data
+  ([15](15-module-school-timetable.md#holidays)).
+- **Public reference data** (regions and holiday feed rows, see [04](04-data-model.md#holiday-reference-data))
+  is readable by any session on a live device and by nobody else; a revoked device reads nothing.
+  Nothing household-specific lives there, and only the holiday sync writes it.
 
 ## Module boundaries
 
@@ -210,6 +216,14 @@ Three layers, and since ADR-010 the database ones carry the weight:
    in PostgREST's exposed schemas, and Studio is never published.
 
 Hiding a button in Flutter is a courtesy, never a control.
+
+### The service-role key
+
+Added 2026-10-14, so that the exceptions have one place to point to. The service-role key is
+used by Edge Functions that have no user (ICS feeds, enrolment, jobs such as `holidays-sync`'s
+weekly run), and by the two account-administration functions of ADR-014. The one exception
+inside a user request is the on-demand holiday cache refresh: it verifies the member's JWT,
+and the service role writes only the public cache. Each use names its reason in a comment.
 
 ### Audit log
 

@@ -8,14 +8,17 @@ is built, offline outbox included. Onboarding (step 9, [specs/20](specs/20-onboa
 ADR-014 and ADR-018 — self-hosted only, no WuselWall Cloud) has started: Sign in with Apple and Google are built and switched on (9.1).
 M0.4: the first TestFlight build is uploaded; Android is an APK by hand until the Play
 account exists. Since 2026-10-13 the public hosts are `wuselwall.app`, `web.` and `api.`
-(ADR-017). Built on `feature/week-board`, **migrations not yet on the server**: household
+(ADR-017). Built on `feature/regions-and-ux`, **migrations not yet on the server**: regions to any depth
+and holidays (DE/AT/CH/LI from OpenHolidays, fetched by the server: public holidays automatic,
+Ferien imported), several schools, the timetable's day operations, meal suggestions, the Today
+tab with the getting-started card, and the data export; before them household
 settings (specs/21), the kiosk week board (specs/09), M1.3a calendar (events, presence,
 recurrence expanded in Edge Functions, the ICS feed with tokens), M1.3b Stundenplan (the
 projection in `supabase/functions/_shared/school.ts`), M1.2 tasks and points, M1.4 meals, and
 the kid register. `scripts/local-pgtap` runs every migration and pgTAP suite on a throwaway
 local Postgres (no Docker); `scripts/remote-pgtap-dry.sh` tries new migrations on the server
 inside a rolled-back transaction. Next: apply the migrations and deploy the Edge Functions
-(`scripts/remote-migrate.sh`, `scripts/remote-stack.sh functions`), schedule `tasks-nightly`,
+(`scripts/remote-migrate.sh`, `scripts/remote-stack.sh functions`), schedule `tasks-nightly` and `holidays-sync`,
 then the rest of 9.1/9.2 and M1.6.
 
 ## Architecture rules
@@ -58,7 +61,9 @@ See [specs/03-architecture.md](specs/03-architecture.md),
 - Edge Functions forward the caller's JWT. The service-role key is only for functions
   without a user (ICS, enrolment, jobs) and for the two account-administration functions
   of ADR-014 (`account-delete`, MFA reset), which verify the caller's JWT and act only on
-  that caller (or, for the reset, a co-guardian), with a comment at each use.
+  that caller (or, for the reset, a co-guardian), with a comment at each use. The one
+  exception in a user request: `holidays-sync`'s on-demand refresh verifies the JWT and writes
+  only the public holiday cache (no household data).
 - Migrations are forward-only and must stay compatible with the previous app release.
 - **No household is hard-coded.** Anything one household would answer differently from
   another is a setting with a curated default ([specs/20](specs/21-household-settings.md)):

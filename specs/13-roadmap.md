@@ -107,6 +107,8 @@ entry retired one release later.
 tablet is connected without anyone touching its keyboard, and both are timed on the
 release checklist.
 
+> **Built 2026-10-14 on `feature/regions-and-ux`, not yet on the server:** the getting-started card on the adult Today tab (FR-5.17) — six items derived from data (invite partner, connect tablet, wall display, set PIN, subscribe feed, and Stundenplan eintragen), dismissible ("Brauchen wir nicht"), brought back from Einstellungen → Erste Schritte. The data export for guardians on a personal device (FR-5.16, the export part): one JSON file, secrets left out. **Open:** account and household deletion, leave, and the rest of 9.1/9.2.
+
 ### M1.1 Shopping, complete
 
 > **Offline outbox built 2026-10-12:** drift mirror and outbox, `api.shopping_apply` with
@@ -174,6 +176,8 @@ registers · the collapsed school-day block in the feed, off by default.
 Build 1.3a fully before starting 1.3b: the projection has nowhere to render until the
 calendar's occurrence-source seam exists.
 
+> **Built 2026-10-14 on `feature/regions-and-ux`, not yet on the server:** regions to any depth (Germany, Austria, Switzerland to the Gemeinde, Liechtenstein) from the public OpenHolidays dataset, fetched by the server; public holidays (Feiertage) automatic, for school days, the week board's day header and the free-day meal; school holidays (Ferien) imported with a preview and editable afterwards (the M2 item, built early); several schools per household; day operations in the timetable editor (clear, copy, swap, with undo until Save). Details: [15](15-module-school-timetable.md#holidays).
+
 ### M1.4 Meals
 > **Built 2026-10-13 on `feature/week-board`, not yet on the server:** the week plan (free text or recipe, cook, guests), recipes, who-is-eating with the defaulting rule (computed with the board in `board-week`), shopping generation with the mandatory preview, the kiosk correction dots.
 > pgTAP green on a local throwaway Postgres (`scripts/local-pgtap`); not yet run on the
@@ -182,6 +186,8 @@ calendar's occurrence-source seam exists.
 Meal plan week grid · recipes with ingredients · who is eating at home, with the defaulting
 rule from presence and Hort · generation into the shopping list, with the mandatory
 preview · the meal zone of the week board
+
+> **Built 2026-10-14 on `feature/regions-and-ux`, not yet on the server:** meal suggestions in the meal editor from the last 365 days of cooked meals ("Oft bei uns", "Lange nicht gegessen" after 90 and 60 days — FR-3.8), the meal behind each generated shopping item (FR-3.7), and undo when a planned meal is cleared.
 
 ### M1.5 Polish
 > **Week board built early, 2026-10-13:** the board, its tap-through details and the
@@ -272,9 +278,9 @@ meets them.
 - Shortcuts endpoints and per-person tokens
 - MCP server, `family:read` scope
 - Imported external calendars (sports club, bin collection)
-- Ferien import for the Bundesland, so holidays stop being hand-entered
+- ~~Ferien import for the Bundesland, so holidays stop being hand-entered~~ — built early on `feature/regions-and-ux` (2026-10-14), see M1.3
 - Equipment reminders from tomorrow's subjects ("Morgen brauchst du: Sportsachen")
-- Meal suggestions from history ("not cooked in 60 days")
+- ~~Meal suggestions from history ("not cooked in 60 days")~~ — built early on `feature/regions-and-ux` (2026-10-14), see M1.4
 - Whatever the first two weeks of real use made obviously necessary — reserve capacity
   for this rather than planning around it
 

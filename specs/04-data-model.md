@@ -18,7 +18,9 @@ household
   id, name, timezone, locale,                    -- timezone/locale from the founder's device
   created_by_profile_id, created_at,
   deleted_at NULL,                               -- J6: purged 14 days later
-  region NULL                                    -- ISO 3166-2, e.g. 'DE-BE'; asked with the first school
+  -- the household's region is the setting household.region (21), not a column: an OpenHolidays
+  -- subdivision code of any depth, e.g. 'DE-BE' or 'CH-ZH-ZH-ZH'; asked with the first school.
+  -- Added 2026-10-14.
 
 setting_definition               -- the catalogue of settings and curated defaults,
   key, scope, type, default_value JSONB,        -- written by migrations only; see
@@ -176,8 +178,15 @@ events for it — [ADR-008](adr/ADR-008-school-timetable-model.md).
 
 ```
 school
-  id, household_id, name, state_code TEXT,      -- Bundesland, drives the holiday feed
+  id, household_id, name,
+  region_code TEXT NULL,                        -- OpenHolidays subdivision, any depth (DE-BE,
+                                                -- AT-9, CH-ZH-ZH-ZH): drives the holiday rules
+  state_code TEXT NULL,                         -- the first two segments of region_code, kept
+                                                -- for the previous app release
   timezone TEXT
+
+  -- Added 2026-10-14: several schools per household; a school takes the household's
+  -- timezone when it is created. Starter subjects follow the country (see 21).
 
 school_period                    -- the bell times, shared by every timetable at a school
   id, school_id, index INT,                     -- 1 = 1. Stunde
@@ -222,12 +231,70 @@ timetable_exception              -- one date, one slot
   starts_at TIME NULL, ends_at TIME NULL,       -- for kind='extra' off the grid
   note TEXT, created_by_profile_id
 
-school_holiday                   -- Ferien, bewegliche Ferientage, closures
+school_holiday                   -- Ferien, bewegliche Ferientage, closures, public holidays
   id, household_id, school_id NULL,             -- NULL = applies to every school
   name TEXT, starts_on DATE, ends_on DATE,
-  kind ENUM('holiday','closure_day'),
-  source ENUM('manual','imported'), source_url NULL
+  kind ENUM('holiday','closure_day','public_holiday'),
+  source ENUM('manual','imported'), source_url NULL,
+  feed_id TEXT NULL                             -- the holiday_feed row it was imported from
 ```
+
+Added 2026-10-14. A `public_holiday` is a Feiertag: it has no school (`school_id` NULL) and
+is never imported by hand. Imported Ferien (`kind = 'holiday'`, `feed_id` set) are ordinary
+holidays once they are in the list; the feed row is imported once per household and school.
+
+### Holiday reference data
+
+Added 2026-10-14. Public reference data, not household data: the server's holidays sync fills
+it from the public OpenHolidays dataset ([15](15-module-school-timetable.md#holidays)); it holds
+no household id, and any live device may read it (a revoked device reads nothing).
+
+```
+region                           -- every subdivision the sync knows
+  code PK,                                      -- 'CH-ZH-ZH-ZH', 'AT-9', 'DE-BY'
+  country, parent_code NULL, level 1..4,
+  category TEXT,                                -- source label: Kanton, Bezirk, Gemeinde, ...
+  short_name, names JSONB (language -> name), fetched_at
+
+holiday_feed                     -- public holidays and school holidays per country
+  id PK,                                        -- the OpenHolidays id
+  country, kind ENUM('public','school'),
+  starts_on, ends_on, names JSONB,
+  nationwide BOOLEAN, subdivisions TEXT[],      -- where it applies (see the rule in 15)
+  fetched_at
+
+holiday_feed_sync                -- per country: requested_at, fetched_at, valid_from,
+  country PK, ...                               -- valid_to, last_error (bookkeeping only)
+```
+
+`api.regions`, `api.holiday_feed` and `api.holiday_feed_status` read these tables; the rule
+"does a holiday of country C with subdivisions S apply to region R" is `app.region_covers`,
+and the Edge Functions mirror it in `_shared/openholidays.ts`. Writes go only through the service-role cache functions of `holidays-sync`.
+
+### Getting started and export
+
+Added 2026-10-14 (the Today tab, FR-5.17, and the data export, FR-5.16).
+
+```
+getting_started_dismissal        -- the only stored state of the getting-started card
+  id, household_id, profile_id NULL,            -- NULL = household-wide; the guardian's
+                                                -- profile for set_pin
+  item ENUM('invite_partner','connect_tablet','wall_display','set_pin','subscribe_feed','school'),
+  dismissed_at
+```
+
+The card's items are derived from data and never ticked by hand (`api.getting_started`).
+The export (`api.household_export`) has no table of its own: it reads every household table
+and leaves out secrets (password and PIN hashes, token and code hashes, Auth ids) and the
+technical bookkeeping listed in migration `160`. A pgTAP guard fails when a new household
+table is neither exported nor listed there.
+
+### Views over existing tables
+
+Added 2026-10-14, no new storage. `api.meal_history` (the cooked meals of the last 365 days,
+grouped by recipe or by free text) feeds the meal suggestions (FR-3.8), and
+`api.shopping_item_meals` lists the meals behind a shopping item (FR-3.7).
+Both are `security_invoker` views, so RLS and the device check apply.
 
 Two things this shape is protecting:
 
