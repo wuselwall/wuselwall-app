@@ -74,11 +74,17 @@ class RegisterHomePage extends ConsumerWidget {
               selectedIndex: tab.index,
               onDestinationSelected: (i) =>
                   ref.read(homeTabProvider.notifier).select(HomeTab.values[i]),
+              // Six destinations do not fit a phone with their labels: there only
+              // the selected one is labelled, the others keep their tooltip.
+              labelBehavior: MediaQuery.sizeOf(context).width < 600
+                  ? NavigationDestinationLabelBehavior.onlyShowSelected
+                  : null,
               destinations: [
                 for (final t in HomeTab.values)
                   NavigationDestination(
                     icon: Icon(homeSections[t]!.icon),
                     label: homeSections[t]!.label(l10n),
+                    tooltip: homeSections[t]!.label(l10n),
                   ),
               ],
             )
