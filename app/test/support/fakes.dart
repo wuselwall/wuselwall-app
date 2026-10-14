@@ -159,13 +159,20 @@ class FakeIdentityRepository implements IdentityRepository {
 }
 
 class FakeShoppingRepository implements ShoppingRepository {
-  FakeShoppingRepository(this.list);
+  FakeShoppingRepository(this.list, {this.mealsByItem = const {}});
 
   List<ShoppingItem> list;
   final toggles = <({String? actor, String id})>[];
 
+  /// The meals behind each item id, for the item's sheet.
+  final Map<String, List<ShoppingItemMeal>> mealsByItem;
+
   @override
   Future<Result<List<ShoppingItem>>> items() async => Ok(list);
+
+  @override
+  Future<Result<List<ShoppingItemMeal>>> itemMeals(String itemId) async =>
+      Ok(mealsByItem[itemId] ?? const []);
 
   @override
   Future<Result<ShoppingSnapshot>> snapshot() async => Ok(

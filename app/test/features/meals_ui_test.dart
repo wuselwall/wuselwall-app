@@ -325,4 +325,160 @@ void main() {
     expect(t.takeException(), isNull);
     await unmountApp(t, container);
   });
+
+  /// The day [n] days before today, at midnight.
+  DateTime daysAgo(int n) {
+    final now = DateTime.now();
+    return DateTime(now.year, now.month, now.day - n);
+  }
+
+  testWidgets('the suggestion chips fill the title and link the recipe', (
+    t,
+  ) async {
+    final meals = FakeMealsRepository(
+      recipes: const [
+        Recipe(id: 'r-braten', title: 'Rinderbraten', servingsDefault: 4),
+      ],
+      history: [
+        MealHistoryEntry(
+          recipeId: 'r-braten',
+          title: 'Rinderbraten',
+          times: 4,
+          firstOn: daysAgo(150),
+          lastOn: daysAgo(9),
+        ),
+        MealHistoryEntry(
+          title: 'Pizza',
+          times: 2,
+          firstOn: daysAgo(30),
+          lastOn: daysAgo(3),
+        ),
+        MealHistoryEntry(
+          title: 'Linseneintopf',
+          times: 3,
+          firstOn: daysAgo(330),
+          lastOn: daysAgo(200),
+        ),
+      ],
+    );
+    final container = await pumpMeals(t, meals);
+
+    await t.tap(find.text('Noch nichts geplant').first);
+    await t.pumpAndSettle();
+    expect(find.text('Oft bei uns'), findsOneWidget);
+    expect(find.text('Lange nicht gegessen'), findsOneWidget);
+    expect(find.widgetWithText(ActionChip, 'Linseneintopf'), findsOneWidget);
+
+    await t.tap(find.widgetWithText(ActionChip, 'Rinderbraten'));
+    await t.pumpAndSettle();
+    expect(find.text('Oft bei uns'), findsNothing);
+    await t.tap(find.widgetWithText(FilledButton, 'Speichern'));
+    await t.pumpAndSettle();
+
+    final saved = meals.setMeals.single;
+    expect(saved.recipeId, 'r-braten');
+    expect(saved.freeText, isNull);
+    expect(t.takeException(), isNull);
+    await unmountApp(t, container);
+  });
+
+  testWidgets('a free-text suggestion saves as free text', (t) async {
+    final meals = FakeMealsRepository(
+      history: [
+        MealHistoryEntry(
+          title: 'Pizza',
+          times: 2,
+          firstOn: daysAgo(30),
+          lastOn: daysAgo(3),
+        ),
+      ],
+    );
+    final container = await pumpMeals(t, meals);
+
+    await t.tap(find.text('Noch nichts geplant').first);
+    await t.pumpAndSettle();
+    expect(find.text('Lange nicht gegessen'), findsNothing);
+    await t.tap(find.widgetWithText(ActionChip, 'Pizza'));
+    await t.pumpAndSettle();
+    await t.tap(find.widgetWithText(FilledButton, 'Speichern'));
+    await t.pumpAndSettle();
+
+    final saved = meals.setMeals.single;
+    expect(saved.freeText, 'Pizza');
+    expect(saved.recipeId, isNull);
+    expect(t.takeException(), isNull);
+    await unmountApp(t, container);
+  });
+
+  testWidgets('with no history the editor shows no suggestion rows', (t) async {
+    final meals = FakeMealsRepository();
+    final container = await pumpMeals(t, meals);
+
+    await t.tap(find.text('Noch nichts geplant').first);
+    await t.pumpAndSettle();
+    expect(find.text('Oft bei uns'), findsNothing);
+    expect(find.text('Lange nicht gegessen'), findsNothing);
+    expect(find.byType(ActionChip), findsNothing);
+    expect(t.takeException(), isNull);
+    await unmountApp(t, container);
+  });
+
+  testWidgets('a row with no meals is hidden, the other still shows', (
+    t,
+  ) async {
+    final meals = FakeMealsRepository(
+      history: [
+        MealHistoryEntry(
+          title: 'Linseneintopf',
+          times: 3,
+          firstOn: daysAgo(330),
+          lastOn: daysAgo(200),
+        ),
+      ],
+    );
+    final container = await pumpMeals(t, meals);
+
+    await t.tap(find.text('Noch nichts geplant').first);
+    await t.pumpAndSettle();
+    expect(find.text('Oft bei uns'), findsNothing);
+    expect(find.text('Lange nicht gegessen'), findsOneWidget);
+    expect(t.takeException(), isNull);
+    await unmountApp(t, container);
+  });
+
+  testWidgets('clearing a planned meal offers undo, which puts it back', (
+    t,
+  ) async {
+    final meals = FakeMealsRepository(
+      entries: [
+        MealEntry(
+          id: 'm1',
+          onDate: dayOf(0),
+          slot: PlanSlot.dinner,
+          freeText: 'Pizza',
+          title: 'Pizza',
+        ),
+      ],
+    );
+    final container = await pumpMeals(t, meals);
+
+    await t.tap(find.text('Pizza'));
+    await t.pumpAndSettle();
+    await t.tap(find.byIcon(Icons.delete_outline));
+    await t.pumpAndSettle();
+
+    expect(find.text('„Pizza“ entfernt'), findsOneWidget);
+    expect(find.text('Pizza'), findsNothing);
+
+    await t.tap(find.text('Rückgängig'));
+    await t.pumpAndSettle();
+
+    final restored = meals.setMeals.single;
+    expect(restored.freeText, 'Pizza');
+    expect(restored.date, dayOf(0));
+    expect(restored.slot, PlanSlot.dinner);
+    expect(find.text('Pizza'), findsOneWidget);
+    expect(t.takeException(), isNull);
+    await unmountApp(t, container);
+  });
 }

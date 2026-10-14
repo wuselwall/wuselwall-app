@@ -4837,6 +4837,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Nothing planned today'**
   String get kidNoPlanToday;
+
+  /// No description provided for @mealsUxSuggestOften.
+  ///
+  /// In en, this message translates to:
+  /// **'Family favourites'**
+  String get mealsUxSuggestOften;
+
+  /// No description provided for @mealsUxSuggestRare.
+  ///
+  /// In en, this message translates to:
+  /// **'Not had in a while'**
+  String get mealsUxSuggestRare;
+
+  /// No description provided for @mealsUxClearedSnack.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} removed'**
+  String mealsUxClearedSnack(String title);
+
+  /// No description provided for @mealsUxUndo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get mealsUxUndo;
+
+  /// No description provided for @mealsUxFromMealPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'From the meal plan'**
+  String get mealsUxFromMealPlan;
+
+  /// No description provided for @mealsUxForMeal.
+  ///
+  /// In en, this message translates to:
+  /// **'For: {meal} · {day}'**
+  String mealsUxForMeal(String meal, String day);
 }
 
 class _AppLocalizationsDelegate

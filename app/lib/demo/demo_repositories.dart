@@ -165,6 +165,29 @@ class DemoShoppingRepository implements ShoppingRepository {
   @override
   Future<Result<List<ShoppingItem>>> items() async => Ok(List.of(_items));
 
+  /// The two meals of the demo week that put the pasta on the list.
+  @override
+  Future<Result<List<ShoppingItemMeal>>> itemMeals(String itemId) async {
+    final item = _items.where((i) => i.id == itemId).firstOrNull;
+    final now = DateTime.now();
+    final monday = DateTime(now.year, now.month, now.day - (now.weekday - 1));
+    final meals = {
+      'demo-src-nudel': ShoppingItemMeal(
+        mealEntryId: 'demo-src-nudel',
+        onDate: DateTime(monday.year, monday.month, monday.day + 1),
+        title: 'Nudelauflauf',
+      ),
+      'demo-src-pesto': ShoppingItemMeal(
+        mealEntryId: 'demo-src-pesto',
+        onDate: DateTime(monday.year, monday.month, monday.day + 5),
+        title: 'Nudeln mit Pesto',
+      ),
+    };
+    return Ok([
+      for (final id in item?.sourceMealEntryIds ?? const <String>[]) ?meals[id],
+    ]);
+  }
+
   @override
   Future<Result<ShoppingSnapshot>> snapshot() async => Ok(
     ShoppingSnapshot(
@@ -341,6 +364,7 @@ class DemoShoppingRepository implements ShoppingRepository {
     categoryId: it.categoryId,
     addedBy: it.addedBy,
     count: count ?? it.count,
+    sourceMealEntryIds: it.sourceMealEntryIds,
   );
 
   @override

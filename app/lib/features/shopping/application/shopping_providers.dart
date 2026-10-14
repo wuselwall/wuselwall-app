@@ -3,6 +3,7 @@ import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/text/fold.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/shopping/application/shopping_sync.dart';
+import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_sync_model.dart';
 
@@ -35,6 +36,16 @@ final shoppingCategoriesProvider = Provider<AsyncValue<List<ShoppingCategory>>>(
 final shoppingCatalogProvider = Provider<AsyncValue<List<CatalogEntry>>>(
   (ref) => ref.watch(shoppingViewProvider).whenData((v) => v.catalog),
 );
+
+/// The meals behind one item, for its sheet (FR-3.7). Online only: a failed request is
+/// no meals, never an error in the sheet.
+final shoppingItemMealsProvider = FutureProvider.autoDispose
+    .family<List<ShoppingItemMeal>, String>((ref, itemId) async {
+      final result = await ref
+          .watch(shoppingRepositoryProvider)
+          .itemMeals(itemId);
+      return result.valueOrNull ?? const [];
+    });
 
 /// Changes made on this device that the server has not confirmed yet.
 final shoppingPendingProvider = Provider<int>(
