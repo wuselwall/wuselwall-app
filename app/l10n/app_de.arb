@@ -912,5 +912,10 @@
   "schoolsUiDayCleared": "Tag geleert",
   "schoolsUiDayCopied": "Tag kopiert",
   "schoolsUiDaySwapped": "Tage getauscht",
-  "schoolsUiUndo": "Rückgängig"
+  "schoolsUiUndo": "Rückgängig",
+  "exportFamilyTitle": "Familie",
+  "exportAction": "Daten exportieren",
+  "exportExplanation": "Alle Daten eurer Familie als Datei, z. B. für einen Umzug auf einen anderen Server.",
+  "exportInProgress": "Daten werden exportiert",
+  "exportPersonalDeviceRequired": "Der Export geht nur vom eigenen Telefon aus."
 }
