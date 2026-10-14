@@ -190,31 +190,6 @@ List<LessonRecord> _gridLessons(
       ),
 ];
 
-/// Undo of a day operation: saves the grid as it was before the change, then refreshes
-/// the editor. The editor may be gone by then, so it reports through [messenger].
-Future<void> _undoDayChange({
-  required SchoolRepository repo,
-  required String? actor,
-  required String timetableId,
-  required _GridSnapshot before,
-  required Future<void> Function() refresh,
-  required ScaffoldMessengerState messenger,
-  required AppLocalizations l10n,
-}) async {
-  final result = await repo.setLessons(
-    actor: actor,
-    timetableId: timetableId,
-    lessons: _gridLessons(timetableId, before.cells.values, before.care),
-  );
-  if (result case Err(:final failure)) {
-    messenger
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(failure.message(l10n))));
-    return;
-  }
-  await refresh();
-}
-
 /// Which weekdays a day is copied to: any of the others, several at once.
 class _CopyDayDialog extends StatefulWidget {
   const _CopyDayDialog({required this.from});
@@ -383,16 +358,14 @@ class _EditorBodyState extends ConsumerState<_EditorBody> {
     final l10n = context.l10n;
     switch (action) {
       case _DayAction.clear:
-        unawaited(
-          _changeGrid(
-            message: l10n.schoolsUiDayCleared,
-            change: () {
-              _cells.removeWhere((_, d) => d.weekday == weekday);
-              for (final b in _care) {
-                b.days.remove(weekday);
-              }
-            },
-          ),
+        _changeGrid(
+          message: l10n.schoolsUiDayCleared,
+          change: () {
+            _cells.removeWhere((_, d) => d.weekday == weekday);
+            for (final b in _care) {
+              b.days.remove(weekday);
+            }
+          },
         );
       case _DayAction.copy:
         unawaited(_pickCopyTargets(weekday));
@@ -407,7 +380,7 @@ class _EditorBodyState extends ConsumerState<_EditorBody> {
       builder: (_) => _CopyDayDialog(from: from),
     );
     if (targets == null || targets.isEmpty || !mounted) return;
-    await _changeGrid(
+    _changeGrid(
       message: context.l10n.schoolsUiDayCopied,
       change: () {
         final sources = [
@@ -450,7 +423,7 @@ class _EditorBodyState extends ConsumerState<_EditorBody> {
       ),
     );
     if (other == null || !mounted) return;
-    await _changeGrid(
+    _changeGrid(
       message: context.l10n.schoolsUiDaySwapped,
       change: () {
         final moved = [
@@ -475,59 +448,19 @@ class _EditorBodyState extends ConsumerState<_EditorBody> {
     );
   }
 
-  /// Applies a day operation to the grid and saves the whole grid at once, so Undo can
-  /// save the grid as it was. Without a saved timetable the change stays in the draft.
-  Future<void> _changeGrid({
-    required String message,
-    required void Function() change,
-  }) async {
+  /// Applies a day operation to the draft, like any other edit: nothing is saved until
+  /// Save. Undo restores the draft as it was before the operation.
+  void _changeGrid({required String message, required void Function() change}) {
     final l10n = context.l10n;
     final before = _snapshot();
-    final timetableId = _timetable?.id;
     setState(change);
-    final undoLabel = l10n.schoolsUiUndo;
-    if (timetableId == null) {
-      context.showMessageWithAction(
-        message,
-        actionLabel: undoLabel,
-        onAction: () {
-          if (mounted) setState(() => _restore(before));
-        },
-      );
-      return;
-    }
-    final actor = ref.read(actingProfileProvider);
-    final repo = ref.read(schoolRepositoryProvider);
-    final refresh = widget.onCopied;
-    final messenger = ScaffoldMessenger.of(context);
     context.showMessageWithAction(
       message,
-      actionLabel: undoLabel,
-      onAction: () => unawaited(
-        _undoDayChange(
-          repo: repo,
-          actor: actor,
-          timetableId: timetableId,
-          before: before,
-          refresh: refresh,
-          messenger: messenger,
-          l10n: l10n,
-        ),
-      ),
+      actionLabel: l10n.schoolsUiUndo,
+      onAction: () {
+        if (mounted) setState(() => _restore(before));
+      },
     );
-    final result = await repo.setLessons(
-      actor: actor,
-      timetableId: timetableId,
-      lessons: _gridLessons(timetableId, _cells.values, _care),
-    );
-    if (!mounted) return;
-    switch (result) {
-      case Err(:final failure):
-        setState(() => _restore(before));
-        context.showFailure(failure);
-      case Ok():
-        await refresh();
-    }
   }
 
   Future<void> _editCell(int weekday, int period) async {

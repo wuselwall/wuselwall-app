@@ -118,7 +118,21 @@ void main() {
       return school;
     }
 
-    testWidgets('swap saves the exchanged days, and Undo saves them back', (
+    /// Saves the draft with the page's Save button.
+    Future<void> save(WidgetTester t) async {
+      final button = find.text(de.schoolSaveTimetable);
+      await t.ensureVisible(button);
+      await t.tap(button);
+      await t.pumpAndSettle();
+    }
+
+    /// Text shown in one cell of the grid.
+    Finder cellText(int weekday, int period, String text) => find.descendant(
+      of: find.byKey(ValueKey('cell-$weekday-$period')),
+      matching: find.text(text),
+    );
+
+    testWidgets('swap changes the grid only; Save sends the exchanged days', (
       t,
     ) async {
       final school = await openEditor(t);
@@ -130,13 +144,25 @@ void main() {
       await t.tap(find.text('Freitag'));
       await t.pumpAndSettle();
 
-      final swapped = school.lessonSets.last.lessons;
+      expect(cellText(1, 3, 'D'), findsOneWidget);
+      expect(cellText(5, 3, 'Sp'), findsOneWidget);
+      expect(
+        school.lessonSets,
+        isEmpty,
+        reason: 'nothing is saved before Save',
+      );
+
+      await save(t);
+      final swapped = school.lessonSets.single.lessons;
       expect(
         swapped
             .where((l) => l.weekday == 1 && l.periodIndex == 3)
             .single
             .toJson(),
-        containsPair('subject_id', 'sub-d'),
+        allOf(
+          containsPair('subject_id', 'sub-d'),
+          containsPair('room', 'Aula'),
+        ),
       );
       expect(
         swapped
@@ -153,32 +179,52 @@ void main() {
         3,
         reason: 'untouched',
       );
-
-      await t.tap(find.text(de.schoolsUiUndo));
-      await t.pumpAndSettle();
-
-      final restored = school.lessonSets.last.lessons;
-      expect(
-        restored
-            .where((l) => l.weekday == 1 && l.periodIndex == 3)
-            .single
-            .toJson(),
-        allOf(
-          containsPair('subject_id', 'sub-sp'),
-          containsPair('room', 'Turnhalle'),
-        ),
-      );
-      expect(
-        restored
-            .where((l) => l.weekday == 5 && l.periodIndex == 3)
-            .single
-            .toJson(),
-        containsPair('subject_id', 'sub-d'),
-      );
     });
 
     testWidgets(
-      'copy replaces the chosen day with a copy of Friday, Undo restores it',
+      'Undo after swap restores the draft, so Save sends the original',
+      (t) async {
+        final school = await openEditor(t);
+
+        await t.tap(find.byTooltip(de.schoolsUiDayMenu).first);
+        await t.pumpAndSettle();
+        await t.tap(find.text(de.schoolsUiSwapDay));
+        await t.pumpAndSettle();
+        await t.tap(find.text('Freitag'));
+        await t.pumpAndSettle();
+        await t.tap(find.text(de.schoolsUiUndo));
+        await t.pumpAndSettle();
+
+        expect(cellText(1, 3, 'Sp'), findsOneWidget);
+        expect(cellText(5, 3, 'D'), findsOneWidget);
+
+        await save(t);
+        final restored = school.lessonSets.single.lessons;
+        expect(
+          restored
+              .where((l) => l.weekday == 1 && l.periodIndex == 3)
+              .single
+              .toJson(),
+          allOf(
+            containsPair('subject_id', 'sub-sp'),
+            containsPair('room', 'Turnhalle'),
+          ),
+        );
+        expect(
+          restored
+              .where((l) => l.weekday == 5 && l.periodIndex == 3)
+              .single
+              .toJson(),
+          allOf(
+            containsPair('subject_id', 'sub-d'),
+            containsPair('room', 'Aula'),
+          ),
+        );
+      },
+    );
+
+    testWidgets(
+      'copy changes the chosen day in the grid; Save sends the copy',
       (t) async {
         final school = await openEditor(t);
 
@@ -191,7 +237,12 @@ void main() {
         await t.tap(find.text(de.schoolsUiCopyDayApply));
         await t.pumpAndSettle();
 
-        final copied = school.lessonSets.last.lessons;
+        expect(cellText(2, 3, 'D'), findsOneWidget);
+        expect(cellText(5, 3, 'D'), findsOneWidget, reason: 'the source stays');
+        expect(school.lessonSets, isEmpty);
+
+        await save(t);
+        final copied = school.lessonSets.single.lessons;
         final tuesday = copied.where((l) => l.weekday == 2).toList();
         expect(tuesday, hasLength(3));
         expect(
@@ -207,48 +258,58 @@ void main() {
               .single
               .toJson(),
           containsPair('subject_id', 'sub-d'),
-          reason: 'the source day stays',
-        );
-
-        await t.tap(find.text(de.schoolsUiUndo));
-        await t.pumpAndSettle();
-
-        final restored = school.lessonSets.last.lessons;
-        expect(
-          restored
-              .where((l) => l.weekday == 2 && l.periodIndex == 3)
-              .single
-              .toJson(),
-          allOf(
-            containsPair('subject_id', 'sub-sp'),
-            containsPair('room', 'Turnhalle'),
-          ),
         );
       },
     );
 
-    testWidgets('clear day saves the empty day and Undo brings it back', (
-      t,
-    ) async {
+    testWidgets('Undo after copy restores Tuesday in the draft', (t) async {
       final school = await openEditor(t);
 
-      await t.tap(find.byTooltip(de.schoolsUiDayMenu).at(2));
+      await t.tap(find.byTooltip(de.schoolsUiDayMenu).at(4));
       await t.pumpAndSettle();
-      await t.tap(find.text(de.schoolClearDay));
+      await t.tap(find.text(de.schoolsUiCopyDay));
       await t.pumpAndSettle();
-
-      expect(
-        school.lessonSets.last.lessons.where((l) => l.weekday == 3),
-        isEmpty,
-      );
-
+      await t.tap(find.text('Dienstag'));
+      await t.pumpAndSettle();
+      await t.tap(find.text(de.schoolsUiCopyDayApply));
+      await t.pumpAndSettle();
       await t.tap(find.text(de.schoolsUiUndo));
       await t.pumpAndSettle();
 
+      expect(cellText(2, 3, 'Sp'), findsOneWidget);
+
+      await save(t);
       expect(
-        school.lessonSets.last.lessons.where((l) => l.weekday == 3),
-        hasLength(3),
+        school.lessonSets.single.lessons
+            .where((l) => l.weekday == 2 && l.periodIndex == 3)
+            .single
+            .toJson(),
+        allOf(
+          containsPair('subject_id', 'sub-sp'),
+          containsPair('room', 'Turnhalle'),
+        ),
       );
     });
+
+    testWidgets(
+      'clear day empties the grid draft, and Save sends the empty day',
+      (t) async {
+        final school = await openEditor(t);
+
+        await t.tap(find.byTooltip(de.schoolsUiDayMenu).at(2));
+        await t.pumpAndSettle();
+        await t.tap(find.text(de.schoolClearDay));
+        await t.pumpAndSettle();
+
+        expect(cellText(3, 1, 'Ma'), findsNothing);
+        expect(school.lessonSets, isEmpty);
+
+        await save(t);
+        expect(
+          school.lessonSets.single.lessons.where((l) => l.weekday == 3),
+          isEmpty,
+        );
+      },
+    );
   });
 }
