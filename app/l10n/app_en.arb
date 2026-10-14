@@ -1678,26 +1678,56 @@
   "extCalUrlInvalid": "That does not look like a web address (https://…).",
   "extCalColourLabel": "Colour",
   "extCalColourOption": "Colour {number}",
-  "@extCalColourOption": {"placeholders": {"number": {"type": "int"}}},
+  "@extCalColourOption": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
   "extCalMembersLabel": "Who?",
   "extCalMembersHelp": "Without a choice, the calendar is for the whole family.",
   "extCalMembersWhole": "Whole family",
   "extCalShowOnBoard": "Show on the kitchen display",
   "extCalShowOnBoardHelp": "Its appointments appear as key appointments on the kitchen display’s week board.",
   "extCalDeleteConfirm": "“{name}” and all its appointments will be removed.",
-  "@extCalDeleteConfirm": {"placeholders": {"name": {"type": "String"}}},
+  "@extCalDeleteConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "extCalDeleted": "Calendar removed.",
   "extCalRefreshNow": "Refresh now",
   "extCalRefreshed": "{count, plural, =0{No appointments found} =1{1 appointment loaded} other{{count} appointments loaded}}",
-  "@extCalRefreshed": {"placeholders": {"count": {"type": "int"}}},
+  "@extCalRefreshed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "extCalNotModified": "No changes since the last fetch.",
   "extCalRecent": "Fetched a moment ago. Try again in a few minutes.",
   "extCalRefreshFailed": "The calendar could not be loaded: {reason}",
-  "@extCalRefreshFailed": {"placeholders": {"reason": {"type": "String"}}},
+  "@extCalRefreshFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
   "extCalStatusPaused": "Paused",
   "extCalStatusNever": "Loading for the first time …",
   "extCalStatusUpdated": "Updated {when}",
-  "@extCalStatusUpdated": {"placeholders": {"when": {"type": "String"}}},
+  "@extCalStatusUpdated": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
   "extCalReadOnlyHint": "Only guardians can subscribe to calendars or change them.",
   "extCalErrUnreachable": "The address cannot be reached right now.",
   "extCalErrTimeout": "The address answers too slowly.",
@@ -1706,7 +1736,13 @@
   "extCalErrNotIcs": "That is not a calendar (ICS).",
   "extCalErrHttp404": "Address not found (404).",
   "extCalErrHttp": "The address answers with error {status}.",
-  "@extCalErrHttp": {"placeholders": {"status": {"type": "int"}}},
+  "@extCalErrHttp": {
+    "placeholders": {
+      "status": {
+        "type": "int"
+      }
+    }
+  },
   "extCalErrInternal": "Something went wrong on the server. Try again later.",
   "extCalErrDb": "The appointments could not be stored.",
   "extCalErrUnknown": "The fetch did not work.",
@@ -1715,10 +1751,20 @@
   "extCalErrNotFound": "This calendar no longer exists.",
   "extCalImportedNote": "Subscribed calendar — changes come from the source",
   "extCalFromCalendar": "From {name}",
-  "@extCalFromCalendar": {"placeholders": {"name": {"type": "String"}}},
+  "@extCalFromCalendar": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "extCalAllDay": "All day",
   "extCalSheetTitle": "Appointment from a subscription",
   "extCalSettingsRefreshHint": "The server fetches each calendar about once an hour.",
   "extCalActive": "Active",
-  "extCalUrlLoading": "Loading the address"
+  "extCalUrlLoading": "Loading the address",
+  "shoppingNavLabel": "Shopping",
+  "@shoppingNavLabel": {
+    "description": "Short label of the shopping list in the bottom navigation bar; the page title stays shoppingTitle."
+  }
 }

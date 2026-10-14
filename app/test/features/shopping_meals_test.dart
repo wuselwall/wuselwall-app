@@ -40,7 +40,7 @@ void main() {
         ),
       );
       // The adult home opens on the calendar: go to the shopping tab first.
-      await t.tap(find.text('Einkaufsliste'));
+      await t.tap(find.text('Einkauf'));
       await t.pumpAndSettle();
 
       // The icon sits on the item's tile; the navigation bar has one of its own.

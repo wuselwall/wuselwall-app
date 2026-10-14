@@ -31,7 +31,7 @@ void main() {
       // Once the session is aal2 the router lets the guardian through.
       container.invalidate(sessionStateProvider);
       await t.pumpAndSettle();
-      expect(find.text('Einkaufsliste'), findsOneWidget);
+      expect(find.text('Einkauf'), findsOneWidget);
     },
   );
 
@@ -60,7 +60,7 @@ void main() {
     await t.tap(find.text('Dieses Gerät verwenden'));
     await t.pumpAndSettle();
     expect(identity.registeredLabels, ['Papas iPhone']);
-    expect(find.text('Einkaufsliste'), findsOneWidget);
+    expect(find.text('Einkauf'), findsOneWidget);
   });
 
   testWidgets('a rate-limited enrolment explains itself', (t) async {

@@ -3178,4 +3178,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get extCalUrlLoading => 'Adresse wird geladen';
+
+  @override
+  String get shoppingNavLabel => 'Einkauf';
 }

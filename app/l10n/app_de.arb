@@ -1050,26 +1050,56 @@
   "extCalUrlInvalid": "Das sieht nicht nach einer Internet-Adresse aus (https://…).",
   "extCalColourLabel": "Farbe",
   "extCalColourOption": "Farbe {number}",
-  "@extCalColourOption": {"placeholders": {"number": {"type": "int"}}},
+  "@extCalColourOption": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
   "extCalMembersLabel": "Für wen?",
   "extCalMembersHelp": "Ohne Auswahl gilt der Kalender für die ganze Familie.",
   "extCalMembersWhole": "Ganze Familie",
   "extCalShowOnBoard": "Auf dem Küchendisplay zeigen",
   "extCalShowOnBoardHelp": "Seine Termine erscheinen als wichtige Termine in der Wochenansicht des Küchendisplays.",
   "extCalDeleteConfirm": "„{name}“ und alle seine Termine werden entfernt.",
-  "@extCalDeleteConfirm": {"placeholders": {"name": {"type": "String"}}},
+  "@extCalDeleteConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "extCalDeleted": "Kalender entfernt.",
   "extCalRefreshNow": "Jetzt aktualisieren",
   "extCalRefreshed": "{count, plural, =0{Keine Termine gefunden} =1{1 Termin geladen} other{{count} Termine geladen}}",
-  "@extCalRefreshed": {"placeholders": {"count": {"type": "int"}}},
+  "@extCalRefreshed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "extCalNotModified": "Keine Änderungen seit dem letzten Abruf.",
   "extCalRecent": "Gerade eben abgerufen. Versuch es in ein paar Minuten nochmal.",
   "extCalRefreshFailed": "Der Kalender konnte nicht geladen werden: {reason}",
-  "@extCalRefreshFailed": {"placeholders": {"reason": {"type": "String"}}},
+  "@extCalRefreshFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
   "extCalStatusPaused": "Pausiert",
   "extCalStatusNever": "Wird zum ersten Mal geladen …",
   "extCalStatusUpdated": "Aktualisiert {when}",
-  "@extCalStatusUpdated": {"placeholders": {"when": {"type": "String"}}},
+  "@extCalStatusUpdated": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
   "extCalReadOnlyHint": "Nur Eltern können Kalender abonnieren oder ändern.",
   "extCalErrUnreachable": "Die Adresse ist gerade nicht erreichbar.",
   "extCalErrTimeout": "Die Adresse antwortet zu langsam.",
@@ -1078,7 +1108,13 @@
   "extCalErrNotIcs": "Das ist kein Kalender (ICS).",
   "extCalErrHttp404": "Adresse nicht gefunden (404).",
   "extCalErrHttp": "Die Adresse antwortet mit Fehler {status}.",
-  "@extCalErrHttp": {"placeholders": {"status": {"type": "int"}}},
+  "@extCalErrHttp": {
+    "placeholders": {
+      "status": {
+        "type": "int"
+      }
+    }
+  },
   "extCalErrInternal": "Auf dem Server ist etwas schiefgegangen. Versuch es später nochmal.",
   "extCalErrDb": "Die Termine konnten nicht gespeichert werden.",
   "extCalErrUnknown": "Der Abruf hat nicht geklappt.",
@@ -1087,10 +1123,17 @@
   "extCalErrNotFound": "Diesen Kalender gibt es nicht mehr.",
   "extCalImportedNote": "Abonnierter Kalender — Änderungen kommen von der Quelle",
   "extCalFromCalendar": "Aus {name}",
-  "@extCalFromCalendar": {"placeholders": {"name": {"type": "String"}}},
+  "@extCalFromCalendar": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "extCalAllDay": "Ganztägig",
   "extCalSheetTitle": "Termin aus einem Abo",
   "extCalSettingsRefreshHint": "Der Server ruft jeden Kalender etwa einmal pro Stunde ab.",
   "extCalActive": "Aktiv",
-  "extCalUrlLoading": "Adresse wird geladen"
+  "extCalUrlLoading": "Adresse wird geladen",
+  "shoppingNavLabel": "Einkauf"
 }
