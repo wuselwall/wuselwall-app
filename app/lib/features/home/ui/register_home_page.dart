@@ -15,6 +15,7 @@ import 'package:wuselwall/features/meals/ui/meals_section.dart';
 import 'package:wuselwall/features/school/ui/schedule_section.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_section.dart';
 import 'package:wuselwall/features/tasks/ui/tasks_section.dart';
+import 'package:wuselwall/features/today/ui/today_section.dart';
 
 /// Home for every register (specs/09 "Screens by register"). The adult home has one tab
 /// per module, each a [HomeSection] owned by its feature. The kid
@@ -88,6 +89,7 @@ class RegisterHomePage extends ConsumerWidget {
 
 /// Each destination's section, owned by its feature.
 final homeSections = <HomeTab, HomeSection>{
+  HomeTab.today: todaySection,
   HomeTab.calendar: calendarSection,
   HomeTab.schedule: scheduleSection,
   HomeTab.tasks: tasksSection,

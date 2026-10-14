@@ -2820,4 +2820,77 @@ class AppLocalizationsDe extends AppLocalizations {
   String mealsUxForMeal(String meal, String day) {
     return 'Für: $meal · $day';
   }
+
+  @override
+  String get todayTitle => 'Heute';
+
+  @override
+  String get todayEmpty => 'Heute ist noch nichts geplant. Genieß die Ruhe.';
+
+  @override
+  String get todayAgendaTitle => 'Termine';
+
+  @override
+  String get todayAllDay => 'ganztägig';
+
+  @override
+  String get todayTasksTitle => 'Deine Aufgaben heute';
+
+  @override
+  String get todayMealTitle => 'Warmes Essen';
+
+  @override
+  String todayMealLine(String slot, String dish) {
+    return '$slot: $dish';
+  }
+
+  @override
+  String get todayShoppingTitle => 'Einkaufsliste';
+
+  @override
+  String todayShoppingOpen(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Artikel offen',
+      one: '1 Artikel offen',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get todayStartTitle => 'Erste Schritte';
+
+  @override
+  String todayStartProgress(int done, int total) {
+    return '$done von $total';
+  }
+
+  @override
+  String get todayStartNotNeeded => 'Brauchen wir nicht';
+
+  @override
+  String get todayStartInvitePartner => 'Partner:in einladen';
+
+  @override
+  String get todayStartConnectTablet => 'Familien-Tablet verbinden';
+
+  @override
+  String get todayStartWallDisplay => 'Wandanzeige einrichten';
+
+  @override
+  String get todayStartSetPin => 'Deine PIN festlegen';
+
+  @override
+  String get todayStartSubscribeFeed => 'Kalender abonnieren';
+
+  @override
+  String get todayStartSchool => 'Stundenplan eintragen';
+
+  @override
+  String get settingsGettingStarted => 'Erste Schritte';
+
+  @override
+  String get settingsGettingStartedSubtitle =>
+      'Die Einrichtungskarte wieder auf dem Heute-Tab zeigen';
 }
