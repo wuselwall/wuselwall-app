@@ -1,6 +1,8 @@
 // Takes the user documentation's screenshots from the Flutter web demo build
 // (app/lib/main_demo.dart, in-memory data, no backend):
 //   npm run docs:screenshots
+// To take only some shots while debugging, pass their names (both languages and themes):
+//   node docs/tools/screenshots.mjs today meals-suggest
 // Each shot is rendered in German and English, and in the light (name.png) and dark
 // (name-dark.png) theme: the docs' <Shot> component shows the one matching the reader's.
 // Flutter draws to a canvas, so the script switches on the accessibility tree
@@ -59,10 +61,14 @@ const tapNode = async (page, role, name) => {
 };
 // Adult navigation destinations are in the bottom bar (a NavigationBar, role depends on the
 // Flutter version), and list tiles may have no button role: match by name in both roles,
-// and by aria-label when the role is missing. A substring match tolerates a suffix such as "Tab 2 of 5".
+// and by aria-label when the role is missing. A substring match tolerates a suffix such as "Tab 2 of 5",
+// but it also matches cards that mention the name (the Today card "Warmes Essen … Einkaufsliste"),
+// so an exact match always wins and the substring is only the fallback, on buttons and tabs.
 const tapAny = async (page, name, { exact = true } = {}) => {
-  const byLabel = page.locator(`flt-semantics[aria-label${exact ? '=' : '*='}"${name}"]`);
-  await page.getByRole('button', { name, exact }).or(page.getByRole('tab', { name, exact })).or(byLabel).first().dispatchEvent('click');
+  const find = (ex) => page.getByRole('button', { name, exact: ex }).or(page.getByRole('tab', { name, exact: ex }))
+    .or(page.locator(`flt-semantics[aria-label${ex ? '=' : '*='}"${name}"]`));
+  const target = (await find(true).count()) ? find(true) : find(exact);
+  await target.first().dispatchEvent('click');
   await settle(page);
 };
 const scrollDown = async (page, px = 600) => {
@@ -70,6 +76,11 @@ const scrollDown = async (page, px = 600) => {
   await page.mouse.move(vp.width / 2, vp.height * 0.6);
   await page.mouse.wheel(0, px);
   await settle(page);
+};
+// Long lists build their semantics lazily: scroll in steps until the control is in the tree.
+const scrollUntil = async (page, name, role = 'button') => {
+  const loc = page.getByRole(role, { name, exact: true });
+  for (let i = 0; i < 30 && !(await loc.count()); i++) await scrollDown(page, 600);
 };
 // The semantics layer turns any pointer press into a tap, so for a long press the
 // pointer goes straight to Flutter's canvas.
@@ -109,8 +120,10 @@ const shots = [
   { name: 'today', scenario: 'adult', viewport: PHONE, steps: async (p, t) => tapAny(p, t.today) },
   // The school page's settings icon opens the school form; the region field opens the picker.
   { name: 'region-picker', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.schedule, { exact: false }); await tapAny(p, t.editSchool); await tapAny(p, t.region, { exact: false }); } },
-  { name: 'holiday-import', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.schedule, { exact: false }); await tapAny(p, t.editSchool); await scrollDown(p, 1400); await press(p, t.importHolidays); } },
-  { name: 'meals-suggest', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.meals, { exact: false }); await press(p, t.addMeal); } },
+  { name: 'holiday-import', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.schedule); await tapAny(p, t.editSchool); await scrollUntil(p, t.importHolidays); await tapNode(p, 'button', t.importHolidays); } },
+  // The add action is a popup on each day: its name doubles the tooltip, so match it loosely,
+  // then pick the first free slot, which opens the meal editor with the suggestions.
+  { name: 'meals-suggest', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.meals); await press(p, t.addMeal, { exact: false }); await p.getByRole('menuitem').first().click(); await settle(p, 1200); } },
   { name: 'tasks-today', scenario: 'adult', viewport: TABLET, steps: async (p, t) => tapAny(p, t.tasks, { exact: false }) },
   { name: 'meals-week', scenario: 'adult', viewport: TABLET, steps: async (p, t) => tapAny(p, t.meals, { exact: false }) },
   { name: 'settings-household', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await press(p, t.settings); await tapAny(p, t.householdSettings, { exact: false }); } },
