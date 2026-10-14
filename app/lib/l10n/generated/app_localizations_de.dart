@@ -1796,60 +1796,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get schoolName => 'Name der Schule';
 
   @override
-  String get schoolState => 'Bundesland';
-
-  @override
-  String get schoolStateNone => 'Nicht angegeben';
-
-  @override
-  String get schoolStateBW => 'Baden-Württemberg';
-
-  @override
-  String get schoolStateBY => 'Bayern';
-
-  @override
-  String get schoolStateBE => 'Berlin';
-
-  @override
-  String get schoolStateBB => 'Brandenburg';
-
-  @override
-  String get schoolStateHB => 'Bremen';
-
-  @override
-  String get schoolStateHH => 'Hamburg';
-
-  @override
-  String get schoolStateHE => 'Hessen';
-
-  @override
-  String get schoolStateMV => 'Mecklenburg-Vorpommern';
-
-  @override
-  String get schoolStateNI => 'Niedersachsen';
-
-  @override
-  String get schoolStateNW => 'Nordrhein-Westfalen';
-
-  @override
-  String get schoolStateRP => 'Rheinland-Pfalz';
-
-  @override
-  String get schoolStateSL => 'Saarland';
-
-  @override
-  String get schoolStateSN => 'Sachsen';
-
-  @override
-  String get schoolStateST => 'Sachsen-Anhalt';
-
-  @override
-  String get schoolStateSH => 'Schleswig-Holstein';
-
-  @override
-  String get schoolStateTH => 'Thüringen';
-
-  @override
   String get schoolBellTimes => 'Klingelzeiten';
 
   @override
@@ -2798,4 +2744,134 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get schoolsUiUndo => 'Rückgängig';
+
+  @override
+  String get regionSettingTitle => 'Region';
+
+  @override
+  String get regionSettingHelp =>
+      'Bestimmt, welche Feiertage gelten und welche Schulferien du übernehmen kannst. Wähle Kanton, Bundesland oder Gemeinde.';
+
+  @override
+  String get regionFieldLabel => 'Region';
+
+  @override
+  String get regionFieldEmpty => 'Keine Region gewählt';
+
+  @override
+  String get regionFieldClear => 'Region entfernen';
+
+  @override
+  String get regionCountryDE => 'Deutschland';
+
+  @override
+  String get regionCountryAT => 'Österreich';
+
+  @override
+  String get regionCountryCH => 'Schweiz';
+
+  @override
+  String get regionCountryLI => 'Liechtenstein';
+
+  @override
+  String get regionCountryOther => 'Anderes Land (ohne Region)';
+
+  @override
+  String get regionPickCountryTitle => 'Land';
+
+  @override
+  String get regionPickRegionTitle => 'Kanton oder Bundesland';
+
+  @override
+  String get regionPickSearch => 'Suchen';
+
+  @override
+  String regionPickWholeRegion(String name) {
+    return 'Ganze Region: $name';
+  }
+
+  @override
+  String get regionPickDeeperTitle => 'Genauer wählen (Bezirk/Gemeinde)';
+
+  @override
+  String get regionPickDeeperSearch => 'Gemeinde oder Bezirk eingeben';
+
+  @override
+  String get regionPickNoMatch => 'Nichts gefunden';
+
+  @override
+  String get regionPickLoading => 'Regionen werden geladen…';
+
+  @override
+  String get regionPickRetry => 'Erneut versuchen';
+
+  @override
+  String get regionPickSkip => 'Ohne Region weiter';
+
+  @override
+  String get regionPickEmpty => 'Keine Regionen für dieses Land gefunden.';
+
+  @override
+  String get regionUnavailable =>
+      'Die Regionsliste ist gerade nicht verfügbar. Prüfe die Verbindung und versuche es erneut.';
+
+  @override
+  String regionNameTop(String category, String name) {
+    return '$category $name';
+  }
+
+  @override
+  String regionNameDeeper(String name, String category, String parent) {
+    return '$name ($category), $parent';
+  }
+
+  @override
+  String get regionImportAction => 'Ferien übernehmen';
+
+  @override
+  String get regionImportNeedsRegion =>
+      'Wähle zuerst eine Region für die Schule.';
+
+  @override
+  String get regionImportTitle => 'Schulferien';
+
+  @override
+  String get regionImportIntro =>
+      'Feiertage der Region gelten automatisch. Hier übernimmst du die Schulferien.';
+
+  @override
+  String get regionImportSwissHint =>
+      'In der Schweiz können die Schulferien je Gemeinde abweichen. Bitte die Daten prüfen.';
+
+  @override
+  String get regionImportNone =>
+      'Keine Schulferien in den nächsten 18 Monaten gefunden.';
+
+  @override
+  String get regionImportAlready => 'schon übernommen';
+
+  @override
+  String get regionImportOverlaps =>
+      'überschneidet sich mit einem eigenen Eintrag';
+
+  @override
+  String get regionImportButton => 'Übernehmen';
+
+  @override
+  String regionImportDone(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Ferien übernommen',
+      one: '1 Ferien übernommen',
+      zero: 'Keine Ferien übernommen',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get regionImportAttribution => 'Daten: OpenHolidays API · ODbL';
+
+  @override
+  String get regionImported => 'importiert';
 }

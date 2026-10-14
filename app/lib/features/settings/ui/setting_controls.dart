@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
+import 'package:wuselwall/features/region/ui/region_field.dart';
 import 'package:wuselwall/features/settings/domain/household_setting.dart';
 import 'package:wuselwall/features/settings/ui/setting_labels.dart';
 
@@ -123,6 +124,10 @@ class _SettingControl extends StatelessWidget {
       ),
       SettingType.times => _TimePair(
         value: value! as List<dynamic>,
+        onChanged: onChanged,
+      ),
+      SettingType.region => RegionField(
+        code: value as String?,
         onChanged: onChanged,
       ),
     };
