@@ -912,5 +912,11 @@
   "schoolsUiDayCleared": "Tag geleert",
   "schoolsUiDayCopied": "Tag kopiert",
   "schoolsUiDaySwapped": "Tage getauscht",
-  "schoolsUiUndo": "Rückgängig"
+  "schoolsUiUndo": "Rückgängig",
+  "mealsUxSuggestOften": "Oft bei uns",
+  "mealsUxSuggestRare": "Lange nicht gegessen",
+  "mealsUxClearedSnack": "„{title}“ entfernt",
+  "mealsUxUndo": "Rückgängig",
+  "mealsUxFromMealPlan": "Kommt aus dem Essensplan",
+  "mealsUxForMeal": "Für: {meal} · {day}"
 }

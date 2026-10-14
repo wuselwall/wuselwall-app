@@ -165,6 +165,10 @@ abstract final class DemoData {
         categoryId: 'c-$cat',
         addedBy: by,
         count: count,
+        // The pasta came from two of the week's meals (see DemoShoppingRepository.itemMeals).
+        sourceMealEntryIds: name == 'Nudeln'
+            ? const ['demo-src-nudel', 'demo-src-pesto']
+            : const [],
       ),
     ShoppingItem(
       id: 'i-d1',

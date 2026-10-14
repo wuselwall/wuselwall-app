@@ -42,6 +42,15 @@ final recipesProvider = FutureProvider.autoDispose<List<Recipe>>((ref) async {
   return (await ref.watch(mealsRepositoryProvider).recipes()).unwrap();
 });
 
+/// The household's meal history for the editor's suggestions. Refetched on the `meals`
+/// topic. The editor treats a failure as no suggestions.
+final mealHistoryProvider = FutureProvider.autoDispose<List<MealHistoryEntry>>((
+  ref,
+) async {
+  _refreshOnMeals(ref);
+  return (await ref.watch(mealsRepositoryProvider).history()).unwrap();
+});
+
 void _refreshOnMeals(Ref ref) {
   final householdId = ref.watch(deviceProvider).value?.householdId;
   if (householdId != null) {
