@@ -1,8 +1,8 @@
 // POST {week_start?} → the kiosk week board (specs/09). The base comes from
 // api.board_week; presence, the day's appointments and busy_until are filled from the
-// week's occurrences, the timetables and school days from the school projection, and the
-// meal zone from the week's meal plan entries. Acts as the caller, so RLS applies
-// (ADR-010).
+// week's occurrences, the timetables and school days from the school projection, the
+// public holiday of each day from the household's region, and the meal zone from the
+// week's meal plan entries. Acts as the caller, so RLS applies (ADR-010).
 import {
   errorResponse,
   json,
@@ -14,6 +14,7 @@ import {
 import {
   type BoardJson,
   fillBoard,
+  fillHolidays,
   fillMeals,
   fillSchool,
   type MealMember,
@@ -57,8 +58,15 @@ Deno.serve(async (req: Request): Promise<Response> => {
       schoolDays,
       timetablesJson(school, base.week_start),
     );
+    const withHolidays = fillHolidays(
+      withSchool,
+      school.holidays,
+      school.publicFeed,
+      school.householdRegion,
+      school.locale,
+    );
     return json(
-      fillMeals(withSchool, {
+      fillMeals(withHolidays, {
         entries: meals.entries,
         settings: meals.settings,
         presence: calendar.occurrences,
