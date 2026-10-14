@@ -53,6 +53,9 @@ extension FailureL10n on Failure {
       'reward_out_of_stock' => l10n.errRewardOutOfStock,
       'task_not_open' => l10n.errTaskNotOpen,
       'meal_invalid' => l10n.errMealInvalid,
+      'external_calendar_invalid' => l10n.extCalErrInvalid,
+      'external_calendar_url_invalid' => l10n.extCalErrUrlInvalid,
+      'external_calendar_not_found' => l10n.extCalErrNotFound,
       'personal_device_required' => l10n.exportPersonalDeviceRequired,
       _ => null,
     };
