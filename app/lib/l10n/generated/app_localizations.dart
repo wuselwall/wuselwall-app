@@ -4927,6 +4927,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Undo'**
   String get schoolsUiUndo;
+
+  /// A public holiday on a day of the week board and its details; {name} is the holiday, e.g. Ascension Day.
+  ///
+  /// In en, this message translates to:
+  /// **'Public holiday · {name}'**
+  String boardHolidayLabel(String name);
 }
 
 class _AppLocalizationsDelegate

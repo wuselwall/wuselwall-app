@@ -2798,4 +2798,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get schoolsUiUndo => 'Rückgängig';
+
+  @override
+  String boardHolidayLabel(String name) {
+    return 'Feiertag · $name';
+  }
 }

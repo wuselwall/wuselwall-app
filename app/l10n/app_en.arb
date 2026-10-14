@@ -1523,5 +1523,14 @@
   "schoolsUiDayCleared": "Day cleared",
   "schoolsUiDayCopied": "Day copied",
   "schoolsUiDaySwapped": "Days swapped",
-  "schoolsUiUndo": "Undo"
+  "schoolsUiUndo": "Undo",
+  "boardHolidayLabel": "Public holiday · {name}",
+  "@boardHolidayLabel": {
+    "description": "A public holiday on a day of the week board and its details; {name} is the holiday, e.g. Ascension Day.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

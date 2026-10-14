@@ -9,6 +9,11 @@
 // a free day.
 import { Temporal } from "npm:temporal-polyfill@0.3.0";
 import { addDays } from "./occurrences.ts";
+import {
+  type HolidayFeedRow,
+  holidayName,
+  regionCovers,
+} from "./openholidays.ts";
 
 // ── view rows (api.* columns, household_id left out) ─────────────────────────────
 
@@ -16,6 +21,8 @@ export type SchoolRow = {
   id: string;
   name: string;
   state_code: string | null;
+  /** The OpenHolidays region ("CH-ZH", "DE-BE"); public holidays apply from it. */
+  region_code: string | null;
   timezone: string;
   created_at: string;
 };
@@ -102,9 +109,12 @@ export type HolidayRow = {
   name: string;
   starts_on: string;
   ends_on: string;
-  kind: "holiday" | "closure_day";
+  /** public_holiday: a Feiertag, from the region (api.holiday_feed) or imported by the family. */
+  kind: "holiday" | "closure_day" | "public_holiday";
   source: "manual" | "imported";
   source_url: string | null;
+  /** The holiday cache row it came from (api.holiday_feed id), when it has one. */
+  feed_id: string | null;
 };
 
 export type SchoolData = {
@@ -202,6 +212,47 @@ export function projectSchoolDays(
   for (let date = from; date <= to; date = addDays(date, 1)) {
     for (const tt of activeTimetables(data, date)) {
       out.push(projectDay(data, tt, date));
+    }
+  }
+  return out;
+}
+
+/**
+ * The public holidays that cover each school's region, as holiday rows of that school (kind
+ * public_holiday, feed_id set, the name in the household's language). A feed holiday the
+ * household already has a row for (same feed_id, household-wide or for this school) is left
+ * out: the family's row is the one the projection reads. Schools without a region get none.
+ */
+export function publicHolidayRows(
+  schools: SchoolRow[],
+  feed: HolidayFeedRow[],
+  holidays: HolidayRow[],
+  locale: string,
+): HolidayRow[] {
+  const out: HolidayRow[] = [];
+  for (const school of schools) {
+    if (school.region_code === null) continue;
+    for (const f of feed) {
+      if (f.kind !== "public") continue;
+      if (!regionCovers(school.region_code, f.country, f.nationwide, f.subdivisions)) {
+        continue;
+      }
+      const owned = holidays.some((h) =>
+        h.feed_id === f.id && (h.school_id === null || h.school_id === school.id)
+      );
+      const name = holidayName(f.names, locale);
+      if (owned || name === "") continue;
+      out.push({
+        id: `feed:${f.id}:${school.id}`,
+        school_id: school.id,
+        name,
+        starts_on: f.starts_on,
+        ends_on: f.ends_on,
+        kind: "public_holiday",
+        source: "imported",
+        source_url: null,
+        feed_id: f.id,
+      });
     }
   }
   return out;

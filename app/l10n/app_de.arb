@@ -912,5 +912,14 @@
   "schoolsUiDayCleared": "Tag geleert",
   "schoolsUiDayCopied": "Tag kopiert",
   "schoolsUiDaySwapped": "Tage getauscht",
-  "schoolsUiUndo": "Rückgängig"
+  "schoolsUiUndo": "Rückgängig",
+  "boardHolidayLabel": "Feiertag · {name}",
+  "@boardHolidayLabel": {
+    "description": "A public holiday on a day of the week board and its details; {name} is the holiday, e.g. Auffahrt.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }
