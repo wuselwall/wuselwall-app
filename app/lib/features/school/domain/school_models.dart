@@ -437,11 +437,16 @@ class SchoolData {
       subjects.where((s) => s.name == subjectName).firstOrNull?.iconKey;
 
   /// The term the editor opens on for a week: the one covering [day], else the
-  /// current one, else the last.
-  TermRecord? termFor(DateTime day) =>
-      terms.where((t) => t.covers(day)).firstOrNull ??
-      terms.where((t) => t.isCurrent).firstOrNull ??
-      (terms.isEmpty ? null : terms.last);
+  /// current one, else the last. With [schoolId], only that school's terms count.
+  TermRecord? termFor(DateTime day, {String? schoolId}) {
+    final own = [
+      for (final t in terms)
+        if (schoolId == null || t.schoolId == schoolId) t,
+    ];
+    return own.where((t) => t.covers(day)).firstOrNull ??
+        own.where((t) => t.isCurrent).firstOrNull ??
+        (own.isEmpty ? null : own.last);
+  }
 }
 
 /// One day of the `school-week` reply: a SchoolDay and its date.

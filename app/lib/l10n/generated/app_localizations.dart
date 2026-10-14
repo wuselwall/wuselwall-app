@@ -4837,6 +4837,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Nothing planned today'**
   String get kidNoPlanToday;
+
+  /// No description provided for @schoolsUiAddSchool.
+  ///
+  /// In en, this message translates to:
+  /// **'Another school'**
+  String get schoolsUiAddSchool;
+
+  /// No description provided for @schoolsUiNewSchool.
+  ///
+  /// In en, this message translates to:
+  /// **'New school'**
+  String get schoolsUiNewSchool;
+
+  /// No description provided for @schoolsUiPickSchool.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose school'**
+  String get schoolsUiPickSchool;
+
+  /// No description provided for @schoolsUiAskSchool.
+  ///
+  /// In en, this message translates to:
+  /// **'Which school?'**
+  String get schoolsUiAskSchool;
+
+  /// No description provided for @schoolsUiSchoolOf.
+  ///
+  /// In en, this message translates to:
+  /// **'School: {name}'**
+  String schoolsUiSchoolOf(String name);
+
+  /// No description provided for @schoolsUiDayMenu.
+  ///
+  /// In en, this message translates to:
+  /// **'Day actions'**
+  String get schoolsUiDayMenu;
+
+  /// No description provided for @schoolsUiCopyDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy day to…'**
+  String get schoolsUiCopyDay;
+
+  /// No description provided for @schoolsUiCopyDayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy {day} to'**
+  String schoolsUiCopyDayTitle(String day);
+
+  /// No description provided for @schoolsUiCopyDayApply.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get schoolsUiCopyDayApply;
+
+  /// No description provided for @schoolsUiSwapDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Swap with…'**
+  String get schoolsUiSwapDay;
+
+  /// No description provided for @schoolsUiSwapDayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Swap {day} with'**
+  String schoolsUiSwapDayTitle(String day);
+
+  /// No description provided for @schoolsUiDayCleared.
+  ///
+  /// In en, this message translates to:
+  /// **'Day cleared'**
+  String get schoolsUiDayCleared;
+
+  /// No description provided for @schoolsUiDayCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Day copied'**
+  String get schoolsUiDayCopied;
+
+  /// No description provided for @schoolsUiDaySwapped.
+  ///
+  /// In en, this message translates to:
+  /// **'Days swapped'**
+  String get schoolsUiDaySwapped;
+
+  /// No description provided for @schoolsUiUndo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get schoolsUiUndo;
 }
 
 class _AppLocalizationsDelegate

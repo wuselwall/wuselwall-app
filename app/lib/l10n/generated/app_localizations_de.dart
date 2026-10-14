@@ -2747,4 +2747,55 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get kidNoPlanToday => 'Heute nichts Besonderes';
+
+  @override
+  String get schoolsUiAddSchool => 'Weitere Schule';
+
+  @override
+  String get schoolsUiNewSchool => 'Neue Schule';
+
+  @override
+  String get schoolsUiPickSchool => 'Schule wählen';
+
+  @override
+  String get schoolsUiAskSchool => 'Welche Schule?';
+
+  @override
+  String schoolsUiSchoolOf(String name) {
+    return 'Schule: $name';
+  }
+
+  @override
+  String get schoolsUiDayMenu => 'Tagesaktionen';
+
+  @override
+  String get schoolsUiCopyDay => 'Tag kopieren nach…';
+
+  @override
+  String schoolsUiCopyDayTitle(String day) {
+    return '$day kopieren nach';
+  }
+
+  @override
+  String get schoolsUiCopyDayApply => 'Kopieren';
+
+  @override
+  String get schoolsUiSwapDay => 'Tag tauschen mit…';
+
+  @override
+  String schoolsUiSwapDayTitle(String day) {
+    return '$day tauschen mit';
+  }
+
+  @override
+  String get schoolsUiDayCleared => 'Tag geleert';
+
+  @override
+  String get schoolsUiDayCopied => 'Tag kopiert';
+
+  @override
+  String get schoolsUiDaySwapped => 'Tage getauscht';
+
+  @override
+  String get schoolsUiUndo => 'Rückgängig';
 }
