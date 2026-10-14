@@ -47,3 +47,18 @@ You decide under [Household settings](/en/settings/household) whether children m
 ## Appointments in Outlook or on an iPhone
 
 The family calendar can be shown as a **subscription** in Outlook or on an iPhone, read-only. See [Calendar subscriptions](/en/calendar/feeds).
+
+## Subscribed calendars
+
+Appointments from outside come into the family calendar through a **subscription**: a club's fixture list, the town's bin collection calendar, school events. You need only the calendar's address, usually a file ending in **.ics**. **webcal://** addresses work too.
+
+A guardian manages subscriptions under **Settings → Subscribed calendars**. **Subscribe to a calendar** opens the form with name, address, colour, **Who?** (without a choice the calendar is for the whole family) and **Show on the kitchen display**. The appointments appear in the calendar in the calendar's colour, with a subscription mark. They are read-only: changes come from the source.
+
+Your server fetches each calendar about once an hour. **Refresh now** does it at once. If a fetch fails, the reason shows on the calendar, for example "The address cannot be reached right now."
+
+Good to know:
+
+- Only **https://** addresses are accepted. Addresses that point to machines on your own network are refused.
+- A calendar may be at most 2 MB. A fetch gives up after 15 seconds.
+- Every device of your household can see the address, including the children's. If it contains a secret key, treat it like a password.
+- The subscribed appointments are not yet part of the subscription for Outlook and iPhone.

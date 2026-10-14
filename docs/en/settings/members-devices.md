@@ -33,6 +33,10 @@ Guardians can save all of your family's data as one file, for example for a move
 
 The file contains what you entered: members, appointments, timetables, chores, recipes, shopping lists and so on. Passwords, PINs and sign-in data are **not** included, and devices appear only with their name and date.
 
+## Subscribed calendars
+
+Subscribe to club or town calendars under **Settings → Subscribed calendars**. How it works and what to note is under [Calendar](/en/calendar/#subscribed-calendars).
+
 ## Showing Getting started again
 
 If you hid the **Getting started** card on the Today tab, bring it back under **Settings → Getting started**.

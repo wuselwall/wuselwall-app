@@ -144,7 +144,9 @@ wuselwall/
   and each such use is commented with why. Added 2026-10-14: the on-demand holiday cache
   refresh (`holidays-sync`, called with a member's JWT when a country is picked) uses the
   service role only to write the public holiday cache, which holds no household data
-  ([15](15-module-school-timetable.md#holidays)).
+  ([15](15-module-school-timetable.md#holidays)). The same holds for the on-demand refresh of one
+  subscribed calendar (`calendar-import`, a guardian's JWT, then the service role for that calendar's
+  fetch and stored occurrences; [05](05-module-calendar.md#external-calendars-subscribed-ics-fr-19)).
 - **Public reference data** (regions and holiday feed rows, see [04](04-data-model.md#holiday-reference-data))
   is readable by any session on a live device and by nobody else; a revoked device reads nothing.
   Nothing household-specific lives there, and only the holiday sync writes it.
