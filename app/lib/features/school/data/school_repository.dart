@@ -84,13 +84,14 @@ class SchoolRepository {
     parse: (json) => SchoolWeek.fromJson(json! as Map<String, dynamic>),
   );
 
-  /// [timezone] is sent only when given: the server takes the household's for a new
-  /// school and keeps the stored value of an existing one.
+  /// [regionCode] is any depth (`DE-BE`, `CH-ZH-ZH-ZH`); null clears it. [timezone] is sent
+  /// only when given: the server takes the household's for a new school and keeps the
+  /// stored value of an existing one.
   Future<Result<String>> saveSchool({
     required String? actor,
     String? id,
     required String name,
-    String? stateCode,
+    String? regionCode,
     String? timezone,
   }) => _api.rpc(
     'school_save',
@@ -99,7 +100,7 @@ class SchoolRepository {
       'p_school': {
         'id': ?id,
         'name': name,
-        'state_code': stateCode,
+        'region_code': regionCode,
         'timezone': ?timezone,
       },
     },

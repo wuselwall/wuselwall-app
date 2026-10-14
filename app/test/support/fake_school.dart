@@ -15,6 +15,7 @@ SchoolData referenceSchoolData({
   bool withTimetable = true,
   bool secondSchool = false,
   bool varied = false,
+  List<HolidayRecord> holidays = const [],
 }) {
   const schoolId = 'school-1';
   const termId = 'term-1';
@@ -97,7 +98,7 @@ SchoolData referenceSchoolData({
           ]
         : const [],
     exceptions: const [],
-    holidays: const [],
+    holidays: holidays,
   );
 }
 
@@ -333,7 +334,8 @@ class FakeSchoolRepository implements SchoolRepository {
   final periodSets = <List<PeriodRecord>>[];
   final lessonSets = <({String timetableId, List<LessonRecord> lessons})>[];
   final timetableSaves = <TimetableRecord>[];
-  final schoolSaves = <({String? id, String name, String? timezone})>[];
+  final schoolSaves =
+      <({String? id, String name, String? regionCode, String? timezone})>[];
   final actors = <String?>[];
 
   /// Saved schools join [data], as the server would return them on the refetch.
@@ -342,16 +344,21 @@ class FakeSchoolRepository implements SchoolRepository {
     required String? actor,
     String? id,
     required String name,
-    String? stateCode,
+    String? regionCode,
     String? timezone,
   }) async {
     actors.add(actor);
-    schoolSaves.add((id: id, name: name, timezone: timezone));
+    schoolSaves.add((
+      id: id,
+      name: name,
+      regionCode: regionCode,
+      timezone: timezone,
+    ));
     final newId = id ?? 'school-new-${schoolSaves.length}';
     final school = SchoolRecord.fromJson({
       'id': newId,
       'name': name,
-      'state_code': stateCode,
+      'region_code': regionCode,
       'timezone': timezone ?? 'Europe/Berlin',
     });
     data = _withData(

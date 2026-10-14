@@ -20,9 +20,12 @@ enum SettingType {
   enumeration,
   weekdayTime,
   timeRange,
-  times;
+  times,
+  region;
 
-  static SettingType parse(String wire) => switch (wire) {
+  /// Null for a type this app does not know: a newer server may add one (specs/21), and
+  /// that row is skipped rather than failing the whole list.
+  static SettingType? tryParse(String wire) => switch (wire) {
     'boolean' => SettingType.boolean,
     'integer' => SettingType.integer,
     'time' => SettingType.time,
@@ -30,8 +33,12 @@ enum SettingType {
     'weekday_time' => SettingType.weekdayTime,
     'time_range' => SettingType.timeRange,
     'times' => SettingType.times,
-    _ => throw FormatException('Unknown setting type "$wire"'),
+    'region' => SettingType.region,
+    _ => null,
   };
+
+  static SettingType parse(String wire) =>
+      tryParse(wire) ?? (throw FormatException('Unknown setting type "$wire"'));
 }
 
 /// One row of `api.settings`: a catalogue definition with its effective value.
@@ -52,6 +59,17 @@ class SettingEntry {
     this.profileId,
     this.deviceId,
   });
+
+  /// The rows of `api.settings` this app can show: those of an unknown scope or type are
+  /// left out (see [SettingType.tryParse]).
+  static List<SettingEntry> fromRows(Iterable<Map<String, dynamic>> rows) => [
+    for (final row in rows)
+      if (_known(row)) SettingEntry.fromJson(row),
+  ];
+
+  static bool _known(Map<String, dynamic> json) =>
+      SettingType.tryParse(json['type'] as String? ?? '') != null &&
+      const {'household', 'member', 'device'}.contains(json['scope']);
 
   factory SettingEntry.fromJson(Map<String, dynamic> json) => SettingEntry(
     key: json['key'] as String,

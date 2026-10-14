@@ -24,6 +24,7 @@ import 'package:wuselwall/features/identity/data/sign_in_methods_repository.dart
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/identity/domain/sign_in_method.dart';
 import 'package:wuselwall/features/meals/data/meals_repository.dart';
+import 'package:wuselwall/features/region/data/region_repository.dart';
 import 'package:wuselwall/features/school/data/school_repository.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 import 'package:wuselwall/features/shopping/data/shopping_store.dart';
@@ -33,6 +34,7 @@ import 'package:wuselwall/features/today/data/getting_started_repository.dart';
 
 import 'fake_getting_started.dart';
 import 'fake_meals.dart';
+import 'fake_region.dart';
 import 'fake_school.dart';
 import 'fake_tasks.dart';
 
@@ -491,6 +493,7 @@ Future<ProviderContainer> pumpApp(
   FakeMealsRepository? meals,
   FakeSchoolRepository? school,
   FakeGettingStartedRepository? gettingStarted,
+  FakeRegionRepository? region,
   Size size = const Size(1000, 1600),
 }) async {
   tester.view.physicalSize = size;
@@ -522,6 +525,9 @@ Future<ProviderContainer> pumpApp(
       mealsRepositoryProvider.overrideWithValue(meals ?? FakeMealsRepository()),
       schoolRepositoryProvider.overrideWithValue(
         school ?? FakeSchoolRepository(),
+      ),
+      regionRepositoryProvider.overrideWithValue(
+        region ?? FakeRegionRepository(),
       ),
     ],
   );
