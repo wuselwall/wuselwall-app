@@ -18,6 +18,7 @@ import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/data/board_repository.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/calendar/data/calendar_repository.dart';
+import 'package:wuselwall/features/calendar/data/external_calendars_repository.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/data/sign_in_methods_repository.dart';
@@ -32,6 +33,7 @@ import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_sync_model.dart';
 import 'package:wuselwall/features/today/data/getting_started_repository.dart';
 
+import 'fake_external_calendars.dart';
 import 'fake_getting_started.dart';
 import 'fake_meals.dart';
 import 'fake_region.dart';
@@ -450,8 +452,12 @@ List<Override> baseOverrides({
   required FakeIdentityRepository identity,
   FakeShoppingRepository? shopping,
   FakeSignInMethods? signInMethods,
+  FakeExternalCalendarsRepository? externalCalendars,
   bool signedIn = true,
 }) => [
+  externalCalendarsRepositoryProvider.overrideWithValue(
+    externalCalendars ?? FakeExternalCalendarsRepository(),
+  ),
   appConfigProvider.overrideWithValue(
     const AppConfig(
       environment: 'test',

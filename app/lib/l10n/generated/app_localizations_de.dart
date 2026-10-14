@@ -2991,4 +2991,188 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get regionImported => 'importiert';
+
+  @override
+  String get extCalTitle => 'Abonnierte Kalender';
+
+  @override
+  String get extCalSettingsSubtitle =>
+      'Termine aus Vereins- und Abfallkalendern';
+
+  @override
+  String get extCalEmpty =>
+      'Noch kein Kalender abonniert. Ein Abo bringt Termine von außen in den Familienkalender, zum Beispiel den Spielplan deines Vereins.';
+
+  @override
+  String get extCalNew => 'Kalender abonnieren';
+
+  @override
+  String get extCalNewTitle => 'Neuer Kalender';
+
+  @override
+  String get extCalEditTitle => 'Kalender bearbeiten';
+
+  @override
+  String get extCalEdit => 'Bearbeiten';
+
+  @override
+  String get extCalNameLabel => 'Name';
+
+  @override
+  String get extCalNameHint => 'z. B. FC Spielplan';
+
+  @override
+  String get extCalNameRequired => 'Gib dem Kalender einen Namen.';
+
+  @override
+  String get extCalUrlLabel => 'Adresse (ICS)';
+
+  @override
+  String get extCalUrlHelp =>
+      'Die Adresse, unter der der Kalender veröffentlicht ist, meist mit .ics am Ende. Beispiele: Abfallkalender deiner Gemeinde, Spielplan des Vereins. webcal://-Adressen gehen auch.';
+
+  @override
+  String get extCalUrlInvalid =>
+      'Das sieht nicht nach einer Internet-Adresse aus (https://…).';
+
+  @override
+  String get extCalColourLabel => 'Farbe';
+
+  @override
+  String extCalColourOption(int number) {
+    return 'Farbe $number';
+  }
+
+  @override
+  String get extCalMembersLabel => 'Für wen?';
+
+  @override
+  String get extCalMembersHelp =>
+      'Ohne Auswahl gilt der Kalender für die ganze Familie.';
+
+  @override
+  String get extCalMembersWhole => 'Ganze Familie';
+
+  @override
+  String get extCalShowOnBoard => 'Auf dem Küchendisplay zeigen';
+
+  @override
+  String get extCalShowOnBoardHelp =>
+      'Seine Termine erscheinen als wichtige Termine in der Wochenansicht des Küchendisplays.';
+
+  @override
+  String extCalDeleteConfirm(String name) {
+    return '„$name“ und alle seine Termine werden entfernt.';
+  }
+
+  @override
+  String get extCalDeleted => 'Kalender entfernt.';
+
+  @override
+  String get extCalRefreshNow => 'Jetzt aktualisieren';
+
+  @override
+  String extCalRefreshed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Termine geladen',
+      one: '1 Termin geladen',
+      zero: 'Keine Termine gefunden',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get extCalNotModified => 'Keine Änderungen seit dem letzten Abruf.';
+
+  @override
+  String get extCalRecent =>
+      'Gerade eben abgerufen. Versuch es in ein paar Minuten nochmal.';
+
+  @override
+  String extCalRefreshFailed(String reason) {
+    return 'Der Kalender konnte nicht geladen werden: $reason';
+  }
+
+  @override
+  String get extCalStatusPaused => 'Pausiert';
+
+  @override
+  String get extCalStatusNever => 'Wird zum ersten Mal geladen …';
+
+  @override
+  String extCalStatusUpdated(String when) {
+    return 'Aktualisiert $when';
+  }
+
+  @override
+  String get extCalReadOnlyHint =>
+      'Nur Eltern können Kalender abonnieren oder ändern.';
+
+  @override
+  String get extCalErrUnreachable => 'Die Adresse ist gerade nicht erreichbar.';
+
+  @override
+  String get extCalErrTimeout => 'Die Adresse antwortet zu langsam.';
+
+  @override
+  String get extCalErrForbiddenHost => 'Diese Adresse ist nicht erlaubt.';
+
+  @override
+  String get extCalErrTooLarge => 'Der Kalender ist zu groß (mehr als 2 MB).';
+
+  @override
+  String get extCalErrNotIcs => 'Das ist kein Kalender (ICS).';
+
+  @override
+  String get extCalErrHttp404 => 'Adresse nicht gefunden (404).';
+
+  @override
+  String extCalErrHttp(int status) {
+    return 'Die Adresse antwortet mit Fehler $status.';
+  }
+
+  @override
+  String get extCalErrInternal =>
+      'Auf dem Server ist etwas schiefgegangen. Versuch es später nochmal.';
+
+  @override
+  String get extCalErrDb => 'Die Termine konnten nicht gespeichert werden.';
+
+  @override
+  String get extCalErrUnknown => 'Der Abruf hat nicht geklappt.';
+
+  @override
+  String get extCalErrInvalid =>
+      'Der Kalender passt so nicht: Prüfe Name und Farbe.';
+
+  @override
+  String get extCalErrUrlInvalid =>
+      'Diese Adresse kann nicht gespeichert werden. Sie muss mit https:// beginnen.';
+
+  @override
+  String get extCalErrNotFound => 'Diesen Kalender gibt es nicht mehr.';
+
+  @override
+  String get extCalImportedNote =>
+      'Abonnierter Kalender — Änderungen kommen von der Quelle';
+
+  @override
+  String extCalFromCalendar(String name) {
+    return 'Aus $name';
+  }
+
+  @override
+  String get extCalAllDay => 'Ganztägig';
+
+  @override
+  String get extCalSheetTitle => 'Termin aus einem Abo';
+
+  @override
+  String get extCalSettingsRefreshHint =>
+      'Der Server ruft jeden Kalender etwa einmal pro Stunde ab.';
+
+  @override
+  String get extCalActive => 'Aktiv';
 }

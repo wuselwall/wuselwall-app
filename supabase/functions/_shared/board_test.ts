@@ -40,6 +40,8 @@ function occ(p: Partial<Occurrence> & { id: string }): Occurrence {
     attendee_ids: [],
     is_recurring: false,
     is_override: false,
+    source: "event",
+    colour_hex: null,
     ...p,
   };
 }
@@ -218,6 +220,27 @@ Deno.test("a timed appointment is on its start day only, with its times", () => 
     tentative: false,
     key: false,
   }]);
+});
+
+Deno.test("an imported calendar is on the board only when it shows there, as key appointments", () => {
+  const imported = (id: string, show: boolean, title: string) =>
+    occ({
+      id,
+      title,
+      source: "imported",
+      colour_hex: "#6D4C41",
+      importance: show ? "key" : "normal",
+      attendee_ids: [],
+      local_start_date: "2026-10-14",
+      local_end_date: "2026-10-14",
+      all_day: true,
+    });
+  const board = fillBoard(
+    base(),
+    [imported("i-show", true, "Abfall"), imported("i-hidden", false, "Spielplan")],
+    [],
+  );
+  assertEquals(dayOf(board, "2026-10-14").events.map((e) => [e.id, e.key]), [["i-show", true]]);
 });
 
 Deno.test("the key and tentative flags come from importance and status", () => {
