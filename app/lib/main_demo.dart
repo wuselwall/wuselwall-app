@@ -16,6 +16,7 @@ import 'package:wuselwall/core/realtime/household_channel.dart';
 import 'package:wuselwall/core/supabase/supabase_providers.dart';
 import 'package:wuselwall/demo/demo_board.dart';
 import 'package:wuselwall/demo/demo_data.dart';
+import 'package:wuselwall/demo/demo_getting_started.dart';
 import 'package:wuselwall/demo/demo_kid.dart';
 import 'package:wuselwall/demo/demo_meals.dart';
 import 'package:wuselwall/demo/demo_repositories.dart';
@@ -32,6 +33,7 @@ import 'package:wuselwall/features/school/data/school_repository.dart';
 import 'package:wuselwall/features/settings/data/household_settings_repository.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 import 'package:wuselwall/features/tasks/data/tasks_repository.dart';
+import 'package:wuselwall/features/today/data/getting_started_repository.dart';
 
 class _Day extends NightNotifier {
   @override
@@ -108,6 +110,9 @@ void main() {
         mealsRepositoryProvider.overrideWithValue(DemoMealsRepository()),
         calendarRepositoryProvider.overrideWithValue(DemoCalendarRepository()),
         tasksRepositoryProvider.overrideWithValue(DemoTasksRepository()),
+        gettingStartedRepositoryProvider.overrideWithValue(
+          DemoGettingStartedRepository(),
+        ),
         kidBadgesRepositoryProvider.overrideWithValue(
           DemoKidBadgesRepository(),
         ),

@@ -1487,5 +1487,28 @@
       }
     }
   },
-  "kidNoPlanToday": "Nothing planned today"
+  "kidNoPlanToday": "Nothing planned today",
+  "todayTitle": "Today",
+  "todayEmpty": "Nothing is planned for today yet. Enjoy the quiet.",
+  "todayAgendaTitle": "Appointments",
+  "todayAllDay": "all day",
+  "todayTasksTitle": "Your chores today",
+  "todayMealTitle": "Warm meal",
+  "todayMealLine": "{slot}: {dish}",
+  "@todayMealLine": {"placeholders": {"slot": {"type": "String"}, "dish": {"type": "String"}}},
+  "todayShoppingTitle": "Shopping list",
+  "todayShoppingOpen": "{count, plural, =1{1 item still open} other{{count} items still open}}",
+  "@todayShoppingOpen": {"placeholders": {"count": {"type": "int"}}},
+  "todayStartTitle": "Getting started",
+  "todayStartProgress": "{done} of {total}",
+  "@todayStartProgress": {"placeholders": {"done": {"type": "int"}, "total": {"type": "int"}}},
+  "todayStartNotNeeded": "Not needed",
+  "todayStartInvitePartner": "Invite your partner",
+  "todayStartConnectTablet": "Connect the family tablet",
+  "todayStartWallDisplay": "Set up the wall display",
+  "todayStartSetPin": "Set your PIN",
+  "todayStartSubscribeFeed": "Subscribe to the calendar",
+  "todayStartSchool": "Add the timetable",
+  "settingsGettingStarted": "Getting started",
+  "settingsGettingStartedSubtitle": "Show the setup card on the Today tab again"
 }

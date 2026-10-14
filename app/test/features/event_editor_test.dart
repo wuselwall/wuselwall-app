@@ -61,16 +61,20 @@ Future<ProviderContainer> _app(
   WidgetTester t, {
   FakeCalendarRepository? calendar,
   List<SettingEntry> settings = const [],
-}) => pumpApp(
-  t,
-  overrides: [
-    ...baseOverrides(identity: FakeIdentityRepository(current: device())),
-    householdSettingsRepositoryProvider.overrideWithValue(
-      _SettingsFake(settings),
-    ),
-  ],
-  calendar: calendar,
-);
+}) async {
+  final container = await pumpApp(
+    t,
+    overrides: [
+      ...baseOverrides(identity: FakeIdentityRepository(current: device())),
+      householdSettingsRepositoryProvider.overrideWithValue(
+        _SettingsFake(settings),
+      ),
+    ],
+    calendar: calendar,
+  );
+  await openTab(t, 'Kalender');
+  return container;
+}
 
 /// Opens the editor on [route] the way the app does, through the router.
 Future<void> _open(

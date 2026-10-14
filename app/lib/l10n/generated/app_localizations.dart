@@ -4837,6 +4837,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Nothing planned today'**
   String get kidNoPlanToday;
+
+  /// No description provided for @todayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get todayTitle;
+
+  /// No description provided for @todayEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing is planned for today yet. Enjoy the quiet.'**
+  String get todayEmpty;
+
+  /// No description provided for @todayAgendaTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Appointments'**
+  String get todayAgendaTitle;
+
+  /// No description provided for @todayAllDay.
+  ///
+  /// In en, this message translates to:
+  /// **'all day'**
+  String get todayAllDay;
+
+  /// No description provided for @todayTasksTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your chores today'**
+  String get todayTasksTitle;
+
+  /// No description provided for @todayMealTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Warm meal'**
+  String get todayMealTitle;
+
+  /// No description provided for @todayMealLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{slot}: {dish}'**
+  String todayMealLine(String slot, String dish);
+
+  /// No description provided for @todayShoppingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping list'**
+  String get todayShoppingTitle;
+
+  /// No description provided for @todayShoppingOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 item still open} other{{count} items still open}}'**
+  String todayShoppingOpen(int count);
+
+  /// No description provided for @todayStartTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Getting started'**
+  String get todayStartTitle;
+
+  /// No description provided for @todayStartProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total}'**
+  String todayStartProgress(int done, int total);
+
+  /// No description provided for @todayStartNotNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Not needed'**
+  String get todayStartNotNeeded;
+
+  /// No description provided for @todayStartInvitePartner.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite your partner'**
+  String get todayStartInvitePartner;
+
+  /// No description provided for @todayStartConnectTablet.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect the family tablet'**
+  String get todayStartConnectTablet;
+
+  /// No description provided for @todayStartWallDisplay.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up the wall display'**
+  String get todayStartWallDisplay;
+
+  /// No description provided for @todayStartSetPin.
+  ///
+  /// In en, this message translates to:
+  /// **'Set your PIN'**
+  String get todayStartSetPin;
+
+  /// No description provided for @todayStartSubscribeFeed.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribe to the calendar'**
+  String get todayStartSubscribeFeed;
+
+  /// No description provided for @todayStartSchool.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the timetable'**
+  String get todayStartSchool;
+
+  /// No description provided for @settingsGettingStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Getting started'**
+  String get settingsGettingStarted;
+
+  /// No description provided for @settingsGettingStartedSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Show the setup card on the Today tab again'**
+  String get settingsGettingStartedSubtitle;
 }
 
 class _AppLocalizationsDelegate
