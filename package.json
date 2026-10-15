@@ -23,6 +23,7 @@
     "docs:preview": "vitepress preview docs",
     "docs:demo": "cd app && flutter build web -t lib/main_demo.dart --release -o build/web-demo",
     "docs:screenshots": "npm run docs:demo && node docs/tools/screenshots.mjs",
-    "docs:check": "node docs/tools/check-shots.mjs"
+    "docs:check": "node docs/tools/check-shots.mjs",
+    "play:listing": "node scripts/play-listing.mjs"
   }
 }

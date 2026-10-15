@@ -20,12 +20,12 @@ Uhr, Datum und Kalenderwoche. Darunter steht **Als Nächstes**: der nächste Ter
 
 ### Eine Spalte pro Tag
 
-Die sieben Tage stehen nebeneinander, von Montag bis Sonntag. Heute ist die Spalte breiter und umrahmt, vergangene Tage sind blasser. Jede Spalte hat dieselben drei Bereiche in derselben Reihenfolge:
+Die sieben Tage stehen nebeneinander, von Montag bis Sonntag. Heute ist die Spalte breiter und umrahmt, vergangene Tage sind blasser. Jede Spalte hat dieselben drei Bereiche in derselben Reihenfolge, getrennt durch schmale Streifen:
 
-- **Wer ist wo**: eine Zeile pro Familienmitglied. Bei Kindern stehen die Schulzeit (zum Beispiel 8–14:25), besondere Stunden wie Sport oder Schwimmen und das Hortende. Bei Erwachsenen zeigt ein blasser Streifen ihren üblichen Zustand, etwa Homeoffice. Alles, was anders ist – Dienst, Dienstreise, Büro –, erscheint als farbiges Band; eine mehrtägige Reise ist ein durchgehendes Band. Eine kleine Uhr mit „bis 17“ heißt: Termine bis 17 Uhr. **Blass = wie üblich, kräftig = anders.**
-- **Termine**: Vormittag, Nachmittag und Abend. Gezeigt werden nur Termine, die ihr für die Küchenanzeige markiert habt. Ein Punkt zeigt, wer dabei ist. Gestrichelt heißt: noch nicht sicher. Passt nicht alles hinein, steht dort „+2 weitere“.
-  Mit **Alle Termine** (in der Zeile der Termine) zeigt jede Spalte alle ihre Termine, nicht nur die markierten. Das Häkchen geht von selbst wieder aus, wenn niemand die Wand berührt.
-- **Warmes Essen**: die warme Mahlzeit des Tages – Sonne für das Mittagessen, Mond für das Abendessen – mit dem Gericht. Ein Punkt pro Person zeigt, wer mitisst: gefüllt = isst mit uns, leer = ist nicht da. Dazu steht, wer kocht.
+- **Wer ist wo**: eine Zeile pro Familienmitglied. Bei Kindern stehen die Schulzeit (zum Beispiel 8–14:25), besondere Stunden wie Sport oder Schwimmen und das Hortende. Bei Erwachsenen zeigt ein blasser Streifen ihren üblichen Zustand, etwa Homeoffice. Alles, was anders ist – Dienst, Dienstreise, Büro –, erscheint als farbiges Band; eine mehrtägige Reise ist ein durchgehendes Band. Eine kleine Uhr mit „bis 17“ heißt: Termine bis 17 Uhr. Ein Feiertag steht über seiner Spalte; Kinder ohne Schule haben „frei“. **Blass = wie üblich, kräftig = anders.**
+- **Termine**: Vormittag, Nachmittag und Abend. Gezeigt werden nur Termine, die ihr für die Küchenanzeige markiert habt. Ein Punkt zeigt, wer dabei ist. Gestrichelt und mit „?“ heißt: noch nicht sicher. Passt nicht alles hinein, steht dort „+2 weitere“.
+  Mit **Alle Termine** (rechts im Streifen über den Terminen) zeigt jede Spalte alle ihre Termine, nicht nur die markierten. Das Häkchen geht von selbst wieder aus, wenn niemand die Wand berührt.
+- **Warmes Essen** (so steht es links in der Zeile): die warme Mahlzeit des Tages – Sonne für das Mittagessen, Mond für das Abendessen – mit dem Gericht. Ein Punkt pro Person zeigt, wer mitisst: gefüllt = isst mit uns, leer = ist nicht da. Dazu steht, wer kocht.
 - **Fußzeile**: die offenen Aufgaben jeder Person für heute, ein Tipp auf **Heute offen** öffnet das Aufgabenbrett der Familie, und die Anzahl der Artikel auf der Einkaufsliste.
 
 ### Tippen für Details
@@ -53,7 +53,7 @@ Mehr kann die Wand nicht ändern: Sie setzt Artikel auf die Einkaufsliste und ko
 ### Nachts und ohne Verbindung
 
 - Ab 21 Uhr wechselt die Anzeige automatisch in eine ruhige Nachtansicht.
-- Bricht die Verbindung ab, bleibt der letzte Stand sichtbar, mit dem Hinweis „Keine Verbindung“.
+- Bricht die Verbindung ab, bleibt der letzte Stand sichtbar, mit dem Hinweis „Keine Verbindung“; oben rechts steht, wann er zuletzt aktualisiert wurde. Solange alles läuft, zeigt die Wand dazu nichts an.
 
 ::: tip Kinder-Tablet
 Die Ansicht für Kinder hat die Reiter **Mein Tag**, **Stundenplan**, **Punkte**, **Einkaufen** und **Familie**.

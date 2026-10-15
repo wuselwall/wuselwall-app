@@ -266,22 +266,15 @@ class ClipFit extends StatelessWidget {
   );
 }
 
-/// The title band before each zone: sunken ground, uppercase title, a hint in ink-3.
-class BoardCaption extends StatelessWidget {
-  const BoardCaption({
-    required this.title,
-    required this.hint,
-    this.trailing,
-    super.key,
-  });
+/// The quiet band between two zones. The zones need no titles: the gutter names every
+/// row (a member, a day part, the meal), so the band only separates them.
+class BoardDivider extends StatelessWidget {
+  const BoardDivider({this.trailing, super.key});
 
-  static const height = 30.0;
+  static const height = 8.0;
 
-  /// The band of a caption that carries a control: a 56 px kiosk tap target (specs/09).
+  /// The band of a divider that carries a control: a 56 px kiosk tap target (specs/09).
   static const controlHeight = 56.0;
-
-  final String title;
-  final String hint;
 
   /// A control at the right end of the band, such as the Termine zone's "Alle Termine".
   final Widget? trailing;
@@ -289,52 +282,15 @@ class BoardCaption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ww = context.ww;
-    final text = Text.rich(
-      TextSpan(
-        children: [
-          TextSpan(
-            text: title.toUpperCase(),
-            style: boardUi(
-              24,
-              weight: FontWeight.w800,
-              color: ww.ink2,
-            ).copyWith(letterSpacing: 0.5),
-          ),
-          TextSpan(
-            text: ' · ',
-            style: boardUi(24, color: ww.ink3),
-          ),
-          TextSpan(
-            text: hint,
-            style: boardUi(24, weight: FontWeight.w500, color: ww.ink3),
-          ),
-        ],
-      ),
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      softWrap: false,
-    );
-    if (trailing == null) {
-      return Container(
-        height: height,
-        color: ww.sunken,
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        alignment: Alignment.centerLeft,
-        child: text,
-      );
-    }
     return Container(
-      height: controlHeight,
-      color: ww.sunken,
-      padding: const EdgeInsets.only(left: 12, right: 8),
-      child: Row(
-        children: [
-          Expanded(
-            child: Align(alignment: Alignment.centerLeft, child: text),
-          ),
-          trailing!,
-        ],
+      height: trailing == null ? height : controlHeight,
+      padding: trailing == null ? null : const EdgeInsets.only(right: 8),
+      alignment: Alignment.centerRight,
+      decoration: BoxDecoration(
+        color: ww.sunken,
+        border: Border.symmetric(horizontal: BorderSide(color: ww.line)),
       ),
+      child: trailing,
     );
   }
 }

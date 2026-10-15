@@ -331,22 +331,6 @@
     }
   },
   "boardNothingMoreToday": "Nothing else planned today",
-  "boardUpdatedSecondsAgo": "updated {seconds} s ago",
-  "@boardUpdatedSecondsAgo": {
-    "placeholders": {
-      "seconds": {
-        "type": "int"
-      }
-    }
-  },
-  "boardUpdatedMinutesAgo": "updated {minutes} min ago",
-  "@boardUpdatedMinutesAgo": {
-    "placeholders": {
-      "minutes": {
-        "type": "int"
-      }
-    }
-  },
   "boardLastUpdatedAt": "last updated {time}",
   "@boardLastUpdatedAt": {
     "placeholders": {
@@ -358,11 +342,7 @@
   "boardOffline": "No connection – this is the last known plan.",
   "boardLoading": "Loading the week …",
   "boardZoneWhere": "Who is where",
-  "boardZoneWhereHint": "pale = as usual · bold = different",
-  "boardZoneEvents": "Appointments",
-  "boardZoneEventsHint": "dots = who is involved · dashed = not certain yet",
   "boardZoneMeal": "Hot meal",
-  "boardZoneMealHint": "filled dot = eating · open dot = not there",
   "boardMorning": "Morning",
   "boardAfternoon": "Afternoon",
   "boardEvening": "Evening",

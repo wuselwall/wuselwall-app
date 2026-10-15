@@ -22,7 +22,7 @@ jobs:
   ios:
     # Xcode 26: App Store Connect accepts only builds made with the iOS 26 SDK or later,
     # so the self-hosted Mac behind the "macOS" label must have Xcode 26 installed.
-    runs-on: macOS
+    runs-on: [self-hosted, macOS]
     defaults: { run: { working-directory: app } }
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
