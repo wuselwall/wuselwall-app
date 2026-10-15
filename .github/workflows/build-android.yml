@@ -28,18 +28,6 @@ jobs:
       # Exactly the packages in pubspec.lock, checked against their hashes, before the
       # signing secrets come near the build.
       - run: flutter pub get --enforce-lockfile
-      # The builds' server is not in the repository: env/dev.json is the store
-      # configuration plus the secrets WW_SUPABASE_URL and WW_SUPABASE_PUBLISHABLE_KEY, until
-      # these builds become store builds (ADR-018). Secrets, not variables: the logs of a
-      # public repository are public, and only secrets are masked in them.
-      - name: Build configuration
-        env:
-          URL: ${{ secrets.WW_SUPABASE_URL }}
-          KEY: ${{ secrets.WW_SUPABASE_PUBLISHABLE_KEY }}
-        run: |
-          [ -n "$URL" ] && [ -n "$KEY" ] || { echo "::error::set the secrets WW_SUPABASE_URL and WW_SUPABASE_PUBLISHABLE_KEY"; exit 1; }
-          jq --arg url "$URL" --arg key "$KEY" \
-            '. + {ENV: "dev", SUPABASE_URL: $url, SUPABASE_PUBLISHABLE_KEY: $key}' env/store.json > env/dev.json
       - run: ./tool/write_android_signing.sh
         env:
           ANDROID_KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_B64 }}
@@ -48,11 +36,15 @@ jobs:
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
       # The run number as versionCode: every build installs over the previous one. A tag
       # sets the version name; a manual run keeps the one in pubspec.yaml.
+      # No server is compiled in (env/store.json, ADR-018). The first first-party host is
+      # where a device updated from an earlier build finds its server again, so a release
+      # without it would strand them.
       - run: |
+          [ -n "$FIRST_PARTY_HOSTS" ] || { echo "::error::set the secret WW_FIRST_PARTY_HOSTS"; exit 1; }
           args=(--build-number=${{ github.run_number }})
           if [[ "$GITHUB_REF_TYPE" == tag ]]; then args+=(--build-name="${GITHUB_REF_NAME#v}"); fi
           for target in apk appbundle; do
-            flutter build "$target" --release "${args[@]}" --dart-define-from-file=env/dev.json \
+            flutter build "$target" --release "${args[@]}" --dart-define-from-file=env/store.json \
               --dart-define=WW_FIRST_PARTY_HOSTS="$FIRST_PARTY_HOSTS"
           done
         env:
