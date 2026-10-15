@@ -108,6 +108,8 @@ release checklist.
 
 > **Built 2026-10-14 on `feature/regions-and-ux`, not yet on the server:** the getting-started card on the adult Today tab (FR-5.17) — six items derived from data (invite partner, connect tablet, wall display, set PIN, subscribe feed, and Stundenplan eintragen), dismissible ("Brauchen wir nicht"), brought back from Einstellungen → Erste Schritte. The data export for guardians on a personal device (FR-5.16, the export part): one JSON file, secrets left out. **Open:** account and household deletion, leave, and the rest of 9.1/9.2.
 
+> **Built 2026-10-15 on `feature/regions-and-ux`, not yet on the server:** households (H1/H2, founder codes), invitations (without universal links and the "joined" notice), pairing (the code enrolment stays one release), email code sign-in (E1–E3), leaving, deleting and restoring a family, account deletion, the second-factor reset, the localised mail and the local reminders. **Open for M1.0:** universal links and App Links, the guardian notice, step 7a (on `feature/self-hosting-kit`), and the end-to-end and device checks of the release checklist.
+
 ### M1.1 Shopping, complete
 
 > **Offline outbox built 2026-10-12:** drift mirror and outbox, `api.shopping_apply` with
@@ -281,6 +283,10 @@ meets them.
 - ~~Imported external calendars (sports club, bin collection)~~ — FR-1.9 built early on `feature/regions-and-ux` (2026-10-14), see [05](05-module-calendar.md#external-calendars-subscribed-ics-fr-19). Open: the imported occurrences in the outbound ICS feed
 - Equipment reminders from tomorrow's subjects ("Morgen brauchst du: Sportsachen")
 - ~~Meal suggestions from history ("not cooked in 60 days")~~ — built early on `feature/regions-and-ux` (2026-10-14), see M1.4
+
+- ~~Local reminders, the Q47 lean: morning summary and event reminders on personal phones, no relay~~ — built on `feature/regions-and-ux` (2026-10-15), see M1.0 and [09](09-clients-and-ux.md)
+- ~~QR scanner without ML Kit (Q49)~~ — `camera` and `zxing2` (2026-10-14), see [14](14-open-questions.md)
+- ~~"Alle Termine" on the week board (FR-8.11)~~ — built on `feature/regions-and-ux` (2026-10-15), see [09](09-clients-and-ux.md#the-wall-display)
 - Whatever the first two weeks of real use made obviously necessary — reserve capacity
   for this rather than planning around it
 

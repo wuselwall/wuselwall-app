@@ -1,10 +1,13 @@
 # FAQ
 
 ## "This device has been blocked"
-A guardian blocked the device. Connect it again — with a new [code](/en/guide/setup#_2-connect-a-device-with-a-code) or by signing in.
+A guardian blocked the device. Connect it again with [Connect a family tablet or wall display](/en/guide/setup#_4-connecting-a-family-tablet-or-wall-display).
 
 ## "That code is wrong or has expired"
-Codes last 10 minutes and work once. Create a new one in Settings. After several wrong tries you have to wait a few minutes.
+Codes last 10 minutes and work once. Tap **Connect a family tablet or wall display** on the new device again, and it shows a new code. After several wrong tries you have to wait a few minutes.
+
+## "The invitation code does not work"
+Invitations are valid for 7 days and work once. Ask the person who invited you for **Share again** or for a new invitation. The link opens the invitation page in the browser; enter the code in the app under **I have an invitation code** ([Signing in and connecting](/en/guide/setup#_3-joining-a-family)).
 
 ## "Tap your name first"
 On shared devices you have to say who you are before changing anything ([Who are you?](/en/guide/who-are-you)).

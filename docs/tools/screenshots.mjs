@@ -37,12 +37,12 @@ const WALL = { width: 1280, height: 800 }; // the recommended wall resolution
 
 /** Labels differ per language; the steps look them up here. */
 const T = {
-  de: { newList: 'Neue Liste', name: 'Name', save: 'Speichern', search: 'Suchen oder hinzufügen', settings: 'Einstellungen', addDevice: 'Gerät hinzufügen', deviceName: 'Gerätename', createCode: 'Code erzeugen', addMember: 'Mitglied hinzufügen', history: 'Verlauf', trolley: 'Im Wagen', household: 'Neue Familie anlegen', signIn: 'Mit E-Mail fortfahren', enrol: 'Mit Code verbinden', papa: 'Thomas', daughter: 'Emma', wholemeal: /Vollkorn/, kitchenTablet: 'Küchen-Tablet', close: 'Schließen', shopping: 'Einkauf', calendar: 'Kalender', week: 'Woche', newEvent: 'Neuer Termin', schedule: 'Stundenplan', tasks: 'Aufgaben', meals: 'Essen', householdSettings: 'Haushalt einstellen', today: 'Heute', editSchool: 'Schule bearbeiten', region: 'Region', importHolidays: 'Ferien übernehmen', addMeal: 'Mahlzeit hinzufügen' },
-  en: { newList: 'New list', name: 'Name', save: 'Save', search: 'Search or add', settings: 'Settings', addDevice: 'Add device', deviceName: 'Device name', createCode: 'Create code', addMember: 'Add member', history: 'History', trolley: 'In the trolley', household: 'Start a new family', signIn: 'Continue with email', enrol: 'Connect with a code', papa: 'David', daughter: 'Olivia', wholemeal: /Wholemeal/, kitchenTablet: 'Kitchen tablet', close: 'Close', shopping: 'Shopping', calendar: 'Calendar', week: 'Week', newEvent: 'New event', schedule: 'Timetable', tasks: 'Tasks', meals: 'Meals', householdSettings: 'Household settings', today: 'Today', editSchool: 'Edit school', region: 'Region', importHolidays: 'Import school holidays', addMeal: 'Add meal' },
+  de: { grandma: 'Oma Ruth', newList: 'Neue Liste', name: 'Name', save: 'Speichern', search: 'Suchen oder hinzufügen', settings: 'Einstellungen', addDevice: 'Gerät hinzufügen', deviceName: 'Gerätename', createCode: 'Code erzeugen', addMember: 'Mitglied hinzufügen', history: 'Verlauf', trolley: 'Im Wagen', household: 'Neue Familie anlegen', signIn: 'Mit E-Mail fortfahren', enrol: 'Mit Code verbinden', papa: 'Thomas', daughter: 'Emma', wholemeal: /Vollkorn/, kitchenTablet: 'Küchen-Tablet', close: 'Schließen', shopping: 'Einkauf', calendar: 'Kalender', week: 'Woche', newEvent: 'Neuer Termin', schedule: 'Stundenplan', tasks: 'Aufgaben', meals: 'Essen', householdSettings: 'Haushalt einstellen', today: 'Heute', editSchool: 'Schule bearbeiten', region: 'Region', importHolidays: 'Ferien übernehmen', addMeal: 'Mahlzeit hinzufügen', pairFront: 'Familien-Tablet oder Wanddisplay verbinden', pairConnect: 'Gerät verbinden', pairCode: 'Code vom neuen Gerät', next: 'Weiter', inviteAdult: 'Erwachsene Person einladen', inviteName: 'Name', inviteCreate: 'Einladung erstellen', reminders: 'Erinnerungen' },
+  en: { grandma: 'Grandma Ruth', newList: 'New list', name: 'Name', save: 'Save', search: 'Search or add', settings: 'Settings', addDevice: 'Add device', deviceName: 'Device name', createCode: 'Create code', addMember: 'Add member', history: 'History', trolley: 'In the trolley', household: 'Start a new family', signIn: 'Continue with email', enrol: 'Connect with a code', papa: 'David', daughter: 'Olivia', wholemeal: /Wholemeal/, kitchenTablet: 'Kitchen tablet', close: 'Close', shopping: 'Shopping', calendar: 'Calendar', week: 'Week', newEvent: 'New event', schedule: 'Timetable', tasks: 'Tasks', meals: 'Meals', householdSettings: 'Household settings', today: 'Today', editSchool: 'Edit school', region: 'Region', importHolidays: 'Import school holidays', addMeal: 'Add meal', pairFront: 'Connect a family tablet or wall display', pairConnect: 'Connect device', pairCode: 'Code from the new device', next: 'Next', inviteAdult: 'Invite an adult', inviteName: 'Name', inviteCreate: 'Create invitation', reminders: 'Reminders' },
 };
 
-async function open(page, scenario) {
-  await page.goto(`${base}/?scenario=${scenario}`);
+async function open(page, scenario, route = '') {
+  await page.goto(`${base}/?scenario=${scenario}${route ? `#${route}` : ''}`);
   await page.waitForSelector('flt-glass-pane', { state: 'attached', timeout: 90000 });
   await page.locator('flt-semantics-placeholder').evaluate((e) => e.click()).catch(() => {});
   await page.waitForSelector('flt-semantics', { state: 'attached', timeout: 30000 });
@@ -102,8 +102,6 @@ const longPress = async (page, locator) => {
 const shots = [
   { name: 'setup-server', scenario: 'server', viewport: PHONE },
   { name: 'setup-start', scenario: 'setup', viewport: PHONE },
-  { name: 'setup-household', scenario: 'setup', viewport: PHONE, steps: async (p, t) => press(p, t.household) },
-  { name: 'setup-enrol', scenario: 'setup', viewport: PHONE, steps: async (p, t) => press(p, t.enrol) },
   { name: 'setup-sign-in', scenario: 'setup', viewport: PHONE, steps: async (p, t) => press(p, t.signIn) },
   // The adult home opens on the calendar, so the shopping shots first press its nav destination.
   { name: 'shopping-phone', scenario: 'adult', viewport: PHONE, steps: async (p, t) => tapAny(p, t.shopping, { exact: false }) },
@@ -136,9 +134,17 @@ const shots = [
   // The board has no avatars: open the footer's shopping list first, then tap the name in its bar.
   { name: 'wall-shopping', scenario: 'kiosk', viewport: WALL, steps: async (p, t) => { await p.getByRole('button', { name: t.shopping }).first().click(); await settle(p); await p.getByRole('button', { name: t.daughter, exact: true }).last().click(); await settle(p); } },
   { name: 'settings-phone', scenario: 'adult', viewport: PHONE, steps: async (p, t) => press(p, t.settings) },
-  { name: 'settings-add-device', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await press(p, t.settings); await press(p, t.addDevice); } },
   { name: 'settings-sign-in', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await press(p, t.settings); await scrollDown(p, 700); } },
   { name: 'settings-code', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await press(p, t.settings); await press(p, t.addDevice); await p.getByRole('textbox', { name: t.deviceName }).fill(t.kitchenTablet); await press(p, t.createCode); } },
+  { name: 'new-family', scenario: 'newfamily', viewport: PHONE },
+  // The new device's pairing screen, reached from the front door.
+  { name: 'pair-device', scenario: 'setup', viewport: PHONE, steps: async (p, t) => press(p, t.pairFront) },
+  // A guardian's phone: enter the code the new device shows, then review it before approving.
+    // Opened at the pairing route (the Settings → Devices button is far down the list in English).
+  { name: 'pair-approve', scenario: 'adult', viewport: PHONE, route: '/settings/devices/pair', steps: async (p, t) => { await p.getByRole('textbox', { name: t.pairCode }).fill('K7QM3XRP'); await press(p, t.next); } },
+  // Inviting an adult: the name, then the result sheet with the code, QR code and share action.
+  { name: 'invite-sheet', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await press(p, t.settings); await scrollUntil(p, t.inviteAdult); await tapAny(p, t.inviteAdult, { exact: false }); await p.getByRole('textbox', { name: t.inviteName }).fill(t.grandma); await press(p, t.inviteCreate); } },
+  { name: 'reminders', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await press(p, t.settings); await tapAny(p, t.reminders, { exact: false }); } },
 ];
 
 const only = process.argv.slice(2);
@@ -157,7 +163,7 @@ for (const lang of ['de', 'en']) {
     });
     const page = await ctx.newPage();
     try {
-      await open(page, shot.scenario);
+      await open(page, shot.scenario, shot.route);
       if (shot.steps) await shot.steps(page, T[lang]);
     } catch (e) {
       failed++;

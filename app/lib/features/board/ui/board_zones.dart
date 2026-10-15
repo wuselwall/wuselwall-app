@@ -220,7 +220,7 @@ class _PartRow extends StatelessWidget {
                         child: _DayPartCell(
                           board: board,
                           events: [
-                            for (final e in board.days[i].keyEvents)
+                            for (final e in frame.eventsOf(i))
                               if (settings.partOf(e.starts) == part) e,
                           ],
                           isToday: frame.isToday(i),
@@ -452,4 +452,66 @@ class _EventLine extends StatelessWidget {
 int _endMinutes(BoardEvent e) {
   final end = e.ends ?? e.starts;
   return end == null ? 24 * 60 : minutesOf(end);
+}
+
+/// "Alle Termine" (FR-8.11): every day column shows all its appointments, not only the key
+/// ones, so a forgotten key flag cannot hide one from the kitchen. The whole 56 px band is the
+/// target; the switch is filled while on. The kiosk reverts it to key-only when it goes idle
+/// (register_home_page.dart).
+class BoardAllEventsToggle extends ConsumerWidget {
+  const BoardAllEventsToggle({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final ww = context.ww;
+    final scheme = Theme.of(context).colorScheme;
+    final on = ref.watch(boardAllEventsProvider);
+    final ink = on ? scheme.onPrimaryContainer : scheme.onSurface;
+
+    return Semantics(
+      toggled: on,
+      button: true,
+      label: l10n.boardAllEvents,
+      excludeSemantics: true,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => ref.read(boardAllEventsProvider.notifier).set(!on),
+        child: SizedBox(
+          height: BoardDivider.controlHeight,
+          child: Center(
+            child: Container(
+              height: BoardDivider.controlHeight - 8,
+              padding: const EdgeInsets.symmetric(horizontal: 14),
+              decoration: BoxDecoration(
+                color: on ? scheme.primaryContainer : null,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: on ? scheme.primary : ww.ink3,
+                  width: 2,
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    on ? Icons.check_box : Icons.check_box_outline_blank,
+                    size: 26,
+                    color: ink,
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    l10n.boardAllEvents,
+                    style: boardUi(24, weight: FontWeight.w700, color: ink),
+                    maxLines: 1,
+                    softWrap: false,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }

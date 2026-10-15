@@ -1,8 +1,8 @@
 export type Lang = 'de' | 'en';
 
 export const paths = {
-  de: { home: '/', imprint: '/impressum/', privacy: '/datenschutz/' },
-  en: { home: '/en/', imprint: '/en/imprint/', privacy: '/en/privacy/' },
+  de: { home: '/', imprint: '/impressum/', privacy: '/datenschutz/', invite: '/i/' },
+  en: { home: '/en/', imprint: '/en/imprint/', privacy: '/en/privacy/', invite: '/en/i/' },
 } as const;
 
 type Feature = { title: string; text: string };
@@ -15,8 +15,19 @@ type View = Feature & { shot: 'shopping-phone' | 'kid-shopping' | 'wall-child-we
  */
 type Section = { title: string; body: string[] };
 
+/** The landing page for invitation links (/i/): what it is, and what to do next. */
+export interface InviteStrings {
+  title: string;
+  description: string;
+  heading: string;
+  what: string;
+  steps: string;
+  personal: string;
+}
+
 export interface Strings {
   htmlLang: string;
+  invite: InviteStrings;
   title: string;
   description: string;
   skip: string;
@@ -73,6 +84,14 @@ export interface Strings {
 }
 
 const de: Strings = {
+  invite: {
+    title: 'Einladung – WuselWall',
+    description: 'Du bist zu einer Familie in WuselWall eingeladen. So kommst du hinein.',
+    heading: 'Du bist eingeladen',
+    what: 'WuselWall ist der Familienplan für die Küchenwand: Termine, Aufgaben, Einkaufsliste und Essen, auf einem gemeinsamen Gerät.',
+    steps: 'Installiere die App und tippe auf „Ich habe einen Einladungscode“. Den Code findest du in der Nachricht.',
+    personal: 'Der Link ist persönlich. Gib ihn nur an die Person weiter, für die er gedacht ist.',
+  },
   htmlLang: 'de-CH',
   title: 'WuselWall – der Familienorganisator für zuhause',
   description:
@@ -135,6 +154,12 @@ const de: Strings = {
     { label: 'Feiertage und Schulferien für Deutschland, Österreich, die Schweiz und Liechtenstein – bis zur Gemeinde', state: 'fertig', done: true },
     { label: 'Mehrere Schulen pro Familie', state: 'fertig', done: true },
     { label: 'Kalender abonnieren: Verein, Abfuhr, Schule', state: 'fertig', done: true },
+    { label: 'Familie einladen per Link oder Code', state: 'fertig', done: true },
+    { label: 'Tablet und Wanddisplay verbinden, ohne zu tippen', state: 'fertig', done: true },
+    { label: 'Anmelden mit Code per E-Mail', state: 'fertig', done: true },
+    { label: 'Erinnerungen auf dem Handy', state: 'fertig', done: true },
+    { label: 'Familie verlassen oder löschen', state: 'fertig', done: true },
+    { label: 'Kalender in Outlook, inklusive abonnierter Kalender', state: 'fertig', done: true },
     { label: 'Kalender und Wochentafel', state: 'fertig', done: true },
     { label: 'Aufgaben und Punkte', state: 'fertig', done: true },
     { label: 'Stundenplan und Essensplan', state: 'fertig', done: true },
@@ -148,7 +173,7 @@ const de: Strings = {
     { q: 'Warum gibt es keinen WuselWall-Dienst zum Anmelden?', a: 'Weil die Daten eurer Familie nicht zu uns gehören. Wir entwickeln die App und die Server-Software, betreiben aber keinen Dienst für andere Familien. So kann bei uns auch nichts verloren gehen oder abfließen.' },
     { q: 'Was brauchen wir für einen eigenen Server?', a: 'Einen Rechner, der dauernd läuft und Docker kann, mit 8 GB Arbeitsspeicher: ein NAS (etwa Synology oder QNAP), einen Mini-PC oder einen gemieteten Server. Ohne eigenen Rechner geht es auch mit einem eigenen Projekt bei Supabase. Die <a href="/docs/server/">Anleitung</a> führt Schritt für Schritt durch beides. Ein Installationsskript, das alles auf einmal erledigt, folgt.' },
     { q: 'Können wir WuselWall ohne Server ausprobieren?', a: 'Ja: Tippt auf dem ersten Bildschirm der App auf „Ohne Server ausprobieren“. Dann läuft eine Beispielfamilie ganz auf dem Gerät, und nichts verlässt es. Die <a href="/docs/">Anleitung</a> zeigt außerdem jeden Bildschirm.' },
-    { q: 'Werden wir getrackt?', a: 'Nein: keine Werbung, kein Tracking, keine Analyse durch uns. Zwei Stellen, an denen Google technische Daten erhält – die freiwillige Anmeldung mit Google und den QR-Scanner auf Android –, beschreibt die <a href="/datenschutz/">Datenschutzerklärung</a> genau.' },
+    { q: 'Werden wir getrackt?', a: 'Nein: keine Werbung, kein Tracking, keine Analyse durch uns. Die eine Stelle, an der Google technische Daten erhält – die freiwillige Anmeldung mit Google –, beschreibt die <a href="/datenschutz/">Datenschutzerklärung</a> genau.' },
   ],
   openTitle: 'Open Source',
   openText: 'Der gesamte Quellcode, die Spezifikation und die Entscheidungen dahinter sind öffentlich, unter der Apache-Lizenz 2.0. Lesen, ausprobieren, selbst betreiben oder mithelfen.',
@@ -185,7 +210,7 @@ const de: Strings = {
     privacyDescription: 'Wie WuselWall mit Daten umgeht: diese Website, die Apps und die Anmeldung mit Apple oder Google.',
   },
   privacy: {
-    updated: 'Stand: 14. Oktober 2026',
+    updated: 'Stand: 15. Oktober 2026',
     summaryTitle: 'Das Wichtigste in Kürze',
     summary: [
       'Wir betreiben keinen Dienst, auf dem die Daten Ihrer Familie liegen. Die App speichert alles auf dem WuselWall-Server, mit dem Ihre Familie sie verbunden hat.',
@@ -242,9 +267,17 @@ const de: Strings = {
         body: [
           'Die Anmeldung mit Apple oder Google ist freiwillig; die Anmeldung mit E-Mail-Adresse geht immer. Ob sie angeboten wird, hängt vom Server ab: In der Regel läuft sie über den Browser und nur, wenn der Betreiber Ihres Servers das bei Apple und Google selbst eingerichtet hat – dann gelten auch seine Angaben.',
           'Wenn Sie sich mit Apple oder Google anmelden, erfährt der Anbieter, dass und wann Sie sich bei WuselWall anmelden. Der Server erhält eine Kennung Ihres Kontos, Ihre E-Mail-Adresse (bei Apple auf Wunsch eine Weiterleitungsadresse) und Ihren Namen. Mehr fragt WuselWall nicht ab, insbesondere keinen Zugriff auf Kalender oder Kontakte.',
-          '<strong>Apple:</strong> Auf iPhone und iPad ist die Anmeldung Teil des Betriebssystems; die App enthält dafür keinen fremden Code. Auf Android und im Browser öffnet sich die Anmeldeseite von Apple.',
+          '<strong>Apple:</strong> Auf iPhone und iPad ist die Anmeldung Teil des Betriebssystems; die App enthält dafür keinen fremden Code. Auf Android und im Browser öffnet sich die Anmeldeseite von Apple. Bei einer Anmeldung mit Apple speichert der Server einen verschlüsselten Apple-Token ausschließlich, um den Apple-Zugriff beim Löschen Ihres Kontos widerrufen zu können.',
           '<strong>Google:</strong> Auf iPhone und iPad enthält die App dafür die Anmeldebibliothek von Google. Sie wird erst aktiv, wenn Sie „Mit Google anmelden“ tippen. Laut Googles eigener Angabe erhebt sie dann neben Name, E-Mail-Adresse und Kontokennung auch eine Gerätekennung und Nutzungsdaten, die Google auch für eigene Analysen verwendet – nicht aber für Tracking über Apps und Websites anderer Anbieter hinweg. Auf Android läuft die Anmeldung über die Google-Dienste des Geräts, im Browser über die Anmeldeseite von Google.',
           'Apple und Google verarbeiten diese Daten in eigener Verantwortung, auch in den USA: <a href="https://www.apple.com/de/legal/privacy/" rel="noopener">Datenschutz bei Apple</a>, <a href="https://policies.google.com/privacy?hl=de" rel="noopener">Datenschutzerklärung von Google</a>.',
+        ],
+      },
+      {
+        title: 'Anmeldung mit E-Mail-Adresse',
+        body: [
+          'Mit einer E-Mail-Adresse melden Sie sich mit einem Code an, den WuselWall Ihnen per E-Mail schickt. Ein Passwort ist dafür nicht nötig. Den Code verschickt der WuselWall-Server, mit dem Ihre Familie verbunden ist, über den Versanddienst, den sein Betreiber eingerichtet hat.',
+          'Auf dem Server, den das WuselWall-Projekt selbst betreibt, ist das Scaleway Transactional Email, ein Dienst der Scaleway SAS in Paris (Frankreich). Scaleway erhält dafür die E-Mail-Adresse, an die der Code geht, und den Inhalt der Nachricht einschließlich des Codes, damit die Nachricht zugestellt werden kann. Die Nachrichten enthalten keine Bilder und keine Verfolgungslinks. Der Code ist zehn Minuten gültig.',
+          'Auf anderen Servern entscheidet der Betreiber, wie die Codes verschickt werden, etwa über einen eigenen Mailserver. Dann gelten seine Angaben.',
         ],
       },
       {
@@ -284,6 +317,14 @@ const de: Strings = {
 };
 
 const en: Strings = {
+  invite: {
+    title: 'Invitation – WuselWall',
+    description: 'You are invited to a family on WuselWall. This is how you join.',
+    heading: 'You are invited',
+    what: 'WuselWall is the family plan for the kitchen wall: appointments, chores, the shopping list and meals, on one shared device.',
+    steps: 'Install the app and tap “I have an invitation code”. You will find the code in the message.',
+    personal: 'The link is personal. Only pass it on to the person it was meant for.',
+  },
   htmlLang: 'en',
   title: 'WuselWall – the family organiser for your home',
   description:
@@ -346,6 +387,12 @@ const en: Strings = {
     { label: 'Public and school holidays for Germany, Austria, Switzerland and Liechtenstein – down to the municipality', state: 'done', done: true },
     { label: 'Several schools per family', state: 'done', done: true },
     { label: 'Subscribe to club, bin and school calendars', state: 'done', done: true },
+    { label: 'Inviting the family by link or code', state: 'done', done: true },
+    { label: 'Connecting a tablet or wall display without typing', state: 'done', done: true },
+    { label: 'Signing in with a code by email', state: 'done', done: true },
+    { label: 'Reminders on your phone', state: 'done', done: true },
+    { label: 'Leaving or deleting a family', state: 'done', done: true },
+    { label: 'Calendar in Outlook, including subscribed calendars', state: 'done', done: true },
     { label: 'Calendar and week board', state: 'done', done: true },
     { label: 'Chores and points', state: 'done', done: true },
     { label: 'School timetable and meal plan', state: 'done', done: true },
@@ -359,7 +406,7 @@ const en: Strings = {
     { q: 'Why is there no WuselWall service to sign up to?', a: 'Because your family’s data does not belong with us. We build the app and the server software, but we run no service for other families. So nothing can get lost or leak on our side either.' },
     { q: 'What do we need for our own server?', a: 'A computer that is always on and runs Docker, with 8 GB of memory: a NAS (such as Synology or QNAP), a mini PC or a rented server. Without a machine of your own, a Supabase project of your own works too. The <a href="/docs/en/server/">guide</a> walks through both step by step. An install script that does it all at once will follow.' },
     { q: 'Can we try WuselWall without a server?', a: 'Yes: tap “Try it without a server” on the app’s first screen. A sample family then runs entirely on the device, and nothing leaves it. The <a href="/docs/en/">guide</a> also shows every screen.' },
-    { q: 'Are we being tracked?', a: 'No: no ads, no tracking, no analytics by us. The <a href="/en/privacy/">privacy policy</a> describes the two places where Google receives technical data – the optional sign-in with Google and the QR scanner on Android.' },
+    { q: 'Are we being tracked?', a: 'No: no ads, no tracking, no analytics by us. The <a href="/en/privacy/">privacy policy</a> describes the one place where Google receives technical data – the optional sign-in with Google.' },
   ],
   openTitle: 'Open source',
   openText: 'All of the source code, the specification and the decisions behind it are public, under the Apache License 2.0. Read it, try it, run it yourself or help build it.',
@@ -396,7 +443,7 @@ const en: Strings = {
     privacyDescription: 'How WuselWall handles data: this website, the apps and signing in with Apple or Google.',
   },
   privacy: {
-    updated: 'Last updated: 14 October 2026',
+    updated: 'Last updated: 15 October 2026',
     summaryTitle: 'In short',
     summary: [
       'We run no service that holds your family’s data. The app stores everything on the WuselWall server your family connected it to.',
@@ -453,9 +500,17 @@ const en: Strings = {
         body: [
           'Signing in with Apple or Google is optional; signing in with an email address always works. Whether it is offered depends on the server: usually it runs through the browser, and only if your server’s operator has set it up with Apple and Google themselves – that operator’s information then applies too.',
           'When you sign in with Apple or Google, the provider learns that and when you sign in to WuselWall. The server receives an identifier for your account, your email address (with Apple, a relay address if you prefer) and your name. WuselWall asks for nothing more – in particular no access to calendars or contacts.',
-          '<strong>Apple:</strong> on iPhone and iPad, signing in is part of the operating system; the app contains no third-party code for it. On Android and in the browser, Apple’s sign-in page opens.',
+          '<strong>Apple:</strong> on iPhone and iPad, signing in is part of the operating system; the app contains no third-party code for it. On Android and in the browser, Apple’s sign-in page opens. When you sign in with Apple, the server keeps an encrypted Apple token only to revoke Apple’s access when you delete your account.',
           '<strong>Google:</strong> on iPhone and iPad, the app contains Google’s sign-in library for this. It becomes active only when you tap “Sign in with Google”. According to Google’s own declaration, it then collects, besides name, email address and account identifier, a device identifier and usage data, which Google also uses for its own analytics – but not for tracking across other companies’ apps and websites. On Android, sign-in runs through the device’s Google services; in the browser, through Google’s sign-in page.',
           'Apple and Google process this data under their own responsibility, also in the USA: <a href="https://www.apple.com/legal/privacy/" rel="noopener">Apple’s privacy policy</a>, <a href="https://policies.google.com/privacy?hl=en" rel="noopener">Google’s privacy policy</a>.',
+        ],
+      },
+      {
+        title: 'Signing in with an email address',
+        body: [
+          'With an email address you sign in with a code that WuselWall sends you by email. No password is needed. The WuselWall server your family is connected to sends the code, through the mail service its operator has set up.',
+          'On the server that the WuselWall project runs itself, that service is Scaleway Transactional Email, run by Scaleway SAS in Paris (France). For this, Scaleway receives the email address the code goes to and the content of the message, including the code, so that the message can be delivered. The messages contain no images and no tracking links. The code is valid for ten minutes.',
+          'On other servers, the operator decides how codes are sent, for example through their own mail server. Their details apply then.',
         ],
       },
       {
@@ -497,6 +552,6 @@ const en: Strings = {
 export const strings: Record<Lang, Strings> = { de, en };
 
 /** The other language's URL for the same page, for hreflang and the footer switch. */
-export function alternate(lang: Lang, page: 'home' | 'imprint' | 'privacy') {
+export function alternate(lang: Lang, page: 'home' | 'imprint' | 'privacy' | 'invite') {
   return paths[lang === 'de' ? 'en' : 'de'][page];
 }

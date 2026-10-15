@@ -16,18 +16,27 @@ import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/demo/demo_export.dart';
 import 'package:wuselwall/demo/demo_external_calendars.dart';
 import 'package:wuselwall/demo/demo_getting_started.dart';
+import 'package:wuselwall/demo/demo_invitations.dart';
 import 'package:wuselwall/demo/demo_kid.dart';
 import 'package:wuselwall/demo/demo_meals.dart';
+import 'package:wuselwall/demo/demo_pairing.dart';
 import 'package:wuselwall/demo/demo_region.dart';
 import 'package:wuselwall/demo/demo_repositories.dart';
 import 'package:wuselwall/demo/demo_school.dart';
 import 'package:wuselwall/demo/demo_tasks.dart';
+import 'package:wuselwall/features/account/application/account_admin_providers.dart';
 import 'package:wuselwall/features/board/data/board_repository.dart';
 import 'package:wuselwall/features/calendar/data/calendar_repository.dart';
 import 'package:wuselwall/features/calendar/data/external_calendars_repository.dart';
+import 'package:wuselwall/features/household/data/household_leave_repository.dart';
+import 'package:wuselwall/features/household/data/household_onboarding_repository.dart';
+import 'package:wuselwall/features/identity/application/first_run.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
+import 'package:wuselwall/features/identity/data/pairing_repository.dart';
 import 'package:wuselwall/features/identity/data/sign_in_methods_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
+import 'package:wuselwall/features/invitations/application/invitation_providers.dart';
+import 'package:wuselwall/features/invitations/data/invitation_repository.dart';
 import 'package:wuselwall/features/kid/data/kid_badges_repository.dart';
 import 'package:wuselwall/features/meals/data/meals_repository.dart';
 import 'package:wuselwall/features/region/data/region_repository.dart';
@@ -44,7 +53,7 @@ class _Day extends NightNotifier {
 }
 
 DeviceInfo? _device(String scenario) => switch (scenario) {
-  'setup' => null,
+  'setup' || 'newfamily' => null,
   'kid' => DeviceInfo(
     deviceId: 'd-2',
     householdId: 'h1',
@@ -78,7 +87,7 @@ DeviceInfo? _device(String scenario) => switch (scenario) {
 };
 
 /// Every repository and session provider replaced by its in-memory demo.
-/// [scenario]: setup | adult | kid | kiosk. The family's names follow the device's
+/// [scenario]: setup | newfamily (signed in, no family yet) | adult | kid | kiosk. The family's names follow the device's
 /// language, as the app's own text does.
 List<Override> demoOverrides({String scenario = 'adult'}) {
   DemoData.useLanguageOf(PlatformDispatcher.instance.locales);
@@ -102,6 +111,22 @@ List<Override> _overrides(String scenario) => [
   ),
   signInMethodsRepositoryProvider.overrideWithValue(
     DemoSignInMethodsRepository(),
+  ),
+  pairingRepositoryProvider.overrideWithValue(DemoPairingRepository()),
+  invitationRepositoryProvider.overrideWithValue(DemoInvitationRepository()),
+  invitationStoreProvider.overrideWithValue(DemoInvitationStore()),
+  // The demo shows the share sheet's text in place; nothing is handed to the platform.
+  inviteSharerProvider.overrideWithValue((_) async {}),
+  // The screenshots show the wall display without its one-time checklist.
+  pendingFirstRunProvider.overrideWith((ref) async => null),
+  householdOnboardingRepositoryProvider.overrideWithValue(
+    DemoHouseholdOnboardingRepository(hasHousehold: scenario != 'newfamily'),
+  ),
+  householdLeaveRepositoryProvider.overrideWithValue(
+    DemoHouseholdLeaveRepository(),
+  ),
+  accountAdminRepositoryProvider.overrideWithValue(
+    DemoAccountAdminRepository(),
   ),
   shoppingRepositoryProvider.overrideWithValue(DemoShoppingRepository()),
   householdSettingsRepositoryProvider.overrideWithValue(

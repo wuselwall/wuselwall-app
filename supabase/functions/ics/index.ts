@@ -66,8 +66,10 @@ Deno.serve(async (req: Request): Promise<Response> => {
   if (feed === null) return empty(404);
 
   // The school rows are hashed too: a holiday has no updated_at, so the revision cannot see it.
+  // The imported occurrences change without a revision bump (their own store), so they are hashed too.
   const shape = JSON.stringify(feed.filter ?? {}) +
-    (feed.school ? JSON.stringify([feed.school, feed.members ?? null]) : "");
+    (feed.school ? JSON.stringify([feed.school, feed.members ?? null]) : "") +
+    (feed.external ? JSON.stringify(feed.external) : "");
   const etag = `"${feed.revision}-${await shortHash(shape)}"`;
   const cacheHeaders = {
     ETag: etag,

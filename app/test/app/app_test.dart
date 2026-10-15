@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:wuselwall/features/household/domain/household_models.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 
 import '../support/fakes.dart';
@@ -19,7 +20,10 @@ void main() {
     testWidgets('shows the German setup screen', (t) async {
       await pump(t);
       expect(find.text('Willkommen bei WuselWall'), findsOneWidget);
-      expect(find.text('Mit Code verbinden'), findsOneWidget);
+      expect(
+        find.text('Familien-Tablet oder Wanddisplay verbinden'),
+        findsOneWidget,
+      );
     });
 
     testWidgets('shows English on an English device', (t) async {
@@ -34,7 +38,10 @@ void main() {
 
     testWidgets('a wrong enrolment code shows a localized error', (t) async {
       await pump(t);
-      await t.tap(find.text('Mit Code verbinden'));
+      await t.tap(find.text('Familien-Tablet oder Wanddisplay verbinden'));
+      await t.pump();
+      await t.pump();
+      await t.tap(find.text('Ich habe einen Code vom Handy (ältere Version)'));
       await t.pumpAndSettle();
       await t.enterText(find.byType(TextField), 'ABCD2345');
       await t.tap(find.text('Verbinden'));
@@ -81,7 +88,22 @@ void main() {
           guardianVerifiedUntil: null,
         ),
       );
-      await pumpApp(t, overrides: baseOverrides(identity: identity));
+      // The account still has a family: a revoked phone is signed out. (Without one, the
+      // account starts afresh instead; see household_leave_test.dart.)
+      await pumpApp(
+        t,
+        overrides: baseOverrides(
+          identity: identity,
+          household: FakeHouseholdOnboardingRepository(
+            identity: identity,
+            accountValue: const Account(
+              userId: 'user-1',
+              hasHousehold: true,
+              creation: HouseholdCreation.code,
+            ),
+          ),
+        ),
+      );
       expect(identity.signedOut, isTrue);
       expect(find.text('Willkommen bei WuselWall'), findsOneWidget);
     });

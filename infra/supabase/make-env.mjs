@@ -168,9 +168,18 @@ const out = {
 
   // Auth: supabase/config.toml [auth]
   JWT_EXPIRY: '3600',
-  DISABLE_SIGNUP: 'true',
+  // The e-mail sign-in code (supabase/config.toml [auth.email]).
+  MAILER_OTP_LENGTH: '6',
+  MAILER_OTP_EXP: '600',
+  SMTP_MAX_FREQUENCY: '60s',
+  // Strangers get an account that can do nothing but wait for an invitation or, while
+  // household creation is in `code` mode, start a family with a founder code (specs/20).
+  DISABLE_SIGNUP: 'false',
   ENABLE_EMAIL_SIGNUP: 'true',
-  ENABLE_EMAIL_AUTOCONFIRM: 'true',
+  // Never autoconfirm: with sign-up open, an autoconfirmed address would count as verified
+  // without proof, and an invitation naming that address would match it (specs/20, J2).
+  // Email codes confirm the address by themselves; Apple and Google come confirmed.
+  ENABLE_EMAIL_AUTOCONFIRM: 'false',
   ENABLE_ANONYMOUS_USERS: 'false',
   ENABLE_PHONE_SIGNUP: 'false',
   ENABLE_PHONE_AUTOCONFIRM: 'false',
@@ -194,6 +203,28 @@ const out = {
   GOOGLE_ENABLED: vars.WW_GOOGLE_CLIENT_IDS ? 'true' : 'false',
   GOOGLE_CLIENT_IDS: vars.WW_GOOGLE_CLIENT_IDS ?? '',
   GOOGLE_CLIENT_SECRET: vars.WW_GOOGLE_CLIENT_SECRET ?? '',
+
+  // Sign in with Apple, server side (supabase/functions/apple-token, account-delete). The key
+  // (.p8) is kept on one line with \n for its line breaks. APPLE_TOKEN_KEY is generated here,
+  // once, with the stack: the stored Apple refresh tokens are encrypted with it and cannot be
+  // read back with another key.
+  APPLE_TEAM_ID: vars.WW_APPLE_TEAM_ID ?? '',
+  APPLE_KEY_ID: vars.WW_APPLE_KEY_ID ?? '',
+  APPLE_PRIVATE_KEY: (vars.WW_APPLE_PRIVATE_KEY ?? '').replace(/\n/g, '\\n'),
+  APPLE_CLIENT_ID: vars.WW_APPLE_BUNDLE_ID ?? '',
+  APPLE_TOKEN_KEY: b64(32),
+
+  // Mail: the Send Email Hook (supabase/functions/send-email). The secret is generated like the
+  // others and must be the same value in GoTrue and in the functions container, which this file
+  // guarantees by writing one variable for both. The hook is switched on only when the Scaleway
+  // project and key from supabase/.env are present, so a stack never sends mail it cannot send.
+  SEND_EMAIL_HOOK_SECRET: `v1,whsec_${b64(32)}`,
+  SEND_EMAIL_HOOK_ENABLED: vars.SCW_SECRET_KEY && vars.SCW_PROJECT_ID && vars.MAIL_FROM ? 'true' : 'false',
+  SCW_SECRET_KEY: vars.SCW_SECRET_KEY ?? '',
+  SCW_PROJECT_ID: vars.SCW_PROJECT_ID ?? '',
+  SCW_REGION: vars.SCW_REGION ?? 'fr-par',
+  MAIL_FROM: vars.MAIL_FROM ?? '',
+  MAIL_FROM_NAME: vars.MAIL_FROM_NAME ?? 'WuselWall',
 
   // Storage
   GLOBAL_S3_BUCKET: 'stub',

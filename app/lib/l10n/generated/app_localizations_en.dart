@@ -104,9 +104,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get doorTagline => 'The family plan for the kitchen wall';
 
   @override
-  String get setupEnrolAction => 'Connect with a code';
-
-  @override
   String get setupHouseholdAction => 'Start a new family';
 
   @override
@@ -626,7 +623,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signInMethodsTitle => 'Sign-in';
 
   @override
-  String get signInMethodEmail => 'Email and password';
+  String get signInMethodEmail => 'Email code';
 
   @override
   String get signInMethodApple => 'Apple';
@@ -3158,6 +3155,801 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get scanTypeCode => 'Type the code';
+
+  @override
+  String get feedSubTitle => 'Include subscribed calendars';
+
+  @override
+  String get feedSubHelp =>
+      'Events from imported calendars (for example a club or the bin collection) also appear in this subscription.';
+
+  @override
+  String get feedSubSummary => 'Subscribed calendars';
+
+  @override
+  String get boardAllEvents => 'All events';
+
+  @override
+  String get reminderChannelName => 'Reminders';
+
+  @override
+  String get reminderStartLabel => 'Turn on reminders';
+
+  @override
+  String reminderMorningEventsAndTasks(int events, int tasks) {
+    String _temp0 = intl.Intl.pluralLogic(
+      events,
+      locale: localeName,
+      other: '$events appointments',
+      one: '1 appointment',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      tasks,
+      locale: localeName,
+      other: '$tasks chores',
+      one: '1 chore',
+    );
+    return 'Today: $_temp0, $_temp1';
+  }
+
+  @override
+  String reminderMorningEventsOnly(int events) {
+    String _temp0 = intl.Intl.pluralLogic(
+      events,
+      locale: localeName,
+      other: '$events appointments',
+      one: '1 appointment',
+    );
+    return 'Today: $_temp0';
+  }
+
+  @override
+  String reminderMorningTasksOnly(int tasks) {
+    String _temp0 = intl.Intl.pluralLogic(
+      tasks,
+      locale: localeName,
+      other: '$tasks chores',
+      one: '1 chore',
+    );
+    return 'Today: $_temp0';
+  }
+
+  @override
+  String get reminderMorningNoEvents => 'Nothing is scheduled today.';
+
+  @override
+  String reminderMorningFirst(String time, String title) {
+    return 'First up at $time: $title';
+  }
+
+  @override
+  String reminderMorningAllDay(String title) {
+    return 'All day: $title';
+  }
+
+  @override
+  String reminderEventBody(String time) {
+    return 'Starts at $time';
+  }
+
+  @override
+  String get reminderSettingsTitle => 'Reminders';
+
+  @override
+  String get reminderSettingsSubtitle => 'On this phone';
+
+  @override
+  String get reminderSettingsSection => 'What you want to be reminded of';
+
+  @override
+  String get reminderStatusOn => 'Reminders are on on this phone.';
+
+  @override
+  String get reminderStatusOff => 'Reminders are off on this phone.';
+
+  @override
+  String get reminderStatusUnavailable => 'This device cannot show reminders.';
+
+  @override
+  String get reminderEnableAction => 'Turn on reminders';
+
+  @override
+  String get reminderDeniedNote =>
+      'Without permission there are no reminders. You can change the permission in the system settings.';
+
+  @override
+  String get reminderLocalNote =>
+      'Reminders are created on this phone. Nothing is sent to a server or to anyone else.';
+
+  @override
+  String get reminderOnlyPersonal =>
+      'Reminders are only available on a member\'s personal device.';
+
+  @override
+  String get pairFrontDoorAction => 'Connect a family tablet or wall display';
+
+  @override
+  String get pairTitle => 'Connect a family tablet or wall display';
+
+  @override
+  String get pairScanHint => 'Open WuselWall on your phone and scan this code.';
+
+  @override
+  String get pairCodeHint =>
+      'Or on the phone: Settings → Devices → Connect a device, then type the code.';
+
+  @override
+  String get pairQrLabel => 'QR code to connect this device';
+
+  @override
+  String get pairWaiting => 'Waiting for approval …';
+
+  @override
+  String pairConnected(String household) {
+    return 'Connected to $household';
+  }
+
+  @override
+  String get pairOldCodeLink => 'I have a code from a phone (older version)';
+
+  @override
+  String get pairConnectAction => 'Connect a device';
+
+  @override
+  String get pairOldCodeAction => 'Create a code for an older device';
+
+  @override
+  String get pairEntryBody =>
+      'Scan the code the new device shows, or type it in.';
+
+  @override
+  String get pairCodeField => 'Code from the new device';
+
+  @override
+  String get pairNext => 'Next';
+
+  @override
+  String get pairReviewBody => 'This is the code of the device to connect.';
+
+  @override
+  String get pairConfirmHint =>
+      'Only confirm if you can see this device in front of you.';
+
+  @override
+  String get pairKindLabel => 'What kind of device is this?';
+
+  @override
+  String get pairKindWall => 'Wall display';
+
+  @override
+  String get pairKindKid => 'Kids\' tablet';
+
+  @override
+  String get pairKindFamily => 'Shared tablet';
+
+  @override
+  String get pairKindChild => 'A child\'s phone';
+
+  @override
+  String get pairChildLabel => 'Which child?';
+
+  @override
+  String get pairNameLabel => 'Device name';
+
+  @override
+  String get pairDefaultWall => 'Wall display';
+
+  @override
+  String get pairDefaultKid => 'Kids\' tablet';
+
+  @override
+  String get pairDefaultFamily => 'Tablet';
+
+  @override
+  String pairDefaultChild(String name) {
+    return '$name\'s phone';
+  }
+
+  @override
+  String get pairApproveAction => 'Connect';
+
+  @override
+  String get pairApproved => 'Device connected';
+
+  @override
+  String get pairOnlyOnPersonal => 'This works only on your own phone.';
+
+  @override
+  String get pairPinTitle => 'Set the guardian PIN';
+
+  @override
+  String get pairPinBody =>
+      'The PIN confirms changes on shared devices. Set it once.';
+
+  @override
+  String get pairPinConfirm => 'Enter the PIN again';
+
+  @override
+  String get pairPinMismatch => 'The PINs do not match. Try again.';
+
+  @override
+  String get firstRunKioskTitle => 'Set up the wall display';
+
+  @override
+  String get firstRunKioskBody =>
+      'Three steps, once on this device. Then it shows the week.';
+
+  @override
+  String get firstRunPinTitle => 'Keep the app open';
+
+  @override
+  String get firstRunPinIos =>
+      'Settings → Accessibility → Guided Access: turn it on. Open WuselWall and press the top button three times quickly.';
+
+  @override
+  String get firstRunPinAndroid =>
+      'Settings → Security → App pinning (on some devices “Screen pinning”). Open WuselWall, open Recents and tap the pin.';
+
+  @override
+  String get firstRunAwakeTitle => 'Keep the screen on';
+
+  @override
+  String get firstRunAwakeIos =>
+      'Settings → Display & Brightness → Auto-Lock → Never.';
+
+  @override
+  String get firstRunAwakeAndroid =>
+      'Settings → Display → Screen timeout: the longest setting.';
+
+  @override
+  String get firstRunPowerTitle => 'Leave it plugged in';
+
+  @override
+  String get firstRunPowerBody =>
+      'Keep it on the mains, so it is ready again after a power cut.';
+
+  @override
+  String get firstRunDone => 'Done';
+
+  @override
+  String get firstRunKidTitle => 'Welcome';
+
+  @override
+  String get firstRunKidBody =>
+      'Tap your picture, and WuselWall knows who you are.';
+
+  @override
+  String get firstRunKidStart => 'Let’s go';
+
+  @override
+  String get householdNewTitle => 'New family';
+
+  @override
+  String get householdNewFamilyName => 'Family name';
+
+  @override
+  String get householdNewYourName => 'Your name';
+
+  @override
+  String get householdNewColour => 'Your colour';
+
+  @override
+  String householdNewColourOption(String number) {
+    return 'Colour $number';
+  }
+
+  @override
+  String householdNewFamilyPrefill(String name) {
+    return 'Family $name';
+  }
+
+  @override
+  String householdNewDefaults(String timezone, String language) {
+    return 'Time zone $timezone · Language $language — from your device';
+  }
+
+  @override
+  String get householdLanguageDe => 'German';
+
+  @override
+  String get householdLanguageEn => 'English';
+
+  @override
+  String get householdNewFounderCode => 'Founder code';
+
+  @override
+  String get householdNewFounderHelp =>
+      'The person who runs your server gives you the founder code.';
+
+  @override
+  String get householdSeedExamples =>
+      'Start with examples — 5 tasks, 3 rewards';
+
+  @override
+  String get householdNewCreate => 'Create family';
+
+  @override
+  String get householdNewInvited => 'I was invited';
+
+  @override
+  String get householdInvitedNote => 'Invitations arrive with the next update.';
+
+  @override
+  String get householdNewSignOut => 'Sign out';
+
+  @override
+  String get householdNewErrNoCode =>
+      'New families are only possible with a founder code for now.';
+
+  @override
+  String get householdNewErrCodeWrong => 'The founder code is not correct.';
+
+  @override
+  String get householdNewErrRateLimited =>
+      'Too many attempts. Wait a few minutes and try again.';
+
+  @override
+  String get householdMembersTitle => 'Who else is in your family?';
+
+  @override
+  String householdMembersYou(String name) {
+    return '$name (you)';
+  }
+
+  @override
+  String get householdKindChild => 'Child';
+
+  @override
+  String get householdKindAdult => 'Adult';
+
+  @override
+  String get householdMembersName => 'Name';
+
+  @override
+  String get householdMembersAdd => 'Add a person';
+
+  @override
+  String get householdMembersRemove => 'Remove';
+
+  @override
+  String get householdMembersDone => 'Done';
+
+  @override
+  String get householdMembersSkip => 'Skip';
+
+  @override
+  String get householdMembersHelp => 'You can invite adults later.';
+
+  @override
+  String householdDeviceLabel(String owner, String device) {
+    return '$owner $device';
+  }
+
+  @override
+  String get householdDeviceIphone => 'iPhone';
+
+  @override
+  String get householdDeviceAndroid => 'Android phone';
+
+  @override
+  String get householdDeviceBrowser => 'browser';
+
+  @override
+  String get householdDeviceComputer => 'computer';
+
+  @override
+  String get emailContinue => 'Continue';
+
+  @override
+  String get emailHavePassword => 'I have a password';
+
+  @override
+  String get emailWrongCredentials => 'Email or password is incorrect.';
+
+  @override
+  String get emailUseCodeInstead => 'Use an email code instead';
+
+  @override
+  String get emailOffline => 'No connection – signing in by email needs one.';
+
+  @override
+  String get emailCodeTitle => 'Code from the email';
+
+  @override
+  String emailCodeSent(String email) {
+    return 'We sent a 6-digit code to $email. It is valid for 10 minutes.';
+  }
+
+  @override
+  String get emailCodeFieldLabel => 'Six-digit code';
+
+  @override
+  String get emailCodeWrong =>
+      'That code is wrong or has expired. Try again, or ask for a new one.';
+
+  @override
+  String emailCodeResendIn(int seconds) {
+    return 'No code? Send again (in $seconds s)';
+  }
+
+  @override
+  String get emailCodeResend => 'No code? Send again';
+
+  @override
+  String get emailCodeSpam => 'Check your spam folder.';
+
+  @override
+  String get emailCodeResent => 'A new code is on its way.';
+
+  @override
+  String get emailCodeOtherMethod => 'Choose another way';
+
+  @override
+  String get emailCodeOtherAddress => 'Another email address';
+
+  @override
+  String get signInMethodTitle => 'How would you like to sign in next time?';
+
+  @override
+  String get signInMethodCode => 'With a code by email — nothing to remember';
+
+  @override
+  String get signInMethodPassword => 'With a password';
+
+  @override
+  String get passwordStrengthShort => 'Still too short';
+
+  @override
+  String get passwordStrengthWeak => 'Weak';
+
+  @override
+  String get passwordStrengthFair => 'Fair';
+
+  @override
+  String get passwordStrengthStrong => 'Strong';
+
+  @override
+  String get settingsPasswordTitle => 'Password';
+
+  @override
+  String get settingsPasswordSet =>
+      'Set. You can also sign in with email and password.';
+
+  @override
+  String get settingsPasswordNotSet =>
+      'Not set. Signing in with an email code still works.';
+
+  @override
+  String get passwordSetAction => 'Set password';
+
+  @override
+  String get passwordChangeAction => 'Change password';
+
+  @override
+  String get passwordSaved => 'Your password is saved.';
+
+  @override
+  String get passwordDialogBody =>
+      'At least 10 characters. The email code always stays available.';
+
+  @override
+  String signInMethodEmailSubtitle(String email) {
+    return '$email — always available';
+  }
+
+  @override
+  String get signInMethodAlwaysAvailable => 'Always available';
+
+  @override
+  String get leaveLeaveTile => 'Leave family';
+
+  @override
+  String get leaveLeaveExplain =>
+      'Your account leaves the family. Your devices sign out. Entries stay with the family; afterwards you can start another family or join one.';
+
+  @override
+  String get leaveLeaveBlocked =>
+      'Invite a second adult first, or delete the family.';
+
+  @override
+  String get leaveLeaveDialogTitle => 'Leave the family?';
+
+  @override
+  String get leaveLeaveDialogBody =>
+      'You lose access to this family. It stays as it is, and the others stay in it.';
+
+  @override
+  String get leaveLeaveConfirm => 'Leave';
+
+  @override
+  String get leaveCancel => 'Cancel';
+
+  @override
+  String get leaveDeleteTile => 'Delete family';
+
+  @override
+  String get leaveDeleteExplain =>
+      'All devices sign out at once. For 14 days a guardian can restore the family; after that all data is deleted for good.';
+
+  @override
+  String get leaveDeleteDialogTitle => 'Delete the family?';
+
+  @override
+  String get leaveDeleteDialogBody =>
+      'All devices sign out and nobody can reach the family any more. For 14 days a guardian can restore it. After that all data is gone.';
+
+  @override
+  String leaveDeleteNameLabel(String name) {
+    return 'Type ‘$name’ to confirm';
+  }
+
+  @override
+  String get leaveDeleteConfirm => 'Delete family';
+
+  @override
+  String leaveDeletedTitle(String family, String date) {
+    return '$family will be deleted for good on $date';
+  }
+
+  @override
+  String get leaveDeletedBodyGuardian =>
+      'You can restore the family. All data is still there. This phone becomes the family\'s phone again; the other devices sign in again.';
+
+  @override
+  String get leaveDeletedBodyMember =>
+      'Only a guardian can restore the family. You can also start afresh; then your account leaves this family.';
+
+  @override
+  String get leaveRestore => 'Restore';
+
+  @override
+  String get leaveStartAfresh => 'Start afresh';
+
+  @override
+  String get leaveStartAfreshHint =>
+      'Your account leaves the deleted family, and you start a new one.';
+
+  @override
+  String get leaveErrConfirmName => 'The name does not match.';
+
+  @override
+  String get leaveErrHouseholdDeleted => 'This family has been deleted.';
+
+  @override
+  String get leaveErrRestoreExpired => 'This family can no longer be restored.';
+
+  @override
+  String get leaveErrNotDeleted => 'This family is not deleted.';
+
+  @override
+  String get leaveErrAdultRequired => 'Only adults have their own account.';
+
+  @override
+  String get leaveErrAlreadyInHousehold =>
+      'This account already belongs to a family.';
+
+  @override
+  String get inviteDoorAction => 'I have an invitation code';
+
+  @override
+  String get inviteCodeTitle => 'Invitation';
+
+  @override
+  String get inviteCodeBody =>
+      'Enter the code, or paste the link you were sent.';
+
+  @override
+  String get inviteCodeLabel => 'Code or link';
+
+  @override
+  String get inviteCheckAction => 'Check invitation';
+
+  @override
+  String get inviteCodeInvalidFormat =>
+      'That is neither an invitation code nor a WuselWall link.';
+
+  @override
+  String get inviteNoLonger =>
+      'This invitation is no longer valid. Ask the person who invited you for a new one.';
+
+  @override
+  String get inviteRateLimited =>
+      'Too many attempts. Wait a few minutes and try again.';
+
+  @override
+  String inviteBanner(String inviter, String household) {
+    return '$inviter has invited you to $household';
+  }
+
+  @override
+  String inviteBannerNoInviter(String household) {
+    return 'You are invited to $household';
+  }
+
+  @override
+  String get inviteRoleLineGuardian =>
+      'As a guardian you see everything and approve rewards.';
+
+  @override
+  String get inviteRoleLineMember =>
+      'As a member you tick off tasks, without approving rewards.';
+
+  @override
+  String get inviteContinue => 'Continue to sign-in';
+
+  @override
+  String get inviteJoin => 'Join';
+
+  @override
+  String get inviteNewFamilyInstead => 'Start my own family';
+
+  @override
+  String inviteJoinTitle(String name, String household) {
+    return 'You are $name in $household';
+  }
+
+  @override
+  String get inviteJoinHint =>
+      'Your name and colour, as the family sees them. You can change them later in Settings.';
+
+  @override
+  String get inviteJoinDecline => 'Don\'t join';
+
+  @override
+  String inviteAlreadyIn(String household) {
+    return 'You are already in $household.';
+  }
+
+  @override
+  String get inviteNothingKept => 'There is no invitation to join any more.';
+
+  @override
+  String inviteResultTitle(String name) {
+    return 'Invitation for $name';
+  }
+
+  @override
+  String get inviteResultHint =>
+      'The person enters the code in WuselWall, or scans the QR code.';
+
+  @override
+  String inviteValidUntil(String date) {
+    return 'Valid until $date';
+  }
+
+  @override
+  String get inviteQrLabel => 'QR code of the invitation';
+
+  @override
+  String get inviteShare => 'Share';
+
+  @override
+  String get inviteDone => 'Done';
+
+  @override
+  String inviteShareMessage(String household, String link, String code) {
+    return 'Join $household on WuselWall: $link — or enter the code $code in the app.';
+  }
+
+  @override
+  String get inviteAdultTitle => 'Invite an adult';
+
+  @override
+  String get inviteAdultName => 'Name';
+
+  @override
+  String get inviteAdultRole => 'Role';
+
+  @override
+  String get inviteRoleGuardian => 'Guardian';
+
+  @override
+  String get inviteRoleMember => 'Member';
+
+  @override
+  String get inviteRoleGuardianHelp => 'Sees everything and approves rewards.';
+
+  @override
+  String get inviteRoleMemberHelp =>
+      'Ticks off tasks but does not approve rewards. For an au pair or grandparents.';
+
+  @override
+  String get inviteAdultEmail => 'Email (optional)';
+
+  @override
+  String get inviteAdultEmailHelp =>
+      'With this address the person finds the invitation by itself when signing in.';
+
+  @override
+  String get inviteEmailInvalid => 'That does not look like an email address.';
+
+  @override
+  String get inviteCreate => 'Create invitation';
+
+  @override
+  String get inviteInviteAction => 'Invite';
+
+  @override
+  String inviteOpenUntil(String date) {
+    return 'Invited · until $date';
+  }
+
+  @override
+  String get inviteShareAgain => 'Share again';
+
+  @override
+  String get inviteWithdraw => 'Withdraw';
+
+  @override
+  String get inviteWithdrawn => 'Invitation withdrawn.';
+
+  @override
+  String get inviteScanTitle => 'Scan invitation';
+
+  @override
+  String get accountDeleteTile => 'Delete account';
+
+  @override
+  String get accountDeleteExplain =>
+      'Your account and its sign-in methods are deleted, and you are signed out everywhere. Your profile stays in the family with its history. Apple access is revoked.';
+
+  @override
+  String get accountDeleteBlocked =>
+      'You are the last guardian with an account in this family. Invite a second adult first, or delete the family.';
+
+  @override
+  String get accountDeleteDialogTitle => 'Delete account?';
+
+  @override
+  String get accountDeleteDialogBody =>
+      'This cannot be undone. Your sign-in is removed, and your profile stays in the family.';
+
+  @override
+  String get accountDeleteConfirm => 'Delete account';
+
+  @override
+  String get accountDeleteRefused =>
+      'The account could not be deleted. Try again later.';
+
+  @override
+  String get accountDeleteReauthTitle => 'Please confirm it is you';
+
+  @override
+  String accountDeleteReauthBody(String email) {
+    return 'Deleting an account needs a fresh sign-in. We send a code to $email.';
+  }
+
+  @override
+  String get accountDeleteReauthSend => 'Send code';
+
+  @override
+  String get accountDeleteReauthCodeLabel => 'Code from the email';
+
+  @override
+  String get accountDeleteReauthConfirm => 'Confirm';
+
+  @override
+  String get accountDeleteReauthSignInAgain =>
+      'Sign in again first, then you can delete the account.';
+
+  @override
+  String get mfaResetAction => 'Reset two-factor';
+
+  @override
+  String get mfaResetConfirmTitle => 'Reset two-factor?';
+
+  @override
+  String mfaResetConfirmBody(String name) {
+    return '$name can sign in without a second factor afterwards and set it up again.';
+  }
+
+  @override
+  String get mfaResetConfirm => 'Reset';
+
+  @override
+  String mfaResetDone(String name) {
+    return '$name\'s second factor is reset.';
+  }
 
   @override
   String get serverTitle => 'Which server?';

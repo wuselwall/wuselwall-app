@@ -263,6 +263,8 @@ Badging API plan.
 
 ## The wall display
 
+> **Built 2026-10-15 on `feature/regions-and-ux`, not yet on the server.** The wall shows only the appointments marked for the kitchen unless "Alle Termine" is ticked (FR-8.11): every day column then shows all its appointments. The kiosk reverts the switch to key-only when it goes idle. A newly paired wall display shows a one-time checklist (keep the app pinned, keep the screen on, leave it plugged in), and a kids' tablet a welcome screen.
+
 The hardware is a decision worth making early because it constrains the UI.
 
 | Option | Pros | Cons |
@@ -284,6 +286,8 @@ ordering, not the marketing diagonal — cheap 10" tablets in this price range a
 
 ## Realtime and notifications
 
+> **Built 2026-10-15 on `feature/regions-and-ux`, not yet on the server.** Notifications are local only (Q47): on personal phones the app schedules a morning summary (default 07:00, the day's appointments and tasks, and the first appointment) and, if switched on, a reminder before each appointment. Settings are per person (Einstellungen → Erinnerungen). Nothing is sent to a server or a third party. Kiosk and kids' devices have no reminders.
+
 - **Supabase Realtime** delivers live updates while the app is open: database triggers
   broadcast small invalidation messages (`board:changed`, `shopping:changed`) on a
   private per-household channel, and the client refetches. On reconnect, refetch rather
@@ -298,6 +302,7 @@ ordering, not the marketing diagonal — cheap 10" tablets in this price range a
   train a family to ignore an app is to notify them about everything in week one. The
   defaults — morning summary at 07:00 on, everything else off — are in
   [21](21-household-settings.md#notifications).
+- **Local reminders** (built 2026-10-14, [14 Q47](14-open-questions.md)): Android and iOS schedule the morning summary and the event reminders on the phone itself, for the acting member on a personal device only, never on shared or kiosk devices. They are planned seven days ahead from data the app already has and replaced whenever it changes. Nothing leaves the device, and the system prompt appears only after a tap on *Erinnerungen einschalten*.
 - The web build gets realtime but no push; the laptop has Outlook for that.
 
 ## Design system

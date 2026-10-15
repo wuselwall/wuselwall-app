@@ -17,15 +17,21 @@ import 'package:wuselwall/core/server/server_address.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/qr_code_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
+import 'package:wuselwall/features/account/ui/delete_account_tile.dart';
+import 'package:wuselwall/features/account/ui/mfa_reset_button.dart';
 import 'package:wuselwall/features/home/application/home_tab.dart';
+import 'package:wuselwall/features/household/ui/leave_family_tiles.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
+import 'package:wuselwall/features/identity/application/pairing_providers.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/data/sign_in_methods_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/identity/domain/sign_in_method.dart';
 import 'package:wuselwall/features/identity/ui/enrolment_qr.dart';
 import 'package:wuselwall/features/identity/ui/guardian_gate.dart';
+import 'package:wuselwall/features/identity/ui/set_password_dialog.dart';
+import 'package:wuselwall/features/invitations/ui/members_invitations.dart';
 import 'package:wuselwall/features/settings/application/household_export_providers.dart';
 import 'package:wuselwall/features/settings/data/household_export_repository.dart';
 import 'package:wuselwall/features/shopping/data/shopping_store.dart';
@@ -44,6 +50,7 @@ class SettingsPage extends ConsumerWidget {
     final members = ref.watch(membersProvider);
     final devices = ref.watch(devicesProvider);
     final thisDevice = ref.watch(deviceProvider).value;
+    final canApprove = ref.watch(canApprovePairingProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -82,6 +89,13 @@ class SettingsPage extends ConsumerWidget {
             onTap: () => context.go(Routes.baselines),
           ),
           ListTile(
+            leading: const Icon(Icons.notifications_outlined),
+            title: Text(l10n.reminderSettingsTitle),
+            subtitle: Text(l10n.reminderSettingsSubtitle),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.go(Routes.reminders),
+          ),
+          ListTile(
             leading: const Icon(Icons.flag_outlined),
             title: Text(l10n.settingsGettingStarted),
             subtitle: Text(l10n.settingsGettingStartedSubtitle),
@@ -111,19 +125,45 @@ class SettingsPage extends ConsumerWidget {
                     subtitle: Text(
                       m.isGuardian ? l10n.roleGuardian : l10n.roleMember,
                     ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        MfaResetButton(member: m),
+                        InviteMemberButton(member: m),
+                      ],
+                    ),
                   ),
+                const OpenInvitationRows(),
+                const InviteAdultTile(),
               ],
             ),
           ),
           const SizedBox(height: Tokens.space6),
           _Header(
             title: l10n.settingsDevices,
-            action: IconButton(
-              tooltip: l10n.addDevice,
-              icon: const Icon(Icons.add_to_home_screen),
-              onPressed: () => _addDevice(context, ref),
-            ),
+            action: canApprove
+                ? const SizedBox.shrink()
+                : IconButton(
+                    tooltip: l10n.addDevice,
+                    icon: const Icon(Icons.add_to_home_screen),
+                    onPressed: () => _addDevice(context, ref),
+                  ),
           ),
+          // J3: the new device shows the code, this phone approves it. The code the old
+          // way stays for one release, for devices on an older app.
+          if (canApprove) ...[
+            FilledButton.icon(
+              key: const ValueKey('connect-device'),
+              onPressed: () => context.push<void>(Routes.devicePair),
+              icon: const Icon(Icons.add_to_home_screen),
+              label: Text(l10n.pairConnectAction),
+            ),
+            TextButton(
+              onPressed: () => _addDevice(context, ref),
+              child: Text(l10n.pairOldCodeAction),
+            ),
+            const SizedBox(height: Tokens.space2),
+          ],
           AsyncValueView<List<DeviceEntry>>(
             value: devices,
             onRetry: () => ref.invalidate(devicesProvider),
@@ -156,6 +196,8 @@ class SettingsPage extends ConsumerWidget {
             const _FamilySection(),
             const SizedBox(height: Tokens.space6),
             const _SignInMethodsSection(),
+            const LeaveFamilyTile(),
+            const DeleteAccountTile(),
             const SizedBox(height: Tokens.space6),
             const _SecuritySection(),
           ],
@@ -503,6 +545,7 @@ class _FamilySectionState extends ConsumerState<_FamilySection> {
               : null,
           onTap: _exporting ? null : _export,
         ),
+        const DeleteFamilyTile(),
       ],
     );
   }
@@ -552,6 +595,7 @@ class _SignInMethodsSection extends ConsumerWidget {
     final l10n = context.l10n;
     final methods = ref.watch(signInMethodsProvider);
     final repo = ref.read(signInMethodsRepositoryProvider);
+    final hasPassword = ref.read(identityRepositoryProvider).hasPassword();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -571,7 +615,15 @@ class _SignInMethodsSection extends ConsumerWidget {
                   ListTile(
                     leading: _methodIcon(m.provider),
                     title: Text(_methodName(l10n, m.provider)),
-                    subtitle: m.email == null ? null : Text(m.email!),
+                    subtitle: switch (m.provider) {
+                      // The e-mail code is always there for an account with an address.
+                      SignInMethodKind.email => Text(
+                        m.email == null
+                            ? l10n.signInMethodAlwaysAvailable
+                            : l10n.signInMethodEmailSubtitle(m.email!),
+                      ),
+                      _ => m.email == null ? null : Text(m.email!),
+                    },
                     trailing: list.length < 2 || m.provider.provider == null
                         ? null
                         : TextButton(
@@ -596,12 +648,36 @@ class _SignInMethodsSection extends ConsumerWidget {
                             )
                           : null,
                     ),
+                ListTile(
+                  leading: const Icon(Icons.lock_outline),
+                  title: Text(l10n.settingsPasswordTitle),
+                  subtitle: Text(
+                    hasPassword
+                        ? l10n.settingsPasswordSet
+                        : l10n.settingsPasswordNotSet,
+                  ),
+                  trailing: OutlinedButton(
+                    onPressed: () => _setPassword(context, ref),
+                    child: Text(
+                      hasPassword
+                          ? l10n.passwordChangeAction
+                          : l10n.passwordSetAction,
+                    ),
+                  ),
+                ),
               ],
             );
           },
         ),
       ],
     );
+  }
+
+  Future<void> _setPassword(BuildContext context, WidgetRef ref) async {
+    final saved = await showSetPasswordDialog(context);
+    if (!saved || !context.mounted) return;
+    ref.invalidate(signInMethodsProvider);
+    context.showMessage(context.l10n.passwordSaved);
   }
 
   static Widget _methodIcon(SignInMethodKind kind) => switch (kind) {

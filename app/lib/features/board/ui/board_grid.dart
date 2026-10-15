@@ -13,11 +13,19 @@ class BoardFrame {
     required this.board,
     required this.geometry,
     required this.night,
+    this.allEvents = false,
   });
 
   final WeekBoard board;
   final BoardGeometry geometry;
   final bool night;
+
+  /// Every appointment of each day, not only the key ones (FR-8.11, "Alle Termine").
+  final bool allEvents;
+
+  /// The appointments the zones draw for day [i]: the key ones, or all with [allEvents].
+  List<BoardEvent> eventsOf(int i) =>
+      allEvents ? board.days[i].events : board.days[i].keyEvents;
 
   int? get todayIndex => board.todayIndex;
 
@@ -261,19 +269,28 @@ class ClipFit extends StatelessWidget {
 /// The quiet band between two zones. The zones need no titles: the gutter names every
 /// row (a member, a day part, the meal), so the band only separates them.
 class BoardDivider extends StatelessWidget {
-  const BoardDivider({super.key});
+  const BoardDivider({this.trailing, super.key});
 
   static const height = 8.0;
+
+  /// The band of a divider that carries a control: a 56 px kiosk tap target (specs/09).
+  static const controlHeight = 56.0;
+
+  /// A control at the right end of the band, such as the Termine zone's "Alle Termine".
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
     final ww = context.ww;
     return Container(
-      height: height,
+      height: trailing == null ? height : controlHeight,
+      padding: trailing == null ? null : const EdgeInsets.only(right: 8),
+      alignment: Alignment.centerRight,
       decoration: BoxDecoration(
         color: ww.sunken,
         border: Border.symmetric(horizontal: BorderSide(color: ww.line)),
       ),
+      child: trailing,
     );
   }
 }

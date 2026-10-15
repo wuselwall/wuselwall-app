@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/ui/week_board_page.dart';
 import 'package:wuselwall/features/calendar/ui/calendar_section.dart';
 import 'package:wuselwall/features/home/application/home_section.dart';
@@ -30,8 +31,10 @@ class RegisterHomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (register == UiRegister.kiosk) {
-      return const IdleReverter(
-        child: Scaffold(body: SafeArea(child: WeekBoardPage())),
+      return IdleReverter(
+        // The board goes back to key appointments when nobody touches it (FR-8.11).
+        onIdle: () => ref.read(boardAllEventsProvider.notifier).set(false),
+        child: const Scaffold(body: SafeArea(child: WeekBoardPage())),
       );
     }
     if (register == UiRegister.kid) return const KidHome();

@@ -24,6 +24,7 @@ The seven days stand side by side, Monday to Sunday. Today's column is wider and
 
 - **Who is where**: one row per family member. For children, this shows school time (for example 8–14:25), notable lessons such as sport or swimming, and the end of after-school care. For adults, a pale strip shows their usual state, such as home office. Anything different — duty, business trip, office — appears as a coloured band; a multi-day trip is one continuous band. A small clock with "until 17" means appointments until 17:00. A public holiday is named above its column; children without school show "free". **Pale = as usual, bold = different.**
 - **Appointments**: morning, afternoon and evening. Only appointments marked for the kitchen display are shown. A dot shows who is involved. Dashed and with a "?" means not certain yet. If there is no room left, it says "+2 more".
+  With **All events** (at the right of the band above the appointments) every column shows all its appointments, not only the marked ones. The tick goes off again by itself when nobody touches the wall.
 - **Hot meal** (named at the left of its row): the one warm meal of the day — sun for lunch, moon for dinner — with the dish. A dot per person shows who eats with us (filled) and who is not there (hollow). It also shows who cooks.
 - **Footer**: each person's open tasks for today; a tap on **Open today** opens the family's chore board. Also the number of items on the shopping list.
 
@@ -55,7 +56,17 @@ The wall can do no more than that: it adds items to the shopping list and correc
 - If the connection drops, the last plan stays visible with the note "No connection"; the top right says when it was last updated. While everything works, the wall shows nothing about it.
 
 ::: tip Kids' tablet
-The children's view is getting **My day**, **Timetable** and **Points** soon.
+The children's view has the tabs **My day**, **Timetable**, **Points**, **Shopping** and **Family**.
 :::
 
-It is connected like any shared device with a [code](/en/guide/setup#_2-connect-a-device-with-a-code); choose the device type **Wall display**.
+## Connecting
+
+You connect the wall display without typing a code: on the device, tap **Connect a family tablet or wall display**. On your phone choose **Settings → Devices → Connect a device**, pick the kind **Wall display**, scan the QR code and give the device a name. The whole process is shown under [Signing in and connecting](/en/guide/setup#_4-connecting-a-family-tablet-or-wall-display).
+
+The first time, the wall display shows a **checklist** with three steps, which you go through once on the device:
+
+1. **Keep the app open**: On iPhone and iPad you turn on **Guided Access** under **Accessibility**. On Android you turn on **App pinning** under **Security**. This keeps the display on WuselWall.
+2. **Keep the screen on**: Set auto-lock or the screen timeout to "never" or to the maximum.
+3. **Leave it plugged in**: Keep it connected to the power, so that it is ready again after a power cut.
+
+**Done** removes the checklist.

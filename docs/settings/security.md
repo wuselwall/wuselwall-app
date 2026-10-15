@@ -4,11 +4,12 @@ Anmeldung und Sicherheit gibt es nur auf dem **persönlichen Handy** eines Erzie
 
 ## Anmeldung
 
-Hier steht, womit du dich anmelden kannst: **E-Mail und Passwort**, **Apple**, **Google**.
+Hier steht, womit du dich anmelden kannst: der **Code per E-Mail**, ein **Passwort** (siehe [Konto und Familie](/settings/account#passwort)), **Apple** und **Google**.
 
 <Shot name="settings-sign-in" alt="Einstellungen → Anmeldung" />
 
 - **Verbinden**: Tippe bei Apple oder Google auf **Verbinden** und bestätige im Fenster von Apple bzw. Google. Ab dann kommst du auch mit diesem Konto hinein, auf jedem Gerät. Verbinden geht nur in der App auf dem Handy, nicht im Browser.
+- **Passwort**: Mit **Passwort festlegen** oder **Passwort ändern** richtest du eins ein.
 - **Entfernen**: nimmt eine Methode wieder weg. Die letzte bleibt immer, damit du dich nicht aussperrst.
 
 Apple und Google erfahren dabei, dass du WuselWall nutzt, und geben deinen Namen und deine E-Mail-Adresse weiter – sonst nichts. WuselWall fragt bei Google nie nach Kalender oder Kontakten.

@@ -24,6 +24,7 @@ class FeedFilter {
     this.calendarIds = const [],
     this.kinds = const {'appointment'},
     this.school = FeedSchool.off,
+    this.subscribed = false,
   });
 
   factory FeedFilter.fromJson(Map<String, dynamic> json) => FeedFilter(
@@ -31,6 +32,7 @@ class FeedFilter {
     calendarIds: [...?(json['calendar_ids'] as List?)?.cast<String>()],
     kinds: {...?(json['kinds'] as List?)?.cast<String>()},
     school: FeedSchool.parse(json['school'] as String? ?? 'off'),
+    subscribed: json['subscribed'] == true,
   );
 
   final List<String> profileIds;
@@ -40,11 +42,16 @@ class FeedFilter {
   final Set<String> kinds;
   final FeedSchool school;
 
+  /// Whether the imported calendars (FR-1.9) are part of the feed. Off by default: sharing is a
+  /// deliberate act. A subscription saved before the key existed reads as off.
+  final bool subscribed;
+
   Map<String, dynamic> toJson() => {
     'profile_ids': profileIds,
     'calendar_ids': calendarIds,
     'kinds': kinds.toList(),
     'school': school.name,
+    'subscribed': subscribed,
   };
 }
 

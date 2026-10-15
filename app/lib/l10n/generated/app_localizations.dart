@@ -278,12 +278,6 @@ abstract class AppLocalizations {
   /// **'The family plan for the kitchen wall'**
   String get doorTagline;
 
-  /// No description provided for @setupEnrolAction.
-  ///
-  /// In en, this message translates to:
-  /// **'Connect with a code'**
-  String get setupEnrolAction;
-
   /// No description provided for @setupHouseholdAction.
   ///
   /// In en, this message translates to:
@@ -1223,7 +1217,7 @@ abstract class AppLocalizations {
   /// No description provided for @signInMethodEmail.
   ///
   /// In en, this message translates to:
-  /// **'Email and password'**
+  /// **'Email code'**
   String get signInMethodEmail;
 
   /// No description provided for @signInMethodApple.
@@ -5533,6 +5527,1338 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Type the code'**
   String get scanTypeCode;
+
+  /// No description provided for @feedSubTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Include subscribed calendars'**
+  String get feedSubTitle;
+
+  /// No description provided for @feedSubHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Events from imported calendars (for example a club or the bin collection) also appear in this subscription.'**
+  String get feedSubHelp;
+
+  /// No description provided for @feedSubSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribed calendars'**
+  String get feedSubSummary;
+
+  /// No description provided for @boardAllEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'All events'**
+  String get boardAllEvents;
+
+  /// No description provided for @reminderChannelName.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders'**
+  String get reminderChannelName;
+
+  /// No description provided for @reminderStartLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on reminders'**
+  String get reminderStartLabel;
+
+  /// No description provided for @reminderMorningEventsAndTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Today: {events, plural, one{1 appointment} other{{events} appointments}}, {tasks, plural, one{1 chore} other{{tasks} chores}}'**
+  String reminderMorningEventsAndTasks(int events, int tasks);
+
+  /// No description provided for @reminderMorningEventsOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Today: {events, plural, one{1 appointment} other{{events} appointments}}'**
+  String reminderMorningEventsOnly(int events);
+
+  /// No description provided for @reminderMorningTasksOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Today: {tasks, plural, one{1 chore} other{{tasks} chores}}'**
+  String reminderMorningTasksOnly(int tasks);
+
+  /// No description provided for @reminderMorningNoEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing is scheduled today.'**
+  String get reminderMorningNoEvents;
+
+  /// No description provided for @reminderMorningFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'First up at {time}: {title}'**
+  String reminderMorningFirst(String time, String title);
+
+  /// No description provided for @reminderMorningAllDay.
+  ///
+  /// In en, this message translates to:
+  /// **'All day: {title}'**
+  String reminderMorningAllDay(String title);
+
+  /// No description provided for @reminderEventBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts at {time}'**
+  String reminderEventBody(String time);
+
+  /// No description provided for @reminderSettingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders'**
+  String get reminderSettingsTitle;
+
+  /// No description provided for @reminderSettingsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'On this phone'**
+  String get reminderSettingsSubtitle;
+
+  /// No description provided for @reminderSettingsSection.
+  ///
+  /// In en, this message translates to:
+  /// **'What you want to be reminded of'**
+  String get reminderSettingsSection;
+
+  /// No description provided for @reminderStatusOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders are on on this phone.'**
+  String get reminderStatusOn;
+
+  /// No description provided for @reminderStatusOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders are off on this phone.'**
+  String get reminderStatusOff;
+
+  /// No description provided for @reminderStatusUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This device cannot show reminders.'**
+  String get reminderStatusUnavailable;
+
+  /// No description provided for @reminderEnableAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on reminders'**
+  String get reminderEnableAction;
+
+  /// No description provided for @reminderDeniedNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Without permission there are no reminders. You can change the permission in the system settings.'**
+  String get reminderDeniedNote;
+
+  /// No description provided for @reminderLocalNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders are created on this phone. Nothing is sent to a server or to anyone else.'**
+  String get reminderLocalNote;
+
+  /// No description provided for @reminderOnlyPersonal.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders are only available on a member\'s personal device.'**
+  String get reminderOnlyPersonal;
+
+  /// No description provided for @pairFrontDoorAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect a family tablet or wall display'**
+  String get pairFrontDoorAction;
+
+  /// No description provided for @pairTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect a family tablet or wall display'**
+  String get pairTitle;
+
+  /// No description provided for @pairScanHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Open WuselWall on your phone and scan this code.'**
+  String get pairScanHint;
+
+  /// No description provided for @pairCodeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Or on the phone: Settings → Devices → Connect a device, then type the code.'**
+  String get pairCodeHint;
+
+  /// No description provided for @pairQrLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'QR code to connect this device'**
+  String get pairQrLabel;
+
+  /// No description provided for @pairWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for approval …'**
+  String get pairWaiting;
+
+  /// No description provided for @pairConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected to {household}'**
+  String pairConnected(String household);
+
+  /// No description provided for @pairOldCodeLink.
+  ///
+  /// In en, this message translates to:
+  /// **'I have a code from a phone (older version)'**
+  String get pairOldCodeLink;
+
+  /// No description provided for @pairConnectAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect a device'**
+  String get pairConnectAction;
+
+  /// No description provided for @pairOldCodeAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a code for an older device'**
+  String get pairOldCodeAction;
+
+  /// No description provided for @pairEntryBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan the code the new device shows, or type it in.'**
+  String get pairEntryBody;
+
+  /// No description provided for @pairCodeField.
+  ///
+  /// In en, this message translates to:
+  /// **'Code from the new device'**
+  String get pairCodeField;
+
+  /// No description provided for @pairNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get pairNext;
+
+  /// No description provided for @pairReviewBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This is the code of the device to connect.'**
+  String get pairReviewBody;
+
+  /// No description provided for @pairConfirmHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Only confirm if you can see this device in front of you.'**
+  String get pairConfirmHint;
+
+  /// No description provided for @pairKindLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'What kind of device is this?'**
+  String get pairKindLabel;
+
+  /// No description provided for @pairKindWall.
+  ///
+  /// In en, this message translates to:
+  /// **'Wall display'**
+  String get pairKindWall;
+
+  /// No description provided for @pairKindKid.
+  ///
+  /// In en, this message translates to:
+  /// **'Kids\' tablet'**
+  String get pairKindKid;
+
+  /// No description provided for @pairKindFamily.
+  ///
+  /// In en, this message translates to:
+  /// **'Shared tablet'**
+  String get pairKindFamily;
+
+  /// No description provided for @pairKindChild.
+  ///
+  /// In en, this message translates to:
+  /// **'A child\'s phone'**
+  String get pairKindChild;
+
+  /// No description provided for @pairChildLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Which child?'**
+  String get pairChildLabel;
+
+  /// No description provided for @pairNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Device name'**
+  String get pairNameLabel;
+
+  /// No description provided for @pairDefaultWall.
+  ///
+  /// In en, this message translates to:
+  /// **'Wall display'**
+  String get pairDefaultWall;
+
+  /// No description provided for @pairDefaultKid.
+  ///
+  /// In en, this message translates to:
+  /// **'Kids\' tablet'**
+  String get pairDefaultKid;
+
+  /// No description provided for @pairDefaultFamily.
+  ///
+  /// In en, this message translates to:
+  /// **'Tablet'**
+  String get pairDefaultFamily;
+
+  /// No description provided for @pairDefaultChild.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}\'s phone'**
+  String pairDefaultChild(String name);
+
+  /// No description provided for @pairApproveAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect'**
+  String get pairApproveAction;
+
+  /// No description provided for @pairApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Device connected'**
+  String get pairApproved;
+
+  /// No description provided for @pairOnlyOnPersonal.
+  ///
+  /// In en, this message translates to:
+  /// **'This works only on your own phone.'**
+  String get pairOnlyOnPersonal;
+
+  /// No description provided for @pairPinTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set the guardian PIN'**
+  String get pairPinTitle;
+
+  /// No description provided for @pairPinBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The PIN confirms changes on shared devices. Set it once.'**
+  String get pairPinBody;
+
+  /// No description provided for @pairPinConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the PIN again'**
+  String get pairPinConfirm;
+
+  /// No description provided for @pairPinMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'The PINs do not match. Try again.'**
+  String get pairPinMismatch;
+
+  /// No description provided for @firstRunKioskTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up the wall display'**
+  String get firstRunKioskTitle;
+
+  /// No description provided for @firstRunKioskBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Three steps, once on this device. Then it shows the week.'**
+  String get firstRunKioskBody;
+
+  /// No description provided for @firstRunPinTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the app open'**
+  String get firstRunPinTitle;
+
+  /// No description provided for @firstRunPinIos.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings → Accessibility → Guided Access: turn it on. Open WuselWall and press the top button three times quickly.'**
+  String get firstRunPinIos;
+
+  /// No description provided for @firstRunPinAndroid.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings → Security → App pinning (on some devices “Screen pinning”). Open WuselWall, open Recents and tap the pin.'**
+  String get firstRunPinAndroid;
+
+  /// No description provided for @firstRunAwakeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the screen on'**
+  String get firstRunAwakeTitle;
+
+  /// No description provided for @firstRunAwakeIos.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings → Display & Brightness → Auto-Lock → Never.'**
+  String get firstRunAwakeIos;
+
+  /// No description provided for @firstRunAwakeAndroid.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings → Display → Screen timeout: the longest setting.'**
+  String get firstRunAwakeAndroid;
+
+  /// No description provided for @firstRunPowerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave it plugged in'**
+  String get firstRunPowerTitle;
+
+  /// No description provided for @firstRunPowerBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep it on the mains, so it is ready again after a power cut.'**
+  String get firstRunPowerBody;
+
+  /// No description provided for @firstRunDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get firstRunDone;
+
+  /// No description provided for @firstRunKidTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome'**
+  String get firstRunKidTitle;
+
+  /// No description provided for @firstRunKidBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap your picture, and WuselWall knows who you are.'**
+  String get firstRunKidBody;
+
+  /// No description provided for @firstRunKidStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Let’s go'**
+  String get firstRunKidStart;
+
+  /// No description provided for @householdNewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New family'**
+  String get householdNewTitle;
+
+  /// No description provided for @householdNewFamilyName.
+  ///
+  /// In en, this message translates to:
+  /// **'Family name'**
+  String get householdNewFamilyName;
+
+  /// No description provided for @householdNewYourName.
+  ///
+  /// In en, this message translates to:
+  /// **'Your name'**
+  String get householdNewYourName;
+
+  /// No description provided for @householdNewColour.
+  ///
+  /// In en, this message translates to:
+  /// **'Your colour'**
+  String get householdNewColour;
+
+  /// No description provided for @householdNewColourOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour {number}'**
+  String householdNewColourOption(String number);
+
+  /// No description provided for @householdNewFamilyPrefill.
+  ///
+  /// In en, this message translates to:
+  /// **'Family {name}'**
+  String householdNewFamilyPrefill(String name);
+
+  /// No description provided for @householdNewDefaults.
+  ///
+  /// In en, this message translates to:
+  /// **'Time zone {timezone} · Language {language} — from your device'**
+  String householdNewDefaults(String timezone, String language);
+
+  /// No description provided for @householdLanguageDe.
+  ///
+  /// In en, this message translates to:
+  /// **'German'**
+  String get householdLanguageDe;
+
+  /// No description provided for @householdLanguageEn.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get householdLanguageEn;
+
+  /// No description provided for @householdNewFounderCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Founder code'**
+  String get householdNewFounderCode;
+
+  /// No description provided for @householdNewFounderHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The person who runs your server gives you the founder code.'**
+  String get householdNewFounderHelp;
+
+  /// No description provided for @householdSeedExamples.
+  ///
+  /// In en, this message translates to:
+  /// **'Start with examples — 5 tasks, 3 rewards'**
+  String get householdSeedExamples;
+
+  /// No description provided for @householdNewCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create family'**
+  String get householdNewCreate;
+
+  /// No description provided for @householdNewInvited.
+  ///
+  /// In en, this message translates to:
+  /// **'I was invited'**
+  String get householdNewInvited;
+
+  /// No description provided for @householdInvitedNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Invitations arrive with the next update.'**
+  String get householdInvitedNote;
+
+  /// No description provided for @householdNewSignOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out'**
+  String get householdNewSignOut;
+
+  /// No description provided for @householdNewErrNoCode.
+  ///
+  /// In en, this message translates to:
+  /// **'New families are only possible with a founder code for now.'**
+  String get householdNewErrNoCode;
+
+  /// No description provided for @householdNewErrCodeWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'The founder code is not correct.'**
+  String get householdNewErrCodeWrong;
+
+  /// No description provided for @householdNewErrRateLimited.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts. Wait a few minutes and try again.'**
+  String get householdNewErrRateLimited;
+
+  /// No description provided for @householdMembersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Who else is in your family?'**
+  String get householdMembersTitle;
+
+  /// No description provided for @householdMembersYou.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} (you)'**
+  String householdMembersYou(String name);
+
+  /// No description provided for @householdKindChild.
+  ///
+  /// In en, this message translates to:
+  /// **'Child'**
+  String get householdKindChild;
+
+  /// No description provided for @householdKindAdult.
+  ///
+  /// In en, this message translates to:
+  /// **'Adult'**
+  String get householdKindAdult;
+
+  /// No description provided for @householdMembersName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get householdMembersName;
+
+  /// No description provided for @householdMembersAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a person'**
+  String get householdMembersAdd;
+
+  /// No description provided for @householdMembersRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get householdMembersRemove;
+
+  /// No description provided for @householdMembersDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get householdMembersDone;
+
+  /// No description provided for @householdMembersSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get householdMembersSkip;
+
+  /// No description provided for @householdMembersHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'You can invite adults later.'**
+  String get householdMembersHelp;
+
+  /// No description provided for @householdDeviceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{owner} {device}'**
+  String householdDeviceLabel(String owner, String device);
+
+  /// No description provided for @householdDeviceIphone.
+  ///
+  /// In en, this message translates to:
+  /// **'iPhone'**
+  String get householdDeviceIphone;
+
+  /// No description provided for @householdDeviceAndroid.
+  ///
+  /// In en, this message translates to:
+  /// **'Android phone'**
+  String get householdDeviceAndroid;
+
+  /// No description provided for @householdDeviceBrowser.
+  ///
+  /// In en, this message translates to:
+  /// **'browser'**
+  String get householdDeviceBrowser;
+
+  /// No description provided for @householdDeviceComputer.
+  ///
+  /// In en, this message translates to:
+  /// **'computer'**
+  String get householdDeviceComputer;
+
+  /// No description provided for @emailContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get emailContinue;
+
+  /// No description provided for @emailHavePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'I have a password'**
+  String get emailHavePassword;
+
+  /// No description provided for @emailWrongCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Email or password is incorrect.'**
+  String get emailWrongCredentials;
+
+  /// No description provided for @emailUseCodeInstead.
+  ///
+  /// In en, this message translates to:
+  /// **'Use an email code instead'**
+  String get emailUseCodeInstead;
+
+  /// No description provided for @emailOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection – signing in by email needs one.'**
+  String get emailOffline;
+
+  /// No description provided for @emailCodeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Code from the email'**
+  String get emailCodeTitle;
+
+  /// No description provided for @emailCodeSent.
+  ///
+  /// In en, this message translates to:
+  /// **'We sent a 6-digit code to {email}. It is valid for 10 minutes.'**
+  String emailCodeSent(String email);
+
+  /// No description provided for @emailCodeFieldLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Six-digit code'**
+  String get emailCodeFieldLabel;
+
+  /// No description provided for @emailCodeWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'That code is wrong or has expired. Try again, or ask for a new one.'**
+  String get emailCodeWrong;
+
+  /// No description provided for @emailCodeResendIn.
+  ///
+  /// In en, this message translates to:
+  /// **'No code? Send again (in {seconds} s)'**
+  String emailCodeResendIn(int seconds);
+
+  /// No description provided for @emailCodeResend.
+  ///
+  /// In en, this message translates to:
+  /// **'No code? Send again'**
+  String get emailCodeResend;
+
+  /// No description provided for @emailCodeSpam.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your spam folder.'**
+  String get emailCodeSpam;
+
+  /// No description provided for @emailCodeResent.
+  ///
+  /// In en, this message translates to:
+  /// **'A new code is on its way.'**
+  String get emailCodeResent;
+
+  /// No description provided for @emailCodeOtherMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose another way'**
+  String get emailCodeOtherMethod;
+
+  /// No description provided for @emailCodeOtherAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Another email address'**
+  String get emailCodeOtherAddress;
+
+  /// No description provided for @signInMethodTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How would you like to sign in next time?'**
+  String get signInMethodTitle;
+
+  /// No description provided for @signInMethodCode.
+  ///
+  /// In en, this message translates to:
+  /// **'With a code by email — nothing to remember'**
+  String get signInMethodCode;
+
+  /// No description provided for @signInMethodPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'With a password'**
+  String get signInMethodPassword;
+
+  /// No description provided for @passwordStrengthShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Still too short'**
+  String get passwordStrengthShort;
+
+  /// No description provided for @passwordStrengthWeak.
+  ///
+  /// In en, this message translates to:
+  /// **'Weak'**
+  String get passwordStrengthWeak;
+
+  /// No description provided for @passwordStrengthFair.
+  ///
+  /// In en, this message translates to:
+  /// **'Fair'**
+  String get passwordStrengthFair;
+
+  /// No description provided for @passwordStrengthStrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Strong'**
+  String get passwordStrengthStrong;
+
+  /// No description provided for @settingsPasswordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get settingsPasswordTitle;
+
+  /// No description provided for @settingsPasswordSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Set. You can also sign in with email and password.'**
+  String get settingsPasswordSet;
+
+  /// No description provided for @settingsPasswordNotSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not set. Signing in with an email code still works.'**
+  String get settingsPasswordNotSet;
+
+  /// No description provided for @passwordSetAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Set password'**
+  String get passwordSetAction;
+
+  /// No description provided for @passwordChangeAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Change password'**
+  String get passwordChangeAction;
+
+  /// No description provided for @passwordSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Your password is saved.'**
+  String get passwordSaved;
+
+  /// No description provided for @passwordDialogBody.
+  ///
+  /// In en, this message translates to:
+  /// **'At least 10 characters. The email code always stays available.'**
+  String get passwordDialogBody;
+
+  /// No description provided for @signInMethodEmailSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{email} — always available'**
+  String signInMethodEmailSubtitle(String email);
+
+  /// No description provided for @signInMethodAlwaysAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Always available'**
+  String get signInMethodAlwaysAvailable;
+
+  /// No description provided for @leaveLeaveTile.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave family'**
+  String get leaveLeaveTile;
+
+  /// No description provided for @leaveLeaveExplain.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account leaves the family. Your devices sign out. Entries stay with the family; afterwards you can start another family or join one.'**
+  String get leaveLeaveExplain;
+
+  /// No description provided for @leaveLeaveBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite a second adult first, or delete the family.'**
+  String get leaveLeaveBlocked;
+
+  /// No description provided for @leaveLeaveDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave the family?'**
+  String get leaveLeaveDialogTitle;
+
+  /// No description provided for @leaveLeaveDialogBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You lose access to this family. It stays as it is, and the others stay in it.'**
+  String get leaveLeaveDialogBody;
+
+  /// No description provided for @leaveLeaveConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave'**
+  String get leaveLeaveConfirm;
+
+  /// No description provided for @leaveCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get leaveCancel;
+
+  /// No description provided for @leaveDeleteTile.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete family'**
+  String get leaveDeleteTile;
+
+  /// No description provided for @leaveDeleteExplain.
+  ///
+  /// In en, this message translates to:
+  /// **'All devices sign out at once. For 14 days a guardian can restore the family; after that all data is deleted for good.'**
+  String get leaveDeleteExplain;
+
+  /// No description provided for @leaveDeleteDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete the family?'**
+  String get leaveDeleteDialogTitle;
+
+  /// No description provided for @leaveDeleteDialogBody.
+  ///
+  /// In en, this message translates to:
+  /// **'All devices sign out and nobody can reach the family any more. For 14 days a guardian can restore it. After that all data is gone.'**
+  String get leaveDeleteDialogBody;
+
+  /// No description provided for @leaveDeleteNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Type ‘{name}’ to confirm'**
+  String leaveDeleteNameLabel(String name);
+
+  /// No description provided for @leaveDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete family'**
+  String get leaveDeleteConfirm;
+
+  /// No description provided for @leaveDeletedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{family} will be deleted for good on {date}'**
+  String leaveDeletedTitle(String family, String date);
+
+  /// No description provided for @leaveDeletedBodyGuardian.
+  ///
+  /// In en, this message translates to:
+  /// **'You can restore the family. All data is still there. This phone becomes the family\'s phone again; the other devices sign in again.'**
+  String get leaveDeletedBodyGuardian;
+
+  /// No description provided for @leaveDeletedBodyMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Only a guardian can restore the family. You can also start afresh; then your account leaves this family.'**
+  String get leaveDeletedBodyMember;
+
+  /// No description provided for @leaveRestore.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore'**
+  String get leaveRestore;
+
+  /// No description provided for @leaveStartAfresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Start afresh'**
+  String get leaveStartAfresh;
+
+  /// No description provided for @leaveStartAfreshHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account leaves the deleted family, and you start a new one.'**
+  String get leaveStartAfreshHint;
+
+  /// No description provided for @leaveErrConfirmName.
+  ///
+  /// In en, this message translates to:
+  /// **'The name does not match.'**
+  String get leaveErrConfirmName;
+
+  /// No description provided for @leaveErrHouseholdDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'This family has been deleted.'**
+  String get leaveErrHouseholdDeleted;
+
+  /// No description provided for @leaveErrRestoreExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'This family can no longer be restored.'**
+  String get leaveErrRestoreExpired;
+
+  /// No description provided for @leaveErrNotDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'This family is not deleted.'**
+  String get leaveErrNotDeleted;
+
+  /// No description provided for @leaveErrAdultRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Only adults have their own account.'**
+  String get leaveErrAdultRequired;
+
+  /// No description provided for @leaveErrAlreadyInHousehold.
+  ///
+  /// In en, this message translates to:
+  /// **'This account already belongs to a family.'**
+  String get leaveErrAlreadyInHousehold;
+
+  /// No description provided for @inviteDoorAction.
+  ///
+  /// In en, this message translates to:
+  /// **'I have an invitation code'**
+  String get inviteDoorAction;
+
+  /// No description provided for @inviteCodeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Invitation'**
+  String get inviteCodeTitle;
+
+  /// No description provided for @inviteCodeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the code, or paste the link you were sent.'**
+  String get inviteCodeBody;
+
+  /// No description provided for @inviteCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Code or link'**
+  String get inviteCodeLabel;
+
+  /// No description provided for @inviteCheckAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Check invitation'**
+  String get inviteCheckAction;
+
+  /// No description provided for @inviteCodeInvalidFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'That is neither an invitation code nor a WuselWall link.'**
+  String get inviteCodeInvalidFormat;
+
+  /// No description provided for @inviteNoLonger.
+  ///
+  /// In en, this message translates to:
+  /// **'This invitation is no longer valid. Ask the person who invited you for a new one.'**
+  String get inviteNoLonger;
+
+  /// No description provided for @inviteRateLimited.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts. Wait a few minutes and try again.'**
+  String get inviteRateLimited;
+
+  /// No description provided for @inviteBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'{inviter} has invited you to {household}'**
+  String inviteBanner(String inviter, String household);
+
+  /// No description provided for @inviteBannerNoInviter.
+  ///
+  /// In en, this message translates to:
+  /// **'You are invited to {household}'**
+  String inviteBannerNoInviter(String household);
+
+  /// No description provided for @inviteRoleLineGuardian.
+  ///
+  /// In en, this message translates to:
+  /// **'As a guardian you see everything and approve rewards.'**
+  String get inviteRoleLineGuardian;
+
+  /// No description provided for @inviteRoleLineMember.
+  ///
+  /// In en, this message translates to:
+  /// **'As a member you tick off tasks, without approving rewards.'**
+  String get inviteRoleLineMember;
+
+  /// No description provided for @inviteContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue to sign-in'**
+  String get inviteContinue;
+
+  /// No description provided for @inviteJoin.
+  ///
+  /// In en, this message translates to:
+  /// **'Join'**
+  String get inviteJoin;
+
+  /// No description provided for @inviteNewFamilyInstead.
+  ///
+  /// In en, this message translates to:
+  /// **'Start my own family'**
+  String get inviteNewFamilyInstead;
+
+  /// No description provided for @inviteJoinTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You are {name} in {household}'**
+  String inviteJoinTitle(String name, String household);
+
+  /// No description provided for @inviteJoinHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your name and colour, as the family sees them. You can change them later in Settings.'**
+  String get inviteJoinHint;
+
+  /// No description provided for @inviteJoinDecline.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t join'**
+  String get inviteJoinDecline;
+
+  /// No description provided for @inviteAlreadyIn.
+  ///
+  /// In en, this message translates to:
+  /// **'You are already in {household}.'**
+  String inviteAlreadyIn(String household);
+
+  /// No description provided for @inviteNothingKept.
+  ///
+  /// In en, this message translates to:
+  /// **'There is no invitation to join any more.'**
+  String get inviteNothingKept;
+
+  /// No description provided for @inviteResultTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Invitation for {name}'**
+  String inviteResultTitle(String name);
+
+  /// No description provided for @inviteResultHint.
+  ///
+  /// In en, this message translates to:
+  /// **'The person enters the code in WuselWall, or scans the QR code.'**
+  String get inviteResultHint;
+
+  /// No description provided for @inviteValidUntil.
+  ///
+  /// In en, this message translates to:
+  /// **'Valid until {date}'**
+  String inviteValidUntil(String date);
+
+  /// No description provided for @inviteQrLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'QR code of the invitation'**
+  String get inviteQrLabel;
+
+  /// No description provided for @inviteShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get inviteShare;
+
+  /// No description provided for @inviteDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get inviteDone;
+
+  /// No description provided for @inviteShareMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Join {household} on WuselWall: {link} — or enter the code {code} in the app.'**
+  String inviteShareMessage(String household, String link, String code);
+
+  /// No description provided for @inviteAdultTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite an adult'**
+  String get inviteAdultTitle;
+
+  /// No description provided for @inviteAdultName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get inviteAdultName;
+
+  /// No description provided for @inviteAdultRole.
+  ///
+  /// In en, this message translates to:
+  /// **'Role'**
+  String get inviteAdultRole;
+
+  /// No description provided for @inviteRoleGuardian.
+  ///
+  /// In en, this message translates to:
+  /// **'Guardian'**
+  String get inviteRoleGuardian;
+
+  /// No description provided for @inviteRoleMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Member'**
+  String get inviteRoleMember;
+
+  /// No description provided for @inviteRoleGuardianHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Sees everything and approves rewards.'**
+  String get inviteRoleGuardianHelp;
+
+  /// No description provided for @inviteRoleMemberHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Ticks off tasks but does not approve rewards. For an au pair or grandparents.'**
+  String get inviteRoleMemberHelp;
+
+  /// No description provided for @inviteAdultEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email (optional)'**
+  String get inviteAdultEmail;
+
+  /// No description provided for @inviteAdultEmailHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'With this address the person finds the invitation by itself when signing in.'**
+  String get inviteAdultEmailHelp;
+
+  /// No description provided for @inviteEmailInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'That does not look like an email address.'**
+  String get inviteEmailInvalid;
+
+  /// No description provided for @inviteCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create invitation'**
+  String get inviteCreate;
+
+  /// No description provided for @inviteInviteAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite'**
+  String get inviteInviteAction;
+
+  /// No description provided for @inviteOpenUntil.
+  ///
+  /// In en, this message translates to:
+  /// **'Invited · until {date}'**
+  String inviteOpenUntil(String date);
+
+  /// No description provided for @inviteShareAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Share again'**
+  String get inviteShareAgain;
+
+  /// No description provided for @inviteWithdraw.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw'**
+  String get inviteWithdraw;
+
+  /// No description provided for @inviteWithdrawn.
+  ///
+  /// In en, this message translates to:
+  /// **'Invitation withdrawn.'**
+  String get inviteWithdrawn;
+
+  /// No description provided for @inviteScanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan invitation'**
+  String get inviteScanTitle;
+
+  /// No description provided for @accountDeleteTile.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete account'**
+  String get accountDeleteTile;
+
+  /// No description provided for @accountDeleteExplain.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account and its sign-in methods are deleted, and you are signed out everywhere. Your profile stays in the family with its history. Apple access is revoked.'**
+  String get accountDeleteExplain;
+
+  /// No description provided for @accountDeleteBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'You are the last guardian with an account in this family. Invite a second adult first, or delete the family.'**
+  String get accountDeleteBlocked;
+
+  /// No description provided for @accountDeleteDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete account?'**
+  String get accountDeleteDialogTitle;
+
+  /// No description provided for @accountDeleteDialogBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This cannot be undone. Your sign-in is removed, and your profile stays in the family.'**
+  String get accountDeleteDialogBody;
+
+  /// No description provided for @accountDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete account'**
+  String get accountDeleteConfirm;
+
+  /// No description provided for @accountDeleteRefused.
+  ///
+  /// In en, this message translates to:
+  /// **'The account could not be deleted. Try again later.'**
+  String get accountDeleteRefused;
+
+  /// No description provided for @accountDeleteReauthTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Please confirm it is you'**
+  String get accountDeleteReauthTitle;
+
+  /// No description provided for @accountDeleteReauthBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleting an account needs a fresh sign-in. We send a code to {email}.'**
+  String accountDeleteReauthBody(String email);
+
+  /// No description provided for @accountDeleteReauthSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send code'**
+  String get accountDeleteReauthSend;
+
+  /// No description provided for @accountDeleteReauthCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Code from the email'**
+  String get accountDeleteReauthCodeLabel;
+
+  /// No description provided for @accountDeleteReauthConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get accountDeleteReauthConfirm;
+
+  /// No description provided for @accountDeleteReauthSignInAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in again first, then you can delete the account.'**
+  String get accountDeleteReauthSignInAgain;
+
+  /// No description provided for @mfaResetAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset two-factor'**
+  String get mfaResetAction;
+
+  /// No description provided for @mfaResetConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset two-factor?'**
+  String get mfaResetConfirmTitle;
+
+  /// No description provided for @mfaResetConfirmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} can sign in without a second factor afterwards and set it up again.'**
+  String mfaResetConfirmBody(String name);
+
+  /// No description provided for @mfaResetConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get mfaResetConfirm;
+
+  /// No description provided for @mfaResetDone.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}\'s second factor is reset.'**
+  String mfaResetDone(String name);
 
   /// No description provided for @serverTitle.
   ///

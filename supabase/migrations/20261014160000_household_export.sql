@@ -103,7 +103,11 @@ begin
     'badge_award', (select coalesce(jsonb_agg(to_jsonb(r) - v_secret order by r.awarded_at, r.id), '[]')
                       from app.badge_award r where r.household_id = a.household_id),
     'tasks_day_closed', (select coalesce(jsonb_agg(to_jsonb(r) - v_secret order by r.day), '[]')
-                           from app.tasks_day_closed r where r.household_id = a.household_id)
+                           from app.tasks_day_closed r where r.household_id = a.household_id),
+    -- Invitations: token and code hashes are secrets (v_secret); the accepting Auth user is one too.
+    'invitation', (select coalesce(jsonb_agg(to_jsonb(r) - v_secret - 'accepted_by_user'
+                                             order by r.created_at, r.id), '[]')
+                     from app.invitation r where r.household_id = a.household_id)
   );
 
   perform app.audit(a, 'household', a.household_id, 'export');

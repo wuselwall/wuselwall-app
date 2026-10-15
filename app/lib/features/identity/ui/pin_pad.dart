@@ -4,9 +4,9 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
-import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
+import 'package:wuselwall/features/identity/ui/pin_keypad.dart';
 
 /// Numeric pad for the 6-digit guardian PIN. The digits are never echoed — only dots —
 /// because the pad sits on a wall display in a busy kitchen (specs/08).
@@ -79,7 +79,6 @@ class _PinPadDialogState extends ConsumerState<PinPadDialog> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final touch = ref.watch(uiRegisterProvider).touchTarget;
     final scheme = Theme.of(context).colorScheme;
 
     return AlertDialog(
@@ -91,23 +90,7 @@ class _PinPadDialogState extends ConsumerState<PinPadDialog> {
           children: [
             Text(l10n.pinPrompt(widget.guardian.displayName)),
             const SizedBox(height: Tokens.space4),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                for (var i = 0; i < _length; i++)
-                  Container(
-                    key: ValueKey('pin-dot-$i'),
-                    width: 16,
-                    height: 16,
-                    margin: const EdgeInsets.symmetric(horizontal: 6),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: i < _pin.length ? scheme.primary : null,
-                      border: Border.all(color: scheme.outline),
-                    ),
-                  ),
-              ],
-            ),
+            PinDots(length: _length, filled: _pin.length),
             SizedBox(
               height: 32,
               child: Center(
@@ -118,37 +101,11 @@ class _PinPadDialogState extends ConsumerState<PinPadDialog> {
                 ),
               ),
             ),
-            for (final row in const [
-              ['1', '2', '3'],
-              ['4', '5', '6'],
-              ['7', '8', '9'],
-              ['', '0', '<'],
-            ])
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  for (final key in row)
-                    Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: SizedBox(
-                        width: touch + 12,
-                        height: touch,
-                        child: key.isEmpty
-                            ? null
-                            : key == '<'
-                            ? IconButton(
-                                tooltip: l10n.delete,
-                                onPressed: _backspace,
-                                icon: const Icon(Icons.backspace_outlined),
-                              )
-                            : OutlinedButton(
-                                onPressed: () => _press(key),
-                                child: Text(key),
-                              ),
-                      ),
-                    ),
-                ],
-              ),
+            PinKeypad(
+              enabled: !_busy,
+              onDigit: _press,
+              onBackspace: _backspace,
+            ),
           ],
         ),
       ),

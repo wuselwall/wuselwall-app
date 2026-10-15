@@ -61,4 +61,4 @@ Wissenswert:
 - Es gehen nur Adressen mit **https://**. Adressen, die auf Rechner im eigenen Netz zeigen, nimmt WuselWall nicht an.
 - Ein Kalender darf höchstens 2 MB groß sein. Der Abruf bricht nach 15 Sekunden ab.
 - Alle Geräte des Haushalts sehen nur den Rechnernamen der Adresse, zum Beispiel „abfuhr.example.de“. Die ganze Adresse sehen nur Erziehungsberechtigte, wenn sie den Kalender bearbeiten. Enthält sie einen geheimen Schlüssel, gilt sie wie ein Passwort.
-- Die abonnierten Termine sind noch nicht im Abo für Outlook und iPhone enthalten.
+- Im Abo für Outlook und iPhone erscheinen abonnierte Termine nur, wenn du beim Abo **Abonnierte Kalender einschließen** anhakst. Siehe [Kalender-Abos](/calendar/feeds).

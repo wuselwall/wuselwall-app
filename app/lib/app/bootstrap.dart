@@ -16,6 +16,9 @@ import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/logging/log.dart';
+import 'package:wuselwall/core/notifications/notification_scheduler.dart';
+import 'package:wuselwall/core/notifications/notification_scheduler_provider.dart';
+import 'package:wuselwall/core/notifications/plugin_notification_scheduler.dart';
 import 'package:wuselwall/core/server/first_party.dart';
 import 'package:wuselwall/core/server/server_address.dart';
 import 'package:wuselwall/core/server/server_compat.dart';
@@ -285,6 +288,14 @@ class _BootstrapState extends State<Bootstrap> {
       overrides: [
         appConfigProvider.overrideWithValue(config),
         serverSessionProvider.overrideWithValue(session),
+        // Local reminders exist on Android and iOS only (specs/09, Q47).
+        notificationSchedulerProvider.overrideWithValue(
+          !kIsWeb &&
+                  (defaultTargetPlatform == TargetPlatform.android ||
+                      defaultTargetPlatform == TargetPlatform.iOS)
+              ? PluginNotificationScheduler()
+              : const NoopNotificationScheduler(),
+        ),
       ],
       child: widget.app,
     ),

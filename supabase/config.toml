@@ -87,7 +87,10 @@ enable_refresh_token_rotation = true
 # Requires enable_refresh_token_rotation = true.
 refresh_token_reuse_interval = 10
 # Allow/disallow new user signups to your project.
-enable_signup = false
+# On: a stranger who signs up gets an account that can do nothing but wait for an invitation
+# or, while household creation is in `code` mode (app.instance_setting), start a family with a
+# founder code (specs/20, ADR-014). Nothing in the account is reachable through RLS before that.
+enable_signup = true
 # Allow/disallow testing manual linking of accounts
 # On: Settings → Sign-in connects Apple or Google to an existing account (specs/20).
 enable_manual_linking = true
@@ -99,8 +102,28 @@ enable_signup = true
 # If enabled, a user will be required to confirm any email change on both the old, and new email
 # addresses. If disabled, only the new email is required to confirm.
 double_confirm_changes = true
-# If enabled, users need to confirm their email address before signing in.
-enable_confirmations = false
+# If enabled, users need to confirm their email address before signing in. On: with sign-up
+# open, an unconfirmed address must never count as verified (invitations match it, specs/20).
+# Email codes confirm the address themselves; nothing in the app signs up with a password.
+enable_confirmations = true
+# The sign-in code mailed to the address (specs/20, "With email"): six digits, valid for
+# 600 seconds, and at most one new code per address every 60 seconds.
+otp_length = 6
+otp_expiry = 600
+max_frequency = "60s"
+
+# Fallback mails for a stack where the Send Email Hook is off: German first, English below, in
+# one mail, with the six-digit code ({{ .Token }}). They apply only when the hook is not running.
+# GoTrue reads these files from the project; the compose stack has no static host for them, so
+# its operator relies on the hook, and a stack without it sends GoTrue's built-in English mails
+# through SMTP. The hook renders the same wording in the recipient's language (_shared/mail_*.ts).
+[auth.email.template.magic_link]
+subject = "Dein WuselWall-Code / Your WuselWall code"
+content_path = "./supabase/templates/magic_link.html"
+
+[auth.email.template.confirmation]
+subject = "Dein WuselWall-Code / Your WuselWall code"
+content_path = "./supabase/templates/confirmation.html"
 
 # Uncomment to customize email template
 # [auth.email.template.invite]
@@ -123,6 +146,17 @@ template = "Your code is {{ .Code }} ."
 [auth.hook.custom_access_token]
 enabled = true
 uri = "pg-functions://postgres/app/custom_access_token_hook"
+
+# The Send Email Hook (specs/10 §4, specs/20 "Email"): GoTrue hands every mail to the send-email
+# Edge Function instead of sending it, and that function renders it in the recipient's language
+# and sends it through Scaleway Transactional Email. Off here: CLI and CI stacks catch mail in
+# Mailpit (local_smtp) and need no Scaleway project. A compose stack switches it
+# on in infra/supabase/docker-compose.wuselwall.yml. To try it on a laptop, set enabled = true,
+# put SEND_EMAIL_HOOK_SECRET (v1,whsec_<base64>) and the SCW_* / MAIL_FROM* values in supabase/.env.
+[auth.hook.send_email]
+enabled = false
+uri = "http://host.docker.internal:54321/functions/v1/send-email"
+secrets = "env(SEND_EMAIL_HOOK_SECRET)"
 
 
 # Configure one of the supported SMS providers: `twilio`, `twilio_verify`, `messagebird`, `textlocal`, `vonage`.

@@ -37,7 +37,6 @@
   },
   "setupHeadline": "Welcome to WuselWall",
   "doorTagline": "The family plan for the kitchen wall",
-  "setupEnrolAction": "Connect with a code",
   "setupHouseholdAction": "Start a new family",
   "wizardTitle": "New household",
   "wizardCreate": "Create household",
@@ -275,7 +274,7 @@
   "errLastSignInMethod": "This is your only way to sign in, so it cannot be removed.",
   "errEmailExists": "This email address already belongs to another account.",
   "signInMethodsTitle": "Sign-in",
-  "signInMethodEmail": "Email and password",
+  "signInMethodEmail": "Email code",
   "signInMethodApple": "Apple",
   "signInMethodGoogle": "Google",
   "signInMethodNotConnected": "Not connected",
@@ -1752,6 +1751,461 @@
   "scanCameraUnavailable": "This device has no camera that WuselWall can use. Type the code instead.",
   "scanWebUnsupported": "This browser cannot scan QR codes. Type the code instead.",
   "scanTypeCode": "Type the code",
+  "feedSubTitle": "Include subscribed calendars",
+  "feedSubHelp": "Events from imported calendars (for example a club or the bin collection) also appear in this subscription.",
+  "feedSubSummary": "Subscribed calendars",
+  "boardAllEvents": "All events",
+  "reminderChannelName": "Reminders",
+  "reminderStartLabel": "Turn on reminders",
+  "reminderMorningEventsAndTasks": "Today: {events, plural, one{1 appointment} other{{events} appointments}}, {tasks, plural, one{1 chore} other{{tasks} chores}}",
+  "@reminderMorningEventsAndTasks": {
+    "placeholders": {
+      "events": {
+        "type": "int"
+      },
+      "tasks": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderMorningEventsOnly": "Today: {events, plural, one{1 appointment} other{{events} appointments}}",
+  "@reminderMorningEventsOnly": {
+    "placeholders": {
+      "events": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderMorningTasksOnly": "Today: {tasks, plural, one{1 chore} other{{tasks} chores}}",
+  "@reminderMorningTasksOnly": {
+    "placeholders": {
+      "tasks": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderMorningNoEvents": "Nothing is scheduled today.",
+  "reminderMorningFirst": "First up at {time}: {title}",
+  "@reminderMorningFirst": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderMorningAllDay": "All day: {title}",
+  "@reminderMorningAllDay": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderEventBody": "Starts at {time}",
+  "@reminderEventBody": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderSettingsTitle": "Reminders",
+  "reminderSettingsSubtitle": "On this phone",
+  "reminderSettingsSection": "What you want to be reminded of",
+  "reminderStatusOn": "Reminders are on on this phone.",
+  "reminderStatusOff": "Reminders are off on this phone.",
+  "reminderStatusUnavailable": "This device cannot show reminders.",
+  "reminderEnableAction": "Turn on reminders",
+  "reminderDeniedNote": "Without permission there are no reminders. You can change the permission in the system settings.",
+  "reminderLocalNote": "Reminders are created on this phone. Nothing is sent to a server or to anyone else.",
+  "reminderOnlyPersonal": "Reminders are only available on a member's personal device.",
+  "pairFrontDoorAction": "Connect a family tablet or wall display",
+  "pairTitle": "Connect a family tablet or wall display",
+  "pairScanHint": "Open WuselWall on your phone and scan this code.",
+  "pairCodeHint": "Or on the phone: Settings → Devices → Connect a device, then type the code.",
+  "pairQrLabel": "QR code to connect this device",
+  "pairWaiting": "Waiting for approval …",
+  "pairConnected": "Connected to {household}",
+  "@pairConnected": {
+    "placeholders": {
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "pairOldCodeLink": "I have a code from a phone (older version)",
+  "pairConnectAction": "Connect a device",
+  "pairOldCodeAction": "Create a code for an older device",
+  "pairEntryBody": "Scan the code the new device shows, or type it in.",
+  "pairCodeField": "Code from the new device",
+  "pairNext": "Next",
+  "pairReviewBody": "This is the code of the device to connect.",
+  "pairConfirmHint": "Only confirm if you can see this device in front of you.",
+  "pairKindLabel": "What kind of device is this?",
+  "pairKindWall": "Wall display",
+  "pairKindKid": "Kids' tablet",
+  "pairKindFamily": "Shared tablet",
+  "pairKindChild": "A child's phone",
+  "pairChildLabel": "Which child?",
+  "pairNameLabel": "Device name",
+  "pairDefaultWall": "Wall display",
+  "pairDefaultKid": "Kids' tablet",
+  "pairDefaultFamily": "Tablet",
+  "pairDefaultChild": "{name}'s phone",
+  "@pairDefaultChild": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pairApproveAction": "Connect",
+  "pairApproved": "Device connected",
+  "pairOnlyOnPersonal": "This works only on your own phone.",
+  "pairPinTitle": "Set the guardian PIN",
+  "pairPinBody": "The PIN confirms changes on shared devices. Set it once.",
+  "pairPinConfirm": "Enter the PIN again",
+  "pairPinMismatch": "The PINs do not match. Try again.",
+  "firstRunKioskTitle": "Set up the wall display",
+  "firstRunKioskBody": "Three steps, once on this device. Then it shows the week.",
+  "firstRunPinTitle": "Keep the app open",
+  "firstRunPinIos": "Settings → Accessibility → Guided Access: turn it on. Open WuselWall and press the top button three times quickly.",
+  "firstRunPinAndroid": "Settings → Security → App pinning (on some devices “Screen pinning”). Open WuselWall, open Recents and tap the pin.",
+  "firstRunAwakeTitle": "Keep the screen on",
+  "firstRunAwakeIos": "Settings → Display & Brightness → Auto-Lock → Never.",
+  "firstRunAwakeAndroid": "Settings → Display → Screen timeout: the longest setting.",
+  "firstRunPowerTitle": "Leave it plugged in",
+  "firstRunPowerBody": "Keep it on the mains, so it is ready again after a power cut.",
+  "firstRunDone": "Done",
+  "firstRunKidTitle": "Welcome",
+  "firstRunKidBody": "Tap your picture, and WuselWall knows who you are.",
+  "firstRunKidStart": "Let’s go",
+  "householdNewTitle": "New family",
+  "householdNewFamilyName": "Family name",
+  "householdNewYourName": "Your name",
+  "householdNewColour": "Your colour",
+  "householdNewColourOption": "Colour {number}",
+  "@householdNewColourOption": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "householdNewFamilyPrefill": "Family {name}",
+  "@householdNewFamilyPrefill": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "householdNewDefaults": "Time zone {timezone} · Language {language} — from your device",
+  "@householdNewDefaults": {
+    "placeholders": {
+      "timezone": {
+        "type": "String"
+      },
+      "language": {
+        "type": "String"
+      }
+    }
+  },
+  "householdLanguageDe": "German",
+  "householdLanguageEn": "English",
+  "householdNewFounderCode": "Founder code",
+  "householdNewFounderHelp": "The person who runs your server gives you the founder code.",
+  "householdSeedExamples": "Start with examples — 5 tasks, 3 rewards",
+  "householdNewCreate": "Create family",
+  "householdNewInvited": "I was invited",
+  "householdInvitedNote": "Invitations arrive with the next update.",
+  "householdNewSignOut": "Sign out",
+  "householdNewErrNoCode": "New families are only possible with a founder code for now.",
+  "householdNewErrCodeWrong": "The founder code is not correct.",
+  "householdNewErrRateLimited": "Too many attempts. Wait a few minutes and try again.",
+  "householdMembersTitle": "Who else is in your family?",
+  "householdMembersYou": "{name} (you)",
+  "@householdMembersYou": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "householdKindChild": "Child",
+  "householdKindAdult": "Adult",
+  "householdMembersName": "Name",
+  "householdMembersAdd": "Add a person",
+  "householdMembersRemove": "Remove",
+  "householdMembersDone": "Done",
+  "householdMembersSkip": "Skip",
+  "householdMembersHelp": "You can invite adults later.",
+  "householdDeviceLabel": "{owner} {device}",
+  "@householdDeviceLabel": {
+    "placeholders": {
+      "owner": {
+        "type": "String"
+      },
+      "device": {
+        "type": "String"
+      }
+    }
+  },
+  "householdDeviceIphone": "iPhone",
+  "householdDeviceAndroid": "Android phone",
+  "householdDeviceBrowser": "browser",
+  "householdDeviceComputer": "computer",
+  "emailContinue": "Continue",
+  "emailHavePassword": "I have a password",
+  "emailWrongCredentials": "Email or password is incorrect.",
+  "emailUseCodeInstead": "Use an email code instead",
+  "emailOffline": "No connection – signing in by email needs one.",
+  "emailCodeTitle": "Code from the email",
+  "emailCodeSent": "We sent a 6-digit code to {email}. It is valid for 10 minutes.",
+  "@emailCodeSent": {
+    "placeholders": {
+      "email": {
+        "type": "String",
+        "example": "lukas@example.org"
+      }
+    }
+  },
+  "emailCodeFieldLabel": "Six-digit code",
+  "emailCodeWrong": "That code is wrong or has expired. Try again, or ask for a new one.",
+  "emailCodeResendIn": "No code? Send again (in {seconds} s)",
+  "@emailCodeResendIn": {
+    "placeholders": {
+      "seconds": {
+        "type": "int",
+        "example": "4"
+      }
+    }
+  },
+  "emailCodeResend": "No code? Send again",
+  "emailCodeSpam": "Check your spam folder.",
+  "emailCodeResent": "A new code is on its way.",
+  "emailCodeOtherMethod": "Choose another way",
+  "emailCodeOtherAddress": "Another email address",
+  "signInMethodTitle": "How would you like to sign in next time?",
+  "signInMethodCode": "With a code by email — nothing to remember",
+  "signInMethodPassword": "With a password",
+  "passwordStrengthShort": "Still too short",
+  "passwordStrengthWeak": "Weak",
+  "passwordStrengthFair": "Fair",
+  "passwordStrengthStrong": "Strong",
+  "settingsPasswordTitle": "Password",
+  "settingsPasswordSet": "Set. You can also sign in with email and password.",
+  "settingsPasswordNotSet": "Not set. Signing in with an email code still works.",
+  "passwordSetAction": "Set password",
+  "passwordChangeAction": "Change password",
+  "passwordSaved": "Your password is saved.",
+  "passwordDialogBody": "At least 10 characters. The email code always stays available.",
+  "signInMethodEmailSubtitle": "{email} — always available",
+  "@signInMethodEmailSubtitle": {
+    "placeholders": {
+      "email": {
+        "type": "String",
+        "example": "lukas@example.org"
+      }
+    }
+  },
+  "signInMethodAlwaysAvailable": "Always available",
+  "leaveLeaveTile": "Leave family",
+  "leaveLeaveExplain": "Your account leaves the family. Your devices sign out. Entries stay with the family; afterwards you can start another family or join one.",
+  "leaveLeaveBlocked": "Invite a second adult first, or delete the family.",
+  "leaveLeaveDialogTitle": "Leave the family?",
+  "leaveLeaveDialogBody": "You lose access to this family. It stays as it is, and the others stay in it.",
+  "leaveLeaveConfirm": "Leave",
+  "leaveCancel": "Cancel",
+  "leaveDeleteTile": "Delete family",
+  "leaveDeleteExplain": "All devices sign out at once. For 14 days a guardian can restore the family; after that all data is deleted for good.",
+  "leaveDeleteDialogTitle": "Delete the family?",
+  "leaveDeleteDialogBody": "All devices sign out and nobody can reach the family any more. For 14 days a guardian can restore it. After that all data is gone.",
+  "leaveDeleteNameLabel": "Type ‘{name}’ to confirm",
+  "@leaveDeleteNameLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "leaveDeleteConfirm": "Delete family",
+  "leaveDeletedTitle": "{family} will be deleted for good on {date}",
+  "@leaveDeletedTitle": {
+    "placeholders": {
+      "family": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "leaveDeletedBodyGuardian": "You can restore the family. All data is still there. This phone becomes the family's phone again; the other devices sign in again.",
+  "leaveDeletedBodyMember": "Only a guardian can restore the family. You can also start afresh; then your account leaves this family.",
+  "leaveRestore": "Restore",
+  "leaveStartAfresh": "Start afresh",
+  "leaveStartAfreshHint": "Your account leaves the deleted family, and you start a new one.",
+  "leaveErrConfirmName": "The name does not match.",
+  "leaveErrHouseholdDeleted": "This family has been deleted.",
+  "leaveErrRestoreExpired": "This family can no longer be restored.",
+  "leaveErrNotDeleted": "This family is not deleted.",
+  "leaveErrAdultRequired": "Only adults have their own account.",
+  "leaveErrAlreadyInHousehold": "This account already belongs to a family.",
+  "inviteDoorAction": "I have an invitation code",
+  "inviteCodeTitle": "Invitation",
+  "inviteCodeBody": "Enter the code, or paste the link you were sent.",
+  "inviteCodeLabel": "Code or link",
+  "inviteCheckAction": "Check invitation",
+  "inviteCodeInvalidFormat": "That is neither an invitation code nor a WuselWall link.",
+  "inviteNoLonger": "This invitation is no longer valid. Ask the person who invited you for a new one.",
+  "inviteRateLimited": "Too many attempts. Wait a few minutes and try again.",
+  "inviteBanner": "{inviter} has invited you to {household}",
+  "@inviteBanner": {
+    "placeholders": {
+      "inviter": {
+        "type": "String"
+      },
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteBannerNoInviter": "You are invited to {household}",
+  "@inviteBannerNoInviter": {
+    "placeholders": {
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteRoleLineGuardian": "As a guardian you see everything and approve rewards.",
+  "inviteRoleLineMember": "As a member you tick off tasks, without approving rewards.",
+  "inviteContinue": "Continue to sign-in",
+  "inviteJoin": "Join",
+  "inviteNewFamilyInstead": "Start my own family",
+  "inviteJoinTitle": "You are {name} in {household}",
+  "@inviteJoinTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteJoinHint": "Your name and colour, as the family sees them. You can change them later in Settings.",
+  "inviteJoinDecline": "Don't join",
+  "inviteAlreadyIn": "You are already in {household}.",
+  "@inviteAlreadyIn": {
+    "placeholders": {
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteNothingKept": "There is no invitation to join any more.",
+  "inviteResultTitle": "Invitation for {name}",
+  "@inviteResultTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteResultHint": "The person enters the code in WuselWall, or scans the QR code.",
+  "inviteValidUntil": "Valid until {date}",
+  "@inviteValidUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteQrLabel": "QR code of the invitation",
+  "inviteShare": "Share",
+  "inviteDone": "Done",
+  "inviteShareMessage": "Join {household} on WuselWall: {link} — or enter the code {code} in the app.",
+  "@inviteShareMessage": {
+    "placeholders": {
+      "household": {
+        "type": "String"
+      },
+      "link": {
+        "type": "String"
+      },
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteAdultTitle": "Invite an adult",
+  "inviteAdultName": "Name",
+  "inviteAdultRole": "Role",
+  "inviteRoleGuardian": "Guardian",
+  "inviteRoleMember": "Member",
+  "inviteRoleGuardianHelp": "Sees everything and approves rewards.",
+  "inviteRoleMemberHelp": "Ticks off tasks but does not approve rewards. For an au pair or grandparents.",
+  "inviteAdultEmail": "Email (optional)",
+  "inviteAdultEmailHelp": "With this address the person finds the invitation by itself when signing in.",
+  "inviteEmailInvalid": "That does not look like an email address.",
+  "inviteCreate": "Create invitation",
+  "inviteInviteAction": "Invite",
+  "inviteOpenUntil": "Invited · until {date}",
+  "@inviteOpenUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteShareAgain": "Share again",
+  "inviteWithdraw": "Withdraw",
+  "inviteWithdrawn": "Invitation withdrawn.",
+  "inviteScanTitle": "Scan invitation",
+  "accountDeleteTile": "Delete account",
+  "accountDeleteExplain": "Your account and its sign-in methods are deleted, and you are signed out everywhere. Your profile stays in the family with its history. Apple access is revoked.",
+  "accountDeleteBlocked": "You are the last guardian with an account in this family. Invite a second adult first, or delete the family.",
+  "accountDeleteDialogTitle": "Delete account?",
+  "accountDeleteDialogBody": "This cannot be undone. Your sign-in is removed, and your profile stays in the family.",
+  "accountDeleteConfirm": "Delete account",
+  "accountDeleteRefused": "The account could not be deleted. Try again later.",
+  "accountDeleteReauthTitle": "Please confirm it is you",
+  "accountDeleteReauthBody": "Deleting an account needs a fresh sign-in. We send a code to {email}.",
+  "@accountDeleteReauthBody": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "accountDeleteReauthSend": "Send code",
+  "accountDeleteReauthCodeLabel": "Code from the email",
+  "accountDeleteReauthConfirm": "Confirm",
+  "accountDeleteReauthSignInAgain": "Sign in again first, then you can delete the account.",
+  "mfaResetAction": "Reset two-factor",
+  "mfaResetConfirmTitle": "Reset two-factor?",
+  "mfaResetConfirmBody": "{name} can sign in without a second factor afterwards and set it up again.",
+  "@mfaResetConfirmBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "mfaResetConfirm": "Reset",
+  "mfaResetDone": "{name}'s second factor is reset.",
+  "@mfaResetDone": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "serverTitle": "Which server?",
   "serverLead": "WuselWall keeps your family's data on your family's own server. Enter its address, or scan its QR code.",
   "serverAddressLabel": "Server address",

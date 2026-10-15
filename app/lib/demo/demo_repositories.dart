@@ -5,9 +5,14 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/demo/demo_english.dart';
 import 'package:wuselwall/demo/demo_external_calendars.dart';
+import 'package:wuselwall/features/account/data/account_admin_repository.dart';
+import 'package:wuselwall/features/account/domain/member_security.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/calendar/data/calendar_repository.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
+import 'package:wuselwall/features/household/data/household_leave_repository.dart';
+import 'package:wuselwall/features/household/data/household_onboarding_repository.dart';
+import 'package:wuselwall/features/household/domain/household_models.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/data/sign_in_methods_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
@@ -38,6 +43,25 @@ class DemoIdentityRepository implements IdentityRepository {
   @override
   Future<Result<void>> signIn(String email, String password) async =>
       const Ok(null);
+
+  @override
+  Future<Result<void>> sendEmailCode(
+    String email, {
+    required String locale,
+  }) async => const Ok(null);
+
+  @override
+  Future<Result<bool>> verifyEmailCode(String email, String code) async =>
+      const Ok(false);
+
+  @override
+  Future<Result<void>> setPassword(String password) async => const Ok(null);
+
+  @override
+  bool hasPassword() => true;
+
+  @override
+  Future<Result<void>> markSignInChoice(String choice) async => const Ok(null);
 
   @override
   Future<void> signOut() async {}
@@ -1237,3 +1261,101 @@ List<_OneOff> get _oneOffs => [
     tentative: true,
   ),
 ];
+
+/// Starting a family, for the demo: the account already has its household, so H1 never
+/// shows; creating or adding people succeeds without writing anything.
+class DemoHouseholdOnboardingRepository
+    implements HouseholdOnboardingRepository {
+  /// false: a signed-in account without a family, the H1 screen (scenario `newfamily`).
+  const DemoHouseholdOnboardingRepository({this.hasHousehold = true});
+
+  final bool hasHousehold;
+
+  @override
+  Future<Result<Account>> account() async => Ok(
+    hasHousehold
+        ? const Account(
+            userId: 'demo-user',
+            email: 'lukas@example.org',
+            hasHousehold: true,
+            creation: HouseholdCreation.code,
+            householdId: 'h1',
+            householdName: 'Huser',
+            profileId: 'p-lukas',
+            givenName: 'Lukas',
+            fullName: 'Lukas Huser',
+          )
+        : const Account(
+            userId: 'demo-user',
+            email: 'lukas@example.org',
+            hasHousehold: false,
+            creation: HouseholdCreation.code,
+          ),
+  );
+
+  @override
+  Future<Result<void>> create({
+    required String householdName,
+    required String displayName,
+    required String colorHex,
+    required String timezone,
+    required String locale,
+    required String? founderCode,
+    required bool seedExamples,
+    required String deviceLabel,
+  }) async => const Ok(null);
+
+  @override
+  Future<Result<void>> addMembers(List<NewMember> members) async =>
+      const Ok(null);
+
+  @override
+  Future<Result<void>> completeExamples() async => const Ok(null);
+}
+
+/// Deleting the account and resetting a second factor in the demo: each call succeeds and
+/// nothing is stored. The demo account is an e-mail account, and its re-sign-in is always fresh.
+class DemoAccountAdminRepository implements AccountAdminRepository {
+  @override
+  String? currentProvider() => 'email';
+
+  @override
+  bool hasRecentSignIn() => true;
+
+  @override
+  Future<Result<void>> deleteAccount() async => const Ok(null);
+
+  @override
+  Future<Result<void>> resetMfa({
+    required String actorProfileId,
+    required String profileId,
+  }) async => const Ok(null);
+
+  @override
+  Future<Result<List<MemberSecurity>>> memberSecurity(
+    String actorProfileId,
+  ) async => const Ok([
+    MemberSecurity(profileId: DemoData.papa, hasAccount: true, hasMfa: true),
+    MemberSecurity(profileId: DemoData.mama, hasAccount: true, hasMfa: true),
+  ]);
+}
+
+/// Leaving, deleting and restoring a family in the demo: each call succeeds and nothing is
+/// stored; the demo session stays signed in.
+class DemoHouseholdLeaveRepository implements HouseholdLeaveRepository {
+  @override
+  Future<Result<void>> leaveFamily({required String profileId}) async =>
+      const Ok(null);
+
+  @override
+  Future<Result<DateTime>> deleteFamily({
+    required String profileId,
+    required String confirmName,
+  }) async => Ok(DateTime(2026, 10, 29));
+
+  @override
+  Future<Result<void>> restoreFamily() async => const Ok(null);
+
+  @override
+  Future<Result<void>> startAfresh() async => const Ok(null);
+}

@@ -453,6 +453,18 @@ wall display opens, and the wall never offers the others.
 
 ---
 
+## Onboarding tables (built 2026-10-15)
+
+Tables in the `app` schema, RLS enabled and forced, never exposed; written only through `api` functions:
+
+- `app.instance_setting`: per-server settings, such as the `code` household creation mode (`households` migration).
+- `app.founder_attempt`: the guess log of founder codes.
+- `app.pairing_request`, `app.pairing_attempt`: a device's request to be connected (a secret, a code, the approving guardian, an expiry), and its attempt log.
+- `app.invitation`, `app.invitation_attempt`: an invitation (a token and a code, the role, an optional confirmed email, an expiry, single use) and its attempt log.
+- `app.apple_token`: the encrypted Apple refresh token of an account, kept only until the account is deleted and access is revoked.
+- `app.household.created_by_profile_id` and `app.household.deleted_at`: who started the family, and when a deleted family becomes purgeable (14 days).
+
+
 ## Relationship overview
 
 ```
