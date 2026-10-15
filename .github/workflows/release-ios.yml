@@ -1,8 +1,7 @@
-# Signed builds for the family's devices (specs/16, step 7). A tag v*.*.* releases;
-# "Run workflow" builds the pubspec version from any branch, for testing the pipeline.
-# The Android job (Play internal track) joins once the Play Console account exists;
-# until then build-android.yml produces the APK.
-name: release-mobile
+# Signed iOS builds for TestFlight (specs/16, step 7); release-android.yml is its Android
+# twin. A tag v*.*.* releases; "Run workflow" builds the pubspec version from any branch,
+# for testing the pipeline.
+name: release-ios
 on:
   workflow_dispatch:
     inputs:
@@ -13,7 +12,7 @@ on:
   push:
     tags: ['v*.*.*']
 concurrency:
-  group: release-mobile
+  group: release-ios
   cancel-in-progress: false
 permissions:
   contents: read
@@ -35,13 +34,14 @@ jobs:
         with: { ruby-version: '3.3', bundler-cache: true, working-directory: app/ios }
       - run: xcodebuild -version
       # A tag sets the version name; a manual run keeps the one in pubspec.yaml. The run
-      # number is the build number, so every upload is newer than the last.
+      # number plus 100 is the build number, so every upload is newer than the last: the
+      # count restarted at 1 when the workflow was renamed from release-mobile.yml.
       # No server is compiled in (env/store.json, ADR-018). The first first-party host is
       # where a device updated from an earlier build finds its server again, so a release
       # without it would strand them.
       - run: |
           [ -n "$FIRST_PARTY_HOSTS" ] || { echo "::error::set the secret WW_FIRST_PARTY_HOSTS"; exit 1; }
-          args=(--build-number=${{ github.run_number }})
+          args=(--build-number=$(( ${{ github.run_number }} + 100 )))
           if [[ "$GITHUB_REF_TYPE" == tag ]]; then args+=(--build-name="${GITHUB_REF_NAME#v}"); fi
           flutter build ios --release --no-codesign "${args[@]}" --dart-define-from-file=env/store.json \
             --dart-define=WW_FIRST_PARTY_HOSTS="$FIRST_PARTY_HOSTS"
