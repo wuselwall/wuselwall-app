@@ -9,6 +9,7 @@ import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/server/server_providers.dart';
 import 'package:wuselwall/core/ui/qr_code_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/identity/application/pairing_providers.dart';
@@ -160,7 +161,10 @@ class _PairPageState extends ConsumerState<PairPage> {
                   Center(
                     child: QrCodeView(
                       key: const ValueKey('pair-qr'),
-                      data: pairingQrPayload(request.code),
+                      data: pairingQrPayload(
+                        request.code,
+                        server: ref.watch(currentServerProvider),
+                      ),
                       semanticsLabel: l10n.pairQrLabel,
                     ),
                   ),

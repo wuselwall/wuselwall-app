@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -64,11 +66,21 @@ class _App extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final config = ref.watch(appConfigProvider);
-    final leave = ref.watch(serverSessionProvider).leave;
+    final session = ref.watch(serverSessionProvider);
+    final leave = session.leave;
     return MaterialApp(
       home: Scaffold(
         body: Column(
           children: [
+            ValueListenableBuilder<LinkEvent?>(
+              valueListenable: session.inbox,
+              builder: (_, event, _) => Text(
+                event == null
+                    ? 'no link'
+                    : 'link ${event.link.kind.name} ${event.link.secret} '
+                          '${event.verdict.name}',
+              ),
+            ),
             Text('running on ${config.supabaseUrl}'),
             if (leave != null)
               TextButton(onPressed: leave, child: const Text('leave')),
@@ -94,6 +106,7 @@ void main() {
     AppConfig build = _store,
     String appVersion = '1.0.0',
     bool hasSession = false,
+    Stream<String>? links,
   }) async {
     final discovery = _Discovery(answers);
     // German, the default language (specs/09).
@@ -109,6 +122,7 @@ void main() {
         disconnect: () async {},
         hasSession: () async => hasSession,
         signOutLocally: () async {},
+        links: links,
         app: const _App(),
       ),
     );
@@ -232,6 +246,137 @@ void main() {
     );
     expect(find.text('running on https://api.example.org'), findsOneWidget);
     expect(find.text('leave'), findsNothing);
+  });
+
+  group('links', () {
+    const code = 'K7QM3XRP';
+    String invite(String host) => 'https://wuselwall.app/i/#$code@$host';
+
+    testWidgets('an invitation link opened first skips the server question', (
+      t,
+    ) async {
+      final links = StreamController<String>();
+      addTearDown(links.close);
+      await pump(
+        t,
+        answers: {'api.example.org': Ok(_server())},
+        links: links.stream,
+      );
+      // The question is up while the app waits for a link.
+      links.add(invite('api.example.org'));
+      await t.pumpAndSettle();
+
+      expect(find.text('Mit welchem Server?'), findsNothing);
+      expect(find.text('running on https://api.example.org'), findsOneWidget);
+      expect(find.text('link invitation $code proceed'), findsOneWidget);
+      expect(store.kept?.supabaseUrl.host, 'api.example.org');
+    });
+
+    testWidgets(
+      'the same checks as a typed address apply to the link\'s server',
+      (t) async {
+        final links = StreamController<String>();
+        addTearDown(links.close);
+        await pump(
+          t,
+          answers: {
+            'old.example.org': Ok(_server(api: -5, host: 'old.example.org')),
+          },
+          links: links.stream,
+        );
+        links.add(invite('old.example.org'));
+        await t.pumpAndSettle();
+
+        expect(
+          find.textContaining('Dieser Server braucht ein Update'),
+          findsOneWidget,
+        );
+        expect(find.textContaining('running on'), findsNothing);
+        expect(store.kept, isNull);
+      },
+    );
+
+    testWidgets('a link of the server the app is on continues directly', (
+      t,
+    ) async {
+      store.kept = _server();
+      final links = StreamController<String>();
+      addTearDown(links.close);
+      await pump(
+        t,
+        answers: {'api.example.org': Ok(_server())},
+        links: links.stream,
+      );
+      links.add('https://wuselwall.app/p/#$code@api.example.org');
+      await t.pumpAndSettle();
+      expect(find.text('link pairing $code proceed'), findsOneWidget);
+    });
+
+    testWidgets('a link of another server is handed over, not followed', (
+      t,
+    ) async {
+      store.kept = _server();
+      final links = StreamController<String>();
+      addTearDown(links.close);
+      await pump(
+        t,
+        answers: {
+          'api.example.org': Ok(_server()),
+          'other.example.org': Ok(_server(host: 'other.example.org')),
+        },
+        links: links.stream,
+      );
+      links.add(invite('other.example.org'));
+      await t.pumpAndSettle();
+      expect(find.text('link invitation $code offerSwitch'), findsOneWidget);
+      expect(find.text('running on https://api.example.org'), findsOneWidget);
+      expect(store.kept?.supabaseUrl.host, 'api.example.org');
+    });
+
+    testWidgets('signed in, another server\'s link is explained only', (
+      t,
+    ) async {
+      store.kept = _server();
+      final links = StreamController<String>();
+      addTearDown(links.close);
+      await pump(
+        t,
+        answers: {'api.example.org': Ok(_server())},
+        hasSession: true,
+        links: links.stream,
+      );
+      links.add(invite('other.example.org'));
+      await t.pumpAndSettle();
+      expect(find.text('link invitation $code otherServer'), findsOneWidget);
+    });
+
+    testWidgets('a link without a server, with none chosen, asks for one', (
+      t,
+    ) async {
+      final links = StreamController<String>();
+      addTearDown(links.close);
+      await pump(t, links: links.stream);
+      links.add('https://wuselwall.app/i/#$code');
+      await t.pumpAndSettle();
+      expect(find.text('Mit welchem Server?'), findsOneWidget);
+      expect(
+        find.textContaining('sagt nicht, zu welchem Server'),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('an invitation pasted as the server address carries on', (
+      t,
+    ) async {
+      await pump(t, answers: {'api.example.org': Ok(_server())});
+      await t.enterText(
+        find.byKey(const ValueKey('server-address')),
+        invite('api.example.org'),
+      );
+      await t.tap(find.byKey(const ValueKey('server-connect')));
+      await t.pumpAndSettle();
+      expect(find.text('link invitation $code proceed'), findsOneWidget);
+    });
   });
 
   testWidgets('the demo household runs without a server, and has a way out', (

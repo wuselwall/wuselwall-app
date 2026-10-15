@@ -149,7 +149,14 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, _) => const SetupPage(),
         routes: [
           GoRoute(path: 'household', builder: (_, _) => const WizardPage()),
-          GoRoute(path: 'invite', builder: (_, _) => const InviteCodePage()),
+          GoRoute(
+            path: 'invite',
+            builder: (_, state) => InviteCodePage(
+              initialSecret: state.extra is String
+                  ? state.extra! as String
+                  : null,
+            ),
+          ),
           GoRoute(
             path: 'invitations',
             builder: (_, _) => const InvitePendingPage(),
@@ -232,6 +239,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: Routes.devicePair,
         builder: (_, state) => DevicePairPage(
           initialKind: PairingKind.fromWire(state.uri.queryParameters['kind']),
+          initialCode: state.extra is String ? state.extra! as String : null,
         ),
       ),
       GoRoute(
