@@ -6,6 +6,7 @@ import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/details/task_board_detail.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
+import 'package:wuselwall/features/tasks/ui/task_widgets.dart';
 
 import '../support/fake_tasks.dart';
 import '../support/fakes.dart';
@@ -392,7 +393,14 @@ void main() {
       // Columns in household order, each with its member's name in the header.
       expect(find.text('Papa'), findsWidgets);
       expect(find.text('Anna'), findsWidgets);
-      expect(find.text('🔥 12'), findsOneWidget);
+      // The streak is a flame picture and the count, not one text.
+      expect(
+        find.descendant(
+          of: find.byType(StreakBadge),
+          matching: find.text('12'),
+        ),
+        findsOneWidget,
+      );
       expect(find.text('Wer bist du?'), findsOneWidget);
 
       // Nobody is acting yet: the tick is not sent.

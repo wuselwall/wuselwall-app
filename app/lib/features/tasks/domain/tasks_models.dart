@@ -80,30 +80,29 @@ String taskIsoDate(DateTime d) =>
 
 DateTime taskDay(DateTime d) => DateTime(d.year, d.month, d.day);
 
-/// Icon keys are stable names; the app shows the emoji from [taskIcons]. Keeping the
-/// key, not the glyph, in the database lets a later design change the picture.
-const taskIcons = <String, String>{
-  'dishes': '🍽️',
-  'table': '🥄',
-  'trash': '🗑️',
-  'bed': '🛏️',
-  'dog': '🐕',
-  'plant': '🌱',
-  'bike': '🚲',
-  'book': '📚',
-  'laundry': '🧺',
-  'teeth': '🪥',
-  'shopping': '🛒',
-  'cooking': '🍳',
-  'car': '🚗',
-  'toys': '🧸',
-  'star': '⭐',
-  'cinema': '🎬',
-  'moon': '🌙',
-  'trip': '🧭',
-};
-
-String? taskIconGlyph(String? key) => key == null ? null : taskIcons[key];
+/// Icon keys are stable names stored with a task, reward or badge; the app shows the
+/// matching picture (assets/emoji/tasks). Keeping the key, not the picture, in the
+/// database lets a later design change the picture.
+const taskIconKeys = <String>[
+  'dishes',
+  'table',
+  'trash',
+  'bed',
+  'dog',
+  'plant',
+  'bike',
+  'book',
+  'laundry',
+  'teeth',
+  'shopping',
+  'cooking',
+  'car',
+  'toys',
+  'star',
+  'cinema',
+  'moon',
+  'trip',
+];
 
 class TaskDefinition {
   const TaskDefinition({

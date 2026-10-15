@@ -2135,11 +2135,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String tasksStreakBadge(int count) {
-    return '🔥 $count';
-  }
-
-  @override
   String tasksStreakDays(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -2226,6 +2221,60 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tasksFieldIcon => 'Icon';
+
+  @override
+  String get taskIcon_dishes => 'Plate';
+
+  @override
+  String get taskIcon_table => 'Spoon';
+
+  @override
+  String get taskIcon_trash => 'Bin';
+
+  @override
+  String get taskIcon_bed => 'Bed';
+
+  @override
+  String get taskIcon_dog => 'Dog';
+
+  @override
+  String get taskIcon_plant => 'Plant';
+
+  @override
+  String get taskIcon_bike => 'Bike';
+
+  @override
+  String get taskIcon_book => 'Books';
+
+  @override
+  String get taskIcon_laundry => 'Laundry basket';
+
+  @override
+  String get taskIcon_teeth => 'Toothbrush';
+
+  @override
+  String get taskIcon_shopping => 'Shopping trolley';
+
+  @override
+  String get taskIcon_cooking => 'Frying pan';
+
+  @override
+  String get taskIcon_car => 'Car';
+
+  @override
+  String get taskIcon_toys => 'Teddy bear';
+
+  @override
+  String get taskIcon_star => 'Star';
+
+  @override
+  String get taskIcon_cinema => 'Film';
+
+  @override
+  String get taskIcon_moon => 'Moon';
+
+  @override
+  String get taskIcon_trip => 'Compass';
 
   @override
   String get tasksNoIcon => 'No icon';
@@ -2492,7 +2541,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get kidTasksNone => 'You have no chores today.';
 
   @override
-  String get kidTasksAllDone => 'All done! 🎉';
+  String get kidTasksAllDone => 'All done!';
 
   @override
   String get kidTasksAllDoneBody => 'Well done, you did everything for today.';
@@ -2613,7 +2662,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get kidRequestSent => 'Your reward is waiting for approval.';
 
   @override
-  String get kidRedeemed => 'Redeemed! 🎉';
+  String get kidRedeemed => 'Redeemed!';
 
   @override
   String get kidSoldOut => 'Sold out for now';
@@ -2629,8 +2678,8 @@ class AppLocalizationsEn extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       days,
       locale: localeName,
-      other: '$days days $title 🔥',
-      one: '1 day $title 🔥',
+      other: '$days days $title',
+      one: '1 day $title',
     );
     return '$_temp0';
   }
