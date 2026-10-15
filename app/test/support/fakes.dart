@@ -12,20 +12,31 @@ import 'package:wuselwall/core/config/config_providers.dart';
 import 'package:wuselwall/core/connectivity/connectivity_provider.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/core/notifications/notification_scheduler_provider.dart';
 import 'package:wuselwall/core/realtime/household_channel.dart';
 import 'package:wuselwall/core/supabase/supabase_providers.dart';
+import 'package:wuselwall/features/account/application/account_admin_providers.dart';
+import 'package:wuselwall/features/account/data/account_admin_repository.dart';
+import 'package:wuselwall/features/account/domain/member_security.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/data/board_repository.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/calendar/data/calendar_repository.dart';
 import 'package:wuselwall/features/calendar/data/external_calendars_repository.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
+import 'package:wuselwall/features/household/data/household_leave_repository.dart';
+import 'package:wuselwall/features/household/data/household_onboarding_repository.dart';
+import 'package:wuselwall/features/household/domain/household_models.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
+import 'package:wuselwall/features/identity/data/pairing_repository.dart';
 import 'package:wuselwall/features/identity/data/sign_in_methods_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/identity/domain/sign_in_method.dart';
+import 'package:wuselwall/features/invitations/data/invitation_repository.dart';
 import 'package:wuselwall/features/meals/data/meals_repository.dart';
 import 'package:wuselwall/features/region/data/region_repository.dart';
+import 'package:wuselwall/features/reminders/application/reminder_providers.dart';
+import 'package:wuselwall/features/reminders/data/reminder_dismissal_store.dart';
 import 'package:wuselwall/features/school/data/school_repository.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 import 'package:wuselwall/features/shopping/data/shopping_store.dart';
@@ -35,7 +46,10 @@ import 'package:wuselwall/features/today/data/getting_started_repository.dart';
 
 import 'fake_external_calendars.dart';
 import 'fake_getting_started.dart';
+import 'fake_invitations.dart';
 import 'fake_meals.dart';
+import 'fake_notifications.dart';
+import 'fake_pairing.dart';
 import 'fake_region.dart';
 import 'fake_school.dart';
 import 'fake_tasks.dart';
@@ -84,12 +98,34 @@ class FakeIdentityRepository implements IdentityRepository {
     this.mfa = MfaState.none,
     this.profile,
     this.enrolResult = const Err(ValidationFailure(code: 'code_invalid')),
-  });
+    List<Member>? members,
+  }) : _people = members ?? testMembers;
 
+  /// The household's people, as `members()` returns them.
+  final List<Member> _people;
   DeviceInfo? current;
   MfaState mfa;
   GuardianProfile? profile;
   Result<void> enrolResult;
+
+  /// What [signIn] answers; a failure by default, as an unknown account would.
+  Result<void> signInResult = const Err(
+    AuthFailure(code: 'invalid_credentials'),
+  );
+  final signIns = <(String, String)>[];
+
+  /// E1/E2: the addresses a code was mailed to, and the codes checked.
+  final codeRequests = <String>[];
+  final codeChecks = <String>[];
+  Result<void> sendCodeResult = const Ok(null);
+
+  /// What checking a code answers: `Ok(true)` for a new account (E3 owed).
+  Result<bool> verifyResult = const Ok(false);
+  Result<bool> Function(String code)? verifyFor;
+  final passwordsSet = <String>[];
+  final choices = <String>[];
+  bool passwordSet = false;
+  final pins = <String>[];
   final registeredLabels = <String>[];
   final mfaCodes = <String>[];
   final createdCodes = <String>[];
@@ -101,7 +137,7 @@ class FakeIdentityRepository implements IdentityRepository {
   Future<Result<DeviceInfo?>> currentDevice() async => Ok(current);
 
   @override
-  Future<Result<List<Member>>> members() async => Ok(testMembers);
+  Future<Result<List<Member>>> members() async => Ok(_people);
 
   @override
   Future<Result<PinResult>> verifyPin({
@@ -119,8 +155,47 @@ class FakeIdentityRepository implements IdentityRepository {
   Future<Result<List<DeviceEntry>>> devices() async => const Ok([]);
 
   @override
-  Future<Result<void>> signIn(String email, String password) async =>
-      const Err(AuthFailure(code: 'invalid_credentials'));
+  Future<Result<void>> signIn(String email, String password) async {
+    signIns.add((email, password));
+    return signInResult;
+  }
+
+  @override
+  Future<Result<void>> sendEmailCode(
+    String email, {
+    required String locale,
+  }) async {
+    codeRequests.add(email);
+    return sendCodeResult;
+  }
+
+  @override
+  Future<Result<bool>> verifyEmailCode(String email, String code) async {
+    codeChecks.add(code);
+    return verifyFor?.call(code) ?? verifyResult;
+  }
+
+  @override
+  Future<Result<void>> setPassword(String password) async {
+    passwordsSet.add(password);
+    passwordSet = true;
+    return const Ok(null);
+  }
+
+  @override
+  bool hasPassword() => passwordSet;
+
+  @override
+  Future<Result<void>> markSignInChoice(String choice) async {
+    choices.add(choice);
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<void>> setPin({required String pin}) async {
+    pins.add(pin);
+    return const Ok(null);
+  }
 
   @override
   Future<Result<void>> enrolDevice(String code) async => enrolResult;
@@ -162,6 +237,167 @@ class FakeIdentityRepository implements IdentityRepository {
 
   @override
   dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
+}
+
+/// Starting a family. Creating a household records its arguments; on success it makes
+/// [identity] Ready, as the session refresh does in the app (the test re-reads the session).
+/// Records the leave, delete and restore calls; each answers with its result.
+/// Deleting the account and resetting a second factor. Each deletion answers with the next of
+/// [deleteResults] (the last one repeats). [recent] is what the sign-in check answers.
+class FakeAccountAdminRepository implements AccountAdminRepository {
+  List<Result<void>> deleteResults = [const Ok(null)];
+  Result<void> resetResult = const Ok(null);
+  List<MemberSecurity> security = const [];
+  String? provider = 'email';
+  bool recent = false;
+
+  var deleteCalls = 0;
+  final resets = <({String actorProfileId, String profileId})>[];
+
+  @override
+  String? currentProvider() => provider;
+
+  @override
+  bool hasRecentSignIn() => recent;
+
+  @override
+  Future<Result<void>> deleteAccount() async {
+    final i = deleteCalls < deleteResults.length
+        ? deleteCalls
+        : deleteResults.length - 1;
+    deleteCalls++;
+    return deleteResults[i];
+  }
+
+  @override
+  Future<Result<void>> resetMfa({
+    required String actorProfileId,
+    required String profileId,
+  }) async {
+    resets.add((actorProfileId: actorProfileId, profileId: profileId));
+    return resetResult;
+  }
+
+  @override
+  Future<Result<List<MemberSecurity>>> memberSecurity(
+    String actorProfileId,
+  ) async => Ok(security);
+}
+
+class FakeHouseholdLeaveRepository implements HouseholdLeaveRepository {
+  Result<void> leaveResult = const Ok(null);
+  Result<DateTime> deleteResult = Ok(DateTime.utc(2026, 10, 29));
+  Result<void> restoreResult = const Ok(null);
+  Result<void> startAfreshResult = const Ok(null);
+
+  final leaves = <String>[];
+  final deletes = <({String profileId, String confirmName})>[];
+  var restores = 0;
+  var startAfreshes = 0;
+
+  @override
+  Future<Result<void>> leaveFamily({required String profileId}) async {
+    leaves.add(profileId);
+    return leaveResult;
+  }
+
+  @override
+  Future<Result<DateTime>> deleteFamily({
+    required String profileId,
+    required String confirmName,
+  }) async {
+    deletes.add((profileId: profileId, confirmName: confirmName));
+    return deleteResult;
+  }
+
+  @override
+  Future<Result<void>> restoreFamily() async {
+    restores++;
+    return restoreResult;
+  }
+
+  @override
+  Future<Result<void>> startAfresh() async {
+    startAfreshes++;
+    return startAfreshResult;
+  }
+}
+
+class FakeHouseholdOnboardingRepository
+    implements HouseholdOnboardingRepository {
+  FakeHouseholdOnboardingRepository({
+    this.accountValue = const Account(
+      userId: 'user-1',
+      email: 'daniel@example.org',
+      hasHousehold: false,
+      creation: HouseholdCreation.code,
+      fullName: 'Daniel Huser',
+      givenName: 'Daniel',
+    ),
+    this.createResult = const Ok(null),
+    this.identity,
+  });
+
+  Account accountValue;
+  Result<void> createResult;
+  final FakeIdentityRepository? identity;
+
+  /// The arguments of each create call, in order.
+  final created =
+      <
+        ({
+          String householdName,
+          String displayName,
+          String colorHex,
+          String timezone,
+          String locale,
+          String? founderCode,
+          bool seedExamples,
+          String deviceLabel,
+        })
+      >[];
+  final addedMembers = <List<NewMember>>[];
+  var examplesCompleted = 0;
+
+  @override
+  Future<Result<Account>> account() async => Ok(accountValue);
+
+  @override
+  Future<Result<void>> create({
+    required String householdName,
+    required String displayName,
+    required String colorHex,
+    required String timezone,
+    required String locale,
+    required String? founderCode,
+    required bool seedExamples,
+    required String deviceLabel,
+  }) async {
+    created.add((
+      householdName: householdName,
+      displayName: displayName,
+      colorHex: colorHex,
+      timezone: timezone,
+      locale: locale,
+      founderCode: founderCode,
+      seedExamples: seedExamples,
+      deviceLabel: deviceLabel,
+    ));
+    if (createResult is Ok && identity != null) identity!.current = device();
+    return createResult;
+  }
+
+  @override
+  Future<Result<void>> addMembers(List<NewMember> members) async {
+    addedMembers.add(members);
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<void>> completeExamples() async {
+    examplesCompleted++;
+    return const Ok(null);
+  }
 }
 
 class FakeShoppingRepository implements ShoppingRepository {
@@ -242,16 +478,21 @@ class FakeSignInMethods implements SignInMethodsRepository {
     this.linkable = const {},
     List<SignInMethod>? linked,
     this.signInResult = const Ok(null),
+    this.routes = const {},
   }) : linked = linked ?? [];
 
   List<SignInProvider> offered;
   Set<SignInProvider> linkable;
   List<SignInMethod> linked;
   Result<void> signInResult;
+  final Map<SignInProvider, ProviderRoute> routes;
   final signIns = <SignInProvider>[];
   final links = <SignInProvider>[];
   final unlinked = <String>[];
   final redirectErrors = StreamController<Failure>.broadcast();
+
+  @override
+  ProviderRoute? route(SignInProvider provider) => routes[provider];
 
   @override
   List<SignInProvider> available() => offered;
@@ -453,8 +694,43 @@ List<Override> baseOverrides({
   FakeShoppingRepository? shopping,
   FakeSignInMethods? signInMethods,
   FakeExternalCalendarsRepository? externalCalendars,
+  FakeNotificationScheduler? notifications,
+  FakePairingRepository? pairing,
+  FakeHouseholdOnboardingRepository? household,
+  FakeHouseholdLeaveRepository? leave,
+  FakeAccountAdminRepository? accountAdmin,
+  FakeInvitationRepository? invitations,
+  MemoryInvitationStore? invitationStore,
   bool signedIn = true,
+  bool online = true,
 }) => [
+  householdLeaveRepositoryProvider.overrideWithValue(
+    leave ?? FakeHouseholdLeaveRepository(),
+  ),
+  accountAdminRepositoryProvider.overrideWithValue(
+    accountAdmin ?? FakeAccountAdminRepository(),
+  ),
+  invitationRepositoryProvider.overrideWithValue(
+    invitations ?? FakeInvitationRepository(),
+  ),
+  invitationStoreProvider.overrideWithValue(
+    invitationStore ?? MemoryInvitationStore(),
+  ),
+  householdOnboardingRepositoryProvider.overrideWithValue(
+    household ?? FakeHouseholdOnboardingRepository(identity: identity),
+  ),
+  pairingRepositoryProvider.overrideWithValue(
+    pairing ?? FakePairingRepository(),
+  ),
+  // Local reminders: granted and available by default, so the Today row stays hidden in
+  // tests that are not about it; the plan applies at once (no debounce).
+  notificationSchedulerProvider.overrideWithValue(
+    notifications ?? FakeNotificationScheduler(),
+  ),
+  reminderDismissalStoreProvider.overrideWithValue(
+    MemoryReminderDismissalStore(),
+  ),
+  reminderDebounceProvider.overrideWithValue(Duration.zero),
   externalCalendarsRepositoryProvider.overrideWithValue(
     externalCalendars ?? FakeExternalCalendarsRepository(),
   ),
@@ -472,7 +748,7 @@ List<Override> baseOverrides({
   ),
   if (shopping != null) shoppingRepositoryProvider.overrideWithValue(shopping),
   shoppingStoreProvider.overrideWith((ref) => MemoryShoppingStore()),
-  connectivityProvider.overrideWith((ref) => Stream.value(true)),
+  connectivityProvider.overrideWith((ref) => Stream.value(online)),
   householdInvalidationsProvider.overrideWith(
     (ref, id) => const Stream<Invalidation>.empty(),
   ),

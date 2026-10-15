@@ -10,7 +10,11 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
+import 'package:wuselwall/features/identity/domain/pairing.dart';
 import 'package:wuselwall/features/identity/ui/guardian_gate.dart';
+import 'package:wuselwall/features/invitations/ui/invite_flow.dart';
+import 'package:wuselwall/features/reminders/application/reminder_providers.dart';
+import 'package:wuselwall/features/reminders/ui/reminder_start_row.dart';
 import 'package:wuselwall/features/today/application/today_providers.dart';
 import 'package:wuselwall/features/today/data/getting_started_repository.dart';
 import 'package:wuselwall/features/today/domain/getting_started.dart';
@@ -27,10 +31,15 @@ class GettingStartedCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final items =
         ref.watch(gettingStartedProvider).value ?? const <GettingStartedItem>[];
-    if (items.every((i) => i.done)) return const SizedBox.shrink();
+    // Client-side item: the phone's reminders (specs/20, "Erinnerungen einschalten").
+    final reminderOpen = ref.watch(reminderCardProvider).value ?? false;
+    if (items.every((i) => i.done) && !reminderOpen) {
+      return const SizedBox.shrink();
+    }
 
     final l10n = context.l10n;
     final theme = Theme.of(context);
+    final total = items.length + (reminderOpen ? 1 : 0);
     final doneCount = items.where((i) => i.done).length;
     final rows = <Widget>[];
     var openShown = 0;
@@ -62,14 +71,15 @@ class GettingStartedCard extends ConsumerWidget {
                   ),
                 ),
                 Text(
-                  l10n.todayStartProgress(doneCount, items.length),
+                  l10n.todayStartProgress(doneCount, total),
                   style: theme.textTheme.labelLarge,
                 ),
               ],
             ),
             const SizedBox(height: Tokens.space2),
-            LinearProgressIndicator(value: doneCount / items.length),
+            LinearProgressIndicator(value: doneCount / total),
             ...rows,
+            if (reminderOpen) const ReminderStartRow(),
           ],
         ),
       ),
@@ -118,9 +128,18 @@ class _ItemRow extends ConsumerWidget {
 /// and school screens for their own.
 Future<void> _open(BuildContext context, WidgetRef ref, StartItem item) async {
   final container = ProviderScope.containerOf(context);
+  if (item == StartItem.invitePartner) {
+    await inviteAdultFlow(context, ref);
+    container.invalidate(gettingStartedProvider);
+    return;
+  }
   final route = switch (item) {
     StartItem.subscribeFeed => Routes.feedTokens,
     StartItem.school => Routes.schoolSetup,
+    StartItem.connectTablet =>
+      '${Routes.devicePair}?kind=${PairingKind.kidTablet.wire}',
+    StartItem.wallDisplay =>
+      '${Routes.devicePair}?kind=${PairingKind.wallDisplay.wire}',
     _ => Routes.settings,
   };
   await context.push<void>(route);

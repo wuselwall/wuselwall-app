@@ -41,7 +41,7 @@ select is((select coalesce(string_agg(c.relname, ', '), '') from pg_class c
 select is((select coalesce(string_agg(p.proname, ', ' order by p.proname), '') from pg_proc p
             join pg_namespace n on n.oid = p.pronamespace
            where n.nspname = 'api' and has_function_privilege('anon', p.oid, 'execute')),
-  'enrol_device, health, server_info, setup_household', 'anon can call exactly health, server_info, setup_household and enrol_device');
+  'enrol_device, health, invitation_preview, pairing_poll, pairing_start, server_info, setup_household', 'anon can call exactly health, server_info, setup_household, enrol_device, invitation_preview, pairing_start and pairing_poll');
 
 select is((select coalesce(string_agg(n.nspname || '.' || p.proname, ', '), '') from pg_proc p
             join pg_namespace n on n.oid = p.pronamespace
@@ -53,8 +53,8 @@ select is((select coalesce(string_agg(p.proname, ', '), '') from pg_proc p
             join pg_namespace n on n.oid = p.pronamespace
            where n.nspname = 'app'
              and has_function_privilege('authenticated', p.oid, 'execute')
-             and p.proname not in ('jwt_household', 'jwt_device', 'device_ok', 'session_alive')),
-  '', 'authenticated can execute only the RLS helpers in app');
+             and p.proname not in ('jwt_household', 'jwt_device', 'device_ok', 'session_alive', 'profile_has_account')),
+  '', 'authenticated can execute only the RLS helpers in app (and the has-account check of api.members)');
 
 select * from finish();
 rollback;

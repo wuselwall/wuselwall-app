@@ -24,6 +24,7 @@ Die sieben Tage stehen nebeneinander, von Montag bis Sonntag. Heute ist die Spal
 
 - **Wer ist wo**: eine Zeile pro Familienmitglied. Bei Kindern stehen die Schulzeit (zum Beispiel 8–14:25), besondere Stunden wie Sport oder Schwimmen und das Hortende. Bei Erwachsenen zeigt ein blasser Streifen ihren üblichen Zustand, etwa Homeoffice. Alles, was anders ist – Dienst, Dienstreise, Büro –, erscheint als farbiges Band; eine mehrtägige Reise ist ein durchgehendes Band. Eine kleine Uhr mit „bis 17“ heißt: Termine bis 17 Uhr. Ein Feiertag steht über seiner Spalte; Kinder ohne Schule haben „frei“. **Blass = wie üblich, kräftig = anders.**
 - **Termine**: Vormittag, Nachmittag und Abend. Gezeigt werden nur Termine, die ihr für die Küchenanzeige markiert habt. Ein Punkt zeigt, wer dabei ist. Gestrichelt und mit „?“ heißt: noch nicht sicher. Passt nicht alles hinein, steht dort „+2 weitere“.
+  Mit **Alle Termine** (rechts im Streifen über den Terminen) zeigt jede Spalte alle ihre Termine, nicht nur die markierten. Das Häkchen geht von selbst wieder aus, wenn niemand die Wand berührt.
 - **Warmes Essen** (so steht es links in der Zeile): die warme Mahlzeit des Tages – Sonne für das Mittagessen, Mond für das Abendessen – mit dem Gericht. Ein Punkt pro Person zeigt, wer mitisst: gefüllt = isst mit uns, leer = ist nicht da. Dazu steht, wer kocht.
 - **Fußzeile**: die offenen Aufgaben jeder Person für heute, ein Tipp auf **Heute offen** öffnet das Aufgabenbrett der Familie, und die Anzahl der Artikel auf der Einkaufsliste.
 
@@ -55,7 +56,17 @@ Mehr kann die Wand nicht ändern: Sie setzt Artikel auf die Einkaufsliste und ko
 - Bricht die Verbindung ab, bleibt der letzte Stand sichtbar, mit dem Hinweis „Keine Verbindung“; oben rechts steht, wann er zuletzt aktualisiert wurde. Solange alles läuft, zeigt die Wand dazu nichts an.
 
 ::: tip Kinder-Tablet
-Die Ansicht für Kinder bekommt gerade **Mein Tag**, **Stundenplan** und **Punkte** dazu.
+Die Ansicht für Kinder hat die Reiter **Mein Tag**, **Stundenplan**, **Punkte**, **Einkaufen** und **Familie**.
 :::
 
-Verbunden wird sie wie jedes geteilte Gerät mit einem [Code](/guide/setup#_2-gerat-mit-code-verbinden); wähle dabei die Geräteart **Wandanzeige**.
+## Verbinden
+
+Die Wandanzeige verbindest du ohne Tippen von Code: Auf dem Gerät tippst du auf **Familien-Tablet oder Wanddisplay verbinden**. Auf deinem Handy wählst du unter **Einstellungen → Geräte → Gerät verbinden** die Art **Wanddisplay**, scannst den QR-Code und gibst dem Gerät einen Namen. Den ganzen Ablauf zeigt [Anmelden und verbinden](/guide/setup#_4-familien-tablet-oder-wanddisplay-verbinden).
+
+Beim ersten Start zeigt die Wandanzeige eine **Checkliste** mit drei Schritten, die du einmal auf dem Gerät durchgehst:
+
+1. **App festhalten**: Bei iPhone und iPad schaltest du unter **Bedienungshilfen** den **Geführten Zugriff** ein. Bei Android unter **Sicherheit** die **App-Anheftung**. So bleibt die Anzeige immer auf WuselWall.
+2. **Bildschirm anlassen**: Die automatische Sperre oder das Bildschirm-Timeout stellst du auf „nie“ bzw. das Maximum.
+3. **Am Strom lassen**: Dauerhaft ans Stromnetz, damit sie nach einem Stromausfall wieder bereit ist.
+
+Mit **Fertig** verschwindet die Checkliste.

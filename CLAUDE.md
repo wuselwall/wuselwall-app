@@ -6,20 +6,25 @@ This repository holds both the planning documents and the code for WuselWall (se
 Setup-plan steps 3, 5, 6 and 8 are built (app shell, identity, online shopping list, the
 compose stack) and M1.1 is built, offline outbox included. Onboarding (step 9,
 [specs/20](specs/20-onboarding.md), ADR-014 and ADR-018 — self-hosted only, no WuselWall
-Cloud) has started: Sign in with Apple and Google are built (9.1). Built since: household
-settings (specs/21), the kiosk week board (specs/09), M1.3a calendar (events, presence,
-recurrence expanded in Edge Functions, the ICS feed with tokens), M1.3b Stundenplan (the
-projection in `supabase/functions/_shared/school.ts`), M1.2 tasks and points, M1.4 meals,
-the kid register; regions to any depth and holidays (DE/AT/CH/LI from OpenHolidays,
-fetched by the server: public holidays automatic, Ferien imported), several schools, the
-timetable's day operations, meal suggestions, the Today tab with the getting-started card,
-the data export, subscribed ICS calendars (FR-1.9: `calendar-import`, read-only
-occurrences in their own tables); and ADR-018's server choice: the store app asks for its
-server (discovery through the `server-info` function), a server release with
-`server/wuselwall`, and `deploy-supabase.yml` for a family's own hosted project.
-`scripts/local-pgtap` runs every migration and pgTAP suite on a throwaway local Postgres
-(no Docker). The server runs three scheduled jobs: `tasks-nightly`, `holidays-sync` and
-`calendar-import` (hourly). Next: the rest of 9.1/9.2 and M1.6.
+Cloud) is built: Sign in with Apple and Google, email codes (E1–E3), households and founder
+codes (H1/H2), invitations, pairing of shared and wall devices, leaving, deleting and
+restoring a family, account deletion and the second-factor reset, localised mail
+(`send-email` hook), and ADR-018's server choice: the store app asks for its server
+(discovery through the `server-info` function), a server release with `server/wuselwall`, and
+`deploy-supabase.yml` for a family's own hosted project. Built besides: household settings
+(specs/21), the kiosk week board (specs/09) with "Alle Termine", M1.3a calendar (events,
+presence, recurrence expanded in Edge Functions, the ICS feed with tokens), M1.3b Stundenplan
+(the projection in `supabase/functions/_shared/school.ts`), M1.2 tasks and points, M1.4 meals,
+the kid register; regions to any depth and holidays (DE/AT/CH/LI from OpenHolidays, fetched
+by the server: public holidays automatic, Ferien imported), several schools, the timetable's
+day operations, meal suggestions, the Today tab with the getting-started card, the data
+export, subscribed ICS calendars (FR-1.9: `calendar-import`, read-only occurrences in their
+own tables, optionally in the outbound feed), local reminders (Q47) and the QR scanner on
+`camera` and `zxing2` (Q49). `scripts/local-pgtap` runs every migration and pgTAP suite on a
+throwaway local Postgres (no Docker). The server runs four scheduled jobs: `tasks-nightly`,
+`holidays-sync` (weekly), `calendar-import` (hourly) and `household-purge` (daily). Next: apply
+the migrations and deploy the functions (`scripts/remote-backup.sh` first), set
+`ENABLE_EMAIL_AUTOCONFIRM=false` on an existing server, then M1.6.
 
 **Never describe a particular operator's server in a committed file** — not a host, path,
 SSH alias, machine or the fact that someone runs one. Placeholders (`example.org`) in

@@ -100,13 +100,21 @@ class _SetupPageState extends ConsumerState<SetupPage> {
                   ),
                   const SizedBox(height: Tokens.space3),
                 ],
-                // Email + password until the email code (E1–E3) replaces it.
+                // E1: the address, then a code by e-mail (E2, E3).
                 OutlinedButton.icon(
                   onPressed: _busy || !online
                       ? null
                       : () => context.go(Routes.signIn),
                   icon: const Icon(Icons.mail_outline),
                   label: Text(l10n.doorEmail),
+                ),
+                // An invitation: the code, a link or its QR code (J2).
+                TextButton.icon(
+                  onPressed: _busy || !online
+                      ? null
+                      : () => context.go(Routes.inviteCode),
+                  icon: const Icon(Icons.mark_email_unread_outlined),
+                  label: Text(l10n.inviteDoorAction),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: Tokens.space4),
@@ -123,16 +131,13 @@ class _SetupPageState extends ConsumerState<SetupPage> {
                     ],
                   ),
                 ),
-                // The M0.1 code entry, where pairing (J3) will stand.
+                // Pairing (J3): the new device shows a code, a guardian's phone approves it.
                 TextButton.icon(
-                  onPressed: () => context.go(Routes.enrol),
-                  icon: const Icon(Icons.pin_outlined),
-                  label: Text(l10n.setupEnrolAction),
-                ),
-                // The founder wizard, until H1 after sign-in replaces it.
-                TextButton(
-                  onPressed: () => context.go(Routes.wizard),
-                  child: Text(l10n.setupHouseholdAction),
+                  onPressed: _busy || !online
+                      ? null
+                      : () => context.go(Routes.pair),
+                  icon: const Icon(Icons.tablet_android),
+                  label: Text(l10n.pairFrontDoorAction),
                 ),
                 // The web app of a server: the phone joins the same server by scanning.
                 if (kIsWeb) const _ContinueOnPhone(),

@@ -144,11 +144,16 @@ class IdleReverter extends ConsumerStatefulWidget {
   const IdleReverter({
     required this.child,
     this.timeout = const Duration(seconds: 60),
+    this.onIdle,
     super.key,
   });
 
   final Widget child;
   final Duration timeout;
+
+  /// Also called after the revert: state the screen resets itself, such as the board's
+  /// "Alle Termine" switch.
+  final VoidCallback? onIdle;
 
   @override
   ConsumerState<IdleReverter> createState() => _IdleReverterState();
@@ -160,7 +165,9 @@ class _IdleReverterState extends ConsumerState<IdleReverter> {
   void _touch() {
     _timer?.cancel();
     _timer = Timer(widget.timeout, () {
-      if (mounted) ref.read(actingProfileProvider.notifier).clear();
+      if (!mounted) return;
+      ref.read(actingProfileProvider.notifier).clear();
+      widget.onIdle?.call();
     });
   }
 

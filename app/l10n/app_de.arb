@@ -37,7 +37,6 @@
   },
   "setupHeadline": "Willkommen bei WuselWall",
   "doorTagline": "Der Familienplan für die Küchenwand",
-  "setupEnrolAction": "Mit Code verbinden",
   "setupHouseholdAction": "Neue Familie anlegen",
   "wizardTitle": "Neuer Haushalt",
   "wizardCreate": "Haushalt anlegen",
@@ -274,7 +273,7 @@
   "errLastSignInMethod": "Das ist deine einzige Anmeldemethode, darum kann sie nicht entfernt werden.",
   "errEmailExists": "Diese E-Mail-Adresse gehört schon zu einem anderen Konto.",
   "signInMethodsTitle": "Anmeldung",
-  "signInMethodEmail": "E-Mail und Passwort",
+  "signInMethodEmail": "E-Mail-Code",
   "signInMethodApple": "Apple",
   "signInMethodGoogle": "Google",
   "signInMethodNotConnected": "Nicht verbunden",
@@ -1135,6 +1134,461 @@
   "scanCameraUnavailable": "Auf diesem Gerät gibt es keine Kamera, die WuselWall nutzen kann. Gib den Code stattdessen ein.",
   "scanWebUnsupported": "Dieser Browser kann keine QR-Codes scannen. Gib den Code stattdessen ein.",
   "scanTypeCode": "Code eintippen",
+  "feedSubTitle": "Abonnierte Kalender einschließen",
+  "feedSubHelp": "Termine aus importierten Kalendern (z. B. Verein, Müllabfuhr) erscheinen auch im Abo.",
+  "feedSubSummary": "Abonnierte Kalender",
+  "boardAllEvents": "Alle Termine",
+  "reminderChannelName": "Erinnerungen",
+  "reminderStartLabel": "Erinnerungen einschalten",
+  "reminderMorningEventsAndTasks": "Heute: {events, plural, one{1 Termin} other{{events} Termine}}, {tasks, plural, one{1 Aufgabe} other{{tasks} Aufgaben}}",
+  "@reminderMorningEventsAndTasks": {
+    "placeholders": {
+      "events": {
+        "type": "int"
+      },
+      "tasks": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderMorningEventsOnly": "Heute: {events, plural, one{1 Termin} other{{events} Termine}}",
+  "@reminderMorningEventsOnly": {
+    "placeholders": {
+      "events": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderMorningTasksOnly": "Heute: {tasks, plural, one{1 Aufgabe} other{{tasks} Aufgaben}}",
+  "@reminderMorningTasksOnly": {
+    "placeholders": {
+      "tasks": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderMorningNoEvents": "Heute steht kein Termin an.",
+  "reminderMorningFirst": "Als Erstes um {time}: {title}",
+  "@reminderMorningFirst": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderMorningAllDay": "Ganztägig: {title}",
+  "@reminderMorningAllDay": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderEventBody": "Beginnt um {time}",
+  "@reminderEventBody": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderSettingsTitle": "Erinnerungen",
+  "reminderSettingsSubtitle": "Auf diesem Telefon",
+  "reminderSettingsSection": "Woran du erinnert werden willst",
+  "reminderStatusOn": "Erinnerungen sind auf diesem Telefon eingeschaltet.",
+  "reminderStatusOff": "Erinnerungen sind auf diesem Telefon aus.",
+  "reminderStatusUnavailable": "Auf diesem Gerät gibt es keine Erinnerungen.",
+  "reminderEnableAction": "Erinnerungen einschalten",
+  "reminderDeniedNote": "Ohne Erlaubnis gibt es keine Erinnerungen. Die Erlaubnis kannst du in den Systemeinstellungen ändern.",
+  "reminderLocalNote": "Erinnerungen entstehen auf diesem Telefon. Nichts davon wird an einen Server oder an Dritte geschickt.",
+  "reminderOnlyPersonal": "Erinnerungen gibt es nur auf dem persönlichen Gerät eines Familienmitglieds.",
+  "pairFrontDoorAction": "Familien-Tablet oder Wanddisplay verbinden",
+  "pairTitle": "Familien-Tablet oder Wanddisplay verbinden",
+  "pairScanHint": "Öffne WuselWall auf deinem Handy und scanne diesen Code.",
+  "pairCodeHint": "Oder auf dem Handy: Einstellungen → Geräte → Gerät verbinden, dann den Code eintippen.",
+  "pairQrLabel": "QR-Code zum Verbinden dieses Geräts",
+  "pairWaiting": "Warte auf die Bestätigung …",
+  "pairConnected": "Verbunden mit {household}",
+  "@pairConnected": {
+    "placeholders": {
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "pairOldCodeLink": "Ich habe einen Code vom Handy (ältere Version)",
+  "pairConnectAction": "Gerät verbinden",
+  "pairOldCodeAction": "Code für ein älteres Gerät erzeugen",
+  "pairEntryBody": "Scanne den Code, den das neue Gerät zeigt, oder tippe ihn ab.",
+  "pairCodeField": "Code vom neuen Gerät",
+  "pairNext": "Weiter",
+  "pairReviewBody": "Das ist der Code des Geräts, das verbunden werden soll.",
+  "pairConfirmHint": "Nur bestätigen, wenn du dieses Gerät vor dir siehst.",
+  "pairKindLabel": "Was ist das für ein Gerät?",
+  "pairKindWall": "Wanddisplay",
+  "pairKindKid": "Kinder-Tablet",
+  "pairKindFamily": "Tablet für alle",
+  "pairKindChild": "Handy eines Kindes",
+  "pairChildLabel": "Welches Kind?",
+  "pairNameLabel": "Name des Geräts",
+  "pairDefaultWall": "Wanddisplay",
+  "pairDefaultKid": "Kinder-Tablet",
+  "pairDefaultFamily": "Tablet",
+  "pairDefaultChild": "Handy von {name}",
+  "@pairDefaultChild": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pairApproveAction": "Verbinden",
+  "pairApproved": "Gerät verbunden",
+  "pairOnlyOnPersonal": "Das geht nur auf deinem eigenen Handy.",
+  "pairPinTitle": "Eltern-PIN festlegen",
+  "pairPinBody": "Die PIN bestätigt Änderungen auf gemeinsam genutzten Geräten. Lege sie einmal fest.",
+  "pairPinConfirm": "PIN noch einmal eingeben",
+  "pairPinMismatch": "Die PINs stimmen nicht überein. Versuch es noch einmal.",
+  "firstRunKioskTitle": "Wanddisplay einrichten",
+  "firstRunKioskBody": "Drei Schritte, einmal auf diesem Gerät. Danach zeigt es die Woche.",
+  "firstRunPinTitle": "App festhalten",
+  "firstRunPinIos": "Einstellungen → Bedienungshilfen → Geführter Zugriff einschalten. WuselWall öffnen und die obere Taste dreimal schnell drücken.",
+  "firstRunPinAndroid": "Einstellungen → Sicherheit → App-Anheftung einschalten (je nach Gerät auch „Bildschirm anpinnen“). WuselWall öffnen, die Übersicht aufrufen und die Nadel antippen.",
+  "firstRunAwakeTitle": "Bildschirm anlassen",
+  "firstRunAwakeIos": "Einstellungen → Anzeige & Helligkeit → Automatische Sperre → Nie.",
+  "firstRunAwakeAndroid": "Einstellungen → Anzeige → Bildschirm-Timeout auf das Maximum stellen.",
+  "firstRunPowerTitle": "Am Strom lassen",
+  "firstRunPowerBody": "Dauerhaft ans Stromnetz hängen, damit es nach einem Stromausfall wieder bereit ist.",
+  "firstRunDone": "Fertig",
+  "firstRunKidTitle": "Willkommen",
+  "firstRunKidBody": "Tipp auf dein Bild, dann weiß WuselWall, wer du bist.",
+  "firstRunKidStart": "Los geht’s",
+  "householdNewTitle": "Neue Familie",
+  "householdNewFamilyName": "Familienname",
+  "householdNewYourName": "Dein Name",
+  "householdNewColour": "Deine Farbe",
+  "householdNewColourOption": "Farbe {number}",
+  "@householdNewColourOption": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "householdNewFamilyPrefill": "Familie {name}",
+  "@householdNewFamilyPrefill": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "householdNewDefaults": "Zeitzone {timezone} · Sprache {language} — von deinem Gerät",
+  "@householdNewDefaults": {
+    "placeholders": {
+      "timezone": {
+        "type": "String"
+      },
+      "language": {
+        "type": "String"
+      }
+    }
+  },
+  "householdLanguageDe": "Deutsch",
+  "householdLanguageEn": "Englisch",
+  "householdNewFounderCode": "Gründungscode",
+  "householdNewFounderHelp": "Den Gründungscode bekommst du von der Person, die deinen Server betreibt.",
+  "householdSeedExamples": "Mit Beispielen starten — 5 Aufgaben, 3 Belohnungen",
+  "householdNewCreate": "Familie anlegen",
+  "householdNewInvited": "Ich wurde eingeladen",
+  "householdInvitedNote": "Einladungen kommen mit dem nächsten Update.",
+  "householdNewSignOut": "Abmelden",
+  "householdNewErrNoCode": "Neue Familien gibt es gerade nur mit Gründungscode.",
+  "householdNewErrCodeWrong": "Der Gründungscode stimmt nicht.",
+  "householdNewErrRateLimited": "Zu viele Versuche. Warte ein paar Minuten und probier es dann nochmal.",
+  "householdMembersTitle": "Wer gehört noch zu euch?",
+  "householdMembersYou": "{name} (du)",
+  "@householdMembersYou": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "householdKindChild": "Kind",
+  "householdKindAdult": "Erwachsen",
+  "householdMembersName": "Name",
+  "householdMembersAdd": "Person hinzufügen",
+  "householdMembersRemove": "Entfernen",
+  "householdMembersDone": "Fertig",
+  "householdMembersSkip": "Überspringen",
+  "householdMembersHelp": "Einladen kannst du Erwachsene später.",
+  "householdDeviceLabel": "{owner} {device}",
+  "@householdDeviceLabel": {
+    "placeholders": {
+      "owner": {
+        "type": "String"
+      },
+      "device": {
+        "type": "String"
+      }
+    }
+  },
+  "householdDeviceIphone": "iPhone",
+  "householdDeviceAndroid": "Android-Handy",
+  "householdDeviceBrowser": "Browser",
+  "householdDeviceComputer": "Computer",
+  "emailContinue": "Weiter",
+  "emailHavePassword": "Ich habe ein Passwort",
+  "emailWrongCredentials": "E-Mail oder Passwort stimmt nicht.",
+  "emailUseCodeInstead": "Stattdessen Code per E-Mail",
+  "emailOffline": "Keine Verbindung – die Anmeldung per E-Mail braucht eine Verbindung.",
+  "emailCodeTitle": "Code aus der E-Mail",
+  "emailCodeSent": "Wir haben einen 6-stelligen Code an {email} geschickt. Er ist 10 Minuten gültig.",
+  "@emailCodeSent": {
+    "placeholders": {
+      "email": {
+        "type": "String",
+        "example": "lukas@example.org"
+      }
+    }
+  },
+  "emailCodeFieldLabel": "Sechsstelliger Code",
+  "emailCodeWrong": "Der Code stimmt nicht oder ist abgelaufen. Probier es noch einmal oder fordere einen neuen an.",
+  "emailCodeResendIn": "Kein Code? Erneut senden (in {seconds} s)",
+  "@emailCodeResendIn": {
+    "placeholders": {
+      "seconds": {
+        "type": "int",
+        "example": "4"
+      }
+    }
+  },
+  "emailCodeResend": "Kein Code? Erneut senden",
+  "emailCodeSpam": "Schau im Spam-Ordner nach.",
+  "emailCodeResent": "Ein neuer Code ist unterwegs.",
+  "emailCodeOtherMethod": "Andere Methode wählen",
+  "emailCodeOtherAddress": "Andere E-Mail-Adresse",
+  "signInMethodTitle": "Wie möchtest du dich künftig anmelden?",
+  "signInMethodCode": "Mit Code per E-Mail — nichts zu merken",
+  "signInMethodPassword": "Mit Passwort",
+  "passwordStrengthShort": "Noch zu kurz",
+  "passwordStrengthWeak": "Schwach",
+  "passwordStrengthFair": "Mittel",
+  "passwordStrengthStrong": "Stark",
+  "settingsPasswordTitle": "Passwort",
+  "settingsPasswordSet": "Festgelegt. Du kannst dich auch mit E-Mail und Passwort anmelden.",
+  "settingsPasswordNotSet": "Nicht festgelegt. Anmelden geht weiterhin mit einem Code per E-Mail.",
+  "passwordSetAction": "Passwort festlegen",
+  "passwordChangeAction": "Passwort ändern",
+  "passwordSaved": "Dein Passwort ist gespeichert.",
+  "passwordDialogBody": "Mindestens 10 Zeichen. Der Code per E-Mail bleibt immer möglich.",
+  "signInMethodEmailSubtitle": "{email} — immer verfügbar",
+  "@signInMethodEmailSubtitle": {
+    "placeholders": {
+      "email": {
+        "type": "String",
+        "example": "lukas@example.org"
+      }
+    }
+  },
+  "signInMethodAlwaysAvailable": "Immer verfügbar",
+  "leaveLeaveTile": "Familie verlassen",
+  "leaveLeaveExplain": "Dein Konto verlässt die Familie. Deine Geräte melden sich ab. Die Einträge bleiben bei der Familie; du kannst danach eine andere Familie gründen oder ihr beitreten.",
+  "leaveLeaveBlocked": "Lade zuerst eine zweite erwachsene Person ein oder lösche die Familie.",
+  "leaveLeaveDialogTitle": "Familie verlassen?",
+  "leaveLeaveDialogBody": "Du verlierst den Zugang zu dieser Familie. Die Familie bleibt bestehen, und die anderen bleiben drin.",
+  "leaveLeaveConfirm": "Verlassen",
+  "leaveCancel": "Abbrechen",
+  "leaveDeleteTile": "Familie löschen",
+  "leaveDeleteExplain": "Alle Geräte melden sich sofort ab. 14 Tage lang kann eine Elternperson die Familie wiederherstellen, danach werden alle Daten endgültig gelöscht.",
+  "leaveDeleteDialogTitle": "Familie löschen?",
+  "leaveDeleteDialogBody": "Alle Geräte melden sich ab, und niemand kommt mehr an die Familie. 14 Tage lang kann eine Elternperson sie wiederherstellen. Danach sind alle Daten weg.",
+  "leaveDeleteNameLabel": "Tippe ‚{name}‘ zum Bestätigen",
+  "@leaveDeleteNameLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "leaveDeleteConfirm": "Familie löschen",
+  "leaveDeletedTitle": "{family} wird am {date} endgültig gelöscht",
+  "@leaveDeletedTitle": {
+    "placeholders": {
+      "family": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "leaveDeletedBodyGuardian": "Du kannst die Familie wiederherstellen. Alle Daten sind noch da. Dieses Gerät ist danach wieder euer Familientelefon; die anderen Geräte melden sich neu an.",
+  "leaveDeletedBodyMember": "Nur eine Elternperson kann die Familie wiederherstellen. Du kannst auch neu anfangen; dann verlässt dein Konto diese Familie.",
+  "leaveRestore": "Wiederherstellen",
+  "leaveStartAfresh": "Neu anfangen",
+  "leaveStartAfreshHint": "Dein Konto verlässt die gelöschte Familie, und du gründest eine neue.",
+  "leaveErrConfirmName": "Der Name stimmt nicht.",
+  "leaveErrHouseholdDeleted": "Diese Familie ist gelöscht.",
+  "leaveErrRestoreExpired": "Diese Familie kann nicht mehr wiederhergestellt werden.",
+  "leaveErrNotDeleted": "Diese Familie ist nicht gelöscht.",
+  "leaveErrAdultRequired": "Nur Erwachsene haben ein eigenes Konto.",
+  "leaveErrAlreadyInHousehold": "Dieses Konto gehört schon zu einer Familie.",
+  "inviteDoorAction": "Ich habe einen Einladungscode",
+  "inviteCodeTitle": "Einladung",
+  "inviteCodeBody": "Gib den Code ein oder füge den Link ein, den du bekommen hast.",
+  "inviteCodeLabel": "Code oder Link",
+  "inviteCheckAction": "Einladung prüfen",
+  "inviteCodeInvalidFormat": "Das ist weder ein Einladungscode noch ein WuselWall-Link.",
+  "inviteNoLonger": "Diese Einladung gilt nicht mehr. Bitte die Person, die dich eingeladen hat, um eine neue.",
+  "inviteRateLimited": "Zu viele Versuche. Warte ein paar Minuten und versuch es noch einmal.",
+  "inviteBanner": "{inviter} hat dich zu {household} eingeladen",
+  "@inviteBanner": {
+    "placeholders": {
+      "inviter": {
+        "type": "String"
+      },
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteBannerNoInviter": "Du bist zu {household} eingeladen",
+  "@inviteBannerNoInviter": {
+    "placeholders": {
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteRoleLineGuardian": "Als Erziehungsberechtigte:r siehst du alles und bestätigst Belohnungen.",
+  "inviteRoleLineMember": "Als Mitglied erledigst du Aufgaben, bestätigst aber keine Belohnungen.",
+  "inviteContinue": "Weiter zur Anmeldung",
+  "inviteJoin": "Beitreten",
+  "inviteNewFamilyInstead": "Eigene Familie anlegen",
+  "inviteJoinTitle": "Du bist {name} in {household}",
+  "@inviteJoinTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteJoinHint": "Dein Name und deine Farbe, so wie die Familie sie sieht. Später änderbar in den Einstellungen.",
+  "inviteJoinDecline": "Nicht beitreten",
+  "inviteAlreadyIn": "Du bist schon in {household}.",
+  "@inviteAlreadyIn": {
+    "placeholders": {
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteNothingKept": "Es liegt keine Einladung mehr vor.",
+  "inviteResultTitle": "Einladung für {name}",
+  "@inviteResultTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteResultHint": "Die Person gibt den Code in WuselWall ein oder scannt den QR-Code.",
+  "inviteValidUntil": "Gültig bis {date}",
+  "@inviteValidUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteQrLabel": "QR-Code der Einladung",
+  "inviteShare": "Teilen",
+  "inviteDone": "Fertig",
+  "inviteShareMessage": "Komm zu {household} in WuselWall: {link} — oder gib in der App den Code {code} ein.",
+  "@inviteShareMessage": {
+    "placeholders": {
+      "household": {
+        "type": "String"
+      },
+      "link": {
+        "type": "String"
+      },
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteAdultTitle": "Erwachsene Person einladen",
+  "inviteAdultName": "Name",
+  "inviteAdultRole": "Rolle",
+  "inviteRoleGuardian": "Erziehungsberechtigt",
+  "inviteRoleMember": "Mitglied",
+  "inviteRoleGuardianHelp": "Sieht alles und bestätigt Belohnungen.",
+  "inviteRoleMemberHelp": "Erledigt Aufgaben, bestätigt aber keine Belohnungen. Etwa für eine Au-pair oder Großeltern.",
+  "inviteAdultEmail": "E-Mail (optional)",
+  "inviteAdultEmailHelp": "Mit dieser Adresse findet die Person die Einladung von selbst, wenn sie sich anmeldet.",
+  "inviteEmailInvalid": "Das sieht nicht nach einer E-Mail-Adresse aus.",
+  "inviteCreate": "Einladung erstellen",
+  "inviteInviteAction": "Einladen",
+  "inviteOpenUntil": "Eingeladen · bis {date}",
+  "@inviteOpenUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteShareAgain": "Erneut teilen",
+  "inviteWithdraw": "Zurückziehen",
+  "inviteWithdrawn": "Einladung zurückgezogen.",
+  "inviteScanTitle": "Einladung scannen",
+  "accountDeleteTile": "Konto löschen",
+  "accountDeleteExplain": "Dein Konto und seine Anmeldemethoden werden gelöscht, und du wirst überall abgemeldet. Dein Profil bleibt mit allem, was du getan hast, in der Familie. Der Apple-Zugriff wird widerrufen.",
+  "accountDeleteBlocked": "Du bist die letzte Elternperson mit Konto in dieser Familie. Lade zuerst eine zweite erwachsene Person ein oder lösche die Familie.",
+  "accountDeleteDialogTitle": "Konto löschen?",
+  "accountDeleteDialogBody": "Das lässt sich nicht rückgängig machen. Deine Anmeldung wird entfernt, und dein Profil bleibt in der Familie.",
+  "accountDeleteConfirm": "Konto löschen",
+  "accountDeleteRefused": "Das Konto konnte nicht gelöscht werden. Versuch es später noch einmal.",
+  "accountDeleteReauthTitle": "Bitte bestätige, dass du es bist",
+  "accountDeleteReauthBody": "Zum Löschen brauchen wir eine frische Anmeldung. Wir schicken einen Code an {email}.",
+  "@accountDeleteReauthBody": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "accountDeleteReauthSend": "Code senden",
+  "accountDeleteReauthCodeLabel": "Code aus der E-Mail",
+  "accountDeleteReauthConfirm": "Bestätigen",
+  "accountDeleteReauthSignInAgain": "Melde dich zuerst neu an, dann kannst du das Konto löschen.",
+  "mfaResetAction": "Zwei-Faktor zurücksetzen",
+  "mfaResetConfirmTitle": "Zwei-Faktor zurücksetzen?",
+  "mfaResetConfirmBody": "{name} kann sich danach ohne zweiten Faktor anmelden und ihn neu einrichten.",
+  "@mfaResetConfirmBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "mfaResetConfirm": "Zurücksetzen",
+  "mfaResetDone": "Der zweite Faktor von {name} ist zurückgesetzt.",
+  "@mfaResetDone": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "serverTitle": "Mit welchem Server?",
   "serverLead": "WuselWall speichert eure Daten auf dem Server eurer Familie. Gib seine Adresse ein oder scanne seinen QR-Code.",
   "serverAddressLabel": "Adresse des Servers",

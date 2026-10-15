@@ -6,6 +6,7 @@ import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/supabase/api_client.dart';
 import 'package:wuselwall/core/supabase/supabase_providers.dart';
+import 'package:wuselwall/features/identity/domain/email_code.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 
 /// Everything identity-related that touches the backend: sign-in, setup, enrolment,
@@ -39,6 +40,53 @@ class IdentityRepository {
   Future<Result<void>> signIn(String email, String password) =>
       Result.guard(() async {
         await _auth.signInWithPassword(email: email.trim(), password: password);
+      });
+
+  /// E1/E2: mails a six-digit code (specs/20, "With email"). The same call for every
+  /// address, so nothing reveals whether an account exists. [locale] is the app's
+  /// language for the mail.
+  Future<Result<void>> sendEmailCode(String email, {required String locale}) =>
+      Result.guard(
+        () => _auth.signInWithOtp(
+          email: email.trim(),
+          shouldCreateUser: true,
+          data: {'locale': locale},
+        ),
+      );
+
+  /// E2: checks the code and signs in. `Ok(true)` when this is the first code sign-in
+  /// of a new account, which owes E3 (see `isFirstCodeSignIn`).
+  Future<Result<bool>> verifyEmailCode(String email, String code) =>
+      Result.guard(() async {
+        final response = await _auth.verifyOTP(
+          type: OtpType.email,
+          email: email.trim(),
+          token: code.trim(),
+        );
+        final user = response.user;
+        return user != null &&
+            isFirstCodeSignIn(
+              createdAt: user.createdAt,
+              userMetadata: user.userMetadata,
+              now: DateTime.now(),
+            );
+      });
+
+  /// Sets (or changes) the account's password and records that it has one.
+  Future<Result<void>> setPassword(String password) => Result.guard(() async {
+    await _auth.updateUser(
+      UserAttributes(password: password, data: {hasPasswordKey: true}),
+    );
+  });
+
+  /// Whether this account has a password set in the app (see [hasPasswordKey]).
+  bool hasPassword() =>
+      _auth.currentUser?.userMetadata?[hasPasswordKey] == true;
+
+  /// E3's answer: `code` or `password`, kept so E3 is not shown again.
+  Future<Result<void>> markSignInChoice(String choice) =>
+      Result.guard(() async {
+        await _auth.updateUser(UserAttributes(data: {signInChoiceKey: choice}));
       });
 
   Future<void> signOut() => _auth.signOut();

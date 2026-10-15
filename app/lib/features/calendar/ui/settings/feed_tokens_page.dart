@@ -153,7 +153,12 @@ String _summary(AppLocalizations l10n, FeedFilter f, List<Member> members) {
     FeedSchool.day => l10n.feedSummarySchoolDay,
     FeedSchool.lessons => l10n.feedSummarySchoolLessons,
   };
-  return [kinds.join(' + '), people, ?school].join(' · ');
+  return [
+    kinds.join(' + '),
+    people,
+    ?school,
+    if (f.subscribed) l10n.feedSubSummary,
+  ].join(' · ');
 }
 
 /// "vor 3 Std." and the fetch count, from the server's last_fetched_at.
@@ -234,6 +239,7 @@ class _NewFeedDialogState extends State<_NewFeedDialog> {
   final _people = <String>{};
   bool _presence = false;
   FeedSchool _school = FeedSchool.off;
+  bool _subscribed = false;
 
   @override
   void initState() {
@@ -256,6 +262,7 @@ class _NewFeedDialogState extends State<_NewFeedDialog> {
           profileIds: _people.toList(),
           kinds: {'appointment', if (_presence) 'presence'},
           school: _school,
+          subscribed: _subscribed,
         ),
       ),
     );
@@ -337,6 +344,14 @@ class _NewFeedDialogState extends State<_NewFeedDialog> {
                   onSelected: (_) => setState(() => _school = value),
                 ),
             ],
+          ),
+          const SizedBox(height: Tokens.space4),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            value: _subscribed,
+            onChanged: (v) => setState(() => _subscribed = v),
+            title: Text(l10n.feedSubTitle),
+            subtitle: Text(l10n.feedSubHelp),
           ),
         ],
       ),

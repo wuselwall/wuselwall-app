@@ -4,22 +4,45 @@ Das gehört den **Erziehungsberechtigten**. Öffne dazu auf deinem Handy das Zah
 
 <Shot name="settings-phone" alt="Einstellungen mit Mitgliedern und Geräten" />
 
+## Erwachsene Person einladen
+
+Eine Person, die mit eigenem Konto in der Familie mitmachen soll, lädst du ein. Tippe unter **Mitglieder** auf **Erwachsene Person einladen**:
+
+1. Gib den **Namen** ein und wähle die **Rolle**: **Erziehungsberechtigt** sieht alles und bestätigt Belohnungen. **Mitglied** erledigt Aufgaben, bestätigt aber keine Belohnungen (zum Beispiel für eine Au-pair oder die Großeltern).
+2. Optional eine **E-Mail-Adresse**. Meldet sich die Person mit genau dieser Adresse an, findet sie die Einladung von selbst.
+3. Tippe auf **Einladung erstellen**.
+
+<Shot name="invite-sheet" alt="Einladung für Oma Ruth mit Code, QR-Code und Teilen" />
+
+Dann zeigt WuselWall den **Code**, einen **QR-Code** und den **Link**. Tippe auf **Teilen**, dann schickst du sie zum Beispiel per Nachricht. Die Person gibt den Code in WuselWall ein oder scannt den QR-Code; so geht es unter [Anmelden und verbinden](/guide/setup#_3-einer-familie-beitreten).
+
+Die Einladung gilt **7 Tage** und funktioniert **einmal**. Offene Einladungen stehen in der Liste mit ihrem Ablaufdatum: **Erneut teilen** schickt sie noch einmal, **Zurückziehen** macht sie ungültig.
+
+Hast du bei der E-Mail-Adresse nichts angegeben, gibt es den Code allein. Die Person muss ihn dann in der App eingeben.
+
+Zu einem bestehenden **Mitglied** ohne Konto lädst du die Person direkt in der Mitgliederliste über **Einladen** ein.
+
+::: tip Kein Konto nötig
+Kinder brauchen keine Einladung. Sie legst du als Mitglied mit Namen an, und ihr Gerät verbindest du wie unter [Gerät verbinden](#gerat-verbinden) beschrieben.
+:::
+
 ## Mitglied hinzufügen
 
-Tippe auf **Mitglied hinzufügen** und gib einen **Namen** ein. WuselWall vergibt automatisch die nächste freie **Farbe**. Neue Mitglieder sind „Mitglieder“; zusätzliche Erziehungsberechtigte lassen sich derzeit noch nicht anlegen.
+Mit dem Symbol neben **Mitglieder** legst du eine Person nur mit **Namen** an, zum Beispiel ein Kind oder jemanden, der nicht selbst in WuselWall ist. WuselWall vergibt automatisch die nächste freie **Farbe**.
 
-## Gerät hinzufügen
+## Zwei-Faktor zurücksetzen
 
-1. Tippe auf **Gerät hinzufügen**.
-2. Gib einen **Gerätenamen** ein, wähle die **Art** (geteilt oder Wandanzeige) und tippe auf **Code erzeugen**.
-3. Auf dem neuen Gerät gibst du den Code ein oder scannst den QR-Code ([Verbinden](/guide/setup#_2-gerat-mit-code-verbinden)).
+Hat eine andere Erziehungsberechtigte Person ihren zweiten Faktor verloren, tippst du bei ihrem Namen auf **Zwei-Faktor zurücksetzen**. Danach kann sie sich ohne den zweiten Faktor anmelden und ihn neu einrichten (siehe [Sicherheit](/settings/security#zwei-faktor-anmeldung)).
 
-<div class="shots">
-<Shot name="settings-add-device" alt="Dialog „Gerät hinzufügen“" />
-<Shot name="settings-code" alt="Der erzeugte Code mit QR-Code" />
-</div>
+## Gerät verbinden
 
-Der Code gilt **10 Minuten** und funktioniert **einmal**.
+Ein Kinder-Tablet, ein Tablet für alle oder die Wandanzeige verbindest du so: Tippe unter **Geräte** auf **Gerät verbinden**, scanne den QR-Code oder tippe den Code ab, den das neue Gerät zeigt, und wähle die Art und einen Namen. Den ganzen Ablauf zeigt [Anmelden und verbinden](/guide/setup#_4-familien-tablet-oder-wanddisplay-verbinden).
+
+<Shot name="pair-approve" alt="Handy eines Erwachsenen: Gerät prüfen und verbinden" />
+
+Du musst den Code nicht abtippen: Das neue Gerät zeigt einen QR-Code, den du mit der Kamera deines Handys scannst.
+
+Ältere Geräte mit einer älteren Version von WuselWall bekommen noch einen Code über **Code für ein älteres Gerät erzeugen**. Diese Möglichkeit verschwindet mit der nächsten Version.
 
 ## Gerät sperren
 
@@ -39,10 +62,12 @@ Erziehungsberechtigte können alle Daten eurer Familie als eine Datei speichern,
 
 Die Datei enthält die Angaben, die ihr eingegeben habt: Mitglieder, Termine, Stundenpläne, Aufgaben, Rezepte, Einkaufslisten und so weiter. Passwörter, PINs und Anmeldedaten sind **nicht** enthalten, und Geräte erscheinen nur mit Namen und Datum.
 
+Familie löschen und verlassen steht unter [Konto und Familie](/settings/account).
+
 ## Abonnierte Kalender
 
 Kalender von Vereinen oder der Gemeinde abonnierst du unter **Einstellungen → Abonnierte Kalender**. Wie das funktioniert und was zu beachten ist, steht unter [Kalender](/calendar/#abonnierte-kalender).
 
 ## Erste Schritte wieder anzeigen
 
-Hast du die Karte **Erste Schritte** auf dem Heute-Tab ausgeblendet, holst du sie unter **Einstellungen → Erste Schritte** zurück.
+Hast du die Karte **Erste Schritte** auf dem Heute-Tab ausgeblendet, holst du sie unter **Einstellungen → Erste Schritte** zurück. Die Karte zeigt, was noch fehlt: Erwachsene einladen, Tablet verbinden, Wandanzeige einrichten, PIN festlegen, Kalender abonnieren, Stundenplan eintragen und Erinnerungen einschalten (siehe [Erinnerungen](/settings/reminders)).
