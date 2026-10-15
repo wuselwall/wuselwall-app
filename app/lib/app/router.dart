@@ -10,6 +10,7 @@ import 'package:wuselwall/features/calendar/ui/settings/external_calendars_page.
 import 'package:wuselwall/features/calendar/ui/settings/feed_tokens_page.dart';
 import 'package:wuselwall/features/home/ui/register_home_page.dart';
 import 'package:wuselwall/features/household/application/household_providers.dart';
+import 'package:wuselwall/features/household/ui/deleted_family_page.dart';
 import 'package:wuselwall/features/household/ui/members_page.dart';
 import 'package:wuselwall/features/household/ui/new_family_page.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
@@ -55,6 +56,7 @@ abstract final class Routes {
   static const mfa = '/setup/mfa';
   static const register = '/setup/register';
   static const newFamily = '/setup/new-family';
+  static const deletedFamily = '/setup/deleted-family';
   static const welcomeMembers = '/welcome/members';
   static const home = '/';
   static const settings = '/settings';
@@ -111,6 +113,9 @@ final routerProvider = Provider<GoRouter>((ref) {
         // A new account answers E3 once, before it starts or joins a family.
         NeedsHousehold() when ref.read(signInChoiceOwedProvider) =>
           path == Routes.signInChoice ? null : Routes.signInChoice,
+        // A deleted family the account can restore or leave (specs/20 J6).
+        NeedsHousehold(:final account) when account.deletedHousehold != null =>
+          path == Routes.deletedFamily ? null : Routes.deletedFamily,
         NeedsHousehold() => path == Routes.newFamily ? null : Routes.newFamily,
         // A founder who has just created the household sees H2 once, before Today.
         Ready() when ref.read(onboardingPlanProvider) != null =>
@@ -159,6 +164,17 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: 'sign-in-choice',
             builder: (_, _) => const SignInChoicePage(),
+          ),
+          GoRoute(
+            path: 'deleted-family',
+            builder: (_, _) => Consumer(
+              builder: (_, ref, _) {
+                final s = ref.watch(sessionStateProvider).value;
+                return DeletedFamilyPage(
+                  account: s is NeedsHousehold ? s.account : null,
+                );
+              },
+            ),
           ),
           GoRoute(path: 'enrol', builder: (_, _) => const EnrolPage()),
           GoRoute(path: 'pair', builder: (_, _) => const PairPage()),

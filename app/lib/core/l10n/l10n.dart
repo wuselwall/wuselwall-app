@@ -57,6 +57,13 @@ extension FailureL10n on Failure {
       'external_calendar_url_invalid' => l10n.extCalErrUrlInvalid,
       'external_calendar_not_found' => l10n.extCalErrNotFound,
       'personal_device_required' => l10n.exportPersonalDeviceRequired,
+      'last_guardian' => l10n.leaveLeaveBlocked,
+      'confirm_name_mismatch' => l10n.leaveErrConfirmName,
+      'household_deleted' => l10n.leaveErrHouseholdDeleted,
+      'restore_expired' => l10n.leaveErrRestoreExpired,
+      'not_deleted' => l10n.leaveErrNotDeleted,
+      'adult_required' => l10n.leaveErrAdultRequired,
+      'already_in_household' => l10n.leaveErrAlreadyInHousehold,
       _ => null,
     };
     if (byCode != null) return byCode;

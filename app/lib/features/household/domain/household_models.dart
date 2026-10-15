@@ -10,6 +10,9 @@ class Account {
     this.profileId,
     this.fullName,
     this.givenName,
+    this.householdName,
+    this.leaveBlocked,
+    this.deletedHousehold,
   });
 
   factory Account.fromJson(Map<String, dynamic> json) => Account(
@@ -23,6 +26,13 @@ class Account {
         : HouseholdCreation.code,
     fullName: json['full_name'] as String?,
     givenName: json['given_name'] as String?,
+    householdName: json['household_name'] as String?,
+    leaveBlocked: json['leave_blocked'] as String?,
+    deletedHousehold: json['deleted_household'] is Map<String, dynamic>
+        ? DeletedHousehold.fromJson(
+            json['deleted_household'] as Map<String, dynamic>,
+          )
+        : null,
   );
 
   final String userId;
@@ -38,11 +48,49 @@ class Account {
   final String? fullName;
   final String? givenName;
 
+  /// The family's name, when the account is in a live family (for a typed confirmation).
+  final String? householdName;
+
+  /// Why this account cannot leave its family yet (`last_guardian`), or null.
+  final String? leaveBlocked;
+
+  /// The family this account's adult profile sat in, once it was deleted; null otherwise.
+  final DeletedHousehold? deletedHousehold;
+
   /// The family name suggested for H1: the surname of [fullName], when there is one.
   String? get suggestedFamilyName {
     final parts = (fullName ?? '').trim().split(RegExp(r'\s+'));
     return parts.length > 1 && parts.last.isNotEmpty ? parts.last : null;
   }
+}
+
+/// A family deleted but not yet purged (specs/20 J6): the account may restore it or start
+/// afresh. `purgeAfter` is when the family is removed for good.
+class DeletedHousehold {
+  const DeletedHousehold({
+    required this.id,
+    required this.name,
+    required this.deletedAt,
+    required this.purgeAfter,
+    required this.canRestore,
+  });
+
+  factory DeletedHousehold.fromJson(Map<String, dynamic> json) =>
+      DeletedHousehold(
+        id: json['id'] as String,
+        name: json['name'] as String,
+        deletedAt: DateTime.parse(json['deleted_at'] as String),
+        purgeAfter: DateTime.parse(json['purge_after'] as String),
+        canRestore: json['can_restore'] as bool? ?? false,
+      );
+
+  final String id;
+  final String name;
+  final DateTime deletedAt;
+  final DateTime purgeAfter;
+
+  /// A guardian within the 14 days.
+  final bool canRestore;
 }
 
 /// `app.instance_setting` `household_creation`.

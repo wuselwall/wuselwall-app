@@ -57,6 +57,18 @@ final sessionStateProvider = FutureProvider<SessionState>((ref) async {
     return const SignedOut();
   }
 
+  // An account with no household (or a deleted one) is not signed out: it starts or restores.
+  Future<SessionState> freeAccountOrSignOut() async {
+    final account = await ref
+        .read(householdOnboardingRepositoryProvider)
+        .account();
+    return switch (account) {
+      Ok(:final value) when !value.hasHousehold => NeedsHousehold(value),
+      Ok() => dropSession(),
+      Err(:final failure) => throw failure,
+    };
+  }
+
   final device = await repo.currentDevice();
   switch (device) {
     case Err(:final failure):
@@ -64,8 +76,11 @@ final sessionStateProvider = FutureProvider<SessionState>((ref) async {
         return dropSession();
       }
       throw failure;
+    case Ok(:final value) when value != null && !value.revoked:
+      return Ready(value);
+    // A phone revoked by leaving its family, or by the family's deletion (specs/20 J6).
     case Ok(:final value) when value != null:
-      return value.revoked ? dropSession() : Ready(value);
+      return freeAccountOrSignOut();
     case Ok():
       break;
   }
@@ -80,14 +95,7 @@ final sessionStateProvider = FutureProvider<SessionState>((ref) async {
       throw failure;
   }
 
-  final account = await ref
-      .read(householdOnboardingRepositoryProvider)
-      .account();
-  return switch (account) {
-    Ok(:final value) when !value.hasHousehold => NeedsHousehold(value),
-    Ok() => dropSession(),
-    Err(:final failure) => throw failure,
-  };
+  return freeAccountOrSignOut();
 });
 
 /// The device behind the current session, or null while there is none.

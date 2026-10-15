@@ -21,6 +21,7 @@ import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/calendar/data/calendar_repository.dart';
 import 'package:wuselwall/features/calendar/data/external_calendars_repository.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
+import 'package:wuselwall/features/household/data/household_leave_repository.dart';
 import 'package:wuselwall/features/household/data/household_onboarding_repository.dart';
 import 'package:wuselwall/features/household/domain/household_models.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
@@ -232,6 +233,46 @@ class FakeIdentityRepository implements IdentityRepository {
 
 /// Starting a family. Creating a household records its arguments; on success it makes
 /// [identity] Ready, as the session refresh does in the app (the test re-reads the session).
+/// Records the leave, delete and restore calls; each answers with its result.
+class FakeHouseholdLeaveRepository implements HouseholdLeaveRepository {
+  Result<void> leaveResult = const Ok(null);
+  Result<DateTime> deleteResult = Ok(DateTime.utc(2026, 10, 29));
+  Result<void> restoreResult = const Ok(null);
+  Result<void> startAfreshResult = const Ok(null);
+
+  final leaves = <String>[];
+  final deletes = <({String profileId, String confirmName})>[];
+  var restores = 0;
+  var startAfreshes = 0;
+
+  @override
+  Future<Result<void>> leaveFamily({required String profileId}) async {
+    leaves.add(profileId);
+    return leaveResult;
+  }
+
+  @override
+  Future<Result<DateTime>> deleteFamily({
+    required String profileId,
+    required String confirmName,
+  }) async {
+    deletes.add((profileId: profileId, confirmName: confirmName));
+    return deleteResult;
+  }
+
+  @override
+  Future<Result<void>> restoreFamily() async {
+    restores++;
+    return restoreResult;
+  }
+
+  @override
+  Future<Result<void>> startAfresh() async {
+    startAfreshes++;
+    return startAfreshResult;
+  }
+}
+
 class FakeHouseholdOnboardingRepository
     implements HouseholdOnboardingRepository {
   FakeHouseholdOnboardingRepository({
@@ -601,9 +642,13 @@ List<Override> baseOverrides({
   FakeNotificationScheduler? notifications,
   FakePairingRepository? pairing,
   FakeHouseholdOnboardingRepository? household,
+  FakeHouseholdLeaveRepository? leave,
   bool signedIn = true,
   bool online = true,
 }) => [
+  householdLeaveRepositoryProvider.overrideWithValue(
+    leave ?? FakeHouseholdLeaveRepository(),
+  ),
   householdOnboardingRepositoryProvider.overrideWithValue(
     household ?? FakeHouseholdOnboardingRepository(identity: identity),
   ),

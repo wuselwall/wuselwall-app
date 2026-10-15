@@ -7,6 +7,7 @@ import 'package:wuselwall/demo/demo_external_calendars.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/calendar/data/calendar_repository.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
+import 'package:wuselwall/features/household/data/household_leave_repository.dart';
 import 'package:wuselwall/features/household/data/household_onboarding_repository.dart';
 import 'package:wuselwall/features/household/domain/household_models.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
@@ -1261,6 +1262,7 @@ class DemoHouseholdOnboardingRepository
       hasHousehold: true,
       creation: HouseholdCreation.code,
       householdId: 'h1',
+      householdName: 'Huser',
       profileId: 'p-lukas',
       givenName: 'Lukas',
       fullName: 'Lukas Huser',
@@ -1285,4 +1287,24 @@ class DemoHouseholdOnboardingRepository
 
   @override
   Future<Result<void>> completeExamples() async => const Ok(null);
+}
+
+/// Leaving, deleting and restoring a family in the demo: each call succeeds and nothing is
+/// stored; the demo session stays signed in.
+class DemoHouseholdLeaveRepository implements HouseholdLeaveRepository {
+  @override
+  Future<Result<void>> leaveFamily({required String profileId}) async =>
+      const Ok(null);
+
+  @override
+  Future<Result<DateTime>> deleteFamily({
+    required String profileId,
+    required String confirmName,
+  }) async => Ok(DateTime(2026, 10, 29));
+
+  @override
+  Future<Result<void>> restoreFamily() async => const Ok(null);
+
+  @override
+  Future<Result<void>> startAfresh() async => const Ok(null);
 }
