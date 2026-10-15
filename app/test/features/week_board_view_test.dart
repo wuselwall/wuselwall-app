@@ -10,6 +10,8 @@ import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_geometry.dart';
+import 'package:wuselwall/features/board/ui/board_grid.dart';
+import 'package:wuselwall/features/board/ui/board_presence.dart';
 import 'package:wuselwall/features/board/ui/week_board_page.dart';
 import 'package:wuselwall/features/home/ui/register_home_page.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
@@ -417,6 +419,36 @@ void main() {
       await _pumpBoard(t);
       expect(find.text('Dienstreise Berlin'), findsOneWidget);
     });
+
+    testWidgets(
+      "today's border lies under the zones, not over multi-day bars",
+      (t) async {
+        await _pumpBoard(t);
+        final border = find.byWidgetPredicate(
+          (w) => w is CustomPaint && w.painter is TodayBorderPainter,
+        );
+        final stack = t.widget<Stack>(
+          find.ancestor(of: border, matching: find.byType(Stack)).first,
+        );
+        final borderIndex = stack.children.indexWhere(
+          (c) => find
+              .descendant(of: find.byWidget(c), matching: border)
+              .evaluate()
+              .isNotEmpty,
+        );
+        final zonesIndex = stack.children.indexWhere(
+          (c) => find
+              .descendant(
+                of: find.byWidget(c),
+                matching: find.byType(PresenceRows),
+              )
+              .evaluate()
+              .isNotEmpty,
+        );
+        expect(borderIndex, greaterThanOrEqualTo(0));
+        expect(borderIndex, lessThan(zonesIndex));
+      },
+    );
 
     testWidgets('counts the appointments that do not fit a day part', (
       t,
