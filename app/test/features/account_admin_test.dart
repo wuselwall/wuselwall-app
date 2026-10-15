@@ -54,6 +54,7 @@ Future<Pumped> pumpSettings(
   Account? acc,
   List<Member>? members,
   FakeAccountAdminRepository? admin,
+  Size size = const Size(1000, 1600),
 }) async {
   final identity = FakeIdentityRepository(
     current: device ?? testDevice(),
@@ -62,6 +63,7 @@ Future<Pumped> pumpSettings(
   final accountAdmin = admin ?? FakeAccountAdminRepository();
   final container = await pumpApp(
     t,
+    size: size,
     overrides: baseOverrides(
       identity: identity,
       accountAdmin: accountAdmin,
@@ -262,6 +264,43 @@ void main() {
         await unmountApp(t, s.container);
       },
     );
+
+    testWidgets('at phone width the reset action leaves the role readable', (
+      t,
+    ) async {
+      final admin = FakeAccountAdminRepository()
+        ..security = const [
+          MemberSecurity(profileId: mamaId, hasAccount: true, hasMfa: true),
+        ];
+      final s = await pumpSettings(
+        t,
+        members: people,
+        admin: admin,
+        size: const Size(390, 844),
+      );
+      // The settings list builds rows lazily: scroll the member row into the tree first.
+      await t.dragUntilVisible(
+        resetButton,
+        find.byType(ListView).first,
+        const Offset(0, -300),
+      );
+      final row = find.ancestor(
+        of: resetButton,
+        matching: find.byType(ListTile),
+      );
+      final role = find.descendant(
+        of: row,
+        matching: find.text('Erziehungsberechtigter'),
+      );
+      expect(role, findsOneWidget);
+      // The role takes the column's width and wraps at most to two lines, not
+      // one or two letters per line as it did beside the buttons.
+      expect(t.getSize(role).height, lessThan(50));
+      expect(t.getSize(role).width, greaterThan(200));
+      expect(resetButton, findsOneWidget);
+      expect(t.takeException(), isNull);
+      await unmountApp(t, s.container);
+    });
 
     testWidgets('a co-guardian without a factor has no reset to offer', (
       t,

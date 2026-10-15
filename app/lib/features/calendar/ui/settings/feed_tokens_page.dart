@@ -9,6 +9,7 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/qr_code_view.dart';
+import 'package:wuselwall/core/ui/ringed_avatar.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
 import 'package:wuselwall/features/calendar/application/feed_providers.dart';
@@ -298,10 +299,14 @@ class _NewFeedDialogState extends State<_NewFeedDialog> {
             children: [
               for (final m in widget.members)
                 FilterChip(
-                  avatar: MemberDot(
-                    memberColor: m.color,
-                    semanticLabel: m.displayName,
-                    size: 16,
+                  showCheckmark: false,
+                  avatar: RingedAvatar(
+                    selected: _people.contains(m.id),
+                    child: MemberDot(
+                      memberColor: m.color,
+                      semanticLabel: m.displayName,
+                      size: 16,
+                    ),
                   ),
                   label: Text(m.displayName),
                   selected: _people.contains(m.id),

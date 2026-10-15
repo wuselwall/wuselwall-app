@@ -66,6 +66,15 @@ class WeekBoardView extends ConsumerWidget {
                 Positioned.fill(
                   child: CustomPaint(painter: GroundPainter(geometry, grounds)),
                 ),
+                // Under the zones: a bar that runs across today covers the border.
+                if (frame.todayIndex != null)
+                  Positioned.fill(
+                    child: IgnorePointer(
+                      child: CustomPaint(
+                        painter: TodayBorderPainter(geometry, scheme.primary),
+                      ),
+                    ),
+                  ),
                 Column(
                   children: [
                     SizedBox(
@@ -88,14 +97,6 @@ class WeekBoardView extends ConsumerWidget {
                     Expanded(flex: 8, child: MealRow(frame: frame)),
                   ],
                 ),
-                if (frame.todayIndex != null)
-                  Positioned.fill(
-                    child: IgnorePointer(
-                      child: CustomPaint(
-                        painter: TodayBorderPainter(geometry, scheme.primary),
-                      ),
-                    ),
-                  ),
               ],
             ),
           ),

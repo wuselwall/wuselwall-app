@@ -198,9 +198,11 @@ void main() {
       required List<Member> members,
       DeviceInfo? phone,
       ValueChanged<String>? shared,
+      Size size = const Size(1000, 1600),
     }) async {
       final container = await pumpApp(
         t,
+        size: size,
         overrides: [
           ...baseOverrides(
             identity: FakeIdentityRepository(
@@ -311,6 +313,32 @@ void main() {
       expect(find.text('Rolle'), findsOneWidget);
       expect(find.text('Erziehungsberechtigt'), findsWidgets);
       await unmountApp(t, container);
+    });
+
+    testWidgets('at phone width an open invitation keeps its name readable', (
+      t,
+    ) async {
+      final invitations = FakeInvitationRepository(open: [openInvitation()]);
+      await pumpMembers(
+        t,
+        invitations: invitations,
+        members: [...testMembers, _sabine],
+        size: const Size(390, 844),
+      );
+      final row = find.byKey(const ValueKey('open-invitation-inv-1'));
+      await t.scrollUntilVisible(row, 200);
+      final title = find.descendant(of: row, matching: find.text('Sabine'));
+      expect(t.getSize(title).width, greaterThan(40));
+      expect(t.getSize(title).height, lessThan(30), reason: 'one line');
+      expect(
+        find.descendant(of: row, matching: find.text('Erneut teilen')),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(of: row, matching: find.text('Zurückziehen')),
+        findsOneWidget,
+      );
+      expect(t.takeException(), isNull);
     });
   });
 }

@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/emoji_picture.dart';
+import 'package:wuselwall/core/ui/ringed_avatar.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
@@ -48,7 +50,7 @@ class TaskEditorDialog extends ConsumerStatefulWidget {
 }
 
 /// The icon choices: `null` first ("no icon"), then the curated set.
-final _iconChoices = <String?>[null, ...taskIcons.keys];
+final _iconChoices = <String?>[null, ...taskIconKeys];
 
 const _windowChoices = [1, 2, 3, 4, 5, 6, 7, 10, 14];
 
@@ -315,11 +317,11 @@ class _TaskEditorDialogState extends ConsumerState<TaskEditorDialog> {
                 children: [
                   for (final key in _iconChoices)
                     _IconChoice(
-                      glyph: taskIconGlyph(key),
+                      asset: taskIconAsset(key),
                       selected: _icon == key,
                       tooltip: key == null
                           ? l10n.tasksNoIcon
-                          : l10n.tasksFieldIcon,
+                          : taskIconName(l10n, key),
                       onTap: () => setState(() => _icon = key),
                     ),
                 ],
@@ -459,10 +461,14 @@ class _TaskEditorDialogState extends ConsumerState<TaskEditorDialog> {
                   children: [
                     for (final m in active)
                       FilterChip(
-                        avatar: TaskAvatar(
-                          name: m.displayName,
-                          color: m.color,
-                          size: 22,
+                        showCheckmark: false,
+                        avatar: RingedAvatar(
+                          selected: _assignees.contains(m.id),
+                          child: TaskAvatar(
+                            name: m.displayName,
+                            color: m.color,
+                            size: 22,
+                          ),
                         ),
                         label: Text(m.displayName),
                         selected: _assignees.contains(m.id),
@@ -519,13 +525,13 @@ class _Label extends StatelessWidget {
 
 class _IconChoice extends StatelessWidget {
   const _IconChoice({
-    required this.glyph,
+    required this.asset,
     required this.selected,
     required this.tooltip,
     required this.onTap,
   });
 
-  final String? glyph;
+  final String? asset;
   final bool selected;
   final String tooltip;
   final VoidCallback onTap;
@@ -549,9 +555,9 @@ class _IconChoice extends StatelessWidget {
               width: 2,
             ),
           ),
-          child: glyph == null
+          child: asset == null
               ? Icon(Icons.block, color: scheme.onSurfaceVariant)
-              : Text(glyph!, style: const TextStyle(fontSize: 24)),
+              : EmojiPicture(asset!, size: 28),
         ),
       ),
     );

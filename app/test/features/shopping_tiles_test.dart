@@ -1,6 +1,19 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:wuselwall/app/app.dart';
+import 'package:wuselwall/app/theme/app_theme.dart';
+import 'package:wuselwall/app/theme/palette.dart';
+import 'package:wuselwall/app/theme/ui_register.dart';
+import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/shopping/application/shopping_providers.dart';
+import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
+import 'package:wuselwall/features/shopping/data/shopping_store.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
+import 'package:wuselwall/features/shopping/domain/shopping_sync_model.dart';
+import 'package:wuselwall/features/shopping/ui/shopping_page.dart';
+
+import '../support/fakes.dart';
 
 CatalogEntry entry(String name, int count, {DateTime? last}) => CatalogEntry(
   id: name,
@@ -11,6 +24,52 @@ CatalogEntry entry(String name, int count, {DateTime? last}) => CatalogEntry(
   purchaseCount: count,
   lastPurchasedAt: last,
 );
+
+/// Pumps the shopping body on the wall, with [catalog] as the household's catalogue.
+Future<void> pumpBody(WidgetTester t, List<CatalogEntry> catalog) async {
+  t.view.physicalSize = const Size(1280, 800);
+  t.view.devicePixelRatio = 1;
+  addTearDown(t.view.resetPhysicalSize);
+  addTearDown(t.view.resetDevicePixelRatio);
+
+  await t.pumpWidget(
+    ProviderScope(
+      overrides: [
+        uiRegisterProvider.overrideWithValue(UiRegister.kiosk),
+        shoppingViewProvider.overrideWithValue(
+          AsyncData(
+            ShoppingView(
+              items: [item('1', 'Milch')],
+              lists: const [
+                ShoppingList(
+                  id: 'l1',
+                  name: 'Supermarkt',
+                  isDefault: true,
+                  openCount: 1,
+                ),
+              ],
+              categories: const [],
+              catalog: catalog,
+              pendingCount: 0,
+            ),
+          ),
+        ),
+        shoppingStoreProvider.overrideWith((ref) => MemoryShoppingStore()),
+        shoppingRepositoryProvider.overrideWithValue(
+          FakeShoppingRepository([item('1', 'Milch')]),
+        ),
+      ],
+      child: MaterialApp(
+        theme: AppTheme.build(UiRegister.kiosk, Shade.light),
+        localizationsDelegates: localizationsDelegates,
+        supportedLocales: supportedLocales,
+        locale: const Locale('de'),
+        home: const Scaffold(body: ShoppingBody()),
+      ),
+    ),
+  );
+  await t.pump();
+}
 
 void main() {
   final catalog = [
@@ -53,6 +112,61 @@ void main() {
         'KÄS',
       ).single.name,
       'Käse',
+    );
+  });
+
+  testWidgets('on the wall the tiles are one row and leave room for the list', (
+    t,
+  ) async {
+    await pumpBody(t, catalog);
+
+    final strip = find.byWidgetPredicate(
+      (w) => w is SingleChildScrollView && w.scrollDirection == Axis.horizontal,
+    );
+    expect(strip, findsOneWidget);
+    expect(t.getSize(strip).height, lessThan(200));
+  });
+
+  testWidgets('a tile shows its item\'s picture, else the category icon', (
+    t,
+  ) async {
+    await pumpBody(t, [
+      CatalogEntry(
+        id: 'm',
+        listId: 'l1',
+        name: 'Milch',
+        foldedName: 'milch',
+        categoryId: null,
+        purchaseCount: 5,
+        lastPurchasedAt: null,
+        iconKey: 'milk',
+      ),
+      CatalogEntry(
+        id: 'u',
+        listId: 'l1',
+        name: 'Einhorn',
+        foldedName: 'einhorn',
+        categoryId: null,
+        purchaseCount: 2,
+        lastPurchasedAt: null,
+        iconKey: 'unicorn',
+      ),
+    ]);
+
+    final milkPicture = find.byWidgetPredicate(
+      (w) =>
+          w is Image &&
+          w.image is AssetImage &&
+          (w.image as AssetImage).assetName == 'assets/emoji/shopping/milk.png',
+    );
+    expect(milkPicture, findsOneWidget);
+    expect(find.byType(Image), findsOneWidget);
+    // The unknown key falls back to the category icon (no category: the basket).
+    expect(
+      find.byWidgetPredicate(
+        (w) => w is Icon && w.icon == Icons.shopping_basket_outlined,
+      ),
+      findsOneWidget,
     );
   });
 }

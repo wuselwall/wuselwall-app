@@ -665,8 +665,14 @@ abstract class AppLocalizations {
   /// No description provided for @classShared.
   ///
   /// In en, this message translates to:
-  /// **'Shared (tap to switch)'**
+  /// **'Shared'**
   String get classShared;
+
+  /// No description provided for @classSharedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Several people use it: tap a name to switch.'**
+  String get classSharedHint;
 
   /// No description provided for @classKiosk.
   ///
@@ -2057,7 +2063,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingMealsSchoolDayHelp.
   ///
   /// In en, this message translates to:
-  /// **'The one warm meal on the kitchen wall. On school days children eat lunch at school or in the Hort.'**
+  /// **'The one warm meal on the kitchen wall. On school days children eat lunch at school or at after-school care.'**
   String get settingMealsSchoolDayHelp;
 
   /// No description provided for @settingMealsFreeDayTitle.
@@ -2729,7 +2735,7 @@ abstract class AppLocalizations {
   /// No description provided for @mealsEatingHelp.
   ///
   /// In en, this message translates to:
-  /// **'Someone who is away or travelling over the meal, or who has Hort past the cut-off, is switched off automatically. Set it by hand only when that is not true.'**
+  /// **'Someone who is away or travelling over the meal, or who is at after-school care past the cut-off, is switched off automatically. Set it by hand only when that is not true.'**
   String get mealsEatingHelp;
 
   /// No description provided for @mealsEatingAuto.
@@ -3818,12 +3824,6 @@ abstract class AppLocalizations {
   /// **'{count, plural, =1{1 point} other{{count} points}}'**
   String tasksPointsCount(int count);
 
-  /// No description provided for @tasksStreakBadge.
-  ///
-  /// In en, this message translates to:
-  /// **'🔥 {count}'**
-  String tasksStreakBadge(int count);
-
   /// No description provided for @tasksStreakDays.
   ///
   /// In en, this message translates to:
@@ -3955,6 +3955,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Icon'**
   String get tasksFieldIcon;
+
+  /// No description provided for @taskIcon_dishes.
+  ///
+  /// In en, this message translates to:
+  /// **'Plate'**
+  String get taskIcon_dishes;
+
+  /// No description provided for @taskIcon_table.
+  ///
+  /// In en, this message translates to:
+  /// **'Spoon'**
+  String get taskIcon_table;
+
+  /// No description provided for @taskIcon_trash.
+  ///
+  /// In en, this message translates to:
+  /// **'Bin'**
+  String get taskIcon_trash;
+
+  /// No description provided for @taskIcon_bed.
+  ///
+  /// In en, this message translates to:
+  /// **'Bed'**
+  String get taskIcon_bed;
+
+  /// No description provided for @taskIcon_dog.
+  ///
+  /// In en, this message translates to:
+  /// **'Dog'**
+  String get taskIcon_dog;
+
+  /// No description provided for @taskIcon_plant.
+  ///
+  /// In en, this message translates to:
+  /// **'Plant'**
+  String get taskIcon_plant;
+
+  /// No description provided for @taskIcon_bike.
+  ///
+  /// In en, this message translates to:
+  /// **'Bike'**
+  String get taskIcon_bike;
+
+  /// No description provided for @taskIcon_book.
+  ///
+  /// In en, this message translates to:
+  /// **'Books'**
+  String get taskIcon_book;
+
+  /// No description provided for @taskIcon_laundry.
+  ///
+  /// In en, this message translates to:
+  /// **'Laundry basket'**
+  String get taskIcon_laundry;
+
+  /// No description provided for @taskIcon_teeth.
+  ///
+  /// In en, this message translates to:
+  /// **'Toothbrush'**
+  String get taskIcon_teeth;
+
+  /// No description provided for @taskIcon_shopping.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping trolley'**
+  String get taskIcon_shopping;
+
+  /// No description provided for @taskIcon_cooking.
+  ///
+  /// In en, this message translates to:
+  /// **'Frying pan'**
+  String get taskIcon_cooking;
+
+  /// No description provided for @taskIcon_car.
+  ///
+  /// In en, this message translates to:
+  /// **'Car'**
+  String get taskIcon_car;
+
+  /// No description provided for @taskIcon_toys.
+  ///
+  /// In en, this message translates to:
+  /// **'Teddy bear'**
+  String get taskIcon_toys;
+
+  /// No description provided for @taskIcon_star.
+  ///
+  /// In en, this message translates to:
+  /// **'Star'**
+  String get taskIcon_star;
+
+  /// No description provided for @taskIcon_cinema.
+  ///
+  /// In en, this message translates to:
+  /// **'Film'**
+  String get taskIcon_cinema;
+
+  /// No description provided for @taskIcon_moon.
+  ///
+  /// In en, this message translates to:
+  /// **'Moon'**
+  String get taskIcon_moon;
+
+  /// No description provided for @taskIcon_trip.
+  ///
+  /// In en, this message translates to:
+  /// **'Compass'**
+  String get taskIcon_trip;
 
   /// No description provided for @tasksNoIcon.
   ///
@@ -4445,7 +4553,7 @@ abstract class AppLocalizations {
   /// No description provided for @kidTasksAllDone.
   ///
   /// In en, this message translates to:
-  /// **'All done! 🎉'**
+  /// **'All done!'**
   String get kidTasksAllDone;
 
   /// No description provided for @kidTasksAllDoneBody.
@@ -4643,7 +4751,7 @@ abstract class AppLocalizations {
   /// No description provided for @kidRedeemed.
   ///
   /// In en, this message translates to:
-  /// **'Redeemed! 🎉'**
+  /// **'Redeemed!'**
   String get kidRedeemed;
 
   /// No description provided for @kidSoldOut.
@@ -4667,7 +4775,7 @@ abstract class AppLocalizations {
   /// No description provided for @kidStreak.
   ///
   /// In en, this message translates to:
-  /// **'{days, plural, =1{1 day {title} 🔥} other{{days} days {title} 🔥}}'**
+  /// **'{days, plural, =1{1 day {title}} other{{days} days {title}}}'**
   String kidStreak(int days, String title);
 
   /// No description provided for @kidFamilyTitle.
@@ -5705,7 +5813,7 @@ abstract class AppLocalizations {
   /// No description provided for @pairTitle.
   ///
   /// In en, this message translates to:
-  /// **'Connect a family tablet or wall display'**
+  /// **'Connect this device'**
   String get pairTitle;
 
   /// No description provided for @pairScanHint.

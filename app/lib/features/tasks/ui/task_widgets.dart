@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/emoji_picture.dart';
 import 'package:wuselwall/features/tasks/domain/tasks_models.dart';
 
 /// A member's initial in a circle of their ink. [inverted] puts the circle on
@@ -96,7 +97,35 @@ class PointsCoin extends StatelessWidget {
   }
 }
 
-/// The task's picture: its emoji from `taskIcons`, or a neutral tick when it has none.
+/// The picture of a task, reward or badge icon key, or null when the key is unknown.
+String? taskIconAsset(String? key) => key != null && taskIconKeys.contains(key)
+    ? 'assets/emoji/tasks/$key.png'
+    : null;
+
+/// What the icon shows, for the chooser's tooltip and screen readers.
+String taskIconName(AppLocalizations l10n, String key) => switch (key) {
+  'dishes' => l10n.taskIcon_dishes,
+  'table' => l10n.taskIcon_table,
+  'trash' => l10n.taskIcon_trash,
+  'bed' => l10n.taskIcon_bed,
+  'dog' => l10n.taskIcon_dog,
+  'plant' => l10n.taskIcon_plant,
+  'bike' => l10n.taskIcon_bike,
+  'book' => l10n.taskIcon_book,
+  'laundry' => l10n.taskIcon_laundry,
+  'teeth' => l10n.taskIcon_teeth,
+  'shopping' => l10n.taskIcon_shopping,
+  'cooking' => l10n.taskIcon_cooking,
+  'car' => l10n.taskIcon_car,
+  'toys' => l10n.taskIcon_toys,
+  'star' => l10n.taskIcon_star,
+  'cinema' => l10n.taskIcon_cinema,
+  'moon' => l10n.taskIcon_moon,
+  'trip' => l10n.taskIcon_trip,
+  _ => l10n.tasksFieldIcon,
+};
+
+/// The task's picture: its bundled picture for [iconKey], or a neutral tick when it has none.
 class TaskGlyph extends StatelessWidget {
   const TaskGlyph({this.iconKey, this.size = 28, super.key});
 
@@ -105,19 +134,46 @@ class TaskGlyph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final glyph = taskIconGlyph(iconKey);
+    final asset = taskIconAsset(iconKey);
     return ExcludeSemantics(
       child: SizedBox.square(
         dimension: size * 1.4,
         child: Center(
-          child: glyph == null
+          child: asset == null
               ? Icon(
                   Icons.task_alt,
                   size: size,
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 )
-              : Text(glyph, style: TextStyle(fontSize: size)),
+              : EmojiPicture(asset, size: size),
         ),
+      ),
+    );
+  }
+}
+
+/// "🔥 3" as a picture and the count; screen readers hear "3 days in a row".
+class StreakBadge extends StatelessWidget {
+  const StreakBadge({required this.days, this.style, super.key});
+
+  final int days;
+  final TextStyle? style;
+
+  @override
+  Widget build(BuildContext context) {
+    final size =
+        (style?.fontSize ?? DefaultTextStyle.of(context).style.fontSize ?? 14) *
+        1.1;
+    return Semantics(
+      label: context.l10n.tasksStreakDays(days),
+      excludeSemantics: true,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          EmojiPicture(emojiFire, size: size),
+          const SizedBox(width: 2),
+          Text('$days', style: style, maxLines: 1),
+        ],
       ),
     );
   }
@@ -129,7 +185,7 @@ String taskKindLabel(BuildContext context, TaskKind kind) => switch (kind) {
   TaskKind.bonus => context.l10n.tasksKindBonus,
 };
 
-/// The streak of [profileId] on [definitionId] as "🔥 3", or null when there is none.
+/// The streak of [profileId] on [definitionId], or null when there is none.
 Streak? streakOf(
   Iterable<Streak> streaks,
   String? profileId,
