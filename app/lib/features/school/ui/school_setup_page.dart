@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/palette.dart';
+import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
@@ -812,6 +813,7 @@ class _SubjectDialogState extends State<_SubjectDialog> {
               maxLength: 80,
               decoration: InputDecoration(labelText: l10n.schoolEquipment),
             ),
+            const SizedBox(height: Tokens.space2),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
               title: Text(l10n.schoolNotable),
