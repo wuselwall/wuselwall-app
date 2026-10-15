@@ -105,6 +105,8 @@ class _LinePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()..color = color;
     for (var i = 0; i < BoardGeometry.dayCount; i++) {
+      // today's border takes its place
+      if (i == geometry.todayIndex) continue;
       canvas.drawRect(
         Rect.fromLTWH(geometry.left(i), 0, 1, size.height),
         paint,
@@ -154,7 +156,9 @@ class GroundPainter extends CustomPainter {
   }
 }
 
-/// The 2 px primary border on both sides of today's column, drawn once over every zone.
+/// The 2 px primary border on both sides of today's column, drawn once under every zone,
+/// so a bar that runs across today (a trip into Friday) covers it instead of being cut
+/// through.
 class TodayBorderPainter extends CustomPainter {
   const TodayBorderPainter(this.geometry, this.color);
 
