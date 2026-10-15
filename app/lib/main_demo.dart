@@ -29,6 +29,7 @@ import 'package:wuselwall/demo/demo_tasks.dart';
 import 'package:wuselwall/features/board/data/board_repository.dart';
 import 'package:wuselwall/features/calendar/data/calendar_repository.dart';
 import 'package:wuselwall/features/calendar/data/external_calendars_repository.dart';
+import 'package:wuselwall/features/household/data/household_leave_repository.dart';
 import 'package:wuselwall/features/household/data/household_onboarding_repository.dart';
 import 'package:wuselwall/features/identity/application/first_run.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
@@ -123,6 +124,9 @@ void main() {
         ),
         householdExportRepositoryProvider.overrideWithValue(
           DemoHouseholdExportRepository(),
+        ),
+        householdLeaveRepositoryProvider.overrideWithValue(
+          DemoHouseholdLeaveRepository(),
         ),
         boardRepositoryProvider.overrideWithValue(DemoBoardRepository()),
         schoolRepositoryProvider.overrideWithValue(DemoSchoolRepository()),

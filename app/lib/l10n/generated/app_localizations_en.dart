@@ -3559,4 +3559,92 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get householdDeviceComputer => 'computer';
+
+  @override
+  String get leaveLeaveTile => 'Leave family';
+
+  @override
+  String get leaveLeaveExplain =>
+      'Your account leaves the family. Your devices sign out. Entries stay with the family; afterwards you can start another family or join one.';
+
+  @override
+  String get leaveLeaveBlocked =>
+      'Invite a second adult first, or delete the family.';
+
+  @override
+  String get leaveLeaveDialogTitle => 'Leave the family?';
+
+  @override
+  String get leaveLeaveDialogBody =>
+      'You lose access to this family. It stays as it is, and the others stay in it.';
+
+  @override
+  String get leaveLeaveConfirm => 'Leave';
+
+  @override
+  String get leaveCancel => 'Cancel';
+
+  @override
+  String get leaveDeleteTile => 'Delete family';
+
+  @override
+  String get leaveDeleteExplain =>
+      'All devices sign out at once. For 14 days a guardian can restore the family; after that all data is deleted for good.';
+
+  @override
+  String get leaveDeleteDialogTitle => 'Delete the family?';
+
+  @override
+  String get leaveDeleteDialogBody =>
+      'All devices sign out and nobody can reach the family any more. For 14 days a guardian can restore it. After that all data is gone.';
+
+  @override
+  String leaveDeleteNameLabel(String name) {
+    return 'Type ‘$name’ to confirm';
+  }
+
+  @override
+  String get leaveDeleteConfirm => 'Delete family';
+
+  @override
+  String leaveDeletedTitle(String family, String date) {
+    return '$family will be deleted for good on $date';
+  }
+
+  @override
+  String get leaveDeletedBodyGuardian =>
+      'You can restore the family. All data is still there. This phone becomes the family\'s phone again; the other devices sign in again.';
+
+  @override
+  String get leaveDeletedBodyMember =>
+      'Only a guardian can restore the family. You can also start afresh; then your account leaves this family.';
+
+  @override
+  String get leaveRestore => 'Restore';
+
+  @override
+  String get leaveStartAfresh => 'Start afresh';
+
+  @override
+  String get leaveStartAfreshHint =>
+      'Your account leaves the deleted family, and you start a new one.';
+
+  @override
+  String get leaveErrConfirmName => 'The name does not match.';
+
+  @override
+  String get leaveErrHouseholdDeleted => 'This family has been deleted.';
+
+  @override
+  String get leaveErrRestoreExpired => 'This family can no longer be restored.';
+
+  @override
+  String get leaveErrNotDeleted => 'This family is not deleted.';
+
+  @override
+  String get leaveErrAdultRequired => 'Only adults have their own account.';
+
+  @override
+  String get leaveErrAlreadyInHousehold =>
+      'This account already belongs to a family.';
 }

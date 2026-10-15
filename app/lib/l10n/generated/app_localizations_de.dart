@@ -3585,4 +3585,93 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get householdDeviceComputer => 'Computer';
+
+  @override
+  String get leaveLeaveTile => 'Familie verlassen';
+
+  @override
+  String get leaveLeaveExplain =>
+      'Dein Konto verlässt die Familie. Deine Geräte melden sich ab. Die Einträge bleiben bei der Familie; du kannst danach eine andere Familie gründen oder ihr beitreten.';
+
+  @override
+  String get leaveLeaveBlocked =>
+      'Lade zuerst eine zweite erwachsene Person ein oder lösche die Familie.';
+
+  @override
+  String get leaveLeaveDialogTitle => 'Familie verlassen?';
+
+  @override
+  String get leaveLeaveDialogBody =>
+      'Du verlierst den Zugang zu dieser Familie. Die Familie bleibt bestehen, und die anderen bleiben drin.';
+
+  @override
+  String get leaveLeaveConfirm => 'Verlassen';
+
+  @override
+  String get leaveCancel => 'Abbrechen';
+
+  @override
+  String get leaveDeleteTile => 'Familie löschen';
+
+  @override
+  String get leaveDeleteExplain =>
+      'Alle Geräte melden sich sofort ab. 14 Tage lang kann eine Elternperson die Familie wiederherstellen, danach werden alle Daten endgültig gelöscht.';
+
+  @override
+  String get leaveDeleteDialogTitle => 'Familie löschen?';
+
+  @override
+  String get leaveDeleteDialogBody =>
+      'Alle Geräte melden sich ab, und niemand kommt mehr an die Familie. 14 Tage lang kann eine Elternperson sie wiederherstellen. Danach sind alle Daten weg.';
+
+  @override
+  String leaveDeleteNameLabel(String name) {
+    return 'Tippe ‚$name‘ zum Bestätigen';
+  }
+
+  @override
+  String get leaveDeleteConfirm => 'Familie löschen';
+
+  @override
+  String leaveDeletedTitle(String family, String date) {
+    return '$family wird am $date endgültig gelöscht';
+  }
+
+  @override
+  String get leaveDeletedBodyGuardian =>
+      'Du kannst die Familie wiederherstellen. Alle Daten sind noch da. Dieses Gerät ist danach wieder euer Familientelefon; die anderen Geräte melden sich neu an.';
+
+  @override
+  String get leaveDeletedBodyMember =>
+      'Nur eine Elternperson kann die Familie wiederherstellen. Du kannst auch neu anfangen; dann verlässt dein Konto diese Familie.';
+
+  @override
+  String get leaveRestore => 'Wiederherstellen';
+
+  @override
+  String get leaveStartAfresh => 'Neu anfangen';
+
+  @override
+  String get leaveStartAfreshHint =>
+      'Dein Konto verlässt die gelöschte Familie, und du gründest eine neue.';
+
+  @override
+  String get leaveErrConfirmName => 'Der Name stimmt nicht.';
+
+  @override
+  String get leaveErrHouseholdDeleted => 'Diese Familie ist gelöscht.';
+
+  @override
+  String get leaveErrRestoreExpired =>
+      'Diese Familie kann nicht mehr wiederhergestellt werden.';
+
+  @override
+  String get leaveErrNotDeleted => 'Diese Familie ist nicht gelöscht.';
+
+  @override
+  String get leaveErrAdultRequired => 'Nur Erwachsene haben ein eigenes Konto.';
+
+  @override
+  String get leaveErrAlreadyInHousehold =>
+      'Dieses Konto gehört schon zu einer Familie.';
 }

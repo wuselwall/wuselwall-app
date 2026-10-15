@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:wuselwall/features/household/domain/household_models.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 
 import '../support/fakes.dart';
@@ -87,7 +88,22 @@ void main() {
           guardianVerifiedUntil: null,
         ),
       );
-      await pumpApp(t, overrides: baseOverrides(identity: identity));
+      // The account still has a family: a revoked phone is signed out. (Without one, the
+      // account starts afresh instead; see household_leave_test.dart.)
+      await pumpApp(
+        t,
+        overrides: baseOverrides(
+          identity: identity,
+          household: FakeHouseholdOnboardingRepository(
+            identity: identity,
+            accountValue: const Account(
+              userId: 'user-1',
+              hasHousehold: true,
+              creation: HouseholdCreation.code,
+            ),
+          ),
+        ),
+      );
       expect(identity.signedOut, isTrue);
       expect(find.text('Willkommen bei WuselWall'), findsOneWidget);
     });

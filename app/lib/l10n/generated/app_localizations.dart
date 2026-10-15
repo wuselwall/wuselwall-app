@@ -6187,6 +6187,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'computer'**
   String get householdDeviceComputer;
+
+  /// No description provided for @leaveLeaveTile.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave family'**
+  String get leaveLeaveTile;
+
+  /// No description provided for @leaveLeaveExplain.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account leaves the family. Your devices sign out. Entries stay with the family; afterwards you can start another family or join one.'**
+  String get leaveLeaveExplain;
+
+  /// No description provided for @leaveLeaveBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite a second adult first, or delete the family.'**
+  String get leaveLeaveBlocked;
+
+  /// No description provided for @leaveLeaveDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave the family?'**
+  String get leaveLeaveDialogTitle;
+
+  /// No description provided for @leaveLeaveDialogBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You lose access to this family. It stays as it is, and the others stay in it.'**
+  String get leaveLeaveDialogBody;
+
+  /// No description provided for @leaveLeaveConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave'**
+  String get leaveLeaveConfirm;
+
+  /// No description provided for @leaveCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get leaveCancel;
+
+  /// No description provided for @leaveDeleteTile.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete family'**
+  String get leaveDeleteTile;
+
+  /// No description provided for @leaveDeleteExplain.
+  ///
+  /// In en, this message translates to:
+  /// **'All devices sign out at once. For 14 days a guardian can restore the family; after that all data is deleted for good.'**
+  String get leaveDeleteExplain;
+
+  /// No description provided for @leaveDeleteDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete the family?'**
+  String get leaveDeleteDialogTitle;
+
+  /// No description provided for @leaveDeleteDialogBody.
+  ///
+  /// In en, this message translates to:
+  /// **'All devices sign out and nobody can reach the family any more. For 14 days a guardian can restore it. After that all data is gone.'**
+  String get leaveDeleteDialogBody;
+
+  /// No description provided for @leaveDeleteNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Type ‘{name}’ to confirm'**
+  String leaveDeleteNameLabel(String name);
+
+  /// No description provided for @leaveDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete family'**
+  String get leaveDeleteConfirm;
+
+  /// No description provided for @leaveDeletedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{family} will be deleted for good on {date}'**
+  String leaveDeletedTitle(String family, String date);
+
+  /// No description provided for @leaveDeletedBodyGuardian.
+  ///
+  /// In en, this message translates to:
+  /// **'You can restore the family. All data is still there. This phone becomes the family\'s phone again; the other devices sign in again.'**
+  String get leaveDeletedBodyGuardian;
+
+  /// No description provided for @leaveDeletedBodyMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Only a guardian can restore the family. You can also start afresh; then your account leaves this family.'**
+  String get leaveDeletedBodyMember;
+
+  /// No description provided for @leaveRestore.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore'**
+  String get leaveRestore;
+
+  /// No description provided for @leaveStartAfresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Start afresh'**
+  String get leaveStartAfresh;
+
+  /// No description provided for @leaveStartAfreshHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account leaves the deleted family, and you start a new one.'**
+  String get leaveStartAfreshHint;
+
+  /// No description provided for @leaveErrConfirmName.
+  ///
+  /// In en, this message translates to:
+  /// **'The name does not match.'**
+  String get leaveErrConfirmName;
+
+  /// No description provided for @leaveErrHouseholdDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'This family has been deleted.'**
+  String get leaveErrHouseholdDeleted;
+
+  /// No description provided for @leaveErrRestoreExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'This family can no longer be restored.'**
+  String get leaveErrRestoreExpired;
+
+  /// No description provided for @leaveErrNotDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'This family is not deleted.'**
+  String get leaveErrNotDeleted;
+
+  /// No description provided for @leaveErrAdultRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Only adults have their own account.'**
+  String get leaveErrAdultRequired;
+
+  /// No description provided for @leaveErrAlreadyInHousehold.
+  ///
+  /// In en, this message translates to:
+  /// **'This account already belongs to a family.'**
+  String get leaveErrAlreadyInHousehold;
 }
 
 class _AppLocalizationsDelegate
