@@ -118,11 +118,6 @@ class _SetupPageState extends ConsumerState<SetupPage> {
                   icon: const Icon(Icons.pin_outlined),
                   label: Text(l10n.setupEnrolAction),
                 ),
-                // The founder wizard, until H1 after sign-in replaces it.
-                TextButton(
-                  onPressed: () => context.go(Routes.wizard),
-                  child: Text(l10n.setupHouseholdAction),
-                ),
                 if (kDebugMode)
                   TextButton(
                     onPressed: () => context.go(Routes.system),

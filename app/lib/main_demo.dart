@@ -28,6 +28,7 @@ import 'package:wuselwall/demo/demo_tasks.dart';
 import 'package:wuselwall/features/board/data/board_repository.dart';
 import 'package:wuselwall/features/calendar/data/calendar_repository.dart';
 import 'package:wuselwall/features/calendar/data/external_calendars_repository.dart';
+import 'package:wuselwall/features/household/data/household_onboarding_repository.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/data/sign_in_methods_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
@@ -106,6 +107,9 @@ void main() {
         ),
         signInMethodsRepositoryProvider.overrideWithValue(
           DemoSignInMethodsRepository(),
+        ),
+        householdOnboardingRepositoryProvider.overrideWithValue(
+          DemoHouseholdOnboardingRepository(),
         ),
         shoppingRepositoryProvider.overrideWithValue(DemoShoppingRepository()),
         householdSettingsRepositoryProvider.overrideWithValue(

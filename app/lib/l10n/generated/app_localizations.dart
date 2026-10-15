@@ -5539,6 +5539,210 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Shopping'**
   String get shoppingNavLabel;
+
+  /// No description provided for @householdNewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New family'**
+  String get householdNewTitle;
+
+  /// No description provided for @householdNewFamilyName.
+  ///
+  /// In en, this message translates to:
+  /// **'Family name'**
+  String get householdNewFamilyName;
+
+  /// No description provided for @householdNewYourName.
+  ///
+  /// In en, this message translates to:
+  /// **'Your name'**
+  String get householdNewYourName;
+
+  /// No description provided for @householdNewColour.
+  ///
+  /// In en, this message translates to:
+  /// **'Your colour'**
+  String get householdNewColour;
+
+  /// No description provided for @householdNewColourOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour {number}'**
+  String householdNewColourOption(String number);
+
+  /// No description provided for @householdNewFamilyPrefill.
+  ///
+  /// In en, this message translates to:
+  /// **'Family {name}'**
+  String householdNewFamilyPrefill(String name);
+
+  /// No description provided for @householdNewDefaults.
+  ///
+  /// In en, this message translates to:
+  /// **'Time zone {timezone} · Language {language} — from your device'**
+  String householdNewDefaults(String timezone, String language);
+
+  /// No description provided for @householdLanguageDe.
+  ///
+  /// In en, this message translates to:
+  /// **'German'**
+  String get householdLanguageDe;
+
+  /// No description provided for @householdLanguageEn.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get householdLanguageEn;
+
+  /// No description provided for @householdNewFounderCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Founder code'**
+  String get householdNewFounderCode;
+
+  /// No description provided for @householdNewFounderHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The person who runs your server gives you the founder code.'**
+  String get householdNewFounderHelp;
+
+  /// No description provided for @householdSeedExamples.
+  ///
+  /// In en, this message translates to:
+  /// **'Start with examples — 5 tasks, 3 rewards'**
+  String get householdSeedExamples;
+
+  /// No description provided for @householdNewCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create family'**
+  String get householdNewCreate;
+
+  /// No description provided for @householdNewInvited.
+  ///
+  /// In en, this message translates to:
+  /// **'I was invited'**
+  String get householdNewInvited;
+
+  /// No description provided for @householdInvitedNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Invitations arrive with the next update.'**
+  String get householdInvitedNote;
+
+  /// No description provided for @householdNewSignOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out'**
+  String get householdNewSignOut;
+
+  /// No description provided for @householdNewErrNoCode.
+  ///
+  /// In en, this message translates to:
+  /// **'New families are only possible with a founder code for now.'**
+  String get householdNewErrNoCode;
+
+  /// No description provided for @householdNewErrCodeWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'The founder code is not correct.'**
+  String get householdNewErrCodeWrong;
+
+  /// No description provided for @householdNewErrRateLimited.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts. Wait a few minutes and try again.'**
+  String get householdNewErrRateLimited;
+
+  /// No description provided for @householdMembersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Who else is in your family?'**
+  String get householdMembersTitle;
+
+  /// No description provided for @householdMembersYou.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} (you)'**
+  String householdMembersYou(String name);
+
+  /// No description provided for @householdKindChild.
+  ///
+  /// In en, this message translates to:
+  /// **'Child'**
+  String get householdKindChild;
+
+  /// No description provided for @householdKindAdult.
+  ///
+  /// In en, this message translates to:
+  /// **'Adult'**
+  String get householdKindAdult;
+
+  /// No description provided for @householdMembersName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get householdMembersName;
+
+  /// No description provided for @householdMembersAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a person'**
+  String get householdMembersAdd;
+
+  /// No description provided for @householdMembersRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get householdMembersRemove;
+
+  /// No description provided for @householdMembersDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get householdMembersDone;
+
+  /// No description provided for @householdMembersSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get householdMembersSkip;
+
+  /// No description provided for @householdMembersHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'You can invite adults later.'**
+  String get householdMembersHelp;
+
+  /// No description provided for @householdDeviceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{owner} {device}'**
+  String householdDeviceLabel(String owner, String device);
+
+  /// No description provided for @householdDeviceIphone.
+  ///
+  /// In en, this message translates to:
+  /// **'iPhone'**
+  String get householdDeviceIphone;
+
+  /// No description provided for @householdDeviceAndroid.
+  ///
+  /// In en, this message translates to:
+  /// **'Android phone'**
+  String get householdDeviceAndroid;
+
+  /// No description provided for @householdDeviceBrowser.
+  ///
+  /// In en, this message translates to:
+  /// **'browser'**
+  String get householdDeviceBrowser;
+
+  /// No description provided for @householdDeviceComputer.
+  ///
+  /// In en, this message translates to:
+  /// **'computer'**
+  String get householdDeviceComputer;
 }
 
 class _AppLocalizationsDelegate

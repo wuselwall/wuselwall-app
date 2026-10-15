@@ -9,6 +9,9 @@ import 'package:wuselwall/features/calendar/ui/settings/external_calendar_form_p
 import 'package:wuselwall/features/calendar/ui/settings/external_calendars_page.dart';
 import 'package:wuselwall/features/calendar/ui/settings/feed_tokens_page.dart';
 import 'package:wuselwall/features/home/ui/register_home_page.dart';
+import 'package:wuselwall/features/household/application/household_providers.dart';
+import 'package:wuselwall/features/household/ui/members_page.dart';
+import 'package:wuselwall/features/household/ui/new_family_page.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/meals/domain/meal_models.dart';
 import 'package:wuselwall/features/meals/ui/recipe_editor_page.dart';
@@ -36,6 +39,8 @@ abstract final class Routes {
   static const enrol = '/setup/enrol';
   static const mfa = '/setup/mfa';
   static const register = '/setup/register';
+  static const newFamily = '/setup/new-family';
+  static const welcomeMembers = '/welcome/members';
   static const home = '/';
   static const settings = '/settings';
   static const householdSettings = '/settings/household';
@@ -85,6 +90,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       return switch (session.value) {
         NeedsMfa() => path == Routes.mfa ? null : Routes.mfa,
         NeedsRegistration() => path == Routes.register ? null : Routes.register,
+        NeedsHousehold() => path == Routes.newFamily ? null : Routes.newFamily,
+        // A founder who has just created the household sees H2 once, before Today.
+        Ready() when ref.read(onboardingPlanProvider) != null =>
+          path == Routes.welcomeMembers ? null : Routes.welcomeMembers,
         Ready() =>
           (Routes.isSetup(path) || path == Routes.splash) ? Routes.home : null,
         // SignedOut, or an error on first load (the splash page shows it).
@@ -93,7 +102,8 @@ final routerProvider = Provider<GoRouter>((ref) {
               ? (path == Routes.splash ? null : Routes.splash)
               : (Routes.isSetup(path) &&
                         path != Routes.mfa &&
-                        path != Routes.register
+                        path != Routes.register &&
+                        path != Routes.newFamily
                     ? null
                     : Routes.setup),
       };
@@ -105,6 +115,17 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, _) => const SetupPage(),
         routes: [
           GoRoute(path: 'household', builder: (_, _) => const WizardPage()),
+          GoRoute(
+            path: 'new-family',
+            builder: (_, _) => Consumer(
+              builder: (_, ref, _) {
+                final s = ref.watch(sessionStateProvider).value;
+                return NewFamilyPage(
+                  account: s is NeedsHousehold ? s.account : null,
+                );
+              },
+            ),
+          ),
           GoRoute(path: 'sign-in', builder: (_, _) => const SignInPage()),
           GoRoute(path: 'enrol', builder: (_, _) => const EnrolPage()),
           GoRoute(path: 'mfa', builder: (_, _) => const MfaChallengePage()),
@@ -122,6 +143,10 @@ final routerProvider = Provider<GoRouter>((ref) {
             ),
           ),
         ],
+      ),
+      GoRoute(
+        path: Routes.welcomeMembers,
+        builder: (_, _) => const MembersPage(),
       ),
       GoRoute(
         path: Routes.home,
