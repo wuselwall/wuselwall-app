@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/ringed_avatar.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
@@ -459,10 +460,14 @@ class _TaskEditorDialogState extends ConsumerState<TaskEditorDialog> {
                   children: [
                     for (final m in active)
                       FilterChip(
-                        avatar: TaskAvatar(
-                          name: m.displayName,
-                          color: m.color,
-                          size: 22,
+                        showCheckmark: false,
+                        avatar: RingedAvatar(
+                          selected: _assignees.contains(m.id),
+                          child: TaskAvatar(
+                            name: m.displayName,
+                            color: m.color,
+                            size: 22,
+                          ),
                         ),
                         label: Text(m.displayName),
                         selected: _assignees.contains(m.id),

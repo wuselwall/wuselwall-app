@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/ringed_avatar.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
@@ -103,9 +104,13 @@ class _Children extends ConsumerWidget {
               children: [
                 for (final k in kids)
                   ChoiceChip(
-                    avatar: MemberAvatar(
-                      member: _boardMember(context, k),
-                      size: 24,
+                    showCheckmark: false,
+                    avatar: RingedAvatar(
+                      selected: k.id == child.id,
+                      child: MemberAvatar(
+                        member: _boardMember(context, k),
+                        size: 24,
+                      ),
                     ),
                     label: Text(k.displayName),
                     selected: k.id == child.id,
