@@ -21,6 +21,7 @@ import 'package:wuselwall/demo/demo_external_calendars.dart';
 import 'package:wuselwall/demo/demo_getting_started.dart';
 import 'package:wuselwall/demo/demo_kid.dart';
 import 'package:wuselwall/demo/demo_meals.dart';
+import 'package:wuselwall/demo/demo_pairing.dart';
 import 'package:wuselwall/demo/demo_region.dart';
 import 'package:wuselwall/demo/demo_repositories.dart';
 import 'package:wuselwall/demo/demo_school.dart';
@@ -28,7 +29,9 @@ import 'package:wuselwall/demo/demo_tasks.dart';
 import 'package:wuselwall/features/board/data/board_repository.dart';
 import 'package:wuselwall/features/calendar/data/calendar_repository.dart';
 import 'package:wuselwall/features/calendar/data/external_calendars_repository.dart';
+import 'package:wuselwall/features/identity/application/first_run.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
+import 'package:wuselwall/features/identity/data/pairing_repository.dart';
 import 'package:wuselwall/features/identity/data/sign_in_methods_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/kid/data/kid_badges_repository.dart';
@@ -107,6 +110,9 @@ void main() {
         signInMethodsRepositoryProvider.overrideWithValue(
           DemoSignInMethodsRepository(),
         ),
+        pairingRepositoryProvider.overrideWithValue(DemoPairingRepository()),
+        // The screenshots show the wall display without its one-time checklist.
+        pendingFirstRunProvider.overrideWith((ref) async => null),
         shoppingRepositoryProvider.overrideWithValue(DemoShoppingRepository()),
         householdSettingsRepositoryProvider.overrideWithValue(
           DemoHouseholdSettingsRepository(),

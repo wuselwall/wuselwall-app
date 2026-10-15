@@ -37,7 +37,6 @@
   },
   "setupHeadline": "Welcome to WuselWall",
   "doorTagline": "The family plan for the kitchen wall",
-  "setupEnrolAction": "Connect with a code",
   "setupHouseholdAction": "Start a new family",
   "wizardTitle": "New household",
   "wizardCreate": "Create household",
@@ -1842,5 +1841,66 @@
   "reminderEnableAction": "Turn on reminders",
   "reminderDeniedNote": "Without permission there are no reminders. You can change the permission in the system settings.",
   "reminderLocalNote": "Reminders are created on this phone. Nothing is sent to a server or to anyone else.",
-  "reminderOnlyPersonal": "Reminders are only available on a member's personal device."
+  "reminderOnlyPersonal": "Reminders are only available on a member's personal device.",
+  "pairFrontDoorAction": "Connect a family tablet or wall display",
+  "pairTitle": "Connect a family tablet or wall display",
+  "pairScanHint": "Open WuselWall on your phone and scan this code.",
+  "pairCodeHint": "Or on the phone: Settings → Devices → Connect a device, then type the code.",
+  "pairQrLabel": "QR code to connect this device",
+  "pairWaiting": "Waiting for approval …",
+  "pairConnected": "Connected to {household}",
+  "@pairConnected": {
+    "placeholders": {
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "pairOldCodeLink": "I have a code from a phone (older version)",
+  "pairConnectAction": "Connect a device",
+  "pairOldCodeAction": "Create a code for an older device",
+  "pairEntryBody": "Scan the code the new device shows, or type it in.",
+  "pairCodeField": "Code from the new device",
+  "pairNext": "Next",
+  "pairReviewBody": "This is the code of the device to connect.",
+  "pairConfirmHint": "Only confirm if you can see this device in front of you.",
+  "pairKindLabel": "What kind of device is this?",
+  "pairKindWall": "Wall display",
+  "pairKindKid": "Kids' tablet",
+  "pairKindFamily": "Shared tablet",
+  "pairKindChild": "A child's phone",
+  "pairChildLabel": "Which child?",
+  "pairNameLabel": "Device name",
+  "pairDefaultWall": "Wall display",
+  "pairDefaultKid": "Kids' tablet",
+  "pairDefaultFamily": "Tablet",
+  "pairDefaultChild": "{name}'s phone",
+  "@pairDefaultChild": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pairApproveAction": "Connect",
+  "pairApproved": "Device connected",
+  "pairOnlyOnPersonal": "This works only on your own phone.",
+  "pairPinTitle": "Set the guardian PIN",
+  "pairPinBody": "The PIN confirms changes on shared devices. Set it once.",
+  "pairPinConfirm": "Enter the PIN again",
+  "pairPinMismatch": "The PINs do not match. Try again.",
+  "firstRunKioskTitle": "Set up the wall display",
+  "firstRunKioskBody": "Three steps, once on this device. Then it shows the week.",
+  "firstRunPinTitle": "Keep the app open",
+  "firstRunPinIos": "Settings → Accessibility → Guided Access: turn it on. Open WuselWall and press the top button three times quickly.",
+  "firstRunPinAndroid": "Settings → Security → App pinning (on some devices “Screen pinning”). Open WuselWall, open Recents and tap the pin.",
+  "firstRunAwakeTitle": "Keep the screen on",
+  "firstRunAwakeIos": "Settings → Display & Brightness → Auto-Lock → Never.",
+  "firstRunAwakeAndroid": "Settings → Display → Screen timeout: the longest setting.",
+  "firstRunPowerTitle": "Leave it plugged in",
+  "firstRunPowerBody": "Keep it on the mains, so it is ready again after a power cut.",
+  "firstRunDone": "Done",
+  "firstRunKidTitle": "Welcome",
+  "firstRunKidBody": "Tap your picture, and WuselWall knows who you are.",
+  "firstRunKidStart": "Let’s go"
 }

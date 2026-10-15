@@ -71,7 +71,10 @@ void main() {
       t,
       overrides: baseOverrides(identity: identity, signedIn: false),
     );
-    await t.tap(find.text('Mit Code verbinden'));
+    await t.tap(find.text('Familien-Tablet oder Wanddisplay verbinden'));
+    await t.pump();
+    await t.pump();
+    await t.tap(find.text('Ich habe einen Code vom Handy (ältere Version)'));
     await t.pumpAndSettle();
     await t.enterText(find.byType(TextField), 'ABCD2345');
     await t.tap(find.text('Verbinden'));
@@ -87,7 +90,10 @@ void main() {
         signedIn: false,
       ),
     );
-    await t.tap(find.text('Mit Code verbinden'));
+    await t.tap(find.text('Familien-Tablet oder Wanddisplay verbinden'));
+    await t.pump();
+    await t.pump();
+    await t.tap(find.text('Ich habe einen Code vom Handy (ältere Version)'));
     await t.pumpAndSettle();
     await t.enterText(find.byType(TextField), 'nope');
     await t.tap(find.text('Verbinden'));
@@ -110,7 +116,9 @@ void main() {
       );
       await t.tap(find.byIcon(Icons.settings));
       await t.pumpAndSettle();
-      await t.tap(find.byIcon(Icons.add_to_home_screen));
+      // A guardian on a personal phone connects devices by scanning; the code for an older
+      // device is the secondary action.
+      await t.tap(find.text('Code für ein älteres Gerät erzeugen'));
       await t.pumpAndSettle();
       await t.enterText(find.byType(TextField), 'Wand');
       await t.tap(find.text('Code erzeugen'));

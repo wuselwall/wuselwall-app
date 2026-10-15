@@ -22,6 +22,7 @@ import 'package:wuselwall/features/calendar/data/calendar_repository.dart';
 import 'package:wuselwall/features/calendar/data/external_calendars_repository.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
+import 'package:wuselwall/features/identity/data/pairing_repository.dart';
 import 'package:wuselwall/features/identity/data/sign_in_methods_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/identity/domain/sign_in_method.dart';
@@ -40,6 +41,7 @@ import 'fake_external_calendars.dart';
 import 'fake_getting_started.dart';
 import 'fake_meals.dart';
 import 'fake_notifications.dart';
+import 'fake_pairing.dart';
 import 'fake_region.dart';
 import 'fake_school.dart';
 import 'fake_tasks.dart';
@@ -94,6 +96,13 @@ class FakeIdentityRepository implements IdentityRepository {
   MfaState mfa;
   GuardianProfile? profile;
   Result<void> enrolResult;
+
+  /// What [signIn] answers; a failure by default, as an unknown account would.
+  Result<void> signInResult = const Err(
+    AuthFailure(code: 'invalid_credentials'),
+  );
+  final signIns = <(String, String)>[];
+  final pins = <String>[];
   final registeredLabels = <String>[];
   final mfaCodes = <String>[];
   final createdCodes = <String>[];
@@ -123,8 +132,16 @@ class FakeIdentityRepository implements IdentityRepository {
   Future<Result<List<DeviceEntry>>> devices() async => const Ok([]);
 
   @override
-  Future<Result<void>> signIn(String email, String password) async =>
-      const Err(AuthFailure(code: 'invalid_credentials'));
+  Future<Result<void>> signIn(String email, String password) async {
+    signIns.add((email, password));
+    return signInResult;
+  }
+
+  @override
+  Future<Result<void>> setPin({required String pin}) async {
+    pins.add(pin);
+    return const Ok(null);
+  }
 
   @override
   Future<Result<void>> enrolDevice(String code) async => enrolResult;
@@ -458,8 +475,12 @@ List<Override> baseOverrides({
   FakeSignInMethods? signInMethods,
   FakeExternalCalendarsRepository? externalCalendars,
   FakeNotificationScheduler? notifications,
+  FakePairingRepository? pairing,
   bool signedIn = true,
 }) => [
+  pairingRepositoryProvider.overrideWithValue(
+    pairing ?? FakePairingRepository(),
+  ),
   // Local reminders: granted and available by default, so the Today row stays hidden in
   // tests that are not about it; the plan applies at once (no debounce).
   notificationSchedulerProvider.overrideWithValue(
