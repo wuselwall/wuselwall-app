@@ -192,7 +192,7 @@ select is((select coalesce(string_agg(c.relname, ', ' order by c.relname), '') f
            where n.nspname = 'app' and c.relkind in ('r', 'p') and a.attname = 'household_id'
              and not a.attisdropped
              and c.relname <> all (array['enrolment_code', 'busy_until', 'shopping_op', 'shopping_item_alias',
-                                       'getting_started_dismissal', 'external_occurrence'])
+                                       'getting_started_dismissal', 'external_occurrence', 'pairing_request'])
              and not (current_setting('test.export_papa')::jsonb -> 'tables') ? c.relname),
   '', 'every household table is exported or excluded on purpose');
 
