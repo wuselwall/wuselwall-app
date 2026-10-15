@@ -122,7 +122,7 @@ wuselwall/
 ├─ server/                     wuselwall: install, update, backup, restore (in a release)
 ├─ website/                    Astro site: landing page, Impressum, Datenschutz (ADR-016)
 ├─ scripts/                    remote-web / remote-stack / -migrate / -pgtap / -backup / -setup-token
-├─ .github/workflows/          ci.yml, release-mobile.yml
+├─ .github/workflows/          ci.yml, release-ios.yml, release-android.yml
 ├─ specs/                      the specification (this folder)
 └─ docs/                       the end-user documentation (VitePress)
 ```
