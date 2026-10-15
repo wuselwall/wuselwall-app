@@ -35,8 +35,8 @@ void main() {
 
   test('members come in household order with their kinds', () {
     expect(board.members.map((m) => m.id), [
-      DemoData.lotta,
-      DemoData.hanna,
+      DemoData.daughter,
+      DemoData.son,
       DemoData.mama,
       DemoData.papa,
     ]);
@@ -50,7 +50,7 @@ void main() {
       board.member(DemoData.papa)!.baseline!.state,
       PresenceState.homeOffice,
     );
-    expect(board.member(DemoData.lotta)!.baseline, isNull);
+    expect(board.member(DemoData.daughter)!.baseline, isNull);
   });
 
   test('todayIndex is the weekday of now', () {
@@ -68,7 +68,7 @@ void main() {
 
   test('presenceOn is empty on a day without bands', () {
     expect(board.presenceOn(DemoData.papa, 6), isEmpty);
-    expect(board.presenceOn(DemoData.lotta, 0), isEmpty);
+    expect(board.presenceOn(DemoData.daughter, 0), isEmpty);
   });
 
   test('day parts split at the household settings', () {
@@ -128,7 +128,7 @@ void main() {
   test(
     'Lotta has a cancelled lesson on Friday, and its equipment still shows',
     () {
-      final friday = board.days[4].school[DemoData.lotta]!;
+      final friday = board.days[4].school[DemoData.daughter]!;
       expect(
         friday.lessons.where((l) => l.status == LessonStatus.cancelled),
         isNotEmpty,

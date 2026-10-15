@@ -1,6 +1,8 @@
 // The in-memory demo household (ADR-018, decision 4): the docs' screenshots
 // (lib/main_demo.dart) and the store app's "Try it without a server" run on these
 // overrides. Nothing here talks to a server; nothing is kept.
+import 'dart:ui' show PlatformDispatcher;
+
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:supabase_flutter/supabase_flutter.dart' show AuthState;
 import 'package:wuselwall/app/theme/night.dart';
@@ -43,30 +45,30 @@ class _Day extends NightNotifier {
 
 DeviceInfo? _device(String scenario) => switch (scenario) {
   'setup' => null,
-  'kid' => const DeviceInfo(
+  'kid' => DeviceInfo(
     deviceId: 'd-2',
     householdId: 'h1',
-    label: 'Kinder-iPad',
+    label: DemoData.kidsTablet,
     deviceClass: DeviceClass.shared,
     register: UiRegister.kid,
     profileId: null,
     revoked: false,
     guardianVerifiedUntil: null,
   ),
-  'kiosk' => const DeviceInfo(
+  'kiosk' => DeviceInfo(
     deviceId: 'd-3',
     householdId: 'h1',
-    label: 'Küche (Wand)',
+    label: DemoData.kitchenWall,
     deviceClass: DeviceClass.kiosk,
     register: UiRegister.kiosk,
     profileId: null,
     revoked: false,
     guardianVerifiedUntil: null,
   ),
-  _ => const DeviceInfo(
+  _ => DeviceInfo(
     deviceId: 'd-1',
     householdId: 'h1',
-    label: 'Lukas’ iPhone',
+    label: DemoData.papaPhone,
     deviceClass: DeviceClass.personal,
     register: UiRegister.adult,
     profileId: DemoData.papa,
@@ -76,8 +78,14 @@ DeviceInfo? _device(String scenario) => switch (scenario) {
 };
 
 /// Every repository and session provider replaced by its in-memory demo.
-/// [scenario]: setup | adult | kid | kiosk.
-List<Override> demoOverrides({String scenario = 'adult'}) => [
+/// [scenario]: setup | adult | kid | kiosk. The family's names follow the device's
+/// language, as the app's own text does.
+List<Override> demoOverrides({String scenario = 'adult'}) {
+  DemoData.useLanguageOf(PlatformDispatcher.instance.locales);
+  return _overrides(scenario);
+}
+
+List<Override> _overrides(String scenario) => [
   appConfigProvider.overrideWithValue(
     const AppConfig(
       environment: 'demo',

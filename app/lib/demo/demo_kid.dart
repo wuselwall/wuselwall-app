@@ -9,26 +9,38 @@ class DemoKidBadgesRepository implements KidBadgesRepository {
   Future<Result<List<KidBadge>>> badges(String profileId) async => Ok([
     KidBadge(
       id: 'b-first',
-      title: 'Erste Aufgabe',
-      description: 'Die erste Aufgabe erledigt',
-      earned: profileId == DemoData.lotta,
+      title: DemoData.tr('Erste Aufgabe', 'First chore'),
+      description: DemoData.tr(
+        'Die erste Aufgabe erledigt',
+        'Finished the first chore',
+      ),
+      earned: profileId == DemoData.daughter,
     ),
     KidBadge(
       id: 'b-week',
-      title: 'Sieben Tage am Stück',
-      description: 'Sieben Fälligkeiten hintereinander erledigt',
+      title: DemoData.tr('Sieben Tage am Stück', 'Seven days in a row'),
+      description: DemoData.tr(
+        'Sieben Fälligkeiten hintereinander erledigt',
+        'Seven chores in a row done on time',
+      ),
       earned: false,
     ),
     KidBadge(
       id: 'b-25',
-      title: 'Fünfundzwanzig Aufgaben',
-      description: 'Fünfundzwanzig Aufgaben erledigt',
+      title: DemoData.tr('Fünfundzwanzig Aufgaben', 'Twenty-five chores'),
+      description: DemoData.tr(
+        'Fünfundzwanzig Aufgaben erledigt',
+        'Finished twenty-five chores',
+      ),
       earned: false,
     ),
     KidBadge(
       id: 'b-100',
-      title: 'Hundert Punkte',
-      description: 'Hundert Punkte verdient',
+      title: DemoData.tr('Hundert Punkte', 'A hundred points'),
+      description: DemoData.tr(
+        'Hundert Punkte verdient',
+        'Earned a hundred points',
+      ),
       earned: false,
     ),
   ]);

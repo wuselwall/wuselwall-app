@@ -1,5 +1,6 @@
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/demo/demo_data.dart';
+import 'package:wuselwall/demo/demo_english.dart';
 import 'package:wuselwall/features/board/data/board_repository.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 
@@ -19,7 +20,7 @@ class DemoBoardRepository implements BoardRepository {
       Ok(WeekBoard.fromJson(_json(_clock())));
 }
 
-const _family = [DemoData.lotta, DemoData.hanna, DemoData.mama, DemoData.papa];
+const _family = [DemoData.daughter, DemoData.son, DemoData.mama, DemoData.papa];
 
 /// The lesson bells (lessons 1–7); the breaks between them are derived.
 const _bells = [
@@ -54,7 +55,7 @@ class _Plan {
 
 const _plans = [
   _Plan(
-    member: DemoData.lotta,
+    member: DemoData.daughter,
     klasse: '5a',
     school: 'Gemeinschaftsschule am Park',
     grid: [
@@ -67,7 +68,7 @@ const _plans = [
     rooms: {'Sp': 'Turnhalle', 'BK': 'Kunstraum', 'NaWi': 'NaWi-Raum'},
   ),
   _Plan(
-    member: DemoData.hanna,
+    member: DemoData.son,
     klasse: 'SAPh E',
     school: 'Grundschule Lindenhof',
     grid: [
@@ -84,8 +85,8 @@ const _plans = [
 
 /// Lesson changes: (member, day index, period, status, note).
 const _exceptions = [
-  (DemoData.lotta, 2, 3, 'substituted', 'Frau Klein'),
-  (DemoData.lotta, 4, 6, 'cancelled', 'fällt aus'),
+  (DemoData.daughter, 2, 3, 'substituted', 'Frau Klein'),
+  (DemoData.daughter, 4, 6, 'cancelled', 'fällt aus'),
 ];
 
 const _subjects = {
@@ -132,8 +133,8 @@ const _notable = {'Sp': 'Sport', 'Sw': 'Schwimmen', 'FreiDay': 'FreiDay'};
 
 const _equipment = {'Sp': 'Sportsachen', 'Sw': 'Schwimmzeug'};
 
-/// Lukas' `busy_until` per day; null is no line.
-const _lukasBusy = <String?>[
+/// The father's `busy_until` per day; null is no line.
+const _papaBusy = <String?>[
   '16:30',
   '18:00',
   '17:00',
@@ -148,14 +149,14 @@ const _meals = <(String, String, String?, String, List<String>, int)>[
   ('dinner', '18:30', 'Kürbissuppe', DemoData.mama, _family, 0),
   ('dinner', '18:30', 'Nudelauflauf', DemoData.papa, _family, 0),
   ('dinner', '18:30', 'Chili sin Carne', DemoData.mama, _family, 0),
-  // Thursday is Christi Himmelfahrt (a public holiday of the household's region): a free day, so
-  // the warm meal is at lunch, as on a weekend.
+  // Thursday is the household's own free day (see [_freeDay]), so the warm meal is at
+  // lunch, as on a weekend.
   (
     'lunch',
     '12:30',
     'Fischstäbchen',
     DemoData.mama,
-    [DemoData.lotta, DemoData.hanna, DemoData.mama],
+    [DemoData.daughter, DemoData.son, DemoData.mama],
     0,
   ),
   (
@@ -163,7 +164,7 @@ const _meals = <(String, String, String?, String, List<String>, int)>[
     '18:00',
     null,
     DemoData.mama,
-    [DemoData.lotta, DemoData.hanna, DemoData.mama],
+    [DemoData.daughter, DemoData.son, DemoData.mama],
     0,
   ),
   (
@@ -171,7 +172,7 @@ const _meals = <(String, String, String?, String, List<String>, int)>[
     '12:30',
     'Nudeln mit Pesto',
     DemoData.papa,
-    [DemoData.lotta, DemoData.papa],
+    [DemoData.daughter, DemoData.papa],
     0,
   ),
   ('lunch', '12:30', 'Rinderbraten', DemoData.mama, _family, 2),
@@ -182,8 +183,13 @@ String _iso(DateTime d) =>
     '${d.month.toString().padLeft(2, '0')}-'
     '${d.day.toString().padLeft(2, '0')}';
 
-/// The demo week's public holiday: Thursday, Christi Himmelfahrt.
+/// The demo week's free day: Thursday. Not a public holiday of the region, which falls on
+/// one date, while the demo shows whichever week it runs in: a free day that a household
+/// enters for itself, as German towns set their schools' floating holidays (and English
+/// schools their INSET days).
 const _holidayDay = 3;
+
+String get _freeDay => DemoData.english ? 'INSET day' : 'Beweglicher Ferientag';
 
 Map<String, dynamic> _json(DateTime now) {
   final monday = DateTime(now.year, now.month, now.day - (now.weekday - 1));
@@ -201,30 +207,30 @@ Map<String, dynamic> _json(DateTime now) {
     },
     'members': [
       {
-        'id': DemoData.lotta,
-        'display_name': 'Lotta',
+        'id': DemoData.daughter,
+        'display_name': DemoData.name(DemoData.daughter),
         'color': '#7B3FE4',
         'kind': 'child',
       },
       {
-        'id': DemoData.hanna,
-        'display_name': 'Hanna',
+        'id': DemoData.son,
+        'display_name': DemoData.name(DemoData.son),
         'color': '#08737F',
         'kind': 'child',
       },
       {
         'id': DemoData.mama,
-        'display_name': 'Sabine',
+        'display_name': DemoData.name(DemoData.mama),
         'color': '#9A5300',
         'kind': 'adult',
-        'baseline': {'state': 'off', 'label': 'zu Hause'},
+        'baseline': {'state': 'off', 'label': demoText('zu Hause')},
       },
       {
         'id': DemoData.papa,
-        'display_name': 'Lukas',
+        'display_name': DemoData.name(DemoData.papa),
         'color': '#C2255C',
         'kind': 'adult',
-        'baseline': {'state': 'home_office', 'label': 'Homeoffice'},
+        'baseline': {'state': 'home_office', 'label': demoText('Homeoffice')},
       },
     ],
     'presence': _presence(dates),
@@ -232,8 +238,8 @@ Map<String, dynamic> _json(DateTime now) {
       for (final p in _plans)
         {
           'member_id': p.member,
-          'class_label': p.klasse,
-          'school_name': p.school,
+          'class_label': demoText(p.klasse),
+          'school_name': demoText(p.school),
           'periods': _periods(),
         },
     ],
@@ -242,12 +248,12 @@ Map<String, dynamic> _json(DateTime now) {
         {
           'date': dates[i],
           'holiday': i == _holidayDay
-              ? {'name': 'Christi Himmelfahrt', 'source': 'region'}
+              ? {'name': _freeDay, 'source': 'household'}
               : null,
           'events': _events(i),
           'busy_until': [
-            if (_lukasBusy[i] != null)
-              {'member_id': DemoData.papa, 'until': _lukasBusy[i]},
+            if (_papaBusy[i] != null)
+              {'member_id': DemoData.papa, 'until': _papaBusy[i]},
           ],
           'school': [
             for (final p in _plans)
@@ -255,7 +261,7 @@ Map<String, dynamic> _json(DateTime now) {
                   ? {
                       'member_id': p.member,
                       'free': 'holiday',
-                      'holiday_name': 'Christi Himmelfahrt',
+                      'holiday_name': _freeDay,
                       'lessons': <Map<String, dynamic>>[],
                     }
                   : i < 5
@@ -270,8 +276,8 @@ Map<String, dynamic> _json(DateTime now) {
         },
     ],
     'open_tasks': [
-      {'member_id': DemoData.lotta, 'count': 2},
-      {'member_id': DemoData.hanna, 'count': 1},
+      {'member_id': DemoData.daughter, 'count': 2},
+      {'member_id': DemoData.son, 'count': 1},
       {'member_id': DemoData.mama, 'count': 1},
     ],
     'shopping_count': 7,
@@ -292,7 +298,7 @@ Map<String, dynamic> _band(
   'id': id,
   'member_id': member,
   'state': state,
-  'label': label,
+  'label': demoText(label),
   'first_day': first,
   'last_day': last,
   'starts': starts,
@@ -341,8 +347,8 @@ List<Map<String, dynamic>> _presence(List<String> d) => [
     d[4],
   ),
   _band(
-    'pr-hanna-sa',
-    DemoData.hanna,
+    'pr-son-sa',
+    DemoData.son,
     'childcare',
     'Oma',
     d[5],
@@ -379,8 +385,8 @@ Map<String, dynamic> _school(_Plan plan, int day) {
     if (code == null) continue;
     final (from, to) = _bells[period - 1];
     final notableName = _notable[code];
-    if (notableName != null && !notable.contains(notableName)) {
-      notable.add(notableName);
+    if (notableName != null && !notable.contains(demoText(notableName))) {
+      notable.add(demoText(notableName));
     }
     var status = 'normal';
     String? note;
@@ -394,15 +400,15 @@ Map<String, dynamic> _school(_Plan plan, int day) {
       'period': period,
       'starts': from,
       'ends': to,
-      'subject': _subjects[code] ?? code,
-      'short': code,
-      'room': plan.rooms[code],
+      'subject': demoText(_subjects[code] ?? code),
+      'short': demoShort(code),
+      'room': demoTextOrNull(plan.rooms[code]),
       'tint': _tints[code],
       'kind': 'lesson',
       'status': status,
-      'note': note,
+      'note': demoTextOrNull(note),
       'notable': notableName != null,
-      'equipment': _equipment[code],
+      'equipment': demoTextOrNull(_equipment[code]),
     });
   }
   final hort = plan.hort[day];
@@ -411,7 +417,7 @@ Map<String, dynamic> _school(_Plan plan, int day) {
       'period': null,
       'starts': lessons.last['ends'],
       'ends': hort,
-      'subject': 'Hort',
+      'subject': demoText('Hort'),
       'kind': 'care',
       'status': 'normal',
       'notable': false,
@@ -427,7 +433,7 @@ Map<String, dynamic> _school(_Plan plan, int day) {
     )['ends'],
     'notable': notable,
     'care_until': hort,
-    'care_label': hort == null ? null : 'Hort',
+    'care_label': hort == null ? null : demoText('Hort'),
     'lessons': lessons,
   };
 }
@@ -441,8 +447,8 @@ Map<String, dynamic> _ev(
   bool tentative = false,
   bool key = true,
 }) => {
-  'title': title,
-  'location': place,
+  'title': demoText(title),
+  'location': demoTextOrNull(place),
   'starts': starts,
   'ends': ends,
   'attendee_ids': who,
@@ -456,29 +462,35 @@ List<Map<String, dynamic>> _events(int day) {
     0 => [
       _ev('Müll rausstellen', '07:30', '08:00', [DemoData.papa], key: false),
       _ev('Heizung wird gewartet', '10:00', '11:00', [DemoData.papa]),
-      _ev('Turnen', '15:00', '16:00', [DemoData.hanna], place: 'TSV-Halle'),
+      _ev('Turnen', '15:00', '16:00', [DemoData.son], place: 'TSV-Halle'),
     ],
     1 => [
-      _ev('Zahnarzt', '14:30', '15:30', [DemoData.lotta], place: 'Dr. Behrens'),
+      _ev('Zahnarzt', '14:30', '15:30', [
+        DemoData.daughter,
+      ], place: 'Dr. Behrens'),
     ],
     2 => [
-      _ev('Turnen', '16:00', '17:00', [DemoData.hanna], place: 'TSV-Halle'),
+      _ev('Turnen', '16:00', '17:00', [DemoData.son], place: 'TSV-Halle'),
       _ev('Elternabend', '19:30', '20:30', [DemoData.mama], place: 'Klasse 5a'),
     ],
     3 => [
-      _ev('Fotografin in der Schule', null, null, [DemoData.lotta], key: false),
-      _ev('Klavier', '15:30', '16:30', [DemoData.lotta], place: 'Musikschule'),
+      _ev('Fotografin in der Schule', null, null, [
+        DemoData.daughter,
+      ], key: false),
+      _ev('Klavier', '15:30', '16:30', [
+        DemoData.daughter,
+      ], place: 'Musikschule'),
     ],
     4 => [
       _ev('Kinoabend', '18:00', '19:00', [
-        DemoData.lotta,
-        DemoData.hanna,
+        DemoData.daughter,
+        DemoData.son,
         DemoData.mama,
       ]),
     ],
     5 => [
       _ev('Fußballturnier', '10:00', '11:00', [
-        DemoData.hanna,
+        DemoData.son,
         DemoData.mama,
       ], place: 'Sportplatz Ost'),
       _ev('Grillen bei Webers', '16:00', '17:00', _family, tentative: true),
@@ -501,7 +513,7 @@ Map<String, dynamic> _meal(int day) {
   return {
     'slot': slot,
     'time': time,
-    'title': dish,
+    'title': demoTextOrNull(dish),
     'cook_id': cook,
     'eating': eating,
     'guests': guests,

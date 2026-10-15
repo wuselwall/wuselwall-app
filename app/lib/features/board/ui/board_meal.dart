@@ -26,6 +26,26 @@ class MealRow extends StatelessWidget {
       child: BoardRow(
         geometry: g,
         children: [
+          // The zone's name in the gutter, where the other zones name their rows.
+          Positioned(
+            left: 12,
+            width: BoardGeometry.gutter - 20,
+            top: 0,
+            bottom: 0,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                context.l10n.boardZoneMeal,
+                style: boardUi(
+                  24,
+                  weight: FontWeight.w700,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
           for (var i = 0; i < BoardGeometry.dayCount; i++)
             if (board.days[i].meal case final meal?)
               Positioned(
@@ -121,55 +141,59 @@ class _MealCell extends StatelessWidget {
         const SizedBox(height: 2),
         _Dish(meal: meal, twoLines: twoLines),
         const SizedBox(height: 4),
-        Row(
+        // The cook stays beside the dots while there is room, else takes the next line.
+        Wrap(
+          spacing: 6,
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            MemberDots(
-              size: 12,
-              dots: [
-                for (final m in board.members)
-                  MemberDot(
-                    memberColor: m.color,
-                    filled: meal.eating.contains(m.id),
-                    size: 12,
-                    semanticLabel: meal.eating.contains(m.id)
-                        ? l10n.boardEating(context.memberName(board, m))
-                        : l10n.boardNotEating(context.memberName(board, m)),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                MemberDots(
+                  size: 12,
+                  dots: [
+                    for (final m in board.members)
+                      MemberDot(
+                        memberColor: m.color,
+                        filled: meal.eating.contains(m.id),
+                        size: 12,
+                        semanticLabel: meal.eating.contains(m.id)
+                            ? l10n.boardEating(context.memberName(board, m))
+                            : l10n.boardNotEating(context.memberName(board, m)),
+                      ),
+                  ],
+                ),
+                if (meal.guests > 0) ...[
+                  const SizedBox(width: 4),
+                  Semantics(
+                    label: l10n.boardMealGuests(meal.guests),
+                    excludeSemantics: true,
+                    child: Text(
+                      l10n.boardMoreCount(meal.guests),
+                      style: boardCell(
+                        24,
+                        weight: FontWeight.w700,
+                        color: ww.ink2,
+                      ),
+                      maxLines: 1,
+                      softWrap: false,
+                    ),
                   ),
+                ],
               ],
             ),
-            if (meal.guests > 0) ...[
-              const SizedBox(width: 4),
+            if (cook != null)
               Semantics(
-                label: l10n.boardMealGuests(meal.guests),
+                label: l10n.boardMealCook(context.memberName(board, cook)),
                 excludeSemantics: true,
                 child: Text(
-                  l10n.boardMoreCount(meal.guests),
-                  style: boardCell(24, weight: FontWeight.w700, color: ww.ink2),
+                  context.memberName(board, cook),
+                  style: boardCell(24, weight: FontWeight.w600, color: ww.ink2),
                   maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   softWrap: false,
                 ),
               ),
-            ],
-            if (cook != null) ...[
-              const SizedBox(width: 6),
-              Expanded(
-                child: Semantics(
-                  label: l10n.boardMealCook(context.memberName(board, cook)),
-                  excludeSemantics: true,
-                  child: Text(
-                    context.memberName(board, cook),
-                    style: boardCell(
-                      24,
-                      weight: FontWeight.w600,
-                      color: ww.ink2,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: false,
-                  ),
-                ),
-              ),
-            ],
           ],
         ),
       ],

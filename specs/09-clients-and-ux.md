@@ -87,7 +87,7 @@ household settings with these values as defaults.
 │  KW 36   │ Mo 31.8.│ Di 1.9. ║ Mi 2.9. ║ Do 3.9. │ Fr 4.9. │ Sa 5.9.│ So 6.9.      │
 │          │         │         ║  HEUTE  ║         │         │        │              │
 ├──────────┴─────────┴─────────╨─────────╨─────────┴─────────┴────────┴──────────────┤
-│ WER IST WO · Schulzeit + Besonderes · blass = Grundzustand, kräftig = Abweichung    │
+│░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░│
 ├──────────┼─────────┼─────────╥─────────╥─────────┬─────────┬────────┬──────────────┤
 │ ● Lotta  │ 8–14:25 │ 8–14:25 ║ 8–14:25 ║ 8–14:25 │ 8–13:35 │  frei  │  frei        │
 │    9     │         │ FreiDay ║ Sport   ║ Sport   │ Sport   │        │              │
@@ -97,23 +97,23 @@ household settings with these values as defaults.
 │          │8:30–14  │         ║8:30–14  ║         │         │        │              │
 │ ● Lukas  │·Homeoff.│BÜRO HH  ║·Homeoff.║◀── Dienstreise Berlin ──▶│·Homeoff.│      │
 ├──────────┼─────────┼─────────╨─────────╨─────────┼─────────┼────────┼──────────────┤
-│ TERMINE · Punkte = wer betroffen ist · gestrichelt = noch nicht sicher              │
+│░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░│
 ├──────────┼─────────┼─────────╥─────────╥─────────┼─────────┼────────┼──────────────┤
 │ Vormittag│10:00    │         ║         ║         │         │10:00   │11:00         │
-│ bis 12   │Heizung ●│         ║         ║         │         │Turnier●●│Oma+Opa ●●●● │
+│          │Heizung ●│         ║         ║         │         │Turnier●●│Oma+Opa ●●●● │
 │ Nachmit. │15:00    │14:30    ║16:00    ║15:30    │         │16:00   │              │
-│ 12–17    │Turnen  ●│Zahnarzt●║Turnen  ●║Klavier ●│         │Grillen?│              │
+│          │Turnen  ●│Zahnarzt●║Turnen  ●║Klavier ●│         │Grillen?│              │
 │ Abend    │         │         ║19:30    ║         │18:00    │        │              │
-│ ab 17    │         │         ║Elternab●║         │Kino  ●●●│        │              │
+│          │         │         ║Elternab●║         │Kino  ●●●│        │              │
 ├──────────┼─────────┼─────────╨─────────╨─────────┼─────────┼────────┼──────────────┤
-│ WARMES ESSEN · voller Punkt = isst mit · offener Punkt = nicht da                   │
+│░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░│
 ├──────────┼─────────┼─────────╥─────────╥─────────┼─────────┼────────┼──────────────┤
-│ eine     │ABEND    │ABEND    ║ABEND    ║ABEND    │ABEND    │MITTAG  │MITTAG        │
-│ warme    │Kürbis-  │Nudel-   ║Chili    ║Fisch-   │Flamm-   │Pesto   │Braten        │
-│ Mahlzeit │suppe    │auflauf  ║sin Carne║stäbchen │kuchen   │        │              │
+│ Warmes   │ABEND    │ABEND    ║ABEND    ║ABEND    │ABEND    │MITTAG  │MITTAG        │
+│ Essen    │Kürbis-  │Nudel-   ║Chili    ║Fisch-   │Flamm-   │Pesto   │Braten        │
+│          │suppe    │auflauf  ║sin Carne║stäbchen │kuchen   │        │              │
 │          │●●●● Sab │●●●● Luk ║●●●● Sab ║●●●○ Sab │●●●○ Sab │●○○● Luk│●●●● +2 Gäste │
 ├──────────┴─────────┴─────────╨─────────╨─────────┴─────────┴────────┴──────────────┤
-│ Heute offen: Lotta 2 · Hanna 1 · Sabine 1    Einkaufsliste 7   aktualisiert vor 4 s │
+│ Heute offen: Lotta 2 · Hanna 1 · Sabine 1    Einkaufsliste 7                       │
 └────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -121,11 +121,18 @@ household settings with these values as defaults.
 
 | Zone | Height | Contents | Source |
 |---|---|---|---|
-| **Header** | 1 line | Full date, clock, calendar week, freshness marker | — |
+| **Header** | 1 line | Full date, clock, calendar week, the next-up line; the freshness marker only once the board is out of date | — |
 | **Wer ist wo** | One row per member, always in the household's member order (`profile.sort_order`) | Children: the school-day span from the Stundenplan, plus the lessons worth knowing about the evening before (Sport, Schwimmen, FreiDay) and the Hort end time — never the individual subjects. Adults: the **deviation** from their baseline, as a filled band; the baseline itself stays a quiet muted chip, and under either a "Termine bis 17:00" line (FR-1.19) saying when that person is out of meetings. Bands span multiple columns where they span multiple days. | [15](15-module-school-timetable.md) |
 | **Termine** | 3 fixed bands — Vormittag (< 12:00), Nachmittag (12–17), Abend (≥ 17:00) — 2 slots each, then "+n weitere" | Key appointments only (`importance='key'`), time above title, and a **dot per attendee** in their member colour at the right edge; four dots means the whole family. Day parts rather than a time axis: a wall display is read for "which afternoon is full", not for "what happens at 14:15". | [05](05-module-calendar.md) |
 | **Warmes Essen** | 1 row | One warm meal a day — Mittag at the weekend, Abend on school days, with the slot named in the cell. Under it, one dot per member, filled when they are eating, hollow when not, plus who is cooking (as a name, not an icon) and a guest count. | [07](07-module-meals-shopping.md) |
 | **Footer** | 1 line | Open tasks per member, shopping-list count, night-mode indicator | [06](06-module-tasks.md) |
+
+**Why the zones carry no titles.** Narrow sunken bands separate the zones; the gutter
+names every row — a member, a day part, "Warmes Essen" — so a title band over each zone
+said nothing new, and its legend ("blass = Grundzustand", "Punkte = wer betroffen ist")
+is learned once and then only costs height. *(Changed 2026-10-15: the three caption bands
+with their legends took the room the zones needed for their two-line layouts at
+1280×800. The legends live in the user documentation.)*
 
 **Why the dot row matters.** "Wer isst mit?" is the single most-asked question in a
 family's afternoon, and it is answerable from the presence and school data the system
@@ -218,9 +225,11 @@ it.
 - Live via Supabase Realtime invalidations; a full refetch every 5 minutes as a belt-and-braces measure, because a
   wall display that has silently stopped updating is worse than one that is obviously
   offline.
-- A subtle "aktualisiert vor 4 s" in the header, which turns into "zuletzt aktualisiert
-  17:05" and a muted banner when the connection is lost. The last good board stays on
-  screen (FR-8.10).
+- A live board says nothing about its freshness. When the connection is lost, or no
+  refresh has succeeded for two refetch intervals, the header shows "zuletzt aktualisiert
+  17:05", and a lost connection adds a muted banner. The last good board stays on screen
+  (FR-8.10). *(Changed 2026-10-15: the permanent "aktualisiert vor 4 s" was dropped — on a
+  board that is always current it was only noise, and it crowded the next-up line.)*
 - Night variant from 21:00 (`device.night_hours`, per kiosk, default 21:00–06:00): dark ground, reduced contrast, meals and tomorrow's first
   appointment emphasised, everything else calmed down.
 

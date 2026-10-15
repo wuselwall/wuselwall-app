@@ -8,35 +8,71 @@ import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 abstract final class DemoData {
   static const papa = 'p-papa';
   static const mama = 'p-mama';
-  static const lotta = 'p-lotta';
-  static const hanna = 'p-hanna';
+  static const daughter = 'p-daughter';
+  static const son = 'p-son';
 
-  static const members = [
+  /// The family's names in German and in English: the demo speaks the app's language.
+  static const _names = {
+    papa: ('Thomas', 'David'),
+    mama: ('Julia', 'Sarah'),
+    daughter: ('Emma', 'Olivia'),
+    son: ('Paul', 'Jack'),
+  };
+
+  static var _english = false;
+
+  /// Whether the demo runs in English; set by [useLanguageOf] when the demo starts.
+  static bool get english => _english;
+
+  /// Picks the language as MaterialApp does from the device's [preferred] locales and
+  /// app.dart's `supportedLocales`: the first German or English one, German otherwise.
+  static void useLanguageOf(List<Locale> preferred) {
+    final code = preferred
+        .map((l) => l.languageCode)
+        .firstWhere((c) => c == 'de' || c == 'en', orElse: () => 'de');
+    _english = code == 'en';
+  }
+
+  /// The display name of the member [id].
+  static String name(String id) {
+    final (de, en) = _names[id]!;
+    return _english ? en : de;
+  }
+
+  /// [de] in German, [en] in English: all of the demo's content speaks the app's
+  /// language, not only the names.
+  static String tr(String de, String en) => _english ? en : de;
+
+  /// The father's phone, as the device list shows it.
+  static String get papaPhone =>
+      _english ? "${name(papa)}'s iPhone" : '${name(papa)}’ iPhone';
+
+  static List<Member> get members => [
     Member(
       id: papa,
-      displayName: 'Lukas',
+      displayName: name(papa),
       color: Color(0xFFC2255C),
       role: Role.guardian,
       active: true,
     ),
     Member(
       id: mama,
-      displayName: 'Sabine',
+      displayName: name(mama),
       color: Color(0xFF9A5300),
       role: Role.guardian,
       active: true,
     ),
     Member(
-      id: lotta,
-      displayName: 'Lotta',
+      id: daughter,
+      displayName: name(daughter),
       color: Color(0xFF7B3FE4),
       role: Role.member,
       active: true,
       isChild: true,
     ),
     Member(
-      id: hanna,
-      displayName: 'Hanna',
+      id: son,
+      displayName: name(son),
       color: Color(0xFF08737F),
       role: Role.member,
       active: true,
@@ -44,10 +80,10 @@ abstract final class DemoData {
     ),
   ];
 
-  static const lists = [
-    ('l-super', 'Supermarkt', true),
-    ('l-drug', 'Drogerie', false),
-    ('l-hardware', 'Baumarkt', false),
+  static List<(String, String, bool)> get lists => [
+    ('l-super', tr('Supermarkt', 'Supermarket'), true),
+    ('l-drug', tr('Drogerie', 'Pharmacy'), false),
+    ('l-hardware', tr('Baumarkt', 'Hardware store'), false),
   ];
 
   static const superKeys = [
@@ -104,23 +140,23 @@ abstract final class DemoData {
   static final _now = DateTime(2026, 10, 11, 9);
 
   /// (name, category key, purchases) — what the household has bought before.
-  static const _catalogue = [
-    ('Milch', 'dairy', 42),
-    ('Brot', 'bakery', 35),
-    ('Bananen', 'produce', 31),
-    ('Äpfel', 'produce', 24),
+  static List<(String, String, int)> get _catalogue => [
+    (tr('Milch', 'Milk'), 'dairy', 42),
+    (tr('Brot', 'Bread'), 'bakery', 35),
+    (tr('Bananen', 'Bananas'), 'produce', 31),
+    (tr('Äpfel', 'Apples'), 'produce', 24),
     ('Butter', 'dairy', 22),
-    ('Eier', 'dairy', 21),
-    ('Nudeln', 'pantry', 19),
-    ('Joghurt', 'dairy', 18),
-    ('Tomaten', 'produce', 17),
-    ('Käse', 'dairy', 16),
-    ('Gurke', 'produce', 12),
-    ('Reis', 'pantry', 11),
-    ('Orangensaft', 'drinks', 9),
-    ('Toilettenpapier', 'household', 8),
-    ('Gummibärchen', 'pantry', 7),
-    ('Kartoffeln', 'produce', 7),
+    (tr('Eier', 'Eggs'), 'dairy', 21),
+    (tr('Nudeln', 'Pasta'), 'pantry', 19),
+    (tr('Joghurt', 'Yoghurt'), 'dairy', 18),
+    (tr('Tomaten', 'Tomatoes'), 'produce', 17),
+    (tr('Käse', 'Cheese'), 'dairy', 16),
+    (tr('Gurke', 'Cucumber'), 'produce', 12),
+    (tr('Reis', 'Rice'), 'pantry', 11),
+    (tr('Orangensaft', 'Orange juice'), 'drinks', 9),
+    (tr('Toilettenpapier', 'Toilet paper'), 'household', 8),
+    (tr('Gummibärchen', 'Gummy bears'), 'pantry', 7),
+    (tr('Kartoffeln', 'Potatoes'), 'produce', 7),
   ];
 
   static List<CatalogEntry> catalogue() => [
@@ -140,16 +176,33 @@ abstract final class DemoData {
       ),
   ];
 
+  /// The pasta, which came from two of the week's meals.
+  static String get pasta => tr('Nudeln', 'Pasta');
+
   /// (name, category key, count, spec, added by, ticked)
-  static const _items = [
-    ('Bananen', 'produce', 1, null, lotta, false),
-    ('Gurke', 'produce', 2, null, mama, false),
-    ('Brot', 'bakery', 1, 'Vollkorn', papa, false),
-    ('Milch', 'dairy', 2, '1,5 %', papa, false),
-    ('Joghurt', 'dairy', 1, 'Natur, 500 g', mama, false),
-    ('Nudeln', 'pantry', 1, null, hanna, false),
-    ('Gummibärchen', 'pantry', 1, null, hanna, false),
-    ('Orangensaft', 'drinks', 1, null, mama, true),
+  static List<(String, String, int, String?, String, bool)> get _items => [
+    (tr('Bananen', 'Bananas'), 'produce', 1, null, daughter, false),
+    (tr('Gurke', 'Cucumber'), 'produce', 2, null, mama, false),
+    (
+      tr('Brot', 'Bread'),
+      'bakery',
+      1,
+      tr('Vollkorn', 'Wholemeal'),
+      papa,
+      false,
+    ),
+    (tr('Milch', 'Milk'), 'dairy', 2, tr('1,5 %', 'semi-skimmed'), papa, false),
+    (
+      tr('Joghurt', 'Yoghurt'),
+      'dairy',
+      1,
+      tr('Natur, 500 g', 'plain, 500 g'),
+      mama,
+      false,
+    ),
+    (pasta, 'pantry', 1, null, son, false),
+    (tr('Gummibärchen', 'Gummy bears'), 'pantry', 1, null, son, false),
+    (tr('Orangensaft', 'Orange juice'), 'drinks', 1, null, mama, true),
     ('Butter', 'dairy', 1, null, papa, true),
   ];
 
@@ -166,13 +219,13 @@ abstract final class DemoData {
         addedBy: by,
         count: count,
         // The pasta came from two of the week's meals (see DemoShoppingRepository.itemMeals).
-        sourceMealEntryIds: name == 'Nudeln'
+        sourceMealEntryIds: name == pasta
             ? const ['demo-src-nudel', 'demo-src-pesto']
             : const [],
       ),
     ShoppingItem(
       id: 'i-d1',
-      name: 'Zahnpasta',
+      name: tr('Zahnpasta', 'Toothpaste'),
       quantity: null,
       checked: false,
       createdAt: _now,
@@ -197,18 +250,29 @@ abstract final class DemoData {
     ),
   ];
 
-  static const tripItems = [
-    TripItem(name: 'Milch', quantity: '1,5 %', count: 2),
-    TripItem(name: 'Brot', quantity: null, count: 1),
-    TripItem(name: 'Äpfel', quantity: null, count: 1),
-    TripItem(name: 'Eier', quantity: '10er', count: 1),
-    TripItem(name: 'Käse', quantity: null, count: 1),
+  static List<TripItem> get tripItems => [
+    TripItem(
+      name: tr('Milch', 'Milk'),
+      quantity: tr('1,5 %', 'semi-skimmed'),
+      count: 2,
+    ),
+    TripItem(name: tr('Brot', 'Bread'), quantity: null, count: 1),
+    TripItem(name: tr('Äpfel', 'Apples'), quantity: null, count: 1),
+    TripItem(
+      name: tr('Eier', 'Eggs'),
+      quantity: tr('10er', 'pack of 10'),
+      count: 1,
+    ),
+    TripItem(name: tr('Käse', 'Cheese'), quantity: null, count: 1),
   ];
 
-  static final devices = [
+  static String get kidsTablet => tr('Kinder-iPad', "Kids' iPad");
+  static String get kitchenWall => tr('Küche (Wand)', 'Kitchen (wall)');
+
+  static List<DeviceEntry> get devices => [
     DeviceEntry(
       id: 'd-1',
-      label: 'Lukas’ iPhone',
+      label: papaPhone,
       deviceClass: DeviceClass.personal,
       register: UiRegister.adult,
       revoked: false,
@@ -216,7 +280,7 @@ abstract final class DemoData {
     ),
     DeviceEntry(
       id: 'd-2',
-      label: 'Kinder-iPad',
+      label: kidsTablet,
       deviceClass: DeviceClass.shared,
       register: UiRegister.kid,
       revoked: false,
@@ -224,7 +288,7 @@ abstract final class DemoData {
     ),
     DeviceEntry(
       id: 'd-3',
-      label: 'Küche (Wand)',
+      label: kitchenWall,
       deviceClass: DeviceClass.kiosk,
       register: UiRegister.kiosk,
       revoked: false,

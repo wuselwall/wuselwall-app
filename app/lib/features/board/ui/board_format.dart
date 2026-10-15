@@ -33,6 +33,10 @@ extension BoardFormat on BuildContext {
     return '${_twelveHour(t)}${t.period == DayPeriod.am ? 'a' : 'p'}';
   }
 
+  /// An appointment's start in a day column: "14:00" in 24-hour time, "2p" in 12-hour
+  /// English, where "2:00 PM" would leave no room for the attendee dots.
+  String cellTime(TimeOfDay t) => _use24h ? time(t) : shortTime(t);
+
   String _twelveHour(TimeOfDay t) {
     final h = t.hourOfPeriod == 0 ? 12 : t.hourOfPeriod;
     return t.minute == 0 ? '$h' : '$h:${t.minute.toString().padLeft(2, '0')}';
