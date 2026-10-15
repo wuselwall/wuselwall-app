@@ -14,6 +14,8 @@ import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/qr_code_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
+import 'package:wuselwall/features/account/ui/delete_account_tile.dart';
+import 'package:wuselwall/features/account/ui/mfa_reset_button.dart';
 import 'package:wuselwall/features/home/application/home_tab.dart';
 import 'package:wuselwall/features/household/ui/leave_family_tiles.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
@@ -119,7 +121,13 @@ class SettingsPage extends ConsumerWidget {
                     subtitle: Text(
                       m.isGuardian ? l10n.roleGuardian : l10n.roleMember,
                     ),
-                    trailing: InviteMemberButton(member: m),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        MfaResetButton(member: m),
+                        InviteMemberButton(member: m),
+                      ],
+                    ),
                   ),
                 const OpenInvitationRows(),
                 const InviteAdultTile(),
@@ -184,6 +192,7 @@ class SettingsPage extends ConsumerWidget {
             const SizedBox(height: Tokens.space6),
             const _SignInMethodsSection(),
             const LeaveFamilyTile(),
+            const DeleteAccountTile(),
             const SizedBox(height: Tokens.space6),
             const _SecuritySection(),
           ],

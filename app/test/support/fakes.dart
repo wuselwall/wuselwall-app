@@ -15,6 +15,9 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/notifications/notification_scheduler_provider.dart';
 import 'package:wuselwall/core/realtime/household_channel.dart';
 import 'package:wuselwall/core/supabase/supabase_providers.dart';
+import 'package:wuselwall/features/account/application/account_admin_providers.dart';
+import 'package:wuselwall/features/account/data/account_admin_repository.dart';
+import 'package:wuselwall/features/account/domain/member_security.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/data/board_repository.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
@@ -239,6 +242,48 @@ class FakeIdentityRepository implements IdentityRepository {
 /// Starting a family. Creating a household records its arguments; on success it makes
 /// [identity] Ready, as the session refresh does in the app (the test re-reads the session).
 /// Records the leave, delete and restore calls; each answers with its result.
+/// Deleting the account and resetting a second factor. Each deletion answers with the next of
+/// [deleteResults] (the last one repeats). [recent] is what the sign-in check answers.
+class FakeAccountAdminRepository implements AccountAdminRepository {
+  List<Result<void>> deleteResults = [const Ok(null)];
+  Result<void> resetResult = const Ok(null);
+  List<MemberSecurity> security = const [];
+  String? provider = 'email';
+  bool recent = false;
+
+  var deleteCalls = 0;
+  final resets = <({String actorProfileId, String profileId})>[];
+
+  @override
+  String? currentProvider() => provider;
+
+  @override
+  bool hasRecentSignIn() => recent;
+
+  @override
+  Future<Result<void>> deleteAccount() async {
+    final i = deleteCalls < deleteResults.length
+        ? deleteCalls
+        : deleteResults.length - 1;
+    deleteCalls++;
+    return deleteResults[i];
+  }
+
+  @override
+  Future<Result<void>> resetMfa({
+    required String actorProfileId,
+    required String profileId,
+  }) async {
+    resets.add((actorProfileId: actorProfileId, profileId: profileId));
+    return resetResult;
+  }
+
+  @override
+  Future<Result<List<MemberSecurity>>> memberSecurity(
+    String actorProfileId,
+  ) async => Ok(security);
+}
+
 class FakeHouseholdLeaveRepository implements HouseholdLeaveRepository {
   Result<void> leaveResult = const Ok(null);
   Result<DateTime> deleteResult = Ok(DateTime.utc(2026, 10, 29));
@@ -433,16 +478,21 @@ class FakeSignInMethods implements SignInMethodsRepository {
     this.linkable = const {},
     List<SignInMethod>? linked,
     this.signInResult = const Ok(null),
+    this.routes = const {},
   }) : linked = linked ?? [];
 
   List<SignInProvider> offered;
   Set<SignInProvider> linkable;
   List<SignInMethod> linked;
   Result<void> signInResult;
+  final Map<SignInProvider, ProviderRoute> routes;
   final signIns = <SignInProvider>[];
   final links = <SignInProvider>[];
   final unlinked = <String>[];
   final redirectErrors = StreamController<Failure>.broadcast();
+
+  @override
+  ProviderRoute? route(SignInProvider provider) => routes[provider];
 
   @override
   List<SignInProvider> available() => offered;
@@ -648,6 +698,7 @@ List<Override> baseOverrides({
   FakePairingRepository? pairing,
   FakeHouseholdOnboardingRepository? household,
   FakeHouseholdLeaveRepository? leave,
+  FakeAccountAdminRepository? accountAdmin,
   FakeInvitationRepository? invitations,
   MemoryInvitationStore? invitationStore,
   bool signedIn = true,
@@ -655,6 +706,9 @@ List<Override> baseOverrides({
 }) => [
   householdLeaveRepositoryProvider.overrideWithValue(
     leave ?? FakeHouseholdLeaveRepository(),
+  ),
+  accountAdminRepositoryProvider.overrideWithValue(
+    accountAdmin ?? FakeAccountAdminRepository(),
   ),
   invitationRepositoryProvider.overrideWithValue(
     invitations ?? FakeInvitationRepository(),
