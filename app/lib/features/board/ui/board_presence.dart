@@ -154,6 +154,13 @@ class _MemberRow extends StatelessWidget {
     if (!school.hasSchool) {
       // A band that day (Oma, a trip) says more than "frei", and they would overlap.
       if (bandDay) return const [];
+      // The day's own holiday is already named over the column: the row only says
+      // "frei". A school's own free day (Ferien, a floating holiday) is named here.
+      final holidayName = school.holidayName;
+      final text =
+          holidayName == null || holidayName == board.days[i].holiday?.name
+          ? l10n.boardNoSchool
+          : holidayName;
       return [
         Positioned(
           left: g.left(i),
@@ -162,17 +169,19 @@ class _MemberRow extends StatelessWidget {
           bottom: 0,
           child: Opacity(
             opacity: opacity,
-            child: ClipFit(
-              child: Text(
-                school.holidayName ?? l10n.boardNoSchool,
-                style: boardCell(
-                  24,
-                  weight: FontWeight.w500,
-                  color: context.ww.ink3,
+            child: Padding(
+              // In line with the text of a school chip.
+              padding: const EdgeInsets.symmetric(horizontal: 18),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: ShrinkText(
+                  text,
+                  style: boardCell(
+                    24,
+                    weight: FontWeight.w500,
+                    color: context.ww.ink3,
+                  ),
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                softWrap: false,
               ),
             ),
           ),
@@ -353,7 +362,6 @@ class _MemberRow extends StatelessWidget {
     final busyBelow = !compact && busyDays.isNotEmpty;
     final label = context.presenceLabel(band.state, band.label);
     final oneLineLabel = [label, ?timeText, ?busyInline].join(' · ');
-    final bandInset = compact ? 2.0 : 4.0;
 
     final schoolOnRun =
         member.isChild &&
@@ -363,6 +371,8 @@ class _MemberRow extends StatelessWidget {
         ].isNotEmpty;
     // A band shares its row with a busy line or a school chip: it gets one line then.
     final oneLine = compact || busyBelow || schoolOnRun;
+    // A two-line band needs nearly the whole row.
+    final bandInset = compact || !oneLine ? 2.0 : 4.0;
     return [
       for (final (i, t) in busyDays)
         if (busyBelow)
@@ -398,7 +408,9 @@ class _MemberRow extends StatelessWidget {
                 openStart: openStart,
                 openEnd: openEnd,
                 tentative: band.tentative,
-                dense: oneLine,
+                // Label and time share a member row: tight padding and lines.
+                dense: true,
+                lineHeight: 1.1,
               ),
             ),
           ),
@@ -458,51 +470,37 @@ class _SchoolText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final spanText = Text(
-      span,
-      style: boardNum(26, weight: FontWeight.w700, color: ink),
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      softWrap: false,
-    );
-    // The notes ("Sport · Hort bis 15") shrink a little before they lose their end:
-    // the Hort time is the part a parent reads the board for.
-    final notesText = FittedBox(
-      fit: BoxFit.scaleDown,
-      alignment: Alignment.centerLeft,
-      child: Text(
-        notes,
-        style: boardCell(24, weight: FontWeight.w600, color: ink2),
-        maxLines: 1,
-        softWrap: false,
-      ),
-    );
+    final spanStyle = boardNum(26, weight: FontWeight.w700, color: ink);
+    final notesStyle = boardCell(24, weight: FontWeight.w600, color: ink2);
     if (oneLine) {
-      // Beside the span the notes keep their size and lose their end instead.
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Flexible(flex: 3, child: spanText),
-          if (notes.isNotEmpty) ...[
-            const SizedBox(width: 8),
-            Flexible(
-              flex: 2,
-              child: Text(
-                notes,
-                style: boardCell(24, weight: FontWeight.w600, color: ink2),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                softWrap: false,
-              ),
-            ),
+      // The span comes first and keeps its room; the notes lose their end instead.
+      return Text.rich(
+        TextSpan(
+          children: [
+            TextSpan(text: span, style: spanStyle),
+            if (notes.isNotEmpty) TextSpan(text: '  $notes', style: notesStyle),
           ],
-        ],
+        ),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        softWrap: false,
       );
     }
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [spanText, if (notes.isNotEmpty) notesText],
+      children: [
+        Text(
+          span,
+          style: spanStyle,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          softWrap: false,
+        ),
+        // The notes ("Sport · Hort bis 15") shrink a little before they lose their
+        // end: the Hort time is the part a parent reads the board for.
+        if (notes.isNotEmpty) ShrinkText(notes, style: notesStyle),
+      ],
     );
   }
 }
@@ -537,23 +535,18 @@ class _BaselineTrack extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          // A one-day run is narrow: the label shrinks a little rather than losing
-          // its end, since the baseline is never the thing to read closely.
-          Flexible(
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              alignment: Alignment.centerLeft,
-              child: Text(
-                label,
-                style: boardUi(
-                  24,
-                  weight: FontWeight.w500,
-                  color: ww.ink2,
-                  height: 1.1,
-                ),
-                maxLines: 1,
-                softWrap: false,
+          // A one-day run is narrow: the label shrinks a little before it loses its
+          // end, since the baseline is never the thing to read closely.
+          Expanded(
+            child: ShrinkText(
+              label,
+              style: boardUi(
+                24,
+                weight: FontWeight.w500,
+                color: ww.ink2,
+                height: 1.1,
               ),
+              minScale: 0.7,
             ),
           ),
         ],

@@ -46,7 +46,7 @@ void main() {
         clock: () => DateTime(2026, 10, 14, 9),
       ).week()).unwrap();
       expect(board.member(DemoData.son)!.displayName, 'Jack');
-      expect(board.days[3].holiday!.name, 'Floating school holiday');
+      expect(board.days[3].holiday!.name, 'INSET day');
       expect(board.days[3].holiday!.isHousehold, isTrue);
     },
   );

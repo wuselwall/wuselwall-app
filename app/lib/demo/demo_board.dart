@@ -185,11 +185,11 @@ String _iso(DateTime d) =>
 
 /// The demo week's free day: Thursday. Not a public holiday of the region, which falls on
 /// one date, while the demo shows whichever week it runs in: a free day that a household
-/// enters for itself, as German towns set their schools' floating holidays.
+/// enters for itself, as German towns set their schools' floating holidays (and English
+/// schools their INSET days).
 const _holidayDay = 3;
 
-String get _freeDay =>
-    DemoData.english ? 'Floating school holiday' : 'Beweglicher Ferientag';
+String get _freeDay => DemoData.english ? 'INSET day' : 'Beweglicher Ferientag';
 
 Map<String, dynamic> _json(DateTime now) {
   final monday = DateTime(now.year, now.month, now.day - (now.weekday - 1));

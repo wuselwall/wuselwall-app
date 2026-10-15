@@ -1322,18 +1322,6 @@ abstract class AppLocalizations {
   /// **'Nothing else planned today'**
   String get boardNothingMoreToday;
 
-  /// No description provided for @boardUpdatedSecondsAgo.
-  ///
-  /// In en, this message translates to:
-  /// **'updated {seconds} s ago'**
-  String boardUpdatedSecondsAgo(int seconds);
-
-  /// No description provided for @boardUpdatedMinutesAgo.
-  ///
-  /// In en, this message translates to:
-  /// **'updated {minutes} min ago'**
-  String boardUpdatedMinutesAgo(int minutes);
-
   /// No description provided for @boardLastUpdatedAt.
   ///
   /// In en, this message translates to:
@@ -1358,35 +1346,11 @@ abstract class AppLocalizations {
   /// **'Who is where'**
   String get boardZoneWhere;
 
-  /// No description provided for @boardZoneWhereHint.
-  ///
-  /// In en, this message translates to:
-  /// **'pale = as usual · bold = different'**
-  String get boardZoneWhereHint;
-
-  /// No description provided for @boardZoneEvents.
-  ///
-  /// In en, this message translates to:
-  /// **'Appointments'**
-  String get boardZoneEvents;
-
-  /// No description provided for @boardZoneEventsHint.
-  ///
-  /// In en, this message translates to:
-  /// **'dots = who is involved · dashed = not certain yet'**
-  String get boardZoneEventsHint;
-
   /// No description provided for @boardZoneMeal.
   ///
   /// In en, this message translates to:
   /// **'Hot meal'**
   String get boardZoneMeal;
-
-  /// No description provided for @boardZoneMealHint.
-  ///
-  /// In en, this message translates to:
-  /// **'filled dot = eating · open dot = not there'**
-  String get boardZoneMealHint;
 
   /// No description provided for @boardMorning.
   ///

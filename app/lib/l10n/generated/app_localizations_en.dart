@@ -688,16 +688,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get boardNothingMoreToday => 'Nothing else planned today';
 
   @override
-  String boardUpdatedSecondsAgo(int seconds) {
-    return 'updated $seconds s ago';
-  }
-
-  @override
-  String boardUpdatedMinutesAgo(int minutes) {
-    return 'updated $minutes min ago';
-  }
-
-  @override
   String boardLastUpdatedAt(String time) {
     return 'last updated $time';
   }
@@ -712,20 +702,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get boardZoneWhere => 'Who is where';
 
   @override
-  String get boardZoneWhereHint => 'pale = as usual · bold = different';
-
-  @override
-  String get boardZoneEvents => 'Appointments';
-
-  @override
-  String get boardZoneEventsHint =>
-      'dots = who is involved · dashed = not certain yet';
-
-  @override
   String get boardZoneMeal => 'Hot meal';
-
-  @override
-  String get boardZoneMealHint => 'filled dot = eating · open dot = not there';
 
   @override
   String get boardMorning => 'Morning';
