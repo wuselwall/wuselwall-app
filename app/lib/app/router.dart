@@ -14,6 +14,7 @@ import 'package:wuselwall/features/meals/domain/meal_models.dart';
 import 'package:wuselwall/features/meals/ui/recipe_editor_page.dart';
 import 'package:wuselwall/features/meals/ui/recipe_view_page.dart';
 import 'package:wuselwall/features/meals/ui/recipes_page.dart';
+import 'package:wuselwall/features/reminders/ui/reminders_page.dart';
 import 'package:wuselwall/features/school/ui/school_setup_page.dart';
 import 'package:wuselwall/features/school/ui/timetable_editor_page.dart';
 import 'package:wuselwall/features/settings/ui/household_settings_page.dart';
@@ -53,6 +54,7 @@ abstract final class Routes {
   static const externalCalendarNew = '/settings/calendars/new';
   static const externalCalendarEdit = '/settings/calendars/edit';
   static const baselines = '/settings/baselines';
+  static const reminders = '/settings/reminders';
 
   static bool isSetup(String path) =>
       path == setup || path.startsWith('$setup/');
@@ -155,6 +157,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         ),
       ),
       GoRoute(path: Routes.baselines, builder: (_, _) => const BaselinePage()),
+      GoRoute(path: Routes.reminders, builder: (_, _) => const RemindersPage()),
       GoRoute(
         path: Routes.shoppingHistory,
         builder: (_, _) => const ShoppingHistoryPage(),

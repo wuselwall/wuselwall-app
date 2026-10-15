@@ -289,6 +289,7 @@ ordering, not the marketing diagonal — cheap 10" tablets in this price range a
   train a family to ignore an app is to notify them about everything in week one. The
   defaults — morning summary at 07:00 on, everything else off — are in
   [21](21-household-settings.md#notifications).
+- **Local reminders** (built 2026-10-14, [14 Q47](14-open-questions.md)): Android and iOS schedule the morning summary and the event reminders on the phone itself, for the acting member on a personal device only, never on shared or kiosk devices. They are planned seven days ahead from data the app already has and replaced whenever it changes. Nothing leaves the device, and the system prompt appears only after a tap on *Erinnerungen einschalten*.
 - The web build gets realtime but no push; the laptop has Outlook for that.
 
 ## Design system

@@ -1766,5 +1766,72 @@
   "shoppingNavLabel": "Shopping",
   "@shoppingNavLabel": {
     "description": "Short label of the shopping list in the bottom navigation bar; the page title stays shoppingTitle."
-  }
+  },
+  "reminderChannelName": "Reminders",
+  "reminderStartLabel": "Turn on reminders",
+  "reminderMorningEventsAndTasks": "Today: {events, plural, one{1 appointment} other{{events} appointments}}, {tasks, plural, one{1 chore} other{{tasks} chores}}",
+  "@reminderMorningEventsAndTasks": {
+    "placeholders": {
+      "events": {
+        "type": "int"
+      },
+      "tasks": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderMorningEventsOnly": "Today: {events, plural, one{1 appointment} other{{events} appointments}}",
+  "@reminderMorningEventsOnly": {
+    "placeholders": {
+      "events": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderMorningTasksOnly": "Today: {tasks, plural, one{1 chore} other{{tasks} chores}}",
+  "@reminderMorningTasksOnly": {
+    "placeholders": {
+      "tasks": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderMorningNoEvents": "Nothing is scheduled today.",
+  "reminderMorningFirst": "First up at {time}: {title}",
+  "@reminderMorningFirst": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderMorningAllDay": "All day: {title}",
+  "@reminderMorningAllDay": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderEventBody": "Starts at {time}",
+  "@reminderEventBody": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderSettingsTitle": "Reminders",
+  "reminderSettingsSubtitle": "On this phone",
+  "reminderSettingsSection": "What you want to be reminded of",
+  "reminderStatusOn": "Reminders are on on this phone.",
+  "reminderStatusOff": "Reminders are off on this phone.",
+  "reminderStatusUnavailable": "This device cannot show reminders.",
+  "reminderEnableAction": "Turn on reminders",
+  "reminderDeniedNote": "Without permission there are no reminders. You can change the permission in the system settings.",
+  "reminderLocalNote": "Reminders are created on this phone. Nothing is sent to a server or to anyone else.",
+  "reminderOnlyPersonal": "Reminders are only available on a member's personal device."
 }
