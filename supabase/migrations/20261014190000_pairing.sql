@@ -33,6 +33,21 @@ create policy owner_all on app.pairing_request to postgres using (true) with che
 -- No grants to anon or authenticated: the api functions below are the only way in.
 revoke all on app.pairing_request from public, anon, authenticated;
 
+-- Pairing's own attempt log (rate limits for start, poll and approve). Kept apart from
+-- app.pairing_attempt: api.enrol_device counts every failure there toward its global limit, so
+-- failed pairings must not land in it.
+create table app.pairing_attempt (
+  id           bigint generated always as identity primary key,
+  attempted_at timestamptz not null default now(),
+  client_key   text not null,
+  success      boolean not null
+);
+create index on app.pairing_attempt (client_key, attempted_at desc);
+alter table app.pairing_attempt enable row level security;
+alter table app.pairing_attempt force row level security;
+create policy owner_all on app.pairing_attempt to postgres using (true) with check (true);
+revoke all on app.pairing_attempt from public, anon, authenticated;
+
 -- ------------------------------------------------------------ internals
 
 create function app.pairing_hash(p_value text) returns text
@@ -77,9 +92,9 @@ declare
   v_expires timestamptz := now() + interval '10 minutes';
   v_id      uuid;
 begin
-  if (select count(*) from app.enrol_attempt
+  if (select count(*) from app.pairing_attempt
        where client_key = v_key and attempted_at > now() - interval '10 minutes') >= 10
-     or (select count(*) from app.enrol_attempt
+     or (select count(*) from app.pairing_attempt
           where client_key like 'pair:%' and attempted_at > now() - interval '10 minutes') >= 200 then
     return jsonb_build_object('ok', false, 'reason', 'rate_limited');
   end if;
@@ -97,7 +112,7 @@ begin
   insert into app.pairing_request (secret_hash, code_hash, expires_at, client_key)
   values (app.pairing_hash(v_secret), app.pairing_hash(v_code), v_expires, v_client)
   returning id into v_id;
-  insert into app.enrol_attempt (client_key, success) values (v_key, true);
+  insert into app.pairing_attempt (client_key, success) values (v_key, true);
 
   return jsonb_build_object('ok', true, 'request_id', v_id, 'secret', v_secret,
                             'code', v_code, 'expires_at', v_expires);
@@ -114,20 +129,20 @@ declare
   v_mail text;
   v_pw   text := encode(extensions.gen_random_bytes(24), 'hex');
 begin
-  if (select count(*) from app.enrol_attempt
+  if (select count(*) from app.pairing_attempt
        where client_key = v_key and not success and attempted_at > now() - interval '10 minutes') >= 10
-     or (select count(*) from app.enrol_attempt
+     or (select count(*) from app.pairing_attempt
           where client_key like 'pair:%' and not success and attempted_at > now() - interval '10 minutes') >= 200 then
     return jsonb_build_object('status', 'rate_limited');
   end if;
 
   select * into v_req from app.pairing_request where id = p_request_id for update;
   if not found then
-    insert into app.enrol_attempt (client_key, success) values (v_key, false);
+    insert into app.pairing_attempt (client_key, success) values (v_key, false);
     return jsonb_build_object('status', 'invalid');
   end if;
   if v_req.secret_hash <> app.pairing_hash(coalesce(p_secret, '')) then
-    insert into app.enrol_attempt (client_key, success) values (v_key, false);
+    insert into app.pairing_attempt (client_key, success) values (v_key, false);
     return jsonb_build_object('status', 'invalid');
   end if;
 
@@ -199,7 +214,7 @@ begin
   end if;
 
   -- Five wrong codes per guardian in ten minutes, then refused: a code is 8 symbols.
-  if (select count(*) from app.enrol_attempt
+  if (select count(*) from app.pairing_attempt
        where client_key = 'approve:' || a.profile_id::text and not success
          and attempted_at > now() - interval '10 minutes') >= 5 then
     return jsonb_build_object('ok', false, 'reason', 'rate_limited');
@@ -209,7 +224,7 @@ begin
    where code_hash = app.pairing_hash(v_code) and status = 'pending' and expires_at > now()
    for update;
   if not found then
-    insert into app.enrol_attempt (client_key, success) values ('approve:' || a.profile_id::text, false);
+    insert into app.pairing_attempt (client_key, success) values ('approve:' || a.profile_id::text, false);
     return jsonb_build_object('ok', false, 'reason', 'code_invalid');
   end if;
 
@@ -230,52 +245,6 @@ begin
   return jsonb_build_object(
     'ok', true, 'device_id', v_dev, 'label', v_label,
     'needs_pin', (select pin_hash is null from app.profile where id = a.profile_id));
-end $$;
-
--- ------------------------------------------------------------ enrolment: keep its global bucket to itself
-
--- The legacy enrolment's global limit counts failed enrolments. Pairing failures share the
--- attempt log, so they are left out here; otherwise a flood of pairing polls would lock out
--- the old code entry for everyone.
-create or replace function api.enrol_device(p_code text) returns jsonb
-language plpgsql security definer set search_path = '' as $$
-declare
-  v_headers text := current_setting('request.headers', true);
-  v_key     text := coalesce(nullif(split_part(coalesce(v_headers::json ->> 'x-forwarded-for', ''), ',', 1), ''), 'unknown');
-  v_code    app.enrolment_code;
-  v_pw      text := encode(extensions.gen_random_bytes(24), 'hex');
-  v_id      uuid := gen_random_uuid();
-  v_mail    text;
-  v_user    uuid;
-begin
-  -- 5 failures per client and 30 overall per 10 minutes. Behind a proxy the client key
-  -- is the forwarded address; without one all clients share the bucket "unknown".
-  if (select count(*) from app.enrol_attempt
-       where client_key = v_key and not success and attempted_at > now() - interval '10 minutes') >= 5
-     or (select count(*) from app.enrol_attempt
-          where not success and client_key not like 'pair:%' and client_key not like 'approve:%'
-            and attempted_at > now() - interval '10 minutes') >= 30 then
-    return jsonb_build_object('ok', false, 'reason', 'rate_limited');
-  end if;
-
-  select * into v_code from app.enrolment_code
-   where code_hash = encode(extensions.digest(upper(btrim(p_code)), 'sha256'), 'hex')
-     and consumed_at is null and expires_at > now()
-   for update;
-  if not found then
-    insert into app.enrol_attempt (client_key, success) values (v_key, false);
-    return jsonb_build_object('ok', false, 'reason', 'code_invalid');
-  end if;
-
-  v_mail := 'device-' || v_id || '@devices.wuselwall.invalid';
-  v_user := app.create_auth_user(v_mail, v_pw, jsonb_build_object('device', true));
-  insert into app.device (id, household_id, auth_user_id, label, class, register)
-  values (v_id, v_code.household_id, v_user, v_code.label, v_code.class, v_code.register);
-  update app.enrolment_code set consumed_at = now() where id = v_code.id;
-  insert into app.enrol_attempt (client_key, success) values (v_key, true);
-  insert into app.audit_log (household_id, actor_profile_id, device_id, entity_type, entity_id, action)
-  values (v_code.household_id, v_code.created_by, v_id, 'device', v_id, 'enrol');
-  return jsonb_build_object('ok', true, 'email', v_mail, 'password', v_pw);
 end $$;
 
 -- ------------------------------------------------------------ grants

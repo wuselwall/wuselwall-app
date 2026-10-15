@@ -1,11 +1,12 @@
 begin;
-select plan(53);
+select plan(54);
 
 -- Pairing (J3/J5): the new device starts a request, a guardian approves it, the device collects
 -- its credentials once. Everything runs as the database owner except the calls made by the
 -- device (anon) and by a guardian's phone (authenticated), which switch role inside the helpers.
 
 delete from app.enrol_attempt;
+delete from app.pairing_attempt;
 
 -- ---- fixtures: two households, guardians on personal phones, a child, a shared tablet, a kiosk
 create temp table fx (name text primary key, id uuid not null);
@@ -271,17 +272,21 @@ select throws_ok(
   '42501', 'device not usable', 'a revoked phone cannot approve');
 
 -- ---- the legacy enrolment keeps its own bucket ----------------------------------------------
-insert into app.enrol_attempt (client_key, success)
+insert into app.pairing_attempt (client_key, success)
   select 'pair:192.0.2.5', false from generate_series(1, 30);
+-- Thirty failed pairings from another client, plus a failed approval and poll from this one:
+-- the legacy code entry still answers with a code verdict, not a rate limit.
 select is((select api.enrol_device('AAAAAAA1') ->> 'reason'), 'code_invalid',
   'pairing failures do not lock out the legacy code entry');
+select is((select count(*)::int from app.enrol_attempt), 1,
+  'only the legacy attempt itself is in the legacy attempt log');
 
 -- ---- the start limits -----------------------------------------------------------------------
 create temp table sx as select pg_temp.start_raw('198.51.100.20') r from generate_series(1, 11);
 grant all on sx to public;
 select is((select count(*) from sx where r ->> 'ok' = 'true'), 10::bigint, 'ten requests per client in ten minutes');
 select is((select count(*) from sx where r ->> 'reason' = 'rate_limited'), 1::bigint, 'the eleventh is refused, not raised');
-insert into app.enrol_attempt (client_key, success)
+insert into app.pairing_attempt (client_key, success)
   select 'pair:203.0.113.99', true from generate_series(1, 300);
 select is(pg_temp.start_raw('198.51.100.21') ->> 'reason', 'rate_limited', 'overall, two hundred requests in ten minutes stop new ones');
 
