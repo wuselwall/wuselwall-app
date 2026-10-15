@@ -1780,60 +1780,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get schoolName => 'Name of the school';
 
   @override
-  String get schoolState => 'State';
-
-  @override
-  String get schoolStateNone => 'Not given';
-
-  @override
-  String get schoolStateBW => 'Baden-Württemberg';
-
-  @override
-  String get schoolStateBY => 'Bavaria';
-
-  @override
-  String get schoolStateBE => 'Berlin';
-
-  @override
-  String get schoolStateBB => 'Brandenburg';
-
-  @override
-  String get schoolStateHB => 'Bremen';
-
-  @override
-  String get schoolStateHH => 'Hamburg';
-
-  @override
-  String get schoolStateHE => 'Hesse';
-
-  @override
-  String get schoolStateMV => 'Mecklenburg-Western Pomerania';
-
-  @override
-  String get schoolStateNI => 'Lower Saxony';
-
-  @override
-  String get schoolStateNW => 'North Rhine-Westphalia';
-
-  @override
-  String get schoolStateRP => 'Rhineland-Palatinate';
-
-  @override
-  String get schoolStateSL => 'Saarland';
-
-  @override
-  String get schoolStateSN => 'Saxony';
-
-  @override
-  String get schoolStateST => 'Saxony-Anhalt';
-
-  @override
-  String get schoolStateSH => 'Schleswig-Holstein';
-
-  @override
-  String get schoolStateTH => 'Thuringia';
-
-  @override
   String get schoolBellTimes => 'Bell times';
 
   @override
@@ -2729,4 +2675,596 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get kidNoPlanToday => 'Nothing planned today';
+
+  @override
+  String get schoolsUiAddSchool => 'Another school';
+
+  @override
+  String get schoolsUiNewSchool => 'New school';
+
+  @override
+  String get schoolsUiPickSchool => 'Choose school';
+
+  @override
+  String get schoolsUiAskSchool => 'Which school?';
+
+  @override
+  String schoolsUiSchoolOf(String name) {
+    return 'School: $name';
+  }
+
+  @override
+  String get schoolsUiDayMenu => 'Day actions';
+
+  @override
+  String get schoolsUiCopyDay => 'Copy day to…';
+
+  @override
+  String schoolsUiCopyDayTitle(String day) {
+    return 'Copy $day to';
+  }
+
+  @override
+  String get schoolsUiCopyDayApply => 'Copy';
+
+  @override
+  String get schoolsUiSwapDay => 'Swap with…';
+
+  @override
+  String schoolsUiSwapDayTitle(String day) {
+    return 'Swap $day with';
+  }
+
+  @override
+  String get schoolsUiDayCleared => 'Day cleared';
+
+  @override
+  String get schoolsUiDayCopied => 'Day copied';
+
+  @override
+  String get schoolsUiDaySwapped => 'Days swapped';
+
+  @override
+  String get schoolsUiUndo => 'Undo';
+
+  @override
+  String get mealsUxSuggestOften => 'Family favourites';
+
+  @override
+  String get mealsUxSuggestRare => 'Not had in a while';
+
+  @override
+  String mealsUxClearedSnack(String title) {
+    return '$title removed';
+  }
+
+  @override
+  String get mealsUxUndo => 'Undo';
+
+  @override
+  String get mealsUxFromMealPlan => 'From the meal plan';
+
+  @override
+  String mealsUxForMeal(String meal, String day) {
+    return 'For: $meal · $day';
+  }
+
+  @override
+  String get todayTitle => 'Today';
+
+  @override
+  String get todayEmpty => 'Nothing is planned for today yet. Enjoy the quiet.';
+
+  @override
+  String get todayAgendaTitle => 'Appointments';
+
+  @override
+  String get todayAllDay => 'all day';
+
+  @override
+  String get todayTasksTitle => 'Your chores today';
+
+  @override
+  String get todayMealTitle => 'Warm meal';
+
+  @override
+  String todayMealLine(String slot, String dish) {
+    return '$slot: $dish';
+  }
+
+  @override
+  String get todayShoppingTitle => 'Shopping list';
+
+  @override
+  String todayShoppingOpen(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items still open',
+      one: '1 item still open',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get todayStartTitle => 'Getting started';
+
+  @override
+  String todayStartProgress(int done, int total) {
+    return '$done of $total';
+  }
+
+  @override
+  String get todayStartNotNeeded => 'Not needed';
+
+  @override
+  String get todayStartInvitePartner => 'Invite your partner';
+
+  @override
+  String get todayStartConnectTablet => 'Connect the family tablet';
+
+  @override
+  String get todayStartWallDisplay => 'Set up the wall display';
+
+  @override
+  String get todayStartSetPin => 'Set your PIN';
+
+  @override
+  String get todayStartSubscribeFeed => 'Subscribe to the calendar';
+
+  @override
+  String get todayStartSchool => 'Add the timetable';
+
+  @override
+  String get settingsGettingStarted => 'Getting started';
+
+  @override
+  String get settingsGettingStartedSubtitle =>
+      'Show the setup card on the Today tab again';
+
+  @override
+  String get exportFamilyTitle => 'Family';
+
+  @override
+  String get exportAction => 'Export data';
+
+  @override
+  String get exportExplanation =>
+      'All your family\'s data as a file, for example for a move to another server.';
+
+  @override
+  String get exportInProgress => 'Exporting data';
+
+  @override
+  String get exportPersonalDeviceRequired =>
+      'The export works from your own phone only.';
+
+  @override
+  String boardHolidayLabel(String name) {
+    return 'Public holiday · $name';
+  }
+
+  @override
+  String get regionSettingTitle => 'Region';
+
+  @override
+  String get regionSettingHelp =>
+      'Decides which public holidays apply and which school holidays you can import. Choose the canton, state or municipality.';
+
+  @override
+  String get regionFieldLabel => 'Region';
+
+  @override
+  String get regionFieldEmpty => 'No region chosen';
+
+  @override
+  String get regionFieldClear => 'Remove region';
+
+  @override
+  String get regionCountryDE => 'Germany';
+
+  @override
+  String get regionCountryAT => 'Austria';
+
+  @override
+  String get regionCountryCH => 'Switzerland';
+
+  @override
+  String get regionCountryLI => 'Liechtenstein';
+
+  @override
+  String get regionCountryOther => 'Other country (no region)';
+
+  @override
+  String get regionPickCountryTitle => 'Country';
+
+  @override
+  String get regionPickRegionTitle => 'Canton or state';
+
+  @override
+  String get regionPickSearch => 'Search';
+
+  @override
+  String regionPickWholeRegion(String name) {
+    return 'All of $name';
+  }
+
+  @override
+  String get regionPickDeeperTitle =>
+      'Choose more precisely (district or municipality)';
+
+  @override
+  String get regionPickDeeperSearch => 'Type a municipality or district';
+
+  @override
+  String get regionPickNoMatch => 'Nothing found';
+
+  @override
+  String get regionPickLoading => 'Loading regions…';
+
+  @override
+  String get regionPickRetry => 'Try again';
+
+  @override
+  String get regionPickSkip => 'Continue without a region';
+
+  @override
+  String get regionPickEmpty => 'No regions for this country.';
+
+  @override
+  String get regionUnavailable =>
+      'The region list is not available right now. Check the connection and try again.';
+
+  @override
+  String regionNameTop(String category, String name) {
+    return '$category $name';
+  }
+
+  @override
+  String regionNameDeeper(String name, String category, String parent) {
+    return '$name ($category), $parent';
+  }
+
+  @override
+  String get regionImportAction => 'Import school holidays';
+
+  @override
+  String get regionImportNeedsRegion => 'Choose a region for the school first.';
+
+  @override
+  String get regionImportTitle => 'School holidays';
+
+  @override
+  String get regionImportIntro =>
+      'Public holidays of the region apply automatically. Here you bring in the school holidays.';
+
+  @override
+  String get regionImportSwissHint =>
+      'School holidays in Switzerland can differ by municipality. Check the dates.';
+
+  @override
+  String get regionImportNone =>
+      'No school holidays found for the next 18 months.';
+
+  @override
+  String get regionImportAlready => 'already imported';
+
+  @override
+  String get regionImportOverlaps => 'overlaps an entry of your own';
+
+  @override
+  String get regionImportButton => 'Import';
+
+  @override
+  String regionImportDone(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count holidays imported',
+      one: '1 holiday imported',
+      zero: 'No holidays imported',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get regionImportAttribution => 'Data: OpenHolidays API · ODbL';
+
+  @override
+  String get regionImported => 'imported';
+
+  @override
+  String get extCalTitle => 'Subscribed calendars';
+
+  @override
+  String get extCalSettingsSubtitle =>
+      'Appointments from club and bin calendars';
+
+  @override
+  String get extCalEmpty =>
+      'No calendar subscribed yet. A subscription brings outside appointments into the family calendar, such as a club’s fixture list.';
+
+  @override
+  String get extCalNew => 'Subscribe to a calendar';
+
+  @override
+  String get extCalNewTitle => 'New calendar';
+
+  @override
+  String get extCalEditTitle => 'Edit calendar';
+
+  @override
+  String get extCalEdit => 'Edit';
+
+  @override
+  String get extCalNameLabel => 'Name';
+
+  @override
+  String get extCalNameHint => 'e.g. FC fixtures';
+
+  @override
+  String get extCalNameRequired => 'Give the calendar a name.';
+
+  @override
+  String get extCalUrlLabel => 'Address (ICS)';
+
+  @override
+  String get extCalUrlHelp =>
+      'The address the calendar is published at, usually ending in .ics. Examples: your town’s bin collection calendar, a club’s fixture list. webcal:// addresses work too.';
+
+  @override
+  String get extCalUrlInvalid =>
+      'That does not look like a web address (https://…).';
+
+  @override
+  String get extCalColourLabel => 'Colour';
+
+  @override
+  String extCalColourOption(int number) {
+    return 'Colour $number';
+  }
+
+  @override
+  String get extCalMembersLabel => 'Who?';
+
+  @override
+  String get extCalMembersHelp =>
+      'Without a choice, the calendar is for the whole family.';
+
+  @override
+  String get extCalMembersWhole => 'Whole family';
+
+  @override
+  String get extCalShowOnBoard => 'Show on the kitchen display';
+
+  @override
+  String get extCalShowOnBoardHelp =>
+      'Its appointments appear as key appointments on the kitchen display’s week board.';
+
+  @override
+  String extCalDeleteConfirm(String name) {
+    return '“$name” and all its appointments will be removed.';
+  }
+
+  @override
+  String get extCalDeleted => 'Calendar removed.';
+
+  @override
+  String get extCalRefreshNow => 'Refresh now';
+
+  @override
+  String extCalRefreshed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count appointments loaded',
+      one: '1 appointment loaded',
+      zero: 'No appointments found',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get extCalNotModified => 'No changes since the last fetch.';
+
+  @override
+  String get extCalRecent =>
+      'Fetched a moment ago. Try again in a few minutes.';
+
+  @override
+  String extCalRefreshFailed(String reason) {
+    return 'The calendar could not be loaded: $reason';
+  }
+
+  @override
+  String get extCalStatusPaused => 'Paused';
+
+  @override
+  String get extCalStatusNever => 'Loading for the first time …';
+
+  @override
+  String extCalStatusUpdated(String when) {
+    return 'Updated $when';
+  }
+
+  @override
+  String get extCalReadOnlyHint =>
+      'Only guardians can subscribe to calendars or change them.';
+
+  @override
+  String get extCalErrUnreachable => 'The address cannot be reached right now.';
+
+  @override
+  String get extCalErrTimeout => 'The address answers too slowly.';
+
+  @override
+  String get extCalErrForbiddenHost => 'This address is not allowed.';
+
+  @override
+  String get extCalErrTooLarge => 'The calendar is too large (over 2 MB).';
+
+  @override
+  String get extCalErrNotIcs => 'That is not a calendar (ICS).';
+
+  @override
+  String get extCalErrHttp404 => 'Address not found (404).';
+
+  @override
+  String extCalErrHttp(int status) {
+    return 'The address answers with error $status.';
+  }
+
+  @override
+  String get extCalErrInternal =>
+      'Something went wrong on the server. Try again later.';
+
+  @override
+  String get extCalErrDb => 'The appointments could not be stored.';
+
+  @override
+  String get extCalErrUnknown => 'The fetch did not work.';
+
+  @override
+  String get extCalErrInvalid =>
+      'The calendar does not fit: check the name and colour.';
+
+  @override
+  String get extCalErrUrlInvalid =>
+      'This address cannot be saved. It must start with https://.';
+
+  @override
+  String get extCalErrNotFound => 'This calendar no longer exists.';
+
+  @override
+  String get extCalImportedNote =>
+      'Subscribed calendar — changes come from the source';
+
+  @override
+  String extCalFromCalendar(String name) {
+    return 'From $name';
+  }
+
+  @override
+  String get extCalAllDay => 'All day';
+
+  @override
+  String get extCalSheetTitle => 'Appointment from a subscription';
+
+  @override
+  String get extCalSettingsRefreshHint =>
+      'The server fetches each calendar about once an hour.';
+
+  @override
+  String get extCalActive => 'Active';
+
+  @override
+  String get extCalUrlLoading => 'Loading the address';
+
+  @override
+  String get shoppingNavLabel => 'Shopping';
+
+  @override
+  String get scanHint =>
+      'Hold the camera over the QR code on the other device.';
+
+  @override
+  String get scanCameraDenied =>
+      'WuselWall has no access to the camera, so it cannot scan the code. Allow the camera in the system settings, or type the code instead.';
+
+  @override
+  String get scanCameraUnavailable =>
+      'This device has no camera that WuselWall can use. Type the code instead.';
+
+  @override
+  String get scanWebUnsupported =>
+      'This browser cannot scan QR codes. Type the code instead.';
+
+  @override
+  String get scanTypeCode => 'Type the code';
+
+  @override
+  String get serverTitle => 'Which server?';
+
+  @override
+  String get serverLead =>
+      'WuselWall keeps your family\'s data on your family\'s own server. Enter its address, or scan its QR code.';
+
+  @override
+  String get serverAddressLabel => 'Server address';
+
+  @override
+  String get serverAddressHint => 'e.g. api.example.org';
+
+  @override
+  String get serverConnect => 'Connect';
+
+  @override
+  String get serverScan => 'Scan QR code';
+
+  @override
+  String get serverScanTitle => 'Scan the server\'s QR code';
+
+  @override
+  String get serverDemo => 'Try it without a server';
+
+  @override
+  String get serverDemoHint =>
+      'With an example family. Nothing leaves this device.';
+
+  @override
+  String get serverHelp =>
+      'No server yet? The guide at wuselwall.app/docs shows how to set one up.';
+
+  @override
+  String get serverInvalid => 'That is not a server address.';
+
+  @override
+  String get serverUnreachable =>
+      'The server does not answer. Is the address right, and are you online?';
+
+  @override
+  String get serverNotWuselwall =>
+      'There is no WuselWall server at this address.';
+
+  @override
+  String get serverTooOld =>
+      'This server needs an update. Ask whoever runs it to update WuselWall.';
+
+  @override
+  String get serverAppTooOld =>
+      'This server needs a newer version of the app. Please update WuselWall.';
+
+  @override
+  String get serverIncompatibleTitle => 'Server and app don\'t fit together';
+
+  @override
+  String get serverChooseOther => 'Choose another server';
+
+  @override
+  String get demoBanner => 'Example family: nothing is saved';
+
+  @override
+  String get demoExit => 'Exit';
+
+  @override
+  String get settingsServer => 'Server';
+
+  @override
+  String settingsServerBody(String address) {
+    return 'This app talks to $address. Scan this code with the WuselWall app on another device to connect it to the same server.';
+  }
+
+  @override
+  String get settingsServerSwitch => 'Change server';
+
+  @override
+  String get settingsServerSwitchConfirm =>
+      'This device will be signed out and forget everything stored on it. Then you can choose another server.';
+
+  @override
+  String get setupPhoneTitle => 'Continue on your phone';
+
+  @override
+  String get setupPhoneBody =>
+      'Open the WuselWall app on your phone, choose this server by scanning the code, then sign in there.';
 }

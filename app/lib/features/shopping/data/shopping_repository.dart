@@ -22,6 +22,15 @@ class ShoppingRepository {
     build: (q) => q.order('checked').order('created_at'),
   );
 
+  /// The meals behind one item (FR-3.7). Online only: the item's sheet shows none when
+  /// this fails, so it never blocks the list.
+  Future<Result<List<ShoppingItemMeal>>> itemMeals(String itemId) =>
+      _api.select(
+        'shopping_item_meals',
+        parse: ShoppingItemMeal.fromJson,
+        build: (q) => q.eq('item_id', itemId).order('on_date'),
+      );
+
   Future<Result<List<ShoppingList>>> lists() => _api.select(
     'shopping_lists',
     parse: ShoppingList.fromJson,

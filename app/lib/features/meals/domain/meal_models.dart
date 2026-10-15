@@ -250,3 +250,30 @@ TimeOfDay? _time(Object? v) {
   final p = (v as String).split(':');
   return TimeOfDay(hour: int.parse(p[0]), minute: int.parse(p[1]));
 }
+
+/// A meal of the household's last year (`api.meal_history`): a recipe, or a free-text dish
+/// grouped by its spelling, cooked [times] times. [title] is the most recent spelling.
+class MealHistoryEntry {
+  const MealHistoryEntry({
+    required this.title,
+    required this.times,
+    required this.firstOn,
+    required this.lastOn,
+    this.recipeId,
+  });
+
+  factory MealHistoryEntry.fromJson(Map<String, dynamic> json) =>
+      MealHistoryEntry(
+        recipeId: json['recipe_id'] as String?,
+        title: json['title'] as String,
+        times: json['times'] as int,
+        firstOn: parseDate(json['first_on'] as String),
+        lastOn: parseDate(json['last_on'] as String),
+      );
+
+  final String? recipeId;
+  final String title;
+  final int times;
+  final DateTime firstOn;
+  final DateTime lastOn;
+}

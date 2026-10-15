@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
-# Runs supabase/tests/*.sql against the database of the home server's compose stack.
-# Each test runs in a rolled-back transaction, so this is safe on the family's data. The
+# Runs supabase/tests/*.sql against the database of a server's compose stack.
+# Each test runs in a rolled-back transaction, so this is safe on live data. The
 # files are streamed through `docker exec`, so nothing is mounted and no password is needed.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-export DOCKER_HOST=ssh://${WW_HOST:-unraid}
+# The target server comes from scripts/remote.env (git-ignored; see remote.env.example).
+[ -f scripts/remote.env ] && . scripts/remote.env
+export DOCKER_HOST=ssh://${WW_HOST:?set WW_HOST in scripts/remote.env}
 DB=${DB_CONTAINER:-supabase-db}
 status=0
 for f in supabase/tests/*.sql; do

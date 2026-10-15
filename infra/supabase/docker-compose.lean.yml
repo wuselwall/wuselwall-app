@@ -1,0 +1,26 @@
+# WuselWall's lean layer: switches off what WuselWall does not use, for a small NAS or VPS.
+# Listed in COMPOSE_FILE by make-env.mjs for every new server; a server whose .env was made
+# before this file does not use it.
+#
+# - Storage and imgproxy: WuselWall stores no files (no bucket, no upload, specs/10).
+# - Studio and postgres-meta: an operator's convenience, not part of the app. They run with
+#   COMPOSE_PROFILES=studio (make-env.mjs --studio) and are reached through an SSH tunnel.
+#
+# The gateway's clusters for them resolve by DNS on demand, so Envoy starts without them;
+# their routes answer 503 instead.
+services:
+  storage:
+    profiles: [disabled]
+
+  imgproxy:
+    profiles: [disabled]
+
+  studio:
+    profiles: [studio]
+
+  meta:
+    profiles: [studio]
+
+  api-gw:
+    # Upstream waits for Studio to be healthy; with Studio optional, it waits for nothing.
+    depends_on: !reset {}

@@ -42,23 +42,38 @@ class SignInMethodsRepository {
 
   /// How [provider] is reached on this platform, or null when it is not offered
   /// here. The front door never shows a button that will fail.
-  ProviderRoute? route(SignInProvider provider) => switch (provider) {
-    SignInProvider.apple when !_config.appleSignIn => null,
-    SignInProvider.apple when _isWeb => ProviderRoute.redirect,
-    SignInProvider.apple => switch (_platform) {
-      TargetPlatform.iOS || TargetPlatform.macOS => ProviderRoute.native,
-      TargetPlatform.android => ProviderRoute.redirect,
-      _ => null,
-    },
-    SignInProvider.google when _config.googleWebClientId.isEmpty => null,
-    SignInProvider.google when _isWeb => ProviderRoute.redirect,
-    SignInProvider.google => switch (_platform) {
-      TargetPlatform.android => ProviderRoute.native,
-      TargetPlatform.iOS when _config.googleIosClientId.isNotEmpty =>
-        ProviderRoute.native,
-      _ => null,
-    },
-  };
+  ///
+  /// The native sheets only where [AppConfig.nativeSignIn] allows them (the project's
+  /// own servers, ADR-018 decision 6); on any other server Apple and Google go through
+  /// that server's redirect, with the clients its operator registered.
+  ProviderRoute? route(SignInProvider provider) {
+    final native = _config.nativeSignIn;
+    final mobile =
+        _platform == TargetPlatform.android || _platform == TargetPlatform.iOS;
+    return switch (provider) {
+      SignInProvider.apple when !_config.appleSignIn => null,
+      SignInProvider.apple when _isWeb => ProviderRoute.redirect,
+      SignInProvider.apple => switch (_platform) {
+        TargetPlatform.iOS ||
+        TargetPlatform.macOS when native => ProviderRoute.native,
+        TargetPlatform.iOS || TargetPlatform.android => ProviderRoute.redirect,
+        _ => null,
+      },
+      SignInProvider.google when !_config.googleSignIn => null,
+      SignInProvider.google when _isWeb => ProviderRoute.redirect,
+      SignInProvider.google when !native =>
+        mobile ? ProviderRoute.redirect : null,
+      SignInProvider.google => switch (_platform) {
+        TargetPlatform.android when _config.googleWebClientId.isNotEmpty =>
+          ProviderRoute.native,
+        TargetPlatform.iOS
+            when _config.googleWebClientId.isNotEmpty &&
+                _config.googleIosClientId.isNotEmpty =>
+          ProviderRoute.native,
+        _ => null,
+      },
+    };
+  }
 
   /// The providers offered here, in the front door's order: Apple first on Apple
   /// devices, Google first everywhere else.

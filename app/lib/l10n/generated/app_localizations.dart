@@ -3194,114 +3194,6 @@ abstract class AppLocalizations {
   /// **'Name of the school'**
   String get schoolName;
 
-  /// No description provided for @schoolState.
-  ///
-  /// In en, this message translates to:
-  /// **'State'**
-  String get schoolState;
-
-  /// No description provided for @schoolStateNone.
-  ///
-  /// In en, this message translates to:
-  /// **'Not given'**
-  String get schoolStateNone;
-
-  /// No description provided for @schoolStateBW.
-  ///
-  /// In en, this message translates to:
-  /// **'Baden-Württemberg'**
-  String get schoolStateBW;
-
-  /// No description provided for @schoolStateBY.
-  ///
-  /// In en, this message translates to:
-  /// **'Bavaria'**
-  String get schoolStateBY;
-
-  /// No description provided for @schoolStateBE.
-  ///
-  /// In en, this message translates to:
-  /// **'Berlin'**
-  String get schoolStateBE;
-
-  /// No description provided for @schoolStateBB.
-  ///
-  /// In en, this message translates to:
-  /// **'Brandenburg'**
-  String get schoolStateBB;
-
-  /// No description provided for @schoolStateHB.
-  ///
-  /// In en, this message translates to:
-  /// **'Bremen'**
-  String get schoolStateHB;
-
-  /// No description provided for @schoolStateHH.
-  ///
-  /// In en, this message translates to:
-  /// **'Hamburg'**
-  String get schoolStateHH;
-
-  /// No description provided for @schoolStateHE.
-  ///
-  /// In en, this message translates to:
-  /// **'Hesse'**
-  String get schoolStateHE;
-
-  /// No description provided for @schoolStateMV.
-  ///
-  /// In en, this message translates to:
-  /// **'Mecklenburg-Western Pomerania'**
-  String get schoolStateMV;
-
-  /// No description provided for @schoolStateNI.
-  ///
-  /// In en, this message translates to:
-  /// **'Lower Saxony'**
-  String get schoolStateNI;
-
-  /// No description provided for @schoolStateNW.
-  ///
-  /// In en, this message translates to:
-  /// **'North Rhine-Westphalia'**
-  String get schoolStateNW;
-
-  /// No description provided for @schoolStateRP.
-  ///
-  /// In en, this message translates to:
-  /// **'Rhineland-Palatinate'**
-  String get schoolStateRP;
-
-  /// No description provided for @schoolStateSL.
-  ///
-  /// In en, this message translates to:
-  /// **'Saarland'**
-  String get schoolStateSL;
-
-  /// No description provided for @schoolStateSN.
-  ///
-  /// In en, this message translates to:
-  /// **'Saxony'**
-  String get schoolStateSN;
-
-  /// No description provided for @schoolStateST.
-  ///
-  /// In en, this message translates to:
-  /// **'Saxony-Anhalt'**
-  String get schoolStateST;
-
-  /// No description provided for @schoolStateSH.
-  ///
-  /// In en, this message translates to:
-  /// **'Schleswig-Holstein'**
-  String get schoolStateSH;
-
-  /// No description provided for @schoolStateTH.
-  ///
-  /// In en, this message translates to:
-  /// **'Thuringia'**
-  String get schoolStateTH;
-
   /// No description provided for @schoolBellTimes.
   ///
   /// In en, this message translates to:
@@ -4837,6 +4729,996 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Nothing planned today'**
   String get kidNoPlanToday;
+
+  /// No description provided for @schoolsUiAddSchool.
+  ///
+  /// In en, this message translates to:
+  /// **'Another school'**
+  String get schoolsUiAddSchool;
+
+  /// No description provided for @schoolsUiNewSchool.
+  ///
+  /// In en, this message translates to:
+  /// **'New school'**
+  String get schoolsUiNewSchool;
+
+  /// No description provided for @schoolsUiPickSchool.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose school'**
+  String get schoolsUiPickSchool;
+
+  /// No description provided for @schoolsUiAskSchool.
+  ///
+  /// In en, this message translates to:
+  /// **'Which school?'**
+  String get schoolsUiAskSchool;
+
+  /// No description provided for @schoolsUiSchoolOf.
+  ///
+  /// In en, this message translates to:
+  /// **'School: {name}'**
+  String schoolsUiSchoolOf(String name);
+
+  /// No description provided for @schoolsUiDayMenu.
+  ///
+  /// In en, this message translates to:
+  /// **'Day actions'**
+  String get schoolsUiDayMenu;
+
+  /// No description provided for @schoolsUiCopyDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy day to…'**
+  String get schoolsUiCopyDay;
+
+  /// No description provided for @schoolsUiCopyDayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy {day} to'**
+  String schoolsUiCopyDayTitle(String day);
+
+  /// No description provided for @schoolsUiCopyDayApply.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get schoolsUiCopyDayApply;
+
+  /// No description provided for @schoolsUiSwapDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Swap with…'**
+  String get schoolsUiSwapDay;
+
+  /// No description provided for @schoolsUiSwapDayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Swap {day} with'**
+  String schoolsUiSwapDayTitle(String day);
+
+  /// No description provided for @schoolsUiDayCleared.
+  ///
+  /// In en, this message translates to:
+  /// **'Day cleared'**
+  String get schoolsUiDayCleared;
+
+  /// No description provided for @schoolsUiDayCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Day copied'**
+  String get schoolsUiDayCopied;
+
+  /// No description provided for @schoolsUiDaySwapped.
+  ///
+  /// In en, this message translates to:
+  /// **'Days swapped'**
+  String get schoolsUiDaySwapped;
+
+  /// No description provided for @schoolsUiUndo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get schoolsUiUndo;
+
+  /// No description provided for @mealsUxSuggestOften.
+  ///
+  /// In en, this message translates to:
+  /// **'Family favourites'**
+  String get mealsUxSuggestOften;
+
+  /// No description provided for @mealsUxSuggestRare.
+  ///
+  /// In en, this message translates to:
+  /// **'Not had in a while'**
+  String get mealsUxSuggestRare;
+
+  /// No description provided for @mealsUxClearedSnack.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} removed'**
+  String mealsUxClearedSnack(String title);
+
+  /// No description provided for @mealsUxUndo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get mealsUxUndo;
+
+  /// No description provided for @mealsUxFromMealPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'From the meal plan'**
+  String get mealsUxFromMealPlan;
+
+  /// No description provided for @mealsUxForMeal.
+  ///
+  /// In en, this message translates to:
+  /// **'For: {meal} · {day}'**
+  String mealsUxForMeal(String meal, String day);
+
+  /// No description provided for @todayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get todayTitle;
+
+  /// No description provided for @todayEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing is planned for today yet. Enjoy the quiet.'**
+  String get todayEmpty;
+
+  /// No description provided for @todayAgendaTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Appointments'**
+  String get todayAgendaTitle;
+
+  /// No description provided for @todayAllDay.
+  ///
+  /// In en, this message translates to:
+  /// **'all day'**
+  String get todayAllDay;
+
+  /// No description provided for @todayTasksTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your chores today'**
+  String get todayTasksTitle;
+
+  /// No description provided for @todayMealTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Warm meal'**
+  String get todayMealTitle;
+
+  /// No description provided for @todayMealLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{slot}: {dish}'**
+  String todayMealLine(String slot, String dish);
+
+  /// No description provided for @todayShoppingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping list'**
+  String get todayShoppingTitle;
+
+  /// No description provided for @todayShoppingOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 item still open} other{{count} items still open}}'**
+  String todayShoppingOpen(int count);
+
+  /// No description provided for @todayStartTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Getting started'**
+  String get todayStartTitle;
+
+  /// No description provided for @todayStartProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total}'**
+  String todayStartProgress(int done, int total);
+
+  /// No description provided for @todayStartNotNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Not needed'**
+  String get todayStartNotNeeded;
+
+  /// No description provided for @todayStartInvitePartner.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite your partner'**
+  String get todayStartInvitePartner;
+
+  /// No description provided for @todayStartConnectTablet.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect the family tablet'**
+  String get todayStartConnectTablet;
+
+  /// No description provided for @todayStartWallDisplay.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up the wall display'**
+  String get todayStartWallDisplay;
+
+  /// No description provided for @todayStartSetPin.
+  ///
+  /// In en, this message translates to:
+  /// **'Set your PIN'**
+  String get todayStartSetPin;
+
+  /// No description provided for @todayStartSubscribeFeed.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribe to the calendar'**
+  String get todayStartSubscribeFeed;
+
+  /// No description provided for @todayStartSchool.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the timetable'**
+  String get todayStartSchool;
+
+  /// No description provided for @settingsGettingStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Getting started'**
+  String get settingsGettingStarted;
+
+  /// No description provided for @settingsGettingStartedSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Show the setup card on the Today tab again'**
+  String get settingsGettingStartedSubtitle;
+
+  /// No description provided for @exportFamilyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Family'**
+  String get exportFamilyTitle;
+
+  /// No description provided for @exportAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Export data'**
+  String get exportAction;
+
+  /// No description provided for @exportExplanation.
+  ///
+  /// In en, this message translates to:
+  /// **'All your family\'s data as a file, for example for a move to another server.'**
+  String get exportExplanation;
+
+  /// No description provided for @exportInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Exporting data'**
+  String get exportInProgress;
+
+  /// No description provided for @exportPersonalDeviceRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'The export works from your own phone only.'**
+  String get exportPersonalDeviceRequired;
+
+  /// A public holiday on a day of the week board and its details; {name} is the holiday, e.g. Ascension Day.
+  ///
+  /// In en, this message translates to:
+  /// **'Public holiday · {name}'**
+  String boardHolidayLabel(String name);
+
+  /// No description provided for @regionSettingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Region'**
+  String get regionSettingTitle;
+
+  /// No description provided for @regionSettingHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Decides which public holidays apply and which school holidays you can import. Choose the canton, state or municipality.'**
+  String get regionSettingHelp;
+
+  /// No description provided for @regionFieldLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Region'**
+  String get regionFieldLabel;
+
+  /// No description provided for @regionFieldEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No region chosen'**
+  String get regionFieldEmpty;
+
+  /// No description provided for @regionFieldClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove region'**
+  String get regionFieldClear;
+
+  /// No description provided for @regionCountryDE.
+  ///
+  /// In en, this message translates to:
+  /// **'Germany'**
+  String get regionCountryDE;
+
+  /// No description provided for @regionCountryAT.
+  ///
+  /// In en, this message translates to:
+  /// **'Austria'**
+  String get regionCountryAT;
+
+  /// No description provided for @regionCountryCH.
+  ///
+  /// In en, this message translates to:
+  /// **'Switzerland'**
+  String get regionCountryCH;
+
+  /// No description provided for @regionCountryLI.
+  ///
+  /// In en, this message translates to:
+  /// **'Liechtenstein'**
+  String get regionCountryLI;
+
+  /// No description provided for @regionCountryOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other country (no region)'**
+  String get regionCountryOther;
+
+  /// No description provided for @regionPickCountryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Country'**
+  String get regionPickCountryTitle;
+
+  /// No description provided for @regionPickRegionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Canton or state'**
+  String get regionPickRegionTitle;
+
+  /// No description provided for @regionPickSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get regionPickSearch;
+
+  /// No description provided for @regionPickWholeRegion.
+  ///
+  /// In en, this message translates to:
+  /// **'All of {name}'**
+  String regionPickWholeRegion(String name);
+
+  /// No description provided for @regionPickDeeperTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose more precisely (district or municipality)'**
+  String get regionPickDeeperTitle;
+
+  /// No description provided for @regionPickDeeperSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Type a municipality or district'**
+  String get regionPickDeeperSearch;
+
+  /// No description provided for @regionPickNoMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing found'**
+  String get regionPickNoMatch;
+
+  /// No description provided for @regionPickLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading regions…'**
+  String get regionPickLoading;
+
+  /// No description provided for @regionPickRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get regionPickRetry;
+
+  /// No description provided for @regionPickSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue without a region'**
+  String get regionPickSkip;
+
+  /// No description provided for @regionPickEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No regions for this country.'**
+  String get regionPickEmpty;
+
+  /// No description provided for @regionUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'The region list is not available right now. Check the connection and try again.'**
+  String get regionUnavailable;
+
+  /// No description provided for @regionNameTop.
+  ///
+  /// In en, this message translates to:
+  /// **'{category} {name}'**
+  String regionNameTop(String category, String name);
+
+  /// No description provided for @regionNameDeeper.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} ({category}), {parent}'**
+  String regionNameDeeper(String name, String category, String parent);
+
+  /// No description provided for @regionImportAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Import school holidays'**
+  String get regionImportAction;
+
+  /// No description provided for @regionImportNeedsRegion.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a region for the school first.'**
+  String get regionImportNeedsRegion;
+
+  /// No description provided for @regionImportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'School holidays'**
+  String get regionImportTitle;
+
+  /// No description provided for @regionImportIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Public holidays of the region apply automatically. Here you bring in the school holidays.'**
+  String get regionImportIntro;
+
+  /// No description provided for @regionImportSwissHint.
+  ///
+  /// In en, this message translates to:
+  /// **'School holidays in Switzerland can differ by municipality. Check the dates.'**
+  String get regionImportSwissHint;
+
+  /// No description provided for @regionImportNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No school holidays found for the next 18 months.'**
+  String get regionImportNone;
+
+  /// No description provided for @regionImportAlready.
+  ///
+  /// In en, this message translates to:
+  /// **'already imported'**
+  String get regionImportAlready;
+
+  /// No description provided for @regionImportOverlaps.
+  ///
+  /// In en, this message translates to:
+  /// **'overlaps an entry of your own'**
+  String get regionImportOverlaps;
+
+  /// No description provided for @regionImportButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Import'**
+  String get regionImportButton;
+
+  /// No description provided for @regionImportDone.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No holidays imported} =1{1 holiday imported} other{{count} holidays imported}}'**
+  String regionImportDone(int count);
+
+  /// No description provided for @regionImportAttribution.
+  ///
+  /// In en, this message translates to:
+  /// **'Data: OpenHolidays API · ODbL'**
+  String get regionImportAttribution;
+
+  /// No description provided for @regionImported.
+  ///
+  /// In en, this message translates to:
+  /// **'imported'**
+  String get regionImported;
+
+  /// No description provided for @extCalTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribed calendars'**
+  String get extCalTitle;
+
+  /// No description provided for @extCalSettingsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Appointments from club and bin calendars'**
+  String get extCalSettingsSubtitle;
+
+  /// No description provided for @extCalEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No calendar subscribed yet. A subscription brings outside appointments into the family calendar, such as a club’s fixture list.'**
+  String get extCalEmpty;
+
+  /// No description provided for @extCalNew.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribe to a calendar'**
+  String get extCalNew;
+
+  /// No description provided for @extCalNewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New calendar'**
+  String get extCalNewTitle;
+
+  /// No description provided for @extCalEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit calendar'**
+  String get extCalEditTitle;
+
+  /// No description provided for @extCalEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get extCalEdit;
+
+  /// No description provided for @extCalNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get extCalNameLabel;
+
+  /// No description provided for @extCalNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. FC fixtures'**
+  String get extCalNameHint;
+
+  /// No description provided for @extCalNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Give the calendar a name.'**
+  String get extCalNameRequired;
+
+  /// No description provided for @extCalUrlLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Address (ICS)'**
+  String get extCalUrlLabel;
+
+  /// No description provided for @extCalUrlHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The address the calendar is published at, usually ending in .ics. Examples: your town’s bin collection calendar, a club’s fixture list. webcal:// addresses work too.'**
+  String get extCalUrlHelp;
+
+  /// No description provided for @extCalUrlInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'That does not look like a web address (https://…).'**
+  String get extCalUrlInvalid;
+
+  /// No description provided for @extCalColourLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour'**
+  String get extCalColourLabel;
+
+  /// No description provided for @extCalColourOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour {number}'**
+  String extCalColourOption(int number);
+
+  /// No description provided for @extCalMembersLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Who?'**
+  String get extCalMembersLabel;
+
+  /// No description provided for @extCalMembersHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Without a choice, the calendar is for the whole family.'**
+  String get extCalMembersHelp;
+
+  /// No description provided for @extCalMembersWhole.
+  ///
+  /// In en, this message translates to:
+  /// **'Whole family'**
+  String get extCalMembersWhole;
+
+  /// No description provided for @extCalShowOnBoard.
+  ///
+  /// In en, this message translates to:
+  /// **'Show on the kitchen display'**
+  String get extCalShowOnBoard;
+
+  /// No description provided for @extCalShowOnBoardHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Its appointments appear as key appointments on the kitchen display’s week board.'**
+  String get extCalShowOnBoardHelp;
+
+  /// No description provided for @extCalDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'“{name}” and all its appointments will be removed.'**
+  String extCalDeleteConfirm(String name);
+
+  /// No description provided for @extCalDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar removed.'**
+  String get extCalDeleted;
+
+  /// No description provided for @extCalRefreshNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh now'**
+  String get extCalRefreshNow;
+
+  /// No description provided for @extCalRefreshed.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No appointments found} =1{1 appointment loaded} other{{count} appointments loaded}}'**
+  String extCalRefreshed(int count);
+
+  /// No description provided for @extCalNotModified.
+  ///
+  /// In en, this message translates to:
+  /// **'No changes since the last fetch.'**
+  String get extCalNotModified;
+
+  /// No description provided for @extCalRecent.
+  ///
+  /// In en, this message translates to:
+  /// **'Fetched a moment ago. Try again in a few minutes.'**
+  String get extCalRecent;
+
+  /// No description provided for @extCalRefreshFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The calendar could not be loaded: {reason}'**
+  String extCalRefreshFailed(String reason);
+
+  /// No description provided for @extCalStatusPaused.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get extCalStatusPaused;
+
+  /// No description provided for @extCalStatusNever.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading for the first time …'**
+  String get extCalStatusNever;
+
+  /// No description provided for @extCalStatusUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated {when}'**
+  String extCalStatusUpdated(String when);
+
+  /// No description provided for @extCalReadOnlyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Only guardians can subscribe to calendars or change them.'**
+  String get extCalReadOnlyHint;
+
+  /// No description provided for @extCalErrUnreachable.
+  ///
+  /// In en, this message translates to:
+  /// **'The address cannot be reached right now.'**
+  String get extCalErrUnreachable;
+
+  /// No description provided for @extCalErrTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'The address answers too slowly.'**
+  String get extCalErrTimeout;
+
+  /// No description provided for @extCalErrForbiddenHost.
+  ///
+  /// In en, this message translates to:
+  /// **'This address is not allowed.'**
+  String get extCalErrForbiddenHost;
+
+  /// No description provided for @extCalErrTooLarge.
+  ///
+  /// In en, this message translates to:
+  /// **'The calendar is too large (over 2 MB).'**
+  String get extCalErrTooLarge;
+
+  /// No description provided for @extCalErrNotIcs.
+  ///
+  /// In en, this message translates to:
+  /// **'That is not a calendar (ICS).'**
+  String get extCalErrNotIcs;
+
+  /// No description provided for @extCalErrHttp404.
+  ///
+  /// In en, this message translates to:
+  /// **'Address not found (404).'**
+  String get extCalErrHttp404;
+
+  /// No description provided for @extCalErrHttp.
+  ///
+  /// In en, this message translates to:
+  /// **'The address answers with error {status}.'**
+  String extCalErrHttp(int status);
+
+  /// No description provided for @extCalErrInternal.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong on the server. Try again later.'**
+  String get extCalErrInternal;
+
+  /// No description provided for @extCalErrDb.
+  ///
+  /// In en, this message translates to:
+  /// **'The appointments could not be stored.'**
+  String get extCalErrDb;
+
+  /// No description provided for @extCalErrUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'The fetch did not work.'**
+  String get extCalErrUnknown;
+
+  /// No description provided for @extCalErrInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'The calendar does not fit: check the name and colour.'**
+  String get extCalErrInvalid;
+
+  /// No description provided for @extCalErrUrlInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'This address cannot be saved. It must start with https://.'**
+  String get extCalErrUrlInvalid;
+
+  /// No description provided for @extCalErrNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'This calendar no longer exists.'**
+  String get extCalErrNotFound;
+
+  /// No description provided for @extCalImportedNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribed calendar — changes come from the source'**
+  String get extCalImportedNote;
+
+  /// No description provided for @extCalFromCalendar.
+  ///
+  /// In en, this message translates to:
+  /// **'From {name}'**
+  String extCalFromCalendar(String name);
+
+  /// No description provided for @extCalAllDay.
+  ///
+  /// In en, this message translates to:
+  /// **'All day'**
+  String get extCalAllDay;
+
+  /// No description provided for @extCalSheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Appointment from a subscription'**
+  String get extCalSheetTitle;
+
+  /// No description provided for @extCalSettingsRefreshHint.
+  ///
+  /// In en, this message translates to:
+  /// **'The server fetches each calendar about once an hour.'**
+  String get extCalSettingsRefreshHint;
+
+  /// No description provided for @extCalActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get extCalActive;
+
+  /// No description provided for @extCalUrlLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading the address'**
+  String get extCalUrlLoading;
+
+  /// Short label of the shopping list in the bottom navigation bar; the page title stays shoppingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping'**
+  String get shoppingNavLabel;
+
+  /// No description provided for @scanHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold the camera over the QR code on the other device.'**
+  String get scanHint;
+
+  /// No description provided for @scanCameraDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'WuselWall has no access to the camera, so it cannot scan the code. Allow the camera in the system settings, or type the code instead.'**
+  String get scanCameraDenied;
+
+  /// No description provided for @scanCameraUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This device has no camera that WuselWall can use. Type the code instead.'**
+  String get scanCameraUnavailable;
+
+  /// No description provided for @scanWebUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'This browser cannot scan QR codes. Type the code instead.'**
+  String get scanWebUnsupported;
+
+  /// No description provided for @scanTypeCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Type the code'**
+  String get scanTypeCode;
+
+  /// No description provided for @serverTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Which server?'**
+  String get serverTitle;
+
+  /// No description provided for @serverLead.
+  ///
+  /// In en, this message translates to:
+  /// **'WuselWall keeps your family\'s data on your family\'s own server. Enter its address, or scan its QR code.'**
+  String get serverLead;
+
+  /// No description provided for @serverAddressLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Server address'**
+  String get serverAddressLabel;
+
+  /// No description provided for @serverAddressHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. api.example.org'**
+  String get serverAddressHint;
+
+  /// No description provided for @serverConnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect'**
+  String get serverConnect;
+
+  /// No description provided for @serverScan.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan QR code'**
+  String get serverScan;
+
+  /// No description provided for @serverScanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan the server\'s QR code'**
+  String get serverScanTitle;
+
+  /// No description provided for @serverDemo.
+  ///
+  /// In en, this message translates to:
+  /// **'Try it without a server'**
+  String get serverDemo;
+
+  /// No description provided for @serverDemoHint.
+  ///
+  /// In en, this message translates to:
+  /// **'With an example family. Nothing leaves this device.'**
+  String get serverDemoHint;
+
+  /// No description provided for @serverHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'No server yet? The guide at wuselwall.app/docs shows how to set one up.'**
+  String get serverHelp;
+
+  /// No description provided for @serverInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'That is not a server address.'**
+  String get serverInvalid;
+
+  /// No description provided for @serverUnreachable.
+  ///
+  /// In en, this message translates to:
+  /// **'The server does not answer. Is the address right, and are you online?'**
+  String get serverUnreachable;
+
+  /// No description provided for @serverNotWuselwall.
+  ///
+  /// In en, this message translates to:
+  /// **'There is no WuselWall server at this address.'**
+  String get serverNotWuselwall;
+
+  /// No description provided for @serverTooOld.
+  ///
+  /// In en, this message translates to:
+  /// **'This server needs an update. Ask whoever runs it to update WuselWall.'**
+  String get serverTooOld;
+
+  /// No description provided for @serverAppTooOld.
+  ///
+  /// In en, this message translates to:
+  /// **'This server needs a newer version of the app. Please update WuselWall.'**
+  String get serverAppTooOld;
+
+  /// No description provided for @serverIncompatibleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Server and app don\'t fit together'**
+  String get serverIncompatibleTitle;
+
+  /// No description provided for @serverChooseOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose another server'**
+  String get serverChooseOther;
+
+  /// No description provided for @demoBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Example family: nothing is saved'**
+  String get demoBanner;
+
+  /// No description provided for @demoExit.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit'**
+  String get demoExit;
+
+  /// No description provided for @settingsServer.
+  ///
+  /// In en, this message translates to:
+  /// **'Server'**
+  String get settingsServer;
+
+  /// No description provided for @settingsServerBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This app talks to {address}. Scan this code with the WuselWall app on another device to connect it to the same server.'**
+  String settingsServerBody(String address);
+
+  /// No description provided for @settingsServerSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Change server'**
+  String get settingsServerSwitch;
+
+  /// No description provided for @settingsServerSwitchConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'This device will be signed out and forget everything stored on it. Then you can choose another server.'**
+  String get settingsServerSwitchConfirm;
+
+  /// No description provided for @setupPhoneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue on your phone'**
+  String get setupPhoneTitle;
+
+  /// No description provided for @setupPhoneBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the WuselWall app on your phone, choose this server by scanning the code, then sign in there.'**
+  String get setupPhoneBody;
 }
 
 class _AppLocalizationsDelegate

@@ -10,6 +10,7 @@ class ShoppingItem {
     this.addedBy,
     this.count = 1,
     this.pending = false,
+    this.sourceMealEntryIds = const [],
   });
 
   factory ShoppingItem.fromJson(Map<String, dynamic> json) => ShoppingItem(
@@ -22,6 +23,8 @@ class ShoppingItem {
     categoryId: json['category_id'] as String?,
     addedBy: json['added_by'] as String?,
     count: json['count'] as int? ?? 1,
+    sourceMealEntryIds: ((json['source_meal_entry_ids'] as List?) ?? const [])
+        .cast<String>(),
   );
 
   final String id;
@@ -41,6 +44,10 @@ class ShoppingItem {
   /// Changed on this device and not yet confirmed by the server ("wartet").
   final bool pending;
 
+  /// The meal entries that put this item on the list (FR-3.7); empty for hand-added items.
+  /// Kept in the offline snapshot too, so the list shows them without a connection.
+  final List<String> sourceMealEntryIds;
+
   Map<String, dynamic> toJson() => {
     'id': id,
     'name': name,
@@ -51,6 +58,7 @@ class ShoppingItem {
     'category_id': categoryId,
     'added_by': addedBy,
     'count': count,
+    'source_meal_entry_ids': sourceMealEntryIds,
   };
 
   ShoppingItem copyWith({
@@ -72,7 +80,30 @@ class ShoppingItem {
     addedBy: addedBy,
     count: count ?? this.count,
     pending: pending ?? this.pending,
+    sourceMealEntryIds: sourceMealEntryIds,
   );
+}
+
+/// A meal behind a shopping item (`api.shopping_item_meals`), shown in the item's sheet.
+class ShoppingItemMeal {
+  const ShoppingItemMeal({
+    required this.mealEntryId,
+    required this.onDate,
+    this.title,
+  });
+
+  factory ShoppingItemMeal.fromJson(Map<String, dynamic> json) =>
+      ShoppingItemMeal(
+        mealEntryId: json['meal_entry_id'] as String,
+        onDate: DateTime.parse(json['on_date'] as String),
+        title: json['title'] as String?,
+      );
+
+  final String mealEntryId;
+  final DateTime onDate;
+
+  /// The dish's name; null when the recipe behind it is gone.
+  final String? title;
 }
 
 /// A named list (Supermarkt, Drogerie, …). One is the default.

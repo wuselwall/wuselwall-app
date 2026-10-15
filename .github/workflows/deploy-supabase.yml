@@ -1,0 +1,152 @@
+# Puts the WuselWall server into a family's own hosted Supabase project, from a copy (fork)
+# of this repository, without installing anything (docs/server/supabase-cloud). Started by
+# hand ("Run workflow"); run it again for an update. The project runs nothing here: the
+# workflow runs in the family's repository, with the family's secrets, against the
+# family's project.
+#
+# Repository secrets (Settings → Secrets and variables → Actions):
+#   SUPABASE_ACCESS_TOKEN   an access token of the family's Supabase account
+#   SUPABASE_PROJECT_ID     the project's reference ID (https://<id>.supabase.co)
+#   SUPABASE_DB_PASSWORD    the database password chosen when the project was created
+#   WUSELWALL_SETUP_TOKEN   optional: a phrase of the family's choice, used once to found
+#                           the household. Ignored once a household exists.
+#
+# With "web" ticked, the web app is published on this repository's GitHub Pages
+# (Settings → Pages → Source: GitHub Actions, once). It asks for the server on first use.
+#
+# Logs of a public fork are public. No step prints a secret: GitHub masks the secrets, and
+# the cron secret is generated and masked here.
+name: deploy-supabase
+on:
+  workflow_dispatch:
+    inputs:
+      web:
+        description: Also publish the web app on GitHub Pages
+        type: boolean
+        default: false
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+      PROJECT: ${{ secrets.SUPABASE_PROJECT_ID }}
+      SETUP_TOKEN: ${{ secrets.WUSELWALL_SETUP_TOKEN }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+
+      - name: Check the secrets
+        run: |
+          for v in SUPABASE_ACCESS_TOKEN SUPABASE_DB_PASSWORD PROJECT; do
+            [ -n "${!v}" ] || { echo "::error::secret missing: ${v/PROJECT/SUPABASE_PROJECT_ID}"; exit 1; }
+          done
+          [[ $PROJECT =~ ^[a-z0-9]{20}$ ]] || { echo "::error::SUPABASE_PROJECT_ID is the 20-letter reference ID"; exit 1; }
+
+      - name: Database
+        run: |
+          # config.toml's env() values are for local stacks; the defaults satisfy the parser.
+          cp supabase/.env.example supabase/.env
+          npx supabase link --project-ref "$PROJECT" --password "$SUPABASE_DB_PASSWORD"
+          # Never --include-seed: the seed is development data.
+          npx supabase db push --password "$SUPABASE_DB_PASSWORD" --yes
+
+      - name: Data API and Auth settings
+        run: |
+          api() {
+            curl -fsS -X "$1" "https://api.supabase.com/v1/projects/$PROJECT/$2" \
+              -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" -H 'Content-Type: application/json' \
+              -d "$3" > /dev/null
+          }
+          # PostgREST serves only the api schema (ADR-010).
+          api PATCH postgrest '{"db_schema":"api","db_extra_search_path":"public, extensions","max_rows":1000}'
+          # The access-token hook puts household and device into every token; accounts come
+          # from invitations, not open sign-up; TOTP for two-factor sign-in.
+          api PATCH config/auth "$(jq -n --arg site "https://$PROJECT.supabase.co" '{
+            hook_custom_access_token_enabled: true,
+            hook_custom_access_token_uri: "pg-functions://postgres/app/custom_access_token_hook",
+            disable_signup: true,
+            mfa_totp_enroll_enabled: true,
+            mfa_totp_verify_enabled: true,
+            site_url: $site,
+            uri_allow_list: "ch.goomba.wuselwall://login-callback/"
+          }')"
+
+      - name: Edge Functions
+        run: |
+          secret=$(openssl rand -hex 32)
+          echo "::add-mask::$secret"
+          echo "CRON_SECRET=$secret" >> "$GITHUB_ENV"
+          npx supabase secrets set --project-ref "$PROJECT" "CRON_SECRET=$secret"
+          # verify_jwt per function comes from config.toml ([functions.*]).
+          npx supabase functions deploy --project-ref "$PROJECT" --use-api
+
+      - name: Scheduled jobs and the setup token
+        run: |
+          query() {
+            jq -n --arg q "$1" '{query: $q}' | curl -fsS -X POST \
+              "https://api.supabase.com/v1/projects/$PROJECT/database/query" \
+              -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" -H 'Content-Type: application/json' -d @-
+          }
+          # infra/jobs/schedule.sql without psql: its two variables filled in.
+          sql=$(sed -e '/^\\set /d' \
+            -e "s|:'functions_url'|'https://$PROJECT.supabase.co/functions/v1'|g" \
+            -e "s|:'cron_secret'|'$CRON_SECRET'|g" infra/jobs/schedule.sql)
+          query "$sql" > /dev/null
+          if [ -n "$SETUP_TOKEN" ]; then
+            hash=$(printf '%s' "$SETUP_TOKEN" | sha256sum | cut -d' ' -f1)
+            query "do \$\$ begin
+              if not exists (select 1 from app.household) then
+                delete from app.setup_token;
+                insert into app.setup_token (token_hash) values ('$hash');
+              end if;
+            end \$\$;" > /dev/null
+          fi
+
+      - name: Summary
+        run: |
+          {
+            echo "### WuselWall is on your Supabase project"
+            echo
+            # The project ID is a secret, so GitHub would print it as ***.
+            echo "In the WuselWall app, enter your project ID (the value of SUPABASE_PROJECT_ID) at **Which server?**."
+            echo
+            if [ -n "$SETUP_TOKEN" ]; then
+              echo "Then **Start a new family** with the phrase you saved as \`WUSELWALL_SETUP_TOKEN\`."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  web:
+    if: inputs.web
+    needs: deploy
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.pages.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with: { flutter-version-file: app/pubspec.yaml, cache: true }
+      - id: configure
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+      - name: Build
+        working-directory: app
+        run: |
+          # Without a server: it asks once, and the browser remembers (ADR-018).
+          flutter build web --release --no-web-resources-cdn \
+            --base-href "${{ steps.configure.outputs.base_path }}/" \
+            --dart-define=ENV=pages -o build/web-pages
+          # GitHub Pages has no fallback to index.html; its 404 page serves the app instead.
+          cp build/web-pages/index.html build/web-pages/404.html
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with: { path: app/build/web-pages }
+      - id: pages
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

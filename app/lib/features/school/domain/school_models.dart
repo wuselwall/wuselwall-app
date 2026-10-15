@@ -20,21 +20,27 @@ class SchoolRecord {
     required this.id,
     required this.name,
     this.stateCode,
+    this.regionCode,
     this.timezone = 'Europe/Berlin',
   });
 
+  /// Rows of an older server carry only `state_code`; that stands in for the region.
   factory SchoolRecord.fromJson(Map<String, dynamic> json) => SchoolRecord(
     id: json['id'] as String,
     name: json['name'] as String,
     stateCode: json['state_code'] as String?,
+    regionCode: json['region_code'] as String? ?? json['state_code'] as String?,
     timezone: json['timezone'] as String? ?? 'Europe/Berlin',
   );
 
   final String id;
   final String name;
 
-  /// ISO 3166-2 (`DE-BE`), null when not given.
+  /// ISO 3166-2 (`DE-BE`), null when not given. Kept for rows written before regions.
   final String? stateCode;
+
+  /// The school's region (any depth, `CH-ZH-ZH-ZH`), null when not given.
+  final String? regionCode;
   final String timezone;
 }
 
@@ -371,6 +377,7 @@ class HolidayRecord {
     required this.endsOn,
     this.schoolId,
     this.kind = 'holiday',
+    this.source = 'manual',
   });
 
   factory HolidayRecord.fromJson(Map<String, dynamic> json) => HolidayRecord(
@@ -380,6 +387,7 @@ class HolidayRecord {
     startsOn: parseDate(json['starts_on'] as String),
     endsOn: parseDate(json['ends_on'] as String),
     kind: json['kind'] as String? ?? 'holiday',
+    source: json['source'] as String? ?? 'manual',
   );
 
   final String id;
@@ -390,6 +398,11 @@ class HolidayRecord {
   /// Inclusive.
   final DateTime endsOn;
   final String kind;
+
+  /// 'manual', or 'imported' for a row taken from the region's holiday feed.
+  final String source;
+
+  bool get isImported => source == 'imported';
 
   bool overlaps(DateTime from, DateTime to) =>
       !endsOn.isBefore(from) && !startsOn.isAfter(to);
@@ -437,11 +450,16 @@ class SchoolData {
       subjects.where((s) => s.name == subjectName).firstOrNull?.iconKey;
 
   /// The term the editor opens on for a week: the one covering [day], else the
-  /// current one, else the last.
-  TermRecord? termFor(DateTime day) =>
-      terms.where((t) => t.covers(day)).firstOrNull ??
-      terms.where((t) => t.isCurrent).firstOrNull ??
-      (terms.isEmpty ? null : terms.last);
+  /// current one, else the last. With [schoolId], only that school's terms count.
+  TermRecord? termFor(DateTime day, {String? schoolId}) {
+    final own = [
+      for (final t in terms)
+        if (schoolId == null || t.schoolId == schoolId) t,
+    ];
+    return own.where((t) => t.covers(day)).firstOrNull ??
+        own.where((t) => t.isCurrent).firstOrNull ??
+        (own.isEmpty ? null : own.last);
+  }
 }
 
 /// One day of the `school-week` reply: a SchoolDay and its date.

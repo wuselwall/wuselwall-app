@@ -261,6 +261,81 @@ class DemoMealsRepository implements MealsRepository {
       if (!e.onDate.isBefore(from) && !e.onDate.isAfter(to)) e,
   ]);
 
+  /// A year of cooking for the suggestions: the week's dishes were cooked often, and a
+  /// few older ones have not been on the table for months.
+  @override
+  Future<Result<List<MealHistoryEntry>>> history() async {
+    final today = _clock();
+    DateTime ago(int days) =>
+        DateTime(today.year, today.month, today.day - days);
+    return Ok(
+      [
+        MealHistoryEntry(
+          title: 'Nudelauflauf',
+          times: 7,
+          firstOn: ago(300),
+          lastOn: ago(2),
+        ),
+        MealHistoryEntry(
+          recipeId: 'r-braten',
+          title: 'Rinderbraten',
+          times: 4,
+          firstOn: ago(150),
+          lastOn: ago(9),
+        ),
+        MealHistoryEntry(
+          title: 'Fischstäbchen',
+          times: 6,
+          firstOn: ago(200),
+          lastOn: ago(70),
+        ),
+        MealHistoryEntry(
+          title: 'Chili sin Carne',
+          times: 3,
+          firstOn: ago(120),
+          lastOn: ago(5),
+        ),
+        MealHistoryEntry(
+          recipeId: 'r-pesto',
+          title: 'Nudeln mit Pesto',
+          times: 3,
+          firstOn: ago(280),
+          lastOn: ago(40),
+        ),
+        MealHistoryEntry(
+          title: 'Kürbissuppe',
+          times: 2,
+          firstOn: ago(180),
+          lastOn: ago(75),
+        ),
+        MealHistoryEntry(
+          title: 'Gulaschsuppe',
+          times: 5,
+          firstOn: ago(340),
+          lastOn: ago(120),
+        ),
+        MealHistoryEntry(
+          title: 'Linseneintopf',
+          times: 3,
+          firstOn: ago(330),
+          lastOn: ago(210),
+        ),
+        MealHistoryEntry(
+          title: 'Pizza selbst gemacht',
+          times: 2,
+          firstOn: ago(260),
+          lastOn: ago(95),
+        ),
+        MealHistoryEntry(
+          title: 'Hühnercurry',
+          times: 2,
+          firstOn: ago(250),
+          lastOn: ago(130),
+        ),
+      ]..sort((a, b) => b.times.compareTo(a.times)),
+    );
+  }
+
   @override
   Future<Result<List<Recipe>>> recipes() async => Ok(List.of(_recipes));
 

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' show TimeOfDay;
+import 'package:flutter/material.dart' show Color, TimeOfDay;
 import 'package:wuselwall/features/board/domain/week_board.dart';
 
 /// Calendar read and write models, shaped by the contract in `api.events`, the
@@ -30,6 +30,22 @@ enum EventStatus {
   };
 
   String get wire => name;
+}
+
+/// Where an occurrence comes from. Imported ones (an ICS subscription, specs/05) are
+/// read-only everywhere; an older server sends no `source`, so every one is an event.
+enum OccurrenceSource {
+  event,
+  imported;
+
+  static OccurrenceSource parse(String? v) =>
+      v == 'imported' ? imported : event;
+}
+
+/// `#RRGGBB` as a colour, or null for anything else (including a missing value).
+Color? colourFromHex(String? hex) {
+  if (hex == null || !RegExp(r'^#[0-9A-Fa-f]{6}$').hasMatch(hex)) return null;
+  return Color(0xFF000000 | int.parse(hex.substring(1), radix: 16));
 }
 
 enum Importance {
@@ -78,6 +94,8 @@ class Occurrence {
     this.attendeeIds = const [],
     this.isRecurring = false,
     this.isOverride = false,
+    this.source = OccurrenceSource.event,
+    this.colourHex,
   });
 
   factory Occurrence.fromJson(Map<String, dynamic> json) => Occurrence(
@@ -104,6 +122,8 @@ class Occurrence {
     attendeeIds: ((json['attendee_ids'] as List?) ?? const []).cast<String>(),
     isRecurring: json['is_recurring'] as bool? ?? false,
     isOverride: json['is_override'] as bool? ?? false,
+    source: OccurrenceSource.parse(json['source'] as String?),
+    colourHex: json['colour_hex'] as String?,
   );
 
   final String id;
@@ -138,6 +158,13 @@ class Occurrence {
   final bool isRecurring;
   final bool isOverride;
 
+  /// `event` (the household's own, editable) or `imported` (read-only).
+  final OccurrenceSource source;
+
+  /// The imported calendar's colour; null for events, which take their members' colour.
+  final String? colourHex;
+
+  bool get isImported => source == OccurrenceSource.imported;
   bool get isPresence => kind == EventKind.presence;
   bool get isTentative => status == EventStatus.tentative;
   bool get isKey => importance == Importance.key;

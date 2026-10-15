@@ -148,9 +148,11 @@ const _meals = <(String, String, String?, String, List<String>, int)>[
   ('dinner', '18:30', 'Kürbissuppe', DemoData.mama, _family, 0),
   ('dinner', '18:30', 'Nudelauflauf', DemoData.papa, _family, 0),
   ('dinner', '18:30', 'Chili sin Carne', DemoData.mama, _family, 0),
+  // Thursday is Christi Himmelfahrt (a public holiday of the household's region): a free day, so
+  // the warm meal is at lunch, as on a weekend.
   (
-    'dinner',
-    '18:30',
+    'lunch',
+    '12:30',
     'Fischstäbchen',
     DemoData.mama,
     [DemoData.lotta, DemoData.hanna, DemoData.mama],
@@ -179,6 +181,9 @@ String _iso(DateTime d) =>
     '${d.year.toString().padLeft(4, '0')}-'
     '${d.month.toString().padLeft(2, '0')}-'
     '${d.day.toString().padLeft(2, '0')}';
+
+/// The demo week's public holiday: Thursday, Christi Himmelfahrt.
+const _holidayDay = 3;
 
 Map<String, dynamic> _json(DateTime now) {
   final monday = DateTime(now.year, now.month, now.day - (now.weekday - 1));
@@ -236,6 +241,9 @@ Map<String, dynamic> _json(DateTime now) {
       for (var i = 0; i < 7; i++)
         {
           'date': dates[i],
+          'holiday': i == _holidayDay
+              ? {'name': 'Christi Himmelfahrt', 'source': 'region'}
+              : null,
           'events': _events(i),
           'busy_until': [
             if (_lukasBusy[i] != null)
@@ -243,7 +251,14 @@ Map<String, dynamic> _json(DateTime now) {
           ],
           'school': [
             for (final p in _plans)
-              i < 5
+              i == _holidayDay
+                  ? {
+                      'member_id': p.member,
+                      'free': 'holiday',
+                      'holiday_name': 'Christi Himmelfahrt',
+                      'lessons': <Map<String, dynamic>>[],
+                    }
+                  : i < 5
                   ? _school(p, i)
                   : {
                       'member_id': p.member,

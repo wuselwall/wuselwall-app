@@ -1,15 +1,15 @@
 # ADR-016 — A public website at the root; the Flutter web app moves to /app/
 
-**Status:** Accepted · 2026-10-12 · Amends [ADR-013](ADR-013-one-self-hosted-environment.md)
+**Status:** Accepted · 2026-10-12 · Amends [ADR-013](ADR-013-self-hosted-compose-stack.md)
 (what nginx serves) and [ADR-014](ADR-014-self-service-onboarding.md) (the "links site")
 
-**Amended 2026-10-13 by [ADR-018](ADR-018-self-hosted-only.md):** no move to Cloudflare Pages; the website and links site stay on the home server, and links carry secrets and server addresses in the fragment.
+**Amended 2026-10-13 by [ADR-018](ADR-018-self-hosted-only.md):** no move to Cloudflare Pages; the website and links site stay where they are, and links carry secrets and server addresses in the fragment.
 
 **Superseded in part 2026-10-13 by [ADR-017](ADR-017-wuselwall-app-domain.md):** the website, the web app and the API moved to their own hosts on `wuselwall.app`; the "same origin, `/app/`" decision below no longer holds. The rest stands.
 
 ## Context
 
-`https://wusel.goomba.ch/` was the Flutter web app. With public store listings
+The project's first address served the Flutter web app at its root. With public store listings
 ([ADR-015](ADR-015-saas-and-self-hosted-flavours.md)) the address needs a front door: a
 marketing page that explains the product and sends visitors to the App Store, Google Play
 or the web app, the legal pages stores and Swiss/German law require (Impressum,
@@ -24,11 +24,11 @@ engines, so the content must be in the HTML the server sends.
   `hreflang`, canonical URLs, a sitemap, `robots.txt`, Open Graph tags and JSON-LD. No
   cookies, no third-party requests, no analytics (T7 in [11](../11-security-and-privacy.md)).
 - **Same origin, new layout.** The site is `/`; the Flutter web app is `/app/` (built with
-  `--base-href /app/`). One origin keeps passkeys (RP ID `wusel.goomba.ch`) and the API
-  prefixes untouched. `/#/route` links from before the move are forwarded to `/app/#/route`
-  by a line on the landing page. GoTrue's `SITE_URL` becomes `https://wusel.goomba.ch/app/`.
-- **Its own compose project**, `infra/web`, beside `infra/supabase`. nginx proxies `/` to the
-  container on the Docker bridge (`172.17.0.1:54480`), like the Supabase gateway.
+  `--base-href /app/`). One origin kept the passkeys' RP ID and the API prefixes
+  untouched. `/#/route` links from before the move are forwarded to `/app/#/route`
+  by a line on the landing page. GoTrue's `SITE_URL` gained `/app/`.
+- **Its own compose project**, `infra/web`, beside `infra/supabase`. The host's front proxies `/`
+  to the container on the Docker bridge (`172.17.0.1:54480`).
 - **Operator data in one file**, `website/src/config/site.ts`. A deploy
   (`scripts/remote-web.sh deploy`) builds with `LEGAL_STRICT=1`, which fails while any
   Impressum value is a `TODO`; until then the legal pages are `noindex`.

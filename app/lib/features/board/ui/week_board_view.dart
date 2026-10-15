@@ -64,7 +64,7 @@ class WeekBoardView extends ConsumerWidget {
                 Column(
                   children: [
                     SizedBox(
-                      height: DayHeaderRow.height,
+                      height: DayHeaderRow.heightOf(board),
                       child: DayHeaderRow(frame: frame),
                     ),
                     BoardCaption(

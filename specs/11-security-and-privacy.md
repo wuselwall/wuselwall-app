@@ -43,17 +43,17 @@ insiders. If a threat model does not exclude anything it is not a threat model.
 
 ### T1 — internet-facing exposure
 
-*Revised 2026-10-11 for the home server ([ADR-013](adr/ADR-013-one-self-hosted-environment.md)).*
+*Revised 2026-10-14 for any server at home ([ADR-013](adr/ADR-013-self-hosted-compose-stack.md), [ADR-018](adr/ADR-018-self-hosted-only.md)).*
 
-- **Only 443 is forwarded** from the router, to nginx. The DNS record is proxied by
-  Cloudflare, so the home address is not published in DNS.
-- **nginx forwards exactly four API prefixes** to the gateway, on `api.wuselwall.app`
-  (and, until old app builds are gone, on `wusel.goomba.ch`)
-  ([`infra/nginx/wuselwall.app.conf`](../infra/nginx/wuselwall.app.conf)); Studio, the
-  `/pg/` metadata API and everything else answer 404.
-- **Postgres (127.0.0.1:54422) and Studio (behind the gateway, reached by SSH tunnel) are never forwarded or proxied.**
-  The CLI stack publishes them on the home network only; anyone on the home wifi can reach
-  them, which is accepted for a household network and must not be extended.
+- **Only 80 and 443 are forwarded** from the router, to the front (the release's Caddy, or
+  the operator's own web server). A proxy such as Cloudflare in front additionally keeps the
+  home address out of DNS; the guide names it as an option, with its trade-off.
+- **The front forwards exactly four API prefixes** to the gateway, plus the discovery
+  document ([`infra/supabase/volumes/caddy/Caddyfile`](../infra/supabase/volumes/caddy/Caddyfile));
+  Studio, the `/pg/` metadata API and everything else answer 404.
+- **Postgres (127.0.0.1:54422) and Studio (off by default; behind the gateway, reached by
+  SSH tunnel) are never forwarded or proxied.** The gateway itself listens on the Docker
+  bridge only.
 - **Anonymous users are disabled; public sign-up is enabled for adults** (since
   ADR-014). A new account has no household claim and therefore reads and writes nothing
   (RLS), and it can create a household only in the instance's `household_creation` mode
@@ -62,10 +62,10 @@ insiders. If a threat model does not exclude anything it is not a threat model.
   `auth.secret_key` come from the git-ignored `supabase/.env`. The defaults are public;
   with them, anyone holds the service role.
 - **Founder codes are random and single use** (`scripts/remote-setup-token.sh`); the
-  seed's `dev-setup` is in git and must never exist on the home server (S3 in
+  seed's `dev-setup` is in git and must never exist on a live server (S3 in
   [19](19-security-and-architecture-review.md)).
-- Cloudflare terminates TLS with modern defaults; set *Always Use HTTPS* and HSTS in its
-  dashboard. Between Cloudflare and nginx: the origin certificate, SSL mode Full (strict).
+- TLS with modern defaults: Caddy's, or the operator's front configured likewise (HTTPS
+  only, HSTS).
 - Supabase's images are used as published, pinned through the Supabase CLI version in
   `package.json`; nothing is built on the server, and no auto-updater touches them.
 
@@ -163,16 +163,12 @@ sign-in providers (they learn that the person signs in to WuselWall; scopes are
 `email`/`name`/`profile` only), and **one SMTP provider** ([Q41](14-open-questions.md);
 decided: Scaleway, EU), which sees email addresses and sign-in codes and nothing from
 the household. *(ADR-015's Supabase Inc. as Cloud's processor is gone with Cloud, [ADR-018](adr/ADR-018-self-hosted-only.md).)*
-**Since ADR-018**, the store app carries **Google's iOS sign-in library** for the family's
-server. Its privacy manifest declares device ID and usage data for analytics (Google's,
+**Since ADR-018**, the store app carries **Google's iOS sign-in library** for the
+first-party servers' native sign-in. Its privacy manifest declares device ID and usage data for analytics (Google's,
 not tracking), and the privacy policy and store labels say so. Apple's sign-in is part of
 iOS and adds no code.
-**Found 2026-10-13, not accepted:** on Android, `mobile_scanner` decodes QR codes with
-Google's **ML Kit**, which sends device, app and performance data with a per-installation
-identifier to Google for diagnostics and usage analytics (Google's ML Kit data disclosure).
-That breaks NFR-9. The privacy policy discloses it until the Android scanner is replaced
-by an on-device decoder without telemetry ([Q49](14-open-questions.md)).
-| A Ferien import from a public API ([15](15-module-school-timetable.md#holidays)) | Fetched by a scheduled Edge Function, server-side only, with the host pinned in configuration and the result cached in the database. The browser never contacts it, and a failed fetch degrades to hand-entered holidays rather than to an error. |
+**Found 2026-10-13, fixed 2026-10-14:** the Android QR scanner used `mobile_scanner`, which bundles Google's **ML Kit** and sent device, app and performance data with a per-installation identifier to Google. The scanner now uses the `camera` plugin and the pure-Dart `zxing2` decoder on every platform, so no vendor SDK reads the camera image ([Q49](14-open-questions.md)).
+| A holiday import from a public API ([15](15-module-school-timetable.md#holidays)) | Fetched by the server only, with the host pinned in configuration and the result cached in the database. The browser never contacts it, and a failed fetch keeps the last good data (hand-entered holidays always work) rather than raising an error. Built 2026-10-14: the host is `openholidaysapi.org`, see the outbound list below. |
 | An external map or weather widget | If you want weather on the wall display, proxy it server-side so the app never contacts a third party directly, and cache aggressively. |
 | Avatar images from Gravatar | Local uploads or generated initials. |
 
@@ -181,9 +177,45 @@ the native apps, enforce it in review: the app talks to exactly one host, and a 
 outbound host in a pull request is a question to answer, not a detail. A policy that is a
 mechanism survives temptation on a Friday evening.
 
+### Outbound calendar subscriptions
+
+Added 2026-10-14 with FR-1.9. A guardian types the address of a calendar (a club's fixture list,
+the bin collection), and the server fetches it. That makes the server a fetcher of arbitrary
+addresses, which is the classic server-side request forgery risk, so `_shared/safe_fetch.ts`
+enforces, on the first address and on every redirect:
+
+- **https only** (`webcal://` is rewritten to `https://` when the address is saved);
+- **public addresses only**: a host that resolves to a private, loopback, link-local or
+  otherwise reserved address is refused, IPv4 and IPv6;
+- **redirects are followed by hand**, each hop checked again, at most three;
+- **15 seconds** in total, **2 MB** of body, and the answer must be an iCalendar document.
+
+Residual risk, stated plainly: the address is resolved once for the check and again by the
+HTTP client, so a hostile DNS server that answers differently the second time (DNS rebinding)
+could still reach an internal address. Closing it fully needs a connection pinned to the checked
+address, which the runtime does not offer yet. The address is chosen by a guardian, which limits
+who could do this, but does not prevent it.
+
+The requests carry the User-Agent `WuselWall calendar-import (+https://wuselwall.app)`, and the
+third party sees the server's IP address and the request time, like any HTTPS request. Nothing about
+the household is sent, except what is in the address the family typed.
+
+Who may read the address: only guardians. The subscription list that every live device of the
+household reads (`api.external_calendars`) carries the host name only (`url_host`). The full address
+comes from `api.external_calendar_url`, which refuses children's devices, kiosks, revoked devices and
+other households, and writes no audit row. The household export, which is guardian-only, includes it.
+
 Outbound connections from the server should be enumerable on one hand: Let's Encrypt,
 the container registry, the backup target, APNs and FCM (for push), the OS package
-mirrors, and since ADR-014 the SMTP provider and Apple's and Google's token endpoints.
+mirrors, and since ADR-014 the SMTP provider and Apple's and Google's token endpoints. Added
+2026-10-14: the calendar addresses that guardians subscribe to (see above), chosen by the family,
+and `openholidaysapi.org` for the holiday cache.
+
+Added 2026-10-14: `openholidaysapi.org` (OpenHolidays, the public holiday dataset). The server
+calls it weekly (`holidays-sync`) and when a member picks a country in the app. The request
+carries only the country codes, date ranges and the server's own IP address, like any HTTPS
+request; nothing about the household, its members, its schools or its region choice is sent.
+The results are cached as public reference data.
 
 ### T8 — a curious nine-year-old
 
@@ -233,12 +265,12 @@ With Supabase, row-level security is not defence in depth; it is the perimeter.
   the requesting device. The approval screen repeats the code and warns against
   approving a device that is not in front of you. That is the one social-engineering
   path, and it ends in a shared device a guardian can see and revoke in Geräte.
-- **Other servers cannot harvest the family's sign-ins** ([ADR-018](adr/ADR-018-self-hosted-only.md),
+- **Other servers cannot harvest sign-ins meant for a first-party server** ([ADR-018](adr/ADR-018-self-hosted-only.md),
   decision 6; first argued for Cloud in ADR-015). The store app uses native Apple and
   Google sign-in, whose ID tokens are addressed to our app, only against the first-party
-  servers compiled into the app (the user's Unraid stack). Against any other server it
+  servers named at build time (`WW_FIRST_PARTY_HOSTS`). Against any other server it
   offers email and the operator's own redirect clients. A hostile server therefore never
-  receives a token that the family's server would accept. The app shows the server's host
+  receives a token that a first-party server would accept. The app shows the server's host
   on every sign-in screen.
 - **Cross-household isolation is now about strangers.** The pgTAP cross-household cases
   (T9) are release-blocking, and the catalogue test pins the exact list of
@@ -308,7 +340,7 @@ With Supabase, row-level security is not defence in depth; it is the perimeter.
 - [ ] Router forwards 443 only; Postgres, Studio and Mailpit not reachable from outside the home
 - [ ] nginx answers 404 outside the four API prefixes
 - [ ] Anonymous users disabled; `household_creation` is `code`; the stack runs on its own keys, not the CLI defaults
-- [ ] No `dev-setup` founder code on the home server; the family's own founder code used and consumed
+- [ ] No `dev-setup` founder code on a live server; the household's own founder code used and consumed
 - [ ] Sign-in with Apple, Google, email code and password each tested on a real device; the
       email-code mail arrives (not in spam) in both languages
 - [ ] A stranger's fresh account sees nothing: one manual probe of `api` with its token

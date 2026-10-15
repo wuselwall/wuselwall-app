@@ -64,6 +64,7 @@ class DemoSchoolRepository implements SchoolRepository {
         'id': p.schoolId,
         'name': p.school,
         'state_code': 'DE-BE',
+        'region_code': 'DE-BE',
         'timezone': 'Europe/Berlin',
       },
   ];
@@ -298,8 +299,8 @@ class DemoSchoolRepository implements SchoolRepository {
     required String? actor,
     String? id,
     required String name,
-    String? stateCode,
-    String timezone = 'Europe/Berlin',
+    String? regionCode,
+    String? timezone,
   }) async => Ok(id ?? 'school-new');
 
   @override

@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wuselwall/app/server_session.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
@@ -22,6 +25,19 @@ class EnrolPage extends ConsumerStatefulWidget {
 class _EnrolPageState extends ConsumerState<EnrolPage> {
   final _code = TextEditingController();
   bool _busy = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // The code scanned together with the server at the server choice: use it at once.
+    final pending = ref.read(serverSessionProvider).takePendingEnrolCode();
+    if (pending != null) {
+      _code.text = pending;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) unawaited(_submit(pending));
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -51,11 +67,11 @@ class _EnrolPageState extends ConsumerState<EnrolPage> {
     }
   }
 
-  // The camera scanner works on phones and the web; desktop builds have no camera API.
+  // The camera scanner runs on phones; the web and desktop builds type the code instead.
   bool get _canScan =>
-      kIsWeb ||
-      defaultTargetPlatform == TargetPlatform.android ||
-      defaultTargetPlatform == TargetPlatform.iOS;
+      !kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.android ||
+          defaultTargetPlatform == TargetPlatform.iOS);
 
   @override
   Widget build(BuildContext context) {

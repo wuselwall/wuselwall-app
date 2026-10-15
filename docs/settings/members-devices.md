@@ -26,3 +26,23 @@ Der Code gilt **10 Minuten** und funktioniert **einmal**.
 Geht ein Handy verloren oder wird ein Tablet weitergegeben: Tippe in der Geräteliste auf **Sperren**. Das Gerät verliert **sofort** den Zugriff – auch wenn es gerade offen ist. Gesperrte Geräte bleiben in der Liste, damit nachvollziehbar ist, was passiert ist.
 
 Auf deinem eigenen Handy kannst du dich mit **Dieses Gerät abmelden** auch selbst abmelden.
+
+## Server {#server}
+
+Hier steht, mit welchem Server diese App spricht, mit seinem **QR-Code**. Ein neues Gerät scannt ihn bei der Frage **Mit welchem Server?** und ist dann mit demselben Server verbunden.
+
+**Server wechseln** brauchst du nur, wenn eure Familie auf einen anderen Server umzieht. Das Gerät meldet sich dabei ab und vergisst alles, was darauf gespeichert ist, auch Einkäufe, die es noch nicht senden konnte. Auf geteilten Geräten fragt WuselWall vorher nach der PIN eines Erziehungsberechtigten.
+
+## Daten exportieren
+
+Erziehungsberechtigte können alle Daten eurer Familie als eine Datei speichern, zum Beispiel für einen Umzug auf einen anderen Server. Das geht unten in den Einstellungen im Bereich **Familie** mit **Daten exportieren**, und nur vom eigenen Handy eines Erziehungsberechtigten aus.
+
+Die Datei enthält die Angaben, die ihr eingegeben habt: Mitglieder, Termine, Stundenpläne, Aufgaben, Rezepte, Einkaufslisten und so weiter. Passwörter, PINs und Anmeldedaten sind **nicht** enthalten, und Geräte erscheinen nur mit Namen und Datum.
+
+## Abonnierte Kalender
+
+Kalender von Vereinen oder der Gemeinde abonnierst du unter **Einstellungen → Abonnierte Kalender**. Wie das funktioniert und was zu beachten ist, steht unter [Kalender](/calendar/#abonnierte-kalender).
+
+## Erste Schritte wieder anzeigen
+
+Hast du die Karte **Erste Schritte** auf dem Heute-Tab ausgeblendet, holst du sie unter **Einstellungen → Erste Schritte** zurück.

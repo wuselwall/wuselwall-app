@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/core/server/server_address.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
+import 'package:wuselwall/features/identity/domain/enrol_code.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/identity/ui/enrolment_qr.dart';
 
@@ -31,7 +33,7 @@ void main() {
       // Once the session is aal2 the router lets the guardian through.
       container.invalidate(sessionStateProvider);
       await t.pumpAndSettle();
-      expect(find.text('Einkaufsliste'), findsOneWidget);
+      expect(find.text('Einkauf'), findsOneWidget);
     },
   );
 
@@ -60,7 +62,7 @@ void main() {
     await t.tap(find.text('Dieses Gerät verwenden'));
     await t.pumpAndSettle();
     expect(identity.registeredLabels, ['Papas iPhone']);
-    expect(find.text('Einkaufsliste'), findsOneWidget);
+    expect(find.text('Einkauf'), findsOneWidget);
   });
 
   testWidgets('a rate-limited enrolment explains itself', (t) async {
@@ -120,7 +122,13 @@ void main() {
       final qr = t.widget<EnrolmentQr>(
         find.byKey(const ValueKey('enrolment-qr')),
       );
-      expect(qr.payload, 'wuselwall://enrol?code=ABCD2345');
+      // The code and the server in one scan (ADR-018): a fresh store app reads both.
+      expect(qr.payload, startsWith('wuselwall://enrol?code=ABCD2345&server='));
+      expect(parseEnrolmentCode(qr.payload), 'ABCD2345');
+      expect(
+        parseServerAddress(qr.payload, allowHttp: true),
+        Uri.parse('http://localhost'),
+      );
     });
 
     testWidgets('security options show on a personal phone only', (t) async {

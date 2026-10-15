@@ -1,9 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wuselwall/features/calendar/domain/external_calendar.dart';
 import 'package:wuselwall/features/calendar/ui/event_edit_args.dart';
 import 'package:wuselwall/features/calendar/ui/event_editor_page.dart';
 import 'package:wuselwall/features/calendar/ui/settings/baseline_page.dart';
+import 'package:wuselwall/features/calendar/ui/settings/external_calendar_form_page.dart';
+import 'package:wuselwall/features/calendar/ui/settings/external_calendars_page.dart';
 import 'package:wuselwall/features/calendar/ui/settings/feed_tokens_page.dart';
 import 'package:wuselwall/features/home/ui/register_home_page.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
@@ -46,6 +49,9 @@ abstract final class Routes {
   static const schoolSetup = '/school/setup';
   static const timetableEdit = '/school/timetable';
   static const feedTokens = '/settings/feeds';
+  static const externalCalendars = '/settings/calendars';
+  static const externalCalendarNew = '/settings/calendars/new';
+  static const externalCalendarEdit = '/settings/calendars/edit';
   static const baselines = '/settings/baselines';
 
   static bool isSetup(String path) =>
@@ -134,6 +140,20 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: Routes.feedTokens,
         builder: (_, _) => const FeedTokensPage(),
       ),
+      GoRoute(
+        path: Routes.externalCalendars,
+        builder: (_, _) => const ExternalCalendarsPage(),
+      ),
+      GoRoute(
+        path: Routes.externalCalendarNew,
+        builder: (_, _) => const ExternalCalendarFormPage(),
+      ),
+      GoRoute(
+        path: Routes.externalCalendarEdit,
+        builder: (_, state) => ExternalCalendarFormPage(
+          calendar: state.extra as ExternalCalendar?,
+        ),
+      ),
       GoRoute(path: Routes.baselines, builder: (_, _) => const BaselinePage()),
       GoRoute(
         path: Routes.shoppingHistory,
@@ -160,7 +180,9 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: Routes.schoolSetup,
-        builder: (_, _) => const SchoolSetupPage(),
+        builder: (_, state) => SchoolSetupPage(
+          initialSchoolId: state.uri.queryParameters['school'],
+        ),
       ),
       GoRoute(
         path: Routes.timetableEdit,

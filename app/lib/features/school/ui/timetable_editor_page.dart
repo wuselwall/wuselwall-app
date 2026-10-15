@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -110,6 +112,17 @@ class _Draft {
 
   String get key => '$weekday:$period:$parity';
 
+  /// The same entry on another weekday; period, parity and subject are kept.
+  _Draft copyTo(int otherWeekday) => _Draft(
+    weekday: otherWeekday,
+    period: period,
+    parity: parity,
+    subjectId: subjectId,
+    room: room,
+    teacher: teacher,
+    isNotable: isNotable,
+  );
+
   LessonRecord toRecord(String timetableId) => LessonRecord(
     id: '',
     timetableId: timetableId,
@@ -136,6 +149,98 @@ class _CareBlock {
   TimeOfDay starts;
   TimeOfDay ends;
   final Set<int> days;
+
+  _CareBlock copy() =>
+      _CareBlock(title: title, starts: starts, ends: ends, days: {...days});
+}
+
+/// The grid before a day operation, for its Undo.
+class _GridSnapshot {
+  const _GridSnapshot({required this.cells, required this.care});
+
+  final Map<String, _Draft> cells;
+  final List<_CareBlock> care;
+}
+
+/// The weekday menu of a day header.
+enum _DayAction { clear, copy, swap }
+
+/// Monday 2 January 2023 is a Monday: a date for each weekday name (1 = Monday).
+DateTime _weekdayDate(int weekday) =>
+    DateTime(2023, 1, 2).add(Duration(days: weekday - 1));
+
+/// The lessons the server takes for a whole grid: the Stunden cells, then the care rows
+/// on their weekdays.
+List<LessonRecord> _gridLessons(
+  String timetableId,
+  Iterable<_Draft> drafts,
+  List<_CareBlock> care,
+) => [
+  for (final d in drafts) d.toRecord(timetableId),
+  for (final b in care)
+    for (final day in b.days.toList()..sort())
+      LessonRecord(
+        id: '',
+        timetableId: timetableId,
+        weekday: day,
+        kind: 'care',
+        title: b.title.trim().isEmpty ? null : b.title.trim(),
+        startsAt: b.starts,
+        endsAt: b.ends,
+      ),
+];
+
+/// Which weekdays a day is copied to: any of the others, several at once.
+class _CopyDayDialog extends StatefulWidget {
+  const _CopyDayDialog({required this.from});
+
+  final int from;
+
+  @override
+  State<_CopyDayDialog> createState() => _CopyDayDialogState();
+}
+
+class _CopyDayDialogState extends State<_CopyDayDialog> {
+  final _targets = <int>{};
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return AlertDialog(
+      title: Text(
+        l10n.schoolsUiCopyDayTitle(
+          context.weekdayLong(_weekdayDate(widget.from)),
+        ),
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (final d in const [1, 2, 3, 4, 5])
+            if (d != widget.from)
+              CheckboxListTile(
+                key: ValueKey('copy-target-$d'),
+                value: _targets.contains(d),
+                title: Text(context.weekdayLong(_weekdayDate(d))),
+                onChanged: (v) => setState(
+                  () => v == true ? _targets.add(d) : _targets.remove(d),
+                ),
+              ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(l10n.cancel),
+        ),
+        FilledButton(
+          onPressed: _targets.isEmpty
+              ? null
+              : () => Navigator.of(context).pop(Set<int>.of(_targets)),
+          child: Text(l10n.schoolsUiCopyDayApply),
+        ),
+      ],
+    );
+  }
 }
 
 class _EditorBody extends ConsumerStatefulWidget {
@@ -162,7 +267,13 @@ class _EditorBodyState extends ConsumerState<_EditorBody> {
   late final TermRecord? _term = widget.data.terms
       .where((t) => t.id == widget.args.termId)
       .firstOrNull;
-  late final String _schoolId = _term?.schoolId ?? widget.data.schools.first.id;
+
+  /// The school of the term the timetable is entered for. Never a guess: with several
+  /// schools the term decides, and a term-less editor has no school.
+  late final String? _schoolId = _term?.schoolId ?? _timetable?.schoolId;
+  late final SchoolRecord? _school = widget.data.schools
+      .where((s) => s.id == _schoolId)
+      .firstOrNull;
   late final TextEditingController _class = TextEditingController(
     text: _timetable?.classLabel ?? '',
   );
@@ -222,9 +333,135 @@ class _EditorBodyState extends ConsumerState<_EditorBody> {
   SubjectRecord? _subjectOf(String? id) =>
       _subjects.where((s) => s.id == id).firstOrNull;
 
-  /// Clears a whole day (both parities, all Stunden) after a confirmation-free tap.
-  void _clearDay(int weekday) =>
-      setState(() => _cells.removeWhere((_, d) => d.weekday == weekday));
+  /// The grid as it stands, copied, for the Undo of a day operation.
+  _GridSnapshot _snapshot() => _GridSnapshot(
+    cells: {
+      for (final e in _cells.entries) e.key: e.value.copyTo(e.value.weekday),
+    },
+    care: [for (final b in _care) b.copy()],
+  );
+
+  void _restore(_GridSnapshot s) {
+    _cells
+      ..clear()
+      ..addAll({
+        for (final e in s.cells.entries) e.key: e.value.copyTo(e.value.weekday),
+      });
+    for (var i = 0; i < _care.length; i++) {
+      _care[i].days
+        ..clear()
+        ..addAll(s.care[i].days);
+    }
+  }
+
+  void _onDayAction(int weekday, _DayAction action) {
+    final l10n = context.l10n;
+    switch (action) {
+      case _DayAction.clear:
+        _changeGrid(
+          message: l10n.schoolsUiDayCleared,
+          change: () {
+            _cells.removeWhere((_, d) => d.weekday == weekday);
+            for (final b in _care) {
+              b.days.remove(weekday);
+            }
+          },
+        );
+      case _DayAction.copy:
+        unawaited(_pickCopyTargets(weekday));
+      case _DayAction.swap:
+        unawaited(_pickSwapTarget(weekday));
+    }
+  }
+
+  Future<void> _pickCopyTargets(int from) async {
+    final targets = await showDialog<Set<int>>(
+      context: context,
+      builder: (_) => _CopyDayDialog(from: from),
+    );
+    if (targets == null || targets.isEmpty || !mounted) return;
+    _changeGrid(
+      message: context.l10n.schoolsUiDayCopied,
+      change: () {
+        final sources = [
+          for (final d in _cells.values)
+            if (d.weekday == from) d,
+        ];
+        _cells.removeWhere((_, d) => targets.contains(d.weekday));
+        for (final t in targets) {
+          for (final s in sources) {
+            final copy = s.copyTo(t);
+            _cells[copy.key] = copy;
+          }
+        }
+        for (final b in _care) {
+          final had = b.days.contains(from);
+          b.days.removeAll(targets);
+          if (had) b.days.addAll(targets);
+        }
+      },
+    );
+  }
+
+  Future<void> _pickSwapTarget(int from) async {
+    final other = await showDialog<int>(
+      context: context,
+      builder: (dialogContext) => SimpleDialog(
+        title: Text(
+          dialogContext.l10n.schoolsUiSwapDayTitle(
+            dialogContext.weekdayLong(_weekdayDate(from)),
+          ),
+        ),
+        children: [
+          for (final d in const [1, 2, 3, 4, 5])
+            if (d != from)
+              SimpleDialogOption(
+                onPressed: () => Navigator.of(dialogContext).pop(d),
+                child: Text(dialogContext.weekdayLong(_weekdayDate(d))),
+              ),
+        ],
+      ),
+    );
+    if (other == null || !mounted) return;
+    _changeGrid(
+      message: context.l10n.schoolsUiDaySwapped,
+      change: () {
+        final moved = [
+          for (final d in _cells.values)
+            if (d.weekday == from || d.weekday == other)
+              d.copyTo(d.weekday == from ? other : from),
+        ];
+        _cells.removeWhere((_, d) => d.weekday == from || d.weekday == other);
+        for (final m in moved) {
+          _cells[m.key] = m;
+        }
+        for (final b in _care) {
+          final hadFrom = b.days.contains(from);
+          final hadOther = b.days.contains(other);
+          b.days
+            ..remove(from)
+            ..remove(other);
+          if (hadFrom) b.days.add(other);
+          if (hadOther) b.days.add(from);
+        }
+      },
+    );
+  }
+
+  /// Applies a day operation to the draft, like any other edit: nothing is saved until
+  /// Save. Undo restores the draft as it was before the operation.
+  void _changeGrid({required String message, required void Function() change}) {
+    final l10n = context.l10n;
+    final before = _snapshot();
+    setState(change);
+    context.showMessageWithAction(
+      message,
+      actionLabel: l10n.schoolsUiUndo,
+      onAction: () {
+        if (mounted) setState(() => _restore(before));
+      },
+    );
+  }
 
   Future<void> _editCell(int weekday, int period) async {
     final ab = _cycle == 'ab';
@@ -261,6 +498,8 @@ class _EditorBodyState extends ConsumerState<_EditorBody> {
   );
 
   Future<void> _save() async {
+    final schoolId = _schoolId;
+    if (schoolId == null) return;
     final actor = ref.read(actingProfileProvider);
     final repo = ref.read(schoolRepositoryProvider);
     setState(() => _busy = true);
@@ -269,7 +508,7 @@ class _EditorBodyState extends ConsumerState<_EditorBody> {
     final meta = TimetableRecord(
       id: _timetable?.id ?? '',
       profileId: widget.args.profileId,
-      schoolId: _schoolId,
+      schoolId: schoolId,
       termId: widget.args.termId,
       classLabel: _class.text.trim().isEmpty ? null : _class.text.trim(),
       weekCycle: _cycle,
@@ -290,24 +529,10 @@ class _EditorBodyState extends ConsumerState<_EditorBody> {
       timetableId = saved.valueOrNull;
     }
 
-    final lessons = [
-      for (final d in _cells.values) d.toRecord(timetableId!),
-      for (final b in _care)
-        for (final day in b.days.toList()..sort())
-          LessonRecord(
-            id: '',
-            timetableId: timetableId!,
-            weekday: day,
-            kind: 'care',
-            title: b.title.trim().isEmpty ? null : b.title.trim(),
-            startsAt: b.starts,
-            endsAt: b.ends,
-          ),
-    ];
     final result = await repo.setLessons(
       actor: actor,
       timetableId: timetableId!,
-      lessons: lessons,
+      lessons: _gridLessons(timetableId, _cells.values, _care),
     );
     if (!mounted) return;
     setState(() => _busy = false);
@@ -386,6 +611,13 @@ class _EditorBodyState extends ConsumerState<_EditorBody> {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
+        if (_school case final school?) ...[
+          Text(
+            l10n.schoolsUiSchoolOf(school.name),
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          const SizedBox(height: 8),
+        ],
         TextField(
           controller: _class,
           decoration: InputDecoration(labelText: l10n.schoolEditorClass),
@@ -410,7 +642,7 @@ class _EditorBodyState extends ConsumerState<_EditorBody> {
         ),
         if (widget.data.subjects.isEmpty) Text(l10n.schoolNoSubjects),
         const SizedBox(height: 8),
-        _Header(days: days, onClearDay: _clearDay, labelWidth: 84),
+        _Header(days: days, onDayAction: _onDayAction, labelWidth: 84),
         for (final p in periods)
           if (p.isBreak)
             const SizedBox(height: 6)
@@ -476,19 +708,17 @@ class _EditorBodyState extends ConsumerState<_EditorBody> {
 class _Header extends StatelessWidget {
   const _Header({
     required this.days,
-    required this.onClearDay,
+    required this.onDayAction,
     required this.labelWidth,
   });
 
   final List<int> days;
-  final void Function(int weekday) onClearDay;
+  final void Function(int weekday, _DayAction action) onDayAction;
   final double labelWidth;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    // Monday 2 January 2023 is a Monday: weekday names without a DateTime per day.
-    final monday = DateTime(2023, 1, 2);
     return Row(
       children: [
         SizedBox(width: labelWidth),
@@ -497,14 +727,27 @@ class _Header extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  context.weekdayShort(monday.add(Duration(days: d - 1))),
+                  context.weekdayShort(_weekdayDate(d)),
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
-                IconButton(
-                  tooltip: l10n.schoolClearDay,
-                  visualDensity: VisualDensity.compact,
-                  icon: const Icon(Icons.clear_all, size: 18),
-                  onPressed: () => onClearDay(d),
+                PopupMenuButton<_DayAction>(
+                  tooltip: l10n.schoolsUiDayMenu,
+                  icon: const Icon(Icons.more_horiz, size: 18),
+                  onSelected: (a) => onDayAction(d, a),
+                  itemBuilder: (_) => [
+                    PopupMenuItem(
+                      value: _DayAction.clear,
+                      child: Text(l10n.schoolClearDay),
+                    ),
+                    PopupMenuItem(
+                      value: _DayAction.copy,
+                      child: Text(l10n.schoolsUiCopyDay),
+                    ),
+                    PopupMenuItem(
+                      value: _DayAction.swap,
+                      child: Text(l10n.schoolsUiSwapDay),
+                    ),
+                  ],
                 ),
               ],
             ),

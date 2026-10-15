@@ -3,6 +3,7 @@ import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/demo/demo_data.dart';
+import 'package:wuselwall/demo/demo_external_calendars.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/calendar/data/calendar_repository.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
@@ -164,6 +165,29 @@ class DemoShoppingRepository implements ShoppingRepository {
 
   @override
   Future<Result<List<ShoppingItem>>> items() async => Ok(List.of(_items));
+
+  /// The two meals of the demo week that put the pasta on the list.
+  @override
+  Future<Result<List<ShoppingItemMeal>>> itemMeals(String itemId) async {
+    final item = _items.where((i) => i.id == itemId).firstOrNull;
+    final now = DateTime.now();
+    final monday = DateTime(now.year, now.month, now.day - (now.weekday - 1));
+    final meals = {
+      'demo-src-nudel': ShoppingItemMeal(
+        mealEntryId: 'demo-src-nudel',
+        onDate: DateTime(monday.year, monday.month, monday.day + 1),
+        title: 'Nudelauflauf',
+      ),
+      'demo-src-pesto': ShoppingItemMeal(
+        mealEntryId: 'demo-src-pesto',
+        onDate: DateTime(monday.year, monday.month, monday.day + 5),
+        title: 'Nudeln mit Pesto',
+      ),
+    };
+    return Ok([
+      for (final id in item?.sourceMealEntryIds ?? const <String>[]) ?meals[id],
+    ]);
+  }
 
   @override
   Future<Result<ShoppingSnapshot>> snapshot() async => Ok(
@@ -341,6 +365,7 @@ class DemoShoppingRepository implements ShoppingRepository {
     categoryId: it.categoryId,
     addedBy: it.addedBy,
     count: count ?? it.count,
+    sourceMealEntryIds: it.sourceMealEntryIds,
   );
 
   @override
@@ -361,6 +386,14 @@ typedef _Definition = ({
 /// The catalogue of specs/21 with its curated defaults, as a household that changed
 /// nothing sees it (`api.settings` without overrides).
 const _catalogue = <_Definition>[
+  (
+    key: 'household.region',
+    scope: SettingScope.household,
+    type: SettingType.region,
+    defaultValue: null,
+    constraints: {'nullable': true},
+    selfService: false,
+  ),
   (
     key: 'board.member_label',
     scope: SettingScope.household,
@@ -689,6 +722,7 @@ class DemoCalendarRepository implements CalendarRepository {
       if (_deleted.contains(event.id)) continue;
       out.addAll(_expand(event, first, last).expand(_visible));
     }
+    out.addAll(demoImportedOccurrences(monday, first, last));
     out.sort((a, b) => a.start.compareTo(b.start));
     return Ok(OccurrenceWindow(timezone: 'Europe/Berlin', occurrences: out));
   }

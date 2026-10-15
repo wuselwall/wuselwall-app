@@ -45,17 +45,17 @@ that question is answerable on the home network, without a domain, a VPS or a
 certificate. Standing up production infrastructure for a system the household has not
 yet tried is building the wrong thing carefully.
 
-*Superseded 2026-10-11 by [ADR-013](adr/ADR-013-one-self-hosted-environment.md): the home
-server already had a public URL, so M0.3 shrank to securing that one environment and was
+*Superseded 2026-10-11 by [ADR-013](adr/ADR-013-self-hosted-compose-stack.md): the pilot
+runs on a public self-hosted server from the start, so M0.3 shrank to securing it and was
 built straight away.*
 
 | | Status |
 |---|---|
 | **M0.0** Repository skeleton · local Supabase with the first migration, RLS and pgTAP harness · Flutter shell with three registers and German l10n · `ci.yml` ([16](16-setup-plan.md) steps 1–4) | Built — CI green on `main` since PR #3; the RLS catalogue test (`040_catalogue`) exists |
 | **M0.1** Identity: setup wizard, guardian accounts, device enrolment, tap-to-switch, guardian PIN, revocation (step 5) | Built and tested (pgTAP + end-to-end), incl. per-phone devices, TOTP, QR enrolment, rate limiting; passkeys wired, untested until the production domain exists — see ADR-010 implementation notes |
-| **M0.2** The shopping list, online only: add, tick, finish, live across devices (step 6) | Built and tested; not yet tried on the family's real devices |
-| **M0.4** Mobile release pipeline: signing, `release-mobile.yml`, TestFlight and the Play internal track (step 7) | In progress — Apple account active, iOS signing and `release-mobile.yml` (iOS job) written 2026-10-12; **first TestFlight build uploaded 2026-10-12** (it still calls `wusel.goomba.ch`, which forwards — ADR-017); Android: a signed APK by hand (`build-android.yml`, `scripts/deploy-apk.sh`) until the Play account exists |
-| **M0.3** The one environment ([ADR-013](adr/ADR-013-one-self-hosted-environment.md)): own keys, `wusel.goomba.ch` (since 2026-10-13 `wuselwall.app`, ADR-017) through Cloudflare and nginx, nightly backups, restore drill (step 8) | Built 2026-10-11; **moved the same day to the official compose stack** ([ADR-013 amendment](adr/ADR-013-one-self-hosted-environment.md#amendment-2026-10-11-the-official-compose-stack)). The household starts fresh on it: the development data stayed behind in the stopped CLI stack |
+| **M0.2** The shopping list, online only: add, tick, finish, live across devices (step 6) | Built and tested; not yet tried on a pilot household's devices |
+| **M0.4** Mobile release pipeline: signing, `release-mobile.yml`, TestFlight and the Play internal track (step 7) | In progress — Apple account active, iOS signing and `release-mobile.yml` (iOS job) written 2026-10-12; **first TestFlight build uploaded 2026-10-12**; Android: a signed APK by hand (`build-android.yml`, `scripts/deploy-apk.sh`) until the Play account exists |
+| **M0.3** A self-hosted server ([ADR-013](adr/ADR-013-self-hosted-compose-stack.md)): own keys, a public HTTPS front, nightly backups, restore drill (step 8) | Built 2026-10-11; **moved the same day to the official compose stack** ([ADR-013 amendment](adr/ADR-013-self-hosted-compose-stack.md#amendment-2026-10-11-the-official-compose-stack)). The pilot household starts fresh on it |
 
 M0.4 is new and comes **before** M0.3. A PWA reached the phones by URL; a native app
 reaches an iPhone only through a signed build, and without a Mac the release pipeline is
@@ -63,15 +63,14 @@ the only way to get one there. So distribution is proven during M0, while deploy
 the backend can still wait.
 
 **Done when:** the shopping list is used on both parents' phones for one real supermarket
-trip — installed from TestFlight or Play, talking to the home server at
-`https://api.wuselwall.app`.
+trip — installed from TestFlight or Play, talking to the household's own server.
 
-### One environment from the start
+### A real server from the start
 
-*Rewritten 2026-10-11 for [ADR-013](adr/ADR-013-one-self-hosted-environment.md).* The plan
+*Rewritten 2026-10-11 for [ADR-013](adr/ADR-013-self-hosted-compose-stack.md).* The plan
 used to trial on the home network against a laptop stack and stand up production at
-M1.6. Now the stack runs on the home server and is public (since 2026-10-13 at `https://api.wuselwall.app`,
-[ADR-017](adr/ADR-017-wuselwall-app-domain.md)) from day one, so the trial and the real thing are the same environment. What the LAN
+M1.6. Now the pilot runs on a public self-hosted server from day one, so the trial and the
+real thing are the same. What the LAN
 trial could not show is no longer blocked by infrastructure:
 
 - **Use outside the house** works as soon as the apps are installed.
@@ -106,6 +105,8 @@ entry retired one release later.
 **Done when** the second parent joins from a WhatsApp message in under a minute, the wall
 tablet is connected without anyone touching its keyboard, and both are timed on the
 release checklist.
+
+> **Built 2026-10-14 on `feature/regions-and-ux`, not yet on the server:** the getting-started card on the adult Today tab (FR-5.17) — six items derived from data (invite partner, connect tablet, wall display, set PIN, subscribe feed, and Stundenplan eintragen), dismissible ("Brauchen wir nicht"), brought back from Einstellungen → Erste Schritte. The data export for guardians on a personal device (FR-5.16, the export part): one JSON file, secrets left out. **Open:** account and household deletion, leave, and the rest of 9.1/9.2.
 
 ### M1.1 Shopping, complete
 
@@ -174,6 +175,8 @@ registers · the collapsed school-day block in the feed, off by default.
 Build 1.3a fully before starting 1.3b: the projection has nowhere to render until the
 calendar's occurrence-source seam exists.
 
+> **Built 2026-10-14 on `feature/regions-and-ux`, not yet on the server:** regions to any depth (Germany, Austria, Switzerland to the Gemeinde, Liechtenstein) from the public OpenHolidays dataset, fetched by the server; public holidays (Feiertage) automatic, for school days, the week board's day header and the free-day meal; school holidays (Ferien) imported with a preview and editable afterwards (the M2 item, built early); several schools per household; day operations in the timetable editor (clear, copy, swap, with undo until Save). Details: [15](15-module-school-timetable.md#holidays).
+
 ### M1.4 Meals
 > **Built 2026-10-13 on `feature/week-board`, not yet on the server:** the week plan (free text or recipe, cook, guests), recipes, who-is-eating with the defaulting rule (computed with the board in `board-week`), shopping generation with the mandatory preview, the kiosk correction dots.
 > pgTAP green on a local throwaway Postgres (`scripts/local-pgtap`); not yet run on the
@@ -182,6 +185,8 @@ calendar's occurrence-source seam exists.
 Meal plan week grid · recipes with ingredients · who is eating at home, with the defaulting
 rule from presence and Hort · generation into the shopping list, with the mandatory
 preview · the meal zone of the week board
+
+> **Built 2026-10-14 on `feature/regions-and-ux`, not yet on the server:** meal suggestions in the meal editor from the last 365 days of cooked meals ("Oft bei uns", "Lange nicht gegessen" after 90 and 60 days — FR-3.8), the meal behind each generated shopping item (FR-3.7), and undo when a planned meal is cleared.
 
 ### M1.5 Polish
 > **Week board built early, 2026-10-13:** the board, its tap-through details and the
@@ -208,11 +213,12 @@ that session short.
 
 ### M1.6 Launch
 
-*Re-scoped 2026-10-11 by [ADR-013](adr/ADR-013-one-self-hosted-environment.md): there is
-no separate deployment any more, so this is the launch checklist on the one environment.*
+*Re-scoped 2026-10-11 by [ADR-013](adr/ADR-013-self-hosted-compose-stack.md): there is
+no separate deployment any more, so this is the launch checklist for the pilot household's
+server.*
 
-The family's real household set up through the M1.0 flow with a founder code
-(`scripts/remote-setup-token.sh`), the second parent joined by invitation and the devices
+The pilot household set up through the M1.0 flow with a founder code
+(`wuselwall setup-token`), the second parent joined by invitation and the devices
 paired · the development data cleared before that, once · push credentials (Q38) and
 notification preferences · the ICS feed verified against real Outlook and real iOS ·
 nightly backups with the dead-man's switch and an off-site copy (Q14) · **a restore drill
@@ -235,11 +241,11 @@ anything.
 *Added 2026-10-11 ([ADR-014](adr/ADR-014-self-service-onboarding.md)).* Not a milestone
 with features but a **gate**: the instance stays in `code` mode, and strangers cannot
 start a household, until every line below is true. It sits after M1.6 on purpose. The
-family uses the flows for weeks first, and their hesitations are fixed before anyone else
+pilot household uses the flows for weeks first, and its hesitations are fixed before anyone else
 meets them.
 
 - ~~WuselWall Cloud live~~ — dropped 2026-10-13 ([ADR-018](adr/ADR-018-self-hosted-only.md)):
-  no instance of ours opens; the family's server stays in `code` mode for good.
+  the project runs no instance for anyone.
 - **The self-hosting kit** ([ADR-018](adr/ADR-018-self-hosted-only.md),
   [10](10-deployment-and-ops.md#other-families-servers)): tagged server releases with
   install, migrate and update scripts and the server's QR code; `/.well-known/wuselwall.json`
@@ -248,8 +254,7 @@ meets them.
   `docs/` for a parent with a NAS (email-only sign-in, SMTP, one's own Apple/Google
   clients).
 - **The domain** — decided 2026-10-13: `wuselwall.app`
-  ([ADR-017](adr/ADR-017-wuselwall-app-domain.md), [Q45](14-open-questions.md)). Still to do:
-  retiring the `wusel.goomba.ch` bridge.
+  ([ADR-017](adr/ADR-017-wuselwall-app-domain.md), [Q45](14-open-questions.md)).
 - **Email** ([Q41](14-open-questions.md)): the sending domain verified, and the
   deliverability check in [10](10-deployment-and-ops.md#email-setup) passed.
 - **Store listings** ([Q42](14-open-questions.md), decided: App Store and Google Play):
@@ -257,9 +262,9 @@ meets them.
   library included), and App Review pointed at the demo mode.
 - **Legal:** the privacy policy for the website, the apps and the sign-in providers
   (published 2026-10-13, operator details still to fill in), and a contact address. The
-  record of processing and processor agreements cover the family's server only; each
-  operator is the controller for their own ([11](11-security-and-privacy.md#privacy-and-legal)).
-- **Abuse controls** live: Auth and Cloudflare rate limits, the 30-day clean-up of empty
+  record of processing and processor agreements cover what the project itself runs (the
+  website and the docs); each operator is the controller for their own server ([11](11-security-and-privacy.md#privacy-and-legal)).
+- **Abuse controls** live: Auth's and the front's rate limits, the 30-day clean-up of empty
   accounts, the attempt logs ([11, T11](11-security-and-privacy.md#t11--the-open-front-door)).
 - **Deletion and export** tested on a real household, including Apple token revocation.
 - **The cross-household pgTAP suite** reviewed once more with "a stranger is on the other
@@ -272,9 +277,10 @@ meets them.
 - Shortcuts endpoints and per-person tokens
 - MCP server, `family:read` scope
 - Imported external calendars (sports club, bin collection)
-- Ferien import for the Bundesland, so holidays stop being hand-entered
+- ~~Ferien import for the Bundesland, so holidays stop being hand-entered~~ — built early on `feature/regions-and-ux` (2026-10-14), see M1.3
+- ~~Imported external calendars (sports club, bin collection)~~ — FR-1.9 built early on `feature/regions-and-ux` (2026-10-14), see [05](05-module-calendar.md#external-calendars-subscribed-ics-fr-19). Open: the imported occurrences in the outbound ICS feed
 - Equipment reminders from tomorrow's subjects ("Morgen brauchst du: Sportsachen")
-- Meal suggestions from history ("not cooked in 60 days")
+- ~~Meal suggestions from history ("not cooked in 60 days")~~ — built early on `feature/regions-and-ux` (2026-10-14), see M1.4
 - Whatever the first two weeks of real use made obviously necessary — reserve capacity
   for this rather than planning around it
 

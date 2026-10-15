@@ -38,6 +38,16 @@ const sidebar = (p: string, t: Record<string, string>) => [
       { text: t.security, link: `${p}/settings/security` },
     ],
   },
+  {
+    text: t.server,
+    items: [
+      { text: t.serverOverview, link: `${p}/server/` },
+      { text: t.serverSupabase, link: `${p}/server/supabase-cloud` },
+      { text: t.serverHome, link: `${p}/server/home-server` },
+      { text: t.serverRestore, link: `${p}/server/restore` },
+      { text: t.serverExtras, link: `${p}/server/extras` },
+    ],
+  },
   { text: t.faq, link: `${p}/faq` },
 ]
 
@@ -79,6 +89,7 @@ export default defineConfig({
           modules: 'Module', calendar: 'Kalender', feeds: 'Kalender-Abos für Outlook und iPhone', school: 'Stundenplan', tasks: 'Aufgaben', meals: 'Essen',
           shopping: 'Einkaufsliste', add: 'Artikel hinzufügen', lists: 'Mehrere Listen', store: 'Im Laden', history: 'Verlauf',
           devices: 'Geräte und Sicherheit', wall: 'Wandbildschirm und Kinder', household: 'Haushalt einstellen', members: 'Mitglieder und Geräte', security: 'Sicherheit', faq: 'Häufige Fragen',
+          server: 'Eigener Server', serverOverview: 'Überblick', serverHome: 'Server zu Hause', serverSupabase: 'Server bei Supabase', serverRestore: 'Backup zurückspielen', serverExtras: 'Extras',
         }),
         docFooter: { prev: 'Zurück', next: 'Weiter' },
         outlineTitle: 'Auf dieser Seite',
@@ -108,6 +119,7 @@ export default defineConfig({
           modules: 'Modules', calendar: 'Calendar', feeds: 'Calendar subscriptions for Outlook and iPhone', school: 'Timetable', tasks: 'Tasks', meals: 'Meals',
           shopping: 'Shopping list', add: 'Adding items', lists: 'Several lists', store: 'In the store', history: 'History',
           devices: 'Devices and security', wall: 'Wall display and kids', household: 'Household settings', members: 'Members and devices', security: 'Security', faq: 'FAQ',
+          server: 'Your own server', serverOverview: 'Overview', serverHome: 'Server at home', serverSupabase: 'Server at Supabase', serverRestore: 'Restoring a backup', serverExtras: 'Extras',
         }),
       },
     },

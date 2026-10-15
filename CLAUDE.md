@@ -2,38 +2,42 @@
 
 This repository holds both the planning documents and the code for WuselWall (see
 [README.md](README.md)). `specs/` is the specification; `app/` (Flutter), `supabase/`
-(migrations, Edge Functions, tests) and `infra/` hold the implementation. Setup-plan steps 3, 5,
-6 and 8 are built (app shell, identity, online shopping list, the one environment) and M1.1
-is built, offline outbox included. Onboarding (step 9, [specs/20](specs/20-onboarding.md),
-ADR-014 and ADR-018 — self-hosted only, no WuselWall Cloud) has started: Sign in with Apple and Google are built and switched on (9.1).
-M0.4: the first TestFlight build is uploaded; Android is an APK by hand until the Play
-account exists. Since 2026-10-13 the public hosts are `wuselwall.app`, `web.` and `api.`
-(ADR-017). Built on `feature/week-board`, **migrations not yet on the server**: household
+(migrations, Edge Functions, tests), `infra/` and `server/` hold the implementation.
+Setup-plan steps 3, 5, 6 and 8 are built (app shell, identity, online shopping list, the
+compose stack) and M1.1 is built, offline outbox included. Onboarding (step 9,
+[specs/20](specs/20-onboarding.md), ADR-014 and ADR-018 — self-hosted only, no WuselWall
+Cloud) has started: Sign in with Apple and Google are built (9.1). Built since: household
 settings (specs/21), the kiosk week board (specs/09), M1.3a calendar (events, presence,
 recurrence expanded in Edge Functions, the ICS feed with tokens), M1.3b Stundenplan (the
-projection in `supabase/functions/_shared/school.ts`), M1.2 tasks and points, M1.4 meals, and
-the kid register. `scripts/local-pgtap` runs every migration and pgTAP suite on a throwaway
-local Postgres (no Docker); `scripts/remote-pgtap-dry.sh` tries new migrations on the server
-inside a rolled-back transaction. Next: apply the migrations and deploy the Edge Functions
-(`scripts/remote-migrate.sh`, `scripts/remote-stack.sh functions`), schedule `tasks-nightly`,
-then the rest of 9.1/9.2 and M1.6.
+projection in `supabase/functions/_shared/school.ts`), M1.2 tasks and points, M1.4 meals,
+the kid register; regions to any depth and holidays (DE/AT/CH/LI from OpenHolidays,
+fetched by the server: public holidays automatic, Ferien imported), several schools, the
+timetable's day operations, meal suggestions, the Today tab with the getting-started card,
+the data export, subscribed ICS calendars (FR-1.9: `calendar-import`, read-only
+occurrences in their own tables); and ADR-018's server choice: the store app asks for its
+server (discovery through the `server-info` function), a server release with
+`server/wuselwall`, and `deploy-supabase.yml` for a family's own hosted project.
+`scripts/local-pgtap` runs every migration and pgTAP suite on a throwaway local Postgres
+(no Docker). The server runs three scheduled jobs: `tasks-nightly`, `holidays-sync` and
+`calendar-import` (hourly). Next: the rest of 9.1/9.2 and M1.6.
+
+**Never describe a particular operator's server in a committed file** — not a host, path,
+SSH alias, machine or the fact that someone runs one. Placeholders (`example.org`) in
+committed files; real values in git-ignored files (`scripts/remote.env`,
+`app/env/dev.json`, `CLAUDE.local.md`) or CI variables and secrets.
 
 ## Architecture rules
 
 See [specs/03-architecture.md](specs/03-architecture.md),
 [ADR-010](specs/adr/ADR-010-flutter-and-self-hosted-supabase.md) and
-[ADR-013](specs/adr/ADR-013-one-self-hosted-environment.md).
+[ADR-013](specs/adr/ADR-013-self-hosted-compose-stack.md).
 
-- **There is one environment** today: the official compose stack (`infra/supabase`) on the home server (Unraid, `ssh unraid`),
-  public at `https://api.wuselwall.app` ([ADR-017](specs/adr/ADR-017-wuselwall-app-domain.md);
-  the web app is `https://web.wuselwall.app`, the website `https://wuselwall.app`, and
-  `wusel.goomba.ch` is only a bridge for old app builds). The family's data lives there, next to development
-  and testing (Q46), and it stays the only environment: **the project runs no hosted
-  service** ([ADR-018](specs/adr/ADR-018-self-hosted-only.md)). Other families run their own
-  server, and the store app connects to whichever server a household chooses. Before any migration
-  run `scripts/remote-backup.sh`; never run `supabase db reset` against it; never run the
-  Dart integration test against it (it creates households and revokes devices — CI and
-  throwaway stacks only). Keys come from the git-ignored `supabase/.env`.
+- **The project runs no hosted service** ([ADR-018](specs/adr/ADR-018-self-hosted-only.md)):
+  every family runs its own server, and the store app connects to whichever server a
+  household chooses. A live server holds a family's data: before any migration back it up;
+  never run `supabase db reset` against it; never run the Dart integration test against it
+  (it creates households and revokes devices — CI and throwaway stacks only). Keys come
+  from the git-ignored `supabase/.env`.
 - `supabase/` is the server other families install (ADR-018): keep it portable to any
   Supabase stack, including an operator's own hosted project — no dependence on superuser
   rights or on self-hosted-only features without noting it in ADR-013. A migration that
@@ -58,7 +62,10 @@ See [specs/03-architecture.md](specs/03-architecture.md),
 - Edge Functions forward the caller's JWT. The service-role key is only for functions
   without a user (ICS, enrolment, jobs) and for the two account-administration functions
   of ADR-014 (`account-delete`, MFA reset), which verify the caller's JWT and act only on
-  that caller (or, for the reset, a co-guardian), with a comment at each use.
+  that caller (or, for the reset, a co-guardian), with a comment at each use. Two more,
+  inside a user's request: `holidays-sync` verifies the member's JWT and writes only the
+  public holiday cache; `calendar-import` verifies the guardian's JWT and stores only that
+  one calendar.
 - Migrations are forward-only and must stay compatible with the previous app release.
 - **No household is hard-coded.** Anything one household would answer differently from
   another is a setting with a curated default ([specs/20](specs/21-household-settings.md)):
@@ -83,22 +90,23 @@ See [specs/03-architecture.md](specs/03-architecture.md),
   never `kDebugMode` branches for URLs or keys.
 - Developer-only screens are gated with `kDebugMode` and must not exist in release.
 - Realtime callbacks receive the whole envelope: read `message['payload']['topic']`.
-- pgTAP against the Unraid stack: `scripts/remote-pgtap.sh` (`supabase test db` cannot mount
-  local files into a remote Docker host). Tests clear their own state inside a rolled-back
+- pgTAP against a server's compose stack: `scripts/remote-pgtap.sh` (`supabase test db`
+  cannot mount local files into a remote Docker host). Tests clear their own state inside a rolled-back
   transaction, so they pass on a database that already has data.
 - Run `flutter analyze` and `flutter test` before finishing, and `scripts/remote-pgtap.sh`
   after backend changes. The integration tests (`flutter test test/integration
   --dart-define-from-file=env/ci.json`) run in CI on a throwaway stack, or locally against
-  one (`npx supabase start` with Docker on the laptop) — never against the home server.
-  The home server runs the official compose stack (`infra/supabase`), driven by
-  `scripts/remote-stack.sh`; migrations go through `scripts/remote-migrate.sh` (see specs/10).
+  one (`npx supabase start` with Docker on the laptop) — never against a live server.
+  A server from a checkout runs the official compose stack (`infra/supabase`), driven by
+  `scripts/remote-stack.sh`, with migrations through `scripts/remote-migrate.sh`; a server
+  from a release is driven by `server/wuselwall` (see specs/10).
 
 ## Website (`website/`)
 
 Astro site at `https://wuselwall.app/` ([ADR-016](specs/adr/ADR-016-public-website.md),
 [ADR-017](specs/adr/ADR-017-wuselwall-app-domain.md)): marketing page, Impressum, Datenschutz,
-German at `/` and English at `/en/`. The Flutter web app has its own host,
-`https://web.wuselwall.app/` (`scripts/deploy-web.sh`). Every user-facing string lives in `website/src/i18n/index.ts` in **both** languages;
+German at `/` and English at `/en/`. The Flutter web app is served by each server, not by
+the website. Every user-facing string lives in `website/src/i18n/index.ts` in **both** languages;
 operator and legal data only in `website/src/config/site.ts` (`TODO` values fail
 `LEGAL_STRICT=1` builds). No cookies, no third-party requests, no analytics. Deploy with
 `scripts/remote-web.sh deploy`, independent of the Supabase stack. App screenshots on the

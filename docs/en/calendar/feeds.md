@@ -1,6 +1,6 @@
 # Calendar subscriptions for Outlook and iPhone
 
-A **subscription** shows the family calendar in another app. It is read-only: you still change appointments in WuselWall.
+A **subscription** shows the family calendar in another app. It is read-only: you still change appointments in WuselWall. The other way round, bringing outside calendars into WuselWall, is under [Subscribed calendars](/en/calendar/#subscribed-calendars).
 
 Open **Settings → Calendar subscriptions** and tap **New subscription**.
 

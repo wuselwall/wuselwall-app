@@ -1,10 +1,13 @@
 // Runs supabase/migrations and supabase/tests on a throwaway local Postgres 15 — no Docker,
-// no sudo, nothing on the home server. A bare Postgres plus shim.sql (the few Supabase
+// no sudo, no live server. A bare Postgres plus shim.sql (the few Supabase
 // roles, auth and realtime objects the migrations touch) is not Supabase: CI's stack and
 // scripts/remote-pgtap.sh stay the real check. This one is for the minutes in between.
 //
 //   cd scripts/local-pgtap && npm ci && node run.mjs          all migrations, all tests
 //   node run.mjs 080 090                                       only tests matching an arg
+//   WW_PGTAP_REPO=<worktree>/supabase WW_PGTAP_DB=wusel_x node run.mjs
+//                                       another checkout's migrations, in a database of its own,
+//                                       so parallel runs (worktrees) share the server safely
 //
 // Exit code 1 when a migration fails or a test reports "not ok", an error or a bad plan.
 import { execFileSync } from 'node:child_process';
@@ -16,7 +19,8 @@ const here = path.dirname(new URL(import.meta.url).pathname);
 const bin = path.join(here, 'node_modules/@embedded-postgres/linux-x64/native/bin');
 const cache = path.join(here, 'cache');
 const data = path.join(cache, 'data');
-const repo = path.resolve(here, '../../supabase');
+const repo = path.resolve(process.env.WW_PGTAP_REPO ?? path.join(here, '../../supabase'));
+const DB = process.env.WW_PGTAP_DB ?? 'wusel';
 const PGTAP = '1.3.3';
 const PORT = 54329;
 const only = process.argv.slice(2);
@@ -49,11 +53,12 @@ const conn = (database) => new pg.Client({ host: '127.0.0.1', port: PORT, user: 
 
 const admin = conn('postgres');
 await admin.connect();
-await admin.query('drop database if exists wusel with (force)');
-await admin.query('create database wusel');
+if (!/^[a-z_][a-z0-9_]*$/.test(DB)) throw new Error(`bad WW_PGTAP_DB: ${DB}`);
+await admin.query(`drop database if exists ${DB} with (force)`);
+await admin.query(`create database ${DB}`);
 await admin.end();
 
-const db = conn('wusel');
+const db = conn(DB);
 await db.connect();
 let failed = false;
 const run = async (label, sql) => {
@@ -85,7 +90,7 @@ await db.end();
 const tests = fs.readdirSync(path.join(repo, 'tests')).filter((f) => f.endsWith('.sql')).sort()
   .filter((f) => only.length === 0 || only.some((o) => f.includes(o)));
 for (const t of tests) {
-  const c = conn('wusel');
+  const c = conn(DB);
   await c.connect();
   const sql = fs.readFileSync(path.join(repo, 'tests', t), 'utf8');
   let lines = [];

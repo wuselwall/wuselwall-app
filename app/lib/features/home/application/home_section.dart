@@ -8,6 +8,7 @@ class HomeSection {
   const HomeSection({
     required this.icon,
     required this.label,
+    this.navLabel,
     required this.body,
     this.bottom,
     this.fab,
@@ -15,6 +16,10 @@ class HomeSection {
 
   final IconData icon;
   final String Function(AppLocalizations l10n) label;
+
+  /// A shorter label for the navigation bar, where six destinations share a phone's width;
+  /// the bar's tooltip keeps [label].
+  final String Function(AppLocalizations l10n)? navLabel;
   final Widget body;
   final PreferredSizeWidget? bottom;
   final Widget Function(BuildContext context)? fab;

@@ -13,6 +13,15 @@ The adults' view has these areas:
 | [Tasks](/en/tasks/) | Chores, points and rewards |
 | [Meals](/en/meals/) | Meal plan, recipes, filling the shopping list |
 | [Shopping list](/en/shopping/add) | Items, tiles, ticking off in the shop |
+| Today | The day at a glance, and the first steps of the setup |
+
+## Today and getting started
+
+**Today** is the adults' first page. It shows the day's appointments, your chores for today to tick off, the warm meal and how many shopping list items are still open.
+
+<Shot name="today" alt="The Today tab with the Getting started card, the appointments and the warm meal" />
+
+As long as something from the setup is missing, the **Getting started** card is at the top: invite your partner, connect the family tablet, set up the wall display, set your PIN, subscribe to the calendar and add the timetable. Each item disappears once it is done. If you do not need one, tap **Not needed**. Guardians see the card on their own phone and on shared devices; under **Settings → Getting started** it comes back.
 
 ## The household
 

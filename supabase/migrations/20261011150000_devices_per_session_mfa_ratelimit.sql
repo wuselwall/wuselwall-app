@@ -110,7 +110,14 @@ begin
   end if;
   return jsonb_set(event, '{claims}', claims);
 end $$;
-grant select on auth.mfa_factors to supabase_auth_admin;
+-- Auth owns auth.mfa_factors, so this grant is a no-op wherever it is refused. A hosted
+-- Supabase project may refuse grants on the auth schema to the migration role; the
+-- install must not fail on it (ADR-018: any Supabase stack is a WuselWall server).
+do $$ begin
+  grant select on auth.mfa_factors to supabase_auth_admin;
+exception when insufficient_privilege then
+  raise notice 'grant on auth.mfa_factors refused; Auth owns the table anyway';
+end $$;
 
 -- The caller's device: by session for personal phones, by user for shared/kiosk devices.
 create or replace function api.current_device() returns jsonb

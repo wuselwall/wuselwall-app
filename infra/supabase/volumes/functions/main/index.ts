@@ -11,7 +11,14 @@ const VERIFY_JWT = Deno.env.get('VERIFY_JWT') === 'true'
 // The ICS feed is fetched by Outlook and Apple Calendar with nothing but the token in
 // its URL; `api.ics_feed` checks that token (specs/05 "The ICS feed"). The nightly task
 // job is called by the host's cron with a shared secret it checks in constant time.
-const NO_USER_FUNCTIONS = new Set(['ics', 'tasks-nightly'])
+// holidays-sync is listed too: its weekly run is called by the host's cron with the secret,
+// while the region picker's call carries a user JWT and is verified by the function itself.
+// calendar-import is the same: the hourly run carries the secret, and a guardian's "fetch now"
+// carries a user JWT that the function verifies itself (getUser, then the database's guardian gate).
+// server-info is the discovery document the app reads before anyone signs in (ADR-018).
+const NO_USER_FUNCTIONS = new Set([
+  'ics', 'tasks-nightly', 'holidays-sync', 'calendar-import', 'server-info',
+])
 
 type AuthFailure = {
   code: RequestErrors

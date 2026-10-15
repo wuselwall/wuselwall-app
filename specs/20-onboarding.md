@@ -189,9 +189,8 @@ an invitation or pairing link, which carries the server:
     clients with Apple and Google.
 
   Native Apple and Google sign-in and passkeys appear only on the first-party servers
-  compiled into the app (`WW_FIRST_PARTY_HOSTS`: `api.wuselwall.app`, the family's Unraid
-  stack). Otherwise a hostile server could replay tokens addressed to our app to the
-  family's server (ADR-018, decision 6). The front door simply shows fewer buttons. It never
+  named at build time (`WW_FIRST_PARTY_HOSTS`). Otherwise a hostile server could replay
+  tokens addressed to our app to a first-party server (ADR-018, decision 6). The front door simply shows fewer buttons. It never
   shows a button that will fail.
 
 ### Several ways into one account
@@ -405,7 +404,7 @@ anyway.
 | **Konto löschen** | Einstellungen → Konto; any adult; recent sign-in (≤ 5 min, else sign in again) | The Auth user and all its sessions are deleted; its personal devices are revoked. The **profile stays** as a non-account family member, with its history, unless also removed. Sign in with Apple tokens are revoked with Apple. The last guardian *with an account* cannot do this while other members exist: they delete the household or hand over first |
 | **Familie verlassen** | Einstellungen → Konto; any adult who is not the last guardian | The account is unlinked from the profile; the account remains and can start or join another family |
 | **Familie löschen** | Einstellungen → Familie; a guardian on a personal device; recent sign-in; type the family's name | Every device is signed out at once and the household is marked deleted. **Purged after 14 days** by a job; until then any of its guardians can sign in and choose *Wiederherstellen*. Backups age out within their retention, which the privacy policy states |
-| **Daten exportieren** | Einstellungen → Familie; guardian | A JSON file of the household's data (GDPR Art. 20). Required before the opening gate, not before |
+| **Daten exportieren** | Einstellungen → Familie; guardian on a personal device | A JSON file of the household's data (GDPR Art. 20). Built 2026-10-14: secrets (PIN and password hashes, token hashes, Auth ids) and technical bookkeeping are left out, devices appear by label only. Required before the opening gate, not before |
 
 Google Play additionally requires a **web page** explaining how to request deletion. It
 lives on the same small site as the invitation landing page.
@@ -426,11 +425,21 @@ the work.
 | Erinnerungen einschalten | Push is built | This device has a push token | Per device |
 | Kalender abonnieren (Outlook, iPhone) | The ICS feed is built (M1.3a) | A feed token exists | Household |
 | Schneller anmelden mit Passkey | Passkeys verified on this platform | The account has a passkey | Per account |
+| Stundenplan eintragen | A child profile exists | A school and a timetable exist (added 2026-10-14) | Household |
 
-- At most four items at a time, with progress ("2 von 4"). Each item can be dismissed
-  ("Brauchen wir nicht"); the card disappears when everything is done or dismissed and
-  returns from Einstellungen → Erste Schritte.
+*Built 2026-10-14 on `feature/regions-and-ux`, not yet on the server:* the card with the
+items above except reminders and passkey, which wait for their features. Stundenplan
+eintragen is the extra item: a family with a child in school wants the timetable in the
+calendar, and the card says so in the adult's words.
+
+- Progress counts every shown item, done or open ("2 von 6"). At most four open items are
+  listed at a time; done items stay in the list. Each item can be dismissed ("Brauchen wir
+  nicht"). The household-wide items are dismissed for everyone; "Eltern-PIN festlegen" only
+  for the guardian who dismissed it. The card disappears when everything shown is done or
+  dismissed, and returns from Einstellungen → Erste Schritte, which restores every dismissal
+  of the household and of that guardian.
 - Items appear only when their feature exists, so the card grows with the roadmap.
+- Only a guardian on a personal or shared device sees the card; members and kiosks get none.
 - The push-permission rule from [09](09-clients-and-ux.md) holds: the system prompt
   appears only after a tap on *Erinnerungen einschalten*, never at first launch.
 
@@ -496,7 +505,7 @@ Indicative. Migrations, functions and policies follow the rules in
 **Supabase Auth configuration.**
 - `enable_signup = true`, `enable_anonymous_sign_ins = false`, `enable_manual_linking = true`.
 - `[auth.email]`: `otp_length = 6`, `otp_expiry = 600`, `max_frequency = "60s"`.
-- `[auth.external.apple]` and `[auth.external.google]` enabled on the home server. Other servers enable them only with their operator's own clients (redirect only, [ADR-018](adr/ADR-018-self-hosted-only.md)).
+- `[auth.external.apple]` and `[auth.external.google]` enabled on the first-party servers. Other servers enable them only with their operator's own clients (redirect only, [ADR-018](adr/ADR-018-self-hosted-only.md)).
   Client IDs list the web client *and* the native app identifiers. Secrets come from the
   stack's `.env` ([10 §4](10-deployment-and-ops.md#4-sign-in-providers-and-mail)). CLI stacks
   keep them off: CI has no clients, and neither provider redirects to 127.0.0.1.
@@ -530,8 +539,8 @@ the founder codes; `household` gains `created_by_profile_id` and `deleted_at`.
 | `account-delete` (Edge Function) | signed-in | Deletes the Auth user with the Admin API and revokes the Apple token: outbound HTTP, so not SQL |
 | `guardian_reset_mfa(actor, profile)` | guardian, personal device | Removes another guardian's TOTP factor (Admin API in an Edge Function; see ADR-013's portability note) |
 
-After this step, anon can call `health`, `invitation_preview`, `pairing_start` and
-`pairing_poll`, plus `enrol_device` for one release. `setup_household` goes. The catalogue
+After this step, anon can call `health`, `server_info`, `invitation_preview`,
+`pairing_start` and `pairing_poll`, plus `enrol_device` for one release. `setup_household` goes. The catalogue
 test (`040_catalogue.test.sql`) is updated to exactly this list.
 
 **Apple token revocation** needs Apple's refresh token, which `signInWithIdToken` does not
@@ -545,8 +554,8 @@ Every email the system sends is localised. A Supabase **send-email hook** (an Ed
 reading the message files in `supabase/functions/_shared/`) renders the code mail and the
 "new sign-in" notice in the language the app passed as `locale` at sign-in, and sends it
 through Scaleway Transactional Email ([Q41](14-open-questions.md); the setup, sender and
-subject line are in [10](10-deployment-and-ops.md#email-setup)). This runs on the Unraid stack
-and on every server release (other operators send through their own provider), because the compose stack runs Edge Functions ([A11](19-security-and-architecture-review.md),
+subject line are in [10](10-deployment-and-ops.md#email-setup)). This runs on every server
+release (each operator sends through their own provider), because the compose stack runs Edge Functions ([A11](19-security-and-architecture-review.md),
 fixed). **On self-hosted stacks without the hook**, the GoTrue template is used instead,
 with German and English in the same mail, German first.
 
@@ -554,8 +563,8 @@ with German and English in the same mail, German first.
 
 `https://wuselwall.app/i/‹token›` (invitations), `/p/‹code›` (pairing, so the phone's own
 camera works) and `/.well-known/apple-app-site-association` plus `assetlinks.json` (also
-needed by passkeys) form the **links site**. It is static and belongs to no backend. Nginx on the Unraid server serves it on
-`wuselwall.app`, beside the website ([ADR-017](adr/ADR-017-wuselwall-app-domain.md)). Every
+needed by passkeys) form the **links site**. It is static and belongs to no backend; it is
+served on `wuselwall.app`, beside the website ([ADR-017](adr/ADR-017-wuselwall-app-domain.md)). Every
 server's invitations use it. The token and the server travel in the fragment, so the site
 never receives them ([ADR-018](adr/ADR-018-self-hosted-only.md), decision 8). The landing
 page reads the fragment in the browser, and the app gets the whole URL. The

@@ -6,9 +6,16 @@ import 'fakes.dart';
 
 /// A school with one timetable for [kidId] (Anna): Mathe, Deutsch and Sport on every
 /// weekday, bell times for three lessons. Enough for the grid, the sheet and the editor.
+///
+/// [secondSchool] adds a Gymnasium with its own bell times and term (the siblings at
+/// different schools). [varied] makes Friday's third lesson differ from the others, so
+/// day operations show in the saved lessons.
 SchoolData referenceSchoolData({
   bool withSchool = true,
   bool withTimetable = true,
+  bool secondSchool = false,
+  bool varied = false,
+  List<HolidayRecord> holidays = const [],
 }) {
   const schoolId = 'school-1';
   const termId = 'term-1';
@@ -22,12 +29,22 @@ SchoolData referenceSchoolData({
               'state_code': 'DE-BE',
               'timezone': 'Europe/Berlin',
             }),
+            if (secondSchool)
+              SchoolRecord.fromJson({
+                'id': secondSchoolId,
+                'name': 'Gymnasium Lindenhof',
+                'state_code': 'DE-BE',
+                'timezone': 'Europe/Berlin',
+              }),
           ]
         : const [],
     periods: withSchool
         ? [
             for (final p in _bellRows)
               PeriodRecord.fromJson({...p, 'school_id': schoolId}),
+            if (secondSchool)
+              for (final p in _gymnasiumBellRows)
+                PeriodRecord.fromJson({...p, 'school_id': secondSchoolId}),
           ]
         : const [],
     terms: withSchool
@@ -40,6 +57,15 @@ SchoolData referenceSchoolData({
               'ends_on': '2027-07-31',
               'is_current': true,
             }),
+            if (secondSchool)
+              TermRecord.fromJson({
+                'id': secondTermId,
+                'school_id': secondSchoolId,
+                'name': 'Schuljahr 2026/27',
+                'starts_on': '2026-08-01',
+                'ends_on': '2027-07-31',
+                'is_current': true,
+              }),
           ]
         : const [],
     subjects: [for (final s in _subjectRows) SubjectRecord.fromJson(s)],
@@ -62,14 +88,17 @@ SchoolData referenceSchoolData({
             for (var wd = 1; wd <= 5; wd++) ...[
               LessonRecord.fromJson(_lesson(ttId, wd, 1, 'sub-ma', 'R1')),
               LessonRecord.fromJson(_lesson(ttId, wd, 2, 'sub-d', null)),
-              LessonRecord.fromJson(
-                _lesson(ttId, wd, 3, 'sub-sp', 'Turnhalle'),
-              ),
+              if (varied && wd == 5)
+                LessonRecord.fromJson(_lesson(ttId, wd, 3, 'sub-d', 'Aula'))
+              else
+                LessonRecord.fromJson(
+                  _lesson(ttId, wd, 3, 'sub-sp', 'Turnhalle'),
+                ),
             ],
           ]
         : const [],
     exceptions: const [],
-    holidays: const [],
+    holidays: holidays,
   );
 }
 
@@ -135,6 +164,36 @@ const _bellRows = [
     'label': null,
     'starts_at': '09:55',
     'ends_at': '10:40',
+    'kind': 'lesson',
+  },
+];
+
+const secondSchoolId = 'school-2';
+const secondTermId = 'term-2';
+
+const _gymnasiumBellRows = [
+  {
+    'id': 'g1',
+    'index': 1,
+    'label': null,
+    'starts_at': '07:45',
+    'ends_at': '08:30',
+    'kind': 'lesson',
+  },
+  {
+    'id': 'g2',
+    'index': 1,
+    'label': null,
+    'starts_at': '08:30',
+    'ends_at': '08:40',
+    'kind': 'break',
+  },
+  {
+    'id': 'g3',
+    'index': 2,
+    'label': null,
+    'starts_at': '08:40',
+    'ends_at': '09:25',
     'kind': 'lesson',
   },
 ];
@@ -248,6 +307,22 @@ Map<String, dynamic> _weekJson(DateTime from, DateTime to) {
   };
 }
 
+/// [d] with some lists replaced.
+SchoolData _withData(
+  SchoolData d, {
+  List<SchoolRecord>? schools,
+  List<LessonRecord>? lessons,
+}) => SchoolData(
+  schools: schools ?? d.schools,
+  periods: d.periods,
+  terms: d.terms,
+  subjects: d.subjects,
+  timetables: d.timetables,
+  lessons: lessons ?? d.lessons,
+  exceptions: d.exceptions,
+  holidays: d.holidays,
+);
+
 /// In-memory school backend. Serves [data] and a projected week, and records every
 /// write the UI makes, so tests can assert the JSON the repository would send.
 class FakeSchoolRepository implements SchoolRepository {
@@ -259,7 +334,39 @@ class FakeSchoolRepository implements SchoolRepository {
   final periodSets = <List<PeriodRecord>>[];
   final lessonSets = <({String timetableId, List<LessonRecord> lessons})>[];
   final timetableSaves = <TimetableRecord>[];
+  final schoolSaves =
+      <({String? id, String name, String? regionCode, String? timezone})>[];
   final actors = <String?>[];
+
+  /// Saved schools join [data], as the server would return them on the refetch.
+  @override
+  Future<Result<String>> saveSchool({
+    required String? actor,
+    String? id,
+    required String name,
+    String? regionCode,
+    String? timezone,
+  }) async {
+    actors.add(actor);
+    schoolSaves.add((
+      id: id,
+      name: name,
+      regionCode: regionCode,
+      timezone: timezone,
+    ));
+    final newId = id ?? 'school-new-${schoolSaves.length}';
+    final school = SchoolRecord.fromJson({
+      'id': newId,
+      'name': name,
+      'region_code': regionCode,
+      'timezone': timezone ?? 'Europe/Berlin',
+    });
+    data = _withData(
+      data,
+      schools: [...data.schools.where((s) => s.id != newId), school],
+    );
+    return Ok(newId);
+  }
 
   @override
   Future<Result<SchoolData>> all() async => Ok(data);
@@ -306,6 +413,14 @@ class FakeSchoolRepository implements SchoolRepository {
   }) async {
     actors.add(actor);
     lessonSets.add((timetableId: timetableId, lessons: lessons));
+    data = _withData(
+      data,
+      lessons: [
+        for (final l in data.lessons)
+          if (l.timetableId != timetableId) l,
+        ...lessons,
+      ],
+    );
     return const Ok(null);
   }
 
