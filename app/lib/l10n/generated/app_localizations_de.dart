@@ -105,9 +105,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get doorTagline => 'Der Familienplan für die Küchenwand';
 
   @override
-  String get setupEnrolAction => 'Mit Code verbinden';
-
-  @override
   String get setupHouseholdAction => 'Neue Familie anlegen';
 
   @override
@@ -3181,4 +3178,165 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get shoppingNavLabel => 'Einkauf';
+
+  @override
+  String get pairFrontDoorAction =>
+      'Familien-Tablet oder Wanddisplay verbinden';
+
+  @override
+  String get pairTitle => 'Familien-Tablet oder Wanddisplay verbinden';
+
+  @override
+  String get pairScanHint =>
+      'Öffne WuselWall auf deinem Handy und scanne diesen Code.';
+
+  @override
+  String get pairCodeHint =>
+      'Oder auf dem Handy: Einstellungen → Geräte → Gerät verbinden, dann den Code eintippen.';
+
+  @override
+  String get pairQrLabel => 'QR-Code zum Verbinden dieses Geräts';
+
+  @override
+  String get pairWaiting => 'Warte auf die Bestätigung …';
+
+  @override
+  String pairConnected(String household) {
+    return 'Verbunden mit $household';
+  }
+
+  @override
+  String get pairOldCodeLink =>
+      'Ich habe einen Code vom Handy (ältere Version)';
+
+  @override
+  String get pairConnectAction => 'Gerät verbinden';
+
+  @override
+  String get pairOldCodeAction => 'Code für ein älteres Gerät erzeugen';
+
+  @override
+  String get pairEntryBody =>
+      'Scanne den Code, den das neue Gerät zeigt, oder tippe ihn ab.';
+
+  @override
+  String get pairCodeField => 'Code vom neuen Gerät';
+
+  @override
+  String get pairNext => 'Weiter';
+
+  @override
+  String get pairReviewBody =>
+      'Das ist der Code des Geräts, das verbunden werden soll.';
+
+  @override
+  String get pairConfirmHint =>
+      'Nur bestätigen, wenn du dieses Gerät vor dir siehst.';
+
+  @override
+  String get pairKindLabel => 'Was ist das für ein Gerät?';
+
+  @override
+  String get pairKindWall => 'Wanddisplay';
+
+  @override
+  String get pairKindKid => 'Kinder-Tablet';
+
+  @override
+  String get pairKindFamily => 'Tablet für alle';
+
+  @override
+  String get pairKindChild => 'Handy eines Kindes';
+
+  @override
+  String get pairChildLabel => 'Welches Kind?';
+
+  @override
+  String get pairNameLabel => 'Name des Geräts';
+
+  @override
+  String get pairDefaultWall => 'Wanddisplay';
+
+  @override
+  String get pairDefaultKid => 'Kinder-Tablet';
+
+  @override
+  String get pairDefaultFamily => 'Tablet';
+
+  @override
+  String pairDefaultChild(String name) {
+    return 'Handy von $name';
+  }
+
+  @override
+  String get pairApproveAction => 'Verbinden';
+
+  @override
+  String get pairApproved => 'Gerät verbunden';
+
+  @override
+  String get pairOnlyOnPersonal => 'Das geht nur auf deinem eigenen Handy.';
+
+  @override
+  String get pairPinTitle => 'Eltern-PIN festlegen';
+
+  @override
+  String get pairPinBody =>
+      'Die PIN bestätigt Änderungen auf gemeinsam genutzten Geräten. Lege sie einmal fest.';
+
+  @override
+  String get pairPinConfirm => 'PIN noch einmal eingeben';
+
+  @override
+  String get pairPinMismatch =>
+      'Die PINs stimmen nicht überein. Versuch es noch einmal.';
+
+  @override
+  String get firstRunKioskTitle => 'Wanddisplay einrichten';
+
+  @override
+  String get firstRunKioskBody =>
+      'Drei Schritte, einmal auf diesem Gerät. Danach zeigt es die Woche.';
+
+  @override
+  String get firstRunPinTitle => 'App festhalten';
+
+  @override
+  String get firstRunPinIos =>
+      'Einstellungen → Bedienungshilfen → Geführter Zugriff einschalten. WuselWall öffnen und die obere Taste dreimal schnell drücken.';
+
+  @override
+  String get firstRunPinAndroid =>
+      'Einstellungen → Sicherheit → App-Anheftung einschalten (je nach Gerät auch „Bildschirm anpinnen“). WuselWall öffnen, die Übersicht aufrufen und die Nadel antippen.';
+
+  @override
+  String get firstRunAwakeTitle => 'Bildschirm anlassen';
+
+  @override
+  String get firstRunAwakeIos =>
+      'Einstellungen → Anzeige & Helligkeit → Automatische Sperre → Nie.';
+
+  @override
+  String get firstRunAwakeAndroid =>
+      'Einstellungen → Anzeige → Bildschirm-Timeout auf das Maximum stellen.';
+
+  @override
+  String get firstRunPowerTitle => 'Am Strom lassen';
+
+  @override
+  String get firstRunPowerBody =>
+      'Dauerhaft ans Stromnetz hängen, damit es nach einem Stromausfall wieder bereit ist.';
+
+  @override
+  String get firstRunDone => 'Fertig';
+
+  @override
+  String get firstRunKidTitle => 'Willkommen';
+
+  @override
+  String get firstRunKidBody =>
+      'Tipp auf dein Bild, dann weiß WuselWall, wer du bist.';
+
+  @override
+  String get firstRunKidStart => 'Los geht’s';
 }

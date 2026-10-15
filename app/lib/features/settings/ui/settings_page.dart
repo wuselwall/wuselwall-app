@@ -17,6 +17,7 @@ import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/home/application/home_tab.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
+import 'package:wuselwall/features/identity/application/pairing_providers.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/data/sign_in_methods_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
@@ -40,6 +41,7 @@ class SettingsPage extends ConsumerWidget {
     final members = ref.watch(membersProvider);
     final devices = ref.watch(devicesProvider);
     final thisDevice = ref.watch(deviceProvider).value;
+    final canApprove = ref.watch(canApprovePairingProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -114,12 +116,29 @@ class SettingsPage extends ConsumerWidget {
           const SizedBox(height: Tokens.space6),
           _Header(
             title: l10n.settingsDevices,
-            action: IconButton(
-              tooltip: l10n.addDevice,
-              icon: const Icon(Icons.add_to_home_screen),
-              onPressed: () => _addDevice(context, ref),
-            ),
+            action: canApprove
+                ? const SizedBox.shrink()
+                : IconButton(
+                    tooltip: l10n.addDevice,
+                    icon: const Icon(Icons.add_to_home_screen),
+                    onPressed: () => _addDevice(context, ref),
+                  ),
           ),
+          // J3: the new device shows the code, this phone approves it. The code the old
+          // way stays for one release, for devices on an older app.
+          if (canApprove) ...[
+            FilledButton.icon(
+              key: const ValueKey('connect-device'),
+              onPressed: () => context.push<void>(Routes.devicePair),
+              icon: const Icon(Icons.add_to_home_screen),
+              label: Text(l10n.pairConnectAction),
+            ),
+            TextButton(
+              onPressed: () => _addDevice(context, ref),
+              child: Text(l10n.pairOldCodeAction),
+            ),
+            const SizedBox(height: Tokens.space2),
+          ],
           AsyncValueView<List<DeviceEntry>>(
             value: devices,
             onRetry: () => ref.invalidate(devicesProvider),
