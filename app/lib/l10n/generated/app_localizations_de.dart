@@ -3212,4 +3212,102 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get boardAllEvents => 'Alle Termine';
+
+  @override
+  String get reminderChannelName => 'Erinnerungen';
+
+  @override
+  String get reminderStartLabel => 'Erinnerungen einschalten';
+
+  @override
+  String reminderMorningEventsAndTasks(int events, int tasks) {
+    String _temp0 = intl.Intl.pluralLogic(
+      events,
+      locale: localeName,
+      other: '$events Termine',
+      one: '1 Termin',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      tasks,
+      locale: localeName,
+      other: '$tasks Aufgaben',
+      one: '1 Aufgabe',
+    );
+    return 'Heute: $_temp0, $_temp1';
+  }
+
+  @override
+  String reminderMorningEventsOnly(int events) {
+    String _temp0 = intl.Intl.pluralLogic(
+      events,
+      locale: localeName,
+      other: '$events Termine',
+      one: '1 Termin',
+    );
+    return 'Heute: $_temp0';
+  }
+
+  @override
+  String reminderMorningTasksOnly(int tasks) {
+    String _temp0 = intl.Intl.pluralLogic(
+      tasks,
+      locale: localeName,
+      other: '$tasks Aufgaben',
+      one: '1 Aufgabe',
+    );
+    return 'Heute: $_temp0';
+  }
+
+  @override
+  String get reminderMorningNoEvents => 'Heute steht kein Termin an.';
+
+  @override
+  String reminderMorningFirst(String time, String title) {
+    return 'Als Erstes um $time: $title';
+  }
+
+  @override
+  String reminderMorningAllDay(String title) {
+    return 'Ganztägig: $title';
+  }
+
+  @override
+  String reminderEventBody(String time) {
+    return 'Beginnt um $time';
+  }
+
+  @override
+  String get reminderSettingsTitle => 'Erinnerungen';
+
+  @override
+  String get reminderSettingsSubtitle => 'Auf diesem Telefon';
+
+  @override
+  String get reminderSettingsSection => 'Woran du erinnert werden willst';
+
+  @override
+  String get reminderStatusOn =>
+      'Erinnerungen sind auf diesem Telefon eingeschaltet.';
+
+  @override
+  String get reminderStatusOff => 'Erinnerungen sind auf diesem Telefon aus.';
+
+  @override
+  String get reminderStatusUnavailable =>
+      'Auf diesem Gerät gibt es keine Erinnerungen.';
+
+  @override
+  String get reminderEnableAction => 'Erinnerungen einschalten';
+
+  @override
+  String get reminderDeniedNote =>
+      'Ohne Erlaubnis gibt es keine Erinnerungen. Die Erlaubnis kannst du in den Systemeinstellungen ändern.';
+
+  @override
+  String get reminderLocalNote =>
+      'Erinnerungen entstehen auf diesem Telefon. Nichts davon wird an einen Server oder an Dritte geschickt.';
+
+  @override
+  String get reminderOnlyPersonal =>
+      'Erinnerungen gibt es nur auf dem persönlichen Gerät eines Familienmitglieds.';
 }

@@ -3194,4 +3194,100 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get boardAllEvents => 'All events';
+
+  @override
+  String get reminderChannelName => 'Reminders';
+
+  @override
+  String get reminderStartLabel => 'Turn on reminders';
+
+  @override
+  String reminderMorningEventsAndTasks(int events, int tasks) {
+    String _temp0 = intl.Intl.pluralLogic(
+      events,
+      locale: localeName,
+      other: '$events appointments',
+      one: '1 appointment',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      tasks,
+      locale: localeName,
+      other: '$tasks chores',
+      one: '1 chore',
+    );
+    return 'Today: $_temp0, $_temp1';
+  }
+
+  @override
+  String reminderMorningEventsOnly(int events) {
+    String _temp0 = intl.Intl.pluralLogic(
+      events,
+      locale: localeName,
+      other: '$events appointments',
+      one: '1 appointment',
+    );
+    return 'Today: $_temp0';
+  }
+
+  @override
+  String reminderMorningTasksOnly(int tasks) {
+    String _temp0 = intl.Intl.pluralLogic(
+      tasks,
+      locale: localeName,
+      other: '$tasks chores',
+      one: '1 chore',
+    );
+    return 'Today: $_temp0';
+  }
+
+  @override
+  String get reminderMorningNoEvents => 'Nothing is scheduled today.';
+
+  @override
+  String reminderMorningFirst(String time, String title) {
+    return 'First up at $time: $title';
+  }
+
+  @override
+  String reminderMorningAllDay(String title) {
+    return 'All day: $title';
+  }
+
+  @override
+  String reminderEventBody(String time) {
+    return 'Starts at $time';
+  }
+
+  @override
+  String get reminderSettingsTitle => 'Reminders';
+
+  @override
+  String get reminderSettingsSubtitle => 'On this phone';
+
+  @override
+  String get reminderSettingsSection => 'What you want to be reminded of';
+
+  @override
+  String get reminderStatusOn => 'Reminders are on on this phone.';
+
+  @override
+  String get reminderStatusOff => 'Reminders are off on this phone.';
+
+  @override
+  String get reminderStatusUnavailable => 'This device cannot show reminders.';
+
+  @override
+  String get reminderEnableAction => 'Turn on reminders';
+
+  @override
+  String get reminderDeniedNote =>
+      'Without permission there are no reminders. You can change the permission in the system settings.';
+
+  @override
+  String get reminderLocalNote =>
+      'Reminders are created on this phone. Nothing is sent to a server or to anyone else.';
+
+  @override
+  String get reminderOnlyPersonal =>
+      'Reminders are only available on a member\'s personal device.';
 }
