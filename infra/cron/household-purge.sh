@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # The daily purge of deleted families (specs/20 J6): removes the families deleted more than
-# 14 days ago, and the Auth users of their shared and kiosk devices. Runs on the home server
-# at 04:00 from homeserver's User Scripts plugin (schedule "Custom", cron `0 4 * * *`); see specs/10.
+# 14 days ago, and the Auth users of their shared and kiosk devices. For a server that schedules
+# its jobs from the host's cron instead of pg_cron (infra/jobs/schedule.sql; never both).
+# Cron: `0 4 * * *`.
 #
-# The secret lives in a root-only file next to the stack and is the same value as
-# CRON_SECRET in the stack's .env. The call stays on the host: the gateway listens on the
-# Docker bridge (172.17.0.1:54421) and nothing leaves the machine.
+# SECRET_FILE holds the same value as CRON_SECRET in the stack's .env (root-only). The call
+# stays on the host: the gateway listens on the Docker bridge and nothing leaves the machine.
 set -euo pipefail
-SECRET_FILE=${SECRET_FILE:-/srv/appdata/wuselwall/cron-secret}
+SECRET_FILE=${SECRET_FILE:?set SECRET_FILE to the file holding CRON_SECRET}
 URL=${URL:-http://172.17.0.1:54421/functions/v1/household-purge}
 
 secret=$(cat "$SECRET_FILE")

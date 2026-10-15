@@ -375,9 +375,7 @@ void main() {
       expect(bar, findsOneWidget);
       expect(find.text('Milch'), findsNothing);
 
-      await t.tap(
-        find.descendant(of: bar, matching: find.text('Einkauf')),
-      );
+      await t.tap(find.descendant(of: bar, matching: find.text('Einkauf')));
       await t.pumpAndSettle();
       expect(find.text('Milch'), findsOneWidget);
       expect(find.byType(FloatingActionButton), findsNothing);

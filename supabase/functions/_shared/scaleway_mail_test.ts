@@ -11,7 +11,7 @@ const config: ScalewayConfig = {
   secretKey: "scw-secret-test",
   projectId: "11111111-2222-3333-4444-555555555555",
   region: "fr-par",
-  fromEmail: "noreply@example.org",
+  fromEmail: "codes@example.org",
   fromName: "WuselWall",
 };
 const mail = {
@@ -52,7 +52,7 @@ Deno.test("emailsUrl: the regional endpoint, and only well-formed regions", () =
 Deno.test("emailBody: from, to, subject, text, html and project_id in Scaleway's shape", () => {
   const body = emailBody(config, mail) as Record<string, unknown>;
   assertEquals(body, {
-    from: { email: "noreply@example.org", name: "WuselWall" },
+    from: { email: "codes@example.org", name: "WuselWall" },
     to: [{ email: "anna@example.com" }],
     subject: "Your WuselWall code: 123456",
     text: "t",

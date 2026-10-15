@@ -18,7 +18,7 @@ const settings: HookSettings = {
     secretKey: "scw-secret-test",
     projectId: "11111111-2222-3333-4444-555555555555",
     region: "fr-par",
-    fromEmail: "noreply@example.org",
+    fromEmail: "codes@example.org",
     fromName: "WuselWall",
   },
 };
@@ -109,7 +109,7 @@ Deno.test("a signed magic-link mail is rendered in English and sent through Scal
   assertEquals(sent[0].headers.get("X-Auth-Token"), "scw-secret-test");
   assertEquals(sent[0].json.to, [{ email: "anna@example.com" }]);
   assertEquals(sent[0].json.from, {
-    email: "noreply@example.org",
+    email: "codes@example.org",
     name: "WuselWall",
   });
   assertEquals(sent[0].json.project_id, "11111111-2222-3333-4444-555555555555");
@@ -282,7 +282,7 @@ Deno.test("settingsFromEnv names the missing variables and never their values", 
     SEND_EMAIL_HOOK_SECRET: SECRET,
     SCW_SECRET_KEY: "k",
     SCW_PROJECT_ID: "p",
-    MAIL_FROM: "noreply@example.org",
+    MAIL_FROM: "codes@example.org",
   };
   const ok = settingsFromEnv((name) => full[name]);
   assert(ok.ok);

@@ -35,7 +35,7 @@ export const legal = {
   phone: '',
   // The web server keeps no access logs; its error log (which holds a client's IP
   // address) is deleted after this many days at the latest. The privacy policy promises
-  // it: nginx rotates weekly and a daily job on the home server deletes files last
+  // it: nginx rotates weekly and a daily job on the web server deletes files last
   // written 21 or more days ago, so no entry outlives 29 days (specs/10).
   logRetentionDays: '30',
 } as const;

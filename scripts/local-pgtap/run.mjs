@@ -1,5 +1,5 @@
 // Runs supabase/migrations and supabase/tests on a throwaway local Postgres 15 — no Docker,
-// no sudo, nothing on the home server. A bare Postgres plus shim.sql (the few Supabase
+// no sudo, no live server. A bare Postgres plus shim.sql (the few Supabase
 // roles, auth and realtime objects the migrations touch) is not Supabase: CI's stack and
 // scripts/remote-pgtap.sh stay the real check. This one is for the minutes in between.
 //

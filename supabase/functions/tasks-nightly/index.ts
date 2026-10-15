@@ -9,9 +9,9 @@
 // is a 401 with no body. The service role is only used for the two service_role
 // functions: tasks_schedule_all and tasks_close_day.
 //
-// Scheduling: infra/cron/tasks-nightly.sh, run at 03:00 by homeserver's User Scripts plugin,
-// POSTs here through the gateway on the Docker bridge with the secret from a root-only
-// file. The router lets this function through without a user JWT (NO_USER_FUNCTIONS in
+// Scheduling: pg_cron and pg_net (infra/jobs/schedule.sql) POST here with the secret
+// from Vault, or infra/cron/tasks-nightly.sh does from the host's cron through the gateway
+// on the Docker bridge. The router lets this function through without a user JWT (NO_USER_FUNCTIONS in
 // infra/supabase/volumes/functions/main/index.ts); the secret is the only way in.
 // Run it once a day. Re-running is safe: materialising is keyed, and the day close is
 // recorded in app.tasks_day_closed.

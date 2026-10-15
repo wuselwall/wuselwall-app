@@ -6,11 +6,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/router.dart';
+import 'package:wuselwall/app/server_session.dart';
 import 'package:wuselwall/app/theme/register_labels.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
+import 'package:wuselwall/core/config/config_providers.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/server/server_address.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/qr_code_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
@@ -31,6 +34,7 @@ import 'package:wuselwall/features/identity/ui/set_password_dialog.dart';
 import 'package:wuselwall/features/invitations/ui/members_invitations.dart';
 import 'package:wuselwall/features/settings/application/household_export_providers.dart';
 import 'package:wuselwall/features/settings/data/household_export_repository.dart';
+import 'package:wuselwall/features/shopping/data/shopping_store.dart';
 import 'package:wuselwall/features/system/ui/class_labels.dart';
 import 'package:wuselwall/features/today/application/today_providers.dart';
 import 'package:wuselwall/features/today/data/getting_started_repository.dart';
@@ -187,6 +191,7 @@ class SettingsPage extends ConsumerWidget {
               ],
             ),
           ),
+          const _ServerSection(),
           if (thisDevice?.deviceClass == DeviceClass.personal) ...[
             const _FamilySection(),
             const SizedBox(height: Tokens.space6),
@@ -443,13 +448,13 @@ class _NewDeviceDialogState extends State<_NewDeviceDialog> {
   }
 }
 
-class _CodeDialog extends StatelessWidget {
+class _CodeDialog extends ConsumerWidget {
   const _CodeDialog({required this.code});
 
   final EnrolmentCode code;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     return AlertDialog(
       title: Text(l10n.enrolmentCodeTitle),
@@ -472,7 +477,11 @@ class _CodeDialog extends StatelessWidget {
               ),
             ),
             const SizedBox(height: Tokens.space4),
-            EnrolmentQr(key: const ValueKey('enrolment-qr'), code: code.code),
+            EnrolmentQr(
+              key: const ValueKey('enrolment-qr'),
+              code: code.code,
+              server: ref.watch(appConfigProvider).supabaseUrl,
+            ),
             const SizedBox(height: Tokens.space3),
             Text(l10n.enrolmentCodeHint),
           ],
@@ -799,8 +808,9 @@ class _SecuritySection extends ConsumerWidget {
             child: Text(l10n.pinChangeAction),
           ),
         ),
-        // Not on the web until the passkeys SDK is self-hosted (web/index.html).
-        if (!kIsWeb)
+        // Not on the web until the passkeys SDK is self-hosted (web/index.html), and
+        // only with the project's own servers (ADR-018).
+        if (!kIsWeb && ref.watch(appConfigProvider).nativeSignIn)
           ListTile(
             leading: const Icon(Icons.fingerprint),
             title: Text(l10n.passkeyTitle),
@@ -953,5 +963,88 @@ class _TotpEnrolDialogState extends ConsumerState<_TotpEnrolDialog> {
         ),
       ],
     );
+  }
+}
+
+/// The server this app talks to (ADR-018): its address and QR code, so another device
+/// joins it with one scan, and the way to another server. Only for a store build, which
+/// chose its server; a development build names its own.
+class _ServerSection extends ConsumerWidget {
+  const _ServerSection();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final config = ref.watch(appConfigProvider);
+    final session = ref.watch(serverSessionProvider);
+    if (config.server == null) return const SizedBox.shrink();
+    final server = Uri.parse(config.supabaseUrl);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const SizedBox(height: Tokens.space6),
+        Text(
+          l10n.settingsServer,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        ListTile(
+          leading: const Icon(Icons.dns_outlined),
+          title: SelectableText(displayServerAddress(server)),
+          subtitle: Text(l10n.settingsServerBody(displayServerAddress(server))),
+        ),
+        Center(
+          child: QrCodeView(
+            key: const ValueKey('server-qr'),
+            data: serverQrPayload(server),
+            semanticsLabel: l10n.settingsServer,
+          ),
+        ),
+        if (session.leave != null)
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: TextButton.icon(
+              onPressed: () => _switch(context, ref, session),
+              icon: const Icon(Icons.swap_horiz),
+              label: Text(l10n.settingsServerSwitch),
+            ),
+          ),
+      ],
+    );
+  }
+
+  /// Leaving a server empties the device: its outbox belongs to that server's household.
+  /// A guardian decision, so a child cannot move the family tablet elsewhere.
+  Future<void> _switch(
+    BuildContext context,
+    WidgetRef ref,
+    ServerSession session,
+  ) async {
+    final l10n = context.l10n;
+    if (!await ensureGuardian(context, ref) || !context.mounted) return;
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.settingsServerSwitch),
+        content: Text(l10n.settingsServerSwitchConfirm),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(l10n.cancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(l10n.settingsServerSwitch),
+          ),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    final identity = ref.read(identityRepositoryProvider);
+    final personal =
+        ref.read(deviceProvider).value?.deviceClass == DeviceClass.personal;
+    await ref.read(shoppingStoreProvider).clear();
+    // Like "Sign out": a personal phone also gives up its device record.
+    await (personal ? identity.signOutDevice() : identity.signOut());
+    await session.leave?.call();
   }
 }

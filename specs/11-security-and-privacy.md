@@ -43,17 +43,17 @@ insiders. If a threat model does not exclude anything it is not a threat model.
 
 ### T1 — internet-facing exposure
 
-*Revised 2026-10-11 for the home server ([ADR-013](adr/ADR-013-one-self-hosted-environment.md)).*
+*Revised 2026-10-14 for any server at home ([ADR-013](adr/ADR-013-self-hosted-compose-stack.md), [ADR-018](adr/ADR-018-self-hosted-only.md)).*
 
-- **Only 443 is forwarded** from the router, to nginx. The DNS record is proxied by
-  Cloudflare, so the home address is not published in DNS.
-- **nginx forwards exactly four API prefixes** to the gateway, on `api.wuselwall.app`
-  (and, until old app builds are gone, on `wusel.example.org`)
-  ([`infra/nginx/wuselwall.app.conf`](../infra/nginx/wuselwall.app.conf)); Studio, the
-  `/pg/` metadata API and everything else answer 404.
-- **Postgres (127.0.0.1:54422) and Studio (behind the gateway, reached by SSH tunnel) are never forwarded or proxied.**
-  The CLI stack publishes them on the home network only; anyone on the home wifi can reach
-  them, which is accepted for a household network and must not be extended.
+- **Only 80 and 443 are forwarded** from the router, to the front (the release's Caddy, or
+  the operator's own web server). A proxy such as Cloudflare in front additionally keeps the
+  home address out of DNS; the guide names it as an option, with its trade-off.
+- **The front forwards exactly four API prefixes** to the gateway, plus the discovery
+  document ([`infra/supabase/volumes/caddy/Caddyfile`](../infra/supabase/volumes/caddy/Caddyfile));
+  Studio, the `/pg/` metadata API and everything else answer 404.
+- **Postgres (127.0.0.1:54422) and Studio (off by default; behind the gateway, reached by
+  SSH tunnel) are never forwarded or proxied.** The gateway itself listens on the Docker
+  bridge only.
 - **Anonymous users are disabled; public sign-up is enabled for adults** (since
   ADR-014). A new account has no household claim and therefore reads and writes nothing
   (RLS), and it can create a household only in the instance's `household_creation` mode
@@ -62,10 +62,10 @@ insiders. If a threat model does not exclude anything it is not a threat model.
   `auth.secret_key` come from the git-ignored `supabase/.env`. The defaults are public;
   with them, anyone holds the service role.
 - **Founder codes are random and single use** (`scripts/remote-setup-token.sh`); the
-  seed's `dev-setup` is in git and must never exist on the home server (S3 in
+  seed's `dev-setup` is in git and must never exist on a live server (S3 in
   [19](19-security-and-architecture-review.md)).
-- Cloudflare terminates TLS with modern defaults; set *Always Use HTTPS* and HSTS in its
-  dashboard. Between Cloudflare and nginx: the origin certificate, SSL mode Full (strict).
+- TLS with modern defaults: Caddy's, or the operator's front configured likewise (HTTPS
+  only, HSTS).
 - Supabase's images are used as published, pinned through the Supabase CLI version in
   `package.json`; nothing is built on the server, and no auto-updater touches them.
 
@@ -163,8 +163,8 @@ sign-in providers (they learn that the person signs in to WuselWall; scopes are
 `email`/`name`/`profile` only), and **one SMTP provider** ([Q41](14-open-questions.md);
 decided: Scaleway, EU), which sees email addresses and sign-in codes and nothing from
 the household. *(ADR-015's Supabase Inc. as Cloud's processor is gone with Cloud, [ADR-018](adr/ADR-018-self-hosted-only.md).)*
-**Since ADR-018**, the store app carries **Google's iOS sign-in library** for the family's
-server. Its privacy manifest declares device ID and usage data for analytics (Google's,
+**Since ADR-018**, the store app carries **Google's iOS sign-in library** for the
+first-party servers' native sign-in. Its privacy manifest declares device ID and usage data for analytics (Google's,
 not tracking), and the privacy policy and store labels say so. Apple's sign-in is part of
 iOS and adds no code.
 **Found 2026-10-13, fixed 2026-10-14:** the Android QR scanner used `mobile_scanner`, which bundles Google's **ML Kit** and sent device, app and performance data with a per-installation identifier to Google. The scanner now uses the `camera` plugin and the pure-Dart `zxing2` decoder on every platform, so no vendor SDK reads the camera image ([Q49](14-open-questions.md)).
@@ -265,12 +265,12 @@ With Supabase, row-level security is not defence in depth; it is the perimeter.
   the requesting device. The approval screen repeats the code and warns against
   approving a device that is not in front of you. That is the one social-engineering
   path, and it ends in a shared device a guardian can see and revoke in Geräte.
-- **Other servers cannot harvest the family's sign-ins** ([ADR-018](adr/ADR-018-self-hosted-only.md),
+- **Other servers cannot harvest sign-ins meant for a first-party server** ([ADR-018](adr/ADR-018-self-hosted-only.md),
   decision 6; first argued for Cloud in ADR-015). The store app uses native Apple and
   Google sign-in, whose ID tokens are addressed to our app, only against the first-party
-  servers compiled into the app (the user's homeserver stack). Against any other server it
+  servers named at build time (`WW_FIRST_PARTY_HOSTS`). Against any other server it
   offers email and the operator's own redirect clients. A hostile server therefore never
-  receives a token that the family's server would accept. The app shows the server's host
+  receives a token that a first-party server would accept. The app shows the server's host
   on every sign-in screen.
 - **Cross-household isolation is now about strangers.** The pgTAP cross-household cases
   (T9) are release-blocking, and the catalogue test pins the exact list of
@@ -351,7 +351,7 @@ With Supabase, row-level security is not defence in depth; it is the perimeter.
 - [ ] Router forwards 443 only; Postgres, Studio and Mailpit not reachable from outside the home
 - [ ] nginx answers 404 outside the four API prefixes
 - [ ] Anonymous users disabled; `household_creation` is `code`; the stack runs on its own keys, not the CLI defaults
-- [ ] No `dev-setup` founder code on the home server; the family's own founder code used and consumed
+- [ ] No `dev-setup` founder code on a live server; the household's own founder code used and consumed
 - [ ] Sign-in with Apple, Google, email code and password each tested on a real device; the
       email-code mail arrives (not in spam) in both languages
 - [ ] A stranger's fresh account sees nothing: one manual probe of `api` with its token

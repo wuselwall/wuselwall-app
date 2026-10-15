@@ -3973,4 +3973,90 @@ class AppLocalizationsEn extends AppLocalizations {
   String mfaResetDone(String name) {
     return '$name\'s second factor is reset.';
   }
+
+  @override
+  String get serverTitle => 'Which server?';
+
+  @override
+  String get serverLead =>
+      'WuselWall keeps your family\'s data on your family\'s own server. Enter its address, or scan its QR code.';
+
+  @override
+  String get serverAddressLabel => 'Server address';
+
+  @override
+  String get serverAddressHint => 'e.g. api.example.org';
+
+  @override
+  String get serverConnect => 'Connect';
+
+  @override
+  String get serverScan => 'Scan QR code';
+
+  @override
+  String get serverScanTitle => 'Scan the server\'s QR code';
+
+  @override
+  String get serverDemo => 'Try it without a server';
+
+  @override
+  String get serverDemoHint =>
+      'With an example family. Nothing leaves this device.';
+
+  @override
+  String get serverHelp =>
+      'No server yet? The guide at wuselwall.app/docs shows how to set one up.';
+
+  @override
+  String get serverInvalid => 'That is not a server address.';
+
+  @override
+  String get serverUnreachable =>
+      'The server does not answer. Is the address right, and are you online?';
+
+  @override
+  String get serverNotWuselwall =>
+      'There is no WuselWall server at this address.';
+
+  @override
+  String get serverTooOld =>
+      'This server needs an update. Ask whoever runs it to update WuselWall.';
+
+  @override
+  String get serverAppTooOld =>
+      'This server needs a newer version of the app. Please update WuselWall.';
+
+  @override
+  String get serverIncompatibleTitle => 'Server and app don\'t fit together';
+
+  @override
+  String get serverChooseOther => 'Choose another server';
+
+  @override
+  String get demoBanner => 'Example family: nothing is saved';
+
+  @override
+  String get demoExit => 'Exit';
+
+  @override
+  String get settingsServer => 'Server';
+
+  @override
+  String settingsServerBody(String address) {
+    return 'This app talks to $address. Scan this code with the WuselWall app on another device to connect it to the same server.';
+  }
+
+  @override
+  String get settingsServerSwitch => 'Change server';
+
+  @override
+  String get settingsServerSwitchConfirm =>
+      'This device will be signed out and forget everything stored on it. Then you can choose another server.';
+
+  @override
+  String get setupPhoneTitle => 'Continue on your phone';
+
+  @override
+  String get setupPhoneBody =>
+      'Open the WuselWall app on your phone, choose this server by scanning the code, then sign in there.';
 }

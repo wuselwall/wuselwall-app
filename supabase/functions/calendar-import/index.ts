@@ -3,7 +3,8 @@
 //
 // Two modes, told apart by the request:
 //
-// - Scheduled (header `x-cron-secret`, no body): the hourly job of infra/cron/calendar-import.sh.
+// - Scheduled (header `x-cron-secret`, no body): the hourly job of infra/jobs/schedule.sql
+//   (or infra/cron/calendar-import.sh from the host's cron).
 //   Fetches up to 20 calendars that are active and were last attempted more than 55 minutes ago
 //   (api.external_calendar_due), oldest attempt first. Authenticated like holidays-sync: the
 //   secret, compared in constant time, and nothing else.

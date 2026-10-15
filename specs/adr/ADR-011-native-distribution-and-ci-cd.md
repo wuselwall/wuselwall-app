@@ -1,7 +1,7 @@
 # ADR-011 — Native app distribution and the CI/CD pipeline
 
 **Status:** Accepted · 2026-10-11 · Follows from [ADR-010](ADR-010-flutter-and-self-hosted-supabase.md) ·
-Amended by [ADR-013](ADR-013-one-self-hosted-environment.md): one environment, no `deploy.yml` ·
+Amended by [ADR-013](ADR-013-self-hosted-compose-stack.md): one self-hosted stack, no `deploy.yml` ·
 Amended by [ADR-014](ADR-014-self-service-onboarding.md): opening the app to other
 households needs public distribution (TestFlight public link or the App Store, Play open
 testing or production), decided in [Q42](../14-open-questions.md) · Amended by
@@ -45,16 +45,15 @@ starter's `com.example.*` values. Consequences for this pipeline:
 |---|---|---|
 | **iOS / iPadOS** | **TestFlight**, internal testing, via the **Apple Developer Program** | The only route that installs on a family member's device without a cable or a Mac, updates itself, and needs no App Review for internal testers. Builds expire after 90 days, which a release every few weeks makes irrelevant. |
 | **Android** (wall tablet, any Android phone) | **Google Play internal testing track** | Automatic updates on the wall tablet without touching it, no review for internal tracks, a one-time registration fee. A signed APK attached to a GitHub Release remains the fallback. |
-| **Laptop browser** | The Flutter **web build**, served as static files by the home server's nginx | Nothing to install. |
+| **Laptop browser** | The Flutter **web build**, served as static files by each server | Nothing to install. |
 
 Fallback for iOS if TestFlight proves awkward for the children's accounts: **Ad Hoc**
-distribution to the registered UDIDs of the household's devices, installed from a page on
-the home server. Decided in [Q37](../14-open-questions.md) once both are tried on a real iPad.
+distribution to the registered UDIDs of the household's devices, installed from a web page. Decided in [Q37](../14-open-questions.md) once both are tried on a real iPad.
 
 ### CI/CD on GitHub Actions
 
 Two workflows, one responsibility each (`deploy.yml` was dropped by ADR-013: migrations
-are applied to the one environment by script, after a backup). Detail in [16](../16-setup-plan.md#cicd-at-a-glance).
+are applied to a server by script, after a backup). Detail in [16](../16-setup-plan.md#cicd-at-a-glance).
 
 | Workflow | Trigger | Does |
 |---|---|---|
@@ -69,7 +68,7 @@ are applied to the one environment by script, after a backup). Detail in [16](..
 - **iOS builds only run on tags**, never on pull requests: macOS runner minutes on a
   private repository are billed at ten times the Linux rate and the free allowance
   covers roughly ten iOS builds a month.
-- **No staging environment.** One household, one environment (ADR-013). Migrations are instead
+- **No staging environment.** One landscape per server (ADR-013). Migrations are instead
   rehearsed in CI against an empty database on every pull request and, before risky
   releases, against last night's restored backup (the restore drill doing double duty).
 
@@ -116,5 +115,5 @@ Complements CI rather than replacing it, if a Mac is available (Q35).
 - **More moving parts at release**: certificates expire yearly, the Play upload key must
   never be lost, TestFlight builds lapse after 90 days. Each is a calendar reminder,
   listed in [10](../10-deployment-and-ops.md#updates).
-- Apple and Google become parties to the build and update process — not to the family's
-  data, which stays on the home server.
+- Apple and Google become parties to the build and update process — not to a household's
+  data, which stays on its own server.

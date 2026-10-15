@@ -145,7 +145,7 @@ language sql stable security definer set search_path = '' as $$
                                        and o.active and o.id <> p.id and o.role = 'guardian'
                                        and o.auth_user_id is not null)
                         then 'last_guardian' end,
-    -- Invitations naming this account's confirmed email (20261014210000_invitations.sql),
+    -- Invitations naming this account's confirmed email (20261015103000_invitations.sql),
     -- never into a deleted family.
     'pending_invitations', coalesce((
       select jsonb_agg(jsonb_build_object(

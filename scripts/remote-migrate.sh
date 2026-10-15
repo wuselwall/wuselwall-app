@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# The only way to change the one environment's database (specs/10#changing-the-database):
+# The way to change a server's database from a checkout (specs/10#changing-the-database):
 # dump first, apply the pending migrations, then run the pgTAP suite (rolled-back
 # transactions, safe on live data). Stops at the first failure.
 set -euo pipefail

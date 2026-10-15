@@ -1,8 +1,8 @@
 # The user documentation (docs/): the Flutter web demo, its screenshots in both languages
 # and both themes, the VitePress site. A pull request that touches the app or the docs gets
 # the build as a check (screenshots as an artifact to look at); a push to main also
-# publishes it at https://wuselwall.app/docs/ through the home server's runner
-# (label wuselwall-deploy, CI Runner Farm plugin) and infra/docs/receive-docs.sh (specs/10).
+# publishes it at https://wuselwall.app/docs/ through a self-hosted runner (label
+# wuselwall-deploy) that hands the site over SSH to the web server (specs/10).
 name: docs
 on:
   workflow_dispatch:
@@ -48,18 +48,20 @@ jobs:
     steps:
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with: { name: docs-site, path: site }
-      # The key can only run receive-docs.sh on the server (forced command in
+      # The key can only run the receiving script on the web server (a forced command in
       # authorized_keys); the pinned host key keeps it from talking to anything else.
-      - name: Publish on the home server
+      # DOCS_DEPLOY_TARGET is user@host of that server.
+      - name: Publish
         env:
           KEY: ${{ secrets.DOCS_DEPLOY_KEY }}
           KNOWN_HOSTS: ${{ secrets.DOCS_DEPLOY_KNOWN_HOSTS }}
+          TARGET: ${{ secrets.DOCS_DEPLOY_TARGET }}
         run: |
           command -v ssh >/dev/null || { sudo apt-get update -qq && sudo apt-get install -y -qq openssh-client; }
           d=$(mktemp -d); trap 'rm -rf "$d"' EXIT
           printf '%s\n' "$KEY" > "$d/key"; chmod 600 "$d/key"
           printf '%s\n' "$KNOWN_HOSTS" > "$d/known_hosts"
           tar -czf - -C site . | ssh -i "$d/key" -o IdentitiesOnly=yes -o BatchMode=yes \
-            -o StrictHostKeyChecking=yes -o UserKnownHostsFile="$d/known_hosts" root@runner.example.org
+            -o StrictHostKeyChecking=yes -o UserKnownHostsFile="$d/known_hosts" "$TARGET"
       - name: The published site answers
         run: curl -fsS https://wuselwall.app/docs/ | grep -q 'WuselWall'

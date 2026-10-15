@@ -1,0 +1,27 @@
+# A server release (ADR-018, decision 9): on a tag server-v<version>, the archive that
+# server/wuselwall installs and updates from, attached to a GitHub release. Families
+# download it; the project runs nothing for them.
+name: server-release
+on:
+  push:
+    tags: ['server-v*']
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with: { flutter-version-file: app/pubspec.yaml, cache: true }
+      - name: Build
+        run: scripts/build-server-release.sh "${GITHUB_REF_NAME#server-v}"
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=${GITHUB_REF_NAME#server-v}
+          gh release create "$GITHUB_REF_NAME" "dist/wuselwall-server-$version.tar.gz" \
+            --title "WuselWall server $version" \
+            --notes "Install or update: see https://wuselwall.app/docs/en/server/ (German: https://wuselwall.app/docs/server/)."

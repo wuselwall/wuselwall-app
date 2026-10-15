@@ -100,6 +100,7 @@ const longPress = async (page, locator) => {
  * not lose the others.
  */
 const shots = [
+  { name: 'setup-server', scenario: 'server', viewport: PHONE },
   { name: 'setup-start', scenario: 'setup', viewport: PHONE },
   { name: 'setup-sign-in', scenario: 'setup', viewport: PHONE, steps: async (p, t) => press(p, t.signIn) },
   // The adult home opens on the calendar, so the shopping shots first press its nav destination.

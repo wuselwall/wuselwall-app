@@ -27,7 +27,10 @@ List<List<int>> _render(String payload, {int scale = 4}) {
       final mx = x ~/ scale - quiet;
       final my = y ~/ scale - quiet;
       final dark =
-          mx >= 0 && my >= 0 && mx < qr.moduleCount && my < qr.moduleCount &&
+          mx >= 0 &&
+          my >= 0 &&
+          mx < qr.moduleCount &&
+          my < qr.moduleCount &&
           qr.isDark(my, mx);
       return dark ? 0 : 255;
     });
@@ -133,10 +136,7 @@ void main() {
   });
 
   group('QrScanPage fallbacks', () {
-    Future<void> pumpPage(
-      WidgetTester tester,
-      ListCameras listCameras,
-    ) async {
+    Future<void> pumpPage(WidgetTester tester, ListCameras listCameras) async {
       await tester.pumpWidget(
         MaterialApp(
           locale: const Locale('de'),
