@@ -1144,5 +1144,72 @@
   "feedSubTitle": "Abonnierte Kalender einschließen",
   "feedSubHelp": "Termine aus importierten Kalendern (z. B. Verein, Müllabfuhr) erscheinen auch im Abo.",
   "feedSubSummary": "Abonnierte Kalender",
-  "boardAllEvents": "Alle Termine"
+  "boardAllEvents": "Alle Termine",
+  "reminderChannelName": "Erinnerungen",
+  "reminderStartLabel": "Erinnerungen einschalten",
+  "reminderMorningEventsAndTasks": "Heute: {events, plural, one{1 Termin} other{{events} Termine}}, {tasks, plural, one{1 Aufgabe} other{{tasks} Aufgaben}}",
+  "@reminderMorningEventsAndTasks": {
+    "placeholders": {
+      "events": {
+        "type": "int"
+      },
+      "tasks": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderMorningEventsOnly": "Heute: {events, plural, one{1 Termin} other{{events} Termine}}",
+  "@reminderMorningEventsOnly": {
+    "placeholders": {
+      "events": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderMorningTasksOnly": "Heute: {tasks, plural, one{1 Aufgabe} other{{tasks} Aufgaben}}",
+  "@reminderMorningTasksOnly": {
+    "placeholders": {
+      "tasks": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderMorningNoEvents": "Heute steht kein Termin an.",
+  "reminderMorningFirst": "Als Erstes um {time}: {title}",
+  "@reminderMorningFirst": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderMorningAllDay": "Ganztägig: {title}",
+  "@reminderMorningAllDay": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderEventBody": "Beginnt um {time}",
+  "@reminderEventBody": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderSettingsTitle": "Erinnerungen",
+  "reminderSettingsSubtitle": "Auf diesem Telefon",
+  "reminderSettingsSection": "Woran du erinnert werden willst",
+  "reminderStatusOn": "Erinnerungen sind auf diesem Telefon eingeschaltet.",
+  "reminderStatusOff": "Erinnerungen sind auf diesem Telefon aus.",
+  "reminderStatusUnavailable": "Auf diesem Gerät gibt es keine Erinnerungen.",
+  "reminderEnableAction": "Erinnerungen einschalten",
+  "reminderDeniedNote": "Ohne Erlaubnis gibt es keine Erinnerungen. Die Erlaubnis kannst du in den Systemeinstellungen ändern.",
+  "reminderLocalNote": "Erinnerungen entstehen auf diesem Telefon. Nichts davon wird an einen Server oder an Dritte geschickt.",
+  "reminderOnlyPersonal": "Erinnerungen gibt es nur auf dem persönlichen Gerät eines Familienmitglieds."
 }

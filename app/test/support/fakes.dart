@@ -12,6 +12,7 @@ import 'package:wuselwall/core/config/config_providers.dart';
 import 'package:wuselwall/core/connectivity/connectivity_provider.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/core/notifications/notification_scheduler_provider.dart';
 import 'package:wuselwall/core/realtime/household_channel.dart';
 import 'package:wuselwall/core/supabase/supabase_providers.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
@@ -26,6 +27,8 @@ import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/identity/domain/sign_in_method.dart';
 import 'package:wuselwall/features/meals/data/meals_repository.dart';
 import 'package:wuselwall/features/region/data/region_repository.dart';
+import 'package:wuselwall/features/reminders/application/reminder_providers.dart';
+import 'package:wuselwall/features/reminders/data/reminder_dismissal_store.dart';
 import 'package:wuselwall/features/school/data/school_repository.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 import 'package:wuselwall/features/shopping/data/shopping_store.dart';
@@ -36,6 +39,7 @@ import 'package:wuselwall/features/today/data/getting_started_repository.dart';
 import 'fake_external_calendars.dart';
 import 'fake_getting_started.dart';
 import 'fake_meals.dart';
+import 'fake_notifications.dart';
 import 'fake_region.dart';
 import 'fake_school.dart';
 import 'fake_tasks.dart';
@@ -453,8 +457,18 @@ List<Override> baseOverrides({
   FakeShoppingRepository? shopping,
   FakeSignInMethods? signInMethods,
   FakeExternalCalendarsRepository? externalCalendars,
+  FakeNotificationScheduler? notifications,
   bool signedIn = true,
 }) => [
+  // Local reminders: granted and available by default, so the Today row stays hidden in
+  // tests that are not about it; the plan applies at once (no debounce).
+  notificationSchedulerProvider.overrideWithValue(
+    notifications ?? FakeNotificationScheduler(),
+  ),
+  reminderDismissalStoreProvider.overrideWithValue(
+    MemoryReminderDismissalStore(),
+  ),
+  reminderDebounceProvider.overrideWithValue(Duration.zero),
   externalCalendarsRepositoryProvider.overrideWithValue(
     externalCalendars ?? FakeExternalCalendarsRepository(),
   ),

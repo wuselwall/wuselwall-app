@@ -5593,6 +5593,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All events'**
   String get boardAllEvents;
+
+  /// No description provided for @reminderChannelName.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders'**
+  String get reminderChannelName;
+
+  /// No description provided for @reminderStartLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on reminders'**
+  String get reminderStartLabel;
+
+  /// No description provided for @reminderMorningEventsAndTasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Today: {events, plural, one{1 appointment} other{{events} appointments}}, {tasks, plural, one{1 chore} other{{tasks} chores}}'**
+  String reminderMorningEventsAndTasks(int events, int tasks);
+
+  /// No description provided for @reminderMorningEventsOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Today: {events, plural, one{1 appointment} other{{events} appointments}}'**
+  String reminderMorningEventsOnly(int events);
+
+  /// No description provided for @reminderMorningTasksOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Today: {tasks, plural, one{1 chore} other{{tasks} chores}}'**
+  String reminderMorningTasksOnly(int tasks);
+
+  /// No description provided for @reminderMorningNoEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing is scheduled today.'**
+  String get reminderMorningNoEvents;
+
+  /// No description provided for @reminderMorningFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'First up at {time}: {title}'**
+  String reminderMorningFirst(String time, String title);
+
+  /// No description provided for @reminderMorningAllDay.
+  ///
+  /// In en, this message translates to:
+  /// **'All day: {title}'**
+  String reminderMorningAllDay(String title);
+
+  /// No description provided for @reminderEventBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts at {time}'**
+  String reminderEventBody(String time);
+
+  /// No description provided for @reminderSettingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders'**
+  String get reminderSettingsTitle;
+
+  /// No description provided for @reminderSettingsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'On this phone'**
+  String get reminderSettingsSubtitle;
+
+  /// No description provided for @reminderSettingsSection.
+  ///
+  /// In en, this message translates to:
+  /// **'What you want to be reminded of'**
+  String get reminderSettingsSection;
+
+  /// No description provided for @reminderStatusOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders are on on this phone.'**
+  String get reminderStatusOn;
+
+  /// No description provided for @reminderStatusOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders are off on this phone.'**
+  String get reminderStatusOff;
+
+  /// No description provided for @reminderStatusUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This device cannot show reminders.'**
+  String get reminderStatusUnavailable;
+
+  /// No description provided for @reminderEnableAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on reminders'**
+  String get reminderEnableAction;
+
+  /// No description provided for @reminderDeniedNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Without permission there are no reminders. You can change the permission in the system settings.'**
+  String get reminderDeniedNote;
+
+  /// No description provided for @reminderLocalNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders are created on this phone. Nothing is sent to a server or to anyone else.'**
+  String get reminderLocalNote;
+
+  /// No description provided for @reminderOnlyPersonal.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders are only available on a member\'s personal device.'**
+  String get reminderOnlyPersonal;
 }
 
 class _AppLocalizationsDelegate
