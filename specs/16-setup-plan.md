@@ -417,10 +417,11 @@ release can also be run from a Mac with the same lanes if one becomes available.
 
 ### Server address
 
-Releases are built with `env/dev.json`, which CI writes from the repository secrets
-`WW_SUPABASE_URL` and `WW_SUPABASE_PUBLISHABLE_KEY`, until they become store builds without
-a server (`env/store.json`, [ADR-018](adr/ADR-018-self-hosted-only.md)). Servers are
-reached over HTTPS, so the apps need no cleartext exception.
+Releases are store builds without a server (`env/store.json`,
+[ADR-018](adr/ADR-018-self-hosted-only.md)): the person chooses one at the first start. A
+device updated from an earlier build, which had its server compiled in, keeps a session's
+server: the first host of `WW_FIRST_PARTY_HOSTS`. Servers are reached over HTTPS, so the
+apps need no cleartext exception.
 
 ### Getting it onto the devices
 
@@ -580,7 +581,7 @@ manager.
 | `PLAY_SERVICE_ACCOUNT_JSON` | GitHub secrets | Play upload |
 | `WW_JWT_SECRET`, `WW_SECRET_KEY` | `supabase/.env` on the development machine | the Supabase stack (CLI) |
 | `RESTIC_PASSWORD`, backup-target credentials, healthchecks URL | `backup.env` next to the server's tool (`BACKUP_ENV`) | backups |
-| `WW_SUPABASE_URL`, `WW_SUPABASE_PUBLISHABLE_KEY`, `WW_FIRST_PARTY_HOSTS` (not secret, but kept out of public logs) | GitHub secrets | the release builds' configuration |
+| `WW_FIRST_PARTY_HOSTS` (not secret, but kept out of public logs) | GitHub secret | the hosts with native sign-in and passkeys in release builds |
 | `DOCS_DEPLOY_KEY`, `DOCS_DEPLOY_KNOWN_HOSTS`, `DOCS_DEPLOY_TARGET` | GitHub secrets | publishing the docs |
 | Push credentials (APNs key, FCM service account) | Edge Function secrets | `push-send` |
 | `WW_APPLE_SECRET` (the six-monthly client-secret JWT), the Sign in with Apple `.p8` key | The server's stack `.env` (`GOTRUE_EXTERNAL_APPLE_*`); the `.p8` in the password manager only | Supabase Auth (Apple via OAuth); the `account-delete` and code-exchange functions |
