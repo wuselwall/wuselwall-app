@@ -10,6 +10,7 @@ import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
+import 'package:wuselwall/features/reminders/application/reminder_providers.dart';
 
 /// Locales in priority order. German is first because it is the fallback for any
 /// device language the app does not support (specs/09, CLAUDE.md).
@@ -40,7 +41,8 @@ class WuselWallApp extends ConsumerWidget {
       theme: AppTheme.build(register, night ? Shade.night : Shade.light),
       darkTheme: AppTheme.build(register, night ? Shade.night : Shade.dark),
       themeMode: ThemeMode.system,
-      builder: (context, child) => _MemberAccent(child: child!),
+      builder: (context, child) =>
+          _ReminderHost(child: _MemberAccent(child: child!)),
     );
   }
 }
@@ -66,5 +68,47 @@ class _MemberAccent extends ConsumerWidget {
       data: AppTheme.forMember(Theme.of(context), member.color),
       child: child,
     );
+  }
+}
+
+/// Keeps the phone's local reminders in step (features/reminders): reads the sync once
+/// at start, and re-plans whenever the app comes back to the foreground, since the days
+/// and the OS permission may have moved on while it was closed.
+class _ReminderHost extends ConsumerStatefulWidget {
+  const _ReminderHost({required this.child});
+
+  final Widget child;
+
+  @override
+  ConsumerState<_ReminderHost> createState() => _ReminderHostState();
+}
+
+class _ReminderHostState extends ConsumerState<_ReminderHost>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state != AppLifecycleState.resumed) return;
+    ref
+      ..invalidate(reminderPlanProvider)
+      ..invalidate(notificationPermissionProvider)
+      ..invalidate(reminderCardProvider);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ref.watch(reminderSyncProvider);
+    return widget.child;
   }
 }

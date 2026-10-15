@@ -78,6 +78,13 @@ class SettingsPage extends ConsumerWidget {
             onTap: () => context.go(Routes.baselines),
           ),
           ListTile(
+            leading: const Icon(Icons.notifications_outlined),
+            title: Text(l10n.reminderSettingsTitle),
+            subtitle: Text(l10n.reminderSettingsSubtitle),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.go(Routes.reminders),
+          ),
+          ListTile(
             leading: const Icon(Icons.flag_outlined),
             title: Text(l10n.settingsGettingStarted),
             subtitle: Text(l10n.settingsGettingStartedSubtitle),
