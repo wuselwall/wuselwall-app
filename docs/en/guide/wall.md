@@ -20,11 +20,11 @@ The clock, the date and the calendar week. Below it is **Up next**: the next app
 
 ### One column per day
 
-The seven days stand side by side, Monday to Sunday. Today's column is wider and framed, past days are paler. Every column has the same three areas in the same order:
+The seven days stand side by side, Monday to Sunday. Today's column is wider and framed, past days are paler. Every column has the same three areas in the same order, separated by narrow strips:
 
-- **Who is where**: one row per family member. For children, this shows school time (for example 8–14:25), notable lessons such as sport or swimming, and the end of after-school care. For adults, a pale strip shows their usual state, such as home office. Anything different — duty, business trip, office — appears as a coloured band; a multi-day trip is one continuous band. A small clock with "until 17" means appointments until 17:00. **Pale = as usual, bold = different.**
-- **Appointments**: morning, afternoon and evening. Only appointments marked for the kitchen display are shown. A dot shows who is involved. Dashed means not certain yet. If there is no room left, it says "+2 more".
-- **Warm meal**: the one warm meal of the day — sun for lunch, moon for dinner — with the dish. A dot per person shows who eats with us (filled) and who is not there (hollow). It also shows who cooks.
+- **Who is where**: one row per family member. For children, this shows school time (for example 8–14:25), notable lessons such as sport or swimming, and the end of after-school care. For adults, a pale strip shows their usual state, such as home office. Anything different — duty, business trip, office — appears as a coloured band; a multi-day trip is one continuous band. A small clock with "until 17" means appointments until 17:00. A public holiday is named above its column; children without school show "free". **Pale = as usual, bold = different.**
+- **Appointments**: morning, afternoon and evening. Only appointments marked for the kitchen display are shown. A dot shows who is involved. Dashed and with a "?" means not certain yet. If there is no room left, it says "+2 more".
+- **Hot meal** (named at the left of its row): the one warm meal of the day — sun for lunch, moon for dinner — with the dish. A dot per person shows who eats with us (filled) and who is not there (hollow). It also shows who cooks.
 - **Footer**: each person's open tasks for today; a tap on **Open today** opens the family's chore board. Also the number of items on the shopping list.
 
 ### Tap for details
@@ -52,7 +52,7 @@ The wall can do no more than that: it adds items to the shopping list and correc
 ### Night and no connection
 
 - From 21:00 the display switches by itself to a calm night view.
-- If the connection drops, the last plan stays visible with the note "No connection".
+- If the connection drops, the last plan stays visible with the note "No connection"; the top right says when it was last updated. While everything works, the wall shows nothing about it.
 
 ::: tip Kids' tablet
 The children's view is getting **My day**, **Timetable** and **Points** soon.

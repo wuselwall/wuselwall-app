@@ -258,47 +258,21 @@ class ClipFit extends StatelessWidget {
   );
 }
 
-/// The title band before each zone: sunken ground, uppercase title, a hint in ink-3.
-class BoardCaption extends StatelessWidget {
-  const BoardCaption({required this.title, required this.hint, super.key});
+/// The quiet band between two zones. The zones need no titles: the gutter names every
+/// row (a member, a day part, the meal), so the band only separates them.
+class BoardDivider extends StatelessWidget {
+  const BoardDivider({super.key});
 
-  static const height = 30.0;
-
-  final String title;
-  final String hint;
+  static const height = 8.0;
 
   @override
   Widget build(BuildContext context) {
     final ww = context.ww;
     return Container(
       height: height,
-      color: ww.sunken,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      alignment: Alignment.centerLeft,
-      child: Text.rich(
-        TextSpan(
-          children: [
-            TextSpan(
-              text: title.toUpperCase(),
-              style: boardUi(
-                24,
-                weight: FontWeight.w800,
-                color: ww.ink2,
-              ).copyWith(letterSpacing: 0.5),
-            ),
-            TextSpan(
-              text: ' · ',
-              style: boardUi(24, color: ww.ink3),
-            ),
-            TextSpan(
-              text: hint,
-              style: boardUi(24, weight: FontWeight.w500, color: ww.ink3),
-            ),
-          ],
-        ),
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        softWrap: false,
+      decoration: BoxDecoration(
+        color: ww.sunken,
+        border: Border.symmetric(horizontal: BorderSide(color: ww.line)),
       ),
     );
   }

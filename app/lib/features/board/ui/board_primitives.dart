@@ -17,6 +17,47 @@ const _dotRadius = 1.5;
 const _dashOn = 6.0;
 const _dashOff = 4.0;
 
+/// One line of text that shrinks a little before it loses its end: down to [minScale],
+/// then it keeps that size and ends in an ellipsis. A label in a narrow column stays
+/// readable from across the room instead of shrinking to a smudge.
+class ShrinkText extends StatelessWidget {
+  const ShrinkText(
+    this.text, {
+    required this.style,
+    this.minScale = 0.8,
+    super.key,
+  });
+
+  final String text;
+  final TextStyle style;
+  final double minScale;
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, c) {
+      final painter = TextPainter(
+        text: TextSpan(text: text, style: style),
+        textDirection: Directionality.of(context),
+        textScaler: MediaQuery.textScalerOf(context),
+        maxLines: 1,
+      )..layout();
+      final natural = painter.width;
+      painter.dispose();
+      // A little under the exact ratio: glyph widths do not scale quite linearly,
+      // and the exact size would still lose its last letter.
+      final scale = natural <= c.maxWidth ? 1.0 : c.maxWidth / natural * 0.97;
+      final fitted = scale >= minScale ? scale : minScale;
+      return Text(
+        text,
+        style: style.copyWith(fontSize: style.fontSize! * fitted),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        softWrap: false,
+      );
+    },
+  );
+}
+
 /// A presence deviation drawn with its state's treatment (specs/17 "Presence
 /// treatments"): working solid, home office hatched, travel chevron + ✈, away dashed,
 /// off outlined, childcare dotted. Fills the width it is given; one line of [label]
@@ -36,6 +77,7 @@ class PresenceBandView extends StatelessWidget {
     this.tentative = false,
     this.dense = false,
     this.fontSize = 24,
+    this.lineHeight,
     super.key,
   });
 
@@ -55,6 +97,10 @@ class PresenceBandView extends StatelessWidget {
   /// Text and icon size: 24 on the wall (the kiosk minimum), the theme's body size in
   /// the adult and kid registers.
   final double fontSize;
+
+  /// The text's line height; null keeps the font's own. The wall sets it tighter so a
+  /// band's label and time fit a member row together.
+  final double? lineHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -111,15 +157,15 @@ class PresenceBandView extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        // A narrow band shrinks its label a little before cutting it.
+        ShrinkText(
           shown,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
           style: TextStyle(
             fontFamily: Tokens.fontUi,
             fontSize: fontSize,
             fontWeight: FontWeight.w700,
             color: textColor,
+            height: lineHeight,
           ),
         ),
         if (detail != null)
@@ -132,6 +178,7 @@ class PresenceBandView extends StatelessWidget {
               fontSize: fontSize,
               fontWeight: FontWeight.w600,
               color: textColor,
+              height: lineHeight,
               fontFeatures: const [FontFeature.tabularFigures()],
             ),
           ),
