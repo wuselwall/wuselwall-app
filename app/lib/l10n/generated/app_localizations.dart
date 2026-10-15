@@ -5539,6 +5539,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Shopping'**
   String get shoppingNavLabel;
+
+  /// No description provided for @scanHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold the camera over the QR code on the other device.'**
+  String get scanHint;
+
+  /// No description provided for @scanCameraDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'WuselWall has no access to the camera, so it cannot scan the code. Allow the camera in the system settings, or type the code instead.'**
+  String get scanCameraDenied;
+
+  /// No description provided for @scanCameraUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This device has no camera that WuselWall can use. Type the code instead.'**
+  String get scanCameraUnavailable;
+
+  /// No description provided for @scanWebUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'This browser cannot scan QR codes. Type the code instead.'**
+  String get scanWebUnsupported;
+
+  /// No description provided for @scanTypeCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Type the code'**
+  String get scanTypeCode;
 }
 
 class _AppLocalizationsDelegate

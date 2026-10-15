@@ -3181,4 +3181,22 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get shoppingNavLabel => 'Einkauf';
+
+  @override
+  String get scanHint => 'Halte die Kamera auf den QR-Code am anderen Gerät.';
+
+  @override
+  String get scanCameraDenied =>
+      'WuselWall hat keinen Kamerazugriff und kann den Code deshalb nicht scannen. Erlaube die Kamera in den Systemeinstellungen oder gib den Code ein.';
+
+  @override
+  String get scanCameraUnavailable =>
+      'Auf diesem Gerät gibt es keine Kamera, die WuselWall nutzen kann. Gib den Code stattdessen ein.';
+
+  @override
+  String get scanWebUnsupported =>
+      'Dieser Browser kann keine QR-Codes scannen. Gib den Code stattdessen ein.';
+
+  @override
+  String get scanTypeCode => 'Code eintippen';
 }

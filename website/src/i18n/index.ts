@@ -232,7 +232,7 @@ const de: Strings = {
         title: 'Kamera und QR-Codes',
         body: [
           'Die App fragt nach der Kamera nur, um QR-Codes zu scannen, etwa beim Verbinden eines Geräts. Die Bilder werden nicht gespeichert und nicht an Ihren Server oder an uns übertragen.',
-          'Auf iPhone und iPad erkennt das Betriebssystem den Code. <strong>Auf Android</strong> verwendet die App dafür ML Kit von Google. ML Kit wertet das Bild auf dem Gerät aus. Laut Google sendet es dabei technische Angaben an Google – Gerätemodell, Betriebssystem, App-Version, Leistungs- und Fehlerdaten sowie eine Kennung dieser Installation –, die Google für Fehleranalyse und Nutzungsstatistik verwendet. Wir prüfen, ML Kit durch eine Lösung ohne Datenübertragung zu ersetzen.',
+          'Die Codes werden auf dem Gerät ausgewertet, auf Android ebenso wie auf iPhone und iPad. Dafür nutzt die App keinen Dienst eines Drittanbieters, und sie sendet dabei nichts nach außen.',
         ],
       },
       {
@@ -441,7 +441,7 @@ const en: Strings = {
         title: 'Camera and QR codes',
         body: [
           'The app asks for the camera only to scan QR codes, for example when connecting a device. The images are not stored and are not sent to your server or to us.',
-          'On iPhone and iPad the operating system reads the code. <strong>On Android</strong> the app uses Google’s ML Kit for this. ML Kit analyses the image on the device. According to Google, it sends technical data to Google – device model, operating system, app version, performance and error data, and an identifier for this installation – which Google uses for diagnostics and usage statistics. We are looking into replacing ML Kit with a solution that sends nothing.',
+          'The codes are read on the device, on Android as well as on iPhone and iPad. The app uses no third-party service for this and sends nothing out while it reads them.',
         ],
       },
       {

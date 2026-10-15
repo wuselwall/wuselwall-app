@@ -1766,5 +1766,10 @@
   "shoppingNavLabel": "Shopping",
   "@shoppingNavLabel": {
     "description": "Short label of the shopping list in the bottom navigation bar; the page title stays shoppingTitle."
-  }
+  },
+  "scanHint": "Hold the camera over the QR code on the other device.",
+  "scanCameraDenied": "WuselWall has no access to the camera, so it cannot scan the code. Allow the camera in the system settings, or type the code instead.",
+  "scanCameraUnavailable": "This device has no camera that WuselWall can use. Type the code instead.",
+  "scanWebUnsupported": "This browser cannot scan QR codes. Type the code instead.",
+  "scanTypeCode": "Type the code"
 }
