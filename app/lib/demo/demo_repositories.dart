@@ -1256,19 +1256,31 @@ final _oneOffs = <_OneOff>[
 /// shows; creating or adding people succeeds without writing anything.
 class DemoHouseholdOnboardingRepository
     implements HouseholdOnboardingRepository {
+  /// false: a signed-in account without a family, the H1 screen (scenario `newfamily`).
+  const DemoHouseholdOnboardingRepository({this.hasHousehold = true});
+
+  final bool hasHousehold;
+
   @override
-  Future<Result<Account>> account() async => const Ok(
-    Account(
-      userId: 'demo-user',
-      email: 'lukas@example.org',
-      hasHousehold: true,
-      creation: HouseholdCreation.code,
-      householdId: 'h1',
-      householdName: 'Huser',
-      profileId: 'p-lukas',
-      givenName: 'Lukas',
-      fullName: 'Lukas Huser',
-    ),
+  Future<Result<Account>> account() async => Ok(
+    hasHousehold
+        ? const Account(
+            userId: 'demo-user',
+            email: 'lukas@example.org',
+            hasHousehold: true,
+            creation: HouseholdCreation.code,
+            householdId: 'h1',
+            householdName: 'Huser',
+            profileId: 'p-lukas',
+            givenName: 'Lukas',
+            fullName: 'Lukas Huser',
+          )
+        : const Account(
+            userId: 'demo-user',
+            email: 'lukas@example.org',
+            hasHousehold: false,
+            creation: HouseholdCreation.code,
+          ),
   );
 
   @override

@@ -1,7 +1,7 @@
 // Entry point for the user documentation's screenshots, never part of a release:
 //   flutter build web -t lib/main_demo.dart
 // The app runs on in-memory data (lib/demo). The scenario comes from the URL:
-//   ?scenario=setup | adult | kid | kiosk   (default adult)
+//   ?scenario=setup | newfamily | adult | kid | kiosk   (default adult)
 // Language and light/dark follow the browser, as on a real device.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -56,7 +56,7 @@ class _Day extends NightNotifier {
 }
 
 DeviceInfo? _device(String scenario) => switch (scenario) {
-  'setup' => null,
+  'setup' || 'newfamily' => null,
   'kid' => const DeviceInfo(
     deviceId: 'd-2',
     householdId: 'h1',
@@ -126,7 +126,9 @@ void main() {
         // The screenshots show the wall display without its one-time checklist.
         pendingFirstRunProvider.overrideWith((ref) async => null),
         householdOnboardingRepositoryProvider.overrideWithValue(
-          DemoHouseholdOnboardingRepository(),
+          DemoHouseholdOnboardingRepository(
+            hasHousehold: scenario != 'newfamily',
+          ),
         ),
         shoppingRepositoryProvider.overrideWithValue(DemoShoppingRepository()),
         householdSettingsRepositoryProvider.overrideWithValue(

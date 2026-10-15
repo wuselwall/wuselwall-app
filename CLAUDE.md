@@ -5,22 +5,25 @@ This repository holds both the planning documents and the code for WuselWall (se
 (migrations, Edge Functions, tests) and `infra/` hold the implementation. Setup-plan steps 3, 5,
 6 and 8 are built (app shell, identity, online shopping list, the one environment) and M1.1
 is built, offline outbox included. Onboarding (step 9, [specs/20](specs/20-onboarding.md),
-ADR-014 and ADR-018 — self-hosted only, no WuselWall Cloud) has started: Sign in with Apple and Google are built and switched on (9.1).
-M0.4: the first TestFlight build is uploaded; Android is an APK by hand until the Play
-account exists. Since 2026-10-13 the public hosts are `wuselwall.app`, `web.` and `api.`
-(ADR-017). Built on `feature/regions-and-ux`, **migrations not yet on the server**: regions to any depth
-and holidays (DE/AT/CH/LI from OpenHolidays, fetched by the server: public holidays automatic,
-Ferien imported), several schools, the timetable's day operations, meal suggestions, the Today
-tab with the getting-started card, the data export, and subscribed ICS calendars (FR-1.9:
-`calendar-import`, read-only occurrences in their own tables); before them household
-settings (specs/21), the kiosk week board (specs/09), M1.3a calendar (events, presence,
-recurrence expanded in Edge Functions, the ICS feed with tokens), M1.3b Stundenplan (the
-projection in `supabase/functions/_shared/school.ts`), M1.2 tasks and points, M1.4 meals, and
-the kid register. `scripts/local-pgtap` runs every migration and pgTAP suite on a throwaway
-local Postgres (no Docker); `scripts/remote-pgtap-dry.sh` tries new migrations on the server
-inside a rolled-back transaction. Next: apply the migrations and deploy the Edge Functions
-(`scripts/remote-migrate.sh`, `scripts/remote-stack.sh functions`), schedule `tasks-nightly`, `holidays-sync` and `calendar-import` (hourly),
-then the rest of 9.1/9.2 and M1.6.
+ADR-014 and ADR-018 — self-hosted only, no WuselWall Cloud) is built, steps 9.1–9.7, except 7a
+(any server chosen in the app), which lives on `feature/self-hosting-kit`. M0.4: the first
+TestFlight build is uploaded; Android is an APK by hand until the Play account exists. Since
+2026-10-13 the public hosts are `wuselwall.app`, `web.` and `api.` (ADR-017). Built on
+`feature/regions-and-ux`, **migrations and functions not yet on the server**: households and
+founder codes (H1/H2), email code sign-in (E1–E3), invitations, pairing of shared and wall
+devices, leaving, deleting and restoring a family, account deletion, the second-factor reset,
+localised mail, local reminders, "Alle Termine" on the wall, subscribed calendars in the ICS
+feed, the QR scanner on `camera` and `zxing2`; before them regions and holidays (DE/AT/CH/LI),
+several schools, the timetable's day operations, meal suggestions, the Today tab with the
+getting-started card, the data export, subscribed ICS calendars (FR-1.9), household settings
+(specs/21), the kiosk week board (specs/09), M1.3a calendar, M1.3b Stundenplan (the projection in
+`supabase/functions/_shared/school.ts`), M1.2 tasks and points, M1.4 meals, and the kid register.
+`scripts/local-pgtap` runs every migration and pgTAP suite on a throwaway local Postgres (no
+Docker); `scripts/remote-pgtap-dry.sh` tries new migrations on the server inside a rolled-back
+transaction. Next: apply the migrations (`scripts/remote-backup.sh` first, then
+`scripts/remote-migrate.sh`), deploy the Edge Functions (`scripts/remote-stack.sh functions`),
+schedule the jobs (`household-purge`, `calendar-import`, `holidays-sync`, `tasks-nightly`), set
+`ENABLE_EMAIL_AUTOCONFIRM=false` on the existing server, then M1.6.
 
 ## Architecture rules
 
