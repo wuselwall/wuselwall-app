@@ -5711,7 +5711,7 @@ abstract class AppLocalizations {
   /// No description provided for @pairTitle.
   ///
   /// In en, this message translates to:
-  /// **'Connect a family tablet or wall display'**
+  /// **'Connect this device'**
   String get pairTitle;
 
   /// No description provided for @pairScanHint.

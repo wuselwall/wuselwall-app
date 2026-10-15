@@ -3291,7 +3291,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pairFrontDoorAction => 'Connect a family tablet or wall display';
 
   @override
-  String get pairTitle => 'Connect a family tablet or wall display';
+  String get pairTitle => 'Connect this device';
 
   @override
   String get pairScanHint => 'Open WuselWall on your phone and scan this code.';

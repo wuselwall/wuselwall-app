@@ -1212,7 +1212,7 @@
   "reminderLocalNote": "Erinnerungen entstehen auf diesem Telefon. Nichts davon wird an einen Server oder an Dritte geschickt.",
   "reminderOnlyPersonal": "Erinnerungen gibt es nur auf dem persönlichen Gerät eines Familienmitglieds.",
   "pairFrontDoorAction": "Familien-Tablet oder Wanddisplay verbinden",
-  "pairTitle": "Familien-Tablet oder Wanddisplay verbinden",
+  "pairTitle": "Dieses Gerät verbinden",
   "pairScanHint": "Öffne WuselWall auf deinem Handy und scanne diesen Code.",
   "pairCodeHint": "Oder auf dem Handy: Einstellungen → Geräte → Gerät verbinden, dann den Code eintippen.",
   "pairQrLabel": "QR-Code zum Verbinden dieses Geräts",
