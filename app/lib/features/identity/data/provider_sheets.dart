@@ -15,6 +15,7 @@ class ProviderCredential {
     required this.nonce,
     this.givenName,
     this.familyName,
+    this.authorizationCode,
   });
 
   final String idToken;
@@ -26,6 +27,10 @@ class ProviderCredential {
   /// Apple sends the name only on the first authorisation, and never in the token.
   final String? givenName;
   final String? familyName;
+
+  /// Apple's one-time authorisation code. The server exchanges it for a refresh token, which
+  /// revokes Apple's access when the account is deleted (apple-token, specs/20).
+  final String? authorizationCode;
 }
 
 /// The platforms' native sign-in sheets (specs/20, "With Apple", "With Google").
@@ -66,6 +71,7 @@ class NativeProviderSheets implements ProviderSheets {
       nonce: nonce,
       givenName: credential.givenName,
       familyName: credential.familyName,
+      authorizationCode: credential.authorizationCode,
     );
   }
 

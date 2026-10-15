@@ -117,6 +117,16 @@ services:
       SCW_REGION: ${SCW_REGION:-fr-par}
       MAIL_FROM: ${MAIL_FROM:-}
       MAIL_FROM_NAME: ${MAIL_FROM_NAME:-WuselWall}
+      # Sign in with Apple, server side (supabase/functions/apple-token and account-delete,
+      # specs/20 "Server side"). Empty = no Apple on this server, and the apps ignore it. The
+      # key (.p8) is stored with its line breaks as \n. APPLE_TOKEN_KEY encrypts the stored Apple
+      # refresh tokens: it is generated once with the stack, and must never change, or the
+      # tokens cannot be read to revoke them.
+      APPLE_TEAM_ID: ${APPLE_TEAM_ID:-}
+      APPLE_KEY_ID: ${APPLE_KEY_ID:-}
+      APPLE_PRIVATE_KEY: ${APPLE_PRIVATE_KEY:-}
+      APPLE_CLIENT_ID: ${APPLE_CLIENT_ID:-}
+      APPLE_TOKEN_KEY: ${APPLE_TOKEN_KEY:-}
 
   db:
     # Postgres 15, as supabase/config.toml ([db] major_version) and CI.

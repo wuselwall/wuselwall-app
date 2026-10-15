@@ -11,6 +11,7 @@ import 'package:wuselwall/core/error/error_mapper.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/logging/log.dart';
+import 'package:wuselwall/core/supabase/api_client.dart';
 import 'package:wuselwall/core/supabase/supabase_bootstrap.dart';
 import 'package:wuselwall/core/supabase/supabase_providers.dart';
 import 'package:wuselwall/features/identity/data/provider_sheets.dart';
@@ -30,6 +31,7 @@ class SignInMethodsRepository {
     TargetPlatform? platform,
     this._isWeb = kIsWeb,
     http.Client? httpClient,
+    this._api,
   }) : _platform = platform ?? defaultTargetPlatform,
        _http = httpClient ?? http.Client();
 
@@ -39,6 +41,10 @@ class SignInMethodsRepository {
   final TargetPlatform _platform;
   final bool _isWeb;
   final http.Client _http;
+
+  /// Hands Apple's authorisation code to the server (apple-token). Null in tests that do not
+  /// care; the store is best effort either way.
+  final ApiClient? _api;
 
   /// How [provider] is reached on this platform, or null when it is not offered
   /// here. The front door never shows a button that will fail.
@@ -88,6 +94,7 @@ class SignInMethodsRepository {
           idToken: credential.idToken,
           nonce: credential.nonce,
         );
+        _storeAppleToken(provider, credential);
         await _keepAppleName(credential);
       case ProviderRoute.redirect:
         await _auth.signInWithOAuth(provider.oauth, redirectTo: _redirectTo);
@@ -158,6 +165,7 @@ class SignInMethodsRepository {
       await _authPost('logout', query: {'scope': 'local'}, accessToken: extra);
     }
     await _auth.refreshSession();
+    _storeAppleToken(provider, credential);
     await _keepAppleName(credential);
     return true;
   });
@@ -184,6 +192,28 @@ class SignInMethodsRepository {
   /// Where the redirect returns: the web app's own page, or the app's deep link.
   String get _redirectTo =>
       _isWeb ? '${Uri.base.origin}${Uri.base.path}' : authRedirectUri;
+
+  /// Sends Apple's authorisation code to apple-token, so the account can be revoked at Apple
+  /// later (specs/20, "Server side"). Fire and forget: the sign-in has already succeeded, and
+  /// a missing token only means the revocation cannot be done.
+  void _storeAppleToken(SignInProvider provider, ProviderCredential c) {
+    final api = _api;
+    final code = c.authorizationCode;
+    if (api == null || provider != SignInProvider.apple || code == null) return;
+    unawaited(
+      api
+          .function<void>(
+            'apple-token',
+            body: {'authorization_code': code},
+            parse: (_) {},
+          )
+          .then((result) {
+            if (result case Err(:final failure)) {
+              logError('Could not store the Apple token', error: failure);
+            }
+          }),
+    );
+  }
 
   /// Apple sends the name only on the first authorisation, so it is written into
   /// the user's metadata at once; onboarding prefills from there. Best effort: the
@@ -266,6 +296,7 @@ final signInMethodsRepositoryProvider = Provider<SignInMethodsRepository>(
     auth: ref.watch(supabaseClientProvider).auth,
     sheets: ref.watch(providerSheetsProvider),
     config: ref.watch(appConfigProvider),
+    api: ref.watch(apiClientProvider),
   ),
 );
 

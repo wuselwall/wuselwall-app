@@ -4,6 +4,8 @@ import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/demo/demo_external_calendars.dart';
+import 'package:wuselwall/features/account/data/account_admin_repository.dart';
+import 'package:wuselwall/features/account/domain/member_security.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/calendar/data/calendar_repository.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
@@ -1287,6 +1289,34 @@ class DemoHouseholdOnboardingRepository
 
   @override
   Future<Result<void>> completeExamples() async => const Ok(null);
+}
+
+/// Deleting the account and resetting a second factor in the demo: each call succeeds and
+/// nothing is stored. The demo account is an e-mail account, and its re-sign-in is always fresh.
+class DemoAccountAdminRepository implements AccountAdminRepository {
+  @override
+  String? currentProvider() => 'email';
+
+  @override
+  bool hasRecentSignIn() => true;
+
+  @override
+  Future<Result<void>> deleteAccount() async => const Ok(null);
+
+  @override
+  Future<Result<void>> resetMfa({
+    required String actorProfileId,
+    required String profileId,
+  }) async => const Ok(null);
+
+  @override
+  Future<Result<List<MemberSecurity>>> memberSecurity(
+    String actorProfileId,
+  ) async => const Ok([
+    MemberSecurity(profileId: DemoData.papa, hasAccount: true, hasMfa: true),
+    MemberSecurity(profileId: DemoData.mama, hasAccount: true, hasMfa: true),
+    MemberSecurity(profileId: DemoData.hanna, hasAccount: true, hasMfa: false),
+  ]);
 }
 
 /// Leaving, deleting and restoring a family in the demo: each call succeeds and nothing is
