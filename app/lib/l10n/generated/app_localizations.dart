@@ -5539,6 +5539,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Shopping'**
   String get shoppingNavLabel;
+
+  /// No description provided for @feedSubTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Include subscribed calendars'**
+  String get feedSubTitle;
+
+  /// No description provided for @feedSubHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Events from imported calendars (for example a club or the bin collection) also appear in this subscription.'**
+  String get feedSubHelp;
+
+  /// No description provided for @feedSubSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribed calendars'**
+  String get feedSubSummary;
+
+  /// No description provided for @boardAllEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'All events'**
+  String get boardAllEvents;
 }
 
 class _AppLocalizationsDelegate

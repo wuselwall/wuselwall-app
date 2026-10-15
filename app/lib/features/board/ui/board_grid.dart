@@ -13,11 +13,19 @@ class BoardFrame {
     required this.board,
     required this.geometry,
     required this.night,
+    this.allEvents = false,
   });
 
   final WeekBoard board;
   final BoardGeometry geometry;
   final bool night;
+
+  /// Every appointment of each day, not only the key ones (FR-8.11, "Alle Termine").
+  final bool allEvents;
+
+  /// The appointments the zones draw for day [i]: the key ones, or all with [allEvents].
+  List<BoardEvent> eventsOf(int i) =>
+      allEvents ? board.days[i].events : board.days[i].keyEvents;
 
   int? get todayIndex => board.todayIndex;
 
@@ -260,45 +268,72 @@ class ClipFit extends StatelessWidget {
 
 /// The title band before each zone: sunken ground, uppercase title, a hint in ink-3.
 class BoardCaption extends StatelessWidget {
-  const BoardCaption({required this.title, required this.hint, super.key});
+  const BoardCaption({
+    required this.title,
+    required this.hint,
+    this.trailing,
+    super.key,
+  });
 
   static const height = 30.0;
+
+  /// The band of a caption that carries a control: a 56 px kiosk tap target (specs/09).
+  static const controlHeight = 56.0;
 
   final String title;
   final String hint;
 
+  /// A control at the right end of the band, such as the Termine zone's "Alle Termine".
+  final Widget? trailing;
+
   @override
   Widget build(BuildContext context) {
     final ww = context.ww;
+    final text = Text.rich(
+      TextSpan(
+        children: [
+          TextSpan(
+            text: title.toUpperCase(),
+            style: boardUi(
+              24,
+              weight: FontWeight.w800,
+              color: ww.ink2,
+            ).copyWith(letterSpacing: 0.5),
+          ),
+          TextSpan(
+            text: ' · ',
+            style: boardUi(24, color: ww.ink3),
+          ),
+          TextSpan(
+            text: hint,
+            style: boardUi(24, weight: FontWeight.w500, color: ww.ink3),
+          ),
+        ],
+      ),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      softWrap: false,
+    );
+    if (trailing == null) {
+      return Container(
+        height: height,
+        color: ww.sunken,
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        alignment: Alignment.centerLeft,
+        child: text,
+      );
+    }
     return Container(
-      height: height,
+      height: controlHeight,
       color: ww.sunken,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      alignment: Alignment.centerLeft,
-      child: Text.rich(
-        TextSpan(
-          children: [
-            TextSpan(
-              text: title.toUpperCase(),
-              style: boardUi(
-                24,
-                weight: FontWeight.w800,
-                color: ww.ink2,
-              ).copyWith(letterSpacing: 0.5),
-            ),
-            TextSpan(
-              text: ' · ',
-              style: boardUi(24, color: ww.ink3),
-            ),
-            TextSpan(
-              text: hint,
-              style: boardUi(24, weight: FontWeight.w500, color: ww.ink3),
-            ),
-          ],
-        ),
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        softWrap: false,
+      padding: const EdgeInsets.only(left: 12, right: 8),
+      child: Row(
+        children: [
+          Expanded(
+            child: Align(alignment: Alignment.centerLeft, child: text),
+          ),
+          trailing!,
+        ],
       ),
     );
   }

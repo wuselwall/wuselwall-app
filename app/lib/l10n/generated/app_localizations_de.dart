@@ -3181,4 +3181,17 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get shoppingNavLabel => 'Einkauf';
+
+  @override
+  String get feedSubTitle => 'Abonnierte Kalender einschließen';
+
+  @override
+  String get feedSubHelp =>
+      'Termine aus importierten Kalendern (z. B. Verein, Müllabfuhr) erscheinen auch im Abo.';
+
+  @override
+  String get feedSubSummary => 'Abonnierte Kalender';
+
+  @override
+  String get boardAllEvents => 'Alle Termine';
 }
