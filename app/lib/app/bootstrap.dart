@@ -24,6 +24,7 @@ import 'package:wuselwall/core/server/server_address.dart';
 import 'package:wuselwall/core/server/server_compat.dart';
 import 'package:wuselwall/core/server/server_discovery.dart';
 import 'package:wuselwall/core/server/server_info.dart';
+import 'package:wuselwall/core/server/server_link.dart';
 import 'package:wuselwall/core/server/server_store.dart';
 import 'package:wuselwall/core/supabase/secure_session_storage.dart';
 import 'package:wuselwall/core/supabase/supabase_bootstrap.dart';
@@ -40,6 +41,8 @@ import 'package:wuselwall/features/setup/ui/server_choice_page.dart';
 ///   fits (decision 5).
 /// - A store build updated from one that had a first-party server compiled in finds a
 ///   session but no server, and keeps that server ([legacyServer]).
+/// - An invitation or pairing link names its server ([links]); with no server chosen the app
+///   uses that one and skips the question.
 /// - The web app first looks at its own origin: a server serves its own web app.
 /// - Otherwise it asks ([ServerChoicePage]), or shows the demo household.
 class Bootstrap extends StatefulWidget {
@@ -53,6 +56,7 @@ class Bootstrap extends StatefulWidget {
     Future<bool> Function()? hasSession,
     Future<void> Function()? signOutLocally,
     this.webOrigin,
+    this.links,
     @visibleForTesting this.app = const WuselWallApp(),
     super.key,
   }) : store = store ?? ServerStore(),
@@ -78,6 +82,11 @@ class Bootstrap extends StatefulWidget {
 
   /// The web app's own origin; null on the native apps.
   final Uri? webOrigin;
+
+  /// The links the app is opened with, as text (`app_links`; null where there are none).
+  /// A link names a server: with none chosen the app connects to it, with the same one it
+  /// continues, with another it asks (specs/20, "Choosing the server").
+  final Stream<String>? links;
 
   /// What runs once a server is chosen (tests replace it: no Supabase there).
   final Widget app;
@@ -140,10 +149,83 @@ class _BootstrapState extends State<Bootstrap> {
   int _generation = 0;
   String? _pendingEnrolCode;
 
+  /// The server the app runs on, null while none is chosen.
+  Uri? _server;
+  ServerSession? _session;
+  OpenedLink? _pendingLink;
+  StreamSubscription<String>? _linkSubscription;
+  bool _started = false;
+  OpenedLink? _earlyLink;
+  final _firstLink = Completer<void>();
+
   @override
   void initState() {
     super.initState();
-    unawaited(_start());
+    _linkSubscription = widget.links?.listen(
+      (raw) => unawaited(_onLink(raw)),
+      onError: (Object e, StackTrace st) =>
+          logError('Reading a link', error: e, stackTrace: st),
+    );
+    unawaited(_startAndOpenLink());
+  }
+
+  @override
+  void dispose() {
+    unawaited(_linkSubscription?.cancel());
+    super.dispose();
+  }
+
+  Future<void> _startAndOpenLink() async {
+    await _start();
+    _started = true;
+    final early = _earlyLink;
+    _earlyLink = null;
+    if (early != null) await _handleLink(early);
+  }
+
+  Future<void> _onLink(String raw) async {
+    final link = parseAppLink(raw);
+    if (link == null) return;
+    if (!_firstLink.isCompleted) _firstLink.complete();
+    if (!_started) {
+      _earlyLink = link;
+      return;
+    }
+    await _handleLink(link);
+  }
+
+  /// A link while the app is up: connect, continue, or hand the decision to the app.
+  Future<void> _handleLink(OpenedLink link) async {
+    if (!mounted || _phase is _Incompatible) return;
+    final verdict = decideLink(
+      linkServer: link.server,
+      current: _server,
+      signedIn: _server != null && await widget.hasSession(),
+    );
+    switch (verdict) {
+      case LinkVerdict.needsServer:
+        _show(const _Choosing(problem: ServerProblem.linkWithoutServer));
+      case LinkVerdict.connect:
+        await _connectForLink(link);
+      case LinkVerdict.proceed:
+      case LinkVerdict.offerSwitch:
+      case LinkVerdict.otherServer:
+        _session?.inbox.value = LinkEvent(link, verdict, current: _server);
+    }
+  }
+
+  /// Leaves the current server for the one [link] names. Nobody is signed in on it.
+  Future<void> _switchToLinkServer(OpenedLink link) => _connectForLink(link);
+
+  Future<void> _connectForLink(OpenedLink link) async {
+    final server = link.server!;
+    _show(const _Starting());
+    _pendingLink = link;
+    final problem = await _connect(server);
+    if (problem != null) {
+      _pendingLink = null;
+      _show(_Choosing(prefill: displayServerAddress(server), problem: problem));
+    }
   }
 
   Future<void> _start() async {
@@ -168,6 +250,14 @@ class _BootstrapState extends State<Bootstrap> {
     }
     final web = widget.webOrigin;
     if (web != null && await _connect(web) == null) return;
+    // A link that opened the app names its server: wait a moment for it rather than ask.
+    if (widget.links != null) {
+      await _firstLink.future.timeout(
+        const Duration(milliseconds: 400),
+        onTimeout: () {},
+      );
+      if (_earlyLink != null) return;
+    }
     _show(const _Choosing());
   }
 
@@ -212,6 +302,25 @@ class _BootstrapState extends State<Bootstrap> {
   }
 
   Future<ServerProblem?> _choose(String raw) async {
+    // An invitation or pairing link (or `CODE@host`) names its server and carries on.
+    final link = parseAppLink(raw);
+    final typed = link == null ? parseInvitation(raw) : null;
+    final named =
+        link ??
+        (typed == null
+            ? null
+            : OpenedLink(
+                LinkKind.invitation,
+                typed.secret,
+                server: typed.server,
+              ));
+    if (named != null) {
+      if (named.server == null) return ServerProblem.linkWithoutServer;
+      _pendingLink = named;
+      final problem = await _connect(named.server!);
+      if (problem != null) _pendingLink = null;
+      return problem;
+    }
     final address = parseServerAddress(raw, allowHttp: kDebugMode);
     if (address == null) return ServerProblem.invalid;
     // A device code's QR carries its server: one scan for both (ADR-018).
@@ -228,11 +337,20 @@ class _BootstrapState extends State<Bootstrap> {
     }
     await widget.connect(config);
     _connected = true;
+    _server = Uri.tryParse(config.supabaseUrl);
+    final pending = _pendingLink;
     final session = ServerSession(
       leave: config.hasFixedServer ? null : _leave,
       pendingEnrolCode: _pendingEnrolCode,
+      openLink: _handleLink,
+      switchToLinkServer: config.hasFixedServer ? null : _switchToLinkServer,
+      initialLink: pending == null
+          ? null
+          : LinkEvent(pending, LinkVerdict.proceed, current: _server),
     );
+    _pendingLink = null;
     _pendingEnrolCode = null;
+    _session = session;
     _show(_Running(config, session, ++_generation));
   }
 
@@ -241,6 +359,8 @@ class _BootstrapState extends State<Bootstrap> {
   Future<void> _leave() async {
     if (_connected) await widget.signOutLocally();
     await widget.store.clear();
+    _server = null;
+    _session = null;
     _show(const _Choosing());
     // The old app is gone from the tree after this frame; then its client can go.
     await WidgetsBinding.instance.endOfFrame;
@@ -261,6 +381,7 @@ class _BootstrapState extends State<Bootstrap> {
     ),
     _Choosing(:final prefill, :final problem) => BootstrapShell(
       child: ServerChoicePage(
+        key: ValueKey(_phase),
         prefill: prefill,
         problem: problem,
         onAddress: _choose,

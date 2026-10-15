@@ -1512,7 +1512,7 @@
   "inviteQrLabel": "QR-Code der Einladung",
   "inviteShare": "Teilen",
   "inviteDone": "Fertig",
-  "inviteShareMessage": "Komm zu {household} in WuselWall: {link} — oder gib in der App den Code {code} ein.",
+  "inviteShareMessage": "Komm zu {household} in WuselWall: {link} — oder gib in der App den Code {code} ein, auf dem Server {server}.",
   "@inviteShareMessage": {
     "placeholders": {
       "household": {
@@ -1522,6 +1522,9 @@
         "type": "String"
       },
       "code": {
+        "type": "String"
+      },
+      "server": {
         "type": "String"
       }
     }
@@ -1590,7 +1593,7 @@
     }
   },
   "serverTitle": "Mit welchem Server?",
-  "serverLead": "WuselWall speichert eure Daten auf dem Server eurer Familie. Gib seine Adresse ein oder scanne seinen QR-Code.",
+  "serverLead": "WuselWall speichert eure Daten auf dem Server eurer Familie. Gib seine Adresse ein oder scanne seinen QR-Code. Hast du eine Einladung? Füge den Link ein, oder Code und Server zusammen, etwa K7QM3XRP@api.example.org.",
   "serverAddressLabel": "Adresse des Servers",
   "serverAddressHint": "z. B. api.example.org",
   "serverConnect": "Verbinden",
@@ -1604,6 +1607,39 @@
   "serverNotWuselwall": "Unter dieser Adresse läuft kein WuselWall-Server.",
   "serverTooOld": "Dieser Server braucht ein Update. Bitte die Person, die ihn betreibt, WuselWall zu aktualisieren.",
   "serverAppTooOld": "Dieser Server braucht eine neuere Version der App. Bitte aktualisiere WuselWall.",
+  "serverLinkWithoutServer": "Dieser Link sagt nicht, zu welchem Server er gehört. Gib oben die Adresse des Servers ein, danach den Code.",
+  "inviteResultServer": "Server: {server}",
+  "@inviteResultServer": {
+    "placeholders": {
+      "server": {
+        "type": "String"
+      }
+    }
+  },
+  "linkOtherServerTitle": "Dieser Link gehört zu einem anderen Server",
+  "linkSwitchBody": "Der Link zeigt auf {host}, aber diese App ist mit {current} verbunden. Zu {host} wechseln?",
+  "@linkSwitchBody": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      },
+      "current": {
+        "type": "String"
+      }
+    }
+  },
+  "linkSwitchAction": "Server wechseln",
+  "linkOtherServerBody": "Der Link zeigt auf {host}, aber du bist auf {current} angemeldet. Melde dich zuerst ab (Einstellungen → Server wechseln) und öffne den Link dann erneut.",
+  "@linkOtherServerBody": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      },
+      "current": {
+        "type": "String"
+      }
+    }
+  },
   "serverIncompatibleTitle": "Server und App passen nicht zusammen",
   "serverChooseOther": "Anderen Server wählen",
   "demoBanner": "Beispielfamilie: nichts wird gespeichert",
