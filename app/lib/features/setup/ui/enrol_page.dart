@@ -51,11 +51,11 @@ class _EnrolPageState extends ConsumerState<EnrolPage> {
     }
   }
 
-  // The camera scanner works on phones and the web; desktop builds have no camera API.
+  // The camera scanner runs on phones; the web and desktop builds type the code instead.
   bool get _canScan =>
-      kIsWeb ||
-      defaultTargetPlatform == TargetPlatform.android ||
-      defaultTargetPlatform == TargetPlatform.iOS;
+      !kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.android ||
+          defaultTargetPlatform == TargetPlatform.iOS);
 
   @override
   Widget build(BuildContext context) {

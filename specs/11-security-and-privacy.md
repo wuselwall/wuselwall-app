@@ -167,11 +167,7 @@ the household. *(ADR-015's Supabase Inc. as Cloud's processor is gone with Cloud
 server. Its privacy manifest declares device ID and usage data for analytics (Google's,
 not tracking), and the privacy policy and store labels say so. Apple's sign-in is part of
 iOS and adds no code.
-**Found 2026-10-13, not accepted:** on Android, `mobile_scanner` decodes QR codes with
-Google's **ML Kit**, which sends device, app and performance data with a per-installation
-identifier to Google for diagnostics and usage analytics (Google's ML Kit data disclosure).
-That breaks NFR-9. The privacy policy discloses it until the Android scanner is replaced
-by an on-device decoder without telemetry ([Q49](14-open-questions.md)).
+**Found 2026-10-13, fixed 2026-10-14:** the Android QR scanner used `mobile_scanner`, which bundles Google's **ML Kit** and sent device, app and performance data with a per-installation identifier to Google. The scanner now uses the `camera` plugin and the pure-Dart `zxing2` decoder on every platform, so no vendor SDK reads the camera image ([Q49](14-open-questions.md)).
 | A holiday import from a public API ([15](15-module-school-timetable.md#holidays)) | Fetched by the server only, with the host pinned in configuration and the result cached in the database. The browser never contacts it, and a failed fetch keeps the last good data (hand-entered holidays always work) rather than raising an error. Built 2026-10-14: the host is `openholidaysapi.org`, see the outbound list below. |
 | An external map or weather widget | If you want weather on the wall display, proxy it server-side so the app never contacts a third party directly, and cache aggressively. |
 | Avatar images from Gravatar | Local uploads or generated initials. |

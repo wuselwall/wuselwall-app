@@ -3162,4 +3162,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shoppingNavLabel => 'Shopping';
+
+  @override
+  String get scanHint =>
+      'Hold the camera over the QR code on the other device.';
+
+  @override
+  String get scanCameraDenied =>
+      'WuselWall has no access to the camera, so it cannot scan the code. Allow the camera in the system settings, or type the code instead.';
+
+  @override
+  String get scanCameraUnavailable =>
+      'This device has no camera that WuselWall can use. Type the code instead.';
+
+  @override
+  String get scanWebUnsupported =>
+      'This browser cannot scan QR codes. Type the code instead.';
+
+  @override
+  String get scanTypeCode => 'Type the code';
 }

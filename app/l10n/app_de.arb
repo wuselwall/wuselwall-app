@@ -1135,5 +1135,10 @@
   "extCalSettingsRefreshHint": "Der Server ruft jeden Kalender etwa einmal pro Stunde ab.",
   "extCalActive": "Aktiv",
   "extCalUrlLoading": "Adresse wird geladen",
-  "shoppingNavLabel": "Einkauf"
+  "shoppingNavLabel": "Einkauf",
+  "scanHint": "Halte die Kamera auf den QR-Code am anderen Gerät.",
+  "scanCameraDenied": "WuselWall hat keinen Kamerazugriff und kann den Code deshalb nicht scannen. Erlaube die Kamera in den Systemeinstellungen oder gib den Code ein.",
+  "scanCameraUnavailable": "Auf diesem Gerät gibt es keine Kamera, die WuselWall nutzen kann. Gib den Code stattdessen ein.",
+  "scanWebUnsupported": "Dieser Browser kann keine QR-Codes scannen. Gib den Code stattdessen ein.",
+  "scanTypeCode": "Code eintippen"
 }
