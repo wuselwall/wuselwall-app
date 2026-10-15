@@ -15,6 +15,7 @@ import 'package:wuselwall/features/household/ui/new_family_page.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/application/first_run.dart';
 import 'package:wuselwall/features/identity/application/pairing_providers.dart';
+import 'package:wuselwall/features/identity/application/sign_in_choice.dart';
 import 'package:wuselwall/features/identity/domain/pairing.dart';
 import 'package:wuselwall/features/identity/ui/device_pair_page.dart';
 import 'package:wuselwall/features/meals/domain/meal_models.dart';
@@ -26,12 +27,14 @@ import 'package:wuselwall/features/school/ui/school_setup_page.dart';
 import 'package:wuselwall/features/school/ui/timetable_editor_page.dart';
 import 'package:wuselwall/features/settings/ui/household_settings_page.dart';
 import 'package:wuselwall/features/settings/ui/settings_page.dart';
+import 'package:wuselwall/features/setup/ui/email_code_page.dart';
 import 'package:wuselwall/features/setup/ui/enrol_page.dart';
 import 'package:wuselwall/features/setup/ui/first_run_page.dart';
 import 'package:wuselwall/features/setup/ui/mfa_challenge_page.dart';
 import 'package:wuselwall/features/setup/ui/pair_page.dart';
 import 'package:wuselwall/features/setup/ui/register_device_page.dart';
 import 'package:wuselwall/features/setup/ui/setup_page.dart';
+import 'package:wuselwall/features/setup/ui/sign_in_choice_page.dart';
 import 'package:wuselwall/features/setup/ui/sign_in_page.dart';
 import 'package:wuselwall/features/setup/ui/splash_page.dart';
 import 'package:wuselwall/features/setup/ui/wizard_page.dart';
@@ -43,6 +46,8 @@ abstract final class Routes {
   static const setup = '/setup';
   static const wizard = '/setup/household';
   static const signIn = '/setup/sign-in';
+  static const emailCode = '/setup/email-code';
+  static const signInChoice = '/setup/sign-in-choice';
   static const enrol = '/setup/enrol';
   static const pair = '/setup/pair';
   static const firstRun = '/first-run';
@@ -82,6 +87,7 @@ final routerProvider = Provider<GoRouter>((ref) {
   ref
     ..listen(sessionStateProvider, (_, _) => refresh.value++)
     ..listen(pendingFirstRunProvider, (_, _) => refresh.value++)
+    ..listen(signInChoiceOwedProvider, (_, _) => refresh.value++)
     ..onDispose(refresh.dispose);
 
   return GoRouter(
@@ -102,6 +108,9 @@ final routerProvider = Provider<GoRouter>((ref) {
       return switch (session.value) {
         NeedsMfa() => path == Routes.mfa ? null : Routes.mfa,
         NeedsRegistration() => path == Routes.register ? null : Routes.register,
+        // A new account answers E3 once, before it starts or joins a family.
+        NeedsHousehold() when ref.read(signInChoiceOwedProvider) =>
+          path == Routes.signInChoice ? null : Routes.signInChoice,
         NeedsHousehold() => path == Routes.newFamily ? null : Routes.newFamily,
         // A founder who has just created the household sees H2 once, before Today.
         Ready() when ref.read(onboardingPlanProvider) != null =>
@@ -137,7 +146,20 @@ final routerProvider = Provider<GoRouter>((ref) {
               },
             ),
           ),
-          GoRoute(path: 'sign-in', builder: (_, _) => const SignInPage()),
+          GoRoute(
+            path: 'sign-in',
+            builder: (_, state) =>
+                SignInPage(initialEmail: state.uri.queryParameters['email']),
+          ),
+          GoRoute(
+            path: 'email-code',
+            builder: (_, state) =>
+                EmailCodePage(email: state.uri.queryParameters['email'] ?? ''),
+          ),
+          GoRoute(
+            path: 'sign-in-choice',
+            builder: (_, _) => const SignInChoicePage(),
+          ),
           GoRoute(path: 'enrol', builder: (_, _) => const EnrolPage()),
           GoRoute(path: 'pair', builder: (_, _) => const PairPage()),
           GoRoute(path: 'mfa', builder: (_, _) => const MfaChallengePage()),

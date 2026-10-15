@@ -115,6 +115,10 @@ const out = {
 
   // Auth: supabase/config.toml [auth]
   JWT_EXPIRY: '3600',
+  // The e-mail sign-in code (supabase/config.toml [auth.email]).
+  MAILER_OTP_LENGTH: '6',
+  MAILER_OTP_EXP: '600',
+  SMTP_MAX_FREQUENCY: '60s',
   // Strangers get an account that can do nothing but wait for an invitation or, while
   // household creation is in `code` mode, start a family with a founder code (specs/20).
   DISABLE_SIGNUP: 'false',

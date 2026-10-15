@@ -623,7 +623,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signInMethodsTitle => 'Sign-in';
 
   @override
-  String get signInMethodEmail => 'Email and password';
+  String get signInMethodEmail => 'Email code';
 
   @override
   String get signInMethodApple => 'Apple';
@@ -3559,4 +3559,107 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get householdDeviceComputer => 'computer';
+
+  @override
+  String get emailContinue => 'Continue';
+
+  @override
+  String get emailHavePassword => 'I have a password';
+
+  @override
+  String get emailWrongCredentials => 'Email or password is incorrect.';
+
+  @override
+  String get emailUseCodeInstead => 'Use an email code instead';
+
+  @override
+  String get emailOffline => 'No connection – signing in by email needs one.';
+
+  @override
+  String get emailCodeTitle => 'Code from the email';
+
+  @override
+  String emailCodeSent(String email) {
+    return 'We sent a 6-digit code to $email. It is valid for 10 minutes.';
+  }
+
+  @override
+  String get emailCodeFieldLabel => 'Six-digit code';
+
+  @override
+  String get emailCodeWrong =>
+      'That code is wrong or has expired. Try again, or ask for a new one.';
+
+  @override
+  String emailCodeResendIn(int seconds) {
+    return 'No code? Send again (in $seconds s)';
+  }
+
+  @override
+  String get emailCodeResend => 'No code? Send again';
+
+  @override
+  String get emailCodeSpam => 'Check your spam folder.';
+
+  @override
+  String get emailCodeResent => 'A new code is on its way.';
+
+  @override
+  String get emailCodeOtherMethod => 'Choose another way';
+
+  @override
+  String get emailCodeOtherAddress => 'Another email address';
+
+  @override
+  String get signInMethodTitle => 'How would you like to sign in next time?';
+
+  @override
+  String get signInMethodCode => 'With a code by email — nothing to remember';
+
+  @override
+  String get signInMethodPassword => 'With a password';
+
+  @override
+  String get passwordStrengthShort => 'Still too short';
+
+  @override
+  String get passwordStrengthWeak => 'Weak';
+
+  @override
+  String get passwordStrengthFair => 'Fair';
+
+  @override
+  String get passwordStrengthStrong => 'Strong';
+
+  @override
+  String get settingsPasswordTitle => 'Password';
+
+  @override
+  String get settingsPasswordSet =>
+      'Set. You can also sign in with email and password.';
+
+  @override
+  String get settingsPasswordNotSet =>
+      'Not set. Signing in with an email code still works.';
+
+  @override
+  String get passwordSetAction => 'Set password';
+
+  @override
+  String get passwordChangeAction => 'Change password';
+
+  @override
+  String get passwordSaved => 'Your password is saved.';
+
+  @override
+  String get passwordDialogBody =>
+      'At least 10 characters. The email code always stays available.';
+
+  @override
+  String signInMethodEmailSubtitle(String email) {
+    return '$email — always available';
+  }
+
+  @override
+  String get signInMethodAlwaysAvailable => 'Always available';
 }
