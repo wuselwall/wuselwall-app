@@ -102,8 +102,10 @@ enable_signup = true
 # If enabled, a user will be required to confirm any email change on both the old, and new email
 # addresses. If disabled, only the new email is required to confirm.
 double_confirm_changes = true
-# If enabled, users need to confirm their email address before signing in.
-enable_confirmations = false
+# If enabled, users need to confirm their email address before signing in. On: with sign-up
+# open, an unconfirmed address must never count as verified (invitations match it, specs/20).
+# Email codes confirm the address themselves; nothing in the app signs up with a password.
+enable_confirmations = true
 # The sign-in code mailed to the address (specs/20, "With email"): six digits, valid for
 # 600 seconds, and at most one new code per address every 60 seconds.
 otp_length = 6
