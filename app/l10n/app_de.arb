@@ -37,7 +37,6 @@
   },
   "setupHeadline": "Willkommen bei WuselWall",
   "doorTagline": "Der Familienplan für die Küchenwand",
-  "setupEnrolAction": "Mit Code verbinden",
   "setupHouseholdAction": "Neue Familie anlegen",
   "wizardTitle": "Neuer Haushalt",
   "wizardCreate": "Haushalt anlegen",
@@ -1211,5 +1210,66 @@
   "reminderEnableAction": "Erinnerungen einschalten",
   "reminderDeniedNote": "Ohne Erlaubnis gibt es keine Erinnerungen. Die Erlaubnis kannst du in den Systemeinstellungen ändern.",
   "reminderLocalNote": "Erinnerungen entstehen auf diesem Telefon. Nichts davon wird an einen Server oder an Dritte geschickt.",
-  "reminderOnlyPersonal": "Erinnerungen gibt es nur auf dem persönlichen Gerät eines Familienmitglieds."
+  "reminderOnlyPersonal": "Erinnerungen gibt es nur auf dem persönlichen Gerät eines Familienmitglieds.",
+  "pairFrontDoorAction": "Familien-Tablet oder Wanddisplay verbinden",
+  "pairTitle": "Familien-Tablet oder Wanddisplay verbinden",
+  "pairScanHint": "Öffne WuselWall auf deinem Handy und scanne diesen Code.",
+  "pairCodeHint": "Oder auf dem Handy: Einstellungen → Geräte → Gerät verbinden, dann den Code eintippen.",
+  "pairQrLabel": "QR-Code zum Verbinden dieses Geräts",
+  "pairWaiting": "Warte auf die Bestätigung …",
+  "pairConnected": "Verbunden mit {household}",
+  "@pairConnected": {
+    "placeholders": {
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "pairOldCodeLink": "Ich habe einen Code vom Handy (ältere Version)",
+  "pairConnectAction": "Gerät verbinden",
+  "pairOldCodeAction": "Code für ein älteres Gerät erzeugen",
+  "pairEntryBody": "Scanne den Code, den das neue Gerät zeigt, oder tippe ihn ab.",
+  "pairCodeField": "Code vom neuen Gerät",
+  "pairNext": "Weiter",
+  "pairReviewBody": "Das ist der Code des Geräts, das verbunden werden soll.",
+  "pairConfirmHint": "Nur bestätigen, wenn du dieses Gerät vor dir siehst.",
+  "pairKindLabel": "Was ist das für ein Gerät?",
+  "pairKindWall": "Wanddisplay",
+  "pairKindKid": "Kinder-Tablet",
+  "pairKindFamily": "Tablet für alle",
+  "pairKindChild": "Handy eines Kindes",
+  "pairChildLabel": "Welches Kind?",
+  "pairNameLabel": "Name des Geräts",
+  "pairDefaultWall": "Wanddisplay",
+  "pairDefaultKid": "Kinder-Tablet",
+  "pairDefaultFamily": "Tablet",
+  "pairDefaultChild": "Handy von {name}",
+  "@pairDefaultChild": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pairApproveAction": "Verbinden",
+  "pairApproved": "Gerät verbunden",
+  "pairOnlyOnPersonal": "Das geht nur auf deinem eigenen Handy.",
+  "pairPinTitle": "Eltern-PIN festlegen",
+  "pairPinBody": "Die PIN bestätigt Änderungen auf gemeinsam genutzten Geräten. Lege sie einmal fest.",
+  "pairPinConfirm": "PIN noch einmal eingeben",
+  "pairPinMismatch": "Die PINs stimmen nicht überein. Versuch es noch einmal.",
+  "firstRunKioskTitle": "Wanddisplay einrichten",
+  "firstRunKioskBody": "Drei Schritte, einmal auf diesem Gerät. Danach zeigt es die Woche.",
+  "firstRunPinTitle": "App festhalten",
+  "firstRunPinIos": "Einstellungen → Bedienungshilfen → Geführter Zugriff einschalten. WuselWall öffnen und die obere Taste dreimal schnell drücken.",
+  "firstRunPinAndroid": "Einstellungen → Sicherheit → App-Anheftung einschalten (je nach Gerät auch „Bildschirm anpinnen“). WuselWall öffnen, die Übersicht aufrufen und die Nadel antippen.",
+  "firstRunAwakeTitle": "Bildschirm anlassen",
+  "firstRunAwakeIos": "Einstellungen → Anzeige & Helligkeit → Automatische Sperre → Nie.",
+  "firstRunAwakeAndroid": "Einstellungen → Anzeige → Bildschirm-Timeout auf das Maximum stellen.",
+  "firstRunPowerTitle": "Am Strom lassen",
+  "firstRunPowerBody": "Dauerhaft ans Stromnetz hängen, damit es nach einem Stromausfall wieder bereit ist.",
+  "firstRunDone": "Fertig",
+  "firstRunKidTitle": "Willkommen",
+  "firstRunKidBody": "Tipp auf dein Bild, dann weiß WuselWall, wer du bist.",
+  "firstRunKidStart": "Los geht’s"
 }

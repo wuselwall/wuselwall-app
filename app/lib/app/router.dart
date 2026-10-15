@@ -10,6 +10,10 @@ import 'package:wuselwall/features/calendar/ui/settings/external_calendars_page.
 import 'package:wuselwall/features/calendar/ui/settings/feed_tokens_page.dart';
 import 'package:wuselwall/features/home/ui/register_home_page.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
+import 'package:wuselwall/features/identity/application/first_run.dart';
+import 'package:wuselwall/features/identity/application/pairing_providers.dart';
+import 'package:wuselwall/features/identity/domain/pairing.dart';
+import 'package:wuselwall/features/identity/ui/device_pair_page.dart';
 import 'package:wuselwall/features/meals/domain/meal_models.dart';
 import 'package:wuselwall/features/meals/ui/recipe_editor_page.dart';
 import 'package:wuselwall/features/meals/ui/recipe_view_page.dart';
@@ -20,7 +24,9 @@ import 'package:wuselwall/features/school/ui/timetable_editor_page.dart';
 import 'package:wuselwall/features/settings/ui/household_settings_page.dart';
 import 'package:wuselwall/features/settings/ui/settings_page.dart';
 import 'package:wuselwall/features/setup/ui/enrol_page.dart';
+import 'package:wuselwall/features/setup/ui/first_run_page.dart';
 import 'package:wuselwall/features/setup/ui/mfa_challenge_page.dart';
+import 'package:wuselwall/features/setup/ui/pair_page.dart';
 import 'package:wuselwall/features/setup/ui/register_device_page.dart';
 import 'package:wuselwall/features/setup/ui/setup_page.dart';
 import 'package:wuselwall/features/setup/ui/sign_in_page.dart';
@@ -35,6 +41,9 @@ abstract final class Routes {
   static const wizard = '/setup/household';
   static const signIn = '/setup/sign-in';
   static const enrol = '/setup/enrol';
+  static const pair = '/setup/pair';
+  static const firstRun = '/first-run';
+  static const devicePair = '/settings/devices/pair';
   static const mfa = '/setup/mfa';
   static const register = '/setup/register';
   static const home = '/';
@@ -67,6 +76,7 @@ final routerProvider = Provider<GoRouter>((ref) {
   final refresh = ValueNotifier<int>(0);
   ref
     ..listen(sessionStateProvider, (_, _) => refresh.value++)
+    ..listen(pendingFirstRunProvider, (_, _) => refresh.value++)
     ..onDispose(refresh.dispose);
 
   return GoRouter(
@@ -87,8 +97,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       return switch (session.value) {
         NeedsMfa() => path == Routes.mfa ? null : Routes.mfa,
         NeedsRegistration() => path == Routes.register ? null : Routes.register,
-        Ready() =>
-          (Routes.isSetup(path) || path == Routes.splash) ? Routes.home : null,
+        Ready() => _readyRedirect(ref, path),
         // SignedOut, or an error on first load (the splash page shows it).
         _ =>
           session.hasError
@@ -109,6 +118,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(path: 'household', builder: (_, _) => const WizardPage()),
           GoRoute(path: 'sign-in', builder: (_, _) => const SignInPage()),
           GoRoute(path: 'enrol', builder: (_, _) => const EnrolPage()),
+          GoRoute(path: 'pair', builder: (_, _) => const PairPage()),
           GoRoute(path: 'mfa', builder: (_, _) => const MfaChallengePage()),
           GoRoute(
             path: 'register',
@@ -133,6 +143,21 @@ final routerProvider = Provider<GoRouter>((ref) {
         ),
       ),
       GoRoute(path: Routes.settings, builder: (_, _) => const SettingsPage()),
+      GoRoute(
+        path: Routes.devicePair,
+        builder: (_, state) => DevicePairPage(
+          initialKind: PairingKind.fromWire(state.uri.queryParameters['kind']),
+        ),
+      ),
+      GoRoute(
+        path: Routes.firstRun,
+        builder: (_, _) => Consumer(
+          builder: (_, ref, _) {
+            final kind = ref.watch(pendingFirstRunProvider).value;
+            return kind == null ? const SplashPage() : FirstRunPage(kind: kind);
+          },
+        ),
+      ),
       GoRoute(
         path: Routes.householdSettings,
         builder: (_, _) => const HouseholdSettingsPage(),
@@ -195,3 +220,16 @@ final routerProvider = Provider<GoRouter>((ref) {
     ],
   );
 });
+
+/// Where an enrolled device goes from a setup screen or the splash: the introduction it owes
+/// first, otherwise home. The pairing page stays up while the greeting is shown.
+String? _readyRedirect(Ref ref, String path) {
+  final owed = ref.read(pendingFirstRunProvider).value;
+  if (owed != null) return path == Routes.firstRun ? null : Routes.firstRun;
+  if (path == Routes.firstRun) return Routes.home;
+  final greeting =
+      path == Routes.pair && ref.read(pairingHandoffProvider) != null;
+  return (Routes.isSetup(path) && !greeting) || path == Routes.splash
+      ? Routes.home
+      : null;
+}

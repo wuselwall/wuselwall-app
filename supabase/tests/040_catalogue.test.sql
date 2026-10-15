@@ -41,7 +41,7 @@ select is((select coalesce(string_agg(c.relname, ', '), '') from pg_class c
 select is((select coalesce(string_agg(p.proname, ', ' order by p.proname), '') from pg_proc p
             join pg_namespace n on n.oid = p.pronamespace
            where n.nspname = 'api' and has_function_privilege('anon', p.oid, 'execute')),
-  'enrol_device, health, setup_household', 'anon can call exactly health, setup_household and enrol_device');
+  'enrol_device, health, pairing_poll, pairing_start, setup_household', 'anon can call exactly health, setup_household, enrol_device, pairing_start and pairing_poll');
 
 select is((select coalesce(string_agg(n.nspname || '.' || p.proname, ', '), '') from pg_proc p
             join pg_namespace n on n.oid = p.pronamespace

@@ -19,7 +19,10 @@ void main() {
     testWidgets('shows the German setup screen', (t) async {
       await pump(t);
       expect(find.text('Willkommen bei WuselWall'), findsOneWidget);
-      expect(find.text('Mit Code verbinden'), findsOneWidget);
+      expect(
+        find.text('Familien-Tablet oder Wanddisplay verbinden'),
+        findsOneWidget,
+      );
     });
 
     testWidgets('shows English on an English device', (t) async {
@@ -34,7 +37,10 @@ void main() {
 
     testWidgets('a wrong enrolment code shows a localized error', (t) async {
       await pump(t);
-      await t.tap(find.text('Mit Code verbinden'));
+      await t.tap(find.text('Familien-Tablet oder Wanddisplay verbinden'));
+      await t.pump();
+      await t.pump();
+      await t.tap(find.text('Ich habe einen Code vom Handy (ältere Version)'));
       await t.pumpAndSettle();
       await t.enterText(find.byType(TextField), 'ABCD2345');
       await t.tap(find.text('Verbinden'));

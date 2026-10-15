@@ -278,12 +278,6 @@ abstract class AppLocalizations {
   /// **'The family plan for the kitchen wall'**
   String get doorTagline;
 
-  /// No description provided for @setupEnrolAction.
-  ///
-  /// In en, this message translates to:
-  /// **'Connect with a code'**
-  String get setupEnrolAction;
-
   /// No description provided for @setupHouseholdAction.
   ///
   /// In en, this message translates to:
@@ -5707,6 +5701,288 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reminders are only available on a member\'s personal device.'**
   String get reminderOnlyPersonal;
+
+  /// No description provided for @pairFrontDoorAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect a family tablet or wall display'**
+  String get pairFrontDoorAction;
+
+  /// No description provided for @pairTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect a family tablet or wall display'**
+  String get pairTitle;
+
+  /// No description provided for @pairScanHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Open WuselWall on your phone and scan this code.'**
+  String get pairScanHint;
+
+  /// No description provided for @pairCodeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Or on the phone: Settings → Devices → Connect a device, then type the code.'**
+  String get pairCodeHint;
+
+  /// No description provided for @pairQrLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'QR code to connect this device'**
+  String get pairQrLabel;
+
+  /// No description provided for @pairWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for approval …'**
+  String get pairWaiting;
+
+  /// No description provided for @pairConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected to {household}'**
+  String pairConnected(String household);
+
+  /// No description provided for @pairOldCodeLink.
+  ///
+  /// In en, this message translates to:
+  /// **'I have a code from a phone (older version)'**
+  String get pairOldCodeLink;
+
+  /// No description provided for @pairConnectAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect a device'**
+  String get pairConnectAction;
+
+  /// No description provided for @pairOldCodeAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a code for an older device'**
+  String get pairOldCodeAction;
+
+  /// No description provided for @pairEntryBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan the code the new device shows, or type it in.'**
+  String get pairEntryBody;
+
+  /// No description provided for @pairCodeField.
+  ///
+  /// In en, this message translates to:
+  /// **'Code from the new device'**
+  String get pairCodeField;
+
+  /// No description provided for @pairNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get pairNext;
+
+  /// No description provided for @pairReviewBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This is the code of the device to connect.'**
+  String get pairReviewBody;
+
+  /// No description provided for @pairConfirmHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Only confirm if you can see this device in front of you.'**
+  String get pairConfirmHint;
+
+  /// No description provided for @pairKindLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'What kind of device is this?'**
+  String get pairKindLabel;
+
+  /// No description provided for @pairKindWall.
+  ///
+  /// In en, this message translates to:
+  /// **'Wall display'**
+  String get pairKindWall;
+
+  /// No description provided for @pairKindKid.
+  ///
+  /// In en, this message translates to:
+  /// **'Kids\' tablet'**
+  String get pairKindKid;
+
+  /// No description provided for @pairKindFamily.
+  ///
+  /// In en, this message translates to:
+  /// **'Shared tablet'**
+  String get pairKindFamily;
+
+  /// No description provided for @pairKindChild.
+  ///
+  /// In en, this message translates to:
+  /// **'A child\'s phone'**
+  String get pairKindChild;
+
+  /// No description provided for @pairChildLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Which child?'**
+  String get pairChildLabel;
+
+  /// No description provided for @pairNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Device name'**
+  String get pairNameLabel;
+
+  /// No description provided for @pairDefaultWall.
+  ///
+  /// In en, this message translates to:
+  /// **'Wall display'**
+  String get pairDefaultWall;
+
+  /// No description provided for @pairDefaultKid.
+  ///
+  /// In en, this message translates to:
+  /// **'Kids\' tablet'**
+  String get pairDefaultKid;
+
+  /// No description provided for @pairDefaultFamily.
+  ///
+  /// In en, this message translates to:
+  /// **'Tablet'**
+  String get pairDefaultFamily;
+
+  /// No description provided for @pairDefaultChild.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}\'s phone'**
+  String pairDefaultChild(String name);
+
+  /// No description provided for @pairApproveAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect'**
+  String get pairApproveAction;
+
+  /// No description provided for @pairApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Device connected'**
+  String get pairApproved;
+
+  /// No description provided for @pairOnlyOnPersonal.
+  ///
+  /// In en, this message translates to:
+  /// **'This works only on your own phone.'**
+  String get pairOnlyOnPersonal;
+
+  /// No description provided for @pairPinTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set the guardian PIN'**
+  String get pairPinTitle;
+
+  /// No description provided for @pairPinBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The PIN confirms changes on shared devices. Set it once.'**
+  String get pairPinBody;
+
+  /// No description provided for @pairPinConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the PIN again'**
+  String get pairPinConfirm;
+
+  /// No description provided for @pairPinMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'The PINs do not match. Try again.'**
+  String get pairPinMismatch;
+
+  /// No description provided for @firstRunKioskTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up the wall display'**
+  String get firstRunKioskTitle;
+
+  /// No description provided for @firstRunKioskBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Three steps, once on this device. Then it shows the week.'**
+  String get firstRunKioskBody;
+
+  /// No description provided for @firstRunPinTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the app open'**
+  String get firstRunPinTitle;
+
+  /// No description provided for @firstRunPinIos.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings → Accessibility → Guided Access: turn it on. Open WuselWall and press the top button three times quickly.'**
+  String get firstRunPinIos;
+
+  /// No description provided for @firstRunPinAndroid.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings → Security → App pinning (on some devices “Screen pinning”). Open WuselWall, open Recents and tap the pin.'**
+  String get firstRunPinAndroid;
+
+  /// No description provided for @firstRunAwakeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the screen on'**
+  String get firstRunAwakeTitle;
+
+  /// No description provided for @firstRunAwakeIos.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings → Display & Brightness → Auto-Lock → Never.'**
+  String get firstRunAwakeIos;
+
+  /// No description provided for @firstRunAwakeAndroid.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings → Display → Screen timeout: the longest setting.'**
+  String get firstRunAwakeAndroid;
+
+  /// No description provided for @firstRunPowerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave it plugged in'**
+  String get firstRunPowerTitle;
+
+  /// No description provided for @firstRunPowerBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep it on the mains, so it is ready again after a power cut.'**
+  String get firstRunPowerBody;
+
+  /// No description provided for @firstRunDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get firstRunDone;
+
+  /// No description provided for @firstRunKidTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome'**
+  String get firstRunKidTitle;
+
+  /// No description provided for @firstRunKidBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap your picture, and WuselWall knows who you are.'**
+  String get firstRunKidBody;
+
+  /// No description provided for @firstRunKidStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Let’s go'**
+  String get firstRunKidStart;
 }
 
 class _AppLocalizationsDelegate
