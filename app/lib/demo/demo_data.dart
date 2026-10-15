@@ -240,31 +240,82 @@ abstract final class DemoData {
       id: 't-2',
       listId: 'l-super',
       finishedAt: DateTime(2026, 10, 8, 17, 40),
-      itemCount: 14,
+      itemCount: tripItems('t-2').length,
     ),
     ShoppingTrip(
       id: 't-1',
       listId: 'l-super',
       finishedAt: DateTime(2026, 10, 3, 10, 5),
-      itemCount: 22,
+      itemCount: tripItems('t-1').length,
     ),
   ];
 
-  static List<TripItem> get tripItems => [
-    TripItem(
-      name: tr('Milch', 'Milk'),
-      quantity: tr('1,5 %', 'semi-skimmed'),
-      count: 2,
-    ),
-    TripItem(name: tr('Brot', 'Bread'), quantity: null, count: 1),
-    TripItem(name: tr('Äpfel', 'Apples'), quantity: null, count: 1),
-    TripItem(
-      name: tr('Eier', 'Eggs'),
-      quantity: tr('10er', 'pack of 10'),
-      count: 1,
-    ),
-    TripItem(name: tr('Käse', 'Cheese'), quantity: null, count: 1),
-  ];
+  /// The items bought on each finished trip; the trip's `itemCount` is the length of its list.
+  static List<TripItem> tripItems(String tripId) => switch (tripId) {
+    't-2' => [
+      TripItem(
+        name: tr('Milch', 'Milk'),
+        quantity: tr('1,5 %', 'semi-skimmed'),
+        count: 2,
+      ),
+      TripItem(name: tr('Brot', 'Bread'), quantity: null, count: 1),
+      TripItem(name: tr('Äpfel', 'Apples'), quantity: null, count: 1),
+      TripItem(
+        name: tr('Eier', 'Eggs'),
+        quantity: tr('10er', 'pack of 10'),
+        count: 1,
+      ),
+      TripItem(name: tr('Käse', 'Cheese'), quantity: null, count: 1),
+      TripItem(name: tr('Bananen', 'Bananas'), quantity: null, count: 1),
+      TripItem(name: tr('Butter', 'Butter'), quantity: null, count: 1),
+      TripItem(name: tr('Joghurt', 'Yoghurt'), quantity: null, count: 2),
+      TripItem(name: tr('Nudeln', 'Pasta'), quantity: null, count: 1),
+      TripItem(name: tr('Tomaten', 'Tomatoes'), quantity: null, count: 1),
+      TripItem(name: tr('Gurke', 'Cucumber'), quantity: null, count: 1),
+      TripItem(
+        name: tr('Orangensaft', 'Orange juice'),
+        quantity: null,
+        count: 1,
+      ),
+      TripItem(
+        name: tr('Toilettenpapier', 'Toilet paper'),
+        quantity: tr('8er', 'pack of 8'),
+        count: 1,
+      ),
+      TripItem(
+        name: tr('Kaffee', 'Coffee'),
+        quantity: tr('500 g', '500 g'),
+        count: 1,
+      ),
+    ],
+    't-1' => [
+      TripItem(name: tr('Haferflocken', 'Oats'), quantity: null, count: 1),
+      TripItem(name: tr('Reis', 'Rice'), quantity: null, count: 1),
+      TripItem(
+        name: tr('Hähnchenbrust', 'Chicken breast'),
+        quantity: null,
+        count: 1,
+      ),
+      TripItem(name: tr('Paprika', 'Peppers'), quantity: null, count: 3),
+      TripItem(name: tr('Zwiebeln', 'Onions'), quantity: null, count: 1),
+      TripItem(
+        name: tr('Kartoffeln', 'Potatoes'),
+        quantity: tr('2 kg', '2 kg'),
+        count: 1,
+      ),
+      TripItem(
+        name: tr('Spülmittel', 'Washing-up liquid'),
+        quantity: null,
+        count: 1,
+      ),
+      TripItem(
+        name: tr('Müllbeutel', 'Bin bags'),
+        quantity: tr('20er', 'pack of 20'),
+        count: 1,
+      ),
+    ],
+    _ => const [],
+  };
 
   static String get kidsTablet => tr('Kinder-iPad', "Kids' iPad");
   static String get kitchenWall => tr('Küche (Wand)', 'Kitchen (wall)');

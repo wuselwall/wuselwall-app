@@ -145,25 +145,16 @@ const _papaBusy = <String?>[
 ];
 
 /// (slot, time, dish, cook, eating, guests) per day; a null dish is nothing planned.
-const _meals = <(String, String, String?, String, List<String>, int)>[
+const _meals = <(String, String, String?, String?, List<String>, int)>[
   ('dinner', '18:30', 'Kürbissuppe', DemoData.mama, _family, 0),
   ('dinner', '18:30', 'Nudelauflauf', DemoData.papa, _family, 0),
   ('dinner', '18:30', 'Chili sin Carne', DemoData.mama, _family, 0),
-  // Thursday is the household's own free day (see [_freeDay]), so the warm meal is at
-  // lunch, as on a weekend.
-  (
-    'lunch',
-    '12:30',
-    'Fischstäbchen',
-    DemoData.mama,
-    [DemoData.daughter, DemoData.son, DemoData.mama],
-    0,
-  ),
+  ('dinner', '18:30', 'Fischstäbchen', DemoData.mama, _family, 0),
   (
     'dinner',
     '18:00',
     null,
-    DemoData.mama,
+    null,
     [DemoData.daughter, DemoData.son, DemoData.mama],
     0,
   ),
@@ -276,9 +267,7 @@ Map<String, dynamic> _json(DateTime now) {
         },
     ],
     'open_tasks': [
-      {'member_id': DemoData.daughter, 'count': 2},
-      {'member_id': DemoData.son, 'count': 1},
-      {'member_id': DemoData.mama, 'count': 1},
+      {'member_id': DemoData.son, 'count': 2},
     ],
     'shopping_count': 7,
   };
