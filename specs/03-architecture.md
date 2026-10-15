@@ -7,11 +7,12 @@ architecture it replaces is recorded in [ADR-003](adr/ADR-003-technology-stack.m
 ## System shape
 
 **One Flutter codebase** producing native apps for iOS/iPadOS and Android plus a web
-build, talking to **one self-hosted Supabase stack** on the home server
-([ADR-013](adr/ADR-013-one-self-hosted-environment.md)). PostgreSQL is the domain core:
-tables, rules, authorisation and audit all live in it. A small number of Edge Functions
-handle what SQL does badly. Cloudflare terminates TLS at the edge, and the home server's
-nginx forwards only the API paths.
+build, talking to **the household's own Supabase stack**: a server at home or a hosted
+Supabase project ([ADR-013](adr/ADR-013-self-hosted-compose-stack.md),
+[ADR-018](adr/ADR-018-self-hosted-only.md)). PostgreSQL is the domain core: tables, rules,
+authorisation and audit all live in it. A small number of Edge Functions handle what SQL
+does badly. On a server at home, a front (the release's Caddy, or the operator's own web
+server) terminates TLS and forwards only the API paths.
 
 ```
    iPhones · iPads            wall tablet (Android)          laptop browser
@@ -19,14 +20,11 @@ nginx forwards only the API paths.
           │                          │                              │
           └──────────────┬───────────┴──────────────────────────────┘
                          │ HTTPS 443 only
+                         │ router → the server
                 ┌────────▼─────────┐
-                │ Cloudflare proxy │  TLS at the edge, hides the home address
-                └────────┬─────────┘
-                         │ HTTPS (origin certificate), router → home server
-                ┌────────▼─────────┐
-                │      nginx       │  path allow-list, WebSocket upgrade
+                │ Caddy (or nginx) │  TLS, path allow-list, WebSocket upgrade
                 └───┬──────────┬───┘
-api.wuselwall.app │          │  MCP host (M2)
+  api.example.org   │          │  MCP host (M2)
    /auth/v1 /rest/v1│          │
    /realtime/v1     │          │
    /functions/v1    │          │
@@ -51,8 +49,8 @@ api.wuselwall.app │          │  MCP host (M2)
                          │ nightly pg_dump  │──► restic ──► off-site storage (encrypted)
                          └──────────────────┘
 
-   Studio (admin UI) runs on the server but is never proxied by nginx —
-   reachable only on the home network.
+   Studio (admin UI) is off by default; when switched on it is never proxied —
+   reachable only through an SSH tunnel.
 ```
 
 ### Why the database is the core
@@ -77,7 +75,7 @@ queues. It holds no business rules.
 | Offline store | **drift** (SQLite) | The shopping list's mirror and outbox ([07](07-module-meals-shopping.md#offline--the-one-place-it-is-non-negotiable)). Typed queries, migrations, reactive streams. |
 | Secrets on device | `flutter_secure_storage` | Keychain on iOS, Keystore-backed on Android — where the device session lives. |
 | Localisation | Flutter **gen-l10n**, ARB files | German and English, always both (NFR-14); generated, type-safe message accessors. |
-| Backend platform | **Supabase, self-hosted only**: the homeserver stack for the family, and any household's own stack (or own Supabase project) for everyone else | User decision. Auth, a REST layer, realtime and functions around PostgreSQL. `supabase/` is the server release other families install; the store app has no default backend ([ADR-018](adr/ADR-018-self-hosted-only.md), replacing ADR-015's Cloud). |
+| Backend platform | **Supabase, self-hosted only**: every household's own stack, or its own hosted Supabase project | User decision. Auth, a REST layer, realtime and functions around PostgreSQL. `supabase/` is the server release other families install; the store app has no default backend ([ADR-018](adr/ADR-018-self-hosted-only.md), replacing ADR-015's Cloud). |
 | Database | **PostgreSQL** (the version Supabase's image ships — pin the tag) | Recurrence ranges, ledgers, arrays, `pg_trgm` for shopping capture, `pg_cron` for jobs. |
 | Domain logic | **SQL and PL/pgSQL** in the `api` schema | Transactional writes, guardian checks and audit in one place. |
 | Authorisation | **Row-level security**, forced on every table | The primary control: the anon key ships in every app. |
@@ -105,7 +103,7 @@ wuselwall/
 │  ├─ l10n/app_en.arb  app_de.arb   every user-facing string, in both languages
 │  ├─ test/                    unit and widget tests
 │  ├─ integration_test/        on-device flows (later)
-│  ├─ env/                     dev.json (api.wuselwall.app), ci.json — --dart-define-from-file
+│  ├─ env/                     store.json, ci.json, dev.json (git-ignored) — --dart-define-from-file
 │  ├─ android/  ios/  web/     platform shells; fastlane/ inside android/ and ios/
 ├─ supabase/
 │  ├─ config.toml              local stack configuration (Supabase CLI)
@@ -117,9 +115,11 @@ wuselwall/
 │  ├─ tests/                   pgTAP: one file per module, RLS tests for every table
 │  └─ seed.sql                 a development household
 ├─ infra/
-│  ├─ nginx/                   the wuselwall.app site file for the home server's nginx
+│  ├─ supabase/                the official compose stack, WuselWall's lean and Caddy layers
+│  ├─ jobs/  cron/             the scheduled jobs: pg_cron (schedule.sql) or the host's cron
 │  ├─ web/                     compose project for the website container (ADR-016)
-│  └─ backup/                  backup.sh, restore-drill.sh (run on the home server)
+│  └─ backup/                  backup.sh, restore-drill.sh (run on the server)
+├─ server/                     wuselwall: install, update, backup, restore (in a release)
 ├─ website/                    Astro site: landing page, Impressum, Datenschutz (ADR-016)
 ├─ scripts/                    remote-web / remote-stack / -migrate / -pgtap / -backup / -setup-token
 ├─ .github/workflows/          ci.yml, release-mobile.yml
@@ -141,7 +141,15 @@ wuselwall/
   The service-role key is used only by functions with no user (ICS, enrolment, jobs)
   and by the account-administration functions of [ADR-014](adr/ADR-014-self-service-onboarding.md)
   (`account-delete`, MFA reset), which verify the caller's JWT before acting on that one account,
-  and each such use is commented with why.
+  and each such use is commented with why. Added 2026-10-14: the on-demand holiday cache
+  refresh (`holidays-sync`, called with a member's JWT when a country is picked) uses the
+  service role only to write the public holiday cache, which holds no household data
+  ([15](15-module-school-timetable.md#holidays)). The same holds for the on-demand refresh of one
+  subscribed calendar (`calendar-import`, a guardian's JWT, then the service role for that calendar's
+  fetch and stored occurrences; [05](05-module-calendar.md#external-calendars-subscribed-ics-fr-19)).
+- **Public reference data** (regions and holiday feed rows, see [04](04-data-model.md#holiday-reference-data))
+  is readable by any session on a live device and by nobody else; a revoked device reads nothing.
+  Nothing household-specific lives there, and only the holiday sync writes it.
 
 ## Module boundaries
 
@@ -202,7 +210,7 @@ Three layers, and since ADR-010 the database ones carry the weight:
 1. **Row-level security on every `app` table**, with `FORCE ROW LEVEL SECURITY` so it
    also binds the role that owns the `api` functions. Every policy checks the JWT's
    household and that the calling device is not revoked. RLS is the control that stands
-   between the public anon key and the family's data.
+   between the public anon key and a household's data.
 2. **Role and step-up checks** inside `api` functions: `app.require_guardian(v_actor)`
    raises unless `guardian_verified_until` is in the future or the caller is a guardian
    on their own personal device.
@@ -210,6 +218,14 @@ Three layers, and since ADR-010 the database ones carry the weight:
    in PostgREST's exposed schemas, and Studio is never published.
 
 Hiding a button in Flutter is a courtesy, never a control.
+
+### The service-role key
+
+Added 2026-10-14, so that the exceptions have one place to point to. The service-role key is
+used by Edge Functions that have no user (ICS feeds, enrolment, jobs such as `holidays-sync`'s
+weekly run), and by the two account-administration functions of ADR-014. The one exception
+inside a user request is the on-demand holiday cache refresh: it verifies the member's JWT,
+and the service role writes only the public cache. Each use names its reason in a comment.
 
 ### Audit log
 

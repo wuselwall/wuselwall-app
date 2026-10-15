@@ -3,6 +3,7 @@ import {
   type BoardJson,
   type BusyRow,
   fillBoard,
+  fillHolidays,
   fillMeals,
   fillSchool,
   type MealEntryRow,
@@ -10,7 +11,8 @@ import {
   type MealJson,
   type MealSettings,
 } from "./board.ts";
-import type { SchoolDayJson, TimetableJson } from "./school.ts";
+import type { HolidayFeedRow } from "./openholidays.ts";
+import type { HolidayRow, SchoolDayJson, TimetableJson } from "./school.ts";
 import { addDays, type Occurrence } from "./occurrences.ts";
 
 // Monday 2026-10-12 .. Sunday 2026-10-18. Member ids are neutral on purpose.
@@ -38,6 +40,8 @@ function occ(p: Partial<Occurrence> & { id: string }): Occurrence {
     attendee_ids: [],
     is_recurring: false,
     is_override: false,
+    source: "event",
+    colour_hex: null,
     ...p,
   };
 }
@@ -216,6 +220,27 @@ Deno.test("a timed appointment is on its start day only, with its times", () => 
     tentative: false,
     key: false,
   }]);
+});
+
+Deno.test("an imported calendar is on the board only when it shows there, as key appointments", () => {
+  const imported = (id: string, show: boolean, title: string) =>
+    occ({
+      id,
+      title,
+      source: "imported",
+      colour_hex: "#6D4C41",
+      importance: show ? "key" : "normal",
+      attendee_ids: [],
+      local_start_date: "2026-10-14",
+      local_end_date: "2026-10-14",
+      all_day: true,
+    });
+  const board = fillBoard(
+    base(),
+    [imported("i-show", true, "Abfall"), imported("i-hidden", false, "Spielplan")],
+    [],
+  );
+  assertEquals(dayOf(board, "2026-10-14").events.map((e) => [e.id, e.key]), [["i-show", true]]);
 });
 
 Deno.test("the key and tentative flags come from importance and status", () => {
@@ -655,4 +680,110 @@ Deno.test("eating follows the member order given, and the input is not mutated",
   });
   assertEquals(mealOf(board, "2026-10-12").eating, ["c", "a", "b"]);
   assertEquals(input, snapshot);
+});
+
+// ── public holidays on the board (fillHolidays) and the meal slot they change ─────
+
+const ASCENSION: HolidayFeedRow = {
+  id: "feed-ch-auffahrt",
+  country: "CH",
+  kind: "public",
+  starts_on: "2026-05-14",
+  ends_on: "2026-05-14",
+  names: { de: "Auffahrt", en: "Ascension Day" },
+  nationwide: true,
+  subdivisions: [],
+};
+
+const ZH_ONLY: HolidayFeedRow = {
+  id: "feed-zh-sechselaeuten",
+  country: "CH",
+  kind: "public",
+  starts_on: "2026-10-12",
+  ends_on: "2026-10-12",
+  names: { de: "Sechseläuten" },
+  nationwide: false,
+  subdivisions: ["CH-ZH"],
+};
+
+const OWN: HolidayRow = {
+  id: "own-1",
+  school_id: null,
+  name: "Brückentag",
+  starts_on: "2026-10-16",
+  ends_on: "2026-10-16",
+  kind: "public_holiday",
+  source: "manual",
+  source_url: null,
+  feed_id: null,
+};
+
+function withHolidays(
+  region: string | null,
+  locale = "de-DE",
+  holidays: HolidayRow[] = [],
+  feed: HolidayFeedRow[] = [ASCENSION, ZH_ONLY],
+): BoardJson {
+  return fillHolidays(base(), holidays, feed, region, locale);
+}
+
+Deno.test("a region's public holiday marks its day, named in the household's language", () => {
+  const feed = [{ ...ASCENSION, starts_on: "2026-10-14", ends_on: "2026-10-14" }];
+  const german = withHolidays("CH-ZH-ZH-ZH", "de-DE", [], feed);
+  assertEquals(dayOf(german, "2026-10-14").holiday, { name: "Auffahrt", source: "region" });
+  assertEquals(dayOf(german, "2026-10-13").holiday, null);
+  const english = withHolidays("CH-ZH", "en-GB", [], feed);
+  assertEquals(dayOf(english, "2026-10-14").holiday, { name: "Ascension Day", source: "region" });
+});
+
+Deno.test("a canton-only holiday covers its region's municipalities, not another canton", () => {
+  const inZh = withHolidays("CH-ZH-ZH-ZH");
+  assertEquals(dayOf(inZh, "2026-10-12").holiday, { name: "Sechseläuten", source: "region" });
+  const inAg = withHolidays("CH-AG");
+  assertEquals(dayOf(inAg, "2026-10-12").holiday, null);
+});
+
+Deno.test("without a household region only the family's own holidays mark a day", () => {
+  const board = withHolidays(null, "de-DE", [OWN]);
+  assertEquals(dayOf(board, "2026-10-12").holiday, null);
+  assertEquals(dayOf(board, "2026-10-16").holiday, { name: "Brückentag", source: "household" });
+});
+
+Deno.test("the family's own holiday row wins over the cache and carries its own name", () => {
+  const feed = [{ ...ASCENSION, starts_on: "2026-10-16", ends_on: "2026-10-16" }];
+  const board = withHolidays("CH-ZH", "de-DE", [OWN], feed);
+  assertEquals(dayOf(board, "2026-10-16").holiday, { name: "Brückentag", source: "household" });
+});
+
+Deno.test("a school's row for one school does not mark the household's day", () => {
+  const schoolOnly: HolidayRow = { ...OWN, school_id: "school1" };
+  const board = withHolidays(null, "de-DE", [schoolOnly]);
+  assertEquals(dayOf(board, "2026-10-16").holiday, null);
+});
+
+Deno.test("a day without any holiday has null, and the input is not mutated", () => {
+  const input = base();
+  const snapshot = structuredClone(input);
+  const board = fillHolidays(input, [], [ASCENSION], "CH-ZH", "de-DE");
+  assertEquals(input, snapshot);
+  assertEquals(board.days.every((d) => d.holiday === null), true);
+});
+
+Deno.test("a public holiday of the household's region is a free day for the meal zone", () => {
+  const withHoliday = fillHolidays(
+    base(),
+    [],
+    [{ ...ASCENSION, starts_on: "2026-10-14", ends_on: "2026-10-14" }],
+    "CH-ZH",
+    "de-DE",
+  );
+  const board = fillMeals(withHoliday, {
+    entries: [],
+    settings: MEAL_SETTINGS,
+    presence: [],
+    schoolDays: [],
+    members: MEAL_MEMBERS,
+  });
+  assertEquals(mealOf(board, "2026-10-14").slot, "lunch");
+  assertEquals(mealOf(board, "2026-10-13").slot, "dinner");
 });

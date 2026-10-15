@@ -18,19 +18,25 @@ import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/data/board_repository.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/calendar/data/calendar_repository.dart';
+import 'package:wuselwall/features/calendar/data/external_calendars_repository.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/data/sign_in_methods_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/identity/domain/sign_in_method.dart';
 import 'package:wuselwall/features/meals/data/meals_repository.dart';
+import 'package:wuselwall/features/region/data/region_repository.dart';
 import 'package:wuselwall/features/school/data/school_repository.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 import 'package:wuselwall/features/shopping/data/shopping_store.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_sync_model.dart';
+import 'package:wuselwall/features/today/data/getting_started_repository.dart';
 
+import 'fake_external_calendars.dart';
+import 'fake_getting_started.dart';
 import 'fake_meals.dart';
+import 'fake_region.dart';
 import 'fake_school.dart';
 import 'fake_tasks.dart';
 
@@ -159,13 +165,20 @@ class FakeIdentityRepository implements IdentityRepository {
 }
 
 class FakeShoppingRepository implements ShoppingRepository {
-  FakeShoppingRepository(this.list);
+  FakeShoppingRepository(this.list, {this.mealsByItem = const {}});
 
   List<ShoppingItem> list;
   final toggles = <({String? actor, String id})>[];
 
+  /// The meals behind each item id, for the item's sheet.
+  final Map<String, List<ShoppingItemMeal>> mealsByItem;
+
   @override
   Future<Result<List<ShoppingItem>>> items() async => Ok(list);
+
+  @override
+  Future<Result<List<ShoppingItemMeal>>> itemMeals(String itemId) async =>
+      Ok(mealsByItem[itemId] ?? const []);
 
   @override
   Future<Result<ShoppingSnapshot>> snapshot() async => Ok(
@@ -439,8 +452,12 @@ List<Override> baseOverrides({
   required FakeIdentityRepository identity,
   FakeShoppingRepository? shopping,
   FakeSignInMethods? signInMethods,
+  FakeExternalCalendarsRepository? externalCalendars,
   bool signedIn = true,
 }) => [
+  externalCalendarsRepositoryProvider.overrideWithValue(
+    externalCalendars ?? FakeExternalCalendarsRepository(),
+  ),
   appConfigProvider.overrideWithValue(
     const AppConfig(
       environment: 'test',
@@ -481,6 +498,8 @@ Future<ProviderContainer> pumpApp(
   FakeTasksApi? tasks,
   FakeMealsRepository? meals,
   FakeSchoolRepository? school,
+  FakeGettingStartedRepository? gettingStarted,
+  FakeRegionRepository? region,
   Size size = const Size(1000, 1600),
 }) async {
   tester.view.physicalSize = size;
@@ -503,11 +522,18 @@ Future<ProviderContainer> pumpApp(
       calendarRepositoryProvider.overrideWithValue(
         calendar ?? FakeCalendarRepository(),
       ),
-      // The tasks repository runs on a fake `api` layer when a test asks for one.
-      if (tasks != null) apiClientProvider.overrideWithValue(tasks),
+      // The tasks repository runs on a fake `api` layer; an empty one when a test does not
+      // ask for one, so the Today tab never reaches Supabase.
+      apiClientProvider.overrideWithValue(tasks ?? FakeTasksApi()),
+      gettingStartedRepositoryProvider.overrideWithValue(
+        gettingStarted ?? FakeGettingStartedRepository(),
+      ),
       mealsRepositoryProvider.overrideWithValue(meals ?? FakeMealsRepository()),
       schoolRepositoryProvider.overrideWithValue(
         school ?? FakeSchoolRepository(),
+      ),
+      regionRepositoryProvider.overrideWithValue(
+        region ?? FakeRegionRepository(),
       ),
     ],
   );
@@ -520,6 +546,15 @@ Future<ProviderContainer> pumpApp(
   );
   await tester.pumpAndSettle();
   return container;
+}
+
+/// Switches the adult home to the tab with [label] (its navigation bar label). Today is
+/// the default tab, so tests about another tab start by tapping it.
+Future<void> openTab(WidgetTester tester, String label) async {
+  await tester.tap(
+    find.descendant(of: find.byType(NavigationBar), matching: find.text(label)),
+  );
+  await tester.pumpAndSettle();
 }
 
 /// Unmounts the app and disposes its container inside the test. The kiosk board keeps

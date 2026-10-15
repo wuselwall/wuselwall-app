@@ -59,6 +59,14 @@ class MealsRepository {
         .order('slot'),
   );
 
+  /// The household's meals of the last year, cooked or not, most often first
+  /// (`api.meal_history`). The editor's suggestions are picked from it.
+  Future<Result<List<MealHistoryEntry>>> history() => _api.select(
+    'meal_history',
+    parse: MealHistoryEntry.fromJson,
+    build: (q) => q.order('times', ascending: false),
+  );
+
   /// Creates or replaces a recipe. An empty id creates; the ingredient list replaces
   /// the old one as a whole.
   Future<Result<String>> saveRecipe({

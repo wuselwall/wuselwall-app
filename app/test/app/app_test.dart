@@ -59,7 +59,7 @@ void main() {
       );
       // The adult home opens on the calendar; the shopping tab is one tap away. Its
       // label is the same text as the app bar title, so the title is found in the bar.
-      await t.tap(find.text('Einkaufsliste'));
+      await t.tap(find.text('Einkauf'));
       await t.pumpAndSettle();
       expect(find.widgetWithText(AppBar, 'Einkaufsliste'), findsOneWidget);
       expect(find.text('Milch'), findsOneWidget);

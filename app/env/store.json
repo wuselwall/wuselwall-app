@@ -1,0 +1,6 @@
+{
+  "ENV": "store",
+  "APPLE_SIGN_IN": true,
+  "GOOGLE_WEB_CLIENT_ID": "81490193668-hsfddbkmfgtv800qqv3bv8802ds9i1ca.apps.googleusercontent.com",
+  "GOOGLE_IOS_CLIENT_ID": "81490193668-1ek7pn55teu3gsb2isttgp8govb94396.apps.googleusercontent.com"
+}

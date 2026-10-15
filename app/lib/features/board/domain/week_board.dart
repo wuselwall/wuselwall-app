@@ -330,6 +330,7 @@ class BoardDay {
     required this.busyUntil,
     required this.school,
     required this.meal,
+    this.holiday,
   });
 
   factory BoardDay.fromJson(Map<String, dynamic> json) => BoardDay(
@@ -345,6 +346,9 @@ class BoardDay {
     meal: json['meal'] == null
         ? null
         : BoardMeal.fromJson(json['meal'] as Map<String, dynamic>),
+    holiday: json['holiday'] == null
+        ? null
+        : BoardHoliday.fromJson(json['holiday'] as Map<String, dynamic>),
   );
 
   final DateTime date;
@@ -362,7 +366,26 @@ class BoardDay {
   /// The one warm meal (FR-8.4). Null only when the meals module is not built.
   final BoardMeal? meal;
 
+  /// A public holiday of the day (the household's region or its own row); null on an
+  /// ordinary day, and on servers that do not send holidays yet.
+  final BoardHoliday? holiday;
+
   List<BoardEvent> get keyEvents => events.where((e) => e.isKey).toList();
+}
+
+/// The public holiday of a day ("Auffahrt"), in the household's language.
+class BoardHoliday {
+  const BoardHoliday({required this.name, this.isHousehold = false});
+
+  factory BoardHoliday.fromJson(Map<String, dynamic> json) => BoardHoliday(
+    name: json['name'] as String,
+    isHousehold: json['source'] == 'household',
+  );
+
+  final String name;
+
+  /// True when the family entered the day itself; false when the region's calendar says so.
+  final bool isHousehold;
 }
 
 class BoardEvent {

@@ -188,17 +188,45 @@ Realistically this is done twice a year, in a hurry, on a laptop, from a sheet o
 
 ### Holidays
 
-Ferien and bewegliche Ferientage are entered by hand in v1 and imported in M2. The import
-is a public dataset (`ferien-api.de` and the Kultusministerien's own ICS files), it is
-per region — a school's region defaults to the household's (`household.region`), and the
-import starts with the German Bundesländer — and it must be fetched **server-side by a scheduled Edge Function**, cached, and never
-requested from the app — NFR-9 is not suspended for convenience.
+Built 2026-10-14 on `feature/regions-and-ux`, not yet on the server. Ferien and bewegliche
+Ferientage were hand-entered in v1; the M2 import is built early, and public holidays are new.
 
-Bewegliche Ferientage are school-specific and are never in the public feed. They will
-always be hand-entered, which is fine: it is four or five dates a year, announced in a
-letter.
+**Regions.** A region is a subdivision of the public OpenHolidays dataset
+(openholidaysapi.org, ODbL 1.0), to any depth the data has: Germany (Bundesland), Austria
+(Bundesland), Switzerland (Kanton, Bezirk, Gemeinde) and Liechtenstein. A school has a
+`region_code`; a school's region defaults to the household's (`household.region`, see
+[21](21-household-settings.md#household-and-members)), and the picker walks the tree
+one level at a time.
 
----
+**Who fetches what.** The server fetches the data, never the app: `holidays-sync` runs weekly
+from `infra/cron/holidays-sync.sh`, and on demand when a member picks a country, which is the
+one call with a member's JWT that uses the service role, and only to write the public cache
+([03](03-architecture.md#the-service-role-key)). The cache is reference data
+(`app.region`, `app.holiday_feed`, see [04](04-data-model.md#holiday-reference-data)); a failed
+fetch keeps the last good data and never blocks the household's own entries.
+
+**Public holidays (Feiertage) are automatic.** Nothing is imported. A holiday that covers the
+household's region frees the school days of a school in a covered region, appears in the week
+board's day header and day detail ("Feiertag · …"), and moves the warm meal to the free-day
+slot ([21](21-household-settings.md#meals-m14)). The rule is `app.region_covers`: a nationwide
+holiday covers its country; a subdivision holiday covers its own subdivision and everything
+below it (`CH-ZH` covers `CH-ZH-ZH-ZH`, but `CH-ZH-ZH-ZH` does not cover `CH-ZH`).
+
+**School holidays (Ferien) are imported, with a preview.** The family picks the feed rows of
+its school's region in a preview, the rows are copied into the school's holiday list, and each
+imported row is marked "importiert". The copy is ordinary data afterwards: the family may edit
+or delete any of it. A feed row is imported once per school, so a second import adds nothing.
+
+**Swiss reality.** Swiss school holidays are set by the Gemeinde, not the canton, and some
+Gemeinden differ from their neighbours by a week. The dataset carries the cantonal and district
+rules; the Gemeinde is the level the family picks, and where the data has no Gemeinde row the
+family enters the dates by hand. The import never guesses a Gemeinde.
+
+**Bewegliche Ferientage** are school-specific and are never in the public feed. They are
+always hand-entered: it is four or five dates a year, announced in a letter.
+
+Starter subjects follow the country (German, Lehrplan 21 for Switzerland, Austrian), see
+[21](21-household-settings.md#household-and-members).
 
 ## Part 2 — presence: regular and flexible
 

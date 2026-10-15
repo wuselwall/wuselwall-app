@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# The one environment's Supabase stack on the home server: Supabase's official
-# self-hosting compose file plus infra/supabase/docker-compose.wuselwall.yml
-# (ADR-013 amendment, specs/10).
+# A server's Supabase stack, driven over SSH from a checkout: Supabase's official
+# self-hosting compose file plus infra/supabase/docker-compose.wuselwall.yml (specs/10).
+# A server installed from a release uses server/wuselwall instead.
 #
 #   scripts/remote-stack.sh init-env     create the server's .env once (refuses to overwrite)
 #   scripts/remote-stack.sh set-env KEY  set one variable in the server's .env, value on stdin
@@ -16,8 +16,10 @@
 # holds the JWT secret and the signing key, and a restore without them strands every device.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-HOST=${WW_HOST:-homeserver}
-DIR=${WW_STACK_DIR:-/srv/appdata/wuselwall/supabase}
+# The target server comes from scripts/remote.env (git-ignored; see remote.env.example).
+[ -f scripts/remote.env ] && . scripts/remote.env
+HOST=${WW_HOST:?set WW_HOST in scripts/remote.env}
+DIR=${WW_STACK_DIR:?set WW_STACK_DIR in scripts/remote.env}
 
 case "${1:-}" in
   init-env)
@@ -26,7 +28,11 @@ case "${1:-}" in
       exit 1
     fi
     ssh "$HOST" "mkdir -p '$DIR' && chmod 700 '$DIR'"
+    # The server's addresses come from the environment (WW_API_URL, WW_WEB_URL, optional
+    # WW_RP_ID), never from this file; a release installs with server/wuselwall instead.
+    : "${WW_API_URL:?set WW_API_URL=https://api.<your domain>}" "${WW_WEB_URL:?set WW_WEB_URL=https://web.<your domain>}"
     node infra/supabase/make-env.mjs "${2:-supabase/.env}" \
+      --api "$WW_API_URL" --web "$WW_WEB_URL" ${WW_RP_ID:+--rp-id "$WW_RP_ID"} --studio \
       | ssh "$HOST" "umask 077 && cat > '$DIR/.env'"
     echo "wrote $HOST:$DIR/.env"
     ;;
@@ -48,7 +54,7 @@ case "${1:-}" in
     rsync -rlt --delete --chmod=D755,F644 \
       --exclude .env --exclude make-env.mjs \
       --exclude volumes/db/data/ --exclude volumes/storage/ --exclude volumes/snippets/ \
-      --exclude volumes/functions/ \
+      --exclude volumes/functions/ --exclude volumes/web/ \
       infra/supabase/ "$HOST:$DIR/"
     # Upstream's router (main/) next to our functions, one directory each.
     rsync -rlt --delete --chmod=D755,F644 \

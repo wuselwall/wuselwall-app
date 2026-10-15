@@ -13,11 +13,20 @@ import 'package:wuselwall/features/board/ui/board_primitives.dart';
 import 'package:wuselwall/features/board/ui/details/board_details.dart';
 
 /// The day names row: each column's weekday and date,
-/// today's column marked with a bar and "Heute" in place of its weekday. Tapping a column opens that day.
+/// today's column marked with a bar and "Heute" in place of its weekday. A public holiday
+/// of the week shows its name under the date, which makes the row taller for that week.
+/// Tapping a column opens that day.
 class DayHeaderRow extends StatelessWidget {
   const DayHeaderRow({required this.frame, super.key});
 
   static const height = 44.0;
+
+  /// The row's height when a day of the week is a public holiday: a second line for it.
+  static const holidayHeight = 72.0;
+
+  /// The height the row needs for [board]: [holidayHeight] when any day has a holiday.
+  static double heightOf(WeekBoard board) =>
+      board.days.any((d) => d.holiday != null) ? holidayHeight : height;
 
   final BoardFrame frame;
 
@@ -39,7 +48,7 @@ class DayHeaderRow extends StatelessWidget {
             top: 0,
             bottom: 0,
             child: BoardTap(
-              label: context.fullDate(board.days[i].date),
+              label: _label(context, board.days[i]),
               onTap: () => unawaited(openDayDetail(context, board, i)),
               child: Opacity(
                 opacity: frame.opacity(i),
@@ -55,40 +64,59 @@ class DayHeaderRow extends StatelessWidget {
                         child: ColoredBox(color: scheme.primary),
                       ),
                     ClipFit(
-                      child: Row(
+                      child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Flexible(
-                            child: Text(
-                              // Today says so in words instead of a pill: the
-                              // column is wide, but not wide enough for both.
-                              i == today
-                                  ? context.l10n.boardToday
-                                  : context.weekdayShort(board.days[i].date),
-                              style: boardNum(
-                                28,
-                                weight: FontWeight.w700,
-                                color: i == today
-                                    ? scheme.primary
-                                    : scheme.onSurface,
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  // Today says so in words instead of a pill: the
+                                  // column is wide, but not wide enough for both.
+                                  i == today
+                                      ? context.l10n.boardToday
+                                      : context.weekdayShort(
+                                          board.days[i].date,
+                                        ),
+                                  style: boardNum(
+                                    28,
+                                    weight: FontWeight.w700,
+                                    color: i == today
+                                        ? scheme.primary
+                                        : scheme.onSurface,
+                                  ),
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
                               ),
-                              maxLines: 1,
-                              softWrap: false,
-                            ),
+                              const SizedBox(width: 6),
+                              Flexible(
+                                child: Text(
+                                  context.dayMonth(board.days[i].date),
+                                  style: boardNum(
+                                    24,
+                                    weight: FontWeight.w500,
+                                    color: ww.ink2,
+                                  ),
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(width: 6),
-                          Flexible(
-                            child: Text(
-                              context.dayMonth(board.days[i].date),
-                              style: boardNum(
+                          if (board.days[i].holiday case final holiday?)
+                            Text(
+                              holiday.name,
+                              style: boardUi(
                                 24,
-                                weight: FontWeight.w500,
+                                weight: FontWeight.w600,
                                 color: ww.ink2,
                               ),
                               maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                               softWrap: false,
                             ),
-                          ),
                         ],
                       ),
                     ),
@@ -100,6 +128,15 @@ class DayHeaderRow extends StatelessWidget {
       ],
     );
   }
+}
+
+/// The column's label for screen readers: the date, and the holiday when there is one.
+String _label(BuildContext context, BoardDay day) {
+  final date = context.fullDate(day.date);
+  final holiday = day.holiday;
+  return holiday == null
+      ? date
+      : '$date, ${context.l10n.boardHolidayLabel(holiday.name)}';
 }
 
 /// Zone "Termine": three fixed day parts, each row holding the key appointments of that

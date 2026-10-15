@@ -3,7 +3,7 @@
 *Added 2026-10-11 with the move to Flutter and self-hosted Supabase
 ([ADR-010](adr/ADR-010-flutter-and-self-hosted-supabase.md),
 [ADR-011](adr/ADR-011-native-distribution-and-ci-cd.md)); step 8 rewritten the same day
-for one environment on the home server ([ADR-013](adr/ADR-013-one-self-hosted-environment.md)). This is the build order for
+for a self-hosted server ([ADR-013](adr/ADR-013-self-hosted-compose-stack.md)). This is the build order for
 milestone M0 in [13](13-roadmap.md): everything that has to exist before the first
 module is worth building.*
 
@@ -24,8 +24,8 @@ change and a tag producing installable builds. Once that works, every module aft
 | 4 | M0.0 | `ci.yml`: every pull request tested | 1 evening |
 | 5 | M0.1 | Identity: setup wizard, guardian accounts, device enrolment, tap-to-switch, PIN | 1 weekend |
 | 6 | M0.2 | The shopping list, online only — the first real feature | 1–2 evenings |
-| 7 | M0.4 | `release-mobile.yml`: a tag puts builds on the family's devices | 1 weekend |
-| 8 | M0.3 | The one environment ([ADR-013](adr/ADR-013-one-self-hosted-environment.md)): own keys, nginx allow-list, backups | 1 evening |
+| 7 | M0.4 | `release-mobile.yml`: a tag puts builds on the testers' devices | 1 weekend |
+| 8 | M0.3 | A self-hosted server ([ADR-013](adr/ADR-013-self-hosted-compose-stack.md)): own keys, an allow-list front, backups | 1 evening |
 | 9 | M1.0 | Onboarding ([ADR-014](adr/ADR-014-self-service-onboarding.md)): Apple, Google, email code and password; households, invitations, pairing, getting started, deletion | 2–3 weekends |
 
 Steps 1–4 can be done in a single long weekend. Step 7 waits on the Apple and Google
@@ -47,9 +47,9 @@ accounts from step 0, which is why those are applied for first.
 | `gh` | GitHub from the terminal | Already installed and authenticated |
 | A physical Android device | Running the app | Use wireless debugging (`adb pair` / `adb connect`) — USB and the Android emulator are both awkward from WSL2 |
 
-*Since [ADR-013](adr/ADR-013-one-self-hosted-environment.md) the stack runs on the home
-server and phones reach it at `https://api.wuselwall.app`, so the two WSL traps below only
-matter for a throwaway stack on the laptop.*
+*Since [ADR-013](adr/ADR-013-self-hosted-compose-stack.md) the stack runs on a server and
+phones reach it over HTTPS, so the two WSL traps below only matter for a throwaway stack on
+the laptop.*
 
 Two WSL-specific traps worth solving on day one:
 
@@ -72,12 +72,11 @@ and no Xcode debugger. See [Q35](14-open-questions.md).
 | **App Store Connect**: the app record, bundle ID `ch.goomba.wuselwall`, an **API key** (App Manager role) | Uploads from CI without a password or 2FA prompt | — | Minutes, after the programme is active |
 | **Google Play Console** (personal) | Internal testing track for the wall tablet and Android phones | $25 once | Identity verification can take several days |
 | **Second private GitHub repository** `wuselwall-certificates` | `fastlane match` storage for iOS signing | — | Minutes |
-| Domain `wuselwall.app` and Cloudflare ([ADR-017](adr/ADR-017-wuselwall-app-domain.md)) | The public hosts `wuselwall.app`, `web.` and `api.`; a Cloudflare origin certificate for them | ≈ €14 / year | in place 2026-10-13 |
-| Domain `example.org` | The mail sender and the old address `wusel.example.org` (a bridge for old app builds) | already owned | in place |
+| Domain `wuselwall.app` ([ADR-017](adr/ADR-017-wuselwall-app-domain.md)) | The project's website, docs and links site | ≈ €14 / year | in place 2026-10-13 |
 | Firebase project | Android push via FCM — not needed until push is built, and only if [Q38](14-open-questions.md) settles on FCM | free | Minutes |
 | **Sign in with Apple** (in the Developer account): the capability on `ch.goomba.wuselwall`, a Services ID, a key | Step 9 — Apple sign-in on iOS, Android and the web | — | Minutes, after the programme is active |
 | **Google Cloud project** with an OAuth consent screen and three OAuth clients (web, iOS, Android) | Step 9 — Google sign-in | free | Minutes; the consent screen's branding review can take a few days |
-| **Scaleway account** with Transactional Email ([Q41](14-open-questions.md), decided): one project, for the homeserver stack (no Cloud since ADR-018); sending domains verified with SPF/DKIM/DMARC ([10](10-deployment-and-ops.md#email-setup)) | Step 9 — email codes | 300 mails/month free, then €0.25 per 1,000 | An evening, plus DNS propagation |
+| **Scaleway account** with Transactional Email ([Q41](14-open-questions.md), decided): one project per server that sends mail; sending domains verified with SPF/DKIM/DMARC ([10](10-deployment-and-ops.md#email-setup)) | Step 9 — email codes | 300 mails/month free, then €0.25 per 1,000 | An evening, plus DNS propagation |
 | **Supabase organisation** on the Pro plan, project in Frankfurt ([ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md)) | WuselWall Cloud — needed at the opening gate, not before | ≈ $25 / month | Minutes |
 
 ---
@@ -153,15 +152,16 @@ and no Xcode debugger. See [Q35](14-open-questions.md).
    `freezed`/`json_serializable`, `flutter_secure_storage`, `intl` and
    `flutter_localizations`. Add `drift` in step 6, not before.
 4. **Configuration per environment** with `--dart-define-from-file`:
-   `env/dev.json` (the one environment, `https://api.wuselwall.app`, and its publishable
-   key) and `env/ci.json` (CI's throwaway stack); no `prod.json`
-   ([ADR-013](adr/ADR-013-one-self-hosted-environment.md)). No `if (kDebugMode)` branches
+   `env/dev.json` (git-ignored: a development build's server and its publishable key; CI
+   writes it from repository secrets), `env/ci.json` (CI's throwaway stack) and, since
+   ADR-018, `env/store.json` (store builds, no server); no `prod.json`
+   ([ADR-013](adr/ADR-013-self-hosted-compose-stack.md)). No `if (kDebugMode)` branches
    for configuration. The publishable key is public by design; nothing else secret goes
    in either file.
 5. **Platform networking for a local stack**: iOS `NSAppTransportSecurity →
    NSAllowsLocalNetworking` and an Android network-security config permitting cleartext
-   to the private address range, for a throwaway stack on the laptop. The one
-   environment is HTTPS (`api.wuselwall.app`).
+   to the private address range, for a throwaway stack on the laptop. A live server is
+   HTTPS.
 6. **Localisation from the first widget**: `app/l10n.yaml` with `app/l10n/app_en.arb`
    (template) and `app/l10n/app_de.arb`, both locales supported with German first, and
    `untranslated-messages-file` so CI can fail on a string missing from either. No string literal is ever shown to a user (see `CLAUDE.md`).
@@ -185,7 +185,7 @@ text, and the System page reports the database round-trip.
 `.github/workflows/ci.yml`. Three parallel jobs, each one fast enough to wait for. A pull
 request runs only the fast checks (format, analyse, unit and widget tests); the web build
 and the backend job run on a tag `v*.*.*` or by hand ("Run workflow"), and by hand before a
-migration goes to the one environment ([10](10-deployment-and-ops.md#changing-the-database)).
+migration goes to a live server ([10](10-deployment-and-ops.md#changing-the-database)).
 
 ```yaml
 name: ci
@@ -304,8 +304,8 @@ The model is [08](08-users-auth-permissions.md); the Supabase mechanics are
    a revoked device by wiping its session and showing enrolment.
 7. **Guardian account features**: TOTP enrolment for the second factor (done). Passkeys
    (Supabase Auth beta): the code is in; the domain is decided
-   ([ADR-017](adr/ADR-017-wuselwall-app-domain.md)) and the server already uses RP ID
-   `wuselwall.app` with origin `https://web.wuselwall.app`; add iOS Associated Domains
+   ([ADR-017](adr/ADR-017-wuselwall-app-domain.md)): RP ID `wuselwall.app` on the
+   first-party servers; add iOS Associated Domains
    (`webcredentials:wuselwall.app`), publish `/.well-known/apple-app-site-association`
    and `/.well-known/assetlinks.json` on `wuselwall.app` and add the
    `passkeys` web SDK script in `web/index.html`, then test on a real device.
@@ -417,9 +417,10 @@ release can also be run from a Mac with the same lanes if one becomes available.
 
 ### Server address
 
-Releases are built with `env/dev.json`, the one environment at `https://api.wuselwall.app`
-([ADR-013](adr/ADR-013-one-self-hosted-environment.md)). It is reachable from anywhere over
-HTTPS, so the apps need no cleartext exception and work outside the home wifi too.
+Releases are built with `env/dev.json`, which CI writes from the repository secrets
+`WW_SUPABASE_URL` and `WW_SUPABASE_PUBLISHABLE_KEY`, until they become store builds without
+a server (`env/store.json`, [ADR-018](adr/ADR-018-self-hosted-only.md)). Servers are
+reached over HTTPS, so the apps need no cleartext exception.
 
 ### Getting it onto the devices
 
@@ -436,35 +437,32 @@ without anyone touching a cable.
 
 ---
 
-## Step 8 — The one environment: secrets, proxy, backups (M0.3)
+## Step 8 — A self-hosted server: secrets, front, backups (M0.3)
 
-> **Built 2026-10-11** ([ADR-013](adr/ADR-013-one-self-hosted-environment.md)). It replaces
-> the earlier plan of a production VPS, Caddy and `deploy.yml`. The operating guide is
-> [10](10-deployment-and-ops.md).
+> **Built 2026-10-11** ([ADR-013](adr/ADR-013-self-hosted-compose-stack.md)). It replaces
+> the earlier plan of a production VPS and `deploy.yml`. The operating guide is
+> [10](10-deployment-and-ops.md); since 2026-10-14 a server release installs all of this
+> with `server/wuselwall` ([docs/server](../docs/server/index.md)).
 
-1. **Own keys** for the stack on the home server. First built as the CLI's stack with
-   `auth.jwt_secret`, `auth.publishable_key` and `auth.secret_key` read from the
-   git-ignored `supabase/.env`; **since the ADR-013 amendment** the official compose stack
-   in [`infra/supabase/`](../infra/supabase/), whose server-side `.env` keeps those three
-   values and adds its own (`scripts/remote-stack.sh init-env`). CI writes the CLI's public
-   defaults into its own throwaway `supabase/.env`.
-2. **Public entry**: Cloudflare proxied record `wusel.example.org` → the home server's nginx:
-   the four API prefixes to the gateway on `172.17.0.1:54421`, everything else 404.
-   *Since 2026-10-13 ([ADR-017](adr/ADR-017-wuselwall-app-domain.md)):* `api.wuselwall.app`
-   for the API, `web.wuselwall.app` for the web app, `wuselwall.app` for the website, all in
-   [`infra/nginx/wuselwall.app.conf`](../infra/nginx/wuselwall.app.conf); the old record
-   forwards the API for old app builds and redirects the rest.
+1. **Own keys** for the stack. First built as the CLI's stack with `auth.jwt_secret`,
+   `auth.publishable_key` and `auth.secret_key` read from the git-ignored `supabase/.env`;
+   **since the ADR-013 amendment** the official compose stack in
+   [`infra/supabase/`](../infra/supabase/), whose server-side `.env` comes from
+   `make-env.mjs` (kept keys or fresh ones). CI writes the CLI's public defaults into its
+   own throwaway `supabase/.env`.
+2. **Public entry**: a front that forwards the four API prefixes to the gateway on
+   `172.17.0.1:54421` and answers 404 elsewhere; today the release's Caddy layer
+   ([`infra/supabase/volumes/caddy/Caddyfile`](../infra/supabase/volumes/caddy/Caddyfile)).
 3. **Backups**: [`infra/backup/backup.sh`](../infra/backup/backup.sh) nightly on the server
-   (homeserver User Scripts), optional restic off-site and healthchecks ping;
-   `scripts/remote-backup.sh` on demand; [`infra/backup/restore-drill.sh`](../infra/backup/restore-drill.sh)
-   restores into a scratch database and counts rows.
+   from cron, optional restic off-site and healthchecks ping; `scripts/remote-backup.sh` on
+   demand; [`infra/backup/restore-drill.sh`](../infra/backup/restore-drill.sh) restores into
+   a scratch database and counts rows; `server/wuselwall restore` puts a dump back.
 4. **Setup token** (*a single-use founder code from step 9*):
-   `scripts/remote-setup-token.sh` replaces the seed's `dev-setup` with a random token
-   before the family sets up its household.
+   `scripts/remote-setup-token.sh` or `wuselwall setup-token` replaces the seed's
+   `dev-setup` with a random token before the household is set up.
 5. **Changing the database**: CI first, then `scripts/remote-migrate.sh` (backup →
-   pending migrations through `docker exec` → pgTAP). No deploy
-   workflow: GitHub's runners cannot reach the home network, and one environment does not
-   need one.
+   pending migrations through `docker exec` → pgTAP) or `wuselwall update`. No deploy
+   workflow: a CI runner cannot reach a server at home, and none is needed.
 
 **Done when** the public URL answers only on the API prefixes, the stack runs on its own
 keys, and the restore drill has restored a nightly dump once. *(Restore drill first run
@@ -485,8 +483,7 @@ Order chosen so that each slice is usable on its own:
    `signInWithIdToken`, OAuth redirect on the web; Einstellungen → Konto → Anmeldung
    (link, unlink, set password). Strings in both ARB files.
    *Apple and Google built 2026-10-12, switched on 2026-10-13* (client IDs on the server and
-   in `env/dev.json`; their return URL is `https://api.wuselwall.app/auth/v1/callback`
-   since ADR-017): native sheets on iOS (both) and Android (Google), the
+   in the build configuration; their return URL is the server's `/auth/v1/callback`): native sheets on iOS (both) and Android (Google), the
    redirect elsewhere; Einstellungen → Anmeldung links and unlinks them (native sheet only:
    the redirect would replace the device's session). `enable_signup` stays `false` until
    households (9.2) give a new account somewhere to go, so Apple and Google sign in only
@@ -511,18 +508,19 @@ Order chosen so that each slice is usable on its own:
    job (`pg_cron`), the `account-delete` Edge Function (Admin API, Apple revocation), the
    Apple authorisation-code exchange, `guardian_reset_mfa`, data export.
 7. **Localised mail.** The send-email hook in `supabase/functions/` with the message files
-   in `_shared/`, sending through Scaleway TEM's HTTP API, on the homeserver stack
-   (whose compose stack runs Edge Functions since A11 was fixed). A bilingual GoTrue
+   in `_shared/`, sending through the operator's provider (Scaleway TEM's HTTP API
+   recommended), on the compose stack (which runs Edge Functions since A11 was fixed). A bilingual GoTrue
    template over SMTP remains the fallback for self-hosted stacks without the hook.
 7a. **Any server, chosen in the app** ([ADR-018](adr/ADR-018-self-hosted-only.md), replacing
    ADR-015's two flavours; [20](20-onboarding.md#choosing-the-server)):
    - store builds without a default backend; S0 before the front door (QR code, typed
-     address, invitation), reading `/.well-known/wuselwall.json` (served from `infra/web/`
-     on every server), remembering the server, and showing its host;
+     address, invitation), reading the discovery document (the `server-info` function on
+     every server, also at `/.well-known/wuselwall.json`), remembering the server, and
+     showing its host — *built 2026-10-14*;
    - "Ohne Server ausprobieren": the in-memory demo, also for App Review;
    - the server carried in the fragment of invitation and pairing links;
-   - native Apple/Google and passkeys hidden except on `WW_FIRST_PARTY_HOSTS`
-     (homeserver: `api.wuselwall.app`);
+   - native Apple/Google and passkeys hidden except on `WW_FIRST_PARTY_HOSTS` (a repository
+     variable, never a committed file);
    - `min_app_version` and the `api_version` window honoured.
 8. **Tests.**
    - pgTAP: a fresh account sees nothing; `code` mode refuses without a founder code; an
@@ -530,7 +528,7 @@ Order chosen so that each slice is usable on its own:
      pairing request cannot be claimed without its secret or approved by a member or from
      a shared device; deletion leaves no rows reachable.
    - The catalogue test's anon list becomes `health, invitation_preview, pairing_poll,
-     pairing_start` plus `enrol_device` for one release.
+     pairing_start, server_info` plus `enrol_device` for one release.
    - E2E: J1 by email code through Mailpit, J2, J3 (typed code), each with a screen-count
      assertion.
    - Manual: Apple and Google on real devices.
@@ -581,15 +579,16 @@ manager.
 | `ANDROID_KEYSTORE_B64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, `ANDROID_KEY_PASSWORD` | GitHub secrets | Android signing |
 | `PLAY_SERVICE_ACCOUNT_JSON` | GitHub secrets | Play upload |
 | `WW_JWT_SECRET`, `WW_SECRET_KEY` | `supabase/.env` on the development machine | the Supabase stack (CLI) |
-| `RESTIC_PASSWORD`, backup-target credentials, healthchecks URL | `/srv/appdata/wuselwall/backup.env` on the server | backups |
-| Cloudflare origin certificate and key | nginx container on the server | TLS between Cloudflare and nginx |
+| `RESTIC_PASSWORD`, backup-target credentials, healthchecks URL | `backup.env` next to the server's tool (`BACKUP_ENV`) | backups |
+| `WW_SUPABASE_URL`, `WW_SUPABASE_PUBLISHABLE_KEY`, `WW_FIRST_PARTY_HOSTS` (not secret, but kept out of public logs) | GitHub secrets | the release builds' configuration |
+| `DOCS_DEPLOY_KEY`, `DOCS_DEPLOY_KNOWN_HOSTS`, `DOCS_DEPLOY_TARGET` | GitHub secrets | publishing the docs |
 | Push credentials (APNs key, FCM service account) | Edge Function secrets | `push-send` |
-| `WW_APPLE_SECRET` (the six-monthly client-secret JWT), the Sign in with Apple `.p8` key | The home server's stack `.env` (`GOTRUE_EXTERNAL_APPLE_*`); the `.p8` in the password manager only | Supabase Auth (Apple via OAuth); the `account-delete` and code-exchange functions |
-| `WW_GOOGLE_CLIENT_SECRET` (web client) | The home server's stack `.env` (`GOTRUE_EXTERNAL_GOOGLE_*`) | Supabase Auth (Google via OAuth) |
-| Scaleway TEM credentials: project ID and the secret key of an IAM application limited to Transactional Email, one pair per environment | The home server's stack `.env` (`SMTP_USER`, `SMTP_PASS`) and Edge Function secrets; the Cloud project's Auth settings and Edge Function secrets. Throwaway stacks use Mailpit | Supabase Auth email ([10](10-deployment-and-ops.md#email-setup)), the send-email hook |
+| `WW_APPLE_SECRET` (the six-monthly client-secret JWT), the Sign in with Apple `.p8` key | The server's stack `.env` (`GOTRUE_EXTERNAL_APPLE_*`); the `.p8` in the password manager only | Supabase Auth (Apple via OAuth); the `account-delete` and code-exchange functions |
+| `WW_GOOGLE_CLIENT_SECRET` (web client) | The server's stack `.env` (`GOTRUE_EXTERNAL_GOOGLE_*`) | Supabase Auth (Google via OAuth) |
+| Scaleway TEM credentials: project ID and the secret key of an IAM application limited to Transactional Email, one pair per environment | The server's stack `.env` (`SMTP_USER`, `SMTP_PASS`) and Edge Function secrets, or a hosted project's Auth settings. Throwaway stacks use Mailpit | Supabase Auth email ([10](10-deployment-and-ops.md#email-setup)), the send-email hook |
 
 The **publishable key** (`WW_PUBLISHABLE_KEY`) is not a secret — it is compiled into every
-app via `app/env/dev.json` — and the **secret key never leaves `supabase/.env`**: not in
+app through its build configuration or the server's discovery document — and the **secret key never leaves `supabase/.env`**: not in
 CI, not in the app, not in a shell history.
 
 ---
@@ -600,7 +599,7 @@ CI, not in the app, not in a shell history.
 |---|---|---|
 | Apple or Google account verification stalls | Step 7 blocked | Steps 1–6 and 8 do not depend on it; Android sideloading of a debug APK keeps the trial going |
 | No Mac makes iOS problems opaque | A TestFlight build crashes on launch with nothing in the logs | TestFlight crash reports; a borrowed Mac for one evening; Codemagic's build logs as a second opinion |
-| ~~WSL networking fights the LAN trial~~ | — | Resolved by ADR-013: the stack runs on the home server, reached over HTTPS |
+| ~~WSL networking fights the LAN trial~~ | — | Resolved by ADR-013: the stack runs on a server, reached over HTTPS |
 | PL/pgSQL slows feature work | Simple functions take an evening each | Write the first three carefully as templates; generate the rest from them; revisit the escape hatch in ADR-010 |
 | macOS CI minutes run out | Billing warning | iOS builds only on tags already; Codemagic's free tier as an overflow |
 | Self-hosted Supabase upgrade breaks something | Containers fail after `pull` | Images pinned by digest; upgrades only deliberately, after a backup, following the self-hosting changelog |

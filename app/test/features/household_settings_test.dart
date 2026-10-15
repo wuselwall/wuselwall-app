@@ -382,4 +382,38 @@ void main() {
       expect(find.text('angepasst'), findsOneWidget);
     });
   });
+
+  group('SettingEntry.fromRows', () {
+    test('skips a type or scope this app does not know', () {
+      final entries = SettingEntry.fromRows([
+        _row(
+          key: 'future.kind',
+          scope: 'household',
+          type: 'colour',
+          value: 'red',
+        ),
+        _row(
+          key: 'future.scope',
+          scope: 'school',
+          type: 'boolean',
+          value: true,
+        ),
+        _row(
+          key: 'household.region',
+          scope: 'household',
+          type: 'region',
+          value: null,
+        ),
+        _row(
+          key: 'board.rollover',
+          scope: 'household',
+          type: 'boolean',
+          value: false,
+        ),
+      ]);
+      expect(entries.map((e) => e.key), ['household.region', 'board.rollover']);
+      expect(entries.first.type, SettingType.region);
+      expect(entries.first.nullable, isFalse);
+    });
+  });
 }

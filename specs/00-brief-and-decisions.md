@@ -150,20 +150,19 @@ GoombaWall everywhere, including the bundle ID (`ch.wuselwall.app`), the Dart pa
 the Supabase project ID. Names considered and rejected, and the consequences, are in
 [ADR-012](adr/ADR-012-product-name.md).
 
-### 2026-10-11 — One environment on the home server
+### 2026-10-11 — One self-hosted stack, no separate dev and prod
 
-> For now we only build one tenant, not two (dev and prod) landscapes. We run the dev
-> environment self-hosted on the private server. Any further tenants might be run on the
-> Supabase SaaS service itself.
+> For now we only build one tenant, not two (dev and prod) landscapes. […] Any further
+> tenants might be run on the Supabase SaaS service itself.
 
 | Change | Answer | Where |
 |---|---|---|
-| Hosting | The Supabase stack on the home server (homeserver) is the only environment: the family uses it and development happens against it. No VPS, no `deploy.yml`, no `env/prod.json` | [ADR-013](adr/ADR-013-one-self-hosted-environment.md), [10](10-deployment-and-ops.md) |
-| Public entry | `https://wusel.example.org` → Cloudflare proxy → the home server's nginx (four API prefixes) → Kong | [10](10-deployment-and-ops.md), `infra/nginx/` |
-| Further tenants | Hosted Supabase, one project per tenant; `supabase/` stays portable | [ADR-013](adr/ADR-013-one-self-hosted-environment.md#keeping-the-code-portable-to-hosted-supabase) |
+| Hosting | One self-hosted Supabase stack, used by the pilot household and for development alike. No VPS, no `deploy.yml`, no `env/prod.json` | [ADR-013](adr/ADR-013-self-hosted-compose-stack.md), [10](10-deployment-and-ops.md) |
+| Public entry | An HTTPS front that forwards four API prefixes to the gateway | [10](10-deployment-and-ops.md) |
+| Further tenants | Hosted Supabase, one project per tenant; `supabase/` stays portable | [ADR-013](adr/ADR-013-self-hosted-compose-stack.md#keeping-the-code-portable-to-hosted-supabase) |
 | Identifiers | Application and bundle ID `ch.goomba.wuselwall` (chosen by the user before any store record existed); the GitHub repository moved to the `wuselwall` organisation as `wuselwall-app`, with `wuselwall-certificates` for iOS signing | [ADR-010](adr/ADR-010-flutter-and-self-hosted-supabase.md#starting-point-and-identifiers), [ADR-011](adr/ADR-011-native-distribution-and-ci-cd.md) |
 
-**What this cost.** Development and the family share one database, protected by a dump
+**What this cost.** Development and live data share one database, protected by a dump
 before every migration and by keeping `db reset` and the integration test away from it.
 **What it bought.** No hosting bill, no second stack to keep in step, and push, the
 Outlook feed and use outside the house no longer wait for a deployment milestone.
@@ -200,12 +199,12 @@ longer needs the operator.
 > Yes, move to the official self-hosting compose file.
 
 The answer to S10 and A8 in [19](19-security-and-architecture-review.md), and the first
-condition of [Q40](14-open-questions.md). The one environment now runs Supabase's
-official compose file (`infra/supabase/`) instead of the CLI's stack: no database port on
-the home network, Studio behind a login, its own secrets, and the CLI's image versions so
-CI and the server agree. The development data was not carried over — the family's
-household starts fresh. Recorded as the
-[ADR-013 amendment](adr/ADR-013-one-self-hosted-environment.md#amendment-2026-10-11-the-official-compose-stack).
+condition of [Q40](14-open-questions.md). The server now runs Supabase's official
+compose file (`infra/supabase/`) instead of the CLI's stack: no database port on the
+local network, Studio behind a login, its own secrets, and the CLI's image versions so
+CI and the server agree. The development data was not carried over — the pilot household
+starts fresh. Recorded as the
+[ADR-013 amendment](adr/ADR-013-self-hosted-compose-stack.md#amendment-2026-10-11-the-official-compose-stack).
 
 ### 2026-10-11 — A generic household setup with curated defaults
 
@@ -227,45 +226,39 @@ use without a release — and a second household needs no code change.
 
 ### 2026-10-11 — Hosting flavours, stores, captcha, domain
 
-> When it comes to hosting there is the self-host flavor (which I personally do on my
-> homeserver server for development and testing) but there should also be the option to use
-> a SaaS via Supabase, which I will own as an account. If we will ever charge for that is
-> another story. […] We will roll out the app in the Google and App Store once we have the
-> Android dev account and Apple developer account. No captcha. Final public domain is not
-> yet decided. For now we use wusel.example.org.
+> When it comes to hosting there is the self-host flavor […] but there should also be the
+> option to use a SaaS via Supabase, which I will own as an account. If we will ever charge
+> for that is another story. […] We will roll out the app in the Google and App Store once
+> we have the Android dev account and Apple developer account. No captcha. Final public
+> domain is not yet decided. […]
 
 | Change | Answer | Where |
 |---|---|---|
-| Hosting | Two flavours from one codebase. **WuselWall Cloud** is a hosted Supabase project in the user's account (Frankfurt, Pro) and the store app's default. **Self-hosted** is any server, including the homeserver stack for development and testing, reached through "Eigener Server" | [ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md), [10](10-deployment-and-ops.md#wuselwall-cloud) |
+| Hosting | Two flavours from one codebase. **WuselWall Cloud** is a hosted Supabase project in the user's account (Frankfurt, Pro) and the store app's default. **Self-hosted** is any server, reached through "Eigener Server" | [ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md), [10](10-deployment-and-ops.md#wuselwall-cloud) |
 | Sign-in on custom servers | Email code and password; Apple/Google only via the operator's own redirect clients. Native Apple/Google and passkeys on Cloud only, so that a hostile server cannot replay tokens to Cloud | [ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md), [20](20-onboarding.md#on-a-self-hosted-server) |
 | Email | Decided: Scaleway Transactional Email, one project per environment, a sending subdomain with SPF/DKIM/DMARC, the code in the subject | [10](10-deployment-and-ops.md#email-setup), [Q41](14-open-questions.md) |
 | Distribution | Public App Store and Google Play listings once the developer accounts exist | [ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md), Q42 |
 | Captcha | None | Q44 |
-| Domain | `wusel.example.org` for now; final domain open | Q45 |
-| The family's data | Stays on the homeserver stack, next to development and testing (user, 2026-10-11). homeserver is a first-party server, so the family keeps native Apple/Google sign-in and passkeys | [Q46](14-open-questions.md), [ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md) |
+| Domain | A temporary address for now; final domain open | Q45 |
 
 **What this costs.** Supabase Pro (≈ $25/month, later ≈ $10 for a custom domain), a
 US-headquartered processor for Cloud's households, two schemas to keep in step, and a
 plainer front door on self-hosted servers. **What it buys.** Strangers' data and uptime
-are off the home server, Edge Functions deploy normally on Cloud, and self-hosting stays a
+are off self-hosted servers, Edge Functions deploy normally on Cloud, and self-hosting stays a
 real option in the same app.
 
 ### 2026-10-13 — The domain: wuselwall.app
 
-> I just bought the domain wuselwall.app. […] The web-version of the app should run on
-> web.wuselwall.app, the website directly on wuselwall.app, the api for the backend can run
-> on api.wuselwall.app.
+> I just bought the domain wuselwall.app. […]
 
 | Change | Answer | Where |
 |---|---|---|
 | Domain | **`wuselwall.app`** decides Q45: invitation and pairing links, universal links and App Links, the passkey RP ID | [ADR-017](adr/ADR-017-wuselwall-app-domain.md), [Q45](14-open-questions.md) |
-| Public entry | `wuselwall.app` the website, `/docs/` and `/download/`; `web.wuselwall.app` the Flutter web app; `api.wuselwall.app` the gateway (four API prefixes). Cloudflare proxy, origin certificate, the home server's nginx | [ADR-017](adr/ADR-017-wuselwall-app-domain.md), [10](10-deployment-and-ops.md), `infra/nginx/wuselwall.app.conf` |
-| The old address | `wusel.example.org` forwards the API for app builds that carry it and redirects everything else, until every installed app uses the new one | [ADR-017](adr/ADR-017-wuselwall-app-domain.md) |
-| Unchanged | Application and bundle ID `ch.goomba.wuselwall`; the home server's mail sender on `example.org` | [ADR-012](adr/ADR-012-product-name.md), [10](10-deployment-and-ops.md#email-setup) |
+| Public entry | `wuselwall.app` the website, `/docs/` and `/download/` | [ADR-017](adr/ADR-017-wuselwall-app-domain.md) |
+| Unchanged | Application and bundle ID `ch.goomba.wuselwall` | [ADR-012](adr/ADR-012-product-name.md) |
 
-**What this costs.** Two origins (CORS, which the gateway already allows) and one fresh
-sign-in in each browser that used the web app. **What it buys.** The product's own name
-in every link, and a website, web app and API that can each move without the others.
+**What this costs.** A domain to renew. **What it buys.** The product's own name in every
+link.
 
 ### 2026-10-13 — Self-hosted only
 
@@ -276,10 +269,10 @@ in every link, and a website, web app and API that can each move without the oth
 
 | Change | Answer | Where |
 |---|---|---|
-| Hosting | **No WuselWall Cloud.** The project runs no service holding another family's data; the family's own server stays closed (`code` mode). Others run a server release on their own hardware or their own Supabase project | [ADR-018](adr/ADR-018-self-hosted-only.md) |
+| Hosting | **No WuselWall Cloud.** The project runs no service holding a family's data. Every household runs a server release on its own hardware or its own Supabase project | [ADR-018](adr/ADR-018-self-hosted-only.md) |
 | The app | No default server: invitation link, the server's QR code or a typed address, discovered through `/.well-known/wuselwall.json`. A demo mode without any server, also for App Review | [ADR-018](adr/ADR-018-self-hosted-only.md), [20](20-onboarding.md#choosing-the-server) |
 | Compatibility | `api_version` in the discovery document; each app release supports the current and the previous one; CI tests against the previous server release | [ADR-018](adr/ADR-018-self-hosted-only.md), [10](10-deployment-and-ops.md#other-families-servers) |
-| Apple and Google | Native sign-in only on the family's server (user, 2026-10-13); other servers get email, plus the redirect with their operator's own clients. The privacy policy names Google's iOS sign-in library, which declares device ID and usage data for analytics | [ADR-018](adr/ADR-018-self-hosted-only.md), [11](11-security-and-privacy.md) |
+| Apple and Google | Native sign-in only on first-party servers (user, 2026-10-13); other servers get email, plus the redirect with their operator's own clients. The privacy policy names Google's iOS sign-in library, which declares device ID and usage data for analytics | [ADR-018](adr/ADR-018-self-hosted-only.md), [11](11-security-and-privacy.md) |
 | Open | Push to self-hosted servers ([Q47](14-open-questions.md)); sign-up without SMTP (Q48) | [14](14-open-questions.md) |
 
 **What this costs.** Families need a server, version skew between store apps and servers

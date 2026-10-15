@@ -10,9 +10,12 @@ environment:
   flutter: 3.47.7
 
 dependencies:
+  camera: ^0.12.1
   characters: ^1.4.0
   connectivity_plus: ^7.3.2
   crypto: ^3.0.7
+  # cupertino_ui (pulled in by Flutter) refers to this font; without it the build warns.
+  cupertino_icons: ^1.0.9
   drift: ^2.35.2
   drift_flutter: ^0.3.1
   flutter:
@@ -25,12 +28,14 @@ dependencies:
   google_sign_in: ^7.2.0
   http: ^1.2.0
   intl: any
-  mobile_scanner: ^7.4.2
+  package_info_plus: ^10.2.2
   passkeys: ^2.23.1
   qr: ^4.0.0
+  share_plus: ^13.3.1
   sign_in_with_apple: ^8.2.0
   supabase_flutter: ^2.18.3
   uuid: ^4.6.0
+  zxing2: ^0.2.4
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.4

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Restore drill, run ON the home server (specs/10#backups): restores the newest dump into a
+# Restore drill, run ON the server (specs/10#backups): restores the newest dump into a
 # scratch database next to the live one, counts rows in the main tables, drops it again.
 # The live database is only read. Usage: restore-drill.sh [dump-file]
 set -euo pipefail
 
 DB=${DB_CONTAINER:-supabase-db}
-OUT=${BACKUP_DIR:-/srv/backups/wuselwall}
+OUT=${BACKUP_DIR:?set BACKUP_DIR}
 DUMP=${1:-$(ls -t "$OUT"/db-*.dump | head -1)}
 SCRATCH=restore_drill
 

@@ -8,10 +8,10 @@ Every setting has a **default**, which WuselWall suggests. It suits most familie
 
 ## The areas
 
-- **Household and members**: whether the kitchen wall shows **full names** or only **initials**
+- **Household and members**: the **region** (country, canton or state, municipality) that public and school holidays follow, and whether the kitchen wall shows **full names** or only **initials**. You choose the region when you add the first school; you can change it here later
 - **Tasks**: points for a duty and for a bonus chore, whether new chores are duties or bonuses, whether guardians check chores, how many **streak jokers** there are per month and whether **rewards need approval**
 - **Calendar and school**: whether children change their own appointments, which new appointments appear on the kitchen wall, when uncertain appointments are asked about, whether children may report timetable changes and whether the **equipment hint** appears
-- **Meals**: whether there is a **warm meal** on **school days** and on **free days**, that **away means not eating**, and until when care counts as lunch
+- **Meals**: whether there is a **warm meal** on **school days** and on **free days** (weekends, public holidays, school holidays), that **away means not eating**, and until when care counts as lunch
 - **Kitchen display**: when the wall moves on to the coming week, where morning, afternoon and evening split, the night theme hours and when an opened detail returns to the wall
 - **My settings**: the sound when a chore is ticked, the morning summary, reminders before appointments, and notifications when a chore is confirmed or a reward is requested. These apply only to the person you chose at the top.
 

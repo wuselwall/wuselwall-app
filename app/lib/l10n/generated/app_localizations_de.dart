@@ -1796,60 +1796,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get schoolName => 'Name der Schule';
 
   @override
-  String get schoolState => 'Bundesland';
-
-  @override
-  String get schoolStateNone => 'Nicht angegeben';
-
-  @override
-  String get schoolStateBW => 'Baden-Württemberg';
-
-  @override
-  String get schoolStateBY => 'Bayern';
-
-  @override
-  String get schoolStateBE => 'Berlin';
-
-  @override
-  String get schoolStateBB => 'Brandenburg';
-
-  @override
-  String get schoolStateHB => 'Bremen';
-
-  @override
-  String get schoolStateHH => 'Hamburg';
-
-  @override
-  String get schoolStateHE => 'Hessen';
-
-  @override
-  String get schoolStateMV => 'Mecklenburg-Vorpommern';
-
-  @override
-  String get schoolStateNI => 'Niedersachsen';
-
-  @override
-  String get schoolStateNW => 'Nordrhein-Westfalen';
-
-  @override
-  String get schoolStateRP => 'Rheinland-Pfalz';
-
-  @override
-  String get schoolStateSL => 'Saarland';
-
-  @override
-  String get schoolStateSN => 'Sachsen';
-
-  @override
-  String get schoolStateST => 'Sachsen-Anhalt';
-
-  @override
-  String get schoolStateSH => 'Schleswig-Holstein';
-
-  @override
-  String get schoolStateTH => 'Thüringen';
-
-  @override
   String get schoolBellTimes => 'Klingelzeiten';
 
   @override
@@ -2747,4 +2693,596 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get kidNoPlanToday => 'Heute nichts Besonderes';
+
+  @override
+  String get schoolsUiAddSchool => 'Weitere Schule';
+
+  @override
+  String get schoolsUiNewSchool => 'Neue Schule';
+
+  @override
+  String get schoolsUiPickSchool => 'Schule wählen';
+
+  @override
+  String get schoolsUiAskSchool => 'Welche Schule?';
+
+  @override
+  String schoolsUiSchoolOf(String name) {
+    return 'Schule: $name';
+  }
+
+  @override
+  String get schoolsUiDayMenu => 'Tagesaktionen';
+
+  @override
+  String get schoolsUiCopyDay => 'Tag kopieren nach…';
+
+  @override
+  String schoolsUiCopyDayTitle(String day) {
+    return '$day kopieren nach';
+  }
+
+  @override
+  String get schoolsUiCopyDayApply => 'Kopieren';
+
+  @override
+  String get schoolsUiSwapDay => 'Tag tauschen mit…';
+
+  @override
+  String schoolsUiSwapDayTitle(String day) {
+    return '$day tauschen mit';
+  }
+
+  @override
+  String get schoolsUiDayCleared => 'Tag geleert';
+
+  @override
+  String get schoolsUiDayCopied => 'Tag kopiert';
+
+  @override
+  String get schoolsUiDaySwapped => 'Tage getauscht';
+
+  @override
+  String get schoolsUiUndo => 'Rückgängig';
+
+  @override
+  String get mealsUxSuggestOften => 'Oft bei uns';
+
+  @override
+  String get mealsUxSuggestRare => 'Lange nicht gegessen';
+
+  @override
+  String mealsUxClearedSnack(String title) {
+    return '„$title“ entfernt';
+  }
+
+  @override
+  String get mealsUxUndo => 'Rückgängig';
+
+  @override
+  String get mealsUxFromMealPlan => 'Kommt aus dem Essensplan';
+
+  @override
+  String mealsUxForMeal(String meal, String day) {
+    return 'Für: $meal · $day';
+  }
+
+  @override
+  String get todayTitle => 'Heute';
+
+  @override
+  String get todayEmpty => 'Heute ist noch nichts geplant. Genieß die Ruhe.';
+
+  @override
+  String get todayAgendaTitle => 'Termine';
+
+  @override
+  String get todayAllDay => 'ganztägig';
+
+  @override
+  String get todayTasksTitle => 'Deine Aufgaben heute';
+
+  @override
+  String get todayMealTitle => 'Warmes Essen';
+
+  @override
+  String todayMealLine(String slot, String dish) {
+    return '$slot: $dish';
+  }
+
+  @override
+  String get todayShoppingTitle => 'Einkaufsliste';
+
+  @override
+  String todayShoppingOpen(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Artikel offen',
+      one: '1 Artikel offen',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get todayStartTitle => 'Erste Schritte';
+
+  @override
+  String todayStartProgress(int done, int total) {
+    return '$done von $total';
+  }
+
+  @override
+  String get todayStartNotNeeded => 'Brauchen wir nicht';
+
+  @override
+  String get todayStartInvitePartner => 'Partner:in einladen';
+
+  @override
+  String get todayStartConnectTablet => 'Familien-Tablet verbinden';
+
+  @override
+  String get todayStartWallDisplay => 'Wandanzeige einrichten';
+
+  @override
+  String get todayStartSetPin => 'Deine PIN festlegen';
+
+  @override
+  String get todayStartSubscribeFeed => 'Kalender abonnieren';
+
+  @override
+  String get todayStartSchool => 'Stundenplan eintragen';
+
+  @override
+  String get settingsGettingStarted => 'Erste Schritte';
+
+  @override
+  String get settingsGettingStartedSubtitle =>
+      'Die Einrichtungskarte wieder auf dem Heute-Tab zeigen';
+
+  @override
+  String get exportFamilyTitle => 'Familie';
+
+  @override
+  String get exportAction => 'Daten exportieren';
+
+  @override
+  String get exportExplanation =>
+      'Alle Daten eurer Familie als Datei, z. B. für einen Umzug auf einen anderen Server.';
+
+  @override
+  String get exportInProgress => 'Daten werden exportiert';
+
+  @override
+  String get exportPersonalDeviceRequired =>
+      'Der Export geht nur vom eigenen Telefon aus.';
+
+  @override
+  String boardHolidayLabel(String name) {
+    return 'Feiertag · $name';
+  }
+
+  @override
+  String get regionSettingTitle => 'Region';
+
+  @override
+  String get regionSettingHelp =>
+      'Bestimmt, welche Feiertage gelten und welche Schulferien du übernehmen kannst. Wähle Kanton, Bundesland oder Gemeinde.';
+
+  @override
+  String get regionFieldLabel => 'Region';
+
+  @override
+  String get regionFieldEmpty => 'Keine Region gewählt';
+
+  @override
+  String get regionFieldClear => 'Region entfernen';
+
+  @override
+  String get regionCountryDE => 'Deutschland';
+
+  @override
+  String get regionCountryAT => 'Österreich';
+
+  @override
+  String get regionCountryCH => 'Schweiz';
+
+  @override
+  String get regionCountryLI => 'Liechtenstein';
+
+  @override
+  String get regionCountryOther => 'Anderes Land (ohne Region)';
+
+  @override
+  String get regionPickCountryTitle => 'Land';
+
+  @override
+  String get regionPickRegionTitle => 'Kanton oder Bundesland';
+
+  @override
+  String get regionPickSearch => 'Suchen';
+
+  @override
+  String regionPickWholeRegion(String name) {
+    return 'Ganze Region: $name';
+  }
+
+  @override
+  String get regionPickDeeperTitle => 'Genauer wählen (Bezirk/Gemeinde)';
+
+  @override
+  String get regionPickDeeperSearch => 'Gemeinde oder Bezirk eingeben';
+
+  @override
+  String get regionPickNoMatch => 'Nichts gefunden';
+
+  @override
+  String get regionPickLoading => 'Regionen werden geladen…';
+
+  @override
+  String get regionPickRetry => 'Erneut versuchen';
+
+  @override
+  String get regionPickSkip => 'Ohne Region weiter';
+
+  @override
+  String get regionPickEmpty => 'Keine Regionen für dieses Land gefunden.';
+
+  @override
+  String get regionUnavailable =>
+      'Die Regionsliste ist gerade nicht verfügbar. Prüfe die Verbindung und versuche es erneut.';
+
+  @override
+  String regionNameTop(String category, String name) {
+    return '$category $name';
+  }
+
+  @override
+  String regionNameDeeper(String name, String category, String parent) {
+    return '$name ($category), $parent';
+  }
+
+  @override
+  String get regionImportAction => 'Ferien übernehmen';
+
+  @override
+  String get regionImportNeedsRegion =>
+      'Wähle zuerst eine Region für die Schule.';
+
+  @override
+  String get regionImportTitle => 'Schulferien';
+
+  @override
+  String get regionImportIntro =>
+      'Feiertage der Region gelten automatisch. Hier übernimmst du die Schulferien.';
+
+  @override
+  String get regionImportSwissHint =>
+      'In der Schweiz können die Schulferien je Gemeinde abweichen. Bitte die Daten prüfen.';
+
+  @override
+  String get regionImportNone =>
+      'Keine Schulferien in den nächsten 18 Monaten gefunden.';
+
+  @override
+  String get regionImportAlready => 'schon übernommen';
+
+  @override
+  String get regionImportOverlaps =>
+      'überschneidet sich mit einem eigenen Eintrag';
+
+  @override
+  String get regionImportButton => 'Übernehmen';
+
+  @override
+  String regionImportDone(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Ferien übernommen',
+      one: '1 Ferien übernommen',
+      zero: 'Keine Ferien übernommen',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get regionImportAttribution => 'Daten: OpenHolidays API · ODbL';
+
+  @override
+  String get regionImported => 'importiert';
+
+  @override
+  String get extCalTitle => 'Abonnierte Kalender';
+
+  @override
+  String get extCalSettingsSubtitle =>
+      'Termine aus Vereins- und Abfallkalendern';
+
+  @override
+  String get extCalEmpty =>
+      'Noch kein Kalender abonniert. Ein Abo bringt Termine von außen in den Familienkalender, zum Beispiel den Spielplan deines Vereins.';
+
+  @override
+  String get extCalNew => 'Kalender abonnieren';
+
+  @override
+  String get extCalNewTitle => 'Neuer Kalender';
+
+  @override
+  String get extCalEditTitle => 'Kalender bearbeiten';
+
+  @override
+  String get extCalEdit => 'Bearbeiten';
+
+  @override
+  String get extCalNameLabel => 'Name';
+
+  @override
+  String get extCalNameHint => 'z. B. FC Spielplan';
+
+  @override
+  String get extCalNameRequired => 'Gib dem Kalender einen Namen.';
+
+  @override
+  String get extCalUrlLabel => 'Adresse (ICS)';
+
+  @override
+  String get extCalUrlHelp =>
+      'Die Adresse, unter der der Kalender veröffentlicht ist, meist mit .ics am Ende. Beispiele: Abfallkalender deiner Gemeinde, Spielplan des Vereins. webcal://-Adressen gehen auch.';
+
+  @override
+  String get extCalUrlInvalid =>
+      'Das sieht nicht nach einer Internet-Adresse aus (https://…).';
+
+  @override
+  String get extCalColourLabel => 'Farbe';
+
+  @override
+  String extCalColourOption(int number) {
+    return 'Farbe $number';
+  }
+
+  @override
+  String get extCalMembersLabel => 'Für wen?';
+
+  @override
+  String get extCalMembersHelp =>
+      'Ohne Auswahl gilt der Kalender für die ganze Familie.';
+
+  @override
+  String get extCalMembersWhole => 'Ganze Familie';
+
+  @override
+  String get extCalShowOnBoard => 'Auf dem Küchendisplay zeigen';
+
+  @override
+  String get extCalShowOnBoardHelp =>
+      'Seine Termine erscheinen als wichtige Termine in der Wochenansicht des Küchendisplays.';
+
+  @override
+  String extCalDeleteConfirm(String name) {
+    return '„$name“ und alle seine Termine werden entfernt.';
+  }
+
+  @override
+  String get extCalDeleted => 'Kalender entfernt.';
+
+  @override
+  String get extCalRefreshNow => 'Jetzt aktualisieren';
+
+  @override
+  String extCalRefreshed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Termine geladen',
+      one: '1 Termin geladen',
+      zero: 'Keine Termine gefunden',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get extCalNotModified => 'Keine Änderungen seit dem letzten Abruf.';
+
+  @override
+  String get extCalRecent =>
+      'Gerade eben abgerufen. Versuch es in ein paar Minuten nochmal.';
+
+  @override
+  String extCalRefreshFailed(String reason) {
+    return 'Der Kalender konnte nicht geladen werden: $reason';
+  }
+
+  @override
+  String get extCalStatusPaused => 'Pausiert';
+
+  @override
+  String get extCalStatusNever => 'Wird zum ersten Mal geladen …';
+
+  @override
+  String extCalStatusUpdated(String when) {
+    return 'Aktualisiert $when';
+  }
+
+  @override
+  String get extCalReadOnlyHint =>
+      'Nur Eltern können Kalender abonnieren oder ändern.';
+
+  @override
+  String get extCalErrUnreachable => 'Die Adresse ist gerade nicht erreichbar.';
+
+  @override
+  String get extCalErrTimeout => 'Die Adresse antwortet zu langsam.';
+
+  @override
+  String get extCalErrForbiddenHost => 'Diese Adresse ist nicht erlaubt.';
+
+  @override
+  String get extCalErrTooLarge => 'Der Kalender ist zu groß (mehr als 2 MB).';
+
+  @override
+  String get extCalErrNotIcs => 'Das ist kein Kalender (ICS).';
+
+  @override
+  String get extCalErrHttp404 => 'Adresse nicht gefunden (404).';
+
+  @override
+  String extCalErrHttp(int status) {
+    return 'Die Adresse antwortet mit Fehler $status.';
+  }
+
+  @override
+  String get extCalErrInternal =>
+      'Auf dem Server ist etwas schiefgegangen. Versuch es später nochmal.';
+
+  @override
+  String get extCalErrDb => 'Die Termine konnten nicht gespeichert werden.';
+
+  @override
+  String get extCalErrUnknown => 'Der Abruf hat nicht geklappt.';
+
+  @override
+  String get extCalErrInvalid =>
+      'Der Kalender passt so nicht: Prüfe Name und Farbe.';
+
+  @override
+  String get extCalErrUrlInvalid =>
+      'Diese Adresse kann nicht gespeichert werden. Sie muss mit https:// beginnen.';
+
+  @override
+  String get extCalErrNotFound => 'Diesen Kalender gibt es nicht mehr.';
+
+  @override
+  String get extCalImportedNote =>
+      'Abonnierter Kalender — Änderungen kommen von der Quelle';
+
+  @override
+  String extCalFromCalendar(String name) {
+    return 'Aus $name';
+  }
+
+  @override
+  String get extCalAllDay => 'Ganztägig';
+
+  @override
+  String get extCalSheetTitle => 'Termin aus einem Abo';
+
+  @override
+  String get extCalSettingsRefreshHint =>
+      'Der Server ruft jeden Kalender etwa einmal pro Stunde ab.';
+
+  @override
+  String get extCalActive => 'Aktiv';
+
+  @override
+  String get extCalUrlLoading => 'Adresse wird geladen';
+
+  @override
+  String get shoppingNavLabel => 'Einkauf';
+
+  @override
+  String get scanHint => 'Halte die Kamera auf den QR-Code am anderen Gerät.';
+
+  @override
+  String get scanCameraDenied =>
+      'WuselWall hat keinen Kamerazugriff und kann den Code deshalb nicht scannen. Erlaube die Kamera in den Systemeinstellungen oder gib den Code ein.';
+
+  @override
+  String get scanCameraUnavailable =>
+      'Auf diesem Gerät gibt es keine Kamera, die WuselWall nutzen kann. Gib den Code stattdessen ein.';
+
+  @override
+  String get scanWebUnsupported =>
+      'Dieser Browser kann keine QR-Codes scannen. Gib den Code stattdessen ein.';
+
+  @override
+  String get scanTypeCode => 'Code eintippen';
+
+  @override
+  String get serverTitle => 'Mit welchem Server?';
+
+  @override
+  String get serverLead =>
+      'WuselWall speichert eure Daten auf dem Server eurer Familie. Gib seine Adresse ein oder scanne seinen QR-Code.';
+
+  @override
+  String get serverAddressLabel => 'Adresse des Servers';
+
+  @override
+  String get serverAddressHint => 'z. B. api.example.org';
+
+  @override
+  String get serverConnect => 'Verbinden';
+
+  @override
+  String get serverScan => 'QR-Code scannen';
+
+  @override
+  String get serverScanTitle => 'QR-Code des Servers scannen';
+
+  @override
+  String get serverDemo => 'Ohne Server ausprobieren';
+
+  @override
+  String get serverDemoHint =>
+      'Mit einer Beispielfamilie. Nichts verlässt dieses Gerät.';
+
+  @override
+  String get serverHelp =>
+      'Noch kein Server? Die Anleitung auf wuselwall.app/docs zeigt, wie ihr einen einrichtet.';
+
+  @override
+  String get serverInvalid => 'Das ist keine Serveradresse.';
+
+  @override
+  String get serverUnreachable =>
+      'Der Server antwortet nicht. Stimmt die Adresse, und bist du online?';
+
+  @override
+  String get serverNotWuselwall =>
+      'Unter dieser Adresse läuft kein WuselWall-Server.';
+
+  @override
+  String get serverTooOld =>
+      'Dieser Server braucht ein Update. Bitte die Person, die ihn betreibt, WuselWall zu aktualisieren.';
+
+  @override
+  String get serverAppTooOld =>
+      'Dieser Server braucht eine neuere Version der App. Bitte aktualisiere WuselWall.';
+
+  @override
+  String get serverIncompatibleTitle => 'Server und App passen nicht zusammen';
+
+  @override
+  String get serverChooseOther => 'Anderen Server wählen';
+
+  @override
+  String get demoBanner => 'Beispielfamilie: nichts wird gespeichert';
+
+  @override
+  String get demoExit => 'Beenden';
+
+  @override
+  String get settingsServer => 'Server';
+
+  @override
+  String settingsServerBody(String address) {
+    return 'Diese App spricht mit $address. Scanne diesen Code mit der WuselWall-App auf einem anderen Gerät, um es mit demselben Server zu verbinden.';
+  }
+
+  @override
+  String get settingsServerSwitch => 'Server wechseln';
+
+  @override
+  String get settingsServerSwitchConfirm =>
+      'Dieses Gerät wird abgemeldet und vergisst alles, was darauf gespeichert ist. Danach kannst du einen anderen Server wählen.';
+
+  @override
+  String get setupPhoneTitle => 'Auf dem Handy weitermachen';
+
+  @override
+  String get setupPhoneBody =>
+      'Öffne die WuselWall-App auf deinem Handy, wähle diesen Server, indem du den Code scannst, und melde dich dort an.';
 }

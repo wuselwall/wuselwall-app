@@ -21,7 +21,7 @@ specification; `app/`, `supabase/` and `infra/` hold the implementation.
 | Started | 2026-10-11 |
 | Decision set | Locked for v1 (see `specs/adr/`) |
 | Origin | Specification carried over from BretApp; code starts from scratch |
-| Latest change | 2026-10-13 — the domain `wuselwall.app`: website, `web.` and `api.` ([ADR-017](specs/adr/ADR-017-wuselwall-app-domain.md)). Before: 2026-10-11 — household settings with curated defaults ([21](specs/21-household-settings.md)); the one environment on the official compose stack ([ADR-013](specs/adr/ADR-013-one-self-hosted-environment.md#amendment-2026-10-11-the-official-compose-stack)) |
+| Latest change | 2026-10-14 — every family's own server: the store app chooses its server, a server release with an installer, hosted Supabase without tools ([ADR-018](specs/adr/ADR-018-self-hosted-only.md#amendment-2026-10-14-built), [the guide](docs/server/index.md)). Before: 2026-10-13 — the domain `wuselwall.app` for the website ([ADR-017](specs/adr/ADR-017-wuselwall-app-domain.md)). Before: 2026-10-11 — household settings with curated defaults ([21](specs/21-household-settings.md)); the official compose stack ([ADR-013](specs/adr/ADR-013-self-hosted-compose-stack.md#amendment-2026-10-11-the-official-compose-stack)) |
 
 ## Planned layout
 
@@ -30,8 +30,9 @@ app/               Flutter — iOS, Android and web; three UI registers, German 
 supabase/          migrations (tables in `app`, views and functions in `api`, RLS),
                    Edge Functions, pgTAP tests, seed
 website/           Astro site at wuselwall.app — landing page, Impressum, Datenschutz (de/en)
-infra/             nginx site file, the website's compose project, backup scripts (home server)
-scripts/           remote-web, remote-stack, -migrate, -pgtap, -backup, -setup-token (the home server)
+infra/             the compose stack and its layers, the website's compose project, jobs, backups
+server/            the operator's tool in a server release: install, update, backup, restore
+scripts/           release builder; remote-* to drive a server over SSH from a checkout
 .github/workflows/ ci.yml, release-mobile.yml
 specs/             the specification — read 01, 02 and 03 before writing code
 ```
@@ -59,7 +60,7 @@ specifications you hand to a coding session, one at a time.
 | 15 | [School Timetable & Presence](specs/15-module-school-timetable.md) | A5 — the Stundenplan as a pattern, presence for shift work and travel, the German glossary. *Read straight after 05.* |
 | 08 | [Users, Auth & Permissions](specs/08-users-auth-permissions.md) | B1 — household model, device sessions, profile switching, guardian PIN |
 | 09 | [Clients & UX](specs/09-clients-and-ux.md) | B2 — one Flutter app, three UI registers, **the kitchen week board**, platform constraints |
-| 10 | [Deployment & Operations](specs/10-deployment-and-ops.md) | B3 — the one environment on the home server: Cloudflare, nginx, keys, backups, updates, costs |
+| 10 | [Deployment & Operations](specs/10-deployment-and-ops.md) | B3 — running a server: the stack, keys, backups, updates, server releases |
 | 11 | [Security & Privacy](specs/11-security-and-privacy.md) | Threat model and the controls that answer each threat |
 | 12 | [MCP & Assistants](specs/12-mcp-and-assistants.md) | B4 — MCP server design, Siri via Shortcuts today |
 | 13 | [Roadmap](specs/13-roadmap.md) | Milestones, per-module v1 scope cuts, rough effort |
@@ -87,11 +88,10 @@ specifications you hand to a coding session, one at a time.
    TypeScript stack. → [ADR-010](specs/adr/ADR-010-flutter-and-self-hosted-supabase.md)
 4. **Device sessions with tap-to-switch profiles**, guardian PIN for anything that
    moves points or deletes other people's data. → [ADR-004](specs/adr/ADR-004-identity-model.md)
-5. **One self-hosted environment on the home server**, public through Cloudflare and nginx
-   on `wuselwall.app` (website), `web.wuselwall.app` (web app) and `api.wuselwall.app`;
-   no hosted service for other families: every household runs its own server, and the
-   store app connects to whichever one it chooses. Supersedes the VPS plan.
-   → [ADR-013](specs/adr/ADR-013-one-self-hosted-environment.md), [ADR-017](specs/adr/ADR-017-wuselwall-app-domain.md), [ADR-018](specs/adr/ADR-018-self-hosted-only.md)
+5. **Self-hosted only**: the project runs no service that holds a family's data. Every
+   household runs its own server, at home or as its own hosted Supabase project, and the
+   store app connects to whichever one it chooses.
+   → [ADR-013](specs/adr/ADR-013-self-hosted-compose-stack.md), [ADR-017](specs/adr/ADR-017-wuselwall-app-domain.md), [ADR-018](specs/adr/ADR-018-self-hosted-only.md)
 6. **Server-authoritative data**, with a narrow offline queue for the shopping list only —
    no general-purpose sync engine. → [ADR-006](specs/adr/ADR-006-offline-strategy.md)
 7. **A remote MCP server** over Streamable HTTP with OAuth; Apple Shortcuts is the

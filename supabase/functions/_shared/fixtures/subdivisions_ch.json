@@ -1,0 +1,150 @@
+[
+  {
+    "code": "CH-AG",
+    "shortName": "AG",
+    "category": [
+      {
+        "language": "DE",
+        "text": "Kanton"
+      },
+      {
+        "language": "FR",
+        "text": "canton"
+      },
+      {
+        "language": "IT",
+        "text": "canonte"
+      },
+      {
+        "language": "RM",
+        "text": "chantun"
+      },
+      {
+        "language": "EN",
+        "text": "canton"
+      }
+    ],
+    "name": [
+      {
+        "language": "DE",
+        "text": "Aargau"
+      },
+      {
+        "language": "FR",
+        "text": "Argovie"
+      },
+      {
+        "language": "IT",
+        "text": "Argovia"
+      },
+      {
+        "language": "RM",
+        "text": "Argovia"
+      },
+      {
+        "language": "EN",
+        "text": "Aargau"
+      }
+    ],
+    "children": [
+      {
+        "code": "CH-AG-ZZ",
+        "shortName": "AG-ZZ",
+        "category": [
+          {
+            "language": "DE",
+            "text": "Bezirk"
+          },
+          {
+            "language": "FR",
+            "text": "district"
+          },
+          {
+            "language": "IT",
+            "text": "distretto"
+          },
+          {
+            "language": "RM",
+            "text": "district"
+          },
+          {
+            "language": "EN",
+            "text": "district"
+          }
+        ],
+        "name": [
+          {
+            "language": "DE",
+            "text": "Zurzach"
+          }
+        ],
+        "children": [
+          {
+            "code": "CH-AG-ZZ-TE",
+            "shortName": "AG-ZZ-TE",
+            "category": [
+              {
+                "language": "DE",
+                "text": "Gemeinde"
+              },
+              {
+                "language": "FR",
+                "text": "commune"
+              },
+              {
+                "language": "IT",
+                "text": "comune"
+              },
+              {
+                "language": "RM",
+                "text": "vischnanca"
+              },
+              {
+                "language": "EN",
+                "text": "municipality"
+              }
+            ],
+            "name": [
+              {
+                "language": "DE",
+                "text": "Tegerfelden"
+              }
+            ]
+          },
+          {
+            "code": "CH-AG-ZZ-BO",
+            "shortName": "AG-ZZ-BO",
+            "category": [
+              {
+                "language": "DE",
+                "text": "Gemeinde"
+              },
+              {
+                "language": "FR",
+                "text": "commune"
+              },
+              {
+                "language": "IT",
+                "text": "comune"
+              },
+              {
+                "language": "RM",
+                "text": "vischnanca"
+              },
+              {
+                "language": "EN",
+                "text": "municipality"
+              }
+            ],
+            "name": [
+              {
+                "language": "DE",
+                "text": "Böttstein"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

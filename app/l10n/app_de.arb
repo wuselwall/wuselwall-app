@@ -603,24 +603,6 @@
   "schoolSetupTitle": "Schule",
   "schoolSectionSchool": "Schule",
   "schoolName": "Name der Schule",
-  "schoolState": "Bundesland",
-  "schoolStateNone": "Nicht angegeben",
-  "schoolStateBW": "Baden-Württemberg",
-  "schoolStateBY": "Bayern",
-  "schoolStateBE": "Berlin",
-  "schoolStateBB": "Brandenburg",
-  "schoolStateHB": "Bremen",
-  "schoolStateHH": "Hamburg",
-  "schoolStateHE": "Hessen",
-  "schoolStateMV": "Mecklenburg-Vorpommern",
-  "schoolStateNI": "Niedersachsen",
-  "schoolStateNW": "Nordrhein-Westfalen",
-  "schoolStateRP": "Rheinland-Pfalz",
-  "schoolStateSL": "Saarland",
-  "schoolStateSN": "Sachsen",
-  "schoolStateST": "Sachsen-Anhalt",
-  "schoolStateSH": "Schleswig-Holstein",
-  "schoolStateTH": "Thüringen",
   "schoolBellTimes": "Klingelzeiten",
   "schoolAddLesson": "Stunde hinzufügen",
   "schoolAddBreak": "Pause hinzufügen",
@@ -876,5 +858,319 @@
   "kidStreak": "{days, plural, =1{1 Tag {title} 🔥} other{{days} Tage {title} 🔥}}",
   "kidFamilyTitle": "Familie heute",
   "kidOpenTasks": "{count, plural, =0{Keine Aufgaben offen} =1{1 Aufgabe offen} other{{count} Aufgaben offen}}",
-  "kidNoPlanToday": "Heute nichts Besonderes"
+  "kidNoPlanToday": "Heute nichts Besonderes",
+  "schoolsUiAddSchool": "Weitere Schule",
+  "schoolsUiNewSchool": "Neue Schule",
+  "schoolsUiPickSchool": "Schule wählen",
+  "schoolsUiAskSchool": "Welche Schule?",
+  "schoolsUiSchoolOf": "Schule: {name}",
+  "@schoolsUiSchoolOf": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "schoolsUiDayMenu": "Tagesaktionen",
+  "schoolsUiCopyDay": "Tag kopieren nach…",
+  "schoolsUiCopyDayTitle": "{day} kopieren nach",
+  "@schoolsUiCopyDayTitle": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "schoolsUiCopyDayApply": "Kopieren",
+  "schoolsUiSwapDay": "Tag tauschen mit…",
+  "schoolsUiSwapDayTitle": "{day} tauschen mit",
+  "@schoolsUiSwapDayTitle": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "schoolsUiDayCleared": "Tag geleert",
+  "schoolsUiDayCopied": "Tag kopiert",
+  "schoolsUiDaySwapped": "Tage getauscht",
+  "schoolsUiUndo": "Rückgängig",
+  "mealsUxSuggestOften": "Oft bei uns",
+  "mealsUxSuggestRare": "Lange nicht gegessen",
+  "mealsUxClearedSnack": "„{title}“ entfernt",
+  "mealsUxUndo": "Rückgängig",
+  "mealsUxFromMealPlan": "Kommt aus dem Essensplan",
+  "mealsUxForMeal": "Für: {meal} · {day}",
+  "todayTitle": "Heute",
+  "todayEmpty": "Heute ist noch nichts geplant. Genieß die Ruhe.",
+  "todayAgendaTitle": "Termine",
+  "todayAllDay": "ganztägig",
+  "todayTasksTitle": "Deine Aufgaben heute",
+  "todayMealTitle": "Warmes Essen",
+  "todayMealLine": "{slot}: {dish}",
+  "@todayMealLine": {
+    "placeholders": {
+      "slot": {
+        "type": "String"
+      },
+      "dish": {
+        "type": "String"
+      }
+    }
+  },
+  "todayShoppingTitle": "Einkaufsliste",
+  "todayShoppingOpen": "{count, plural, =1{1 Artikel offen} other{{count} Artikel offen}}",
+  "@todayShoppingOpen": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "todayStartTitle": "Erste Schritte",
+  "todayStartProgress": "{done} von {total}",
+  "@todayStartProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "todayStartNotNeeded": "Brauchen wir nicht",
+  "todayStartInvitePartner": "Partner:in einladen",
+  "todayStartConnectTablet": "Familien-Tablet verbinden",
+  "todayStartWallDisplay": "Wandanzeige einrichten",
+  "todayStartSetPin": "Deine PIN festlegen",
+  "todayStartSubscribeFeed": "Kalender abonnieren",
+  "todayStartSchool": "Stundenplan eintragen",
+  "settingsGettingStarted": "Erste Schritte",
+  "settingsGettingStartedSubtitle": "Die Einrichtungskarte wieder auf dem Heute-Tab zeigen",
+  "exportFamilyTitle": "Familie",
+  "exportAction": "Daten exportieren",
+  "exportExplanation": "Alle Daten eurer Familie als Datei, z. B. für einen Umzug auf einen anderen Server.",
+  "exportInProgress": "Daten werden exportiert",
+  "exportPersonalDeviceRequired": "Der Export geht nur vom eigenen Telefon aus.",
+  "boardHolidayLabel": "Feiertag · {name}",
+  "@boardHolidayLabel": {
+    "description": "A public holiday on a day of the week board and its details; {name} is the holiday, e.g. Auffahrt.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "regionSettingTitle": "Region",
+  "regionSettingHelp": "Bestimmt, welche Feiertage gelten und welche Schulferien du übernehmen kannst. Wähle Kanton, Bundesland oder Gemeinde.",
+  "regionFieldLabel": "Region",
+  "regionFieldEmpty": "Keine Region gewählt",
+  "regionFieldClear": "Region entfernen",
+  "regionCountryDE": "Deutschland",
+  "regionCountryAT": "Österreich",
+  "regionCountryCH": "Schweiz",
+  "regionCountryLI": "Liechtenstein",
+  "regionCountryOther": "Anderes Land (ohne Region)",
+  "regionPickCountryTitle": "Land",
+  "regionPickRegionTitle": "Kanton oder Bundesland",
+  "regionPickSearch": "Suchen",
+  "regionPickWholeRegion": "Ganze Region: {name}",
+  "@regionPickWholeRegion": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "regionPickDeeperTitle": "Genauer wählen (Bezirk/Gemeinde)",
+  "regionPickDeeperSearch": "Gemeinde oder Bezirk eingeben",
+  "regionPickNoMatch": "Nichts gefunden",
+  "regionPickLoading": "Regionen werden geladen…",
+  "regionPickRetry": "Erneut versuchen",
+  "regionPickSkip": "Ohne Region weiter",
+  "regionPickEmpty": "Keine Regionen für dieses Land gefunden.",
+  "regionUnavailable": "Die Regionsliste ist gerade nicht verfügbar. Prüfe die Verbindung und versuche es erneut.",
+  "regionNameTop": "{category} {name}",
+  "@regionNameTop": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "regionNameDeeper": "{name} ({category}), {parent}",
+  "@regionNameDeeper": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "category": {
+        "type": "String"
+      },
+      "parent": {
+        "type": "String"
+      }
+    }
+  },
+  "regionImportAction": "Ferien übernehmen",
+  "regionImportNeedsRegion": "Wähle zuerst eine Region für die Schule.",
+  "regionImportTitle": "Schulferien",
+  "regionImportIntro": "Feiertage der Region gelten automatisch. Hier übernimmst du die Schulferien.",
+  "regionImportSwissHint": "In der Schweiz können die Schulferien je Gemeinde abweichen. Bitte die Daten prüfen.",
+  "regionImportNone": "Keine Schulferien in den nächsten 18 Monaten gefunden.",
+  "regionImportAlready": "schon übernommen",
+  "regionImportOverlaps": "überschneidet sich mit einem eigenen Eintrag",
+  "regionImportButton": "Übernehmen",
+  "regionImportDone": "{count, plural, =0{Keine Ferien übernommen} =1{1 Ferien übernommen} other{{count} Ferien übernommen}}",
+  "@regionImportDone": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "regionImportAttribution": "Daten: OpenHolidays API · ODbL",
+  "regionImported": "importiert",
+  "extCalTitle": "Abonnierte Kalender",
+  "extCalSettingsSubtitle": "Termine aus Vereins- und Abfallkalendern",
+  "extCalEmpty": "Noch kein Kalender abonniert. Ein Abo bringt Termine von außen in den Familienkalender, zum Beispiel den Spielplan deines Vereins.",
+  "extCalNew": "Kalender abonnieren",
+  "extCalNewTitle": "Neuer Kalender",
+  "extCalEditTitle": "Kalender bearbeiten",
+  "extCalEdit": "Bearbeiten",
+  "extCalNameLabel": "Name",
+  "extCalNameHint": "z. B. FC Spielplan",
+  "extCalNameRequired": "Gib dem Kalender einen Namen.",
+  "extCalUrlLabel": "Adresse (ICS)",
+  "extCalUrlHelp": "Die Adresse, unter der der Kalender veröffentlicht ist, meist mit .ics am Ende. Beispiele: Abfallkalender deiner Gemeinde, Spielplan des Vereins. webcal://-Adressen gehen auch.",
+  "extCalUrlInvalid": "Das sieht nicht nach einer Internet-Adresse aus (https://…).",
+  "extCalColourLabel": "Farbe",
+  "extCalColourOption": "Farbe {number}",
+  "@extCalColourOption": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "extCalMembersLabel": "Für wen?",
+  "extCalMembersHelp": "Ohne Auswahl gilt der Kalender für die ganze Familie.",
+  "extCalMembersWhole": "Ganze Familie",
+  "extCalShowOnBoard": "Auf dem Küchendisplay zeigen",
+  "extCalShowOnBoardHelp": "Seine Termine erscheinen als wichtige Termine in der Wochenansicht des Küchendisplays.",
+  "extCalDeleteConfirm": "„{name}“ und alle seine Termine werden entfernt.",
+  "@extCalDeleteConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "extCalDeleted": "Kalender entfernt.",
+  "extCalRefreshNow": "Jetzt aktualisieren",
+  "extCalRefreshed": "{count, plural, =0{Keine Termine gefunden} =1{1 Termin geladen} other{{count} Termine geladen}}",
+  "@extCalRefreshed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "extCalNotModified": "Keine Änderungen seit dem letzten Abruf.",
+  "extCalRecent": "Gerade eben abgerufen. Versuch es in ein paar Minuten nochmal.",
+  "extCalRefreshFailed": "Der Kalender konnte nicht geladen werden: {reason}",
+  "@extCalRefreshFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "extCalStatusPaused": "Pausiert",
+  "extCalStatusNever": "Wird zum ersten Mal geladen …",
+  "extCalStatusUpdated": "Aktualisiert {when}",
+  "@extCalStatusUpdated": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "extCalReadOnlyHint": "Nur Eltern können Kalender abonnieren oder ändern.",
+  "extCalErrUnreachable": "Die Adresse ist gerade nicht erreichbar.",
+  "extCalErrTimeout": "Die Adresse antwortet zu langsam.",
+  "extCalErrForbiddenHost": "Diese Adresse ist nicht erlaubt.",
+  "extCalErrTooLarge": "Der Kalender ist zu groß (mehr als 2 MB).",
+  "extCalErrNotIcs": "Das ist kein Kalender (ICS).",
+  "extCalErrHttp404": "Adresse nicht gefunden (404).",
+  "extCalErrHttp": "Die Adresse antwortet mit Fehler {status}.",
+  "@extCalErrHttp": {
+    "placeholders": {
+      "status": {
+        "type": "int"
+      }
+    }
+  },
+  "extCalErrInternal": "Auf dem Server ist etwas schiefgegangen. Versuch es später nochmal.",
+  "extCalErrDb": "Die Termine konnten nicht gespeichert werden.",
+  "extCalErrUnknown": "Der Abruf hat nicht geklappt.",
+  "extCalErrInvalid": "Der Kalender passt so nicht: Prüfe Name und Farbe.",
+  "extCalErrUrlInvalid": "Diese Adresse kann nicht gespeichert werden. Sie muss mit https:// beginnen.",
+  "extCalErrNotFound": "Diesen Kalender gibt es nicht mehr.",
+  "extCalImportedNote": "Abonnierter Kalender — Änderungen kommen von der Quelle",
+  "extCalFromCalendar": "Aus {name}",
+  "@extCalFromCalendar": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "extCalAllDay": "Ganztägig",
+  "extCalSheetTitle": "Termin aus einem Abo",
+  "extCalSettingsRefreshHint": "Der Server ruft jeden Kalender etwa einmal pro Stunde ab.",
+  "extCalActive": "Aktiv",
+  "extCalUrlLoading": "Adresse wird geladen",
+  "shoppingNavLabel": "Einkauf",
+  "scanHint": "Halte die Kamera auf den QR-Code am anderen Gerät.",
+  "scanCameraDenied": "WuselWall hat keinen Kamerazugriff und kann den Code deshalb nicht scannen. Erlaube die Kamera in den Systemeinstellungen oder gib den Code ein.",
+  "scanCameraUnavailable": "Auf diesem Gerät gibt es keine Kamera, die WuselWall nutzen kann. Gib den Code stattdessen ein.",
+  "scanWebUnsupported": "Dieser Browser kann keine QR-Codes scannen. Gib den Code stattdessen ein.",
+  "scanTypeCode": "Code eintippen",
+  "serverTitle": "Mit welchem Server?",
+  "serverLead": "WuselWall speichert eure Daten auf dem Server eurer Familie. Gib seine Adresse ein oder scanne seinen QR-Code.",
+  "serverAddressLabel": "Adresse des Servers",
+  "serverAddressHint": "z. B. api.example.org",
+  "serverConnect": "Verbinden",
+  "serverScan": "QR-Code scannen",
+  "serverScanTitle": "QR-Code des Servers scannen",
+  "serverDemo": "Ohne Server ausprobieren",
+  "serverDemoHint": "Mit einer Beispielfamilie. Nichts verlässt dieses Gerät.",
+  "serverHelp": "Noch kein Server? Die Anleitung auf wuselwall.app/docs zeigt, wie ihr einen einrichtet.",
+  "serverInvalid": "Das ist keine Serveradresse.",
+  "serverUnreachable": "Der Server antwortet nicht. Stimmt die Adresse, und bist du online?",
+  "serverNotWuselwall": "Unter dieser Adresse läuft kein WuselWall-Server.",
+  "serverTooOld": "Dieser Server braucht ein Update. Bitte die Person, die ihn betreibt, WuselWall zu aktualisieren.",
+  "serverAppTooOld": "Dieser Server braucht eine neuere Version der App. Bitte aktualisiere WuselWall.",
+  "serverIncompatibleTitle": "Server und App passen nicht zusammen",
+  "serverChooseOther": "Anderen Server wählen",
+  "demoBanner": "Beispielfamilie: nichts wird gespeichert",
+  "demoExit": "Beenden",
+  "settingsServer": "Server",
+  "settingsServerBody": "Diese App spricht mit {address}. Scanne diesen Code mit der WuselWall-App auf einem anderen Gerät, um es mit demselben Server zu verbinden.",
+  "@settingsServerBody": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsServerSwitch": "Server wechseln",
+  "settingsServerSwitchConfirm": "Dieses Gerät wird abgemeldet und vergisst alles, was darauf gespeichert ist. Danach kannst du einen anderen Server wählen.",
+  "setupPhoneTitle": "Auf dem Handy weitermachen",
+  "setupPhoneBody": "Öffne die WuselWall-App auf deinem Handy, wähle diesen Server, indem du den Code scannst, und melde dich dort an."
 }

@@ -1,0 +1,97 @@
+[
+  {
+    "id": "adbbd6a7-365b-441f-bd45-1750624026bd",
+    "startDate": "2026-01-01",
+    "endDate": "2026-01-01",
+    "type": "Public",
+    "name": [
+      {
+        "language": "DE",
+        "text": "Neujahrstag"
+      },
+      {
+        "language": "FR",
+        "text": "Nouvel an"
+      },
+      {
+        "language": "IT",
+        "text": "Capodanno"
+      },
+      {
+        "language": "EN",
+        "text": "New Year's Day"
+      }
+    ],
+    "nationwide": true
+  },
+  {
+    "id": "241f2d63-900c-42eb-b2a0-14864f9e36e5",
+    "startDate": "2026-01-02",
+    "endDate": "2026-01-02",
+    "type": "Public",
+    "name": [
+      {
+        "language": "DE",
+        "text": "Berchtoldstag"
+      },
+      {
+        "language": "FR",
+        "text": "Saint-Berchtold"
+      },
+      {
+        "language": "IT",
+        "text": "Santo Berchold"
+      },
+      {
+        "language": "EN",
+        "text": "Berchtold's Day"
+      }
+    ],
+    "nationwide": false,
+    "subdivisions": [
+      {
+        "code": "CH-LU",
+        "shortName": "LU"
+      },
+      {
+        "code": "CH-FR-LA-RI",
+        "shortName": "FR-LA-RI"
+      },
+      {
+        "code": "CH-VS",
+        "shortName": "VS"
+      }
+    ]
+  },
+  {
+    "id": "6178d158-6706-42a7-b4c1-11b4574cb361",
+    "startDate": "2026-01-02",
+    "endDate": "2026-01-02",
+    "type": "Optional",
+    "name": [
+      {
+        "language": "DE",
+        "text": "Berchtoldstag"
+      },
+      {
+        "language": "FR",
+        "text": "Saint-Berchtold"
+      },
+      {
+        "language": "IT",
+        "text": "Santo Berchold"
+      },
+      {
+        "language": "EN",
+        "text": "Berchtold's Day"
+      }
+    ],
+    "nationwide": false,
+    "subdivisions": [
+      {
+        "code": "CH-ZH",
+        "shortName": "ZH"
+      }
+    ]
+  }
+]

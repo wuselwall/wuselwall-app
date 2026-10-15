@@ -10,9 +10,11 @@ import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
+import 'package:wuselwall/features/meals/application/meal_undo.dart';
 import 'package:wuselwall/features/meals/application/meals_providers.dart';
 import 'package:wuselwall/features/meals/data/meals_repository.dart';
 import 'package:wuselwall/features/meals/domain/meal_models.dart';
+import 'package:wuselwall/features/meals/domain/meal_suggestions.dart';
 import 'package:wuselwall/features/meals/ui/count_stepper.dart';
 import 'package:wuselwall/features/meals/ui/meals_format.dart';
 
@@ -121,26 +123,10 @@ class _MealEditorSheetState extends ConsumerState<_MealEditorSheet> {
     final actor = ref.read(actingProfileProvider);
     final entry = widget.entry;
 
+    final clearing = text.isEmpty && recipe == null;
     setState(() => _busy = true);
-    final result = text.isEmpty && recipe == null
-        // Nothing to show: an entry that only carries eating overrides keeps them;
-        // otherwise the slot is cleared.
-        ? (entry != null && entry.eatingOverrides.isNotEmpty
-              ? await repo
-                    .setMeal(
-                      actor: actor,
-                      date: widget.date,
-                      slot: widget.slot,
-                      guests: _guests,
-                      cookProfileId: _cook,
-                      time: _time,
-                    )
-                    .then((r) => r.map((_) {}))
-              : await repo.clearMeal(
-                  actor: actor,
-                  date: widget.date,
-                  slot: widget.slot,
-                ))
+    final result = clearing
+        ? await _clear(repo, actor, keepOverrides: true)
         : await repo
               .setMeal(
                 actor: actor,
@@ -159,31 +145,81 @@ class _MealEditorSheetState extends ConsumerState<_MealEditorSheet> {
     switch (result) {
       case Ok():
         _invalidate();
+        if (clearing && entry != null && entry.hasDish) {
+          _offerUndo(actor, entry);
+        }
         Navigator.of(context).pop();
       case Err(:final failure):
         context.showFailure(failure);
     }
   }
 
-  Future<void> _delete() async {
-    setState(() => _busy = true);
-    final result = await ref
-        .read(mealsRepositoryProvider)
-        .clearMeal(
-          actor: ref.read(actingProfileProvider),
+  /// Clears the slot. With [keepOverrides] the eating answers survive: a clear removes the
+  /// row, so they are set again after it.
+  Future<Result<void>> _clear(
+    MealsRepository repo,
+    String? actor, {
+    required bool keepOverrides,
+  }) async {
+    final cleared = await repo.clearMeal(
+      actor: actor,
+      date: widget.date,
+      slot: widget.slot,
+    );
+    if (cleared is Err<void>) return cleared;
+    if (keepOverrides) {
+      for (final override
+          in (widget.entry?.eatingOverrides ?? const {}).entries) {
+        final set = await repo.setEating(
+          actor: actor,
           date: widget.date,
           slot: widget.slot,
+          profileId: override.key,
+          eating: override.value,
         );
+        if (set is Err<void>) return set;
+      }
+    }
+    return const Ok(null);
+  }
+
+  /// "Rückgängig" for the meal this sheet just cleared. Called before the sheet closes,
+  /// while its messenger is still at hand.
+  void _offerUndo(String? actor, MealEntry previous) => offerMealUndo(
+    ScaffoldMessenger.of(context),
+    ProviderScope.containerOf(context),
+    l10n: context.l10n,
+    actor: actor,
+    previous: previous,
+  );
+
+  Future<void> _delete() async {
+    final actor = ref.read(actingProfileProvider);
+    final entry = widget.entry;
+    setState(() => _busy = true);
+    final result = await _clear(
+      ref.read(mealsRepositoryProvider),
+      actor,
+      keepOverrides: false,
+    );
     if (!mounted) return;
     setState(() => _busy = false);
     switch (result) {
       case Ok():
         _invalidate();
+        if (entry != null && entry.hasDish) _offerUndo(actor, entry);
         Navigator.of(context).pop();
       case Err(:final failure):
         context.showFailure(failure);
     }
   }
+
+  /// Fills the title from a suggestion, linking its recipe when it has one.
+  void _pickSuggestion(MealHistoryEntry meal) => setState(() {
+    _recipeId = meal.recipeId;
+    _text.text = meal.title;
+    _text.selection = TextSelection.collapsed(offset: meal.title.length);
+  });
 
   Future<void> _pickTime() async {
     final picked = await showTimePicker(
@@ -211,6 +247,13 @@ class _MealEditorSheetState extends ConsumerState<_MealEditorSheet> {
               if (fold(r.title).contains(query)) r,
           ].take(5).toList();
     final isEntry = widget.entry != null;
+    // Without a history (none yet, or the request failed) there are no suggestions.
+    final ideas = _text.text.trim().isEmpty
+        ? suggestMeals(
+            ref.watch(mealHistoryProvider).value ?? const [],
+            DateTime.now(),
+          )
+        : const MealSuggestions();
 
     return Center(
       child: ConstrainedBox(
@@ -252,6 +295,23 @@ class _MealEditorSheetState extends ConsumerState<_MealEditorSheet> {
                   }
                 }),
               ),
+              if (!ideas.isEmpty) ...[
+                const SizedBox(height: Tokens.space3),
+                if (ideas.often.isNotEmpty)
+                  _IdeaRow(
+                    label: l10n.mealsUxSuggestOften,
+                    meals: ideas.often,
+                    onPick: _pickSuggestion,
+                  ),
+                if (ideas.often.isNotEmpty && ideas.rare.isNotEmpty)
+                  const SizedBox(height: Tokens.space2),
+                if (ideas.rare.isNotEmpty)
+                  _IdeaRow(
+                    label: l10n.mealsUxSuggestRare,
+                    meals: ideas.rare,
+                    onPick: _pickSuggestion,
+                  ),
+              ],
               if (suggestions.isNotEmpty) ...[
                 const SizedBox(height: Tokens.space2),
                 Text(
@@ -404,17 +464,22 @@ class _MealEditorSheetState extends ConsumerState<_MealEditorSheet> {
                   ),
                 ),
               const SizedBox(height: Tokens.space4),
+              // Delete sits on its own line: with the other two buttons it did not fit
+              // a narrow phone in German.
+              if (isEntry)
+                Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: TextButton.icon(
+                    onPressed: _busy ? null : _delete,
+                    icon: const Icon(Icons.delete_outline),
+                    label: Text(l10n.mealsDelete),
+                    style: TextButton.styleFrom(
+                      foregroundColor: theme.colorScheme.error,
+                    ),
+                  ),
+                ),
               Row(
                 children: [
-                  if (isEntry)
-                    TextButton.icon(
-                      onPressed: _busy ? null : _delete,
-                      icon: const Icon(Icons.delete_outline),
-                      label: Text(l10n.mealsDelete),
-                      style: TextButton.styleFrom(
-                        foregroundColor: theme.colorScheme.error,
-                      ),
-                    ),
                   const Spacer(),
                   TextButton(
                     onPressed: _busy ? null : () => Navigator.of(context).pop(),
@@ -431,6 +496,45 @@ class _MealEditorSheetState extends ConsumerState<_MealEditorSheet> {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// One suggestion row: a label and the meals as tappable chips. A recipe carries its icon.
+class _IdeaRow extends StatelessWidget {
+  const _IdeaRow({
+    required this.label,
+    required this.meals,
+    required this.onPick,
+  });
+
+  final String label;
+  final List<MealHistoryEntry> meals;
+  final void Function(MealHistoryEntry meal) onPick;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: theme.textTheme.labelLarge),
+        const SizedBox(height: Tokens.space1),
+        Wrap(
+          spacing: Tokens.space2,
+          runSpacing: Tokens.space2,
+          children: [
+            for (final meal in meals)
+              ActionChip(
+                avatar: meal.recipeId == null
+                    ? null
+                    : const Icon(Icons.menu_book, size: 16),
+                label: Text(meal.title),
+                onPressed: () => onPick(meal),
+              ),
+          ],
+        ),
+      ],
     );
   }
 }

@@ -33,27 +33,46 @@ class DayDetailBody extends ConsumerWidget {
     final nowMinutes = minutesOf(TimeOfDay.fromDateTime(now));
     final day = board.days[dayIndex];
     final isToday = isSameDay(day.date, board.today);
+    final holiday = day.holiday;
     return Padding(
       padding: const EdgeInsets.all(Tokens.space6),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Expanded(
-            flex: 3,
-            child: SingleChildScrollView(
-              child: _Appointments(
-                board: board,
-                dayIndex: dayIndex,
-                isToday: isToday,
-                nowMinutes: nowMinutes,
-              ),
+          if (holiday != null) ...[
+            Text(
+              context.l10n.boardHolidayLabel(holiday.name),
+              style: detailUi(26, context.ww.ink2, weight: FontWeight.w700),
             ),
-          ),
-          const SizedBox(width: Tokens.space8),
+            const SizedBox(height: Tokens.space4),
+          ],
           Expanded(
-            flex: 2,
-            child: SingleChildScrollView(
-              child: _WhoAndMeal(board: board, dayIndex: dayIndex, host: host),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: SingleChildScrollView(
+                    child: _Appointments(
+                      board: board,
+                      dayIndex: dayIndex,
+                      isToday: isToday,
+                      nowMinutes: nowMinutes,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: Tokens.space8),
+                Expanded(
+                  flex: 2,
+                  child: SingleChildScrollView(
+                    child: _WhoAndMeal(
+                      board: board,
+                      dayIndex: dayIndex,
+                      host: host,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
