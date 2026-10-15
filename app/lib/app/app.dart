@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wuselwall/app/link_host.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/server_session.dart';
 import 'package:wuselwall/app/theme/app_theme.dart';
@@ -43,7 +44,9 @@ class WuselWallApp extends ConsumerWidget {
       darkTheme: AppTheme.build(register, night ? Shade.night : Shade.dark),
       themeMode: ThemeMode.system,
       builder: (context, child) {
-        final app = _ReminderHost(child: _MemberAccent(child: child!));
+        final app = LinkHost(
+          child: _ReminderHost(child: _MemberAccent(child: child!)),
+        );
         final banner = ref.watch(appBannerProvider);
         if (banner == null) return app;
         return Column(

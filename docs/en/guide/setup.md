@@ -41,9 +41,11 @@ This phone becomes your **personal phone**. It gets a name automatically, such a
 
 ## 3. Joining a family
 
-If a family has invited you, you get a **code** or a **link**. The link opens the invitation page of WuselWall in the browser; you enter the code in the app:
+If a family has invited you, you get a **link**, a **QR code** or a **code**. The link and the QR code also contain your family's **server**. If WuselWall is already on your phone, the link opens the app directly: you do not choose a server or type anything. If the app is not installed yet, the link shows a page with the stores; install the app, then open the link again.
 
-1. On the start screen, tap **I have an invitation code**.
+If you only got the code, you enter it in the app:
+
+1. On the start screen, tap **I have an invitation code**. If the app still asks for the server, enter code and server together, like `K7QM3XRP@family.example.org`; the invitation message names the server.
 2. Paste the code or the whole link, then tap **Check invitation**.
 3. WuselWall shows what you are invited to: **You are ‹name› in ‹family›**. You can adjust your name and colour here. **Join** adds you.
 
@@ -51,7 +53,7 @@ If the family entered your email address, you need to enter nothing: after signi
 
 ## 4. Connecting a family tablet or wall display
 
-This is how the **wall display** in the kitchen, a **kids' tablet** or a **shared tablet** join the household. You do not type a code, only briefly use your phone:
+This is how the **wall display** in the kitchen, a **kids' tablet** or a **shared tablet** join the household. You do not type a code, only briefly use your phone. The new device's QR code also names the server; if you open it with your phone's camera, WuselWall starts right at the confirmation:
 
 1. On the new device, tap **Connect a family tablet or wall display**. It shows a **QR code** and a code.
 2. On your phone, open **Settings → Devices → Connect a device**. You can also start from the **Getting started** card on the Today tab.

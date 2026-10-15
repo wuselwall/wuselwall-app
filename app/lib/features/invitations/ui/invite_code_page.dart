@@ -1,11 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/router.dart';
+import 'package:wuselwall/app/server_session.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/server/server_link.dart';
+import 'package:wuselwall/core/server/server_providers.dart';
 import 'package:wuselwall/core/supabase/supabase_providers.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
@@ -19,7 +24,10 @@ import 'package:wuselwall/features/setup/ui/qr_scan_page.dart';
 /// invitation on this phone and goes on to sign-in, or straight to the join confirmation for an
 /// account that is already signed in (H1's "Ich wurde eingeladen").
 class InviteCodePage extends ConsumerStatefulWidget {
-  const InviteCodePage({super.key});
+  const InviteCodePage({this.initialSecret, super.key});
+
+  /// A secret that arrived with an opened link: checked as soon as the page is up.
+  final String? initialSecret;
 
   @override
   ConsumerState<InviteCodePage> createState() => _InviteCodePageState();
@@ -32,6 +40,18 @@ class _InviteCodePageState extends ConsumerState<InviteCodePage> {
   ({String secret, InvitationPreview preview})? _valid;
 
   @override
+  void initState() {
+    super.initState();
+    final secret = widget.initialSecret;
+    if (secret != null) {
+      _code.text = secret;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) unawaited(_check(secret));
+      });
+    }
+  }
+
+  @override
   void dispose() {
     _code.dispose();
     super.dispose();
@@ -39,14 +59,28 @@ class _InviteCodePageState extends ConsumerState<InviteCodePage> {
 
   Future<void> _check([String? scanned]) async {
     final l10n = context.l10n;
-    final secret = parseInvitation(scanned ?? _code.text);
-    if (secret == null) {
+    final parsed = parseInvitation(scanned ?? _code.text);
+    if (parsed == null) {
       setState(() {
         _error = l10n.inviteCodeInvalidFormat;
         _valid = null;
       });
       return;
     }
+    // A link of another server is not followed silently: the bootstrap decides (switch,
+    // or say why not).
+    final server = parsed.server;
+    final current = ref.read(currentServerProvider);
+    if (server != null && current != null && !sameServer(server, current)) {
+      await ref
+          .read(serverSessionProvider)
+          .openLink
+          ?.call(
+            OpenedLink(LinkKind.invitation, parsed.secret, server: server),
+          );
+      return;
+    }
+    final secret = parsed.secret;
     setState(() {
       _busy = true;
       _error = null;
@@ -74,7 +108,7 @@ class _InviteCodePageState extends ConsumerState<InviteCodePage> {
       MaterialPageRoute(
         builder: (_) => QrScanPage(
           title: context.l10n.inviteScanTitle,
-          parse: parseInvitation,
+          parse: (raw) => parseInvitation(raw) == null ? null : raw,
         ),
       ),
     );

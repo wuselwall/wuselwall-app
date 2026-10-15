@@ -14,7 +14,7 @@ Invite a person who should take part in the family with their own account. Under
 
 <Shot name="invite-sheet" alt="Invitation for Oma Ruth with code, QR code and share" />
 
-WuselWall then shows the **code**, a **QR code** and the **link**. Tap **Share** to send them, for example in a message. The person enters the code in WuselWall or scans the QR code; see [Signing in and connecting](/en/guide/setup#_3-joining-a-family).
+WuselWall then shows the **code**, your family's **server**, a **QR code** and the **link**. Tap **Share** to send them, for example in a message. The link and the QR code name the server: the person taps the link or scans the QR code, and WuselWall opens directly with the invitation, without choosing a server. Whoever only has the code enters it in WuselWall, together with the server if asked; see [Signing in and connecting](/en/guide/setup#_3-joining-a-family).
 
 An invitation is valid for **7 days** and works **once**. Open invitations are listed with their expiry date: **Share again** sends it once more, **Withdraw** cancels it.
 
@@ -42,7 +42,7 @@ To connect a kids' tablet, a shared tablet or the wall display: under **Devices*
 
 <Shot name="pair-approve" alt="A guardian's phone: check the device and connect it" />
 
-You do not need to type the code: the new device shows a QR code that you scan with your phone's camera.
+You do not need to type the code: the new device shows a QR code that you scan with your phone's camera. It also contains the server; WuselWall opens right at the confirmation. If the link belongs to a different server than the one you are signed in on, the app does not follow it by itself but tells you so.
 
 Older devices with an older version of WuselWall still get a code from **Create a code for an older device**. This option goes away with the next version.
 

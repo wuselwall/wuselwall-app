@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:wuselwall/app/bootstrap.dart';
 import 'package:wuselwall/app/config_error_app.dart';
 import 'package:wuselwall/app/licenses.dart';
+import 'package:wuselwall/app/link_source.dart';
 import 'package:wuselwall/core/config/app_config.dart';
 import 'package:wuselwall/core/logging/log.dart';
 
@@ -30,6 +31,7 @@ Future<void> main() async {
   runApp(
     Bootstrap(
       build: config,
+      links: openedLinks(),
       webOrigin: kIsWeb
           ? Uri(
               scheme: Uri.base.scheme,

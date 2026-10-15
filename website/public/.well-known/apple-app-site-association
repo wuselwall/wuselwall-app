@@ -1,0 +1,18 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["JSX2VQXW7G.ch.goomba.wuselwall"],
+        "components": [
+          { "/": "/i/*" },
+          { "/": "/en/i/*" },
+          { "/": "/p/*" },
+          { "/": "/en/p/*" }
+        ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": ["JSX2VQXW7G.ch.goomba.wuselwall"]
+  }
+}
