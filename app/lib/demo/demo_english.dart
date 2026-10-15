@@ -32,7 +32,7 @@ const _shorts = {
 const _texts = {
   // Schools and classes
   'Gemeinschaftsschule am Park': 'Parkside School',
-  'Grundschule Lindenhof': 'Lindenhof Primary',
+  'Grundschule Lindenhof': 'Hollybrook Primary',
   'SAPh E': 'Year 2',
   'Schuljahr 2026/27': 'School year 2026/27',
   'Klasse 5a': 'Class 5a',
@@ -61,13 +61,14 @@ const _texts = {
   'Schwimmbad': 'Pool',
   'Sportsachen': 'PE kit',
   'Schwimmzeug': 'Swimming kit',
-  'Frau Klein': 'Ms Klein',
+  'Frau Klein': 'Ms Clarke',
   'fällt aus': 'cancelled',
-  'Hort': 'After-school club',
+  // The care label as an English family would type it: short enough for a day column.
+  'Hort': 'Club',
   // Presence
   'Dienst': 'Work shift',
-  'Büro Hamburg': 'Hamburg office',
-  'Dienstreise Berlin': 'Business trip to Berlin',
+  'Büro Hamburg': 'London office',
+  'Dienstreise Berlin': 'Business trip to Leeds',
   'Oma': 'Grandma',
   'zu Hause': 'At home',
   'Homeoffice': 'Working from home',
@@ -77,7 +78,7 @@ const _texts = {
   'Turnen': 'Gymnastics',
   'TSV-Halle': 'Sports hall',
   'Zahnarzt': 'Dentist',
-  'Dr. Behrens': 'Dr Behrens',
+  'Dr. Behrens': 'Dr Patel',
   'Elternabend': 'Parents’ evening',
   'Fotografin in der Schule': 'School photos',
   'Klavier': 'Piano',

@@ -63,61 +63,62 @@ class DayHeaderRow extends StatelessWidget {
                         height: 4,
                         child: ColoredBox(color: scheme.primary),
                       ),
-                    ClipFit(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Flexible(
-                                child: Text(
-                                  // Today says so in words instead of a pill: the
-                                  // column is wide, but not wide enough for both.
-                                  i == today
-                                      ? context.l10n.boardToday
-                                      : context.weekdayShort(
-                                          board.days[i].date,
-                                        ),
-                                  style: boardNum(
-                                    28,
-                                    weight: FontWeight.w700,
-                                    color: i == today
-                                        ? scheme.primary
-                                        : scheme.onSurface,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: ClipFit(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // A narrow column shrinks the line a little rather than
+                            // cutting the date.
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    // Today says so in words instead of a pill: the
+                                    // column is wide, but not wide enough for both.
+                                    i == today
+                                        ? context.l10n.boardToday
+                                        : context.weekdayShort(
+                                            board.days[i].date,
+                                          ),
+                                    style: boardNum(
+                                      28,
+                                      weight: FontWeight.w700,
+                                      color: i == today
+                                          ? scheme.primary
+                                          : scheme.onSurface,
+                                    ),
+                                    maxLines: 1,
+                                    softWrap: false,
                                   ),
-                                  maxLines: 1,
-                                  softWrap: false,
-                                ),
-                              ),
-                              const SizedBox(width: 6),
-                              Flexible(
-                                child: Text(
-                                  context.dayMonth(board.days[i].date),
-                                  style: boardNum(
-                                    24,
-                                    weight: FontWeight.w500,
-                                    color: ww.ink2,
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    context.dayMonth(board.days[i].date),
+                                    style: boardNum(
+                                      24,
+                                      weight: FontWeight.w500,
+                                      color: ww.ink2,
+                                    ),
+                                    maxLines: 1,
+                                    softWrap: false,
                                   ),
-                                  maxLines: 1,
-                                  softWrap: false,
-                                ),
+                                ],
                               ),
-                            ],
-                          ),
-                          if (board.days[i].holiday case final holiday?)
-                            Text(
-                              holiday.name,
-                              style: boardUi(
-                                24,
-                                weight: FontWeight.w600,
-                                color: ww.ink2,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              softWrap: false,
                             ),
-                        ],
+                            if (board.days[i].holiday case final holiday?)
+                              ShrinkText(
+                                holiday.name,
+                                style: boardCell(
+                                  24,
+                                  weight: FontWeight.w600,
+                                  color: ww.ink2,
+                                ),
+                              ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -172,20 +173,7 @@ class _PartRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final board = frame.board;
     final g = frame.geometry;
-    final l10n = context.l10n;
     final settings = board.settings;
-    final boundary = switch (part) {
-      DayPart.morning => l10n.boardUntil(
-        context.shortTime(settings.morningEnds),
-      ),
-      DayPart.afternoon => context.span(
-        settings.morningEnds,
-        settings.eveningStarts,
-      ),
-      DayPart.evening => l10n.boardFrom(
-        context.shortTime(settings.eveningStarts),
-      ),
-    };
     final ink = Theme.of(context).colorScheme.onSurface;
 
     return BoardRow(
@@ -196,32 +184,17 @@ class _PartRow extends StatelessWidget {
           width: BoardGeometry.gutter,
           top: 0,
           bottom: 0,
+          // The part's name only: the appointments carry their own times, so the
+          // part's boundaries would only add a line to read.
           child: Padding(
             padding: const EdgeInsets.only(left: 12),
-            child: LayoutBuilder(
-              builder: (context, c) => ClipFit(
-                alignment: Alignment.centerLeft,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      context.dayPartLabel(part),
-                      style: boardUi(24, weight: FontWeight.w700, color: ink),
-                      maxLines: 1,
-                      softWrap: false,
-                    ),
-                    // A short band has room for the part's name only.
-                    if (c.maxHeight >= 54)
-                      Text(
-                        boundary,
-                        style: boardUi(24, color: context.ww.ink3),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        softWrap: false,
-                      ),
-                  ],
-                ),
+            child: ClipFit(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                context.dayPartLabel(part),
+                style: boardUi(24, weight: FontWeight.w700, color: ink),
+                maxLines: 1,
+                softWrap: false,
               ),
             ),
           ),
@@ -378,7 +351,9 @@ class _EventBlock extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                start == null ? context.l10n.boardAllDay : context.time(start),
+                start == null
+                    ? context.l10n.boardAllDay
+                    : context.cellTime(start),
                 style: start == null
                     ? boardUi(
                         24,
