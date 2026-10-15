@@ -18,8 +18,8 @@ class DemoExternalCalendarsRepository implements ExternalCalendarsRepository {
   late final _calendars = <ExternalCalendar>[
     ExternalCalendar(
       id: demoBinCalendarId,
-      name: 'Abfuhrkalender',
-      urlHost: 'abfuhr.example.de',
+      name: DemoData.tr('Abfuhrkalender', 'Bin collection'),
+      urlHost: DemoData.tr('abfuhr.example.de', 'bins.example.org'),
       colourHex: '#9A5300',
       memberIds: const [],
       showOnBoard: true,
@@ -28,10 +28,10 @@ class DemoExternalCalendarsRepository implements ExternalCalendarsRepository {
     ),
     ExternalCalendar(
       id: demoFootballCalendarId,
-      name: 'FC Spielplan',
-      urlHost: 'fc-beispiel.example.de',
+      name: DemoData.tr('FC Spielplan', 'Football fixtures'),
+      urlHost: DemoData.tr('fc-beispiel.example.de', 'fc.example.org'),
       colourHex: '#1A4FA8',
-      memberIds: const [DemoData.hanna],
+      memberIds: const [DemoData.son],
       showOnBoard: false,
       active: true,
       lastFetchedAt: _clock().subtract(const Duration(minutes: 40)),
@@ -128,7 +128,7 @@ const demoBinCalendarId = 'ext-abfuhr';
 const demoFootballCalendarId = 'ext-fc';
 
 /// The imported occurrences of the week starting on [monday] that fall between [first]
-/// and [last] (inclusive local dates): bin days for everyone, one fixture for Hanna.
+/// and [last] (inclusive local dates): bin days for everyone, one fixture for the son.
 List<Occurrence> demoImportedOccurrences(
   DateTime monday,
   DateTime first,
@@ -139,8 +139,16 @@ List<Occurrence> demoImportedOccurrences(
 
   final out = <Occurrence>[];
   for (final bin in [
-    (offset: 1, title: 'Restmüll', uid: 'bin-rest'),
-    (offset: 4, title: 'Gelber Sack', uid: 'bin-gelb'),
+    (
+      offset: 1,
+      title: DemoData.tr('Restmüll', 'General waste'),
+      uid: 'bin-rest',
+    ),
+    (
+      offset: 4,
+      title: DemoData.tr('Gelber Sack', 'Recycling'),
+      uid: 'bin-gelb',
+    ),
   ]) {
     final d = day(bin.offset);
     if (d.isBefore(first) || d.isAfter(last)) {
@@ -165,12 +173,12 @@ List<Occurrence> demoImportedOccurrences(
         id: '${demoFootballCalendarId}_spiel-1',
         calendarId: demoFootballCalendarId,
         colourHex: '#1A4FA8',
-        title: 'Junioren gegen TSV',
+        title: DemoData.tr('Junioren gegen TSV', 'Under-9s vs Rovers'),
         date: fixture,
         start: const TimeOfDay(hour: 10, minute: 0),
         end: const TimeOfDay(hour: 11, minute: 30),
-        location: 'Sportplatz Nord',
-        attendees: const [DemoData.hanna],
+        location: DemoData.tr('Sportplatz Nord', 'North playing field'),
+        attendees: const [DemoData.son],
       ),
     );
   }

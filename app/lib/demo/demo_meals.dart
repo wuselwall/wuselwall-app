@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart' show TimeOfDay;
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/demo/demo_data.dart';
+import 'package:wuselwall/demo/demo_english.dart';
 import 'package:wuselwall/features/meals/data/meals_repository.dart';
 import 'package:wuselwall/features/meals/domain/meal_models.dart';
 
@@ -29,92 +30,98 @@ class DemoMealsRepository implements MealsRepository {
   void _seed() {
     _recipes
       ..add(
-        const Recipe(
+        Recipe(
           id: 'r-braten',
-          title: 'Rinderbraten',
+          title: demoText('Rinderbraten'),
           servingsDefault: 4,
-          steps:
-              'Fleisch würzen und scharf anbraten.\n'
-              'Gemüse dazugeben und kurz mitrösten.\n'
-              'Mit Brühe und Rotwein ablöschen und zwei Stunden schmoren.\n'
-              'Soße abschmecken und mit dem Fleisch servieren.',
-          tags: ['Sonntag', 'Ofen'],
+          steps: demoText(
+            'Fleisch würzen und scharf anbraten.\n'
+            'Gemüse dazugeben und kurz mitrösten.\n'
+            'Mit Brühe und Rotwein ablöschen und zwei Stunden schmoren.\n'
+            'Soße abschmecken und mit dem Fleisch servieren.',
+          ),
+          tags: [demoText('Sonntag'), demoText('Ofen')],
           ingredients: [
             RecipeIngredient(
               id: 'i1',
-              rawName: 'Rindfleisch',
+              rawName: demoText('Rindfleisch'),
               quantity: 800,
               unit: 'g',
             ),
             RecipeIngredient(
               id: 'i2',
-              rawName: 'Zwiebeln',
+              rawName: demoText('Zwiebeln'),
               quantity: 2,
-              unit: 'Stück',
+              unit: demoText('Stück'),
             ),
             RecipeIngredient(
               id: 'i3',
-              rawName: 'Karotten',
+              rawName: demoText('Karotten'),
               quantity: 3,
-              unit: 'Stück',
+              unit: demoText('Stück'),
             ),
             RecipeIngredient(
               id: 'i4',
-              rawName: 'Rotwein',
+              rawName: demoText('Rotwein'),
               quantity: 250,
               unit: 'ml',
             ),
             RecipeIngredient(
               id: 'i5',
-              rawName: 'Rinderbrühe',
+              rawName: demoText('Rinderbrühe'),
               quantity: 500,
               unit: 'ml',
             ),
             RecipeIngredient(
               id: 'i6',
-              rawName: 'Tomatenmark',
+              rawName: demoText('Tomatenmark'),
               quantity: 2,
-              unit: 'EL',
+              unit: demoText('EL'),
             ),
-            RecipeIngredient(id: 'i7', rawName: 'Salz', note: 'nach Geschmack'),
+            RecipeIngredient(
+              id: 'i7',
+              rawName: demoText('Salz'),
+              note: demoText('nach Geschmack'),
+            ),
           ],
         ),
       )
       ..add(
-        const Recipe(
+        Recipe(
           id: 'r-pesto',
-          title: 'Nudeln mit Pesto',
+          title: demoText('Nudeln mit Pesto'),
           servingsDefault: 4,
-          steps:
-              'Nudeln in Salzwasser kochen.\n'
-              'Pesto mit etwas Nudelwasser verrühren.\n'
-              'Alles mischen und mit Parmesan servieren.',
-          tags: ['schnell'],
+          steps: demoText(
+            'Nudeln in Salzwasser kochen.\n'
+            'Pesto mit etwas Nudelwasser verrühren.\n'
+            'Alles mischen und mit Parmesan servieren.',
+          ),
+          tags: [demoText('schnell')],
           ingredients: [
             RecipeIngredient(
               id: 'p1',
-              rawName: 'Nudeln',
+              rawName: demoText('Nudeln'),
               quantity: 500,
               unit: 'g',
             ),
             RecipeIngredient(
               id: 'p2',
-              rawName: 'Basilikumpesto',
+              rawName: demoText('Basilikumpesto'),
               quantity: 150,
               unit: 'g',
             ),
             RecipeIngredient(
               id: 'p3',
-              rawName: 'Parmesan',
+              rawName: demoText('Parmesan'),
               quantity: 50,
               unit: 'g',
             ),
             RecipeIngredient(
               id: 'p4',
-              rawName: 'Pinienkerne',
+              rawName: demoText('Pinienkerne'),
               quantity: 30,
               unit: 'g',
-              note: 'optional',
+              note: demoText('optional'),
             ),
           ],
         ),
@@ -125,7 +132,7 @@ class DemoMealsRepository implements MealsRepository {
       (
         0,
         PlanSlot.dinner,
-        'Kürbissuppe',
+        demoText('Kürbissuppe'),
         null,
         DemoData.mama,
         '18:30',
@@ -135,7 +142,7 @@ class DemoMealsRepository implements MealsRepository {
       (
         1,
         PlanSlot.dinner,
-        'Nudelauflauf',
+        demoText('Nudelauflauf'),
         null,
         DemoData.papa,
         '18:30',
@@ -145,7 +152,7 @@ class DemoMealsRepository implements MealsRepository {
       (
         2,
         PlanSlot.dinner,
-        'Chili sin Carne',
+        demoText('Chili sin Carne'),
         null,
         DemoData.mama,
         '18:30',
@@ -155,7 +162,7 @@ class DemoMealsRepository implements MealsRepository {
       (
         3,
         PlanSlot.dinner,
-        'Fischstäbchen',
+        demoText('Fischstäbchen'),
         null,
         DemoData.mama,
         '18:30',
@@ -165,7 +172,7 @@ class DemoMealsRepository implements MealsRepository {
       (
         5,
         PlanSlot.lunch,
-        'Nudeln mit Pesto',
+        demoText('Nudeln mit Pesto'),
         'r-pesto',
         DemoData.papa,
         '12:30',
@@ -175,7 +182,7 @@ class DemoMealsRepository implements MealsRepository {
       (
         6,
         PlanSlot.lunch,
-        'Rinderbraten',
+        demoText('Rinderbraten'),
         'r-braten',
         DemoData.mama,
         '12:30',
@@ -271,63 +278,63 @@ class DemoMealsRepository implements MealsRepository {
     return Ok(
       [
         MealHistoryEntry(
-          title: 'Nudelauflauf',
+          title: demoText('Nudelauflauf'),
           times: 7,
           firstOn: ago(300),
           lastOn: ago(2),
         ),
         MealHistoryEntry(
           recipeId: 'r-braten',
-          title: 'Rinderbraten',
+          title: demoText('Rinderbraten'),
           times: 4,
           firstOn: ago(150),
           lastOn: ago(9),
         ),
         MealHistoryEntry(
-          title: 'Fischstäbchen',
+          title: demoText('Fischstäbchen'),
           times: 6,
           firstOn: ago(200),
           lastOn: ago(70),
         ),
         MealHistoryEntry(
-          title: 'Chili sin Carne',
+          title: demoText('Chili sin Carne'),
           times: 3,
           firstOn: ago(120),
           lastOn: ago(5),
         ),
         MealHistoryEntry(
           recipeId: 'r-pesto',
-          title: 'Nudeln mit Pesto',
+          title: demoText('Nudeln mit Pesto'),
           times: 3,
           firstOn: ago(280),
           lastOn: ago(40),
         ),
         MealHistoryEntry(
-          title: 'Kürbissuppe',
+          title: demoText('Kürbissuppe'),
           times: 2,
           firstOn: ago(180),
           lastOn: ago(75),
         ),
         MealHistoryEntry(
-          title: 'Gulaschsuppe',
+          title: demoText('Gulaschsuppe'),
           times: 5,
           firstOn: ago(340),
           lastOn: ago(120),
         ),
         MealHistoryEntry(
-          title: 'Linseneintopf',
+          title: demoText('Linseneintopf'),
           times: 3,
           firstOn: ago(330),
           lastOn: ago(210),
         ),
         MealHistoryEntry(
-          title: 'Pizza selbst gemacht',
+          title: demoText('Pizza selbst gemacht'),
           times: 2,
           firstOn: ago(260),
           lastOn: ago(95),
         ),
         MealHistoryEntry(
-          title: 'Hühnercurry',
+          title: demoText('Hühnercurry'),
           times: 2,
           firstOn: ago(250),
           lastOn: ago(130),
@@ -525,7 +532,7 @@ class DemoMealsRepository implements MealsRepository {
           quantity: qty == null ? null : double.parse(qty.toStringAsFixed(1)),
           unit: unit,
           mealEntryIds: ids,
-          alreadyOnList: name == 'Nudeln',
+          alreadyOnList: name == demoText('Nudeln'),
         ),
     ];
   }

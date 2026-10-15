@@ -3,6 +3,7 @@ import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/demo/demo_data.dart';
+import 'package:wuselwall/demo/demo_english.dart';
 import 'package:wuselwall/demo/demo_external_calendars.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/calendar/data/calendar_repository.dart';
@@ -104,17 +105,20 @@ class DemoIdentityRepository implements IdentityRepository {
 /// Apple and Google as on an iPhone: both offered, Apple already connected.
 class DemoSignInMethodsRepository implements SignInMethodsRepository {
   final _linked = [
-    const SignInMethod(
+    SignInMethod(
       identityId: 'demo-email',
       provider: SignInMethodKind.email,
-      email: 'lukas@example.org',
+      email: _email,
     ),
-    const SignInMethod(
+    SignInMethod(
       identityId: 'demo-apple',
       provider: SignInMethodKind.apple,
-      email: 'lukas@example.org',
+      email: _email,
     ),
   ];
+
+  static String get _email =>
+      '${DemoData.name(DemoData.papa).toLowerCase()}@example.org';
 
   @override
   List<SignInProvider> available() => const [
@@ -176,12 +180,12 @@ class DemoShoppingRepository implements ShoppingRepository {
       'demo-src-nudel': ShoppingItemMeal(
         mealEntryId: 'demo-src-nudel',
         onDate: DateTime(monday.year, monday.month, monday.day + 1),
-        title: 'Nudelauflauf',
+        title: demoText('Nudelauflauf'),
       ),
       'demo-src-pesto': ShoppingItemMeal(
         mealEntryId: 'demo-src-pesto',
         onDate: DateTime(monday.year, monday.month, monday.day + 5),
-        title: 'Nudeln mit Pesto',
+        title: demoText('Nudeln mit Pesto'),
       ),
     };
     return Ok([
@@ -246,7 +250,7 @@ class DemoShoppingRepository implements ShoppingRepository {
 
   @override
   Future<Result<List<TripItem>>> tripItems(String tripId) async =>
-      const Ok(DemoData.tripItems);
+      Ok(DemoData.tripItems);
 
   @override
   Future<Result<String>> add({
@@ -1151,29 +1155,35 @@ class _OneOff {
   }
 }
 
-const _allFour = [DemoData.papa, DemoData.mama, DemoData.lotta, DemoData.hanna];
+const _allFour = [
+  DemoData.papa,
+  DemoData.mama,
+  DemoData.daughter,
+  DemoData.son,
+];
 
-final _weekly = <_Weekly>[
+// Getters, not finals: the titles follow the language the demo runs in.
+List<_Weekly> get _weekly => [
   _Weekly(
     id: 'e-turnen',
-    title: 'Turnen',
+    title: demoText('Turnen'),
     weekday: DateTime.monday,
     start: const TimeOfDay(hour: 15, minute: 0),
     end: const TimeOfDay(hour: 16, minute: 0),
-    attendees: const [DemoData.hanna],
-    location: 'TSV-Halle',
+    attendees: const [DemoData.son],
+    location: demoText('TSV-Halle'),
   ),
   _Weekly(
     id: 'e-klavier',
-    title: 'Klavier',
+    title: demoText('Klavier'),
     weekday: DateTime.thursday,
     start: const TimeOfDay(hour: 15, minute: 30),
     end: const TimeOfDay(hour: 16, minute: 0),
-    attendees: const [DemoData.lotta],
+    attendees: const [DemoData.daughter],
   ),
   _Weekly(
     id: 'e-dienst-mo',
-    title: 'Dienst',
+    title: demoText('Dienst'),
     weekday: DateTime.monday,
     start: const TimeOfDay(hour: 8, minute: 30),
     end: const TimeOfDay(hour: 14, minute: 0),
@@ -1182,7 +1192,7 @@ final _weekly = <_Weekly>[
   ),
   _Weekly(
     id: 'e-dienst-mi',
-    title: 'Dienst',
+    title: demoText('Dienst'),
     weekday: DateTime.wednesday,
     start: const TimeOfDay(hour: 8, minute: 30),
     end: const TimeOfDay(hour: 14, minute: 0),
@@ -1191,10 +1201,10 @@ final _weekly = <_Weekly>[
   ),
 ];
 
-final _oneOffs = <_OneOff>[
+List<_OneOff> get _oneOffs => [
   _OneOff(
     id: 'e-berlin',
-    title: 'Dienstreise Berlin',
+    title: demoText('Dienstreise Berlin'),
     firstDay: 3,
     lastDay: 4,
     attendees: const [DemoData.papa],
@@ -1202,14 +1212,14 @@ final _oneOffs = <_OneOff>[
   ),
   _OneOff(
     id: 'e-fotografin',
-    title: 'Fotografin in der Schule',
+    title: demoText('Fotografin in der Schule'),
     firstDay: 3,
     lastDay: 3,
-    attendees: const [DemoData.lotta],
+    attendees: const [DemoData.daughter],
   ),
   _OneOff(
     id: 'e-elternabend',
-    title: 'Elternabend',
+    title: demoText('Elternabend'),
     firstDay: 2,
     lastDay: 2,
     attendees: const [DemoData.mama],
@@ -1218,7 +1228,7 @@ final _oneOffs = <_OneOff>[
   ),
   _OneOff(
     id: 'e-grillen',
-    title: 'Grillen bei Webers',
+    title: demoText('Grillen bei Webers'),
     firstDay: 5,
     lastDay: 5,
     attendees: _allFour,
