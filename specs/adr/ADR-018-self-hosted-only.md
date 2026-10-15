@@ -79,7 +79,7 @@ with **no** default backend, and a project that runs no service for other famili
    - **Apple and Google through the web redirect:** when the operator registered their own
      clients. Those tokens are addressed to the operator, not to us;
    - **native Apple and Google, and passkeys:** only on the first-party hosts named at
-     build time (`WW_FIRST_PARTY_HOSTS`, a CI variable). The reason is ADR-015's decision
+     build time (`WW_FIRST_PARTY_HOSTS`, a CI secret). The reason is ADR-015's decision
      4: an ID token addressed to our app, handed to a hostile server, could be replayed to
      a first-party server. Passkeys also need the server's domain in the app's associated
      domains. The user decided on 2026-10-13 to keep native sign-in for first-party
@@ -200,7 +200,7 @@ What exists now, decision by decision, and where it differs from the text above.
 - **6 (sign-in per server).** The discovery document reports Apple and Google from Auth's
   settings; the app offers them through the server's redirect. The native sheets and
   passkeys need the server's host in `WW_FIRST_PARTY_HOSTS`, a build-time define that CI
-  supplies from a repository variable; no committed file names a host.
+  supplies from a repository secret (masked in the public logs); no committed file names a host.
 - **7 (each server serves its web app).** A server release carries one web build without a
   server; it reads the discovery document at its own origin, and asks otherwise. The Caddy
   layer serves it next to the API.

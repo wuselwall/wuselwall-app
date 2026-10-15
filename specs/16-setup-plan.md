@@ -153,7 +153,7 @@ and no Xcode debugger. See [Q35](14-open-questions.md).
    `flutter_localizations`. Add `drift` in step 6, not before.
 4. **Configuration per environment** with `--dart-define-from-file`:
    `env/dev.json` (git-ignored: a development build's server and its publishable key; CI
-   writes it from repository variables), `env/ci.json` (CI's throwaway stack) and, since
+   writes it from repository secrets), `env/ci.json` (CI's throwaway stack) and, since
    ADR-018, `env/store.json` (store builds, no server); no `prod.json`
    ([ADR-013](adr/ADR-013-self-hosted-compose-stack.md)). No `if (kDebugMode)` branches
    for configuration. The publishable key is public by design; nothing else secret goes
@@ -417,7 +417,7 @@ release can also be run from a Mac with the same lanes if one becomes available.
 
 ### Server address
 
-Releases are built with `env/dev.json`, which CI writes from the repository variables
+Releases are built with `env/dev.json`, which CI writes from the repository secrets
 `WW_SUPABASE_URL` and `WW_SUPABASE_PUBLISHABLE_KEY`, until they become store builds without
 a server (`env/store.json`, [ADR-018](adr/ADR-018-self-hosted-only.md)). Servers are
 reached over HTTPS, so the apps need no cleartext exception.
@@ -580,7 +580,7 @@ manager.
 | `PLAY_SERVICE_ACCOUNT_JSON` | GitHub secrets | Play upload |
 | `WW_JWT_SECRET`, `WW_SECRET_KEY` | `supabase/.env` on the development machine | the Supabase stack (CLI) |
 | `RESTIC_PASSWORD`, backup-target credentials, healthchecks URL | `backup.env` next to the server's tool (`BACKUP_ENV`) | backups |
-| `WW_SUPABASE_URL`, `WW_SUPABASE_PUBLISHABLE_KEY`, `WW_FIRST_PARTY_HOSTS` (not secret) | GitHub repository variables | the release builds' configuration |
+| `WW_SUPABASE_URL`, `WW_SUPABASE_PUBLISHABLE_KEY`, `WW_FIRST_PARTY_HOSTS` (not secret, but kept out of public logs) | GitHub secrets | the release builds' configuration |
 | `DOCS_DEPLOY_KEY`, `DOCS_DEPLOY_KNOWN_HOSTS`, `DOCS_DEPLOY_TARGET` | GitHub secrets | publishing the docs |
 | Push credentials (APNs key, FCM service account) | Edge Function secrets | `push-send` |
 | `WW_APPLE_SECRET` (the six-monthly client-secret JWT), the Sign in with Apple `.p8` key | The server's stack `.env` (`GOTRUE_EXTERNAL_APPLE_*`); the `.p8` in the password manager only | Supabase Auth (Apple via OAuth); the `account-delete` and code-exchange functions |

@@ -32,14 +32,15 @@ jobs:
       # signing secrets come near the build.
       - run: flutter pub get --enforce-lockfile
       # The builds' server is not in the repository: env/dev.json is the store
-      # configuration plus the repository variables WW_SUPABASE_URL and
-      # WW_SUPABASE_PUBLISHABLE_KEY, until these builds become store builds (ADR-018).
+      # configuration plus the secrets WW_SUPABASE_URL and WW_SUPABASE_PUBLISHABLE_KEY, until
+      # these builds become store builds (ADR-018). Secrets, not variables: the logs of a
+      # public repository are public, and only secrets are masked in them.
       - name: Build configuration
         env:
-          URL: ${{ vars.WW_SUPABASE_URL }}
-          KEY: ${{ vars.WW_SUPABASE_PUBLISHABLE_KEY }}
+          URL: ${{ secrets.WW_SUPABASE_URL }}
+          KEY: ${{ secrets.WW_SUPABASE_PUBLISHABLE_KEY }}
         run: |
-          [ -n "$URL" ] && [ -n "$KEY" ] || { echo "::error::set the repository variables WW_SUPABASE_URL and WW_SUPABASE_PUBLISHABLE_KEY"; exit 1; }
+          [ -n "$URL" ] && [ -n "$KEY" ] || { echo "::error::set the secrets WW_SUPABASE_URL and WW_SUPABASE_PUBLISHABLE_KEY"; exit 1; }
           jq --arg url "$URL" --arg key "$KEY" \
             '. + {ENV: "dev", SUPABASE_URL: $url, SUPABASE_PUBLISHABLE_KEY: $key}' env/store.json > env/dev.json
       - uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
@@ -51,7 +52,9 @@ jobs:
           args=(--build-number=${{ github.run_number }})
           if [[ "$GITHUB_REF_TYPE" == tag ]]; then args+=(--build-name="${GITHUB_REF_NAME#v}"); fi
           flutter build ios --release --no-codesign "${args[@]}" --dart-define-from-file=env/dev.json \
-            --dart-define=WW_FIRST_PARTY_HOSTS=${{ vars.WW_FIRST_PARTY_HOSTS }}
+            --dart-define=WW_FIRST_PARTY_HOSTS="$FIRST_PARTY_HOSTS"
+        env:
+          FIRST_PARTY_HOSTS: ${{ secrets.WW_FIRST_PARTY_HOSTS }}
       - run: bundle exec fastlane ios beta
         working-directory: app/ios
         env:

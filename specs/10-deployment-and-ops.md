@@ -136,7 +136,7 @@ the discovery document:
   `docker compose up -d auth`; on a hosted project in Authentication → Providers.
 
 The native sheets and passkeys are offered only for servers in the build's
-`WW_FIRST_PARTY_HOSTS` (a CI variable): an ID token addressed to the app must never reach
+`WW_FIRST_PARTY_HOSTS` (a CI secret): an ID token addressed to the app must never reach
 another operator's server ([ADR-018](adr/ADR-018-self-hosted-only.md), decision 6).
 Everywhere else Apple and Google go through the server's redirect with the operator's own
 clients.
@@ -200,7 +200,7 @@ meta, any analytics, captcha.
 **Left to do:**
 
 1. Switch the store builds to `app/env/store.json` once the first-party servers serve
-   `server-info` (the CI variable `WW_FIRST_PARTY_HOSTS` is wired already).
+   `server-info` (the CI secret `WW_FIRST_PARTY_HOSTS` is wired already).
 2. A smoke test of `deploy-supabase.yml` on a scratch hosted project, on Postgres 17 (the
    direct `auth.users` inserts of ADR-013 and the now tolerant `auth.mfa_factors` grant are
    the known risks), and a first `server-v` tag.
