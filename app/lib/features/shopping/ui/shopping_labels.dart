@@ -26,8 +26,8 @@ String categoryLabel(AppLocalizations l10n, ShoppingCategory c) =>
       _ => c.name ?? l10n.shoppingCat_other,
     };
 
-/// The tile icon follows the item's category: a self-hosted set, never product photos
-/// (NFR-9).
+/// The category's icon: a tile's fallback when the item has no icon_key the app knows.
+/// A self-hosted set, never product photos (NFR-9).
 IconData categoryIcon(ShoppingCategory? c) => switch (c?.key) {
   'produce' => Icons.eco_outlined,
   'bakery' => Icons.bakery_dining_outlined,
@@ -47,3 +47,84 @@ IconData categoryIcon(ShoppingCategory? c) => switch (c?.key) {
   'garden' => Icons.yard_outlined,
   _ => Icons.shopping_basket_outlined,
 };
+
+/// The bundled pictures for the `icon_key` the server gives a catalogue item from its
+/// name (app.catalog_icon_for): Noto Emoji (Apache 2.0), rendered by
+/// scripts/shopping-icons.mjs. A key this app does not know yet (a newer server) shows
+/// the category icon instead.
+const shoppingIconKeys = <String>{
+  'milk',
+  'cheese',
+  'butter',
+  'egg',
+  'bowl',
+  'bread',
+  'baguette',
+  'pretzel',
+  'croissant',
+  'apple',
+  'pear',
+  'banana',
+  'orange',
+  'lemon',
+  'grapes',
+  'strawberry',
+  'tomato',
+  'cucumber',
+  'carrot',
+  'potato',
+  'onion',
+  'garlic',
+  'bell_pepper',
+  'chili',
+  'broccoli',
+  'lettuce',
+  'mushroom',
+  'avocado',
+  'corn',
+  'peas',
+  'beans',
+  'pasta',
+  'rice',
+  'salt',
+  'honey',
+  'oil',
+  'nuts',
+  'chocolate',
+  'candy',
+  'cookie',
+  'cake',
+  'ice_cream',
+  'pizza',
+  'fries',
+  'chicken',
+  'meat',
+  'sausage',
+  'bacon',
+  'fish',
+  'coffee',
+  'tea',
+  'juice',
+  'water',
+  'soda',
+  'beer',
+  'wine',
+  'tin',
+  'toilet_paper',
+  'soap',
+  'toothbrush',
+  'lotion',
+  'sponge',
+  'baby_bottle',
+  'trash',
+  'battery',
+  'light_bulb',
+  'plaster',
+  'pill',
+};
+
+/// The asset of [key]'s picture, or null when there is none.
+String? shoppingIconAsset(String? key) =>
+    key != null && shoppingIconKeys.contains(key)
+    ? 'assets/shopping/$key.png'
+    : null;
