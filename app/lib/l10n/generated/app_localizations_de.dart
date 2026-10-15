@@ -2778,6 +2778,25 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String todayNoticeJoined(String name) {
+    return '$name ist beigetreten';
+  }
+
+  @override
+  String todayNoticeSignIn(String device) {
+    return 'Neu angemeldet: $device';
+  }
+
+  @override
+  String get todayNoticeDismiss => 'Gesehen';
+
+  @override
+  String get todayNoticeMembers => 'Mitglieder';
+
+  @override
+  String get todayNoticeDevices => 'Geräte';
+
+  @override
   String get todayStartTitle => 'Erste Schritte';
 
   @override
