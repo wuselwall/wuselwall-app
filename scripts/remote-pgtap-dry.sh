@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Tries migrations that are not applied yet against the home server's database without
+# Tries migrations that are not applied yet against a server's database without
 # keeping anything: for each test file, the new migrations and the test run in one
 # transaction, and the test's own closing `rollback` undoes both. Use it before
 # `remote-migrate.sh` to see a new migration pass the whole pgTAP suite.
@@ -9,7 +9,9 @@
 # The migrations take their locks for the length of one test file (a second or two).
 set -uo pipefail
 cd "$(dirname "$0")/.."
-export DOCKER_HOST=ssh://${WW_HOST:-unraid}
+# The target server comes from scripts/remote.env (git-ignored; see remote.env.example).
+[ -f scripts/remote.env ] && . scripts/remote.env
+export DOCKER_HOST=ssh://${WW_HOST:?set WW_HOST in scripts/remote.env}
 DB=${DB_CONTAINER:-supabase-db}
 
 migrations=()

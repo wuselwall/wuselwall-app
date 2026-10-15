@@ -16,6 +16,9 @@ abstract interface class ShoppingStore {
   Future<List<ShoppingOp>> readOutbox(String householdId);
   Future<void> append(String householdId, ShoppingOp op);
   Future<void> remove(Iterable<String> opIds);
+
+  /// Forgets everything, outbox included: the device is leaving its server (ADR-018).
+  Future<void> clear();
 }
 
 /// Holds nothing across restarts: the web build (always online, on the laptop), the
@@ -64,6 +67,13 @@ class MemoryShoppingStore implements ShoppingStore {
     final gone = opIds.toSet();
     _outbox.removeWhere((op) => gone.contains(op.opId));
   }
+
+  @override
+  Future<void> clear() async {
+    _household = null;
+    _snapshot = null;
+    _outbox.clear();
+  }
 }
 
 /// SQLite through drift, on the phones and tablets. Two tables and plain SQL; the
@@ -75,6 +85,12 @@ class DriftShoppingStore implements ShoppingStore {
   final _ShoppingDatabase _db;
 
   Future<void> close() => _db.close();
+
+  @override
+  Future<void> clear() async {
+    await _db.customStatement('delete from snapshot');
+    await _db.customStatement('delete from outbox');
+  }
 
   /// Drops everything that belongs to another household.
   Future<void> _scope(String householdId) async {

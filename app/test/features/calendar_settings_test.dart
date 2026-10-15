@@ -132,12 +132,12 @@ void main() {
 
     test('feedAddress and webcalAddress build the subscription URL', () {
       expect(
-        feedAddress('https://api.wuselwall.app/', 'abc'),
-        'https://api.wuselwall.app/functions/v1/ics/abc.ics',
+        feedAddress('https://api.example.org/', 'abc'),
+        'https://api.example.org/functions/v1/ics/abc.ics',
       );
       expect(
-        webcalAddress('https://api.wuselwall.app/functions/v1/ics/abc.ics'),
-        'webcal://api.wuselwall.app/functions/v1/ics/abc.ics',
+        webcalAddress('https://api.example.org/functions/v1/ics/abc.ics'),
+        'webcal://api.example.org/functions/v1/ics/abc.ics',
       );
     });
   });

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# The website (website/) on the home server: its own compose project (infra/web), apart
-# from the Supabase stack and the Flutter web app, so each updates on its own (specs/10).
+# The website (website/) on its server: its own compose project (infra/web), apart from
+# any Supabase stack and the Flutter web app, so each updates on its own (specs/10).
 #
 #   scripts/remote-web.sh deploy     sync website/ and infra/web, build the image on the server,
 #                                    up -d. Refuses to ship placeholders in the Impressum.
@@ -11,8 +11,10 @@
 # Roll back by redeploying an earlier commit; the previous image stays as a layer cache.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-HOST=${WW_HOST:-unraid}
-DIR=${WW_WEB_DIR:-/mnt/cache/appdata/wuselwall/web}
+# The target server comes from scripts/remote.env (git-ignored; see remote.env.example).
+[ -f scripts/remote.env ] && . scripts/remote.env
+HOST=${WW_HOST:?set WW_HOST in scripts/remote.env}
+DIR=${WW_SITE_DIR:?set WW_SITE_DIR in scripts/remote.env}
 
 case "${1:-}" in
   deploy)

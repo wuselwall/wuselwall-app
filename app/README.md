@@ -11,9 +11,10 @@ flutter pub get
 flutter run --dart-define-from-file=env/dev.json -d web-server --web-hostname localhost --web-port 3000
 ```
 
-`env/dev.json` points at the one environment, `https://api.wuselwall.app`
-([ADR-013](../specs/adr/ADR-013-one-self-hosted-environment.md)) — the family's data, so
-develop with care. `env/ci.json` points at a throwaway stack on `http://127.0.0.1:54321`
+`env/dev.json` is git-ignored: copy `env/dev.example.json` and point it at your server
+([ADR-013](../specs/adr/ADR-013-self-hosted-compose-stack.md)) — if that server holds a
+family's data, develop with care. Without `SUPABASE_URL` (as in `env/store.json`) the app
+asks for its server at the start ([ADR-018](../specs/adr/ADR-018-self-hosted-only.md)). `env/ci.json` points at a throwaway stack on `http://127.0.0.1:54321`
 (`npm run db:start` with Docker on the laptop); the integration tests use only that.
 
 ## Layout

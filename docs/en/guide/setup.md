@@ -1,5 +1,7 @@
 # Signing in and connecting
 
+At the very first start, the app asks which server to connect to ([Installing the app](/en/guide/install#at-first-start-which-server)). Then it goes on here.
+
 There are three ways onto a new device. At the top of the start screen you sign in with your account; below “or” you connect a shared device with a code or start a new family:
 
 <Shot name="setup-start" alt="WuselWall start screen" />
@@ -20,6 +22,8 @@ This is how **kids' tablets**, the **wall display** and other shared devices joi
 
 1. A guardian opens **Settings → Add device** on their phone and creates a code (see [Members and devices](/en/settings/members-devices)).
 2. On the new device, tap **Connect with a code** and enter the code — or scan the QR code.
+
+If the app on the new device is brand new, scan the QR code right at the question **Which server?**: it holds both the server and the code, so one scan connects the device.
 
 <Shot name="setup-enrol" alt="Entering a code" />
 

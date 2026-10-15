@@ -120,7 +120,7 @@ its own test, not as four independent fetches the client stitches together.
 ### URL and authentication
 
 ```
-GET https://api.wuselwall.app/ics/{token}.ics
+GET https://api.example.org/ics/{token}.ics
 ```
 
 - `token` is 32 random bytes, base64url-encoded. Only its hash is stored.

@@ -1607,5 +1607,37 @@
         "type": "String"
       }
     }
-  }
+  },
+  "serverTitle": "Which server?",
+  "serverLead": "WuselWall keeps your family's data on your family's own server. Enter its address, or scan its QR code.",
+  "serverAddressLabel": "Server address",
+  "serverAddressHint": "e.g. api.example.org",
+  "serverConnect": "Connect",
+  "serverScan": "Scan QR code",
+  "serverScanTitle": "Scan the server's QR code",
+  "serverDemo": "Try it without a server",
+  "serverDemoHint": "With an example family. Nothing leaves this device.",
+  "serverHelp": "No server yet? The guide at wuselwall.app/docs shows how to set one up.",
+  "serverInvalid": "That is not a server address.",
+  "serverUnreachable": "The server does not answer. Is the address right, and are you online?",
+  "serverNotWuselwall": "There is no WuselWall server at this address.",
+  "serverTooOld": "This server needs an update. Ask whoever runs it to update WuselWall.",
+  "serverAppTooOld": "This server needs a newer version of the app. Please update WuselWall.",
+  "serverIncompatibleTitle": "Server and app don't fit together",
+  "serverChooseOther": "Choose another server",
+  "demoBanner": "Example family: nothing is saved",
+  "demoExit": "Exit",
+  "settingsServer": "Server",
+  "settingsServerBody": "This app talks to {address}. Scan this code with the WuselWall app on another device to connect it to the same server.",
+  "@settingsServerBody": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsServerSwitch": "Change server",
+  "settingsServerSwitchConfirm": "This device will be signed out and forget everything stored on it. Then you can choose another server.",
+  "setupPhoneTitle": "Continue on your phone",
+  "setupPhoneBody": "Open the WuselWall app on your phone, choose this server by scanning the code, then sign in there."
 }

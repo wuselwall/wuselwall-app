@@ -22,3 +22,11 @@ infra/supabase/volumes/storage/*
 
 # The docs screenshots are build output (npm run docs:screenshots, CI)
 docs/public/screenshots/
+
+# Operator-specific notes, values and archived originals: never committed
+private/
+CLAUDE.local.md
+scripts/remote.env
+app/env/dev.json
+infra/supabase/volumes/web/*
+!infra/supabase/volumes/web/README.md

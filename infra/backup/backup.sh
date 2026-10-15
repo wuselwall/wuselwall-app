@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
-# Nightly backup of the WuselWall database, run ON the home server (specs/10#backups).
-# Unraid: User Scripts plugin, schedule daily. On demand: scripts/remote-backup.sh.
+# Backup of the WuselWall database, run ON the server (specs/10#backups): nightly from cron
+# with `server/wuselwall backup`, on demand with scripts/remote-backup.sh.
 #
-# Optional settings in /mnt/user/appdata/wuselwall/backup.env (chmod 600):
-#   (not on /boot: the flash drive is often exported over SMB)
+# BACKUP_DIR (required) is where the dumps go. Optional settings in the file BACKUP_ENV
+# (chmod 600):
 #   RESTIC_REPOSITORY=b2:bucket:wuselwall   RESTIC_PASSWORD=...   (+ B2_ACCOUNT_ID/KEY, ...)
 #   HEALTHCHECK_URL=https://hc-ping.com/<uuid>
 set -euo pipefail
 
 DB=${DB_CONTAINER:-supabase-db}
-OUT=${BACKUP_DIR:-/mnt/user/backups/wuselwall}
+OUT=${BACKUP_DIR:?set BACKUP_DIR}
 KEEP_DAYS=${KEEP_DAYS:-14}
 LABEL=${1:-nightly}
-ENV_FILE=/mnt/user/appdata/wuselwall/backup.env
-[ -f "$ENV_FILE" ] && . "$ENV_FILE"
+ENV_FILE=${BACKUP_ENV:-}
+if [ -n "$ENV_FILE" ] && [ -f "$ENV_FILE" ]; then . "$ENV_FILE"; fi
 
 STAMP=$(date +%F-%H%M)
 mkdir -p "$OUT"
@@ -29,7 +29,7 @@ find "$OUT" -name 'db-*.dump' -mtime +"$KEEP_DAYS" -delete
 find "$OUT" -name 'roles-*.sql' -mtime +"$KEEP_DAYS" -delete
 
 if [ -n "${RESTIC_REPOSITORY:-}" ]; then
-  # restic from its image: nothing to install on Unraid. Client-side encrypted.
+  # restic from its image: nothing to install on the host. Client-side encrypted.
   docker run --rm -v "$OUT":/data:ro -v "$OUT/.restic-cache":/root/.cache/restic \
     -e RESTIC_REPOSITORY -e RESTIC_PASSWORD -e B2_ACCOUNT_ID -e B2_ACCOUNT_KEY \
     -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY \
