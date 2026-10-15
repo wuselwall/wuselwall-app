@@ -665,8 +665,14 @@ abstract class AppLocalizations {
   /// No description provided for @classShared.
   ///
   /// In en, this message translates to:
-  /// **'Shared (tap to switch)'**
+  /// **'Shared'**
   String get classShared;
+
+  /// No description provided for @classSharedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Several people use it: tap a name to switch.'**
+  String get classSharedHint;
 
   /// No description provided for @classKiosk.
   ///

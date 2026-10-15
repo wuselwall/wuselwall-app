@@ -308,7 +308,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get classPersonal => 'Personal';
 
   @override
-  String get classShared => 'Shared (tap to switch)';
+  String get classShared => 'Shared';
+
+  @override
+  String get classSharedHint => 'Several people use it: tap a name to switch.';
 
   @override
   String get classKiosk => 'Wall display';

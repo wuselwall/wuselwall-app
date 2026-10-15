@@ -420,6 +420,13 @@ class _NewDeviceDialogState extends State<_NewDeviceDialog> {
             selected: {_class},
             onSelectionChanged: (s) => setState(() => _class = s.first),
           ),
+          if (_class == DeviceClass.shared) ...[
+            const SizedBox(height: Tokens.space2),
+            Text(
+              l10n.classSharedHint,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
         ],
       ),
       actions: [
