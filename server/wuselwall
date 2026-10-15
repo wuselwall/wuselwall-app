@@ -55,6 +55,20 @@ wait_for_db() {
   die "the database did not start; see: $0 logs db"
 }
 
+# Auth and Realtime create their own tables at startup (auth.*, realtime.messages), which
+# the migrations build on: wait for them, not just for Postgres.
+wait_for_services() {
+  for _ in $(seq 1 90); do
+    local pending=0 s
+    for s in "$@"; do
+      [ "$(compose ps --format '{{.Health}}' "$s" 2> /dev/null)" = healthy ] || pending=1
+    done
+    [ "$pending" = 0 ] && return 0
+    sleep 2
+  done
+  die "$* did not become healthy; see: $0 logs <service>"
+}
+
 wait_for_stack() {
   say "Waiting for the services"
   for _ in $(seq 1 90); do
@@ -167,6 +181,7 @@ cmd_install() {
   say "Starting the stack (the first start downloads a few GB)"
   compose up -d
   wait_for_db
+  wait_for_services auth realtime
   say "Setting up the database"
   migrate
   # PostgREST serves only the api schema, which the migrations just created; without a
