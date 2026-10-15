@@ -260,9 +260,7 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
                       TextButton(
                         onPressed: _busy
                             ? null
-                            : () => context.showMessage(
-                                l10n.householdInvitedNote,
-                              ),
+                            : () => context.go(Routes.inviteCode),
                         child: Text(l10n.householdNewInvited),
                       ),
                       TextButton(

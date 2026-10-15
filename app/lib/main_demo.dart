@@ -19,6 +19,7 @@ import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/demo/demo_export.dart';
 import 'package:wuselwall/demo/demo_external_calendars.dart';
 import 'package:wuselwall/demo/demo_getting_started.dart';
+import 'package:wuselwall/demo/demo_invitations.dart';
 import 'package:wuselwall/demo/demo_kid.dart';
 import 'package:wuselwall/demo/demo_meals.dart';
 import 'package:wuselwall/demo/demo_pairing.dart';
@@ -35,6 +36,8 @@ import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/data/pairing_repository.dart';
 import 'package:wuselwall/features/identity/data/sign_in_methods_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
+import 'package:wuselwall/features/invitations/application/invitation_providers.dart';
+import 'package:wuselwall/features/invitations/data/invitation_repository.dart';
 import 'package:wuselwall/features/kid/data/kid_badges_repository.dart';
 import 'package:wuselwall/features/meals/data/meals_repository.dart';
 import 'package:wuselwall/features/region/data/region_repository.dart';
@@ -112,6 +115,12 @@ void main() {
           DemoSignInMethodsRepository(),
         ),
         pairingRepositoryProvider.overrideWithValue(DemoPairingRepository()),
+        invitationRepositoryProvider.overrideWithValue(
+          DemoInvitationRepository(),
+        ),
+        invitationStoreProvider.overrideWithValue(DemoInvitationStore()),
+        // The demo shows the share sheet's text in place; nothing is handed to the platform.
+        inviteSharerProvider.overrideWithValue((_) async {}),
         // The screenshots show the wall display without its one-time checklist.
         pendingFirstRunProvider.overrideWith((ref) async => null),
         householdOnboardingRepositoryProvider.overrideWithValue(

@@ -182,7 +182,7 @@ void main() {
     },
   );
 
-  testWidgets('the invitation link keeps the person on H1 with a note', (
+  testWidgets('"Ich wurde eingeladen" opens the invitation code entry', (
     t,
   ) async {
     await pumpApp(
@@ -194,11 +194,8 @@ void main() {
     );
     await t.tap(find.text('Ich wurde eingeladen'));
     await t.pumpAndSettle();
-    expect(
-      find.text('Einladungen kommen mit dem nächsten Update.'),
-      findsOneWidget,
-    );
-    expect(find.text('Neue Familie'), findsOneWidget);
+    expect(find.text('Einladung'), findsWidgets);
+    expect(find.text('Code oder Link'), findsOneWidget);
   });
 
   group('H2', () {

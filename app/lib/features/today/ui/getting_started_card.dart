@@ -12,6 +12,7 @@ import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/domain/pairing.dart';
 import 'package:wuselwall/features/identity/ui/guardian_gate.dart';
+import 'package:wuselwall/features/invitations/ui/invite_flow.dart';
 import 'package:wuselwall/features/reminders/application/reminder_providers.dart';
 import 'package:wuselwall/features/reminders/ui/reminder_start_row.dart';
 import 'package:wuselwall/features/today/application/today_providers.dart';
@@ -127,6 +128,11 @@ class _ItemRow extends ConsumerWidget {
 /// and school screens for their own.
 Future<void> _open(BuildContext context, WidgetRef ref, StartItem item) async {
   final container = ProviderScope.containerOf(context);
+  if (item == StartItem.invitePartner) {
+    await inviteAdultFlow(context, ref);
+    container.invalidate(gettingStartedProvider);
+    return;
+  }
   final route = switch (item) {
     StartItem.subscribeFeed => Routes.feedTokens,
     StartItem.school => Routes.schoolSetup,
