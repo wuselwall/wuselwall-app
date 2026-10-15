@@ -104,9 +104,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get doorTagline => 'The family plan for the kitchen wall';
 
   @override
-  String get setupEnrolAction => 'Connect with a code';
-
-  @override
   String get setupHouseholdAction => 'Start a new family';
 
   @override
@@ -3162,4 +3159,160 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shoppingNavLabel => 'Shopping';
+
+  @override
+  String get pairFrontDoorAction => 'Connect a family tablet or wall display';
+
+  @override
+  String get pairTitle => 'Connect a family tablet or wall display';
+
+  @override
+  String get pairScanHint => 'Open WuselWall on your phone and scan this code.';
+
+  @override
+  String get pairCodeHint =>
+      'Or on the phone: Settings → Devices → Connect a device, then type the code.';
+
+  @override
+  String get pairQrLabel => 'QR code to connect this device';
+
+  @override
+  String get pairWaiting => 'Waiting for approval …';
+
+  @override
+  String pairConnected(String household) {
+    return 'Connected to $household';
+  }
+
+  @override
+  String get pairOldCodeLink => 'I have a code from a phone (older version)';
+
+  @override
+  String get pairConnectAction => 'Connect a device';
+
+  @override
+  String get pairOldCodeAction => 'Create a code for an older device';
+
+  @override
+  String get pairEntryBody =>
+      'Scan the code the new device shows, or type it in.';
+
+  @override
+  String get pairCodeField => 'Code from the new device';
+
+  @override
+  String get pairNext => 'Next';
+
+  @override
+  String get pairReviewBody => 'This is the code of the device to connect.';
+
+  @override
+  String get pairConfirmHint =>
+      'Only confirm if you can see this device in front of you.';
+
+  @override
+  String get pairKindLabel => 'What kind of device is this?';
+
+  @override
+  String get pairKindWall => 'Wall display';
+
+  @override
+  String get pairKindKid => 'Kids\' tablet';
+
+  @override
+  String get pairKindFamily => 'Shared tablet';
+
+  @override
+  String get pairKindChild => 'A child\'s phone';
+
+  @override
+  String get pairChildLabel => 'Which child?';
+
+  @override
+  String get pairNameLabel => 'Device name';
+
+  @override
+  String get pairDefaultWall => 'Wall display';
+
+  @override
+  String get pairDefaultKid => 'Kids\' tablet';
+
+  @override
+  String get pairDefaultFamily => 'Tablet';
+
+  @override
+  String pairDefaultChild(String name) {
+    return '$name\'s phone';
+  }
+
+  @override
+  String get pairApproveAction => 'Connect';
+
+  @override
+  String get pairApproved => 'Device connected';
+
+  @override
+  String get pairOnlyOnPersonal => 'This works only on your own phone.';
+
+  @override
+  String get pairPinTitle => 'Set the guardian PIN';
+
+  @override
+  String get pairPinBody =>
+      'The PIN confirms changes on shared devices. Set it once.';
+
+  @override
+  String get pairPinConfirm => 'Enter the PIN again';
+
+  @override
+  String get pairPinMismatch => 'The PINs do not match. Try again.';
+
+  @override
+  String get firstRunKioskTitle => 'Set up the wall display';
+
+  @override
+  String get firstRunKioskBody =>
+      'Three steps, once on this device. Then it shows the week.';
+
+  @override
+  String get firstRunPinTitle => 'Keep the app open';
+
+  @override
+  String get firstRunPinIos =>
+      'Settings → Accessibility → Guided Access: turn it on. Open WuselWall and press the top button three times quickly.';
+
+  @override
+  String get firstRunPinAndroid =>
+      'Settings → Security → App pinning (on some devices “Screen pinning”). Open WuselWall, open Recents and tap the pin.';
+
+  @override
+  String get firstRunAwakeTitle => 'Keep the screen on';
+
+  @override
+  String get firstRunAwakeIos =>
+      'Settings → Display & Brightness → Auto-Lock → Never.';
+
+  @override
+  String get firstRunAwakeAndroid =>
+      'Settings → Display → Screen timeout: the longest setting.';
+
+  @override
+  String get firstRunPowerTitle => 'Leave it plugged in';
+
+  @override
+  String get firstRunPowerBody =>
+      'Keep it on the mains, so it is ready again after a power cut.';
+
+  @override
+  String get firstRunDone => 'Done';
+
+  @override
+  String get firstRunKidTitle => 'Welcome';
+
+  @override
+  String get firstRunKidBody =>
+      'Tap your picture, and WuselWall knows who you are.';
+
+  @override
+  String get firstRunKidStart => 'Let’s go';
 }

@@ -10,6 +10,7 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
+import 'package:wuselwall/features/identity/domain/pairing.dart';
 import 'package:wuselwall/features/identity/ui/guardian_gate.dart';
 import 'package:wuselwall/features/today/application/today_providers.dart';
 import 'package:wuselwall/features/today/data/getting_started_repository.dart';
@@ -121,6 +122,10 @@ Future<void> _open(BuildContext context, WidgetRef ref, StartItem item) async {
   final route = switch (item) {
     StartItem.subscribeFeed => Routes.feedTokens,
     StartItem.school => Routes.schoolSetup,
+    StartItem.connectTablet =>
+      '${Routes.devicePair}?kind=${PairingKind.kidTablet.wire}',
+    StartItem.wallDisplay =>
+      '${Routes.devicePair}?kind=${PairingKind.wallDisplay.wire}',
     _ => Routes.settings,
   };
   await context.push<void>(route);

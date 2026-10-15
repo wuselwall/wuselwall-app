@@ -112,11 +112,13 @@ class _SetupPageState extends ConsumerState<SetupPage> {
                     ],
                   ),
                 ),
-                // The M0.1 code entry, where pairing (J3) will stand.
+                // Pairing (J3): the new device shows a code, a guardian's phone approves it.
                 TextButton.icon(
-                  onPressed: () => context.go(Routes.enrol),
-                  icon: const Icon(Icons.pin_outlined),
-                  label: Text(l10n.setupEnrolAction),
+                  onPressed: _busy || !online
+                      ? null
+                      : () => context.go(Routes.pair),
+                  icon: const Icon(Icons.tablet_android),
+                  label: Text(l10n.pairFrontDoorAction),
                 ),
                 // The founder wizard, until H1 after sign-in replaces it.
                 TextButton(
