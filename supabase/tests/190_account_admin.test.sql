@@ -146,8 +146,8 @@ select pg_temp.person('Jule', (select id from hh where name = 'Me'), 'member', '
 select pg_temp.phone('Jule', 'Jule-Phone', 'adult');
 select pg_temp.person('Lina', (select id from hh where name = 'Me'), 'member', 'child', null);
 select pg_temp.device_user('Me-iPad', (select id from hh where name = 'Me'), 'shared');
-insert into auth.mfa_factors (user_id, friendly_name, factor_type, status)
-  values (pg_temp.uid('Ida'), 'Ida-App', 'totp', 'verified');
+insert into auth.mfa_factors (id, user_id, friendly_name, factor_type, status, created_at, updated_at)
+  values (gen_random_uuid(), pg_temp.uid('Ida'), 'Ida-App', 'totp', 'verified', now(), now());
 
 -- ============================================================ account_delete_prepare: service only
 select pg_temp.as_phone('Gert-Phone');
