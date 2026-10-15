@@ -14,7 +14,7 @@ Eine Person, die mit eigenem Konto in der Familie mitmachen soll, lädst du ein.
 
 <Shot name="invite-sheet" alt="Einladung für Oma Ruth mit Code, QR-Code und Teilen" />
 
-Dann zeigt WuselWall den **Code**, einen **QR-Code** und den **Link**. Tippe auf **Teilen**, dann schickst du sie zum Beispiel per Nachricht. Die Person gibt den Code in WuselWall ein oder scannt den QR-Code; so geht es unter [Anmelden und verbinden](/guide/setup#_3-einer-familie-beitreten).
+Dann zeigt WuselWall den **Code**, den **Server** eurer Familie, einen **QR-Code** und den **Link**. Tippe auf **Teilen**, dann schickst du sie zum Beispiel per Nachricht. Link und QR-Code nennen den Server: Die Person tippt auf den Link oder scannt den QR-Code, und WuselWall öffnet sich direkt mit der Einladung, ohne dass sie einen Server auswählen muss. Wer nur den Code hat, gibt ihn in WuselWall ein, bei Bedarf zusammen mit dem Server; so geht es unter [Anmelden und verbinden](/guide/setup#_3-einer-familie-beitreten).
 
 Die Einladung gilt **7 Tage** und funktioniert **einmal**. Offene Einladungen stehen in der Liste mit ihrem Ablaufdatum: **Erneut teilen** schickt sie noch einmal, **Zurückziehen** macht sie ungültig.
 
@@ -40,7 +40,7 @@ Ein Kinder-Tablet, ein Tablet für alle oder die Wandanzeige verbindest du so: T
 
 <Shot name="pair-approve" alt="Handy eines Erwachsenen: Gerät prüfen und verbinden" />
 
-Du musst den Code nicht abtippen: Das neue Gerät zeigt einen QR-Code, den du mit der Kamera deines Handys scannst.
+Du musst den Code nicht abtippen: Das neue Gerät zeigt einen QR-Code, den du mit der Kamera deines Handys scannst. Er enthält auch den Server; WuselWall öffnet sich direkt bei der Bestätigung. Gehört der Link zu einem anderen Server als dem, auf dem du angemeldet bist, folgt die App ihm nicht von selbst, sondern sagt dir das.
 
 Ältere Geräte mit einer älteren Version von WuselWall bekommen noch einen Code über **Code für ein älteres Gerät erzeugen**. Diese Möglichkeit verschwindet mit der nächsten Version.
 

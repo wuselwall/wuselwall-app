@@ -476,12 +476,12 @@ keys, and the restore drill has restored a nightly dump once. *(Restore drill fi
 > **Status 2026-10-15** (`feature/regions-and-ux`; migrations and functions not yet on the server):
 > 1. Sign-in: Apple and Google (2026-10-13), the email code, E1–E3 and the password are built. Done.
 > 2. Households: built (H1, H2, founder codes, `my_account`). Done. The wizard and `setup_household` are still there for one release.
-> 3. Invitations: built, except universal links and App Links and the guardian's "joined" notice.
+> 3. Invitations: built, universal links and App Links included (2026-10-15; the Android signing fingerprints and the AASA content type are still to be set by the operator), except the guardian's "joined" notice.
 > 4. Pairing: built. The code enrolment stays for one release.
 > 5. Getting started and deferred PIN: built.
 > 6. Leaving: built (leave, delete with 14 days to restore, purge job, account deletion with the Apple revocation, second-factor reset, export).
 > 7. Localised mail: built, through the send-email hook and Scaleway Transactional Email when configured; the bilingual GoTrue template remains the fallback.
-> 7a. Any server, chosen in the app: **not on this branch**; it lives on `feature/self-hosting-kit`.
+> 7a. Any server, chosen in the app: built (the server choice, the demo, discovery and compatibility, the self-hosting kit), and since 2026-10-15 the server in the fragment of invitation and pairing links.
 > 8. Tests: the pgTAP suites and the Dart tests are built with the features. The E2E journeys (J1–J3) and the manual Apple and Google checks on real devices are still open.
 > 9. User documentation: `docs/guide/setup.md` and its screenshots rewritten (both languages).
 >
@@ -534,7 +534,11 @@ Order chosen so that each slice is usable on its own:
      every server, also at `/.well-known/wuselwall.json`), remembering the server, and
      showing its host — *built 2026-10-14*;
    - "Ohne Server ausprobieren": the in-memory demo, also for App Review;
-   - the server carried in the fragment of invitation and pairing links;
+   - the server carried in the fragment of invitation and pairing links — *built
+     2026-10-15*: `https://wuselwall.app/i/#‹token›@‹host›` and `/p/#‹code›@‹host›` (port
+     only when not the default), older links without `@host` still read; the app opens
+     such links (`app_links`) and uses the link's server when none is chosen, continues
+     when it matches, and never switches silently when another server is chosen;
    - native Apple/Google and passkeys hidden except on `WW_FIRST_PARTY_HOSTS` (a repository
      variable, never a committed file);
    - `min_app_version` and the `api_version` window honoured.

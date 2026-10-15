@@ -285,7 +285,7 @@ row, and nothing in it is reachable through RLS.
 
 > **Built 2026-10-15 on `feature/regions-and-ux`, not yet on the server.** Guardians invite from Einstellungen → Mitglieder or from the getting-started card: a code, a QR code, the link `https://wuselwall.app/i/#…` and the share sheet. An invitation is valid for 7 days and works once; "Erneut teilen" and "Zurückziehen" manage it. An invitee uses "Ich habe einen Einladungscode" on the front door, or reaches H0 automatically when the invitation names their confirmed email. The join confirmation reads "Du bist ‹Name› in ‹Familie›". The landing page is the website's `/i/`.
 >
-> **Not built:** universal links and Android App Links (the link opens the landing page; the code is entered in the app), and the guardian notice "‹Name› ist beigetreten".
+> **Built 2026-10-15:** universal links and Android App Links (the link opens the app, carries the server in the fragment and starts at the invitation banner), once the operator has published the Android fingerprints. **Not built:** the guardian notice "‹Name› ist beigetreten".
 
 **Inviting (a guardian, on their phone).** From the getting-started card, or
 Einstellungen → Mitglieder → a person → **Einladen** (or **Erwachsene Person einladen**,
@@ -298,10 +298,10 @@ which creates the profile on the way):
 
 The result is one invitation with three equivalent forms:
 
-- a **link** `https://wuselwall.app/i/‹token›` (128-bit token; `?s=‹host›` added for a
-  self-hosted household), handed to the share sheet with
+- a **link** `https://wuselwall.app/i/#‹token›@‹host›` (128-bit token, and the
+  household's server in the fragment), handed to the share sheet with
   a ready message in the inviter's language ("Komm zu Familie Huser in WuselWall: ‹link›
-  — oder gib in der App den Code K7QM‑3XRP ein.");
+  — oder gib in der App den Code K7QM‑3XRP ein, auf dem Server ‹host›.");
 - an **8-character code** (`K7QM-3XRP`, the enrolment alphabet without look-alikes);
 - a **QR code** on screen, for when the person is standing in the same kitchen.
 
