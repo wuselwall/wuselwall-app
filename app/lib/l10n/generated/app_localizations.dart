@@ -6787,6 +6787,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Scan invitation'**
   String get inviteScanTitle;
+
+  /// No description provided for @accountDeleteTile.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete account'**
+  String get accountDeleteTile;
+
+  /// No description provided for @accountDeleteExplain.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account and its sign-in methods are deleted, and you are signed out everywhere. Your profile stays in the family with its history. Apple access is revoked.'**
+  String get accountDeleteExplain;
+
+  /// No description provided for @accountDeleteBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'You are the last guardian with an account in this family. Invite a second adult first, or delete the family.'**
+  String get accountDeleteBlocked;
+
+  /// No description provided for @accountDeleteDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete account?'**
+  String get accountDeleteDialogTitle;
+
+  /// No description provided for @accountDeleteDialogBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This cannot be undone. Your sign-in is removed, and your profile stays in the family.'**
+  String get accountDeleteDialogBody;
+
+  /// No description provided for @accountDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete account'**
+  String get accountDeleteConfirm;
+
+  /// No description provided for @accountDeleteRefused.
+  ///
+  /// In en, this message translates to:
+  /// **'The account could not be deleted. Try again later.'**
+  String get accountDeleteRefused;
+
+  /// No description provided for @accountDeleteReauthTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Please confirm it is you'**
+  String get accountDeleteReauthTitle;
+
+  /// No description provided for @accountDeleteReauthBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleting an account needs a fresh sign-in. We send a code to {email}.'**
+  String accountDeleteReauthBody(String email);
+
+  /// No description provided for @accountDeleteReauthSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send code'**
+  String get accountDeleteReauthSend;
+
+  /// No description provided for @accountDeleteReauthCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Code from the email'**
+  String get accountDeleteReauthCodeLabel;
+
+  /// No description provided for @accountDeleteReauthConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get accountDeleteReauthConfirm;
+
+  /// No description provided for @accountDeleteReauthSignInAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in again first, then you can delete the account.'**
+  String get accountDeleteReauthSignInAgain;
+
+  /// No description provided for @mfaResetAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset two-factor'**
+  String get mfaResetAction;
+
+  /// No description provided for @mfaResetConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset two-factor?'**
+  String get mfaResetConfirmTitle;
+
+  /// No description provided for @mfaResetConfirmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} can sign in without a second factor afterwards and set it up again.'**
+  String mfaResetConfirmBody(String name);
+
+  /// No description provided for @mfaResetConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get mfaResetConfirm;
+
+  /// No description provided for @mfaResetDone.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}\'s second factor is reset.'**
+  String mfaResetDone(String name);
 }
 
 class _AppLocalizationsDelegate

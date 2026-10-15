@@ -3908,4 +3908,69 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get inviteScanTitle => 'Scan invitation';
+
+  @override
+  String get accountDeleteTile => 'Delete account';
+
+  @override
+  String get accountDeleteExplain =>
+      'Your account and its sign-in methods are deleted, and you are signed out everywhere. Your profile stays in the family with its history. Apple access is revoked.';
+
+  @override
+  String get accountDeleteBlocked =>
+      'You are the last guardian with an account in this family. Invite a second adult first, or delete the family.';
+
+  @override
+  String get accountDeleteDialogTitle => 'Delete account?';
+
+  @override
+  String get accountDeleteDialogBody =>
+      'This cannot be undone. Your sign-in is removed, and your profile stays in the family.';
+
+  @override
+  String get accountDeleteConfirm => 'Delete account';
+
+  @override
+  String get accountDeleteRefused =>
+      'The account could not be deleted. Try again later.';
+
+  @override
+  String get accountDeleteReauthTitle => 'Please confirm it is you';
+
+  @override
+  String accountDeleteReauthBody(String email) {
+    return 'Deleting an account needs a fresh sign-in. We send a code to $email.';
+  }
+
+  @override
+  String get accountDeleteReauthSend => 'Send code';
+
+  @override
+  String get accountDeleteReauthCodeLabel => 'Code from the email';
+
+  @override
+  String get accountDeleteReauthConfirm => 'Confirm';
+
+  @override
+  String get accountDeleteReauthSignInAgain =>
+      'Sign in again first, then you can delete the account.';
+
+  @override
+  String get mfaResetAction => 'Reset two-factor';
+
+  @override
+  String get mfaResetConfirmTitle => 'Reset two-factor?';
+
+  @override
+  String mfaResetConfirmBody(String name) {
+    return '$name can sign in without a second factor afterwards and set it up again.';
+  }
+
+  @override
+  String get mfaResetConfirm => 'Reset';
+
+  @override
+  String mfaResetDone(String name) {
+    return '$name\'s second factor is reset.';
+  }
 }
