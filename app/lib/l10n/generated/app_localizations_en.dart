@@ -3162,4 +3162,120 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shoppingNavLabel => 'Shopping';
+
+  @override
+  String get householdNewTitle => 'New family';
+
+  @override
+  String get householdNewFamilyName => 'Family name';
+
+  @override
+  String get householdNewYourName => 'Your name';
+
+  @override
+  String get householdNewColour => 'Your colour';
+
+  @override
+  String householdNewColourOption(String number) {
+    return 'Colour $number';
+  }
+
+  @override
+  String householdNewFamilyPrefill(String name) {
+    return 'Family $name';
+  }
+
+  @override
+  String householdNewDefaults(String timezone, String language) {
+    return 'Time zone $timezone · Language $language — from your device';
+  }
+
+  @override
+  String get householdLanguageDe => 'German';
+
+  @override
+  String get householdLanguageEn => 'English';
+
+  @override
+  String get householdNewFounderCode => 'Founder code';
+
+  @override
+  String get householdNewFounderHelp =>
+      'The person who runs your server gives you the founder code.';
+
+  @override
+  String get householdSeedExamples =>
+      'Start with examples — 5 tasks, 3 rewards';
+
+  @override
+  String get householdNewCreate => 'Create family';
+
+  @override
+  String get householdNewInvited => 'I was invited';
+
+  @override
+  String get householdInvitedNote => 'Invitations arrive with the next update.';
+
+  @override
+  String get householdNewSignOut => 'Sign out';
+
+  @override
+  String get householdNewErrNoCode =>
+      'New families are only possible with a founder code for now.';
+
+  @override
+  String get householdNewErrCodeWrong => 'The founder code is not correct.';
+
+  @override
+  String get householdNewErrRateLimited =>
+      'Too many attempts. Wait a few minutes and try again.';
+
+  @override
+  String get householdMembersTitle => 'Who else is in your family?';
+
+  @override
+  String householdMembersYou(String name) {
+    return '$name (you)';
+  }
+
+  @override
+  String get householdKindChild => 'Child';
+
+  @override
+  String get householdKindAdult => 'Adult';
+
+  @override
+  String get householdMembersName => 'Name';
+
+  @override
+  String get householdMembersAdd => 'Add a person';
+
+  @override
+  String get householdMembersRemove => 'Remove';
+
+  @override
+  String get householdMembersDone => 'Done';
+
+  @override
+  String get householdMembersSkip => 'Skip';
+
+  @override
+  String get householdMembersHelp => 'You can invite adults later.';
+
+  @override
+  String householdDeviceLabel(String owner, String device) {
+    return '$owner $device';
+  }
+
+  @override
+  String get householdDeviceIphone => 'iPhone';
+
+  @override
+  String get householdDeviceAndroid => 'Android phone';
+
+  @override
+  String get householdDeviceBrowser => 'browser';
+
+  @override
+  String get householdDeviceComputer => 'computer';
 }

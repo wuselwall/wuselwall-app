@@ -115,7 +115,9 @@ const out = {
 
   // Auth: supabase/config.toml [auth]
   JWT_EXPIRY: '3600',
-  DISABLE_SIGNUP: 'true',
+  // Strangers get an account that can do nothing but wait for an invitation or, while
+  // household creation is in `code` mode, start a family with a founder code (specs/20).
+  DISABLE_SIGNUP: 'false',
   ENABLE_EMAIL_SIGNUP: 'true',
   ENABLE_EMAIL_AUTOCONFIRM: 'true',
   ENABLE_ANONYMOUS_USERS: 'false',

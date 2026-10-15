@@ -7,6 +7,8 @@ import 'package:wuselwall/demo/demo_external_calendars.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/calendar/data/calendar_repository.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
+import 'package:wuselwall/features/household/data/household_onboarding_repository.dart';
+import 'package:wuselwall/features/household/domain/household_models.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/data/sign_in_methods_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
@@ -1227,3 +1229,41 @@ final _oneOffs = <_OneOff>[
     tentative: true,
   ),
 ];
+
+/// Starting a family, for the demo: the account already has its household, so H1 never
+/// shows; creating or adding people succeeds without writing anything.
+class DemoHouseholdOnboardingRepository
+    implements HouseholdOnboardingRepository {
+  @override
+  Future<Result<Account>> account() async => const Ok(
+    Account(
+      userId: 'demo-user',
+      email: 'lukas@example.org',
+      hasHousehold: true,
+      creation: HouseholdCreation.code,
+      householdId: 'h1',
+      profileId: 'p-lukas',
+      givenName: 'Lukas',
+      fullName: 'Lukas Huser',
+    ),
+  );
+
+  @override
+  Future<Result<void>> create({
+    required String householdName,
+    required String displayName,
+    required String colorHex,
+    required String timezone,
+    required String locale,
+    required String? founderCode,
+    required bool seedExamples,
+    required String deviceLabel,
+  }) async => const Ok(null);
+
+  @override
+  Future<Result<void>> addMembers(List<NewMember> members) async =>
+      const Ok(null);
+
+  @override
+  Future<Result<void>> completeExamples() async => const Ok(null);
+}
