@@ -1,8 +1,9 @@
 begin;
-select plan(56);
+select plan(64);
 
 -- Start from an empty system, whatever the database already holds (all rolled back).
 delete from app.enrol_attempt;
+delete from app.founder_attempt;
 delete from app.household;
 delete from app.setup_token;
 insert into app.setup_token (token_hash) values
@@ -105,8 +106,8 @@ select is((api.household_create('Huser', 'Daniel', '#7B3FE4', 'Europe/Berlin', '
   'founder_code_required', 'code mode without a code is refused (a result)');
 select is((api.household_create('Huser', 'Daniel', '#7B3FE4', 'Europe/Berlin', 'de-DE', 'nope', true, 'x') ->> 'reason'),
   'founder_code_invalid', 'a wrong founder code is refused (a result)');
-select is((select count(*) from app.enrol_attempt where client_key = 'founder:unknown' and not success),
-  1::bigint, 'the wrong code is logged as a failed attempt');
+select is((select count(*) from app.founder_attempt where client_key = 'unknown' and not success),
+  1::bigint, 'the wrong code is logged as a failed founder attempt');
 
 create temp table r1 as
   select api.household_create('Huser', 'Daniel', '#7B3FE4', 'Europe/Berlin', 'de-DE', 'FOUNDER-ONE', true, 'Daniels iPhone') as r;
@@ -138,6 +139,27 @@ select is((select consumed_at is null from app.setup_token
             where token_hash = encode(extensions.digest('founder-three', 'sha256'), 'hex')),
   true, 'a refused code is not consumed');
 
+-- ---- founder failures stay out of device enrolment ---------------------------
+select is((select count(*) from app.enrol_attempt), 0::bigint,
+  'founder failures are not logged as device enrolment attempts');
+select is((api.enrol_device('NOTACODE') ->> 'reason'), 'code_invalid',
+  'device enrolment is not rate limited by founder failures');
+
+-- ---- the overall limit: 50 failures per 10 minutes, from any client -------------
+delete from app.founder_attempt;
+insert into app.founder_attempt (client_key, success)
+  select 'other-' || g, false from generate_series(1, 50) g;
+select pg_temp.new_account('fuenf', 'fuenf@example.org', '{}'::jsonb);
+select pg_temp.claims_of('fuenf');
+select is((api.household_create('Fuenf', 'Lea', '#08737F', 'Europe/Berlin', 'de-DE', 'founder-three', false, 'x') ->> 'reason'),
+  'rate_limited', 'the overall limit refuses a valid code while fifty failures are recent');
+select is((select consumed_at is null from app.setup_token
+            where token_hash = encode(extensions.digest('founder-three', 'sha256'), 'hex')),
+  true, 'a code refused by the overall limit is not consumed');
+delete from app.founder_attempt where client_key like 'other-%';
+select is((api.household_create('Fuenf', 'Lea', '#08737F', 'Europe/Berlin', 'de-DE', 'founder-three', false, 'x') ->> 'ok'),
+  'true', 'once the window clears, the code works');
+
 -- ---- open mode: no code needed --------------------------------------------------
 update app.instance_setting set value = '"open"' where key = 'household_creation';
 select pg_temp.as_account('vier');
@@ -147,6 +169,20 @@ create temp table r4 as
   select api.household_create('Vier', 'Lena', '#1A4FA8', 'Europe/Berlin', 'de-DE', null, false, 'Lenas iPhone') as r;
 grant all on r4 to public;
 select is((select r ->> 'ok' from r4), 'true', 'open mode creates a household without a code');
+-- Device users have no profile, but they are not free to start a family, even in open mode.
+select pg_temp.new_account('kiosk', 'kiosk-dev@devices.wuselwall.invalid', '{}'::jsonb);
+select pg_temp.new_account('tablet', 'tablet-dev@devices.wuselwall.invalid', '{}'::jsonb);
+insert into app.device (household_id, auth_user_id, label, class, register)
+  select (select (r ->> 'household_id')::uuid from r1), uid, 'Flur-Wand', 'kiosk', 'kiosk' from acc where name = 'kiosk';
+insert into app.device (household_id, auth_user_id, label, class, register)
+  select (select (r ->> 'household_id')::uuid from r1), uid, 'Flur-Tablet', 'shared', 'kid' from acc where name = 'tablet';
+select pg_temp.claims_of('kiosk');
+select throws_ok($$ select api.household_create('Kiosk', 'Wand', '#7B3FE4', 'Europe/Berlin', 'de-DE', null, false, 'x') $$,
+  '42501', 'already in a household', 'in open mode a kiosk device user cannot create a household');
+select pg_temp.claims_of('tablet');
+select throws_ok($$ select api.household_create('Tablet', 'Kind', '#7B3FE4', 'Europe/Berlin', 'de-DE', null, false, 'x') $$,
+  '42501', 'already in a household', 'in open mode a shared device user cannot create a household');
+select is((api.my_account() ->> 'has_household')::boolean, true, 'a device user reports has_household');
 update app.instance_setting set value = '"code"' where key = 'household_creation';
 
 -- ---- what the founder's session gets ------------------------------------------

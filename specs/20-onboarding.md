@@ -268,8 +268,9 @@ One instance setting, `household_creation`:
 
 - **`open`**: any signed-in adult without a household can create one. Self-service.
 - **`code`**: creating a household also needs a single-use **Gründungscode** (founder
-  code) issued by the operator (`scripts/remote-setup-token.sh`; the old setup token,
-  now one of possibly many). Joining by invitation and pairing devices work as in
+  code) issued by the operator: `scripts/remote-setup-token.sh --founder` adds one code
+  while households exist (the first one, the old setup token, comes from the script
+  without the flag). Joining by invitation and pairing devices work as in
   `open`.
 
 The instance starts in **`code`** and switches to `open` only when the opening gate in

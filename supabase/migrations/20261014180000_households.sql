@@ -33,6 +33,20 @@ alter table app.household
 alter table app.setup_token
   add column consumed_by uuid references app.profile on delete set null;
 
+-- Founder-code guesses. Their own log, not app.enrol_attempt: a stranger guessing founder
+-- codes must not use up the global device-enrolment budget of api.enrol_device.
+create table app.founder_attempt (
+  id           bigint generated always as identity primary key,
+  attempted_at timestamptz not null default now(),
+  client_key   text not null,
+  success      boolean not null
+);
+create index on app.founder_attempt (client_key, attempted_at desc);
+alter table app.founder_attempt enable row level security;
+alter table app.founder_attempt force row level security;
+create policy owner_all on app.founder_attempt to postgres using (true) with check (true);
+revoke all on app.founder_attempt from public, anon, authenticated;
+
 -- ------------------------------------------------------------ member colours
 
 -- The member palette of app/lib/app/theme/palette.dart, in its order (upper case, as stored).
@@ -157,7 +171,8 @@ language sql stable security definer set search_path = '' as $$
   select jsonb_build_object(
     'user_id',            u.id,
     'email',              u.email,
-    'has_household',      p.id is not null,
+    -- A device user (a shared or kiosk tablet) has no profile but is not free to start one.
+    'has_household',      p.id is not null or exists (select 1 from app.device d where d.auth_user_id = u.id),
     'household_id',       p.household_id,
     'profile_id',         p.id,
     'household_creation', app.household_creation_mode(),
@@ -187,7 +202,7 @@ declare
   v_user    uuid := auth.uid();
   v_session uuid := nullif(auth.jwt() ->> 'session_id', '')::uuid;
   v_headers text := current_setting('request.headers', true);
-  v_key     text := 'founder:' || coalesce(nullif(split_part(coalesce(v_headers::json ->> 'x-forwarded-for', ''), ',', 1), ''), 'unknown');
+  v_key     text := coalesce(nullif(split_part(coalesce(v_headers::json ->> 'x-forwarded-for', ''), ',', 1), ''), 'unknown');
   v_mode    text := app.household_creation_mode();
   v_token   app.setup_token;
   v_hh      uuid;
@@ -201,7 +216,9 @@ begin
   if v_session is null or not exists (select 1 from auth.sessions where id = v_session and user_id = v_user) then
     raise exception 'no session' using errcode = '42501', hint = 'session_invalid';
   end if;
-  if exists (select 1 from app.profile where auth_user_id = v_user and active) then
+  -- Also refused for any device user (shared or kiosk tablets sign in as their own user), revoked or not.
+  if exists (select 1 from app.profile where auth_user_id = v_user and active)
+     or exists (select 1 from app.device where auth_user_id = v_user) then
     raise exception 'already in a household' using errcode = '42501', hint = 'already_in_household';
   end if;
 
@@ -229,8 +246,12 @@ begin
     if coalesce(btrim(p_founder_code), '') = '' then
       return jsonb_build_object('ok', false, 'reason', 'founder_code_required');
     end if;
-    if (select count(*) from app.enrol_attempt
-         where client_key = v_key and not success and attempted_at > now() - interval '10 minutes') >= 5 then
+    -- 5 failures per client and 50 overall per 10 minutes. The overall limit keeps a
+    -- guessing stranger from ever reaching a code: it also refuses the honest founder.
+    if (select count(*) from app.founder_attempt
+         where client_key = v_key and not success and attempted_at > now() - interval '10 minutes') >= 5
+       or (select count(*) from app.founder_attempt
+            where not success and attempted_at > now() - interval '10 minutes') >= 50 then
       return jsonb_build_object('ok', false, 'reason', 'rate_limited');
     end if;
     select * into v_token from app.setup_token
@@ -238,7 +259,7 @@ begin
        and consumed_at is null
      for update;
     if not found then
-      insert into app.enrol_attempt (client_key, success) values (v_key, false);
+      insert into app.founder_attempt (client_key, success) values (v_key, false);
       return jsonb_build_object('ok', false, 'reason', 'founder_code_invalid');
     end if;
   end if;
@@ -255,7 +276,7 @@ begin
 
   if v_mode = 'code' then
     update app.setup_token set consumed_at = now(), consumed_by = v_prof where token_hash = v_token.token_hash;
-    insert into app.enrol_attempt (client_key, success) values (v_key, true);
+    insert into app.founder_attempt (client_key, success) values (v_key, true);
   end if;
 
   perform app.shopping_ensure_lists(v_hh);
