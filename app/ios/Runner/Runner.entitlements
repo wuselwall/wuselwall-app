@@ -6,5 +6,10 @@
 	<array>
 		<string>Default</string>
 	</array>
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>applinks:wuselwall.app</string>
+		<string>webcredentials:wuselwall.app</string>
+	</array>
 </dict>
 </plist>

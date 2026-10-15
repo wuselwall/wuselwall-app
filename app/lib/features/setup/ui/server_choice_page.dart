@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/server/server_address.dart';
+import 'package:wuselwall/core/server/server_link.dart';
 import 'package:wuselwall/features/setup/ui/qr_scan_page.dart';
 
 /// Why a server could not be used, in words a family understands.
@@ -12,6 +13,7 @@ enum ServerProblem {
   notWuselwall,
   serverTooOld,
   appTooOld,
+  linkWithoutServer,
 }
 
 String serverProblemText(AppLocalizations l10n, ServerProblem problem) =>
@@ -21,6 +23,7 @@ String serverProblemText(AppLocalizations l10n, ServerProblem problem) =>
       ServerProblem.notWuselwall => l10n.serverNotWuselwall,
       ServerProblem.serverTooOld => l10n.serverTooOld,
       ServerProblem.appTooOld => l10n.serverAppTooOld,
+      ServerProblem.linkWithoutServer => l10n.serverLinkWithoutServer,
     };
 
 /// The question before the front door of a store build (ADR-018, decision 3; specs/20
@@ -61,7 +64,9 @@ class _ServerChoicePageState extends State<ServerChoicePage> {
 
   Future<void> _connect(String raw) async {
     if (_busy) return;
-    if (parseServerAddress(raw, allowHttp: kDebugMode) == null) {
+    if (parseServerAddress(raw, allowHttp: kDebugMode) == null &&
+        parseAppLink(raw) == null &&
+        parseInvitation(raw) == null) {
       setState(() => _problem = ServerProblem.invalid);
       return;
     }
@@ -83,12 +88,16 @@ class _ServerChoicePageState extends State<ServerChoicePage> {
       MaterialPageRoute(
         builder: (_) => QrScanPage(
           title: l10n.serverScanTitle,
-          parse: (raw) => parseServerAddress(raw) == null ? null : raw,
+          parse: (raw) =>
+              parseServerAddress(raw) == null && parseAppLink(raw) == null
+              ? null
+              : raw,
         ),
       ),
     );
     if (raw == null || !mounted) return;
-    _address.text = displayServerAddress(parseServerAddress(raw)!);
+    final server = parseAppLink(raw)?.server ?? parseServerAddress(raw);
+    if (server != null) _address.text = displayServerAddress(server);
     await _connect(raw);
   }
 

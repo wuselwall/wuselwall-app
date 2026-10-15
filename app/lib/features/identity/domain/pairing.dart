@@ -1,38 +1,21 @@
 import 'package:wuselwall/app/theme/ui_register.dart';
+import 'package:wuselwall/core/server/server_link.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 
-/// The pairing code the new device shows (specs/20 J3): eight symbols without 0/O/1/I, shown
-/// as K7QM-3XRP. Typed or scanned text is normalised before the check.
-final _pairingCode = RegExp(r'^[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{8}$');
+export 'package:wuselwall/core/server/server_link.dart' show parsePairingCode;
 
-const _pairingHost = 'wuselwall.app';
+// The pairing code the new device shows (specs/20 J3): eight symbols without 0/O/1/I, shown
+// as K7QM-3XRP. Typed or scanned text is normalised before the check ([parsePairingCode]).
 
 /// The code in the display form: K7QM-3XRP.
 String formatPairingCode(String code) =>
     code.length == 8 ? '${code.substring(0, 4)}-${code.substring(4)}' : code;
 
 /// What the new device's QR code encodes. The phone's camera follows the link to the
-/// website, the app's own scanner reads the code from the fragment.
-String pairingQrPayload(String code) => 'https://$_pairingHost/p/#$code';
-
-/// Reads a pairing code from typed or scanned text: the bare code (with or without the
-/// hyphen, in any case), or a WuselWall link whose fragment or last path segment is the code.
-/// Returns null when [raw] holds no plausible code.
-String? parsePairingCode(String raw) {
-  final text = raw.trim();
-  final uri = Uri.tryParse(text);
-  final String candidate;
-  if (uri != null && uri.hasScheme) {
-    if (uri.host != _pairingHost) return null;
-    candidate = uri.fragment.isNotEmpty
-        ? uri.fragment
-        : (uri.pathSegments.isEmpty ? '' : uri.pathSegments.last);
-  } else {
-    candidate = text;
-  }
-  final code = candidate.toUpperCase().replaceAll(RegExp(r'[\s-]'), '');
-  return _pairingCode.hasMatch(code) ? code : null;
-}
+/// website; the app opens it, or its own scanner reads the code and the household's
+/// [server] from the fragment.
+String pairingQrPayload(String code, {Uri? server}) =>
+    'https://$linkSiteHost/p/#${linkFragment(code, server)}';
 
 /// What the guardian says the new device is (G1). Each kind maps to the device class,
 /// the UI register and, for a child's phone, the bound child (specs/20 G1 table).

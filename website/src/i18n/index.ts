@@ -1,8 +1,8 @@
 export type Lang = 'de' | 'en';
 
 export const paths = {
-  de: { home: '/', imprint: '/impressum/', privacy: '/datenschutz/', invite: '/i/' },
-  en: { home: '/en/', imprint: '/en/imprint/', privacy: '/en/privacy/', invite: '/en/i/' },
+  de: { home: '/', imprint: '/impressum/', privacy: '/datenschutz/', invite: '/i/', pair: '/p/' },
+  en: { home: '/en/', imprint: '/en/imprint/', privacy: '/en/privacy/', invite: '/en/i/', pair: '/en/p/' },
 } as const;
 
 type Feature = { title: string; text: string };
@@ -15,7 +15,7 @@ type View = Feature & { shot: 'shopping-phone' | 'kid-shopping' | 'wall-child-we
  */
 type Section = { title: string; body: string[] };
 
-/** The landing page for invitation links (/i/): what it is, and what to do next. */
+/** The landing pages for invitation links (/i/) and pairing QR codes (/p/): what it is, and what to do next. */
 export interface InviteStrings {
   title: string;
   description: string;
@@ -28,6 +28,7 @@ export interface InviteStrings {
 export interface Strings {
   htmlLang: string;
   invite: InviteStrings;
+  pair: InviteStrings;
   title: string;
   description: string;
   skip: string;
@@ -89,8 +90,16 @@ const de: Strings = {
     description: 'Du bist zu einer Familie in WuselWall eingeladen. So kommst du hinein.',
     heading: 'Du bist eingeladen',
     what: 'WuselWall ist der Familienplan für die Küchenwand: Termine, Aufgaben, Einkaufsliste und Essen, auf einem gemeinsamen Gerät.',
-    steps: 'Installiere die App und tippe auf „Ich habe einen Einladungscode“. Den Code findest du in der Nachricht.',
+    steps: 'Ist WuselWall schon auf deinem Handy, öffnet dieser Link die App und bringt dich zur Einladung. Sonst installiere die App und öffne den Link danach noch einmal. Oder tippe in der App auf „Ich habe einen Einladungscode“ und gib den Code aus der Nachricht ein.',
     personal: 'Der Link ist persönlich. Gib ihn nur an die Person weiter, für die er gedacht ist.',
+  },
+  pair: {
+    title: 'Gerät verbinden – WuselWall',
+    description: 'Ein Tablet oder Wanddisplay wartet darauf, mit einer Familie in WuselWall verbunden zu werden.',
+    heading: 'Ein Gerät verbinden',
+    what: 'Dieser Code gehört zu einem Tablet oder Wanddisplay, das mit einer Familie in WuselWall verbunden werden soll.',
+    steps: 'Ist WuselWall auf deinem Handy, öffnet dieser Link die App und bringt dich zur Bestätigung. Sonst öffne die App selbst (Einstellungen → Geräte → Gerät verbinden) und scanne den Code am Gerät.',
+    personal: 'Bestätigen darf nur ein Elternteil, das das Gerät vor sich sieht.',
   },
   htmlLang: 'de-CH',
   title: 'WuselWall – der Familienorganisator für zuhause',
@@ -322,8 +331,16 @@ const en: Strings = {
     description: 'You are invited to a family on WuselWall. This is how you join.',
     heading: 'You are invited',
     what: 'WuselWall is the family plan for the kitchen wall: appointments, chores, the shopping list and meals, on one shared device.',
-    steps: 'Install the app and tap “I have an invitation code”. You will find the code in the message.',
+    steps: 'If WuselWall is already on your phone, this link opens the app and takes you to the invitation. Otherwise install the app, then open the link again. Or tap “I have an invitation code” in the app and enter the code from the message.',
     personal: 'The link is personal. Only pass it on to the person it was meant for.',
+  },
+  pair: {
+    title: 'Connect a device – WuselWall',
+    description: 'A tablet or wall display is waiting to be connected to a family in WuselWall.',
+    heading: 'Connect a device',
+    what: 'This code belongs to a tablet or wall display that is to be connected to a family in WuselWall.',
+    steps: 'If WuselWall is on your phone, this link opens the app and takes you to the confirmation. Otherwise open the app yourself (Settings → Devices → Connect a device) and scan the code on the device.',
+    personal: 'Only a guardian who can see the device in front of them should confirm.',
   },
   htmlLang: 'en',
   title: 'WuselWall – the family organiser for your home',
@@ -552,6 +569,6 @@ const en: Strings = {
 export const strings: Record<Lang, Strings> = { de, en };
 
 /** The other language's URL for the same page, for hreflang and the footer switch. */
-export function alternate(lang: Lang, page: 'home' | 'imprint' | 'privacy' | 'invite') {
+export function alternate(lang: Lang, page: 'home' | 'imprint' | 'privacy' | 'invite' | 'pair') {
   return paths[lang === 'de' ? 'en' : 'de'][page];
 }
