@@ -157,7 +157,7 @@ void main() {
       (w) =>
           w is Image &&
           w.image is AssetImage &&
-          (w.image as AssetImage).assetName == 'assets/shopping/milk.png',
+          (w.image as AssetImage).assetName == 'assets/emoji/shopping/milk.png',
     );
     expect(milkPicture, findsOneWidget);
     expect(find.byType(Image), findsOneWidget);

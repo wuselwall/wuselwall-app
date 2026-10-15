@@ -7,9 +7,9 @@ void main() {
   test('every key has its picture at 1x, 2x and 3x', () {
     for (final key in shoppingIconKeys) {
       for (final path in [
-        'assets/shopping/$key.png',
-        'assets/shopping/2.0x/$key.png',
-        'assets/shopping/3.0x/$key.png',
+        'assets/emoji/shopping/$key.png',
+        'assets/emoji/shopping/2.0x/$key.png',
+        'assets/emoji/shopping/3.0x/$key.png',
       ]) {
         expect(File(path).existsSync(), isTrue, reason: path);
       }
@@ -31,6 +31,6 @@ void main() {
   test('shoppingIconAsset maps known keys only', () {
     expect(shoppingIconAsset(null), isNull);
     expect(shoppingIconAsset('unicorn'), isNull);
-    expect(shoppingIconAsset('milk'), 'assets/shopping/milk.png');
+    expect(shoppingIconAsset('milk'), 'assets/emoji/shopping/milk.png');
   });
 }

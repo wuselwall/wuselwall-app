@@ -49,8 +49,8 @@ IconData categoryIcon(ShoppingCategory? c) => switch (c?.key) {
 };
 
 /// The bundled pictures for the `icon_key` the server gives a catalogue item from its
-/// name (app.catalog_icon_for): Noto Emoji (Apache 2.0), rendered by
-/// scripts/shopping-icons.mjs. A key this app does not know yet (a newer server) shows
+/// name (app.catalog_icon_for): Fluent Emoji Flat (MIT), rendered by
+/// scripts/emoji-pictures.mjs. A key this app does not know yet (a newer server) shows
 /// the category icon instead.
 const shoppingIconKeys = <String>{
   'milk',
@@ -126,5 +126,5 @@ const shoppingIconKeys = <String>{
 /// The asset of [key]'s picture, or null when there is none.
 String? shoppingIconAsset(String? key) =>
     key != null && shoppingIconKeys.contains(key)
-    ? 'assets/shopping/$key.png'
+    ? 'assets/emoji/shopping/$key.png'
     : null;
