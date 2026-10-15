@@ -284,6 +284,17 @@ With Supabase, row-level security is not defence in depth; it is the perimeter.
   can be reset by Google without losing the app.
 - The App Store Connect API key has the narrowest role that can upload builds.
 
+## Onboarding controls (built 2026-10-15)
+
+- **Pairing.** A pairing request is claimable only with its secret, expires after 10 minutes and works once. Only a guardian's personal phone can approve it, after the code is typed or scanned and the kind and name are chosen. Attempts are logged in `app.pairing_attempt`, apart from the legacy enrolment's log.
+- **Invitations.** An invitation is single use and valid 7 days; a second household cannot accept it. Guesses at codes and tokens are logged and limited in `app.invitation_attempt`.
+- **Founder codes.** A founder code is what starts a family in `code` mode. It is issued by the operator (`scripts/remote-setup-token.sh --founder`), shown once, and guesses are limited in `app.founder_attempt`. The exact thresholds are in the migrations.
+- **No autoconfirm.** `ENABLE_EMAIL_AUTOCONFIRM=false` and `enable_confirmations = true`: an address counts as the person's only after they confirm it, because invitations match confirmed addresses.
+- **Account deletion.** A fresh sign-in is required only when the server requires one (5 minutes), by email code. Apple access is revoked. The Apple refresh token is kept only for that revocation, encrypted with `APPLE_TOKEN_KEY` (AES-GCM), which the database never sees and which must never change.
+- **Mail hook.** The send-email hook checks its signature (`SEND_EMAIL_HOOK_SECRET`) before it sends anything, and it writes only the code mail, in the recipient's language.
+- **Account administration.** `account-delete` and the MFA reset verify the caller's JWT and act only on that caller, or, for the reset, on a co-guardian (ADR-014).
+
+
 ## Application-level practice
 
 - **Validate at every boundary.** `api` functions check their arguments and rely on

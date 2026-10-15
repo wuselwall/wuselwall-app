@@ -254,6 +254,8 @@ Badging API plan.
 
 ## The wall display
 
+> **Built 2026-10-15 on `feature/regions-and-ux`, not yet on the server.** The wall shows only the appointments marked for the kitchen unless "Alle Termine" is ticked (FR-8.11): every day column then shows all its appointments. The kiosk reverts the switch to key-only when it goes idle. A newly paired wall display shows a one-time checklist (keep the app pinned, keep the screen on, leave it plugged in), and a kids' tablet a welcome screen.
+
 The hardware is a decision worth making early because it constrains the UI.
 
 | Option | Pros | Cons |
@@ -274,6 +276,8 @@ ordering, not the marketing diagonal — cheap 10" tablets in this price range a
 1280×800, which works, and occasionally 1024×600, which does not.
 
 ## Realtime and notifications
+
+> **Built 2026-10-15 on `feature/regions-and-ux`, not yet on the server.** Notifications are local only (Q47): on personal phones the app schedules a morning summary (default 07:00, the day's appointments and tasks, and the first appointment) and, if switched on, a reminder before each appointment. Settings are per person (Einstellungen → Erinnerungen). Nothing is sent to a server or a third party. Kiosk and kids' devices have no reminders.
 
 - **Supabase Realtime** delivers live updates while the app is open: database triggers
   broadcast small invalidation messages (`board:changed`, `shopping:changed`) on a

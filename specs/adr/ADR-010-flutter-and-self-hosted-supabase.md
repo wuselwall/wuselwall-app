@@ -274,3 +274,7 @@ module, and a bespoke outbox for one module is smaller than a sync engine for al
 **Revisit if** PL/pgSQL becomes the bottleneck to progress. The escape hatch is a small
 TypeScript service connecting to the same Postgres for writes; nothing in this decision
 prevents adding one later.
+
+## Amendment (2026-10-15): the QR scanner (Q49)
+
+The app's QR scanner moved from `mobile_scanner` to the `camera` plugin plus `zxing2`, a Dart port of ZXing that decodes on the device. Reason: `mobile_scanner` uses Google's ML Kit on Android, which reports device, app and performance data to Google. The decision and its reasons are in [14](../14-open-questions.md) (Q49); the privacy policy no longer names ML Kit.

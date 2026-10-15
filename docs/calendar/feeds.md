@@ -10,12 +10,13 @@ Ein **Abo** zeigt den Familienkalender in einer anderen App. Es ist nur zum Lese
 2. Wähle unter **Was** die Termine. Außerdem:
    - **Anwesenheit** zeigt, wer wo ist (Arbeit, Homeoffice, Frei …). Für Arbeitsgeräte und Kinder lässt man das besser aus.
    - **Schule** zeigt Schultage als ganzen Tag oder jede Unterrichtsstunde. Oder aus.
+   - **Abonnierte Kalender einschließen** nimmt auch die Termine aus abonnierten Kalendern auf, zum Beispiel vom Verein oder der Müllabfuhr. Das ist **aus**, bis du es anhakst. Jedes Abo entscheidet also selbst, ob seine Termine mitkommen.
 3. Unter **Wessen Termine** wählst du Personen. Ohne Auswahl sind alle Mitglieder dabei.
 4. Tippe auf **Abo erstellen**.
 
 ## Die Adresse
 
-Die Abo-Adresse wird **nur einmal** angezeigt. Wer sie hat, sieht die Termine. Behandle sie deshalb wie ein Passwort.
+Die Abo-Adresse wird **nur einmal** angezeigt. Wer sie hat, sieht die Termine. Behandle sie deshalb wie ein Passwort. Die Adresse enthält einen geheimen Schlüssel für dieses eine Abo; ein neues Abo bekommt eine neue Adresse.
 
 Mit **Adresse kopieren** holst du die Adresse in die Zwischenablage. Mit **webcal-Link kopieren** bekommst du einen Link, der auf dem iPhone direkt den Dialog zum Abonnieren öffnet. Der QR-Code zeigt dieselbe Adresse, zum Abscannen.
 

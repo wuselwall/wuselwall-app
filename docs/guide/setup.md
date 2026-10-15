@@ -1,39 +1,68 @@
 # Anmelden und verbinden
 
-Es gibt drei Wege auf ein neues Gerät. Oben auf dem Startbildschirm meldest du dich mit deinem Konto an, unter „oder“ verbindest du ein geteiltes Gerät mit einem Code oder legst eine neue Familie an:
+Auf dem Startbildschirm beginnt alles. Du meldest dich mit deinem Konto an, tretst einer Familie per **Einladung** bei oder verbindest ein **geteiltes Gerät**.
 
 <Shot name="setup-start" alt="Startbildschirm von WuselWall" />
 
+Der Startbildschirm hat drei Wege:
+
+- **Mit E-Mail fortfahren**, auch **Mit Apple fortfahren** oder **Mit Google fortfahren**, wenn dein Gerät sie anbietet: für dich als Erwachsene:r, auf deinem eigenen Handy.
+- **Ich habe einen Einladungscode**: du wurdest von einer Familie eingeladen.
+- **Familien-Tablet oder Wanddisplay verbinden**: für ein Gerät, das allen gehört. Es wird von einem Erwachsenen auf seinem Handy freigegeben.
+
 ## 1. Anmelden
 
-Auf deinem **eigenen Handy** tippst du auf **Mit E-Mail fortfahren** und meldest dich mit E-Mail und Passwort an. Beim ersten Mal fragt WuselWall nach einem **Namen für das Gerät** („Handy von Lukas“) – so erkennst du es später in der Geräteliste und kannst es bei Verlust sperren.
+Tippe auf **Mit E-Mail fortfahren** und gib deine E-Mail-Adresse ein. WuselWall schickt dir einen **6-stelligen Code**. Er gilt **10 Minuten**. Gib ihn ein, dann bist du drin. Kommt er nicht an, schau im Spam-Ordner nach oder tippe auf **Erneut senden**; einen neuen Code gibt es frühestens nach einer Minute.
 
-<Shot name="setup-sign-in" alt="Anmeldung" />
+<Shot name="setup-sign-in" alt="Anmeldung mit E-Mail" />
 
-Statt mit E-Mail und Passwort geht es auch direkt auf dem Startbildschirm mit **Mit Apple fortfahren** oder **Mit Google fortfahren** – sofern dein Apple- oder Google-Konto dieselbe E-Mail-Adresse hat wie dein WuselWall-Konto. Hat es eine andere (oder nutzt du bei Apple „E-Mail-Adresse verbergen“), meldest du dich einmal mit E-Mail und Passwort an und verbindest Apple oder Google unter **Einstellungen → Anmeldung** (siehe [Sicherheit](/settings/security#anmeldung)).
+Lieber mit Passwort? Tippe auf **Ich habe ein Passwort**. Das Passwort legst du unter **Einstellungen → Anmeldung** fest, mindestens 10 Zeichen. Der Code per E-Mail bleibt immer möglich.
 
-Hast du die Zwei-Faktor-Anmeldung eingeschaltet, kommt danach noch der 6-stellige Code aus deiner Authenticator-App (siehe [Sicherheit](/settings/security)).
+Beim allerersten Mal fragt WuselWall einmal, wie du dich künftig anmelden möchtest: mit dem **Code per E-Mail** (nichts zu merken) oder mit einem **Passwort**.
 
-## 2. Gerät mit Code verbinden
+Ist die **Zwei-Faktor-Anmeldung** eingeschaltet, kommt danach noch der 6-stellige Code aus deiner Authenticator-App (siehe [Sicherheit](/settings/security)).
 
-So kommen **Kinder-Tablets**, die **Wandanzeige** und weitere geteilte Geräte in den Haushalt:
+## 2. Neue Familie anlegen
 
-1. Ein Erziehungsberechtigter öffnet auf seinem Handy **Einstellungen → Gerät hinzufügen** und erzeugt einen Code (siehe [Mitglieder und Geräte](/settings/members-devices)).
-2. Auf dem neuen Gerät tippst du auf **Mit Code verbinden** und gibst den Code ein – oder scannst den QR-Code.
+Wenn dein Konto noch zu keiner Familie gehört, öffnet WuselWall **Neue Familie**. Das machst du einmal, auf deinem eigenen Handy:
 
-<Shot name="setup-enrol" alt="Code eingeben" />
+1. **Familienname**, zum Beispiel „Huser“.
+2. **Dein Name** und **Deine Farbe**. Die Farbe erscheint überall da, wo du etwas angelegt hast.
+3. Optional **Mit Beispielen starten**: ein paar Aufgaben und Belohnungen, die ihr einfach ändern oder löschen könnt.
+4. Den **Gründungscode**, falls euer Server einen verlangt. Den bekommst du von der Person, die den Server betreibt.
 
-Der Code gilt **10 Minuten** und nur **einmal**. Stimmt er nicht, fordere einen neuen an.
+<Shot name="new-family" alt="Formular „Neue Familie“" />
 
-## 3. Neue Familie anlegen (nur einmal)
+Tippe auf **Familie anlegen**. Dann kommt die Seite **Wer gehört noch zu euch?**: Trage Kinder und weitere Erwachsene mit Namen ein, damit sie in den Listen auftauchen. Erwachsene kannst du auch später einladen; mit **Überspringen** geht es sofort weiter.
 
-Das macht die Person, die WuselWall für die Familie aufgesetzt hat – **einmal** am Anfang.
+Dieses Handy wird dabei das **persönliche Handy** von dir. Es bekommt automatisch einen Namen wie „Lukas iPhone“, den du unter **Einstellungen → Geräte** ändern kannst. Danach öffnet sich der Tab **Heute**.
 
-1. Tippe auf **Neue Familie anlegen**.
-2. Gib das **Einrichtungs-Token** ein. Das hat dir die Person gegeben, die den Server betreibt. Es gilt nur einmal.
-3. Wähle einen **Haushaltsnamen** und gib deinen **Namen**, deine **E-Mail** und ein **Passwort** (mindestens 10 Zeichen) ein.
-4. Lege eine **6-stellige PIN** fest. Mit ihr bestätigst du später wichtige Aktionen auf geteilten Geräten.
+## 3. Einer Familie beitreten
 
-<Shot name="setup-household" alt="Formular „Neuer Haushalt“" />
+Wurdest du von einer Familie eingeladen, bekommst du einen **Code** oder einen **Link**. Den Link öffnet der Browser auf der Einladungsseite von WuselWall; den Code gibst du in der App ein:
 
-Danach ist dieser Weg für immer geschlossen: Niemand sonst kann einen zweiten Haushalt anlegen.
+1. Auf dem Startbildschirm **Ich habe einen Einladungscode** antippen.
+2. Den Code oder den ganzen Link einfügen, dann **Einladung prüfen**.
+3. WuselWall zeigt dir, wozu du eingeladen bist: **Du bist ‹Name› in ‹Familie›**. Dein Name und deine Farbe kannst du hier anpassen. Mit **Beitreten** gehörst du dazu.
+
+Hat die Familie deine E-Mail-Adresse eingetragen, brauchst du gar nichts einzugeben: Nach der Anmeldung zeigt WuselWall die Einladung von selbst. Einladungen gelten **7 Tage** und funktionieren **einmal**; wie man sie verschickt, steht unter [Mitglieder und Geräte](/settings/members-devices#erwachsene-person-einladen).
+
+## 4. Familien-Tablet oder Wanddisplay verbinden
+
+So kommen das **Wanddisplay** in der Küche, ein **Kinder-Tablet** oder ein **Tablet für alle** in den Haushalt. Du brauchst dafür keinen Code abzutippen, nur kurz dein Handy:
+
+1. Auf dem neuen Gerät tippst du auf **Familien-Tablet oder Wanddisplay verbinden**. Es zeigt einen **QR-Code** und einen Code.
+2. Auf deinem Handy öffnest du **Einstellungen → Geräte → Gerät verbinden**. Du kannst den Code auch aus der Karte **Erste Schritte** auf dem Tab Heute starten.
+3. Scanne den QR-Code oder tippe den Code ab und tippe auf **Weiter**.
+4. Wähle die Art des Geräts: **Wanddisplay**, **Kinder-Tablet**, **Tablet für alle** oder **Handy eines Kindes**. Bei einem Kinderhandy wählst du das Kind. Gib dem Gerät einen Namen und tippe auf **Verbinden**.
+5. Beim allerersten Mal legst du die **Eltern-PIN** fest. Sie bestätigt Änderungen auf geteilten Geräten (siehe [Wer bist du?](/guide/who-are-you)).
+
+<Shot name="pair-device" alt="Neues Gerät zeigt QR-Code und Code" />
+
+<Shot name="pair-approve" alt="Handy eines Erwachsenen: Gerät prüfen und verbinden" />
+
+Danach ist das neue Gerät fertig. Das Wanddisplay zeigt einmal eine kurze Checkliste, damit es dauerhaft läuft (siehe [Wandanzeige](/guide/wall)). Der Code gilt **10 Minuten** und nur **einmal**. Stimmt er nicht, fange auf dem neuen Gerät noch einmal an.
+
+::: tip Ältere Geräte
+Hat ein Gerät noch eine ältere Version von WuselWall, nimmt es den alten Code an: unter **Einstellungen → Geräte** tippst du dafür auf **Code für ein älteres Gerät erzeugen**. Diese Möglichkeit verschwindet mit der nächsten Version.
+:::

@@ -10,12 +10,13 @@ Open **Settings → Calendar subscriptions** and tap **New subscription**.
 2. Under **What**, choose the appointments. Also:
    - **Presence** shows who is where (at work, home office, off …). For work devices and children it is better to leave this off.
    - **School** shows school days as one all-day entry, or every lesson. Or off.
+   - **Include subscribed calendars** adds the appointments from subscribed calendars, for example a club or the bin collection. It is **off** until you tick it. Each subscription decides for itself whether its appointments come along.
 3. Under **Whose events** choose people. With nobody chosen, all members are included.
 4. Tap **Create subscription**.
 
 ## The address
 
-The subscription address is shown **only once**. Anyone who has it can see the appointments, so treat it like a password.
+The subscription address is shown **only once**. Anyone who has it can see the appointments, so treat it like a password. The address contains a secret key for this one subscription; a new subscription gets a new address.
 
 **Copy address** puts the address on your clipboard. **Copy webcal link** gives you a link that opens the subscribe dialog directly on an iPhone. The QR code shows the same address, for scanning.
 

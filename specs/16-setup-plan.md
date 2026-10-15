@@ -474,6 +474,21 @@ keys, and the restore drill has restored a nightly dump once. *(Restore drill fi
 
 ## Step 9 — Onboarding (M1.0)
 
+> **Status 2026-10-15** (`feature/regions-and-ux`; migrations and functions not yet on the server):
+> 1. Sign-in: Apple and Google (2026-10-13), the email code, E1–E3 and the password are built. Done.
+> 2. Households: built (H1, H2, founder codes, `my_account`). Done. The wizard and `setup_household` are still there for one release.
+> 3. Invitations: built, except universal links and App Links and the guardian's "joined" notice.
+> 4. Pairing: built. The code enrolment stays for one release.
+> 5. Getting started and deferred PIN: built.
+> 6. Leaving: built (leave, delete with 14 days to restore, purge job, account deletion with the Apple revocation, second-factor reset, export).
+> 7. Localised mail: built, through the send-email hook and Scaleway Transactional Email when configured; the bilingual GoTrue template remains the fallback.
+> 7a. Any server, chosen in the app: **not on this branch**; it lives on `feature/self-hosting-kit`.
+> 8. Tests: the pgTAP suites and the Dart tests are built with the features. The E2E journeys (J1–J3) and the manual Apple and Google checks on real devices are still open.
+> 9. User documentation: `docs/guide/setup.md` and its screenshots rewritten (both languages).
+>
+> **Next:** apply the migrations and deploy the Edge Functions, schedule the jobs, set `ENABLE_EMAIL_AUTOCONFIRM=false` on an existing server, then M1.6.
+
+
 *Added 2026-10-11.* The experience is [20](20-onboarding.md); the decision
 [ADR-014](adr/ADR-014-self-service-onboarding.md). Mechanics in [10 §4](10-deployment-and-ops.md#4-sign-in-providers-and-mail).
 Order chosen so that each slice is usable on its own:
