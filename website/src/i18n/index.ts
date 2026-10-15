@@ -1,8 +1,8 @@
 export type Lang = 'de' | 'en';
 
 export const paths = {
-  de: { home: '/', imprint: '/impressum/', privacy: '/datenschutz/' },
-  en: { home: '/en/', imprint: '/en/imprint/', privacy: '/en/privacy/' },
+  de: { home: '/', imprint: '/impressum/', privacy: '/datenschutz/', invite: '/i/' },
+  en: { home: '/en/', imprint: '/en/imprint/', privacy: '/en/privacy/', invite: '/en/i/' },
 } as const;
 
 type Feature = { title: string; text: string };
@@ -15,8 +15,19 @@ type View = Feature & { shot: 'shopping-phone' | 'kid-shopping' | 'wall-child-we
  */
 type Section = { title: string; body: string[] };
 
+/** The landing page for invitation links (/i/): what it is, and what to do next. */
+export interface InviteStrings {
+  title: string;
+  description: string;
+  heading: string;
+  what: string;
+  steps: string;
+  personal: string;
+}
+
 export interface Strings {
   htmlLang: string;
+  invite: InviteStrings;
   title: string;
   description: string;
   skip: string;
@@ -73,6 +84,14 @@ export interface Strings {
 }
 
 const de: Strings = {
+  invite: {
+    title: 'Einladung – WuselWall',
+    description: 'Du bist zu einer Familie in WuselWall eingeladen. So kommst du hinein.',
+    heading: 'Du bist eingeladen',
+    what: 'WuselWall ist der Familienplan für die Küchenwand: Termine, Aufgaben, Einkaufsliste und Essen, auf einem gemeinsamen Gerät.',
+    steps: 'Installiere die App und tippe auf „Ich habe einen Einladungscode“. Den Code findest du in der Nachricht.',
+    personal: 'Der Link ist persönlich. Gib ihn nur an die Person weiter, für die er gedacht ist.',
+  },
   htmlLang: 'de-CH',
   title: 'WuselWall – der Familienorganisator für zuhause',
   description:
@@ -282,6 +301,14 @@ const de: Strings = {
 };
 
 const en: Strings = {
+  invite: {
+    title: 'Invitation – WuselWall',
+    description: 'You are invited to a family on WuselWall. This is how you join.',
+    heading: 'You are invited',
+    what: 'WuselWall is the family plan for the kitchen wall: appointments, chores, the shopping list and meals, on one shared device.',
+    steps: 'Install the app and tap “I have an invitation code”. You will find the code in the message.',
+    personal: 'The link is personal. Only pass it on to the person it was meant for.',
+  },
   htmlLang: 'en',
   title: 'WuselWall – the family organiser for your home',
   description:
@@ -493,6 +520,6 @@ const en: Strings = {
 export const strings: Record<Lang, Strings> = { de, en };
 
 /** The other language's URL for the same page, for hreflang and the footer switch. */
-export function alternate(lang: Lang, page: 'home' | 'imprint' | 'privacy') {
+export function alternate(lang: Lang, page: 'home' | 'imprint' | 'privacy' | 'invite') {
   return paths[lang === 'de' ? 'en' : 'de'][page];
 }
