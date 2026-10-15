@@ -228,6 +228,7 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
                       decoration: InputDecoration(
                         labelText: l10n.householdNewFounderCode,
                         helperText: l10n.householdNewFounderHelp,
+                        helperMaxLines: 3,
                         errorText: _codeError,
                       ),
                       validator: _required,
