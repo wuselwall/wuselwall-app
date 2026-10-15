@@ -410,7 +410,7 @@ jobs:
 *Built 2026-10-12:* the iOS job, also startable by hand (`workflow_dispatch`, which keeps
 the pubspec version), with `app/ios/Gemfile` and `app/ios/fastlane/` (`Appfile`, `Matchfile`,
 `Fastfile`; team `JSX2VQXW7G`). The Android job follows once the Play Console account
-exists; until then `build-android.yml` builds the APK.
+exists; until then `build-android.yml` builds the APK and the App Bundle for a manual upload.
 
 Each platform's `Fastfile` holds two or three short lanes; the workflow stays thin, so a
 release can also be run from a Mac with the same lanes if one becomes available.
