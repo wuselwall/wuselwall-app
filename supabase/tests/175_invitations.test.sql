@@ -1,5 +1,5 @@
 begin;
-select plan(93);
+select plan(94);
 
 -- Invitations (onboarding J2): a guardian invites an adult of the household, the invitee signs
 -- in and joins. Everything runs as the database owner, except the invitee's calls (anon for the
@@ -295,6 +295,13 @@ select pg_temp.account('other', 'sess_other');
 set local role authenticated;
 select throws_ok(format($$ select api.invitation_accept(null, %L, null, null, 'Handy') $$, (select id from inv where name = 'hans')),
   '42501', 'not invited', 'another address cannot accept an invitation made for Hans');
+reset role;
+
+-- Unconfirmed, the invitation naming Hans's address is not offered on his account.
+select pg_temp.account('hans', 'sess_hans');
+set local role authenticated;
+select is(jsonb_array_length(api.my_account() -> 'pending_invitations'), 0,
+  'an unconfirmed address is offered no invitation');
 reset role;
 
 -- Hans confirms his address: the waiting invitation shows on his account (H0).

@@ -97,6 +97,14 @@ class _SetupPageState extends ConsumerState<SetupPage> {
                   icon: const Icon(Icons.mail_outline),
                   label: Text(l10n.doorEmail),
                 ),
+                // An invitation: the code, a link or its QR code (J2).
+                TextButton.icon(
+                  onPressed: _busy || !online
+                      ? null
+                      : () => context.go(Routes.inviteCode),
+                  icon: const Icon(Icons.mark_email_unread_outlined),
+                  label: Text(l10n.inviteDoorAction),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: Tokens.space4),
                   child: Row(

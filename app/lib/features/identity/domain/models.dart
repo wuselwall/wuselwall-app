@@ -69,6 +69,7 @@ class Member {
     required this.active,
     this.isChild = false,
     this.sortOrder = 0,
+    this.hasAccount = true,
   });
 
   factory Member.fromJson(Map<String, dynamic> json) => Member(
@@ -79,6 +80,8 @@ class Member {
     active: json['active'] as bool,
     isChild: json['kind'] == 'child',
     sortOrder: json['sort_order'] as int? ?? 0,
+    // Older servers do not say; an unknown person is treated as one with an account.
+    hasAccount: json['has_account'] as bool? ?? true,
   );
 
   final String id;
@@ -90,6 +93,9 @@ class Member {
   /// `profile.kind` (ADR-014): role says what someone may do, kind whether they are a
   /// child — the kid register, starter chores and the Stundenplan use it.
   final bool isChild;
+
+  /// Whether the person has signed in (an invitation is open only for one without).
+  final bool hasAccount;
 
   /// The household's member order (`profile.sort_order`).
   final int sortOrder;

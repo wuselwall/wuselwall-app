@@ -9,6 +9,7 @@ import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/data/sign_in_methods_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/identity/domain/sign_in_method.dart';
+import 'package:wuselwall/features/invitations/data/invitation_repository.dart';
 
 /// Where the app stands, which decides what it shows (the router just follows this).
 sealed class SessionState {
@@ -34,8 +35,12 @@ final class NeedsRegistration extends SessionState {
 /// A signed-in account with no device and no profile: it may start a family (H1), or
 /// wait for an invitation. It is not signed out.
 final class NeedsHousehold extends SessionState {
-  const NeedsHousehold(this.account);
+  const NeedsHousehold(this.account, {this.hasStoredInvite = false});
   final Account account;
+
+  /// An invitation was previewed on this phone and not yet joined or discarded: the join
+  /// confirmation comes first (specs/20, J2).
+  final bool hasStoredInvite;
 }
 
 final class Ready extends SessionState {
@@ -83,8 +88,11 @@ final sessionStateProvider = FutureProvider<SessionState>((ref) async {
   final account = await ref
       .read(householdOnboardingRepositoryProvider)
       .account();
+  if (account case Ok(:final value) when !value.hasHousehold) {
+    final stored = await ref.read(invitationStoreProvider).read();
+    return NeedsHousehold(value, hasStoredInvite: stored != null);
+  }
   return switch (account) {
-    Ok(:final value) when !value.hasHousehold => NeedsHousehold(value),
     Ok() => dropSession(),
     Err(:final failure) => throw failure,
   };

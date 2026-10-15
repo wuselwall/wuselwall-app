@@ -1346,5 +1346,117 @@
   "householdDeviceIphone": "iPhone",
   "householdDeviceAndroid": "Android-Handy",
   "householdDeviceBrowser": "Browser",
-  "householdDeviceComputer": "Computer"
+  "householdDeviceComputer": "Computer",
+  "inviteDoorAction": "Ich habe einen Einladungscode",
+  "inviteCodeTitle": "Einladung",
+  "inviteCodeBody": "Gib den Code ein oder füge den Link ein, den du bekommen hast.",
+  "inviteCodeLabel": "Code oder Link",
+  "inviteCheckAction": "Einladung prüfen",
+  "inviteCodeInvalidFormat": "Das ist weder ein Einladungscode noch ein WuselWall-Link.",
+  "inviteNoLonger": "Diese Einladung gilt nicht mehr. Bitte die Person, die dich eingeladen hat, um eine neue.",
+  "inviteRateLimited": "Zu viele Versuche. Warte ein paar Minuten und versuch es noch einmal.",
+  "inviteBanner": "{inviter} hat dich zu {household} eingeladen",
+  "@inviteBanner": {
+    "placeholders": {
+      "inviter": {
+        "type": "String"
+      },
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteBannerNoInviter": "Du bist zu {household} eingeladen",
+  "@inviteBannerNoInviter": {
+    "placeholders": {
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteRoleLineGuardian": "Als Erziehungsberechtigte:r siehst du alles und bestätigst Belohnungen.",
+  "inviteRoleLineMember": "Als Mitglied erledigst du Aufgaben, bestätigst aber keine Belohnungen.",
+  "inviteContinue": "Weiter zur Anmeldung",
+  "inviteJoin": "Beitreten",
+  "inviteNewFamilyInstead": "Eigene Familie anlegen",
+  "inviteJoinTitle": "Du bist {name} in {household}",
+  "@inviteJoinTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteJoinHint": "Dein Name und deine Farbe, so wie die Familie sie sieht. Später änderbar in den Einstellungen.",
+  "inviteJoinDecline": "Nicht beitreten",
+  "inviteAlreadyIn": "Du bist schon in {household}.",
+  "@inviteAlreadyIn": {
+    "placeholders": {
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteNothingKept": "Es liegt keine Einladung mehr vor.",
+  "inviteResultTitle": "Einladung für {name}",
+  "@inviteResultTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteResultHint": "Die Person gibt den Code in WuselWall ein oder scannt den QR-Code.",
+  "inviteValidUntil": "Gültig bis {date}",
+  "@inviteValidUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteQrLabel": "QR-Code der Einladung",
+  "inviteShare": "Teilen",
+  "inviteDone": "Fertig",
+  "inviteShareMessage": "Komm zu {household} in WuselWall: {link} — oder gib in der App den Code {code} ein.",
+  "@inviteShareMessage": {
+    "placeholders": {
+      "household": {
+        "type": "String"
+      },
+      "link": {
+        "type": "String"
+      },
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteAdultTitle": "Erwachsene Person einladen",
+  "inviteAdultName": "Name",
+  "inviteAdultRole": "Rolle",
+  "inviteRoleGuardian": "Erziehungsberechtigt",
+  "inviteRoleMember": "Mitglied",
+  "inviteRoleGuardianHelp": "Sieht alles und bestätigt Belohnungen.",
+  "inviteRoleMemberHelp": "Erledigt Aufgaben, bestätigt aber keine Belohnungen. Etwa für eine Au-pair oder Großeltern.",
+  "inviteAdultEmail": "E-Mail (optional)",
+  "inviteAdultEmailHelp": "Mit dieser Adresse findet die Person die Einladung von selbst, wenn sie sich anmeldet.",
+  "inviteEmailInvalid": "Das sieht nicht nach einer E-Mail-Adresse aus.",
+  "inviteCreate": "Einladung erstellen",
+  "inviteInviteAction": "Einladen",
+  "inviteOpenUntil": "Eingeladen · bis {date}",
+  "@inviteOpenUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteShareAgain": "Erneut teilen",
+  "inviteWithdraw": "Zurückziehen",
+  "inviteWithdrawn": "Einladung zurückgezogen.",
+  "inviteScanTitle": "Einladung scannen"
 }
