@@ -31,11 +31,17 @@ class WeekBoardView extends ConsumerWidget {
     if (board == null) return const SizedBox.shrink();
 
     final night = ref.watch(nightProvider);
+    final allEvents = ref.watch(boardAllEventsProvider);
     final geometry = BoardGeometry(
       canvasWidth: KioskCanvas.designWidth,
       todayIndex: board.todayIndex,
     );
-    final frame = BoardFrame(board: board, geometry: geometry, night: night);
+    final frame = BoardFrame(
+      board: board,
+      geometry: geometry,
+      night: night,
+      allEvents: allEvents,
+    );
     final ww = context.ww;
     final scheme = Theme.of(context).colorScheme;
     final l10n = context.l10n;
@@ -81,6 +87,7 @@ class WeekBoardView extends ConsumerWidget {
                     BoardCaption(
                       title: l10n.boardZoneEvents,
                       hint: l10n.boardZoneEventsHint,
+                      trailing: const BoardAllEventsToggle(),
                     ),
                     Expanded(flex: 11, child: TermineRows(frame: frame)),
                     BoardCaption(

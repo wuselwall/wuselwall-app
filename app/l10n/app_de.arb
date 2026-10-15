@@ -1135,5 +1135,9 @@
   "extCalSettingsRefreshHint": "Der Server ruft jeden Kalender etwa einmal pro Stunde ab.",
   "extCalActive": "Aktiv",
   "extCalUrlLoading": "Adresse wird geladen",
-  "shoppingNavLabel": "Einkauf"
+  "shoppingNavLabel": "Einkauf",
+  "feedSubTitle": "Abonnierte Kalender einschließen",
+  "feedSubHelp": "Termine aus importierten Kalendern (z. B. Verein, Müllabfuhr) erscheinen auch im Abo.",
+  "feedSubSummary": "Abonnierte Kalender",
+  "boardAllEvents": "Alle Termine"
 }

@@ -64,6 +64,24 @@ export type IcsFeed = {
   school?: SchoolData;
   /** The children named in the school rows: profile id → display name. */
   members?: Record<string, string>;
+  /** Imported occurrences (FR-1.9). Present only when the token is subscribed; see subscribedOccurrences. */
+  external?: ExternalOccurrence[];
+};
+
+/** One occurrence of an imported calendar, as api.ics_feed sends it. The raw UID never leaves the database. */
+export type ExternalOccurrence = {
+  calendar_id: string;
+  /** SHA-256 hex of the source UID, for the stable UID of the feed's VEVENT. */
+  uid_hash: string;
+  /** The calendar's members; empty = the whole family. */
+  member_ids: string[];
+  starts_at: string | null;
+  ends_at: string | null;
+  all_day: boolean;
+  start_date: string | null;
+  end_date: string | null;
+  title: string;
+  location: string | null;
 };
 
 export type RenderOptions = {
@@ -497,6 +515,66 @@ function renderOverride(
   ];
 }
 
+// ── imported calendars (FR-1.9, specs/05 "Later: importing external calendars") ──
+
+/**
+ * The imported occurrences a token gets. None unless the filter says `subscribed`. A token that
+ * names no profiles gets every calendar; otherwise a calendar with no members (the whole family)
+ * and a calendar whose members overlap the named profiles, as the household's own events.
+ */
+export function subscribedOccurrences(feed: IcsFeed): ExternalOccurrence[] {
+  const filter = feed.filter as
+    | { subscribed?: unknown; profile_ids?: unknown }
+    | null
+    | undefined;
+  if (filter?.subscribed !== true) return [];
+  const named = Array.isArray(filter.profile_ids)
+    ? filter.profile_ids.filter((id): id is string => typeof id === "string")
+    : [];
+  return (feed.external ?? []).filter((o) =>
+    named.length === 0 ||
+    o.member_ids.length === 0 ||
+    o.member_ids.some((id) => named.includes(id))
+  );
+}
+
+/**
+ * One imported occurrence: a plain, read-only VEVENT. The UID is stable for the occurrence (its
+ * calendar, the hash of the source UID and the start), so a subscriber's calendar app updates in
+ * place. A timed occurrence is written in UTC, so it needs no VTIMEZONE.
+ */
+function externalVEvent(o: ExternalOccurrence, dtstamp: string): string[] {
+  let key: string;
+  let timing: string[];
+  if (o.all_day) {
+    const start = Temporal.PlainDate.from(o.start_date ?? "");
+    const end = Temporal.PlainDate.from(o.end_date ?? o.start_date ?? "");
+    key = ymd(start);
+    // ICS end dates are exclusive: DTEND is the day after the last day.
+    timing = [
+      `DTSTART;VALUE=DATE:${ymd(start)}`,
+      `DTEND;VALUE=DATE:${ymd(end.add({ days: 1 }))}`,
+    ];
+  } else {
+    const start = Temporal.Instant.from(o.starts_at ?? "");
+    const end = o.ends_at ? Temporal.Instant.from(o.ends_at) : start;
+    // YYYYMMDDTHHMM in UTC: the same instant gives the same UID.
+    key = ymdhms(start.toZonedDateTimeISO("UTC")).slice(0, 13);
+    timing = [`DTSTART:${utcStamp(start)}`, `DTEND:${utcStamp(end)}`];
+  }
+  const uid = `ext-${o.calendar_id}-${o.uid_hash}-${key}@wuselwall.app`;
+  const lines = [
+    "BEGIN:VEVENT",
+    `UID:${escapeText(uid)}`,
+    `DTSTAMP:${dtstamp}`,
+    ...timing,
+    `SUMMARY:${escapeText(o.title)}`,
+  ];
+  if (o.location) lines.push(`LOCATION:${escapeText(o.location)}`);
+  lines.push("STATUS:CONFIRMED", "TRANSP:OPAQUE", "END:VEVENT");
+  return lines;
+}
+
 // ── school days (specs/15 "What goes into the ICS feed") ─────────────────────────
 
 /** The projection window: 30 days back and 120 ahead of today in the household's zone. */
@@ -766,6 +844,9 @@ export function renderIcs(feed: IcsFeed, opts: RenderOptions): string {
   }
 
   for (const e of school) lines.push(...e.lines);
+  for (const o of subscribedOccurrences(feed)) {
+    lines.push(...externalVEvent(o, ctx.dtstamp));
+  }
 
   lines.push("END:VCALENDAR");
   return lines.map(foldLine).join(CRLF) + CRLF;

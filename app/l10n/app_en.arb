@@ -1766,5 +1766,9 @@
   "shoppingNavLabel": "Shopping",
   "@shoppingNavLabel": {
     "description": "Short label of the shopping list in the bottom navigation bar; the page title stays shoppingTitle."
-  }
+  },
+  "feedSubTitle": "Include subscribed calendars",
+  "feedSubHelp": "Events from imported calendars (for example a club or the bin collection) also appear in this subscription.",
+  "feedSubSummary": "Subscribed calendars",
+  "boardAllEvents": "All events"
 }

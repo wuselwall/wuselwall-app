@@ -3162,4 +3162,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shoppingNavLabel => 'Shopping';
+
+  @override
+  String get feedSubTitle => 'Include subscribed calendars';
+
+  @override
+  String get feedSubHelp =>
+      'Events from imported calendars (for example a club or the bin collection) also appear in this subscription.';
+
+  @override
+  String get feedSubSummary => 'Subscribed calendars';
+
+  @override
+  String get boardAllEvents => 'All events';
 }
