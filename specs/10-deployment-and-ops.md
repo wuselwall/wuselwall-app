@@ -199,14 +199,12 @@ meta, any analytics, captcha.
 
 **Left to do:**
 
-1. Switch the store builds to `app/env/store.json` once the first-party servers serve
-   `server-info` (the CI secret `WW_FIRST_PARTY_HOSTS` is wired already).
-2. A smoke test of `deploy-supabase.yml` on a scratch hosted project, on Postgres 17 (the
+1. A smoke test of `deploy-supabase.yml` on a scratch hosted project, on Postgres 17 (the
    direct `auth.users` inserts of ADR-013 and the now tolerant `auth.mfa_factors` grant are
    the known risks), and a first `server-v` tag.
-3. CI: the integration test against the previous server release (ADR-018, decision 5).
-4. Universal links and App Links for `/i/` and `/p/` (decision 8).
-5. Moving between hosted Supabase and a home server, written up in the guide.
+2. CI: the integration test against the previous server release (ADR-018, decision 5).
+3. Universal links and App Links for `/i/` and `/p/` (decision 8).
+4. Moving between hosted Supabase and a home server, written up in the guide.
 
 ## WuselWall Cloud
 
