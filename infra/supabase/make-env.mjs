@@ -123,7 +123,10 @@ const out = {
   // household creation is in `code` mode, start a family with a founder code (specs/20).
   DISABLE_SIGNUP: 'false',
   ENABLE_EMAIL_SIGNUP: 'true',
-  ENABLE_EMAIL_AUTOCONFIRM: 'true',
+  // Never autoconfirm: with sign-up open, an autoconfirmed address would count as verified
+  // without proof, and an invitation naming that address would match it (specs/20, J2).
+  // Email codes confirm the address by themselves; Apple and Google come confirmed.
+  ENABLE_EMAIL_AUTOCONFIRM: 'false',
   ENABLE_ANONYMOUS_USERS: 'false',
   ENABLE_PHONE_SIGNUP: 'false',
   ENABLE_PHONE_AUTOCONFIRM: 'false',
