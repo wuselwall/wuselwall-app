@@ -112,6 +112,26 @@ void main() {
     },
   );
 
+  testWidgets('a break row shows its whole label, also at large text', (
+    t,
+  ) async {
+    t.platformDispatcher.textScaleFactorTestValue = 1.5;
+    addTearDown(t.platformDispatcher.clearTextScaleFactorTestValue);
+    await pumpApp(
+      t,
+      overrides: baseOverrides(
+        identity: FakeIdentityRepository(current: device()),
+      ),
+      school: FakeSchoolRepository(),
+    );
+    await _openSchedule(t);
+
+    expect(t.takeException(), isNull);
+    final label = find.text(de.boardBreak);
+    expect(label, findsWidgets);
+    expect(t.getSize(label.first).height, greaterThanOrEqualTo(11));
+  });
+
   testWidgets(
     'a long press on a lesson opens the sheet, and Fällt aus saves the exception',
     (t) async {
@@ -208,6 +228,34 @@ void main() {
     expect(periods.where((p) => !p.isBreak).length, 3);
     expect(periods.where((p) => p.isBreak).length, 2);
     expect(periods.first.toJson(), containsPair('kind', 'lesson'));
+  });
+
+  testWidgets('bell times line up: start and end on one line with tooltips', (
+    t,
+  ) async {
+    await pumpApp(
+      t,
+      overrides: baseOverrides(
+        identity: FakeIdentityRepository(current: device()),
+      ),
+      school: FakeSchoolRepository(),
+    );
+    await _openSchedule(t);
+    // Phone width only for the setup page: the tab bar needs the default size.
+    t.view.physicalSize = const Size(390, 844);
+    t.view.devicePixelRatio = 1;
+    await t.pumpAndSettle();
+    await t.tap(find.byTooltip(de.schoolEditSchool));
+    await t.pumpAndSettle();
+
+    final start = find.byTooltip(de.schoolStart).first;
+    final end = find.byTooltip(de.schoolEnd).first;
+    expect(
+      t.getCenter(start).dy,
+      closeTo(t.getCenter(end).dy, 1),
+      reason: 'the start and end times sit on the same line',
+    );
+    expect(t.takeException(), isNull);
   });
 
   testWidgets('without a school the section offers the setup', (t) async {

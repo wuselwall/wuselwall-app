@@ -310,7 +310,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get classPersonal => 'Persönlich';
 
   @override
-  String get classShared => 'Geteilt (Antippen zum Wechseln)';
+  String get classShared => 'Geteilt';
+
+  @override
+  String get classSharedHint =>
+      'Mehrere nutzen es: zum Wechseln den Namen antippen.';
 
   @override
   String get classKiosk => 'Wandanzeige';
@@ -2147,11 +2151,6 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String tasksStreakBadge(int count) {
-    return '🔥 $count';
-  }
-
-  @override
   String tasksStreakDays(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -2238,6 +2237,60 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get tasksFieldIcon => 'Symbol';
+
+  @override
+  String get taskIcon_dishes => 'Teller';
+
+  @override
+  String get taskIcon_table => 'Löffel';
+
+  @override
+  String get taskIcon_trash => 'Mülleimer';
+
+  @override
+  String get taskIcon_bed => 'Bett';
+
+  @override
+  String get taskIcon_dog => 'Hund';
+
+  @override
+  String get taskIcon_plant => 'Pflanze';
+
+  @override
+  String get taskIcon_bike => 'Fahrrad';
+
+  @override
+  String get taskIcon_book => 'Bücher';
+
+  @override
+  String get taskIcon_laundry => 'Wäschekorb';
+
+  @override
+  String get taskIcon_teeth => 'Zahnbürste';
+
+  @override
+  String get taskIcon_shopping => 'Einkaufswagen';
+
+  @override
+  String get taskIcon_cooking => 'Pfanne';
+
+  @override
+  String get taskIcon_car => 'Auto';
+
+  @override
+  String get taskIcon_toys => 'Teddybär';
+
+  @override
+  String get taskIcon_star => 'Stern';
+
+  @override
+  String get taskIcon_cinema => 'Film';
+
+  @override
+  String get taskIcon_moon => 'Mond';
+
+  @override
+  String get taskIcon_trip => 'Kompass';
 
   @override
   String get tasksNoIcon => 'Ohne Symbol';
@@ -2505,7 +2558,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get kidTasksNone => 'Heute hast du keine Aufgaben.';
 
   @override
-  String get kidTasksAllDone => 'Alles geschafft! 🎉';
+  String get kidTasksAllDone => 'Alles geschafft!';
 
   @override
   String get kidTasksAllDoneBody => 'Super gemacht, heute ist alles erledigt.';
@@ -2627,7 +2680,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get kidRequestSent => 'Deine Belohnung wartet auf Freigabe.';
 
   @override
-  String get kidRedeemed => 'Eingelöst! 🎉';
+  String get kidRedeemed => 'Eingelöst!';
 
   @override
   String get kidSoldOut => 'Gerade ausverkauft';
@@ -2643,8 +2696,8 @@ class AppLocalizationsDe extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       days,
       locale: localeName,
-      other: '$days Tage $title 🔥',
-      one: '1 Tag $title 🔥',
+      other: '$days Tage $title',
+      one: '1 Tag $title',
     );
     return '$_temp0';
   }
@@ -3308,7 +3361,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Familien-Tablet oder Wanddisplay verbinden';
 
   @override
-  String get pairTitle => 'Familien-Tablet oder Wanddisplay verbinden';
+  String get pairTitle => 'Dieses Gerät verbinden';
 
   @override
   String get pairScanHint =>

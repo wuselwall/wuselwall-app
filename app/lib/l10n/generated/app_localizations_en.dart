@@ -308,7 +308,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get classPersonal => 'Personal';
 
   @override
-  String get classShared => 'Shared (tap to switch)';
+  String get classShared => 'Shared';
+
+  @override
+  String get classSharedHint => 'Several people use it: tap a name to switch.';
 
   @override
   String get classKiosk => 'Wall display';
@@ -1133,7 +1136,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingMealsSchoolDayHelp =>
-      'The one warm meal on the kitchen wall. On school days children eat lunch at school or in the Hort.';
+      'The one warm meal on the kitchen wall. On school days children eat lunch at school or at after-school care.';
 
   @override
   String get settingMealsFreeDayTitle => 'Warm meal on free days';
@@ -1507,7 +1510,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get mealsEatingHelp =>
-      'Someone who is away or travelling over the meal, or who has Hort past the cut-off, is switched off automatically. Set it by hand only when that is not true.';
+      'Someone who is away or travelling over the meal, or who is at after-school care past the cut-off, is switched off automatically. Set it by hand only when that is not true.';
 
   @override
   String get mealsEatingAuto => 'Automatic';
@@ -2132,11 +2135,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String tasksStreakBadge(int count) {
-    return '🔥 $count';
-  }
-
-  @override
   String tasksStreakDays(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -2223,6 +2221,60 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tasksFieldIcon => 'Icon';
+
+  @override
+  String get taskIcon_dishes => 'Plate';
+
+  @override
+  String get taskIcon_table => 'Spoon';
+
+  @override
+  String get taskIcon_trash => 'Bin';
+
+  @override
+  String get taskIcon_bed => 'Bed';
+
+  @override
+  String get taskIcon_dog => 'Dog';
+
+  @override
+  String get taskIcon_plant => 'Plant';
+
+  @override
+  String get taskIcon_bike => 'Bike';
+
+  @override
+  String get taskIcon_book => 'Books';
+
+  @override
+  String get taskIcon_laundry => 'Laundry basket';
+
+  @override
+  String get taskIcon_teeth => 'Toothbrush';
+
+  @override
+  String get taskIcon_shopping => 'Shopping trolley';
+
+  @override
+  String get taskIcon_cooking => 'Frying pan';
+
+  @override
+  String get taskIcon_car => 'Car';
+
+  @override
+  String get taskIcon_toys => 'Teddy bear';
+
+  @override
+  String get taskIcon_star => 'Star';
+
+  @override
+  String get taskIcon_cinema => 'Film';
+
+  @override
+  String get taskIcon_moon => 'Moon';
+
+  @override
+  String get taskIcon_trip => 'Compass';
 
   @override
   String get tasksNoIcon => 'No icon';
@@ -2489,7 +2541,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get kidTasksNone => 'You have no chores today.';
 
   @override
-  String get kidTasksAllDone => 'All done! 🎉';
+  String get kidTasksAllDone => 'All done!';
 
   @override
   String get kidTasksAllDoneBody => 'Well done, you did everything for today.';
@@ -2610,7 +2662,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get kidRequestSent => 'Your reward is waiting for approval.';
 
   @override
-  String get kidRedeemed => 'Redeemed! 🎉';
+  String get kidRedeemed => 'Redeemed!';
 
   @override
   String get kidSoldOut => 'Sold out for now';
@@ -2626,8 +2678,8 @@ class AppLocalizationsEn extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       days,
       locale: localeName,
-      other: '$days days $title 🔥',
-      one: '1 day $title 🔥',
+      other: '$days days $title',
+      one: '1 day $title',
     );
     return '$_temp0';
   }
@@ -3288,7 +3340,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pairFrontDoorAction => 'Connect a family tablet or wall display';
 
   @override
-  String get pairTitle => 'Connect a family tablet or wall display';
+  String get pairTitle => 'Connect this device';
 
   @override
   String get pairScanHint => 'Open WuselWall on your phone and scan this code.';

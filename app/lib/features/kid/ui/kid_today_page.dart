@@ -8,6 +8,7 @@ import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/emoji_picture.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
@@ -155,10 +156,19 @@ class _TasksSectionState extends ConsumerState<_TasksSection> {
                 color: context.ww.successContainer,
                 child: Column(
                   children: [
-                    Text(
-                      l10n.kidTasksAllDone,
-                      style: Theme.of(context).textTheme.headlineSmall
-                          ?.copyWith(fontWeight: FontWeight.w800),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            l10n.kidTasksAllDone,
+                            style: Theme.of(context).textTheme.headlineSmall
+                                ?.copyWith(fontWeight: FontWeight.w800),
+                          ),
+                        ),
+                        const SizedBox(width: Tokens.space2),
+                        const EmojiPicture(emojiParty, size: 32),
+                      ],
                     ),
                     Text(l10n.kidTasksAllDoneBody),
                   ],
@@ -277,9 +287,9 @@ class _TaskCard extends StatelessWidget {
           child: Row(
             children: [
               ExcludeSemantics(
-                child: Text(
-                  taskIconGlyph(task.iconKey) ?? '⭐',
-                  style: const TextStyle(fontSize: 40),
+                child: EmojiPicture(
+                  taskIconAsset(task.iconKey) ?? taskIconAsset('star')!,
+                  size: 40,
                 ),
               ),
               const SizedBox(width: Tokens.space3),

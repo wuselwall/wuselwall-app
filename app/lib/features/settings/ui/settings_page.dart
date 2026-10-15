@@ -122,14 +122,21 @@ class SettingsPage extends ConsumerWidget {
                       child: Text(m.initial),
                     ),
                     title: Text(m.displayName),
-                    subtitle: Text(
-                      m.isGuardian ? l10n.roleGuardian : l10n.roleMember,
-                    ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        MfaResetButton(member: m),
-                        InviteMemberButton(member: m),
+                        Text(
+                          m.isGuardian ? l10n.roleGuardian : l10n.roleMember,
+                        ),
+                        // Below the role, not beside it: at phone width a trailing
+                        // action squeezes the role into a sliver (as #29 did).
+                        Wrap(
+                          spacing: Tokens.space1,
+                          children: [
+                            MfaResetButton(member: m),
+                            InviteMemberButton(member: m),
+                          ],
+                        ),
                       ],
                     ),
                   ),
@@ -420,6 +427,13 @@ class _NewDeviceDialogState extends State<_NewDeviceDialog> {
             selected: {_class},
             onSelectionChanged: (s) => setState(() => _class = s.first),
           ),
+          if (_class == DeviceClass.shared) ...[
+            const SizedBox(height: Tokens.space2),
+            Text(
+              l10n.classSharedHint,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
         ],
       ),
       actions: [

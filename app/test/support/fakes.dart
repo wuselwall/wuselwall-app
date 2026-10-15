@@ -705,6 +705,9 @@ List<Override> baseOverrides({
   MemoryInvitationStore? invitationStore,
   bool signedIn = true,
   bool online = true,
+
+  /// Replaces the constant session of [signedIn], for a journey that signs in on the way.
+  Override? sessionUser,
 }) => [
   householdLeaveRepositoryProvider.overrideWithValue(
     leave ?? FakeHouseholdLeaveRepository(),
@@ -743,7 +746,8 @@ List<Override> baseOverrides({
       supabasePublishableKey: 'key',
     ),
   ),
-  sessionUserIdProvider.overrideWithValue(signedIn ? 'user-1' : null),
+  sessionUser ??
+      sessionUserIdProvider.overrideWithValue(signedIn ? 'user-1' : null),
   identityRepositoryProvider.overrideWithValue(identity),
   signInMethodsRepositoryProvider.overrideWithValue(
     signInMethods ?? FakeSignInMethods(),

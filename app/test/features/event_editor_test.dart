@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/core/ui/ringed_avatar.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 import 'package:wuselwall/features/calendar/ui/event_edit_args.dart';
 import 'package:wuselwall/features/settings/data/household_settings_repository.dart';
@@ -178,6 +179,30 @@ void main() {
       await _save(t);
       expect(cal.saved.single.importance, Importance.key);
       expect(cal.saved.single.attendeeIds, [guardianId, kidId]);
+    });
+
+    testWidgets('a selected person chip shows a ring, not a check mark', (
+      t,
+    ) async {
+      final cal = FakeCalendarRepository();
+      await _open(
+        t,
+        calendar: cal,
+        args: EventEditArgs(date: _day),
+      );
+      final anna = find.widgetWithText(FilterChip, 'Anna');
+      expect(t.widget<FilterChip>(anna).selected, isFalse);
+      await _tap(t, anna);
+
+      final chip = t.widget<FilterChip>(anna);
+      expect(chip.selected, isTrue);
+      expect(chip.showCheckmark, isFalse);
+      final ring = find.descendant(
+        of: find.byWidget(chip),
+        matching: find.byType(RingedAvatar),
+      );
+      expect(ring, findsOneWidget);
+      expect(t.widget<RingedAvatar>(ring).selected, isTrue);
     });
 
     testWidgets('key_default none keeps the switch off, even for everyone', (

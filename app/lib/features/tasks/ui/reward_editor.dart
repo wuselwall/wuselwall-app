@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/emoji_picture.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/ui/guardian_gate.dart';
@@ -10,6 +11,7 @@ import 'package:wuselwall/features/tasks/application/task_defaults.dart';
 import 'package:wuselwall/features/tasks/application/tasks_providers.dart';
 import 'package:wuselwall/features/tasks/data/tasks_repository.dart';
 import 'package:wuselwall/features/tasks/domain/tasks_models.dart';
+import 'package:wuselwall/features/tasks/ui/task_widgets.dart';
 
 /// Opens the reward editor. Returns true when the reward was saved.
 Future<bool?> showRewardEditor(
@@ -140,9 +142,15 @@ class _RewardEditorDialogState extends ConsumerState<RewardEditorDialog> {
                 spacing: Tokens.space2,
                 runSpacing: Tokens.space2,
                 children: [
-                  for (final key in <String?>[null, ...taskIcons.keys])
+                  for (final key in <String?>[null, ...taskIconKeys])
                     ChoiceChip(
-                      label: Text(taskIconGlyph(key) ?? l10n.tasksNoIcon),
+                      label: key == null
+                          ? Text(l10n.tasksNoIcon)
+                          : EmojiPicture(
+                              taskIconAsset(key)!,
+                              size: 24,
+                              semanticLabel: taskIconName(l10n, key),
+                            ),
                       selected: _icon == key,
                       onSelected: (_) => setState(() => _icon = key),
                     ),
