@@ -1843,7 +1843,7 @@
   "reminderLocalNote": "Reminders are created on this phone. Nothing is sent to a server or to anyone else.",
   "reminderOnlyPersonal": "Reminders are only available on a member's personal device.",
   "pairFrontDoorAction": "Connect a family tablet or wall display",
-  "pairTitle": "Connect a family tablet or wall display",
+  "pairTitle": "Connect this device",
   "pairScanHint": "Open WuselWall on your phone and scan this code.",
   "pairCodeHint": "Or on the phone: Settings → Devices → Connect a device, then type the code.",
   "pairQrLabel": "QR code to connect this device",

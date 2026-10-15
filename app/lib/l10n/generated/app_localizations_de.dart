@@ -3312,7 +3312,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Familien-Tablet oder Wanddisplay verbinden';
 
   @override
-  String get pairTitle => 'Familien-Tablet oder Wanddisplay verbinden';
+  String get pairTitle => 'Dieses Gerät verbinden';
 
   @override
   String get pairScanHint =>
