@@ -11,6 +11,9 @@ import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_geometry.dart';
 import 'package:wuselwall/features/board/ui/week_board_page.dart';
+import 'package:wuselwall/features/home/ui/register_home_page.dart';
+import 'package:wuselwall/features/identity/application/device_providers.dart';
+import 'package:wuselwall/features/identity/domain/models.dart';
 
 // The reference household (specs/21) in test data only: nothing below is logic.
 // Week of Mon 12 Oct 2026; today is Wed 14 Oct, 14:05.
@@ -89,7 +92,7 @@ Map<String, Object?> _dayJson(
   'meal': meal,
 };
 
-WeekBoard _board() => WeekBoard.fromJson({
+Map<String, Object?> _boardJson() => {
   'week_start': '2026-10-12',
   'today': '2026-10-14',
   'generated_at': '2026-10-14T14:05:00',
@@ -301,7 +304,9 @@ WeekBoard _board() => WeekBoard.fromJson({
     {'member_id': 'hanna', 'count': 1},
   ],
   'shopping_count': 17,
-});
+};
+
+WeekBoard _board() => WeekBoard.fromJson(_boardJson());
 
 final _snapshot = BoardSnapshot(
   board: _board(),
@@ -358,6 +363,37 @@ Future<void> _pumpBoard(
   await t.pump();
 }
 
+/// The kiosk home as the app shows it: the idle reverter wraps the board (register_home_page).
+Future<void> _pumpKiosk(WidgetTester t) async {
+  t.view.physicalSize = const Size(1280, 800);
+  t.view.devicePixelRatio = 1;
+  addTearDown(t.view.resetPhysicalSize);
+  addTearDown(t.view.resetDevicePixelRatio);
+
+  await t.pumpWidget(
+    ProviderScope(
+      overrides: [
+        boardProvider.overrideWith(() => _FixedBoard(_snapshot)),
+        nowProvider.overrideWithValue(DateTime(2026, 10, 14, 14, 5)),
+        nightProvider.overrideWith(() => _FixedNight(false)),
+        deviceKeyProvider.overrideWithValue((
+          deviceId: 'kiosk-1',
+          deviceClass: DeviceClass.kiosk,
+          profileId: null,
+        )),
+      ],
+      child: MaterialApp(
+        theme: AppTheme.build(UiRegister.kiosk, Shade.light),
+        localizationsDelegates: localizationsDelegates,
+        supportedLocales: supportedLocales,
+        locale: const Locale('de'),
+        home: const RegisterHomePage(register: UiRegister.kiosk),
+      ),
+    ),
+  );
+  await t.pump();
+}
+
 void main() {
   group('the week board', () {
     testWidgets('lays out the week at 1280x800 without exceptions', (t) async {
@@ -389,6 +425,67 @@ void main() {
       // Four key events in the afternoon: one shown, three counted.
       expect(find.text('+3 weitere'), findsOneWidget);
     });
+
+    testWidgets('by default the day columns show only the key appointments', (
+      t,
+    ) async {
+      await _pumpBoard(t);
+      expect(find.text('Zahnarzt'), findsOneWidget);
+      expect(find.text('Heizungswartung'), findsNothing);
+    });
+
+    testWidgets(
+      '"Alle Termine" shows a non-key appointment and keeps presence in its zone',
+      (t) async {
+        await _pumpBoard(t);
+        await t.tap(find.text('Alle Termine'));
+        await t.pump();
+
+        expect(find.text('Heizungswartung'), findsOneWidget);
+        expect(
+          ProviderScope.containerOf(t.element(find.byType(WeekBoardPage)))
+              .read(boardAllEventsProvider),
+          isTrue,
+        );
+        expect(find.text('Dienstreise Berlin'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'overflow still counts with every appointment shown, and nothing scrolls',
+      (t) async {
+        final json = _boardJson();
+        final wednesday = (json['days'] as List)[2] as Map<String, Object?>;
+        (wednesday['events'] as List<Map<String, Object?>>).addAll(
+          <Map<String, Object?>>[
+            _event('a', 'Arzt', starts: '12:30', ends: '13:00', who: ['hanna']),
+            _event(
+              'f',
+              'Friseur',
+              starts: '16:30',
+              ends: '17:00',
+              who: ['lotta'],
+            ),
+          ],
+        );
+        await _pumpBoard(
+          t,
+          snapshot: BoardSnapshot(
+            board: WeekBoard.fromJson(json),
+            fetchedAt: DateTime(2026, 10, 14, 14, 4),
+          ),
+        );
+        // Four key appointments in the afternoon: one shown, three counted.
+        expect(find.text('+3 weitere'), findsOneWidget);
+
+        await t.tap(find.text('Alle Termine'));
+        await t.pump();
+        // Six in the afternoon now: still one shown, five counted, no exception.
+        expect(find.text('+5 weitere'), findsOneWidget);
+        expect(find.text('+3 weitere'), findsNothing);
+        expect(t.takeException(), isNull);
+      },
+    );
 
     testWidgets('keeps the empty meal zone and says nothing is planned', (
       t,
@@ -484,6 +581,27 @@ void main() {
     test('makes every column equal when today is outside the week', () {
       const g = BoardGeometry(canvasWidth: 1280);
       expect(g.width(0), closeTo(g.width(6), 0.001));
+    });
+  });
+  group('the all-events switch when the kiosk goes idle', () {
+    testWidgets('the idle kiosk reverts "Alle Termine" to key appointments', (
+      t,
+    ) async {
+      await _pumpKiosk(t);
+      await t.tap(find.text('Alle Termine'));
+      await t.pump();
+      expect(find.text('Heizungswartung'), findsOneWidget);
+
+      // Nobody touches the wall for the idle time: the board is key-only again.
+      await t.pump(const Duration(seconds: 61));
+      await t.pump();
+      expect(find.text('Heizungswartung'), findsNothing);
+      expect(find.text('Zahnarzt'), findsOneWidget);
+      expect(
+        ProviderScope.containerOf(t.element(find.byType(WeekBoardPage)))
+            .read(boardAllEventsProvider),
+        isFalse,
+      );
     });
   });
 }

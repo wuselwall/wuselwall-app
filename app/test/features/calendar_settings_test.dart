@@ -127,7 +127,23 @@ void main() {
         'calendar_ids': <String>[],
         'kinds': ['appointment'],
         'school': 'off',
+        'subscribed': false,
       });
+    });
+
+    test('a token saved before the subscribed key reads as not subscribed', () {
+      final filter = FeedFilter.fromJson({
+        'profile_ids': <String>[],
+        'calendar_ids': <String>[],
+        'kinds': ['appointment'],
+        'school': 'off',
+      });
+      expect(filter.subscribed, isFalse);
+      expect(
+        FeedFilter.fromJson({'kinds': ['appointment'], 'subscribed': true})
+            .subscribed,
+        isTrue,
+      );
     });
 
     test('feedAddress and webcalAddress build the subscription URL', () {
@@ -178,6 +194,7 @@ void main() {
         'calendar_ids': <String>[],
         'kinds': ['appointment'],
         'school': 'off',
+        'subscribed': false,
       });
 
       const url = 'http://localhost/functions/v1/ics/tok123.ics';
@@ -187,6 +204,46 @@ void main() {
           .toList();
       expect(shown, contains(url));
       expect(shown, contains('webcal://localhost/functions/v1/ics/tok123.ics'));
+    });
+
+    testWidgets('the subscribed switch is off by default and sends true when on', (
+      tester,
+    ) async {
+      final feeds = FakeFeedRepository();
+      await pumpApp(
+        tester,
+        overrides: [
+          ...baseOverrides(identity: FakeIdentityRepository(current: device())),
+          feedRepositoryProvider.overrideWithValue(feeds),
+        ],
+      );
+      final container = ProviderScope.containerOf(
+        tester.element(find.byType(Scaffold).first),
+      );
+      container.read(routerProvider).go(Routes.feedTokens);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byType(FloatingActionButton));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField).first, 'Mit Vereinen');
+      await tester.pumpAndSettle();
+      final switchFinder = find.widgetWithText(
+        SwitchListTile,
+        'Abonnierte Kalender einschließen',
+      );
+      expect(tester.widget<SwitchListTile>(switchFinder).value, isFalse);
+      expect(
+        find.text('Termine aus importierten Kalendern (z. B. Verein, Müllabfuhr) erscheinen auch im Abo.'),
+        findsOneWidget,
+      );
+
+      await tester.tap(switchFinder);
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(FilledButton, 'Abo erstellen'));
+      await tester.pumpAndSettle();
+
+      expect(feeds.created.single.filter.subscribed, isTrue);
+      expect(feeds.created.single.filter.toJson()['subscribed'], isTrue);
     });
 
     testWidgets('revoke asks for confirmation and revokes that token only', (

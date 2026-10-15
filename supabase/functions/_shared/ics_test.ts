@@ -7,11 +7,13 @@ import {
 import ICALPkg from "npm:ical.js@2.2.1";
 import { Temporal } from "npm:temporal-polyfill@0.3.0";
 import {
+  type ExternalOccurrence,
   type FeedEvent,
   type FeedOverride,
   foldLine,
   type IcsFeed,
   renderIcs,
+  subscribedOccurrences,
 } from "./ics.ts";
 import type { SchoolData } from "./school.ts";
 
@@ -785,4 +787,154 @@ Deno.test("reference parser (ical.js) reads the school events", () => {
   assertEquals(school.length, tuesdaysInWindow());
   const start = school[0].getFirstPropertyValue("dtstart");
   assertEquals(start.isDate, false);
+});
+
+// ── imported calendars (FR-1.9) ──────────────────────────────────────────────────
+
+const MEMBER_LOTTA = "11111111-1111-4111-8111-111111111111";
+const MEMBER_HANNA = "22222222-2222-4222-8222-222222222222";
+const CAL_FAMILY = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
+const CAL_LOTTA = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb";
+
+/** Imported occurrences: the whole-family bin day, Lotta's match (timed) and Hanna's choir. */
+function external(): ExternalOccurrence[] {
+  return [
+    {
+      calendar_id: CAL_FAMILY,
+      uid_hash: "a1".repeat(32),
+      member_ids: [],
+      starts_at: null,
+      ends_at: null,
+      all_day: true,
+      start_date: "2026-10-20",
+      end_date: "2026-10-20",
+      title: "Restmüll",
+      location: null,
+    },
+    {
+      calendar_id: CAL_LOTTA,
+      uid_hash: "b2".repeat(32),
+      member_ids: [MEMBER_LOTTA],
+      starts_at: "2026-10-17T16:00:00+00:00",
+      ends_at: "2026-10-17T17:30:00+00:00",
+      all_day: false,
+      start_date: null,
+      end_date: null,
+      title: "Spiel, Heim",
+      location: "Sportplatz",
+    },
+    {
+      calendar_id: "cccccccc-cccc-4ccc-8ccc-cccccccccccc",
+      uid_hash: "c3".repeat(32),
+      member_ids: [MEMBER_HANNA],
+      starts_at: "2026-10-18T18:00:00+00:00",
+      ends_at: "2026-10-18T19:00:00+00:00",
+      all_day: false,
+      start_date: null,
+      end_date: null,
+      title: "Chorprobe",
+      location: null,
+    },
+  ];
+}
+
+function subscribedFeed(
+  filter: Record<string, unknown>,
+  over: Partial<IcsFeed> = {},
+): IcsFeed {
+  return feed({
+    filter: { profile_ids: [], calendar_ids: [], kinds: ["appointment"], school: "off", ...filter },
+    external: external(),
+    ...over,
+  });
+}
+
+/** The VEVENTs that come from imported calendars, identified by their UID prefix. */
+function externalBlocks(text: string): string[][] {
+  return veventBlocks(text).filter((b) => b.some((l) => l.startsWith("UID:ext-")));
+}
+
+Deno.test("subscribed off or absent: no imported VEVENTs", () => {
+  assertEquals(externalBlocks(render(subscribedFeed({ subscribed: false }))).length, 0);
+  assertEquals(externalBlocks(render(subscribedFeed({}))).length, 0);
+  assertEquals(externalBlocks(render(feed({ filter: { subscribed: true } }))).length, 0);
+  assertEquals(subscribedOccurrences(subscribedFeed({ subscribed: false })).length, 0);
+});
+
+Deno.test("subscribed true, no profiles: every imported occurrence, all-day and timed right", () => {
+  const out = render(subscribedFeed({ subscribed: true }));
+  const blocks = externalBlocks(out);
+  assertEquals(blocks.length, 3);
+  const lines = unfolded(out);
+  // All-day: DATE values, DTEND the day after.
+  assert(lines.includes("DTSTART;VALUE=DATE:20261020"));
+  assert(lines.includes("DTEND;VALUE=DATE:20261021"));
+  // Timed: UTC instants, no TZID, no VTIMEZONE needed for them.
+  assert(lines.includes("DTSTART:20261017T160000Z"));
+  assert(lines.includes("DTEND:20261017T173000Z"));
+  assert(lines.includes("SUMMARY:Spiel\\, Heim"));
+  assert(lines.includes("LOCATION:Sportplatz"));
+  assert(lines.includes("TRANSP:OPAQUE"));
+  assertFalse(out.includes("TZID=Europe/Berlin:20261017"));
+  for (const b of blocks) {
+    assertFalse(b.some((l) => l.startsWith("X-WUSELWALL-KIND")));
+  }
+});
+
+Deno.test("imported UIDs are stable per occurrence and carry the calendar, the source hash and the start", () => {
+  const first = externalBlocks(render(subscribedFeed({ subscribed: true })))
+    .map((b) => b.find((l) => l.startsWith("UID:")));
+  const again = externalBlocks(render(subscribedFeed({ subscribed: true })))
+    .map((b) => b.find((l) => l.startsWith("UID:")));
+  assertEquals(first, again);
+  assertEquals(
+    first[0],
+    `UID:ext-${CAL_FAMILY}-${"a1".repeat(32)}-20261020@wuselwall.app`,
+  );
+  assertEquals(
+    first[1],
+    `UID:ext-${CAL_LOTTA}-${"b2".repeat(32)}-20261017T1600@wuselwall.app`,
+  );
+  // A moved timed occurrence gets a new UID, so the subscriber sees one event leave and one arrive.
+  const moved = subscribedFeed({ subscribed: true }, {
+    external: external().map((o, i) =>
+      i === 1 ? { ...o, starts_at: "2026-10-17T17:00:00+00:00", ends_at: "2026-10-17T18:30:00+00:00" } : o
+    ),
+  });
+  assert(!render(moved).includes(first[1]!));
+});
+
+Deno.test("a token that names Lotta: whole family and Lotta's calendar, not Hanna's", () => {
+  const out = render(subscribedFeed({ subscribed: true, profile_ids: [MEMBER_LOTTA] }));
+  const titles = externalBlocks(out).map((b) =>
+    b.find((l) => l.startsWith("SUMMARY:"))
+  );
+  assertEquals(titles, ["SUMMARY:Restmüll", "SUMMARY:Spiel\\, Heim"]);
+  assertFalse(out.includes("Chorprobe"));
+});
+
+Deno.test("a token that names Hanna gets the whole family and Hanna's choir only", () => {
+  const out = render(subscribedFeed({ subscribed: true, profile_ids: [MEMBER_HANNA] }));
+  const titles = externalBlocks(out).map((b) => b.find((l) => l.startsWith("SUMMARY:")));
+  assertEquals(titles, ["SUMMARY:Restmüll", "SUMMARY:Chorprobe"]);
+});
+
+Deno.test("the profile filter drops a calendar whose members are all outside the named profiles", () => {
+  const named = subscribedOccurrences(subscribedFeed({ subscribed: true, profile_ids: ["someone-else"] }));
+  assertEquals(named.map((o) => o.calendar_id), [CAL_FAMILY]);
+});
+
+Deno.test("imported occurrences are read as a plain VEVENT by an ICS parser", () => {
+  const out = render(subscribedFeed({ subscribed: true }));
+  const root = new ICAL.Component(ICAL.parse(out));
+  const timed = root.getAllSubcomponents("vevent").find((v: {
+    getFirstPropertyValue(n: string): unknown;
+  }) => String(v.getFirstPropertyValue("uid")).startsWith(`ext-${CAL_LOTTA}`));
+  assert(timed, "the timed imported event is in the parsed feed");
+  assertEquals(timed.getFirstPropertyValue("summary"), "Spiel, Heim");
+  assertEquals(timed.getFirstPropertyValue("dtstart").isDate, false);
+  const allDay = root.getAllSubcomponents("vevent").find((v: {
+    getFirstPropertyValue(n: string): unknown;
+  }) => String(v.getFirstPropertyValue("uid")).startsWith(`ext-${CAL_FAMILY}`));
+  assertEquals(allDay.getFirstPropertyValue("dtstart").isDate, true);
 });

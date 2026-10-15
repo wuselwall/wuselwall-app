@@ -113,3 +113,17 @@ final clockProvider = StreamProvider<DateTime>((ref) async* {
 final nowProvider = Provider<DateTime>(
   (ref) => ref.watch(clockProvider).value ?? DateTime.now(),
 );
+
+/// Whether the week board shows every appointment of each day, not only the key ones
+/// (FR-8.11: a forgotten key flag must not hide an event from the kitchen). Off by default;
+/// the kiosk's idle reverter switches it off again (register_home_page.dart).
+class BoardAllEventsNotifier extends Notifier<bool> {
+  @override
+  bool build() => false;
+
+  void set(bool on) => state = on;
+}
+
+final boardAllEventsProvider = NotifierProvider<BoardAllEventsNotifier, bool>(
+  BoardAllEventsNotifier.new,
+);
