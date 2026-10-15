@@ -33,8 +33,9 @@ String ymd(DateTime d) =>
 /// Opens the app as an adult on a personal device, on the meals tab.
 Future<ProviderContainer> pumpMeals(
   WidgetTester t,
-  FakeMealsRepository meals,
-) async {
+  FakeMealsRepository meals, {
+  Size size = const Size(1000, 1600),
+}) async {
   final container = await pumpApp(
     t,
     overrides: [
@@ -44,6 +45,7 @@ Future<ProviderContainer> pumpMeals(
       ),
     ],
     meals: meals,
+    size: size,
   );
   container.read(homeTabProvider.notifier).select(HomeTab.meals);
   await t.pumpAndSettle();
@@ -442,6 +444,31 @@ void main() {
     await t.pumpAndSettle();
     expect(find.text('Oft bei uns'), findsNothing);
     expect(find.text('Lange nicht gegessen'), findsOneWidget);
+    expect(t.takeException(), isNull);
+    await unmountApp(t, container);
+  });
+
+  testWidgets('the planned time stays whole on a narrow week column', (
+    t,
+  ) async {
+    final meals = FakeMealsRepository(
+      entries: [
+        MealEntry(
+          id: 'm1',
+          onDate: dayOf(0),
+          slot: PlanSlot.dinner,
+          freeText: 'Kürbissuppe',
+          title: 'Kürbissuppe',
+          cookProfileId: guardianId,
+          atTime: const TimeOfDay(hour: 18, minute: 30),
+          guests: 2,
+        ),
+      ],
+    );
+    final container = await pumpMeals(t, meals, size: const Size(1024, 768));
+
+    expect(find.text('18:30'), findsOneWidget);
+    expect(find.text('Papa kocht · +2 Gäste'), findsOneWidget);
     expect(t.takeException(), isNull);
     await unmountApp(t, container);
   });
