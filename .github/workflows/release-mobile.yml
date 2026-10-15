@@ -20,8 +20,9 @@ permissions:
 
 jobs:
   ios:
-    # Xcode 26: App Store Connect accepts only builds made with the iOS 26 SDK or later.
-    runs-on: macos-26
+    # Xcode 26: App Store Connect accepts only builds made with the iOS 26 SDK or later,
+    # so the self-hosted Mac behind the "macOS" label must have Xcode 26 installed.
+    runs-on: macOS
     defaults: { run: { working-directory: app } }
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -30,6 +31,18 @@ jobs:
       # Exactly the packages in pubspec.lock, checked against their hashes, before the
       # signing secrets come near the build.
       - run: flutter pub get --enforce-lockfile
+      # The builds' server is not in the repository: env/dev.json is the store
+      # configuration plus the secrets WW_SUPABASE_URL and WW_SUPABASE_PUBLISHABLE_KEY, until
+      # these builds become store builds (ADR-018). Secrets, not variables: the logs of a
+      # public repository are public, and only secrets are masked in them.
+      - name: Build configuration
+        env:
+          URL: ${{ secrets.WW_SUPABASE_URL }}
+          KEY: ${{ secrets.WW_SUPABASE_PUBLISHABLE_KEY }}
+        run: |
+          [ -n "$URL" ] && [ -n "$KEY" ] || { echo "::error::set the secrets WW_SUPABASE_URL and WW_SUPABASE_PUBLISHABLE_KEY"; exit 1; }
+          jq --arg url "$URL" --arg key "$KEY" \
+            '. + {ENV: "dev", SUPABASE_URL: $url, SUPABASE_PUBLISHABLE_KEY: $key}' env/store.json > env/dev.json
       - uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
         with: { ruby-version: '3.3', bundler-cache: true, working-directory: app/ios }
       - run: xcodebuild -version
@@ -38,7 +51,10 @@ jobs:
       - run: |
           args=(--build-number=${{ github.run_number }})
           if [[ "$GITHUB_REF_TYPE" == tag ]]; then args+=(--build-name="${GITHUB_REF_NAME#v}"); fi
-          flutter build ios --release --no-codesign "${args[@]}" --dart-define-from-file=env/dev.json
+          flutter build ios --release --no-codesign "${args[@]}" --dart-define-from-file=env/dev.json \
+            --dart-define=WW_FIRST_PARTY_HOSTS="$FIRST_PARTY_HOSTS"
+        env:
+          FIRST_PARTY_HOSTS: ${{ secrets.WW_FIRST_PARTY_HOSTS }}
       - run: bundle exec fastlane ios beta
         working-directory: app/ios
         env:

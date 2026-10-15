@@ -46,12 +46,14 @@ LuminanceSource? _luminanceSource(ScanFrame frame) {
   final height = frame.height;
   if (width <= 0 || height <= 0) return null;
   if (frame.bgra) {
-    if (frame.bytesPerRow < width * 4 || frame.bytes.length < frame.bytesPerRow * height) {
+    if (frame.bytesPerRow < width * 4 ||
+        frame.bytes.length < frame.bytesPerRow * height) {
       return null;
     }
     return _bgraLuminance(frame);
   }
-  if (frame.bytesPerRow < width || frame.bytes.length < frame.bytesPerRow * height) {
+  if (frame.bytesPerRow < width ||
+      frame.bytes.length < frame.bytesPerRow * height) {
     return null;
   }
   final bytes = frame.bytes;

@@ -7,7 +7,7 @@
 //   node scripts/apple-client-secret.mjs --client-id <Services ID> --key-id <10 chars>
 //        --p8 <AuthKey_….p8 | -> [--team JSX2VQXW7G] [--days 180]
 //
-// Straight to the home server, never through a file or the clipboard:
+// Straight to the server, never through a file or the clipboard:
 //   node scripts/apple-client-secret.mjs --client-id … --key-id … --p8 … \
 //     | scripts/remote-stack.sh set-env APPLE_SECRET
 //   scripts/remote-stack.sh up -d auth

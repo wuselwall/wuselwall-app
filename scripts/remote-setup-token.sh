@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Issues founder codes on the home server (specs/10#3-first-household, specs/20 "Household
+# Issues founder codes on the server named in scripts/remote.env (specs/10#3-first-household, specs/20 "Household
 # creation: open, or by code"). Prints each code once; only its SHA-256 hash is stored.
 #
 #   scripts/remote-setup-token.sh           the first setup code. Replaces every code, and
@@ -11,6 +11,9 @@
 # The dev seed's "dev-setup" is in git and must not guard a stack that is reachable from the
 # internet.
 set -euo pipefail
+cd "$(dirname "$0")/.."
+# The target server comes from scripts/remote.env (git-ignored; see remote.env.example).
+[ -f scripts/remote.env ] && . scripts/remote.env
 
 case "${1:-}" in
   '')        mode=first ;;
@@ -41,7 +44,7 @@ SQL
 )
 fi
 
-out=$(ssh "${WW_HOST:-unraid}" docker exec -i "${DB_CONTAINER:-supabase-db}" psql -U postgres -X -q -t -A -v ON_ERROR_STOP=1 <<SQL
+out=$(ssh "${WW_HOST:?set WW_HOST in scripts/remote.env}" docker exec -i "${DB_CONTAINER:-supabase-db}" psql -U postgres -X -q -t -A -v ON_ERROR_STOP=1 <<SQL
 $guard_sql
 insert into app.setup_token (token_hash) values (encode(extensions.digest('$token', 'sha256'), 'hex'));
 select 'ok';

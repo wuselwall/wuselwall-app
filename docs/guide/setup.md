@@ -1,6 +1,8 @@
 # Anmelden und verbinden
 
-Auf dem Startbildschirm beginnt alles. Du meldest dich mit deinem Konto an, tretst einer Familie per **Einladung** bei oder verbindest ein **geteiltes Gerät**.
+Beim allerersten Start fragt die App, mit welchem Server sie sich verbinden soll ([App installieren](/guide/install#beim-ersten-start-welcher-server)). Danach geht es hier weiter.
+
+Auf dem Startbildschirm beginnt alles. Du meldest dich mit deinem Konto an, trittst einer Familie per **Einladung** bei oder verbindest ein **geteiltes Gerät**.
 
 <Shot name="setup-start" alt="Startbildschirm von WuselWall" />
 

@@ -1,13 +1,24 @@
 #!/usr/bin/env node
-// Writes the compose stack's .env (ADR-013 amendment) to stdout, from supabase/.env and
-// fresh random values. Run by `scripts/remote-stack.sh init-env`, which streams it to the
-// server once and never stores it on the laptop.
+// Writes the compose stack's .env (ADR-013 amendment) to stdout. Run once per server: by
+// `scripts/remote-stack.sh init-env` (over SSH, from a checkout) or by server/wuselwall
+// (on the server, from a release; docs/server). The output holds every secret; nothing is stored here.
 //
-// Usage: node infra/supabase/make-env.mjs supabase/.env
+// Usage:
+//   node make-env.mjs [supabase/.env] --api https://api.example.org --web https://web.example.org
+//                     [--admin-email you@example.org] [--rp-id example.org] [--studio] [--caddy]
 //
-// Kept from supabase/.env, so every installed app and every device session keeps
-// working: WW_JWT_SECRET (HS256, now also listed in the JWKS) and the opaque
-// WW_PUBLISHABLE_KEY / WW_SECRET_KEY the apps ship with.
+//   supabase/.env  optional. WW_JWT_SECRET, WW_PUBLISHABLE_KEY and WW_SECRET_KEY are kept
+//                  from it, so the apps and every device session of an existing server keep
+//                  working; WW_CRON_SECRET and the WW_APPLE_* / WW_GOOGLE_* values are taken
+//                  over when present. Whatever is missing is generated.
+//   --api          the server's public address (the gateway behind HTTPS)
+//   --web          where the web app is served; Auth sends its redirects there
+//   --rp-id        the passkey relying party (default: the web app's host)
+//   --studio       keep Studio and its metadata service (switched off otherwise; see
+//                  docker-compose.lean.yml)
+//   --caddy        add the Caddy front (docker-compose.caddy.yml): HTTPS from Let's Encrypt
+//                  for both hosts, the web app, and /.well-known/wuselwall.json
+//
 // Generated: the Postgres password and the services' own secrets, an EC P-256 key pair
 // that signs new tokens, the ES256 "internal API keys" the gateway swaps the opaque keys
 // for, and legacy HS256 anon/service JWTs (only the containers' health checks use them).
@@ -15,27 +26,55 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 
-const src = process.argv[2];
-if (!src) {
-  console.error('usage: make-env.mjs <path to supabase/.env>');
+const args = process.argv.slice(2);
+const valued = ['--api', '--web', '--admin-email', '--rp-id'];
+const flag = (name) => args.includes(`--${name}`);
+const option = (name) => {
+  const i = args.indexOf(`--${name}`);
+  return i >= 0 ? args[i + 1] : undefined;
+};
+const fail = (message) => {
+  console.error(`make-env: ${message}`);
   process.exit(2);
-}
-const vars = Object.fromEntries(
-  fs.readFileSync(src, 'utf8').split('\n')
-    .map((l) => l.trim()).filter((l) => l && !l.startsWith('#') && l.includes('='))
-    .map((l) => [l.slice(0, l.indexOf('=')), l.slice(l.indexOf('=') + 1).replace(/^"|"$/g, '')]),
-);
-for (const k of ['WW_JWT_SECRET', 'WW_PUBLISHABLE_KEY', 'WW_SECRET_KEY']) {
-  if (!vars[k]) {
-    console.error(`${k} missing in ${src}`);
-    process.exit(1);
+};
+const src = args.find((a, i) => !a.startsWith('--') && !valued.includes(args[i - 1]));
+
+const origin = (name) => {
+  const value = option(name);
+  if (!value) fail(`--${name} https://… is required`);
+  let url;
+  try {
+    url = new URL(value);
+  } catch {
+    fail(`--${name}: not an address: ${value}`);
   }
-}
-const jwtSecret = vars.WW_JWT_SECRET;
+  if (url.protocol !== 'https:' || url.pathname !== '/' || url.search || url.hash) {
+    fail(`--${name}: an https:// origin without a path, e.g. https://api.example.org`);
+  }
+  return url;
+};
+const api = origin('api');
+const web = origin('web');
+
+const vars = src
+  ? Object.fromEntries(
+    fs.readFileSync(src, 'utf8').split('\n')
+      .map((l) => l.trim()).filter((l) => l && !l.startsWith('#') && l.includes('='))
+      .map((l) => [l.slice(0, l.indexOf('=')), l.slice(l.indexOf('=') + 1).replace(/^"|"$/g, '')]),
+  )
+  : {};
 
 const hex = (n) => crypto.randomBytes(n).toString('hex');
 const b64 = (n) => crypto.randomBytes(n).toString('base64');
 const b64url = (x) => Buffer.from(x).toString('base64url');
+
+// A new server gets fresh keys. They land in the .env printed below (JWT_SECRET,
+// SUPABASE_PUBLISHABLE_KEY, SUPABASE_SECRET_KEY, CRON_SECRET): that file is the copy to keep.
+vars.WW_JWT_SECRET ||= hex(32);
+vars.WW_PUBLISHABLE_KEY ||= `sb_publishable_${b64url(crypto.randomBytes(16))}`;
+vars.WW_SECRET_KEY ||= `sb_secret_${b64url(crypto.randomBytes(16))}`;
+vars.WW_CRON_SECRET ||= hex(32);
+const jwtSecret = vars.WW_JWT_SECRET;
 
 const { privateKey } = crypto.generateKeyPairSync('ec', { namedCurve: 'P-256' });
 const jwk = privateKey.export({ format: 'jwk' });
@@ -58,7 +97,17 @@ function sign(alg, payload) {
 const claims = (role) => ({ role, iss: 'supabase', iat, exp });
 
 const out = {
-  COMPOSE_FILE: 'docker-compose.yml:docker-compose.wuselwall.yml',
+  COMPOSE_FILE: [
+    'docker-compose.yml',
+    'docker-compose.wuselwall.yml',
+    // Storage and imgproxy are unused; Studio and meta run only with --studio.
+    'docker-compose.lean.yml',
+    ...(flag('caddy') ? ['docker-compose.caddy.yml'] : []),
+  ].join(':'),
+  COMPOSE_PROFILES: flag('studio') ? 'studio' : '',
+
+  // The scheduled jobs' shared secret (tasks-nightly, holidays-sync; infra/jobs).
+  CRON_SECRET: vars.WW_CRON_SECRET,
 
   // Secrets
   POSTGRES_PASSWORD: hex(24),
@@ -83,15 +132,19 @@ const out = {
   S3_PROTOCOL_ACCESS_KEY_SECRET: hex(32),
 
   // URLs
-  SUPABASE_PUBLIC_URL: 'https://api.wuselwall.app',
-  API_EXTERNAL_URL: 'https://api.wuselwall.app/auth/v1',
+  SUPABASE_PUBLIC_URL: api.origin,
+  API_EXTERNAL_URL: `${api.origin}/auth/v1`,
   // Where GoTrue's e-mail links land: the web app, not the website (ADR-017).
-  SITE_URL: 'https://web.wuselwall.app/',
-  ADDITIONAL_REDIRECT_URLS: 'https://web.wuselwall.app/**,https://127.0.0.1:3000,ch.goomba.wuselwall://login-callback/',
-  // The registrable domain, so a passkey serves the web app and (through the website's
-  // /.well-known/ files) the native apps alike.
-  PASSKEY_RP_ID: 'wuselwall.app',
-  PASSKEY_RP_ORIGINS: 'https://web.wuselwall.app',
+  SITE_URL: `${web.origin}/`,
+  // The web app, and the native apps' deep link for Apple and Google through the redirect.
+  ADDITIONAL_REDIRECT_URLS: `${web.origin}/**,ch.goomba.wuselwall://login-callback/`,
+  // Passkeys work in the native apps only for the first-party hosts (ADR-018); elsewhere
+  // the web app's own host is the relying party.
+  PASSKEY_RP_ID: option('rp-id') ?? web.hostname,
+  PASSKEY_RP_ORIGINS: web.origin,
+  // Read by the Caddy front (docker-compose.caddy.yml); harmless without it.
+  WW_API_HOST: api.host,
+  WW_WEB_HOST: web.host,
 
   // Ports (docker-compose.wuselwall.yml)
   GATEWAY_BIND: '172.17.0.1',
@@ -135,7 +188,7 @@ const out = {
   MAILER_URLPATHS_RECOVERY: '/auth/v1/verify',
   MAILER_URLPATHS_EMAIL_CHANGE: '/auth/v1/verify',
   // No SMTP yet: nothing sends mail today. Set a real relay before e-mail codes ship.
-  SMTP_ADMIN_EMAIL: 'anmeldung@goomba.ch',
+  SMTP_ADMIN_EMAIL: option('admin-email') ?? `wuselwall@${web.hostname}`,
   SMTP_HOST: 'localhost',
   SMTP_PORT: '25',
   SMTP_USER: '',
@@ -166,11 +219,11 @@ const out = {
   // guarantees by writing one variable for both. The hook is switched on only when the Scaleway
   // project and key from supabase/.env are present, so a stack never sends mail it cannot send.
   SEND_EMAIL_HOOK_SECRET: `v1,whsec_${b64(32)}`,
-  SEND_EMAIL_HOOK_ENABLED: vars.SCW_SECRET_KEY && vars.SCW_PROJECT_ID ? 'true' : 'false',
+  SEND_EMAIL_HOOK_ENABLED: vars.SCW_SECRET_KEY && vars.SCW_PROJECT_ID && vars.MAIL_FROM ? 'true' : 'false',
   SCW_SECRET_KEY: vars.SCW_SECRET_KEY ?? '',
   SCW_PROJECT_ID: vars.SCW_PROJECT_ID ?? '',
   SCW_REGION: vars.SCW_REGION ?? 'fr-par',
-  MAIL_FROM: vars.MAIL_FROM ?? 'anmeldung@goomba.ch',
+  MAIL_FROM: vars.MAIL_FROM ?? '',
   MAIL_FROM_NAME: vars.MAIL_FROM_NAME ?? 'WuselWall',
 
   // Storage

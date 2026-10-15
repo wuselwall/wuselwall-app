@@ -1,7 +1,7 @@
 # Pull requests get the fast checks: format, analyse, unit and widget tests, the website
 # build, the dependency audit. A tag v*.*.* (the release, next to release-mobile.yml and build-android.yml) or
 # "Run workflow" adds the web build and the backend: every migration from zero, pgTAP, the
-# integration test. Run it by hand on a branch before its migration goes to Unraid (specs/10).
+# integration test. Run it by hand on a branch before its migration goes to a live server (specs/10).
 name: ci
 on:
   workflow_dispatch:

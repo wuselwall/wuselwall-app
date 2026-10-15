@@ -337,7 +337,7 @@ begin
   end if;
   -- One household per account, and no device user (a shared or kiosk tablet) starts one.
   if exists (select 1 from app.profile where auth_user_id = v_user and active)
-     -- A phone revoked by leaving a family does not count (20261014220000_leave.sql).
+     -- A phone revoked by leaving a family does not count (20261015104000_leave.sql).
      or exists (select 1 from app.device where auth_user_id = v_user
                  and (class <> 'personal' or revoked_at is null)) then
     raise exception 'already in a household' using errcode = '42501', hint = 'already_in_household';

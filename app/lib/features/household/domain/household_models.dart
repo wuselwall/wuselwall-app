@@ -64,6 +64,7 @@ class Account {
 
   /// The family this account's adult profile sat in, once it was deleted; null otherwise.
   final DeletedHousehold? deletedHousehold;
+
   /// Invitations that name this account's confirmed email: H0 offers them before H1.
   final List<PendingInvitation> pendingInvitations;
 

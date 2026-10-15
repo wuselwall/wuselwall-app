@@ -3,14 +3,14 @@
 **Status:** Accepted · 2026-10-11 · Amends [ADR-004](ADR-004-identity-model.md) (adult
 accounts, device enrolment), [ADR-010](ADR-010-flutter-and-self-hosted-supabase.md#identity-on-supabase-auth)
 (public sign-up), [ADR-011](ADR-011-native-distribution-and-ci-cd.md) (public
-distribution before opening) and [ADR-013](ADR-013-one-self-hosted-environment.md)
+distribution before opening) and [ADR-013](ADR-013-self-hosted-compose-stack.md)
 (further tenants); reverses the multi-tenancy non-goal in [01](../01-vision-and-scope.md).
 The experience is specified in [20 — Onboarding](../20-onboarding.md). Amended by
 [ADR-015](ADR-015-saas-and-self-hosted-flavours.md) on 2026-10-11: households live on
 *WuselWall Cloud* or a self-hosted server; native Apple/Google sign-in only on Cloud; no
 captcha; public store listings.
 
-**Amended 2026-10-13 by [ADR-018](ADR-018-self-hosted-only.md):** self-service happens on self-hosted servers only — the store app has no default server, and the family's server stays in `code` mode for good.
+**Amended 2026-10-13 by [ADR-018](ADR-018-self-hosted-only.md):** self-service happens on self-hosted servers only — the store app has no default server, and the project runs none for anyone.
 
 **Amended 2026-10-13 by [ADR-017](ADR-017-wuselwall-app-domain.md):** the links domain is decided — `wuselwall.app` ([Q45](../14-open-questions.md)).
 
@@ -177,7 +177,7 @@ enough until abuse is observed. *Rejected outright by the user on 2026-10-11.*
   at the gate. *Decided by ADR-015: public App Store and Google Play listings.*
 - **The domain becomes hard to change.** Universal links, the passkey relying-party ID
   and every invitation link are bound to it. Pick the final domain before the gate
-  ([Q45](../14-open-questions.md); `wusel.goomba.ch` until then).
+  ([Q45](../14-open-questions.md); decided: `wuselwall.app`).
 - `app.create_auth_user`, which writes the `auth` schema directly, now serves pairing as
   well as enrolment. Its portability caveat in ADR-013 applies twice.
 - **A narrow exception to the service-role rule** ([03](../03-architecture.md)):

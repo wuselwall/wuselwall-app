@@ -7,7 +7,7 @@
 // constant time. Anything else is a 401 with no body. The service role is only used for
 // api.household_purge_due, which checks the role itself as well.
 //
-// Scheduling: infra/cron/household-purge.sh, run daily by Unraid's User Scripts plugin, POSTs
+// Scheduling: pg_cron (infra/jobs/schedule.sql) or infra/cron/household-purge.sh, daily, POSTs
 // here through the gateway on the Docker bridge with the secret from a root-only file. The
 // router lets this function through without a user JWT (NO_USER_FUNCTIONS in
 // infra/supabase/volumes/functions/main/index.ts); the secret is the only way in. Re-running

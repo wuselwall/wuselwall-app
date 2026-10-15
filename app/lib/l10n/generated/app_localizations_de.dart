@@ -4002,4 +4002,90 @@ class AppLocalizationsDe extends AppLocalizations {
   String mfaResetDone(String name) {
     return 'Der zweite Faktor von $name ist zurückgesetzt.';
   }
+
+  @override
+  String get serverTitle => 'Mit welchem Server?';
+
+  @override
+  String get serverLead =>
+      'WuselWall speichert eure Daten auf dem Server eurer Familie. Gib seine Adresse ein oder scanne seinen QR-Code.';
+
+  @override
+  String get serverAddressLabel => 'Adresse des Servers';
+
+  @override
+  String get serverAddressHint => 'z. B. api.example.org';
+
+  @override
+  String get serverConnect => 'Verbinden';
+
+  @override
+  String get serverScan => 'QR-Code scannen';
+
+  @override
+  String get serverScanTitle => 'QR-Code des Servers scannen';
+
+  @override
+  String get serverDemo => 'Ohne Server ausprobieren';
+
+  @override
+  String get serverDemoHint =>
+      'Mit einer Beispielfamilie. Nichts verlässt dieses Gerät.';
+
+  @override
+  String get serverHelp =>
+      'Noch kein Server? Die Anleitung auf wuselwall.app/docs zeigt, wie ihr einen einrichtet.';
+
+  @override
+  String get serverInvalid => 'Das ist keine Serveradresse.';
+
+  @override
+  String get serverUnreachable =>
+      'Der Server antwortet nicht. Stimmt die Adresse, und bist du online?';
+
+  @override
+  String get serverNotWuselwall =>
+      'Unter dieser Adresse läuft kein WuselWall-Server.';
+
+  @override
+  String get serverTooOld =>
+      'Dieser Server braucht ein Update. Bitte die Person, die ihn betreibt, WuselWall zu aktualisieren.';
+
+  @override
+  String get serverAppTooOld =>
+      'Dieser Server braucht eine neuere Version der App. Bitte aktualisiere WuselWall.';
+
+  @override
+  String get serverIncompatibleTitle => 'Server und App passen nicht zusammen';
+
+  @override
+  String get serverChooseOther => 'Anderen Server wählen';
+
+  @override
+  String get demoBanner => 'Beispielfamilie: nichts wird gespeichert';
+
+  @override
+  String get demoExit => 'Beenden';
+
+  @override
+  String get settingsServer => 'Server';
+
+  @override
+  String settingsServerBody(String address) {
+    return 'Diese App spricht mit $address. Scanne diesen Code mit der WuselWall-App auf einem anderen Gerät, um es mit demselben Server zu verbinden.';
+  }
+
+  @override
+  String get settingsServerSwitch => 'Server wechseln';
+
+  @override
+  String get settingsServerSwitchConfirm =>
+      'Dieses Gerät wird abgemeldet und vergisst alles, was darauf gespeichert ist. Danach kannst du einen anderen Server wählen.';
+
+  @override
+  String get setupPhoneTitle => 'Auf dem Handy weitermachen';
+
+  @override
+  String get setupPhoneBody =>
+      'Öffne die WuselWall-App auf deinem Handy, wähle diesen Server, indem du den Code scannst, und melde dich dort an.';
 }

@@ -1,5 +1,7 @@
 # Signing in and connecting
 
+At the very first start, the app asks which server to connect to ([Installing the app](/en/guide/install#at-first-start-which-server)). Then it goes on here.
+
 The start screen is where everything begins. You sign in with your account, join a family by **invitation**, or connect a **shared device**.
 
 <Shot name="setup-start" alt="WuselWall start screen" />

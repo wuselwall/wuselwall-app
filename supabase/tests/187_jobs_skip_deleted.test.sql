@@ -1,7 +1,7 @@
 begin;
 select plan(4);
 
--- The scheduled jobs do not see a deleted household (20261014225000_jobs_skip_deleted.sql).
+-- The scheduled jobs do not see a deleted household (20261015105000_jobs_skip_deleted.sql).
 delete from app.household;
 
 insert into app.household (name) values ('Live'), ('Deleted');

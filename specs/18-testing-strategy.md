@@ -84,7 +84,7 @@ Two modes, selected by `--dart-define-from-file`:
 - **Hermetic** (`env/e2e-fake.json`): providers overridden with fakes. Fast, no network,
   deterministic. Most flows run this way.
 - **Backed** (`env/ci.json`): a throwaway stack (CI, or `supabase start` on the laptop) —
-  never the one environment, which holds the family's data (ADR-013). A handful of flows only.
+  never a live server, which holds a family's data (ADR-013). A handful of flows only.
 
 First flows:
 

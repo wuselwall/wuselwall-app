@@ -114,9 +114,11 @@ class _QrScanPageState extends State<QrScanPage> with WidgetsBindingObserver {
       await _releaseCamera();
       // The plugin reports a refused permission as CameraAccessDenied (or ...WithoutPrompt
       // and ...Restricted); anything else means the camera could not be opened.
-      _show(e.code.startsWith('CameraAccess')
-          ? _ScanPhase.denied
-          : _ScanPhase.unavailable);
+      _show(
+        e.code.startsWith('CameraAccess')
+            ? _ScanPhase.denied
+            : _ScanPhase.unavailable,
+      );
     } on Object {
       // A missing platform implementation or an unexpected failure: no usable camera.
       await _releaseCamera();

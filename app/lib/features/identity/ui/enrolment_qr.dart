@@ -5,8 +5,8 @@ import 'package:wuselwall/features/identity/domain/enrol_code.dart';
 
 /// The enrolment code as a QR code, dark on paper in every shade so it scans.
 class EnrolmentQr extends StatelessWidget {
-  EnrolmentQr({required String code, super.key})
-    : payload = enrolmentQrPayload(code);
+  EnrolmentQr({required String code, String? server, super.key})
+    : payload = enrolmentQrPayload(code, server: server);
 
   /// What the QR code encodes; the new device parses it with `parseEnrolmentCode`.
   final String payload;

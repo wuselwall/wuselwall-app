@@ -1,0 +1,8 @@
+{
+  "ENV": "dev",
+  "SUPABASE_URL": "https://api.example.org",
+  "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_…",
+  "APPLE_SIGN_IN": false,
+  "GOOGLE_WEB_CLIENT_ID": "",
+  "GOOGLE_IOS_CLIENT_ID": ""
+}

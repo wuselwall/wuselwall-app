@@ -52,7 +52,7 @@ begin
   return v_at;
 end $$;
 
--- Same behaviour as in 20261014220000_leave.sql; the closing is now app.household_close.
+-- Same behaviour as in 20261015104000_leave.sql; the closing is now app.household_close.
 create or replace function api.household_delete(p_actor uuid, p_confirm_name text) returns jsonb
 language plpgsql security definer set search_path = '' as $$
 declare

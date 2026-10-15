@@ -71,7 +71,7 @@ file_size_limit = "50MiB"
 enabled = true
 # The base URL of your website. Used as an allow-list for redirects and for constructing URLs used
 # in emails.
-site_url = "https://web.wuselwall.app"
+site_url = "http://127.0.0.1:3000"
 # A list of *exact* URLs that auth providers are permitted to redirect to post authentication.
 additional_redirect_urls = ["https://127.0.0.1:3000", "ch.goomba.wuselwall://login-callback/"]
 # Our own keys: the CLI defaults are public and this stack is reachable from the internet.
@@ -150,7 +150,7 @@ uri = "pg-functions://postgres/app/custom_access_token_hook"
 # The Send Email Hook (specs/10 §4, specs/20 "Email"): GoTrue hands every mail to the send-email
 # Edge Function instead of sending it, and that function renders it in the recipient's language
 # and sends it through Scaleway Transactional Email. Off here: CLI and CI stacks catch mail in
-# Mailpit (local_smtp) and need no Scaleway project. The home server's compose stack switches it
+# Mailpit (local_smtp) and need no Scaleway project. A compose stack switches it
 # on in infra/supabase/docker-compose.wuselwall.yml. To try it on a laptop, set enabled = true,
 # put SEND_EMAIL_HOOK_SECRET (v1,whsec_<base64>) and the SCW_* / MAIL_FROM* values in supabase/.env.
 [auth.hook.send_email]
@@ -172,7 +172,7 @@ auth_token = "env(SUPABASE_AUTH_SMS_TWILIO_AUTH_TOKEN)"
 # `twitter`, `slack`, `spotify`, `workos`, `zoom`.
 # Sign in with Apple and Google (ADR-014, specs/10 §4). Off on CLI stacks: CI and laptops
 # have no Apple or Google clients, and neither provider can redirect to 127.0.0.1. The
-# home server enables both in infra/supabase/docker-compose.wuselwall.yml. To try them on
+# compose stack enables them in infra/supabase/docker-compose.wuselwall.yml. To try them on
 # a laptop stack, set enabled = true and the WW_* values in supabase/.env.
 # client_id lists every accepted audience, comma-separated, redirect client first:
 # Apple "<Services ID>,ch.goomba.wuselwall"; Google "<web client>,<iOS client>".
@@ -225,3 +225,23 @@ enabled = true
 rp_display_name = "WuselWall"
 rp_id = "localhost"
 rp_origins = ["http://localhost:3000"]
+
+# Functions called without a user (ADR-018). They check the caller themselves: the ICS
+# token, the jobs' x-cron-secret (holidays-sync also takes a user JWT and verifies it),
+# and server-info is public by design. Hosted Supabase verifies a JWT by default, so a
+# plain `supabase functions deploy` needs these; the compose stack's router has the same
+# list (infra/supabase/volumes/functions/main/index.ts).
+[functions.ics]
+verify_jwt = false
+
+[functions.tasks-nightly]
+verify_jwt = false
+
+[functions.holidays-sync]
+verify_jwt = false
+
+[functions.calendar-import]
+verify_jwt = false
+
+[functions.server-info]
+verify_jwt = false
