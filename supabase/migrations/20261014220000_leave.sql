@@ -145,6 +145,25 @@ language sql stable security definer set search_path = '' as $$
                                        and o.active and o.id <> p.id and o.role = 'guardian'
                                        and o.auth_user_id is not null)
                         then 'last_guardian' end,
+    -- Invitations naming this account's confirmed email (20261014210000_invitations.sql),
+    -- never into a deleted family.
+    'pending_invitations', coalesce((
+      select jsonb_agg(jsonb_build_object(
+               'id', i.id,
+               'household_name', h.name,
+               'inviter_first_name', nullif(split_part(btrim(coalesce(inv.display_name, '')), ' ', 1), ''),
+               'profile_name', ip.display_name,
+               'profile_color', ip.color,
+               'role', i.role)
+             order by i.created_at, i.id)
+        from app.invitation i
+        join app.household h on h.id = i.household_id and h.deleted_at is null
+        join app.profile ip on ip.id = i.profile_id
+        left join app.profile inv on inv.id = i.created_by_profile_id
+       where u.email_confirmed_at is not null
+         and i.email = lower(u.email)
+         and i.accepted_at is null and i.revoked_at is null and i.expires_at > now()
+         and ip.active and ip.auth_user_id is null), '[]'::jsonb),
     'deleted_household', case when p.deleted_at is not null then jsonb_build_object(
       'id',         p.household_id,
       'name',       p.household_name,

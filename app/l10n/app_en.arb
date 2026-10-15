@@ -2074,5 +2074,117 @@
   "leaveErrRestoreExpired": "This family can no longer be restored.",
   "leaveErrNotDeleted": "This family is not deleted.",
   "leaveErrAdultRequired": "Only adults have their own account.",
-  "leaveErrAlreadyInHousehold": "This account already belongs to a family."
+  "leaveErrAlreadyInHousehold": "This account already belongs to a family.",
+  "inviteDoorAction": "I have an invitation code",
+  "inviteCodeTitle": "Invitation",
+  "inviteCodeBody": "Enter the code, or paste the link you were sent.",
+  "inviteCodeLabel": "Code or link",
+  "inviteCheckAction": "Check invitation",
+  "inviteCodeInvalidFormat": "That is neither an invitation code nor a WuselWall link.",
+  "inviteNoLonger": "This invitation is no longer valid. Ask the person who invited you for a new one.",
+  "inviteRateLimited": "Too many attempts. Wait a few minutes and try again.",
+  "inviteBanner": "{inviter} has invited you to {household}",
+  "@inviteBanner": {
+    "placeholders": {
+      "inviter": {
+        "type": "String"
+      },
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteBannerNoInviter": "You are invited to {household}",
+  "@inviteBannerNoInviter": {
+    "placeholders": {
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteRoleLineGuardian": "As a guardian you see everything and approve rewards.",
+  "inviteRoleLineMember": "As a member you tick off tasks, without approving rewards.",
+  "inviteContinue": "Continue to sign-in",
+  "inviteJoin": "Join",
+  "inviteNewFamilyInstead": "Start my own family",
+  "inviteJoinTitle": "You are {name} in {household}",
+  "@inviteJoinTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteJoinHint": "Your name and colour, as the family sees them. You can change them later in Settings.",
+  "inviteJoinDecline": "Don't join",
+  "inviteAlreadyIn": "You are already in {household}.",
+  "@inviteAlreadyIn": {
+    "placeholders": {
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteNothingKept": "There is no invitation to join any more.",
+  "inviteResultTitle": "Invitation for {name}",
+  "@inviteResultTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteResultHint": "The person enters the code in WuselWall, or scans the QR code.",
+  "inviteValidUntil": "Valid until {date}",
+  "@inviteValidUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteQrLabel": "QR code of the invitation",
+  "inviteShare": "Share",
+  "inviteDone": "Done",
+  "inviteShareMessage": "Join {household} on WuselWall: {link} — or enter the code {code} in the app.",
+  "@inviteShareMessage": {
+    "placeholders": {
+      "household": {
+        "type": "String"
+      },
+      "link": {
+        "type": "String"
+      },
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteAdultTitle": "Invite an adult",
+  "inviteAdultName": "Name",
+  "inviteAdultRole": "Role",
+  "inviteRoleGuardian": "Guardian",
+  "inviteRoleMember": "Member",
+  "inviteRoleGuardianHelp": "Sees everything and approves rewards.",
+  "inviteRoleMemberHelp": "Ticks off tasks but does not approve rewards. For an au pair or grandparents.",
+  "inviteAdultEmail": "Email (optional)",
+  "inviteAdultEmailHelp": "With this address the person finds the invitation by itself when signing in.",
+  "inviteEmailInvalid": "That does not look like an email address.",
+  "inviteCreate": "Create invitation",
+  "inviteInviteAction": "Invite",
+  "inviteOpenUntil": "Invited · until {date}",
+  "@inviteOpenUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteShareAgain": "Share again",
+  "inviteWithdraw": "Withdraw",
+  "inviteWithdrawn": "Invitation withdrawn.",
+  "inviteScanTitle": "Scan invitation"
 }

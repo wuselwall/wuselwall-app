@@ -3750,4 +3750,162 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get leaveErrAlreadyInHousehold =>
       'This account already belongs to a family.';
+
+  @override
+  String get inviteDoorAction => 'I have an invitation code';
+
+  @override
+  String get inviteCodeTitle => 'Invitation';
+
+  @override
+  String get inviteCodeBody =>
+      'Enter the code, or paste the link you were sent.';
+
+  @override
+  String get inviteCodeLabel => 'Code or link';
+
+  @override
+  String get inviteCheckAction => 'Check invitation';
+
+  @override
+  String get inviteCodeInvalidFormat =>
+      'That is neither an invitation code nor a WuselWall link.';
+
+  @override
+  String get inviteNoLonger =>
+      'This invitation is no longer valid. Ask the person who invited you for a new one.';
+
+  @override
+  String get inviteRateLimited =>
+      'Too many attempts. Wait a few minutes and try again.';
+
+  @override
+  String inviteBanner(String inviter, String household) {
+    return '$inviter has invited you to $household';
+  }
+
+  @override
+  String inviteBannerNoInviter(String household) {
+    return 'You are invited to $household';
+  }
+
+  @override
+  String get inviteRoleLineGuardian =>
+      'As a guardian you see everything and approve rewards.';
+
+  @override
+  String get inviteRoleLineMember =>
+      'As a member you tick off tasks, without approving rewards.';
+
+  @override
+  String get inviteContinue => 'Continue to sign-in';
+
+  @override
+  String get inviteJoin => 'Join';
+
+  @override
+  String get inviteNewFamilyInstead => 'Start my own family';
+
+  @override
+  String inviteJoinTitle(String name, String household) {
+    return 'You are $name in $household';
+  }
+
+  @override
+  String get inviteJoinHint =>
+      'Your name and colour, as the family sees them. You can change them later in Settings.';
+
+  @override
+  String get inviteJoinDecline => 'Don\'t join';
+
+  @override
+  String inviteAlreadyIn(String household) {
+    return 'You are already in $household.';
+  }
+
+  @override
+  String get inviteNothingKept => 'There is no invitation to join any more.';
+
+  @override
+  String inviteResultTitle(String name) {
+    return 'Invitation for $name';
+  }
+
+  @override
+  String get inviteResultHint =>
+      'The person enters the code in WuselWall, or scans the QR code.';
+
+  @override
+  String inviteValidUntil(String date) {
+    return 'Valid until $date';
+  }
+
+  @override
+  String get inviteQrLabel => 'QR code of the invitation';
+
+  @override
+  String get inviteShare => 'Share';
+
+  @override
+  String get inviteDone => 'Done';
+
+  @override
+  String inviteShareMessage(String household, String link, String code) {
+    return 'Join $household on WuselWall: $link — or enter the code $code in the app.';
+  }
+
+  @override
+  String get inviteAdultTitle => 'Invite an adult';
+
+  @override
+  String get inviteAdultName => 'Name';
+
+  @override
+  String get inviteAdultRole => 'Role';
+
+  @override
+  String get inviteRoleGuardian => 'Guardian';
+
+  @override
+  String get inviteRoleMember => 'Member';
+
+  @override
+  String get inviteRoleGuardianHelp => 'Sees everything and approves rewards.';
+
+  @override
+  String get inviteRoleMemberHelp =>
+      'Ticks off tasks but does not approve rewards. For an au pair or grandparents.';
+
+  @override
+  String get inviteAdultEmail => 'Email (optional)';
+
+  @override
+  String get inviteAdultEmailHelp =>
+      'With this address the person finds the invitation by itself when signing in.';
+
+  @override
+  String get inviteEmailInvalid => 'That does not look like an email address.';
+
+  @override
+  String get inviteCreate => 'Create invitation';
+
+  @override
+  String get inviteInviteAction => 'Invite';
+
+  @override
+  String inviteOpenUntil(String date) {
+    return 'Invited · until $date';
+  }
+
+  @override
+  String get inviteShareAgain => 'Share again';
+
+  @override
+  String get inviteWithdraw => 'Withdraw';
+
+  @override
+  String get inviteWithdrawn => 'Invitation withdrawn.';
+
+  @override
+  String get inviteScanTitle => 'Scan invitation';
 }

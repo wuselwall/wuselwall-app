@@ -1,3 +1,5 @@
+import 'package:wuselwall/features/invitations/domain/invitation.dart';
+
 /// The signed-in account, as `api.my_account()` reports it. It knows nothing about the
 /// household beyond whether there is one; the household's own data comes after sign-in.
 class Account {
@@ -13,6 +15,7 @@ class Account {
     this.householdName,
     this.leaveBlocked,
     this.deletedHousehold,
+    this.pendingInvitations = const [],
   });
 
   factory Account.fromJson(Map<String, dynamic> json) => Account(
@@ -33,6 +36,11 @@ class Account {
             json['deleted_household'] as Map<String, dynamic>,
           )
         : null,
+    pendingInvitations: [
+      for (final i
+          in (json['pending_invitations'] as List<Object?>? ?? const []))
+        PendingInvitation.fromJson(i! as Map<String, dynamic>),
+    ],
   );
 
   final String userId;
@@ -56,6 +64,8 @@ class Account {
 
   /// The family this account's adult profile sat in, once it was deleted; null otherwise.
   final DeletedHousehold? deletedHousehold;
+  /// Invitations that name this account's confirmed email: H0 offers them before H1.
+  final List<PendingInvitation> pendingInvitations;
 
   /// The family name suggested for H1: the surname of [fullName], when there is one.
   String? get suggestedFamilyName {

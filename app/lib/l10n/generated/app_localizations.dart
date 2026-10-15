@@ -6523,6 +6523,270 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This account already belongs to a family.'**
   String get leaveErrAlreadyInHousehold;
+
+  /// No description provided for @inviteDoorAction.
+  ///
+  /// In en, this message translates to:
+  /// **'I have an invitation code'**
+  String get inviteDoorAction;
+
+  /// No description provided for @inviteCodeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Invitation'**
+  String get inviteCodeTitle;
+
+  /// No description provided for @inviteCodeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the code, or paste the link you were sent.'**
+  String get inviteCodeBody;
+
+  /// No description provided for @inviteCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Code or link'**
+  String get inviteCodeLabel;
+
+  /// No description provided for @inviteCheckAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Check invitation'**
+  String get inviteCheckAction;
+
+  /// No description provided for @inviteCodeInvalidFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'That is neither an invitation code nor a WuselWall link.'**
+  String get inviteCodeInvalidFormat;
+
+  /// No description provided for @inviteNoLonger.
+  ///
+  /// In en, this message translates to:
+  /// **'This invitation is no longer valid. Ask the person who invited you for a new one.'**
+  String get inviteNoLonger;
+
+  /// No description provided for @inviteRateLimited.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts. Wait a few minutes and try again.'**
+  String get inviteRateLimited;
+
+  /// No description provided for @inviteBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'{inviter} has invited you to {household}'**
+  String inviteBanner(String inviter, String household);
+
+  /// No description provided for @inviteBannerNoInviter.
+  ///
+  /// In en, this message translates to:
+  /// **'You are invited to {household}'**
+  String inviteBannerNoInviter(String household);
+
+  /// No description provided for @inviteRoleLineGuardian.
+  ///
+  /// In en, this message translates to:
+  /// **'As a guardian you see everything and approve rewards.'**
+  String get inviteRoleLineGuardian;
+
+  /// No description provided for @inviteRoleLineMember.
+  ///
+  /// In en, this message translates to:
+  /// **'As a member you tick off tasks, without approving rewards.'**
+  String get inviteRoleLineMember;
+
+  /// No description provided for @inviteContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue to sign-in'**
+  String get inviteContinue;
+
+  /// No description provided for @inviteJoin.
+  ///
+  /// In en, this message translates to:
+  /// **'Join'**
+  String get inviteJoin;
+
+  /// No description provided for @inviteNewFamilyInstead.
+  ///
+  /// In en, this message translates to:
+  /// **'Start my own family'**
+  String get inviteNewFamilyInstead;
+
+  /// No description provided for @inviteJoinTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You are {name} in {household}'**
+  String inviteJoinTitle(String name, String household);
+
+  /// No description provided for @inviteJoinHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your name and colour, as the family sees them. You can change them later in Settings.'**
+  String get inviteJoinHint;
+
+  /// No description provided for @inviteJoinDecline.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t join'**
+  String get inviteJoinDecline;
+
+  /// No description provided for @inviteAlreadyIn.
+  ///
+  /// In en, this message translates to:
+  /// **'You are already in {household}.'**
+  String inviteAlreadyIn(String household);
+
+  /// No description provided for @inviteNothingKept.
+  ///
+  /// In en, this message translates to:
+  /// **'There is no invitation to join any more.'**
+  String get inviteNothingKept;
+
+  /// No description provided for @inviteResultTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Invitation for {name}'**
+  String inviteResultTitle(String name);
+
+  /// No description provided for @inviteResultHint.
+  ///
+  /// In en, this message translates to:
+  /// **'The person enters the code in WuselWall, or scans the QR code.'**
+  String get inviteResultHint;
+
+  /// No description provided for @inviteValidUntil.
+  ///
+  /// In en, this message translates to:
+  /// **'Valid until {date}'**
+  String inviteValidUntil(String date);
+
+  /// No description provided for @inviteQrLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'QR code of the invitation'**
+  String get inviteQrLabel;
+
+  /// No description provided for @inviteShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get inviteShare;
+
+  /// No description provided for @inviteDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get inviteDone;
+
+  /// No description provided for @inviteShareMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Join {household} on WuselWall: {link} — or enter the code {code} in the app.'**
+  String inviteShareMessage(String household, String link, String code);
+
+  /// No description provided for @inviteAdultTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite an adult'**
+  String get inviteAdultTitle;
+
+  /// No description provided for @inviteAdultName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get inviteAdultName;
+
+  /// No description provided for @inviteAdultRole.
+  ///
+  /// In en, this message translates to:
+  /// **'Role'**
+  String get inviteAdultRole;
+
+  /// No description provided for @inviteRoleGuardian.
+  ///
+  /// In en, this message translates to:
+  /// **'Guardian'**
+  String get inviteRoleGuardian;
+
+  /// No description provided for @inviteRoleMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Member'**
+  String get inviteRoleMember;
+
+  /// No description provided for @inviteRoleGuardianHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Sees everything and approves rewards.'**
+  String get inviteRoleGuardianHelp;
+
+  /// No description provided for @inviteRoleMemberHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Ticks off tasks but does not approve rewards. For an au pair or grandparents.'**
+  String get inviteRoleMemberHelp;
+
+  /// No description provided for @inviteAdultEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email (optional)'**
+  String get inviteAdultEmail;
+
+  /// No description provided for @inviteAdultEmailHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'With this address the person finds the invitation by itself when signing in.'**
+  String get inviteAdultEmailHelp;
+
+  /// No description provided for @inviteEmailInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'That does not look like an email address.'**
+  String get inviteEmailInvalid;
+
+  /// No description provided for @inviteCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create invitation'**
+  String get inviteCreate;
+
+  /// No description provided for @inviteInviteAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite'**
+  String get inviteInviteAction;
+
+  /// No description provided for @inviteOpenUntil.
+  ///
+  /// In en, this message translates to:
+  /// **'Invited · until {date}'**
+  String inviteOpenUntil(String date);
+
+  /// No description provided for @inviteShareAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Share again'**
+  String get inviteShareAgain;
+
+  /// No description provided for @inviteWithdraw.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw'**
+  String get inviteWithdraw;
+
+  /// No description provided for @inviteWithdrawn.
+  ///
+  /// In en, this message translates to:
+  /// **'Invitation withdrawn.'**
+  String get inviteWithdrawn;
+
+  /// No description provided for @inviteScanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan invitation'**
+  String get inviteScanTitle;
 }
 
 class _AppLocalizationsDelegate
