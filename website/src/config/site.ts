@@ -53,3 +53,25 @@ export const unfilledLegal: string[] = Object.entries(legal)
 if (process.env.LEGAL_STRICT === '1' && unfilledLegal.length > 0) {
   throw new Error(`LEGAL_STRICT: fill in src/config/site.ts (${unfilledLegal.join(', ')})`);
 }
+
+// Universal links (iOS) and App Links (Android) for the invitation and pairing links on
+// wuselwall.app (specs/20, "Universal links and the landing pages"). The apple-app-site-
+// association file is static (public/.well-known/); assetlinks.json is built from this.
+export const appLinks = {
+  iosTeamId: 'JSX2VQXW7G',
+  iosBundleId: 'ch.goomba.wuselwall',
+  androidPackage: 'ch.goomba.wuselwall',
+  // SHA-256 fingerprints of the certificates that sign the Android app, colon-separated
+  // (AA:BB:…). Fill in the upload key's fingerprint and, for Play App Signing, the app
+  // signing key's (Play Console → App integrity). Until then assetlinks.json lists no
+  // fingerprint, Android does not verify the links and they open in the browser; with
+  // LINKS_STRICT=1 the build fails while any value still starts with "TODO".
+  androidSha256: ['TODO: SHA-256 of the upload key', 'TODO: SHA-256 of the Play app signing key'] as string[],
+};
+
+/** The fingerprints that are real ones, for assetlinks.json. */
+export const androidFingerprints: string[] = appLinks.androidSha256.filter((v) => !v.startsWith('TODO'));
+
+if (process.env.LINKS_STRICT === '1' && androidFingerprints.length < appLinks.androidSha256.length) {
+  throw new Error('LINKS_STRICT: fill in the Android SHA-256 fingerprints in src/config/site.ts (appLinks)');
+}
