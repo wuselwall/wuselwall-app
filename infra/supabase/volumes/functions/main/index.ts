@@ -15,7 +15,7 @@ const VERIFY_JWT = Deno.env.get('VERIFY_JWT') === 'true'
 // while the region picker's call carries a user JWT and is verified by the function itself.
 // calendar-import is the same: the hourly run carries the secret, and a guardian's "fetch now"
 // carries a user JWT that the function verifies itself (getUser, then the database's guardian gate).
-const NO_USER_FUNCTIONS = new Set(['ics', 'tasks-nightly', 'holidays-sync', 'calendar-import'])
+const NO_USER_FUNCTIONS = new Set(['ics', 'tasks-nightly', 'holidays-sync', 'calendar-import', 'household-purge'])
 
 type AuthFailure = {
   code: RequestErrors
