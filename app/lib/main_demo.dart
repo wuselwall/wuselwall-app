@@ -29,6 +29,7 @@ import 'package:wuselwall/demo/demo_tasks.dart';
 import 'package:wuselwall/features/board/data/board_repository.dart';
 import 'package:wuselwall/features/calendar/data/calendar_repository.dart';
 import 'package:wuselwall/features/calendar/data/external_calendars_repository.dart';
+import 'package:wuselwall/features/household/data/household_onboarding_repository.dart';
 import 'package:wuselwall/features/identity/application/first_run.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/data/pairing_repository.dart';
@@ -113,6 +114,9 @@ void main() {
         pairingRepositoryProvider.overrideWithValue(DemoPairingRepository()),
         // The screenshots show the wall display without its one-time checklist.
         pendingFirstRunProvider.overrideWith((ref) async => null),
+        householdOnboardingRepositoryProvider.overrideWithValue(
+          DemoHouseholdOnboardingRepository(),
+        ),
         shoppingRepositoryProvider.overrideWithValue(DemoShoppingRepository()),
         householdSettingsRepositoryProvider.overrideWithValue(
           DemoHouseholdSettingsRepository(),

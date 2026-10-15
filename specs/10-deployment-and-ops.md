@@ -150,8 +150,11 @@ are created from the app by any signed-in adult. While `household_creation` is `
 default until the opening gate), creating one also needs a **founder code**:
 
 ```bash
-scripts/remote-setup-token.sh       # prints a fresh single-use founder code, stores only its hash
+scripts/remote-setup-token.sh           # the first code: replaces every code; refuses once a household exists
+scripts/remote-setup-token.sh --founder # one more single-use code after that; never replaces one
 ```
+
+Each prints its code once and stores only the hash.
 
 The founder signs in on their phone (Apple, Google or email), enters the family name and
 the code, and the rest follows [20, J1](20-onboarding.md#j1--start-a-family). Issue one code

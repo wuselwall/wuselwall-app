@@ -3468,4 +3468,121 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get firstRunKidStart => 'Los geht’s';
+
+  @override
+  String get householdNewTitle => 'Neue Familie';
+
+  @override
+  String get householdNewFamilyName => 'Familienname';
+
+  @override
+  String get householdNewYourName => 'Dein Name';
+
+  @override
+  String get householdNewColour => 'Deine Farbe';
+
+  @override
+  String householdNewColourOption(String number) {
+    return 'Farbe $number';
+  }
+
+  @override
+  String householdNewFamilyPrefill(String name) {
+    return 'Familie $name';
+  }
+
+  @override
+  String householdNewDefaults(String timezone, String language) {
+    return 'Zeitzone $timezone · Sprache $language — von deinem Gerät';
+  }
+
+  @override
+  String get householdLanguageDe => 'Deutsch';
+
+  @override
+  String get householdLanguageEn => 'Englisch';
+
+  @override
+  String get householdNewFounderCode => 'Gründungscode';
+
+  @override
+  String get householdNewFounderHelp =>
+      'Den Gründungscode bekommst du von der Person, die deinen Server betreibt.';
+
+  @override
+  String get householdSeedExamples =>
+      'Mit Beispielen starten — 5 Aufgaben, 3 Belohnungen';
+
+  @override
+  String get householdNewCreate => 'Familie anlegen';
+
+  @override
+  String get householdNewInvited => 'Ich wurde eingeladen';
+
+  @override
+  String get householdInvitedNote =>
+      'Einladungen kommen mit dem nächsten Update.';
+
+  @override
+  String get householdNewSignOut => 'Abmelden';
+
+  @override
+  String get householdNewErrNoCode =>
+      'Neue Familien gibt es gerade nur mit Gründungscode.';
+
+  @override
+  String get householdNewErrCodeWrong => 'Der Gründungscode stimmt nicht.';
+
+  @override
+  String get householdNewErrRateLimited =>
+      'Zu viele Versuche. Warte ein paar Minuten und probier es dann nochmal.';
+
+  @override
+  String get householdMembersTitle => 'Wer gehört noch zu euch?';
+
+  @override
+  String householdMembersYou(String name) {
+    return '$name (du)';
+  }
+
+  @override
+  String get householdKindChild => 'Kind';
+
+  @override
+  String get householdKindAdult => 'Erwachsen';
+
+  @override
+  String get householdMembersName => 'Name';
+
+  @override
+  String get householdMembersAdd => 'Person hinzufügen';
+
+  @override
+  String get householdMembersRemove => 'Entfernen';
+
+  @override
+  String get householdMembersDone => 'Fertig';
+
+  @override
+  String get householdMembersSkip => 'Überspringen';
+
+  @override
+  String get householdMembersHelp => 'Einladen kannst du Erwachsene später.';
+
+  @override
+  String householdDeviceLabel(String owner, String device) {
+    return '$owner $device';
+  }
+
+  @override
+  String get householdDeviceIphone => 'iPhone';
+
+  @override
+  String get householdDeviceAndroid => 'Android-Handy';
+
+  @override
+  String get householdDeviceBrowser => 'Browser';
+
+  @override
+  String get householdDeviceComputer => 'Computer';
 }
