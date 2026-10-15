@@ -310,7 +310,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get classPersonal => 'Persönlich';
 
   @override
-  String get classShared => 'Geteilt (Antippen zum Wechseln)';
+  String get classShared => 'Geteilt';
+
+  @override
+  String get classSharedHint =>
+      'Mehrere nutzen es: zum Wechseln den Namen antippen.';
 
   @override
   String get classKiosk => 'Wandanzeige';
