@@ -43,11 +43,13 @@ import 'package:wuselwall/features/shopping/data/shopping_store.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_sync_model.dart';
 import 'package:wuselwall/features/today/data/getting_started_repository.dart';
+import 'package:wuselwall/features/today/data/notices_repository.dart';
 
 import 'fake_external_calendars.dart';
 import 'fake_getting_started.dart';
 import 'fake_invitations.dart';
 import 'fake_meals.dart';
+import 'fake_notices.dart';
 import 'fake_notifications.dart';
 import 'fake_pairing.dart';
 import 'fake_region.dart';
@@ -775,6 +777,7 @@ Future<ProviderContainer> pumpApp(
   FakeMealsRepository? meals,
   FakeSchoolRepository? school,
   FakeGettingStartedRepository? gettingStarted,
+  FakeNoticesRepository? notices,
   FakeRegionRepository? region,
   Size size = const Size(1000, 1600),
 }) async {
@@ -801,6 +804,9 @@ Future<ProviderContainer> pumpApp(
       // The tasks repository runs on a fake `api` layer; an empty one when a test does not
       // ask for one, so the Today tab never reaches Supabase.
       apiClientProvider.overrideWithValue(tasks ?? FakeTasksApi()),
+      noticesRepositoryProvider.overrideWithValue(
+        notices ?? FakeNoticesRepository(),
+      ),
       gettingStartedRepositoryProvider.overrideWithValue(
         gettingStarted ?? FakeGettingStartedRepository(),
       ),
