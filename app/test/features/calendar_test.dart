@@ -376,7 +376,7 @@ void main() {
       expect(find.text('Milch'), findsNothing);
 
       await t.tap(
-        find.descendant(of: bar, matching: find.text('Einkaufsliste')),
+        find.descendant(of: bar, matching: find.text('Einkauf')),
       );
       await t.pumpAndSettle();
       expect(find.text('Milch'), findsOneWidget);

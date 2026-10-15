@@ -13,6 +13,15 @@ Die Erwachsenen-Ansicht hat diese Bereiche:
 | [Aufgaben](/tasks/) | Aufgaben, Punkte und Belohnungen |
 | [Essen](/meals/) | Essensplan, Rezepte, Einkaufsliste füllen |
 | [Einkaufsliste](/shopping/add) | Artikel, Kacheln, im Laden abhaken |
+| Heute | Der Tag auf einen Blick, und die ersten Schritte der Einrichtung |
+
+## Heute und die ersten Schritte
+
+**Heute** ist die erste Seite der Erwachsenen. Sie zeigt die Termine des Tages, deine Aufgaben für heute zum Abhaken, das warme Essen und wie viele Artikel auf der Einkaufsliste noch offen sind.
+
+<Shot name="today" alt="Der Tab Heute mit der Karte Erste Schritte, den Terminen und dem warmen Essen" />
+
+Solange noch etwas zur Einrichtung fehlt, steht oben die Karte **Erste Schritte**: Partner:in einladen, Familien-Tablet verbinden, Wandanzeige einrichten, deine PIN festlegen, Kalender abonnieren und Stundenplan eintragen. Jeder Punkt verschwindet, sobald er erledigt ist. Was ihr nicht braucht, tippst du auf **Brauchen wir nicht**. Die Karte sehen Erziehungsberechtigte auf dem eigenen Handy und auf geteilten Geräten; unter **Einstellungen → Erste Schritte** kommt sie zurück.
 
 ## Der Haushalt
 

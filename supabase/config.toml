@@ -206,5 +206,8 @@ verify_jwt = false
 [functions.holidays-sync]
 verify_jwt = false
 
+[functions.calendar-import]
+verify_jwt = false
+
 [functions.server-info]
 verify_jwt = false

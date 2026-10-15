@@ -6,6 +6,10 @@ typedef SettingText = ({String title, String help});
 /// The texts of [key]. An unknown key shows its own name, so a new catalogue entry is
 /// visible (and visibly unlabelled) before the app has its strings.
 SettingText settingText(AppLocalizations l10n, String key) => switch (key) {
+  'household.region' => (
+    title: l10n.regionSettingTitle,
+    help: l10n.regionSettingHelp,
+  ),
   'board.member_label' => (
     title: l10n.settingBoardMemberLabelTitle,
     help: l10n.settingBoardMemberLabelHelp,

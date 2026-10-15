@@ -8,10 +8,10 @@ Jede Einstellung hat einen **Standard**. Den schlägt WuselWall vor, und er pass
 
 ## Die Bereiche
 
-- **Haushalt und Mitglieder**: ob die Küchenwand den **Vollnamen** oder nur die **Initiale** zeigt
+- **Haushalt und Mitglieder**: die **Region** (Land, Kanton oder Bundesland, Gemeinde), nach der Feiertage und Schulferien gelten, und ob die Küchenwand den **Vollnamen** oder nur die **Initiale** zeigt. Die Region wählst du beim Anlegen der ersten Schule; hier kannst du sie später ändern
 - **Aufgaben**: Punkte für eine Pflicht und für eine Extra-Aufgabe, ob neue Aufgaben Pflicht oder Extra sind, ob Erziehungsberechtigte Aufgaben prüfen, wie viele **Serien-Joker** es pro Monat gibt und ob **Belohnungen Freigabe brauchen**
 - **Kalender und Schule**: ob Kinder ihre eigenen Termine ändern, welche neuen Termine auf der Küchenwand erscheinen, wann unsichere Termine nachgefragt werden, ob Kinder Plan-Änderungen melden und ob der Hinweis **Sachen für morgen** erscheint
-- **Essen**: ob es an **Schultagen** und an **freien Tagen** eine warme Mahlzeit gibt, dass **abwesend heißt nicht essen** und bis wann Betreuung mittags zählt
+- **Essen**: ob es an **Schultagen** und an **freien Tagen** (Wochenende, Feiertage, Ferien) eine warme Mahlzeit gibt, dass **abwesend heißt nicht essen** und bis wann Betreuung mittags zählt
 - **Küchenwand**: wann die Wand zur kommenden Woche wechselt, wo Vormittag, Nachmittag und Abend getrennt werden, wann das Nachtdesign gilt und wann ein geöffnetes Detail zur Wand zurückspringt
 - **Meine Einstellungen**: der Ton beim Abhaken, die Morgenübersicht, Erinnerungen vor Terminen und Benachrichtigungen, wenn eine Aufgabe bestätigt oder eine Belohnung angefragt wird. Sie gelten nur für die Person, die du oben gewählt hast.
 

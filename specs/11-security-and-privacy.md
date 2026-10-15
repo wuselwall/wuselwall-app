@@ -167,12 +167,8 @@ the household. *(ADR-015's Supabase Inc. as Cloud's processor is gone with Cloud
 first-party servers' native sign-in. Its privacy manifest declares device ID and usage data for analytics (Google's,
 not tracking), and the privacy policy and store labels say so. Apple's sign-in is part of
 iOS and adds no code.
-**Found 2026-10-13, not accepted:** on Android, `mobile_scanner` decodes QR codes with
-Google's **ML Kit**, which sends device, app and performance data with a per-installation
-identifier to Google for diagnostics and usage analytics (Google's ML Kit data disclosure).
-That breaks NFR-9. The privacy policy discloses it until the Android scanner is replaced
-by an on-device decoder without telemetry ([Q49](14-open-questions.md)).
-| A Ferien import from a public API ([15](15-module-school-timetable.md#holidays)) | Fetched by a scheduled Edge Function, server-side only, with the host pinned in configuration and the result cached in the database. The browser never contacts it, and a failed fetch degrades to hand-entered holidays rather than to an error. |
+**Found 2026-10-13, fixed 2026-10-14:** the Android QR scanner used `mobile_scanner`, which bundles Google's **ML Kit** and sent device, app and performance data with a per-installation identifier to Google. The scanner now uses the `camera` plugin and the pure-Dart `zxing2` decoder on every platform, so no vendor SDK reads the camera image ([Q49](14-open-questions.md)).
+| A holiday import from a public API ([15](15-module-school-timetable.md#holidays)) | Fetched by the server only, with the host pinned in configuration and the result cached in the database. The browser never contacts it, and a failed fetch keeps the last good data (hand-entered holidays always work) rather than raising an error. Built 2026-10-14: the host is `openholidaysapi.org`, see the outbound list below. |
 | An external map or weather widget | If you want weather on the wall display, proxy it server-side so the app never contacts a third party directly, and cache aggressively. |
 | Avatar images from Gravatar | Local uploads or generated initials. |
 
@@ -181,9 +177,45 @@ the native apps, enforce it in review: the app talks to exactly one host, and a 
 outbound host in a pull request is a question to answer, not a detail. A policy that is a
 mechanism survives temptation on a Friday evening.
 
+### Outbound calendar subscriptions
+
+Added 2026-10-14 with FR-1.9. A guardian types the address of a calendar (a club's fixture list,
+the bin collection), and the server fetches it. That makes the server a fetcher of arbitrary
+addresses, which is the classic server-side request forgery risk, so `_shared/safe_fetch.ts`
+enforces, on the first address and on every redirect:
+
+- **https only** (`webcal://` is rewritten to `https://` when the address is saved);
+- **public addresses only**: a host that resolves to a private, loopback, link-local or
+  otherwise reserved address is refused, IPv4 and IPv6;
+- **redirects are followed by hand**, each hop checked again, at most three;
+- **15 seconds** in total, **2 MB** of body, and the answer must be an iCalendar document.
+
+Residual risk, stated plainly: the address is resolved once for the check and again by the
+HTTP client, so a hostile DNS server that answers differently the second time (DNS rebinding)
+could still reach an internal address. Closing it fully needs a connection pinned to the checked
+address, which the runtime does not offer yet. The address is chosen by a guardian, which limits
+who could do this, but does not prevent it.
+
+The requests carry the User-Agent `WuselWall calendar-import (+https://wuselwall.app)`, and the
+third party sees the server's IP address and the request time, like any HTTPS request. Nothing about
+the household is sent, except what is in the address the family typed.
+
+Who may read the address: only guardians. The subscription list that every live device of the
+household reads (`api.external_calendars`) carries the host name only (`url_host`). The full address
+comes from `api.external_calendar_url`, which refuses children's devices, kiosks, revoked devices and
+other households, and writes no audit row. The household export, which is guardian-only, includes it.
+
 Outbound connections from the server should be enumerable on one hand: Let's Encrypt,
 the container registry, the backup target, APNs and FCM (for push), the OS package
-mirrors, and since ADR-014 the SMTP provider and Apple's and Google's token endpoints.
+mirrors, and since ADR-014 the SMTP provider and Apple's and Google's token endpoints. Added
+2026-10-14: the calendar addresses that guardians subscribe to (see above), chosen by the family,
+and `openholidaysapi.org` for the holiday cache.
+
+Added 2026-10-14: `openholidaysapi.org` (OpenHolidays, the public holiday dataset). The server
+calls it weekly (`holidays-sync`) and when a member picks a country in the app. The request
+carries only the country codes, date ranges and the server's own IP address, like any HTTPS
+request; nothing about the household, its members, its schools or its region choice is sent.
+The results are cached as public reference data.
 
 ### T8 — a curious nine-year-old
 

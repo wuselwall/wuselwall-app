@@ -1019,24 +1019,6 @@
   "schoolSetupTitle": "School",
   "schoolSectionSchool": "School",
   "schoolName": "Name of the school",
-  "schoolState": "State",
-  "schoolStateNone": "Not given",
-  "schoolStateBW": "Baden-Württemberg",
-  "schoolStateBY": "Bavaria",
-  "schoolStateBE": "Berlin",
-  "schoolStateBB": "Brandenburg",
-  "schoolStateHB": "Bremen",
-  "schoolStateHH": "Hamburg",
-  "schoolStateHE": "Hesse",
-  "schoolStateMV": "Mecklenburg-Western Pomerania",
-  "schoolStateNI": "Lower Saxony",
-  "schoolStateNW": "North Rhine-Westphalia",
-  "schoolStateRP": "Rhineland-Palatinate",
-  "schoolStateSL": "Saarland",
-  "schoolStateSN": "Saxony",
-  "schoolStateST": "Saxony-Anhalt",
-  "schoolStateSH": "Schleswig-Holstein",
-  "schoolStateTH": "Thuringia",
   "schoolBellTimes": "Bell times",
   "schoolAddLesson": "Add lesson",
   "schoolAddBreak": "Add break",
@@ -1608,6 +1590,188 @@
       }
     }
   },
+  "regionSettingTitle": "Region",
+  "regionSettingHelp": "Decides which public holidays apply and which school holidays you can import. Choose the canton, state or municipality.",
+  "regionFieldLabel": "Region",
+  "regionFieldEmpty": "No region chosen",
+  "regionFieldClear": "Remove region",
+  "regionCountryDE": "Germany",
+  "regionCountryAT": "Austria",
+  "regionCountryCH": "Switzerland",
+  "regionCountryLI": "Liechtenstein",
+  "regionCountryOther": "Other country (no region)",
+  "regionPickCountryTitle": "Country",
+  "regionPickRegionTitle": "Canton or state",
+  "regionPickSearch": "Search",
+  "regionPickWholeRegion": "All of {name}",
+  "@regionPickWholeRegion": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "regionPickDeeperTitle": "Choose more precisely (district or municipality)",
+  "regionPickDeeperSearch": "Type a municipality or district",
+  "regionPickNoMatch": "Nothing found",
+  "regionPickLoading": "Loading regions…",
+  "regionPickRetry": "Try again",
+  "regionPickSkip": "Continue without a region",
+  "regionPickEmpty": "No regions for this country.",
+  "regionUnavailable": "The region list is not available right now. Check the connection and try again.",
+  "regionNameTop": "{category} {name}",
+  "@regionNameTop": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "regionNameDeeper": "{name} ({category}), {parent}",
+  "@regionNameDeeper": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "category": {
+        "type": "String"
+      },
+      "parent": {
+        "type": "String"
+      }
+    }
+  },
+  "regionImportAction": "Import school holidays",
+  "regionImportNeedsRegion": "Choose a region for the school first.",
+  "regionImportTitle": "School holidays",
+  "regionImportIntro": "Public holidays of the region apply automatically. Here you bring in the school holidays.",
+  "regionImportSwissHint": "School holidays in Switzerland can differ by municipality. Check the dates.",
+  "regionImportNone": "No school holidays found for the next 18 months.",
+  "regionImportAlready": "already imported",
+  "regionImportOverlaps": "overlaps an entry of your own",
+  "regionImportButton": "Import",
+  "regionImportDone": "{count, plural, =0{No holidays imported} =1{1 holiday imported} other{{count} holidays imported}}",
+  "@regionImportDone": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "regionImportAttribution": "Data: OpenHolidays API · ODbL",
+  "regionImported": "imported",
+  "extCalTitle": "Subscribed calendars",
+  "extCalSettingsSubtitle": "Appointments from club and bin calendars",
+  "extCalEmpty": "No calendar subscribed yet. A subscription brings outside appointments into the family calendar, such as a club’s fixture list.",
+  "extCalNew": "Subscribe to a calendar",
+  "extCalNewTitle": "New calendar",
+  "extCalEditTitle": "Edit calendar",
+  "extCalEdit": "Edit",
+  "extCalNameLabel": "Name",
+  "extCalNameHint": "e.g. FC fixtures",
+  "extCalNameRequired": "Give the calendar a name.",
+  "extCalUrlLabel": "Address (ICS)",
+  "extCalUrlHelp": "The address the calendar is published at, usually ending in .ics. Examples: your town’s bin collection calendar, a club’s fixture list. webcal:// addresses work too.",
+  "extCalUrlInvalid": "That does not look like a web address (https://…).",
+  "extCalColourLabel": "Colour",
+  "extCalColourOption": "Colour {number}",
+  "@extCalColourOption": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "extCalMembersLabel": "Who?",
+  "extCalMembersHelp": "Without a choice, the calendar is for the whole family.",
+  "extCalMembersWhole": "Whole family",
+  "extCalShowOnBoard": "Show on the kitchen display",
+  "extCalShowOnBoardHelp": "Its appointments appear as key appointments on the kitchen display’s week board.",
+  "extCalDeleteConfirm": "“{name}” and all its appointments will be removed.",
+  "@extCalDeleteConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "extCalDeleted": "Calendar removed.",
+  "extCalRefreshNow": "Refresh now",
+  "extCalRefreshed": "{count, plural, =0{No appointments found} =1{1 appointment loaded} other{{count} appointments loaded}}",
+  "@extCalRefreshed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "extCalNotModified": "No changes since the last fetch.",
+  "extCalRecent": "Fetched a moment ago. Try again in a few minutes.",
+  "extCalRefreshFailed": "The calendar could not be loaded: {reason}",
+  "@extCalRefreshFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "extCalStatusPaused": "Paused",
+  "extCalStatusNever": "Loading for the first time …",
+  "extCalStatusUpdated": "Updated {when}",
+  "@extCalStatusUpdated": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "extCalReadOnlyHint": "Only guardians can subscribe to calendars or change them.",
+  "extCalErrUnreachable": "The address cannot be reached right now.",
+  "extCalErrTimeout": "The address answers too slowly.",
+  "extCalErrForbiddenHost": "This address is not allowed.",
+  "extCalErrTooLarge": "The calendar is too large (over 2 MB).",
+  "extCalErrNotIcs": "That is not a calendar (ICS).",
+  "extCalErrHttp404": "Address not found (404).",
+  "extCalErrHttp": "The address answers with error {status}.",
+  "@extCalErrHttp": {
+    "placeholders": {
+      "status": {
+        "type": "int"
+      }
+    }
+  },
+  "extCalErrInternal": "Something went wrong on the server. Try again later.",
+  "extCalErrDb": "The appointments could not be stored.",
+  "extCalErrUnknown": "The fetch did not work.",
+  "extCalErrInvalid": "The calendar does not fit: check the name and colour.",
+  "extCalErrUrlInvalid": "This address cannot be saved. It must start with https://.",
+  "extCalErrNotFound": "This calendar no longer exists.",
+  "extCalImportedNote": "Subscribed calendar — changes come from the source",
+  "extCalFromCalendar": "From {name}",
+  "@extCalFromCalendar": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "extCalAllDay": "All day",
+  "extCalSheetTitle": "Appointment from a subscription",
+  "extCalSettingsRefreshHint": "The server fetches each calendar about once an hour.",
+  "extCalActive": "Active",
+  "extCalUrlLoading": "Loading the address",
+  "shoppingNavLabel": "Shopping",
+  "@shoppingNavLabel": {
+    "description": "Short label of the shopping list in the bottom navigation bar; the page title stays shoppingTitle."
+  },
+  "scanHint": "Hold the camera over the QR code on the other device.",
+  "scanCameraDenied": "WuselWall has no access to the camera, so it cannot scan the code. Allow the camera in the system settings, or type the code instead.",
+  "scanCameraUnavailable": "This device has no camera that WuselWall can use. Type the code instead.",
+  "scanWebUnsupported": "This browser cannot scan QR codes. Type the code instead.",
+  "scanTypeCode": "Type the code",
   "serverTitle": "Which server?",
   "serverLead": "WuselWall keeps your family's data on your family's own server. Enter its address, or scan its QR code.",
   "serverAddressLabel": "Server address",

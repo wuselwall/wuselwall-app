@@ -26,5 +26,9 @@ licence above:
   Apple, the Apple logo and App Store are trademarks of Apple Inc.; Google Play and the
   Google Play logo are trademarks of Google LLC.
 
+- Holiday data (regions, public and school holidays): data from the OpenHolidays API,
+  https://www.openholidaysapi.org, Open Database License 1.0 (ODbL). The server fetches it
+  and caches it; the cached rows are not part of this repository.
+
 - app/assets/sign_in/: the Google "G" logo for the sign-in button, used under Google's
   sign-in branding guidelines. Google is a trademark of Google LLC.
