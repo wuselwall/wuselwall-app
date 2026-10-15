@@ -2761,6 +2761,25 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String todayNoticeJoined(String name) {
+    return '$name joined';
+  }
+
+  @override
+  String todayNoticeSignIn(String device) {
+    return 'New sign-in: $device';
+  }
+
+  @override
+  String get todayNoticeDismiss => 'Got it';
+
+  @override
+  String get todayNoticeMembers => 'Members';
+
+  @override
+  String get todayNoticeDevices => 'Devices';
+
+  @override
   String get todayStartTitle => 'Getting started';
 
   @override

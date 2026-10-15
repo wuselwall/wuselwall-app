@@ -932,6 +932,11 @@
       }
     }
   },
+  "todayNoticeJoined": "{name} ist beigetreten",
+  "todayNoticeSignIn": "Neu angemeldet: {device}",
+  "todayNoticeDismiss": "Gesehen",
+  "todayNoticeMembers": "Mitglieder",
+  "todayNoticeDevices": "Geräte",
   "todayStartNotNeeded": "Brauchen wir nicht",
   "todayStartInvitePartner": "Partner:in einladen",
   "todayStartConnectTablet": "Familien-Tablet verbinden",

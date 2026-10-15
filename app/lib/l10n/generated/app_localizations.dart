@@ -4868,6 +4868,36 @@ abstract class AppLocalizations {
   /// **'{count, plural, =1{1 item still open} other{{count} items still open}}'**
   String todayShoppingOpen(int count);
 
+  /// No description provided for @todayNoticeJoined.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} joined'**
+  String todayNoticeJoined(String name);
+
+  /// No description provided for @todayNoticeSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'New sign-in: {device}'**
+  String todayNoticeSignIn(String device);
+
+  /// No description provided for @todayNoticeDismiss.
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get todayNoticeDismiss;
+
+  /// No description provided for @todayNoticeMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Members'**
+  String get todayNoticeMembers;
+
+  /// No description provided for @todayNoticeDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'Devices'**
+  String get todayNoticeDevices;
+
   /// No description provided for @todayStartTitle.
   ///
   /// In en, this message translates to:
