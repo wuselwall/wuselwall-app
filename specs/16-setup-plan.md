@@ -24,7 +24,7 @@ change and a tag producing installable builds. Once that works, every module aft
 | 4 | M0.0 | `ci.yml`: every pull request tested | 1 evening |
 | 5 | M0.1 | Identity: setup wizard, guardian accounts, device enrolment, tap-to-switch, PIN | 1 weekend |
 | 6 | M0.2 | The shopping list, online only — the first real feature | 1–2 evenings |
-| 7 | M0.4 | `release-mobile.yml`: a tag puts builds on the testers' devices | 1 weekend |
+| 7 | M0.4 | `release-ios.yml` and `release-android.yml`: a tag puts builds on the testers' devices | 1 weekend |
 | 8 | M0.3 | A self-hosted server ([ADR-013](adr/ADR-013-self-hosted-compose-stack.md)): own keys, an allow-list front, backups | 1 evening |
 | 9 | M1.0 | Onboarding ([ADR-014](adr/ADR-014-self-service-onboarding.md)): Apple, Google, email code and password; households, invitations, pairing, getting started, deletion | 2–3 weekends |
 
@@ -361,7 +361,8 @@ the iPhones and iPads. That is why it comes before production rather than after 
 
 ### The workflow
 
-`.github/workflows/release-mobile.yml`, triggered by a tag `v*.*.*`:
+The original sketch, one workflow for both platforms (since split in two, see below),
+triggered by a tag `v*.*.*`:
 
 ```yaml
 name: release-mobile
@@ -410,7 +411,10 @@ jobs:
 *Built 2026-10-12:* the iOS job, also startable by hand (`workflow_dispatch`, which keeps
 the pubspec version), with `app/ios/Gemfile` and `app/ios/fastlane/` (`Appfile`, `Matchfile`,
 `Fastfile`; team `JSX2VQXW7G`). The Android job follows once the Play Console account
-exists; until then `build-android.yml` builds the APK and the App Bundle for a manual upload.
+exists; until then `release-android.yml` builds the APK and the App Bundle for a manual upload.
+*Split 2026-10-15* into `release-ios.yml` and `release-android.yml` (formerly
+`build-android.yml`), one workflow per platform; the build number is the run number plus
+100, since the renamed workflows count from 1 again.
 
 Each platform's `Fastfile` holds two or three short lanes; the workflow stays thin, so a
 release can also be run from a Mac with the same lanes if one becomes available.
@@ -568,9 +572,9 @@ account leaves nothing reachable.
        │                 │ tag vX.Y.Z
        │                 ▼
        │         ci.yml ─────────────── app · web build · backend · functions · audit
-       │         build-android.yml ──── signed APK (until the Play job exists)
-       │         release-mobile.yml ─── Android AAB → Play internal track
-       │                             └─ iOS IPA     → TestFlight
+       │         release-android.yml ── Android AAB → Play internal track
+       │                                (until then a signed APK and the AAB by hand)
+       │         release-ios.yml ────── iOS IPA     → TestFlight
        │
        └─ carries a migration: "Run workflow" → ci.yml, all jobs green
               → merged → by hand: backup → migration up → pgTAP (specs/10)

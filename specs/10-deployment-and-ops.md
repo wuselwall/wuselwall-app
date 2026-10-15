@@ -339,7 +339,7 @@ git-ignored `app/env/dev.json`.
 
 ### The Android app
 
-Until the Play listing exists, `build-android.yml` builds a signed APK and
+Until the Play listing exists, `release-android.yml` builds a signed APK and
 `scripts/deploy-apk.sh` publishes it at the address in `scripts/remote.env`.
 
 ### The user documentation

@@ -33,7 +33,7 @@ website/           Astro site at wuselwall.app — landing page, Impressum, Date
 infra/             the compose stack and its layers, the website's compose project, jobs, backups
 server/            the operator's tool in a server release: install, update, backup, restore
 scripts/           release builder; remote-* to drive a server over SSH from a checkout
-.github/workflows/ ci.yml, release-mobile.yml
+.github/workflows/ ci.yml, release-ios.yml, release-android.yml
 specs/             the specification — read 01, 02 and 03 before writing code
 ```
 

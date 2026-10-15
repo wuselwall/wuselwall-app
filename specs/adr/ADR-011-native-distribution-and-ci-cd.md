@@ -58,7 +58,8 @@ are applied to a server by script, after a backup). Detail in [16](../16-setup-p
 | Workflow | Trigger | Does |
 |---|---|---|
 | `ci.yml` | Every pull request: the fast checks. A tag `v*.*.*`, or "Run workflow" on a branch: everything | Pull requests: Flutter format, analyse, unit and widget tests. Tag or by hand, additionally: web build; `supabase start` → apply every migration from zero → pgTAP tests (RLS included) → schema lint; Deno format, lint and test for Edge Functions; dependency audit |
-| `release-mobile.yml` | A tag `v*.*.*` | Android: signed App Bundle → Play internal track. iOS (macOS runner): `fastlane match` for signing → `flutter build ipa` → TestFlight |
+| `release-ios.yml` | A tag `v*.*.*` | iOS (macOS runner): `fastlane match` for signing → `flutter build ipa` → TestFlight |
+| `release-android.yml` | A tag `v*.*.*` | Android: signed App Bundle → Play internal track (until then a signed APK and the App Bundle for a manual upload) |
 
 - **Signing material never lives on a laptop alone.** iOS certificates and profiles live
   encrypted in a private repository managed by `fastlane match`; the Android upload
