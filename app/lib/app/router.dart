@@ -10,6 +10,7 @@ import 'package:wuselwall/features/calendar/ui/settings/external_calendars_page.
 import 'package:wuselwall/features/calendar/ui/settings/feed_tokens_page.dart';
 import 'package:wuselwall/features/home/ui/register_home_page.dart';
 import 'package:wuselwall/features/household/application/household_providers.dart';
+import 'package:wuselwall/features/household/domain/household_models.dart';
 import 'package:wuselwall/features/household/ui/deleted_family_page.dart';
 import 'package:wuselwall/features/household/ui/members_page.dart';
 import 'package:wuselwall/features/household/ui/new_family_page.dart';
@@ -19,6 +20,10 @@ import 'package:wuselwall/features/identity/application/pairing_providers.dart';
 import 'package:wuselwall/features/identity/application/sign_in_choice.dart';
 import 'package:wuselwall/features/identity/domain/pairing.dart';
 import 'package:wuselwall/features/identity/ui/device_pair_page.dart';
+import 'package:wuselwall/features/invitations/domain/invitation.dart';
+import 'package:wuselwall/features/invitations/ui/invite_code_page.dart';
+import 'package:wuselwall/features/invitations/ui/invite_pending_page.dart';
+import 'package:wuselwall/features/invitations/ui/join_invite_page.dart';
 import 'package:wuselwall/features/meals/domain/meal_models.dart';
 import 'package:wuselwall/features/meals/ui/recipe_editor_page.dart';
 import 'package:wuselwall/features/meals/ui/recipe_view_page.dart';
@@ -57,6 +62,9 @@ abstract final class Routes {
   static const register = '/setup/register';
   static const newFamily = '/setup/new-family';
   static const deletedFamily = '/setup/deleted-family';
+  static const invitePending = '/setup/invitations';
+  static const joinInvite = '/setup/join';
+  static const inviteCode = '/setup/invite';
   static const welcomeMembers = '/welcome/members';
   static const home = '/';
   static const settings = '/settings';
@@ -116,7 +124,8 @@ final routerProvider = Provider<GoRouter>((ref) {
         // A deleted family the account can restore or leave (specs/20 J6).
         NeedsHousehold(:final account) when account.deletedHousehold != null =>
           path == Routes.deletedFamily ? null : Routes.deletedFamily,
-        NeedsHousehold() => path == Routes.newFamily ? null : Routes.newFamily,
+        NeedsHousehold(:final account, :final hasStoredInvite) =>
+          _householdRedirect(path, account, hasStoredInvite, state.extra),
         // A founder who has just created the household sees H2 once, before Today.
         Ready() when ref.read(onboardingPlanProvider) != null =>
           path == Routes.welcomeMembers ? null : Routes.welcomeMembers,
@@ -140,6 +149,19 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, _) => const SetupPage(),
         routes: [
           GoRoute(path: 'household', builder: (_, _) => const WizardPage()),
+          GoRoute(path: 'invite', builder: (_, _) => const InviteCodePage()),
+          GoRoute(
+            path: 'invitations',
+            builder: (_, _) => const InvitePendingPage(),
+          ),
+          GoRoute(
+            path: 'join',
+            builder: (_, state) => JoinInvitePage(
+              pending: state.extra is PendingInvitation
+                  ? state.extra! as PendingInvitation
+                  : null,
+            ),
+          ),
           GoRoute(
             path: 'new-family',
             builder: (_, _) => Consumer(
@@ -283,6 +305,29 @@ final routerProvider = Provider<GoRouter>((ref) {
     ],
   );
 });
+
+/// Where an account without a household belongs: the join confirmation of a kept invitation,
+/// H0 when an invitation names its confirmed email, else H1. The code entry is open to it, as
+/// is the join confirmation of a pending invitation the account chose on H0.
+String? _householdRedirect(
+  String path,
+  Account account,
+  bool storedInvite,
+  Object? extra,
+) {
+  final target = storedInvite
+      ? Routes.joinInvite
+      : account.pendingInvitations.isNotEmpty
+      ? Routes.invitePending
+      : Routes.newFamily;
+  final allowed = switch (path) {
+    Routes.joinInvite => storedInvite || extra is PendingInvitation,
+    Routes.inviteCode => true,
+    Routes.invitePending || Routes.newFamily => !storedInvite,
+    _ => false,
+  };
+  return allowed ? null : target;
+}
 
 /// Where an enrolled device goes from a setup screen or the splash: the introduction it owes
 /// first, otherwise home. The pairing page stays up while the greeting is shown.

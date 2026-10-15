@@ -26,6 +26,7 @@ import 'package:wuselwall/features/identity/domain/sign_in_method.dart';
 import 'package:wuselwall/features/identity/ui/enrolment_qr.dart';
 import 'package:wuselwall/features/identity/ui/guardian_gate.dart';
 import 'package:wuselwall/features/identity/ui/set_password_dialog.dart';
+import 'package:wuselwall/features/invitations/ui/members_invitations.dart';
 import 'package:wuselwall/features/settings/application/household_export_providers.dart';
 import 'package:wuselwall/features/settings/data/household_export_repository.dart';
 import 'package:wuselwall/features/system/ui/class_labels.dart';
@@ -118,7 +119,10 @@ class SettingsPage extends ConsumerWidget {
                     subtitle: Text(
                       m.isGuardian ? l10n.roleGuardian : l10n.roleMember,
                     ),
+                    trailing: InviteMemberButton(member: m),
                   ),
+                const OpenInvitationRows(),
+                const InviteAdultTile(),
               ],
             ),
           ),

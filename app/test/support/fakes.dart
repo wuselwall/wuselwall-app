@@ -29,6 +29,7 @@ import 'package:wuselwall/features/identity/data/pairing_repository.dart';
 import 'package:wuselwall/features/identity/data/sign_in_methods_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/identity/domain/sign_in_method.dart';
+import 'package:wuselwall/features/invitations/data/invitation_repository.dart';
 import 'package:wuselwall/features/meals/data/meals_repository.dart';
 import 'package:wuselwall/features/region/data/region_repository.dart';
 import 'package:wuselwall/features/reminders/application/reminder_providers.dart';
@@ -42,6 +43,7 @@ import 'package:wuselwall/features/today/data/getting_started_repository.dart';
 
 import 'fake_external_calendars.dart';
 import 'fake_getting_started.dart';
+import 'fake_invitations.dart';
 import 'fake_meals.dart';
 import 'fake_notifications.dart';
 import 'fake_pairing.dart';
@@ -93,8 +95,11 @@ class FakeIdentityRepository implements IdentityRepository {
     this.mfa = MfaState.none,
     this.profile,
     this.enrolResult = const Err(ValidationFailure(code: 'code_invalid')),
-  });
+    List<Member>? members,
+  }) : _people = members ?? testMembers;
 
+  /// The household's people, as `members()` returns them.
+  final List<Member> _people;
   DeviceInfo? current;
   MfaState mfa;
   GuardianProfile? profile;
@@ -129,7 +134,7 @@ class FakeIdentityRepository implements IdentityRepository {
   Future<Result<DeviceInfo?>> currentDevice() async => Ok(current);
 
   @override
-  Future<Result<List<Member>>> members() async => Ok(testMembers);
+  Future<Result<List<Member>>> members() async => Ok(_people);
 
   @override
   Future<Result<PinResult>> verifyPin({
@@ -643,11 +648,19 @@ List<Override> baseOverrides({
   FakePairingRepository? pairing,
   FakeHouseholdOnboardingRepository? household,
   FakeHouseholdLeaveRepository? leave,
+  FakeInvitationRepository? invitations,
+  MemoryInvitationStore? invitationStore,
   bool signedIn = true,
   bool online = true,
 }) => [
   householdLeaveRepositoryProvider.overrideWithValue(
     leave ?? FakeHouseholdLeaveRepository(),
+  ),
+  invitationRepositoryProvider.overrideWithValue(
+    invitations ?? FakeInvitationRepository(),
+  ),
+  invitationStoreProvider.overrideWithValue(
+    invitationStore ?? MemoryInvitationStore(),
   ),
   householdOnboardingRepositoryProvider.overrideWithValue(
     household ?? FakeHouseholdOnboardingRepository(identity: identity),
