@@ -89,7 +89,7 @@ class _SetupPageState extends ConsumerState<SetupPage> {
                   ),
                   const SizedBox(height: Tokens.space3),
                 ],
-                // Email + password until the email code (E1–E3) replaces it.
+                // E1: the address, then a code by e-mail (E2, E3).
                 OutlinedButton.icon(
                   onPressed: _busy || !online
                       ? null

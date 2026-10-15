@@ -41,6 +41,25 @@ class DemoIdentityRepository implements IdentityRepository {
       const Ok(null);
 
   @override
+  Future<Result<void>> sendEmailCode(
+    String email, {
+    required String locale,
+  }) async => const Ok(null);
+
+  @override
+  Future<Result<bool>> verifyEmailCode(String email, String code) async =>
+      const Ok(false);
+
+  @override
+  Future<Result<void>> setPassword(String password) async => const Ok(null);
+
+  @override
+  bool hasPassword() => true;
+
+  @override
+  Future<Result<void>> markSignInChoice(String choice) async => const Ok(null);
+
+  @override
   Future<void> signOut() async {}
 
   @override

@@ -1217,7 +1217,7 @@ abstract class AppLocalizations {
   /// No description provided for @signInMethodEmail.
   ///
   /// In en, this message translates to:
-  /// **'Email and password'**
+  /// **'Email code'**
   String get signInMethodEmail;
 
   /// No description provided for @signInMethodApple.
@@ -6187,6 +6187,192 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'computer'**
   String get householdDeviceComputer;
+
+  /// No description provided for @emailContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get emailContinue;
+
+  /// No description provided for @emailHavePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'I have a password'**
+  String get emailHavePassword;
+
+  /// No description provided for @emailWrongCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Email or password is incorrect.'**
+  String get emailWrongCredentials;
+
+  /// No description provided for @emailUseCodeInstead.
+  ///
+  /// In en, this message translates to:
+  /// **'Use an email code instead'**
+  String get emailUseCodeInstead;
+
+  /// No description provided for @emailOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection – signing in by email needs one.'**
+  String get emailOffline;
+
+  /// No description provided for @emailCodeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Code from the email'**
+  String get emailCodeTitle;
+
+  /// No description provided for @emailCodeSent.
+  ///
+  /// In en, this message translates to:
+  /// **'We sent a 6-digit code to {email}. It is valid for 10 minutes.'**
+  String emailCodeSent(String email);
+
+  /// No description provided for @emailCodeFieldLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Six-digit code'**
+  String get emailCodeFieldLabel;
+
+  /// No description provided for @emailCodeWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'That code is wrong or has expired. Try again, or ask for a new one.'**
+  String get emailCodeWrong;
+
+  /// No description provided for @emailCodeResendIn.
+  ///
+  /// In en, this message translates to:
+  /// **'No code? Send again (in {seconds} s)'**
+  String emailCodeResendIn(int seconds);
+
+  /// No description provided for @emailCodeResend.
+  ///
+  /// In en, this message translates to:
+  /// **'No code? Send again'**
+  String get emailCodeResend;
+
+  /// No description provided for @emailCodeSpam.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your spam folder.'**
+  String get emailCodeSpam;
+
+  /// No description provided for @emailCodeResent.
+  ///
+  /// In en, this message translates to:
+  /// **'A new code is on its way.'**
+  String get emailCodeResent;
+
+  /// No description provided for @emailCodeOtherMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose another way'**
+  String get emailCodeOtherMethod;
+
+  /// No description provided for @emailCodeOtherAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Another email address'**
+  String get emailCodeOtherAddress;
+
+  /// No description provided for @signInMethodTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How would you like to sign in next time?'**
+  String get signInMethodTitle;
+
+  /// No description provided for @signInMethodCode.
+  ///
+  /// In en, this message translates to:
+  /// **'With a code by email — nothing to remember'**
+  String get signInMethodCode;
+
+  /// No description provided for @signInMethodPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'With a password'**
+  String get signInMethodPassword;
+
+  /// No description provided for @passwordStrengthShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Still too short'**
+  String get passwordStrengthShort;
+
+  /// No description provided for @passwordStrengthWeak.
+  ///
+  /// In en, this message translates to:
+  /// **'Weak'**
+  String get passwordStrengthWeak;
+
+  /// No description provided for @passwordStrengthFair.
+  ///
+  /// In en, this message translates to:
+  /// **'Fair'**
+  String get passwordStrengthFair;
+
+  /// No description provided for @passwordStrengthStrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Strong'**
+  String get passwordStrengthStrong;
+
+  /// No description provided for @settingsPasswordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get settingsPasswordTitle;
+
+  /// No description provided for @settingsPasswordSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Set. You can also sign in with email and password.'**
+  String get settingsPasswordSet;
+
+  /// No description provided for @settingsPasswordNotSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not set. Signing in with an email code still works.'**
+  String get settingsPasswordNotSet;
+
+  /// No description provided for @passwordSetAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Set password'**
+  String get passwordSetAction;
+
+  /// No description provided for @passwordChangeAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Change password'**
+  String get passwordChangeAction;
+
+  /// No description provided for @passwordSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Your password is saved.'**
+  String get passwordSaved;
+
+  /// No description provided for @passwordDialogBody.
+  ///
+  /// In en, this message translates to:
+  /// **'At least 10 characters. The email code always stays available.'**
+  String get passwordDialogBody;
+
+  /// No description provided for @signInMethodEmailSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{email} — always available'**
+  String signInMethodEmailSubtitle(String email);
+
+  /// No description provided for @signInMethodAlwaysAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Always available'**
+  String get signInMethodAlwaysAvailable;
 }
 
 class _AppLocalizationsDelegate

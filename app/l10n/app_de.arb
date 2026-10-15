@@ -273,7 +273,7 @@
   "errLastSignInMethod": "Das ist deine einzige Anmeldemethode, darum kann sie nicht entfernt werden.",
   "errEmailExists": "Diese E-Mail-Adresse gehört schon zu einem anderen Konto.",
   "signInMethodsTitle": "Anmeldung",
-  "signInMethodEmail": "E-Mail und Passwort",
+  "signInMethodEmail": "E-Mail-Code",
   "signInMethodApple": "Apple",
   "signInMethodGoogle": "Google",
   "signInMethodNotConnected": "Nicht verbunden",
@@ -1346,5 +1346,60 @@
   "householdDeviceIphone": "iPhone",
   "householdDeviceAndroid": "Android-Handy",
   "householdDeviceBrowser": "Browser",
-  "householdDeviceComputer": "Computer"
+  "householdDeviceComputer": "Computer",
+  "emailContinue": "Weiter",
+  "emailHavePassword": "Ich habe ein Passwort",
+  "emailWrongCredentials": "E-Mail oder Passwort stimmt nicht.",
+  "emailUseCodeInstead": "Stattdessen Code per E-Mail",
+  "emailOffline": "Keine Verbindung – die Anmeldung per E-Mail braucht eine Verbindung.",
+  "emailCodeTitle": "Code aus der E-Mail",
+  "emailCodeSent": "Wir haben einen 6-stelligen Code an {email} geschickt. Er ist 10 Minuten gültig.",
+  "@emailCodeSent": {
+    "placeholders": {
+      "email": {
+        "type": "String",
+        "example": "lukas@example.org"
+      }
+    }
+  },
+  "emailCodeFieldLabel": "Sechsstelliger Code",
+  "emailCodeWrong": "Der Code stimmt nicht oder ist abgelaufen. Probier es noch einmal oder fordere einen neuen an.",
+  "emailCodeResendIn": "Kein Code? Erneut senden (in {seconds} s)",
+  "@emailCodeResendIn": {
+    "placeholders": {
+      "seconds": {
+        "type": "int",
+        "example": "4"
+      }
+    }
+  },
+  "emailCodeResend": "Kein Code? Erneut senden",
+  "emailCodeSpam": "Schau im Spam-Ordner nach.",
+  "emailCodeResent": "Ein neuer Code ist unterwegs.",
+  "emailCodeOtherMethod": "Andere Methode wählen",
+  "emailCodeOtherAddress": "Andere E-Mail-Adresse",
+  "signInMethodTitle": "Wie möchtest du dich künftig anmelden?",
+  "signInMethodCode": "Mit Code per E-Mail — nichts zu merken",
+  "signInMethodPassword": "Mit Passwort",
+  "passwordStrengthShort": "Noch zu kurz",
+  "passwordStrengthWeak": "Schwach",
+  "passwordStrengthFair": "Mittel",
+  "passwordStrengthStrong": "Stark",
+  "settingsPasswordTitle": "Passwort",
+  "settingsPasswordSet": "Festgelegt. Du kannst dich auch mit E-Mail und Passwort anmelden.",
+  "settingsPasswordNotSet": "Nicht festgelegt. Anmelden geht weiterhin mit einem Code per E-Mail.",
+  "passwordSetAction": "Passwort festlegen",
+  "passwordChangeAction": "Passwort ändern",
+  "passwordSaved": "Dein Passwort ist gespeichert.",
+  "passwordDialogBody": "Mindestens 10 Zeichen. Der Code per E-Mail bleibt immer möglich.",
+  "signInMethodEmailSubtitle": "{email} — immer verfügbar",
+  "@signInMethodEmailSubtitle": {
+    "placeholders": {
+      "email": {
+        "type": "String",
+        "example": "lukas@example.org"
+      }
+    }
+  },
+  "signInMethodAlwaysAvailable": "Immer verfügbar"
 }
