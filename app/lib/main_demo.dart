@@ -9,6 +9,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/app.dart';
 import 'package:wuselwall/app/bootstrap.dart';
 import 'package:wuselwall/app/licenses.dart';
+import 'package:wuselwall/core/notifications/notification_scheduler_provider.dart';
+import 'package:wuselwall/demo/demo_notifications.dart';
 import 'package:wuselwall/demo/demo_overrides.dart';
 import 'package:wuselwall/features/setup/ui/server_choice_page.dart';
 
@@ -32,7 +34,12 @@ void main() {
 
   runApp(
     ProviderScope(
-      overrides: demoOverrides(scenario: scenario),
+      overrides: [
+        ...demoOverrides(scenario: scenario),
+        notificationSchedulerProvider.overrideWithValue(
+          const DemoNotificationScheduler(),
+        ),
+      ],
       child: const WuselWallApp(),
     ),
   );

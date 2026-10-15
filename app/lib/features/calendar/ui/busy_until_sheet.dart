@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/ringed_avatar.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
@@ -142,10 +143,14 @@ class _BusyUntilSheetState extends ConsumerState<_BusyUntilSheet> {
                   children: [
                     for (final m in widget.members)
                       ChoiceChip(
-                        avatar: MemberDot(
-                          memberColor: m.color,
-                          semanticLabel: m.displayName,
-                          size: 16,
+                        showCheckmark: false,
+                        avatar: RingedAvatar(
+                          selected: m.id == _profileId,
+                          child: MemberDot(
+                            memberColor: m.color,
+                            semanticLabel: m.displayName,
+                            size: 16,
+                          ),
                         ),
                         label: Text(m.displayName),
                         selected: m.id == _profileId,

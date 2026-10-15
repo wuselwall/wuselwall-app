@@ -15,11 +15,13 @@ import 'package:wuselwall/features/invitations/application/invitation_providers.
 import 'package:wuselwall/features/invitations/data/invitation_repository.dart';
 import 'package:wuselwall/features/invitations/domain/invitation.dart';
 
-/// "18.10." for the local language, as the invitation lists write dates.
-String inviteDate(BuildContext context, DateTime date) => DateFormat(
-  'd.M.',
-  Localizations.localeOf(context).languageCode,
-).format(date);
+/// An invitation's expiry date for the local language: "Oct 22" in English, "22. Okt." in German.
+String inviteDate(BuildContext context, DateTime date) =>
+    formatInviteDate(Localizations.localeOf(context).languageCode, date);
+
+/// [inviteDate] for a language code, without a context.
+String formatInviteDate(String languageCode, DateTime date) =>
+    DateFormat.MMMd(languageCode).format(date);
 
 /// What the guardian chose for a new adult: a name, a role and, optionally, an email address.
 class AdultInvite {

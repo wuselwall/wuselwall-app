@@ -5,6 +5,7 @@ import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/text/fold.dart';
+import 'package:wuselwall/core/ui/ringed_avatar.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
@@ -357,15 +358,19 @@ class _MealEditorSheetState extends ConsumerState<_MealEditorSheet> {
                   ),
                   for (final m in members)
                     ChoiceChip(
-                      avatar: CircleAvatar(
-                        radius: 12,
-                        backgroundColor: ww.member(m.color).ink,
-                        child: Text(
-                          m.initial,
-                          style: TextStyle(
-                            color: ww.member(m.color).onInk,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
+                      showCheckmark: false,
+                      avatar: RingedAvatar(
+                        selected: _cook == m.id,
+                        child: CircleAvatar(
+                          radius: 12,
+                          backgroundColor: ww.member(m.color).ink,
+                          child: Text(
+                            m.initial,
+                            style: TextStyle(
+                              color: ww.member(m.color).onInk,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),

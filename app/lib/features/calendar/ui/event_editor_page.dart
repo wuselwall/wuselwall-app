@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/ringed_avatar.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
@@ -446,14 +447,18 @@ class _EventEditorFormState extends ConsumerState<_EventEditorForm> {
             children: [
               for (final m in activeMembers)
                 FilterChip(
-                  avatar: MemberAvatar(
-                    member: BoardMember(
-                      id: m.id,
-                      displayName: m.displayName,
-                      color: m.color,
-                      kind: MemberKind.adult,
+                  showCheckmark: false,
+                  avatar: RingedAvatar(
+                    selected: _draft.attendeeIds.contains(m.id),
+                    child: MemberAvatar(
+                      member: BoardMember(
+                        id: m.id,
+                        displayName: m.displayName,
+                        color: m.color,
+                        kind: MemberKind.adult,
+                      ),
+                      size: 24,
                     ),
-                    size: 24,
                   ),
                   label: Text(m.displayName),
                   selected: _draft.attendeeIds.contains(m.id),

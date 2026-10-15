@@ -16,6 +16,9 @@ licence above:
 
 - app/assets/fonts/: Atkinson Hyperlegible Next and Barlow Semi Condensed, SIL Open
   Font License 1.1; the licence texts are in that folder (OFL-*.txt).
+- app/assets/emoji/: emoji pictures rendered from Fluent Emoji Flat
+  (https://github.com/microsoft/fluentui-emoji), MIT License, Copyright (c) Microsoft
+  Corporation; the licence text is in that folder (LICENSE-FluentEmoji.txt).
 
 - website/src/components/GitHubMark.astro: the GitHub mark from Primer Octicons
   (https://github.com/primer/octicons), MIT License, Copyright (c) GitHub Inc.

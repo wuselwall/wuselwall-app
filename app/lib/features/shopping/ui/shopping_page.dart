@@ -406,60 +406,89 @@ class _TilePickerState extends ConsumerState<_TilePicker> {
         .map((i) => i.count)
         .fold(0, (a, b) => a + b);
 
-    return Padding(
-      padding: const EdgeInsets.all(Tokens.space4),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (widget.showSearch)
-            TextField(
-              controller: widget.search,
-              decoration: InputDecoration(
-                labelText: l10n.shoppingSearchHint,
-                prefixIcon: const Icon(Icons.search),
-              ),
-              textInputAction: TextInputAction.done,
-              // Enter adds the top hit, else the typed name as a new item.
-              onSubmitted: (value) =>
-                  widget.onAdd(tiles.isNotEmpty ? tiles.first.name : value),
+    final tileWidgets = <Widget>[
+      for (final t in tiles)
+        _Tile(
+          width: width,
+          picture: switch (shoppingIconAsset(t.iconKey)) {
+            final asset? => Image.asset(
+              asset,
+              width: kiosk ? 40 : 32,
+              height: kiosk ? 40 : 32,
+              // The tile's label names the item; the picture adds nothing for a screen reader.
+              excludeFromSemantics: true,
             ),
-          const SizedBox(height: Tokens.space2),
-          if (tiles.isEmpty && query.isEmpty)
-            Text(
-              l10n.shoppingTilesEmpty,
-              style: Theme.of(context).textTheme.bodySmall,
-            )
-          else
-            ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: kiosk ? 320 : 176),
-              child: SingleChildScrollView(
-                child: Wrap(
-                  spacing: Tokens.space2,
-                  runSpacing: Tokens.space2,
-                  children: [
-                    for (final t in tiles)
-                      _Tile(
-                        width: width,
-                        icon: categoryIcon(categories[t.categoryId]),
-                        label: t.name,
-                        count: countOf(t.foldedName),
-                        onTap: widget.busy ? null : () => widget.onAdd(t.name),
-                        onLongPress: () => widget.onLongPress(t.name),
-                      ),
-                    if (query.isNotEmpty && !exact)
-                      _Tile(
-                        width: width,
-                        icon: Icons.add_circle_outline,
-                        label: l10n.shoppingCreateTile(query),
-                        count: 0,
-                        onTap: widget.busy ? null : () => widget.onAdd(query),
-                        onLongPress: () => widget.onLongPress(query),
-                      ),
-                  ],
+            null => Icon(categoryIcon(categories[t.categoryId]), size: 28),
+          },
+          label: t.name,
+          count: countOf(t.foldedName),
+          onTap: widget.busy ? null : () => widget.onAdd(t.name),
+          onLongPress: () => widget.onLongPress(t.name),
+        ),
+      if (query.isNotEmpty && !exact)
+        _Tile(
+          width: width,
+          picture: const Icon(Icons.add_circle_outline, size: 28),
+          label: l10n.shoppingCreateTile(query),
+          count: 0,
+          onTap: widget.busy ? null : () => widget.onAdd(query),
+          onLongPress: () => widget.onLongPress(query),
+        ),
+    ];
+
+    // Full width, so the picker lines up with the list below it instead of being
+    // centred by the parent Column.
+    return SizedBox(
+      width: double.infinity,
+      child: Padding(
+        padding: const EdgeInsets.all(Tokens.space4),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (widget.showSearch)
+              TextField(
+                controller: widget.search,
+                decoration: InputDecoration(
+                  labelText: l10n.shoppingSearchHint,
+                  prefixIcon: const Icon(Icons.search),
+                ),
+                textInputAction: TextInputAction.done,
+                // Enter adds the top hit, else the typed name as a new item.
+                onSubmitted: (value) =>
+                    widget.onAdd(tiles.isNotEmpty ? tiles.first.name : value),
+              ),
+            const SizedBox(height: Tokens.space2),
+            if (tiles.isEmpty && query.isEmpty)
+              Text(
+                l10n.shoppingTilesEmpty,
+                style: Theme.of(context).textTheme.bodySmall,
+              )
+            else if (kiosk)
+              // On the wall the list is the point: one row of tiles that scrolls sideways,
+              // all as tall as the tallest, instead of a block that pushes the list away.
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    spacing: Tokens.space2,
+                    children: tileWidgets,
+                  ),
+                ),
+              )
+            else
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxHeight: 176),
+                child: SingleChildScrollView(
+                  child: Wrap(
+                    spacing: Tokens.space2,
+                    runSpacing: Tokens.space2,
+                    children: tileWidgets,
+                  ),
                 ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -468,7 +497,7 @@ class _TilePickerState extends ConsumerState<_TilePicker> {
 class _Tile extends StatelessWidget {
   const _Tile({
     required this.width,
-    required this.icon,
+    required this.picture,
     required this.label,
     required this.count,
     required this.onTap,
@@ -476,7 +505,7 @@ class _Tile extends StatelessWidget {
   });
 
   final double width;
-  final IconData icon;
+  final Widget picture;
   final String label;
   final int count;
   final VoidCallback? onTap;
@@ -503,7 +532,7 @@ class _Tile extends StatelessWidget {
                 Badge(
                   isLabelVisible: count > 1,
                   label: Text('$count×'),
-                  child: Icon(icon, size: 28),
+                  child: picture,
                 ),
                 const SizedBox(height: Tokens.space1),
                 // Flutter cannot hyphenate: a single long word ("Toilettenpapier")
@@ -767,6 +796,7 @@ class _EditItemDialogState extends ConsumerState<_EditItemDialog> {
             maxLength: 40,
             decoration: InputDecoration(labelText: l10n.shoppingSpecHint),
           ),
+          const SizedBox(height: Tokens.space4),
           DropdownButtonFormField<String?>(
             initialValue: widget.categories.any((c) => c.id == _category)
                 ? _category
@@ -849,6 +879,7 @@ class _NewListDialogState extends State<_NewListDialog> {
             maxLength: 40,
             decoration: InputDecoration(labelText: l10n.shoppingListName),
           ),
+          const SizedBox(height: Tokens.space4),
           DropdownButtonFormField<String>(
             initialValue: _kind,
             decoration: InputDecoration(labelText: l10n.shoppingListKind),

@@ -274,7 +274,7 @@ class DemoShoppingRepository implements ShoppingRepository {
 
   @override
   Future<Result<List<TripItem>>> tripItems(String tripId) async =>
-      Ok(DemoData.tripItems);
+      Ok(DemoData.tripItems(tripId));
 
   @override
   Future<Result<String>> add({

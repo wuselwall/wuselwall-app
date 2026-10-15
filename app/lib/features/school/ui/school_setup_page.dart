@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/palette.dart';
+import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
@@ -409,19 +410,21 @@ class _BellTimesState extends ConsumerState<_BellTimes> {
                   title: Text(
                     r.isBreak ? l10n.boardBreak : l10n.boardPeriod(lessonNo),
                   ),
-                  subtitle: Wrap(
-                    spacing: 8,
+                  subtitle: Row(
                     children: [
-                      TextButton(
-                        onPressed: () => _pick(r, start: true),
-                        child: Text(
-                          '${l10n.schoolStart} ${context.time(r.starts)}',
+                      Tooltip(
+                        message: l10n.schoolStart,
+                        child: TextButton(
+                          onPressed: () => _pick(r, start: true),
+                          child: Text(context.time(r.starts)),
                         ),
                       ),
-                      TextButton(
-                        onPressed: () => _pick(r, start: false),
-                        child: Text(
-                          '${l10n.schoolEnd} ${context.time(r.ends)}',
+                      const Text('–'),
+                      Tooltip(
+                        message: l10n.schoolEnd,
+                        child: TextButton(
+                          onPressed: () => _pick(r, start: false),
+                          child: Text(context.time(r.ends)),
                         ),
                       ),
                     ],
@@ -812,6 +815,7 @@ class _SubjectDialogState extends State<_SubjectDialog> {
               maxLength: 80,
               decoration: InputDecoration(labelText: l10n.schoolEquipment),
             ),
+            const SizedBox(height: Tokens.space2),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
               title: Text(l10n.schoolNotable),

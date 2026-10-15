@@ -132,7 +132,8 @@
   },
   "signOutDevice": "Sign out this device",
   "classPersonal": "Personal",
-  "classShared": "Shared (tap to switch)",
+  "classShared": "Shared",
+  "classSharedHint": "Several people use it: tap a name to switch.",
   "classKiosk": "Wall display",
   "systemDevice": "This device",
   "systemRegister": "Register",
@@ -618,7 +619,7 @@
   "settingSchoolEquipmentTitle": "Equipment hint for tomorrow",
   "settingSchoolEquipmentHelp": "Shows what to bring tomorrow, such as sports kit, from tomorrow's subjects.",
   "settingMealsSchoolDayTitle": "Warm meal on school days",
-  "settingMealsSchoolDayHelp": "The one warm meal on the kitchen wall. On school days children eat lunch at school or in the Hort.",
+  "settingMealsSchoolDayHelp": "The one warm meal on the kitchen wall. On school days children eat lunch at school or at after-school care.",
   "settingMealsFreeDayTitle": "Warm meal on free days",
   "settingMealsFreeDayHelp": "For weekends and holidays.",
   "settingMealsAwayTitle": "Away means not eating",
@@ -856,7 +857,7 @@
   "mealsTimeNone": "No time",
   "mealsGuests": "Guests",
   "mealsEatingTitle": "Who is eating",
-  "mealsEatingHelp": "Someone who is away or travelling over the meal, or who has Hort past the cut-off, is switched off automatically. Set it by hand only when that is not true.",
+  "mealsEatingHelp": "Someone who is away or travelling over the meal, or who is at after-school care past the cut-off, is switched off automatically. Set it by hand only when that is not true.",
   "mealsEatingAuto": "Automatic",
   "mealsEatingYes": "Eating",
   "mealsEatingNo": "Not eating",
@@ -1165,14 +1166,6 @@
       }
     }
   },
-  "tasksStreakBadge": "🔥 {count}",
-  "@tasksStreakBadge": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "tasksStreakDays": "{count, plural, =1{1 day in a row} other{{count} days in a row}}",
   "@tasksStreakDays": {
     "placeholders": {
@@ -1226,6 +1219,24 @@
   "tasksFieldTitle": "Title",
   "tasksTitleRequired": "Please enter a title.",
   "tasksFieldIcon": "Icon",
+  "taskIcon_dishes": "Plate",
+  "taskIcon_table": "Spoon",
+  "taskIcon_trash": "Bin",
+  "taskIcon_bed": "Bed",
+  "taskIcon_dog": "Dog",
+  "taskIcon_plant": "Plant",
+  "taskIcon_bike": "Bike",
+  "taskIcon_book": "Books",
+  "taskIcon_laundry": "Laundry basket",
+  "taskIcon_teeth": "Toothbrush",
+  "taskIcon_shopping": "Shopping trolley",
+  "taskIcon_cooking": "Frying pan",
+  "taskIcon_car": "Car",
+  "taskIcon_toys": "Teddy bear",
+  "taskIcon_star": "Star",
+  "taskIcon_cinema": "Film",
+  "taskIcon_moon": "Moon",
+  "taskIcon_trip": "Compass",
   "tasksNoIcon": "No icon",
   "tasksFieldKind": "Type",
   "tasksKindDutyHelp": "Expected of everyone; earns little.",
@@ -1335,7 +1346,7 @@
   },
   "kidTasksTitle": "My chores",
   "kidTasksNone": "You have no chores today.",
-  "kidTasksAllDone": "All done! 🎉",
+  "kidTasksAllDone": "All done!",
   "kidTasksAllDoneBody": "Well done, you did everything for today.",
   "kidAwaitsCheck": "being checked",
   "kidDone": "Done",
@@ -1424,11 +1435,11 @@
   },
   "kidWaitsApproval": "waiting for approval",
   "kidRequestSent": "Your reward is waiting for approval.",
-  "kidRedeemed": "Redeemed! 🎉",
+  "kidRedeemed": "Redeemed!",
   "kidSoldOut": "Sold out for now",
   "kidBadgesTitle": "My badges",
   "kidStreaksTitle": "My streaks",
-  "kidStreak": "{days, plural, =1{1 day {title} 🔥} other{{days} days {title} 🔥}}",
+  "kidStreak": "{days, plural, =1{1 day {title}} other{{days} days {title}}}",
   "@kidStreak": {
     "placeholders": {
       "days": {
@@ -1842,7 +1853,7 @@
   "reminderLocalNote": "Reminders are created on this phone. Nothing is sent to a server or to anyone else.",
   "reminderOnlyPersonal": "Reminders are only available on a member's personal device.",
   "pairFrontDoorAction": "Connect a family tablet or wall display",
-  "pairTitle": "Connect a family tablet or wall display",
+  "pairTitle": "Connect this device",
   "pairScanHint": "Open WuselWall on your phone and scan this code.",
   "pairCodeHint": "Or on the phone: Settings → Devices → Connect a device, then type the code.",
   "pairQrLabel": "QR code to connect this device",

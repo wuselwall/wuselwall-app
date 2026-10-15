@@ -130,6 +130,11 @@ content_path = "./supabase/templates/confirmation.html"
 # subject = "You have been invited"
 # content_path = "./supabase/templates/invite.html"
 
+# The default budget of two mails an hour would stop the onboarding journeys of the
+# integration tests (a fresh address each); this stack only ever holds throwaway mail.
+[auth.rate_limit]
+email_sent = 100
+
 [auth.sms]
 # Allow/disallow new user signups via SMS to your project.
 enable_signup = true
