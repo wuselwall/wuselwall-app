@@ -164,8 +164,8 @@ class _TaskTile extends StatelessWidget {
             if (task.points > 0) PointsCoin(points: task.points, fontSize: 14),
             Text(facts),
             if (streak != null)
-              Text(
-                l10n.tasksStreakBadge(streak!.currentLength),
+              StreakBadge(
+                days: streak!.currentLength,
                 style: TextStyle(color: ww.ink2),
               ),
           ],

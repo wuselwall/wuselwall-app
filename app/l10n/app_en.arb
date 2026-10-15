@@ -1166,14 +1166,6 @@
       }
     }
   },
-  "tasksStreakBadge": "🔥 {count}",
-  "@tasksStreakBadge": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "tasksStreakDays": "{count, plural, =1{1 day in a row} other{{count} days in a row}}",
   "@tasksStreakDays": {
     "placeholders": {
@@ -1227,6 +1219,24 @@
   "tasksFieldTitle": "Title",
   "tasksTitleRequired": "Please enter a title.",
   "tasksFieldIcon": "Icon",
+  "taskIcon_dishes": "Plate",
+  "taskIcon_table": "Spoon",
+  "taskIcon_trash": "Bin",
+  "taskIcon_bed": "Bed",
+  "taskIcon_dog": "Dog",
+  "taskIcon_plant": "Plant",
+  "taskIcon_bike": "Bike",
+  "taskIcon_book": "Books",
+  "taskIcon_laundry": "Laundry basket",
+  "taskIcon_teeth": "Toothbrush",
+  "taskIcon_shopping": "Shopping trolley",
+  "taskIcon_cooking": "Frying pan",
+  "taskIcon_car": "Car",
+  "taskIcon_toys": "Teddy bear",
+  "taskIcon_star": "Star",
+  "taskIcon_cinema": "Film",
+  "taskIcon_moon": "Moon",
+  "taskIcon_trip": "Compass",
   "tasksNoIcon": "No icon",
   "tasksFieldKind": "Type",
   "tasksKindDutyHelp": "Expected of everyone; earns little.",
@@ -1336,7 +1346,7 @@
   },
   "kidTasksTitle": "My chores",
   "kidTasksNone": "You have no chores today.",
-  "kidTasksAllDone": "All done! 🎉",
+  "kidTasksAllDone": "All done!",
   "kidTasksAllDoneBody": "Well done, you did everything for today.",
   "kidAwaitsCheck": "being checked",
   "kidDone": "Done",
@@ -1425,11 +1435,11 @@
   },
   "kidWaitsApproval": "waiting for approval",
   "kidRequestSent": "Your reward is waiting for approval.",
-  "kidRedeemed": "Redeemed! 🎉",
+  "kidRedeemed": "Redeemed!",
   "kidSoldOut": "Sold out for now",
   "kidBadgesTitle": "My badges",
   "kidStreaksTitle": "My streaks",
-  "kidStreak": "{days, plural, =1{1 day {title} 🔥} other{{days} days {title} 🔥}}",
+  "kidStreak": "{days, plural, =1{1 day {title}} other{{days} days {title}}}",
   "@kidStreak": {
     "placeholders": {
       "days": {
