@@ -210,6 +210,31 @@ void main() {
     await unmountApp(tester, container);
   });
 
+  testWidgets('the settings gear sits above the greeting, not on it', (
+    tester,
+  ) async {
+    final container = await pumpApp(
+      tester,
+      overrides: baseOverrides(identity: _KidIdentity()),
+      tasks: _TickingApi(),
+    );
+    await _pickLotta(tester);
+
+    final gear = tester.getRect(find.byTooltip('Einstellungen'));
+    final greeting = tester.getRect(find.textContaining('Hallo, Lotta!'));
+    expect(gear.bottom, lessThanOrEqualTo(greeting.top));
+    expect(gear.overlaps(greeting), isFalse);
+    expect(
+      tester.getSize(find.byTooltip('Einstellungen')).width,
+      greaterThanOrEqualTo(48),
+    );
+    expect(
+      tester.getSize(find.byTooltip('Einstellungen')).height,
+      greaterThanOrEqualTo(48),
+    );
+    await unmountApp(tester, container);
+  });
+
   testWidgets(
     'ticking calls the task action as Lotta, flies the coin and updates the balance',
     (tester) async {
