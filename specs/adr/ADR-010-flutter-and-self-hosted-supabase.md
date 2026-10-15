@@ -4,8 +4,8 @@
 amends [ADR-004](ADR-004-identity-model.md), [ADR-005](ADR-005-hosting.md),
 [ADR-006](ADR-006-offline-strategy.md) and [ADR-007](ADR-007-assistant-integration.md)
 in their implementation, not in their intent. Amended by
-[ADR-013](ADR-013-one-self-hosted-environment.md) (one environment on the home server;
-further tenants on hosted Supabase) and [ADR-014](ADR-014-self-service-onboarding.md)
+[ADR-013](ADR-013-self-hosted-compose-stack.md) (one self-hosted stack, no separate dev
+and prod; further tenants on hosted Supabase) and [ADR-014](ADR-014-self-service-onboarding.md)
 (public sign-up for adults, self-service households, device pairing) and
 [ADR-015](ADR-015-saas-and-self-hosted-flavours.md) (a hosted *WuselWall Cloud* next to the
 self-hosted flavour).
@@ -28,7 +28,7 @@ ADR-005 had rejected "Supabase or Firebase" outright, but the objection was to t
 **hosted** service: family data held by a US cloud provider. Self-hosting removes that
 objection completely. Supabase's Docker stack runs on the same German VPS, the data never
 leaves it, and no Supabase-the-company service is contacted at runtime. *(Since
-[ADR-013](ADR-013-one-self-hosted-environment.md): the home server instead of a VPS.)*
+[ADR-013](ADR-013-self-hosted-compose-stack.md): a server at home instead of a VPS.)*
 
 ## Decision
 
@@ -64,9 +64,9 @@ leaves it, and no Supabase-the-company service is contacted at runtime. *(Since
   `supabase/config.toml` under `additional_redirect_urls`. The identifier is permanent
   once an app is registered with Apple and Google, so it is fixed now, before the first
   store record exists. Display name: `WuselWall`.
-- **Configuration** is `--dart-define-from-file=env/<name>.json` (`dev.json` for the one
-  environment at `https://wusel.example.org`, `ci.json` for CI's throwaway stack; no
-  `prod.json`, see ADR-013), holding only public values: `ENV`, `SUPABASE_URL`,
+- **Configuration** is `--dart-define-from-file=env/<name>.json` (`dev.json`, git-ignored, for a
+  development build's server, `ci.json` for CI's throwaway stack, `store.json` for store
+  builds without a server; no `prod.json`, see ADR-013 and ADR-018), holding only public values: `ENV`, `SUPABASE_URL`,
   `SUPABASE_PUBLISHABLE_KEY`. The starter's `flutter_dotenv` and `.env` were removed. The
   client is initialised with `publishableKey` (the starter's `anonKey` is deprecated in
   `supabase_flutter`), the default PostgREST schema `api`, and the session persisted in
@@ -215,9 +215,9 @@ service layer. Rejected: the user chose Supabase, and the custom server's main j
 auth, a REST layer, realtime, a job runner — are exactly what Supabase provides already.
 
 **Hosted Supabase (supabase.com).** Least operational work. Rejected for the same reason
-ADR-005 gave: it puts the family's data with a US-headquartered provider (NFR-8).
-*Amended by ADR-013:* still rejected for this family's data, but the intended home for any
-further tenant — so `supabase/` must stay portable to a hosted project.
+ADR-005 gave: it puts a household's data with a US-headquartered provider (NFR-8).
+*Amended by ADR-013 and ADR-018:* not the project's choice, but a household may choose its
+own hosted project — so `supabase/` must stay portable to a hosted project.
 
 **Firebase / Appwrite / PocketBase.** Firebase is not self-hostable. Appwrite is, but its
 document model gives up the relational data, `rrule`-style range queries and the
@@ -266,7 +266,7 @@ module, and a bespoke outbox for one module is smaller than a sync engine for al
   in every app binary by design, so a missing policy is an open door. Every table ships
   with policy tests, without exception.
 - **A heavier server.** Self-hosted Supabase is about a dozen containers and wants about
-  8 GB of RAM. *(Moot since ADR-013: the home server has 62 GB.)*
+  8 GB of RAM. *(Since 2026-10-14 the lean layer switches off what WuselWall does not use.)*
 - **Self-hosted Supabase lags the hosted product** and is upgraded by pulling new pinned
   images and following its changelog. Budget a quarterly upgrade evening.
 - **Native distribution costs money and time** — see [ADR-011](ADR-011-native-distribution-and-ci-cd.md).

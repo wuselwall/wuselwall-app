@@ -89,6 +89,7 @@ const longPress = async (page, locator) => {
  * not lose the others.
  */
 const shots = [
+  { name: 'setup-server', scenario: 'server', viewport: PHONE },
   { name: 'setup-start', scenario: 'setup', viewport: PHONE },
   { name: 'setup-household', scenario: 'setup', viewport: PHONE, steps: async (p, t) => press(p, t.household) },
   { name: 'setup-enrol', scenario: 'setup', viewport: PHONE, steps: async (p, t) => press(p, t.enrol) },

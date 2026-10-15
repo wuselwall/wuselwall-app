@@ -1,0 +1,308 @@
+#!/usr/bin/env bash
+# The operator's tool for a WuselWall server (ADR-018, decision 9; docs/server). It runs ON
+# the server, inside an unpacked server release:
+#
+#   wuselwall/            this directory (any path, e.g. /srv/wuselwall)
+#     wuselwall           this script
+#     VERSION             the release
+#     stack/              the compose stack: Supabase's files, WuselWall's layers, the Edge
+#                         Functions, the web app; stack/.env and stack/volumes/db/data are
+#                         created here and never shipped
+#     migrations/         supabase/migrations
+#     jobs/schedule.sql   the two scheduled jobs (pg_cron)
+#     backup/             backup.sh
+#
+# Commands:
+#   install --api https://api.example.org --web https://web.example.org [--caddy] [--studio]
+#           [--admin-email you@example.org] [--env old.env]
+#                         a new server: secrets, stack, database, jobs, the setup token.
+#                         --env reuses the .env of an earlier server (a move, a restore).
+#   update [release.tar.gz | version]
+#                         backup, then the new release's stack, migrations and jobs
+#   backup [label]        a dump of the whole database into backups/ (BACKUP_DIR)
+#   restore <db-….dump>   replaces the database with a backup (see docs/server/restore)
+#   setup-token           a fresh single-use token for founding the household
+#   status | logs [service] | compose <args>
+#
+# Needs: Docker with Compose v2, openssl, tar, curl. Node.js is not needed: make-env.mjs runs
+# in a Node container when node is missing.
+set -euo pipefail
+
+ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+STACK=$ROOT/stack
+DB=${DB_CONTAINER:-supabase-db}
+REPO=${WW_REPO:-wuselwall/wuselwall-app}
+NODE_IMAGE=node:22.12.0-alpine
+FUNCTIONS_URL=http://api-gw:8000/functions/v1
+
+say() { printf '\033[1m%s\033[0m\n' "$*"; }
+die() { printf 'wuselwall: %s\n' "$*" >&2; exit 1; }
+compose() { (cd "$STACK" && docker compose "$@"); }
+psql_db() { docker exec -i "$DB" psql -U postgres -X -q -t -A -v ON_ERROR_STOP=1 "$@"; }
+env_value() { sed -n "s/^$1='\(.*\)'$/\1/p" "$STACK/.env"; }
+
+preflight() {
+  docker compose version > /dev/null 2>&1 || die "Docker Compose v2 is missing ('docker compose version')"
+  command -v openssl > /dev/null || die "openssl is missing"
+  [ -d "$STACK" ] || die "no stack/ next to this script: run it from an unpacked release"
+}
+
+wait_for_db() {
+  for _ in $(seq 1 90); do
+    docker exec "$DB" pg_isready -U postgres -q 2> /dev/null && return 0
+    sleep 2
+  done
+  die "the database did not start; see: $0 logs db"
+}
+
+wait_for_stack() {
+  say "Waiting for the services"
+  for _ in $(seq 1 90); do
+    # Services without a health check (Caddy) report nothing and do not count.
+    if ! compose ps --format '{{.Health}}' | grep -v '^$' | grep -qvx healthy; then return 0; fi
+    sleep 2
+  done
+  compose ps
+  die "not every service became healthy; see: $0 logs <service>"
+}
+
+# The pending migrations, each in one transaction with its row in
+# supabase_migrations.schema_migrations (as scripts/remote-migrations.sh does).
+migrate() {
+  psql_db > /dev/null <<'SQL'
+create schema if not exists supabase_migrations;
+create table if not exists supabase_migrations.schema_migrations (
+  version text primary key, statements text[], name text);
+SQL
+  local applied pending=0
+  applied=$(psql_db -c 'select version from supabase_migrations.schema_migrations' < /dev/null)
+  for f in "$ROOT"/migrations/*.sql; do
+    local base version name
+    base=$(basename "$f" .sql)
+    version=${base%%_*}
+    name=${base#*_}
+    grep -qx "$version" <<< "$applied" && continue
+    pending=1
+    echo "  $base"
+    { echo 'begin;'
+      cat "$f"
+      printf "\ninsert into supabase_migrations.schema_migrations (version, name) values ('%s', '%s');\n" "$version" "$name"
+      echo 'commit;'
+    } | psql_db > /dev/null
+  done
+  [ "$pending" = 1 ] || echo "  no pending migrations"
+}
+
+schedule() {
+  local secret
+  secret=$(env_value CRON_SECRET)
+  [ -n "$secret" ] || die "CRON_SECRET is empty in stack/.env"
+  psql_db -v functions_url="$FUNCTIONS_URL" -v cron_secret="$secret" < "$ROOT/jobs/schedule.sql" \
+    | sed 's/^/  /'
+}
+
+# Prints a token once and stores only its hash. Refuses once a household exists: the
+# server belongs to one household (docs/server).
+setup_token() {
+  local token out
+  token=$(openssl rand -hex 12)
+  out=$(psql_db <<SQL
+do \$\$ begin
+  if exists (select 1 from app.household) then
+    raise exception 'a household exists already; setup is closed';
+  end if;
+end \$\$;
+delete from app.setup_token;
+insert into app.setup_token (token_hash) values (encode(extensions.digest('$token', 'sha256'), 'hex'));
+select 'ok';
+SQL
+)
+  [ "$out" = ok ] || die "$out"
+  echo "$token"
+}
+
+backup() {
+  BACKUP_DIR=${BACKUP_DIR:-$ROOT/backups} DB_CONTAINER=$DB \
+    BACKUP_ENV=${BACKUP_ENV:-$ROOT/backup.env} bash "$ROOT/backup/backup.sh" "${1:-manual}"
+}
+
+show_qr() {
+  if command -v qrencode > /dev/null; then
+    qrencode -t ANSIUTF8 "$1"
+  else
+    echo "  (install qrencode to see a QR code here; the web app shows one as well)"
+  fi
+}
+
+cmd_install() {
+  preflight
+  local env_from='' make_args=()
+  while [ $# -gt 0 ]; do
+    case $1 in
+      --env) env_from=$2; shift 2 ;;
+      --api | --web | --admin-email | --rp-id) make_args+=("$1" "$2"); shift 2 ;;
+      --caddy | --studio) make_args+=("$1"); shift ;;
+      *) die "install: unknown option $1" ;;
+    esac
+  done
+  [ -e "$STACK/.env" ] && die "stack/.env exists: this server is installed already (use update)"
+
+  umask 077
+  if [ -n "$env_from" ]; then
+    say "Taking over the secrets of $env_from"
+    cp "$env_from" "$STACK/.env"
+  else
+    say "Generating the secrets"
+    if command -v node > /dev/null; then
+      node "$STACK/make-env.mjs" "${make_args[@]}" > "$STACK/.env.new"
+    else
+      docker run --rm -v "$STACK/make-env.mjs:/make-env.mjs:ro" "$NODE_IMAGE" \
+        node /make-env.mjs "${make_args[@]}" > "$STACK/.env.new"
+    fi
+    mv "$STACK/.env.new" "$STACK/.env"
+  fi
+  chmod 600 "$STACK/.env"
+  umask 022
+
+  say "Starting the stack (the first start downloads a few GB)"
+  compose up -d
+  wait_for_db
+  say "Setting up the database"
+  migrate
+  # PostgREST serves only the api schema, which the migrations just created; without a
+  # restart it would wait out its reconnect interval as "unhealthy".
+  compose restart rest > /dev/null
+  wait_for_stack
+  say "Scheduling the nightly jobs"
+  schedule
+
+  local api web token
+  api=$(env_value SUPABASE_PUBLIC_URL)
+  web=$(env_value SITE_URL)
+  token=$(setup_token 2> /dev/null || true)
+  echo
+  say "WuselWall $(cat "$ROOT/VERSION") is running."
+  echo "  Server:   $api"
+  echo "  Web app:  $web"
+  [ -n "$token" ] && echo "  Setup token (shown once, for \"Start a new family\"): $token"
+  echo
+  echo "  In the WuselWall app, choose \"Own server\" and enter $api, or scan:"
+  show_qr "$api"
+  echo
+  say "Now copy $STACK/.env into your password manager."
+  echo "  Without it a backup cannot be restored with every device still signed in."
+  if ! grep -q 'docker-compose.caddy.yml' "$STACK/.env"; then
+    echo
+    echo "  Your web server must forward $api to $(env_value GATEWAY_BIND):$(env_value GATEWAY_PORT)"
+    echo "  and serve $STACK/volumes/web for $web (docs/server)."
+  fi
+}
+
+# Unpacks [release] (a file or a version) over this directory: everything but stack/.env,
+# the database and backups/. Functions and the web app are replaced as a whole.
+unpack() {
+  local release=$1 file
+  if [ -f "$release" ]; then
+    file=$release
+  else
+    file=$(mktemp)
+    say "Downloading WuselWall server $release"
+    curl -fsSL -o "$file" \
+      "https://github.com/$REPO/releases/download/server-v$release/wuselwall-server-$release.tar.gz"
+  fi
+  # grep without -q reads to the end: an early exit would kill tar with SIGPIPE (pipefail).
+  tar -tzf "$file" | grep -x 'wuselwall/wuselwall' > /dev/null \
+    || die "$release is not a WuselWall server release"
+  rm -rf "$STACK/volumes/functions" "$STACK/volumes/web"
+  tar -xzf "$file" -C "$ROOT" --strip-components=1
+}
+
+cmd_update() {
+  preflight
+  [ -e "$STACK/.env" ] || die "not installed yet (use install)"
+  if [ "${1:-}" != --unpacked ]; then
+    say "Backing up first"
+    backup update
+    if [ -n "${1:-}" ]; then
+      unpack "$1"
+      # The new release's script finishes the update.
+      exec "$ROOT/wuselwall" update --unpacked
+    fi
+  fi
+  say "Updating the stack to $(cat "$ROOT/VERSION")"
+  compose up -d --remove-orphans
+  wait_for_db
+  wait_for_stack
+  say "Database changes"
+  migrate
+  say "Scheduled jobs"
+  schedule
+  say "Done."
+}
+
+# Replaces this server's database with [dump] (a db-….dump of backup.sh). Meant for a new
+# server installed with the old server's .env (install --env): the same JWT secret, keys
+# and Vault key, so every device stays signed in.
+cmd_restore() {
+  preflight
+  local dump=${1:?usage: wuselwall restore <db-….dump>}
+  [ -f "$dump" ] || die "no such file: $dump"
+  [ -e "$STACK/.env" ] || die "not installed yet: install first (with --env <old .env>)"
+  docker exec -i "$DB" pg_restore --list < "$dump" > /dev/null || die "$dump is not a readable backup"
+
+  local households
+  households=$(psql_db -c "select count(*) from app.household" < /dev/null 2> /dev/null || echo 0)
+  if [ "$households" != 0 ] && [ "${WW_RESTORE_OVER_DATA:-}" != yes ]; then
+    die "this server holds a household already; set WW_RESTORE_OVER_DATA=yes to replace it"
+  fi
+  if [ "$households" != 0 ]; then
+    say "Backing up the current database first"
+    backup before-restore
+  fi
+
+  say "Stopping everything but the database"
+  local services
+  services=$(compose ps --services | grep -vx db || true)
+  # shellcheck disable=SC2086
+  [ -n "$services" ] && compose stop $services
+
+  say "Restoring $(basename "$dump")"
+  # supabase_admin is the superuser here (Supabase's postgres role is not). The archive
+  # recreates the database with its own settings and owners; roles exist in every stack.
+  docker exec "$DB" psql -U supabase_admin -X -q -d template1 -v ON_ERROR_STOP=1 \
+    -c 'drop database if exists postgres with (force)' < /dev/null
+  local log=$ROOT/backups/restore-$(date +%F-%H%M).log
+  mkdir -p "$ROOT/backups"
+  docker exec -i "$DB" pg_restore -U supabase_admin --create --dbname=template1 < "$dump" 2> "$log" || true
+  local errors
+  errors=$(grep -c '^pg_restore: error' "$log" || true)
+  echo "  pg_restore errors: $errors (details in $log)"
+
+  say "Starting everything"
+  compose up -d
+  wait_for_stack
+  say "Database changes of this release"
+  migrate
+  say "Scheduled jobs"
+  schedule
+  psql_db -F ' ' -c "
+    select 'households', count(*) from app.household
+    union all select 'members', count(*) from app.profile
+    union all select 'devices', count(*) from app.device
+    union all select 'accounts', count(*) from auth.users" < /dev/null | sed 's/^/  /'
+  say "Restored."
+}
+
+case "${1:-}" in
+  install) shift; cmd_install "$@" ;;
+  update) shift; cmd_update "$@" ;;
+  backup) shift; preflight; backup "${1:-manual}" ;;
+  restore) shift; cmd_restore "$@" ;;
+  setup-token) preflight; echo "Setup token (shown once): $(setup_token)" ;;
+  migrate) preflight; migrate ;;
+  schedule) preflight; schedule ;;
+  status) preflight; compose ps ;;
+  logs) shift; preflight; compose logs -f --tail=200 "$@" ;;
+  compose) shift; preflight; compose "$@" ;;
+  *) sed -n '2,32p' "$0" | sed 's/^# \{0,1\}//' ;;
+esac

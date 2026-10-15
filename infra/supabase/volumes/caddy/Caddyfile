@@ -1,0 +1,40 @@
+# WuselWall's Caddy front (docker-compose.caddy.yml). Caddy writes no access log unless
+# told to, which is what the privacy policy promises.
+
+(discovery) {
+	# The discovery document (ADR-018): the app and the web app read it here.
+	handle /.well-known/wuselwall.json {
+		rewrite * /functions/v1/server-info
+		reverse_proxy api-gw:8000
+	}
+}
+
+{$WW_API_HOST} {
+	import discovery
+	# PostgREST's schema listing at the bare prefix: nothing an app needs (S17).
+	handle /rest/v1/ {
+		respond 404
+	}
+	@api path /auth/v1/* /rest/v1/* /realtime/v1/* /functions/v1/*
+	handle @api {
+		reverse_proxy api-gw:8000
+	}
+	handle {
+		respond 404
+	}
+}
+
+{$WW_WEB_HOST} {
+	import discovery
+	handle {
+		root * /srv/web
+		header {
+			Cache-Control "no-cache"
+			X-Content-Type-Options "nosniff"
+			Referrer-Policy "strict-origin-when-cross-origin"
+			X-Frame-Options "DENY"
+		}
+		try_files {path} /index.html
+		file_server
+	}
+}

@@ -1,0 +1,32 @@
+# WuselWall's Caddy front (make-env.mjs --caddy): HTTPS with Let's Encrypt certificates
+# for the server and the web app, so "a domain and ports 80 and 443" is the whole network
+# requirement (docs/server). A server behind a web server of its own does without it.
+#
+# - ${WW_API_HOST}: the four API prefixes the apps use, to the gateway; nothing else (no
+#   Studio, no /pg/). Plus the discovery document at /.well-known/wuselwall.json.
+# - ${WW_WEB_HOST}: the web app from volumes/web (a release's build), and the same
+#   discovery document, so the web app finds its server on its own origin.
+services:
+  caddy:
+    container_name: wuselwall-caddy
+    image: caddy:2.10.2-alpine
+    restart: unless-stopped
+    depends_on:
+      api-gw:
+        condition: service_healthy
+    ports:
+      - 80:80/tcp
+      - 443:443/tcp
+      - 443:443/udp
+    environment:
+      WW_API_HOST: ${WW_API_HOST}
+      WW_WEB_HOST: ${WW_WEB_HOST}
+    volumes:
+      - ./volumes/caddy/Caddyfile:/etc/caddy/Caddyfile:ro,z
+      - ./volumes/web:/srv/web:ro,z
+      - caddy-data:/data
+      - caddy-config:/config
+
+volumes:
+  caddy-data:
+  caddy-config:

@@ -979,5 +979,37 @@
         "type": "String"
       }
     }
-  }
+  },
+  "serverTitle": "Mit welchem Server?",
+  "serverLead": "WuselWall speichert eure Daten auf dem Server eurer Familie. Gib seine Adresse ein oder scanne seinen QR-Code.",
+  "serverAddressLabel": "Adresse des Servers",
+  "serverAddressHint": "z. B. api.example.org",
+  "serverConnect": "Verbinden",
+  "serverScan": "QR-Code scannen",
+  "serverScanTitle": "QR-Code des Servers scannen",
+  "serverDemo": "Ohne Server ausprobieren",
+  "serverDemoHint": "Mit einer Beispielfamilie. Nichts verlässt dieses Gerät.",
+  "serverHelp": "Noch kein Server? Die Anleitung auf wuselwall.app/docs zeigt, wie ihr einen einrichtet.",
+  "serverInvalid": "Das ist keine Serveradresse.",
+  "serverUnreachable": "Der Server antwortet nicht. Stimmt die Adresse, und bist du online?",
+  "serverNotWuselwall": "Unter dieser Adresse läuft kein WuselWall-Server.",
+  "serverTooOld": "Dieser Server braucht ein Update. Bitte die Person, die ihn betreibt, WuselWall zu aktualisieren.",
+  "serverAppTooOld": "Dieser Server braucht eine neuere Version der App. Bitte aktualisiere WuselWall.",
+  "serverIncompatibleTitle": "Server und App passen nicht zusammen",
+  "serverChooseOther": "Anderen Server wählen",
+  "demoBanner": "Beispielfamilie: nichts wird gespeichert",
+  "demoExit": "Beenden",
+  "settingsServer": "Server",
+  "settingsServerBody": "Diese App spricht mit {address}. Scanne diesen Code mit der WuselWall-App auf einem anderen Gerät, um es mit demselben Server zu verbinden.",
+  "@settingsServerBody": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsServerSwitch": "Server wechseln",
+  "settingsServerSwitchConfirm": "Dieses Gerät wird abgemeldet und vergisst alles, was darauf gespeichert ist. Danach kannst du einen anderen Server wählen.",
+  "setupPhoneTitle": "Auf dem Handy weitermachen",
+  "setupPhoneBody": "Öffne die WuselWall-App auf deinem Handy, wähle diesen Server, indem du den Code scannst, und melde dich dort an."
 }

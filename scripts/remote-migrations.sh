@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
-# Applies the pending supabase/migrations to the home server's database the way
+# Applies the pending supabase/migrations to the server's database the way
 # `supabase migration up` does: each file in one transaction, together with its row in
 # supabase_migrations.schema_migrations. Streamed through `docker exec`, so no database
 # password leaves the server. Called by scripts/remote-migrate.sh, which dumps first.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-HOST=${WW_HOST:-homeserver}
+# The target server comes from scripts/remote.env (git-ignored; see remote.env.example).
+[ -f scripts/remote.env ] && . scripts/remote.env
+HOST=${WW_HOST:?set WW_HOST in scripts/remote.env}
 DB=${DB_CONTAINER:-supabase-db}
 
 psql() { ssh "$HOST" "docker exec -i $DB psql -U postgres -X -q -t -A -v ON_ERROR_STOP=1 $(printf '%q ' "$@")"; }

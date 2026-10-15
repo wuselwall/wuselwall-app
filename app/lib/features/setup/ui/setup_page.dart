@@ -5,9 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/router.dart';
+import 'package:wuselwall/app/server_session.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
+import 'package:wuselwall/core/config/config_providers.dart';
 import 'package:wuselwall/core/connectivity/connectivity_provider.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/server/server_address.dart';
+import 'package:wuselwall/core/ui/qr_code_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/identity/data/sign_in_methods_repository.dart';
 import 'package:wuselwall/features/identity/domain/sign_in_method.dart';
@@ -30,6 +34,12 @@ class _SetupPageState extends ConsumerState<SetupPage> {
   @override
   void initState() {
     super.initState();
+    // A device code came with the server (one scan at the server choice): straight on.
+    if (ref.read(serverSessionProvider).hasPendingEnrolCode) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) context.go(Routes.enrol);
+      });
+    }
     // A redirect sign-in (the web, Apple on Android) reports back here, not from
     // the call that opened the browser.
     _redirectErrors = ref
@@ -63,6 +73,7 @@ class _SetupPageState extends ConsumerState<SetupPage> {
     final theme = Theme.of(context);
     final providers = ref.read(signInMethodsRepositoryProvider).available();
     final online = ref.watch(connectivityProvider).value ?? true;
+    final session = ref.watch(serverSessionProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -123,6 +134,13 @@ class _SetupPageState extends ConsumerState<SetupPage> {
                   onPressed: () => context.go(Routes.wizard),
                   child: Text(l10n.setupHouseholdAction),
                 ),
+                // The web app of a server: the phone joins the same server by scanning.
+                if (kIsWeb) const _ContinueOnPhone(),
+                if (session.leave != null)
+                  TextButton(
+                    onPressed: _busy ? null : session.leave,
+                    child: Text(l10n.serverChooseOther),
+                  ),
                 if (kDebugMode)
                   TextButton(
                     onPressed: () => context.go(Routes.system),
@@ -133,6 +151,33 @@ class _SetupPageState extends ConsumerState<SetupPage> {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// The server's QR code on the web front door: the phone app scans it and lands on the
+/// same server (ADR-018, decision 3).
+class _ContinueOnPhone extends ConsumerWidget {
+  const _ContinueOnPhone();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final server = Uri.parse(ref.watch(appConfigProvider).supabaseUrl);
+    return ExpansionTile(
+      leading: const Icon(Icons.smartphone),
+      title: Text(l10n.setupPhoneTitle),
+      childrenPadding: const EdgeInsets.only(bottom: Tokens.space4),
+      children: [
+        Text(l10n.setupPhoneBody),
+        const SizedBox(height: Tokens.space3),
+        QrCodeView(
+          data: serverQrPayload(server),
+          semanticsLabel: l10n.setupPhoneTitle,
+        ),
+        const SizedBox(height: Tokens.space2),
+        SelectableText(displayServerAddress(server)),
+      ],
     );
   }
 }

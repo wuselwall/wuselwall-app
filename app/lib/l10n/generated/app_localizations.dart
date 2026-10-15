@@ -5119,6 +5119,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Public holiday · {name}'**
   String boardHolidayLabel(String name);
+
+  /// No description provided for @serverTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Which server?'**
+  String get serverTitle;
+
+  /// No description provided for @serverLead.
+  ///
+  /// In en, this message translates to:
+  /// **'WuselWall keeps your family\'s data on your family\'s own server. Enter its address, or scan its QR code.'**
+  String get serverLead;
+
+  /// No description provided for @serverAddressLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Server address'**
+  String get serverAddressLabel;
+
+  /// No description provided for @serverAddressHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. api.example.org'**
+  String get serverAddressHint;
+
+  /// No description provided for @serverConnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect'**
+  String get serverConnect;
+
+  /// No description provided for @serverScan.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan QR code'**
+  String get serverScan;
+
+  /// No description provided for @serverScanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan the server\'s QR code'**
+  String get serverScanTitle;
+
+  /// No description provided for @serverDemo.
+  ///
+  /// In en, this message translates to:
+  /// **'Try it without a server'**
+  String get serverDemo;
+
+  /// No description provided for @serverDemoHint.
+  ///
+  /// In en, this message translates to:
+  /// **'With an example family. Nothing leaves this device.'**
+  String get serverDemoHint;
+
+  /// No description provided for @serverHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'No server yet? The guide at wuselwall.app/docs shows how to set one up.'**
+  String get serverHelp;
+
+  /// No description provided for @serverInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'That is not a server address.'**
+  String get serverInvalid;
+
+  /// No description provided for @serverUnreachable.
+  ///
+  /// In en, this message translates to:
+  /// **'The server does not answer. Is the address right, and are you online?'**
+  String get serverUnreachable;
+
+  /// No description provided for @serverNotWuselwall.
+  ///
+  /// In en, this message translates to:
+  /// **'There is no WuselWall server at this address.'**
+  String get serverNotWuselwall;
+
+  /// No description provided for @serverTooOld.
+  ///
+  /// In en, this message translates to:
+  /// **'This server needs an update. Ask whoever runs it to update WuselWall.'**
+  String get serverTooOld;
+
+  /// No description provided for @serverAppTooOld.
+  ///
+  /// In en, this message translates to:
+  /// **'This server needs a newer version of the app. Please update WuselWall.'**
+  String get serverAppTooOld;
+
+  /// No description provided for @serverIncompatibleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Server and app don\'t fit together'**
+  String get serverIncompatibleTitle;
+
+  /// No description provided for @serverChooseOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose another server'**
+  String get serverChooseOther;
+
+  /// No description provided for @demoBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Example family: nothing is saved'**
+  String get demoBanner;
+
+  /// No description provided for @demoExit.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit'**
+  String get demoExit;
+
+  /// No description provided for @settingsServer.
+  ///
+  /// In en, this message translates to:
+  /// **'Server'**
+  String get settingsServer;
+
+  /// No description provided for @settingsServerBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This app talks to {address}. Scan this code with the WuselWall app on another device to connect it to the same server.'**
+  String settingsServerBody(String address);
+
+  /// No description provided for @settingsServerSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Change server'**
+  String get settingsServerSwitch;
+
+  /// No description provided for @settingsServerSwitchConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'This device will be signed out and forget everything stored on it. Then you can choose another server.'**
+  String get settingsServerSwitchConfirm;
+
+  /// No description provided for @setupPhoneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue on your phone'**
+  String get setupPhoneTitle;
+
+  /// No description provided for @setupPhoneBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the WuselWall app on your phone, choose this server by scanning the code, then sign in there.'**
+  String get setupPhoneBody;
 }
 
 class _AppLocalizationsDelegate

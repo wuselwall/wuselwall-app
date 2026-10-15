@@ -1,8 +1,8 @@
 # ADR-018 — Self-hosted only: the app connects to any WuselWall server, and there is no WuselWall Cloud
 
-**Status:** Accepted · 2026-10-13 · Supersedes [ADR-015](ADR-015-saas-and-self-hosted-flavours.md)
+**Status:** Accepted · 2026-10-13 · Built 2026-10-14, see the [amendment](#amendment-2026-10-14-built) (decision 8's links and decision 10 are open) · Supersedes [ADR-015](ADR-015-saas-and-self-hosted-flavours.md)
 except its decisions 6 (public store listings) and 7 (no captcha), which stand; amends
-[ADR-013](ADR-013-one-self-hosted-environment.md) (its "one environment" holds for good),
+[ADR-013](ADR-013-self-hosted-compose-stack.md) (one landscape per server),
 [ADR-014](ADR-014-self-service-onboarding.md) (households live on self-hosted servers only),
 [ADR-016](ADR-016-public-website.md) and [ADR-017](ADR-017-wuselwall-app-domain.md) (the links
 site stays where it is); answers [Q40](../14-open-questions.md) anew and opens Q47 and Q48
@@ -19,7 +19,7 @@ Server". Cloud was never created. On 2026-10-13 the user wrote:
 > hosted SaaS from our side?
 
 Asked how native Apple and Google sign-in should behave without Cloud, the user chose to
-keep them for the family's own server only.
+keep them for first-party servers only.
 
 Most of the separation already exists. The app talks only to `api` views, `api` functions,
 Edge Functions, Supabase Auth and Realtime, never to a table. Its backend is two values in
@@ -31,10 +31,8 @@ with **no** default backend, and a project that runs no service for other famili
 
 1. **The project runs no service that holds another family's data.** It publishes the
    app (App Store, Google Play), the server (this repository's `supabase/`, the compose
-   stack in `infra/`, a matching web build), the website and the documentation. The only
-   backend it runs is the family's own (`api.wuselwall.app`, the homeserver stack). That
-   server stays in `code` mode for good: nobody founds a household there without a
-   founder code from its operator, and it is not offered to anyone.
+   stack in `infra/`, a matching web build), the website and the documentation. It offers
+   no server to anyone.
 
 2. **"Any self-hosted backend" means any Supabase stack that runs a WuselWall server
    release.** That can be one's own hardware, a rented VPS, or one's own Supabase project.
@@ -80,21 +78,20 @@ with **no** default backend, and a project that runs no service for other famili
      are what keep strangers out there ([Q48](../14-open-questions.md));
    - **Apple and Google through the web redirect:** when the operator registered their own
      clients. Those tokens are addressed to the operator, not to us;
-   - **native Apple and Google, and passkeys:** only on the first-party hosts compiled into
-     the app (`WW_FIRST_PARTY_HOSTS`: `api.wuselwall.app`, and `wusel.example.org` while the
-     bridge lives). The reason is ADR-015's decision 4, with the family's server in
-     Cloud's place: an ID token addressed to our app, handed to a hostile server, could be
-     replayed to the family's server. Passkeys also need the server's domain in the app's
-     associated domains. The user decided on 2026-10-13 to keep native sign-in for the
-     family. The store app therefore contains Google's sign-in library, and the privacy
+   - **native Apple and Google, and passkeys:** only on the first-party hosts named at
+     build time (`WW_FIRST_PARTY_HOSTS`, a CI variable). The reason is ADR-015's decision
+     4: an ID token addressed to our app, handed to a hostile server, could be replayed to
+     a first-party server. Passkeys also need the server's domain in the app's associated
+     domains. The user decided on 2026-10-13 to keep native sign-in for first-party
+     servers. The store app therefore contains Google's sign-in library, and the privacy
      policy names it (see Consequences).
 
 7. **Each server serves its own web app,** the build of the same release, so it can never
-   be out of step with its database. The compose stack gets a static container for it.
-   `web.wuselwall.app` is the family server's web app, as today, and the public website
-   no longer links to it. The project runs no web app that connects to arbitrary servers.
+   be out of step with its database. The compose stack serves it. The public website does
+   not link to any server's web app, and the project runs no web app that connects to
+   arbitrary servers.
 
-8. **The links site stays on the home server** (`wuselwall.app`, [ADR-017](ADR-017-wuselwall-app-domain.md)).
+8. **The links site stays on `wuselwall.app`** ([ADR-017](ADR-017-wuselwall-app-domain.md)).
    The move to Cloudflare Pages existed only for Cloud. Because the site now carries
    links to servers it does not run, **secrets and server addresses travel in the
    fragment**: `https://wuselwall.app/i/#‹token›@‹host›` (the same for `/p/`). Browsers do
@@ -106,7 +103,7 @@ with **no** default backend, and a project that runs no service for other famili
    the Edge Functions, the web build, the compose override and the operator scripts
    (install, migrate with a backup point, update, show the QR code). These generalise
    today's `scripts/remote-*.sh`. The self-hosting guide in `docs/` is written for a parent
-   with a NAS, not for a developer. Templates for homeserver Community Apps, Umbrel or YunoHost
+   with a NAS, not for a developer. Templates for NAS app stores, Umbrel or YunoHost
    come later, if families ask.
 
 10. **Push notifications** (M1.6) need an answer before they are built
@@ -124,18 +121,18 @@ fits a family project.
 question. Rejected, as in ADR-015: almost no family can sign and distribute an iOS app.
 
 **Native Apple and Google for every server, by publishing our client IDs.** Rejected
-because of the replay in decision 6. A hostile server could sign in as its users on the
-family's server, or on any other server that accepted our IDs.
+because of the replay in decision 6. A hostile server could sign in as its users on any
+other server that accepted our IDs.
 
 **No Apple and Google at all.** This would be the simplest option, and the store app would ship no Google
-library. Considered and not chosen (user, 2026-10-13): the family keeps the convenience on
-its own server. Revisit if the store privacy label or App Review makes it a burden.
+library. Considered and not chosen (user, 2026-10-13): first-party servers keep the
+convenience. Revisit if the store privacy label or App Review makes it a burden.
 
 **A backend-neutral API, so that other implementations could serve the app.** Rejected.
 Re-implementing PostgREST, GoTrue and Realtime semantics is a protocol project with no
 audience. Portability across Supabase hosting already covers "any backend" for families.
 
-**One central web app (`web.wuselwall.app`) that connects to any server.** Rejected:
+**One central web app that connects to any server.** Rejected:
 version skew with every server, and the project's host in every family's path.
 
 ## Consequences
@@ -147,7 +144,7 @@ version skew with every server, and the project's host in every family's path.
   that the app's data goes to the server the household chose. Each operator is the
   controller for their own server.
 - No Supabase bill. The ≈ €8–12/month of [10](../10-deployment-and-ops.md#costs) is the
-  whole cost again (NFR-7), and there is one environment holding real data, as in ADR-013.
+  whole cost again (NFR-7).
 - The opening gate in [13](../13-roadmap.md) no longer opens an instance. It becomes "the
   self-hosting kit is ready for other families".
 
@@ -165,7 +162,7 @@ version skew with every server, and the project's host in every family's path.
   set up mail.
 - **Push needs its own answer** (Q47). Every option is either a small service the project
   runs, or weaker notifications.
-- **The store app carries Google's iOS sign-in library** for one family's server. Its
+- **The store app carries Google's iOS sign-in library** for the first-party servers. Its
   privacy manifest declares name, email, user ID, device ID and usage data. Device ID and
   usage data are declared for analytics (Google's), and none of it for tracking. Apple's
   sign-in is part of iOS and adds nothing. The App Store privacy label and Google's Data
@@ -174,3 +171,65 @@ version skew with every server, and the project's host in every family's path.
 **Revisit if** families who cannot run a server ask for hosting in numbers. The answer
 would then be a third party that runs servers (a co-operative, an association), not the
 project. Revisit also if the Google library outweighs the convenience it buys one family.
+
+## Amendment 2026-10-14: built
+
+What exists now, decision by decision, and where it differs from the text above.
+
+- **3 (no default server).** The discovery document is built by the Edge Function
+  `server-info` (`supabase/functions/_shared/server_info.ts`) from `api.server_info()` and
+  Auth's public settings, so **every** server serves it at `/functions/v1/server-info`,
+  needing no file and no domain of its own. `/.well-known/wuselwall.json` is a proxy rewrite
+  to that function wherever a server has a front of its own (the Caddy layer, nginx). The app
+  tries the `.well-known` path first, then the function (`core/server/server_discovery.dart`).
+  This is what makes a hosted Supabase project a complete server: the address
+  `https://<id>.supabase.co`, or just the 20-letter project ID, is all a family types. The
+  server's QR code is in Settings → Server and on the web front door ("Continue on your
+  phone"); the enrolment QR carries `server=` too, so a fresh device joins with one scan.
+  The chosen server lives in secure storage (`ServerStore`); Settings → Change server (a
+  guardian action) empties the local store and signs the device out. A build with
+  `SUPABASE_URL` (development) never asks. A store build that finds a session but no stored
+  server, because it was updated from a build with a server compiled in, keeps the first
+  first-party host.
+- **4 (demo).** Built: "Try it without a server" runs the docs' in-memory household
+  (`lib/demo/demo_overrides.dart`) under a banner with a way out.
+- **5 (compatibility).** `api.server_info()` returns `api_version` 1 and `min_app_version`
+  1.0.0. The app checks both when a server is chosen and again in the background at every
+  start, and stops with a plain message at a server outside its window. Not built yet: the CI
+  run against the previous server release.
+- **6 (sign-in per server).** The discovery document reports Apple and Google from Auth's
+  settings; the app offers them through the server's redirect. The native sheets and
+  passkeys need the server's host in `WW_FIRST_PARTY_HOSTS`, a build-time define that CI
+  supplies from a repository variable; no committed file names a host.
+- **7 (each server serves its web app).** A server release carries one web build without a
+  server; it reads the discovery document at its own origin, and asks otherwise. The Caddy
+  layer serves it next to the API.
+- **8 (links with the server in the fragment).** Only the parsing exists: the app reads
+  `…/p/#CODE@host` and `…/i/#…@host` when typed or scanned. Universal links and App Links,
+  their `.well-known` files and the landing pages are open; they need the store listings'
+  signing details.
+- **9 (a server release is a product).** `scripts/build-server-release.sh`, published by
+  `.github/workflows/server-release.yml` on a tag `server-v<version>`. Inside: the stack
+  (Supabase's compose file, WuselWall's layer, a lean layer that switches off Storage,
+  imgproxy, Studio and meta, an optional Caddy layer), the functions, the migrations, the web
+  build and `server/wuselwall`, which installs (secrets from a portable `make-env.mjs`, the
+  jobs, a setup token), updates with a backup first, backs up and restores. The two jobs run
+  inside the database with pg_cron and pg_net (`infra/jobs/schedule.sql`), so a server needs
+  no host cron.
+- **New: hosted Supabase without tools.** `.github/workflows/deploy-supabase.yml` runs in a
+  family's fork with their own secrets: migrations, Data API and Auth settings through the
+  Management API, functions, the jobs, the setup token, and optionally the web app on the
+  fork's GitHub Pages. The project still runs nothing (decision 1).
+- **10 (push).** Open, as before.
+
+**Considered and not taken:** an installer inside the app that creates the family's Supabase
+project through Supabase's OAuth and Management API. Supabase's OAuth apps need a client
+secret, which only a service run by the project could keep, against decision 1. Revisit if
+Supabase offers public (PKCE-only) clients. Managed hosts that run the Supabase stack for a
+customer, some of them in the EU, can serve a WuselWall server like any Supabase stack; none
+is tested, and the docs name none.
+
+**Release order:** the store builds switch to `app/env/store.json` (no server) only after the
+first-party servers serve `server-info`; otherwise an updated device finds no discovery
+document and has to be pointed at its server by hand.
+

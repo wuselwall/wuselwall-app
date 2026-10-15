@@ -26,6 +26,17 @@ jobs:
       # Exactly the packages in pubspec.lock, checked against their hashes, before the
       # signing secrets come near the build.
       - run: flutter pub get --enforce-lockfile
+      # The builds' server is not in the repository: env/dev.json is the store
+      # configuration plus the repository variables WW_SUPABASE_URL and
+      # WW_SUPABASE_PUBLISHABLE_KEY, until these builds become store builds (ADR-018).
+      - name: Build configuration
+        env:
+          URL: ${{ vars.WW_SUPABASE_URL }}
+          KEY: ${{ vars.WW_SUPABASE_PUBLISHABLE_KEY }}
+        run: |
+          [ -n "$URL" ] && [ -n "$KEY" ] || { echo "::error::set the repository variables WW_SUPABASE_URL and WW_SUPABASE_PUBLISHABLE_KEY"; exit 1; }
+          jq --arg url "$URL" --arg key "$KEY" \
+            '. + {ENV: "dev", SUPABASE_URL: $url, SUPABASE_PUBLISHABLE_KEY: $key}' env/store.json > env/dev.json
       - run: ./tool/write_android_signing.sh
         env:
           ANDROID_KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_B64 }}
@@ -37,7 +48,8 @@ jobs:
       - run: |
           args=(--build-number=${{ github.run_number }})
           if [[ "$GITHUB_REF_TYPE" == tag ]]; then args+=(--build-name="${GITHUB_REF_NAME#v}"); fi
-          flutter build apk --release "${args[@]}" --dart-define-from-file=env/dev.json
+          flutter build apk --release "${args[@]}" --dart-define-from-file=env/dev.json \
+            --dart-define=WW_FIRST_PARTY_HOSTS=${{ vars.WW_FIRST_PARTY_HOSTS }}
       - run: |
           mv build/app/outputs/flutter-apk/app-release.apk build/wuselwall.apk
           # The signature Android checks on every update — must never change. apksigner,

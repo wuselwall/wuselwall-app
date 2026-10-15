@@ -26,3 +26,9 @@ Der Code gilt **10 Minuten** und funktioniert **einmal**.
 Geht ein Handy verloren oder wird ein Tablet weitergegeben: Tippe in der Geräteliste auf **Sperren**. Das Gerät verliert **sofort** den Zugriff – auch wenn es gerade offen ist. Gesperrte Geräte bleiben in der Liste, damit nachvollziehbar ist, was passiert ist.
 
 Auf deinem eigenen Handy kannst du dich mit **Dieses Gerät abmelden** auch selbst abmelden.
+
+## Server {#server}
+
+Hier steht, mit welchem Server diese App spricht, mit seinem **QR-Code**. Ein neues Gerät scannt ihn bei der Frage **Mit welchem Server?** und ist dann mit demselben Server verbunden.
+
+**Server wechseln** brauchst du nur, wenn eure Familie auf einen anderen Server umzieht. Das Gerät meldet sich dabei ab und vergisst alles, was darauf gespeichert ist, auch Einkäufe, die es noch nicht senden konnte. Auf geteilten Geräten fragt WuselWall vorher nach der PIN eines Erziehungsberechtigten.

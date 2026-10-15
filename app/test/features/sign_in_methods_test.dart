@@ -126,6 +126,50 @@ void main() {
       expect(r.canLink(SignInProvider.google), isFalse);
     });
 
+    // ADR-018, decision 6: an ID token addressed to this app never goes to another
+    // operator's server; their own redirect clients do the work there.
+    const otherServer = AppConfig(
+      environment: 'test',
+      supabaseUrl: 'https://api.example.org',
+      supabasePublishableKey: 'key',
+      appleSignIn: true,
+      googleSignIn: true,
+      nativeSignIn: false,
+    );
+
+    test(
+      "another operator's server: the redirect on an iPhone, never a sheet",
+      () {
+        final r = repo(config: otherServer);
+        expect(r.route(SignInProvider.apple), ProviderRoute.redirect);
+        expect(r.route(SignInProvider.google), ProviderRoute.redirect);
+        expect(r.canLink(SignInProvider.apple), isFalse);
+      },
+    );
+
+    test("another operator's server: the redirect on Android", () {
+      final r = repo(config: otherServer, platform: TargetPlatform.android);
+      expect(r.available(), [SignInProvider.google, SignInProvider.apple]);
+      expect(r.route(SignInProvider.google), ProviderRoute.redirect);
+      expect(r.canLink(SignInProvider.google), isFalse);
+    });
+
+    test(
+      "another operator's server without Apple or Google offers neither",
+      () {
+        final r = repo(
+          config: const AppConfig(
+            environment: 'test',
+            supabaseUrl: 'https://api.example.org',
+            supabasePublishableKey: 'key',
+            googleSignIn: false,
+            nativeSignIn: false,
+          ),
+        );
+        expect(r.available(), isEmpty);
+      },
+    );
+
     test('nothing without configuration — no button that would fail', () {
       final r = repo(
         config: const AppConfig(

@@ -1,5 +1,7 @@
 # Anmelden und verbinden
 
+Beim allerersten Start fragt die App, mit welchem Server sie sich verbinden soll ([App installieren](/guide/install#beim-ersten-start-welcher-server)). Danach geht es hier weiter.
+
 Es gibt drei Wege auf ein neues Gerät. Oben auf dem Startbildschirm meldest du dich mit deinem Konto an, unter „oder“ verbindest du ein geteiltes Gerät mit einem Code oder legst eine neue Familie an:
 
 <Shot name="setup-start" alt="Startbildschirm von WuselWall" />
@@ -20,6 +22,8 @@ So kommen **Kinder-Tablets**, die **Wandanzeige** und weitere geteilte Geräte i
 
 1. Ein Erziehungsberechtigter öffnet auf seinem Handy **Einstellungen → Gerät hinzufügen** und erzeugt einen Code (siehe [Mitglieder und Geräte](/settings/members-devices)).
 2. Auf dem neuen Gerät tippst du auf **Mit Code verbinden** und gibst den Code ein – oder scannst den QR-Code.
+
+Ist die App auf dem neuen Gerät ganz frisch, scannst du den QR-Code schon bei der Frage **Mit welchem Server?**: Er enthält den Server und den Code, und das Gerät ist mit einem Scan verbunden.
 
 <Shot name="setup-enrol" alt="Code eingeben" />
 
