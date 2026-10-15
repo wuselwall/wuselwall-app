@@ -8,6 +8,8 @@ An item should be on the list within three seconds — even one-handed, in front
 
 At the top you see tiles for what you bought **most recently** and **most often**. Nobody maintains this list: it builds itself when you finish a trip.
 
+Each tile shows a picture of the item: WuselWall recognises common items by their name, such as milk, bread or apples. An item it doesn't know shows its category's symbol.
+
 - **Tap once** to put the item on the list. Its tile turns green.
 - **Tap again** to count up: "2×", "3×" … The small **−** in the list takes one away.
 - **Press and hold** to add a note for that item, such as "organic", "500 g" or "tin".

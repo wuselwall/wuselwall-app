@@ -410,7 +410,16 @@ class _TilePickerState extends ConsumerState<_TilePicker> {
       for (final t in tiles)
         _Tile(
           width: width,
-          icon: categoryIcon(categories[t.categoryId]),
+          picture: switch (shoppingIconAsset(t.iconKey)) {
+            final asset? => Image.asset(
+              asset,
+              width: kiosk ? 40 : 32,
+              height: kiosk ? 40 : 32,
+              // The tile's label names the item; the picture adds nothing for a screen reader.
+              excludeFromSemantics: true,
+            ),
+            null => Icon(categoryIcon(categories[t.categoryId]), size: 28),
+          },
           label: t.name,
           count: countOf(t.foldedName),
           onTap: widget.busy ? null : () => widget.onAdd(t.name),
@@ -419,7 +428,7 @@ class _TilePickerState extends ConsumerState<_TilePicker> {
       if (query.isNotEmpty && !exact)
         _Tile(
           width: width,
-          icon: Icons.add_circle_outline,
+          picture: const Icon(Icons.add_circle_outline, size: 28),
           label: l10n.shoppingCreateTile(query),
           count: 0,
           onTap: widget.busy ? null : () => widget.onAdd(query),
@@ -488,7 +497,7 @@ class _TilePickerState extends ConsumerState<_TilePicker> {
 class _Tile extends StatelessWidget {
   const _Tile({
     required this.width,
-    required this.icon,
+    required this.picture,
     required this.label,
     required this.count,
     required this.onTap,
@@ -496,7 +505,7 @@ class _Tile extends StatelessWidget {
   });
 
   final double width;
-  final IconData icon;
+  final Widget picture;
   final String label;
   final int count;
   final VoidCallback? onTap;
@@ -523,7 +532,7 @@ class _Tile extends StatelessWidget {
                 Badge(
                   isLabelVisible: count > 1,
                   label: Text('$count×'),
-                  child: Icon(icon, size: 28),
+                  child: picture,
                 ),
                 const SizedBox(height: Tokens.space1),
                 // Flutter cannot hyphenate: a single long word ("Toilettenpapier")

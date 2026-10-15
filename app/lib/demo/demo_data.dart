@@ -139,28 +139,29 @@ abstract final class DemoData {
 
   static final _now = DateTime(2026, 10, 11, 9);
 
-  /// (name, category key, purchases) — what the household has bought before.
-  static List<(String, String, int)> get _catalogue => [
-    (tr('Milch', 'Milk'), 'dairy', 42),
-    (tr('Brot', 'Bread'), 'bakery', 35),
-    (tr('Bananen', 'Bananas'), 'produce', 31),
-    (tr('Äpfel', 'Apples'), 'produce', 24),
-    ('Butter', 'dairy', 22),
-    (tr('Eier', 'Eggs'), 'dairy', 21),
-    (tr('Nudeln', 'Pasta'), 'pantry', 19),
-    (tr('Joghurt', 'Yoghurt'), 'dairy', 18),
-    (tr('Tomaten', 'Tomatoes'), 'produce', 17),
-    (tr('Käse', 'Cheese'), 'dairy', 16),
-    (tr('Gurke', 'Cucumber'), 'produce', 12),
-    (tr('Reis', 'Rice'), 'pantry', 11),
-    (tr('Orangensaft', 'Orange juice'), 'drinks', 9),
-    (tr('Toilettenpapier', 'Toilet paper'), 'household', 8),
-    (tr('Gummibärchen', 'Gummy bears'), 'pantry', 7),
-    (tr('Kartoffeln', 'Potatoes'), 'produce', 7),
+  /// (name, category key, purchases, icon key) — what the household has bought before.
+  /// The icon key is the one the server picks from the name (app.catalog_icon_for).
+  static List<(String, String, int, String)> get _catalogue => [
+    (tr('Milch', 'Milk'), 'dairy', 42, 'milk'),
+    (tr('Brot', 'Bread'), 'bakery', 35, 'bread'),
+    (tr('Bananen', 'Bananas'), 'produce', 31, 'banana'),
+    (tr('Äpfel', 'Apples'), 'produce', 24, 'apple'),
+    ('Butter', 'dairy', 22, 'butter'),
+    (tr('Eier', 'Eggs'), 'dairy', 21, 'egg'),
+    (tr('Nudeln', 'Pasta'), 'pantry', 19, 'pasta'),
+    (tr('Joghurt', 'Yoghurt'), 'dairy', 18, 'bowl'),
+    (tr('Tomaten', 'Tomatoes'), 'produce', 17, 'tomato'),
+    (tr('Käse', 'Cheese'), 'dairy', 16, 'cheese'),
+    (tr('Gurke', 'Cucumber'), 'produce', 12, 'cucumber'),
+    (tr('Reis', 'Rice'), 'pantry', 11, 'rice'),
+    (tr('Orangensaft', 'Orange juice'), 'drinks', 9, 'juice'),
+    (tr('Toilettenpapier', 'Toilet paper'), 'household', 8, 'toilet_paper'),
+    (tr('Gummibärchen', 'Gummy bears'), 'pantry', 7, 'candy'),
+    (tr('Kartoffeln', 'Potatoes'), 'produce', 7, 'potato'),
   ];
 
   static List<CatalogEntry> catalogue() => [
-    for (final (i, (name, cat, n)) in _catalogue.indexed)
+    for (final (i, (name, cat, n, icon)) in _catalogue.indexed)
       CatalogEntry(
         id: 'k-$i',
         listId: 'l-super',
@@ -173,6 +174,7 @@ abstract final class DemoData {
         categoryId: 'c-$cat',
         purchaseCount: n,
         lastPurchasedAt: _now.subtract(Duration(days: i + 1)),
+        iconKey: icon,
       ),
   ];
 
