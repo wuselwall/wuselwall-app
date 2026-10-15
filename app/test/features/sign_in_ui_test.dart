@@ -118,7 +118,7 @@ void main() {
     testWidgets('connects Google with the native sheet', (t) async {
       final methods = await pump(t);
       expect(find.text('Anmeldung'), findsOneWidget);
-      expect(find.text('papa@example.org'), findsOneWidget);
+      expect(find.text('papa@example.org — immer verfügbar'), findsOneWidget);
       // Apple has only the redirect on this platform, so it points elsewhere.
       expect(
         find.text('Verbinden geht in der App auf deinem Handy.'),

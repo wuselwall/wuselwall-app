@@ -8,17 +8,24 @@ class AuthFormScaffold extends StatelessWidget {
   const AuthFormScaffold({
     required this.title,
     required this.children,
+    this.showBack = true,
     super.key,
   });
 
   final String title;
   final List<Widget> children;
 
+  /// Off where going back would only bring the person straight back (E3).
+  final bool showBack;
+
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
       title: Text(title),
-      leading: BackButton(onPressed: () => context.go(Routes.setup)),
+      automaticallyImplyLeading: showBack,
+      leading: showBack
+          ? BackButton(onPressed: () => context.go(Routes.setup))
+          : null,
     ),
     body: SafeArea(
       child: Center(

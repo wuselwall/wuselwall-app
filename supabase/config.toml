@@ -104,6 +104,11 @@ enable_signup = true
 double_confirm_changes = true
 # If enabled, users need to confirm their email address before signing in.
 enable_confirmations = false
+# The sign-in code mailed to the address (specs/20, "With email"): six digits, valid for
+# 600 seconds, and at most one new code per address every 60 seconds.
+otp_length = 6
+otp_expiry = 600
+max_frequency = "60s"
 
 # Fallback mails for a stack where the Send Email Hook is off: German first, English below, in
 # one mail, with the six-digit code ({{ .Token }}). They apply only when the hook is not running.

@@ -1,25 +1,38 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
+import 'package:wuselwall/app/theme/ww_colors.dart';
+import 'package:wuselwall/core/connectivity/connectivity_provider.dart';
+import 'package:wuselwall/core/error/failure.dart';
+import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/setup/ui/auth_form_scaffold.dart';
 
-/// Guardian sign-in (email + password). Success makes this a personal device; the
-/// router moves on once the device record is read.
+/// E1 (specs/20, "With email"): the address, then a code by e-mail (E2). A password is
+/// one step behind "Ich habe ein Passwort". The same answer for every address.
 class SignInPage extends ConsumerStatefulWidget {
-  const SignInPage({super.key});
+  const SignInPage({this.initialEmail, super.key});
+
+  /// Prefilled when E2 sends the person back to change the address.
+  final String? initialEmail;
 
   @override
   ConsumerState<SignInPage> createState() => _SignInPageState();
 }
 
 class _SignInPageState extends ConsumerState<SignInPage> {
-  final _email = TextEditingController();
+  late final _email = TextEditingController(text: widget.initialEmail ?? '');
   final _password = TextEditingController();
   bool _busy = false;
+  bool _showPassword = false;
+  bool _wrongCredentials = false;
 
   @override
   void dispose() {
@@ -28,14 +41,46 @@ class _SignInPageState extends ConsumerState<SignInPage> {
     super.dispose();
   }
 
-  Future<void> _submit() async {
+  /// Mails the code and goes to E2. Also the way out of a wrong password.
+  Future<void> _sendCode() async {
+    final email = _email.text.trim();
     setState(() => _busy = true);
+    final result = await ref
+        .read(identityRepositoryProvider)
+        .sendEmailCode(
+          email,
+          locale: Localizations.localeOf(context).languageCode,
+        );
+    if (!mounted) return;
+    setState(() => _busy = false);
+    switch (result) {
+      case Ok():
+        unawaited(context.push(emailCodeLocation(email)));
+      case Err(:final failure):
+        context.showFailure(failure);
+    }
+  }
+
+  Future<void> _signInWithPassword() async {
+    setState(() {
+      _busy = true;
+      _wrongCredentials = false;
+    });
     final result = await ref
         .read(identityRepositoryProvider)
         .signIn(_email.text, _password.text);
     if (!mounted) return;
     setState(() => _busy = false);
-    result.failureOrNull.let(context.showFailure);
+    switch (result) {
+      // Success: the router moves on once the session state is read.
+      case Ok():
+        break;
+      case Err(failure: AuthFailure(code: 'invalid_credentials')):
+        // Never says which of the two was wrong.
+        setState(() => _wrongCredentials = true);
+      case Err(:final failure):
+        context.showFailure(failure);
+    }
   }
 
   Future<void> _passkey() async {
@@ -51,34 +96,75 @@ class _SignInPageState extends ConsumerState<SignInPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final theme = Theme.of(context);
+    final ww = context.ww;
+    final online = ref.watch(connectivityProvider).value ?? true;
+    final busy = _busy || !online;
+
     return AuthFormScaffold(
-      title: l10n.signInTitle,
+      title: l10n.doorEmail,
       children: [
+        if (!online) ...[
+          Container(
+            padding: const EdgeInsets.all(Tokens.space3),
+            color: ww.warningContainer,
+            child: Text(
+              l10n.emailOffline,
+              style: TextStyle(color: ww.onWarningContainer),
+            ),
+          ),
+          const SizedBox(height: Tokens.space4),
+        ],
         TextField(
           controller: _email,
+          autofocus: true,
           keyboardType: TextInputType.emailAddress,
           autofillHints: const [AutofillHints.email],
           decoration: InputDecoration(labelText: l10n.fieldEmail),
-        ),
-        const SizedBox(height: Tokens.space4),
-        TextField(
-          controller: _password,
-          obscureText: true,
-          autofillHints: const [AutofillHints.password],
-          decoration: InputDecoration(labelText: l10n.fieldPasswordSimple),
-          onSubmitted: (_) => _submit(),
+          onSubmitted: (_) => busy ? null : _sendCode(),
         ),
         const SizedBox(height: Tokens.space6),
         FilledButton(
-          onPressed: _busy ? null : _submit,
-          child: Text(l10n.signInAction),
+          onPressed: busy ? null : _sendCode,
+          child: Text(l10n.emailContinue),
         ),
+        if (!_showPassword)
+          TextButton(
+            onPressed: busy ? null : () => setState(() => _showPassword = true),
+            child: Text(l10n.emailHavePassword),
+          )
+        else ...[
+          const SizedBox(height: Tokens.space4),
+          TextField(
+            controller: _password,
+            obscureText: true,
+            autofillHints: const [AutofillHints.password],
+            decoration: InputDecoration(labelText: l10n.fieldPasswordSimple),
+            onSubmitted: (_) => busy ? null : _signInWithPassword(),
+          ),
+          if (_wrongCredentials) ...[
+            const SizedBox(height: Tokens.space3),
+            Text(
+              l10n.emailWrongCredentials,
+              style: TextStyle(color: theme.colorScheme.error),
+            ),
+          ],
+          const SizedBox(height: Tokens.space3),
+          OutlinedButton(
+            onPressed: busy ? null : _signInWithPassword,
+            child: Text(l10n.signInAction),
+          ),
+          TextButton(
+            onPressed: busy ? null : _sendCode,
+            child: Text(l10n.emailUseCodeInstead),
+          ),
+        ],
         // Passkeys need a JavaScript SDK on the web that is not self-hosted yet
         // (web/index.html); the native apps have them.
         if (!kIsWeb) ...[
           const SizedBox(height: Tokens.space3),
           OutlinedButton.icon(
-            onPressed: _busy ? null : _passkey,
+            onPressed: busy ? null : _passkey,
             icon: const Icon(Icons.fingerprint),
             label: Text(l10n.signInPasskey),
           ),
@@ -87,6 +173,10 @@ class _SignInPageState extends ConsumerState<SignInPage> {
     );
   }
 }
+
+/// Where E1 sends the person: E2 with the address it mailed.
+String emailCodeLocation(String email) =>
+    '${Routes.emailCode}?email=${Uri.encodeQueryComponent(email)}';
 
 extension NullableLet<T extends Object> on T? {
   void let(void Function(T value) action) {

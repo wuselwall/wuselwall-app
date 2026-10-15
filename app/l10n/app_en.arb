@@ -274,7 +274,7 @@
   "errLastSignInMethod": "This is your only way to sign in, so it cannot be removed.",
   "errEmailExists": "This email address already belongs to another account.",
   "signInMethodsTitle": "Sign-in",
-  "signInMethodEmail": "Email and password",
+  "signInMethodEmail": "Email code",
   "signInMethodApple": "Apple",
   "signInMethodGoogle": "Google",
   "signInMethodNotConnected": "Not connected",
@@ -1977,5 +1977,60 @@
   "householdDeviceIphone": "iPhone",
   "householdDeviceAndroid": "Android phone",
   "householdDeviceBrowser": "browser",
-  "householdDeviceComputer": "computer"
+  "householdDeviceComputer": "computer",
+  "emailContinue": "Continue",
+  "emailHavePassword": "I have a password",
+  "emailWrongCredentials": "Email or password is incorrect.",
+  "emailUseCodeInstead": "Use an email code instead",
+  "emailOffline": "No connection – signing in by email needs one.",
+  "emailCodeTitle": "Code from the email",
+  "emailCodeSent": "We sent a 6-digit code to {email}. It is valid for 10 minutes.",
+  "@emailCodeSent": {
+    "placeholders": {
+      "email": {
+        "type": "String",
+        "example": "lukas@example.org"
+      }
+    }
+  },
+  "emailCodeFieldLabel": "Six-digit code",
+  "emailCodeWrong": "That code is wrong or has expired. Try again, or ask for a new one.",
+  "emailCodeResendIn": "No code? Send again (in {seconds} s)",
+  "@emailCodeResendIn": {
+    "placeholders": {
+      "seconds": {
+        "type": "int",
+        "example": "4"
+      }
+    }
+  },
+  "emailCodeResend": "No code? Send again",
+  "emailCodeSpam": "Check your spam folder.",
+  "emailCodeResent": "A new code is on its way.",
+  "emailCodeOtherMethod": "Choose another way",
+  "emailCodeOtherAddress": "Another email address",
+  "signInMethodTitle": "How would you like to sign in next time?",
+  "signInMethodCode": "With a code by email — nothing to remember",
+  "signInMethodPassword": "With a password",
+  "passwordStrengthShort": "Still too short",
+  "passwordStrengthWeak": "Weak",
+  "passwordStrengthFair": "Fair",
+  "passwordStrengthStrong": "Strong",
+  "settingsPasswordTitle": "Password",
+  "settingsPasswordSet": "Set. You can also sign in with email and password.",
+  "settingsPasswordNotSet": "Not set. Signing in with an email code still works.",
+  "passwordSetAction": "Set password",
+  "passwordChangeAction": "Change password",
+  "passwordSaved": "Your password is saved.",
+  "passwordDialogBody": "At least 10 characters. The email code always stays available.",
+  "signInMethodEmailSubtitle": "{email} — always available",
+  "@signInMethodEmailSubtitle": {
+    "placeholders": {
+      "email": {
+        "type": "String",
+        "example": "lukas@example.org"
+      }
+    }
+  },
+  "signInMethodAlwaysAvailable": "Always available"
 }
