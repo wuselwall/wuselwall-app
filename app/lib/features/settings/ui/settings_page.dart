@@ -24,6 +24,7 @@ import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/identity/domain/sign_in_method.dart';
 import 'package:wuselwall/features/identity/ui/enrolment_qr.dart';
 import 'package:wuselwall/features/identity/ui/guardian_gate.dart';
+import 'package:wuselwall/features/identity/ui/set_password_dialog.dart';
 import 'package:wuselwall/features/settings/application/household_export_providers.dart';
 import 'package:wuselwall/features/settings/data/household_export_repository.dart';
 import 'package:wuselwall/features/system/ui/class_labels.dart';
@@ -569,6 +570,7 @@ class _SignInMethodsSection extends ConsumerWidget {
     final l10n = context.l10n;
     final methods = ref.watch(signInMethodsProvider);
     final repo = ref.read(signInMethodsRepositoryProvider);
+    final hasPassword = ref.read(identityRepositoryProvider).hasPassword();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -588,7 +590,15 @@ class _SignInMethodsSection extends ConsumerWidget {
                   ListTile(
                     leading: _methodIcon(m.provider),
                     title: Text(_methodName(l10n, m.provider)),
-                    subtitle: m.email == null ? null : Text(m.email!),
+                    subtitle: switch (m.provider) {
+                      // The e-mail code is always there for an account with an address.
+                      SignInMethodKind.email => Text(
+                        m.email == null
+                            ? l10n.signInMethodAlwaysAvailable
+                            : l10n.signInMethodEmailSubtitle(m.email!),
+                      ),
+                      _ => m.email == null ? null : Text(m.email!),
+                    },
                     trailing: list.length < 2 || m.provider.provider == null
                         ? null
                         : TextButton(
@@ -613,12 +623,36 @@ class _SignInMethodsSection extends ConsumerWidget {
                             )
                           : null,
                     ),
+                ListTile(
+                  leading: const Icon(Icons.lock_outline),
+                  title: Text(l10n.settingsPasswordTitle),
+                  subtitle: Text(
+                    hasPassword
+                        ? l10n.settingsPasswordSet
+                        : l10n.settingsPasswordNotSet,
+                  ),
+                  trailing: OutlinedButton(
+                    onPressed: () => _setPassword(context, ref),
+                    child: Text(
+                      hasPassword
+                          ? l10n.passwordChangeAction
+                          : l10n.passwordSetAction,
+                    ),
+                  ),
+                ),
               ],
             );
           },
         ),
       ],
     );
+  }
+
+  Future<void> _setPassword(BuildContext context, WidgetRef ref) async {
+    final saved = await showSetPasswordDialog(context);
+    if (!saved || !context.mounted) return;
+    ref.invalidate(signInMethodsProvider);
+    context.showMessage(context.l10n.passwordSaved);
   }
 
   static Widget _methodIcon(SignInMethodKind kind) => switch (kind) {

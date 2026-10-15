@@ -104,6 +104,18 @@ class FakeIdentityRepository implements IdentityRepository {
     AuthFailure(code: 'invalid_credentials'),
   );
   final signIns = <(String, String)>[];
+
+  /// E1/E2: the addresses a code was mailed to, and the codes checked.
+  final codeRequests = <String>[];
+  final codeChecks = <String>[];
+  Result<void> sendCodeResult = const Ok(null);
+
+  /// What checking a code answers: `Ok(true)` for a new account (E3 owed).
+  Result<bool> verifyResult = const Ok(false);
+  Result<bool> Function(String code)? verifyFor;
+  final passwordsSet = <String>[];
+  final choices = <String>[];
+  bool passwordSet = false;
   final pins = <String>[];
   final registeredLabels = <String>[];
   final mfaCodes = <String>[];
@@ -137,6 +149,37 @@ class FakeIdentityRepository implements IdentityRepository {
   Future<Result<void>> signIn(String email, String password) async {
     signIns.add((email, password));
     return signInResult;
+  }
+
+  @override
+  Future<Result<void>> sendEmailCode(
+    String email, {
+    required String locale,
+  }) async {
+    codeRequests.add(email);
+    return sendCodeResult;
+  }
+
+  @override
+  Future<Result<bool>> verifyEmailCode(String email, String code) async {
+    codeChecks.add(code);
+    return verifyFor?.call(code) ?? verifyResult;
+  }
+
+  @override
+  Future<Result<void>> setPassword(String password) async {
+    passwordsSet.add(password);
+    passwordSet = true;
+    return const Ok(null);
+  }
+
+  @override
+  bool hasPassword() => passwordSet;
+
+  @override
+  Future<Result<void>> markSignInChoice(String choice) async {
+    choices.add(choice);
+    return const Ok(null);
   }
 
   @override
@@ -559,6 +602,7 @@ List<Override> baseOverrides({
   FakePairingRepository? pairing,
   FakeHouseholdOnboardingRepository? household,
   bool signedIn = true,
+  bool online = true,
 }) => [
   householdOnboardingRepositoryProvider.overrideWithValue(
     household ?? FakeHouseholdOnboardingRepository(identity: identity),
@@ -592,7 +636,7 @@ List<Override> baseOverrides({
   ),
   if (shopping != null) shoppingRepositoryProvider.overrideWithValue(shopping),
   shoppingStoreProvider.overrideWith((ref) => MemoryShoppingStore()),
-  connectivityProvider.overrideWith((ref) => Stream.value(true)),
+  connectivityProvider.overrideWith((ref) => Stream.value(online)),
   householdInvalidationsProvider.overrideWith(
     (ref, id) => const Stream<Invalidation>.empty(),
   ),

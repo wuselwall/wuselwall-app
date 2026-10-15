@@ -627,7 +627,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get signInMethodsTitle => 'Anmeldung';
 
   @override
-  String get signInMethodEmail => 'E-Mail und Passwort';
+  String get signInMethodEmail => 'E-Mail-Code';
 
   @override
   String get signInMethodApple => 'Apple';
@@ -3585,4 +3585,108 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get householdDeviceComputer => 'Computer';
+
+  @override
+  String get emailContinue => 'Weiter';
+
+  @override
+  String get emailHavePassword => 'Ich habe ein Passwort';
+
+  @override
+  String get emailWrongCredentials => 'E-Mail oder Passwort stimmt nicht.';
+
+  @override
+  String get emailUseCodeInstead => 'Stattdessen Code per E-Mail';
+
+  @override
+  String get emailOffline =>
+      'Keine Verbindung – die Anmeldung per E-Mail braucht eine Verbindung.';
+
+  @override
+  String get emailCodeTitle => 'Code aus der E-Mail';
+
+  @override
+  String emailCodeSent(String email) {
+    return 'Wir haben einen 6-stelligen Code an $email geschickt. Er ist 10 Minuten gültig.';
+  }
+
+  @override
+  String get emailCodeFieldLabel => 'Sechsstelliger Code';
+
+  @override
+  String get emailCodeWrong =>
+      'Der Code stimmt nicht oder ist abgelaufen. Probier es noch einmal oder fordere einen neuen an.';
+
+  @override
+  String emailCodeResendIn(int seconds) {
+    return 'Kein Code? Erneut senden (in $seconds s)';
+  }
+
+  @override
+  String get emailCodeResend => 'Kein Code? Erneut senden';
+
+  @override
+  String get emailCodeSpam => 'Schau im Spam-Ordner nach.';
+
+  @override
+  String get emailCodeResent => 'Ein neuer Code ist unterwegs.';
+
+  @override
+  String get emailCodeOtherMethod => 'Andere Methode wählen';
+
+  @override
+  String get emailCodeOtherAddress => 'Andere E-Mail-Adresse';
+
+  @override
+  String get signInMethodTitle => 'Wie möchtest du dich künftig anmelden?';
+
+  @override
+  String get signInMethodCode => 'Mit Code per E-Mail — nichts zu merken';
+
+  @override
+  String get signInMethodPassword => 'Mit Passwort';
+
+  @override
+  String get passwordStrengthShort => 'Noch zu kurz';
+
+  @override
+  String get passwordStrengthWeak => 'Schwach';
+
+  @override
+  String get passwordStrengthFair => 'Mittel';
+
+  @override
+  String get passwordStrengthStrong => 'Stark';
+
+  @override
+  String get settingsPasswordTitle => 'Passwort';
+
+  @override
+  String get settingsPasswordSet =>
+      'Festgelegt. Du kannst dich auch mit E-Mail und Passwort anmelden.';
+
+  @override
+  String get settingsPasswordNotSet =>
+      'Nicht festgelegt. Anmelden geht weiterhin mit einem Code per E-Mail.';
+
+  @override
+  String get passwordSetAction => 'Passwort festlegen';
+
+  @override
+  String get passwordChangeAction => 'Passwort ändern';
+
+  @override
+  String get passwordSaved => 'Dein Passwort ist gespeichert.';
+
+  @override
+  String get passwordDialogBody =>
+      'Mindestens 10 Zeichen. Der Code per E-Mail bleibt immer möglich.';
+
+  @override
+  String signInMethodEmailSubtitle(String email) {
+    return '$email — immer verfügbar';
+  }
+
+  @override
+  String get signInMethodAlwaysAvailable => 'Immer verfügbar';
 }

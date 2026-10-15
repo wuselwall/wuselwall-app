@@ -78,6 +78,11 @@ services:
       GOTRUE_RATE_LIMIT_ANONYMOUS_USERS: 30
       GOTRUE_RATE_LIMIT_WEB3: 30
       GOTRUE_RATE_LIMIT_EMAIL_SENT: 30
+      # The e-mail sign-in code (supabase/config.toml [auth.email]): six digits, 600 s, one
+      # new code per address every 60 s.
+      GOTRUE_MAILER_OTP_LENGTH: ${MAILER_OTP_LENGTH:-6}
+      GOTRUE_MAILER_OTP_EXP: ${MAILER_OTP_EXP:-600}
+      GOTRUE_SMTP_MAX_FREQUENCY: ${SMTP_MAX_FREQUENCY:-60s}
 
   rest:
     image: public.ecr.aws/supabase/postgrest:v16.4
