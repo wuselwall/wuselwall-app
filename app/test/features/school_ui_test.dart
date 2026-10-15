@@ -210,6 +210,34 @@ void main() {
     expect(periods.first.toJson(), containsPair('kind', 'lesson'));
   });
 
+  testWidgets('bell times line up: start and end on one line with tooltips', (
+    t,
+  ) async {
+    await pumpApp(
+      t,
+      overrides: baseOverrides(
+        identity: FakeIdentityRepository(current: device()),
+      ),
+      school: FakeSchoolRepository(),
+    );
+    await _openSchedule(t);
+    // Phone width only for the setup page: the tab bar needs the default size.
+    t.view.physicalSize = const Size(390, 844);
+    t.view.devicePixelRatio = 1;
+    await t.pumpAndSettle();
+    await t.tap(find.byTooltip(de.schoolEditSchool));
+    await t.pumpAndSettle();
+
+    final start = find.byTooltip(de.schoolStart).first;
+    final end = find.byTooltip(de.schoolEnd).first;
+    expect(
+      t.getCenter(start).dy,
+      closeTo(t.getCenter(end).dy, 1),
+      reason: 'the start and end times sit on the same line',
+    );
+    expect(t.takeException(), isNull);
+  });
+
   testWidgets('without a school the section offers the setup', (t) async {
     await pumpApp(
       t,
