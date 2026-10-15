@@ -146,7 +146,7 @@ insert into tok (name, id, token)
 select is(length((select token from tok where name = 'oma')), 43, 'a token is 43 characters');
 select ok((select token from tok where name = 'oma') ~ '^[A-Za-z0-9_-]{43}$', 'a token is base64url without padding');
 select is((select filter from api.feed_tokens where id = (select id from tok where name = 'oma')),
-  '{"profile_ids":[],"calendar_ids":[],"kinds":["appointment"],"school":"off"}'::jsonb,
+  '{"profile_ids":[],"calendar_ids":[],"kinds":["appointment"],"school":"off","subscribed":false}'::jsonb,
   'an empty filter takes the defaults: appointments only, school off');
 select is((select count(*)::int from api.feed_tokens), 4, 'the guardian lists every token of the household');
 select throws_ok($$ select api.feed_token_create(null, 'Bad', '{"kinds":["sms"]}'::jsonb) $$,

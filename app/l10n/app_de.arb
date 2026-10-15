@@ -1140,5 +1140,9 @@
   "scanCameraDenied": "WuselWall hat keinen Kamerazugriff und kann den Code deshalb nicht scannen. Erlaube die Kamera in den Systemeinstellungen oder gib den Code ein.",
   "scanCameraUnavailable": "Auf diesem Gerät gibt es keine Kamera, die WuselWall nutzen kann. Gib den Code stattdessen ein.",
   "scanWebUnsupported": "Dieser Browser kann keine QR-Codes scannen. Gib den Code stattdessen ein.",
-  "scanTypeCode": "Code eintippen"
+  "scanTypeCode": "Code eintippen",
+  "feedSubTitle": "Abonnierte Kalender einschließen",
+  "feedSubHelp": "Termine aus importierten Kalendern (z. B. Verein, Müllabfuhr) erscheinen auch im Abo.",
+  "feedSubSummary": "Abonnierte Kalender",
+  "boardAllEvents": "Alle Termine"
 }
