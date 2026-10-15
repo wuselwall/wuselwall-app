@@ -767,6 +767,7 @@ class _EditItemDialogState extends ConsumerState<_EditItemDialog> {
             maxLength: 40,
             decoration: InputDecoration(labelText: l10n.shoppingSpecHint),
           ),
+          const SizedBox(height: Tokens.space4),
           DropdownButtonFormField<String?>(
             initialValue: widget.categories.any((c) => c.id == _category)
                 ? _category
@@ -849,6 +850,7 @@ class _NewListDialogState extends State<_NewListDialog> {
             maxLength: 40,
             decoration: InputDecoration(labelText: l10n.shoppingListName),
           ),
+          const SizedBox(height: Tokens.space4),
           DropdownButtonFormField<String>(
             initialValue: _kind,
             decoration: InputDecoration(labelText: l10n.shoppingListKind),
