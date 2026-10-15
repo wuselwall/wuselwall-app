@@ -21,6 +21,8 @@ import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/calendar/data/calendar_repository.dart';
 import 'package:wuselwall/features/calendar/data/external_calendars_repository.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
+import 'package:wuselwall/features/household/data/household_onboarding_repository.dart';
+import 'package:wuselwall/features/household/domain/household_models.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/data/pairing_repository.dart';
 import 'package:wuselwall/features/identity/data/sign_in_methods_repository.dart';
@@ -183,6 +185,85 @@ class FakeIdentityRepository implements IdentityRepository {
 
   @override
   dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
+}
+
+/// Starting a family. Creating a household records its arguments; on success it makes
+/// [identity] Ready, as the session refresh does in the app (the test re-reads the session).
+class FakeHouseholdOnboardingRepository
+    implements HouseholdOnboardingRepository {
+  FakeHouseholdOnboardingRepository({
+    this.accountValue = const Account(
+      userId: 'user-1',
+      email: 'daniel@example.org',
+      hasHousehold: false,
+      creation: HouseholdCreation.code,
+      fullName: 'Daniel Huser',
+      givenName: 'Daniel',
+    ),
+    this.createResult = const Ok(null),
+    this.identity,
+  });
+
+  Account accountValue;
+  Result<void> createResult;
+  final FakeIdentityRepository? identity;
+
+  /// The arguments of each create call, in order.
+  final created =
+      <
+        ({
+          String householdName,
+          String displayName,
+          String colorHex,
+          String timezone,
+          String locale,
+          String? founderCode,
+          bool seedExamples,
+          String deviceLabel,
+        })
+      >[];
+  final addedMembers = <List<NewMember>>[];
+  var examplesCompleted = 0;
+
+  @override
+  Future<Result<Account>> account() async => Ok(accountValue);
+
+  @override
+  Future<Result<void>> create({
+    required String householdName,
+    required String displayName,
+    required String colorHex,
+    required String timezone,
+    required String locale,
+    required String? founderCode,
+    required bool seedExamples,
+    required String deviceLabel,
+  }) async {
+    created.add((
+      householdName: householdName,
+      displayName: displayName,
+      colorHex: colorHex,
+      timezone: timezone,
+      locale: locale,
+      founderCode: founderCode,
+      seedExamples: seedExamples,
+      deviceLabel: deviceLabel,
+    ));
+    if (createResult is Ok && identity != null) identity!.current = device();
+    return createResult;
+  }
+
+  @override
+  Future<Result<void>> addMembers(List<NewMember> members) async {
+    addedMembers.add(members);
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<void>> completeExamples() async {
+    examplesCompleted++;
+    return const Ok(null);
+  }
 }
 
 class FakeShoppingRepository implements ShoppingRepository {
@@ -476,8 +557,12 @@ List<Override> baseOverrides({
   FakeExternalCalendarsRepository? externalCalendars,
   FakeNotificationScheduler? notifications,
   FakePairingRepository? pairing,
+  FakeHouseholdOnboardingRepository? household,
   bool signedIn = true,
 }) => [
+  householdOnboardingRepositoryProvider.overrideWithValue(
+    household ?? FakeHouseholdOnboardingRepository(identity: identity),
+  ),
   pairingRepositoryProvider.overrideWithValue(
     pairing ?? FakePairingRepository(),
   ),
