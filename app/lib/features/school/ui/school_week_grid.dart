@@ -100,56 +100,50 @@ class SchoolWeekGrid extends StatelessWidget {
       ],
     );
 
-    Widget row({
-      required Widget label,
-      required List<Lesson?> cells,
-      double? height,
-    }) => SizedBox(
-      height: height,
-      child: IntrinsicHeight(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SizedBox(
-              width: _labelWidth,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(0, 4, 6, 4),
-                child: label,
-              ),
-            ),
-            for (var i = 0; i < _days; i++)
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.all(1.5),
-                  decoration: BoxDecoration(
-                    color: raised == i
-                        ? scheme.primaryContainer.withAlpha(60)
-                        : null,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: cells[i] == null
-                      ? null
-                      : _LessonCell(
-                          lesson: cells[i]!,
-                          iconKey: iconKeyOf?.call(cells[i]!.subject),
-                          current:
-                              raised == i &&
-                              nowMinutes != null &&
-                              cells[i]!.period != null &&
-                              nowMinutes! >= minutesOf(cells[i]!.starts) &&
-                              nowMinutes! < minutesOf(cells[i]!.ends),
-                          onTap: onLesson == null || cells[i]!.period == null
-                              ? null
-                              : () => onLesson!(i, cells[i]!),
-                          cellKey: ValueKey('lesson-$i-${cells[i]!.period}'),
-                          tapOnPress: _desktop,
-                        ),
+    Widget row({required Widget label, required List<Lesson?> cells}) =>
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SizedBox(
+                width: _labelWidth,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 4, 6, 4),
+                  child: label,
                 ),
               ),
-          ],
-        ),
-      ),
-    );
+              for (var i = 0; i < _days; i++)
+                Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.all(1.5),
+                    decoration: BoxDecoration(
+                      color: raised == i
+                          ? scheme.primaryContainer.withAlpha(60)
+                          : null,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: cells[i] == null
+                        ? null
+                        : _LessonCell(
+                            lesson: cells[i]!,
+                            iconKey: iconKeyOf?.call(cells[i]!.subject),
+                            current:
+                                raised == i &&
+                                nowMinutes != null &&
+                                cells[i]!.period != null &&
+                                nowMinutes! >= minutesOf(cells[i]!.starts) &&
+                                nowMinutes! < minutesOf(cells[i]!.ends),
+                            onTap: onLesson == null || cells[i]!.period == null
+                                ? null
+                                : () => onLesson!(i, cells[i]!),
+                            cellKey: ValueKey('lesson-$i-${cells[i]!.period}'),
+                            tapOnPress: _desktop,
+                          ),
+                  ),
+                ),
+            ],
+          ),
+        );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -158,17 +152,28 @@ class SchoolWeekGrid extends StatelessWidget {
         const SizedBox(height: 4),
         for (final p in timetable.periods)
           if (p.kind == PeriodKind.breakTime)
-            row(
-              height: 14,
-              label: Text(
-                l10n.boardBreak,
-                style: TextStyle(
-                  fontFamily: Tokens.fontUi,
-                  fontSize: 11,
-                  color: ww.ink3,
-                ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: _labelWidth,
+                    child: Text(
+                      l10n.boardBreak,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      semanticsLabel:
+                          '${l10n.boardBreak} ${context.span(p.starts, p.ends)}',
+                      style: TextStyle(
+                        fontFamily: Tokens.fontUi,
+                        fontSize: 11,
+                        color: ww.ink3,
+                      ),
+                    ),
+                  ),
+                  Expanded(child: Divider(height: 1, color: ww.line)),
+                ],
               ),
-              cells: const [null, null, null, null, null],
             )
           else
             row(

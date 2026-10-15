@@ -112,6 +112,26 @@ void main() {
     },
   );
 
+  testWidgets('a break row shows its whole label, also at large text', (
+    t,
+  ) async {
+    t.platformDispatcher.textScaleFactorTestValue = 1.5;
+    addTearDown(t.platformDispatcher.clearTextScaleFactorTestValue);
+    await pumpApp(
+      t,
+      overrides: baseOverrides(
+        identity: FakeIdentityRepository(current: device()),
+      ),
+      school: FakeSchoolRepository(),
+    );
+    await _openSchedule(t);
+
+    expect(t.takeException(), isNull);
+    final label = find.text(de.boardBreak);
+    expect(label, findsWidgets);
+    expect(t.getSize(label.first).height, greaterThanOrEqualTo(11));
+  });
+
   testWidgets(
     'a long press on a lesson opens the sheet, and Fällt aus saves the exception',
     (t) async {
