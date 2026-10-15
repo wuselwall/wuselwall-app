@@ -1401,5 +1401,47 @@
       }
     }
   },
-  "signInMethodAlwaysAvailable": "Immer verfügbar"
+  "signInMethodAlwaysAvailable": "Immer verfügbar",
+  "leaveLeaveTile": "Familie verlassen",
+  "leaveLeaveExplain": "Dein Konto verlässt die Familie. Deine Geräte melden sich ab. Die Einträge bleiben bei der Familie; du kannst danach eine andere Familie gründen oder ihr beitreten.",
+  "leaveLeaveBlocked": "Lade zuerst eine zweite erwachsene Person ein oder lösche die Familie.",
+  "leaveLeaveDialogTitle": "Familie verlassen?",
+  "leaveLeaveDialogBody": "Du verlierst den Zugang zu dieser Familie. Die Familie bleibt bestehen, und die anderen bleiben drin.",
+  "leaveLeaveConfirm": "Verlassen",
+  "leaveCancel": "Abbrechen",
+  "leaveDeleteTile": "Familie löschen",
+  "leaveDeleteExplain": "Alle Geräte melden sich sofort ab. 14 Tage lang kann eine Elternperson die Familie wiederherstellen, danach werden alle Daten endgültig gelöscht.",
+  "leaveDeleteDialogTitle": "Familie löschen?",
+  "leaveDeleteDialogBody": "Alle Geräte melden sich ab, und niemand kommt mehr an die Familie. 14 Tage lang kann eine Elternperson sie wiederherstellen. Danach sind alle Daten weg.",
+  "leaveDeleteNameLabel": "Tippe ‚{name}‘ zum Bestätigen",
+  "@leaveDeleteNameLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "leaveDeleteConfirm": "Familie löschen",
+  "leaveDeletedTitle": "{family} wird am {date} endgültig gelöscht",
+  "@leaveDeletedTitle": {
+    "placeholders": {
+      "family": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "leaveDeletedBodyGuardian": "Du kannst die Familie wiederherstellen. Alle Daten sind noch da. Dieses Gerät ist danach wieder euer Familientelefon; die anderen Geräte melden sich neu an.",
+  "leaveDeletedBodyMember": "Nur eine Elternperson kann die Familie wiederherstellen. Du kannst auch neu anfangen; dann verlässt dein Konto diese Familie.",
+  "leaveRestore": "Wiederherstellen",
+  "leaveStartAfresh": "Neu anfangen",
+  "leaveStartAfreshHint": "Dein Konto verlässt die gelöschte Familie, und du gründest eine neue.",
+  "leaveErrConfirmName": "Der Name stimmt nicht.",
+  "leaveErrHouseholdDeleted": "Diese Familie ist gelöscht.",
+  "leaveErrRestoreExpired": "Diese Familie kann nicht mehr wiederhergestellt werden.",
+  "leaveErrNotDeleted": "Diese Familie ist nicht gelöscht.",
+  "leaveErrAdultRequired": "Nur Erwachsene haben ein eigenes Konto.",
+  "leaveErrAlreadyInHousehold": "Dieses Konto gehört schon zu einer Familie."
 }

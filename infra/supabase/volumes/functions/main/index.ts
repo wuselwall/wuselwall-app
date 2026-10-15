@@ -17,7 +17,7 @@ const VERIFY_JWT = Deno.env.get('VERIFY_JWT') === 'true'
 // carries a user JWT that the function verifies itself (getUser, then the database's guardian gate).
 // send-email is GoTrue's Send Email Hook: GoTrue calls it with no user, and the Standard Webhooks
 // signature (SEND_EMAIL_HOOK_SECRET) is the only gate, checked by the function itself.
-const NO_USER_FUNCTIONS = new Set(['ics', 'tasks-nightly', 'holidays-sync', 'calendar-import', 'send-email'])
+const NO_USER_FUNCTIONS = new Set(['ics', 'tasks-nightly', 'holidays-sync', 'calendar-import', 'send-email', 'household-purge'])
 
 type AuthFailure = {
   code: RequestErrors
