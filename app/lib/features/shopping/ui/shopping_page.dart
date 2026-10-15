@@ -406,60 +406,80 @@ class _TilePickerState extends ConsumerState<_TilePicker> {
         .map((i) => i.count)
         .fold(0, (a, b) => a + b);
 
-    return Padding(
-      padding: const EdgeInsets.all(Tokens.space4),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (widget.showSearch)
-            TextField(
-              controller: widget.search,
-              decoration: InputDecoration(
-                labelText: l10n.shoppingSearchHint,
-                prefixIcon: const Icon(Icons.search),
+    final tileWidgets = <Widget>[
+      for (final t in tiles)
+        _Tile(
+          width: width,
+          icon: categoryIcon(categories[t.categoryId]),
+          label: t.name,
+          count: countOf(t.foldedName),
+          onTap: widget.busy ? null : () => widget.onAdd(t.name),
+          onLongPress: () => widget.onLongPress(t.name),
+        ),
+      if (query.isNotEmpty && !exact)
+        _Tile(
+          width: width,
+          icon: Icons.add_circle_outline,
+          label: l10n.shoppingCreateTile(query),
+          count: 0,
+          onTap: widget.busy ? null : () => widget.onAdd(query),
+          onLongPress: () => widget.onLongPress(query),
+        ),
+    ];
+
+    // Full width, so the picker lines up with the list below it instead of being
+    // centred by the parent Column.
+    return SizedBox(
+      width: double.infinity,
+      child: Padding(
+        padding: const EdgeInsets.all(Tokens.space4),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (widget.showSearch)
+              TextField(
+                controller: widget.search,
+                decoration: InputDecoration(
+                  labelText: l10n.shoppingSearchHint,
+                  prefixIcon: const Icon(Icons.search),
+                ),
+                textInputAction: TextInputAction.done,
+                // Enter adds the top hit, else the typed name as a new item.
+                onSubmitted: (value) =>
+                    widget.onAdd(tiles.isNotEmpty ? tiles.first.name : value),
               ),
-              textInputAction: TextInputAction.done,
-              // Enter adds the top hit, else the typed name as a new item.
-              onSubmitted: (value) =>
-                  widget.onAdd(tiles.isNotEmpty ? tiles.first.name : value),
-            ),
-          const SizedBox(height: Tokens.space2),
-          if (tiles.isEmpty && query.isEmpty)
-            Text(
-              l10n.shoppingTilesEmpty,
-              style: Theme.of(context).textTheme.bodySmall,
-            )
-          else
-            ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: kiosk ? 320 : 176),
-              child: SingleChildScrollView(
-                child: Wrap(
-                  spacing: Tokens.space2,
-                  runSpacing: Tokens.space2,
-                  children: [
-                    for (final t in tiles)
-                      _Tile(
-                        width: width,
-                        icon: categoryIcon(categories[t.categoryId]),
-                        label: t.name,
-                        count: countOf(t.foldedName),
-                        onTap: widget.busy ? null : () => widget.onAdd(t.name),
-                        onLongPress: () => widget.onLongPress(t.name),
-                      ),
-                    if (query.isNotEmpty && !exact)
-                      _Tile(
-                        width: width,
-                        icon: Icons.add_circle_outline,
-                        label: l10n.shoppingCreateTile(query),
-                        count: 0,
-                        onTap: widget.busy ? null : () => widget.onAdd(query),
-                        onLongPress: () => widget.onLongPress(query),
-                      ),
-                  ],
+            const SizedBox(height: Tokens.space2),
+            if (tiles.isEmpty && query.isEmpty)
+              Text(
+                l10n.shoppingTilesEmpty,
+                style: Theme.of(context).textTheme.bodySmall,
+              )
+            else if (kiosk)
+              // On the wall the list is the point: one row of tiles that scrolls sideways,
+              // all as tall as the tallest, instead of a block that pushes the list away.
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    spacing: Tokens.space2,
+                    children: tileWidgets,
+                  ),
+                ),
+              )
+            else
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxHeight: 176),
+                child: SingleChildScrollView(
+                  child: Wrap(
+                    spacing: Tokens.space2,
+                    runSpacing: Tokens.space2,
+                    children: tileWidgets,
+                  ),
                 ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }
