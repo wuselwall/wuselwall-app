@@ -15,7 +15,9 @@ const VERIFY_JWT = Deno.env.get('VERIFY_JWT') === 'true'
 // while the region picker's call carries a user JWT and is verified by the function itself.
 // calendar-import is the same: the hourly run carries the secret, and a guardian's "fetch now"
 // carries a user JWT that the function verifies itself (getUser, then the database's guardian gate).
-const NO_USER_FUNCTIONS = new Set(['ics', 'tasks-nightly', 'holidays-sync', 'calendar-import'])
+// send-email is GoTrue's Send Email Hook: GoTrue calls it with no user, and the Standard Webhooks
+// signature (SEND_EMAIL_HOOK_SECRET) is the only gate, checked by the function itself.
+const NO_USER_FUNCTIONS = new Set(['ics', 'tasks-nightly', 'holidays-sync', 'calendar-import', 'send-email'])
 
 type AuthFailure = {
   code: RequestErrors

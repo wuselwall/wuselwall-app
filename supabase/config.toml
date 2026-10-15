@@ -105,6 +105,19 @@ double_confirm_changes = true
 # If enabled, users need to confirm their email address before signing in.
 enable_confirmations = false
 
+# Fallback mails for a stack where the Send Email Hook is off: German first, English below, in
+# one mail, with the six-digit code ({{ .Token }}). They apply only when the hook is not running.
+# GoTrue reads these files from the project; the compose stack has no static host for them, so
+# its operator relies on the hook, and a stack without it sends GoTrue's built-in English mails
+# through SMTP. The hook renders the same wording in the recipient's language (_shared/mail_*.ts).
+[auth.email.template.magic_link]
+subject = "Dein WuselWall-Code / Your WuselWall code"
+content_path = "./supabase/templates/magic_link.html"
+
+[auth.email.template.confirmation]
+subject = "Dein WuselWall-Code / Your WuselWall code"
+content_path = "./supabase/templates/confirmation.html"
+
 # Uncomment to customize email template
 # [auth.email.template.invite]
 # subject = "You have been invited"
@@ -126,6 +139,17 @@ template = "Your code is {{ .Code }} ."
 [auth.hook.custom_access_token]
 enabled = true
 uri = "pg-functions://postgres/app/custom_access_token_hook"
+
+# The Send Email Hook (specs/10 §4, specs/20 "Email"): GoTrue hands every mail to the send-email
+# Edge Function instead of sending it, and that function renders it in the recipient's language
+# and sends it through Scaleway Transactional Email. Off here: CLI and CI stacks catch mail in
+# Mailpit (local_smtp) and need no Scaleway project. The home server's compose stack switches it
+# on in infra/supabase/docker-compose.wuselwall.yml. To try it on a laptop, set enabled = true,
+# put SEND_EMAIL_HOOK_SECRET (v1,whsec_<base64>) and the SCW_* / MAIL_FROM* values in supabase/.env.
+[auth.hook.send_email]
+enabled = false
+uri = "http://host.docker.internal:54321/functions/v1/send-email"
+secrets = "env(SEND_EMAIL_HOOK_SECRET)"
 
 
 # Configure one of the supported SMS providers: `twilio`, `twilio_verify`, `messagebird`, `textlocal`, `vonage`.

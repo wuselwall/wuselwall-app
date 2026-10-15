@@ -144,6 +144,18 @@ const out = {
   GOOGLE_CLIENT_IDS: vars.WW_GOOGLE_CLIENT_IDS ?? '',
   GOOGLE_CLIENT_SECRET: vars.WW_GOOGLE_CLIENT_SECRET ?? '',
 
+  // Mail: the Send Email Hook (supabase/functions/send-email). The secret is generated like the
+  // others and must be the same value in GoTrue and in the functions container, which this file
+  // guarantees by writing one variable for both. The hook is switched on only when the Scaleway
+  // project and key from supabase/.env are present, so a stack never sends mail it cannot send.
+  SEND_EMAIL_HOOK_SECRET: `v1,whsec_${b64(32)}`,
+  SEND_EMAIL_HOOK_ENABLED: vars.SCW_SECRET_KEY && vars.SCW_PROJECT_ID ? 'true' : 'false',
+  SCW_SECRET_KEY: vars.SCW_SECRET_KEY ?? '',
+  SCW_PROJECT_ID: vars.SCW_PROJECT_ID ?? '',
+  SCW_REGION: vars.SCW_REGION ?? 'fr-par',
+  MAIL_FROM: vars.MAIL_FROM ?? 'anmeldung@goomba.ch',
+  MAIL_FROM_NAME: vars.MAIL_FROM_NAME ?? 'WuselWall',
+
   // Storage
   GLOBAL_S3_BUCKET: 'stub',
   REGION: 'stub',
