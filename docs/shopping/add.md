@@ -8,6 +8,8 @@ Ein Artikel soll in drei Sekunden auf der Liste stehen – auch einhändig, vor 
 
 Oben siehst du Kacheln mit dem, was ihr **zuletzt** und **am häufigsten** gekauft habt. Niemand pflegt diese Liste: Sie entsteht von selbst, wenn ihr einen Einkauf beendet.
 
+Jede Kachel zeigt ein Bild dazu: WuselWall erkennt gängige Artikel am Namen, etwa Milch, Brot oder Äpfel. Für einen Artikel, den es nicht kennt, steht das Symbol seiner Kategorie.
+
 - **Einmal tippen** setzt den Artikel auf die Liste. Die Kachel wird grün hinterlegt.
 - **Nochmal tippen** zählt hoch: „2×“, „3×“ … Mit dem kleinen **−** in der Liste nimmst du eins wieder weg.
 - **Lange drücken** öffnet eine Notiz für diesen Artikel, zum Beispiel „Bio“, „500 g“ oder „Dose“.

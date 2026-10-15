@@ -178,10 +178,9 @@ class _Column extends StatelessWidget {
             ),
           ),
           if (streak != null)
-            Text(
-              l10n.tasksStreakBadge(streak!),
+            StreakBadge(
+              days: streak!,
               style: boardNum(26, weight: FontWeight.w800, color: mc?.onInk),
-              maxLines: 1,
             ),
           if (points != null) ...[
             const SizedBox(width: Tokens.space2),

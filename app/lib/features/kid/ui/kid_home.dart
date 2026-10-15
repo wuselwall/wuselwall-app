@@ -53,20 +53,27 @@ class KidHome extends ConsumerWidget {
     return Scaffold(
       body: SafeArea(
         bottom: false,
-        child: Stack(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Positioned.fill(child: body),
             // Quiet, for the grown-ups: settings, where guardian actions ask for the PIN.
-            Positioned(
-              top: 4,
-              right: 4,
-              child: IconButton(
-                tooltip: l10n.settingsTitle,
-                icon: const Icon(Icons.settings_outlined),
-                color: context.ww.ink3,
-                onPressed: () => context.go(Routes.settings),
+            // Its own row, so it never sits on top of a page's content.
+            Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  top: Tokens.space1,
+                  right: Tokens.space1,
+                ),
+                child: IconButton(
+                  tooltip: l10n.settingsTitle,
+                  icon: const Icon(Icons.settings_outlined),
+                  color: context.ww.ink3,
+                  onPressed: () => context.go(Routes.settings),
+                ),
               ),
             ),
+            Expanded(child: body),
           ],
         ),
       ),

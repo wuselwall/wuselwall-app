@@ -183,6 +183,7 @@ class CatalogEntry {
     required this.categoryId,
     required this.purchaseCount,
     required this.lastPurchasedAt,
+    this.iconKey,
   });
 
   factory CatalogEntry.fromJson(Map<String, dynamic> json) => CatalogEntry(
@@ -195,6 +196,7 @@ class CatalogEntry {
     lastPurchasedAt: json['last_purchased_at'] == null
         ? null
         : DateTime.parse(json['last_purchased_at'] as String),
+    iconKey: json['icon_key'] as String?,
   );
 
   final String id;
@@ -205,6 +207,9 @@ class CatalogEntry {
   final int purchaseCount;
   final DateTime? lastPurchasedAt;
 
+  /// The picture the server picked from the name (app.catalog_icon_for); null when it knows none.
+  final String? iconKey;
+
   Map<String, dynamic> toJson() => {
     'id': id,
     'list_id': listId,
@@ -213,6 +218,7 @@ class CatalogEntry {
     'category_id': categoryId,
     'purchase_count': purchaseCount,
     'last_purchased_at': lastPurchasedAt?.toIso8601String(),
+    'icon_key': iconKey,
   };
 }
 

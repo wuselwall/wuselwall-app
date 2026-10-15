@@ -6,6 +6,7 @@ import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/emoji_picture.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/kid/application/kid_logic.dart';
 import 'package:wuselwall/features/kid/application/kid_providers.dart';
@@ -115,10 +116,18 @@ class _KidPointsPageState extends ConsumerState<KidPointsPage> {
             Padding(
               padding: const EdgeInsets.only(bottom: Tokens.space2),
               child: KidCard(
-                child: Text(
-                  l10n.kidStreak(s.days, s.title),
-                  style: Theme.of(context).textTheme.titleMedium
-                      ?.copyWith(fontWeight: FontWeight.w700),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        l10n.kidStreak(s.days, s.title),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                    const SizedBox(width: Tokens.space2),
+                    const EmojiPicture(emojiFire, size: 28),
+                  ],
                 ),
               ),
             ),
@@ -208,9 +217,9 @@ class _RewardCard extends StatelessWidget {
           Row(
             children: [
               ExcludeSemantics(
-                child: Text(
-                  taskIconGlyph(reward.iconKey) ?? '🎁',
-                  style: const TextStyle(fontSize: 40),
+                child: EmojiPicture(
+                  taskIconAsset(reward.iconKey) ?? emojiGift,
+                  size: 40,
                 ),
               ),
               const SizedBox(width: Tokens.space3),
@@ -286,7 +295,7 @@ class _BadgeTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ww = context.ww;
-    final glyph = taskIconGlyph(badge.iconKey);
+    final asset = taskIconAsset(badge.iconKey);
     return Semantics(
       label: badge.earned ? badge.title : '${badge.title} ·',
       child: SizedBox(
@@ -305,13 +314,8 @@ class _BadgeTile extends StatelessWidget {
                       : Theme.of(context).colorScheme.surfaceContainerHighest,
                   shape: BoxShape.circle,
                 ),
-                child: glyph != null
-                    ? ExcludeSemantics(
-                        child: Text(
-                          glyph,
-                          style: const TextStyle(fontSize: 30),
-                        ),
-                      )
+                child: asset != null
+                    ? ExcludeSemantics(child: EmojiPicture(asset, size: 36))
                     : Icon(
                         Icons.workspace_premium_rounded,
                         size: 32,

@@ -7,7 +7,7 @@ import 'package:wuselwall/features/invitations/application/invitation_providers.
 import 'package:wuselwall/features/invitations/ui/invite_flow.dart';
 
 /// Under Mitglieder: the household's open invitations, with "Erneut teilen" and
-/// "Zurückziehen" for a guardian on a personal phone.
+/// "Zurückziehen" below each one for a guardian on a personal phone.
 class OpenInvitationRows extends ConsumerWidget {
   const OpenInvitationRows({super.key});
 
@@ -26,11 +26,16 @@ class OpenInvitationRows extends ConsumerWidget {
             key: ValueKey('open-invitation-${invitation.id}'),
             leading: const Icon(Icons.mark_email_unread_outlined),
             title: Text(invitation.profileName),
-            subtitle: Text(
-              l10n.inviteOpenUntil(inviteDate(context, invitation.expiresAt)),
-            ),
-            trailing: canInvite
-                ? Wrap(
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.inviteOpenUntil(
+                    inviteDate(context, invitation.expiresAt),
+                  ),
+                ),
+                if (canInvite)
+                  Wrap(
                     spacing: Tokens.space1,
                     children: [
                       TextButton(
@@ -44,8 +49,9 @@ class OpenInvitationRows extends ConsumerWidget {
                         child: Text(l10n.inviteWithdraw),
                       ),
                     ],
-                  )
-                : null,
+                  ),
+              ],
+            ),
           ),
       ],
     );

@@ -486,7 +486,7 @@ keys, and the restore drill has restored a nightly dump once. *(Restore drill fi
 > 6. Leaving: built (leave, delete with 14 days to restore, purge job, account deletion with the Apple revocation, second-factor reset, export).
 > 7. Localised mail: built, through the send-email hook and Scaleway Transactional Email when configured; the bilingual GoTrue template remains the fallback.
 > 7a. Any server, chosen in the app: built (the server choice, the demo, discovery and compatibility, the self-hosting kit), and since 2026-10-15 the server in the fragment of invitation and pairing links.
-> 8. Tests: the pgTAP suites and the Dart tests are built with the features. The E2E journeys (J1–J3) and the manual Apple and Google checks on real devices are still open.
+> 8. Tests: the pgTAP suites and the Dart tests are built with the features. Since 2026-10-15 the journeys J1–J3 are written: `app/test/integration/onboarding_integration_test.dart` drives the repositories against a throwaway stack (the email code read from Mailpit, founder codes planted by `supabase/seed.sql`) and runs in CI's `backend` job, and `app/test/journeys/` drives the real screens with fakes and asserts the screen counts of NFR-17 on every PR. Still open: the manual Apple and Google checks on real devices, and the timings (90 s, 60 s, 30 s) on the release checklist.
 > 9. User documentation: `docs/guide/setup.md` and its screenshots rewritten (both languages).
 >
 > **Next:** apply the migrations and deploy the Edge Functions, schedule the jobs, set `ENABLE_EMAIL_AUTOCONFIRM=false` on an existing server, then M1.6.
@@ -553,8 +553,9 @@ Order chosen so that each slice is usable on its own:
      a shared device; deletion leaves no rows reachable.
    - The catalogue test's anon list becomes `health, invitation_preview, pairing_poll,
      pairing_start, server_info` plus `enrol_device` for one release.
-   - E2E: J1 by email code through Mailpit, J2, J3 (typed code), each with a screen-count
-     assertion.
+   - E2E (built 2026-10-15): J1 by email code through Mailpit, J2, J3, each with a
+     screen-count assertion. The backend journeys are `app/test/integration/onboarding_integration_test.dart`
+     (CI's `backend` job); the screen counts are `app/test/journeys/` (every PR).
    - Manual: Apple and Google on real devices.
 9. **User documentation:** rewrite `docs/guide/setup.md` (and `/en/`) and regenerate the
    screenshots: the front door, H1, H2, an invitation, P1 and G1.

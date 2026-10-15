@@ -41,6 +41,7 @@ ShoppingSnapshot snap(List<ShoppingItem> items) => ShoppingSnapshot(
       categoryId: 'cat-produce',
       purchaseCount: 3,
       lastPurchasedAt: DateTime.utc(2026, 10),
+      iconKey: 'apple',
     ),
   ],
 );

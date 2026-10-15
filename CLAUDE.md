@@ -7,11 +7,13 @@ Setup-plan steps 3, 5, 6 and 8 are built (app shell, identity, online shopping l
 compose stack) and M1.1 is built, offline outbox included. Onboarding (step 9,
 [specs/20](specs/20-onboarding.md), ADR-014 and ADR-018 — self-hosted only, no WuselWall
 Cloud) is built: Sign in with Apple and Google, email codes (E1–E3), households and founder
-codes (H1/H2), invitations, pairing of shared and wall devices, leaving, deleting and
+codes (H1/H2), invitations and pairing (links carry the server and open the app as universal
+links and App Links), the join and new-sign-in notices on Today, leaving, deleting and
 restoring a family, account deletion and the second-factor reset, localised mail
 (`send-email` hook), and ADR-018's server choice: the store app asks for its server
 (discovery through the `server-info` function), a server release with `server/wuselwall`, and
-`deploy-supabase.yml` for a family's own hosted project. Built besides: household settings
+`deploy-supabase.yml` for a family's own hosted project. The onboarding journeys J1–J3 are
+integration tests (CI's backend job) and screen-count tests (`app/test/journeys`). Built besides: household settings
 (specs/21), the kiosk week board (specs/09) with "Alle Termine", M1.3a calendar (events,
 presence, recurrence expanded in Edge Functions, the ICS feed with tokens), M1.3b Stundenplan
 (the projection in `supabase/functions/_shared/school.ts`), M1.2 tasks and points, M1.4 meals,
