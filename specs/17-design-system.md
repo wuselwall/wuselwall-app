@@ -145,7 +145,8 @@ There are two sets, each used for one job only, as specs/09 asks ("one coherent 
 - **Interface icons: Phosphor** (MIT). These are navigation, actions and status. Use the
   *Regular* weight in the adult register, *Bold* in kid and kiosk, and *Fill* for the
   selected state. Package `phosphor_flutter`, bundled.
-- **Content icons: Fluent Emoji Flat** (MIT), as self-hosted SVG. These are chores,
+- **Content icons: Fluent Emoji Flat** (MIT), self-hosted, rendered to PNG at three pixel
+  ratios by `scripts/emoji-pictures.mjs` (no SVG renderer in the app). These are chores,
   shopping catalogue items, subjects, rewards and badges. The set is colourful and
   friendly, has a picture for nearly every grocery and school subject, and stays
   readable at 2 m. It supplies the `icon_key` for `catalog_item`, `subject`,
@@ -214,8 +215,9 @@ As implemented:
   widgets.
 - Fonts are bundled under `app/assets/fonts/` with their OFL licences, which
   `registerFontLicenses()` adds to the licence page.
-- Not yet done: Phosphor and Fluent Emoji (they arrive with the first screen that
-  needs them), presence painters (M1.3), and the member colour picker (M0.1).
+- Fluent Emoji is in use for shopping tiles, chores, rewards and badges; subjects still
+  use Material icons. Not yet done: Phosphor (it arrives with the first screen that
+  needs it), presence painters (M1.3), and the member colour picker (M0.1).
 
 ## Method
 

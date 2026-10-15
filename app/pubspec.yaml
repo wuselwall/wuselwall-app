@@ -58,10 +58,12 @@ flutter:
   assets:
     - assets/fonts/OFL-AtkinsonHyperlegibleNext.txt
     - assets/fonts/OFL-BarlowSemiCondensed.txt
-    # The shopping tiles' pictures, Noto Emoji (Apache 2.0, licence in that folder),
-    # rendered by scripts/shopping-icons.mjs; the 2.0x/ and 3.0x/ variants are picked
-    # automatically.
-    - assets/shopping/
+    # Emoji pictures (Fluent Emoji Flat, MIT, licence in assets/emoji/), rendered by
+    # scripts/emoji-pictures.mjs; the 2.0x/ and 3.0x/ variants are picked automatically.
+    - assets/emoji/
+    - assets/emoji/shopping/
+    - assets/emoji/tasks/
+    - assets/emoji/extras/
     # Google's "G" for its sign-in button, as its branding rules require; rendered at
     # 20 dp from google_g.svg (the 2.0x/ and 3.0x/ variants are picked automatically).
     - assets/sign_in/google_g.png
