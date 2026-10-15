@@ -446,17 +446,27 @@ class _SlotCard extends ConsumerWidget {
               if (entry != null &&
                   (cookName != null ||
                       entry.atTime != null ||
-                      entry.guests > 0))
-                Text(
-                  [
-                    if (cookName != null) l10n.boardMealCook(cookName),
-                    if (entry.atTime != null) context.time(entry.atTime!),
-                    if (entry.guests > 0) l10n.boardMealGuests(entry.guests),
-                  ].join(' · '),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.bodySmall?.copyWith(color: ww.ink2),
-                ),
+                      entry.guests > 0)) ...[
+                if (entry.atTime != null)
+                  Text(
+                    context.time(entry.atTime!),
+                    maxLines: 1,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: ww.ink2,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                if (cookName != null || entry.guests > 0)
+                  Text(
+                    [
+                      if (cookName != null) l10n.boardMealCook(cookName),
+                      if (entry.guests > 0) l10n.boardMealGuests(entry.guests),
+                    ].join(' · '),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.bodySmall?.copyWith(color: ww.ink2),
+                  ),
+              ],
             ],
           ),
         ),
