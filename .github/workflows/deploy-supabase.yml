@@ -113,9 +113,8 @@ jobs:
           {
             echo "### WuselWall is on your Supabase project"
             echo
-            echo "In the WuselWall app, choose **Own server** and enter:"
-            echo
-            echo "    https://$PROJECT.supabase.co"
+            # The project ID is a secret, so GitHub would print it as ***.
+            echo "In the WuselWall app, enter your project ID (the value of SUPABASE_PROJECT_ID) at **Which server?**."
             echo
             if [ -n "$SETUP_TOKEN" ]; then
               echo "Then **Start a new family** with the phrase you saved as \`WUSELWALL_SETUP_TOKEN\`."
