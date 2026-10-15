@@ -59,6 +59,17 @@ services:
       GOTRUE_WEBAUTHN_RP_DISPLAY_NAME: WuselWall
       GOTRUE_WEBAUTHN_RP_ID: ${PASSKEY_RP_ID}
       GOTRUE_WEBAUTHN_RP_ORIGINS: ${PASSKEY_RP_ORIGINS}
+      # Mail (specs/10 §4 "Email setup"). The Send Email Hook hands every mail to the send-email
+      # Edge Function, which renders it in the recipient's language and sends it through Scaleway
+      # Transactional Email. It is switched on by make-env.mjs once the stack's .env has the
+      # SCW_* values (or by hand: set-env SEND_EMAIL_HOOK_ENABLED true). Its secret is the
+      # v1,whsec_ value the functions container checks the signature with. The SMTP_* values in
+      # the .env are the fallback when the hook is off. The bilingual templates in
+      # supabase/templates/ are not used here: GoTrue loads templates only from URLs, and this
+      # stack hosts no static files, so without the hook GoTrue's English defaults are sent.
+      GOTRUE_HOOK_SEND_EMAIL_ENABLED: ${SEND_EMAIL_HOOK_ENABLED:-false}
+      GOTRUE_HOOK_SEND_EMAIL_URI: http://functions:9000/send-email
+      GOTRUE_HOOK_SEND_EMAIL_SECRETS: ${SEND_EMAIL_HOOK_SECRET:-}
       # The CLI's limits, except e-mail: no SMTP is configured yet, so nothing is sent.
       GOTRUE_RATE_LIMIT_TOKEN_REFRESH: 150
       GOTRUE_RATE_LIMIT_VERIFY: 30
@@ -91,6 +102,16 @@ services:
       # The shared secret of the nightly task job (supabase/functions/tasks-nightly): the
       # host's cron sends it as x-cron-secret. Empty = the job refuses every call.
       CRON_SECRET: ${CRON_SECRET:-}
+      # The Send Email Hook (supabase/functions/send-email): the signature secret GoTrue signs
+      # with, and Scaleway Transactional Email (specs/10 §4). SCW_SECRET_KEY is the secret key of
+      # an IAM application whose only policy is Transactional Email on SCW_PROJECT_ID. Every
+      # function in this container can read these; the send-email function is the only one that does.
+      SEND_EMAIL_HOOK_SECRET: ${SEND_EMAIL_HOOK_SECRET:-}
+      SCW_SECRET_KEY: ${SCW_SECRET_KEY:-}
+      SCW_PROJECT_ID: ${SCW_PROJECT_ID:-}
+      SCW_REGION: ${SCW_REGION:-fr-par}
+      MAIL_FROM: ${MAIL_FROM:-}
+      MAIL_FROM_NAME: ${MAIL_FROM_NAME:-WuselWall}
 
   db:
     # Postgres 15, as supabase/config.toml ([db] major_version) and CI.

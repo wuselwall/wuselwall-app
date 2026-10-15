@@ -183,7 +183,7 @@ const de: Strings = {
     privacyDescription: 'Wie WuselWall mit Daten umgeht: diese Website, die Apps und die Anmeldung mit Apple oder Google.',
   },
   privacy: {
-    updated: 'Stand: 14. Oktober 2026',
+    updated: 'Stand: 15. Oktober 2026',
     summaryTitle: 'Das Wichtigste in Kürze',
     summary: [
       'Wir betreiben keinen Dienst, auf dem die Daten Ihrer Familie liegen. Die App speichert alles auf dem WuselWall-Server, mit dem Ihre Familie sie verbunden hat.',
@@ -243,6 +243,14 @@ const de: Strings = {
           '<strong>Apple:</strong> Auf iPhone und iPad ist die Anmeldung Teil des Betriebssystems; die App enthält dafür keinen fremden Code. Auf Android und im Browser öffnet sich die Anmeldeseite von Apple.',
           '<strong>Google:</strong> Auf iPhone und iPad enthält die App dafür die Anmeldebibliothek von Google. Sie wird erst aktiv, wenn Sie „Mit Google anmelden“ tippen. Laut Googles eigener Angabe erhebt sie dann neben Name, E-Mail-Adresse und Kontokennung auch eine Gerätekennung und Nutzungsdaten, die Google auch für eigene Analysen verwendet – nicht aber für Tracking über Apps und Websites anderer Anbieter hinweg. Auf Android läuft die Anmeldung über die Google-Dienste des Geräts, im Browser über die Anmeldeseite von Google.',
           'Apple und Google verarbeiten diese Daten in eigener Verantwortung, auch in den USA: <a href="https://www.apple.com/de/legal/privacy/" rel="noopener">Datenschutz bei Apple</a>, <a href="https://policies.google.com/privacy?hl=de" rel="noopener">Datenschutzerklärung von Google</a>.',
+        ],
+      },
+      {
+        title: 'Anmeldung mit E-Mail-Adresse',
+        body: [
+          'Mit einer E-Mail-Adresse melden Sie sich mit einem Code an, den WuselWall Ihnen per E-Mail schickt. Ein Passwort ist dafür nicht nötig. Den Code verschickt der WuselWall-Server, mit dem Ihre Familie verbunden ist, über den Versanddienst, den sein Betreiber eingerichtet hat.',
+          'Auf dem Server, den das WuselWall-Projekt selbst betreibt, ist das Scaleway Transactional Email, ein Dienst der Scaleway SAS in Paris (Frankreich). Scaleway erhält dafür die E-Mail-Adresse, an die der Code geht, und den Inhalt der Nachricht einschließlich des Codes, damit die Nachricht zugestellt werden kann. Die Nachrichten enthalten keine Bilder und keine Verfolgungslinks. Der Code ist zehn Minuten gültig.',
+          'Auf anderen Servern entscheidet der Betreiber, wie die Codes verschickt werden, etwa über einen eigenen Mailserver. Dann gelten seine Angaben.',
         ],
       },
       {
@@ -392,7 +400,7 @@ const en: Strings = {
     privacyDescription: 'How WuselWall handles data: this website, the apps and signing in with Apple or Google.',
   },
   privacy: {
-    updated: 'Last updated: 14 October 2026',
+    updated: 'Last updated: 15 October 2026',
     summaryTitle: 'In short',
     summary: [
       'We run no service that holds your family’s data. The app stores everything on the WuselWall server your family connected it to.',
@@ -452,6 +460,14 @@ const en: Strings = {
           '<strong>Apple:</strong> on iPhone and iPad, signing in is part of the operating system; the app contains no third-party code for it. On Android and in the browser, Apple’s sign-in page opens.',
           '<strong>Google:</strong> on iPhone and iPad, the app contains Google’s sign-in library for this. It becomes active only when you tap “Sign in with Google”. According to Google’s own declaration, it then collects, besides name, email address and account identifier, a device identifier and usage data, which Google also uses for its own analytics – but not for tracking across other companies’ apps and websites. On Android, sign-in runs through the device’s Google services; in the browser, through Google’s sign-in page.',
           'Apple and Google process this data under their own responsibility, also in the USA: <a href="https://www.apple.com/legal/privacy/" rel="noopener">Apple’s privacy policy</a>, <a href="https://policies.google.com/privacy?hl=en" rel="noopener">Google’s privacy policy</a>.',
+        ],
+      },
+      {
+        title: 'Signing in with an email address',
+        body: [
+          'With an email address you sign in with a code that WuselWall sends you by email. No password is needed. The WuselWall server your family is connected to sends the code, through the mail service its operator has set up.',
+          'On the server that the WuselWall project runs itself, that service is Scaleway Transactional Email, run by Scaleway SAS in Paris (France). For this, Scaleway receives the email address the code goes to and the content of the message, including the code, so that the message can be delivered. The messages contain no images and no tracking links. The code is valid for ten minutes.',
+          'On other servers, the operator decides how codes are sent, for example through their own mail server. Their details apply then.',
         ],
       },
       {

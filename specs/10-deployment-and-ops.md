@@ -228,13 +228,37 @@ built for one thing: a six-digit code in the inbox within seconds, never in spam
 | Sending domain | `example.org` itself, verified in the homeserver project (2026-10-11); it may move to `wuselwall.app` ([ADR-017](adr/ADR-017-wuselwall-app-domain.md)) | `example.org` has no mailboxes, so its MX points at Scaleway's blackhole and its SPF names only Scaleway; a domain that receives personal mail would need a sending subdomain instead |
 | Sender | `WuselWall <noreply@example.org>`, Reply-To a read support address | A recognisable name in the inbox list; replies reach a person, which App Review and GDPR both expect |
 | DNS (Cloudflare) | The SPF, DKIM and DMARC records Scaleway shows when the domain is added; DMARC starts at `p=none` with `rua` reports, moves to `p=quarantine` after two clean weeks | Without SPF and DKIM the codes go to spam; Gmail and Yahoo require SPF or DKIM from every sender and DMARC from bulk senders |
-| Content | Plain text plus minimal HTML, no images, no tracking pixels, no link tracking (switched off in TEM). **Subject carries the code:** "123456 ist dein WuselWall-Code" / "123456 is your WuselWall code" | The code readable from the notification is the fastest path into the app; tracking would contradict NFR-9 |
+| Content | Plain text plus minimal HTML, no images, no tracking pixels, no link tracking (switched off in TEM). **Subject carries the code:** "Dein WuselWall-Code: 123456" / "Your WuselWall code: 123456"; the body shows the code in large type, valid for ten minutes (`supabase/functions/_shared/mail_*.ts`) | The code readable from the notification is the fastest path into the app; tracking would contradict NFR-9 |
 | Language | Per recipient (`locale` from sign-in), via the send-email hook; bilingual GoTrue template where the hook is not running | The localisation rule in [CLAUDE.md](../CLAUDE.md) |
 | How it is sent | The send-email hook (Edge Function) calls TEM's HTTP API (the compose stack runs Edge Functions); GoTrue's SMTP as the fallback, through the stack's `.env`: `SMTP_HOST=smtp.tem.scaleway.com`, `SMTP_PORT=587` (STARTTLS), `SMTP_USER` = the Scaleway project ID, `SMTP_PASS` = the secret key of an IAM application whose only policy is Transactional Email on that project. Throwaway stacks keep Mailpit | One code path, the same one every server release ships |
 | Rate limits | Auth's email limit raised to fit (e.g. 60/hour per project) and per-address resend at most every 60 s | Hosted Supabase's default email limit is meant for testing and fails silently when reached |
 | One provider, no pooling of free tiers | Scaleway alone; a second provider only as a failover, and only after a real outage | Every extra provider is another processor seeing addresses and codes (NFR-9), another SPF/DKIM setup, and splits the sending reputation — to save cents |
 | Self-hosters | Bring their own SMTP; the self-hosting guide names TEM as one option | Their mail, their reputation |
 | Throwaway stacks | Mailpit, as today | The integration tests read the code from it |
+
+**Switching the hook on** (built 2026-10-15; the home server's stack is not yet switched):
+
+1. In Scaleway (the homeserver project), add the sending domain, publish the SPF, DKIM and DMARC
+   records it shows in Cloudflare, and wait for the domain check to pass.
+2. Create an IAM application whose only policy is Transactional Email on that project, and
+   note its secret key and the project ID.
+3. Put the values into the stack's `.env` with `scripts/remote-stack.sh set-env`, never on the
+   command line: `SCW_SECRET_KEY`, `SCW_PROJECT_ID`, and if they differ from the defaults
+   `SCW_REGION` (`fr-par`), `MAIL_FROM` (`noreply@example.org`) and `MAIL_FROM_NAME`
+   (`WuselWall`). A new stack gets them from `supabase/.env` through `make-env.mjs`, which
+   also generates `SEND_EMAIL_HOOK_SECRET` (`v1,whsec_…`, shared by GoTrue and the functions
+   container) and sets `SEND_EMAIL_HOOK_ENABLED=true` when the Scaleway values are present.
+4. Set `SEND_EMAIL_HOOK_ENABLED=true` (if step 3 did not), deploy the function with
+   `scripts/remote-stack.sh functions`, then `scripts/remote-stack.sh up -d auth`.
+5. Check with a code to a Gmail, an Outlook.com, a GMX and an iCloud address, as below.
+
+The hook is the only path that renders the mails in the recipient's language. Stacks that run
+without it (the hook off, or a self-hoster's own SMTP) send GoTrue's own mails, in English;
+`supabase/templates/` holds the bilingual wording for the CLI's `config.toml`, and the compose
+stack has no static host from which GoTrue could load it. A failed send is a 5xx to GoTrue,
+which the app reports as a failed sign-in, so a provider outage is visible to the user rather
+than silent. The function's logs name the mail kind, the locale and the error code, never the
+address or the code.
 
 **Checks, before the first stranger signs up:** a code to a Gmail, an Outlook.com, a GMX
 and an iCloud address. Each lands in the inbox and passes SPF, DKIM and DMARC (visible in
