@@ -10,7 +10,8 @@ import 'package:wuselwall/features/board/ui/board_grid.dart';
 import 'package:wuselwall/features/board/ui/board_next_up.dart';
 
 /// The top line: the clock, the date and calendar week, the "als Nächstes" line, the
-/// freshness marker and the way to settings. Ticks with the clock.
+/// way to settings and, once the connection is lost, the time of the last good board.
+/// Ticks with the clock.
 class BoardHeader extends ConsumerWidget {
   const BoardHeader({required this.frame, required this.snapshot, super.key});
 
@@ -46,8 +47,9 @@ class BoardHeader extends ConsumerWidget {
             softWrap: false,
           ),
           const SizedBox(width: 18),
-          Flexible(
-            flex: 2,
+          // The date keeps its full length; the next-up line gives way instead.
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 380),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,11 +81,11 @@ class BoardHeader extends ConsumerWidget {
             margin: const EdgeInsets.symmetric(horizontal: 22),
             color: ww.line,
           ),
-          Expanded(flex: 4, child: BoardNextUp(frame: frame)),
-          const SizedBox(width: 16),
-          Flexible(
-            child: _Freshness(snapshot: snapshot, now: now),
-          ),
+          Expanded(child: BoardNextUp(frame: frame)),
+          if (_isOutdated(snapshot, now)) ...[
+            const SizedBox(width: 16),
+            Flexible(child: _LastUpdated(snapshot: snapshot)),
+          ],
           IconButton(
             tooltip: context.l10n.settingsTitle,
             constraints: const BoxConstraints.tightFor(width: 56, height: 56),
@@ -135,46 +137,40 @@ class BoardOfflineBanner extends StatelessWidget {
   }
 }
 
-/// "aktualisiert vor 4 s", or, when the connection is lost, the warning and the time of
-/// the last good board (specs/09 "Freshness and failure").
-class _Freshness extends StatelessWidget {
-  const _Freshness({required this.snapshot, required this.now});
+/// Twice the full refetch interval: a board this old has stopped updating even when no
+/// refresh has failed.
+final _outdatedAfter = BoardNotifier.refetchEvery * 2;
+
+bool _isOutdated(BoardSnapshot snapshot, DateTime now) {
+  final fetchedAt = snapshot.fetchedAt;
+  if (fetchedAt == null) return false;
+  return snapshot.isStale || now.difference(fetchedAt) > _outdatedAfter;
+}
+
+/// While the connection is lost, or the board has not been refreshed for a while: the warning and the time of the last good board
+/// (specs/09 "Freshness and failure"). A live board says nothing about its freshness:
+/// "updated 4 s ago" on a board that is always current is only noise.
+class _LastUpdated extends StatelessWidget {
+  const _LastUpdated({required this.snapshot});
 
   final BoardSnapshot snapshot;
-  final DateTime now;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final ww = context.ww;
     final fetchedAt = snapshot.fetchedAt;
     if (fetchedAt == null) return const SizedBox.shrink();
-
-    final String text;
-    final Color color;
-    if (snapshot.isStale) {
-      text = l10n.boardLastUpdatedAt(
-        context.time(TimeOfDay.fromDateTime(fetchedAt)),
-      );
-      color = ww.warning;
-    } else {
-      final seconds = now.difference(fetchedAt).inSeconds.clamp(0, 1 << 30);
-      text = seconds < 60
-          ? l10n.boardUpdatedSecondsAgo(seconds)
-          : l10n.boardUpdatedMinutesAgo(seconds ~/ 60);
-      color = ww.ink3;
-    }
+    final color = context.ww.warning;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (snapshot.isStale) ...[
-          Icon(Icons.cloud_off, size: 26, color: color),
-          const SizedBox(width: 8),
-        ],
+        Icon(Icons.cloud_off, size: 26, color: color),
+        const SizedBox(width: 8),
         Flexible(
           child: Text(
-            text,
+            context.l10n.boardLastUpdatedAt(
+              context.time(TimeOfDay.fromDateTime(fetchedAt)),
+            ),
             style: boardUi(24, weight: FontWeight.w500, color: color),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

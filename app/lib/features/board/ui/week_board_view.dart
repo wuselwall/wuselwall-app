@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/night.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
-import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/ui/board_footer.dart';
 import 'package:wuselwall/features/board/ui/board_geometry.dart';
@@ -17,8 +16,9 @@ import 'package:wuselwall/features/board/ui/kiosk_canvas.dart';
 ///
 /// Seven day columns; every column has the same zones in the same order at the same
 /// height, so the eye reads by position (specs/09 "The rule that makes it readable").
-/// The fixed bands are the header (with the next-up line), the day names, three zone
-/// captions and the footer; the three zones share the rest by flex and never scroll.
+/// The fixed bands are the header (with the next-up line), the day names, the dividers
+/// between the zones and the footer; the three zones share the rest by flex and never
+/// scroll.
 /// There is no narrow-screen variant: the canvas is always [KioskCanvas.designWidth] wide.
 class WeekBoardView extends ConsumerWidget {
   const WeekBoardView({required this.snapshot, super.key});
@@ -44,7 +44,6 @@ class WeekBoardView extends ConsumerWidget {
     );
     final ww = context.ww;
     final scheme = Theme.of(context).colorScheme;
-    final l10n = context.l10n;
     final grounds = [
       for (var i = 0; i < BoardGeometry.dayCount; i++)
         frame.isPast(i)
@@ -73,27 +72,19 @@ class WeekBoardView extends ConsumerWidget {
                       height: DayHeaderRow.heightOf(board),
                       child: DayHeaderRow(frame: frame),
                     ),
-                    BoardCaption(
-                      title: l10n.boardZoneWhere,
-                      hint: l10n.boardZoneWhereHint,
-                    ),
-                    // Two units per member, so a household of four gets rows tall
+                    const BoardDivider(),
+                    // Four units per member, so a household of four gets rows tall
                     // enough for two lines at 1280×800 (school span over its notes,
                     // band over its times); larger households fall back to one line.
+                    // The day parts and the meal get the heights their two-line
+                    // layouts need at that size too.
                     Expanded(
                       flex: 4 * board.members.length.clamp(1, 8),
                       child: PresenceRows(frame: frame),
                     ),
-                    BoardCaption(
-                      title: l10n.boardZoneEvents,
-                      hint: l10n.boardZoneEventsHint,
-                      trailing: const BoardAllEventsToggle(),
-                    ),
+                    const BoardDivider(trailing: BoardAllEventsToggle()),
                     Expanded(flex: 11, child: TermineRows(frame: frame)),
-                    BoardCaption(
-                      title: l10n.boardZoneMeal,
-                      hint: l10n.boardZoneMealHint,
-                    ),
+                    const BoardDivider(),
                     Expanded(flex: 8, child: MealRow(frame: frame)),
                   ],
                 ),

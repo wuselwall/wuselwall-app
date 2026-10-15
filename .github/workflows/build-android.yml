@@ -1,7 +1,9 @@
 # A signed APK for the family's Android devices, installed by hand until the Play
 # internal track exists (specs/16, step 7). scripts/deploy-apk.sh publishes it at
-# https://wuselwall.app/download/wuselwall.apk. A tag v*.*.* builds it, like
-# release-mobile.yml; "Run workflow" builds the pubspec version from any branch.
+# https://wuselwall.app/download/wuselwall.apk. The same run builds the App Bundle (.aab)
+# that Play Console takes, uploaded by hand until release-mobile.yml has an Android job.
+# A tag v*.*.* builds both, like release-mobile.yml; "Run workflow" builds the pubspec
+# version from any branch.
 name: build-android
 on:
   workflow_dispatch:
@@ -15,7 +17,7 @@ permissions:
 
 jobs:
   apk:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, build]
     defaults: { run: { working-directory: app } }
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -49,12 +51,15 @@ jobs:
       - run: |
           args=(--build-number=${{ github.run_number }})
           if [[ "$GITHUB_REF_TYPE" == tag ]]; then args+=(--build-name="${GITHUB_REF_NAME#v}"); fi
-          flutter build apk --release "${args[@]}" --dart-define-from-file=env/dev.json \
-            --dart-define=WW_FIRST_PARTY_HOSTS="$FIRST_PARTY_HOSTS"
+          for target in apk appbundle; do
+            flutter build "$target" --release "${args[@]}" --dart-define-from-file=env/dev.json \
+              --dart-define=WW_FIRST_PARTY_HOSTS="$FIRST_PARTY_HOSTS"
+          done
         env:
           FIRST_PARTY_HOSTS: ${{ secrets.WW_FIRST_PARTY_HOSTS }}
       - run: |
           mv build/app/outputs/flutter-apk/app-release.apk build/wuselwall.apk
+          mv build/app/outputs/bundle/release/app-release.aab build/wuselwall.aab
           # The signature Android checks on every update — must never change. apksigner,
           # because the APK carries only the v2/v3 scheme, which keytool cannot read.
           apksigner=$(ls -d "$ANDROID_HOME"/build-tools/*/ | sort -V | tail -1)apksigner
@@ -63,4 +68,9 @@ jobs:
         with:
           name: wuselwall-apk
           path: app/build/wuselwall.apk
+          retention-days: 30
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: wuselwall-aab
+          path: app/build/wuselwall.aab
           retention-days: 30
