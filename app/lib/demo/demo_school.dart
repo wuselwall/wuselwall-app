@@ -1,5 +1,6 @@
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/demo/demo_data.dart';
+import 'package:wuselwall/demo/demo_english.dart';
 import 'package:wuselwall/features/school/data/school_repository.dart';
 import 'package:wuselwall/features/school/domain/school_models.dart';
 
@@ -25,7 +26,7 @@ class DemoSchoolRepository implements SchoolRepository {
         'on_date': _dateOfWeekday(e.$2),
         'period_index': e.$3,
         'kind': e.$4,
-        'note': e.$5,
+        'note': demoText(e.$5),
       },
   ];
 
@@ -33,11 +34,11 @@ class DemoSchoolRepository implements SchoolRepository {
     for (final e in _subjectCodes.entries)
       {
         'id': _subjectId(e.key),
-        'name': e.value,
-        'short_name': e.key,
+        'name': demoText(e.value),
+        'short_name': demoShort(e.key),
         'tint': _tints[e.key] ?? 'stone',
         'icon_key': _icons[e.key],
-        'equipment_note': _equipment[e.key],
+        'equipment_note': demoTextOrNull(_equipment[e.key]),
         'notable_default': _notable.containsKey(e.key),
       },
   ];
@@ -62,7 +63,7 @@ class DemoSchoolRepository implements SchoolRepository {
     for (final p in _plans)
       {
         'id': p.schoolId,
-        'name': p.school,
+        'name': demoText(p.school),
         'state_code': 'DE-BE',
         'region_code': 'DE-BE',
         'timezone': 'Europe/Berlin',
@@ -86,7 +87,7 @@ class DemoSchoolRepository implements SchoolRepository {
       {
         'id': 'term-${p.member}',
         'school_id': p.schoolId,
-        'name': 'Schuljahr 2026/27',
+        'name': demoText('Schuljahr 2026/27'),
         'starts_on': '2026-08-01',
         'ends_on': '2027-07-31',
         'ab_anchor_week': null,
@@ -101,7 +102,7 @@ class DemoSchoolRepository implements SchoolRepository {
         'profile_id': p.member,
         'school_id': p.schoolId,
         'term_id': 'term-${p.member}',
-        'class_label': p.klasse,
+        'class_label': demoText(p.klasse),
         'week_cycle': 'weekly',
         'valid_from': '2026-08-01',
         'valid_to': null,
@@ -124,7 +125,7 @@ class DemoSchoolRepository implements SchoolRepository {
               'kind': 'lesson',
               'title': null,
               'teacher': null,
-              'room': p.rooms[p.grid[d][i]],
+              'room': demoTextOrNull(p.rooms[p.grid[d][i]]),
               'week_parity': 'all',
               'is_notable': _notable.containsKey(p.grid[d][i]),
               'note': null,
@@ -140,7 +141,7 @@ class DemoSchoolRepository implements SchoolRepository {
           'ends_at': e.value,
           'subject_id': null,
           'kind': 'care',
-          'title': 'Hort',
+          'title': demoText('Hort'),
           'week_parity': 'all',
           'is_notable': false,
         },
@@ -215,8 +216,8 @@ class DemoSchoolRepository implements SchoolRepository {
           for (final p in _plans)
             {
               'member_id': p.member,
-              'class_label': p.klasse,
-              'school_name': p.school,
+              'class_label': demoText(p.klasse),
+              'school_name': demoText(p.school),
               'periods': _periods(),
             },
         ],
@@ -242,8 +243,8 @@ class DemoSchoolRepository implements SchoolRepository {
       if (code == null) continue;
       final (from, to) = _bells[period - 1];
       final notableName = _notable[code];
-      if (notableName != null && !notable.contains(notableName)) {
-        notable.add(notableName);
+      if (notableName != null && !notable.contains(demoText(notableName))) {
+        notable.add(demoText(notableName));
       }
       var status = 'normal';
       String? note;
@@ -257,15 +258,15 @@ class DemoSchoolRepository implements SchoolRepository {
         'period': period,
         'starts': from,
         'ends': to,
-        'subject': _subjectCodes[code] ?? code,
-        'short': code,
-        'room': plan.rooms[code],
+        'subject': demoText(_subjectCodes[code] ?? code),
+        'short': demoShort(code),
+        'room': demoTextOrNull(plan.rooms[code]),
         'tint': _tints[code],
         'kind': 'lesson',
         'status': status,
-        'note': note,
+        'note': demoTextOrNull(note),
         'notable': notableName != null,
-        'equipment': _equipment[code],
+        'equipment': demoTextOrNull(_equipment[code]),
       });
     }
     final hort = plan.hort[weekday - 1];
@@ -274,7 +275,7 @@ class DemoSchoolRepository implements SchoolRepository {
         'period': null,
         'starts': lessons.last['ends'],
         'ends': hort,
-        'subject': 'Hort',
+        'subject': demoText('Hort'),
         'kind': 'care',
         'status': 'normal',
         'notable': false,
@@ -289,7 +290,7 @@ class DemoSchoolRepository implements SchoolRepository {
       )['ends'],
       'notable': notable,
       'care_until': hort,
-      'care_label': hort == null ? null : 'Hort',
+      'care_label': hort == null ? null : demoText('Hort'),
       'lessons': lessons,
     };
   }
@@ -440,7 +441,7 @@ class _Plan {
 
 const _plans = [
   _Plan(
-    member: DemoData.lotta,
+    member: DemoData.daughter,
     klasse: '5a',
     school: 'Gemeinschaftsschule am Park',
     schoolId: 'school-park',
@@ -454,7 +455,7 @@ const _plans = [
     rooms: {'Sp': 'Turnhalle', 'BK': 'Kunstraum', 'NaWi': 'NaWi-Raum'},
   ),
   _Plan(
-    member: DemoData.hanna,
+    member: DemoData.son,
     klasse: 'SAPh E',
     school: 'Grundschule Lindenhof',
     schoolId: 'school-lindenhof',
@@ -472,8 +473,8 @@ const _plans = [
 
 /// Lesson changes: (member, day index, period, status, note).
 const _exceptionSeeds = [
-  (DemoData.lotta, 2, 3, 'substituted', 'Frau Klein'),
-  (DemoData.lotta, 4, 6, 'cancelled', 'fällt aus'),
+  (DemoData.daughter, 2, 3, 'substituted', 'Frau Klein'),
+  (DemoData.daughter, 4, 6, 'cancelled', 'fällt aus'),
 ];
 
 const _subjectCodes = {

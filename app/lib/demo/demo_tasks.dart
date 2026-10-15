@@ -1,12 +1,13 @@
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/demo/demo_data.dart';
+import 'package:wuselwall/demo/demo_english.dart';
 import 'package:wuselwall/features/tasks/data/tasks_repository.dart';
 import 'package:wuselwall/features/tasks/domain/tasks_models.dart';
 
 /// In-memory tasks for the user documentation's screenshots (`lib/main_demo.dart`).
-/// The starter chores of specs/21 for Lotta and Hanna, a few ticks already made, the
-/// ledger their balances come from, two rewards and one request waiting for Lukas.
+/// The starter chores of specs/21 for the two children, a few ticks already made, the
+/// ledger their balances come from, two rewards and one request waiting for their father.
 /// Writes change the same state, so the screens behave as on a real device.
 class DemoTasksRepository implements TasksRepository {
   DemoTasksRepository({DateTime Function()? clock})
@@ -31,18 +32,18 @@ class DemoTasksRepository implements TasksRepository {
   DateTime _day(int offset) => _today.add(Duration(days: offset));
 
   void _seed() {
-    final lotta = DemoData.lotta;
-    final hanna = DemoData.hanna;
+    final daughter = DemoData.daughter;
+    final son = DemoData.son;
 
     final table = TaskDefinition(
       id: 'd-table',
-      title: 'Tisch decken',
+      title: demoText('Tisch decken'),
       kind: TaskKind.duty,
       points: 1,
       startsOn: _day(-30),
       windowDays: 1,
       assignment: TaskAssignment.rotating,
-      assigneeIds: [lotta, hanna],
+      assigneeIds: [daughter, son],
       requiresVerification: false,
       isActive: true,
       iconKey: 'table',
@@ -50,13 +51,13 @@ class DemoTasksRepository implements TasksRepository {
     );
     final dishes = TaskDefinition(
       id: 'd-dishes',
-      title: 'Spülmaschine ausräumen',
+      title: demoText('Spülmaschine ausräumen'),
       kind: TaskKind.duty,
       points: 1,
       startsOn: _day(-30),
       windowDays: 1,
       assignment: TaskAssignment.rotating,
-      assigneeIds: [hanna, lotta],
+      assigneeIds: [son, daughter],
       requiresVerification: false,
       isActive: true,
       iconKey: 'dishes',
@@ -64,13 +65,13 @@ class DemoTasksRepository implements TasksRepository {
     );
     final room = TaskDefinition(
       id: 'd-room',
-      title: 'Zimmer aufräumen',
+      title: demoText('Zimmer aufräumen'),
       kind: TaskKind.duty,
       points: 2,
       startsOn: _day(-60),
       windowDays: 1,
       assignment: TaskAssignment.each,
-      assigneeIds: [lotta, hanna],
+      assigneeIds: [daughter, son],
       requiresVerification: true,
       isActive: true,
       iconKey: 'bed',
@@ -78,7 +79,7 @@ class DemoTasksRepository implements TasksRepository {
     );
     final trash = TaskDefinition(
       id: 'd-trash',
-      title: 'Müll rausbringen',
+      title: demoText('Müll rausbringen'),
       kind: TaskKind.bonus,
       points: 5,
       startsOn: _day(-14),
@@ -92,7 +93,7 @@ class DemoTasksRepository implements TasksRepository {
     );
     final cooking = TaskDefinition(
       id: 'd-cooking',
-      title: 'Beim Kochen helfen',
+      title: demoText('Beim Kochen helfen'),
       kind: TaskKind.bonus,
       points: 8,
       startsOn: _day(-14),
@@ -137,46 +138,46 @@ class DemoTasksRepository implements TasksRepository {
       instance(
         'i-table',
         table,
-        assignee: lotta,
+        assignee: daughter,
         status: InstanceStatus.done,
         count: 1,
-        by: lotta,
+        by: daughter,
         at: DateTime(now.year, now.month, now.day, 7, 40),
       ),
-      instance('i-dishes', dishes, assignee: hanna),
+      instance('i-dishes', dishes, assignee: son),
       instance(
-        'i-room-lotta',
+        'i-room-daughter',
         room,
-        assignee: lotta,
+        assignee: daughter,
         status: InstanceStatus.done,
         count: 1,
-        by: lotta,
+        by: daughter,
         at: DateTime(now.year, now.month, now.day, 9, 5),
       ),
-      instance('i-room-hanna', room, assignee: hanna),
+      instance('i-room-son', room, assignee: son),
       instance('i-trash', trash),
       instance(
         'i-cooking',
         cooking,
-        assignee: hanna,
+        assignee: son,
         status: InstanceStatus.done,
         count: 1,
-        by: hanna,
+        by: son,
         at: DateTime(now.year, now.month, now.day, 8, 15),
       ),
     ]);
 
     _ledger.addAll([
       for (final (i, row) in [
-        (lotta, 2, 'task', 'Tisch decken'),
-        (hanna, 8, 'task', 'Beim Kochen helfen'),
-        (lotta, 5, 'task', 'Müll rausbringen'),
-        (hanna, 5, 'bonus', 'Hilfe beim Einkaufen'),
-        (lotta, 2, 'task', 'Zimmer aufräumen'),
-        (hanna, 2, 'task', 'Zimmer aufräumen'),
-        (lotta, 1, 'task', 'Spülmaschine'),
-        (hanna, 1, 'task', 'Tisch decken'),
-        (lotta, 2, 'task', 'Tisch decken'),
+        (daughter, 2, 'task', demoText('Tisch decken')),
+        (son, 8, 'task', demoText('Beim Kochen helfen')),
+        (daughter, 5, 'task', demoText('Müll rausbringen')),
+        (son, 5, 'bonus', demoText('Hilfe beim Einkaufen')),
+        (daughter, 2, 'task', demoText('Zimmer aufräumen')),
+        (son, 2, 'task', demoText('Zimmer aufräumen')),
+        (daughter, 1, 'task', demoText('Spülmaschine')),
+        (son, 1, 'task', demoText('Tisch decken')),
+        (daughter, 2, 'task', demoText('Tisch decken')),
       ].indexed)
         PointTransaction(
           id: 'pt-$i',
@@ -192,18 +193,18 @@ class DemoTasksRepository implements TasksRepository {
     _ledger.add(
       PointTransaction(
         id: 'pt-adj',
-        profileId: hanna,
+        profileId: son,
         occurredAt: _today.subtract(const Duration(days: 2)),
         amount: 5,
         reason: LedgerReason.adjustment,
-        note: 'Nachtrag vom Wochenende',
+        note: demoText('Nachtrag vom Wochenende'),
       ),
     );
 
-    _rewards.addAll(const [
+    _rewards.addAll([
       Reward(
         id: 'r-movie',
-        title: 'Samstagsfilm aussuchen',
+        title: demoText('Samstagsfilm aussuchen'),
         costPoints: 5,
         requiresApproval: true,
         isActive: true,
@@ -211,7 +212,7 @@ class DemoTasksRepository implements TasksRepository {
       ),
       Reward(
         id: 'r-late',
-        title: '15 Minuten länger aufbleiben',
+        title: demoText('15 Minuten länger aufbleiben'),
         costPoints: 15,
         requiresApproval: true,
         isActive: true,
@@ -222,7 +223,7 @@ class DemoTasksRepository implements TasksRepository {
       _requested(
         id: 'rd-1',
         rewardId: 'r-movie',
-        profileId: hanna,
+        profileId: son,
         cost: 5,
         at: now.subtract(const Duration(hours: 3)),
       ),
@@ -230,13 +231,13 @@ class DemoTasksRepository implements TasksRepository {
 
     _streaks.addAll([
       const Streak(
-        profileId: DemoData.lotta,
+        profileId: DemoData.daughter,
         definitionId: 'd-table',
         currentLength: 5,
         longestLength: 9,
       ),
       const Streak(
-        profileId: DemoData.hanna,
+        profileId: DemoData.son,
         definitionId: 'd-cooking',
         currentLength: 3,
         longestLength: 3,
