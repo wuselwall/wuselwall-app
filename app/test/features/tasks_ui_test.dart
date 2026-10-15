@@ -248,6 +248,26 @@ void main() {
       });
     });
 
+    testWidgets('the approvals badge sits beside the label, not on it', (
+      t,
+    ) async {
+      final api = FakeTasksApi(
+        tables: {'task_instances': pending, ...requests},
+      );
+      await pumpTasks(t, api);
+
+      final label = t.getRect(
+        find.descendant(
+          of: find.byType(TabBar),
+          matching: find.text('Freigaben'),
+        ),
+      );
+      final badge = t.getRect(
+        find.descendant(of: find.byType(TabBar), matching: find.byType(Badge)),
+      );
+      expect(label.overlaps(badge), isFalse);
+    });
+
     testWidgets('a declined reward request carries the note to reward_decide', (
       t,
     ) async {

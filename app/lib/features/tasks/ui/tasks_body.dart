@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/features/tasks/application/tasks_providers.dart';
 import 'package:wuselwall/features/tasks/ui/tasks_approvals_tab.dart';
@@ -30,13 +31,11 @@ class TasksBody extends ConsumerWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    if (approvals > 0)
-                      Badge.count(
-                        count: approvals,
-                        child: Text(l10n.tasksTabApprovals),
-                      )
-                    else
-                      Text(l10n.tasksTabApprovals),
+                    Text(l10n.tasksTabApprovals),
+                    if (approvals > 0) ...[
+                      const SizedBox(width: Tokens.space2),
+                      Badge.count(count: approvals),
+                    ],
                   ],
                 ),
               ),
