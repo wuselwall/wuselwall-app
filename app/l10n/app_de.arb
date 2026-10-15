@@ -1555,5 +1555,44 @@
   "inviteShareAgain": "Erneut teilen",
   "inviteWithdraw": "Zurückziehen",
   "inviteWithdrawn": "Einladung zurückgezogen.",
-  "inviteScanTitle": "Einladung scannen"
+  "inviteScanTitle": "Einladung scannen",
+  "accountDeleteTile": "Konto löschen",
+  "accountDeleteExplain": "Dein Konto und seine Anmeldemethoden werden gelöscht, und du wirst überall abgemeldet. Dein Profil bleibt mit allem, was du getan hast, in der Familie. Der Apple-Zugriff wird widerrufen.",
+  "accountDeleteBlocked": "Du bist die letzte Elternperson mit Konto in dieser Familie. Lade zuerst eine zweite erwachsene Person ein oder lösche die Familie.",
+  "accountDeleteDialogTitle": "Konto löschen?",
+  "accountDeleteDialogBody": "Das lässt sich nicht rückgängig machen. Deine Anmeldung wird entfernt, und dein Profil bleibt in der Familie.",
+  "accountDeleteConfirm": "Konto löschen",
+  "accountDeleteRefused": "Das Konto konnte nicht gelöscht werden. Versuch es später noch einmal.",
+  "accountDeleteReauthTitle": "Bitte bestätige, dass du es bist",
+  "accountDeleteReauthBody": "Zum Löschen brauchen wir eine frische Anmeldung. Wir schicken einen Code an {email}.",
+  "@accountDeleteReauthBody": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "accountDeleteReauthSend": "Code senden",
+  "accountDeleteReauthCodeLabel": "Code aus der E-Mail",
+  "accountDeleteReauthConfirm": "Bestätigen",
+  "accountDeleteReauthSignInAgain": "Melde dich zuerst neu an, dann kannst du das Konto löschen.",
+  "mfaResetAction": "Zwei-Faktor zurücksetzen",
+  "mfaResetConfirmTitle": "Zwei-Faktor zurücksetzen?",
+  "mfaResetConfirmBody": "{name} kann sich danach ohne zweiten Faktor anmelden und ihn neu einrichten.",
+  "@mfaResetConfirmBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "mfaResetConfirm": "Zurücksetzen",
+  "mfaResetDone": "Der zweite Faktor von {name} ist zurückgesetzt.",
+  "@mfaResetDone": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

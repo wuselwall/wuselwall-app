@@ -151,6 +151,16 @@ const out = {
   GOOGLE_CLIENT_IDS: vars.WW_GOOGLE_CLIENT_IDS ?? '',
   GOOGLE_CLIENT_SECRET: vars.WW_GOOGLE_CLIENT_SECRET ?? '',
 
+  // Sign in with Apple, server side (supabase/functions/apple-token, account-delete). The key
+  // (.p8) is kept on one line with \n for its line breaks. APPLE_TOKEN_KEY is generated here,
+  // once, with the stack: the stored Apple refresh tokens are encrypted with it and cannot be
+  // read back with another key.
+  APPLE_TEAM_ID: vars.WW_APPLE_TEAM_ID ?? '',
+  APPLE_KEY_ID: vars.WW_APPLE_KEY_ID ?? '',
+  APPLE_PRIVATE_KEY: (vars.WW_APPLE_PRIVATE_KEY ?? '').replace(/\n/g, '\\n'),
+  APPLE_CLIENT_ID: vars.WW_APPLE_BUNDLE_ID ?? '',
+  APPLE_TOKEN_KEY: b64(32),
+
   // Mail: the Send Email Hook (supabase/functions/send-email). The secret is generated like the
   // others and must be the same value in GoTrue and in the functions container, which this file
   // guarantees by writing one variable for both. The hook is switched on only when the Scaleway

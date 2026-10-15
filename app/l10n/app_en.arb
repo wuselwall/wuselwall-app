@@ -2186,5 +2186,44 @@
   "inviteShareAgain": "Share again",
   "inviteWithdraw": "Withdraw",
   "inviteWithdrawn": "Invitation withdrawn.",
-  "inviteScanTitle": "Scan invitation"
+  "inviteScanTitle": "Scan invitation",
+  "accountDeleteTile": "Delete account",
+  "accountDeleteExplain": "Your account and its sign-in methods are deleted, and you are signed out everywhere. Your profile stays in the family with its history. Apple access is revoked.",
+  "accountDeleteBlocked": "You are the last guardian with an account in this family. Invite a second adult first, or delete the family.",
+  "accountDeleteDialogTitle": "Delete account?",
+  "accountDeleteDialogBody": "This cannot be undone. Your sign-in is removed, and your profile stays in the family.",
+  "accountDeleteConfirm": "Delete account",
+  "accountDeleteRefused": "The account could not be deleted. Try again later.",
+  "accountDeleteReauthTitle": "Please confirm it is you",
+  "accountDeleteReauthBody": "Deleting an account needs a fresh sign-in. We send a code to {email}.",
+  "@accountDeleteReauthBody": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "accountDeleteReauthSend": "Send code",
+  "accountDeleteReauthCodeLabel": "Code from the email",
+  "accountDeleteReauthConfirm": "Confirm",
+  "accountDeleteReauthSignInAgain": "Sign in again first, then you can delete the account.",
+  "mfaResetAction": "Reset two-factor",
+  "mfaResetConfirmTitle": "Reset two-factor?",
+  "mfaResetConfirmBody": "{name} can sign in without a second factor afterwards and set it up again.",
+  "@mfaResetConfirmBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "mfaResetConfirm": "Reset",
+  "mfaResetDone": "{name}'s second factor is reset.",
+  "@mfaResetDone": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

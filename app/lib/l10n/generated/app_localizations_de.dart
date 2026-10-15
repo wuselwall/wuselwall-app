@@ -3937,4 +3937,69 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get inviteScanTitle => 'Einladung scannen';
+
+  @override
+  String get accountDeleteTile => 'Konto löschen';
+
+  @override
+  String get accountDeleteExplain =>
+      'Dein Konto und seine Anmeldemethoden werden gelöscht, und du wirst überall abgemeldet. Dein Profil bleibt mit allem, was du getan hast, in der Familie. Der Apple-Zugriff wird widerrufen.';
+
+  @override
+  String get accountDeleteBlocked =>
+      'Du bist die letzte Elternperson mit Konto in dieser Familie. Lade zuerst eine zweite erwachsene Person ein oder lösche die Familie.';
+
+  @override
+  String get accountDeleteDialogTitle => 'Konto löschen?';
+
+  @override
+  String get accountDeleteDialogBody =>
+      'Das lässt sich nicht rückgängig machen. Deine Anmeldung wird entfernt, und dein Profil bleibt in der Familie.';
+
+  @override
+  String get accountDeleteConfirm => 'Konto löschen';
+
+  @override
+  String get accountDeleteRefused =>
+      'Das Konto konnte nicht gelöscht werden. Versuch es später noch einmal.';
+
+  @override
+  String get accountDeleteReauthTitle => 'Bitte bestätige, dass du es bist';
+
+  @override
+  String accountDeleteReauthBody(String email) {
+    return 'Zum Löschen brauchen wir eine frische Anmeldung. Wir schicken einen Code an $email.';
+  }
+
+  @override
+  String get accountDeleteReauthSend => 'Code senden';
+
+  @override
+  String get accountDeleteReauthCodeLabel => 'Code aus der E-Mail';
+
+  @override
+  String get accountDeleteReauthConfirm => 'Bestätigen';
+
+  @override
+  String get accountDeleteReauthSignInAgain =>
+      'Melde dich zuerst neu an, dann kannst du das Konto löschen.';
+
+  @override
+  String get mfaResetAction => 'Zwei-Faktor zurücksetzen';
+
+  @override
+  String get mfaResetConfirmTitle => 'Zwei-Faktor zurücksetzen?';
+
+  @override
+  String mfaResetConfirmBody(String name) {
+    return '$name kann sich danach ohne zweiten Faktor anmelden und ihn neu einrichten.';
+  }
+
+  @override
+  String get mfaResetConfirm => 'Zurücksetzen';
+
+  @override
+  String mfaResetDone(String name) {
+    return 'Der zweite Faktor von $name ist zurückgesetzt.';
+  }
 }
