@@ -9,7 +9,7 @@
 #                         Functions, the web app; stack/.env and stack/volumes/db/data are
 #                         created here and never shipped
 #     migrations/         supabase/migrations
-#     jobs/schedule.sql   the two scheduled jobs (pg_cron)
+#     jobs/schedule.sql   the scheduled jobs (pg_cron)
 #     backup/             backup.sh
 #
 # Commands:

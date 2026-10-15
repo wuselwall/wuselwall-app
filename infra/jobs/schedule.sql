@@ -1,4 +1,4 @@
--- Schedules WuselWall's two jobs inside the database, with pg_cron and pg_net, so a
+-- Schedules WuselWall's three jobs inside the database, with pg_cron and pg_net, so a
 -- server needs no cron on its host (docs/server). The same file serves the compose stack
 -- and a hosted Supabase project; only the two variables differ:
 --
@@ -40,5 +40,15 @@ select cron.schedule('wuselwall-holidays-sync', '0 3 * * 1', format($job$
     body := '{}'::jsonb,
     timeout_milliseconds := 300000)
 $job$, :'functions_url' || '/holidays-sync', :'cron_secret'));
+
+-- Every hour: the households' subscribed calendars (FR-1.9), at most 20 feeds per run, each
+-- fetched from the internet by the function. 20 feeds at 15 seconds is the worst case.
+select cron.schedule('wuselwall-calendar-import', '0 * * * *', format($job$
+  select net.http_post(
+    url := %L,
+    headers := jsonb_build_object('content-type', 'application/json', 'x-cron-secret', %L),
+    body := '{}'::jsonb,
+    timeout_milliseconds := 900000)
+$job$, :'functions_url' || '/calendar-import', :'cron_secret'));
 
 select jobname, schedule from cron.job where jobname like 'wuselwall-%' order by jobname;

@@ -86,9 +86,9 @@ family name, the founder's own name, the other members, with timezone and locale
 device. This spec adds **nothing to ask** there, only three rules:
 
 1. Everything not asked starts at its curated default and is changed under Einstellungen.
-2. **Region** (`household.region`) is not asked at creation. It only drives school
-   holidays, so it is asked when the first school is added, with the country prefilled
-   from the device locale.
+2. **Region** (`household.region`) is not asked at creation. It drives the school holidays
+   and the public holidays, so it is asked when the first school is added, with the country
+   prefilled from the device locale.
 3. J1's starter examples are the **starter content** below, each set on by default and
    removable: shopping lists with categories, starter chores, starter rewards, starter
    badges. The subject list is offered when the first school is added.
@@ -104,7 +104,7 @@ belongs to; *self* means a member may change it for themselves.
 
 | Key | Scope | Default | Range | Context | Source |
 |---|---|---|---|---|---|
-| `household.region` | household | asked with the first school, country from the device | ISO 3166-2 | Proposes the timezone; picks the holiday feed in M2. Hand-entered holidays work in any region | Q18 |
+| `household.region` | household | asked with the first school, country from the device | region picker: any OpenHolidays subdivision (`DE-BE`, `AT-9`, `CH-ZH-ZH-ZH`, `LI`) | Proposes the timezone; the public holidays of the region apply automatically, and Ferien are imported from it. Changeable under Einstellungen. Hand-entered holidays work in any region. *Decided 2026-10-14* | Q18 |
 | `board.member_label` | household | full name | name · initial | The kitchen is private, and a name is easier to read than an initial at two metres. A household with frequent visitors may prefer initials | Q27 |
 | `member.completion_sound` | member, self | on | on · off | Ticking a chore off makes a short sound. The sound is part of the motivation for a young child; a child may switch it off | [06](06-module-tasks.md#screens) |
 
@@ -159,9 +159,19 @@ Turning any of these on is one deliberate checkbox on that token
 
 - A **bell-time template**: 45-minute Stunden from 08:00, a 20-minute break after the
   2nd and the 4th, 5 minutes otherwise. Edited to match the school's sheet.
-- A **subject list** (German school subjects) with colours and icons:
-  - Deutsch, Mathematik, Sachunterricht, Englisch, Musik, Kunst, Religion/Ethik;
-  - Sport and Schwimmen, which are notable by default and carry an equipment note.
+- A **subject list** with colours and icons, following the school's country (*added 2026-10-14*):
+  - **Germany** (and any country without a list of its own): Deutsch, Mathematik,
+    Sachunterricht, Englisch, Musik, Kunst, Religion/Ethik;
+    Sport and Schwimmen, which are notable by default and carry an equipment note;
+  - **Austria**: Deutsch, Mathematik, Sachunterricht, Englisch, Bildnerische Erziehung,
+    Musikerziehung, Bewegung und Sport (notable, Sportsachen), Technisches und textiles Werken,
+    Religion;
+  - **Switzerland and Liechtenstein** (Lehrplan 21 fields): Deutsch, Mathematik,
+    Natur, Mensch, Gesellschaft, Englisch, Französisch, Bildnerisches Gestalten, Textiles und
+    Technisches Gestalten, Musik, Bewegung und Sport (notable, Sportsachen), Medien und
+    Informatik.
+  The list is written only into an empty subject list, and the family renames or removes
+  any of it. Starter content is example data, not a rule of the module.
 - A new timetable is `weekly`. A/B weeks are switched on per timetable.
 - Hort and Betreuung are `care` rows on the timetable, not presence entries (Q22,
   decided).
@@ -174,6 +184,8 @@ Turning any of these on is one deliberate checkbox on that token
 | `meals.warm_meal.free_day` | household | lunch | lunch · dinner | Weekends and holidays | FR-8.4 |
 | `meals.away_means_not_eating` | household | on | on · off | `travel` or `away` presence over the meal's slot marks that member as not eating, so most days need no input | [07](07-module-meals-shopping.md#views) |
 | `meals.care_lunch_cutoff` | household | 14:00 | time | A child whose care row runs past this time is out for lunch | [07](07-module-meals-shopping.md#views) |
+
+*Added 2026-10-14, no new setting:* a public holiday of the household's region counts as a free day for the warm meal (`meals.warm_meal.free_day`), and the meal suggestions ("Oft bei uns", "Lange nicht gegessen", after 90 and 60 days) need no setting either.
 
 ### Shopping
 

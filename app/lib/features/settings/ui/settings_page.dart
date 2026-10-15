@@ -68,6 +68,13 @@ class SettingsPage extends ConsumerWidget {
             onTap: () => context.go(Routes.feedTokens),
           ),
           ListTile(
+            leading: const Icon(Icons.cloud_download_outlined),
+            title: Text(l10n.extCalTitle),
+            subtitle: Text(l10n.extCalSettingsSubtitle),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.go(Routes.externalCalendars),
+          ),
+          ListTile(
             leading: const Icon(Icons.home_outlined),
             title: Text(l10n.baselineTitle),
             subtitle: Text(l10n.baselineSettingsSubtitle),

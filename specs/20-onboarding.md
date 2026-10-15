@@ -404,7 +404,7 @@ anyway.
 | **Konto löschen** | Einstellungen → Konto; any adult; recent sign-in (≤ 5 min, else sign in again) | The Auth user and all its sessions are deleted; its personal devices are revoked. The **profile stays** as a non-account family member, with its history, unless also removed. Sign in with Apple tokens are revoked with Apple. The last guardian *with an account* cannot do this while other members exist: they delete the household or hand over first |
 | **Familie verlassen** | Einstellungen → Konto; any adult who is not the last guardian | The account is unlinked from the profile; the account remains and can start or join another family |
 | **Familie löschen** | Einstellungen → Familie; a guardian on a personal device; recent sign-in; type the family's name | Every device is signed out at once and the household is marked deleted. **Purged after 14 days** by a job; until then any of its guardians can sign in and choose *Wiederherstellen*. Backups age out within their retention, which the privacy policy states |
-| **Daten exportieren** | Einstellungen → Familie; guardian | A JSON file of the household's data (GDPR Art. 20). Required before the opening gate, not before |
+| **Daten exportieren** | Einstellungen → Familie; guardian on a personal device | A JSON file of the household's data (GDPR Art. 20). Built 2026-10-14: secrets (PIN and password hashes, token hashes, Auth ids) and technical bookkeeping are left out, devices appear by label only. Required before the opening gate, not before |
 
 Google Play additionally requires a **web page** explaining how to request deletion. It
 lives on the same small site as the invitation landing page.
@@ -425,11 +425,21 @@ the work.
 | Erinnerungen einschalten | Push is built | This device has a push token | Per device |
 | Kalender abonnieren (Outlook, iPhone) | The ICS feed is built (M1.3a) | A feed token exists | Household |
 | Schneller anmelden mit Passkey | Passkeys verified on this platform | The account has a passkey | Per account |
+| Stundenplan eintragen | A child profile exists | A school and a timetable exist (added 2026-10-14) | Household |
 
-- At most four items at a time, with progress ("2 von 4"). Each item can be dismissed
-  ("Brauchen wir nicht"); the card disappears when everything is done or dismissed and
-  returns from Einstellungen → Erste Schritte.
+*Built 2026-10-14 on `feature/regions-and-ux`, not yet on the server:* the card with the
+items above except reminders and passkey, which wait for their features. Stundenplan
+eintragen is the extra item: a family with a child in school wants the timetable in the
+calendar, and the card says so in the adult's words.
+
+- Progress counts every shown item, done or open ("2 von 6"). At most four open items are
+  listed at a time; done items stay in the list. Each item can be dismissed ("Brauchen wir
+  nicht"). The household-wide items are dismissed for everyone; "Eltern-PIN festlegen" only
+  for the guardian who dismissed it. The card disappears when everything shown is done or
+  dismissed, and returns from Einstellungen → Erste Schritte, which restores every dismissal
+  of the household and of that guardian.
 - Items appear only when their feature exists, so the card grows with the roadmap.
+- Only a guardian on a personal or shared device sees the card; members and kiosks get none.
 - The push-permission rule from [09](09-clients-and-ux.md) holds: the system prompt
   appears only after a tap on *Erinnerungen einschalten*, never at first launch.
 

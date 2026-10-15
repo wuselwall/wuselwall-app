@@ -32,3 +32,17 @@ On your own phone you can also sign out yourself with **Sign out this device**.
 This shows which server the app talks to, with its **QR code**. A new device scans it at the question **Which server?** and is then connected to the same server.
 
 You only need **Change server** when your family moves to another server. The device signs out and forgets everything stored on it, including shopping it could not send yet. On shared devices WuselWall asks for a guardian's PIN first.
+
+## Exporting your data
+
+Guardians can save all of your family's data as one file, for example for a move to another server. You find it at the bottom of the settings, in the **Family** area, with **Export data**. It works only from a guardian's own phone.
+
+The file contains what you entered: members, appointments, timetables, chores, recipes, shopping lists and so on. Passwords, PINs and sign-in data are **not** included, and devices appear only with their name and date.
+
+## Subscribed calendars
+
+Subscribe to club or town calendars under **Settings → Subscribed calendars**. How it works and what to note is under [Calendar](/en/calendar/#subscribed-calendars).
+
+## Showing Getting started again
+
+If you hid the **Getting started** card on the Today tab, bring it back under **Settings → Getting started**.

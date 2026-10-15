@@ -105,8 +105,9 @@ then the function, so a hosted project's `https://<id>.supabase.co` is a complet
 
 ### The scheduled jobs
 
-`tasks-nightly` (daily) and `holidays-sync` (weekly) authenticate with `x-cron-secret`.
-[`infra/jobs/schedule.sql`](../infra/jobs/schedule.sql) schedules both with pg_cron and
+`tasks-nightly` (daily), `holidays-sync` (weekly) and `calendar-import` (hourly, the
+households' subscribed calendars) authenticate with `x-cron-secret`.
+[`infra/jobs/schedule.sql`](../infra/jobs/schedule.sql) schedules all three with pg_cron and
 pg_net, the secret in the jobs' text (not in Vault, whose key does not survive a restore on
 a new machine); `wuselwall install`, `update` and `restore` run it. A server
 may instead call them from the host's cron (`infra/cron/*.sh`) — never both.
@@ -190,10 +191,10 @@ built 2026-10-14.* The project ships a **server release**, not a service.
 
 **Mandatory:** a Supabase stack (Postgres with `pgcrypto`, `pg_cron` and `pg_net`; Auth with
 the custom access-token hook; PostgREST exposing only `api`; Realtime; the Edge runtime),
-HTTPS, the two scheduled jobs, a backup. **Optional:** the web app (until the store
-listings), SMTP, Apple/Google through the operator's own redirect clients, OpenHolidays
-(the server's only outbound call besides Deno's npm/jsr downloads, which the `deno-cache`
-volume keeps), off-site backup, monitoring. **Not needed:** Storage, imgproxy, Studio,
+HTTPS, the three scheduled jobs, a backup. **Optional:** the web app (until the store
+listings), SMTP, Apple/Google through the operator's own redirect clients; outbound calls
+only to OpenHolidays and to the calendar feeds a household subscribed to (besides Deno's
+npm/jsr downloads, which the `deno-cache` volume keeps); off-site backup, monitoring. **Not needed:** Storage, imgproxy, Studio,
 meta, any analytics, captcha.
 
 **Left to do:**

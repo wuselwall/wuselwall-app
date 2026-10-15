@@ -36,7 +36,7 @@ So wenig wie möglich ist Pflicht. Alles in der zweiten Tabelle könnt ihr wegla
 |---|---|
 | **Ein Supabase-Server**: ein Projekt bei Supabase oder der Docker-Stack zu Hause | Datenbank, Anmeldung, Live-Aktualisierung und die Server-Funktionen von WuselWall |
 | **HTTPS** | Die Apps sprechen nur verschlüsselt mit dem Server. Supabase hat es schon, zu Hause holt es der mitgelieferte Webserver Caddy automatisch |
-| **Zwei nächtliche Aufträge** | Sie legen die Aufgaben der nächsten 14 Tage an und schließen den Vortag ab, einmal pro Woche holen sie die Feiertage. Sie laufen in der Datenbank selbst, die Installation richtet sie ein |
+| **Regelmäßige Aufträge** | Sie legen jede Nacht die Aufgaben der nächsten 14 Tage an und schließen den Vortag ab, holen einmal pro Woche die Feiertage und stündlich die abonnierten Kalender. Sie laufen in der Datenbank selbst, die Installation richtet sie ein |
 | **Ein Backup** | Die Datenbank ist das Einzige, was sich nicht neu aufbauen lässt |
 
 ### Optional
@@ -47,6 +47,7 @@ So wenig wie möglich ist Pflicht. Alles in der zweiten Tabelle könnt ihr wegla
 | **E-Mail-Versand (SMTP)** | WuselWall verschickt heute **keine** E-Mails. Konten entstehen mit E-Mail-Adresse und Passwort direkt in der App, ohne Bestätigungsmail ([Extras](/server/extras#e-mail)) |
 | **Anmelden mit Apple oder Google** | Alle melden sich mit E-Mail und Passwort an. Lässt sich nachrüsten, aber mit viel Aufwand ([Extras](/server/extras#anmelden-mit-apple-und-google)) |
 | **Feiertage und Schulferien** | Der Server holt sie einmal pro Woche bei [OpenHolidays](https://www.openholidaysapi.org/) und schickt dabei nur Ländercodes. Ohne Internetzugang des Servers fehlen sie auf der Wochentafel ([Extras](/server/extras#feiertage)) |
+| **Abonnierte Kalender** | Abonniert ihr Kalender von Vereinen oder der Gemeinde, holt der Server sie stündlich von den Adressen, die ihr eingetragen habt. Ohne Abos ruft er nichts ab |
 | **Kalender-Abos für Outlook, Google und iPhone** | Funktionieren nur, wenn der Server aus dem Internet erreichbar ist |
 | **Passkeys** | Gibt es auf selbst betriebenen Servern nicht. Alle melden sich mit Passwort an, gern mit Zwei-Faktor-Code |
 | **Backup außer Haus, Überwachung** | Siehe [Extras](/server/extras#backup-ausser-haus) |

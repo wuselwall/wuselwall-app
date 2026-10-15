@@ -129,6 +129,12 @@ const de: Strings = {
   status: [
     { label: 'Geräte verbinden und Familie einrichten', state: 'fertig', done: true },
     { label: 'Einkaufsliste mit Offline-Modus', state: 'fertig', done: true },
+    { label: 'Heute-Ansicht mit ersten Schritten', state: 'fertig', done: true },
+    { label: 'Essensvorschläge aus eurem Verlauf', state: 'fertig', done: true },
+    { label: 'Datenexport für die Familie', state: 'fertig', done: true },
+    { label: 'Feiertage und Schulferien für Deutschland, Österreich, die Schweiz und Liechtenstein – bis zur Gemeinde', state: 'fertig', done: true },
+    { label: 'Mehrere Schulen pro Familie', state: 'fertig', done: true },
+    { label: 'Kalender abonnieren: Verein, Abfuhr, Schule', state: 'fertig', done: true },
     { label: 'Kalender und Wochentafel', state: 'als Nächstes', done: false },
     { label: 'Aufgaben und Punkte', state: 'als Nächstes', done: false },
     { label: 'Stundenplan und Essensplan', state: 'als Nächstes', done: false },
@@ -177,7 +183,7 @@ const de: Strings = {
     privacyDescription: 'Wie WuselWall mit Daten umgeht: diese Website, die Apps und die Anmeldung mit Apple oder Google.',
   },
   privacy: {
-    updated: 'Stand: 13. Oktober 2026',
+    updated: 'Stand: 14. Oktober 2026',
     summaryTitle: 'Das Wichtigste in Kürze',
     summary: [
       'Wir betreiben keinen Dienst, auf dem die Daten Ihrer Familie liegen. Die App speichert alles auf dem WuselWall-Server, mit dem Ihre Familie sie verbunden hat.',
@@ -209,10 +215,24 @@ const de: Strings = {
         ],
       },
       {
+        title: 'Feiertage und Schulferien',
+        body: [
+          'Damit die App Feiertage und Schulferien kennt, holt der WuselWall-Server die Daten aus dem öffentlichen Datensatz von OpenHolidays (openholidaysapi.org): einmal pro Woche und, wenn jemand in der App ein Land auswählt. Die App selbst verbindet sich nicht damit. Für diese Abfrage ist der Betreiber Ihres Servers verantwortlich.',
+          'Dabei gehen nur Ländercodes und Datumsbereiche an OpenHolidays, dazu wie bei jeder Anfrage die IP-Adresse Ihres Servers. Nichts über Ihre Familie, ihre Mitglieder, Schulen oder Ihre Region wird übermittelt. Die Antworten liegen als öffentliche Daten auf dem Server, nicht bei uns. Die Daten stehen unter der Open Database License 1.0.',
+        ],
+      },
+      {
+        title: 'Kalender-Abos',
+        body: [
+          'Abonniert eure Familie einen Kalender von außen – etwa den Spielplan eines Vereins oder den Abfuhrkalender –, holt der WuselWall-Server die Datei unter der Adresse, die ihr eingegeben habt, etwa einmal pro Stunde. Die App selbst verbindet sich nicht damit. Für diese Abfragen ist der Betreiber eures Servers verantwortlich.',
+          'Der Anbieter des Kalenders erfährt dabei die IP-Adresse eures Servers, den Zeitpunkt und die Kennung „WuselWall calendar-import“ im Anfragekopf. Nichts über eure Familie wird übermittelt, außer was in der Adresse selbst steht. Die vollständige Adresse sehen nur Eltern; alle anderen Geräte zeigen nur den Namen des Anbieters.',
+        ],
+      },
+      {
         title: 'Kamera und QR-Codes',
         body: [
           'Die App fragt nach der Kamera nur, um QR-Codes zu scannen, etwa beim Verbinden eines Geräts. Die Bilder werden nicht gespeichert und nicht an Ihren Server oder an uns übertragen.',
-          'Auf iPhone und iPad erkennt das Betriebssystem den Code. <strong>Auf Android</strong> verwendet die App dafür ML Kit von Google. ML Kit wertet das Bild auf dem Gerät aus. Laut Google sendet es dabei technische Angaben an Google – Gerätemodell, Betriebssystem, App-Version, Leistungs- und Fehlerdaten sowie eine Kennung dieser Installation –, die Google für Fehleranalyse und Nutzungsstatistik verwendet. Wir prüfen, ML Kit durch eine Lösung ohne Datenübertragung zu ersetzen.',
+          'Die Codes werden auf dem Gerät ausgewertet, auf Android ebenso wie auf iPhone und iPad. Dafür nutzt die App keinen Dienst eines Drittanbieters, und sie sendet dabei nichts nach außen.',
         ],
       },
       {
@@ -318,6 +338,12 @@ const en: Strings = {
   status: [
     { label: 'Connecting devices and setting up a family', state: 'done', done: true },
     { label: 'Shopping list with offline mode', state: 'done', done: true },
+    { label: 'Today view with first steps', state: 'done', done: true },
+    { label: 'Meal suggestions from your history', state: 'done', done: true },
+    { label: 'Data export for the family', state: 'done', done: true },
+    { label: 'Public and school holidays for Germany, Austria, Switzerland and Liechtenstein – down to the municipality', state: 'done', done: true },
+    { label: 'Several schools per family', state: 'done', done: true },
+    { label: 'Subscribe to club, bin and school calendars', state: 'done', done: true },
     { label: 'Calendar and week board', state: 'up next', done: false },
     { label: 'Chores and points', state: 'up next', done: false },
     { label: 'School timetable and meal plan', state: 'up next', done: false },
@@ -366,7 +392,7 @@ const en: Strings = {
     privacyDescription: 'How WuselWall handles data: this website, the apps and signing in with Apple or Google.',
   },
   privacy: {
-    updated: 'Last updated: 13 October 2026',
+    updated: 'Last updated: 14 October 2026',
     summaryTitle: 'In short',
     summary: [
       'We run no service that holds your family’s data. The app stores everything on the WuselWall server your family connected it to.',
@@ -398,10 +424,24 @@ const en: Strings = {
         ],
       },
       {
+        title: 'Public and school holidays',
+        body: [
+          'So that the app knows public and school holidays, your WuselWall server fetches the data from the public OpenHolidays dataset (openholidaysapi.org): once a week, and when someone in the app picks a country. The app itself does not connect to it. The operator of your server is responsible for this request.',
+          'Only country codes and date ranges go to OpenHolidays, and, as with every request, the IP address of your server. Nothing about your family, its members, schools or region is sent. The answers are stored on the server as public data, not with us. The data is under the Open Database License 1.0.',
+        ],
+      },
+      {
+        title: 'Subscribed calendars',
+        body: [
+          'If your family subscribes to a calendar from outside – such as a club’s fixture list or the bin collection calendar –, your WuselWall server fetches the file from the address you entered, about once an hour. The app itself does not connect to it. The operator of your server is responsible for these requests.',
+          'The calendar’s provider learns the IP address of your server, the time, and the identifier “WuselWall calendar-import” in the request header. Nothing about your family is sent, except what is in the address itself. Only guardians see the full address; every other device shows just the provider’s name.',
+        ],
+      },
+      {
         title: 'Camera and QR codes',
         body: [
           'The app asks for the camera only to scan QR codes, for example when connecting a device. The images are not stored and are not sent to your server or to us.',
-          'On iPhone and iPad the operating system reads the code. <strong>On Android</strong> the app uses Google’s ML Kit for this. ML Kit analyses the image on the device. According to Google, it sends technical data to Google – device model, operating system, app version, performance and error data, and an identifier for this installation – which Google uses for diagnostics and usage statistics. We are looking into replacing ML Kit with a solution that sends nothing.',
+          'The codes are read on the device, on Android as well as on iPhone and iPad. The app uses no third-party service for this and sends nothing out while it reads them.',
         ],
       },
       {

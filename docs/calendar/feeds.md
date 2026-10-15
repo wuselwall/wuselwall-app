@@ -1,6 +1,6 @@
 # Kalender-Abos für Outlook und iPhone
 
-Ein **Abo** zeigt den Familienkalender in einer anderen App. Es ist nur zum Lesen: Termine ändert ihr weiterhin in WuselWall.
+Ein **Abo** zeigt den Familienkalender in einer anderen App. Es ist nur zum Lesen: Termine ändert ihr weiterhin in WuselWall. Das Gegenstück, Kalender von außen in WuselWall zu holen, steht unter [Abonnierte Kalender](/calendar/#abonnierte-kalender).
 
 Öffne **Einstellungen → Kalender-Abos** und tippe auf **Neues Abo**.
 

@@ -213,7 +213,7 @@ What exists now, decision by decision, and where it differs from the text above.
   (Supabase's compose file, WuselWall's layer, a lean layer that switches off Storage,
   imgproxy, Studio and meta, an optional Caddy layer), the functions, the migrations, the web
   build and `server/wuselwall`, which installs (secrets from a portable `make-env.mjs`, the
-  jobs, a setup token), updates with a backup first, backs up and restores. The two jobs run
+  jobs, a setup token), updates with a backup first, backs up and restores. The scheduled jobs run
   inside the database with pg_cron and pg_net (`infra/jobs/schedule.sql`), so a server needs
   no host cron.
 - **New: hosted Supabase without tools.** `.github/workflows/deploy-supabase.yml` runs in a

@@ -36,7 +36,7 @@ void main() {
       ),
     );
     // The adult home opens on the calendar: go to the shopping tab first.
-    await t.tap(find.text('Einkaufsliste'));
+    await t.tap(find.text('Einkauf'));
     await t.pumpAndSettle();
     shopping.online = false;
 

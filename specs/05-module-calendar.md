@@ -91,7 +91,7 @@ feed. It composes sources rather than querying one table:
 ```
 events      → expand rrule + rdates − exdates, apply overrides      (editable)
 school      → project timetables − holidays ± exceptions            (read-only)
-imported    → cached external ICS, M2                               (read-only)
+imported    → app.external_occurrence, subscribed ICS, built 2026-10-14 (read-only)
 tasks       → due task instances, when the caller asks for them     (read-only)
 ```
 
@@ -202,12 +202,36 @@ writable inbox that WuselWall polls. Both are Phase 3 or later. Outlook is not p
 this path — it has no meaningful CalDAV support, which is precisely why the ICS feed
 exists.
 
-## Later: importing external calendars
+## External calendars (subscribed ICS, FR-1.9)
 
-Ferien (via the Bundesland feeds, see [15](15-module-school-timetable.md#holidays)),
-sports fixtures and rubbish collection are all published as ICS. `calendar.kind = 'imported'` with a `source_url`, polled hourly by the
-scheduled job (`pg_cron` → an Edge Function), rendered read-only in a distinct colour, and included in the outbound feed so
-they reach Outlook too. Low effort, high perceived value — a good early Phase 2 item.
+Sports fixtures, rubbish collection and school events are published as ICS. Built 2026-10-14
+on `feature/regions-and-ux`, ahead of M2, with a design change from the first draft: the
+imported occurrences are not `calendar` rows with `kind = 'imported'`. They live in their own
+tables, `app.external_calendar` (the subscription: name, address, colour, members, the flag for
+the kitchen display, active, last attempt and last error) and `app.external_occurrence` (plain
+rows, one per occurrence in a window of 30 days back and 400 days ahead). The reason: the
+family's own events stay the only rows that can be edited, and a feed rewritten every hour
+cannot touch them. The read path composes them as the `imported` source above, read-only, in
+the calendar's colour with an RSS mark.
+
+- **Who fetches:** the server only. `calendar-import` runs hourly from `infra/cron/calendar-import.sh`
+  (at most 20 feeds per run, each one whose last attempt is older than 55 minutes), and a guardian's
+  "Jetzt aktualisieren" fetches one feed at once. The apps never contact the address.
+- **Who manages:** guardians, on a personal device or with a current step-up on a shared one;
+  Einstellungen → Abonnierte Kalender. Add, edit, delete, pause, "Jetzt aktualisieren". A kiosk
+  cannot. Members see the imported occurrences. The address is a secret when it carries a token,
+  so it is split: `api.external_calendars` (readable by every live device of the household) shows
+  only `url_host`, the host name for display; the full address comes from `api.external_calendar_url`,
+  which answers guardians on a personal device or with a current step-up, and nobody else (a child's
+  device, the kiosk, a revoked device and other households are refused). The edit form loads it that way
+  and sends the address only when it was changed.
+- **Parsing:** the feed is expanded on the server (`_shared/ical_parse.ts`): recurrence, all-day
+  entries, and the feed's own time zone. Changing the address deletes the calendar's occurrences
+  and fetches at once.
+- **Safety:** the fetch rules are in [11](11-security-and-privacy.md#outbound-calendar-subscriptions):
+  https only, public addresses only, every redirect checked, 15 seconds, 2 MB, ETag for "not modified".
+- **Not yet:** imported occurrences are not in the outbound ICS feed, so Outlook does not see
+  them through WuselWall's own feed yet. This is the next step for this feature.
 
 ## v1 scope cut
 

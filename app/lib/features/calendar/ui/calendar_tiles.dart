@@ -8,6 +8,7 @@ import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 import 'package:wuselwall/features/calendar/ui/event_edit_args.dart';
+import 'package:wuselwall/features/calendar/ui/imported_occurrence_sheet.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 
 /// Below this column width a timed block shows only its first attendee's initial: a
@@ -60,7 +61,13 @@ class OccurrenceTile extends StatelessWidget {
         for (final m in members)
           if (m.id == id) m,
     ];
-    final lead = attendees.isEmpty ? null : ww.member(attendees.first.color);
+    // An imported calendar's appointments take that calendar's colour, not a member's.
+    final imported = occurrence.isImported;
+    final lead = imported
+        ? ww.member(colourFromHex(occurrence.colourHex) ?? cs.primary)
+        : attendees.isEmpty
+        ? null
+        : ww.member(attendees.first.color);
     final ground = lead?.tint ?? cs.surfaceContainerHigh;
     final bar = lead?.ink ?? cs.primary;
     final past = occurrence.end.isBefore(now);
@@ -84,6 +91,34 @@ class OccurrenceTile extends StatelessWidget {
       fontFamily: Tokens.fontNumeric,
       fontFeatures: const [FontFeature.tabularFigures()],
     );
+    // The subscription mark: the non-colour cue for an imported appointment (NFR-13).
+    Widget titleText({required int maxLines, required bool softWrap}) =>
+        imported
+        ? Text.rich(
+            TextSpan(
+              style: titleStyle,
+              children: [
+                WidgetSpan(
+                  alignment: PlaceholderAlignment.middle,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 2),
+                    child: Icon(Icons.rss_feed, size: 11, color: ww.ink2),
+                  ),
+                ),
+                TextSpan(text: occurrence.title),
+              ],
+            ),
+            maxLines: maxLines,
+            overflow: TextOverflow.ellipsis,
+            softWrap: softWrap,
+          )
+        : Text(
+            occurrence.title,
+            maxLines: maxLines,
+            overflow: TextOverflow.ellipsis,
+            softWrap: softWrap,
+            style: titleStyle,
+          );
     final dots = MemberDots(
       size: 8,
       dots: [
@@ -100,15 +135,7 @@ class OccurrenceTile extends StatelessWidget {
     if (compact) {
       content = Row(
         children: [
-          Expanded(
-            child: Text(
-              occurrence.title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              softWrap: false,
-              style: titleStyle,
-            ),
-          ),
+          Expanded(child: titleText(maxLines: 1, softWrap: false)),
           if (attendees.isNotEmpty) ...[const SizedBox(width: 4), dots],
         ],
       );
@@ -131,6 +158,14 @@ class OccurrenceTile extends StatelessWidget {
             children: [
               if (startText != null)
                 TextSpan(text: '$startText ', style: timeStyle),
+              if (imported)
+                WidgetSpan(
+                  alignment: PlaceholderAlignment.middle,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 2),
+                    child: Icon(Icons.rss_feed, size: 11, color: ww.ink2),
+                  ),
+                ),
               TextSpan(text: occurrence.title, style: titleStyle),
             ],
           ),
@@ -144,13 +179,7 @@ class OccurrenceTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              occurrence.title,
-              maxLines: titleLines,
-              overflow: TextOverflow.ellipsis,
-              softWrap: titleLines > 1,
-              style: titleStyle,
-            ),
+            titleText(maxLines: titleLines, softWrap: titleLines > 1),
             if (spanText != null)
               Text(
                 spanText,
@@ -180,6 +209,7 @@ class OccurrenceTile extends StatelessWidget {
       occurrence.title,
       ?spanText,
       if (occurrence.isTentative) l10n.boardTentative,
+      if (imported) l10n.extCalSheetTitle,
     ].join(', ');
 
     return Opacity(
@@ -191,13 +221,17 @@ class OccurrenceTile extends StatelessWidget {
           color: Colors.transparent,
           child: InkWell(
             borderRadius: BorderRadius.circular(6),
-            onTap: () => context.push(
-              Routes.eventEdit,
-              extra: EventEditArgs(
-                eventId: occurrence.eventId,
-                occurrence: occurrence,
-              ),
-            ),
+            // Imported appointments are read-only: they open the source's details, never
+            // the editor.
+            onTap: imported
+                ? () => showImportedOccurrenceSheet(context, occurrence)
+                : () => context.push(
+                    Routes.eventEdit,
+                    extra: EventEditArgs(
+                      eventId: occurrence.eventId,
+                      occurrence: occurrence,
+                    ),
+                  ),
             child: CustomPaint(
               foregroundPainter: occurrence.isTentative
                   ? _DashedOutlinePainter(color: bar, radius: 6)

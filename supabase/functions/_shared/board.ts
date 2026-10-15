@@ -83,6 +83,10 @@ export function fillBoard(
   for (const occ of occurrences) {
     if (occ.kind === "presence") {
       presence.push(...bandsOf(occ, weekStart, weekEnd));
+    } else if (occ.source === "imported" && occ.importance !== "key") {
+      // An imported calendar reaches the board only when it is set to show there, and then as
+      // key appointments (specs/09, FR-1.9). Its other occurrences stay in the calendar only.
+      continue;
     } else {
       appointments.push(occ);
     }

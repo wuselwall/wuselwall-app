@@ -36,7 +36,7 @@ As little as possible is required. Everything in the second table can be left ou
 |---|---|
 | **A Supabase server**: a project at Supabase, or the Docker stack at home | Database, sign-in, live updates and WuselWall's server functions |
 | **HTTPS** | The apps talk to the server only over an encrypted connection. Supabase has it already; at home, the bundled web server Caddy fetches it automatically |
-| **Two nightly jobs** | They create the next 14 days of tasks and close the previous day, and once a week they fetch the holidays. They run inside the database; the installation sets them up |
+| **Scheduled jobs** | Every night they create the next 14 days of tasks and close the previous day; once a week they fetch the holidays, and every hour the subscribed calendars. They run inside the database; the installation sets them up |
 | **A backup** | The database is the one thing that cannot be rebuilt |
 
 ### Optional
@@ -47,6 +47,7 @@ As little as possible is required. Everything in the second table can be left ou
 | **Sending email (SMTP)** | WuselWall sends **no** email today. Accounts are created in the app with an email address and a password, without a confirmation mail ([Extras](/en/server/extras#email)) |
 | **Sign in with Apple or Google** | Everyone signs in with email and password. Can be added, but it takes a lot of work ([Extras](/en/server/extras#apple-and-google)) |
 | **Public and school holidays** | The server fetches them once a week from [OpenHolidays](https://www.openholidaysapi.org/), sending only country codes. Without internet access on the server, they are missing from the week board ([Extras](/en/server/extras#holidays)) |
+| **Subscribed calendars** | If you subscribe to club or town calendars, the server fetches them every hour from the addresses you entered. Without subscriptions it fetches nothing |
 | **Calendar subscriptions for Outlook, Google and iPhone** | Work only if the server can be reached from the internet |
 | **Passkeys** | Not available on self-hosted servers. Everyone signs in with a password, ideally with a two-factor code |
 | **Off-site backup, monitoring** | See [Extras](/en/server/extras#off-site-backup) |

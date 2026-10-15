@@ -28,7 +28,7 @@ as $$
     'min_app_version', '1.0.0',
     'household_creation', 'token',
     'features', jsonb_build_array(
-      'calendar', 'ics', 'school', 'tasks', 'meals', 'shopping', 'holidays'
+      'calendar', 'ics', 'calendar-import', 'school', 'tasks', 'meals', 'shopping', 'holidays'
     )
   );
 $$;
