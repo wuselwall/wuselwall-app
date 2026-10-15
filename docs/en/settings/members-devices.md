@@ -18,6 +18,8 @@ WuselWall then shows the **code**, a **QR code** and the **link**. Tap **Share**
 
 An invitation is valid for **7 days** and works **once**. Open invitations are listed with their expiry date: **Share again** sends it once more, **Withdraw** cancels it.
 
+Once the person has joined, **every guardian** gets a notice on the **Today** tab ("Sabine joined"). **Got it** hides it, **Members** leads to the list. Notices disappear on their own after 14 days.
+
 If you left out the email address, the code is all there is. The person then has to enter it in the app.
 
 For an existing **member** without an account, invite them from the member list with **Invite**.
@@ -47,6 +49,8 @@ Older devices with an older version of WuselWall still get a code from **Create 
 ## Block a device
 
 If a phone is lost or a tablet is handed on: in the device list, tap **Block**. The device loses access **at once**, even if it is open. Blocked devices stay in the list so that you can see what happened.
+
+When you sign in with your account on a new phone, your other phones show the notice "New sign-in: Daniel's iPhone" on the **Today** tab. **Devices** leads to the device list, where **Block** shuts out a device that is not yours.
 
 On your own phone you can also sign yourself out with **Sign out this device**.
 
