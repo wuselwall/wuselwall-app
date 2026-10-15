@@ -1133,7 +1133,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingMealsSchoolDayHelp =>
-      'The one warm meal on the kitchen wall. On school days children eat lunch at school or in the Hort.';
+      'The one warm meal on the kitchen wall. On school days children eat lunch at school or at after-school care.';
 
   @override
   String get settingMealsFreeDayTitle => 'Warm meal on free days';
@@ -1507,7 +1507,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get mealsEatingHelp =>
-      'Someone who is away or travelling over the meal, or who has Hort past the cut-off, is switched off automatically. Set it by hand only when that is not true.';
+      'Someone who is away or travelling over the meal, or who is at after-school care past the cut-off, is switched off automatically. Set it by hand only when that is not true.';
 
   @override
   String get mealsEatingAuto => 'Automatic';
