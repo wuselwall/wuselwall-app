@@ -19,6 +19,7 @@ import 'package:wuselwall/demo/demo_getting_started.dart';
 import 'package:wuselwall/demo/demo_invitations.dart';
 import 'package:wuselwall/demo/demo_kid.dart';
 import 'package:wuselwall/demo/demo_meals.dart';
+import 'package:wuselwall/demo/demo_notices.dart';
 import 'package:wuselwall/demo/demo_pairing.dart';
 import 'package:wuselwall/demo/demo_region.dart';
 import 'package:wuselwall/demo/demo_repositories.dart';
@@ -46,6 +47,7 @@ import 'package:wuselwall/features/settings/data/household_settings_repository.d
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 import 'package:wuselwall/features/tasks/data/tasks_repository.dart';
 import 'package:wuselwall/features/today/data/getting_started_repository.dart';
+import 'package:wuselwall/features/today/data/notices_repository.dart';
 
 class _Day extends NightNotifier {
   @override
@@ -147,6 +149,7 @@ List<Override> _overrides(String scenario) => [
   gettingStartedRepositoryProvider.overrideWithValue(
     DemoGettingStartedRepository(),
   ),
+  noticesRepositoryProvider.overrideWithValue(DemoNoticesRepository()),
   kidBadgesRepositoryProvider.overrideWithValue(DemoKidBadgesRepository()),
   householdInvalidationsProvider.overrideWith(
     (ref, id) => const Stream<Invalidation>.empty(),

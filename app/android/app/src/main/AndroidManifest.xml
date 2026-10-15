@@ -28,6 +28,8 @@
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
               />
+            <!-- Links are read by app_links (lib/app/link_source.dart), not routed by Flutter. -->
+            <meta-data android:name="flutter_deeplinking_enabled" android:value="false" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -41,6 +43,22 @@
               <data
                 android:scheme="ch.goomba.wuselwall"
                 android:host="login-callback" />
+            </intent-filter>
+
+            <!-- App Links (specs/20, "Universal links and the landing pages"): invitation and
+                 pairing links on wuselwall.app open the app. Verified through
+                 https://wuselwall.app/.well-known/assetlinks.json; until that lists the
+                 signing key's fingerprint the links open in the browser. The fragment
+                 (token and server) is not part of the matching. -->
+            <intent-filter android:autoVerify="true">
+              <action android:name="android.intent.action.VIEW" />
+              <category android:name="android.intent.category.DEFAULT" />
+              <category android:name="android.intent.category.BROWSABLE" />
+              <data android:scheme="https" android:host="wuselwall.app" />
+              <data android:pathPrefix="/i/" />
+              <data android:pathPrefix="/en/i/" />
+              <data android:pathPrefix="/p/" />
+              <data android:pathPrefix="/en/p/" />
             </intent-filter>
         </activity>
         <!-- flutter_local_notifications: shows scheduled reminders and restores them after

@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/server/server_address.dart';
+import 'package:wuselwall/core/server/server_providers.dart';
 import 'package:wuselwall/core/ui/qr_code_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
@@ -134,6 +136,7 @@ class _InviteResultDialog extends ConsumerWidget {
     final l10n = context.l10n;
     final theme = Theme.of(context);
     final household = ref.watch(householdNameProvider);
+    final server = ref.watch(currentServerProvider);
     return AlertDialog(
       title: Text(l10n.inviteResultTitle(name)),
       content: SizedBox(
@@ -154,10 +157,18 @@ class _InviteResultDialog extends ConsumerWidget {
                 ),
               ),
             ),
+            if (server != null) ...[
+              const SizedBox(height: Tokens.space2),
+              Text(
+                l10n.inviteResultServer(displayServerAddress(server)),
+                key: const ValueKey('invite-server'),
+                style: theme.textTheme.bodySmall,
+              ),
+            ],
             const SizedBox(height: Tokens.space4),
             QrCodeView(
               key: const ValueKey('invite-qr'),
-              data: invitation.link,
+              data: invitation.linkOn(server),
               semanticsLabel: l10n.inviteQrLabel,
               size: 200,
             ),
@@ -178,8 +189,9 @@ class _InviteResultDialog extends ConsumerWidget {
               ? () => ref.read(inviteSharerProvider)(
                   l10n.inviteShareMessage(
                     household.value!,
-                    invitation.link,
+                    invitation.linkOn(server),
                     invitation.displayCode,
+                    server == null ? '' : displayServerAddress(server),
                   ),
                 )
               : null,

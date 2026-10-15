@@ -15,16 +15,19 @@ Failure _cause(Failure failure) =>
 void main() {
   group('parsePairingCode', () {
     test('reads the bare code in any case, with or without the hyphen', () {
-      expect(parsePairingCode('K7QM3XRP'), 'K7QM3XRP');
-      expect(parsePairingCode('K7QM-3XRP'), 'K7QM3XRP');
-      expect(parsePairingCode(' k7qm 3xrp '), 'K7QM3XRP');
+      expect(parsePairingCode('K7QM3XRP')?.secret, 'K7QM3XRP');
+      expect(parsePairingCode('K7QM-3XRP')?.secret, 'K7QM3XRP');
+      expect(parsePairingCode(' k7qm 3xrp ')?.secret, 'K7QM3XRP');
     });
 
     test('reads the code from the link the new device shows', () {
       final payload = pairingQrPayload('K7QM3XRP');
       expect(payload, 'https://wuselwall.app/p/#K7QM3XRP');
-      expect(parsePairingCode(payload), 'K7QM3XRP');
-      expect(parsePairingCode('https://wuselwall.app/p/K7QM-3XRP'), 'K7QM3XRP');
+      expect(parsePairingCode(payload)?.secret, 'K7QM3XRP');
+      expect(
+        parsePairingCode('https://wuselwall.app/p/K7QM-3XRP')?.secret,
+        'K7QM3XRP',
+      );
     });
 
     test('refuses what is not a pairing code', () {

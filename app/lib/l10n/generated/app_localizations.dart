@@ -4868,6 +4868,36 @@ abstract class AppLocalizations {
   /// **'{count, plural, =1{1 item still open} other{{count} items still open}}'**
   String todayShoppingOpen(int count);
 
+  /// No description provided for @todayNoticeJoined.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} joined'**
+  String todayNoticeJoined(String name);
+
+  /// No description provided for @todayNoticeSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'New sign-in: {device}'**
+  String todayNoticeSignIn(String device);
+
+  /// No description provided for @todayNoticeDismiss.
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get todayNoticeDismiss;
+
+  /// No description provided for @todayNoticeMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Members'**
+  String get todayNoticeMembers;
+
+  /// No description provided for @todayNoticeDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'Devices'**
+  String get todayNoticeDevices;
+
   /// No description provided for @todayStartTitle.
   ///
   /// In en, this message translates to:
@@ -6647,8 +6677,13 @@ abstract class AppLocalizations {
   /// No description provided for @inviteShareMessage.
   ///
   /// In en, this message translates to:
-  /// **'Join {household} on WuselWall: {link} — or enter the code {code} in the app.'**
-  String inviteShareMessage(String household, String link, String code);
+  /// **'Join {household} on WuselWall: {link} — or enter the code {code} in the app, on the server {server}.'**
+  String inviteShareMessage(
+    String household,
+    String link,
+    String code,
+    String server,
+  );
 
   /// No description provided for @inviteAdultTitle.
   ///
@@ -6869,7 +6904,7 @@ abstract class AppLocalizations {
   /// No description provided for @serverLead.
   ///
   /// In en, this message translates to:
-  /// **'WuselWall keeps your family\'s data on your family\'s own server. Enter its address, or scan its QR code.'**
+  /// **'WuselWall keeps your family\'s data on your family\'s own server. Enter its address, or scan its QR code. Got an invitation? Paste the link, or the code together with the server, like K7QM3XRP@api.example.org.'**
   String get serverLead;
 
   /// No description provided for @serverAddressLabel.
@@ -6949,6 +6984,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This server needs a newer version of the app. Please update WuselWall.'**
   String get serverAppTooOld;
+
+  /// No description provided for @serverLinkWithoutServer.
+  ///
+  /// In en, this message translates to:
+  /// **'This link does not say which server it belongs to. Enter the server\'s address above, then the code.'**
+  String get serverLinkWithoutServer;
+
+  /// No description provided for @inviteResultServer.
+  ///
+  /// In en, this message translates to:
+  /// **'Server: {server}'**
+  String inviteResultServer(String server);
+
+  /// No description provided for @linkOtherServerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'This link belongs to another server'**
+  String get linkOtherServerTitle;
+
+  /// No description provided for @linkSwitchBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The link points to {host}, but this app is connected to {current}. Switch to {host}?'**
+  String linkSwitchBody(String host, String current);
+
+  /// No description provided for @linkSwitchAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch server'**
+  String get linkSwitchAction;
+
+  /// No description provided for @linkOtherServerBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The link points to {host}, but you are signed in on {current}. Sign out first (Settings → Change server), then open the link again.'**
+  String linkOtherServerBody(String host, String current);
 
   /// No description provided for @serverIncompatibleTitle.
   ///

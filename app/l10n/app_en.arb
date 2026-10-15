@@ -1534,6 +1534,25 @@
       }
     }
   },
+  "todayNoticeJoined": "{name} joined",
+  "@todayNoticeJoined": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "todayNoticeSignIn": "New sign-in: {device}",
+  "@todayNoticeSignIn": {
+    "placeholders": {
+      "device": {
+        "type": "String"
+      }
+    }
+  },
+  "todayNoticeDismiss": "Got it",
+  "todayNoticeMembers": "Members",
+  "todayNoticeDevices": "Devices",
   "todayStartTitle": "Getting started",
   "todayStartProgress": "{done} of {total}",
   "@todayStartProgress": {
@@ -2129,7 +2148,7 @@
   "inviteQrLabel": "QR code of the invitation",
   "inviteShare": "Share",
   "inviteDone": "Done",
-  "inviteShareMessage": "Join {household} on WuselWall: {link} — or enter the code {code} in the app.",
+  "inviteShareMessage": "Join {household} on WuselWall: {link} — or enter the code {code} in the app, on the server {server}.",
   "@inviteShareMessage": {
     "placeholders": {
       "household": {
@@ -2139,6 +2158,9 @@
         "type": "String"
       },
       "code": {
+        "type": "String"
+      },
+      "server": {
         "type": "String"
       }
     }
@@ -2207,7 +2229,7 @@
     }
   },
   "serverTitle": "Which server?",
-  "serverLead": "WuselWall keeps your family's data on your family's own server. Enter its address, or scan its QR code.",
+  "serverLead": "WuselWall keeps your family's data on your family's own server. Enter its address, or scan its QR code. Got an invitation? Paste the link, or the code together with the server, like K7QM3XRP@api.example.org.",
   "serverAddressLabel": "Server address",
   "serverAddressHint": "e.g. api.example.org",
   "serverConnect": "Connect",
@@ -2221,6 +2243,39 @@
   "serverNotWuselwall": "There is no WuselWall server at this address.",
   "serverTooOld": "This server needs an update. Ask whoever runs it to update WuselWall.",
   "serverAppTooOld": "This server needs a newer version of the app. Please update WuselWall.",
+  "serverLinkWithoutServer": "This link does not say which server it belongs to. Enter the server's address above, then the code.",
+  "inviteResultServer": "Server: {server}",
+  "@inviteResultServer": {
+    "placeholders": {
+      "server": {
+        "type": "String"
+      }
+    }
+  },
+  "linkOtherServerTitle": "This link belongs to another server",
+  "linkSwitchBody": "The link points to {host}, but this app is connected to {current}. Switch to {host}?",
+  "@linkSwitchBody": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      },
+      "current": {
+        "type": "String"
+      }
+    }
+  },
+  "linkSwitchAction": "Switch server",
+  "linkOtherServerBody": "The link points to {host}, but you are signed in on {current}. Sign out first (Settings → Change server), then open the link again.",
+  "@linkOtherServerBody": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      },
+      "current": {
+        "type": "String"
+      }
+    }
+  },
   "serverIncompatibleTitle": "Server and app don't fit together",
   "serverChooseOther": "Choose another server",
   "demoBanner": "Example family: nothing is saved",
