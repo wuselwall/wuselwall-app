@@ -5,10 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/router.dart';
+import 'package:wuselwall/app/server_session.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/server/server_link.dart';
+import 'package:wuselwall/core/server/server_providers.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/application/pairing_providers.dart';
@@ -50,7 +53,7 @@ class _DevicePairPageState extends ConsumerState<DevicePairPage> {
     super.initState();
     _code = widget.initialCode == null
         ? null
-        : parsePairingCode(widget.initialCode!);
+        : parsePairingCode(widget.initialCode!)?.secret;
   }
 
   @override
@@ -101,18 +104,35 @@ class _DevicePairPageState extends ConsumerState<DevicePairPage> {
       defaultTargetPlatform == TargetPlatform.iOS;
 
   void _useCode(String? raw) {
-    final code = raw == null ? null : parsePairingCode(raw);
-    if (code == null) {
+    final parsed = raw == null ? null : parsePairingCode(raw);
+    if (parsed == null) {
       context.showFailure(const ValidationFailure(code: 'code_invalid'));
       return;
     }
-    setState(() => _code = code);
+    // A code of another server is not followed silently: the bootstrap decides.
+    final server = parsed.server;
+    final current = ref.read(currentServerProvider);
+    if (server != null && current != null && !sameServer(server, current)) {
+      unawaited(
+        ref
+                .read(serverSessionProvider)
+                .openLink
+                ?.call(
+                  OpenedLink(LinkKind.pairing, parsed.secret, server: server),
+                ) ??
+            Future<void>.value(),
+      );
+      return;
+    }
+    setState(() => _code = parsed.secret);
   }
 
   Future<void> _scan() async {
     final code = await Navigator.of(context).push<String>(
       MaterialPageRoute(
-        builder: (_) => const QrScanPage(parse: parsePairingCode),
+        builder: (_) => QrScanPage(
+          parse: (raw) => parsePairingCode(raw) == null ? null : raw,
+        ),
       ),
     );
     if (code != null && mounted) _useCode(code);

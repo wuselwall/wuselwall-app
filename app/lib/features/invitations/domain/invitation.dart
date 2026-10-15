@@ -1,38 +1,16 @@
+import 'package:wuselwall/core/server/server_link.dart';
 import 'package:wuselwall/features/identity/domain/pairing.dart';
+
+export 'package:wuselwall/core/server/server_link.dart' show parseInvitation;
 
 /// Invitations (specs/20, J2). What a guardian makes, what the invitee sees and what the
 /// server answers. Holds no rules: `api.invitation_*` decides, this only reads and writes.
 
-const inviteHost = 'wuselwall.app';
-
-final _tokenPattern = RegExp(r'^[0-9a-f]{32}$');
-final _codePattern = RegExp(r'^[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{8}$');
-
-/// The link a guardian shares: the token travels in the fragment, so the landing page on
-/// the website never receives it (specs/20, "Universal links and the landing pages").
-String inviteLink(String token) => 'https://$inviteHost/i/#$token';
-
-/// Reads a secret out of typed or scanned text: the 8-symbol code (any case, with or without
-/// the hyphen), the token, or an invitation link `…/i/#<token>[@host]`. The `@host` part names
-/// the household's server and belongs to another branch, so it is dropped here. Returns the
-/// normalised secret, or null when [raw] holds neither.
-String? parseInvitation(String raw) {
-  final text = raw.trim();
-  final uri = Uri.tryParse(text);
-  final String candidate;
-  if (uri != null && uri.hasScheme) {
-    if (uri.host != inviteHost || !uri.path.startsWith('/i')) return null;
-    candidate = uri.fragment.split('@').first;
-  } else {
-    candidate = text;
-  }
-  final s = candidate.replaceAll(RegExp(r'[\s-]'), '');
-  if (s.length == 32 && _tokenPattern.hasMatch(s.toLowerCase())) {
-    return s.toLowerCase();
-  }
-  final code = s.toUpperCase();
-  return _codePattern.hasMatch(code) ? code : null;
-}
+/// The link a guardian shares: the token and the household's [server] travel in the fragment,
+/// so the landing page on the website never receives them (specs/20, "Universal links and the
+/// landing pages"; ADR-018, decision 8). Without a [server] the link names none.
+String inviteLink(String token, {Uri? server}) =>
+    'https://$linkSiteHost/i/#${linkFragment(token, server)}';
 
 /// The role an invitation gives. `guardian` (Erziehungsberechtigt) or `member` (Mitglied).
 enum InvitationRole {
@@ -134,7 +112,8 @@ class CreatedInvitation {
   final String code;
   final DateTime expiresAt;
 
-  String get link => inviteLink(token);
+  /// The link to share, naming the household's [server].
+  String linkOn(Uri? server) => inviteLink(token, server: server);
 
   /// K7QM-3XRP, the way it is read out and written down.
   String get displayCode => formatPairingCode(code);

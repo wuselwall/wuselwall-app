@@ -31,7 +31,7 @@ Uri? parseServerAddress(String raw, {bool allowHttp = false}) {
   if (link != null &&
       link.hasScheme &&
       link.fragment.contains('@') &&
-      RegExp(r'^/[ip]/?$').hasMatch(link.path)) {
+      RegExp(r'^(/en)?/[ip]/?$').hasMatch(link.path)) {
     final host = link.fragment.substring(link.fragment.lastIndexOf('@') + 1);
     return parseServerAddress(Uri.decodeComponent(host), allowHttp: allowHttp);
   }

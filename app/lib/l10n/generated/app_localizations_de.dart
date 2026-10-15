@@ -2778,6 +2778,25 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String todayNoticeJoined(String name) {
+    return '$name ist beigetreten';
+  }
+
+  @override
+  String todayNoticeSignIn(String device) {
+    return 'Neu angemeldet: $device';
+  }
+
+  @override
+  String get todayNoticeDismiss => 'Gesehen';
+
+  @override
+  String get todayNoticeMembers => 'Mitglieder';
+
+  @override
+  String get todayNoticeDevices => 'Geräte';
+
+  @override
   String get todayStartTitle => 'Erste Schritte';
 
   @override
@@ -3854,8 +3873,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get inviteDone => 'Fertig';
 
   @override
-  String inviteShareMessage(String household, String link, String code) {
-    return 'Komm zu $household in WuselWall: $link — oder gib in der App den Code $code ein.';
+  String inviteShareMessage(
+    String household,
+    String link,
+    String code,
+    String server,
+  ) {
+    return 'Komm zu $household in WuselWall: $link — oder gib in der App den Code $code ein, auf dem Server $server.';
   }
 
   @override
@@ -3984,7 +4008,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get serverLead =>
-      'WuselWall speichert eure Daten auf dem Server eurer Familie. Gib seine Adresse ein oder scanne seinen QR-Code.';
+      'WuselWall speichert eure Daten auf dem Server eurer Familie. Gib seine Adresse ein oder scanne seinen QR-Code. Hast du eine Einladung? Füge den Link ein, oder Code und Server zusammen, etwa K7QM3XRP@api.example.org.';
 
   @override
   String get serverAddressLabel => 'Adresse des Servers';
@@ -4030,6 +4054,32 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get serverAppTooOld =>
       'Dieser Server braucht eine neuere Version der App. Bitte aktualisiere WuselWall.';
+
+  @override
+  String get serverLinkWithoutServer =>
+      'Dieser Link sagt nicht, zu welchem Server er gehört. Gib oben die Adresse des Servers ein, danach den Code.';
+
+  @override
+  String inviteResultServer(String server) {
+    return 'Server: $server';
+  }
+
+  @override
+  String get linkOtherServerTitle =>
+      'Dieser Link gehört zu einem anderen Server';
+
+  @override
+  String linkSwitchBody(String host, String current) {
+    return 'Der Link zeigt auf $host, aber diese App ist mit $current verbunden. Zu $host wechseln?';
+  }
+
+  @override
+  String get linkSwitchAction => 'Server wechseln';
+
+  @override
+  String linkOtherServerBody(String host, String current) {
+    return 'Der Link zeigt auf $host, aber du bist auf $current angemeldet. Melde dich zuerst ab (Einstellungen → Server wechseln) und öffne den Link dann erneut.';
+  }
 
   @override
   String get serverIncompatibleTitle => 'Server und App passen nicht zusammen';

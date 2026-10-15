@@ -41,9 +41,11 @@ Dieses Handy wird dabei das **persönliche Handy** von dir. Es bekommt automatis
 
 ## 3. Einer Familie beitreten
 
-Wurdest du von einer Familie eingeladen, bekommst du einen **Code** oder einen **Link**. Den Link öffnet der Browser auf der Einladungsseite von WuselWall; den Code gibst du in der App ein:
+Wurdest du von einer Familie eingeladen, bekommst du einen **Link**, einen **QR-Code** oder einen **Code**. Der Link und der QR-Code enthalten auch den **Server** eurer Familie. Ist WuselWall schon auf deinem Handy, öffnet der Link direkt die App: Du musst weder einen Server auswählen noch etwas eingeben. Ist die App noch nicht installiert, zeigt der Link eine Seite mit den Stores; installiere die App und öffne den Link danach noch einmal.
 
-1. Auf dem Startbildschirm **Ich habe einen Einladungscode** antippen.
+Hast du nur den Code bekommen, gibst du ihn in der App ein:
+
+1. Auf dem Startbildschirm **Ich habe einen Einladungscode** antippen. Fragt die App noch nach dem Server, gibst du Code und Server zusammen ein, etwa `K7QM3XRP@familie.example.org`; den Server nennt dir die Nachricht der Einladung.
 2. Den Code oder den ganzen Link einfügen, dann **Einladung prüfen**.
 3. WuselWall zeigt dir, wozu du eingeladen bist: **Du bist ‹Name› in ‹Familie›**. Dein Name und deine Farbe kannst du hier anpassen. Mit **Beitreten** gehörst du dazu.
 
@@ -51,7 +53,7 @@ Hat die Familie deine E-Mail-Adresse eingetragen, brauchst du gar nichts einzuge
 
 ## 4. Familien-Tablet oder Wanddisplay verbinden
 
-So kommen das **Wanddisplay** in der Küche, ein **Kinder-Tablet** oder ein **Tablet für alle** in den Haushalt. Du brauchst dafür keinen Code abzutippen, nur kurz dein Handy:
+So kommen das **Wanddisplay** in der Küche, ein **Kinder-Tablet** oder ein **Tablet für alle** in den Haushalt. Du brauchst dafür keinen Code abzutippen, nur kurz dein Handy. Der QR-Code des neuen Geräts nennt auch den Server; öffnest du ihn mit der Kamera deines Handys, startet WuselWall direkt bei der Bestätigung:
 
 1. Auf dem neuen Gerät tippst du auf **Familien-Tablet oder Wanddisplay verbinden**. Es zeigt einen **QR-Code** und einen Code.
 2. Auf deinem Handy öffnest du **Einstellungen → Geräte → Gerät verbinden**. Du kannst den Code auch aus der Karte **Erste Schritte** auf dem Tab Heute starten.
