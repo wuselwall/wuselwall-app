@@ -18,6 +18,8 @@ Dann zeigt WuselWall den **Code**, einen **QR-Code** und den **Link**. Tippe auf
 
 Die Einladung gilt **7 Tage** und funktioniert **einmal**. Offene Einladungen stehen in der Liste mit ihrem Ablaufdatum: **Erneut teilen** schickt sie noch einmal, **Zurückziehen** macht sie ungültig.
 
+Sobald die Person beigetreten ist, bekommt **jede erziehungsberechtigte Person** auf dem Tab **Heute** einen Hinweis („Sabine ist beigetreten“). **Gesehen** blendet ihn aus, **Mitglieder** führt zur Liste. Hinweise verschwinden nach 14 Tagen von selbst.
+
 Hast du bei der E-Mail-Adresse nichts angegeben, gibt es den Code allein. Die Person muss ihn dann in der App eingeben.
 
 Zu einem bestehenden **Mitglied** ohne Konto lädst du die Person direkt in der Mitgliederliste über **Einladen** ein.
@@ -47,6 +49,8 @@ Du musst den Code nicht abtippen: Das neue Gerät zeigt einen QR-Code, den du mi
 ## Gerät sperren
 
 Geht ein Handy verloren oder wird ein Tablet weitergegeben: Tippe in der Geräteliste auf **Sperren**. Das Gerät verliert **sofort** den Zugriff – auch wenn es gerade offen ist. Gesperrte Geräte bleiben in der Liste, damit nachvollziehbar ist, was passiert ist.
+
+Meldest du dich mit deinem Konto auf einem neuen Handy an, zeigen deine anderen Handys auf dem Tab **Heute** den Hinweis „Neu angemeldet: Daniels iPhone“. **Geräte** führt zur Geräteliste, wo du ein Gerät, das nicht deins ist, mit **Sperren** ausschließt.
 
 Auf deinem eigenen Handy kannst du dich mit **Dieses Gerät abmelden** auch selbst abmelden.
 

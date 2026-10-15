@@ -12,7 +12,9 @@ import 'package:wuselwall/features/shopping/application/shopping_providers.dart'
 import 'package:wuselwall/features/tasks/application/tasks_providers.dart';
 import 'package:wuselwall/features/tasks/domain/tasks_models.dart';
 import 'package:wuselwall/features/today/data/getting_started_repository.dart';
+import 'package:wuselwall/features/today/data/notices_repository.dart';
 import 'package:wuselwall/features/today/domain/getting_started.dart';
+import 'package:wuselwall/features/today/domain/notice.dart';
 
 /// The card's items for the acting profile. Empty for nobody acting and for members,
 /// so the card only ever shows to a guardian.
@@ -26,6 +28,20 @@ final gettingStartedProvider =
               .items(actor: actor))
           .unwrap();
     });
+
+/// The notices for the acting profile. A failure (a server without notices, offline)
+/// shows none: they are a courtesy, never an error on Today.
+final noticesProvider = FutureProvider.autoDispose<List<AppNotice>>((
+  ref,
+) async {
+  ref.watch(deviceKeyProvider);
+  final actor = ref.watch(actingProfileProvider);
+  if (actor == null) return const [];
+  final result = await ref
+      .watch(noticesRepositoryProvider)
+      .notices(actor: actor);
+  return result.valueOrNull ?? const [];
+});
 
 /// Today's agenda as the acting profile sees it. Everything here is derived from the
 /// providers the modules already have: the calendar's occurrences (recurrence is

@@ -13,6 +13,7 @@ import 'package:wuselwall/features/tasks/domain/tasks_models.dart';
 import 'package:wuselwall/features/tasks/ui/task_widgets.dart';
 import 'package:wuselwall/features/today/application/today_providers.dart';
 import 'package:wuselwall/features/today/ui/getting_started_card.dart';
+import 'package:wuselwall/features/today/ui/notice_cards.dart';
 
 /// The adult home's first tab (specs/09 "Screens by register"): the setup card, then
 /// what today holds for the acting profile. Each block hides when it is empty; when
@@ -28,7 +29,8 @@ class TodayPage extends ConsumerWidget {
       onRefresh: () async {
         ref
           ..invalidate(todayAgendaProvider)
-          ..invalidate(gettingStartedProvider);
+          ..invalidate(gettingStartedProvider)
+          ..invalidate(noticesProvider);
       },
       child: ListView(
         padding: const EdgeInsets.fromLTRB(
@@ -38,6 +40,7 @@ class TodayPage extends ConsumerWidget {
           Tokens.space6,
         ),
         children: [
+          const NoticeCards(),
           const GettingStartedCard(),
           AsyncValueView<TodayAgenda>(
             value: agenda,

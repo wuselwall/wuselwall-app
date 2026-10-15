@@ -83,6 +83,10 @@ getting_started_dismissal        -- items are derived from data; only "not neede
   household_id, item_key, profile_id NULL,       -- NULL = for the whole household
   device_id NULL, dismissed_at
 
+notice_dismissal                 -- notices (join, new sign-in) are derived from audit_log and
+  id, household_id, profile_id,                  -- device rows (specs/20 J2, J4); only "Gesehen"
+  notice_key, dismissed_at                       -- is stored, per profile; unique (profile_id, key)
+
 instance_setting                 -- one row per instance, not per household
   household_creation ENUM('code','open')         -- 'code' until the opening gate
 
@@ -283,6 +287,15 @@ getting_started_dismissal        -- the only stored state of the getting-started
   dismissed_at
 ```
 
+```
+notice_dismissal                 -- added 2026-10-15 (specs/20 J2, J4): "Gesehen", per profile
+  id, household_id, profile_id, notice_key,     -- 'join:<audit id>' | 'signin:<device id>'
+  dismissed_at                                  -- unique (profile_id, notice_key)
+```
+
+Notices themselves are not stored: `api.notices` derives them from `audit_log` and `device`
+rows and drops anything older than 14 days.
+
 The card's items are derived from data and never ticked by hand (`api.getting_started`).
 The export (`api.household_export`) has no table of its own: it reads every household table
 and leaves out secrets (password and PIN hashes, token and code hashes, Auth ids) and the
@@ -475,6 +488,7 @@ household ─┬─< profile ─┬── auth.users (0..1, adults only)
            ├─< device ──< enrolment_code
            ├─< invitation ──> profile
            ├─< getting_started_dismissal
+           ├─< notice_dismissal
            ├─< audit_entry
            ├─< calendar ──< event ─┬─< event_attendee
            │                       └─< event_override

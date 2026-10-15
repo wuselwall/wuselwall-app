@@ -285,7 +285,9 @@ row, and nothing in it is reachable through RLS.
 
 > **Built 2026-10-15 on `feature/regions-and-ux`, not yet on the server.** Guardians invite from Einstellungen → Mitglieder or from the getting-started card: a code, a QR code, the link `https://wuselwall.app/i/#…` and the share sheet. An invitation is valid for 7 days and works once; "Erneut teilen" and "Zurückziehen" manage it. An invitee uses "Ich habe einen Einladungscode" on the front door, or reaches H0 automatically when the invitation names their confirmed email. The join confirmation reads "Du bist ‹Name› in ‹Familie›". The landing page is the website's `/i/`.
 >
-> **Not built:** universal links and Android App Links (the link opens the landing page; the code is entered in the app), and the guardian notice "‹Name› ist beigetreten".
+> **Not built:** universal links and Android App Links (the link opens the landing page; the code is entered in the app).
+>
+> **Notices (built 2026-10-15):** the guardian notice "‹Name› ist beigetreten" and the new-sign-in notice of J4 are in-app cards at the top of the adult Today tab (there is no server push). They are not stored: `api.notices` derives them from the audit row that invitation acceptance writes and from the `device` rows of personal devices, so they cannot drift from the facts. A join notice goes to every guardian except the joiner (on a shared device only while the PIN step-up is valid); a sign-in notice goes to the same profile's other personal devices, for devices registered after the viewing one. Both age out after 14 days. "Gesehen" (`api.notice_dismiss`) hides one for the acting profile only, kept in `notice_dismissal`; the card links to Einstellungen (Mitglieder, Geräte with Sperren). A server without them gives the app no notices, no error.
 
 **Inviting (a guardian, on their phone).** From the getting-started card, or
 Einstellungen → Mitglieder → a person → **Einladen** (or **Erwachsene Person einladen**,

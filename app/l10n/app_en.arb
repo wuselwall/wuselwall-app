@@ -1534,6 +1534,25 @@
       }
     }
   },
+  "todayNoticeJoined": "{name} joined",
+  "@todayNoticeJoined": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "todayNoticeSignIn": "New sign-in: {device}",
+  "@todayNoticeSignIn": {
+    "placeholders": {
+      "device": {
+        "type": "String"
+      }
+    }
+  },
+  "todayNoticeDismiss": "Got it",
+  "todayNoticeMembers": "Members",
+  "todayNoticeDevices": "Devices",
   "todayStartTitle": "Getting started",
   "todayStartProgress": "{done} of {total}",
   "@todayStartProgress": {
