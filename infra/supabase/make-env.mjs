@@ -96,6 +96,9 @@ function sign(alg, payload) {
 }
 const claims = (role) => ({ role, iss: 'supabase', iat, exp });
 
+// The send-email hook runs only when the Scaleway project and key are there to send with.
+const sendEmailHook = Boolean(vars.SCW_SECRET_KEY && vars.SCW_PROJECT_ID && vars.MAIL_FROM);
+
 const out = {
   COMPOSE_FILE: [
     'docker-compose.yml',
@@ -218,8 +221,11 @@ const out = {
   // others and must be the same value in GoTrue and in the functions container, which this file
   // guarantees by writing one variable for both. The hook is switched on only when the Scaleway
   // project and key from supabase/.env are present, so a stack never sends mail it cannot send.
+  // GoTrue calls the hook at the server's public HTTPS address: it refuses a plain-http one
+  // (other than localhost) and would not start (docker-compose.wuselwall.yml).
   SEND_EMAIL_HOOK_SECRET: `v1,whsec_${b64(32)}`,
-  SEND_EMAIL_HOOK_ENABLED: vars.SCW_SECRET_KEY && vars.SCW_PROJECT_ID && vars.MAIL_FROM ? 'true' : 'false',
+  SEND_EMAIL_HOOK_ENABLED: sendEmailHook ? 'true' : 'false',
+  SEND_EMAIL_HOOK_URI: sendEmailHook ? `${api.origin}/functions/v1/send-email` : '',
   SCW_SECRET_KEY: vars.SCW_SECRET_KEY ?? '',
   SCW_PROJECT_ID: vars.SCW_PROJECT_ID ?? '',
   SCW_REGION: vars.SCW_REGION ?? 'fr-par',

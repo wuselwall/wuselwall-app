@@ -177,9 +177,12 @@ relying on it, and after any DNS change.
    `SCW_REGION` (`fr-par`), `MAIL_FROM` (an address on the sending domain) and `MAIL_FROM_NAME`
    (`WuselWall`). A new stack gets them from `supabase/.env` through `make-env.mjs`, which
    also generates `SEND_EMAIL_HOOK_SECRET` (`v1,whsec_…`, shared by GoTrue and the functions
-   container) and sets `SEND_EMAIL_HOOK_ENABLED=true` when the Scaleway values are present.
-4. Set `SEND_EMAIL_HOOK_ENABLED=true` (if step 3 did not), deploy the function with
-   `scripts/remote-stack.sh functions`, then `scripts/remote-stack.sh up -d auth`.
+   container) and sets `SEND_EMAIL_HOOK_ENABLED=true` and `SEND_EMAIL_HOOK_URI` when the
+   Scaleway values are present.
+4. Set `SEND_EMAIL_HOOK_ENABLED=true` and `SEND_EMAIL_HOOK_URI=https://<api>/functions/v1/send-email`
+   (if step 3 did not), deploy the function with `scripts/remote-stack.sh functions`, then
+   `scripts/remote-stack.sh up -d auth`. The address must be HTTPS: GoTrue refuses a plain-http
+   hook address other than localhost and then does not start at all, hook on or off.
 5. Check with a code to a Gmail, an Outlook.com, a GMX and an iCloud address, as below.
 
 The hook is the only path that renders the mails in the recipient's language. Stacks that run
