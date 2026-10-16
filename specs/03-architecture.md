@@ -138,7 +138,7 @@ wuselwall/
 - **The Flutter app contains no business rules.** Feature repositories translate between
   Dart models and `api` calls; widgets never call Supabase directly.
 - **Edge Functions never bypass RLS for user requests.** They forward the caller's JWT.
-  The service-role key is used only by functions with no user (ICS, enrolment, jobs)
+  The service-role key is used only by functions with no user (ICS, Shortcuts, MCP, enrolment, jobs)
   and by the account-administration functions of [ADR-014](adr/ADR-014-self-service-onboarding.md)
   (`account-delete`, MFA reset), which verify the caller's JWT before acting on that one account,
   and each such use is commented with why. Added 2026-10-14: the on-demand holiday cache
@@ -222,10 +222,15 @@ Hiding a button in Flutter is a courtesy, never a control.
 ### The service-role key
 
 Added 2026-10-14, so that the exceptions have one place to point to. The service-role key is
-used by Edge Functions that have no user (ICS feeds, enrolment, jobs such as `holidays-sync`'s
-weekly run), and by the two account-administration functions of ADR-014. The one exception
+used by Edge Functions that have no user (ICS feeds, Shortcuts, enrolment, jobs such as
+`holidays-sync`'s weekly run), and by the two account-administration functions of ADR-014. The one exception
 inside a user request is the on-demand holiday cache refresh: it verifies the member's JWT,
 and the service role writes only the public cache. Each use names its reason in a comment.
+Shortcuts (added 2026-10-16, [12](12-mcp-and-assistants.md#part-1--siri-today-via-shortcuts))
+call `api.shortcut_*` functions that start from the shortcut key: they act as the key's holder
+only, with an actor whose device class `shortcut` no guardian check accepts, and return only the
+key's household. The MCP server (`mcp`, same date) does the same with an assistant key through
+`api.mcp_context`, read-only.
 
 ### Audit log
 

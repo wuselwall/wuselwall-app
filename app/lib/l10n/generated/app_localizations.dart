@@ -7188,6 +7188,246 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open the WuselWall app on your phone, choose this server by scanning the code, then sign in there.'**
   String get setupPhoneBody;
+
+  /// No description provided for @shortcutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Siri and Shortcuts'**
+  String get shortcutTitle;
+
+  /// No description provided for @shortcutSettingsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping list, the day and more by voice'**
+  String get shortcutSettingsSubtitle;
+
+  /// No description provided for @shortcutIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'A key connects a shortcut on the iPhone with WuselWall. With it, Siri puts things on the shopping list and tells you what is on today, what there is to eat or who has PE tomorrow. A key belongs to one person: it can read and add, but it cannot delete or manage anything. A key for an AI assistant (MCP) only reads.'**
+  String get shortcutIntro;
+
+  /// No description provided for @shortcutEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No keys yet.'**
+  String get shortcutEmpty;
+
+  /// No description provided for @shortcutKioskNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Keys are created on a personal phone, not on the wall display.'**
+  String get shortcutKioskNote;
+
+  /// No description provided for @shortcutNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New key'**
+  String get shortcutNew;
+
+  /// No description provided for @shortcutLabelField.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get shortcutLabelField;
+
+  /// No description provided for @shortcutLabelHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. iPhone'**
+  String get shortcutLabelHint;
+
+  /// No description provided for @shortcutForWhom.
+  ///
+  /// In en, this message translates to:
+  /// **'For whom?'**
+  String get shortcutForWhom;
+
+  /// No description provided for @shortcutForWhomHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The shortcut acts as this person: it ticks their tasks and tells their points.'**
+  String get shortcutForWhomHelp;
+
+  /// No description provided for @shortcutCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create key'**
+  String get shortcutCreate;
+
+  /// No description provided for @shortcutKeyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Key for {name}'**
+  String shortcutKeyTitle(String name);
+
+  /// No description provided for @shortcutKeyOnce.
+  ///
+  /// In en, this message translates to:
+  /// **'This key is shown only now. Whoever has it can read and add as {name}, so treat it like a password. The Shortcuts app syncs it through iCloud.'**
+  String shortcutKeyOnce(String name);
+
+  /// No description provided for @shortcutCopyKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy key'**
+  String get shortcutCopyKey;
+
+  /// No description provided for @shortcutAddressLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get shortcutAddressLabel;
+
+  /// No description provided for @shortcutCopyAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy address'**
+  String get shortcutCopyAddress;
+
+  /// No description provided for @shortcutCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied.'**
+  String get shortcutCopied;
+
+  /// No description provided for @shortcutHowTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How it works'**
+  String get shortcutHowTitle;
+
+  /// No description provided for @shortcutHowSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'In the Shortcuts app, create a shortcut with the action “Get Contents of URL”: the address with /today at the end, and a header “Authorization” with “Bearer ”, a space and the key. Then add “Show Result” or “Speak Text”. The guide at wuselwall.app/docs/en/settings/shortcuts shows every shortcut.'**
+  String get shortcutHowSteps;
+
+  /// No description provided for @shortcutLastUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Last used: {when}'**
+  String shortcutLastUsed(String when);
+
+  /// No description provided for @shortcutNeverUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Never used'**
+  String get shortcutNeverUsed;
+
+  /// No description provided for @shortcutUseCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 request} other{{count} requests}}'**
+  String shortcutUseCount(int count);
+
+  /// No description provided for @shortcutRevoked.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoked'**
+  String get shortcutRevoked;
+
+  /// No description provided for @shortcutRevokeAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke'**
+  String get shortcutRevokeAction;
+
+  /// No description provided for @shortcutRevokeConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke “{label}”? The shortcut stops working at once.'**
+  String shortcutRevokeConfirm(String label);
+
+  /// No description provided for @shortcutErrLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a name of at most 60 characters.'**
+  String get shortcutErrLabel;
+
+  /// No description provided for @shortcutErrLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'This person already has ten keys. Please revoke one first.'**
+  String get shortcutErrLimit;
+
+  /// No description provided for @shortcutSectionAssistants.
+  ///
+  /// In en, this message translates to:
+  /// **'AI assistants'**
+  String get shortcutSectionAssistants;
+
+  /// No description provided for @shortcutKindShortcut.
+  ///
+  /// In en, this message translates to:
+  /// **'Siri'**
+  String get shortcutKindShortcut;
+
+  /// No description provided for @shortcutKindAssistant.
+  ///
+  /// In en, this message translates to:
+  /// **'Assistant'**
+  String get shortcutKindAssistant;
+
+  /// No description provided for @shortcutKindShortcutHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'For a shortcut on the iPhone: it reads and adds, for example to the shopping list.'**
+  String get shortcutKindShortcutHelp;
+
+  /// No description provided for @shortcutKindAssistantHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'For an AI assistant that speaks MCP, such as Claude: it only reads, and only adults get one.'**
+  String get shortcutKindAssistantHelp;
+
+  /// No description provided for @shortcutAssistantLabelHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Claude on the laptop'**
+  String get shortcutAssistantLabelHint;
+
+  /// No description provided for @shortcutAssistantKeyOnce.
+  ///
+  /// In en, this message translates to:
+  /// **'This key is shown only now. With it, an assistant reads the whole family\'s week as {name}: appointments, who is away, the children\'s timetables, tasks, meals and the shopping list. What it reads goes to the assistant\'s provider. Treat the key like a password.'**
+  String shortcutAssistantKeyOnce(String name);
+
+  /// No description provided for @shortcutAssistantHowSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the address as an MCP server in your assistant and send the key as the header “Authorization” with “Bearer ”, a space and the key. The guide at wuselwall.app/docs/en/settings/shortcuts shows how for some assistants.'**
+  String get shortcutAssistantHowSteps;
+
+  /// No description provided for @shortcutErrAdultOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Only adults get a key for an assistant.'**
+  String get shortcutErrAdultOnly;
+
+  /// No description provided for @reminderPackTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pack for tomorrow'**
+  String get reminderPackTitle;
+
+  /// No description provided for @reminderPackChild.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}: {items}'**
+  String reminderPackChild(String name, String items);
+
+  /// No description provided for @settingNotifyPackingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Packing reminder the evening before'**
+  String get settingNotifyPackingTitle;
+
+  /// No description provided for @settingNotifyPackingHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'At this time your phone says what has to go in the school bag for tomorrow, from the timetables (for example PE kit). Only when there is something to pack.'**
+  String get settingNotifyPackingHelp;
 }
 
 class _AppLocalizationsDelegate

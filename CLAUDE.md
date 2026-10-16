@@ -21,9 +21,13 @@ the kid register; regions to any depth and holidays (DE/AT/CH/LI from OpenHolida
 by the server: public holidays automatic, Ferien imported), several schools, the timetable's
 day operations, meal suggestions, the Today tab with the getting-started card, the data
 export, subscribed ICS calendars (FR-1.9: `calendar-import`, read-only occurrences in their
-own tables, optionally in the outbound feed), local reminders (Q47) and the QR scanner on
-`camera` and `zxing2` (Q49). `scripts/local-pgtap` runs every migration and pgTAP suite on a
-throwaway local Postgres (no Docker). The server runs four scheduled jobs: `tasks-nightly`,
+own tables, optionally in the outbound feed), local reminders (Q47), the QR scanner on
+`camera` and `zxing2` (Q49), Siri via Apple Shortcuts (M2, specs/12 Part 1: per-person keys
+in `app.shortcut_token`, the `shortcuts` function), the MCP server with `family:read` (M2,
+Part 2: the `mcp` function, read-only `wwa_` assistant keys as the Q15 interim, no OAuth yet),
+and the evening packing reminder (FR-7.12, `notify.packing_reminder`).
+`scripts/local-pgtap` runs every migration and pgTAP suite on a throwaway local Postgres (no
+Docker). The server runs four scheduled jobs: `tasks-nightly`,
 `holidays-sync` (weekly), `calendar-import` (hourly) and `household-purge` (daily). Next: the
 journey gaps of [specs/16 step 10](specs/16-setup-plan.md#step-10--journey-gaps-before-launch-m15)
 (members, the family and devices editable; lists and categories; servers without mail;
@@ -70,7 +74,7 @@ See [specs/03-architecture.md](specs/03-architecture.md),
 - The Flutter app contains no business rules. Widgets call repositories; repositories
   call `api` views, `api` functions or Edge Functions — never a table.
 - Edge Functions forward the caller's JWT. The service-role key is only for functions
-  without a user (ICS, enrolment, jobs) and for the two account-administration functions
+  without a user (ICS, Shortcuts, MCP, enrolment, jobs) and for the two account-administration functions
   of ADR-014 (`account-delete`, MFA reset), which verify the caller's JWT and act only on
   that caller (or, for the reset, a co-guardian), with a comment at each use. Two more,
   inside a user's request: `holidays-sync` verifies the member's JWT and writes only the

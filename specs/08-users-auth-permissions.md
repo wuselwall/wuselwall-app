@@ -171,7 +171,8 @@ shared household secret.
 | Calendar feed token | Until revoked | URL (bearer); hash in DB | Per token |
 | MCP OAuth access token | 1 hour | Client-held | Per grant |
 | MCP refresh token | 30 days | Client-held | Per grant |
-| Shortcuts API token | Until revoked | iOS Keychain via Shortcuts | Per token |
+| Shortcuts key (`wws_…`) | Until revoked, or until its holder leaves | The Shortcuts app (synced by iCloud); hash in DB | Per key |
+| Assistant key (`wwa_…`, MCP `family:read`, the Q15 interim) | Until revoked, or until its holder leaves | The assistant's configuration; hash in DB | Per key |
 
 On the **web build** (the laptop), the session lives in browser storage instead of a
 platform keystore — one more reason the laptop is a `personal` device with a fixed adult

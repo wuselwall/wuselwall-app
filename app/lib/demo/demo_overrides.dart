@@ -24,6 +24,7 @@ import 'package:wuselwall/demo/demo_pairing.dart';
 import 'package:wuselwall/demo/demo_region.dart';
 import 'package:wuselwall/demo/demo_repositories.dart';
 import 'package:wuselwall/demo/demo_school.dart';
+import 'package:wuselwall/demo/demo_shortcuts.dart';
 import 'package:wuselwall/demo/demo_tasks.dart';
 import 'package:wuselwall/features/account/application/account_admin_providers.dart';
 import 'package:wuselwall/features/board/data/board_repository.dart';
@@ -45,6 +46,7 @@ import 'package:wuselwall/features/school/data/school_repository.dart';
 import 'package:wuselwall/features/settings/data/household_export_repository.dart';
 import 'package:wuselwall/features/settings/data/household_settings_repository.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
+import 'package:wuselwall/features/shortcuts/data/shortcut_repository.dart';
 import 'package:wuselwall/features/tasks/data/tasks_repository.dart';
 import 'package:wuselwall/features/today/data/getting_started_repository.dart';
 import 'package:wuselwall/features/today/data/notices_repository.dart';
@@ -146,6 +148,7 @@ List<Override> _overrides(String scenario) => [
     DemoExternalCalendarsRepository(),
   ),
   tasksRepositoryProvider.overrideWithValue(DemoTasksRepository()),
+  shortcutRepositoryProvider.overrideWithValue(DemoShortcutRepository()),
   gettingStartedRepositoryProvider.overrideWithValue(
     DemoGettingStartedRepository(),
   ),

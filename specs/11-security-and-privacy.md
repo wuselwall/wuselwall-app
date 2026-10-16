@@ -85,6 +85,26 @@ insiders. If a threat model does not exclude anything it is not a threat model.
   That combination is the most sensitive thing this system will ever hold, and the
   default should reflect it. Including it is a checkbox with a warning next to it.
 
+### T2a — shortcut keys
+
+*Added 2026-10-16 ([12](12-mcp-and-assistants.md#part-1--siri-today-via-shortcuts)).* A
+shortcut key is a bearer credential in the Shortcuts app, synced through iCloud.
+
+- 256 bits of entropy, prefixed `wws_` so a leaked key is recognisable; only the hash is stored.
+- One person per key. The key reads and adds as that person and nothing else: no deletion, no
+  points adjustment, no settings, and a guardian's key is no guardian (its actor's device class
+  `shortcut` fails `app.require_guardian`). It ticks only its holder's own chores.
+- At most 100 writes per household day per key; reads are not capped.
+- The key travels in the `Authorization` header, never in the URL, so it stays out of access logs.
+- Unknown, revoked and orphaned keys get the same answer, so keys cannot be probed.
+- Revoked at once from Settings, and automatically when the holder leaves the family, the
+  profile is deactivated or the family is deleted. `last_used_at` and a use count are shown.
+- **Assistant keys** (`wwa_…`, MCP `family:read`) share the table and every rule above, and add
+  three: only adults hold them, their actor (device class `assistant`, origin `mcp`) is refused
+  by every write, and no shortcut function accepts them (nor does the MCP read accept a shortcut
+  key). Unlike a shortcut, an assistant sends what it reads to its provider: the issuing dialog
+  and the guide say so, and the `mcp` function refuses requests with an `Origin` header.
+
 ### T3 — device loss
 
 - Every device is its own Auth user. Revoking one affects nothing else.
@@ -238,7 +258,7 @@ With Supabase, row-level security is not defence in depth; it is the perimeter.
 - `api` views are `security_invoker`; `api` functions run as a role without `BYPASSRLS`,
   so neither silently widens access.
 - The **service-role key** exists only in the server's `.env`. It is used by the Edge
-  Functions that have no user (ICS, enrolment, jobs) and by `account-delete` and the MFA
+  Functions that have no user (ICS, Shortcuts, MCP, enrolment, jobs) and by `account-delete` and the MFA
   reset (ADR-014), which need the Auth Admin API and act only on the verified caller or
   their co-guardian; each such use commented; it is
   never in CI, never in the app and never on a laptop.
