@@ -1894,11 +1894,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get schoolWeekdayPick => 'Days';
 
   @override
-  String get feedTitle => 'Calendar subscriptions';
+  String get feedTitle => 'Share the family calendar';
 
   @override
-  String get feedSettingsSubtitle =>
-      'The family calendar in Outlook or on an iPhone';
+  String get feedSettingsSubtitle => 'Read-only, in Outlook or on an iPhone';
 
   @override
   String get feedNew => 'New subscription';
@@ -3019,11 +3018,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get regionImported => 'imported';
 
   @override
-  String get extCalTitle => 'Subscribed calendars';
+  String get extCalTitle => 'Add outside calendars';
 
   @override
   String get extCalSettingsSubtitle =>
-      'Appointments from club and bin calendars';
+      'Club fixtures, bin collection and more in the family calendar';
 
   @override
   String get extCalEmpty =>
@@ -3228,14 +3227,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get scanTypeCode => 'Type the code';
 
   @override
-  String get feedSubTitle => 'Include subscribed calendars';
+  String get feedSubTitle => 'Include outside calendars';
 
   @override
   String get feedSubHelp =>
       'Events from imported calendars (for example a club or the bin collection) also appear in this subscription.';
 
   @override
-  String get feedSubSummary => 'Subscribed calendars';
+  String get feedSubSummary => 'Outside calendars';
 
   @override
   String get boardAllEvents => 'All events';

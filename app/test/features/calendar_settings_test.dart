@@ -160,7 +160,7 @@ void main() {
     });
   });
 
-  group('Kalender-Abos', () {
+  group('Familienkalender teilen', () {
     testWidgets('create sends label and filter, then shows the URL once', (
       tester,
     ) async {
@@ -233,7 +233,7 @@ void main() {
         await tester.pumpAndSettle();
         final switchFinder = find.widgetWithText(
           SwitchListTile,
-          'Abonnierte Kalender einschließen',
+          'Kalender von außen einschließen',
         );
         expect(tester.widget<SwitchListTile>(switchFinder).value, isFalse);
         expect(

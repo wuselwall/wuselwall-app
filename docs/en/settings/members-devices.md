@@ -68,9 +68,9 @@ The file contains what you entered: members, appointments, timetables, tasks, re
 
 Leaving and deleting a family is described under [Account and family](/en/settings/account).
 
-## Subscribed calendars
+## Outside calendars
 
-You subscribe to calendars from clubs or the town under **Settings → Subscribed calendars**. How this works and what to note is described under [Calendar](/en/calendar/#subscribed-calendars).
+You subscribe to calendars from clubs or the town under **Settings → Add outside calendars**. How this works and what to note is described under [Calendar](/en/calendar/#outside-calendars).
 
 ## Show Getting started again
 

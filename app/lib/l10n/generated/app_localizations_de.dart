@@ -1910,11 +1910,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get schoolWeekdayPick => 'Tage';
 
   @override
-  String get feedTitle => 'Kalender-Abos';
+  String get feedTitle => 'Familienkalender teilen';
 
   @override
   String get feedSettingsSubtitle =>
-      'Der Familienkalender in Outlook oder auf dem iPhone';
+      'Nur zum Lesen, in Outlook oder auf dem iPhone';
 
   @override
   String get feedNew => 'Neues Abo';
@@ -3038,11 +3038,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get regionImported => 'importiert';
 
   @override
-  String get extCalTitle => 'Abonnierte Kalender';
+  String get extCalTitle => 'Kalender von außen hinzufügen';
 
   @override
   String get extCalSettingsSubtitle =>
-      'Termine aus Vereins- und Abfallkalendern';
+      'Spielplan, Abfuhrtermine und mehr im Familienkalender';
 
   @override
   String get extCalEmpty =>
@@ -3246,14 +3246,14 @@ class AppLocalizationsDe extends AppLocalizations {
   String get scanTypeCode => 'Code eintippen';
 
   @override
-  String get feedSubTitle => 'Abonnierte Kalender einschließen';
+  String get feedSubTitle => 'Kalender von außen einschließen';
 
   @override
   String get feedSubHelp =>
       'Termine aus importierten Kalendern (z. B. Verein, Müllabfuhr) erscheinen auch im Abo.';
 
   @override
-  String get feedSubSummary => 'Abonnierte Kalender';
+  String get feedSubSummary => 'Kalender von außen';
 
   @override
   String get boardAllEvents => 'Alle Termine';
