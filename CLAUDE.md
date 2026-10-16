@@ -22,9 +22,12 @@ by the server: public holidays automatic, Ferien imported), several schools, the
 day operations, meal suggestions, the Today tab with the getting-started card, the data
 export, subscribed ICS calendars (FR-1.9: `calendar-import`, read-only occurrences in their
 own tables, optionally in the outbound feed), local reminders (Q47), the QR scanner on
-`camera` and `zxing2` (Q49), and Siri via Apple Shortcuts (M2, specs/12 Part 1: per-person keys
-in `app.shortcut_token`, the `shortcuts` function). `scripts/local-pgtap` runs every migration and pgTAP suite on a
-throwaway local Postgres (no Docker). The server runs four scheduled jobs: `tasks-nightly`,
+`camera` and `zxing2` (Q49), Siri via Apple Shortcuts (M2, specs/12 Part 1: per-person keys
+in `app.shortcut_token`, the `shortcuts` function), the MCP server with `family:read` (M2,
+Part 2: the `mcp` function, read-only `wwa_` assistant keys as the Q15 interim, no OAuth yet),
+and the evening packing reminder (FR-7.12, `notify.packing_reminder`).
+`scripts/local-pgtap` runs every migration and pgTAP suite on a throwaway local Postgres (no
+Docker). The server runs four scheduled jobs: `tasks-nightly`,
 `holidays-sync` (weekly), `calendar-import` (hourly) and `household-purge` (daily). Next: apply
 the migrations and deploy the functions (`scripts/remote-backup.sh` first), set
 `ENABLE_EMAIL_AUTOCONFIRM=false` on an existing server, then M1.6.
@@ -68,7 +71,7 @@ See [specs/03-architecture.md](specs/03-architecture.md),
 - The Flutter app contains no business rules. Widgets call repositories; repositories
   call `api` views, `api` functions or Edge Functions — never a table.
 - Edge Functions forward the caller's JWT. The service-role key is only for functions
-  without a user (ICS, Shortcuts, enrolment, jobs) and for the two account-administration functions
+  without a user (ICS, Shortcuts, MCP, enrolment, jobs) and for the two account-administration functions
   of ADR-014 (`account-delete`, MFA reset), which verify the caller's JWT and act only on
   that caller (or, for the reset, a co-guardian), with a comment at each use. Two more,
   inside a user's request: `holidays-sync` verifies the member's JWT and writes only the

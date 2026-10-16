@@ -64,6 +64,27 @@ Ist ein Handy weg oder braucht jemand den Kurzbefehl nicht mehr, tippe in der Li
 
 Erziehungsberechtigte sehen und sperren alle Schlüssel der Familie, alle anderen ihre eigenen. Der [Datenexport](/settings/members-devices#daten-exportieren) enthält jeden Schlüssel mit Namen und Datum, aber nicht den Schlüssel selbst.
 
+## KI-Assistenten (MCP)
+
+Ein KI-Assistent, der **MCP** spricht (das Model Context Protocol, zum Beispiel Claude), kann mit einem eigenen Schlüssel in WuselWall **nachlesen**: „Was steht diese Woche an?“, „Was gibt es am Donnerstag zu essen?“, „Wann hat Lotta morgen Schluss?“. Er kann **nichts eintragen, ändern oder löschen**.
+
+Wähle beim Erstellen **Assistent** statt **Siri**. Einen Schlüssel für einen Assistenten bekommen nur Erwachsene. Er erscheint in der Liste unter **KI-Assistenten** und wird gesperrt wie jeder andere Schlüssel.
+
+::: warning Was der Assistent liest, verlässt euren Server
+Der Assistent liest die Woche der ganzen Familie: Termine, wer wann weg ist, die Stundenpläne der Kinder, Aufgaben, Punkte, Essen, Rezepte und die Einkaufsliste. Diese Daten gehen an den Anbieter des Assistenten und unterliegen dessen Datenschutzbedingungen. Überlegt deshalb gemeinsam, ob ihr das wollt.
+:::
+
+Der Assistent findet diese Abfragen: Wochenübersicht, Termine, Aufgaben, Essensplan, Einkaufsliste, Punkte, Rezepte, Stundenplan und wer zu Hause ist. Jede Antwort nennt die Personen beim Namen.
+
+**Verbinden:** Trage im Assistenten einen MCP-Server mit der Adresse aus WuselWall ein, also etwa `https://api.example.org/functions/v1/mcp`, und schicke den Schlüssel als Header `Authorization: Bearer wwa_…`. In Claude Code geht das so:
+
+```sh
+claude mcp add --transport http wuselwall https://api.example.org/functions/v1/mcp \
+  --header "Authorization: Bearer wwa_…"
+```
+
+Assistenten, die sich nur per OAuth anmelden können und keinen eigenen Header erlauben, lassen sich noch nicht verbinden. Eine Anmeldung mit Zustimmungsseite kommt zusammen mit dem Eintragen über Assistenten.
+
 ::: info Ohne iPhone
 Ein Kurzbefehl ist eine gewöhnliche Web-Anfrage. Jede App, die eine Anfrage mit einem Header schicken kann, funktioniert genauso.
 :::

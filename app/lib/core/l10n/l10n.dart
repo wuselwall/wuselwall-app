@@ -66,6 +66,7 @@ extension FailureL10n on Failure {
       'already_in_household' => l10n.leaveErrAlreadyInHousehold,
       'shortcut_label_invalid' => l10n.shortcutErrLabel,
       'shortcut_token_limit' => l10n.shortcutErrLimit,
+      'assistant_adult_only' => l10n.shortcutErrAdultOnly,
       _ => null,
     };
     if (byCode != null) return byCode;

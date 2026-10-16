@@ -89,6 +89,21 @@ what the sentence then explains.
 
 ## Part 2 — the MCP server
 
+> **Built 2026-10-16 on `feature/mcp-read` (phase 2, `family:read`), not yet on the server:** the
+> `mcp` Edge Function at `<server>/functions/v1/mcp`, dual-era (revision `2026-07-28` with
+> `server/discover`, per-request `_meta`, header validation, `resultType` and cache hints; the
+> `initialize` handshake of `2025-03-26` to `2025-11-25` for clients not yet on the new
+> revision), written by hand without the SDK: a stateless JSON-only server is small. All nine
+> read tools below and the four resources. **Authorisation is the interim of
+> [Q15](14-open-questions.md):** a per-person *assistant key* (`wwa_…`, adults only, issued
+> in Settings → Siri und Kurzbefehle) as a bearer token instead of OAuth 2.1. Supabase Auth's
+> OAuth 2.1 server is in public beta and runs self-hosted, but needs a login and consent screen
+> on every family's server and a hook change for OAuth sessions; it comes with phase 3 and the
+> write scopes. The key's actor has origin `mcp` and device class `assistant`, and
+> `app.key_actor` refuses every write for it. Not built: per-grant rate limits at the proxy
+> (reads are counted per key, not capped) and the guardian feed of assistant actions (there are
+> no assistant actions yet).
+
 ### Protocol baseline
 
 Target spec revision **`2026-07-28`**, the largest revision since MCP launched:

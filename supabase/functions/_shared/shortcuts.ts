@@ -592,7 +592,7 @@ function eventLine(ctx: ShortcutContext, o: Occurrence, date: string, m: Shortcu
     : `${o.title}${people}`;
 }
 
-function mealLine(ctx: ShortcutContext, meal: MealRow, m: ShortcutMessages): string {
+function mealLine(meal: MealRow, m: ShortcutMessages): string {
   const slot = m.slot[meal.slot as keyof ShortcutMessages["slot"]] ?? meal.slot;
   return `${slot}: ${meal.title ?? "?"}`;
 }
@@ -620,7 +620,7 @@ export function answerDay(ctx: ShortcutContext, date: string, m: ShortcutMessage
   const sentences = [
     events.length === 0 ? m.noEvents(when) : m.events(when, events.map((o) => eventLine(ctx, o, date, m))),
   ];
-  if (meals.length > 0) sentences.push(m.meals(when, meals.map((x) => mealLine(ctx, x, m))));
+  if (meals.length > 0) sentences.push(m.meals(when, meals.map((x) => mealLine(x, m))));
   if (chores.length > 0) sentences.push(m.yourChores(chores.map((t) => t.title)));
   return {
     text: sentences.join(" "),
@@ -644,7 +644,7 @@ export function answerMeals(ctx: ShortcutContext, date: string, m: ShortcutMessa
   const when = whenOf(date, ctx.household.today, m);
   const meals = mealsOn(ctx, date);
   if (meals.length === 0) return { text: m.noMeals(when), data: { date, meals: [] } };
-  const sentences = [m.meals(when, meals.map((x) => mealLine(ctx, x, m)))];
+  const sentences = [m.meals(when, meals.map((x) => mealLine(x, m)))];
   const cooks = [...new Set(meals.map((x) => nameOf(ctx, x.cook_profile_id)).filter((n) => n !== null))];
   for (const cook of cooks) sentences.push(m.cooks(cook!));
   return {

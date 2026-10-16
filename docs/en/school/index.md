@@ -72,7 +72,7 @@ Tap a lesson when something changes:
 
 ## Pack for tomorrow
 
-On the kitchen wall, a child's card shows **Pack for tomorrow** when something needs to come along, for example sports kit. Whether this hint appears is set under [Household settings](/en/settings/household).
+On the kitchen wall, a child's card shows **Pack for tomorrow** when something needs to come along, for example sports kit. The child's Today view shows the same, and your own phone gives a [packing reminder](/en/settings/reminders) the evening before. Whether these hints appear is set under [Household settings](/en/settings/household): switched off, they disappear everywhere.
 
 ## Children report changes
 

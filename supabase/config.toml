@@ -254,3 +254,7 @@ verify_jwt = false
 # Apple Shortcuts send a shortcut token, not a JWT; api.shortcut_* checks it.
 [functions.shortcuts]
 verify_jwt = false
+
+# Assistants send an assistant key, not a JWT; api.mcp_context checks it.
+[functions.mcp]
+verify_jwt = false

@@ -8,6 +8,10 @@
 // Public holidays are not imported: the cache (api.holiday_feed) is read for the regions
 // of the schools and of the household, and a school's region holidays join its holidays
 // here (publicHolidayRows), so the projection reads one list.
+//
+// The household setting school.equipment_hint (specs/21, FR-7.12) is applied here too: when
+// it is off, the subjects' equipment notes are left out, so no lesson carries equipment and
+// no "Morgen einpacken" appears anywhere, whatever the app version.
 import type { userClient } from "./client.ts";
 import type { HolidayFeedRow } from "./openholidays.ts";
 import { countriesFromRegions } from "./openholidays.ts";
@@ -84,6 +88,10 @@ export async function loadSchoolData(
       loadHousehold(client),
     ]);
 
+  const subjectsShown = household.equipmentHint
+    ? subjects
+    : subjects.map((s) => ({ ...s, equipment_note: null }));
+
   const regions = [
     ...schools.map((s) => s.region_code),
     household.region,
@@ -98,7 +106,7 @@ export async function loadSchoolData(
     schools,
     periods,
     terms,
-    subjects,
+    subjects: subjectsShown,
     timetables,
     lessons,
     exceptions,
@@ -109,23 +117,28 @@ export async function loadSchoolData(
   };
 }
 
-/** The household's locale and its region setting (household-level values only). */
+/**
+ * The household's locale, its region setting and whether the equipment hint is on
+ * (household-level values only; a missing row is the curated default, on).
+ */
 export async function loadHousehold(
   client: Client,
-): Promise<{ locale: string; region: string | null }> {
+): Promise<{ locale: string; region: string | null; equipmentHint: boolean }> {
   const [households, settings] = await Promise.all([
     rows<{ locale: string }>(client.from("household").select("locale")),
-    rows<{ value: unknown }>(
-      client.from("settings").select("value")
-        .eq("key", "household.region")
+    rows<{ key: string; value: unknown }>(
+      client.from("settings").select("key, value")
+        .in("key", ["household.region", "school.equipment_hint"])
         .is("profile_id", null)
         .is("device_id", null),
     ),
   ]);
-  const value = settings[0]?.value;
+  const valueOf = (key: string) => settings.find((s) => s.key === key)?.value;
+  const region = valueOf("household.region");
   return {
     locale: households[0]?.locale ?? "de-DE",
-    region: typeof value === "string" && value !== "" ? value : null,
+    region: typeof region === "string" && region !== "" ? region : null,
+    equipmentHint: valueOf("school.equipment_hint") !== false,
   };
 }
 

@@ -18,10 +18,11 @@ import 'package:wuselwall/features/identity/ui/guardian_gate.dart';
 import 'package:wuselwall/features/shortcuts/application/shortcut_providers.dart';
 import 'package:wuselwall/features/shortcuts/data/shortcut_repository.dart';
 
-/// Siri and Shortcuts (specs/12 "Part 1"): one key per person and device, which an Apple
-/// Shortcut sends to read and add as that person. A guardian sees and manages every key;
-/// everyone else sees and manages their own. Never on the kitchen wall: a key is shown
-/// once, to the person who pastes it into a shortcut.
+/// Siri and Shortcuts (specs/12 "Part 1") and assistants over MCP ("Part 2"): one key per
+/// person and device. A shortcut key reads and adds as that person; an assistant key, for
+/// adults only, reads. A guardian sees and manages every key; everyone else sees and
+/// manages their own. Never on the kitchen wall: a key is shown once, to the person who
+/// pastes it into a shortcut or an assistant.
 class ShortcutsPage extends ConsumerWidget {
   const ShortcutsPage({super.key});
 
@@ -54,6 +55,19 @@ class ShortcutsPage extends ConsumerWidget {
           final visible = guardian
               ? list
               : list.where((t) => t.profileId == acting).toList();
+          Widget tile(ShortcutToken t) => _KeyTile(
+            token: t,
+            owner: members
+                .where((m) => m.id == t.profileId)
+                .firstOrNull
+                ?.displayName,
+            onRevoke: guardian || t.profileId == acting
+                ? () => _revoke(context, ref, t)
+                : null,
+          );
+          final assistants = visible
+              .where((t) => t.kind == KeyKind.assistant)
+              .toList();
           return ListView(
             padding: const EdgeInsets.fromLTRB(
               Tokens.space4,
@@ -67,16 +81,16 @@ class ShortcutsPage extends ConsumerWidget {
               if (kiosk) Text(l10n.shortcutKioskNote),
               if (visible.isEmpty && !kiosk) Text(l10n.shortcutEmpty),
               for (final t in visible)
-                _KeyTile(
-                  token: t,
-                  owner: members
-                      .where((m) => m.id == t.profileId)
-                      .firstOrNull
-                      ?.displayName,
-                  onRevoke: guardian || t.profileId == acting
-                      ? () => _revoke(context, ref, t)
-                      : null,
+                if (t.kind == KeyKind.shortcut) tile(t),
+              if (assistants.isNotEmpty) ...[
+                const SizedBox(height: Tokens.space4),
+                Text(
+                  l10n.shortcutSectionAssistants,
+                  style: Theme.of(context).textTheme.titleSmall,
                 ),
+                const SizedBox(height: Tokens.space2),
+                for (final t in assistants) tile(t),
+              ],
             ],
           );
         },
@@ -110,7 +124,12 @@ class ShortcutsPage extends ConsumerWidget {
 
     final result = await ref
         .read(shortcutRepositoryProvider)
-        .create(actor: acting, profileId: spec.profile.id, label: spec.label);
+        .create(
+          actor: acting,
+          profileId: spec.profile.id,
+          label: spec.label,
+          kind: spec.kind,
+        );
     if (!context.mounted) return;
     switch (result) {
       case Ok(:final value):
@@ -121,7 +140,10 @@ class ShortcutsPage extends ConsumerWidget {
           builder: (_) => _KeyDialog(
             name: spec.profile.displayName,
             token: value.token,
-            address: shortcutsAddress(ref.read(appConfigProvider).supabaseUrl),
+            kind: spec.kind,
+            address: spec.kind == KeyKind.assistant
+                ? mcpAddress(ref.read(appConfigProvider).supabaseUrl)
+                : shortcutsAddress(ref.read(appConfigProvider).supabaseUrl),
           ),
         );
       case Err(:final failure):
@@ -197,7 +219,13 @@ class _KeyTile extends StatelessWidget {
       opacity: token.revoked ? 0.5 : 1,
       child: Card(
         child: ListTile(
-          leading: Icon(token.revoked ? Icons.key_off : Icons.key),
+          leading: Icon(
+            token.revoked
+                ? Icons.key_off
+                : token.kind == KeyKind.assistant
+                ? Icons.smart_toy_outlined
+                : Icons.key,
+          ),
           title: Text(token.label),
           // "Thomas · 34 Abfragen", then when it was last used.
           subtitle: Text(
@@ -223,13 +251,19 @@ class _KeyTile extends StatelessWidget {
 }
 
 class _NewKey {
-  const _NewKey({required this.label, required this.profile});
+  const _NewKey({
+    required this.label,
+    required this.profile,
+    required this.kind,
+  });
 
   final String label;
   final Member profile;
+  final KeyKind kind;
 }
 
-/// The key's name, and for a guardian whose it is (the guardian's own by default).
+/// What the key is for, its name, and for a guardian whose it is (the guardian's own by
+/// default). An assistant reads the whole family's week, so only adults are offered for it.
 class _NewKeyDialog extends StatefulWidget {
   const _NewKeyDialog({required this.me, required this.members});
 
@@ -243,6 +277,16 @@ class _NewKeyDialog extends StatefulWidget {
 class _NewKeyDialogState extends State<_NewKeyDialog> {
   final _label = TextEditingController();
   late Member _profile = widget.me;
+  var _kind = KeyKind.shortcut;
+
+  List<Member> get _people => _kind == KeyKind.assistant
+      ? widget.members.where((m) => !m.isChild).toList()
+      : widget.members;
+
+  void _setKind(KeyKind kind) => setState(() {
+    _kind = kind;
+    if (!_people.any((m) => m.id == _profile.id)) _profile = widget.me;
+  });
 
   @override
   void initState() {
@@ -267,16 +311,45 @@ class _NewKeyDialogState extends State<_NewKeyDialog> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // A child has no assistant key, so a child's own dialog offers shortcuts only.
+          if (!widget.me.isChild) ...[
+            SegmentedButton<KeyKind>(
+              segments: [
+                ButtonSegment(
+                  value: KeyKind.shortcut,
+                  icon: const Icon(Icons.key),
+                  label: Text(l10n.shortcutKindShortcut),
+                ),
+                ButtonSegment(
+                  value: KeyKind.assistant,
+                  icon: const Icon(Icons.smart_toy_outlined),
+                  label: Text(l10n.shortcutKindAssistant),
+                ),
+              ],
+              selected: {_kind},
+              onSelectionChanged: (s) => _setKind(s.single),
+            ),
+            const SizedBox(height: Tokens.space1),
+            Text(
+              _kind == KeyKind.assistant
+                  ? l10n.shortcutKindAssistantHelp
+                  : l10n.shortcutKindShortcutHelp,
+              style: theme.textTheme.bodySmall,
+            ),
+            const SizedBox(height: Tokens.space2),
+          ],
           TextField(
             controller: _label,
             autofocus: true,
             maxLength: 60,
             decoration: InputDecoration(
               labelText: l10n.shortcutLabelField,
-              hintText: l10n.shortcutLabelHint,
+              hintText: _kind == KeyKind.assistant
+                  ? l10n.shortcutAssistantLabelHint
+                  : l10n.shortcutLabelHint,
             ),
           ),
-          if (widget.members.length > 1) ...[
+          if (_people.length > 1) ...[
             const SizedBox(height: Tokens.space2),
             Text(l10n.shortcutForWhom, style: theme.textTheme.labelLarge),
             Text(l10n.shortcutForWhomHelp, style: theme.textTheme.bodySmall),
@@ -285,7 +358,7 @@ class _NewKeyDialogState extends State<_NewKeyDialog> {
               spacing: Tokens.space2,
               runSpacing: Tokens.space2,
               children: [
-                for (final m in widget.members)
+                for (final m in _people)
                   ChoiceChip(
                     showCheckmark: false,
                     avatar: RingedAvatar(
@@ -315,7 +388,11 @@ class _NewKeyDialogState extends State<_NewKeyDialog> {
               ? null
               : () => Navigator.pop(
                   context,
-                  _NewKey(label: _label.text.trim(), profile: _profile),
+                  _NewKey(
+                    label: _label.text.trim(),
+                    profile: _profile,
+                    kind: _kind,
+                  ),
                 ),
           child: Text(l10n.shortcutCreate),
         ),
@@ -324,16 +401,19 @@ class _NewKeyDialogState extends State<_NewKeyDialog> {
   }
 }
 
-/// The key, once, with the address and the first steps in the Shortcuts app.
+/// The key, once, with the address and the first steps in the Shortcuts app, or for an
+/// assistant the connection and what it means for the family's data.
 class _KeyDialog extends StatelessWidget {
   const _KeyDialog({
     required this.name,
     required this.token,
+    required this.kind,
     required this.address,
   });
 
   final String name;
   final String token;
+  final KeyKind kind;
   final String address;
 
   @override
@@ -347,7 +427,12 @@ class _KeyDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(l10n.shortcutKeyOnce(name), style: theme.textTheme.bodySmall),
+          Text(
+            kind == KeyKind.assistant
+                ? l10n.shortcutAssistantKeyOnce(name)
+                : l10n.shortcutKeyOnce(name),
+            style: theme.textTheme.bodySmall,
+          ),
           const SizedBox(height: Tokens.space2),
           SelectableText(token),
           const SizedBox(height: Tokens.space1),
@@ -368,7 +453,11 @@ class _KeyDialog extends StatelessWidget {
           const SizedBox(height: Tokens.space4),
           Text(l10n.shortcutHowTitle, style: theme.textTheme.titleSmall),
           const SizedBox(height: Tokens.space1),
-          Text(l10n.shortcutHowSteps),
+          Text(
+            kind == KeyKind.assistant
+                ? l10n.shortcutAssistantHowSteps
+                : l10n.shortcutHowSteps,
+          ),
         ],
       ),
       actions: [

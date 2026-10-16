@@ -1,5 +1,5 @@
 begin;
-select plan(46);
+select plan(47);
 
 -- Start from an empty system, whatever the database already holds (all rolled back).
 delete from app.household;
@@ -14,13 +14,15 @@ begin
 end $$;
 
 -- ---- the catalogue, as the owner ---------------------------------------------------------
-select is((select count(*)::int from app.setting_definition), 26, 'the catalogue holds the 26 settings (specs/21 and household.region)');
+select is((select count(*)::int from app.setting_definition), 27, 'the catalogue holds the 27 settings (specs/21, household.region, notify.packing_reminder)');
 select is((select count(*)::int from app.setting_definition d where not app.setting_valid(d, d.default_value)),
   0, 'every default satisfies its own constraints');
 select ok(not (select app.setting_valid(d, '4'::jsonb) from app.setting_definition d where d.key = 'tasks.points.duty_default'),
   'a value above the maximum is invalid');
 select ok(not (select app.setting_valid(d, 'null'::jsonb) from app.setting_definition d where d.key = 'tasks.points.duty_default'),
   'JSON null is invalid where the constraints do not allow it');
+select is((select default_value from app.setting_definition where key = 'notify.packing_reminder'), '"19:00"'::jsonb,
+  'the packing reminder is on at 19:00 by default, and each member sets their own');
 select ok((select app.setting_valid(d, 'null'::jsonb) from app.setting_definition d where d.key = 'notify.event_reminder'),
   'JSON null switches a nullable setting off');
 select ok(not (select app.setting_valid(d, '1.5'::jsonb) from app.setting_definition d where d.key = 'device.idle_revert_seconds'),
@@ -75,7 +77,7 @@ insert into app.device (household_id, auth_user_id, label, class, register, prof
 select pg_temp.act_as((select guser from ids), jsonb_build_object(
   'household_id', (select hh from ids), 'device_id', (select phone from ids), 'device_class', 'personal'));
 
-select is((select count(*)::int from api.settings), 26, 'api.settings lists every definition for a fresh household');
+select is((select count(*)::int from api.settings), 27, 'api.settings lists every definition for a fresh household');
 select is((select bool_and(is_default) from api.settings), true, 'a fresh household is on every default');
 select is((select value from api.settings where key = 'board.rollover'), '{"weekday":6,"time":"12:00"}'::jsonb,
   'the rollover shows its curated default');
@@ -156,7 +158,7 @@ select is((select count(*)::int from api.settings where profile_id is not null o
   'another household sees none of the overrides (RLS)');
 select is((select value from api.settings where key = 'board.day_parts'), '["12:00","17:00"]'::jsonb,
   'another household keeps its own defaults');
-select is((select count(*)::int from api.settings), 26, 'another household sees every definition');
+select is((select count(*)::int from api.settings), 27, 'another household sees every definition');
 select throws_ok(format($$ select api.set_setting(null, 'member.completion_sound', 'false', %L) $$, (select kid from ids)),
   '22023', 'WW-SET-003 setting target invalid', 'a profile of another household cannot be changed');
 select throws_ok(format($$ select api.reset_setting(null, 'device.idle_revert_seconds', null, %L) $$, (select ipad from ids)),
