@@ -1715,5 +1715,9 @@
   "shortcutAssistantLabelHint": "z. B. Claude auf dem Laptop",
   "shortcutAssistantKeyOnce": "Dieser Schlüssel wird nur jetzt angezeigt. Damit liest ein Assistent als {name} die ganze Woche der Familie: Termine, wer weg ist, die Stundenpläne der Kinder, Aufgaben, Essen und die Einkaufsliste. Was er liest, geht an den Anbieter des Assistenten. Behandle den Schlüssel wie ein Passwort.",
   "shortcutAssistantHowSteps": "Trage die Adresse in deinem Assistenten als MCP-Server ein und schicke den Schlüssel als Header „Authorization“ mit „Bearer “, einem Leerzeichen und dem Schlüssel. Die Anleitung auf wuselwall.app/docs/settings/shortcuts zeigt, wie das bei einigen Assistenten geht.",
-  "shortcutErrAdultOnly": "Einen Schlüssel für einen Assistenten bekommen nur Erwachsene."
+  "shortcutErrAdultOnly": "Einen Schlüssel für einen Assistenten bekommen nur Erwachsene.",
+  "reminderPackTitle": "Für morgen einpacken",
+  "reminderPackChild": "{name}: {items}",
+  "settingNotifyPackingTitle": "Einpack-Erinnerung am Vorabend",
+  "settingNotifyPackingHelp": "Um diese Uhrzeit sagt dein Handy, was für morgen in die Schultasche gehört, aus den Stundenplänen (zum Beispiel Sportsachen). Nur wenn etwas einzupacken ist."
 }

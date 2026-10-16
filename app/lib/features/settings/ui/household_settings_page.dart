@@ -97,6 +97,7 @@ class _SettingsList extends ConsumerWidget {
         'calendar.tentative_nudge',
         'notify.morning_summary',
         'notify.event_reminder',
+        'notify.packing_reminder',
         'notify.task_verified',
         'notify.redemption_request',
       ], personal: true),

@@ -102,6 +102,10 @@ SettingText settingText(AppLocalizations l10n, String key) => switch (key) {
     title: l10n.settingNotifyEventReminderTitle,
     help: l10n.settingNotifyEventReminderHelp,
   ),
+  'notify.packing_reminder' => (
+    title: l10n.settingNotifyPackingTitle,
+    help: l10n.settingNotifyPackingHelp,
+  ),
   'notify.task_verified' => (
     title: l10n.settingNotifyTaskVerifiedTitle,
     help: l10n.settingNotifyTaskVerifiedHelp,
