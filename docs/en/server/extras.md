@@ -1,14 +1,14 @@
 # Server extras
 
-Everything on this page is **optional**. WuselWall runs without it. Each extra brings in another service that learns something about you, so take only what you really need.
+Everything on this page except **sending email** is **optional**. WuselWall runs without it. Each extra brings in another service that learns something about you, so take only what you really need.
 
 Commands for a server at home run in the directory of the `wuselwall` tool ([Server at home](/en/server/home-server)).
 
 ## Email {#email}
 
-**Not needed today.** WuselWall sends no email yet. Accounts are created through invitations, with an email address and a password, without a confirmation mail.
+**Needed for now.** Whoever signs in for the first time confirms their address with a **code by email**, and only then can set a password. Without sending email the code never arrives, and nobody can start or join a family. A server without any email, with a password from the start, is planned.
 
-**Sign-in codes by email** come later. The server then needs an SMTP service, a provider that sends mail for it. A mailbox at your normal mail provider won't do; use a service for *transactional* mail, such as Scaleway Transactional Email in the EU (300 mails a month for free). The provider sees the email addresses and the codes. So that the mails don't land in spam, add the records the provider names to your domain (SPF, DKIM, DMARC).
+For this the server needs an SMTP service, a provider that sends mail for it. A mailbox at your normal mail provider won't do; use a service for *transactional* mail, such as Scaleway Transactional Email in the EU (300 mails a month for free). The provider sees the email addresses and the codes. So that the mails don't land in spam, add the records the provider names to your domain (SPF, DKIM, DMARC).
 
 **At home:** put `SMTP_HOST`, `SMTP_PORT` (usually `587`), `SMTP_USER`, `SMTP_PASS` and, as the sender, `SMTP_ADMIN_EMAIL` into `stack/.env`, in single quotes like the other values. Then:
 
@@ -16,7 +16,7 @@ Commands for a server at home run in the directory of the `wuselwall` tool ([Ser
 ./wuselwall compose up -d auth
 ```
 
-**At Supabase:** **Authentication → Emails → SMTP Settings**, with the same details.
+**At Supabase:** **Authentication → Emails → SMTP Settings**, with the same details. Supabase's built-in email is meant for trying things out and sends only a few mails an hour.
 
 ## Sign in with Apple and Google {#apple-and-google}
 
