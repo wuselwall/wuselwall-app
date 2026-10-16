@@ -1,14 +1,14 @@
 # Extras für den Server
 
-Alles auf dieser Seite ist **freiwillig**. WuselWall läuft ohne. Jedes Extra bringt einen weiteren Dienst ins Spiel, der etwas über euch erfährt, also nehmt nur, was ihr wirklich braucht.
+Alles auf dieser Seite außer dem **E-Mail-Versand** ist **freiwillig**. WuselWall läuft ohne. Jedes Extra bringt einen weiteren Dienst ins Spiel, der etwas über euch erfährt, also nehmt nur, was ihr wirklich braucht.
 
 Die Befehle für einen Server zu Hause laufen im Verzeichnis des Werkzeugs `wuselwall` ([Server zu Hause](/server/home-server)).
 
 ## E-Mail {#e-mail}
 
-**Heute nicht nötig.** WuselWall verschickt noch keine E-Mails. Konten entstehen über Einladungen, mit E-Mail-Adresse und Passwort, ohne Bestätigungsmail.
+**Zurzeit nötig.** Wer sich zum ersten Mal anmeldet, bestätigt seine Adresse mit einem **Code per Mail**. Erst danach kann man ein Passwort festlegen. Ohne Mail-Versand kommt der Code nie an, und niemand kann eine Familie anlegen oder einer beitreten. Ein Server ganz ohne Mail, mit Passwort von Anfang an, ist geplant.
 
-Später kommen **Anmeldecodes per Mail** dazu. Dann braucht der Server einen SMTP-Dienst, also einen Anbieter, der Mails verschickt. Ein Postfach beim normalen Mailanbieter ist dafür ungeeignet. Nehmt einen Dienst für sogenannte *transaktionale* Mails, etwa Scaleway Transactional Email aus der EU (300 Mails im Monat gratis). Der Anbieter sieht die E-Mail-Adressen und die Codes. Damit die Mails nicht im Spam landen, trägst du bei deiner Domain die Einträge ein, die der Anbieter nennt (SPF, DKIM, DMARC).
+Dafür braucht der Server einen SMTP-Dienst, also einen Anbieter, der Mails verschickt. Ein Postfach beim normalen Mailanbieter ist dafür ungeeignet. Nehmt einen Dienst für sogenannte *transaktionale* Mails, etwa Scaleway Transactional Email aus der EU (300 Mails im Monat gratis). Der Anbieter sieht die E-Mail-Adressen und die Codes. Damit die Mails nicht im Spam landen, trägst du bei deiner Domain die Einträge ein, die der Anbieter nennt (SPF, DKIM, DMARC).
 
 **Zu Hause:** Trag in `stack/.env` die Werte `SMTP_HOST`, `SMTP_PORT` (meist `587`), `SMTP_USER`, `SMTP_PASS` und als Absender `SMTP_ADMIN_EMAIL` ein, in einfachen Anführungszeichen wie die anderen Werte. Dann:
 
@@ -16,7 +16,7 @@ Später kommen **Anmeldecodes per Mail** dazu. Dann braucht der Server einen SMT
 ./wuselwall compose up -d auth
 ```
 
-**Bei Supabase:** **Authentication → Emails → SMTP Settings**, dieselben Angaben.
+**Bei Supabase:** **Authentication → Emails → SMTP Settings**, dieselben Angaben. Der eingebaute Mail-Versand von Supabase ist nur zum Ausprobieren gedacht und schickt nur wenige Mails pro Stunde.
 
 ## Anmelden mit Apple und Google {#anmelden-mit-apple-und-google}
 

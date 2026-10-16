@@ -75,7 +75,8 @@ trial could not show is no longer blocked by infrastructure:
 
 - **Use outside the house** works as soon as the apps are installed.
 - **The ICS feed into Outlook** can be tested as soon as the feed exists (M1.3a).
-- **Push** needs only its credentials (Q38) and the `push-send` function.
+- **Reminders** are local to each phone (Q47, built 2026-10-15); push waits for a relay
+  that is built only if families miss it.
 
 The price is that development and the family share one database; see ADR-013 for the
 safeguards (a dump before every migration, no `db reset`, the integration test kept on
@@ -106,9 +107,16 @@ entry retired one release later.
 tablet is connected without anyone touching its keyboard, and both are timed on the
 release checklist.
 
-> **Built 2026-10-14 on `feature/regions-and-ux`, not yet on the server:** the getting-started card on the adult Today tab (FR-5.17) — six items derived from data (invite partner, connect tablet, wall display, set PIN, subscribe feed, and Stundenplan eintragen), dismissible ("Brauchen wir nicht"), brought back from Einstellungen → Erste Schritte. The data export for guardians on a personal device (FR-5.16, the export part): one JSON file, secrets left out. **Open:** account and household deletion, leave, and the rest of 9.1/9.2.
-
-> **Built 2026-10-15 on `feature/regions-and-ux`, not yet on the server:** households (H1/H2, founder codes), invitations with the guardian "joined" notice and the new-sign-in notice (in-app cards on Today), pairing (the code enrolment stays one release), email code sign-in (E1–E3), leaving, deleting and restoring a family, account deletion, the second-factor reset, the localised mail and the local reminders. **Universal links and App Links are built** (iOS Associated Domains, an Android `autoVerify` filter, the association files and the `/p/` landing page on the website; invitation and pairing links carry the server in the fragment); App Links work once the Android signing fingerprints are in the site configuration, and the website must serve the association file as `application/json`. The end-to-end journeys J1–J3 are written (backend journeys in CI's `backend` job, screen counts on every PR). **Open for M1.0:** the device checks and the timings of the release checklist.
+> **Built 2026-10-14 and 2026-10-15, merged to `main`:** the front door with Apple, Google
+> and email codes (E1–E3); households (H1/H2, founder codes); invitations by link, code and
+> QR, with universal links and App Links carrying the server; pairing; the getting-started
+> card (FR-5.17); the join and new-sign-in notices on Today; leaving, deleting and restoring
+> a family, account deletion, the second-factor reset and the data export (FR-5.16); the
+> localised mail; the server choice and the demo (ADR-018). The journeys J1–J3 are
+> integration tests and screen-count tests. **Open for M1.0:** the gaps the journeys still
+> have ([16, step 10](16-setup-plan.md#step-10--journey-gaps-before-launch-m15): servers
+> without mail, the loose ends, retiring the M0.1 paths) and the timed device checks of the
+> release checklist (step 10.9).
 
 ### M1.1 Shopping, complete
 
@@ -119,8 +127,10 @@ release checklist.
 > **Built 2026-10-11 (online):** several lists with a default, categories per list as the
 > store layout, the catalogue learned on purchase, the tile picker with folded ranked
 > typeahead and tap-again counts, long-press notes and category correction, the trolley
-> section, trips and the history page. **Still open:** the self-hosted icon set beyond category
-> icons, and the kiosk tile layout polish.
+> section, trips and the history page; catalogue pictures chosen by the server from the item's name
+> (2026-10-15). **Still open:** editing lists, categories and their walking order, and
+> removing a learned tile ([16, step 10.3](16-setup-plan.md#step-10--journey-gaps-before-launch-m15)),
+> and the kiosk tile layout polish.
 
 **Scope (as reached in BretApp, 2026-09-12, on the old stack — the mechanisms map to
 drift and Supabase Realtime as described in [07](07-module-meals-shopping.md)):** Categories and store layouts (a category belongs to a list rather
@@ -143,9 +153,7 @@ so there is no separate trip entity to keep in sync. Reachable per list from the
 screen and from its own list switcher.
 
 ### M1.2 Tasks and gamification
-> **Built 2026-10-13 on `feature/week-board`, not yet on the server:** household settings with the Einstellungen screen; definitions with RRULE, the four policies, the materialiser (`tasks-materialise`, `tasks-nightly`), the ledger, rewards with approval, streaks with jokers, four badges, the starter pack, the adult screens and the kiosk family task board; the kid screens. **Open:** scheduling `tasks-nightly` (pg_cron/pg_net or host cron).
-> pgTAP green on a local throwaway Postgres (`scripts/local-pgtap`); not yet run on the
-> compose stack or with real devices.
+> **Built 2026-10-13:** household settings with the Einstellungen screen; definitions with RRULE, the four policies, the materialiser (`tasks-materialise`, `tasks-nightly`, scheduled by the server's host cron, `infra/cron/`), the ledger, rewards with approval, streaks with jokers, four badges, the starter pack, the adult screens and the kiosk family task board; the kid screens. **Open:** pending approvals on Today, since there is no push ([16, step 10.5](16-setup-plan.md#step-10--journey-gaps-before-launch-m15)); real-device use is M1.6's.
 
 **Household settings first** ([21](21-household-settings.md)): `setting_definition`, the
 override table, `api.settings` / `api.set_setting`, and the Einstellungen screen — M1.2 is
@@ -157,9 +165,7 @@ kid task screen · the family task board (reached from the week board's footer i
 guardian PIN and approvals
 
 ### M1.3 Calendar, presence and Stundenplan
-> **Built 2026-10-13 on `feature/week-board`, not yet on the server:** M1.3a — events, attendees, presence with six states, recurrence with overrides and `rdates` (the Dienstplan grid), tentative, the key flag, busy-until, day/3-day/week views and the editor, the signed ICS feed with per-token filters (school day or lessons included). M1.3b — schools, bell times, terms, subjects, A/B weeks, care rows, exceptions, holidays, the projection (`_shared/school.ts`) and the grid editor. **Open:** the feed verified against real Outlook and real iOS.
-> pgTAP green on a local throwaway Postgres (`scripts/local-pgtap`); not yet run on the
-> compose stack or with real devices.
+> **Built 2026-10-13:** M1.3a — events, attendees, presence with six states, recurrence with overrides and `rdates` (the Dienstplan grid), tentative, the key flag, busy-until, day/3-day/week views and the editor, the signed ICS feed with per-token filters (school day or lessons included). M1.3b — schools, bell times, terms, subjects, A/B weeks, care rows, exceptions, holidays, the projection (`_shared/school.ts`) and the grid editor. **Open:** the feed verified against real Outlook and real iOS (M1.6).
 
 *Grew on 2026-08-30 with the A5 addition; the largest single block after tasks.*
 
@@ -177,18 +183,16 @@ registers · the collapsed school-day block in the feed, off by default.
 Build 1.3a fully before starting 1.3b: the projection has nowhere to render until the
 calendar's occurrence-source seam exists.
 
-> **Built 2026-10-14 on `feature/regions-and-ux`, not yet on the server:** regions to any depth (Germany, Austria, Switzerland to the Gemeinde, Liechtenstein) from the public OpenHolidays dataset, fetched by the server; public holidays (Feiertage) automatic, for school days, the week board's day header and the free-day meal; school holidays (Ferien) imported with a preview and editable afterwards (the M2 item, built early); several schools per household; day operations in the timetable editor (clear, copy, swap, with undo until Save). Details: [15](15-module-school-timetable.md#holidays).
+> **Built 2026-10-14:** regions to any depth (Germany, Austria, Switzerland to the Gemeinde, Liechtenstein) from the public OpenHolidays dataset, fetched by the server; public holidays (Feiertage) automatic, for school days, the week board's day header and the free-day meal; school holidays (Ferien) imported with a preview and editable afterwards (the M2 item, built early); several schools per household; day operations in the timetable editor (clear, copy, swap, with undo until Save). Details: [15](15-module-school-timetable.md#holidays).
 
 ### M1.4 Meals
-> **Built 2026-10-13 on `feature/week-board`, not yet on the server:** the week plan (free text or recipe, cook, guests), recipes, who-is-eating with the defaulting rule (computed with the board in `board-week`), shopping generation with the mandatory preview, the kiosk correction dots.
-> pgTAP green on a local throwaway Postgres (`scripts/local-pgtap`); not yet run on the
-> compose stack or with real devices.
+> **Built 2026-10-13:** the week plan (free text or recipe, cook, guests), recipes, who-is-eating with the defaulting rule (computed with the board in `board-week`), shopping generation with the mandatory preview, the kiosk correction dots.
 
 Meal plan week grid · recipes with ingredients · who is eating at home, with the defaulting
 rule from presence and Hort · generation into the shopping list, with the mandatory
 preview · the meal zone of the week board
 
-> **Built 2026-10-14 on `feature/regions-and-ux`, not yet on the server:** meal suggestions in the meal editor from the last 365 days of cooked meals ("Oft bei uns", "Lange nicht gegessen" after 90 and 60 days — FR-3.8), the meal behind each generated shopping item (FR-3.7), and undo when a planned meal is cleared.
+> **Built 2026-10-14:** meal suggestions in the meal editor from the last 365 days of cooked meals ("Oft bei uns", "Lange nicht gegessen" after 90 and 60 days — FR-3.8), the meal behind each generated shopping item (FR-3.7), and undo when a planned meal is cleared.
 
 ### M1.5 Polish
 > **Week board built early, 2026-10-13:** the board, its tap-through details and the
@@ -198,13 +202,16 @@ preview · the meal zone of the week board
 > (M1.3b), meals (M1.4), open tasks (M1.2) — so the board is built once, not twice. Until
 > then its zones are present and empty, as the degradation rules require.
 
-**The week board** — the composed `/api/board/week` read model, the four zones, today
+**The week board** — the composed `api.board_week` read model, the four zones, today
 emphasis, degradation rules, tap-through detail, night variant · three UI registers
-finished · seed data including one real term's timetable for each child
+finished · **the journey gaps** of [16, step 10](16-setup-plan.md#step-10--journey-gaps-before-launch-m15)
+(added 2026-10-16): members, the family and devices editable; lists and categories
+editable; servers without mail; pending approvals on Today; the wall's offline start; the
+account-deletion page; the release checklist; the M0.1 paths retired; a navigation rail on
+wide screens.
 
-Everything here is verifiable on the home network. What is not — push, installability,
-the feed, the mounted display — moved to M1.6 (since ADR-013 only the mounted display
-and push still wait for it).
+What needs the real household and its hardware — the mounted display, the feed in Outlook,
+the timed journeys — is M1.6.
 
 The week board comes last on purpose: it is a composition of all four modules plus the
 Stundenplan, and building it before its sources exist means building it twice. It is also
@@ -221,8 +228,11 @@ server.*
 
 The pilot household set up through the M1.0 flow with a founder code
 (`wuselwall setup-token`), the second parent joined by invitation and the devices
-paired · the development data cleared before that, once · push credentials (Q38) and
-notification preferences · the ICS feed verified against real Outlook and real iOS ·
+paired · the development data cleared before that, once · every merged migration and
+function applied, after a backup ([10](10-deployment-and-ops.md#changing-the-database)) · the
+four jobs scheduled · local reminders checked on both parents' phones (Q47; no push
+credentials) · the release checklist (step 10.9) filled in once · the ICS feed verified
+against real Outlook and real iOS ·
 nightly backups with the dead-man's switch and an off-site copy (Q14) · **a restore drill
 on the real data, with the date written down** · the pre-launch checklist in
 [11](11-security-and-privacy.md) · wall display mounted in the kitchen, the app pinned in
@@ -267,7 +277,7 @@ meets them.
   record of processing and processor agreements cover what the project itself runs (the
   website and the docs); each operator is the controller for their own server ([11](11-security-and-privacy.md#privacy-and-legal)).
 - **Abuse controls** live: Auth's and the front's rate limits, the 30-day clean-up of empty
-  accounts, the attempt logs ([11, T11](11-security-and-privacy.md#t11--the-open-front-door)).
+  accounts (not built yet: a fifth job), the attempt logs ([11, T11](11-security-and-privacy.md#t11--the-open-front-door)).
 - **Deletion and export** tested on a real household, including Apple token revocation.
 - **The cross-household pgTAP suite** reviewed once more with "a stranger is on the other
   side" in mind.
@@ -278,17 +288,22 @@ meets them.
 
 - ~~Shortcuts endpoints and per-person tokens~~ — built on `feature/shortcuts` (2026-10-16), see [12](12-mcp-and-assistants.md#the-endpoint-as-built)
 - ~~MCP server, `family:read` scope~~ — built on `feature/mcp-read` (2026-10-16) with assistant keys as the Q15 interim, see [12](12-mcp-and-assistants.md#part-2--the-mcp-server)
-- Imported external calendars (sports club, bin collection)
-- ~~Ferien import for the Bundesland, so holidays stop being hand-entered~~ — built early on `feature/regions-and-ux` (2026-10-14), see M1.3
-- ~~Imported external calendars (sports club, bin collection)~~ — FR-1.9 built early on `feature/regions-and-ux` (2026-10-14), see [05](05-module-calendar.md#external-calendars-subscribed-ics-fr-19). Open: the imported occurrences in the outbound ICS feed
 - ~~Equipment reminders from tomorrow's subjects ("Morgen brauchst du: Sportsachen")~~ — built on `feature/equipment-reminder` (2026-10-16): the evening notification `notify.packing_reminder`, and `school.equipment_hint` now honoured everywhere, see [15](15-module-school-timetable.md)
-- ~~Meal suggestions from history ("not cooked in 60 days")~~ — built early on `feature/regions-and-ux` (2026-10-14), see M1.4
-
-- ~~Local reminders, the Q47 lean: morning summary and event reminders on personal phones, no relay~~ — built on `feature/regions-and-ux` (2026-10-15), see M1.0 and [09](09-clients-and-ux.md)
-- ~~QR scanner without ML Kit (Q49)~~ — `camera` and `zxing2` (2026-10-14), see [14](14-open-questions.md)
-- ~~"Alle Termine" on the week board (FR-8.11)~~ — built on `feature/regions-and-ux` (2026-10-15), see [09](09-clients-and-ux.md#the-wall-display)
+- The audit log in Einstellungen (FR-5.9 records everything; nothing shows it yet): the last
+  30 days, by member, guardians only. It is the counterweight J2 promises for guardian
+  invitations, and it answers "who ticked my chore on the wall?"
+- A month overview in the calendar, read-only, for Ferien and birthdays (the views stop at
+  a week today)
+- Birthdays, once [Q50](14-open-questions.md) is answered
+- The push relay, only if the first weeks show that local reminders and the Today notices
+  miss something that matters (Q47)
 - Whatever the first two weeks of real use made obviously necessary — reserve capacity
   for this rather than planning around it
+
+*Built early, ahead of M2 (2026-10-14/15):* Ferien import by region, subscribed external
+calendars (FR-1.9, also in the outbound feed), meal suggestions from history, local
+reminders (Q47), the QR scanner without ML Kit (Q49), "Alle Termine" on the week board
+(FR-8.11).
 
 ## M3 — Depth
 
@@ -298,6 +313,9 @@ meets them.
 - Family goal bar and ageing bonuses on open tasks
 - CalDAV for two-way phone editing, if read-only proves limiting
 - Richer badges and a wider reward catalogue
+- Keyboard shortcuts and bulk editing in the adult register (moved from [09](09-clients-and-ux.md) on 2026-10-16)
+- One account in two households, for separated parents and a child with two homes (Q43),
+  when a real family asks
 
 ## M4 — Speculative
 
@@ -320,8 +338,8 @@ order-of-magnitude, not commitment.
 | M1.3a | 2–3 weeks | Recurrence and ICS correctness. Timezones and all-day events will each cost you a day. |
 | M1.3b | 1–2 weeks | The projection function: A/B weeks × holidays × exceptions is where the edge cases live. Write the tests first, genuinely. |
 | M1.4 | 1–2 weeks | Quantity aggregation and unit handling is fiddlier than it looks. |
-| M1.5 | 2–3 weeks | Always underestimated, and now carries the week board. Three registers plus one screen that has to be right. |
-| M1.6 | 1–2 evenings | Push credentials, the real household, the restore drill on real data. TLS, DNS and the stack already exist (ADR-013), and the release pipeline is proven from M0.4. |
+| M1.5 | 2–3 weeks | Always underestimated. The week board is built; what remains is step 10's journey gaps, about two weekends, and the register polish. |
+| M1.6 | 1–2 evenings | The real household, the release checklist, the restore drill on real data. TLS, DNS and the stack already exist (ADR-013), and the release pipeline is proven from M0.4. |
 | **M1 total** | **~3–4 months** | The A5 addition (Stundenplan, presence, week board) added roughly a month. Supabase saves the auth, realtime and job plumbing; PL/pgSQL and pgTAP cost some of that back. |
 | M2 | 2–3 weeks | |
 

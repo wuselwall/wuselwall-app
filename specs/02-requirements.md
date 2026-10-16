@@ -105,6 +105,9 @@ Priority: **M** = must have in v1 · **S** = should have · **C** = could have �
 
 ## FR-6 Assistant Integration (B4)
 
+*Scheduled for M2 ([13](13-roadmap.md)). The pilot launch (M1.6) ships without it, so "M"
+here means "before v1 is called done", not "before the household uses it".*
+
 | ID | Requirement | Prio | Origin |
 |---|---|---|---|
 | FR-6.1 | An MCP server exposing read tools for agenda, tasks, meals and the shopping list | M | B4 |
@@ -167,14 +170,14 @@ Added 2026-08-30. The kitchen display's standard view. Specified in
 | ID | Requirement | Target | Origin |
 |---|---|---|---|
 | NFR-1 | **Multi-device** — works on iPhone, iPad, desktop browser and a wall tablet from one codebase | One Flutter codebase: native iOS/iPadOS and Android apps plus a web build; all four device classes verified before v1 is called done | B2 |
-| NFR-2 | **Installability** — a native app on every phone, iPad and the wall tablet, updated without touching the device *(revised 2026-10-11, was: PWA add-to-home-screen)* | TestFlight and the Play internal track, verified on a real device of each kind ([ADR-011](adr/ADR-011-native-distribution-and-ci-cd.md)) | B2 |
+| NFR-2 | **Installability** — a native app on every phone, iPad and the wall tablet, updated without touching the device *(revised 2026-10-11, was: PWA add-to-home-screen)* | The App Store and Google Play ([Q42](14-open-questions.md)), with TestFlight and the Play testing tracks before each release, verified on a real device of each kind ([ADR-011](adr/ADR-011-native-distribution-and-ci-cd.md)) | B2 |
 | NFR-3 | **Performance** — the week board on a low-end wall tablet | Cold start to a rendered board < 3 s, refresh after a change < 1 s, on the household LAN | D |
 | NFR-4 | **Interaction latency** — ticking an item feels instant | Optimistic UI, < 100 ms perceived | D |
 | NFR-5 | **Live updates** — a change on one device appears on the others | < 3 s while online | FR-4.6 |
 | NFR-6 | **Availability** — self-hosted, single node, no HA | ~99% is fine; scheduled downtime acceptable | B3 |
 | NFR-7 | **Cost** — total recurring spend | Hosting ≤ €13 / month, plus the Apple Developer Program (€99 / year). *Proposed 2026-10-11 — the native apps and a larger server for Supabase break the original ≤ €10 target; confirm in [Q36](14-open-questions.md)* *Since [ADR-018](adr/ADR-018-self-hosted-only.md) (2026-10-13): no hosted flavour, so ≈ €8–12/month is the whole cost ([10](10-deployment-and-ops.md#costs)); every other household's server is its operator's cost* | B3 |
 | NFR-8 | **Data residency** — all data stored in Germany or the EU | Hard requirement for what the project ships and recommends (EU regions, EU mail providers). Each household's data lives wherever its operator runs the server ([ADR-018](adr/ADR-018-self-hosted-only.md)) | B3 |
-| NFR-9 | **Third-party exposure** — outbound connections from server and client | Zero analytics, zero external fonts, zero CDN, zero error-reporting or crash-reporting SDKs in the app. Push via APNs/FCM and distribution via Apple/Google are the accepted exceptions, and carry no data beyond the notification itself. *Since 2026-10-11 ([ADR-014](adr/ADR-014-self-service-onboarding.md)):* Sign in with Apple/Google, for adults who choose them, and one SMTP provider for sign-in codes are also accepted. No deferred-deep-link, attribution or captcha service | B3 |
+| NFR-9 | **Third-party exposure** — outbound connections from server and client | Zero analytics, zero external fonts, zero CDN, zero error-reporting or crash-reporting SDKs in the app. Push via APNs/FCM and distribution via Apple/Google are the accepted exceptions, and carry no data beyond the notification itself (v1 sends no push at all: its reminders are local, [Q47](14-open-questions.md)). *Since 2026-10-11 ([ADR-014](adr/ADR-014-self-service-onboarding.md)):* Sign in with Apple/Google, for adults who choose them, and one SMTP provider for sign-in codes are also accepted. No deferred-deep-link, attribution or captcha service | B3 |
 | NFR-10 | **Transport security** — HTTPS everywhere, HSTS, modern TLS only | Enforced by the reverse proxy | B3 |
 | NFR-11 | **Backups** — nightly, encrypted, off-site, with a tested restore | RPO 24 h, RTO 4 h | D |
 | NFR-12 | **Patching** — OS and dependency updates | Unattended OS security updates; dependency review monthly | B3 |
@@ -189,11 +192,12 @@ Added 2026-08-30. The kitchen display's standard view. Specified in
 These are not choices; they are facts to design around. Detail in [09](09-clients-and-ux.md).
 *Revised 2026-10-11 for native apps; the PWA constraints that stood here no longer apply.*
 
-- iOS gives apps **no reliable background execution**. Any reminder must be a
-  server-sent push, never a device-scheduled timer, and the shopping outbox drains on
-  resume rather than in the background.
-- **Push needs a one-time permission** and travels through Apple's and Google's push
-  services.
+- iOS gives apps **no reliable background execution**. A reminder is either handed to the
+  OS in advance as a local notification, from data the app already holds (v1, Q47), or
+  pushed by a server; never a timer inside the app. The shopping outbox drains on resume
+  rather than in the background.
+- **Notifications need a one-time permission**; a push would also travel through Apple's
+  and Google's push services.
 - **Every iOS build must be signed** and distributed through an Apple channel; TestFlight
   builds expire after 90 days. An Apple Developer Program membership is a hard
   prerequisite.
