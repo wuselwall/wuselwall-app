@@ -2381,5 +2381,19 @@
     }
   },
   "shortcutAssistantHowSteps": "Add the address as an MCP server in your assistant and send the key as the header “Authorization” with “Bearer ”, a space and the key. The guide at wuselwall.app/docs/en/settings/shortcuts shows how for some assistants.",
-  "shortcutErrAdultOnly": "Only adults get a key for an assistant."
+  "shortcutErrAdultOnly": "Only adults get a key for an assistant.",
+  "reminderPackTitle": "Pack for tomorrow",
+  "reminderPackChild": "{name}: {items}",
+  "@reminderPackChild": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "items": {
+        "type": "String"
+      }
+    }
+  },
+  "settingNotifyPackingTitle": "Packing reminder the evening before",
+  "settingNotifyPackingHelp": "At this time your phone says what has to go in the school bag for tomorrow, from the timetables (for example PE kit). Only when there is something to pack."
 }

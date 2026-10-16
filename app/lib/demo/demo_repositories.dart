@@ -619,6 +619,14 @@ const _catalogue = <_Definition>[
     selfService: true,
   ),
   (
+    key: 'notify.packing_reminder',
+    scope: SettingScope.member,
+    type: SettingType.time,
+    defaultValue: '19:00',
+    constraints: {'nullable': true},
+    selfService: true,
+  ),
+  (
     key: 'notify.task_verified',
     scope: SettingScope.member,
     type: SettingType.boolean,
