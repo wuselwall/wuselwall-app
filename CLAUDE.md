@@ -23,8 +23,9 @@ day operations, meal suggestions, the Today tab with the getting-started card, t
 export, subscribed ICS calendars (FR-1.9: `calendar-import`, read-only occurrences in their
 own tables, optionally in the outbound feed), local reminders (Q47), the QR scanner on
 `camera` and `zxing2` (Q49), Siri via Apple Shortcuts (M2, specs/12 Part 1: per-person keys
-in `app.shortcut_token`, the `shortcuts` function), and the MCP server with `family:read` (M2,
-Part 2: the `mcp` function, read-only `wwa_` assistant keys as the Q15 interim, no OAuth yet).
+in `app.shortcut_token`, the `shortcuts` function), the MCP server with `family:read` (M2,
+Part 2: the `mcp` function, read-only `wwa_` assistant keys as the Q15 interim, no OAuth yet),
+and the evening packing reminder (FR-7.12, `notify.packing_reminder`).
 `scripts/local-pgtap` runs every migration and pgTAP suite on a throwaway local Postgres (no
 Docker). The server runs four scheduled jobs: `tasks-nightly`,
 `holidays-sync` (weekly), `calendar-import` (hourly) and `household-purge` (daily). Next: apply

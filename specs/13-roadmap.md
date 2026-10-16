@@ -281,7 +281,7 @@ meets them.
 - Imported external calendars (sports club, bin collection)
 - ~~Ferien import for the Bundesland, so holidays stop being hand-entered~~ — built early on `feature/regions-and-ux` (2026-10-14), see M1.3
 - ~~Imported external calendars (sports club, bin collection)~~ — FR-1.9 built early on `feature/regions-and-ux` (2026-10-14), see [05](05-module-calendar.md#external-calendars-subscribed-ics-fr-19). Open: the imported occurrences in the outbound ICS feed
-- Equipment reminders from tomorrow's subjects ("Morgen brauchst du: Sportsachen")
+- ~~Equipment reminders from tomorrow's subjects ("Morgen brauchst du: Sportsachen")~~ — built on `feature/equipment-reminder` (2026-10-16): the evening notification `notify.packing_reminder`, and `school.equipment_hint` now honoured everywhere, see [15](15-module-school-timetable.md)
 - ~~Meal suggestions from history ("not cooked in 60 days")~~ — built early on `feature/regions-and-ux` (2026-10-14), see M1.4
 
 - ~~Local reminders, the Q47 lean: morning summary and event reminders on personal phones, no relay~~ — built on `feature/regions-and-ux` (2026-10-15), see M1.0 and [09](09-clients-and-ux.md)
