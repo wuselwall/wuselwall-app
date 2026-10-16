@@ -1,0 +1,69 @@
+# Siri and Shortcuts
+
+With the **Shortcuts** app on the iPhone you talk to WuselWall through Siri: "Hey Siri, shopping list" – "What do you need?" – "Milk and two cucumbers" – "Milk and Cucumbers (2×) are on the list." No extra app is needed, only a **key** from WuselWall.
+
+<Shot name="shortcuts" alt="Settings → Siri and Shortcuts with two keys" />
+
+## What a key may do
+
+A key belongs to **one person**. A shortcut with that key acts as that person: it ticks their tasks and tells their points.
+
+- It can **read**: the day, the meals, the timetable, who is home, the points.
+- It can **add**: put things on the shopping list and tick one of the person's own tasks.
+- It can **neither delete nor manage anything**: no changing events, no correcting points, no settings. That holds for a guardian's key too.
+- A key adds something at most 100 times a day. If a shortcut runs in a loop by mistake, that is where it stops.
+
+## Creating a key
+
+1. Open **Settings → Siri and Shortcuts** and tap **New key**.
+2. Give it a **name**, for example "iPhone".
+3. As a guardian, choose the person under **For whom?**. Everyone else creates their own key on their own phone.
+4. Tap **Create key**.
+
+The key is shown **only once**, together with your server's **address**. Copy both. Whoever has the key can read and add as that person, so treat it like a password. The Shortcuts app syncs it through iCloud to your other Apple devices.
+
+## The first shortcut: shopping list
+
+1. Open the **Shortcuts** app and tap **+**.
+2. Add the action **Ask for Input**. Question: "What do you need?"
+3. Add **Get Contents of URL**:
+   - **URL:** the address from WuselWall with `/shopping` at the end, for example `https://api.example.org/functions/v1/shortcuts/shopping`
+   - **Method:** POST
+   - **Headers:** key `Authorization`, value `Bearer ` (with a space) followed by your key
+   - **Request Body:** JSON, field `text` with the value **Provided Input**
+4. Add **Show Result** (or **Speak Text** if Siri should read the answer aloud).
+5. Name the shortcut **Shopping list**. From now on, "Hey Siri, shopping list" is enough.
+
+WuselWall understands amounts: "2 litres of milk" becomes milk with "2 l", "3 apples" becomes apples (3×). Separate several things with "and" or a comma. Something already on the list is counted up instead of added twice.
+
+## Every shortcut
+
+Every shortcut is built like the one above: **Get Contents of URL** with method POST, the `Authorization` header and a JSON body. Only the end of the address and the fields change.
+
+| Shortcut | Address ends in | Fields in the JSON | Answer, for example |
+|---|---|---|---|
+| Shopping list | `/shopping` | `text`: what goes on the list; `list`: a list other than the default one (optional) | "Milk is on the list." |
+| What's on today? | `/today` | `day`: "tomorrow", a weekday or a date (optional) | "Today: 08:30 Dentist (Lotta). Meals today: Dinner: Spaghetti." |
+| What's for dinner? | `/meals` | `day` (optional) | "Meals today: Dinner: Spaghetti. Sabine is cooking." |
+| My points | `/points` | – | "You have 42 points." |
+| Task done | `/chore` | `text`: which task | "Done: Empty the dishwasher. 2 points added." |
+| School | `/school` | `text`: the question, such as "Does Lotta have PE tomorrow?" | "Yes, Lotta has PE tomorrow, period 3 (09:55–10:40)." |
+| When is … back? | `/presence` | `text`: the question, such as "When is Sabine back?" | "Sabine is travelling until Friday 23 October and back on Saturday 24 October." |
+
+For **School** and **When is … back?**, let the shortcut **Ask for Input** first, as for shopping, and send the whole question as `text`. WuselWall finds the name, the day and the subject in it; the subject is matched by the name your timetable gives it. Without a day, **School** means the next day, because packing usually happens the evening before. If no name is in the question, it is about you.
+
+**Task done** ticks only your own tasks and those not yet assigned to anyone. If several tasks match, WuselWall asks instead of guessing. Without `text`, the shortcut lists what is still open.
+
+::: tip Language
+Answers come in the iPhone's language when it is German or English, otherwise in the household's language. The field `lang` (`de` or `en`) sets it.
+:::
+
+## Revoking a key
+
+If a phone is lost, or someone no longer needs the shortcut, tap **Revoke** in the list. It takes effect at once: the shortcut then only answers that it is no longer valid. The list shows when a key was last used. When someone leaves the family, their keys are revoked automatically.
+
+Guardians see and revoke every key of the family, everyone else their own. The [data export](/en/settings/members-devices#export-data) lists each key with its name and date, but not the key itself.
+
+::: info Without an iPhone
+A shortcut is an ordinary web request. Any app that can send a request with a header works the same way.
+:::

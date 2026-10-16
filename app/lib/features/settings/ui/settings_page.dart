@@ -95,6 +95,14 @@ class SettingsPage extends ConsumerWidget {
             trailing: const Icon(Icons.chevron_right),
             onTap: () => context.go(Routes.reminders),
           ),
+          if (thisDevice?.deviceClass != DeviceClass.kiosk)
+            ListTile(
+              leading: const Icon(Icons.keyboard_voice_outlined),
+              title: Text(l10n.shortcutTitle),
+              subtitle: Text(l10n.shortcutSettingsSubtitle),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => context.go(Routes.shortcuts),
+            ),
           ListTile(
             leading: const Icon(Icons.flag_outlined),
             title: Text(l10n.settingsGettingStarted),

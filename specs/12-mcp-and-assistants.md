@@ -14,6 +14,12 @@ Two separate things, on different timelines:
 
 ## Part 1 — Siri today, via Shortcuts
 
+> **Built 2026-10-16 on `feature/shortcuts`, not yet on the server:** the `shortcuts` Edge
+> Function, `app.shortcut_token` with Settings → Siri und Kurzbefehle, and every shortcut below
+> except "Wann ist …" for a member's baseline (only presence entries are read). The contract is
+> under [The endpoint as built](#the-endpoint-as-built); the family's guide is
+> `docs/settings/shortcuts.md`.
+
 Apple's Shortcuts app has a **Get Contents of URL** action that performs authenticated
 HTTP requests, and any shortcut can be triggered by a spoken phrase. That is the whole
 mechanism. The native app could register App Intents — with Swift code alongside
@@ -24,9 +30,9 @@ remain an M3+ option if a spoken phrase stops being enough.
 
 1. Ask for Input (text) → "Was brauchst du?"
 2. Get Contents of URL
-   - `POST https://api.example.org/functions/v1/shortcuts/shopping/add`
+   - `POST https://api.example.org/functions/v1/shortcuts/shopping`
    - Header `Authorization: Bearer <shortcut token>`
-   - JSON body `{ "text": <Provided Input>, "clientUuid": <UUID> }`
+   - JSON body `{ "text": <Provided Input>, "id": <UUID> }`
 3. Show Result → "Auf der Liste."
 
 The server parses `text` leniently — "2 Liter Milch" yields quantity 2, unit `l`, item
@@ -45,6 +51,39 @@ cannot delete, cannot adjust points, and cannot manage anything.
 
 Share the shortcut to each family member's phone via an iCloud link with their own token
 substituted.
+
+### The endpoint as built
+
+*Added 2026-10-16.* `POST|GET <server>/functions/v1/shortcuts/<action>`, the key in
+`Authorization: Bearer wws_…` (never in the URL). Parameters come from the query or a JSON body.
+The answer is `text/plain` — one or two sentences for Show Result and Speak Text — or, with
+`Accept: application/json` or `format=json`, `{ "text": …, …facts }`. The language is `lang`,
+else Accept-Language, else the household's locale; the wording lives in
+`_shared/shortcuts_de.ts` and `shortcuts_en.ts`.
+
+| Action | Method | Parameters | Reads or writes |
+|---|---|---|---|
+| `shopping` | POST | `text` (dictation), `list?` (a list's name), `id?` (UUID: a replay is a no-op) | adds through `app.shopping_do_add`; amounts with a unit become the quantity, bare numbers the count |
+| `today` | GET, POST | `day?` | appointments, meals and the holder's own tasks of the day |
+| `meals` | GET, POST | `day?` | the day's meals and who cooks |
+| `points` | GET, POST | – | the holder's balance |
+| `chore` | POST | `text` | ticks one of the holder's open tasks (or an unassigned one a member may claim) through `app.tasks_do_complete`; a tie is asked back, no text lists them |
+| `school` | GET, POST | `text` (the question) or `member?`, `subject?`; `day?` (default tomorrow) | the projected school day; weekends and holidays answered as such; the equipment line follows `school.equipment_hint` |
+| `presence` | GET, POST | `text` or `member?` | presence entries of the next 30 days: away until when, or here and the next trip |
+
+`day` is `heute`/`today`, `morgen`/`tomorrow`, `übermorgen`, a weekday (the next one, today
+included) or `YYYY-MM-DD`; in a question the first such word counts. Names and subjects are
+found in the question as whole words, folded like `app.fold`. No member named means the holder.
+
+Server side: `api.shortcut_context(token, parts, from, days)` returns the rows of the api views
+the app reads (events, overrides, imported occurrences, busy-until, the school projection's
+rows and public holidays, meal entries, the holder's open tasks) narrowed to the key's
+household, so `occurrences.ts` and `school.ts` run on them unchanged;
+`api.shortcut_shopping_add` and `api.shortcut_task_complete` write. All three are executable by
+the service role only and start with `app.shortcut_actor(token)`, which yields an actor with
+origin and device class `shortcut`. Status codes: 401 for a key that does not work (unknown,
+revoked, holder gone — one answer for all), 429 at the daily cap of 100 writes, 400/404 for
+what the sentence then explains.
 
 ---
 

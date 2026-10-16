@@ -45,6 +45,7 @@ import 'package:wuselwall/features/setup/ui/sign_in_page.dart';
 import 'package:wuselwall/features/setup/ui/splash_page.dart';
 import 'package:wuselwall/features/setup/ui/wizard_page.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_history_page.dart';
+import 'package:wuselwall/features/shortcuts/ui/shortcuts_page.dart';
 import 'package:wuselwall/features/system/ui/system_page.dart';
 
 abstract final class Routes {
@@ -84,6 +85,7 @@ abstract final class Routes {
   static const externalCalendarEdit = '/settings/calendars/edit';
   static const baselines = '/settings/baselines';
   static const reminders = '/settings/reminders';
+  static const shortcuts = '/settings/shortcuts';
 
   static bool isSetup(String path) =>
       path == setup || path.startsWith('$setup/');
@@ -276,6 +278,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(path: Routes.baselines, builder: (_, _) => const BaselinePage()),
       GoRoute(path: Routes.reminders, builder: (_, _) => const RemindersPage()),
+      GoRoute(path: Routes.shortcuts, builder: (_, _) => const ShortcutsPage()),
       GoRoute(
         path: Routes.shoppingHistory,
         builder: (_, _) => const ShoppingHistoryPage(),

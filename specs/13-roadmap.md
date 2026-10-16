@@ -276,7 +276,7 @@ meets them.
 
 ## M2 — Assistants and the obvious gaps
 
-- Shortcuts endpoints and per-person tokens
+- ~~Shortcuts endpoints and per-person tokens~~ — built on `feature/shortcuts` (2026-10-16), see [12](12-mcp-and-assistants.md#the-endpoint-as-built)
 - MCP server, `family:read` scope
 - Imported external calendars (sports club, bin collection)
 - ~~Ferien import for the Bundesland, so holidays stop being hand-entered~~ — built early on `feature/regions-and-ux` (2026-10-14), see M1.3

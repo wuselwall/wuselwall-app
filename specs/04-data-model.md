@@ -144,6 +144,14 @@ calendar_feed_token
                                                 --  kinds:['appointment'],
                                                 --  school:'off'|'day'|'lessons'}
   created_at, last_fetched_at, fetch_count, revoked_at
+
+shortcut_token                                  -- Siri and Shortcuts (specs/12), added 2026-10-16
+  id, household_id, profile_id,                 -- the person the key acts as
+  label, token_hash,                            -- "iPhone"; "wws_…" shown once
+  created_by_profile_id, created_at,
+  last_used_at, use_count,
+  writes_on DATE, writes_count,                 -- the daily write cap (100)
+  revoked_at                                    -- also set when the holder leaves or the family is deleted
 ```
 
 `event` deliberately stores **both** a timestamp pair and a date pair, with exactly one
@@ -493,6 +501,7 @@ household ─┬─< profile ─┬── auth.users (0..1, adults only)
            ├─< calendar ──< event ─┬─< event_attendee
            │                       └─< event_override
            ├─< calendar_feed_token
+           ├─< shortcut_token ──> profile
            ├─< school ─┬─< school_period
            │           ├─< school_term ──< timetable ─┬─< timetable_lesson ──> subject
            │           │                              └─< timetable_exception
@@ -543,7 +552,10 @@ functions where it cannot. Each one should have a pgTAP test.
 13b. A `pairing_request` is approved at most once and claimed at most once, and only with
     its secret; an approved request that is not claimed before `expires_at` binds nothing.
 14. `calendar_feed_token.token_hash` stores a hash; the plaintext token is shown once at
-    creation and never retrievable afterwards.
+    creation and never retrievable afterwards. The same holds for `shortcut_token.token_hash`.
+14a. A `shortcut_token` acts only while it is not revoked, its holder's profile is active and
+    its household is not deleted; deactivating the profile, clearing its account (leaving the
+    family) or deleting the household revokes it, and restoring the household does not undo that.
 15. `event.presence_state` is non-null exactly when `kind = 'presence'`, and null
     otherwise. A presence row never carries attendees other than its owner.
 15a. A member's baseline never materialises as rows. Any day with no `presence` event is
