@@ -2306,7 +2306,7 @@
   "setupPhoneBody": "Open the WuselWall app on your phone, choose this server by scanning the code, then sign in there.",
   "shortcutTitle": "Siri and Shortcuts",
   "shortcutSettingsSubtitle": "Shopping list, the day and more by voice",
-  "shortcutIntro": "A key connects a shortcut on the iPhone with WuselWall. With it, Siri puts things on the shopping list and tells you what is on today, what there is to eat or who has PE tomorrow. A key belongs to one person: it can read and add, but it cannot delete or manage anything.",
+  "shortcutIntro": "A key connects a shortcut on the iPhone with WuselWall. With it, Siri puts things on the shopping list and tells you what is on today, what there is to eat or who has PE tomorrow. A key belongs to one person: it can read and add, but it cannot delete or manage anything. A key for an AI assistant (MCP) only reads.",
   "shortcutEmpty": "No keys yet.",
   "shortcutKioskNote": "Keys are created on a personal phone, not on the wall display.",
   "shortcutNew": "New key",
@@ -2365,5 +2365,35 @@
     }
   },
   "shortcutErrLabel": "Please enter a name of at most 60 characters.",
-  "shortcutErrLimit": "This person already has ten keys. Please revoke one first."
+  "shortcutErrLimit": "This person already has ten keys. Please revoke one first.",
+  "shortcutSectionAssistants": "AI assistants",
+  "shortcutKindShortcut": "Siri",
+  "shortcutKindAssistant": "Assistant",
+  "shortcutKindShortcutHelp": "For a shortcut on the iPhone: it reads and adds, for example to the shopping list.",
+  "shortcutKindAssistantHelp": "For an AI assistant that speaks MCP, such as Claude: it only reads, and only adults get one.",
+  "shortcutAssistantLabelHint": "e.g. Claude on the laptop",
+  "shortcutAssistantKeyOnce": "This key is shown only now. With it, an assistant reads the whole family's week as {name}: appointments, who is away, the children's timetables, tasks, meals and the shopping list. What it reads goes to the assistant's provider. Treat the key like a password.",
+  "@shortcutAssistantKeyOnce": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shortcutAssistantHowSteps": "Add the address as an MCP server in your assistant and send the key as the header “Authorization” with “Bearer ”, a space and the key. The guide at wuselwall.app/docs/en/settings/shortcuts shows how for some assistants.",
+  "shortcutErrAdultOnly": "Only adults get a key for an assistant.",
+  "reminderPackTitle": "Pack for tomorrow",
+  "reminderPackChild": "{name}: {items}",
+  "@reminderPackChild": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "items": {
+        "type": "String"
+      }
+    }
+  },
+  "settingNotifyPackingTitle": "Packing reminder the evening before",
+  "settingNotifyPackingHelp": "At this time your phone says what has to go in the school bag for tomorrow, from the timetables (for example PE kit). Only when there is something to pack."
 }

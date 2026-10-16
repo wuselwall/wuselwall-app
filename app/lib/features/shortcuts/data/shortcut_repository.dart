@@ -3,8 +3,18 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/supabase/api_client.dart';
 import 'package:wuselwall/core/supabase/supabase_providers.dart';
 
-/// One row of `api.shortcut_tokens` (specs/12 "Part 1"): a key an Apple Shortcut sends to
-/// act as one person. The key itself is never stored, so it is not here.
+/// What a key is for (specs/12): an Apple Shortcut, which reads and adds as its holder, or
+/// an AI assistant over MCP, which only reads (family:read).
+enum KeyKind {
+  shortcut,
+  assistant;
+
+  /// A server before the assistant keys has shortcut keys only.
+  static KeyKind parse(String? v) => v == 'assistant' ? assistant : shortcut;
+}
+
+/// One row of `api.shortcut_tokens` (specs/12): a key an Apple Shortcut or an assistant sends
+/// to act as one person. The key itself is never stored, so it is not here.
 class ShortcutToken {
   const ShortcutToken({
     required this.id,
@@ -12,6 +22,7 @@ class ShortcutToken {
     required this.label,
     required this.createdAt,
     required this.useCount,
+    this.kind = KeyKind.shortcut,
     this.lastUsedAt,
     this.revokedAt,
   });
@@ -22,6 +33,7 @@ class ShortcutToken {
     label: json['label'] as String,
     createdAt: DateTime.parse(json['created_at'] as String),
     useCount: json['use_count'] as int? ?? 0,
+    kind: KeyKind.parse(json['kind'] as String?),
     lastUsedAt: json['last_used_at'] == null
         ? null
         : DateTime.parse(json['last_used_at'] as String),
@@ -38,6 +50,7 @@ class ShortcutToken {
   final DateTime createdAt;
   final DateTime? lastUsedAt;
   final int useCount;
+  final KeyKind kind;
   final DateTime? revokedAt;
 
   bool get revoked => revokedAt != null;
@@ -60,7 +73,11 @@ String shortcutsAddress(String supabaseUrl) {
   return '$base/functions/v1/shortcuts';
 }
 
-/// Shortcut keys. A guardian issues and revokes them for anyone; a member issues and
+/// The address an assistant connects to: `<supabaseUrl>/functions/v1/mcp` (specs/12 "Part 2").
+String mcpAddress(String supabaseUrl) =>
+    shortcutsAddress(supabaseUrl).replaceFirst(RegExp(r'/shortcuts$'), '/mcp');
+
+/// Shortcut and assistant keys. A guardian issues and revokes them for anyone; a member issues and
 /// revokes their own on their phone. Every call goes through `api`.
 class ShortcutRepository {
   const ShortcutRepository(this._api);
@@ -73,13 +90,17 @@ class ShortcutRepository {
     build: (q) => q.order('created_at'),
   );
 
-  /// Creates a key for [profileId] (the acting person when null). It comes back once.
+  /// Creates a key of [kind] for [profileId] (the acting person when null). It comes back
+  /// once. An assistant key is for an adult only; the server says so otherwise.
   Future<Result<CreatedShortcutToken>> create({
     required String? actor,
     required String? profileId,
     required String label,
+    KeyKind kind = KeyKind.shortcut,
   }) => _api.rpc(
-    'shortcut_token_create',
+    kind == KeyKind.assistant
+        ? 'assistant_key_create'
+        : 'shortcut_token_create',
     params: {'p_actor': actor, 'p_profile': profileId, 'p_label': label},
     parse: (json) {
       final m = json! as Map<String, dynamic>;

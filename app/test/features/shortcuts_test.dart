@@ -12,7 +12,8 @@ class FakeShortcutRepository implements ShortcutRepository {
   FakeShortcutRepository({this.tokensList = const []});
 
   final List<ShortcutToken> tokensList;
-  final created = <({String? actor, String? profileId, String label})>[];
+  final created =
+      <({String? actor, String? profileId, String label, KeyKind kind})>[];
   final revoked = <({String? actor, String id})>[];
 
   @override
@@ -23,9 +24,15 @@ class FakeShortcutRepository implements ShortcutRepository {
     required String? actor,
     required String? profileId,
     required String label,
+    KeyKind kind = KeyKind.shortcut,
   }) async {
-    created.add((actor: actor, profileId: profileId, label: label));
-    return const Ok(CreatedShortcutToken(id: 's-new', token: 'wws_key123'));
+    created.add((actor: actor, profileId: profileId, label: label, kind: kind));
+    return Ok(
+      CreatedShortcutToken(
+        id: 's-new',
+        token: kind == KeyKind.assistant ? 'wwa_key456' : 'wws_key123',
+      ),
+    );
   }
 
   @override
@@ -119,7 +126,12 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(keys.created, [
-      (actor: guardianId, profileId: kidId, label: 'Annas iPad'),
+      (
+        actor: guardianId,
+        profileId: kidId,
+        label: 'Annas iPad',
+        kind: KeyKind.shortcut,
+      ),
     ]);
     expect(find.text('Schlüssel für Anna'), findsOneWidget);
     final shown = tester
@@ -192,5 +204,81 @@ void main() {
     await tester.tap(find.widgetWithText(FilledButton, 'Sperren'));
     await tester.pumpAndSettle();
     expect(keys.revoked, [(actor: guardianId, id: 's1')]);
+  });
+
+  testWidgets('an assistant key is for adults and shows the MCP address', (
+    tester,
+  ) async {
+    final keys = FakeShortcutRepository();
+    await _open(tester, keys);
+
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
+    expect(find.widgetWithText(ChoiceChip, 'Anna'), findsOneWidget);
+    await tester.tap(find.text('Assistent'));
+    await tester.pumpAndSettle();
+    // The only other member is a child: no choice of person is left.
+    expect(find.byType(ChoiceChip), findsNothing);
+    await tester.enterText(find.byType(TextField).first, 'Claude');
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, 'Schlüssel erstellen'));
+    await tester.pumpAndSettle();
+
+    expect(keys.created.single.kind, KeyKind.assistant);
+    expect(keys.created.single.profileId, guardianId);
+    final shown = tester
+        .widgetList<SelectableText>(find.byType(SelectableText))
+        .map((w) => w.data)
+        .toList();
+    expect(shown, contains('wwa_key456'));
+    expect(shown, contains('http://localhost/functions/v1/mcp'));
+  });
+
+  testWidgets('a child is offered shortcut keys only', (tester) async {
+    await _open(tester, FakeShortcutRepository(), profileId: kidId);
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
+    expect(find.text('Assistent'), findsNothing);
+  });
+
+  testWidgets('assistant keys are listed under their own heading', (
+    tester,
+  ) async {
+    await _open(
+      tester,
+      FakeShortcutRepository(
+        tokensList: [
+          _token(),
+          ShortcutToken(
+            id: 'a1',
+            profileId: guardianId,
+            label: 'Claude',
+            createdAt: DateTime(2026, 10, 2),
+            useCount: 0,
+            kind: KeyKind.assistant,
+          ),
+        ],
+      ),
+    );
+    expect(find.text('KI-Assistenten'), findsOneWidget);
+    expect(find.byIcon(Icons.smart_toy_outlined), findsOneWidget);
+  });
+
+  test('mcpAddress is the mcp function under the server', () {
+    expect(
+      mcpAddress('https://api.example.org/'),
+      'https://api.example.org/functions/v1/mcp',
+    );
+  });
+
+  test('a row without kind (an older server) is a shortcut key', () {
+    final t = ShortcutToken.fromJson({
+      'id': 's1',
+      'profile_id': kidId,
+      'label': 'iPad',
+      'created_at': '2026-10-01T08:00:00Z',
+      'use_count': 0,
+    });
+    expect(t.kind, KeyKind.shortcut);
   });
 }

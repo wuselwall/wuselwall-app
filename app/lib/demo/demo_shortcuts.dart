@@ -2,8 +2,8 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/features/shortcuts/data/shortcut_repository.dart';
 
-/// Two shortcut keys for the screenshots: the father's phone, in use, and the daughter's
-/// tablet, never used yet. A new key is made up and kept until the demo is reloaded.
+/// Keys for the screenshots: the father's phone, in use, the daughter's tablet, never used
+/// yet, and the mother's assistant. A new key is made up and kept until the demo is reloaded.
 class DemoShortcutRepository implements ShortcutRepository {
   DemoShortcutRepository()
     : _tokens = [
@@ -22,6 +22,15 @@ class DemoShortcutRepository implements ShortcutRepository {
           createdAt: DateTime(2026, 10, 9),
           useCount: 0,
         ),
+        ShortcutToken(
+          id: 's-3',
+          profileId: DemoData.mama,
+          label: 'Claude',
+          createdAt: DateTime(2026, 10, 12),
+          lastUsedAt: DateTime.now().subtract(const Duration(days: 1)),
+          useCount: 7,
+          kind: KeyKind.assistant,
+        ),
       ];
 
   final List<ShortcutToken> _tokens;
@@ -34,6 +43,7 @@ class DemoShortcutRepository implements ShortcutRepository {
     required String? actor,
     required String? profileId,
     required String label,
+    KeyKind kind = KeyKind.shortcut,
   }) async {
     final id = 's-${_tokens.length + 1}';
     _tokens.add(
@@ -43,12 +53,15 @@ class DemoShortcutRepository implements ShortcutRepository {
         label: label,
         createdAt: DateTime.now(),
         useCount: 0,
+        kind: kind,
       ),
     );
     return Ok(
       CreatedShortcutToken(
         id: id,
-        token: 'wws_demo-key-not-valid-on-any-server-000000',
+        token: kind == KeyKind.assistant
+            ? 'wwa_demo-key-not-valid-on-any-server-000000'
+            : 'wws_demo-key-not-valid-on-any-server-000000',
       ),
     );
   }
@@ -68,6 +81,7 @@ class DemoShortcutRepository implements ShortcutRepository {
         createdAt: t.createdAt,
         lastUsedAt: t.lastUsedAt,
         useCount: t.useCount,
+        kind: t.kind,
         revokedAt: DateTime.now(),
       );
     }
