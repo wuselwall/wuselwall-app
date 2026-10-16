@@ -13,6 +13,7 @@ import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/reminders/data/reminder_dismissal_store.dart';
 import 'package:wuselwall/features/reminders/domain/reminder_plan.dart';
+import 'package:wuselwall/features/school/application/school_providers.dart';
 import 'package:wuselwall/features/settings/application/household_settings_providers.dart';
 import 'package:wuselwall/features/tasks/data/tasks_repository.dart';
 import 'package:wuselwall/features/tasks/domain/tasks_models.dart';
@@ -67,6 +68,11 @@ final reminderPlanProvider = FutureProvider.autoDispose<ReminderPlan>((
     'notify.event_reminder',
     profileId: actor,
   );
+  final packing = resolveSetting(
+    settings,
+    'notify.packing_reminder',
+    profileId: actor,
+  );
 
   final now = DateTime.now();
   final from = DateTime(now.year, now.month, now.day);
@@ -82,6 +88,11 @@ final reminderPlanProvider = FutureProvider.autoDispose<ReminderPlan>((
     tasks.addAll((await repository.instancesOn(day)).unwrap());
   }
 
+  final packingAt = morningTimeOf(packing?.value);
+  final packs = packingAt == null
+      ? const <PackList>[]
+      : await _packLists(ref, actor, from);
+
   return planReminders(
     now: now,
     l10n: reminderL10n(),
@@ -90,8 +101,46 @@ final reminderPlanProvider = FutureProvider.autoDispose<ReminderPlan>((
     eventMinutes: (event?.value as num?)?.toInt(),
     occurrences: window.occurrences,
     tasks: tasks,
+    packingAt: packingAt,
+    packs: packs,
   );
 });
+
+/// What the children pack for each school day from tomorrow through the plan's last
+/// evening: a child's own phone covers that child, an adult's every child. A server or
+/// household without the school module simply gives none.
+Future<List<PackList>> _packLists(Ref ref, String actor, DateTime today) async {
+  final members = await ref.watch(membersProvider.future);
+  final me = members.where((m) => m.id == actor).firstOrNull;
+  final children = me != null && me.isChild
+      ? [me]
+      : members.where((m) => m.isChild && m.active).toList();
+  if (children.isEmpty) return const [];
+  final first = DateTime(today.year, today.month, today.day + 1);
+  final last = DateTime(today.year, today.month, today.day + planDays);
+  try {
+    final week = await ref.watch(schoolWeekProvider((first, last)).future);
+    return [
+      for (
+        var d = first;
+        !d.isAfter(last);
+        d = DateTime(d.year, d.month, d.day + 1)
+      )
+        for (final child in children)
+          if (week.dayOf(child.id, d)?.equipment case final items?
+              when items.isNotEmpty)
+            PackList(
+              day: d,
+              profileId: child.id,
+              name: child.displayName,
+              items: items,
+            ),
+    ];
+  } on Object catch (error, stack) {
+    logError('Packing reminders skipped', error: error, stackTrace: stack);
+    return const [];
+  }
+}
 
 /// Whether the OS currently lets the app show notifications.
 final notificationPermissionProvider = FutureProvider.autoDispose<bool>((

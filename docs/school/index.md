@@ -72,7 +72,7 @@ Tippe auf eine Stunde, wenn sich etwas ändert:
 
 ## Morgen einpacken
 
-Auf der Küchenwand steht bei einem Kind **Morgen einpacken**, wenn morgen etwas mitzubringen ist, zum Beispiel Sportsachen. Ob dieser Hinweis erscheint, legt ihr unter [Haushalt einstellen](/settings/household) fest.
+Auf der Küchenwand steht bei einem Kind **Morgen einpacken**, wenn morgen etwas mitzubringen ist, zum Beispiel Sportsachen. Dasselbe zeigt die Heute-Ansicht des Kindes, und auf dem eigenen Handy kommt am Vorabend eine [Einpack-Erinnerung](/settings/reminders). Ob diese Hinweise erscheinen, legt ihr unter [Haushalt einstellen](/settings/household) fest: ausgeschaltet verschwinden sie überall.
 
 ## Kinder melden Änderungen
 

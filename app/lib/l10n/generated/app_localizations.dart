@@ -7404,6 +7404,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Only adults get a key for an assistant.'**
   String get shortcutErrAdultOnly;
+
+  /// No description provided for @reminderPackTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pack for tomorrow'**
+  String get reminderPackTitle;
+
+  /// No description provided for @reminderPackChild.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}: {items}'**
+  String reminderPackChild(String name, String items);
+
+  /// No description provided for @settingNotifyPackingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Packing reminder the evening before'**
+  String get settingNotifyPackingTitle;
+
+  /// No description provided for @settingNotifyPackingHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'At this time your phone says what has to go in the school bag for tomorrow, from the timetables (for example PE kit). Only when there is something to pack.'**
+  String get settingNotifyPackingHelp;
 }
 
 class _AppLocalizationsDelegate

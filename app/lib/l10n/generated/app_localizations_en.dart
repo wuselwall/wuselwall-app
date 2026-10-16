@@ -4273,4 +4273,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shortcutErrAdultOnly => 'Only adults get a key for an assistant.';
+
+  @override
+  String get reminderPackTitle => 'Pack for tomorrow';
+
+  @override
+  String reminderPackChild(String name, String items) {
+    return '$name: $items';
+  }
+
+  @override
+  String get settingNotifyPackingTitle => 'Packing reminder the evening before';
+
+  @override
+  String get settingNotifyPackingHelp =>
+      'At this time your phone says what has to go in the school bag for tomorrow, from the timetables (for example PE kit). Only when there is something to pack.';
 }
