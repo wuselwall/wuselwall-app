@@ -8,8 +8,9 @@ Erinnerungen bekommst du auf **deinem eigenen Handy**, wenn du sie einschaltest:
 
 - **Morgenübersicht**: eine Benachrichtigung am Morgen, zum Beispiel „Heute: 3 Termine, 2 Aufgaben“ und „Als Erstes um 8:00: Schwimmen“. Die Uhrzeit stellst du ein. Erziehungsberechtigte sehen dort auch offene Belohnungen, die auf Freigabe warten.
 - **Erinnerung vor Terminen**: eine Benachrichtigung, bevor ein Termin beginnt, zu dem du eingetragen bist.
+- **Einpack-Erinnerung am Vorabend**: zum Beispiel „Für morgen einpacken – Lotta: Sportsachen“, aus den [Stundenplänen](/school/#morgen-einpacken). Erwachsene bekommen sie für alle Kinder, ein Kind auf dem eigenen Handy für sich. Sie kommt nur, wenn etwas einzupacken ist.
 
-Beides steuerst du mit einem Schalter. Die Einstellungen gelten nur für dich. Der Standard legt die Morgenübersicht auf 7:00 fest, die Terminerinnerung ist aus.
+Alles steuerst du mit einem Schalter. Die Einstellungen gelten nur für dich. Der Standard legt die Morgenübersicht auf 7:00 und die Einpack-Erinnerung auf 19:00 fest, die Terminerinnerung ist aus.
 
 ## Erlaubnis
 

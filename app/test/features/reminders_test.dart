@@ -311,6 +311,95 @@ void main() {
     });
   });
 
+  group('packing reminder (FR-7.12)', () {
+    final now = DateTime(2026, 10, 14, 6);
+    const seven = TimeOfDay(hour: 19, minute: 0);
+
+    PackList pack(int dayOffset, String id, String name, List<String> items) =>
+        PackList(
+          day: DateTime(2026, 10, 14 + dayOffset),
+          profileId: id,
+          name: name,
+          items: items,
+        );
+
+    ReminderPlan plan({
+      TimeOfDay? packingAt = seven,
+      List<PackList> packs = const [],
+      DateTime? at,
+      String actor = guardianId,
+    }) => planReminders(
+      now: at ?? now,
+      l10n: _de,
+      actor: actor,
+      morningAt: null,
+      eventMinutes: null,
+      occurrences: const [],
+      tasks: const [],
+      packingAt: packingAt,
+      packs: packs,
+    );
+
+    test('a parent hears every child, the evening before', () {
+      final p = plan(
+        packs: [
+          pack(1, kidId, 'Anna', ['Sportsachen']),
+          pack(1, 'p-2', 'Lotta', ['Schwimmsachen', 'Flöte']),
+        ],
+      );
+      expect(p.reminders, hasLength(1));
+      expect(p.reminders.single.when, DateTime(2026, 10, 14, 19));
+      expect(p.reminders.single.title, 'Für morgen einpacken');
+      expect(
+        p.reminders.single.body,
+        'Anna: Sportsachen · Lotta: Schwimmsachen, Flöte',
+      );
+    });
+
+    test("a child's own phone lists just the things", () {
+      final p = plan(
+        actor: kidId,
+        packs: [
+          pack(2, kidId, 'Anna', ['Sportsachen']),
+        ],
+      );
+      expect(p.reminders.single.when, DateTime(2026, 10, 15, 19));
+      expect(p.reminders.single.body, 'Sportsachen');
+    });
+
+    test('nothing to pack, switched off, or the evening gone: no reminder', () {
+      expect(plan(packs: [pack(1, kidId, 'Anna', [])]).reminders, isEmpty);
+      expect(
+        plan(
+          packingAt: null,
+          packs: [
+            pack(1, kidId, 'Anna', ['Sportsachen']),
+          ],
+        ).reminders,
+        isEmpty,
+      );
+      final late = plan(
+        at: DateTime(2026, 10, 14, 20),
+        packs: [
+          pack(1, kidId, 'Anna', ['Sportsachen']),
+          pack(2, kidId, 'Anna', ['Turnbeutel']),
+        ],
+      );
+      expect(late.reminders.map((r) => r.body), ['Anna: Turnbeutel']);
+    });
+
+    test('only evenings inside the plan', () {
+      final p = plan(
+        packs: [
+          pack(7, kidId, 'Anna', ['Sportsachen']),
+          pack(8, kidId, 'Anna', ['Schwimmsachen']),
+        ],
+      );
+      // The evening of day 6 is the plan's last; day 7's is past it.
+      expect(p.reminders.map((r) => r.when), [DateTime(2026, 10, 20, 19)]);
+    });
+  });
+
   group('the phone schedules and the Today row', () {
     testWidgets('nothing is scheduled without permission', (t) async {
       final notifications = FakeNotificationScheduler(granted: false);

@@ -4137,4 +4137,155 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get setupPhoneBody =>
       'Open the WuselWall app on your phone, choose this server by scanning the code, then sign in there.';
+
+  @override
+  String get shortcutTitle => 'Siri and Shortcuts';
+
+  @override
+  String get shortcutSettingsSubtitle =>
+      'Shopping list, the day and more by voice';
+
+  @override
+  String get shortcutIntro =>
+      'A key connects a shortcut on the iPhone with WuselWall. With it, Siri puts things on the shopping list and tells you what is on today, what there is to eat or who has PE tomorrow. A key belongs to one person: it can read and add, but it cannot delete or manage anything. A key for an AI assistant (MCP) only reads.';
+
+  @override
+  String get shortcutEmpty => 'No keys yet.';
+
+  @override
+  String get shortcutKioskNote =>
+      'Keys are created on a personal phone, not on the wall display.';
+
+  @override
+  String get shortcutNew => 'New key';
+
+  @override
+  String get shortcutLabelField => 'Name';
+
+  @override
+  String get shortcutLabelHint => 'e.g. iPhone';
+
+  @override
+  String get shortcutForWhom => 'For whom?';
+
+  @override
+  String get shortcutForWhomHelp =>
+      'The shortcut acts as this person: it ticks their tasks and tells their points.';
+
+  @override
+  String get shortcutCreate => 'Create key';
+
+  @override
+  String shortcutKeyTitle(String name) {
+    return 'Key for $name';
+  }
+
+  @override
+  String shortcutKeyOnce(String name) {
+    return 'This key is shown only now. Whoever has it can read and add as $name, so treat it like a password. The Shortcuts app syncs it through iCloud.';
+  }
+
+  @override
+  String get shortcutCopyKey => 'Copy key';
+
+  @override
+  String get shortcutAddressLabel => 'Address';
+
+  @override
+  String get shortcutCopyAddress => 'Copy address';
+
+  @override
+  String get shortcutCopied => 'Copied.';
+
+  @override
+  String get shortcutHowTitle => 'How it works';
+
+  @override
+  String get shortcutHowSteps =>
+      'In the Shortcuts app, create a shortcut with the action “Get Contents of URL”: the address with /today at the end, and a header “Authorization” with “Bearer ”, a space and the key. Then add “Show Result” or “Speak Text”. The guide at wuselwall.app/docs/en/settings/shortcuts shows every shortcut.';
+
+  @override
+  String shortcutLastUsed(String when) {
+    return 'Last used: $when';
+  }
+
+  @override
+  String get shortcutNeverUsed => 'Never used';
+
+  @override
+  String shortcutUseCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count requests',
+      one: '1 request',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get shortcutRevoked => 'Revoked';
+
+  @override
+  String get shortcutRevokeAction => 'Revoke';
+
+  @override
+  String shortcutRevokeConfirm(String label) {
+    return 'Revoke “$label”? The shortcut stops working at once.';
+  }
+
+  @override
+  String get shortcutErrLabel =>
+      'Please enter a name of at most 60 characters.';
+
+  @override
+  String get shortcutErrLimit =>
+      'This person already has ten keys. Please revoke one first.';
+
+  @override
+  String get shortcutSectionAssistants => 'AI assistants';
+
+  @override
+  String get shortcutKindShortcut => 'Siri';
+
+  @override
+  String get shortcutKindAssistant => 'Assistant';
+
+  @override
+  String get shortcutKindShortcutHelp =>
+      'For a shortcut on the iPhone: it reads and adds, for example to the shopping list.';
+
+  @override
+  String get shortcutKindAssistantHelp =>
+      'For an AI assistant that speaks MCP, such as Claude: it only reads, and only adults get one.';
+
+  @override
+  String get shortcutAssistantLabelHint => 'e.g. Claude on the laptop';
+
+  @override
+  String shortcutAssistantKeyOnce(String name) {
+    return 'This key is shown only now. With it, an assistant reads the whole family\'s week as $name: appointments, who is away, the children\'s timetables, tasks, meals and the shopping list. What it reads goes to the assistant\'s provider. Treat the key like a password.';
+  }
+
+  @override
+  String get shortcutAssistantHowSteps =>
+      'Add the address as an MCP server in your assistant and send the key as the header “Authorization” with “Bearer ”, a space and the key. The guide at wuselwall.app/docs/en/settings/shortcuts shows how for some assistants.';
+
+  @override
+  String get shortcutErrAdultOnly => 'Only adults get a key for an assistant.';
+
+  @override
+  String get reminderPackTitle => 'Pack for tomorrow';
+
+  @override
+  String reminderPackChild(String name, String items) {
+    return '$name: $items';
+  }
+
+  @override
+  String get settingNotifyPackingTitle => 'Packing reminder the evening before';
+
+  @override
+  String get settingNotifyPackingHelp =>
+      'At this time your phone says what has to go in the school bag for tomorrow, from the timetables (for example PE kit). Only when there is something to pack.';
 }

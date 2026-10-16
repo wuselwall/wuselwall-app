@@ -146,6 +146,8 @@ const shots = [
   // Inviting an adult: the name, then the result sheet with the code, QR code and share action.
   { name: 'invite-sheet', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await press(p, t.settings); await scrollUntil(p, t.inviteAdult); await tapAny(p, t.inviteAdult, { exact: false }); await p.getByRole('textbox', { name: t.inviteName }).fill(t.grandma); await press(p, t.inviteCreate); } },
   { name: 'reminders', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await press(p, t.settings); await tapAny(p, t.reminders, { exact: false }); } },
+  // Siri and Shortcuts: the keys of the family, one in use and one not yet.
+  { name: 'shortcuts', scenario: 'adult', viewport: PHONE, route: '/settings/shortcuts' },
 ];
 
 const only = process.argv.slice(2);

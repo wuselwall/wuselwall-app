@@ -4167,4 +4167,156 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get setupPhoneBody =>
       'Öffne die WuselWall-App auf deinem Handy, wähle diesen Server, indem du den Code scannst, und melde dich dort an.';
+
+  @override
+  String get shortcutTitle => 'Siri und Kurzbefehle';
+
+  @override
+  String get shortcutSettingsSubtitle =>
+      'Einkaufsliste, Tagesplan und mehr per Sprachbefehl';
+
+  @override
+  String get shortcutIntro =>
+      'Ein Schlüssel verbindet einen Kurzbefehl auf dem iPhone mit WuselWall. Damit setzt Siri Dinge auf die Einkaufsliste und sagt, was heute ansteht, was es zu essen gibt oder wer morgen Sport hat. Ein Schlüssel gehört zu einer Person: Er kann lesen und hinzufügen, aber nichts löschen und nichts verwalten. Ein Schlüssel für einen KI-Assistenten (MCP) liest nur.';
+
+  @override
+  String get shortcutEmpty => 'Noch keine Schlüssel.';
+
+  @override
+  String get shortcutKioskNote =>
+      'Schlüssel werden auf einem eigenen Handy erstellt, nicht an der Wand.';
+
+  @override
+  String get shortcutNew => 'Neuer Schlüssel';
+
+  @override
+  String get shortcutLabelField => 'Name';
+
+  @override
+  String get shortcutLabelHint => 'z. B. iPhone';
+
+  @override
+  String get shortcutForWhom => 'Für wen?';
+
+  @override
+  String get shortcutForWhomHelp =>
+      'Der Kurzbefehl handelt als diese Person: Er hakt ihre Aufgaben ab und nennt ihre Punkte.';
+
+  @override
+  String get shortcutCreate => 'Schlüssel erstellen';
+
+  @override
+  String shortcutKeyTitle(String name) {
+    return 'Schlüssel für $name';
+  }
+
+  @override
+  String shortcutKeyOnce(String name) {
+    return 'Dieser Schlüssel wird nur jetzt angezeigt. Wer ihn hat, kann als $name lesen und hinzufügen, also behandle ihn wie ein Passwort. Die Kurzbefehle-App synchronisiert ihn über iCloud.';
+  }
+
+  @override
+  String get shortcutCopyKey => 'Schlüssel kopieren';
+
+  @override
+  String get shortcutAddressLabel => 'Adresse';
+
+  @override
+  String get shortcutCopyAddress => 'Adresse kopieren';
+
+  @override
+  String get shortcutCopied => 'Kopiert.';
+
+  @override
+  String get shortcutHowTitle => 'So geht’s';
+
+  @override
+  String get shortcutHowSteps =>
+      'In der Kurzbefehle-App einen Kurzbefehl mit der Aktion „Inhalte von URL abrufen“ anlegen: die Adresse mit /today am Ende und als Header „Authorization“ mit „Bearer “, einem Leerzeichen und dem Schlüssel. Danach „Ergebnis anzeigen“ oder „Text sprechen“ dazunehmen. Die Anleitung auf wuselwall.app/docs/settings/shortcuts zeigt alle Kurzbefehle.';
+
+  @override
+  String shortcutLastUsed(String when) {
+    return 'Zuletzt benutzt: $when';
+  }
+
+  @override
+  String get shortcutNeverUsed => 'Noch nie benutzt';
+
+  @override
+  String shortcutUseCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Abfragen',
+      one: '1 Abfrage',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get shortcutRevoked => 'Gesperrt';
+
+  @override
+  String get shortcutRevokeAction => 'Sperren';
+
+  @override
+  String shortcutRevokeConfirm(String label) {
+    return '„$label“ sperren? Der Kurzbefehl funktioniert sofort nicht mehr.';
+  }
+
+  @override
+  String get shortcutErrLabel =>
+      'Bitte einen Namen mit höchstens 60 Zeichen eingeben.';
+
+  @override
+  String get shortcutErrLimit =>
+      'Diese Person hat schon zehn Schlüssel. Bitte zuerst einen sperren.';
+
+  @override
+  String get shortcutSectionAssistants => 'KI-Assistenten';
+
+  @override
+  String get shortcutKindShortcut => 'Siri';
+
+  @override
+  String get shortcutKindAssistant => 'Assistent';
+
+  @override
+  String get shortcutKindShortcutHelp =>
+      'Für einen Kurzbefehl auf dem iPhone: Er liest und fügt hinzu, zum Beispiel zur Einkaufsliste.';
+
+  @override
+  String get shortcutKindAssistantHelp =>
+      'Für einen KI-Assistenten, der MCP spricht, etwa Claude: Er liest nur, und nur Erwachsene bekommen einen.';
+
+  @override
+  String get shortcutAssistantLabelHint => 'z. B. Claude auf dem Laptop';
+
+  @override
+  String shortcutAssistantKeyOnce(String name) {
+    return 'Dieser Schlüssel wird nur jetzt angezeigt. Damit liest ein Assistent als $name die ganze Woche der Familie: Termine, wer weg ist, die Stundenpläne der Kinder, Aufgaben, Essen und die Einkaufsliste. Was er liest, geht an den Anbieter des Assistenten. Behandle den Schlüssel wie ein Passwort.';
+  }
+
+  @override
+  String get shortcutAssistantHowSteps =>
+      'Trage die Adresse in deinem Assistenten als MCP-Server ein und schicke den Schlüssel als Header „Authorization“ mit „Bearer “, einem Leerzeichen und dem Schlüssel. Die Anleitung auf wuselwall.app/docs/settings/shortcuts zeigt, wie das bei einigen Assistenten geht.';
+
+  @override
+  String get shortcutErrAdultOnly =>
+      'Einen Schlüssel für einen Assistenten bekommen nur Erwachsene.';
+
+  @override
+  String get reminderPackTitle => 'Für morgen einpacken';
+
+  @override
+  String reminderPackChild(String name, String items) {
+    return '$name: $items';
+  }
+
+  @override
+  String get settingNotifyPackingTitle => 'Einpack-Erinnerung am Vorabend';
+
+  @override
+  String get settingNotifyPackingHelp =>
+      'Um diese Uhrzeit sagt dein Handy, was für morgen in die Schultasche gehört, aus den Stundenplänen (zum Beispiel Sportsachen). Nur wenn etwas einzupacken ist.';
 }

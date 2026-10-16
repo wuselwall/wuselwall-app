@@ -25,6 +25,24 @@ class ReminderPlan {
   final List<Reminder> reminders;
 }
 
+/// What one child is to pack for a school day: the equipment of that day's lessons
+/// (FR-7.12, the projection's `equipment`), already empty when the household switched
+/// the hint off.
+class PackList {
+  const PackList({
+    required this.day,
+    required this.profileId,
+    required this.name,
+    required this.items,
+  });
+
+  /// The school day the things are for.
+  final DateTime day;
+  final String profileId;
+  final String name;
+  final List<String> items;
+}
+
 /// Most notifications kept at once. iOS keeps only the 64 that come soonest, so the plan
 /// stays under that and the rest is filled in on the next reschedule.
 const maxReminders = 60;
@@ -37,6 +55,8 @@ const planDays = 7;
 ///
 /// [occurrences] covers today through [planDays]; [tasks] is every instance in that span.
 /// A null [morningAt] switches the summary off, a null [eventMinutes] the reminders.
+/// [packingAt] is the evening "Für morgen einpacken" (`notify.packing_reminder`): on the
+/// evening before each day of [packs] that has something to pack; a null switches it off.
 /// Presence entries, cancelled events and all-day events get no event reminder; an
 /// event counts for [actor] when it is theirs or for the whole family.
 ReminderPlan planReminders({
@@ -47,6 +67,8 @@ ReminderPlan planReminders({
   required int? eventMinutes,
   required List<Occurrence> occurrences,
   required List<TaskInstance> tasks,
+  TimeOfDay? packingAt,
+  List<PackList> packs = const [],
 }) {
   final today = DateTime(now.year, now.month, now.day);
   final end = DateTime(today.year, today.month, today.day + planDays);
@@ -105,6 +127,40 @@ ReminderPlan planReminders({
           when: when,
           title: o.title,
           body: l10n.reminderEventBody(_clock(o.localStarts!)),
+        ),
+      );
+    }
+  }
+
+  if (packingAt != null) {
+    final byDay = <DateTime, List<PackList>>{};
+    for (final p in packs) {
+      if (p.items.isEmpty) continue;
+      final day = DateTime(p.day.year, p.day.month, p.day.day);
+      (byDay[day] ??= []).add(p);
+    }
+    for (final MapEntry(key: day, value: lists) in byDay.entries) {
+      final at = DateTime(
+        day.year,
+        day.month,
+        day.day - 1,
+        packingAt.hour,
+        packingAt.minute,
+      );
+      if (!at.isAfter(now) || !at.isBefore(end)) continue;
+      // A child's own phone lists the things; a parent's names each child.
+      final own = lists.length == 1 && lists.single.profileId == actor;
+      reminders.add(
+        Reminder(
+          when: at,
+          title: l10n.reminderPackTitle,
+          body: own
+              ? lists.single.items.join(', ')
+              : lists
+                    .map(
+                      (p) => l10n.reminderPackChild(p.name, p.items.join(', ')),
+                    )
+                    .join(' · '),
         ),
       );
     }

@@ -167,6 +167,14 @@ footer when tomorrow has a subject with equipment attached (Sport → Sportsache
 Schwimmen → Schwimmsachen). That footer is the single highest-value thing this module
 does for the evening routine, which is why FR-7.12 exists even though it is only a `C`.
 
+*Built 2026-10-16 (FR-7.12 complete):* the equipment of the day's held lessons is in the
+projection (`equipment`), shown on the kid's Today, the board's pack strip and the Stundenplan
+section; the evening local notification `notify.packing_reminder` (19:00 by default, specs/21)
+names it the evening before; Siri and assistants answer it ([12](12-mcp-and-assistants.md)).
+The household setting `school.equipment_hint` now switches all of it off: the school loader
+(`_shared/school_data.ts`) leaves the subjects' equipment notes out of the projection, so every
+app version follows.
+
 **Week board (kiosk):** the child's row shows the school-day span and only the lessons
 flagged `is_notable` — Sport, Schwimmen, an AG, an excursion. Rendering six subjects per
 day on a wall display at two metres produces a grey rectangle nobody reads.
@@ -381,6 +389,7 @@ tentative status · key-appointment flag.
 **Out:** automatic import from WebUntis, IServ, Schulmanager or any school portal ·
 imported Ferien feeds (M2) · homework and grades — that is a different application, and
 the school already has one · marks, absence reporting, parent-teacher communication ·
-equipment reminders (FR-7.12, `C` — do it in M2 if the evening routine still hurts) ·
+equipment reminders (FR-7.12, `C` — do it in M2 if the evening routine still hurts; *built
+2026-10-16, see below*) ·
 free/busy computation across the household · anything that treats presence as capacity to
 be optimised. This is a kitchen display, not a resource planner.

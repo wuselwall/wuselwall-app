@@ -149,6 +149,12 @@ void main() {
       );
       await t.tap(find.byIcon(Icons.settings));
       await t.pumpAndSettle();
+      // The security section sits below the settings entries; the list builds lazily.
+      await t.scrollUntilVisible(
+        find.text('Zwei-Faktor-Anmeldung'),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
       expect(find.text('Zwei-Faktor-Anmeldung'), findsOneWidget);
       expect(find.text('Passkey'), findsOneWidget);
     });
