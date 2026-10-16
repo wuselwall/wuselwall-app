@@ -66,7 +66,11 @@ export const appLinks = {
   // signing key's (Play Console → App integrity). Until then assetlinks.json lists no
   // fingerprint, Android does not verify the links and they open in the browser; with
   // LINKS_STRICT=1 the build fails while any value still starts with "TODO".
-  androidSha256: ['TODO: SHA-256 of the upload key', 'TODO: SHA-256 of the Play app signing key'] as string[],
+  androidSha256: [
+    // The upload key (signs the APK on the download page).
+    '5A:FE:7B:26:7D:69:F3:50:5F:6C:44:11:AF:11:76:43:EB:1C:FC:B2:98:24:71:1A:1F:F3:63:7E:12:DF:98:7A',
+    'TODO: SHA-256 of the Play app signing key',
+  ] as string[],
 };
 
 /** The fingerprints that are real ones, for assetlinks.json. */
