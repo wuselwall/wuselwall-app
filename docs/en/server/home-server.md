@@ -14,7 +14,7 @@ In the examples your domain is `example.org`. The server is reached at `api.exam
 
 ::: details No open ports?
 - **Cloudflare Tunnel:** a small program on the server (`cloudflared`) connects out to Cloudflare, and you open no port. Cloudflare decrypts the traffic on the way and can see it. Then install without `--caddy` and point the tunnel at the stack as described under "Your own web server instead of Caddy".
-- **VPN only** (Tailscale, WireGuard): the server stays invisible from the internet. In exchange every device needs the VPN, the kitchen tablet too, and **calendar subscriptions** for Outlook and Google don't work.
+- **VPN only** (Tailscale, WireGuard): the server stays invisible from the internet. In exchange every device needs the VPN, the kitchen tablet too, and the **shared family calendar** in Outlook and Google doesn't work.
 :::
 
 ## 1. Installing

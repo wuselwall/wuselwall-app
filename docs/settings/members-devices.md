@@ -68,9 +68,9 @@ Die Datei enthält die Angaben, die ihr eingegeben habt: Mitglieder, Termine, St
 
 Familie löschen und verlassen steht unter [Konto und Familie](/settings/account).
 
-## Abonnierte Kalender
+## Kalender von außen
 
-Kalender von Vereinen oder der Gemeinde abonnierst du unter **Einstellungen → Abonnierte Kalender**. Wie das funktioniert und was zu beachten ist, steht unter [Kalender](/calendar/#abonnierte-kalender).
+Kalender von Vereinen oder der Gemeinde abonnierst du unter **Einstellungen → Kalender von außen hinzufügen**. Wie das funktioniert und was zu beachten ist, steht unter [Kalender](/calendar/#kalender-von-aussen).
 
 ## Erste Schritte wieder anzeigen
 

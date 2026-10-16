@@ -3431,13 +3431,13 @@ abstract class AppLocalizations {
   /// No description provided for @feedTitle.
   ///
   /// In en, this message translates to:
-  /// **'Calendar subscriptions'**
+  /// **'Share the family calendar'**
   String get feedTitle;
 
   /// No description provided for @feedSettingsSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'The family calendar in Outlook or on an iPhone'**
+  /// **'Read-only, in Outlook or on an iPhone'**
   String get feedSettingsSubtitle;
 
   /// No description provided for @feedNew.
@@ -5327,13 +5327,13 @@ abstract class AppLocalizations {
   /// No description provided for @extCalTitle.
   ///
   /// In en, this message translates to:
-  /// **'Subscribed calendars'**
+  /// **'Add outside calendars'**
   String get extCalTitle;
 
   /// No description provided for @extCalSettingsSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Appointments from club and bin calendars'**
+  /// **'Club fixtures, bin collection and more in the family calendar'**
   String get extCalSettingsSubtitle;
 
   /// No description provided for @extCalEmpty.
@@ -5669,7 +5669,7 @@ abstract class AppLocalizations {
   /// No description provided for @feedSubTitle.
   ///
   /// In en, this message translates to:
-  /// **'Include subscribed calendars'**
+  /// **'Include outside calendars'**
   String get feedSubTitle;
 
   /// No description provided for @feedSubHelp.
@@ -5681,7 +5681,7 @@ abstract class AppLocalizations {
   /// No description provided for @feedSubSummary.
   ///
   /// In en, this message translates to:
-  /// **'Subscribed calendars'**
+  /// **'Outside calendars'**
   String get feedSubSummary;
 
   /// No description provided for @boardAllEvents.

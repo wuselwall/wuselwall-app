@@ -218,7 +218,7 @@ the calendar's colour with an RSS mark.
   (at most 20 feeds per run, each one whose last attempt is older than 55 minutes), and a guardian's
   "Jetzt aktualisieren" fetches one feed at once. The apps never contact the address.
 - **Who manages:** guardians, on a personal device or with a current step-up on a shared one;
-  Einstellungen → Abonnierte Kalender. Add, edit, delete, pause, "Jetzt aktualisieren". A kiosk
+  Einstellungen → Kalender von außen hinzufügen. Add, edit, delete, pause, "Jetzt aktualisieren". A kiosk
   cannot. Members see the imported occurrences. The address is a secret when it carries a token,
   so it is split: `api.external_calendars` (readable by every live device of the household) shows
   only `url_host`, the host name for display; the full address comes from `api.external_calendar_url`,
