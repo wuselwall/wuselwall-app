@@ -125,7 +125,7 @@ account. Day-to-day use never asks for it.
 
 ## Device pairing
 
-> **Built 2026-10-15 on `feature/regions-and-ux`, not yet on the server.** Pairing replaces code enrolment as the way a shared or kiosk device joins (see [20](20-onboarding.md#j3--connect-a-shared-device)). The device kinds are `wall_display` (kiosk register), `kid_tablet` (shared, kid register), `family_tablet` (shared, adult register) and `child_phone` (personal device bound to a child's profile). A guardian's personal phone approves the request and picks the kind; the approval creates the device's Auth user. The enrolment code stays for one release for devices on an older app.
+> **Built 2026-10-15.** Pairing replaces code enrolment as the way a shared or kiosk device joins (see [20](20-onboarding.md#j3--connect-a-shared-device)). The device kinds are `wall_display` (kiosk register), `kid_tablet` (shared, kid register), `family_tablet` (shared, adult register) and `child_phone` (personal device bound to a child's profile). A guardian's personal phone approves the request and picks the kind; the approval creates the device's Auth user. The enrolment code stays for one release for devices on an older app.
 
 No password and no code is ever typed on the wall display or a child's iPad. *Revised
 2026-10-11 ([ADR-014](adr/ADR-014-self-service-onboarding.md)): the new device shows the

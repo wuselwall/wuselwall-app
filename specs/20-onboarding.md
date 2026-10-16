@@ -86,13 +86,11 @@ What every device shows before it belongs to a household:
 - **"Server ändern"** replaces ADR-015's "Eigener Server" (2026-10-13, [ADR-018](adr/ADR-018-self-hosted-only.md)):
   the server is chosen before the front door ([below](#choosing-the-server)), whose header
   shows its host; this quiet link corrects a wrong choice.
-- **Until the rest of step 9 is built** ([16](16-setup-plan.md#step-9--onboarding-m10)),
-  the M0.1 paths stand where their replacements will, so the layout does not change twice:
-  "Mit E-Mail fortfahren" opens email + password sign-in until E1 replaces it; below
-  "oder", "Dieses Gerät mit Code einrichten" (the guardian-generated code) stands where
-  "verbinden" (9.4) will; and "Neuen Haushalt einrichten" (the founder wizard with its
-  setup token) comes last, until H1 after sign-in (9.2) takes its place. There is no
-  separate "Als Erziehungsberechtigter anmelden": every adult sign-in is in the top group.
+- **The M0.1 paths** (the founder wizard with its setup token, and code enrolment typed
+  on the new device) stay for one release after step 9, for apps that have not updated,
+  and are removed in [16, step 10.10](16-setup-plan.md#step-10--journey-gaps-before-launch-m15).
+  There is no separate "Als Erziehungsberechtigter anmelden": every adult sign-in is in the
+  top group.
 
 ### With Apple
 
@@ -117,7 +115,7 @@ What every device shows before it belongs to a household:
 
 ### With email
 
-> **Built 2026-10-15 on `feature/regions-and-ux`, not yet on the server.** E1 takes the address, with "Ich habe ein Passwort" for the password path. E2 is the six-digit code: it submits itself when complete, and "Erneut senden" comes back after 60 s. E3 runs once for a new account, before it starts or joins a family: the code or a password of at least 10 characters. Email addresses are never autoconfirmed (`ENABLE_EMAIL_AUTOCONFIRM=false`, `enable_confirmations = true`), because invitations match confirmed addresses only. Einstellungen → Anmeldung sets or changes the password. The code mail is written in the recipient's language by the send-email hook (see Email below).
+> **Built 2026-10-15.** E1 takes the address, with "Ich habe ein Passwort" for the password path. E2 is the six-digit code: it submits itself when complete, and "Erneut senden" comes back after 60 s. E3 runs once for a new account, before it starts or joins a family: the code or a password of at least 10 characters. Email addresses are never autoconfirmed (`ENABLE_EMAIL_AUTOCONFIRM=false`, `enable_confirmations = true`), because invitations match confirmed addresses only. Einstellungen → Anmeldung sets or changes the password. The code mail is written in the recipient's language by the send-email hook (see Email below).
 
 ```
  E1  E-Mail-Adresse  [______________]           E2  Code aus der E-Mail
@@ -185,8 +183,10 @@ an invitation or pairing link, which carries the server:
   strangers.
 - **Sign-in methods** are what the server's discovery document lists:
   - always email and password;
-  - an email code if the operator configured SMTP (servers without it:
-    [Q48](14-open-questions.md));
+  - an email code if the operator configured SMTP (`sign_in.email_code`). A server without
+    SMTP autoconfirms addresses, so E1 there signs up and signs in with a password, H0's
+    email match is off, and a guardian resets a forgotten password with a one-time code
+    ([Q48](14-open-questions.md), [16, step 10.4](16-setup-plan.md#step-10--journey-gaps-before-launch-m15));
   - Apple and Google through the web redirect, if the operator registered their own
     clients with Apple and Google.
 
@@ -210,7 +210,7 @@ and for Apple on Android, Settings says to link from the phone app instead.
 
 ## J1 — Start a family
 
-> **Built 2026-10-15 on `feature/regions-and-ux`, not yet on the server.** For an account without a family, H1 "Neue Familie" comes right after sign-in: family name, own name, colour, the examples checkbox (on H1, not on H2) and, only in `code` mode, the founder code. Then H2 "Wer gehört noch zu euch?" once. This phone becomes the founder's personal device, named automatically. Server: `api.my_account`, `api.household_create`, `api.household_add_members`, `app.founder_attempt`; `scripts/remote-setup-token.sh --founder` issues further founder codes. Sign-up is on (`enable_signup = true`).
+> **Built 2026-10-15.** For an account without a family, H1 "Neue Familie" comes right after sign-in: family name, own name, colour, the examples checkbox (on H1, not on H2) and, only in `code` mode, the founder code. Then H2 "Wer gehört noch zu euch?" once. This phone becomes the founder's personal device, named automatically. Server: `api.my_account`, `api.household_create`, `api.household_add_members`, `app.founder_attempt`; `scripts/remote-setup-token.sh --founder` issues further founder codes. Sign-up is on (`enable_signup = true`).
 
 ```
  Front door ─► [E1 ─► E2 ─► E3] ─┬─► H1 Neue Familie ─► H2 Wer gehört dazu? ─► Today
@@ -252,8 +252,10 @@ At the bottom: "Ich wurde eingeladen" for anyone who arrived here by mistake.
 - A name and *Kind/Erwachsen* per row. *Kind* is `kind = child`, `role = member`;
   *Erwachsen* is `kind = adult`, `role = guardian`, which the invitation can still
   change (an au pair joins as an adult `member`).
-  Each person gets the next free palette colour, shown as the dot, changeable later.
-  Avatars, birthdays and baselines come later, where they are used.
+  Each person gets the next free palette colour, shown as the dot, changeable later on
+  the member page ([16, step 10.1](16-setup-plan.md#step-10--journey-gaps-before-launch-m15)),
+  as are the name, the kind and the order. Avatars and baselines come later, where they
+  are used; birthdays are [Q50](14-open-questions.md).
 - **Examples are on by default**, because a task board with nothing on it teaches
   nothing. They are ordinary rows the family edits or deletes. The default shopping list
   "Supermarkt" and its categories are always created: they are structure, not examples.
@@ -283,7 +285,7 @@ row, and nothing in it is reachable through RLS.
 
 ## J2 — Join a family
 
-> **Built 2026-10-15 on `feature/regions-and-ux`, not yet on the server.** Guardians invite from Einstellungen → Mitglieder or from the getting-started card: a code, a QR code, the link `https://wuselwall.app/i/#…` and the share sheet. An invitation is valid for 7 days and works once; "Erneut teilen" and "Zurückziehen" manage it. An invitee uses "Ich habe einen Einladungscode" on the front door, or reaches H0 automatically when the invitation names their confirmed email. The join confirmation reads "Du bist ‹Name› in ‹Familie›". The landing page is the website's `/i/`.
+> **Built 2026-10-15.** Guardians invite from Einstellungen → Mitglieder or from the getting-started card: a code, a QR code, the link `https://wuselwall.app/i/#…` and the share sheet. An invitation is valid for 7 days and works once; "Erneut teilen" and "Zurückziehen" manage it. An invitee uses "Ich habe einen Einladungscode" on the front door, or reaches H0 automatically when the invitation names their confirmed email. The join confirmation reads "Du bist ‹Name› in ‹Familie›". The landing page is the website's `/i/`.
 >
 > **Built 2026-10-15:** universal links and Android App Links (the link opens the app, carries the server in the fragment and starts at the invitation banner); App Links once the Android signing fingerprints are published in the site configuration.
 >
@@ -336,7 +338,7 @@ the way to leave it.
 
 ## J3 — Connect a shared device
 
-> **Built 2026-10-15 on `feature/regions-and-ux`, not yet on the server.** Pairing replaces code enrolment on new devices. The new device shows a QR code and a code ("Familien-Tablet oder Wanddisplay verbinden"). A guardian's phone (Einstellungen → Geräte → Gerät verbinden, or the getting-started card) scans or types it, picks the kind (Wanddisplay, Kinder-Tablet, Tablet für alle, Handy eines Kindes), a name and, for a child's phone, the child, and sets the guardian PIN the first time. The wall display then shows a one-time kiosk checklist; the kids' tablet a welcome. The old code enrolment stays for one release, behind "Code für ein älteres Gerät erzeugen".
+> **Built 2026-10-15.** Pairing replaces code enrolment on new devices. The new device shows a QR code and a code ("Familien-Tablet oder Wanddisplay verbinden"). A guardian's phone (Einstellungen → Geräte → Gerät verbinden, or the getting-started card) scans or types it, picks the kind (Wanddisplay, Kinder-Tablet, Tablet für alle, Handy eines Kindes), a name and, for a child's phone, the child, and sets the guardian PIN the first time. The wall display then shows a one-time kiosk checklist; the kids' tablet a welcome. The old code enrolment stays for one release, behind "Code für ein älteres Gerät erzeugen".
 
 *Replaces the M0.1 enrolment flow (guardian generates a code, the code is typed on the new
 device). The pairing runs the other way round: the new device shows a code and the
@@ -404,12 +406,12 @@ guardian's phone approves it.*
   **Lost the authenticator?** Another guardian removes the factor from their own phone
   (Einstellungen → Mitglieder → person → *Zwei-Faktor zurücksetzen*, a guardian action,
   audited). A household with a single guardian is told so when enabling TOTP, and is
-  pointed at a passkey or a second guardian as the backup. Without either, recovery is a
+  pointed at a passkey or a second guardian as the backup (not built yet, step 10.7). Without either, recovery is a
   support request to the operator.
 
 ## J6 — Leave
 
-> **Built 2026-10-15 on `feature/regions-and-ux`, not yet on the server.** **Leaving** (Einstellungen → Konto, "Familie verlassen") is refused for the last guardian with an account. **Household deletion** does not use the "recent sign-in ≤ 5 min" rule: it is replaced by typing the family's name on a guardian's own phone. A deleted family can be restored for 14 days ("Wiederherstellen"; "Neu anfangen" when signing in again), then the daily `household-purge` job deletes it. Jobs skip deleted households. **Account deletion** ("Konto löschen") asks for a fresh sign-in only when the server requires one (≤ 5 min), by email code. The profile stays in the family without an account, and Apple access is revoked; an encrypted Apple refresh token is kept only for that revocation. Guardians reset a co-guardian's second factor under Mitglieder.
+> **Built 2026-10-15.** **Leaving** (Einstellungen → Konto, "Familie verlassen") is refused for the last guardian with an account. **Household deletion** does not use the "recent sign-in ≤ 5 min" rule: it is replaced by typing the family's name on a guardian's own phone. A deleted family can be restored for 14 days ("Wiederherstellen"; "Neu anfangen" when signing in again), then the daily `household-purge` job deletes it. Jobs skip deleted households. **Account deletion** ("Konto löschen") asks for a fresh sign-in only when the server requires one (≤ 5 min), by email code. The profile stays in the family without an account, and Apple access is revoked; an encrypted Apple refresh token is kept only for that revocation. Guardians reset a co-guardian's second factor under Mitglieder.
 
 Required by the App Store (guideline 5.1.1(v)) and Google Play, and the right thing
 anyway.
@@ -426,7 +428,7 @@ lives on the same small site as the invitation landing page.
 
 ## The getting-started card
 
-> **Built 2026-10-15 on `feature/regions-and-ux`, not yet on the server.** The items lead to their flows: "Partner:in einladen" opens the invitation flow; "Familien-Tablet verbinden" and "Wandanzeige einrichten" open pairing with the kind preset; "Kalender abonnieren" and "Stundenplan eintragen" their screens. The reminders row ("Erinnerungen einschalten") is local to the phone and shown only on personal devices (Q47).
+> **Built 2026-10-15.** The items lead to their flows: "Partner:in einladen" opens the invitation flow; "Familien-Tablet verbinden" and "Wandanzeige einrichten" open pairing with the kind preset; "Kalender abonnieren" and "Stundenplan eintragen" their screens. The reminders row ("Erinnerungen einschalten") is local to the phone and shown only on personal devices (Q47).
 
 Shown on Today in the adult register only, never on the kid or kiosk registers. Every
 item is **derived from data**, not ticked by hand. "Kinder-Tablet verbinden" is done
@@ -439,13 +441,14 @@ the work.
 | Kinder-Tablet verbinden | A child profile exists | A `shared` device exists | Household |
 | Wanddisplay einrichten | Always | A `kiosk` device exists | Household |
 | Eltern-PIN festlegen | A shared/kiosk device exists | This guardian has a PIN | Per guardian |
-| Erinnerungen einschalten | Push is built | This device has a push token | Per device |
+| Erinnerungen einschalten | A personal device on Android or iOS | This device granted the notification permission (local reminders, Q47) | Per device |
 | Kalender abonnieren (Outlook, iPhone) | The ICS feed is built (M1.3a) | A feed token exists | Household |
 | Schneller anmelden mit Passkey | Passkeys verified on this platform | The account has a passkey | Per account |
 | Stundenplan eintragen | A child profile exists | A school and a timetable exist (added 2026-10-14) | Household |
 
-*Built 2026-10-14 on `feature/regions-and-ux`, not yet on the server:* the card with the
-items above except reminders and passkey, which wait for their features. Stundenplan
+*Built 2026-10-14:* the card with the items above except the passkey, which waits for
+passkeys to be verified on a real device; the reminders row followed on 2026-10-15, and its
+"done when" moves to the permission in step 10.7. Stundenplan
 eintragen is the extra item: a family with a child in school wants the timetable in the
 calendar, and the card says so in the adult's words.
 
@@ -477,7 +480,7 @@ languages, and reviewed in the screenshots ([docs](../docs/)).
 | Wrong email code | "Der Code stimmt nicht." The field clears; after five wrong codes: "Fordere einen neuen Code an." |
 | Expired email code | "Der Code ist abgelaufen." with **Neuen Code senden** directly under it |
 | Invitation expired, used or withdrawn | "Diese Einladung gilt nicht mehr. Bitte ‹Daniel› um eine neue." |
-| Signed up, closed the app before H1 | The next launch opens H1 with whatever was typed (a local draft) |
+| Signed up, closed the app before H1 | The next launch opens H1 with whatever was typed (a local draft; not built yet, [16, step 10.7](16-setup-plan.md#step-10--journey-gaps-before-launch-m15)) |
 | Household creation in `code` mode, no code | "Neue Familien gibt es gerade nur mit Gründungscode." plus "Ich wurde eingeladen" |
 | Pairing request approved but the tablet went offline | The tablet collects its credentials on its next poll, within the request's lifetime; otherwise the guardian sees it unconnected in Geräte and repeats J3 |
 | A device revoked while in use | The front door, as today ([08](08-users-auth-permissions.md#device-pairing)) |

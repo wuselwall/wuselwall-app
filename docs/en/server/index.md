@@ -35,6 +35,7 @@ As little as possible is required. Everything in the second table can be left ou
 | What | What for |
 |---|---|
 | **A Supabase server**: a project at Supabase, or the Docker stack at home | Database, sign-in, live updates and WuselWall's server functions |
+| **Sending email (SMTP)** | Anyone signing up gets a code by email. Without SMTP that code never arrives, and nobody can start or join a family ([Extras](/en/server/extras#email)). A server without any mail comes later |
 | **HTTPS** | The apps talk to the server only over an encrypted connection. Supabase has it already; at home, the bundled web server Caddy fetches it automatically |
 | **Scheduled jobs** | Every night they create the next 14 days of tasks and close the previous day; once a week they fetch the holidays, and every hour the subscribed calendars. They run inside the database; the installation sets them up |
 | **A backup** | The database is the one thing that cannot be rebuilt |
@@ -44,7 +45,6 @@ As little as possible is required. Everything in the second table can be left ou
 | What | Without it |
 |---|---|
 | **The web app** | Only needed until the apps are in the stores, or for the laptop. At home the server brings it along; at Supabase, GitHub publishes it for you |
-| **Sending email (SMTP)** | WuselWall sends **no** email today. Accounts are created in the app with an email address and a password, without a confirmation mail ([Extras](/en/server/extras#email)) |
 | **Sign in with Apple or Google** | Everyone signs in with email and password. Can be added, but it takes a lot of work ([Extras](/en/server/extras#apple-and-google)) |
 | **Public and school holidays** | The server fetches them once a week from [OpenHolidays](https://www.openholidaysapi.org/), sending only country codes. Without internet access on the server, they are missing from the week board ([Extras](/en/server/extras#holidays)) |
 | **Subscribed calendars** | If you subscribe to club or town calendars, the server fetches them every hour from the addresses you entered. Without subscriptions it fetches nothing |

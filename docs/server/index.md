@@ -35,6 +35,7 @@ So wenig wie möglich ist Pflicht. Alles in der zweiten Tabelle könnt ihr wegla
 | Was | Wozu |
 |---|---|
 | **Ein Supabase-Server**: ein Projekt bei Supabase oder der Docker-Stack zu Hause | Datenbank, Anmeldung, Live-Aktualisierung und die Server-Funktionen von WuselWall |
+| **E-Mail-Versand (SMTP)** | Wer sich neu anmeldet, bekommt einen Code per Mail. Ohne SMTP kommt dieser Code nie an, und niemand kann eine Familie anlegen oder beitreten ([Extras](/server/extras#e-mail)). Ein Server ganz ohne Mail-Versand kommt später |
 | **HTTPS** | Die Apps sprechen nur verschlüsselt mit dem Server. Supabase hat es schon, zu Hause holt es der mitgelieferte Webserver Caddy automatisch |
 | **Regelmäßige Aufträge** | Sie legen jede Nacht die Aufgaben der nächsten 14 Tage an und schließen den Vortag ab, holen einmal pro Woche die Feiertage und stündlich die abonnierten Kalender. Sie laufen in der Datenbank selbst, die Installation richtet sie ein |
 | **Ein Backup** | Die Datenbank ist das Einzige, was sich nicht neu aufbauen lässt |
@@ -44,7 +45,6 @@ So wenig wie möglich ist Pflicht. Alles in der zweiten Tabelle könnt ihr wegla
 | Was | Ohne das |
 |---|---|
 | **Die Web-App** | Nur nötig, solange die Apps nicht in den Stores sind, oder für den Laptop. Zu Hause liefert der Server sie mit, bei Supabase veröffentlicht sie GitHub für euch |
-| **E-Mail-Versand (SMTP)** | WuselWall verschickt heute **keine** E-Mails. Konten entstehen mit E-Mail-Adresse und Passwort direkt in der App, ohne Bestätigungsmail ([Extras](/server/extras#e-mail)) |
 | **Anmelden mit Apple oder Google** | Alle melden sich mit E-Mail und Passwort an. Lässt sich nachrüsten, aber mit viel Aufwand ([Extras](/server/extras#anmelden-mit-apple-und-google)) |
 | **Feiertage und Schulferien** | Der Server holt sie einmal pro Woche bei [OpenHolidays](https://www.openholidaysapi.org/) und schickt dabei nur Ländercodes. Ohne Internetzugang des Servers fehlen sie auf der Wochentafel ([Extras](/server/extras#feiertage)) |
 | **Abonnierte Kalender** | Abonniert ihr Kalender von Vereinen oder der Gemeinde, holt der Server sie stündlich von den Adressen, die ihr eingetragen habt. Ohne Abos ruft er nichts ab |
