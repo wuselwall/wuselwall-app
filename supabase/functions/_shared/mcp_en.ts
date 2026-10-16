@@ -1,0 +1,80 @@
+// English wording of the MCP summaries (mcp_family.ts). Keys mirror mcp_de.ts; the McpMessages type
+// makes a missing or extra key a compile error. Category names follow the app (app_en.arb).
+import type { McpMessages } from "./mcp_family.ts";
+
+const points = (n: number) => (n === 1 ? "1 point" : `${n} points`);
+
+export const MCP_EN: McpMessages = {
+  day: (date) =>
+    new Date(`${date}T12:00:00Z`).toLocaleDateString("en-GB", {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      timeZone: "UTC",
+    }),
+  noAppointments: "nothing on",
+  tasks: "Tasks",
+  anyone: "anyone",
+  taskStatus: {
+    open: "open",
+    done: "done",
+    verified: "confirmed",
+    skipped: "skipped",
+    expired: "expired",
+  },
+  points,
+  due: (date) => `due ${date}`,
+  noTasks: "No tasks.",
+  noMeals: "No meals planned.",
+  guests: (n) => (n === 1 ? "+1 guest" : `+${n} guests`),
+  shopping: (list, n) => (n === 0 ? `${list}: nothing open.` : `${list}: ${n} open`),
+  noList: "No shopping list yet: it is made with the first item.",
+  category: {
+    produce: "Fruit & vegetables",
+    bakery: "Bread & bakery",
+    dairy: "Dairy & cheese",
+    meat_fish: "Meat & fish",
+    pantry: "Pantry",
+    frozen: "Frozen",
+    drinks: "Drinks",
+    household: "Household",
+    other: "Other",
+    care: "Body care",
+    baby: "Baby & kids",
+    cleaning: "Cleaning",
+    health: "Health",
+    tools: "Tools",
+    screws: "Screws & fixings",
+    electrical: "Electrical",
+    garden: "Garden",
+  },
+  balance: (name, n) => `${name} has ${points(n)}.`,
+  ledgerReason: {
+    task: "task",
+    redemption: "reward",
+    adjustment: "correction",
+    badge: "badge",
+    bonus: "bonus",
+  },
+  streak: (title, n) => `${title}: ${n} in a row`,
+  recipes: (n) => (n === 1 ? "1 recipe:" : `${n} recipes:`),
+  noRecipe: (query) => `No recipe matches “${query}”.`,
+  lessonStatus: {
+    cancelled: "cancelled",
+    substituted: "substitute",
+    room_change: "room change",
+    extra: "extra",
+  },
+  weekend: "weekend",
+  schoolFree: (holiday) => (holiday ? `no school (${holiday})` : "no school"),
+  baseline: "usually",
+  nobodyAway: "everyone as usual",
+  week: (from) => `Week from ${from}`,
+  windowInvalid:
+    "Please give a range of at most 62 days, starting no more than 7 days ago, from not after to, as YYYY-MM-DD.",
+  memberRequired: "Please name a child (member).",
+  dateInvalid: (key, value) => `${key} must be a date as YYYY-MM-DD, not ${value}.`,
+  notText: (key) => `${key} must be text.`,
+  statusInvalid: "status is open, done or all.",
+  queryRequired: "Please say what to look for (query).",
+};

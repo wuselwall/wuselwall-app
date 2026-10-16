@@ -19,10 +19,11 @@ const VERIFY_JWT = Deno.env.get('VERIFY_JWT') === 'true'
 // send-email is GoTrue's Send Email Hook: GoTrue calls it with no user, and the Standard Webhooks
 // signature (SEND_EMAIL_HOOK_SECRET) is the only gate, checked by the function itself.
 // shortcuts is called by Apple Shortcuts with a shortcut token ("Bearer wws_…"), not a JWT;
-// every api.shortcut_* function checks that token (specs/12 "Part 1").
+// every api.shortcut_* function checks that token (specs/12 "Part 1"). mcp is called by an
+// assistant with an assistant key ("Bearer wwa_…"), which api.mcp_context checks (specs/12 "Part 2").
 const NO_USER_FUNCTIONS = new Set([
   'ics', 'tasks-nightly', 'holidays-sync', 'calendar-import', 'server-info', 'send-email',
-  'household-purge', 'shortcuts',
+  'household-purge', 'shortcuts', 'mcp',
 ])
 
 type AuthFailure = {

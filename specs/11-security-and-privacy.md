@@ -99,6 +99,11 @@ shortcut key is a bearer credential in the Shortcuts app, synced through iCloud.
 - Unknown, revoked and orphaned keys get the same answer, so keys cannot be probed.
 - Revoked at once from Settings, and automatically when the holder leaves the family, the
   profile is deactivated or the family is deleted. `last_used_at` and a use count are shown.
+- **Assistant keys** (`wwa_…`, MCP `family:read`) share the table and every rule above, and add
+  three: only adults hold them, their actor (device class `assistant`, origin `mcp`) is refused
+  by every write, and no shortcut function accepts them (nor does the MCP read accept a shortcut
+  key). Unlike a shortcut, an assistant sends what it reads to its provider: the issuing dialog
+  and the guide say so, and the `mcp` function refuses requests with an `Origin` header.
 
 ### T3 — device loss
 
@@ -253,7 +258,7 @@ With Supabase, row-level security is not defence in depth; it is the perimeter.
 - `api` views are `security_invoker`; `api` functions run as a role without `BYPASSRLS`,
   so neither silently widens access.
 - The **service-role key** exists only in the server's `.env`. It is used by the Edge
-  Functions that have no user (ICS, Shortcuts, enrolment, jobs) and by `account-delete` and the MFA
+  Functions that have no user (ICS, Shortcuts, MCP, enrolment, jobs) and by `account-delete` and the MFA
   reset (ADR-014), which need the Auth Admin API and act only on the verified caller or
   their co-guardian; each such use commented; it is
   never in CI, never in the app and never on a laptop.

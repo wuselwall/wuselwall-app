@@ -7204,7 +7204,7 @@ abstract class AppLocalizations {
   /// No description provided for @shortcutIntro.
   ///
   /// In en, this message translates to:
-  /// **'A key connects a shortcut on the iPhone with WuselWall. With it, Siri puts things on the shopping list and tells you what is on today, what there is to eat or who has PE tomorrow. A key belongs to one person: it can read and add, but it cannot delete or manage anything.'**
+  /// **'A key connects a shortcut on the iPhone with WuselWall. With it, Siri puts things on the shopping list and tells you what is on today, what there is to eat or who has PE tomorrow. A key belongs to one person: it can read and add, but it cannot delete or manage anything. A key for an AI assistant (MCP) only reads.'**
   String get shortcutIntro;
 
   /// No description provided for @shortcutEmpty.
@@ -7350,6 +7350,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This person already has ten keys. Please revoke one first.'**
   String get shortcutErrLimit;
+
+  /// No description provided for @shortcutSectionAssistants.
+  ///
+  /// In en, this message translates to:
+  /// **'AI assistants'**
+  String get shortcutSectionAssistants;
+
+  /// No description provided for @shortcutKindShortcut.
+  ///
+  /// In en, this message translates to:
+  /// **'Siri'**
+  String get shortcutKindShortcut;
+
+  /// No description provided for @shortcutKindAssistant.
+  ///
+  /// In en, this message translates to:
+  /// **'Assistant'**
+  String get shortcutKindAssistant;
+
+  /// No description provided for @shortcutKindShortcutHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'For a shortcut on the iPhone: it reads and adds, for example to the shopping list.'**
+  String get shortcutKindShortcutHelp;
+
+  /// No description provided for @shortcutKindAssistantHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'For an AI assistant that speaks MCP, such as Claude: it only reads, and only adults get one.'**
+  String get shortcutKindAssistantHelp;
+
+  /// No description provided for @shortcutAssistantLabelHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Claude on the laptop'**
+  String get shortcutAssistantLabelHint;
+
+  /// No description provided for @shortcutAssistantKeyOnce.
+  ///
+  /// In en, this message translates to:
+  /// **'This key is shown only now. With it, an assistant reads the whole family\'s week as {name}: appointments, who is away, the children\'s timetables, tasks, meals and the shopping list. What it reads goes to the assistant\'s provider. Treat the key like a password.'**
+  String shortcutAssistantKeyOnce(String name);
+
+  /// No description provided for @shortcutAssistantHowSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the address as an MCP server in your assistant and send the key as the header “Authorization” with “Bearer ”, a space and the key. The guide at wuselwall.app/docs/en/settings/shortcuts shows how for some assistants.'**
+  String get shortcutAssistantHowSteps;
+
+  /// No description provided for @shortcutErrAdultOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Only adults get a key for an assistant.'**
+  String get shortcutErrAdultOnly;
 }
 
 class _AppLocalizationsDelegate
