@@ -14,7 +14,7 @@ In den Beispielen heißt eure Domain `example.org`. Der Server ist unter `api.ex
 
 ::: details Ohne offene Ports?
 - **Cloudflare Tunnel:** Ein kleines Programm auf dem Server (`cloudflared`) baut die Verbindung zu Cloudflare selbst auf, und du öffnest keinen Port. Cloudflare entschlüsselt dabei den Verkehr und kann ihn sehen. Installiere dann ohne `--caddy` und leite den Tunnel weiter, wie unter „Eigener Webserver statt Caddy“ beschrieben.
-- **Nur im VPN** (Tailscale, WireGuard): Der Server bleibt unsichtbar aus dem Internet. Dafür braucht jedes Gerät das VPN, auch das Küchen-Tablet, und **Kalender-Abos** für Outlook und Google funktionieren nicht.
+- **Nur im VPN** (Tailscale, WireGuard): Der Server bleibt unsichtbar aus dem Internet. Dafür braucht jedes Gerät das VPN, auch das Küchen-Tablet, und der **geteilte Familienkalender** in Outlook und Google funktioniert nicht.
 :::
 
 ## 1. Installieren

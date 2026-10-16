@@ -152,7 +152,7 @@ void main() {
     );
   });
 
-  group('Abonnierte Kalender', () {
+  group('Kalender von außen', () {
     testWidgets('the list shows the status and the friendly error', (
       tester,
     ) async {

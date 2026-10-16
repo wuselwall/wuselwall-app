@@ -46,13 +46,13 @@ Ob Kinder Termine anlegen und ändern dürfen, legt ihr unter [Haushalt einstell
 
 ## Termine in Outlook oder auf dem iPhone
 
-Der Familienkalender lässt sich als **Abo** in Outlook oder auf dem iPhone anzeigen, nur zum Lesen. Siehe [Kalender-Abos](/calendar/feeds).
+Der Familienkalender lässt sich als **Abo** in Outlook oder auf dem iPhone anzeigen, nur zum Lesen. Siehe [Den Familienkalender teilen](/calendar/feeds).
 
-## Abonnierte Kalender
+## Kalender von außen {#kalender-von-aussen}
 
 Termine von außen kommen mit einem **Abo** in den Familienkalender: der Spielplan des Vereins, der Abfuhrkalender der Gemeinde, Schulveranstaltungen. Ihr braucht dafür nur die Adresse des Kalenders, meist eine Datei, die auf **.ics** endet. Adressen mit **webcal://** gehen auch.
 
-Abos verwaltet ein Erziehungsberechtigter unter **Einstellungen → Abonnierte Kalender**. **Kalender abonnieren** öffnet das Formular mit Name, Adresse, Farbe, **Für wen?** (ohne Auswahl gilt der Kalender für die ganze Familie) und **Auf dem Küchendisplay zeigen**. Die Termine erscheinen im Kalender in der Farbe des Kalenders, mit einem Abo-Symbol. Sie sind nur zum Lesen: Änderungen kommen von der Quelle.
+Abos verwaltet ein Erziehungsberechtigter unter **Einstellungen → Kalender von außen hinzufügen**. **Kalender abonnieren** öffnet das Formular mit Name, Adresse, Farbe, **Für wen?** (ohne Auswahl gilt der Kalender für die ganze Familie) und **Auf dem Küchendisplay zeigen**. Die Termine erscheinen im Kalender in der Farbe des Kalenders, mit einem Abo-Symbol. Sie sind nur zum Lesen: Änderungen kommen von der Quelle.
 
 Euer Server holt jeden Kalender etwa einmal pro Stunde. Mit **Jetzt aktualisieren** geht es sofort. Schlägt der Abruf fehl, steht der Grund bei dem Kalender, zum Beispiel „Die Adresse ist gerade nicht erreichbar“.
 
@@ -61,4 +61,4 @@ Wissenswert:
 - Es gehen nur Adressen mit **https://**. Adressen, die auf Rechner im eigenen Netz zeigen, nimmt WuselWall nicht an.
 - Ein Kalender darf höchstens 2 MB groß sein. Der Abruf bricht nach 15 Sekunden ab.
 - Alle Geräte des Haushalts sehen nur den Rechnernamen der Adresse, zum Beispiel „abfuhr.example.de“. Die ganze Adresse sehen nur Erziehungsberechtigte, wenn sie den Kalender bearbeiten. Enthält sie einen geheimen Schlüssel, gilt sie wie ein Passwort.
-- Im Abo für Outlook und iPhone erscheinen abonnierte Termine nur, wenn du beim Abo **Abonnierte Kalender einschließen** anhakst. Siehe [Kalender-Abos](/calendar/feeds).
+- Im Abo für Outlook und iPhone erscheinen Termine von außen nur, wenn du beim Abo **Kalender von außen einschließen** anhakst. Siehe [Den Familienkalender teilen](/calendar/feeds).

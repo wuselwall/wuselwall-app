@@ -1,8 +1,8 @@
-# Calendar subscriptions for Outlook and iPhone
+# Sharing the family calendar
 
-A **subscription** shows the family calendar in another app. It is read-only: you still change appointments in WuselWall. The other way round, bringing outside calendars into WuselWall, is under [Subscribed calendars](/en/calendar/#subscribed-calendars).
+A **subscription** shows the family calendar in another app. It is read-only: you still change appointments in WuselWall. The other way round, bringing outside calendars into WuselWall, is under [Outside calendars](/en/calendar/#outside-calendars).
 
-Open **Settings → Calendar subscriptions** and tap **New subscription**.
+Open **Settings → Share the family calendar** and tap **New subscription**.
 
 ## Creating a subscription
 
@@ -10,7 +10,7 @@ Open **Settings → Calendar subscriptions** and tap **New subscription**.
 2. Under **What**, choose the appointments. Also:
    - **Presence** shows who is where (at work, home office, off …). For work devices and children it is better to leave this off.
    - **School** shows school days as one all-day entry, or every lesson. Or off.
-   - **Include subscribed calendars** adds the appointments from subscribed calendars, for example a club or the bin collection. It is **off** until you tick it. Each subscription decides for itself whether its appointments come along.
+   - **Include outside calendars** adds the appointments from outside calendars, for example a club or the bin collection. It is **off** until you tick it. Each subscription decides for itself whether its appointments come along.
 3. Under **Whose events** choose people. With nobody chosen, all members are included.
 4. Tap **Create subscription**.
 
