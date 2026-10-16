@@ -173,8 +173,9 @@ const de: Strings = {
     { label: 'Aufgaben und Punkte', state: 'fertig', done: true },
     { label: 'Stundenplan und Essensplan', state: 'fertig', done: true },
     { label: 'Eigener Server für jede Familie: Installation, App verbinden, ohne Server ausprobieren', state: 'fertig', done: true },
+    { label: 'Namen, Farben und Reihenfolge der Familie, Geräte und Einkaufslisten nachträglich ändern', state: 'als Nächstes', done: false },
+    { label: 'Eigener Server auch ohne E-Mail-Versand', state: 'als Nächstes', done: false },
     { label: 'Im App Store und bei Google Play', state: 'als Nächstes', done: false },
-    { label: 'Erinnerungen als Push-Nachricht', state: 'geplant', done: false },
   ],
   faqTitle: 'Häufige Fragen',
   faq: [
@@ -414,8 +415,9 @@ const en: Strings = {
     { label: 'Chores and points', state: 'done', done: true },
     { label: 'School timetable and meal plan', state: 'done', done: true },
     { label: 'A server for every family: install, connect the app, try it without a server', state: 'done', done: true },
+    { label: 'Change names, colours and order of the family, devices and shopping lists afterwards', state: 'up next', done: false },
+    { label: 'Your own server, even without sending email', state: 'up next', done: false },
     { label: 'On the App Store and Google Play', state: 'up next', done: false },
-    { label: 'Reminders as push notifications', state: 'planned', done: false },
   ],
   faqTitle: 'Questions',
   faq: [

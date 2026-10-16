@@ -205,7 +205,7 @@ exists.
 ## External calendars (subscribed ICS, FR-1.9)
 
 Sports fixtures, rubbish collection and school events are published as ICS. Built 2026-10-14
-on `feature/regions-and-ux`, ahead of M2, with a design change from the first draft: the
+ahead of M2, with a design change from the first draft: the
 imported occurrences are not `calendar` rows with `kind = 'imported'`. They live in their own
 tables, `app.external_calendar` (the subscription: name, address, colour, members, the flag for
 the kitchen display, active, last attempt and last error) and `app.external_occurrence` (plain

@@ -24,9 +24,12 @@ export, subscribed ICS calendars (FR-1.9: `calendar-import`, read-only occurrenc
 own tables, optionally in the outbound feed), local reminders (Q47) and the QR scanner on
 `camera` and `zxing2` (Q49). `scripts/local-pgtap` runs every migration and pgTAP suite on a
 throwaway local Postgres (no Docker). The server runs four scheduled jobs: `tasks-nightly`,
-`holidays-sync` (weekly), `calendar-import` (hourly) and `household-purge` (daily). Next: apply
-the migrations and deploy the functions (`scripts/remote-backup.sh` first), set
-`ENABLE_EMAIL_AUTOCONFIRM=false` on an existing server, then M1.6.
+`holidays-sync` (weekly), `calendar-import` (hourly) and `household-purge` (daily). Next: the
+journey gaps of [specs/16 step 10](specs/16-setup-plan.md#step-10--journey-gaps-before-launch-m15)
+(members, the family and devices editable; lists and categories; servers without mail;
+approvals on Today; the wall's offline start; the deletion page and the release checklist),
+then M1.6. Merged migrations and functions reach a live server after a backup
+(`scripts/remote-backup.sh` first); a server with mail sets `ENABLE_EMAIL_AUTOCONFIRM=false`.
 
 **Never describe a particular operator's server in a committed file** — not a host, path,
 SSH alias, machine or the fact that someone runs one. Placeholders (`example.org`) in

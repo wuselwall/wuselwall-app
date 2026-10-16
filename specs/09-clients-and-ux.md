@@ -13,7 +13,7 @@ laptop can be the same physical size and still need different interfaces.
 
 | Register | Devices | Character |
 |---|---|---|
-| **adult** | Laptop browser (web build), parents' iPhones | Dense. Full navigation, keyboard shortcuts, bulk editing, all administrative screens. This is where planning happens. |
+| **adult** | Laptop browser (web build), parents' iPhones | Dense. Full navigation and all administrative screens; a navigation rail on wide screens ([16, step 10.11](16-setup-plan.md#step-10--journey-gaps-before-launch-m15)). This is where planning happens. Keyboard shortcuts and bulk editing are M3. |
 | **kid** | Children's iPads | Large. Icons before words, four or five destinations maximum, no destructive actions, generous animation and feedback. |
 | **kiosk** | Wall display | Glanceable. A read-first **week board**, no navigation chrome, huge type, tap-to-act on a small set of things, auto-revert to home after 60 s. |
 
@@ -35,9 +35,12 @@ on the parent's phone gives `kid` or `kiosk`.
 - Tasks: my tasks, family board, definitions admin, approvals
 - Meals: week grid, recipes
 - Shopping: list, catalogue, stores
-- Settings: account and sign-in methods, members and invitations, devices (connect,
-  revoke), feed tokens, rewards, assistants, audit log, school and subjects, getting
-  started, family (export, delete)
+- Settings: account and sign-in methods; members (edit, order, invite) and invitations;
+  devices (connect, rename, revoke); the family (name, timezone, export, delete); household
+  settings, presence baselines, feed tokens, subscribed calendars, reminders, getting
+  started. Rewards live under Tasks, school and subjects under Stundenplan. The member,
+  family and device editing is [16, step 10.1–10.2](16-setup-plan.md#step-10--journey-gaps-before-launch-m15);
+  assistants and the audit log are M2.
 
 **kid**
 - My day (my tasks + today's meal + my events + today's lessons)
@@ -243,7 +246,7 @@ eviction — no longer apply to the phones, iPads or wall tablet.*
 |---|---|---|
 | Parents' iPhones, children's iPads | Flutter iOS app | TestFlight ([ADR-011](adr/ADR-011-native-distribution-and-ci-cd.md)) |
 | Wall tablet, any Android phone | Flutter Android app | Play internal testing track |
-| Work laptop | Flutter web build | `https://web.example.org` |
+| Work laptop | Flutter web build | The household's own server, which serves the web build of its release ([10](10-deployment-and-ops.md)) |
 
 ### Native reality, current as of 2026
 
@@ -251,9 +254,9 @@ These still constrain the design:
 
 | Constraint | Consequence for WuselWall |
 |---|---|
-| iOS gives apps **no reliable background execution**; background fetch is opportunistic and often skipped | Every reminder is still a server-side push. Never schedule anything important on the device. The shopping outbox drains when the app resumes or connectivity returns, so pending state is still shown honestly. |
-| Push needs **permission**, asked once; a refusal is hard to undo | Ask from an explicit "Erinnerungen einschalten" button (an item on the getting-started card, [20](20-onboarding.md#the-getting-started-card)), never at first launch. |
-| Push travels through **Apple (APNs)** and, on Android, **Google (FCM)** | Payloads carry as little as the notification needs; nothing is sent that would not be fine on a lock screen. Provider choice: [Q38](14-open-questions.md). |
+| iOS gives apps **no reliable background execution**; background fetch is opportunistic and often skipped | A reminder is handed to the OS ahead of time as a local notification, planned from data the app already holds and replaced whenever it changes (Q47), or pushed by a server; never a timer inside the app. Whatever needs a server event to happen first (a reward request) is a notice on Today instead, until a relay exists. The shopping outbox drains when the app resumes or connectivity returns, so pending state is still shown honestly. |
+| Notifications need **permission**, asked once; a refusal is hard to undo | Ask from an explicit "Erinnerungen einschalten" button (an item on the getting-started card, [20](20-onboarding.md#the-getting-started-card)), never at first launch. |
+| Push would travel through **Apple (APNs)** and, on Android, **Google (FCM)**, with the project's credentials (ADR-018) | Not in v1 (Q47). If a relay is built: payloads carry as little as the notification needs, nothing that would not be fine on a lock screen; provider choice [Q38](14-open-questions.md). |
 | **TestFlight builds expire** after 90 days | Release at least quarterly; the pipeline makes that a tag. |
 | The **web build** is a Flutter canvas, not HTML: a larger first download, no browser find-in-page, weaker screen-reader support than native | Acceptable for one adult on a laptop. The web build is the adult register only; it is never the kiosk and never a child's device. |
 | iOS **App Intents, widgets and Live Activities** are now possible, but need native Swift alongside Flutter | Not in v1. Shortcuts still covers Siri ([12](12-mcp-and-assistants.md)); a widget for the open-task count is a natural M3 candidate. |
@@ -263,7 +266,7 @@ Badging API plan.
 
 ## The wall display
 
-> **Built 2026-10-15 on `feature/regions-and-ux`, not yet on the server.** The wall shows only the appointments marked for the kitchen unless "Alle Termine" is ticked (FR-8.11): every day column then shows all its appointments. The kiosk reverts the switch to key-only when it goes idle. A newly paired wall display shows a one-time checklist (keep the app pinned, keep the screen on, leave it plugged in), and a kids' tablet a welcome screen.
+> **Built 2026-10-15.** The wall shows only the appointments marked for the kitchen unless "Alle Termine" is ticked (FR-8.11): every day column then shows all its appointments. The kiosk reverts the switch to key-only when it goes idle. A newly paired wall display shows a one-time checklist (keep the app pinned, keep the screen on, leave it plugged in), and a kids' tablet a welcome screen.
 
 The hardware is a decision worth making early because it constrains the UI.
 
@@ -286,18 +289,22 @@ ordering, not the marketing diagonal — cheap 10" tablets in this price range a
 
 ## Realtime and notifications
 
-> **Built 2026-10-15 on `feature/regions-and-ux`, not yet on the server.** Notifications are local only (Q47): on personal phones the app schedules a morning summary (default 07:00, the day's appointments and tasks, and the first appointment) and, if switched on, a reminder before each appointment. Settings are per person (Einstellungen → Erinnerungen). Nothing is sent to a server or a third party. Kiosk and kids' devices have no reminders.
+> **Built 2026-10-15.** Notifications are local only (Q47): on personal phones the app schedules a morning summary (default 07:00, the day's appointments and tasks, and the first appointment) and, if switched on, a reminder before each appointment. Settings are per person (Einstellungen → Erinnerungen). Nothing is sent to a server or a third party. Kiosk and kids' devices have no reminders.
 
 - **Supabase Realtime** delivers live updates while the app is open: database triggers
   broadcast small invalidation messages (`board:changed`, `shopping:changed`) on a
   private per-household channel, and the client refetches. On reconnect, refetch rather
   than replaying missed messages.
-- **Native push** (APNs on iOS, FCM on Android), sent by the `push-send` Edge Function,
-  for anything that must reach a closed app:
-  - morning summary of today's tasks and events (per member, configurable time)
-  - an event starting in N minutes
-  - a reward redemption awaiting guardian approval
-  - a task verified and points credited
+- **What must reach a closed app**, and how v1 does it without push (Q47):
+  - morning summary of today's tasks and events (per member, configurable time) — a local
+    notification;
+  - an event starting in N minutes — a local notification;
+  - a reward redemption awaiting guardian approval — a notice on Today, the count on the
+    Tasks tab and in the next morning summary ([16, step 10.5](16-setup-plan.md#step-10--journey-gaps-before-launch-m15));
+  - a task verified and points credited — seen in the kid views the next time they open.
+
+  A native push (APNs, FCM, through a relay the project would run) comes only if families
+  miss these in practice.
 - Each member controls their own notification set. Default to few: the fastest way to
   train a family to ignore an app is to notify them about everything in week one. The
   defaults — morning summary at 07:00 on, everything else off — are in
