@@ -64,6 +64,27 @@ If a phone is lost, or someone no longer needs the shortcut, tap **Revoke** in t
 
 Guardians see and revoke every key of the family, everyone else their own. The [data export](/en/settings/members-devices#export-data) lists each key with its name and date, but not the key itself.
 
+## AI assistants (MCP)
+
+An AI assistant that speaks **MCP** (the Model Context Protocol, for example Claude) can **look things up** in WuselWall with a key of its own: "What's on this week?", "What's for dinner on Thursday?", "When does Lotta finish school tomorrow?". It can **neither add, change nor delete anything**.
+
+When creating a key, choose **Assistant** instead of **Siri**. Only adults get a key for an assistant. It appears in the list under **AI assistants** and is revoked like any other key.
+
+::: warning What the assistant reads leaves your server
+The assistant reads the whole family's week: appointments, who is away when, the children's timetables, tasks, points, meals, recipes and the shopping list. That data goes to the assistant's provider and is subject to its privacy terms. Decide together whether you want that.
+:::
+
+The assistant finds these lookups: the week overview, appointments, tasks, the meal plan, the shopping list, points, recipes, the timetable and who is home. Every answer names people by their names.
+
+**Connecting:** add an MCP server in the assistant with the address from WuselWall, for example `https://api.example.org/functions/v1/mcp`, and send the key as the header `Authorization: Bearer wwa_…`. In Claude Code:
+
+```sh
+claude mcp add --transport http wuselwall https://api.example.org/functions/v1/mcp \
+  --header "Authorization: Bearer wwa_…"
+```
+
+Assistants that can only sign in with OAuth and allow no header of your own cannot connect yet. A sign-in with a consent page will come together with adding things through assistants.
+
 ::: info Without an iPhone
 A shortcut is an ordinary web request. Any app that can send a request with a header works the same way.
 :::

@@ -152,6 +152,8 @@ shortcut_token                                  -- Siri and Shortcuts (specs/12)
   last_used_at, use_count,
   writes_on DATE, writes_count,                 -- the daily write cap (100)
   revoked_at                                    -- also set when the holder leaves or the family is deleted
+  kind                                          -- 'shortcut' ("wws_…", reads and adds) or 'assistant'
+                                                --  ("wwa_…", MCP family:read, adults only), added 2026-10-16
 ```
 
 `event` deliberately stores **both** a timestamp pair and a date pair, with exactly one
