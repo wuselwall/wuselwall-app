@@ -67,8 +67,13 @@ services:
       # the .env are the fallback when the hook is off. The bilingual templates in
       # supabase/templates/ are not used here: GoTrue loads templates only from URLs, and this
       # stack hosts no static files, so without the hook GoTrue's English defaults are sent.
+      #
+      # The hook's address is HTTPS, the server's own public one (<api>/functions/v1/send-email),
+      # and empty while the hook is off: GoTrue refuses a plain-http hook address unless it is
+      # localhost, even with the hook off, and then exits at start (found 2026-10-16, when
+      # http://functions:9000 stopped Auth on the first server that got this layer).
       GOTRUE_HOOK_SEND_EMAIL_ENABLED: ${SEND_EMAIL_HOOK_ENABLED:-false}
-      GOTRUE_HOOK_SEND_EMAIL_URI: http://functions:9000/send-email
+      GOTRUE_HOOK_SEND_EMAIL_URI: ${SEND_EMAIL_HOOK_URI:-}
       GOTRUE_HOOK_SEND_EMAIL_SECRETS: ${SEND_EMAIL_HOOK_SECRET:-}
       # The CLI's limits, except e-mail: no SMTP is configured yet, so nothing is sent.
       GOTRUE_RATE_LIMIT_TOKEN_REFRESH: 150
