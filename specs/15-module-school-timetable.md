@@ -196,7 +196,7 @@ Realistically this is done twice a year, in a hurry, on a laptop, from a sheet o
 
 ### Holidays
 
-Built 2026-10-14 on `feature/regions-and-ux`, not yet on the server. Ferien and bewegliche
+Built 2026-10-14. Ferien and bewegliche
 Ferientage were hand-entered in v1; the M2 import is built early, and public holidays are new.
 
 **Regions.** A region is a subdivision of the public OpenHolidays dataset

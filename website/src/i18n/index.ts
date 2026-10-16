@@ -176,8 +176,9 @@ const de: Strings = {
     { label: 'Siri und Kurzbefehle: Einkaufsliste, Tagesplan und Stundenplan per Sprachbefehl', state: 'fertig', done: true },
     { label: 'KI-Assistenten (MCP) lesen eure Woche nach, nur lesend', state: 'fertig', done: true },
     { label: 'Erinnerung am Vorabend: was in die Schultasche gehört', state: 'fertig', done: true },
+    { label: 'Namen, Farben und Reihenfolge der Familie, Geräte und Einkaufslisten nachträglich ändern', state: 'als Nächstes', done: false },
+    { label: 'Eigener Server auch ohne E-Mail-Versand', state: 'als Nächstes', done: false },
     { label: 'Im App Store und bei Google Play', state: 'als Nächstes', done: false },
-    { label: 'Erinnerungen als Push-Nachricht', state: 'geplant', done: false },
   ],
   faqTitle: 'Häufige Fragen',
   faq: [
@@ -420,8 +421,9 @@ const en: Strings = {
     { label: 'Siri and Shortcuts: shopping list, the day and the timetable by voice', state: 'done', done: true },
     { label: 'AI assistants (MCP) look up your week, read-only', state: 'done', done: true },
     { label: 'A reminder the evening before: what goes in the school bag', state: 'done', done: true },
+    { label: 'Change names, colours and order of the family, devices and shopping lists afterwards', state: 'up next', done: false },
+    { label: 'Your own server, even without sending email', state: 'up next', done: false },
     { label: 'On the App Store and Google Play', state: 'up next', done: false },
-    { label: 'Reminders as push notifications', state: 'planned', done: false },
   ],
   faqTitle: 'Questions',
   faq: [

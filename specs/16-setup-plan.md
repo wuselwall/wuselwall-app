@@ -5,7 +5,9 @@
 [ADR-011](adr/ADR-011-native-distribution-and-ci-cd.md)); step 8 rewritten the same day
 for a self-hosted server ([ADR-013](adr/ADR-013-self-hosted-compose-stack.md)). This is the build order for
 milestone M0 in [13](13-roadmap.md): everything that has to exist before the first
-module is worth building.*
+module is worth building. Step 9 (onboarding, M1.0) and step 10 (the journey gaps found
+before launch, M1.5) were added later; the modules themselves are planned in their own
+documents.*
 
 The goal of M0 is not features. It is to prove every layer end to end with the thinnest
 possible content: a Flutter app on a real iPhone, iPad and Android tablet, talking to
@@ -27,6 +29,7 @@ change and a tag producing installable builds. Once that works, every module aft
 | 7 | M0.4 | `release-ios.yml` and `release-android.yml`: a tag puts builds on the testers' devices | 1 weekend |
 | 8 | M0.3 | A self-hosted server ([ADR-013](adr/ADR-013-self-hosted-compose-stack.md)): own keys, an allow-list front, backups | 1 evening |
 | 9 | M1.0 | Onboarding ([ADR-014](adr/ADR-014-self-service-onboarding.md)): Apple, Google, email code and password; households, invitations, pairing, getting started, deletion | 2–3 weekends |
+| 10 | M1.5 | Journey gaps before launch: members, family and devices editable, shopping structure, servers without mail, approvals on Today, the wall's offline start, the release checklist | 2 weekends |
 
 Steps 1–4 can be done in a single long weekend. Step 7 waits on the Apple and Google
 accounts from step 0, which is why those are applied for first.
@@ -73,11 +76,10 @@ and no Xcode debugger. See [Q35](14-open-questions.md).
 | **Google Play Console** (personal) | Internal testing track for the wall tablet and Android phones | $25 once | Identity verification can take several days |
 | **Second private GitHub repository** `wuselwall-certificates` | `fastlane match` storage for iOS signing | — | Minutes |
 | Domain `wuselwall.app` ([ADR-017](adr/ADR-017-wuselwall-app-domain.md)) | The project's website, docs and links site | ≈ €14 / year | in place 2026-10-13 |
-| Firebase project | Android push via FCM — not needed until push is built, and only if [Q38](14-open-questions.md) settles on FCM | free | Minutes |
+| Firebase project | Android push via FCM — only if a push relay is ever built ([Q47](14-open-questions.md)); v1's reminders are local | free | Minutes |
 | **Sign in with Apple** (in the Developer account): the capability on `ch.goomba.wuselwall`, a Services ID, a key | Step 9 — Apple sign-in on iOS, Android and the web | — | Minutes, after the programme is active |
 | **Google Cloud project** with an OAuth consent screen and three OAuth clients (web, iOS, Android) | Step 9 — Google sign-in | free | Minutes; the consent screen's branding review can take a few days |
 | **Scaleway account** with Transactional Email ([Q41](14-open-questions.md), decided): one project per server that sends mail; sending domains verified with SPF/DKIM/DMARC ([10](10-deployment-and-ops.md#email-setup)) | Step 9 — email codes | 300 mails/month free, then €0.25 per 1,000 | An evening, plus DNS propagation |
-| **Supabase organisation** on the Pro plan, project in Frankfurt ([ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md)) | WuselWall Cloud — needed at the opening gate, not before | ≈ $25 / month | Minutes |
 
 ---
 
@@ -477,10 +479,10 @@ keys, and the restore drill has restored a nightly dump once. *(Restore drill fi
 
 ## Step 9 — Onboarding (M1.0)
 
-> **Status 2026-10-15** (`feature/regions-and-ux`; migrations and functions not yet on the server):
+> **Status 2026-10-16** (merged to `main`):
 > 1. Sign-in: Apple and Google (2026-10-13), the email code, E1–E3 and the password are built. Done.
 > 2. Households: built (H1, H2, founder codes, `my_account`). Done. The wizard and `setup_household` are still there for one release.
-> 3. Invitations: built, universal links and App Links included (2026-10-15; the Android signing fingerprints and the AASA content type are still to be set by the operator), except the guardian's "joined" notice.
+> 3. Invitations: built, with universal links and App Links (2026-10-15; the upload key's fingerprint is in `assetlinks.json` since 2026-10-16, Play App Signing's follows with the first Play upload) and the guardian's "joined" notice on Today.
 > 4. Pairing: built. The code enrolment stays for one release.
 > 5. Getting started and deferred PIN: built.
 > 6. Leaving: built (leave, delete with 14 days to restore, purge job, account deletion with the Apple revocation, second-factor reset, export).
@@ -489,7 +491,7 @@ keys, and the restore drill has restored a nightly dump once. *(Restore drill fi
 > 8. Tests: the pgTAP suites and the Dart tests are built with the features. Since 2026-10-15 the journeys J1–J3 are written: `app/test/integration/onboarding_integration_test.dart` drives the repositories against a throwaway stack (the email code read from Mailpit, founder codes planted by `supabase/seed.sql`) and runs in CI's `backend` job, and `app/test/journeys/` drives the real screens with fakes and asserts the screen counts of NFR-17 on every PR. Still open: the manual Apple and Google checks on real devices, and the timings (90 s, 60 s, 30 s) on the release checklist.
 > 9. User documentation: `docs/guide/setup.md` and its screenshots rewritten (both languages).
 >
-> **Next:** apply the migrations and deploy the Edge Functions, schedule the jobs, set `ENABLE_EMAIL_AUTOCONFIRM=false` on an existing server, then M1.6.
+> **Next:** step 10, then M1.6. Gaps found in the journeys after this step was built are step 10's slices 4 (servers without mail), 7 (loose ends) and 10 (retiring the M0.1 paths).
 
 
 *Added 2026-10-11.* The experience is [20](20-onboarding.md); the decision
@@ -567,6 +569,129 @@ account leaves nothing reachable.
 
 ---
 
+## Step 10 — Journey gaps before launch (M1.5)
+
+*Added 2026-10-16, from a walk through the journeys J1–J6 ([20](20-onboarding.md)) and every
+module's screens against the code.* None of this is a new feature. Each slice closes a
+place where the pilot household would get stuck in its first weeks, with nothing in the app
+to get it out. They are ordered by how soon a family runs into them. Every slice follows the
+architecture rules ([03](03-architecture.md)): one `api` function per write, starting with
+`app.actor()` and auditing; pgTAP for the cross-household, revoked-device and
+unauthenticated cases; strings in both ARB files; and the matching `docs/` page in both
+languages. A slice that changes the app–server contract raises `api_version`.
+
+1. **Members can be edited** (FR-5.1, [20 H2](20-onboarding.md#j1--start-a-family),
+   [21](21-household-settings.md#the-kitchen-display)). Today a profile has only two writes,
+   `api.members_add` and `api.member_baseline_set`. A misspelt name, two people with one
+   colour, the board's member order, or an adult entered as *Kind* in H2 cannot be
+   corrected, although H2 promises "changeable later".
+   - Migration: `profile.avatar_key` (an emoji from the design system's set, null = the
+     initial); `api.member_update(actor, profile, display_name, color, kind, avatar_key)`;
+     `api.members_reorder(actor, profile_ids uuid[])`, which re-spaces `sort_order` in steps
+     of ten; `api.member_set_role(actor, profile, role)` (a guardian is always
+     `kind = adult`; refused when it would leave no guardian with an account; demoting ends
+     that profile's PIN window); `api.member_deactivate` and `_reactivate`
+     (`active = false`: off the board, the avatar rows, rotations and new assignments, with
+     history and points kept; refused for a profile with an account, whose adult leaves
+     first, J6). The views and the materialiser skip inactive profiles.
+   - App: Einstellungen → Mitglieder → a person opens a member page (name, colour, avatar,
+     Kind/Erwachsen, role, baseline, invite, second-factor reset, *Nicht mehr dabei*), and
+     the list reorders by dragging. Members change their own name, colour and avatar;
+     everything else is a guardian action (the PIN on shared devices).
+   - Tests: pgTAP for each function (a member edits only themselves, the last guardian, an
+     inactive member drops out of rotations); a widget test for the reorder.
+2. **The family and its devices can be renamed** (H1: "changed in Settings later").
+   `api.household_update(actor, name, timezone, locale)`; `api.device_rename(actor, device,
+   label)`; the device list shows `last_seen_at` ("zuletzt aktiv vor 3 Tagen"), so the
+   "revoke the old phone" of J4 is an informed choice. App: Einstellungen → Familie (name,
+   timezone, beside export and delete) and a rename action on each device.
+3. **Shopping structure is editable** (FR-4.4, [21](21-household-settings.md#shopping):
+   "Lists can be renamed, added and removed"). Lists can be created and made the default,
+   but not renamed or removed; categories cannot be added, renamed or put in walking order;
+   and a typo the catalogue learned stays a tile for ever.
+   - Migration: `api.shopping_list_update(actor, list, name)`; `api.shopping_list_delete`
+     (never the default; its open items move to the default list);
+     `api.shopping_category_save(actor, list, id, name, icon)`, `_delete` (its items become
+     uncategorised) and `api.shopping_categories_reorder(actor, list, ids uuid[])`;
+     `api.catalog_item_update(actor, item, name, category)` and `_delete` (the tile goes; the
+     history keeps its text). Each broadcasts `shopping:changed`. Structure edits are
+     online only; items stay offline-capable ([ADR-006](adr/ADR-006-offline-strategy.md)),
+     and the mirror refetches the structure on the broadcast.
+   - App: "Liste bearbeiten" from the list switcher (name, default, categories with drag
+     handles, add and remove), and "Nicht mehr vorschlagen" on a tile's long-press sheet.
+4. **Servers without mail can start a family** ([Q48](14-open-questions.md)). This blocks
+   the self-hosting kit. A release installs with `ENABLE_EMAIL_AUTOCONFIRM=false`, so
+   without SMTP E1's code never arrives and no other way creates an account, while
+   [docs/server](../docs/server/index.md) tells operators that no mail is needed.
+   - Server: `make-env.mjs` and `wuselwall install` set `ENABLE_EMAIL_AUTOCONFIRM=true` only
+     when no `SMTP_HOST` is given; the discovery document gains `sign_in.email_code`, false
+     when Auth's settings report `mailer_autoconfirm`.
+   - App: on such a server E1 is email and password, for sign-up and sign-in alike; E2 and
+     E3 are skipped.
+   - Safety: with autoconfirm any typed address counts as confirmed, so H0's automatic
+     invitation match is off on these servers (`api.my_account` lists no pending invitations
+     by email). Invitations go by link, QR or code only.
+   - A forgotten password: `api.member_password_reset_create(actor, profile)` gives a
+     guardian on a personal device a one-time code (10 minutes, single use) for an adult of
+     the household. A `password-reset` Edge Function (anon, rate-limited) redeems the code
+     with a new password. It uses the service role and acts only on that profile's Auth user,
+     so it joins the list of service-role functions in `CLAUDE.md`.
+   - Docs: `docs/server` (index and extras) and [20](20-onboarding.md#choosing-the-server)
+     corrected, both languages.
+   - Tests: Deno tests for the discovery flag; pgTAP for the reset code (single use,
+     expiry, guardian only, cross-household); the J1 integration test once more on a stack
+     with autoconfirm.
+5. **Approvals reach a guardian without push** ([Q47](14-open-questions.md)). With local
+   reminders only, a child's reward request and a chore waiting for verification sit in
+   Aufgaben → Freigaben until a guardian happens to look, and the child's "wartet auf
+   Freigabe" turns into "it never works". `api.notices` gains two derived kinds,
+   `redemption_pending` and `verification_pending` (a count and the oldest, for guardians;
+   gone once decided, so no dismissal), shown as one card on Today. The Tasks tab carries the
+   count as a badge, and the local morning summary adds "2 Freigaben warten" from the data
+   loaded when it was planned.
+6. **The wall survives a reboot without network** (FR-8.10, NFR-3). The last good board is
+   kept in memory only, so a tablet that restarts during an outage (a power cut takes the
+   router down too) shows an error instead of the week. Store the last `board_week` JSON on
+   the device (drift, as the shopping mirror does), show it at cold start with the
+   "zuletzt aktualisiert" marker, and do the same for the kid home's day. Test: a widget
+   test that starts with a failing repository and a stored board.
+7. **Onboarding loose ends** from [20](20-onboarding.md#failures-and-interruptions): the
+   local H1 draft for an account that closed the app before H1; the single-guardian warning
+   when turning on TOTP (J4); the getting-started reminders row, done when this device has
+   granted the notification permission. Passkeys (E3's third option, the getting-started
+   item) stay behind the real-device test of step 5.7.
+8. **The account-deletion web page** that Google Play requires
+   ([20 J6](20-onboarding.md#j6--leave)): `/konto-loeschen` and `/en/delete-account` on the
+   website, with `paths` entries and strings in `website/src/i18n/index.ts`. It explains
+   Einstellungen → Konto → Konto löschen and Familie löschen, and that each family's data
+   lives on its own server, whose operator answers requests; the project holds none. Needed
+   for the Data safety form of the Play closed test, so before the first store upload, not
+   at the gate.
+9. **The release checklist** that NFR-17, M1.0 and M1.6 refer to and that does not exist
+   yet: `specs/22-release-checklist.md`. The device matrix (iPhone, iPad, an Android phone,
+   the wall tablet, the web build); J1–J3 timed by someone new to the build, with every
+   hesitation written down; Apple and Google sign-in on real devices; an invitation link and
+   a pairing QR opened from the camera app on both platforms (universal links, App Links); a
+   wall reboot with the network off (slice 6); a local reminder firing; the TestFlight expiry
+   date; the date of the last restore drill. Each release links its filled-in copy in its
+   GitHub release notes.
+10. **Retire the one-release leftovers**, once a store build with pairing and invitations
+    has been out for one release: the wizard and `api.setup_household`, `api.enrol_device`
+    and `api.devices_create_enrolment_code`, the code-entry screen and "Code für ein älteres
+    Gerät erzeugen". Raise `api_version` and `min_app_version`; the catalogue test's anon
+    list becomes `health, invitation_preview, pairing_poll, pairing_start, server_info`.
+11. **The adult register on a wide screen** ([09](09-clients-and-ux.md#one-application-three-registers)).
+    At 840 px and wider (the web build, an iPad set up as *Tablet für alle*), a
+    `NavigationRail` replaces the six-item bottom bar. Keyboard shortcuts and bulk editing,
+    which 09 used to promise, are M3.
+
+**Done when** the pilot household can correct every name, colour, order and list it
+entered during J1 without help; a fresh server release without SMTP takes a family from S0
+to Today; a reward request is seen by a guardian the same day without anyone opening the
+Tasks tab; and the wall shows the week after a power cut, with the router still off.
+
+---
+
 ## CI/CD at a glance
 
 ```
@@ -607,7 +732,7 @@ manager.
 | `RESTIC_PASSWORD`, backup-target credentials, healthchecks URL | `backup.env` next to the server's tool (`BACKUP_ENV`) | backups |
 | `WW_FIRST_PARTY_HOSTS` (not secret, but kept out of public logs) | GitHub secret | the hosts with native sign-in and passkeys in release builds |
 | `DOCS_DEPLOY_KEY`, `DOCS_DEPLOY_KNOWN_HOSTS`, `DOCS_DEPLOY_TARGET` | GitHub secrets | publishing the docs |
-| Push credentials (APNs key, FCM service account) | Edge Function secrets | `push-send` |
+| Push credentials (APNs key, FCM service account) — only if a relay is ever built ([Q47](14-open-questions.md)) | Edge Function secrets | a future `push-send` |
 | `WW_APPLE_SECRET` (the six-monthly client-secret JWT), the Sign in with Apple `.p8` key | The server's stack `.env` (`GOTRUE_EXTERNAL_APPLE_*`); the `.p8` in the password manager only | Supabase Auth (Apple via OAuth); the `account-delete` and code-exchange functions |
 | `WW_GOOGLE_CLIENT_SECRET` (web client) | The server's stack `.env` (`GOTRUE_EXTERNAL_GOOGLE_*`) | Supabase Auth (Google via OAuth) |
 | Scaleway TEM credentials: project ID and the secret key of an IAM application limited to Transactional Email, one pair per environment | The server's stack `.env` (`SMTP_USER`, `SMTP_PASS`) and Edge Function secrets, or a hosted project's Auth settings. Throwaway stacks use Mailpit | Supabase Auth email ([10](10-deployment-and-ops.md#email-setup)), the send-email hook |
