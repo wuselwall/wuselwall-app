@@ -262,7 +262,7 @@ const de: Strings = {
         ],
       },
       {
-        title: 'Kalender-Abos',
+        title: 'Kalender von außen',
         body: [
           'Abonniert eure Familie einen Kalender von außen – etwa den Spielplan eines Vereins oder den Abfuhrkalender –, holt der WuselWall-Server die Datei unter der Adresse, die ihr eingegeben habt, etwa einmal pro Stunde. Die App selbst verbindet sich nicht damit. Für diese Abfragen ist der Betreiber eures Servers verantwortlich.',
           'Der Anbieter des Kalenders erfährt dabei die IP-Adresse eures Servers, den Zeitpunkt und die Kennung „WuselWall calendar-import“ im Anfragekopf. Nichts über eure Familie wird übermittelt, außer was in der Adresse selbst steht. Die vollständige Adresse sehen nur Eltern; alle anderen Geräte zeigen nur den Namen des Anbieters.',
@@ -507,7 +507,7 @@ const en: Strings = {
         ],
       },
       {
-        title: 'Subscribed calendars',
+        title: 'Outside calendars',
         body: [
           'If your family subscribes to a calendar from outside – such as a club’s fixture list or the bin collection calendar –, your WuselWall server fetches the file from the address you entered, about once an hour. The app itself does not connect to it. The operator of your server is responsible for these requests.',
           'The calendar’s provider learns the IP address of your server, the time, and the identifier “WuselWall calendar-import” in the request header. Nothing about your family is sent, except what is in the address itself. Only guardians see the full address; every other device shows just the provider’s name.',

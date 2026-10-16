@@ -89,7 +89,7 @@ export default defineConfig({
         ],
         sidebar: sidebar('', {
           start: 'Erste Schritte', concepts: 'So funktioniert WuselWall', install: 'App installieren', setup: 'Anmelden und verbinden', who: 'Wer bist du?',
-          modules: 'Module', calendar: 'Kalender', feeds: 'Kalender-Abos für Outlook und iPhone', school: 'Stundenplan', tasks: 'Aufgaben', meals: 'Essen',
+          modules: 'Module', calendar: 'Kalender', feeds: 'Familienkalender teilen', school: 'Stundenplan', tasks: 'Aufgaben', meals: 'Essen',
           shopping: 'Einkaufsliste', add: 'Artikel hinzufügen', lists: 'Mehrere Listen', store: 'Im Laden', history: 'Verlauf',
           devices: 'Geräte und Sicherheit', wall: 'Wandbildschirm und Kinder', household: 'Haushalt einstellen', members: 'Mitglieder und Geräte', account: 'Konto und Familie', reminders: 'Erinnerungen', shortcuts: 'Siri und Kurzbefehle', security: 'Sicherheit', faq: 'Häufige Fragen',
           server: 'Eigener Server', serverOverview: 'Überblick', serverHome: 'Server zu Hause', serverSupabase: 'Server bei Supabase', serverRestore: 'Backup zurückspielen', serverExtras: 'Extras',
@@ -119,7 +119,7 @@ export default defineConfig({
         ],
         sidebar: sidebar('/en', {
           start: 'Getting started', concepts: 'How WuselWall works', install: 'Installing the app', setup: 'Signing in and connecting', who: 'Who are you?',
-          modules: 'Modules', calendar: 'Calendar', feeds: 'Calendar subscriptions for Outlook and iPhone', school: 'Timetable', tasks: 'Tasks', meals: 'Meals',
+          modules: 'Modules', calendar: 'Calendar', feeds: 'Sharing the family calendar', school: 'Timetable', tasks: 'Tasks', meals: 'Meals',
           shopping: 'Shopping list', add: 'Adding items', lists: 'Several lists', store: 'In the store', history: 'History',
           devices: 'Devices and security', wall: 'Wall display and kids', household: 'Household settings', members: 'Members and devices', account: 'Account and family', reminders: 'Reminders', shortcuts: 'Siri and Shortcuts', security: 'Security', faq: 'FAQ',
           server: 'Your own server', serverOverview: 'Overview', serverHome: 'Server at home', serverSupabase: 'Server at Supabase', serverRestore: 'Restoring a backup', serverExtras: 'Extras',
