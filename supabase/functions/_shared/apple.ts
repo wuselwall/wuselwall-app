@@ -3,9 +3,11 @@
 // app.apple_token.
 //
 // Sign in with Apple has been removed: no new token is stored. Accounts that signed in with
-// Apple before that may still have one, and account-delete revokes it so the app's access to
-// the Apple ID ends with the account (App Store Review Guideline 5.1.1(v)). Without the Apple
-// environment (see appleConfig) nothing here runs.
+// Apple before that may still have one. When such an account is deleted, the database keeps the
+// token as a revocation obligation, and account-delete and the daily household-purge revoke it
+// (apple_revocation.ts), so the app's access to the Apple ID ends with the account (App Store
+// Review Guideline 5.1.1(v)). Without the Apple environment (see appleConfig) the obligations
+// wait.
 //
 // Pure apart from the injected `fetch` and the WebCrypto calls: the tests pass a fake fetch and
 // a generated key pair. The key material comes from the environment; nothing here is logged.
