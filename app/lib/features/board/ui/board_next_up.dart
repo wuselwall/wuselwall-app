@@ -133,6 +133,11 @@ class _BoardNextUpState extends ConsumerState<BoardNextUp>
         : l10n.boardInMinutes(inMinutes);
     final second = upcoming.length > 1 ? upcoming[1] : null;
 
+    // Every child here is Flexible, including the gaps: RenderFlex sizes
+    // flexible children to fit exactly the space it is given, so (unlike a
+    // LayoutBuilder-driven switch, which IntrinsicHeight above cannot host)
+    // this Row structurally cannot overflow even when squeezed to a sliver
+    // at large text scales (specs/09: truncate content, never overflow).
     return Row(
       children: [
         Flexible(
@@ -159,10 +164,15 @@ class _BoardNextUpState extends ConsumerState<BoardNextUp>
             softWrap: false,
           ),
         ),
-        const SizedBox(width: Tokens.space3),
-        MemberDots(dots: _dots(context, board, first.memberIds), size: 14),
+        Flexible(child: const SizedBox(width: Tokens.space3)),
+        Flexible(
+          child: MemberDots(
+            dots: _dots(context, board, first.memberIds),
+            size: 14,
+          ),
+        ),
         if (second != null) ...[
-          const SizedBox(width: Tokens.space4),
+          Flexible(child: const SizedBox(width: Tokens.space4)),
           Flexible(
             flex: 2,
             child: Text.rich(

@@ -69,6 +69,8 @@ class _Choice extends StatelessWidget {
     final colors = context.ww.member(member.color);
     return Semantics(
       button: true,
+      focusable: true,
+      onTap: onTap,
       label: member.displayName,
       excludeSemantics: true,
       child: InkWell(

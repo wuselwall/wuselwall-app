@@ -80,7 +80,7 @@ class _MemberRow extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      MemberAvatar(member: member, size: 36),
+                      MemberAvatar(member: member, size: 48),
                       const SizedBox(width: 10),
                       Flexible(
                         child: Text(
@@ -149,7 +149,6 @@ class _MemberRow extends StatelessWidget {
     final l10n = context.l10n;
     final school = board.days[i].school[member.id];
     if (school == null) return const [];
-    final opacity = frame.opacity(i);
 
     if (!school.hasSchool) {
       // A band that day (Oma, a trip) says more than "frei", and they would overlap.
@@ -167,20 +166,17 @@ class _MemberRow extends StatelessWidget {
           width: g.width(i),
           top: 0,
           bottom: 0,
-          child: Opacity(
-            opacity: opacity,
-            child: Padding(
-              // In line with the text of a school chip.
-              padding: const EdgeInsets.symmetric(horizontal: 18),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: ShrinkText(
-                  text,
-                  style: boardCell(
-                    24,
-                    weight: FontWeight.w500,
-                    color: context.ww.ink3,
-                  ),
+          child: Padding(
+            // In line with the text of a school chip.
+            padding: const EdgeInsets.symmetric(horizontal: 18),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: ShrinkText(
+                text,
+                style: boardCell(
+                  24,
+                  weight: FontWeight.w500,
+                  color: context.ww.ink3,
                 ),
               ),
             ),
@@ -209,28 +205,25 @@ class _MemberRow extends StatelessWidget {
         BoardTap(
           label: l10n.boardSchoolSpan(span),
           onTap: () => unawaited(openSchoolDay(context, board, member.id, i)),
-          child: Opacity(
-            opacity: opacity,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: mc.tint,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border(left: BorderSide(color: mc.ink, width: 4)),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: ClipFit(
-                    alignment: Alignment.centerLeft,
-                    child: _SchoolText(
-                      span: span,
-                      notes: notes,
-                      ink: ink,
-                      ink2: ww.ink2,
-                      // Compact rows keep span and notes on one line.
-                      oneLine: half * 2 < _compactRowHeight,
-                    ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: mc.tint,
+                borderRadius: BorderRadius.circular(8),
+                border: Border(left: BorderSide(color: mc.ink, width: 4)),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: ClipFit(
+                  alignment: Alignment.centerLeft,
+                  child: _SchoolText(
+                    span: span,
+                    notes: notes,
+                    ink: ink,
+                    ink2: ww.ink2,
+                    // Compact rows keep span and notes on one line.
+                    oneLine: half * 2 < _compactRowHeight,
                   ),
                 ),
               ),
@@ -265,14 +258,11 @@ class _MemberRow extends StatelessWidget {
           onTap: () => unawaited(openMemberWeek(context, board, member.id)),
           child: busy == null || compact
               ? const SizedBox.expand()
-              : Opacity(
-                  opacity: frame.opacity(i),
-                  child: Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 0, 8, 4),
-                      child: _BusyLine(until: busy),
-                    ),
+              : Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 0, 8, 4),
+                    child: _BusyLine(until: busy),
                   ),
                 ),
         ),
@@ -310,11 +300,8 @@ class _MemberRow extends StatelessWidget {
           bottom: compact ? 0 : null,
           height: compact ? null : 32,
           child: IgnorePointer(
-            child: Opacity(
-              opacity: frame.spanOpacity(i, j),
-              child: Center(
-                child: _BaselineTrack(memberColor: member.color, label: label),
-              ),
+            child: Center(
+              child: _BaselineTrack(memberColor: member.color, label: label),
             ),
           ),
         ),
@@ -392,26 +379,23 @@ class _MemberRow extends StatelessWidget {
         g,
         run.first,
         run.last,
-        Opacity(
-          opacity: frame.spanOpacity(run.first, run.last),
-          child: BoardTap(
-            label: label,
-            onTap: onTap,
-            // A short row gives the band almost all of its height; anything the band
-            // cannot fit is clipped rather than breaking the grid.
-            child: ClipFit(
-              child: PresenceBandView(
-                state: band.state,
-                memberColor: member.color,
-                label: oneLine ? oneLineLabel : label,
-                detail: oneLine ? null : timeText,
-                openStart: openStart,
-                openEnd: openEnd,
-                tentative: band.tentative,
-                // Label and time share a member row: tight padding and lines.
-                dense: true,
-                lineHeight: 1.1,
-              ),
+        BoardTap(
+          label: label,
+          onTap: onTap,
+          // A short row gives the band almost all of its height; anything the band
+          // cannot fit is clipped rather than breaking the grid.
+          child: ClipFit(
+            child: PresenceBandView(
+              state: band.state,
+              memberColor: member.color,
+              label: oneLine ? oneLineLabel : label,
+              detail: oneLine ? null : timeText,
+              openStart: openStart,
+              openEnd: openEnd,
+              tentative: band.tentative,
+              // Label and time share a member row: tight padding and lines.
+              dense: true,
+              lineHeight: 1.1,
             ),
           ),
         ),

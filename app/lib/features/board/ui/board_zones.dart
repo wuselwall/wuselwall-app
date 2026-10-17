@@ -19,7 +19,10 @@ import 'package:wuselwall/features/board/ui/details/board_details.dart';
 class DayHeaderRow extends StatelessWidget {
   const DayHeaderRow({required this.frame, super.key});
 
-  static const height = 44.0;
+  // A6: this row is each day's primary tap target (it opens that day's detail),
+  // not a decorative band, so its actual hit area must clear the kiosk's real
+  // 56 px minimum (specs/17, t_da411148) — not the 44 px it used before.
+  static const height = 56.0;
 
   /// The row's height when a day of the week is a public holiday: a second line for it.
   static const holidayHeight = 72.0;
@@ -50,79 +53,76 @@ class DayHeaderRow extends StatelessWidget {
             child: BoardTap(
               label: _label(context, board.days[i]),
               onTap: () => unawaited(openDayDetail(context, board, i)),
-              child: Opacity(
-                opacity: frame.opacity(i),
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    if (i == today)
-                      Positioned(
-                        left: 0,
-                        right: 0,
-                        top: 0,
-                        height: 4,
-                        child: ColoredBox(color: scheme.primary),
-                      ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: ClipFit(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            // A narrow column shrinks the line a little rather than
-                            // cutting the date.
-                            FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    // Today says so in words instead of a pill: the
-                                    // column is wide, but not wide enough for both.
-                                    i == today
-                                        ? context.l10n.boardToday
-                                        : context.weekdayShort(
-                                            board.days[i].date,
-                                          ),
-                                    style: boardNum(
-                                      28,
-                                      weight: FontWeight.w700,
-                                      color: i == today
-                                          ? scheme.primary
-                                          : scheme.onSurface,
-                                    ),
-                                    maxLines: 1,
-                                    softWrap: false,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  if (i == today)
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      top: 0,
+                      height: 4,
+                      child: ColoredBox(color: scheme.primary),
+                    ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: ClipFit(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // A narrow column shrinks the line a little rather than
+                          // cutting the date.
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  // Today says so in words instead of a pill: the
+                                  // column is wide, but not wide enough for both.
+                                  i == today
+                                      ? context.l10n.boardToday
+                                      : context.weekdayShort(
+                                          board.days[i].date,
+                                        ),
+                                  style: boardNum(
+                                    28,
+                                    weight: FontWeight.w700,
+                                    color: i == today
+                                        ? scheme.primary
+                                        : scheme.onSurface,
                                   ),
-                                  const SizedBox(width: 6),
-                                  Text(
-                                    context.dayMonth(board.days[i].date),
-                                    style: boardNum(
-                                      24,
-                                      weight: FontWeight.w500,
-                                      color: ww.ink2,
-                                    ),
-                                    maxLines: 1,
-                                    softWrap: false,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  context.dayMonth(board.days[i].date),
+                                  style: boardNum(
+                                    24,
+                                    weight: FontWeight.w500,
+                                    color: ww.ink2,
                                   ),
-                                ],
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
+                              ],
+                            ),
+                          ),
+                          if (board.days[i].holiday case final holiday?)
+                            ShrinkText(
+                              holiday.name,
+                              style: boardCell(
+                                24,
+                                weight: FontWeight.w600,
+                                color: ww.ink2,
                               ),
                             ),
-                            if (board.days[i].holiday case final holiday?)
-                              ShrinkText(
-                                holiday.name,
-                                style: boardCell(
-                                  24,
-                                  weight: FontWeight.w600,
-                                  color: ww.ink2,
-                                ),
-                              ),
-                          ],
-                        ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -208,26 +208,23 @@ class _PartRow extends StatelessWidget {
             child: BoardTap(
               label: context.fullDate(board.days[i].date),
               onTap: () => unawaited(openDayDetail(context, board, i)),
-              child: Opacity(
-                opacity: frame.opacity(i),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 2, 8, 0),
-                  child: LayoutBuilder(
-                    builder: (context, c) => ClipFit(
-                      alignment: Alignment.topLeft,
-                      child: SizedBox(
-                        width: c.maxWidth,
-                        child: _DayPartCell(
-                          board: board,
-                          events: [
-                            for (final e in frame.eventsOf(i))
-                              if (settings.partOf(e.starts) == part) e,
-                          ],
-                          isToday: frame.isToday(i),
-                          now: now,
-                          // Two lines for a lone appointment need ~52 canvas px.
-                          roomy: c.maxHeight >= 52,
-                        ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(8, 2, 8, 0),
+                child: LayoutBuilder(
+                  builder: (context, c) => ClipFit(
+                    alignment: Alignment.topLeft,
+                    child: SizedBox(
+                      width: c.maxWidth,
+                      child: _DayPartCell(
+                        board: board,
+                        events: [
+                          for (final e in frame.eventsOf(i))
+                            if (settings.partOf(e.starts) == part) e,
+                        ],
+                        isToday: frame.isToday(i),
+                        now: now,
+                        // Two lines for a lone appointment need ~52 canvas px.
+                        roomy: c.maxHeight >= 52,
                       ),
                     ),
                   ),
@@ -412,16 +409,19 @@ class _EventLine extends StatelessWidget {
     final row = Row(
       children: [
         if (start != null) ...[
-          Text(
-            context.shortTime(start),
-            style: boardNum(
-              24,
-              weight: FontWeight.w700,
-              color: ww.ink2,
-              height: 1.1,
+          Flexible(
+            child: Text(
+              context.shortTime(start),
+              style: boardNum(
+                24,
+                weight: FontWeight.w700,
+                color: ww.ink2,
+                height: 1.1,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              softWrap: false,
             ),
-            maxLines: 1,
-            softWrap: false,
           ),
           const SizedBox(width: 6),
         ],
@@ -437,7 +437,10 @@ class _EventLine extends StatelessWidget {
         if (dots.isNotEmpty) ...[
           const SizedBox(width: 4),
           // Two lines share the cell: the dots shrink so the title keeps its room.
-          MemberDots(dots: dots, size: 10),
+          Flexible(
+            fit: FlexFit.loose,
+            child: ClipRect(child: MemberDots(dots: dots, size: 10)),
+          ),
         ],
       ],
     );
@@ -472,6 +475,8 @@ class BoardAllEventsToggle extends ConsumerWidget {
     return Semantics(
       toggled: on,
       button: true,
+      focusable: true,
+      onTap: () => ref.read(boardAllEventsProvider.notifier).set(!on),
       label: l10n.boardAllEvents,
       excludeSemantics: true,
       child: GestureDetector(
