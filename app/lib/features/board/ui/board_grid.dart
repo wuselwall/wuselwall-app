@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
@@ -216,7 +217,7 @@ class DashedOutlinePainter extends CustomPainter {
 
 /// Makes a tap target with a button semantics label. A GestureDetector, not an
 /// InkWell: the board needs no ink ripples and must not depend on a Material ancestor.
-class BoardTap extends StatelessWidget {
+class BoardTap extends StatefulWidget {
   const BoardTap({
     required this.label,
     required this.onTap,
@@ -229,18 +230,63 @@ class BoardTap extends StatelessWidget {
   final Widget child;
 
   @override
-  // The label says what the tap opens; the cell's own texts would repeat it
-  // ("Lotta, L, Lotta"), so they are not read out separately.
+  State<BoardTap> createState() => _BoardTapState();
+}
+
+class _BoardTapState extends State<BoardTap> {
+  final _focus = FocusNode();
+  bool _focused = false;
+
+  @override
+  void dispose() {
+    _focus.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) => Semantics(
     button: true,
     focusable: true,
-    onTap: onTap,
-    label: label,
+    focused: _focused,
+    onFocus: _focus.requestFocus,
+    onTap: widget.onTap,
+    label: widget.label,
     excludeSemantics: true,
-    child: GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: onTap,
-      child: child,
+    child: FocusableActionDetector(
+      focusNode: _focus,
+      onFocusChange: (focused) => setState(() => _focused = focused),
+      shortcuts: const {
+        SingleActivator(LogicalKeyboardKey.enter): ActivateIntent(),
+        SingleActivator(LogicalKeyboardKey.space): ActivateIntent(),
+      },
+      actions: {
+        ActivateIntent: CallbackAction<ActivateIntent>(
+          onInvoke: (_) {
+            widget.onTap();
+            return null;
+          },
+        ),
+      },
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        excludeFromSemantics: true,
+        onTap: () {
+          _focus.requestFocus();
+          widget.onTap();
+        },
+        child: DecoratedBox(
+          position: DecorationPosition.foreground,
+          decoration: BoxDecoration(
+            border: _focused
+                ? Border.all(
+                    color: Theme.of(context).colorScheme.primary,
+                    width: 3,
+                  )
+                : null,
+          ),
+          child: widget.child,
+        ),
+      ),
     ),
   );
 }
@@ -286,7 +332,9 @@ class BoardDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     final ww = context.ww;
     return Container(
-      height: trailing == null ? height : controlHeight,
+      constraints: BoxConstraints(
+        minHeight: trailing == null ? height : controlHeight,
+      ),
       padding: trailing == null ? null : const EdgeInsets.only(right: 8),
       alignment: Alignment.centerRight,
       decoration: BoxDecoration(

@@ -21,7 +21,24 @@ class MealRow extends StatelessWidget {
     final board = frame.board;
     final g = frame.geometry;
     return BoardTap(
-      label: context.l10n.boardZoneMeal,
+      label: [
+        context.l10n.boardZoneMeal,
+        for (final day in board.days)
+          if (day.meal case final meal?) ...[
+            context.fullDate(day.date),
+            meal.title ?? context.l10n.boardMealNothingPlanned,
+            if (meal.time case final time?) context.time(time),
+            if (board.member(meal.cookId ?? '') case final cook?)
+              context.l10n.boardMealCook(context.memberName(board, cook)),
+            for (final member in board.members)
+              (meal.eating.contains(member.id)
+                  ? context.l10n.boardEating
+                  : context.l10n.boardNotEating)(
+                context.memberName(board, member),
+              ),
+            if (meal.guests > 0) context.l10n.boardMealGuests(meal.guests),
+          ],
+      ].join(', '),
       onTap: () => unawaited(openMealWeek(context, board)),
       child: BoardRow(
         geometry: g,
@@ -41,7 +58,7 @@ class MealRow extends StatelessWidget {
                   weight: FontWeight.w700,
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
-                maxLines: 2,
+                maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -56,18 +73,28 @@ class MealRow extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(8, 6, 8, 4),
                   child: LayoutBuilder(
-                    builder: (context, c) => ClipFit(
-                      alignment: Alignment.topLeft,
-                      child: SizedBox(
-                        width: c.maxWidth,
-                        child: _MealCell(
-                          board: board,
-                          meal: meal,
-                          // Two dish lines and the cook's line need about 112 canvas px.
-                          twoLines: c.maxHeight >= 112,
-                        ),
-                      ),
-                    ),
+                    builder: (context, c) =>
+                        c.maxHeight <
+                            MediaQuery.textScalerOf(context).scale(112)
+                        ? Align(
+                            alignment: Alignment.centerLeft,
+                            child: _Dish(meal: meal, twoLines: false),
+                          )
+                        : ClipFit(
+                            alignment: Alignment.topLeft,
+                            child: SizedBox(
+                              width: c.maxWidth,
+                              child: _MealCell(
+                                board: board,
+                                meal: meal,
+                                // Reserve time, two dish lines and wrapped metadata
+                                // at the real scaler, not unscaled canvas heights.
+                                twoLines:
+                                    c.maxHeight >=
+                                    MediaQuery.textScalerOf(context).scale(140),
+                              ),
+                            ),
+                          ),
                   ),
                 ),
               ),
@@ -189,8 +216,8 @@ class _MealCell extends StatelessWidget {
   }
 }
 
-/// The dish. A one-word dish shrinks a little rather than break mid-word
-/// ("Fischstäbch-en"); longer names may take a second line when there is room.
+/// The dish truncates at the real text size, including a single long word.
+/// A second line is allowed only when its scaled height fits the zone.
 class _Dish extends StatelessWidget {
   const _Dish({required this.meal, required this.twoLines});
 
@@ -219,13 +246,7 @@ class _Dish extends StatelessWidget {
       weight: FontWeight.w700,
       color: Theme.of(context).colorScheme.onSurface,
     );
-    if (!title.trim().contains(' ')) {
-      return FittedBox(
-        fit: BoxFit.scaleDown,
-        alignment: Alignment.centerLeft,
-        child: Text(title, style: style, maxLines: 1, softWrap: false),
-      );
-    }
+
     return Text(
       title,
       style: style,

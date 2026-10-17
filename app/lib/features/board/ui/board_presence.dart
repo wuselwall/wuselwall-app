@@ -62,6 +62,134 @@ class _MemberRow extends StatelessWidget {
         );
       }
 
+      // A short row cannot host separate school/care actions. The whole row is
+      // the containing action, not merely its name gutter. Summaries are one
+      // scaled line; full school, care and presence stay in semantics/details.
+      if (rowHeight < MediaQuery.textScalerOf(context).scale(120)) {
+        final summaries = <String>[];
+        for (var i = 0; i < BoardGeometry.dayCount; i++) {
+          final school = board.days[i].school[member.id];
+          final bands = board.presenceOn(member.id, i);
+          summaries.add(
+            [
+              if (school != null) ...[
+                if (school.hasSchool)
+                  context.l10n.boardSchoolSpan(
+                    context.span(school.starts!, school.ends!),
+                  )
+                else
+                  school.holidayName ?? context.l10n.boardNoSchool,
+                ...school.notable,
+                if (school.careUntil case final until?)
+                  context.l10n.boardCareUntil(
+                    school.careLabel ?? context.l10n.boardCareDefault,
+                    context.shortTime(until),
+                  ),
+              ],
+              for (final band in bands) ...[
+                context.presenceLabel(band.state, band.label),
+                if (band.starts case final start?) context.shortTime(start),
+                if (band.ends case final end?) context.shortTime(end),
+              ],
+              if (bands.isEmpty)
+                if (member.baseline case final baseline?)
+                  context.presenceLabel(baseline.state, baseline.label),
+              if (board.days[i].busyUntil[member.id] case final until?)
+                context.l10n.boardBusyUntil(context.shortTime(until)),
+            ].join(' · '),
+          );
+        }
+        return BoardTap(
+          label: [
+            name,
+            for (var i = 0; i < summaries.length; i++)
+              '${context.fullDate(board.days[i].date)}: ${summaries[i]}',
+          ].join(', '),
+          onTap: openWeek,
+          child: BoardRow(
+            geometry: frame.geometry,
+            children: [
+              Positioned(
+                left: 12,
+                width: BoardGeometry.gutter - 20,
+                top: 0,
+                bottom: 0,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    name,
+                    style: boardUi(24, weight: FontWeight.w700, color: ink),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+              for (var i = 0; i < summaries.length; i++)
+                if (member.isChild ||
+                    (!bandDays.contains(i) && member.baseline == null))
+                  spanCell(
+                    frame.geometry,
+                    i,
+                    i,
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      decoration: BoxDecoration(
+                        color:
+                            bandDays.contains(i) ||
+                                (board.days[i].school[member.id]?.hasSchool ??
+                                    false)
+                            ? mc.tint
+                            : null,
+                        border: bandDays.contains(i)
+                            ? Border(left: BorderSide(color: mc.ink, width: 4))
+                            : null,
+                      ),
+                      child: Text(
+                        (board.days[i].school[member.id]?.hasSchool ?? false)
+                            ? context.span(
+                                board.days[i].school[member.id]!.starts!,
+                                board.days[i].school[member.id]!.ends!,
+                              )
+                            : summaries[i],
+                        style: boardCell(24, color: ink),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+              if (!member.isChild)
+                ..._baselineTracks(context, bandDays, compact: true),
+              for (final run in runs)
+                if (!member.isChild ||
+                    ![
+                      for (var i = run.first; i <= run.last; i++)
+                        if (board.days[i].school[member.id]?.hasSchool ?? false)
+                          i,
+                    ].isNotEmpty)
+                  spanCell(
+                    frame.geometry,
+                    run.first,
+                    run.last,
+                    PresenceBandView(
+                      state: run.band.state,
+                      memberColor: member.color,
+                      label: context.presenceLabel(
+                        run.band.state,
+                        run.band.label,
+                      ),
+                      dense: true,
+                      lineHeight: 1,
+                      openStart: run.band.startsBeforeWeek,
+                      openEnd: run.band.endsAfterWeek,
+                      tentative: run.band.tentative,
+                    ),
+                  ),
+            ],
+          ),
+        );
+      }
+
       return BoardRow(
         geometry: frame.geometry,
         children: [
@@ -501,7 +629,7 @@ class _BaselineTrack extends StatelessWidget {
   Widget build(BuildContext context) {
     final ww = context.ww;
     return Container(
-      height: 32,
+      constraints: const BoxConstraints(minHeight: 32),
       padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         color: ww.sunken,

@@ -62,10 +62,7 @@ class BoardFooter extends StatelessWidget {
                       body: const TaskBoardDetailBody(),
                     ),
                   ),
-                  child: ClipFit(
-                    alignment: Alignment.centerLeft,
-                    child: _OpenTasks(board: board),
-                  ),
+                  child: Center(child: _OpenTasks(board: board)),
                 ),
               ),
               if (night) ...[
@@ -163,6 +160,17 @@ class _OpenTasks extends StatelessWidget {
       for (final m in board.members)
         if ((board.openTasks[m.id] ?? 0) > 0) (m, board.openTasks[m.id]!),
     ];
+
+    if (MediaQuery.textScalerOf(context).scale(24) > 32) {
+      return Text(
+        open.isEmpty
+            ? l10n.boardAllDone
+            : '${l10n.boardOpenToday}: ${open.map((e) => '${context.memberName(board, e.$1)} ${e.$2}').join(' · ')}',
+        style: boardUi(24, color: ink),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      );
+    }
 
     if (open.isEmpty) {
       return Row(
