@@ -66,13 +66,19 @@ void main() {
   var counter = 0;
   String freshEmail() => 'e2e-$stamp-${counter++}@example.org';
 
-  /// A client with its repositories, one per simulated device.
+  /// A client with its repositories, one per simulated device. Like the app's client
+  /// (`FlutterAuthClientOptions`), it uses the PKCE flow, which keeps a code verifier
+  /// in async storage when a code is requested; the plain Dart client has none unless
+  /// one is given, so each device gets its own in-memory store.
   _Device device() {
     final client = SupabaseClient(
       url,
       key,
       postgrestOptions: const PostgrestClientOptions(schema: 'api'),
-      authOptions: const AuthClientOptions(autoRefreshToken: false),
+      authOptions: AuthClientOptions(
+        autoRefreshToken: false,
+        pkceAsyncStorage: _MemoryAsyncStorage(),
+      ),
     );
     addTearDown(client.dispose);
     return _Device(client);
@@ -506,6 +512,21 @@ class _Device {
   final IdentityRepository identity;
   final HouseholdOnboardingRepository onboarding;
   final InvitationRepository invitations;
+}
+
+/// The PKCE code-verifier store of one simulated device, kept in memory.
+class _MemoryAsyncStorage extends GotrueAsyncStorage {
+  final _items = <String, String>{};
+
+  @override
+  Future<String?> getItem({required String key}) async => _items[key];
+
+  @override
+  Future<void> setItem({required String key, required String value}) async =>
+      _items[key] = value;
+
+  @override
+  Future<void> removeItem({required String key}) async => _items.remove(key);
 }
 
 /// The latest six-digit code mailed to [email], read from Mailpit's HTTP API. Polls for up
