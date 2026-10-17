@@ -1956,6 +1956,8 @@
   "householdNewErrNoCode": "New families are only possible with a founder code for now.",
   "householdNewErrCodeWrong": "The founder code is not correct.",
   "householdNewErrRateLimited": "Too many attempts. Wait a few minutes and try again.",
+  "householdNewStalled": "This is taking longer than usual. Please wait, or sign out and sign in again. Do not create the family a second time.",
+  "setupPrivacy": "Privacy policy",
   "householdMembersTitle": "Who else is in your family?",
   "householdMembersYou": "{name} (you)",
   "@householdMembersYou": {

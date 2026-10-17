@@ -157,6 +157,9 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    // Read once for the list's taps, which may still be sent after this page has gone.
+    final sync = _sync;
+    final actor = _actor;
     final kiosk = ref.watch(uiRegisterProvider) == UiRegister.kiosk;
     final current = ref.watch(currentListProvider);
     final pending = ref.watch(shoppingPendingProvider);
@@ -204,8 +207,10 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody> {
                     : _ItemList(
                         items: open,
                         listId: list.id,
-                        onToggle: (i) => _sync.check(
-                          actor: _actor,
+                        // Bound now, not read later: a tick still settling is sent even
+                        // when this page is already leaving (see _ItemListState.dispose).
+                        onToggle: (i) => sync.check(
+                          actor: actor,
                           itemId: i.id,
                           checked: !i.checked,
                         ),
@@ -563,7 +568,7 @@ class _Tile extends StatelessWidget {
   }
 }
 
-class _ItemList extends ConsumerWidget {
+class _ItemList extends ConsumerStatefulWidget {
   const _ItemList({
     required this.items,
     required this.listId,
@@ -579,27 +584,78 @@ class _ItemList extends ConsumerWidget {
   final void Function(ShoppingItem) onEdit;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_ItemList> createState() => _ItemListState();
+}
+
+class _ItemListState extends ConsumerState<_ItemList> {
+  /// How long the list stays still after the last tick. Ticks in this window stay in place,
+  /// ticked, so a quick run down the list cannot land on a row that just moved up.
+  static const _quiet = Duration(milliseconds: 800);
+
+  /// Ticked but not yet sent: still listed where they were, shown ticked. Tapping one again
+  /// unticks it before the list moves.
+  final Map<String, ShoppingItem> _ticked = {};
+  Timer? _settle;
+
+  @override
+  void dispose() {
+    _settle?.cancel();
+    _sendTicks();
+    super.dispose();
+  }
+
+  void _sendTicks() {
+    final pending = _ticked.values.toList();
+    _ticked.clear();
+    for (final item in pending) {
+      // Skip what another device has meanwhile ticked: sending again would untick it.
+      final now = widget.items.where((i) => i.id == item.id);
+      if (now.isNotEmpty && !now.first.checked) widget.onToggle(item);
+    }
+  }
+
+  void _tap(ShoppingItem item) {
+    // Unticking a ticked item in the trolley is sent at once: it is rare and it is a
+    // deliberate act there.
+    if (item.checked) {
+      widget.onToggle(item);
+      return;
+    }
+    setState(() {
+      if (_ticked.remove(item.id) == null) _ticked[item.id] = item;
+    });
+    _settle?.cancel();
+    if (_ticked.isNotEmpty) {
+      _settle = Timer(_quiet, () {
+        if (mounted) setState(_sendTicks);
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final categories = [
       for (final c
           in ref.watch(shoppingCategoriesProvider).value ??
               const <ShoppingCategory>[])
-        if (c.listId == listId) c,
+        if (c.listId == widget.listId) c,
     ];
     final members = {
       for (final m in ref.watch(membersProvider).value ?? const <Member>[])
         m.id: m,
     };
-    final open = items.where((i) => !i.checked).toList();
-    final trolley = items.where((i) => i.checked).toList();
+    // Items ticked in this window are still unchecked in the data, so they stay in `open`.
+    final open = widget.items.where((i) => !i.checked).toList();
+    final trolley = widget.items.where((i) => i.checked).toList();
 
     Widget tile(ShoppingItem i) => _ItemTile(
       item: i,
+      checked: i.checked || _ticked.containsKey(i.id),
       adder: members[i.addedBy],
-      onToggle: () => onToggle(i),
-      onLess: () => onLess(i),
-      onEdit: () => onEdit(i),
+      onToggle: () => _tap(i),
+      onLess: () => widget.onLess(i),
+      onEdit: () => widget.onEdit(i),
     );
 
     final known = categories.map((c) => c.id).toSet();
@@ -651,6 +707,7 @@ class _Header extends StatelessWidget {
 class _ItemTile extends StatelessWidget {
   const _ItemTile({
     required this.item,
+    required this.checked,
     required this.adder,
     required this.onToggle,
     required this.onLess,
@@ -658,6 +715,9 @@ class _ItemTile extends StatelessWidget {
   });
 
   final ShoppingItem item;
+
+  /// Shown ticked: the item's own state, or a tick still settling (see _ItemList).
+  final bool checked;
   final Member? adder;
   final VoidCallback onToggle;
   final VoidCallback onLess;
@@ -666,7 +726,7 @@ class _ItemTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final style = item.checked
+    final style = checked
         ? TextStyle(
             decoration: TextDecoration.lineThrough,
             color: Theme.of(context).disabledColor,
@@ -681,7 +741,7 @@ class _ItemTile extends StatelessWidget {
     // For screen readers the row is one checkbox named after the item; who added it
     // is a hint after the name, not a label before it.
     return Semantics(
-      checked: item.checked,
+      checked: checked,
       value: item.pending ? l10n.shoppingItemPending : null,
       hint: adder == null ? null : l10n.shoppingAddedBy(adder!.displayName),
       child: ListTile(
@@ -689,7 +749,7 @@ class _ItemTile extends StatelessWidget {
         onTap: onToggle,
         onLongPress: onEdit,
         leading: ExcludeSemantics(
-          child: Checkbox(value: item.checked, onChanged: (_) => onToggle()),
+          child: Checkbox(value: checked, onChanged: (_) => onToggle()),
         ),
         title: Row(
           mainAxisSize: MainAxisSize.min,
@@ -743,7 +803,7 @@ class _ItemTile extends StatelessWidget {
                   ),
                 ),
               ),
-            if (item.count > 1 && !item.checked)
+            if (item.count > 1 && !checked)
               IconButton(
                 tooltip: l10n.shoppingRemoveOne,
                 onPressed: onLess,

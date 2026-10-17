@@ -39,6 +39,7 @@ dependencies:
   sign_in_with_apple: ^8.2.0
   supabase_flutter: ^2.18.3
   timezone: ^0.11.2
+  url_launcher: ^6.3.3
   uuid: ^4.6.0
   zxing2: ^0.2.4
 

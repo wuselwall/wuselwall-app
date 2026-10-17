@@ -6200,6 +6200,18 @@ abstract class AppLocalizations {
   /// **'Too many attempts. Wait a few minutes and try again.'**
   String get householdNewErrRateLimited;
 
+  /// No description provided for @householdNewStalled.
+  ///
+  /// In en, this message translates to:
+  /// **'This is taking longer than usual. Please wait, or sign out and sign in again. Do not create the family a second time.'**
+  String get householdNewStalled;
+
+  /// No description provided for @setupPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy policy'**
+  String get setupPrivacy;
+
   /// No description provided for @householdMembersTitle.
   ///
   /// In en, this message translates to:
