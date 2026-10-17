@@ -68,38 +68,36 @@ Future<void> _pumpShopping(WidgetTester t, UiRegister register) async {
 
 void main() {
   for (final register in [UiRegister.kid, UiRegister.kiosk]) {
-    testWidgets(
-      '${register.name}: "Einkauf beenden" is at least 56x56',
-      (t) async {
-        await _pumpShopping(t, register);
+    testWidgets('${register.name}: "Einkauf beenden" is at least 56x56', (
+      t,
+    ) async {
+      await _pumpShopping(t, register);
 
-        final finishButton = find.ancestor(
-          of: find.text('Einkauf beenden'),
-          matching: find.byType(FilledButton),
-        );
-        expect(finishButton, findsOneWidget);
-        final size = t.getSize(finishButton);
-        expect(size.width, greaterThanOrEqualTo(56));
-        expect(size.height, greaterThanOrEqualTo(56));
-      },
-    );
-  }
-
-  testWidgets(
-    'kid: the shopping history icon action is at least 56x56',
-    (t) async {
-      await _pumpShopping(t, UiRegister.kid);
-
-      final historyButton = find.ancestor(
-        of: find.byIcon(Icons.history),
-        matching: find.byType(IconButton),
+      final finishButton = find.ancestor(
+        of: find.text('Einkauf beenden'),
+        matching: find.byType(FilledButton),
       );
-      expect(historyButton, findsOneWidget);
-      final size = t.getSize(historyButton);
+      expect(finishButton, findsOneWidget);
+      final size = t.getSize(finishButton);
       expect(size.width, greaterThanOrEqualTo(56));
       expect(size.height, greaterThanOrEqualTo(56));
-    },
-  );
+    });
+  }
+
+  testWidgets('kid: the shopping history icon action is at least 56x56', (
+    t,
+  ) async {
+    await _pumpShopping(t, UiRegister.kid);
+
+    final historyButton = find.ancestor(
+      of: find.byIcon(Icons.history),
+      matching: find.byType(IconButton),
+    );
+    expect(historyButton, findsOneWidget);
+    final size = t.getSize(historyButton);
+    expect(size.width, greaterThanOrEqualTo(56));
+    expect(size.height, greaterThanOrEqualTo(56));
+  });
 
   testWidgets(
     'kiosk: the shopping history icon is not shown (kiosk has no detail nav)',

@@ -1,5 +1,5 @@
 # Household data, security (RLS) and Edge Function changes get an executable gate before
-# the pilot rollout (specs/03, ADR-013). Three jobs:
+# the pilot rollout (specs/03, ADR-013). Four jobs:
 #
 #   changes           always runs, on a GitHub-hosted runner, for every pull request. It
 #                     only reads `git diff` between the PR's base and head commit -- it
@@ -9,7 +9,7 @@
 #                     so a release is never gated on an imperfect path list (ADR-011's "run
 #                     it by hand on a branch before its migration goes to a live server").
 #
-#   edge-functions    deno test for every supabase/functions/_shared/*_test.ts (not a
+#   edge-functions    deno test discovers all tests below supabase/functions/ (not a
 #                     hand-picked subset). No Docker, no network permission at runtime:
 #                     the code under test never calls out, and npm/jsr modules resolve
 #                     from Deno's own cache rather than a node_modules the repository
@@ -121,7 +121,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed # v2.0.5
         with: { deno-version: '2.5.6' }
-      - run: deno test supabase/functions/_shared/ --allow-env --allow-read --node-modules-dir=none --lock=deno.lock --frozen
+      - run: deno test supabase/functions/ --allow-env --allow-read --node-modules-dir=none --lock=deno.lock --frozen
 
   backend:
     needs: changes
@@ -148,7 +148,7 @@ jobs:
       # realtime. Needs studio-less start from above; uses the public local dev key.
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with: { flutter-version-file: app/pubspec.yaml, cache: true }
-      - run: flutter pub get --enforce-lockfile && flutter test test/integration --dart-define-from-file=env/ci.json
+      - run: flutter pub get --enforce-lockfile && flutter test test/integration --dart-define-from-file=env/ci.json -j 1
         working-directory: app
 
   # The single required status check for branch protection (see the file header). Always

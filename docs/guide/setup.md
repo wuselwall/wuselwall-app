@@ -6,6 +6,9 @@ Auf dem Startbildschirm beginnt alles. Du meldest dich mit deinem Konto an, trit
 
 <Shot name="setup-start" alt="Startbildschirm von WuselWall" />
 
+Unten öffnet **Datenschutz** die Datenschutzerklärung in deinem Browser. Ohne Verbindung
+ist der Link deaktiviert; die Erklärung ist nicht in der App gespeichert.
+
 Der Startbildschirm hat drei Wege:
 
 - **Mit E-Mail fortfahren**, auch **Mit Apple fortfahren** oder **Mit Google fortfahren**, wenn dein Gerät sie anbietet: für dich als Erwachsene:r, auf deinem eigenen Handy.
@@ -34,6 +37,11 @@ Wenn dein Konto noch zu keiner Familie gehört, öffnet WuselWall **Neue Familie
 4. Den **Gründungscode**, falls euer Server einen verlangt. Den bekommst du von der Person, die den Server betreibt.
 
 <Shot name="new-family" alt="Formular „Neue Familie“" />
+
+Bleibt die App nach dem Anlegen länger als 15 Sekunden stehen, zeigt sie einen Hinweis.
+Du kannst dann **Ich wurde eingeladen** wählen oder dich **abmelden**. **Familie anlegen**
+bleibt gesperrt, damit nicht versehentlich eine zweite Familie entsteht. Kommt die
+Bestätigung später, geht die App von selbst weiter.
 
 Tippe auf **Familie anlegen**. Dann kommt die Seite **Wer gehört noch zu euch?**: Trage Kinder und weitere Erwachsene mit Namen ein, damit sie in den Listen auftauchen. Erwachsene kannst du auch später einladen; mit **Überspringen** geht es sofort weiter.
 
