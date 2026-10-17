@@ -596,32 +596,14 @@ class AppLocalizationsDe extends AppLocalizations {
       'Diese Person gehört nicht mehr zum Haushalt. Die Änderung wurde nicht gespeichert.';
 
   @override
-  String get doorApple => 'Mit Apple fortfahren';
-
-  @override
-  String get doorGoogle => 'Mit Google fortfahren';
-
-  @override
   String get doorEmail => 'Mit E-Mail fortfahren';
 
   @override
   String get doorOr => 'oder';
 
   @override
-  String get errProviderFailed =>
-      'Das hat nicht geklappt. Versuch es nochmal oder melde dich mit deiner E-Mail an.';
-
-  @override
   String get errSignupDisabled =>
-      'Zu dieser Adresse gibt es noch kein WuselWall-Konto. Melde dich mit E-Mail und Passwort an und verbinde Apple oder Google dann unter Einstellungen → Anmeldung.';
-
-  @override
-  String get errIdentityAlreadyExists =>
-      'Dieses Apple- oder Google-Konto ist schon mit einem anderen WuselWall-Konto verbunden.';
-
-  @override
-  String get errLastSignInMethod =>
-      'Das ist deine einzige Anmeldemethode, darum kann sie nicht entfernt werden.';
+      'Zu dieser Adresse gibt es noch kein WuselWall-Konto. Bitte jemanden aus deiner Familie um eine Einladung.';
 
   @override
   String get errEmailExists =>
@@ -632,35 +614,6 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get signInMethodEmail => 'E-Mail-Code';
-
-  @override
-  String get signInMethodApple => 'Apple';
-
-  @override
-  String get signInMethodGoogle => 'Google';
-
-  @override
-  String get signInMethodNotConnected => 'Nicht verbunden';
-
-  @override
-  String get signInMethodConnect => 'Verbinden';
-
-  @override
-  String get signInMethodRemove => 'Entfernen';
-
-  @override
-  String get signInMethodLinkElsewhere =>
-      'Verbinden geht in der App auf deinem Handy.';
-
-  @override
-  String signInMethodConnected(String provider) {
-    return '$provider ist verbunden.';
-  }
-
-  @override
-  String signInMethodRemoveConfirm(String provider) {
-    return '$provider entfernen? Du kannst dich dann nicht mehr damit anmelden.';
-  }
 
   @override
   String boardWeekNumber(int week) {
@@ -3996,7 +3949,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get accountDeleteExplain =>
-      'Dein Konto und seine Anmeldemethoden werden gelöscht, und du wirst überall abgemeldet. Dein Profil bleibt mit allem, was du getan hast, in der Familie. Der Apple-Zugriff wird widerrufen.';
+      'Dein Konto wird gelöscht, und du wirst überall abgemeldet. Dein Profil bleibt mit allem, was du getan hast, in der Familie.';
 
   @override
   String get accountDeleteBlocked =>

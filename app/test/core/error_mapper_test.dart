@@ -38,16 +38,7 @@ void main() {
       expect(mapError(const AuthException('nope')), isA<AuthFailure>());
     });
 
-    test('a redirect error keeps Supabase\'s specific code', () {
-      // getSessionFromUrl puts `error` in code and `error_code` in statusCode.
-      final failure = mapError(
-        const AuthException(
-          'Signups not allowed',
-          code: 'access_denied',
-          statusCode: 'signup_disabled',
-        ),
-      );
-      expect(failure.code, 'signup_disabled');
+    test('an auth error keeps its code', () {
       expect(
         mapError(
           const AuthException('x', code: 'otp_expired', statusCode: '403'),

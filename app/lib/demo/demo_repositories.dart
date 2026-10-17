@@ -14,9 +14,7 @@ import 'package:wuselwall/features/household/data/household_leave_repository.dar
 import 'package:wuselwall/features/household/data/household_onboarding_repository.dart';
 import 'package:wuselwall/features/household/domain/household_models.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
-import 'package:wuselwall/features/identity/data/sign_in_methods_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
-import 'package:wuselwall/features/identity/domain/sign_in_method.dart';
 import 'package:wuselwall/features/settings/data/household_settings_repository.dart';
 import 'package:wuselwall/features/settings/domain/household_setting.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
@@ -59,6 +57,10 @@ class DemoIdentityRepository implements IdentityRepository {
 
   @override
   bool hasPassword() => true;
+
+  @override
+  String? accountEmail() =>
+      '${DemoData.name(DemoData.papa).toLowerCase()}@example.org';
 
   @override
   Future<Result<void>> markSignInChoice(String choice) async => const Ok(null);
@@ -124,63 +126,6 @@ class DemoIdentityRepository implements IdentityRepository {
   dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError(
     '${invocation.memberName} is not part of the demo',
   );
-}
-
-/// Apple and Google as on an iPhone: both offered, Apple already connected.
-class DemoSignInMethodsRepository implements SignInMethodsRepository {
-  final _linked = [
-    SignInMethod(
-      identityId: 'demo-email',
-      provider: SignInMethodKind.email,
-      email: _email,
-    ),
-    SignInMethod(
-      identityId: 'demo-apple',
-      provider: SignInMethodKind.apple,
-      email: _email,
-    ),
-  ];
-
-  static String get _email =>
-      '${DemoData.name(DemoData.papa).toLowerCase()}@example.org';
-
-  @override
-  List<SignInProvider> available() => const [
-    SignInProvider.apple,
-    SignInProvider.google,
-  ];
-
-  @override
-  ProviderRoute? route(SignInProvider provider) => ProviderRoute.native;
-
-  @override
-  bool canLink(SignInProvider provider) => true;
-
-  @override
-  Future<Result<void>> signIn(SignInProvider provider) async => const Ok(null);
-
-  @override
-  Stream<Failure> authErrors() => const Stream.empty();
-
-  @override
-  Future<Result<List<SignInMethod>>> methods() async => Ok(List.of(_linked));
-
-  @override
-  Future<Result<bool>> link(SignInProvider provider) async {
-    _linked.add(
-      SignInMethod(
-        identityId: 'demo-${provider.name}',
-        provider: provider.kind,
-      ),
-    );
-    return const Ok(true);
-  }
-
-  @override
-  Future<Result<void>> unlink(String identityId) async {
-    _linked.removeWhere((m) => m.identityId == identityId);
-    return const Ok(null);
-  }
 }
 
 class DemoShoppingRepository implements ShoppingRepository {
@@ -1324,9 +1269,6 @@ class DemoHouseholdOnboardingRepository
 /// Deleting the account and resetting a second factor in the demo: each call succeeds and
 /// nothing is stored. The demo account is an e-mail account, and its re-sign-in is always fresh.
 class DemoAccountAdminRepository implements AccountAdminRepository {
-  @override
-  String? currentProvider() => 'email';
-
   @override
   bool hasRecentSignIn() => true;
 

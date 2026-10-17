@@ -10,8 +10,8 @@
 #   server, CI and a laptop stack run the same Postgres 15, GoTrue, PostgREST and Realtime.
 # - Exposure: the gateway listens on the Docker bridge address only (nginx reaches it,
 #   the home network does not); Postgres on 127.0.0.1 only; no pooler, no Mailpit.
-# - Auth: the settings of supabase/config.toml's [auth] section, as GoTrue variables,
-#   plus Sign in with Apple and Google, which CLI stacks leave off.
+# - Auth: the settings of supabase/config.toml's [auth] section, as GoTrue variables. No
+#   external (OAuth) provider and no identity linking: sign-in is by e-mail or passkey only.
 # - Keys: JWKS everywhere, so tokens signed with the old HS256 secret stay valid next to
 #   the ES256 key pair (infra/supabase/make-env.mjs).
 
@@ -31,19 +31,6 @@ services:
       # Sign with the EC key, verify the legacy HS256 secret too.
       GOTRUE_JWT_KEYS: ${JWT_KEYS}
       GOTRUE_PASSWORD_MIN_LENGTH: 10
-      # Settings → Sign-in links Apple or Google to an existing account (specs/20).
-      GOTRUE_SECURITY_MANUAL_LINKING_ENABLED: "true"
-      # Sign in with Apple and Google (specs/10 §4). CLIENT_ID lists every accepted ID-token
-      # audience, comma-separated, the redirect client first: Apple "<Services ID>,<bundle
-      # ID>", Google "<web client>,<iOS client>". Off until the stack's .env sets them.
-      GOTRUE_EXTERNAL_APPLE_ENABLED: ${APPLE_ENABLED:-false}
-      GOTRUE_EXTERNAL_APPLE_CLIENT_ID: ${APPLE_CLIENT_IDS:-}
-      GOTRUE_EXTERNAL_APPLE_SECRET: ${APPLE_SECRET:-}
-      GOTRUE_EXTERNAL_APPLE_REDIRECT_URI: ${API_EXTERNAL_URL}/callback
-      GOTRUE_EXTERNAL_GOOGLE_ENABLED: ${GOOGLE_ENABLED:-false}
-      GOTRUE_EXTERNAL_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_IDS:-}
-      GOTRUE_EXTERNAL_GOOGLE_SECRET: ${GOOGLE_CLIENT_SECRET:-}
-      GOTRUE_EXTERNAL_GOOGLE_REDIRECT_URI: ${API_EXTERNAL_URL}/callback
       GOTRUE_SECURITY_REFRESH_TOKEN_ROTATION_ENABLED: "true"
       GOTRUE_SECURITY_REFRESH_TOKEN_REUSE_INTERVAL: 10
       GOTRUE_MAILER_SECURE_EMAIL_CHANGE_ENABLED: "true"
@@ -122,11 +109,11 @@ services:
       SCW_REGION: ${SCW_REGION:-fr-par}
       MAIL_FROM: ${MAIL_FROM:-}
       MAIL_FROM_NAME: ${MAIL_FROM_NAME:-WuselWall}
-      # Sign in with Apple, server side (supabase/functions/apple-token and account-delete,
-      # specs/20 "Server side"). Empty = no Apple on this server, and the apps ignore it. The
-      # key (.p8) is stored with its line breaks as \n. APPLE_TOKEN_KEY encrypts the stored Apple
-      # refresh tokens: it is generated once with the stack, and must never change, or the
-      # tokens cannot be read to revoke them.
+      # Revoking Apple's access when an account is deleted (supabase/functions/account-delete),
+      # for servers that offered Sign in with Apple before it was removed and still hold Apple
+      # refresh tokens. Empty = nothing to revoke. The key (.p8) is stored with its line breaks
+      # as \n. APPLE_TOKEN_KEY decrypts the stored tokens: it was generated once with the stack
+      # and must never change, or the tokens cannot be read to revoke them.
       APPLE_TEAM_ID: ${APPLE_TEAM_ID:-}
       APPLE_KEY_ID: ${APPLE_KEY_ID:-}
       APPLE_PRIVATE_KEY: ${APPLE_PRIVATE_KEY:-}

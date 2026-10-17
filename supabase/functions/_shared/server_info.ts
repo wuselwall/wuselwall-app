@@ -3,7 +3,7 @@
 // function, and by servers with a domain of their own also at
 // /.well-known/wuselwall.json (a proxy rewrite to the same function).
 //
-// Pure: index.ts gathers the three inputs, this module checks and shapes them.
+// Pure: index.ts gathers the inputs, this module checks and shapes them.
 
 /** The document's own format version, independent of the server's api_version. */
 export const DISCOVERY_FORMAT = 1;
@@ -16,12 +16,6 @@ export type ServerInfoRow = {
   features: string[];
 };
 
-/** The part of Auth's public `/auth/v1/settings` the front door cares about. */
-export type AuthSettings = {
-  external?: Record<string, boolean>;
-  disable_signup?: boolean;
-};
-
 export type DiscoveryDocument = {
   wuselwall: number;
   /** Omitted when this server cannot know its public address: the app then uses the
@@ -31,9 +25,10 @@ export type DiscoveryDocument = {
   api_version: number;
   min_app_version: string;
   household_creation: string;
-  /** Sign-in through Auth's redirect, as the operator configured it. Native sheets and
-   * passkeys are decided by the app (WW_FIRST_PARTY_HOSTS), never by a server. */
-  sign_in: { password: true; apple: boolean; google: boolean };
+  /** E-mail (a code or a password) is the only sign-in. Passkeys are decided by the app
+   * (WW_FIRST_PARTY_HOSTS), never by a server. Apps from before social sign-in was
+   * removed read the absent `apple` and `google` as off. */
+  sign_in: { password: true };
   features: string[];
 };
 
@@ -88,7 +83,6 @@ export function checkRow(row: unknown): ServerInfoRow {
 
 export function discoveryDocument(
   row: ServerInfoRow,
-  auth: AuthSettings,
   key: string,
   url: string | undefined,
 ): DiscoveryDocument {
@@ -99,11 +93,7 @@ export function discoveryDocument(
     api_version: row.api_version,
     min_app_version: row.min_app_version,
     household_creation: row.household_creation,
-    sign_in: {
-      password: true,
-      apple: auth.external?.["apple"] === true,
-      google: auth.external?.["google"] === true,
-    },
+    sign_in: { password: true },
     features: row.features,
   };
 }

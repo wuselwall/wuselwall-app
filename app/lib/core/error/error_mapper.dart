@@ -15,7 +15,7 @@ Failure mapError(Object error, [StackTrace? stackTrace]) {
 
   final failure = switch (error) {
     PostgrestException() => _fromPostgrest(error),
-    AuthException() => AuthFailure(code: _authCode(error), cause: error),
+    AuthException() => AuthFailure(code: error.code, cause: error),
     SocketException() ||
     TimeoutException() ||
     HttpException() ||
@@ -27,14 +27,6 @@ Failure mapError(Object error, [StackTrace? stackTrace]) {
     logError('Unmapped error', error: error, stackTrace: stackTrace);
   }
   return failure;
-}
-
-/// An error carried back in a redirect URL has the OAuth `error` (for example
-/// `access_denied`) in [AuthException.code] and Supabase's specific `error_code` (for
-/// example `signup_disabled`) in [AuthException.statusCode]; the specific one wins.
-String? _authCode(AuthException e) {
-  final status = e.statusCode;
-  return status != null && int.tryParse(status) == null ? status : e.code;
 }
 
 Failure _fromPostgrest(PostgrestException e) {
