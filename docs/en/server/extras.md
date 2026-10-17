@@ -18,18 +18,9 @@ For this the server needs an SMTP service, a provider that sends mail for it. A 
 
 **At Supabase:** **Authentication → Emails → SMTP Settings**, with the same details. Supabase's built-in email is meant for trying things out and sends only a few mails an hour.
 
-## Sign in with Apple and Google {#apple-and-google}
+## Revoking Apple access (accounts from before, only) {#apple-revocation}
 
-**Our advice: leave it out.** Email and password plus the two-factor code ([Security](/en/settings/security)) keep an account just as safe.
-
-Technically it works on any server, but only through the sign-in window in the browser, with **your own** Apple and Google credentials:
-
-- **Apple** requires a membership in the Apple Developer Program (USD 99 a year), a *Services ID* and a key. The secret made from them **expires every six months** and must be renewed, or signing in with Apple stops working.
-- **Google** requires a Google Cloud project with an OAuth consent screen and an OAuth client of type *Web*.
-
-The return address for both is `https://api.example.org/auth/v1/callback` (at Supabase `https://<project-id>.supabase.co/auth/v1/callback`). At home the values go into `stack/.env` (`APPLE_ENABLED`, `APPLE_CLIENT_IDS`, `APPLE_SECRET`, `GOOGLE_ENABLED`, `GOOGLE_CLIENT_IDS`, `GOOGLE_CLIENT_SECRET`, then `./wuselwall compose up -d auth`); at Supabase under **Authentication → Providers**. The app asks the server what it offers and shows the buttons by itself.
-
-Signing in directly on the phone (without a browser window) and passkeys are not available on self-hosted servers: a sign-in token that Apple or Google issues for the app should never reach a server that could use it elsewhere.
+WuselWall no longer offers sign-in with Apple or Google. Only if your server still has accounts from before that change does it need access to Apple: when such an account is deleted, WuselWall revokes its Apple access there. For that the server needs just these five values in `stack/.env`: `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_PRIVATE_KEY`, `APPLE_CLIENT_ID` and `APPLE_TOKEN_KEY`. Without them the server cannot revoke access at Apple. Never change `APPLE_TOKEN_KEY`: the stored Apple tokens are encrypted with it.
 
 ## Public and school holidays {#holidays}
 

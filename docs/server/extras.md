@@ -18,18 +18,9 @@ Dafür braucht der Server einen SMTP-Dienst, also einen Anbieter, der Mails vers
 
 **Bei Supabase:** **Authentication → Emails → SMTP Settings**, dieselben Angaben. Der eingebaute Mail-Versand von Supabase ist nur zum Ausprobieren gedacht und schickt nur wenige Mails pro Stunde.
 
-## Anmelden mit Apple und Google {#anmelden-mit-apple-und-google}
+## Apple-Zugang widerrufen (nur für ältere Konten) {#apple-widerruf}
 
-**Unser Rat: weglassen.** Mit E-Mail und Passwort, dazu dem Zwei-Faktor-Code ([Sicherheit](/settings/security)), ist ein Konto genauso sicher.
-
-Technisch geht es auf jedem Server, aber nur über das Anmeldefenster im Browser, mit **euren eigenen** Zugängen bei Apple und Google:
-
-- **Apple** verlangt eine Mitgliedschaft im Apple Developer Program (99 US-Dollar im Jahr), eine *Services ID* und einen Schlüssel. Das Geheimnis daraus läuft **alle sechs Monate** ab und muss erneuert werden, sonst geht die Anmeldung mit Apple nicht mehr.
-- **Google** verlangt ein Projekt in der Google Cloud mit einem OAuth-Zustimmungsbildschirm und einem OAuth-Client vom Typ *Web*.
-
-Die Rücksprungadresse für beide ist `https://api.example.org/auth/v1/callback` (bei Supabase `https://<projekt-id>.supabase.co/auth/v1/callback`). Die Werte kommen zu Hause in `stack/.env` (`APPLE_ENABLED`, `APPLE_CLIENT_IDS`, `APPLE_SECRET`, `GOOGLE_ENABLED`, `GOOGLE_CLIENT_IDS`, `GOOGLE_CLIENT_SECRET`, danach `./wuselwall compose up -d auth`) und bei Supabase unter **Authentication → Providers**. Die App fragt den Server, was er anbietet, und zeigt die Knöpfe dann von selbst.
-
-Die Anmeldung direkt im Handy (ohne Browserfenster) und Passkeys gibt es auf selbst betriebenen Servern nicht: Ein Anmeldeschlüssel, den Apple oder Google für die App ausstellt, soll nie bei einem Server landen, der ihn anderswo einsetzen könnte.
+Anmelden mit Apple und Google gibt es in WuselWall nicht mehr. Nur wenn auf eurem Server noch Konten aus der Zeit davor bestehen, braucht der Server Zugang bei Apple: Löscht jemand so ein Konto, widerruft WuselWall dort den Apple-Zugang. Dafür braucht der Server in `stack/.env` nur diese fünf Werte: `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_PRIVATE_KEY`, `APPLE_CLIENT_ID` und `APPLE_TOKEN_KEY`. Ohne sie kann der Server den Zugang bei Apple nicht widerrufen. Den Wert `APPLE_TOKEN_KEY` nie ändern: mit ihm sind die gespeicherten Apple-Tokens verschlüsselt.
 
 ## Feiertage und Schulferien {#feiertage}
 

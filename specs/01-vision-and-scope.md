@@ -59,7 +59,7 @@ cut lines):
 
 Plus the cross-cutting essentials: per-person identity, four device classes, a secure
 self-hosted deployment, an MCP endpoint for assistants, and *(since 2026-10-11)*
-**self-service onboarding**: adults sign up with Apple, Google or email, create or join a
+**self-service onboarding**: adults sign up with email, create or join a
 household, and connect shared devices from their phone ([20](20-onboarding.md)).
 
 ## Explicitly out of scope

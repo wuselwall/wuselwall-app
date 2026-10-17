@@ -15,8 +15,7 @@ second adult decides it in the first sixty seconds. Everything below is ordered 
 1. **One door for adults.** Signing up and signing in are the same screen and the same
    flow. Nobody has to know whether they already have an account.
 2. **Ask only what cannot be inferred or deferred.**
-   *Inferred:* timezone and language (from the device), the person's name (from Apple or
-   Google), their colour (the next free one in the palette), the device's name ("Daniels
+   *Inferred:* timezone and language (from the device), their colour (the next free one in the palette), the device's name ("Daniels
    iPhone"). *Deferred:* the guardian PIN (until the first shared device exists), avatars,
    birthdays, presence baselines, a second factor, a passkey, push permission.
 3. **Nobody types on a shared device.** Not a password, not a code, not a name. The wall
@@ -34,7 +33,7 @@ second adult decides it in the first sixty seconds. Everything below is ordered 
 
 | | Journey | Who | Device | Target (NFR-17) |
 |---|---|---|---|---|
-| J1 | **Start a family** | The first adult | Their own phone or laptop | ≤ 3 screens after sign-in, ≤ 90 s with Apple/Google, no typing beyond names |
+| J1 | **Start a family** | The first adult | Their own phone or laptop | ≤ 3 screens after sign-in, ≤ 90 s, no typing beyond names |
 | J2 | **Join a family** | An invited adult (the other parent, a grandparent, an au pair) | Their own phone | ≤ 2 screens after sign-in, ≤ 60 s from tapping the link |
 | J3 | **Connect a shared device** | A guardian, holding their phone | Wall display, children's iPad, a family tablet | Zero typing on the shared device, ≤ 30 s of the guardian's time |
 | J4 | **Come back** | Any adult with an account | A new or reset phone, the laptop | Sign-in, then straight to Today |
@@ -55,12 +54,6 @@ What every device shows before it belongs to a household:
 │   Der Familienplan für die Küchenwand│
 │                                      │
 │  ┌────────────────────────────────┐  │
-│  │ A Mit Apple fortfahren         │  │   ← first on iOS and iPadOS
-│  └────────────────────────────────┘  │
-│  ┌────────────────────────────────┐  │
-│  │ G Mit Google fortfahren        │  │   ← first on Android and the web
-│  └────────────────────────────────┘  │
-│  ┌────────────────────────────────┐  │
 │  │ ✉ Mit E-Mail fortfahren        │  │
 │  └────────────────────────────────┘  │
 │                                      │
@@ -73,10 +66,7 @@ What every device shows before it belongs to a household:
 └──────────────────────────────────────┘
 ```
 
-- The three sign-in buttons serve sign-up and sign-in alike.
-- The Apple and Google buttons follow those companies' branding rules (shape, logo,
-  black/white for Apple). Those are the only colours in the app not taken from the
-  design system. They live in `palette.dart` as brand tokens like every other colour.
+- The email button serves sign-up and sign-in alike.
 - **"Familien-Tablet oder Wanddisplay verbinden"** is the shared-device path (J3). It is
   deliberately secondary: the phone in someone's hand is almost always their own.
 - **"Ich habe einen Einladungscode"** takes a typed or scanned invitation code (J2 when
@@ -92,26 +82,9 @@ What every device shows before it belongs to a household:
   There is no separate "Als Erziehungsberechtigter anmelden": every adult sign-in is in the
   top group.
 
-### With Apple
+### Sign-in methods
 
-- **iOS/iPadOS:** native sheet (`sign_in_with_apple`), then
-  `signInWithIdToken(provider: apple, idToken, nonce)`. **Android and web:** Supabase's
-  OAuth redirect, returning through `ch.goomba.wuselwall://login-callback/` (the web
-  build returns to its own origin).
-- Scopes `name` and `email`. Apple sends the name **only on the first authorisation**,
-  so the app writes it into the user's metadata immediately. It prefills J1 and J2 from
-  there.
-- "Hide My Email" relay addresses work like any other address. They only defeat the
-  automatic invitation match (J2), so the code path covers them.
-- Cancelling the sheet returns to the front door without a message. Cancelling is a
-  choice, not an error.
-
-### With Google
-
-- **Android and iOS:** native (`google_sign_in`), then
-  `signInWithIdToken(provider: google, idToken)`. **Web:** Supabase's OAuth redirect.
-- Scopes `openid email profile` only. WuselWall never asks Google for calendar or
-  contacts access ([ADR-001](adr/ADR-001-calendar-backbone.md)).
+Sign-in with Apple and Google was removed on 2026-10-17 (decision log in [00](00-brief-and-decisions.md)). Adults sign in with an email code or a password. The app carries neither Apple's nor Google's sign-in library, and the server configures no external provider.
 
 ### With email
 
@@ -187,26 +160,16 @@ an invitation or pairing link, which carries the server:
     SMTP autoconfirms addresses, so E1 there signs up and signs in with a password, H0's
     email match is off, and a guardian resets a forgotten password with a one-time code
     ([Q48](14-open-questions.md), [16, step 10.4](16-setup-plan.md#step-10--journey-gaps-before-launch-m15));
-  - Apple and Google through the web redirect, if the operator registered their own
-    clients with Apple and Google.
-
-  Native Apple and Google sign-in and passkeys appear only on the first-party servers
+  Passkeys appear only on the first-party servers
   named at build time (`WW_FIRST_PARTY_HOSTS`). Otherwise a hostile server could replay
   tokens addressed to our app to a first-party server (ADR-018, decision 6). The front door simply shows fewer buttons. It never
   shows a button that will fail.
 
 ### Several ways into one account
 
-The same verified email from Google and from an email code is **one account**: Supabase
-Auth links the identities automatically. In **Einstellungen → Konto → Anmeldung** an
-adult sees their methods (Apple, Google, email code, password, passkeys), adds another
-(manual identity linking, which also covers an Apple relay address), sets or changes a
-password, and removes any method but the last.
-
-A personal device is bound to its Auth session ([08](08-users-auth-permissions.md)), and
-Supabase answers a link with a *new* session. The app therefore links through the native
-sheet only, keeps its own session, signs the new one out at once and refreshes. On the web,
-and for Apple on Android, Settings says to link from the phone app instead.
+A verified email address is **one account**: the email code and the password sign in to the same
+account. In **Einstellungen → Konto → Anmeldung** an adult sees their methods (email code, password,
+passkeys), sets or changes the password, and removes any method but the last.
 
 ## J1 — Start a family
 
@@ -229,8 +192,8 @@ creates a second, empty household.
 
 | Field | Prefill | Notes |
 |---|---|---|
-| Familienname | "Familie ‹family name›" from Apple/Google, else empty | Required. With Apple or Google it is usually prefilled, and the screen needs only a tap |
-| Dein Name | Given name from Apple/Google | Editable |
+| Familienname | Empty | Required |
+| Dein Name | Empty | Editable |
 | Deine Farbe | The first palette colour | A row of swatches; the choice is visible at once in the app bar |
 | — | "Zeitzone Europa/Berlin · Sprache Deutsch — von deinem Gerät · Ändern" | One quiet line; changed in Settings later |
 | Gründungscode | — | **Only while household creation is in `code` mode** (see [below](#household-creation-open-or-by-code)) |
@@ -418,7 +381,7 @@ anyway.
 
 | Action | Where, by whom | Effect |
 |---|---|---|
-| **Konto löschen** | Einstellungen → Konto; any adult; recent sign-in (≤ 5 min, else sign in again) | The Auth user and all its sessions are deleted; its personal devices are revoked. The **profile stays** as a non-account family member, with its history, unless also removed. Sign in with Apple tokens are revoked with Apple. The last guardian *with an account* cannot do this while other members exist: they delete the household or hand over first |
+| **Konto löschen** | Einstellungen → Konto; any adult; recent sign-in (≤ 5 min, else sign in again) | The Auth user and all its sessions are deleted; its personal devices are revoked. The **profile stays** as a non-account family member, with its history, unless also removed. For an account created before sign-in with Apple was removed, its Apple access is revoked at Apple too. The last guardian *with an account* cannot do this while other members exist: they delete the household or hand over first |
 | **Familie verlassen** | Einstellungen → Konto; any adult who is not the last guardian | The account is unlinked from the profile; the account remains and can start or join another family |
 | **Familie löschen** | Einstellungen → Familie; a guardian on a personal device; recent sign-in; type the family's name | Every device is signed out at once and the household is marked deleted. **Purged after 14 days** by a job; until then any of its guardians can sign in and choose *Wiederherstellen*. Backups age out within their retention, which the privacy policy states |
 | **Daten exportieren** | Einstellungen → Familie; guardian on a personal device | A JSON file of the household's data (GDPR Art. 20). Built 2026-10-14: secrets (PIN and password hashes, token hashes, Auth ids) and technical bookkeeping are left out, devices appear by label only. Required before the opening gate, not before |
@@ -475,8 +438,6 @@ languages, and reviewed in the screenshots ([docs](../docs/)).
 
 | Situation | What the person sees |
 |---|---|
-| Apple/Google sheet cancelled | The front door again, no message |
-| Apple/Google error | "Das hat nicht geklappt. Versuch es nochmal oder nimm die E-Mail." |
 | Wrong email code | "Der Code stimmt nicht." The field clears; after five wrong codes: "Fordere einen neuen Code an." |
 | Expired email code | "Der Code ist abgelaufen." with **Neuen Code senden** directly under it |
 | Invitation expired, used or withdrawn | "Diese Einladung gilt nicht mehr. Bitte ‹Daniel› um eine neue." |
@@ -493,8 +454,6 @@ files are the source of truth once built.
 | Key (indicative) | Deutsch | English |
 |---|---|---|
 | `doorTagline` | Der Familienplan für die Küchenwand | The family plan for the kitchen wall |
-| `doorApple` | Mit Apple fortfahren | Continue with Apple |
-| `doorGoogle` | Mit Google fortfahren | Continue with Google |
 | `doorEmail` | Mit E-Mail fortfahren | Continue with email |
 | `doorPairDevice` | Familien-Tablet oder Wanddisplay verbinden | Connect a family tablet or wall display |
 | `doorInviteCode` | Ich habe einen Einladungscode | I have an invitation code |
@@ -523,12 +482,8 @@ Indicative. Migrations, functions and policies follow the rules in
 [03](03-architecture.md) and are specified in [16, step 9](16-setup-plan.md#step-9--onboarding-m10).
 
 **Supabase Auth configuration.**
-- `enable_signup = true`, `enable_anonymous_sign_ins = false`, `enable_manual_linking = true`.
+- `enable_signup = true`, `enable_anonymous_sign_ins = false`.
 - `[auth.email]`: `otp_length = 6`, `otp_expiry = 600`, `max_frequency = "60s"`.
-- `[auth.external.apple]` and `[auth.external.google]` enabled on the first-party servers. Other servers enable them only with their operator's own clients (redirect only, [ADR-018](adr/ADR-018-self-hosted-only.md)).
-  Client IDs list the web client *and* the native app identifiers. Secrets come from the
-  stack's `.env` ([10 §4](10-deployment-and-ops.md#4-sign-in-providers-and-mail)). CLI stacks
-  keep them off: CI has no clients, and neither provider redirects to 127.0.0.1.
 - `[auth.rate_limit]` set deliberately: email sends, verifications and sign-ins per IP.
   These come on top of the Cloudflare rules (S9 in [19](19-security-and-architecture-review.md)).
 - `[auth.email.smtp]` pointing at the provider chosen in [Q41](14-open-questions.md).
@@ -556,17 +511,14 @@ the founder codes; `household` gains `created_by_profile_id` and `deleted_at`.
 | `pairing_approve(actor, code, label, class, register, profile?)` | guardian, personal device | Binds the request; refuses expired or claimed ones |
 | `getting_started` (view) / `getting_started_dismiss(actor, key)` | adult | The card |
 | `account_leave`, `household_delete(actor, confirm_name)`, `household_restore` | as in J6 | |
-| `account-delete` (Edge Function) | signed-in | Deletes the Auth user with the Admin API and revokes the Apple token: outbound HTTP, so not SQL |
+| `account-delete` (Edge Function) | signed-in | Deletes the Auth user with the Admin API and, for accounts from before sign-in with Apple was removed, revokes their Apple access: outbound HTTP, so not SQL |
 | `guardian_reset_mfa(actor, profile)` | guardian, personal device | Removes another guardian's TOTP factor (Admin API in an Edge Function; see ADR-013's portability note) |
 
 After this step, anon can call `health`, `server_info`, `invitation_preview`,
 `pairing_start` and `pairing_poll`, plus `enrol_device` for one release. `setup_household` goes. The catalogue
 test (`040_catalogue.test.sql`) is updated to exactly this list.
 
-**Apple token revocation** needs Apple's refresh token, which `signInWithIdToken` does not
-keep. On first sign-in with Apple, the app passes Apple's authorisation code to a small
-Edge Function. The function exchanges it for a refresh token and stores it encrypted
-against the user. `account-delete` uses it to call Apple's revoke endpoint.
+**Apple access revocation** (accounts created before sign-in with Apple was removed only): `account-delete` revokes the Apple refresh token stored for such an account, encrypted with `APPLE_TOKEN_KEY`. No new Apple tokens are stored.
 
 ### Email
 
