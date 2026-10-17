@@ -21,8 +21,7 @@ Responsive layout still applies within each register — the adult register must
 phone — but the register itself is a device property.
 
 Before a device belongs to a household it shows the **front door**
-([20](20-onboarding.md#the-front-door)), the same on every device: continue with Apple,
-Google or email, or connect this device as a family tablet or wall display. The register
+([20](20-onboarding.md#the-front-door)), the same on every device: continue with email, or connect this device as a family tablet or wall display. The register
 is decided by what happens there: an adult's sign-in gives `adult`, and the pairing choice
 on the parent's phone gives `kid` or `kiosk`.
 

@@ -100,7 +100,7 @@ PIN forty times, while a wall display left unattended returns to a safe state qu
 who uses their own phone or the laptop has a **Supabase Auth** account, linked to their
 profile (`profile.auth_user_id`, one household per account). Children never have one.
 
-- **Ways in:** Sign in with Apple, Sign in with Google, an email **one-time code**, or
+- **Ways in:** an email **one-time code**, or
   email and **password** (chosen after the first code, so the address is always
   verified). One account can carry several of these. Passkeys can be added in Settings
   once they are verified on hardware. The flows are in [20](20-onboarding.md#the-front-door).
@@ -205,7 +205,7 @@ you gave it write access. Both are enough to justify it.
 wizard and its one-time token are replaced.* A household starts when an adult signs in
 on their own phone and creates it ([20, J1](20-onboarding.md#j1--start-a-family)):
 
-1. Sign in: Apple, Google or email.
+1. Sign in: email code or password.
 2. **Neue Familie**: family name, own name and colour, mostly prefilled. Timezone and
    locale come from the device. While the instance is in `code` mode, a single-use
    founder code from the operator is also required.

@@ -73,8 +73,7 @@ jobs:
             disable_signup: true,
             mfa_totp_enroll_enabled: true,
             mfa_totp_verify_enabled: true,
-            site_url: $site,
-            uri_allow_list: "ch.goomba.wuselwall://login-callback/"
+            site_url: $site
           }')"
 
       - name: Edge Functions

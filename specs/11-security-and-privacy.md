@@ -120,11 +120,9 @@ shortcut key is a bearer credential in the Shortcuts app, synced through iCloud.
 
 ### T4 — account attacks
 
-- **Most adults have no password at all.** Apple, Google and email codes leave nothing
-  to stuff. Passwords that exist are at least 10 characters, with a strength meter in the
+- **Most adults have no password at all.** Email codes leave nothing to stuff. Passwords that exist are at least 10 characters, with a strength meter in the
   app (S14 in [19](19-security-and-architecture-review.md)).
-- **TOTP is optional**, never part of sign-up (ADR-014: Apple and Google enforce their
-  own second factors; a mandatory one locks out a sole guardian who loses a phone).
+- **TOTP is optional**, never part of sign-up (ADR-014: a mandatory one locks out a sole guardian who loses a phone).
   Passkeys are offered from the getting-started card once verified on hardware.
 - Email codes: 6 digits, 10 minutes, single use, a resend at most every 60 s, and
   verification attempts rate-limited per IP by Supabase Auth. The mail says what the code
@@ -178,15 +176,10 @@ This is where a self-hosted app usually leaks, quietly, through convenience:
 | A captcha on sign-up | None, decided 2026-10-11 ([Q44](14-open-questions.md)): rate limits, `code` mode until the gate, and the empty-account clean-up. |
 | Open and click tracking in sign-in mail | Switched off at the mail provider; plain text plus minimal HTML ([10](10-deployment-and-ops.md#email-setup)). |
 
-**Accepted since ADR-014**, each only for those who use it: **Apple** and **Google** as
-sign-in providers (they learn that the person signs in to WuselWall; scopes are
-`email`/`name`/`profile` only), and **one SMTP provider** ([Q41](14-open-questions.md);
+**Apple and Google as sign-in providers** were accepted from ADR-014 until their removal on 2026-10-17. **Still accepted: one SMTP provider** ([Q41](14-open-questions.md);
 decided: Scaleway, EU), which sees email addresses and sign-in codes and nothing from
 the household. *(ADR-015's Supabase Inc. as Cloud's processor is gone with Cloud, [ADR-018](adr/ADR-018-self-hosted-only.md).)*
-**Since ADR-018**, the store app carries **Google's iOS sign-in library** for the
-first-party servers' native sign-in. Its privacy manifest declares device ID and usage data for analytics (Google's,
-not tracking), and the privacy policy and store labels say so. Apple's sign-in is part of
-iOS and adds no code.
+**Since ADR-018 and until 2026-10-17**, the store app carried **Google's iOS sign-in library** for the first-party servers' native sign-in. It went with the sign-in itself; its privacy-manifest and store-label declarations go with that code change. Apple's sign-in was part of iOS and added no code.
 **Found 2026-10-13, fixed 2026-10-14:** the Android QR scanner used `mobile_scanner`, which bundles Google's **ML Kit** and sent device, app and performance data with a per-installation identifier to Google. The scanner now uses the `camera` plugin and the pure-Dart `zxing2` decoder on every platform, so no vendor SDK reads the camera image ([Q49](14-open-questions.md)).
 | A holiday import from a public API ([15](15-module-school-timetable.md#holidays)) | Fetched by the server only, with the host pinned in configuration and the result cached in the database. The browser never contacts it, and a failed fetch keeps the last good data (hand-entered holidays always work) rather than raising an error. Built 2026-10-14: the host is `openholidaysapi.org`, see the outbound list below. |
 | An external map or weather widget | If you want weather on the wall display, proxy it server-side so the app never contacts a third party directly, and cache aggressively. |
@@ -286,12 +279,10 @@ With Supabase, row-level security is not defence in depth; it is the perimeter.
   approving a device that is not in front of you. That is the one social-engineering
   path, and it ends in a shared device a guardian can see and revoke in Geräte.
 - **Other servers cannot harvest sign-ins meant for a first-party server** ([ADR-018](adr/ADR-018-self-hosted-only.md),
-  decision 6; first argued for Cloud in ADR-015). The store app uses native Apple and
-  Google sign-in, whose ID tokens are addressed to our app, only against the first-party
-  servers named at build time (`WW_FIRST_PARTY_HOSTS`). Against any other server it
-  offers email and the operator's own redirect clients. A hostile server therefore never
-  receives a token that a first-party server would accept. The app shows the server's host
-  on every sign-in screen.
+  decision 6; first argued for Cloud in ADR-015). Since 2026-10-17 the store app sends no
+  sign-in token of Apple or Google to any server, so there is none that could be replayed.
+  Passkeys remain limited to the first-party servers named at build time (`WW_FIRST_PARTY_HOSTS`).
+  The app shows the server's host on every sign-in screen.
 - **Cross-household isolation is now about strangers.** The pgTAP cross-household cases
   (T9) are release-blocking, and the catalogue test pins the exact list of
   anon-callable functions.
@@ -310,7 +301,7 @@ With Supabase, row-level security is not defence in depth; it is the perimeter.
 - **Invitations.** An invitation is single use and valid 7 days; a second household cannot accept it. Guesses at codes and tokens are logged and limited in `app.invitation_attempt`.
 - **Founder codes.** A founder code is what starts a family in `code` mode. It is issued by the operator (`scripts/remote-setup-token.sh --founder`), shown once, and guesses are limited in `app.founder_attempt`. The exact thresholds are in the migrations.
 - **No autoconfirm.** `ENABLE_EMAIL_AUTOCONFIRM=false` and `enable_confirmations = true`: an address counts as the person's only after they confirm it, because invitations match confirmed addresses.
-- **Account deletion.** A fresh sign-in is required only when the server requires one (5 minutes), by email code. Apple access is revoked. The Apple refresh token is kept only for that revocation, encrypted with `APPLE_TOKEN_KEY` (AES-GCM), which the database never sees and which must never change.
+- **Account deletion.** A fresh sign-in is required only when the server requires one (5 minutes), by email code. For accounts created before sign-in with Apple was removed, Apple access is revoked. Their Apple refresh token is kept only for that revocation, encrypted with `APPLE_TOKEN_KEY` (AES-GCM), which the database never sees and which must never change.
 - **Mail hook.** The send-email hook checks its signature (`SEND_EMAIL_HOOK_SECRET`) before it sends anything, and it writes only the code mail, in the recipient's language.
 - **Account administration.** `account-delete` and the MFA reset verify the caller's JWT and act only on that caller, or, for the reset, on a co-guardian (ADR-014).
 
@@ -372,11 +363,11 @@ With Supabase, row-level security is not defence in depth; it is the perimeter.
 - [ ] nginx answers 404 outside the four API prefixes
 - [ ] Anonymous users disabled; `household_creation` is `code`; the stack runs on its own keys, not the CLI defaults
 - [ ] No `dev-setup` founder code on a live server; the household's own founder code used and consumed
-- [ ] Sign-in with Apple, Google, email code and password each tested on a real device; the
+- [ ] Email code and password each tested on a real device; the
       email-code mail arrives (not in spam) in both languages
 - [ ] A stranger's fresh account sees nothing: one manual probe of `api` with its token
 - [ ] Invitation and pairing tested end to end, including an expired and a withdrawn invitation
-- [ ] Account deletion tested, including Apple token revocation
+- [ ] Account deletion tested, including Apple access revocation for an account from before sign-in with Apple was removed
 - [ ] RLS catalogue test and every policy test green against the live schema
 - [ ] TLS working; HSTS and Always Use HTTPS on in Cloudflare
 - [ ] Content-Security-Policy set, and verified to break nothing

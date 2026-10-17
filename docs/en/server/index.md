@@ -45,7 +45,6 @@ As little as possible is required. Everything in the second table can be left ou
 | What | Without it |
 |---|---|
 | **The web app** | Only needed until the apps are in the stores, or for the laptop. At home the server brings it along; at Supabase, GitHub publishes it for you |
-| **Sign in with Apple or Google** | Everyone signs in with email and password. Can be added, but it takes a lot of work ([Extras](/en/server/extras#apple-and-google)) |
 | **Public and school holidays** | The server fetches them once a week from [OpenHolidays](https://www.openholidaysapi.org/), sending only country codes. Without internet access on the server, they are missing from the week board ([Extras](/en/server/extras#holidays)) |
 | **Outside calendars** | If you subscribe to club or town calendars, the server fetches them every hour from the addresses you entered. Without subscriptions it fetches nothing |
 | **Shared family calendar in Outlook, Google and iPhone** | Works only if the server can be reached from the internet |
