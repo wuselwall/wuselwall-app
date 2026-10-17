@@ -593,6 +593,15 @@ void main() {
       expect(find.text('+3 more'), findsOneWidget);
     });
 
+    testWidgets('a presence cell names its member as well as the day (A10)', (
+      t,
+    ) async {
+      final handle = t.ensureSemantics();
+      await _pumpBoard(t);
+      expect(find.bySemanticsLabel(RegExp(r'^Sabine, \S')), findsWidgets);
+      handle.dispose();
+    });
+
     testWidgets('opens the family task board from the footer', (t) async {
       await _pumpBoard(t);
       await t.tap(find.text('Heute offen'));

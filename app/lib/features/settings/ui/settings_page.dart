@@ -376,7 +376,10 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) => Row(
     children: [
       Expanded(
-        child: Text(title, style: Theme.of(context).textTheme.titleMedium),
+        child: Semantics(
+          header: true,
+          child: Text(title, style: Theme.of(context).textTheme.titleMedium),
+        ),
       ),
       action,
     ],

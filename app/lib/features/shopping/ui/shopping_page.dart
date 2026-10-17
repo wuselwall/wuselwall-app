@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
+import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/text/fold.dart';
@@ -932,7 +933,10 @@ class _Header extends StatelessWidget {
       Tokens.space4,
       Tokens.space1,
     ),
-    child: Text(label, style: Theme.of(context).textTheme.titleSmall),
+    child: Semantics(
+      header: true,
+      child: Text(label, style: Theme.of(context).textTheme.titleSmall),
+    ),
   );
 }
 
@@ -1056,15 +1060,28 @@ class _ItemTileState extends State<_ItemTile> {
                   ),
                 ),
               if (adder != null)
-                ExcludeSemantics(
-                  child: Tooltip(
-                    message: l10n.shoppingAddedBy(adder.displayName),
-                    child: Container(
-                      width: 12,
-                      height: 12,
-                      decoration: BoxDecoration(
-                        color: adder.color,
-                        shape: BoxShape.circle,
+                Semantics(
+                  label: l10n.shoppingAddedBy(adder.displayName),
+                  child: ExcludeSemantics(
+                    child: Tooltip(
+                      message: l10n.shoppingAddedBy(adder.displayName),
+                      child: Container(
+                        width: 18,
+                        height: 18,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: context.ww.member(adder.color).ink,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Text(
+                          adder.initial,
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w800,
+                            height: 1,
+                            color: context.ww.member(adder.color).onInk,
+                          ),
+                        ),
                       ),
                     ),
                   ),

@@ -1163,6 +1163,17 @@
   "feedSubHelp": "Termine aus importierten Kalendern (z. B. Verein, Müllabfuhr) erscheinen auch im Abo.",
   "feedSubSummary": "Kalender von außen",
   "boardAllEvents": "Alle Termine",
+  "boardMemberDay": "{name}, {date}",
+  "@boardMemberDay": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "reminderChannelName": "Erinnerungen",
   "reminderStartLabel": "Erinnerungen einschalten",
   "reminderMorningEventsAndTasks": "Heute: {events, plural, one{1 Termin} other{{events} Termine}}, {tasks, plural, one{1 Aufgabe} other{{tasks} Aufgaben}}",

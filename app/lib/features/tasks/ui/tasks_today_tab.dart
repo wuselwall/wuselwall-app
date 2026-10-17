@@ -108,20 +108,26 @@ class _GroupHeader extends StatelessWidget {
     final m = member;
     return Padding(
       padding: const EdgeInsets.only(top: Tokens.space4, bottom: Tokens.space2),
-      child: Row(
-        children: [
-          if (m != null)
-            TaskAvatar(name: m.displayName, color: m.color, size: 32)
-          else
-            Icon(Icons.people_alt_outlined, color: theme.colorScheme.onSurface),
-          const SizedBox(width: Tokens.space2),
-          Text(
-            m?.displayName ?? context.l10n.tasksOpenForAnyone,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w700,
+      child: Semantics(
+        header: true,
+        child: Row(
+          children: [
+            if (m != null)
+              TaskAvatar(name: m.displayName, color: m.color, size: 32)
+            else
+              Icon(
+                Icons.people_alt_outlined,
+                color: theme.colorScheme.onSurface,
+              ),
+            const SizedBox(width: Tokens.space2),
+            Text(
+              m?.displayName ?? context.l10n.tasksOpenForAnyone,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

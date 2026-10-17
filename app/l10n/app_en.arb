@@ -1787,6 +1787,17 @@
   "feedSubHelp": "Events from imported calendars (for example a club or the bin collection) also appear in this subscription.",
   "feedSubSummary": "Outside calendars",
   "boardAllEvents": "All events",
+  "boardMemberDay": "{name}, {date}",
+  "@boardMemberDay": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "reminderChannelName": "Reminders",
   "reminderStartLabel": "Turn on reminders",
   "reminderMorningEventsAndTasks": "Today: {events, plural, one{1 appointment} other{{events} appointments}}, {tasks, plural, one{1 chore} other{{tasks} chores}}",

@@ -62,10 +62,13 @@ class KidSectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.only(top: Tokens.space6, bottom: Tokens.space2),
-    child: Text(
-      text,
-      style: Theme.of(context).textTheme.titleLarge
-          ?.copyWith(fontWeight: FontWeight.w800),
+    child: Semantics(
+      header: true,
+      child: Text(
+        text,
+        style: Theme.of(context).textTheme.titleLarge
+            ?.copyWith(fontWeight: FontWeight.w800),
+      ),
     ),
   );
 }
@@ -123,44 +126,50 @@ class _KidBalancePillState extends State<KidBalancePill>
   Widget build(BuildContext context) {
     final ww = context.ww;
     final rising = _to > _from;
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, _) {
-        // The coin tick: a small swell as the count lands, only when it went up.
-        final tick = rising && _controller.isAnimating
-            ? 1 + 0.12 * math.sin(math.pi * _controller.value)
-            : 1.0;
-        return Transform.scale(
-          scale: tick,
-          child: Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: Tokens.space4,
-              vertical: Tokens.space2,
-            ),
-            decoration: BoxDecoration(
-              color: ww.points,
-              borderRadius: BorderRadius.circular(999),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.star_rounded, color: ww.onPoints, size: 28),
-                const SizedBox(width: Tokens.space2),
-                Text(
-                  '$_shown',
-                  style: TextStyle(
-                    fontFamily: Tokens.fontNumeric,
-                    fontFeatures: const [FontFeature.tabularFigures()],
-                    fontSize: 28,
-                    fontWeight: FontWeight.w800,
-                    color: ww.onPoints,
-                  ),
+    return Semantics(
+      label: context.l10n.tasksPointsCount(widget.balance),
+      container: true,
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, _) {
+          // The coin tick: a small swell as the count lands, only when it went up.
+          final tick = rising && _controller.isAnimating
+              ? 1 + 0.12 * math.sin(math.pi * _controller.value)
+              : 1.0;
+          return ExcludeSemantics(
+            child: Transform.scale(
+              scale: tick,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: Tokens.space4,
+                  vertical: Tokens.space2,
                 ),
-              ],
+                decoration: BoxDecoration(
+                  color: ww.points,
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.star_rounded, color: ww.onPoints, size: 28),
+                    const SizedBox(width: Tokens.space2),
+                    Text(
+                      '$_shown',
+                      style: TextStyle(
+                        fontFamily: Tokens.fontNumeric,
+                        fontFeatures: const [FontFeature.tabularFigures()],
+                        fontSize: 28,
+                        fontWeight: FontWeight.w800,
+                        color: ww.onPoints,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

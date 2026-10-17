@@ -5702,6 +5702,12 @@ abstract class AppLocalizations {
   /// **'All events'**
   String get boardAllEvents;
 
+  /// No description provided for @boardMemberDay.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}, {date}'**
+  String boardMemberDay(String name, String date);
+
   /// No description provided for @reminderChannelName.
   ///
   /// In en, this message translates to:

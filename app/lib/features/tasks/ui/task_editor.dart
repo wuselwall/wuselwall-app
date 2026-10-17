@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/error/result.dart';
@@ -68,6 +71,7 @@ class _TaskEditorDialogState extends ConsumerState<TaskEditorDialog> {
   late bool _verification;
 
   bool _titleError = false;
+  final _titleFocus = FocusNode();
   bool _pointsError = false;
   bool _weekdayError = false;
   bool _poolError = false;
@@ -104,11 +108,13 @@ class _TaskEditorDialogState extends ConsumerState<TaskEditorDialog> {
   void dispose() {
     _title.dispose();
     _points.dispose();
+    _titleFocus.dispose();
     super.dispose();
   }
 
   /// Validates the form, marking what is wrong. Null when it can be sent.
   TaskDraft? _draft() {
+    final l10n = context.l10n;
     final title = _title.text.trim();
     final points = int.tryParse(_points.text.trim());
     final needsDays =
@@ -127,6 +133,23 @@ class _TaskEditorDialogState extends ConsumerState<TaskEditorDialog> {
       _poolError = !poolOk;
     });
     if (_titleError || _pointsError || _weekdayError || _poolError) {
+      // Put the focus on the first problem and say it: the red text is not read out
+      // by itself (A8).
+      if (_titleError) _titleFocus.requestFocus();
+      final message = _titleError
+          ? l10n.tasksTitleRequired
+          : _pointsError
+          ? l10n.tasksPointsInvalid
+          : _weekdayError
+          ? l10n.tasksWeekdaysRequired
+          : l10n.tasksPoolRequired;
+      unawaited(
+        SemanticsService.sendAnnouncement(
+          View.of(context),
+          message,
+          Directionality.of(context),
+        ),
+      );
       return null;
     }
     return TaskDraft(
@@ -302,6 +325,7 @@ class _TaskEditorDialogState extends ConsumerState<TaskEditorDialog> {
             children: [
               TextField(
                 controller: _title,
+                focusNode: _titleFocus,
                 autofocus: !_editing,
                 maxLength: 80,
                 onChanged: (_) => setState(() => _titleError = false),
@@ -539,25 +563,33 @@ class _IconChoice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    return Tooltip(
-      message: tooltip,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(10),
-        onTap: onTap,
-        child: Container(
-          width: 44,
-          height: 44,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: selected ? scheme.primary : Colors.transparent,
-              width: 2,
+    return Semantics(
+      selected: selected,
+      button: true,
+      inMutuallyExclusiveGroup: true,
+      label: tooltip,
+      excludeSemantics: true,
+      onTap: onTap,
+      child: Tooltip(
+        message: tooltip,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(10),
+          onTap: onTap,
+          child: Container(
+            width: 44,
+            height: 44,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: selected ? scheme.primary : Colors.transparent,
+                width: 2,
+              ),
             ),
+            child: asset == null
+                ? Icon(Icons.block, color: scheme.onSurfaceVariant)
+                : EmojiPicture(asset!, size: 28),
           ),
-          child: asset == null
-              ? Icon(Icons.block, color: scheme.onSurfaceVariant)
-              : EmojiPicture(asset!, size: 28),
         ),
       ),
     );
