@@ -7,8 +7,9 @@
 //   3. api.account_delete_prepare decides (the last guardian with an account is refused, 409)
 //      and unlinks the profile, revokes the account's devices and closes the family if this
 //      was its only person.
-//   4. Apple's refresh token, if one was stored, is revoked at Apple. Apple unreachable is
-//      logged, not fatal: the account goes either way.
+//   4. Apple's refresh token, if one was stored (an account that signed in with Apple before
+//      social sign-in was removed), is revoked at Apple. Apple unreachable is logged, not
+//      fatal: the account goes either way.
 //   5. The Auth user is deleted with the Admin API, and with it every session.
 //
 // The service role is used in steps 3 to 5, and only for the user verified in step 1: both

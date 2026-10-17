@@ -42,6 +42,15 @@ final deleteTile = find.byKey(const ValueKey('delete-account'));
 final deleteConfirm = find.byKey(const ValueKey('delete-account-confirm'));
 final reauthCode = find.byKey(const ValueKey('reauth-code'));
 
+/// Scrolls Settings until [finder] is on screen. Twice: the lazy list only knows its true
+/// length once the end has been laid out, so the first jump can stop short.
+Future<void> scrollTo(WidgetTester t, Finder finder) async {
+  await t.ensureVisible(finder);
+  await t.pumpAndSettle();
+  await t.ensureVisible(finder);
+  await t.pumpAndSettle();
+}
+
 typedef Pumped = ({
   ProviderContainer container,
   FakeIdentityRepository identity,
@@ -90,7 +99,7 @@ void main() {
           t,
           acc: account(leaveBlocked: 'last_guardian'),
         );
-        await t.ensureVisible(deleteTile);
+        await scrollTo(t, deleteTile);
         expect(
           find.text(
             'Du bist die letzte Elternperson mit Konto in dieser Familie. Lade zuerst eine zweite erwachsene Person ein oder lösche die Familie.',
@@ -110,7 +119,7 @@ void main() {
       'a confirmed deletion goes straight through with a recent sign-in',
       (t) async {
         final s = await pumpSettings(t);
-        await t.ensureVisible(deleteTile);
+        await scrollTo(t, deleteTile);
         await t.tap(deleteTile);
         await t.pumpAndSettle();
         expect(find.text('Konto löschen?'), findsOneWidget);
@@ -134,7 +143,7 @@ void main() {
 
     testWidgets('cancelling the dialog deletes nothing', (t) async {
       final s = await pumpSettings(t);
-      await t.ensureVisible(deleteTile);
+      await scrollTo(t, deleteTile);
       await t.tap(deleteTile);
       await t.pumpAndSettle();
       await t.tap(find.text('Abbrechen'));
@@ -156,7 +165,7 @@ void main() {
           admin.recent = true;
           return const Ok(false);
         };
-        await t.ensureVisible(deleteTile);
+        await scrollTo(t, deleteTile);
         await t.tap(deleteTile);
         await t.pumpAndSettle();
         await t.tap(deleteConfirm);
@@ -186,7 +195,7 @@ void main() {
         ];
       final s = await pumpSettings(t, admin: admin);
       s.identity.verifyResult = const Err(AuthFailure(code: 'otp_invalid'));
-      await t.ensureVisible(deleteTile);
+      await scrollTo(t, deleteTile);
       await t.tap(deleteTile);
       await t.pumpAndSettle();
       await t.tap(deleteConfirm);

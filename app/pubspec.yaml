@@ -14,7 +14,6 @@ dependencies:
   camera: ^0.12.1
   characters: ^1.4.0
   connectivity_plus: ^7.3.2
-  crypto: ^3.0.7
   # cupertino_ui (pulled in by Flutter) refers to this font; without it the build warns.
   cupertino_icons: ^1.0.9
   drift: ^2.35.2
@@ -29,14 +28,12 @@ dependencies:
   flutter_secure_storage: ^11.2.0
   flutter_timezone: ^5.1.1
   go_router: ^18.0.2
-  google_sign_in: ^7.2.0
   http: ^1.2.0
   intl: any
   package_info_plus: ^10.2.2
   passkeys: ^2.23.1
   qr: ^4.0.0
   share_plus: ^13.3.1
-  sign_in_with_apple: ^8.2.0
   supabase_flutter: ^2.18.3
   timezone: ^0.11.2
   uuid: ^4.6.0
@@ -64,9 +61,6 @@ flutter:
     - assets/emoji/shopping/
     - assets/emoji/tasks/
     - assets/emoji/extras/
-    # Google's "G" for its sign-in button, as its branding rules require; rendered at
-    # 20 dp from google_g.svg (the 2.0x/ and 3.0x/ variants are picked automatically).
-    - assets/sign_in/google_g.png
   fonts:
     - family: AtkinsonHyperlegibleNext
       fonts:

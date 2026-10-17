@@ -86,13 +86,8 @@ Deno.test("checkRow refuses a half-migrated answer", () => {
   assertEquals(checkRow(row), row);
 });
 
-Deno.test("discoveryDocument reports redirect sign-in as Auth has it", () => {
-  const doc = discoveryDocument(
-    row,
-    { external: { apple: true, google: false, email: true } },
-    "sb_publishable_abc",
-    "https://api.example.org",
-  );
+Deno.test("discoveryDocument offers password sign-in only", () => {
+  const doc = discoveryDocument(row, "sb_publishable_abc", "https://api.example.org");
   assertEquals(doc, {
     wuselwall: 1,
     supabase_url: "https://api.example.org",
@@ -100,13 +95,14 @@ Deno.test("discoveryDocument reports redirect sign-in as Auth has it", () => {
     api_version: 1,
     min_app_version: "1.0.0",
     household_creation: "token",
-    sign_in: { password: true, apple: true, google: false },
+    // No apple or google: social sign-in was removed. Earlier apps read a missing key as off.
+    sign_in: { password: true },
     features: ["calendar", "shopping"],
   });
 });
 
 Deno.test("discoveryDocument leaves the address out when it is unknown", () => {
-  const doc = discoveryDocument(row, {}, "k", undefined);
+  const doc = discoveryDocument(row, "k", undefined);
   assertEquals("supabase_url" in doc, false);
-  assertEquals(doc.sign_in, { password: true, apple: false, google: false });
+  assertEquals(doc.sign_in, { password: true });
 });

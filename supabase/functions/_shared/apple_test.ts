@@ -1,13 +1,11 @@
 import { assert, assertEquals, assertRejects, assertThrows } from "jsr:@std/assert@1.0.13";
 import {
   APPLE_REVOKE_URL,
-  APPLE_TOKEN_URL,
   appleClientSecret,
   appleConfig,
   AppleError,
   decryptToken,
   encryptToken,
-  exchangeAuthorizationCode,
   pemToDer,
   revokeRefreshToken,
 } from "./apple.ts";
@@ -115,40 +113,6 @@ Deno.test("config: null unless every Apple value is set", () => {
   assertEquals(appleConfig(get({})), null);
 });
 
-Deno.test("token exchange: the form body, and the refresh token returned", async () => {
-  const { fn, calls } = fakeFetch(200, { refresh_token: "r-1", access_token: "a" });
-  const refresh = await exchangeAuthorizationCode("code-1", { clientId: "c", clientSecret: "s" }, fn);
-  assertEquals(refresh, "r-1");
-  assertEquals(calls[0].url, APPLE_TOKEN_URL);
-  assertEquals(calls[0].init.method, "POST");
-  const body = new URLSearchParams(calls[0].init.body as string);
-  assertEquals(body.get("grant_type"), "authorization_code");
-  assertEquals(body.get("code"), "code-1");
-  assertEquals(body.get("client_id"), "c");
-  assertEquals(body.get("client_secret"), "s");
-});
-
-Deno.test("token exchange: an error or a reply without a refresh token is refused", async () => {
-  const bad = fakeFetch(400, { error: "invalid_grant" });
-  await assertRejects(
-    () => exchangeAuthorizationCode("x", { clientId: "c", clientSecret: "s" }, bad.fn),
-    AppleError,
-  );
-  const none = fakeFetch(200, { access_token: "a" });
-  await assertRejects(
-    () => exchangeAuthorizationCode("x", { clientId: "c", clientSecret: "s" }, none.fn),
-    AppleError,
-  );
-  const down = (async () => {
-    throw new TypeError("network down");
-  }) as typeof fetch;
-  await assertRejects(
-    () => exchangeAuthorizationCode("x", { clientId: "c", clientSecret: "s" }, down),
-    AppleError,
-    "unreachable",
-  );
-});
-
 Deno.test("revoke: the form body, with the refresh token hint", async () => {
   const { fn, calls } = fakeFetch(200, "");
   await revokeRefreshToken("r-9", { clientId: "c", clientSecret: "s" }, fn);
@@ -165,6 +129,14 @@ Deno.test("revoke: Apple's refusal is an error the caller can log", async () => 
     () => revokeRefreshToken("r", { clientId: "c", clientSecret: "s" }, fn),
     AppleError,
     "http_400",
+  );
+  const down = (async () => {
+    throw new TypeError("network down");
+  }) as typeof fetch;
+  await assertRejects(
+    () => revokeRefreshToken("r", { clientId: "c", clientSecret: "s" }, down),
+    AppleError,
+    "unreachable",
   );
 });
 

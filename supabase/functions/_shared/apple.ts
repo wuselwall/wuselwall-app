@@ -1,16 +1,19 @@
-// Sign in with Apple, server side (specs/20 "Server side", specs/10 §4): the client-secret JWT
-// Apple asks for, the code-for-token exchange and the token revocation, and the AES-GCM
-// encryption of the refresh token stored in app.apple_token.
+// Revoking Apple's access when an account is deleted (specs/20 J6): the client-secret JWT Apple
+// asks for, the token revocation, and the AES-GCM decryption of the refresh token in
+// app.apple_token.
+//
+// Sign in with Apple has been removed: no new token is stored. Accounts that signed in with
+// Apple before that may still have one, and account-delete revokes it so the app's access to
+// the Apple ID ends with the account (App Store Review Guideline 5.1.1(v)). Without the Apple
+// environment (see appleConfig) nothing here runs.
 //
 // Pure apart from the injected `fetch` and the WebCrypto calls: the tests pass a fake fetch and
-// a generated key pair. The key material comes from the environment (see appleConfig); nothing
-// here is logged.
+// a generated key pair. The key material comes from the environment; nothing here is logged.
 //
-// The client secret is signed with the Sign in with Apple key (.p8, ES256), the same way
-// scripts/apple-client-secret.mjs does it by hand. Apple accepts at most six months.
+// The client secret is signed with the Sign in with Apple key (.p8, ES256). Apple accepts at
+// most six months.
 
 export const APPLE_AUD = "https://appleid.apple.com";
-export const APPLE_TOKEN_URL = "https://appleid.apple.com/auth/token";
 export const APPLE_REVOKE_URL = "https://appleid.apple.com/auth/revoke";
 export const CLIENT_SECRET_MAX_SECONDS = 180 * 24 * 60 * 60;
 
@@ -26,13 +29,13 @@ export type AppleConfig = {
   keyId: string;
   /** The PKCS#8 PEM of the .p8 key. */
   privateKeyPem: string;
-  /** The app's bundle id, the audience of native sign-in tokens. */
+  /** The client the tokens were issued to (the app's bundle id). */
   clientId: string;
-  /** 32 random bytes, base64. Encrypts the refresh token at rest. */
+  /** 32 random bytes, base64. Encrypted the refresh token at rest. */
   tokenKey: string;
 };
 
-/** The configuration, or null when any Apple value is missing (the apps then ignore Apple). */
+/** The configuration, or null when any Apple value is missing (then nothing is revoked). */
 export function appleConfig(env: (name: string) => string | undefined = (n) => Deno.env.get(n)): AppleConfig | null {
   const teamId = env("APPLE_TEAM_ID")?.trim();
   const keyId = env("APPLE_KEY_ID")?.trim();
@@ -137,27 +140,10 @@ async function postForm(url: string, form: Form, fetchFn: AppleFetch): Promise<R
   try {
     json = (await response.json()) as Record<string, unknown>;
   } catch {
-    // An empty body is fine for the revoke endpoint; a token exchange checks its fields below.
+    // An empty body is fine for the revoke endpoint.
   }
   if (!response.ok) throw new AppleError(`http_${response.status}`);
   return json;
-}
-
-/** Exchanges Apple's one-time authorisation code for tokens. Returns Apple's refresh token. */
-export async function exchangeAuthorizationCode(
-  code: string,
-  secret: { clientId: string; clientSecret: string },
-  fetchFn: AppleFetch = fetch,
-): Promise<string> {
-  const json = await postForm(APPLE_TOKEN_URL, {
-    client_id: secret.clientId,
-    client_secret: secret.clientSecret,
-    code,
-    grant_type: "authorization_code",
-  }, fetchFn);
-  const refresh = json.refresh_token;
-  if (typeof refresh !== "string" || refresh === "") throw new AppleError("no_refresh_token");
-  return refresh;
 }
 
 /** Revokes a refresh token at Apple, so the app's access to the Apple account ends. */
@@ -182,7 +168,8 @@ async function aesKey(keyB64: string): Promise<CryptoKey> {
   return await crypto.subtle.importKey("raw", raw, { name: "AES-GCM" }, false, ["encrypt", "decrypt"]);
 }
 
-/** AES-256-GCM with a random 12-byte IV. Returns base64(iv | ciphertext). */
+/** AES-256-GCM with a random 12-byte IV. Returns base64(iv | ciphertext): the form the removed
+ * apple-token function stored, kept so the tests can make what decryptToken reads. */
 export async function encryptToken(plain: string, keyB64: string): Promise<string> {
   const key = await aesKey(keyB64);
   const iv = crypto.getRandomValues(new Uint8Array(12));

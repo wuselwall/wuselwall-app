@@ -83,6 +83,9 @@ class IdentityRepository {
   bool hasPassword() =>
       _auth.currentUser?.userMetadata?[hasPasswordKey] == true;
 
+  /// The account's e-mail address, where sign-in codes go; null without a session.
+  String? accountEmail() => _auth.currentUser?.email;
+
   /// E3's answer: `code` or `password`, kept so E3 is not shown again.
   Future<Result<void>> markSignInChoice(String choice) =>
       Result.guard(() async {

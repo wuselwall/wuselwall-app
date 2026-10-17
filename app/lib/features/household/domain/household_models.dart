@@ -52,7 +52,8 @@ class Account {
   /// Whether a new family needs a founder code (`code`) or anyone may start one (`open`).
   final HouseholdCreation creation;
 
-  /// From the identity provider (Apple, Google), when it gave one.
+  /// The name in the account's metadata, when it has one (an account that signed in with
+  /// Apple or Google before those were removed may).
   final String? fullName;
   final String? givenName;
 
