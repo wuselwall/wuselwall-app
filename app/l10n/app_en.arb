@@ -1438,6 +1438,8 @@
   "kidRedeemed": "Redeemed!",
   "kidSoldOut": "Sold out for now",
   "kidBadgesTitle": "My badges",
+  "kidBadgeEarned": "Earned",
+  "kidBadgeNotYet": "Not earned yet",
   "kidStreaksTitle": "My streaks",
   "kidStreak": "{days, plural, =1{1 day {title}} other{{days} days {title}}}",
   "@kidStreak": {

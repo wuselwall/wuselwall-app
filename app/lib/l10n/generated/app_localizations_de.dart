@@ -2689,6 +2689,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get kidBadgesTitle => 'Meine Abzeichen';
 
   @override
+  String get kidBadgeEarned => 'Verdient';
+
+  @override
+  String get kidBadgeNotYet => 'Noch nicht verdient';
+
+  @override
   String get kidStreaksTitle => 'Meine Serien';
 
   @override
