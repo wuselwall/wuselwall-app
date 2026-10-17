@@ -87,6 +87,8 @@ class _Avatar extends StatelessWidget {
     // children recognise their written name before they read anyone else's.
     return Semantics(
       button: true,
+      focusable: true,
+      onTap: onTap,
       selected: selected,
       label: member.displayName,
       excludeSemantics: true,

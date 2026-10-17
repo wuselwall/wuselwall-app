@@ -29,92 +29,120 @@ class BoardFooter extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
 
     return Container(
-      height: height,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      constraints: BoxConstraints(minHeight: height),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       decoration: BoxDecoration(
         color: ww.sunken,
         border: Border(top: BorderSide(color: ww.line)),
       ),
-      child: Row(
-        children: [
-          Expanded(
-            child: BoardTap(
-              label: l10n.boardOpenToday,
-              onTap: () => unawaited(
-                showBoardDetail(
-                  context,
-                  title: l10n.boardOpenToday,
-                  body: const TaskBoardDetailBody(),
+      // A6: the vertical padding above sits *outside* this row, so without a
+      // floor here the row (and therefore each BoardTap's actual hit area)
+      // could land under 56 px tall even though the container around it
+      // meets `height` — a nominal 56 button that is not actually 56
+      // (specs/17, t_da411148). ConstrainedBox gives IntrinsicHeight a real
+      // minimum to stretch every tappable child to.
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: height),
+        child: IntrinsicHeight(
+          child: Row(
+            // Stretched so every item's tap target is the bar's full height, not
+            // just its text's — the bar itself grows past `height` at larger text
+            // scales (specs/09: preserve system text scaling, never clip or
+            // overflow). IntrinsicHeight gives the Row a finite height to stretch
+            // to, instead of the unbounded height its loose Column slot allows.
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: BoardTap(
+                  label: l10n.boardOpenToday,
+                  onTap: () => unawaited(
+                    showBoardDetail(
+                      context,
+                      title: l10n.boardOpenToday,
+                      body: const TaskBoardDetailBody(),
+                    ),
+                  ),
+                  child: ClipFit(
+                    alignment: Alignment.centerLeft,
+                    child: _OpenTasks(board: board),
+                  ),
                 ),
               ),
-              child: ClipFit(
-                alignment: Alignment.centerLeft,
-                child: _OpenTasks(board: board),
-              ),
-            ),
-          ),
-          if (night) ...[
-            Icon(Icons.nightlight_round, size: 28, color: ww.ink3),
-            const SizedBox(width: 8),
-            Text(
-              l10n.boardNightMode,
-              style: boardUi(24, weight: FontWeight.w600, color: ww.ink3),
-              maxLines: 1,
-              softWrap: false,
-            ),
-            const SizedBox(width: 16),
-          ],
-          BoardTap(
-            label: l10n.boardShoppingList,
-            onTap: () => unawaited(
-              showBoardDetail(
-                context,
-                title: l10n.boardShoppingList,
-                body: const Column(
-                  children: [
-                    Expanded(child: ShoppingBody()),
-                    ActingProfileBar(),
-                  ],
+              if (night) ...[
+                Icon(Icons.nightlight_round, size: 28, color: ww.ink3),
+                const SizedBox(width: 8),
+                // Flexible, not a fixed child: at large text scales with a long
+                // locale string ("Nachtmodus") this label gives way to the
+                // shopping action below rather than forcing a RenderFlex
+                // overflow (specs/09: truncate content, not font size).
+                Flexible(
+                  child: Text(
+                    l10n.boardNightMode,
+                    style: boardUi(24, weight: FontWeight.w600, color: ww.ink3),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: false,
+                  ),
+                ),
+                const SizedBox(width: 16),
+              ],
+              // Flexible: the shopping action's own label/count truncate before
+              // the Row overflows at larger text scales (specs/09).
+              Flexible(
+                child: BoardTap(
+                  label: l10n.boardShoppingList,
+                  onTap: () => unawaited(
+                    showBoardDetail(
+                      context,
+                      title: l10n.boardShoppingList,
+                      body: const Column(
+                        children: [
+                          Expanded(child: ShoppingBody()),
+                          ActingProfileBar(),
+                        ],
+                      ),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.shopping_basket_outlined,
+                        size: 32,
+                        color: scheme.onSurface,
+                      ),
+                      const SizedBox(width: 10),
+                      Flexible(
+                        child: Text(
+                          l10n.boardShoppingList,
+                          style: boardUi(
+                            26,
+                            weight: FontWeight.w600,
+                            color: scheme.onSurface,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: false,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        '${board.shoppingCount}',
+                        style: boardNum(
+                          26,
+                          weight: FontWeight.w800,
+                          color: scheme.onSurface,
+                        ),
+                        maxLines: 1,
+                        softWrap: false,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            child: SizedBox(
-              height: height,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.shopping_basket_outlined,
-                    size: 32,
-                    color: scheme.onSurface,
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    l10n.boardShoppingList,
-                    style: boardUi(
-                      26,
-                      weight: FontWeight.w600,
-                      color: scheme.onSurface,
-                    ),
-                    maxLines: 1,
-                    softWrap: false,
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    '${board.shoppingCount}',
-                    style: boardNum(
-                      26,
-                      weight: FontWeight.w800,
-                      color: scheme.onSurface,
-                    ),
-                    maxLines: 1,
-                    softWrap: false,
-                  ),
-                ],
-              ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -142,11 +170,14 @@ class _OpenTasks extends StatelessWidget {
         children: [
           Icon(Icons.check_circle, size: 30, color: ww.success),
           const SizedBox(width: 10),
-          Text(
-            l10n.boardAllDone,
-            style: boardUi(26, weight: FontWeight.w600, color: ink),
-            maxLines: 1,
-            softWrap: false,
+          Flexible(
+            child: Text(
+              l10n.boardAllDone,
+              style: boardUi(26, weight: FontWeight.w600, color: ink),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              softWrap: false,
+            ),
           ),
         ],
       );
@@ -172,11 +203,14 @@ class _OpenTasks extends StatelessWidget {
                 size: 14,
               ),
               const SizedBox(width: 6),
-              Text(
-                context.memberName(board, m),
-                style: boardUi(26, weight: FontWeight.w600, color: ink),
-                maxLines: 1,
-                softWrap: false,
+              Flexible(
+                child: Text(
+                  context.memberName(board, m),
+                  style: boardUi(26, weight: FontWeight.w600, color: ink),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  softWrap: false,
+                ),
               ),
               const SizedBox(width: 4),
               Text(

@@ -288,6 +288,15 @@ void main() {
     expect(find.text('Film aussuchen'), findsOneWidget);
     // The cheap one is affordable and offers to be redeemed.
     expect(find.text('Einlösen'), findsOneWidget);
+    // A6: the kid "Einlösen" button's actual rendered hit area is >=56x56
+    // logical px, not just a nominal minimumSize that density then shrinks.
+    final redeemButton = find.ancestor(
+      of: find.text('Einlösen'),
+      matching: find.byType(FilledButton),
+    );
+    final redeemSize = tester.getSize(redeemButton);
+    expect(redeemSize.width, greaterThanOrEqualTo(56));
+    expect(redeemSize.height, greaterThanOrEqualTo(56));
     await unmountApp(tester, container);
   });
 

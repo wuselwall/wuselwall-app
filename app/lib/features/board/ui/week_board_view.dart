@@ -44,9 +44,12 @@ class WeekBoardView extends ConsumerWidget {
     );
     final ww = context.ww;
     final scheme = Theme.of(context).colorScheme;
+    // Past days and, at night, every day but today and tomorrow recede through their
+    // ground colour rather than through opacity on their own text (A6/A7,
+    // `t_da411148`): the text keeps its full, contrast-checked colour in every shade.
     final grounds = [
       for (var i = 0; i < BoardGeometry.dayCount; i++)
-        frame.isPast(i)
+        frame.recede(i)
             ? ww.sunken
             : frame.isToday(i)
             ? scheme.surfaceContainerLow

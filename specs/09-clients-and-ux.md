@@ -199,6 +199,29 @@ The board must never scroll and never break its geometry. In order:
 4. On a narrow screen, the weekend collapses into one half-width column.
 5. Never drop a zone. An empty zone is a statement; a missing zone is a bug.
 
+**Accessibility decision, 2026-10-17 (A6/A7, `t_da411148`).** The 24 logical-pixel
+minimum applies to all kiosk text, including initials, captions, counts and band
+labels, after any fitting or transforms. Truncate at that minimum; do not shrink
+text below it. Full labels remain available in the existing tap-through detail and
+semantic names. Keep overflow counts readable and preserve each zone's purpose.
+
+Respect system text scaling, including 200%, in all registers. Do not clamp or
+replace the kiosk's text scaler to make the board fit. At larger text sizes, show
+fewer summaries using the degradation rules above, while keeping the seven-day
+geometry, all zones, readable overflow indicators and access to full detail. The
+reference acceptance viewport is 1280×800 logical pixels in landscape, with the
+reference household, in German and English. No RenderFlex overflow, overlapping
+text or clipped controls is acceptable at 100%, 150% or 200%. This does not claim
+that every appointment title fits in full on the board.
+
+Past days and the night variant may recede through backgrounds, borders and visual
+emphasis, not by making their information unreadable. Do not apply a fixed opacity
+to an entire content subtree. Keep rendered text at **at least 4.5:1** against its
+actual composited background in light, dark and night, including past days and
+multi-day bands. This retains specs/17's existing stricter text-token rule rather
+than relaxing large kiosk text to the WCAG AA 3:1 allowance. Night lowers glare,
+not the acceptance threshold.
+
 ### Touch behaviour
 
 Tapping is a shortcut into detail, never into editing — the wall display is the wrong
