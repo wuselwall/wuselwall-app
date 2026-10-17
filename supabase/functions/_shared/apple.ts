@@ -127,25 +127,57 @@ export type AppleFetch = typeof fetch;
 
 type Form = Record<string, string>;
 
-async function postForm(url: string, form: Form, fetchFn: AppleFetch): Promise<Record<string, unknown>> {
-  let response: Response;
+/** How long one call to Apple may take, connection and response body together. */
+export const APPLE_TIMEOUT_MS = 5_000;
+
+/**
+ * One form POST, bounded: after `timeoutMs` the request is aborted and the call fails with
+ * `timeout`, whether Apple hangs before answering or while sending the body. The race does not
+ * rely on the fetch honouring the abort signal.
+ */
+async function postForm(
+  url: string,
+  form: Form,
+  fetchFn: AppleFetch,
+  timeoutMs: number,
+): Promise<Record<string, unknown>> {
+  const controller = new AbortController();
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const expired = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => {
+      controller.abort();
+      reject(new AppleError("timeout"));
+    }, Math.max(0, timeoutMs));
+  });
+  // Raced below; never left as an unhandled rejection when nothing is waiting on it.
+  expired.catch(() => {});
   try {
-    response = await fetchFn(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded", Accept: "application/json" },
-      body: new URLSearchParams(form).toString(),
-    });
-  } catch {
-    throw new AppleError("unreachable");
+    let response: Response;
+    try {
+      response = await Promise.race([
+        fetchFn(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded", Accept: "application/json" },
+          body: new URLSearchParams(form).toString(),
+          signal: controller.signal,
+        }),
+        expired,
+      ]);
+    } catch (err) {
+      throw err instanceof AppleError ? err : new AppleError(controller.signal.aborted ? "timeout" : "unreachable");
+    }
+    let json: Record<string, unknown> = {};
+    try {
+      json = (await Promise.race([response.json(), expired])) as Record<string, unknown>;
+    } catch (err) {
+      // An empty body is fine for the revoke endpoint; a body that never ends is not.
+      if (err instanceof AppleError || controller.signal.aborted) throw new AppleError("timeout");
+    }
+    if (!response.ok) throw new AppleError(`http_${response.status}`);
+    return json;
+  } finally {
+    clearTimeout(timer);
   }
-  let json: Record<string, unknown> = {};
-  try {
-    json = (await response.json()) as Record<string, unknown>;
-  } catch {
-    // An empty body is fine for the revoke endpoint.
-  }
-  if (!response.ok) throw new AppleError(`http_${response.status}`);
-  return json;
 }
 
 /** Revokes a refresh token at Apple, so the app's access to the Apple account ends. */
@@ -153,13 +185,14 @@ export async function revokeRefreshToken(
   refreshToken: string,
   secret: { clientId: string; clientSecret: string },
   fetchFn: AppleFetch = fetch,
+  timeoutMs: number = APPLE_TIMEOUT_MS,
 ): Promise<void> {
   await postForm(APPLE_REVOKE_URL, {
     client_id: secret.clientId,
     client_secret: secret.clientSecret,
     token: refreshToken,
     token_type_hint: "refresh_token",
-  }, fetchFn);
+  }, fetchFn, timeoutMs);
 }
 
 // ------------------------------------------------------------------ encryption at rest

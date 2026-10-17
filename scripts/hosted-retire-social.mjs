@@ -10,11 +10,15 @@
 // this names them:
 //   - Google and Apple sign-in off, their login client IDs and secrets (the GoTrue Apple
 //     client-secret JWT, the Google OAuth secret) emptied, manual identity linking off;
-//   - the redirect allow-list emptied: its only entry was the native apps' OAuth callback
-//     (ch.goomba.wuselwall://login-callback/). E-mail links go to site_url, which stays.
+//   - the native apps' OAuth callback (ch.goomba.wuselwall://login-callback/, any scheme)
+//     taken out of the redirect allow-list. Every other entry stays exactly as it was: an
+//     operator may have added invitation, pairing or web destinations the retained journeys
+//     need (specs/22, item 1). A list without the callback is not rewritten. E-mail links go
+//     to site_url, which stays.
 //   - the apple-token Edge Function deleted if it is still deployed: deploying the remaining
 //     functions does not remove one that is no longer in the repository.
-// Then it reads the settings and the function list back and fails unless they show the result.
+// Then it reads the settings and the function list back and fails unless they show the result,
+// including every allow-list entry it meant to keep.
 //
 // Kept, on purpose: the APPLE_TEAM_ID, APPLE_KEY_ID, APPLE_PRIVATE_KEY, APPLE_CLIENT_ID and
 // APPLE_TOKEN_KEY Edge Function secrets. account-delete needs them to revoke the Apple tokens of
@@ -32,12 +36,36 @@ export const RETIRED_AUTH = Object.freeze({
   external_apple_secret: '',
   external_apple_additional_client_ids: '',
   security_manual_linking_enabled: false,
-  uri_allow_list: '',
 });
 
 export const RETIRED_FUNCTIONS = Object.freeze(['apple-token']);
 
-const OBSOLETE_REDIRECT = /login-callback/;
+// The native OAuth callback: a custom scheme whose host is login-callback, with or without a
+// path. Only this is obsolete; an https destination that merely contains the word is not.
+const OBSOLETE_REDIRECT = /^[a-z][a-z0-9+.-]*:\/\/login-callback(?:[/?#].*)?$/i;
+
+/** The entries of a comma-separated allow-list, trimmed, empty ones dropped. */
+export function redirectEntries(list) {
+  return String(list ?? '').split(',').map((e) => e.trim()).filter((e) => e !== '');
+}
+
+export function isObsoleteRedirect(entry) {
+  return OBSOLETE_REDIRECT.test(entry.trim());
+}
+
+/** The allow-list without the obsolete callback: every other entry kept, in its order. */
+export function retainedRedirects(list) {
+  return redirectEntries(list).filter((e) => !isObsoleteRedirect(e));
+}
+
+/** The PATCH body for a project whose Auth settings read `before`. */
+export function retirementPatch(before) {
+  const body = { ...RETIRED_AUTH };
+  if (redirectEntries(before?.uri_allow_list).some(isObsoleteRedirect)) {
+    body.uri_allow_list = retainedRedirects(before.uri_allow_list).join(',');
+  }
+  return body;
+}
 
 /** What is still wrong with these Auth settings (empty: retired). Never includes values. */
 export function authProblems(config) {
@@ -45,7 +73,7 @@ export function authProblems(config) {
   if (config.external_google_enabled !== false) problems.push('Google sign-in is still enabled');
   if (config.external_apple_enabled !== false) problems.push('Apple sign-in is still enabled');
   if (config.security_manual_linking_enabled !== false) problems.push('manual identity linking is still enabled');
-  if (OBSOLETE_REDIRECT.test(config.uri_allow_list ?? '')) {
+  if (redirectEntries(config.uri_allow_list).some(isObsoleteRedirect)) {
     problems.push('the redirect allow-list still holds the native OAuth callback');
   }
   return problems;
@@ -71,13 +99,18 @@ export async function retire({ project, token, fetchFn = fetch, log = console.lo
     return text ? JSON.parse(text) : null;
   };
 
-  const before = await call('GET', 'config/auth');
+  const before = (await call('GET', 'config/auth')) ?? {};
   const wasOn = authProblems(before);
-  await call('PATCH', 'config/auth', RETIRED_AUTH);
-  const after = await call('GET', 'config/auth');
+  const kept = retainedRedirects(before.uri_allow_list);
+  await call('PATCH', 'config/auth', retirementPatch(before));
+  const after = (await call('GET', 'config/auth')) ?? {};
   const left = authProblems(after);
+  const afterEntries = new Set(redirectEntries(after.uri_allow_list));
+  const lost = kept.filter((e) => !afterEntries.has(e)).length;
+  if (lost) left.push(`${lost} redirect allow-list entr${lost === 1 ? 'y' : 'ies'} to keep went missing`);
   if (left.length) throw new Error(`Auth settings not retired: ${left.join('; ')}`);
   log(wasOn.length ? `Auth: switched off (${wasOn.join('; ')})` : 'Auth: social sign-in was already off');
+  log(`Auth: ${kept.length} other redirect allow-list entr${kept.length === 1 ? 'y' : 'ies'} kept`);
   const stored = storedLoginCredentials(after);
   if (stored.length) log(`::warning::login credentials still reported as set: ${stored.join(', ')}`);
 
@@ -93,7 +126,11 @@ export async function retire({ project, token, fetchFn = fetch, log = console.lo
   const remaining = ((await call('GET', 'functions')) ?? []).map((f) => f.slug);
   const still = RETIRED_FUNCTIONS.filter((s) => remaining.includes(s));
   if (still.length) throw new Error(`still deployed: ${still.join(', ')}`);
-  return { switchedOff: wasOn, deletedFunctions: RETIRED_FUNCTIONS.filter((s) => deployed.some((f) => f.slug === s)) };
+  return {
+    switchedOff: wasOn,
+    keptRedirects: kept.length,
+    deletedFunctions: RETIRED_FUNCTIONS.filter((s) => deployed.some((f) => f.slug === s)),
+  };
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

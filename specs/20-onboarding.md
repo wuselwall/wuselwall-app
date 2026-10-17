@@ -518,7 +518,7 @@ After this step, anon can call `health`, `server_info`, `invitation_preview`,
 `pairing_start` and `pairing_poll`, plus `enrol_device` for one release. `setup_household` goes. The catalogue
 test (`040_catalogue.test.sql`) is updated to exactly this list.
 
-**Apple access revocation** (accounts created before sign-in with Apple was removed only): `account-delete` revokes the Apple refresh token stored for such an account, encrypted with `APPLE_TOKEN_KEY`. No new Apple tokens are stored. Since 2026-10-17 the deletion moves the token into a revocation obligation in the same transaction; a failed or unconfigured revocation is kept and retried by the daily `household-purge` job, and the deletion never waits for Apple ([22](22-legacy-social-account-recovery.md)).
+**Apple access revocation** (accounts created before sign-in with Apple was removed only): `account-delete` revokes the Apple refresh token stored for such an account, encrypted with `APPLE_TOKEN_KEY`. No new Apple tokens are stored. Since 2026-10-17 the deletion moves the token into a revocation obligation in the same transaction; a failed or unconfigured revocation is kept and retried by the daily `household-purge` job, and the account is deleted before Apple is asked, which delays the answer by 5 seconds at most ([22](22-legacy-social-account-recovery.md)).
 
 ### Email
 

@@ -1,7 +1,7 @@
 begin;
-select plan(28);
+select plan(38);
 
--- Apple revocation obligations (20261017110000, specs/22 item 6): a stored Apple token never
+-- Apple revocation obligations (20261017110000 and 20261017120000, specs/22 item 6): a stored Apple token never
 -- disappears without an obligation to revoke it, and only the service role sees or settles them.
 -- Starts from an empty system, all rolled back.
 delete from app.household;
@@ -169,6 +169,56 @@ select pg_temp.owner();
 select is((select count(*) from app.apple_revocation where user_id = pg_temp.id('uid-phone-a')), 0::bigint,
   'a successful revocation removes the obligation');
 select is((select count(*) from app.apple_revocation), 1::bigint, 'and only that one');
+
+-- ============================================================ fair daily retries (20261017120000)
+-- 51 obligations, a batch of 50, and every attempt fails (Apple keeps refusing). The daily job
+-- must not pick the same oldest 50 every day: what waited longest since its last try goes first.
+-- record() stamps now(), constant in this transaction, so each "next day" moves every attempt
+-- 24 hours back.
+delete from app.apple_revocation;
+create temp table fair (n integer primary key, id uuid);
+grant all on fair to public;
+with ins as (
+  insert into app.apple_revocation (user_id, refresh_token_enc, created_at)
+  select gen_random_uuid(), 'enc-fair-' || n, now() - interval '30 days' + n * interval '1 minute'
+    from generate_series(1, 51) n
+  returning id, refresh_token_enc)
+insert into fair select substr(refresh_token_enc, 10)::integer, id from ins;
+
+create function pg_temp.daily_run() returns setof integer language plpgsql as $$
+declare r record;
+begin
+  perform pg_temp.as_service();
+  for r in select d.id from api.apple_revocation_due() d loop
+    perform api.apple_revocation_record(r.id, 'http_400');
+    return next (select n from fair where fair.id = r.id);
+  end loop;
+  perform pg_temp.owner();
+  update app.apple_revocation set last_attempt_at = last_attempt_at - interval '24 hours'
+   where last_attempt_at is not null;
+end $$;
+
+create temp table day1 as select n from pg_temp.daily_run() n;
+create temp table day2 as select n from pg_temp.daily_run() n;
+create temp table day3 as select n from pg_temp.daily_run() n;
+
+select is((select count(*) from day1), 50::bigint, 'day 1 tries a full batch');
+select ok(not exists (select 1 from day1 where n = 51), 'day 1 takes the oldest 50');
+select ok(exists (select 1 from day2 where n = 51),
+  'day 2 tries the obligation that was never tried, although the oldest 50 keep failing');
+select is((select count(*) from day2), 50::bigint, 'day 2 tries a full batch as well');
+select is((select array_agg(n order by n) from fair where n not in (select n from day2)), array[50],
+  'day 2 leaves out only the newest of the first batch');
+select ok(exists (select 1 from day3 where n = 50), 'day 3 reaches the one day 2 left out');
+select is((select count(distinct n) from (select n from day1 union all select n from day2) d), 51::bigint,
+  'within two daily runs every obligation was tried');
+select is((select min(attempts) from app.apple_revocation), 1,
+  'no obligation is starved: each has at least one attempt');
+select is((select count(*) from app.apple_revocation where refresh_token_enc like 'enc-fair-%'), 51::bigint,
+  'failed attempts keep every encrypted token');
+select pg_temp.as_member('phone-a');
+select throws_ok($$ select * from api.apple_revocation_due() $$, '42501', null,
+  'the fair batch is still closed to members');
 
 select * from finish();
 rollback;

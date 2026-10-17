@@ -3,12 +3,12 @@
 // before the upgrade. It shows what the script sends and checks; it is not the real API.
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { authProblems, retire, RETIRED_AUTH } from './hosted-retire-social.mjs';
+import { authProblems, retainedRedirects, retire, RETIRED_AUTH, retirementPatch } from './hosted-retire-social.mjs';
 
 const TOKEN = 'sbp_test_token_not_real';
 
 /** A project as it looked with Google and Apple on (the pre-removal deploy). */
-function project({ applyPatch = true, deleteWorks = true, functions } = {}) {
+function project({ applyPatch = true, deleteWorks = true, functions, uriAllowList, dropsList = false } = {}) {
   const state = {
     auth: {
       site_url: 'https://abcdefghijklmnopqrst.supabase.co',
@@ -20,7 +20,7 @@ function project({ applyPatch = true, deleteWorks = true, functions } = {}) {
       external_apple_client_id: 'ch.goomba.wuselwall.signin,ch.goomba.wuselwall',
       external_apple_secret: 'apple-client-secret-jwt',
       security_manual_linking_enabled: true,
-      uri_allow_list: 'ch.goomba.wuselwall://login-callback/',
+      uri_allow_list: uriAllowList ?? 'ch.goomba.wuselwall://login-callback/',
     },
     functions: functions ?? ['account-delete', 'apple-token', 'server-info'],
     secrets: ['APPLE_TEAM_ID', 'APPLE_KEY_ID', 'APPLE_PRIVATE_KEY', 'APPLE_CLIENT_ID', 'APPLE_TOKEN_KEY', 'CRON_SECRET'],
@@ -34,6 +34,8 @@ function project({ applyPatch = true, deleteWorks = true, functions } = {}) {
     if (path === 'config/auth' && init.method === 'GET') return ok(state.auth);
     if (path === 'config/auth' && init.method === 'PATCH') {
       if (applyPatch) Object.assign(state.auth, JSON.parse(init.body));
+      // A misbehaving API that empties the list whatever it was sent.
+      if (dropsList) state.auth.uri_allow_list = '';
       return ok(state.auth);
     }
     if (path === 'functions' && init.method === 'GET') return ok(state.functions.map((slug) => ({ slug })));
@@ -70,7 +72,7 @@ test('an upgrade from enabled providers switches them off, clears the callback a
     'GET config/auth', 'PATCH config/auth', 'GET config/auth',
     'GET functions', 'DELETE functions/apple-token', 'GET functions',
   ]);
-  assert.deepEqual(p.calls[1].body, RETIRED_AUTH);
+  assert.deepEqual(p.calls[1].body, { ...RETIRED_AUTH, uri_allow_list: '' });
   // Nothing printed carries a setting value or the token.
   for (const l of lines) {
     assert.ok(!l.includes('secret-jwt') && !l.includes('google-secret') && !l.includes(TOKEN), l);
@@ -82,7 +84,7 @@ test('a second run finds nothing left to do and still verifies', async () => {
   await retire({ project: 'abcdefghijklmnopqrst', token: TOKEN, fetchFn: p.fetchFn, log: () => {} });
   const lines = [];
   const out = await retire({ project: 'abcdefghijklmnopqrst', token: TOKEN, fetchFn: p.fetchFn, log: (l) => lines.push(l) });
-  assert.deepEqual(out, { switchedOff: [], deletedFunctions: [] });
+  assert.deepEqual(out, { switchedOff: [], keptRedirects: 0, deletedFunctions: [] });
   assert.ok(lines.includes('Edge Function apple-token: not deployed'));
 });
 
@@ -108,4 +110,69 @@ test('authProblems names each leftover without its value', () => {
   assert.deepEqual(problems, ['Apple sign-in is still enabled', 'the redirect allow-list still holds the native OAuth callback']);
   // A missing key is not proof of "off".
   assert.ok(authProblems({}).includes('Google sign-in is still enabled'));
+});
+
+// specs/22 item 1: only the obsolete OAuth callback goes; invitation, pairing and any other
+// destination an operator added stays, in its order.
+const MIXED = [
+  'https://example.org/invite/**',
+  'ch.goomba.wuselwall://login-callback/',
+  'https://example.org/pair/**',
+  ' https://family.example.org/** ',
+  'ch.goomba.wuselwall.dev://login-callback',
+  'https://example.org/docs/login-callback-help',
+].join(',');
+const MIXED_KEPT = [
+  'https://example.org/invite/**',
+  'https://example.org/pair/**',
+  'https://family.example.org/**',
+  'https://example.org/docs/login-callback-help',
+];
+
+test('a mixed allow-list keeps invitation, pairing and other entries and loses only the callback', async () => {
+  const p = project({ uriAllowList: MIXED });
+  const lines = [];
+  const out = await retire({ project: 'abcdefghijklmnopqrst', token: TOKEN, fetchFn: p.fetchFn, log: (l) => lines.push(l) });
+  assert.equal(p.calls[1].body.uri_allow_list, MIXED_KEPT.join(','));
+  assert.equal(p.state.auth.uri_allow_list, MIXED_KEPT.join(','), 'read back from the project');
+  assert.equal(out.keptRedirects, 4);
+  assert.ok(lines.includes('Auth: 4 other redirect allow-list entries kept'));
+  // The printed lines name counts, never the entries themselves.
+  for (const l of lines) assert.ok(!l.includes('example.org'), l);
+});
+
+test('a mixed list is idempotent: the second run sends no allow-list and changes nothing', async () => {
+  const p = project({ uriAllowList: MIXED });
+  await retire({ project: 'abcdefghijklmnopqrst', token: TOKEN, fetchFn: p.fetchFn, log: () => {} });
+  const firstCalls = p.calls.length;
+  const out = await retire({ project: 'abcdefghijklmnopqrst', token: TOKEN, fetchFn: p.fetchFn, log: () => {} });
+  const patch = p.calls.slice(firstCalls).find((c) => c.method === 'PATCH');
+  assert.ok(!('uri_allow_list' in patch.body), 'a list without the callback is not rewritten');
+  assert.equal(p.state.auth.uri_allow_list, MIXED_KEPT.join(','));
+  assert.deepEqual(out, { switchedOff: [], keptRedirects: 4, deletedFunctions: [] });
+});
+
+test('a project without the callback keeps its allow-list untouched', async () => {
+  const list = 'https://example.org/invite/**,https://example.org/pair/**';
+  const p = project({ uriAllowList: list });
+  await retire({ project: 'abcdefghijklmnopqrst', token: TOKEN, fetchFn: p.fetchFn, log: () => {} });
+  assert.ok(!('uri_allow_list' in p.calls[1].body));
+  assert.equal(p.state.auth.uri_allow_list, list);
+});
+
+test('a read-back that lost a retained entry fails the deploy', async () => {
+  const p = project({ uriAllowList: MIXED, dropsList: true });
+  await assert.rejects(
+    retire({ project: 'abcdefghijklmnopqrst', token: TOKEN, fetchFn: p.fetchFn, log: () => {} }),
+    /4 redirect allow-list entries to keep went missing/,
+  );
+});
+
+test('retainedRedirects and retirementPatch', () => {
+  assert.deepEqual(retainedRedirects(MIXED), MIXED_KEPT);
+  assert.deepEqual(retainedRedirects(''), []);
+  assert.deepEqual(retainedRedirects(undefined), []);
+  assert.deepEqual(retirementPatch({ uri_allow_list: 'ch.goomba.wuselwall://login-callback/' }),
+    { ...RETIRED_AUTH, uri_allow_list: '' });
+  assert.deepEqual(retirementPatch({}), { ...RETIRED_AUTH });
 });

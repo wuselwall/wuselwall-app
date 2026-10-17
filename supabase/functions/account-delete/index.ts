@@ -26,7 +26,7 @@ import {
   serviceClient,
 } from "../_shared/client.ts";
 import { amrOf, RECENT_SIGN_IN_SECONDS, signedInRecently, verifiedCaller } from "../_shared/caller.ts";
-import { appleConfig } from "../_shared/apple.ts";
+import { APPLE_TIMEOUT_MS, appleConfig } from "../_shared/apple.ts";
 import { rpcRevocationStore, settleRevocations } from "../_shared/apple_revocation.ts";
 
 /** A refusal in the shape the apps read: `hint` carries the stable reason. */
@@ -61,13 +61,18 @@ Deno.serve(async (req: Request): Promise<Response> => {
     const { error: deleteError } = await service.auth.admin.deleteUser(user.id);
     if (deleteError) throw deleteError;
 
-    // Service role, for the verified (now deleted) user's own obligations only.
+    // Service role, for the verified (now deleted) user's own obligations only. Bounded: the
+    // account is already gone, and a hanging Apple delays this answer by APPLE_TIMEOUT_MS at
+    // most; whatever is not settled here stays for the daily job.
     try {
-      const outcome = await settleRevocations(rpcRevocationStore(service), appleConfig(), { user: user.id });
-      if (outcome.kept > 0) {
+      const outcome = await settleRevocations(rpcRevocationStore(service), appleConfig(), {
+        user: user.id,
+        budgetMs: APPLE_TIMEOUT_MS,
+      });
+      if (outcome.kept + outcome.deferred > 0) {
         console.error(
           "account-delete: Apple revocation kept for retry:",
-          outcome.unconfigured ? "config_missing" : `${outcome.kept} pending`,
+          outcome.unconfigured ? "config_missing" : `${outcome.kept + outcome.deferred} pending`,
         );
       }
     } catch {

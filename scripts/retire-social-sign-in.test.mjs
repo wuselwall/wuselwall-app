@@ -80,3 +80,15 @@ test('a fresh .env from the current make-env.mjs is left alone', () => {
   assert.equal(out, fresh);
   assert.match(log, /nothing left to retire/);
 });
+
+test('a mixed redirect list loses only the native callback, other entries keep their order', () => {
+  const mixed = "ADDITIONAL_REDIRECT_URLS='https://app.example.org/**,https://app.example.org/invite/**,"
+    + "ch.goomba.wuselwall://login-callback/,https://app.example.org/pair/**,"
+    + "https://app.example.org/help/login-callback-faq'\n";
+  const { file, out } = run(mixed);
+  assert.equal(out, "ADDITIONAL_REDIRECT_URLS='https://app.example.org/**,https://app.example.org/invite/**,"
+    + "https://app.example.org/pair/**,https://app.example.org/help/login-callback-faq'\n");
+  const second = again(file);
+  assert.equal(second.out, out);
+  assert.match(second.log, /nothing left to retire/);
+});

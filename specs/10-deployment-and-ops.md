@@ -147,10 +147,10 @@ account that cannot receive a code cannot sign in again after its session ends.
 
 | Server | Step | Effect |
 |---|---|---|
-| Compose, from a release | `wuselwall update` (and `install --env`) runs `stack/retire-social-sign-in.sh` before Auth restarts | Removes `APPLE_ENABLED`, `APPLE_CLIENT_IDS`, `APPLE_SECRET` (the GoTrue login client secret), `GOOGLE_ENABLED`, `GOOGLE_CLIENT_IDS`, `GOOGLE_CLIENT_SECRET` from `stack/.env`, and the native callback from `ADDITIONAL_REDIRECT_URLS`. Prints names, never values |
+| Compose, from a release | `wuselwall update` (and `install --env`) runs `stack/retire-social-sign-in.sh` before Auth restarts | Removes `APPLE_ENABLED`, `APPLE_CLIENT_IDS`, `APPLE_SECRET` (the GoTrue login client secret), `GOOGLE_ENABLED`, `GOOGLE_CLIENT_IDS`, `GOOGLE_CLIENT_SECRET` from `stack/.env`, and the native callback (`<scheme>://login-callback…`) from `ADDITIONAL_REDIRECT_URLS`; every other entry (web app, invitation, pairing) stays in its order. Prints names, never values |
 | Compose, from a checkout | `scripts/remote-stack.sh deploy` runs the same script on the server | Same |
 | Compose, both | `docker-compose.wuselwall.yml` | `GOTRUE_EXTERNAL_APPLE_ENABLED`, `GOTRUE_EXTERNAL_GOOGLE_ENABLED`, `GOTRUE_SECURITY_MANUAL_LINKING_ENABLED` are `"false"`, whatever the `.env` holds. The functions directory is replaced as a whole, so `apple-token` is gone |
-| Hosted Supabase | `deploy-supabase.yml`, step *Retire social sign-in* (`scripts/hosted-retire-social.mjs`) | PATCHes Google and Apple off, their login client IDs and secrets empty, manual linking off, `uri_allow_list` empty; reads the settings back and fails if any is still on; deletes a still-deployed `apple-token` and fails unless the function list no longer has it. Deploying the remaining functions alone would leave `apple-token` running |
+| Hosted Supabase | `deploy-supabase.yml`, step *Retire social sign-in* (`scripts/hosted-retire-social.mjs`) | PATCHes Google and Apple off, their login client IDs and secrets empty, manual linking off, and only the native callback taken out of `uri_allow_list` (other entries, such as invitation or pairing destinations, stay; a list without the callback is not rewritten); reads the settings back and fails if any is still on or a kept entry is missing; deletes a still-deployed `apple-token` and fails unless the function list no longer has it. Deploying the remaining functions alone would leave `apple-token` running |
 
 Kept everywhere: `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_PRIVATE_KEY`, `APPLE_CLIENT_ID`,
 `APPLE_TOKEN_KEY` (stack `.env` or the hosted project's Edge Function secrets). They are not
@@ -173,9 +173,13 @@ accounts from before. `APPLE_TOKEN_KEY` never changes.
 **Apple revocation obligations.** Deleting an account that holds a stored Apple token moves
 the encrypted token into `app.apple_revocation` in the same transaction (migration
 `20261017110000`). account-delete tries the revocation at once; `household-purge` retries
-every open one daily. A missing Apple value, a key that cannot decrypt or Apple being down
-keeps the row with a reason code; nothing is lost and the deletion itself never waits for
-Apple. To see what is open (database administrators only):
+every open one daily, those that waited longest since their last attempt first (migration
+`20261017120000`), so obligations that keep failing cannot starve the rest. A missing Apple
+value, a key that cannot decrypt, Apple being down or not answering keeps the row with a
+reason code; nothing is lost. The account is deleted before Apple is asked; each call to Apple
+gives up after 5 seconds, so a hanging Apple delays account-delete's answer by that much at
+most, and the daily job stops calling Apple after 60 seconds and leaves the rest for the next
+run. To see what is open (database administrators only):
 
 ```sql
 select last_error, count(*), max(attempts), min(created_at)

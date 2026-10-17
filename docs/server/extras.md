@@ -22,7 +22,7 @@ Dafür braucht der Server einen SMTP-Dienst, also einen Anbieter, der Mails vers
 
 Anmelden mit Apple und Google gibt es in WuselWall nicht mehr. Nur wenn auf eurem Server noch Konten aus der Zeit davor bestehen, braucht der Server Zugang bei Apple: Löscht jemand so ein Konto, widerruft WuselWall dort den Apple-Zugang. Dafür braucht der Server in `stack/.env` nur diese fünf Werte: `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_PRIVATE_KEY`, `APPLE_CLIENT_ID` und `APPLE_TOKEN_KEY`. Ohne sie kann der Server den Zugang bei Apple nicht widerrufen. Den Wert `APPLE_TOKEN_KEY` nie ändern: mit ihm sind die gespeicherten Apple-Tokens verschlüsselt.
 
-Klappt der Widerruf nicht sofort (Apple nicht erreichbar, ein Wert fehlt), geht nichts verloren: Der Server merkt sich den offenen Widerruf und versucht es jede Nacht wieder. Das Löschen des Kontos wartet nie auf Apple.
+Klappt der Widerruf nicht sofort (Apple nicht erreichbar, ein Wert fehlt), geht nichts verloren: Der Server merkt sich den offenen Widerruf und versucht es jede Nacht wieder. Das Konto ist schon gelöscht, bevor der Server Apple fragt; antwortet Apple nicht, wartet die Antwort höchstens ein paar Sekunden.
 
 ## Update von einer Version mit Apple- und Google-Anmeldung {#social-stilllegen}
 
@@ -31,7 +31,7 @@ Klappt der Widerruf nicht sofort (Apple nicht erreichbar, ein Wert fehlt), geht 
 **Was das Update von selbst erledigt:**
 
 - **Zu Hause** (`wuselwall update`): Die alten Anmelde-Einstellungen für Apple und Google und die alte Rücksprungadresse der App verschwinden aus `stack/.env`. Die Anmeldung mit Apple, Google und das Verknüpfen von Konten sind ausgeschaltet, die alte Funktion `apple-token` ist weg. Die fünf Werte für den Widerruf bleiben.
-- **Bei Supabase** (Workflow **deploy-supabase**): Der Schritt **Retire social sign-in** schaltet Apple, Google und das Verknüpfen ab, leert die Rücksprungadressen, löscht die Funktion `apple-token` und prüft danach beides. Schlägt etwas fehl, bricht der Workflow ab.
+- **Bei Supabase** (Workflow **deploy-supabase**): Der Schritt **Retire social sign-in** schaltet Apple, Google und das Verknüpfen ab, entfernt die alte Rücksprungadresse der App (andere Einträge, etwa für Einladungen, bleiben), löscht die Funktion `apple-token` und prüft danach beides. Schlägt etwas fehl, bricht der Workflow ab.
 
 **Danach prüfen:** Wer sich früher mit Apple oder Google angemeldet hat, fordert auf einem **zweiten** Gerät einen Code per E-Mail an und meldet sich damit an. Das erste Gerät bleibt dabei angemeldet. Niemand soll sich zum Ausprobieren abmelden.
 
