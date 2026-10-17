@@ -1,4 +1,4 @@
-# CLAUDE.md
+# AGENTS.md
 
 This repository holds both the planning documents and the code for WuselWall (see
 [README.md](README.md)). `specs/` is the specification; `app/` (Flutter), `supabase/`
