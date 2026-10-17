@@ -126,52 +126,6 @@ abstract final class Palette {
   static const onPoints = Color(0xFF3E2A00);
 }
 
-/// A sign-in button's colours, fixed by the provider's branding rules.
-@immutable
-class ProviderButtonColors {
-  const ProviderButtonColors({
-    required this.background,
-    required this.foreground,
-    required this.border,
-  });
-
-  final Color background;
-  final Color foreground;
-  final Color border;
-}
-
-/// "Continue with Apple" and "Continue with Google": the only colours in the app not
-/// taken from the design system (specs/20, "The front door"). Apple: black on light
-/// grounds, white on dark ones. Google: its light and dark neutral buttons.
-abstract final class ProviderBrand {
-  static const _appleOnLight = ProviderButtonColors(
-    background: Color(0xFF000000),
-    foreground: Color(0xFFFFFFFF),
-    border: Color(0xFF000000),
-  );
-  static const _appleOnDark = ProviderButtonColors(
-    background: Color(0xFFFFFFFF),
-    foreground: Color(0xFF000000),
-    border: Color(0xFFFFFFFF),
-  );
-  static const _googleLight = ProviderButtonColors(
-    background: Color(0xFFFFFFFF),
-    foreground: Color(0xFF1F1F1F),
-    border: Color(0xFF747775),
-  );
-  static const _googleDark = ProviderButtonColors(
-    background: Color(0xFF131314),
-    foreground: Color(0xFFE3E3E3),
-    border: Color(0xFF8E918F),
-  );
-
-  static ProviderButtonColors apple(Shade shade) =>
-      shade == Shade.light ? _appleOnLight : _appleOnDark;
-
-  static ProviderButtonColors google(Shade shade) =>
-      shade == Shade.light ? _googleLight : _googleDark;
-}
-
 /// One member colour in all three shades. People are ink (specs/17): saturated, used
 /// for bands, dots, avatars and the active accent — always next to an initial.
 @immutable

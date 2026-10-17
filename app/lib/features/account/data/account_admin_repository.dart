@@ -13,10 +13,6 @@ class AccountAdminRepository {
   final ApiClient _api;
   final GoTrueClient _auth;
 
-  /// The sign-in provider of the current session: `email`, `apple`, `google`, or null.
-  String? currentProvider() =>
-      _auth.currentUser?.appMetadata['provider'] as String?;
-
   /// Whether the current session signed in within the last five minutes.
   bool hasRecentSignIn() {
     final token = _auth.currentSession?.accessToken;
