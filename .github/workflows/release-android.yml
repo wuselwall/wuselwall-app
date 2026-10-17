@@ -1,12 +1,16 @@
-# A signed APK for the family's Android devices, installed by hand until the Play
-# internal track exists (specs/16, step 7). scripts/deploy-apk.sh publishes it at
-# https://wuselwall.app/download/wuselwall.apk. The same run builds the App Bundle (.aab)
-# that Play Console takes, uploaded by hand until this workflow uploads it to the internal
-# track. A tag v*.*.* builds both, like release-ios.yml; "Run workflow" builds the pubspec
-# version from any branch.
+# Signed Android builds (specs/16, step 7); release-ios.yml is its iOS twin. The App
+# Bundle (.aab) goes to the Play internal testing track; the APK stays the fallback that
+# scripts/deploy-apk.sh publishes at https://wuselwall.app/download/wuselwall.apk. A tag
+# v*.*.* builds both and uploads the bundle; "Run workflow" builds the pubspec version from
+# any branch and uploads it only when asked to.
 name: release-android
 on:
   workflow_dispatch:
+    inputs:
+      upload:
+        description: Upload the App Bundle to the Play internal track
+        type: boolean
+        default: false
   push:
     tags: ['v*.*.*']
 concurrency:
@@ -68,3 +72,20 @@ jobs:
           name: wuselwall-aab
           path: app/build/wuselwall.aab
           retention-days: 30
+
+  # A GitHub-hosted runner, so the Play key never reaches the shared build machine. Testers
+  # on the internal track receive the build as soon as Play has processed it.
+  play:
+    needs: apk
+    if: github.ref_type == 'tag' || inputs.upload
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: app/android } }
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with: { name: wuselwall-aab, path: app/build }
+      - uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
+        with: { ruby-version: '3.3', bundler-cache: true, working-directory: app/android }
+      - run: bundle exec fastlane android internal
+        env:
+          PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
