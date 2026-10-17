@@ -3559,6 +3559,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'Too many attempts. Wait a few minutes and try again.';
 
   @override
+  String get householdNewStalled =>
+      'This is taking longer than usual. Please wait, or sign out and sign in again. Do not create the family a second time.';
+
+  @override
+  String get setupPrivacy => 'Privacy policy';
+
+  @override
   String get householdMembersTitle => 'Who else is in your family?';
 
   @override

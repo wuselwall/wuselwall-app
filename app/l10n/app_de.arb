@@ -1332,6 +1332,8 @@
   "householdNewErrNoCode": "Neue Familien gibt es gerade nur mit Gründungscode.",
   "householdNewErrCodeWrong": "Der Gründungscode stimmt nicht.",
   "householdNewErrRateLimited": "Zu viele Versuche. Warte ein paar Minuten und probier es dann nochmal.",
+  "householdNewStalled": "Das dauert länger als üblich. Bitte warte kurz oder melde dich ab und wieder an. Die Familie bitte nicht noch einmal anlegen.",
+  "setupPrivacy": "Datenschutz",
   "householdMembersTitle": "Wer gehört noch zu euch?",
   "householdMembersYou": "{name} (du)",
   "@householdMembersYou": {

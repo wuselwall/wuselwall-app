@@ -3586,6 +3586,13 @@ class AppLocalizationsDe extends AppLocalizations {
       'Zu viele Versuche. Warte ein paar Minuten und probier es dann nochmal.';
 
   @override
+  String get householdNewStalled =>
+      'Das dauert länger als üblich. Bitte warte kurz oder melde dich ab und wieder an. Die Familie bitte nicht noch einmal anlegen.';
+
+  @override
+  String get setupPrivacy => 'Datenschutz';
+
+  @override
   String get householdMembersTitle => 'Wer gehört noch zu euch?';
 
   @override

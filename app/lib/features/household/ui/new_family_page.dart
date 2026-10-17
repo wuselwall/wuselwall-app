@@ -44,6 +44,10 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
   var _swatch = 0;
   var _examples = true;
   var _busy = false;
+  // Set when the session has not turned Ready long after create() succeeded: the form
+  // stays locked (a second create would make a second family), but the escapes open again.
+  var _stalled = false;
+  Timer? _stallTimer;
   String? _codeError;
 
   /// The household default until the device says otherwise.
@@ -72,6 +76,7 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
 
   @override
   void dispose() {
+    _stallTimer?.cancel();
     for (final c in [_family, _name, _founderCode]) {
       c.dispose();
     }
@@ -119,6 +124,11 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
     if (!mounted) return;
     switch (result) {
       case Ok():
+        // The router normally moves on once the session is Ready. If it does not, say so
+        // and open the escapes after a while, instead of leaving the screen locked.
+        _stallTimer = Timer(const Duration(seconds: 15), () {
+          if (mounted) setState(() => _stalled = true);
+        });
         context.go(Routes.welcomeMembers);
       case Err(:final failure):
         plan.clear();
@@ -254,18 +264,29 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
                     onPressed: _busy ? null : _submit,
                     child: Text(l10n.householdNewCreate),
                   ),
+                  if (_stalled) ...[
+                    const SizedBox(height: Tokens.space3),
+                    Text(
+                      l10n.householdNewStalled,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: ww.ink2,
+                      ),
+                    ),
+                  ],
                   const SizedBox(height: Tokens.space4),
                   Wrap(
                     alignment: WrapAlignment.spaceBetween,
                     children: [
                       TextButton(
-                        onPressed: _busy
+                        // Locked while creating, open again once the session stalls.
+                        onPressed: _busy && !_stalled
                             ? null
                             : () => context.go(Routes.inviteCode),
                         child: Text(l10n.householdNewInvited),
                       ),
+                      // Never locked: a user must always be able to leave this screen.
                       TextButton(
-                        onPressed: _busy ? null : _signOut,
+                        onPressed: _signOut,
                         child: Text(l10n.householdNewSignOut),
                       ),
                     ],
