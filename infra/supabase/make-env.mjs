@@ -9,7 +9,7 @@
 //
 //   supabase/.env  optional. WW_JWT_SECRET, WW_PUBLISHABLE_KEY and WW_SECRET_KEY are kept
 //                  from it, so the apps and every device session of an existing server keep
-//                  working; WW_CRON_SECRET and the WW_APPLE_* / WW_GOOGLE_* values are taken
+//                  working; WW_CRON_SECRET and the WW_APPLE_* values (old Apple accounts) are taken
 //                  over when present. Whatever is missing is generated.
 //   --api          the server's public address (the gateway behind HTTPS)
 //   --web          where the web app is served; Auth sends its redirects there
@@ -139,8 +139,7 @@ const out = {
   API_EXTERNAL_URL: `${api.origin}/auth/v1`,
   // Where GoTrue's e-mail links land: the web app, not the website (ADR-017).
   SITE_URL: `${web.origin}/`,
-  // The web app, and the native apps' deep link for Apple and Google through the redirect.
-  ADDITIONAL_REDIRECT_URLS: `${web.origin}/**,ch.goomba.wuselwall://login-callback/`,
+  ADDITIONAL_REDIRECT_URLS: `${web.origin}/**`,
   // Passkeys work in the native apps only for the first-party hosts (ADR-018); elsewhere
   // the web app's own host is the relying party.
   PASSKEY_RP_ID: option('rp-id') ?? web.hostname,
@@ -198,16 +197,8 @@ const out = {
   SMTP_PASS: '',
   SMTP_SENDER_NAME: 'WuselWall',
 
-  // Sign in with Apple and Google (specs/10 §4), from supabase/.env when it has them; off
-  // otherwise. Later changes go through `scripts/remote-stack.sh set-env`.
-  APPLE_ENABLED: vars.WW_APPLE_CLIENT_IDS ? 'true' : 'false',
-  APPLE_CLIENT_IDS: vars.WW_APPLE_CLIENT_IDS ?? '',
-  APPLE_SECRET: vars.WW_APPLE_SECRET ?? '',
-  GOOGLE_ENABLED: vars.WW_GOOGLE_CLIENT_IDS ? 'true' : 'false',
-  GOOGLE_CLIENT_IDS: vars.WW_GOOGLE_CLIENT_IDS ?? '',
-  GOOGLE_CLIENT_SECRET: vars.WW_GOOGLE_CLIENT_SECRET ?? '',
-
-  // Sign in with Apple, server side (supabase/functions/apple-token, account-delete). The key
+  // Apple access for accounts created before sign-in with Apple was removed: account-delete
+  // revokes it at Apple. Only these five values are needed; no provider is enabled. The key
   // (.p8) is kept on one line with \n for its line breaks. APPLE_TOKEN_KEY is generated here,
   // once, with the stack: the stored Apple refresh tokens are encrypted with it and cannot be
   // read back with another key.

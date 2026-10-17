@@ -291,3 +291,14 @@ licence lets anyone run WuselWall as a hosted service, which fits
 [ADR-018](adr/ADR-018-self-hosted-only.md). `LICENSE` and `NOTICE` (third-party material:
 the Supabase compose files, the fonts, store badges, the GitHub mark and the Google "G")
 are at the repository root.
+
+### 2026-10-17 — Social sign-in removed
+
+> There is no need for social login, so make sure there is nothing left of it. (Operator, on the
+> task that removes it.)
+
+| Change | Answer | Where |
+|---|---|---|
+| Adult sign-in | Email one-time code and email + password only. Sign in with Apple and Sign in with Google are removed from the apps, the server configuration and the documentation. This supersedes the social-sign-in parts of the 2026-10-11 entry above, [ADR-014](adr/ADR-014-self-service-onboarding.md) and the native-sheet part of [ADR-018](adr/ADR-018-self-hosted-only.md), decision 6. Passkeys stay, for `WW_FIRST_PARTY_HOSTS` only | [20](20-onboarding.md#the-front-door), [10 §4](10-deployment-and-ops.md#4-sign-in-and-mail) |
+| Existing Apple accounts | Accounts created before the removal keep the stored Apple refresh token, used only to revoke Apple access when the account is deleted (App Store guideline 5.1.1(v)). The five `APPLE_*` values that do this stay; `APPLE_TOKEN_KEY` never changes | [10 §4](10-deployment-and-ops.md#4-sign-in-and-mail) |
+| Open | How accounts whose only method was Apple or Google get back in (email code on the verified address, or a password reset) is **not decided here**: the review task must confirm it before release | [11](11-security-and-privacy.md) |

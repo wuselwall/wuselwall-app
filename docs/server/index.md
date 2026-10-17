@@ -45,7 +45,6 @@ So wenig wie möglich ist Pflicht. Alles in der zweiten Tabelle könnt ihr wegla
 | Was | Ohne das |
 |---|---|
 | **Die Web-App** | Nur nötig, solange die Apps nicht in den Stores sind, oder für den Laptop. Zu Hause liefert der Server sie mit, bei Supabase veröffentlicht sie GitHub für euch |
-| **Anmelden mit Apple oder Google** | Alle melden sich mit E-Mail und Passwort an. Lässt sich nachrüsten, aber mit viel Aufwand ([Extras](/server/extras#anmelden-mit-apple-und-google)) |
 | **Feiertage und Schulferien** | Der Server holt sie einmal pro Woche bei [OpenHolidays](https://www.openholidaysapi.org/) und schickt dabei nur Ländercodes. Ohne Internetzugang des Servers fehlen sie auf der Wochentafel ([Extras](/server/extras#feiertage)) |
 | **Kalender von außen** | Abonniert ihr Kalender von Vereinen oder der Gemeinde, holt der Server sie stündlich von den Adressen, die ihr eingetragen habt. Ohne Abos ruft er nichts ab |
 | **Geteilter Familienkalender in Outlook, Google und iPhone** | Funktioniert nur, wenn der Server aus dem Internet erreichbar ist |
