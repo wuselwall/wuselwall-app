@@ -22,7 +22,7 @@ For this the server needs an SMTP service, a provider that sends mail for it. A 
 
 WuselWall no longer offers sign-in with Apple or Google. Only if your server still has accounts from before that change does it need access to Apple: when such an account is deleted, WuselWall revokes its Apple access there. For that the server needs just these five values in `stack/.env`: `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_PRIVATE_KEY`, `APPLE_CLIENT_ID` and `APPLE_TOKEN_KEY`. Without them the server cannot revoke access at Apple. Never change `APPLE_TOKEN_KEY`: the stored Apple tokens are encrypted with it.
 
-If the revocation does not work right away (Apple unreachable, a value missing), nothing is lost: the server remembers the open revocation and tries again every night. Deleting the account never waits for Apple.
+If the revocation does not work right away (Apple unreachable, a value missing), nothing is lost: the server remembers the open revocation and tries again every night. The account is already deleted before the server asks Apple; if Apple does not answer, the reply waits a few seconds at most.
 
 ## Updating from a version with Apple and Google sign-in {#retiring-social-sign-in}
 
@@ -31,7 +31,7 @@ If the revocation does not work right away (Apple unreachable, a value missing),
 **What the update does by itself:**
 
 - **At home** (`wuselwall update`): the old Apple and Google sign-in settings and the app's old return address leave `stack/.env`. Sign-in with Apple and Google and account linking are switched off, and the old `apple-token` function is gone. The five revocation values stay.
-- **At Supabase** (the **deploy-supabase** workflow): the step **Retire social sign-in** switches off Apple, Google and linking, empties the return addresses, deletes the `apple-token` function and then checks both. If anything fails, the workflow stops.
+- **At Supabase** (the **deploy-supabase** workflow): the step **Retire social sign-in** switches off Apple, Google and linking, removes the app's old return address (other entries, such as those for invitations, stay), deletes the `apple-token` function and then checks both. If anything fails, the workflow stops.
 
 **Check afterwards:** someone who used to sign in with Apple or Google asks for a code by email on a **second** device and signs in with it. The first device stays signed in. Nobody should sign out just to try it.
 

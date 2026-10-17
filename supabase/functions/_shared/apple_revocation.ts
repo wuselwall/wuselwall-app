@@ -4,12 +4,15 @@
 // token as an obligation (app.apple_revocation). This tries them: account-delete right after the
 // deletion (its own), household-purge once a day (all that are due). Each attempt is recorded:
 // a success removes the obligation, anything else keeps it with a short reason code, so a
-// missing configuration, a wrong key or Apple being down never loses the token. Nothing here
-// blocks an account deletion, and no token or response body is ever logged or returned.
+// missing configuration, a wrong key or Apple being down never loses the token. Every call to
+// Apple is bounded (APPLE_TIMEOUT_MS) and a run can be given a time budget, so a hanging Apple
+// never holds up a caller for long; the deletion itself is done before any of this runs. No
+// token or response body is ever logged or returned.
 //
 // Pure apart from the injected database calls and `fetch`: the tests pass fakes.
 
 import {
+  APPLE_TIMEOUT_MS,
   appleClientSecret,
   type AppleConfig,
   AppleError,
@@ -35,20 +38,37 @@ export type RevocationOutcome = {
   kept: number;
   /** True when the Apple values are missing: nothing could be revoked. */
   unconfigured: boolean;
+  /** Not tried because the time budget ran out; untouched, so they stay first in line. */
+  deferred: number;
 };
 
 function code(err: unknown): string {
   return err instanceof AppleError ? err.code : "internal";
 }
 
+export type SettleOptions = {
+  user?: string;
+  fetchFn?: AppleFetch;
+  now?: Date;
+  /**
+   * Wall-clock budget for all calls to Apple in this run. Each call gets at most what is left
+   * (and never more than APPLE_TIMEOUT_MS); obligations not reached in time are left untouched
+   * for the next run. account-delete passes a short one, so a hanging Apple delays its answer
+   * by a few seconds at most, after the account is already deleted.
+   */
+  budgetMs?: number;
+  /** For the tests: the clock the budget is measured with. */
+  clock?: () => number;
+};
+
 /** Tries the obligations of `user` (or every due one) and records each outcome. */
 export async function settleRevocations(
   store: RevocationStore,
   config: AppleConfig | null,
-  options: { user?: string; fetchFn?: AppleFetch; now?: Date } = {},
+  options: SettleOptions = {},
 ): Promise<RevocationOutcome> {
   const rows = await store.due(options.user);
-  const outcome: RevocationOutcome = { tried: rows.length, revoked: 0, kept: 0, unconfigured: !config };
+  const outcome: RevocationOutcome = { tried: rows.length, revoked: 0, kept: 0, unconfigured: !config, deferred: 0 };
   if (rows.length === 0) return outcome;
 
   if (!config) {
@@ -66,7 +86,17 @@ export async function settleRevocations(
     return outcome;
   }
 
-  for (const row of rows) {
+  const clock = options.clock ?? Date.now;
+  const deadline = options.budgetMs === undefined ? Infinity : clock() + options.budgetMs;
+
+  for (const [i, row] of rows.entries()) {
+    const left = deadline - clock();
+    if (left <= 0) {
+      // Out of time: the rest wait for the next run, untouched (not counted as attempts).
+      outcome.deferred = rows.length - i;
+      outcome.tried = i;
+      break;
+    }
     let refresh: string;
     try {
       refresh = await decryptToken(row.refresh_token_enc, config.tokenKey);
@@ -80,6 +110,7 @@ export async function settleRevocations(
         refresh,
         { clientId: config.clientId, clientSecret },
         options.fetchFn ?? fetch,
+        Math.min(APPLE_TIMEOUT_MS, left),
       );
     } catch (err) {
       await store.record(row.id, code(err));

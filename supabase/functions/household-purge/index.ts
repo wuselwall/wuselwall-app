@@ -23,6 +23,9 @@ import {
 import { appleConfig } from "../_shared/apple.ts";
 import { rpcRevocationStore, settleRevocations } from "../_shared/apple_revocation.ts";
 
+// Well inside an Edge Function's wall-clock limit, with the purge itself done first.
+const APPLE_DAILY_BUDGET_MS = 60_000;
+
 /**
  * Compares two strings without leaking, through timing, where they first differ.
  * Length differences are folded into the result rather than returned early.
@@ -73,18 +76,28 @@ Deno.serve(async (req: Request): Promise<Response> => {
       "device accounts",
     );
     // Apple revocations still open from deleted accounts (specs/22 item 6): retried here, once
-    // a day. A failure is kept for tomorrow and never fails the purge.
-    let apple: { revoked: number; kept: number; unconfigured: boolean } | null = null;
+    // a day, within a time budget (each call to Apple is bounded as well). A failure is kept for
+    // tomorrow and never fails the purge; what the budget did not reach goes first tomorrow.
+    let apple: { revoked: number; kept: number; deferred: number; unconfigured: boolean } | null = null;
     try {
-      const outcome = await settleRevocations(rpcRevocationStore(client), appleConfig());
-      apple = { revoked: outcome.revoked, kept: outcome.kept, unconfigured: outcome.unconfigured && outcome.tried > 0 };
-      if (outcome.tried > 0) {
+      const outcome = await settleRevocations(rpcRevocationStore(client), appleConfig(), {
+        budgetMs: APPLE_DAILY_BUDGET_MS,
+      });
+      apple = {
+        revoked: outcome.revoked,
+        kept: outcome.kept,
+        deferred: outcome.deferred,
+        unconfigured: outcome.unconfigured && outcome.tried > 0,
+      };
+      if (outcome.tried + outcome.deferred > 0) {
         console.log(
           "household-purge: Apple revocations",
           outcome.revoked,
           "revoked,",
           outcome.kept,
-          outcome.unconfigured ? "kept (Apple values missing)" : "kept for retry",
+          outcome.unconfigured ? "kept (Apple values missing)," : "kept for retry,",
+          outcome.deferred,
+          "left for the next run",
         );
       }
     } catch {
