@@ -417,6 +417,13 @@ exists; until then `release-android.yml` builds the APK and the App Bundle for a
 *Split 2026-10-15* into `release-ios.yml` and `release-android.yml` (formerly
 `build-android.yml`), one workflow per platform; the build number is the run number plus
 100, since the renamed workflows count from 1 again.
+*Built 2026-10-17,* after the first App Bundle (versionCode 101) went to the internal
+track by hand: the Android upload, a job `play` on a GitHub-hosted runner that takes the
+bundle from the build job and runs `bundle exec fastlane android internal`
+(`app/android/Gemfile`, `app/android/fastlane/`), authenticated with the Play service
+account key in the secret `PLAY_SERVICE_ACCOUNT_JSON`. A tag uploads; "Run workflow" uploads
+only with *upload* ticked. The lane uploads the build alone, never the store listing in
+`fastlane/metadata`.
 
 Each platform's `Fastfile` holds two or three short lanes; the workflow stays thin, so a
 release can also be run from a Mac with the same lanes if one becomes available.

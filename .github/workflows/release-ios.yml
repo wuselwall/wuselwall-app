@@ -37,6 +37,9 @@ jobs:
       # Exactly the packages in pubspec.lock, checked against their hashes, before the
       # signing secrets come near the build.
       - run: flutter pub get --enforce-lockfile
+      # setup-ruby's prebuilt Rubies only run from GitHub's hosted path, so on the Mac
+      # /Users/runner/hostedtoolcache must exist and belong to the runner's user (once:
+      # sudo mkdir -p /Users/runner/hostedtoolcache && sudo chown -R "$USER" /Users/runner).
       - uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
         with: { ruby-version: '3.3', bundler-cache: true, working-directory: app/ios }
       - run: xcodebuild -version
