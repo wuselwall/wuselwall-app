@@ -4766,6 +4766,18 @@ abstract class AppLocalizations {
   /// **'My badges'**
   String get kidBadgesTitle;
 
+  /// No description provided for @kidBadgeEarned.
+  ///
+  /// In en, this message translates to:
+  /// **'Earned'**
+  String get kidBadgeEarned;
+
+  /// No description provided for @kidBadgeNotYet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not earned yet'**
+  String get kidBadgeNotYet;
+
   /// No description provided for @kidStreaksTitle.
   ///
   /// In en, this message translates to:

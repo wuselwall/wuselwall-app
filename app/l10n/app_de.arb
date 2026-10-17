@@ -865,6 +865,8 @@
   "kidRedeemed": "Eingelöst!",
   "kidSoldOut": "Gerade ausverkauft",
   "kidBadgesTitle": "Meine Abzeichen",
+  "kidBadgeEarned": "Verdient",
+  "kidBadgeNotYet": "Noch nicht verdient",
   "kidStreaksTitle": "Meine Serien",
   "kidStreak": "{days, plural, =1{1 Tag {title}} other{{days} Tage {title}}}",
   "kidFamilyTitle": "Familie heute",
