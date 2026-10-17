@@ -7,6 +7,9 @@ Die Liste ist für den Einkauf gebaut: große Flächen, einhändig und mit Hands
 ## Abhaken
 
 - Tippe irgendwo auf die Zeile (mindestens 56 Pixel hoch), um einen Artikel abzuhaken.
+- Die Zeile bleibt noch kurz stehen: Erst 800 Millisekunden nach dem letzten Haken
+  werden die Haken gesendet und die Liste neu sortiert. Noch einmal tippen nimmt einen
+  solchen Haken sofort zurück. Beim Verlassen der Liste werden wartende Haken gesendet.
 - Abgehakte Artikel wandern nicht weg, sondern in den eingeklappten Bereich **„Im Wagen“** am Ende. So lässt sich ein versehentliches Abhaken mit einem Tipp rückgängig machen.
 
 <Shot name="shopping-trolley" alt="Aufgeklappter Bereich „Im Wagen“" />
