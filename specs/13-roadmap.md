@@ -7,6 +7,16 @@
 > step-by-step build order is [16 — Setup Plan](16-setup-plan.md). The status column
 > tracks this repository only.
 
+## Current qualification status
+
+Built in code is not deployed or pilot-approved. This repository does not verify a live
+server's migrations, functions, scheduled jobs, backups or data. Real-device, native
+assistive-technology and Outlook/iOS feed checks and the two-week family trial remain
+operator gates in the [release checklist](release-checklist.md). The integration candidate
+requires exact-commit automated checks and independent review before pilot authorization.
+Shortcuts, read-only MCP and the packing reminder are built in main; push and public store
+release remain separately gated. Step 10's journey gaps precede M1.6.
+
 ## A note on the "all four modules at once" decision
 
 You chose to build all four modules in the first release rather than starting with one.
@@ -153,7 +163,7 @@ so there is no separate trip entity to keep in sync. Reachable per list from the
 screen and from its own list switcher.
 
 ### M1.2 Tasks and gamification
-> **Built 2026-10-13:** household settings with the Einstellungen screen; definitions with RRULE, the four policies, the materialiser (`tasks-materialise`, `tasks-nightly`, scheduled by the server's host cron, `infra/cron/`), the ledger, rewards with approval, streaks with jokers, four badges, the starter pack, the adult screens and the kiosk family task board; the kid screens. **Open:** pending approvals on Today, since there is no push ([16, step 10.5](16-setup-plan.md#step-10--journey-gaps-before-launch-m15)); real-device use is M1.6's.
+> **Built 2026-10-13:** household settings with the Einstellungen screen; definitions with RRULE, the four policies, the materialiser (`tasks-materialise`, `tasks-nightly`), the ledger, rewards with approval, streaks with jokers, four badges, the starter pack, the adult screens and the kiosk family task board; the kid screens. Scheduling options are built in `infra/jobs/schedule.sql` and `infra/cron/`; which a server runs is unverified. **Open:** pending approvals on Today, since there is no push ([16, step 10.5](16-setup-plan.md#step-10--journey-gaps-before-launch-m15)); real-device use is M1.6's.
 
 **Household settings first** ([21](21-household-settings.md)): `setting_definition`, the
 override table, `api.settings` / `api.set_setting`, and the Einstellungen screen — M1.2 is
@@ -228,7 +238,8 @@ server.*
 
 The pilot household set up through the M1.0 flow with a founder code
 (`wuselwall setup-token`), the second parent joined by invitation and the devices
-paired · the development data cleared before that, once · every merged migration and
+paired · development data removed only by an explicit operator decision after a verified
+backup (never an automatic checklist step) · every merged migration and
 function applied, after a backup ([10](10-deployment-and-ops.md#changing-the-database)) · the
 four jobs scheduled · local reminders checked on both parents' phones (Q47; no push
 credentials) · the release checklist (step 10.9) filled in once · the ICS feed verified

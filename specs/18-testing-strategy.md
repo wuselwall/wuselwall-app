@@ -8,6 +8,13 @@ the distribution decisions in [ADR-011](adr/ADR-011-native-distribution-and-ci-c
 [Q35](14-open-questions.md): iOS Simulator, Xcode and local iOS builds are part of the
 plan below.
 
+> **Status 2026-10-17 (base `43ac2e5`, candidate branch noted where it differs).** Layers 1, 3, 4 and 6 exist. Layer 2 has Deno tests
+> beside the functions (`supabase/functions/_shared/*_test.ts`). At the base no CI step ran them, because `ci.yml` had no Deno step. The candidate
+> adds an `edge-functions` job to `.github/workflows/backend-ci.yml`; no CI run of it is recorded in this file. Layers 5, 7 and 8 are not built: `app/test/golden`, `app/integration_test/`,
+> `e2e/web/`, `scripts/e2e.sh` and `.github/workflows/e2e.yml` do not exist at that commit. Layer 9
+> is [release-checklist.md](release-checklist.md), added with this status. This document records
+> no device run and no live-server result.
+
 ## Devices on hand
 
 | Device | Stands in for | Used for |
@@ -25,21 +32,23 @@ nothing is tested twice at an expensive layer if a cheap one already covers it.
 
 | # | Layer | Tool | Lives in | Runs | Status |
 |---|---|---|---|---|---|
-| 1 | Database: RLS, `api` functions, error codes | pgTAP | `supabase/tests/` | Tag or by hand | Exists |
-| 2 | Edge Functions: ICS, recurrence, projection | `deno test` | `supabase/functions/**` | Tag or by hand | When the first function lands |
+| 1 | Database: RLS, `api` functions, error codes | pgTAP | `supabase/tests/` | Tag or manual run always; pull request when backend-sensitive paths change (`backend-ci.yml`, candidate) | Exists |
+| 2 | Edge Functions: ICS, recurrence, projection | `deno test` | `supabase/functions/**` | Same trigger as layer 1 (`edge-functions` job, `backend-ci.yml`, candidate) | Exists as `_shared/*_test.ts`; at the base no CI step ran it. Candidate adds the CI job; no run recorded here |
 | 3 | Dart unit: domain, error mapper, `Result` | `flutter test` | `app/test/core`, `…/domain` | Every PR | Exists |
-| 4 | Widget: screens with fake repositories | `flutter test` | `app/test/features`, `app/test/app` | Every PR | Exists — extend (below) |
-| 5 | Golden: pixels per locale × theme × form factor | `flutter test` + `matchesGoldenFile` | `app/test/golden` | Every PR | New |
-| 6 | Repository integration: Dart repositories against a real stack | `flutter test --tags integration` | `app/test/integration` | Tag or by hand (`backend` job) | Exists |
-| 7 | On-device E2E: the real app on a simulator, emulator or phone | `integration_test` + **Patrol** | `app/integration_test/` | Nightly (Android), before a release (iOS, devices) | New |
-| 8 | Web smoke: the release web build in a browser | **Playwright** | `e2e/web/` | Tag or by hand | New, small |
-| 9 | Manual device check: what automation cannot reach | Checklist | [`specs/release-checklist.md`](release-checklist.md) | Before promoting a TestFlight/Play build | New |
+| 4 | Widget: screens with fake repositories | `flutter test` | `app/test/features`, `app/test/app` | Every PR | Exists; the extension below (`pumpWw`, guideline checks) is not built |
+| 5 | Golden: pixels per locale × theme × form factor | `flutter test` + `matchesGoldenFile` | `app/test/golden` | Every PR | Not built (no `app/test/golden`) |
+| 6 | Repository integration: Dart repositories against a real stack | `flutter test --tags integration` | `app/test/integration` | Tag or manual run always; pull request when backend-sensitive paths change (`backend` job of `backend-ci.yml`, candidate) | Exists |
+| 7 | On-device E2E: the real app on a simulator, emulator or phone | `integration_test` + **Patrol** | `app/integration_test/` | Nightly (Android), before a release (iOS, devices) | Not built (no directory, no Patrol) |
+| 8 | Web smoke: the release web build in a browser | **Playwright** | `e2e/web/` | Tag or by hand | Not built (no directory) |
+| 9 | Manual device check: what automation cannot reach | Checklist | [`specs/release-checklist.md`](release-checklist.md) | Before promoting a TestFlight/Play build | Added 2026-10-17; manual, no results recorded in the repository |
 
 Note the naming: `app/test/integration/` stays the host-VM repository tests (layer 6).
 Flutter's on-device tests go in `app/integration_test/` (layer 7), the directory the
 tooling expects.
 
 ### Layer 4 — widget tests, extended
+
+*Status 2026-10-17:* `app/test/features` and `app/test/app` exist. `pumpWw` and the guideline checks are not in `app/test` at `43ac2e5`; the list below is the plan.
 
 The fakes in `test/support/fakes.dart` already make screens testable without a backend.
 Add one helper, `pumpWw(widget, {locale, register, brightness, size, textScale})`, and use
@@ -57,6 +66,8 @@ never on a device.
 
 ### Layer 5 — goldens
 
+*Status 2026-10-17: not built.* No golden images or `update-goldens.sh` exist.
+
 Screenshots compared pixel-for-pixel, for the screens whose look is the requirement: the
 kiosk week board, the shopping list and tile picker, the acting-profile bar with member
 colours, the setup and enrolment screens.
@@ -71,6 +82,8 @@ colours, the setup and enrolment screens.
 - Tag them `golden` so `flutter test -x golden` stays available for a quick local loop.
 
 ### Layer 7 — on-device E2E with Patrol
+
+*Status 2026-10-17: not built.* No device or Patrol tests exist. The host-level repository and screen-count tests that cover part of the same flows are `app/test/integration/` (`onboarding_integration_test.dart`, `identity_shopping_integration_test.dart`, `health_integration_test.dart`) and `app/test/journeys/` (J1–J3 screen counts).
 
 `integration_test` alone drives only Flutter widgets. It cannot accept the camera
 permission dialog, toggle wifi, open a notification or press the system back button.
@@ -119,6 +132,8 @@ as with the Supabase CLI.
 
 ### Layer 8 — Playwright, for the web build only
 
+*Status 2026-10-17: not built.* No `e2e/web/` and no Playwright specs in the repository.
+
 Yes, Playwright still works, but within limits. Flutter web paints to a `<canvas>`
 (CanvasKit or skwasm; the HTML renderer is gone), so there is no DOM text to find.
 What Playwright can see is Flutter's **semantics tree**, which the engine mirrors as
@@ -163,16 +178,17 @@ build is promoted to the family, run [`specs/release-checklist.md`](release-chec
 - VoiceOver on one screen, TalkBack on one screen; system font size at maximum.
 - Language switched on the device: German and English both show, nothing English leaks
   into the German UI.
-- Later: push notifications (M1.6) and the kiosk pinned on the wall tablet.
+- Push notifications are not built (Q38, Q47), so they are not a check for the pilot. The kiosk pinned on the wall tablet is a pilot check ([release checklist](release-checklist.md)).
 
 ## Where tests run
 
 | When | Where | What |
 |---|---|---|
-| Every PR | GitHub Actions, `ubuntu-latest` (`ci.yml`) | Layers 3–5. |
-| A tag `v*.*.*`, or "Run workflow" on a branch (always before a migration) | GitHub Actions, `ubuntu-latest` (`ci.yml`) | Layers 1–6 and 8. Target: under 10 minutes. |
-| Nightly on `main` | GitHub Actions, `ubuntu-latest` with KVM, Android Emulator (`e2e.yml`) | Layer 7, hermetic and backed, on a phone AVD and a 10" tablet AVD |
-| Before a release | The MacBook: `scripts/e2e.sh ios` | Layer 7 on iPhone and iPad simulators, then on the physical iPhone, iPad and Samsung over USB |
+| Every PR | GitHub Actions, `ci.yml` `app`, `website` and `audit` jobs (GitHub-hosted for a pull request; self-hosted build fleet only for a tag or manual run, candidate) | Layers 3 and 4. Layer 5 is not built. |
+| Every PR | GitHub Actions, `backend-ci.yml` (candidate): `changes` always; `edge-functions` and `backend` only when a backend-sensitive path changed; `required` always, as the one required check | Layers 1, 2 and 6, when they run. A skipped run is not a pass for them. |
+| A tag `v*.*.*`, or "Run workflow" on a branch (always before a migration) | GitHub Actions: `backend-ci.yml` `edge-functions` (self-hosted for a manual or tag run, candidate) and `backend` (`ubuntu-latest`) | Layers 1, 2 and 6. Layer 8 is not built. Target: under 10 minutes, not measured. |
+| Nightly on `main` | GitHub Actions, `ubuntu-latest` with KVM, Android Emulator (`e2e.yml`) | Not built: no `e2e.yml`. Planned: Layer 7, hermetic and backed, on a phone AVD and a 10" tablet AVD |
+| Before a release | The MacBook: `scripts/e2e.sh ios` (not built; the script does not exist) | Planned: Layer 7 on iPhone and iPad simulators, then on the physical iPhone, iPad and Samsung over USB |
 | Before promoting a build | The three devices, by hand | Layer 9 |
 
 Why not iOS in CI: macOS runners bill at ten times the Linux rate, which would eat a
@@ -186,6 +202,8 @@ Firebase Test Lab, which Patrol supports, is the fallback if an Android-model-sp
 bug ever shows up; its free tier allows a few physical-device runs a day.
 
 ## Order of work
+
+*Status 2026-10-17: T1–T4 are not started. T5 is `specs/release-checklist.md`, added with this status; it is manual and has no recorded results.*
 
 | Step | Work | Size |
 |---|---|---|
