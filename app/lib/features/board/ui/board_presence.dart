@@ -382,7 +382,11 @@ class _MemberRow extends StatelessWidget {
         i,
         i,
         BoardTap(
-          label: context.fullDate(board.days[i].date),
+          // The member's row is what the cell belongs to: name the member too.
+          label: context.l10n.boardMemberDay(
+            member.displayName,
+            context.fullDate(board.days[i].date),
+          ),
           onTap: () => unawaited(openMemberWeek(context, board, member.id)),
           child: busy == null || compact
               ? const SizedBox.expand()

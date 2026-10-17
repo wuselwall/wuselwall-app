@@ -3246,6 +3246,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get boardAllEvents => 'All events';
 
   @override
+  String boardMemberDay(String name, String date) {
+    return '$name, $date';
+  }
+
+  @override
   String get reminderChannelName => 'Reminders';
 
   @override
