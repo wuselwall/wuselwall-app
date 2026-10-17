@@ -26,6 +26,7 @@ class BoardHeader extends ConsumerWidget {
     final now = ref.watch(nowProvider);
     final ww = context.ww;
     final scheme = Theme.of(context).colorScheme;
+    final compact = MediaQuery.textScalerOf(context).scale(24) > 32;
 
     return Container(
       constraints: BoxConstraints(minHeight: height),
@@ -74,17 +75,18 @@ class BoardHeader extends ConsumerWidget {
                     overflow: TextOverflow.ellipsis,
                     softWrap: false,
                   ),
-                  Text(
-                    context.l10n.boardWeekNumber(board.isoWeek),
-                    style: boardNum(
-                      24,
-                      weight: FontWeight.w600,
-                      color: ww.ink3,
+                  if (!compact)
+                    Text(
+                      context.l10n.boardWeekNumber(board.isoWeek),
+                      style: boardNum(
+                        24,
+                        weight: FontWeight.w600,
+                        color: ww.ink3,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: false,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: false,
-                  ),
                 ],
               ),
             ),
