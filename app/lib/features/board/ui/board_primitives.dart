@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
+import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 
@@ -46,7 +47,17 @@ class ShrinkText extends StatelessWidget {
       // A little under the exact ratio: glyph widths do not scale quite linearly,
       // and the exact size would still lose its last letter.
       final scale = natural <= c.maxWidth ? 1.0 : c.maxWidth / natural * 0.97;
-      final fitted = scale >= minScale ? scale : minScale;
+      // NFR-16/A6: no kiosk text may render below the kiosk's 24 px floor, whatever
+      // [minScale] asks for. A caller's narrower minScale (e.g. the baseline track's
+      // 0.7) only matters when the base size is already above the floor; once scale
+      // would cross it, the label truncates with an ellipsis instead of shrinking
+      // further (specs/09 "degradation rules": truncate content, not font size).
+      final floorScale = (UiRegister.kiosk.minFontSize / style.fontSize!).clamp(
+        0.0,
+        1.0,
+      );
+      final effectiveMinScale = math.max(minScale, floorScale);
+      final fitted = scale >= effectiveMinScale ? scale : effectiveMinScale;
       return Text(
         text,
         style: style.copyWith(fontSize: style.fontSize! * fitted),

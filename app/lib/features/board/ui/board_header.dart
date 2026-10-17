@@ -28,73 +28,96 @@ class BoardHeader extends ConsumerWidget {
     final scheme = Theme.of(context).colorScheme;
 
     return Container(
-      height: height,
+      constraints: BoxConstraints(minHeight: height),
       padding: const EdgeInsets.only(left: 20, right: 8),
       decoration: BoxDecoration(
         border: Border(bottom: BorderSide(color: ww.line)),
       ),
-      child: Row(
-        children: [
-          // The clock is the one thing read from across the room.
-          Text(
-            context.time(TimeOfDay.fromDateTime(now)),
-            style: boardNum(
-              50,
-              weight: FontWeight.w700,
-              color: scheme.onSurface,
+      // IntrinsicHeight gives the row a finite height to stretch every item to
+      // (its loose Column slot alone would allow unbounded height); stretching
+      // keeps the header's items full height so it can still grow past `height`
+      // at larger text scales, instead of clipping or overflowing the clock and
+      // date (specs/09: preserve system text scaling).
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // The clock is the one thing read from across the room.
+            Center(
+              child: Text(
+                context.time(TimeOfDay.fromDateTime(now)),
+                style: boardNum(
+                  50,
+                  weight: FontWeight.w700,
+                  color: scheme.onSurface,
+                ),
+                maxLines: 1,
+                softWrap: false,
+              ),
             ),
-            maxLines: 1,
-            softWrap: false,
-          ),
-          const SizedBox(width: 18),
-          // The date keeps its full length; the next-up line gives way instead.
-          ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 380),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  context.fullDate(board.today),
-                  style: boardUi(
-                    26,
-                    weight: FontWeight.w800,
-                    color: scheme.onSurface,
+            const SizedBox(width: 18),
+            // The date keeps its full length; the next-up line gives way instead.
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 380),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    context.fullDate(board.today),
+                    style: boardUi(
+                      26,
+                      weight: FontWeight.w800,
+                      color: scheme.onSurface,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: false,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: false,
-                ),
-                Text(
-                  context.l10n.boardWeekNumber(board.isoWeek),
-                  style: boardNum(24, weight: FontWeight.w600, color: ww.ink3),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: false,
-                ),
-              ],
+                  Text(
+                    context.l10n.boardWeekNumber(board.isoWeek),
+                    style: boardNum(
+                      24,
+                      weight: FontWeight.w600,
+                      color: ww.ink3,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: false,
+                  ),
+                ],
+              ),
             ),
-          ),
-          Container(
-            width: 1,
-            height: 44,
-            margin: const EdgeInsets.symmetric(horizontal: 22),
-            color: ww.line,
-          ),
-          Expanded(child: BoardNextUp(frame: frame)),
-          if (_isOutdated(snapshot, now)) ...[
-            const SizedBox(width: 16),
-            Flexible(child: _LastUpdated(snapshot: snapshot)),
+            Center(
+              child: Container(
+                width: 1,
+                height: 44,
+                margin: const EdgeInsets.symmetric(horizontal: 22),
+                color: ww.line,
+              ),
+            ),
+            Expanded(
+              child: Center(child: BoardNextUp(frame: frame)),
+            ),
+            if (_isOutdated(snapshot, now)) ...[
+              const SizedBox(width: 16),
+              Flexible(child: _LastUpdated(snapshot: snapshot)),
+            ],
+            Center(
+              child: IconButton(
+                tooltip: context.l10n.settingsTitle,
+                constraints: const BoxConstraints.tightFor(
+                  width: 56,
+                  height: 56,
+                ),
+                iconSize: 30,
+                color: ww.ink3,
+                icon: const Icon(Icons.settings_outlined),
+                onPressed: () => context.go(Routes.settings),
+              ),
+            ),
           ],
-          IconButton(
-            tooltip: context.l10n.settingsTitle,
-            constraints: const BoxConstraints.tightFor(width: 56, height: 56),
-            iconSize: 30,
-            color: ww.ink3,
-            icon: const Icon(Icons.settings_outlined),
-            onPressed: () => context.go(Routes.settings),
-          ),
-        ],
+        ),
       ),
     );
   }

@@ -53,21 +53,18 @@ class MealRow extends StatelessWidget {
                 width: g.width(i),
                 top: 0,
                 bottom: 0,
-                child: Opacity(
-                  opacity: frame.opacity(i),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(8, 6, 8, 4),
-                    child: LayoutBuilder(
-                      builder: (context, c) => ClipFit(
-                        alignment: Alignment.topLeft,
-                        child: SizedBox(
-                          width: c.maxWidth,
-                          child: _MealCell(
-                            board: board,
-                            meal: meal,
-                            // Two dish lines and the cook's line need about 112 canvas px.
-                            twoLines: c.maxHeight >= 112,
-                          ),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 6, 8, 4),
+                  child: LayoutBuilder(
+                    builder: (context, c) => ClipFit(
+                      alignment: Alignment.topLeft,
+                      child: SizedBox(
+                        width: c.maxWidth,
+                        child: _MealCell(
+                          board: board,
+                          meal: meal,
+                          // Two dish lines and the cook's line need about 112 canvas px.
+                          twoLines: c.maxHeight >= 112,
                         ),
                       ),
                     ),
@@ -141,47 +138,38 @@ class _MealCell extends StatelessWidget {
         const SizedBox(height: 2),
         _Dish(meal: meal, twoLines: twoLines),
         const SizedBox(height: 4),
-        // The cook stays beside the dots while there is room, else takes the next line.
+        // The cook stays beside the dots while there is room, else takes the next
+        // line; the dots and the guest count are separate Wrap children too, so a
+        // crowded household's dots alone cannot force a fixed-width overflow.
         Wrap(
           spacing: 6,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                MemberDots(
-                  size: 12,
-                  dots: [
-                    for (final m in board.members)
-                      MemberDot(
-                        memberColor: m.color,
-                        filled: meal.eating.contains(m.id),
-                        size: 12,
-                        semanticLabel: meal.eating.contains(m.id)
-                            ? l10n.boardEating(context.memberName(board, m))
-                            : l10n.boardNotEating(context.memberName(board, m)),
-                      ),
-                  ],
-                ),
-                if (meal.guests > 0) ...[
-                  const SizedBox(width: 4),
-                  Semantics(
-                    label: l10n.boardMealGuests(meal.guests),
-                    excludeSemantics: true,
-                    child: Text(
-                      l10n.boardMoreCount(meal.guests),
-                      style: boardCell(
-                        24,
-                        weight: FontWeight.w700,
-                        color: ww.ink2,
-                      ),
-                      maxLines: 1,
-                      softWrap: false,
-                    ),
+            MemberDots(
+              size: 12,
+              dots: [
+                for (final m in board.members)
+                  MemberDot(
+                    memberColor: m.color,
+                    filled: meal.eating.contains(m.id),
+                    size: 12,
+                    semanticLabel: meal.eating.contains(m.id)
+                        ? l10n.boardEating(context.memberName(board, m))
+                        : l10n.boardNotEating(context.memberName(board, m)),
                   ),
-                ],
               ],
             ),
+            if (meal.guests > 0)
+              Semantics(
+                label: l10n.boardMealGuests(meal.guests),
+                excludeSemantics: true,
+                child: Text(
+                  l10n.boardMoreCount(meal.guests),
+                  style: boardCell(24, weight: FontWeight.w700, color: ww.ink2),
+                  maxLines: 1,
+                  softWrap: false,
+                ),
+              ),
             if (cook != null)
               Semantics(
                 label: l10n.boardMealCook(context.memberName(board, cook)),
