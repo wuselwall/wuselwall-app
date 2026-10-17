@@ -69,6 +69,7 @@ specifications you hand to a coding session, one at a time.
 | 19 | [Security & Architecture Review](specs/19-security-and-architecture-review.md) | Findings of the 2026-10-11 review, what is fixed and what the operator still has to do |
 | 17 | [Design System](specs/17-design-system.md) | Colour, type and form: the member palette (colour-blind-checked), presence treatments, night theme, three design directions, A "Küchentisch" chosen |
 | 21 | [Household Settings](specs/21-household-settings.md) | The reference household, the settings model, the setup wizard and every curated default with its reasoning |
+| 22 | [Legacy Social-Account Recovery](specs/22-legacy-social-account-recovery.md) | After social sign-in was removed (2026-10-17): how accounts from before get back in, and when Apple and Google credentials may be retired |
 | 18 | [Testing Strategy](specs/18-testing-strategy.md) | The nine test layers from pgTAP to the family's devices: widget and golden matrices, Patrol on device, Playwright for the web build only, the manual release check, and where each runs |
 | — | [Market Research](specs/market-research.md) | Family planners with meal planning in the German-speaking market: feature matrix, pros and cons, open-source and self-hosted options, implications for ADR-002 |
 | — | [Design system mockup](specs/mockups/design-system.html) | The three directions on the same Monday, switchable between light, dark and night, with simulated colour-blindness |

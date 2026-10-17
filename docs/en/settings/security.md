@@ -11,6 +11,17 @@ This lists the ways you can sign in: the **code by email** and a **password** (s
 - **Password**: **Set password** or **Change password** sets one up.
 - **Remove**: takes a method away again. The last one always stays, so you cannot lock yourself out.
 
+## Used to sign in with Apple or Google? {#apple-google-before}
+
+WuselWall no longer offers sign-in with Apple or Google. Your account, your profile and your family stay as they are; you now sign in with a **code by email**, to the **same address** your account already has.
+
+- **With Google**, or with Apple and your normal address: enter that address on the sign-in screen and ask for a code.
+- **With Apple and "Hide My Email"**: your account's address is the forwarding address Apple created, ending in `@privaterelay.appleid.com`. You find it in your Apple account settings under **Sign in with Apple**, at **WuselWall**. Enter that address, not your normal Apple ID address.
+- **Try it first on a second device** while your phone stays signed in. Do not sign out just to test.
+- **No code arrives?** Tell whoever runs your family's server. Do not create a new account: it would not belong to your family.
+
+Once you are signed in, you can also set a **password** here.
+
 ## Two-factor sign-in
 
 On top of the password, WuselWall asks for a **6-digit code** from an authenticator app at every sign-in (your password manager's app, or one from Google, Microsoft or Aegis, for example).

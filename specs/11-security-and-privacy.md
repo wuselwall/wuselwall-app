@@ -220,7 +220,9 @@ other households, and writes no audit row. The household export, which is guardi
 
 Outbound connections from the server should be enumerable on one hand: Let's Encrypt,
 the container registry, the backup target, APNs and FCM (for push), the OS package
-mirrors, and since ADR-014 the SMTP provider and Apple's and Google's token endpoints. Added
+mirrors, and since ADR-014 the SMTP provider and Apple's and Google's token endpoints (since
+2026-10-17 only Apple's revoke endpoint, for accounts from before social sign-in was removed,
+[22](22-legacy-social-account-recovery.md)). Added
 2026-10-14: the calendar addresses that guardians subscribe to (see above), chosen by the family,
 and `openholidaysapi.org` for the holiday cache.
 
@@ -301,7 +303,7 @@ With Supabase, row-level security is not defence in depth; it is the perimeter.
 - **Invitations.** An invitation is single use and valid 7 days; a second household cannot accept it. Guesses at codes and tokens are logged and limited in `app.invitation_attempt`.
 - **Founder codes.** A founder code is what starts a family in `code` mode. It is issued by the operator (`scripts/remote-setup-token.sh --founder`), shown once, and guesses are limited in `app.founder_attempt`. The exact thresholds are in the migrations.
 - **No autoconfirm.** `ENABLE_EMAIL_AUTOCONFIRM=false` and `enable_confirmations = true`: an address counts as the person's only after they confirm it, because invitations match confirmed addresses.
-- **Account deletion.** A fresh sign-in is required only when the server requires one (5 minutes), by email code. For accounts created before sign-in with Apple was removed, Apple access is revoked. Their Apple refresh token is kept only for that revocation, encrypted with `APPLE_TOKEN_KEY` (AES-GCM), which the database never sees and which must never change.
+- **Account deletion.** A fresh sign-in is required only when the server requires one (5 minutes), by email code. For accounts created before sign-in with Apple was removed, Apple access is revoked. Their Apple refresh token is kept only for that revocation, encrypted with `APPLE_TOKEN_KEY` (AES-GCM), which the database never sees and which must never change. Since 2026-10-17 the token outlives the account as a revocation obligation (`app.apple_revocation`) until Apple accepts the revocation, retried daily; the deletion never waits for Apple ([22](22-legacy-social-account-recovery.md), [10](10-deployment-and-ops.md#retiring-social-sign-in-on-an-existing-server-2026-10-17)).
 - **Mail hook.** The send-email hook checks its signature (`SEND_EMAIL_HOOK_SECRET`) before it sends anything, and it writes only the code mail, in the recipient's language.
 - **Account administration.** `account-delete` and the MFA reset verify the caller's JWT and act only on that caller, or, for the reset, on a co-guardian (ADR-014).
 

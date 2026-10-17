@@ -7,6 +7,8 @@ except its decisions 6 (public store listings) and 7 (no captcha), which stand; 
 [ADR-016](ADR-016-public-website.md) and [ADR-017](ADR-017-wuselwall-app-domain.md) (the links
 site stays where it is); answers [Q40](../14-open-questions.md) anew and opens Q47 and Q48
 
+**Amended 2026-10-17 — social sign-in removed ([00](../00-brief-and-decisions.md#2026-10-17--social-sign-in-removed), [22](../22-legacy-social-account-recovery.md)):** in decision 6, the lines on Apple and Google (through the web redirect, native on first-party hosts) and the Consequences on Google's iOS sign-in library no longer apply; the store app carries no sign-in SDK. Passkeys only for `WW_FIRST_PARTY_HOSTS` stand. The text below is kept as decided.
+
 ## Context
 
 ADR-015 planned two flavours: *WuselWall Cloud*, a hosted Supabase project in the user's

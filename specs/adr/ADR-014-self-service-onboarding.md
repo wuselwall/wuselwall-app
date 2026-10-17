@@ -14,6 +14,8 @@ captcha; public store listings.
 
 **Amended 2026-10-13 by [ADR-017](ADR-017-wuselwall-app-domain.md):** the links domain is decided — `wuselwall.app` ([Q45](../14-open-questions.md)).
 
+**Amended 2026-10-17 — social sign-in removed ([00](../00-brief-and-decisions.md#2026-10-17--social-sign-in-removed), [22](../22-legacy-social-account-recovery.md)):** the Apple and Google parts of this decision — the title's providers, Sign in with Apple and Google in decision 1 (and their mention in decision 6), the Apple client secret and Google clients under Consequences — are superseded. Adults sign in with an email code, a password, or on first-party hosts a passkey; accounts from before keep their identity and sign in with an email code to their existing address. The text below is the decision as taken on 2026-10-11 and is not rewritten.
+
 ## Context
 
 M0.1 built onboarding for exactly one household run by its own developer:
