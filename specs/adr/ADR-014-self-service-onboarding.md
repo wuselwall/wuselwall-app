@@ -14,6 +14,12 @@ captcha; public store listings.
 
 **Amended 2026-10-13 by [ADR-017](ADR-017-wuselwall-app-domain.md):** the links domain is decided — `wuselwall.app` ([Q45](../14-open-questions.md)).
 
+**Amended 2026-10-17 (user):** no Sign in with Apple or Google. Adults sign in with an email
+code or a password; passkeys stay as the optional extra on first-party servers. Decision 2's
+two providers, the Apple token revocation of decision 7 and the Settings linking of
+identities are gone, with the `google_sign_in` and `sign_in_with_apple` packages, the
+`apple-token` function and `app.apple_token`. The rest of this ADR stands.
+
 ## Context
 
 M0.1 built onboarding for exactly one household run by its own developer:
