@@ -30,11 +30,15 @@ The seven days stand side by side, Monday to Sunday. Today's column is wider and
 
 ### Tap for details
 
+The text follows the device's text-size setting. At larger sizes the wall uses shorter summaries with ellipses instead of shrinking letters. Dates, school notes, care, further appointments and meals remain available in the details. A short counter such as **+2** means two further appointments. When three day parts cannot fit vertically, the appointment area summarises each day's appointments in one row. Day names, all seven columns and every area stay visible.
+
+In compact rows the **whole member row** is one large button: it opens a child's weekly timetable or an adult's week. For a particular school day or care, tap the day header. With a keyboard, use **Tab** to move between buttons; a visible outline shows focus, and **Enter** or **Space** opens the details.
+
 A tap shows more, and after a minute the display returns to the week by itself:
 
 - on a **day header**: that whole day
 - on a **child's name**: the timetable for the week. Cancelled lessons are struck through, substitutions are marked, and "Pack for tomorrow" is shown.
-- on a **school time**: that school day, lesson by lesson
+- on a **school time in a compact row**: the child's weekly timetable; use the day header for an individual school day
 - on an **adult's name**: their week
 - on the **meal area**: the meals of the week
 

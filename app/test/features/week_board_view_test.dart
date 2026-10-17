@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/app/app.dart';
@@ -404,6 +406,21 @@ Future<void> _pumpKiosk(WidgetTester t) async {
 }
 
 void main() {
+  setUpAll(() async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    for (final family in {
+      'AtkinsonHyperlegibleNext': ['Regular', 'SemiBold', 'Bold', 'ExtraBold'],
+      'BarlowSemiCondensed': ['Medium', 'SemiBold', 'Bold'],
+    }.entries) {
+      final loader = FontLoader(family.key);
+      for (final weight in family.value) {
+        loader.addFont(
+          rootBundle.load('assets/fonts/${family.key}-$weight.ttf'),
+        );
+      }
+      await loader.load();
+    }
+  });
   group('the week board', () {
     testWidgets('lays out the week at 1280x800 without exceptions', (t) async {
       await _pumpBoard(t);
@@ -655,7 +672,7 @@ void main() {
   });
 
   group('A6/A7 scaling and legibility matrix (t_0b191bb3)', () {
-    // A non-reference household: six adults and one child, long names, so no
+    // A non-reference household: three adults and two children, long names, so no
     // fixture-shaped assumption (four members, short names) hides a layout bug.
     Map<String, Object?> bigHouseholdJson() {
       final json = _boardJson();
@@ -766,26 +783,133 @@ void main() {
     for (final shade in matrixShades) {
       for (final scale in matrixScales) {
         for (final locale in matrixLocales) {
-          testWidgets('1280x800, ${locale.languageCode}, ${shade.name}, '
-              '${scale}x: non-reference household, no overflow', (t) async {
-            await _pumpBoard(
-              t,
-              snapshot: BoardSnapshot(
-                board: WeekBoard.fromJson(bigHouseholdJson()),
-                fetchedAt: DateTime(2026, 10, 14, 14, 4),
-              ),
-              shade: shade,
-              locale: locale,
-              textScale: scale,
-              night: shade == Shade.night,
-            );
-            // No RenderFlex overflow, no failed layout assertion.
-            expect(t.takeException(), isNull);
-            // The geometry degrades (fewer events shown, overflow counted) but
-            // never drops a day or a zone: all seven weekday short names (or
-            // "Heute") are present once each.
-            expect(find.byType(DayHeaderRow), findsOneWidget);
-          });
+          for (final fixture in ['crowded', 'reference-split', 'six-members']) {
+            testWidgets('1280x800, ${locale.languageCode}, ${shade.name}, '
+                '${scale}x: $fixture targets, fonts and clips', (t) async {
+              final json = fixture == 'reference-split'
+                  ? _boardJson()
+                  : bigHouseholdJson();
+              if (fixture == 'six-members') {
+                (json['members'] as List).add({
+                  'id': 'a4',
+                  'display_name': 'Alexandra',
+                  'color': '#08737F',
+                  'kind': 'adult',
+                });
+              }
+              if (fixture == 'reference-split') {
+                (json['presence'] as List).add({
+                  'id': 'care',
+                  'member_id': 'lotta',
+                  'state': 'childcare',
+                  'label': 'Hort am Nachmittag',
+                  'first_day': '2026-10-14',
+                  'last_day': '2026-10-14',
+                  'starts': '14:25',
+                  'ends': '16:00',
+                });
+                (((json['days'] as List)[3] as Map)['meal'] as Map)['title'] =
+                    'Kartoffelgemüseauflauf';
+              }
+              await _pumpBoard(
+                t,
+                snapshot: BoardSnapshot(
+                  board: WeekBoard.fromJson(json),
+                  fetchedAt: DateTime(2026, 10, 14, 14, 4),
+                ),
+                shade: shade,
+                locale: locale,
+                textScale: scale,
+                night: shade == Shade.night,
+              );
+              // No RenderFlex overflow, no failed layout assertion.
+              expect(t.takeException(), isNull);
+              // The geometry degrades (fewer events shown, overflow counted) but
+              // never drops a day or a zone: all seven weekday short names (or
+              // "Heute") are present once each.
+              expect(find.byType(DayHeaderRow), findsOneWidget);
+              final targets = <Rect>[];
+              for (final element in find.byType(BoardTap).evaluate()) {
+                final box = element.renderObject! as RenderBox;
+                final rect = MatrixUtils.transformRect(
+                  box.getTransformTo(null),
+                  Offset.zero & box.size,
+                );
+                expect(
+                  rect.width,
+                  greaterThanOrEqualTo(56),
+                  reason: '${(element.widget as BoardTap).label}: $rect',
+                );
+                expect(
+                  rect.height,
+                  greaterThanOrEqualTo(56),
+                  reason: '${(element.widget as BoardTap).label}: $rect',
+                );
+                expect(rect.bottom, lessThanOrEqualTo(800));
+                for (final previous in targets) {
+                  expect(
+                    rect.overlaps(previous.deflate(0.01)),
+                    isFalse,
+                    reason: '$rect overlaps $previous',
+                  );
+                }
+                targets.add(rect);
+              }
+              for (final element in find.byType(RichText).evaluate()) {
+                final paragraph = element.renderObject! as RenderParagraph;
+                final text = paragraph.text.toPlainText();
+                if (text.runes.every((r) => r >= 0xe000 && r <= 0xf8ff)) {
+                  continue; // Icon glyphs.
+                }
+                final transform = paragraph.getTransformTo(null);
+                final x =
+                    MatrixUtils.transformPoint(transform, const Offset(1, 0)) -
+                    MatrixUtils.transformPoint(transform, Offset.zero);
+                void checkSpan(InlineSpan span) {
+                  if (span.style?.fontSize case final size?) {
+                    expect(
+                      paragraph.textScaler.scale(size) * x.distance,
+                      greaterThanOrEqualTo(24 * scale - 0.01),
+                      reason: text,
+                    );
+                  }
+                  if (span is TextSpan) {
+                    for (final child in span.children ?? <InlineSpan>[]) {
+                      checkSpan(child);
+                    }
+                  }
+                }
+
+                checkSpan(paragraph.text);
+                final bounds = MatrixUtils.transformRect(
+                  transform,
+                  Offset.zero & paragraph.size,
+                );
+                for (
+                  RenderObject? parent = paragraph.parent;
+                  parent != null;
+                  parent = parent.parent
+                ) {
+                  if (parent is RenderClipRect) {
+                    final clip = MatrixUtils.transformRect(
+                      parent.getTransformTo(null),
+                      Offset.zero & parent.size,
+                    );
+                    expect(
+                      bounds.top,
+                      greaterThanOrEqualTo(clip.top - 0.1),
+                      reason: '$text clipped at top',
+                    );
+                    expect(
+                      bounds.bottom,
+                      lessThanOrEqualTo(clip.bottom + 0.1),
+                      reason: '$text clipped at bottom',
+                    );
+                  }
+                }
+              }
+            });
+          }
         }
       }
     }
@@ -802,9 +926,10 @@ void main() {
           textScale: 2,
         );
         expect(t.takeException(), isNull);
-        // Three key events in the afternoon for the child on every day; the day
-        // part shows one and counts the rest instead of throwing.
-        expect(find.textContaining('weitere'), findsWidgets);
+        // The reduced appointment zone summarises all three events in one
+        // containing day cell: one title and a readable count for the other two.
+        expect(find.text('+2'), findsWidgets);
+        expect(t.getSize(find.byType(TermineRows)).height, 56);
       },
     );
 
@@ -812,12 +937,8 @@ void main() {
         'and none overlap', (t) async {
       await _pumpBoard(t);
 
-      // The day header's seven columns and each member's name tap (the
-      // gutter) are the board's primary row/cell actions (specs/17, A6).
-      // Compact band chips inside a split member row (a day with both a
-      // school span and a presence band) are the spec's explicit
-      // exception — "use >=56px containing row/cell action when distinct
-      // band targets cannot fit" — and are not asserted individually here.
+      // A compact member has one containing full-width row action, including
+      // both school and care. The matrix above checks EVERY actual BoardTap.
       final dayCells = find.descendant(
         of: find.byType(DayHeaderRow),
         matching: find.byType(BoardTap),

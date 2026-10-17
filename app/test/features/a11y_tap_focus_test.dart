@@ -113,11 +113,7 @@ void main() {
           BoardTap(
             label: 'Lotta, Montag',
             onTap: () => tapped = true,
-            child: const SizedBox(
-              key: ValueKey('cell'),
-              width: 80,
-              height: 80,
-            ),
+            child: const SizedBox(key: ValueKey('cell'), width: 80, height: 80),
           ),
         ),
       );
@@ -129,6 +125,7 @@ void main() {
           label: 'Lotta, Montag',
           isButton: true,
           isFocusable: true,
+          hasFocusAction: true,
           hasTapAction: true,
         ),
       );
@@ -170,6 +167,7 @@ void main() {
           hasTapAction: true,
           hasToggledState: true,
           isToggled: false,
+          hasFocusAction: true,
         ),
       );
 
@@ -186,6 +184,8 @@ void main() {
           hasTapAction: true,
           hasToggledState: true,
           isToggled: true,
+          hasFocusAction: true,
+          isFocused: true,
         ),
       );
       handle.dispose();

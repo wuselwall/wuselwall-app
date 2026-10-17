@@ -129,7 +129,7 @@ const shots = [
   { name: 'kid-who', scenario: 'kid', viewport: TABLET },
   { name: 'kid-shopping', scenario: 'kid', viewport: TABLET, steps: async (p, t) => { await press(p, t.daughter); await tapAny(p, t.kidShopping, { exact: false }); } },
   { name: 'wall-board', scenario: 'kiosk', viewport: WALL },
-  { name: 'wall-child-week', scenario: 'kiosk', viewport: WALL, steps: async (p, t) => press(p, t.daughter) },
+  { name: 'wall-child-week', scenario: 'kiosk', viewport: WALL, steps: async (p, t) => press(p, new RegExp(`^${t.daughter},`)) },
   { name: 'wall-day', scenario: 'kiosk', viewport: WALL, steps: async (p) => { await p.getByRole('button', { name: /^(Mittwoch|Wednesday)/ }).first().click(); await settle(p); } },
   // The board has no avatars: open the footer's shopping list first, then tap the name in its bar.
   { name: 'wall-shopping', scenario: 'kiosk', viewport: WALL, steps: async (p, t) => { await p.getByRole('button', { name: t.shopping }).first().click(); await settle(p); await p.getByRole('button', { name: t.daughter, exact: true }).last().click(); await settle(p); } },

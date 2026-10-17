@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/night.dart';
@@ -78,27 +80,41 @@ class WeekBoardView extends ConsumerWidget {
                       ),
                     ),
                   ),
-                Column(
-                  children: [
-                    SizedBox(
-                      height: DayHeaderRow.heightOf(board),
-                      child: DayHeaderRow(frame: frame),
-                    ),
-                    const BoardDivider(),
-                    // Four units per member, so a household of four gets rows tall
-                    // enough for two lines at 1280×800 (school span over its notes,
-                    // band over its times); larger households fall back to one line.
-                    // The day parts and the meal get the heights their two-line
-                    // layouts need at that size too.
-                    Expanded(
-                      flex: 4 * board.members.length.clamp(1, 8),
-                      child: PresenceRows(frame: frame),
-                    ),
-                    const BoardDivider(trailing: BoardAllEventsToggle()),
-                    Expanded(flex: 11, child: TermineRows(frame: frame)),
-                    const BoardDivider(),
-                    Expanded(flex: 8, child: MealRow(frame: frame)),
-                  ],
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final scaler = MediaQuery.textScalerOf(context);
+                    final reserved =
+                        DayHeaderRow.heightOf(board) +
+                        56 * board.members.length +
+                        math.max(56, scaler.scale(24) * 1.15 + 12) +
+                        2 * BoardDivider.height +
+                        math.max(56, scaler.scale(24) * 1.1 + 10);
+                    // Reduce appointment summaries before squeezing any action or
+                    // meal below its floor. The zone and all seven days remain.
+                    final appointmentHeight =
+                        constraints.maxHeight - reserved >= 168 ? 168.0 : 56.0;
+                    return Column(
+                      children: [
+                        SizedBox(
+                          height: DayHeaderRow.heightOf(board),
+                          child: DayHeaderRow(frame: frame),
+                        ),
+                        const BoardDivider(),
+                        // Compact containing row actions have a real 56px floor.
+                        SizedBox(
+                          height: 56.0 * board.members.length,
+                          child: PresenceRows(frame: frame),
+                        ),
+                        const BoardDivider(trailing: BoardAllEventsToggle()),
+                        SizedBox(
+                          height: appointmentHeight,
+                          child: TermineRows(frame: frame),
+                        ),
+                        const BoardDivider(),
+                        Expanded(flex: 8, child: MealRow(frame: frame)),
+                      ],
+                    );
+                  },
                 ),
               ],
             ),
