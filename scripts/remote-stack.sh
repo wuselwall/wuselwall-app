@@ -38,7 +38,7 @@ case "${1:-}" in
     ;;
   set-env)
     # The value comes on stdin, never as an argument: no secret in shell history or ps.
-    #   node scripts/apple-client-secret.mjs … | scripts/remote-stack.sh set-env APPLE_SECRET
+    #   <secret source> | scripts/remote-stack.sh set-env KEY
     key=${2:?usage: set-env KEY < value}
     [[ $key =~ ^[A-Z][A-Z0-9_]*$ ]] || { echo "not a variable name: $key" >&2; exit 2; }
     value=$(cat)

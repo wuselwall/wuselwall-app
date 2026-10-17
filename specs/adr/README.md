@@ -20,7 +20,7 @@ editing it. The value is in the trail.
 | [011](ADR-011-native-distribution-and-ci-cd.md) | Native app distribution (TestFlight, Play internal) and the CI/CD pipeline | Accepted, amended by 012, 013, 014 and 015 |
 | [012](ADR-012-product-name.md) | Product name WuselWall, its identifiers, logo and mascot | Accepted |
 | [013](ADR-013-self-hosted-compose-stack.md) | Self-hosted Supabase on the official compose stack; no separate dev and prod | Accepted, amended by 014, 017 and 018 |
-| [014](ADR-014-self-service-onboarding.md) | Self-service households; adults sign in with Apple, Google or email; devices pair from a parent's phone | Accepted, amended by 015, 017 and 018 |
+| [014](ADR-014-self-service-onboarding.md) | Self-service households; adults sign in with Apple, Google or email; devices pair from a parent's phone | Accepted, amended by 015, 017 and 018; social sign-in removed 2026-10-17 (see [00](../00-brief-and-decisions.md)) |
 | [015](ADR-015-saas-and-self-hosted-flavours.md) | Two flavours: WuselWall Cloud on hosted Supabase, and self-hosted; public store listings | Superseded by 018 (store listings and no captcha stand) |
 | [016](ADR-016-public-website.md) | A public website at the root (Astro, own compose project); the Flutter web app moves to /app/ | Accepted, superseded in part by 017, amended by 018 |
 | [017](ADR-017-wuselwall-app-domain.md) | The domain wuselwall.app for the website, the docs and the links | Accepted |

@@ -30,7 +30,7 @@ Only a guardian can delete a family, on their own phone. Tap **Delete family**, 
 To delete your WuselWall account yourself, tap **Delete account**. The sign-in is removed, and you are signed out everywhere.
 
 - Your **profile** stays in the family with everything you have done. Only the access goes.
-- If your account is connected to **Apple**, access is revoked at Apple.
+- If your account still dates from when sign-in with Apple existed and is connected to Apple, access is revoked at Apple.
 - For deletion WuselWall asks whether it is really you. If your sign-in is older than 5 minutes, WuselWall sends a **code by email** before it continues.
 - The last guardian with an account cannot delete it (see above).
 

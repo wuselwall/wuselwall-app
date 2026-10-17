@@ -8,7 +8,7 @@ The start screen is where everything begins. You sign in with your account, join
 
 The start screen has three ways in:
 
-- **Continue with email**, or **Continue with Apple** or **Continue with Google** where your device offers them: for you as an adult, on your own phone.
+- **Continue with email**: for you as an adult, on your own phone.
 - **I have an invitation code**: a family has invited you.
 - **Connect a family tablet or wall display**: for a device that belongs to everyone. An adult approves it on their phone.
 
