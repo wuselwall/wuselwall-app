@@ -28,8 +28,6 @@ class WwColors extends ThemeExtension<WwColors> {
   /// code does not glare (night stays at its ~10:1).
   Color get qrInk => shade == Shade.light ? _c.ink : _c.bg;
   Color get qrPaper => shade == Shade.light ? _c.surface : _c.ink;
-  ProviderButtonColors get appleButton => ProviderBrand.apple(shade);
-  ProviderButtonColors get googleButton => ProviderBrand.google(shade);
 
   /// A member's colours for this shade, from their stored `colour_hex`.
   MemberColors member(Color stored) {

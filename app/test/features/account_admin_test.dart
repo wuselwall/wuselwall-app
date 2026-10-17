@@ -91,6 +91,7 @@ void main() {
           acc: account(leaveBlocked: 'last_guardian'),
         );
         await t.ensureVisible(deleteTile);
+        await t.pumpAndSettle();
         expect(
           find.text(
             'Du bist die letzte Elternperson mit Konto in dieser Familie. Lade zuerst eine zweite erwachsene Person ein oder lösche die Familie.',
@@ -111,6 +112,7 @@ void main() {
       (t) async {
         final s = await pumpSettings(t);
         await t.ensureVisible(deleteTile);
+        await t.pumpAndSettle();
         await t.tap(deleteTile);
         await t.pumpAndSettle();
         expect(find.text('Konto löschen?'), findsOneWidget);
@@ -135,6 +137,7 @@ void main() {
     testWidgets('cancelling the dialog deletes nothing', (t) async {
       final s = await pumpSettings(t);
       await t.ensureVisible(deleteTile);
+      await t.pumpAndSettle();
       await t.tap(deleteTile);
       await t.pumpAndSettle();
       await t.tap(find.text('Abbrechen'));
@@ -157,6 +160,7 @@ void main() {
           return const Ok(false);
         };
         await t.ensureVisible(deleteTile);
+        await t.pumpAndSettle();
         await t.tap(deleteTile);
         await t.pumpAndSettle();
         await t.tap(deleteConfirm);
@@ -187,6 +191,7 @@ void main() {
       final s = await pumpSettings(t, admin: admin);
       s.identity.verifyResult = const Err(AuthFailure(code: 'otp_invalid'));
       await t.ensureVisible(deleteTile);
+      await t.pumpAndSettle();
       await t.tap(deleteTile);
       await t.pumpAndSettle();
       await t.tap(deleteConfirm);
