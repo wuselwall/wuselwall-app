@@ -31,6 +31,11 @@ services:
       # Sign with the EC key, verify the legacy HS256 secret too.
       GOTRUE_JWT_KEYS: ${JWT_KEYS}
       GOTRUE_PASSWORD_MIN_LENGTH: 10
+      # No social sign-in (specs/22). Spelled out rather than left to GoTrue's defaults, so a
+      # server whose .env still carries old provider values cannot switch them back on.
+      GOTRUE_EXTERNAL_APPLE_ENABLED: "false"
+      GOTRUE_EXTERNAL_GOOGLE_ENABLED: "false"
+      GOTRUE_SECURITY_MANUAL_LINKING_ENABLED: "false"
       GOTRUE_SECURITY_REFRESH_TOKEN_ROTATION_ENABLED: "true"
       GOTRUE_SECURITY_REFRESH_TOKEN_REUSE_INTERVAL: 10
       GOTRUE_MAILER_SECURE_EMAIL_CHANGE_ENABLED: "true"

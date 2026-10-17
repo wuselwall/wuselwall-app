@@ -60,6 +60,8 @@ case "${1:-}" in
     rsync -rlt --delete --chmod=D755,F644 \
       infra/supabase/volumes/functions/ $( [ -d supabase/functions ] && echo supabase/functions/ ) \
       "$HOST:$DIR/volumes/functions/"
+    # Before Auth restarts: the old social sign-in settings leave the .env (specs/22).
+    ssh "$HOST" "cd '$DIR' && sh retire-social-sign-in.sh .env"
     ssh "$HOST" "cd '$DIR' && docker compose up -d --remove-orphans && docker compose ps"
     ;;
   functions)
