@@ -10,6 +10,8 @@ and prod; further tenants on hosted Supabase) and [ADR-014](ADR-014-self-service
 [ADR-015](ADR-015-saas-and-self-hosted-flavours.md) (a hosted *WuselWall Cloud* next to the
 self-hosted flavour).
 
+**Amended 2026-10-17 ([00](../00-brief-and-decisions.md#2026-10-17--social-sign-in-removed)):** the auth deep link `ch.goomba.wuselwall://login-callback/` below is no longer registered in the apps or allow-listed in `additional_redirect_urls`: it served social sign-in, which was removed. The identifier `ch.goomba.wuselwall` stands.
+
 ## Context
 
 ADR-003 chose TypeScript end to end: a SvelteKit PWA, Drizzle, Better Auth and pg-boss on

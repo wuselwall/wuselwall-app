@@ -68,6 +68,8 @@ GitHub sees who opens the web app, but not your data: that goes straight from th
 
 Bring new WuselWall versions into your copy: on GitHub, **Sync fork → Update branch**. Then **Actions → deploy-supabase → Run workflow**, as the first time. Supabase takes care of Postgres, security updates and HTTPS.
 
+Coming from a version with sign-in through Apple or Google? Read [Updating from a version with Apple and Google sign-in](/en/server/extras#retiring-social-sign-in) first.
+
 ## Backups
 
 On **Pro**, Supabase backs up every day and keeps the backups for 7 days. You restore one in the dashboard under **Database → Backups**. A copy of your own, about once a month, is described in [Restoring a backup](/en/server/restore#at-supabase).

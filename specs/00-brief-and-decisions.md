@@ -301,4 +301,16 @@ are at the repository root.
 |---|---|---|
 | Adult sign-in | Email one-time code and email + password only. Sign in with Apple and Sign in with Google are removed from the apps, the server configuration and the documentation. This supersedes the social-sign-in parts of the 2026-10-11 entry above, [ADR-014](adr/ADR-014-self-service-onboarding.md) and the native-sheet part of [ADR-018](adr/ADR-018-self-hosted-only.md), decision 6. Passkeys stay, for `WW_FIRST_PARTY_HOSTS` only | [20](20-onboarding.md#the-front-door), [10 §4](10-deployment-and-ops.md#4-sign-in-and-mail) |
 | Existing Apple accounts | Accounts created before the removal keep the stored Apple refresh token, used only to revoke Apple access when the account is deleted (App Store guideline 5.1.1(v)). The five `APPLE_*` values that do this stay; `APPLE_TOKEN_KEY` never changes | [10 §4](10-deployment-and-ops.md#4-sign-in-and-mail) |
-| Open | How accounts whose only method was Apple or Google get back in (email code on the verified address, or a password reset) is **not decided here**: the review task must confirm it before release | [11](11-security-and-privacy.md) |
+| Open | How accounts whose only method was Apple or Google get back in (email code on the verified address, or a password reset) is **not decided here**: the review task must confirm it before release. *Decided later on 2026-10-17, see the amendment below* | [11](11-security-and-privacy.md) |
+
+#### Amendment 2026-10-17 — recovery of accounts from before, and credential retirement
+
+The open row above is answered by [22](22-legacy-social-account-recovery.md): an account that
+signed in only with Apple or Google keeps its user, profile and memberships and signs in with
+a fresh email code to its **existing** address, an Apple relay address included. No bulk
+address rewrite, re-invitation or administrator password. A server whose relay accounts
+cannot receive codes is not updated. Sign-in endpoints are switched off on upgrade (hosted
+projects included) and the deployed `apple-token` is deleted; Apple's revocation of stored
+tokens becomes a retained, retried obligation; the five `APPLE_*` values, the Apple key, App
+ID, Services ID and relay sources stay until specs/22's retirement conditions hold. Runbook:
+[10](10-deployment-and-ops.md#retiring-social-sign-in-on-an-existing-server-2026-10-17).

@@ -99,7 +99,8 @@ or run `supabase db reset` against a live server.**
 Every server serves the discovery document through the Edge Function `server-info`
 (`supabase/functions/_shared/server_info.ts`): its public address, the publishable key,
 `api_version` and `min_app_version` from `api.server_info()`, the household-creation mode,
-Apple and Google as Auth reports them, and `features`. A front of the server's own also
+the sign-in methods (e-mail only: `sign_in` has no `apple` or `google` since 2026-10-17, which
+older apps read as off) and `features`. A front of the server's own also
 serves it at `/.well-known/wuselwall.json`. The app reads the `.well-known` path first,
 then the function, so a hosted project's `https://<id>.supabase.co` is a complete address.
 
@@ -132,6 +133,81 @@ per client and globally (`app.founder_attempt`).
 Email code and password work on every server. Sign-in with Apple and Google was removed on 2026-10-17 ([00](00-brief-and-decisions.md)): no server configures an external provider.
 
 Passkeys are offered only for servers in the build's `WW_FIRST_PARTY_HOSTS` (a CI secret), as [ADR-018](adr/ADR-018-self-hosted-only.md) decision 6 requires.
+
+### Retiring social sign-in on an existing server (2026-10-17)
+
+Policy and release evidence: [22](22-legacy-social-account-recovery.md). This is the runbook.
+
+**Hold first.** A server whose families used Apple's *Hide My Email* must not be updated
+until its operator has confirmed that those accounts can receive an email code at their relay
+address (`…@privaterelay.appleid.com`), or that there are none (specs/22, operator gate). An
+account that cannot receive a code cannot sign in again after its session ends.
+
+**What the update does by itself.**
+
+| Server | Step | Effect |
+|---|---|---|
+| Compose, from a release | `wuselwall update` (and `install --env`) runs `stack/retire-social-sign-in.sh` before Auth restarts | Removes `APPLE_ENABLED`, `APPLE_CLIENT_IDS`, `APPLE_SECRET` (the GoTrue login client secret), `GOOGLE_ENABLED`, `GOOGLE_CLIENT_IDS`, `GOOGLE_CLIENT_SECRET` from `stack/.env`, and the native callback from `ADDITIONAL_REDIRECT_URLS`. Prints names, never values |
+| Compose, from a checkout | `scripts/remote-stack.sh deploy` runs the same script on the server | Same |
+| Compose, both | `docker-compose.wuselwall.yml` | `GOTRUE_EXTERNAL_APPLE_ENABLED`, `GOTRUE_EXTERNAL_GOOGLE_ENABLED`, `GOTRUE_SECURITY_MANUAL_LINKING_ENABLED` are `"false"`, whatever the `.env` holds. The functions directory is replaced as a whole, so `apple-token` is gone |
+| Hosted Supabase | `deploy-supabase.yml`, step *Retire social sign-in* (`scripts/hosted-retire-social.mjs`) | PATCHes Google and Apple off, their login client IDs and secrets empty, manual linking off, `uri_allow_list` empty; reads the settings back and fails if any is still on; deletes a still-deployed `apple-token` and fails unless the function list no longer has it. Deploying the remaining functions alone would leave `apple-token` running |
+
+Kept everywhere: `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_PRIVATE_KEY`, `APPLE_CLIENT_ID`,
+`APPLE_TOKEN_KEY` (stack `.env` or the hosted project's Edge Function secrets). They are not
+sign-in settings: account-delete and the daily job use them to revoke the Apple tokens of
+accounts from before. `APPLE_TOKEN_KEY` never changes.
+
+**Check afterwards.**
+
+- `curl -s -H "apikey: <publishable key>" https://<api>/auth/v1/settings` shows
+  `"apple": false` and `"google": false` under `external`.
+- Compose: `grep -c login-callback stack/.env` is `0`; `ls stack/volumes/functions` has no
+  `apple-token`; `./wuselwall compose exec auth env | grep -E 'EXTERNAL_(APPLE|GOOGLE)_ENABLED|MANUAL_LINKING'`
+  shows `false` three times.
+- Hosted: the workflow log of *Retire social sign-in* ends without an error and says
+  `Edge Function apple-token: deleted` or `not deployed`.
+- A family member who used Apple or Google signs in with an email code on a phone **that is
+  still signed in elsewhere**, so nobody is locked out if it fails (specs/22: never sign
+  someone out to test).
+
+**Apple revocation obligations.** Deleting an account that holds a stored Apple token moves
+the encrypted token into `app.apple_revocation` in the same transaction (migration
+`20261017110000`). account-delete tries the revocation at once; `household-purge` retries
+every open one daily. A missing Apple value, a key that cannot decrypt or Apple being down
+keeps the row with a reason code; nothing is lost and the deletion itself never waits for
+Apple. To see what is open (database administrators only):
+
+```sql
+select last_error, count(*), max(attempts), min(created_at)
+  from app.apple_revocation group by last_error;
+```
+
+`config_missing`: set the five values. `decrypt_failed`: the `APPLE_TOKEN_KEY` is not the one
+the tokens were stored with; restore the original from the password manager. `http_4xx` that
+persists (wrong `APPLE_CLIENT_ID`, revoked key) needs investigating. Delete a row by hand only
+once its case is conclusively resolved, and note why: a count of zero after rows were deleted
+proves nothing.
+
+**Backups.** Dumps contain `app.apple_token` and `app.apple_revocation`, encrypted with
+`APPLE_TOKEN_KEY`. Keep that key (with the rest of `.env`) as long as any backup you might
+restore still holds tokens. A restore can bring back obligations that were settled after the
+backup was taken; retrying them is harmless.
+
+**External clients and credentials.** Only after the checks above and the recovery evidence
+of specs/22 passed:
+
+1. *Google:* delete the OAuth clients that existed **only** for WuselWall sign-in (web, iOS,
+   Android clients and their redirect URI `https://<api>/auth/v1/callback`). Keep the Google
+   Cloud project, the Play Console and its publishing credentials, and any client used for
+   anything else. Unsure whether something else uses a client: keep it.
+2. *Apple, sign-in only:* stop renewing the six-monthly client-secret JWT (it is no longer
+   generated or stored). Keep the signing key (`.p8`), the App ID and the Services ID the
+   tokens were issued to, and the private-relay email sources: legacy tokens and relay mail
+   depend on them.
+3. *Apple, everything:* only when the operator can state that no account needs relay
+   delivery any more, `app.apple_token` and `app.apple_revocation` are empty because each
+   token was revoked or conclusively resolved, and no backup you would restore holds tokens.
+   There is no fixed date and nothing deletes keys automatically.
 
 ### Email setup
 

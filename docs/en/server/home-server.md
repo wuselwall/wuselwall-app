@@ -74,6 +74,8 @@ The tool checks every backup and keeps 14 days. Without `BACKUP_DIR` they go to 
 
 The tool backs up the database first, downloads the new version, restarts the stack and applies the database changes. Server, web app and nightly jobs are then on the same version.
 
+Coming from a version with sign-in through Apple or Google? Read [Updating from a version with Apple and Google sign-in](/en/server/extras#retiring-social-sign-in) first.
+
 ::: warning No automatic updates for the stack
 Keep every auto-updater (Watchtower, a NAS's automatic container updates) away from WuselWall's containers. Updates come with `wuselwall update`, in a tested combination.
 :::
