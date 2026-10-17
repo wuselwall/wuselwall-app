@@ -1,0 +1,38 @@
+# Android release lane (specs/16, step 7). The workflow builds and signs the App Bundle
+# first (release-android.yml, job apk); this lane only uploads it.
+default_platform(:android)
+
+# The Play service account key, checked before use so that a mix-up fails in seconds with
+# a message that names the secret, never printing its value.
+def play_json_key
+  raw = ENV.fetch("PLAY_SERVICE_ACCOUNT_JSON", "")
+  UI.user_error!("set the secret PLAY_SERVICE_ACCOUNT_JSON") if raw.strip.empty?
+  begin
+    key = JSON.parse(raw)
+  rescue JSON::ParserError
+    UI.user_error!("PLAY_SERVICE_ACCOUNT_JSON must be the whole JSON key file of the service account")
+  end
+  unless key.is_a?(Hash) && key["type"] == "service_account" && key["client_email"] && key["private_key"]
+    UI.user_error!("PLAY_SERVICE_ACCOUNT_JSON is not a service account key (Google Cloud → Service Accounts → Keys → JSON)")
+  end
+  raw
+end
+
+platform :android do
+  desc "Upload the signed App Bundle to the Play internal testing track"
+  lane :internal do
+    # Only the build: the store listing in fastlane/metadata is uploaded on its own,
+    # never as a side effect of a release.
+    upload_to_play_store(
+      json_key_data: play_json_key,
+      track: "internal",
+      aab: "../build/wuselwall.aab",
+      release_status: "completed",
+      skip_upload_apk: true,
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+    )
+  end
+end

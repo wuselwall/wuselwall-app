@@ -17,7 +17,7 @@ specification; `app/`, `supabase/` and `infra/` hold the implementation.
 
 | | |
 |---|---|
-| Phase | M0.0–M0.3 built; M0.4: first TestFlight upload done, Play waits for the Google account; M1.1 shopping built, offline included; M1.0 onboarding started (Apple and Google sign-in live). Next: the rest of 9.1 and 9.2 (households), then M1.2 tasks, starting with household settings ([13 — Roadmap](specs/13-roadmap.md)) |
+| Phase | M0.0–M0.3 built; M0.4: first TestFlight upload and first Play internal release done, the Play upload from CI written; M1.1 shopping built, offline included; M1.0 onboarding started (Apple and Google sign-in live). Next: the rest of 9.1 and 9.2 (households), then M1.2 tasks, starting with household settings ([13 — Roadmap](specs/13-roadmap.md)) |
 | Started | 2026-10-11 |
 | Decision set | Locked for v1 (see `specs/adr/`) |
 | Origin | Specification carried over from BretApp; code starts from scratch |
