@@ -6,11 +6,10 @@
 // by design: the publishable key ships in every app, and row-level security, not the
 // key, protects a household's data.
 //
-// It reads api.server_info() and Auth's public settings with that same publishable key,
-// as any client could. No service role.
+// It reads api.server_info() with that same publishable key, as any client could. No
+// service role.
 import { CORS_HEADERS, errorResponse, json, preflight } from "../_shared/client.ts";
 import {
-  type AuthSettings,
   checkRow,
   discoveryDocument,
   publicUrl,
@@ -38,22 +37,19 @@ Deno.serve(async (req: Request): Promise<Response> => {
     const key = publishableKey(env);
     if (!internal || !key) throw new Error("SUPABASE_URL and a publishable key must be set");
 
-    const [row, auth] = await Promise.all([
-      getJson(`${internal}/rest/v1/rpc/server_info`, key, {
-        method: "POST",
-        body: "{}",
-        headers: { "Content-Profile": "api" },
-      }),
-      getJson(`${internal}/auth/v1/settings`, key),
-    ]);
+    const row = await getJson(`${internal}/rest/v1/rpc/server_info`, key, {
+      method: "POST",
+      body: "{}",
+      headers: { "Content-Profile": "api" },
+    });
 
-    const doc = discoveryDocument(checkRow(row), auth as AuthSettings, key, publicUrl(env));
+    const doc = discoveryDocument(checkRow(row), key, publicUrl(env));
     return new Response(JSON.stringify(doc), {
       headers: {
         ...CORS_HEADERS,
         "Access-Control-Allow-Methods": "GET, OPTIONS",
         "Content-Type": "application/json",
-        // Short: an operator who switches on Apple sign-in should see it within minutes.
+        // Short: a changed setting (household creation, features) shows within minutes.
         "Cache-Control": "public, max-age=300",
       },
     });
