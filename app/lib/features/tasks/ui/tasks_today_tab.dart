@@ -113,7 +113,14 @@ class _GroupHeader extends StatelessWidget {
         child: Row(
           children: [
             if (m != null)
-              TaskAvatar(name: m.displayName, color: m.color, size: 32)
+              // The visible name below is the heading; the avatar repeats it.
+              ExcludeSemantics(
+                child: TaskAvatar(
+                  name: m.displayName,
+                  color: m.color,
+                  size: 32,
+                ),
+              )
             else
               Icon(
                 Icons.people_alt_outlined,
