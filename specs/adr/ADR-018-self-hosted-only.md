@@ -5,7 +5,11 @@ except its decisions 6 (public store listings) and 7 (no captcha), which stand; 
 [ADR-013](ADR-013-self-hosted-compose-stack.md) (one landscape per server),
 [ADR-014](ADR-014-self-service-onboarding.md) (households live on self-hosted servers only),
 [ADR-016](ADR-016-public-website.md) and [ADR-017](ADR-017-wuselwall-app-domain.md) (the links
-site stays where it is); answers [Q40](../14-open-questions.md) anew and opens Q47 and Q48
+site stays where it is); answers [Q40](../14-open-questions.md) anew and opens Q47 and Q48.
+Decision 6 is narrowed on 2026-10-17: Sign in with Apple and Google are gone
+([ADR-014](ADR-014-self-service-onboarding.md)'s amendment), so `WW_FIRST_PARTY_HOSTS` gates
+passkeys only, the discovery document no longer reports Apple or Google, and the store app
+carries no Google sign-in library
 
 ## Context
 

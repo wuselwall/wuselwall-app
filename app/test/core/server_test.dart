@@ -23,7 +23,7 @@ Map<String, Object?> doc({
   'api_version': api,
   'min_app_version': min,
   'household_creation': 'token',
-  'sign_in': {'password': true, 'apple': true, 'google': false},
+  'sign_in': {'password': true},
   'features': ['calendar', 'shopping'],
 };
 
@@ -111,8 +111,6 @@ void main() {
       final s = info();
       expect(s.supabaseUrl, Uri.parse('https://api.example.org'));
       expect(s.publishableKey, 'sb_publishable_abc');
-      expect(s.appleSignIn, isTrue);
-      expect(s.googleSignIn, isFalse);
       expect(s.features, ['calendar', 'shopping']);
     });
 
@@ -250,25 +248,16 @@ void main() {
       environment: 'store',
       supabaseUrl: '',
       supabasePublishableKey: '',
-      appleSignIn: true,
-      googleWebClientId: 'web.apps.googleusercontent.com',
-      googleIosClientId: 'ios.apps.googleusercontent.com',
     );
 
-    test(
-      "another operator's server gets no native sign-in and no client IDs",
-      () {
-        // No WW_FIRST_PARTY_HOSTS in tests: every server is someone else's.
-        final c = AppConfig.forServer(build, info());
-        expect(c.supabaseUrl, 'https://api.example.org');
-        expect(c.supabasePublishableKey, 'sb_publishable_abc');
-        expect(c.nativeSignIn, isFalse);
-        expect(c.googleWebClientId, isEmpty);
-        expect(c.appleSignIn, isTrue, reason: "the server's own redirect");
-        expect(c.googleSignIn, isFalse);
-        expect(c.hasFixedServer, isFalse);
-      },
-    );
+    test("another operator's server gets no passkeys", () {
+      // No WW_FIRST_PARTY_HOSTS in tests: every server is someone else's.
+      final c = AppConfig.forServer(build, info());
+      expect(c.supabaseUrl, 'https://api.example.org');
+      expect(c.supabasePublishableKey, 'sb_publishable_abc');
+      expect(c.nativeSignIn, isFalse);
+      expect(c.hasFixedServer, isFalse);
+    });
 
     test('a store build without a server is not a configuration error', () {
       expect(build.validate(), isEmpty);

@@ -64,7 +64,7 @@ built straight away.*
 | **M0.0** Repository skeleton · local Supabase with the first migration, RLS and pgTAP harness · Flutter shell with three registers and German l10n · `ci.yml` ([16](16-setup-plan.md) steps 1–4) | Built — CI green on `main` since PR #3; the RLS catalogue test (`040_catalogue`) exists |
 | **M0.1** Identity: setup wizard, guardian accounts, device enrolment, tap-to-switch, guardian PIN, revocation (step 5) | Built and tested (pgTAP + end-to-end), incl. per-phone devices, TOTP, QR enrolment, rate limiting; passkeys wired, untested until the production domain exists — see ADR-010 implementation notes |
 | **M0.2** The shopping list, online only: add, tick, finish, live across devices (step 6) | Built and tested; not yet tried on a pilot household's devices |
-| **M0.4** Mobile release pipeline: signing, `release-ios.yml` and `release-android.yml`, TestFlight and the Play internal track (step 7) | In progress — Apple account active, iOS signing and `release-ios.yml` (then `release-mobile.yml`) written 2026-10-12; **first TestFlight build uploaded 2026-10-12**; Android: a signed APK by hand (`release-android.yml`, `scripts/deploy-apk.sh`) until the Play account exists |
+| **M0.4** Mobile release pipeline: signing, `release-ios.yml` and `release-android.yml`, TestFlight and the Play internal track (step 7) | In progress — Apple account active, iOS signing and `release-ios.yml` (then `release-mobile.yml`) written 2026-10-12; **first TestFlight build uploaded 2026-10-12**; Android: **first App Bundle on the Play internal track by hand 2026-10-17**, the upload from `release-android.yml` written the same day; the signed APK (`scripts/deploy-apk.sh`) stays the fallback |
 | **M0.3** A self-hosted server ([ADR-013](adr/ADR-013-self-hosted-compose-stack.md)): own keys, a public HTTPS front, nightly backups, restore drill (step 8) | Built 2026-10-11; **moved the same day to the official compose stack** ([ADR-013 amendment](adr/ADR-013-self-hosted-compose-stack.md#amendment-2026-10-11-the-official-compose-stack)). The pilot household starts fresh on it |
 
 M0.4 is new and comes **before** M0.3. A PWA reached the phones by URL; a native app
@@ -106,7 +106,7 @@ is assembled in M1.5, once all of its sources exist.
 alongside M1.1–M1.4 and must be finished **before M1.6**, because the family's real
 household is set up through it.
 
-The front door (Apple, Google, email code, password) · household creation in `code` mode
+The front door (email code, password; Apple and Google removed 2026-10-17) · household creation in `code` mode
 with H1/H2 and seeded examples · invitations by link, code, QR and email match ·
 reverse pairing for shared devices, with the PIN deferred to the first one · the
 getting-started card · account and household deletion, leave, data export · localised
@@ -117,8 +117,8 @@ entry retired one release later.
 tablet is connected without anyone touching its keyboard, and both are timed on the
 release checklist.
 
-> **Built 2026-10-14 and 2026-10-15, merged to `main`:** the front door with Apple, Google
-> and email codes (E1–E3); households (H1/H2, founder codes); invitations by link, code and
+> **Built 2026-10-14 and 2026-10-15, merged to `main`:** the front door with email codes
+> and passwords (E1–E3; Apple and Google removed 2026-10-17); households (H1/H2, founder codes); invitations by link, code and
 > QR, with universal links and App Links carrying the server; pairing; the getting-started
 > card (FR-5.17); the join and new-sign-in notices on Today; leaving, deleting and restoring
 > a family, account deletion, the second-factor reset and the data export (FR-5.16); the
@@ -274,22 +274,21 @@ meets them.
   install, migrate and update scripts and the server's QR code; `/.well-known/wuselwall.json`
   with `api_version`; the app's server choice (S0), demo mode and the `api_version`
   window, tested against the previous server release in CI; a self-hosting guide in
-  `docs/` for a parent with a NAS (email-only sign-in, SMTP, one's own Apple/Google
-  clients).
+  `docs/` for a parent with a NAS (email-only sign-in, SMTP).
 - **The domain** — decided 2026-10-13: `wuselwall.app`
   ([ADR-017](adr/ADR-017-wuselwall-app-domain.md), [Q45](14-open-questions.md)).
 - **Email** ([Q41](14-open-questions.md)): the sending domain verified, and the
   deliverability check in [10](10-deployment-and-ops.md#email-setup) passed.
 - **Store listings** ([Q42](14-open-questions.md), decided: App Store and Google Play):
-  store privacy labels and the Data safety form filled in honestly (Google's iOS sign-in
-  library included), and App Review pointed at the demo mode.
-- **Legal:** the privacy policy for the website, the apps and the sign-in providers
+  store privacy labels and the Data safety form filled in honestly, and App Review pointed
+  at the demo mode.
+- **Legal:** the privacy policy for the website, the apps and the email sign-in
   (published 2026-10-13, operator details still to fill in), and a contact address. The
   record of processing and processor agreements cover what the project itself runs (the
   website and the docs); each operator is the controller for their own server ([11](11-security-and-privacy.md#privacy-and-legal)).
 - **Abuse controls** live: Auth's and the front's rate limits, the 30-day clean-up of empty
   accounts (not built yet: a fifth job), the attempt logs ([11, T11](11-security-and-privacy.md#t11--the-open-front-door)).
-- **Deletion and export** tested on a real household, including Apple token revocation.
+- **Deletion and export** tested on a real household.
 - **The cross-household pgTAP suite** reviewed once more with "a stranger is on the other
   side" in mind.
 - Then: the store listings go public. `household_creation` stays `code` on the family's

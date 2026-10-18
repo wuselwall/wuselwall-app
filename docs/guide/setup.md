@@ -11,7 +11,7 @@ ist der Link deaktiviert; die Erklärung ist nicht in der App gespeichert.
 
 Der Startbildschirm hat drei Wege:
 
-- **Mit E-Mail fortfahren**, auch **Mit Apple fortfahren** oder **Mit Google fortfahren**, wenn dein Gerät sie anbietet: für dich als Erwachsene:r, auf deinem eigenen Handy.
+- **Mit E-Mail fortfahren**: für dich als Erwachsene:r, auf deinem eigenen Handy.
 - **Ich habe einen Einladungscode**: du wurdest von einer Familie eingeladen.
 - **Familien-Tablet oder Wanddisplay verbinden**: für ein Gerät, das allen gehört. Es wird von einem Erwachsenen auf seinem Handy freigegeben.
 

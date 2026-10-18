@@ -10,10 +10,8 @@ import 'package:wuselwall/features/account/application/account_admin_providers.d
 import 'package:wuselwall/features/household/application/household_leave_providers.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
-import 'package:wuselwall/features/identity/data/sign_in_methods_repository.dart';
 import 'package:wuselwall/features/identity/domain/email_code.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
-import 'package:wuselwall/features/identity/domain/sign_in_method.dart';
 
 /// "Konto löschen" in Einstellungen → Konto (specs/20 J6). The account, its sign-in methods and
 /// its devices go; the profile stays in the family. Disabled, with the reason, for the last
@@ -76,23 +74,6 @@ class _DeleteAccountTileState extends ConsumerState<DeleteAccountTile> {
   Future<bool> _renewSignIn() async {
     final l10n = context.l10n;
     final repo = ref.read(accountAdminRepositoryProvider);
-    final native = switch (repo.currentProvider()) {
-      'apple' => SignInProvider.apple,
-      'google' => SignInProvider.google,
-      _ => null,
-    };
-    final signIn = ref.read(signInMethodsRepositoryProvider);
-    if (native != null && signIn.route(native) == ProviderRoute.native) {
-      // The platform sheet; a cancelled sheet changes nothing, so the check below decides.
-      final signedIn = await signIn.signIn(native);
-      if (!mounted) return false;
-      if (signedIn case Err(:final failure)) {
-        context.showFailure(failure);
-        return false;
-      }
-      return repo.hasRecentSignIn();
-    }
-
     final email = ref.read(myAccountProvider).value?.email;
     if (email != null) {
       final renewed = await showDialog<bool>(

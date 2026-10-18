@@ -30,7 +30,7 @@ updates:
       website-minor-and-patch: { update-types: [minor, patch] }
 
   - package-ecosystem: bundler
-    directory: /app/ios          # fastlane
+    directories: [/app/ios, /app/android]   # fastlane; one PR keeps both locks equal
     schedule: { interval: weekly, day: monday }
     cooldown: { default-days: 7 }
     groups:

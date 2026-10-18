@@ -30,7 +30,6 @@ Eine Familie löscht nur eine Elternperson, und zwar auf dem eigenen Handy. Tipp
 Willst du dein WuselWall-Konto selbst löschen, tippe auf **Konto löschen**. Die Anmeldung wird entfernt, und du wirst überall abgemeldet.
 
 - Dein **Profil** bleibt mit allem, was du getan hast, in der Familie. Nur der Zugang geht weg.
-- Ist dein Konto mit **Apple** verbunden, wird der Zugang bei Apple widerrufen.
 - Zum Löschen fragt WuselWall, ob du es wirklich bist. Ist deine Anmeldung schon etwas älter (mehr als 5 Minuten), schickt WuselWall einen **Code per E-Mail**, bevor es weitergeht.
 - Die letzte Elternperson mit Konto kann ihr Konto nicht löschen (siehe oben).
 

@@ -164,14 +164,10 @@ build is promoted to the family, run [`specs/release-checklist.md`](release-chec
 
 - Passkeys with the real providers: iCloud Keychain (iPhone, iPad), Samsung Pass and
   Google Password Manager (Samsung).
-- **Sign in with Apple** (iPhone natively; the Samsung through the web redirect) and
-  **Sign in with Google** (Samsung natively; the iPhone too). Neither can be automated:
-  both need a real account and the provider's own UI.
 - **The timed walk-throughs (NFR-17):** J1, J2 and J3 with a stopwatch, by someone who has
   not seen the build. Write down the times and every hesitation. Universal links: an
   invitation link opens the app when installed and the landing page when not.
 - Enrol by **scanning** the QR code with the camera.
-- The auth deep link `ch.goomba.wuselwall://login-callback/` returns into the app.
 - Realtime still arrives after the app was in the background for ten minutes — the
   Samsung's battery optimisation is the usual culprit.
 - iPad: rotation, split view, and the kid register at arm's length.

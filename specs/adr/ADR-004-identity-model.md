@@ -23,8 +23,8 @@ Two-layer identity:
 
 Guardian actions require a **6-digit PIN step-up**, valid for 15 minutes on that device.
 Guardians additionally hold real accounts (passkey or password) for settings, setup and
-device management. *(Since ADR-014: Apple, Google, an email code or a password; the
-second factor is optional.)*
+device management. *(Since ADR-014: an email code or a password — Apple and Google, added
+then, were removed on 2026-10-17; the second factor is optional.)*
 
 ## Alternatives considered
 
