@@ -347,8 +347,11 @@ Until the Play listing exists, `release-android.yml` builds a signed APK and
 
 ### The user documentation
 
-`docs/` is built on GitHub's machines (the Flutter web demo, Playwright screenshots in both
-languages and themes, VitePress with `DOCS_BASE=/docs/`). The deploy job runs on a
+`docs/` is built by `docs.yml` (the Flutter web demo, Playwright screenshots in both
+languages and themes, VitePress with `DOCS_BASE=/docs/`): a pull request's build on
+GitHub's ephemeral `ubuntu-latest` runner, since it executes the PR's code; a push to `main`
+or "Run workflow" on the self-hosted build runner. The deploy job, never run for a pull
+request, runs on a
 self-hosted runner (label `wuselwall-deploy`) that holds no access of its own: it pipes the
 site over SSH to `DOCS_DEPLOY_TARGET` with a key that may run only the receiving script (a
 forced `command=`), and the host key is pinned (`DOCS_DEPLOY_KNOWN_HOSTS`).
