@@ -18,6 +18,24 @@ Dafür braucht der Server einen SMTP-Dienst, also einen Anbieter, der Mails vers
 
 **Bei Supabase:** **Authentication → Emails → SMTP Settings**, dieselben Angaben. Der eingebaute Mail-Versand von Supabase ist nur zum Ausprobieren gedacht und schickt nur wenige Mails pro Stunde.
 
+## Update von einer Version mit Apple- und Google-Anmeldung {#social-stilllegen}
+
+Bis Oktober 2026 konnte man sich bei WuselWall auch mit Apple oder Google anmelden. Wer das tat, meldet sich jetzt mit einem Code per E-Mail an die Adresse seines Kontos an. Konto und Familie bleiben dieselben.
+
+**Erst prüfen, dann updaten.** Hat sich jemand bei euch mit Apple und **„E-Mail-Adresse verbergen“** angemeldet, lautet die Adresse seines Kontos `…@privaterelay.appleid.com`. Ein Code an diese Adresse kommt nur an, wenn eure Absenderadresse bei Apple für die Weiterleitung eingetragen ist. Klärt das vor dem Update. Kommt kein Code an, wartet mit dem Update: Sonst kann sich diese Person nach dem nächsten Abmelden nicht mehr anmelden.
+
+**Was das Update von selbst erledigt:**
+
+- **Zu Hause** (`wuselwall update`): Alle Werte für Apple und Google (`APPLE_…`, `GOOGLE_CLIENT_…`) und die alte Rücksprungadresse der App verschwinden aus `stack/.env`, die alte Funktion `apple-token` ist weg. Das Werkzeug nennt dabei nur die Namen, nie die Werte.
+- **Bei Supabase** (Workflow **deploy-supabase**): Der Schritt **Retire social sign-in** schaltet Apple, Google und das Verknüpfen von Konten ab, entfernt die alte Rücksprungadresse der App (andere Einträge, etwa für Einladungen, bleiben), löscht die Funktion `apple-token` und die `APPLE_…`-Secrets und prüft danach alles. Schlägt etwas fehl, bricht der Workflow ab.
+
+**Danach prüfen:** Wer sich früher mit Apple oder Google angemeldet hat, fordert auf einem **zweiten** Gerät einen Code per E-Mail an und meldet sich damit an. Das erste Gerät bleibt dabei angemeldet. Niemand soll sich zum Ausprobieren abmelden.
+
+**Erst danach aufräumen**, bei Google und Apple:
+
+- **Google:** Löscht nur die OAuth-Clients, die es allein für die WuselWall-Anmeldung gab. Das Google-Cloud-Projekt, die Play Console und alles, was andere Apps nutzen, bleibt. Im Zweifel: behalten.
+- **Apple:** Die Services ID, den Schlüssel für Sign in with Apple und die Erinnerung an das halbjährliche Client-Secret braucht ihr nicht mehr. Die eingetragenen Absender für die Weiterleitung **behaltet** ihr, solange es Konten mit einer `privaterelay`-Adresse gibt.
+
 ## Feiertage und Schulferien {#feiertage}
 
 Für die Wochentafel holt der Server einmal pro Woche die Feiertage und Schulferien der Länder, die ihr in den Einstellungen gewählt habt. Die Quelle ist die freie [OpenHolidays API](https://www.openholidaysapi.org/). Der Server schickt dabei nur Ländercodes, nichts über eure Familie, und die Apps fragen OpenHolidays nie selbst. Kommt der Server nicht ins Internet, fehlen die Feiertage, alles andere läuft weiter.
