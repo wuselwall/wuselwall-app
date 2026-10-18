@@ -33,7 +33,7 @@ EIN GERÄT PRO PERSON ODER PRO RAUM
 • Eigene Geräte für die Erwachsenen, ein gemeinsames Tablet für die Küche
 • Kinder brauchen kein Konto und keine E-Mail-Adresse
 • Neue Geräte per QR-Code verbinden, jedes Gerät einzeln sperren
-• Anmeldung mit E-Mail und Passwort, je nach Server auch mit Google
+• Anmeldung mit Code per E-Mail oder mit Passwort
 
 EURE DATEN BLEIBEN BEI EUCH
 • Alles liegt auf eurem eigenen Server

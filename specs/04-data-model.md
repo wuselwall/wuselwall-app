@@ -43,7 +43,7 @@ profile                          -- a family member
                                                  -- and for adults without one. UNIQUE =
                                                  -- one household per account (Q43)
   is_active, sort_order
-  (credentials, identities — Apple, Google, email, password, passkeys — sessions and MFA
+  (credentials, identities — email, password, passkeys — sessions and MFA
    factors live in Supabase's own auth schema)
 
 device
@@ -484,7 +484,6 @@ Tables in the `app` schema, RLS enabled and forced, never exposed; written only 
 - `app.founder_attempt`: the guess log of founder codes.
 - `app.pairing_request`, `app.pairing_attempt`: a device's request to be connected (a secret, a code, the approving guardian, an expiry), and its attempt log.
 - `app.invitation`, `app.invitation_attempt`: an invitation (a token and a code, the role, an optional confirmed email, an expiry, single use) and its attempt log.
-- `app.apple_token`: the encrypted Apple refresh token of an account, kept only until the account is deleted and access is revoked.
 - `app.household.created_by_profile_id` and `app.household.deleted_at`: who started the family, and when a deleted family becomes purgeable (14 days).
 
 

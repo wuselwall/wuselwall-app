@@ -35,16 +35,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
 
-            <intent-filter>
-              <action android:name="android.intent.action.VIEW" />
-              <category android:name="android.intent.category.DEFAULT" />
-              <category android:name="android.intent.category.BROWSABLE" />
-              <!-- Accepts URIs that begin with YOUR_SCHEME://YOUR_HOST -->
-              <data
-                android:scheme="ch.goomba.wuselwall"
-                android:host="login-callback" />
-            </intent-filter>
-
             <!-- App Links (specs/20, "Universal links and the landing pages"): invitation and
                  pairing links on wuselwall.app open the app. Verified through
                  https://wuselwall.app/.well-known/assetlinks.json; until that lists the

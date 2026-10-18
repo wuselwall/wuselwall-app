@@ -7,7 +7,6 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/features/household/domain/household_models.dart';
 import 'package:wuselwall/features/identity/application/sign_in_choice.dart';
 import 'package:wuselwall/features/identity/domain/email_code.dart';
-import 'package:wuselwall/features/identity/domain/sign_in_method.dart';
 
 import '../support/fakes.dart';
 
@@ -310,21 +309,12 @@ void main() {
         overrides: baseOverrides(
           identity: identity,
           shopping: FakeShoppingRepository([]),
-          signInMethods: FakeSignInMethods(
-            linked: [
-              const SignInMethod(
-                identityId: 'identity-email',
-                provider: SignInMethodKind.email,
-                email: 'papa@example.org',
-              ),
-            ],
-          ),
         ),
       );
       await t.tap(find.byIcon(Icons.settings));
       await t.pumpAndSettle();
 
-      expect(find.text('papa@example.org — immer verfügbar'), findsOneWidget);
+      expect(find.text('daniel@example.org — immer verfügbar'), findsOneWidget);
       await t.ensureVisible(find.text('Passwort festlegen'));
       await t.tap(find.text('Passwort festlegen'));
       await t.pumpAndSettle();

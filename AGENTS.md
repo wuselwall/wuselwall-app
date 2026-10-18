@@ -6,7 +6,7 @@ This repository holds both the planning documents and the code for WuselWall (se
 Setup-plan steps 3, 5, 6 and 8 are built (app shell, identity, online shopping list, the
 compose stack) and M1.1 is built, offline outbox included. Onboarding (step 9,
 [specs/20](specs/20-onboarding.md), ADR-014 and ADR-018 — self-hosted only, no WuselWall
-Cloud) is built: Sign in with Apple and Google, email codes (E1–E3), households and founder
+Cloud) is built: email codes and passwords (E1–E3), households and founder
 codes (H1/H2), invitations and pairing (links carry the server and open the app as universal
 links and App Links), the join and new-sign-in notices on Today, leaving, deleting and
 restoring a family, account deletion and the second-factor reset, localised mail
@@ -58,7 +58,7 @@ See [specs/03-architecture.md](specs/03-architecture.md),
   changes the app–server contract raises `api_version`; each app release supports the
   current and the previous one, so never assume every server runs the latest release.
 - No household's server is hard-coded in the app either: the store app has no default
-  backend. Native Apple/Google sign-in and passkeys only for `WW_FIRST_PARTY_HOSTS`.
+  backend. Passkeys only for `WW_FIRST_PARTY_HOSTS`.
 
 - Tables live in the `app` schema and are never exposed. PostgREST exposes only `api`:
   `security_invoker` views for reads, one function per write use case.
