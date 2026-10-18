@@ -21,7 +21,24 @@ class MealRow extends StatelessWidget {
     final board = frame.board;
     final g = frame.geometry;
     return BoardTap(
-      label: context.l10n.boardZoneMeal,
+      label: [
+        context.l10n.boardZoneMeal,
+        for (final day in board.days)
+          if (day.meal case final meal?) ...[
+            context.fullDate(day.date),
+            meal.title ?? context.l10n.boardMealNothingPlanned,
+            if (meal.time case final time?) context.time(time),
+            if (board.member(meal.cookId ?? '') case final cook?)
+              context.l10n.boardMealCook(context.memberName(board, cook)),
+            for (final member in board.members)
+              (meal.eating.contains(member.id)
+                  ? context.l10n.boardEating
+                  : context.l10n.boardNotEating)(
+                context.memberName(board, member),
+              ),
+            if (meal.guests > 0) context.l10n.boardMealGuests(meal.guests),
+          ],
+      ].join(', '),
       onTap: () => unawaited(openMealWeek(context, board)),
       child: BoardRow(
         geometry: g,
@@ -41,7 +58,7 @@ class MealRow extends StatelessWidget {
                   weight: FontWeight.w700,
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
-                maxLines: 2,
+                maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -53,24 +70,31 @@ class MealRow extends StatelessWidget {
                 width: g.width(i),
                 top: 0,
                 bottom: 0,
-                child: Opacity(
-                  opacity: frame.opacity(i),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(8, 6, 8, 4),
-                    child: LayoutBuilder(
-                      builder: (context, c) => ClipFit(
-                        alignment: Alignment.topLeft,
-                        child: SizedBox(
-                          width: c.maxWidth,
-                          child: _MealCell(
-                            board: board,
-                            meal: meal,
-                            // Two dish lines and the cook's line need about 112 canvas px.
-                            twoLines: c.maxHeight >= 112,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 6, 8, 4),
+                  child: LayoutBuilder(
+                    builder: (context, c) =>
+                        c.maxHeight <
+                            MediaQuery.textScalerOf(context).scale(112)
+                        ? Align(
+                            alignment: Alignment.centerLeft,
+                            child: _Dish(meal: meal, twoLines: false),
+                          )
+                        : ClipFit(
+                            alignment: Alignment.topLeft,
+                            child: SizedBox(
+                              width: c.maxWidth,
+                              child: _MealCell(
+                                board: board,
+                                meal: meal,
+                                // Reserve time, two dish lines and wrapped metadata
+                                // at the real scaler, not unscaled canvas heights.
+                                twoLines:
+                                    c.maxHeight >=
+                                    MediaQuery.textScalerOf(context).scale(140),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
                   ),
                 ),
               ),
@@ -141,47 +165,38 @@ class _MealCell extends StatelessWidget {
         const SizedBox(height: 2),
         _Dish(meal: meal, twoLines: twoLines),
         const SizedBox(height: 4),
-        // The cook stays beside the dots while there is room, else takes the next line.
+        // The cook stays beside the dots while there is room, else takes the next
+        // line; the dots and the guest count are separate Wrap children too, so a
+        // crowded household's dots alone cannot force a fixed-width overflow.
         Wrap(
           spacing: 6,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                MemberDots(
-                  size: 12,
-                  dots: [
-                    for (final m in board.members)
-                      MemberDot(
-                        memberColor: m.color,
-                        filled: meal.eating.contains(m.id),
-                        size: 12,
-                        semanticLabel: meal.eating.contains(m.id)
-                            ? l10n.boardEating(context.memberName(board, m))
-                            : l10n.boardNotEating(context.memberName(board, m)),
-                      ),
-                  ],
-                ),
-                if (meal.guests > 0) ...[
-                  const SizedBox(width: 4),
-                  Semantics(
-                    label: l10n.boardMealGuests(meal.guests),
-                    excludeSemantics: true,
-                    child: Text(
-                      l10n.boardMoreCount(meal.guests),
-                      style: boardCell(
-                        24,
-                        weight: FontWeight.w700,
-                        color: ww.ink2,
-                      ),
-                      maxLines: 1,
-                      softWrap: false,
-                    ),
+            MemberDots(
+              size: 12,
+              dots: [
+                for (final m in board.members)
+                  MemberDot(
+                    memberColor: m.color,
+                    filled: meal.eating.contains(m.id),
+                    size: 12,
+                    semanticLabel: meal.eating.contains(m.id)
+                        ? l10n.boardEating(context.memberName(board, m))
+                        : l10n.boardNotEating(context.memberName(board, m)),
                   ),
-                ],
               ],
             ),
+            if (meal.guests > 0)
+              Semantics(
+                label: l10n.boardMealGuests(meal.guests),
+                excludeSemantics: true,
+                child: Text(
+                  l10n.boardMoreCount(meal.guests),
+                  style: boardCell(24, weight: FontWeight.w700, color: ww.ink2),
+                  maxLines: 1,
+                  softWrap: false,
+                ),
+              ),
             if (cook != null)
               Semantics(
                 label: l10n.boardMealCook(context.memberName(board, cook)),
@@ -201,8 +216,8 @@ class _MealCell extends StatelessWidget {
   }
 }
 
-/// The dish. A one-word dish shrinks a little rather than break mid-word
-/// ("Fischstäbch-en"); longer names may take a second line when there is room.
+/// The dish truncates at the real text size, including a single long word.
+/// A second line is allowed only when its scaled height fits the zone.
 class _Dish extends StatelessWidget {
   const _Dish({required this.meal, required this.twoLines});
 
@@ -231,13 +246,7 @@ class _Dish extends StatelessWidget {
       weight: FontWeight.w700,
       color: Theme.of(context).colorScheme.onSurface,
     );
-    if (!title.trim().contains(' ')) {
-      return FittedBox(
-        fit: BoxFit.scaleDown,
-        alignment: Alignment.centerLeft,
-        child: Text(title, style: style, maxLines: 1, softWrap: false),
-      );
-    }
+
     return Text(
       title,
       style: style,

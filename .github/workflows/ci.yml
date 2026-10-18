@@ -1,7 +1,15 @@
 # Pull requests get the fast checks: format, analyse, unit and widget tests, the website
-# build, the dependency audit. A tag v*.*.* (the release, next to release-ios.yml and release-android.yml) or
-# "Run workflow" adds the web build and the backend: every migration from zero, pgTAP, the
-# integration test. Run it by hand on a branch before its migration goes to a live server (specs/10).
+# build, the dependency audit. A tag v*.*.* (the release, next to release-ios.yml and
+# release-android.yml) or "Run workflow" adds the web build. The disposable backend
+# (migrations, pgTAP, the Flutter integration test) and the Deno unit tests for Edge
+# Functions live in backend-ci.yml, which runs on every pull request and skips its heavy
+# jobs through its own change detector rather than a workflow-level path filter, and
+# always in full on a tag or "Run workflow" (specs/10).
+#
+# Every job here executes PR-supplied code (dependency installs included), so for a
+# pull_request event it runs on the GitHub-hosted, ephemeral ubuntu-latest runner rather
+# than the self-hosted fleet; only a push tag or a manual "Run workflow" (both
+# maintainer-triggered, not PR-controlled) uses [self-hosted, Linux, build].
 name: ci
 on:
   workflow_dispatch:
@@ -16,7 +24,7 @@ permissions:
 
 jobs:
   app:
-    runs-on: [self-hosted, Linux, build]
+    runs-on: ${{ github.event_name == 'pull_request' && 'ubuntu-latest' || fromJSON('["self-hosted","Linux","build"]') }}
     defaults: { run: { working-directory: app } }
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -31,7 +39,7 @@ jobs:
         if: github.event_name != 'pull_request'
 
   website:
-    runs-on: [self-hosted, Linux, build]
+    runs-on: ${{ github.event_name == 'pull_request' && 'ubuntu-latest' || fromJSON('["self-hosted","Linux","build"]') }}
     defaults: { run: { working-directory: website } }
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -48,7 +56,7 @@ jobs:
   # Known vulnerabilities in every lockfile (specs/11, T5). Accepted ones, each with a
   # reason and an expiry, live in osv-scanner.toml next to the lockfile.
   audit:
-    runs-on: [self-hosted, Linux, build]
+    runs-on: ${{ github.event_name == 'pull_request' && 'ubuntu-latest' || fromJSON('["self-hosted","Linux","build"]') }}
     env:
       OSV_VERSION: v2.6.0
       OSV_SHA256: ca69b3d3cd08f889a49dc0a383122f71cc528b83803671df5fd874d97485b108
@@ -62,30 +70,3 @@ jobs:
             --lockfile=app/ios/Gemfile.lock --lockfile=app/android/Gemfile.lock \
             --lockfile=package-lock.json \
             --lockfile=website/package-lock.json
-
-  backend:
-    if: github.event_name != 'pull_request'
-    runs-on: ubuntu-latest   # supabase start needs a Docker daemon of its own
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with: { node-version: 22, cache: npm }
-      - run: npm ci
-      # config.toml reads its keys from supabase/.env (ADR-013). This stack is throwaway,
-      # so it gets the CLI's public defaults, which env/ci.json expects.
-      - run: |
-          cat > supabase/.env <<'EOF'
-          WW_JWT_SECRET=super-secret-jwt-token-with-at-least-32-characters-long
-          WW_PUBLISHABLE_KEY=sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH
-          WW_SECRET_KEY=sb_secret_N7UND0UgjKTVK-Uodkm0Hg_xSvEMPvz
-          EOF
-      - run: npx supabase start -x studio,imgproxy,logflare,vector
-      - run: npx supabase db reset      # every migration from zero, plus seed
-      - run: npx supabase test db       # pgTAP
-      - run: npx supabase db lint --level warning
-      # The app's repositories against the real stack: identity, enrolment, shopping,
-      # realtime. Needs studio-less start from above; uses the public local dev key.
-      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
-        with: { flutter-version-file: app/pubspec.yaml, cache: true }
-      - run: flutter pub get --enforce-lockfile && flutter test test/integration --dart-define-from-file=env/ci.json
-        working-directory: app
