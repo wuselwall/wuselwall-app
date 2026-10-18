@@ -89,6 +89,7 @@ class PresenceBandView extends StatelessWidget {
     this.dense = false,
     this.fontSize = 24,
     this.lineHeight,
+    this.wraps = false,
     super.key,
   });
 
@@ -112,6 +113,11 @@ class PresenceBandView extends StatelessWidget {
   /// The text's line height; null keeps the font's own. The wall sets it tighter so a
   /// band's label and time fit a member row together.
   final double? lineHeight;
+
+  /// Whether the label and time wrap onto more lines rather than shrink and end in an
+  /// ellipsis: the detail views, which have the room to show all of it. The board's
+  /// fixed-height rows keep the single line.
+  final bool wraps;
 
   @override
   Widget build(BuildContext context) {
@@ -168,22 +174,35 @@ class PresenceBandView extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // A narrow band shrinks its label a little before cutting it.
-        ShrinkText(
-          shown,
-          style: TextStyle(
-            fontFamily: Tokens.fontUi,
-            fontSize: fontSize,
-            fontWeight: FontWeight.w700,
-            color: textColor,
-            height: lineHeight,
+        // A narrow band shrinks its label a little before cutting it; in a detail
+        // view ([wraps]) the label wraps instead, so nothing is cut (t_10f0b348).
+        if (wraps)
+          Text(
+            shown,
+            style: TextStyle(
+              fontFamily: Tokens.fontUi,
+              fontSize: fontSize,
+              fontWeight: FontWeight.w700,
+              color: textColor,
+              height: lineHeight,
+            ),
+          )
+        else
+          ShrinkText(
+            shown,
+            style: TextStyle(
+              fontFamily: Tokens.fontUi,
+              fontSize: fontSize,
+              fontWeight: FontWeight.w700,
+              color: textColor,
+              height: lineHeight,
+            ),
           ),
-        ),
         if (detail != null)
           Text(
             detail!,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+            maxLines: wraps ? null : 1,
+            overflow: wraps ? null : TextOverflow.ellipsis,
             style: TextStyle(
               fontFamily: Tokens.fontNumeric,
               fontSize: fontSize,
@@ -274,11 +293,15 @@ class BaselineChip extends StatelessWidget {
   const BaselineChip({
     required this.memberColor,
     required this.label,
+    this.wraps = false,
     super.key,
   });
 
   final Color memberColor;
   final String label;
+
+  /// Whether a long label wraps (detail views) rather than ending in an ellipsis.
+  final bool wraps;
 
   @override
   Widget build(BuildContext context) {
@@ -302,8 +325,8 @@ class BaselineChip extends StatelessWidget {
           Flexible(
             child: Text(
               label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+              maxLines: wraps ? null : 1,
+              overflow: wraps ? null : TextOverflow.ellipsis,
               style: TextStyle(
                 fontFamily: Tokens.fontUi,
                 fontSize: 24,
@@ -372,21 +395,34 @@ class MemberDots extends StatelessWidget {
 }
 
 /// A member's avatar: a circle in their ink with their initial in `onInk`.
+///
+/// The initial is half of [size] before the text scale. With [growsWithText] the
+/// circle grows with the text scale too, so a scaled initial is never clipped; off by
+/// default, because chips and fixed rows elsewhere size their avatar slot themselves.
 class MemberAvatar extends StatelessWidget {
-  const MemberAvatar({required this.member, this.size = 40, super.key});
+  const MemberAvatar({
+    required this.member,
+    this.size = 40,
+    this.growsWithText = false,
+    super.key,
+  });
 
   final BoardMember member;
   final double size;
+  final bool growsWithText;
 
   @override
   Widget build(BuildContext context) {
     final mc = context.ww.member(member.color);
+    final diameter = growsWithText
+        ? MediaQuery.textScalerOf(context).scale(size)
+        : size;
     return Semantics(
       label: member.displayName,
       excludeSemantics: true,
       child: Container(
-        width: size,
-        height: size,
+        width: diameter,
+        height: diameter,
         alignment: Alignment.center,
         decoration: BoxDecoration(color: mc.ink, shape: BoxShape.circle),
         child: Text(
@@ -417,7 +453,9 @@ class PaperTile extends StatelessWidget {
   final Widget child;
   final String? tint;
 
-  /// Entfall: the tile recedes (50 % opacity) and gets a diagonal strike.
+  /// Entfall: the tile recedes to the sunken ground and gets a diagonal strike. Its
+  /// text keeps full colour, so specs/17's 4.5:1 holds (t_10f0b348); the lesson body
+  /// also says "Entfall" in words.
   final bool struckThrough;
   final EdgeInsetsGeometry padding;
 
@@ -431,7 +469,7 @@ class PaperTile extends StatelessWidget {
     final tile = Container(
       padding: padding,
       decoration: BoxDecoration(
-        color: ww.paper(paper),
+        color: struckThrough ? ww.sunken : ww.paper(paper),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: ww.line),
       ),
@@ -441,10 +479,7 @@ class PaperTile extends StatelessWidget {
       ),
     );
     if (!struckThrough) return tile;
-    return CustomPaint(
-      foregroundPainter: _StrikePainter(ww.ink2),
-      child: Opacity(opacity: 0.5, child: tile),
-    );
+    return CustomPaint(foregroundPainter: _StrikePainter(ww.ink2), child: tile);
   }
 }
 

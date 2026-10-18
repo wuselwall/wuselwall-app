@@ -240,12 +240,15 @@ class _EatingDot extends StatelessWidget {
                     : l10n.boardNotEating(name),
               ),
               const SizedBox(width: Tokens.space2),
-              Text(
-                name,
-                style: detailUi(
-                  24,
-                  eating ? context.ink : ww.ink3,
-                  weight: FontWeight.w600,
+              // A long name wraps instead of running past the row (t_10f0b348).
+              Flexible(
+                child: Text(
+                  name,
+                  style: detailUi(
+                    24,
+                    eating ? context.ink : ww.ink3,
+                    weight: FontWeight.w600,
+                  ),
                 ),
               ),
             ],
