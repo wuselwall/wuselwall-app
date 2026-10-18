@@ -20,14 +20,6 @@ licence above:
   (https://github.com/microsoft/fluentui-emoji), MIT License, Copyright (c) Microsoft
   Corporation; the licence text is in that folder (LICENSE-FluentEmoji.txt).
 
-- website/src/components/GitHubMark.astro: the GitHub mark from Primer Octicons
-  (https://github.com/primer/octicons), MIT License, Copyright (c) GitHub Inc.
-  GitHub and the GitHub logo are trademarks of GitHub, Inc.
-
-- website/public/badges/: the "Download on the App Store" and "Get it on Google Play"
-  badges, unmodified artwork from Apple and Google, used under their badge guidelines.
-  Apple, the Apple logo and App Store are trademarks of Apple Inc.; Google Play and the
-  Google Play logo are trademarks of Google LLC.
 
 - Holiday data (regions, public and school holidays): data from the OpenHolidays API,
   https://www.openholidaysapi.org, Open Database License 1.0 (ODbL). The server fetches it

@@ -1,5 +1,5 @@
-# Pull requests get the fast checks: format, analyse, unit and widget tests, the website
-# build, the dependency audit. A tag v*.*.* (the release, next to release-ios.yml and release-android.yml) or
+# Pull requests get the app checks and dependency audit. Marketing CI lives in
+# wuselwall/wuselwall-website. A tag v*.*.* (next to the mobile release workflows) or
 # "Run workflow" adds the web build and the backend: every migration from zero, pgTAP, the
 # integration test. Run it by hand on a branch before its migration goes to a live server (specs/10).
 name: ci
@@ -30,20 +30,6 @@ jobs:
       - run: flutter build web --release --dart-define-from-file=env/ci.json
         if: github.event_name != 'pull_request'
 
-  website:
-    runs-on: [self-hosted, Linux, build]
-    defaults: { run: { working-directory: website } }
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with: { node-version: 22, cache: npm, cache-dependency-path: website/package-lock.json }
-      - run: npm ci
-      - run: npm run build   # placeholders in the Impressum are allowed here; remote-web.sh deploy refuses them
-      - name: Built pages carry their content (SSR/SEO smoke test)
-        run: |
-          grep -q '<h1>' dist/client/index.html
-          grep -q 'hreflang="de-CH"' dist/client/en/index.html
-          test -s dist/client/sitemap-index.xml
 
   # Known vulnerabilities in every lockfile (specs/11, T5). Accepted ones, each with a
   # reason and an expiry, live in osv-scanner.toml next to the lockfile.
@@ -60,8 +46,7 @@ jobs:
           chmod +x osv-scanner
           ./osv-scanner scan source --lockfile=app/pubspec.lock \
             --lockfile=app/ios/Gemfile.lock --lockfile=app/android/Gemfile.lock \
-            --lockfile=package-lock.json \
-            --lockfile=website/package-lock.json
+            --lockfile=package-lock.json
 
   backend:
     if: github.event_name != 'pull_request'

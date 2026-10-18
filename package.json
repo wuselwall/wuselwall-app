@@ -9,6 +9,7 @@
   "license": "Apache-2.0",
   "name": "wuselwall",
   "scripts": {
+    "repo:check": "node --test scripts/repository-boundaries.test.mjs",
     "db:start": "supabase start",
     "db:stop": "supabase stop",
     "db:reset": "supabase db reset",
