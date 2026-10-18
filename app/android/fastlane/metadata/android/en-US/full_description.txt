@@ -33,7 +33,7 @@ ONE DEVICE PER PERSON OR PER ROOM
 • Own devices for the adults, one shared tablet for the kitchen
 • Children need no account and no email address
 • Connect new devices with a QR code, lock each device on its own
-• Sign in with email and password, and with Google where the server offers it
+• Sign in with a code by email, or with a password
 
 YOUR DATA STAYS WITH YOU
 • Everything lives on your own server

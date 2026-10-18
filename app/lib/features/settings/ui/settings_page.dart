@@ -20,14 +20,13 @@ import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/account/ui/delete_account_tile.dart';
 import 'package:wuselwall/features/account/ui/mfa_reset_button.dart';
 import 'package:wuselwall/features/home/application/home_tab.dart';
+import 'package:wuselwall/features/household/application/household_leave_providers.dart';
 import 'package:wuselwall/features/household/ui/leave_family_tiles.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/application/pairing_providers.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
-import 'package:wuselwall/features/identity/data/sign_in_methods_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
-import 'package:wuselwall/features/identity/domain/sign_in_method.dart';
 import 'package:wuselwall/features/identity/ui/enrolment_qr.dart';
 import 'package:wuselwall/features/identity/ui/guardian_gate.dart';
 import 'package:wuselwall/features/identity/ui/set_password_dialog.dart';
@@ -607,16 +606,21 @@ class _FamilySectionState extends ConsumerState<_FamilySection> {
   }
 }
 
-/// Ways into this account (specs/20, "Several ways into one account") — for the
-/// adult's own phone. Apple and Google are connected through the native sheet only.
-class _SignInMethodsSection extends ConsumerWidget {
+/// How this account signs in (specs/20, "Several ways into one account") — for the
+/// adult's own phone: the email code, always, and an optional password.
+class _SignInMethodsSection extends ConsumerStatefulWidget {
   const _SignInMethodsSection();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_SignInMethodsSection> createState() =>
+      _SignInMethodsSectionState();
+}
+
+class _SignInMethodsSectionState extends ConsumerState<_SignInMethodsSection> {
+  @override
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final methods = ref.watch(signInMethodsProvider);
-    final repo = ref.read(signInMethodsRepositoryProvider);
+    final email = ref.watch(myAccountProvider).value?.email;
     final hasPassword = ref.read(identityRepositoryProvider).hasPassword();
 
     return Column(
@@ -626,156 +630,40 @@ class _SignInMethodsSection extends ConsumerWidget {
           l10n.signInMethodsTitle,
           style: Theme.of(context).textTheme.titleMedium,
         ),
-        AsyncValueView<List<SignInMethod>>(
-          value: methods,
-          onRetry: () => ref.invalidate(signInMethodsProvider),
-          data: (list) {
-            final linked = {for (final m in list) m.provider};
-            return Column(
-              children: [
-                for (final m in list)
-                  ListTile(
-                    leading: _methodIcon(m.provider),
-                    title: Text(_methodName(l10n, m.provider)),
-                    subtitle: switch (m.provider) {
-                      // The e-mail code is always there for an account with an address.
-                      SignInMethodKind.email => Text(
-                        m.email == null
-                            ? l10n.signInMethodAlwaysAvailable
-                            : l10n.signInMethodEmailSubtitle(m.email!),
-                      ),
-                      _ => m.email == null ? null : Text(m.email!),
-                    },
-                    trailing: list.length < 2 || m.provider.provider == null
-                        ? null
-                        : TextButton(
-                            onPressed: () => _remove(context, ref, m),
-                            child: Text(l10n.signInMethodRemove),
-                          ),
-                  ),
-                for (final p in repo.available())
-                  if (!linked.contains(p.kind))
-                    ListTile(
-                      leading: _methodIcon(p.kind),
-                      title: Text(_methodName(l10n, p.kind)),
-                      subtitle: Text(
-                        repo.canLink(p)
-                            ? l10n.signInMethodNotConnected
-                            : l10n.signInMethodLinkElsewhere,
-                      ),
-                      trailing: repo.canLink(p)
-                          ? OutlinedButton(
-                              onPressed: () => _connect(context, ref, p),
-                              child: Text(l10n.signInMethodConnect),
-                            )
-                          : null,
-                    ),
-                ListTile(
-                  leading: const Icon(Icons.lock_outline),
-                  title: Text(l10n.settingsPasswordTitle),
-                  subtitle: Text(
-                    hasPassword
-                        ? l10n.settingsPasswordSet
-                        : l10n.settingsPasswordNotSet,
-                  ),
-                  trailing: OutlinedButton(
-                    onPressed: () => _setPassword(context, ref),
-                    child: Text(
-                      hasPassword
-                          ? l10n.passwordChangeAction
-                          : l10n.passwordSetAction,
-                    ),
-                  ),
-                ),
-              ],
-            );
-          },
+        ListTile(
+          leading: const Icon(Icons.mail_outline),
+          title: Text(l10n.signInMethodEmail),
+          // The e-mail code is always there for an account with an address.
+          subtitle: Text(
+            email == null
+                ? l10n.signInMethodAlwaysAvailable
+                : l10n.signInMethodEmailSubtitle(email),
+          ),
+        ),
+        ListTile(
+          leading: const Icon(Icons.lock_outline),
+          title: Text(l10n.settingsPasswordTitle),
+          subtitle: Text(
+            hasPassword
+                ? l10n.settingsPasswordSet
+                : l10n.settingsPasswordNotSet,
+          ),
+          trailing: OutlinedButton(
+            onPressed: _setPassword,
+            child: Text(
+              hasPassword ? l10n.passwordChangeAction : l10n.passwordSetAction,
+            ),
+          ),
         ),
       ],
     );
   }
 
-  Future<void> _setPassword(BuildContext context, WidgetRef ref) async {
+  Future<void> _setPassword() async {
     final saved = await showSetPasswordDialog(context);
-    if (!saved || !context.mounted) return;
-    ref.invalidate(signInMethodsProvider);
+    if (!saved || !mounted) return;
+    setState(() {});
     context.showMessage(context.l10n.passwordSaved);
-  }
-
-  static Widget _methodIcon(SignInMethodKind kind) => switch (kind) {
-    SignInMethodKind.apple => const Icon(Icons.apple),
-    SignInMethodKind.google => Image.asset(
-      'assets/sign_in/google_g.png',
-      width: 20,
-      height: 20,
-    ),
-    SignInMethodKind.email ||
-    SignInMethodKind.other => const Icon(Icons.mail_outline),
-  };
-
-  static String _methodName(AppLocalizations l10n, SignInMethodKind kind) =>
-      switch (kind) {
-        SignInMethodKind.apple => l10n.signInMethodApple,
-        SignInMethodKind.google => l10n.signInMethodGoogle,
-        SignInMethodKind.email ||
-        SignInMethodKind.other => l10n.signInMethodEmail,
-      };
-
-  Future<void> _connect(
-    BuildContext context,
-    WidgetRef ref,
-    SignInProvider provider,
-  ) async {
-    final l10n = context.l10n;
-    final result = await ref
-        .read(signInMethodsRepositoryProvider)
-        .link(provider);
-    if (!context.mounted) return;
-    result.when(
-      ok: (linked) {
-        if (!linked) return;
-        ref.invalidate(signInMethodsProvider);
-        context.showMessage(
-          l10n.signInMethodConnected(_methodName(l10n, provider.kind)),
-        );
-      },
-      err: context.showFailure,
-    );
-  }
-
-  Future<void> _remove(
-    BuildContext context,
-    WidgetRef ref,
-    SignInMethod method,
-  ) async {
-    final l10n = context.l10n;
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        content: Text(
-          l10n.signInMethodRemoveConfirm(_methodName(l10n, method.provider)),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(l10n.cancel),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: Text(l10n.signInMethodRemove),
-          ),
-        ],
-      ),
-    );
-    if (!(confirmed ?? false)) return;
-    final result = await ref
-        .read(signInMethodsRepositoryProvider)
-        .unlink(method.identityId);
-    if (!context.mounted) return;
-    result.when(
-      ok: (_) => ref.invalidate(signInMethodsProvider),
-      err: context.showFailure,
-    );
   }
 }
 
