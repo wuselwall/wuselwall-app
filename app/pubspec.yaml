@@ -10,7 +10,7 @@ environment:
   flutter: 3.47.7
 
 dependencies:
-  app_links: 7.2.1
+  app_links: 7.2.2
   camera: ^0.12.1
   characters: ^1.4.0
   connectivity_plus: ^7.3.2
