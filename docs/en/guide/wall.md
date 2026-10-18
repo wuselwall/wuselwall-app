@@ -42,6 +42,8 @@ A tap shows more, and after a minute the display returns to the week by itself:
 - on an **adult's name**: their week
 - on the **meal area**: the meals of the week
 
+The details show everything in full, also at large text sizes: long names, places and dishes continue on the next line. What is already over — past days, finished appointments, cancelled lessons — sits on a muted background but stays as readable as the rest.
+
 <Shot name="wall-day" alt="Wall display: details of one day" wide />
 
 <Shot name="wall-child-week" alt="Wall display: a child's timetable for the week" wide />

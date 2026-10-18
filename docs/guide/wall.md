@@ -42,6 +42,8 @@ Ein Tipp zeigt mehr, und nach einer Minute geht die Anzeige von selbst zurück z
 - auf den **Namen eines Erwachsenen**: seine Woche
 - auf den **Essensbereich**: die Mahlzeiten der Woche
 
+In den Details steht alles vollständig, auch bei großer Schrift: lange Namen, Orte und Gerichte laufen in die nächste Zeile weiter. Was schon vorbei ist – vergangene Tage, beendete Termine, ausgefallene Stunden – liegt auf einem gedämpften Grund, bleibt aber so gut lesbar wie der Rest.
+
 <Shot name="wall-day" alt="Wandanzeige: Detailansicht eines Tages" wide />
 
 <Shot name="wall-child-week" alt="Wandanzeige: Stundenplan eines Kindes für die Woche" wide />
