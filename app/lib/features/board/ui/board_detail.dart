@@ -118,13 +118,14 @@ class _BoardDetailState extends State<_BoardDetail> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
+                            // The title and subtitle wrap rather than end in an
+                            // ellipsis: at 200 % text a long date or name stays
+                            // whole (t_10f0b348).
                             Text(
                               widget.title,
                               style: theme.textTheme.headlineSmall?.copyWith(
                                 fontWeight: FontWeight.w700,
                               ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
                             ),
                             if (widget.subtitle != null)
                               Text(
@@ -132,8 +133,6 @@ class _BoardDetailState extends State<_BoardDetail> {
                                 style: theme.textTheme.bodyMedium?.copyWith(
                                   color: ww.ink2,
                                 ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
                               ),
                           ],
                         ),
