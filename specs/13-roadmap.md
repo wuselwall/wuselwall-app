@@ -285,6 +285,9 @@ meets them.
 
 ## M2 — Assistants and the obvious gaps
 
+*Ordered with M3 and the open questions into phases after the Alpha in
+[23 — Roadmap after the Alpha](23-roadmap-after-alpha.md) (2026-10-18).*
+
 - ~~Shortcuts endpoints and per-person tokens~~ — built on `feature/shortcuts` (2026-10-16), see [12](12-mcp-and-assistants.md#the-endpoint-as-built)
 - ~~MCP server, `family:read` scope~~ — built on `feature/mcp-read` (2026-10-16) with assistant keys as the Q15 interim, see [12](12-mcp-and-assistants.md#part-2--the-mcp-server)
 - ~~Equipment reminders from tomorrow's subjects ("Morgen brauchst du: Sportsachen")~~ — built on `feature/equipment-reminder` (2026-10-16): the evening notification `notify.packing_reminder`, and `school.equipment_hint` now honoured everywhere, see [15](15-module-school-timetable.md)
