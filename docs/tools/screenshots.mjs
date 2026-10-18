@@ -151,6 +151,7 @@ const shots = [
 ];
 
 const only = process.argv.slice(2);
+const SHOT_TIMEOUT = 120_000;
 // Software GL: headless Chromium has no GPU here, and CanvasKit needs WebGL.
 const browser = await chromium.launch({
   args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'],
@@ -172,11 +173,13 @@ for (const lang of ['de', 'en']) {
       failed++;
       console.warn(`! ${lang}/${shot.name}: ${e.message.split('\n')[0]}`);
     }
-    await page.screenshot({ path: path.join(out, lang, `${shot.name}.png`) });
+    // Software-rendered wall shots (2x, SwiftShader) can exceed Playwright's 30 s default
+    // on a busy shared runner; the capture itself is not a failure signal.
+    await page.screenshot({ path: path.join(out, lang, `${shot.name}.png`), timeout: SHOT_TIMEOUT });
     // The app follows the browser's scheme live, so the same state is shot again in dark.
     await page.emulateMedia({ colorScheme: 'dark' });
     await settle(page, 1000);
-    await page.screenshot({ path: path.join(out, lang, `${shot.name}-dark.png`) });
+    await page.screenshot({ path: path.join(out, lang, `${shot.name}-dark.png`), timeout: SHOT_TIMEOUT });
     console.log(`${lang}/${shot.name}`);
     await ctx.close();
   }

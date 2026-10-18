@@ -117,17 +117,20 @@ wuselwall/
 ├─ infra/
 │  ├─ supabase/                the official compose stack, WuselWall's lean and Caddy layers
 │  ├─ jobs/  cron/             the scheduled jobs: pg_cron (schedule.sql) or the host's cron
-│  ├─ web/                     compose project for the website container (ADR-016)
+
 │  └─ backup/                  backup.sh, restore-drill.sh (run on the server)
 ├─ server/                     wuselwall: install, update, backup, restore (in a release)
-├─ website/                    Astro site: landing page, Impressum, Datenschutz (ADR-016)
-├─ scripts/                    remote-web / remote-stack / -migrate / -pgtap / -backup / -setup-token
+├─ scripts/                    remote-stack / -migrate / -pgtap / -backup / -setup-token
 ├─ .github/workflows/          ci.yml, release-ios.yml, release-android.yml
 ├─ specs/                      the specification (this folder)
 └─ docs/                       the end-user documentation (VitePress)
 ```
 
 **The rules that keep this maintainable:**
+
+The marketing website and its deployment now live in the separate private
+`wuselwall/wuselwall-website` repository. VitePress source remains here and its intended
+publisher is GitHub Pages at `docs.wuselwall.app`; see [ADR-019](adr/ADR-019-website-repository-and-docs-pages.md).
 
 - **PostgREST exposes only the `api` schema.** Tables live in `app` and are unreachable
   from any client. Reads go through `api` views declared `security_invoker`, so the
