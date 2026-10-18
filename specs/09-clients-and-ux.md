@@ -225,6 +225,11 @@ multi-day bands. This retains specs/17's existing stricter text-token rule rathe
 than relaxing large kiosk text to the WCAG AA 3:1 allowance. Night lowers glare,
 not the acceptance threshold.
 
+The tap-through details are where the full labels live, so they never truncate: at
+every text scale their text wraps, their columns grow with it and nothing ends in an
+ellipsis or a line limit. Past days, finished appointments and cancelled lessons in a
+detail recede through their ground (`sunken`), with the same 4.5:1 rule (`t_10f0b348`).
+
 ### Touch behaviour
 
 Tapping is a shortcut into detail, never into editing — the wall display is the wrong
