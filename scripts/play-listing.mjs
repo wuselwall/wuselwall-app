@@ -23,7 +23,7 @@ const fonts = `
   @font-face { font-family: Atkinson; font-weight: 400; src: url(data:font/ttf;base64,${await font('AtkinsonHyperlegibleNext-Regular.ttf')}); }
   @font-face { font-family: Atkinson; font-weight: 600; src: url(data:font/ttf;base64,${await font('AtkinsonHyperlegibleNext-SemiBold.ttf')}); }
   @font-face { font-family: Atkinson; font-weight: 800; src: url(data:font/ttf;base64,${await font('AtkinsonHyperlegibleNext-ExtraBold.ttf')}); }`;
-const logo = (await readFile(path.join(root, 'website/public/logo.svg'))).toString('base64');
+const logo = (await readFile(path.join(root, 'docs/public/logo.svg'))).toString('base64');
 const paper = '#f7f4ee', ink = '#1c1f23', tanne = '#2d6a4f';
 
 /** Captions per locale; the shot names are those of docs/tools/screenshots.mjs. */

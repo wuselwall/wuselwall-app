@@ -315,8 +315,8 @@ RPO 24 h, RTO a few hours (NFR-11).
 | Edge Functions from a checkout | `scripts/remote-stack.sh functions` | The Edge runtime only |
 | One service | `docker compose up -d --no-deps auth` after editing `.env` | That container only |
 | Database schema from a checkout | `scripts/remote-migrate.sh` | Postgres |
-| The project's website | `scripts/remote-web.sh deploy` to its host (`scripts/remote.env`) | The website container (`infra/web`) |
-| The user documentation | `.github/workflows/docs.yml` on every push to `main` | Static files, see below |
+| The project's website | Independent pipeline in `wuselwall/wuselwall-website` | Its marketing container only |
+| The user documentation | `.github/workflows/docs.yml`, GitHub Pages opt-in | Static Pages artifact; no server SSH credentials |
 
 ### The web app
 
@@ -331,11 +331,18 @@ Until the Play listing exists, `release-android.yml` builds a signed APK and
 
 ### The user documentation
 
-`docs/` is built on GitHub's machines (the Flutter web demo, Playwright screenshots in both
-languages and themes, VitePress with `DOCS_BASE=/docs/`). The deploy job runs on a
-self-hosted runner (label `wuselwall-deploy`) that holds no access of its own: it pipes the
-site over SSH to `DOCS_DEPLOY_TARGET` with a key that may run only the receiving script (a
-forced `command=`), and the host key is pinned (`DOCS_DEPLOY_KNOWN_HOSTS`).
+`docs/` stays with the app and is built on GitHub-hosted machines (Flutter demo,
+Playwright screenshots in both languages/themes, VitePress with `DOCS_BASE=/`). The
+prepared publisher uses a GitHub Pages artifact and OIDC with job-scoped `pages: write`
+and `id-token: write`; it no longer uses a self-hosted deploy runner or SSH secrets.
+
+Publishing stays disabled until `DOCS_PAGES_ENABLED=true` is set after the operator
+chooses eligible private-repository Pages hosting or explicitly publishes the app
+repository, configures Pages and `docs.wuselwall.app`, and approves cutover. PR builds
+never deploy. Old `wuselwall.app/docs/` content and app links must remain served until
+the custom domain works; change them to path-preserving redirects only after verification.
+See the [cutover checklist](website-and-docs-migration.md). No visibility, DNS, secret
+or live-host changes are implied by the prepared workflow.
 
 ## Updates
 

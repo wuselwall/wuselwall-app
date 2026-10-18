@@ -1,8 +1,6 @@
-# The user documentation (docs/): the Flutter web demo, its screenshots in both languages
-# and both themes, the VitePress site. A pull request that touches the app or the docs gets
-# the build as a check (screenshots as an artifact to look at); a push to main also
-# publishes it at https://wuselwall.app/docs/ through a self-hosted runner (label
-# wuselwall-deploy) that hands the site over SSH to the web server (specs/10).
+# VitePress source remains with the app. Build PRs without production credentials.
+# Pages publishing is opt-in after plan/visibility, Pages and DNS are configured:
+# set the repository variable DOCS_PAGES_ENABLED=true. See specs/website-and-docs-migration.md.
 name: docs
 on:
   workflow_dispatch:
@@ -19,49 +17,52 @@ permissions:
 
 jobs:
   build:
-    runs-on: [self-hosted, Linux, build]
+    runs-on: ubuntu-latest
     steps:
+      # A job-local npm cache avoids restoring archives with paths from another runner home.
+      - run: echo "npm_config_cache=$RUNNER_TEMP/npm-cache" >> "$GITHUB_ENV"
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with: { fetch-depth: 0 }   # "last updated" on each page comes from git history
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with: { flutter-version-file: app/pubspec.yaml, cache: true }
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with: { node-version: 22, cache: npm }
+        with: { node-version: 22 }
       - run: npm ci
+      - run: npm run repo:check
       - run: npx playwright install --with-deps chromium
       - run: flutter pub get --enforce-lockfile && flutter gen-l10n
         working-directory: app
       - run: npm run docs:screenshots   # fails in CI when a step could not reach its screen
       - run: npm run docs:check
       - run: npm run docs:build
-        env: { DOCS_BASE: /docs/ }
+        env: { DOCS_BASE: / }
+      - name: Check the custom-domain output
+        run: |
+          test "$(cat docs/.vitepress/dist/CNAME)" = docs.wuselwall.app
+          test -s docs/.vitepress/dist/index.html
+          test -s docs/.vitepress/dist/en/index.html
+          test -s docs/.vitepress/dist/sitemap.xml
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with: { name: docs-site, path: docs/.vitepress/dist, retention-days: 7 }
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with: { name: docs-screenshots, path: docs/public/screenshots, retention-days: 7 }
+      - name: Package GitHub Pages site
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.DOCS_PAGES_ENABLED == 'true'
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
+        with: { path: docs/.vitepress/dist }
 
   deploy:
     needs: build
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-    runs-on: [self-hosted, wuselwall-deploy]
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.DOCS_PAGES_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     concurrency: { group: docs-deploy, cancel-in-progress: false }
     steps:
-      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
-        with: { name: docs-site, path: site }
-      # The key can only run the receiving script on the web server (a forced command in
-      # authorized_keys); the pinned host key keeps it from talking to anything else.
-      # DOCS_DEPLOY_TARGET is user@host of that server.
-      - name: Publish
-        env:
-          KEY: ${{ secrets.DOCS_DEPLOY_KEY }}
-          KNOWN_HOSTS: ${{ secrets.DOCS_DEPLOY_KNOWN_HOSTS }}
-          TARGET: ${{ secrets.DOCS_DEPLOY_TARGET }}
-        run: |
-          command -v ssh >/dev/null || { sudo apt-get update -qq && sudo apt-get install -y -qq openssh-client; }
-          d=$(mktemp -d); trap 'rm -rf "$d"' EXIT
-          printf '%s\n' "$KEY" > "$d/key"; chmod 600 "$d/key"
-          printf '%s\n' "$KNOWN_HOSTS" > "$d/known_hosts"
-          tar -czf - -C site . | ssh -i "$d/key" -o IdentitiesOnly=yes -o BatchMode=yes \
-            -o StrictHostKeyChecking=yes -o UserKnownHostsFile="$d/known_hosts" "$TARGET"
-      - name: The published site answers
-        run: curl -fsS https://wuselwall.app/docs/ | grep -q 'WuselWall'
+      - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
+      - id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4

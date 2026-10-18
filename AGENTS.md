@@ -115,36 +115,27 @@ See [specs/03-architecture.md](specs/03-architecture.md),
   `scripts/remote-stack.sh`, with migrations through `scripts/remote-migrate.sh`; a server
   from a release is driven by `server/wuselwall` (see specs/10).
 
-## Website (`website/`)
+## Marketing website (separate repository)
 
-Astro site at `https://wuselwall.app/` ([ADR-016](specs/adr/ADR-016-public-website.md),
-[ADR-017](specs/adr/ADR-017-wuselwall-app-domain.md)): marketing page, Impressum, Datenschutz,
-German at `/` and English at `/en/`. The Flutter web app is served by each server, not by
-the website. Every user-facing string lives in `website/src/i18n/index.ts` in **both** languages;
-operator and legal data only in `website/src/config/site.ts` (`TODO` values fail
-`LEGAL_STRICT=1` builds). No cookies, no third-party requests, no analytics. Deploy with
-`scripts/remote-web.sh deploy`, independent of the Supabase stack. App screenshots on the
-home page are WebP copies of the docs' shots (`npm run sync-screens` in `website/`, after
-`npm run docs:screenshots`); the link-preview images come from `node scripts/og-image.mjs`.
-The official App Store and Google Play badges (`public/badges/`, unmodified artwork) appear
-only once `site.stores` holds the real listing URLs. The privacy policy describes every
-third party the apps or the site talk to: a new SDK or outbound host updates it, in both
-languages, in the same change. Check with
-`cd website && npm run build`. When you add a page, add its route in both languages and its
-`paths` entry so `hreflang` and the sitemap stay right.
+The private `wuselwall/wuselwall-website` repository owns the Astro marketing site,
+legal pages, well-known app-link files, screenshots and independent website CI/CD.
+This app repository does not build or deploy it. See
+[ADR-019](specs/adr/ADR-019-website-repository-and-docs-pages.md) and the
+[cutover plan](specs/website-and-docs-migration.md).
 
-**When a feature is finished or the next step changes, update the "Where we are" list in the
-same change** — `status` in `website/src/i18n/index.ts`, both languages, states `fertig`/`done`,
-`als Nächstes`/`up next`, `geplant`/`planned`. It is the public progress, written for
-families: features they can use, not setup-plan steps or milestone numbers. Keep it in step
-with the status line at the top of this file and the roadmap ([specs/13](specs/13-roadmap.md)).
-The live site changes only after `scripts/remote-web.sh deploy`.
+When a feature or next step changes, update this repository's status and roadmap,
+and coordinate a separate bilingual public-progress change in the website repository.
+Do not require access to the private marketing repository to build or contribute to the
+app/backend/docs. Export screenshots from this repository explicitly; the marketing
+repository keeps its own committed copies and never checks out private app source in CI.
 
 ## End-user documentation (`docs/`)
 
 VitePress site in German (root) and English (`/en/`), written for the family, not for
-developers (the specification is `specs/`), published at `https://wuselwall.app/docs/` by
-`.github/workflows/docs.yml` on every push to `main`. Screenshots come from the Flutter web
+developers (the specification is `specs/`). `.github/workflows/docs.yml` prepares GitHub
+Pages publishing at `https://docs.wuselwall.app/`, opt-in through `DOCS_PAGES_ENABLED`
+only after hosting eligibility, Pages and DNS are configured. Until cutover, preserve
+the existing `wuselwall.app/docs/` service and links. Screenshots come from the Flutter web
 demo (`app/lib/main_demo.dart`, in-memory data) driven by Playwright
 (`docs/tools/screenshots.mjs`): every shot in both languages and both themes (`name.png`,
 `name-dark.png`). They are build output, not committed: `npm run docs:screenshots` makes
