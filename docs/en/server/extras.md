@@ -18,6 +18,24 @@ For this the server needs an SMTP service, a provider that sends mail for it. A 
 
 **At Supabase:** **Authentication → Emails → SMTP Settings**, with the same details. Supabase's built-in email is meant for trying things out and sends only a few mails an hour.
 
+## Updating from a version with Apple and Google sign-in {#retiring-social-sign-in}
+
+Until October 2026 you could also sign in to WuselWall with Apple or Google. Anyone who did now signs in with an email code sent to their account's address. The account and the family stay the same.
+
+**Check first, then update.** If someone signed in with Apple and **"Hide My Email"**, their account's address is `…@privaterelay.appleid.com`. A code sent there only arrives if your sender address is registered with Apple for forwarding. Sort that out before the update. If no code arrives, hold the update: otherwise that person cannot sign in again after their next sign-out.
+
+**What the update does by itself:**
+
+- **At home** (`wuselwall update`): every Apple and Google value (`APPLE_…`, `GOOGLE_CLIENT_…`) and the app's old return address leave `stack/.env`, and the old `apple-token` function is gone. The tool names what it removes, never the values.
+- **At Supabase** (the **deploy-supabase** workflow): the step **Retire social sign-in** switches off Apple, Google and account linking, removes the app's old return address (other entries, such as those for invitations, stay), deletes the `apple-token` function and the `APPLE_…` secrets, and then checks all of it. If anything fails, the workflow stops.
+
+**Check afterwards:** someone who used to sign in with Apple or Google asks for a code by email on a **second** device and signs in with it. The first device stays signed in. Nobody should sign out just to try it.
+
+**Only then clean up**, at Google and Apple:
+
+- **Google:** delete only the OAuth clients that existed just for WuselWall sign-in. The Google Cloud project, the Play Console and anything other apps use stay. When in doubt: keep it.
+- **Apple:** you no longer need the Services ID, the Sign in with Apple key or the reminder for the six-monthly client secret. **Keep** the senders registered for forwarding as long as there are accounts with a `privaterelay` address.
+
 ## Public and school holidays {#holidays}
 
 For the week board, the server fetches the public and school holidays of the countries you chose in the settings, once a week. The source is the free [OpenHolidays API](https://www.openholidaysapi.org/). The server sends only country codes, nothing about your family, and the apps never ask OpenHolidays themselves. If the server can't reach the internet, the holidays are missing; everything else keeps working.

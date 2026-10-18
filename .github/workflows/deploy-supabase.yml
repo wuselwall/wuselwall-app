@@ -85,6 +85,11 @@ jobs:
           # verify_jwt per function comes from config.toml ([functions.*]).
           npx supabase functions deploy --project-ref "$PROJECT" --use-api
 
+      - name: Retire social sign-in
+        # Google and Apple sign-in, identity linking and the native OAuth callback off, the
+        # retired apple-token function and the Apple secrets deleted, all read back (specs/10).
+        run: node scripts/hosted-retire-social.mjs
+
       - name: Scheduled jobs and the setup token
         run: |
           query() {
