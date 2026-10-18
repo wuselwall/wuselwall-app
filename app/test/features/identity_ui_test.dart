@@ -97,6 +97,8 @@ void main() {
     await t.pumpAndSettle();
 
     await t.tap(find.text('Milch'));
+    // A tick settles for a moment before it is sent (see shopping_page's _ItemList).
+    await t.pump(const Duration(seconds: 1));
     await t.pumpAndSettle();
     expect(shopping.toggles.single, (actor: kidId, id: '1'));
   });

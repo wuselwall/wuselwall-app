@@ -17,7 +17,7 @@ specification; `app/`, `supabase/` and `infra/` hold the implementation.
 
 | | |
 |---|---|
-| Phase | M0.0–M0.3 built; M0.4: first TestFlight upload and first Play internal release done, the Play upload from CI written; M1.1 shopping built, offline included; M1.0 onboarding started (sign-in with email codes and passwords live). Next: the rest of 9.1 and 9.2 (households), then M1.2 tasks, starting with household settings ([13 — Roadmap](specs/13-roadmap.md)) |
+| Phase | Built in code: M0.0–M0.3; the M0.4 pipeline (first TestFlight upload 2026-10-12; first Play internal release done, the Play upload from CI written); M1.0 onboarding, steps 1–9 (sign-in with email codes and passwords only); M1.1–M1.4; the M1.5 week board; the Q47 local reminders. Built is not deployed: no server's state is verified, and no pilot evidence is recorded. Next: M1.6 pilot validation with the [release checklist](specs/release-checklist.md); store and signing gates are separate. Status and history: [13 — Roadmap](specs/13-roadmap.md#current-status-2026-10-17-base-43ac2e5) |
 | Started | 2026-10-11 |
 | Decision set | Locked for v1 (see `specs/adr/`) |
 | Origin | Specification carried over from BretApp; code starts from scratch |
@@ -72,6 +72,7 @@ specifications you hand to a coding session, one at a time.
 | 12 | [MCP & Assistants](specs/12-mcp-and-assistants.md) | B4 — MCP server design, Siri via Shortcuts today |
 | 13 | [Roadmap](specs/13-roadmap.md) | Milestones, per-module v1 scope cuts, rough effort |
 | 14 | [Open Questions](specs/14-open-questions.md) | Decisions deliberately deferred, with the deadline for each |
+| 23 | [Roadmap after the Alpha](specs/23-roadmap-after-alpha.md) | What follows M1.6, in four phases, each item checked against the principles; and what is deliberately not on it |
 | 16 | [Setup Plan](specs/16-setup-plan.md) | **The build order for M0**: tools and accounts, repository, local Supabase, app shell, identity, CI, mobile releases, deployment — with the workflows and the secrets inventory |
 | 19 | [Security & Architecture Review](specs/19-security-and-architecture-review.md) | Findings of the 2026-10-11 review, what is fixed and what the operator still has to do |
 | 17 | [Design System](specs/17-design-system.md) | Colour, type and form: the member palette (colour-blind-checked), presence treatments, night theme, three design directions, A "Küchentisch" chosen |

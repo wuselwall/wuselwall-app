@@ -2642,6 +2642,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get kidBadgesTitle => 'Meine Abzeichen';
 
   @override
+  String get kidBadgeEarned => 'Verdient';
+
+  @override
+  String get kidBadgeNotYet => 'Noch nicht verdient';
+
+  @override
   String get kidStreaksTitle => 'Meine Serien';
 
   @override
@@ -3212,6 +3218,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get boardAllEvents => 'Alle Termine';
 
   @override
+  String boardMemberDay(String name, String date) {
+    return '$name, $date';
+  }
+
+  @override
   String get reminderChannelName => 'Erinnerungen';
 
   @override
@@ -3537,6 +3548,13 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get householdNewErrRateLimited =>
       'Zu viele Versuche. Warte ein paar Minuten und probier es dann nochmal.';
+
+  @override
+  String get householdNewStalled =>
+      'Das dauert länger als üblich. Bitte warte kurz oder melde dich ab und wieder an. Die Familie bitte nicht noch einmal anlegen.';
+
+  @override
+  String get setupPrivacy => 'Datenschutz';
 
   @override
   String get householdMembersTitle => 'Wer gehört noch zu euch?';

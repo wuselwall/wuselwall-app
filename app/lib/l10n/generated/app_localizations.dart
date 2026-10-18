@@ -4688,6 +4688,18 @@ abstract class AppLocalizations {
   /// **'My badges'**
   String get kidBadgesTitle;
 
+  /// No description provided for @kidBadgeEarned.
+  ///
+  /// In en, this message translates to:
+  /// **'Earned'**
+  String get kidBadgeEarned;
+
+  /// No description provided for @kidBadgeNotYet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not earned yet'**
+  String get kidBadgeNotYet;
+
   /// No description provided for @kidStreaksTitle.
   ///
   /// In en, this message translates to:
@@ -5612,6 +5624,12 @@ abstract class AppLocalizations {
   /// **'All events'**
   String get boardAllEvents;
 
+  /// No description provided for @boardMemberDay.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}, {date}'**
+  String boardMemberDay(String name, String date);
+
   /// No description provided for @reminderChannelName.
   ///
   /// In en, this message translates to:
@@ -6121,6 +6139,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Too many attempts. Wait a few minutes and try again.'**
   String get householdNewErrRateLimited;
+
+  /// No description provided for @householdNewStalled.
+  ///
+  /// In en, this message translates to:
+  /// **'This is taking longer than usual. Please wait, or sign out and sign in again. Do not create the family a second time.'**
+  String get householdNewStalled;
+
+  /// No description provided for @setupPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy policy'**
+  String get setupPrivacy;
 
   /// No description provided for @householdMembersTitle.
   ///

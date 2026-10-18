@@ -6,6 +6,9 @@ The start screen is where everything begins. You sign in with your account, join
 
 <Shot name="setup-start" alt="WuselWall start screen" />
 
+At the bottom, **Privacy policy** opens the policy in your browser. Without a connection
+the link is disabled; the policy is not stored in the app.
+
 The start screen has three ways in:
 
 - **Continue with email**: for you as an adult, on your own phone.
@@ -34,6 +37,11 @@ If your account does not belong to a family yet, WuselWall opens **New family**.
 4. The **founder code**, if your server asks for one. The person who runs your server gives it to you.
 
 <Shot name="new-family" alt="New family form" />
+
+If the app stays on this page for more than 15 seconds after creation, it shows a message.
+You can then choose **I was invited** or **Sign out**. **Create family** stays locked to
+avoid accidentally creating a second family. If confirmation arrives later, the app
+continues automatically.
 
 Tap **Create family**. Then comes the page **Who else is in your family?**: enter children and other adults by name, so they appear in the lists. You can invite adults later; **Skip** continues at once.
 

@@ -7,6 +7,9 @@ The list is built for shopping: big targets, usable one-handed and with gloves.
 ## Ticking
 
 - Tap anywhere on a row (at least 56 pixels tall) to tick an item.
+- The row stays put briefly: ticks are sent and the list reorders 800 milliseconds after
+  the last tick. Tap again to undo a waiting tick immediately. Leaving the list sends
+  waiting ticks.
 - Ticked items don't disappear; they move to the collapsed **"In the trolley"** section at the end. An accidental tick is undone with one tap.
 
 <Shot name="shopping-trolley" alt="The expanded “In the trolley” section" />

@@ -182,6 +182,13 @@ text, and the System page reports the database round-trip.
 
 ## Step 4 — Continuous integration (M0.0)
 
+> The YAML below is the original plan, not the current workflow. Current jobs are
+> `ci.yml` (`app`, `website`, `audit`) and `backend-ci.yml` (`changes`, `edge-functions`,
+> `backend`, `required`). See the [candidate gate matrix](release-checklist.md#2-automated-and-local-gates-on-the-candidate-commit).
+> The intended aggregate check is `backend-ci / required`, plus app, website and audit.
+> Repository plan restrictions currently prevent configuring branch protection/rulesets;
+> exact-head checks require manual verification. No enforced protection is claimed.
+
 `.github/workflows/ci.yml`. Three parallel jobs, each one fast enough to wait for. A pull
 request runs only the fast checks (format, analyse, unit and widget tests); the web build
 and the backend job run on a tag `v*.*.*` or by hand ("Run workflow"), and by hand before a
@@ -256,7 +263,9 @@ Notes:
   Supabase) are added to the `backend` job in step 6, once there is a repository worth
   testing. **On-device UI tests** (`integration_test` on an Android emulator) are
   expensive in CI; run them nightly or before a release, not on every pull request.
-- Required status checks on `main`: `app`, `backend`, `functions`.
+- Intended status checks: `backend-ci / required`, `app`, `website`, `audit`. The old
+  `functions`/`backend` pair is replaced by the always-reporting aggregate; enforcement
+  remains unavailable as noted above.
 
 **Done when** a pull request that breaks a migration, an RLS test, a missing German
 string or the formatting is blocked.
@@ -497,6 +506,12 @@ keys, and the restore drill has restored a nightly dump once. *(Restore drill fi
 > 9. User documentation: `docs/guide/setup.md` and its screenshots rewritten (both languages).
 >
 > **Next:** step 10, then M1.6. Gaps found in the journeys after this step was built are step 10's slices 4 (servers without mail), 7 (loose ends) and 10 (retiring the M0.1 paths).
+>
+> **Deployment status unknown:** built source does not verify an installed server.
+> Operator-only steps after a verified backup are migrations, function deployment and
+> job scheduling (`infra/jobs/schedule.sql` or `infra/cron/*.sh`, never both), and
+> `ENABLE_EMAIL_AUTOCONFIRM=false` for servers with mail. Use the
+> [release checklist](release-checklist.md); this change authorizes no operation.
 
 
 *Added 2026-10-11.* The experience is [20](20-onboarding.md); the decision
@@ -560,7 +575,8 @@ Order chosen so that each slice is usable on its own:
      a shared device; deletion leaves no rows reachable.
    - The catalogue test's anon list becomes `health, invitation_preview, pairing_poll,
      pairing_start, server_info` plus `enrol_device` for one release.
-   - E2E (built 2026-10-15): J1 by email code through Mailpit, J2, J3, each with a
+   - Repository integration and screen-count tests (not real-device E2E; built
+     2026-10-15): J1 by email code through Mailpit, J2, J3, each with a
      screen-count assertion. The backend journeys are `app/test/integration/onboarding_integration_test.dart`
      (CI's `backend` job); the screen counts are `app/test/journeys/` (every PR).
 9. **User documentation:** rewrite `docs/guide/setup.md` (and `/en/`) and regenerate the
