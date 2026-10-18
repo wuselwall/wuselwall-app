@@ -62,6 +62,134 @@ class _MemberRow extends StatelessWidget {
         );
       }
 
+      // A short row cannot host separate school/care actions. The whole row is
+      // the containing action, not merely its name gutter. Summaries are one
+      // scaled line; full school, care and presence stay in semantics/details.
+      if (rowHeight < MediaQuery.textScalerOf(context).scale(120)) {
+        final summaries = <String>[];
+        for (var i = 0; i < BoardGeometry.dayCount; i++) {
+          final school = board.days[i].school[member.id];
+          final bands = board.presenceOn(member.id, i);
+          summaries.add(
+            [
+              if (school != null) ...[
+                if (school.hasSchool)
+                  context.l10n.boardSchoolSpan(
+                    context.span(school.starts!, school.ends!),
+                  )
+                else
+                  school.holidayName ?? context.l10n.boardNoSchool,
+                ...school.notable,
+                if (school.careUntil case final until?)
+                  context.l10n.boardCareUntil(
+                    school.careLabel ?? context.l10n.boardCareDefault,
+                    context.shortTime(until),
+                  ),
+              ],
+              for (final band in bands) ...[
+                context.presenceLabel(band.state, band.label),
+                if (band.starts case final start?) context.shortTime(start),
+                if (band.ends case final end?) context.shortTime(end),
+              ],
+              if (bands.isEmpty)
+                if (member.baseline case final baseline?)
+                  context.presenceLabel(baseline.state, baseline.label),
+              if (board.days[i].busyUntil[member.id] case final until?)
+                context.l10n.boardBusyUntil(context.shortTime(until)),
+            ].join(' · '),
+          );
+        }
+        return BoardTap(
+          label: [
+            name,
+            for (var i = 0; i < summaries.length; i++)
+              '${context.fullDate(board.days[i].date)}: ${summaries[i]}',
+          ].join(', '),
+          onTap: openWeek,
+          child: BoardRow(
+            geometry: frame.geometry,
+            children: [
+              Positioned(
+                left: 12,
+                width: BoardGeometry.gutter - 20,
+                top: 0,
+                bottom: 0,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    name,
+                    style: boardUi(24, weight: FontWeight.w700, color: ink),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+              for (var i = 0; i < summaries.length; i++)
+                if (member.isChild ||
+                    (!bandDays.contains(i) && member.baseline == null))
+                  spanCell(
+                    frame.geometry,
+                    i,
+                    i,
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      decoration: BoxDecoration(
+                        color:
+                            bandDays.contains(i) ||
+                                (board.days[i].school[member.id]?.hasSchool ??
+                                    false)
+                            ? mc.tint
+                            : null,
+                        border: bandDays.contains(i)
+                            ? Border(left: BorderSide(color: mc.ink, width: 4))
+                            : null,
+                      ),
+                      child: Text(
+                        (board.days[i].school[member.id]?.hasSchool ?? false)
+                            ? context.span(
+                                board.days[i].school[member.id]!.starts!,
+                                board.days[i].school[member.id]!.ends!,
+                              )
+                            : summaries[i],
+                        style: boardCell(24, color: ink),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+              if (!member.isChild)
+                ..._baselineTracks(context, bandDays, compact: true),
+              for (final run in runs)
+                if (!member.isChild ||
+                    ![
+                      for (var i = run.first; i <= run.last; i++)
+                        if (board.days[i].school[member.id]?.hasSchool ?? false)
+                          i,
+                    ].isNotEmpty)
+                  spanCell(
+                    frame.geometry,
+                    run.first,
+                    run.last,
+                    PresenceBandView(
+                      state: run.band.state,
+                      memberColor: member.color,
+                      label: context.presenceLabel(
+                        run.band.state,
+                        run.band.label,
+                      ),
+                      dense: true,
+                      lineHeight: 1,
+                      openStart: run.band.startsBeforeWeek,
+                      openEnd: run.band.endsAfterWeek,
+                      tentative: run.band.tentative,
+                    ),
+                  ),
+            ],
+          ),
+        );
+      }
+
       return BoardRow(
         geometry: frame.geometry,
         children: [
@@ -80,7 +208,7 @@ class _MemberRow extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      MemberAvatar(member: member, size: 36),
+                      MemberAvatar(member: member, size: 48),
                       const SizedBox(width: 10),
                       Flexible(
                         child: Text(
@@ -149,7 +277,6 @@ class _MemberRow extends StatelessWidget {
     final l10n = context.l10n;
     final school = board.days[i].school[member.id];
     if (school == null) return const [];
-    final opacity = frame.opacity(i);
 
     if (!school.hasSchool) {
       // A band that day (Oma, a trip) says more than "frei", and they would overlap.
@@ -167,20 +294,17 @@ class _MemberRow extends StatelessWidget {
           width: g.width(i),
           top: 0,
           bottom: 0,
-          child: Opacity(
-            opacity: opacity,
-            child: Padding(
-              // In line with the text of a school chip.
-              padding: const EdgeInsets.symmetric(horizontal: 18),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: ShrinkText(
-                  text,
-                  style: boardCell(
-                    24,
-                    weight: FontWeight.w500,
-                    color: context.ww.ink3,
-                  ),
+          child: Padding(
+            // In line with the text of a school chip.
+            padding: const EdgeInsets.symmetric(horizontal: 18),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: ShrinkText(
+                text,
+                style: boardCell(
+                  24,
+                  weight: FontWeight.w500,
+                  color: context.ww.ink3,
                 ),
               ),
             ),
@@ -209,28 +333,25 @@ class _MemberRow extends StatelessWidget {
         BoardTap(
           label: l10n.boardSchoolSpan(span),
           onTap: () => unawaited(openSchoolDay(context, board, member.id, i)),
-          child: Opacity(
-            opacity: opacity,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: mc.tint,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border(left: BorderSide(color: mc.ink, width: 4)),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: ClipFit(
-                    alignment: Alignment.centerLeft,
-                    child: _SchoolText(
-                      span: span,
-                      notes: notes,
-                      ink: ink,
-                      ink2: ww.ink2,
-                      // Compact rows keep span and notes on one line.
-                      oneLine: half * 2 < _compactRowHeight,
-                    ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: mc.tint,
+                borderRadius: BorderRadius.circular(8),
+                border: Border(left: BorderSide(color: mc.ink, width: 4)),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: ClipFit(
+                  alignment: Alignment.centerLeft,
+                  child: _SchoolText(
+                    span: span,
+                    notes: notes,
+                    ink: ink,
+                    ink2: ww.ink2,
+                    // Compact rows keep span and notes on one line.
+                    oneLine: half * 2 < _compactRowHeight,
                   ),
                 ),
               ),
@@ -261,18 +382,19 @@ class _MemberRow extends StatelessWidget {
         i,
         i,
         BoardTap(
-          label: context.fullDate(board.days[i].date),
+          // The member's row is what the cell belongs to: name the member too.
+          label: context.l10n.boardMemberDay(
+            member.displayName,
+            context.fullDate(board.days[i].date),
+          ),
           onTap: () => unawaited(openMemberWeek(context, board, member.id)),
           child: busy == null || compact
               ? const SizedBox.expand()
-              : Opacity(
-                  opacity: frame.opacity(i),
-                  child: Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 0, 8, 4),
-                      child: _BusyLine(until: busy),
-                    ),
+              : Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 0, 8, 4),
+                    child: _BusyLine(until: busy),
                   ),
                 ),
         ),
@@ -310,11 +432,8 @@ class _MemberRow extends StatelessWidget {
           bottom: compact ? 0 : null,
           height: compact ? null : 32,
           child: IgnorePointer(
-            child: Opacity(
-              opacity: frame.spanOpacity(i, j),
-              child: Center(
-                child: _BaselineTrack(memberColor: member.color, label: label),
-              ),
+            child: Center(
+              child: _BaselineTrack(memberColor: member.color, label: label),
             ),
           ),
         ),
@@ -392,26 +511,23 @@ class _MemberRow extends StatelessWidget {
         g,
         run.first,
         run.last,
-        Opacity(
-          opacity: frame.spanOpacity(run.first, run.last),
-          child: BoardTap(
-            label: label,
-            onTap: onTap,
-            // A short row gives the band almost all of its height; anything the band
-            // cannot fit is clipped rather than breaking the grid.
-            child: ClipFit(
-              child: PresenceBandView(
-                state: band.state,
-                memberColor: member.color,
-                label: oneLine ? oneLineLabel : label,
-                detail: oneLine ? null : timeText,
-                openStart: openStart,
-                openEnd: openEnd,
-                tentative: band.tentative,
-                // Label and time share a member row: tight padding and lines.
-                dense: true,
-                lineHeight: 1.1,
-              ),
+        BoardTap(
+          label: label,
+          onTap: onTap,
+          // A short row gives the band almost all of its height; anything the band
+          // cannot fit is clipped rather than breaking the grid.
+          child: ClipFit(
+            child: PresenceBandView(
+              state: band.state,
+              memberColor: member.color,
+              label: oneLine ? oneLineLabel : label,
+              detail: oneLine ? null : timeText,
+              openStart: openStart,
+              openEnd: openEnd,
+              tentative: band.tentative,
+              // Label and time share a member row: tight padding and lines.
+              dense: true,
+              lineHeight: 1.1,
             ),
           ),
         ),
@@ -517,7 +633,7 @@ class _BaselineTrack extends StatelessWidget {
   Widget build(BuildContext context) {
     final ww = context.ww;
     return Container(
-      height: 32,
+      constraints: const BoxConstraints(minHeight: 32),
       padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         color: ww.sunken,

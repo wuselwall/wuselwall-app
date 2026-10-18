@@ -153,7 +153,7 @@ const de: Strings = {
     { title: 'Zweisprachig und anpassbar', text: 'Deutsch und Englisch, von Anfang an. Alles, was eine Familie anders macht als die nächste, ist eine Einstellung.' },
   ],
   statusTitle: 'Wo wir stehen',
-  statusLead: 'WuselWall entsteht Schritt für Schritt. Das ist der aktuelle Stand:',
+  statusLead: 'WuselWall entsteht Schritt für Schritt. „Fertig“ heißt: gebaut. Ein Test im Alltag einer Familie steht noch aus. Das ist der aktuelle Stand:',
   status: [
     { label: 'Geräte verbinden und Familie einrichten', state: 'fertig', done: true },
     { label: 'Einkaufsliste mit Offline-Modus', state: 'fertig', done: true },
@@ -178,7 +178,9 @@ const de: Strings = {
     { label: 'Erinnerung am Vorabend: was in die Schultasche gehört', state: 'fertig', done: true },
     { label: 'Namen, Farben und Reihenfolge der Familie, Geräte und Einkaufslisten nachträglich ändern', state: 'als Nächstes', done: false },
     { label: 'Eigener Server auch ohne E-Mail-Versand', state: 'als Nächstes', done: false },
-    { label: 'Im App Store und bei Google Play', state: 'als Nächstes', done: false },
+    { label: 'Erster Test mit einer Familie (Pilot)', state: 'als Nächstes', done: false },
+    { label: 'Im App Store und bei Google Play', state: 'geplant', done: false },
+    { label: 'Erinnerungen als Push-Nachricht', state: 'geplant', done: false },
   ],
   faqTitle: 'Häufige Fragen',
   faq: [
@@ -387,7 +389,7 @@ const en: Strings = {
     { title: 'Bilingual and adaptable', text: 'German and English from day one. Whatever one family does differently from the next is a setting.' },
   ],
   statusTitle: 'Where we are',
-  statusLead: 'WuselWall is built step by step. This is the current state:',
+  statusLead: 'WuselWall is built step by step. “Done” means built. A trial with a family is still to come. This is the current state:',
   status: [
     { label: 'Connecting devices and setting up a family', state: 'done', done: true },
     { label: 'Shopping list with offline mode', state: 'done', done: true },
@@ -412,7 +414,9 @@ const en: Strings = {
     { label: 'A reminder the evening before: what goes in the school bag', state: 'done', done: true },
     { label: 'Change names, colours and order of the family, devices and shopping lists afterwards', state: 'up next', done: false },
     { label: 'Your own server, even without sending email', state: 'up next', done: false },
-    { label: 'On the App Store and Google Play', state: 'up next', done: false },
+    { label: 'First trial with one family (pilot)', state: 'up next', done: false },
+    { label: 'On the App Store and Google Play', state: 'planned', done: false },
+    { label: 'Reminders as push notifications', state: 'planned', done: false },
   ],
   faqTitle: 'Questions',
   faq: [

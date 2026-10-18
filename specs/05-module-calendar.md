@@ -27,6 +27,9 @@ document a fixed interval, does not let you configure one, and does not offer a 
 refresh button for subscribed internet calendars. Reports cluster around 3–4 hours and
 occasionally stretch to 24. **The ICS feed is an awareness channel, not a notification
 channel.** Anything time-critical is delivered by push from WuselWall itself.
+*Status 2026-10-17: this is the design, not the shipped state. No push sender exists in the
+repository (no `push-send` function, no push-token storage). What ships is local reminders on
+personal phones, nothing sent by a server ([Q47](14-open-questions.md), [Q38](14-open-questions.md)).*
 
 iOS Calendar is better behaved: subscribed calendars can be set to refresh as often as
 every 15 minutes, and the phone is the device that actually needs to be current.
@@ -230,8 +233,12 @@ the calendar's colour with an RSS mark.
   and fetches at once.
 - **Safety:** the fetch rules are in [11](11-security-and-privacy.md#outbound-calendar-subscriptions):
   https only, public addresses only, every redirect checked, 15 seconds, 2 MB, ETag for "not modified".
-- **Not yet:** imported occurrences are not in the outbound ICS feed, so Outlook does not see
-  them through WuselWall's own feed yet. This is the next step for this feature.
+- **Outbound (built in code 2026-10-15):** a feed token whose filter has `subscribed` true
+  carries the household's active imported occurrences under the `external` key
+  (`supabase/migrations/20261015101000_feed_subscribed.sql`, `api.ics_feed`). The renderer
+  (`supabase/functions/_shared/ics.ts`) writes them as plain VEVENTs, and the feed's ETag covers
+  them (`supabase/functions/ics/index.ts`). Off by default for every token. Not verified in a real
+  Outlook or iOS subscription: that check is in the [release checklist](release-checklist.md).
 
 ## v1 scope cut
 
@@ -243,3 +250,7 @@ with per-token filtering by member, calendar and kind, and revocation.
 **Out:** imported feeds, CalDAV, invitations to people outside the household, attachments,
 reminders that are not push notifications, free/busy queries and conflict detection,
 natural-language event entry.
+
+*Historical cut, as written in August. Since then built: imported feeds (above, including
+their outbound feed) and local reminders (Q47). Still out: CalDAV, invitations to outsiders,
+attachments, free/busy, conflict detection, natural-language entry.*

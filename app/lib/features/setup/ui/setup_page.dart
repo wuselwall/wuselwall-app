@@ -8,6 +8,7 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/config/config_providers.dart';
 import 'package:wuselwall/core/connectivity/connectivity_provider.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/legal/legal_links.dart';
 import 'package:wuselwall/core/server/server_address.dart';
 import 'package:wuselwall/core/ui/qr_code_view.dart';
 
@@ -99,6 +100,16 @@ class _SetupPageState extends ConsumerState<SetupPage> {
                     onPressed: session.leave,
                     child: Text(l10n.serverChooseOther),
                   ),
+                // The privacy policy, quiet at the foot of the front door (specs/20).
+                Center(
+                  child: TextButton(
+                    onPressed: online
+                        ? () =>
+                              openPrivacyPolicy(Localizations.localeOf(context))
+                        : null,
+                    child: Text(l10n.setupPrivacy),
+                  ),
+                ),
                 if (kDebugMode)
                   TextButton(
                     onPressed: () => context.go(Routes.system),

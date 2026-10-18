@@ -288,6 +288,15 @@ void main() {
     expect(find.text('Film aussuchen'), findsOneWidget);
     // The cheap one is affordable and offers to be redeemed.
     expect(find.text('Einlösen'), findsOneWidget);
+    // A6: the kid "Einlösen" button's actual rendered hit area is >=56x56
+    // logical px, not just a nominal minimumSize that density then shrinks.
+    final redeemButton = find.ancestor(
+      of: find.text('Einlösen'),
+      matching: find.byType(FilledButton),
+    );
+    final redeemSize = tester.getSize(redeemButton);
+    expect(redeemSize.width, greaterThanOrEqualTo(56));
+    expect(redeemSize.height, greaterThanOrEqualTo(56));
     await unmountApp(tester, container);
   });
 
@@ -348,5 +357,50 @@ void main() {
     // Let the five-second undo bar expire before the test ends.
     await tester.pump(const Duration(seconds: 6));
     await unmountApp(tester, container);
+  });
+
+  // A11y polish (audit t_d7ce38d4, A10): what a screen reader hears on the kid's day.
+  testWidgets('the task title is read once, on the card', (tester) async {
+    final handle = tester.ensureSemantics();
+    final container = await pumpApp(
+      tester,
+      overrides: baseOverrides(identity: _KidIdentity()),
+      tasks: _TickingApi(),
+    );
+    await _pickLotta(tester);
+    expect(find.bySemanticsLabel(RegExp(r'^Tisch decken')), findsOneWidget);
+    await unmountApp(tester, container);
+    handle.dispose();
+  });
+
+  testWidgets(
+    'the greeting has no stray initial and the balance has its unit',
+    (tester) async {
+      final handle = tester.ensureSemantics();
+      final container = await pumpApp(
+        tester,
+        overrides: baseOverrides(identity: _KidIdentity()),
+        tasks: _TickingApi(),
+      );
+      await _pickLotta(tester);
+      expect(find.bySemanticsLabel('L'), findsNothing);
+      expect(find.bySemanticsLabel('12 Punkte'), findsOneWidget);
+      await unmountApp(tester, container);
+      handle.dispose();
+    },
+  );
+
+  testWidgets('kid section titles are headers', (tester) async {
+    final handle = tester.ensureSemantics();
+    final container = await pumpApp(
+      tester,
+      overrides: baseOverrides(identity: _KidIdentity()),
+      tasks: _TickingApi(),
+    );
+    await _pickLotta(tester);
+    final node = tester.getSemantics(find.text('Meine Aufgaben'));
+    expect(node.flagsCollection.isHeader, isTrue);
+    await unmountApp(tester, container);
+    handle.dispose();
   });
 }
