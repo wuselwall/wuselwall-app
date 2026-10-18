@@ -5,6 +5,10 @@
     "supabase": "^2.120.0",
     "vitepress": "^1.6.4"
   },
+  "overrides": {
+    "esbuild": "^0.25.12",
+    "vite": "^6.4.4"
+  },
   "private": true,
   "license": "Apache-2.0",
   "name": "wuselwall",

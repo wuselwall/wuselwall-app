@@ -1,6 +1,5 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
@@ -36,25 +35,24 @@ class BoardFrame {
   /// A day before today: its content recedes (specs/09 "Today, and the rest of the week").
   bool isPast(int i) => date(i).isBefore(board.today);
 
-  /// The opacity of a day's content: past days at half strength; at night everything
-  /// except today and tomorrow at 40 % (specs/09 "Night").
-  double opacity(int i) {
+  /// Whether a day's content recedes: past days always, and at night everything
+  /// except today and tomorrow (specs/09 "Night"). Recede through the day's ground
+  /// colour and borders (`week_board_view.dart`'s `grounds`), never through a fixed
+  /// opacity over the day's own text — specs/17's 4.5:1 text contrast holds for
+  /// every day, including past and night ones (A6/A7, `t_da411148`).
+  bool recede(int i) {
     final today = todayIndex;
-    var o = 1.0;
-    if (isPast(i)) o = math.min(o, 0.5);
-    if (night && today != null && i != today && i != today + 1) {
-      o = math.min(o, 0.4);
-    }
-    return o;
+    if (isPast(i)) return true;
+    if (night && today != null && i != today && i != today + 1) return true;
+    return false;
   }
 
-  /// The lowest [opacity] over columns [first]..[last], for things that span them.
-  double spanOpacity(int first, int last) {
-    var o = 1.0;
+  /// Whether any column in [first]..[last] recedes, for things that span them.
+  bool spanRecedes(int first, int last) {
     for (var i = first; i <= last; i++) {
-      o = math.min(o, opacity(i));
+      if (recede(i)) return true;
     }
-    return o;
+    return false;
   }
 }
 
@@ -219,7 +217,7 @@ class DashedOutlinePainter extends CustomPainter {
 
 /// Makes a tap target with a button semantics label. A GestureDetector, not an
 /// InkWell: the board needs no ink ripples and must not depend on a Material ancestor.
-class BoardTap extends StatelessWidget {
+class BoardTap extends StatefulWidget {
   const BoardTap({
     required this.label,
     required this.onTap,
@@ -232,16 +230,63 @@ class BoardTap extends StatelessWidget {
   final Widget child;
 
   @override
-  // The label says what the tap opens; the cell's own texts would repeat it
-  // ("Lotta, L, Lotta"), so they are not read out separately.
+  State<BoardTap> createState() => _BoardTapState();
+}
+
+class _BoardTapState extends State<BoardTap> {
+  final _focus = FocusNode();
+  bool _focused = false;
+
+  @override
+  void dispose() {
+    _focus.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) => Semantics(
     button: true,
-    label: label,
+    focusable: true,
+    focused: _focused,
+    onFocus: _focus.requestFocus,
+    onTap: widget.onTap,
+    label: widget.label,
     excludeSemantics: true,
-    child: GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: onTap,
-      child: child,
+    child: FocusableActionDetector(
+      focusNode: _focus,
+      onFocusChange: (focused) => setState(() => _focused = focused),
+      shortcuts: const {
+        SingleActivator(LogicalKeyboardKey.enter): ActivateIntent(),
+        SingleActivator(LogicalKeyboardKey.space): ActivateIntent(),
+      },
+      actions: {
+        ActivateIntent: CallbackAction<ActivateIntent>(
+          onInvoke: (_) {
+            widget.onTap();
+            return null;
+          },
+        ),
+      },
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        excludeFromSemantics: true,
+        onTap: () {
+          _focus.requestFocus();
+          widget.onTap();
+        },
+        child: DecoratedBox(
+          position: DecorationPosition.foreground,
+          decoration: BoxDecoration(
+            border: _focused
+                ? Border.all(
+                    color: Theme.of(context).colorScheme.primary,
+                    width: 3,
+                  )
+                : null,
+          ),
+          child: widget.child,
+        ),
+      ),
     ),
   );
 }
@@ -287,7 +332,9 @@ class BoardDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     final ww = context.ww;
     return Container(
-      height: trailing == null ? height : controlHeight,
+      constraints: BoxConstraints(
+        minHeight: trailing == null ? height : controlHeight,
+      ),
       padding: trailing == null ? null : const EdgeInsets.only(right: 8),
       alignment: Alignment.centerRight,
       decoration: BoxDecoration(

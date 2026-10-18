@@ -1,6 +1,9 @@
-# VitePress source remains with the app. Build PRs without production credentials.
-# Pages publishing is opt-in after plan/visibility, Pages and DNS are configured:
-# set the repository variable DOCS_PAGES_ENABLED=true. See specs/website-and-docs-migration.md.
+# VitePress source remains with the app. The build executes PR-supplied code (npm ci,
+# Playwright, Flutter, the screenshot script), so it always runs on the GitHub-hosted,
+# ephemeral ubuntu-latest runner and never holds production credentials. Pages publishing
+# is opt-in after plan/visibility, Pages and DNS are configured: set the repository variable
+# DOCS_PAGES_ENABLED=true. The deploy job never runs for a pull_request.
+# See specs/website-and-docs-migration.md.
 name: docs
 on:
   workflow_dispatch:

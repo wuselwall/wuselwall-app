@@ -116,8 +116,8 @@ class _Appointments extends StatelessWidget {
   }
 }
 
-/// The title's line box (26 px at height 1.2) and the attendee dot, for centring.
-const _titleLine = 26 * 1.2;
+/// The title's line box is 26 px at height 1.2 before the text scale; the attendee
+/// dot is centred on it.
 const _dotSize = 20.0;
 
 class _EventRow extends StatelessWidget {
@@ -138,64 +138,76 @@ class _EventRow extends StatelessWidget {
     final l10n = context.l10n;
     final ww = context.ww;
     final e = event;
+    final scaler = MediaQuery.textScalerOf(context);
     final end = e.ends ?? e.starts;
     final over = isToday && end != null && minutesOf(end) < nowMinutes;
     final attendees = [
       for (final m in board.members)
         if (e.attendeeIds.contains(m.id)) m,
     ];
-    return Opacity(
-      opacity: over ? 0.45 : 1,
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: Tokens.space4),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 150,
-              child: Text(
-                eventSpan(context, e),
-                style: e.isAllDay
-                    ? detailUi(26, ww.ink2, weight: FontWeight.w700)
-                    : detailNum(26, context.ink, weight: FontWeight.w700),
-              ),
-            ),
-            Flexible(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    e.tentative ? '${e.title} ?' : e.title,
-                    style: detailUi(26, context.ink, weight: FontWeight.w700),
-                  ),
-                  if (e.location case final location?)
-                    Text(location, style: detailUi(24, ww.ink2)),
-                  if (e.tentative)
-                    Text(l10n.boardTentative, style: detailUi(24, ww.ink2)),
-                ],
-              ),
-            ),
-            if (attendees.isNotEmpty) ...[
-              const SizedBox(width: Tokens.space3),
-              // Centred on the title line, so the dots read as the title's own.
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: (_titleLine - _dotSize) / 2,
+    // An appointment that is over recedes to the sunken ground; its text keeps its
+    // full colour, so specs/17's 4.5:1 holds (t_10f0b348). Every row has the same
+    // inset, so the columns line up whether a row is over or not.
+    return Padding(
+      padding: const EdgeInsets.only(bottom: Tokens.space2),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: over ? ww.sunken : null,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(Tokens.space2),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // The time column grows with the text scale, so "ganztägig" and a
+              // span stay whole words at 200 % (t_10f0b348).
+              SizedBox(
+                width: scaler.scale(150),
+                child: Text(
+                  eventSpan(context, e),
+                  style: e.isAllDay
+                      ? detailUi(26, ww.ink2, weight: FontWeight.w700)
+                      : detailNum(26, context.ink, weight: FontWeight.w700),
                 ),
-                child: MemberDots(
-                  size: _dotSize,
-                  dots: [
-                    for (final m in attendees)
-                      MemberDot(
-                        memberColor: m.color,
-                        size: _dotSize,
-                        semanticLabel: context.memberName(board, m),
-                      ),
+              ),
+              Flexible(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      e.tentative ? '${e.title} ?' : e.title,
+                      style: detailUi(26, context.ink, weight: FontWeight.w700),
+                    ),
+                    if (e.location case final location?)
+                      Text(location, style: detailUi(24, ww.ink2)),
+                    if (e.tentative)
+                      Text(l10n.boardTentative, style: detailUi(24, ww.ink2)),
                   ],
                 ),
               ),
+              if (attendees.isNotEmpty) ...[
+                const SizedBox(width: Tokens.space3),
+                // Centred on the title line, so the dots read as the title's own.
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: (scaler.scale(26) * 1.2 - _dotSize) / 2,
+                  ),
+                  child: MemberDots(
+                    size: _dotSize,
+                    dots: [
+                      for (final m in attendees)
+                        MemberDot(
+                          memberColor: m.color,
+                          size: _dotSize,
+                          semanticLabel: context.memberName(board, m),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );
@@ -249,7 +261,9 @@ class _WhoAndMeal extends StatelessWidget {
         children: [
           Row(
             children: [
-              MemberAvatar(member: m, size: 40),
+              // 48 px, so the initial is the kiosk's 24 px minimum; the circle grows
+              // with the text scale so the scaled initial still fits (t_10f0b348).
+              MemberAvatar(member: m, size: 48, growsWithText: true),
               const SizedBox(width: Tokens.space3),
               Expanded(
                 child: Text(
@@ -271,6 +285,7 @@ class _WhoAndMeal extends StatelessWidget {
               child: BaselineChip(
                 memberColor: m.color,
                 label: context.presenceLabel(baseline.state, baseline.label),
+                wraps: true,
               ),
             ),
           if (busy != null)
@@ -303,6 +318,7 @@ class _WhoAndMeal extends StatelessWidget {
       tentative: b.tentative,
       openStart: !isSameDay(day, b.firstDay),
       openEnd: !isSameDay(day, b.lastDay),
+      wraps: true,
     );
   }
 }

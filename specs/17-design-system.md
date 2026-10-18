@@ -167,6 +167,19 @@ member colours and `brand`, so it follows the theme like everything else.
 | Elevation | None. Borders separate, shadows only on sheets and dialogs | Same | None |
 | Touch target | 44 | 56 | 56 |
 
+**Clarified 2026-10-17 (A6, `t_da411148`):** targets are actual non-overlapping
+hit areas in logical pixels, minimum width **and** height, after visual density,
+padding and layout constraints. A nominal `minimumSize` of 56 is not sufficient if
+the resulting target is 52. Retain 56×56 for kid and kiosk controls; do not waive
+NFR-13 to match current code. A compact decorative band may sit inside a larger
+56×56 target; if adjacent bands cannot have separate non-overlapping targets,
+use the existing containing row/cell detail action rather than tiny independent
+buttons. Keep meaningful band labels in the container's semantics and retain
+access to their full detail. Coordinate board actions with A1 (`t_39e3e9d5`).
+
+The 24 px kiosk minimum, system text scaling and rendered contrast acceptance are
+clarified in [09 — Degradation rules](09-clients-and-ux.md#degradation-rules).
+
 Motion: 150 ms standard, 250 ms emphasised, both `easeOutCubic`. The points fly to the
 balance in 600 ms along a curve, with a coin-count tick. All of it follows the system's
 reduce-motion setting.

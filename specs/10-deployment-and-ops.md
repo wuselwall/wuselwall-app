@@ -331,7 +331,8 @@ Until the Play listing exists, `release-android.yml` builds a signed APK and
 
 ### The user documentation
 
-`docs/` stays with the app and is built on GitHub-hosted machines (Flutter demo,
+`docs/` stays with the app and is built on GitHub's ephemeral `ubuntu-latest` runners,
+for pull requests and `main` alike (Flutter demo,
 Playwright screenshots in both languages/themes, VitePress with `DOCS_BASE=/`). The
 prepared publisher uses a GitHub Pages artifact and OIDC with job-scoped `pages: write`
 and `id-token: write`; it no longer uses a self-hosted deploy runner or SSH secrets.

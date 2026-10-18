@@ -80,7 +80,7 @@ class DetailHeading extends StatelessWidget {
 }
 
 /// One day of a week-long list: its label in a fixed column, the content beside it.
-/// Today is raised (paper ground, primary frame); past days recede.
+/// Today is raised (paper ground, primary frame); past days recede to the sunken ground.
 class DayRow extends StatelessWidget {
   const DayRow({
     required this.date,
@@ -99,40 +99,44 @@ class DayRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final ww = context.ww;
     final scheme = Theme.of(context).colorScheme;
-    return Opacity(
-      opacity: past ? 0.5 : 1,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: Tokens.space2),
-        padding: const EdgeInsets.symmetric(
-          horizontal: Tokens.space4,
-          vertical: Tokens.space3,
-        ),
-        decoration: raised
-            ? BoxDecoration(
-                color: scheme.surfaceContainerLow,
-                border: Border.all(color: scheme.primary, width: 2),
-                borderRadius: BorderRadius.circular(14),
-              )
-            : BoxDecoration(
-                border: Border(bottom: BorderSide(color: ww.line)),
-              ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 200,
-              child: Text(
-                '${context.weekdayShort(date)} ${context.dayMonth(date)}',
-                style: detailNum(
-                  26,
-                  raised ? scheme.primary : context.ink,
-                  weight: FontWeight.w700,
-                ),
+    // A past day recedes through its ground, never through opacity over its text:
+    // specs/17's 4.5:1 holds for past rows as for every other (t_10f0b348).
+    return Container(
+      margin: const EdgeInsets.only(bottom: Tokens.space2),
+      padding: const EdgeInsets.symmetric(
+        horizontal: Tokens.space4,
+        vertical: Tokens.space3,
+      ),
+      decoration: raised
+          ? BoxDecoration(
+              color: scheme.surfaceContainerLow,
+              border: Border.all(color: scheme.primary, width: 2),
+              borderRadius: BorderRadius.circular(14),
+            )
+          : past
+          ? BoxDecoration(
+              color: ww.sunken,
+              borderRadius: BorderRadius.circular(14),
+            )
+          : BoxDecoration(
+              border: Border(bottom: BorderSide(color: ww.line)),
+            ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 200,
+            child: Text(
+              '${context.weekdayShort(date)} ${context.dayMonth(date)}',
+              style: detailNum(
+                26,
+                raised ? scheme.primary : context.ink,
+                weight: FontWeight.w700,
               ),
             ),
-            Expanded(child: child),
-          ],
-        ),
+          ),
+          Expanded(child: child),
+        ],
       ),
     );
   }
@@ -232,12 +236,16 @@ class EatingDots extends StatelessWidget {
                     : l10n.boardNotEating(context.memberName(board, m)),
               ),
               const SizedBox(width: Tokens.space2),
-              Text(
-                context.memberName(board, m),
-                style: detailUi(
-                  24,
-                  eating.contains(m.id) ? context.ink : ww.ink3,
-                  weight: FontWeight.w600,
+              // A long name wraps within the width the Wrap offers instead of
+              // running past it at large text (t_10f0b348).
+              Flexible(
+                child: Text(
+                  context.memberName(board, m),
+                  style: detailUi(
+                    24,
+                    eating.contains(m.id) ? context.ink : ww.ink3,
+                    weight: FontWeight.w600,
+                  ),
                 ),
               ),
             ],

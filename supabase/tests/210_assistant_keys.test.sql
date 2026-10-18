@@ -1,5 +1,5 @@
 begin;
-select plan(31);
+select plan(32);
 
 -- Start from an empty system, whatever the database already holds (all rolled back).
 delete from app.household;
@@ -238,8 +238,16 @@ select is(pg_temp.error_hint(format($$ select api.mcp_context(%L, '{}', null, 1)
 reset role;
 select pg_temp.act_as_dev('papa');
 insert into snap select 'export', api.household_export(null);
-select is((select jsonb_agg(t ->> 'kind' order by t ->> 'label') from snap, jsonb_array_elements(v -> 'tables' -> 'shortcut_token') t
-            where k = 'export'), '["assistant", "assistant", "shortcut"]'::jsonb, 'the export carries the kind');
+-- Keyed by label, not sorted by it: 'iPhone' sorts after 'Laptop' under the C collation and
+-- between 'Claude' and 'Laptop' under en_US, so an ordered list depended on the database's locale.
+select is((select jsonb_object_agg(t ->> 'label', t ->> 'kind') from snap, jsonb_array_elements(v -> 'tables' -> 'shortcut_token') t
+            where k = 'export'), '{"Claude": "assistant", "Laptop": "assistant", "iPhone": "shortcut"}'::jsonb,
+  'the export carries the kind');
+select is((select count(*)::int from snap, jsonb_array_elements(v -> 'tables' -> 'shortcut_token') t
+             join app.shortcut_token s on s.id = (t ->> 'id')::uuid
+            where k = 'export' and s.kind = t ->> 'kind' and s.household_id = pg_temp.id('hh_a')),
+  (select count(*)::int from app.shortcut_token where household_id = pg_temp.id('hh_a')),
+  'every key of the household is exported once, with its own kind');
 
 select * from finish();
 rollback;

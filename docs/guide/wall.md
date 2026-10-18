@@ -30,13 +30,19 @@ Die sieben Tage stehen nebeneinander, von Montag bis Sonntag. Heute ist die Spal
 
 ### Tippen für Details
 
+Die Schrift folgt der Textgröße des Geräts. Bei großer Schrift zeigt die Wand kürzere Zusammenfassungen mit Auslassungspunkten, statt die Buchstaben zu verkleinern. Datum, Schulnotizen, Betreuung, weitere Termine und die Mahlzeiten bleiben in den Details erreichbar. Ein kurzer Zähler wie **+2** bedeutet zwei weitere Termine. Reicht die Höhe nicht für drei Tagesabschnitte, fasst der Terminbereich die Termine pro Tag in einer Zeile zusammen. Die Tagesnamen, alle sieben Spalten und alle Bereiche bleiben stehen.
+
+In kompakten Zeilen ist die **ganze Mitgliederzeile** eine einzige große Schaltfläche: beim Kind öffnet sie den Wochenstundenplan, beim Erwachsenen seine Woche. Für einen bestimmten Schultag oder die Betreuung tippt ihr auf die Tagesüberschrift. Mit einer Tastatur wechselt ihr mit **Tab** zwischen den Schaltflächen; ein sichtbarer Rahmen zeigt den Fokus, **Enter** oder die **Leertaste** öffnet die Details.
+
 Ein Tipp zeigt mehr, und nach einer Minute geht die Anzeige von selbst zurück zur Woche:
 
 - auf die **Tagesüberschrift**: der ganze Tag
 - auf den **Namen eines Kindes**: der Stundenplan der Woche. Entfall ist durchgestrichen, Vertretungen sind markiert, und „Morgen einpacken“ steht dabei.
-- auf eine **Schulzeit**: dieser Schultag, Stunde für Stunde
+- auf eine **Schulzeit in einer kompakten Zeile**: der Wochenstundenplan des Kindes; den einzelnen Schultag erreicht ihr über die Tagesüberschrift
 - auf den **Namen eines Erwachsenen**: seine Woche
 - auf den **Essensbereich**: die Mahlzeiten der Woche
+
+In den Details steht alles vollständig, auch bei großer Schrift: lange Namen, Orte und Gerichte laufen in die nächste Zeile weiter. Was schon vorbei ist – vergangene Tage, beendete Termine, ausgefallene Stunden – liegt auf einem gedämpften Grund, bleibt aber so gut lesbar wie der Rest.
 
 <Shot name="wall-day" alt="Wandanzeige: Detailansicht eines Tages" wide />
 

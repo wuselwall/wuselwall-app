@@ -19,7 +19,10 @@ import 'package:wuselwall/features/board/ui/details/board_details.dart';
 class DayHeaderRow extends StatelessWidget {
   const DayHeaderRow({required this.frame, super.key});
 
-  static const height = 44.0;
+  // A6: this row is each day's primary tap target (it opens that day's detail),
+  // not a decorative band, so its actual hit area must clear the kiosk's real
+  // 56 px minimum (specs/17, t_da411148) — not the 44 px it used before.
+  static const height = 56.0;
 
   /// The row's height when a day of the week is a public holiday: a second line for it.
   static const holidayHeight = 72.0;
@@ -34,7 +37,6 @@ class DayHeaderRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final board = frame.board;
     final g = frame.geometry;
-    final ww = context.ww;
     final scheme = Theme.of(context).colorScheme;
     final today = frame.todayIndex;
 
@@ -50,79 +52,67 @@ class DayHeaderRow extends StatelessWidget {
             child: BoardTap(
               label: _label(context, board.days[i]),
               onTap: () => unawaited(openDayDetail(context, board, i)),
-              child: Opacity(
-                opacity: frame.opacity(i),
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    if (i == today)
-                      Positioned(
-                        left: 0,
-                        right: 0,
-                        top: 0,
-                        height: 4,
-                        child: ColoredBox(color: scheme.primary),
-                      ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: ClipFit(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  if (i == today)
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      top: 0,
+                      height: 4,
+                      child: ColoredBox(color: scheme.primary),
+                    ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            // A narrow column shrinks the line a little rather than
-                            // cutting the date.
-                            FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    // Today says so in words instead of a pill: the
-                                    // column is wide, but not wide enough for both.
-                                    i == today
-                                        ? context.l10n.boardToday
-                                        : context.weekdayShort(
-                                            board.days[i].date,
-                                          ),
-                                    style: boardNum(
-                                      28,
-                                      weight: FontWeight.w700,
-                                      color: i == today
-                                          ? scheme.primary
-                                          : scheme.onSurface,
-                                    ),
-                                    maxLines: 1,
-                                    softWrap: false,
-                                  ),
-                                  const SizedBox(width: 6),
-                                  Text(
-                                    context.dayMonth(board.days[i].date),
-                                    style: boardNum(
-                                      24,
-                                      weight: FontWeight.w500,
-                                      color: ww.ink2,
-                                    ),
-                                    maxLines: 1,
-                                    softWrap: false,
-                                  ),
-                                ],
+                            Flexible(
+                              child: Text(
+                                i == today
+                                    ? context.l10n.boardToday
+                                    : context.weekdayShort(board.days[i].date),
+                                style: boardNum(
+                                  24,
+                                  weight: FontWeight.w700,
+                                  color: i == today
+                                      ? scheme.primary
+                                      : scheme.onSurface,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            if (board.days[i].holiday case final holiday?)
-                              ShrinkText(
-                                holiday.name,
-                                style: boardCell(
-                                  24,
-                                  weight: FontWeight.w600,
-                                  color: ww.ink2,
+                            if (MediaQuery.textScalerOf(context).scale(24) <=
+                                32) ...[
+                              const SizedBox(width: 6),
+                              Flexible(
+                                child: Text(
+                                  context.dayMonth(board.days[i].date),
+                                  style: boardNum(24, color: context.ww.ink2),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
+                            ],
                           ],
                         ),
-                      ),
+                        if (MediaQuery.textScalerOf(context).scale(24) <= 28)
+                          if (board.days[i].holiday case final holiday?)
+                            Text(
+                              holiday.name,
+                              style: boardCell(24, color: context.ww.ink2),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -141,8 +131,8 @@ String _label(BuildContext context, BoardDay day) {
 }
 
 /// Zone "Termine": three fixed day parts, each row holding the key appointments of that
-/// part per day, two at most, then "+n weitere". Ticks with the clock only to dim the
-/// appointments that have already ended today.
+/// part per day, two at most, then "+n weitere". A short zone uses one summary
+/// per day. Ended appointments keep their full text contrast in every shade.
 class TermineRows extends ConsumerWidget {
   const TermineRows({required this.frame, super.key});
 
@@ -151,13 +141,69 @@ class TermineRows extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final now = ref.watch(nowProvider);
-    return Column(
-      children: [
-        for (final part in DayPart.values)
-          Expanded(
-            child: _PartRow(frame: frame, part: part, now: now),
-          ),
-      ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxHeight < 168) {
+          return BoardRow(
+            geometry: frame.geometry,
+            children: [
+              Positioned(
+                left: 12,
+                width: BoardGeometry.gutter - 20,
+                top: 0,
+                bottom: 0,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    context.l10n.boardAppointmentsOf,
+                    style: boardUi(
+                      24,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+              for (var i = 0; i < BoardGeometry.dayCount; i++)
+                spanCell(
+                  frame.geometry,
+                  i,
+                  i,
+                  BoardTap(
+                    label: [
+                      context.fullDate(frame.board.days[i].date),
+                      for (final e in frame.eventsOf(i))
+                        '${e.starts == null ? context.l10n.boardAllDay : context.shortTime(e.starts!)} ${_titleOf(e)}',
+                    ].join(', '),
+                    onTap: () =>
+                        unawaited(openDayDetail(context, frame.board, i)),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Center(
+                        child: _DayPartCell(
+                          board: frame.board,
+                          events: frame.eventsOf(i),
+                          isToday: frame.isToday(i),
+                          now: now,
+                          roomy: false,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          );
+        }
+        return Column(
+          children: [
+            for (final part in DayPart.values)
+              Expanded(
+                child: _PartRow(frame: frame, part: part, now: now),
+              ),
+          ],
+        );
+      },
     );
   }
 }
@@ -194,6 +240,7 @@ class _PartRow extends StatelessWidget {
                 context.dayPartLabel(part),
                 style: boardUi(24, weight: FontWeight.w700, color: ink),
                 maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 softWrap: false,
               ),
             ),
@@ -206,28 +253,33 @@ class _PartRow extends StatelessWidget {
             top: 0,
             bottom: 0,
             child: BoardTap(
-              label: context.fullDate(board.days[i].date),
+              label: [
+                context.fullDate(board.days[i].date),
+                context.dayPartLabel(part),
+                for (final e in frame.eventsOf(i))
+                  if (settings.partOf(e.starts) == part)
+                    '${e.starts == null ? context.l10n.boardAllDay : context.shortTime(e.starts!)} ${_titleOf(e)}',
+              ].join(', '),
               onTap: () => unawaited(openDayDetail(context, board, i)),
-              child: Opacity(
-                opacity: frame.opacity(i),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 2, 8, 0),
-                  child: LayoutBuilder(
-                    builder: (context, c) => ClipFit(
-                      alignment: Alignment.topLeft,
-                      child: SizedBox(
-                        width: c.maxWidth,
-                        child: _DayPartCell(
-                          board: board,
-                          events: [
-                            for (final e in frame.eventsOf(i))
-                              if (settings.partOf(e.starts) == part) e,
-                          ],
-                          isToday: frame.isToday(i),
-                          now: now,
-                          // Two lines for a lone appointment need ~52 canvas px.
-                          roomy: c.maxHeight >= 52,
-                        ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(8, 2, 8, 0),
+                child: LayoutBuilder(
+                  builder: (context, c) => ClipFit(
+                    alignment: Alignment.topLeft,
+                    child: SizedBox(
+                      width: c.maxWidth,
+                      child: _DayPartCell(
+                        board: board,
+                        events: [
+                          for (final e in frame.eventsOf(i))
+                            if (settings.partOf(e.starts) == part) e,
+                        ],
+                        isToday: frame.isToday(i),
+                        now: now,
+                        // Two lines for a lone appointment need ~52 canvas px.
+                        roomy:
+                            c.maxHeight >=
+                            MediaQuery.textScalerOf(context).scale(52),
                       ),
                     ),
                   ),
@@ -264,6 +316,29 @@ class _DayPartCell extends StatelessWidget {
   Widget build(BuildContext context) {
     if (events.isEmpty) return const SizedBox.shrink();
     final l10n = context.l10n;
+    if (!roomy) {
+      final e = events.first;
+      return Row(
+        children: [
+          Expanded(
+            child: Text(
+              '${e.starts == null ? l10n.boardAllDay : context.shortTime(e.starts!)} ${_titleOf(e)}',
+              style: boardCell(
+                24,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          if (events.length > 1)
+            Text(
+              l10n.boardMoreCount(events.length - 1),
+              style: boardCell(24, color: context.ww.ink2),
+            ),
+        ],
+      );
+    }
     final nowMinutes = now.hour * 60 + now.minute;
     // Today's appointments that are already over recede.
     bool ended(BoardEvent e) => isToday && _endMinutes(e) < nowMinutes;
@@ -384,10 +459,7 @@ class _EventBlock extends StatelessWidget {
         ),
       ],
     );
-    return Opacity(
-      opacity: ended ? 0.45 : 1,
-      child: _tentative(context, event, block),
-    );
+    return _tentative(context, event, block);
   }
 }
 
@@ -412,16 +484,19 @@ class _EventLine extends StatelessWidget {
     final row = Row(
       children: [
         if (start != null) ...[
-          Text(
-            context.shortTime(start),
-            style: boardNum(
-              24,
-              weight: FontWeight.w700,
-              color: ww.ink2,
-              height: 1.1,
+          Flexible(
+            child: Text(
+              context.shortTime(start),
+              style: boardNum(
+                24,
+                weight: FontWeight.w700,
+                color: ww.ink2,
+                height: 1.1,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              softWrap: false,
             ),
-            maxLines: 1,
-            softWrap: false,
           ),
           const SizedBox(width: 6),
         ],
@@ -437,14 +512,14 @@ class _EventLine extends StatelessWidget {
         if (dots.isNotEmpty) ...[
           const SizedBox(width: 4),
           // Two lines share the cell: the dots shrink so the title keeps its room.
-          MemberDots(dots: dots, size: 10),
+          Flexible(
+            fit: FlexFit.loose,
+            child: ClipRect(child: MemberDots(dots: dots, size: 10)),
+          ),
         ],
       ],
     );
-    return Opacity(
-      opacity: ended ? 0.45 : 1,
-      child: _tentative(context, event, row),
-    );
+    return _tentative(context, event, row);
   }
 }
 
@@ -471,18 +546,16 @@ class BoardAllEventsToggle extends ConsumerWidget {
 
     return Semantics(
       toggled: on,
-      button: true,
-      label: l10n.boardAllEvents,
-      excludeSemantics: true,
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
+      child: BoardTap(
+        label: l10n.boardAllEvents,
         onTap: () => ref.read(boardAllEventsProvider.notifier).set(!on),
-        child: SizedBox(
-          height: BoardDivider.controlHeight,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            minHeight: BoardDivider.controlHeight,
+          ),
           child: Center(
             child: Container(
-              height: BoardDivider.controlHeight - 8,
-              padding: const EdgeInsets.symmetric(horizontal: 14),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
               decoration: BoxDecoration(
                 color: on ? scheme.primaryContainer : null,
                 borderRadius: BorderRadius.circular(10),
