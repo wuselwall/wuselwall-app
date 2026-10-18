@@ -7,16 +7,10 @@
 //   3. api.account_delete_prepare decides (the last guardian with an account is refused, 409)
 //      and unlinks the profile, revokes the account's devices and closes the family if this
 //      was its only person.
-//   4. The Auth user is deleted with the Admin API, and with it every session. If the account
-//      signed in with Apple before social sign-in was removed, its stored refresh token does not
-//      vanish with it: the database keeps it as a revocation obligation in the same transaction
-//      (migration 20261017110000).
-//   5. That obligation is tried at once. A missing Apple configuration, a token that cannot be
-//      decrypted or Apple being unreachable keeps it for the daily retry (household-purge); the
-//      deletion has happened either way and the response does not depend on Apple.
+//   4. The Auth user is deleted with the Admin API, and with it every session.
 //
-// The service role is used in steps 3 to 5, and only for the user verified in step 1: every
-// call passes that user's id, and the database functions refuse any other caller.
+// The service role is used in steps 3 and 4, and only for the user verified in step 1: both
+// calls pass that user's id, and the database function refuses any other caller.
 import {
   errorResponse,
   json,
@@ -26,8 +20,6 @@ import {
   serviceClient,
 } from "../_shared/client.ts";
 import { amrOf, RECENT_SIGN_IN_SECONDS, signedInRecently, verifiedCaller } from "../_shared/caller.ts";
-import { APPLE_TIMEOUT_MS, appleConfig } from "../_shared/apple.ts";
-import { rpcRevocationStore, settleRevocations } from "../_shared/apple_revocation.ts";
 
 /** A refusal in the shape the apps read: `hint` carries the stable reason. */
 function refusal(status: number, error: string, message: string): Response {
@@ -56,28 +48,9 @@ Deno.serve(async (req: Request): Promise<Response> => {
       return refusal(409, reason, `account deletion refused: ${reason}`);
     }
 
-    // Service role: the Admin API deletes exactly the verified user. A stored Apple token
-    // becomes a revocation obligation in the same transaction (database trigger).
+    // Service role: the Admin API deletes exactly the verified user.
     const { error: deleteError } = await service.auth.admin.deleteUser(user.id);
     if (deleteError) throw deleteError;
-
-    // Service role, for the verified (now deleted) user's own obligations only. Bounded: the
-    // account is already gone, and a hanging Apple delays this answer by APPLE_TIMEOUT_MS at
-    // most; whatever is not settled here stays for the daily job.
-    try {
-      const outcome = await settleRevocations(rpcRevocationStore(service), appleConfig(), {
-        user: user.id,
-        budgetMs: APPLE_TIMEOUT_MS,
-      });
-      if (outcome.kept + outcome.deferred > 0) {
-        console.error(
-          "account-delete: Apple revocation kept for retry:",
-          outcome.unconfigured ? "config_missing" : `${outcome.kept + outcome.deferred} pending`,
-        );
-      }
-    } catch {
-      console.error("account-delete: Apple revocation not tried; the daily job retries it");
-    }
 
     return json({ ok: true, household_deleted: (prepared as { household_deleted?: boolean }).household_deleted === true });
   } catch (err) {

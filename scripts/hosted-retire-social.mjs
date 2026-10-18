@@ -1,7 +1,8 @@
 #!/usr/bin/env node
-// Retires social sign-in on a family's hosted Supabase project (specs/22, "Credential and
-// external-client retirement", items 1 and 3). Run by .github/workflows/deploy-supabase.yml on
-// every deploy, after the Auth settings; harmless to run again.
+// Retires social sign-in on a family's hosted Supabase project that had it before 2026-10-17
+// (specs/10, "Retiring social sign-in on an existing server"). Run by
+// .github/workflows/deploy-supabase.yml on every deploy, after the Edge Functions; harmless to
+// run again.
 //
 //   SUPABASE_ACCESS_TOKEN=… PROJECT=<ref> node scripts/hosted-retire-social.mjs
 //
@@ -13,16 +14,15 @@
 //   - the native apps' OAuth callback (ch.goomba.wuselwall://login-callback/, any scheme)
 //     taken out of the redirect allow-list. Every other entry stays exactly as it was: an
 //     operator may have added invitation, pairing or web destinations the retained journeys
-//     need (specs/22, item 1). A list without the callback is not rewritten. E-mail links go
-//     to site_url, which stays.
+//     need. A list without the callback is not rewritten. E-mail links go to site_url, which
+//     stays.
 //   - the apple-token Edge Function deleted if it is still deployed: deploying the remaining
 //     functions does not remove one that is no longer in the repository.
-// Then it reads the settings and the function list back and fails unless they show the result,
-// including every allow-list entry it meant to keep.
-//
-// Kept, on purpose: the APPLE_TEAM_ID, APPLE_KEY_ID, APPLE_PRIVATE_KEY, APPLE_CLIENT_ID and
-// APPLE_TOKEN_KEY Edge Function secrets. account-delete needs them to revoke the Apple tokens of
-// accounts from before the removal; they are not sign-in settings.
+//   - the Edge Function secrets only Apple sign-in and its token revocation read (APPLE_TEAM_ID,
+//     APPLE_KEY_ID, APPLE_PRIVATE_KEY, APPLE_CLIENT_ID, APPLE_TOKEN_KEY) deleted: no function
+//     reads them since 20261017100000_drop_apple_token dropped the stored tokens.
+// Then it reads the settings, the function list and the secret names back and fails unless they
+// show the result, including every allow-list entry it meant to keep.
 //
 // Prints no secret and no setting value, only what changed and what was checked.
 
@@ -39,6 +39,10 @@ export const RETIRED_AUTH = Object.freeze({
 });
 
 export const RETIRED_FUNCTIONS = Object.freeze(['apple-token']);
+
+export const RETIRED_SECRETS = Object.freeze([
+  'APPLE_TEAM_ID', 'APPLE_KEY_ID', 'APPLE_PRIVATE_KEY', 'APPLE_CLIENT_ID', 'APPLE_TOKEN_KEY',
+]);
 
 // The native OAuth callback: a custom scheme whose host is login-callback, with or without a
 // path. Only this is obsolete; an https destination that merely contains the word is not.
@@ -126,10 +130,24 @@ export async function retire({ project, token, fetchFn = fetch, log = console.lo
   const remaining = ((await call('GET', 'functions')) ?? []).map((f) => f.slug);
   const still = RETIRED_FUNCTIONS.filter((s) => remaining.includes(s));
   if (still.length) throw new Error(`still deployed: ${still.join(', ')}`);
+
+  // Names only: the API answers with a digest of each value, which is never printed.
+  const secretNames = async () => ((await call('GET', 'secrets')) ?? []).map((x) => x.name);
+  const secretsBefore = await secretNames();
+  const set = RETIRED_SECRETS.filter((n) => secretsBefore.includes(n));
+  if (set.length) {
+    await call('DELETE', 'secrets', set);
+    log(`Edge Function secrets deleted: ${set.join(', ')}`);
+  } else {
+    log('Edge Function secrets: no Apple values set');
+  }
+  const leftSecrets = (await secretNames()).filter((n) => RETIRED_SECRETS.includes(n));
+  if (leftSecrets.length) throw new Error(`secrets still set: ${leftSecrets.join(', ')}`);
   return {
     switchedOff: wasOn,
     keptRedirects: kept.length,
     deletedFunctions: RETIRED_FUNCTIONS.filter((s) => deployed.some((f) => f.slug === s)),
+    deletedSecrets: set,
   };
 }
 

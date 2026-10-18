@@ -20,6 +20,7 @@ import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/account/ui/delete_account_tile.dart';
 import 'package:wuselwall/features/account/ui/mfa_reset_button.dart';
 import 'package:wuselwall/features/home/application/home_tab.dart';
+import 'package:wuselwall/features/household/application/household_leave_providers.dart';
 import 'package:wuselwall/features/household/ui/leave_family_tiles.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
@@ -374,7 +375,10 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) => Row(
     children: [
       Expanded(
-        child: Text(title, style: Theme.of(context).textTheme.titleMedium),
+        child: Semantics(
+          header: true,
+          child: Text(title, style: Theme.of(context).textTheme.titleMedium),
+        ),
       ),
       action,
     ],
@@ -605,8 +609,8 @@ class _FamilySectionState extends ConsumerState<_FamilySection> {
   }
 }
 
-/// Ways into this account (specs/20) — for the adult's own phone: a code to the
-/// account's e-mail address, always, and a password when one is set.
+/// How this account signs in (specs/20, "Several ways into one account") — for the
+/// adult's own phone: the email code, always, and an optional password.
 class _SignInMethodsSection extends ConsumerStatefulWidget {
   const _SignInMethodsSection();
 
@@ -619,9 +623,8 @@ class _SignInMethodsSectionState extends ConsumerState<_SignInMethodsSection> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final identity = ref.read(identityRepositoryProvider);
-    final email = identity.accountEmail();
-    final hasPassword = identity.hasPassword();
+    final email = ref.watch(myAccountProvider).value?.email;
+    final hasPassword = ref.read(identityRepositoryProvider).hasPassword();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -720,7 +723,7 @@ class _SecuritySection extends ConsumerWidget {
         ),
         // Not on the web until the passkeys SDK is self-hosted (web/index.html), and
         // only with the project's own servers (ADR-018).
-        if (!kIsWeb && ref.watch(appConfigProvider).passkeys)
+        if (!kIsWeb && ref.watch(appConfigProvider).nativeSignIn)
           ListTile(
             leading: const Icon(Icons.fingerprint),
             title: Text(l10n.passkeyTitle),

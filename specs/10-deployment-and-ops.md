@@ -99,8 +99,7 @@ or run `supabase db reset` against a live server.**
 Every server serves the discovery document through the Edge Function `server-info`
 (`supabase/functions/_shared/server_info.ts`): its public address, the publishable key,
 `api_version` and `min_app_version` from `api.server_info()`, the household-creation mode,
-the sign-in methods (e-mail only: `sign_in` has no `apple` or `google` since 2026-10-17, which
-older apps read as off) and `features`. A front of the server's own also
+the sign-in methods and `features`. A front of the server's own also
 serves it at `/.well-known/wuselwall.json`. The app reads the `.well-known` path first,
 then the function, so a hosted project's `https://<id>.supabase.co` is a complete address.
 
@@ -130,88 +129,10 @@ per client and globally (`app.founder_attempt`).
 
 ### 4. Sign-in and mail
 
-Email code and password work on every server. Sign-in with Apple and Google was removed on 2026-10-17 ([00](00-brief-and-decisions.md)): no server configures an external provider.
-
-Passkeys are offered only for servers in the build's `WW_FIRST_PARTY_HOSTS` (a CI secret), as [ADR-018](adr/ADR-018-self-hosted-only.md) decision 6 requires.
-
-### Retiring social sign-in on an existing server (2026-10-17)
-
-Policy and release evidence: [22](22-legacy-social-account-recovery.md). This is the runbook.
-
-**Hold first.** A server whose families used Apple's *Hide My Email* must not be updated
-until its operator has confirmed that those accounts can receive an email code at their relay
-address (`…@privaterelay.appleid.com`), or that there are none (specs/22, operator gate). An
-account that cannot receive a code cannot sign in again after its session ends.
-
-**What the update does by itself.**
-
-| Server | Step | Effect |
-|---|---|---|
-| Compose, from a release | `wuselwall update` (and `install --env`) runs `stack/retire-social-sign-in.sh` before Auth restarts | Removes `APPLE_ENABLED`, `APPLE_CLIENT_IDS`, `APPLE_SECRET` (the GoTrue login client secret), `GOOGLE_ENABLED`, `GOOGLE_CLIENT_IDS`, `GOOGLE_CLIENT_SECRET` from `stack/.env`, and the native callback (`<scheme>://login-callback…`) from `ADDITIONAL_REDIRECT_URLS`; every other entry (web app, invitation, pairing) stays in its order. Prints names, never values |
-| Compose, from a checkout | `scripts/remote-stack.sh deploy` runs the same script on the server | Same |
-| Compose, both | `docker-compose.wuselwall.yml` | `GOTRUE_EXTERNAL_APPLE_ENABLED`, `GOTRUE_EXTERNAL_GOOGLE_ENABLED`, `GOTRUE_SECURITY_MANUAL_LINKING_ENABLED` are `"false"`, whatever the `.env` holds. The functions directory is replaced as a whole, so `apple-token` is gone |
-| Hosted Supabase | `deploy-supabase.yml`, step *Retire social sign-in* (`scripts/hosted-retire-social.mjs`) | PATCHes Google and Apple off, their login client IDs and secrets empty, manual linking off, and only the native callback taken out of `uri_allow_list` (other entries, such as invitation or pairing destinations, stay; a list without the callback is not rewritten); reads the settings back and fails if any is still on or a kept entry is missing; deletes a still-deployed `apple-token` and fails unless the function list no longer has it. Deploying the remaining functions alone would leave `apple-token` running |
-
-Kept everywhere: `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_PRIVATE_KEY`, `APPLE_CLIENT_ID`,
-`APPLE_TOKEN_KEY` (stack `.env` or the hosted project's Edge Function secrets). They are not
-sign-in settings: account-delete and the daily job use them to revoke the Apple tokens of
-accounts from before. `APPLE_TOKEN_KEY` never changes.
-
-**Check afterwards.**
-
-- `curl -s -H "apikey: <publishable key>" https://<api>/auth/v1/settings` shows
-  `"apple": false` and `"google": false` under `external`.
-- Compose: `grep -c login-callback stack/.env` is `0`; `ls stack/volumes/functions` has no
-  `apple-token`; `./wuselwall compose exec auth env | grep -E 'EXTERNAL_(APPLE|GOOGLE)_ENABLED|MANUAL_LINKING'`
-  shows `false` three times.
-- Hosted: the workflow log of *Retire social sign-in* ends without an error and says
-  `Edge Function apple-token: deleted` or `not deployed`.
-- A family member who used Apple or Google signs in with an email code on a phone **that is
-  still signed in elsewhere**, so nobody is locked out if it fails (specs/22: never sign
-  someone out to test).
-
-**Apple revocation obligations.** Deleting an account that holds a stored Apple token moves
-the encrypted token into `app.apple_revocation` in the same transaction (migration
-`20261017110000`). account-delete tries the revocation at once; `household-purge` retries
-every open one daily, those that waited longest since their last attempt first (migration
-`20261017120000`), so obligations that keep failing cannot starve the rest. A missing Apple
-value, a key that cannot decrypt, Apple being down or not answering keeps the row with a
-reason code; nothing is lost. The account is deleted before Apple is asked; each call to Apple
-gives up after 5 seconds, so a hanging Apple delays account-delete's answer by that much at
-most, and the daily job stops calling Apple after 60 seconds and leaves the rest for the next
-run. To see what is open (database administrators only):
-
-```sql
-select last_error, count(*), max(attempts), min(created_at)
-  from app.apple_revocation group by last_error;
-```
-
-`config_missing`: set the five values. `decrypt_failed`: the `APPLE_TOKEN_KEY` is not the one
-the tokens were stored with; restore the original from the password manager. `http_4xx` that
-persists (wrong `APPLE_CLIENT_ID`, revoked key) needs investigating. Delete a row by hand only
-once its case is conclusively resolved, and note why: a count of zero after rows were deleted
-proves nothing.
-
-**Backups.** Dumps contain `app.apple_token` and `app.apple_revocation`, encrypted with
-`APPLE_TOKEN_KEY`. Keep that key (with the rest of `.env`) as long as any backup you might
-restore still holds tokens. A restore can bring back obligations that were settled after the
-backup was taken; retrying them is harmless.
-
-**External clients and credentials.** Only after the checks above and the recovery evidence
-of specs/22 passed:
-
-1. *Google:* delete the OAuth clients that existed **only** for WuselWall sign-in (web, iOS,
-   Android clients and their redirect URI `https://<api>/auth/v1/callback`). Keep the Google
-   Cloud project, the Play Console and its publishing credentials, and any client used for
-   anything else. Unsure whether something else uses a client: keep it.
-2. *Apple, sign-in only:* stop renewing the six-monthly client-secret JWT (it is no longer
-   generated or stored). Keep the signing key (`.p8`), the App ID and the Services ID the
-   tokens were issued to, and the private-relay email sources: legacy tokens and relay mail
-   depend on them.
-3. *Apple, everything:* only when the operator can state that no account needs relay
-   delivery any more, `app.apple_token` and `app.apple_revocation` are empty because each
-   token was revoked or conclusively resolved, and no backup you would restore holds tokens.
-   There is no fixed date and nothing deletes keys automatically.
+Email codes and passwords work on every server; there are no external sign-in providers
+(Sign in with Apple and Google were removed 2026-10-17). Passkeys are offered only for
+servers in the build's `WW_FIRST_PARTY_HOSTS` (a CI secret)
+([ADR-018](adr/ADR-018-self-hosted-only.md), decision 6). Email codes need a mail service:
 
 ### Email setup
 
@@ -273,19 +194,47 @@ Order on a server, for the migrations and functions of the onboarding release:
    - `holidays-sync.sh`, weekly;
    - `tasks-nightly.sh`, daily at 03:00 (`0 3 * * *`).
 4. On an existing server, set `ENABLE_EMAIL_AUTOCONFIRM=false` in the stack's environment (the default in `make-env.mjs`).
-5. Keep `APPLE_TOKEN_KEY` as it is: it decrypts the Apple refresh tokens still stored for accounts created before sign-in with Apple was removed, and changing it makes them unreadable.
+5. Since 2026-10-17 (no Apple or Google sign-in): see [Retiring social sign-in on an existing server](#retiring-social-sign-in-on-an-existing-server); the update does it.
 
 New environment variables, in the stack's `.env` (generated by `make-env.mjs` from the CI variables):
 
 | Variable | Purpose |
 |---|---|
-| `WW_APPLE_TEAM_ID`, `WW_APPLE_KEY_ID`, `WW_APPLE_PRIVATE_KEY`, `WW_APPLE_BUNDLE_ID` | Only for revoking Apple access of accounts created before sign-in with Apple was removed. Read by the stack as `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_PRIVATE_KEY`, `APPLE_CLIENT_ID`. |
-| `APPLE_TOKEN_KEY` | Encrypts the stored Apple refresh tokens of those accounts. Generated once; never changes. |
 | `SCW_SECRET_KEY`, `SCW_PROJECT_ID`, `SCW_REGION` | Scaleway Transactional Email. `SEND_EMAIL_HOOK_ENABLED` is true only when the first two are set; `SCW_REGION` defaults to `fr-par`. |
 | `SEND_EMAIL_HOOK_SECRET` | The signing secret of the send-email hook (`v1,whsec_…`). Generated once. |
 
 Founder codes for a new family come from `scripts/remote-setup-token.sh --founder` (see [20](20-onboarding.md), J1).
 
+
+
+### Retiring social sign-in on an existing server
+
+Sign in with Apple and Google were removed on 2026-10-17 (migration `20261017100000_drop_apple_token`
+drops the stored Apple refresh tokens; account deletion no longer revokes at Apple). A server or
+hosted project set up before still carries the old settings; the update removes them.
+
+**Hold first.** A server whose families used Apple's *Hide My Email* is not updated until its
+operator has confirmed that those accounts receive an email code at their relay address
+(`…@privaterelay.appleid.com`), or that there are none. An account that cannot receive a code
+cannot sign in again after its session ends.
+
+| Server | Step | Effect |
+|---|---|---|
+| Compose, from a release | `wuselwall update` and `install --env` run `stack/retire-social-sign-in.sh` before Auth restarts | Removes `APPLE_ENABLED`, `APPLE_CLIENT_IDS`, `APPLE_SECRET`, `GOOGLE_ENABLED`, `GOOGLE_CLIENT_IDS`, `GOOGLE_CLIENT_SECRET`, `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_PRIVATE_KEY`, `APPLE_CLIENT_ID`, `APPLE_TOKEN_KEY` from `stack/.env`, and the native callback (`<scheme>://login-callback…`) from `ADDITIONAL_REDIRECT_URLS`; every other entry stays in its order. Prints names, never values. The functions directory is replaced as a whole, so `apple-token` goes |
+| Compose, from a checkout | `scripts/remote-stack.sh deploy` runs the same script on the server | Same |
+| Hosted Supabase | `deploy-supabase.yml`, step *Retire social sign-in* (`scripts/hosted-retire-social.mjs`) | A Management API update changes only the keys it names, so a project that once had providers on keeps them on. The step PATCHes Google and Apple off, their client IDs and secrets empty, manual linking off, and only the native callback out of `uri_allow_list`; deletes a still-deployed `apple-token` and the five `APPLE_*` Edge Function secrets; reads all of it back and fails if anything is left |
+
+The compose overlay passes no `GOTRUE_EXTERNAL_*` variable, so leftover `.env` values could not
+switch a provider on; the script removes them so no credential lingers.
+
+**Check afterwards.** `curl -s -H "apikey: <publishable key>" https://<api>/auth/v1/settings`
+shows `"apple": false` and `"google": false` under `external`. Compose: `grep -c login-callback
+stack/.env` is `0`. Then a member who used Apple or Google signs in with an email code on a
+second device while the first stays signed in; nobody signs out to test.
+
+**Outside the repo, afterwards:** delete the Google OAuth clients that existed only for sign-in;
+remove the Apple Services ID, the Sign in with Apple key and its client-secret reminder. Keep
+the senders registered for Apple's relay while accounts with a relay address exist.
 
 ## Other families' servers
 
@@ -396,8 +345,8 @@ RPO 24 h, RTO a few hours (NFR-11).
 | Edge Functions from a checkout | `scripts/remote-stack.sh functions` | The Edge runtime only |
 | One service | `docker compose up -d --no-deps auth` after editing `.env` | That container only |
 | Database schema from a checkout | `scripts/remote-migrate.sh` | Postgres |
-| The project's website | `scripts/remote-web.sh deploy` to its host (`scripts/remote.env`) | The website container (`infra/web`) |
-| The user documentation | `.github/workflows/docs.yml` on every push to `main` | Static files, see below |
+| The project's website | Independent pipeline in `wuselwall/wuselwall-website` | Its marketing container only |
+| The user documentation | `.github/workflows/docs.yml`, GitHub Pages opt-in | Static Pages artifact; no server SSH credentials |
 
 ### The web app
 
@@ -412,11 +361,19 @@ Until the Play listing exists, `release-android.yml` builds a signed APK and
 
 ### The user documentation
 
-`docs/` is built on GitHub's machines (the Flutter web demo, Playwright screenshots in both
-languages and themes, VitePress with `DOCS_BASE=/docs/`). The deploy job runs on a
-self-hosted runner (label `wuselwall-deploy`) that holds no access of its own: it pipes the
-site over SSH to `DOCS_DEPLOY_TARGET` with a key that may run only the receiving script (a
-forced `command=`), and the host key is pinned (`DOCS_DEPLOY_KNOWN_HOSTS`).
+`docs/` stays with the app and is built on GitHub's ephemeral `ubuntu-latest` runners,
+for pull requests and `main` alike (Flutter demo,
+Playwright screenshots in both languages/themes, VitePress with `DOCS_BASE=/`). The
+prepared publisher uses a GitHub Pages artifact and OIDC with job-scoped `pages: write`
+and `id-token: write`; it no longer uses a self-hosted deploy runner or SSH secrets.
+
+Publishing stays disabled until `DOCS_PAGES_ENABLED=true` is set after the operator
+chooses eligible private-repository Pages hosting or explicitly publishes the app
+repository, configures Pages and `docs.wuselwall.app`, and approves cutover. PR builds
+never deploy. Old `wuselwall.app/docs/` content and app links must remain served until
+the custom domain works; change them to path-preserving redirects only after verification.
+See the [cutover checklist](website-and-docs-migration.md). No visibility, DNS, secret
+or live-host changes are implied by the prepared workflow.
 
 ## Updates
 

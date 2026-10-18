@@ -210,83 +210,113 @@ class _RewardCard extends StatelessWidget {
       soldOut: reward.soldOut,
     );
     final touch = UiRegister.kid.touchTarget;
-    return KidCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              ExcludeSemantics(
-                child: EmojiPicture(
-                  taskIconAsset(reward.iconKey) ?? emojiGift,
-                  size: 40,
-                ),
+    // One node per reward: title, cost and the state are spoken together; the action is
+    // a child of this node, so the screen reader meets it inside its own reward.
+    final spokenState = switch (state) {
+      KidRewardState.needMore => l10n.kidNeedMore(
+        kidPointsMissing(reward.costPoints, balance),
+      ),
+      KidRewardState.waiting => l10n.kidWaitsApproval,
+      KidRewardState.soldOut => l10n.kidSoldOut,
+      KidRewardState.ready => null,
+    };
+    return Semantics(
+      container: true,
+      explicitChildNodes: true,
+      label: [
+        reward.title,
+        l10n.tasksPointsCount(reward.costPoints),
+        ?spokenState,
+      ].join(', '),
+      child: KidCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // The visible copy of the label above; the node carries the words.
+            ExcludeSemantics(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      EmojiPicture(
+                        taskIconAsset(reward.iconKey) ?? emojiGift,
+                        size: 40,
+                      ),
+                      const SizedBox(width: Tokens.space3),
+                      Expanded(
+                        child: Text(
+                          reward.title,
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ),
+                      PointsCoin(points: reward.costPoints, fontSize: 19),
+                    ],
+                  ),
+                  const SizedBox(height: Tokens.space3),
+                  switch (state) {
+                    KidRewardState.needMore => Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        LinearProgressIndicator(
+                          value: reward.costPoints == 0
+                              ? 1
+                              : (balance / reward.costPoints).clamp(0.0, 1.0),
+                          minHeight: 10,
+                        ),
+                        const SizedBox(height: Tokens.space2),
+                        Text(
+                          spokenState!,
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                    KidRewardState.waiting => Row(
+                      children: [
+                        const Icon(Icons.hourglass_top_rounded),
+                        const SizedBox(width: Tokens.space2),
+                        Text(spokenState!, style: theme.textTheme.bodyLarge),
+                      ],
+                    ),
+                    KidRewardState.soldOut => Text(
+                      spokenState!,
+                      style: theme.textTheme.bodyLarge,
+                    ),
+                    KidRewardState.ready => const SizedBox.shrink(),
+                  },
+                ],
               ),
-              const SizedBox(width: Tokens.space3),
-              Expanded(
+            ),
+            if (state == KidRewardState.ready)
+              FilledButton(
+                style: FilledButton.styleFrom(
+                  minimumSize: Size.fromHeight(touch),
+                ),
+                onPressed: busy ? null : onAsk,
+                // The label takes the button's own foreground (onPrimary, which is the
+                // member's onInk), not the page ink: ink on the member fill is near-invisible
+                // in dark mode.
                 child: Text(
-                  reward.title,
-                  style: theme.textTheme.titleLarge?.copyWith(
+                  l10n.kidRedeem,
+                  style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w800,
+                    color: theme.colorScheme.onPrimary,
                   ),
                 ),
               ),
-              PointsCoin(points: reward.costPoints, fontSize: 19),
-            ],
-          ),
-          const SizedBox(height: Tokens.space3),
-          switch (state) {
-            KidRewardState.needMore => Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                LinearProgressIndicator(
-                  value: reward.costPoints == 0
-                      ? 1
-                      : (balance / reward.costPoints).clamp(0.0, 1.0),
-                  minHeight: 10,
-                ),
-                const SizedBox(height: Tokens.space2),
-                Text(
-                  l10n.kidNeedMore(
-                    kidPointsMissing(reward.costPoints, balance),
-                  ),
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ],
-            ),
-            KidRewardState.waiting => Row(
-              children: [
-                const Icon(Icons.hourglass_top_rounded),
-                const SizedBox(width: Tokens.space2),
-                Text(l10n.kidWaitsApproval, style: theme.textTheme.bodyLarge),
-              ],
-            ),
-            KidRewardState.soldOut => Text(
-              l10n.kidSoldOut,
-              style: theme.textTheme.bodyLarge,
-            ),
-            KidRewardState.ready => FilledButton(
-              style: FilledButton.styleFrom(
-                minimumSize: Size.fromHeight(touch),
-              ),
-              onPressed: busy ? null : onAsk,
-              child: Text(
-                l10n.kidRedeem,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ),
-          },
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
-/// A badge: bright when earned, faint while it is still to come.
+/// A badge: one node with its title and whether it is earned. The medal is faint while
+/// it is still to come; the text is not, so it keeps its contrast.
 class _BadgeTile extends StatelessWidget {
   const _BadgeTile({required this.badge});
 
@@ -295,16 +325,21 @@ class _BadgeTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ww = context.ww;
+    final l10n = context.l10n;
     final asset = taskIconAsset(badge.iconKey);
     return Semantics(
-      label: badge.earned ? badge.title : '${badge.title} ·',
+      container: true,
+      excludeSemantics: true,
+      label:
+          '${badge.title}, '
+          '${badge.earned ? l10n.kidBadgeEarned : l10n.kidBadgeNotYet}',
       child: SizedBox(
         width: 104,
-        child: Opacity(
-          opacity: badge.earned ? 1 : 0.35,
-          child: Column(
-            children: [
-              Container(
+        child: Column(
+          children: [
+            Opacity(
+              opacity: badge.earned ? 1 : 0.35,
+              child: Container(
                 width: 64,
                 height: 64,
                 alignment: Alignment.center,
@@ -315,7 +350,7 @@ class _BadgeTile extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
                 child: asset != null
-                    ? ExcludeSemantics(child: EmojiPicture(asset, size: 36))
+                    ? EmojiPicture(asset, size: 36)
                     : Icon(
                         Icons.workspace_premium_rounded,
                         size: 32,
@@ -324,16 +359,16 @@ class _BadgeTile extends StatelessWidget {
                             : Theme.of(context).colorScheme.onSurface,
                       ),
               ),
-              const SizedBox(height: Tokens.space1),
-              Text(
-                badge.title,
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.labelLarge,
-              ),
-            ],
-          ),
+            ),
+            const SizedBox(height: Tokens.space1),
+            Text(
+              badge.title,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.labelLarge,
+            ),
+          ],
         ),
       ),
     );

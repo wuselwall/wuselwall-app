@@ -38,7 +38,7 @@ case "${1:-}" in
     ;;
   set-env)
     # The value comes on stdin, never as an argument: no secret in shell history or ps.
-    #   <secret source> | scripts/remote-stack.sh set-env KEY
+    #   pass show wuselwall/scaleway | scripts/remote-stack.sh set-env SCW_SECRET_KEY
     key=${2:?usage: set-env KEY < value}
     [[ $key =~ ^[A-Z][A-Z0-9_]*$ ]] || { echo "not a variable name: $key" >&2; exit 2; }
     value=$(cat)
@@ -60,7 +60,7 @@ case "${1:-}" in
     rsync -rlt --delete --chmod=D755,F644 \
       infra/supabase/volumes/functions/ $( [ -d supabase/functions ] && echo supabase/functions/ ) \
       "$HOST:$DIR/volumes/functions/"
-    # Before Auth restarts: the old social sign-in settings leave the .env (specs/22).
+    # Before Auth restarts: the old social sign-in values leave the .env (specs/10).
     ssh "$HOST" "cd '$DIR' && sh retire-social-sign-in.sh .env"
     ssh "$HOST" "cd '$DIR' && docker compose up -d --remove-orphans && docker compose ps"
     ;;

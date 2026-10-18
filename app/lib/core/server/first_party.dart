@@ -1,7 +1,7 @@
 /// The project's own servers (ADR-018, decision 6), from `WW_FIRST_PARTY_HOSTS` in the
-/// build's env file. Only these get passkeys: their domain is the one in the apps'
-/// associated domains, so a passkey made for it must never be offered to another
-/// operator's server.
+/// build's env file. Only these get the native Apple and Google sheets and passkeys: an
+/// ID token addressed to this app must never be handed to another operator's server,
+/// which could replay it to one of these.
 const _hosts = String.fromEnvironment('WW_FIRST_PARTY_HOSTS');
 
 List<String> get firstPartyHosts => [

@@ -15,19 +15,21 @@ class AppConfig {
     required this.environment,
     required this.supabaseUrl,
     required this.supabasePublishableKey,
-    this.passkeys = true,
+    this.nativeSignIn = true,
     this.server,
   });
 
   /// The build combined with a chosen server. Passkeys stay with the project's own
   /// servers (ADR-018, decision 6).
-  factory AppConfig.forServer(AppConfig build, ServerInfo server) => AppConfig(
-    environment: build.environment,
-    supabaseUrl: server.supabaseUrl.toString().replaceAll(RegExp(r'/$'), ''),
-    supabasePublishableKey: server.publishableKey,
-    passkeys: isFirstParty(server.supabaseUrl),
-    server: server,
-  );
+  factory AppConfig.forServer(AppConfig build, ServerInfo server) {
+    return AppConfig(
+      environment: build.environment,
+      supabaseUrl: server.supabaseUrl.toString().replaceAll(RegExp(r'/$'), ''),
+      supabasePublishableKey: server.publishableKey,
+      nativeSignIn: isFirstParty(server.supabaseUrl),
+      server: server,
+    );
+  }
 
   /// Reads the compile-time defines. Call [validate] before using the result.
   factory AppConfig.fromEnvironment() => const AppConfig(
@@ -41,9 +43,8 @@ class AppConfig {
   final String supabasePublishableKey;
 
   /// Whether passkeys may be used: only with the project's own servers
-  /// (WW_FIRST_PARTY_HOSTS, whose domain is in the apps' associated domains) and with
-  /// builds that name their server.
-  final bool passkeys;
+  /// (WW_FIRST_PARTY_HOSTS) and builds that name their server.
+  final bool nativeSignIn;
 
   /// The chosen server, or null for a build that names its own (`SUPABASE_URL`).
   final ServerInfo? server;

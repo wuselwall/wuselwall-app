@@ -5,9 +5,7 @@
 // Authentication: a scheduled job has no user, so this function uses the service-role client
 // (serviceClient) and is protected by the shared secret in header `x-cron-secret`, compared in
 // constant time. Anything else is a 401 with no body. The service role is only used for
-// api.household_purge_due and the Apple revocation obligations (api.apple_revocation_due and
-// _record, which settle the open revocations of already deleted accounts); all three check the
-// role themselves as well.
+// api.household_purge_due, which checks the role itself as well.
 //
 // Scheduling: pg_cron (infra/jobs/schedule.sql) or infra/cron/household-purge.sh, daily, POSTs
 // here through the gateway on the Docker bridge with the secret from a root-only file. The
@@ -20,11 +18,6 @@ import {
   requirePost,
   serviceClient,
 } from "../_shared/client.ts";
-import { appleConfig } from "../_shared/apple.ts";
-import { rpcRevocationStore, settleRevocations } from "../_shared/apple_revocation.ts";
-
-// Well inside an Edge Function's wall-clock limit, with the purge itself done first.
-const APPLE_DAILY_BUDGET_MS = 60_000;
 
 /**
  * Compares two strings without leaking, through timing, where they first differ.
@@ -75,38 +68,9 @@ Deno.serve(async (req: Request): Promise<Response> => {
       counts.device_accounts ?? 0,
       "device accounts",
     );
-    // Apple revocations still open from deleted accounts (specs/22 item 6): retried here, once
-    // a day, within a time budget (each call to Apple is bounded as well). A failure is kept for
-    // tomorrow and never fails the purge; what the budget did not reach goes first tomorrow.
-    let apple: { revoked: number; kept: number; deferred: number; unconfigured: boolean } | null = null;
-    try {
-      const outcome = await settleRevocations(rpcRevocationStore(client), appleConfig(), {
-        budgetMs: APPLE_DAILY_BUDGET_MS,
-      });
-      apple = {
-        revoked: outcome.revoked,
-        kept: outcome.kept,
-        deferred: outcome.deferred,
-        unconfigured: outcome.unconfigured && outcome.tried > 0,
-      };
-      if (outcome.tried + outcome.deferred > 0) {
-        console.log(
-          "household-purge: Apple revocations",
-          outcome.revoked,
-          "revoked,",
-          outcome.kept,
-          outcome.unconfigured ? "kept (Apple values missing)," : "kept for retry,",
-          outcome.deferred,
-          "left for the next run",
-        );
-      }
-    } catch {
-      console.error("household-purge: Apple revocations not tried");
-    }
     return json({
       households: counts.households ?? 0,
       device_accounts: counts.device_accounts ?? 0,
-      apple_revocations: apple,
     });
   } catch (err) {
     return errorResponse(err);

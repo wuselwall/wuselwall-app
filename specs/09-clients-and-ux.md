@@ -21,7 +21,8 @@ Responsive layout still applies within each register — the adult register must
 phone — but the register itself is a device property.
 
 Before a device belongs to a household it shows the **front door**
-([20](20-onboarding.md#the-front-door)), the same on every device: continue with email, or connect this device as a family tablet or wall display. The register
+([20](20-onboarding.md#the-front-door)), the same on every device: continue with Apple,
+Google or email, or connect this device as a family tablet or wall display. The register
 is decided by what happens there: an adult's sign-in gives `adult`, and the pairing choice
 on the parent's phone gives `kid` or `kiosk`.
 
@@ -200,6 +201,34 @@ The board must never scroll and never break its geometry. In order:
 3. Beyond two presence bands for one person in a day, show the longest and a "+1".
 4. On a narrow screen, the weekend collapses into one half-width column.
 5. Never drop a zone. An empty zone is a statement; a missing zone is a bug.
+
+**Accessibility decision, 2026-10-17 (A6/A7, `t_da411148`).** The 24 logical-pixel
+minimum applies to all kiosk text, including initials, captions, counts and band
+labels, after any fitting or transforms. Truncate at that minimum; do not shrink
+text below it. Full labels remain available in the existing tap-through detail and
+semantic names. Keep overflow counts readable and preserve each zone's purpose.
+
+Respect system text scaling, including 200%, in all registers. Do not clamp or
+replace the kiosk's text scaler to make the board fit. At larger text sizes, show
+fewer summaries using the degradation rules above, while keeping the seven-day
+geometry, all zones, readable overflow indicators and access to full detail. The
+reference acceptance viewport is 1280×800 logical pixels in landscape, with the
+reference household, in German and English. No RenderFlex overflow, overlapping
+text or clipped controls is acceptable at 100%, 150% or 200%. This does not claim
+that every appointment title fits in full on the board.
+
+Past days and the night variant may recede through backgrounds, borders and visual
+emphasis, not by making their information unreadable. Do not apply a fixed opacity
+to an entire content subtree. Keep rendered text at **at least 4.5:1** against its
+actual composited background in light, dark and night, including past days and
+multi-day bands. This retains specs/17's existing stricter text-token rule rather
+than relaxing large kiosk text to the WCAG AA 3:1 allowance. Night lowers glare,
+not the acceptance threshold.
+
+The tap-through details are where the full labels live, so they never truncate: at
+every text scale their text wraps, their columns grow with it and nothing ends in an
+ellipsis or a line limit. Past days, finished appointments and cancelled lessons in a
+detail recede through their ground (`sunken`), with the same 4.5:1 rule (`t_10f0b348`).
 
 ### Touch behaviour
 

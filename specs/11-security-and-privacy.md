@@ -122,7 +122,8 @@ shortcut key is a bearer credential in the Shortcuts app, synced through iCloud.
 
 - **Most adults have no password at all.** Email codes leave nothing to stuff. Passwords that exist are at least 10 characters, with a strength meter in the
   app (S14 in [19](19-security-and-architecture-review.md)).
-- **TOTP is optional**, never part of sign-up (ADR-014: a mandatory one locks out a sole guardian who loses a phone).
+- **TOTP is optional**, never part of sign-up (ADR-014: a mandatory one locks out a sole
+  guardian who loses a phone).
   Passkeys are offered from the getting-started card once verified on hardware.
 - Email codes: 6 digits, 10 minutes, single use, a resend at most every 60 s, and
   verification attempts rate-limited per IP by Supabase Auth. The mail says what the code
@@ -176,10 +177,12 @@ This is where a self-hosted app usually leaks, quietly, through convenience:
 | A captcha on sign-up | None, decided 2026-10-11 ([Q44](14-open-questions.md)): rate limits, `code` mode until the gate, and the empty-account clean-up. |
 | Open and click tracking in sign-in mail | Switched off at the mail provider; plain text plus minimal HTML ([10](10-deployment-and-ops.md#email-setup)). |
 
-**Apple and Google as sign-in providers** were accepted from ADR-014 until their removal on 2026-10-17. **Still accepted: one SMTP provider** ([Q41](14-open-questions.md);
+**Accepted since ADR-014**: **one SMTP provider** ([Q41](14-open-questions.md);
 decided: Scaleway, EU), which sees email addresses and sign-in codes and nothing from
 the household. *(ADR-015's Supabase Inc. as Cloud's processor is gone with Cloud, [ADR-018](adr/ADR-018-self-hosted-only.md).)*
-**Since ADR-018 and until 2026-10-17**, the store app carried **Google's iOS sign-in library** for the first-party servers' native sign-in. It went with the sign-in itself; its privacy-manifest and store-label declarations go with that code change. Apple's sign-in was part of iOS and added no code.
+**Removed 2026-10-17:** Sign in with Apple and Google, and with them Google's iOS sign-in
+library that the store app carried for the first-party servers. No vendor sign-in SDK is
+left in the app.
 **Found 2026-10-13, fixed 2026-10-14:** the Android QR scanner used `mobile_scanner`, which bundles Google's **ML Kit** and sent device, app and performance data with a per-installation identifier to Google. The scanner now uses the `camera` plugin and the pure-Dart `zxing2` decoder on every platform, so no vendor SDK reads the camera image ([Q49](14-open-questions.md)).
 | A holiday import from a public API ([15](15-module-school-timetable.md#holidays)) | Fetched by the server only, with the host pinned in configuration and the result cached in the database. The browser never contacts it, and a failed fetch keeps the last good data (hand-entered holidays always work) rather than raising an error. Built 2026-10-14: the host is `openholidaysapi.org`, see the outbound list below. |
 | An external map or weather widget | If you want weather on the wall display, proxy it server-side so the app never contacts a third party directly, and cache aggressively. |
@@ -220,9 +223,7 @@ other households, and writes no audit row. The household export, which is guardi
 
 Outbound connections from the server should be enumerable on one hand: Let's Encrypt,
 the container registry, the backup target, APNs and FCM (for push), the OS package
-mirrors, and since ADR-014 the SMTP provider and Apple's and Google's token endpoints (since
-2026-10-17 only Apple's revoke endpoint, for accounts from before social sign-in was removed,
-[22](22-legacy-social-account-recovery.md)). Added
+mirrors, and since ADR-014 the SMTP provider. Added
 2026-10-14: the calendar addresses that guardians subscribe to (see above), chosen by the family,
 and `openholidaysapi.org` for the holiday cache.
 
@@ -281,10 +282,10 @@ With Supabase, row-level security is not defence in depth; it is the perimeter.
   approving a device that is not in front of you. That is the one social-engineering
   path, and it ends in a shared device a guardian can see and revoke in Geräte.
 - **Other servers cannot harvest sign-ins meant for a first-party server** ([ADR-018](adr/ADR-018-self-hosted-only.md),
-  decision 6; first argued for Cloud in ADR-015). Since 2026-10-17 the store app sends no
-  sign-in token of Apple or Google to any server, so there is none that could be replayed.
-  Passkeys remain limited to the first-party servers named at build time (`WW_FIRST_PARTY_HOSTS`).
-  The app shows the server's host on every sign-in screen.
+  decision 6; first argued for Cloud in ADR-015). The store app offers passkeys only
+  against the first-party servers named at build time (`WW_FIRST_PARTY_HOSTS`); against
+  any other server it offers email codes and passwords. The app shows the server's host
+  on every sign-in screen.
 - **Cross-household isolation is now about strangers.** The pgTAP cross-household cases
   (T9) are release-blocking, and the catalogue test pins the exact list of
   anon-callable functions.
@@ -303,7 +304,7 @@ With Supabase, row-level security is not defence in depth; it is the perimeter.
 - **Invitations.** An invitation is single use and valid 7 days; a second household cannot accept it. Guesses at codes and tokens are logged and limited in `app.invitation_attempt`.
 - **Founder codes.** A founder code is what starts a family in `code` mode. It is issued by the operator (`scripts/remote-setup-token.sh --founder`), shown once, and guesses are limited in `app.founder_attempt`. The exact thresholds are in the migrations.
 - **No autoconfirm.** `ENABLE_EMAIL_AUTOCONFIRM=false` and `enable_confirmations = true`: an address counts as the person's only after they confirm it, because invitations match confirmed addresses.
-- **Account deletion.** A fresh sign-in is required only when the server requires one (5 minutes), by email code. For accounts created before sign-in with Apple was removed, Apple access is revoked. Their Apple refresh token is kept only for that revocation, encrypted with `APPLE_TOKEN_KEY` (AES-GCM), which the database never sees and which must never change. Since 2026-10-17 the token outlives the account as a revocation obligation (`app.apple_revocation`) until Apple accepts the revocation, retried daily; the account is deleted before Apple is asked, and a hanging Apple delays the answer by 5 seconds at most ([22](22-legacy-social-account-recovery.md), [10](10-deployment-and-ops.md#retiring-social-sign-in-on-an-existing-server-2026-10-17)).
+- **Account deletion.** A fresh sign-in is required only when the server requires one (5 minutes), by email code.
 - **Mail hook.** The send-email hook checks its signature (`SEND_EMAIL_HOOK_SECRET`) before it sends anything, and it writes only the code mail, in the recipient's language.
 - **Account administration.** `account-delete` and the MFA reset verify the caller's JWT and act only on that caller, or, for the reset, on a co-guardian (ADR-014).
 
@@ -365,11 +366,11 @@ With Supabase, row-level security is not defence in depth; it is the perimeter.
 - [ ] nginx answers 404 outside the four API prefixes
 - [ ] Anonymous users disabled; `household_creation` is `code`; the stack runs on its own keys, not the CLI defaults
 - [ ] No `dev-setup` founder code on a live server; the household's own founder code used and consumed
-- [ ] Email code and password each tested on a real device; the
+- [ ] Sign-in with email code and password each tested on a real device; the
       email-code mail arrives (not in spam) in both languages
 - [ ] A stranger's fresh account sees nothing: one manual probe of `api` with its token
 - [ ] Invitation and pairing tested end to end, including an expired and a withdrawn invitation
-- [ ] Account deletion tested, including Apple access revocation for an account from before sign-in with Apple was removed
+- [ ] Account deletion tested
 - [ ] RLS catalogue test and every policy test green against the live schema
 - [ ] TLS working; HSTS and Always Use HTTPS on in Cloudflare
 - [ ] Content-Security-Policy set, and verified to break nothing

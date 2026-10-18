@@ -6,7 +6,7 @@ This repository holds both the planning documents and the code for WuselWall (se
 Setup-plan steps 3, 5, 6 and 8 are built (app shell, identity, online shopping list, the
 compose stack) and M1.1 is built, offline outbox included. Onboarding (step 9,
 [specs/20](specs/20-onboarding.md), ADR-014 and ADR-018 — self-hosted only, no WuselWall
-Cloud) is built: email codes (E1–E3), households and founder
+Cloud) is built: email codes and passwords (E1–E3), households and founder
 codes (H1/H2), invitations and pairing (links carry the server and open the app as universal
 links and App Links), the join and new-sign-in notices on Today, leaving, deleting and
 restoring a family, account deletion and the second-factor reset, localised mail
@@ -58,8 +58,7 @@ See [specs/03-architecture.md](specs/03-architecture.md),
   changes the app–server contract raises `api_version`; each app release supports the
   current and the previous one, so never assume every server runs the latest release.
 - No household's server is hard-coded in the app either: the store app has no default
-  backend. Native passkeys only for `WW_FIRST_PARTY_HOSTS`. Sign-in with Apple and Google was removed
-  (see the 2026-10-17 decision in [specs/00](specs/00-brief-and-decisions.md)).
+  backend. Passkeys only for `WW_FIRST_PARTY_HOSTS`.
 
 - Tables live in the `app` schema and are never exposed. PostgREST exposes only `api`:
   `security_invoker` views for reads, one function per write use case.
@@ -116,36 +115,27 @@ See [specs/03-architecture.md](specs/03-architecture.md),
   `scripts/remote-stack.sh`, with migrations through `scripts/remote-migrate.sh`; a server
   from a release is driven by `server/wuselwall` (see specs/10).
 
-## Website (`website/`)
+## Marketing website (separate repository)
 
-Astro site at `https://wuselwall.app/` ([ADR-016](specs/adr/ADR-016-public-website.md),
-[ADR-017](specs/adr/ADR-017-wuselwall-app-domain.md)): marketing page, Impressum, Datenschutz,
-German at `/` and English at `/en/`. The Flutter web app is served by each server, not by
-the website. Every user-facing string lives in `website/src/i18n/index.ts` in **both** languages;
-operator and legal data only in `website/src/config/site.ts` (`TODO` values fail
-`LEGAL_STRICT=1` builds). No cookies, no third-party requests, no analytics. Deploy with
-`scripts/remote-web.sh deploy`, independent of the Supabase stack. App screenshots on the
-home page are WebP copies of the docs' shots (`npm run sync-screens` in `website/`, after
-`npm run docs:screenshots`); the link-preview images come from `node scripts/og-image.mjs`.
-The official App Store and Google Play badges (`public/badges/`, unmodified artwork) appear
-only once `site.stores` holds the real listing URLs. The privacy policy describes every
-third party the apps or the site talk to: a new SDK or outbound host updates it, in both
-languages, in the same change. Check with
-`cd website && npm run build`. When you add a page, add its route in both languages and its
-`paths` entry so `hreflang` and the sitemap stay right.
+The private `wuselwall/wuselwall-website` repository owns the Astro marketing site,
+legal pages, well-known app-link files, screenshots and independent website CI/CD.
+This app repository does not build or deploy it. See
+[ADR-019](specs/adr/ADR-019-website-repository-and-docs-pages.md) and the
+[cutover plan](specs/website-and-docs-migration.md).
 
-**When a feature is finished or the next step changes, update the "Where we are" list in the
-same change** — `status` in `website/src/i18n/index.ts`, both languages, states `fertig`/`done`,
-`als Nächstes`/`up next`, `geplant`/`planned`. It is the public progress, written for
-families: features they can use, not setup-plan steps or milestone numbers. Keep it in step
-with the status line at the top of this file and the roadmap ([specs/13](specs/13-roadmap.md)).
-The live site changes only after `scripts/remote-web.sh deploy`.
+When a feature or next step changes, update this repository's status and roadmap,
+and coordinate a separate bilingual public-progress change in the website repository.
+Do not require access to the private marketing repository to build or contribute to the
+app/backend/docs. Export screenshots from this repository explicitly; the marketing
+repository keeps its own committed copies and never checks out private app source in CI.
 
 ## End-user documentation (`docs/`)
 
 VitePress site in German (root) and English (`/en/`), written for the family, not for
-developers (the specification is `specs/`), published at `https://wuselwall.app/docs/` by
-`.github/workflows/docs.yml` on every push to `main`. Screenshots come from the Flutter web
+developers (the specification is `specs/`). `.github/workflows/docs.yml` prepares GitHub
+Pages publishing at `https://docs.wuselwall.app/`, opt-in through `DOCS_PAGES_ENABLED`
+only after hosting eligibility, Pages and DNS are configured. Until cutover, preserve
+the existing `wuselwall.app/docs/` service and links. Screenshots come from the Flutter web
 demo (`app/lib/main_demo.dart`, in-memory data) driven by Playwright
 (`docs/tools/screenshots.mjs`): every shot in both languages and both themes (`name.png`,
 `name-dark.png`). They are build output, not committed: `npm run docs:screenshots` makes

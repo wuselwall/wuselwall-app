@@ -86,7 +86,7 @@ Deno.test("checkRow refuses a half-migrated answer", () => {
   assertEquals(checkRow(row), row);
 });
 
-Deno.test("discoveryDocument offers password sign-in only", () => {
+Deno.test("discoveryDocument shapes the row", () => {
   const doc = discoveryDocument(row, "sb_publishable_abc", "https://api.example.org");
   assertEquals(doc, {
     wuselwall: 1,
@@ -95,7 +95,6 @@ Deno.test("discoveryDocument offers password sign-in only", () => {
     api_version: 1,
     min_app_version: "1.0.0",
     household_creation: "token",
-    // No apple or google: social sign-in was removed. Earlier apps read a missing key as off.
     sign_in: { password: true },
     features: ["calendar", "shopping"],
   });
@@ -104,5 +103,4 @@ Deno.test("discoveryDocument offers password sign-in only", () => {
 Deno.test("discoveryDocument leaves the address out when it is unknown", () => {
   const doc = discoveryDocument(row, "k", undefined);
   assertEquals("supabase_url" in doc, false);
-  assertEquals(doc.sign_in, { password: true });
 });

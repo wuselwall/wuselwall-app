@@ -102,6 +102,7 @@ class EventDraft {
   /// before its start.
   void moveStart(DateTime to) {
     start = to;
+    _timedEnd = null;
     if (isAllDay) {
       if (dateOnly(end).isBefore(dateOnly(start))) end = start;
     } else {
@@ -112,14 +113,36 @@ class EventDraft {
   /// Sets the end and remembers the length when it is after the start.
   void setEnd(DateTime to) {
     end = to;
+    _timedEnd = null;
     final length = _positive(end.difference(start));
     if (!isAllDay && length != null) duration = length;
   }
 
-  /// Switching to all-day keeps the dates; back to timed restores a valid end.
+  /// The timed end before the switch to all-day, restored on the way back while
+  /// neither date was changed in between.
+  DateTime? _timedEnd;
+
+  /// Switching to all-day keeps the days the event covers: a timed end is an
+  /// exclusive instant, an all-day end date is inclusive (specs/04), so an end at
+  /// midnight belongs to the day before (23:00–00:00 stays one day). Back to timed
+  /// restores the end it had, or a valid one.
   void setAllDay(bool value) {
+    if (value == isAllDay) return;
     isAllDay = value;
-    if (!value && !end.isAfter(start)) end = start.add(duration);
+    if (value) {
+      _timedEnd = end;
+      if (end.isAfter(start) && end == dateOnly(end)) {
+        end = DateTime(end.year, end.month, end.day - 1);
+      }
+    } else {
+      final restored = _timedEnd;
+      _timedEnd = null;
+      if (restored != null) {
+        end = restored;
+      } else if (!end.isAfter(start)) {
+        end = start.add(duration);
+      }
+    }
   }
 
   /// The first problem with the draft, or null.

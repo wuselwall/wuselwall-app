@@ -1,25 +1,9 @@
 # Advisories osv-scanner (ci.yml, job audit) accepts for now. Every entry has a reason
 # and an expiry, so it comes back for review instead of being silenced for good.
-
-# VitePress 1.6.4 (docs tooling only) pins vite 5 / esbuild 0.21. All four concern the
-# local dev server (`npm run docs:dev`) — mostly Windows paths — not the built site.
-# VitePress 2 is still alpha; revisit when it is stable.
-[[IgnoredVulns]]
-id = "GHSA-67mh-4wv8-2f99" # esbuild: dev server answers cross-origin requests
-ignoreUntil = 2027-01-31
-reason = "Dev server of the docs tooling only; no fix in VitePress 1.x"
-
-[[IgnoredVulns]]
-id = "GHSA-4w7w-66w2-5vf9" # vite: path traversal in optimized deps .map handling
-ignoreUntil = 2027-01-31
-reason = "Dev server of the docs tooling only; no fix in VitePress 1.x"
-
-[[IgnoredVulns]]
-id = "GHSA-fx2h-pf6j-xcff" # vite: server.fs.deny bypass on Windows
-ignoreUntil = 2027-01-31
-reason = "Dev server of the docs tooling only, Windows only; no fix in VitePress 1.x"
-
-[[IgnoredVulns]]
-id = "GHSA-v6wh-96g9-6wx3" # launch-editor via vite: NTLMv2 hash disclosure on Windows
-ignoreUntil = 2027-01-31
-reason = "Dev server of the docs tooling only, Windows only; no fix in VitePress 1.x"
+#
+# None at the moment. The root docs toolchain was patched instead: the root package.json
+# overrides esbuild to 0.25.x and vite to 6.4.x (VitePress 1.6.4 declares vite 5, so the
+# vite override is outside its declared range; the docs build and dev server were checked).
+# The four advisories this file used to accept (GHSA-67mh-4wv8-2f99, GHSA-4w7w-66w2-5vf9,
+# GHSA-fx2h-pf6j-xcff, GHSA-v6wh-96g9-6wx3) were dev-server only. If an accepted exception
+# is needed again, add it here with a reason and an expiry.

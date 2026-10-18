@@ -68,7 +68,7 @@ GitHub sieht dabei, wer die Web-App aufruft, aber nicht eure Daten: Die gehen di
 
 Neue WuselWall-Versionen holst du in eure Kopie: auf GitHub **Sync fork → Update branch**. Danach **Actions → deploy-supabase → Run workflow**, wie beim ersten Mal. Um Postgres, Sicherheitsupdates und HTTPS kümmert sich Supabase.
 
-Kommt ihr von einer Version mit Anmeldung über Apple oder Google, lies vorher [Update von einer Version mit Apple- und Google-Anmeldung](/server/extras#social-stilllegen).
+Kommst du von einer Version mit Anmeldung über Apple oder Google? Lies zuerst [Update von einer Version mit Apple- und Google-Anmeldung](/server/extras#social-stilllegen).
 
 ## Backups
 

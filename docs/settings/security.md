@@ -4,23 +4,11 @@ Anmeldung und Sicherheit gibt es nur auf dem **persönlichen Handy** eines Erzie
 
 ## Anmeldung
 
-Hier steht, womit du dich anmelden kannst: der **Code per E-Mail** und ein **Passwort** (siehe [Konto und Familie](/settings/account#passwort)).
+Hier steht, womit du dich anmelden kannst: der **Code per E-Mail**, den es immer gibt, und ein **Passwort** (siehe [Konto und Familie](/settings/account#passwort)).
 
 <Shot name="settings-sign-in" alt="Einstellungen → Anmeldung" />
 
 - **Passwort**: Mit **Passwort festlegen** oder **Passwort ändern** richtest du eins ein.
-- **Entfernen**: nimmt eine Methode wieder weg. Die letzte bleibt immer, damit du dich nicht aussperrst.
-
-## Früher mit Apple oder Google angemeldet? {#apple-google-frueher}
-
-Die Anmeldung mit Apple oder Google gibt es in WuselWall nicht mehr. Dein Konto, dein Profil und deine Familie bleiben, wie sie sind; du meldest dich jetzt mit einem **Code per E-Mail** an, an **dieselbe Adresse**, die dein Konto schon hat.
-
-- **Mit Google**, oder mit Apple und deiner normalen Adresse: Gib diese Adresse bei der Anmeldung ein und fordere einen Code an.
-- **Mit Apple und „E-Mail-Adresse verbergen“**: Die Adresse deines Kontos ist die Weiterleitungsadresse von Apple, sie endet auf `@privaterelay.appleid.com`. Du findest sie in den Einstellungen deines Apple-Accounts unter **Mit Apple anmelden**, bei **WuselWall**. Gib diese Adresse ein, nicht deine normale Apple-ID-Adresse.
-- **Probier es zuerst auf einem zweiten Gerät aus**, während dein Handy angemeldet bleibt. Melde dich nicht zum Ausprobieren ab.
-- **Kommt kein Code an?** Sag der Person Bescheid, die euren Server betreut. Leg kein neues Konto an: Es gehörte nicht zu deiner Familie.
-
-Bist du angemeldet, kannst du hier auch ein **Passwort** festlegen.
 
 ## Zwei-Faktor-Anmeldung
 

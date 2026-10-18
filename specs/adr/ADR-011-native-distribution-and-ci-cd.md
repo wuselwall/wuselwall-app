@@ -8,8 +8,6 @@ testing or production), decided in [Q42](../14-open-questions.md) · Amended by
 [ADR-015](ADR-015-saas-and-self-hosted-flavours.md): **public App Store and Google Play
 listings** once the developer accounts exist; store builds use `env/cloud.json`
 
-**Amended 2026-10-17 ([00](../00-brief-and-decisions.md#2026-10-17--social-sign-in-removed)):** the auth deep link `ch.goomba.wuselwall://login-callback/` below is no longer in `Info.plist`, the Android manifest or the Supabase redirect URLs: it served social sign-in, which was removed. The identifier stands.
-
 ## Context
 
 A PWA is distributed by visiting a URL. Native apps are not: every build for an iPhone or

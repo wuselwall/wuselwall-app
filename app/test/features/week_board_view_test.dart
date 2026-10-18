@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/app/app.dart';
@@ -12,6 +14,7 @@ import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_geometry.dart';
 import 'package:wuselwall/features/board/ui/board_grid.dart';
 import 'package:wuselwall/features/board/ui/board_presence.dart';
+import 'package:wuselwall/features/board/ui/board_zones.dart';
 import 'package:wuselwall/features/board/ui/week_board_page.dart';
 import 'package:wuselwall/features/home/ui/register_home_page.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
@@ -340,6 +343,7 @@ Future<void> _pumpBoard(
   Shade shade = Shade.light,
   Locale locale = const Locale('de'),
   bool night = false,
+  double textScale = 1,
 }) async {
   t.view.physicalSize = size;
   t.view.devicePixelRatio = 1;
@@ -358,6 +362,11 @@ Future<void> _pumpBoard(
         localizationsDelegates: localizationsDelegates,
         supportedLocales: supportedLocales,
         locale: locale,
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(context)
+              .copyWith(textScaler: TextScaler.linear(textScale)),
+          child: child!,
+        ),
         home: const Scaffold(body: SafeArea(child: WeekBoardPage())),
       ),
     ),
@@ -397,6 +406,21 @@ Future<void> _pumpKiosk(WidgetTester t) async {
 }
 
 void main() {
+  setUpAll(() async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    for (final family in {
+      'AtkinsonHyperlegibleNext': ['Regular', 'SemiBold', 'Bold', 'ExtraBold'],
+      'BarlowSemiCondensed': ['Medium', 'SemiBold', 'Bold'],
+    }.entries) {
+      final loader = FontLoader(family.key);
+      for (final weight in family.value) {
+        loader.addFont(
+          rootBundle.load('assets/fonts/${family.key}-$weight.ttf'),
+        );
+      }
+      await loader.load();
+    }
+  });
   group('the week board', () {
     testWidgets('lays out the week at 1280x800 without exceptions', (t) async {
       await _pumpBoard(t);
@@ -569,12 +593,31 @@ void main() {
       expect(find.text('+3 more'), findsOneWidget);
     });
 
+    testWidgets('a presence cell names its member as well as the day (A10)', (
+      t,
+    ) async {
+      final handle = t.ensureSemantics();
+      await _pumpBoard(t);
+      expect(find.bySemanticsLabel(RegExp(r'^Sabine, \S')), findsWidgets);
+      handle.dispose();
+    });
+
     testWidgets('opens the family task board from the footer', (t) async {
       await _pumpBoard(t);
       await t.tap(find.text('Heute offen'));
       await t.pump(const Duration(milliseconds: 400));
       expect(t.takeException(), isNull);
       expect(find.text('Zurück zur Woche'), findsOneWidget);
+
+      // A6: the actual rendered hit area, not a nominal minimumSize, is
+      // >=56x56 logical px for the kiosk's "back to week" action.
+      final backButton = find.ancestor(
+        of: find.text('Zurück zur Woche'),
+        matching: find.byType(FilledButton),
+      );
+      final backSize = t.getSize(backButton);
+      expect(backSize.width, greaterThanOrEqualTo(56));
+      expect(backSize.height, greaterThanOrEqualTo(56));
 
       await t.tap(find.text('Zurück zur Woche'));
       await t.pump(const Duration(milliseconds: 400));
@@ -634,6 +677,316 @@ void main() {
             .read(boardAllEventsProvider),
         isFalse,
       );
+    });
+  });
+
+  group('A6/A7 scaling and legibility matrix (t_0b191bb3)', () {
+    // A non-reference household: three adults and two children, long names, so no
+    // fixture-shaped assumption (four members, short names) hides a layout bug.
+    Map<String, Object?> bigHouseholdJson() {
+      final json = _boardJson();
+      json['members'] = [
+        {
+          'id': 'a1',
+          'display_name': 'Maximiliane',
+          'color': '#7B3FE4',
+          'kind': 'adult',
+          'baseline': {'state': 'home_office', 'label': 'Heimarbeitsplatz'},
+        },
+        {
+          'id': 'a2',
+          'display_name': 'Bartholomäus',
+          'color': '#08737F',
+          'kind': 'adult',
+          'baseline': {'state': 'working', 'label': 'Büro Hauptbahnhof'},
+        },
+        {
+          'id': 'a3',
+          'display_name': 'Konstantina',
+          'color': '#9A5300',
+          'kind': 'adult',
+        },
+        {
+          'id': 'k1',
+          'display_name': 'Franziskaneria',
+          'color': '#736200',
+          'kind': 'child',
+        },
+        {
+          'id': 'k2',
+          'display_name': 'Zbigniew',
+          'color': '#C2255C',
+          'kind': 'child',
+        },
+      ];
+      final days = (json['days'] as List).cast<Map<String, Object?>>();
+      for (var i = 0; i < days.length; i++) {
+        days[i] = _dayJson(
+          i,
+          events: [
+            _event(
+              'e$i-1',
+              'Elternabend zur Schulfahrt',
+              starts: '10:00',
+              ends: '11:00',
+              who: ['a1', 'a2'],
+              key: true,
+            ),
+            _event(
+              'e$i-2',
+              'Zahnarzttermin',
+              starts: '13:00',
+              ends: '13:30',
+              who: ['k1'],
+              key: true,
+            ),
+            _event(
+              'e$i-3',
+              'Fußballtraining',
+              starts: '16:00',
+              ends: '17:30',
+              who: ['k2'],
+              key: true,
+            ),
+          ],
+          school: [
+            _school(
+              'k1',
+              starts: '08:00',
+              ends: '14:25',
+              notable: ['Schwimmen'],
+              careUntil: '16:00',
+              careLabel: 'Hort',
+            ),
+          ],
+          meal: _meal(
+            'dinner',
+            time: '18:30',
+            title: 'Gefüllte Paprika mit Couscous',
+            cook: 'a3',
+            eating: ['a1', 'a2', 'a3', 'k1', 'k2'],
+            guests: 2,
+          ),
+        );
+      }
+      json['days'] = days;
+      // A multi-day band across the whole week, so it is drawn past, today and
+      // future at once.
+      json['presence'] = [
+        {
+          'id': 'trip',
+          'member_id': 'a2',
+          'state': 'travel',
+          'label': 'Dienstreise mit Zwischenstopp',
+          'first_day': '2026-10-12',
+          'last_day': '2026-10-18',
+        },
+      ];
+      return json;
+    }
+
+    final matrixShades = Shade.values;
+    final matrixScales = [1.0, 1.5, 2.0];
+    final matrixLocales = [const Locale('de'), const Locale('en')];
+
+    for (final shade in matrixShades) {
+      for (final scale in matrixScales) {
+        for (final locale in matrixLocales) {
+          for (final fixture in ['crowded', 'reference-split', 'six-members']) {
+            testWidgets('1280x800, ${locale.languageCode}, ${shade.name}, '
+                '${scale}x: $fixture targets, fonts and clips', (t) async {
+              final json = fixture == 'reference-split'
+                  ? _boardJson()
+                  : bigHouseholdJson();
+              if (fixture == 'six-members') {
+                (json['members'] as List).add({
+                  'id': 'a4',
+                  'display_name': 'Alexandra',
+                  'color': '#08737F',
+                  'kind': 'adult',
+                });
+              }
+              if (fixture == 'reference-split') {
+                (json['presence'] as List).add({
+                  'id': 'care',
+                  'member_id': 'lotta',
+                  'state': 'childcare',
+                  'label': 'Hort am Nachmittag',
+                  'first_day': '2026-10-14',
+                  'last_day': '2026-10-14',
+                  'starts': '14:25',
+                  'ends': '16:00',
+                });
+                (((json['days'] as List)[3] as Map)['meal'] as Map)['title'] =
+                    'Kartoffelgemüseauflauf';
+              }
+              await _pumpBoard(
+                t,
+                snapshot: BoardSnapshot(
+                  board: WeekBoard.fromJson(json),
+                  fetchedAt: DateTime(2026, 10, 14, 14, 4),
+                ),
+                shade: shade,
+                locale: locale,
+                textScale: scale,
+                night: shade == Shade.night,
+              );
+              // No RenderFlex overflow, no failed layout assertion.
+              expect(t.takeException(), isNull);
+              // The geometry degrades (fewer events shown, overflow counted) but
+              // never drops a day or a zone: all seven weekday short names (or
+              // "Heute") are present once each.
+              expect(find.byType(DayHeaderRow), findsOneWidget);
+              final targets = <Rect>[];
+              for (final element in find.byType(BoardTap).evaluate()) {
+                final box = element.renderObject! as RenderBox;
+                final rect = MatrixUtils.transformRect(
+                  box.getTransformTo(null),
+                  Offset.zero & box.size,
+                );
+                expect(
+                  rect.width,
+                  greaterThanOrEqualTo(56),
+                  reason: '${(element.widget as BoardTap).label}: $rect',
+                );
+                expect(
+                  rect.height,
+                  greaterThanOrEqualTo(56),
+                  reason: '${(element.widget as BoardTap).label}: $rect',
+                );
+                expect(rect.bottom, lessThanOrEqualTo(800));
+                for (final previous in targets) {
+                  expect(
+                    rect.overlaps(previous.deflate(0.01)),
+                    isFalse,
+                    reason: '$rect overlaps $previous',
+                  );
+                }
+                targets.add(rect);
+              }
+              for (final element in find.byType(RichText).evaluate()) {
+                final paragraph = element.renderObject! as RenderParagraph;
+                final text = paragraph.text.toPlainText();
+                if (text.runes.every((r) => r >= 0xe000 && r <= 0xf8ff)) {
+                  continue; // Icon glyphs.
+                }
+                final transform = paragraph.getTransformTo(null);
+                final x =
+                    MatrixUtils.transformPoint(transform, const Offset(1, 0)) -
+                    MatrixUtils.transformPoint(transform, Offset.zero);
+                void checkSpan(InlineSpan span) {
+                  if (span.style?.fontSize case final size?) {
+                    expect(
+                      paragraph.textScaler.scale(size) * x.distance,
+                      greaterThanOrEqualTo(24 * scale - 0.01),
+                      reason: text,
+                    );
+                  }
+                  if (span is TextSpan) {
+                    for (final child in span.children ?? <InlineSpan>[]) {
+                      checkSpan(child);
+                    }
+                  }
+                }
+
+                checkSpan(paragraph.text);
+                final bounds = MatrixUtils.transformRect(
+                  transform,
+                  Offset.zero & paragraph.size,
+                );
+                for (
+                  RenderObject? parent = paragraph.parent;
+                  parent != null;
+                  parent = parent.parent
+                ) {
+                  if (parent is RenderClipRect) {
+                    final clip = MatrixUtils.transformRect(
+                      parent.getTransformTo(null),
+                      Offset.zero & parent.size,
+                    );
+                    expect(
+                      bounds.top,
+                      greaterThanOrEqualTo(clip.top - 0.1),
+                      reason: '$text clipped at top',
+                    );
+                    expect(
+                      bounds.bottom,
+                      lessThanOrEqualTo(clip.bottom + 0.1),
+                      reason: '$text clipped at bottom',
+                    );
+                  }
+                }
+              }
+            });
+          }
+        }
+      }
+    }
+
+    testWidgets(
+      'at 200% text the crowded fixture still shows an overflow count, not an overflow error',
+      (t) async {
+        await _pumpBoard(
+          t,
+          snapshot: BoardSnapshot(
+            board: WeekBoard.fromJson(bigHouseholdJson()),
+            fetchedAt: DateTime(2026, 10, 14, 14, 4),
+          ),
+          textScale: 2,
+        );
+        expect(t.takeException(), isNull);
+        // The reduced appointment zone summarises all three events in one
+        // containing day cell: one title and a readable count for the other two.
+        expect(find.text('+2'), findsWidgets);
+        expect(t.getSize(find.byType(TermineRows)).height, 56);
+      },
+    );
+
+    testWidgets('A6: day-header cells and member-row names are each >=56x56, '
+        'and none overlap', (t) async {
+      await _pumpBoard(t);
+
+      // A compact member has one containing full-width row action, including
+      // both school and care. The matrix above checks EVERY actual BoardTap.
+      final dayCells = find.descendant(
+        of: find.byType(DayHeaderRow),
+        matching: find.byType(BoardTap),
+      );
+      final memberNames = find.ancestor(
+        of: find.text('Lotta'),
+        matching: find.byType(BoardTap),
+      );
+
+      final finders = [
+        for (var i = 0; i < t.widgetList(dayCells).length; i++) dayCells.at(i),
+        memberNames.first,
+      ];
+      expect(finders.length, 8);
+
+      final rects = <Rect>[];
+      for (final finder in finders) {
+        final size = t.getSize(finder);
+        expect(size.width, greaterThanOrEqualTo(56));
+        expect(size.height, greaterThanOrEqualTo(56));
+        rects.add(
+          Rect.fromLTWH(
+            t.getTopLeft(finder).dx,
+            t.getTopLeft(finder).dy,
+            size.width,
+            size.height,
+          ),
+        );
+      }
+      // Adjacent-target behaviour: no two tap targets' hit areas overlap.
+      for (var i = 0; i < rects.length; i++) {
+        for (var j = i + 1; j < rects.length; j++) {
+          expect(
+            rects[i].overlaps(rects[j]),
+            isFalse,
+            reason: '#$i overlaps #$j: ${rects[i]} vs ${rects[j]}',
+          );
+        }
+      }
     });
   });
 }

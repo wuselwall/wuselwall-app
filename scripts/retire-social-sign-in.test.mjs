@@ -41,15 +41,16 @@ function again(file) {
   return { log, out: fs.readFileSync(file, 'utf8'), mode: fs.statSync(file).mode & 0o777 };
 }
 
-test('removes the login settings and the native callback, keeps everything else', () => {
+test('removes every Apple and Google value and the native callback, keeps everything else', () => {
   const { out, mode } = run(OLD_ENV);
-  for (const k of ['APPLE_ENABLED', 'APPLE_CLIENT_IDS', 'APPLE_SECRET', 'GOOGLE_ENABLED', 'GOOGLE_CLIENT_IDS', 'GOOGLE_CLIENT_SECRET']) {
+  for (const k of ['APPLE_ENABLED', 'APPLE_CLIENT_IDS', 'APPLE_SECRET', 'GOOGLE_ENABLED', 'GOOGLE_CLIENT_IDS', 'GOOGLE_CLIENT_SECRET',
+    'APPLE_TEAM_ID', 'APPLE_KEY_ID', 'APPLE_PRIVATE_KEY', 'APPLE_CLIENT_ID', 'APPLE_TOKEN_KEY']) {
     assert.doesNotMatch(out, new RegExp(`^${k}=`, 'm'), k);
   }
   assert.match(out, /^ADDITIONAL_REDIRECT_URLS='https:\/\/app\.example\.org\/\*\*'$/m);
   assert.doesNotMatch(out, /login-callback/);
-  // The five revocation values and unrelated settings stay byte for byte.
-  const keep = /^(APPLE_TEAM_ID|APPLE_KEY_ID|APPLE_PRIVATE_KEY|APPLE_CLIENT_ID|APPLE_TOKEN_KEY|JWT_SECRET|SITE_URL|GOOGLE_PROJECT_ID)=/;
+  // Unrelated settings, the upstream Google placeholder included, stay byte for byte.
+  const keep = /^(JWT_SECRET|SITE_URL|GOOGLE_PROJECT_ID)=/;
   for (const line of OLD_ENV.split('\n').filter((l) => keep.test(l))) {
     assert.ok(out.split('\n').includes(line), line);
   }
@@ -62,7 +63,8 @@ test('prints names only, never a value', () => {
   assert.match(log, /removed APPLE_SECRET/);
   assert.match(log, /removed GOOGLE_CLIENT_SECRET/);
   assert.match(log, /removed the native OAuth callback/);
-  for (const value of ['apple-login-client-secret', 'google-oauth-secret', 'googleusercontent', 'keep-me', 'TEAM123456']) {
+  assert.match(log, /removed APPLE_TOKEN_KEY/);
+  for (const value of ['apple-login-client-secret', 'google-oauth-secret', 'googleusercontent', 'keep-me', 'TEAM123456', 'AAECAwQF']) {
     assert.ok(!log.includes(value), value);
   }
 });
@@ -75,7 +77,7 @@ test('a second run changes nothing', () => {
 });
 
 test('a fresh .env from the current make-env.mjs is left alone', () => {
-  const fresh = "SITE_URL='https://app.example.org/'\nADDITIONAL_REDIRECT_URLS='https://app.example.org/**'\nAPPLE_TOKEN_KEY='x'\n";
+  const fresh = "SITE_URL='https://app.example.org/'\nADDITIONAL_REDIRECT_URLS='https://app.example.org/**'\nGOOGLE_PROJECT_ID='unused'\n";
   const { out, log } = run(fresh);
   assert.equal(out, fresh);
   assert.match(log, /nothing left to retire/);

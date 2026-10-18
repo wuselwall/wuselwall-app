@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
@@ -131,8 +133,6 @@ class TimetableGrid extends StatelessWidget {
               children: [
                 Text(
                   extra.subject,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
                   style: detailUi(
                     24,
                     context.ink,
@@ -245,9 +245,10 @@ class TimetableGrid extends StatelessWidget {
     ),
   );
 
-  /// A break: a slim row with the Pause label in the left column and empty cells.
+  /// A break: a slim row with the Pause label in the left column and empty cells. It
+  /// is as tall as its label at the current text scale, so the label is never cut.
   Widget _breakRow(BuildContext context, int? raised) => SizedBox(
-    height: _breakHeight,
+    height: math.max(_breakHeight, MediaQuery.textScalerOf(context).scale(24)),
     child: Row(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -343,23 +344,14 @@ class LessonBody extends StatelessWidget {
     final whereStyle = dense
         ? boardCell(24, weight: FontWeight.w600, color: ww.ink2, height: 1)
         : detailUi(24, ww.ink2);
+    // No line limits, also in the grid's dense cell: a long name or room wraps and its
+    // row grows, so nothing ends in an ellipsis at 150 or 200 % text (t_10f0b348).
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: titleStyle,
-        ),
-        if (where.isNotEmpty)
-          Text(
-            where,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: whereStyle,
-          ),
+        Text(title, style: titleStyle),
+        if (where.isNotEmpty) Text(where, style: whereStyle),
         if (status != null)
           Text(
             status,

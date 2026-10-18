@@ -14,7 +14,11 @@ captcha; public store listings.
 
 **Amended 2026-10-13 by [ADR-017](ADR-017-wuselwall-app-domain.md):** the links domain is decided — `wuselwall.app` ([Q45](../14-open-questions.md)).
 
-**Amended 2026-10-17 — social sign-in removed ([00](../00-brief-and-decisions.md#2026-10-17--social-sign-in-removed), [22](../22-legacy-social-account-recovery.md)):** the Apple and Google parts of this decision — the title's providers, Sign in with Apple and Google in decision 1 (and their mention in decision 6), the Apple client secret and Google clients under Consequences — are superseded. Adults sign in with an email code, a password, or on first-party hosts a passkey; accounts from before keep their identity and sign in with an email code to their existing address. The text below is the decision as taken on 2026-10-11 and is not rewritten.
+**Amended 2026-10-17 (user):** no Sign in with Apple or Google. Adults sign in with an email
+code or a password; passkeys stay as the optional extra on first-party servers. Decision 2's
+two providers, the Apple token revocation of decision 7 and the Settings linking of
+identities are gone, with the `google_sign_in` and `sign_in_with_apple` packages, the
+`apple-token` function and `app.apple_token`. The rest of this ADR stands.
 
 ## Context
 

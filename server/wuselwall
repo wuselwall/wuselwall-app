@@ -165,7 +165,7 @@ cmd_install() {
   if [ -n "$env_from" ]; then
     say "Taking over the secrets of $env_from"
     cp "$env_from" "$STACK/.env"
-    # An .env from before social sign-in was removed: its login settings go (specs/22).
+    # An .env from before social sign-in was removed: its Apple and Google values go (specs/10).
     sh "$STACK/retire-social-sign-in.sh" "$STACK/.env"
   else
     say "Generating the secrets"
@@ -247,8 +247,8 @@ cmd_update() {
     fi
   fi
   say "Updating the stack to $(cat "$ROOT/VERSION")"
-  # Social sign-in is gone: the old login settings and the native OAuth callback leave the .env
-  # before Auth restarts; the Apple values for revoking old tokens stay (specs/22).
+  # Social sign-in is gone: its Apple and Google values and the native OAuth callback leave
+  # the .env before Auth restarts (specs/10).
   sh "$STACK/retire-social-sign-in.sh" "$STACK/.env"
   compose up -d --remove-orphans
   wait_for_db

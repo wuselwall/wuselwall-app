@@ -136,143 +136,133 @@ class SchoolDayDetailBody extends ConsumerWidget {
         isToday && startMinutes <= nowMinutes && nowMinutes < endMinutes;
     final lesson = entry.lesson;
 
+    // Past rows keep full-colour text (specs/17's 4.5:1, t_10f0b348): a past lesson
+    // says "vorbei" in words, a break needs no marking.
     if (entry.isBreak) {
       // A break is one slim line, indented to the tile column.
-      return Opacity(
-        opacity: past ? 0.5 : 1,
-        child: Padding(
-          padding: const EdgeInsets.only(
-            left: _timeColumnWidth,
-            bottom: Tokens.space2,
-          ),
-          child: Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(text: l10n.boardBreak, style: detailUi(24, ww.ink3)),
-                const TextSpan(text: ' '),
-                TextSpan(
-                  text: context.span(entry.starts, entry.ends),
-                  style: detailNum(24, ww.ink3, weight: FontWeight.w500),
-                ),
-              ],
-            ),
+      return Padding(
+        padding: const EdgeInsets.only(
+          left: _timeColumnWidth,
+          bottom: Tokens.space2,
+        ),
+        child: Text.rich(
+          TextSpan(
+            children: [
+              TextSpan(text: l10n.boardBreak, style: detailUi(24, ww.ink3)),
+              const TextSpan(text: ' '),
+              TextSpan(
+                text: context.span(entry.starts, entry.ends),
+                style: detailNum(24, ww.ink3, weight: FontWeight.w500),
+              ),
+            ],
           ),
         ),
       );
     }
 
-    return Opacity(
-      opacity: past ? 0.5 : 1,
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: Tokens.space3),
-        child: Container(
-          padding: const EdgeInsets.only(left: Tokens.space3),
-          decoration: current
-              ? BoxDecoration(
-                  border: Border(
-                    left: BorderSide(color: context.accent, width: 3),
-                  ),
-                )
-              : null,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                width: _timeColumnWidth,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      context.span(entry.starts, entry.ends),
-                      style: detailNum(
-                        26,
-                        context.ink,
-                        weight: FontWeight.w700,
-                      ),
-                    ),
-                    if (entry.periodLabel != null)
-                      Text(entry.periodLabel!, style: detailUi(24, ww.ink2)),
-                  ],
+    return Padding(
+      padding: const EdgeInsets.only(bottom: Tokens.space3),
+      child: Container(
+        padding: const EdgeInsets.only(left: Tokens.space3),
+        decoration: current
+            ? BoxDecoration(
+                border: Border(
+                  left: BorderSide(color: context.accent, width: 3),
                 ),
+              )
+            : null,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: _timeColumnWidth,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    context.span(entry.starts, entry.ends),
+                    style: detailNum(26, context.ink, weight: FontWeight.w700),
+                  ),
+                  if (entry.periodLabel != null)
+                    Text(entry.periodLabel!, style: detailUi(24, ww.ink2)),
+                ],
               ),
-              if (lesson != null)
-                Expanded(
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(
-                        maxWidth: _tileMaxWidth,
-                      ),
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (current)
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  bottom: Tokens.space2,
+            ),
+            if (lesson != null)
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: _tileMaxWidth),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (current)
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                bottom: Tokens.space2,
+                              ),
+                              child: DecoratedBox(
+                                decoration: BoxDecoration(
+                                  color: context.accent,
+                                  borderRadius: BorderRadius.circular(999),
                                 ),
-                                child: DecoratedBox(
-                                  decoration: BoxDecoration(
-                                    color: context.accent,
-                                    borderRadius: BorderRadius.circular(999),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: Tokens.space3,
+                                    vertical: 2,
                                   ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: Tokens.space3,
-                                      vertical: 2,
-                                    ),
-                                    child: Text(
-                                      l10n.boardLessonNow,
-                                      style: detailUi(
-                                        24,
-                                        Theme.of(context).colorScheme.onPrimary,
-                                        weight: FontWeight.w700,
-                                      ),
+                                  child: Text(
+                                    l10n.boardLessonNow,
+                                    style: detailUi(
+                                      24,
+                                      Theme.of(context).colorScheme.onPrimary,
+                                      weight: FontWeight.w700,
                                     ),
                                   ),
                                 ),
-                              ),
-                            PaperTile(
-                              tint: lesson.tint,
-                              struckThrough:
-                                  lesson.status == LessonStatus.cancelled,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: Tokens.space4,
-                                vertical: Tokens.space3,
-                              ),
-                              child: LessonBody(
-                                lesson: lesson,
-                                title: lesson.subject,
-                                titleSize: 28,
-                                showTeacher: true,
                               ),
                             ),
-                            if (past)
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  top: Tokens.space2,
-                                ),
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.check, size: 28, color: ww.ink2),
-                                    const SizedBox(width: Tokens.space2),
-                                    Text(
-                                      l10n.boardLessonOver,
-                                      style: detailUi(24, ww.ink2),
-                                    ),
-                                  ],
-                                ),
+                          PaperTile(
+                            tint: lesson.tint,
+                            struckThrough:
+                                lesson.status == LessonStatus.cancelled,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: Tokens.space4,
+                              vertical: Tokens.space3,
+                            ),
+                            child: LessonBody(
+                              lesson: lesson,
+                              title: lesson.subject,
+                              titleSize: 28,
+                              showTeacher: true,
+                            ),
+                          ),
+                          if (past)
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                top: Tokens.space2,
                               ),
-                          ],
-                        ),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.check, size: 28, color: ww.ink2),
+                                  const SizedBox(width: Tokens.space2),
+                                  Text(
+                                    l10n.boardLessonOver,
+                                    style: detailUi(24, ww.ink2),
+                                  ),
+                                ],
+                              ),
+                            ),
+                        ],
                       ),
                     ),
                   ),
                 ),
-            ],
-          ),
+              ),
+          ],
         ),
       ),
     );

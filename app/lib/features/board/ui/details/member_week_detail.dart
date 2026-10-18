@@ -84,6 +84,7 @@ class _DayRow extends StatelessWidget {
                 tentative: b.tentative,
                 openStart: !isSameDay(day.date, b.firstDay),
                 openEnd: !isSameDay(day.date, b.lastDay),
+                wraps: true,
               ),
             ),
           if (bands.isEmpty)
@@ -93,6 +94,7 @@ class _DayRow extends StatelessWidget {
                 child: BaselineChip(
                   memberColor: member.color,
                   label: context.presenceLabel(baseline.state, baseline.label),
+                  wraps: true,
                 ),
               )
             else

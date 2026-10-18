@@ -9,7 +9,12 @@
 // It reads api.server_info() with that same publishable key, as any client could. No
 // service role.
 import { CORS_HEADERS, errorResponse, json, preflight } from "../_shared/client.ts";
-import { checkRow, discoveryDocument, publicUrl, publishableKey } from "../_shared/server_info.ts";
+import {
+  checkRow,
+  discoveryDocument,
+  publicUrl,
+  publishableKey,
+} from "../_shared/server_info.ts";
 
 const env = (name: string) => Deno.env.get(name);
 
@@ -44,7 +49,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
         ...CORS_HEADERS,
         "Access-Control-Allow-Methods": "GET, OPTIONS",
         "Content-Type": "application/json",
-        // Short: a server update (api_version, features) should reach the apps within minutes.
+        // Short: a changed setting (household creation, features) shows within minutes.
         "Cache-Control": "public, max-age=300",
       },
     });

@@ -9,9 +9,8 @@
 //
 //   supabase/.env  optional. WW_JWT_SECRET, WW_PUBLISHABLE_KEY and WW_SECRET_KEY are kept
 //                  from it, so the apps and every device session of an existing server keep
-//                  working; WW_CRON_SECRET and the WW_APPLE_* values (revoking Apple's access
-//                  for accounts from before social sign-in was removed) are taken over when
-//                  present. Whatever is missing is generated.
+//                  working; WW_CRON_SECRET is taken over when present. Whatever is missing
+//                  is generated.
 //   --api          the server's public address (the gateway behind HTTPS)
 //   --web          where the web app is served; Auth sends its redirects there
 //   --rp-id        the passkey relying party (default: the web app's host)
@@ -140,8 +139,7 @@ const out = {
   API_EXTERNAL_URL: `${api.origin}/auth/v1`,
   // Where GoTrue's e-mail links land: the web app, not the website (ADR-017).
   SITE_URL: `${web.origin}/`,
-  // The web app. No native-app redirect: sign-in is by e-mail or passkey, never a browser
-  // redirect back into the apps.
+  // The web app.
   ADDITIONAL_REDIRECT_URLS: `${web.origin}/**`,
   // Passkeys work in the native apps only for the first-party hosts (ADR-018); elsewhere
   // the web app's own host is the relying party.
@@ -183,7 +181,7 @@ const out = {
   ENABLE_EMAIL_SIGNUP: 'true',
   // Never autoconfirm: with sign-up open, an autoconfirmed address would count as verified
   // without proof, and an invitation naming that address would match it (specs/20, J2).
-  // Email codes confirm the address by themselves; Apple and Google come confirmed.
+  // Email codes confirm the address by themselves.
   ENABLE_EMAIL_AUTOCONFIRM: 'false',
   ENABLE_ANONYMOUS_USERS: 'false',
   ENABLE_PHONE_SIGNUP: 'false',
@@ -199,17 +197,6 @@ const out = {
   SMTP_USER: '',
   SMTP_PASS: '',
   SMTP_SENDER_NAME: 'WuselWall',
-
-  // Revoking Apple's access when an account is deleted (supabase/functions/account-delete), for
-  // stacks that offered Sign in with Apple before it was removed and so still hold Apple refresh
-  // tokens. The key (.p8) is kept on one line with \n for its line breaks. APPLE_TOKEN_KEY is
-  // generated here, once, with the stack: the stored tokens were encrypted with it and cannot be
-  // read back with another key. Empty Apple values: nothing is revoked.
-  APPLE_TEAM_ID: vars.WW_APPLE_TEAM_ID ?? '',
-  APPLE_KEY_ID: vars.WW_APPLE_KEY_ID ?? '',
-  APPLE_PRIVATE_KEY: (vars.WW_APPLE_PRIVATE_KEY ?? '').replace(/\n/g, '\\n'),
-  APPLE_CLIENT_ID: vars.WW_APPLE_BUNDLE_ID ?? '',
-  APPLE_TOKEN_KEY: b64(32),
 
   // Mail: the Send Email Hook (supabase/functions/send-email). The secret is generated like the
   // others and must be the same value in GoTrue and in the functions container, which this file

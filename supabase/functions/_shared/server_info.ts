@@ -25,9 +25,8 @@ export type DiscoveryDocument = {
   api_version: number;
   min_app_version: string;
   household_creation: string;
-  /** E-mail (a code or a password) is the only sign-in. Passkeys are decided by the app
-   * (WW_FIRST_PARTY_HOSTS), never by a server. Apps from before social sign-in was
-   * removed read the absent `apple` and `google` as off. */
+  /** Email codes and passwords, on every server. Passkeys are decided by the app
+   * (WW_FIRST_PARTY_HOSTS), never by a server. */
   sign_in: { password: true };
   features: string[];
 };

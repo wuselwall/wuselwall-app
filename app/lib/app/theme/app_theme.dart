@@ -87,23 +87,37 @@ abstract final class AppTheme {
       visualDensity: register == UiRegister.adult
           ? VisualDensity.standard
           : VisualDensity.comfortable,
+      // NFR-13 sets `touch` as the *actual* minimum hit edge, not a nominal size
+      // to shrink from. `VisualDensity.comfortable` (kid/kiosk, above) subtracts
+      // 4 logical px per axis from a button's layout size, so a nominal 56 button
+      // rendered at 52 — under the minimum. Pin each button style's own density to
+      // `standard` so `minimumSize` is the actual rendered size; the page-level
+      // `comfortable` density still loosens everything else (lists, padding).
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           minimumSize: Size(touch, touch),
           shape: shape,
+          visualDensity: VisualDensity.standard,
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           minimumSize: Size(touch, touch),
           shape: shape,
+          visualDensity: VisualDensity.standard,
         ),
       ),
       textButtonTheme: TextButtonThemeData(
-        style: TextButton.styleFrom(minimumSize: Size(touch, touch)),
+        style: TextButton.styleFrom(
+          minimumSize: Size(touch, touch),
+          visualDensity: VisualDensity.standard,
+        ),
       ),
       iconButtonTheme: IconButtonThemeData(
-        style: IconButton.styleFrom(minimumSize: Size(touch, touch)),
+        style: IconButton.styleFrom(
+          minimumSize: Size(touch, touch),
+          visualDensity: VisualDensity.standard,
+        ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(borderRadius: radius),

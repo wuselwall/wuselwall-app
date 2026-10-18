@@ -92,7 +92,6 @@ refresh_token_reuse_interval = 10
 # founder code (specs/20, ADR-014). Nothing in the account is reachable through RLS before that.
 enable_signup = true
 # Allow/disallow testing manual linking of accounts
-# Off: there is nothing to link. Sign-in is by e-mail (a code or a password) or a passkey.
 enable_manual_linking = false
 
 [auth.email]
@@ -172,8 +171,9 @@ message_service_sid = ""
 # DO NOT commit your Twilio auth token to git. Use environment variable substitution instead:
 auth_token = "env(SUPABASE_AUTH_SMS_TWILIO_AUTH_TOKEN)"
 
-# No external OAuth provider ([auth.external.*]): WuselWall has no social sign-in (Apple,
-# Google or any other). Sign-in is by e-mail (a code or a password) or a passkey.
+# Use an external OAuth provider. The full list of providers are: `apple`, `azure`, `bitbucket`,
+# `discord`, `facebook`, `github`, `gitlab`, `google`, `keycloak`, `linkedin_oidc`, `notion`, `twitch`,
+# `twitter`, `slack`, `spotify`, `workos`, `zoom`.
 
 [analytics]
 enabled = false

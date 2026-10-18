@@ -163,7 +163,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
         // Passkeys need a JavaScript SDK on the web that is not self-hosted yet
         // (web/index.html); the native apps have them, for the project's own servers
         // only (their domain is in the apps' associated domains; ADR-018).
-        if (!kIsWeb && ref.watch(appConfigProvider).passkeys) ...[
+        if (!kIsWeb && ref.watch(appConfigProvider).nativeSignIn) ...[
           const SizedBox(height: Tokens.space3),
           OutlinedButton.icon(
             onPressed: busy ? null : _passkey,

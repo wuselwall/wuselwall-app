@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
+import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/text/fold.dart';
@@ -159,6 +160,9 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody> {
     final l10n = context.l10n;
     final kiosk = ref.watch(uiRegisterProvider) == UiRegister.kiosk;
     final current = ref.watch(currentListProvider);
+    // Capture while mounted: pending ticks flush even when this page leaves.
+    final sync = _sync;
+    final actor = _actor;
     final pending = ref.watch(shoppingPendingProvider);
     ref.listen(shoppingSyncProvider.select((s) => s.rejection), (_, next) {
       if (next != null && mounted) context.showFailure(next.failure);
@@ -174,77 +178,105 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody> {
           (v) =>
               v.where((i) => i.listId == null || i.listId == list.id).toList(),
         );
-        return Column(
-          children: [
-            if (!kiosk)
-              _ListSwitcher(
-                selected: list.id,
-                onNew: _newList,
-                onDefault: () => _run(
-                  () => _repo.setDefaultList(actor: _actor, listId: list.id),
+        // A4: one explicit traversal order for the whole body (lists, search,
+        // catalogue, items, finish, then whatever sits outside this widget), instead
+        // of whatever ambient order the nested scrollables would otherwise produce.
+        return FocusTraversalGroup(
+          policy: OrderedTraversalPolicy(),
+          child: Column(
+            children: [
+              if (!kiosk)
+                _ListSwitcher(
+                  selected: list.id,
+                  onNew: _newList,
+                  onDefault: () => _run(
+                    () => _repo.setDefaultList(actor: _actor, listId: list.id),
+                  ),
                 ),
-              ),
-            if (pending > 0) _PendingBanner(count: pending),
-            _TilePicker(
-              list: list,
-              items: items.value ?? const [],
-              search: _search,
-              showSearch: !kiosk,
-              busy: _busy,
-              onAdd: (name) => _addName(name, list),
-              onLongPress: (name) => _addAndEdit(name, list),
-            ),
-            const Divider(height: 1),
-            Expanded(
-              child: AsyncValueView<List<ShoppingItem>>(
-                value: items,
-                onRetry: _refresh,
-                data: (open) => open.isEmpty
-                    ? Center(child: Text(l10n.shoppingEmpty))
-                    : _ItemList(
-                        items: open,
-                        listId: list.id,
-                        onToggle: (i) => _sync.check(
-                          actor: _actor,
-                          itemId: i.id,
-                          checked: !i.checked,
-                        ),
-                        onLess: (i) => _sync.adjustCount(
-                          actor: _actor,
-                          itemId: i.id,
-                          delta: -1,
-                        ),
-                        onEdit: _edit,
+              if (pending > 0) _PendingBanner(count: pending),
+              // A5: the picker and the item list share one scrollable instead of the
+              // picker taking a fixed natural height and the list getting whatever is
+              // left over — at 200% text on a 320 px phone that leftover was ~0 px, so
+              // the list was unreachable even though nothing was actually lost.
+              Expanded(
+                child: CustomScrollView(
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: _TilePicker(
+                        list: list,
+                        items: items.value ?? const [],
+                        search: _search,
+                        showSearch: !kiosk,
+                        busy: _busy,
+                        onAdd: (name) => _addName(name, list),
+                        onLongPress: (name) => _addAndEdit(name, list),
                       ),
-              ),
-            ),
-            SafeArea(
-              top: false,
-              child: Padding(
-                padding: const EdgeInsets.all(Tokens.space4),
-                child: Row(
-                  children: [
-                    if (!kiosk)
-                      IconButton(
-                        tooltip: l10n.shoppingHistory,
-                        onPressed: () => context.push(Routes.shoppingHistory),
-                        icon: const Icon(Icons.history),
-                      ),
-                    Expanded(
-                      child: FilledButton.icon(
-                        onPressed:
-                            !(items.value?.any((i) => i.checked) ?? false)
-                            ? null
-                            : () => _finish(list),
-                        icon: const Icon(Icons.shopping_cart_checkout),
-                        label: Text(l10n.shoppingFinish),
+                    ),
+                    const SliverToBoxAdapter(child: Divider(height: 1)),
+                    SliverToBoxAdapter(
+                      child: AsyncValueView<List<ShoppingItem>>(
+                        value: items,
+                        onRetry: _refresh,
+                        data: (open) => open.isEmpty
+                            ? Padding(
+                                padding: const EdgeInsets.all(Tokens.space8),
+                                child: Center(child: Text(l10n.shoppingEmpty)),
+                              )
+                            : _ItemList(
+                                items: open,
+                                listId: list.id,
+                                onToggle: (i) => sync.check(
+                                  actor: actor,
+                                  itemId: i.id,
+                                  checked: !i.checked,
+                                ),
+                                onLess: (i) => _sync.adjustCount(
+                                  actor: _actor,
+                                  itemId: i.id,
+                                  delta: -1,
+                                ),
+                                onEdit: _edit,
+                              ),
                       ),
                     ),
                   ],
                 ),
               ),
-            ),
-          ],
+              SafeArea(
+                top: false,
+                child: Padding(
+                  padding: const EdgeInsets.all(Tokens.space4),
+                  child: Row(
+                    children: [
+                      if (!kiosk)
+                        FocusTraversalOrder(
+                          order: const NumericFocusOrder(900),
+                          child: IconButton(
+                            tooltip: l10n.shoppingHistory,
+                            onPressed: () =>
+                                context.push(Routes.shoppingHistory),
+                            icon: const Icon(Icons.history),
+                          ),
+                        ),
+                      Expanded(
+                        child: FocusTraversalOrder(
+                          order: const NumericFocusOrder(901),
+                          child: FilledButton.icon(
+                            onPressed:
+                                !(items.value?.any((i) => i.checked) ?? false)
+                                ? null
+                                : () => _finish(list),
+                            icon: const Icon(Icons.shopping_cart_checkout),
+                            label: Text(l10n.shoppingFinish),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         );
       },
     );
@@ -304,8 +336,11 @@ class _ListSwitcher extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final lists = ref.watch(shoppingListsProvider).value ?? const [];
+    final touch = ref.watch(uiRegisterProvider).touchTarget;
     return SizedBox(
-      height: 56,
+      // A6: tall enough for the touch target plus the row's own padding — the chips
+      // used to be capped at 40 px by this box regardless of their own minimum.
+      height: touch + Tokens.space2 * 2,
       child: ListView(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(
@@ -313,31 +348,180 @@ class _ListSwitcher extends ConsumerWidget {
           vertical: Tokens.space2,
         ),
         children: [
-          for (final l in lists)
+          for (final (i, l) in lists.indexed)
             Padding(
               padding: const EdgeInsets.only(right: Tokens.space2),
-              child: GestureDetector(
-                onLongPress: l.id == selected && !l.isDefault
-                    ? onDefault
-                    : null,
-                child: ChoiceChip(
+              child: FocusTraversalOrder(
+                order: NumericFocusOrder(i.toDouble()),
+                child: _ListChip(
+                  key: ValueKey(l.id),
+                  minHeight: touch,
+                  onLongPress: l.id == selected && !l.isDefault
+                      ? onDefault
+                      : null,
                   selected: l.id == selected,
                   avatar: l.isDefault ? const Icon(Icons.star, size: 18) : null,
-                  label: Text(
-                    l.openCount == 0 ? l.name : '${l.name} · ${l.openCount}',
-                  ),
-                  onSelected: (_) =>
+                  label: l.openCount == 0
+                      ? l.name
+                      : '${l.name} · ${l.openCount}',
+                  onSelected: () =>
                       ref.read(selectedListIdProvider.notifier).select(l.id),
                 ),
               ),
             ),
-          ActionChip(
-            avatar: const Icon(Icons.add, size: 18),
-            label: Text(l10n.shoppingNewList),
-            onPressed: onNew,
+          FocusTraversalOrder(
+            order: NumericFocusOrder(lists.length.toDouble()),
+            child: _NewListChip(
+              minHeight: touch,
+              label: l10n.shoppingNewList,
+              onPressed: onNew,
+            ),
           ),
         ],
       ),
+    );
+  }
+}
+
+/// One list's `ChoiceChip`, at least the register's touch target (A6) and with a
+/// keyboard-focus ring at 3:1 contrast or better (A4) instead of Material's default
+/// highlight, which measured 1.32:1 here.
+class _ListChip extends StatefulWidget {
+  const _ListChip({
+    super.key,
+    required this.minHeight,
+    required this.selected,
+    required this.avatar,
+    required this.label,
+    required this.onSelected,
+    required this.onLongPress,
+  });
+
+  final double minHeight;
+  final bool selected;
+  final Widget? avatar;
+  final String label;
+  final VoidCallback onSelected;
+  final VoidCallback? onLongPress;
+
+  @override
+  State<_ListChip> createState() => _ListChipState();
+}
+
+class _ListChipState extends State<_ListChip> {
+  late final _focusNode = FocusNode(
+    debugLabel: 'shopping-list:${widget.label}',
+  );
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onLongPress: widget.onLongPress,
+      child: _FocusRing(
+        focusNode: _focusNode,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: widget.minHeight),
+          child: ChoiceChip(
+            focusNode: _focusNode,
+            selected: widget.selected,
+            avatar: widget.avatar,
+            label: Text(widget.label),
+            onSelected: (_) => widget.onSelected(),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// The "new list" `ActionChip`, same touch target and focus ring as [_ListChip].
+class _NewListChip extends StatefulWidget {
+  const _NewListChip({
+    required this.minHeight,
+    required this.label,
+    required this.onPressed,
+  });
+
+  final double minHeight;
+  final String label;
+  final VoidCallback onPressed;
+
+  @override
+  State<_NewListChip> createState() => _NewListChipState();
+}
+
+class _NewListChipState extends State<_NewListChip> {
+  final _focusNode = FocusNode(debugLabel: 'shopping-new-list');
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _FocusRing(
+      focusNode: _focusNode,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(minHeight: widget.minHeight),
+        child: ActionChip(
+          focusNode: _focusNode,
+          avatar: const Icon(Icons.add, size: 18),
+          label: Text(widget.label),
+          onPressed: widget.onPressed,
+        ),
+      ),
+    );
+  }
+}
+
+/// A visible keyboard-focus ring at 3:1 contrast or better against the surrounding
+/// ground (WCAG 1.4.11). Listens to a [FocusNode] already owned by the wrapped
+/// control instead of adding a focus stop of its own, and paints over the child
+/// instead of reserving border space, so it never changes the child's layout size
+/// (important here: several of these sit inside a `SliverList` that forces an exact
+/// cross-axis extent on them).
+class _FocusRing extends StatelessWidget {
+  const _FocusRing({
+    required this.focusNode,
+    required this.child,
+    this.borderRadius = const BorderRadius.all(Radius.circular(8)),
+  });
+
+  final FocusNode focusNode;
+  final Widget child;
+  final BorderRadius borderRadius;
+
+  @override
+  Widget build(BuildContext context) {
+    final ringColor = Theme.of(context).colorScheme.primary;
+    return AnimatedBuilder(
+      animation: focusNode,
+      builder: (context, child) => Stack(
+        fit: StackFit.passthrough,
+        children: [
+          child!,
+          if (focusNode.hasFocus)
+            Positioned.fill(
+              child: IgnorePointer(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    borderRadius: borderRadius,
+                    border: Border.all(color: ringColor, width: 2.5),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+      child: child,
     );
   }
 }
@@ -368,6 +552,8 @@ class _TilePicker extends ConsumerStatefulWidget {
 }
 
 class _TilePickerState extends ConsumerState<_TilePicker> {
+  final _searchFocus = FocusNode(debugLabel: 'shopping-search');
+
   @override
   void initState() {
     super.initState();
@@ -377,6 +563,7 @@ class _TilePickerState extends ConsumerState<_TilePicker> {
   @override
   void dispose() {
     widget.search.removeListener(_changed);
+    _searchFocus.dispose();
     super.dispose();
   }
 
@@ -407,32 +594,38 @@ class _TilePickerState extends ConsumerState<_TilePicker> {
         .fold(0, (a, b) => a + b);
 
     final tileWidgets = <Widget>[
-      for (final t in tiles)
-        _Tile(
-          width: width,
-          picture: switch (shoppingIconAsset(t.iconKey)) {
-            final asset? => Image.asset(
-              asset,
-              width: kiosk ? 40 : 32,
-              height: kiosk ? 40 : 32,
-              // The tile's label names the item; the picture adds nothing for a screen reader.
-              excludeFromSemantics: true,
-            ),
-            null => Icon(categoryIcon(categories[t.categoryId]), size: 28),
-          },
-          label: t.name,
-          count: countOf(t.foldedName),
-          onTap: widget.busy ? null : () => widget.onAdd(t.name),
-          onLongPress: () => widget.onLongPress(t.name),
+      for (final (i, t) in tiles.indexed)
+        FocusTraversalOrder(
+          order: NumericFocusOrder(200 + i.toDouble()),
+          child: _Tile(
+            width: width,
+            picture: switch (shoppingIconAsset(t.iconKey)) {
+              final asset? => Image.asset(
+                asset,
+                width: kiosk ? 40 : 32,
+                height: kiosk ? 40 : 32,
+                // The tile's label names the item; the picture adds nothing for a screen reader.
+                excludeFromSemantics: true,
+              ),
+              null => Icon(categoryIcon(categories[t.categoryId]), size: 28),
+            },
+            label: t.name,
+            count: countOf(t.foldedName),
+            onTap: widget.busy ? null : () => widget.onAdd(t.name),
+            onLongPress: () => widget.onLongPress(t.name),
+          ),
         ),
       if (query.isNotEmpty && !exact)
-        _Tile(
-          width: width,
-          picture: const Icon(Icons.add_circle_outline, size: 28),
-          label: l10n.shoppingCreateTile(query),
-          count: 0,
-          onTap: widget.busy ? null : () => widget.onAdd(query),
-          onLongPress: () => widget.onLongPress(query),
+        FocusTraversalOrder(
+          order: NumericFocusOrder(200 + tiles.length.toDouble()),
+          child: _Tile(
+            width: width,
+            picture: const Icon(Icons.add_circle_outline, size: 28),
+            label: l10n.shoppingCreateTile(query),
+            count: 0,
+            onTap: widget.busy ? null : () => widget.onAdd(query),
+            onLongPress: () => widget.onLongPress(query),
+          ),
         ),
     ];
 
@@ -446,16 +639,27 @@ class _TilePickerState extends ConsumerState<_TilePicker> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (widget.showSearch)
-              TextField(
-                controller: widget.search,
-                decoration: InputDecoration(
-                  labelText: l10n.shoppingSearchHint,
-                  prefixIcon: const Icon(Icons.search),
+              FocusTraversalOrder(
+                order: const NumericFocusOrder(100),
+                child: _FocusRing(
+                  focusNode: _searchFocus,
+                  child: TextField(
+                    controller: widget.search,
+                    focusNode: _searchFocus,
+                    decoration: InputDecoration(
+                      labelText: l10n.shoppingSearchHint,
+                      prefixIcon: const Icon(Icons.search),
+                    ),
+                    textInputAction: TextInputAction.done,
+                    // Enter adds the top hit, else the typed name as a new item, and
+                    // keeps the keyboard focus here instead of letting it fall to the
+                    // document (A4): "done" unfocuses by default before onSubmitted runs.
+                    onSubmitted: (value) {
+                      widget.onAdd(tiles.isNotEmpty ? tiles.first.name : value);
+                      _searchFocus.requestFocus();
+                    },
+                  ),
                 ),
-                textInputAction: TextInputAction.done,
-                // Enter adds the top hit, else the typed name as a new item.
-                onSubmitted: (value) =>
-                    widget.onAdd(tiles.isNotEmpty ? tiles.first.name : value),
               ),
             const SizedBox(height: Tokens.space2),
             if (tiles.isEmpty && query.isEmpty)
@@ -494,7 +698,7 @@ class _TilePickerState extends ConsumerState<_TilePicker> {
   }
 }
 
-class _Tile extends StatelessWidget {
+class _Tile extends StatefulWidget {
   const _Tile({
     required this.width,
     required this.picture,
@@ -512,49 +716,76 @@ class _Tile extends StatelessWidget {
   final VoidCallback onLongPress;
 
   @override
+  State<_Tile> createState() => _TileState();
+}
+
+class _TileState extends State<_Tile> {
+  late final _focusNode = FocusNode(
+    debugLabel: 'shopping-tile:${widget.label}',
+  );
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  // A4: off-screen catalogue tiles took keyboard focus without scrolling into view.
+  void _onFocusChange(bool focused) {
+    if (focused) {
+      Scrollable.ensureVisible(context, alignment: 0.5);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final onList = count > 0;
+    final onList = widget.count > 0;
     return SizedBox(
-      width: width,
-      child: Card(
-        margin: EdgeInsets.zero,
-        color: onList ? scheme.primaryContainer : null,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(12),
-          onTap: onTap,
-          onLongPress: onLongPress,
-          child: Padding(
-            padding: const EdgeInsets.all(Tokens.space2),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Badge(
-                  isLabelVisible: count > 1,
-                  label: Text('$count×'),
-                  child: picture,
-                ),
-                const SizedBox(height: Tokens.space1),
-                // Flutter cannot hyphenate: a single long word ("Toilettenpapier")
-                // shrinks to fit rather than breaking mid-word; phrases wrap.
-                if (label.trim().contains(' '))
-                  Text(
-                    label,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.labelMedium,
-                  )
-                else
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      label,
-                      maxLines: 1,
-                      style: Theme.of(context).textTheme.labelMedium,
-                    ),
+      width: widget.width,
+      child: _FocusRing(
+        focusNode: _focusNode,
+        child: Card(
+          margin: EdgeInsets.zero,
+          color: onList ? scheme.primaryContainer : null,
+          child: InkWell(
+            focusNode: _focusNode,
+            onFocusChange: _onFocusChange,
+            borderRadius: BorderRadius.circular(12),
+            onTap: widget.onTap,
+            onLongPress: widget.onLongPress,
+            child: Padding(
+              padding: const EdgeInsets.all(Tokens.space2),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Badge(
+                    isLabelVisible: widget.count > 1,
+                    label: Text('${widget.count}×'),
+                    child: widget.picture,
                   ),
-              ],
+                  const SizedBox(height: Tokens.space1),
+                  // Flutter cannot hyphenate: a single long word ("Toilettenpapier")
+                  // shrinks to fit rather than breaking mid-word; phrases wrap.
+                  if (widget.label.trim().contains(' '))
+                    Text(
+                      widget.label,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.labelMedium,
+                    )
+                  else
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        widget.label,
+                        maxLines: 1,
+                        style: Theme.of(context).textTheme.labelMedium,
+                      ),
+                    ),
+                ],
+              ),
             ),
           ),
         ),
@@ -563,7 +794,7 @@ class _Tile extends StatelessWidget {
   }
 }
 
-class _ItemList extends ConsumerWidget {
+class _ItemList extends ConsumerStatefulWidget {
   const _ItemList({
     required this.items,
     required this.listId,
@@ -579,27 +810,78 @@ class _ItemList extends ConsumerWidget {
   final void Function(ShoppingItem) onEdit;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_ItemList> createState() => _ItemListState();
+}
+
+class _ItemListState extends ConsumerState<_ItemList> {
+  static const _quiet = Duration(milliseconds: 800);
+  final Map<String, ShoppingItem> _ticked = {};
+  Timer? _settle;
+
+  @override
+  void dispose() {
+    _settle?.cancel();
+    _sendTicks();
+    super.dispose();
+  }
+
+  void _sendTicks() {
+    final pending = _ticked.values.toList();
+    _ticked.clear();
+    for (final item in pending) {
+      // A concurrent tick must not be toggled back by this device.
+      final now = widget.items.where((i) => i.id == item.id);
+      if (now.isNotEmpty && !now.first.checked) widget.onToggle(item);
+    }
+  }
+
+  void _tap(ShoppingItem item) {
+    if (item.checked) {
+      widget.onToggle(item);
+      return;
+    }
+    setState(() {
+      if (_ticked.remove(item.id) == null) _ticked[item.id] = item;
+    });
+    _settle?.cancel();
+    if (_ticked.isNotEmpty) {
+      _settle = Timer(_quiet, () {
+        if (mounted) setState(_sendTicks);
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final categories = [
       for (final c
           in ref.watch(shoppingCategoriesProvider).value ??
               const <ShoppingCategory>[])
-        if (c.listId == listId) c,
+        if (c.listId == widget.listId) c,
     ];
     final members = {
       for (final m in ref.watch(membersProvider).value ?? const <Member>[])
         m.id: m,
     };
-    final open = items.where((i) => !i.checked).toList();
-    final trolley = items.where((i) => i.checked).toList();
+    final open = widget.items.where((i) => !i.checked).toList();
+    final trolley = widget.items.where((i) => i.checked).toList();
 
     Widget tile(ShoppingItem i) => _ItemTile(
       item: i,
+      checked: i.checked || _ticked.containsKey(i.id),
       adder: members[i.addedBy],
-      onToggle: () => onToggle(i),
-      onLess: () => onLess(i),
-      onEdit: () => onEdit(i),
+      onToggle: () => _tap(i),
+      onLess: () => widget.onLess(i),
+      onEdit: () => widget.onEdit(i),
+    );
+
+    // A4: items and the trolley share one traversal order with the rest of the page
+    // instead of whatever order this nested list would otherwise produce.
+    var order = 300;
+    Widget orderedTile(ShoppingItem i) => FocusTraversalOrder(
+      order: NumericFocusOrder((order++).toDouble()),
+      child: tile(i),
     );
 
     final known = categories.map((c) => c.id).toSet();
@@ -609,22 +891,29 @@ class _ItemList extends ConsumerWidget {
       if (inGroup.isEmpty) continue;
       groups
         ..add(_Header(categoryLabel(l10n, c)))
-        ..addAll(inGroup.map(tile));
+        ..addAll(inGroup.map(orderedTile));
     }
     final loose = open.where((i) => !known.contains(i.categoryId)).toList();
     if (loose.isNotEmpty) {
       groups
         ..add(_Header(l10n.shoppingUncategorised))
-        ..addAll(loose.map(tile));
+        ..addAll(loose.map(orderedTile));
     }
 
     return ListView(
+      // The picker and the item list share one outer scrollable (A5): this list is
+      // sized by its content here instead of scrolling independently.
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       children: [
         ...groups,
         if (trolley.isNotEmpty)
-          ExpansionTile(
-            title: Text(l10n.shoppingInTrolley(trolley.length)),
-            children: trolley.map(tile).toList(),
+          FocusTraversalOrder(
+            order: NumericFocusOrder((order++).toDouble()),
+            child: ExpansionTile(
+              title: Text(l10n.shoppingInTrolley(trolley.length)),
+              children: trolley.map(orderedTile).toList(),
+            ),
           ),
       ],
     );
@@ -644,13 +933,17 @@ class _Header extends StatelessWidget {
       Tokens.space4,
       Tokens.space1,
     ),
-    child: Text(label, style: Theme.of(context).textTheme.titleSmall),
+    child: Semantics(
+      header: true,
+      child: Text(label, style: Theme.of(context).textTheme.titleSmall),
+    ),
   );
 }
 
-class _ItemTile extends StatelessWidget {
+class _ItemTile extends StatefulWidget {
   const _ItemTile({
     required this.item,
+    required this.checked,
     required this.adder,
     required this.onToggle,
     required this.onLess,
@@ -658,15 +951,40 @@ class _ItemTile extends StatelessWidget {
   });
 
   final ShoppingItem item;
+  final bool checked;
   final Member? adder;
   final VoidCallback onToggle;
   final VoidCallback onLess;
   final VoidCallback onEdit;
 
   @override
+  State<_ItemTile> createState() => _ItemTileState();
+}
+
+class _ItemTileState extends State<_ItemTile> {
+  late final _focusNode = FocusNode(
+    debugLabel: 'shopping-item:${widget.item.name}',
+  );
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  // A4: off-screen items took keyboard focus without scrolling into view.
+  void _onFocusChange(bool focused) {
+    if (focused) {
+      Scrollable.ensureVisible(context, alignment: 0.5);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final style = item.checked
+    final item = widget.item;
+    final adder = widget.adder;
+    final style = widget.checked
         ? TextStyle(
             decoration: TextDecoration.lineThrough,
             color: Theme.of(context).disabledColor,
@@ -681,75 +999,101 @@ class _ItemTile extends StatelessWidget {
     // For screen readers the row is one checkbox named after the item; who added it
     // is a hint after the name, not a label before it.
     return Semantics(
-      checked: item.checked,
+      checked: widget.checked,
       value: item.pending ? l10n.shoppingItemPending : null,
-      hint: adder == null ? null : l10n.shoppingAddedBy(adder!.displayName),
-      child: ListTile(
-        minTileHeight: 56,
-        onTap: onToggle,
-        onLongPress: onEdit,
-        leading: ExcludeSemantics(
-          child: Checkbox(value: item.checked, onChanged: (_) => onToggle()),
-        ),
-        title: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Flexible(child: Text(item.name, style: style)),
-            if (item.sourceMealEntryIds.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(left: Tokens.space2),
-                child: ExcludeSemantics(
-                  child: Tooltip(
-                    message: l10n.mealsUxFromMealPlan,
-                    child: Icon(
-                      Icons.restaurant_menu,
-                      size: 18,
-                      color: Theme.of(context).colorScheme.outline,
+      hint: adder == null ? null : l10n.shoppingAddedBy(adder.displayName),
+      child: _FocusRing(
+        focusNode: _focusNode,
+        borderRadius: BorderRadius.zero,
+        child: ListTile(
+          minTileHeight: 56,
+          focusNode: _focusNode,
+          onFocusChange: _onFocusChange,
+          onTap: widget.onToggle,
+          onLongPress: widget.onEdit,
+          leading: ExcludeSemantics(
+            // A4: the row itself is the one tab stop (Space/Enter already toggle
+            // it); without this the checkbox was a second, redundant stop.
+            child: ExcludeFocusTraversal(
+              child: Checkbox(
+                value: widget.checked,
+                onChanged: (_) => widget.onToggle(),
+              ),
+            ),
+          ),
+          title: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Flexible(child: Text(item.name, style: style)),
+              if (item.sourceMealEntryIds.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(left: Tokens.space2),
+                  child: ExcludeSemantics(
+                    child: Tooltip(
+                      message: l10n.mealsUxFromMealPlan,
+                      child: Icon(
+                        Icons.restaurant_menu,
+                        size: 18,
+                        color: Theme.of(context).colorScheme.outline,
+                      ),
                     ),
                   ),
                 ),
-              ),
-          ],
-        ),
-        subtitle: detail.isEmpty ? null : Text(detail, style: style),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (item.pending)
-              Padding(
-                padding: const EdgeInsets.only(right: Tokens.space2),
-                child: ExcludeSemantics(
-                  child: Tooltip(
-                    message: l10n.shoppingItemPending,
-                    child: Icon(
-                      Icons.cloud_upload_outlined,
-                      size: 18,
-                      color: Theme.of(context).colorScheme.outline,
+            ],
+          ),
+          subtitle: detail.isEmpty ? null : Text(detail, style: style),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (item.pending)
+                Padding(
+                  padding: const EdgeInsets.only(right: Tokens.space2),
+                  child: ExcludeSemantics(
+                    child: Tooltip(
+                      message: l10n.shoppingItemPending,
+                      child: Icon(
+                        Icons.cloud_upload_outlined,
+                        size: 18,
+                        color: Theme.of(context).colorScheme.outline,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            if (adder != null)
-              ExcludeSemantics(
-                child: Tooltip(
-                  message: l10n.shoppingAddedBy(adder!.displayName),
-                  child: Container(
-                    width: 12,
-                    height: 12,
-                    decoration: BoxDecoration(
-                      color: adder!.color,
-                      shape: BoxShape.circle,
+              if (adder != null)
+                Semantics(
+                  label: l10n.shoppingAddedBy(adder.displayName),
+                  child: ExcludeSemantics(
+                    child: Tooltip(
+                      message: l10n.shoppingAddedBy(adder.displayName),
+                      child: Container(
+                        width: 18,
+                        height: 18,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: context.ww.member(adder.color).ink,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Text(
+                          adder.initial,
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w800,
+                            height: 1,
+                            color: context.ww.member(adder.color).onInk,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            if (item.count > 1 && !item.checked)
-              IconButton(
-                tooltip: l10n.shoppingRemoveOne,
-                onPressed: onLess,
-                icon: const Icon(Icons.remove_circle_outline),
-              ),
-          ],
+              if (item.count > 1 && !widget.checked)
+                IconButton(
+                  tooltip: l10n.shoppingRemoveOne,
+                  onPressed: widget.onLess,
+                  icon: const Icon(Icons.remove_circle_outline),
+                ),
+            ],
+          ),
         ),
       ),
     );

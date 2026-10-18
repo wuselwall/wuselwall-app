@@ -267,7 +267,7 @@
   "errActorInvalid": "That person is no longer part of the household. The change was not saved.",
   "doorEmail": "Continue with email",
   "doorOr": "or",
-  "errSignupDisabled": "There is no WuselWall account for this address yet. Ask someone in your family for an invitation.",
+  "errSignupDisabled": "There is no WuselWall account for this address yet. Ask your family for an invitation, or start a new family.",
   "errEmailExists": "This email address already belongs to another account.",
   "signInMethodsTitle": "Sign-in",
   "signInMethodEmail": "Email code",
@@ -1409,6 +1409,8 @@
   "kidRedeemed": "Redeemed!",
   "kidSoldOut": "Sold out for now",
   "kidBadgesTitle": "My badges",
+  "kidBadgeEarned": "Earned",
+  "kidBadgeNotYet": "Not earned yet",
   "kidStreaksTitle": "My streaks",
   "kidStreak": "{days, plural, =1{1 day {title}} other{{days} days {title}}}",
   "@kidStreak": {
@@ -1756,6 +1758,17 @@
   "feedSubHelp": "Events from imported calendars (for example a club or the bin collection) also appear in this subscription.",
   "feedSubSummary": "Outside calendars",
   "boardAllEvents": "All events",
+  "boardMemberDay": "{name}, {date}",
+  "@boardMemberDay": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "reminderChannelName": "Reminders",
   "reminderStartLabel": "Turn on reminders",
   "reminderMorningEventsAndTasks": "Today: {events, plural, one{1 appointment} other{{events} appointments}}, {tasks, plural, one{1 chore} other{{tasks} chores}}",
@@ -1927,6 +1940,8 @@
   "householdNewErrNoCode": "New families are only possible with a founder code for now.",
   "householdNewErrCodeWrong": "The founder code is not correct.",
   "householdNewErrRateLimited": "Too many attempts. Wait a few minutes and try again.",
+  "householdNewStalled": "This is taking longer than usual. Please wait, or sign out and sign in again. Do not create the family a second time.",
+  "setupPrivacy": "Privacy policy",
   "householdMembersTitle": "Who else is in your family?",
   "householdMembersYou": "{name} (you)",
   "@householdMembersYou": {
@@ -2172,7 +2187,7 @@
   "inviteWithdrawn": "Invitation withdrawn.",
   "inviteScanTitle": "Scan invitation",
   "accountDeleteTile": "Delete account",
-  "accountDeleteExplain": "Your account is deleted, and you are signed out everywhere. Your profile stays in the family with its history.",
+  "accountDeleteExplain": "Your account and its sign-in methods are deleted, and you are signed out everywhere. Your profile stays in the family with its history. Apple access is revoked.",
   "accountDeleteBlocked": "You are the last guardian with an account in this family. Invite a second adult first, or delete the family.",
   "accountDeleteDialogTitle": "Delete account?",
   "accountDeleteDialogBody": "This cannot be undone. Your sign-in is removed, and your profile stays in the family.",
