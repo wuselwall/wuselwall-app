@@ -25,5 +25,6 @@ editing it. The value is in the trail.
 | [016](ADR-016-public-website.md) | A public website at the root (Astro, own compose project); the Flutter web app moves to /app/ | Accepted, superseded in part by 017, amended by 018 |
 | [017](ADR-017-wuselwall-app-domain.md) | The domain wuselwall.app for the website, the docs and the links | Accepted |
 | [018](ADR-018-self-hosted-only.md) | Self-hosted only: the store app connects to any WuselWall server; no WuselWall Cloud | Accepted, built 2026-10-14 |
+| [019](ADR-019-website-repository-and-docs-pages.md) | Private marketing repository; documentation source stays with the app and targets GitHub Pages | Accepted; hosting activation pending |
 
 Format: Context · Decision · Alternatives considered · Consequences.

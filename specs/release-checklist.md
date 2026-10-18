@@ -80,7 +80,7 @@ CI matrix at the candidate (the trigger decides what runs; a skipped job is not 
 | Workflow and job | Pull request | Tag `v*.*.*` or manual run | Runner |
 |---|---|---|---|
 | `ci.yml` `app` (analyse, tests, format; web build) | Yes; the web build step is skipped | Yes, with the web build | GitHub-hosted for a PR; self-hosted build fleet for a tag or manual run |
-| `ci.yml` `website` (build, SSR smoke) | Yes | Yes | As `app` |
+| `wuselwall-website` CI (build, strict legal, SSR/SEO smoke) | Yes | Yes | In the separate website repository (ADR-019) |
 | `ci.yml` `audit` (osv-scanner) | Yes | Yes | As `app` |
 | `backend-ci.yml` `changes` (reads `git diff` only) | Always | Always treated as backend-sensitive | GitHub-hosted |
 | `backend-ci.yml` `edge-functions` (Deno tests) | Only when `changes` finds a backend-sensitive path | Yes | GitHub-hosted for a PR; self-hosted for a tag or manual run |
@@ -96,13 +96,13 @@ in an older plan). The exact check name GitHub shows for it is not verified unti
 | ID | Check | Mode | Pass when | Result | Evidence |
 |---|---|---|---|---|---|
 | A1 | `app` job: `flutter analyze --fatal-infos`, `flutter test` (includes the English/German ARB parity test, the screen-count tests in `app/test/journeys/` and the widget tests) and a format check | CI | The job is green on the candidate SHA | NOT RUN | CI run link |
-| A2 | `website` job: `npm run build` with the SSR smoke grep | CI | Green on the candidate SHA. Placeholders in the Impressum are allowed here; `remote-web.sh deploy` refuses them | NOT RUN | CI run link |
+| A2 | Website CI in `wuselwall/wuselwall-website` (build, SSR/SEO smoke) | CI | Green on the website commit that is live with the release. Placeholders in the Impressum are allowed here; the website's deploy refuses them | NOT RUN | CI run link |
 | A3 | `audit` job: `osv-scanner` over the lockfiles | CI | Green, or each finding listed in `osv-scanner.toml` with its reason and expiry | NOT RUN | CI run link |
 | A4 | `backend` job in `backend-ci.yml`: `supabase db reset` on a throwaway stack, `supabase test db`, `supabase db lint --level warning`, `flutter test test/integration` | CI. Always on a tag or a manual run. On a pull request only when `changes` finds a backend-sensitive path; a skipped run is not evidence for the migrations | Green on the candidate SHA, with `backend-ci / required` green. Required before a migration goes to any live server | NOT RUN | CI run link |
 | A5 | Local pgTAP over every migration and suite: `cd scripts/local-pgtap && npm ci && node run.mjs` | Local | Exit 0; no `not ok` in the output | NOT RUN | command, exit code, output file |
 | A6 | Edge Function unit tests: `deno test supabase/functions/ --allow-env --allow-read --node-modules-dir=none --lock=deno.lock --frozen` | CI, the `edge-functions` job of `backend-ci.yml`, with the same trigger rule as A4 (Deno 2.5.6, `--frozen` on `deno.lock`). At base `43ac2e5` no CI step ran them | Green on the candidate SHA. A local run is a second record, not a substitute | NOT RUN | CI run link; or Deno version, command, output file |
 | A7 | Documentation: `npm run docs:check` and `npm run docs:build` in the repository root | Local | Both exit 0. `docs:check` needs the screenshots from `npm run docs:screenshots` present in `docs/public/screenshots/` | NOT RUN | command, exit code |
-| A8 | Website build with legal and link strictness: `cd website && LEGAL_STRICT=1 LINKS_STRICT=1 npm run build` | Local, before a website deploy | Fails while a `TODO` value remains. Record which fields still fail. Do not fill a value in to pass | NOT RUN | command, output of the failing fields |
+| A8 | Website build with legal and link strictness: `LEGAL_STRICT=1 LINKS_STRICT=1 npm run build` in `wuselwall/wuselwall-website` | Local, before a website deploy | Fails while a `TODO` value remains. Record which fields still fail. Do not fill a value in to pass | NOT RUN | command, output of the failing fields |
 
 ## 3. Backup, migration and restore
 
@@ -147,7 +147,7 @@ hesitation, not only the total. The screen count follows the journey test's defi
 | T3 | J3: connect a shared device by pairing (nothing typed on the device) | Manual | At most 30 s of a guardian's time. Nothing typed on the shared device | NOT RUN | time, hesitations |
 | T4 | J1 with the email code: time from the code request to Today, with the mail delay recorded apart from the app's own time | Manual | The app's part meets T1's limit; the mail delay is recorded, not counted against NFR-17 | NOT RUN | app time, mail delay |
 | L1 | iOS universal links: `https://<domain>/.well-known/apple-app-site-association` is served as JSON, and the signed build's Associated Domains entitlement includes `applinks:` for the same domain | Manual, read only for the file; the entitlement is read from the signed build | The file answers with a JSON content type and lists the app ID. The entitlement matches the server | NOT RUN | response headers, entitlement value |
-| L2 | Android App Links: `/.well-known/assetlinks.json` lists the SHA-256 of the signing key that signed the candidate APK or AAB | Manual | The fingerprint equals the candidate's signing certificate. At `43ac2e5`, `website/src/config/site.ts` holds `TODO` values for both signing fingerprints, so this check cannot pass until the operator supplies the real values. Do not put a placeholder in the file | NOT RUN | fingerprint (public), comparison result |
+| L2 | Android App Links: `/.well-known/assetlinks.json` lists the SHA-256 of the signing key that signed the candidate APK or AAB | Manual | The fingerprint equals the candidate's signing certificate. At `43ac2e5`, the website's `src/config/site.ts` (now in `wuselwall/wuselwall-website`) holds `TODO` values for both signing fingerprints, so this check cannot pass until the operator supplies the real values. Do not put a placeholder in the file | NOT RUN | fingerprint (public), comparison result |
 | L3 | Invitation link opens the app when it is installed, on iPhone and on an Android phone | Manual | The app opens at the invitation. Screenshot | NOT RUN | screenshot paths |
 | L4 | Invitation link opens the `/i/` landing page when the app is not installed | Manual | The landing page loads in German and English. Record the device language | NOT RUN | screenshot paths |
 | L5 | Pairing link (`/p/`) behaves as L3 and L4 | Manual | As L3 and L4 | NOT RUN | screenshot paths |
@@ -241,9 +241,9 @@ complete at `43ac2e5`, and this checklist does not mark them complete.
 |---|---|---|---|---|---|
 | G1 | Apple developer account and App Store listing, privacy labels | Manual | Listing live in review or on sale, with labels filled in honestly | NOT RUN | listing link |
 | G2 | Google Play account, listing and Data safety form (the Play account was still waiting at the M0.4 date) | Manual | Account active, listing and form filled in | NOT RUN | console status |
-| G3 | Android signing fingerprints in `website/src/config/site.ts` (upload key and Play app signing key) | Manual | Both real values set, with L2 passing | NOT RUN | commit reference |
+| G3 | Android signing fingerprints in `src/config/site.ts` of `wuselwall/wuselwall-website` (upload key and Play app signing key) | Manual | Both real values set, with L2 passing | NOT RUN | commit reference |
 | G4 | Store URLs in `site.stores`, which show the badges only when set | Manual | The real listing URLs | NOT RUN | commit reference |
-| G5 | Legal fields in `website/src/config/site.ts`: no `TODO` left in a field that shows on the site (A8) | Local | A8 passes. Filled-in facts are not changed to pass it | NOT RUN | A8 output |
+| G5 | Legal fields in `src/config/site.ts` of `wuselwall/wuselwall-website`: no `TODO` left in a field that shows on the site (A8) | Local | A8 passes. Filled-in facts are not changed to pass it | NOT RUN | A8 output |
 | G6 | Sending domain verified and deliverability checked (Q41, S6) | Manual | Verified | NOT RUN | provider status |
 | G7 | App Review reviewers can use the demo mode without a server | Manual | Demo mode works from a clean install | NOT RUN | review notes |
 | G8 | Abuse controls on: rate limits at the front and in Auth, clean-up of empty accounts, the attempt logs ([11](11-security-and-privacy.md)) | Manual, read only | Configured and observed | NOT RUN | configuration check |
