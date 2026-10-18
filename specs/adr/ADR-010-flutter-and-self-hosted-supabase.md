@@ -122,8 +122,8 @@ rule gave, now enforced by configuration instead of by code review.
 ADR-004's two-layer model is kept exactly; only the mechanism changes.
 
 - **Public sign-up is disabled.** No one can create an account from outside.
-  *Reversed by [ADR-014](ADR-014-self-service-onboarding.md): adults sign up with Apple,
-  Google, an email code or a password; a new account sees nothing until it creates or
+  *Reversed by [ADR-014](ADR-014-self-service-onboarding.md): adults sign up with an email
+  code or a password (Apple and Google too, until 2026-10-17); a new account sees nothing until it creates or
   joins a household.*
 - **Guardians** are Supabase Auth users (email + password, TOTP as the second factor;
   passkeys if Supabase Auth offers them when M0.1 is built), created by the setup wizard.

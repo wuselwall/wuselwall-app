@@ -17,7 +17,7 @@ specification; `app/`, `supabase/` and `infra/` hold the implementation.
 
 | | |
 |---|---|
-| Phase | Built in code: M0.0–M0.3; the M0.4 pipeline (first TestFlight upload 2026-10-12; Play waited for the Google account as of that date); M1.0 onboarding, steps 1–9; M1.1–M1.4; the M1.5 week board; the Q47 local reminders. Built is not deployed: no server's state is verified, and no pilot evidence is recorded. Next: M1.6 pilot validation with the [release checklist](specs/release-checklist.md); store and signing gates are separate. Status and history: [13 — Roadmap](specs/13-roadmap.md#current-status-2026-10-17-base-43ac2e5) |
+| Phase | Built in code: M0.0–M0.3; the M0.4 pipeline (first TestFlight upload 2026-10-12; first Play internal release done, the Play upload from CI written); M1.0 onboarding, steps 1–9 (sign-in with email codes and passwords only); M1.1–M1.4; the M1.5 week board; the Q47 local reminders. Built is not deployed: no server's state is verified, and no pilot evidence is recorded. Next: M1.6 pilot validation with the [release checklist](specs/release-checklist.md); store and signing gates are separate. Status and history: [13 — Roadmap](specs/13-roadmap.md#current-status-2026-10-17-base-43ac2e5) |
 | Started | 2026-10-11 |
 | Decision set | Locked for v1 (see `specs/adr/`) |
 | Origin | Specification carried over from BretApp; code starts from scratch |

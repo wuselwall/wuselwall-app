@@ -35,7 +35,6 @@ import 'package:wuselwall/features/household/data/household_onboarding_repositor
 import 'package:wuselwall/features/identity/application/first_run.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/data/pairing_repository.dart';
-import 'package:wuselwall/features/identity/data/sign_in_methods_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/invitations/application/invitation_providers.dart';
 import 'package:wuselwall/features/invitations/data/invitation_repository.dart';
@@ -112,9 +111,6 @@ List<Override> _overrides(String scenario) => [
   ),
   identityRepositoryProvider.overrideWithValue(
     DemoIdentityRepository(device: _device(scenario)),
-  ),
-  signInMethodsRepositoryProvider.overrideWithValue(
-    DemoSignInMethodsRepository(),
   ),
   pairingRepositoryProvider.overrideWithValue(DemoPairingRepository()),
   invitationRepositoryProvider.overrideWithValue(DemoInvitationRepository()),

@@ -23,8 +23,9 @@ String _wd(int isoWeekday) =>
         .format(DateTime(2024, 1, 1 + isoWeekday - 1))
         .replaceAll('.', '');
 
-/// Hour the editor starts a new event on: the next full hour of the real clock.
-int get _defaultHour => (DateTime.now().hour + 1).clamp(0, 23);
+/// The clock the new-event tests run on, so the default start (the next full hour)
+/// does not depend on when the suite runs.
+final _morning = DateTime(2026, 10, 14, 9, 30);
 
 final _day = DateTime(2026, 10, 14); // a Wednesday, so the weekly default is Mi
 
@@ -62,11 +63,15 @@ Future<ProviderContainer> _app(
   WidgetTester t, {
   FakeCalendarRepository? calendar,
   List<SettingEntry> settings = const [],
+  DateTime? now,
 }) async {
   final container = await pumpApp(
     t,
     overrides: [
-      ...baseOverrides(identity: FakeIdentityRepository(current: device())),
+      ...baseOverrides(
+        identity: FakeIdentityRepository(current: device()),
+        now: now,
+      ),
       householdSettingsRepositoryProvider.overrideWithValue(
         _SettingsFake(settings),
       ),
@@ -84,8 +89,14 @@ Future<void> _open(
   EventEditArgs? args,
   String route = Routes.eventNew,
   List<SettingEntry> settings = const [],
+  DateTime? now,
 }) async {
-  final container = await _app(t, calendar: calendar, settings: settings);
+  final container = await _app(
+    t,
+    calendar: calendar,
+    settings: settings,
+    now: now ?? _morning,
+  );
   // The push completes when the editor pops, so it is not awaited.
   unawaited(container.read(routerProvider).push(route, extra: args));
   await t.pumpAndSettle();
@@ -135,7 +146,8 @@ void main() {
 
       expect(cal.saved, hasLength(1));
       final json = cal.saved.single.toJson();
-      final start = DateTime(2026, 10, 14, _defaultHour);
+      // The next full hour after 09:30.
+      final start = DateTime(2026, 10, 14, 10);
       expect(json['title'], 'Zahnarzt');
       expect(json['is_all_day'], false);
       expect(json['starts_at'], start.toUtc().toIso8601String());
@@ -221,24 +233,34 @@ void main() {
       expect(cal.saved.single.importance, Importance.normal);
     });
 
-    testWidgets('an all-day event saves start_date and end_date', (t) async {
-      final cal = FakeCalendarRepository();
-      await _open(
-        t,
-        calendar: cal,
-        args: EventEditArgs(date: _day),
-      );
-      await _title(t, 'Geburtstag');
-      await _tap(t, find.widgetWithText(SwitchListTile, _de.eventAllDay));
-      await _save(t);
+    // Late in the evening the default timed draft is 23:00–00:00; switched to all-day
+    // it is still one day, not two (end_date is inclusive, specs/04).
+    for (final now in [
+      _morning,
+      DateTime(2026, 10, 14, 22, 30),
+      DateTime(2026, 10, 14, 23, 30),
+    ]) {
+      testWidgets('an all-day event saves start_date and end_date '
+          '(clock ${now.hour}:${now.minute})', (t) async {
+        final cal = FakeCalendarRepository();
+        await _open(
+          t,
+          calendar: cal,
+          args: EventEditArgs(date: _day),
+          now: now,
+        );
+        await _title(t, 'Geburtstag');
+        await _tap(t, find.widgetWithText(SwitchListTile, _de.eventAllDay));
+        await _save(t);
 
-      final json = cal.saved.single.toJson();
-      expect(json['is_all_day'], true);
-      expect(json['start_date'], '2026-10-14');
-      expect(json['end_date'], '2026-10-14');
-      expect(json['starts_at'], isNull);
-      expect(json['ends_at'], isNull);
-    });
+        final json = cal.saved.single.toJson();
+        expect(json['is_all_day'], true);
+        expect(json['start_date'], '2026-10-14');
+        expect(json['end_date'], '2026-10-14');
+        expect(json['starts_at'], isNull);
+        expect(json['ends_at'], isNull);
+      });
+    }
 
     testWidgets('an empty title is refused and nothing is saved', (t) async {
       final cal = FakeCalendarRepository();

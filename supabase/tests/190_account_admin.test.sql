@@ -1,9 +1,9 @@
 begin;
-select plan(59);
+select plan(48);
 
 -- C1 account administration (specs/20 J6 "Konto löschen", J4 "Zwei-Faktor zurücksetzen";
--- specs/16 step 9.6): the service-role functions behind account-delete, apple-token and
--- mfa-reset, and the guardian functions behind Mitglieder. Start from an empty system, all
+-- specs/16 step 9.6): the service-role functions behind account-delete and mfa-reset, and
+-- the guardian functions behind Mitglieder. Start from an empty system, all
 -- rolled back.
 delete from app.household;
 
@@ -242,39 +242,6 @@ select is((select count(*) from app.household where name = 'Mb' and deleted_at i
   'another family is untouched');
 select is((select count(*) from app.device where label = 'Fritz-Phone' and revoked_at is null), 1::bigint,
   'and its guardian keeps the phone');
-
--- ============================================================ apple tokens: service only
-select pg_temp.as_phone('Hugo-Phone');
-select throws_ok(format($$ select api.apple_token_put(%L, 'x') $$, pg_temp.uid('Hugo')),
-  '42501', null, 'a signed-in account cannot store an Apple token');
-select throws_ok(format($$ select api.apple_token_get(%L) $$, pg_temp.uid('Hugo')),
-  '42501', null, 'a signed-in account cannot read an Apple token');
-select throws_ok('select count(*) from app.apple_token', '42501', null,
-  'and cannot read the token table');
-select pg_temp.as_fake_service();
-select throws_ok(format($$ select api.apple_token_put(%L, 'x') $$, pg_temp.uid('Hugo')),
-  '42501', 'service role required', 'a user claim is refused by apple_token_put');
-select throws_ok(format($$ select api.apple_token_get(%L) $$, pg_temp.uid('Hugo')),
-  '42501', 'service role required', 'and by apple_token_get');
-select pg_temp.as_service();
-select throws_ok(format($$ select api.apple_token_put(%L, '') $$, pg_temp.uid('Hugo')),
-  '22023', 'token missing', 'an empty token is refused');
-select is((select api.apple_token_get(pg_temp.uid('Hugo'))), null::text, 'no token stored yet reads as null');
-select api.apple_token_put(pg_temp.uid('Hugo'), 'enc-1');
-select api.apple_token_put(pg_temp.uid('Hugo'), 'enc-2');
-select is((select api.apple_token_get(pg_temp.uid('Hugo')))::text, 'enc-2', 'the token is stored, and a second put replaces it');
-select pg_temp.owner();
-select is((select count(*) from app.apple_token where user_id = pg_temp.uid('Hugo')), 1::bigint, 'one row per account');
-
--- The Apple token row is gone with its account (cascade).
-select pg_temp.as_service();
-select api.apple_token_put(pg_temp.uid('Quirin'), 'enc-q');
-select pg_temp.owner();
-select is((select count(*) from app.apple_token where user_id = pg_temp.uid('Quirin')), 1::bigint,
-  'a stored Apple token is kept until the account goes');
-delete from auth.users where id = pg_temp.uid('Quirin');
-select is((select count(*) from app.apple_token where user_id = pg_temp.uid('Quirin')), 0::bigint,
-  'and is removed with the account');
 
 -- ============================================================ mfa_reset_check
 -- Hugo (guardian, phone) resets Ida's authenticator.

@@ -67,5 +67,6 @@ jobs:
           echo "$OSV_SHA256  osv-scanner" | sha256sum -c
           chmod +x osv-scanner
           ./osv-scanner scan source --lockfile=app/pubspec.lock \
-            --lockfile=app/ios/Gemfile.lock --lockfile=package-lock.json \
+            --lockfile=app/ios/Gemfile.lock --lockfile=app/android/Gemfile.lock \
+            --lockfile=package-lock.json \
             --lockfile=website/package-lock.json

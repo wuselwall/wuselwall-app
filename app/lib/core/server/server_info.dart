@@ -8,8 +8,6 @@ class ServerInfo {
     required this.apiVersion,
     required this.minAppVersion,
     this.householdCreation = 'token',
-    this.appleSignIn = false,
-    this.googleSignIn = false,
     this.features = const [],
   });
 
@@ -25,7 +23,6 @@ class ServerInfo {
     final key = json['publishable_key'];
     final api = json['api_version'];
     final min = json['min_app_version'];
-    final signIn = json['sign_in'];
     final features = json['features'];
     if (supabaseUrl == null ||
         !supabaseUrl.hasScheme ||
@@ -47,8 +44,6 @@ class ServerInfo {
       apiVersion: api,
       minAppVersion: min,
       householdCreation: json['household_creation'] as String? ?? 'token',
-      appleSignIn: signIn is Map && signIn['apple'] == true,
-      googleSignIn: signIn is Map && signIn['google'] == true,
       features: features is List
           ? features.whereType<String>().toList()
           : const [],
@@ -61,10 +56,6 @@ class ServerInfo {
   final int apiVersion;
   final String minAppVersion;
   final String householdCreation;
-
-  /// Sign-in through Auth's redirect, as the server's operator configured it.
-  final bool appleSignIn;
-  final bool googleSignIn;
   final List<String> features;
 
   /// The form the app keeps on the device; [ServerInfo.fromDiscovery] reads it back.
@@ -75,7 +66,7 @@ class ServerInfo {
     'api_version': apiVersion,
     'min_app_version': minAppVersion,
     'household_creation': householdCreation,
-    'sign_in': {'password': true, 'apple': appleSignIn, 'google': googleSignIn},
+    'sign_in': {'password': true},
     'features': features,
   };
 

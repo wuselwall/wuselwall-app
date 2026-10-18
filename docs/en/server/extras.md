@@ -18,19 +18,6 @@ For this the server needs an SMTP service, a provider that sends mail for it. A 
 
 **At Supabase:** **Authentication → Emails → SMTP Settings**, with the same details. Supabase's built-in email is meant for trying things out and sends only a few mails an hour.
 
-## Sign in with Apple and Google {#apple-and-google}
-
-**Our advice: leave it out.** Email and password plus the two-factor code ([Security](/en/settings/security)) keep an account just as safe.
-
-Technically it works on any server, but only through the sign-in window in the browser, with **your own** Apple and Google credentials:
-
-- **Apple** requires a membership in the Apple Developer Program (USD 99 a year), a *Services ID* and a key. The secret made from them **expires every six months** and must be renewed, or signing in with Apple stops working.
-- **Google** requires a Google Cloud project with an OAuth consent screen and an OAuth client of type *Web*.
-
-The return address for both is `https://api.example.org/auth/v1/callback` (at Supabase `https://<project-id>.supabase.co/auth/v1/callback`). At home the values go into `stack/.env` (`APPLE_ENABLED`, `APPLE_CLIENT_IDS`, `APPLE_SECRET`, `GOOGLE_ENABLED`, `GOOGLE_CLIENT_IDS`, `GOOGLE_CLIENT_SECRET`, then `./wuselwall compose up -d auth`); at Supabase under **Authentication → Providers**. The app asks the server what it offers and shows the buttons by itself.
-
-Signing in directly on the phone (without a browser window) and passkeys are not available on self-hosted servers: a sign-in token that Apple or Google issues for the app should never reach a server that could use it elsewhere.
-
 ## Public and school holidays {#holidays}
 
 For the week board, the server fetches the public and school holidays of the countries you chose in the settings, once a week. The source is the free [OpenHolidays API](https://www.openholidaysapi.org/). The server sends only country codes, nothing about your family, and the apps never ask OpenHolidays themselves. If the server can't reach the internet, the holidays are missing; everything else keeps working.

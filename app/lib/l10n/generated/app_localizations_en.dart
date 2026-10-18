@@ -591,32 +591,14 @@ class AppLocalizationsEn extends AppLocalizations {
       'That person is no longer part of the household. The change was not saved.';
 
   @override
-  String get doorApple => 'Continue with Apple';
-
-  @override
-  String get doorGoogle => 'Continue with Google';
-
-  @override
   String get doorEmail => 'Continue with email';
 
   @override
   String get doorOr => 'or';
 
   @override
-  String get errProviderFailed =>
-      'That did not work. Try again, or sign in with your email.';
-
-  @override
   String get errSignupDisabled =>
-      'There is no WuselWall account for this address yet. Sign in with your email and password, then connect Apple or Google under Settings → Sign-in.';
-
-  @override
-  String get errIdentityAlreadyExists =>
-      'This Apple or Google account is already connected to another WuselWall account.';
-
-  @override
-  String get errLastSignInMethod =>
-      'This is your only way to sign in, so it cannot be removed.';
+      'There is no WuselWall account for this address yet. Ask your family for an invitation, or start a new family.';
 
   @override
   String get errEmailExists =>
@@ -627,35 +609,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get signInMethodEmail => 'Email code';
-
-  @override
-  String get signInMethodApple => 'Apple';
-
-  @override
-  String get signInMethodGoogle => 'Google';
-
-  @override
-  String get signInMethodNotConnected => 'Not connected';
-
-  @override
-  String get signInMethodConnect => 'Connect';
-
-  @override
-  String get signInMethodRemove => 'Remove';
-
-  @override
-  String get signInMethodLinkElsewhere =>
-      'Connect it in the app on your phone.';
-
-  @override
-  String signInMethodConnected(String provider) {
-    return '$provider is connected.';
-  }
-
-  @override
-  String signInMethodRemoveConfirm(String provider) {
-    return 'Remove $provider? You will no longer be able to sign in with it.';
-  }
 
   @override
   String boardWeekNumber(int week) {

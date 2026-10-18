@@ -37,8 +37,22 @@ jobs:
       # Exactly the packages in pubspec.lock, checked against their hashes, before the
       # signing secrets come near the build.
       - run: flutter pub get --enforce-lockfile
-      - uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
-        with: { ruby-version: '3.3', bundler-cache: true, working-directory: app/ios }
+      # fastlane runs on the Mac's Homebrew Ruby (brew install ruby). ruby/setup-ruby does not
+      # work here: its prebuilt Rubies expect GitHub's runner image, its tool cache path and
+      # its Homebrew libraries. The gems are installed from Gemfile.lock (frozen) outside the
+      # workspace, so checkout's clean keeps them between runs.
+      - name: Ruby and the locked gems
+        working-directory: app/ios
+        run: |
+          brew=$(command -v brew || ls /opt/homebrew/bin/brew /usr/local/bin/brew 2>/dev/null | head -1)
+          ruby_bin="$([ -n "$brew" ] && "$brew" --prefix ruby 2>/dev/null || true)/bin"
+          [ -x "$ruby_bin/ruby" ] || { echo "::error::no Homebrew Ruby on the Mac: brew install ruby"; exit 1; }
+          export PATH="$ruby_bin:$PATH"
+          echo "$ruby_bin" >> "$GITHUB_PATH"
+          export BUNDLE_PATH="$HOME/.cache/wuselwall/bundle" BUNDLE_FROZEN=true
+          printf 'BUNDLE_PATH=%s\nBUNDLE_FROZEN=true\n' "$BUNDLE_PATH" >> "$GITHUB_ENV"
+          ruby --version
+          bundle install
       - run: xcodebuild -version
       # A tag sets the version name; a manual run keeps the one in pubspec.yaml. The run
       # number plus 100 is the build number, so every upload is newer than the last: the

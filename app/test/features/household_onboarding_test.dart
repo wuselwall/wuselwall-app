@@ -36,7 +36,7 @@ void main() {
         ),
       );
       expect(find.text('Neue Familie'), findsOneWidget);
-      expect(find.text('Mit Apple fortfahren'), findsNothing);
+      expect(find.text('Mit E-Mail fortfahren'), findsNothing);
       expect(find.text('Dein Name'), findsOneWidget);
     },
   );

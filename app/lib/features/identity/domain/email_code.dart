@@ -27,10 +27,8 @@ const newAccountClockSkew = Duration(minutes: 5);
 /// Whether a code sign-in just created (or first used) this account, so E3 is owed:
 /// the account has no [signInChoiceKey] marker yet and was created within
 /// [newAccountWindow]. An account that predates the marker is never new in this sense,
-/// because it is older than the window. An account signed in by Apple or Google just
-/// now and never answered E3 would also pass this check; E3 then appears once, which is
-/// harmless. An app closed before E3 is answered leaves the account to H1 after the
-/// window has passed.
+/// because it is older than the window. An app closed before E3 is answered leaves the
+/// account to H1 after the window has passed.
 bool isFirstCodeSignIn({
   required String createdAt,
   required Map<String, dynamic>? userMetadata,

@@ -28,7 +28,7 @@ change and a tag producing installable builds. Once that works, every module aft
 | 6 | M0.2 | The shopping list, online only — the first real feature | 1–2 evenings |
 | 7 | M0.4 | `release-ios.yml` and `release-android.yml`: a tag puts builds on the testers' devices | 1 weekend |
 | 8 | M0.3 | A self-hosted server ([ADR-013](adr/ADR-013-self-hosted-compose-stack.md)): own keys, an allow-list front, backups | 1 evening |
-| 9 | M1.0 | Onboarding ([ADR-014](adr/ADR-014-self-service-onboarding.md)): Apple, Google, email code and password; households, invitations, pairing, getting started, deletion | 2–3 weekends |
+| 9 | M1.0 | Onboarding ([ADR-014](adr/ADR-014-self-service-onboarding.md)): email code and password; households, invitations, pairing, getting started, deletion | 2–3 weekends |
 | 10 | M1.5 | Journey gaps before launch: members, family and devices editable, shopping structure, servers without mail, approvals on Today, the wall's offline start, the release checklist | 2 weekends |
 
 Steps 1–4 can be done in a single long weekend. Step 7 waits on the Apple and Google
@@ -77,8 +77,6 @@ and no Xcode debugger. See [Q35](14-open-questions.md).
 | **Second private GitHub repository** `wuselwall-certificates` | `fastlane match` storage for iOS signing | — | Minutes |
 | Domain `wuselwall.app` ([ADR-017](adr/ADR-017-wuselwall-app-domain.md)) | The project's website, docs and links site | ≈ €14 / year | in place 2026-10-13 |
 | Firebase project | Android push via FCM — only if a push relay is ever built ([Q47](14-open-questions.md)); v1's reminders are local | free | Minutes |
-| **Sign in with Apple** (in the Developer account): the capability on `ch.goomba.wuselwall`, a Services ID, a key | Step 9 — Apple sign-in on iOS, Android and the web | — | Minutes, after the programme is active |
-| **Google Cloud project** with an OAuth consent screen and three OAuth clients (web, iOS, Android) | Step 9 — Google sign-in | free | Minutes; the consent screen's branding review can take a few days |
 | **Scaleway account** with Transactional Email ([Q41](14-open-questions.md), decided): one project per server that sends mail; sending domains verified with SPF/DKIM/DMARC ([10](10-deployment-and-ops.md#email-setup)) | Step 9 — email codes | 300 mails/month free, then €0.25 per 1,000 | An evening, plus DNS propagation |
 
 ---
@@ -426,6 +424,13 @@ exists; until then `release-android.yml` builds the APK and the App Bundle for a
 *Split 2026-10-15* into `release-ios.yml` and `release-android.yml` (formerly
 `build-android.yml`), one workflow per platform; the build number is the run number plus
 100, since the renamed workflows count from 1 again.
+*Built 2026-10-17,* after the first App Bundle (versionCode 101) went to the internal
+track by hand: the Android upload, a job `play` on a GitHub-hosted runner that takes the
+bundle from the build job and runs `bundle exec fastlane android internal`
+(`app/android/Gemfile`, `app/android/fastlane/`), authenticated with the Play service
+account key in the secret `PLAY_SERVICE_ACCOUNT_JSON`. A tag uploads; "Run workflow" uploads
+only with *upload* ticked. The lane uploads the build alone, never the store listing in
+`fastlane/metadata`.
 
 Each platform's `Fastfile` holds two or three short lanes; the workflow stays thin, so a
 release can also be run from a Mac with the same lanes if one becomes available.
@@ -489,15 +494,15 @@ keys, and the restore drill has restored a nightly dump once. *(Restore drill fi
 ## Step 9 — Onboarding (M1.0)
 
 > **Status 2026-10-16** (merged to `main`):
-> 1. Sign-in: Apple and Google (2026-10-13), the email code, E1–E3 and the password are built. Done.
+> 1. Sign-in: the email code, E1–E3 and the password are built. Done. Apple and Google (built 2026-10-13) were removed again on 2026-10-17, with their packages, the `apple-token` function and `app.apple_token`.
 > 2. Households: built (H1, H2, founder codes, `my_account`). Done. The wizard and `setup_household` are still there for one release.
 > 3. Invitations: built, with universal links and App Links (2026-10-15; the upload key's fingerprint is in `assetlinks.json` since 2026-10-16, Play App Signing's follows with the first Play upload) and the guardian's "joined" notice on Today.
 > 4. Pairing: built. The code enrolment stays for one release.
 > 5. Getting started and deferred PIN: built.
-> 6. Leaving: built (leave, delete with 14 days to restore, purge job, account deletion with the Apple revocation, second-factor reset, export).
+> 6. Leaving: built (leave, delete with 14 days to restore, purge job, account deletion, second-factor reset, export).
 > 7. Localised mail: built, through the send-email hook and Scaleway Transactional Email when configured; the bilingual GoTrue template remains the fallback.
 > 7a. Any server, chosen in the app: built (the server choice, the demo, discovery and compatibility, the self-hosting kit), and since 2026-10-15 the server in the fragment of invitation and pairing links.
-> 8. Tests: the pgTAP suites and the Dart tests are built with the features. Since 2026-10-15 the journeys J1–J3 are written: `app/test/integration/onboarding_integration_test.dart` drives the repositories against a throwaway stack (the email code read from Mailpit, founder codes planted by `supabase/seed.sql`) and runs in CI's `backend` job, and `app/test/journeys/` drives the real screens with fakes and asserts the screen counts of NFR-17 on every PR. Still open: the manual Apple and Google checks on real devices, and the timings (90 s, 60 s, 30 s) on the release checklist.
+> 8. Tests: the pgTAP suites and the Dart tests are built with the features. Since 2026-10-15 the journeys J1–J3 are written: `app/test/integration/onboarding_integration_test.dart` drives the repositories against a throwaway stack (the email code read from Mailpit, founder codes planted by `supabase/seed.sql`) and runs in CI's `backend` job, and `app/test/journeys/` drives the real screens with fakes and asserts the screen counts of NFR-17 on every PR. Still open: the timings (90 s, 60 s, 30 s) on the release checklist.
 > 9. User documentation: `docs/guide/setup.md` and its screenshots rewritten (both languages).
 >
 > **Next:** step 10, then M1.6. Gaps found in the journeys after this step was built are step 10's slices 4 (servers without mail), 7 (loose ends) and 10 (retiring the M0.1 paths).
@@ -510,10 +515,10 @@ keys, and the restore drill has restored a nightly dump once. *(Restore drill fi
 
 
 *Added 2026-10-11.* The experience is [20](20-onboarding.md); the decision
-[ADR-014](adr/ADR-014-self-service-onboarding.md). Mechanics in [10 §4](10-deployment-and-ops.md#4-sign-in-providers-and-mail).
+[ADR-014](adr/ADR-014-self-service-onboarding.md). Mechanics in [10 §4](10-deployment-and-ops.md#4-sign-in-and-mail).
 Order chosen so that each slice is usable on its own:
 
-1. **Sign-in, all four ways.** `config.toml`: `enable_signup = true`,
+1. **Sign-in.** *(Apple and Google removed 2026-10-17; the history below is kept.)* `config.toml`: `enable_signup = true`,
    `enable_manual_linking = true`, `[auth.email]` OTP settings, `[auth.external.apple]`
    and `[auth.external.google]` from `env(...)`, `[auth.rate_limit]`, `[auth.email.smtp]`.
    App: the front door, E1–E3, `sign_in_with_apple` and `google_sign_in` with
@@ -542,8 +547,8 @@ Order chosen so that each slice is usable on its own:
 5. **Getting started and deferral.** `api.getting_started`, dismissals, the card on Today;
    the PIN prompt moved to the first pairing; empty states per module as they are built.
 6. **Leaving.** `api.account_leave`, `api.household_delete/_restore` and the 14-day purge
-   job (`pg_cron`), the `account-delete` Edge Function (Admin API, Apple revocation), the
-   Apple authorisation-code exchange, `guardian_reset_mfa`, data export.
+   job (`pg_cron`), the `account-delete` Edge Function (Admin API), `guardian_reset_mfa`,
+   data export.
 7. **Localised mail.** The send-email hook in `supabase/functions/` with the message files
    in `_shared/`, sending through the operator's provider (Scaleway TEM's HTTP API
    recommended), on the compose stack (which runs Edge Functions since A11 was fixed). A bilingual GoTrue
@@ -560,7 +565,7 @@ Order chosen so that each slice is usable on its own:
      only when not the default), older links without `@host` still read; the app opens
      such links (`app_links`) and uses the link's server when none is chosen, continues
      when it matches, and never switches silently when another server is chosen;
-   - native Apple/Google and passkeys hidden except on `WW_FIRST_PARTY_HOSTS` (a repository
+   - passkeys hidden except on `WW_FIRST_PARTY_HOSTS` (a repository
      variable, never a committed file);
    - `min_app_version` and the `api_version` window honoured.
 8. **Tests.**
@@ -574,12 +579,11 @@ Order chosen so that each slice is usable on its own:
      2026-10-15): J1 by email code through Mailpit, J2, J3, each with a
      screen-count assertion. The backend journeys are `app/test/integration/onboarding_integration_test.dart`
      (CI's `backend` job); the screen counts are `app/test/journeys/` (every PR).
-   - Manual: Apple and Google on real devices.
 9. **User documentation:** rewrite `docs/guide/setup.md` (and `/en/`) and regenerate the
    screenshots: the front door, H1, H2, an invitation, P1 and G1.
 
-**Done when** a new family is started on an iPhone with Apple and on an Android phone with
-an email code, the second adult joins from a messenger link, a tablet is paired without
+**Done when** a new family is started on an iPhone and on an Android phone with an email
+code, the second adult joins from a messenger link, a tablet is paired without
 typing on it, the J1/J2/J3 times on the release checklist meet NFR-17, and a deleted
 account leaves nothing reachable.
 
@@ -686,7 +690,7 @@ languages. A slice that changes the app–server contract raises `api_version`.
 9. **The release checklist** that NFR-17, M1.0 and M1.6 refer to and that does not exist
    yet: `specs/22-release-checklist.md`. The device matrix (iPhone, iPad, an Android phone,
    the wall tablet, the web build); J1–J3 timed by someone new to the build, with every
-   hesitation written down; Apple and Google sign-in on real devices; an invitation link and
+   hesitation written down; email-code sign-in on real devices; an invitation link and
    a pairing QR opened from the camera app on both platforms (universal links, App Links); a
    wall reboot with the network off (slice 6); a local reminder firing; the TestFlight expiry
    date; the date of the last restore drill. Each release links its filled-in copy in its
@@ -749,8 +753,6 @@ manager.
 | `WW_FIRST_PARTY_HOSTS` (not secret, but kept out of public logs) | GitHub secret | the hosts with native sign-in and passkeys in release builds |
 | `DOCS_DEPLOY_KEY`, `DOCS_DEPLOY_KNOWN_HOSTS`, `DOCS_DEPLOY_TARGET` | GitHub secrets | publishing the docs |
 | Push credentials (APNs key, FCM service account) — only if a relay is ever built ([Q47](14-open-questions.md)) | Edge Function secrets | a future `push-send` |
-| `WW_APPLE_SECRET` (the six-monthly client-secret JWT), the Sign in with Apple `.p8` key | The server's stack `.env` (`GOTRUE_EXTERNAL_APPLE_*`); the `.p8` in the password manager only | Supabase Auth (Apple via OAuth); the `account-delete` and code-exchange functions |
-| `WW_GOOGLE_CLIENT_SECRET` (web client) | The server's stack `.env` (`GOTRUE_EXTERNAL_GOOGLE_*`) | Supabase Auth (Google via OAuth) |
 | Scaleway TEM credentials: project ID and the secret key of an IAM application limited to Transactional Email, one pair per environment | The server's stack `.env` (`SMTP_USER`, `SMTP_PASS`) and Edge Function secrets, or a hosted project's Auth settings. Throwaway stacks use Mailpit | Supabase Auth email ([10](10-deployment-and-ops.md#email-setup)), the send-email hook |
 
 The **publishable key** (`WW_PUBLISHABLE_KEY`) is not a secret — it is compiled into every

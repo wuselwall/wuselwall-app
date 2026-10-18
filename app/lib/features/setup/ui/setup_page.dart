@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,14 +11,9 @@ import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/legal/legal_links.dart';
 import 'package:wuselwall/core/server/server_address.dart';
 import 'package:wuselwall/core/ui/qr_code_view.dart';
-import 'package:wuselwall/core/ui/snackbars.dart';
-import 'package:wuselwall/features/identity/data/sign_in_methods_repository.dart';
-import 'package:wuselwall/features/identity/domain/sign_in_method.dart';
-import 'package:wuselwall/features/setup/ui/provider_buttons.dart';
 
-/// What every un-enrolled device shows (specs/20, "The front door"): the sign-in
-/// group (Apple and Google where this build offers them, then email), then below
-/// "or" the device code and a new household.
+/// What every un-enrolled device shows (specs/20, "The front door"): sign-in with
+/// email and an invitation, then below "or" the device code and a new household.
 class SetupPage extends ConsumerStatefulWidget {
   const SetupPage({super.key});
 
@@ -29,9 +22,6 @@ class SetupPage extends ConsumerStatefulWidget {
 }
 
 class _SetupPageState extends ConsumerState<SetupPage> {
-  StreamSubscription<Object>? _redirectErrors;
-  bool _busy = false;
-
   @override
   void initState() {
     super.initState();
@@ -41,38 +31,12 @@ class _SetupPageState extends ConsumerState<SetupPage> {
         if (mounted) context.go(Routes.enrol);
       });
     }
-    // A redirect sign-in (the web, Apple on Android) reports back here, not from
-    // the call that opened the browser.
-    _redirectErrors = ref
-        .read(signInMethodsRepositoryProvider)
-        .authErrors()
-        .listen((failure) {
-          if (mounted) context.showFailure(failure);
-        });
-  }
-
-  @override
-  void dispose() {
-    unawaited(_redirectErrors?.cancel());
-    super.dispose();
-  }
-
-  Future<void> _signIn(SignInProvider provider) async {
-    setState(() => _busy = true);
-    final result = await ref
-        .read(signInMethodsRepositoryProvider)
-        .signIn(provider);
-    if (!mounted) return;
-    setState(() => _busy = false);
-    final failure = result.failureOrNull;
-    if (failure != null) context.showFailure(failure);
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
-    final providers = ref.read(signInMethodsRepositoryProvider).available();
     final online = ref.watch(connectivityProvider).value ?? true;
     final session = ref.watch(serverSessionProvider);
 
@@ -94,24 +58,15 @@ class _SetupPageState extends ConsumerState<SetupPage> {
                 const SizedBox(height: Tokens.space2),
                 Text(l10n.doorTagline),
                 const SizedBox(height: Tokens.space6),
-                for (final p in providers) ...[
-                  ProviderButton(
-                    provider: p,
-                    onPressed: _busy || !online ? null : () => _signIn(p),
-                  ),
-                  const SizedBox(height: Tokens.space3),
-                ],
                 // E1: the address, then a code by e-mail (E2, E3).
                 OutlinedButton.icon(
-                  onPressed: _busy || !online
-                      ? null
-                      : () => context.go(Routes.signIn),
+                  onPressed: !online ? null : () => context.go(Routes.signIn),
                   icon: const Icon(Icons.mail_outline),
                   label: Text(l10n.doorEmail),
                 ),
                 // An invitation: the code, a link or its QR code (J2).
                 TextButton.icon(
-                  onPressed: _busy || !online
+                  onPressed: !online
                       ? null
                       : () => context.go(Routes.inviteCode),
                   icon: const Icon(Icons.mark_email_unread_outlined),
@@ -134,9 +89,7 @@ class _SetupPageState extends ConsumerState<SetupPage> {
                 ),
                 // Pairing (J3): the new device shows a code, a guardian's phone approves it.
                 TextButton.icon(
-                  onPressed: _busy || !online
-                      ? null
-                      : () => context.go(Routes.pair),
+                  onPressed: !online ? null : () => context.go(Routes.pair),
                   icon: const Icon(Icons.tablet_android),
                   label: Text(l10n.pairFrontDoorAction),
                 ),
@@ -144,7 +97,7 @@ class _SetupPageState extends ConsumerState<SetupPage> {
                 if (kIsWeb) const _ContinueOnPhone(),
                 if (session.leave != null)
                   TextButton(
-                    onPressed: _busy ? null : session.leave,
+                    onPressed: session.leave,
                     child: Text(l10n.serverChooseOther),
                   ),
                 // The privacy policy, quiet at the foot of the front door (specs/20).
