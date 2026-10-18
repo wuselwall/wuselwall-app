@@ -8,7 +8,7 @@ import { authProblems, retainedRedirects, retire, RETIRED_AUTH, retirementPatch 
 const TOKEN = 'sbp_test_token_not_real';
 
 /** A project as it looked with Google and Apple on (the pre-removal deploy). */
-function project({ applyPatch = true, deleteWorks = true, functions, uriAllowList, dropsList = false } = {}) {
+function project({ applyPatch = true, deleteWorks = true, functions, uriAllowList, dropsList = false, secretsDeleteWorks = true } = {}) {
   const state = {
     auth: {
       site_url: 'https://abcdefghijklmnopqrst.supabase.co',
@@ -39,6 +39,11 @@ function project({ applyPatch = true, deleteWorks = true, functions, uriAllowLis
       return ok(state.auth);
     }
     if (path === 'functions' && init.method === 'GET') return ok(state.functions.map((slug) => ({ slug })));
+    if (path === 'secrets' && init.method === 'GET') return ok(state.secrets.map((name) => ({ name, value: 'digest' })));
+    if (path === 'secrets' && init.method === 'DELETE') {
+      if (secretsDeleteWorks) state.secrets = state.secrets.filter((n) => !JSON.parse(init.body).includes(n));
+      return ok({});
+    }
     if (path.startsWith('functions/') && init.method === 'DELETE') {
       if (!deleteWorks) return new Response('{}', { status: 500 });
       state.functions = state.functions.filter((s) => s !== path.slice('functions/'.length));
@@ -49,7 +54,7 @@ function project({ applyPatch = true, deleteWorks = true, functions, uriAllowLis
   return { state, calls, fetchFn };
 }
 
-test('an upgrade from enabled providers switches them off, clears the callback and removes apple-token', async () => {
+test('an upgrade from enabled providers switches them off, clears the callback, removes apple-token and the Apple secrets', async () => {
   const p = project();
   const lines = [];
   const out = await retire({ project: 'abcdefghijklmnopqrst', token: TOKEN, fetchFn: p.fetchFn, log: (l) => lines.push(l) });
@@ -64,18 +69,20 @@ test('an upgrade from enabled providers switches them off, clears the callback a
   assert.deepEqual(p.state.functions, ['account-delete', 'server-info']);
   assert.deepEqual(out.deletedFunctions, ['apple-token']);
   assert.equal(out.switchedOff.length, 4);
-  // The revocation secrets are never touched: no call goes to the secrets endpoint.
-  assert.ok(!p.calls.some((c) => c.path.startsWith('secrets')));
-  assert.equal(p.state.secrets.length, 6);
+  // Only the Apple values go; any other secret stays.
+  assert.deepEqual(p.state.secrets, ['CRON_SECRET']);
+  assert.deepEqual(out.deletedSecrets, ['APPLE_TEAM_ID', 'APPLE_KEY_ID', 'APPLE_PRIVATE_KEY', 'APPLE_CLIENT_ID', 'APPLE_TOKEN_KEY']);
+  assert.deepEqual(p.calls.find((c) => c.method === 'DELETE' && c.path === 'secrets').body, out.deletedSecrets);
   // Removal is checked by reading back, not assumed from the DELETE.
   assert.deepEqual(p.calls.map((c) => `${c.method} ${c.path}`), [
     'GET config/auth', 'PATCH config/auth', 'GET config/auth',
     'GET functions', 'DELETE functions/apple-token', 'GET functions',
+    'GET secrets', 'DELETE secrets', 'GET secrets',
   ]);
   assert.deepEqual(p.calls[1].body, { ...RETIRED_AUTH, uri_allow_list: '' });
   // Nothing printed carries a setting value or the token.
   for (const l of lines) {
-    assert.ok(!l.includes('secret-jwt') && !l.includes('google-secret') && !l.includes(TOKEN), l);
+    assert.ok(!l.includes('secret-jwt') && !l.includes('google-secret') && !l.includes('digest') && !l.includes(TOKEN), l);
   }
 });
 
@@ -84,8 +91,10 @@ test('a second run finds nothing left to do and still verifies', async () => {
   await retire({ project: 'abcdefghijklmnopqrst', token: TOKEN, fetchFn: p.fetchFn, log: () => {} });
   const lines = [];
   const out = await retire({ project: 'abcdefghijklmnopqrst', token: TOKEN, fetchFn: p.fetchFn, log: (l) => lines.push(l) });
-  assert.deepEqual(out, { switchedOff: [], keptRedirects: 0, deletedFunctions: [] });
+  assert.deepEqual(out, { switchedOff: [], keptRedirects: 0, deletedFunctions: [], deletedSecrets: [] });
   assert.ok(lines.includes('Edge Function apple-token: not deployed'));
+  assert.ok(lines.includes('Edge Function secrets: no Apple values set'));
+  assert.ok(!p.calls.slice(9).some((c) => c.method === 'DELETE'), 'nothing deleted twice');
 });
 
 test('a project that ignores the update fails the deploy', async () => {
@@ -104,6 +113,14 @@ test('a failed function deletion fails the deploy', async () => {
   );
 });
 
+test('a secret deletion that does not stick fails the deploy', async () => {
+  const p = project({ secretsDeleteWorks: false });
+  await assert.rejects(
+    retire({ project: 'abcdefghijklmnopqrst', token: TOKEN, fetchFn: p.fetchFn, log: () => {} }),
+    /secrets still set: APPLE_TEAM_ID, APPLE_KEY_ID, APPLE_PRIVATE_KEY, APPLE_CLIENT_ID, APPLE_TOKEN_KEY/,
+  );
+});
+
 test('authProblems names each leftover without its value', () => {
   assert.deepEqual(authProblems({ ...RETIRED_AUTH }), []);
   const problems = authProblems({ ...RETIRED_AUTH, external_apple_enabled: true, uri_allow_list: 'https://x/**,ch.goomba.wuselwall://login-callback/' });
@@ -112,8 +129,8 @@ test('authProblems names each leftover without its value', () => {
   assert.ok(authProblems({}).includes('Google sign-in is still enabled'));
 });
 
-// specs/22 item 1: only the obsolete OAuth callback goes; invitation, pairing and any other
-// destination an operator added stays, in its order.
+// Only the obsolete OAuth callback goes; invitation, pairing and any other destination an
+// operator added stays, in its order.
 const MIXED = [
   'https://example.org/invite/**',
   'ch.goomba.wuselwall://login-callback/',
@@ -149,7 +166,7 @@ test('a mixed list is idempotent: the second run sends no allow-list and changes
   const patch = p.calls.slice(firstCalls).find((c) => c.method === 'PATCH');
   assert.ok(!('uri_allow_list' in patch.body), 'a list without the callback is not rewritten');
   assert.equal(p.state.auth.uri_allow_list, MIXED_KEPT.join(','));
-  assert.deepEqual(out, { switchedOff: [], keptRedirects: 4, deletedFunctions: [] });
+  assert.deepEqual(out, { switchedOff: [], keptRedirects: 4, deletedFunctions: [], deletedSecrets: [] });
 });
 
 test('a project without the callback keeps its allow-list untouched', async () => {

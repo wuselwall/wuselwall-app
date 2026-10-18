@@ -80,7 +80,7 @@ queues. It holds no business rules.
 | Domain logic | **SQL and PL/pgSQL** in the `api` schema | Transactional writes, guardian checks and audit in one place. |
 | Authorisation | **Row-level security**, forced on every table | The primary control: the anon key ships in every app. |
 | Auth | **Supabase Auth** (GoTrue) + a custom access-token hook | Adult accounts (email code, password; [ADR-014](adr/ADR-014-self-service-onboarding.md)) and per-device users; household and device in the JWT. A send-email hook localises auth mail. |
-| Composed reads, public endpoints | **Supabase Edge Functions** (Deno, TypeScript) | RFC 5545 via `rrule`, the timetable projection, ICS output via `ical-generator`, device enrolment, the send-email hook, account deletion, with Apple access revocation for accounts from before 2026-10-17; later MCP and Shortcuts. |
+| Composed reads, public endpoints | **Supabase Edge Functions** (Deno, TypeScript) | RFC 5545 via `rrule`, the timetable projection, ICS output via `ical-generator`, device enrolment, the send-email hook, account deletion; later MCP and Shortcuts. |
 | Background jobs | **pg_cron**, with **pg_net** to invoke Edge Functions | No worker container. Jobs and their history are visible in SQL. |
 | Realtime | **Supabase Realtime**, broadcast from triggers on a private per-household channel | Invalidations, not data: the client refetches. |
 | Push | **FCM** (Android) and **APNs** (iOS), sent from an Edge Function | Native push channels; provider choice is [Q38](14-open-questions.md). |
@@ -117,17 +117,20 @@ wuselwall/
 ├─ infra/
 │  ├─ supabase/                the official compose stack, WuselWall's lean and Caddy layers
 │  ├─ jobs/  cron/             the scheduled jobs: pg_cron (schedule.sql) or the host's cron
-│  ├─ web/                     compose project for the website container (ADR-016)
+
 │  └─ backup/                  backup.sh, restore-drill.sh (run on the server)
 ├─ server/                     wuselwall: install, update, backup, restore (in a release)
-├─ website/                    Astro site: landing page, Impressum, Datenschutz (ADR-016)
-├─ scripts/                    remote-web / remote-stack / -migrate / -pgtap / -backup / -setup-token
+├─ scripts/                    remote-stack / -migrate / -pgtap / -backup / -setup-token
 ├─ .github/workflows/          ci.yml, release-ios.yml, release-android.yml
 ├─ specs/                      the specification (this folder)
 └─ docs/                       the end-user documentation (VitePress)
 ```
 
 **The rules that keep this maintainable:**
+
+The marketing website and its deployment now live in the separate private
+`wuselwall/wuselwall-website` repository. VitePress source remains here and its intended
+publisher is GitHub Pages at `docs.wuselwall.app`; see [ADR-019](adr/ADR-019-website-repository-and-docs-pages.md).
 
 - **PostgREST exposes only the `api` schema.** Tables live in `app` and are unreachable
   from any client. Reads go through `api` views declared `security_invoker`, so the

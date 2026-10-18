@@ -182,6 +182,13 @@ text, and the System page reports the database round-trip.
 
 ## Step 4 — Continuous integration (M0.0)
 
+> The YAML below is the original plan, not the current workflow. Current jobs are
+> `ci.yml` (`app`, `website`, `audit`) and `backend-ci.yml` (`changes`, `edge-functions`,
+> `backend`, `required`). See the [candidate gate matrix](release-checklist.md#2-automated-and-local-gates-on-the-candidate-commit).
+> The intended aggregate check is `backend-ci / required`, plus app, website and audit.
+> Repository plan restrictions currently prevent configuring branch protection/rulesets;
+> exact-head checks require manual verification. No enforced protection is claimed.
+
 `.github/workflows/ci.yml`. Three parallel jobs, each one fast enough to wait for. A pull
 request runs only the fast checks (format, analyse, unit and widget tests); the web build
 and the backend job run on a tag `v*.*.*` or by hand ("Run workflow"), and by hand before a
@@ -256,7 +263,9 @@ Notes:
   Supabase) are added to the `backend` job in step 6, once there is a repository worth
   testing. **On-device UI tests** (`integration_test` on an Android emulator) are
   expensive in CI; run them nightly or before a release, not on every pull request.
-- Required status checks on `main`: `app`, `backend`, `functions`.
+- Intended status checks: `backend-ci / required`, `app`, `website`, `audit`. The old
+  `functions`/`backend` pair is replaced by the always-reporting aggregate; enforcement
+  remains unavailable as noted above.
 
 **Done when** a pull request that breaks a migration, an RLS test, a missing German
 string or the formatting is blocked.
@@ -485,25 +494,43 @@ keys, and the restore drill has restored a nightly dump once. *(Restore drill fi
 ## Step 9 — Onboarding (M1.0)
 
 > **Status 2026-10-16** (merged to `main`):
-> 1. Sign-in: the email code, E1–E3 and the password are built. Done. Apple and Google were built and then removed on 2026-10-17 ([00](00-brief-and-decisions.md)).
+> 1. Sign-in: the email code, E1–E3 and the password are built. Done. Apple and Google (built 2026-10-13) were removed again on 2026-10-17, with their packages, the `apple-token` function and `app.apple_token`.
 > 2. Households: built (H1, H2, founder codes, `my_account`). Done. The wizard and `setup_household` are still there for one release.
 > 3. Invitations: built, with universal links and App Links (2026-10-15; the upload key's fingerprint is in `assetlinks.json` since 2026-10-16, Play App Signing's follows with the first Play upload) and the guardian's "joined" notice on Today.
 > 4. Pairing: built. The code enrolment stays for one release.
 > 5. Getting started and deferred PIN: built.
-> 6. Leaving: built (leave, delete with 14 days to restore, purge job, account deletion with the Apple revocation, second-factor reset, export).
+> 6. Leaving: built (leave, delete with 14 days to restore, purge job, account deletion, second-factor reset, export).
 > 7. Localised mail: built, through the send-email hook and Scaleway Transactional Email when configured; the bilingual GoTrue template remains the fallback.
 > 7a. Any server, chosen in the app: built (the server choice, the demo, discovery and compatibility, the self-hosting kit), and since 2026-10-15 the server in the fragment of invitation and pairing links.
-> 8. Tests: the pgTAP suites and the Dart tests are built with the features. Since 2026-10-15 the journeys J1–J3 are written: `app/test/integration/onboarding_integration_test.dart` drives the repositories against a throwaway stack (the email code read from Mailpit, founder codes planted by `supabase/seed.sql`) and runs in CI's `backend` job, and `app/test/journeys/` drives the real screens with fakes and asserts the screen counts of NFR-17 on every PR. The manual Apple and Google checks on real devices are retired with social sign-in (2026-10-17, [00](00-brief-and-decisions.md#2026-10-17--social-sign-in-removed)); what replaces them for accounts from before is the recovery evidence of [22](22-legacy-social-account-recovery.md#required-evidence-before-release). Still open: the timings (90 s, 60 s, 30 s) on the release checklist.
+> 8. Tests: the pgTAP suites and the Dart tests are built with the features. Since 2026-10-15 the journeys J1–J3 are written: `app/test/integration/onboarding_integration_test.dart` drives the repositories against a throwaway stack (the email code read from Mailpit, founder codes planted by `supabase/seed.sql`) and runs in CI's `backend` job, and `app/test/journeys/` drives the real screens with fakes and asserts the screen counts of NFR-17 on every PR. Still open: the timings (90 s, 60 s, 30 s) on the release checklist.
 > 9. User documentation: `docs/guide/setup.md` and its screenshots rewritten (both languages).
 >
 > **Next:** step 10, then M1.6. Gaps found in the journeys after this step was built are step 10's slices 4 (servers without mail), 7 (loose ends) and 10 (retiring the M0.1 paths).
+>
+> **Deployment status unknown:** built source does not verify an installed server.
+> Operator-only steps after a verified backup are migrations, function deployment and
+> job scheduling (`infra/jobs/schedule.sql` or `infra/cron/*.sh`, never both), and
+> `ENABLE_EMAIL_AUTOCONFIRM=false` for servers with mail. Use the
+> [release checklist](release-checklist.md); this change authorizes no operation.
 
 
 *Added 2026-10-11.* The experience is [20](20-onboarding.md); the decision
-[ADR-014](adr/ADR-014-self-service-onboarding.md). Mechanics in [10 §4](10-deployment-and-ops.md#4-sign-in-providers-and-mail).
+[ADR-014](adr/ADR-014-self-service-onboarding.md). Mechanics in [10 §4](10-deployment-and-ops.md#4-sign-in-and-mail).
 Order chosen so that each slice is usable on its own:
 
-1. **Sign-in, with email codes and passwords.** `config.toml`: `enable_signup = true`, `[auth.email]` OTP settings, `[auth.rate_limit]`, `[auth.email.smtp]`. App: the front door, E1–E3, Einstellungen → Konto → Anmeldung (set password). Strings in both ARB files. *Apple and Google were built 2026-10-12, switched on 2026-10-13, and removed on 2026-10-17 ([00](00-brief-and-decisions.md)).*
+1. **Sign-in.** *(Apple and Google removed 2026-10-17; the history below is kept.)* `config.toml`: `enable_signup = true`,
+   `enable_manual_linking = true`, `[auth.email]` OTP settings, `[auth.external.apple]`
+   and `[auth.external.google]` from `env(...)`, `[auth.rate_limit]`, `[auth.email.smtp]`.
+   App: the front door, E1–E3, `sign_in_with_apple` and `google_sign_in` with
+   `signInWithIdToken`, OAuth redirect on the web; Einstellungen → Konto → Anmeldung
+   (link, unlink, set password). Strings in both ARB files.
+   *Apple and Google built 2026-10-12, switched on 2026-10-13* (client IDs on the server and
+   in the build configuration; their return URL is the server's `/auth/v1/callback`): native sheets on iOS (both) and Android (Google), the
+   redirect elsewhere; Einstellungen → Anmeldung links and unlinks them (native sheet only:
+   the redirect would replace the device's session). `enable_signup` stays `false` until
+   households (9.2) give a new account somewhere to go, so Apple and Google sign in only
+   accounts whose verified email already exists. CLI stacks keep both providers off. Still
+   open in 9.1: the email code, E1–E3, set password.
 2. **Households.** Migration: `app.instance_setting` (`code`), `profile.kind`,
    `household.created_by_profile_id`/`deleted_at`, founder codes in `app.setup_token`.
    `api.my_account`, `api.household_create` (registers this session as the personal
@@ -520,7 +547,8 @@ Order chosen so that each slice is usable on its own:
 5. **Getting started and deferral.** `api.getting_started`, dismissals, the card on Today;
    the PIN prompt moved to the first pairing; empty states per module as they are built.
 6. **Leaving.** `api.account_leave`, `api.household_delete/_restore` and the 14-day purge
-   job (`pg_cron`), the `account-delete` Edge Function (Admin API, Apple revocation for accounts from before 2026-10-17), `guardian_reset_mfa`, data export.
+   job (`pg_cron`), the `account-delete` Edge Function (Admin API), `guardian_reset_mfa`,
+   data export.
 7. **Localised mail.** The send-email hook in `supabase/functions/` with the message files
    in `_shared/`, sending through the operator's provider (Scaleway TEM's HTTP API
    recommended), on the compose stack (which runs Edge Functions since A11 was fixed). A bilingual GoTrue
@@ -547,13 +575,15 @@ Order chosen so that each slice is usable on its own:
      a shared device; deletion leaves no rows reachable.
    - The catalogue test's anon list becomes `health, invitation_preview, pairing_poll,
      pairing_start, server_info` plus `enrol_device` for one release.
-   - E2E (built 2026-10-15): J1 by email code through Mailpit, J2, J3, each with a
+   - Repository integration and screen-count tests (not real-device E2E; built
+     2026-10-15): J1 by email code through Mailpit, J2, J3, each with a
      screen-count assertion. The backend journeys are `app/test/integration/onboarding_integration_test.dart`
      (CI's `backend` job); the screen counts are `app/test/journeys/` (every PR).
 9. **User documentation:** rewrite `docs/guide/setup.md` (and `/en/`) and regenerate the
    screenshots: the front door, H1, H2, an invitation, P1 and G1.
 
-**Done when** a new family is started on an iPhone and on an Android phone with an email code, the second adult joins from a messenger link, a tablet is paired without
+**Done when** a new family is started on an iPhone and on an Android phone with an email
+code, the second adult joins from a messenger link, a tablet is paired without
 typing on it, the J1/J2/J3 times on the release checklist meet NFR-17, and a deleted
 account leaves nothing reachable.
 
@@ -660,7 +690,7 @@ languages. A slice that changes the app–server contract raises `api_version`.
 9. **The release checklist** that NFR-17, M1.0 and M1.6 refer to and that does not exist
    yet: `specs/22-release-checklist.md`. The device matrix (iPhone, iPad, an Android phone,
    the wall tablet, the web build); J1–J3 timed by someone new to the build, with every
-   hesitation written down; an invitation link and
+   hesitation written down; email-code sign-in on real devices; an invitation link and
    a pairing QR opened from the camera app on both platforms (universal links, App Links); a
    wall reboot with the network off (slice 6); a local reminder firing; the TestFlight expiry
    date; the date of the last restore drill. Each release links its filled-in copy in its

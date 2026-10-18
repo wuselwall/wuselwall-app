@@ -23,9 +23,7 @@ Map<String, Object?> doc({
   'api_version': api,
   'min_app_version': min,
   'household_creation': 'token',
-  // A server from before social sign-in was removed still advertises Apple; the app
-  // ignores it.
-  'sign_in': {'password': true, 'apple': true, 'google': false},
+  'sign_in': {'password': true},
   'features': ['calendar', 'shopping'],
 };
 
@@ -114,10 +112,6 @@ void main() {
       expect(s.supabaseUrl, Uri.parse('https://api.example.org'));
       expect(s.publishableKey, 'sb_publishable_abc');
       expect(s.features, ['calendar', 'shopping']);
-    });
-
-    test('keeps no social sign-in, even when an older server offers it', () {
-      expect(info().toJson()['sign_in'], {'password': true});
     });
 
     test('without supabase_url the document speaks for its own origin', () {
@@ -261,7 +255,7 @@ void main() {
       final c = AppConfig.forServer(build, info());
       expect(c.supabaseUrl, 'https://api.example.org');
       expect(c.supabasePublishableKey, 'sb_publishable_abc');
-      expect(c.passkeys, isFalse);
+      expect(c.nativeSignIn, isFalse);
       expect(c.hasFixedServer, isFalse);
     });
 

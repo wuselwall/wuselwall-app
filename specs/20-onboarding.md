@@ -6,6 +6,10 @@ underneath (device sessions, tap-to-switch, the guardian PIN) is unchanged and l
 [08](08-users-auth-permissions.md); this document is about how people and devices get
 *into* it.
 
+> **2026-10-17: no Sign in with Apple or Google.** Adults sign in with a code by email or a
+> password, and passkeys stay with the first-party servers. This document describes the app
+> without the two providers; [ADR-014](adr/ADR-014-self-service-onboarding.md) records the change.
+
 Onboarding is where a family app is won or lost. A household decides in the first ten
 minutes whether this is "the new thing we use" or "the thing Papa installed", and the
 second adult decides it in the first sixty seconds. Everything below is ordered by that.
@@ -15,8 +19,8 @@ second adult decides it in the first sixty seconds. Everything below is ordered 
 1. **One door for adults.** Signing up and signing in are the same screen and the same
    flow. Nobody has to know whether they already have an account.
 2. **Ask only what cannot be inferred or deferred.**
-   *Inferred:* timezone and language (from the device), their colour (the next free one in the palette), the device's name ("Daniels
-   iPhone"). *Deferred:* the guardian PIN (until the first shared device exists), avatars,
+   *Inferred:* timezone and language (from the device), their colour (the next free one in
+   the palette), the device's name ("Daniels iPhone"). *Deferred:* the guardian PIN (until the first shared device exists), avatars,
    birthdays, presence baselines, a second factor, a passkey, push permission.
 3. **Nobody types on a shared device.** Not a password, not a code, not a name. The wall
    display and the children's iPads are set up from a parent's phone.
@@ -33,7 +37,7 @@ second adult decides it in the first sixty seconds. Everything below is ordered 
 
 | | Journey | Who | Device | Target (NFR-17) |
 |---|---|---|---|---|
-| J1 | **Start a family** | The first adult | Their own phone or laptop | ≤ 3 screens after sign-in, ≤ 90 s, no typing beyond names |
+| J1 | **Start a family** | The first adult | Their own phone or laptop | ≤ 3 screens after sign-in, ≤ 90 s from the email code, no typing beyond names |
 | J2 | **Join a family** | An invited adult (the other parent, a grandparent, an au pair) | Their own phone | ≤ 2 screens after sign-in, ≤ 60 s from tapping the link |
 | J3 | **Connect a shared device** | A guardian, holding their phone | Wall display, children's iPad, a family tablet | Zero typing on the shared device, ≤ 30 s of the guardian's time |
 | J4 | **Come back** | Any adult with an account | A new or reset phone, the laptop | Sign-in, then straight to Today |
@@ -79,12 +83,8 @@ What every device shows before it belongs to a household:
 - **The M0.1 paths** (the founder wizard with its setup token, and code enrolment typed
   on the new device) stay for one release after step 9, for apps that have not updated,
   and are removed in [16, step 10.10](16-setup-plan.md#step-10--journey-gaps-before-launch-m15).
-  There is no separate "Als Erziehungsberechtigter anmelden": every adult sign-in is in the
-  top group.
-
-### Sign-in methods
-
-Sign-in with Apple and Google was removed on 2026-10-17 (decision log in [00](00-brief-and-decisions.md)). Adults sign in with an email code or a password. The app carries neither Apple's nor Google's sign-in library, and the server configures no external provider.
+  There is no separate "Als Erziehungsberechtigter anmelden": every adult signs in with
+  email.
 
 ### With email
 
@@ -160,16 +160,16 @@ an invitation or pairing link, which carries the server:
     SMTP autoconfirms addresses, so E1 there signs up and signs in with a password, H0's
     email match is off, and a guardian resets a forgotten password with a one-time code
     ([Q48](14-open-questions.md), [16, step 10.4](16-setup-plan.md#step-10--journey-gaps-before-launch-m15));
-  Passkeys appear only on the first-party servers
-  named at build time (`WW_FIRST_PARTY_HOSTS`). Otherwise a hostile server could replay
-  tokens addressed to our app to a first-party server (ADR-018, decision 6). The front door simply shows fewer buttons. It never
-  shows a button that will fail.
+
+  Passkeys appear only on the first-party servers named at build time
+  (`WW_FIRST_PARTY_HOSTS`). Otherwise a hostile server could collect assertions for a
+  first-party server (ADR-018, decision 6). The app never shows a button that will fail.
 
 ### Several ways into one account
 
-A verified email address is **one account**: the email code and the password sign in to the same
-account. In **Einstellungen → Konto → Anmeldung** an adult sees their methods (email code, password,
-passkeys), sets or changes the password, and removes any method but the last.
+Every account has its email code, and may add a password. In **Einstellungen → Konto →
+Anmeldung** an adult sees the address the code goes to and sets or changes the password.
+Passkeys sit in Einstellungen → Sicherheit, on the first-party servers only.
 
 ## J1 — Start a family
 
@@ -193,7 +193,7 @@ creates a second, empty household.
 | Field | Prefill | Notes |
 |---|---|---|
 | Familienname | Empty | Required |
-| Dein Name | Empty | Editable |
+| Dein Name | The name in the account's metadata, if any | Editable |
 | Deine Farbe | The first palette colour | A row of swatches; the choice is visible at once in the app bar |
 | — | "Zeitzone Europa/Berlin · Sprache Deutsch — von deinem Gerät · Ändern" | One quiet line; changed in Settings later |
 | Gründungscode | — | **Only while household creation is in `code` mode** (see [below](#household-creation-open-or-by-code)) |
@@ -360,7 +360,7 @@ guardian's phone approves it.*
 
 ## J4 — Come back
 
-- **New or reset phone:** sign in with any linked method. The account already has a
+- **New or reset phone:** sign in with the email code or the password. The account already has a
   household, so a personal device is created silently and Today opens. The account's
   other devices get a notice ("Neu angemeldet: Daniels iPhone"), and Settings → Geräte
   lists the old phone for revocation.
@@ -374,14 +374,14 @@ guardian's phone approves it.*
 
 ## J6 — Leave
 
-> **Built 2026-10-15.** **Leaving** (Einstellungen → Konto, "Familie verlassen") is refused for the last guardian with an account. **Household deletion** does not use the "recent sign-in ≤ 5 min" rule: it is replaced by typing the family's name on a guardian's own phone. A deleted family can be restored for 14 days ("Wiederherstellen"; "Neu anfangen" when signing in again), then the daily `household-purge` job deletes it. Jobs skip deleted households. **Account deletion** ("Konto löschen") asks for a fresh sign-in only when the server requires one (≤ 5 min), by email code. The profile stays in the family without an account, and Apple access is revoked; an encrypted Apple refresh token is kept only for that revocation. Guardians reset a co-guardian's second factor under Mitglieder.
+> **Built 2026-10-15.** **Leaving** (Einstellungen → Konto, "Familie verlassen") is refused for the last guardian with an account. **Household deletion** does not use the "recent sign-in ≤ 5 min" rule: it is replaced by typing the family's name on a guardian's own phone. A deleted family can be restored for 14 days ("Wiederherstellen"; "Neu anfangen" when signing in again), then the daily `household-purge` job deletes it. Jobs skip deleted households. **Account deletion** ("Konto löschen") asks for a fresh sign-in only when the server requires one (≤ 5 min), by email code. The profile stays in the family without an account. Guardians reset a co-guardian's second factor under Mitglieder.
 
 Required by the App Store (guideline 5.1.1(v)) and Google Play, and the right thing
 anyway.
 
 | Action | Where, by whom | Effect |
 |---|---|---|
-| **Konto löschen** | Einstellungen → Konto; any adult; recent sign-in (≤ 5 min, else sign in again) | The Auth user and all its sessions are deleted; its personal devices are revoked. The **profile stays** as a non-account family member, with its history, unless also removed. For an account created before sign-in with Apple was removed, its Apple access is revoked at Apple too. The last guardian *with an account* cannot do this while other members exist: they delete the household or hand over first |
+| **Konto löschen** | Einstellungen → Konto; any adult; recent sign-in (≤ 5 min, else sign in again) | The Auth user and all its sessions are deleted; its personal devices are revoked. The **profile stays** as a non-account family member, with its history, unless also removed. The last guardian *with an account* cannot do this while other members exist: they delete the household or hand over first |
 | **Familie verlassen** | Einstellungen → Konto; any adult who is not the last guardian | The account is unlinked from the profile; the account remains and can start or join another family |
 | **Familie löschen** | Einstellungen → Familie; a guardian on a personal device; recent sign-in; type the family's name | Every device is signed out at once and the household is marked deleted. **Purged after 14 days** by a job; until then any of its guardians can sign in and choose *Wiederherstellen*. Backups age out within their retention, which the privacy policy states |
 | **Daten exportieren** | Einstellungen → Familie; guardian on a personal device | A JSON file of the household's data (GDPR Art. 20). Built 2026-10-14: secrets (PIN and password hashes, token hashes, Auth ids) and technical bookkeeping are left out, devices appear by label only. Required before the opening gate, not before |
@@ -482,8 +482,9 @@ Indicative. Migrations, functions and policies follow the rules in
 [03](03-architecture.md) and are specified in [16, step 9](16-setup-plan.md#step-9--onboarding-m10).
 
 **Supabase Auth configuration.**
-- `enable_signup = true`, `enable_anonymous_sign_ins = false`.
+- `enable_signup = true`, `enable_anonymous_sign_ins = false`, `enable_manual_linking = false`.
 - `[auth.email]`: `otp_length = 6`, `otp_expiry = 600`, `max_frequency = "60s"`.
+- No external providers: `[auth.external.*]` stays off everywhere.
 - `[auth.rate_limit]` set deliberately: email sends, verifications and sign-ins per IP.
   These come on top of the Cloudflare rules (S9 in [19](19-security-and-architecture-review.md)).
 - `[auth.email.smtp]` pointing at the provider chosen in [Q41](14-open-questions.md).
@@ -511,14 +512,12 @@ the founder codes; `household` gains `created_by_profile_id` and `deleted_at`.
 | `pairing_approve(actor, code, label, class, register, profile?)` | guardian, personal device | Binds the request; refuses expired or claimed ones |
 | `getting_started` (view) / `getting_started_dismiss(actor, key)` | adult | The card |
 | `account_leave`, `household_delete(actor, confirm_name)`, `household_restore` | as in J6 | |
-| `account-delete` (Edge Function) | signed-in | Deletes the Auth user with the Admin API and, for accounts from before sign-in with Apple was removed, revokes their Apple access: outbound HTTP, so not SQL |
+| `account-delete` (Edge Function) | signed-in | Deletes the Auth user with the Admin API: outbound HTTP, so not SQL |
 | `guardian_reset_mfa(actor, profile)` | guardian, personal device | Removes another guardian's TOTP factor (Admin API in an Edge Function; see ADR-013's portability note) |
 
 After this step, anon can call `health`, `server_info`, `invitation_preview`,
 `pairing_start` and `pairing_poll`, plus `enrol_device` for one release. `setup_household` goes. The catalogue
 test (`040_catalogue.test.sql`) is updated to exactly this list.
-
-**Apple access revocation** (accounts created before sign-in with Apple was removed only): `account-delete` revokes the Apple refresh token stored for such an account, encrypted with `APPLE_TOKEN_KEY`. No new Apple tokens are stored. Since 2026-10-17 the deletion moves the token into a revocation obligation in the same transaction; a failed or unconfigured revocation is kept and retried by the daily `household-purge` job, and the account is deleted before Apple is asked, which delays the answer by 5 seconds at most ([22](22-legacy-social-account-recovery.md)).
 
 ### Email
 
@@ -556,7 +555,7 @@ There is no analytics (NFR-9), so the targets in NFR-17 are checked by hand and 
 
 ## Not in onboarding v1
 
-Facebook, Microsoft, GitHub or any other provider; SMS codes (cost, and phone numbers
+Apple, Google, Facebook, Microsoft, GitHub or any other provider (removed 2026-10-17); SMS codes (cost, and phone numbers
 with a third party); magic links (see [above](#with-email)); *(a "look around first" mode is in since ADR-018: "Ohne Server ausprobieren")*; accounts for
 children; several households per account ([Q43](14-open-questions.md)); importing from
 other family apps (Cozi, FamCal), which would make switching easier but belongs in M3 at

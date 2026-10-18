@@ -185,12 +185,6 @@ class FakeIdentityRepository implements IdentityRepository {
   @override
   bool hasPassword() => passwordSet;
 
-  /// The signed-in account's address, as Settings → Sign-in shows it.
-  String? email = 'papa@example.org';
-
-  @override
-  String? accountEmail() => email;
-
   @override
   Future<Result<void>> markSignInChoice(String choice) async {
     choices.add(choice);
@@ -641,6 +635,9 @@ List<Override> baseOverrides({
   bool signedIn = true,
   bool online = true,
 
+  /// The wall clock the app reads ([nowProvider]); the real time when null.
+  DateTime? now,
+
   /// Replaces the constant session of [signedIn], for a journey that signs in on the way.
   Override? sessionUser,
 }) => [
@@ -693,7 +690,8 @@ List<Override> baseOverrides({
   // Daytime, and no boundary timer outliving the widget tree.
   nightProvider.overrideWith(DayNight.new),
   // One tick, not a per-second stream: the kiosk clock would keep pumpAndSettle busy.
-  clockProvider.overrideWith((ref) => Stream.value(DateTime.now())),
+  clockProvider.overrideWith((ref) => Stream.value(now ?? DateTime.now())),
+  if (now != null) nowProvider.overrideWithValue(now),
 ];
 
 class DayNight extends NightNotifier {

@@ -72,7 +72,10 @@ void main() {
       url,
       key,
       postgrestOptions: const PostgrestClientOptions(schema: 'api'),
-      authOptions: const AuthClientOptions(autoRefreshToken: false),
+      authOptions: AuthClientOptions(
+        autoRefreshToken: false,
+        pkceAsyncStorage: _InMemoryPkceStorage(),
+      ),
     );
     addTearDown(client.dispose);
     return _Device(client);
@@ -506,6 +509,27 @@ class _Device {
   final IdentityRepository identity;
   final HouseholdOnboardingRepository onboarding;
   final InvitationRepository invitations;
+}
+
+/// In-memory PKCE code-verifier storage for one simulated device. The real app persists
+/// this in `SecureSessionStorage` (platform secure storage); a throwaway test device only
+/// needs it to survive between `sendEmailCode`/`verifyEmailCode` (or a magic-link exchange)
+/// within the same client instance, never shared across devices.
+class _InMemoryPkceStorage extends GotrueAsyncStorage {
+  final _store = <String, String>{};
+
+  @override
+  Future<String?> getItem({required String key}) async => _store[key];
+
+  @override
+  Future<void> setItem({required String key, required String value}) async {
+    _store[key] = value;
+  }
+
+  @override
+  Future<void> removeItem({required String key}) async {
+    _store.remove(key);
+  }
 }
 
 /// The latest six-digit code mailed to [email], read from Mailpit's HTTP API. Polls for up

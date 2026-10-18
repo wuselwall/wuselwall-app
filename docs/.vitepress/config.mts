@@ -54,14 +54,15 @@ const sidebar = (p: string, t: Record<string, string>) => [
   { text: t.faq, link: `${p}/faq` },
 ]
 
-// Published under https://wuselwall.app/docs/ (.github/workflows/docs.yml sets
-// DOCS_BASE=/docs/); "/" for npm run docs:dev.
+// GitHub Pages custom domain: https://docs.wuselwall.app/.
+// Keep a base override for local previews or an explicitly configured project URL.
 const base = process.env.DOCS_BASE ?? '/'
 
 export default defineConfig({
   title: 'WuselWall',
   base,
   cleanUrls: true,
+  sitemap: { hostname: 'https://docs.wuselwall.app' },
   lastUpdated: true,
   // head is not rewritten with base, unlike links and images.
   head: [['link', { rel: 'icon', href: `${base}favicon.svg` }]],

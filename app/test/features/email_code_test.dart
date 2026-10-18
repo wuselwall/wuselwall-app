@@ -314,7 +314,7 @@ void main() {
       await t.tap(find.byIcon(Icons.settings));
       await t.pumpAndSettle();
 
-      expect(find.text('papa@example.org — immer verfügbar'), findsOneWidget);
+      expect(find.text('daniel@example.org — immer verfügbar'), findsOneWidget);
       await t.ensureVisible(find.text('Passwort festlegen'));
       await t.tap(find.text('Passwort festlegen'));
       await t.pumpAndSettle();

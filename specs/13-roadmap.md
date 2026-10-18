@@ -7,6 +7,16 @@
 > step-by-step build order is [16 — Setup Plan](16-setup-plan.md). The status column
 > tracks this repository only.
 
+## Current qualification status
+
+Built in code is not deployed or pilot-approved. This repository does not verify a live
+server's migrations, functions, scheduled jobs, backups or data. Real-device, native
+assistive-technology and Outlook/iOS feed checks and the two-week family trial remain
+operator gates in the [release checklist](release-checklist.md). The integration candidate
+requires exact-commit automated checks and independent review before pilot authorization.
+Shortcuts, read-only MCP and the packing reminder are built in main; push and public store
+release remain separately gated. Step 10's journey gaps precede M1.6.
+
 ## A note on the "all four modules at once" decision
 
 You chose to build all four modules in the first release rather than starting with one.
@@ -96,7 +106,7 @@ is assembled in M1.5, once all of its sources exist.
 alongside M1.1–M1.4 and must be finished **before M1.6**, because the family's real
 household is set up through it.
 
-The front door (email code, password) · household creation in `code` mode
+The front door (email code, password; Apple and Google removed 2026-10-17) · household creation in `code` mode
 with H1/H2 and seeded examples · invitations by link, code, QR and email match ·
 reverse pairing for shared devices, with the PIN deferred to the first one · the
 getting-started card · account and household deletion, leave, data export · localised
@@ -107,8 +117,8 @@ entry retired one release later.
 tablet is connected without anyone touching its keyboard, and both are timed on the
 release checklist.
 
-> **Built 2026-10-14 and 2026-10-15, merged to `main`:** the front door with email codes (E1–E3); Apple and Google sign-in were removed on 2026-10-17
-> ([00](00-brief-and-decisions.md)); households (H1/H2, founder codes); invitations by link, code and
+> **Built 2026-10-14 and 2026-10-15, merged to `main`:** the front door with email codes
+> and passwords (E1–E3; Apple and Google removed 2026-10-17); households (H1/H2, founder codes); invitations by link, code and
 > QR, with universal links and App Links carrying the server; pairing; the getting-started
 > card (FR-5.17); the join and new-sign-in notices on Today; leaving, deleting and restoring
 > a family, account deletion, the second-factor reset and the data export (FR-5.16); the
@@ -153,7 +163,7 @@ so there is no separate trip entity to keep in sync. Reachable per list from the
 screen and from its own list switcher.
 
 ### M1.2 Tasks and gamification
-> **Built 2026-10-13:** household settings with the Einstellungen screen; definitions with RRULE, the four policies, the materialiser (`tasks-materialise`, `tasks-nightly`, scheduled by the server's host cron, `infra/cron/`), the ledger, rewards with approval, streaks with jokers, four badges, the starter pack, the adult screens and the kiosk family task board; the kid screens. **Open:** pending approvals on Today, since there is no push ([16, step 10.5](16-setup-plan.md#step-10--journey-gaps-before-launch-m15)); real-device use is M1.6's.
+> **Built 2026-10-13:** household settings with the Einstellungen screen; definitions with RRULE, the four policies, the materialiser (`tasks-materialise`, `tasks-nightly`), the ledger, rewards with approval, streaks with jokers, four badges, the starter pack, the adult screens and the kiosk family task board; the kid screens. Scheduling options are built in `infra/jobs/schedule.sql` and `infra/cron/`; which a server runs is unverified. **Open:** pending approvals on Today, since there is no push ([16, step 10.5](16-setup-plan.md#step-10--journey-gaps-before-launch-m15)); real-device use is M1.6's.
 
 **Household settings first** ([21](21-household-settings.md)): `setting_definition`, the
 override table, `api.settings` / `api.set_setting`, and the Einstellungen screen — M1.2 is
@@ -228,7 +238,8 @@ server.*
 
 The pilot household set up through the M1.0 flow with a founder code
 (`wuselwall setup-token`), the second parent joined by invitation and the devices
-paired · the development data cleared before that, once · every merged migration and
+paired · development data removed only by an explicit operator decision after a verified
+backup (never an automatic checklist step) · every merged migration and
 function applied, after a backup ([10](10-deployment-and-ops.md#changing-the-database)) · the
 four jobs scheduled · local reminders checked on both parents' phones (Q47; no push
 credentials) · the release checklist (step 10.9) filled in once · the ICS feed verified
@@ -263,26 +274,30 @@ meets them.
   install, migrate and update scripts and the server's QR code; `/.well-known/wuselwall.json`
   with `api_version`; the app's server choice (S0), demo mode and the `api_version`
   window, tested against the previous server release in CI; a self-hosting guide in
-  `docs/` for a parent with a NAS (email-only sign-in and SMTP).
+  `docs/` for a parent with a NAS (email-only sign-in, SMTP).
 - **The domain** — decided 2026-10-13: `wuselwall.app`
   ([ADR-017](adr/ADR-017-wuselwall-app-domain.md), [Q45](14-open-questions.md)).
 - **Email** ([Q41](14-open-questions.md)): the sending domain verified, and the
   deliverability check in [10](10-deployment-and-ops.md#email-setup) passed.
 - **Store listings** ([Q42](14-open-questions.md), decided: App Store and Google Play):
-  store privacy labels and the Data safety form filled in honestly, and App Review pointed at the demo mode.
-- **Legal:** the privacy policy for the website and the apps
+  store privacy labels and the Data safety form filled in honestly, and App Review pointed
+  at the demo mode.
+- **Legal:** the privacy policy for the website, the apps and the email sign-in
   (published 2026-10-13, operator details still to fill in), and a contact address. The
   record of processing and processor agreements cover what the project itself runs (the
   website and the docs); each operator is the controller for their own server ([11](11-security-and-privacy.md#privacy-and-legal)).
 - **Abuse controls** live: Auth's and the front's rate limits, the 30-day clean-up of empty
   accounts (not built yet: a fifth job), the attempt logs ([11, T11](11-security-and-privacy.md#t11--the-open-front-door)).
-- **Deletion and export** tested on a real household, including Apple access revocation for an account from before sign-in with Apple was removed.
+- **Deletion and export** tested on a real household.
 - **The cross-household pgTAP suite** reviewed once more with "a stranger is on the other
   side" in mind.
 - Then: the store listings go public. `household_creation` stays `code` on the family's
   server. Other operators choose their own mode.
 
 ## M2 — Assistants and the obvious gaps
+
+*Ordered with M3 and the open questions into phases after the Alpha in
+[23 — Roadmap after the Alpha](23-roadmap-after-alpha.md) (2026-10-18).*
 
 - ~~Shortcuts endpoints and per-person tokens~~ — built on `feature/shortcuts` (2026-10-16), see [12](12-mcp-and-assistants.md#the-endpoint-as-built)
 - ~~MCP server, `family:read` scope~~ — built on `feature/mcp-read` (2026-10-16) with assistant keys as the Q15 interim, see [12](12-mcp-and-assistants.md#part-2--the-mcp-server)

@@ -66,21 +66,24 @@ class _KidTodayPageState extends ConsumerState<KidTodayPage> {
           ),
           child: Row(
             children: [
-              Container(
-                width: 56,
-                height: 56,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: colors.ink,
-                  shape: BoxShape.circle,
-                ),
-                child: Text(
-                  member.initial,
-                  style: TextStyle(
-                    fontFamily: Tokens.fontUi,
-                    fontSize: 26,
-                    fontWeight: FontWeight.w800,
-                    color: colors.onInk,
+              ExcludeSemantics(
+                // The initial is decoration: the greeting already names the child.
+                child: Container(
+                  width: 56,
+                  height: 56,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: colors.ink,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Text(
+                    member.initial,
+                    style: TextStyle(
+                      fontFamily: Tokens.fontUi,
+                      fontSize: 26,
+                      fontWeight: FontWeight.w800,
+                      color: colors.onInk,
+                    ),
                   ),
                 ),
               ),
@@ -281,55 +284,68 @@ class _TaskCard extends StatelessWidget {
       child: Semantics(
         button: true,
         enabled: !done,
-        label: task.title,
+        label: [
+          task.title,
+          ?status,
+          if (!done && task.points > 0) l10n.tasksPointsCount(task.points),
+        ].join(', '),
         child: KidCard(
           onTap: done ? null : onTap,
-          child: Row(
-            children: [
-              ExcludeSemantics(
-                child: EmojiPicture(
-                  taskIconAsset(task.iconKey) ?? taskIconAsset('star')!,
-                  size: 40,
+          child: ExcludeSemantics(
+            // One spoken label for the card (title, status, points): the children would
+            // otherwise repeat the title (A10).
+            child: Row(
+              children: [
+                ExcludeSemantics(
+                  child: EmojiPicture(
+                    taskIconAsset(task.iconKey) ?? taskIconAsset('star')!,
+                    size: 40,
+                  ),
                 ),
-              ),
-              const SizedBox(width: Tokens.space3),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      task.title,
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w800,
-                        decoration: done ? TextDecoration.lineThrough : null,
+                const SizedBox(width: Tokens.space3),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ExcludeSemantics(
+                        // The card's label already says the title; it is not read twice.
+                        child: Text(
+                          task.title,
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.w800,
+                            decoration: done
+                                ? TextDecoration.lineThrough
+                                : null,
+                          ),
+                        ),
                       ),
-                    ),
-                    Wrap(
-                      spacing: Tokens.space3,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: [
-                        if (!done && task.points > 0)
-                          PointsCoin(points: task.points, fontSize: 19),
-                        if (status != null)
-                          Text(status, style: theme.textTheme.bodyLarge),
-                      ],
-                    ),
-                  ],
+                      Wrap(
+                        spacing: Tokens.space3,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          if (!done && task.points > 0)
+                            PointsCoin(points: task.points, fontSize: 19),
+                          if (status != null)
+                            Text(status, style: theme.textTheme.bodyLarge),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              AnimatedScale(
-                scale: done ? 1 : 0.85,
-                duration: motion,
-                curve: Curves.easeOutCubic,
-                child: Icon(
-                  done
-                      ? Icons.check_circle_rounded
-                      : Icons.radio_button_unchecked_rounded,
-                  size: 44,
-                  color: done ? ww.success : theme.colorScheme.onSurface,
+                AnimatedScale(
+                  scale: done ? 1 : 0.85,
+                  duration: motion,
+                  curve: Curves.easeOutCubic,
+                  child: Icon(
+                    done
+                        ? Icons.check_circle_rounded
+                        : Icons.radio_button_unchecked_rounded,
+                    size: 44,
+                    color: done ? ww.success : theme.colorScheme.onSurface,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

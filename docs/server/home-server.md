@@ -74,7 +74,7 @@ Das Werkzeug prüft jede Sicherung und behält sie 14 Tage. Ohne `BACKUP_DIR` la
 
 Das Werkzeug sichert zuerst die Datenbank, lädt die neue Version, startet den Stack neu und spielt die Datenbank-Änderungen ein. Server, Web-App und nächtliche Aufträge sind danach auf demselben Stand.
 
-Kommt ihr von einer Version mit Anmeldung über Apple oder Google, lies vorher [Update von einer Version mit Apple- und Google-Anmeldung](/server/extras#social-stilllegen).
+Kommst du von einer Version mit Anmeldung über Apple oder Google? Lies zuerst [Update von einer Version mit Apple- und Google-Anmeldung](/server/extras#social-stilllegen).
 
 ::: warning Kein automatisches Update für den Stack
 Lass keinen Auto-Updater (Watchtower, die automatischen Container-Updates eines NAS) an die Container von WuselWall. Updates kommen mit `wuselwall update`, in einer geprüften Kombination.

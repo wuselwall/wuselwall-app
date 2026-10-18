@@ -4,23 +4,11 @@ Sign-in and security settings exist only on a guardian's **personal phone**: **S
 
 ## Sign-in
 
-This lists the ways you can sign in: the **code by email** and a **password** (see [Account and family](/en/settings/account#password)).
+This lists the ways you can sign in: the **code by email**, which is always there, and a **password** (see [Account and family](/en/settings/account#password)).
 
 <Shot name="settings-sign-in" alt="Settings → Sign-in" />
 
 - **Password**: **Set password** or **Change password** sets one up.
-- **Remove**: takes a method away again. The last one always stays, so you cannot lock yourself out.
-
-## Used to sign in with Apple or Google? {#apple-google-before}
-
-WuselWall no longer offers sign-in with Apple or Google. Your account, your profile and your family stay as they are; you now sign in with a **code by email**, to the **same address** your account already has.
-
-- **With Google**, or with Apple and your normal address: enter that address on the sign-in screen and ask for a code.
-- **With Apple and "Hide My Email"**: your account's address is the forwarding address Apple created, ending in `@privaterelay.appleid.com`. You find it in your Apple account settings under **Sign in with Apple**, at **WuselWall**. Enter that address, not your normal Apple ID address.
-- **Try it first on a second device** while your phone stays signed in. Do not sign out just to test.
-- **No code arrives?** Tell whoever runs your family's server. Do not create a new account: it would not belong to your family.
-
-Once you are signed in, you can also set a **password** here.
 
 ## Two-factor sign-in
 

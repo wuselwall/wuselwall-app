@@ -59,10 +59,6 @@ class DemoIdentityRepository implements IdentityRepository {
   bool hasPassword() => true;
 
   @override
-  String? accountEmail() =>
-      '${DemoData.name(DemoData.papa).toLowerCase()}@example.org';
-
-  @override
   Future<Result<void>> markSignInChoice(String choice) async => const Ok(null);
 
   @override

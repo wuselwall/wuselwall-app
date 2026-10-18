@@ -484,8 +484,6 @@ Tables in the `app` schema, RLS enabled and forced, never exposed; written only 
 - `app.founder_attempt`: the guess log of founder codes.
 - `app.pairing_request`, `app.pairing_attempt`: a device's request to be connected (a secret, a code, the approving guardian, an expiry), and its attempt log.
 - `app.invitation`, `app.invitation_attempt`: an invitation (a token and a code, the role, an optional confirmed email, an expiry, single use) and its attempt log.
-- `app.apple_token`: the encrypted Apple refresh token of an account created before sign-in with Apple was removed (2026-10-17), kept only until the account is deleted and access is revoked.
-- `app.apple_revocation`: a revocation still owed to Apple. When a row leaves `app.apple_token` (normally with its account), a trigger copies its encrypted token here; the row goes only when Apple accepted the revocation or an operator resolved it by hand. No foreign key: the user is gone. Service role only, through `api.apple_revocation_due` and `api.apple_revocation_record`.
 - `app.household.created_by_profile_id` and `app.household.deleted_at`: who started the family, and when a deleted family becomes purgeable (14 days).
 
 

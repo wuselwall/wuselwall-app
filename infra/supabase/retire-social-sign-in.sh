@@ -1,19 +1,20 @@
 #!/bin/sh
-# Retires social sign-in in an existing compose stack's .env (specs/22, items 1 and 3).
+# Retires social sign-in in the .env of a compose stack set up before 2026-10-17 (specs/10,
+# "Retiring social sign-in on an existing server").
 #
 #   sh retire-social-sign-in.sh <stack>/.env
 #
-# Run by server/wuselwall update and scripts/remote-stack.sh deploy before the stack starts;
-# harmless to run again. Servers set up before the removal have, in their .env:
+# Run by server/wuselwall (update, install --env) and scripts/remote-stack.sh deploy before
+# the stack starts; harmless to run again. Such a .env still has:
 #   - the Google and Apple login settings (APPLE_ENABLED, APPLE_CLIENT_IDS, APPLE_SECRET — the
-#     GoTrue Apple client-secret JWT —, GOOGLE_ENABLED, GOOGLE_CLIENT_IDS, GOOGLE_CLIENT_SECRET).
-#     Nothing reads them any more; they are removed so no login credential lingers.
+#     GoTrue Apple client-secret JWT —, GOOGLE_ENABLED, GOOGLE_CLIENT_IDS, GOOGLE_CLIENT_SECRET)
+#     and the values the apple-token function and Apple token revocation read (APPLE_TEAM_ID,
+#     APPLE_KEY_ID, APPLE_PRIVATE_KEY, APPLE_CLIENT_ID, APPLE_TOKEN_KEY). Nothing reads them
+#     any more; they are removed so no credential lingers. GOOGLE_PROJECT_ID and
+#     GOOGLE_PROJECT_NUMBER are upstream Supabase placeholders and stay.
 #   - the native apps' OAuth callback in ADDITIONAL_REDIRECT_URLS (Auth's redirect allow-list).
 #     Only that entry is removed; the web app's own entry and any other destination an
 #     operator added (invitation, pairing) stay, e-mail links need them.
-# Kept, on purpose: APPLE_TEAM_ID, APPLE_KEY_ID, APPLE_PRIVATE_KEY, APPLE_CLIENT_ID and
-# APPLE_TOKEN_KEY. account-delete needs them to revoke the Apple tokens of accounts from before
-# the removal, and the stored tokens can only be read with this APPLE_TOKEN_KEY.
 #
 # Prints the names of what it changed, never a value. The file keeps its permissions (600).
 set -eu
@@ -24,7 +25,8 @@ tmp="$env_file.retire.$$"
 trap 'rm -f "$tmp"' EXIT
 umask 077
 awk -v q="'" '
-  BEGIN { split("APPLE_ENABLED APPLE_CLIENT_IDS APPLE_SECRET GOOGLE_ENABLED GOOGLE_CLIENT_IDS GOOGLE_CLIENT_SECRET", gone, " ")
+  BEGIN { split("APPLE_ENABLED APPLE_CLIENT_IDS APPLE_SECRET GOOGLE_ENABLED GOOGLE_CLIENT_IDS GOOGLE_CLIENT_SECRET " \
+                "APPLE_TEAM_ID APPLE_KEY_ID APPLE_PRIVATE_KEY APPLE_CLIENT_ID APPLE_TOKEN_KEY", gone, " ")
           for (i in gone) drop[gone[i]] = 1 }
   {
     key = $0; sub(/=.*/, "", key)
@@ -36,7 +38,7 @@ awk -v q="'" '
       n = split(value, parts, ","); kept = ""
       for (i = 1; i <= n; i++) {
         # Only the native OAuth callback (<scheme>://login-callback…) goes; invitation,
-        # pairing and any other destination stays (specs/22 item 1).
+        # pairing and any other destination stays.
         entry = parts[i]; gsub(/^[ \t]+|[ \t]+$/, "", entry)
         if (entry ~ /^[A-Za-z][A-Za-z0-9+.-]*:\/\/login-callback([\/?#].*)?$/) { changed = 1; continue }
         kept = kept (kept == "" ? "" : ",") parts[i]

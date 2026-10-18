@@ -13,8 +13,8 @@ import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/domain/email_code.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 
-/// "Konto löschen" in Einstellungen → Konto (specs/20 J6). The account and its devices go;
-/// the profile stays in the family. Disabled, with the reason, for the last
+/// "Konto löschen" in Einstellungen → Konto (specs/20 J6). The account, its sign-in methods and
+/// its devices go; the profile stays in the family. Disabled, with the reason, for the last
 /// guardian with an account. A stale sign-in is renewed first (the server asks for a sign-in
 /// of at most five minutes), then the deletion is retried once.
 class DeleteAccountTile extends ConsumerStatefulWidget {
@@ -70,8 +70,7 @@ class _DeleteAccountTileState extends ConsumerState<DeleteAccountTile> {
   static bool _needsSignIn(Failure f) =>
       f is PermissionFailure && f.code == 'reauth_required';
 
-  /// Asks for a sign-in that is at most five minutes old: a code to the account's address.
-  /// True when one happened.
+  /// Asks for a sign-in that is at most five minutes old. True when one happened.
   Future<bool> _renewSignIn() async {
     final l10n = context.l10n;
     final repo = ref.read(accountAdminRepositoryProvider);

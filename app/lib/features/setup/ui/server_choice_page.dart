@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/server/server_address.dart';
@@ -53,13 +56,32 @@ class ServerChoicePage extends StatefulWidget {
 
 class _ServerChoicePageState extends State<ServerChoicePage> {
   late final _address = TextEditingController(text: widget.prefill);
+  final _addressFocus = FocusNode();
   late ServerProblem? _problem = widget.problem;
   bool _busy = false;
 
   @override
   void dispose() {
     _address.dispose();
+    _addressFocus.dispose();
     super.dispose();
+  }
+
+  /// Shows a problem on the field and moves focus there, and says it aloud: the red
+  /// text alone is not announced to a screen reader (A8).
+  void _fail(ServerProblem problem) {
+    setState(() {
+      _busy = false;
+      _problem = problem;
+    });
+    _addressFocus.requestFocus();
+    unawaited(
+      SemanticsService.sendAnnouncement(
+        View.of(context),
+        serverProblemText(context.l10n, problem),
+        Directionality.of(context),
+      ),
+    );
   }
 
   Future<void> _connect(String raw) async {
@@ -67,7 +89,7 @@ class _ServerChoicePageState extends State<ServerChoicePage> {
     if (parseServerAddress(raw, allowHttp: kDebugMode) == null &&
         parseAppLink(raw) == null &&
         parseInvitation(raw) == null) {
-      setState(() => _problem = ServerProblem.invalid);
+      _fail(ServerProblem.invalid);
       return;
     }
     setState(() {
@@ -76,9 +98,13 @@ class _ServerChoicePageState extends State<ServerChoicePage> {
     });
     final problem = await widget.onAddress(raw);
     if (!mounted) return;
+    if (problem != null) {
+      _fail(problem);
+      return;
+    }
     setState(() {
       _busy = false;
-      _problem = problem;
+      _problem = null;
     });
   }
 
@@ -125,22 +151,28 @@ class _ServerChoicePageState extends State<ServerChoicePage> {
                 const SizedBox(height: Tokens.space2),
                 Text(l10n.serverLead),
                 const SizedBox(height: Tokens.space6),
-                TextField(
-                  key: const ValueKey('server-address'),
-                  controller: _address,
-                  enabled: !_busy,
-                  keyboardType: TextInputType.url,
-                  autocorrect: false,
-                  enableSuggestions: false,
-                  textInputAction: TextInputAction.go,
-                  onSubmitted: _connect,
-                  decoration: InputDecoration(
-                    labelText: l10n.serverAddressLabel,
-                    hintText: l10n.serverAddressHint,
-                    errorText: problem == null
-                        ? null
-                        : serverProblemText(l10n, problem),
-                    errorMaxLines: 3,
+                Semantics(
+                  validationResult: problem == null
+                      ? SemanticsValidationResult.none
+                      : SemanticsValidationResult.invalid,
+                  child: TextField(
+                    key: const ValueKey('server-address'),
+                    controller: _address,
+                    focusNode: _addressFocus,
+                    enabled: !_busy,
+                    keyboardType: TextInputType.url,
+                    autocorrect: false,
+                    enableSuggestions: false,
+                    textInputAction: TextInputAction.go,
+                    onSubmitted: _connect,
+                    decoration: InputDecoration(
+                      labelText: l10n.serverAddressLabel,
+                      hintText: l10n.serverAddressHint,
+                      errorText: problem == null
+                          ? null
+                          : serverProblemText(l10n, problem),
+                      errorMaxLines: 3,
+                    ),
                   ),
                 ),
                 const SizedBox(height: Tokens.space4),

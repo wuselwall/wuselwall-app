@@ -179,7 +179,7 @@ chose **self-service households**.
 
 | Change | Answer | Where |
 |---|---|---|
-| Adult sign-in | Sign in with Apple, Sign in with Google, email one-time code, email + password (chosen after the first code). One screen for sign-up and sign-in. No other providers, no SMS, no magic links | [ADR-014](adr/ADR-014-self-service-onboarding.md), [20](20-onboarding.md#the-front-door) |
+| Adult sign-in | Email one-time code, email + password (chosen after the first code). One screen for sign-up and sign-in. No providers, no SMS, no magic links *(revised 2026-10-17: Sign in with Apple and Google removed, user)* | [ADR-014](adr/ADR-014-self-service-onboarding.md), [20](20-onboarding.md#the-front-door) |
 | Households | Any adult can create one: `code` mode (founder code from the operator) until the opening gate, then `open`. One household per account. All households in one project, isolated by RLS | [20](20-onboarding.md#household-creation-open-or-by-code), [13](13-roadmap.md#opening-to-other-households) |
 | Other adults | Invitation by link, code or QR, bound to a profile, 7 days; matched automatically by email | [20, J2](20-onboarding.md#j2--join-a-family) |
 | Shared devices | Reverse pairing: the device shows a code, a parent's phone approves it; no typing on the device | [20, J3](20-onboarding.md#j3--connect-a-shared-device), [08](08-users-auth-permissions.md#device-pairing) |
@@ -235,7 +235,7 @@ use without a release — and a second household needs no code change.
 | Change | Answer | Where |
 |---|---|---|
 | Hosting | Two flavours from one codebase. **WuselWall Cloud** is a hosted Supabase project in the user's account (Frankfurt, Pro) and the store app's default. **Self-hosted** is any server, reached through "Eigener Server" | [ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md), [10](10-deployment-and-ops.md#wuselwall-cloud) |
-| Sign-in on custom servers | Email code and password; Apple/Google only via the operator's own redirect clients. Native Apple/Google and passkeys on Cloud only, so that a hostile server cannot replay tokens to Cloud | [ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md), [20](20-onboarding.md#on-a-self-hosted-server) |
+| Sign-in on custom servers | Email code and password. Passkeys on first-party servers only, so that a hostile server cannot replay assertions to them *(Apple and Google removed 2026-10-17)* | [ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md), [20](20-onboarding.md#on-a-self-hosted-server) |
 | Email | Decided: Scaleway Transactional Email, one project per environment, a sending subdomain with SPF/DKIM/DMARC, the code in the subject | [10](10-deployment-and-ops.md#email-setup), [Q41](14-open-questions.md) |
 | Distribution | Public App Store and Google Play listings once the developer accounts exist | [ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md), Q42 |
 | Captcha | None | Q44 |
@@ -272,7 +272,7 @@ link.
 | Hosting | **No WuselWall Cloud.** The project runs no service holding a family's data. Every household runs a server release on its own hardware or its own Supabase project | [ADR-018](adr/ADR-018-self-hosted-only.md) |
 | The app | No default server: invitation link, the server's QR code or a typed address, discovered through `/.well-known/wuselwall.json`. A demo mode without any server, also for App Review | [ADR-018](adr/ADR-018-self-hosted-only.md), [20](20-onboarding.md#choosing-the-server) |
 | Compatibility | `api_version` in the discovery document; each app release supports the current and the previous one; CI tests against the previous server release | [ADR-018](adr/ADR-018-self-hosted-only.md), [10](10-deployment-and-ops.md#other-families-servers) |
-| Apple and Google | Native sign-in only on first-party servers (user, 2026-10-13); other servers get email, plus the redirect with their operator's own clients. The privacy policy names Google's iOS sign-in library, which declares device ID and usage data for analytics | [ADR-018](adr/ADR-018-self-hosted-only.md), [11](11-security-and-privacy.md) |
+| Apple and Google | No sign-in with either (user, 2026-10-17; was: native sign-in on first-party servers, 2026-10-13). The app carries no vendor sign-in library | [ADR-018](adr/ADR-018-self-hosted-only.md), [11](11-security-and-privacy.md) |
 | Open | Push to self-hosted servers ([Q47](14-open-questions.md)); sign-up without SMTP (Q48) | [14](14-open-questions.md) |
 
 **What this costs.** Families need a server, version skew between store apps and servers
@@ -291,26 +291,3 @@ licence lets anyone run WuselWall as a hosted service, which fits
 [ADR-018](adr/ADR-018-self-hosted-only.md). `LICENSE` and `NOTICE` (third-party material:
 the Supabase compose files, the fonts, store badges, the GitHub mark and the Google "G")
 are at the repository root.
-
-### 2026-10-17 — Social sign-in removed
-
-> There is no need for social login, so make sure there is nothing left of it. (Operator, on the
-> task that removes it.)
-
-| Change | Answer | Where |
-|---|---|---|
-| Adult sign-in | Email one-time code and email + password only. Sign in with Apple and Sign in with Google are removed from the apps, the server configuration and the documentation. This supersedes the social-sign-in parts of the 2026-10-11 entry above, [ADR-014](adr/ADR-014-self-service-onboarding.md) and the native-sheet part of [ADR-018](adr/ADR-018-self-hosted-only.md), decision 6. Passkeys stay, for `WW_FIRST_PARTY_HOSTS` only | [20](20-onboarding.md#the-front-door), [10 §4](10-deployment-and-ops.md#4-sign-in-and-mail) |
-| Existing Apple accounts | Accounts created before the removal keep the stored Apple refresh token, used only to revoke Apple access when the account is deleted (App Store guideline 5.1.1(v)). The five `APPLE_*` values that do this stay; `APPLE_TOKEN_KEY` never changes | [10 §4](10-deployment-and-ops.md#4-sign-in-and-mail) |
-| Open | How accounts whose only method was Apple or Google get back in (email code on the verified address, or a password reset) is **not decided here**: the review task must confirm it before release. *Decided later on 2026-10-17, see the amendment below* | [11](11-security-and-privacy.md) |
-
-#### Amendment 2026-10-17 — recovery of accounts from before, and credential retirement
-
-The open row above is answered by [22](22-legacy-social-account-recovery.md): an account that
-signed in only with Apple or Google keeps its user, profile and memberships and signs in with
-a fresh email code to its **existing** address, an Apple relay address included. No bulk
-address rewrite, re-invitation or administrator password. A server whose relay accounts
-cannot receive codes is not updated. Sign-in endpoints are switched off on upgrade (hosted
-projects included) and the deployed `apple-token` is deleted; Apple's revocation of stored
-tokens becomes a retained, retried obligation; the five `APPLE_*` values, the Apple key, App
-ID, Services ID and relay sources stay until specs/22's retirement conditions hold. Runbook:
-[10](10-deployment-and-ops.md#retiring-social-sign-in-on-an-existing-server-2026-10-17).

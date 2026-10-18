@@ -16,6 +16,15 @@ void _asIphone() => debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
 void main() {
   Finder field(String label) => find.widgetWithText(TextFormField, label);
 
+  /// The button whose label is [label] (a FilledButton or TextButton).
+  ButtonStyleButton button(WidgetTester t, String label) =>
+      t.widget<ButtonStyleButton>(
+        find.ancestor(
+          of: find.text(label),
+          matching: find.byWidgetPredicate((w) => w is ButtonStyleButton),
+        ),
+      );
+
   testWidgets(
     'a signed-in account without a household starts H1, not the front door',
     (t) async {
@@ -27,7 +36,7 @@ void main() {
         ),
       );
       expect(find.text('Neue Familie'), findsOneWidget);
-      expect(find.text('Mit Apple fortfahren'), findsNothing);
+      expect(find.text('Mit E-Mail fortfahren'), findsNothing);
       expect(find.text('Dein Name'), findsOneWidget);
     },
   );
@@ -179,6 +188,36 @@ void main() {
         find.text('Neue Familien gibt es gerade nur mit Gründungscode.'),
         findsOneWidget,
       );
+    },
+  );
+
+  testWidgets(
+    'a creation that never turns Ready opens the escapes after a while',
+    (t) async {
+      await pumpApp(
+        t,
+        overrides: baseOverrides(
+          identity: FakeIdentityRepository(),
+          household: FakeHouseholdOnboardingRepository(),
+        ),
+      );
+      await t.enterText(field('Gründungscode'), 'ABCD2345');
+      await t.tap(find.text('Familie anlegen'));
+      await t.pumpAndSettle();
+
+      // Still creating: the form is locked, sign-out is not.
+      expect(find.textContaining('länger als üblich'), findsNothing);
+      expect(button(t, 'Familie anlegen').onPressed, isNull);
+      expect(button(t, 'Ich wurde eingeladen').onPressed, isNull);
+      expect(button(t, 'Abmelden').onPressed, isNotNull);
+
+      await t.pump(const Duration(seconds: 16));
+
+      // Stalled: the message says not to create twice; the invitation escape opens again,
+      // the create button stays locked.
+      expect(find.textContaining('länger als üblich'), findsOneWidget);
+      expect(button(t, 'Familie anlegen').onPressed, isNull);
+      expect(button(t, 'Ich wurde eingeladen').onPressed, isNotNull);
     },
   );
 

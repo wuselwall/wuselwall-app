@@ -37,7 +37,7 @@ void main() {
       final token = tokenWith({
         'amr': [
           {'method': 'password', 'timestamp': unix - 3600},
-          {'method': 'otp', 'timestamp': unix - 30},
+          {'method': 'oauth', 'timestamp': unix - 30},
         ],
       });
       expect(signedInRecently(token, now: now), isTrue);

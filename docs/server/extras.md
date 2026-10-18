@@ -18,29 +18,23 @@ Dafür braucht der Server einen SMTP-Dienst, also einen Anbieter, der Mails vers
 
 **Bei Supabase:** **Authentication → Emails → SMTP Settings**, dieselben Angaben. Der eingebaute Mail-Versand von Supabase ist nur zum Ausprobieren gedacht und schickt nur wenige Mails pro Stunde.
 
-## Apple-Zugang widerrufen (nur für ältere Konten) {#apple-widerruf}
-
-Anmelden mit Apple und Google gibt es in WuselWall nicht mehr. Nur wenn auf eurem Server noch Konten aus der Zeit davor bestehen, braucht der Server Zugang bei Apple: Löscht jemand so ein Konto, widerruft WuselWall dort den Apple-Zugang. Dafür braucht der Server in `stack/.env` nur diese fünf Werte: `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_PRIVATE_KEY`, `APPLE_CLIENT_ID` und `APPLE_TOKEN_KEY`. Ohne sie kann der Server den Zugang bei Apple nicht widerrufen. Den Wert `APPLE_TOKEN_KEY` nie ändern: mit ihm sind die gespeicherten Apple-Tokens verschlüsselt.
-
-Klappt der Widerruf nicht sofort (Apple nicht erreichbar, ein Wert fehlt), geht nichts verloren: Der Server merkt sich den offenen Widerruf und versucht es jede Nacht wieder. Das Konto ist schon gelöscht, bevor der Server Apple fragt; antwortet Apple nicht, wartet die Antwort höchstens ein paar Sekunden.
-
 ## Update von einer Version mit Apple- und Google-Anmeldung {#social-stilllegen}
+
+Bis Oktober 2026 konnte man sich bei WuselWall auch mit Apple oder Google anmelden. Wer das tat, meldet sich jetzt mit einem Code per E-Mail an die Adresse seines Kontos an. Konto und Familie bleiben dieselben.
 
 **Erst prüfen, dann updaten.** Hat sich jemand bei euch mit Apple und **„E-Mail-Adresse verbergen“** angemeldet, lautet die Adresse seines Kontos `…@privaterelay.appleid.com`. Ein Code an diese Adresse kommt nur an, wenn eure Absenderadresse bei Apple für die Weiterleitung eingetragen ist. Klärt das vor dem Update. Kommt kein Code an, wartet mit dem Update: Sonst kann sich diese Person nach dem nächsten Abmelden nicht mehr anmelden.
 
 **Was das Update von selbst erledigt:**
 
-- **Zu Hause** (`wuselwall update`): Die alten Anmelde-Einstellungen für Apple und Google und die alte Rücksprungadresse der App verschwinden aus `stack/.env`. Die Anmeldung mit Apple, Google und das Verknüpfen von Konten sind ausgeschaltet, die alte Funktion `apple-token` ist weg. Die fünf Werte für den Widerruf bleiben.
-- **Bei Supabase** (Workflow **deploy-supabase**): Der Schritt **Retire social sign-in** schaltet Apple, Google und das Verknüpfen ab, entfernt die alte Rücksprungadresse der App (andere Einträge, etwa für Einladungen, bleiben), löscht die Funktion `apple-token` und prüft danach beides. Schlägt etwas fehl, bricht der Workflow ab.
+- **Zu Hause** (`wuselwall update`): Alle Werte für Apple und Google (`APPLE_…`, `GOOGLE_CLIENT_…`) und die alte Rücksprungadresse der App verschwinden aus `stack/.env`, die alte Funktion `apple-token` ist weg. Das Werkzeug nennt dabei nur die Namen, nie die Werte.
+- **Bei Supabase** (Workflow **deploy-supabase**): Der Schritt **Retire social sign-in** schaltet Apple, Google und das Verknüpfen von Konten ab, entfernt die alte Rücksprungadresse der App (andere Einträge, etwa für Einladungen, bleiben), löscht die Funktion `apple-token` und die `APPLE_…`-Secrets und prüft danach alles. Schlägt etwas fehl, bricht der Workflow ab.
 
 **Danach prüfen:** Wer sich früher mit Apple oder Google angemeldet hat, fordert auf einem **zweiten** Gerät einen Code per E-Mail an und meldet sich damit an. Das erste Gerät bleibt dabei angemeldet. Niemand soll sich zum Ausprobieren abmelden.
 
 **Erst danach aufräumen**, bei Google und Apple:
 
-- **Google:** Löscht nur die OAuth-Clients, die es allein für die WuselWall-Anmeldung gab. Das Google-Cloud-Projekt, die Play Console und alles, was andere Apps oder der Kalender nutzen, bleibt. Im Zweifel: behalten.
-- **Apple:** Das halbjährliche Client-Secret für die Anmeldung braucht ihr nicht mehr. Den Schlüssel (`.p8`), die App ID, die Services ID und die eingetragenen Absender für die Weiterleitung **behaltet** ihr, solange es noch Konten mit Apple-Weiterleitung oder offene Widerrufe gibt und solange ihr ein Backup zurückspielen könntet, das noch Apple-Tokens enthält.
-
-Die technischen Einzelheiten stehen in der Spezifikation (`specs/10`, „Retiring social sign-in“).
+- **Google:** Löscht nur die OAuth-Clients, die es allein für die WuselWall-Anmeldung gab. Das Google-Cloud-Projekt, die Play Console und alles, was andere Apps nutzen, bleibt. Im Zweifel: behalten.
+- **Apple:** Die Services ID, den Schlüssel für Sign in with Apple und die Erinnerung an das halbjährliche Client-Secret braucht ihr nicht mehr. Die eingetragenen Absender für die Weiterleitung **behaltet** ihr, solange es Konten mit einer `privaterelay`-Adresse gibt.
 
 ## Feiertage und Schulferien {#feiertage}
 
