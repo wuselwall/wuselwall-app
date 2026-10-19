@@ -18,7 +18,7 @@ WuselWall then shows the **code**, your family's **server**, a **QR code** and t
 
 An invitation is valid for **7 days** and works **once**. Open invitations are listed with their expiry date: **Share again** sends it once more, **Withdraw** cancels it.
 
-Once the person has joined, **every guardian** gets a notice on the **Today** tab ("Sabine joined"). **Got it** hides it, **Members** leads to the list. Notices disappear on their own after 14 days.
+Once the person has joined, **every guardian** gets a notice on the **Today** tab ("Sarah joined"). **Got it** hides it, **Members** leads to the list. Notices disappear on their own after 14 days.
 
 If you left out the email address, the code is all there is. The person then has to enter it in the app.
 

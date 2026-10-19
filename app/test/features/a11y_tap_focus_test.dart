@@ -111,7 +111,7 @@ void main() {
       await tester.pumpWidget(
         _host(
           BoardTap(
-            label: 'Lotta, Montag',
+            label: 'Emma, Montag',
             onTap: () => tapped = true,
             child: const SizedBox(key: ValueKey('cell'), width: 80, height: 80),
           ),
@@ -122,7 +122,7 @@ void main() {
       expect(
         node,
         matchesSemantics(
-          label: 'Lotta, Montag',
+          label: 'Emma, Montag',
           isButton: true,
           isFocusable: true,
           hasFocusAction: true,

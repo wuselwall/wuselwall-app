@@ -8,7 +8,7 @@ You get reminders on **your own phone**, once you switch them on: under **Settin
 
 - **Morning summary**: a notification in the morning, for example "Today: 3 appointments, 2 tasks" and "First up at 8:00: swimming". You set the time. Guardians also see rewards that are waiting for approval there.
 - **Reminder before appointments**: a notification before an appointment you are part of starts.
-- **Packing reminder the evening before**: for example "Pack for tomorrow – Lotta: sports kit", from the [timetables](/en/school/#pack-for-tomorrow). Adults get it for every child, a child on their own phone for themselves. It comes only when there is something to pack.
+- **Packing reminder the evening before**: for example "Pack for tomorrow – Olivia: sports kit", from the [timetables](/en/school/#pack-for-tomorrow). Adults get it for every child, a child on their own phone for themselves. It comes only when there is something to pack.
 
 You control each with a switch. The settings apply only to you. By default the morning summary is set to 7:00 and the packing reminder to 19:00, and the appointment reminder is off.
 

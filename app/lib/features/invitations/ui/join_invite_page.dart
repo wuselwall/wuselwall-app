@@ -15,7 +15,7 @@ import 'package:wuselwall/features/invitations/data/invitation_repository.dart';
 import 'package:wuselwall/features/invitations/domain/invitation.dart';
 import 'package:wuselwall/features/setup/ui/auth_form_scaffold.dart';
 
-/// The join confirmation (specs/20, J2): "Du bist Sabine in Familie Huser", with the name and
+/// The join confirmation (specs/20, J2): "Du bist Julia in Familie Huser", with the name and
 /// colour the inviter chose, both editable. Shown for a kept invitation (its code) or for a
 /// pending one from H0 (its id).
 class JoinInvitePage extends ConsumerWidget {

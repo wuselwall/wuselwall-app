@@ -19,7 +19,7 @@ const _wrongCode =
 Future<ProviderContainer> _toCodeScreen(
   WidgetTester t,
   FakeIdentityRepository identity, {
-  String address = 'lukas@example.org',
+  String address = 'thomas@example.org',
 }) async {
   final container = await pumpApp(
     t,
@@ -77,7 +77,7 @@ void main() {
 
   group('E1 — the address', () {
     testWidgets('a code goes to any address the same way', (t) async {
-      for (final address in ['lukas@example.org', 'niemand@example.org']) {
+      for (final address in ['thomas@example.org', 'niemand@example.org']) {
         final identity = FakeIdentityRepository();
         await _toCodeScreen(t, identity, address: address);
         expect(find.text(_codeTitle), findsOneWidget);
@@ -97,7 +97,7 @@ void main() {
         await t.tap(find.text('Mit E-Mail fortfahren'));
         await t.pump();
         await t.pump();
-        await t.enterText(find.byType(TextField), 'lukas@example.org');
+        await t.enterText(find.byType(TextField), 'thomas@example.org');
         await t.tap(find.text('Ich habe ein Passwort'));
         await t.pump();
         await t.enterText(find.byType(TextField).at(1), 'falsch');
@@ -105,13 +105,13 @@ void main() {
         await t.pump();
         await t.pump();
 
-        expect(identity.signIns, [('lukas@example.org', 'falsch')]);
+        expect(identity.signIns, [('thomas@example.org', 'falsch')]);
         expect(find.text('E-Mail oder Passwort stimmt nicht.'), findsOneWidget);
 
         await t.tap(find.text('Stattdessen Code per E-Mail'));
         await t.pump();
         await t.pump();
-        expect(identity.codeRequests, ['lukas@example.org']);
+        expect(identity.codeRequests, ['thomas@example.org']);
         expect(find.text(_codeTitle), findsOneWidget);
       },
     );

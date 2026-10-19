@@ -299,7 +299,7 @@ Map<String, dynamic> _band(
 
 List<Map<String, dynamic>> _presence(List<String> d) => [
   _band(
-    'pr-sabine-mo',
+    'pr-julia-mo',
     DemoData.mama,
     'working',
     'Dienst',
@@ -309,7 +309,7 @@ List<Map<String, dynamic>> _presence(List<String> d) => [
     ends: '14:00',
   ),
   _band(
-    'pr-lukas-di',
+    'pr-thomas-di',
     DemoData.papa,
     'working',
     'Büro Hamburg',
@@ -318,7 +318,7 @@ List<Map<String, dynamic>> _presence(List<String> d) => [
     starts: '08:00',
   ),
   _band(
-    'pr-sabine-mi',
+    'pr-julia-mi',
     DemoData.mama,
     'working',
     'Dienst',
@@ -328,7 +328,7 @@ List<Map<String, dynamic>> _presence(List<String> d) => [
     ends: '14:00',
   ),
   _band(
-    'pr-lukas-do',
+    'pr-thomas-do',
     DemoData.papa,
     'travel',
     'Dienstreise Berlin',

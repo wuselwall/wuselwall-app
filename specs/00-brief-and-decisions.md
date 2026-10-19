@@ -80,7 +80,7 @@ the date here.
 
 > I want to add another key feature, basically a special version of views the calendar:
 > Adding school schedule (Stundenplan) for the kids. Appointments in general should be
-> flexible, e.g. regular to maintain when Sabine is working or flexible to show when Lukas
+> flexible, e.g. regular to maintain when Sarah is working or flexible to show when David
 > is travelling for work.
 >
 > The standard view in the kitchen (kiosk style) should contain the Stundenplan, main
@@ -91,7 +91,7 @@ Three distinct requirements, and they were treated as three:
 | Ask | Answer | Where |
 |---|---|---|
 | The children's Stundenplan | A first-class **timetable pattern** — weekday × Stunde → Fach, term-bound, minus Ferien, plus per-date exceptions — projected into the calendar rather than stored as sixty recurring events | [15](15-module-school-timetable.md), [ADR-008](adr/ADR-008-school-timetable-model.md), FR-7.x |
-| Flexible appointments: regular for Sabine's work, ad hoc for Lukas's travel | A second event **kind**, `presence`, in the same table: rotas as `RRULE` *or* an explicit `RDATE` set tapped into a month grid, travel as a plain span with a `tentative` status | [05](05-module-calendar.md#what-a-calendar-entry-can-be), [ADR-009](adr/ADR-009-event-kinds-and-presence.md), FR-1.11–1.17 |
+| Flexible appointments: regular for Sarah's work, ad hoc for David's travel | A second event **kind**, `presence`, in the same table: rotas as `RRULE` *or* an explicit `RDATE` set tapped into a month grid, travel as a plain span with a `tentative` status | [05](05-module-calendar.md#what-a-calendar-entry-can-be), [ADR-009](adr/ADR-009-event-kinds-and-presence.md), FR-1.11–1.17 |
 | The kitchen's standard view | The kiosk's default screen is now a **seven-day week board** with four fixed zones per day, not the today dashboard originally planned | [09](09-clients-and-ux.md#the-week-board), FR-8.x |
 
 **What this cost.** Roughly a month on M1 (see [13](13-roadmap.md#effort)), most of it in
@@ -102,7 +102,10 @@ and the security model's most sensitive asset is no longer the calendar but a ch
 timetable combined with an adult's absence pattern ([11](11-security-and-privacy.md)).
 
 **Naming note.** The examples throughout the documents use the reference household's
-names: *Lukas* and *Sabine* for the adults, *Lotta* (9) and *Hanna* (7) for the children.
+names, the same as the demo's and in the language of the text around them: in English
+*David* and *Sarah* for the adults, *Olivia* (9) and *Jack* (7) for the children; in German
+(quoted German text, German mockups, the German docs and the code) *Thomas* and *Julia*,
+*Emma* (9) and *Paul* (7).
 Since 2026-10-11 they are examples, not assumptions — see the entry below and
 [21](21-household-settings.md#the-reference-household).
 
@@ -111,7 +114,7 @@ child's school-day span and the lessons worth packing for, with the full Stunden
 tap away (FR-8.3a); key appointments sit in three fixed day parts rather than on a time
 axis, with a dot per attendee (FR-8.3b); the meal zone shows one warm meal a day; and each
 adult gained a **baseline presence** so that only deviations are entered and only
-deviations are emphasised (FR-1.18). Lotta's timetable in the mockup is the real one from
+deviations are emphasised (FR-1.18). Olivia's timetable in the mockup is the real one from
 the class's paper plan.
 
 ### 2026-10-11 — Technology stack: Flutter and self-hosted Supabase

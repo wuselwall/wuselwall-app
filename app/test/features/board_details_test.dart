@@ -73,36 +73,26 @@ final Map<String, dynamic> _json = {
   },
   'members': [
     {
-      'id': 'sabine',
-      'display_name': 'Sabine',
+      'id': 'julia',
+      'display_name': 'Julia',
       'color': '#C0566B',
       'kind': 'adult',
       'baseline': {'state': 'home_office', 'label': 'Homeoffice'},
     },
     {
-      'id': 'lukas',
-      'display_name': 'Lukas',
+      'id': 'thomas',
+      'display_name': 'Thomas',
       'color': '#3B6FB6',
       'kind': 'adult',
       'baseline': {'state': 'working', 'label': null},
     },
-    {
-      'id': 'lotta',
-      'display_name': 'Lotta',
-      'color': '#3E8E4F',
-      'kind': 'child',
-    },
-    {
-      'id': 'hanna',
-      'display_name': 'Hanna',
-      'color': '#7A5CC2',
-      'kind': 'child',
-    },
+    {'id': 'emma', 'display_name': 'Emma', 'color': '#3E8E4F', 'kind': 'child'},
+    {'id': 'paul', 'display_name': 'Paul', 'color': '#7A5CC2', 'kind': 'child'},
   ],
   'presence': [
     {
       'id': 'travel',
-      'member_id': 'sabine',
+      'member_id': 'julia',
       'state': 'travel',
       'label': 'Dienstreise Berlin',
       'first_day': '2026-10-14',
@@ -113,7 +103,7 @@ final Map<String, dynamic> _json = {
     },
     {
       'id': 'off',
-      'member_id': 'lukas',
+      'member_id': 'thomas',
       'state': 'off',
       'label': null,
       'first_day': '2026-10-16',
@@ -122,7 +112,7 @@ final Map<String, dynamic> _json = {
   ],
   'timetables': [
     {
-      'member_id': 'lotta',
+      'member_id': 'emma',
       'class_label': '5b',
       'school_name': 'Gesamtschule Nord',
       'periods': [
@@ -136,7 +126,7 @@ final Map<String, dynamic> _json = {
       ],
     },
     {
-      'member_id': 'hanna',
+      'member_id': 'paul',
       'class_label': '3a',
       'school_name': 'Grundschule Süd',
       'periods': [
@@ -157,7 +147,7 @@ final Map<String, dynamic> _json = {
               'location': null,
               'starts': '17:30',
               'ends': '18:30',
-              'attendee_ids': ['hanna'],
+              'attendee_ids': ['paul'],
               'tentative': false,
               'key': false,
             },
@@ -169,27 +159,27 @@ final Map<String, dynamic> _json = {
               'location': null,
               'starts': null,
               'ends': null,
-              'attendee_ids': ['sabine'],
+              'attendee_ids': ['julia'],
               'tentative': false,
               'key': false,
             },
             {
               'id': 'zahn',
-              'title': 'Zahnarzt Lotta',
+              'title': 'Zahnarzt Emma',
               'location': 'Praxis Weber',
               'starts': '08:00',
               'ends': '09:00',
-              'attendee_ids': ['lotta'],
+              'attendee_ids': ['emma'],
               'tentative': false,
               'key': true,
             },
             {
-              'id': 'hanna',
+              'id': 'paul',
               'title': 'Kinderturnen',
               'location': 'Halle Ost',
               'starts': '14:00',
               'ends': '14:45',
-              'attendee_ids': ['hanna', 'sabine'],
+              'attendee_ids': ['paul', 'julia'],
               'tentative': true,
               'key': false,
             },
@@ -199,7 +189,7 @@ final Map<String, dynamic> _json = {
               'location': 'Aula',
               'starts': '19:00',
               'ends': '20:30',
-              'attendee_ids': ['sabine', 'lukas'],
+              'attendee_ids': ['julia', 'thomas'],
               'tentative': false,
               'key': true,
             },
@@ -207,12 +197,12 @@ final Map<String, dynamic> _json = {
           _ => <Map<String, dynamic>>[],
         },
         'busy_until': [
-          if (i == 2) {'member_id': 'sabine', 'until': '17:00'},
+          if (i == 2) {'member_id': 'julia', 'until': '17:00'},
         ],
         'school': [
           if (i == 2) ...[
             _schoolDay(
-              memberId: 'lotta',
+              memberId: 'emma',
               starts: '08:00',
               ends: '13:00',
               notable: ['Sport'],
@@ -271,11 +261,11 @@ final Map<String, dynamic> _json = {
                 _care('13:00', '15:00'),
               ],
             ),
-            _schoolDay(memberId: 'hanna', free: 'holiday', lessons: const []),
+            _schoolDay(memberId: 'paul', free: 'holiday', lessons: const []),
           ],
           if (i == 3) ...[
             _schoolDay(
-              memberId: 'lotta',
+              memberId: 'emma',
               starts: '08:00',
               ends: '10:30',
               careUntil: '15:00',
@@ -316,16 +306,16 @@ final Map<String, dynamic> _json = {
             'slot': 'dinner',
             'time': '18:30',
             'title': 'Lasagne',
-            'cook_id': 'lukas',
-            'eating': ['lukas', 'sabine', 'lotta'],
+            'cook_id': 'thomas',
+            'eating': ['thomas', 'julia', 'emma'],
             'guests': 1,
           },
           3 => {
             'slot': 'dinner',
             'time': '18:30',
             'title': 'Kürbissuppe',
-            'cook_id': 'sabine',
-            'eating': ['sabine', 'lotta', 'hanna', 'lukas'],
+            'cook_id': 'julia',
+            'eating': ['julia', 'emma', 'paul', 'thomas'],
             'guests': 0,
           },
           _ => null,
@@ -414,14 +404,14 @@ void main() {
       expected: [
         'Mittwoch, 14. Oktober',
         'Heute',
-        'Zahnarzt Lotta',
+        'Zahnarzt Emma',
         'Kinderturnen ?',
         'Geburtstag planen',
         'Elternabend',
         'Dienstreise Berlin',
         'Termine bis 17:00',
         'Lasagne',
-        'Lukas kocht',
+        'Thomas kocht',
         'Schule 8–13',
       ],
     );
@@ -454,9 +444,9 @@ void main() {
   ) async {
     await _check(
       tester,
-      open: (context) => openChildWeek(context, _board, 'lotta'),
+      open: (context) => openChildWeek(context, _board, 'emma'),
       expected: [
-        'Stundenplan von Lotta',
+        'Stundenplan von Emma',
         'Klasse 5b',
         'Entfall',
         'Vertretung',
@@ -471,20 +461,20 @@ void main() {
   testWidgets('child week in the dark shade', (tester) async {
     await _check(
       tester,
-      open: (context) => openChildWeek(context, _board, 'lotta'),
+      open: (context) => openChildWeek(context, _board, 'emma'),
       shade: Shade.dark,
-      expected: ['Stundenplan von Lotta', 'Entfall', 'Vertretung'],
+      expected: ['Stundenplan von Emma', 'Entfall', 'Vertretung'],
     );
   });
 
   testWidgets('child week in English', (tester) async {
     await _check(
       tester,
-      open: (context) => openChildWeek(context, _board, 'lotta'),
+      open: (context) => openChildWeek(context, _board, 'emma'),
       locale: const Locale('en'),
       backLabel: 'Back to the week',
       expected: [
-        "Lotta's timetable",
+        "Emma's timetable",
         'Cancelled',
         'Substitute',
         'Pack for tomorrow: Sportsachen',
@@ -497,9 +487,9 @@ void main() {
   ) async {
     await _check(
       tester,
-      open: (context) => openSchoolDay(context, _board, 'lotta', 2),
+      open: (context) => openSchoolDay(context, _board, 'emma', 2),
       expected: [
-        'Lotta · Mittwoch',
+        'Emma · Mittwoch',
         'Schule 8–13',
         'Hort bis 15:00',
         'Mathematik',
@@ -517,9 +507,9 @@ void main() {
   testWidgets('member week: baseline, travel band, cooking', (tester) async {
     await _check(
       tester,
-      open: (context) => openMemberWeek(context, _board, 'sabine'),
+      open: (context) => openMemberWeek(context, _board, 'julia'),
       expected: [
-        'Die Woche von Sabine',
+        'Die Woche von Julia',
         'Normalerweise: Homeoffice',
         'Dienstreise Berlin',
         'Termine bis 17:00',
@@ -537,7 +527,7 @@ void main() {
         'Essen dieser Woche',
         'nichts geplant',
         'Lasagne',
-        'Lukas kocht',
+        'Thomas kocht',
         'Kürbissuppe',
       ],
     );

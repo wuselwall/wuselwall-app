@@ -43,12 +43,12 @@ Every shortcut is built like the one above: **Get Contents of URL** with method 
 | Shortcut | Address ends in | Fields in the JSON | Answer, for example |
 |---|---|---|---|
 | Shopping list | `/shopping` | `text`: what goes on the list; `list`: a list other than the default one (optional) | "Milk is on the list." |
-| What's on today? | `/today` | `day`: "tomorrow", a weekday or a date (optional) | "Today: 08:30 Dentist (Lotta). Meals today: Dinner: Spaghetti." |
-| What's for dinner? | `/meals` | `day` (optional) | "Meals today: Dinner: Spaghetti. Sabine is cooking." |
+| What's on today? | `/today` | `day`: "tomorrow", a weekday or a date (optional) | "Today: 08:30 Dentist (Olivia). Meals today: Dinner: Spaghetti." |
+| What's for dinner? | `/meals` | `day` (optional) | "Meals today: Dinner: Spaghetti. Sarah is cooking." |
 | My points | `/points` | – | "You have 42 points." |
 | Task done | `/chore` | `text`: which task | "Done: Empty the dishwasher. 2 points added." |
-| School | `/school` | `text`: the question, such as "Does Lotta have PE tomorrow?" | "Yes, Lotta has PE tomorrow, period 3 (09:55–10:40)." |
-| When is … back? | `/presence` | `text`: the question, such as "When is Sabine back?" | "Sabine is travelling until Friday 23 October and back on Saturday 24 October." |
+| School | `/school` | `text`: the question, such as "Does Olivia have PE tomorrow?" | "Yes, Olivia has PE tomorrow, period 3 (09:55–10:40)." |
+| When is … back? | `/presence` | `text`: the question, such as "When is Sarah back?" | "Sarah is travelling until Friday 23 October and back on Saturday 24 October." |
 
 For **School** and **When is … back?**, let the shortcut **Ask for Input** first, as for shopping, and send the whole question as `text`. WuselWall finds the name, the day and the subject in it; the subject is matched by the name your timetable gives it. Without a day, **School** means the next day, because packing usually happens the evening before. If no name is in the question, it is about you.
 
@@ -66,7 +66,7 @@ Guardians see and revoke every key of the family, everyone else their own. The [
 
 ## AI assistants (MCP)
 
-An AI assistant that speaks **MCP** (the Model Context Protocol, for example Claude) can **look things up** in WuselWall with a key of its own: "What's on this week?", "What's for dinner on Thursday?", "When does Lotta finish school tomorrow?". It can **neither add, change nor delete anything**.
+An AI assistant that speaks **MCP** (the Model Context Protocol, for example Claude) can **look things up** in WuselWall with a key of its own: "What's on this week?", "What's for dinner on Thursday?", "When does Olivia finish school tomorrow?". It can **neither add, change nor delete anything**.
 
 When creating a key, choose **Assistant** instead of **Siri**. Only adults get a key for an assistant. It appears in the list under **AI assistants** and is revoked like any other key.
 

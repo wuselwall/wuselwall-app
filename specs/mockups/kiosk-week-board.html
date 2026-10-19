@@ -138,10 +138,10 @@ h1 {
   --scr-today:  #ffffff;
   --scr-accent: #0b6e6a;
   --scr-past:   .46;
-  --lotta:  #6d4aff;
-  --hanna:  #0e8f9c;
-  --sabine: #b5610a;
-  --lukas:  #c2255c;
+  --emma:  #6d4aff;
+  --paul:  #0e8f9c;
+  --julia: #b5610a;
+  --thomas:  #c2255c;
 }
 .screen[data-mode="nacht"], .overlay[data-mode="nacht"] {
   --scr-bg:     #0a0d11;
@@ -154,10 +154,10 @@ h1 {
   --scr-today:  #161d24;
   --scr-accent: #35c4ba;
   --scr-past:   .32;
-  --lotta:  #a894ff;
-  --hanna:  #3fc3d0;
-  --sabine: #e6a04b;
-  --lukas:  #ff7ba3;
+  --emma:  #a894ff;
+  --paul:  #3fc3d0;
+  --julia: #e6a04b;
+  --thomas:  #ff7ba3;
 }
 
 .screen {
@@ -588,7 +588,7 @@ footer.page {
     Spalte dieselben Bereiche in derselben Reihenfolge — wer ist wo, was steht vormittags,
     nachmittags und abends an, und was es warm zu essen gibt. Auf der Wand steht vom
     Stundenplan nur die Schulzeit und das Besondere; <strong>der volle Stundenplan ist einen
-    Tipp entfernt</strong>: auf die Schulzeit eines Tages tippen — etwa Lottas
+    Tipp entfernt</strong>: auf die Schulzeit eines Tages tippen — etwa Emmas
     <em>8:00–14:25</em> am Mittwoch — und der Tag steht Stunde für Stunde da, mit Pausen,
     Vertretung und Entfall, darunter die ganze Woche. Bei den Erwachsenen zeigt das Display
     nur, was vom Normalfall abweicht: <strong>blass ist der Grundzustand, kräftig ist die
@@ -604,7 +604,7 @@ footer.page {
   <div class="controls">
     <button class="btn" id="tgl-mode" aria-pressed="false"><span class="dot"></span>Nachtansicht ab 21 Uhr</button>
     <button class="btn" id="tgl-anno" aria-pressed="false"><span class="dot"></span>Bereiche erklären</button>
-    <button class="btn" id="open-plan"><span class="dot"></span>Lottas Schultag ansehen</button>
+    <button class="btn" id="open-plan"><span class="dot"></span>Emmas Schultag ansehen</button>
     <span class="hint">Das Display hat Tag- und Nachtmodus — unabhängig davon, wie diese Seite gerade aussieht.</span>
   </div>
 
@@ -640,8 +640,8 @@ footer.page {
         <h3>Wer ist wo</h3>
         <p>Eine Zeile pro Person. Bei den Kindern die Schulzeit plus das, was man abends
         vorher wissen muss: Sport, Schwimmen, FreiDay, Hort. Bei den Erwachsenen gilt ein
-        <em>Grundzustand</em> — Lukas ist normalerweise im Homeoffice, Sabine normalerweise
-        zu Hause. Der steht blass da; kräftig wird nur, was davon abweicht: Sabines Dienst
+        <em>Grundzustand</em> — Thomas ist normalerweise im Homeoffice, Julia normalerweise
+        zu Hause. Der steht blass da; kräftig wird nur, was davon abweicht: Julias Dienst
         Montag und Mittwoch, ein Bürotag in Berlin, eine Dienstreise nach Hamburg über zwei
         Tage. Darunter steht, <b>bis wann jemand in Terminen ist</b> — „Termine bis 17:00"
         beantwortet die Frage, die bei Homeoffice tatsächlich gestellt wird: nicht <em>ob</em>
@@ -716,7 +716,7 @@ footer.page {
       <div class="q">
         <span class="qn">4</span>
         <h3>Stimmen die Grundzustände — und sollen Dienstzeiten mit Uhrzeit dastehen?</h3>
-        <p>Hinterlegt ist: Lukas normalerweise Homeoffice, Sabine normalerweise zu Hause,
+        <p>Hinterlegt ist: Thomas normalerweise Homeoffice, Julia normalerweise zu Hause,
         Dienst Montag und Mittwoch 8:30–14:00. Eingetragen wird dann nur noch die Ausnahme —
         ein Bürotag, eine Dienstreise, ein zusätzlicher Dienst. Uhrzeiten sind praktisch für
         die Planung, aber auch das, was ein Besuch in der Küche als Erstes mitliest.</p>
@@ -727,14 +727,14 @@ footer.page {
         <h3>Wer pflegt den Stundenplan — und wer trägt einen Entfall ein?</h3>
         <p>Der Plan wird zweimal im Jahr eingegeben, das ist schnell. Vertretungen und
         Entfall kommen unter der Woche und sind die eigentliche Arbeit.</p>
-        <span class="lean"><b>Vorschlag:</b> Eltern pflegen den Plan; ob Lotta ihren Entfall selbst eintragen darf, entscheiden wir, wenn sie die App wirklich nutzt.</span>
+        <span class="lean"><b>Vorschlag:</b> Eltern pflegen den Plan; ob Emma ihren Entfall selbst eintragen darf, entscheiden wir, wenn sie die App wirklich nutzt.</span>
       </div>
     </div>
   </section>
 
   <footer class="page">
     <span>Mockup, kein Screenshot — Beispieldaten für eine Diskussion.</span>
-    <span>Lottas Stundenplan (5a) ist der echte aus dem Foto; Hannas SAPh-Plan ist erfunden.</span>
+    <span>Emmas Stundenplan (5a) ist der echte aus dem Foto; Pauls SAPh-Plan ist erfunden.</span>
     <span>Spezifikation: specs/09-clients-and-ux.md · specs/15-module-school-timetable.md</span>
   </footer>
 </div>
@@ -753,11 +753,11 @@ footer.page {
 <script>
 /* ── household ───────────────────────────────────────────── */
 const members = [
-  { id: "lotta",  name: "Lotta",  role: "9 · Klasse 5a",  initial: "L", kind: "kid",   colour: "var(--lotta)" },
-  { id: "hanna",  name: "Hanna",  role: "7 · SAPh E",     initial: "H", kind: "kid",   colour: "var(--hanna)" },
-  { id: "sabine", name: "Sabine", role: "Mo + Mi Dienst", initial: "S", kind: "adult", colour: "var(--sabine)",
+  { id: "emma",  name: "Emma",  role: "9 · Klasse 5a",  initial: "E", kind: "kid",   colour: "var(--emma)" },
+  { id: "paul",  name: "Paul",  role: "7 · SAPh E",     initial: "P", kind: "kid",   colour: "var(--paul)" },
+  { id: "julia", name: "Julia", role: "Mo + Mi Dienst", initial: "J", kind: "adult", colour: "var(--julia)",
     baseline: { label: "zu Hause" } },
-  { id: "lukas",  name: "Lukas",  role: "meist Homeoffice", initial: "L", kind: "adult", colour: "var(--lukas)",
+  { id: "thomas",  name: "Thomas",  role: "meist Homeoffice", initial: "T", kind: "adult", colour: "var(--thomas)",
     baseline: { label: "Homeoffice" } }
 ];
 const byId = Object.fromEntries(members.map(m => [m.id, m]));
@@ -775,9 +775,9 @@ const bells = [
 ];
 
 /* ── timetables ──────────────────────────────────────────── */
-/* Lotta: the plan from the paper original. Hanna: a shorter one. */
+/* Emma: the plan from the paper original. Paul: a shorter one. */
 const timetables = {
-  lotta: {
+  emma: {
     klasse: "5a", term: "Schuljahr 2026/27 · 1. Halbjahr",
     grid: {
       mo: ["Ma", "D",       "D",   "E/F", "E/F", "BK",     "BK"],
@@ -793,7 +793,7 @@ const timetables = {
     ],
     hort: {}
   },
-  hanna: {
+  paul: {
     klasse: "SAPh E", term: "Schuljahr 2026/27 · 1. Halbjahr",
     grid: {
       mo: ["D",  "Ma", "SU", "Sp", null, null, null],
@@ -842,67 +842,67 @@ function schoolDay(childId, day) {
 const week = [
   {
     key: "mo", dow: "Montag", short: "Mo", date: "31.08.", state: "past",
-    presence: { sabine: { state: "working", label: "Dienst", time: "8:30–14:00" } },
-    busyUntil: { lukas: "16:30" },
+    presence: { julia: { state: "working", label: "Dienst", time: "8:30–14:00" } },
+    busyUntil: { thomas: "16:30" },
     appts: [
-      { time: "10:00", title: "Heizung wird gewartet", who: ["lukas"] },
-      { time: "15:00", title: "Turnen", who: ["hanna"], place: "TSV-Halle" }
+      { time: "10:00", title: "Heizung wird gewartet", who: ["thomas"] },
+      { time: "15:00", title: "Turnen", who: ["paul"], place: "TSV-Halle" }
     ],
-    meal: { when: "Abend 18:30", dish: "Kürbissuppe", cook: "sabine", eaters: ["lotta","hanna","sabine","lukas"] }
+    meal: { when: "Abend 18:30", dish: "Kürbissuppe", cook: "julia", eaters: ["emma","paul","julia","thomas"] }
   },
   {
     key: "di", dow: "Dienstag", short: "Di", date: "01.09.", state: "past",
-    presence: { lukas: { state: "working", label: "Büro Berlin", time: "ab 8:00" } },
-    busyUntil: { lukas: "18:00" },
+    presence: { thomas: { state: "working", label: "Büro Berlin", time: "ab 8:00" } },
+    busyUntil: { thomas: "18:00" },
     appts: [
-      { time: "14:30", title: "Zahnarzt", who: ["lotta"], place: "Dr. Behrens" }
+      { time: "14:30", title: "Zahnarzt", who: ["emma"], place: "Dr. Behrens" }
     ],
-    meal: { when: "Abend 18:30", dish: "Nudelauflauf", cook: "lukas", eaters: ["lotta","hanna","sabine","lukas"] }
+    meal: { when: "Abend 18:30", dish: "Nudelauflauf", cook: "thomas", eaters: ["emma","paul","julia","thomas"] }
   },
   {
     key: "mi", dow: "Mittwoch", short: "Mi", date: "02.09.", state: "today",
-    presence: { sabine: { state: "working", label: "Dienst", time: "8:30–14:00" } },
-    busyUntil: { lukas: "17:00" },
+    presence: { julia: { state: "working", label: "Dienst", time: "8:30–14:00" } },
+    busyUntil: { thomas: "17:00" },
     appts: [
-      { time: "16:00", title: "Turnen", who: ["hanna"], place: "TSV-Halle" },
-      { time: "19:30", title: "Elternabend", who: ["sabine"], place: "Klasse 5a" }
+      { time: "16:00", title: "Turnen", who: ["paul"], place: "TSV-Halle" },
+      { time: "19:30", title: "Elternabend", who: ["julia"], place: "Klasse 5a" }
     ],
-    meal: { when: "Abend 18:30", dish: "Chili sin Carne", cook: "sabine", eaters: ["lotta","hanna","sabine","lukas"] }
+    meal: { when: "Abend 18:30", dish: "Chili sin Carne", cook: "julia", eaters: ["emma","paul","julia","thomas"] }
   },
   {
     key: "do", dow: "Donnerstag", short: "Do", date: "03.09.", state: "future",
-    presence: { lukas: { state: "travel", label: "Dienstreise Hamburg", span: 2 } },
-    busyUntil: { lukas: "16:00" },
+    presence: { thomas: { state: "travel", label: "Dienstreise Hamburg", span: 2 } },
+    busyUntil: { thomas: "16:00" },
     appts: [
-      { time: "15:30", title: "Klavier", who: ["lotta"], place: "Musikschule" }
+      { time: "15:30", title: "Klavier", who: ["emma"], place: "Musikschule" }
     ],
-    meal: { when: "Abend 18:30", dish: "Fischstäbchen", cook: "sabine", eaters: ["lotta","hanna","sabine"] }
+    meal: { when: "Abend 18:30", dish: "Fischstäbchen", cook: "julia", eaters: ["emma","paul","julia"] }
   },
   {
     key: "fr", dow: "Freitag", short: "Fr", date: "04.09.", state: "future",
     presence: {},
-    busyUntil: { lukas: "15:30" },
+    busyUntil: { thomas: "15:30" },
     appts: [
-      { time: "18:00", title: "Kinoabend", who: ["lotta","hanna","sabine"] }
+      { time: "18:00", title: "Kinoabend", who: ["emma","paul","julia"] }
     ],
-    meal: { when: "Abend 18:00", dish: "Flammkuchen", cook: "sabine", eaters: ["lotta","hanna","sabine"] }
+    meal: { when: "Abend 18:00", dish: "Flammkuchen", cook: "julia", eaters: ["emma","paul","julia"] }
   },
   {
     key: "sa", dow: "Samstag", short: "Sa", date: "05.09.", state: "future",
     presence: {},
     appts: [
-      { time: "10:00", title: "Fußballturnier", who: ["hanna","sabine"], place: "Sportplatz Ost" },
-      { time: "16:00", title: "Grillen bei Webers", who: ["lotta","hanna","sabine","lukas"], tentative: true }
+      { time: "10:00", title: "Fußballturnier", who: ["paul","julia"], place: "Sportplatz Ost" },
+      { time: "16:00", title: "Grillen bei Webers", who: ["emma","paul","julia","thomas"], tentative: true }
     ],
-    meal: { when: "Mittag 12:30", dish: "Nudeln mit Pesto", cook: "lukas", eaters: ["lotta","lukas"] }
+    meal: { when: "Mittag 12:30", dish: "Nudeln mit Pesto", cook: "thomas", eaters: ["emma","thomas"] }
   },
   {
     key: "so", dow: "Sonntag", short: "So", date: "06.09.", state: "future",
     presence: {},
     appts: [
-      { time: "11:00", title: "Oma & Opa kommen", who: ["lotta","hanna","sabine","lukas"] }
+      { time: "11:00", title: "Oma & Opa kommen", who: ["emma","paul","julia","thomas"] }
     ],
-    meal: { when: "Mittag 12:30", dish: "Rinderbraten", cook: "sabine", eaters: ["lotta","hanna","sabine","lukas"], guests: 2 }
+    meal: { when: "Mittag 12:30", dish: "Rinderbraten", cook: "julia", eaters: ["emma","paul","julia","thomas"], guests: 2 }
   }
 ];
 
@@ -1089,10 +1089,10 @@ function render() {
   board.append(el(`<div class="scr-foot full">
     <span class="anno">4</span>
     <span>Heute offen:</span>
-    <span class="chipcount"><span class="mini" style="--c:var(--lotta)"></span><b>Lotta 2</b></span>
-    <span class="chipcount"><span class="mini" style="--c:var(--hanna)"></span><b>Hanna 1</b></span>
-    <span class="chipcount"><span class="mini" style="--c:var(--sabine)"></span><b>Sabine 1</b></span>
-    <span class="chipcount"><span class="mini" style="--c:var(--lukas)"></span><b>Lukas 0</b></span>
+    <span class="chipcount"><span class="mini" style="--c:var(--emma)"></span><b>Emma 2</b></span>
+    <span class="chipcount"><span class="mini" style="--c:var(--paul)"></span><b>Paul 1</b></span>
+    <span class="chipcount"><span class="mini" style="--c:var(--julia)"></span><b>Julia 1</b></span>
+    <span class="chipcount"><span class="mini" style="--c:var(--thomas)"></span><b>Thomas 0</b></span>
     <button class="shop-btn" data-shop="1">Einkaufsliste <b id="shop-count">${shopCount}</b>
       <span class="plus">＋ etwas drauf</span></button>
     <span class="stale">aktualisiert vor 4 s</span>
@@ -1375,7 +1375,7 @@ board.addEventListener("click", e => {
   const mem = e.target.closest("[data-member]");
   if (mem) openMember(mem.dataset.member);
 });
-document.getElementById("open-plan").addEventListener("click", () => openTimetable("lotta", "mi"));
+document.getElementById("open-plan").addEventListener("click", () => openTimetable("emma", "mi"));
 sheetBody.addEventListener("click", e => {
   const t = e.target.closest("[data-item]");
   if (t) {

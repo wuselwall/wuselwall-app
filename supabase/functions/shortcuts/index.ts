@@ -6,7 +6,7 @@
 //   GET  points                                 my points
 //   POST chore      {text}                      tick one of my open tasks (no text: list them)
 //   GET  school     ?member=&day=&subject= | ?text=   "Hat Mia morgen Sport?"
-//   GET  presence   ?member= | ?text=           "Wann ist Sabine wieder da?"
+//   GET  presence   ?member= | ?text=           "Wann ist Julia wieder da?"
 //
 // Every parameter may come in the query or in a JSON body. The token is the Authorization
 // header ("Bearer wws_…"), never the URL, so it stays out of logs. The answer is plain text

@@ -137,7 +137,7 @@ class FeedTokensPage extends ConsumerWidget {
   }
 }
 
-/// "Termine · Lukas, Sabine · Schultag": what a subscription carries, in words.
+/// "Termine · Thomas, Julia · Schultag": what a subscription carries, in words.
 String _summary(AppLocalizations l10n, FeedFilter f, List<Member> members) {
   final kinds = [
     if (f.kinds.contains('appointment')) l10n.feedSummaryAppointments,

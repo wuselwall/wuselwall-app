@@ -117,7 +117,7 @@ profile (`profile.auth_user_id`, one household per account). Children never have
   rewards.
 
 An adult's phone is enrolled simply by signing in: it becomes a `personal` device bound to
-their profile, named automatically ("Daniels iPhone"). On a personal device a guardian
+their profile, named automatically ("Thomas’ iPhone"). On a personal device a guardian
 needs no PIN: the account sign-in is the stronger proof. A full sign-in on a personal
 device (at `aal2` where TOTP is on) is required for: creating or deleting the household,
 inviting adults, approving a device pairing, setting or resetting a PIN, and deleting the

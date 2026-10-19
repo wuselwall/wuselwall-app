@@ -18,7 +18,7 @@ Dann zeigt WuselWall den **Code**, den **Server** eurer Familie, einen **QR-Code
 
 Die Einladung gilt **7 Tage** und funktioniert **einmal**. Offene Einladungen stehen in der Liste mit ihrem Ablaufdatum: **Erneut teilen** schickt sie noch einmal, **Zurückziehen** macht sie ungültig.
 
-Sobald die Person beigetreten ist, bekommt **jede erziehungsberechtigte Person** auf dem Tab **Heute** einen Hinweis („Sabine ist beigetreten“). **Gesehen** blendet ihn aus, **Mitglieder** führt zur Liste. Hinweise verschwinden nach 14 Tagen von selbst.
+Sobald die Person beigetreten ist, bekommt **jede erziehungsberechtigte Person** auf dem Tab **Heute** einen Hinweis („Julia ist beigetreten“). **Gesehen** blendet ihn aus, **Mitglieder** führt zur Liste. Hinweise verschwinden nach 14 Tagen von selbst.
 
 Hast du bei der E-Mail-Adresse nichts angegeben, gibt es den Code allein. Die Person muss ihn dann in der App eingeben.
 

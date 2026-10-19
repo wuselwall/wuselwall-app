@@ -26,15 +26,15 @@ begin
   perform set_config('role', 'authenticated', true);
 end $$;
 
--- ---- household A: Papa (guardian, personal phone), Lotta (child), Hanna (member) -------------
+-- ---- household A: Papa (guardian, personal phone), Emma (child), Paul (member) -------------
 create temp table sa as
   select api.setup_household('dev-setup', 'A', 'a@example.org', 'longpassword1', 'Papa', '#111111', '123456') r;
 grant all on sa to public;
 insert into ids select 'hh_a', (r ->> 'household_id')::uuid from sa;
 insert into app.profile (household_id, display_name, role, kind)
-  select (r ->> 'household_id')::uuid, 'Lotta', 'member', 'child' from sa;
+  select (r ->> 'household_id')::uuid, 'Emma', 'member', 'child' from sa;
 insert into app.profile (household_id, display_name, role)
-  select (r ->> 'household_id')::uuid, 'Hanna', 'member' from sa;
+  select (r ->> 'household_id')::uuid, 'Paul', 'member' from sa;
 insert into ids select lower(p.display_name), p.id from app.profile p
  where p.household_id = (select id from ids where name = 'hh_a');
 
@@ -190,19 +190,19 @@ insert into ids select 'subj_sp', id from app.subject
 insert into ids select 'subj_sw', id from app.subject
  where household_id = (select id from ids where name = 'hh_a') and short_name = 'Sw';
 
-insert into ids select 'tt_lotta', (api.timetable_save(null, jsonb_build_object(
-  'profile_id', (select id from ids where name = 'lotta'), 'school_id', (select id from ids where name = 'sch1'),
+insert into ids select 'tt_emma', (api.timetable_save(null, jsonb_build_object(
+  'profile_id', (select id from ids where name = 'emma'), 'school_id', (select id from ids where name = 'sch1'),
   'term_id', (select id from ids where name = 't1'), 'class_label', '2b', 'week_cycle', 'ab')) ->> 'id')::uuid;
-select is((select week_cycle from api.timetables where id = (select id from ids where name = 'tt_lotta')), 'ab',
+select is((select week_cycle from api.timetables where id = (select id from ids where name = 'tt_emma')), 'ab',
   'a timetable keeps its A/B cycle');
-select is((select valid_from from api.timetables where id = (select id from ids where name = 'tt_lotta')),
+select is((select valid_from from api.timetables where id = (select id from ids where name = 'tt_emma')),
   '2026-08-20'::date, 'a timetable is valid from the start of its term unless told otherwise');
 select throws_ok($$ select api.timetable_save(null, jsonb_build_object(
-  'profile_id', (select id from ids where name = 'lotta'), 'school_id', (select id from ids where name = 'sch1'),
+  'profile_id', (select id from ids where name = 'emma'), 'school_id', (select id from ids where name = 'sch1'),
   'term_id', (select id from ids where name = 't1'))) $$,
   '22023', 'WW-SCH-001 school invalid', 'a member has one timetable per term');
 select throws_ok($$ select api.timetable_save(null, jsonb_build_object(
-  'profile_id', (select id from ids where name = 'hanna'), 'school_id', (select id from ids where name = 'sch1'),
+  'profile_id', (select id from ids where name = 'paul'), 'school_id', (select id from ids where name = 'sch1'),
   'term_id', (select id from ids where name = 't_s2'))) $$,
   '22023', 'WW-SCH-001 school invalid', 'a term of another school is refused');
 select throws_ok($$ select api.timetable_save(null, jsonb_build_object(
@@ -219,86 +219,86 @@ insert into lj select jsonb_build_array(
                      'week_parity', 'a'),
   jsonb_build_object('weekday', 1, 'kind', 'care', 'title', 'Hort', 'starts_at', '13:00', 'ends_at', '15:30'));
 
-select lives_ok($$ select api.timetable_lessons_set(null, (select id from ids where name = 'tt_lotta'),
+select lives_ok($$ select api.timetable_lessons_set(null, (select id from ids where name = 'tt_emma'),
   (select j from lj)) $$, 'a guardian saves the whole grid at once');
-select is((select count(*)::int from api.timetable_lessons where timetable_id = (select id from ids where name = 'tt_lotta')),
+select is((select count(*)::int from api.timetable_lessons where timetable_id = (select id from ids where name = 'tt_emma')),
   5, 'the grid holds the five cells that were saved');
-select is((select is_notable from api.timetable_lessons where timetable_id = (select id from ids where name = 'tt_lotta')
+select is((select is_notable from api.timetable_lessons where timetable_id = (select id from ids where name = 'tt_emma')
              and weekday = 2 and period_index = 4), true, 'Sport is notable when the entry does not say');
-select is((select is_notable from api.timetable_lessons where timetable_id = (select id from ids where name = 'tt_lotta')
+select is((select is_notable from api.timetable_lessons where timetable_id = (select id from ids where name = 'tt_emma')
              and weekday = 1 and period_index = 1), false, 'a subject that is not notable stays off the wall');
-select is((select week_parity from api.timetable_lessons where timetable_id = (select id from ids where name = 'tt_lotta')
+select is((select week_parity from api.timetable_lessons where timetable_id = (select id from ids where name = 'tt_emma')
              and weekday = 3), 'a', 'a lesson can sit on the A week only');
 select ok((select kind = 'care' and period_index is null and starts_at = '13:00'::time and subject_id is null
-             from api.timetable_lessons where timetable_id = (select id from ids where name = 'tt_lotta') and kind = 'care'),
+             from api.timetable_lessons where timetable_id = (select id from ids where name = 'tt_emma') and kind = 'care'),
   'a care row has its own times and no period');
 
 -- Saving the grid moves the timetable's updated_at forward (it drives the ICS SEQUENCE).
 reset role;
-update app.timetable set updated_at = '2000-01-01' where id = (select id from ids where name = 'tt_lotta');
+update app.timetable set updated_at = '2000-01-01' where id = (select id from ids where name = 'tt_emma');
 select pg_temp.act_as_dev('papa');
-select lives_ok($$ select api.timetable_lessons_set(null, (select id from ids where name = 'tt_lotta'),
+select lives_ok($$ select api.timetable_lessons_set(null, (select id from ids where name = 'tt_emma'),
   (select j from lj)) $$, 'the same grid can be saved again');
-select ok((select updated_at > '2000-01-01'::timestamptz from api.timetables where id = (select id from ids where name = 'tt_lotta')),
+select ok((select updated_at > '2000-01-01'::timestamptz from api.timetables where id = (select id from ids where name = 'tt_emma')),
   'saving the grid moves the timetable updated_at forward');
 
-select throws_ok($$ select api.timetable_lessons_set(null, (select id from ids where name = 'tt_lotta'),
+select throws_ok($$ select api.timetable_lessons_set(null, (select id from ids where name = 'tt_emma'),
   jsonb_build_array(jsonb_build_object('weekday', 4, 'period_index', 1,
     'subject_id', (select id from ids where name = 'subj_b')))) $$,
   '22023', 'WW-SCH-001 school invalid', 'a subject of another household is refused in a lesson');
-select throws_ok($$ select api.timetable_lessons_set(null, (select id from ids where name = 'tt_lotta'),
+select throws_ok($$ select api.timetable_lessons_set(null, (select id from ids where name = 'tt_emma'),
   '[{"weekday":4,"period_index":1}]'::jsonb) $$,
   '22023', 'WW-SCH-001 school invalid', 'a lesson needs a subject or a title');
-select throws_ok($$ select api.timetable_lessons_set(null, (select id from ids where name = 'tt_lotta'),
+select throws_ok($$ select api.timetable_lessons_set(null, (select id from ids where name = 'tt_emma'),
   '[{"weekday":8,"period_index":1,"title":"Test"}]'::jsonb) $$,
   '22023', 'WW-SCH-001 school invalid', 'a weekday is 1 to 7');
 
 -- Copy to the sibling: metadata and grid, not exceptions.
-insert into ids select 'tt_hanna', (api.timetable_copy(null, (select id from ids where name = 'tt_lotta'),
-  (select id from ids where name = 'hanna'), (select id from ids where name = 't1')) ->> 'id')::uuid;
-select is((select count(*)::int from api.timetable_lessons where timetable_id = (select id from ids where name = 'tt_hanna')),
+insert into ids select 'tt_paul', (api.timetable_copy(null, (select id from ids where name = 'tt_emma'),
+  (select id from ids where name = 'paul'), (select id from ids where name = 't1')) ->> 'id')::uuid;
+select is((select count(*)::int from api.timetable_lessons where timetable_id = (select id from ids where name = 'tt_paul')),
   5, 'a copy to the sibling takes all five cells');
-select is((select profile_id from api.timetables where id = (select id from ids where name = 'tt_hanna')),
-  (select id from ids where name = 'hanna'), 'the copy belongs to the sibling');
-select throws_ok($$ select api.timetable_copy(null, (select id from ids where name = 'tt_lotta'),
-  (select id from ids where name = 'hanna'), (select id from ids where name = 't1')) $$,
+select is((select profile_id from api.timetables where id = (select id from ids where name = 'tt_paul')),
+  (select id from ids where name = 'paul'), 'the copy belongs to the sibling');
+select throws_ok($$ select api.timetable_copy(null, (select id from ids where name = 'tt_emma'),
+  (select id from ids where name = 'paul'), (select id from ids where name = 't1')) $$,
   '22023', 'WW-SCH-001 school invalid', 'a child cannot have two timetables in one term');
 
 -- ---- exceptions ---------------------------------------------------------------------------------
 insert into ids select 'ex_cancel', (api.timetable_exception_save(null, jsonb_build_object(
-  'timetable_id', (select id from ids where name = 'tt_lotta'), 'on_date', '2026-10-19',
+  'timetable_id', (select id from ids where name = 'tt_emma'), 'on_date', '2026-10-19',
   'period_index', 2, 'kind', 'cancelled')) ->> 'id')::uuid;
 select is((select kind from api.timetable_exceptions where id = (select id from ids where name = 'ex_cancel')), 'cancelled',
   'a lesson can be cancelled on one date');
 insert into ids select 'ex_sub', (api.timetable_exception_save(null, jsonb_build_object(
-  'timetable_id', (select id from ids where name = 'tt_lotta'), 'on_date', '2026-10-20',
+  'timetable_id', (select id from ids where name = 'tt_emma'), 'on_date', '2026-10-20',
   'period_index', 4, 'kind', 'substituted', 'teacher', 'Herr Lang')) ->> 'id')::uuid;
 select is((select teacher from api.timetable_exceptions where id = (select id from ids where name = 'ex_sub')), 'Herr Lang',
   'a substitution names the teacher');
 insert into ids select 'ex_extra', (api.timetable_exception_save(null, jsonb_build_object(
-  'timetable_id', (select id from ids where name = 'tt_lotta'), 'on_date', '2026-10-17',
+  'timetable_id', (select id from ids where name = 'tt_emma'), 'on_date', '2026-10-17',
   'starts_at', '10:00', 'ends_at', '11:00', 'kind', 'extra',
   'subject_id', (select id from ids where name = 'subj_ma'))) ->> 'id')::uuid;
-select is((select count(*)::int from api.timetable_exceptions where timetable_id = (select id from ids where name = 'tt_lotta')
+select is((select count(*)::int from api.timetable_exceptions where timetable_id = (select id from ids where name = 'tt_emma')
              and on_date = '2026-10-17' and kind = 'extra'), 1, 'an extra lesson can land on a Saturday');
 select throws_ok($$ select api.timetable_exception_save(null, jsonb_build_object(
-  'timetable_id', (select id from ids where name = 'tt_lotta'), 'on_date', '2026-10-21', 'kind', 'cancelled')) $$,
+  'timetable_id', (select id from ids where name = 'tt_emma'), 'on_date', '2026-10-21', 'kind', 'cancelled')) $$,
   '22023', 'WW-SCH-001 school invalid', 'a cancelled lesson names its period');
 select throws_ok($$ select api.timetable_exception_save(null, jsonb_build_object(
-  'timetable_id', (select id from ids where name = 'tt_lotta'), 'on_date', '2026-10-21',
+  'timetable_id', (select id from ids where name = 'tt_emma'), 'on_date', '2026-10-21',
   'kind', 'extra', 'period_index', 2)) $$,
   '22023', 'WW-SCH-001 school invalid', 'an extra lesson needs a subject and a time or period');
 
 reset role;
-update app.timetable set updated_at = '2000-01-01' where id = (select id from ids where name = 'tt_lotta');
+update app.timetable set updated_at = '2000-01-01' where id = (select id from ids where name = 'tt_emma');
 select pg_temp.act_as_dev('papa');
 select lives_ok($$ select api.timetable_exception_save(null, jsonb_build_object(
-  'id', (select id from ids where name = 'ex_sub'), 'timetable_id', (select id from ids where name = 'tt_lotta'),
+  'id', (select id from ids where name = 'ex_sub'), 'timetable_id', (select id from ids where name = 'tt_emma'),
   'on_date', '2026-10-20', 'period_index', 4, 'kind', 'substituted', 'teacher', 'Frau Lang')) $$,
   'a guardian corrects a substitution');
 select is((select teacher from api.timetable_exceptions where id = (select id from ids where name = 'ex_sub')), 'Frau Lang',
   'the corrected teacher is saved');
-select ok((select updated_at > '2000-01-01'::timestamptz from api.timetables where id = (select id from ids where name = 'tt_lotta')),
+select ok((select updated_at > '2000-01-01'::timestamptz from api.timetables where id = (select id from ids where name = 'tt_emma')),
   'an exception moves the timetable updated_at forward');
 select lives_ok($$ select api.timetable_exception_delete(null, (select id from ids where name = 'ex_cancel')) $$,
   'a guardian removes an exception');
@@ -329,16 +329,16 @@ select is((select count(*)::int from api.school_holidays where id = (select id f
 -- ---- a child on the shared iPad: reads and reports, does not maintain ---------------------------
 reset role;
 select pg_temp.act_as_dev('ipad');
-select throws_ok($$ select api.school_save((select id from ids where name = 'lotta'), '{"name":"Nein"}'::jsonb) $$,
+select throws_ok($$ select api.school_save((select id from ids where name = 'emma'), '{"name":"Nein"}'::jsonb) $$,
   '42501', 'guardian required', 'a child cannot change the school');
-select throws_ok($$ select api.timetable_lessons_set((select id from ids where name = 'lotta'),
-  (select id from ids where name = 'tt_lotta'), '[]'::jsonb) $$,
+select throws_ok($$ select api.timetable_lessons_set((select id from ids where name = 'emma'),
+  (select id from ids where name = 'tt_emma'), '[]'::jsonb) $$,
   '42501', 'guardian required', 'a child cannot replace the grid');
-select throws_ok($$ select api.school_holiday_save((select id from ids where name = 'lotta'),
+select throws_ok($$ select api.school_holiday_save((select id from ids where name = 'emma'),
   '{"name":"Ferien","starts_on":"2026-12-01","ends_on":"2026-12-02","kind":"holiday"}'::jsonb) $$,
   '42501', 'guardian required', 'a child cannot add a holiday');
-select throws_ok($$ select api.timetable_exception_save((select id from ids where name = 'lotta'), jsonb_build_object(
-  'timetable_id', (select id from ids where name = 'tt_lotta'), 'on_date', '2026-10-22', 'period_index', 3,
+select throws_ok($$ select api.timetable_exception_save((select id from ids where name = 'emma'), jsonb_build_object(
+  'timetable_id', (select id from ids where name = 'tt_emma'), 'on_date', '2026-10-22', 'period_index', 3,
   'kind', 'cancelled')) $$,
   '42501', 'guardian required', 'with the setting off a child cannot report a change');
 
@@ -347,14 +347,14 @@ reset role;
 insert into app.household_setting (household_id, key, value)
   values ((select id from ids where name = 'hh_a'), 'school.members_report_changes', 'true'::jsonb);
 select pg_temp.act_as_dev('ipad');
-insert into ids select 'ex_kid', (api.timetable_exception_save((select id from ids where name = 'lotta'), jsonb_build_object(
-  'timetable_id', (select id from ids where name = 'tt_lotta'), 'on_date', '2026-10-22', 'period_index', 3,
+insert into ids select 'ex_kid', (api.timetable_exception_save((select id from ids where name = 'emma'), jsonb_build_object(
+  'timetable_id', (select id from ids where name = 'tt_emma'), 'on_date', '2026-10-22', 'period_index', 3,
   'kind', 'cancelled')) ->> 'id')::uuid;
 select is((select count(*)::int from api.timetable_exceptions where id = (select id from ids where name = 'ex_kid')), 1,
   'a child reports a change once the household allows it');
-select lives_ok($$ select api.timetable_exception_delete((select id from ids where name = 'lotta'),
+select lives_ok($$ select api.timetable_exception_delete((select id from ids where name = 'emma'),
   (select id from ids where name = 'ex_kid')) $$, 'a child removes the change she reported');
-select throws_ok($$ select api.school_save((select id from ids where name = 'lotta'), '{"name":"Nein"}'::jsonb) $$,
+select throws_ok($$ select api.school_save((select id from ids where name = 'emma'), '{"name":"Nein"}'::jsonb) $$,
   '42501', 'guardian required', 'the setting opens exceptions only, not the school');
 
 -- ---- a kiosk never writes -----------------------------------------------------------------------
@@ -363,7 +363,7 @@ select pg_temp.act_as_dev('kiosk');
 select throws_ok($$ select api.school_save((select id from ids where name = 'papa'), '{"name":"Kiosk"}'::jsonb) $$,
   '42501', 'not allowed on a kiosk', 'a kiosk device cannot save a school');
 select throws_ok($$ select api.timetable_exception_save((select id from ids where name = 'papa'), jsonb_build_object(
-  'timetable_id', (select id from ids where name = 'tt_lotta'), 'on_date', '2026-10-23', 'period_index', 1,
+  'timetable_id', (select id from ids where name = 'tt_emma'), 'on_date', '2026-10-23', 'period_index', 1,
   'kind', 'cancelled')) $$,
   '42501', 'not allowed on a kiosk', 'a kiosk device cannot report an exception, even with the setting on');
 
@@ -378,25 +378,25 @@ select is((select count(*)::int from api.school_terms where id in (select id fro
   0, 'another household sees none of the terms');
 select is((select count(*)::int from api.subjects where name in ('Deutsch', 'Mathematik')),
   0, 'another household sees none of the subjects');
-select is((select count(*)::int from api.timetables where id in (select id from ids where name in ('tt_lotta', 'tt_hanna'))),
+select is((select count(*)::int from api.timetables where id in (select id from ids where name in ('tt_emma', 'tt_paul'))),
   0, 'another household sees none of the timetables');
-select is((select count(*)::int from api.timetable_lessons where timetable_id in (select id from ids where name in ('tt_lotta', 'tt_hanna'))),
+select is((select count(*)::int from api.timetable_lessons where timetable_id in (select id from ids where name in ('tt_emma', 'tt_paul'))),
   0, 'another household sees none of the lessons');
-select is((select count(*)::int from api.timetable_exceptions where timetable_id = (select id from ids where name = 'tt_lotta')),
+select is((select count(*)::int from api.timetable_exceptions where timetable_id = (select id from ids where name = 'tt_emma')),
   0, 'another household sees none of the exceptions');
 select is((select count(*)::int from api.school_holidays where id = (select id from ids where name = 'hol_herbst')),
   0, 'another household sees none of the holidays');
 select throws_ok($$ select api.school_save(null, jsonb_build_object('id', (select id from ids where name = 'sch1'),
   'name', 'Fremd')) $$, 'P0002', 'school not found', 'another household cannot rename a school by its id');
-select throws_ok($$ select api.timetable_lessons_set(null, (select id from ids where name = 'tt_lotta'), '[]'::jsonb) $$,
+select throws_ok($$ select api.timetable_lessons_set(null, (select id from ids where name = 'tt_emma'), '[]'::jsonb) $$,
   'P0002', 'timetable not found', 'another household cannot replace a grid');
 select throws_ok($$ select api.subject_delete(null, (select id from ids where name = 'subj_d')) $$,
   'P0002', 'subject not found', 'another household cannot delete a subject');
-select throws_ok($$ select api.timetable_save(null, jsonb_build_object('profile_id', (select id from ids where name = 'lotta'),
+select throws_ok($$ select api.timetable_save(null, jsonb_build_object('profile_id', (select id from ids where name = 'emma'),
   'school_id', (select id from ids where name = 'school_b'), 'term_id', (select id from ids where name = 't1'))) $$,
   '22023', 'WW-SCH-001 school invalid', 'another household cannot put a child on its own term');
 select throws_ok($$ select api.timetable_exception_save(null, jsonb_build_object(
-  'timetable_id', (select id from ids where name = 'tt_lotta'), 'on_date', '2026-10-24', 'period_index', 1,
+  'timetable_id', (select id from ids where name = 'tt_emma'), 'on_date', '2026-10-24', 'period_index', 1,
   'kind', 'cancelled')) $$,
   '22023', 'WW-SCH-001 school invalid', 'another household cannot add an exception to a timetable of another');
 select throws_ok($$ select api.school_holiday_save(null, jsonb_build_object('school_id', (select id from ids where name = 'sch1'),

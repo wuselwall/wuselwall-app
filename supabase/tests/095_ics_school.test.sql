@@ -24,16 +24,16 @@ begin
   perform set_config('role', 'authenticated', true);
 end $$;
 
--- ---- household A: Papa (guardian), Lotta (child), Hanna (member) ------------------------------
+-- ---- household A: Papa (guardian), Emma (child), Paul (member) ------------------------------
 create temp table sa as
   select api.setup_household('dev-setup', 'A', 'a@example.org', 'longpassword1', 'Papa', '#111111', '123456') r;
 grant all on sa to public;
 insert into ids select 'hh_a', (r ->> 'household_id')::uuid from sa;
 insert into ids select 'papa', (r ->> 'profile_id')::uuid from sa;
 insert into app.profile (household_id, display_name, role, kind)
-  select (select id from ids where name = 'hh_a'), 'Lotta', 'member', 'child';
+  select (select id from ids where name = 'hh_a'), 'Emma', 'member', 'child';
 insert into app.profile (household_id, display_name, role, kind)
-  select (select id from ids where name = 'hh_a'), 'Hanna', 'member', 'adult';
+  select (select id from ids where name = 'hh_a'), 'Paul', 'member', 'adult';
 insert into ids select lower(p.display_name), p.id from app.profile p
  where p.household_id = (select id from ids where name = 'hh_a') and p.role = 'member';
 insert into app.device (household_id, auth_user_id, label, class, register, profile_id)
@@ -50,7 +50,7 @@ with s as (insert into app.subject (household_id, name, short_name, tint)
            values ((select id from ids where name = 'hh_a'), 'Mathe', 'Ma', 'blue') returning id)
   insert into ids select 'subj_a', id from s;
 
--- Current term, an old term (outside the window), and the timetables of Lotta and Hanna.
+-- Current term, an old term (outside the window), and the timetables of Emma and Paul.
 with s as (insert into app.school_term (household_id, school_id, name, starts_on, ends_on)
            values ((select id from ids where name = 'hh_a'), (select id from ids where name = 'school_a'),
                    'Herbst', current_date - 60, current_date + 200) returning id)
@@ -60,37 +60,37 @@ with s as (insert into app.school_term (household_id, school_id, name, starts_on
                    'Frueher', '2025-01-01', '2025-06-30') returning id)
   insert into ids select 'term_old', id from s;
 with s as (insert into app.timetable (household_id, profile_id, school_id, term_id, valid_from)
-           values ((select id from ids where name = 'hh_a'), (select id from ids where name = 'lotta'),
+           values ((select id from ids where name = 'hh_a'), (select id from ids where name = 'emma'),
                    (select id from ids where name = 'school_a'), (select id from ids where name = 'term_a'),
                    current_date - 60) returning id)
-  insert into ids select 'tt_lotta', id from s;
+  insert into ids select 'tt_emma', id from s;
 with s as (insert into app.timetable (household_id, profile_id, school_id, term_id, valid_from)
-           values ((select id from ids where name = 'hh_a'), (select id from ids where name = 'lotta'),
+           values ((select id from ids where name = 'hh_a'), (select id from ids where name = 'emma'),
                    (select id from ids where name = 'school_a'), (select id from ids where name = 'term_old'),
                    '2025-01-01') returning id)
   insert into ids select 'tt_old', id from s;
 with s as (insert into app.timetable (household_id, profile_id, school_id, term_id, valid_from)
-           values ((select id from ids where name = 'hh_a'), (select id from ids where name = 'hanna'),
+           values ((select id from ids where name = 'hh_a'), (select id from ids where name = 'paul'),
                    (select id from ids where name = 'school_a'), (select id from ids where name = 'term_a'),
                    current_date - 60) returning id)
-  insert into ids select 'tt_hanna', id from s;
+  insert into ids select 'tt_paul', id from s;
 
 insert into app.timetable_lesson (household_id, timetable_id, weekday, period_index, subject_id, room)
-  select (select id from ids where name = 'hh_a'), (select id from ids where name = 'tt_lotta'), w, p,
+  select (select id from ids where name = 'hh_a'), (select id from ids where name = 'tt_emma'), w, p,
          (select id from ids where name = 'subj_a'), 'R1'
     from (values (1, 1), (1, 2), (2, 1)) v(w, p);
 insert into app.timetable_lesson (household_id, timetable_id, weekday, period_index, title)
-  select (select id from ids where name = 'hh_a'), (select id from ids where name = 'tt_hanna'), 1, 1, 'Hanna-Stunde';
+  select (select id from ids where name = 'hh_a'), (select id from ids where name = 'tt_paul'), 1, 1, 'Paul-Stunde';
 insert into app.timetable_lesson (household_id, timetable_id, weekday, period_index, subject_id)
   select (select id from ids where name = 'hh_a'), (select id from ids where name = 'tt_old'), 1, 1,
          (select id from ids where name = 'subj_a');
 
 -- One cancellation inside the window, one long before it.
 insert into app.timetable_exception (household_id, timetable_id, on_date, period_index, kind)
-  select (select id from ids where name = 'hh_a'), (select id from ids where name = 'tt_lotta'),
+  select (select id from ids where name = 'hh_a'), (select id from ids where name = 'tt_emma'),
          current_date + 3, 1, 'cancelled'
   union all
-  select (select id from ids where name = 'hh_a'), (select id from ids where name = 'tt_lotta'),
+  select (select id from ids where name = 'hh_a'), (select id from ids where name = 'tt_emma'),
          current_date - 45, 1, 'cancelled';
 
 insert into app.school_holiday (household_id, school_id, name, starts_on, ends_on, kind)
@@ -128,13 +128,13 @@ insert into tok select 'day', r ->> 'token' from (select api.feed_token_create(n
   '{"school":"day"}'::jsonb) r) s;
 insert into tok select 'lessons', r ->> 'token' from (select api.feed_token_create(null, 'Stunden',
   '{"school":"lessons"}'::jsonb) r) s;
-insert into tok select 'hanna', r ->> 'token' from (select api.feed_token_create(null, 'Hanna',
-  jsonb_build_object('profile_ids', jsonb_build_array((select id from ids where name = 'hanna')),
+insert into tok select 'paul', r ->> 'token' from (select api.feed_token_create(null, 'Paul',
+  jsonb_build_object('profile_ids', jsonb_build_array((select id from ids where name = 'paul')),
                      'school', 'day')) r) s;
 reset role;
 
 insert into snap select k, api.ics_feed((select token from tok where name = k))
-  from (values ('off'), ('day'), ('lessons'), ('hanna')) v(k);
+  from (values ('off'), ('day'), ('lessons'), ('paul')) v(k);
 
 -- ---- what the feed holds --------------------------------------------------------------------
 select ok(not ((select v from snap where k = 'off') ? 'school'), 'the default filter has no school key');
@@ -142,9 +142,9 @@ select ok(not ((select v from snap where k = 'off') ? 'members'), 'the default f
 select ok((select v from snap where k = 'off') ? 'events', 'the feed keeps its events key without school');
 select ok((select v from snap where k = 'day') ? 'school', 'school "day" adds the school key');
 select is(jsonb_array_length((select v from snap where k = 'day') -> 'school' -> 'timetables'), 1,
-  'only Lotta has a timetable in the window (Hanna is not a child, the old term is outside it)');
+  'only Emma has a timetable in the window (Paul is not a child, the old term is outside it)');
 select is((select v from snap where k = 'day') -> 'school' -> 'timetables' -> 0 ->> 'id',
-  (select id::text from ids where name = 'tt_lotta'), 'the timetable is Lotta''s current one');
+  (select id::text from ids where name = 'tt_emma'), 'the timetable is Emma''s current one');
 select is(jsonb_array_length((select v from snap where k = 'day') -> 'school' -> 'schools'), 1,
   'the schools are the household''s own');
 select is((select v from snap where k = 'day') -> 'school' -> 'schools' -> 0 ->> 'name', 'Grundschule A',
@@ -162,7 +162,7 @@ select is(jsonb_array_length((select v from snap where k = 'day') -> 'school' ->
 select is(jsonb_array_length((select v from snap where k = 'day') -> 'school' -> 'holidays'), 1,
   'only the household''s holiday, not the other household''s');
 select is((select v from snap where k = 'day') -> 'members',
-  jsonb_build_object((select id::text from ids where name = 'lotta'), 'Lotta'),
+  jsonb_build_object((select id::text from ids where name = 'emma'), 'Emma'),
   'members name the child with a timetable');
 select ok(not exists (select 1 from snap s, jsonb_array_elements(s.v -> 'school' -> 'timetables') t
                        where s.k = 'day' and t ->> 'id' = (select id::text from ids where name = 'tt_b')),
@@ -179,11 +179,11 @@ select ok(exists (select 1 from snap s, jsonb_array_elements(s.v -> 'school' -> 
 select ok((select v from snap where k = 'lessons') ? 'school', 'school "lessons" adds the school key');
 select is(jsonb_array_length((select v from snap where k = 'lessons') -> 'school' -> 'timetables'), 1,
   'lessons mode selects the same rows');
-select is((select v from snap where k = 'hanna') -> 'members',
-  jsonb_build_object((select id::text from ids where name = 'hanna'), 'Hanna'),
+select is((select v from snap where k = 'paul') -> 'members',
+  jsonb_build_object((select id::text from ids where name = 'paul'), 'Paul'),
   'a profile filter names its member and no other');
-select is((select v from snap where k = 'hanna') -> 'school' -> 'timetables' -> 0 ->> 'profile_id',
-  (select id::text from ids where name = 'hanna'), 'a profile filter limits the timetables to that profile');
+select is((select v from snap where k = 'paul') -> 'school' -> 'timetables' -> 0 ->> 'profile_id',
+  (select id::text from ids where name = 'paul'), 'a profile filter limits the timetables to that profile');
 
 select * from finish();
 rollback;

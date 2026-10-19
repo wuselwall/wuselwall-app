@@ -14,7 +14,7 @@ void main() {
     });
 
     test('German after s, ß, x and z takes an apostrophe only', () {
-      expect(possessiveName('Lukas', 'de'), 'Lukas’');
+      expect(possessiveName('Thomas', 'de'), 'Thomas’');
       expect(possessiveName('Strauß', 'de'), 'Strauß’');
       expect(possessiveName('Max', 'de'), 'Max’');
       expect(possessiveName('Franz', 'de'), 'Franz’');
@@ -70,8 +70,8 @@ void main() {
         "Daniel's browser",
       );
       expect(
-        deviceLabel(l10n: de, ownerName: 'Lotta', host: DeviceHost.computer),
-        'Lottas Computer',
+        deviceLabel(l10n: de, ownerName: 'Emma', host: DeviceHost.computer),
+        'Emmas Computer',
       );
     });
 

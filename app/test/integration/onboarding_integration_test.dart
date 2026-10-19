@@ -241,7 +241,7 @@ void main() {
         founder,
         index: 1,
         familyName: familyName,
-        name: 'Sabine',
+        name: 'Julia',
       );
       deleteFamilyAfter(founder, familyName);
       final founderDevice = (await founder.identity.currentDevice()).unwrap()!;
@@ -262,7 +262,7 @@ void main() {
         expect(preview, isA<PreviewValid>());
         final valid = (preview as PreviewValid).preview;
         expect(valid.householdName, familyName);
-        expect(valid.inviterFirstName, 'Sabine');
+        expect(valid.inviterFirstName, 'Julia');
         expect(valid.profileName, 'Oma');
         expect(valid.role, InvitationRole.guardian);
       }
@@ -285,7 +285,7 @@ void main() {
       expect(omaDevice.profileId, (accepted as Accepted).profileId);
       expect(
         (await oma.identity.members()).unwrap().map((m) => m.displayName),
-        containsAll(['Sabine', 'Oma']),
+        containsAll(['Julia', 'Oma']),
       );
 
       // The founder now sees the "join" notice; the joiner does not.
