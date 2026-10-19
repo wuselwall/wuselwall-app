@@ -87,7 +87,7 @@ void main() {
       t,
     ) async {
       final s = await pumpSettings(t);
-      await t.ensureVisible(deleteTile);
+      await t.scrollUntilVisible(deleteTile, 200);
       await t.pumpAndSettle();
       expect(
         find.text(
@@ -106,7 +106,7 @@ void main() {
           t,
           acc: account(leaveBlocked: 'last_guardian'),
         );
-        await t.ensureVisible(deleteTile);
+        await t.scrollUntilVisible(deleteTile, 200);
         await t.pumpAndSettle();
         expect(
           find.text(
@@ -127,7 +127,7 @@ void main() {
       'a confirmed deletion goes straight through with a recent sign-in',
       (t) async {
         final s = await pumpSettings(t);
-        await t.ensureVisible(deleteTile);
+        await t.scrollUntilVisible(deleteTile, 200);
         await t.pumpAndSettle();
         await t.tap(deleteTile);
         await t.pumpAndSettle();
@@ -152,7 +152,7 @@ void main() {
 
     testWidgets('cancelling the dialog deletes nothing', (t) async {
       final s = await pumpSettings(t);
-      await t.ensureVisible(deleteTile);
+      await t.scrollUntilVisible(deleteTile, 200);
       await t.pumpAndSettle();
       await t.tap(deleteTile);
       await t.pumpAndSettle();
@@ -175,7 +175,7 @@ void main() {
           admin.recent = true;
           return const Ok(false);
         };
-        await t.ensureVisible(deleteTile);
+        await t.scrollUntilVisible(deleteTile, 200);
         await t.pumpAndSettle();
         await t.tap(deleteTile);
         await t.pumpAndSettle();
@@ -206,7 +206,7 @@ void main() {
         ];
       final s = await pumpSettings(t, admin: admin);
       s.identity.verifyResult = const Err(AuthFailure(code: 'otp_invalid'));
-      await t.ensureVisible(deleteTile);
+      await t.scrollUntilVisible(deleteTile, 200);
       await t.pumpAndSettle();
       await t.tap(deleteTile);
       await t.pumpAndSettle();

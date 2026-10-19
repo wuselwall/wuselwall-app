@@ -222,7 +222,12 @@ As implemented:
   light, `bg` on `ink` in dark and night, so a code never glares at night.
 - `Shade` is `light | dark | night`. Night is a third `ThemeData`, used by the kiosk
   register from 21:00 to 06:00 (`nightProvider`, which rebuilds at each boundary)
-  regardless of the OS setting.
+  regardless of the OS setting or the device's appearance.
+- Light or dark follows the OS by default. Each device can fix it to light or dark under
+  Settings → Appearance (`appearanceProvider` in `app/theme/appearance.dart`, kept in
+  the device's secure storage, not on the server: it is a per-device preference like
+  the OS setting it overrides). Further colour schemes are not offered; the palette's
+  contrast and colour-vision checks hold for the light, dark and night values only.
 - On shared and kiosk devices, `AppTheme.forMember` swaps `primary` to the acting
   member's ink. This happens in one `Theme` wrapper in `MaterialApp.builder`, not in
   widgets.

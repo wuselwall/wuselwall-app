@@ -33,6 +33,7 @@ import 'package:wuselwall/features/identity/ui/set_password_dialog.dart';
 import 'package:wuselwall/features/invitations/ui/members_invitations.dart';
 import 'package:wuselwall/features/settings/application/household_export_providers.dart';
 import 'package:wuselwall/features/settings/data/household_export_repository.dart';
+import 'package:wuselwall/features/settings/ui/appearance_tile.dart';
 import 'package:wuselwall/features/shopping/data/shopping_store.dart';
 import 'package:wuselwall/features/system/ui/class_labels.dart';
 import 'package:wuselwall/features/today/application/today_providers.dart';
@@ -94,6 +95,7 @@ class SettingsPage extends ConsumerWidget {
             trailing: const Icon(Icons.chevron_right),
             onTap: () => context.go(Routes.reminders),
           ),
+          const AppearanceTile(),
           if (thisDevice?.deviceClass != DeviceClass.kiosk)
             ListTile(
               leading: const Icon(Icons.keyboard_voice_outlined),

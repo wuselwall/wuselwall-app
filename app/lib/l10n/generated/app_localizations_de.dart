@@ -4295,4 +4295,24 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get settingNotifyPackingHelp =>
       'Um diese Uhrzeit sagt dein Handy, was für morgen in die Schultasche gehört, aus den Stundenplänen (zum Beispiel Sportsachen). Nur wenn etwas einzupacken ist.';
+
+  @override
+  String get appearanceTitle => 'Darstellung';
+
+  @override
+  String get appearanceSystem => 'Automatisch';
+
+  @override
+  String get appearanceSystemHelp =>
+      'Hell oder dunkel, wie auf diesem Gerät eingestellt';
+
+  @override
+  String get appearanceLight => 'Hell';
+
+  @override
+  String get appearanceDark => 'Dunkel';
+
+  @override
+  String get appearanceNightNote =>
+      'Nachts zeigt das Wanddisplay immer seine Nachtansicht.';
 }

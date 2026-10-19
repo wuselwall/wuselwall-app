@@ -4263,4 +4263,23 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get settingNotifyPackingHelp =>
       'At this time your phone says what has to go in the school bag for tomorrow, from the timetables (for example PE kit). Only when there is something to pack.';
+
+  @override
+  String get appearanceTitle => 'Appearance';
+
+  @override
+  String get appearanceSystem => 'Automatic';
+
+  @override
+  String get appearanceSystemHelp => 'Light or dark, as set on this device';
+
+  @override
+  String get appearanceLight => 'Light';
+
+  @override
+  String get appearanceDark => 'Dark';
+
+  @override
+  String get appearanceNightNote =>
+      'At night the wall display always shows its night view.';
 }
