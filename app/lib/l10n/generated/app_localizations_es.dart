@@ -2018,14 +2018,15 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get baselineTitle => 'Lugar habitual';
+  String get baselineTitle => 'Semana habitual';
 
   @override
-  String get baselineSettingsSubtitle => 'Dónde suele estar cada persona';
+  String get baselineSettingsSubtitle =>
+      'Dónde suele estar cada persona, día a día';
 
   @override
   String get baselineHelp =>
-      'Dónde sueles estar. Solo se introducen los cambios, así que un día normal queda vacío.';
+      'Dónde sueles estar cada día de la semana. Solo se introducen los cambios, así que una semana normal queda vacía.';
 
   @override
   String get baselineNone => 'Sin definir';
@@ -2038,6 +2039,66 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get baselineSaved => 'Guardado.';
+
+  @override
+  String get usualCopyMonday => 'De martes a viernes como el lunes';
+
+  @override
+  String usualDayTitle(String name, String weekday) {
+    return '$name el $weekday';
+  }
+
+  @override
+  String get usualDayApply => 'Aplicar';
+
+  @override
+  String get usualWholeDay => 'Todo el día';
+
+  @override
+  String get usualSlots => 'Franjas horarias';
+
+  @override
+  String get usualSlotState => 'Dónde';
+
+  @override
+  String get usualSlotFrom => 'Desde';
+
+  @override
+  String get usualSlotUntil => 'Hasta';
+
+  @override
+  String get usualAddSlot => 'Añadir franja horaria';
+
+  @override
+  String get usualRemoveSlot => 'Quitar franja horaria';
+
+  @override
+  String get usualSlotsInvalid =>
+      'Cada franja termina después de empezar y las franjas no se solapan.';
+
+  @override
+  String get usualAlternating => 'Semanas alternas (A/B)';
+
+  @override
+  String get usualAlternatingHelp =>
+      'Para un plan que se repite cada dos semanas.';
+
+  @override
+  String get usualWeekA => 'Semana A';
+
+  @override
+  String get usualWeekB => 'Semana B';
+
+  @override
+  String usualThisWeekIs(String week) {
+    return 'Esta semana: $week.';
+  }
+
+  @override
+  String get usualWhichWeek => '¿Qué semana es esta?';
+
+  @override
+  String get errUsualWeekInvalid => 'Esta semana habitual no es válida.';
 
   @override
   String get busyTitle => 'Reuniones hasta';
