@@ -3599,19 +3599,19 @@ abstract class AppLocalizations {
   /// No description provided for @baselineTitle.
   ///
   /// In en, this message translates to:
-  /// **'Usual place'**
+  /// **'Usual week'**
   String get baselineTitle;
 
   /// No description provided for @baselineSettingsSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Where everyone usually is'**
+  /// **'Where everyone usually is, day by day'**
   String get baselineSettingsSubtitle;
 
   /// No description provided for @baselineHelp.
   ///
   /// In en, this message translates to:
-  /// **'Where you usually are. Only deviations get entered, so a normal day stays empty.'**
+  /// **'Where you usually are on each day of the week. Only deviations get entered, so a normal week stays empty.'**
   String get baselineHelp;
 
   /// No description provided for @baselineNone.
@@ -3637,6 +3637,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Saved.'**
   String get baselineSaved;
+
+  /// No description provided for @usualCopyMonday.
+  ///
+  /// In en, this message translates to:
+  /// **'Tuesday to Friday like Monday'**
+  String get usualCopyMonday;
+
+  /// No description provided for @usualDayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} on {weekday}'**
+  String usualDayTitle(String name, String weekday);
+
+  /// No description provided for @usualDayApply.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get usualDayApply;
+
+  /// No description provided for @errUsualWeekInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'This usual week is not valid.'**
+  String get errUsualWeekInvalid;
 
   /// No description provided for @busyTitle.
   ///

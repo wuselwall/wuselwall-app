@@ -10,30 +10,34 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/calendar/data/calendar_repository.dart';
 import 'package:wuselwall/features/calendar/data/feed_repository.dart';
+import 'package:wuselwall/features/calendar/domain/usual_week.dart';
 import 'package:wuselwall/features/calendar/ui/busy_until_sheet.dart';
 
 import '../support/fakes.dart';
 
-/// A week board whose only content is [members] (with their baselines).
-WeekBoard boardWith(List<Map<String, dynamic>> members) => WeekBoard.fromJson({
-  'week_start': '2026-10-12',
-  'today': '2026-10-14',
-  'generated_at': '2026-10-14T08:00:00Z',
-  'members': members,
-  'presence': <Map<String, dynamic>>[],
-  'timetables': <Map<String, dynamic>>[],
-  'days': [
-    for (var i = 0; i < 7; i++)
-      {
-        'date': '2026-10-${12 + i}',
-        'events': <Map<String, dynamic>>[],
-        'busy_until': <Map<String, dynamic>>[],
-        'school': <Map<String, dynamic>>[],
-      },
-  ],
-  'open_tasks': <Map<String, dynamic>>[],
-  'shopping_count': 0,
-});
+/// A week board whose only content is [members] (with their baselines). With [usual],
+/// its days carry (empty) usual places, as a server with the usual week sends them.
+WeekBoard boardWith(List<Map<String, dynamic>> members, {bool usual = false}) =>
+    WeekBoard.fromJson({
+      'week_start': '2026-10-12',
+      'today': '2026-10-14',
+      'generated_at': '2026-10-14T08:00:00Z',
+      'members': members,
+      'presence': <Map<String, dynamic>>[],
+      'timetables': <Map<String, dynamic>>[],
+      'days': [
+        for (var i = 0; i < 7; i++)
+          {
+            'date': '2026-10-${12 + i}',
+            'events': <Map<String, dynamic>>[],
+            'busy_until': <Map<String, dynamic>>[],
+            'school': <Map<String, dynamic>>[],
+            if (usual) 'usual': <Map<String, dynamic>>[],
+          },
+      ],
+      'open_tasks': <Map<String, dynamic>>[],
+      'shopping_count': 0,
+    });
 
 const _papaRow = {
   'id': guardianId,
@@ -76,11 +80,28 @@ class FakeFeedRepository implements FeedRepository {
   dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
 }
 
-/// Records the busy-until and baseline writes; everything else is the in-memory fake.
+/// Records the busy-until, baseline and usual-week writes, and serves [usual]; everything
+/// else is the in-memory fake.
 class RecordingCalendar extends FakeCalendarRepository {
+  RecordingCalendar({this.usual = const []});
+
+  final List<UsualWeek> usual;
   final busy = <({String profileId, DateTime date, TimeOfDay? until})>[];
   final baselines =
       <({String profileId, PresenceState? state, String? label})>[];
+  final weeks = <UsualWeek>[];
+
+  @override
+  Future<Result<List<UsualWeek>>> usualWeeks() async => Ok(usual);
+
+  @override
+  Future<Result<void>> setUsualWeek({
+    required String? actor,
+    required UsualWeek week,
+  }) async {
+    weeks.add(week);
+    return const Ok(null);
+  }
 
   @override
   Future<Result<void>> setBusyUntil({
@@ -304,6 +325,70 @@ void main() {
     });
   });
 
+  group('Übliche Woche', () {
+    testWidgets(
+      'sets Monday, copies it to Tuesday to Friday and keeps week B',
+      (tester) async {
+        final calendar = RecordingCalendar(
+          usual: [
+            UsualWeek(
+              profileId: guardianId,
+              anchor: DateTime(2026, 10, 19),
+              slots: const [
+                UsualSlot(
+                  week: 1,
+                  weekday: 1,
+                  place: UsualPlace(state: PresenceState.off),
+                ),
+              ],
+            ),
+          ],
+        );
+        await pumpApp(
+          tester,
+          overrides: baseOverrides(
+            identity: FakeIdentityRepository(current: device()),
+          ),
+          board: FakeBoardRepository(boardWith([_papaRow], usual: true)),
+          calendar: calendar,
+        );
+        final container = ProviderScope.containerOf(
+          tester.element(find.byType(Scaffold).first),
+        );
+        container.read(routerProvider).go(Routes.baselines);
+        await tester.pumpAndSettle();
+
+        expect(find.text('Nichts eingetragen'), findsNWidgets(7));
+        await tester.tap(find.text('Mo'));
+        await tester.pumpAndSettle();
+        expect(find.text('Papa am Montag'), findsOneWidget);
+        await tester.tap(find.text('Homeoffice').last);
+        await tester.pumpAndSettle();
+        await tester.tap(find.widgetWithText(FilledButton, 'Übernehmen'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Dienstag bis Freitag wie Montag'));
+        await tester.pumpAndSettle();
+        expect(find.text('Nichts eingetragen'), findsNWidgets(2));
+        await tester.tap(find.widgetWithText(FilledButton, 'Speichern'));
+        await tester.pumpAndSettle();
+
+        final week = calendar.weeks.single;
+        expect(week.anchor, DateTime(2026, 10, 19));
+        expect(
+          [
+            for (final s in week.slots.where((s) => s.week == 0))
+              (s.weekday, s.place.state),
+          ]..sort((a, b) => a.$1.compareTo(b.$1)),
+          [for (var d = 1; d <= 5; d++) (d, PresenceState.homeOffice)],
+        );
+        expect(week.day(1, week: 1).single.state, PresenceState.off);
+        expect(calendar.baselines, isEmpty);
+        await unmountApp(tester, container);
+      },
+    );
+  });
+
+  // A server without the usual week (its board days carry no usual places).
   group('Grundzustand', () {
     testWidgets('saves the chosen state and own label for a member', (
       tester,

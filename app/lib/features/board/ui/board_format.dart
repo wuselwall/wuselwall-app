@@ -78,6 +78,14 @@ extension BoardFormat on BuildContext {
     };
   }
 
+  /// A usual place: its label, and its times when it is a slot ("Büro 8–12").
+  String usualLabel(UsualPlace place) {
+    final label = presenceLabel(place.state, place.label);
+    return place.isWholeDay
+        ? label
+        : '$label ${span(place.starts!, place.ends!)}';
+  }
+
   /// A member as the board names them (`board.member_label`).
   String memberName(WeekBoard board, BoardMember m) =>
       board.settings.memberLabel == MemberLabel.initial

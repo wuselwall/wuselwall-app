@@ -40,9 +40,11 @@ Unter **Wiederholung** wählst du **Täglich**, **Wöchentlich**, **Alle 2 Woche
 
 Tippe auf die Überschrift eines Tages, um **Termine bis** zu setzen: Ab dieser Uhrzeit bist du nicht verfügbar. Das erscheint auf der Küchenwand, zum Beispiel als „Termine bis 17“. Es zeigt nur die Uhrzeit, keine Termine und keine Details. Mit **Für die ganze Woche übernehmen (Mo–Fr)** gilt es für jeden Werktag der Woche.
 
-## Grundzustand
+## Übliche Woche
 
-Unter **Einstellungen → Grundzustand** tragt ihr ein, wo ihr normalerweise seid, zum Beispiel zu Hause oder im Büro. Danach tragt ihr nur noch Abweichungen ein. Ein normaler Tag bleibt leer.
+Unter **Einstellungen → Übliche Woche** tragt ihr für jeden Wochentag ein, wo ihr normalerweise seid, zum Beispiel montags im Büro und an den anderen Tagen im Homeoffice. Tippe auf einen Tag, wähle den Ort und tippe auf **Übernehmen**. Mit **Dienstag bis Freitag wie Montag** gilt der Montag für die ganze Arbeitswoche. Ein Tag mit **Nichts eingetragen** bleibt auf der Küchenwand leer, so wie meist das Wochenende. Zum Schluss tippst du auf **Speichern**.
+
+Danach tragt ihr nur noch Abweichungen ein. Eine normale Woche bleibt leer. An einem Feiertag zeigt die Küchenwand keinen üblichen Ort.
 
 ## Kinder und Termine
 

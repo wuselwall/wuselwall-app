@@ -2000,14 +2000,15 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get baselineTitle => 'Usual place';
+  String get baselineTitle => 'Usual week';
 
   @override
-  String get baselineSettingsSubtitle => 'Where everyone usually is';
+  String get baselineSettingsSubtitle =>
+      'Where everyone usually is, day by day';
 
   @override
   String get baselineHelp =>
-      'Where you usually are. Only deviations get entered, so a normal day stays empty.';
+      'Where you usually are on each day of the week. Only deviations get entered, so a normal week stays empty.';
 
   @override
   String get baselineNone => 'Nothing set';
@@ -2020,6 +2021,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get baselineSaved => 'Saved.';
+
+  @override
+  String get usualCopyMonday => 'Tuesday to Friday like Monday';
+
+  @override
+  String usualDayTitle(String name, String weekday) {
+    return '$name on $weekday';
+  }
+
+  @override
+  String get usualDayApply => 'Apply';
+
+  @override
+  String get errUsualWeekInvalid => 'This usual week is not valid.';
 
   @override
   String get busyTitle => 'Meetings until';

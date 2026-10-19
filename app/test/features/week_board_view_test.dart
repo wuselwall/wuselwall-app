@@ -430,6 +430,53 @@ void main() {
     });
 
     testWidgets(
+      'draws the usual week per day: a run once, today the current slot',
+      (t) async {
+        Map<String, Object?> place(
+          String label, [
+          String? starts,
+          String? ends,
+        ]) => {
+          'member_id': 'julia',
+          'state': 'working',
+          'label': label,
+          'starts': starts,
+          'ends': ends,
+        };
+        final json = _boardJson();
+        final days = (json['days'] as List).cast<Map<String, Object?>>();
+        for (var i = 0; i < days.length; i++) {
+          days[i] = {
+            ...days[i],
+            // Julia at home Monday, Tuesday, Thursday and Friday; Wednesday (today,
+            // 14:05) in two slots. Nobody else has a usual week: their single
+            // baselines are not drawn.
+            'usual': [
+              if (i < 5 && i != 2) place('zu Hause'),
+              if (i == 2) ...[
+                place('Büro', '08:00', '12:00'),
+                place('Praxis', '13:00', '17:00'),
+              ],
+            ],
+          };
+        }
+        await _pumpBoard(
+          t,
+          snapshot: BoardSnapshot(
+            board: WeekBoard.fromJson(json),
+            fetchedAt: DateTime(2026, 10, 14, 14, 4),
+          ),
+        );
+        expect(t.takeException(), isNull);
+        expect(find.text('zu Hause'), findsNWidgets(2));
+        expect(find.textContaining('Praxis'), findsOneWidget);
+        expect(find.textContaining('Büro'), findsNothing);
+        expect(find.text('+1'), findsOneWidget);
+        expect(find.text('Homeoffice'), findsNothing);
+      },
+    );
+
+    testWidgets(
       "today's border lies under the zones, not over multi-day bars",
       (t) async {
         await _pumpBoard(t);

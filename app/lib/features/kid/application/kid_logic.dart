@@ -49,15 +49,20 @@ List<Occurrence> kidEventsFor(
 }
 
 /// Where a member is on the day at [index] of the board: the presence band that covers
-/// it, else their baseline. Null when neither says anything.
+/// it, else their usual place (today the slot at [nowMinutes]); outside the week, their
+/// most common usual place. Null when neither says anything.
 ({PresenceState state, String? label})? kidPresenceOf(
   WeekBoard board,
   BoardMember member,
-  int? index,
-) {
+  int? index, {
+  int? nowMinutes,
+}) {
   if (index != null) {
     final band = board.presenceOn(member.id, index).firstOrNull;
     if (band != null) return (state: band.state, label: band.label);
+    final usual = board.usualShownOn(member.id, index, nowMinutes: nowMinutes);
+    if (usual == null) return null;
+    return (state: usual.place.state, label: usual.place.label);
   }
   final baseline = member.baseline;
   if (baseline != null) return (state: baseline.state, label: baseline.label);

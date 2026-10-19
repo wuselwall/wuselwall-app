@@ -385,6 +385,49 @@ Deno.test("presence: entries first, the usual state otherwise", async () => {
   assertEquals(r.text, "Do., 15.10.: Thomas im Homeoffice (üblicherweise); Julia auf Reise");
 });
 
+Deno.test("presence: the usual week's places of the day, none on a public holiday", async () => {
+  const server = familyServer(
+    (_parts, from, days) => {
+      const ctx = rows(from ?? TODAY, days);
+      return Promise.resolve({
+        ...ctx,
+        // Julia is travelling today (an entry), so only Thomas's usual week shows.
+        usual_weeks: [{
+          profile_id: "thomas",
+          anchor: null,
+          slots: [
+            { week: 0, weekday: 4, position: 1, state: "working", label: "Büro", starts: "08:00", ends: "12:00" },
+            { week: 0, weekday: 4, position: 2, state: "home_office", label: null, starts: "13:00", ends: "17:00" },
+            { week: 0, weekday: 5, position: 1, state: "home_office", label: null, starts: null, ends: null },
+          ],
+        }],
+        school: {
+          ...ctx.school!,
+          holidays: [{
+            id: "h",
+            school_id: null,
+            name: "Brückentag",
+            starts_on: "2026-10-16",
+            ends_on: "2026-10-16",
+            kind: "public_holiday",
+            source: "manual",
+            source_url: null,
+            feed_id: null,
+          }],
+        },
+      });
+    },
+    () => "de",
+    "test",
+  );
+  const r = await server.callTool("get_presence", { from: TODAY, to: "2026-10-16", member: "Thomas" });
+  assertEquals(
+    r.text,
+    "Do., 15.10.: Thomas Büro 08:00–12:00 (üblicherweise); Thomas im Homeoffice 13:00–17:00 (üblicherweise)\n" +
+      "Fr., 16.10.: alle wie üblich",
+  );
+});
+
 Deno.test("week board: the week from Monday, today marked", async () => {
   const { server, calls } = serverFor();
   const r = await server.callTool("get_week_board", {});

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart' show TimeOfDay;
 import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/demo/demo_board.dart';
 import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/demo/demo_english.dart';
 import 'package:wuselwall/demo/demo_external_calendars.dart';
@@ -10,6 +11,7 @@ import 'package:wuselwall/features/account/domain/member_security.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/calendar/data/calendar_repository.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
+import 'package:wuselwall/features/calendar/domain/usual_week.dart';
 import 'package:wuselwall/features/household/data/household_leave_repository.dart';
 import 'package:wuselwall/features/household/data/household_onboarding_repository.dart';
 import 'package:wuselwall/features/household/domain/household_models.dart';
@@ -668,6 +670,23 @@ class DemoCalendarRepository implements CalendarRepository {
   /// Changes to single occurrences, keyed by event id and original start instant.
   final _overrides = <String, _DemoOverride>{};
   var _nextId = 1;
+
+  /// The usual weeks as saved in this session; the board keeps showing the built-in ones.
+  final _usual = demoUsualWeeks();
+
+  @override
+  Future<Result<List<UsualWeek>>> usualWeeks() async => Ok([..._usual]);
+
+  @override
+  Future<Result<void>> setUsualWeek({
+    required String? actor,
+    required UsualWeek week,
+  }) async {
+    _usual
+      ..removeWhere((w) => w.profileId == week.profileId)
+      ..add(week);
+    return const Ok(null);
+  }
 
   @override
   Future<Result<OccurrenceWindow>> occurrences(

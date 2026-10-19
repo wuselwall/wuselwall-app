@@ -185,4 +185,91 @@ void main() {
     expect(band.tentative, isFalse);
     expect(band.dayCount, 7);
   });
+
+  group('the usual week', () {
+    WeekBoard boardOf(List<Object?>? usual, {String today = '2026-10-14'}) =>
+        WeekBoard.fromJson({
+          'week_start': '2026-10-12',
+          'today': today,
+          'generated_at': '2026-10-14T08:00:00Z',
+          'members': [
+            {
+              'id': 'a',
+              'display_name': 'A',
+              'color': '#2E7D6B',
+              'kind': 'adult',
+              'baseline': {'state': 'off', 'label': null},
+            },
+          ],
+          'days': [
+            for (var i = 0; i < 7; i++)
+              {
+                'date': '2026-10-${12 + i}',
+                'events': <Object>[],
+                if (usual != null) 'usual': i == 2 ? usual : <Object>[],
+              },
+          ],
+        });
+    Map<String, Object?> slot(String state, String? starts, String? ends) => {
+      'member_id': 'a',
+      'state': state,
+      'label': null,
+      'starts': starts,
+      'ends': ends,
+    };
+    final slots = [
+      slot('working', '08:00', '12:00'),
+      slot('home_office', '13:00', '17:00'),
+    ];
+
+    test(
+      'a server without the usual week gives the single place every day',
+      () {
+        final board = boardOf(null);
+        for (var i = 0; i < 7; i++) {
+          expect(board.usualOn('a', i).single.state, PresenceState.off);
+        }
+      },
+    );
+
+    test("a day's places come from that day only", () {
+      final board = boardOf(slots);
+      expect(board.usualOn('a', 1), isEmpty);
+      expect(board.usualOn('a', 2).map((p) => p.state), [
+        PresenceState.working,
+        PresenceState.homeOffice,
+      ]);
+      expect(
+        board.usualOn('a', 2).first.starts,
+        const TimeOfDay(hour: 8, minute: 0),
+      );
+    });
+
+    test('today shows the slot covering now, else the next, else the last', () {
+      final board = boardOf(slots);
+      PresenceState? at(int minute) =>
+          board.usualShownOn('a', 2, nowMinutes: minute)?.place.state;
+      expect(at(9 * 60), PresenceState.working);
+      expect(at(12 * 60 + 30), PresenceState.homeOffice);
+      expect(at(6 * 60), PresenceState.working);
+      expect(at(20 * 60), PresenceState.homeOffice);
+      expect(board.usualShownOn('a', 2, nowMinutes: 9 * 60)!.more, 1);
+    });
+
+    test('another day shows its first slot whatever the time', () {
+      final board = boardOf(slots, today: '2026-10-13');
+      expect(
+        board.usualShownOn('a', 2, nowMinutes: 15 * 60)!.place.state,
+        PresenceState.working,
+      );
+      expect(board.usualShownOn('a', 1, nowMinutes: 15 * 60), isNull);
+    });
+  });
+
+  test('the demo has a usual week, and nothing usual on its free day', () {
+    expect(board.usualOn(DemoData.mama, 0).single.state, PresenceState.off);
+    expect(board.usualOn(DemoData.papa, 2), hasLength(2));
+    expect(board.usualOn(DemoData.papa, 3), isEmpty);
+    expect(board.usualOn(DemoData.papa, 5), isEmpty);
+  });
 }
