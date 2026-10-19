@@ -511,7 +511,7 @@ export function longDate(date: string, m: ShortcutMessages): string {
 
 /**
  * The member a name means: the same name folded, else the only one it starts, else null.
- * "lotta" finds Lotta, "Lo" finds her when nobody else starts so.
+ * "emma" finds Emma, "Em" finds her when nobody else starts so.
  */
 export function findMember(members: MemberRow[], name: string): MemberRow | null {
   const q = fold(name.trim());
@@ -579,7 +579,7 @@ function onDay(o: Occurrence, date: string): boolean {
   return o.local_start_date <= date && o.local_end_date >= date;
 }
 
-/** "08:00 Zahnarzt (Lotta)", "Elternabend (ganztägig)". Whole-family events name nobody. */
+/** "08:00 Zahnarzt (Emma)", "Elternabend (ganztägig)". Whole-family events name nobody. */
 function eventLine(ctx: ShortcutContext, o: Occurrence, date: string, m: ShortcutMessages): string {
   const who = o.attendee_ids.length > 0 && o.attendee_ids.length < ctx.members.length
     ? o.attendee_ids.map((id) => nameOf(ctx, id)).filter((n): n is string => n !== null)
@@ -889,7 +889,7 @@ const AWAY_STATES = new Set(["travel", "away", "working", "childcare"]);
 const OVERNIGHT_STATES = new Set(["travel", "away"]);
 
 /**
- * "Wann ist Sabine wieder da?": the member's presence now and next. Away for nights (travel,
+ * "Wann ist Julia wieder da?": the member's presence now and next. Away for nights (travel,
  * away) is answered with the day of return, joining back-to-back entries; a shift or childcare
  * until a time with that time, or as "today" when it fills the day. Otherwise the member is
  * here, and the next trip in the window is named. `now` is an instant; the window starts today.

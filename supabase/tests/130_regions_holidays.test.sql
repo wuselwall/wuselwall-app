@@ -24,13 +24,13 @@ begin
   perform set_config('role', 'authenticated', true);
 end $$;
 
--- ---- household A: Papa (guardian, personal phone), Lotta (child), iPad, kiosk, revoked phone -----
+-- ---- household A: Papa (guardian, personal phone), Emma (child), iPad, kiosk, revoked phone -----
 create temp table sa as
   select api.setup_household('dev-setup', 'A', 'a@example.org', 'longpassword1', 'Papa', '#111111', '123456') r;
 grant all on sa to public;
 insert into ids select 'hh_a', (r ->> 'household_id')::uuid from sa;
 insert into app.profile (household_id, display_name, role, kind)
-  select (r ->> 'household_id')::uuid, 'Lotta', 'member', 'child' from sa;
+  select (r ->> 'household_id')::uuid, 'Emma', 'member', 'child' from sa;
 insert into ids select lower(p.display_name), p.id from app.profile p
  where p.household_id = (select id from ids where name = 'hh_a');
 
@@ -244,7 +244,7 @@ select throws_ok($$ select api.holiday_import_preview(null, (select id from ids 
 -- cannot be named.
 reset role;
 select pg_temp.act_as_dev('ipad');
-select throws_ok($$ select api.holiday_import((select id from ids where name = 'lotta'),
+select throws_ok($$ select api.holiday_import((select id from ids where name = 'emma'),
   (select id from ids where name = 'sch_ch'), array['feed-ch-nat'], 'de') $$,
   '42501', 'guardian required', 'a child cannot import holidays');
 reset role;

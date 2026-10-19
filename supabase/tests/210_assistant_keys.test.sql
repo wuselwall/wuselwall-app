@@ -55,28 +55,28 @@ exception when others then
   return v_hint;
 end $$;
 
--- ---- household A: Papa (guardian, phone), Hanna (member, phone), Lotta (child), a kiosk ------
+-- ---- household A: Papa (guardian, phone), Paul (member, phone), Emma (child), a kiosk ------
 create temp table sa as
   select api.setup_household('dev-setup', 'A', 'a@example.org', 'longpassword1', 'Papa', '#111111', '123456') r;
 grant all on sa to public;
 insert into ids select 'hh_a', (r ->> 'household_id')::uuid from sa;
 insert into ids select 'papa', (r ->> 'profile_id')::uuid from sa;
 insert into users values
-  ('hanna', app.create_auth_user('hanna@example.org', 'longpassword1')),
+  ('paul', app.create_auth_user('paul@example.org', 'longpassword1')),
   ('kiosk', app.create_auth_user('kiosk@devices.invalid', 'x1234567890')),
   ('old', app.create_auth_user('old@example.org', 'longpassword1'));
 insert into app.profile (household_id, display_name, role, kind, auth_user_id)
-  values (pg_temp.id('hh_a'), 'Hanna', 'member', 'adult', (select usr from users where name = 'hanna')),
-         (pg_temp.id('hh_a'), 'Lotta', 'member', 'child', null);
+  values (pg_temp.id('hh_a'), 'Paul', 'member', 'adult', (select usr from users where name = 'paul')),
+         (pg_temp.id('hh_a'), 'Emma', 'member', 'child', null);
 insert into ids select lower(p.display_name), p.id from app.profile p
- where p.household_id = pg_temp.id('hh_a') and p.display_name in ('Hanna', 'Lotta');
+ where p.household_id = pg_temp.id('hh_a') and p.display_name in ('Paul', 'Emma');
 
 insert into app.device (household_id, auth_user_id, label, class, register, profile_id)
   select pg_temp.id('hh_a'), p.auth_user_id, 'A-Phone', 'personal', 'adult', p.id
     from app.profile p where p.id = pg_temp.id('papa');
 insert into app.device (household_id, auth_user_id, label, class, register, profile_id)
-  values (pg_temp.id('hh_a'), (select usr from users where name = 'hanna'), 'Hanna-Phone', 'personal',
-          'adult', pg_temp.id('hanna'));
+  values (pg_temp.id('hh_a'), (select usr from users where name = 'paul'), 'Paul-Phone', 'personal',
+          'adult', pg_temp.id('paul'));
 insert into app.device (household_id, auth_user_id, label, class, register)
   values (pg_temp.id('hh_a'), (select usr from users where name = 'kiosk'), 'Kiosk', 'kiosk', 'kiosk');
 insert into app.device (household_id, auth_user_id, label, class, register, profile_id, revoked_at)
@@ -96,7 +96,7 @@ insert into app.device (household_id, auth_user_id, label, class, register, prof
 
 insert into devs
   select n, d.auth_user_id, d.id, d.household_id, d.class
-    from (values ('papa', 'A-Phone'), ('hanna', 'Hanna-Phone'), ('kiosk', 'Kiosk'), ('old', 'Old-Phone'),
+    from (values ('papa', 'A-Phone'), ('paul', 'Paul-Phone'), ('kiosk', 'Kiosk'), ('old', 'Old-Phone'),
                  ('b', 'B-Phone')) v(n, label)
     join app.device d on d.label = v.label;
 
@@ -114,13 +114,13 @@ insert into app.event (household_id, calendar_id, title, kind, is_all_day, start
 
 insert into app.task_instance (household_id, title, points, kind, due_on, opens_on, closes_on, assigned_profile_id)
   values (pg_temp.id('hh_a'), 'Spülmaschine ausräumen', 3, 'duty', current_date, current_date, current_date,
-          pg_temp.id('hanna')),
+          pg_temp.id('paul')),
          (pg_temp.id('hh_a'), 'Zimmer aufräumen', 2, 'duty', current_date, current_date, current_date,
-          pg_temp.id('lotta')),
+          pg_temp.id('emma')),
          (pg_temp.id('hh_b'), 'B chore', 5, 'duty', current_date, current_date, current_date,
           pg_temp.id('bea'));
-insert into ids select 'task_hanna', id from app.task_instance where title = 'Spülmaschine ausräumen';
-insert into ids select 'task_lotta', id from app.task_instance where title = 'Zimmer aufräumen';
+insert into ids select 'task_paul', id from app.task_instance where title = 'Spülmaschine ausräumen';
+insert into ids select 'task_emma', id from app.task_instance where title = 'Zimmer aufräumen';
 insert into ids select 'task_b', id from app.task_instance where title = 'B chore';
 
 insert into app.meal_plan_entry (household_id, on_date, slot, free_text)
@@ -135,7 +135,7 @@ insert into app.shopping_item (list_id, household_id, name, folded_name, added_b
     join (values ('hh_a', 'Milch'), ('hh_b', 'B-Käse')) v(hh, n) on l.household_id = pg_temp.id(v.hh) and l.is_default;
 insert into app.recipe (household_id, title) values (pg_temp.id('hh_a'), 'Spaghetti Bolognese'), (pg_temp.id('hh_b'), 'B-Rezept');
 insert into app.point_transaction (household_id, profile_id, amount, reason, source_type, source_id)
-  values (pg_temp.id('hh_a'), pg_temp.id('lotta'), 4, 'adjustment', 'adjustment', 'x1');
+  values (pg_temp.id('hh_a'), pg_temp.id('emma'), 4, 'adjustment', 'adjustment', 'x1');
 
 -- ---- issuing ----------------------------------------------------------------------------------
 reset role;
@@ -151,17 +151,17 @@ select is((select kind from api.shortcut_tokens where id = (select id from tok w
   'the list says which kind a key is');
 select is((select kind from api.shortcut_tokens where id = (select id from tok where name = 'papa_sc')), 'shortcut',
   'and a shortcut key is a shortcut key');
-select is(pg_temp.error_hint($$ select api.assistant_key_create(null, pg_temp.id('lotta'), 'For Lotta') $$),
+select is(pg_temp.error_hint($$ select api.assistant_key_create(null, pg_temp.id('emma'), 'For Emma') $$),
   'assistant_adult_only', 'an assistant key is for adults only');
 select is(pg_temp.error_hint($$ select api.assistant_key_create(null, pg_temp.id('bea'), 'B') $$),
   'profile_not_found', 'a member of another household is refused');
 
 reset role;
-select pg_temp.act_as_dev('hanna');
+select pg_temp.act_as_dev('paul');
 insert into tok (name, id, token)
-  select 'hanna', (r ->> 'id')::uuid, r ->> 'token' from (select api.assistant_key_create(null, null, 'Laptop') r) s;
-select is((select profile_id from api.shortcut_tokens where id = (select id from tok where name = 'hanna')),
-  pg_temp.id('hanna'), 'an adult member issues her own assistant key');
+  select 'paul', (r ->> 'id')::uuid, r ->> 'token' from (select api.assistant_key_create(null, null, 'Laptop') r) s;
+select is((select profile_id from api.shortcut_tokens where id = (select id from tok where name = 'paul')),
+  pg_temp.id('paul'), 'an adult member issues his own assistant key');
 select is(pg_temp.error_hint($$ select api.assistant_key_create(null, pg_temp.id('papa'), 'For Papa') $$),
   'guardian_required', 'but not one for someone else');
 
@@ -189,7 +189,7 @@ select is(pg_temp.error_hint(format($$ select api.shortcut_context(%L, '{}', nul
 select is(pg_temp.error_hint(format($$ select api.shortcut_shopping_add(%L, '[{"name":"x"}]', null, null) $$,
   pg_temp.token('papa'))), 'shortcut_token_invalid', 'an assistant key adds nothing');
 select is(pg_temp.error_hint(format($$ select api.shortcut_task_complete(%L, %L) $$, pg_temp.token('papa'),
-  pg_temp.id('task_hanna'))), 'shortcut_token_invalid', 'and ticks nothing');
+  pg_temp.id('task_paul'))), 'shortcut_token_invalid', 'and ticks nothing');
 
 -- ---- what an assistant reads ---------------------------------------------------------------------
 insert into snap select 'ctx', api.mcp_context(pg_temp.token('papa'),
@@ -203,7 +203,7 @@ select is((select jsonb_agg(i ->> 'name') from snap, jsonb_array_elements(v -> '
 select ok((select jsonb_array_length(v -> 'shopping_categories') > 0 from snap where k = 'ctx'),
   'with the categories to group them');
 select is((select (b ->> 'balance')::int from snap, jsonb_array_elements(v -> 'balances') b
-            where k = 'ctx' and b ->> 'profile_id' = pg_temp.id('lotta')::text), 4, 'every member''s balance');
+            where k = 'ctx' and b ->> 'profile_id' = pg_temp.id('emma')::text), 4, 'every member''s balance');
 select is((select jsonb_array_length(v -> 'ledger') from snap where k = 'ctx'), 1, 'the recent ledger');
 select is((select jsonb_agg(r ->> 'title') from snap, jsonb_array_elements(v -> 'recipes') r where k = 'ctx'),
   '["Spaghetti Bolognese"]'::jsonb, 'the household''s recipes');
@@ -227,11 +227,11 @@ select is((app.key_actor(pg_temp.token('papa'), 'assistant', false)).origin, 'mc
 
 -- ---- revoking --------------------------------------------------------------------------------------
 select pg_temp.act_as_dev('papa');
-select lives_ok(format($$ select api.shortcut_token_revoke(null, %L) $$, (select id from tok where name = 'hanna')),
+select lives_ok(format($$ select api.shortcut_token_revoke(null, %L) $$, (select id from tok where name = 'paul')),
   'a guardian revokes an assistant key');
 reset role;
 select pg_temp.act_as_service();
-select is(pg_temp.error_hint(format($$ select api.mcp_context(%L, '{}', null, 1) $$, pg_temp.token('hanna'))),
+select is(pg_temp.error_hint(format($$ select api.mcp_context(%L, '{}', null, 1) $$, pg_temp.token('paul'))),
   'shortcut_token_invalid', 'a revoked assistant key reads nothing');
 
 -- ---- the export ------------------------------------------------------------------------------------

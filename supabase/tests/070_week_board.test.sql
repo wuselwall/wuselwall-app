@@ -48,17 +48,17 @@ insert into app.device (household_id, auth_user_id, label, class, register, prof
 update app.profile set default_presence_state = 'home_office', default_presence_label = 'Homeoffice'
  where id = (select prof from ctxa);
 insert into app.profile (household_id, display_name, role, kind)
-  select hh, 'Lotta', 'member', 'child' from ctxa;
+  select hh, 'Emma', 'member', 'child' from ctxa;
 
--- The guardian's phone adds Hanna through the add-member function.
+-- The guardian's phone adds Paul through the add-member function.
 select pg_temp.act_as((select usr from ctxa), jsonb_build_object(
   'household_id', (select hh from ctxa), 'device_id', (select dev from ctxa), 'device_class', 'personal'));
-create temp table added as select api.members_add(null, 'Hanna', '#ff8800') id;
+create temp table added as select api.members_add(null, 'Paul', '#ff8800') id;
 grant all on added to public;
 select is((select sort_order from api.members where id = (select id from added)), 30,
   'a new member goes to the end: the last sort order plus ten');
 
--- Hanna is moved in front of Lotta: the board follows sort_order, not creation order.
+-- Paul is moved in front of Emma: the board follows sort_order, not creation order.
 reset role;
 update app.profile set sort_order = 15 where id = (select id from added);
 select pg_temp.act_as((select usr from ctxa), jsonb_build_object(
@@ -110,14 +110,14 @@ select is(api.board_week('2026-08-31') ->> 'week_start', '2026-08-31',
 select is((select array_agg(m.v ->> 'display_name' order by m.n)
              from bd x cross join lateral jsonb_array_elements(x.board -> 'members') with ordinality m(v, n)
             where x.k = 'now'),
-  array['Papa', 'Hanna', 'Lotta'], 'members come back in sort order');
-select is(pg_temp.member((select board from bd where k = 'now'), 'Lotta') ->> 'kind', 'child',
+  array['Papa', 'Paul', 'Emma'], 'members come back in sort order');
+select is(pg_temp.member((select board from bd where k = 'now'), 'Emma') ->> 'kind', 'child',
   'a child is marked as a child');
 select is(pg_temp.member((select board from bd where k = 'now'), 'Papa') ->> 'kind', 'adult',
   'a guardian is an adult');
 select is(pg_temp.member((select board from bd where k = 'now'), 'Papa') -> 'baseline',
   '{"state": "home_office", "label": "Homeoffice"}'::jsonb, 'a set baseline is returned with its label');
-select is(pg_temp.member((select board from bd where k = 'now'), 'Lotta') -> 'baseline', 'null'::jsonb,
+select is(pg_temp.member((select board from bd where k = 'now'), 'Emma') -> 'baseline', 'null'::jsonb,
   'no baseline is a JSON null');
 select is(pg_temp.member((select board from bd where k = 'now'), 'Papa') ->> 'color', '#111111',
   'members carry their colour');

@@ -41,7 +41,7 @@ speech, and rejecting an ambiguous item is worse than filing it imperfectly.
 
 **Shortcuts worth building:** add to shopping list · what's on today · what's for dinner ·
 mark a chore done · how many points do I have · **"Hat Mia morgen Sport?"** · **"Wann ist
-Sabine wieder da?"** — the last two are the questions actually asked out loud in this
+Julia wieder da?"** — the last two are the questions actually asked out loud in this
 household, which is a better selection criterion than what is easy to build.
 
 **Security:** a dedicated token type, one per person, scoped to a small set of endpoints,

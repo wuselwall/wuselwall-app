@@ -107,7 +107,7 @@ specifications you hand to a coding session, one at a time.
 8. **The Stundenplan is a pattern, not sixty recurring events** — stored as a grid per
    term, projected into the calendar at read time, minus Ferien, plus per-date
    exceptions. → [ADR-008](specs/adr/ADR-008-school-timetable-model.md)
-9. **Presence is an event kind**, so "Sabine arbeitet" and "Lukas ist in Berlin" reuse
+9. **Presence is an event kind**, so "Julia arbeitet" and "Thomas ist in Berlin" reuse
    recurrence, overrides and the feed; what reaches the kitchen display is an explicit
    flag, never a heuristic. → [ADR-009](specs/adr/ADR-009-event-kinds-and-presence.md)
 10. **Public App Store and Google Play listings**, fed by GitHub Actions and fastlane;

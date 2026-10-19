@@ -239,8 +239,8 @@ Starter subjects follow the country (German, Lehrplan 21 for Switzerland, Austri
 ## Part 2 — presence: regular and flexible
 
 The requirement, in the user's words (the names are the reference household's): *"Appointments
-in general should be flexible, e.g. regular to maintain when Sabine is working or flexible
-to show when Lukas is travelling for work."*
+in general should be flexible, e.g. regular to maintain when Sarah is working or flexible
+to show when David is travelling for work."*
 
 Two shapes of the same underlying fact — **where is this person, and are they available**
 — and they need different input mechanics, not different data models.
@@ -337,7 +337,7 @@ with confirm and delete as the two actions.
 ### What presence must never do
 
 - **Never appear in the appointment lane.** A presence band is context, not an item on
-  the agenda. If "Sabine arbeitet" (reference household) competes for space with "Zahnarzt 14:30", the board
+  the agenda. If "Julia arbeitet" (reference household) competes for space with "Zahnarzt 14:30", the board
   stops being readable.
 - **Never generate a notification on its own.** The pattern is known; nobody needs a push
   saying that Thursday is a working day. The exception is the tentative-confirmation

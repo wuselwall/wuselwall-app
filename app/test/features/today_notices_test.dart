@@ -16,7 +16,7 @@ final _en = AppLocalizationsEn();
 final _joined = AppNotice(
   key: 'join:7',
   kind: NoticeKind.join,
-  name: 'Sabine',
+  name: 'Julia',
   at: DateTime(2026, 10, 15, 9),
 );
 final _signIn = AppNotice(
@@ -36,7 +36,7 @@ void main() {
               'key': 'join:1',
               'kind': 'join',
               'at': '2026-10-15T07:00:00+00:00',
-              'name': 'Sabine',
+              'name': 'Julia',
             },
             {'key': 'signin:2', 'kind': 'signin', 'name': 'iPhone'},
             {'key': 'x:3', 'kind': 'from-the-future', 'name': 'Newer'},
@@ -47,7 +47,7 @@ void main() {
 
       final notices = result.unwrap();
       expect(notices.map((n) => (n.kind, n.name)), [
-        (NoticeKind.join, 'Sabine'),
+        (NoticeKind.join, 'Julia'),
         (NoticeKind.signIn, 'iPhone'),
       ]);
       expect(notices.first.at.toUtc(), DateTime.utc(2026, 10, 15, 7));
@@ -81,7 +81,7 @@ void main() {
         notices: FakeNoticesRepository([_signIn, _joined]),
       );
 
-      expect(find.text(_de.todayNoticeJoined('Sabine')), findsOneWidget);
+      expect(find.text(_de.todayNoticeJoined('Julia')), findsOneWidget);
       expect(
         find.text(_de.todayNoticeSignIn('Daniels iPhone')),
         findsOneWidget,
@@ -100,7 +100,7 @@ void main() {
         notices: FakeNoticesRepository([_joined]),
       );
 
-      expect(find.text('Sabine joined'), findsOneWidget);
+      expect(find.text('Julia joined'), findsOneWidget);
       expect(find.text(_en.todayNoticeDismiss), findsOneWidget);
     });
 
@@ -120,7 +120,7 @@ void main() {
       await t.pumpAndSettle();
 
       expect(repo.dismissed.single, (actor: guardianId, key: 'join:7'));
-      expect(find.text(_de.todayNoticeJoined('Sabine')), findsNothing);
+      expect(find.text(_de.todayNoticeJoined('Julia')), findsNothing);
     });
 
     testWidgets('no notices, no cards', (t) async {

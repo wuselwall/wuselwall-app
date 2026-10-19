@@ -35,30 +35,30 @@ exception when others then
   return v_hint;
 end $$;
 
--- ---- household A: Papa (guardian), Lotta (child), Hanna (member) -------------------------------
+-- ---- household A: Papa (guardian), Emma (child), Paul (member) -------------------------------
 create temp table sa as
   select api.setup_household('dev-setup', 'A', 'a@example.org', 'longpassword1', 'Papa', '#111111', '123456') r;
 grant all on sa to public;
 insert into ids select 'hh_a', (r ->> 'household_id')::uuid from sa;
 insert into ids select 'papa', (r ->> 'profile_id')::uuid from sa;
 insert into app.profile (household_id, display_name, role, kind)
-  select (select id from ids where name = 'hh_a'), 'Lotta', 'member', 'child';
+  select (select id from ids where name = 'hh_a'), 'Emma', 'member', 'child';
 insert into app.profile (household_id, display_name, role, kind)
-  select (select id from ids where name = 'hh_a'), 'Hanna', 'member', 'adult';
+  select (select id from ids where name = 'hh_a'), 'Paul', 'member', 'adult';
 insert into ids select lower(p.display_name), p.id from app.profile p
  where p.household_id = (select id from ids where name = 'hh_a') and p.role = 'member';
 insert into app.device (household_id, auth_user_id, label, class, register, profile_id)
   select (select id from ids where name = 'hh_a'), p.auth_user_id, 'A-Phone', 'personal', 'adult', p.id
     from app.profile p where p.id = (select id from ids where name = 'papa');
 
--- ---- imported calendars: whole family, Lotta's, Hanna's, and an inactive one ----------------
+-- ---- imported calendars: whole family, Emma's, Paul's, and an inactive one ----------------
 insert into app.external_calendar (id, household_id, name, url, colour_hex, member_ids, active)
   values ('11111111-1111-4111-8111-111111111111', (select id from ids where name = 'hh_a'), 'Müllabfuhr',
           'https://muell.example.org/feed.ics', '#2E7D32', '{}', true),
-         ('22222222-2222-4222-8222-222222222222', (select id from ids where name = 'hh_a'), 'Fussball Lotta',
-          'https://fc.example.org/lotta.ics', '#1565C0', array[(select id from ids where name = 'lotta')], true),
-         ('33333333-3333-4333-8333-333333333333', (select id from ids where name = 'hh_a'), 'Chor Hanna',
-          'https://chor.example.org/hanna.ics', '#8E24AA', array[(select id from ids where name = 'hanna')], true),
+         ('22222222-2222-4222-8222-222222222222', (select id from ids where name = 'hh_a'), 'Fussball Emma',
+          'https://fc.example.org/emma.ics', '#1565C0', array[(select id from ids where name = 'emma')], true),
+         ('33333333-3333-4333-8333-333333333333', (select id from ids where name = 'hh_a'), 'Chor Paul',
+          'https://chor.example.org/paul.ics', '#8E24AA', array[(select id from ids where name = 'paul')], true),
          ('44444444-4444-4444-8444-444444444444', (select id from ids where name = 'hh_a'), 'Alt',
           'https://alt.example.org/old.ics', '#616161', '{}', false);
 
@@ -83,9 +83,9 @@ insert into tok (name, id, token)
   select 'alles', (r ->> 'id')::uuid, r ->> 'token'
     from (select api.feed_token_create(null, 'Alles', '{"subscribed":true}'::jsonb) r) s;
 insert into tok (name, id, token)
-  select 'lotta', (r ->> 'id')::uuid, r ->> 'token'
-    from (select api.feed_token_create(null, 'Lotta', jsonb_build_object(
-            'profile_ids', jsonb_build_array((select id from ids where name = 'lotta')),
+  select 'emma', (r ->> 'id')::uuid, r ->> 'token'
+    from (select api.feed_token_create(null, 'Emma', jsonb_build_object(
+            'profile_ids', jsonb_build_array((select id from ids where name = 'emma')),
             'subscribed', true)) r) s;
 insert into tok (name, id, token)
   select 'aus', (r ->> 'id')::uuid, r ->> 'token'
@@ -113,7 +113,7 @@ insert into snap select 'spiel_start', to_jsonb(starts_at) from app.external_occ
 set local role service_role;
 insert into snap select 'oma', api.ics_feed((select token from tok where name = 'oma'));
 insert into snap select 'alles', api.ics_feed((select token from tok where name = 'alles'));
-insert into snap select 'lotta', api.ics_feed((select token from tok where name = 'lotta'));
+insert into snap select 'emma', api.ics_feed((select token from tok where name = 'emma'));
 
 select ok(not ((select v from snap where k = 'oma') ? 'external'),
   'a token that is not subscribed has no external key');
@@ -125,28 +125,28 @@ select is((select count(*)::int from snap s, jsonb_array_elements(s.v -> 'extern
             where s.k = 'alles' and e ->> 'title' = 'Alt-Termin'), 0,
   'an inactive calendar is not in the feed');
 select is((select array_agg(e ->> 'title' order by e ->> 'title')
-             from snap s, jsonb_array_elements(s.v -> 'external') e where s.k = 'lotta'),
+             from snap s, jsonb_array_elements(s.v -> 'external') e where s.k = 'emma'),
   array['Chorprobe', 'Restmüll', 'Spiel']::text[],
-  'a token that names Lotta still gets every active calendar: the renderer applies the profile filter');
+  'a token that names Emma still gets every active calendar: the renderer applies the profile filter');
 select is((select e -> 'member_ids' from snap s, jsonb_array_elements(s.v -> 'external') e
-            where s.k = 'lotta' and e ->> 'title' = 'Spiel'),
-  jsonb_build_array((select id::text from ids where name = 'lotta')),
+            where s.k = 'emma' and e ->> 'title' = 'Spiel'),
+  jsonb_build_array((select id::text from ids where name = 'emma')),
   'each occurrence carries the member ids of its calendar');
 select ok((select (e ->> 'uid_hash') ~ '^[0-9a-f]{64}$' and not (e ? 'uid')
              from snap s, jsonb_array_elements(s.v -> 'external') e
-            where s.k = 'lotta' and e ->> 'title' = 'Spiel'),
+            where s.k = 'emma' and e ->> 'title' = 'Spiel'),
   'the feed carries a SHA-256 of the occurrence UID, never the UID itself');
 select is((select (e ->> 'starts_at')::timestamptz from snap s, jsonb_array_elements(s.v -> 'external') e
-            where s.k = 'lotta' and e ->> 'title' = 'Spiel'),
+            where s.k = 'emma' and e ->> 'title' = 'Spiel'),
   (select (v #>> '{}')::timestamptz from snap where k = 'spiel_start'), 'timed occurrences keep their instants');
 select is((select e ->> 'start_date' from snap s, jsonb_array_elements(s.v -> 'external') e
-            where s.k = 'lotta' and e ->> 'title' = 'Restmüll'),
+            where s.k = 'emma' and e ->> 'title' = 'Restmüll'),
   (current_date + 3)::text, 'all-day occurrences keep their dates');
 select ok((select e ->> 'calendar_id' = '11111111-1111-4111-8111-111111111111' from snap s,
-             jsonb_array_elements(s.v -> 'external') e where s.k = 'lotta' and e ->> 'title' = 'Restmüll'),
+             jsonb_array_elements(s.v -> 'external') e where s.k = 'emma' and e ->> 'title' = 'Restmüll'),
   'each occurrence names its calendar');
 select ok(not (select e ? 'calendar_name' from snap s, jsonb_array_elements(s.v -> 'external') e
-                where s.k = 'lotta' limit 1),
+                where s.k = 'emma' limit 1),
   'the calendar name is not exposed to the feed');
 select ok(api.ics_feed('not-a-token') is null, 'an unknown token still gets nothing');
 

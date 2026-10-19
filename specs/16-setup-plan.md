@@ -130,7 +130,7 @@ and no Xcode debugger. See [Q35](14-open-questions.md).
    - every table in `app` has RLS enabled and forced — a **catalogue test** that queries
      `pg_class` and fails when a new table forgets it. This one test is worth more than
      any other in the repository.
-4. `supabase/seed.sql`: the development household — Lukas, Sabine, Lotta, Hanna — and
+4. `supabase/seed.sql`: the development household — David, Sarah, Olivia, Jack — and
    one device of each class.
 5. A `health` Edge Function returning `{ ok: true, db: <round-trip ms> }`, and the
    `_shared/` folder with Deno's `deno.json`, formatter and linter settings.

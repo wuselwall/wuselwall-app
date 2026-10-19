@@ -42,10 +42,10 @@ No migration was needed.
 
 | # | Key | Name (de) | Light ink | Dark ink | Light tint | Dark tint | Reference household |
 |---|---|---|---|---|---|---|---|
-| 1 | `violet` | Violett | `#7B3FE4` | `#C3A6FF` | `#EDE4FB` | `#3D3B50` | Lotta |
-| 2 | `petrol` | Petrol | `#08737F` | `#4FCBD6` | `#DCEBED` | `#264248` | Hanna |
-| 3 | `amber` | Bernstein | `#9A5300` | `#F0A84E` | `#F1E7DB` | `#463B2C` | Sabine |
-| 4 | `raspberry` | Himbeere | `#C2255C` | `#FF85AE` | `#F6E0E8` | `#493440` | Lukas |
+| 1 | `violet` | Violett | `#7B3FE4` | `#C3A6FF` | `#EDE4FB` | `#3D3B50` | Olivia |
+| 2 | `petrol` | Petrol | `#08737F` | `#4FCBD6` | `#DCEBED` | `#264248` | Jack |
+| 3 | `amber` | Bernstein | `#9A5300` | `#F0A84E` | `#F1E7DB` | `#463B2C` | Sarah |
+| 4 | `raspberry` | Himbeere | `#C2255C` | `#FF85AE` | `#F6E0E8` | `#493440` | David |
 | 5 | `cocoa` | Kakao | `#7A4A2A` | `#D9A684` | `#ECE6E1` | `#423B37` | a fifth member or guests |
 | 6 | `ocean` | Ozean | `#1A4FA8` | `#86B4FF` | `#DFE6F3` | `#313E50` | — |
 | 7 | `mustard` | Senf | `#736200` | `#E3C83A` | `#EBE9DB` | `#444228` | — |

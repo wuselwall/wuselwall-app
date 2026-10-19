@@ -145,7 +145,7 @@ class BoardFooter extends StatelessWidget {
   }
 }
 
-/// "Heute offen: Lotta 2 · Hanna 1", or a tick when nothing is open.
+/// "Heute offen: Emma 2 · Paul 1", or a tick when nothing is open.
 class _OpenTasks extends StatelessWidget {
   const _OpenTasks({required this.board});
 

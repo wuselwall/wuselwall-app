@@ -135,9 +135,9 @@ void main() {
 
     test('the acting member becomes the accent', () {
       final base = AppTheme.build(UiRegister.kiosk, Shade.dark);
-      final lotta = MemberPalette.swatches.first;
-      final themed = AppTheme.forMember(base, lotta.light);
-      expect(themed.colorScheme.primary, lotta.dark);
+      final emma = MemberPalette.swatches.first;
+      final themed = AppTheme.forMember(base, emma.light);
+      expect(themed.colorScheme.primary, emma.dark);
       expect(themed.extension<WwColors>()!.shade, Shade.dark);
     });
   });

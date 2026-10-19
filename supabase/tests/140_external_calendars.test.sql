@@ -31,15 +31,15 @@ create function pg_temp.pid(p_name text) returns uuid language sql as $$
   select id from ids where name = p_name
 $$;
 
--- ---- household A: Papa (guardian, personal phone), Lotta (child), Hanna, iPad, kiosk, revoked phone
+-- ---- household A: Papa (guardian, personal phone), Emma (child), Paul, iPad, kiosk, revoked phone
 create temp table sa as
   select api.setup_household('dev-setup', 'A', 'a@example.org', 'longpassword1', 'Papa', '#111111', '123456') r;
 grant all on sa to public;
 insert into ids select 'hh_a', (r ->> 'household_id')::uuid from sa;
 insert into app.profile (household_id, display_name, role, kind)
-  select (r ->> 'household_id')::uuid, 'Lotta', 'member', 'child' from sa;
+  select (r ->> 'household_id')::uuid, 'Emma', 'member', 'child' from sa;
 insert into app.profile (household_id, display_name, role)
-  select (r ->> 'household_id')::uuid, 'Hanna', 'member' from sa;
+  select (r ->> 'household_id')::uuid, 'Paul', 'member' from sa;
 insert into ids select lower(p.display_name), p.id from app.profile p
  where p.household_id = (select id from ids where name = 'hh_a');
 
@@ -89,7 +89,7 @@ select pg_temp.act_as_dev('papa');
 select pg_temp.act_as_dev('papa');
 insert into cal select 'club', (api.external_calendar_save(pg_temp.pid('papa'),
   jsonb_build_object('name', 'Fussball', 'url', 'https://club.example.org/fixtures.ics',
-                     'colour_hex', '#1E88E5', 'member_ids', jsonb_build_array(pg_temp.pid('lotta'))))->>'id')::uuid;
+                     'colour_hex', '#1E88E5', 'member_ids', jsonb_build_array(pg_temp.pid('emma'))))->>'id')::uuid;
 reset role;
 select is((select count(*)::int from cal), 1, 'a guardian creates an imported calendar and gets its id back');
 
@@ -107,7 +107,7 @@ select is((select active from app.external_calendar where id = (select id from c
   true, 'a new calendar is active');
 
 select is((select member_ids from app.external_calendar where id = (select id from cal where name = 'club')),
-  array[pg_temp.pid('lotta')], 'member_ids are stored as given');
+  array[pg_temp.pid('emma')], 'member_ids are stored as given');
 select is((select last_fetched_at from app.external_calendar where id = (select id from cal where name = 'club')),
   null::timestamptz, 'a new calendar has not been fetched yet');
 
@@ -130,7 +130,7 @@ select is((select count(*)::int from app.external_occurrence where calendar_id =
 select is((select etag from app.external_calendar where id = (select id from cal where name = 'club')),
   '"v1"', 'an update without a new URL keeps the etag');
 select is((select member_ids from app.external_calendar where id = (select id from cal where name = 'club')),
-  array[pg_temp.pid('lotta')], 'an update without member_ids keeps them');
+  array[pg_temp.pid('emma')], 'an update without member_ids keeps them');
 
 -- Update: a new URL clears the occurrences, the etag and the fetch record.
 select pg_temp.act_as_dev('papa');
@@ -168,11 +168,11 @@ reset role;
 
 -- Members, children and kiosks write nothing.
 select pg_temp.act_as_dev('ipad');
-select throws_like($$ select api.external_calendar_save(pg_temp.pid('lotta'), '{"name":"Lotta","url":"https://a.example.org/a.ics"}') $$,
+select throws_like($$ select api.external_calendar_save(pg_temp.pid('emma'), '{"name":"Emma","url":"https://a.example.org/a.ics"}') $$,
   '%guardian required%', 'a child on the shared iPad cannot create an imported calendar');
-select throws_like($$ select api.external_calendar_delete(pg_temp.pid('lotta'), (select id from cal where name = 'bins')) $$,
+select throws_like($$ select api.external_calendar_delete(pg_temp.pid('emma'), (select id from cal where name = 'bins')) $$,
   '%guardian required%', 'a child cannot delete an imported calendar');
-select throws_like($$ select api.external_calendar_refresh_request(pg_temp.pid('lotta'), (select id from cal where name = 'bins')) $$,
+select throws_like($$ select api.external_calendar_refresh_request(pg_temp.pid('emma'), (select id from cal where name = 'bins')) $$,
   '%guardian required%', 'a child cannot ask for an on-demand fetch');
 reset role;
 
@@ -213,7 +213,7 @@ select throws_like($$ select api.external_calendar_url(pg_temp.pid('papa'), '000
 reset role;
 
 select pg_temp.act_as_dev('ipad');
-select throws_like($$ select api.external_calendar_url(pg_temp.pid('lotta'), (select id from cal where name = 'bins')) $$,
+select throws_like($$ select api.external_calendar_url(pg_temp.pid('emma'), (select id from cal where name = 'bins')) $$,
   '%guardian required%', 'a child on the shared iPad gets no address');
 reset role;
 

@@ -25,9 +25,9 @@ function member(
 }
 
 const MEMBERS = [
-  member("lukas", "Lukas", "adult", "home_office"),
-  member("sabine", "Sabine", "adult"),
-  member("lotta", "Lotta", "child"),
+  member("thomas", "Thomas", "adult", "home_office"),
+  member("julia", "Julia", "adult"),
+  member("emma", "Emma", "child"),
 ];
 
 function event(id: string, extra: Partial<EventRow>): EventRow {
@@ -93,7 +93,7 @@ const lesson = (id: string, weekday: number, index: number, subjectId: string): 
 /** Everything of the household, whatever is asked; the window as the database computes it. */
 function rows(from: string, days: number): McpContext {
   return {
-    holder: { profile_id: "lukas", display_name: "Lukas", role: "guardian", kind: "adult" },
+    holder: { profile_id: "thomas", display_name: "Thomas", role: "guardian", kind: "adult" },
     household: { name: "Huser", timezone: "Europe/Berlin", locale: "de-DE", today: TODAY, region: null },
     window: { from, to: addDays(from, days - 1) },
     members: MEMBERS,
@@ -107,7 +107,7 @@ function rows(from: string, days: number): McpContext {
       event("Zahnarzt", {
         starts_at: "2026-10-15T06:30:00Z",
         ends_at: "2026-10-15T07:30:00Z",
-        attendee_ids: ["lotta"],
+        attendee_ids: ["emma"],
       }),
       event("Elternabend", { is_all_day: true, start_date: "2026-10-16", end_date: "2026-10-16" }),
       event("Reise", {
@@ -116,13 +116,13 @@ function rows(from: string, days: number): McpContext {
         is_all_day: true,
         start_date: "2026-10-15",
         end_date: "2026-10-16",
-        attendee_ids: ["sabine"],
+        attendee_ids: ["julia"],
       }),
     ],
     overrides: [],
     external: [],
     meals: [
-      { on_date: TODAY, slot: "dinner", title: "Spaghetti", cook_profile_id: "sabine", at_time: null },
+      { on_date: TODAY, slot: "dinner", title: "Spaghetti", cook_profile_id: "julia", at_time: null },
     ],
     tasks_all: [
       {
@@ -132,7 +132,7 @@ function rows(from: string, days: number): McpContext {
         due_on: TODAY,
         opens_on: TODAY,
         closes_on: TODAY,
-        assigned_profile_id: "lotta",
+        assigned_profile_id: "emma",
         requires_verification: false,
         status: "open",
         completed_by_profile_id: null,
@@ -145,10 +145,10 @@ function rows(from: string, days: number): McpContext {
         due_on: TODAY,
         opens_on: TODAY,
         closes_on: TODAY,
-        assigned_profile_id: "lukas",
+        assigned_profile_id: "thomas",
         requires_verification: false,
         status: "done",
-        completed_by_profile_id: "lukas",
+        completed_by_profile_id: "thomas",
         completed_at: "2026-10-15T07:00:00Z",
       },
     ],
@@ -160,7 +160,7 @@ function rows(from: string, days: number): McpContext {
         count: 1,
         list_id: "l1",
         category_id: "c-dairy",
-        added_by: "sabine",
+        added_by: "julia",
       },
       {
         id: "i2",
@@ -185,15 +185,15 @@ function rows(from: string, days: number): McpContext {
       { id: "c-produce", list_id: "l1", key: "produce", name: null, sort_order: 0 },
       { id: "c-dairy", list_id: "l1", key: "dairy", name: null, sort_order: 20 },
     ],
-    balances: [{ profile_id: "lotta", balance: 42 }, { profile_id: "lukas", balance: 0 }],
+    balances: [{ profile_id: "emma", balance: 42 }, { profile_id: "thomas", balance: 0 }],
     ledger: [{
-      profile_id: "lotta",
+      profile_id: "emma",
       occurred_at: "2026-10-14T16:00:00Z",
       amount: 3,
       reason: "task",
       note: null,
     }],
-    streaks: [{ profile_id: "lotta", title: "Spülmaschine ausräumen", current_length: 4, longest_length: 9 }],
+    streaks: [{ profile_id: "emma", title: "Spülmaschine ausräumen", current_length: 4, longest_length: 9 }],
     recipes: [
       { id: "r1", title: "Spaghetti Bolognese", description: null, servings_default: 4, tags: ["Pasta"] },
       { id: "r2", title: "Zucchini-Lasagne", description: null, servings_default: 4, tags: null },
@@ -224,7 +224,7 @@ function rows(from: string, days: number): McpContext {
       subjects: [subject("d", "Deutsch"), subject("sp", "Sport", "Sportsachen")],
       timetables: [{
         id: "tt",
-        profile_id: "lotta",
+        profile_id: "emma",
         school_id: "s1",
         term_id: "term",
         class_label: "3a",
@@ -274,18 +274,18 @@ Deno.test("agenda: appointments with names, tasks due with their assignee", asyn
   assertEquals(calls[0], { parts: ["calendar", "tasks_all"], from: TODAY, days: 2 });
   assertEquals(
     r.text,
-    "Do., 15.10.: 08:30 Zahnarzt (Lotta) · Aufgaben: Spülmaschine ausräumen (Lotta)\nFr., 16.10.: Elternabend",
+    "Do., 15.10.: 08:30 Zahnarzt (Emma) · Aufgaben: Spülmaschine ausräumen (Emma)\nFr., 16.10.: Elternabend",
   );
   const day = (r.structured as Any).days[0];
-  assertEquals(day.appointments[0].members, [{ id: "lotta", name: "Lotta" }]);
-  assertEquals(day.tasks_due[0].assignee, { id: "lotta", name: "Lotta" });
+  assertEquals(day.appointments[0].members, [{ id: "emma", name: "Emma" }]);
+  assertEquals(day.tasks_due[0].assignee, { id: "emma", name: "Emma" });
 });
 
 Deno.test("agenda: an unknown member or a bad date is a tool error the assistant can act on", async () => {
   const { server } = serverFor();
   const who = await server.callTool("get_agenda", { member: "Oma" });
   assert(who.isError);
-  assertEquals(who.text, "Niemand in der Familie heißt „Oma“. (Lukas, Sabine, Lotta)");
+  assertEquals(who.text, "Niemand in der Familie heißt „Oma“. (Thomas, Julia, Emma)");
   const when = await serverFor("en").server.callTool("get_agenda", { from: "15.10.2026" });
   assert(when.isError);
   assertEquals(when.text, 'from must be a date as YYYY-MM-DD, not "15.10.2026".');
@@ -305,15 +305,15 @@ Deno.test("tasks: open by default, done on request, by member", async () => {
   const { server } = serverFor();
   const open = await server.callTool("list_tasks", {});
   assertEquals((open.structured as Any).tasks.map((t: Any) => t.id), ["t1"]);
-  assertEquals(open.text, "Spülmaschine ausräumen – Lotta – fällig Do., 15.10. – offen – 3 Punkte");
-  const done = await server.callTool("list_tasks", { status: "done", member: "lukas" });
-  assertEquals((done.structured as Any).tasks[0].completed_by, { id: "lukas", name: "Lukas" });
+  assertEquals(open.text, "Spülmaschine ausräumen – Emma – fällig Do., 15.10. – offen – 3 Punkte");
+  const done = await server.callTool("list_tasks", { status: "done", member: "thomas" });
+  assertEquals((done.structured as Any).tasks[0].completed_by, { id: "thomas", name: "Thomas" });
   assert((await server.callTool("list_tasks", { status: "later" })).isError);
 });
 
 Deno.test("meals: per day, with the cook", async () => {
   const r = await serverFor("en").server.callTool("get_meal_plan", {});
-  assertEquals(r.text, "Thu, 15 Oct: Dinner: Spaghetti (Sabine)");
+  assertEquals(r.text, "Thu, 15 Oct: Dinner: Spaghetti (Julia)");
   assertEquals((r.structured as Any).days.length, 7);
 });
 
@@ -321,7 +321,7 @@ Deno.test("shopping: grouped by the store's categories, the default list unless 
   const { server } = serverFor();
   const r = await server.callTool("get_shopping_list", {});
   assertEquals(r.text, "Supermarkt: 2 offen\nObst & Gemüse: Äpfel 3×\nMilch & Käse: Milch (2 l)");
-  assertEquals((r.structured as Any).groups[1].items[0].added_by, { id: "sabine", name: "Sabine" });
+  assertEquals((r.structured as Any).groups[1].items[0].added_by, { id: "julia", name: "Julia" });
   const other = await server.callTool("get_shopping_list", { list: "baumarkt" });
   assertEquals(other.text, "Baumarkt: 1 offen\nSonstiges: Schrauben");
   const empty = familyServer(
@@ -340,10 +340,10 @@ Deno.test("shopping: grouped by the store's categories, the default list unless 
 
 Deno.test("points: balance, recent ledger and streaks; the holder by default", async () => {
   const { server } = serverFor();
-  const lotta = await server.callTool("get_points", { member: "Lotta" });
-  assertEquals(lotta.text, "Lotta hat 42 Punkte.\n+3 Aufgabe\nSpülmaschine ausräumen: 4-mal in Folge");
+  const emma = await server.callTool("get_points", { member: "Emma" });
+  assertEquals(emma.text, "Emma hat 42 Punkte.\n+3 Aufgabe\nSpülmaschine ausräumen: 4-mal in Folge");
   const me = await server.callTool("get_points", {});
-  assertEquals((me.structured as Any).member, { id: "lukas", name: "Lukas" });
+  assertEquals((me.structured as Any).member, { id: "thomas", name: "Thomas" });
 });
 
 Deno.test("recipes: by title, tag or ingredient", async () => {
@@ -369,20 +369,20 @@ Deno.test("recipes: by title, tag or ingredient", async () => {
 
 Deno.test("timetable: a child's day with what to pack; a member is required", async () => {
   const { server } = serverFor();
-  const r = await server.callTool("get_timetable", { member: "Lotta" });
-  assertEquals(r.text, "Lotta\nDo., 15.10.: 08:00–09:35 Deutsch, Sport Einpacken: Sportsachen.");
+  const r = await server.callTool("get_timetable", { member: "Emma" });
+  assertEquals(r.text, "Emma\nDo., 15.10.: 08:00–09:35 Deutsch, Sport Einpacken: Sportsachen.");
   assertEquals((r.structured as Any).days[0].lessons[1].subject, "Sport");
   assert((await server.callTool("get_timetable", {})).isError);
   assertEquals(
-    (await server.callTool("get_timetable", { member: "Lukas" })).text,
-    "Für Lukas ist kein Stundenplan eingetragen.",
+    (await server.callTool("get_timetable", { member: "Thomas" })).text,
+    "Für Thomas ist kein Stundenplan eingetragen.",
   );
 });
 
 Deno.test("presence: entries first, the usual state otherwise", async () => {
   const { server } = serverFor();
   const r = await server.callTool("get_presence", { from: TODAY, to: TODAY });
-  assertEquals(r.text, "Do., 15.10.: Lukas im Homeoffice (üblicherweise); Sabine auf Reise");
+  assertEquals(r.text, "Do., 15.10.: Thomas im Homeoffice (üblicherweise); Julia auf Reise");
 });
 
 Deno.test("week board: the week from Monday, today marked", async () => {
@@ -393,10 +393,10 @@ Deno.test("week board: the week from Monday, today marked", async () => {
   const s = r.structured as Any;
   assertEquals(s.week_start, "2026-10-12");
   assertEquals(s.days[3].today, true);
-  assertEquals(s.days[3].presence[0].member, { id: "sabine", name: "Sabine" });
+  assertEquals(s.days[3].presence[0].member, { id: "julia", name: "Julia" });
   assert(
     r.text.includes(
-      "Do., 15.10.: 08:30 Zahnarzt (Lotta) · Sabine auf Reise · Lotta: 08:00–09:35 Deutsch, Sport",
+      "Do., 15.10.: 08:30 Zahnarzt (Emma) · Julia auf Reise · Emma: 08:00–09:35 Deutsch, Sport",
     ),
   );
 });
@@ -405,8 +405,8 @@ Deno.test("resources: the members and today's agenda as JSON", async () => {
   const { server } = serverFor();
   const members = await server.readResource("family://members");
   assertEquals(JSON.parse(members!.text).members[2], {
-    id: "lotta",
-    name: "Lotta",
+    id: "emma",
+    name: "Emma",
     role: "member",
     child: true,
   });

@@ -18,13 +18,13 @@ The specs, mockups, demo build (`app/lib/main_demo.dart`), documentation screens
 
 | Member | Role | Example of |
 |---|---|---|
-| **Lukas** | guardian | an adult with a home-office baseline who travels for work at short notice |
-| **Sabine** | guardian | an adult on a shift rota that repeats but is revised monthly |
-| **Lotta**, 9 | member | an older child: reads fluently, understands saving up points |
-| **Hanna**, 7 | member | a younger child: icon-led, needs quick rewards and forgiving streaks |
+| **David** | guardian | an adult with a home-office baseline who travels for work at short notice |
+| **Sarah** | guardian | an adult on a shift rota that repeats but is revised monthly |
+| **Olivia**, 9 | member | an older child: reads fluently, understands saving up points |
+| **Jack**, 7 | member | a younger child: icon-led, needs quick rewards and forgiving streaks |
 
 They live in Berlin, and the children go to two different schools. When a spec says
-"Sabine's Dienstplan", read it as "a rota like the reference household's". Nothing in
+"Sarah's Dienstplan", read it as "a rota like the reference household's". Nothing in
 code, schema or tests may depend on the number of members, their ages, their roles
 beyond `guardian`/`member`, the region or the schools.
 
