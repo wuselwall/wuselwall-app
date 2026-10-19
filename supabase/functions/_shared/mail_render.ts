@@ -1,8 +1,8 @@
 // Renders the mails Supabase Auth asks for (the Send Email Hook, specs/20 "Email"): a
-// subject, a plain-text body and an HTML body, in the recipient's language.
+// subject, a plain-text body and an HTML body, in the server's configured language.
 //
-// Pure: no I/O, no clock. The wording lives in mail_de.ts and mail_en.ts, which must
-// both satisfy MailMessages, so a key cannot exist in one language only. Every value that
+// Pure: no I/O, no clock. Each mail_<locale>.ts must satisfy MailMessages,
+// so a key cannot exist in one language only. Every value that
 // reaches the HTML is escaped; the code is digits, but it is escaped like any other value.
 //
 // The HTML is built for every mail client, Outlook's Word engine included: layout tables
@@ -12,12 +12,15 @@
 // No images, no remote CSS, no tracking and no links: the code is the whole action
 // (specs/20, "A code, not a magic link"). The text part carries everything the HTML does.
 //
-// The bilingual fallback templates in supabase/templates/ come from the same layout
+// The single-language fallback templates in supabase/templates/ come from the same layout
 // (renderFallbackTemplate); a test keeps the committed files in step with it.
 import { MAIL_DE } from "./mail_de.ts";
 import { MAIL_EN } from "./mail_en.ts";
+import { MAIL_FR } from "./mail_fr.ts";
+import { MAIL_ES } from "./mail_es.ts";
 
-export type MailLocale = "de" | "en";
+export const MAIL_LOCALES = ["de", "en", "fr", "es"] as const;
+export type MailLocale = typeof MAIL_LOCALES[number];
 
 /** The GoTrue email actions this renderer knows (`email_data.email_action_type`). */
 export type MailKind =
@@ -39,7 +42,7 @@ export const MAIL_KINDS: readonly MailKind[] = [
   "invite",
 ];
 
-/** The wording of one language. mail_de.ts and mail_en.ts both satisfy this type. */
+/** The wording of one language. Every mail_<locale>.ts satisfies this type. */
 export interface MailMessages {
   /** The subject before ": <code>". */
   subject: Record<MailKind, string>;
@@ -83,18 +86,25 @@ export class MailRenderError extends Error {
   }
 }
 
-const MESSAGES: Record<MailLocale, MailMessages> = { de: MAIL_DE, en: MAIL_EN };
+const MESSAGES: Record<MailLocale, MailMessages> = {
+  de: MAIL_DE,
+  en: MAIL_EN,
+  fr: MAIL_FR,
+  es: MAIL_ES,
+};
 
 export function isMailKind(value: unknown): value is MailKind {
   return typeof value === "string" &&
     (MAIL_KINDS as readonly string[]).includes(value);
 }
 
-/** `de` or `en` from a locale tag such as `en-GB`; anything else is German, the default. */
+/** A supported primary language from a locale tag; anything else defaults to German. */
 export function resolveLocale(value: unknown): MailLocale {
   if (typeof value !== "string") return "de";
   const primary = value.trim().toLowerCase().split(/[-_]/)[0];
-  return primary === "en" ? "en" : "de";
+  return (MAIL_LOCALES as readonly string[]).includes(primary)
+    ? primary as MailLocale
+    : "de";
 }
 
 export function escapeHtml(value: string): string {
@@ -304,31 +314,37 @@ export function renderMail(input: RenderInput): RenderedMail {
 export const FALLBACK_TEMPLATES = {
   magiclink: "magic_link.html",
   signup: "confirmation.html",
+  recovery: "recovery.html",
+  email_change: "email_change.html",
+  reauthentication: "reauthentication.html",
+  invite: "invite.html",
 } as const;
 
 export type FallbackTemplateKind = keyof typeof FALLBACK_TEMPLATES;
 
-/** The subject config.toml gives both fallback templates. */
-export const FALLBACK_SUBJECT = "Dein WuselWall-Code / Your WuselWall code";
+/** Localized GoTrue subject, shared by all fallback templates. */
+export function fallbackSubject(locale: MailLocale = "de"): string {
+  return MESSAGES[locale].subject.magiclink;
+}
+
+/** The backwards-compatible German default for stacks without a language setting. */
+export const FALLBACK_SUBJECT = fallbackSubject();
 
 /**
- * A bilingual GoTrue template for stacks without the hook (specs/20 "Email"): German
- * first, English below, each in its own card, with GoTrue's `{{ .Token }}` as the code.
+ * A single-language GoTrue template for stacks without the hook (specs/20 "Email"),
+ * with GoTrue's `{{ .Token }}` as the code. No recipient metadata or links.
  */
-export function renderFallbackTemplate(kind: FallbackTemplateKind): string {
+export function renderFallbackTemplate(
+  kind: FallbackTemplateKind,
+  locale: MailLocale = "de",
+): string {
+  const messages = MESSAGES[locale];
   const code: CodeHtml[] = [{ label: null, codeHtml: "{{ .Token }}" }];
   return documentShell({
-    lang: "de",
-    titleHtml: escapeHtml(FALLBACK_SUBJECT),
-    preheaderHtml: `${escapeHtml(MAIL_DE.lead[kind])} / ${
-      escapeHtml(MAIL_EN.lead[kind])
-    }`,
-    cards: [
-      card(cardContent(MAIL_DE, kind, code)),
-      card(`<div lang="en">\n${cardContent(MAIL_EN, kind, code)}\n</div>`),
-    ],
-    footerHtml: `${escapeHtml(MAIL_DE.footer)}<br>${
-      escapeHtml(MAIL_EN.footer)
-    }`,
+    lang: locale,
+    titleHtml: escapeHtml(fallbackSubject(locale)),
+    preheaderHtml: escapeHtml(messages.lead[kind]),
+    cards: [card(cardContent(messages, kind, code))],
+    footerHtml: escapeHtml(messages.footer),
   }) + "\n";
 }

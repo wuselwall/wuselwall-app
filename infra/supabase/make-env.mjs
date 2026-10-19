@@ -5,7 +5,8 @@
 //
 // Usage:
 //   node make-env.mjs [supabase/.env] --api https://api.example.org --web https://web.example.org
-//                     [--admin-email you@example.org] [--rp-id example.org] [--studio] [--caddy]
+//                     [--admin-email you@example.org] [--language de|en|fr|es]
+//                     [--rp-id example.org] [--studio] [--caddy]
 //
 //   supabase/.env  optional. WW_JWT_SECRET, WW_PUBLISHABLE_KEY and WW_SECRET_KEY are kept
 //                  from it, so the apps and every device session of an existing server keep
@@ -27,7 +28,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 
 const args = process.argv.slice(2);
-const valued = ['--api', '--web', '--admin-email', '--rp-id'];
+const valued = ['--api', '--web', '--admin-email', '--rp-id', '--language'];
 const flag = (name) => args.includes(`--${name}`);
 const option = (name) => {
   const i = args.indexOf(`--${name}`);
@@ -55,6 +56,9 @@ const origin = (name) => {
 };
 const api = origin('api');
 const web = origin('web');
+const mailSubjects = { de: 'Dein WuselWall-Code', en: 'Your WuselWall code', fr: 'Votre code WuselWall', es: 'Tu código de WuselWall' };
+const language = option('language') ?? 'de';
+if (!Object.hasOwn(mailSubjects, language)) fail('--language must be de, en, fr or es');
 
 const vars = src
   ? Object.fromEntries(
@@ -174,6 +178,9 @@ const out = {
   // The e-mail sign-in code (supabase/config.toml [auth.email]).
   MAILER_OTP_LENGTH: '6',
   MAILER_OTP_EXP: '600',
+  // One operator-selected email language, independent of the device's UI locale.
+  MAIL_LANGUAGE: language,
+  MAIL_CODE_SUBJECT: mailSubjects[language],
   SMTP_MAX_FREQUENCY: '60s',
   // Strangers get an account that can do nothing but wait for an invitation or, while
   // household creation is in `code` mode, start a family with a founder code (specs/20).

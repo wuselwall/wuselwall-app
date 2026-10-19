@@ -237,6 +237,8 @@ Recorded so that nobody turns these into options:
 - The six presence states ([15](15-module-school-timetable.md#presence-states)) and the
   four assignment policies.
 - The UI register belongs to the device, never to a screen width.
-- German and English; German for any other device language (NFR-14). The week starts on
+- DE/EN/FR/ES, with device regional variants accepted; German for any unsupported device
+  language (NFR-14). A new family stores `de-DE`, `en-GB`, `fr-FR` or `es-ES`. Email language is
+  not a household setting: it is selected once for the server installation. The week starts on
   Monday.
 - The task materialiser's 14-day horizon.

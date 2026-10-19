@@ -18,8 +18,18 @@ class DemoExternalCalendarsRepository implements ExternalCalendarsRepository {
   late final _calendars = <ExternalCalendar>[
     ExternalCalendar(
       id: demoBinCalendarId,
-      name: DemoData.tr('Abfuhrkalender', 'Bin collection'),
-      urlHost: DemoData.tr('abfuhr.example.de', 'bins.example.org'),
+      name: DemoData.tr4(
+        'Abfuhrkalender',
+        'Bin collection',
+        'Calendrier de collecte',
+        'Calendario de recogida',
+      ),
+      urlHost: DemoData.tr4(
+        'abfuhr.example.de',
+        'bins.example.org',
+        'collecte.example.fr',
+        'recogida.example.es',
+      ),
       colourHex: '#9A5300',
       memberIds: const [],
       showOnBoard: true,
@@ -28,8 +38,18 @@ class DemoExternalCalendarsRepository implements ExternalCalendarsRepository {
     ),
     ExternalCalendar(
       id: demoFootballCalendarId,
-      name: DemoData.tr('FC Spielplan', 'Football fixtures'),
-      urlHost: DemoData.tr('fc-beispiel.example.de', 'fc.example.org'),
+      name: DemoData.tr4(
+        'FC Spielplan',
+        'Football fixtures',
+        'Calendrier du club',
+        'Calendario del club',
+      ),
+      urlHost: DemoData.tr4(
+        'fc-beispiel.example.de',
+        'fc.example.org',
+        'fc.example.fr',
+        'fc.example.es',
+      ),
       colourHex: '#1A4FA8',
       memberIds: const [DemoData.son],
       showOnBoard: false,
@@ -141,12 +161,17 @@ List<Occurrence> demoImportedOccurrences(
   for (final bin in [
     (
       offset: 1,
-      title: DemoData.tr('Restmüll', 'General waste'),
+      title: DemoData.tr4(
+        'Restmüll',
+        'General waste',
+        'Ordures ménagères',
+        'Residuos',
+      ),
       uid: 'bin-rest',
     ),
     (
       offset: 4,
-      title: DemoData.tr('Gelber Sack', 'Recycling'),
+      title: DemoData.tr4('Gelber Sack', 'Recycling', 'Recyclage', 'Reciclaje'),
       uid: 'bin-gelb',
     ),
   ]) {
@@ -173,11 +198,21 @@ List<Occurrence> demoImportedOccurrences(
         id: '${demoFootballCalendarId}_spiel-1',
         calendarId: demoFootballCalendarId,
         colourHex: '#1A4FA8',
-        title: DemoData.tr('Junioren gegen TSV', 'Under-9s vs Rovers'),
+        title: DemoData.tr4(
+          'Junioren gegen TSV',
+          'Under-9s vs Rovers',
+          'Poussins contre Rovers',
+          'Benjamines contra Rovers',
+        ),
         date: fixture,
         start: const TimeOfDay(hour: 10, minute: 0),
         end: const TimeOfDay(hour: 11, minute: 30),
-        location: DemoData.tr('Sportplatz Nord', 'North playing field'),
+        location: DemoData.tr4(
+          'Sportplatz Nord',
+          'North playing field',
+          'Terrain nord',
+          'Campo norte',
+        ),
         attendees: const [DemoData.son],
       ),
     );

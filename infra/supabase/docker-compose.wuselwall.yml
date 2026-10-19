@@ -30,10 +30,18 @@ services:
       mail-templates:
         condition: service_healthy
     environment:
-      GOTRUE_MAILER_TEMPLATES_CONFIRMATION: http://mail-templates/confirmation.html
-      GOTRUE_MAILER_TEMPLATES_MAGIC_LINK: http://mail-templates/magic_link.html
-      GOTRUE_MAILER_SUBJECTS_CONFIRMATION: Dein WuselWall-Code / Your WuselWall code
-      GOTRUE_MAILER_SUBJECTS_MAGIC_LINK: Dein WuselWall-Code / Your WuselWall code
+      GOTRUE_MAILER_TEMPLATES_CONFIRMATION: http://mail-templates/${MAIL_LANGUAGE:-de}/confirmation.html
+      GOTRUE_MAILER_TEMPLATES_MAGIC_LINK: http://mail-templates/${MAIL_LANGUAGE:-de}/magic_link.html
+      GOTRUE_MAILER_TEMPLATES_RECOVERY: http://mail-templates/${MAIL_LANGUAGE:-de}/recovery.html
+      GOTRUE_MAILER_TEMPLATES_EMAIL_CHANGE: http://mail-templates/${MAIL_LANGUAGE:-de}/email_change.html
+      GOTRUE_MAILER_TEMPLATES_REAUTHENTICATION: http://mail-templates/${MAIL_LANGUAGE:-de}/reauthentication.html
+      GOTRUE_MAILER_TEMPLATES_INVITE: http://mail-templates/${MAIL_LANGUAGE:-de}/invite.html
+      GOTRUE_MAILER_SUBJECTS_CONFIRMATION: ${MAIL_CODE_SUBJECT:-Dein WuselWall-Code}
+      GOTRUE_MAILER_SUBJECTS_MAGIC_LINK: ${MAIL_CODE_SUBJECT:-Dein WuselWall-Code}
+      GOTRUE_MAILER_SUBJECTS_RECOVERY: ${MAIL_CODE_SUBJECT:-Dein WuselWall-Code}
+      GOTRUE_MAILER_SUBJECTS_EMAIL_CHANGE: ${MAIL_CODE_SUBJECT:-Dein WuselWall-Code}
+      GOTRUE_MAILER_SUBJECTS_REAUTHENTICATION: ${MAIL_CODE_SUBJECT:-Dein WuselWall-Code}
+      GOTRUE_MAILER_SUBJECTS_INVITE: ${MAIL_CODE_SUBJECT:-Dein WuselWall-Code}
       # Sign with the EC key, verify the legacy HS256 secret too.
       GOTRUE_JWT_KEYS: ${JWT_KEYS}
       GOTRUE_PASSWORD_MIN_LENGTH: 10
@@ -53,12 +61,12 @@ services:
       GOTRUE_WEBAUTHN_RP_ID: ${PASSKEY_RP_ID}
       GOTRUE_WEBAUTHN_RP_ORIGINS: ${PASSKEY_RP_ORIGINS}
       # Mail (specs/10 §4 "Email setup"). The Send Email Hook hands every mail to the send-email
-      # Edge Function, which renders it in the recipient's language and sends it through Scaleway
+      # Edge Function, which renders it in MAIL_LANGUAGE and sends it through Scaleway
       # Transactional Email. It is switched on by make-env.mjs once the stack's .env has the
       # SCW_* values (or by hand: set-env SEND_EMAIL_HOOK_ENABLED true). Its secret is the
       # v1,whsec_ value the functions container checks the signature with. The SMTP_* values in
       # the .env are the fallback when the hook is off. Both signup and returning sign-in
-      # use codes, not links. GoTrue loads the bilingual supabase/templates/ files through
+      # use codes, not links. GoTrue loads that language's supabase/templates/ files through
       # the internal-only mail-templates service (copied by the release/deploy scripts).
       #
       # The hook's address is HTTPS, the server's own public one (<api>/functions/v1/send-email),
@@ -90,7 +98,7 @@ services:
     volumes:
       - ./volumes/mail-templates:/usr/share/nginx/html:ro,z
     healthcheck:
-      test: [CMD-SHELL, "wget -q -O /dev/null http://127.0.0.1/confirmation.html && wget -q -O /dev/null http://127.0.0.1/magic_link.html"]
+      test: [CMD-SHELL, "wget -q -O /dev/null http://127.0.0.1/${MAIL_LANGUAGE:-de}/confirmation.html && wget -q -O /dev/null http://127.0.0.1/${MAIL_LANGUAGE:-de}/magic_link.html"]
       interval: 5s
       timeout: 3s
       retries: 5
@@ -128,6 +136,7 @@ services:
       SCW_REGION: ${SCW_REGION:-fr-par}
       MAIL_FROM: ${MAIL_FROM:-}
       MAIL_FROM_NAME: ${MAIL_FROM_NAME:-WuselWall}
+      MAIL_LANGUAGE: ${MAIL_LANGUAGE:-de}
 
   db:
     # Postgres 15, as supabase/config.toml ([db] major_version) and CI.

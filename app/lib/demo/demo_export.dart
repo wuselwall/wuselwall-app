@@ -13,7 +13,7 @@ class DemoHouseholdExportRepository implements HouseholdExportRepository {
       'version': 1,
       'exported_at': '2026-10-14T09:00:00Z',
       'household': {
-        'name': DemoData.tr('Familie', 'Family'),
+        'name': DemoData.tr4('Familie', 'Family', 'Famille', 'Familia'),
         'timezone': 'Europe/Berlin',
       },
       'tables': {
@@ -32,8 +32,14 @@ class DemoHouseholdExportRepository implements HouseholdExportRepository {
           },
         ],
         'shopping_item': [
-          {'name': DemoData.tr('Milch', 'Milk'), 'checked': false},
-          {'name': DemoData.tr('Brot', 'Bread'), 'checked': true},
+          {
+            'name': DemoData.tr4('Milch', 'Milk', 'Lait', 'Leche'),
+            'checked': false,
+          },
+          {
+            'name': DemoData.tr4('Brot', 'Bread', 'Pain', 'Pan'),
+            'checked': true,
+          },
         ],
       },
     };

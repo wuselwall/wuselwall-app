@@ -4,6 +4,11 @@
 // Times are written in the event's own zone (TZID) so a 07:00 series stays at 07:00
 // across DST, and every referenced zone gets a VTIMEZONE built from its real transitions.
 import { Temporal } from "npm:temporal-polyfill@0.3.0";
+import { pickLang } from "./locale.ts";
+import { ICS_DE } from "./ics_de.ts";
+import { ICS_EN } from "./ics_en.ts";
+import { ICS_FR } from "./ics_fr.ts";
+import { ICS_ES } from "./ics_es.ts";
 import {
   type LessonJson,
   lessonSourceId,
@@ -292,11 +297,21 @@ function yearSpan(feed: IcsFeed, now: Date): { from: number; to: number } {
   return { from, to };
 }
 
+export interface IcsMessages {
+  school: string;
+  withAttendees: string;
+  lessonStatus: Record<Exclude<LessonJson["status"], "normal">, string>;
+  presence: Record<
+    "working" | "home_office" | "travel" | "away" | "off" | "childcare",
+    string
+  >;
+}
+
 type Ctx = {
   feed: IcsFeed;
   host: string;
   dtstamp: string;
-  german: boolean;
+  messages: IcsMessages;
 };
 
 function attendeeNames(ctx: Ctx, ids: string[]): string[] {
@@ -321,13 +336,16 @@ function commonProps(
 ): string[] {
   const names = attendeeNames(ctx, ev.attendee_ids);
   const isPresence = ev.kind === "presence";
-  const base = title || ev.presence_state || "";
+  const state = ev.presence_state;
+  const base = title ||
+    (state && ctx.messages.presence[state as keyof IcsMessages["presence"]]) ||
+    state || "";
   const summary = isPresence && names.length > 0
     ? `${names.join(", ")}: ${base}`
     : base;
 
   const attendeeLine = names.length > 0
-    ? `${ctx.german ? "Mit" : "With"}: ${names.join(", ")}`
+    ? `${ctx.messages.withAttendees}: ${names.join(", ")}`
     : null;
   const description = [ev.description, attendeeLine]
     .filter((s): s is string => typeof s === "string" && s !== "")
@@ -599,17 +617,9 @@ function schoolMode(feed: IcsFeed): "day" | "lessons" {
 /** The label of a lesson that differs from the grid, in the household's language. */
 function statusLabel(
   status: LessonJson["status"],
-  german: boolean,
+  messages: IcsMessages,
 ): string | null {
-  const labels: Record<LessonJson["status"], [string, string] | null> = {
-    normal: null,
-    cancelled: ["Entfall", "Cancelled"],
-    substituted: ["Vertretung", "Substitute"],
-    room_change: ["Raumwechsel", "Room change"],
-    extra: ["Zusatz", "Extra"],
-  };
-  const pair = labels[status];
-  return pair === null ? null : german ? pair[0] : pair[1];
+  return status === "normal" ? null : messages.lessonStatus[status];
 }
 
 /** SEQUENCE from the newest edit of a child's timetables: minutes since the epoch, so it grows with edits. */
@@ -722,10 +732,10 @@ function schoolDayVEvent(
   // One line per lesson, cancellations and substitutions included: "1. Ma · 2. D (Entfall)".
   const parts = day.lessons.map((l) => {
     const label = l.period === null ? "" : `${l.period}. `;
-    const note = statusLabel(l.status, ctx.german);
+    const note = statusLabel(l.status, ctx.messages);
     return `${label}${l.short ?? l.subject}${note ? ` (${note})` : ""}`;
   });
-  const summary = withName(day.member_id, ctx.german ? "Schule" : "School");
+  const summary = withName(day.member_id, ctx.messages.school);
   const lines = [
     "BEGIN:VEVENT",
     `DTSTART;TZID=${zone}:${localStamp(day.date, day.starts!)}`,
@@ -766,7 +776,7 @@ function schoolLessonVEvent(
   // A row keeps its UID through edits; the date makes each occurrence its own event.
   const source = lessonSourceId(lesson) ?? `${day.member_id}-${lesson.period}`;
   const uid = `lesson-${source}-${compactDate(day.date)}@wuselwall.app`;
-  const note = statusLabel(lesson.status, ctx.german);
+  const note = statusLabel(lesson.status, ctx.messages);
   const description = [
     note,
     lesson.teacher,
@@ -801,7 +811,9 @@ export function renderIcs(feed: IcsFeed, opts: RenderOptions): string {
     dtstamp: utcStamp(
       Temporal.Instant.fromEpochMilliseconds(opts.now.getTime()),
     ),
-    german: !(feed.household.locale ?? "de").startsWith("en"),
+    messages: ({ de: ICS_DE, en: ICS_EN, fr: ICS_FR, es: ICS_ES })[
+      pickLang(undefined, null, feed.household.locale ?? null)
+    ],
   };
   const school = schoolEvents(ctx, opts.now);
 

@@ -25,6 +25,11 @@ void main() {
       expect(possessiveName('James', 'en'), "James'");
     });
 
+    test('French and Spanish keep the name unchanged', () {
+      expect(possessiveName('Thomas', 'fr'), 'Thomas');
+      expect(possessiveName('David', 'es'), 'David');
+    });
+
     test('an empty name stays empty', () {
       expect(possessiveName('  ', 'de'), '');
     });

@@ -232,7 +232,12 @@ List<UsualWeek> demoUsualWeeks() {
   ];
 }
 
-String get _freeDay => DemoData.english ? 'INSET day' : 'Beweglicher Ferientag';
+String get _freeDay => switch (DemoData.languageCode) {
+  'en' => 'INSET day',
+  'fr' => 'Jour férié mobile',
+  'es' => 'Día festivo móvil',
+  _ => 'Beweglicher Ferientag',
+};
 
 Map<String, dynamic> _json(DateTime now) {
   final monday = DateTime(now.year, now.month, now.day - (now.weekday - 1));

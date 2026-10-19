@@ -372,7 +372,7 @@ with confirm and delete as the two actions.
 
 ## German glossary
 
-The UI is German and English (NFR-14, [CLAUDE.md](../CLAUDE.md)), German by default; the code is English. This table is the German side. Fix the pairing
+The UI is German, English, French and Spanish (NFR-14, [AGENTS.md](../AGENTS.md)), with German as the unsupported-language fallback; the code is English. This table is the German side. Fix the pairing
 once, in the i18n catalogue, before any of these strings reaches a component:
 
 | Code | UI (de-DE) |

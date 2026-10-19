@@ -79,7 +79,7 @@ const _regionRows = <Map<String, dynamic>>[
     'level': 1,
     'category': 'Kanton',
     'short_name': 'BE',
-    'names': {'de': 'Bern', 'en': 'Bern'},
+    'names': {'de': 'Bern', 'en': 'Bern', 'fr': 'Berne', 'es': 'Berna'},
   },
   {
     'code': 'CH-ZH',
@@ -88,7 +88,7 @@ const _regionRows = <Map<String, dynamic>>[
     'level': 1,
     'category': 'Kanton',
     'short_name': 'ZH',
-    'names': {'de': 'Zürich', 'en': 'Zurich'},
+    'names': {'de': 'Zürich', 'en': 'Zurich', 'fr': 'Zurich', 'es': 'Zúrich'},
   },
   {
     'code': 'CH-ZH-UE',
@@ -97,7 +97,7 @@ const _regionRows = <Map<String, dynamic>>[
     'level': 2,
     'category': 'Bezirk',
     'short_name': 'Uster',
-    'names': {'de': 'Uster', 'en': 'Uster'},
+    'names': {'de': 'Uster', 'en': 'Uster', 'fr': 'Uster', 'es': 'Uster'},
   },
   {
     'code': 'CH-ZH-UE-0003',
@@ -106,7 +106,7 @@ const _regionRows = <Map<String, dynamic>>[
     'level': 3,
     'category': 'Gemeinde',
     'short_name': 'Uster',
-    'names': {'de': 'Uster', 'en': 'Uster'},
+    'names': {'de': 'Uster', 'en': 'Uster', 'fr': 'Uster', 'es': 'Uster'},
   },
   {
     'code': 'CH-ZH-UE-0004',
@@ -115,7 +115,12 @@ const _regionRows = <Map<String, dynamic>>[
     'level': 3,
     'category': 'Gemeinde',
     'short_name': 'Wetzikon',
-    'names': {'de': 'Wetzikon', 'en': 'Wetzikon'},
+    'names': {
+      'de': 'Wetzikon',
+      'en': 'Wetzikon',
+      'fr': 'Wetzikon',
+      'es': 'Wetzikon',
+    },
   },
   {
     'code': 'CH-ZH-ZH',
@@ -124,7 +129,7 @@ const _regionRows = <Map<String, dynamic>>[
     'level': 2,
     'category': 'Bezirk',
     'short_name': 'Zürich',
-    'names': {'de': 'Zürich', 'en': 'Zurich'},
+    'names': {'de': 'Zürich', 'en': 'Zurich', 'fr': 'Zurich', 'es': 'Zúrich'},
   },
   {
     'code': 'CH-ZH-ZH-0261',
@@ -133,7 +138,7 @@ const _regionRows = <Map<String, dynamic>>[
     'level': 3,
     'category': 'Gemeinde',
     'short_name': 'Zürich',
-    'names': {'de': 'Zürich', 'en': 'Zurich'},
+    'names': {'de': 'Zürich', 'en': 'Zurich', 'fr': 'Zurich', 'es': 'Zúrich'},
   },
   {
     'code': 'DE-BE',
@@ -142,7 +147,7 @@ const _regionRows = <Map<String, dynamic>>[
     'level': 1,
     'category': 'Bundesland',
     'short_name': 'BE',
-    'names': {'de': 'Berlin', 'en': 'Berlin'},
+    'names': {'de': 'Berlin', 'en': 'Berlin', 'fr': 'Berlin', 'es': 'Berlín'},
   },
   {
     'code': 'DE-BY',
@@ -151,7 +156,12 @@ const _regionRows = <Map<String, dynamic>>[
     'level': 1,
     'category': 'Bundesland',
     'short_name': 'BY',
-    'names': {'de': 'Bayern', 'en': 'Bavaria'},
+    'names': {
+      'de': 'Bayern',
+      'en': 'Bavaria',
+      'fr': 'Bavière',
+      'es': 'Baviera',
+    },
   },
   {
     'code': 'AT-9',
@@ -160,7 +170,7 @@ const _regionRows = <Map<String, dynamic>>[
     'level': 1,
     'category': 'Bundesland',
     'short_name': 'W',
-    'names': {'de': 'Wien', 'en': 'Vienna'},
+    'names': {'de': 'Wien', 'en': 'Vienna', 'fr': 'Vienne', 'es': 'Viena'},
   },
 ];
 
@@ -168,7 +178,12 @@ const _holidayRows = <Map<String, dynamic>>[
   {
     'feed_id': 'demo-herbstferien-2026',
     'kind': 'holiday',
-    'names': {'de': 'Herbstferien', 'en': 'Autumn holidays'},
+    'names': {
+      'de': 'Herbstferien',
+      'en': 'Autumn holidays',
+      'fr': 'Vacances d’automne',
+      'es': 'Vacaciones de otoño',
+    },
     'starts_on': '2026-10-19',
     'ends_on': '2026-10-31',
     'already_imported': false,
@@ -177,7 +192,12 @@ const _holidayRows = <Map<String, dynamic>>[
   {
     'feed_id': 'demo-weihnachtsferien-2026',
     'kind': 'holiday',
-    'names': {'de': 'Weihnachtsferien', 'en': 'Christmas holidays'},
+    'names': {
+      'de': 'Weihnachtsferien',
+      'en': 'Christmas holidays',
+      'fr': 'Vacances de Noël',
+      'es': 'Vacaciones de Navidad',
+    },
     'starts_on': '2026-12-21',
     'ends_on': '2027-01-08',
     'already_imported': false,

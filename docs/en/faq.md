@@ -25,4 +25,4 @@ Adding the same name a second time makes WuselWall count it up to **2×** instea
 Tiles appear when you **finish** a trip. Until then you type names; after the first trip each becomes a tile.
 
 ## How do I change the language?
-WuselWall follows your device's language (German or English).
+WuselWall follows your device's language (German, English, French or Spanish); other languages show the German version.

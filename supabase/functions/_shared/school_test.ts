@@ -683,15 +683,88 @@ Deno.test("the school's region decides: another canton's holiday does not reach 
 
 Deno.test("a school without a region gets no public holidays", () => {
   assertEquals(
-    publicHolidayRows([school(SCHOOL, null)], [feedRow({ id: "f" })], [], "de-DE"),
+    publicHolidayRows(
+      [school(SCHOOL, null)],
+      [feedRow({ id: "f" })],
+      [],
+      "de-DE",
+    ),
     [],
   );
 });
 
 Deno.test("the name follows the household's language, German when there is none", () => {
-  const feed = [feedRow({ id: "f", names: { de: "Auffahrt", en: "Ascension Day" } })];
-  assertEquals(publicHolidayRows([school(SCHOOL, "CH")], feed, [], "en-GB")[0].name, "Ascension Day");
-  assertEquals(publicHolidayRows([school(SCHOOL, "CH")], feed, [], "it-IT")[0].name, "Auffahrt");
+  const feed = [
+    feedRow({ id: "f", names: { de: "Auffahrt", en: "Ascension Day" } }),
+  ];
+  assertEquals(
+    publicHolidayRows([school(SCHOOL, "CH")], feed, [], "en-GB")[0].name,
+    "Ascension Day",
+  );
+  assertEquals(
+    publicHolidayRows([school(SCHOOL, "CH")], feed, [], "it-IT")[0].name,
+    "Auffahrt",
+  );
+});
+
+Deno.test("a school's public holiday is named in French and Spanish too", () => {
+  const feed = [
+    feedRow({
+      id: "f",
+      names: {
+        de: "Auffahrt",
+        en: "Ascension Day",
+        fr: "Ascension",
+        es: "Ascensión",
+      },
+    }),
+  ];
+  assertEquals(
+    publicHolidayRows([school(SCHOOL, "CH")], feed, [], "fr-FR")[0].name,
+    "Ascension",
+  );
+  assertEquals(
+    publicHolidayRows([school(SCHOOL, "CH")], feed, [], "es-ES")[0].name,
+    "Ascensión",
+  );
+  // A regional tag of an unsupported language falls back to German.
+  assertEquals(
+    publicHolidayRows([school(SCHOOL, "CH")], feed, [], "it-IT")[0].name,
+    "Auffahrt",
+  );
+});
+
+Deno.test("a public holiday in French or Spanish frees the school day with that name", () => {
+  const feed = feedRow({
+    id: "f-auffahrt",
+    names: {
+      de: "Auffahrt",
+      en: "Ascension Day",
+      fr: "Ascension",
+      es: "Ascensión",
+    },
+    starts_on: TUE,
+    ends_on: TUE,
+  });
+  for (
+    const [locale, name] of [["fr-FR", "Ascension"], [
+      "es-ES",
+      "Ascensión",
+    ]] as const
+  ) {
+    const d = data({
+      holidays: publicHolidayRows(
+        [school(SCHOOL, "CH-ZH")],
+        [feed],
+        [],
+        locale,
+      ),
+    });
+    const tue = dayOf(d, TUE);
+    assertEquals(tue.free, "holiday");
+    assertEquals(tue.holiday_name, name);
+    assertEquals(tue.lessons, []);
+  }
 });
 
 Deno.test("a holiday the family already has for this feed id is not duplicated", () => {
@@ -702,7 +775,12 @@ Deno.test("a holiday the family already has for this feed id is not duplicated",
     feed_id: "f",
   };
   assertEquals(
-    publicHolidayRows([school(SCHOOL, "CH")], [feedRow({ id: "f" })], [family], "de-DE"),
+    publicHolidayRows(
+      [school(SCHOOL, "CH")],
+      [feedRow({ id: "f" })],
+      [family],
+      "de-DE",
+    ),
     [],
   );
 });

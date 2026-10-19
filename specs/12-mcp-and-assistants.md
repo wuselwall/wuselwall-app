@@ -57,9 +57,10 @@ substituted.
 *Added 2026-10-16.* `POST|GET <server>/functions/v1/shortcuts/<action>`, the key in
 `Authorization: Bearer wws_…` (never in the URL). Parameters come from the query or a JSON body.
 The answer is `text/plain` — one or two sentences for Show Result and Speak Text — or, with
-`Accept: application/json` or `format=json`, `{ "text": …, …facts }`. The language is `lang`,
-else Accept-Language, else the household's locale; the wording lives in
-`_shared/shortcuts_de.ts` and `shortcuts_en.ts`.
+`Accept: application/json` or `format=json`, `{ "text": …, …facts }`. The language is `lang`
+(`de`, `en`, `fr` or `es`), else Accept-Language, else the household's locale, with German
+as unsupported-language fallback; the catalogues live in
+`_shared/shortcuts_{de,en,fr,es}.ts`.
 
 | Action | Method | Parameters | Reads or writes |
 |---|---|---|---|

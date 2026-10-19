@@ -21,12 +21,18 @@ specification; `app/`, `supabase/` and `infra/` hold the implementation.
 | Started | 2026-10-11 |
 | Decision set | Locked for v1 (see `specs/adr/`) |
 | Origin | Specification carried over from BretApp; code starts from scratch |
-| Latest change | 2026-10-14 — every family's own server: the store app chooses its server, a server release with an installer, hosted Supabase without tools ([ADR-018](specs/adr/ADR-018-self-hosted-only.md#amendment-2026-10-14-built), [the guide](docs/server/index.md)). Before: 2026-10-13 — the domain `wuselwall.app` for the website ([ADR-017](specs/adr/ADR-017-wuselwall-app-domain.md)). Before: 2026-10-11 — household settings with curated defaults ([21](specs/21-household-settings.md)); the official compose stack ([ADR-013](specs/adr/ADR-013-self-hosted-compose-stack.md#amendment-2026-10-11-the-official-compose-stack)) |
+| Latest change | 2026-10-19 — German, English, French and Spanish throughout the application and server responses; installation-selected, single-language email ([NFR-14](specs/02-requirements.md), [operator setup](docs/server/extras.md#e-mail)). Validation and publication remain separate gates. Before: 2026-10-14 — every family's own server: the store app chooses its server, a server release with an installer, hosted Supabase without tools ([ADR-018](specs/adr/ADR-018-self-hosted-only.md#amendment-2026-10-14-built), [the guide](docs/server/index.md)). Before: 2026-10-13 — the domain `wuselwall.app` for the website ([ADR-017](specs/adr/ADR-017-wuselwall-app-domain.md)). Before: 2026-10-11 — household settings with curated defaults ([21](specs/21-household-settings.md)); the official compose stack ([ADR-013](specs/adr/ADR-013-self-hosted-compose-stack.md#amendment-2026-10-11-the-official-compose-stack)) |
+
+The app follows the device language (`de`, `en`, `fr`, `es`, including regional variants),
+with German as the unsupported-language fallback. Server email instead uses one language
+chosen at installation, independent of device or recipient. Family guides and marketing/legal
+pages remain German/English; FR/ES app legal links use the English pages. A separate DE/EN
+website copy/public-progress update must be coordinated in `wuselwall-website`.
 
 ## Planned layout
 
 ```
-app/               Flutter — iOS, Android and web; three UI registers, German l10n
+app/               Flutter — iOS, Android and web; three UI registers, de/en/fr/es l10n
 supabase/          migrations (tables in `app`, views and functions in `api`, RLS),
                    Edge Functions, pgTAP tests, seed
 docs/              VitePress family documentation (de/en), prepared for GitHub Pages

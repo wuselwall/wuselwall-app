@@ -68,6 +68,8 @@
 		E8AED684B494047C6CF63D35 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		5C1A0E2F2E9B4A0100A1B204 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		5C1A0E2F2E9B4A0100A1B203 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		5C1A0E2F2E9B4A0100A1B205 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		5C1A0E2F2E9B4A0100A1B206 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -240,6 +242,8 @@
 			knownRegions = (
 				de,
 				en,
+				fr,
+				es,
 				Base,
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
@@ -420,6 +424,8 @@
 			children = (
 				5C1A0E2F2E9B4A0100A1B204 /* de */,
 				5C1A0E2F2E9B4A0100A1B203 /* en */,
+				5C1A0E2F2E9B4A0100A1B205 /* fr */,
+				5C1A0E2F2E9B4A0100A1B206 /* es */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
