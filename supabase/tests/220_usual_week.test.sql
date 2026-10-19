@@ -1,5 +1,5 @@
 begin;
-select plan(42);
+select plan(44);
 
 -- Start from an empty system, whatever the database already holds (all rolled back).
 delete from app.household;
@@ -139,8 +139,6 @@ select is(pg_temp.set_week(null, '[{"weekday": 1, "state": "working", "starts": 
 select is(pg_temp.set_week(null, '[{"weekday": 1, "state": "working"},
                                    {"weekday": 1, "state": "off", "starts": "11:00", "ends": "14:00"}]'),
   'usual_week_invalid', 'a whole-day place is the day''s only one');
-select is(pg_temp.set_week(null, '[{"week": 1, "weekday": 1, "state": "working"}]'),
-  'usual_week_invalid', 'week B needs an anchor');
 select is(pg_temp.set_week('2026-10-20', '[]'), 'usual_week_invalid', 'the anchor is a Monday');
 select is(pg_temp.set_week(null, '[{"weekday": 1, "state": "working", "starts": "12:00", "ends": "08:00"}]'),
   'usual_week_invalid', 'a slot ends after it starts');
@@ -167,6 +165,14 @@ select is((select jsonb_agg(s ->> 'state' order by (s ->> 'week')::int) from jso
   '["working", "off"]'::jsonb, 'each week has its own place');
 select is((select default_presence_state from api.members where id = pg_temp.id('paul')), 'working',
   'the single baseline is taken from week A');
+
+select is(pg_temp.set_week(null, '[{"week": 0, "weekday": 1, "state": "working"},
+                                   {"week": 1, "weekday": 1, "state": "off"}]'),
+  null, 'alternating is switched off with week B still in the week');
+select is((select anchor from api.usual_weeks where profile_id = pg_temp.id('paul')), null::date,
+  'the anchor is gone');
+select is((select jsonb_agg((s ->> 'week')::int order by (s ->> 'week')::int) from jsonb_array_elements(pg_temp.week('paul')) s),
+  '[0, 1]'::jsonb, 'week B is kept for when alternating is switched on again');
 
 select is(pg_temp.set_week(null, '[]'), null, 'an empty week clears it');
 select is(pg_temp.week('paul'), '[]'::jsonb, 'nothing is left');
