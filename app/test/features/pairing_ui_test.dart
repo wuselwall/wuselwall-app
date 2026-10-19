@@ -175,7 +175,11 @@ void main() {
         final pairing = FakePairingRepository();
         final container = await pumpDevicePair(t, pairing: pairing);
 
-        await t.enterText(find.byType(TextField), 'k7qm-3xrp');
+        await t.enterText(find.byType(TextField), 'k7qm3xrp');
+        expect(
+          t.widget<TextField>(find.byType(TextField)).controller!.text,
+          'K7QM-3XRP',
+        );
         await t.tap(find.text('Weiter'));
         await t.pumpAndSettle();
 

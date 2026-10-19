@@ -57,7 +57,7 @@ So kommen das **Wanddisplay** in der Küche, ein **Kinder-Tablet** oder ein **Ta
 
 1. Auf dem neuen Gerät tippst du auf **Familien-Tablet oder Wanddisplay verbinden**. Es zeigt einen **QR-Code** und einen Code.
 2. Auf deinem Handy öffnest du **Einstellungen → Geräte → Gerät verbinden**. Du kannst den Code auch aus der Karte **Erste Schritte** auf dem Tab Heute starten.
-3. Scanne den QR-Code oder tippe den Code ab und tippe auf **Weiter**.
+3. Scanne den QR-Code oder tippe den Code ab und tippe auf **Weiter**. Beim Tippen erscheinen die Buchstaben automatisch groß und der Bindestrich wird eingefügt. Du kannst den Code klein und ohne Bindestrich eingeben.
 4. Wähle die Art des Geräts: **Wanddisplay**, **Kinder-Tablet**, **Tablet für alle** oder **Handy eines Kindes**. Bei einem Kinderhandy wählst du das Kind. Gib dem Gerät einen Namen und tippe auf **Verbinden**.
 5. Beim allerersten Mal legst du die **Eltern-PIN** fest. Sie bestätigt Änderungen auf geteilten Geräten (siehe [Wer bist du?](/guide/who-are-you)).
 
