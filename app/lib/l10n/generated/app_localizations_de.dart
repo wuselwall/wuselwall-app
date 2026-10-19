@@ -2017,14 +2017,15 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get baselineTitle => 'Grundzustand';
+  String get baselineTitle => 'Übliche Woche';
 
   @override
-  String get baselineSettingsSubtitle => 'Wo alle normalerweise sind';
+  String get baselineSettingsSubtitle =>
+      'Wo alle an welchem Tag normalerweise sind';
 
   @override
   String get baselineHelp =>
-      'Wo du normalerweise bist. Nur Abweichungen trägst du ein, ein normaler Tag bleibt leer.';
+      'Wo du an jedem Wochentag normalerweise bist. Nur Abweichungen trägst du ein, eine normale Woche bleibt leer.';
 
   @override
   String get baselineNone => 'Nichts eingetragen';
@@ -2037,6 +2038,20 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get baselineSaved => 'Gespeichert.';
+
+  @override
+  String get usualCopyMonday => 'Dienstag bis Freitag wie Montag';
+
+  @override
+  String usualDayTitle(String name, String weekday) {
+    return '$name am $weekday';
+  }
+
+  @override
+  String get usualDayApply => 'Übernehmen';
+
+  @override
+  String get errUsualWeekInvalid => 'Diese übliche Woche ist nicht gültig.';
 
   @override
   String get busyTitle => 'Termine bis';

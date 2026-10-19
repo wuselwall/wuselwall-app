@@ -25,7 +25,9 @@ own tables, optionally in the outbound feed), local reminders (Q47), the QR scan
 `camera` and `zxing2` (Q49), Siri via Apple Shortcuts (M2, specs/12 Part 1: per-person keys
 in `app.shortcut_token`, the `shortcuts` function), the MCP server with `family:read` (M2,
 Part 2: the `mcp` function, read-only `wwa_` assistant keys as the Q15 interim, no OAuth yet),
-and the evening packing reminder (FR-7.12, `notify.packing_reminder`).
+the evening packing reminder (FR-7.12, `notify.packing_reminder`), and the usual week
+(issue #81, specs/15 "The baseline": a usual place per weekday, time slots and A/B weeks
+in the data model; the editor has the weekdays).
 `scripts/local-pgtap` runs every migration and pgTAP suite on a throwaway local Postgres (no
 Docker). The server runs four scheduled jobs: `tasks-nightly`,
 `holidays-sync` (weekly), `calendar-import` (hourly) and `household-purge` (daily). Next: the

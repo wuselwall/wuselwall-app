@@ -1,8 +1,10 @@
+import 'package:flutter/material.dart' show TimeOfDay;
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/demo/demo_english.dart';
 import 'package:wuselwall/features/board/data/board_repository.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
+import 'package:wuselwall/features/calendar/domain/usual_week.dart';
 
 /// The kiosk week board for the invented family in [DemoData], used by the demo build
 /// (`lib/main_demo.dart`). It builds the JSON that `api.board_week` returns and runs it
@@ -180,6 +182,56 @@ String _iso(DateTime d) =>
 /// schools their INSET days).
 const _holidayDay = 3;
 
+/// The parents' usual weeks: the mother at home on weekdays, the father working from
+/// home, on Wednesday mornings in the office. The weekend is free.
+List<UsualWeek> demoUsualWeeks() {
+  UsualSlot slot(
+    int weekday,
+    PresenceState state,
+    String label, [
+    TimeOfDay? starts,
+    TimeOfDay? ends,
+  ]) => UsualSlot(
+    weekday: weekday,
+    place: UsualPlace(
+      state: state,
+      label: demoText(label),
+      starts: starts,
+      ends: ends,
+    ),
+  );
+  return [
+    UsualWeek(
+      profileId: DemoData.mama,
+      slots: [
+        for (var d = DateTime.monday; d <= DateTime.friday; d++)
+          slot(d, PresenceState.off, 'zu Hause'),
+      ],
+    ),
+    UsualWeek(
+      profileId: DemoData.papa,
+      slots: [
+        for (final d in [1, 2, 4, 5])
+          slot(d, PresenceState.homeOffice, 'Homeoffice'),
+        slot(
+          3,
+          PresenceState.working,
+          'Büro',
+          const TimeOfDay(hour: 8, minute: 0),
+          const TimeOfDay(hour: 12, minute: 0),
+        ),
+        slot(
+          3,
+          PresenceState.homeOffice,
+          'Homeoffice',
+          const TimeOfDay(hour: 13, minute: 0),
+          const TimeOfDay(hour: 17, minute: 0),
+        ),
+      ],
+    ),
+  ];
+}
+
 String get _freeDay => DemoData.english ? 'INSET day' : 'Beweglicher Ferientag';
 
 Map<String, dynamic> _json(DateTime now) {
@@ -242,6 +294,16 @@ Map<String, dynamic> _json(DateTime now) {
               ? {'name': _freeDay, 'source': 'household'}
               : null,
           'events': _events(i),
+          // As the server does it: nothing usual on the free day.
+          'usual': [
+            if (i != _holidayDay)
+              for (final w in demoUsualWeeks())
+                for (final place in w.day(i + 1))
+                  {
+                    ...UsualSlot(weekday: i + 1, place: place).toJson(),
+                    'member_id': w.profileId,
+                  },
+          ],
           'busy_until': [
             if (_papaBusy[i] != null)
               {'member_id': DemoData.papa, 'until': _papaBusy[i]},

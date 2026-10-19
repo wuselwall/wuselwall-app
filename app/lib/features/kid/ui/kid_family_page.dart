@@ -7,6 +7,7 @@ import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
 import 'package:wuselwall/features/kid/application/kid_logic.dart';
+import 'package:wuselwall/features/kid/application/kid_providers.dart';
 import 'package:wuselwall/features/kid/ui/kid_widgets.dart';
 
 /// "Familie": who is doing what today. One row per member, their presence and how many
@@ -45,7 +46,7 @@ class KidFamilyPage extends ConsumerWidget {
   }
 }
 
-class _FamilyRow extends StatelessWidget {
+class _FamilyRow extends ConsumerWidget {
   const _FamilyRow({
     required this.board,
     required this.member,
@@ -57,10 +58,15 @@ class _FamilyRow extends StatelessWidget {
   final int? index;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
-    final presence = kidPresenceOf(board, member, index);
+    final presence = kidPresenceOf(
+      board,
+      member,
+      index,
+      nowMinutes: ref.watch(kidMinutesProvider),
+    );
     final open = board.openTasks[member.id] ?? 0;
     return KidCard(
       child: Row(
