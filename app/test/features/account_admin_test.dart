@@ -83,6 +83,22 @@ DeviceInfo testDevice({DeviceClass deviceClass = DeviceClass.personal}) =>
 
 void main() {
   group('deleting the account (Konto)', () {
+    testWidgets('the tile describes deletion without an Apple claim', (
+      t,
+    ) async {
+      final s = await pumpSettings(t);
+      await t.ensureVisible(deleteTile);
+      await t.pumpAndSettle();
+      expect(
+        find.text(
+          'Dein Konto und seine Anmeldemethoden werden gelöscht, und du wirst überall abgemeldet. Dein Profil bleibt mit allem, was du getan hast, in der Familie.',
+        ),
+        findsOneWidget,
+      );
+      expect(find.textContaining('Apple'), findsNothing);
+      await unmountApp(t, s.container);
+    });
+
     testWidgets(
       'the last guardian with an account cannot delete it, and is told why',
       (t) async {

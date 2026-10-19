@@ -14,6 +14,18 @@ void main() {
     expect(keys('l10n/app_de.arb'), keys('l10n/app_en.arb'));
   });
 
+  test('the account-deletion explanation makes no Apple revocation claim', () {
+    // Social sign-in was removed; the account is deleted with its sessions and no
+    // Apple token is revoked (supabase/functions/account-delete). Keep the copy honest.
+    for (final file in ['l10n/app_en.arb', 'l10n/app_de.arb']) {
+      final message =
+          (jsonDecode(File(file).readAsStringSync())
+                  as Map<String, dynamic>)['accountDeleteExplain']
+              as String;
+      expect(message, isNot(contains('Apple')), reason: file);
+    }
+  });
+
   test('no ARB message contains an emoji', () {
     // The web app would fetch an emoji font from Google (NFR-9), and emoji look
     // different on every platform: use the pictures in assets/emoji instead.

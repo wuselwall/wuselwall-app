@@ -3972,7 +3972,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get accountDeleteExplain =>
-      'Dein Konto und seine Anmeldemethoden werden gelöscht, und du wirst überall abgemeldet. Dein Profil bleibt mit allem, was du getan hast, in der Familie. Der Apple-Zugriff wird widerrufen.';
+      'Dein Konto und seine Anmeldemethoden werden gelöscht, und du wirst überall abgemeldet. Dein Profil bleibt mit allem, was du getan hast, in der Familie.';
 
   @override
   String get accountDeleteBlocked =>

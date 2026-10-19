@@ -2188,7 +2188,7 @@
   "inviteWithdrawn": "Invitation withdrawn.",
   "inviteScanTitle": "Scan invitation",
   "accountDeleteTile": "Delete account",
-  "accountDeleteExplain": "Your account and its sign-in methods are deleted, and you are signed out everywhere. Your profile stays in the family with its history. Apple access is revoked.",
+  "accountDeleteExplain": "Your account and its sign-in methods are deleted, and you are signed out everywhere. Your profile stays in the family with its history.",
   "accountDeleteBlocked": "You are the last guardian with an account in this family. Invite a second adult first, or delete the family.",
   "accountDeleteDialogTitle": "Delete account?",
   "accountDeleteDialogBody": "This cannot be undone. Your sign-in is removed, and your profile stays in the family.",
