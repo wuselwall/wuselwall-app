@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart' as http;
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:wuselwall/core/error/error_mapper.dart';
 import 'package:wuselwall/core/error/failure.dart';
@@ -33,6 +34,25 @@ void main() {
       );
       expect(failure.code, 'task_done');
     });
+
+    test(
+      'Auth fetch/CORS failures are connectivity errors, not expired sessions',
+      () {
+        expect(
+          mapError(AuthRetryableFetchException(message: 'Failed to fetch')),
+          isA<NetworkFailure>(),
+        );
+        expect(
+          mapError(
+            AuthUnknownException(
+              message: 'Failed to fetch',
+              originalError: http.ClientException('XMLHttpRequest error'),
+            ),
+          ),
+          isA<NetworkFailure>(),
+        );
+      },
+    );
 
     test('auth exceptions become AuthFailure', () {
       expect(mapError(const AuthException('nope')), isA<AuthFailure>());

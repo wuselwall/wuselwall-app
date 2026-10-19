@@ -45,7 +45,8 @@ import 'package:wuselwall/features/setup/ui/server_choice_page.dart';
 ///   session but no server, and keeps that server ([legacyServer]).
 /// - An invitation or pairing link names its server ([links]); with no server chosen the app
 ///   uses that one and skips the question.
-/// - The web app first looks at its own origin: a server serves its own web app.
+/// - The web app refreshes its own origin before using a cached server/key; it uses
+///   the cache only when discovery is unreachable, so an offline start still works.
 /// - Otherwise it asks ([ServerChoicePage]), or shows the demo household.
 class Bootstrap extends StatefulWidget {
   Bootstrap({
@@ -264,6 +265,45 @@ class _BootstrapState extends State<Bootstrap> {
     final build = widget.build;
     final stored = build.hasFixedServer ? null : await widget.store.read();
     final setup = widget.initialSetup;
+    final web = widget.webOrigin;
+    if (!build.hasFixedServer && web != null) {
+      // The installation, not a previous browser choice, defines this web app's
+      // backend. Refresh before constructing clients: a background recheck leaves
+      // the running app using a retired address/key until another reload.
+      final discovered = await widget.discovery.discover(web);
+      switch (discovered) {
+        case Ok(value: final server):
+          final problem = await _fit(server);
+          if (problem != null) {
+            _show(_Incompatible(problem));
+            return;
+          }
+          if (stored != null && stored.supabaseUrl != server.supabaseUrl) {
+            // Never restore another backend's session into this client. Keep
+            // offline data untouched; the member signs in on this server again.
+            await SecureSessionStorage().removePersistedSession();
+            await widget.setupStore.clear();
+          }
+          if (setup != null && setup.server == server.supabaseUrl) {
+            await widget.setupStore.save(setup);
+          }
+          await widget.store.write(server);
+          await _run(AppConfig.forServer(build, server));
+          return;
+        case Err(failure: NetworkFailure()) when stored != null:
+          break; // Offline: the last working configuration remains usable.
+        case Err(:final failure):
+          _show(
+            _Choosing(
+              prefill: displayServerAddress(web),
+              problem: failure is NetworkFailure
+                  ? ServerProblem.unreachable
+                  : ServerProblem.notWuselwall,
+            ),
+          );
+          return;
+      }
+    }
     if (setup != null) {
       if (build.hasFixedServer) {
         if (Uri.parse(build.supabaseUrl) == setup.server) {
@@ -290,8 +330,7 @@ class _BootstrapState extends State<Bootstrap> {
       _show(_Choosing(prefill: displayServerAddress(legacy), problem: problem));
       return;
     }
-    final web = widget.webOrigin;
-    if (web != null && await _connect(web) == null) return;
+
     // A link that opened the app names its server: wait a moment for it rather than ask.
     if (widget.links != null) {
       await _firstLink.future.timeout(

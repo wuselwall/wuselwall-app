@@ -15,6 +15,7 @@ import 'package:wuselwall/core/server/server_info.dart';
 import 'package:wuselwall/core/server/server_store.dart';
 import 'package:wuselwall/core/server/setup_link.dart';
 import 'package:wuselwall/core/server/setup_store.dart';
+import 'package:wuselwall/core/supabase/secure_session_storage.dart';
 
 const _store = AppConfig(
   environment: 'store',
@@ -112,6 +113,7 @@ void main() {
     bool hasSession = false,
     Stream<String>? links,
     SetupLink? initialSetup,
+    Uri? webOrigin,
   }) async {
     final discovery = _Discovery(answers);
     // German, the default language (specs/09).
@@ -121,6 +123,7 @@ void main() {
       Bootstrap(
         build: build,
         initialSetup: initialSetup,
+        webOrigin: webOrigin,
         store: store,
         discovery: discovery,
         appVersion: () async => appVersion,
@@ -135,6 +138,114 @@ void main() {
     await t.pumpAndSettle();
     return discovery;
   }
+
+  testWidgets(
+    'web discovery replaces a retired cached backend before connecting',
+    (t) async {
+      store.kept = _server(host: 'retired.example.org');
+      final discovery = await pump(
+        t,
+        webOrigin: Uri.parse('https://web.example.org'),
+        answers: {'web.example.org': Ok(_server())},
+      );
+
+      expect(connected.single.supabaseUrl, 'https://api.example.org');
+      expect(
+        connected.single.supabasePublishableKey,
+        'sb_publishable_api.example.org',
+      );
+      expect(discovery.asked, [Uri.parse('https://web.example.org')]);
+      expect(store.kept?.supabaseUrl.host, 'api.example.org');
+    },
+  );
+
+  testWidgets('web refreshes a rotated publishable key on the first reload', (
+    t,
+  ) async {
+    store.kept = ServerInfo(
+      supabaseUrl: Uri.parse('https://api.example.org'),
+      publishableKey: 'retired-public-key',
+      apiVersion: 1,
+      minAppVersion: '1.0.0',
+    );
+    final sessions = SecureSessionStorage();
+    await sessions.persistSession('same-server-session');
+    await pump(
+      t,
+      webOrigin: Uri.parse('https://web.example.org'),
+      answers: {'web.example.org': Ok(_server())},
+    );
+    expect(
+      connected.single.supabasePublishableKey,
+      'sb_publishable_api.example.org',
+    );
+    expect(await sessions.accessToken(), 'same-server-session');
+  });
+
+  testWidgets(
+    'web backend migration cannot forward the retired session or setup',
+    (t) async {
+      store.kept = _server(host: 'retired.example.org');
+      final retired = store.kept!.supabaseUrl;
+      final sessions = SecureSessionStorage();
+      await sessions.persistSession('retired-server-session');
+      final setup = SetupStore();
+      await setup.save(
+        SetupLink(store.kept!.supabaseUrl, '0123456789abcdef01234567'),
+      );
+      await pump(
+        t,
+        webOrigin: Uri.parse('https://web.example.org'),
+        answers: {'web.example.org': Ok(_server())},
+      );
+      expect(await sessions.hasAccessToken(), isFalse);
+      expect(await setup.read(retired), isNull);
+      expect(find.text('setup false'), findsOneWidget);
+    },
+  );
+
+  testWidgets('web keeps the cached backend and session when offline', (
+    t,
+  ) async {
+    store.kept = _server();
+    final sessions = SecureSessionStorage();
+    await sessions.persistSession('offline-session');
+    await pump(t, webOrigin: Uri.parse('https://web.example.org'));
+    expect(connected.single.supabaseUrl, 'https://api.example.org');
+    expect(await sessions.accessToken(), 'offline-session');
+  });
+
+  testWidgets('web does not use stale cache for an incompatible installation', (
+    t,
+  ) async {
+    store.kept = _server();
+    await pump(
+      t,
+      webOrigin: Uri.parse('https://web.example.org'),
+      answers: {'web.example.org': Ok(_server(min: '99.0.0'))},
+    );
+    expect(connected, isEmpty);
+    expect(find.textContaining('braucht eine neuere Version'), findsOneWidget);
+  });
+
+  testWidgets(
+    'web setup capability survives refreshing the old cached backend',
+    (t) async {
+      store.kept = _server(host: 'retired.example.org');
+      final setup = SetupLink(
+        _server().supabaseUrl,
+        '0123456789abcdef01234567',
+      );
+      await pump(
+        t,
+        webOrigin: Uri.parse('https://web.example.org'),
+        initialSetup: setup,
+        answers: {'web.example.org': Ok(_server())},
+      );
+      expect(find.text('setup true'), findsOneWidget);
+      expect(await SetupStore().read(setup.server), setup.token);
+    },
+  );
 
   testWidgets('a store build asks which server, then runs on it', (t) async {
     await pump(t, answers: {'api.example.org': Ok(_server())});

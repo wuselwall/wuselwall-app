@@ -381,6 +381,12 @@ build from a checkout; it never reads `app/env/dev.json` or embeds a developer's
 The discovery document must be reachable through the web host's proxy, even when Auth
 lives at another origin. Developer-only fixed-server builds remain available with
 `flutter run --dart-define-from-file=env/dev.json`, not through the deployment helper.
+The browser refreshes its own origin's discovery document before constructing clients,
+including with a stored backend/key. Offline it may use that saved configuration; an
+incompatible or invalid online document does not fall back to stale settings. When the
+configured backend address changes, discard the old backend's saved authentication and
+setup capability before connecting. A new valid setup link for this installation is
+still retained. Native store apps keep their explicitly selected server behaviour.
 
 ### The Android app
 
