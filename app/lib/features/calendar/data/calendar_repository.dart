@@ -6,6 +6,7 @@ import 'package:wuselwall/core/supabase/api_client.dart';
 import 'package:wuselwall/core/supabase/supabase_providers.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
+import 'package:wuselwall/features/calendar/domain/usual_week.dart';
 
 /// Reads occurrences through the `occurrences` Edge Function and the `api.events`
 /// view; every write is one `api` function, naming the acting profile (the server
@@ -108,7 +109,27 @@ class CalendarRepository {
     parse: (_) {},
   );
 
-  /// The member's usual place ("Homeoffice", "zu Hause"); both null clears it.
+  /// Every usual week the caller may see, one per member (`api.usual_weeks`).
+  Future<Result<List<UsualWeek>>> usualWeeks() =>
+      _api.select('usual_weeks', parse: UsualWeek.fromJson);
+
+  /// Replaces [week] as a whole: its anchor and every slot.
+  Future<Result<void>> setUsualWeek({
+    required String? actor,
+    required UsualWeek week,
+  }) => _api.rpc(
+    'member_usual_week_set',
+    params: {
+      'p_actor': actor,
+      'p_profile_id': week.profileId,
+      'p_anchor': week.anchor == null ? null : isoDate(week.anchor!),
+      'p_slots': [for (final s in week.slots) s.toJson()],
+    },
+    parse: (_) {},
+  );
+
+  /// The previous server's single usual place ("Homeoffice", "zu Hause") for every
+  /// day; both null clears it. Only for servers without the usual week.
   Future<Result<void>> setBaseline({
     required String? actor,
     required String profileId,

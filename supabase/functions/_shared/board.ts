@@ -9,6 +9,7 @@ import {
   regionCovers,
 } from "./openholidays.ts";
 import type { HolidayRow, SchoolDayJson, TimetableJson } from "./school.ts";
+import { usualDay, type UsualJson, type UsualWeekRow } from "./usual_week.ts";
 
 /** A row of `api.busy_until` (profile_id, on_date, until). */
 export type BusyRow = { profile_id: string; on_date: string; until: string };
@@ -53,6 +54,8 @@ export type BoardDayJson = {
   school?: SchoolDayJson[];
   /** null on an ordinary day; absent from servers before public holidays. */
   holiday?: DayHolidayJson | null;
+  /** Each member's usual places; absent from servers before the usual week (issue #81). */
+  usual?: UsualJson[];
   [key: string]: unknown;
 };
 
@@ -125,7 +128,24 @@ export function fillHolidays(
   };
 }
 
-function holidayOn(
+/**
+ * Returns a new board whose every day has `usual` filled from the members' usual weeks
+ * (usual_week.ts), in the board's member order. Call it after fillHolidays: a public
+ * holiday has no usual place. `base` is not mutated.
+ */
+export function fillUsual(base: BoardJson, weeks: UsualWeekRow[]): BoardJson {
+  const memberIds = ((base.members ?? []) as { id: string }[]).map((m) => m.id);
+  return {
+    ...base,
+    days: base.days.map((day) => ({
+      ...day,
+      usual: usualDay(weeks, memberIds, day.date, day.holiday != null),
+    })),
+  };
+}
+
+/** The public holiday of a date (see fillHolidays), also for callers outside the board. */
+export function holidayOn(
   date: string,
   holidays: HolidayRow[],
   feed: HolidayFeedRow[],

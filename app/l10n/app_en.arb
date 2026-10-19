@@ -1098,13 +1098,27 @@
       }
     }
   },
-  "baselineTitle": "Usual place",
-  "baselineSettingsSubtitle": "Where everyone usually is",
-  "baselineHelp": "Where you usually are. Only deviations get entered, so a normal day stays empty.",
+  "baselineTitle": "Usual week",
+  "baselineSettingsSubtitle": "Where everyone usually is, day by day",
+  "baselineHelp": "Where you usually are on each day of the week. Only deviations get entered, so a normal week stays empty.",
   "baselineNone": "Nothing set",
   "baselineLabelField": "Own label (optional)",
   "baselineLabelHint": "e.g. at home",
   "baselineSaved": "Saved.",
+  "usualCopyMonday": "Tuesday to Friday like Monday",
+  "usualDayTitle": "{name} on {weekday}",
+  "@usualDayTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "weekday": {
+        "type": "String"
+      }
+    }
+  },
+  "usualDayApply": "Apply",
+  "errUsualWeekInvalid": "This usual week is not valid.",
   "busyTitle": "Meetings until",
   "busyPickTime": "Choose a time",
   "busyThisDay": "This day only",

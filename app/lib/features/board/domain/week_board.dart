@@ -87,6 +87,41 @@ class WeekBoard {
   /// ISO 8601 week number of this week.
   int get isoWeek => isoWeekOf(weekStart);
 
+  /// The usual places of [memberId] on day [index] (0–6), in time order: the day's
+  /// own list from the usual week, or the single [BoardMember.baseline] on every day
+  /// from a server that does not send one yet. Empty on a public holiday.
+  List<UsualPlace> usualOn(String memberId, int index) {
+    final usual = days[index].usual;
+    if (usual != null) return usual[memberId] ?? const [];
+    final baseline = member(memberId)?.baseline;
+    return baseline == null ? const [] : [baseline];
+  }
+
+  /// The one usual place the wall draws for [memberId] on day [index], and how many
+  /// others the day has (specs/09, degradation rule 3). Today it is the slot covering
+  /// [nowMinutes] (minutes since midnight), else the next one, else the last; other
+  /// days show their first. Null when the day has none.
+  ({UsualPlace place, int more})? usualShownOn(
+    String memberId,
+    int index, {
+    int? nowMinutes,
+  }) {
+    final places = usualOn(memberId, index);
+    if (places.isEmpty) return null;
+    var shown = places.first;
+    if (index == todayIndex && nowMinutes != null && places.length > 1) {
+      shown =
+          places.where((p) => p.coversMinute(nowMinutes)).firstOrNull ??
+          places
+              .where(
+                (p) => p.starts != null && minutesOf(p.starts!) > nowMinutes,
+              )
+              .firstOrNull ??
+          places.last;
+    }
+    return (place: shown, more: places.length - 1);
+  }
+
   /// Bands of [memberId] that touch day [index] (0–6), longest first.
   List<PresenceBand> presenceOn(String memberId, int index) {
     final day = days[index].date;
@@ -183,7 +218,7 @@ class BoardMember {
     kind: MemberKind.parse(json['kind'] as String?),
     baseline: json['baseline'] == null
         ? null
-        : Baseline.fromJson(json['baseline'] as Map<String, dynamic>),
+        : UsualPlace.fromJson(json['baseline'] as Map<String, dynamic>),
   );
 
   final String id;
@@ -193,9 +228,9 @@ class BoardMember {
   final Color color;
   final MemberKind kind;
 
-  /// Where this member normally is (`profile.default_presence_*`); drawn as a quiet
-  /// chip on days without a deviation. Null: nothing is drawn.
-  final Baseline? baseline;
+  /// The week's most common usual place (`profile.default_presence_*`): the whole
+  /// usual week of a server that does not send [BoardDay.usual] yet. Null: none.
+  final UsualPlace? baseline;
 
   bool get isChild => kind == MemberKind.child;
 
@@ -203,18 +238,38 @@ class BoardMember {
       displayName.isEmpty ? '?' : displayName.substring(0, 1).toUpperCase();
 }
 
-class Baseline {
-  const Baseline({required this.state, this.label});
+/// A usual place (specs/15 "The baseline"): for the whole day, or for one time slot.
+class UsualPlace {
+  const UsualPlace({required this.state, this.label, this.starts, this.ends});
 
-  factory Baseline.fromJson(Map<String, dynamic> json) => Baseline(
+  factory UsualPlace.fromJson(Map<String, dynamic> json) => UsualPlace(
     state: PresenceState.parse(json['state'] as String),
     label: json['label'] as String?,
+    starts: _time(json['starts']),
+    ends: _time(json['ends']),
   );
 
   final PresenceState state;
 
   /// The household's own words ("zu Hause"); null falls back to the state's name.
   final String? label;
+
+  /// The slot's times; both null for the whole day.
+  final TimeOfDay? starts;
+  final TimeOfDay? ends;
+
+  bool get isWholeDay => starts == null;
+
+  /// Whether the place applies at [minute] (minutes since midnight).
+  bool coversMinute(int minute) =>
+      isWholeDay || (minutesOf(starts!) <= minute && minute < minutesOf(ends!));
+
+  /// Same place and words, for drawing consecutive days as one track.
+  bool sameAs(UsualPlace other) =>
+      state == other.state &&
+      label == other.label &&
+      starts == other.starts &&
+      ends == other.ends;
 }
 
 /// One deviation from a member's baseline: a presence event's occurrence, clipped to
@@ -331,6 +386,7 @@ class BoardDay {
     required this.school,
     required this.meal,
     this.holiday,
+    this.usual,
   });
 
   factory BoardDay.fromJson(Map<String, dynamic> json) => BoardDay(
@@ -349,6 +405,7 @@ class BoardDay {
     holiday: json['holiday'] == null
         ? null
         : BoardHoliday.fromJson(json['holiday'] as Map<String, dynamic>),
+    usual: json['usual'] == null ? null : _usualByMember(json['usual']),
   );
 
   final DateTime date;
@@ -369,6 +426,10 @@ class BoardDay {
   /// A public holiday of the day (the household's region or its own row); null on an
   /// ordinary day, and on servers that do not send holidays yet.
   final BoardHoliday? holiday;
+
+  /// Each member's usual places of the day, in time order; members without any are
+  /// absent. Null from servers before the usual week: see [WeekBoard.usualOn].
+  final Map<String, List<UsualPlace>>? usual;
 
   List<BoardEvent> get keyEvents => events.where((e) => e.isKey).toList();
 }
@@ -633,6 +694,14 @@ int isoWeekOf(DateTime date) {
 }
 
 TimeOfDay? _time(Object? v) => v == null ? null : parseTime(v as String);
+
+Map<String, List<UsualPlace>> _usualByMember(Object? v) {
+  final out = <String, List<UsualPlace>>{};
+  for (final row in _maps(v)) {
+    (out[row['member_id'] as String] ??= []).add(UsualPlace.fromJson(row));
+  }
+  return out;
+}
 
 Iterable<Map<String, dynamic>> _maps(Object? v) =>
     ((v as List?) ?? const []).cast<Map<String, dynamic>>();

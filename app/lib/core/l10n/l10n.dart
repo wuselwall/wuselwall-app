@@ -39,6 +39,7 @@ extension FailureL10n on Failure {
       'setting_unknown' => l10n.errSettingUnknown,
       'setting_target' => l10n.errSettingTarget,
       'event_invalid' => l10n.errEventInvalid,
+      'usual_week_invalid' => l10n.errUsualWeekInvalid,
       'rrule_invalid' => l10n.errRruleInvalid,
       'attendee_invalid' => l10n.errAttendeeInvalid,
       'event_not_found' => l10n.errEventNotFound,

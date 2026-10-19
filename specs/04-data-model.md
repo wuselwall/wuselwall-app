@@ -36,8 +36,9 @@ profile                          -- a family member
   kind ENUM('adult','child'),                   -- ADR-014: role says what you may do,
                                                 -- kind whether you can have an account;
                                                 -- a guardian is always an adult
-  default_presence_state ENUM(...) NULL,        -- the baseline: 'home_office' for one
-  default_presence_label TEXT NULL,             -- adult, 'off' for the other. FR-1.18
+  default_presence_state ENUM(...) NULL,        -- the usual week's most common place,
+  default_presence_label TEXT NULL,             -- for the previous app release. FR-1.18
+  usual_week_anchor DATE NULL,                  -- Monday of a week A; NULL: every week alike
   pin_hash NULL, pin_failed_count, pin_locked_until,
   auth_user_id → auth.users NULL UNIQUE,         -- the adult's account; NULL for children
                                                  -- and for adults without one. UNIQUE =
@@ -173,8 +174,12 @@ hand in v1 and derivable in M3 from a privately imported work calendar, where th
 thing that would cross into the household's data is the end of the last meeting. Nothing
 else about that calendar is stored, shown or fed anywhere.
 
-**The baseline is on the profile, not in the events.** `profile.default_presence_state`
-records where a person normally is — Homeoffice for one adult, at home for the other.
+**The baseline is on the profile, not in the events.** The usual week
+(`app.usual_presence`, one row per weekday and slot, week A or B; the A/B anchor is
+`profile.usual_week_anchor`, specs/15) records where a person normally is — Homeoffice for
+one adult, at home for the other, the office on the days a part-time adult works there.
+`profile.default_presence_state` stays as the week's most common place for the previous
+app release.
 Nothing is stored per day for a normal day; only deviations become `event` rows. This
 halves what has to be maintained and is what lets the week board draw the baseline quietly
 and the exception loudly (FR-1.18). A baseline is display and defaulting only: it never
@@ -560,8 +565,11 @@ functions where it cannot. Each one should have a pgTAP test.
     family) or deleting the household revokes it, and restoring the household does not undo that.
 15. `event.presence_state` is non-null exactly when `kind = 'presence'`, and null
     otherwise. A presence row never carries attendees other than its owner.
-15a. A member's baseline never materialises as rows. Any day with no `presence` event is
-    the baseline by definition — so removing a deviation is a delete, not an edit.
+15a. A member's baseline never materialises as event rows. Any day with no `presence`
+    event is the usual week by definition — so removing a deviation is a delete, not an
+    edit. The usual week itself (`app.usual_presence`: profile, week 0/1, ISO weekday,
+    position 1–3, state, label, optional times) holds either one whole-day row or up to
+    three non-overlapping timed rows per weekday.
 16. `event.rdates` and `event.exdates` are disjoint. A date in both is a contradiction,
     and silently preferring one produces a rota nobody can explain.
 17. `timetable_lesson` is unique on `(timetable_id, weekday, period_index, week_parity)`.

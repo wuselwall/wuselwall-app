@@ -257,14 +257,35 @@ Both are `event` rows with `kind='presence'`. See
 
 ### The baseline, and why most days are empty
 
-Before the states: each adult carries a **baseline** on their profile — where they
-normally are — set per member, and empty until someone sets it. In the reference household
-it is `home_office` for one adult and `off` (at home) for the other. It is not an event, it generates no occurrences, and it never reaches the ICS feed.
+Before the states: each adult carries a **baseline** — where they normally are — set per
+member, and empty until someone sets it. In the reference household it is `home_office`
+for one adult and `off` (at home) for the other. It is not an event, it generates no
+occurrences, and it never reaches the ICS feed.
+
+**Decided 2026-10-19 (issue #81): the baseline is a usual week.** A part-time adult is in
+the office on some weekdays and at home on others; with one place for every day, the
+regular days would be loud bands every week. So the baseline is set per weekday
+(`app.usual_presence`), in three levels, each optional beyond the first:
+
+1. **One place per weekday**, or none: the weekend is usually free and draws nothing.
+2. **Up to three time slots on a day** ("Büro 8–12, Homeoffice 13–17"). A slot without
+   times is the whole day and is then the day's only one; slots do not overlap.
+3. **Alternating weeks A and B**, anchored on the Monday of a week A
+   (`profile.usual_week_anchor`). Not calendar-week parity: a year with a week 53 would
+   put two odd weeks in a row and slip the rota.
+
+The board-week function resolves it per day (`_shared/usual_week.ts`). A public holiday
+has no usual place, and a presence entry on a day replaces the whole usual day, as
+before. On the wall, a run of days with the same single place is one quiet track; a day
+of slots shows one slot (today the one covering now, else the next, else the last; other
+days the first) and a "+n". The previous app release still reads and writes one place:
+`profile.default_presence_*` stays as the week's most common place, and its write fills
+Monday to Friday, as the migration did with every existing baseline.
 
 Two things follow, and both matter more than they look:
 
 - **Only deviations are entered.** A normal week is zero input. "Mo + Mi Dienst
-  8:30–14:00" is one recurring series; a Tuesday in the office is one row; a two-day
+  8:30–14:00" is part of the usual week; a Tuesday in the office is one row; a two-day
   Dienstreise is one row.
 - **Only deviations are loud.** The week board draws the baseline as a muted chip and the
   deviation as a filled band. Drawing every day of everyone's normal life at full strength

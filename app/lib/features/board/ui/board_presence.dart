@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_bands.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
@@ -12,8 +14,8 @@ import 'package:wuselwall/features/board/ui/board_primitives.dart';
 import 'package:wuselwall/features/board/ui/details/board_details.dart';
 
 /// Zone "Wer ist wo": one equal-height row per member, in household order. Children
-/// show their school span; adults show their baseline quietly and their deviations as
-/// bands (specs/09 "The zones").
+/// show their school span; adults show their usual week quietly and their deviations
+/// as bands (specs/09 "The zones").
 class PresenceRows extends StatelessWidget {
   const PresenceRows({required this.frame, super.key});
 
@@ -33,14 +35,22 @@ class PresenceRows extends StatelessWidget {
 /// Rows shorter than this put each day's content on one line.
 const _compactRowHeight = 60.0;
 
-class _MemberRow extends StatelessWidget {
+class _MemberRow extends ConsumerWidget {
   const _MemberRow({required this.frame, required this.member});
 
   final BoardFrame frame;
   final BoardMember member;
 
   @override
-  Widget build(BuildContext context) => LayoutBuilder(
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Today's usual slot follows the clock; once a minute is often enough.
+    final nowMinutes = ref.watch(
+      nowProvider.select((now) => now.hour * 60 + now.minute),
+    );
+    return _build(context, nowMinutes);
+  }
+
+  Widget _build(BuildContext context, int nowMinutes) => LayoutBuilder(
     builder: (context, constraints) {
       final board = frame.board;
       final rowHeight = constraints.maxHeight;
@@ -92,8 +102,8 @@ class _MemberRow extends StatelessWidget {
                 if (band.ends case final end?) context.shortTime(end),
               ],
               if (bands.isEmpty)
-                if (member.baseline case final baseline?)
-                  context.presenceLabel(baseline.state, baseline.label),
+                for (final place in board.usualOn(member.id, i))
+                  context.usualLabel(place),
               if (board.days[i].busyUntil[member.id] case final until?)
                 context.l10n.boardBusyUntil(context.shortTime(until)),
             ].join(' · '),
@@ -126,7 +136,8 @@ class _MemberRow extends StatelessWidget {
               ),
               for (var i = 0; i < summaries.length; i++)
                 if (member.isChild ||
-                    (!bandDays.contains(i) && member.baseline == null))
+                    (!bandDays.contains(i) &&
+                        board.usualOn(member.id, i).isEmpty))
                   spanCell(
                     frame.geometry,
                     i,
@@ -159,7 +170,12 @@ class _MemberRow extends StatelessWidget {
                     ),
                   ),
               if (!member.isChild)
-                ..._baselineTracks(context, bandDays, compact: true),
+                ..._baselineTracks(
+                  context,
+                  bandDays,
+                  compact: true,
+                  nowMinutes: nowMinutes,
+                ),
               for (final run in runs)
                 if (!member.isChild ||
                     ![
@@ -247,7 +263,12 @@ class _MemberRow extends StatelessWidget {
                 covered: bandDays.contains(i),
               ),
           if (!member.isChild)
-            ..._baselineTracks(context, bandDays, compact: compact),
+            ..._baselineTracks(
+              context,
+              bandDays,
+              compact: compact,
+              nowMinutes: nowMinutes,
+            ),
           for (final run in runs)
             ..._bandWidgets(
               context,
@@ -402,26 +423,44 @@ class _MemberRow extends StatelessWidget {
     ];
   }
 
-  /// The baseline as one quiet track per run of ordinary days, labelled once
-  /// (specs/09 "Why only the deviation is loud"): five "Homeoffice" chips in a row would
-  /// be louder than the one day that differs.
+  /// The usual week as quiet tracks, labelled once per run (specs/09 "Why only the
+  /// deviation is loud"): five "Homeoffice" chips in a row would be louder than the one
+  /// day that differs. Days with the same single whole-day place share a track; a day
+  /// of slots gets its own, showing one slot (today the current one) and a "+n".
   List<Widget> _baselineTracks(
     BuildContext context,
     Set<int> bandDays, {
     required bool compact,
+    required int nowMinutes,
   }) {
-    final baseline = member.baseline;
-    if (baseline == null) return const [];
-    final label = context.presenceLabel(baseline.state, baseline.label);
+    final board = frame.board;
+    final shown = [
+      for (var i = 0; i < BoardGeometry.dayCount; i++)
+        bandDays.contains(i)
+            ? null
+            : board.usualShownOn(member.id, i, nowMinutes: nowMinutes),
+    ];
+    bool joins(int a, int b) {
+      final x = shown[a];
+      final y = shown[b];
+      return x != null &&
+          y != null &&
+          x.more == 0 &&
+          y.more == 0 &&
+          x.place.isWholeDay &&
+          x.place.sameAs(y.place);
+    }
+
     final tracks = <Widget>[];
     var i = 0;
     while (i < BoardGeometry.dayCount) {
-      if (bandDays.contains(i)) {
+      final day = shown[i];
+      if (day == null) {
         i++;
         continue;
       }
       var j = i;
-      while (j + 1 < BoardGeometry.dayCount && !bandDays.contains(j + 1)) {
+      while (j + 1 < BoardGeometry.dayCount && joins(j, j + 1)) {
         j++;
       }
       tracks.add(
@@ -433,7 +472,11 @@ class _MemberRow extends StatelessWidget {
           height: compact ? null : 32,
           child: IgnorePointer(
             child: Center(
-              child: _BaselineTrack(memberColor: member.color, label: label),
+              child: _BaselineTrack(
+                memberColor: member.color,
+                label: context.usualLabel(day.place),
+                more: day.more,
+              ),
             ),
           ),
         ),
@@ -621,13 +664,21 @@ class _SchoolText extends StatelessWidget {
   }
 }
 
-/// The baseline drawn across a run of days: a hairline-bordered track with the member's
-/// dot and the label once, in ink-2. Quiet on purpose; never a band (specs/17).
+/// A usual place drawn across a run of days: a hairline-bordered track with the
+/// member's dot and the label once, in ink-2, and the day's other slots counted.
+/// Quiet on purpose; never a band (specs/17).
 class _BaselineTrack extends StatelessWidget {
-  const _BaselineTrack({required this.memberColor, required this.label});
+  const _BaselineTrack({
+    required this.memberColor,
+    required this.label,
+    this.more = 0,
+  });
 
   final Color memberColor;
   final String label;
+
+  /// The day's other usual slots, shown as "+n" that never loses to the label.
+  final int more;
 
   @override
   Widget build(BuildContext context) {
@@ -665,6 +716,15 @@ class _BaselineTrack extends StatelessWidget {
               minScale: 0.7,
             ),
           ),
+          if (more > 0) ...[
+            const SizedBox(width: 6),
+            Text(
+              context.l10n.boardMoreCount(more),
+              style: boardUi(24, weight: FontWeight.w700, color: ww.ink2),
+              maxLines: 1,
+              softWrap: false,
+            ),
+          ],
         ],
       ),
     );

@@ -40,9 +40,11 @@ When you change or delete an event that repeats, WuselWall asks: **Only this eve
 
 Tap a day's heading to set **Meetings until**: from that time on you are not available. It shows on the kitchen wall, for example as "Meetings until 17". It shows only the time, no appointments and no details. With **Apply to the whole week (Mon–Fri)** it applies to every weekday of that week.
 
-## Usual place
+## Usual week
 
-Under **Settings → Usual place** you record where you normally are, for example at home or in the office. After that you only enter the exceptions. A normal day stays empty.
+Under **Settings → Usual week** you record for each day of the week where you normally are, for example in the office on Mondays and working from home on the other days. Tap a day, choose the place and tap **Apply**. **Tuesday to Friday like Monday** makes Monday count for the whole working week. A day with **Nothing set** stays empty on the kitchen wall, as the weekend usually does. Finally, tap **Save**.
+
+After that you only enter the exceptions. A normal week stays empty. On a public holiday the kitchen wall shows no usual place.
 
 ## Children and appointments
 

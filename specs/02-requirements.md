@@ -29,7 +29,7 @@ Priority: **M** = must have in v1 · **S** = should have · **C** = could have �
 | FR-1.15 | Tentative status for unconfirmed plans, visually distinct and emitted as `STATUS:TENTATIVE` | S | late |
 | FR-1.16 | Mark an event as a key appointment ("auf dem Küchendisplay zeigen"); default on for whole-family events | M | late |
 | FR-1.17 | Feed tokens filter by event kind, so a subscription can exclude presence and school entries | S | late |
-| FR-1.18 | Each member has a **baseline presence** (`profile.default_presence`) — where they normally are. Only deviations from it are entered and only deviations are emphasised on the week board | M | late |
+| FR-1.18 | Each member has a **baseline presence**, a usual week (issue #81): where they normally are on each weekday, optionally in up to three time slots a day and in alternating weeks A/B. Only deviations from it are entered and only deviations are emphasised on the week board | M | late |
 | FR-1.19 | A day may carry a **busy-until** time per member ("Termine bis 17:00"), shown under their state. Maintained by hand in v1; derivable later from an imported work calendar | S | late |
 
 ## FR-2 Tasks & Gamification (A2)

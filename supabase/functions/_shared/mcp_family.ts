@@ -5,6 +5,7 @@
 // Design rules from specs/12: read-only annotations; every id comes with a name; both a short
 // human summary (in the household's language, mcp_de.ts / mcp_en.ts) and structured content;
 // a bad argument is an informative tool error the assistant can act on, not a protocol error.
+import { holidayOn } from "./board.ts";
 import { addDays, type Occurrence } from "./occurrences.ts";
 import type { ResourceDef, Server, ToolDef, ToolResult } from "./mcp.ts";
 import { MCP_DE } from "./mcp_de.ts";
@@ -22,6 +23,7 @@ import {
   type ShortcutMessages,
   type TaskRow,
 } from "./shortcuts.ts";
+import { usualOn, type UsualWeekRow } from "./usual_week.ts";
 
 // ── the context of an assistant key ────────────────────────────────────────────────
 
@@ -32,6 +34,8 @@ export type TaskInstanceRow = TaskRow & {
 };
 
 export type McpContext = ShortcutContext & {
+  /** The part 'usual': the active members' usual weeks (api.usual_weeks). */
+  usual_weeks?: UsualWeekRow[];
   tasks_all?: TaskInstanceRow[];
   shopping_items?: {
     id: string;
@@ -182,7 +186,7 @@ export const TOOLS: ToolDef[] = [
   tool(
     "get_presence",
     "Who is home",
-    "Who is working, travelling, away or in childcare on each day, from the calendar's presence entries and each member's usual state. Defaults to today and the next six days.",
+    "Who is working, travelling, away or in childcare on each day, from the calendar's presence entries and each member's usual week (none on a public holiday). Defaults to today and the next six days.",
     { from: DATE, to: DATE, member: MEMBER },
   ),
   tool(
@@ -427,19 +431,45 @@ export function familyServer(loadRows: Load, lang: (locale: string | null) => La
           usual: false,
         });
       }
-      if (entries.length === 0 && mem.default_presence_state) {
+      if (entries.length > 0) continue;
+      for (const place of usualPlaces(ctx, mem, date)) {
         out.push({
           member: { id: mem.id, name: mem.display_name },
-          state: mem.default_presence_state,
-          label: mem.default_presence_label ?? sc.state[mem.default_presence_state as PresenceState] ??
-            mem.default_presence_state,
-          from: null,
-          until: null,
+          state: place.state,
+          label: place.label ?? sc.state[place.state as PresenceState] ?? place.state,
+          from: place.starts,
+          until: place.ends,
           usual: true,
         });
       }
     }
     return out;
+  }
+
+  /**
+   * A member's usual places on a date: from the usual week when the context carries it
+   * (none on a public holiday), else the single baseline of a context without it.
+   */
+  function usualPlaces(ctx: McpContext, mem: MemberRow, date: string) {
+    if (ctx.usual_weeks) {
+      const week = ctx.usual_weeks.find((w) => w.profile_id === mem.id);
+      if (!week) return [];
+      const holiday = holidayOn(
+        date,
+        ctx.school?.holidays ?? [],
+        ctx.school?.public_feed ?? [],
+        ctx.household.region,
+        ctx.household.locale,
+      );
+      return holiday ? [] : usualOn(week, date);
+    }
+    if (!mem.default_presence_state) return [];
+    return [{
+      state: mem.default_presence_state,
+      label: mem.default_presence_label,
+      starts: null as string | null,
+      ends: null as string | null,
+    }];
   }
 
   function schoolOf(ctx: McpContext, date: string, child: MemberRow | null) {
@@ -723,7 +753,7 @@ export function familyServer(loadRows: Load, lang: (locale: string | null) => La
     },
 
     async get_presence(args) {
-      const { ctx, from, to } = await loadWindow(["calendar"], args);
+      const { ctx, from, to } = await loadWindow(["calendar", "school", "usual"], args);
       const { m, sc } = words(ctx);
       const only = member(ctx, stringArg(args, "member"));
       const occ = occurrencesOf(ctx);
