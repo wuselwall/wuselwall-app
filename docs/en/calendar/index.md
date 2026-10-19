@@ -44,6 +44,10 @@ Tap a day's heading to set **Meetings until**: from that time on you are not ava
 
 Under **Settings → Usual week** you record for each day of the week where you normally are, for example in the office on Mondays and working from home on the other days. Tap a day, choose the place and tap **Apply**. **Tuesday to Friday like Monday** makes Monday count for the whole working week. A day with **Nothing set** stays empty on the kitchen wall, as the weekend usually does. Finally, tap **Save**.
 
+If you are not in the same place all day, choose **Time slots**: up to three a day, for example the office from 8 to 12 and working from home from 13 to 17. Today the kitchen wall shows the slot that applies right now, on the other days the first one, with "+1" saying another follows.
+
+If your plan repeats every two weeks, switch on **Alternating weeks (A/B)**. WuselWall asks once whether this week is week A or week B. After that you enter a week of its own under **Week A** and **Week B**.
+
 After that you only enter the exceptions. A normal week stays empty. On a public holiday the kitchen wall shows no usual place.
 
 ## Children and appointments
