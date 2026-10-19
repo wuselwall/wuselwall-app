@@ -6,6 +6,7 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/empty_view.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/tasks/application/task_actions.dart';
@@ -23,6 +24,7 @@ class TasksTodayTab extends ConsumerWidget {
     final members = ref.watch(membersProvider);
     final tasks = ref.watch(tasksTodayProvider);
     final streaks = ref.watch(streaksProvider).value ?? const <Streak>[];
+    final noChores = ref.watch(taskDefinitionsProvider).value?.isEmpty ?? false;
     return RefreshIndicator(
       onRefresh: () async => ref.invalidate(tasksTodayProvider),
       child: AsyncValueView<List<Member>>(
@@ -34,6 +36,7 @@ class TasksTodayTab extends ConsumerWidget {
             members: list.where((m) => m.active).toList(),
             items: items,
             streaks: streaks,
+            noChores: noChores,
           ),
         ),
       ),
@@ -46,22 +49,31 @@ class _Groups extends StatelessWidget {
     required this.members,
     required this.items,
     required this.streaks,
+    required this.noChores,
   });
 
   final List<Member> members;
   final List<TaskInstance> items;
   final List<Streak> streaks;
 
+  /// The household has no chores at all, so the empty day leads to the Chores tab.
+  final bool noChores;
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     if (items.isEmpty) {
-      return ListView(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(Tokens.space6),
-            child: Center(child: Text(l10n.tasksNothingToday)),
-          ),
+      final tabs = DefaultTabController.maybeOf(context);
+      return EmptyView(
+        message: l10n.tasksNothingToday,
+        actions: [
+          if (noChores && tabs != null)
+            FilledButton.icon(
+              // The Chores tab, where the starter pack and the editor are.
+              onPressed: () => tabs.animateTo(2),
+              icon: const Icon(Icons.add),
+              label: Text(l10n.tasksNewChore),
+            ),
         ],
       );
     }

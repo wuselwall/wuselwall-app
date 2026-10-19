@@ -3942,12 +3942,6 @@ abstract class AppLocalizations {
   /// **'No chores yet.'**
   String get tasksNoChores;
 
-  /// No description provided for @tasksStarterTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Start with the starter pack'**
-  String get tasksStarterTitle;
-
   /// No description provided for @tasksStarterHelp.
   ///
   /// In en, this message translates to:

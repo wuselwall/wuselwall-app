@@ -727,7 +727,6 @@
   "tasksDoneBy": "Erledigt von {name}",
   "tasksNoteOptional": "Notiz (optional)",
   "tasksNoChores": "Noch keine Aufgaben.",
-  "tasksStarterTitle": "Mit dem Startpaket beginnen",
   "tasksStarterHelp": "Fünf Aufgaben, drei Belohnungen und vier Abzeichen zum Start. Alles lässt sich danach ändern.",
   "tasksStarterAdd": "Startpaket anlegen",
   "tasksStarterDone": "Startpaket angelegt.",

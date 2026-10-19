@@ -47,12 +47,17 @@ class _KidTimetablePageState extends ConsumerState<KidTimetablePage> {
           ref.invalidate(schoolWeekProvider((dates.first, dates.last))),
       data: (w) {
         if (w.timetableOf(widget.actor) == null) {
-          return Padding(
-            padding: const EdgeInsets.all(Tokens.space4),
-            child: KidCard(
-              child: Text(
-                l10n.kidNoTimetable,
-                style: Theme.of(context).textTheme.titleMedium,
+          return Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(Tokens.space4),
+              child: SizedBox(
+                width: double.infinity,
+                child: KidCard(
+                  child: Text(
+                    l10n.kidNoTimetable,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                ),
               ),
             ),
           );
