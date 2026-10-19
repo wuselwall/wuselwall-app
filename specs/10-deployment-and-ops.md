@@ -392,8 +392,9 @@ prepared publisher uses a GitHub Pages artifact and OIDC with job-scoped `pages:
 and `id-token: write`; it no longer uses a self-hosted deploy runner or SSH secrets.
 
 Publishing stays disabled until `DOCS_PAGES_ENABLED=true` is set after the operator
-chooses eligible private-repository Pages hosting or explicitly publishes the app
-repository, configures Pages and `docs.wuselwall.app`, and approves cutover. PR builds
+makes the app repository public, configures Pages and `docs.wuselwall.app`, and
+approves cutover. Until then the website server keeps the guide at `/docs/` as last
+deployed. PR builds
 never deploy. Old `wuselwall.app/docs/` content and app links must remain served until
 the custom domain works; change them to path-preserving redirects only after verification.
 See the [cutover checklist](website-and-docs-migration.md). No visibility, DNS, secret

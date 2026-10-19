@@ -134,8 +134,8 @@ repository keeps its own committed copies and never checks out private app sourc
 VitePress site in German (root) and English (`/en/`), written for the family, not for
 developers (the specification is `specs/`). `.github/workflows/docs.yml` prepares GitHub
 Pages publishing at `https://docs.wuselwall.app/`, opt-in through `DOCS_PAGES_ENABLED`
-only after hosting eligibility, Pages and DNS are configured. Until cutover, preserve
-the existing `wuselwall.app/docs/` service and links. Screenshots come from the Flutter web
+once this repository is public and Pages and DNS are configured. Until then the guide at
+`wuselwall.app/docs/` stays as last deployed (main no longer updates it); keep its links. Screenshots come from the Flutter web
 demo (`app/lib/main_demo.dart`, in-memory data) driven by Playwright
 (`docs/tools/screenshots.mjs`): every shot in both languages and both themes (`name.png`,
 `name-dark.png`). They are build output, not committed: `npm run docs:screenshots` makes

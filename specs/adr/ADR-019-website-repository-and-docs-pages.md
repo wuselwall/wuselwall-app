@@ -23,9 +23,12 @@ with the screens it explains, but be delivered through GitHub Pages.
   root base `/`, German at `/` and English at `/en/`. PRs build on ephemeral hosted
   runners without production credentials. Pages publishing uses OIDC and narrowly
   scoped permissions, not the website server's SSH credentials.
-- Keep Pages opt-in (`DOCS_PAGES_ENABLED=true`). The app stays private until a separate
-  publication decision or eligible hosting plan exists. DNS, domain verification,
+- Keep Pages opt-in (`DOCS_PAGES_ENABLED=true`). Pages is activated once this repository
+  is made public (the operator's decision; no paid plan). DNS, domain verification,
   Pages settings and HTTPS must be configured before cutover.
+- The marketing website stays on the operator's own server, deployed from a checkout
+  with `scripts/remote-web.sh` in the website repository; only the guide moves to Pages.
+  Its `docsOnPages` switch keeps links and the privacy policy on `/docs/` until cutover.
 - Preserve the old `/docs/` service and links until the custom domain is working.
   Then apply path-preserving redirects and update app/store copy in both languages.
   Keep public app-link verification files at `wuselwall.app/.well-known/`; their host
@@ -45,6 +48,6 @@ sensitive-data purge or proof that the app repository is safe to publish.
 ## Consequences
 
 App contributors need no marketing access. Marketing legal/progress/screenshot updates
-need a separate coordinated PR. An eligible Pages plan or explicit safe publication
-and DNS cutover remain manual gates; source changes are not proof of a live migration.
+need a separate coordinated PR. Making this repository public and the DNS
+cutover remain manual gates; source changes are not proof of a live migration.
 See the [execution and rollback checklist](../website-and-docs-migration.md).
