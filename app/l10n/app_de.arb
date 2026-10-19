@@ -1377,7 +1377,7 @@
     "placeholders": {
       "email": {
         "type": "String",
-        "example": "lukas@example.org"
+        "example": "thomas@example.org"
       }
     }
   },
@@ -1416,7 +1416,7 @@
     "placeholders": {
       "email": {
         "type": "String",
-        "example": "lukas@example.org"
+        "example": "thomas@example.org"
       }
     }
   },

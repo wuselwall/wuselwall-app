@@ -124,23 +124,23 @@ end $$;
 insert into hh (name, id) select n, gen_random_uuid() from unnest(array['Huser', 'Last', 'Bauer', 'Cora', 'Alt', 'Frisch', 'Live']) n;
 insert into app.household (id, name) select id, name from hh;
 
--- Huser: Daniel (guardian, phone), Sabine (guardian, no account), Hanna (adult member, phone),
--- Lotta (child), Kind (a child with an account, on a phone), an iPad and a kiosk.
+-- Huser: Daniel (guardian, phone), Julia (guardian, no account), Paul (adult member, phone),
+-- Emma (child), Kind (a child with an account, on a phone), an iPad and a kiosk.
 select pg_temp.person('Daniel', (select id from hh where name = 'Huser'), 'guardian', 'adult', 'daniel@example.org');
 select pg_temp.phone('Daniel', 'Daniel-Phone', 'adult');
-select pg_temp.person('Sabine', (select id from hh where name = 'Huser'), 'guardian', 'adult', null);
-select pg_temp.person('Hanna', (select id from hh where name = 'Huser'), 'member', 'adult', 'hanna@example.org');
-select pg_temp.phone('Hanna', 'Hanna-Phone', 'adult');
-select pg_temp.person('Lotta', (select id from hh where name = 'Huser'), 'member', 'child', null);
+select pg_temp.person('Julia', (select id from hh where name = 'Huser'), 'guardian', 'adult', null);
+select pg_temp.person('Paul', (select id from hh where name = 'Huser'), 'member', 'adult', 'paul@example.org');
+select pg_temp.phone('Paul', 'Paul-Phone', 'adult');
+select pg_temp.person('Emma', (select id from hh where name = 'Huser'), 'member', 'child', null);
 select pg_temp.person('Kind', (select id from hh where name = 'Huser'), 'member', 'child', 'kind@example.org');
 select pg_temp.phone('Kind', 'Kind-Phone', 'kid');
 select pg_temp.device_user('A-iPad', (select id from hh where name = 'Huser'), 'shared');
 select pg_temp.device_user('A-Kiosk', (select id from hh where name = 'Huser'), 'kiosk');
 
--- Last: Daniel2 is the only guardian with an account; Lotta2 is a child.
+-- Last: Daniel2 is the only guardian with an account; Emma2 is a child.
 select pg_temp.person('Daniel2', (select id from hh where name = 'Last'), 'guardian', 'adult', 'daniel2@example.org');
 select pg_temp.phone('Daniel2', 'Daniel2-Phone', 'adult');
-select pg_temp.person('Lotta2', (select id from hh where name = 'Last'), 'member', 'child', null);
+select pg_temp.person('Emma2', (select id from hh where name = 'Last'), 'member', 'child', null);
 
 -- Solo: an account in no family at all.
 do $$ declare v_uid uuid := app.create_auth_user('solo@example.org', 'longpassword1', '{}'); v_sid uuid := gen_random_uuid();
@@ -155,10 +155,10 @@ select pg_temp.as_phone('Kind-Phone');
 select throws_ok(format($$ select api.account_leave(%L) $$, (select prof from pp where name = 'Kind')),
   '42501', 'only adults have an account', 'a child with an account cannot leave');
 select pg_temp.as_device('A-Kiosk');
-select throws_ok(format($$ select api.account_leave(%L) $$, (select prof from pp where name = 'Lotta')),
+select throws_ok(format($$ select api.account_leave(%L) $$, (select prof from pp where name = 'Emma')),
   '42501', 'personal device required', 'a kiosk cannot leave an account');
 select pg_temp.as_device('A-iPad');
-select throws_ok(format($$ select api.account_leave(%L) $$, (select prof from pp where name = 'Lotta')),
+select throws_ok(format($$ select api.account_leave(%L) $$, (select prof from pp where name = 'Emma')),
   '42501', 'personal device required', 'a shared tablet cannot leave an account');
 select pg_temp.as_phone('Daniel2-Phone');
 select throws_ok(format($$ select api.account_leave(%L) $$, (select prof from pp where name = 'Daniel2')),
@@ -172,29 +172,29 @@ select is(api.my_account() ->> 'leave_blocked', 'last_guardian', 'the app is tol
 select pg_temp.owner();
 
 -- An adult member leaves: the profile stays without the account, the devices are revoked.
-select pg_temp.as_phone('Hanna-Phone');
-select is((api.account_leave((select prof from pp where name = 'Hanna')) ->> 'ok'), 'true',
+select pg_temp.as_phone('Paul-Phone');
+select is((api.account_leave((select prof from pp where name = 'Paul')) ->> 'ok'), 'true',
   'an adult member leaves the family');
 select pg_temp.owner();
-select is((select auth_user_id from app.profile where display_name = 'Hanna'), null::uuid,
+select is((select auth_user_id from app.profile where display_name = 'Paul'), null::uuid,
   'the profile is unlinked from the account');
-select is((select count(*) from app.profile where display_name = 'Hanna'), 1::bigint,
+select is((select count(*) from app.profile where display_name = 'Paul'), 1::bigint,
   'the profile stays in the family with its history');
-select is((select count(*) from app.device where auth_user_id = (select uid from pp where name = 'Hanna') and revoked_at is null),
+select is((select count(*) from app.device where auth_user_id = (select uid from pp where name = 'Paul') and revoked_at is null),
   0::bigint, 'every device of the account is revoked');
-select is((select count(*) from auth.sessions where id = (select sid from pp where name = 'Hanna')), 1::bigint,
+select is((select count(*) from auth.sessions where id = (select sid from pp where name = 'Paul')), 1::bigint,
   'the session is kept, so the account stays signed in');
-select is((select count(*) from app.audit_log where action = 'leave' and entity_id = (select prof from pp where name = 'Hanna')),
+select is((select count(*) from app.audit_log where action = 'leave' and entity_id = (select prof from pp where name = 'Paul')),
   1::bigint, 'the leave is audited');
-select pg_temp.as_account('Hanna');
+select pg_temp.as_account('Paul');
 select is((api.my_account() ->> 'has_household')::boolean, false, 'the account has no household after leaving');
 select is(api.my_account() ->> 'deleted_household', null, 'and no deleted household either');
 select is(pg_temp.visible_rows(), 0::bigint, 'the account sees nothing in any api view');
 select pg_temp.owner();
-select is(pg_temp.hook_claims('Hanna') ->> 'household_id', null, 'the token hook gives no household claims after leaving');
+select is(pg_temp.hook_claims('Paul') ->> 'household_id', null, 'the token hook gives no household claims after leaving');
 
 -- A second guardian with an account: the first guardian may leave.
-select pg_temp.person('Sabine2', (select id from hh where name = 'Last'), 'guardian', 'adult', 'sabine2@example.org');
+select pg_temp.person('Julia2', (select id from hh where name = 'Last'), 'guardian', 'adult', 'julia2@example.org');
 select pg_temp.as_phone('Daniel2-Phone');
 select is((api.account_leave((select prof from pp where name = 'Daniel2')) ->> 'ok'), 'true',
   'the last guardian leaves once a second guardian has an account');

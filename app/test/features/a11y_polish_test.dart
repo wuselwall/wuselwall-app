@@ -160,8 +160,8 @@ void main() {
           membersProvider.overrideWith(
             (ref) async => [
               const Member(
-                id: 'lotta',
-                displayName: 'Lotta',
+                id: 'emma',
+                displayName: 'Emma',
                 color: Color(0xFFB5306B),
                 role: Role.member,
                 active: true,
@@ -180,7 +180,7 @@ void main() {
                     checked: false,
                     createdAt: DateTime(2026, 10, 11),
                     listId: 'l1',
-                    addedBy: 'lotta',
+                    addedBy: 'emma',
                   ),
                 ],
                 lists: const [
@@ -213,11 +213,8 @@ void main() {
     );
     await t.pumpAndSettle();
 
-    expect(find.text('L'), findsOneWidget);
-    expect(
-      find.bySemanticsLabel(RegExp('Hinzugefügt von Lotta')),
-      findsWidgets,
-    );
+    expect(find.text('E'), findsOneWidget);
+    expect(find.bySemanticsLabel(RegExp('Hinzugefügt von Emma')), findsWidgets);
     handle.dispose();
   });
 

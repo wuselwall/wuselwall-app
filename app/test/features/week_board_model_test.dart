@@ -57,7 +57,7 @@ void main() {
     expect(board.todayIndex, DateTime.now().weekday - 1);
   });
 
-  test('presenceOn returns the travel band for Lukas on Thursday', () {
+  test('presenceOn returns the travel band for Thomas on Thursday', () {
     final bands = board.presenceOn(DemoData.papa, 3);
     expect(bands, hasLength(1));
     expect(bands.single.state, PresenceState.travel);
@@ -126,7 +126,7 @@ void main() {
   });
 
   test(
-    'Lotta has a cancelled lesson on Friday, and its equipment still shows',
+    'Emma has a cancelled lesson on Friday, and its equipment still shows',
     () {
       final friday = board.days[4].school[DemoData.daughter]!;
       expect(

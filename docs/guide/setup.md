@@ -31,7 +31,7 @@ Ist die **Zwei-Faktor-Anmeldung** eingeschaltet, kommt danach noch der 6-stellig
 
 Wenn dein Konto noch zu keiner Familie gehört, öffnet WuselWall **Neue Familie**. Das machst du einmal, auf deinem eigenen Handy:
 
-1. **Familienname**, zum Beispiel „Huser“.
+1. **Familienname**, zum Beispiel „Becker“.
 2. **Dein Name** und **Deine Farbe**. Die Farbe erscheint überall da, wo du etwas angelegt hast.
 3. Optional **Mit Beispielen starten**: ein paar Aufgaben und Belohnungen, die ihr einfach ändern oder löschen könnt.
 4. Den **Gründungscode**, falls euer Server einen verlangt. Den bekommst du von der Person, die den Server betreibt.
@@ -45,7 +45,7 @@ Bestätigung später, geht die App von selbst weiter.
 
 Tippe auf **Familie anlegen**. Dann kommt die Seite **Wer gehört noch zu euch?**: Trage Kinder und weitere Erwachsene mit Namen ein, damit sie in den Listen auftauchen. Erwachsene kannst du auch später einladen; mit **Überspringen** geht es sofort weiter.
 
-Dieses Handy wird dabei das **persönliche Handy** von dir. Es bekommt automatisch einen Namen wie „Lukas iPhone“, den du unter **Einstellungen → Geräte** ändern kannst. Danach öffnet sich der Tab **Heute**.
+Dieses Handy wird dabei das **persönliche Handy** von dir. Es bekommt automatisch einen Namen wie „Thomas’ iPhone“, den du unter **Einstellungen → Geräte** ändern kannst. Danach öffnet sich der Tab **Heute**.
 
 ## 3. Einer Familie beitreten
 

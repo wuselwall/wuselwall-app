@@ -83,7 +83,7 @@ class _Avatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.ww.member(member.color);
-    // The name under the circle: two members may share an initial (Lukas, Lotta), and
+    // The name under the circle: two members may share an initial (Emma, Emil), and
     // children recognise their written name before they read anyone else's.
     return Semantics(
       button: true,

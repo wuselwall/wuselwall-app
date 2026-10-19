@@ -19,28 +19,28 @@ end $$;
 create temp table devs (name text primary key, usr uuid, dev uuid, hh uuid, cls text);
 grant all on devs to public;
 
--- ---- household A: Papa (guardian, phone), Lotta (child, phone), iPad, kiosk, revoked phone ----
+-- ---- household A: Papa (guardian, phone), Emma (child, phone), iPad, kiosk, revoked phone ----
 create temp table sa as
   select api.setup_household('dev-setup', 'A', 'a@example.org', 'longpassword1', 'Papa', '#111111', '123456') r;
 grant all on sa to public;
 insert into app.profile (household_id, display_name, role, kind)
-  select (r ->> 'household_id')::uuid, 'Lotta', 'member', 'child' from sa;
+  select (r ->> 'household_id')::uuid, 'Emma', 'member', 'child' from sa;
 create temp table users (name text primary key, usr uuid);
 grant all on users to public;
 insert into users values
-  ('lotta', app.create_auth_user('lotta@example.org', 'longpassword1')),
+  ('emma', app.create_auth_user('emma@example.org', 'longpassword1')),
   ('ipad', app.create_auth_user('ipad@devices.invalid', 'x1234567890')),
   ('kiosk', app.create_auth_user('kiosk@devices.invalid', 'x1234567890')),
   ('old', app.create_auth_user('old@example.org', 'longpassword1'));
-update app.profile set auth_user_id = (select usr from users where name = 'lotta')
- where display_name = 'Lotta';
+update app.profile set auth_user_id = (select usr from users where name = 'emma')
+ where display_name = 'Emma';
 
 insert into app.device (household_id, auth_user_id, label, class, register, profile_id)
   select p.household_id, p.auth_user_id, 'A-Phone', 'personal', 'adult', p.id
     from app.profile p where p.display_name = 'Papa';
 insert into app.device (household_id, auth_user_id, label, class, register, profile_id)
-  select p.household_id, p.auth_user_id, 'Lotta-Phone', 'personal', 'kid', p.id
-    from app.profile p where p.display_name = 'Lotta';
+  select p.household_id, p.auth_user_id, 'Emma-Phone', 'personal', 'kid', p.id
+    from app.profile p where p.display_name = 'Emma';
 insert into app.device (household_id, auth_user_id, label, class, register)
   select p.household_id, u.usr, 'iPad', 'shared', 'kid' from users u
     cross join (select household_id from app.profile where display_name = 'Papa') p where u.name = 'ipad';
@@ -64,8 +64,8 @@ insert into devs
   select 'papa', p.auth_user_id, d.id, d.household_id, 'personal' from app.device d
     join app.profile p on p.id = d.profile_id where d.label = 'A-Phone'
   union all
-  select 'lotta', u.usr, d.id, d.household_id, 'personal' from app.device d
-    join users u on u.usr = d.auth_user_id where u.name = 'lotta'
+  select 'emma', u.usr, d.id, d.household_id, 'personal' from app.device d
+    join users u on u.usr = d.auth_user_id where u.name = 'emma'
   union all
   select 'ipad', u.usr, d.id, d.household_id, 'shared' from app.device d
     join users u on u.usr = d.auth_user_id where u.name = 'ipad'
@@ -151,7 +151,7 @@ select is(position('Milch-A' in current_setting('test.export_bruno')), 0, 'house
 select is(position('Geheimes-B' in current_setting('test.export_bruno')) > 0, true, 'household B data is in the export of B');
 
 -- ---- refusals ----------------------------------------------------------------------------------
-select pg_temp.act_as_dev('lotta');
+select pg_temp.act_as_dev('emma');
 select throws_ok($$ select api.household_export(null) $$, '42501', 'guardian required',
   'a child on a personal phone is refused');
 reset role;

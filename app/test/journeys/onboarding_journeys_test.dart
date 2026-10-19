@@ -183,7 +183,7 @@ void main() {
 
         // H2: a name is all it takes.
         expect(find.text('Wer gehört noch zu euch?'), findsOneWidget);
-        await t.enterText(find.widgetWithText(TextField, 'Name'), 'Lotta');
+        await t.enterText(find.widgetWithText(TextField, 'Name'), 'Emma');
         await t.tap(find.text('Fertig'));
         await t.pumpAndSettle();
 
@@ -222,10 +222,10 @@ void main() {
             identity: identity,
             accountValue: const Account(
               userId: 'user-1',
-              email: 'sabine@example.org',
+              email: 'julia@example.org',
               hasHousehold: false,
               creation: HouseholdCreation.code,
-              givenName: 'Sabine',
+              givenName: 'Julia',
             ),
           ),
         ),
@@ -243,11 +243,11 @@ void main() {
       await t.pumpAndSettle();
       expect(store.value?.secret, 'K7QM3XRP');
 
-      await _enterAddressAndCode(t, 'sabine@example.org');
+      await _enterAddressAndCode(t, 'julia@example.org');
       await _answerE3(t, log);
 
       // The join confirmation carries the name the inviter chose.
-      expect(find.text('Du bist Sabine in Familie Huser'), findsOneWidget);
+      expect(find.text('Du bist Julia in Familie Huser'), findsOneWidget);
       await t.tap(find.byKey(const ValueKey('join-confirm')));
       await t.pumpAndSettle();
 

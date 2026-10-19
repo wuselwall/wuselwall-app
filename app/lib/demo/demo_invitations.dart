@@ -1,9 +1,10 @@
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/features/invitations/data/invitation_repository.dart';
 import 'package:wuselwall/features/invitations/domain/invitation.dart';
 
 /// The demo's invitations: nothing leaves the page. Codes are fixed, so the screens can be
-/// tried out: `K7QM3XRP` is a valid invitation from Lukas for Sabine.
+/// tried out: `K7QM3XRP` is a valid invitation from the father for the mother.
 class DemoInvitationRepository implements InvitationRepository {
   final List<OpenInvitation> _open = [
     OpenInvitation(
@@ -15,7 +16,8 @@ class DemoInvitationRepository implements InvitationRepository {
     ),
   ];
 
-  static const _household = 'Familie Huser';
+  static String get _household =>
+      DemoData.tr('Familie Becker', 'The Becker family');
 
   @override
   Future<Result<CreatedInvitation>> create({
@@ -43,15 +45,15 @@ class DemoInvitationRepository implements InvitationRepository {
   Future<Result<List<OpenInvitation>>> open() async => Ok([..._open]);
 
   @override
-  Future<Result<String>> householdName() async => const Ok(_household);
+  Future<Result<String>> householdName() async => Ok(_household);
 
   @override
   Future<Result<PreviewOutcome>> preview(String secret) async => Ok(
     PreviewValid(
       InvitationPreview(
         householdName: _household,
-        inviterFirstName: 'Lukas',
-        profileName: 'Sabine',
+        inviterFirstName: DemoData.name(DemoData.papa),
+        profileName: DemoData.name(DemoData.mama),
         role: InvitationRole.guardian,
         expiresAt: DateTime.now().add(const Duration(days: 7)),
       ),
@@ -66,7 +68,11 @@ class DemoInvitationRepository implements InvitationRepository {
     String? colorHex,
     required String deviceLabel,
   }) async => const Ok(
-    Accepted(householdId: 'h1', profileId: 'p-sabine', deviceId: 'demo-device'),
+    Accepted(
+      householdId: 'h1',
+      profileId: 'p-invited',
+      deviceId: 'demo-device',
+    ),
   );
 }
 

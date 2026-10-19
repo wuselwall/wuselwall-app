@@ -50,8 +50,8 @@ WeekBoard _board({
   },
   'members': [
     {
-      'id': 'sabine',
-      'display_name': 'Sabine',
+      'id': 'julia',
+      'display_name': 'Julia',
       'color': '#D9622B',
       'kind': 'adult',
     },

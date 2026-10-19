@@ -43,12 +43,12 @@ Jeder Kurzbefehl ist gleich gebaut wie oben: **Inhalte von URL abrufen** mit Met
 | Kurzbefehl | Adresse endet auf | Felder im JSON | Antwort, zum Beispiel |
 |---|---|---|---|
 | Einkaufsliste | `/shopping` | `text`: was auf die Liste soll; `list`: eine andere Liste als die Standardliste (optional) | „Milch ist auf der Liste.“ |
-| Was steht heute an? | `/today` | `day`: „morgen“, ein Wochentag oder ein Datum (optional) | „Heute: 08:30 Zahnarzt (Lotta). Essen heute: Abendessen: Spaghetti.“ |
-| Was gibt es zu essen? | `/meals` | `day` (optional) | „Essen heute: Abendessen: Spaghetti. Sabine kocht.“ |
+| Was steht heute an? | `/today` | `day`: „morgen“, ein Wochentag oder ein Datum (optional) | „Heute: 08:30 Zahnarzt (Emma). Essen heute: Abendessen: Spaghetti.“ |
+| Was gibt es zu essen? | `/meals` | `day` (optional) | „Essen heute: Abendessen: Spaghetti. Julia kocht.“ |
 | Meine Punkte | `/points` | – | „Du hast 42 Punkte.“ |
 | Aufgabe erledigt | `/chore` | `text`: welche Aufgabe | „Erledigt: Spülmaschine ausräumen. 2 Punkte dazu.“ |
-| Schule | `/school` | `text`: die Frage, etwa „Hat Lotta morgen Sport?“ | „Ja, Lotta hat morgen Sport in der 3. Stunde (09:55–10:40).“ |
-| Wann ist … wieder da? | `/presence` | `text`: die Frage, etwa „Wann ist Sabine wieder da?“ | „Sabine ist auf Reise bis Freitag, 23. Oktober und am Samstag, 24. Oktober wieder da.“ |
+| Schule | `/school` | `text`: die Frage, etwa „Hat Emma morgen Sport?“ | „Ja, Emma hat morgen Sport in der 3. Stunde (09:55–10:40).“ |
+| Wann ist … wieder da? | `/presence` | `text`: die Frage, etwa „Wann ist Julia wieder da?“ | „Julia ist auf Reise bis Freitag, 23. Oktober und am Samstag, 24. Oktober wieder da.“ |
 
 Für **Schule** und **Wann ist … wieder da?** lässt du den Kurzbefehl wie beim Einkauf zuerst **Nach Eingabe fragen** und schickst die ganze Frage als `text`. WuselWall sucht darin den Namen, den Tag und das Fach. Ohne Tag meint **Schule** den nächsten Tag, denn gepackt wird meist am Abend vorher. Steht kein Name in der Frage, gilt sie für dich selbst.
 
@@ -66,7 +66,7 @@ Erziehungsberechtigte sehen und sperren alle Schlüssel der Familie, alle andere
 
 ## KI-Assistenten (MCP)
 
-Ein KI-Assistent, der **MCP** spricht (das Model Context Protocol, zum Beispiel Claude), kann mit einem eigenen Schlüssel in WuselWall **nachlesen**: „Was steht diese Woche an?“, „Was gibt es am Donnerstag zu essen?“, „Wann hat Lotta morgen Schluss?“. Er kann **nichts eintragen, ändern oder löschen**.
+Ein KI-Assistent, der **MCP** spricht (das Model Context Protocol, zum Beispiel Claude), kann mit einem eigenen Schlüssel in WuselWall **nachlesen**: „Was steht diese Woche an?“, „Was gibt es am Donnerstag zu essen?“, „Wann hat Emma morgen Schluss?“. Er kann **nichts eintragen, ändern oder löschen**.
 
 Wähle beim Erstellen **Assistent** statt **Siri**. Einen Schlüssel für einen Assistenten bekommen nur Erwachsene. Er erscheint in der Liste unter **KI-Assistenten** und wird gesperrt wie jeder andere Schlüssel.
 

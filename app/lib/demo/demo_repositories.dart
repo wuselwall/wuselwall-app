@@ -1225,18 +1225,18 @@ class DemoHouseholdOnboardingRepository
     hasHousehold
         ? const Account(
             userId: 'demo-user',
-            email: 'lukas@example.org',
+            email: 'thomas@example.org',
             hasHousehold: true,
             creation: HouseholdCreation.code,
             householdId: 'h1',
-            householdName: 'Huser',
-            profileId: 'p-lukas',
-            givenName: 'Lukas',
-            fullName: 'Lukas Huser',
+            householdName: 'Becker',
+            profileId: 'p-thomas',
+            givenName: 'Thomas',
+            fullName: 'Thomas Becker',
           )
         : const Account(
             userId: 'demo-user',
-            email: 'lukas@example.org',
+            email: 'thomas@example.org',
             hasHousehold: false,
             creation: HouseholdCreation.code,
           ),

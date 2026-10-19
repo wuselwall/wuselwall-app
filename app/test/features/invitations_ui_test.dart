@@ -12,29 +12,29 @@ import 'package:wuselwall/features/invitations/domain/invitation.dart';
 import '../support/fake_invitations.dart';
 import '../support/fakes.dart';
 
-/// A pending invitation from Papa for Sabine, to the account of the test.
+/// A pending invitation from Papa for Julia, to the account of the test.
 const _pending = PendingInvitation(
   id: 'inv-pending',
   householdName: 'Familie Huser',
   inviterFirstName: 'Papa',
-  profileName: 'Sabine',
+  profileName: 'Julia',
   profileColor: '#08737F',
   role: InvitationRole.guardian,
 );
 
 Account _account({List<PendingInvitation> pending = const []}) => Account(
   userId: 'user-1',
-  email: 'sabine@example.org',
+  email: 'julia@example.org',
   hasHousehold: false,
   creation: HouseholdCreation.code,
-  givenName: 'Sabine',
+  givenName: 'Julia',
   pendingInvitations: pending,
 );
 
 /// An adult of the household without an account: the one a guardian invites.
-const _sabine = Member(
-  id: 'p-sabine',
-  displayName: 'Sabine',
+const _julia = Member(
+  id: 'p-julia',
+  displayName: 'Julia',
   color: Color(0xFF08737F),
   role: Role.guardian,
   active: true,
@@ -92,10 +92,10 @@ void main() {
       await t.tap(find.byKey(const ValueKey('join-inv-pending')));
       await t.pumpAndSettle();
 
-      expect(find.text('Du bist Sabine in Familie Huser'), findsOneWidget);
-      await t.enterText(find.byType(TextField), 'Sabine S.');
+      expect(find.text('Du bist Julia in Familie Huser'), findsOneWidget);
+      await t.enterText(find.byType(TextField), 'Julia S.');
       await t.pump();
-      expect(find.text('Du bist Sabine S. in Familie Huser'), findsOneWidget);
+      expect(find.text('Du bist Julia S. in Familie Huser'), findsOneWidget);
       await t.tap(find.byKey(const ValueKey('join-confirm')));
       await t.pumpAndSettle();
 
@@ -103,7 +103,7 @@ void main() {
       final sent = invitations.accepted.single;
       expect(sent.invitationId, 'inv-pending');
       expect(sent.secret, isNull);
-      expect(sent.displayName, 'Sabine S.');
+      expect(sent.displayName, 'Julia S.');
       expect(sent.colorHex, '#08737F', reason: 'the colour the inviter chose');
     });
 
@@ -229,16 +229,16 @@ void main() {
         await pumpMembers(
           t,
           invitations: invitations,
-          members: [...testMembers, _sabine],
+          members: [...testMembers, _julia],
           shared: shared.add,
         );
 
-        await t.tap(find.byKey(const ValueKey('invite-member-p-sabine')));
+        await t.tap(find.byKey(const ValueKey('invite-member-p-julia')));
         await t.pumpAndSettle();
 
-        expect(invitations.created.single.profileId, 'p-sabine');
+        expect(invitations.created.single.profileId, 'p-julia');
         expect(invitations.created.single.role, InvitationRole.guardian);
-        expect(find.text('Einladung für Sabine'), findsOneWidget);
+        expect(find.text('Einladung für Julia'), findsOneWidget);
         expect(find.byKey(const ValueKey('invite-code')), findsOneWidget);
         expect(find.text('K7QM-3XRP'), findsOneWidget);
         expect(find.byKey(const ValueKey('invite-qr')), findsOneWidget);
@@ -262,20 +262,20 @@ void main() {
         await pumpMembers(
           t,
           invitations: invitations,
-          members: [...testMembers, _sabine],
+          members: [...testMembers, _julia],
         );
 
         expect(find.textContaining('Eingeladen · bis'), findsOneWidget);
         expect(
-          find.byKey(const ValueKey('invite-member-p-sabine')),
+          find.byKey(const ValueKey('invite-member-p-julia')),
           findsNothing,
           reason: 'no second invitation while one is open',
         );
 
         await t.tap(find.text('Erneut teilen'));
         await t.pumpAndSettle();
-        expect(invitations.created.single.profileId, 'p-sabine');
-        expect(find.text('Einladung für Sabine'), findsOneWidget);
+        expect(invitations.created.single.profileId, 'p-julia');
+        expect(find.text('Einladung für Julia'), findsOneWidget);
         await t.tap(find.text('Fertig'));
         await t.pumpAndSettle();
 
@@ -293,7 +293,7 @@ void main() {
       final container = await pumpMembers(
         t,
         invitations: invitations,
-        members: [...testMembers, _sabine],
+        members: [...testMembers, _julia],
         phone: device(profileId: kidId, register: UiRegister.kid),
       );
       expect(find.textContaining('Eingeladen · bis'), findsOneWidget);
@@ -322,12 +322,12 @@ void main() {
       await pumpMembers(
         t,
         invitations: invitations,
-        members: [...testMembers, _sabine],
+        members: [...testMembers, _julia],
         size: const Size(390, 844),
       );
       final row = find.byKey(const ValueKey('open-invitation-inv-1'));
       await t.scrollUntilVisible(row, 200);
-      final title = find.descendant(of: row, matching: find.text('Sabine'));
+      final title = find.descendant(of: row, matching: find.text('Julia'));
       expect(t.getSize(title).width, greaterThan(40));
       expect(t.getSize(title).height, lessThan(30), reason: 'one line');
       expect(

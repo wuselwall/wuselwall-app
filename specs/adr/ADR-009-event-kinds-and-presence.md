@@ -5,12 +5,12 @@
 ## Context
 
 Added with A5 on 2026-08-30: *"Appointments in general should be flexible, e.g. regular to
-maintain when Sabine is working or flexible to show when Lukas is travelling for work."*
+maintain when Sarah is working or flexible to show when David is travelling for work."*
 
 Two adults with very different scheduling shapes. One has a rota that repeats but is
 revised monthly and does not always fit a recurrence rule. The other has irregular,
 multi-day, frequently uncertain travel. Neither is an appointment in the ordinary sense:
-"Sabine arbeitet" is not something anyone attends, and it must not compete with "Zahnarzt
+"Julia arbeitet" is not something anyone attends, and it must not compete with "Zahnarzt
 14:30" for attention on a wall display.
 
 At the same time the wall display now shows a whole week (FR-8.1). A week of unfiltered
@@ -64,7 +64,7 @@ actually ask is about next Thursday.
 
 - Recurrence, overrides, audit, ICS emission and the permission model are written once and
   serve both kinds.
-- "Sabine arbeitet Mo/Mi/Do" is maintained in seconds and stays correct for months; a
+- "Julia arbeitet Mo/Mi/Do" is maintained in seconds and stays correct for months; a
   swapped shift is one override, not a re-entry.
 - The rota grid (`RDATE`) mirrors the physical gesture of marking up a paper roster, which
   is the difference between a system that gets maintained and one that does not.
@@ -77,7 +77,7 @@ actually ask is about next Thursday.
 
 - `event` gains four nullable-ish columns that are meaningless for the other kind. Enforced
   by check constraints (invariant 15 in [04](../04-data-model.md)) rather than by types.
-- Every read path must filter by kind, and forgetting to do so puts "Sabine arbeitet" in
+- Every read path must filter by kind, and forgetting to do so puts "Julia arbeitet" in
   the agenda list. Centralise it in the query helpers, not in the components.
 - The `importance` flag can be forgotten, and then something genuinely important is missing
   from the kitchen. Mitigation: the event editor shows the flag prominently with the

@@ -102,7 +102,7 @@ const weeklySeries = event({
   rrule: "FREQ=WEEKLY;BYDAY=TU;UNTIL=20270701T000000Z",
   rdates: ["2026-11-03"],
   exdates: ["2026-10-20"],
-  attendee_ids: ["lotta"],
+  attendee_ids: ["emma"],
   description: "Halle 2",
   location: "Sporthalle",
 });
@@ -268,15 +268,15 @@ Deno.test("presence: transparent, kind marker, name prefix, no attendee lines", 
       title: "Dienst",
       starts_at: "2026-10-13T06:00:00Z",
       ends_at: "2026-10-13T14:00:00Z",
-      attendee_ids: ["sabine"],
+      attendee_ids: ["julia"],
       uid: "presence-1@wuselwall.app",
     })],
-    attendees: { sabine: "Sabine" },
+    attendees: { julia: "Julia" },
   }));
   const block = veventBlocks(out)[0];
   assert(block.includes("TRANSP:TRANSPARENT"));
   assert(block.includes("X-WUSELWALL-KIND:presence"));
-  assert(block.includes("SUMMARY:Sabine: Dienst"));
+  assert(block.includes("SUMMARY:Julia: Dienst"));
   assertFalse(out.includes("ATTENDEE"));
 });
 
@@ -308,14 +308,14 @@ Deno.test("DTSTAMP on every VEVENT; UID and SEQUENCE carried through", () => {
 
 Deno.test("attendee names in DESCRIPTION, German and English, and no ATTENDEE lines", () => {
   const withNames = event({
-    attendee_ids: ["lotta", "hanna"],
+    attendee_ids: ["emma", "paul"],
     description: "Bring Wasser",
   });
-  const attendees = { lotta: "Lotta", hanna: "Hanna" };
+  const attendees = { emma: "Emma", paul: "Paul" };
 
   const de = render(feed({ events: [withNames], attendees }));
   assert(
-    unfolded(de).includes("DESCRIPTION:Bring Wasser\\nMit: Lotta\\, Hanna"),
+    unfolded(de).includes("DESCRIPTION:Bring Wasser\\nMit: Emma\\, Paul"),
   );
   assertFalse(de.includes("ATTENDEE"));
 
@@ -325,7 +325,7 @@ Deno.test("attendee names in DESCRIPTION, German and English, and no ATTENDEE li
     household: { name: "Family", timezone: "Europe/Berlin", locale: "en-GB" },
   }));
   assert(
-    unfolded(en).includes("DESCRIPTION:Bring Wasser\\nWith: Lotta\\, Hanna"),
+    unfolded(en).includes("DESCRIPTION:Bring Wasser\\nWith: Emma\\, Paul"),
   );
   assertFalse(en.includes("ATTENDEE"));
 });
@@ -384,7 +384,7 @@ Deno.test("reference parser (ical.js) reads the expected events and times", () =
 
 // ── school days ──────────────────────────────────────────────────────────────────
 
-const LOTTA = "11111111-1111-4111-8111-111111111111";
+const EMMA = "11111111-1111-4111-8111-111111111111";
 
 /** One child's grid, Tuesdays only (weekday 2): two lessons, in a term that covers the window. */
 function schoolData(over: Partial<SchoolData> = {}): SchoolData {
@@ -448,7 +448,7 @@ function schoolData(over: Partial<SchoolData> = {}): SchoolData {
     ],
     timetables: [{
       id: "tt1",
-      profile_id: LOTTA,
+      profile_id: EMMA,
       school_id: "s1",
       term_id: "t1",
       class_label: "2b",
@@ -512,7 +512,7 @@ function schoolFeed(
       school: mode ?? "off",
     },
     school,
-    members: { [LOTTA]: "Lotta" },
+    members: { [EMMA]: "Emma" },
     ...over,
   });
 }
@@ -544,7 +544,7 @@ Deno.test("day mode: one VEVENT per child per school day, lessons in the descrip
   assertEquals(blocks.length, tuesdaysInWindow());
 
   const day = blocks.find((b) =>
-    b.includes(`UID:schoolday-${LOTTA}-20261013@wuselwall.app`)
+    b.includes(`UID:schoolday-${EMMA}-20261013@wuselwall.app`)
   );
   assert(day, "the Tuesday of NOW has a school day");
   assertEquals(
@@ -555,7 +555,7 @@ Deno.test("day mode: one VEVENT per child per school day, lessons in the descrip
     lineStartingWith(day, "DTEND;TZID=Europe/Berlin:"),
     "DTEND;TZID=Europe/Berlin:20261013T093500",
   );
-  assertEquals(lineStartingWith(day, "SUMMARY:"), "SUMMARY:Lotta: Schule");
+  assertEquals(lineStartingWith(day, "SUMMARY:"), "SUMMARY:Emma: Schule");
   assertEquals(
     lineStartingWith(day, "DESCRIPTION:"),
     "DESCRIPTION:1. Ma · 2. D",
@@ -582,7 +582,7 @@ Deno.test("day mode: Entfall and Vertretung are noted in the description", () =>
         starts_at: null,
         ends_at: null,
         note: null,
-        created_by_profile_id: LOTTA,
+        created_by_profile_id: EMMA,
       },
       {
         id: "x2",
@@ -596,13 +596,13 @@ Deno.test("day mode: Entfall and Vertretung are noted in the description", () =>
         starts_at: null,
         ends_at: null,
         note: null,
-        created_by_profile_id: LOTTA,
+        created_by_profile_id: EMMA,
       },
     ],
   });
   const out = render(schoolFeed("day", data));
   const day = schoolBlocks(out).find((b) =>
-    b.includes(`UID:schoolday-${LOTTA}-20261013@wuselwall.app`)
+    b.includes(`UID:schoolday-${EMMA}-20261013@wuselwall.app`)
   );
   assertEquals(
     lineStartingWith(day ?? [], "DESCRIPTION:"),
@@ -630,11 +630,11 @@ Deno.test("holidays and weekends emit nothing", () => {
   });
   const out = render(schoolFeed("day", data));
   assert(
-    !out.includes(`schoolday-${LOTTA}-20261013`),
+    !out.includes(`schoolday-${EMMA}-20261013`),
     "no school day in the holiday",
   );
   assert(
-    !out.includes(`schoolday-${LOTTA}-20261014`),
+    !out.includes(`schoolday-${EMMA}-20261014`),
     "no school day in the holiday",
   );
   assertEquals(
@@ -656,7 +656,7 @@ Deno.test("UIDs are the same across renders; SEQUENCE follows the timetable's up
 
   const seqOf = (text: string) => {
     const block = schoolBlocks(text).find((b) =>
-      b.includes(`UID:schoolday-${LOTTA}-20261013@wuselwall.app`)
+      b.includes(`UID:schoolday-${EMMA}-20261013@wuselwall.app`)
     );
     return lineStartingWith(block ?? [], "SEQUENCE:");
   };
@@ -688,7 +688,7 @@ Deno.test("lessons mode: one VEVENT per lesson with the room; a cancelled lesson
       starts_at: null,
       ends_at: null,
       note: null,
-      created_by_profile_id: LOTTA,
+      created_by_profile_id: EMMA,
     }],
   });
   const out = render(schoolFeed("lessons", data));
@@ -699,7 +699,7 @@ Deno.test("lessons mode: one VEVENT per lesson with the room; a cancelled lesson
     b.includes(`UID:lesson-l1-20261013@wuselwall.app`)
   );
   assert(math, "lesson l1 has its UID");
-  assertEquals(lineStartingWith(math, "SUMMARY:"), "SUMMARY:Lotta: Mathematik");
+  assertEquals(lineStartingWith(math, "SUMMARY:"), "SUMMARY:Emma: Mathematik");
   assertEquals(lineStartingWith(math, "LOCATION:"), "LOCATION:R1");
   assertEquals(lineStartingWith(math, "STATUS:"), "STATUS:CONFIRMED");
 
@@ -727,7 +727,7 @@ Deno.test("English household: School and Cancelled", () => {
       starts_at: null,
       ends_at: null,
       note: null,
-      created_by_profile_id: LOTTA,
+      created_by_profile_id: EMMA,
     }],
   });
   const en = (f: IcsFeed) =>
@@ -736,11 +736,11 @@ Deno.test("English household: School and Cancelled", () => {
       { now: NOW, host: HOST },
     );
   const day = schoolBlocks(en(schoolFeed("day", data))).find((b) =>
-    b.includes(`UID:schoolday-${LOTTA}-20261013@wuselwall.app`)
+    b.includes(`UID:schoolday-${EMMA}-20261013@wuselwall.app`)
   );
   assertEquals(
     lineStartingWith(day ?? [], "SUMMARY:"),
-    "SUMMARY:Lotta: School",
+    "SUMMARY:Emma: School",
   );
   assertEquals(
     lineStartingWith(day ?? [], "DESCRIPTION:"),
@@ -749,7 +749,7 @@ Deno.test("English household: School and Cancelled", () => {
 });
 
 Deno.test("off, or no school rows in the feed: no school events and no school zone", () => {
-  const withoutSchool = feed({ members: { [LOTTA]: "Lotta" } });
+  const withoutSchool = feed({ members: { [EMMA]: "Emma" } });
   for (
     const out of [
       render(withoutSchool),
@@ -791,12 +791,12 @@ Deno.test("reference parser (ical.js) reads the school events", () => {
 
 // ── imported calendars (FR-1.9) ──────────────────────────────────────────────────
 
-const MEMBER_LOTTA = "11111111-1111-4111-8111-111111111111";
-const MEMBER_HANNA = "22222222-2222-4222-8222-222222222222";
+const MEMBER_EMMA = "11111111-1111-4111-8111-111111111111";
+const MEMBER_PAUL = "22222222-2222-4222-8222-222222222222";
 const CAL_FAMILY = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
-const CAL_LOTTA = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb";
+const CAL_EMMA = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb";
 
-/** Imported occurrences: the whole-family bin day, Lotta's match (timed) and Hanna's choir. */
+/** Imported occurrences: the whole-family bin day, Emma's match (timed) and Paul's choir. */
 function external(): ExternalOccurrence[] {
   return [
     {
@@ -812,9 +812,9 @@ function external(): ExternalOccurrence[] {
       location: null,
     },
     {
-      calendar_id: CAL_LOTTA,
+      calendar_id: CAL_EMMA,
       uid_hash: "b2".repeat(32),
-      member_ids: [MEMBER_LOTTA],
+      member_ids: [MEMBER_EMMA],
       starts_at: "2026-10-17T16:00:00+00:00",
       ends_at: "2026-10-17T17:30:00+00:00",
       all_day: false,
@@ -826,7 +826,7 @@ function external(): ExternalOccurrence[] {
     {
       calendar_id: "cccccccc-cccc-4ccc-8ccc-cccccccccccc",
       uid_hash: "c3".repeat(32),
-      member_ids: [MEMBER_HANNA],
+      member_ids: [MEMBER_PAUL],
       starts_at: "2026-10-18T18:00:00+00:00",
       ends_at: "2026-10-18T19:00:00+00:00",
       all_day: false,
@@ -893,7 +893,7 @@ Deno.test("imported UIDs are stable per occurrence and carry the calendar, the s
   );
   assertEquals(
     first[1],
-    `UID:ext-${CAL_LOTTA}-${"b2".repeat(32)}-20261017T1600@wuselwall.app`,
+    `UID:ext-${CAL_EMMA}-${"b2".repeat(32)}-20261017T1600@wuselwall.app`,
   );
   // A moved timed occurrence gets a new UID, so the subscriber sees one event leave and one arrive.
   const moved = subscribedFeed({ subscribed: true }, {
@@ -904,8 +904,8 @@ Deno.test("imported UIDs are stable per occurrence and carry the calendar, the s
   assert(!render(moved).includes(first[1]!));
 });
 
-Deno.test("a token that names Lotta: whole family and Lotta's calendar, not Hanna's", () => {
-  const out = render(subscribedFeed({ subscribed: true, profile_ids: [MEMBER_LOTTA] }));
+Deno.test("a token that names Emma: whole family and Emma's calendar, not Paul's", () => {
+  const out = render(subscribedFeed({ subscribed: true, profile_ids: [MEMBER_EMMA] }));
   const titles = externalBlocks(out).map((b) =>
     b.find((l) => l.startsWith("SUMMARY:"))
   );
@@ -913,8 +913,8 @@ Deno.test("a token that names Lotta: whole family and Lotta's calendar, not Hann
   assertFalse(out.includes("Chorprobe"));
 });
 
-Deno.test("a token that names Hanna gets the whole family and Hanna's choir only", () => {
-  const out = render(subscribedFeed({ subscribed: true, profile_ids: [MEMBER_HANNA] }));
+Deno.test("a token that names Paul gets the whole family and Paul's choir only", () => {
+  const out = render(subscribedFeed({ subscribed: true, profile_ids: [MEMBER_PAUL] }));
   const titles = externalBlocks(out).map((b) => b.find((l) => l.startsWith("SUMMARY:")));
   assertEquals(titles, ["SUMMARY:Restmüll", "SUMMARY:Chorprobe"]);
 });
@@ -929,7 +929,7 @@ Deno.test("imported occurrences are read as a plain VEVENT by an ICS parser", ()
   const root = new ICAL.Component(ICAL.parse(out));
   const timed = root.getAllSubcomponents("vevent").find((v: {
     getFirstPropertyValue(n: string): unknown;
-  }) => String(v.getFirstPropertyValue("uid")).startsWith(`ext-${CAL_LOTTA}`));
+  }) => String(v.getFirstPropertyValue("uid")).startsWith(`ext-${CAL_EMMA}`));
   assert(timed, "the timed imported event is in the parsed feed");
   assertEquals(timed.getFirstPropertyValue("summary"), "Spiel, Heim");
   assertEquals(timed.getFirstPropertyValue("dtstart").isDate, false);

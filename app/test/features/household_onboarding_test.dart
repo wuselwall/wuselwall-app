@@ -276,8 +276,8 @@ void main() {
       await t.pump();
       expect(find.widgetWithText(TextField, 'Name'), findsNWidgets(2));
 
-      await t.enterText(find.widgetWithText(TextField, 'Name').at(0), 'Lotta');
-      await t.enterText(find.widgetWithText(TextField, 'Name').at(1), 'Sabine');
+      await t.enterText(find.widgetWithText(TextField, 'Name').at(0), 'Emma');
+      await t.enterText(find.widgetWithText(TextField, 'Name').at(1), 'Julia');
       // The second row becomes an adult.
       await t.tap(find.text('Erwachsen').at(1));
       await t.pump();
@@ -291,8 +291,8 @@ void main() {
       final h = await onH2(t);
       await t.tap(find.text('Person hinzufügen'));
       await t.pump();
-      await t.enterText(find.widgetWithText(TextField, 'Name').at(0), 'Lotta');
-      await t.enterText(find.widgetWithText(TextField, 'Name').at(1), 'Sabine');
+      await t.enterText(find.widgetWithText(TextField, 'Name').at(0), 'Emma');
+      await t.enterText(find.widgetWithText(TextField, 'Name').at(1), 'Julia');
       await t.tap(find.text('Erwachsen').at(1));
       await t.pump();
 
@@ -302,8 +302,8 @@ void main() {
       expect(h.household.addedMembers, hasLength(1));
       final added = h.household.addedMembers.single;
       expect(added.map((m) => (m.displayName, m.isChild)).toList(), [
-        ('Lotta', true),
-        ('Sabine', false),
+        ('Emma', true),
+        ('Julia', false),
       ]);
       // With children and examples on, the child chores follow.
       expect(h.household.examplesCompleted, 1);
@@ -317,7 +317,7 @@ void main() {
       final h = await onH2(t);
       await t.tap(find.text('Erwachsen').at(0));
       await t.pump();
-      await t.enterText(find.widgetWithText(TextField, 'Name').at(0), 'Sabine');
+      await t.enterText(find.widgetWithText(TextField, 'Name').at(0), 'Julia');
       await t.tap(find.text('Fertig'));
       await t.pumpAndSettle();
       expect(h.household.addedMembers.single.single.isChild, isFalse);

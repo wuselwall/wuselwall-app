@@ -14,7 +14,7 @@ import '../support/fake_tasks.dart';
 import '../support/fakes.dart';
 
 const _mia = 'p-mia';
-const _lotta = 'p-lotta';
+const _emma = 'p-emma';
 
 /// A violet child on a shared kid device: the member colour is the accent, so the
 /// Redeem button is the violet ink with the member's onInk on it.
@@ -28,8 +28,8 @@ final _members = [
     isChild: true,
   ),
   const Member(
-    id: _lotta,
-    displayName: 'Lotta',
+    id: _emma,
+    displayName: 'Emma',
     color: Color(0xFFB5306B),
     role: Role.member,
     active: true,
@@ -55,7 +55,7 @@ FakeTasksApi _api() => FakeTasksApi(
   tables: {
     'point_balances': [
       {'profile_id': _mia, 'balance': 12},
-      {'profile_id': _lotta, 'balance': 4},
+      {'profile_id': _emma, 'balance': 4},
     ],
     'rewards': [
       {

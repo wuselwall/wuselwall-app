@@ -106,28 +106,18 @@ Map<String, Object?> _boardJson() => {
     'member_label': 'name',
   },
   'members': [
+    {'id': 'emma', 'display_name': 'Emma', 'color': '#7B3FE4', 'kind': 'child'},
+    {'id': 'paul', 'display_name': 'Paul', 'color': '#1F8A70', 'kind': 'child'},
     {
-      'id': 'lotta',
-      'display_name': 'Lotta',
-      'color': '#7B3FE4',
-      'kind': 'child',
-    },
-    {
-      'id': 'hanna',
-      'display_name': 'Hanna',
-      'color': '#1F8A70',
-      'kind': 'child',
-    },
-    {
-      'id': 'sabine',
-      'display_name': 'Sabine',
+      'id': 'julia',
+      'display_name': 'Julia',
       'color': '#D9622B',
       'kind': 'adult',
       'baseline': {'state': 'home_office', 'label': 'zu Hause'},
     },
     {
-      'id': 'lukas',
-      'display_name': 'Lukas',
+      'id': 'thomas',
+      'display_name': 'Thomas',
       'color': '#2F6FD6',
       'kind': 'adult',
       'baseline': {'state': 'home_office', 'label': 'Homeoffice'},
@@ -137,7 +127,7 @@ Map<String, Object?> _boardJson() => {
   'presence': [
     {
       'id': 'trip',
-      'member_id': 'lukas',
+      'member_id': 'thomas',
       'state': 'travel',
       'label': 'Dienstreise Berlin',
       'first_day': '2026-10-14',
@@ -150,31 +140,31 @@ Map<String, Object?> _boardJson() => {
       0,
       school: [
         _school(
-          'lotta',
+          'emma',
           starts: '08:00',
           ends: '14:25',
           notable: ['Sport'],
           careUntil: '15:00',
           careLabel: 'Hort',
         ),
-        _school('hanna', starts: '08:00', ends: '11:30'),
+        _school('paul', starts: '08:00', ends: '11:30'),
       ],
       meal: _meal(
         'dinner',
         time: '18:30',
         title: 'Kürbissuppe',
-        cook: 'sabine',
-        eating: ['sabine', 'lukas', 'lotta', 'hanna'],
+        cook: 'julia',
+        eating: ['julia', 'thomas', 'emma', 'paul'],
       ),
     ),
     _dayJson(
       1,
       school: [
-        _school('lotta', starts: '08:00', ends: '13:35'),
-        _school('hanna', free: 'holiday', holidayName: 'Herbstferien'),
+        _school('emma', starts: '08:00', ends: '13:35'),
+        _school('paul', free: 'holiday', holidayName: 'Herbstferien'),
       ],
       busy: [
-        {'member_id': 'sabine', 'until': '17:00'},
+        {'member_id': 'julia', 'until': '17:00'},
       ],
       // The empty meal: its zone stays and says so.
       meal: _meal('lunch', time: '12:00', eating: const []),
@@ -187,14 +177,14 @@ Map<String, Object?> _boardJson() => {
           'Heizungswartung',
           starts: '10:00',
           ends: '11:00',
-          who: ['sabine'],
+          who: ['julia'],
         ),
         _event(
           'z',
           'Zahnarzt',
           starts: '13:00',
           ends: '13:30',
-          who: ['hanna'],
+          who: ['paul'],
           key: true,
         ),
         _event(
@@ -202,7 +192,7 @@ Map<String, Object?> _boardJson() => {
           'Turnen',
           starts: '14:30',
           ends: '15:15',
-          who: ['lotta'],
+          who: ['emma'],
           key: true,
         ),
         _event(
@@ -210,7 +200,7 @@ Map<String, Object?> _boardJson() => {
           'Klavier',
           starts: '15:30',
           ends: '16:00',
-          who: ['lotta', 'hanna'],
+          who: ['emma', 'paul'],
           key: true,
         ),
         _event(
@@ -218,7 +208,7 @@ Map<String, Object?> _boardJson() => {
           'Grillen',
           starts: '16:00',
           ends: '17:00',
-          who: ['sabine', 'lukas'],
+          who: ['julia', 'thomas'],
           key: true,
           tentative: true,
         ),
@@ -226,50 +216,45 @@ Map<String, Object?> _boardJson() => {
           'e',
           'Elternabend',
           starts: '19:30',
-          who: ['sabine', 'lukas'],
+          who: ['julia', 'thomas'],
           key: true,
         ),
       ],
       school: [
         _school(
-          'lotta',
+          'emma',
           starts: '08:00',
           ends: '14:25',
           notable: ['Sport'],
           careUntil: '15:00',
           careLabel: 'Hort',
         ),
-        _school(
-          'hanna',
-          starts: '08:00',
-          ends: '12:45',
-          notable: ['Schwimmen'],
-        ),
+        _school('paul', starts: '08:00', ends: '12:45', notable: ['Schwimmen']),
       ],
       busy: [
-        {'member_id': 'sabine', 'until': '17:00'},
+        {'member_id': 'julia', 'until': '17:00'},
       ],
       meal: _meal(
         'dinner',
         time: '18:30',
         title: 'Chili sin Carne',
-        cook: 'sabine',
-        eating: ['sabine', 'lukas', 'lotta', 'hanna'],
+        cook: 'julia',
+        eating: ['julia', 'thomas', 'emma', 'paul'],
         guests: 2,
       ),
     ),
     _dayJson(
       3,
       school: [
-        _school('lotta', starts: '08:00', ends: '13:35'),
-        _school('hanna', starts: '08:00', ends: '11:30'),
+        _school('emma', starts: '08:00', ends: '13:35'),
+        _school('paul', starts: '08:00', ends: '11:30'),
       ],
       meal: _meal(
         'dinner',
         time: '18:30',
         title: 'Fischstäbchen',
-        cook: 'lukas',
-        eating: ['sabine', 'lotta'],
+        cook: 'thomas',
+        eating: ['julia', 'emma'],
       ),
     ),
     _dayJson(
@@ -278,8 +263,8 @@ Map<String, Object?> _boardJson() => {
         'dinner',
         time: '18:30',
         title: 'Nudeln',
-        cook: 'sabine',
-        eating: ['sabine', 'lukas'],
+        cook: 'julia',
+        eating: ['julia', 'thomas'],
       ),
     ),
     _dayJson(
@@ -288,8 +273,8 @@ Map<String, Object?> _boardJson() => {
         'lunch',
         time: '12:00',
         title: 'Pesto',
-        cook: 'lukas',
-        eating: ['lukas', 'sabine'],
+        cook: 'thomas',
+        eating: ['thomas', 'julia'],
       ),
     ),
     _dayJson(
@@ -298,15 +283,15 @@ Map<String, Object?> _boardJson() => {
         'lunch',
         time: '12:00',
         title: 'Braten',
-        cook: 'sabine',
-        eating: ['sabine', 'lukas', 'lotta', 'hanna'],
+        cook: 'julia',
+        eating: ['julia', 'thomas', 'emma', 'paul'],
         guests: 2,
       ),
     ),
   ],
   'open_tasks': [
-    {'member_id': 'lotta', 'count': 2},
-    {'member_id': 'hanna', 'count': 1},
+    {'member_id': 'emma', 'count': 2},
+    {'member_id': 'paul', 'count': 1},
   ],
   'shopping_count': 17,
 };
@@ -514,13 +499,13 @@ void main() {
         final wednesday = (json['days'] as List)[2] as Map<String, Object?>;
         (wednesday['events'] as List<Map<String, Object?>>).addAll(
           <Map<String, Object?>>[
-            _event('a', 'Arzt', starts: '12:30', ends: '13:00', who: ['hanna']),
+            _event('a', 'Arzt', starts: '12:30', ends: '13:00', who: ['paul']),
             _event(
               'f',
               'Friseur',
               starts: '16:30',
               ends: '17:00',
-              who: ['lotta'],
+              who: ['emma'],
             ),
           ],
         );
@@ -598,7 +583,7 @@ void main() {
     ) async {
       final handle = t.ensureSemantics();
       await _pumpBoard(t);
-      expect(find.bySemanticsLabel(RegExp(r'^Sabine, \S')), findsWidgets);
+      expect(find.bySemanticsLabel(RegExp(r'^Julia, \S')), findsWidgets);
       handle.dispose();
     });
 
@@ -809,7 +794,7 @@ void main() {
               if (fixture == 'reference-split') {
                 (json['presence'] as List).add({
                   'id': 'care',
-                  'member_id': 'lotta',
+                  'member_id': 'emma',
                   'state': 'childcare',
                   'label': 'Hort am Nachmittag',
                   'first_day': '2026-10-14',
@@ -953,7 +938,7 @@ void main() {
         matching: find.byType(BoardTap),
       );
       final memberNames = find.ancestor(
-        of: find.text('Lotta'),
+        of: find.text('Emma'),
         matching: find.byType(BoardTap),
       );
 

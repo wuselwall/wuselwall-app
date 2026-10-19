@@ -6,8 +6,8 @@ import 'package:wuselwall/features/invitations/domain/invitation.dart';
 /// An invitation that is open for a week from now.
 OpenInvitation openInvitation({
   String id = 'inv-1',
-  String profileId = 'p-sabine',
-  String profileName = 'Sabine',
+  String profileId = 'p-julia',
+  String profileName = 'Julia',
   InvitationRole role = InvitationRole.guardian,
   String? email,
 }) => OpenInvitation(
@@ -32,7 +32,7 @@ class FakeInvitationRepository implements InvitationRepository {
   final String household;
   final List<OpenInvitation> openList;
 
-  /// What `preview` answers; a valid invitation from Papa for Sabine when unset.
+  /// What `preview` answers; a valid invitation from Papa for Julia when unset.
   Result<PreviewOutcome>? previewResult;
 
   /// What `accept` answers; joined when unset.
@@ -110,7 +110,7 @@ class FakeInvitationRepository implements InvitationRepository {
             InvitationPreview(
               householdName: household,
               inviterFirstName: 'Papa',
-              profileName: 'Sabine',
+              profileName: 'Julia',
               role: InvitationRole.guardian,
               expiresAt: DateTime.now().add(const Duration(days: 7)),
             ),
@@ -137,8 +137,8 @@ class FakeInvitationRepository implements InvitationRepository {
         const Ok(
           Accepted(
             householdId: 'h1',
-            profileId: 'p-sabine',
-            deviceId: 'd-sabine',
+            profileId: 'p-julia',
+            deviceId: 'd-julia',
           ),
         );
   }

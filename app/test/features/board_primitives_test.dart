@@ -134,9 +134,9 @@ void main() {
     testWidgets('dot carries its semantics label', (tester) async {
       final handle = tester.ensureSemantics();
       await tester.pumpWidget(
-        _host(const MemberDot(memberColor: _violet, semanticLabel: 'Lukas')),
+        _host(const MemberDot(memberColor: _violet, semanticLabel: 'Thomas')),
       );
-      expect(find.bySemanticsLabel('Lukas'), findsOneWidget);
+      expect(find.bySemanticsLabel('Thomas'), findsOneWidget);
       handle.dispose();
     });
 
@@ -145,7 +145,7 @@ void main() {
         _host(
           const MemberDot(
             memberColor: _violet,
-            semanticLabel: 'Sabine',
+            semanticLabel: 'Julia',
             filled: false,
           ),
         ),
@@ -177,13 +177,13 @@ void main() {
       final handle = tester.ensureSemantics();
       const member = BoardMember(
         id: 'm1',
-        displayName: 'Hanna',
+        displayName: 'Paul',
         color: _violet,
         kind: MemberKind.child,
       );
       await tester.pumpWidget(_host(const MemberAvatar(member: member)));
-      expect(find.text('H'), findsOneWidget);
-      expect(find.bySemanticsLabel('Hanna'), findsOneWidget);
+      expect(find.text('P'), findsOneWidget);
+      expect(find.bySemanticsLabel('Paul'), findsOneWidget);
       handle.dispose();
     });
   });
