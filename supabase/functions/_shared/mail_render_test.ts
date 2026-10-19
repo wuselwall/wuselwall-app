@@ -6,10 +6,14 @@ import {
 } from "jsr:@std/assert@1.0.13";
 import {
   escapeHtml,
+  FALLBACK_SUBJECT,
+  FALLBACK_TEMPLATES,
+  type FallbackTemplateKind,
   isMailKind,
   MAIL_KINDS,
   type MailKind,
   MailRenderError,
+  renderFallbackTemplate,
   renderMail,
   resolveLocale,
 } from "./mail_render.ts";
@@ -85,6 +89,59 @@ Deno.test("HTML shows the code in large type and is a complete document", () => 
   assert(!mail.html.includes("<img"), "no images");
   assert(!mail.html.includes("<link"), "no external CSS");
   assert(!/src=|href=/.test(mail.html), "no remote resources or links");
+});
+
+Deno.test("HTML is built for every mail client: tables, inline styles, light colours", () => {
+  const mail = renderMail({ locale: "de", kind: "signup", token: CODE });
+  assertStringIncludes(mail.html, 'role="presentation"');
+  assertStringIncludes(mail.html, "<!--[if mso]>");
+  assertStringIncludes(mail.html, 'name="color-scheme" content="light"');
+  assertStringIncludes(mail.html, 'name="viewport"');
+  assert(!mail.html.includes("<style"), "inline styles only");
+  assert(!mail.html.includes("<script"), "no scripts");
+  // The heading names the action; the preview line is the lead, hidden in the body.
+  assertStringIncludes(mail.html, `>${MAIL_DE.heading.signup}</h1>`);
+  assertStringIncludes(mail.html, "display:none");
+  assertStringIncludes(mail.html, MAIL_DE.instruction);
+  assertStringIncludes(mail.html, MAIL_DE.footer);
+});
+
+Deno.test("text part: heading, code on its own line, instruction and footer", () => {
+  const mail = renderMail({ locale: "en", kind: "signup", token: CODE });
+  assert(mail.text.startsWith(`${MAIL_EN.heading.signup}\n`));
+  assertStringIncludes(mail.text, `\n${CODE}\n`);
+  assertStringIncludes(mail.text, MAIL_EN.instruction);
+  assertStringIncludes(mail.text, `\n-- \n${MAIL_EN.footer}`);
+});
+
+Deno.test("both languages define a heading for every kind", () => {
+  for (const kind of MAIL_KINDS) {
+    assert(MAIL_DE.heading[kind] && MAIL_EN.heading[kind], kind);
+  }
+});
+
+Deno.test("fallback templates: committed files match the renderer", async () => {
+  for (const [kind, file] of Object.entries(FALLBACK_TEMPLATES)) {
+    const committed = await Deno.readTextFile(
+      new URL(`../../templates/${file}`, import.meta.url),
+    );
+    assertEquals(
+      committed,
+      renderFallbackTemplate(kind as FallbackTemplateKind),
+      `supabase/templates/${file} is stale: run deno run --allow-write ` +
+        "supabase/functions/_shared/mail_templates_write.ts",
+    );
+  }
+});
+
+Deno.test("fallback templates: German first, English below, GoTrue's code twice", () => {
+  const html = renderFallbackTemplate("signup");
+  const de = html.indexOf(MAIL_DE.heading.signup);
+  const en = html.indexOf(MAIL_EN.heading.signup);
+  assert(de > 0 && en > de, "German card before the English one");
+  assertEquals(html.split("{{ .Token }}").length - 1, 2);
+  assertStringIncludes(html, `<title>${FALLBACK_SUBJECT}</title>`);
+  assert(!/src=|href=/.test(html), "no remote resources or links");
 });
 
 Deno.test("recovery, reauthentication: a code, the right subject and wording", () => {
