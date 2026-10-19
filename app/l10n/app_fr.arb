@@ -641,6 +641,7 @@
   "@calendarPrevious": {},
   "calendarNext": "Suivant",
   "@calendarNext": {},
+  "calendarChooseView": "Vue du calendrier",
   "calendarToday": "Aujourd’hui",
   "@calendarToday": {},
   "calendarRange": "{from} – {to}",
@@ -1601,6 +1602,18 @@
   "regionPickSkip": "Continuer sans région",
   "regionPickEmpty": "Aucune région pour ce pays.",
   "regionUnavailable": "La liste des régions n’est pas disponible pour le moment. Vérifie la connexion et réessaie.",
+  "regionCategoryCanton": "Canton",
+  "regionNameWithAbbreviation": "{name} ({abbreviation})",
+  "@regionNameWithAbbreviation": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "abbreviation": {
+        "type": "String"
+      }
+    }
+  },
   "regionNameTop": "{category} {name}",
   "@regionNameTop": {
     "placeholders": {
@@ -2384,5 +2397,11 @@
     }
   },
   "settingNotifyPackingTitle": "Rappel pour préparer les affaires la veille au soir",
-  "settingNotifyPackingHelp": "À cette heure, ton téléphone indique les affaires à mettre dans le cartable pour demain, selon les emplois du temps (par exemple la tenue de sport). Uniquement s’il y a quelque chose à préparer."
+  "settingNotifyPackingHelp": "À cette heure, ton téléphone indique les affaires à mettre dans le cartable pour demain, selon les emplois du temps (par exemple la tenue de sport). Uniquement s’il y a quelque chose à préparer.",
+  "appearanceTitle": "Apparence",
+  "appearanceSystem": "Automatique",
+  "appearanceSystemHelp": "Clair ou sombre, selon le réglage de cet appareil",
+  "appearanceLight": "Clair",
+  "appearanceDark": "Sombre",
+  "appearanceNightNote": "La nuit, l’écran mural affiche toujours sa vue de nuit."
 }

@@ -1226,6 +1226,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get calendarNext => 'Suivant';
 
   @override
+  String get calendarChooseView => 'Vue du calendrier';
+
+  @override
   String get calendarToday => 'Aujourd’hui';
 
   @override
@@ -2953,6 +2956,14 @@ class AppLocalizationsFr extends AppLocalizations {
       'La liste des régions n’est pas disponible pour le moment. Vérifie la connexion et réessaie.';
 
   @override
+  String get regionCategoryCanton => 'Canton';
+
+  @override
+  String regionNameWithAbbreviation(String name, String abbreviation) {
+    return '$name ($abbreviation)';
+  }
+
+  @override
   String regionNameTop(String category, String name) {
     return '$category $name';
   }
@@ -4326,4 +4337,24 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get settingNotifyPackingHelp =>
       'À cette heure, ton téléphone indique les affaires à mettre dans le cartable pour demain, selon les emplois du temps (par exemple la tenue de sport). Uniquement s’il y a quelque chose à préparer.';
+
+  @override
+  String get appearanceTitle => 'Apparence';
+
+  @override
+  String get appearanceSystem => 'Automatique';
+
+  @override
+  String get appearanceSystemHelp =>
+      'Clair ou sombre, selon le réglage de cet appareil';
+
+  @override
+  String get appearanceLight => 'Clair';
+
+  @override
+  String get appearanceDark => 'Sombre';
+
+  @override
+  String get appearanceNightNote =>
+      'La nuit, l’écran mural affiche toujours sa vue de nuit.';
 }

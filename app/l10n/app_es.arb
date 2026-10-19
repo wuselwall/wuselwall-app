@@ -641,6 +641,7 @@
   "@calendarPrevious": {},
   "calendarNext": "Siguiente",
   "@calendarNext": {},
+  "calendarChooseView": "Vista del calendario",
   "calendarToday": "Hoy",
   "@calendarToday": {},
   "calendarRange": "{from} – {to}",
@@ -1601,6 +1602,18 @@
   "regionPickSkip": "Continuar sin región",
   "regionPickEmpty": "No hay regiones para este país.",
   "regionUnavailable": "La lista de regiones no está disponible ahora. Comprueba la conexión e inténtalo de nuevo.",
+  "regionCategoryCanton": "Cantón",
+  "regionNameWithAbbreviation": "{name} ({abbreviation})",
+  "@regionNameWithAbbreviation": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "abbreviation": {
+        "type": "String"
+      }
+    }
+  },
   "regionNameTop": "{category} {name}",
   "@regionNameTop": {
     "placeholders": {
@@ -2384,5 +2397,11 @@
     }
   },
   "settingNotifyPackingTitle": "Recordatorio de mochila la noche anterior",
-  "settingNotifyPackingHelp": "A esta hora, tu teléfono te indica qué hay que llevar mañana en la mochila según los horarios, como la ropa de Educación Física. Solo avisa si hay algo que preparar."
+  "settingNotifyPackingHelp": "A esta hora, tu teléfono te indica qué hay que llevar mañana en la mochila según los horarios, como la ropa de Educación Física. Solo avisa si hay algo que preparar.",
+  "appearanceTitle": "Apariencia",
+  "appearanceSystem": "Automático",
+  "appearanceSystemHelp": "Claro u oscuro, según el ajuste de este dispositivo",
+  "appearanceLight": "Claro",
+  "appearanceDark": "Oscuro",
+  "appearanceNightNote": "Por la noche, la pantalla de pared siempre muestra su vista nocturna."
 }
