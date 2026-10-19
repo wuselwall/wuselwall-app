@@ -12,6 +12,15 @@ export const MAIL_EN: MailMessages = {
     reauthentication: "Your WuselWall code to confirm",
     invite: "Invitation to WuselWall",
   },
+  heading: {
+    magiclink: "Your sign-in code",
+    signup: "Confirm your email address",
+    email: "Your sign-in code",
+    recovery: "Reset your password",
+    email_change: "Confirm your new email address",
+    reauthentication: "Confirm it's you",
+    invite: "You're invited",
+  },
   lead: {
     magiclink: "Here is your code to sign in to WuselWall:",
     signup: "Welcome to WuselWall! Here is your code to confirm your account:",
@@ -24,8 +33,10 @@ export const MAIL_EN: MailMessages = {
   },
   codeLabelOld: "Code for your previous address",
   codeLabelNew: "Code for your new address",
+  instruction: "Enter the code in WuselWall.",
   validity: "The code is valid for 10 minutes.",
   ignore: "If this wasn't you, you can ignore this email.",
   greeting: "Hi,",
   signoff: "Best regards from WuselWall",
+  footer: "This email comes from the WuselWall server your account is on.",
 };

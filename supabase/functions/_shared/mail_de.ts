@@ -12,6 +12,15 @@ export const MAIL_DE: MailMessages = {
     reauthentication: "Dein WuselWall-Code zur Bestätigung",
     invite: "Einladung zu WuselWall",
   },
+  heading: {
+    magiclink: "Dein Anmeldecode",
+    signup: "Bestätige deine E-Mail-Adresse",
+    email: "Dein Anmeldecode",
+    recovery: "Passwort zurücksetzen",
+    email_change: "Bestätige deine neue E-Mail-Adresse",
+    reauthentication: "Bestätige, dass du es bist",
+    invite: "Du bist eingeladen",
+  },
   lead: {
     magiclink: "Hier ist dein Code für die Anmeldung bei WuselWall:",
     signup:
@@ -27,8 +36,10 @@ export const MAIL_DE: MailMessages = {
   },
   codeLabelOld: "Code für deine bisherige Adresse",
   codeLabelNew: "Code für deine neue Adresse",
+  instruction: "Gib den Code in WuselWall ein.",
   validity: "Der Code ist 10 Minuten gültig.",
   ignore: "Wenn du das nicht warst, kannst du diese E-Mail ignorieren.",
   greeting: "Hallo,",
   signoff: "Viele Grüße von WuselWall",
+  footer: "Diese E-Mail kommt vom WuselWall-Server deines Kontos.",
 };
