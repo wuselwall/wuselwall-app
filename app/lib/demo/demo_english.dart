@@ -71,6 +71,7 @@ const _texts = {
   'Dienstreise Berlin': 'Business trip to Leeds',
   'Oma': 'Grandma',
   'zu Hause': 'At home',
+  'Büro': 'Office',
   'Homeoffice': 'Working from home',
   // Appointments
   'Müll rausstellen': 'Put the bins out',

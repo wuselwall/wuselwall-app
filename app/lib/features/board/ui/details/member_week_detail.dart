@@ -62,7 +62,7 @@ class _DayRow extends StatelessWidget {
       for (final e in day.events)
         if (e.attendeeIds.contains(member.id)) e,
     ];
-    final baseline = member.baseline;
+    final usual = board.usualOn(member.id, index);
 
     return DayRow(
       date: day.date,
@@ -88,15 +88,16 @@ class _DayRow extends StatelessWidget {
               ),
             ),
           if (bands.isEmpty)
-            if (baseline != null)
-              Padding(
-                padding: const EdgeInsets.only(bottom: Tokens.space2),
-                child: BaselineChip(
-                  memberColor: member.color,
-                  label: context.presenceLabel(baseline.state, baseline.label),
-                  wraps: true,
-                ),
-              )
+            if (usual.isNotEmpty)
+              for (final place in usual)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: Tokens.space2),
+                  child: BaselineChip(
+                    memberColor: member.color,
+                    label: context.usualLabel(place),
+                    wraps: true,
+                  ),
+                )
             else
               Text(l10n.boardNoDeviation, style: detailUi(24, ww.ink3)),
           if (busy != null)

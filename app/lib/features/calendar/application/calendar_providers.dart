@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/core/realtime/household_channel.dart';
 import 'package:wuselwall/features/calendar/data/calendar_repository.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
+import 'package:wuselwall/features/calendar/domain/usual_week.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 
 /// How many days the calendar shows at once. The week starts on Monday (specs/05).
@@ -102,3 +103,12 @@ final calendarEventProvider = FutureProvider.autoDispose
       ref.watch(deviceKeyProvider);
       return (await ref.watch(calendarRepositoryProvider).event(id)).unwrap();
     });
+
+/// Every member's usual week (`api.usual_weeks`), for the settings page, which
+/// refreshes it after a save.
+final usualWeeksProvider = FutureProvider.autoDispose<List<UsualWeek>>((
+  ref,
+) async {
+  ref.watch(deviceKeyProvider);
+  return (await ref.watch(calendarRepositoryProvider).usualWeeks()).unwrap();
+});

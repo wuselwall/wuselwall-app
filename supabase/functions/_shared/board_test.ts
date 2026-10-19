@@ -6,6 +6,7 @@ import {
   fillHolidays,
   fillMeals,
   fillSchool,
+  fillUsual,
   type MealEntryRow,
   type MealInput,
   type MealJson,
@@ -786,4 +787,39 @@ Deno.test("a public holiday of the household's region is a free day for the meal
   });
   assertEquals(mealOf(board, "2026-10-14").slot, "lunch");
   assertEquals(mealOf(board, "2026-10-13").slot, "dinner");
+});
+
+// ── the usual week ──────────────────────────────────────────────────────────────
+
+Deno.test("fillUsual puts the board members' usual places on their weekdays, none on a holiday", () => {
+  const withHoliday = fillHolidays(base(), [], [ASCENSION, ZH_ONLY], "CH-ZH", "de-DE");
+  const input = structuredClone(withHoliday);
+  const board = fillUsual(withHoliday, [
+    {
+      profile_id: "m1",
+      anchor: null,
+      slots: [1, 2, 3].map((weekday) => ({
+        week: 0,
+        weekday,
+        position: 1,
+        state: "home_office",
+        label: null,
+        starts: null,
+        ends: null,
+      })),
+    },
+    // Not a member of the board (left the family): never drawn.
+    {
+      profile_id: "gone",
+      anchor: null,
+      slots: [{ week: 0, weekday: 2, position: 1, state: "off", label: null, starts: null, ends: null }],
+    },
+  ]);
+  // Monday 12 is Sechseläuten in Zürich.
+  assertEquals(dayOf(board, "2026-10-12").usual, []);
+  assertEquals(dayOf(board, "2026-10-13").usual, [
+    { member_id: "m1", state: "home_office", label: null, starts: null, ends: null },
+  ]);
+  assertEquals(dayOf(board, "2026-10-15").usual, []);
+  assertEquals(withHoliday, input);
 });

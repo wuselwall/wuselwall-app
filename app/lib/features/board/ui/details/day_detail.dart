@@ -253,7 +253,7 @@ class _WhoAndMeal extends StatelessWidget {
     final bands = board.presenceOn(m.id, dayIndex);
     final busy = day.busyUntil[m.id];
     final school = day.school[m.id];
-    final baseline = m.baseline;
+    final usual = board.usualOn(m.id, dayIndex);
     return Padding(
       padding: const EdgeInsets.only(bottom: Tokens.space6),
       child: Column(
@@ -279,15 +279,16 @@ class _WhoAndMeal extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: Tokens.space2),
               child: _band(context, b, m, dayIndex),
             ),
-          if (bands.isEmpty && baseline != null)
-            Padding(
-              padding: const EdgeInsets.only(bottom: Tokens.space2),
-              child: BaselineChip(
-                memberColor: m.color,
-                label: context.presenceLabel(baseline.state, baseline.label),
-                wraps: true,
+          if (bands.isEmpty)
+            for (final place in usual)
+              Padding(
+                padding: const EdgeInsets.only(bottom: Tokens.space2),
+                child: BaselineChip(
+                  memberColor: m.color,
+                  label: context.usualLabel(place),
+                  wraps: true,
+                ),
               ),
-            ),
           if (busy != null)
             Text(
               context.l10n.boardBusyUntil(context.time(busy)),
