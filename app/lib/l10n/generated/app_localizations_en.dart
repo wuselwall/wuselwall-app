@@ -3489,11 +3489,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get householdLanguageEn => 'English';
 
   @override
-  String get householdNewFounderCode => 'Founder code';
+  String get householdNewFounderCode => 'Setup code';
 
   @override
   String get householdNewFounderHelp =>
-      'The person who runs your server gives you the founder code.';
+      'Use the setup code shown when your server was installed, or ask the person who runs it. This is not the code from your sign-in email.';
+
+  @override
+  String get householdNewCodeSaved =>
+      'Setup code saved from your setup link. You do not need to enter it again.';
 
   @override
   String get householdSeedExamples =>
@@ -3513,10 +3517,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get householdNewErrNoCode =>
-      'New families are only possible with a founder code for now.';
+      'This server needs a setup code to create a family. Use the code from the server installation, not your email code.';
 
   @override
-  String get householdNewErrCodeWrong => 'The founder code is not correct.';
+  String get householdNewErrCodeWrong =>
+      'This setup code is invalid or has already been used. Ask the person who runs your server for a new setup link or code.';
 
   @override
   String get householdNewErrRateLimited =>
