@@ -5,6 +5,7 @@ import 'package:wuselwall/app/bootstrap.dart';
 import 'package:wuselwall/app/config_error_app.dart';
 import 'package:wuselwall/app/licenses.dart';
 import 'package:wuselwall/app/link_source.dart';
+import 'package:wuselwall/app/setup_link_watch.dart';
 import 'package:wuselwall/core/config/app_config.dart';
 import 'package:wuselwall/core/logging/log.dart';
 import 'package:wuselwall/core/server/setup_link.dart';
@@ -30,6 +31,7 @@ Future<void> main() async {
   }
 
   final initialSetup = kIsWeb ? parseSetupLink(Uri.base.toString()) : null;
+  if (kIsWeb) watchSetupLinks();
   // Remove installer capabilities from browser history before the router starts.
   // The fragment was never sent to the web server or the discovery endpoint.
   if (kIsWeb && Uri.base.fragment.startsWith('setup=')) {
