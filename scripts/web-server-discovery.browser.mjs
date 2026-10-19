@@ -50,8 +50,11 @@ try {
       await page.locator('flt-semantics-placeholder').evaluate((element) => element.click()).catch(() => {});
       await page.getByRole('button', { name: 'Continue with email', exact: true }).click({ timeout: 30000 });
       await page.locator('input').first().fill('browser-probe@example.org', { force: true });
+      const sent = page.waitForResponse((response) => response.request().method() === 'POST' &&
+        new URL(response.url()).pathname === '/auth/v1/otp');
       await page.getByRole('button', { name: 'Continue', exact: true }).click();
-      await page.waitForFunction(() => document.body.innerText.includes('6-digit code'), { timeout: 30000 });
+      assert.equal((await sent).status(), 200);
+      await page.waitForFunction(() => document.body.innerText.includes('6-digit code'));
       assert.ok(discoveryRequests > 0, 'web app must fetch its installation discovery document');
       assert.equal(otpRequests.length, 1, 'one code request, no restart');
       assert.ok(otpRequests[0].url.startsWith(`${backend}/auth/v1/otp`));
