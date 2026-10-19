@@ -44,24 +44,27 @@ class RegisterHomePage extends ConsumerWidget {
     final tab = adult ? ref.watch(homeTabProvider) : HomeTab.shopping;
     final section = homeSections[tab]!;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(section.label(l10n)),
-        bottom: section.bottom,
-        actions: [
-          if (kDebugMode)
-            IconButton(
-              tooltip: l10n.systemTitle,
-              icon: const Icon(Icons.developer_mode),
-              onPressed: () => context.go(Routes.system),
-            ),
-          IconButton(
-            tooltip: l10n.settingsTitle,
-            icon: const Icon(Icons.settings),
-            onPressed: () => context.go(Routes.settings),
-          ),
-        ],
+    final actions = <Widget>[
+      if (kDebugMode)
+        IconButton(
+          tooltip: l10n.systemTitle,
+          icon: const Icon(Icons.developer_mode),
+          onPressed: () => context.go(Routes.system),
+        ),
+      IconButton(
+        tooltip: l10n.settingsTitle,
+        icon: const Icon(Icons.settings),
+        onPressed: () => context.go(Routes.settings),
       ),
+    ];
+    return Scaffold(
+      appBar:
+          section.appBar?.call(context, actions) ??
+          AppBar(
+            title: Text(section.label(l10n)),
+            bottom: section.bottom,
+            actions: actions,
+          ),
       body: SafeArea(
         bottom: false,
         child: Column(

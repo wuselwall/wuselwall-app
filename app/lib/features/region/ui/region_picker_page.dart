@@ -53,11 +53,7 @@ class _RegionPickerPageState extends ConsumerState<RegionPickerPage> {
     final top = _top;
     final country = _country;
     final title = top != null
-        ? regionNameTop(
-            l10n,
-            top.category,
-            top.displayName(languageOf(context)),
-          )
+        ? regionHeading(l10n, top, languageOf(context))
         : country != null
         ? l10n.regionPickRegionTitle
         : l10n.regionPickCountryTitle;
@@ -114,10 +110,18 @@ class _RegionPickerPageState extends ConsumerState<RegionPickerPage> {
     final language = languageOf(context);
     final index = RegionIndex(all);
     final needle = fold(_query);
-    final tops = [
-      for (final r in all)
-        if (r.level == 1 && fold(r.displayName(language)).contains(needle)) r,
-    ];
+    final tops =
+        [
+          for (final r in all)
+            if (r.level == 1 &&
+                (fold(r.displayName(language)).contains(needle) ||
+                    fold(r.shortName).contains(needle)))
+              r,
+        ]..sort(
+          (a, b) =>
+              fold(b.displayName(language))
+                  .compareTo(fold(a.displayName(language))),
+        );
     return Column(
       children: [
         _SearchField(
@@ -137,13 +141,7 @@ class _RegionPickerPageState extends ConsumerState<RegionPickerPage> {
                   itemBuilder: (context, i) {
                     final r = tops[i];
                     return ListTile(
-                      title: Text(
-                        regionNameTop(
-                          l10n,
-                          r.category,
-                          r.displayName(language),
-                        ),
-                      ),
+                      title: Text(regionHeading(l10n, r, language)),
                       trailing: const Icon(Icons.chevron_right),
                       onTap: () {
                         // Without districts or municipalities there is nothing to choose.
@@ -205,13 +203,7 @@ class _RegionPickerPageState extends ConsumerState<RegionPickerPage> {
                         title: Text(r.displayName(language)),
                         subtitle: parent == null
                             ? null
-                            : Text(
-                                regionNameTop(
-                                  l10n,
-                                  parent.category,
-                                  parent.displayName(language),
-                                ),
-                              ),
+                            : Text(regionHeading(l10n, parent, language)),
                         onTap: () => _pick(r.code),
                       );
                     },

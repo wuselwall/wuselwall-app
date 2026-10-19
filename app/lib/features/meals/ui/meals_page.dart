@@ -20,13 +20,10 @@ import 'package:wuselwall/features/meals/ui/meal_editor_sheet.dart';
 import 'package:wuselwall/features/meals/ui/meals_format.dart';
 import 'package:wuselwall/features/meals/ui/shopping_preview_sheet.dart';
 
-/// The week's navigation, in the app bar's bottom: the week before, the week after, and
-/// a tap on the range to come back to this week.
-class MealsToolbar extends ConsumerWidget implements PreferredSizeWidget {
+/// The week's navigation, in the app bar: the week before, the week after, and a tap on
+/// the range to come back to this week.
+class MealsToolbar extends ConsumerWidget {
   const MealsToolbar({super.key});
-
-  @override
-  Size get preferredSize => const Size.fromHeight(56);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -38,38 +35,35 @@ class MealsToolbar extends ConsumerWidget implements PreferredSizeWidget {
       weekStart.month,
       weekStart.day + 6,
     );
-    return SizedBox(
-      height: 56,
-      child: Row(
-        children: [
-          IconButton(
-            tooltip: l10n.mealsPrevWeek,
-            icon: const Icon(Icons.chevron_left),
-            onPressed: () => nav.shift(-1),
-          ),
-          Expanded(
-            child: InkWell(
-              onTap: nav.today,
-              child: Center(
-                child: Text(
-                  l10n.mealsWeekRange(
-                    context.dayMonth(weekStart),
-                    context.dayMonth(weekEnd),
-                  ),
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontFeatures: const [FontFeature.tabularFigures()],
-                  ),
+    return Row(
+      children: [
+        IconButton(
+          tooltip: l10n.mealsPrevWeek,
+          icon: const Icon(Icons.chevron_left),
+          onPressed: () => nav.shift(-1),
+        ),
+        Expanded(
+          child: InkWell(
+            onTap: nav.today,
+            child: Center(
+              child: Text(
+                l10n.mealsWeekRange(
+                  context.dayMonth(weekStart),
+                  context.dayMonth(weekEnd),
+                ),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontFeatures: const [FontFeature.tabularFigures()],
                 ),
               ),
             ),
           ),
-          IconButton(
-            tooltip: l10n.mealsNextWeek,
-            icon: const Icon(Icons.chevron_right),
-            onPressed: () => nav.shift(1),
-          ),
-        ],
-      ),
+        ),
+        IconButton(
+          tooltip: l10n.mealsNextWeek,
+          icon: const Icon(Icons.chevron_right),
+          onPressed: () => nav.shift(1),
+        ),
+      ],
     );
   }
 }

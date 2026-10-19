@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/palette.dart';
@@ -37,6 +38,37 @@ class SchoolSetupPage extends ConsumerStatefulWidget {
 
 class _SchoolSetupPageState extends ConsumerState<SchoolSetupPage> {
   String? _selectedId;
+  var _formKey = GlobalKey<_SchoolFormState>();
+  var _bellsKey = GlobalKey<_BellTimesState>();
+  bool _saving = false;
+
+  void _resetDraft() {
+    _formKey = GlobalKey<_SchoolFormState>();
+    _bellsKey = GlobalKey<_BellTimesState>();
+  }
+
+  void _changed() => setState(() {});
+
+  bool get _dirty =>
+      (_formKey.currentState?.isDirty ?? false) ||
+      (_bellsKey.currentState?.isDirty ?? false);
+
+  Future<void> _save() async {
+    if (_saving) return;
+    final form = _formKey.currentState;
+    final bells = _bellsKey.currentState;
+    setState(() => _saving = true);
+    try {
+      if (form != null && form.isDirty && !await form.save()) return;
+      if (bells != null && bells.isDirty && !await bells.save()) return;
+      if (!mounted) return;
+      ref.invalidate(schoolDataProvider);
+      ref.invalidate(schoolWeekProvider);
+      context.showMessage(context.l10n.schoolSaved);
+    } finally {
+      if (mounted) setState(() => _saving = false);
+    }
+  }
 
   /// True while the empty form for another school is on screen.
   bool _adding = false;
@@ -52,57 +84,78 @@ class _SchoolSetupPageState extends ConsumerState<SchoolSetupPage> {
     final l10n = context.l10n;
     final data = ref.watch(schoolDataProvider);
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.schoolSetupTitle)),
-      body: AsyncValueView(
-        value: data,
-        onRetry: () => ref.invalidate(schoolDataProvider),
-        data: (d) {
-          final school = _adding
-              ? null
-              : d.schools.where((s) => s.id == _selectedId).firstOrNull ??
-                    d.schools.firstOrNull;
-          return ListView(
-            padding: const EdgeInsets.all(16),
-            children: [
-              if (d.schools.length > 1)
-                _SchoolSwitcher(
-                  schools: d.schools,
-                  selected: school,
-                  onSelected: (id) => setState(() {
+      appBar: AppBar(
+        title: Text(l10n.schoolSetupTitle),
+        actions: [
+          if (_dirty || _saving)
+            TextButton(
+              onPressed: _saving || !(_formKey.currentState?.isValid ?? false)
+                  ? null
+                  : _save,
+              child: Text(l10n.save),
+            ),
+        ],
+      ),
+      body: AbsorbPointer(
+        absorbing: _saving,
+        child: AsyncValueView(
+          value: data,
+          onRetry: () => ref.invalidate(schoolDataProvider),
+          data: (d) {
+            final school = _adding
+                ? null
+                : d.schools.where((s) => s.id == _selectedId).firstOrNull ??
+                      d.schools.firstOrNull;
+            return ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                if (d.schools.length > 1)
+                  _SchoolSwitcher(
+                    schools: d.schools,
+                    selected: school,
+                    onSelected: (id) => setState(() {
+                      _resetDraft();
+                      _adding = false;
+                      _selectedId = id;
+                    }),
+                  ),
+                if (!_adding)
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton.icon(
+                      onPressed: () => setState(() {
+                        _resetDraft();
+                        _adding = true;
+                      }),
+                      icon: const Icon(Icons.add),
+                      label: Text(l10n.schoolsUiAddSchool),
+                    ),
+                  ),
+                _SchoolForm(
+                  key: _formKey,
+                  onChanged: _changed,
+                  school: school,
+                  onCreated: (id) => setState(() {
+                    _resetDraft();
                     _adding = false;
                     _selectedId = id;
                   }),
                 ),
-              if (!_adding)
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: TextButton.icon(
-                    onPressed: () => setState(() => _adding = true),
-                    icon: const Icon(Icons.add),
-                    label: Text(l10n.schoolsUiAddSchool),
+                if (school != null) ...[
+                  _BellTimes(
+                    key: _bellsKey,
+                    onChanged: _changed,
+                    data: d,
+                    school: school,
                   ),
-                ),
-              _SchoolForm(
-                key: ValueKey('school-form-${school?.id ?? 'new'}'),
-                school: school,
-                onCreated: (id) => setState(() {
-                  _adding = false;
-                  _selectedId = id;
-                }),
-              ),
-              if (school != null) ...[
-                _BellTimes(
-                  key: ValueKey('bells-${school.id}'),
-                  data: d,
-                  school: school,
-                ),
-                _Terms(data: d, school: school),
-                _Holidays(data: d, school: school),
+                  _Terms(data: d, school: school),
+                  _Holidays(data: d, school: school),
+                ],
+                _Subjects(data: d),
               ],
-              _Subjects(data: d),
-            ],
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
@@ -155,8 +208,9 @@ class _SchoolSwitcher extends StatelessWidget {
 Future<bool> _write(
   BuildContext context,
   WidgetRef ref,
-  Future<Result<Object?>> Function(String? actor) action,
-) async {
+  Future<Result<Object?>> Function(String? actor) action, {
+  bool refresh = true,
+}) async {
   final result = await action(ref.read(actingProfileProvider));
   if (!context.mounted) return false;
   switch (result) {
@@ -164,9 +218,11 @@ Future<bool> _write(
       context.showFailure(failure);
       return false;
     case Ok():
-      ref.invalidate(schoolDataProvider);
-      ref.invalidate(schoolWeekProvider);
-      context.showMessage(context.l10n.schoolSaved);
+      if (refresh) {
+        ref.invalidate(schoolDataProvider);
+        ref.invalidate(schoolWeekProvider);
+        context.showMessage(context.l10n.schoolSaved);
+      }
       return true;
   }
 }
@@ -204,17 +260,65 @@ class _Section extends StatelessWidget {
 /// school, which proposes the household's region; [onCreated] receives the new id once it
 /// is saved.
 class _SchoolForm extends ConsumerStatefulWidget {
-  const _SchoolForm({required this.school, required this.onCreated, super.key});
+  const _SchoolForm({
+    required this.school,
+    required this.onCreated,
+    required this.onChanged,
+    super.key,
+  });
 
   final SchoolRecord? school;
   final ValueChanged<String> onCreated;
+  final VoidCallback onChanged;
 
   @override
   ConsumerState<_SchoolForm> createState() => _SchoolFormState();
 }
 
-class _SchoolFormState extends ConsumerState<_SchoolForm> {
+class _SchoolFormState extends ConsumerState<_SchoolForm>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   late final _name = TextEditingController(text: widget.school?.name ?? '');
+  late String _savedName = widget.school?.name ?? '';
+  late String? _savedRegion = widget.school?.regionCode;
+
+  bool get isValid => _name.text.trim().isNotEmpty;
+
+  bool get isDirty =>
+      _name.text.trim() != _savedName || (_touched && _picked != _savedRegion);
+
+  Future<bool> save() async {
+    final name = _name.text.trim();
+    if (name.isEmpty) return false;
+    final settings =
+        ref.read(householdSettingsProvider).value ?? const <SettingEntry>[];
+    final region = _regionOn(settings);
+    String? savedId;
+    final saved = await _write(context, ref, (actor) async {
+      final result = await ref
+          .read(schoolRepositoryProvider)
+          .saveSchool(
+            actor: actor,
+            id: widget.school?.id,
+            name: name,
+            regionCode: region,
+            // A new school takes the household's timezone on the server.
+            timezone: widget.school?.timezone,
+          );
+      savedId = result.valueOrNull;
+      return result;
+    }, refresh: false);
+    if (!saved || !mounted) return false;
+    _savedName = name;
+    _savedRegion = region;
+    if (region != null) await _proposeHouseholdRegion(region);
+    if (!mounted) return false;
+    final id = savedId;
+    if (widget.school == null && id != null) widget.onCreated(id);
+    return true;
+  }
 
   /// What the user picked or cleared; used once [_touched] is set.
   String? _picked;
@@ -251,6 +355,7 @@ class _SchoolFormState extends ConsumerState<_SchoolForm> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final l10n = context.l10n;
     final settings =
         ref.watch(householdSettingsProvider).value ?? const <SettingEntry>[];
@@ -261,6 +366,7 @@ class _SchoolFormState extends ConsumerState<_SchoolForm> {
       children: [
         TextField(
           controller: _name,
+          onChanged: (_) => widget.onChanged(),
           decoration: InputDecoration(labelText: l10n.schoolName),
         ),
         const SizedBox(height: 12),
@@ -269,42 +375,8 @@ class _SchoolFormState extends ConsumerState<_SchoolForm> {
           onChanged: (code) => setState(() {
             _touched = true;
             _picked = code;
+            widget.onChanged();
           }),
-        ),
-        const SizedBox(height: 12),
-        Align(
-          alignment: Alignment.centerRight,
-          child: FilledButton(
-            onPressed: () async {
-              final name = _name.text.trim();
-              if (name.isEmpty) return;
-              final region = _regionOn(settings);
-              String? savedId;
-              final saved = await _write(context, ref, (actor) async {
-                final result = await ref
-                    .read(schoolRepositoryProvider)
-                    .saveSchool(
-                      actor: actor,
-                      id: widget.school?.id,
-                      name: name,
-                      regionCode: region,
-                      // A new school takes the household's timezone on the server;
-                      // an existing one keeps its own.
-                      timezone: widget.school?.timezone,
-                    );
-                savedId = result.valueOrNull;
-                return result;
-              });
-              if (saved && region != null) {
-                await _proposeHouseholdRegion(region);
-              }
-              final id = savedId;
-              if (saved && widget.school == null && id != null) {
-                widget.onCreated(id);
-              }
-            },
-            child: Text(l10n.save),
-          ),
         ),
       ],
     );
@@ -313,8 +385,14 @@ class _SchoolFormState extends ConsumerState<_SchoolForm> {
 
 /// Bell times in order: a lesson (its index counts up) and the break after it.
 class _BellTimes extends ConsumerStatefulWidget {
-  const _BellTimes({required this.data, required this.school, super.key});
+  const _BellTimes({
+    required this.data,
+    required this.school,
+    required this.onChanged,
+    super.key,
+  });
 
+  final VoidCallback onChanged;
   final SchoolData data;
   final SchoolRecord school;
 
@@ -330,13 +408,49 @@ class _BellRow {
   TimeOfDay ends;
 }
 
-class _BellTimesState extends ConsumerState<_BellTimes> {
+class _BellTimesState extends ConsumerState<_BellTimes>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   late final List<_BellRow> _rows = [
     for (final p in widget.data.periods.where(
       (p) => p.schoolId == widget.school.id,
     ))
       _BellRow(isBreak: p.isBreak, starts: p.starts, ends: p.ends),
   ];
+
+  List<(bool, TimeOfDay, TimeOfDay)> _snapshot() => [
+    for (final row in _rows) (row.isBreak, row.starts, row.ends),
+  ];
+
+  late List<(bool, TimeOfDay, TimeOfDay)> _saved;
+
+  @override
+  void initState() {
+    super.initState();
+    // Capture the original rows before the first edit.
+    _saved = _snapshot();
+  }
+
+  bool get isDirty => !listEquals(_saved, _snapshot());
+
+  Future<bool> save() async {
+    final saved = await _write(
+      context,
+      ref,
+      (actor) => ref
+          .read(schoolRepositoryProvider)
+          .setPeriods(
+            actor: actor,
+            schoolId: widget.school.id,
+            periods: _periods(),
+          ),
+      refresh: false,
+    );
+    if (saved && mounted) _saved = _snapshot();
+    return saved;
+  }
 
   /// Indexes follow the order: lessons count up, a break takes the lesson before it.
   List<PeriodRecord> _periods() {
@@ -374,6 +488,7 @@ class _BellTimesState extends ConsumerState<_BellTimes> {
       } else {
         row.ends = picked;
       }
+      widget.onChanged();
     });
   }
 
@@ -390,11 +505,13 @@ class _BellTimesState extends ConsumerState<_BellTimes> {
           ends: at(minutes + (isBreak ? 20 : 45)),
         ),
       );
+      widget.onChanged();
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final l10n = context.l10n;
     var lessonNo = 0;
     return _Section(
@@ -432,7 +549,10 @@ class _BellTimesState extends ConsumerState<_BellTimes> {
                   trailing: IconButton(
                     tooltip: l10n.schoolRemove,
                     icon: const Icon(Icons.delete_outline),
-                    onPressed: () => setState(() => _rows.removeAt(i)),
+                    onPressed: () => setState(() {
+                      _rows.removeAt(i);
+                      widget.onChanged();
+                    }),
                   ),
                 ),
               );
@@ -448,22 +568,6 @@ class _BellTimesState extends ConsumerState<_BellTimes> {
             OutlinedButton(
               onPressed: () => _add(isBreak: true),
               child: Text(l10n.schoolAddBreak),
-            ),
-            FilledButton(
-              onPressed: () => unawaited(
-                _write(
-                  context,
-                  ref,
-                  (actor) => ref
-                      .read(schoolRepositoryProvider)
-                      .setPeriods(
-                        actor: actor,
-                        schoolId: widget.school.id,
-                        periods: _periods(),
-                      ),
-                ),
-              ),
-              child: Text(l10n.save),
             ),
           ],
         ),

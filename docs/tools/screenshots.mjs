@@ -113,6 +113,7 @@ const shots = [
   { name: 'shopping-history', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.shopping, { exact: false }); await press(p, t.history); await p.getByRole('button', { name: /14/ }).first().click().catch(() => {}); await settle(p); } },
   // Calendar, timetable, tasks, meals and household settings.
   { name: 'calendar-week', scenario: 'adult', viewport: TABLET, steps: async (p, t) => { await tapAny(p, t.calendar); await tapAny(p, t.week); } },
+  { name: 'calendar-phone', scenario: 'adult', viewport: PHONE, steps: async (p, t) => tapAny(p, t.calendar) },
   { name: 'calendar-editor', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.calendar); await tapAny(p, t.newEvent); } },
   { name: 'school-week', scenario: 'adult', viewport: TABLET, steps: async (p, t) => tapAny(p, t.schedule, { exact: false }) },
   // The adult home opens on Today, the first destination.

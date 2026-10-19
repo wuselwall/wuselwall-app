@@ -5,7 +5,7 @@ import 'package:wuselwall/features/region/application/region_providers.dart';
 import 'package:wuselwall/features/region/domain/region_models.dart';
 import 'package:wuselwall/features/region/ui/region_text.dart';
 
-/// A region code as its name: "Uster (Gemeinde), Kanton Zürich". While the regions of the
+/// A region code as its name: "Uster (Gemeinde), Kanton Zürich (ZH)". While the regions of the
 /// code's country load, or when the code is not cached, the bare code is shown.
 class RegionLabel extends ConsumerWidget {
   const RegionLabel({required this.code, this.style, super.key});
