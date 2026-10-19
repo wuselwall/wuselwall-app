@@ -11,6 +11,19 @@ const names = ['db', 'mailpit', 'templates', 'auth'].map((n) => `${prefix}-${n}`
 const [db, mailpit, templates, auth] = names;
 const docker = (...args) => execFileSync('docker', args, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] }).trim();
 const delay = () => new Promise((r) => setTimeout(r, 500));
+const images = ['postgres:15-alpine', 'public.ecr.aws/supabase/mailpit:v1.31.3',
+  'nginx:1.28.0-alpine', 'ghcr.io/supabase/gotrue:v2.197.0'];
+// Shared CI egress can briefly hit anonymous registry limits. Retry only those.
+async function pull(image) {
+  for (let attempt = 1; ; attempt++) {
+    try { docker('pull', '--quiet', image); return; } catch (error) {
+      const limited = /toomanyrequests|rate limit|data limit exceeded/i.test(String(error.stderr ?? error.message));
+      if (!limited || attempt === 4) throw error;
+      console.warn(`Registry limit while pulling ${image}; retrying (${attempt}/3)`);
+      await new Promise((r) => setTimeout(r, attempt * 15000));
+    }
+  }
+}
 async function until(fn) {
   let error;
   for (let n = 0; n < 120; n++) {
@@ -24,6 +37,7 @@ function request(host, path, body) {
   return JSON.parse(docker(...args, `http://${host}${path}`));
 }
 try {
+  for (const image of images) await pull(image);
   docker('network', 'create', prefix);
   docker('run', '-d', '--name', db, '--network', prefix, '--network-alias', 'db',
     '-e', 'POSTGRES_PASSWORD=throwaway-mail-test', 'postgres:15-alpine');
