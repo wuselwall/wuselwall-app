@@ -95,7 +95,7 @@ in an older plan). The exact check name GitHub shows for it is not verified unti
 
 | ID | Check | Mode | Pass when | Result | Evidence |
 |---|---|---|---|---|---|
-| A1 | `app` job: `flutter analyze --fatal-infos`, `flutter test` (includes the English/German ARB parity test, the screen-count tests in `app/test/journeys/` and the widget tests) and a format check | CI | The job is green on the candidate SHA | NOT RUN | CI run link |
+| A1 | `app` job: `flutter analyze --fatal-infos`, `flutter test` (includes the DE/EN/FR/ES ARB, placeholder and native-permission parity tests, the screen-count tests in `app/test/journeys/` and the widget tests) and a format check | CI | The job is green on the candidate SHA | NOT RUN | CI run link |
 | A2 | Website CI in `wuselwall/wuselwall-website` (build, SSR/SEO smoke) | CI | Green on the website commit that is live with the release. Placeholders in the Impressum are allowed here; the website's deploy refuses them | NOT RUN | CI run link |
 | A3 | `audit` job: `osv-scanner` over the lockfiles | CI | Green, or each finding listed in `osv-scanner.toml` with its reason and expiry | NOT RUN | CI run link |
 | A4 | `backend` job in `backend-ci.yml`: `supabase db reset` on a throwaway stack, `supabase test db`, `supabase db lint --level warning`, `flutter test test/integration` | CI. Always on a tag or a manual run. On a pull request only when `changes` finds a backend-sensitive path; a skipped run is not evidence for the migrations | Green on the candidate SHA, with `backend-ci / required` green. Required before a migration goes to any live server | NOT RUN | CI run link |
@@ -149,7 +149,7 @@ hesitation, not only the total. The screen count follows the journey test's defi
 | L1 | iOS universal links: `https://<domain>/.well-known/apple-app-site-association` is served as JSON, and the signed build's Associated Domains entitlement includes `applinks:` for the same domain | Manual, read only for the file; the entitlement is read from the signed build | The file answers with a JSON content type and lists the app ID. The entitlement matches the server | NOT RUN | response headers, entitlement value |
 | L2 | Android App Links: `/.well-known/assetlinks.json` lists the SHA-256 of the signing key that signed the candidate APK or AAB | Manual | The fingerprint equals the candidate's signing certificate. At `43ac2e5`, the website's `src/config/site.ts` (now in `wuselwall/wuselwall-website`) holds `TODO` values for both signing fingerprints, so this check cannot pass until the operator supplies the real values. Do not put a placeholder in the file | NOT RUN | fingerprint (public), comparison result |
 | L3 | Invitation link opens the app when it is installed, on iPhone and on an Android phone | Manual | The app opens at the invitation. Screenshot | NOT RUN | screenshot paths |
-| L4 | Invitation link opens the `/i/` landing page when the app is not installed | Manual | The landing page loads in German and English. Record the device language | NOT RUN | screenshot paths |
+| L4 | Invitation link opens the `/i/` landing page when the app is not installed | Manual | The DE/EN landing page loads; record the device language and any locale redirect behavior | NOT RUN | screenshot paths |
 | L5 | Pairing link (`/p/`) behaves as L3 and L4 | Manual | As L3 and L4 | NOT RUN | screenshot paths |
 | L6 | The auth return URL `ch.goomba.wuselwall://login-callback/` returns into the app after sign-in with the provider | Manual | The app is in front, signed in | NOT RUN | screenshot path |
 
@@ -211,8 +211,9 @@ Personal phones only. Pushes are not built ([14](14-open-questions.md), Q38 and 
 | X1 | VoiceOver on iPhone on one screen (Today): labels read in the expected order | Manual | Every control is announced | NOT RUN | notes |
 | X2 | TalkBack on an Android phone on one screen (Today) | Manual | As X1 | NOT RUN | notes |
 | X3 | System font size at maximum on Today, shopping, the adult board and the kid register: no clipped or overlapping text | Manual | None | NOT RUN | screenshots |
-| X4 | Device language German, then English: no English string in the German UI and no German string in the English UI | Manual | None | NOT RUN | screenshots |
-| X5 | The English and German strings are in parity | CI, A1 (ARB parity test) | Green | NOT RUN | CI run link |
+| X4 | Device language German, English, French, Spanish and one unsupported locale: no string from another application language leaks, unsupported falls back to German | Manual | None | NOT RUN | screenshots |
+| X5 | DE/EN/FR/ES app/server messages and native permission prompts are in parity | CI, A1 (ARB and catalogue parity tests) | Green | NOT RUN | CI run link |
+| X6 | Email hook and SMTP send subject/HTML/plain in only `MAIL_LANGUAGE` (test each of `de`, `en`, `fr`, `es`, plus legacy/unset → German) and preserve the selection across update/language change | CI + manual | No recipient-locale override; keys unchanged | NOT RUN | CI run link, mail samples |
 
 ## 11. Tablets and the wall display
 

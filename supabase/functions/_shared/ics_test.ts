@@ -748,6 +748,117 @@ Deno.test("English household: School and Cancelled", () => {
   );
 });
 
+Deno.test("ICS localizes generated summaries and labels for all four regional locales", () => {
+  for (
+    const [locale, school, withLabel, states, labels] of [
+      ["de-DE", "Schule", "Mit", "unterwegs", [
+        "Entfall",
+        "Vertretung",
+        "Raumwechsel",
+        "Zusatz",
+      ]],
+      ["EN-gb", "School", "With", "travelling", [
+        "Cancelled",
+        "Substitute",
+        "Room change",
+        "Extra",
+      ]],
+      ["fr-FR", "École", "Avec", "en déplacement", [
+        "Annulé",
+        "Remplacement",
+        "Changement de salle",
+        "Supplémentaire",
+      ]],
+      ["es-ES", "Colegio", "Con", "de viaje", [
+        "Cancelada",
+        "Sustitución",
+        "Cambio de aula",
+        "Adicional",
+      ]],
+      ["it-IT", "Schule", "Mit", "unterwegs", [
+        "Entfall",
+        "Vertretung",
+        "Raumwechsel",
+        "Zusatz",
+      ]],
+    ] as const
+  ) {
+    const localized = (f: IcsFeed) =>
+      render({ ...f, household: { ...f.household, locale } });
+    const presence = localized(feed({
+      events: [
+        event({
+          title: "",
+          kind: "presence",
+          presence_state: "travel",
+          attendee_ids: ["emma"],
+        }),
+      ],
+      attendees: { emma: "Emma" },
+    }));
+    assert(unfolded(presence).includes(`SUMMARY:Emma: ${states}`));
+    assert(unfolded(presence).includes(`DESCRIPTION:${withLabel}: Emma`));
+    const custom = localized(feed({
+      events: [
+        event({
+          title: "Voyage personnel",
+          kind: "presence",
+          presence_state: "travel",
+        }),
+      ],
+    }));
+    assert(
+      unfolded(custom).includes("SUMMARY:Voyage personnel"),
+      "preserve user titles",
+    );
+    for (
+      const [index, kind]
+        of (["cancelled", "substituted", "room_change", "extra"] as const)
+          .entries()
+    ) {
+      const data = schoolData({
+        exceptions: [{
+          id: "x1",
+          timetable_id: "tt1",
+          on_date: "2026-10-13",
+          period_index: 2,
+          kind,
+          subject_id: kind === "extra" ? "sj2" : null,
+          teacher: null,
+          room: null,
+          starts_at: null,
+          ends_at: null,
+          note: null,
+          created_by_profile_id: EMMA,
+        }],
+      });
+      const day = schoolBlocks(localized(schoolFeed("day", data))).find((b) =>
+        b.includes(`UID:schoolday-${EMMA}-20261013@wuselwall.app`)
+      ) ?? [];
+      assertEquals(
+        lineStartingWith(day, "SUMMARY:"),
+        `SUMMARY:Emma: ${school}`,
+      );
+      assert(
+        lineStartingWith(day, "DESCRIPTION:")?.includes(labels[index]),
+        day.join("\n"),
+      );
+      const lesson =
+        schoolBlocks(localized(schoolFeed("lessons", data))).find((b) =>
+          b.includes(
+            `UID:lesson-${
+              kind === "extra" ? "x1" : "l2"
+            }-20261013@wuselwall.app`,
+          )
+        ) ?? [];
+      assert(
+        lineStartingWith(lesson, "DESCRIPTION:")?.includes(labels[index]),
+        lesson.join("\n"),
+      );
+    }
+  }
+});
+
 Deno.test("off, or no school rows in the feed: no school events and no school zone", () => {
   const withoutSchool = feed({ members: { [EMMA]: "Emma" } });
   for (
@@ -843,7 +954,13 @@ function subscribedFeed(
   over: Partial<IcsFeed> = {},
 ): IcsFeed {
   return feed({
-    filter: { profile_ids: [], calendar_ids: [], kinds: ["appointment"], school: "off", ...filter },
+    filter: {
+      profile_ids: [],
+      calendar_ids: [],
+      kinds: ["appointment"],
+      school: "off",
+      ...filter,
+    },
     external: external(),
     ...over,
   });
@@ -851,14 +968,25 @@ function subscribedFeed(
 
 /** The VEVENTs that come from imported calendars, identified by their UID prefix. */
 function externalBlocks(text: string): string[][] {
-  return veventBlocks(text).filter((b) => b.some((l) => l.startsWith("UID:ext-")));
+  return veventBlocks(text).filter((b) =>
+    b.some((l) => l.startsWith("UID:ext-"))
+  );
 }
 
 Deno.test("subscribed off or absent: no imported VEVENTs", () => {
-  assertEquals(externalBlocks(render(subscribedFeed({ subscribed: false }))).length, 0);
+  assertEquals(
+    externalBlocks(render(subscribedFeed({ subscribed: false }))).length,
+    0,
+  );
   assertEquals(externalBlocks(render(subscribedFeed({}))).length, 0);
-  assertEquals(externalBlocks(render(feed({ filter: { subscribed: true } }))).length, 0);
-  assertEquals(subscribedOccurrences(subscribedFeed({ subscribed: false })).length, 0);
+  assertEquals(
+    externalBlocks(render(feed({ filter: { subscribed: true } }))).length,
+    0,
+  );
+  assertEquals(
+    subscribedOccurrences(subscribedFeed({ subscribed: false })).length,
+    0,
+  );
 });
 
 Deno.test("subscribed true, no profiles: every imported occurrence, all-day and timed right", () => {
@@ -898,14 +1026,22 @@ Deno.test("imported UIDs are stable per occurrence and carry the calendar, the s
   // A moved timed occurrence gets a new UID, so the subscriber sees one event leave and one arrive.
   const moved = subscribedFeed({ subscribed: true }, {
     external: external().map((o, i) =>
-      i === 1 ? { ...o, starts_at: "2026-10-17T17:00:00+00:00", ends_at: "2026-10-17T18:30:00+00:00" } : o
+      i === 1
+        ? {
+          ...o,
+          starts_at: "2026-10-17T17:00:00+00:00",
+          ends_at: "2026-10-17T18:30:00+00:00",
+        }
+        : o
     ),
   });
   assert(!render(moved).includes(first[1]!));
 });
 
 Deno.test("a token that names Emma: whole family and Emma's calendar, not Paul's", () => {
-  const out = render(subscribedFeed({ subscribed: true, profile_ids: [MEMBER_EMMA] }));
+  const out = render(
+    subscribedFeed({ subscribed: true, profile_ids: [MEMBER_EMMA] }),
+  );
   const titles = externalBlocks(out).map((b) =>
     b.find((l) => l.startsWith("SUMMARY:"))
   );
@@ -914,13 +1050,19 @@ Deno.test("a token that names Emma: whole family and Emma's calendar, not Paul's
 });
 
 Deno.test("a token that names Paul gets the whole family and Paul's choir only", () => {
-  const out = render(subscribedFeed({ subscribed: true, profile_ids: [MEMBER_PAUL] }));
-  const titles = externalBlocks(out).map((b) => b.find((l) => l.startsWith("SUMMARY:")));
+  const out = render(
+    subscribedFeed({ subscribed: true, profile_ids: [MEMBER_PAUL] }),
+  );
+  const titles = externalBlocks(out).map((b) =>
+    b.find((l) => l.startsWith("SUMMARY:"))
+  );
   assertEquals(titles, ["SUMMARY:Restmüll", "SUMMARY:Chorprobe"]);
 });
 
 Deno.test("the profile filter drops a calendar whose members are all outside the named profiles", () => {
-  const named = subscribedOccurrences(subscribedFeed({ subscribed: true, profile_ids: ["someone-else"] }));
+  const named = subscribedOccurrences(
+    subscribedFeed({ subscribed: true, profile_ids: ["someone-else"] }),
+  );
   assertEquals(named.map((o) => o.calendar_id), [CAL_FAMILY]);
 });
 

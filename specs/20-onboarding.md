@@ -88,7 +88,7 @@ What every device shows before it belongs to a household:
 
 ### With email
 
-> **Built 2026-10-15.** E1 takes the address, with "Ich habe ein Passwort" for the password path. E2 is the six-digit code: it submits itself when complete, and "Erneut senden" comes back after 60 s. E3 runs once for a new account, before it starts or joins a family: the code or a password of at least 10 characters. Email addresses are never autoconfirmed (`ENABLE_EMAIL_AUTOCONFIRM=false`, `enable_confirmations = true`), because invitations match confirmed addresses only. Einstellungen → Anmeldung sets or changes the password. The code mail is written in the recipient's language by the send-email hook (see Email below).
+> **Built 2026-10-15.** E1 takes the address, with "Ich habe ein Passwort" for the password path. E2 is the six-digit code: it submits itself when complete, and "Erneut senden" comes back after 60 s. E3 runs once for a new account, before it starts or joins a family: the code or a password of at least 10 characters. Email addresses are never autoconfirmed (`ENABLE_EMAIL_AUTOCONFIRM=false`, `enable_confirmations = true`), because invitations match confirmed addresses only. Einstellungen → Anmeldung sets or changes the password. The code mail uses the server installation's one selected email language, through either the hook or SMTP (see Email below).
 
 ```
  E1  E-Mail-Adresse  [______________]           E2  Code aus der E-Mail
@@ -99,7 +99,7 @@ What every device shows before it belongs to a household:
 
 - **E1 → E2 is the default and covers sign-up, sign-in and the forgotten password.**
   `signInWithOtp(email, shouldCreateUser: true, data: {locale})` sends a **6-digit
-  code**, valid 10 minutes. E2 accepts paste and the platform's one-time-code autofill,
+  code**, valid 10 minutes. The `locale` metadata does not choose email language. E2 accepts paste and the platform's one-time-code autofill,
   and submits itself on the sixth digit.
 - **A code, not a magic link.** Links open in whatever browser the mail app chooses,
   often on a different device from the one being set up, and they do not work on a
@@ -283,7 +283,7 @@ and **Zurückziehen**.
    at the front door with a banner: "Thomas hat dich zu *Familie Becker* eingeladen". The
    banner text comes from `api.invitation_preview`, which shows the household's name and
    the inviter's first name, and nothing else.
-2. **App not installed:** the link opens a small bilingual landing page with the store
+2. **App not installed:** the link opens a small DE/EN landing page with the store
    buttons and the code in large type. After installing, "Ich habe einen
    Einladungscode" on the front door. No third-party deferred-deep-link service is used
    (NFR-9). The code or the email match does that job.
@@ -431,8 +431,8 @@ calendar, and the card says so in the adult's words.
 Each module's empty state names **one** action, with the mascot, in the register's
 voice. For example, the empty shopping list says "Noch nichts auf der Liste. Tipp auf
 eine Kachel." and the empty task board says "Noch keine Aufgaben. Leg die erste an —
-oder nimm eine von den Beispielen." These are written with the module, in both
-languages, and reviewed in the screenshots ([docs](../docs/)).
+oder nimm eine von den Beispielen." These are written with the module, in all four application languages
+(DE/EN/FR/ES), and reviewed in the screenshots ([docs](../docs/)).
 
 ## Failures and interruptions
 
@@ -448,11 +448,13 @@ languages, and reviewed in the screenshots ([docs](../docs/)).
 
 ## Copy for the key screens
 
-Both languages, always ([CLAUDE.md](../CLAUDE.md)). These are the reference texts; the ARB
-files are the source of truth once built.
+All four application languages, always ([AGENTS.md](../AGENTS.md), NFR-14). The table
+below retains the original DE/EN reference copy; the complete DE/EN/FR/ES ARB files are
+the source of truth once built, not a two-language limit on these screens.
 
 | Key (indicative) | Deutsch | English |
 |---|---|---|
+<!-- FR/ES reference copy lives in the complete ARB catalogues; this table keeps the original DE/EN wording. -->
 | `doorTagline` | Der Familienplan für die Küchenwand | The family plan for the kitchen wall |
 | `doorEmail` | Mit E-Mail fortfahren | Continue with email |
 | `doorPairDevice` | Familien-Tablet oder Wanddisplay verbinden | Connect a family tablet or wall display |
@@ -521,14 +523,16 @@ test (`040_catalogue.test.sql`) is updated to exactly this list.
 
 ### Email
 
-Every email the system sends is localised. A Supabase **send-email hook** (an Edge Function
-reading the message files in `supabase/functions/_shared/`) renders the code mail and the
-"new sign-in" notice in the language the app passed as `locale` at sign-in, and sends it
-through Scaleway Transactional Email ([Q41](14-open-questions.md); the setup, sender and
-subject line are in [10](10-deployment-and-ops.md#email-setup)). This runs on every server
-release (each operator sends through their own provider), because the compose stack runs Edge Functions ([A11](19-security-and-architecture-review.md),
-fixed). **On self-hosted stacks without the hook**, the GoTrue template is used instead,
-with German and English in the same mail, German first.
+Every email uses **one installation-selected language**, `MAIL_LANGUAGE` (`de`, `en`,
+`fr`, `es`; default German), independently of sign-in `locale`, device language or recipient
+metadata. Subject, HTML and plain text contain only that language. A Supabase **send-email
+hook** reads the catalogues in `supabase/functions/_shared/` and sends through Scaleway
+Transactional Email when configured ([Q41](14-open-questions.md)). **Without the hook**,
+SMTP uses the same selected language's GoTrue templates, not a bilingual fallback.
+Installers and the hosted workflow configure first-signup and returning-sign-in mail alike;
+updates preserve the choice and keys. Language-changing commands, template generation and
+verification are in [10](10-deployment-and-ops.md#email-setup). Old sent mail does not change.
+The app and non-mail server responses independently support DE/EN/FR/ES (NFR-14).
 
 ### Universal links and the landing pages
 
@@ -539,9 +543,10 @@ served on `wuselwall.app`, beside the website ([ADR-017](adr/ADR-017-wuselwall-a
 server's invitations use it. The token and the server travel in the fragment, so the site
 never receives them ([ADR-018](adr/ADR-018-self-hosted-only.md), decision 8). The landing
 page reads the fragment in the browser, and the app gets the whole URL. The
-landing pages are bilingual, script-free HTML: what this is, the store buttons, the code
-in large type, and a link to the privacy policy. The deletion-request page (Play) sits
-alongside.
+landing pages are DE/EN, script-free HTML: what this is, the store buttons, the code
+in large type, and a link to the privacy policy. They are not expanded to FR/ES; app
+privacy/legal links deliberately use the existing English website pages. The
+deletion-request page (Play) sits alongside.
 
 ## How "smooth" is checked
 

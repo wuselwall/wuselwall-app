@@ -1,0 +1,2388 @@
+{
+  "@@locale": "fr",
+  "appTitle": "WuselWall",
+  "unexpectedError": "Une erreur inattendue est survenue",
+  "retry": "Réessayer",
+  "errorNetwork": "Impossible de se connecter au serveur. Vérifie ta connexion et réessaie.",
+  "errorAuth": "Tu n’es pas connecté ou ta session a expiré.",
+  "errorPermission": "Tu n’as pas l’autorisation de faire cela.",
+  "errorNotFound": "Cet élément est introuvable.",
+  "errorConflict": "Cela entre en conflit avec un élément déjà existant.",
+  "errorValidation": "Cette saisie n’est pas valide.",
+  "errorUnknown": "Un problème est survenu.",
+  "configMissing": "Il manque la configuration de cette version : {missing}",
+  "registerAdult": "Adulte",
+  "registerKid": "Enfant",
+  "registerKiosk": "Écran mural",
+  "systemTitle": "Système",
+  "systemBuild": "Version de compilation",
+  "systemEnvironment": "Environnement",
+  "systemBackendUrl": "URL du serveur",
+  "systemConnectivity": "Connectivité",
+  "systemNetwork": "Réseau",
+  "systemOnline": "En ligne",
+  "systemOffline": "Hors ligne",
+  "systemUnknown": "Inconnu",
+  "systemBackend": "Serveur",
+  "systemStatus": "État",
+  "systemStatusOk": "OK",
+  "systemDbVersion": "Version de la base de données",
+  "systemServerTime": "Heure du serveur",
+  "@configMissing": {
+    "placeholders": {
+      "missing": {
+        "type": "String"
+      }
+    }
+  },
+  "setupHeadline": "Bienvenue sur WuselWall",
+  "doorTagline": "Le planning familial sur le mur de la cuisine",
+  "setupHouseholdAction": "Créer une nouvelle famille",
+  "wizardTitle": "Nouveau foyer",
+  "wizardCreate": "Créer le foyer",
+  "fieldSetupToken": "Jeton de configuration",
+  "fieldHouseholdName": "Nom du foyer",
+  "fieldYourName": "Ton prénom",
+  "fieldEmail": "E-mail",
+  "fieldPassword": "Mot de passe (au moins 10 caractères)",
+  "fieldPasswordSimple": "Mot de passe",
+  "fieldPin": "Code PIN à 6 chiffres",
+  "fieldRequired": "Obligatoire",
+  "signInTitle": "Connexion",
+  "signInAction": "Se connecter",
+  "enrolTitle": "Connecter cet appareil",
+  "enrolBody": "Saisis le code affiché sur un appareil déjà connecté.",
+  "enrolCodeLabel": "Code de connexion de l’appareil",
+  "enrolAction": "Connecter",
+  "errSetupTokenInvalid": "Le jeton de configuration n’est pas valide.",
+  "errSetupClosed": "Ce système est déjà configuré.",
+  "errPasswordTooShort": "Le mot de passe doit contenir au moins 10 caractères.",
+  "errPinFormat": "Le code PIN doit contenir exactement 6 chiffres.",
+  "errCodeInvalid": "Ce code est incorrect ou a expiré.",
+  "errGuardianRequired": "Seul un responsable parental peut faire cela.",
+  "errDeviceRevoked": "Cet appareil a été bloqué.",
+  "errActorRequired": "Appuie d’abord sur ton prénom.",
+  "errNameRequired": "Saisis un nom.",
+  "errInvalidLogin": "L’adresse e-mail ou le mot de passe est incorrect.",
+  "cancel": "Annuler",
+  "save": "Enregistrer",
+  "close": "Fermer",
+  "delete": "Supprimer",
+  "yes": "Oui",
+  "no": "Non",
+  "shoppingTitle": "Liste de courses",
+  "shoppingAddHint": "Ajouter un article",
+  "shoppingQuantityHint": "Quantité",
+  "shoppingEmpty": "Rien à acheter",
+  "shoppingFinish": "Terminer les courses",
+  "shoppingFinishConfirm": "Terminer ces courses ? Les articles cochés seront retirés, les autres resteront sur la liste.",
+  "shoppingFinished": "{bought} achetés, {left} conservés sur la liste",
+  "@shoppingFinished": {
+    "placeholders": {
+      "bought": {
+        "type": "int"
+      },
+      "left": {
+        "type": "int"
+      }
+    }
+  },
+  "actingWho": "Qui es-tu ?",
+  "pinTitle": "Code PIN parental",
+  "pinPrompt": "Saisis le code PIN de {name}",
+  "@pinPrompt": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pinWrong": "Code PIN incorrect. Il reste {left} tentatives.",
+  "@pinWrong": {
+    "placeholders": {
+      "left": {
+        "type": "int"
+      }
+    }
+  },
+  "pinBackoff": "Trop de tentatives. Patiente un instant.",
+  "pinLocked": "Code PIN verrouillé. Un responsable parental doit se connecter pour le déverrouiller.",
+  "settingsTitle": "Paramètres",
+  "settingsMembers": "Membres",
+  "settingsDevices": "Appareils",
+  "addMember": "Ajouter un membre",
+  "memberName": "Prénom",
+  "roleGuardian": "Responsable parental",
+  "roleMember": "Membre",
+  "addDevice": "Ajouter un appareil",
+  "deviceLabel": "Nom de l’appareil",
+  "createCode": "Créer un code",
+  "enrolmentCodeTitle": "Code de connexion de l’appareil",
+  "enrolmentCodeHint": "Saisis ce code sur le nouvel appareil dans les 10 minutes. Il ne fonctionne qu’une fois.",
+  "thisDevice": "cet appareil",
+  "deviceRevoked": "bloqué",
+  "revoke": "Bloquer",
+  "revokeConfirm": "Bloquer « {device} » ? Il perdra immédiatement son accès.",
+  "@revokeConfirm": {
+    "placeholders": {
+      "device": {
+        "type": "String"
+      }
+    }
+  },
+  "signOutDevice": "Déconnecter cet appareil",
+  "classPersonal": "Personnel",
+  "classShared": "Partagé",
+  "classSharedHint": "Plusieurs personnes l’utilisent : appuie sur un prénom pour changer de profil.",
+  "classKiosk": "Écran mural",
+  "systemDevice": "Cet appareil",
+  "systemRegister": "Interface",
+  "systemEnrolled": "Connecté",
+  "errRateLimited": "Trop de tentatives. Patiente quelques minutes et réessaie.",
+  "errMfaRequired": "Saisis d’abord le code de ton application d’authentification.",
+  "scanQr": "Scanner un code QR",
+  "scanTitle": "Scanner le code de configuration",
+  "enrolmentQrLabel": "Code QR du code de connexion de l’appareil",
+  "mfaTitle": "Second facteur",
+  "mfaBody": "Saisis le code à 6 chiffres de ton application d’authentification.",
+  "mfaCodeLabel": "Code à 6 chiffres",
+  "mfaVerify": "Confirmer",
+  "registerTitle": "Nommer cet appareil",
+  "registerBody": "{name}, ce téléphone est nouveau dans le foyer. Donne-lui un nom pour pouvoir le reconnaître (et le bloquer) plus tard.",
+  "@registerBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "registerDefaultLabel": "Téléphone de {name}",
+  "@registerDefaultLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "registerAction": "Utiliser cet appareil",
+  "signInPasskey": "Se connecter avec une clé d’accès",
+  "settingsSecurity": "Sécurité",
+  "totpTitle": "Connexion à deux facteurs",
+  "totpOn": "Activée : un code est demandé à chaque connexion.",
+  "totpOff": "Désactivée",
+  "totpEnable": "Activer",
+  "totpDisable": "Désactiver",
+  "totpScanBody": "Scanne ce code avec une application d’authentification, puis saisis le code à 6 chiffres qu’elle affiche.",
+  "totpQrLabel": "Code QR pour configurer l’application d’authentification",
+  "passkeyTitle": "Clé d’accès",
+  "passkeyBody": "Connecte-toi avec ton empreinte digitale ou ton visage plutôt qu’un mot de passe.",
+  "passkeyAdd": "Ajouter",
+  "passkeyAdded": "Clé d’accès ajoutée.",
+  "shoppingHistory": "Historique",
+  "shoppingHistoryEmpty": "Aucune course terminée pour le moment",
+  "shoppingSearchHint": "Rechercher ou ajouter",
+  "shoppingTilesEmpty": "Les vignettes apparaîtront ici après vos premiers achats. Saisis un nom pour ajouter un article.",
+  "shoppingInTrolley": "Dans le chariot ({count})",
+  "@shoppingInTrolley": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shoppingUncategorised": "Sans catégorie",
+  "shoppingNewList": "Nouvelle liste",
+  "shoppingListName": "Nom",
+  "shoppingListKind": "Organisation",
+  "shoppingKindSupermarket": "Supermarché",
+  "shoppingKindDrugstore": "Droguerie",
+  "shoppingKindHardware": "Magasin de bricolage",
+  "shoppingKindOther": "Autre",
+  "shoppingMakeDefault": "Définir comme liste par défaut",
+  "shoppingEditItem": "Modifier l’article",
+  "shoppingSpecHint": "Précision, par exemple bio ou 500 g",
+  "shoppingCategory": "Catégorie",
+  "shoppingRemoveOne": "Un de moins",
+  "errListExists": "Une liste portant ce nom existe déjà.",
+  "errSpecTooLong": "Cette précision est trop longue (40 caractères maximum).",
+  "errKioskForbidden": "Cette action n’est pas possible sur l’écran mural.",
+  "shoppingCat_produce": "Fruits et légumes",
+  "shoppingCat_bakery": "Pain et boulangerie",
+  "shoppingCat_dairy": "Produits laitiers et fromages",
+  "shoppingCat_meat_fish": "Viande et poisson",
+  "shoppingCat_pantry": "Épicerie",
+  "shoppingCat_frozen": "Surgelés",
+  "shoppingCat_drinks": "Boissons",
+  "shoppingCat_household": "Maison",
+  "shoppingCat_other": "Autres",
+  "shoppingCat_care": "Hygiène et soins",
+  "shoppingCat_baby": "Bébés et enfants",
+  "shoppingCat_cleaning": "Entretien",
+  "shoppingCat_health": "Santé",
+  "shoppingCat_tools": "Outils",
+  "shoppingCat_screws": "Vis et fixations",
+  "shoppingCat_electrical": "Électricité",
+  "shoppingCat_garden": "Jardin",
+  "shoppingCreateTile": "Ajouter « {name} »",
+  "@shoppingCreateTile": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shoppingAddedBy": "Ajouté par {name}",
+  "@shoppingAddedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pinChangeTitle": "Code PIN parental",
+  "pinChangeBody": "Définis un nouveau code PIN à 6 chiffres. Cela déverrouille aussi un code PIN bloqué après trop de tentatives incorrectes.",
+  "pinChangeAction": "Modifier",
+  "pinChangeField": "Nouveau code PIN (6 chiffres)",
+  "pinChanged": "Code PIN modifié.",
+  "shoppingTripItems": "{count, plural, =1{1 article} other{{count} articles}}",
+  "@shoppingTripItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shoppingPending": "{count, plural, =1{1 modification en attente d’envoi} other{{count} modifications en attente d’envoi}}",
+  "@shoppingPending": {
+    "description": "Banner while the offline outbox holds changes the server has not confirmed yet",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shoppingItemPending": "En attente d’envoi",
+  "errCategoryNotFound": "Cette catégorie n’existe plus. La modification n’a pas été enregistrée.",
+  "errNameTooLong": "Ce nom est trop long.",
+  "errActorInvalid": "Cette personne ne fait plus partie du foyer. La modification n’a pas été enregistrée.",
+  "doorEmail": "Continuer par e-mail",
+  "doorOr": "ou",
+  "errSignupDisabled": "Il n’y a pas encore de compte WuselWall pour cette adresse. Demande une invitation à ta famille ou crée une nouvelle famille.",
+  "errEmailExists": "Cette adresse e-mail appartient déjà à un autre compte.",
+  "signInMethodsTitle": "Connexion",
+  "signInMethodEmail": "Code par e-mail",
+  "boardWeekNumber": "Semaine {week}",
+  "@boardWeekNumber": {
+    "placeholders": {
+      "week": {
+        "type": "int"
+      }
+    }
+  },
+  "boardToday": "Aujourd’hui",
+  "boardNow": "Maintenant",
+  "boardNextUp": "À suivre",
+  "boardThen": "puis",
+  "boardInMinutes": "dans {minutes} min",
+  "@boardInMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "boardInHours": "dans {hours} h {minutes} min",
+  "@boardInHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "boardNothingMoreToday": "Plus rien de prévu aujourd’hui",
+  "boardLastUpdatedAt": "dernière mise à jour : {time}",
+  "@boardLastUpdatedAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "boardOffline": "Pas de connexion : voici le dernier planning connu.",
+  "boardLoading": "Chargement de la semaine…",
+  "boardZoneWhere": "Qui est où",
+  "boardZoneMeal": "Repas chaud",
+  "boardMorning": "Matin",
+  "boardAfternoon": "Après-midi",
+  "boardEvening": "Soir",
+  "boardUntil": "jusqu’à {time}",
+  "@boardUntil": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "boardFrom": "à partir de {time}",
+  "@boardFrom": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "boardAllDay": "toute la journée",
+  "boardMoreEvents": "{count, plural, =1{+1 autre} other{+{count} autres}}",
+  "@boardMoreEvents": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "boardMoreCount": "+{count}",
+  "@boardMoreCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "boardNoSchool": "libre",
+  "boardCareUntil": "{label} jusqu’à {time}",
+  "@boardCareUntil": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "boardCareDefault": "Accueil périscolaire",
+  "boardBusyUntil": "Rendez-vous jusqu’à {time}",
+  "@boardBusyUntil": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "boardMealLunch": "Déjeuner",
+  "boardMealDinner": "Dîner",
+  "boardMealNothingPlanned": "rien de prévu",
+  "boardMealCook": "{name} cuisine",
+  "@boardMealCook": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "boardMealGuests": "{count, plural, =1{+1 invité} other{+{count} invités}}",
+  "@boardMealGuests": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "boardEating": "{name} mange avec nous",
+  "@boardEating": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "boardNotEating": "{name} ne mange pas avec nous",
+  "@boardNotEating": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "boardOpenToday": "À faire aujourd’hui",
+  "boardAllDone": "Tout est fait pour aujourd’hui",
+  "boardShoppingList": "Liste de courses",
+  "boardNightMode": "Vue de nuit",
+  "boardBackToWeek": "Revenir à la semaine",
+  "boardTentative": "pas encore confirmé",
+  "boardNoAppointments": "Aucun rendez-vous",
+  "boardSchool": "École",
+  "boardSchoolSpan": "École {span}",
+  "@boardSchoolSpan": {
+    "placeholders": {
+      "span": {
+        "type": "String"
+      }
+    }
+  },
+  "boardNoSchoolToday": "Pas d’école",
+  "boardWeekend": "Week-end",
+  "boardWeekOf": "La semaine de {name}",
+  "@boardWeekOf": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "boardTimetableTitle": "Emploi du temps de {name}",
+  "@boardTimetableTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "boardClass": "Classe {label}",
+  "@boardClass": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "boardPeriod": "Cours {index}",
+  "@boardPeriod": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      }
+    }
+  },
+  "boardBreak": "Pause",
+  "boardLessonOver": "terminé",
+  "boardLessonNow": "en cours",
+  "boardLessonCancelled": "Annulé",
+  "boardLessonSubstituted": "Remplacement",
+  "boardLessonRoomChange": "Changement de salle",
+  "boardLessonExtra": "Supplémentaire",
+  "boardPackTomorrow": "À préparer pour demain : {items}",
+  "@boardPackTomorrow": {
+    "placeholders": {
+      "items": {
+        "type": "String"
+      }
+    }
+  },
+  "boardPackToday": "À emporter aujourd’hui : {items}",
+  "@boardPackToday": {
+    "placeholders": {
+      "items": {
+        "type": "String"
+      }
+    }
+  },
+  "boardWholeWeek": "Toute la semaine",
+  "boardMealWeek": "Les repas de la semaine",
+  "boardBaseline": "D’habitude : {label}",
+  "@boardBaseline": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "boardNoDeviation": "comme d’habitude",
+  "boardCooking": "En cuisine",
+  "boardAppointmentsOf": "Rendez-vous",
+  "boardTasksOf": "Les tâches de {name}",
+  "@boardTasksOf": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "boardTasksComingSoon": "Les tâches arriveront avec la prochaine mise à jour.",
+  "presenceWorking": "Au travail",
+  "presenceHomeOffice": "Télétravail",
+  "presenceTravel": "En déplacement",
+  "presenceAway": "Absent",
+  "presenceOff": "En congé",
+  "presenceChildcare": "Accueil périscolaire",
+  "errSettingInvalid": "Cette valeur est en dehors de la plage autorisée.",
+  "errSettingUnknown": "Ce paramètre n’existe pas.",
+  "errSettingTarget": "Ce paramètre ne peut pas être modifié pour cette personne ou cet appareil.",
+  "householdSettingsTitle": "Paramètres du foyer",
+  "householdSettingsSubtitle": "Valeurs par défaut pour les tâches, le calendrier, les repas et l’écran de la cuisine",
+  "settingsSectionHousehold": "Foyer et membres",
+  "settingsSectionTasks": "Tâches",
+  "settingsSectionCalendar": "Calendrier et école",
+  "settingsSectionMeals": "Repas",
+  "settingsSectionKitchen": "Écran de la cuisine",
+  "settingsSectionDevice": "Cet appareil",
+  "settingsSectionMine": "Mes paramètres",
+  "settingPickPersonFirst": "Choisis d’abord qui tu es. Tes paramètres personnels apparaîtront ensuite ici.",
+  "settingIsDefault": "Par défaut",
+  "settingIsCustom": "Personnalisé",
+  "settingReset": "Rétablir la valeur par défaut",
+  "settingOn": "Activé",
+  "settingOff": "Désactivé",
+  "settingFrom": "de",
+  "settingTo": "à",
+  "settingIncrease": "Augmenter",
+  "settingDecrease": "Diminuer",
+  "settingDayPartsMorningEnds": "Le matin jusqu’à",
+  "settingDayPartsEveningStarts": "Le soir à partir de",
+  "settingUnitPoints": "{count, plural, =1{1 point} other{{count} points}}",
+  "@settingUnitPoints": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingUnitMinutes": "{count} min",
+  "@settingUnitMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingUnitSeconds": "{count} s",
+  "@settingUnitSeconds": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingValueName": "Prénom complet",
+  "settingValueInitial": "Initiale",
+  "settingValueDuty": "Responsabilité",
+  "settingValueBonus": "Tâche bonus",
+  "settingValueRequired": "Approbation",
+  "settingValueSelfServe": "Échange libre",
+  "settingValueWholeFamily": "Toute la famille",
+  "settingValueAll": "Tous",
+  "settingValueNone": "Aucun",
+  "settingValueLunch": "Déjeuner",
+  "settingValueDinner": "Dîner",
+  "settingBoardMemberLabelTitle": "Prénoms sur le tableau",
+  "settingBoardMemberLabelHelp": "À deux mètres, un prénom se lit mieux qu’une initiale. Choisis les initiales si vous recevez souvent du monde dans la cuisine.",
+  "settingTasksDutyPointsTitle": "Points pour une responsabilité",
+  "settingTasksDutyPointsHelp": "Les responsabilités font partie de la vie de famille et rapportent donc peu ou pas de points. La série est leur récompense.",
+  "settingTasksBonusPointsTitle": "Points pour une tâche bonus",
+  "settingTasksBonusPointsHelp": "Une tâche bonus suffit pour la première récompense la moins chère, afin qu’un jeune enfant puisse l’obtenir en quelques jours.",
+  "settingTasksKindTitle": "Les nouvelles tâches sont des",
+  "settingTasksKindHelp": "Une nouvelle tâche est une responsabilité, sauf si quelqu’un choisit d’en faire une tâche bonus. Les occasions de gagner des points restent ainsi limitées.",
+  "settingTasksVerificationTitle": "Les responsables parentaux vérifient les tâches",
+  "settingTasksVerificationHelp": "Vérifier chaque tâche revient à tout contrôler. Réserve cette option aux tâches bonus importantes.",
+  "settingTasksJokersTitle": "Jokers de série par mois",
+  "settingTasksJokersHelp": "Un joker préserve une série quand un jour est manqué. Une journée de maladie ne brise ainsi pas une série de trois semaines.",
+  "settingTasksRewardApprovalTitle": "Les récompenses nécessitent une approbation",
+  "settingTasksRewardApprovalHelp": "Un responsable parental approuve chaque échange avec son code PIN. L’échange libre ne convient qu’aux petites récompenses.",
+  "settingCalendarMembersEditTitle": "Les membres modifient leurs propres événements",
+  "settingCalendarMembersEditHelp": "Les enfants créent et modifient les événements auxquels ils participent. Seuls les responsables parentaux peuvent supprimer les événements des autres.",
+  "settingCalendarKeyDefaultTitle": "Nouveaux événements sur l’écran de la cuisine",
+  "settingCalendarKeyDefaultHelp": "Définit quels nouveaux événements apparaissent sur l’écran de la cuisine sans devoir cocher la case. À revoir après deux semaines d’utilisation.",
+  "settingSchoolReportTitle": "Les membres signalent les changements d’emploi du temps",
+  "settingSchoolReportHelp": "Seuls les responsables parentaux gèrent l’emploi du temps. Avec cette option, un enfant peut signaler un cours annulé, à confirmer par un responsable parental.",
+  "settingSchoolEquipmentTitle": "Rappel du matériel pour demain",
+  "settingSchoolEquipmentHelp": "Indique les affaires à emporter demain, comme la tenue de sport, selon les matières prévues.",
+  "settingMealsSchoolDayTitle": "Repas chaud les jours d’école",
+  "settingMealsSchoolDayHelp": "Le repas chaud affiché sur l’écran de la cuisine. Les jours d’école, les enfants déjeunent à l’école ou à l’accueil périscolaire.",
+  "settingMealsFreeDayTitle": "Repas chaud les jours sans école",
+  "settingMealsFreeDayHelp": "Pour les week-ends et les vacances.",
+  "settingMealsAwayTitle": "Les absents ne participent pas au repas",
+  "settingMealsAwayHelp": "Une personne absente ou en déplacement à l’heure du repas est automatiquement exclue du repas. La plupart des jours, il n’y a donc rien à saisir.",
+  "settingMealsCareCutoffTitle": "Heure limite de garde pour le déjeuner",
+  "settingMealsCareCutoffHelp": "Un enfant gardé au-delà de cette heure déjeune à l’extérieur.",
+  "settingBoardRolloverTitle": "Passage à la semaine suivante",
+  "settingBoardRolloverHelp": "Quand le tableau passe à la semaine suivante. Le dimanche soir, on prépare la semaine à venir ; le samedi matin, on veut encore voir celle en cours.",
+  "settingBoardDayPartsTitle": "Matin, après-midi, soir",
+  "settingBoardDayPartsHelp": "Définit les limites entre le matin, l’après-midi et le soir dans la zone des rendez-vous.",
+  "settingDeviceNightHoursTitle": "Horaires du thème de nuit",
+  "settingDeviceNightHoursHelp": "Quand l’écran mural passe au thème de nuit ambré.",
+  "settingDeviceIdleRevertTitle": "Retour au tableau après",
+  "settingDeviceIdleRevertHelp": "Durée pendant laquelle un profil ou une vue détaillée reste ouvert avant le retour au tableau mural.",
+  "settingMemberCompletionSoundTitle": "Son quand une tâche est cochée",
+  "settingMemberCompletionSoundHelp": "Cocher une tâche produit un son bref. Désactive-le si tu n’en veux pas.",
+  "settingCalendarTentativeTitle": "Vérifier les événements incertains à",
+  "settingCalendarTentativeHelp": "Demande si un événement provisoire aura bien lieu, pour ne pas le laisser incertain jusqu’à son début.",
+  "settingNotifyMorningTitle": "Résumé du matin",
+  "settingNotifyMorningHelp": "Tes tâches et événements du jour. Les responsables parentaux y voient aussi les demandes de récompenses en attente.",
+  "settingNotifyEventReminderTitle": "Rappel avant les événements",
+  "settingNotifyEventReminderHelp": "Une notification avant le début d’un événement.",
+  "settingNotifyTaskVerifiedTitle": "Quand une tâche est validée",
+  "settingNotifyTaskVerifiedHelp": "Une notification quand un responsable parental valide une tâche et que les points sont crédités.",
+  "settingNotifyRedemptionTitle": "Quand une récompense est demandée",
+  "settingNotifyRedemptionHelp": "Une notification immédiate quand un enfant demande une récompense.",
+  "boardCareShort": "{label} {time}",
+  "@boardCareShort": {
+    "description": "Care end next to notable lessons on the wall, e.g. 'Hort 15'",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "calendarTitle": "Calendrier",
+  "@calendarTitle": {},
+  "calendarDay": "Jour",
+  "@calendarDay": {},
+  "calendarThreeDays": "3 jours",
+  "@calendarThreeDays": {},
+  "calendarWeek": "Semaine",
+  "@calendarWeek": {},
+  "calendarPrevious": "Précédent",
+  "@calendarPrevious": {},
+  "calendarNext": "Suivant",
+  "@calendarNext": {},
+  "calendarToday": "Aujourd’hui",
+  "@calendarToday": {},
+  "calendarRange": "{from} – {to}",
+  "@calendarRange": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "calendarNewEvent": "Nouvel événement",
+  "@calendarNewEvent": {},
+  "calendarEmpty": "Rien de prévu",
+  "@calendarEmpty": {},
+  "calendarEditorPlaceholder": "L’éditeur d’événements arrive bientôt.",
+  "@calendarEditorPlaceholder": {},
+  "eventEditTitle": "Modifier l’événement",
+  "@eventEditTitle": {},
+  "eventTitleLabel": "Titre",
+  "@eventTitleLabel": {},
+  "eventTitleRequired": "Saisis un titre.",
+  "@eventTitleRequired": {},
+  "eventKindAppointment": "Rendez-vous",
+  "@eventKindAppointment": {},
+  "eventKindPresence": "Présence",
+  "@eventKindPresence": {},
+  "eventPresenceState": "Situation",
+  "@eventPresenceState": {},
+  "eventPresenceStateRequired": "Choisis une situation.",
+  "@eventPresenceStateRequired": {},
+  "eventAllDay": "Toute la journée",
+  "@eventAllDay": {},
+  "eventStarts": "Début",
+  "@eventStarts": {},
+  "eventEnds": "Fin",
+  "@eventEnds": {},
+  "eventEndBeforeStart": "La fin doit être après le début.",
+  "@eventEndBeforeStart": {},
+  "eventAttendees": "Qui",
+  "@eventAttendees": {},
+  "eventAttendeesWholeFamily": "Personne de sélectionné : cet événement concerne toute la famille.",
+  "@eventAttendeesWholeFamily": {},
+  "eventLocation": "Lieu",
+  "@eventLocation": {},
+  "eventNotes": "Notes",
+  "@eventNotes": {},
+  "eventTentative": "Pas encore confirmé",
+  "@eventTentative": {},
+  "eventKeyDisplay": "Afficher sur l’écran de la cuisine",
+  "@eventKeyDisplay": {},
+  "eventRepeat": "Répétition",
+  "@eventRepeat": {},
+  "eventRepeatNever": "Jamais",
+  "@eventRepeatNever": {},
+  "eventRepeatDaily": "Tous les jours",
+  "@eventRepeatDaily": {},
+  "eventRepeatWeekly": "Toutes les semaines",
+  "@eventRepeatWeekly": {},
+  "eventRepeatBiweekly": "Toutes les 2 semaines",
+  "@eventRepeatBiweekly": {},
+  "eventRepeatMonthly": "Tous les mois",
+  "@eventRepeatMonthly": {},
+  "eventRepeatSpecificDays": "Jours précis (planning de travail)",
+  "@eventRepeatSpecificDays": {},
+  "eventRepeatMonthlyDay": "le {day}",
+  "@eventRepeatMonthlyDay": {
+    "placeholders": {
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "eventRepeatMonthlyNth": "le {n}ᵉ {weekday} du mois",
+  "@eventRepeatMonthlyNth": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "weekday": {
+        "type": "String"
+      }
+    }
+  },
+  "eventRepeatMonthlyLast": "le dernier {weekday}",
+  "@eventRepeatMonthlyLast": {
+    "placeholders": {
+      "weekday": {
+        "type": "String"
+      }
+    }
+  },
+  "eventRepeatDays": "Ces jours-là",
+  "@eventRepeatDays": {},
+  "eventRepeatEnds": "Fin de la répétition",
+  "@eventRepeatEnds": {},
+  "eventRepeatUntil": "à une date",
+  "@eventRepeatUntil": {},
+  "eventRepeatCount": "après {count} fois",
+  "@eventRepeatCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eventDaysPicked": "{count} jours",
+  "@eventDaysPicked": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eventDienstplanHelp": "Appuie sur les jours concernés. Le jour de début est toujours inclus.",
+  "@eventDienstplanHelp": {},
+  "eventCustomRule": "Règle personnalisée",
+  "@eventCustomRule": {},
+  "eventCustomRuleHelp": "Cette répétition ne peut pas être modifiée ici. Elle reste telle quelle.",
+  "@eventCustomRuleHelp": {},
+  "eventWeekdaysRequired": "Choisis au moins un jour de la semaine.",
+  "@eventWeekdaysRequired": {},
+  "eventDeleteConfirm": "Supprimer cet événement ?",
+  "@eventDeleteConfirm": {},
+  "eventScopeTitle": "Quels événements ?",
+  "@eventScopeTitle": {},
+  "eventScopeDeleteTitle": "Quels événements supprimer ?",
+  "@eventScopeDeleteTitle": {},
+  "eventScopeThis": "Cet événement uniquement",
+  "@eventScopeThis": {},
+  "eventScopeSeries": "Tous les événements de la série",
+  "@eventScopeSeries": {},
+  "errEventInvalid": "Cet événement n’est pas valide.",
+  "@errEventInvalid": {},
+  "errRruleInvalid": "Cette répétition ne peut pas être enregistrée.",
+  "@errRruleInvalid": {},
+  "errAttendeeInvalid": "Une personne sélectionnée n’appartient pas à ce foyer.",
+  "@errAttendeeInvalid": {},
+  "errEventNotFound": "Cet événement n’existe plus.",
+  "@errEventNotFound": {},
+  "scheduleTitle": "Emploi du temps",
+  "tasksTitle": "Tâches",
+  "mealsTitle": "Repas",
+  "comingSoon": "Cette partie est en cours de construction.",
+  "mealsWeekRange": "{from} – {to}",
+  "@mealsWeekRange": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "mealsPrevWeek": "Semaine précédente",
+  "mealsNextWeek": "Semaine suivante",
+  "mealsThisWeek": "Cette semaine",
+  "mealsRecipes": "Recettes",
+  "mealsFillShopping": "Compléter la liste de courses",
+  "mealsSlotBreakfast": "Petit-déjeuner",
+  "mealsSlotLunch": "Déjeuner",
+  "mealsSlotDinner": "Dîner",
+  "mealsSlotSnack": "Collation",
+  "mealsNothingYet": "Rien de prévu pour le moment",
+  "mealsAddOther": "Ajouter un repas",
+  "mealsDragHint": "Maintiens un repas appuyé, puis dépose-le sur un autre jour pour le déplacer.",
+  "mealsEditTitle": "Repas du {day}",
+  "@mealsEditTitle": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "mealsFieldLabel": "Plat ou note",
+  "mealsFieldHint": "Pizza, restes, nom d’une recette…",
+  "mealsSuggestionHelp": "Recettes correspondantes. Appuie sur une recette pour la choisir ; ses ingrédients seront alors ajoutés à la liste de courses.",
+  "mealsServings": "Portions",
+  "mealsCook": "Qui cuisine",
+  "mealsCookNobody": "Personne",
+  "mealsTime": "Heure",
+  "mealsTimeNone": "Sans horaire",
+  "mealsGuests": "Invités",
+  "mealsEatingTitle": "Qui mange avec nous",
+  "mealsEatingHelp": "Une personne absente ou en déplacement au moment du repas, ou un enfant gardé au-delà de l’heure limite, est automatiquement exclu du repas. Modifie ce choix à la main seulement si nécessaire.",
+  "mealsEatingAuto": "Automatique",
+  "mealsEatingYes": "Participe au repas",
+  "mealsEatingNo": "Ne participe pas au repas",
+  "mealsDelete": "Supprimer le repas",
+  "mealsPreviewTitle": "Compléter la liste de courses",
+  "mealsPreviewEmpty": "Rien à ajouter. Les repas saisis en texte libre n’ont pas d’ingrédients ; les recettes ajoutent les leurs à la liste.",
+  "mealsPreviewOnList": "Déjà sur la liste",
+  "mealsPreviewFor": "Pour {meals}",
+  "@mealsPreviewFor": {
+    "placeholders": {
+      "meals": {
+        "type": "String"
+      }
+    }
+  },
+  "mealsPreviewAdd": "Ajouter {count, plural, =0{aucun article} =1{1 article} other{{count} articles}}",
+  "@mealsPreviewAdd": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mealsPreviewAdded": "{count, plural, =1{1 article ajouté à la liste de courses} other{{count} articles ajoutés à la liste de courses}}",
+  "@mealsPreviewAdded": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mealsRecipesTitle": "Recettes",
+  "mealsRecipeSearch": "Rechercher des recettes",
+  "mealsRecipesEmpty": "Pas encore de recettes. Un nom de plat suffit pour un repas ; une recette ajoute ses ingrédients à la liste de courses.",
+  "mealsRecipeNew": "Nouvelle recette",
+  "mealsRecipeEdit": "Modifier la recette",
+  "mealsRecipeTitleField": "Titre",
+  "mealsIngredients": "Ingrédients",
+  "mealsIngredientName": "Ingrédient",
+  "mealsIngredientQuantity": "Quantité",
+  "mealsIngredientUnit": "Unité",
+  "mealsIngredientNote": "Note",
+  "mealsIngredientAdd": "Ajouter un ingrédient",
+  "mealsIngredientRemove": "Retirer l’ingrédient",
+  "mealsIngredientMove": "Faire glisser pour réorganiser",
+  "mealsNoIngredients": "Aucun ingrédient indiqué.",
+  "mealsSteps": "Préparation",
+  "mealsStepsHint": "Une étape par ligne",
+  "mealsTags": "Mots-clés",
+  "mealsTagsHint": "Séparés par des virgules, par exemple rapide, végétarien",
+  "mealsSourceUrl": "Lien de la source",
+  "mealsSource": "Source",
+  "mealsRecipeSave": "Enregistrer la recette",
+  "mealsRecipeDelete": "Supprimer la recette",
+  "mealsRecipeDeleteConfirm": "Supprimer « {title} » ? Les repas qui utilisent cette recette conserveront leur nom.",
+  "@mealsRecipeDeleteConfirm": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "mealsRecipeTitleRequired": "Une recette doit avoir un titre.",
+  "mealsKioskHint": "Appuie sur un point pour modifier les participants au repas",
+  "errMealInvalid": "Ce repas n’a pas pu être enregistré. Vérifie la saisie et réessaie.",
+  "schoolSetupCardTitle": "Configurer l’école",
+  "schoolSetupCardBody": "Ajoute l’école, ses horaires de cours et les périodes scolaires. Tu pourras ensuite saisir l’emploi du temps.",
+  "schoolSetupAction": "Configurer l’école",
+  "schoolEnterTimetableTitle": "Saisir l’emploi du temps",
+  "schoolEnterTimetableBody": "Il n’y a pas encore d’emploi du temps pour {name} pour cette période scolaire.",
+  "@schoolEnterTimetableBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "schoolEnterTimetableAction": "Saisir l’emploi du temps",
+  "schoolNoChildren": "Aucun enfant dans le foyer pour le moment.",
+  "schoolEditSchool": "Modifier l’école",
+  "schoolEditTimetable": "Modifier l’emploi du temps",
+  "schoolPrevWeek": "Semaine précédente",
+  "schoolNextWeek": "Semaine suivante",
+  "schoolThisWeek": "Cette semaine",
+  "schoolWeekLabel": "Semaine {week} · {from} – {to}",
+  "@schoolWeekLabel": {
+    "placeholders": {
+      "week": {
+        "type": "int"
+      },
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "schoolChooseChild": "Choisir un enfant",
+  "schoolHolidayBand": "{name} · {range}",
+  "@schoolHolidayBand": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "range": {
+        "type": "String"
+      }
+    }
+  },
+  "schoolNoLessonsToday": "Pas de cours",
+  "schoolPackTomorrowNone": "Rien à préparer pour demain.",
+  "schoolLessonActions": "{subject}, {day}, {period}",
+  "@schoolLessonActions": {
+    "placeholders": {
+      "subject": {
+        "type": "String"
+      },
+      "day": {
+        "type": "String"
+      },
+      "period": {
+        "type": "String"
+      }
+    }
+  },
+  "schoolCancelLesson": "Annulé",
+  "schoolSubstitute": "Remplacement",
+  "schoolRoomChange": "Salle modifiée",
+  "schoolResetException": "Réinitialiser",
+  "schoolPickSubject": "Matière",
+  "schoolSearchSubject": "Rechercher une matière",
+  "schoolTeacher": "Enseignant",
+  "schoolNote": "Note",
+  "schoolRoom": "Salle",
+  "schoolApply": "Appliquer",
+  "schoolSaved": "Enregistré.",
+  "schoolNoSubjects": "Aucune matière pour le moment. Ajoute-les dans la configuration de l’école.",
+  "schoolSetupTitle": "École",
+  "schoolSectionSchool": "École",
+  "schoolName": "Nom de l’école",
+  "schoolBellTimes": "Horaires des cours et des pauses",
+  "schoolAddLesson": "Ajouter un cours",
+  "schoolAddBreak": "Ajouter une pause",
+  "schoolRemove": "Retirer",
+  "schoolStart": "Début",
+  "schoolEnd": "Fin",
+  "schoolTerms": "Périodes scolaires",
+  "schoolAddTerm": "Ajouter une période",
+  "schoolTermEdit": "Période scolaire",
+  "schoolTermName": "Nom",
+  "schoolFrom": "Du",
+  "schoolTo": "Au",
+  "schoolAbWeek": "Semaine de référence A/B (numéro de semaine)",
+  "schoolAbWeekHint": "Une semaine qui correspond à une semaine A. Laisser vide si toutes les semaines sont identiques.",
+  "schoolCurrent": "en cours",
+  "schoolSubjects": "Matières",
+  "schoolAddSubject": "Ajouter une matière",
+  "schoolSubjectEdit": "Matière",
+  "schoolSubjectShort": "Abréviation",
+  "schoolTint": "Couleur",
+  "schoolEquipment": "Affaires à emporter",
+  "schoolNotable": "Afficher sur le tableau mural",
+  "schoolSubjectInUse": "Cette matière figure encore dans un emploi du temps. Retire-la d’abord de cet emploi du temps.",
+  "schoolInvalid": "Ces informations ne sont pas cohérentes.",
+  "schoolHolidays": "Vacances et jours sans école",
+  "schoolAddHoliday": "Ajouter des vacances",
+  "schoolHolidayEdit": "Vacances",
+  "schoolHolidayName": "Nom",
+  "schoolEditorClass": "Classe",
+  "schoolWeekCycle": "Rythme des semaines",
+  "schoolCycleWeekly": "Chaque semaine",
+  "schoolCycleAb": "Semaines A/B",
+  "schoolParityAll": "Chaque semaine",
+  "schoolParityA": "Semaine A",
+  "schoolParityB": "Semaine B",
+  "schoolClearDay": "Vider la journée",
+  "schoolClearCell": "Vider",
+  "schoolCopyFrom": "Copier depuis…",
+  "schoolCopyPick": "Copier l’emploi du temps de",
+  "schoolCareRows": "Accueil périscolaire",
+  "schoolAddCare": "Ajouter un accueil périscolaire",
+  "schoolCareTitle": "Nom",
+  "schoolCareDays": "Les",
+  "schoolSaveTimetable": "Enregistrer l’emploi du temps",
+  "schoolWeekdayPick": "Jours",
+  "feedTitle": "Partager le calendrier familial",
+  "feedSettingsSubtitle": "En lecture seule, dans Outlook ou sur un iPhone",
+  "feedNew": "Nouvel abonnement",
+  "feedEmpty": "Aucun abonnement pour le moment. Un abonnement affiche les rendez-vous dans Outlook ou sur un iPhone, en lecture seule.",
+  "feedRevoked": "Révoqué",
+  "feedNeverFetched": "Jamais consulté",
+  "feedLastFetched": "Dernière consultation : {when}",
+  "@feedLastFetched": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "feedAgoJustNow": "à l’instant",
+  "feedAgoMinutes": "il y a {count} min",
+  "@feedAgoMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "feedAgoHours": "il y a {count} h",
+  "@feedAgoHours": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "feedAgoDays": "{count, plural, =1{il y a 1 jour} other{il y a {count} jours}}",
+  "@feedAgoDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "feedFetchCount": "{count, plural, =1{consulté une fois} other{consulté {count} fois}}",
+  "@feedFetchCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "feedSummaryAppointments": "Rendez-vous",
+  "feedSummaryPresence": "Présence",
+  "feedSummaryEveryone": "Tous les membres",
+  "feedSummarySchoolDay": "Journée d’école",
+  "feedSummarySchoolLessons": "Cours",
+  "feedWhoseTitle": "Les événements de qui",
+  "feedWhoseHelp": "Sans sélection : tout le monde",
+  "feedLabelField": "Nom de l’abonnement",
+  "feedLabelHint": "par exemple Outlook sur l’ordinateur du travail",
+  "feedWhatTitle": "Contenu",
+  "feedKindPresenceTitle": "Présence",
+  "feedPresenceHint": "Indique qui est où et quand (travail, télétravail, congé…). Mieux vaut laisser cette option désactivée pour les appareils professionnels et les enfants.",
+  "feedSchoolTitle": "École",
+  "feedSchoolOff": "Désactivé",
+  "feedSchoolHint": "Les journées d’école en une entrée couvrant toute la journée, ou chaque cours séparément.",
+  "feedCreate": "Créer l’abonnement",
+  "feedUrlTitle": "Adresse de l’abonnement",
+  "feedUrlOnce": "Cette adresse ne sera affichée qu’une fois. Toute personne qui la possède peut voir les événements : protège-la comme un mot de passe.",
+  "feedCopyUrl": "Copier l’adresse",
+  "feedCopyWebcal": "Copier le lien webcal",
+  "feedWebcalLabel": "Lien webcal (ouvre la boîte de dialogue de l’iPhone)",
+  "feedCopied": "Adresse copiée.",
+  "feedQrLabel": "Code QR contenant l’adresse de l’abonnement",
+  "feedHowTitle": "Comment s’abonner",
+  "feedHowOutlook": "Outlook sur le web : Calendrier → Ajouter un calendrier → S’abonner à partir du web → colle l’adresse → donne-lui le nom « Famille ».",
+  "feedHowIphone": "iPhone : Réglages → Apps → Calendrier → Comptes → Ajouter un compte → Autre → Ajouter un calendrier avec abonnement → colle l’adresse. Ou appuie sur le lien webcal.",
+  "feedRevokeAction": "Révoquer",
+  "feedRevokeConfirm": "Révoquer « {label} » ? Cet abonnement cessera immédiatement de recevoir les événements.",
+  "@feedRevokeConfirm": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "baselineTitle": "Lieu habituel",
+  "baselineSettingsSubtitle": "Où chacun se trouve habituellement",
+  "baselineHelp": "L’endroit où tu te trouves d’habitude. Seules les exceptions sont à saisir : une journée normale reste vide.",
+  "baselineNone": "Rien de défini",
+  "baselineLabelField": "Libellé personnel (facultatif)",
+  "baselineLabelHint": "par exemple à la maison",
+  "baselineSaved": "Enregistré.",
+  "busyTitle": "Rendez-vous jusqu’à",
+  "busyPickTime": "Choisir une heure",
+  "busyThisDay": "Ce jour uniquement",
+  "busyWholeWeek": "Appliquer à toute la semaine (lun–ven)",
+  "busyRemove": "Retirer",
+  "busyHelp": "Jusqu’à quelle heure tu n’es pas disponible. Juste l’heure : aucun rendez-vous ni détail.",
+  "busyFor": "Pour",
+  "tasksTabToday": "Aujourd’hui",
+  "tasksTabApprovals": "Approbations",
+  "tasksTabChores": "Tâches",
+  "tasksTabRewards": "Récompenses",
+  "tasksTabPoints": "Points",
+  "tasksNothingToday": "Rien à faire aujourd’hui.",
+  "tasksOpenForAnyone": "À prendre par qui veut",
+  "tasksWaitingApproval": "en attente d’approbation",
+  "tasksDone": "Terminé",
+  "tasksUndo": "Annuler",
+  "tasksCompletedSnack": "{title} : terminé",
+  "@tasksCompletedSnack": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "tasksPointsCount": "{count, plural, =1{1 point} other{{count} points}}",
+  "@tasksPointsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tasksStreakDays": "{count, plural, =1{1 jour de suite} other{{count} jours de suite}}",
+  "@tasksStreakDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tasksOpenCount": "{count, plural, =0{aucune à faire} =1{1 à faire} other{{count} à faire}}",
+  "@tasksOpenCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tasksKindDuty": "Responsabilité",
+  "tasksKindBonus": "Tâche bonus",
+  "tasksApprovalsEmpty": "Rien à vérifier.",
+  "tasksCheckChores": "Tâches à vérifier",
+  "tasksRewardRequests": "Demandes de récompenses",
+  "tasksApprove": "Approuver",
+  "tasksDecline": "Refuser",
+  "tasksRequestedBy": "{name} souhaite {reward}",
+  "@tasksRequestedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "reward": {
+        "type": "String"
+      }
+    }
+  },
+  "tasksDoneBy": "Réalisé par {name}",
+  "@tasksDoneBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tasksNoteOptional": "Note (facultative)",
+  "tasksNoChores": "Pas encore de tâches.",
+  "tasksStarterTitle": "Commencer avec le kit de départ",
+  "tasksStarterHelp": "Cinq tâches, trois récompenses et quatre badges pour commencer. Tout pourra être modifié ensuite.",
+  "tasksStarterAdd": "Ajouter le kit de départ",
+  "tasksStarterDone": "Kit de départ ajouté.",
+  "tasksNewChore": "Nouvelle tâche",
+  "tasksEditChore": "Modifier la tâche",
+  "tasksFieldTitle": "Titre",
+  "tasksTitleRequired": "Saisis un titre.",
+  "tasksFieldIcon": "Icône",
+  "taskIcon_dishes": "Assiette",
+  "taskIcon_table": "Cuillère",
+  "taskIcon_trash": "Poubelle",
+  "taskIcon_bed": "Lit",
+  "taskIcon_dog": "Chien",
+  "taskIcon_plant": "Plante",
+  "taskIcon_bike": "Vélo",
+  "taskIcon_book": "Livres",
+  "taskIcon_laundry": "Panier à linge",
+  "taskIcon_teeth": "Brosse à dents",
+  "taskIcon_shopping": "Chariot de courses",
+  "taskIcon_cooking": "Poêle",
+  "taskIcon_car": "Voiture",
+  "taskIcon_toys": "Ours en peluche",
+  "taskIcon_star": "Étoile",
+  "taskIcon_cinema": "Film",
+  "taskIcon_moon": "Lune",
+  "taskIcon_trip": "Boussole",
+  "tasksNoIcon": "Sans icône",
+  "tasksFieldKind": "Type",
+  "tasksKindDutyHelp": "Une participation attendue de chacun, qui rapporte peu.",
+  "tasksKindBonusHelp": "Un effort supplémentaire et facultatif, qui rapporte des points.",
+  "tasksFieldPoints": "Points",
+  "tasksFieldRepeat": "Répétition",
+  "tasksRepeatOnce": "Une seule fois",
+  "tasksRepeatDaily": "Tous les jours",
+  "tasksRepeatWeekdays": "Certains jours de la semaine",
+  "tasksRepeatWeekly": "Toutes les semaines",
+  "tasksRepeatBiweekly": "Toutes les 2 semaines",
+  "tasksRepeatMonthly": "Tous les mois",
+  "tasksWeekdayOne": "Jour de la semaine",
+  "tasksWeekdayMany": "Jours de la semaine",
+  "tasksWeekdaysRequired": "Choisis au moins un jour de la semaine.",
+  "tasksFieldStarts": "À partir du",
+  "tasksFieldWindow": "Peut être faite",
+  "tasksWindowDays": "{count, plural, =1{Uniquement le jour prévu} other{Pendant {count} jours à partir du jour prévu}}",
+  "@tasksWindowDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tasksFieldWho": "Qui",
+  "tasksWhoFixed": "Une personne",
+  "tasksWhoRotating": "À tour de rôle",
+  "tasksWhoOpen": "Qui veut",
+  "tasksWhoEach": "Chacun",
+  "tasksPickOne": "Qui s’en charge ?",
+  "tasksPickPool": "Qui participe ?",
+  "tasksPickOpenPool": "Qui peut s’en charger ? Sans sélection : tout le monde.",
+  "tasksPoolRequired": "Choisis au moins une personne.",
+  "tasksFieldVerification": "Approbation par un adulte",
+  "tasksVerificationHelp": "Les points sont attribués après vérification.",
+  "tasksArchive": "Archiver",
+  "tasksArchiveHelp": "La tâche disparaît. Ses prochaines occurrences non terminées sont supprimées.",
+  "tasksNoRewards": "Pas encore de récompenses.",
+  "tasksNewReward": "Nouvelle récompense",
+  "tasksEditReward": "Modifier la récompense",
+  "tasksFieldCost": "Coût en points",
+  "tasksFieldStock": "Quantité disponible (vide = illimitée)",
+  "tasksFieldNeedsApproval": "Approbation préalable nécessaire",
+  "tasksNeedsApprovalHelp": "Désactiver cette option ne convient qu’aux petites choses.",
+  "tasksAskForReward": "La demander",
+  "tasksRequestSent": "Demande envoyée.",
+  "tasksRedeemed": "Points échangés.",
+  "tasksSoldOut": "Épuisé",
+  "tasksMissingPoints": "{count, plural, =1{Il manque 1 point} other{Il manque {count} points}}",
+  "@tasksMissingPoints": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tasksHistory": "Historique",
+  "tasksNoHistory": "Aucun échange pour le moment.",
+  "tasksRedemptionRequested": "En attente d’approbation",
+  "tasksRedemptionApproved": "Points échangés, récompense pas encore remise",
+  "tasksRedemptionDeclined": "Refusé",
+  "tasksRedemptionFulfilled": "Récompense remise",
+  "tasksHandOver": "Marquer comme remise",
+  "tasksNoLedger": "Aucun mouvement pour le moment.",
+  "tasksLedgerTask": "Tâche terminée",
+  "tasksLedgerUndo": "Annulation",
+  "tasksLedgerRedemption": "Récompense",
+  "tasksLedgerAdjustment": "Correction",
+  "tasksLedgerBadge": "Badge",
+  "tasksLedgerBonus": "Bonus",
+  "tasksAdjust": "Corriger",
+  "tasksAdjustTitle": "Corriger les points de {name}",
+  "@tasksAdjustTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tasksFieldAmount": "Points (+ ou −)",
+  "tasksAmountInvalid": "Saisis un nombre différent de 0.",
+  "tasksFieldReason": "Motif (obligatoire)",
+  "tasksReasonRequired": "Indique un motif.",
+  "tasksBalanceTitle": "Solde",
+  "tasksBoardStreakLabel": "Série",
+  "errTaskInvalid": "Cette tâche n’est pas valide.",
+  "errTaskNotYours": "Seule la personne concernée peut faire cela.",
+  "errBalanceInsufficient": "Il n’y a pas assez de points pour cela.",
+  "errRewardOutOfStock": "Cette récompense est épuisée.",
+  "errTaskNotOpen": "Cette tâche n’est plus à faire.",
+  "tasksActionTick": "Cocher comme terminé",
+  "tasksPointsInvalid": "Saisis un nombre entier supérieur ou égal à 0.",
+  "kidTabToday": "Ma journée",
+  "kidTabSchool": "Emploi du temps",
+  "kidTabPoints": "Points",
+  "kidTabShopping": "Courses",
+  "kidTabFamily": "Famille",
+  "kidWhoAreYou": "Salut ! Appuie sur ton prénom.",
+  "kidGreeting": "Salut, {name} !",
+  "@kidGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "kidTasksTitle": "Mes tâches",
+  "kidTasksNone": "Tu n’as pas de tâches aujourd’hui.",
+  "kidTasksAllDone": "Tout est fait !",
+  "kidTasksAllDoneBody": "Bravo, tu as tout fait pour aujourd’hui.",
+  "kidAwaitsCheck": "en cours de vérification",
+  "kidDone": "Terminé",
+  "kidTaskDoneSnack": "{title} : c’est fait !",
+  "@kidTaskDoneSnack": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "kidUndo": "Annuler",
+  "kidSchoolTitle": "L’école aujourd’hui",
+  "kidNoSchoolToday": "Pas d’école aujourd’hui.",
+  "kidHoliday": "Vacances : {name}",
+  "@kidHoliday": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "kidNoTimetable": "Ton emploi du temps n’a pas encore été saisi.",
+  "kidRoom": "Salle {room}",
+  "@kidRoom": {
+    "placeholders": {
+      "room": {
+        "type": "String"
+      }
+    }
+  },
+  "kidNow": "Maintenant",
+  "kidLessonCancelled": "annulé",
+  "kidLessonSubstituted": "enseignant remplaçant",
+  "kidLessonRoomChange": "autre salle",
+  "kidCareUntil": "Accueil périscolaire jusqu’à {time}",
+  "@kidCareUntil": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "kidTomorrowNeeds": "Demain, tu auras besoin de : {items}",
+  "@kidTomorrowNeeds": {
+    "placeholders": {
+      "items": {
+        "type": "String"
+      }
+    }
+  },
+  "kidMealDinner": "Ce soir, on mange : {dish}",
+  "@kidMealDinner": {
+    "placeholders": {
+      "dish": {
+        "type": "String"
+      }
+    }
+  },
+  "kidMealLunch": "Ce midi, on mange : {dish}",
+  "@kidMealLunch": {
+    "placeholders": {
+      "dish": {
+        "type": "String"
+      }
+    }
+  },
+  "kidMealNoneDinner": "Rien n’est encore prévu pour ce soir.",
+  "kidMealNoneLunch": "Rien n’est encore prévu pour ce midi.",
+  "kidMealEatingYou": "Tu manges avec nous.",
+  "kidEventsTitle": "Mes rendez-vous aujourd’hui",
+  "kidNoEvents": "Pas de rendez-vous aujourd’hui.",
+  "kidAllDay": "toute la journée",
+  "kidTimetableTitle": "Mon emploi du temps",
+  "kidTodayMarker": "Aujourd’hui",
+  "kidYourPoints": "Tes points",
+  "kidRewardsTitle": "Récompenses",
+  "kidRedeem": "Échanger mes points",
+  "kidNeedMore": "{count, plural, =1{Encore 1 point} other{Encore {count} points}}",
+  "@kidNeedMore": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "kidWaitsApproval": "en attente d’approbation",
+  "kidRequestSent": "Ta récompense attend l’accord d’un adulte.",
+  "kidRedeemed": "Points échangés !",
+  "kidSoldOut": "Épuisé pour le moment",
+  "kidBadgesTitle": "Mes badges",
+  "kidBadgeEarned": "Obtenu",
+  "kidBadgeNotYet": "Pas encore obtenu",
+  "kidStreaksTitle": "Mes séries",
+  "kidStreak": "{days, plural, =1{1 jour : {title}} other{{days} jours : {title}}}",
+  "@kidStreak": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "kidFamilyTitle": "La famille aujourd’hui",
+  "kidOpenTasks": "{count, plural, =0{Aucune tâche à faire} =1{1 tâche à faire} other{{count} tâches à faire}}",
+  "@kidOpenTasks": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "kidNoPlanToday": "Rien de prévu aujourd’hui",
+  "schoolsUiAddSchool": "Une autre école",
+  "schoolsUiNewSchool": "Nouvelle école",
+  "schoolsUiPickSchool": "Choisir l’école",
+  "schoolsUiAskSchool": "Quelle école ?",
+  "schoolsUiSchoolOf": "École : {name}",
+  "@schoolsUiSchoolOf": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "schoolsUiDayMenu": "Actions pour la journée",
+  "schoolsUiCopyDay": "Copier la journée vers…",
+  "schoolsUiCopyDayTitle": "Copier {day} vers",
+  "@schoolsUiCopyDayTitle": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "schoolsUiCopyDayApply": "Copier",
+  "schoolsUiSwapDay": "Échanger avec…",
+  "schoolsUiSwapDayTitle": "Échanger {day} avec",
+  "@schoolsUiSwapDayTitle": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "schoolsUiDayCleared": "Journée vidée",
+  "schoolsUiDayCopied": "Journée copiée",
+  "schoolsUiDaySwapped": "Journées échangées",
+  "schoolsUiUndo": "Annuler",
+  "mealsUxSuggestOften": "Les favoris de la famille",
+  "mealsUxSuggestRare": "Pas mangé depuis un moment",
+  "mealsUxClearedSnack": "{title} retiré",
+  "@mealsUxClearedSnack": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "mealsUxUndo": "Annuler",
+  "mealsUxFromMealPlan": "Issu du planning des repas",
+  "mealsUxForMeal": "Pour : {meal} · {day}",
+  "@mealsUxForMeal": {
+    "placeholders": {
+      "meal": {
+        "type": "String"
+      },
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "todayTitle": "Aujourd’hui",
+  "todayEmpty": "Rien n’est encore prévu aujourd’hui. Profite du calme.",
+  "todayAgendaTitle": "Rendez-vous",
+  "todayAllDay": "toute la journée",
+  "todayTasksTitle": "Tes tâches du jour",
+  "todayMealTitle": "Repas chaud",
+  "todayMealLine": "{slot} : {dish}",
+  "@todayMealLine": {
+    "placeholders": {
+      "slot": {
+        "type": "String"
+      },
+      "dish": {
+        "type": "String"
+      }
+    }
+  },
+  "todayShoppingTitle": "Liste de courses",
+  "todayShoppingOpen": "{count, plural, =1{1 article encore à acheter} other{{count} articles encore à acheter}}",
+  "@todayShoppingOpen": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "todayNoticeJoined": "{name} a rejoint la famille",
+  "@todayNoticeJoined": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "todayNoticeSignIn": "Nouvelle connexion : {device}",
+  "@todayNoticeSignIn": {
+    "placeholders": {
+      "device": {
+        "type": "String"
+      }
+    }
+  },
+  "todayNoticeDismiss": "Compris",
+  "todayNoticeMembers": "Membres",
+  "todayNoticeDevices": "Appareils",
+  "todayStartTitle": "Premiers pas",
+  "todayStartProgress": "{done} sur {total}",
+  "@todayStartProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "todayStartNotNeeded": "Pas nécessaire",
+  "todayStartInvitePartner": "Inviter ton ou ta partenaire",
+  "todayStartConnectTablet": "Connecter la tablette familiale",
+  "todayStartWallDisplay": "Configurer l’écran mural",
+  "todayStartSetPin": "Définir ton code PIN",
+  "todayStartSubscribeFeed": "S’abonner au calendrier",
+  "todayStartSchool": "Ajouter l’emploi du temps",
+  "settingsGettingStarted": "Premiers pas",
+  "settingsGettingStartedSubtitle": "Réafficher la carte de configuration dans l’onglet Aujourd’hui",
+  "exportFamilyTitle": "Famille",
+  "exportAction": "Exporter les données",
+  "exportExplanation": "Toutes les données de votre famille dans un fichier, par exemple pour passer sur un autre serveur.",
+  "exportInProgress": "Exportation des données",
+  "exportPersonalDeviceRequired": "L’exportation fonctionne uniquement depuis ton téléphone personnel.",
+  "boardHolidayLabel": "Jour férié · {name}",
+  "@boardHolidayLabel": {
+    "description": "A public holiday on a day of the week board and its details; {name} is the holiday, e.g. Ascension Day.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "regionSettingTitle": "Région",
+  "regionSettingHelp": "Détermine les jours fériés applicables et les vacances scolaires que tu peux importer. Choisis le canton, l’État ou la commune.",
+  "regionFieldLabel": "Région",
+  "regionFieldEmpty": "Aucune région choisie",
+  "regionFieldClear": "Retirer la région",
+  "regionCountryDE": "Allemagne",
+  "regionCountryAT": "Autriche",
+  "regionCountryCH": "Suisse",
+  "regionCountryLI": "Liechtenstein",
+  "regionCountryOther": "Autre pays (sans région)",
+  "regionPickCountryTitle": "Pays",
+  "regionPickRegionTitle": "Canton ou État",
+  "regionPickSearch": "Rechercher",
+  "regionPickWholeRegion": "Toute la région : {name}",
+  "@regionPickWholeRegion": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "regionPickDeeperTitle": "Préciser le choix (district ou commune)",
+  "regionPickDeeperSearch": "Saisis une commune ou un district",
+  "regionPickNoMatch": "Aucun résultat",
+  "regionPickLoading": "Chargement des régions…",
+  "regionPickRetry": "Réessayer",
+  "regionPickSkip": "Continuer sans région",
+  "regionPickEmpty": "Aucune région pour ce pays.",
+  "regionUnavailable": "La liste des régions n’est pas disponible pour le moment. Vérifie la connexion et réessaie.",
+  "regionNameTop": "{category} {name}",
+  "@regionNameTop": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "regionNameDeeper": "{name} ({category}), {parent}",
+  "@regionNameDeeper": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "category": {
+        "type": "String"
+      },
+      "parent": {
+        "type": "String"
+      }
+    }
+  },
+  "regionImportAction": "Importer les vacances scolaires",
+  "regionImportNeedsRegion": "Choisis d’abord une région pour l’école.",
+  "regionImportTitle": "Vacances scolaires",
+  "regionImportIntro": "Les jours fériés de la région s’appliquent automatiquement. Ici, tu peux importer les vacances scolaires.",
+  "regionImportSwissHint": "En Suisse, les vacances scolaires peuvent varier d’une commune à l’autre. Vérifie les dates.",
+  "regionImportNone": "Aucune période de vacances scolaires trouvée pour les 18 prochains mois.",
+  "regionImportAlready": "déjà importé",
+  "regionImportOverlaps": "chevauche une de tes entrées",
+  "regionImportButton": "Importer",
+  "regionImportDone": "{count, plural, =0{Aucune période de vacances importée} =1{1 période de vacances importée} other{{count} périodes de vacances importées}}",
+  "@regionImportDone": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "regionImportAttribution": "Données : OpenHolidays API · ODbL",
+  "regionImported": "importé",
+  "extCalTitle": "Ajouter des calendriers externes",
+  "extCalSettingsSubtitle": "Matchs du club, collecte des déchets et plus dans le calendrier familial",
+  "extCalEmpty": "Aucun abonnement à un calendrier pour le moment. Un abonnement ajoute des rendez-vous externes au calendrier familial, comme les matchs d’un club.",
+  "extCalNew": "S’abonner à un calendrier",
+  "extCalNewTitle": "Nouveau calendrier",
+  "extCalEditTitle": "Modifier le calendrier",
+  "extCalEdit": "Modifier",
+  "extCalNameLabel": "Nom",
+  "extCalNameHint": "par exemple Matchs du club de foot",
+  "extCalNameRequired": "Donne un nom au calendrier.",
+  "extCalUrlLabel": "Adresse (ICS)",
+  "extCalUrlHelp": "L’adresse de publication du calendrier, qui se termine souvent par .ics. Exemples : calendrier de collecte des déchets de ta commune, matchs d’un club. Les adresses webcal:// fonctionnent aussi.",
+  "extCalUrlInvalid": "Cela ne ressemble pas à une adresse web (https://…).",
+  "extCalColourLabel": "Couleur",
+  "extCalColourOption": "Couleur {number}",
+  "@extCalColourOption": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "extCalMembersLabel": "Pour qui ?",
+  "extCalMembersHelp": "Sans sélection, le calendrier concerne toute la famille.",
+  "extCalMembersWhole": "Toute la famille",
+  "extCalShowOnBoard": "Afficher sur l’écran de la cuisine",
+  "extCalShowOnBoardHelp": "Ses rendez-vous apparaissent parmi les rendez-vous importants dans la vue hebdomadaire de l’écran de la cuisine.",
+  "extCalDeleteConfirm": "« {name} » et tous ses rendez-vous seront supprimés.",
+  "@extCalDeleteConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "extCalDeleted": "Calendrier retiré.",
+  "extCalRefreshNow": "Actualiser maintenant",
+  "extCalRefreshed": "{count, plural, =0{Aucun rendez-vous trouvé} =1{1 rendez-vous chargé} other{{count} rendez-vous chargés}}",
+  "@extCalRefreshed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "extCalNotModified": "Aucun changement depuis la dernière récupération.",
+  "extCalRecent": "Récupéré à l’instant. Réessaie dans quelques minutes.",
+  "extCalRefreshFailed": "Le calendrier n’a pas pu être chargé : {reason}",
+  "@extCalRefreshFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "extCalStatusPaused": "En pause",
+  "extCalStatusNever": "Premier chargement…",
+  "extCalStatusUpdated": "Mis à jour {when}",
+  "@extCalStatusUpdated": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "extCalReadOnlyHint": "Seuls les responsables parentaux peuvent s’abonner à des calendriers ou les modifier.",
+  "extCalErrUnreachable": "L’adresse n’est pas accessible pour le moment.",
+  "extCalErrTimeout": "L’adresse met trop de temps à répondre.",
+  "extCalErrForbiddenHost": "Cette adresse n’est pas autorisée.",
+  "extCalErrTooLarge": "Le calendrier est trop volumineux (plus de 2 Mo).",
+  "extCalErrNotIcs": "Ce n’est pas un calendrier (ICS).",
+  "extCalErrHttp404": "Adresse introuvable (404).",
+  "extCalErrHttp": "L’adresse renvoie l’erreur {status}.",
+  "@extCalErrHttp": {
+    "placeholders": {
+      "status": {
+        "type": "int"
+      }
+    }
+  },
+  "extCalErrInternal": "Un problème est survenu sur le serveur. Réessaie plus tard.",
+  "extCalErrDb": "Les rendez-vous n’ont pas pu être enregistrés.",
+  "extCalErrUnknown": "La récupération a échoué.",
+  "extCalErrInvalid": "Le calendrier n’est pas valide : vérifie son nom et sa couleur.",
+  "extCalErrUrlInvalid": "Cette adresse ne peut pas être enregistrée. Elle doit commencer par https://.",
+  "extCalErrNotFound": "Ce calendrier n’existe plus.",
+  "extCalImportedNote": "Calendrier avec abonnement — les modifications viennent de la source",
+  "extCalFromCalendar": "De {name}",
+  "@extCalFromCalendar": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "extCalAllDay": "Toute la journée",
+  "extCalSheetTitle": "Rendez-vous issu d’un abonnement",
+  "extCalSettingsRefreshHint": "Le serveur récupère chaque calendrier environ une fois par heure.",
+  "extCalActive": "Actif",
+  "extCalUrlLoading": "Chargement de l’adresse",
+  "shoppingNavLabel": "Courses",
+  "@shoppingNavLabel": {
+    "description": "Short label of the shopping list in the bottom navigation bar; the page title stays shoppingTitle."
+  },
+  "scanHint": "Dirige l’appareil photo vers le code QR affiché sur l’autre appareil.",
+  "scanCameraDenied": "WuselWall n’a pas accès à l’appareil photo et ne peut donc pas scanner le code. Autorise cet accès dans les paramètres du système ou saisis le code à la main.",
+  "scanCameraUnavailable": "Cet appareil ne dispose pas d’un appareil photo utilisable par WuselWall. Saisis le code à la main.",
+  "scanWebUnsupported": "Ce navigateur ne peut pas scanner de codes QR. Saisis le code à la main.",
+  "scanTypeCode": "Saisir le code",
+  "feedSubTitle": "Inclure les calendriers externes",
+  "feedSubHelp": "Les événements des calendriers importés (par exemple un club ou la collecte des déchets) apparaissent aussi dans cet abonnement.",
+  "feedSubSummary": "Calendriers externes",
+  "boardAllEvents": "Tous les événements",
+  "boardMemberDay": "{name}, {date}",
+  "@boardMemberDay": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderChannelName": "Rappels",
+  "reminderStartLabel": "Activer les rappels",
+  "reminderMorningEventsAndTasks": "Aujourd’hui : {events, plural, one{1 rendez-vous} other{{events} rendez-vous}}, {tasks, plural, one{1 tâche} other{{tasks} tâches}}",
+  "@reminderMorningEventsAndTasks": {
+    "placeholders": {
+      "events": {
+        "type": "int"
+      },
+      "tasks": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderMorningEventsOnly": "Aujourd’hui : {events, plural, one{1 rendez-vous} other{{events} rendez-vous}}",
+  "@reminderMorningEventsOnly": {
+    "placeholders": {
+      "events": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderMorningTasksOnly": "Aujourd’hui : {tasks, plural, one{1 tâche} other{{tasks} tâches}}",
+  "@reminderMorningTasksOnly": {
+    "placeholders": {
+      "tasks": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderMorningNoEvents": "Rien n’est prévu aujourd’hui.",
+  "reminderMorningFirst": "D’abord, à {time} : {title}",
+  "@reminderMorningFirst": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderMorningAllDay": "Toute la journée : {title}",
+  "@reminderMorningAllDay": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderEventBody": "Commence à {time}",
+  "@reminderEventBody": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderSettingsTitle": "Rappels",
+  "reminderSettingsSubtitle": "Sur ce téléphone",
+  "reminderSettingsSection": "Ce que tu souhaites te faire rappeler",
+  "reminderStatusOn": "Les rappels sont activés sur ce téléphone.",
+  "reminderStatusOff": "Les rappels sont désactivés sur ce téléphone.",
+  "reminderStatusUnavailable": "Cet appareil ne peut pas afficher de rappels.",
+  "reminderEnableAction": "Activer les rappels",
+  "reminderDeniedNote": "Sans autorisation, les rappels ne sont pas possibles. Tu peux modifier l’autorisation dans les paramètres du système.",
+  "reminderLocalNote": "Les rappels sont créés sur ce téléphone. Rien n’est envoyé à un serveur ni à qui que ce soit.",
+  "reminderOnlyPersonal": "Les rappels sont disponibles uniquement sur l’appareil personnel d’un membre de la famille.",
+  "pairFrontDoorAction": "Connecter une tablette familiale ou un écran mural",
+  "pairTitle": "Connecter cet appareil",
+  "pairScanHint": "Ouvre WuselWall sur ton téléphone et scanne ce code.",
+  "pairCodeHint": "Ou sur le téléphone : Paramètres → Appareils → Connecter un appareil, puis saisis le code.",
+  "pairQrLabel": "Code QR pour connecter cet appareil",
+  "pairWaiting": "En attente d’approbation…",
+  "pairConnected": "Connecté à {household}",
+  "@pairConnected": {
+    "placeholders": {
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "pairOldCodeLink": "J’ai un code provenant d’un téléphone (ancienne version)",
+  "pairConnectAction": "Connecter un appareil",
+  "pairOldCodeAction": "Créer un code pour un ancien appareil",
+  "pairEntryBody": "Scanne le code affiché sur le nouvel appareil ou saisis-le à la main.",
+  "pairCodeField": "Code du nouvel appareil",
+  "pairNext": "Suivant",
+  "pairReviewBody": "Voici le code de l’appareil à connecter.",
+  "pairConfirmHint": "Ne confirme que si cet appareil est bien devant toi.",
+  "pairKindLabel": "De quel type d’appareil s’agit-il ?",
+  "pairKindWall": "Écran mural",
+  "pairKindKid": "Tablette des enfants",
+  "pairKindFamily": "Tablette partagée",
+  "pairKindChild": "Téléphone d’un enfant",
+  "pairChildLabel": "Quel enfant ?",
+  "pairNameLabel": "Nom de l’appareil",
+  "pairDefaultWall": "Écran mural",
+  "pairDefaultKid": "Tablette des enfants",
+  "pairDefaultFamily": "Tablette",
+  "pairDefaultChild": "Téléphone de {name}",
+  "@pairDefaultChild": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pairApproveAction": "Connecter",
+  "pairApproved": "Appareil connecté",
+  "pairOnlyOnPersonal": "Cela fonctionne uniquement sur ton téléphone personnel.",
+  "pairPinTitle": "Définir le code PIN parental",
+  "pairPinBody": "Le code PIN sert à confirmer les modifications sur les appareils partagés. Définis-le une seule fois.",
+  "pairPinConfirm": "Saisis à nouveau le code PIN",
+  "pairPinMismatch": "Les codes PIN ne correspondent pas. Réessaie.",
+  "firstRunKioskTitle": "Configurer l’écran mural",
+  "firstRunKioskBody": "Trois étapes à faire une seule fois sur cet appareil. Ensuite, il affichera la semaine.",
+  "firstRunPinTitle": "Garder l’application ouverte",
+  "firstRunPinIos": "Réglages → Accessibilité → Accès guidé : active-le. Ouvre WuselWall et appuie trois fois rapidement sur le bouton supérieur.",
+  "firstRunPinAndroid": "Paramètres → Sécurité → Épinglage d’application (ou « Épinglage d’écran » selon l’appareil). Ouvre WuselWall, affiche les applications récentes et appuie sur l’épingle.",
+  "firstRunAwakeTitle": "Garder l’écran allumé",
+  "firstRunAwakeIos": "Réglages → Luminosité et affichage → Verrouillage automatique → Jamais.",
+  "firstRunAwakeAndroid": "Paramètres → Écran → Délai de mise en veille : choisis la durée la plus longue.",
+  "firstRunPowerTitle": "Le laisser branché",
+  "firstRunPowerBody": "Laisse-le branché sur le secteur pour qu’il soit de nouveau prêt après une coupure de courant.",
+  "firstRunDone": "Terminé",
+  "firstRunKidTitle": "Bienvenue",
+  "firstRunKidBody": "Appuie sur ton image pour que WuselWall sache qui tu es.",
+  "firstRunKidStart": "C’est parti",
+  "householdNewTitle": "Nouvelle famille",
+  "householdNewFamilyName": "Nom de la famille",
+  "householdNewYourName": "Ton prénom",
+  "householdNewColour": "Ta couleur",
+  "householdNewColourOption": "Couleur {number}",
+  "@householdNewColourOption": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "householdNewFamilyPrefill": "Famille {name}",
+  "@householdNewFamilyPrefill": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "householdNewDefaults": "Fuseau horaire {timezone} · Langue {language} — selon ton appareil",
+  "@householdNewDefaults": {
+    "placeholders": {
+      "timezone": {
+        "type": "String"
+      },
+      "language": {
+        "type": "String"
+      }
+    }
+  },
+  "householdLanguageDe": "Allemand",
+  "householdLanguageEn": "Anglais",
+  "householdLanguageFr": "Français",
+  "householdLanguageEs": "Espagnol",
+  "householdNewFounderCode": "Code de configuration",
+  "householdNewFounderHelp": "Utilise le code de configuration affiché lors de l’installation du serveur ou demande-le à la personne qui le gère. Ce n’est pas le code de ton e-mail de connexion.",
+  "householdNewCodeSaved": "Le code de configuration de ton lien de configuration a été enregistré. Tu n’as pas besoin de le saisir à nouveau.",
+  "householdSeedExamples": "Commencer avec des exemples — 5 tâches, 3 récompenses",
+  "householdNewCreate": "Créer la famille",
+  "householdNewInvited": "J’ai reçu une invitation",
+  "householdInvitedNote": "Les invitations arriveront avec la prochaine mise à jour.",
+  "householdNewSignOut": "Se déconnecter",
+  "householdNewErrNoCode": "Ce serveur demande un code de configuration pour créer une famille. Utilise le code fourni à l’installation du serveur, pas celui reçu par e-mail.",
+  "householdNewErrCodeWrong": "Ce code de configuration n’est pas valide ou a déjà été utilisé. Demande un nouveau lien ou code de configuration à la personne qui gère votre serveur.",
+  "householdNewErrRateLimited": "Trop de tentatives. Patiente quelques minutes et réessaie.",
+  "householdNewStalled": "Cela prend plus de temps que d’habitude. Patiente un peu ou déconnecte-toi puis reconnecte-toi. Ne crée pas la famille une deuxième fois.",
+  "setupPrivacy": "Politique de confidentialité",
+  "householdMembersTitle": "Qui d’autre fait partie de ta famille ?",
+  "householdMembersYou": "{name} (toi)",
+  "@householdMembersYou": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "householdKindChild": "Enfant",
+  "householdKindAdult": "Adulte",
+  "householdMembersName": "Prénom",
+  "householdMembersAdd": "Ajouter une personne",
+  "householdMembersRemove": "Retirer",
+  "householdMembersDone": "Terminé",
+  "householdMembersSkip": "Passer",
+  "householdMembersHelp": "Tu pourras inviter des adultes plus tard.",
+  "householdDeviceLabel": "{owner} {device}",
+  "@householdDeviceLabel": {
+    "placeholders": {
+      "owner": {
+        "type": "String"
+      },
+      "device": {
+        "type": "String"
+      }
+    }
+  },
+  "householdDeviceIphone": "iPhone",
+  "householdDeviceAndroid": "Téléphone Android",
+  "householdDeviceBrowser": "navigateur",
+  "householdDeviceComputer": "ordinateur",
+  "emailContinue": "Continuer",
+  "emailHavePassword": "J’ai un mot de passe",
+  "emailWrongCredentials": "L’adresse e-mail ou le mot de passe est incorrect.",
+  "emailUseCodeInstead": "Utiliser plutôt un code par e-mail",
+  "emailOffline": "Pas de connexion : une connexion est nécessaire pour se connecter par e-mail.",
+  "emailCodeTitle": "Code reçu par e-mail",
+  "emailCodeSent": "Nous avons envoyé un code à 6 chiffres à {email}. Il est valable 10 minutes.",
+  "@emailCodeSent": {
+    "placeholders": {
+      "email": {
+        "type": "String",
+        "example": "david@example.org"
+      }
+    }
+  },
+  "emailCodeFieldLabel": "Code à six chiffres",
+  "emailCodeWrong": "Ce code est incorrect ou a expiré. Réessaie ou demande un nouveau code.",
+  "emailCodeResendIn": "Pas de code ? Renvoyer (dans {seconds} s)",
+  "@emailCodeResendIn": {
+    "placeholders": {
+      "seconds": {
+        "type": "int",
+        "example": "4"
+      }
+    }
+  },
+  "emailCodeResend": "Pas de code ? Renvoyer",
+  "emailCodeSpam": "Regarde dans tes courriers indésirables.",
+  "emailCodeResent": "Un nouveau code est en route.",
+  "emailCodeOtherMethod": "Choisir une autre méthode",
+  "emailCodeOtherAddress": "Une autre adresse e-mail",
+  "signInMethodTitle": "Comment souhaites-tu te connecter la prochaine fois ?",
+  "signInMethodCode": "Avec un code par e-mail — rien à retenir",
+  "signInMethodPassword": "Avec un mot de passe",
+  "passwordStrengthShort": "Encore trop court",
+  "passwordStrengthWeak": "Faible",
+  "passwordStrengthFair": "Moyen",
+  "passwordStrengthStrong": "Fort",
+  "settingsPasswordTitle": "Mot de passe",
+  "settingsPasswordSet": "Défini. Tu peux aussi te connecter avec ton adresse e-mail et ton mot de passe.",
+  "settingsPasswordNotSet": "Non défini. Tu peux toujours te connecter avec un code par e-mail.",
+  "passwordSetAction": "Définir un mot de passe",
+  "passwordChangeAction": "Modifier le mot de passe",
+  "passwordSaved": "Ton mot de passe est enregistré.",
+  "passwordDialogBody": "Au moins 10 caractères. Le code par e-mail reste toujours disponible.",
+  "signInMethodEmailSubtitle": "{email} — toujours disponible",
+  "@signInMethodEmailSubtitle": {
+    "placeholders": {
+      "email": {
+        "type": "String",
+        "example": "david@example.org"
+      }
+    }
+  },
+  "signInMethodAlwaysAvailable": "Toujours disponible",
+  "leaveLeaveTile": "Quitter la famille",
+  "leaveLeaveExplain": "Ton compte quitte la famille. Tes appareils sont déconnectés. Les données restent dans la famille ; tu pourras ensuite créer une autre famille ou en rejoindre une.",
+  "leaveLeaveBlocked": "Invite d’abord un deuxième adulte ou supprime la famille.",
+  "leaveLeaveDialogTitle": "Quitter la famille ?",
+  "leaveLeaveDialogBody": "Tu perdras l’accès à cette famille. Elle continuera d’exister et les autres membres y resteront.",
+  "leaveLeaveConfirm": "Quitter",
+  "leaveCancel": "Annuler",
+  "leaveDeleteTile": "Supprimer la famille",
+  "leaveDeleteExplain": "Tous les appareils seront immédiatement déconnectés. Un responsable parental pourra restaurer la famille pendant 14 jours ; ensuite, toutes les données seront définitivement supprimées.",
+  "leaveDeleteDialogTitle": "Supprimer la famille ?",
+  "leaveDeleteDialogBody": "Tous les appareils seront déconnectés et personne ne pourra plus accéder à la famille. Un responsable parental pourra la restaurer pendant 14 jours. Ensuite, toutes les données seront supprimées.",
+  "leaveDeleteNameLabel": "Saisis « {name} » pour confirmer",
+  "@leaveDeleteNameLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "leaveDeleteConfirm": "Supprimer la famille",
+  "leaveDeletedTitle": "{family} sera définitivement supprimée le {date}",
+  "@leaveDeletedTitle": {
+    "placeholders": {
+      "family": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "leaveDeletedBodyGuardian": "Tu peux restaurer la famille. Toutes les données sont encore là. Ce téléphone redeviendra le téléphone de la famille ; les autres appareils devront se reconnecter.",
+  "leaveDeletedBodyMember": "Seul un responsable parental peut restaurer la famille. Tu peux aussi repartir de zéro ; ton compte quittera alors cette famille.",
+  "leaveRestore": "Restaurer",
+  "leaveStartAfresh": "Repartir de zéro",
+  "leaveStartAfreshHint": "Ton compte quitte la famille supprimée et tu en crées une nouvelle.",
+  "leaveErrConfirmName": "Le nom ne correspond pas.",
+  "leaveErrHouseholdDeleted": "Cette famille a été supprimée.",
+  "leaveErrRestoreExpired": "Cette famille ne peut plus être restaurée.",
+  "leaveErrNotDeleted": "Cette famille n’est pas supprimée.",
+  "leaveErrAdultRequired": "Seuls les adultes ont leur propre compte.",
+  "leaveErrAlreadyInHousehold": "Ce compte appartient déjà à une famille.",
+  "inviteDoorAction": "J’ai un code d’invitation",
+  "inviteCodeTitle": "Invitation",
+  "inviteCodeBody": "Saisis le code ou colle le lien que tu as reçu.",
+  "inviteCodeLabel": "Code ou lien",
+  "inviteCheckAction": "Vérifier l’invitation",
+  "inviteCodeInvalidFormat": "Ce n’est ni un code d’invitation ni un lien WuselWall.",
+  "inviteNoLonger": "Cette invitation n’est plus valable. Demande une nouvelle invitation à la personne qui t’a invité.",
+  "inviteRateLimited": "Trop de tentatives. Patiente quelques minutes et réessaie.",
+  "inviteBanner": "{inviter} t’invite à rejoindre {household}",
+  "@inviteBanner": {
+    "placeholders": {
+      "inviter": {
+        "type": "String"
+      },
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteBannerNoInviter": "Tu as une invitation pour rejoindre {household}",
+  "@inviteBannerNoInviter": {
+    "placeholders": {
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteRoleLineGuardian": "En tant que responsable parental, tu vois tout et tu approuves les récompenses.",
+  "inviteRoleLineMember": "En tant que membre, tu coches tes tâches, sans approuver les récompenses.",
+  "inviteContinue": "Continuer vers la connexion",
+  "inviteJoin": "Rejoindre",
+  "inviteNewFamilyInstead": "Créer ma propre famille",
+  "inviteJoinTitle": "Tu es {name} dans {household}",
+  "@inviteJoinTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteJoinHint": "Ton prénom et ta couleur, tels que la famille les voit. Tu pourras les modifier plus tard dans les paramètres.",
+  "inviteJoinDecline": "Ne pas rejoindre",
+  "inviteAlreadyIn": "Tu fais déjà partie de {household}.",
+  "@inviteAlreadyIn": {
+    "placeholders": {
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteNothingKept": "Il n’y a plus d’invitation à accepter.",
+  "inviteResultTitle": "Invitation pour {name}",
+  "@inviteResultTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteResultHint": "La personne saisit le code dans WuselWall ou scanne le code QR.",
+  "inviteValidUntil": "Valable jusqu’au {date}",
+  "@inviteValidUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteQrLabel": "Code QR de l’invitation",
+  "inviteShare": "Partager",
+  "inviteDone": "Terminé",
+  "inviteShareMessage": "Rejoins {household} sur WuselWall : {link} — ou saisis le code {code} dans l’application, sur le serveur {server}.",
+  "@inviteShareMessage": {
+    "placeholders": {
+      "household": {
+        "type": "String"
+      },
+      "link": {
+        "type": "String"
+      },
+      "code": {
+        "type": "String"
+      },
+      "server": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteAdultTitle": "Inviter un adulte",
+  "inviteAdultName": "Prénom",
+  "inviteAdultRole": "Rôle",
+  "inviteRoleGuardian": "Responsable parental",
+  "inviteRoleMember": "Membre",
+  "inviteRoleGuardianHelp": "Voit tout et approuve les récompenses.",
+  "inviteRoleMemberHelp": "Coche les tâches mais n’approuve pas les récompenses. Pour une personne au pair ou les grands-parents, par exemple.",
+  "inviteAdultEmail": "E-mail (facultatif)",
+  "inviteAdultEmailHelp": "Grâce à cette adresse, la personne retrouve automatiquement l’invitation en se connectant.",
+  "inviteEmailInvalid": "Cela ne ressemble pas à une adresse e-mail.",
+  "inviteCreate": "Créer l’invitation",
+  "inviteInviteAction": "Inviter",
+  "inviteOpenUntil": "Invitation envoyée · jusqu’au {date}",
+  "@inviteOpenUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteShareAgain": "Partager à nouveau",
+  "inviteWithdraw": "Retirer",
+  "inviteWithdrawn": "Invitation retirée.",
+  "inviteScanTitle": "Scanner une invitation",
+  "accountDeleteTile": "Supprimer le compte",
+  "accountDeleteExplain": "Ton compte et ses méthodes de connexion seront supprimés, et tu seras déconnecté partout. Ton profil et son historique resteront dans la famille.",
+  "accountDeleteBlocked": "Tu es le dernier responsable parental avec un compte dans cette famille. Invite d’abord un deuxième adulte ou supprime la famille.",
+  "accountDeleteDialogTitle": "Supprimer le compte ?",
+  "accountDeleteDialogBody": "Cette action est irréversible. Tes accès de connexion seront supprimés et ton profil restera dans la famille.",
+  "accountDeleteConfirm": "Supprimer le compte",
+  "accountDeleteRefused": "Le compte n’a pas pu être supprimé. Réessaie plus tard.",
+  "accountDeleteReauthTitle": "Confirme que c’est bien toi",
+  "accountDeleteReauthBody": "La suppression d’un compte nécessite une nouvelle connexion. Nous envoyons un code à {email}.",
+  "@accountDeleteReauthBody": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "accountDeleteReauthSend": "Envoyer le code",
+  "accountDeleteReauthCodeLabel": "Code reçu par e-mail",
+  "accountDeleteReauthConfirm": "Confirmer",
+  "accountDeleteReauthSignInAgain": "Reconnecte-toi d’abord pour pouvoir supprimer le compte.",
+  "mfaResetAction": "Réinitialiser l’authentification à deux facteurs",
+  "mfaResetConfirmTitle": "Réinitialiser l’authentification à deux facteurs ?",
+  "mfaResetConfirmBody": "{name} pourra ensuite se connecter sans second facteur et le configurer à nouveau.",
+  "@mfaResetConfirmBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "mfaResetConfirm": "Réinitialiser",
+  "mfaResetDone": "Le second facteur de {name} a été réinitialisé.",
+  "@mfaResetDone": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "serverTitle": "Quel serveur ?",
+  "serverLead": "WuselWall conserve les données de votre famille sur votre propre serveur. Saisis son adresse ou scanne son code QR. Tu as une invitation ? Colle le lien ou le code accompagné du serveur, par exemple K7QM3XRP@api.example.org.",
+  "serverAddressLabel": "Adresse du serveur",
+  "serverAddressHint": "par exemple api.example.org",
+  "serverConnect": "Connecter",
+  "serverScan": "Scanner un code QR",
+  "serverScanTitle": "Scanner le code QR du serveur",
+  "serverDemo": "Essayer sans serveur",
+  "serverDemoHint": "Avec une famille d’exemple. Rien ne quitte cet appareil.",
+  "serverHelp": "Pas encore de serveur ? Le guide sur wuselwall.app/docs explique comment en installer un.",
+  "serverInvalid": "Ce n’est pas une adresse de serveur.",
+  "serverUnreachable": "Le serveur ne répond pas. L’adresse est-elle correcte et es-tu en ligne ?",
+  "serverNotWuselwall": "Il n’y a pas de serveur WuselWall à cette adresse.",
+  "serverTooOld": "Ce serveur doit être mis à jour. Demande à la personne qui le gère de mettre WuselWall à jour.",
+  "serverAppTooOld": "Ce serveur nécessite une version plus récente de l’application. Mets WuselWall à jour.",
+  "serverLinkWithoutServer": "Ce lien n’indique pas à quel serveur il appartient. Saisis l’adresse du serveur ci-dessus, puis le code.",
+  "inviteResultServer": "Serveur : {server}",
+  "@inviteResultServer": {
+    "placeholders": {
+      "server": {
+        "type": "String"
+      }
+    }
+  },
+  "linkOtherServerTitle": "Ce lien appartient à un autre serveur",
+  "linkSwitchBody": "Le lien pointe vers {host}, mais cette application est connectée à {current}. Passer à {host} ?",
+  "@linkSwitchBody": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      },
+      "current": {
+        "type": "String"
+      }
+    }
+  },
+  "linkSwitchAction": "Changer de serveur",
+  "linkOtherServerBody": "Le lien pointe vers {host}, mais tu es connecté à {current}. Déconnecte-toi d’abord (Paramètres → Changer de serveur), puis ouvre à nouveau le lien.",
+  "@linkOtherServerBody": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      },
+      "current": {
+        "type": "String"
+      }
+    }
+  },
+  "serverIncompatibleTitle": "Le serveur et l’application ne sont pas compatibles",
+  "serverChooseOther": "Choisir un autre serveur",
+  "demoBanner": "Famille d’exemple : rien n’est enregistré",
+  "demoExit": "Quitter",
+  "settingsServer": "Serveur",
+  "settingsServerBody": "Cette application communique avec {address}. Scanne ce code avec l’application WuselWall sur un autre appareil pour le connecter au même serveur.",
+  "@settingsServerBody": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsServerSwitch": "Changer de serveur",
+  "settingsServerSwitchConfirm": "Cet appareil sera déconnecté et toutes les données qui y sont stockées seront effacées. Tu pourras ensuite choisir un autre serveur.",
+  "setupPhoneTitle": "Continuer sur ton téléphone",
+  "setupPhoneBody": "Ouvre l’application WuselWall sur ton téléphone, choisis ce serveur en scannant le code, puis connecte-toi dessus.",
+  "shortcutTitle": "Siri et Raccourcis",
+  "shortcutSettingsSubtitle": "Liste de courses, programme du jour et plus, à la voix",
+  "shortcutIntro": "Une clé relie un raccourci de l’iPhone à WuselWall. Siri peut ainsi ajouter des articles à la liste de courses et te dire ce qui est prévu aujourd’hui, ce qu’il y a à manger ou qui a sport demain. Une clé appartient à une personne : elle permet de lire et d’ajouter, mais pas de supprimer ni de gérer quoi que ce soit. Une clé pour un assistant IA (MCP) permet uniquement de lire.",
+  "shortcutEmpty": "Pas encore de clés.",
+  "shortcutKioskNote": "Les clés se créent sur un téléphone personnel, pas sur l’écran mural.",
+  "shortcutNew": "Nouvelle clé",
+  "shortcutLabelField": "Nom",
+  "shortcutLabelHint": "par exemple iPhone",
+  "shortcutForWhom": "Pour qui ?",
+  "shortcutForWhomHelp": "Le raccourci agit au nom de cette personne : il coche ses tâches et annonce ses points.",
+  "shortcutCreate": "Créer la clé",
+  "shortcutKeyTitle": "Clé pour {name}",
+  "@shortcutKeyTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shortcutKeyOnce": "Cette clé n’est affichée que maintenant. Toute personne qui la possède peut lire et ajouter au nom de {name} : protège-la comme un mot de passe. L’application Raccourcis la synchronise via iCloud.",
+  "@shortcutKeyOnce": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shortcutCopyKey": "Copier la clé",
+  "shortcutAddressLabel": "Adresse",
+  "shortcutCopyAddress": "Copier l’adresse",
+  "shortcutCopied": "Copié.",
+  "shortcutHowTitle": "Comment faire",
+  "shortcutHowSteps": "Dans l’application Raccourcis, crée un raccourci avec l’action « Obtenir le contenu de l’URL » : l’adresse terminée par /today et un en-tête « Authorization » contenant « Bearer », une espace et la clé. Ajoute ensuite « Afficher le résultat » ou « Énoncer le texte ». Le guide sur wuselwall.app/docs/en/settings/shortcuts présente tous les raccourcis.",
+  "shortcutLastUsed": "Dernière utilisation : {when}",
+  "@shortcutLastUsed": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "shortcutNeverUsed": "Jamais utilisé",
+  "shortcutUseCount": "{count, plural, =1{1 requête} other{{count} requêtes}}",
+  "@shortcutUseCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shortcutRevoked": "Révoqué",
+  "shortcutRevokeAction": "Révoquer",
+  "shortcutRevokeConfirm": "Révoquer « {label} » ? Le raccourci cessera immédiatement de fonctionner.",
+  "@shortcutRevokeConfirm": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "shortcutErrLabel": "Saisis un nom de 60 caractères maximum.",
+  "shortcutErrLimit": "Cette personne possède déjà dix clés. Révoque d’abord l’une d’elles.",
+  "shortcutSectionAssistants": "Assistants IA",
+  "shortcutKindShortcut": "Siri",
+  "shortcutKindAssistant": "Assistant",
+  "shortcutKindShortcutHelp": "Pour un raccourci sur l’iPhone : il lit et ajoute, par exemple à la liste de courses.",
+  "shortcutKindAssistantHelp": "Pour un assistant IA compatible MCP, comme Claude : il lit uniquement, et seuls les adultes peuvent avoir une clé.",
+  "shortcutAssistantLabelHint": "par exemple Claude sur l’ordinateur portable",
+  "shortcutAssistantKeyOnce": "Cette clé n’est affichée que maintenant. Avec elle, un assistant lit toute la semaine de la famille au nom de {name} : rendez-vous, absences, emplois du temps des enfants, tâches, repas et liste de courses. Ce qu’il lit est transmis au fournisseur de l’assistant. Protège la clé comme un mot de passe.",
+  "@shortcutAssistantKeyOnce": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shortcutAssistantHowSteps": "Ajoute l’adresse comme serveur MCP dans ton assistant et envoie la clé dans l’en-tête « Authorization » avec « Bearer », une espace et la clé. Le guide sur wuselwall.app/docs/en/settings/shortcuts explique comment faire pour certains assistants.",
+  "shortcutErrAdultOnly": "Seuls les adultes peuvent obtenir une clé pour un assistant.",
+  "reminderPackTitle": "Préparer les affaires pour demain",
+  "reminderPackChild": "{name} : {items}",
+  "@reminderPackChild": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "items": {
+        "type": "String"
+      }
+    }
+  },
+  "settingNotifyPackingTitle": "Rappel pour préparer les affaires la veille au soir",
+  "settingNotifyPackingHelp": "À cette heure, ton téléphone indique les affaires à mettre dans le cartable pour demain, selon les emplois du temps (par exemple la tenue de sport). Uniquement s’il y a quelque chose à préparer."
+}

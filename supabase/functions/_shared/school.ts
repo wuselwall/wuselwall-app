@@ -234,11 +234,19 @@ export function publicHolidayRows(
     if (school.region_code === null) continue;
     for (const f of feed) {
       if (f.kind !== "public") continue;
-      if (!regionCovers(school.region_code, f.country, f.nationwide, f.subdivisions)) {
+      if (
+        !regionCovers(
+          school.region_code,
+          f.country,
+          f.nationwide,
+          f.subdivisions,
+        )
+      ) {
         continue;
       }
       const owned = holidays.some((h) =>
-        h.feed_id === f.id && (h.school_id === null || h.school_id === school.id)
+        h.feed_id === f.id &&
+        (h.school_id === null || h.school_id === school.id)
       );
       const name = holidayName(f.names, locale);
       if (owned || name === "") continue;

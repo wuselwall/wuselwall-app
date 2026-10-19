@@ -16,6 +16,8 @@
 	<array>
 		<string>de</string>
 		<string>en</string>
+		<string>fr</string>
+		<string>es</string>
 	</array>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>

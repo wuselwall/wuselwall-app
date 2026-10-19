@@ -111,22 +111,33 @@ otp_length = 6
 otp_expiry = 600
 max_frequency = "60s"
 
-# Fallback mails when the Send Email Hook is off: German first, English below, with the
-# six-digit code ({{ .Token }}). CLI reads these paths; Compose serves the same files on
-# its internal mail-templates service. deploy-supabase uploads their contents to hosted
-# Auth. The hook renders the recipient's language instead (_shared/mail_*.ts).
+# Operator-selected fallback mails when the Send Email Hook is off. The CLI uses the
+# German root templates; Compose and hosted Auth serve/upload the selected language's
+# templates from {de,en,fr,es}/. mail-language.sh keeps MAIL_LANGUAGE and the subject in
+# step, and the hook uses MAIL_LANGUAGE instead (_shared/mail_*.ts).
 [auth.email.template.magic_link]
-subject = "Dein WuselWall-Code / Your WuselWall code"
-content_path = "./supabase/templates/magic_link.html"
+subject = "Dein WuselWall-Code"
+content_path = "./supabase/templates/de/magic_link.html"
 
 [auth.email.template.confirmation]
-subject = "Dein WuselWall-Code / Your WuselWall code"
-content_path = "./supabase/templates/confirmation.html"
+subject = "Dein WuselWall-Code"
+content_path = "./supabase/templates/de/confirmation.html"
 
-# Uncomment to customize email template
-# [auth.email.template.invite]
-# subject = "You have been invited"
-# content_path = "./supabase/templates/invite.html"
+[auth.email.template.recovery]
+subject = "Dein WuselWall-Code"
+content_path = "./supabase/templates/de/recovery.html"
+
+[auth.email.template.email_change]
+subject = "Dein WuselWall-Code"
+content_path = "./supabase/templates/de/email_change.html"
+
+[auth.email.template.reauthentication]
+subject = "Dein WuselWall-Code"
+content_path = "./supabase/templates/de/reauthentication.html"
+
+[auth.email.template.invite]
+subject = "Dein WuselWall-Code"
+content_path = "./supabase/templates/de/invite.html"
 
 # The default budget of two mails an hour would stop the onboarding journeys of the
 # integration tests (a fresh address each); this stack only ever holds throwaway mail.

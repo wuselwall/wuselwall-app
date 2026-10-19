@@ -9,37 +9,65 @@ class DemoKidBadgesRepository implements KidBadgesRepository {
   Future<Result<List<KidBadge>>> badges(String profileId) async => Ok([
     KidBadge(
       id: 'b-first',
-      title: DemoData.tr('Erste Aufgabe', 'First chore'),
-      description: DemoData.tr(
+      title: DemoData.tr4(
+        'Erste Aufgabe',
+        'First chore',
+        'Première tâche',
+        'Primera tarea',
+      ),
+      description: DemoData.tr4(
         'Die erste Aufgabe erledigt',
         'Finished the first chore',
+        'Première tâche terminée',
+        'Primera tarea completada',
       ),
       earned: profileId == DemoData.daughter,
     ),
     KidBadge(
       id: 'b-week',
-      title: DemoData.tr('Sieben Tage am Stück', 'Seven days in a row'),
-      description: DemoData.tr(
+      title: DemoData.tr4(
+        'Sieben Tage am Stück',
+        'Seven days in a row',
+        'Sept jours d’affilée',
+        'Siete días seguidos',
+      ),
+      description: DemoData.tr4(
         'Sieben Fälligkeiten hintereinander erledigt',
         'Seven chores in a row done on time',
+        'Sept tâches à la suite terminées à temps',
+        'Siete tareas seguidas completadas a tiempo',
       ),
       earned: false,
     ),
     KidBadge(
       id: 'b-25',
-      title: DemoData.tr('Fünfundzwanzig Aufgaben', 'Twenty-five chores'),
-      description: DemoData.tr(
+      title: DemoData.tr4(
+        'Fünfundzwanzig Aufgaben',
+        'Twenty-five chores',
+        'Vingt-cinq tâches',
+        'Veinticinco tareas',
+      ),
+      description: DemoData.tr4(
         'Fünfundzwanzig Aufgaben erledigt',
         'Finished twenty-five chores',
+        'Vingt-cinq tâches terminées',
+        'Veinticinco tareas completadas',
       ),
       earned: false,
     ),
     KidBadge(
       id: 'b-100',
-      title: DemoData.tr('Hundert Punkte', 'A hundred points'),
-      description: DemoData.tr(
+      title: DemoData.tr4(
+        'Hundert Punkte',
+        'A hundred points',
+        'Cent points',
+        'Cien puntos',
+      ),
+      description: DemoData.tr4(
         'Hundert Punkte verdient',
         'Earned a hundred points',
+        'Cent points gagnés',
+        'Cien puntos conseguidos',
       ),
       earned: false,
     ),

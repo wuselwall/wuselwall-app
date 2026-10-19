@@ -646,7 +646,10 @@ function expandEvent(
  * with the calendar's members. Times are local to the household's timezone `tz`. An imported
  * occurrence is a key appointment on the week board when its calendar shows on the board.
  */
-export function importedOccurrence(row: ExternalOccurrenceRow, tz: string): Occurrence {
+export function importedOccurrence(
+  row: ExternalOccurrenceRow,
+  tz: string,
+): Occurrence {
   let start: string;
   let end: string;
   let localStartDate: string;
@@ -667,7 +670,8 @@ export function importedOccurrence(row: ExternalOccurrenceRow, tz: string): Occu
     end = isoOf(endMs);
     const s = toLocal(startMs, tz);
     const e = toLocal(endMs, tz);
-    localEndDate = toLocal(endMs > startMs ? endMs - 1 : startMs, tz).toPlainDate().toString();
+    localEndDate = toLocal(endMs > startMs ? endMs - 1 : startMs, tz)
+      .toPlainDate().toString();
     localStartDate = s.toPlainDate().toString();
     localStarts = hhmm(s);
     localEnds = hhmm(e);
