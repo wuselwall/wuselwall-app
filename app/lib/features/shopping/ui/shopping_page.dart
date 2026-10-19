@@ -11,6 +11,7 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/text/fold.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/empty_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
@@ -172,7 +173,19 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody> {
       value: current,
       onRetry: _refresh,
       data: (list) {
-        if (list == null) return Center(child: Text(l10n.shoppingEmpty));
+        if (list == null) {
+          return EmptyView(
+            message: l10n.shoppingEmpty,
+            actions: [
+              if (!kiosk)
+                FilledButton.icon(
+                  onPressed: _newList,
+                  icon: const Icon(Icons.add),
+                  label: Text(l10n.shoppingNewList),
+                ),
+            ],
+          );
+        }
         final all = ref.watch(shoppingItemsProvider);
         final items = all.whenData(
           (v) =>
@@ -213,32 +226,38 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody> {
                       ),
                     ),
                     const SliverToBoxAdapter(child: Divider(height: 1)),
-                    SliverToBoxAdapter(
-                      child: AsyncValueView<List<ShoppingItem>>(
-                        value: items,
-                        onRetry: _refresh,
-                        data: (open) => open.isEmpty
-                            ? Padding(
-                                padding: const EdgeInsets.all(Tokens.space8),
-                                child: Center(child: Text(l10n.shoppingEmpty)),
-                              )
-                            : _ItemList(
-                                items: open,
-                                listId: list.id,
-                                onToggle: (i) => sync.check(
-                                  actor: actor,
-                                  itemId: i.id,
-                                  checked: !i.checked,
-                                ),
-                                onLess: (i) => _sync.adjustCount(
-                                  actor: _actor,
-                                  itemId: i.id,
-                                  delta: -1,
-                                ),
-                                onEdit: _edit,
-                              ),
+                    // An empty list takes the rest of the screen, its line centred
+                    // there; the tiles above are the way to add the first item.
+                    if (items.value?.isEmpty ?? false)
+                      SliverFillRemaining(
+                        hasScrollBody: false,
+                        child: EmptyView(
+                          message: l10n.shoppingEmpty,
+                          scrolls: false,
+                        ),
+                      )
+                    else
+                      SliverToBoxAdapter(
+                        child: AsyncValueView<List<ShoppingItem>>(
+                          value: items,
+                          onRetry: _refresh,
+                          data: (open) => _ItemList(
+                            items: open,
+                            listId: list.id,
+                            onToggle: (i) => sync.check(
+                              actor: actor,
+                              itemId: i.id,
+                              checked: !i.checked,
+                            ),
+                            onLess: (i) => _sync.adjustCount(
+                              actor: _actor,
+                              itemId: i.id,
+                              delta: -1,
+                            ),
+                            onEdit: _edit,
+                          ),
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ),

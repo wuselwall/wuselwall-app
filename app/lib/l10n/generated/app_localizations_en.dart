@@ -2165,9 +2165,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tasksNoChores => 'No chores yet.';
 
   @override
-  String get tasksStarterTitle => 'Start with the starter pack';
-
-  @override
   String get tasksStarterHelp =>
       'Five chores, three rewards and four badges to begin with. Everything can be changed afterwards.';
 

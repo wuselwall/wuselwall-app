@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/empty_view.dart';
 import 'package:wuselwall/features/shopping/application/shopping_providers.dart';
 import 'package:wuselwall/features/shopping/application/shopping_sync.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
@@ -39,13 +40,13 @@ class ShoppingHistoryPage extends ConsumerWidget {
         onRetry: () => ref.read(shoppingSyncProvider.notifier).sync(),
         data: (current) {
           if (current == null) {
-            return Center(child: Text(l10n.shoppingHistoryEmpty));
+            return EmptyView(message: l10n.shoppingHistoryEmpty);
           }
           return AsyncValueView<List<ShoppingTrip>>(
             value: ref.watch(_tripsProvider(current.id)),
             onRetry: () => ref.invalidate(_tripsProvider(current.id)),
             data: (trips) => trips.isEmpty
-                ? Center(child: Text(l10n.shoppingHistoryEmpty))
+                ? EmptyView(message: l10n.shoppingHistoryEmpty)
                 : ListView(
                     children: [for (final t in trips) _TripTile(trip: t)],
                   ),

@@ -2182,9 +2182,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get tasksNoChores => 'Noch keine Aufgaben.';
 
   @override
-  String get tasksStarterTitle => 'Mit dem Startpaket beginnen';
-
-  @override
   String get tasksStarterHelp =>
       'Fünf Aufgaben, drei Belohnungen und vier Abzeichen zum Start. Alles lässt sich danach ändern.';
 

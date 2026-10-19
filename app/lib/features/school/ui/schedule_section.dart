@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/empty_view.dart';
 import 'package:wuselwall/core/ui/ringed_avatar.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
@@ -61,12 +62,7 @@ class _Children extends ConsumerWidget {
       onRetry: () => ref.invalidate(membersProvider),
       data: (kids) {
         if (kids.isEmpty) {
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Text(l10n.schoolNoChildren, textAlign: TextAlign.center),
-            ),
-          );
+          return EmptyView(message: l10n.schoolNoChildren);
         }
         final picked = ref.watch(selectedChildIdProvider);
         final child =
@@ -447,19 +443,9 @@ class _Card extends StatelessWidget {
   final VoidCallback onPressed;
 
   @override
-  Widget build(BuildContext context) => Center(
-    child: Padding(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(title, style: Theme.of(context).textTheme.titleLarge),
-          const SizedBox(height: 8),
-          Text(body, textAlign: TextAlign.center),
-          const SizedBox(height: 16),
-          FilledButton(onPressed: onPressed, child: Text(action)),
-        ],
-      ),
-    ),
+  Widget build(BuildContext context) => EmptyView(
+    title: title,
+    message: body,
+    actions: [FilledButton(onPressed: onPressed, child: Text(action))],
   );
 }
