@@ -435,6 +435,7 @@
   "calendarWeek": "Woche",
   "calendarPrevious": "Zurück",
   "calendarNext": "Weiter",
+  "calendarChooseView": "Kalenderansicht",
   "calendarToday": "Heute",
   "calendarRange": "{from} – {to}",
   "calendarNewEvent": "Neuer Termin",
@@ -996,6 +997,14 @@
   "regionPickSkip": "Ohne Region weiter",
   "regionPickEmpty": "Keine Regionen für dieses Land gefunden.",
   "regionUnavailable": "Die Regionsliste ist gerade nicht verfügbar. Prüfe die Verbindung und versuche es erneut.",
+  "regionCategoryCanton": "Kanton",
+  "regionNameWithAbbreviation": "{name} ({abbreviation})",
+  "@regionNameWithAbbreviation": {
+    "placeholders": {
+      "name": {"type": "String"},
+      "abbreviation": {"type": "String"}
+    }
+  },
   "regionNameTop": "{category} {name}",
   "@regionNameTop": {
     "placeholders": {

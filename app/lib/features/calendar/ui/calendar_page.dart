@@ -34,13 +34,11 @@ class CalendarPage extends ConsumerWidget {
 DateTime _toMinute(DateTime t) =>
     DateTime(t.year, t.month, t.day, t.hour, t.minute);
 
-/// The calendar's controls in the app bar's bottom: previous, the range in view, next,
-/// today, and the mode (Tag / 3 Tage / Woche).
-class CalendarToolbar extends ConsumerWidget implements PreferredSizeWidget {
-  const CalendarToolbar({super.key});
+/// One row of calendar controls. Narrow screens use a menu for the view selector.
+class CalendarToolbar extends ConsumerWidget {
+  const CalendarToolbar({this.compact = false, super.key});
 
-  @override
-  Size get preferredSize => const Size.fromHeight(104);
+  final bool compact;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -53,54 +51,80 @@ class CalendarToolbar extends ConsumerWidget implements PreferredSizeWidget {
             context.dayMonth(view.from),
             context.dayMonth(view.to),
           );
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Row(
-          children: [
-            IconButton(
-              tooltip: l10n.calendarPrevious,
-              icon: const Icon(Icons.chevron_left),
-              onPressed: nav.previous,
-            ),
-            Expanded(
-              child: Text(
-                label,
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
-            ),
-            IconButton(
-              tooltip: l10n.calendarNext,
-              icon: const Icon(Icons.chevron_right),
-              onPressed: nav.next,
-            ),
-            TextButton(onPressed: nav.today, child: Text(l10n.calendarToday)),
-          ],
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
-          child: SegmentedButton<CalendarMode>(
+    final modes = <CalendarMode, String>{
+      CalendarMode.day: l10n.calendarDay,
+      CalendarMode.threeDays: l10n.calendarThreeDays,
+      CalendarMode.week: l10n.calendarWeek,
+    };
+    final previous = IconButton(
+      tooltip: l10n.calendarPrevious,
+      icon: const Icon(Icons.chevron_left),
+      onPressed: nav.previous,
+    );
+    final next = IconButton(
+      tooltip: l10n.calendarNext,
+      icon: const Icon(Icons.chevron_right),
+      onPressed: nav.next,
+    );
+    Widget range(TextAlign align) => Tooltip(
+      message: label,
+      child: Text(
+        label,
+        textAlign: align,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: Theme.of(context).textTheme.titleSmall,
+      ),
+    );
+    if (!compact) {
+      // Wide: the navigation stays together after the title, the view on the right.
+      return Row(
+        children: [
+          TextButton(onPressed: nav.today, child: Text(l10n.calendarToday)),
+          previous,
+          next,
+          const SizedBox(width: 8),
+          Expanded(child: range(TextAlign.start)),
+          const SizedBox(width: 12),
+          SegmentedButton<CalendarMode>(
             showSelectedIcon: false,
             segments: [
-              ButtonSegment(
-                value: CalendarMode.day,
-                label: Text(l10n.calendarDay),
-              ),
-              ButtonSegment(
-                value: CalendarMode.threeDays,
-                label: Text(l10n.calendarThreeDays),
-              ),
-              ButtonSegment(
-                value: CalendarMode.week,
-                label: Text(l10n.calendarWeek),
-              ),
+              for (final mode in modes.entries)
+                ButtonSegment(value: mode.key, label: Text(mode.value)),
             ],
             selected: {view.mode},
             onSelectionChanged: (modes) => nav.setMode(modes.first),
           ),
+        ],
+      );
+    }
+    return Row(
+      children: [
+        previous,
+        Expanded(child: range(TextAlign.center)),
+        next,
+        IconButton(
+          tooltip: l10n.calendarToday,
+          icon: const Icon(Icons.today_outlined),
+          onPressed: nav.today,
+        ),
+        PopupMenuButton<CalendarMode>(
+          tooltip: l10n.calendarChooseView,
+          initialValue: view.mode,
+          icon: Icon(switch (view.mode) {
+            CalendarMode.day => Icons.view_day_outlined,
+            CalendarMode.threeDays => Icons.view_column_outlined,
+            CalendarMode.week => Icons.view_week_outlined,
+          }),
+          onSelected: nav.setMode,
+          itemBuilder: (_) => [
+            for (final mode in modes.entries)
+              CheckedPopupMenuItem(
+                value: mode.key,
+                checked: view.mode == mode.key,
+                child: Text(mode.value),
+              ),
+          ],
         ),
       ],
     );

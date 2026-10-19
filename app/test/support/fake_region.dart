@@ -53,20 +53,27 @@ class FakeRegionRepository implements RegionRepository {
   final Failure? refreshFailure;
 
   final refreshes = <String>[];
+  final regionReads = <String>[];
+  final statusReads = <String>[];
   final previews =
       <({String schoolId, String region, DateTime from, DateTime to})>[];
   final imports =
       <({String schoolId, List<String> feedIds, String language})>[];
 
   @override
-  Future<Result<List<Region>>> regions(String country) async => Ok([
-    for (final r in cachedRegions)
-      if (r.country == country) r,
-  ]);
+  Future<Result<List<Region>>> regions(String country) async {
+    regionReads.add(country);
+    return Ok([
+      for (final r in cachedRegions)
+        if (r.country == country) r,
+    ]);
+  }
 
   @override
-  Future<Result<FeedStatus?>> feedStatus(String country) async =>
-      Ok(status?.country == country ? status : null);
+  Future<Result<FeedStatus?>> feedStatus(String country) async {
+    statusReads.add(country);
+    return Ok(status?.country == country ? status : null);
+  }
 
   @override
   Future<Result<FeedStatus>> refresh(String country) async {

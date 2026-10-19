@@ -2186,6 +2186,12 @@ abstract class AppLocalizations {
   /// **'Next'**
   String get calendarNext;
 
+  /// No description provided for @calendarChooseView.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar view'**
+  String get calendarChooseView;
+
   /// No description provided for @calendarToday.
   ///
   /// In en, this message translates to:
@@ -5173,6 +5179,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The region list is not available right now. Check the connection and try again.'**
   String get regionUnavailable;
+
+  /// No description provided for @regionCategoryCanton.
+  ///
+  /// In en, this message translates to:
+  /// **'Canton'**
+  String get regionCategoryCanton;
+
+  /// No description provided for @regionNameWithAbbreviation.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} ({abbreviation})'**
+  String regionNameWithAbbreviation(String name, String abbreviation);
 
   /// No description provided for @regionNameTop.
   ///

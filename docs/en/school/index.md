@@ -14,11 +14,17 @@ The first time, tap **Set up school**. This covers:
 - the **subjects** with a short name and a colour. For each subject you can list **Things to bring**, for example sports kit, and decide whether it shows on the wall. The subjects are a starting suggestion that fits your country: rename or delete them
 - the **holidays and free days**
 
+The **Save** action appears at the top right only when you have unsaved changes to the school name, region or bell times. It saves all changed sections together.
+
+Bell times run from earliest to latest, with the first lesson shown as **Period 1** and breaks between lessons.
+
 ## Public and school holidays
 
 The **region** decides which public and school holidays apply to a school. You choose it in steps: first the **country** (Germany, Austria, Switzerland or Liechtenstein), then the **canton** or **state**, and if you like the **district** or **municipality**.
 
 <Shot name="region-picker" alt="The region picker: first the country, then canton or state" />
+
+Cantons and states are listed alphabetically from Z to A in the app’s language. Swiss cantons show their abbreviation, for example **Canton Aargau (AG)**. Search by name or abbreviation.
 
 If you tap **Continue without a region**, the region stays empty. Then there are no automatic public holidays, and you enter school holidays by hand. The household's region is also set under [Household settings](/en/settings/household).
 
