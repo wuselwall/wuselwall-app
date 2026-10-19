@@ -83,7 +83,9 @@ DeviceInfo testDevice({DeviceClass deviceClass = DeviceClass.personal}) =>
 
 void main() {
   group('deleting the account (Konto)', () {
-    testWidgets('the tile describes deletion without an Apple claim', (t) async {
+    testWidgets('the tile describes deletion without an Apple claim', (
+      t,
+    ) async {
       final s = await pumpSettings(t);
       await t.ensureVisible(deleteTile);
       await t.pumpAndSettle();
