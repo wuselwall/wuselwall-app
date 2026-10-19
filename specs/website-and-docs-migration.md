@@ -5,7 +5,7 @@
 | Repository | Owns | Delivery |
 |---|---|---|
 | `wuselwall/wuselwall-app` (visibility unchanged) | App, backend, specs, VitePress source and screenshot generator | Existing app/server releases; prepared GitHub Pages docs |
-| `wuselwall/wuselwall-website` (private) | Astro marketing/legal pages, public app-link files, copied screenshots, website container and deploy helper | Independent website CI and explicitly authorized deploy |
+| `wuselwall/wuselwall-website` (private) | Astro marketing/legal pages, public app-link files, copied screenshots, website container and deploy helper | Website CI; the operator deploys to their own server with `scripts/remote-web.sh deploy` |
 
 The intended docs address is **https://docs.wuselwall.app/** (English `/en/`).
 The old address is still operationally significant until cutover. No command in this
@@ -31,9 +31,10 @@ plan authorizes an unreviewed production operation.
 
 ## Phase 2 — satisfy Pages and DNS prerequisites
 
-- The app repository remains private by explicit choice. Obtain an eligible GitHub plan
-  for private-repository Pages, or separately authorize publication after a safety review.
-  Removing files in a forward commit does **not** remove them from history.
+- Make the app repository public (the chosen route; no paid plan). Review its history
+  for secrets and operator details first: removing files in a forward commit does
+  **not** remove them from history. Until then the server keeps serving the guide at
+  `/docs/` as last deployed; `main` no longer updates that copy.
 - In app Settings → Pages, choose **GitHub Actions** as the build source and configure
   custom domain **docs.wuselwall.app**. Verify domain ownership as GitHub instructs before
   exposing DNS; a checked-in CNAME alone does not configure an Actions Pages domain.
@@ -51,8 +52,9 @@ plan authorizes an unreviewed production operation.
 1. Verify a successful exact-head Pages deployment and the published homepage, English
    homepage, nested guide pages, assets, search and screenshots. Test a direct deep-link
    refresh, mobile navigation and light/dark shots. Check CNAME and sitemap output.
-2. Update marketing links and bilingual privacy disclosures for GitHub Pages' hosting
-   and IP processing; do not claim GitHub has the old server's no-log behavior.
+2. In the website repository set `docsOnPages = true` in `src/config/site.ts` (switches
+   the links and the bilingual privacy section to GitHub Pages together), merge, and
+   deploy with `scripts/remote-web.sh deploy`.
 3. Only then configure the existing marketing front end to redirect `/docs` and
    `/docs/<path>` to `https://docs.wuselwall.app/` and the matching `<path>`, preserving
    language and query strings. Test `/docs/en/guide/setup` and `/docs/settings/shortcuts`.
