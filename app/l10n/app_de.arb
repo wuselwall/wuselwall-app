@@ -1722,5 +1722,11 @@
   "reminderPackTitle": "Für morgen einpacken",
   "reminderPackChild": "{name}: {items}",
   "settingNotifyPackingTitle": "Einpack-Erinnerung am Vorabend",
-  "settingNotifyPackingHelp": "Um diese Uhrzeit sagt dein Handy, was für morgen in die Schultasche gehört, aus den Stundenplänen (zum Beispiel Sportsachen). Nur wenn etwas einzupacken ist."
+  "settingNotifyPackingHelp": "Um diese Uhrzeit sagt dein Handy, was für morgen in die Schultasche gehört, aus den Stundenplänen (zum Beispiel Sportsachen). Nur wenn etwas einzupacken ist.",
+  "appearanceTitle": "Darstellung",
+  "appearanceSystem": "Automatisch",
+  "appearanceSystemHelp": "Hell oder dunkel, wie auf diesem Gerät eingestellt",
+  "appearanceLight": "Hell",
+  "appearanceDark": "Dunkel",
+  "appearanceNightNote": "Nachts zeigt das Wanddisplay immer seine Nachtansicht."
 }

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/app/app.dart';
+import 'package:wuselwall/app/theme/appearance.dart';
 import 'package:wuselwall/app/theme/night.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/config/app_config.dart';
@@ -641,6 +642,7 @@ List<Override> baseOverrides({
   FakeInvitationRepository? invitations,
   MemoryInvitationStore? invitationStore,
   SetupStore? setupStore,
+  AppearanceStore? appearance,
   bool signedIn = true,
   bool online = true,
 
@@ -678,6 +680,9 @@ List<Override> baseOverrides({
     MemoryReminderDismissalStore(),
   ),
   reminderDebounceProvider.overrideWithValue(Duration.zero),
+  appearanceStoreProvider.overrideWithValue(
+    appearance ?? MemoryAppearanceStore(),
+  ),
   externalCalendarsRepositoryProvider.overrideWithValue(
     externalCalendars ?? FakeExternalCalendarsRepository(),
   ),
