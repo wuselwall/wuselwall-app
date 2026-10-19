@@ -1,7 +1,7 @@
 // The Send Email Hook (Supabase Auth, specs/10 §4 and specs/20 "Email"): GoTrue posts each
 // mail it would send here instead of sending it, with the code and the recipient. This
-// module verifies the Standard Webhooks signature, renders the mail in the recipient's
-// language and hands it to Scaleway Transactional Email.
+// module verifies the Standard Webhooks signature, renders the mail in the operator's
+// MAIL_LANGUAGE (German by default) and hands it to Scaleway Transactional Email.
 //
 // Authentication: the signature is the only gate. The function is called by GoTrue, which
 // has no user JWT, so the router lists it in NO_USER_FUNCTIONS. Nothing here trusts the
@@ -12,10 +12,11 @@
 // Logs carry the email action and the locale, never the address or the code.
 import {
   isMailKind,
+  MAIL_LOCALES,
   type MailKind,
+  type MailLocale,
   MailRenderError,
   renderMail,
-  resolveLocale,
 } from "./mail_render.ts";
 import {
   MailSendError,
@@ -28,9 +29,11 @@ export interface HookSettings {
   /** `v1,whsec_<base64>`, the same value GoTrue has in GOTRUE_HOOK_SEND_EMAIL_SECRETS. */
   hookSecret: string;
   scaleway: ScalewayConfig;
+  /** Operator-selected server language. Omitted by older callers: German. */
+  locale?: MailLocale;
 }
 
-/** The variables the hook needs, by name. A missing one is reported by name, never by value. */
+/** Required variables. Missing/invalid settings are reported by name, never by value. */
 export const REQUIRED_ENV = [
   "SEND_EMAIL_HOOK_SECRET",
   "SCW_SECRET_KEY",
@@ -41,12 +44,18 @@ export const REQUIRED_ENV = [
 export function settingsFromEnv(
   get: (name: string) => string | undefined,
 ): { ok: true; settings: HookSettings } | { ok: false; missing: string[] } {
-  const missing = REQUIRED_ENV.filter((name) => !get(name));
+  const missing: string[] = REQUIRED_ENV.filter((name) => !get(name));
+  const locale = get("MAIL_LANGUAGE") ?? "de";
+  // Configuration is exact, unlike device locale tags: never silently change a bad setting.
+  if (!(MAIL_LOCALES as readonly string[]).includes(locale)) {
+    missing.push("MAIL_LANGUAGE");
+  }
   if (missing.length > 0) return { ok: false, missing };
   return {
     ok: true,
     settings: {
       hookSecret: get("SEND_EMAIL_HOOK_SECRET")!,
+      locale: locale as MailLocale,
       scaleway: {
         secretKey: get("SCW_SECRET_KEY")!,
         projectId: get("SCW_PROJECT_ID")!,
@@ -64,7 +73,6 @@ function hookError(status: number, message: string): Response {
 
 type Payload = {
   userEmail: string;
-  locale: unknown;
   kind: string;
   token: string | undefined;
   tokenNew: string | undefined;
@@ -85,16 +93,11 @@ function readPayload(value: unknown): Payload | null {
   if (typeof email !== "string" || !email || typeof kind !== "string") {
     return null;
   }
-  const meta = (user as Record<string, unknown>).user_metadata;
-  const locale = typeof meta === "object" && meta !== null
-    ? (meta as Record<string, unknown>).locale
-    : undefined;
   const text = (
     v: unknown,
   ) => (typeof v === "string" && v !== "" ? v : undefined);
   return {
     userEmail: email,
-    locale,
     kind,
     token: text((data as Record<string, unknown>).token),
     tokenNew: text((data as Record<string, unknown>).token_new),
@@ -152,7 +155,8 @@ export async function sendEmailHook(
     return hookError(400, "unsupported email action");
   }
   const kind: MailKind = payload.kind;
-  const locale = resolveLocale(payload.locale);
+  // All mail from a server uses its operator-selected language, never recipient metadata.
+  const locale = settings.locale ?? "de";
 
   let mail;
   try {

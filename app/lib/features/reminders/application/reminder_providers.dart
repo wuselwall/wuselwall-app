@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:flutter/widgets.dart' show WidgetsBinding;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wuselwall/core/l10n/app_locale.dart';
 import 'package:wuselwall/core/logging/log.dart';
 import 'package:wuselwall/core/notifications/notification_scheduler.dart';
 import 'package:wuselwall/core/notifications/notification_scheduler_provider.dart';
@@ -19,18 +19,14 @@ import 'package:wuselwall/features/tasks/data/tasks_repository.dart';
 import 'package:wuselwall/features/tasks/domain/tasks_models.dart';
 import 'package:wuselwall/l10n/generated/app_localizations.dart';
 
-/// The strings of the reminders: the device language, German unless it is English
-/// (specs/09, CLAUDE.md: German is the fallback).
+/// The strings of the reminders: the device language, German when the app does not
+/// ship it (specs/09: German is the fallback).
 AppLocalizations reminderL10n() {
   // The first of the device's languages the app ships, as MaterialApp resolves it.
-  final codes = WidgetsBinding.instance.platformDispatcher.locales.map(
-    (locale) => locale.languageCode,
+  final locale = resolveAppLocale(
+    WidgetsBinding.instance.platformDispatcher.locales,
   );
-  final code = codes.firstWhere(
-    (c) => c == 'en' || c == 'de',
-    orElse: () => 'de',
-  );
-  return lookupAppLocalizations(Locale(code));
+  return lookupAppLocalizations(locale);
 }
 
 /// How long the plan must stay unchanged before the phone reschedules (calendar edits

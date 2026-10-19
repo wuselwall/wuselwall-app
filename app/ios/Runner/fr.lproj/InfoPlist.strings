@@ -1,0 +1,2 @@
+/* System permission prompts, shown by iOS in the device language. Keep in step with the other lproj files. */
+"NSCameraUsageDescription" = "L’appareil photo permet de scanner le code QR pour configurer cet appareil.";

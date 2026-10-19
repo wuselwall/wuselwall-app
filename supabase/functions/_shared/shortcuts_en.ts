@@ -22,7 +22,8 @@ export const SHORTCUTS_EN: ShortcutMessages = {
 
   tokenInvalid:
     "This shortcut is no longer valid. Create a new key in WuselWall under Settings → Siri and Shortcuts.",
-  rateLimited: "This shortcut has added enough for today. It works again tomorrow.",
+  rateLimited:
+    "This shortcut has added enough for today. It works again tomorrow.",
   unknownAction: "WuselWall does not know this shortcut.",
   failed: "That did not work. Please try again later.",
   textRequired: "The shortcut sent no text.",
@@ -32,7 +33,9 @@ export const SHORTCUTS_EN: ShortcutMessages = {
   dayInvalid: (value) => `“${value}” is not a day WuselWall understands.`,
 
   shoppingAdded: (names, list) =>
-    `${join(names)} ${names.length === 1 ? "is" : "are"} on the ${list ? `“${list}” ` : ""}list.`,
+    `${join(names)} ${names.length === 1 ? "is" : "are"} on the ${
+      list ? `“${list}” ` : ""
+    }list.`,
 
   noEvents: (when) => `Nothing on the calendar ${when}.`,
   events: (when, items) => `${cap(when)}: ${join(items)}.`,
@@ -50,26 +53,39 @@ export const SHORTCUTS_EN: ShortcutMessages = {
 
   points: (n) => `You have ${points(n)}.`,
 
-  choreDone: (title, n) => (n > 0 ? `Done: ${title}. ${points(n)} added.` : `Done: ${title}.`),
-  choreAwaitsCheck: (title) => `Done: ${title}. The points come once it is confirmed.`,
+  choreDone: (
+    title,
+    n,
+  ) => (n > 0 ? `Done: ${title}. ${points(n)} added.` : `Done: ${title}.`),
+  choreAwaitsCheck: (title) =>
+    `Done: ${title}. The points come once it is confirmed.`,
   choreNoneOpen: "No task is left open today.",
   choreOpen: (titles) => `Still open: ${join(titles)}.`,
   choreNoMatch: (text, open) =>
-    `No open task matches “${text}”.${open.length > 0 ? ` Still open: ${join(open)}.` : ""}`,
+    `No open task matches “${text}”.${
+      open.length > 0 ? ` Still open: ${join(open)}.` : ""
+    }`,
   choreAmbiguous: (text, candidates) =>
-    `“${text}” matches several tasks: ${join(candidates, "or")}. Please say which one.`,
+    `“${text}” matches several tasks: ${
+      join(candidates, "or")
+    }. Please say which one.`,
 
   noTimetable: (name) => `No timetable is set up for ${name}.`,
   weekend: (name, when) => `${name} has no school ${when}, it is the weekend.`,
-  holiday: (name, when, holiday) => `${name} has no school ${when}${holiday ? ` (${holiday})` : ""}.`,
+  holiday: (name, when, holiday) =>
+    `${name} has no school ${when}${holiday ? ` (${holiday})` : ""}.`,
   schoolDay: (name, when, from, to, subjects) =>
     `${name} has school ${when} from ${from} to ${to}: ${join(subjects)}.`,
   noLessons: (name, when) => `${name} has no lessons ${when}.`,
   equipment: (items) => `Pack: ${join(items)}.`,
   hasSubject: (name, when, subject, period, time) =>
-    `Yes, ${name} has ${subject} ${when}${period !== null ? `, period ${period}` : ""} (${time}).`,
-  hasNotSubject: (name, when, subject) => `No, ${name} has no ${subject} ${when}.`,
-  subjectCancelled: (name, when, subject) => `${subject} is cancelled for ${name} ${when}.`,
+    `Yes, ${name} has ${subject} ${when}${
+      period !== null ? `, period ${period}` : ""
+    } (${time}).`,
+  hasNotSubject: (name, when, subject) =>
+    `No, ${name} has no ${subject} ${when}.`,
+  subjectCancelled: (name, when, subject) =>
+    `${subject} is cancelled for ${name} ${when}.`,
 
   state: {
     working: "at work",
@@ -80,9 +96,13 @@ export const SHORTCUTS_EN: ShortcutMessages = {
     childcare: "in childcare",
   },
   presenceHere: (name) => `${name} is here, according to the calendar.`,
-  presenceAwayDays: (name, state, lastDay, back) => `${name} is ${state} until ${lastDay} and back ${back}.`,
-  presenceAwayUntil: (name, state, when, time) => `${name} is ${state} and back ${when} at ${time}.`,
+  presenceAwayDays: (name, state, lastDay, back) =>
+    `${name} is ${state} until ${lastDay} and back ${back}.`,
+  presenceAwayUntil: (name, state, when, time) =>
+    `${name} is ${state} and back ${when} at ${time}.`,
   presenceToday: (name, state) => `${name} is ${state} today.`,
   presenceNext: (state, from, to) =>
-    from === to ? `Next: ${state} on ${from}.` : `Next: ${state} from ${from} to ${to}.`,
+    from === to
+      ? `Next: ${state} on ${from}.`
+      : `Next: ${state} from ${from} to ${to}.`,
 };

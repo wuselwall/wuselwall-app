@@ -12,6 +12,7 @@ import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/config/config_providers.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/core/l10n/app_locale.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/logging/log.dart';
 import 'package:wuselwall/core/server/setup_store.dart';
@@ -117,10 +118,6 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
     }
   }
 
-  /// The household's locale: German unless the app runs in English.
-  static String _localeTag(Locale locale) =>
-      locale.languageCode == 'en' ? 'en-GB' : 'de-DE';
-
   Future<void> _submit() async {
     if (_busy || _loadingSetup || !_form.currentState!.validate()) return;
     setState(() => _busy = true);
@@ -148,7 +145,7 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
       displayName: _name.text,
       colorHex: toHex(MemberPalette.swatches[_swatch].light),
       timezone: _timezone,
-      locale: _localeTag(locale),
+      locale: householdLocaleTag(locale),
       founderCode: _needsCode ? (_setupCode ?? _founderCode.text) : null,
       seedExamples: _examples,
       deviceLabel: deviceLabel(
@@ -210,9 +207,13 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
     final theme = Theme.of(context);
     final ww = context.ww;
     final locale = Localizations.localeOf(context);
-    final language = locale.languageCode == 'en'
-        ? l10n.householdLanguageEn
-        : l10n.householdLanguageDe;
+    final language = switch (locale.languageCode) {
+      'de' => l10n.householdLanguageDe,
+      'en' => l10n.householdLanguageEn,
+      'fr' => l10n.householdLanguageFr,
+      'es' => l10n.householdLanguageEs,
+      _ => l10n.householdLanguageDe,
+    };
 
     return Scaffold(
       appBar: AppBar(

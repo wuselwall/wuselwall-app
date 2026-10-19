@@ -55,7 +55,7 @@ For **School** and **When is … back?**, let the shortcut **Ask for Input** fir
 **Task done** ticks only your own tasks and those not yet assigned to anyone. If several tasks match, WuselWall asks instead of guessing. Without `text`, the shortcut lists what is still open.
 
 ::: tip Language
-Answers come in the iPhone's language when it is German or English, otherwise in the household's language. The field `lang` (`de` or `en`) sets it.
+Answers come in the iPhone's language when it is German, English, French or Spanish, otherwise in the household's language. The field `lang` (`de`, `en`, `fr` or `es`) sets it.
 :::
 
 ## Revoking a key

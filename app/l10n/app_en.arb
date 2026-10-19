@@ -1974,6 +1974,8 @@
   },
   "householdLanguageDe": "German",
   "householdLanguageEn": "English",
+  "householdLanguageFr": "French",
+  "householdLanguageEs": "Spanish",
   "householdNewFounderCode": "Setup code",
   "householdNewFounderHelp": "Use the setup code shown when your server was installed, or ask the person who runs it. This is not the code from your sign-in email.",
   "householdNewCodeSaved": "Setup code saved from your setup link. You do not need to enter it again.",

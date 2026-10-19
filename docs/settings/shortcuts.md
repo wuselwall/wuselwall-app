@@ -55,7 +55,7 @@ Für **Schule** und **Wann ist … wieder da?** lässt du den Kurzbefehl wie bei
 **Aufgabe erledigt** hakt nur eigene Aufgaben ab, und solche, die noch niemandem zugeteilt sind. Passen mehrere Aufgaben, fragt WuselWall nach, statt zu raten. Ohne `text` zählt der Kurzbefehl auf, was noch offen ist.
 
 ::: tip Sprache
-Die Antworten kommen in der Sprache des iPhones, wenn es Deutsch oder Englisch ist, sonst in der Sprache des Haushalts. Mit dem Feld `lang` (`de` oder `en`) legst du sie fest.
+Die Antworten kommen in der Sprache des iPhones, wenn es Deutsch, Englisch, Französisch oder Spanisch ist, sonst in der Sprache des Haushalts. Mit dem Feld `lang` (`de`, `en`, `fr` oder `es`) legst du sie fest.
 :::
 
 ## Einen Schlüssel sperren

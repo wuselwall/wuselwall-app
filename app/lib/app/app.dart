@@ -9,15 +9,14 @@ import 'package:wuselwall/app/theme/appearance.dart';
 import 'package:wuselwall/app/theme/night.dart';
 import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
+import 'package:wuselwall/core/l10n/app_locale.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/reminders/application/reminder_providers.dart';
 
-/// Locales in priority order. German is first because it is the fallback for any
-/// device language the app does not support (specs/09, CLAUDE.md).
-const supportedLocales = [Locale('de'), Locale('en')];
+export 'package:wuselwall/core/l10n/app_locale.dart' show supportedLocales;
 
 const localizationsDelegates = <LocalizationsDelegate<dynamic>>[
   AppLocalizations.delegate,

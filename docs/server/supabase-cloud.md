@@ -42,9 +42,9 @@ Das erledigt ein vorbereiteter Ablauf auf GitHub, in eurer eigenen Kopie von Wus
    | `SUPABASE_DB_PASSWORD` | das Datenbank-Passwort |
    | `WUSELWALL_SETUP_TOKEN` | ein Satz eurer Wahl aus Buchstaben und Ziffern, z. B. `KuchenAmSonntag2026`. Ihr braucht ihn einmal, um die Familie zu gründen |
 
-5. Öffne den Reiter **Actions**. In einer Kopie sind die Abläufe zuerst ausgeschaltet: Tippe auf **I understand my workflows, go ahead and enable them**. Dann **deploy-supabase → Run workflow**. Setze den Haken bei **web**, wenn ihr die Web-App wollt (Schritt 4), und tippe auf **Run workflow**.
+5. Öffne den Reiter **Actions**. In einer Kopie sind die Abläufe zuerst ausgeschaltet: Tippe auf **I understand my workflows, go ahead and enable them**. Dann **deploy-supabase → Run workflow**. Wähle bei **language** die Sprache der Anmelde-Mails: `de` (Standard), `en`, `fr` oder `es`. Setze den Haken bei **web**, wenn ihr die Web-App wollt (Schritt 4), und tippe auf **Run workflow**.
 
-Nach ein paar Minuten ist der Lauf grün. In seiner Zusammenfassung steht die Adresse eures Servers. Der Ablauf richtet die Datenbank ein, stellt Anmeldung und Datenzugriff ein, lädt die Server-Funktionen hoch und plant die nächtlichen Aufträge.
+Nach ein paar Minuten ist der Lauf grün. In seiner Zusammenfassung steht die Adresse eures Servers. Der Ablauf richtet die Datenbank ein, stellt Anmeldung und Datenzugriff ein, lädt die Server-Funktionen hoch, wählt die Mail-Templates und Betreffzeilen in der gewählten E-Mail-Sprache und plant die nächtlichen Aufträge.
 
 ::: tip Geheimnisse bleiben geheim
 Die Protokolle eurer Kopie kann jeder sehen, die Secrets nicht: GitHub blendet sie überall aus. Den Satz für die Familiengründung speichert der Server nur als Fingerabdruck.

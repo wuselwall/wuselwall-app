@@ -3587,6 +3587,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get householdLanguageEn => 'Englisch';
 
   @override
+  String get householdLanguageFr => 'Französisch';
+
+  @override
+  String get householdLanguageEs => 'Spanisch';
+
+  @override
   String get householdNewFounderCode => 'Einrichtungscode';
 
   @override

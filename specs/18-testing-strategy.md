@@ -54,8 +54,10 @@ The fakes in `test/support/fakes.dart` already make screens testable without a b
 Add one helper, `pumpWw(widget, {locale, register, brightness, size, textScale})`, and use
 it to run each screen test across:
 
-- **both locales** — German compounds are where overflow happens ("Einkaufslistenverlauf");
-  a `RenderFlex overflowed` error fails the test by default;
+- **all four locales** (`de`, `en`, `fr`, `es`) — German compounds and longer Romance
+  strings are where overflow happens ("Einkaufslistenverlauf", French negatives);
+  a `RenderFlex overflowed` error fails the test by default; include regional and unsupported
+  locale fallback resolution in the locale tests.
 - **every register the screen appears in** (adult, kid, kiosk);
 - **text scale 2.0** for the adult and kid registers;
 - the accessibility guidelines Flutter ships: `meetsGuideline(androidTapTargetGuideline)`,
@@ -124,7 +126,7 @@ First flows:
    in `shopping_sync_test`, and `050_shopping_outbox` in pgTAP.
 
 Selectors are `ValueKey`s from a single `core/testing/test_ids.dart`, never localized text,
-so the same test runs in both locales.
+so the same test runs in all four locales.
 
 Patrol needs a small native setup (an `ios/RunnerUITests` target and the Android test
 runner in `build.gradle`). Pin the Patrol CLI version in `pubspec.yaml` and the setup docs,
@@ -150,8 +152,9 @@ What Playwright can see is Flutter's **semantics tree**, which the engine mirror
 Where it earns its place: it is the only layer that can test the **passkey ceremony
 automatically**. Chromium's virtual authenticator (`WebAuthn.addVirtualAuthenticator`
 over a CDP session) registers and signs in with a passkey against the real stack, with
-no hardware. Scope stays at 3–5 specs: the app loads in both locales, sign-in with
-password + TOTP, passkey registration and sign-in, add a shopping item.
+no hardware. Scope stays at 3–5 specs: the app loads in each supported locale with German fallback, sign-in with
+password + TOTP, passkey registration and sign-in, add a shopping item. Also cover mail
+language selection for hook and SMTP independently of device locale.
 
 It runs in the `backend` job after the repository integration tests, against
 `flutter build web --release` served locally — the same artefact that is deployed.
@@ -172,8 +175,8 @@ build is promoted to the family, run [`specs/release-checklist.md`](release-chec
   Samsung's battery optimisation is the usual culprit.
 - iPad: rotation, split view, and the kid register at arm's length.
 - VoiceOver on one screen, TalkBack on one screen; system font size at maximum.
-- Language switched on the device: German and English both show, nothing English leaks
-  into the German UI.
+- Language switched on the device: DE/EN/FR/ES each show, nothing from another locale
+  leaks; unsupported locales fall back to German.
 - Push notifications are not built (Q38, Q47), so they are not a check for the pilot. The kiosk pinned on the wall tablet is a pilot check ([release checklist](release-checklist.md)).
 
 ## Where tests run
@@ -203,7 +206,7 @@ bug ever shows up; its free tier allows a few physical-device runs a day.
 
 | Step | Work | Size |
 |---|---|---|
-| T1 | `pumpWw` helper; widget tests across locales, registers, text scale and a11y guidelines; first goldens and `update-goldens.sh` | 1–2 evenings |
+| T1 | `pumpWw` helper; widget tests across DE/EN/FR/ES locales, registers, text scale and a11y guidelines; first goldens and `update-goldens.sh` | 1–2 evenings |
 | T2 | Patrol set up on iOS and Android; `test_ids.dart`; flows 3 and 5 hermetic, green on simulator, emulator and the three devices | 1 weekend |
 | T3 | Backed flows 1, 2, 4, 6; `e2e.yml` nightly on the Android emulator | 1 weekend |
 | T4 | Playwright web smoke with the virtual authenticator, added to the `backend` job | 1 evening |

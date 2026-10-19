@@ -28,8 +28,7 @@ rsync -a \
 mkdir -p "$root/stack/volumes/functions" "$root/stack/volumes/web"
 # Upstream's router (main/) next to WuselWall's functions, as the stack mounts them.
 rsync -a infra/supabase/volumes/functions/ supabase/functions/ "$root/stack/volumes/functions/"
-mkdir -p "$root/stack/volumes/mail-templates"
-cp supabase/templates/*.html "$root/stack/volumes/mail-templates/"
+rsync -a supabase/templates/ "$root/stack/volumes/mail-templates/"
 cp supabase/migrations/*.sql "$root/migrations/"
 cp infra/jobs/schedule.sql "$root/jobs/"
 cp infra/backup/backup.sh "$root/backup/"
