@@ -174,7 +174,11 @@ relying on it, and after any DNS change.
 The hook is the only path that renders the mails in the recipient's language. Stacks that run
 without it (the hook off, or a self-hoster's own SMTP) send GoTrue's own mails, in English;
 `supabase/templates/` holds the bilingual wording for the CLI's `config.toml`, and the compose
-stack has no static host from which GoTrue could load it. A failed send is a 5xx to GoTrue,
+stack has no static host from which GoTrue could load it. Those templates are generated from
+the hook's renderer (`deno run --allow-write supabase/functions/_shared/mail_templates_write.ts`),
+and a test fails when they drift. The HTML is built for every mail client (Outlook's Word
+engine included): layout tables, inline styles only, no images and no links; the plain-text
+part carries all of it. A failed send is a 5xx to GoTrue,
 which the app reports as a failed sign-in, so a provider outage is visible to the user rather
 than silent. The function's logs name the mail kind, the locale and the error code, never the
 address or the code.
