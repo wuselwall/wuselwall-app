@@ -3656,6 +3656,90 @@ abstract class AppLocalizations {
   /// **'Apply'**
   String get usualDayApply;
 
+  /// No description provided for @usualWholeDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Whole day'**
+  String get usualWholeDay;
+
+  /// No description provided for @usualSlots.
+  ///
+  /// In en, this message translates to:
+  /// **'Time slots'**
+  String get usualSlots;
+
+  /// No description provided for @usualSlotState.
+  ///
+  /// In en, this message translates to:
+  /// **'Where'**
+  String get usualSlotState;
+
+  /// No description provided for @usualSlotFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get usualSlotFrom;
+
+  /// No description provided for @usualSlotUntil.
+  ///
+  /// In en, this message translates to:
+  /// **'Until'**
+  String get usualSlotUntil;
+
+  /// No description provided for @usualAddSlot.
+  ///
+  /// In en, this message translates to:
+  /// **'Add time slot'**
+  String get usualAddSlot;
+
+  /// No description provided for @usualRemoveSlot.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove time slot'**
+  String get usualRemoveSlot;
+
+  /// No description provided for @usualSlotsInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Each time slot ends after it starts, and slots do not overlap.'**
+  String get usualSlotsInvalid;
+
+  /// No description provided for @usualAlternating.
+  ///
+  /// In en, this message translates to:
+  /// **'Alternating weeks (A/B)'**
+  String get usualAlternating;
+
+  /// No description provided for @usualAlternatingHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'For a plan that repeats every two weeks.'**
+  String get usualAlternatingHelp;
+
+  /// No description provided for @usualWeekA.
+  ///
+  /// In en, this message translates to:
+  /// **'Week A'**
+  String get usualWeekA;
+
+  /// No description provided for @usualWeekB.
+  ///
+  /// In en, this message translates to:
+  /// **'Week B'**
+  String get usualWeekB;
+
+  /// No description provided for @usualThisWeekIs.
+  ///
+  /// In en, this message translates to:
+  /// **'This week is {week}.'**
+  String usualThisWeekIs(String week);
+
+  /// No description provided for @usualWhichWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Which week is this week?'**
+  String get usualWhichWeek;
+
   /// No description provided for @errUsualWeekInvalid.
   ///
   /// In en, this message translates to:
