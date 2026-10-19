@@ -76,6 +76,11 @@ jobs:
             site_url: $site
           }')"
 
+      - name: Email code templates
+        # SMTP fallback must contain the code the app requests, for signup and sign-in.
+        # Upload canonical bilingual templates and verify the exact settings by readback.
+        run: node scripts/hosted-email-templates.mjs
+
       - name: Edge Functions
         run: |
           secret=$(openssl rand -hex 32)

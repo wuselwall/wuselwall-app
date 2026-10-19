@@ -140,9 +140,20 @@ backup() {
     BACKUP_ENV=${BACKUP_ENV:-$ROOT/backup.env} bash "$ROOT/backup/backup.sh" "${1:-manual}"
 }
 
+# A server-origin web link: the capability stays in the fragment and therefore
+# never reaches the web server, its request logs, or a Referer header.
+setup_link() {
+  local web=${1%/} api=${2%/} token=$3
+  if [[ $token =~ ^[0-9a-f]{24}$ ]]; then
+    printf '%s/#setup=%s&server=%s\n' "$web" "$token" "$api"
+  else
+    printf '%s\n' "$api"
+  fi
+}
+
 show_qr() {
   if command -v qrencode > /dev/null; then
-    qrencode -t ANSIUTF8 "$1"
+    printf %s "$1" | qrencode -t ANSIUTF8
   else
     echo "  (install qrencode to see a QR code here; the web app shows one as well)"
   fi
@@ -203,8 +214,9 @@ cmd_install() {
   echo "  Web app:  $web"
   [ -n "$token" ] && echo "  Setup token (shown once, for \"Start a new family\"): $token"
   echo
-  echo "  In the WuselWall app, choose \"Own server\" and enter $api, or scan:"
-  show_qr "$api"
+  echo "  Scan to open setup in your browser, or enter $api in the WuselWall app:"
+  [ -n "$token" ] && echo "  Setup link (keep private): $(setup_link "$web" "$api" "$token")"
+  show_qr "$(setup_link "$web" "$api" "$token")"
   echo
   say "Now copy $STACK/.env into your password manager."
   echo "  Without it a backup cannot be restored with every device still signed in."

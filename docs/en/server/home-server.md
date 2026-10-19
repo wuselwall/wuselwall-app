@@ -32,7 +32,7 @@ The first time this takes a few minutes, because Docker downloads several gigaby
 - generates every key and password (`stack/.env`),
 - starts the stack, with **Caddy**, which fetches Let's Encrypt certificates for both addresses,
 - sets up the database and schedules the nightly jobs,
-- and finally shows the server's address and a **setup token**.
+- and finally shows the server address and a **setup link with a QR code**, carrying the one-time setup code.
 
 Nothing more is needed on the server: no cron job for WuselWall, no Node.js, no web server of your own.
 
@@ -52,9 +52,17 @@ scp dist/wuselwall-server-0.1.0.tar.gz server:     # then on the server: tar xzf
 
 ## 2. Connecting the app
 
-Open WuselWall on the phone and enter `api.example.org` at **Which server?**. The QR code is quicker: open `https://web.example.org` on the laptop, expand **Continue on your phone** and scan the code. Then **Start a new family** with the setup token ([Start a new family](/en/guide/setup#_3-start-a-new-family-once)).
+Open the setup link printed by the installation in your browser, or scan its QR
+code. It contains both the server and the setup code. WuselWall remembers the
+code during email sign-in so you do not enter it again on **New family**
+([Creating a new family](/en/guide/setup#_2-creating-a-new-family)).
 
-`./wuselwall setup-token` gives a new token, as long as no family exists yet.
+You can still type `api.example.org` into **Which server?**. A QR code containing
+only the server address, for example from an older installation, does not carry a
+setup code. In that case, enter the code from the installation once on **New family**.
+
+`./wuselwall setup-token` gives a new setup code as long as no family exists yet.
+Do not publish the code or the setup link.
 
 ## 3. Backups
 

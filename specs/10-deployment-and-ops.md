@@ -171,17 +171,37 @@ relying on it, and after any DNS change.
    hook address other than localhost and then does not start at all, hook on or off.
 5. Check with a code to a Gmail, an Outlook.com, a GMX and an iCloud address, as below.
 
-The hook is the only path that renders the mails in the recipient's language. Stacks that run
-without it (the hook off, or a self-hoster's own SMTP) send GoTrue's own mails, in English;
-`supabase/templates/` holds the bilingual wording for the CLI's `config.toml`, and the compose
-stack has no static host from which GoTrue could load it. Those templates are generated from
-the hook's renderer (`deno run --allow-write supabase/functions/_shared/mail_templates_write.ts`),
-and a test fails when they drift. The HTML is built for every mail client (Outlook's Word
-engine included): layout tables, inline styles only, no images and no links; the plain-text
-part carries all of it. A failed send is a 5xx to GoTrue,
-which the app reports as a failed sign-in, so a provider outage is visible to the user rather
-than silent. The function's logs name the mail kind, the locale and the error code, never the
-address or the code.
+The hook renders each mail in the recipient's language. With the hook off, any configured
+SMTP relay sends the bilingual code templates in `supabase/templates/`, generated from the
+hook's renderer (`deno run --allow-write supabase/functions/_shared/mail_templates_write.ts`;
+a test fails when they drift). The HTML is built for every mail client (Outlook's Word engine
+included): layout tables, inline styles only, no images and no links; the plain-text part
+carries all of it. Both are used: for first signup
+(`confirmation`) and later email sign-in (`magic_link`). The CLI reads these files directly.
+Compose fetches them from the internal-only `mail-templates` service (no published port,
+independent of Caddy); release packaging and checkout deployment copy the canonical files
+into `stack/volumes/mail-templates/`. A checkout used directly with Compose must copy
+`supabase/templates/*.html` into `infra/supabase/volumes/mail-templates/` first. The hosted
+`deploy-supabase` workflow uploads the same contents and subjects through the Management API,
+sets six digits and a 600-second lifetime, and reads every changed setting back. It does
+not change the SMTP provider or switch off an existing hook.
+A failed hook send remains a 5xx, not a retry through SMTP; the app reports that failure.
+The function logs name the mail kind, locale and error code, never the address or code.
+
+These two default templates deliberately contain no sign-in link. Enter the code in the
+already-open app; do not start a second sign-in in a new tab. `signInWithOtp` uses GoTrue's
+`confirmation` template for a new address and `magic_link` for a returning one even though
+the app consumes a code in both cases. Previously sent link-only mail still points to Auth's
+verification endpoint, which may redirect to `SITE_URL` with session/callback parameters;
+changing the templates does not repair that callback or transfer a setup code to another
+browser context. Redirect settings and other mail kinds (invitation, recovery, email change)
+are not changed here. Request a fresh code after updating rather than reusing an old link.
+
+Local regression checks (no operator environment, household data or real mail):
+`node --test scripts/email-code-templates.test.mjs scripts/hosted-email-templates.test.mjs`
+checks Compose, the actual release archive and hosted API payload/readback behavior;
+`node scripts/email-code-smtp.smoke.mjs` starts isolated disposable Docker services, captures
+signup and returning sign-in messages in Mailpit, and verifies each mailed OTP with GoTrue.
 
 
 ---

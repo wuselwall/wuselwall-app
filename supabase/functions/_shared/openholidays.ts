@@ -145,6 +145,28 @@ export function flattenSubdivisions(
 }
 
 /**
+ * The codes the cache can store: the check on app.region.code (20261019100000). OpenHolidays
+ * writes some codes with umlauts (AT-KÄ, CH-BE-SL-RÜ).
+ */
+const REGION_CODE = /^[A-Z]{2}(-[A-Z0-9ÄÖÜ]{1,6}){1,4}$/;
+
+/**
+ * The rows the cache can store, and how many it cannot: a code outside the cache's pattern
+ * (a character the check does not know yet) or a level that is not the code's depth. One odd
+ * code must not fail the whole country's write; it is left out, and the sync logs the count.
+ */
+export function storableRegions(
+  rows: RegionRow[],
+): { rows: RegionRow[]; dropped: number } {
+  const kept = rows.filter((r) =>
+    REGION_CODE.test(r.code) &&
+    r.code.split("-")[0] === r.country &&
+    r.code.split("-").length - 1 === r.level
+  );
+  return { rows: kept, dropped: rows.length - kept.length };
+}
+
+/**
  * The public or school holidays of a country (GET /PublicHolidays, /SchoolHolidays) as
  * feed rows. Entries without an id or with a missing or malformed date are skipped. The
  * kind comes from the endpoint asked, not from the entry's type (the public endpoint also

@@ -18,6 +18,8 @@ For this the server needs an SMTP service, a provider that sends mail for it. A 
 
 **At Supabase:** **Authentication → Emails → SMTP Settings**, with the same details. Supabase's built-in email is meant for trying things out and sends only a few mails an hour.
 
+The server release and the **deploy-supabase** workflow configure both the first confirmation email and later sign-in emails with a **six-digit code**, in German and English. A Scaleway hook is not required. Enter the code in the app you already have open. If you only receive a link, update the server or rerun the workflow from the updated repository, then request a fresh code; an old email does not change.
+
 ## Updating from a version with Apple and Google sign-in {#retiring-social-sign-in}
 
 Until October 2026 you could also sign in to WuselWall with Apple or Google. Anyone who did now signs in with an email code sent to their account's address. The account and the family stay the same.

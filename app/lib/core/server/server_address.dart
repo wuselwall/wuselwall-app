@@ -61,4 +61,18 @@ String displayServerAddress(Uri server) => server.scheme == 'https'
 
 /// What the server's QR code holds: an address any QR reader can show, and that
 /// [parseServerAddress] reads back.
-String serverQrPayload(Uri server) => server.toString();
+String serverQrPayload(Uri server, {String? setupToken, Uri? webOrigin}) {
+  if (setupToken == null || !RegExp(r'^[0-9a-f]{24}$').hasMatch(setupToken)) {
+    return server.toString();
+  }
+  final web = webOrigin ?? server;
+  return Uri(
+    scheme: web.scheme,
+    host: web.host,
+    port: web.hasPort ? web.port : null,
+    path: '/',
+    fragment: Uri(
+      queryParameters: {'setup': setupToken, 'server': server.toString()},
+    ).query,
+  ).toString();
+}
