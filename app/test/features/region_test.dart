@@ -25,6 +25,21 @@ import '../support/fakes.dart';
 
 final de = lookupAppLocalizations(const Locale('de'));
 
+class _DelayedRegionRepository extends FakeRegionRepository {
+  _DelayedRegionRepository()
+    : super(
+        status: FeedStatus(country: 'CH', fetchedAt: DateTime.now()),
+      );
+
+  final ready = Completer<void>();
+
+  @override
+  Future<Result<List<Region>>> regions(String country) async {
+    await ready.future;
+    return super.regions(country);
+  }
+}
+
 /// Records the settings the school form and the settings page write.
 class FakeSettings implements HouseholdSettingsRepository {
   FakeSettings({this.householdRegion});
@@ -156,10 +171,55 @@ void main() {
       final index = RegionIndex(referenceRegions());
       expect(
         regionLabel(de, index, 'CH-ZH-UE-0003', 'de'),
-        'Uster (Gemeinde), Kanton Zürich',
+        'Uster (Gemeinde), Kanton Zürich (ZH)',
       );
-      expect(regionLabel(de, index, 'CH-ZH', 'de'), 'Kanton Zürich');
+      expect(regionLabel(de, index, 'CH-ZH', 'de'), 'Kanton Zürich (ZH)');
       expect(regionLabel(de, index, 'CH-XX-1', 'de'), 'CH-XX-1');
+    });
+
+    test(
+      'an in-flight region lookup survives losing its last listener',
+      () async {
+        final repository = _DelayedRegionRepository();
+        final container = ProviderContainer.test(
+          overrides: [regionRepositoryProvider.overrideWithValue(repository)],
+        );
+        final provider = countryRegionsProvider('CH');
+        final subscription = container.listen(provider, (_, _) {});
+        final pending = container.read(provider.future);
+        subscription.close();
+        await container.pump();
+        final next = container.listen(provider, (_, _) {});
+        repository.ready.complete();
+        expect(await container.read(provider.future), isNotEmpty);
+        expect(await pending, isNotEmpty);
+        expect(repository.statusReads, ['CH']);
+        expect(repository.regionReads, ['CH']);
+        next.close();
+      },
+    );
+
+    test('failed region lookups are discarded when the field leaves', () async {
+      // An empty cache: only then is a failed refresh the lookup's error.
+      final repository = FakeRegionRepository(
+        regions: const [],
+        refreshFailure: const NetworkFailure(),
+      );
+      final container = ProviderContainer.test(
+        retry: (_, _) => null,
+        overrides: [regionRepositoryProvider.overrideWithValue(repository)],
+      );
+      final provider = countryRegionsProvider('CH');
+      for (var i = 0; i < 2; i++) {
+        final subscription = container.listen(provider, (_, _) {});
+        await expectLater(
+          container.read(provider.future),
+          throwsA(isA<NetworkFailure>()),
+        );
+        subscription.close();
+        await container.pump();
+      }
+      expect(repository.refreshes, ['CH', 'CH']);
     });
 
     test('a refresh runs only when the cache is missing or stale', () async {
@@ -243,6 +303,144 @@ void main() {
   });
 
   group('region widgets', () {
+    testWidgets(
+      'scrolling a region field back uses its name without requests',
+      (t) async {
+        final repository = FakeRegionRepository(
+          status: FeedStatus(country: 'CH', fetchedAt: DateTime.now()),
+        );
+        final scroll = ScrollController();
+        addTearDown(scroll.dispose);
+        await t.pumpWidget(
+          ProviderScope(
+            overrides: [regionRepositoryProvider.overrideWithValue(repository)],
+            child: MaterialApp(
+              locale: const Locale('de'),
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              supportedLocales: AppLocalizations.supportedLocales,
+              home: Scaffold(
+                body: ListView.builder(
+                  controller: scroll,
+                  itemCount: 30,
+                  itemBuilder: (context, i) => i == 0
+                      ? RegionField(code: 'CH-ZH', onChanged: (_) {})
+                      : const SizedBox(height: 100),
+                ),
+              ),
+            ),
+          ),
+        );
+        await t.pumpAndSettle();
+        expect(find.text('Kanton Zürich (ZH)'), findsOneWidget);
+        expect(repository.regionReads, ['CH']);
+        expect(repository.statusReads, ['CH']);
+
+        for (var i = 0; i < 3; i++) {
+          scroll.jumpTo(1800);
+          await t.pumpAndSettle();
+          expect(find.byType(RegionField), findsNothing);
+          scroll.jumpTo(0);
+          // The name is present on the first frame, before any new request could finish.
+          await t.pump();
+          expect(find.text('Kanton Zürich (ZH)'), findsOneWidget);
+          expect(find.text('CH-ZH'), findsNothing);
+          await t.pumpAndSettle();
+        }
+        expect(repository.regionReads, ['CH']);
+        expect(repository.statusReads, ['CH']);
+        expect(repository.refreshes, isEmpty);
+
+        // Keeping successful results must still allow an explicit reload.
+        final container = ProviderScope.containerOf(
+          t.element(find.byType(RegionField)),
+        );
+        container.invalidate(countryRegionsProvider('CH'));
+        await t.pumpAndSettle();
+        expect(repository.regionReads, ['CH', 'CH']);
+        expect(repository.statusReads, ['CH', 'CH']);
+      },
+    );
+
+    for (final language in ['de', 'en']) {
+      testWidgets('cantons use $language labels, Z–A names and code search', (
+        t,
+      ) async {
+        final l10n = lookupAppLocalizations(Locale(language));
+        // Unsorted source rows with categories in three different languages.
+        final regions = [
+          Region.fromJson({
+            'code': 'CH-AG',
+            'country': 'CH',
+            'level': 1,
+            'category': 'Kanton',
+            'short_name': 'AG',
+            'names': {'de': 'Aargau', 'en': 'Aargau'},
+          }),
+          Region.fromJson({
+            'code': 'CH-TI',
+            'country': 'CH',
+            'level': 1,
+            'category': 'cantone',
+            'short_name': 'TI',
+            'names': {'de': 'Tessin', 'en': 'Ticino'},
+          }),
+          Region.fromJson({
+            'code': 'CH-ZH',
+            'country': 'CH',
+            'level': 1,
+            'category': 'Kanton',
+            'short_name': 'ZH',
+            'names': {'de': 'Zürich', 'en': 'Zurich'},
+          }),
+          Region.fromJson({
+            'code': 'CH-GE',
+            'country': 'CH',
+            'level': 1,
+            'category': 'canton',
+            'short_name': 'GE',
+            'names': {'de': 'Genf', 'en': 'Geneva'},
+          }),
+        ];
+        await pumpApp(
+          t,
+          locale: Locale(language),
+          region: FakeRegionRepository(regions: regions),
+          overrides: baseOverrides(
+            identity: FakeIdentityRepository(current: device()),
+          ),
+        );
+        final probe = await openPicker(t);
+        await t.tap(find.text(l10n.regionCountryCH));
+        await t.pumpAndSettle();
+        final titles = t
+            .widgetList<ListTile>(inPicker(find.byType(ListTile)))
+            .map((tile) => (tile.title! as Text).data)
+            .toList();
+        expect(
+          titles,
+          language == 'de'
+              ? [
+                  'Kanton Zürich (ZH)',
+                  'Kanton Tessin (TI)',
+                  'Kanton Genf (GE)',
+                  'Kanton Aargau (AG)',
+                ]
+              : [
+                  'Canton Zurich (ZH)',
+                  'Canton Ticino (TI)',
+                  'Canton Geneva (GE)',
+                  'Canton Aargau (AG)',
+                ],
+        );
+        await t.enterText(inPicker(find.byType(TextField)), 'ag');
+        await t.pumpAndSettle();
+        expect(inPicker(find.byType(ListTile)), findsOneWidget);
+        await t.tap(inPicker(find.byType(ListTile)));
+        await t.pumpAndSettle();
+        expect(probe.pick?.code, 'CH-AG');
+      });
+    }
+
     testWidgets('the picker drills country, canton and a Gemeinde search', (
       t,
     ) async {
@@ -255,7 +453,7 @@ void main() {
       final probe = await openPicker(t);
       await t.tap(find.text(de.regionCountryCH));
       await t.pumpAndSettle();
-      await t.tap(find.text('Kanton Zürich'));
+      await t.tap(find.text('Kanton Zürich (ZH)'));
       await t.pumpAndSettle();
       expect(find.text(de.regionPickWholeRegion('Zürich')), findsOneWidget);
 
@@ -283,7 +481,7 @@ void main() {
       final probe = await openPicker(t);
       await t.tap(find.text(de.regionCountryCH));
       await t.pumpAndSettle();
-      await t.tap(find.text('Kanton Bern'));
+      await t.tap(find.text('Kanton Bern (BE)'));
       await t.pumpAndSettle();
       expect(probe.pick?.code, 'CH-BE');
     });
@@ -303,7 +501,7 @@ void main() {
       await t.tap(find.text(de.regionCountryCH));
       await t.pumpAndSettle();
       expect(region.refreshes, ['CH']);
-      expect(find.text('Kanton Bern'), findsOneWidget);
+      expect(find.text('Kanton Bern (BE)'), findsOneWidget);
     });
 
     testWidgets('a failed fetch offers to go on without a region', (t) async {
@@ -348,8 +546,11 @@ void main() {
       await t.tap(find.byTooltip(de.schoolEditSchool));
       await t.pumpAndSettle();
 
-      // The school keeps its own region (Berlin, from the old state code).
-      await t.tap(find.text('Speichern').first);
+      // Editing only the name keeps the school's region (from the old state code).
+      expect(find.text(de.save), findsNothing);
+      await t.enterText(find.byType(TextField).first, 'Renamed school');
+      await t.pumpAndSettle();
+      await t.tap(find.text(de.save));
       await t.pumpAndSettle();
       expect(school.schoolSaves.last.regionCode, 'DE-BE');
 
@@ -358,7 +559,7 @@ void main() {
       await t.pumpAndSettle();
       await t.tap(find.text(de.regionCountryCH));
       await t.pumpAndSettle();
-      await t.tap(find.text('Kanton Bern'));
+      await t.tap(find.text('Kanton Bern (BE)'));
       await t.pumpAndSettle();
       await t.tap(find.text('Speichern').first);
       await t.pumpAndSettle();
@@ -392,9 +593,10 @@ void main() {
       await t.pumpAndSettle();
       await t.tap(find.text(de.regionCountryCH));
       await t.pumpAndSettle();
-      await t.tap(find.text('Kanton Bern'));
+      await t.tap(find.text('Kanton Bern (BE)'));
       await t.pumpAndSettle();
       await t.enterText(find.byType(TextField).first, 'Gymnasium');
+      await t.pumpAndSettle();
       await t.tap(find.text('Speichern').first);
       await t.pumpAndSettle();
 
@@ -421,8 +623,9 @@ void main() {
       await t.pumpAndSettle();
       await t.tap(find.text(de.schoolsUiAddSchool));
       await t.pumpAndSettle();
-      expect(find.text('Uster (Gemeinde), Kanton Zürich'), findsOneWidget);
+      expect(find.text('Uster (Gemeinde), Kanton Zürich (ZH)'), findsOneWidget);
       await t.enterText(find.byType(TextField).first, 'Gymnasium');
+      await t.pumpAndSettle();
       await t.tap(find.text('Speichern').first);
       await t.pumpAndSettle();
       // The household has a region already: nothing is written to it.

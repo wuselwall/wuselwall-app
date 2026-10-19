@@ -1,8 +1,17 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/testing.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:wuselwall/core/error/failure.dart';
+import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/supabase/api_client.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/school/application/school_providers.dart';
+import 'package:wuselwall/features/school/data/school_repository.dart';
 import 'package:wuselwall/features/school/domain/school_models.dart';
 
 import '../support/fake_school.dart';
@@ -23,8 +32,54 @@ Future<void> _openSchedule(WidgetTester t) async {
 
 final de = lookupAppLocalizations(const Locale('de'));
 
+class _ControlledSchoolRepository extends FakeSchoolRepository {
+  bool rejectPeriods = false;
+  Completer<void>? gate;
+  int attempts = 0;
+
+  @override
+  Future<Result<void>> setPeriods({
+    required String? actor,
+    required String schoolId,
+    required List<PeriodRecord> periods,
+  }) async {
+    attempts++;
+    await gate?.future;
+    if (rejectPeriods) return const Err(NetworkFailure());
+    return super.setPeriods(actor: actor, schoolId: schoolId, periods: periods);
+  }
+}
+
 void main() {
   group('repository parsing', () {
+    test('bell times request chronological order from the server', () async {
+      final client = SupabaseClient(
+        'https://example.org',
+        'test-anon-key',
+        httpClient: MockClient((request) async {
+          expect(request.url.path, '/rest/v1/school_periods');
+          expect(
+            request.url.queryParameters['order'],
+            'starts_at.asc.nullslast',
+          );
+          return http.Response(
+            '[]',
+            200,
+            headers: {'content-type': 'application/json'},
+            request: request,
+          );
+        }),
+      );
+      addTearDown(client.dispose);
+      final result = await SchoolRepository(ApiClient(client)).periods();
+      expect(
+        result.isOk,
+        isTrue,
+        reason: result.failureOrNull?.cause.toString(),
+      );
+      expect(result.unwrap(), isEmpty);
+    });
+
     test('a school-week reply becomes timetables and projected days', () {
       final week = SchoolWeek.fromJson({
         'timetables': [
@@ -219,15 +274,148 @@ void main() {
     await t.tap(find.byTooltip(de.schoolEditSchool));
     await t.pumpAndSettle();
 
-    final bellsSave = find.text('Speichern').at(1);
+    expect(find.text(de.save), findsNothing);
+    await t.ensureVisible(find.text(de.schoolAddLesson));
+    await t.tap(find.text(de.schoolAddLesson));
+    await t.pumpAndSettle();
+    final bellsSave = find.descendant(
+      of: find.byType(AppBar),
+      matching: find.text(de.save),
+    );
     await t.ensureVisible(bellsSave);
     await t.tap(bellsSave);
     await t.pumpAndSettle();
 
     final periods = school.periodSets.single;
-    expect(periods.where((p) => !p.isBreak).length, 3);
+    expect(
+      periods.map((p) => p.starts.hour * 60 + p.starts.minute),
+      orderedEquals([480, 525, 530, 575, 595, 640]),
+    );
+    expect(periods.map((p) => p.index), [1, 1, 2, 2, 3, 4]);
+    expect(periods.where((p) => !p.isBreak).length, 4);
     expect(periods.where((p) => p.isBreak).length, 2);
     expect(periods.first.toJson(), containsPair('kind', 'lesson'));
+    expect(school.schoolSaves, isEmpty);
+    expect(find.text(de.save), findsNothing);
+  });
+
+  testWidgets('school Save appears only for changes and saves both sections', (
+    t,
+  ) async {
+    final school = FakeSchoolRepository();
+    await pumpApp(
+      t,
+      overrides: baseOverrides(
+        identity: FakeIdentityRepository(current: device()),
+      ),
+      school: school,
+    );
+    await _openSchedule(t);
+    await t.tap(find.byTooltip(de.schoolEditSchool));
+    await t.pumpAndSettle();
+    expect(find.text(de.save), findsNothing);
+    final name = school.data.schools.first.name;
+    await t.enterText(find.byType(TextField).first, 'Changed school');
+    await t.pumpAndSettle();
+    expect(
+      find.descendant(of: find.byType(AppBar), matching: find.text(de.save)),
+      findsOneWidget,
+    );
+    await t.enterText(find.byType(TextField).first, name);
+    await t.pumpAndSettle();
+    expect(find.text(de.save), findsNothing);
+    await t.enterText(find.byType(TextField).first, 'Changed school');
+    await t.ensureVisible(find.text(de.schoolAddLesson));
+    await t.tap(find.text(de.schoolAddLesson));
+    await t.pumpAndSettle();
+    await t.tap(find.text(de.save));
+    await t.pumpAndSettle();
+    expect(school.schoolSaves.single.name, 'Changed school');
+    expect(school.periodSets.single.where((p) => !p.isBreak), hasLength(4));
+    expect(find.text(de.save), findsNothing);
+  });
+
+  testWidgets('adding and removing the same bell time clears unsaved changes', (
+    t,
+  ) async {
+    await pumpApp(
+      t,
+      overrides: baseOverrides(
+        identity: FakeIdentityRepository(current: device()),
+      ),
+      school: FakeSchoolRepository(),
+    );
+    await _openSchedule(t);
+    await t.tap(find.byTooltip(de.schoolEditSchool));
+    await t.pumpAndSettle();
+    await t.ensureVisible(find.text(de.schoolAddLesson));
+    await t.tap(find.text(de.schoolAddLesson));
+    await t.pumpAndSettle();
+    expect(find.text(de.save), findsOneWidget);
+    await t.ensureVisible(find.byTooltip(de.schoolRemove).last);
+    await t.tap(find.byTooltip(de.schoolRemove).last);
+    await t.pumpAndSettle();
+    expect(find.text(de.save), findsNothing);
+  });
+
+  testWidgets(
+    'failed bell save keeps changes and retries only unsaved sections',
+    (t) async {
+      final school = _ControlledSchoolRepository()..rejectPeriods = true;
+      await pumpApp(
+        t,
+        overrides: baseOverrides(
+          identity: FakeIdentityRepository(current: device()),
+        ),
+        school: school,
+      );
+      await _openSchedule(t);
+      await t.tap(find.byTooltip(de.schoolEditSchool));
+      await t.pumpAndSettle();
+      await t.enterText(find.byType(TextField).first, 'Changed school');
+      await t.ensureVisible(find.text(de.schoolAddLesson));
+      await t.tap(find.text(de.schoolAddLesson));
+      await t.pumpAndSettle();
+      await t.tap(find.text(de.save));
+      await t.pumpAndSettle();
+      expect(school.schoolSaves, hasLength(1));
+      expect(school.periodSets, isEmpty);
+      expect(find.text(de.save), findsOneWidget);
+      school.rejectPeriods = false;
+      await t.tap(find.text(de.save));
+      await t.pumpAndSettle();
+      expect(school.schoolSaves, hasLength(1));
+      expect(school.periodSets, hasLength(1));
+      expect(find.text(de.save), findsNothing);
+    },
+  );
+
+  testWidgets('Save is disabled while a school write is pending', (t) async {
+    final gate = Completer<void>();
+    final school = _ControlledSchoolRepository()..gate = gate;
+    await pumpApp(
+      t,
+      overrides: baseOverrides(
+        identity: FakeIdentityRepository(current: device()),
+      ),
+      school: school,
+    );
+    await _openSchedule(t);
+    await t.tap(find.byTooltip(de.schoolEditSchool));
+    await t.pumpAndSettle();
+    await t.ensureVisible(find.text(de.schoolAddLesson));
+    await t.tap(find.text(de.schoolAddLesson));
+    await t.pumpAndSettle();
+    await t.tap(find.text(de.save));
+    await t.pump();
+    expect(
+      t.widget<TextButton>(find.widgetWithText(TextButton, de.save)).onPressed,
+      isNull,
+    );
+    expect(school.attempts, 1);
+    gate.complete();
+    await t.pumpAndSettle();
+    expect(find.text(de.save), findsNothing);
   });
 
   testWidgets('bell times line up: start and end on one line with tooltips', (

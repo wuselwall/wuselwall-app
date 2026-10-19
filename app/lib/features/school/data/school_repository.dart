@@ -22,7 +22,7 @@ class SchoolRepository {
   Future<Result<List<PeriodRecord>>> periods() => _api.select(
     'school_periods',
     parse: PeriodRecord.fromJson,
-    build: (q) => q.order('starts_at'),
+    build: (q) => q.order('starts_at', ascending: true),
   );
 
   Future<Result<List<TermRecord>>> terms() => _api.select(

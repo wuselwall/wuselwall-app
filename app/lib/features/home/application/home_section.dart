@@ -11,6 +11,7 @@ class HomeSection {
     this.navLabel,
     required this.body,
     this.bottom,
+    this.appBar,
     this.fab,
   });
 
@@ -22,8 +23,22 @@ class HomeSection {
   final String Function(AppLocalizations l10n)? navLabel;
   final Widget body;
   final PreferredSizeWidget? bottom;
+
+  /// A feature can combine its controls and the shared actions in one app bar.
+  final PreferredSizeWidget Function(
+    BuildContext context,
+    List<Widget> actions,
+  )?
+  appBar;
   final Widget Function(BuildContext context)? fab;
 }
+
+/// Whether a section's app bar has room for the title next to its controls: 900 logical
+/// pixels at the text scale in use.
+bool homeBarIsWide(BuildContext context) =>
+    MediaQuery.sizeOf(context).width /
+        MediaQuery.textScalerOf(context).scale(1) >=
+    900;
 
 /// A section whose feature is still being built: says so instead of showing nothing.
 class ComingSoonBody extends StatelessWidget {

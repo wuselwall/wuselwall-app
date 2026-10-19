@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
+import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/demo/demo_repositories.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/details/board_details.dart';
@@ -12,6 +13,7 @@ import 'package:wuselwall/features/board/ui/details/meal_week_detail.dart';
 import 'package:wuselwall/features/home/application/home_tab.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
+import 'package:wuselwall/features/meals/application/meals_providers.dart';
 import 'package:wuselwall/features/meals/domain/meal_models.dart';
 import 'package:wuselwall/features/settings/data/household_settings_repository.dart';
 
@@ -508,4 +510,32 @@ void main() {
     expect(t.takeException(), isNull);
     await unmountApp(t, container);
   });
+
+  for (final width in [390.0, 1348.0]) {
+    testWidgets('the meals header uses one bar at $width', (t) async {
+      final container = await pumpMeals(
+        t,
+        FakeMealsRepository(),
+        size: Size(width, 844),
+      );
+      final l10n = lookupAppLocalizations(const Locale('de'));
+      final appBar = find.byType(AppBar);
+      expect(t.widget<AppBar>(appBar).bottom, isNull);
+      expect(
+        t.getSize(appBar).height,
+        Theme.of(t.element(appBar)).appBarTheme.toolbarHeight,
+      );
+      final settings = find.byTooltip(l10n.settingsTitle);
+      final next = find.byTooltip(l10n.mealsNextWeek);
+      expect(t.getCenter(next).dy, closeTo(t.getCenter(settings).dy, 1));
+      final week = container.read(mealsWeekProvider);
+      await t.tap(next);
+      await t.pumpAndSettle();
+      expect(
+        container.read(mealsWeekProvider),
+        DateTime(week.year, week.month, week.day + 7),
+      );
+      expect(t.takeException(), isNull);
+    });
+  }
 }

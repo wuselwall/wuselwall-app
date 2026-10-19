@@ -8,22 +8,32 @@ import 'package:wuselwall/features/region/domain/region_models.dart';
 /// record (an earlier write broke off) are refreshed too, but then a failure keeps what
 /// there is.
 ///
+/// Successful lookups stay cached for this provider scope, so scrolling a label off screen
+/// does not discard its names; failures are disposed of, so a retry asks again.
+///
 /// Errors show at once: no automatic retries, which kept the picker loading for most of a
 /// minute while the server refused again (it waits ten minutes between attempts). The
 /// picker has its own retry button.
 final countryRegionsProvider = FutureProvider.autoDispose
     .family<List<Region>, String>((ref, country) async {
-      final repository = ref.watch(regionRepositoryProvider);
-      final status = (await repository.feedStatus(country)).unwrap();
-      var regions = (await repository.regions(country)).unwrap();
-      if (regions.isEmpty || status?.fetchedAt == null) {
-        final refreshed = await repository.refresh(country);
-        if (regions.isEmpty) refreshed.unwrap();
-        if (refreshed.isOk) {
-          regions = (await repository.regions(country)).unwrap();
+      // Retain an in-flight lookup too, so a quick scroll does not start a second one.
+      final cache = ref.keepAlive();
+      try {
+        final repository = ref.watch(regionRepositoryProvider);
+        final status = (await repository.feedStatus(country)).unwrap();
+        var regions = (await repository.regions(country)).unwrap();
+        if (regions.isEmpty || status?.fetchedAt == null) {
+          final refreshed = await repository.refresh(country);
+          if (regions.isEmpty) refreshed.unwrap();
+          if (refreshed.isOk) {
+            regions = (await repository.regions(country)).unwrap();
+          }
         }
+        return regions;
+      } catch (_) {
+        cache.close();
+        rethrow;
       }
-      return regions;
     }, retry: (_, _) => null);
 
 /// Refreshes the cache of [country] when it is missing or older than [regionCacheMaxAge].

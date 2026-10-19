@@ -1218,6 +1218,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get calendarNext => 'Weiter';
 
   @override
+  String get calendarChooseView => 'Kalenderansicht';
+
+  @override
   String get calendarToday => 'Heute';
 
   @override
@@ -2935,6 +2938,14 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get regionUnavailable =>
       'Die Regionsliste ist gerade nicht verfügbar. Prüfe die Verbindung und versuche es erneut.';
+
+  @override
+  String get regionCategoryCanton => 'Kanton';
+
+  @override
+  String regionNameWithAbbreviation(String name, String abbreviation) {
+    return '$name ($abbreviation)';
+  }
 
   @override
   String regionNameTop(String category, String name) {
