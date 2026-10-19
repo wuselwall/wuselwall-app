@@ -11,10 +11,16 @@ const names = ['db', 'mailpit', 'templates', 'auth'].map((n) => `${prefix}-${n}`
 const [db, mailpit, templates, auth] = names;
 const docker = (...args) => execFileSync('docker', args, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] }).trim();
 const delay = () => new Promise((r) => setTimeout(r, 500));
-const images = ['postgres:15-alpine', 'public.ecr.aws/supabase/mailpit:v1.31.3',
-  'nginx:1.28.0-alpine', 'ghcr.io/supabase/gotrue:v2.197.0'];
-// Shared CI egress can briefly hit anonymous registry limits. Retry only those.
+// Supabase's images from GHCR, not ECR Public: GitHub-hosted runners share egress IPs that
+// regularly exhaust ECR's anonymous data limit.
+const mailpitImage = 'ghcr.io/supabase/mailpit:v1.31.3';
+const images = ['postgres:15-alpine', mailpitImage, 'nginx:1.28.0-alpine',
+  'ghcr.io/supabase/gotrue:v2.197.0'];
+// The tags are pinned, so an image already on this Docker host (self-hosted runner,
+// developer machine) is used as is. Shared CI egress can briefly hit anonymous registry
+// limits. Retry only those.
 async function pull(image) {
+  try { docker('image', 'inspect', image); return; } catch { /* not cached */ }
   for (let attempt = 1; ; attempt++) {
     try { docker('pull', '--quiet', image); return; } catch (error) {
       const limited = /toomanyrequests|rate limit|data limit exceeded/i.test(String(error.stderr ?? error.message));
@@ -46,7 +52,7 @@ try {
   await until(() => docker('exec', db, 'psql', '-h', '127.0.0.1', '-U', 'postgres',
     '-c', 'create schema if not exists auth;'));
   docker('run', '-d', '--name', mailpit, '--network', prefix, '--network-alias', 'mailpit',
-    'public.ecr.aws/supabase/mailpit:v1.31.3');
+    mailpitImage);
   docker('run', '-d', '--name', templates, '--network', prefix, '--network-alias', 'mail-templates',
     'nginx:1.28.0-alpine');
   for (const kind of ['confirmation', 'magic_link']) {

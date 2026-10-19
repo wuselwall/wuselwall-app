@@ -127,6 +127,11 @@ jobs:
     needs: changes
     if: needs.changes.outputs.backend == 'true'
     runs-on: ubuntu-latest   # supabase start needs a Docker daemon of its own
+    # Every CLI image (the stack, pg_prove for `test db`) from GHCR rather than the default
+    # ECR Public, whose anonymous data limit the shared egress IPs of GitHub-hosted runners
+    # regularly exhaust ("toomanyrequests: Data limit exceeded"). Supabase mirrors each image
+    # there; a CLI bump that needs one GHCR lacks fails loudly instead of falling back.
+    env: { SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io }
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
