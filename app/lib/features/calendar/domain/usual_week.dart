@@ -74,17 +74,10 @@ class UsualWeek {
       );
 
   /// This week alternating from [anchor] (the Monday of a week A), or, with null, the
-  /// same every week: week B's places are dropped then.
-  UsualWeek withAnchor(DateTime? anchor) => UsualWeek(
-    profileId: profileId,
-    anchor: anchor,
-    slots: anchor == null
-        ? [
-            for (final s in slots)
-              if (s.week == 0) s,
-          ]
-        : slots,
-  );
+  /// same every week. Week B stays, unused without an anchor, so switching alternating
+  /// on again brings it back.
+  UsualWeek withAnchor(DateTime? anchor) =>
+      UsualWeek(profileId: profileId, anchor: anchor, slots: slots);
 
   /// 0 for week A (or every week without an anchor), 1 for week B, counted from the
   /// anchor as the server counts (`_shared/usual_week.ts`).

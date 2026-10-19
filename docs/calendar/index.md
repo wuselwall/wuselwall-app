@@ -46,7 +46,7 @@ Unter **Einstellungen → Übliche Woche** tragt ihr für jeden Wochentag ein, w
 
 Bist du an einem Tag nicht den ganzen Tag am selben Ort, wählst du **Zeitfenster**: bis zu drei pro Tag, zum Beispiel von 8 bis 12 Uhr im Büro und von 13 bis 17 Uhr im Homeoffice. Die Küchenwand zeigt heute das Zeitfenster, das gerade gilt, an den anderen Tagen das erste, und mit „+1“, dass noch eines folgt.
 
-Wiederholt sich dein Plan alle zwei Wochen, schalte **Abwechselnde Wochen (A/B)** ein. WuselWall fragt einmal, ob diese Woche Woche A oder Woche B ist. Danach trägst du unter **Woche A** und **Woche B** je eine eigene Woche ein.
+Wiederholt sich dein Plan alle zwei Wochen, schalte **Abwechselnde Wochen (A/B)** ein. WuselWall fragt einmal, ob diese Woche Woche A oder Woche B ist. Danach trägst du unter **Woche A** und **Woche B** je eine eigene Woche ein. Schaltest du es aus, bleibt Woche B gespeichert und ist beim nächsten Einschalten wieder da.
 
 Danach tragt ihr nur noch Abweichungen ein. Eine normale Woche bleibt leer. An einem Feiertag zeigt die Küchenwand keinen üblichen Ort.
 

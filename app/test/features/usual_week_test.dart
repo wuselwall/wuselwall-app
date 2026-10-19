@@ -62,11 +62,12 @@ void main() {
     );
 
     test(
-      'switching alternating off drops week B, a day edit keeps the rest',
+      'switching alternating off keeps week B, a day edit keeps the rest',
       () {
         final single = week.withAnchor(null);
         expect(single.anchor, isNull);
-        expect(single.slots.map((s) => s.week), [0]);
+        expect(single.slots.map((s) => s.week), [0, 1]);
+        expect(single.weekOf(DateTime(2026, 10, 26)), 0);
 
         final edited = week.withDay(2, const [wholeDay]);
         expect(edited.day(1, week: 1).single.state, PresenceState.off);

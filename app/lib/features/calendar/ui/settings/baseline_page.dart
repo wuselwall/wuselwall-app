@@ -164,7 +164,7 @@ class _UsualWeekCardState extends ConsumerState<_UsualWeekCard> {
   }
 
   /// Switching on asks which week this one is, and anchors week A on its Monday.
-  /// Switching off drops week B when the week is saved.
+  /// Switching off keeps week B, unused, for when it is switched on again.
   Future<void> _setAlternating(bool on) async {
     if (!on) {
       setState(() {
