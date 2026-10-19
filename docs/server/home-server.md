@@ -52,6 +52,9 @@ scp dist/wuselwall-server-0.1.0.tar.gz server:     # dann auf dem Server: tar xz
 
 ## 2. Die App verbinden
 
+Die Web-App unter `https://web.example.org` liest die Serveradresse aus eurer
+Installation. Du musst dafür keine Adresse oder Schlüssel in die App einbauen.
+
 Öffne den Einrichtungslink aus der Installation im Browser oder scanne den zugehörigen
 QR-Code. Er enthält den Server und den Einrichtungscode. WuselWall merkt sich den
 Code während der E-Mail-Anmeldung, damit du ihn unter **Neue Familie** nicht noch
