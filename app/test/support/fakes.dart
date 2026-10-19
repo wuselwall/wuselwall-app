@@ -38,6 +38,7 @@ import 'package:wuselwall/features/region/data/region_repository.dart';
 import 'package:wuselwall/features/reminders/application/reminder_providers.dart';
 import 'package:wuselwall/features/reminders/data/reminder_dismissal_store.dart';
 import 'package:wuselwall/features/school/data/school_repository.dart';
+import 'package:wuselwall/features/settings/application/settings_view.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 import 'package:wuselwall/features/shopping/data/shopping_store.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
@@ -284,7 +285,7 @@ class FakeAccountAdminRepository implements AccountAdminRepository {
 
 class FakeHouseholdLeaveRepository implements HouseholdLeaveRepository {
   Result<void> leaveResult = const Ok(null);
-  Result<DateTime> deleteResult = Ok(DateTime.utc(2026, 10, 29));
+  Result<void> deleteResult = const Ok(null);
   Result<void> restoreResult = const Ok(null);
   Result<void> startAfreshResult = const Ok(null);
 
@@ -300,7 +301,7 @@ class FakeHouseholdLeaveRepository implements HouseholdLeaveRepository {
   }
 
   @override
-  Future<Result<DateTime>> deleteFamily({
+  Future<Result<void>> deleteFamily({
     required String profileId,
     required String confirmName,
   }) async {
@@ -643,6 +644,10 @@ List<Override> baseOverrides({
   MemoryInvitationStore? invitationStore,
   SetupStore? setupStore,
   AppearanceStore? appearance,
+
+  /// Basic, as on a new device; tests of an Advanced row pass [SettingsView.advanced].
+  SettingsView settingsView = SettingsView.basic,
+  SettingsViewStore? settingsViewStore,
   bool signedIn = true,
   bool online = true,
 
@@ -682,6 +687,9 @@ List<Override> baseOverrides({
   reminderDebounceProvider.overrideWithValue(Duration.zero),
   appearanceStoreProvider.overrideWithValue(
     appearance ?? MemoryAppearanceStore(),
+  ),
+  settingsViewStoreProvider.overrideWithValue(
+    settingsViewStore ?? MemorySettingsViewStore(settingsView),
   ),
   externalCalendarsRepositoryProvider.overrideWithValue(
     externalCalendars ?? FakeExternalCalendarsRepository(),

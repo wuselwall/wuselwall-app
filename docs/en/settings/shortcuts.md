@@ -1,8 +1,13 @@
-# Siri and Shortcuts
+# Apps and AI assistants
+
+With a **key** from WuselWall, another app works with your family's data as one person. There are two kinds:
+
+- **Automation**: reads and adds, for example for Siri on the iPhone or any other app that can call a web address (such as automation apps on Android or Home Assistant). The examples below use Apple's Shortcuts; other apps send the same requests.
+- **AI assistant**: only reads, for an assistant that speaks MCP, such as Claude (see [below](#ai-assistants-mcp)).
 
 With the **Shortcuts** app on the iPhone you talk to WuselWall through Siri: "Hey Siri, shopping list" – "What do you need?" – "Milk and two cucumbers" – "Milk and Cucumbers (2×) are on the list." No extra app is needed, only a **key** from WuselWall.
 
-<Shot name="shortcuts" alt="Settings → Siri and Shortcuts with two keys" />
+<Shot name="shortcuts" alt="Settings → Apps and AI assistants with two keys" />
 
 ## What a key may do
 
@@ -15,7 +20,7 @@ A key belongs to **one person**. A shortcut with that key acts as that person: i
 
 ## Creating a key
 
-1. Open **Settings → Siri and Shortcuts** and tap **New key**.
+1. Open **Settings → Advanced → Apps and AI assistants** and tap **New key**.
 2. Give it a **name**, for example "iPhone".
 3. As a guardian, choose the person under **For whom?**. Everyone else creates their own key on their own phone.
 4. Tap **Create key**.
@@ -68,7 +73,7 @@ Guardians see and revoke every key of the family, everyone else their own. The [
 
 An AI assistant that speaks **MCP** (the Model Context Protocol, for example Claude) can **look things up** in WuselWall with a key of its own: "What's on this week?", "What's for dinner on Thursday?", "When does Olivia finish school tomorrow?". It can **neither add, change nor delete anything**.
 
-When creating a key, choose **Assistant** instead of **Siri**. Only adults get a key for an assistant. It appears in the list under **AI assistants** and is revoked like any other key.
+When creating a key, choose **AI assistant** instead of **Automation**. Only adults get a key for an assistant. It appears in the list under **AI assistants** and is revoked like any other key.
 
 ::: warning What the assistant reads leaves your server
 The assistant reads the whole family's week: appointments, who is away when, the children's timetables, tasks, points, meals, recipes and the shopping list. That data goes to the assistant's provider and is subject to its privacy terms. Decide together whether you want that.

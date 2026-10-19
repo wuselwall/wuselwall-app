@@ -9,10 +9,10 @@ The app doesn't know by itself where your data lives. So at its first start it a
 <Shot name="setup-server" alt="The question about the server" />
 
 - **Enter the address** you got from whoever set up your server, e.g. `api.example.org`. For a server at Supabase, the project ID is enough.
-- **Scan the QR code**: on a device that is already connected, it's under **Settings → Server**. The code from **Add device** works too and connects the device at the same time ([Connect a device with a code](/en/guide/setup#_2-connect-a-device-with-a-code)).
+- **Scan the QR code**: on a device that is already connected, it's under **Settings → Advanced → Server**. The code from **Add device** works too and connects the device at the same time ([Connect a device with a code](/en/guide/setup#_2-connect-a-device-with-a-code)).
 - **Try it without a server**: the app shows an example family. None of it is saved, and nothing leaves the device. **Exit** takes you back to the question.
 
-The app remembers the server. To choose another one, go to **Settings → Server → Change server** ([Members and devices](/en/settings/members-devices#server)).
+The app remembers the server. To choose another one, go to **Settings → Advanced → Server → Change server** ([Members and devices](/en/settings/members-devices#server)).
 
 No server yet? [Your own server](/en/server/) shows how to set one up.
 

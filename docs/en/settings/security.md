@@ -1,6 +1,6 @@
 # Security
 
-Sign-in and security settings exist only on a guardian's **personal phone**: **Settings → Sign-in** and **Settings → Security**.
+Sign-in and security settings exist only on a guardian's **personal phone**: **Settings → Advanced → Sign-in** and **Settings → Advanced → Security**.
 
 ## Sign-in
 

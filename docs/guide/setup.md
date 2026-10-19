@@ -25,7 +25,7 @@ deine Adresse; er ist etwas anderes als der Einrichtungscode für einen neuen Se
 
 <Shot name="setup-sign-in" alt="Anmeldung mit E-Mail" />
 
-Lieber mit Passwort? Tippe auf **Ich habe ein Passwort**. Das Passwort legst du unter **Einstellungen → Anmeldung** fest, mindestens 10 Zeichen. Der Code per E-Mail bleibt immer möglich.
+Lieber mit Passwort? Tippe auf **Ich habe ein Passwort**. Das Passwort legst du unter **Einstellungen → Erweitert → Anmeldung** fest, mindestens 10 Zeichen. Der Code per E-Mail bleibt immer möglich.
 
 Beim allerersten Mal fragt WuselWall einmal, wie du dich künftig anmelden möchtest: mit dem **Code per E-Mail** (nichts zu merken) oder mit einem **Passwort**.
 
@@ -85,5 +85,5 @@ So kommen das **Wanddisplay** in der Küche, ein **Kinder-Tablet** oder ein **Ta
 Danach ist das neue Gerät fertig. Das Wanddisplay zeigt einmal eine kurze Checkliste, damit es dauerhaft läuft (siehe [Wandanzeige](/guide/wall)). Der Code gilt **10 Minuten** und nur **einmal**. Stimmt er nicht, fange auf dem neuen Gerät noch einmal an.
 
 ::: tip Ältere Geräte
-Hat ein Gerät noch eine ältere Version von WuselWall, nimmt es den alten Code an: unter **Einstellungen → Geräte** tippst du dafür auf **Code für ein älteres Gerät erzeugen**. Diese Möglichkeit verschwindet mit der nächsten Version.
+Hat ein Gerät noch eine ältere Version von WuselWall, nimmt es den alten Code an: unter **Einstellungen → Erweitert → Geräte** tippst du dafür auf **Code für ein älteres Gerät erzeugen**. Diese Möglichkeit verschwindet mit der nächsten Version.
 :::

@@ -1313,10 +1313,10 @@ class DemoHouseholdLeaveRepository implements HouseholdLeaveRepository {
       const Ok(null);
 
   @override
-  Future<Result<DateTime>> deleteFamily({
+  Future<Result<void>> deleteFamily({
     required String profileId,
     required String confirmName,
-  }) async => Ok(DateTime(2026, 10, 29));
+  }) async => const Ok(null);
 
   @override
   Future<Result<void>> restoreFamily() async => const Ok(null);

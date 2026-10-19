@@ -13,6 +13,6 @@ Manche Dinge dürfen nur Erziehungsberechtigte – zum Beispiel Geräte hinzufü
 
 - Die PIN gilt nur für **dich**: Tippt jemand anderes in dieser Zeit auf einen anderen Namen, bekommt er dadurch keine Rechte.
 - Bei einer falschen PIN siehst du, wie viele Versuche übrig sind. Nach einigen Fehlversuchen musst du kurz warten, nach zehn ist die PIN gesperrt.
-- **PIN gesperrt oder vergessen?** Melde dich auf deinem **eigenen Handy** an und setze unter **Einstellungen → Sicherheit → PIN für Erziehungsberechtigte** eine neue PIN. Das entsperrt sie sofort.
+- **PIN gesperrt oder vergessen?** Melde dich auf deinem **eigenen Handy** an und setze unter **Einstellungen → Erweitert → Sicherheit → PIN für Erziehungsberechtigte** eine neue PIN. Das entsperrt sie sofort.
 
 Auf deinem **persönlichen Handy** brauchst du die PIN nicht: Dort bist du schon angemeldet.

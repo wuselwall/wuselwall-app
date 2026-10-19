@@ -4,6 +4,12 @@ This belongs to the **guardians**. On your phone, open the cog at the top right 
 
 <Shot name="settings-phone" alt="Settings with members and devices" />
 
+## Basic or Advanced {#view}
+
+At the top of the settings you choose the view. **Basic** is the default and shows what matters most: household settings, usual week, reminders, appearance, getting started, members and devices, and on your own phone also **Delete account**. **Advanced** also shows sharing the family calendar, outside calendars, apps and AI assistants, the server, the data export, sign-in, security, and leaving the family.
+
+Whatever is hidden **still applies**. The view only changes what you see, and WuselWall remembers it for each device. The same goes for **Household settings**.
+
 ## Invite an adult
 
 Invite a person who should take part in the family with their own account. Under **Members**, tap **Invite an adult**:
@@ -56,13 +62,13 @@ On your own phone you can also sign yourself out with **Sign out this device**.
 
 ## Server {#server}
 
-This shows which server the app talks to, with its **QR code**. A new device scans it at the question **Which server?** and is then connected to the same server.
+Under **Advanced**, this shows which server the app talks to, with its **QR code**. A new device scans it at the question **Which server?** and is then connected to the same server.
 
 You only need **Change server** when your family moves to another server. The device signs out and forgets everything stored on it, including shopping it could not send yet. On shared devices WuselWall asks for a guardian's PIN first.
 
 ## Export data
 
-Guardians can save all data of your family as one file, for example for a move to another server. It is under **Family** at the bottom of the settings, with **Export data**, and only from a guardian's own phone.
+Guardians can save all data of your family as one file, for example for a move to another server. It is under **Family** at the bottom of the settings (**Advanced** view), with **Export data**, and only from a guardian's own phone.
 
 The file contains what you entered: members, appointments, timetables, tasks, recipes, shopping lists and so on. Passwords, PINs and sign-in data are **not** included, and devices appear only with their name and date.
 
@@ -70,7 +76,7 @@ Leaving and deleting a family is described under [Account and family](/en/settin
 
 ## Outside calendars
 
-You subscribe to calendars from clubs or the town under **Settings → Add outside calendars**. How this works and what to note is described under [Calendar](/en/calendar/#outside-calendars).
+You subscribe to calendars from clubs or the town under **Settings → Advanced → Add outside calendars**. How this works and what to note is described under [Calendar](/en/calendar/#outside-calendars).
 
 ## Show Getting started again
 

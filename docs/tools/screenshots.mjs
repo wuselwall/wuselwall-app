@@ -37,8 +37,8 @@ const WALL = { width: 1280, height: 800 }; // the recommended wall resolution
 
 /** Labels differ per language; the steps look them up here. */
 const T = {
-  de: { grandma: 'Oma Ruth', newList: 'Neue Liste', name: 'Name', save: 'Speichern', search: 'Suchen oder hinzufügen', settings: 'Einstellungen', oldCode: 'Code für ein älteres Gerät erzeugen', deviceName: 'Gerätename', createCode: 'Code erzeugen', addMember: 'Mitglied hinzufügen', history: 'Verlauf', trolley: 'Im Wagen', household: 'Neue Familie anlegen', signIn: 'Mit E-Mail fortfahren', enrol: 'Mit Code verbinden', papa: 'Thomas', daughter: 'Emma', wholemeal: /Vollkorn/, kitchenTablet: 'Küchen-Tablet', close: 'Schließen', shopping: 'Einkauf', kidShopping: 'Einkaufen', calendar: 'Kalender', week: 'Woche', newEvent: 'Neuer Termin', schedule: 'Stundenplan', tasks: 'Aufgaben', meals: 'Essen', householdSettings: 'Haushalt einstellen', today: 'Heute', editSchool: 'Schule bearbeiten', region: 'Region', importHolidays: 'Ferien übernehmen', addMeal: 'Mahlzeit hinzufügen', pairFront: 'Familien-Tablet oder Wanddisplay verbinden', pairConnect: 'Gerät verbinden', pairCode: 'Code vom neuen Gerät', next: 'Weiter', inviteAdult: 'Erwachsene Person einladen', inviteName: 'Name', inviteCreate: 'Einladung erstellen', reminders: 'Erinnerungen' },
-  en: { grandma: 'Grandma Ruth', newList: 'New list', name: 'Name', save: 'Save', search: 'Search or add', settings: 'Settings', oldCode: 'Create a code for an older device', deviceName: 'Device name', createCode: 'Create code', addMember: 'Add member', history: 'History', trolley: 'In the trolley', household: 'Start a new family', signIn: 'Continue with email', enrol: 'Connect with a code', papa: 'David', daughter: 'Olivia', wholemeal: /Wholemeal/, kitchenTablet: 'Kitchen tablet', close: 'Close', shopping: 'Shopping', kidShopping: 'Shopping', calendar: 'Calendar', week: 'Week', newEvent: 'New event', schedule: 'Timetable', tasks: 'Tasks', meals: 'Meals', householdSettings: 'Household settings', today: 'Today', editSchool: 'Edit school', region: 'Region', importHolidays: 'Import school holidays', addMeal: 'Add meal', pairFront: 'Connect a family tablet or wall display', pairConnect: 'Connect device', pairCode: 'Code from the new device', next: 'Next', inviteAdult: 'Invite an adult', inviteName: 'Name', inviteCreate: 'Create invitation', reminders: 'Reminders' },
+  de: { grandma: 'Oma Ruth', newList: 'Neue Liste', name: 'Name', save: 'Speichern', search: 'Suchen oder hinzufügen', settings: 'Einstellungen', oldCode: 'Code für ein älteres Gerät erzeugen', deviceName: 'Gerätename', createCode: 'Code erzeugen', addMember: 'Mitglied hinzufügen', history: 'Verlauf', trolley: 'Im Wagen', household: 'Neue Familie anlegen', signIn: 'Mit E-Mail fortfahren', enrol: 'Mit Code verbinden', papa: 'Thomas', daughter: 'Emma', wholemeal: /Vollkorn/, kitchenTablet: 'Küchen-Tablet', close: 'Schließen', shopping: 'Einkauf', kidShopping: 'Einkaufen', calendar: 'Kalender', week: 'Woche', newEvent: 'Neuer Termin', schedule: 'Stundenplan', tasks: 'Aufgaben', meals: 'Essen', householdSettings: 'Haushalt einstellen', today: 'Heute', editSchool: 'Schule bearbeiten', region: 'Region', importHolidays: 'Ferien übernehmen', addMeal: 'Mahlzeit hinzufügen', pairFront: 'Familien-Tablet oder Wanddisplay verbinden', pairConnect: 'Gerät verbinden', pairCode: 'Code vom neuen Gerät', next: 'Weiter', inviteAdult: 'Erwachsene Person einladen', inviteName: 'Name', inviteCreate: 'Einladung erstellen', reminders: 'Erinnerungen', advanced: 'Erweitert', setPassword: 'Passwort festlegen' },
+  en: { grandma: 'Grandma Ruth', newList: 'New list', name: 'Name', save: 'Save', search: 'Search or add', settings: 'Settings', oldCode: 'Create a code for an older device', deviceName: 'Device name', createCode: 'Create code', addMember: 'Add member', history: 'History', trolley: 'In the trolley', household: 'Start a new family', signIn: 'Continue with email', enrol: 'Connect with a code', papa: 'David', daughter: 'Olivia', wholemeal: /Wholemeal/, kitchenTablet: 'Kitchen tablet', close: 'Close', shopping: 'Shopping', kidShopping: 'Shopping', calendar: 'Calendar', week: 'Week', newEvent: 'New event', schedule: 'Timetable', tasks: 'Tasks', meals: 'Meals', householdSettings: 'Household settings', today: 'Today', editSchool: 'Edit school', region: 'Region', importHolidays: 'Import school holidays', addMeal: 'Add meal', pairFront: 'Connect a family tablet or wall display', pairConnect: 'Connect device', pairCode: 'Code from the new device', next: 'Next', inviteAdult: 'Invite an adult', inviteName: 'Name', inviteCreate: 'Create invitation', reminders: 'Reminders', advanced: 'Advanced', setPassword: 'Set password' },
 };
 
 async function open(page, scenario, route = '') {
@@ -69,6 +69,14 @@ const tapAny = async (page, name, { exact = true } = {}) => {
     .or(page.locator(`flt-semantics[aria-label${ex ? '=' : '*='}"${name}"]`));
   const target = (await find(true).count()) ? find(true) : find(exact);
   await target.first().dispatchEvent('click');
+  await settle(page);
+};
+// Settings open in the Basic view; shots of an Advanced row switch first. The segment's
+// role differs between Flutter versions, so match it by name in each.
+const showAdvanced = async (page, t) => {
+  const name = t.advanced;
+  await page.getByRole('button', { name, exact: true }).or(page.getByRole('radio', { name, exact: true }))
+    .or(page.locator(`flt-semantics[aria-label="${name}"]`)).first().dispatchEvent('click');
   await settle(page);
 };
 const scrollDown = async (page, px = 600) => {
@@ -135,9 +143,9 @@ const shots = [
   // The board has no avatars: open the footer's shopping list first, then tap the name in its bar.
   { name: 'wall-shopping', scenario: 'kiosk', viewport: WALL, steps: async (p, t) => { await p.getByRole('button', { name: t.shopping }).first().click(); await settle(p); await p.getByRole('button', { name: t.daughter, exact: true }).last().click(); await settle(p); } },
   { name: 'settings-phone', scenario: 'adult', viewport: PHONE, steps: async (p, t) => press(p, t.settings) },
-  { name: 'settings-sign-in', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await press(p, t.settings); await scrollDown(p, 700); } },
+  { name: 'settings-sign-in', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await press(p, t.settings); await showAdvanced(p, t); await scrollUntil(p, t.setPassword); await scrollDown(p, -450); } },
   // A guardian's phone approves new devices (pair-approve); the code is the way for an older device.
-  { name: 'settings-code', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await press(p, t.settings); await scrollUntil(p, t.oldCode); await tapAny(p, t.oldCode); await p.getByRole('textbox', { name: t.deviceName }).fill(t.kitchenTablet); await press(p, t.createCode); } },
+  { name: 'settings-code', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await press(p, t.settings); await showAdvanced(p, t); await scrollUntil(p, t.oldCode); await tapAny(p, t.oldCode); await p.getByRole('textbox', { name: t.deviceName }).fill(t.kitchenTablet); await press(p, t.createCode); } },
   { name: 'new-family', scenario: 'newfamily', viewport: PHONE },
   // The new device's pairing screen, reached from the front door.
   { name: 'pair-device', scenario: 'setup', viewport: PHONE, steps: async (p, t) => press(p, t.pairFront) },

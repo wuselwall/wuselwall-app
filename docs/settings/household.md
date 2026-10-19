@@ -4,9 +4,13 @@ Nicht jede Familie macht es gleich: Wie viele Punkte eine Aufgabe bringt, ob Kin
 
 <Shot name="settings-household" alt="Haushalt einstellen mit den Bereichen Aufgaben, Kalender, Essen und Küchenwand" />
 
+In der Ansicht **Einfach** siehst du nur die wichtigsten: die Region, die Serien-Joker, ob Belohnungen Freigabe brauchen, ob Kinder ihre eigenen Termine ändern, die warme Mahlzeit an Schultagen und freien Tagen, die Nachtzeit dieses Geräts, den Ton beim Abhaken, die Morgenübersicht und die Erinnerung vor Terminen. Alle anderen zeigt **Erweitert** (oben umschalten oder unten **Alle Einstellungen zeigen**). Ausgeblendete Einstellungen gelten trotzdem weiter.
+
 Jede Einstellung hat einen **Standard**. Den schlägt WuselWall vor, und er passt für die meisten Familien. Weicht euer Wert davon ab, steht dort **angepasst**. Mit **Auf Standard zurücksetzen** geht es jederzeit zurück.
 
 ## Die Bereiche
+
+In der Ansicht **Erweitert**:
 
 - **Haushalt und Mitglieder**: die **Region** (Land, Kanton oder Bundesland, Gemeinde), nach der Feiertage und Schulferien gelten, und ob die Küchenwand den **Vollnamen** oder nur die **Initiale** zeigt. Die Region wählst du beim Anlegen der ersten Schule; hier kannst du sie später ändern
 - **Aufgaben**: Punkte für eine Pflicht und für eine Extra-Aufgabe, ob neue Aufgaben Pflicht oder Extra sind, ob Erziehungsberechtigte Aufgaben prüfen, wie viele **Serien-Joker** es pro Monat gibt und ob **Belohnungen Freigabe brauchen**

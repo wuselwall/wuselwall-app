@@ -11,9 +11,11 @@ import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/ui/guardian_gate.dart';
 import 'package:wuselwall/features/settings/application/household_settings_providers.dart';
+import 'package:wuselwall/features/settings/application/settings_view.dart';
 import 'package:wuselwall/features/settings/data/household_settings_repository.dart';
 import 'package:wuselwall/features/settings/domain/household_setting.dart';
 import 'package:wuselwall/features/settings/ui/setting_controls.dart';
+import 'package:wuselwall/features/settings/ui/settings_view_switch.dart';
 
 /// The household's defaults (specs/21), grouped by what they tune. Household and device
 /// settings are guardian actions; a member's own settings are not.
@@ -38,6 +40,21 @@ class HouseholdSettingsPage extends ConsumerWidget {
   }
 }
 
+/// The settings Basic shows: what most families decide once. Everything else, and any
+/// setting a newer catalogue adds, waits under Advanced and applies all the same.
+const _basicKeys = {
+  'household.region',
+  'tasks.jokers_per_month',
+  'tasks.reward_approval_default',
+  'calendar.members_edit_own_events',
+  'meals.warm_meal.school_day',
+  'meals.warm_meal.free_day',
+  'device.night_hours',
+  'member.completion_sound',
+  'notify.morning_summary',
+  'notify.event_reminder',
+};
+
 class _SectionSpec {
   const _SectionSpec(this.title, this.keys, {this.personal = false});
 
@@ -58,8 +75,9 @@ class _SettingsList extends ConsumerWidget {
     final l10n = context.l10n;
     final deviceId = ref.watch(deviceProvider).value?.deviceId;
     final acting = ref.watch(actingProfileProvider);
+    final advanced = ref.watch(showAdvancedSettingsProvider);
 
-    final sections = [
+    final all = [
       _SectionSpec(l10n.settingsSectionHousehold, const [
         'household.region',
         'board.member_label',
@@ -102,10 +120,20 @@ class _SettingsList extends ConsumerWidget {
         'notify.redemption_request',
       ], personal: true),
     ];
+    final sections = advanced
+        ? all
+        : [
+            for (final section in all)
+              if (section.keys.any(_basicKeys.contains))
+                _SectionSpec(section.title, [
+                  ...section.keys.where(_basicKeys.contains),
+                ], personal: section.personal),
+          ];
 
     return ListView(
       padding: const EdgeInsets.all(Tokens.space4),
       children: [
+        const SettingsViewSwitch(),
         for (final section in sections) ...[
           Padding(
             padding: const EdgeInsets.only(
@@ -126,6 +154,7 @@ class _SettingsList extends ConsumerWidget {
             for (final key in section.keys)
               ..._rowFor(context, ref, key, deviceId, acting),
         ],
+        if (!advanced) const MoreSettingsHint(),
       ],
     );
   }
