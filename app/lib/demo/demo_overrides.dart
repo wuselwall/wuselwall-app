@@ -5,6 +5,7 @@ import 'dart:ui' show PlatformDispatcher;
 
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:supabase_flutter/supabase_flutter.dart' show AuthState;
+import 'package:wuselwall/app/theme/appearance.dart';
 import 'package:wuselwall/app/theme/night.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/config/app_config.dart';
@@ -154,4 +155,6 @@ List<Override> _overrides(String scenario) => [
     (ref, id) => const Stream<Invalidation>.empty(),
   ),
   nightProvider.overrideWith(_Day.new),
+  // The screenshots take both themes from the browser's colour scheme.
+  appearanceStoreProvider.overrideWithValue(MemoryAppearanceStore()),
 ];
