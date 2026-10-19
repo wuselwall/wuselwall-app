@@ -375,8 +375,12 @@ RPO 24 h, RTO a few hours (NFR-11).
 ### The web app
 
 Every server serves the web build of its own release; it finds the server at its own
-origin. A developer's build for a fixed server comes from `scripts/deploy-web.sh` with the
-git-ignored `app/env/dev.json`.
+origin's `/.well-known/wuselwall.json`, using the server address and publishable key set
+during server installation. `scripts/deploy-web.sh` publishes the same backend-neutral
+build from a checkout; it never reads `app/env/dev.json` or embeds a developer's backend.
+The discovery document must be reachable through the web host's proxy, even when Auth
+lives at another origin. Developer-only fixed-server builds remain available with
+`flutter run --dart-define-from-file=env/dev.json`, not through the deployment helper.
 
 ### The Android app
 
