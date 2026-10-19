@@ -3937,7 +3937,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get accountDeleteExplain =>
-      'Your account and its sign-in methods are deleted, and you are signed out everywhere. Your profile stays in the family with its history. Apple access is revoked.';
+      'Your account and its sign-in methods are deleted, and you are signed out everywhere. Your profile stays in the family with its history.';
 
   @override
   String get accountDeleteBlocked =>

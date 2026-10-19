@@ -6856,7 +6856,7 @@ abstract class AppLocalizations {
   /// No description provided for @accountDeleteExplain.
   ///
   /// In en, this message translates to:
-  /// **'Your account and its sign-in methods are deleted, and you are signed out everywhere. Your profile stays in the family with its history. Apple access is revoked.'**
+  /// **'Your account and its sign-in methods are deleted, and you are signed out everywhere. Your profile stays in the family with its history.'**
   String get accountDeleteExplain;
 
   /// No description provided for @accountDeleteBlocked.
