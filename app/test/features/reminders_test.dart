@@ -621,5 +621,46 @@ void main() {
         expect(notifications.requests, 1);
       },
     );
+
+    Future<void> openSettings(
+      WidgetTester t, {
+      required DeviceInfo current,
+      required bool available,
+    }) async {
+      final container = await pumpApp(
+        t,
+        overrides: baseOverrides(
+          identity: FakeIdentityRepository(current: current),
+          notifications: FakeNotificationScheduler(available: available),
+        ),
+      );
+      container.read(routerProvider).go(Routes.settings);
+      await t.pumpAndSettle();
+    }
+
+    testWidgets('Einstellungen lists Erinnerungen on a personal phone', (
+      t,
+    ) async {
+      await openSettings(t, current: device(), available: true);
+      expect(find.text(_de.reminderSettingsTitle), findsOneWidget);
+    });
+
+    testWidgets('Einstellungen hides Erinnerungen where none can be shown', (
+      t,
+    ) async {
+      await openSettings(t, current: device(), available: false);
+      expect(find.text(_de.reminderSettingsTitle), findsNothing);
+    });
+
+    testWidgets('Einstellungen hides Erinnerungen on a shared device', (
+      t,
+    ) async {
+      await openSettings(
+        t,
+        current: device(deviceClass: DeviceClass.kiosk),
+        available: true,
+      );
+      expect(find.text(_de.reminderSettingsTitle), findsNothing);
+    });
   });
 }

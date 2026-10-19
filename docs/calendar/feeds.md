@@ -2,7 +2,7 @@
 
 Ein **Abo** zeigt den Familienkalender in einer anderen App. Es ist nur zum Lesen: Termine ändert ihr weiterhin in WuselWall. Das Gegenstück, Kalender von außen in WuselWall zu holen, steht unter [Kalender von außen](/calendar/#kalender-von-aussen).
 
-Öffne **Einstellungen → Familienkalender teilen** und tippe auf **Neues Abo**.
+Öffne **Einstellungen → Erweitert → Familienkalender teilen** und tippe auf **Neues Abo**.
 
 ## Ein Abo anlegen
 

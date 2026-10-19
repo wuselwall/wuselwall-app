@@ -9,6 +9,7 @@ import 'package:wuselwall/features/household/domain/household_models.dart';
 import 'package:wuselwall/features/household/ui/deleted_family_page.dart';
 import 'package:wuselwall/features/household/ui/new_family_page.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
+import 'package:wuselwall/features/settings/application/settings_view.dart';
 
 import '../support/fakes.dart';
 
@@ -52,6 +53,7 @@ void main() {
       final container = await pumpApp(
         t,
         overrides: baseOverrides(
+          settingsView: SettingsView.advanced,
           identity: identity,
           leave: leave,
           household: FakeHouseholdOnboardingRepository(
@@ -61,6 +63,9 @@ void main() {
         ),
       );
       container.read(routerProvider).go(Routes.settings);
+      await t.pumpAndSettle();
+      // The account tiles are at the end of a lazily built list.
+      await t.drag(find.byType(Scrollable).first, const Offset(0, -3000));
       await t.pumpAndSettle();
       return (container: container, identity: identity, leave: leave);
     }
@@ -78,6 +83,8 @@ void main() {
       );
 
       await t.ensureVisible(leaveTile);
+
+      await t.pumpAndSettle();
       await t.tap(leaveTile);
       await t.pumpAndSettle();
       expect(find.text('Familie verlassen?'), findsOneWidget);
@@ -96,6 +103,7 @@ void main() {
     testWidgets('cancelling the dialog leaves nothing', (t) async {
       final s = await pumpSettings(t, device: device());
       await t.ensureVisible(leaveTile);
+      await t.pumpAndSettle();
       await t.tap(leaveTile);
       await t.pumpAndSettle();
       await t.tap(find.text('Abbrechen'));
@@ -121,6 +129,7 @@ void main() {
         final tile = t.widget<ListTile>(leaveTile);
         expect(tile.enabled, isFalse);
         await t.ensureVisible(leaveTile);
+        await t.pumpAndSettle();
         await t.tap(leaveTile, warnIfMissed: false);
         await t.pumpAndSettle();
         expect(find.text('Familie verlassen?'), findsNothing);
@@ -156,6 +165,7 @@ void main() {
       final s = await pumpSettings(t, device: device());
       s.leave.leaveResult = const Err(PermissionFailure(code: 'last_guardian'));
       await t.ensureVisible(leaveTile);
+      await t.pumpAndSettle();
       await t.tap(leaveTile);
       await t.pumpAndSettle();
       await t.tap(find.text('Verlassen'));
@@ -184,6 +194,7 @@ void main() {
       final container = await pumpApp(
         t,
         overrides: baseOverrides(
+          settingsView: SettingsView.advanced,
           identity: identity,
           leave: leave,
           household: FakeHouseholdOnboardingRepository(
@@ -197,9 +208,28 @@ void main() {
       return (container: container, identity: identity, leave: leave);
     }
 
-    FilledButton confirmButton(WidgetTester t) => t.widget<FilledButton>(
-      find.byKey(const ValueKey('delete-family-confirm')),
-    );
+    final nameField = find.byKey(const ValueKey('delete-family-name'));
+    final nextButton = find.byKey(const ValueKey('delete-family-next'));
+    final wordField = find.byKey(const ValueKey('delete-family-word'));
+    final confirmButton = find.byKey(const ValueKey('delete-family-confirm'));
+    VoidCallback? onPressed(WidgetTester t, Finder button) =>
+        t.widget<FilledButton>(button).onPressed;
+
+    /// Opens the deletion and types [name] in its first step.
+    Future<void> typeName(WidgetTester t, String name) async {
+      await t.ensureVisible(deleteTile);
+      await t.tap(deleteTile);
+      await t.pumpAndSettle();
+      await t.enterText(nameField, name);
+      await t.pump();
+    }
+
+    /// Goes through the first step to the second, where LÖSCHEN is typed.
+    Future<void> toWordStep(WidgetTester t) async {
+      await typeName(t, '  hUSER ');
+      await t.tap(nextButton);
+      await t.pumpAndSettle();
+    }
 
     testWidgets(
       'a guardian on a personal phone sees the delete action in Familie',
@@ -208,7 +238,7 @@ void main() {
         expect(find.text('Familie löschen'), findsOneWidget);
         expect(
           find.text(
-            'Alle Geräte melden sich sofort ab. 14 Tage lang kann eine Elternperson die Familie wiederherstellen, danach werden alle Daten endgültig gelöscht.',
+            'Die Familie wird mit allen Daten sofort und endgültig gelöscht. Alle Geräte melden sich ab. Das lässt sich nicht rückgängig machen.',
           ),
           findsOneWidget,
         );
@@ -226,32 +256,54 @@ void main() {
     });
 
     testWidgets(
-      'the confirm button stays off until the name is typed, trimmed and in any case',
+      'the next button stays off until the name is typed, trimmed and in any case',
       (t) async {
         final s = await pumpSettings(t, device: device());
-        await t.ensureVisible(deleteTile);
-        await t.tap(deleteTile);
-        await t.pumpAndSettle();
+        await typeName(t, 'Huse');
         expect(find.text('Familie löschen?'), findsOneWidget);
-        expect(confirmButton(t).onPressed, isNull);
-
-        await t.enterText(
-          find.byKey(const ValueKey('delete-family-name')),
-          'Huse',
-        );
-        await t.pump();
         expect(
-          confirmButton(t).onPressed,
+          onPressed(t, nextButton),
           isNull,
           reason: 'a partial name is no match',
         );
 
-        await t.enterText(
-          find.byKey(const ValueKey('delete-family-name')),
-          '  hUSER ',
-        );
+        await t.enterText(nameField, '  hUSER ');
         await t.pump();
-        expect(confirmButton(t).onPressed, isNotNull);
+        expect(onPressed(t, nextButton), isNotNull);
+        await unmountApp(t, s.container);
+      },
+    );
+
+    testWidgets(
+      'the second step says the deletion is permanent and wants LÖSCHEN in capitals',
+      (t) async {
+        final s = await pumpSettings(t, device: device());
+        await toWordStep(t);
+        expect(find.text('Endgültig löschen?'), findsOneWidget);
+        expect(
+          find.text(
+            'Die Familie und alle ihre Daten werden sofort und endgültig gelöscht. Niemand kann sie wiederherstellen, auch keine Elternperson. Willst du etwas behalten, exportiere die Daten vorher.',
+          ),
+          findsOneWidget,
+        );
+        expect(onPressed(t, confirmButton), isNull);
+
+        await t.enterText(wordField, 'löschen');
+        await t.pump();
+        expect(
+          onPressed(t, confirmButton),
+          isNull,
+          reason: 'the word counts in capitals only',
+        );
+
+        await t.enterText(wordField, ' LÖSCHEN ');
+        await t.pump();
+        expect(onPressed(t, confirmButton), isNotNull);
+        expect(
+          s.leave.deletes,
+          isEmpty,
+          reason: 'nothing is sent before the tap',
+        );
         await unmountApp(t, s.container);
       },
     );
@@ -260,15 +312,10 @@ void main() {
       'a confirmed delete sends the typed name, then signs this phone out',
       (t) async {
         final s = await pumpSettings(t, device: device());
-        await t.ensureVisible(deleteTile);
-        await t.tap(deleteTile);
-        await t.pumpAndSettle();
-        await t.enterText(
-          find.byKey(const ValueKey('delete-family-name')),
-          '  hUSER ',
-        );
+        await toWordStep(t);
+        await t.enterText(wordField, 'LÖSCHEN');
         await t.pump();
-        await t.tap(find.byKey(const ValueKey('delete-family-confirm')));
+        await t.tap(confirmButton);
         await t.pumpAndSettle();
 
         expect(s.leave.deletes, [
@@ -279,6 +326,17 @@ void main() {
       },
     );
 
+    testWidgets('cancelling the second step deletes nothing', (t) async {
+      final s = await pumpSettings(t, device: device());
+      await toWordStep(t);
+      await t.tap(find.text('Abbrechen'));
+      await t.pumpAndSettle();
+      expect(find.text('Endgültig löschen?'), findsNothing);
+      expect(s.leave.deletes, isEmpty);
+      expect(s.identity.signedOut, isFalse);
+      await unmountApp(t, s.container);
+    });
+
     testWidgets('a refused delete shows the failure and does not sign out', (
       t,
     ) async {
@@ -286,15 +344,10 @@ void main() {
       s.leave.deleteResult = const Err(
         ValidationFailure(code: 'confirm_name_mismatch'),
       );
-      await t.ensureVisible(deleteTile);
-      await t.tap(deleteTile);
-      await t.pumpAndSettle();
-      await t.enterText(
-        find.byKey(const ValueKey('delete-family-name')),
-        'Huser',
-      );
+      await toWordStep(t);
+      await t.enterText(wordField, 'LÖSCHEN');
       await t.pump();
-      await t.tap(find.byKey(const ValueKey('delete-family-confirm')));
+      await t.tap(confirmButton);
       await t.pumpAndSettle();
       expect(find.text('Der Name stimmt nicht.'), findsOneWidget);
       expect(s.identity.signedOut, isFalse);
@@ -319,6 +372,7 @@ void main() {
       final container = await pumpApp(
         t,
         overrides: baseOverrides(
+          settingsView: SettingsView.advanced,
           identity: identity,
           leave: leave,
           household: FakeHouseholdOnboardingRepository(
@@ -395,6 +449,7 @@ void main() {
         final container = await pumpApp(
           t,
           overrides: baseOverrides(
+            settingsView: SettingsView.advanced,
             identity: identity,
             household: FakeHouseholdOnboardingRepository(
               identity: identity,

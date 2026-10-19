@@ -1,6 +1,6 @@
 # Reminders
 
-You get reminders on **your own phone**, once you switch them on: under **Settings → Reminders**. They are created on the phone itself. **None of it is sent to a server or to third parties.** That is why they exist only on a family member's personal device, not on a kids' tablet or the wall display.
+You get reminders on **your own phone**, once you switch them on: under **Settings → Reminders**. They are created on the phone itself. **None of it is sent to a server or to third parties.** That is why they exist only on a family member's personal device, not on a kids' tablet or the wall display. On a device that cannot show reminders, the entry does not appear in the settings.
 
 <Shot name="reminders" alt="Settings → Reminders" />
 

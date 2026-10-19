@@ -41,6 +41,15 @@ on the parent's phone gives `kid` or `kiosk`.
   started. Rewards live under Tasks, school and subjects under Stundenplan. The member,
   family and device editing is [16, step 10.1–10.2](16-setup-plan.md#step-10--journey-gaps-before-launch-m15);
   assistants and the audit log are M2.
+  Settings and household settings open in a **Basic** view (*added 2026-10-19*): household
+  settings, usual week, reminders, appearance, getting started, members and devices, account
+  deletion on a personal phone (easy to find, App Store guideline 5.1.1(v)), and
+  of the household settings only region, streak jokers, reward approval, members editing
+  their own events, the warm meal, night hours, completion sound, morning summary and event
+  reminder. **Advanced** shows everything else: feed tokens, subscribed calendars,
+  apps and AI assistants (specs/12), the server, export, sign-in, security, leaving
+  and deleting the family, and every other household setting, including any a newer catalogue adds.
+  The choice is per device and purely visual: a hidden setting keeps its value and applies.
 
 **kid**
 - My day (my tasks + today's meal + my events + today's lessons)

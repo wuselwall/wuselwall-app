@@ -3741,18 +3741,36 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get leaveDeleteExplain =>
-      'All devices sign out at once. For 14 days a guardian can restore the family; after that all data is deleted for good.';
+      'The family and all its data are deleted immediately and permanently. All devices sign out. This cannot be undone.';
 
   @override
   String get leaveDeleteDialogTitle => 'Delete the family?';
 
   @override
   String get leaveDeleteDialogBody =>
-      'All devices sign out and nobody can reach the family any more. For 14 days a guardian can restore it. After that all data is gone.';
+      'All devices sign out, and the family is permanently deleted with all its data.';
 
   @override
   String leaveDeleteNameLabel(String name) {
     return 'Type ‘$name’ to confirm';
+  }
+
+  @override
+  String get leaveDeleteNext => 'Next';
+
+  @override
+  String get leaveDeleteWordTitle => 'Delete for good?';
+
+  @override
+  String get leaveDeleteWordBody =>
+      'The family and all its data are deleted immediately and permanently. Nobody can restore them, not even a guardian. Export the data first if you want to keep it.';
+
+  @override
+  String get leaveDeleteWord => 'DELETE';
+
+  @override
+  String leaveDeleteWordLabel(String word) {
+    return 'Type $word to delete the family for good';
   }
 
   @override
@@ -4140,15 +4158,15 @@ class AppLocalizationsEn extends AppLocalizations {
       'Open the WuselWall app on your phone, choose this server by scanning the code, then sign in there.';
 
   @override
-  String get shortcutTitle => 'Siri and Shortcuts';
+  String get shortcutTitle => 'Apps and AI assistants';
 
   @override
   String get shortcutSettingsSubtitle =>
-      'Shopping list, the day and more by voice';
+      'Siri, automations and AI assistants (MCP), each with a key';
 
   @override
   String get shortcutIntro =>
-      'A key connects a shortcut on the iPhone with WuselWall. With it, Siri puts things on the shopping list and tells you what is on today, what there is to eat or who has PE tomorrow. A key belongs to one person: it can read and add, but it cannot delete or manage anything. A key for an AI assistant (MCP) only reads.';
+      'A key lets another app use WuselWall as one person. An automation key, for example for a shortcut with Siri on the iPhone or any other app that can call a web address, reads and adds: it puts things on the shopping list and tells you what is on today, what there is to eat or who has PE tomorrow. It cannot delete or manage anything. A key for an AI assistant (MCP, such as Claude) only reads.';
 
   @override
   String get shortcutEmpty => 'No keys yet.';
@@ -4183,7 +4201,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String shortcutKeyOnce(String name) {
-    return 'This key is shown only now. Whoever has it can read and add as $name, so treat it like a password. The Shortcuts app syncs it through iCloud.';
+    return 'This key is shown only now. Whoever has it can read and add as $name, so treat it like a password. In Apple’s Shortcuts app it syncs through iCloud.';
   }
 
   @override
@@ -4203,7 +4221,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shortcutHowSteps =>
-      'In the Shortcuts app, create a shortcut with the action “Get Contents of URL”: the address with /today at the end, and a header “Authorization” with “Bearer ”, a space and the key. Then add “Show Result” or “Speak Text”. The guide at wuselwall.app/docs/en/settings/shortcuts shows every shortcut.';
+      'Any app sends the same request. With Apple Shortcuts, create a shortcut with the action “Get Contents of URL”: the address with /today at the end, and a header “Authorization” with “Bearer ”, a space and the key. Then add “Show Result” or “Speak Text”. The guide at wuselwall.app/docs/en/settings/shortcuts shows every shortcut.';
 
   @override
   String shortcutLastUsed(String when) {
@@ -4244,17 +4262,20 @@ class AppLocalizationsEn extends AppLocalizations {
       'This person already has ten keys. Please revoke one first.';
 
   @override
+  String get shortcutSectionAutomations => 'Automations';
+
+  @override
   String get shortcutSectionAssistants => 'AI assistants';
 
   @override
-  String get shortcutKindShortcut => 'Siri';
+  String get shortcutKindShortcut => 'Automation';
 
   @override
-  String get shortcutKindAssistant => 'Assistant';
+  String get shortcutKindAssistant => 'AI assistant';
 
   @override
   String get shortcutKindShortcutHelp =>
-      'For a shortcut on the iPhone: it reads and adds, for example to the shopping list.';
+      'For Siri and Apple Shortcuts, or any app that can call a web address: it reads and adds, for example to the shopping list.';
 
   @override
   String get shortcutKindAssistantHelp =>
@@ -4308,4 +4329,20 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get appearanceNightNote =>
       'At night the wall display always shows its night view.';
+
+  @override
+  String get settingsViewLabel => 'Which settings to show';
+
+  @override
+  String get settingsViewBasic => 'Basic';
+
+  @override
+  String get settingsViewAdvanced => 'Advanced';
+
+  @override
+  String get settingsViewMoreHint =>
+      'More settings are under Advanced. Hidden settings still apply.';
+
+  @override
+  String get settingsViewShowAll => 'Show all settings';
 }

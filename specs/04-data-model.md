@@ -17,7 +17,7 @@ only where undo matters (events, shopping items) — everywhere else, delete for
 household
   id, name, timezone, locale,                    -- timezone/locale from the founder's device
   created_by_profile_id, created_at,
-  deleted_at NULL,                               -- J6: purged 14 days later
+  deleted_at NULL,                               -- J6: purged 14 days later (account deletion; Familie löschen deletes at once)
   -- the household's region is the setting household.region (21), not a column: an OpenHolidays
   -- subdivision code of any depth, e.g. 'DE-BE' or 'CH-ZH-ZH-ZH'; asked with the first school.
   -- Added 2026-10-14.
@@ -490,7 +490,7 @@ Tables in the `app` schema, RLS enabled and forced, never exposed; written only 
 - `app.founder_attempt`: the guess log of founder codes.
 - `app.pairing_request`, `app.pairing_attempt`: a device's request to be connected (a secret, a code, the approving guardian, an expiry), and its attempt log.
 - `app.invitation`, `app.invitation_attempt`: an invitation (a token and a code, the role, an optional confirmed email, an expiry, single use) and its attempt log.
-- `app.household.created_by_profile_id` and `app.household.deleted_at`: who started the family, and when a deleted family becomes purgeable (14 days).
+- `app.household.created_by_profile_id` and `app.household.deleted_at`: who started the family, and when a deleted family becomes purgeable (14 days). Since 2026-10-19 "Familie löschen" removes the row at once; `deleted_at` is set only by the account deletion of a family's last person (and was set by deletions before).
 
 
 ## Relationship overview

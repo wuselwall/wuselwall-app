@@ -18,8 +18,9 @@ import 'package:wuselwall/features/identity/ui/guardian_gate.dart';
 import 'package:wuselwall/features/shortcuts/application/shortcut_providers.dart';
 import 'package:wuselwall/features/shortcuts/data/shortcut_repository.dart';
 
-/// Siri and Shortcuts (specs/12 "Part 1") and assistants over MCP ("Part 2"): one key per
-/// person and device. A shortcut key reads and adds as that person; an assistant key, for
+/// Apps and AI assistants: Siri, Shortcuts or any app that calls a web address
+/// (specs/12 "Part 1") and assistants over MCP ("Part 2"), one key per person and device.
+/// A shortcut key reads and adds as that person; an assistant key, for
 /// adults only, reads. A guardian sees and manages every key; everyone else sees and
 /// manages their own. Never on the kitchen wall: a key is shown once, to the person who
 /// pastes it into a shortcut or an assistant.
@@ -65,9 +66,22 @@ class ShortcutsPage extends ConsumerWidget {
                 ? () => _revoke(context, ref, t)
                 : null,
           );
+          final automations = visible
+              .where((t) => t.kind == KeyKind.shortcut)
+              .toList();
           final assistants = visible
               .where((t) => t.kind == KeyKind.assistant)
               .toList();
+          Widget header(String title) => Padding(
+            padding: const EdgeInsets.only(
+              top: Tokens.space4,
+              bottom: Tokens.space2,
+            ),
+            child: Semantics(
+              header: true,
+              child: Text(title, style: Theme.of(context).textTheme.titleSmall),
+            ),
+          );
           return ListView(
             padding: const EdgeInsets.fromLTRB(
               Tokens.space4,
@@ -80,15 +94,12 @@ class ShortcutsPage extends ConsumerWidget {
               const SizedBox(height: Tokens.space4),
               if (kiosk) Text(l10n.shortcutKioskNote),
               if (visible.isEmpty && !kiosk) Text(l10n.shortcutEmpty),
-              for (final t in visible)
-                if (t.kind == KeyKind.shortcut) tile(t),
+              if (automations.isNotEmpty) ...[
+                header(l10n.shortcutSectionAutomations),
+                for (final t in automations) tile(t),
+              ],
               if (assistants.isNotEmpty) ...[
-                const SizedBox(height: Tokens.space4),
-                Text(
-                  l10n.shortcutSectionAssistants,
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-                const SizedBox(height: Tokens.space2),
+                header(l10n.shortcutSectionAssistants),
                 for (final t in assistants) tile(t),
               ],
             ],
@@ -224,7 +235,7 @@ class _KeyTile extends StatelessWidget {
                 ? Icons.key_off
                 : token.kind == KeyKind.assistant
                 ? Icons.smart_toy_outlined
-                : Icons.key,
+                : Icons.bolt_outlined,
           ),
           title: Text(token.label),
           // "Thomas · 34 Abfragen", then when it was last used.
@@ -317,7 +328,7 @@ class _NewKeyDialogState extends State<_NewKeyDialog> {
               segments: [
                 ButtonSegment(
                   value: KeyKind.shortcut,
-                  icon: const Icon(Icons.key),
+                  icon: const Icon(Icons.bolt_outlined),
                   label: Text(l10n.shortcutKindShortcut),
                 ),
                 ButtonSegment(

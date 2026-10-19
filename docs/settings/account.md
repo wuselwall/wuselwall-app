@@ -1,10 +1,10 @@
 # Konto und Familie
 
-Diese Schritte betreffen **dein Konto** oder die **ganze Familie**. Sie stehen unten in den Einstellungen deines **persönlichen Handys**, nur dort. Vorher solltest du wissen, was geschieht: Die Schritte lassen sich nicht rückgängig machen, außer beim Löschen der Familie.
+Diese Schritte betreffen **dein Konto** oder die **ganze Familie**. Sie stehen unten in den Einstellungen deines **persönlichen Handys**, nur dort. **Konto löschen** steht immer da, die anderen Schritte in der Ansicht **Erweitert**. Vorher solltest du wissen, was geschieht: Keiner der Schritte lässt sich rückgängig machen.
 
 ## Passwort
 
-Unter **Einstellungen → Anmeldung → Passwort** legst du ein Passwort fest oder änderst es. Mindestens 10 Zeichen; besser ein ganzer Satz. Den Code per E-Mail kannst du trotzdem weiter benutzen.
+Unter **Einstellungen → Erweitert → Anmeldung → Passwort** legst du ein Passwort fest oder änderst es. Mindestens 10 Zeichen; besser ein ganzer Satz. Den Code per E-Mail kannst du trotzdem weiter benutzen.
 
 ## Familie verlassen
 
@@ -18,12 +18,10 @@ Das geht nicht, wenn du die **letzte Elternperson mit Konto** bist. Lade dann zu
 
 ## Familie löschen
 
-Eine Familie löscht nur eine Elternperson, und zwar auf dem eigenen Handy. Tippe auf **Familie löschen**, tippe den **Namen der Familie** zum Bestätigen und dann auf **Familie löschen**.
+Eine Familie löscht nur eine Elternperson, und zwar auf dem eigenen Handy. Tippe auf **Familie löschen**, tippe den **Namen der Familie** und dann auf **Weiter**. Im zweiten Schritt tippst du **LÖSCHEN** (in Großbuchstaben) und dann auf **Familie löschen**.
 
-- Alle Geräte melden sich sofort ab. Niemand kommt mehr hinein.
-- **14 Tage lang** kann eine Elternperson die Familie **wiederherstellen**. Melde dich dazu auf dem eigenen Handy an und tippe auf **Wiederherstellen**. Alle Daten sind noch da.
-- Danach werden alle Daten **endgültig gelöscht**.
-- Meldest du dich in dieser Zeit neu an, bietet WuselWall dir **Wiederherstellen** (nur Erziehungsberechtigte) oder **Neu anfangen** an. Neu anfangen heißt: Dein Konto verlässt die gelöschte Familie, und du gründest eine neue oder tritt einer anderen bei.
+- Die Familie wird mit **allen Daten sofort und endgültig gelöscht**. Es gibt keine Wartezeit und kein Wiederherstellen, auch nicht für Elternpersonen.
+- Alle Geräte melden sich sofort ab. Die Konten der Erwachsenen bleiben bestehen: Wer sich wieder anmeldet, kann eine neue Familie gründen oder einer anderen beitreten.
 
 ## Konto löschen
 

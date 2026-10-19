@@ -24,20 +24,19 @@ class HouseholdLeaveRepository {
     return _refresh();
   }
 
-  /// Deletes the family: every device signs out, and the family is kept for 14 days.
-  /// Returns when it is purged for good. The caller signs out locally afterwards.
-  Future<Result<DateTime>> deleteFamily({
+  /// Deletes the family at once and for good: every device signs out, and all its data is
+  /// removed. The caller signs out locally afterwards.
+  Future<Result<void>> deleteFamily({
     required String profileId,
     required String confirmName,
   }) => _api.rpc(
     'household_delete',
     params: {'p_actor': profileId, 'p_confirm_name': confirmName},
-    parse: (json) => DateTime.parse(
-      (json! as Map<String, dynamic>)['purge_after'] as String,
-    ),
+    parse: (_) {},
   );
 
-  /// Brings a deleted family back, with this phone as its personal device.
+  /// Brings back a family deleted before deletion was immediate (it kept 14 days), with this
+  /// phone as its personal device.
   Future<Result<void>> restoreFamily() async {
     final restored = await _api.rpc<void>('household_restore', parse: (_) {});
     if (restored is Err<void>) return restored;

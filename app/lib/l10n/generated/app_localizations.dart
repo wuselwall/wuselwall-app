@@ -6527,7 +6527,7 @@ abstract class AppLocalizations {
   /// No description provided for @leaveDeleteExplain.
   ///
   /// In en, this message translates to:
-  /// **'All devices sign out at once. For 14 days a guardian can restore the family; after that all data is deleted for good.'**
+  /// **'The family and all its data are deleted immediately and permanently. All devices sign out. This cannot be undone.'**
   String get leaveDeleteExplain;
 
   /// No description provided for @leaveDeleteDialogTitle.
@@ -6539,7 +6539,7 @@ abstract class AppLocalizations {
   /// No description provided for @leaveDeleteDialogBody.
   ///
   /// In en, this message translates to:
-  /// **'All devices sign out and nobody can reach the family any more. For 14 days a guardian can restore it. After that all data is gone.'**
+  /// **'All devices sign out, and the family is permanently deleted with all its data.'**
   String get leaveDeleteDialogBody;
 
   /// No description provided for @leaveDeleteNameLabel.
@@ -6547,6 +6547,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Type ‘{name}’ to confirm'**
   String leaveDeleteNameLabel(String name);
+
+  /// No description provided for @leaveDeleteNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get leaveDeleteNext;
+
+  /// No description provided for @leaveDeleteWordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete for good?'**
+  String get leaveDeleteWordTitle;
+
+  /// No description provided for @leaveDeleteWordBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The family and all its data are deleted immediately and permanently. Nobody can restore them, not even a guardian. Export the data first if you want to keep it.'**
+  String get leaveDeleteWordBody;
+
+  /// The word the guardian types in capitals to delete the family for good.
+  ///
+  /// In en, this message translates to:
+  /// **'DELETE'**
+  String get leaveDeleteWord;
+
+  /// No description provided for @leaveDeleteWordLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Type {word} to delete the family for good'**
+  String leaveDeleteWordLabel(String word);
 
   /// No description provided for @leaveDeleteConfirm.
   ///
@@ -7192,19 +7222,19 @@ abstract class AppLocalizations {
   /// No description provided for @shortcutTitle.
   ///
   /// In en, this message translates to:
-  /// **'Siri and Shortcuts'**
+  /// **'Apps and AI assistants'**
   String get shortcutTitle;
 
   /// No description provided for @shortcutSettingsSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Shopping list, the day and more by voice'**
+  /// **'Siri, automations and AI assistants (MCP), each with a key'**
   String get shortcutSettingsSubtitle;
 
   /// No description provided for @shortcutIntro.
   ///
   /// In en, this message translates to:
-  /// **'A key connects a shortcut on the iPhone with WuselWall. With it, Siri puts things on the shopping list and tells you what is on today, what there is to eat or who has PE tomorrow. A key belongs to one person: it can read and add, but it cannot delete or manage anything. A key for an AI assistant (MCP) only reads.'**
+  /// **'A key lets another app use WuselWall as one person. An automation key, for example for a shortcut with Siri on the iPhone or any other app that can call a web address, reads and adds: it puts things on the shopping list and tells you what is on today, what there is to eat or who has PE tomorrow. It cannot delete or manage anything. A key for an AI assistant (MCP, such as Claude) only reads.'**
   String get shortcutIntro;
 
   /// No description provided for @shortcutEmpty.
@@ -7264,7 +7294,7 @@ abstract class AppLocalizations {
   /// No description provided for @shortcutKeyOnce.
   ///
   /// In en, this message translates to:
-  /// **'This key is shown only now. Whoever has it can read and add as {name}, so treat it like a password. The Shortcuts app syncs it through iCloud.'**
+  /// **'This key is shown only now. Whoever has it can read and add as {name}, so treat it like a password. In Apple’s Shortcuts app it syncs through iCloud.'**
   String shortcutKeyOnce(String name);
 
   /// No description provided for @shortcutCopyKey.
@@ -7300,7 +7330,7 @@ abstract class AppLocalizations {
   /// No description provided for @shortcutHowSteps.
   ///
   /// In en, this message translates to:
-  /// **'In the Shortcuts app, create a shortcut with the action “Get Contents of URL”: the address with /today at the end, and a header “Authorization” with “Bearer ”, a space and the key. Then add “Show Result” or “Speak Text”. The guide at wuselwall.app/docs/en/settings/shortcuts shows every shortcut.'**
+  /// **'Any app sends the same request. With Apple Shortcuts, create a shortcut with the action “Get Contents of URL”: the address with /today at the end, and a header “Authorization” with “Bearer ”, a space and the key. Then add “Show Result” or “Speak Text”. The guide at wuselwall.app/docs/en/settings/shortcuts shows every shortcut.'**
   String get shortcutHowSteps;
 
   /// No description provided for @shortcutLastUsed.
@@ -7351,6 +7381,12 @@ abstract class AppLocalizations {
   /// **'This person already has ten keys. Please revoke one first.'**
   String get shortcutErrLimit;
 
+  /// No description provided for @shortcutSectionAutomations.
+  ///
+  /// In en, this message translates to:
+  /// **'Automations'**
+  String get shortcutSectionAutomations;
+
   /// No description provided for @shortcutSectionAssistants.
   ///
   /// In en, this message translates to:
@@ -7360,19 +7396,19 @@ abstract class AppLocalizations {
   /// No description provided for @shortcutKindShortcut.
   ///
   /// In en, this message translates to:
-  /// **'Siri'**
+  /// **'Automation'**
   String get shortcutKindShortcut;
 
   /// No description provided for @shortcutKindAssistant.
   ///
   /// In en, this message translates to:
-  /// **'Assistant'**
+  /// **'AI assistant'**
   String get shortcutKindAssistant;
 
   /// No description provided for @shortcutKindShortcutHelp.
   ///
   /// In en, this message translates to:
-  /// **'For a shortcut on the iPhone: it reads and adds, for example to the shopping list.'**
+  /// **'For Siri and Apple Shortcuts, or any app that can call a web address: it reads and adds, for example to the shopping list.'**
   String get shortcutKindShortcutHelp;
 
   /// No description provided for @shortcutKindAssistantHelp.
@@ -7464,6 +7500,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'At night the wall display always shows its night view.'**
   String get appearanceNightNote;
+
+  /// No description provided for @settingsViewLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Which settings to show'**
+  String get settingsViewLabel;
+
+  /// No description provided for @settingsViewBasic.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic'**
+  String get settingsViewBasic;
+
+  /// No description provided for @settingsViewAdvanced.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get settingsViewAdvanced;
+
+  /// No description provided for @settingsViewMoreHint.
+  ///
+  /// In en, this message translates to:
+  /// **'More settings are under Advanced. Hidden settings still apply.'**
+  String get settingsViewMoreHint;
+
+  /// No description provided for @settingsViewShowAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Show all settings'**
+  String get settingsViewShowAll;
 }
 
 class _AppLocalizationsDelegate

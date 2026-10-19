@@ -15,7 +15,7 @@ Two separate things, on different timelines:
 ## Part 1 — Siri today, via Shortcuts
 
 > **Built 2026-10-16 on `feature/shortcuts`, not yet on the server:** the `shortcuts` Edge
-> Function, `app.shortcut_token` with Settings → Siri und Kurzbefehle, and every shortcut below
+> Function, `app.shortcut_token` with Settings → Erweitert → Apps und KI-Assistenten (named "Siri und Kurzbefehle" until 2026-10-19), and every shortcut below
 > except "Wann ist …" for a member's baseline (only presence entries are read). The contract is
 > under [The endpoint as built](#the-endpoint-as-built); the family's guide is
 > `docs/settings/shortcuts.md`.
@@ -96,7 +96,7 @@ what the sentence then explains.
 > revision), written by hand without the SDK: a stateless JSON-only server is small. All nine
 > read tools below and the four resources. **Authorisation is the interim of
 > [Q15](14-open-questions.md):** a per-person *assistant key* (`wwa_…`, adults only, issued
-> in Settings → Siri und Kurzbefehle) as a bearer token instead of OAuth 2.1. Supabase Auth's
+> in Settings → Erweitert → Apps und KI-Assistenten) as a bearer token instead of OAuth 2.1. Supabase Auth's
 > OAuth 2.1 server is in public beta and runs self-hosted, but needs a login and consent screen
 > on every family's server and a hook change for OAuth sessions; it comes with phase 3 and the
 > write scopes. The key's actor has origin `mcp` and device class `assistant`, and

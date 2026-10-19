@@ -5,6 +5,7 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/demo/demo_repositories.dart';
 import 'package:wuselwall/features/settings/application/household_settings_providers.dart';
+import 'package:wuselwall/features/settings/application/settings_view.dart';
 import 'package:wuselwall/features/settings/data/household_settings_repository.dart';
 import 'package:wuselwall/features/settings/domain/household_setting.dart';
 
@@ -307,7 +308,10 @@ void main() {
         tester,
         locale: locale,
         overrides: [
-          ...baseOverrides(identity: FakeIdentityRepository(current: device())),
+          ...baseOverrides(
+            identity: FakeIdentityRepository(current: device()),
+            settingsView: SettingsView.advanced,
+          ),
           householdSettingsRepositoryProvider.overrideWithValue(repo),
         ],
       );

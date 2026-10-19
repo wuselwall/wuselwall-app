@@ -7,6 +7,7 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/features/household/domain/household_models.dart';
 import 'package:wuselwall/features/identity/application/sign_in_choice.dart';
 import 'package:wuselwall/features/identity/domain/email_code.dart';
+import 'package:wuselwall/features/settings/application/settings_view.dart';
 
 import '../support/fakes.dart';
 
@@ -307,6 +308,7 @@ void main() {
       await pumpApp(
         t,
         overrides: baseOverrides(
+          settingsView: SettingsView.advanced,
           identity: identity,
           shopping: FakeShoppingRepository([]),
         ),
