@@ -272,7 +272,8 @@ regular days would be loud bands every week. So the baseline is set per weekday
    times is the whole day and is then the day's only one; slots do not overlap.
 3. **Alternating weeks A and B**, anchored on the Monday of a week A
    (`profile.usual_week_anchor`). Not calendar-week parity: a year with a week 53 would
-   put two odd weeks in a row and slip the rota.
+   put two odd weeks in a row and slip the rota. Switching alternating off clears the
+   anchor but keeps week B, unused, so switching it on again brings it back.
 
 The board-week function resolves it per day (`_shared/usual_week.ts`). A public holiday
 has no usual place, and a presence entry on a day replaces the whole usual day, as

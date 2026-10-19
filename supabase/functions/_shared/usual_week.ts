@@ -37,8 +37,9 @@ export function isoWeekday(date: string): number {
 }
 
 /**
- * 0 for week A (or every week without an anchor), 1 for week B. Weeks alternate from the
- * anchor in both directions, whatever the calendar week numbers do around a week 53.
+ * 0 for week A (or every week without an anchor, when a kept week B is unused), 1 for
+ * week B. Weeks alternate from the anchor in both directions, whatever the calendar week
+ * numbers do around a week 53.
  */
 export function abWeekOf(anchor: string | null, date: string): 0 | 1 {
   if (anchor === null) return 0;
