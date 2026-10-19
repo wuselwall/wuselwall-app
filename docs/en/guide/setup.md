@@ -74,7 +74,7 @@ This is how the **wall display** in the kitchen, a **kids' tablet** or a **share
 
 1. On the new device, tap **Connect a family tablet or wall display**. It shows a **QR code** and a code.
 2. On your phone, open **Settings → Devices → Connect a device**. You can also start from the **Getting started** card on the Today tab.
-3. Scan the QR code or type in the code, and tap **Next**.
+3. Scan the QR code or type in the code, and tap **Next**. As you type, letters automatically appear in uppercase and the dash is inserted. You can enter the code in lowercase without the dash.
 4. Choose the kind of device: **Wall display**, **Kids' tablet**, **Shared tablet** or **A child's phone**. For a child's phone you pick the child. Give the device a name and tap **Connect**.
 5. The first time, you set the **guardian PIN**. It confirms changes on shared devices (see [Who are you?](/en/guide/who-are-you)).
 

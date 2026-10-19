@@ -20,6 +20,7 @@ import 'package:wuselwall/features/identity/data/pairing_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/identity/domain/pairing.dart';
 import 'package:wuselwall/features/identity/ui/guardian_gate.dart';
+import 'package:wuselwall/features/identity/ui/pairing_code_input_formatter.dart';
 import 'package:wuselwall/features/identity/ui/pin_keypad.dart';
 import 'package:wuselwall/features/setup/ui/qr_scan_page.dart';
 
@@ -221,6 +222,7 @@ class _DevicePairPageState extends ConsumerState<DevicePairPage> {
     TextField(
       controller: _typed,
       textCapitalization: TextCapitalization.characters,
+      inputFormatters: [PairingCodeInputFormatter()],
       autocorrect: false,
       style: Theme.of(context).textTheme.headlineSmall,
       decoration: InputDecoration(labelText: l10n.pairCodeField),
