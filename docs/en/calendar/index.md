@@ -6,6 +6,10 @@ The calendar is the adults' home screen: everyone's appointments and, at a glanc
 
 ## Views
 
+The title, date navigation, view selector and settings share one compact bar. On phones, open **Calendar view** to choose **Day**, **3 days** or **Week**; the calendar icon returns to **Today**.
+
+<Shot name="calendar-phone" alt="Calendar on a phone with date navigation and the view menu in one bar" />
+
 At the top you choose **Day**, **3 days** or **Week**. Move with **Previous**, **Next** and **Today**. Two rows stay visible at the top:
 
 - **Presence**: one row per person. It shows who is at work, working from home, travelling, away, off or in childcare.

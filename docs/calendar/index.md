@@ -6,6 +6,10 @@ Der Kalender ist die Startseite der Erwachsenen: alle Termine der Familie und, w
 
 ## Ansichten
 
+Titel, Datumsnavigation, Ansichtswahl und Einstellungen teilen sich eine kompakte Leiste. Auf dem Handy wählst du unter **Kalenderansicht** zwischen **Tag**, **3 Tage** und **Woche**; das Kalendersymbol führt zu **Heute**.
+
+<Shot name="calendar-phone" alt="Kalender auf dem Handy mit Datumsnavigation und Ansichtsmenü in einer Leiste" />
+
 Oben wählst du **Tag**, **3 Tage** oder **Woche**. Mit **Zurück**, **Weiter** und **Heute** blätterst du. Ganz oben bleiben zwei Zeilen immer sichtbar:
 
 - **Anwesenheit**: eine Zeile pro Person. Dort steht, wer arbeitet, im Homeoffice ist, unterwegs ist, weg ist, frei hat oder betreut wird.

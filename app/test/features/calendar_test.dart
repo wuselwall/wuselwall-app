@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
+import 'package:wuselwall/features/calendar/application/calendar_providers.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 import 'package:wuselwall/features/calendar/ui/calendar_layout.dart';
 import 'package:wuselwall/features/calendar/ui/event_editor_page.dart';
@@ -308,6 +310,95 @@ void main() {
   });
 
   group('calendar in the app', () {
+    for (final language in ['de', 'en']) {
+      for (final width in [390.0, 1348.0]) {
+        testWidgets('calendar header uses one bar at $width in $language', (
+          t,
+        ) async {
+          final l10n = lookupAppLocalizations(Locale(language));
+          final container = await pumpApp(
+            t,
+            locale: Locale(language),
+            size: Size(width, 844),
+            overrides: baseOverrides(
+              identity: FakeIdentityRepository(current: device()),
+            ),
+          );
+          await openTab(t, l10n.calendarTitle);
+          final appBar = find.byType(AppBar);
+          expect(t.widget<AppBar>(appBar).bottom, isNull);
+          expect(
+            t.getSize(appBar).height,
+            Theme.of(t.element(appBar)).appBarTheme.toolbarHeight,
+          );
+          final previous = find.byTooltip(l10n.calendarPrevious);
+          final next = find.byTooltip(l10n.calendarNext);
+          final settings = find.byTooltip(l10n.settingsTitle);
+          expect(
+            t.getCenter(previous).dy,
+            closeTo(t.getCenter(settings).dy, 1),
+          );
+          expect(t.getCenter(next).dy, closeTo(t.getCenter(settings).dy, 1));
+          if (width < 900) {
+            final picker = find.byTooltip(l10n.calendarChooseView);
+            expect(
+              t.getCenter(picker).dy,
+              closeTo(t.getCenter(settings).dy, 1),
+            );
+            await t.tap(picker);
+            await t.pumpAndSettle();
+          } else {
+            expect(
+              t.getCenter(find.byType(SegmentedButton<CalendarMode>)).dy,
+              closeTo(t.getCenter(settings).dy, 1),
+            );
+          }
+          final threeDays = find.text(l10n.calendarThreeDays);
+          await t.tap(
+            width < 900
+                ? find.ancestor(
+                    of: threeDays,
+                    matching: find.byType(CheckedPopupMenuItem<CalendarMode>),
+                  )
+                : threeDays,
+          );
+          await t.pumpAndSettle();
+          final initial = container.read(calendarViewProvider);
+          expect(initial.mode, CalendarMode.threeDays);
+          await t.tap(next);
+          await t.pumpAndSettle();
+          expect(
+            container.read(calendarViewProvider).anchor,
+            initial.anchor.add(const Duration(days: 3)),
+          );
+          await t.tap(previous);
+          await t.pumpAndSettle();
+          expect(container.read(calendarViewProvider).anchor, initial.anchor);
+          if (width < 900) {
+            await t.tap(
+              find.descendant(
+                of: appBar,
+                matching: find.byTooltip(l10n.calendarToday),
+              ),
+            );
+          } else {
+            await t.tap(
+              find.descendant(
+                of: appBar,
+                matching: find.text(l10n.calendarToday),
+              ),
+            );
+          }
+          await t.pumpAndSettle();
+          expect(
+            container.read(calendarViewProvider).anchor,
+            dateOnly(DateTime.now()),
+          );
+          expect(t.takeException(), isNull);
+        });
+      }
+    }
+
     testWidgets(
       'the week view shows a timed event, an all-day chip and a presence band',
       (t) async {

@@ -14,11 +14,17 @@ Beim ersten Mal tippst du auf **Schule einrichten**. Dazu gehören:
 - die **Fächer** mit Kürzel und Farbe. Pro Fach könnt ihr **Sachen zum Mitnehmen** eintragen, zum Beispiel Sportsachen, und festlegen, ob das Fach auf der Wand erscheinen soll. Die Fächer sind ein Vorschlag, der zu eurem Land passt: ihr benennt sie um oder löscht sie
 - die **Ferien und freie Tage**
 
+**Speichern** erscheint oben rechts, sobald ihr den Schulnamen, die Region oder die Klingelzeiten geändert habt. Damit speichert ihr alle geänderten Abschnitte gemeinsam.
+
+Die Klingelzeiten laufen von früh nach spät: Die erste Stunde heißt **1. Stunde**, die Pausen stehen zwischen den Stunden.
+
 ## Feiertage und Ferien
 
 Die **Region** entscheidet, welche Feiertage und Schulferien für eine Schule gelten. Ihr wählt sie in Schritten: zuerst das **Land** (Deutschland, Österreich, Schweiz oder Liechtenstein), dann der **Kanton** oder das **Bundesland** und auf Wunsch der **Bezirk** oder die **Gemeinde**.
 
 <Shot name="region-picker" alt="Die Regionsauswahl: zuerst das Land, dann Kanton oder Bundesland" />
+
+Kantone und Bundesländer sind alphabetisch von Z bis A in der Sprache der App sortiert. Schweizer Kantone zeigen ihr Kürzel, zum Beispiel **Kanton Aargau (AG)**. Ihr könnt nach Name oder Kürzel suchen.
 
 Tippt ihr auf **Ohne Region weiter**, bleibt die Region leer. Dann gibt es keine automatischen Feiertage, und Ferien tragt ihr von Hand ein. Die Region des Haushalts legt ihr auch unter [Haushalt einstellen](/settings/household) fest.
 

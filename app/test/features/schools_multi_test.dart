@@ -54,12 +54,18 @@ void main() {
       await t.tap(find.text(de.schoolsUiAddSchool));
       await t.pumpAndSettle();
       await t.enterText(find.byType(TextField).first, 'Gymnasium Lindenhof');
+      await t.pumpAndSettle();
       await t.tap(find.text(de.save).first);
       await t.pumpAndSettle();
 
       final saved = school.schoolSaves.single;
       expect(saved.id, isNull);
       expect(saved.name, 'Gymnasium Lindenhof');
+      expect(
+        t.widget<TextField>(find.byType(TextField).first).controller!.text,
+        'Gymnasium Lindenhof',
+      );
+      expect(find.text(de.save), findsNothing);
       expect(
         saved.timezone,
         isNull,

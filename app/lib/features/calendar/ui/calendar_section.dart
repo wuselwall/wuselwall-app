@@ -10,7 +10,23 @@ final calendarSection = HomeSection(
   icon: Icons.calendar_month,
   label: (l10n) => l10n.calendarTitle,
   body: const CalendarPage(),
-  bottom: const CalendarToolbar(),
+  appBar: (context, actions) {
+    final wide = homeBarIsWide(context);
+    return AppBar(
+      centerTitle: false,
+      titleSpacing: 12,
+      title: Row(
+        children: [
+          if (wide) ...[
+            Text(context.l10n.calendarTitle),
+            const SizedBox(width: 24),
+          ],
+          Expanded(child: CalendarToolbar(compact: !wide)),
+        ],
+      ),
+      actions: actions,
+    );
+  },
   fab: (context) => FloatingActionButton.extended(
     onPressed: () => context.push(Routes.eventNew),
     icon: const Icon(Icons.add),
