@@ -32,7 +32,7 @@ Das dauert beim ersten Mal ein paar Minuten, weil Docker einige Gigabyte an Imag
 - erzeugt alle Schlüssel und Passwörter (`stack/.env`),
 - startet den Stack, mit **Caddy**, der für beide Adressen Zertifikate von Let's Encrypt holt,
 - richtet die Datenbank ein und plant die nächtlichen Aufträge,
-- und zeigt zum Schluss die Adresse des Servers und ein **Einrichtungs-Token**.
+- und zeigt zum Schluss die Adresse des Servers sowie einen **Einrichtungslink mit QR-Code**, der den einmaligen Einrichtungscode enthält.
 
 Mehr ist auf dem Server nicht nötig: kein Cronjob für WuselWall, kein Node.js, kein eigener Webserver.
 
@@ -52,9 +52,18 @@ scp dist/wuselwall-server-0.1.0.tar.gz server:     # dann auf dem Server: tar xz
 
 ## 2. Die App verbinden
 
-Öffne WuselWall auf dem Handy und gib bei **Mit welchem Server?** `api.example.org` ein. Bequemer geht es mit dem QR-Code: Öffne `https://web.example.org` am Laptop, klappe **Auf dem Handy weitermachen** auf und scanne den Code. Dann **Neue Familie anlegen** mit dem Einrichtungs-Token ([Neue Familie anlegen](/guide/setup#_3-neue-familie-anlegen-nur-einmal)).
+Öffne den Einrichtungslink aus der Installation im Browser oder scanne den zugehörigen
+QR-Code. Er enthält den Server und den Einrichtungscode. WuselWall merkt sich den
+Code während der E-Mail-Anmeldung, damit du ihn unter **Neue Familie** nicht noch
+einmal eingeben musst ([Neue Familie anlegen](/guide/setup#_2-neue-familie-anlegen)).
 
-Ein neues Token gibt `./wuselwall setup-token`, solange noch keine Familie angelegt ist.
+Du kannst den Server weiterhin von Hand unter **Mit welchem Server?** als
+`api.example.org` eintragen. Ein QR-Code, der nur die Serveradresse enthält — etwa
+aus einer älteren Installation — überträgt aber keinen Einrichtungscode. In diesem
+Fall gibst du den Code aus der Installation einmal unter **Neue Familie** ein.
+
+Einen neuen Einrichtungscode gibt `./wuselwall setup-token`, solange noch keine
+Familie angelegt ist. Veröffentliche den Code und den Einrichtungslink nicht.
 
 ## 3. Backups
 

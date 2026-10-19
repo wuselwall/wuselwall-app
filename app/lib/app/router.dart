@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wuselwall/app/server_session.dart';
 import 'package:wuselwall/features/calendar/domain/external_calendar.dart';
 import 'package:wuselwall/features/calendar/ui/event_edit_args.dart';
 import 'package:wuselwall/features/calendar/ui/event_editor_page.dart';
@@ -96,6 +97,10 @@ abstract final class Routes {
 final routerProvider = Provider<GoRouter>((ref) {
   // Re-evaluate redirects whenever the device (or its loading state) changes.
   final refresh = ValueNotifier<int>(0);
+  final setup = ref.read(serverSessionProvider).setupPending;
+  void refreshSetup() => refresh.value++;
+  setup.addListener(refreshSetup);
+  ref.onDispose(() => setup.removeListener(refreshSetup));
   ref
     ..listen(sessionStateProvider, (_, _) => refresh.value++)
     ..listen(pendingFirstRunProvider, (_, _) => refresh.value++)
@@ -104,10 +109,16 @@ final routerProvider = Provider<GoRouter>((ref) {
 
   return GoRouter(
     initialLocation: Routes.splash,
+    overridePlatformDefaultLocation: setup.value,
     refreshListenable: refresh,
     redirect: (context, state) {
       final path = state.matchedLocation;
       final session = ref.read(sessionStateProvider);
+      if (session.value is SignedOut &&
+          setup.value &&
+          (path == Routes.setup || path == Routes.splash)) {
+        return Routes.signIn;
+      }
 
       // First evaluation: wait, but never flash the setup screen.
       if (!session.hasValue && !session.hasError) {

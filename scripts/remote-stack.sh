@@ -54,12 +54,14 @@ case "${1:-}" in
     rsync -rlt --delete --chmod=D755,F644 \
       --exclude .env --exclude make-env.mjs \
       --exclude volumes/db/data/ --exclude volumes/storage/ --exclude volumes/snippets/ \
-      --exclude volumes/functions/ --exclude volumes/web/ \
+      --exclude volumes/functions/ --exclude volumes/web/ --exclude volumes/mail-templates/ \
       infra/supabase/ "$HOST:$DIR/"
     # Upstream's router (main/) next to our functions, one directory each.
     rsync -rlt --delete --chmod=D755,F644 \
       infra/supabase/volumes/functions/ $( [ -d supabase/functions ] && echo supabase/functions/ ) \
       "$HOST:$DIR/volumes/functions/"
+    # SMTP fallback: raw Go templates served only on the Compose network.
+    rsync -rlt --delete --chmod=D755,F644 supabase/templates/ "$HOST:$DIR/volumes/mail-templates/"
     # Before Auth restarts: the old social sign-in values leave the .env (specs/10).
     ssh "$HOST" "cd '$DIR' && sh retire-social-sign-in.sh .env"
     ssh "$HOST" "cd '$DIR' && docker compose up -d --remove-orphans && docker compose ps"

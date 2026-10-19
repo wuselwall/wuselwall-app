@@ -5,13 +5,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/router.dart';
+import 'package:wuselwall/app/server_session.dart';
 import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
+import 'package:wuselwall/core/config/config_providers.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/logging/log.dart';
+import 'package:wuselwall/core/server/setup_store.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/household/application/household_providers.dart';
 import 'package:wuselwall/features/household/data/household_onboarding_repository.dart';
@@ -40,6 +43,8 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
   final _name = TextEditingController();
   final _founderCode = TextEditingController();
   late final bool _needsCode;
+  String? _setupCode;
+  var _loadingSetup = true;
   var _seeded = false;
   var _swatch = 0;
   var _examples = true;
@@ -48,6 +53,7 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
   // stays locked (a second create would make a second family), but the escapes open again.
   var _stalled = false;
   Timer? _stallTimer;
+  Timer? _setupExpiryTimer;
   String? _codeError;
 
   /// The household default until the device says otherwise.
@@ -60,6 +66,10 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
     _needsCode = account?.creation != HouseholdCreation.open;
     _name.text = account?.givenName ?? '';
     unawaited(_loadTimezone());
+    unawaited(_loadSetup());
+    _setupExpiryTimer = Timer.periodic(const Duration(minutes: 1), (_) {
+      if (!_busy) unawaited(_loadSetup());
+    });
   }
 
   @override
@@ -77,10 +87,24 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
   @override
   void dispose() {
     _stallTimer?.cancel();
+    _setupExpiryTimer?.cancel();
     for (final c in [_family, _name, _founderCode]) {
       c.dispose();
     }
     super.dispose();
+  }
+
+  Future<void> _loadSetup() async {
+    final server = Uri.tryParse(ref.read(appConfigProvider).supabaseUrl);
+    final code = server == null
+        ? null
+        : await ref.read(setupStoreProvider).read(server);
+    if (mounted) {
+      setState(() {
+        _setupCode = code;
+        _loadingSetup = false;
+      });
+    }
   }
 
   Future<void> _loadTimezone() async {
@@ -98,7 +122,19 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
       locale.languageCode == 'en' ? 'en-GB' : 'de-DE';
 
   Future<void> _submit() async {
-    if (!_form.currentState!.validate()) return;
+    if (_busy || _loadingSetup || !_form.currentState!.validate()) return;
+    setState(() => _busy = true);
+    if (_setupCode != null) {
+      await _loadSetup();
+      if (!mounted) return;
+      if (_setupCode == null) {
+        setState(() => _busy = false);
+        return;
+      }
+    }
+    if (!mounted) return;
+    final setupStore = ref.read(setupStoreProvider);
+    final setupSignal = ref.read(serverSessionProvider).setupPending;
     final l10n = context.l10n;
     final locale = Localizations.localeOf(context);
     final repo = ref.read(householdOnboardingRepositoryProvider);
@@ -113,7 +149,7 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
       colorHex: toHex(MemberPalette.swatches[_swatch].light),
       timezone: _timezone,
       locale: _localeTag(locale),
-      founderCode: _needsCode ? _founderCode.text : null,
+      founderCode: _needsCode ? (_setupCode ?? _founderCode.text) : null,
       seedExamples: _examples,
       deviceLabel: deviceLabel(
         l10n: l10n,
@@ -121,6 +157,17 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
         host: currentDeviceHost(),
       ),
     );
+    if (result is Ok) {
+      await setupStore.clear();
+      setupSignal.value = false;
+    }
+    if (result case Err(:final failure)
+        when failure.code == 'founder_code_invalid' ||
+            failure.code == 'founder_code_required') {
+      await setupStore.clear();
+      setupSignal.value = false;
+      _setupCode = null;
+    }
     if (!mounted) return;
     switch (result) {
       case Ok():
@@ -151,7 +198,11 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
     }
   }
 
-  Future<void> _signOut() => ref.read(identityRepositoryProvider).signOut();
+  Future<void> _signOut() async {
+    await ref.read(setupStoreProvider).clear();
+    if (mounted) ref.read(serverSessionProvider).setupPending.value = false;
+    if (mounted) await ref.read(identityRepositoryProvider).signOut();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -230,7 +281,9 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
                     l10n.householdNewDefaults(_timezone, language),
                     style: theme.textTheme.bodySmall?.copyWith(color: ww.ink2),
                   ),
-                  if (_needsCode) ...[
+                  if (_needsCode && _setupCode != null)
+                    Text(l10n.householdNewCodeSaved),
+                  if (_needsCode && _setupCode == null && !_loadingSetup) ...[
                     const SizedBox(height: Tokens.space4),
                     TextFormField(
                       controller: _founderCode,
@@ -261,7 +314,7 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
                   ),
                   const SizedBox(height: Tokens.space4),
                   FilledButton(
-                    onPressed: _busy ? null : _submit,
+                    onPressed: _busy || _loadingSetup ? null : _submit,
                     child: Text(l10n.householdNewCreate),
                   ),
                   if (_stalled) ...[
@@ -281,7 +334,17 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
                         // Locked while creating, open again once the session stalls.
                         onPressed: _busy && !_stalled
                             ? null
-                            : () => context.go(Routes.inviteCode),
+                            : () async {
+                                await ref.read(setupStoreProvider).clear();
+                                if (mounted) {
+                                  ref
+                                          .read(serverSessionProvider)
+                                          .setupPending
+                                          .value =
+                                      false;
+                                  this.context.go(Routes.inviteCode);
+                                }
+                              },
                         child: Text(l10n.householdNewInvited),
                       ),
                       // Never locked: a user must always be able to leave this screen.

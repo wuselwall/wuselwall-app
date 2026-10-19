@@ -19,6 +19,10 @@ Der Startbildschirm hat drei Wege:
 
 Tippe auf **Mit E-Mail fortfahren** und gib deine E-Mail-Adresse ein. WuselWall schickt dir einen **6-stelligen Code**. Er gilt **10 Minuten**. Gib ihn ein, dann bist du drin. Kommt er nicht an, schau im Spam-Ordner nach oder tippe auf **Erneut senden**; einen neuen Code gibt es frühestens nach einer Minute.
 
+Lass die Seite mit dem Codefeld geöffnet und übertrage den Code aus der E-Mail dorthin.
+Du brauchst keinen Anmeldelink und keine zweite Anmeldung. Der E-Mail-Code bestätigt
+deine Adresse; er ist etwas anderes als der Einrichtungscode für einen neuen Server.
+
 <Shot name="setup-sign-in" alt="Anmeldung mit E-Mail" />
 
 Lieber mit Passwort? Tippe auf **Ich habe ein Passwort**. Das Passwort legst du unter **Einstellungen → Anmeldung** fest, mindestens 10 Zeichen. Der Code per E-Mail bleibt immer möglich.
@@ -34,7 +38,12 @@ Wenn dein Konto noch zu keiner Familie gehört, öffnet WuselWall **Neue Familie
 1. **Familienname**, zum Beispiel „Becker“.
 2. **Dein Name** und **Deine Farbe**. Die Farbe erscheint überall da, wo du etwas angelegt hast.
 3. Optional **Mit Beispielen starten**: ein paar Aufgaben und Belohnungen, die ihr einfach ändern oder löschen könnt.
-4. Den **Gründungscode**, falls euer Server einen verlangt. Den bekommst du von der Person, die den Server betreibt.
+4. Den **Einrichtungscode**, falls euer Server einen verlangt und du noch keinen Einrichtungslink geöffnet hast. Er stammt aus der Serverinstallation oder von der Person, die euren Server betreibt — nicht aus der Anmelde-E-Mail.
+
+Hast du den Einrichtungslink oder QR-Code aus der Serverinstallation geöffnet,
+merkt WuselWall sich den Einrichtungscode für diesen Server während der Anmeldung.
+Du musst ihn unter **Neue Familie** nicht erneut eingeben. Behandle den Einrichtungslink
+wie einen Schlüssel und teile ihn nur mit der Person, die eure Familie anlegt.
 
 <Shot name="new-family" alt="Formular „Neue Familie“" />
 
