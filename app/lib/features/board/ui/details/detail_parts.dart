@@ -45,7 +45,7 @@ extension DetailColors on BuildContext {
 bool isSameDay(DateTime a, DateTime b) =>
     a.year == b.year && a.month == b.month && a.day == b.day;
 
-/// "Lotta · Mittwoch" style joins; empty and null parts are dropped.
+/// "Emma · Mittwoch" style joins; empty and null parts are dropped.
 String joinParts(Iterable<String?> parts) =>
     parts.whereType<String>().where((p) => p.trim().isNotEmpty).join(' · ');
 

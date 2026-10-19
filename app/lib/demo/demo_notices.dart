@@ -1,8 +1,9 @@
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/features/today/data/notices_repository.dart';
 import 'package:wuselwall/features/today/domain/notice.dart';
 
-/// One join notice for the screenshots: Sabine has just joined. In memory only; "Gesehen"
+/// One join notice for the screenshots: the mother has just joined. In memory only; "Gesehen"
 /// removes it until the demo is reloaded.
 class DemoNoticesRepository implements NoticesRepository {
   DemoNoticesRepository()
@@ -10,7 +11,7 @@ class DemoNoticesRepository implements NoticesRepository {
         AppNotice(
           key: 'join:1',
           kind: NoticeKind.join,
-          name: 'Sabine',
+          name: DemoData.name(DemoData.mama),
           at: DateTime.now().subtract(const Duration(hours: 2)),
         ),
       ];

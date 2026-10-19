@@ -60,27 +60,27 @@ begin
      where p.household_id = v_hh and p.display_name = any(p_attendees);
 end $$;
 
--- ---- household A: Papa (guardian, personal phone), Lotta and Hanna (members) ------------------
+-- ---- household A: Papa (guardian, personal phone), Emma and Paul (members) ------------------
 create temp table sa as
   select api.setup_household('dev-setup', 'A', 'a@example.org', 'longpassword1', 'Papa', '#111111', '123456') r;
 grant all on sa to public;
 insert into ids select 'hh_a', (r ->> 'household_id')::uuid from sa;
 insert into ids select 'papa', (r ->> 'profile_id')::uuid from sa;
 insert into app.profile (household_id, display_name, role)
-  select (select id from ids where name = 'hh_a'), n, 'member' from (values ('Lotta'), ('Hanna')) v(n);
+  select (select id from ids where name = 'hh_a'), n, 'member' from (values ('Emma'), ('Paul')) v(n);
 insert into ids select lower(p.display_name), p.id from app.profile p
  where p.household_id = (select id from ids where name = 'hh_a') and p.role = 'member';
 
 insert into users values
-  ('hanna', app.create_auth_user('hanna@example.org', 'longpassword1')),
+  ('paul', app.create_auth_user('paul@example.org', 'longpassword1')),
   ('old', app.create_auth_user('old@example.org', 'longpassword1'));
 
 insert into app.device (household_id, auth_user_id, label, class, register, profile_id)
   select (select id from ids where name = 'hh_a'), p.auth_user_id, 'A-Phone', 'personal', 'adult', p.id
     from app.profile p where p.id = (select id from ids where name = 'papa');
 insert into app.device (household_id, auth_user_id, label, class, register, profile_id)
-  select (select id from ids where name = 'hh_a'), usr, 'Hanna-Phone', 'personal', 'adult', (select id from ids where name = 'hanna')
-    from users where name = 'hanna';
+  select (select id from ids where name = 'hh_a'), usr, 'Paul-Phone', 'personal', 'adult', (select id from ids where name = 'paul')
+    from users where name = 'paul';
 insert into app.device (household_id, auth_user_id, label, class, register, profile_id, revoked_at)
   select (select id from ids where name = 'hh_a'), usr, 'Old-Phone', 'personal', 'adult', (select id from ids where name = 'papa'), now()
     from users where name = 'old';
@@ -98,26 +98,26 @@ insert into app.device (household_id, auth_user_id, label, class, register, prof
 
 insert into devs
   select n, d.auth_user_id, d.id, d.household_id, 'personal'
-    from (values ('papa', 'A-Phone'), ('hanna', 'Hanna-Phone'), ('old', 'Old-Phone'), ('b', 'B-Phone')) v(n, label)
+    from (values ('papa', 'A-Phone'), ('paul', 'Paul-Phone'), ('old', 'Old-Phone'), ('b', 'B-Phone')) v(n, label)
     join app.device d on d.label = v.label;
 
 -- ---- events of household A, made as the owner --------------------------------------------------
--- Appointments: a lesson-like one for Lotta, a whole-family day, a series, a recent cancellation.
--- Presence: Hanna's shift. Out of the window: far ahead, long over, cancelled long ago.
+-- Appointments: a lesson-like one for Emma, a whole-family day, a series, a recent cancellation.
+-- Presence: Paul's shift. Out of the window: far ahead, long over, cancelled long ago.
 select pg_temp.new_event('presence', 'presence', 'working', now() + interval '1 day',
-  now() + interval '1 day 8 hours', null, null, array['Hanna']);
-select pg_temp.new_event('lotta', 'appointment', null, now() + interval '2 days',
-  now() + interval '2 days 1 hour', null, null, array['Lotta']);
+  now() + interval '1 day 8 hours', null, null, array['Paul']);
+select pg_temp.new_event('emma', 'appointment', null, now() + interval '2 days',
+  now() + interval '2 days 1 hour', null, null, array['Emma']);
 select pg_temp.new_event('far', 'appointment', null, now() + interval '500 days',
   now() + interval '500 days 1 hour', null, null, null);
 select pg_temp.new_event('ancient', 'appointment', null, now() - interval '120 days',
   now() - interval '119 days 23 hours', null, null, null);
 select pg_temp.new_event('deleted_recent', 'appointment', null, now() + interval '3 days',
-  now() + interval '3 days 1 hour', null, now() - interval '10 days', array['Hanna']);
+  now() + interval '3 days 1 hour', null, now() - interval '10 days', array['Paul']);
 select pg_temp.new_event('deleted_old', 'appointment', null, now() + interval '4 days',
   now() + interval '4 days 1 hour', null, now() - interval '40 days', null);
 select pg_temp.new_event('series', 'appointment', null, now() - interval '2 years',
-  now() - interval '2 years' + interval '1 hour', 'FREQ=WEEKLY', null, array['Hanna']);
+  now() - interval '2 years' + interval '1 hour', 'FREQ=WEEKLY', null, array['Paul']);
 insert into ev (name) values ('family');
 insert into app.event (id, household_id, calendar_id, title, kind, is_all_day, start_date, end_date, timezone, uid)
   select e.id, (select id from ids where name = 'hh_a'),
@@ -136,9 +136,9 @@ insert into tok (name, id, token)
   select 'papa', (r ->> 'id')::uuid, r ->> 'token'
     from (select api.feed_token_create(null, 'Papa', '{"kinds":["appointment","presence"]}'::jsonb) r) s;
 insert into tok (name, id, token)
-  select 'lotta', (r ->> 'id')::uuid, r ->> 'token'
-    from (select api.feed_token_create(null, 'Lotta only', jsonb_build_object(
-            'profile_ids', jsonb_build_array((select id from ids where name = 'lotta')),
+  select 'emma', (r ->> 'id')::uuid, r ->> 'token'
+    from (select api.feed_token_create(null, 'Emma only', jsonb_build_object(
+            'profile_ids', jsonb_build_array((select id from ids where name = 'emma')),
             'kinds', jsonb_build_array('appointment', 'presence'))) r) s;
 insert into tok (name, id, token)
   select 'weg', (r ->> 'id')::uuid, r ->> 'token' from (select api.feed_token_create(null, 'Weg', '{}'::jsonb) r) s;
@@ -167,9 +167,9 @@ select is((select revoked_at is not null from api.feed_tokens where id = (select
 select is(pg_temp.error_hint($$ select api.feed_token_revoke(null, gen_random_uuid()) $$),
   'feed_token_not_found', 'an unknown token cannot be revoked');
 
--- ---- Hanna, a member on her own phone ----------------------------------------------------------
+-- ---- Paul, a member on his own phone -----------------------------------------------------------
 reset role;
-select pg_temp.act_as_dev('hanna');
+select pg_temp.act_as_dev('paul');
 select throws_ok($$ select api.feed_token_create(null, 'Mine', '{}'::jsonb) $$,
   '42501', 'guardian required', 'a member cannot create a feed token');
 select is(pg_temp.error_hint($$ select api.feed_token_create(null, 'Mine', '{}'::jsonb) $$),
@@ -219,15 +219,15 @@ select ok(exists (select 1 from snap s, jsonb_array_elements(s.v -> 'events') e
 select is((select v -> 'household' ->> 'name' from snap where k = 'oma'), 'A', 'the feed names the household');
 select is((select v -> 'household' ->> 'locale' from snap where k = 'oma'), 'de-DE',
   'the feed carries the household locale for the renderer');
-select is((select v -> 'attendees' ->> (select id::text from ids where name = 'lotta') from snap where k = 'oma'),
-  'Lotta', 'attendee names travel with the feed');
+select is((select v -> 'attendees' ->> (select id::text from ids where name = 'emma') from snap where k = 'oma'),
+  'Emma', 'attendee names travel with the feed');
 select ok((select (v ->> 'revision')::bigint > 0 from snap where k = 'oma'), 'the feed carries a revision');
 select is(jsonb_array_length(api.ics_feed((select token from tok where name = 'papa')) -> 'events'), 5,
   'presence and appointments both: the shift is fed too');
 select is((select array_agg(e ->> 'title' order by e ->> 'title')
              from tok t, jsonb_array_elements(api.ics_feed(t.token) -> 'events') e
-            where t.name = 'lotta'),
-  array['family', 'lotta'], 'a member filter keeps that member and the whole-family events');
+            where t.name = 'emma'),
+  array['emma', 'family'], 'a member filter keeps that member and the whole-family events');
 select ok(api.ics_feed('not-a-token') is null, 'an unknown token gets nothing');
 select ok(api.ics_feed((select token from tok where name = 'weg')) is null, 'a revoked token gets nothing');
 select ok(api.ics_feed((select token from tok where name = 'oma')) is not null, 'the same token fetches again');

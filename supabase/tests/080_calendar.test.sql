@@ -26,15 +26,15 @@ begin
   perform set_config('role', 'authenticated', true);
 end $$;
 
--- ---- household A: Papa (guardian, personal phone), Lotta (child), Hanna (member) -------------
+-- ---- household A: Papa (guardian, personal phone), Emma (child), Paul (member) -------------
 create temp table sa as
   select api.setup_household('dev-setup', 'A', 'a@example.org', 'longpassword1', 'Papa', '#111111', '123456') r;
 grant all on sa to public;
 insert into ids select 'hh_a', (r ->> 'household_id')::uuid from sa;
 insert into app.profile (household_id, display_name, role, kind)
-  select (r ->> 'household_id')::uuid, 'Lotta', 'member', 'child' from sa;
+  select (r ->> 'household_id')::uuid, 'Emma', 'member', 'child' from sa;
 insert into app.profile (household_id, display_name, role)
-  select (r ->> 'household_id')::uuid, 'Hanna', 'member' from sa;
+  select (r ->> 'household_id')::uuid, 'Paul', 'member' from sa;
 insert into ids select lower(p.display_name), p.id from app.profile p
  where p.household_id = (select id from ids where name = 'hh_a');
 
@@ -90,14 +90,14 @@ reset role;
 select pg_temp.act_as_dev('papa');
 select is((select count(*)::int from api.calendars), 1, 'a household reads its own calendar only');
 
--- A timed event with two attendees. Lotta sorts before Hanna (sort order 20, 30).
+-- A timed event with two attendees. Emma sorts before Paul (sort order 20, 30).
 insert into ids select 'e1', (api.event_save(null, jsonb_build_object(
   'title', 'Turnen', 'location', 'TSV-Halle', 'kind', 'appointment', 'is_all_day', false,
   'starts_at', '2026-10-14T14:00:00+02:00', 'ends_at', '2026-10-14T15:00:00+02:00',
-  'attendee_ids', jsonb_build_array((select id from ids where name = 'hanna'), (select id from ids where name = 'lotta'))
+  'attendee_ids', jsonb_build_array((select id from ids where name = 'paul'), (select id from ids where name = 'emma'))
   )) ->> 'id')::uuid;
 select is((select attendee_ids from api.events where id = (select id from ids where name = 'e1')),
-  array[(select id from ids where name = 'lotta'), (select id from ids where name = 'hanna')],
+  array[(select id from ids where name = 'emma'), (select id from ids where name = 'paul')],
   'a timed event with two attendees comes back with them in sort order');
 select is((select starts_at from api.events where id = (select id from ids where name = 'e1')),
   '2026-10-14T14:00:00+02:00'::timestamptz, 'a timed event keeps its instants');
@@ -109,9 +109,9 @@ insert into ids select 'e_key', (api.event_save(null, jsonb_build_object(
 select is((select importance from api.events where id = (select id from ids where name = 'e_key')), 'key',
   'an event without attendees is key under the whole-family default');
 insert into ids select 'e_one', (api.event_save(null, jsonb_build_object(
-  'title', 'Hanna liest', 'kind', 'appointment', 'is_all_day', true,
+  'title', 'Paul liest', 'kind', 'appointment', 'is_all_day', true,
   'start_date', '2026-10-16', 'end_date', '2026-10-16',
-  'attendee_ids', jsonb_build_array((select id from ids where name = 'hanna')))) ->> 'id')::uuid;
+  'attendee_ids', jsonb_build_array((select id from ids where name = 'paul')))) ->> 'id')::uuid;
 select is((select importance from api.events where id = (select id from ids where name = 'e_one')), 'normal',
   'one attendee of several is not key');
 
@@ -121,7 +121,7 @@ select lives_ok($$ select api.event_save(null, jsonb_build_object(
   'id', (select id from ids where name = 'e1'), 'title', 'Turnen in der Halle', 'location', 'TSV-Halle',
   'kind', 'appointment', 'is_all_day', false,
   'starts_at', '2026-10-14T14:00:00+02:00', 'ends_at', '2026-10-14T15:00:00+02:00',
-  'attendee_ids', jsonb_build_array((select id from ids where name = 'hanna'), (select id from ids where name = 'lotta'))
+  'attendee_ids', jsonb_build_array((select id from ids where name = 'paul'), (select id from ids where name = 'emma'))
   )) $$, 'a guardian updates an event by its id');
 select is((select uid from api.events where id = (select id from ids where name = 'e1')),
   (select v from snap where k = 'uid'), 'an update keeps the uid');
@@ -162,7 +162,7 @@ insert into ids select 'e_rule', (api.event_save(null, jsonb_build_object(
   'title', 'Schwimmen', 'kind', 'appointment', 'is_all_day', false,
   'starts_at', '2026-10-12T07:00:00+02:00', 'ends_at', '2026-10-12T08:00:00+02:00',
   'rrule', 'FREQ=WEEKLY;BYDAY=MO,WE;UNTIL=20270701',
-  'attendee_ids', jsonb_build_array((select id from ids where name = 'lotta')))) ->> 'id')::uuid;
+  'attendee_ids', jsonb_build_array((select id from ids where name = 'emma')))) ->> 'id')::uuid;
 select is((select rrule from api.events where id = (select id from ids where name = 'e_rule')),
   'FREQ=WEEKLY;BYDAY=MO,WE;UNTIL=20270701', 'a supported rrule is stored as written');
 
@@ -202,51 +202,51 @@ select is((select count(*)::int from api.events where id = (select id from ids w
   'a deleted event disappears from the calendar');
 
 -- Busy until: set, then cleared with null.
-select lives_ok($$ select api.busy_until_set(null, (select id from ids where name = 'lotta'), '2026-10-14', '17:00') $$,
+select lives_ok($$ select api.busy_until_set(null, (select id from ids where name = 'emma'), '2026-10-14', '17:00') $$,
   'a guardian sets a busy-until time for a child');
-select is((select until from api.busy_until where profile_id = (select id from ids where name = 'lotta')
+select is((select until from api.busy_until where profile_id = (select id from ids where name = 'emma')
              and on_date = '2026-10-14'), '17:00'::time, 'the busy-until time is listed');
-select lives_ok($$ select api.busy_until_set(null, (select id from ids where name = 'lotta'), '2026-10-14', null) $$,
+select lives_ok($$ select api.busy_until_set(null, (select id from ids where name = 'emma'), '2026-10-14', null) $$,
   'a null time clears the busy-until entry');
-select is((select count(*)::int from api.busy_until where profile_id = (select id from ids where name = 'lotta')), 0,
+select is((select count(*)::int from api.busy_until where profile_id = (select id from ids where name = 'emma')), 0,
   'the cleared entry is gone');
-select lives_ok($$ select api.busy_until_set(null, (select id from ids where name = 'hanna'), '2026-10-15', '12:00') $$,
+select lives_ok($$ select api.busy_until_set(null, (select id from ids where name = 'paul'), '2026-10-15', '12:00') $$,
   'a busy-until entry for another member is set');
 
 -- Baseline: set, then cleared.
-select lives_ok($$ select api.member_baseline_set(null, (select id from ids where name = 'hanna'), 'travel', 'Reise') $$,
+select lives_ok($$ select api.member_baseline_set(null, (select id from ids where name = 'paul'), 'travel', 'Reise') $$,
   'a guardian sets a member''s usual presence');
-select is((select default_presence_state from api.members where id = (select id from ids where name = 'hanna')),
+select is((select default_presence_state from api.members where id = (select id from ids where name = 'paul')),
   'travel', 'the usual presence is on the member');
-select lives_ok($$ select api.member_baseline_set(null, (select id from ids where name = 'hanna'), null, null) $$,
+select lives_ok($$ select api.member_baseline_set(null, (select id from ids where name = 'paul'), null, null) $$,
   'a null state clears the usual presence');
-select is((select default_presence_state from api.members where id = (select id from ids where name = 'hanna')),
+select is((select default_presence_state from api.members where id = (select id from ids where name = 'paul')),
   null::text, 'the cleared usual presence is gone');
 
 -- ---- a member on the shared iPad -----------------------------------------------------------------
 reset role;
 select pg_temp.act_as_dev('ipad');
 select lives_ok($$ insert into ids select 'e_kid', (api.event_save(
-  (select id from ids where name = 'lotta'), jsonb_build_object(
+  (select id from ids where name = 'emma'), jsonb_build_object(
   'title', 'Lesen', 'kind', 'appointment', 'is_all_day', true,
   'start_date', '2026-10-17', 'end_date', '2026-10-17',
-  'attendee_ids', jsonb_build_array((select id from ids where name = 'lotta')))) ->> 'id')::uuid $$,
+  'attendee_ids', jsonb_build_array((select id from ids where name = 'emma')))) ->> 'id')::uuid $$,
   'a member saves an event she attends');
-select throws_ok($$ select api.event_save((select id from ids where name = 'lotta'), jsonb_build_object(
-  'title', 'Nur Hanna', 'kind', 'appointment', 'is_all_day', true,
+select throws_ok($$ select api.event_save((select id from ids where name = 'emma'), jsonb_build_object(
+  'title', 'Nur Paul', 'kind', 'appointment', 'is_all_day', true,
   'start_date', '2026-10-18', 'end_date', '2026-10-18',
-  'attendee_ids', jsonb_build_array((select id from ids where name = 'hanna')))) $$,
+  'attendee_ids', jsonb_build_array((select id from ids where name = 'paul')))) $$,
   '42501', 'guardian required', 'a member cannot save an event she does not attend');
-select lives_ok($$ select api.event_save((select id from ids where name = 'lotta'), jsonb_build_object(
-  'id', (select id from ids where name = 'e1'), 'title', 'Turnen (Lotta)', 'kind', 'appointment', 'is_all_day', false,
+select lives_ok($$ select api.event_save((select id from ids where name = 'emma'), jsonb_build_object(
+  'id', (select id from ids where name = 'e1'), 'title', 'Turnen (Emma)', 'kind', 'appointment', 'is_all_day', false,
   'starts_at', '2026-10-14T14:00:00+02:00', 'ends_at', '2026-10-14T15:00:00+02:00',
-  'attendee_ids', jsonb_build_array((select id from ids where name = 'hanna'), (select id from ids where name = 'lotta')))) $$,
+  'attendee_ids', jsonb_build_array((select id from ids where name = 'paul'), (select id from ids where name = 'emma')))) $$,
   'a member updates an event she attends');
-select throws_ok($$ select api.event_delete((select id from ids where name = 'lotta'), (select id from ids where name = 'e1')) $$,
+select throws_ok($$ select api.event_delete((select id from ids where name = 'emma'), (select id from ids where name = 'e1')) $$,
   '42501', 'guardian required', 'a member cannot delete an event with two attendees');
-select lives_ok($$ select api.event_delete((select id from ids where name = 'lotta'), (select id from ids where name = 'e_kid')) $$,
+select lives_ok($$ select api.event_delete((select id from ids where name = 'emma'), (select id from ids where name = 'e_kid')) $$,
   'a member deletes her own event with no one else attending');
-select throws_ok($$ select api.busy_until_set((select id from ids where name = 'lotta'), (select id from ids where name = 'hanna'),
+select throws_ok($$ select api.busy_until_set((select id from ids where name = 'emma'), (select id from ids where name = 'paul'),
   '2026-10-15', '12:00') $$, '42501', 'guardian required', 'a member sets only her own busy-until time');
 
 -- ---- Papa switches member editing off ------------------------------------------------------------
@@ -256,10 +256,10 @@ select lives_ok($$ select api.set_setting(null, 'calendar.members_edit_own_event
   'a guardian switches off member editing of own events');
 reset role;
 select pg_temp.act_as_dev('ipad');
-select throws_ok($$ select api.event_save((select id from ids where name = 'lotta'), jsonb_build_object(
+select throws_ok($$ select api.event_save((select id from ids where name = 'emma'), jsonb_build_object(
   'title', 'Verboten', 'kind', 'appointment', 'is_all_day', true,
   'start_date', '2026-10-19', 'end_date', '2026-10-19',
-  'attendee_ids', jsonb_build_array((select id from ids where name = 'lotta')))) $$,
+  'attendee_ids', jsonb_build_array((select id from ids where name = 'emma')))) $$,
   '42501', 'guardian required', 'with editing switched off a member cannot save even her own event');
 
 -- ---- a kiosk never writes ------------------------------------------------------------------------
@@ -285,7 +285,7 @@ select throws_ok($$ select api.event_save(null, jsonb_build_object(
   'id', (select id from ids where name = 'e1'), 'title', 'Fremd', 'kind', 'appointment', 'is_all_day', true,
   'start_date', '2026-10-14', 'end_date', '2026-10-14')) $$,
   'P0002', 'event not found', 'another household cannot update an event by its id');
-select throws_ok($$ select api.busy_until_set(null, (select id from ids where name = 'lotta'), '2026-10-14', '17:00') $$,
+select throws_ok($$ select api.busy_until_set(null, (select id from ids where name = 'emma'), '2026-10-14', '17:00') $$,
   'P0002', 'profile not found', 'another household cannot set busy-until for a member of another');
 
 -- ---- a revoked phone ----------------------------------------------------------------------------

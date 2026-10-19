@@ -75,7 +75,7 @@ have to be maintained by hand. Both decisions are argued in
 ### Flexible by construction
 
 The requirement that arrived with A5 — *appointments should be flexible: regular for when
-Sabine is working, ad hoc for when Lukas is travelling* — is met by three small things
+Sarah is working, ad hoc for when David is travelling* — is met by three small things
 rather than a new subsystem:
 
 1. **`rdates`.** A series can be an explicit list of dates, not only a rule. The rota that
@@ -170,7 +170,7 @@ These are the things that silently break subscribers:
   emitted with `STATUS:CANCELLED` for a while — dropping it silently leaves it on the
   subscriber's calendar forever.
 - Presence entries carry `TRANSP:TRANSPARENT` and a `X-WUSELWALL-KIND:presence` marker, so
-  a subscriber's free/busy is not blocked by "Sabine arbeitet".
+  a subscriber's free/busy is not blocked by "Julia arbeitet".
 - Projected school days use deterministic UIDs (`schoolday-{profileId}-{date}@domain`) and
   a `SEQUENCE` derived from the timetable's `updated_at`. Random UIDs here mean a fresh
   set of ghosts in Outlook every time the feed is rendered.

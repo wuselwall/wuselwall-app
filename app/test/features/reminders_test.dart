@@ -159,7 +159,7 @@ void main() {
           tasks: [
             chore('Müll', today, guardianId),
             chore('Blumen', today, guardianId),
-            chore('Lottas Tisch', today, kidId),
+            chore('Emmas Tisch', today, kidId),
           ],
         );
 
@@ -344,7 +344,7 @@ void main() {
       final p = plan(
         packs: [
           pack(1, kidId, 'Anna', ['Sportsachen']),
-          pack(1, 'p-2', 'Lotta', ['Schwimmsachen', 'Flöte']),
+          pack(1, 'p-2', 'Emma', ['Schwimmsachen', 'Flöte']),
         ],
       );
       expect(p.reminders, hasLength(1));
@@ -352,7 +352,7 @@ void main() {
       expect(p.reminders.single.title, 'Für morgen einpacken');
       expect(
         p.reminders.single.body,
-        'Anna: Sportsachen · Lotta: Schwimmsachen, Flöte',
+        'Anna: Sportsachen · Emma: Schwimmsachen, Flöte',
       );
     });
 

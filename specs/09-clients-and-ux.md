@@ -92,13 +92,13 @@ household settings with these values as defaults.
 ├──────────┴─────────┴─────────╨─────────╨─────────┴─────────┴────────┴──────────────┤
 │░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░│
 ├──────────┼─────────┼─────────╥─────────╥─────────┬─────────┬────────┬──────────────┤
-│ ● Lotta  │ 8–14:25 │ 8–14:25 ║ 8–14:25 ║ 8–14:25 │ 8–13:35 │  frei  │  frei        │
+│ ● Emma   │ 8–14:25 │ 8–14:25 ║ 8–14:25 ║ 8–14:25 │ 8–13:35 │  frei  │  frei        │
 │    9     │         │ FreiDay ║ Sport   ║ Sport   │ Sport   │        │              │
-│ ● Hanna  │ 8–11:30 │ 8–12:45 ║ 8–11:30 ║ 8–12:45 │ 8–11:30 │  frei  │  frei        │
+│ ● Paul   │ 8–11:30 │ 8–12:45 ║ 8–11:30 ║ 8–12:45 │ 8–11:30 │  frei  │  frei        │
 │    7     │Hort 15  │Hort 15  ║Schwimmen║Hort 15  │         │        │              │
-│ ● Sabine │ DIENST  │·zu Hause║ DIENST  ║·zu Hause│·zu Hause│·zu Haus│·zu Hause     │
+│ ● Julia  │ DIENST  │·zu Hause║ DIENST  ║·zu Hause│·zu Hause│·zu Haus│·zu Hause     │
 │          │8:30–14  │         ║8:30–14  ║         │         │        │              │
-│ ● Lukas  │·Homeoff.│BÜRO HH  ║·Homeoff.║◀── Dienstreise Berlin ──▶│·Homeoff.│      │
+│ ● Thomas │·Homeoff.│BÜRO HH  ║·Homeoff.║◀── Dienstreise Berlin ──▶│·Homeoff.│      │
 ├──────────┼─────────┼─────────╨─────────╨─────────┼─────────┼────────┼──────────────┤
 │░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░│
 ├──────────┼─────────┼─────────╥─────────╥─────────┼─────────┼────────┼──────────────┤
@@ -114,9 +114,9 @@ household settings with these values as defaults.
 │ Warmes   │ABEND    │ABEND    ║ABEND    ║ABEND    │ABEND    │MITTAG  │MITTAG        │
 │ Essen    │Kürbis-  │Nudel-   ║Chili    ║Fisch-   │Flamm-   │Pesto   │Braten        │
 │          │suppe    │auflauf  ║sin Carne║stäbchen │kuchen   │        │              │
-│          │●●●● Sab │●●●● Luk ║●●●● Sab ║●●●○ Sab │●●●○ Sab │●○○● Luk│●●●● +2 Gäste │
+│          │●●●● Jul │●●●● Tho ║●●●● Jul ║●●●○ Jul │●●●○ Jul │●○○● Tho│●●●● +2 Gäste │
 ├──────────┴─────────┴─────────╨─────────╨─────────┴─────────┴────────┴──────────────┤
-│ Heute offen: Lotta 2 · Hanna 1 · Sabine 1    Einkaufsliste 7                       │
+│ Heute offen: Emma 2 · Paul 1 · Julia 1    Einkaufsliste 7                          │
 └────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -144,8 +144,8 @@ already holds: `travel` or `away` over the meal slot means not eating; Hort past
 them, and tapping the zone corrects a day in two taps. A multi-select that must be filled
 in by hand would be empty by week three.
 
-**Why only the deviation is loud.** In the reference household Lukas works from home most
-days and Sabine is at home on the days she is not on Dienst; drawing that as a filled band
+**Why only the deviation is loud.** In the reference household David works from home most
+days and Sarah is at home on the days she is not on Dienst; drawing that as a filled band
 per member per day would make the
 zone one solid block of colour in which the Tuesday office day and the two-day Dienstreise
 disappear. So each member carries a **baseline** (`profile.default_presence`), rendered as
@@ -169,7 +169,7 @@ full grid is one tap away and lives on the children's iPads.
 
 ### Considered and rejected: merging the zones
 
-The obvious criticism of the layout above is that it splits one thought in two. Lukas is
+The obvious criticism of the layout above is that it splits one thought in two. David is
 in the Homeoffice row and the Heizungswartung is in the Vormittag band, three centimetres
 apart, and the reader has to join them — even though the appointment is only possible
 *because* of the presence.
@@ -190,7 +190,7 @@ the only one of the three that keeps full-width titles at kiosk type sizes. The 
 work the reader has to do is real but small, and the `busy_until` line ("Termine bis
 17:00") does most of it: it says in the presence zone what the appointments in fact imply.
 A third rejected option — folding presence into the three day-part bands — would print
-"Homeoffice" three times a day and still not answer "where is Hanna".
+"Homeoffice" three times a day and still not answer "where is Jack".
 
 ### Degradation rules
 

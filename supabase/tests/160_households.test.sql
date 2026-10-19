@@ -228,14 +228,14 @@ select is((select count(*)::int from app.shopping_category
 select pg_temp.as_device((select uid from acc where name = 'neu'), (select sess from acc where name = 'neu'),
   (select (r ->> 'household_id')::uuid from r1), (select (r ->> 'device_id')::uuid from r1), 'personal');
 create temp table added as
-  select api.household_add_members(null, '[{"display_name":"Lotta","kind":"child"},{"display_name":"Hanna","kind":"child"},{"display_name":"Sabine","kind":"adult"}]'::jsonb) as r;
+  select api.household_add_members(null, '[{"display_name":"Emma","kind":"child"},{"display_name":"Paul","kind":"child"},{"display_name":"Julia","kind":"adult"}]'::jsonb) as r;
 grant all on added to public;
 select is(jsonb_array_length((select r from added)), 3, 'three rows are added');
 select is((select count(distinct color)::int from app.profile where household_id = (select (r ->> 'household_id')::uuid from r1)),
   4, 'every member gets a different colour');
-select is((select role || '/' || kind from app.profile where household_id = (select (r ->> 'household_id')::uuid from r1) and display_name = 'Lotta'),
+select is((select role || '/' || kind from app.profile where household_id = (select (r ->> 'household_id')::uuid from r1) and display_name = 'Emma'),
   'member/child', 'a child is a member of kind child');
-select is((select role || '/' || kind from app.profile where household_id = (select (r ->> 'household_id')::uuid from r1) and display_name = 'Sabine'),
+select is((select role || '/' || kind from app.profile where household_id = (select (r ->> 'household_id')::uuid from r1) and display_name = 'Julia'),
   'guardian/adult', 'an adult is a guardian of kind adult');
 select throws_ok($$ select api.household_add_members(null, '[{"display_name":"X","kind":"robot"}]') $$,
   '22023', 'kind invalid', 'an unknown kind is refused');
@@ -256,7 +256,7 @@ insert into app.device (household_id, auth_user_id, label, class, register)
 create temp table devids as
   select (select id from app.device where label = 'Kinder-iPad') as shared_dev,
          (select id from app.device where label = 'Wand') as kiosk_dev,
-         (select id from app.profile where display_name = 'Lotta' and household_id = (select (r ->> 'household_id')::uuid from r1)) as kid,
+         (select id from app.profile where display_name = 'Emma' and household_id = (select (r ->> 'household_id')::uuid from r1)) as kid,
          (select id from app.profile where display_name = 'Daniel' and household_id = (select (r ->> 'household_id')::uuid from r1)) as guardian;
 grant all on devids to public;
 

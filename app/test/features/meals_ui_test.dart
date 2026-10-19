@@ -52,7 +52,7 @@ Future<ProviderContainer> pumpMeals(
   return container;
 }
 
-/// A week board whose first day has a dinner for Lotta and Papa, cooked by Papa. The
+/// A week board whose first day has a dinner for Emma and Papa, cooked by Papa. The
 /// kiosk correction is tested against it.
 WeekBoard kioskBoard() {
   final monday = dayOf(0);
@@ -67,7 +67,7 @@ WeekBoard kioskBoard() {
             'time': '18:30',
             'title': 'Kürbissuppe',
             'cook_id': 'm-papa',
-            'eating': ['m-lotta', 'm-papa'],
+            'eating': ['m-emma', 'm-papa'],
             'guests': 0,
           }
         : null,
@@ -78,8 +78,8 @@ WeekBoard kioskBoard() {
     'generated_at': monday.toUtc().toIso8601String(),
     'members': [
       {
-        'id': 'm-lotta',
-        'display_name': 'Lotta',
+        'id': 'm-emma',
+        'display_name': 'Emma',
         'color': '#7B3FE4',
         'kind': 'child',
       },
@@ -312,7 +312,7 @@ void main() {
     await t.tap(
       find.descendant(
         of: find.byType(MealWeekDetailBody),
-        matching: find.text('Lotta'),
+        matching: find.text('Emma'),
       ),
     );
     await t.pumpAndSettle();
@@ -321,8 +321,8 @@ void main() {
     expect(call.actor, 'm-papa');
     expect(call.date, dayOf(0));
     expect(call.slot, PlanSlot.dinner);
-    expect(call.profileId, 'm-lotta');
-    // Lotta was eating, so the tap turns her off.
+    expect(call.profileId, 'm-emma');
+    // Emma was eating, so the tap turns her off.
     expect(call.eating, isFalse);
     expect(t.takeException(), isNull);
     await unmountApp(t, container);

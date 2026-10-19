@@ -20,7 +20,7 @@ second adult decides it in the first sixty seconds. Everything below is ordered 
    flow. Nobody has to know whether they already have an account.
 2. **Ask only what cannot be inferred or deferred.**
    *Inferred:* timezone and language (from the device), their colour (the next free one in
-   the palette), the device's name ("Daniels iPhone"). *Deferred:* the guardian PIN (until the first shared device exists), avatars,
+   the palette), the device's name ("Thomas’ iPhone"). *Deferred:* the guardian PIN (until the first shared device exists), avatars,
    birthdays, presence baselines, a second factor, a passkey, push permission.
 3. **Nobody types on a shared device.** Not a password, not a code, not a name. The wall
    display and the children's iPads are set up from a parent's phone.
@@ -184,7 +184,7 @@ Passkeys sit in Einstellungen → Sicherheit, on the first-party servers only.
 ```
 
 **H0 — a waiting invitation.** If an open invitation names this account's verified email,
-H0 replaces H1: "Sabine hat dich zu *Familie Huser* eingeladen" with **Beitreten** (J2)
+H0 replaces H1: "Julia hat dich zu *Familie Becker* eingeladen" with **Beitreten** (J2)
 and **Eigene Familie anlegen**. This prevents the classic failure where the second parent
 creates a second, empty household.
 
@@ -203,9 +203,9 @@ At the bottom: "Ich wurde eingeladen" for anyone who arrived here by mistake.
 **H2 — "Wer gehört noch zu euch?"**
 
 ```
-  ● Daniel (du)                       Erwachsen
-  ● [Lotta_______]          [ Kind | Erwachsen ]
-  ● [Hanna_______]          [ Kind | Erwachsen ]
+  ● Thomas (du)                       Erwachsen
+  ● [Emma________]          [ Kind | Erwachsen ]
+  ● [Paul________]          [ Kind | Erwachsen ]
   + Person hinzufügen
 
   [✓] Mit Beispielen starten — 5 Aufgaben, 3 Belohnungen
@@ -226,7 +226,7 @@ At the bottom: "Ich wurde eingeladen" for anyone who arrived here by mistake.
   card, once the founder has seen the app.
 
 **Then:** this phone becomes the founder's **personal device**, silently, named from the
-profile and the model ("Daniels iPhone", en "Daniel's iPhone"; renamed in Settings). The
+profile and the model ("Thomas’ iPhone", en "David's iPhone"; renamed in Settings). The
 "name this device" page of M0.1 leaves the flow. The app opens on **Today** with the
 getting-started card.
 
@@ -267,7 +267,7 @@ The result is one invitation with three equivalent forms:
 
 - a **link** `https://wuselwall.app/i/#‹token›@‹host›` (128-bit token, and the
   household's server in the fragment), handed to the share sheet with
-  a ready message in the inviter's language ("Komm zu Familie Huser in WuselWall: ‹link›
+  a ready message in the inviter's language ("Komm zu Familie Becker in WuselWall: ‹link›
   — oder gib in der App den Code K7QM‑3XRP ein, auf dem Server ‹host›.");
 - an **8-character code** (`K7QM-3XRP`, the enrolment alphabet without look-alikes);
 - a **QR code** on screen, for when the person is standing in the same kitchen.
@@ -280,7 +280,7 @@ and **Zurückziehen**.
 **Accepting (the invitee).**
 
 1. **App installed:** the link is a universal link / Android App Link and opens the app
-   at the front door with a banner: "Daniel hat dich zu *Familie Huser* eingeladen". The
+   at the front door with a banner: "Thomas hat dich zu *Familie Becker* eingeladen". The
    banner text comes from `api.invitation_preview`, which shows the household's name and
    the inviter's first name, and nothing else.
 2. **App not installed:** the link opens a small bilingual landing page with the store
@@ -289,9 +289,9 @@ and **Zurückziehen**.
    (NFR-9). The code or the email match does that job.
 3. **The invitation names their email:** they just sign in; H0 appears on its own.
 
-After sign-in, one confirmation screen — **"Du bist Sabine in Familie Huser"** — with the
+After sign-in, one confirmation screen — **"Du bist Julia in Familie Becker"** — with the
 name and colour the inviter chose, both editable, and **Beitreten**. The phone becomes
-their personal device; they land on Today. Every guardian gets a notice ("Sabine ist
+their personal device; they land on Today. Every guardian gets a notice ("Julia ist
 beigetreten"), and the audit log records who invited whom. A guardian invitation is a
 bearer credential to guardian rights, and that visibility is its counterweight.
 
@@ -325,7 +325,7 @@ guardian's phone approves it.*
                                                       Name: [Wanddisplay Küche]
                                                   G2  (first time only) Eltern-PIN festlegen
                                                   [ Verbinden ]
-   "Verbunden mit Familie Huser ✓"   ◄──────────
+   "Verbunden mit Familie Becker ✓"  ◄──────────
    → kiosk tips / "Wer bist du?" / child's day
 ```
 
@@ -362,7 +362,7 @@ guardian's phone approves it.*
 
 - **New or reset phone:** sign in with the email code or the password. The account already has a
   household, so a personal device is created silently and Today opens. The account's
-  other devices get a notice ("Neu angemeldet: Daniels iPhone"), and Settings → Geräte
+  other devices get a notice ("Neu angemeldet: Thomas’ iPhone"), and Settings → Geräte
   lists the old phone for revocation.
 - **Forgot the password:** sign in with an email code; set a new one in Settings.
 - **Second factor (TOTP), if switched on:** the code page follows sign-in as today.
@@ -440,7 +440,7 @@ languages, and reviewed in the screenshots ([docs](../docs/)).
 |---|---|
 | Wrong email code | "Der Code stimmt nicht." The field clears; after five wrong codes: "Fordere einen neuen Code an." |
 | Expired email code | "Der Code ist abgelaufen." with **Neuen Code senden** directly under it |
-| Invitation expired, used or withdrawn | "Diese Einladung gilt nicht mehr. Bitte ‹Daniel› um eine neue." |
+| Invitation expired, used or withdrawn | "Diese Einladung gilt nicht mehr. Bitte ‹Thomas› um eine neue." |
 | Signed up, closed the app before H1 | The next launch opens H1 with whatever was typed (a local draft; not built yet, [16, step 10.7](16-setup-plan.md#step-10--journey-gaps-before-launch-m15)) |
 | Household creation in `code` mode, no code | "Neue Familien gibt es gerade nur mit Gründungscode." plus "Ich wurde eingeladen" |
 | Pairing request approved but the tablet went offline | The tablet collects its credentials on its next poll, within the request's lifetime; otherwise the guardian sees it unconnected in Geräte and repeats J3 |

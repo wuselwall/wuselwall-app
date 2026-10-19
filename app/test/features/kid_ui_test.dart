@@ -10,23 +10,23 @@ import 'package:wuselwall/features/tasks/ui/task_widgets.dart';
 import '../support/fake_tasks.dart';
 import '../support/fakes.dart';
 
-const _lotta = 'p-lotta';
-const _hanna = 'p-hanna';
+const _emma = 'p-emma';
+const _paul = 'p-paul';
 const _papa = 'p-papa';
 
 /// The shared kid iPad's household: two children and a guardian, in that order.
 final _kidMembers = [
   const Member(
-    id: _lotta,
-    displayName: 'Lotta',
+    id: _emma,
+    displayName: 'Emma',
     color: Color(0xFFB5306B),
     role: Role.member,
     active: true,
     isChild: true,
   ),
   const Member(
-    id: _hanna,
-    displayName: 'Hanna',
+    id: _paul,
+    displayName: 'Paul',
     color: Color(0xFF2E7D6B),
     role: Role.member,
     active: true,
@@ -56,7 +56,7 @@ class _KidIdentity extends FakeIdentityRepository {
   Future<Result<List<Member>>> members() async => Ok(_kidMembers);
 }
 
-/// The `api` layer after a tick: Lotta's balance rises by the points credited, as the
+/// The `api` layer after a tick: Emma's balance rises by the points credited, as the
 /// server would do before the tasks topic refetches.
 class _TickingApi extends FakeTasksApi {
   _TickingApi()
@@ -66,20 +66,20 @@ class _TickingApi extends FakeTasksApi {
             instanceRow(
               id: 'i-tisch',
               title: 'Tisch decken',
-              assignee: _lotta,
+              assignee: _emma,
               points: 3,
               iconKey: 'table',
             ),
             instanceRow(
               id: 'i-zimmer',
               title: 'Zimmer aufräumen',
-              assignee: _hanna,
+              assignee: _paul,
               points: 2,
             ),
           ],
           'point_balances': [
-            {'profile_id': _lotta, 'balance': 12},
-            {'profile_id': _hanna, 'balance': 37},
+            {'profile_id': _emma, 'balance': 12},
+            {'profile_id': _paul, 'balance': 37},
           ],
           'rewards': [
             {
@@ -111,8 +111,8 @@ class _TickingApi extends FakeTasksApi {
   }) {
     if (fn == 'task_complete') {
       tables['point_balances'] = [
-        {'profile_id': _lotta, 'balance': 15},
-        {'profile_id': _hanna, 'balance': 37},
+        {'profile_id': _emma, 'balance': 15},
+        {'profile_id': _paul, 'balance': 37},
       ];
     }
     return super.rpc(fn, params: params, parse: parse);
@@ -137,8 +137,8 @@ WeekBoard _familyBoard() {
     'generated_at': today.toUtc().toIso8601String(),
     'members': [
       {
-        'id': _lotta,
-        'display_name': 'Lotta',
+        'id': _emma,
+        'display_name': 'Emma',
         'color': '#B5306B',
         'role': 'member',
         'kind': 'child',
@@ -146,8 +146,8 @@ WeekBoard _familyBoard() {
         'baseline': null,
       },
       {
-        'id': _hanna,
-        'display_name': 'Hanna',
+        'id': _paul,
+        'display_name': 'Paul',
         'color': '#2E7D6B',
         'role': 'member',
         'kind': 'child',
@@ -167,15 +167,15 @@ WeekBoard _familyBoard() {
         },
     ],
     'open_tasks': [
-      {'member_id': _lotta, 'count': 1},
-      {'member_id': _hanna, 'count': 1},
+      {'member_id': _emma, 'count': 1},
+      {'member_id': _paul, 'count': 1},
     ],
     'shopping_count': 0,
   });
 }
 
-Future<void> _pickLotta(WidgetTester tester) async {
-  await tester.tap(find.byKey(const ValueKey('kid-pick-$_lotta')));
+Future<void> _pickEmma(WidgetTester tester) async {
+  await tester.tap(find.byKey(const ValueKey('kid-pick-$_emma')));
   await tester.pumpAndSettle();
 }
 
@@ -194,17 +194,17 @@ void main() {
     await unmountApp(tester, container);
   });
 
-  testWidgets('picking Lotta shows her chores, not Hanna’s', (tester) async {
+  testWidgets('picking Emma shows her chores, not Paul’s', (tester) async {
     final container = await pumpApp(
       tester,
       overrides: baseOverrides(identity: _KidIdentity()),
       tasks: _TickingApi(),
     );
 
-    await _pickLotta(tester);
+    await _pickEmma(tester);
 
     expect(find.byKey(const ValueKey('kid-picker')), findsNothing);
-    expect(find.text('Hallo, Lotta!'), findsOneWidget);
+    expect(find.text('Hallo, Emma!'), findsOneWidget);
     expect(find.text('Tisch decken'), findsOneWidget);
     expect(find.text('Zimmer aufräumen'), findsNothing);
     await unmountApp(tester, container);
@@ -218,10 +218,10 @@ void main() {
       overrides: baseOverrides(identity: _KidIdentity()),
       tasks: _TickingApi(),
     );
-    await _pickLotta(tester);
+    await _pickEmma(tester);
 
     final gear = tester.getRect(find.byTooltip('Einstellungen'));
-    final greeting = tester.getRect(find.textContaining('Hallo, Lotta!'));
+    final greeting = tester.getRect(find.textContaining('Hallo, Emma!'));
     expect(gear.bottom, lessThanOrEqualTo(greeting.top));
     expect(gear.overlaps(greeting), isFalse);
     expect(
@@ -236,7 +236,7 @@ void main() {
   });
 
   testWidgets(
-    'ticking calls the task action as Lotta, flies the coin and updates the balance',
+    'ticking calls the task action as Emma, flies the coin and updates the balance',
     (tester) async {
       final api = _TickingApi();
       final container = await pumpApp(
@@ -244,13 +244,13 @@ void main() {
         overrides: baseOverrides(identity: _KidIdentity()),
         tasks: api,
       );
-      await _pickLotta(tester);
+      await _pickEmma(tester);
 
       await tester.tap(find.text('Tisch decken'));
       await tester.pumpAndSettle();
 
       final call = api.named('task_complete').single;
-      expect(call.params, {'p_actor': _lotta, 'p_instance_id': 'i-tisch'});
+      expect(call.params, {'p_actor': _emma, 'p_instance_id': 'i-tisch'});
       final pill = find.byType(KidBalancePill);
       expect(
         find.descendant(of: pill, matching: find.text('15')),
@@ -263,7 +263,7 @@ void main() {
       await tester.tap(find.text('Rückgängig'));
       await tester.pumpAndSettle();
       expect(api.named('task_undo').single.params, {
-        'p_actor': _lotta,
+        'p_actor': _emma,
         'p_instance_id': 'i-tisch',
       });
       await tester.pump(const Duration(seconds: 6));
@@ -271,7 +271,7 @@ void main() {
     },
   );
 
-  testWidgets('a reward Lotta cannot afford says how far to go, kindly', (
+  testWidgets('a reward Emma cannot afford says how far to go, kindly', (
     tester,
   ) async {
     final container = await pumpApp(
@@ -279,7 +279,7 @@ void main() {
       overrides: baseOverrides(identity: _KidIdentity()),
       tasks: _TickingApi(),
     );
-    await _pickLotta(tester);
+    await _pickEmma(tester);
 
     await tester.tap(find.text('Punkte'));
     await tester.pumpAndSettle();
@@ -306,7 +306,7 @@ void main() {
       overrides: baseOverrides(identity: _KidIdentity()),
       tasks: _TickingApi(),
     );
-    await _pickLotta(tester);
+    await _pickEmma(tester);
 
     await tester.tap(find.text('Punkte'));
     await tester.pumpAndSettle();
@@ -346,7 +346,7 @@ void main() {
       overrides: baseOverrides(identity: _KidIdentity()),
       tasks: _TickingApi(),
     );
-    await _pickLotta(tester);
+    await _pickEmma(tester);
 
     await tester.tap(find.text('Tisch decken'));
     await tester.pump();
@@ -367,7 +367,7 @@ void main() {
       overrides: baseOverrides(identity: _KidIdentity()),
       tasks: _TickingApi(),
     );
-    await _pickLotta(tester);
+    await _pickEmma(tester);
     expect(find.bySemanticsLabel(RegExp(r'^Tisch decken')), findsOneWidget);
     await unmountApp(tester, container);
     handle.dispose();
@@ -382,8 +382,8 @@ void main() {
         overrides: baseOverrides(identity: _KidIdentity()),
         tasks: _TickingApi(),
       );
-      await _pickLotta(tester);
-      expect(find.bySemanticsLabel('L'), findsNothing);
+      await _pickEmma(tester);
+      expect(find.bySemanticsLabel('E'), findsNothing);
       expect(find.bySemanticsLabel('12 Punkte'), findsOneWidget);
       await unmountApp(tester, container);
       handle.dispose();
@@ -397,7 +397,7 @@ void main() {
       overrides: baseOverrides(identity: _KidIdentity()),
       tasks: _TickingApi(),
     );
-    await _pickLotta(tester);
+    await _pickEmma(tester);
     final node = tester.getSemantics(find.text('Meine Aufgaben'));
     expect(node.flagsCollection.isHeader, isTrue);
     await unmountApp(tester, container);

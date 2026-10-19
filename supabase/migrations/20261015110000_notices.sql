@@ -1,4 +1,4 @@
--- In-app notices on the adult Today tab (specs/20 J2 and J4): "Sabine ist beigetreten" for every
+-- In-app notices on the adult Today tab (specs/20 J2 and J4): "Julia ist beigetreten" for every
 -- guardian, "Neu angemeldet: Daniels iPhone" for the account's other personal devices.
 --
 -- Design: derived, not stored. Both events already leave a durable, household-scoped record in

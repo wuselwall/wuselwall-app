@@ -1985,7 +1985,7 @@
     "placeholders": {
       "email": {
         "type": "String",
-        "example": "lukas@example.org"
+        "example": "david@example.org"
       }
     }
   },
@@ -2024,7 +2024,7 @@
     "placeholders": {
       "email": {
         "type": "String",
-        "example": "lukas@example.org"
+        "example": "david@example.org"
       }
     }
   },

@@ -528,7 +528,7 @@ footer.page {
       </div>
       <div class="q">
         <span class="qn">✓</span>
-        <h3>Lotta und Hanna dürfen eintragen</h3>
+        <h3>Emma und Paul dürfen eintragen</h3>
         <p>Beide lesen — sie brauchen keine Sonderrolle, sondern denselben Bildschirm.
         Jede Zeile trägt einen Punkt in der Farbe dessen, der sie eingetragen hat.</p>
         <span class="lean"><b>Folge:</b> Keine Kindersperre auf der Einkaufsliste. Wenn Gummibärchen auftauchen, sieht man, von wem — das reicht.</span>
@@ -663,12 +663,12 @@ const CATALOG = [
 
 /* the household, for "wer hat das eingetragen" */
 const PEOPLE = {
-  lukas:  { name: "Lukas",  c: "#c2255c" },
-  sabine: { name: "Sabine", c: "#b5610a" },
-  lotta:  { name: "Lotta",  c: "#6d4aff" },
-  hanna:  { name: "Hanna",  c: "#0e8f9c" }
+  thomas:  { name: "Thomas",  c: "#c2255c" },
+  julia: { name: "Julia", c: "#b5610a" },
+  emma:  { name: "Emma",  c: "#6d4aff" },
+  paul:  { name: "Paul",  c: "#0e8f9c" }
 };
-const ME = "lukas";   /* a personal phone has a fixed profile */
+const ME = "thomas";   /* a personal phone has a fixed profile */
 
 /* several lists — the kiosk always opens on Supermarkt */
 const LISTS = [
@@ -680,16 +680,16 @@ const LISTS = [
 /* what is already on the list when the screen opens */
 const START = {
   supermarkt: [
-    { name: "Milch", q: 2, by: "sabine" }, { name: "Brot", q: 1, by: "sabine" },
-    { name: "Bananen", q: 1, by: "lotta" }, { name: "Butter", q: 1, by: "lukas" },
-    { name: "Toilettenpapier", q: 1, by: "lukas" }, { name: "Kaffee", q: 1, by: "lukas" },
-    { name: "Joghurt", q: 1, by: "hanna", note: "der mit Erdbeere" }
+    { name: "Milch", q: 2, by: "julia" }, { name: "Brot", q: 1, by: "julia" },
+    { name: "Bananen", q: 1, by: "emma" }, { name: "Butter", q: 1, by: "thomas" },
+    { name: "Toilettenpapier", q: 1, by: "thomas" }, { name: "Kaffee", q: 1, by: "thomas" },
+    { name: "Joghurt", q: 1, by: "paul", note: "der mit Erdbeere" }
   ],
   drogerie: [
-    { name: "Zahnpasta", q: 2, by: "sabine" }, { name: "Pflaster", q: 1, by: "lukas", note: "Kindermotive" }
+    { name: "Zahnpasta", q: 2, by: "julia" }, { name: "Pflaster", q: 1, by: "thomas", note: "Kindermotive" }
   ],
   baumarkt: [
-    { name: "Glühbirnen", q: 1, by: "lukas", note: "E14, warmweiß" }
+    { name: "Glühbirnen", q: 1, by: "thomas", note: "E14, warmweiß" }
   ]
 };
 

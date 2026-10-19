@@ -35,10 +35,10 @@ const EN = messagesFor("en");
 const TODAY = "2026-10-15";
 
 const members: MemberRow[] = [
-  member("lukas", "Lukas", "guardian", "adult"),
-  member("sabine", "Sabine", "guardian", "adult"),
-  member("lotta", "Lotta", "member", "child"),
-  member("hanna", "Hanna", "member", "child"),
+  member("thomas", "Thomas", "guardian", "adult"),
+  member("julia", "Julia", "guardian", "adult"),
+  member("emma", "Emma", "member", "child"),
+  member("paul", "Paul", "member", "child"),
 ];
 
 function member(id: string, name: string, role: "guardian" | "member", kind: "adult" | "child"): MemberRow {
@@ -85,7 +85,7 @@ function task(id: string, title: string, assigned: string | null, points = 2): T
 
 function ctx(extra: Partial<ShortcutContext> = {}): ShortcutContext {
   return {
-    holder: { profile_id: "lukas", display_name: "Lukas", role: "guardian", kind: "adult" },
+    holder: { profile_id: "thomas", display_name: "Thomas", role: "guardian", kind: "adult" },
     household: { name: "Huser", timezone: "Europe/Berlin", locale: "de-DE", today: TODAY, region: null },
     window: { from: TODAY, to: TODAY },
     members,
@@ -170,7 +170,7 @@ Deno.test("days: words, weekdays and dates, in either language", () => {
   assertEquals(parseDay("on Monday"), { kind: "weekday", weekday: 1 });
   assertEquals(parseDay("2026-10-20"), { kind: "date", date: "2026-10-20" });
   assertEquals(parseDay("2026-02-30"), null);
-  assertEquals(parseDay("Wann ist Sabine wieder da?"), null);
+  assertEquals(parseDay("Wann ist Julia wieder da?"), null);
 });
 
 Deno.test("days: a weekday is the next one, today included", () => {
@@ -191,12 +191,13 @@ Deno.test("days: today, tomorrow, and a date written out", () => {
 
 Deno.test("names: folded, by prefix when unique, or found in a question", () => {
   assertEquals(fold("Spülmaschine Größe"), "spuelmaschine groesse");
-  assertEquals(findMember(members, "lotta")?.id, "lotta");
-  assertEquals(findMember(members, "Sa")?.id, "sabine");
-  assertEquals(findMember(members, "L"), null); // Lukas and Lotta
+  assertEquals(findMember(members, "emma")?.id, "emma");
+  assertEquals(findMember(members, "Ju")?.id, "julia");
+  const withEmil = [...members, member("emil", "Emil", "member", "child")];
+  assertEquals(findMember(withEmil, "Em"), null); // Emma and Emil
   assertEquals(findMember(members, "Oma"), null);
-  assertEquals(memberInText(members, "Hat Hanna morgen Sport?")?.id, "hanna");
-  assertEquals(memberInText(members, "Wann ist sabine wieder da"), members[1]);
+  assertEquals(memberInText(members, "Hat Paul morgen Sport?")?.id, "paul");
+  assertEquals(memberInText(members, "Wann ist julia wieder da"), members[1]);
   assertEquals(memberInText(members, "Was gibt es heute?"), null);
 });
 
@@ -212,11 +213,11 @@ Deno.test("language: the parameter, then Accept-Language, then the household", (
 Deno.test("chores: a spoken title finds the task; a tie is not guessed", () => {
   const c = ctx({
     tasks: [
-      task("t1", "Spülmaschine ausräumen", "lukas"),
-      task("t2", "Zimmer aufräumen", "lukas"),
-      task("t3", "Zimmer saugen", "lukas"),
+      task("t1", "Spülmaschine ausräumen", "thomas"),
+      task("t2", "Zimmer aufräumen", "thomas"),
+      task("t3", "Zimmer saugen", "thomas"),
       task("t4", "Müll rausbringen", null),
-      task("t5", "Hannas Aufgabe", "hanna"),
+      task("t5", "Pauls Aufgabe", "paul"),
     ],
   });
   const pick = pickChore(c, "Spülmaschine ist erledigt");
@@ -238,7 +239,7 @@ Deno.test("chores: a spoken title finds the task; a tie is not guessed", () => {
 
 Deno.test("chores: a member may claim an unassigned task; none open is said so", () => {
   const c = ctx({
-    holder: { profile_id: "hanna", display_name: "Hanna", role: "member", kind: "child" },
+    holder: { profile_id: "paul", display_name: "Paul", role: "member", kind: "child" },
     tasks: [task("t4", "Müll rausbringen", null)],
   });
   const pick = pickChore(c, "Müll");
@@ -283,7 +284,7 @@ Deno.test("today: appointments with their people, the meals and my tasks; presen
       event("Zahnarzt", {
         starts_at: "2026-10-15T06:30:00Z",
         ends_at: "2026-10-15T07:30:00Z",
-        attendee_ids: ["lotta"],
+        attendee_ids: ["emma"],
       }),
       event("Elternabend", { is_all_day: true, start_date: TODAY, end_date: TODAY }),
       event("Schicht", {
@@ -291,25 +292,25 @@ Deno.test("today: appointments with their people, the meals and my tasks; presen
         presence_state: "working",
         starts_at: "2026-10-15T04:00:00Z",
         ends_at: "2026-10-15T12:00:00Z",
-        attendee_ids: ["sabine"],
+        attendee_ids: ["julia"],
       }),
       event("Morgen", { starts_at: "2026-10-16T06:30:00Z", ends_at: "2026-10-16T07:30:00Z" }),
     ],
     overrides: [],
     external: [],
-    meals: [{ on_date: TODAY, slot: "dinner", title: "Spaghetti", cook_profile_id: "sabine", at_time: null }],
-    tasks: [task("t1", "Spülmaschine ausräumen", "lukas"), task("t4", "Müll rausbringen", null)],
+    meals: [{ on_date: TODAY, slot: "dinner", title: "Spaghetti", cook_profile_id: "julia", at_time: null }],
+    tasks: [task("t1", "Spülmaschine ausräumen", "thomas"), task("t4", "Müll rausbringen", null)],
   });
   assertEquals(
     answerDay(c, TODAY, DE).text,
-    "Heute: Elternabend (ganztägig) und 08:30 Zahnarzt (Lotta). Essen heute: Abendessen: Spaghetti. " +
+    "Heute: Elternabend (ganztägig) und 08:30 Zahnarzt (Emma). Essen heute: Abendessen: Spaghetti. " +
       "Deine Aufgaben: Spülmaschine ausräumen.",
   );
   assertEquals(
     answerDay(ctx({ events: [], meals: [], tasks: [] }), TODAY, EN).text,
     "Nothing on the calendar today.",
   );
-  assertEquals(answerMeals(c, TODAY, DE).text, "Essen heute: Abendessen: Spaghetti. Sabine kocht.");
+  assertEquals(answerMeals(c, TODAY, DE).text, "Essen heute: Abendessen: Spaghetti. Julia kocht.");
   assertEquals(answerMeals(ctx({ meals: [] }), "2026-10-16", DE).text, "Morgen ist noch kein Essen geplant.");
 });
 
@@ -389,7 +390,7 @@ function schoolCtx(exceptions: ExceptionRow[] = []) {
       subjects: SUBJECTS,
       timetables: [{
         id: "tt",
-        profile_id: "lotta",
+        profile_id: "emma",
         school_id: "s1",
         term_id: "term",
         class_label: "3a",
@@ -408,26 +409,26 @@ function schoolCtx(exceptions: ExceptionRow[] = []) {
   });
 }
 
-Deno.test("school: has Lotta Sport tomorrow, and the day with what to pack", () => {
+Deno.test("school: has Emma Sport tomorrow, and the day with what to pack", () => {
   const c = schoolCtx();
-  const lotta = members[2];
-  const sport = subjectInText(SUBJECTS, "Hat Lotta morgen Sport?");
+  const emma = members[2];
+  const sport = subjectInText(SUBJECTS, "Hat Emma morgen Sport?");
   assertEquals(sport?.id, "sp");
   assertEquals(
-    answerSchool(c, lotta, "2026-10-16", sport, DE).text,
-    "Ja, Lotta hat morgen Sport in der 3. Stunde (09:55–10:40).",
+    answerSchool(c, emma, "2026-10-16", sport, DE).text,
+    "Ja, Emma hat morgen Sport in der 3. Stunde (09:55–10:40).",
   );
   assertEquals(
-    answerSchool(c, lotta, "2026-10-16", { name: "Latein", short_name: null }, DE).text,
-    "Nein, Lotta hat morgen kein Latein.",
+    answerSchool(c, emma, "2026-10-16", { name: "Latein", short_name: null }, DE).text,
+    "Nein, Emma hat morgen kein Latein.",
   );
   assertEquals(
-    answerSchool(c, lotta, "2026-10-16", null, DE).text,
-    "Lotta hat morgen von 08:00 bis 10:40 Schule: Deutsch, Mathematik und Sport. Einpacken: Sportsachen.",
+    answerSchool(c, emma, "2026-10-16", null, DE).text,
+    "Emma hat morgen von 08:00 bis 10:40 Schule: Deutsch, Mathematik und Sport. Einpacken: Sportsachen.",
   );
   assertEquals(
-    answerSchool(c, lotta, "2026-10-16", sport, EN).text,
-    "Yes, Lotta has Sport tomorrow, period 3 (09:55–10:40).",
+    answerSchool(c, emma, "2026-10-16", sport, EN).text,
+    "Yes, Emma has Sport tomorrow, period 3 (09:55–10:40).",
   );
 });
 
@@ -444,24 +445,24 @@ Deno.test("school: a cancelled lesson, the weekend, and no timetable", () => {
     starts_at: null,
     ends_at: null,
     note: null,
-    created_by_profile_id: "lukas",
+    created_by_profile_id: "thomas",
   }]);
   const sport = SUBJECTS[2];
   assertEquals(
     answerSchool(c, members[2], "2026-10-16", sport, DE).text,
-    "Sport fällt morgen für Lotta aus.",
+    "Sport fällt morgen für Emma aus.",
   );
   assertEquals(
     answerSchool(c, members[2], "2026-10-16", null, DE).text,
-    "Lotta hat morgen von 08:00 bis 09:35 Schule: Deutsch und Mathematik.",
+    "Emma hat morgen von 08:00 bis 09:35 Schule: Deutsch und Mathematik.",
   );
   assertEquals(
     answerSchool(c, members[2], "2026-10-17", null, DE).text,
-    "Lotta hat übermorgen keine Schule, es ist Wochenende.",
+    "Emma hat übermorgen keine Schule, es ist Wochenende.",
   );
   assertEquals(
     answerSchool(c, members[3], "2026-10-16", null, DE).text,
-    "Für Hanna ist kein Stundenplan eingetragen.",
+    "Für Paul ist kein Stundenplan eingetragen.",
   );
 });
 
@@ -469,7 +470,7 @@ Deno.test("school: the equipment line follows the household setting", () => {
   const c = { ...schoolCtx(), equipment_hint: false };
   assertEquals(
     answerSchool(c, members[2], "2026-10-16", null, DE).text,
-    "Lotta hat morgen von 08:00 bis 10:40 Schule: Deutsch, Mathematik und Sport.",
+    "Emma hat morgen von 08:00 bis 10:40 Schule: Deutsch, Mathematik und Sport.",
   );
 });
 
@@ -487,7 +488,7 @@ Deno.test("presence: away for days, back the day after the last one", () => {
         is_all_day: true,
         start_date: "2026-10-14",
         end_date: "2026-10-16",
-        attendee_ids: ["sabine"],
+        attendee_ids: ["julia"],
       }),
       // Straight on into a weekend away: one absence.
       event("Weg", {
@@ -496,7 +497,7 @@ Deno.test("presence: away for days, back the day after the last one", () => {
         is_all_day: true,
         start_date: "2026-10-17",
         end_date: "2026-10-17",
-        attendee_ids: ["sabine"],
+        attendee_ids: ["julia"],
       }),
     ],
     overrides: [],
@@ -504,11 +505,11 @@ Deno.test("presence: away for days, back the day after the last one", () => {
   });
   assertEquals(
     answerPresence(c, members[1], NOW, DE).text,
-    "Sabine ist auf Reise bis Samstag, 17. Oktober und am Sonntag, 18. Oktober wieder da.",
+    "Julia ist auf Reise bis Samstag, 17. Oktober und am Sonntag, 18. Oktober wieder da.",
   );
   assertEquals(
     answerPresence(c, members[1], NOW, EN).text,
-    "Sabine is travelling until Saturday 17 October and back on Sunday 18 October.",
+    "Julia is travelling until Saturday 17 October and back on Sunday 18 October.",
   );
 });
 
@@ -521,7 +522,7 @@ Deno.test("presence: at work until a time; otherwise here, with the next trip", 
         presence_state: "working",
         starts_at: "2026-10-15T04:00:00Z",
         ends_at: "2026-10-15T12:00:00Z",
-        attendee_ids: ["sabine"],
+        attendee_ids: ["julia"],
       }),
       event("Reise", {
         kind: "presence",
@@ -529,7 +530,7 @@ Deno.test("presence: at work until a time; otherwise here, with the next trip", 
         is_all_day: true,
         start_date: "2026-10-21",
         end_date: "2026-10-23",
-        attendee_ids: ["lukas"],
+        attendee_ids: ["thomas"],
       }),
     ],
     overrides: [],
@@ -537,13 +538,13 @@ Deno.test("presence: at work until a time; otherwise here, with the next trip", 
   });
   assertEquals(
     answerPresence(c, members[1], NOW, DE).text,
-    "Sabine ist bei der Arbeit und heute um 14:00 wieder da.",
+    "Julia ist bei der Arbeit und heute um 14:00 wieder da.",
   );
   assertEquals(
     answerPresence(c, members[0], NOW, DE).text,
-    "Lukas ist laut Kalender da. Als Nächstes: auf Reise von Mittwoch, 21. Oktober bis Freitag, 23. Oktober.",
+    "Thomas ist laut Kalender da. Als Nächstes: auf Reise von Mittwoch, 21. Oktober bis Freitag, 23. Oktober.",
   );
-  assertEquals(answerPresence(c, members[2], NOW, EN).text, "Lotta is here, according to the calendar.");
+  assertEquals(answerPresence(c, members[2], NOW, EN).text, "Emma is here, according to the calendar.");
 });
 
 Deno.test("presence: an all-day shift is today, not until the next free day", () => {
@@ -554,10 +555,10 @@ Deno.test("presence: an all-day shift is today, not until the next free day", ()
       is_all_day: true,
       start_date: d,
       end_date: d,
-      attendee_ids: ["sabine"],
+      attendee_ids: ["julia"],
     })
   );
   const c = ctx({ window: { from: TODAY, to: "2026-11-13" }, events: shifts, overrides: [], external: [] });
-  assertEquals(answerPresence(c, members[1], NOW, DE).text, "Sabine ist heute bei der Arbeit.");
-  assertEquals(answerPresence(c, members[1], NOW, EN).text, "Sabine is at work today.");
+  assertEquals(answerPresence(c, members[1], NOW, DE).text, "Julia ist heute bei der Arbeit.");
+  assertEquals(answerPresence(c, members[1], NOW, EN).text, "Julia is at work today.");
 });

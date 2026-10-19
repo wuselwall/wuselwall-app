@@ -64,7 +64,7 @@ begin
   insert into devs values (p_name, v_usr, v_id, v_hh, p_class);
 end $$;
 
--- ---- household A: Papa (guardian with PIN, personal phone), Lotta (child) ----------------------
+-- ---- household A: Papa (guardian with PIN, personal phone), Emma (child) ----------------------
 create temp table sa as
   select api.setup_household('dev-setup', 'A', 'a@example.org', 'longpassword1', 'Papa', '#111111', '123456') r;
 grant all on sa to public;
@@ -72,8 +72,8 @@ insert into ids select 'hh_a', (r ->> 'household_id')::uuid from sa;
 insert into ids select 'papa', (r ->> 'profile_id')::uuid from sa;
 with ins as (
   insert into app.profile (household_id, display_name, role)
-    values (pg_temp.id('hh_a'), 'Lotta', 'member') returning id)
-insert into ids select 'lotta', id from ins;
+    values (pg_temp.id('hh_a'), 'Emma', 'member') returning id)
+insert into ids select 'emma', id from ins;
 
 insert into users values
   ('papa', (select auth_user_id from app.profile where id = pg_temp.id('papa'))),
@@ -101,7 +101,7 @@ reset role;
 select pg_temp.add_dev('ipad', 'ipad', 'hh_a', null, 'shared', 'kid');
 
 select pg_temp.act_as_dev('ipad');
-select is(pg_temp.card(pg_temp.id('lotta')), '',
+select is(pg_temp.card(pg_temp.id('emma')), '',
   'a child acting on the tablet gets no card');
 select is(pg_temp.card(pg_temp.id('papa')),
   'invite_partner:open,connect_tablet:done,wall_display:open,set_pin:done,subscribe_feed:open,school:open',
@@ -181,7 +181,7 @@ select is(pg_temp.card(pg_temp.id('papa')),
 
 reset role;
 insert into app.timetable (household_id, profile_id, school_id, term_id, valid_from)
-  values (pg_temp.id('hh_a'), pg_temp.id('lotta'), pg_temp.id('school'), pg_temp.id('term'), date '2026-08-01');
+  values (pg_temp.id('hh_a'), pg_temp.id('emma'), pg_temp.id('school'), pg_temp.id('term'), date '2026-08-01');
 select pg_temp.act_as_dev('ipad');
 select is(pg_temp.card(pg_temp.id('papa')),
   'connect_tablet:done,wall_display:done,set_pin:done,subscribe_feed:done,school:done',
@@ -189,13 +189,13 @@ select is(pg_temp.card(pg_temp.id('papa')),
 
 -- A household without a child shows no school item.
 reset role;
-update app.profile set active = false where id = pg_temp.id('lotta');
+update app.profile set active = false where id = pg_temp.id('emma');
 select pg_temp.act_as_dev('ipad');
 select is(pg_temp.card(pg_temp.id('papa')),
   'wall_display:done,set_pin:done,subscribe_feed:done',
   'without an active child, connect_tablet and school are not shown');
 reset role;
-update app.profile set active = true where id = pg_temp.id('lotta');
+update app.profile set active = true where id = pg_temp.id('emma');
 
 -- ---- 7. Dismissal ----------------------------------------------------------------------------------
 -- Papa's own PIN is set on the setup call, so set_pin is done for him; Mama has no PIN.
@@ -228,9 +228,9 @@ select is(pg_temp.card(pg_temp.id('papa')),
 select is(pg_temp.error_hint(format('select api.getting_started_dismiss(%L, %L)', pg_temp.id('mama'), 'nonsense')),
   'getting_started_item_unknown', 'an unknown item is refused with a stable hint');
 
-select is(pg_temp.error_hint(format('select api.getting_started_dismiss(%L, %L)', pg_temp.id('lotta'), 'school')),
+select is(pg_temp.error_hint(format('select api.getting_started_dismiss(%L, %L)', pg_temp.id('emma'), 'school')),
   'guardian_required', 'a child cannot dismiss anything');
-select is(pg_temp.card(pg_temp.id('lotta')), '', 'a child gets no card, dismissed or not');
+select is(pg_temp.card(pg_temp.id('emma')), '', 'a child gets no card, dismissed or not');
 
 -- Papa restores: his household dismissals and his own go; Mama's set_pin dismissal stays.
 select pg_temp.act_as_dev('papa');

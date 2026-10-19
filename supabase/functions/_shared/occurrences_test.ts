@@ -556,7 +556,7 @@ function imported(p: Partial<ExternalOccurrenceRow>): ExternalOccurrenceRow {
     calendar_id: "cal-fussball",
     calendar_name: "Fussball",
     colour_hex: "#1E88E5",
-    member_ids: ["lotta"],
+    member_ids: ["emma"],
     show_on_board: false,
     uid: "match-1@club",
     starts_at: "2026-10-17T13:00:00Z",
@@ -577,7 +577,7 @@ Deno.test("imported: a timed row is read-only, in the calendar's colour, with it
   assertEquals(occ.id, "imported|row-1");
   assertEquals(occ.event_id, "cal-fussball|match-1@club");
   assertEquals(occ.calendar_id, "cal-fussball");
-  assertEquals(occ.attendee_ids, ["lotta"]);
+  assertEquals(occ.attendee_ids, ["emma"]);
   assertEquals(occ.start, "2026-10-17T13:00:00Z");
   assertEquals(occ.end, "2026-10-17T14:50:00Z");
   assertEquals(occ.local_start_date, "2026-10-17");

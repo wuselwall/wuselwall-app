@@ -25,18 +25,18 @@ begin
   perform set_config('role', 'authenticated', true);
 end $$;
 
--- ---- household A: Papa (guardian, phone), Lotta (child), Hanna (adult member) ------------------
+-- ---- household A: Papa (guardian, phone), Emma (child), Paul (adult member) ------------------
 create temp table sa as
   select api.setup_household('dev-setup', 'A', 'a@example.org', 'longpassword1', 'Papa', '#111111', '123456') r;
 grant all on sa to public;
 insert into ids select 'hh_a', (r ->> 'household_id')::uuid from sa;
 insert into ids select 'papa', (r ->> 'profile_id')::uuid from sa;
 insert into app.profile (household_id, display_name, role, kind)
-  values ((select id from ids where name = 'hh_a'), 'Lotta', 'member', 'child');
+  values ((select id from ids where name = 'hh_a'), 'Emma', 'member', 'child');
 insert into app.profile (household_id, display_name, role)
-  values ((select id from ids where name = 'hh_a'), 'Hanna', 'member');
+  values ((select id from ids where name = 'hh_a'), 'Paul', 'member');
 insert into ids select lower(p.display_name), p.id from app.profile p
- where p.household_id = (select id from ids where name = 'hh_a') and p.display_name in ('Lotta', 'Hanna');
+ where p.household_id = (select id from ids where name = 'hh_a') and p.display_name in ('Emma', 'Paul');
 
 insert into users values
   ('ipad', app.create_auth_user('ipad@devices.invalid', 'x1234567890')),
@@ -110,10 +110,10 @@ insert into ids select 'bolognese', (api.recipe_save(null, jsonb_build_object(
 
 -- Children may not write recipes; a kiosk may not write anything of this kind.
 select pg_temp.act_as_dev('ipad');
-select throws_ok($$ select api.recipe_save((select id from ids where name = 'lotta'), '{"title":"Kekse"}'::jsonb) $$,
+select throws_ok($$ select api.recipe_save((select id from ids where name = 'emma'), '{"title":"Kekse"}'::jsonb) $$,
   '42501', 'guardian required', 'a child may not save a recipe');
 select pg_temp.act_as_dev('kiosk');
-select throws_ok($$ select api.recipe_save((select id from ids where name = 'hanna'), '{"title":"Nein"}'::jsonb) $$,
+select throws_ok($$ select api.recipe_save((select id from ids where name = 'paul'), '{"title":"Nein"}'::jsonb) $$,
   '42501', 'not allowed on a kiosk', 'a kiosk may not save a recipe');
 
 -- ---- meals (Papa) ---------------------------------------------------------------------------------
@@ -167,14 +167,14 @@ select is((select count(*)::int from api.meal_plan_entries where on_date = '2026
 
 -- ---- eating corrections on the kiosk --------------------------------------------------------------
 select pg_temp.act_as_dev('kiosk');
-select lives_ok($$ select api.meal_eating_set((select id from ids where name = 'hanna'), '2026-10-14', 'dinner',
-  (select id from ids where name = 'lotta'), false) $$,
+select lives_ok($$ select api.meal_eating_set((select id from ids where name = 'paul'), '2026-10-14', 'dinner',
+  (select id from ids where name = 'emma'), false) $$,
   'a kiosk corrects who is eating, with an acting profile');
-select is((select eating_overrides ->> (select id::text from ids where name = 'lotta')
+select is((select eating_overrides ->> (select id::text from ids where name = 'emma')
              from api.meal_plan_entries where on_date = '2026-10-14' and slot = 'dinner'),
   'false', 'the correction is stored as an override');
-select lives_ok($$ select api.meal_eating_set((select id from ids where name = 'hanna'), '2026-10-14', 'dinner',
-  (select id from ids where name = 'lotta'), null) $$, 'a null correction removes the override');
+select lives_ok($$ select api.meal_eating_set((select id from ids where name = 'paul'), '2026-10-14', 'dinner',
+  (select id from ids where name = 'emma'), null) $$, 'a null correction removes the override');
 select is((select count(*)::int from jsonb_object_keys((select eating_overrides from api.meal_plan_entries
              where on_date = '2026-10-14' and slot = 'dinner'))),
   0, 'no override is left after the removal');

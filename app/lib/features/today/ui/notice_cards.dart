@@ -13,7 +13,7 @@ import 'package:wuselwall/features/today/application/today_providers.dart';
 import 'package:wuselwall/features/today/data/notices_repository.dart';
 import 'package:wuselwall/features/today/domain/notice.dart';
 
-/// The notices at the top of the adult Today tab (specs/20 J2, J4): "Sabine ist
+/// The notices at the top of the adult Today tab (specs/20 J2, J4): "Julia ist
 /// beigetreten" for guardians, "Neu angemeldet: ‹Gerät›" on the account's other
 /// phones. Each is dismissed with "Gesehen" and links to where the household can act:
 /// Einstellungen lists the members and, with the revoke action, the devices.

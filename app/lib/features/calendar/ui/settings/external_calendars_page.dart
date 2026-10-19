@@ -185,7 +185,7 @@ class _ExternalCalendarsPageState extends ConsumerState<ExternalCalendarsPage> {
   }
 }
 
-/// "Lukas, Sabine" or "Ganze Familie": who the calendar is for.
+/// "Thomas, Julia" or "Ganze Familie": who the calendar is for.
 String _membersLabel(
   AppLocalizations l10n,
   ExternalCalendar c,

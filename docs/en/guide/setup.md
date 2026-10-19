@@ -31,7 +31,7 @@ If two-factor sign-in is on, the six-digit code from your authenticator app foll
 
 If your account does not belong to a family yet, WuselWall opens **New family**. You do this once, on your own phone:
 
-1. **Family name**, for example "Huser".
+1. **Family name**, for example "Becker".
 2. **Your name** and **Your colour**. The colour appears wherever you add something.
 3. Optionally **Start with examples**: a few tasks and rewards that you can change or delete.
 4. The **founder code**, if your server asks for one. The person who runs your server gives it to you.
@@ -45,7 +45,7 @@ continues automatically.
 
 Tap **Create family**. Then comes the page **Who else is in your family?**: enter children and other adults by name, so they appear in the lists. You can invite adults later; **Skip** continues at once.
 
-This phone becomes your **personal phone**. It gets a name automatically, such as "Lukas iPhone", which you can change under **Settings → Devices**. Then the **Today** tab opens.
+This phone becomes your **personal phone**. It gets a name automatically, such as "David's iPhone", which you can change under **Settings → Devices**. Then the **Today** tab opens.
 
 ## 3. Joining a family
 
