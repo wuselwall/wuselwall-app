@@ -3515,11 +3515,15 @@ class AppLocalizationsDe extends AppLocalizations {
   String get householdLanguageEn => 'Englisch';
 
   @override
-  String get householdNewFounderCode => 'Gründungscode';
+  String get householdNewFounderCode => 'Einrichtungscode';
 
   @override
   String get householdNewFounderHelp =>
-      'Den Gründungscode bekommst du von der Person, die deinen Server betreibt.';
+      'Nimm den Einrichtungscode aus der Serverinstallation oder frage die Person, die euren Server betreibt. Das ist nicht der Code aus deiner Anmelde-E-Mail.';
+
+  @override
+  String get householdNewCodeSaved =>
+      'Einrichtungscode aus deinem Einrichtungslink gespeichert. Du musst ihn nicht erneut eingeben.';
 
   @override
   String get householdSeedExamples =>
@@ -3540,10 +3544,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get householdNewErrNoCode =>
-      'Neue Familien gibt es gerade nur mit Gründungscode.';
+      'Dieser Server braucht einen Einrichtungscode, um eine Familie anzulegen. Nimm den Code aus der Serverinstallation, nicht den E-Mail-Code.';
 
   @override
-  String get householdNewErrCodeWrong => 'Der Gründungscode stimmt nicht.';
+  String get householdNewErrCodeWrong =>
+      'Dieser Einrichtungscode ist ungültig oder wurde schon verwendet. Bitte die Person, die euren Server betreibt, um einen neuen Einrichtungslink oder Code.';
 
   @override
   String get householdNewErrRateLimited =>

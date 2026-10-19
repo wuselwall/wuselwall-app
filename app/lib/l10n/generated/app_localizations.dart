@@ -6083,14 +6083,20 @@ abstract class AppLocalizations {
   /// No description provided for @householdNewFounderCode.
   ///
   /// In en, this message translates to:
-  /// **'Founder code'**
+  /// **'Setup code'**
   String get householdNewFounderCode;
 
   /// No description provided for @householdNewFounderHelp.
   ///
   /// In en, this message translates to:
-  /// **'The person who runs your server gives you the founder code.'**
+  /// **'Use the setup code shown when your server was installed, or ask the person who runs it. This is not the code from your sign-in email.'**
   String get householdNewFounderHelp;
+
+  /// No description provided for @householdNewCodeSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Setup code saved from your setup link. You do not need to enter it again.'**
+  String get householdNewCodeSaved;
 
   /// No description provided for @householdSeedExamples.
   ///
@@ -6125,13 +6131,13 @@ abstract class AppLocalizations {
   /// No description provided for @householdNewErrNoCode.
   ///
   /// In en, this message translates to:
-  /// **'New families are only possible with a founder code for now.'**
+  /// **'This server needs a setup code to create a family. Use the code from the server installation, not your email code.'**
   String get householdNewErrNoCode;
 
   /// No description provided for @householdNewErrCodeWrong.
   ///
   /// In en, this message translates to:
-  /// **'The founder code is not correct.'**
+  /// **'This setup code is invalid or has already been used. Ask the person who runs your server for a new setup link or code.'**
   String get householdNewErrCodeWrong;
 
   /// No description provided for @householdNewErrRateLimited.

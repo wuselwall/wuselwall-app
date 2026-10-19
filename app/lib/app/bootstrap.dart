@@ -26,6 +26,8 @@ import 'package:wuselwall/core/server/server_discovery.dart';
 import 'package:wuselwall/core/server/server_info.dart';
 import 'package:wuselwall/core/server/server_link.dart';
 import 'package:wuselwall/core/server/server_store.dart';
+import 'package:wuselwall/core/server/setup_link.dart';
+import 'package:wuselwall/core/server/setup_store.dart';
 import 'package:wuselwall/core/supabase/secure_session_storage.dart';
 import 'package:wuselwall/core/supabase/supabase_bootstrap.dart';
 import 'package:wuselwall/demo/demo_overrides.dart';
@@ -56,10 +58,13 @@ class Bootstrap extends StatefulWidget {
     Future<bool> Function()? hasSession,
     Future<void> Function()? signOutLocally,
     this.webOrigin,
+    this.initialSetup,
+    SetupStore? setupStore,
     this.links,
     @visibleForTesting this.app = const WuselWallApp(),
     super.key,
-  }) : store = store ?? ServerStore(),
+  }) : setupStore = setupStore ?? SetupStore(),
+       store = store ?? ServerStore(),
        discovery = discovery ?? ServerDiscovery(),
        appVersion = appVersion ?? _packageVersion,
        connect = connect ?? initSupabase,
@@ -70,6 +75,8 @@ class Bootstrap extends StatefulWidget {
   /// The build's configuration (`AppConfig.fromEnvironment`).
   final AppConfig build;
   final ServerStore store;
+  final SetupStore setupStore;
+  final SetupLink? initialSetup;
   final ServerDiscovery discovery;
   final Future<String> Function() appVersion;
   final Future<void> Function(AppConfig) connect;
@@ -156,6 +163,7 @@ class _BootstrapState extends State<Bootstrap> {
   StreamSubscription<String>? _linkSubscription;
   bool _started = false;
   OpenedLink? _earlyLink;
+  SetupLink? _earlySetup;
   final _firstLink = Completer<void>();
 
   @override
@@ -181,9 +189,22 @@ class _BootstrapState extends State<Bootstrap> {
     final early = _earlyLink;
     _earlyLink = null;
     if (early != null) await _handleLink(early);
+    final setup = _earlySetup;
+    _earlySetup = null;
+    if (setup != null) await _handleSetup(setup);
   }
 
   Future<void> _onLink(String raw) async {
+    final setup = parseSetupLink(raw);
+    if (setup != null) {
+      if (!_firstLink.isCompleted) _firstLink.complete();
+      if (!_started) {
+        _earlySetup = setup;
+        return;
+      }
+      await _handleSetup(setup);
+      return;
+    }
     final link = parseAppLink(raw);
     if (link == null) return;
     if (!_firstLink.isCompleted) _firstLink.complete();
@@ -192,6 +213,17 @@ class _BootstrapState extends State<Bootstrap> {
       return;
     }
     await _handleLink(link);
+  }
+
+  Future<void> _handleSetup(SetupLink link) async {
+    // Never silently switch an existing installation to an untrusted link's server.
+    if (_server != null && _server != link.server) return;
+    if (_server == null) {
+      await _connect(link.server, setup: link);
+    } else {
+      await widget.setupStore.save(link);
+      _session?.setupPending.value = true;
+    }
   }
 
   /// A link while the app is up: connect, continue, or hand the decision to the app.
@@ -230,11 +262,21 @@ class _BootstrapState extends State<Bootstrap> {
 
   Future<void> _start() async {
     final build = widget.build;
+    final stored = build.hasFixedServer ? null : await widget.store.read();
+    final setup = widget.initialSetup;
+    if (setup != null) {
+      if (build.hasFixedServer) {
+        if (Uri.parse(build.supabaseUrl) == setup.server) {
+          await widget.setupStore.save(setup);
+        }
+      } else if (stored == null || stored.supabaseUrl == setup.server) {
+        if (await _connect(setup.server, setup: setup) == null) return;
+      }
+    }
     if (build.hasFixedServer) {
       await _run(build);
       return;
     }
-    final stored = await widget.store.read();
     if (stored != null) {
       await _run(AppConfig.forServer(build, stored));
       unawaited(_recheck(stored));
@@ -256,14 +298,14 @@ class _BootstrapState extends State<Bootstrap> {
         const Duration(milliseconds: 400),
         onTimeout: () {},
       );
-      if (_earlyLink != null) return;
+      if (_earlyLink != null || _earlySetup != null) return;
     }
     _show(const _Choosing());
   }
 
   /// Discovers [address], checks it against this app, keeps it and starts the app on it.
   /// Returns why it could not, or null.
-  Future<ServerProblem?> _connect(Uri address) async {
+  Future<ServerProblem?> _connect(Uri address, {SetupLink? setup}) async {
     final result = await widget.discovery.discover(address);
     switch (result) {
       case Err(:final failure):
@@ -273,6 +315,11 @@ class _BootstrapState extends State<Bootstrap> {
       case Ok(value: final server):
         final problem = await _fit(server);
         if (problem != null) return problem;
+        // Discovery must not substitute a different origin for a capability.
+        if (setup != null && setup.server != server.supabaseUrl) {
+          return ServerProblem.invalid;
+        }
+        if (setup != null) await widget.setupStore.save(setup);
         await widget.store.write(server);
         await _run(AppConfig.forServer(widget.build, server));
         return null;
@@ -321,6 +368,8 @@ class _BootstrapState extends State<Bootstrap> {
       if (problem != null) _pendingLink = null;
       return problem;
     }
+    final setup = parseSetupLink(raw);
+    if (setup != null) return _connect(setup.server, setup: setup);
     final address = parseServerAddress(raw, allowHttp: kDebugMode);
     if (address == null) return ServerProblem.invalid;
     // A device code's QR carries its server: one scan for both (ADR-018).
@@ -340,6 +389,8 @@ class _BootstrapState extends State<Bootstrap> {
     _server = Uri.tryParse(config.supabaseUrl);
     final pending = _pendingLink;
     final session = ServerSession(
+      hasSetup:
+          _server != null && await widget.setupStore.read(_server!) != null,
       leave: config.hasFixedServer ? null : _leave,
       pendingEnrolCode: _pendingEnrolCode,
       openLink: _handleLink,
@@ -358,6 +409,7 @@ class _BootstrapState extends State<Bootstrap> {
   /// again. The running app has emptied its own stores before calling this.
   Future<void> _leave() async {
     if (_connected) await widget.signOutLocally();
+    await widget.setupStore.clear();
     await widget.store.clear();
     _server = null;
     _session = null;
@@ -409,6 +461,7 @@ class _BootstrapState extends State<Bootstrap> {
       overrides: [
         appConfigProvider.overrideWithValue(config),
         serverSessionProvider.overrideWithValue(session),
+        setupStoreProvider.overrideWithValue(widget.setupStore),
         // Local reminders exist on Android and iOS only (specs/09, Q47).
         notificationSchedulerProvider.overrideWithValue(
           !kIsWeb &&

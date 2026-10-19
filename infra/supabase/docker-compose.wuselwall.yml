@@ -26,7 +26,14 @@ services:
 
   auth:
     image: ghcr.io/supabase/gotrue:v2.197.0
+    depends_on:
+      mail-templates:
+        condition: service_healthy
     environment:
+      GOTRUE_MAILER_TEMPLATES_CONFIRMATION: http://mail-templates/confirmation.html
+      GOTRUE_MAILER_TEMPLATES_MAGIC_LINK: http://mail-templates/magic_link.html
+      GOTRUE_MAILER_SUBJECTS_CONFIRMATION: Dein WuselWall-Code / Your WuselWall code
+      GOTRUE_MAILER_SUBJECTS_MAGIC_LINK: Dein WuselWall-Code / Your WuselWall code
       # Sign with the EC key, verify the legacy HS256 secret too.
       GOTRUE_JWT_KEYS: ${JWT_KEYS}
       GOTRUE_PASSWORD_MIN_LENGTH: 10
@@ -50,9 +57,9 @@ services:
       # Transactional Email. It is switched on by make-env.mjs once the stack's .env has the
       # SCW_* values (or by hand: set-env SEND_EMAIL_HOOK_ENABLED true). Its secret is the
       # v1,whsec_ value the functions container checks the signature with. The SMTP_* values in
-      # the .env are the fallback when the hook is off. The bilingual templates in
-      # supabase/templates/ are not used here: GoTrue loads templates only from URLs, and this
-      # stack hosts no static files, so without the hook GoTrue's English defaults are sent.
+      # the .env are the fallback when the hook is off. Both signup and returning sign-in
+      # use codes, not links. GoTrue loads the bilingual supabase/templates/ files through
+      # the internal-only mail-templates service (copied by the release/deploy scripts).
       #
       # The hook's address is HTTPS, the server's own public one (<api>/functions/v1/send-email),
       # and empty while the hook is off: GoTrue refuses a plain-http hook address unless it is
@@ -74,6 +81,19 @@ services:
       GOTRUE_MAILER_OTP_LENGTH: ${MAILER_OTP_LENGTH:-6}
       GOTRUE_MAILER_OTP_EXP: ${MAILER_OTP_EXP:-600}
       GOTRUE_SMTP_MAX_FREQUENCY: ${SMTP_MAX_FREQUENCY:-60s}
+
+  # No public ports, no Caddy dependency, no credentials or household data. Auth fetches
+  # raw Go templates over the Compose network; SMTP remains the operator's choice.
+  mail-templates:
+    image: nginx:1.28.0-alpine
+    restart: unless-stopped
+    volumes:
+      - ./volumes/mail-templates:/usr/share/nginx/html:ro,z
+    healthcheck:
+      test: [CMD-SHELL, "wget -q -O /dev/null http://127.0.0.1/confirmation.html && wget -q -O /dev/null http://127.0.0.1/magic_link.html"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
   rest:
     image: public.ecr.aws/supabase/postgrest:v16.4

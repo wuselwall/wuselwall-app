@@ -111,11 +111,10 @@ otp_length = 6
 otp_expiry = 600
 max_frequency = "60s"
 
-# Fallback mails for a stack where the Send Email Hook is off: German first, English below, in
-# one mail, with the six-digit code ({{ .Token }}). They apply only when the hook is not running.
-# GoTrue reads these files from the project; the compose stack has no static host for them, so
-# its operator relies on the hook, and a stack without it sends GoTrue's built-in English mails
-# through SMTP. The hook renders the same wording in the recipient's language (_shared/mail_*.ts).
+# Fallback mails when the Send Email Hook is off: German first, English below, with the
+# six-digit code ({{ .Token }}). CLI reads these paths; Compose serves the same files on
+# its internal mail-templates service. deploy-supabase uploads their contents to hosted
+# Auth. The hook renders the recipient's language instead (_shared/mail_*.ts).
 [auth.email.template.magic_link]
 subject = "Dein WuselWall-Code / Your WuselWall code"
 content_path = "./supabase/templates/magic_link.html"
