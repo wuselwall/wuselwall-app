@@ -13,6 +13,8 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/server/server_discovery.dart';
 import 'package:wuselwall/core/server/server_info.dart';
 import 'package:wuselwall/core/server/server_store.dart';
+import 'package:wuselwall/core/server/setup_link.dart';
+import 'package:wuselwall/core/server/setup_store.dart';
 
 const _store = AppConfig(
   environment: 'store',
@@ -81,6 +83,7 @@ class _App extends ConsumerWidget {
                           '${event.verdict.name}',
               ),
             ),
+            Text('setup ${session.setupPending.value}'),
             Text('running on ${config.supabaseUrl}'),
             if (leave != null)
               TextButton(onPressed: leave, child: const Text('leave')),
@@ -96,6 +99,7 @@ void main() {
   late _Store store;
 
   setUp(() {
+    FlutterSecureStorage.setMockInitialValues({});
     connected = [];
     store = _Store();
   });
@@ -107,6 +111,7 @@ void main() {
     String appVersion = '1.0.0',
     bool hasSession = false,
     Stream<String>? links,
+    SetupLink? initialSetup,
   }) async {
     final discovery = _Discovery(answers);
     // German, the default language (specs/09).
@@ -115,6 +120,7 @@ void main() {
     await t.pumpWidget(
       Bootstrap(
         build: build,
+        initialSetup: initialSetup,
         store: store,
         discovery: discovery,
         appVersion: () async => appVersion,
@@ -147,6 +153,106 @@ void main() {
       'sb_publishable_api.example.org',
     );
     expect(store.kept?.supabaseUrl.host, 'api.example.org');
+  });
+
+  testWidgets(
+    'setup link chooses API and keeps capability without a link inbox secret',
+    (t) async {
+      const token = '0123456789abcdef01234567';
+      await pump(t, answers: {'api.example.org': Ok(_server())});
+      await t.enterText(
+        find.byKey(const ValueKey('server-address')),
+        'https://web.example.org/#setup=$token&server=https%3A%2F%2Fapi.example.org',
+      );
+      await t.tap(find.byKey(const ValueKey('server-connect')));
+      await t.pumpAndSettle();
+      expect(find.text('setup true'), findsOneWidget);
+      expect(find.text('no link'), findsOneWidget);
+      expect(
+        await SetupStore().read(Uri.parse('https://api.example.org')),
+        token,
+      );
+      await t.tap(find.text('leave'));
+      await t.pumpAndSettle();
+      expect(
+        await SetupStore().read(Uri.parse('https://api.example.org')),
+        isNull,
+      );
+    },
+  );
+
+  testWidgets('web setup reload restores only the chosen server capability', (
+    t,
+  ) async {
+    final setup = SetupLink(
+      Uri.parse('https://api.example.org'),
+      '0123456789abcdef01234567',
+    );
+    await pump(
+      t,
+      answers: {'api.example.org': Ok(_server())},
+      initialSetup: setup,
+    );
+    expect(find.text('setup true'), findsOneWidget);
+    await t.pumpWidget(const SizedBox());
+    await pump(t, answers: {'api.example.org': Ok(_server())});
+    expect(find.text('setup true'), findsOneWidget);
+  });
+
+  testWidgets(
+    'a fixed-server web build captures only its own setup capability',
+    (t) async {
+      const build = AppConfig(
+        environment: 'dev',
+        supabaseUrl: 'https://api.example.org',
+        supabasePublishableKey: 'key',
+      );
+      await pump(
+        t,
+        build: build,
+        initialSetup: SetupLink(
+          Uri.parse(build.supabaseUrl),
+          '0123456789abcdef01234567',
+        ),
+      );
+      expect(find.text('setup true'), findsOneWidget);
+    },
+  );
+
+  testWidgets('setup link cannot silently replace a stored server', (t) async {
+    store.kept = _server();
+    await pump(
+      t,
+      answers: {'api.example.org': Ok(_server())},
+      initialSetup: SetupLink(
+        Uri.parse('https://other.example.org'),
+        '0123456789abcdef01234567',
+      ),
+    );
+    expect(find.text('setup false'), findsOneWidget);
+    expect(find.text('running on https://api.example.org'), findsOneWidget);
+  });
+
+  testWidgets('a native opened setup link starts the same setup flow', (
+    t,
+  ) async {
+    const token = '0123456789abcdef01234567';
+    final links = StreamController<String>();
+    addTearDown(links.close);
+    await pump(
+      t,
+      answers: {'api.example.org': Ok(_server())},
+      links: links.stream,
+    );
+    links.add(
+      'https://web.example.org/#setup=$token&server=https://api.example.org',
+    );
+    await t.pumpAndSettle();
+    expect(find.text('setup true'), findsOneWidget);
+    expect(
+      await SetupStore().read(Uri.parse('https://api.example.org')),
+      token,
+    );
   });
 
   testWidgets('a hosted Supabase project ID is enough', (t) async {

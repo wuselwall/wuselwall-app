@@ -9,6 +9,7 @@ class AuthFormScaffold extends StatelessWidget {
     required this.title,
     required this.children,
     this.showBack = true,
+    this.onBack,
     super.key,
   });
 
@@ -17,6 +18,7 @@ class AuthFormScaffold extends StatelessWidget {
 
   /// Off where going back would only bring the person straight back (E3).
   final bool showBack;
+  final VoidCallback? onBack;
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -24,7 +26,7 @@ class AuthFormScaffold extends StatelessWidget {
       title: Text(title),
       automaticallyImplyLeading: showBack,
       leading: showBack
-          ? BackButton(onPressed: () => context.go(Routes.setup))
+          ? BackButton(onPressed: onBack ?? () => context.go(Routes.setup))
           : null,
     ),
     body: SafeArea(

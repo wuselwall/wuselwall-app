@@ -19,6 +19,10 @@ The start screen has three ways in:
 
 Tap **Continue with email** and enter your email address. WuselWall sends you a **six-digit code**. It is valid for **10 minutes**. Enter it and you are in. If it does not arrive, check your spam folder or tap **No code? Send again**; a new code comes at the earliest after one minute.
 
+Keep the page with the code field open and enter the code from the email there.
+You do not need a sign-in link or a second sign-in. The email code verifies your
+address; it is different from the setup code for a new server.
+
 <Shot name="setup-sign-in" alt="Signing in with email" />
 
 Prefer a password? Tap **I have a password**. You set the password under **Settings → Sign-in**, at least 10 characters. The code by email always stays possible.
@@ -34,7 +38,12 @@ If your account does not belong to a family yet, WuselWall opens **New family**.
 1. **Family name**, for example "Becker".
 2. **Your name** and **Your colour**. The colour appears wherever you add something.
 3. Optionally **Start with examples**: a few tasks and rewards that you can change or delete.
-4. The **founder code**, if your server asks for one. The person who runs your server gives it to you.
+4. The **setup code**, if your server requires one and you have not opened a setup link. It comes from the server installation or the person who runs your server — not from your sign-in email.
+
+If you opened the setup link or QR code from the server installation, WuselWall
+remembers its setup code for that server during sign-in. You do not enter it again
+on **New family**. Treat the setup link like a key and share it only with the person
+who is creating your family.
 
 <Shot name="new-family" alt="New family form" />
 
