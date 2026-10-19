@@ -477,7 +477,7 @@ void main() {
       await unmountApp(tester, container);
     });
 
-    testWidgets('switching alternating off saves the week without week B', (
+    testWidgets('switching alternating off keeps week B for later', (
       tester,
     ) async {
       final (calendar, container) = await openWeek(
@@ -509,7 +509,16 @@ void main() {
 
       final week = calendar.weeks.single;
       expect(week.anchor, isNull);
-      expect(week.slots.map((s) => (s.week, s.weekday)), [(0, 2)]);
+      expect(week.slots.map((s) => (s.week, s.weekday)), [(0, 2), (1, 2)]);
+
+      // Switched on again, week B is still there.
+      await tester.tap(find.text('Abwechselnde Wochen (A/B)'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Woche A').last);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Woche B'));
+      await tester.pumpAndSettle();
+      expect(find.text('Nichts eingetragen'), findsNWidgets(6));
       await unmountApp(tester, container);
     });
   });

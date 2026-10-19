@@ -46,7 +46,7 @@ Under **Settings → Usual week** you record for each day of the week where you 
 
 If you are not in the same place all day, choose **Time slots**: up to three a day, for example the office from 8 to 12 and working from home from 13 to 17. Today the kitchen wall shows the slot that applies right now, on the other days the first one, with "+1" saying another follows.
 
-If your plan repeats every two weeks, switch on **Alternating weeks (A/B)**. WuselWall asks once whether this week is week A or week B. After that you enter a week of its own under **Week A** and **Week B**.
+If your plan repeats every two weeks, switch on **Alternating weeks (A/B)**. WuselWall asks once whether this week is week A or week B. After that you enter a week of its own under **Week A** and **Week B**. If you switch it off, week B stays saved and is back when you switch it on again.
 
 After that you only enter the exceptions. A normal week stays empty. On a public holiday the kitchen wall shows no usual place.
 
