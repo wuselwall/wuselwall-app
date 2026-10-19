@@ -194,7 +194,7 @@ events for it — [ADR-008](adr/ADR-008-school-timetable-model.md).
 school
   id, household_id, name,
   region_code TEXT NULL,                        -- OpenHolidays subdivision, any depth (DE-BE,
-                                                -- AT-9, CH-ZH-ZH-ZH): drives the holiday rules
+                                                -- AT-NÖ, CH-ZH-ZH-ZH): drives the holiday rules
   state_code TEXT NULL,                         -- the first two segments of region_code, kept
                                                 -- for the previous app release
   timezone TEXT
@@ -265,7 +265,8 @@ no household id, and any live device may read it (a revoked device reads nothing
 
 ```
 region                           -- every subdivision the sync knows
-  code PK,                                      -- 'CH-ZH-ZH-ZH', 'AT-9', 'DE-BY'
+  code PK,                                      -- 'CH-ZH-ZH-ZH', 'AT-NÖ', 'DE-BY': upper case,
+                                                -- digits and Ä Ö Ü, as OpenHolidays writes them
   country, parent_code NULL, level 1..4,
   category TEXT,                                -- source label: Kanton, Bezirk, Gemeinde, ...
   short_name, names JSONB (language -> name), fetched_at
@@ -283,7 +284,7 @@ holiday_feed_sync                -- per country: requested_at, fetched_at, valid
 
 `api.regions`, `api.holiday_feed` and `api.holiday_feed_status` read these tables; the rule
 "does a holiday of country C with subdivisions S apply to region R" is `app.region_covers`,
-and the Edge Functions mirror it in `_shared/openholidays.ts`. Writes go only through the service-role cache functions of `holidays-sync`.
+and the Edge Functions mirror it in `_shared/openholidays.ts`. Writes go only through the service-role cache functions of `holidays-sync`, which leaves out (and logs) a code the check would refuse rather than fail the country. Switzerland has about 2000 regions, more than one PostgREST answer holds (`max_rows`), so the app reads `api.regions` in pages.
 
 ### Getting started and export
 

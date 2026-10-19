@@ -10,6 +10,7 @@ import 'package:wuselwall/core/connectivity/connectivity_provider.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/legal/legal_links.dart';
 import 'package:wuselwall/core/server/server_address.dart';
+import 'package:wuselwall/core/server/setup_store.dart';
 import 'package:wuselwall/core/ui/qr_code_view.dart';
 
 /// What every un-enrolled device shows (specs/20, "The front door"): sign-in with
@@ -140,9 +141,16 @@ class _ContinueOnPhone extends ConsumerWidget {
       children: [
         Text(l10n.setupPhoneBody),
         const SizedBox(height: Tokens.space3),
-        QrCodeView(
-          data: serverQrPayload(server),
-          semanticsLabel: l10n.setupPhoneTitle,
+        FutureBuilder<String?>(
+          future: ref.read(setupStoreProvider).read(server),
+          builder: (context, snapshot) => QrCodeView(
+            data: serverQrPayload(
+              server,
+              setupToken: snapshot.data,
+              webOrigin: kIsWeb ? Uri.parse(Uri.base.origin) : server,
+            ),
+            semanticsLabel: l10n.setupPhoneTitle,
+          ),
         ),
         const SizedBox(height: Tokens.space2),
         SelectableText(displayServerAddress(server)),

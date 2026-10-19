@@ -18,6 +18,8 @@ Dafür braucht der Server einen SMTP-Dienst, also einen Anbieter, der Mails vers
 
 **Bei Supabase:** **Authentication → Emails → SMTP Settings**, dieselben Angaben. Der eingebaute Mail-Versand von Supabase ist nur zum Ausprobieren gedacht und schickt nur wenige Mails pro Stunde.
 
+Die Server-Version und der Workflow **deploy-supabase** richten sowohl die erste Bestätigungsmail als auch spätere Anmeldemails mit einem **sechsstelligen Code** ein, auf Deutsch und Englisch. Ein Scaleway-Hook ist dafür nicht nötig. Gib den Code in der bereits geöffneten App ein. Kommt nur ein Link an, aktualisiere den Server oder starte den Workflow aus dem aktualisierten Repository erneut und fordere danach einen neuen Code an; eine alte Mail ändert sich nicht.
+
 ## Update von einer Version mit Apple- und Google-Anmeldung {#social-stilllegen}
 
 Bis Oktober 2026 konnte man sich bei WuselWall auch mit Apple oder Google anmelden. Wer das tat, meldet sich jetzt mit einem Code per E-Mail an die Adresse seines Kontos an. Konto und Familie bleiben dieselben.

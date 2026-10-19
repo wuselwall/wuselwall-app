@@ -14,6 +14,7 @@ import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/notifications/notification_scheduler_provider.dart';
 import 'package:wuselwall/core/realtime/household_channel.dart';
+import 'package:wuselwall/core/server/setup_store.dart';
 import 'package:wuselwall/core/supabase/supabase_providers.dart';
 import 'package:wuselwall/features/account/application/account_admin_providers.dart';
 import 'package:wuselwall/features/account/data/account_admin_repository.dart';
@@ -621,6 +622,13 @@ ShoppingItem item(String id, String name, {bool checked = false}) =>
       createdAt: DateTime(2026, 10, 11),
     );
 
+class EmptySetupStore extends SetupStore {
+  @override
+  Future<String?> read(Uri server) async => null;
+  @override
+  Future<void> clear() async {}
+}
+
 List<Override> baseOverrides({
   required FakeIdentityRepository identity,
   FakeShoppingRepository? shopping,
@@ -632,6 +640,7 @@ List<Override> baseOverrides({
   FakeAccountAdminRepository? accountAdmin,
   FakeInvitationRepository? invitations,
   MemoryInvitationStore? invitationStore,
+  SetupStore? setupStore,
   bool signedIn = true,
   bool online = true,
 
@@ -641,6 +650,7 @@ List<Override> baseOverrides({
   /// Replaces the constant session of [signedIn], for a journey that signs in on the way.
   Override? sessionUser,
 }) => [
+  setupStoreProvider.overrideWithValue(setupStore ?? EmptySetupStore()),
   householdLeaveRepositoryProvider.overrideWithValue(
     leave ?? FakeHouseholdLeaveRepository(),
   ),

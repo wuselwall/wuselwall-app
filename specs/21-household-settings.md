@@ -104,7 +104,7 @@ belongs to; *self* means a member may change it for themselves.
 
 | Key | Scope | Default | Range | Context | Source |
 |---|---|---|---|---|---|
-| `household.region` | household | asked with the first school, country from the device | region picker: any OpenHolidays subdivision (`DE-BE`, `AT-9`, `CH-ZH-ZH-ZH`, `LI`) | Proposes the timezone; the public holidays of the region apply automatically, and Ferien are imported from it. Changeable under Einstellungen. Hand-entered holidays work in any region. *Decided 2026-10-14* | Q18 |
+| `household.region` | household | asked with the first school, country from the device | region picker: any OpenHolidays subdivision (`DE-BE`, `AT-NÖ`, `CH-ZH-ZH-ZH`, `LI`) | Proposes the timezone; the public holidays of the region apply automatically, and Ferien are imported from it. Changeable under Einstellungen. Hand-entered holidays work in any region. *Decided 2026-10-14* | Q18 |
 | `board.member_label` | household | full name | name · initial | The kitchen is private, and a name is easier to read than an initial at two metres. A household with frequent visitors may prefer initials | Q27 |
 | `member.completion_sound` | member, self | on | on · off | Ticking a chore off makes a short sound. The sound is part of the motivation for a young child; a child may switch it off | [06](06-module-tasks.md#screens) |
 

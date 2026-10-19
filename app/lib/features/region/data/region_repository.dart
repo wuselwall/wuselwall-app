@@ -43,12 +43,33 @@ class SupabaseRegionRepository implements RegionRepository {
 
   final ApiClient _api;
 
+  /// Read in pages: PostgREST returns at most `max_rows` rows per request (1000 by
+  /// default) and Switzerland alone has about 2000 regions. The server may cap a page below
+  /// what was asked, so only an empty page ends the read. Ordered by the primary key last,
+  /// so the pages do not overlap.
   @override
-  Future<Result<List<Region>>> regions(String country) => _api.select(
-    'regions',
-    parse: Region.fromJson,
-    build: (q) => q.eq('country', country).order('level').order('short_name'),
-  );
+  Future<Result<List<Region>>> regions(String country) async {
+    final all = <Region>[];
+    while (true) {
+      final page = await _api.select(
+        'regions',
+        parse: Region.fromJson,
+        build: (q) => q
+            .eq('country', country)
+            .order('level')
+            .order('short_name')
+            .order('code')
+            .range(all.length, all.length + regionPageSize - 1),
+      );
+      switch (page) {
+        case Ok(:final value):
+          if (value.isEmpty) return Ok(all);
+          all.addAll(value);
+        case Err(:final failure):
+          return Err(failure);
+      }
+    }
+  }
 
   @override
   Future<Result<FeedStatus?>> feedStatus(String country) => _api
@@ -113,6 +134,10 @@ String _ymd(DateTime d) =>
     '${d.year.toString().padLeft(4, '0')}-'
     '${d.month.toString().padLeft(2, '0')}-'
     '${d.day.toString().padLeft(2, '0')}';
+
+/// The rows [SupabaseRegionRepository.regions] asks for per request: PostgREST's default
+/// `max_rows`.
+const regionPageSize = 1000;
 
 final regionRepositoryProvider = Provider<RegionRepository>(
   (ref) => SupabaseRegionRepository(ref.watch(apiClientProvider)),

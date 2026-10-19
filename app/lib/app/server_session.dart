@@ -21,11 +21,13 @@ class LinkEvent {
 class ServerSession {
   ServerSession({
     this.leave,
+    bool hasSetup = false,
     this._pendingEnrolCode,
     this.openLink,
     this.switchToLinkServer,
     LinkEvent? initialLink,
-  }) : inbox = ValueNotifier(initialLink);
+  }) : inbox = ValueNotifier(initialLink),
+       setupPending = ValueNotifier(hasSetup);
 
   /// Forgets the server, signs this device out of it and returns to the server choice.
   /// Null for a build that names its own server.
@@ -42,6 +44,9 @@ class ServerSession {
   /// The links waiting for the app to act on them: set by the bootstrap, cleared by
   /// whoever handles the link.
   final ValueNotifier<LinkEvent?> inbox;
+
+  /// Non-secret signal used to skip the generic front door.
+  final ValueNotifier<bool> setupPending;
 
   String? _pendingEnrolCode;
 

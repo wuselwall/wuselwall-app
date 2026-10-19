@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/router.dart';
+import 'package:wuselwall/app/server_session.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/config/config_providers.dart';
@@ -12,6 +13,7 @@ import 'package:wuselwall/core/connectivity/connectivity_provider.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/server/setup_store.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/setup/ui/auth_form_scaffold.dart';
@@ -43,6 +45,13 @@ class _SignInPageState extends ConsumerState<SignInPage> {
   }
 
   /// Mails the code and goes to E2. Also the way out of a wrong password.
+  Future<void> _cancelSetup() async {
+    final session = ref.read(serverSessionProvider);
+    await ref.read(setupStoreProvider).clear();
+    session.setupPending.value = false;
+    if (mounted) context.go(Routes.setup);
+  }
+
   Future<void> _sendCode() async {
     final email = _email.text.trim();
     setState(() => _busy = true);
@@ -103,6 +112,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
     final busy = _busy || !online;
 
     return AuthFormScaffold(
+      onBack: () => unawaited(_cancelSetup()),
       title: l10n.doorEmail,
       children: [
         if (!online) ...[
