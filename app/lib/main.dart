@@ -34,7 +34,8 @@ Future<void> main() async {
   if (kIsWeb) watchSetupLinks();
   // Remove installer capabilities from browser history before the router starts.
   // The fragment was never sent to the web server or the discovery endpoint.
-  if (kIsWeb && Uri.base.fragment.startsWith('setup=')) {
+  if (kIsWeb &&
+      (initialSetup != null || Uri.base.fragment.contains('setup='))) {
     await SystemNavigator.routeInformationUpdated(
       uri: Uri(path: '/'),
       replace: true,
