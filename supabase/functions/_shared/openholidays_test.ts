@@ -9,6 +9,8 @@ import {
   OpenHolidaysError,
   parseHolidays,
   regionCovers,
+  type RegionRow,
+  storableRegions,
   syncWindow,
 } from "./openholidays.ts";
 
@@ -100,6 +102,48 @@ Deno.test("flattenSubdivisions: four levels are allowed", () => {
   };
   const rows = flattenSubdivisions("CH", [deep]);
   assertEquals(rows.map((r) => r.level), [1, 2, 3, 4]);
+});
+
+// ------------------------------------------------------------------ storableRegions
+
+function region(code: string, level: number, country = "CH"): RegionRow {
+  return {
+    code,
+    country,
+    parent_code: null,
+    level: level as RegionRow["level"],
+    category: "",
+    short_name: "",
+    names: {},
+  };
+}
+
+Deno.test("storableRegions: keeps the codes with umlauts that OpenHolidays sends", () => {
+  const rows = [
+    region("AT-KÄ", 1, "AT"),
+    region("AT-NÖ", 1, "AT"),
+    region("CH-BE", 1),
+    region("CH-BE-SL-RÜ", 3),
+    region("DE-BY", 1, "DE"),
+  ];
+  assertEquals(storableRegions(rows), { rows, dropped: 0 });
+});
+
+Deno.test("storableRegions: leaves out a code the cache would refuse, not the country", () => {
+  const { rows, dropped } = storableRegions([
+    region("CH-VD", 1),
+    region("CH-VD-LÉ", 2), // a character the check does not know
+    region("CH-vd", 1), // lower case
+    region("CH-VD-LA", 3), // level is not the depth
+    region("DE-BY", 1), // another country
+  ]);
+  assertEquals(rows.map((r) => r.code), ["CH-VD"]);
+  assertEquals(dropped, 4);
+});
+
+Deno.test("storableRegions: the Swiss fixture is storable as it is", async () => {
+  const rows = flattenSubdivisions("CH", await fixture("subdivisions_ch.json"));
+  assertEquals(storableRegions(rows).dropped, 0);
 });
 
 function assertThrowsShape(fn: () => unknown) {
