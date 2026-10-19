@@ -54,6 +54,9 @@ scp dist/wuselwall-server-0.1.0.tar.gz server:     # then on the server: tar xzf
 
 The web app at `https://web.example.org` reads the server address from your
 installation. You do not build an address or key into the app.
+On loading, it uses the current configuration even if the browser has saved an
+old server address. Offline, it uses the last saved configuration. If the server
+address has changed, sign in again.
 
 Open the setup link printed by the installation in your browser, or scan its QR
 code. It contains both the server and the setup code. WuselWall remembers the

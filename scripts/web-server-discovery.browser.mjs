@@ -21,8 +21,8 @@ const base = `http://localhost:${server.address().port}`;
 const browser = await chromium.launch({ headless: true });
 try {
   for (const family of ['one', 'two']) {
-    const backend = `https://family-${family}.example.org`;
-    const key = `sb_publishable_browser_fixture_${family}`;
+    let backend = `https://family-${family}.example.org`;
+    let key = `sb_publishable_browser_fixture_${family}`;
     const context = await browser.newContext({ locale: 'en-GB', viewport: { width: 390, height: 844 } });
     try {
       const page = await context.newPage();
@@ -35,7 +35,9 @@ try {
           api_version: 1, min_app_version: '0.0.0', household_creation: 'code', features: [] } });
       });
       const otpRequests = [];
-      await page.route(`${backend}/**`, async (route) => {
+      // Intercept Auth writes for every destination, including retired servers and
+      // redirect_to query strings. Never let a browser fixture deliver real mail.
+      await page.route('**/auth/**', async (route) => {
         if (route.request().method() === 'OPTIONS') return route.fulfill({ status: 204,
           headers: { 'access-control-allow-origin': '*', 'access-control-allow-headers': '*', 'access-control-allow-methods': '*' } });
         if (route.request().url().includes('/auth/v1/otp')) {
@@ -61,6 +63,25 @@ try {
       assert.equal(otpRequests[0].key, key, 'auth must use the installation publishable key');
       assert.deepEqual(errors, []);
       console.log(`PASS: same bundle discovers installation ${family} and sends OTP only to its configured backend/key (synthetic API).`);
+
+      // Retain the real encrypted browser storage from the first installation.
+      // Change discovery, then load a new document in that same browser context.
+      backend = `https://family-${family}-moved.example.org`;
+      key = `sb_publishable_browser_fixture_${family}_rotated`;
+      await page.goto(`${base}/?cached-browser=1`);
+      await page.waitForSelector('flt-glass-pane', { state: 'attached', timeout: 90000 });
+      await page.locator('flt-semantics-placeholder').evaluate((element) => element.click()).catch(() => {});
+      await page.getByRole('button', { name: 'Continue with email', exact: true }).click({ timeout: 30000 });
+      await page.locator('input').first().fill('browser-probe@example.org', { force: true });
+      const resent = page.waitForResponse((response) => response.request().method() === 'POST' &&
+        new URL(response.url()).pathname === '/auth/v1/otp');
+      await page.getByRole('button', { name: 'Continue', exact: true }).click();
+      assert.equal((await resent).status(), 200);
+      assert.equal(otpRequests.length, 2);
+      assert.ok(otpRequests[1].url.startsWith(`${backend}/auth/v1/otp`), 'cached browser must stop using retired backend');
+      assert.equal(otpRequests[1].key, key, 'cached browser must refresh its key before connecting');
+      assert.deepEqual(errors, []);
+      console.log(`PASS: cached browser ${family} uses refreshed installation backend/key on its first reload.`);
     } finally { await context.close(); }
   }
 } finally { await browser.close(); await new Promise((resolve) => server.close(resolve)); }
