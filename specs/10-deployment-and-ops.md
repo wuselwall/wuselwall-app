@@ -172,7 +172,11 @@ relying on it, and after any DNS change.
 5. Check with a code to a Gmail, an Outlook.com, a GMX and an iCloud address, as below.
 
 The hook renders each mail in the recipient's language. With the hook off, any configured
-SMTP relay sends the bilingual code templates in `supabase/templates/`, both for first signup
+SMTP relay sends the bilingual code templates in `supabase/templates/`, generated from the
+hook's renderer (`deno run --allow-write supabase/functions/_shared/mail_templates_write.ts`;
+a test fails when they drift). The HTML is built for every mail client (Outlook's Word engine
+included): layout tables, inline styles only, no images and no links; the plain-text part
+carries all of it. Both are used: for first signup
 (`confirmation`) and later email sign-in (`magic_link`). The CLI reads these files directly.
 Compose fetches them from the internal-only `mail-templates` service (no published port,
 independent of Caddy); release packaging and checkout deployment copy the canonical files
