@@ -1,5 +1,5 @@
 begin;
-select plan(92);
+select plan(100);
 
 -- Start from an empty system, whatever the database already holds (all rolled back).
 delete from app.household;
@@ -158,6 +158,17 @@ select lives_ok($$ select api.school_save(null, jsonb_build_object('id', (select
   'name', 'Schule Zürich', 'region_code', 'AT-9')) $$, 'an Austrian region is accepted');
 select is((select state_code from api.schools where id = (select id from ids where name = 'sch_ch')), 'AT-9',
   'an Austrian state is the region itself');
+-- OpenHolidays writes some codes with umlauts (AT-NÖ, CH-BE-SL-RÜ).
+select lives_ok($$ select api.school_save(null, jsonb_build_object('id', (select id from ids where name = 'sch_ch'),
+  'name', 'Schule Zürich', 'region_code', 'CH-BE-SL-RÜ')) $$, 'a region code with an umlaut is accepted');
+select is((select state_code from api.schools where id = (select id from ids where name = 'sch_ch')), 'CH-BE',
+  'the state of a municipality with an umlaut is its canton');
+select lives_ok($$ select api.school_save(null, jsonb_build_object('id', (select id from ids where name = 'sch_ch'),
+  'name', 'Schule Zürich', 'region_code', 'AT-NÖ')) $$, 'an Austrian state with an umlaut is accepted');
+select is((select state_code from api.schools where id = (select id from ids where name = 'sch_ch')), 'AT-NÖ',
+  'an Austrian state with an umlaut is the state code too');
+select throws_ok($$ select api.school_save(null, '{"name":"X","region_code":"CH-BE-SL-rü"}'::jsonb) $$,
+  '22023', 'WW-SCH-001 school invalid', 'umlauts in region codes are upper case too');
 select lives_ok($$ select api.school_save(null, jsonb_build_object('id', (select id from ids where name = 'sch_ch'),
   'name', 'Schule Zürich', 'region_code', null)) $$, 'a null region clears the region');
 select ok((select region_code is null and state_code is null from api.schools where id = (select id from ids where name = 'sch_ch')),
@@ -235,6 +246,8 @@ select throws_ok($$ select api.holiday_import_preview(null, (select id from ids 
   'a preview window over 800 days is refused');
 select throws_ok($$ select api.holiday_import_preview(null, (select id from ids where name = 'sch_ch'),
   'Zurich', '2026-07-01', '2026-12-31') $$, '22023', 'WW-SCH-001 school invalid', 'a preview needs a region code');
+select is(jsonb_array_length(api.holiday_import_preview(null, null, 'CH-BE-SL-RÜ', '2026-07-01', '2026-12-31')), 1,
+  'a preview for a region code with an umlaut works (the nationwide holiday)');
 select throws_ok($$ select api.holiday_import_preview(null, (select id from ids where name = 'school_b'),
   'CH-ZH-ZH-ZH', '2026-07-01', '2026-12-31') $$, 'P0002', 'school not found',
   'a preview for a school of another household is refused');
@@ -312,6 +325,8 @@ select throws_ok($$ select api.set_setting(null, 'household.region', '"Zurich"':
   '22023', 'WW-SET-001 setting value out of range', 'a household region is a code, not a name');
 select throws_ok($$ select api.set_setting(null, 'household.region', '"CH"'::jsonb) $$,
   '22023', 'WW-SET-001 setting value out of range', 'a household region needs a level below the country');
+select lives_ok($$ select api.set_setting(null, 'household.region', '"AT-OÖ"'::jsonb) $$,
+  'a household region with an umlaut is accepted');
 select lives_ok($$ select api.set_setting(null, 'household.region', 'null'::jsonb) $$,
   'the household region can be cleared');
 
@@ -334,6 +349,11 @@ set local role service_role;
 select is(api.holiday_cache_put_regions('[{"code":"AT-9","country":"AT","parent_code":null,"level":1,
   "category":"Bundesland","short_name":"W","names":{"de":"Wien"},"fetched_at":"2026-10-14T00:00:00Z"}]'::jsonb),
   1, 'the service role upserts regions');
+select is(api.holiday_cache_put_regions('[{"code":"AT-KÄ","country":"AT","parent_code":null,"level":1,
+  "category":"Bundesland","short_name":"KÄ","names":{"de":"Kärnten"},"fetched_at":"2026-10-14T00:00:00Z"},
+  {"code":"CH-BE-SL-RÜ","country":"CH","parent_code":"CH-BE-SL","level":3,"category":"Gemeinde",
+  "short_name":"BE-SL-RÜ","names":{"de":"Rüti bei Büren"},"fetched_at":"2026-10-14T00:00:00Z"}]'::jsonb),
+  2, 'the cache takes the region codes with umlauts that OpenHolidays sends');
 select is(api.holiday_cache_put_holidays('[{"id":"feed-at","country":"AT","kind":"public","starts_on":"2026-10-26",
   "ends_on":"2026-10-26","names":{"de":"Nationalfeiertag"},"nationwide":false,"subdivisions":["AT-9"],
   "fetched_at":"2026-10-14T00:00:00Z"}]'::jsonb),
@@ -346,7 +366,7 @@ select is(api.holiday_cache_prune('CH', 'school', '2026-01-01', '2027-12-31', ar
 select is((api.holiday_cache_state('CH') ->> 'holidays')::int, 3, 'the other Swiss holidays stay');
 select lives_ok($$ select api.holiday_cache_finish('AT', now(), '2025-01-01', '2027-12-31') $$,
   'a refresh is recorded');
-select is((api.holiday_cache_state('AT') ->> 'regions')::int, 1, 'the cache state counts the regions');
+select is((api.holiday_cache_state('AT') ->> 'regions')::int, 2, 'the cache state counts the regions (Wien and Kärnten)');
 select ok('AT' = any (api.holiday_cache_countries()), 'a fetched country is refreshed again');
 select lives_ok($$ select api.holiday_cache_fail('AT', 'timeout') $$, 'a failed refresh is recorded');
 reset role;

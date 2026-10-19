@@ -37,6 +37,7 @@ import {
   isCountry,
   OpenHolidaysError,
   type RegionRow,
+  storableRegions,
   syncWindow,
 } from "../_shared/openholidays.ts";
 
@@ -146,7 +147,15 @@ async function refresh(
 
   const fetchedAt = now.toISOString();
   try {
-    const regions = fetched.regions.map((r: RegionRow) => ({
+    const storable = storableRegions(fetched.regions);
+    if (storable.dropped > 0) {
+      console.warn(
+        "holidays-sync left out regions the cache cannot store:",
+        country,
+        storable.dropped,
+      );
+    }
+    const regions = storable.rows.map((r: RegionRow) => ({
       ...r,
       fetched_at: fetchedAt,
     }));

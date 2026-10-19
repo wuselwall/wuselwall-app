@@ -9,6 +9,7 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/demo/demo_repositories.dart';
 import 'package:wuselwall/features/region/application/region_providers.dart';
+import 'package:wuselwall/features/region/data/region_repository.dart';
 import 'package:wuselwall/features/region/domain/region_models.dart';
 import 'package:wuselwall/features/region/ui/region_field.dart';
 import 'package:wuselwall/features/region/ui/region_picker_page.dart';
@@ -187,6 +188,58 @@ void main() {
       await refreshCountryIfStale(stale, 'CH', now: now);
       expect(stale.refreshes, ['CH']);
     });
+
+    Future<List<Region>> readRegions(FakeRegionRepository repository) {
+      final container = ProviderContainer(
+        overrides: [regionRepositoryProvider.overrideWithValue(repository)],
+      );
+      addTearDown(container.dispose);
+      final sub = container.listen(countryRegionsProvider('CH'), (_, _) {});
+      addTearDown(sub.close);
+      return container.read(countryRegionsProvider('CH').future);
+    }
+
+    test('a cache without a successful fetch is refreshed', () async {
+      // An earlier write broke off: regions, but no fetched_at.
+      final repository = FakeRegionRepository(
+        status: const FeedStatus(country: 'CH', lastError: 'db 23514'),
+      );
+      final regions = await readRegions(repository);
+      expect(repository.refreshes, ['CH']);
+      expect(regions, isNotEmpty);
+    });
+
+    test('a failed refresh keeps the regions there are', () async {
+      final repository = FakeRegionRepository(
+        status: const FeedStatus(country: 'CH', lastError: 'db 23514'),
+        refreshFailure: const NetworkFailure(),
+      );
+      final regions = await readRegions(repository);
+      expect(repository.refreshes, ['CH']);
+      expect(regions.map((r) => r.code), contains('CH-ZH'));
+    });
+
+    test('a fetched cache is not refreshed', () async {
+      final repository = FakeRegionRepository(
+        status: FeedStatus(country: 'CH', fetchedAt: DateTime(2026, 10, 14)),
+      );
+      await readRegions(repository);
+      expect(repository.refreshes, isEmpty);
+    });
+
+    test('a failed first fetch is one error, not retried', () async {
+      final repository = FakeRegionRepository(
+        regions: const [],
+        refreshFailure: const NetworkFailure(),
+      );
+      await expectLater(
+        readRegions(repository),
+        throwsA(isA<NetworkFailure>()),
+      );
+      // Riverpod's default would try again after 200 ms.
+      await Future<void>.delayed(const Duration(milliseconds: 500));
+      expect(repository.refreshes, ['CH']);
+    });
   });
 
   group('region widgets', () {
@@ -255,6 +308,7 @@ void main() {
 
     testWidgets('a failed fetch offers to go on without a region', (t) async {
       final region = FakeRegionRepository(
+        regions: const [],
         refreshFailure: const NetworkFailure(),
       );
       await pumpApp(
@@ -266,8 +320,12 @@ void main() {
       );
       final probe = await openPicker(t);
       await t.tap(find.text(de.regionCountryCH));
-      await t.pumpAndSettle();
+      // Shown at once, not after Riverpod's automatic retries (most of a minute of
+      // spinner on a real device): pump a few frames, not pumpAndSettle.
+      await t.pump();
+      await t.pump(const Duration(milliseconds: 50));
       expect(find.text(de.regionUnavailable), findsOneWidget);
+      expect(region.refreshes, ['CH']);
       await t.tap(find.text(de.regionPickSkip));
       await t.pumpAndSettle();
       expect(probe.done, isTrue);
