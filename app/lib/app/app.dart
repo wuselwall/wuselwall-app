@@ -5,6 +5,7 @@ import 'package:wuselwall/app/link_host.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/server_session.dart';
 import 'package:wuselwall/app/theme/app_theme.dart';
+import 'package:wuselwall/app/theme/appearance.dart';
 import 'package:wuselwall/app/theme/night.dart';
 import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
@@ -31,8 +32,9 @@ class WuselWallApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final register = ref.watch(uiRegisterProvider);
-    // The wall display switches to its night shade from 21:00 whatever the OS says;
-    // everything else follows the OS between light and dark.
+    // The wall display switches to its night shade from 21:00 whatever the OS or the
+    // device's appearance says; otherwise the appearance picks light or dark, by
+    // default as the OS does.
     final night = register == UiRegister.kiosk && ref.watch(nightProvider);
 
     return MaterialApp.router(
@@ -42,7 +44,7 @@ class WuselWallApp extends ConsumerWidget {
       localizationsDelegates: localizationsDelegates,
       theme: AppTheme.build(register, night ? Shade.night : Shade.light),
       darkTheme: AppTheme.build(register, night ? Shade.night : Shade.dark),
-      themeMode: ThemeMode.system,
+      themeMode: ref.watch(appearanceProvider).value ?? ThemeMode.system,
       builder: (context, child) {
         final app = LinkHost(
           child: _ReminderHost(child: _MemberAccent(child: child!)),

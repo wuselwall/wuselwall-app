@@ -47,5 +47,5 @@ Alles gehört zu einem **Haushalt**: eurer Familie. Der Haushalt hat **Mitgliede
 Jedes Gerät zeigt WuselWall in der passenden **Ansicht**: für Erwachsene kompakt, für Kinder größer und einfacher, für die Wand besonders groß. Welche Ansicht ein Gerät hat, legen die Erziehungsberechtigten beim Verbinden fest.
 
 ::: tip Sprache und Design
-WuselWall spricht Deutsch und Englisch und folgt der Sprache und dem hellen oder dunklen Design deines Geräts. Auf der Wand wird es ab 21 Uhr automatisch dunkel.
+WuselWall spricht Deutsch und Englisch und folgt der Sprache deines Geräts. Hell oder dunkel folgt es zunächst auch dem Gerät; unter **Einstellungen → Darstellung** stellst du es für dieses Gerät fest auf **Hell** oder **Dunkel** (oder zurück auf **Automatisch**). Auf der Wand wird es ab 21 Uhr automatisch dunkel, egal was eingestellt ist.
 :::

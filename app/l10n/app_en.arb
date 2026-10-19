@@ -2382,5 +2382,11 @@
     }
   },
   "settingNotifyPackingTitle": "Packing reminder the evening before",
-  "settingNotifyPackingHelp": "At this time your phone says what has to go in the school bag for tomorrow, from the timetables (for example PE kit). Only when there is something to pack."
+  "settingNotifyPackingHelp": "At this time your phone says what has to go in the school bag for tomorrow, from the timetables (for example PE kit). Only when there is something to pack.",
+  "appearanceTitle": "Appearance",
+  "appearanceSystem": "Automatic",
+  "appearanceSystemHelp": "Light or dark, as set on this device",
+  "appearanceLight": "Light",
+  "appearanceDark": "Dark",
+  "appearanceNightNote": "At night the wall display always shows its night view."
 }
