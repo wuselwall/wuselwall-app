@@ -20,7 +20,7 @@
 --
 -- Errors (raised with the message 'WW-CAL-0nn ...' and the hint in the second column):
 --   WW-CAL-008  usual week invalid  (hint usual_week_invalid)  shape, state, label, times,
---               overlapping slots, more than three slots, week B without an anchor
+--               overlapping slots, more than three slots
 
 -- ------------------------------------------------------------------ the anchor
 
@@ -33,7 +33,8 @@ grant select (usual_week_anchor) on app.profile to authenticated;
 
 -- One row per usual place of a weekday. A row without times is the whole day and is then
 -- the day's only row; timed rows (at most three) do not overlap. Week 0 is week A, or every
--- week when the profile has no anchor; week 1 is week B.
+-- week when the profile has no anchor; week 1 is week B. Without an anchor week B is kept
+-- but never read, so switching alternating weeks off and on again does not lose it.
 create table app.usual_presence (
   household_id uuid not null references app.household on delete cascade,
   profile_id   uuid not null references app.profile on delete cascade,
@@ -122,8 +123,8 @@ revoke all on function app.usual_week_summarise(uuid), app.usual_week_rows(jsonb
 --   {"week": 0|1, "weekday": 1–7, "state": "...", "label": "..."|null,
 --    "starts": "HH:MM"|null, "ends": "HH:MM"|null}
 -- in any order; an empty array clears the week. p_anchor is null (the same every week) or
--- the Monday of a week A, and week 1 rows need it. A guardian may set anyone's, a member
--- only their own; never from a kiosk.
+-- the Monday of a week A; week 1 rows count only with one. A guardian may set anyone's, a
+-- member only their own; never from a kiosk.
 create function api.member_usual_week_set(p_actor uuid, p_profile_id uuid, p_anchor date, p_slots jsonb)
 returns void language plpgsql security definer set search_path = '' as $$
 declare
@@ -165,7 +166,7 @@ begin
     exception when others then
       raise exception 'WW-CAL-008 usual week invalid' using errcode = '22023', hint = 'usual_week_invalid';
     end;
-    if v_week not in (0, 1) or (v_week = 1 and p_anchor is null)
+    if v_week not in (0, 1)
        or v_day is null or v_day not between 1 and 7
        or v_state is null
        or v_state not in ('working', 'home_office', 'travel', 'away', 'off', 'childcare')
