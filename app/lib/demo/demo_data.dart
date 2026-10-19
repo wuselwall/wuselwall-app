@@ -1,5 +1,6 @@
 import 'package:flutter/painting.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
+import 'package:wuselwall/core/l10n/app_locale.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 
@@ -11,41 +12,48 @@ abstract final class DemoData {
   static const daughter = 'p-daughter';
   static const son = 'p-son';
 
-  /// The family's names in German and in English: the demo speaks the app's language.
+  /// The family's names in all shipped languages, by language code.
   static const _names = {
-    papa: ('Thomas', 'David'),
-    mama: ('Julia', 'Sarah'),
-    daughter: ('Emma', 'Olivia'),
-    son: ('Paul', 'Jack'),
+    papa: {'de': 'Thomas', 'en': 'David', 'fr': 'Thomas', 'es': 'David'},
+    mama: {'de': 'Julia', 'en': 'Sarah', 'fr': 'Julie', 'es': 'Sara'},
+    daughter: {'de': 'Emma', 'en': 'Olivia', 'fr': 'Emma', 'es': 'Olivia'},
+    son: {'de': 'Paul', 'en': 'Jack', 'fr': 'Paul', 'es': 'Pablo'},
   };
 
-  static var _english = false;
+  static var _languageCode = 'de';
 
-  /// Whether the demo runs in English; set by [useLanguageOf] when the demo starts.
-  static bool get english => _english;
+  /// The demo's language (`de`, `en`, `fr`, `es`); set by [useLanguageOf].
+  static String get languageCode => _languageCode;
+
+  /// Whether the demo runs in English; kept for the existing English demo tables.
+  static bool get english => _languageCode == 'en';
 
   /// Picks the language as MaterialApp does from the device's [preferred] locales and
-  /// app.dart's `supportedLocales`: the first German or English one, German otherwise.
+  /// app.dart's `supportedLocales`: the first supported one, German otherwise.
   static void useLanguageOf(List<Locale> preferred) {
-    final code = preferred
-        .map((l) => l.languageCode)
-        .firstWhere((c) => c == 'de' || c == 'en', orElse: () => 'de');
-    _english = code == 'en';
+    _languageCode = resolveAppLocale(preferred).languageCode;
   }
 
   /// The display name of the member [id].
-  static String name(String id) {
-    final (de, en) = _names[id]!;
-    return _english ? en : de;
-  }
+  static String name(String id) => _names[id]![_languageCode]!;
 
-  /// [de] in German, [en] in English: all of the demo's content speaks the app's
-  /// language, not only the names.
-  static String tr(String de, String en) => _english ? en : de;
+  /// [text] in the demo's language: [text] is a map of language code to translation.
+  /// German is the key of every source string, so German never needs a table.
+  static String tr(Map<String, String> text) =>
+      text[_languageCode] ?? text['de']!;
+
+  /// German [de], English [en], French [fr], Spanish [es]: all of the demo's content
+  /// speaks the app's language, not only the names.
+  static String tr4(String de, String en, String fr, String es) =>
+      tr({'de': de, 'en': en, 'fr': fr, 'es': es});
 
   /// The father's phone, as the device list shows it.
-  static String get papaPhone =>
-      _english ? "${name(papa)}'s iPhone" : '${name(papa)}’ iPhone';
+  static String get papaPhone => switch (_languageCode) {
+    'de' => '${name(papa)}’ iPhone',
+    'fr' => 'iPhone de ${name(papa)}',
+    'es' => 'iPhone de ${name(papa)}',
+    _ => "${name(papa)}'s iPhone",
+  };
 
   static List<Member> get members => [
     Member(
@@ -81,9 +89,17 @@ abstract final class DemoData {
   ];
 
   static List<(String, String, bool)> get lists => [
-    ('l-super', tr('Supermarkt', 'Supermarket'), true),
-    ('l-drug', tr('Drogerie', 'Pharmacy'), false),
-    ('l-hardware', tr('Baumarkt', 'Hardware store'), false),
+    (
+      'l-super',
+      tr4('Supermarkt', 'Supermarket', 'Supermarché', 'Supermercado'),
+      true,
+    ),
+    ('l-drug', tr4('Drogerie', 'Pharmacy', 'Droguerie', 'Droguería'), false),
+    (
+      'l-hardware',
+      tr4('Baumarkt', 'Hardware store', 'Magasin de bricolage', 'Ferretería'),
+      false,
+    ),
   ];
 
   static const superKeys = [
@@ -142,22 +158,52 @@ abstract final class DemoData {
   /// (name, category key, purchases, icon key) — what the household has bought before.
   /// The icon key is the one the server picks from the name (app.catalog_icon_for).
   static List<(String, String, int, String)> get _catalogue => [
-    (tr('Milch', 'Milk'), 'dairy', 42, 'milk'),
-    (tr('Brot', 'Bread'), 'bakery', 35, 'bread'),
-    (tr('Bananen', 'Bananas'), 'produce', 31, 'banana'),
-    (tr('Äpfel', 'Apples'), 'produce', 24, 'apple'),
+    (tr4('Milch', 'Milk', 'Lait', 'Leche'), 'dairy', 42, 'milk'),
+    (tr4('Brot', 'Bread', 'Pain', 'Pan'), 'bakery', 35, 'bread'),
+    (tr4('Bananen', 'Bananas', 'Bananes', 'Plátanos'), 'produce', 31, 'banana'),
+    (tr4('Äpfel', 'Apples', 'Pommes', 'Manzanas'), 'produce', 24, 'apple'),
     ('Butter', 'dairy', 22, 'butter'),
-    (tr('Eier', 'Eggs'), 'dairy', 21, 'egg'),
-    (tr('Nudeln', 'Pasta'), 'pantry', 19, 'pasta'),
-    (tr('Joghurt', 'Yoghurt'), 'dairy', 18, 'bowl'),
-    (tr('Tomaten', 'Tomatoes'), 'produce', 17, 'tomato'),
-    (tr('Käse', 'Cheese'), 'dairy', 16, 'cheese'),
-    (tr('Gurke', 'Cucumber'), 'produce', 12, 'cucumber'),
-    (tr('Reis', 'Rice'), 'pantry', 11, 'rice'),
-    (tr('Orangensaft', 'Orange juice'), 'drinks', 9, 'juice'),
-    (tr('Toilettenpapier', 'Toilet paper'), 'household', 8, 'toilet_paper'),
-    (tr('Gummibärchen', 'Gummy bears'), 'pantry', 7, 'candy'),
-    (tr('Kartoffeln', 'Potatoes'), 'produce', 7, 'potato'),
+    (tr4('Eier', 'Eggs', 'Œufs', 'Huevos'), 'dairy', 21, 'egg'),
+    (tr4('Nudeln', 'Pasta', 'Pâtes', 'Pasta'), 'pantry', 19, 'pasta'),
+    (tr4('Joghurt', 'Yoghurt', 'Yaourt', 'Yogur'), 'dairy', 18, 'bowl'),
+    (tr4('Tomaten', 'Tomatoes', 'Tomates', 'Tomates'), 'produce', 17, 'tomato'),
+    (tr4('Käse', 'Cheese', 'Fromage', 'Queso'), 'dairy', 16, 'cheese'),
+    (
+      tr4('Gurke', 'Cucumber', 'Concombre', 'Pepino'),
+      'produce',
+      12,
+      'cucumber',
+    ),
+    (tr4('Reis', 'Rice', 'Riz', 'Arroz'), 'pantry', 11, 'rice'),
+    (
+      tr4('Orangensaft', 'Orange juice', 'Jus d’orange', 'Zumo de naranja'),
+      'drinks',
+      9,
+      'juice',
+    ),
+    (
+      tr4(
+        'Toilettenpapier',
+        'Toilet paper',
+        'Papier toilette',
+        'Papel higiénico',
+      ),
+      'household',
+      8,
+      'toilet_paper',
+    ),
+    (
+      tr4('Gummibärchen', 'Gummy bears', 'Oursons en gomme', 'Gominolas'),
+      'pantry',
+      7,
+      'candy',
+    ),
+    (
+      tr4('Kartoffeln', 'Potatoes', 'Pommes de terre', 'Patatas'),
+      'produce',
+      7,
+      'potato',
+    ),
   ];
 
   static List<CatalogEntry> catalogue() => [
@@ -179,32 +225,67 @@ abstract final class DemoData {
   ];
 
   /// The pasta, which came from two of the week's meals.
-  static String get pasta => tr('Nudeln', 'Pasta');
+  static String get pasta => tr4('Nudeln', 'Pasta', 'Pâtes', 'Pasta');
 
   /// (name, category key, count, spec, added by, ticked)
   static List<(String, String, int, String?, String, bool)> get _items => [
-    (tr('Bananen', 'Bananas'), 'produce', 1, null, daughter, false),
-    (tr('Gurke', 'Cucumber'), 'produce', 2, null, mama, false),
     (
-      tr('Brot', 'Bread'),
+      tr4('Bananen', 'Bananas', 'Bananes', 'Plátanos'),
+      'produce',
+      1,
+      null,
+      daughter,
+      false,
+    ),
+    (
+      tr4('Gurke', 'Cucumber', 'Concombre', 'Pepino'),
+      'produce',
+      2,
+      null,
+      mama,
+      false,
+    ),
+    (
+      tr4('Brot', 'Bread', 'Pain', 'Pan'),
       'bakery',
       1,
-      tr('Vollkorn', 'Wholemeal'),
+      tr4('Vollkorn', 'Wholemeal', 'Complet', 'Integral'),
       papa,
       false,
     ),
-    (tr('Milch', 'Milk'), 'dairy', 2, tr('1,5 %', 'semi-skimmed'), papa, false),
     (
-      tr('Joghurt', 'Yoghurt'),
+      tr4('Milch', 'Milk', 'Lait', 'Leche'),
+      'dairy',
+      2,
+      tr4('1,5 %', 'semi-skimmed', 'demi-écrémé', 'semidesnatada'),
+      papa,
+      false,
+    ),
+    (
+      tr4('Joghurt', 'Yoghurt', 'Yaourt', 'Yogur'),
       'dairy',
       1,
-      tr('Natur, 500 g', 'plain, 500 g'),
+      tr4('Natur, 500 g', 'plain, 500 g', 'nature, 500 g', 'natural, 500 g'),
       mama,
       false,
     ),
     (pasta, 'pantry', 1, null, son, false),
-    (tr('Gummibärchen', 'Gummy bears'), 'pantry', 1, null, son, false),
-    (tr('Orangensaft', 'Orange juice'), 'drinks', 1, null, mama, true),
+    (
+      tr4('Gummibärchen', 'Gummy bears', 'Oursons en gomme', 'Gominolas'),
+      'pantry',
+      1,
+      null,
+      son,
+      false,
+    ),
+    (
+      tr4('Orangensaft', 'Orange juice', 'Jus d’orange', 'Zumo de naranja'),
+      'drinks',
+      1,
+      null,
+      mama,
+      true,
+    ),
     ('Butter', 'dairy', 1, null, papa, true),
   ];
 
@@ -227,7 +308,7 @@ abstract final class DemoData {
       ),
     ShoppingItem(
       id: 'i-d1',
-      name: tr('Zahnpasta', 'Toothpaste'),
+      name: tr4('Zahnpasta', 'Toothpaste', 'Dentifrice', 'Pasta de dientes'),
       quantity: null,
       checked: false,
       createdAt: _now,
@@ -256,71 +337,150 @@ abstract final class DemoData {
   static List<TripItem> tripItems(String tripId) => switch (tripId) {
     't-2' => [
       TripItem(
-        name: tr('Milch', 'Milk'),
-        quantity: tr('1,5 %', 'semi-skimmed'),
+        name: tr4('Milch', 'Milk', 'Lait', 'Leche'),
+        quantity: tr4('1,5 %', 'semi-skimmed', 'demi-écrémé', 'semidesnatada'),
         count: 2,
       ),
-      TripItem(name: tr('Brot', 'Bread'), quantity: null, count: 1),
-      TripItem(name: tr('Äpfel', 'Apples'), quantity: null, count: 1),
       TripItem(
-        name: tr('Eier', 'Eggs'),
-        quantity: tr('10er', 'pack of 10'),
-        count: 1,
-      ),
-      TripItem(name: tr('Käse', 'Cheese'), quantity: null, count: 1),
-      TripItem(name: tr('Bananen', 'Bananas'), quantity: null, count: 1),
-      TripItem(name: tr('Butter', 'Butter'), quantity: null, count: 1),
-      TripItem(name: tr('Joghurt', 'Yoghurt'), quantity: null, count: 2),
-      TripItem(name: tr('Nudeln', 'Pasta'), quantity: null, count: 1),
-      TripItem(name: tr('Tomaten', 'Tomatoes'), quantity: null, count: 1),
-      TripItem(name: tr('Gurke', 'Cucumber'), quantity: null, count: 1),
-      TripItem(
-        name: tr('Orangensaft', 'Orange juice'),
+        name: tr4('Brot', 'Bread', 'Pain', 'Pan'),
         quantity: null,
         count: 1,
       ),
       TripItem(
-        name: tr('Toilettenpapier', 'Toilet paper'),
-        quantity: tr('8er', 'pack of 8'),
+        name: tr4('Äpfel', 'Apples', 'Pommes', 'Manzanas'),
+        quantity: null,
         count: 1,
       ),
       TripItem(
-        name: tr('Kaffee', 'Coffee'),
-        quantity: tr('500 g', '500 g'),
+        name: tr4('Eier', 'Eggs', 'Œufs', 'Huevos'),
+        quantity: tr4('10er', 'pack of 10', 'boîte de 10', 'paquete de 10'),
+        count: 1,
+      ),
+      TripItem(
+        name: tr4('Käse', 'Cheese', 'Fromage', 'Queso'),
+        quantity: null,
+        count: 1,
+      ),
+      TripItem(
+        name: tr4('Bananen', 'Bananas', 'Bananes', 'Plátanos'),
+        quantity: null,
+        count: 1,
+      ),
+      TripItem(
+        name: tr4('Butter', 'Butter', 'Beurre', 'Mantequilla'),
+        quantity: null,
+        count: 1,
+      ),
+      TripItem(
+        name: tr4('Joghurt', 'Yoghurt', 'Yaourt', 'Yogur'),
+        quantity: null,
+        count: 2,
+      ),
+      TripItem(
+        name: tr4('Nudeln', 'Pasta', 'Pâtes', 'Pasta'),
+        quantity: null,
+        count: 1,
+      ),
+      TripItem(
+        name: tr4('Tomaten', 'Tomatoes', 'Tomates', 'Tomates'),
+        quantity: null,
+        count: 1,
+      ),
+      TripItem(
+        name: tr4('Gurke', 'Cucumber', 'Concombre', 'Pepino'),
+        quantity: null,
+        count: 1,
+      ),
+      TripItem(
+        name: tr4(
+          'Orangensaft',
+          'Orange juice',
+          'Jus d’orange',
+          'Zumo de naranja',
+        ),
+        quantity: null,
+        count: 1,
+      ),
+      TripItem(
+        name: tr4(
+          'Toilettenpapier',
+          'Toilet paper',
+          'Papier toilette',
+          'Papel higiénico',
+        ),
+        quantity: tr4('8er', 'pack of 8', 'paquet de 8', 'paquete de 8'),
+        count: 1,
+      ),
+      TripItem(
+        name: tr4('Kaffee', 'Coffee', 'Café', 'Café'),
+        quantity: tr4('500 g', '500 g', '500 g', '500 g'),
         count: 1,
       ),
     ],
     't-1' => [
-      TripItem(name: tr('Haferflocken', 'Oats'), quantity: null, count: 1),
-      TripItem(name: tr('Reis', 'Rice'), quantity: null, count: 1),
       TripItem(
-        name: tr('Hähnchenbrust', 'Chicken breast'),
-        quantity: null,
-        count: 1,
-      ),
-      TripItem(name: tr('Paprika', 'Peppers'), quantity: null, count: 3),
-      TripItem(name: tr('Zwiebeln', 'Onions'), quantity: null, count: 1),
-      TripItem(
-        name: tr('Kartoffeln', 'Potatoes'),
-        quantity: tr('2 kg', '2 kg'),
-        count: 1,
-      ),
-      TripItem(
-        name: tr('Spülmittel', 'Washing-up liquid'),
+        name: tr4('Haferflocken', 'Oats', 'Flocons d’avoine', 'Avena'),
         quantity: null,
         count: 1,
       ),
       TripItem(
-        name: tr('Müllbeutel', 'Bin bags'),
-        quantity: tr('20er', 'pack of 20'),
+        name: tr4('Reis', 'Rice', 'Riz', 'Arroz'),
+        quantity: null,
+        count: 1,
+      ),
+      TripItem(
+        name: tr4(
+          'Hähnchenbrust',
+          'Chicken breast',
+          'Blanc de poulet',
+          'Pechuga de pollo',
+        ),
+        quantity: null,
+        count: 1,
+      ),
+      TripItem(
+        name: tr4('Paprika', 'Peppers', 'Poivrons', 'Pimientos'),
+        quantity: null,
+        count: 3,
+      ),
+      TripItem(
+        name: tr4('Zwiebeln', 'Onions', 'Oignons', 'Cebollas'),
+        quantity: null,
+        count: 1,
+      ),
+      TripItem(
+        name: tr4('Kartoffeln', 'Potatoes', 'Pommes de terre', 'Patatas'),
+        quantity: tr4('2 kg', '2 kg', '2 kg', '2 kg'),
+        count: 1,
+      ),
+      TripItem(
+        name: tr4(
+          'Spülmittel',
+          'Washing-up liquid',
+          'Liquide vaisselle',
+          'Lavavajillas',
+        ),
+        quantity: null,
+        count: 1,
+      ),
+      TripItem(
+        name: tr4(
+          'Müllbeutel',
+          'Bin bags',
+          'Sacs poubelle',
+          'Bolsas de basura',
+        ),
+        quantity: tr4('20er', 'pack of 20', 'paquet de 20', 'paquete de 20'),
         count: 1,
       ),
     ],
     _ => const [],
   };
 
-  static String get kidsTablet => tr('Kinder-iPad', "Kids' iPad");
-  static String get kitchenWall => tr('Küche (Wand)', 'Kitchen (wall)');
+  static String get kidsTablet =>
+      tr4('Kinder-iPad', "Kids' iPad", 'iPad des enfants', 'iPad de los niños');
+  static String get kitchenWall =>
+      tr4('Küche (Wand)', 'Kitchen (wall)', 'Cuisine (mur)', 'Cocina (pared)');
 
   static List<DeviceEntry> get devices => [
     DeviceEntry(

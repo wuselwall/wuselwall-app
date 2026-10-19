@@ -8,6 +8,7 @@
 #                                        (then `up -d auth` or whichever service reads it)
 #   scripts/remote-stack.sh deploy       sync infra/supabase and supabase/functions, then up -d
 #   scripts/remote-stack.sh functions    sync only supabase/functions and restart the Edge runtime
+#   scripts/remote-stack.sh language fr  choose server emails: de, en, fr or es; apply Auth/functions
 #   scripts/remote-stack.sh tunnel       127.0.0.1:54422 → Postgres, 127.0.0.1:54421 → gateway
 #                                        (Studio at http://127.0.0.1:54421, DASHBOARD_* login)
 #   scripts/remote-stack.sh <args>       any docker compose command: ps, logs -f auth, restart rest
@@ -32,7 +33,7 @@ case "${1:-}" in
     # WW_RP_ID), never from this file; a release installs with server/wuselwall instead.
     : "${WW_API_URL:?set WW_API_URL=https://api.<your domain>}" "${WW_WEB_URL:?set WW_WEB_URL=https://web.<your domain>}"
     node infra/supabase/make-env.mjs "${2:-supabase/.env}" \
-      --api "$WW_API_URL" --web "$WW_WEB_URL" ${WW_RP_ID:+--rp-id "$WW_RP_ID"} --studio \
+      --api "$WW_API_URL" --web "$WW_WEB_URL" --language "${WW_MAIL_LANGUAGE:-de}" ${WW_RP_ID:+--rp-id "$WW_RP_ID"} --studio \
       | ssh "$HOST" "umask 077 && cat > '$DIR/.env'"
     echo "wrote $HOST:$DIR/.env"
     ;;
@@ -63,8 +64,13 @@ case "${1:-}" in
     # SMTP fallback: raw Go templates served only on the Compose network.
     rsync -rlt --delete --chmod=D755,F644 supabase/templates/ "$HOST:$DIR/volumes/mail-templates/"
     # Before Auth restarts: the old social sign-in values leave the .env (specs/10).
-    ssh "$HOST" "cd '$DIR' && sh retire-social-sign-in.sh .env"
+    ssh "$HOST" "cd '$DIR' && sh retire-social-sign-in.sh .env && sh mail-language.sh .env"
     ssh "$HOST" "cd '$DIR' && docker compose up -d --remove-orphans && docker compose ps"
+    ;;
+  language)
+    language=${2:?usage: language de|en|fr|es}
+    case "$language" in de|en|fr|es) ;; *) echo 'language must be de, en, fr or es' >&2; exit 2 ;; esac
+    ssh "$HOST" "cd '$DIR' && sh mail-language.sh .env '$language' && docker compose up -d auth functions"
     ;;
   functions)
     # Edge Functions only: Postgres, Auth and the gateway are not touched.

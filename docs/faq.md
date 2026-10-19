@@ -25,4 +25,4 @@ Wird derselbe Name ein zweites Mal hinzugefügt, zählt WuselWall ihn als **2×*
 Kacheln entstehen, wenn ihr einen Einkauf **beendet**. Bis dahin tippst du Namen ein; beim ersten Einkauf wird daraus eine Kachel.
 
 ## Wie ändere ich die Sprache?
-WuselWall folgt der Sprache deines Geräts (Deutsch oder Englisch).
+WuselWall folgt der Sprache deines Geräts (Deutsch, Englisch, Französisch oder Spanisch); bei anderen Sprachen erscheint die deutsche Version.

@@ -55,10 +55,11 @@ try {
     mailpitImage);
   docker('run', '-d', '--name', templates, '--network', prefix, '--network-alias', 'mail-templates',
     'nginx:1.28.0-alpine');
-  for (const kind of ['confirmation', 'magic_link']) {
-    docker('cp', new URL(`../supabase/templates/${kind}.html`, import.meta.url).pathname,
+  for (const kind of ['confirmation', 'magic_link', 'recovery', 'email_change', 'reauthentication', 'invite']) {
+    docker('cp', new URL(`../supabase/templates/fr/${kind}.html`, import.meta.url).pathname,
       `${templates}:/usr/share/nginx/html/${kind}.html`);
   }
+  const subject = 'Votre code WuselWall';
   const env = {
     GOTRUE_API_HOST: '0.0.0.0', PORT: '9999', API_EXTERNAL_URL: 'http://auth:9999',
     GOTRUE_SITE_URL: 'https://app.example.org/', GOTRUE_DB_DRIVER: 'postgres',
@@ -71,33 +72,46 @@ try {
     GOTRUE_HOOK_SEND_EMAIL_ENABLED: 'false',
     GOTRUE_MAILER_TEMPLATES_CONFIRMATION: 'http://mail-templates/confirmation.html',
     GOTRUE_MAILER_TEMPLATES_MAGIC_LINK: 'http://mail-templates/magic_link.html',
-    GOTRUE_MAILER_SUBJECTS_CONFIRMATION: 'Dein WuselWall-Code / Your WuselWall code',
-    GOTRUE_MAILER_SUBJECTS_MAGIC_LINK: 'Dein WuselWall-Code / Your WuselWall code',
+    GOTRUE_MAILER_TEMPLATES_RECOVERY: 'http://mail-templates/recovery.html',
+    GOTRUE_MAILER_TEMPLATES_EMAIL_CHANGE: 'http://mail-templates/email_change.html',
+    GOTRUE_MAILER_TEMPLATES_REAUTHENTICATION: 'http://mail-templates/reauthentication.html',
+    GOTRUE_MAILER_TEMPLATES_INVITE: 'http://mail-templates/invite.html',
+    GOTRUE_MAILER_SUBJECTS_CONFIRMATION: subject,
+    GOTRUE_MAILER_SUBJECTS_MAGIC_LINK: subject,
+    GOTRUE_MAILER_SUBJECTS_RECOVERY: subject,
+    GOTRUE_MAILER_SUBJECTS_EMAIL_CHANGE: subject,
+    GOTRUE_MAILER_SUBJECTS_REAUTHENTICATION: subject,
+    GOTRUE_MAILER_SUBJECTS_INVITE: subject,
   };
-  // Keep smoke settings aligned with the shipped Compose mail configuration.
+  // Keep smoke settings aligned with the shipped Compose mail configuration: Compose
+  // serves the selected language's templates through ${MAIL_LANGUAGE:-de} and takes the
+  // subject from ${MAIL_CODE_SUBJECT:-…}, both written by make-env.mjs / mail-language.sh.
   const compose = readFileSync(new URL('../infra/supabase/docker-compose.wuselwall.yml', import.meta.url), 'utf8');
-  for (const key of Object.keys(env).filter((k) => /MAILER_(TEMPLATES|SUBJECTS)/.test(k))) {
-    assert.ok(compose.includes(`${key}: ${env[key]}`));
+  for (const kind of ['CONFIRMATION', 'MAGIC_LINK', 'RECOVERY', 'EMAIL_CHANGE', 'REAUTHENTICATION', 'INVITE']) {
+    assert.ok(compose.includes(`GOTRUE_MAILER_TEMPLATES_${kind}: http://mail-templates/\${MAIL_LANGUAGE:-de}/${kind.toLowerCase()}.html`),
+      'smoke must stay aligned with Compose selection');
+    assert.ok(compose.includes(`GOTRUE_MAILER_SUBJECTS_${kind}: \${MAIL_CODE_SUBJECT:-`),
+      'smoke must stay aligned with Compose selection');
   }
   docker('run', '-d', '--name', auth, '--network', prefix, '--network-alias', 'auth',
     ...Object.entries(env).flatMap(([k, v]) => ['-e', `${k}=${v}`]), 'ghcr.io/supabase/gotrue:v2.197.0');
   await until(() => request('auth:9999', '/health'));
   const email = 'otp-smoke@example.org';
-  for (const [index, marker] of ['Welcome to WuselWall!', 'Here is your code to sign in'].entries()) {
+  for (const [index, marker] of ['Confirmez votre adresse e-mail', 'Votre code de connexion'].entries()) {
     request('auth:9999', '/otp', { email, create_user: true });
     const message = await until(() => {
       const messages = request('mailpit:8025', '/api/v1/messages');
       assert.equal(messages.total, index + 1);
       return request('mailpit:8025', `/api/v1/message/${messages.messages[0].ID}`);
     });
-    assert.equal(message.Subject, 'Dein WuselWall-Code / Your WuselWall code');
+    assert.equal(message.Subject, subject);
     assert.ok(message.Text.includes(marker), `wrong mail kind for ${index === 0 ? 'signup' : 'sign-in'}`);
     assert.doesNotMatch(message.HTML, /href\s*=|ConfirmationURL|{{/i);
     const code = message.Text.match(/\b\d{6}\b/)?.[0];
     assert.ok(code, 'SMTP message must contain a six-digit code');
     const verified = request('auth:9999', '/verify', { email, token: code, type: 'email' });
     assert.ok(verified.access_token, 'the mailed code must establish a session');
-    console.log(`${index === 0 ? 'Signup confirmation' : 'Returning email sign-in'}: bilingual SMTP code received and verified`);
+    console.log(`${index === 0 ? 'Signup confirmation' : 'Returning email sign-in'}: French SMTP code received and verified`);
   }
 } catch (error) {
   console.error(error.message);

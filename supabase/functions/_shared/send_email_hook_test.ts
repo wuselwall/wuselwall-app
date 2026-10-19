@@ -10,6 +10,7 @@ import {
   settingsFromEnv,
 } from "./send_email_hook.ts";
 import { decodeSecret, sign } from "./webhook_signature.ts";
+import { MAIL_KINDS, MAIL_LOCALES, renderMail } from "./mail_render.ts";
 
 const SECRET = "v1,whsec_d3VzZWx3YWxsLWhvb2stdGVzdC1rZXktMDEyMzQ1Njc4OQ==";
 const settings: HookSettings = {
@@ -74,13 +75,31 @@ async function signed(
 /** A fetch fake that answers the provider with `status` and records what it was sent. */
 function provider(status = 201, body = "{}") {
   const sent: Array<
-    { url: string; headers: Headers; json: Record<string, any> }
+    {
+      url: string;
+      headers: Headers;
+      json: {
+        to: unknown;
+        from: unknown;
+        project_id: unknown;
+        subject: unknown;
+        text: string;
+        html: string;
+      };
+    }
   > = [];
   const fn = ((input: string | URL | Request, init?: RequestInit) => {
     sent.push({
       url: String(input),
       headers: new Headers(init?.headers),
-      json: JSON.parse(String(init?.body)),
+      json: JSON.parse(String(init?.body)) as {
+        to: unknown;
+        from: unknown;
+        project_id: unknown;
+        subject: unknown;
+        text: string;
+        html: string;
+      },
     });
     return Promise.resolve(new Response(body, { status }));
   }) as typeof fetch;
@@ -92,11 +111,11 @@ async function errorOf(res: Response) {
   return json.error as { http_code: number; message: string };
 }
 
-Deno.test("a signed magic-link mail is rendered in English and sent through Scaleway", async () => {
+Deno.test("a signed magic-link mail uses the English server setting and is sent through Scaleway", async () => {
   const { fn, sent } = provider();
   const res = await sendEmailHook(
-    await signed(JSON.stringify(payload())),
-    settings,
+    await signed(JSON.stringify(payload({ locale: "de" }))),
+    { ...settings, locale: "en" },
     fn,
   );
   assertEquals(res.status, 200);
@@ -118,22 +137,55 @@ Deno.test("a signed magic-link mail is rendered in English and sent through Scal
   assertStringIncludes(sent[0].json.html, "123456");
 });
 
-Deno.test("German is the default when the sign-in carries no locale", async () => {
+Deno.test("German is the default server language even when the recipient asks for English", async () => {
   const { fn, sent } = provider();
-  const body = payload({ locale: null });
+  const body = payload({ locale: "en" });
   await sendEmailHook(await signed(JSON.stringify(body)), settings, fn);
   assertEquals(sent[0].json.subject, "Dein WuselWall-Code: 123456");
 });
 
-Deno.test("the locale from user_metadata picks German for de", async () => {
+Deno.test("the German server setting overrides English user_metadata", async () => {
   const { fn, sent } = provider();
   await sendEmailHook(
-    await signed(JSON.stringify(payload({ locale: "de" }))),
-    settings,
+    await signed(JSON.stringify(payload({ locale: "en" }))),
+    { ...settings, locale: "de" },
     fn,
   );
   assertEquals(sent[0].json.subject, "Dein WuselWall-Code: 123456");
   assertStringIncludes(sent[0].json.text, "10 Minuten gültig");
+});
+
+Deno.test("every configured server language overrides contrary recipient metadata for every mail kind", async () => {
+  const env: Record<string, string> = {
+    SEND_EMAIL_HOOK_SECRET: SECRET,
+    SCW_SECRET_KEY: "k",
+    SCW_PROJECT_ID: "p",
+    MAIL_FROM: "codes@example.org",
+  };
+  for (const locale of MAIL_LOCALES) {
+    const loaded = settingsFromEnv((name) =>
+      name === "MAIL_LANGUAGE" ? locale : env[name]
+    );
+    assert(loaded.ok);
+    for (const kind of MAIL_KINDS) {
+      const { fn, sent } = provider();
+      const recipientLocale = locale === "en" ? "de" : "en";
+      const res = await sendEmailHook(
+        await signed(
+          JSON.stringify(payload({ kind, locale: recipientLocale })),
+        ),
+        loaded.settings,
+        fn,
+      );
+      assertEquals(res.status, 200);
+      assertEquals(await res.json(), {});
+      assertEquals(sent.length, 1);
+      const expected = renderMail({ locale, kind, token: "123456" });
+      assertEquals(sent[0].json.subject, expected.subject);
+      assertEquals(sent[0].json.text, expected.text);
+      assertEquals(sent[0].json.html, expected.html);
+    }
+  }
 });
 
 Deno.test("an email change with both codes sends both", async () => {
@@ -288,6 +340,7 @@ Deno.test("settingsFromEnv names the missing variables and never their values", 
   assert(ok.ok);
   assertEquals(ok.settings.scaleway.region, "fr-par");
   assertEquals(ok.settings.scaleway.fromName, "WuselWall");
+  assertEquals(ok.settings.locale, "de");
 
   const missing = settingsFromEnv((
     name,
@@ -296,6 +349,53 @@ Deno.test("settingsFromEnv names the missing variables and never their values", 
 
   const none = settingsFromEnv(() => undefined);
   assertEquals(none, { ok: false, missing: [...REQUIRED_ENV] });
+});
+
+Deno.test("settingsFromEnv accepts exactly the four MAIL_LANGUAGE values", () => {
+  const env: Record<string, string> = {
+    SEND_EMAIL_HOOK_SECRET: SECRET,
+    SCW_SECRET_KEY: "k",
+    SCW_PROJECT_ID: "p",
+    MAIL_FROM: "codes@example.org",
+  };
+  for (const locale of ["de", "en", "fr", "es"]) {
+    const loaded = settingsFromEnv((name) =>
+      name === "MAIL_LANGUAGE" ? locale : env[name]
+    );
+    assert(loaded.ok);
+    assertEquals(loaded.settings.locale, locale);
+  }
+});
+
+Deno.test("settingsFromEnv refuses invalid MAIL_LANGUAGE without echoing its value or secrets", () => {
+  const env: Record<string, string> = {
+    SEND_EMAIL_HOOK_SECRET: SECRET,
+    SCW_SECRET_KEY: "secret-that-must-not-leak",
+    SCW_PROJECT_ID: "p",
+    MAIL_FROM: "codes@example.org",
+  };
+  for (
+    const language of [
+      "it",
+      "EN",
+      "en-GB",
+      " de ",
+      "",
+      "secret-that-must-not-leak",
+    ]
+  ) {
+    const loaded = settingsFromEnv((name) =>
+      name === "MAIL_LANGUAGE" ? language : env[name]
+    );
+    assertEquals(loaded, { ok: false, missing: ["MAIL_LANGUAGE"] });
+  }
+  const missingAndInvalid = settingsFromEnv((name) =>
+    name === "MAIL_LANGUAGE" ? "it" : undefined
+  );
+  assertEquals(missingAndInvalid, {
+    ok: false,
+    missing: [...REQUIRED_ENV, "MAIL_LANGUAGE"],
+  });
 });
 
 Deno.test("settingsFromEnv takes region and sender name from the environment when set", () => {

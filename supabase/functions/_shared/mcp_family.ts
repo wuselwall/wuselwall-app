@@ -10,6 +10,8 @@ import { addDays, type Occurrence } from "./occurrences.ts";
 import type { ResourceDef, Server, ToolDef, ToolResult } from "./mcp.ts";
 import { MCP_DE } from "./mcp_de.ts";
 import { MCP_EN } from "./mcp_en.ts";
+import { MCP_FR } from "./mcp_fr.ts";
+import { MCP_ES } from "./mcp_es.ts";
 import {
   findMember,
   fold,
@@ -61,7 +63,12 @@ export type McpContext = ShortcutContext & {
     reason: string;
     note: string | null;
   }[];
-  streaks?: { profile_id: string; title: string | null; current_length: number; longest_length: number }[];
+  streaks?: {
+    profile_id: string;
+    title: string | null;
+    current_length: number;
+    longest_length: number;
+  }[];
   recipes?: {
     id: string;
     title: string;
@@ -80,7 +87,11 @@ export type McpContext = ShortcutContext & {
 };
 
 /** Loads a context: the parts, the first day (null: the household's today) and the days. */
-export type Load = (parts: string[], from: string | null, days: number) => Promise<McpContext>;
+export type Load = (
+  parts: string[],
+  from: string | null,
+  days: number,
+) => Promise<McpContext>;
 
 // ── the wording ─────────────────────────────────────────────────────────────────
 
@@ -105,7 +116,10 @@ export interface McpMessages {
   streak(title: string, n: number): string;
   recipes(n: number): string;
   noRecipe(query: string): string;
-  lessonStatus: Record<"cancelled" | "substituted" | "room_change" | "extra", string>;
+  lessonStatus: Record<
+    "cancelled" | "substituted" | "room_change" | "extra",
+    string
+  >;
   weekend: string;
   schoolFree(holiday: string | null): string;
   baseline: string;
@@ -120,14 +134,26 @@ export interface McpMessages {
 }
 
 export function mcpMessagesFor(lang: Lang): McpMessages {
-  return lang === "en" ? MCP_EN : MCP_DE;
+  return ({ de: MCP_DE, en: MCP_EN, fr: MCP_FR, es: MCP_ES })[lang];
 }
 
 // ── definitions ─────────────────────────────────────────────────────────────────
 
-const READ_ONLY = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false };
-const DATE = { type: "string", format: "date", description: "YYYY-MM-DD, in the household's time zone" };
-const MEMBER = { type: "string", description: "A family member's name, as the family writes it" };
+const READ_ONLY = {
+  readOnlyHint: true,
+  destructiveHint: false,
+  idempotentHint: true,
+  openWorldHint: false,
+};
+const DATE = {
+  type: "string",
+  format: "date",
+  description: "YYYY-MM-DD, in the household's time zone",
+};
+const MEMBER = {
+  type: "string",
+  description: "A family member's name, as the family writes it",
+};
 
 function tool(
   name: string,
@@ -140,7 +166,12 @@ function tool(
     name,
     title,
     description,
-    inputSchema: { type: "object", properties, required, additionalProperties: false },
+    inputSchema: {
+      type: "object",
+      properties,
+      required,
+      additionalProperties: false,
+    },
     annotations: { title, ...READ_ONLY },
   };
 }
@@ -152,7 +183,10 @@ export const TOOLS: ToolDef[] = [
     "Find a recipe",
     "Recipes of the family whose title, tags or ingredients match the query, with their ingredients.",
     {
-      query: { type: "string", description: "Words to look for, e.g. 'Lasagne' or 'Zucchini'" },
+      query: {
+        type: "string",
+        description: "Words to look for, e.g. 'Lasagne' or 'Zucchini'",
+      },
     },
     ["query"],
   ),
@@ -163,7 +197,10 @@ export const TOOLS: ToolDef[] = [
     {
       from: DATE,
       to: DATE,
-      member: { ...MEMBER, description: "Only this member's appointments (and the whole family's)" },
+      member: {
+        ...MEMBER,
+        description: "Only this member's appointments (and the whole family's)",
+      },
     },
   ),
   tool(
@@ -194,21 +231,35 @@ export const TOOLS: ToolDef[] = [
     "Shopping list",
     "The open items of a shopping list, grouped by category. Defaults to the family's default list.",
     {
-      list: { type: "string", description: "The list's name, e.g. 'Supermarkt'" },
+      list: {
+        type: "string",
+        description: "The list's name, e.g. 'Supermarkt'",
+      },
     },
   ),
   tool(
     "get_timetable",
     "School timetable",
     "A child's school day(s): lessons with times and rooms, cancellations and substitutions, holidays answered as such, and what to pack. Defaults to today.",
-    { member: { ...MEMBER, description: "The child's name" }, date: DATE, from: DATE, to: DATE },
+    {
+      member: { ...MEMBER, description: "The child's name" },
+      date: DATE,
+      from: DATE,
+      to: DATE,
+    },
     ["member"],
   ),
   tool(
     "get_week_board",
     "Week board",
     "The kitchen wall's week as data: per day the appointments, who is away, each child's school day, the meals and the open tasks. The best single answer to 'what is going on?'.",
-    { weekOf: { ...DATE, description: "Any day of the week wanted (YYYY-MM-DD); defaults to this week" } },
+    {
+      weekOf: {
+        ...DATE,
+        description:
+          "Any day of the week wanted (YYYY-MM-DD); defaults to this week",
+      },
+    },
   ),
   tool(
     "list_tasks",
@@ -216,7 +267,11 @@ export const TOOLS: ToolDef[] = [
     "Task instances with points, due dates and status. Defaults to the open ones of today and the next six days.",
     {
       member: MEMBER,
-      status: { type: "string", enum: ["open", "done", "all"], description: "Default: open" },
+      status: {
+        type: "string",
+        enum: ["open", "done", "all"],
+        description: "Default: open",
+      },
       from: DATE,
       to: DATE,
     },
@@ -242,7 +297,8 @@ export const RESOURCES: ResourceDef[] = [
     uri: "family://members",
     name: "members",
     title: "Family members",
-    description: "The family's members with their ids, roles and whether they are children",
+    description:
+      "The family's members with their ids, roles and whether they are children",
     mimeType: "application/json",
   },
   {
@@ -277,7 +333,10 @@ const ISO = /^\d{4}-\d{2}-\d{2}$/;
 function dateArg(args: Record<string, unknown>, key: string): string | null {
   const v = args[key];
   if (v === undefined || v === null || v === "") return null;
-  if (typeof v !== "string" || !ISO.test(v) || new Date(`${v}T00:00:00Z`).toISOString().slice(0, 10) !== v) {
+  if (
+    typeof v !== "string" || !ISO.test(v) ||
+    new Date(`${v}T00:00:00Z`).toISOString().slice(0, 10) !== v
+  ) {
     throw new ToolError((m) => m.dateInvalid(key, JSON.stringify(v)));
   }
   return v;
@@ -291,7 +350,8 @@ function stringArg(args: Record<string, unknown>, key: string): string | null {
 }
 
 function daysBetween(from: string, to: string): number {
-  return (Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) / 86_400_000 + 1;
+  return (Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) /
+      86_400_000 + 1;
 }
 
 function datesOf(from: string, to: string): string[] {
@@ -330,7 +390,11 @@ function member(ctx: McpContext, name: string | null): MemberRow | null {
  * The MCP server for one request: `load` reads the key's context, `lang` picks the language of
  * the summaries once the household's locale is known.
  */
-export function familyServer(loadRows: Load, lang: (locale: string | null) => Lang, version: string): Server {
+export function familyServer(
+  loadRows: Load,
+  lang: (locale: string | null) => Lang,
+  version: string,
+): Server {
   // The household's locale once a context was read: the language of the summaries and errors.
   let locale: string | null = null;
   const load: Load = async (parts, from, days) => {
@@ -349,15 +413,29 @@ export function familyServer(loadRows: Load, lang: (locale: string | null) => La
   };
 
   /** Loads [from, to] (either may be missing): explicit days, or from today. */
-  async function loadWindow(parts: string[], args: Record<string, unknown>, defaultDays = 7) {
+  async function loadWindow(
+    parts: string[],
+    args: Record<string, unknown>,
+    defaultDays = 7,
+  ) {
     const from = dateArg(args, "from");
     const to = dateArg(args, "to");
-    if (from && to && (to < from || daysBetween(from, to) > 62)) throw new ToolError((m) => m.windowInvalid);
+    if (from && to && (to < from || daysBetween(from, to) > 62)) {
+      throw new ToolError((m) => m.windowInvalid);
+    }
     // Without a start the window starts today, which only the server knows: load enough, clip.
-    const ctx = await load(parts, from, from && to ? daysBetween(from, to) : to ? 62 : defaultDays);
+    const ctx = await load(
+      parts,
+      from,
+      from && to ? daysBetween(from, to) : to ? 62 : defaultDays,
+    );
     const last = to ?? ctx.window.to;
     if (last < ctx.window.from) throw new ToolError((m) => m.windowInvalid);
-    return { ctx, from: ctx.window.from, to: last < ctx.window.to ? last : ctx.window.to };
+    return {
+      ctx,
+      from: ctx.window.from,
+      to: last < ctx.window.to ? last : ctx.window.to,
+    };
   }
 
   function words(ctx: McpContext) {
@@ -365,11 +443,18 @@ export function familyServer(loadRows: Load, lang: (locale: string | null) => La
     return { m: mcpMessagesFor(l), sc: messagesFor(l) };
   }
 
-  function appointmentsOn(ctx: McpContext, occ: Occurrence[], date: string, only: MemberRow | null) {
+  function appointmentsOn(
+    ctx: McpContext,
+    occ: Occurrence[],
+    date: string,
+    only: MemberRow | null,
+  ) {
     return occ
       .filter((o) =>
-        o.kind === "appointment" && o.local_start_date <= date && o.local_end_date >= date &&
-        (only === null || o.attendee_ids.length === 0 || o.attendee_ids.includes(only.id))
+        o.kind === "appointment" && o.local_start_date <= date &&
+        o.local_end_date >= date &&
+        (only === null || o.attendee_ids.length === 0 ||
+          o.attendee_ids.includes(only.id))
       )
       .map((o) => ({
         title: o.title,
@@ -384,9 +469,15 @@ export function familyServer(loadRows: Load, lang: (locale: string | null) => La
       }));
   }
 
-  function appointmentText(a: ReturnType<typeof appointmentsOn>[number]): string {
-    const who = a.members.length > 0 ? ` (${a.members.map((x) => x.name).join(", ")})` : "";
-    return a.all_day || !a.starts ? `${a.title}${who}` : `${a.starts} ${a.title}${who}`;
+  function appointmentText(
+    a: ReturnType<typeof appointmentsOn>[number],
+  ): string {
+    const who = a.members.length > 0
+      ? ` (${a.members.map((x) => x.name).join(", ")})`
+      : "";
+    return a.all_day || !a.starts
+      ? `${a.title}${who}`
+      : `${a.starts} ${a.title}${who}`;
   }
 
   function taskData(ctx: McpContext, t: TaskInstanceRow) {
@@ -418,15 +509,19 @@ export function familyServer(loadRows: Load, lang: (locale: string | null) => La
     for (const mem of ctx.members) {
       if (only && mem.id !== only.id) continue;
       const entries = occ.filter((o) =>
-        o.kind === "presence" && o.attendee_ids.includes(mem.id) && o.local_start_date <= date &&
+        o.kind === "presence" && o.attendee_ids.includes(mem.id) &&
+        o.local_start_date <= date &&
         o.local_end_date >= date
       );
       for (const o of entries) {
         out.push({
           member: { id: mem.id, name: mem.display_name },
           state: o.presence_state!,
-          label: sc.state[o.presence_state as PresenceState] ?? o.presence_state!,
-          from: o.all_day || o.local_start_date !== date ? null : o.local_starts,
+          label: sc.state[o.presence_state as PresenceState] ??
+            o.presence_state!,
+          from: o.all_day || o.local_start_date !== date
+            ? null
+            : o.local_starts,
           until: o.all_day || o.local_end_date !== date ? null : o.local_ends,
           usual: false,
         });
@@ -474,7 +569,9 @@ export function familyServer(loadRows: Load, lang: (locale: string | null) => La
 
   function schoolOf(ctx: McpContext, date: string, child: MemberRow | null) {
     return schoolDaysOf(ctx)
-      .filter((d) => d.date === date && (child === null || d.member_id === child.id))
+      .filter((d) =>
+        d.date === date && (child === null || d.member_id === child.id)
+      )
       .map((d) => ({
         member: ref(ctx, d.member_id)!,
         date: d.date,
@@ -497,19 +594,29 @@ export function familyServer(loadRows: Load, lang: (locale: string | null) => La
         equipment: ctx.equipment_hint
           ? [
             ...new Set(
-              d.lessons.filter((l) => l.status !== "cancelled" && l.equipment).map((l) => l.equipment!),
+              d.lessons.filter((l) => l.status !== "cancelled" && l.equipment)
+                .map((l) => l.equipment!),
             ),
           ]
           : [],
       }));
   }
 
-  function schoolText(s: ReturnType<typeof schoolOf>[number], m: McpMessages, sc: ShortcutMessages): string {
+  function schoolText(
+    s: ReturnType<typeof schoolOf>[number],
+    m: McpMessages,
+    sc: ShortcutMessages,
+  ): string {
     if (s.free === "weekend") return m.weekend;
     if (s.free === "holiday") return m.schoolFree(s.holiday);
     const lessons = s.lessons
       .filter((l) => l.kind === "lesson")
-      .map((l) => (l.status === "normal" ? l.subject : `${l.subject} (${m.lessonStatus[l.status]})`));
+      .map((
+        l,
+      ) => (l.status === "normal"
+        ? l.subject
+        : `${l.subject} (${m.lessonStatus[l.status]})`)
+      );
     const head = s.starts && s.ends ? `${s.starts}–${s.ends} ` : "";
     const pack = s.equipment.length > 0 ? ` ${sc.equipment(s.equipment)}` : "";
     return `${head}${lessons.join(", ")}${pack}`.trim();
@@ -529,7 +636,11 @@ export function familyServer(loadRows: Load, lang: (locale: string | null) => La
       }));
   }
 
-  function mealText(x: ReturnType<typeof mealsOf>[number], m: McpMessages, sc: ShortcutMessages): string {
+  function mealText(
+    x: ReturnType<typeof mealsOf>[number],
+    m: McpMessages,
+    sc: ShortcutMessages,
+  ): string {
     const slot = sc.slot[x.slot as keyof ShortcutMessages["slot"]] ?? x.slot;
     const cook = x.cook ? ` (${x.cook.name})` : "";
     const guests = x.guests > 0 ? ` ${m.guests(x.guests)}` : "";
@@ -538,13 +649,23 @@ export function familyServer(loadRows: Load, lang: (locale: string | null) => La
 
   // ── the tools ──
 
-  const tools: Record<string, (args: Record<string, unknown>) => Promise<ToolResult>> = {
+  const tools: Record<
+    string,
+    (args: Record<string, unknown>) => Promise<ToolResult>
+  > = {
     get_agenda: (args) => agenda(args, 7),
   };
 
   /** The agenda of [from, to], or of `defaultDays` from today. */
-  async function agenda(args: Record<string, unknown>, defaultDays: number): Promise<ToolResult> {
-    const { ctx, from, to } = await loadWindow(["calendar", "tasks_all"], args, defaultDays);
+  async function agenda(
+    args: Record<string, unknown>,
+    defaultDays: number,
+  ): Promise<ToolResult> {
+    const { ctx, from, to } = await loadWindow(
+      ["calendar", "tasks_all"],
+      args,
+      defaultDays,
+    );
     const { m } = words(ctx);
     const only = member(ctx, stringArg(args, "member"));
     const occ = occurrencesOf(ctx);
@@ -554,7 +675,8 @@ export function familyServer(loadRows: Load, lang: (locale: string | null) => La
       tasks_due: (ctx.tasks_all ?? [])
         .filter((t) =>
           t.due_on === date && t.status === "open" &&
-          (only === null || t.assigned_profile_id === only.id || t.assigned_profile_id === null)
+          (only === null || t.assigned_profile_id === only.id ||
+            t.assigned_profile_id === null)
         )
         .map((t) => taskData(ctx, t)),
     }));
@@ -564,7 +686,8 @@ export function familyServer(loadRows: Load, lang: (locale: string | null) => La
         : m.noAppointments;
       const tasks = d.tasks_due.length > 0
         ? ` · ${m.tasks}: ${
-          d.tasks_due.map((t) => `${t.title} (${t.assignee?.name ?? m.anyone})`).join(", ")
+          d.tasks_due.map((t) => `${t.title} (${t.assignee?.name ?? m.anyone})`)
+            .join(", ")
         }`
         : "";
       return `${m.day(d.date)}: ${ap}${tasks}`;
@@ -575,26 +698,36 @@ export function familyServer(loadRows: Load, lang: (locale: string | null) => La
     };
   }
 
-  const more: Record<string, (args: Record<string, unknown>) => Promise<ToolResult>> = {
+  const more: Record<
+    string,
+    (args: Record<string, unknown>) => Promise<ToolResult>
+  > = {
     async list_tasks(args) {
       const { ctx, from, to } = await loadWindow(["tasks_all"], args);
       const { m } = words(ctx);
       const only = member(ctx, stringArg(args, "member"));
       const status = stringArg(args, "status") ?? "open";
-      if (!["open", "done", "all"].includes(status)) throw new ToolError((m) => m.statusInvalid);
+      if (!["open", "done", "all"].includes(status)) {
+        throw new ToolError((m) => m.statusInvalid);
+      }
       const tasks = (ctx.tasks_all ?? [])
         .filter((t) => t.due_on >= from && t.due_on <= to)
         .filter((t) => only === null || t.assigned_profile_id === only.id)
         .filter((t) =>
           status === "all" ||
-          (status === "open" ? t.status === "open" : t.status === "done" || t.status === "verified")
+          (status === "open"
+            ? t.status === "open"
+            : t.status === "done" || t.status === "verified")
         )
-        .map((t) => ({ ...taskData(ctx, t), completed_by: ref(ctx, t.completed_by_profile_id) }));
+        .map((t) => ({
+          ...taskData(ctx, t),
+          completed_by: ref(ctx, t.completed_by_profile_id),
+        }));
       const text = tasks.length === 0 ? m.noTasks : tasks
         .map((t) =>
-          `${t.title} – ${t.assignee?.name ?? m.anyone} – ${m.due(m.day(t.due_on))} – ${
-            m.taskStatus[t.status]
-          } – ${m.points(t.points)}`
+          `${t.title} – ${t.assignee?.name ?? m.anyone} – ${
+            m.due(m.day(t.due_on))
+          } – ${m.taskStatus[t.status]} – ${m.points(t.points)}`
         )
         .join("\n");
       return { text, structured: { from, to, status, tasks } };
@@ -603,11 +736,21 @@ export function familyServer(loadRows: Load, lang: (locale: string | null) => La
     async get_meal_plan(args) {
       const { ctx, from, to } = await loadWindow(["meals"], args);
       const { m, sc } = words(ctx);
-      const days = datesOf(from, to).map((date) => ({ date, meals: mealsOf(ctx, date) }));
+      const days = datesOf(from, to).map((date) => ({
+        date,
+        meals: mealsOf(ctx, date),
+      }));
       const lines = days
         .filter((d) => d.meals.length > 0)
-        .map((d) => `${m.day(d.date)}: ${d.meals.map((x) => mealText(x, m, sc)).join("; ")}`);
-      return { text: lines.length > 0 ? lines.join("\n") : m.noMeals, structured: { from, to, days } };
+        .map((d) =>
+          `${m.day(d.date)}: ${
+            d.meals.map((x) => mealText(x, m, sc)).join("; ")
+          }`
+        );
+      return {
+        text: lines.length > 0 ? lines.join("\n") : m.noMeals,
+        structured: { from, to, days },
+      };
     },
 
     async get_shopping_list(args) {
@@ -622,10 +765,16 @@ export function familyServer(loadRows: Load, lang: (locale: string | null) => La
         : ctx.lists.find((l) => fold(l.name) === fold(wanted));
       if (!list) {
         const names = ctx.lists.map((l) => l.name).join(", ");
-        throw new ToolError((_, s) => `${s.listUnknown(wanted ?? "")} (${names})`);
+        throw new ToolError((_, s) =>
+          `${s.listUnknown(wanted ?? "")} (${names})`
+        );
       }
-      const categories = (ctx.shopping_categories ?? []).filter((c) => c.list_id === list.id);
-      const items = (ctx.shopping_items ?? []).filter((i) => i.list_id === list.id);
+      const categories = (ctx.shopping_categories ?? []).filter((c) =>
+        c.list_id === list.id
+      );
+      const items = (ctx.shopping_items ?? []).filter((i) =>
+        i.list_id === list.id
+      );
       const nameOf = (c: { key: string | null; name: string | null }) =>
         c.name ?? (c.key ? m.category[c.key] ?? c.key : m.category.other);
       const groups = [
@@ -635,7 +784,9 @@ export function familyServer(loadRows: Load, lang: (locale: string | null) => La
         })),
         {
           category: m.category.other,
-          items: items.filter((i) => !categories.some((c) => c.id === i.category_id)),
+          items: items.filter((i) =>
+            !categories.some((c) => c.id === i.category_id)
+          ),
         },
       ]
         .filter((g) => g.items.length > 0)
@@ -649,13 +800,22 @@ export function familyServer(loadRows: Load, lang: (locale: string | null) => La
             added_by: ref(ctx, i.added_by),
           })),
         }));
-      const itemText = (i: { name: string; quantity: string | null; count: number }) =>
-        `${i.name}${i.quantity ? ` (${i.quantity})` : ""}${i.count > 1 ? ` ${i.count}×` : ""}`;
+      const itemText = (
+        i: { name: string; quantity: string | null; count: number },
+      ) =>
+        `${i.name}${i.quantity ? ` (${i.quantity})` : ""}${
+          i.count > 1 ? ` ${i.count}×` : ""
+        }`;
       const text = [
         m.shopping(list.name, items.length),
-        ...groups.map((g) => `${g.category}: ${g.items.map(itemText).join(", ")}`),
+        ...groups.map((g) =>
+          `${g.category}: ${g.items.map(itemText).join(", ")}`
+        ),
       ].join("\n");
-      return { text, structured: { list: { id: list.id, name: list.name }, groups } };
+      return {
+        text,
+        structured: { list: { id: list.id, name: list.name }, groups },
+      };
     },
 
     async get_points(args) {
@@ -663,23 +823,29 @@ export function familyServer(loadRows: Load, lang: (locale: string | null) => La
       const { m } = words(ctx);
       const who = member(ctx, stringArg(args, "member")) ??
         ctx.members.find((x) => x.id === ctx.holder.profile_id)!;
-      const balance = (ctx.balances ?? []).find((b) => b.profile_id === who.id)?.balance ?? 0;
-      const ledger = (ctx.ledger ?? []).filter((l) => l.profile_id === who.id).slice(0, 20).map((l) => ({
-        at: l.occurred_at,
-        amount: l.amount,
-        reason: l.reason,
-        note: l.note,
-      }));
+      const balance =
+        (ctx.balances ?? []).find((b) => b.profile_id === who.id)?.balance ?? 0;
+      const ledger = (ctx.ledger ?? []).filter((l) => l.profile_id === who.id)
+        .slice(0, 20).map((l) => ({
+          at: l.occurred_at,
+          amount: l.amount,
+          reason: l.reason,
+          note: l.note,
+        }));
       const streaks = (ctx.streaks ?? [])
         .filter((s) => s.profile_id === who.id && s.current_length > 0)
-        .map((s) => ({ task: s.title, current: s.current_length, longest: s.longest_length }));
+        .map((s) => ({
+          task: s.title,
+          current: s.current_length,
+          longest: s.longest_length,
+        }));
       const lines = [m.balance(who.display_name, balance)];
       if (ledger.length > 0) {
         lines.push(
           ledger.slice(0, 5).map((l) =>
-            `${l.amount > 0 ? "+" : ""}${l.amount} ${m.ledgerReason[l.reason] ?? l.reason}${
-              l.note ? ` (${l.note})` : ""
-            }`
+            `${l.amount > 0 ? "+" : ""}${l.amount} ${
+              m.ledgerReason[l.reason] ?? l.reason
+            }${l.note ? ` (${l.note})` : ""}`
           ).join(", "),
         );
       }
@@ -698,9 +864,18 @@ export function familyServer(loadRows: Load, lang: (locale: string | null) => La
       const terms = fold(query).split(/\s+/).filter((t) => t !== "");
       const matches = (ctx.recipes ?? [])
         .map((r) => {
-          const ingredients = (ctx.ingredients ?? []).filter((i) => i.recipe_id === r.id);
-          const hay = fold([r.title, ...(r.tags ?? []), ...ingredients.map((i) => i.raw_name)].join(" "));
-          return { r, ingredients, score: terms.filter((t) => hay.includes(t)).length };
+          const ingredients = (ctx.ingredients ?? []).filter((i) =>
+            i.recipe_id === r.id
+          );
+          const hay = fold(
+            [r.title, ...(r.tags ?? []), ...ingredients.map((i) => i.raw_name)]
+              .join(" "),
+          );
+          return {
+            r,
+            ingredients,
+            score: terms.filter((t) => hay.includes(t)).length,
+          };
         })
         .filter((x) => x.score === terms.length)
         .slice(0, 10)
@@ -724,7 +899,9 @@ export function familyServer(loadRows: Load, lang: (locale: string | null) => La
             ? r.title
             : `${r.title}: ${
               r.ingredients.map((i) =>
-                [i.quantity, i.unit, i.name].filter((x) => x !== null && x !== "").join(" ")
+                [i.quantity, i.unit, i.name].filter((x) =>
+                  x !== null && x !== ""
+                ).join(" ")
               ).join(", ")
             }`
         ),
@@ -748,8 +925,12 @@ export function familyServer(loadRows: Load, lang: (locale: string | null) => La
           structured: { member: ref(ctx, child.id), days: [] },
         };
       }
-      const text = days.map((d) => `${m.day(d.date)}: ${schoolText(d, m, sc)}`).join("\n");
-      return { text: `${child.display_name}\n${text}`, structured: { member: ref(ctx, child.id), days } };
+      const text = days.map((d) => `${m.day(d.date)}: ${schoolText(d, m, sc)}`)
+        .join("\n");
+      return {
+        text: `${child.display_name}\n${text}`,
+        structured: { member: ref(ctx, child.id), days },
+      };
     },
 
     async get_presence(args) {
@@ -757,14 +938,19 @@ export function familyServer(loadRows: Load, lang: (locale: string | null) => La
       const { m, sc } = words(ctx);
       const only = member(ctx, stringArg(args, "member"));
       const occ = occurrencesOf(ctx);
-      const days = datesOf(from, to).map((date) => ({ date, members: presenceOn(ctx, occ, date, only, sc) }));
+      const days = datesOf(from, to).map((date) => ({
+        date,
+        members: presenceOn(ctx, occ, date, only, sc),
+      }));
       const lines = days.map((d) => {
         const parts = d.members.map((p) =>
-          `${p.member.name} ${p.label}${p.from || p.until ? ` ${p.from ?? ""}–${p.until ?? ""}` : ""}${
-            p.usual ? ` (${m.baseline})` : ""
-          }`
+          `${p.member.name} ${p.label}${
+            p.from || p.until ? ` ${p.from ?? ""}–${p.until ?? ""}` : ""
+          }${p.usual ? ` (${m.baseline})` : ""}`
         );
-        return `${m.day(d.date)}: ${parts.length > 0 ? parts.join("; ") : m.nobodyAway}`;
+        return `${m.day(d.date)}: ${
+          parts.length > 0 ? parts.join("; ") : m.nobodyAway
+        }`;
       });
       return { text: lines.join("\n"), structured: { from, to, days } };
     },
@@ -774,7 +960,11 @@ export function familyServer(loadRows: Load, lang: (locale: string | null) => La
       // This week's Monday needs the household's today: a light read first when no day is given.
       const anchor = weekOf ?? (await load([], null, 1)).household.today;
       const monday = mondayOf(anchor);
-      const ctx = await load(["calendar", "school", "meals", "tasks_all"], monday, 7);
+      const ctx = await load(
+        ["calendar", "school", "meals", "tasks_all"],
+        monday,
+        7,
+      );
       const { m, sc } = words(ctx);
       const occ = occurrencesOf(ctx);
       const days = datesOf(monday, addDays(monday, 6)).map((date) => ({
@@ -798,7 +988,9 @@ export function familyServer(loadRows: Load, lang: (locale: string | null) => La
             `${s.member.name}: ${schoolText(s, m, sc)}`
           ),
           ...d.meals.map((x) => mealText(x, m, sc)),
-          ...(d.open_tasks.length > 0 ? [`${m.tasks}: ${d.open_tasks.map((t) => t.title).join(", ")}`] : []),
+          ...(d.open_tasks.length > 0
+            ? [`${m.tasks}: ${d.open_tasks.map((t) => t.title).join(", ")}`]
+            : []),
         ];
         return `${m.day(d.date)}: ${parts.join(" · ")}`;
       });
@@ -831,7 +1023,10 @@ export function familyServer(loadRows: Load, lang: (locale: string | null) => La
       }
     },
     async readResource(uri) {
-      const json = (r: ToolResult) => ({ mimeType: "application/json", text: JSON.stringify(r.structured) });
+      const json = (r: ToolResult) => ({
+        mimeType: "application/json",
+        text: JSON.stringify(r.structured),
+      });
       switch (uri) {
         case "family://agenda/today":
           return json(await agenda({}, 1));

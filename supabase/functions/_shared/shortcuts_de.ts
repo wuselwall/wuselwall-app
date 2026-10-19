@@ -22,7 +22,8 @@ export const SHORTCUTS_DE: ShortcutMessages = {
 
   tokenInvalid:
     "Dieser Kurzbefehl gilt nicht mehr. In WuselWall unter Einstellungen → Siri und Kurzbefehle lässt sich ein neuer Schlüssel erstellen.",
-  rateLimited: "Für heute hat dieser Kurzbefehl genug eingetragen. Morgen geht es wieder.",
+  rateLimited:
+    "Für heute hat dieser Kurzbefehl genug eingetragen. Morgen geht es wieder.",
   unknownAction: "Diesen Kurzbefehl kennt WuselWall nicht.",
   failed: "Das hat nicht geklappt. Bitte später noch einmal versuchen.",
   textRequired: "Der Kurzbefehl hat keinen Text geschickt.",
@@ -32,7 +33,9 @@ export const SHORTCUTS_DE: ShortcutMessages = {
   dayInvalid: (value) => `„${value}“ ist kein Tag, den WuselWall versteht.`,
 
   shoppingAdded: (names, list) =>
-    `${join(names)} ${names.length === 1 ? "ist" : "sind"} auf der Liste${list ? ` „${list}“` : ""}.`,
+    `${join(names)} ${names.length === 1 ? "ist" : "sind"} auf der Liste${
+      list ? ` „${list}“` : ""
+    }.`,
 
   noEvents: (when) => `${cap(when)} stehen keine Termine an.`,
   events: (when, items) => `${cap(when)}: ${join(items)}.`,
@@ -50,26 +53,42 @@ export const SHORTCUTS_DE: ShortcutMessages = {
 
   points: (n) => `Du hast ${points(n)}.`,
 
-  choreDone: (title, n) => (n > 0 ? `Erledigt: ${title}. ${points(n)} dazu.` : `Erledigt: ${title}.`),
-  choreAwaitsCheck: (title) => `Erledigt: ${title}. Die Punkte gibt es, sobald es bestätigt ist.`,
+  choreDone: (
+    title,
+    n,
+  ) => (n > 0
+    ? `Erledigt: ${title}. ${points(n)} dazu.`
+    : `Erledigt: ${title}.`),
+  choreAwaitsCheck: (title) =>
+    `Erledigt: ${title}. Die Punkte gibt es, sobald es bestätigt ist.`,
   choreNoneOpen: "Heute ist keine Aufgabe mehr offen.",
   choreOpen: (titles) => `Noch offen: ${join(titles)}.`,
   choreNoMatch: (text, open) =>
-    `Keine offene Aufgabe passt zu „${text}“.${open.length > 0 ? ` Noch offen: ${join(open)}.` : ""}`,
+    `Keine offene Aufgabe passt zu „${text}“.${
+      open.length > 0 ? ` Noch offen: ${join(open)}.` : ""
+    }`,
   choreAmbiguous: (text, candidates) =>
-    `„${text}“ passt zu mehreren Aufgaben: ${join(candidates, "oder")}. Bitte genauer sagen, welche.`,
+    `„${text}“ passt zu mehreren Aufgaben: ${
+      join(candidates, "oder")
+    }. Bitte genauer sagen, welche.`,
 
   noTimetable: (name) => `Für ${name} ist kein Stundenplan eingetragen.`,
-  weekend: (name, when) => `${name} hat ${when} keine Schule, es ist Wochenende.`,
-  holiday: (name, when, holiday) => `${name} hat ${when} schulfrei${holiday ? ` (${holiday})` : ""}.`,
+  weekend: (name, when) =>
+    `${name} hat ${when} keine Schule, es ist Wochenende.`,
+  holiday: (name, when, holiday) =>
+    `${name} hat ${when} schulfrei${holiday ? ` (${holiday})` : ""}.`,
   schoolDay: (name, when, from, to, subjects) =>
     `${name} hat ${when} von ${from} bis ${to} Schule: ${join(subjects)}.`,
   noLessons: (name, when) => `${name} hat ${when} keinen Unterricht.`,
   equipment: (items) => `Einpacken: ${join(items)}.`,
   hasSubject: (name, when, subject, period, time) =>
-    `Ja, ${name} hat ${when} ${subject}${period !== null ? ` in der ${period}. Stunde` : ""} (${time}).`,
-  hasNotSubject: (name, when, subject) => `Nein, ${name} hat ${when} kein ${subject}.`,
-  subjectCancelled: (name, when, subject) => `${subject} fällt ${when} für ${name} aus.`,
+    `Ja, ${name} hat ${when} ${subject}${
+      period !== null ? ` in der ${period}. Stunde` : ""
+    } (${time}).`,
+  hasNotSubject: (name, when, subject) =>
+    `Nein, ${name} hat ${when} kein ${subject}.`,
+  subjectCancelled: (name, when, subject) =>
+    `${subject} fällt ${when} für ${name} aus.`,
 
   state: {
     working: "bei der Arbeit",
@@ -82,8 +101,11 @@ export const SHORTCUTS_DE: ShortcutMessages = {
   presenceHere: (name) => `${name} ist laut Kalender da.`,
   presenceAwayDays: (name, state, lastDay, back) =>
     `${name} ist ${state} bis ${lastDay} und ${back} wieder da.`,
-  presenceAwayUntil: (name, state, when, time) => `${name} ist ${state} und ${when} um ${time} wieder da.`,
+  presenceAwayUntil: (name, state, when, time) =>
+    `${name} ist ${state} und ${when} um ${time} wieder da.`,
   presenceToday: (name, state) => `${name} ist heute ${state}.`,
   presenceNext: (state, from, to) =>
-    from === to ? `Als Nächstes: ${state} am ${from}.` : `Als Nächstes: ${state} von ${from} bis ${to}.`,
+    from === to
+      ? `Als Nächstes: ${state} am ${from}.`
+      : `Als Nächstes: ${state} von ${from} bis ${to}.`,
 };

@@ -20,6 +20,12 @@ name: deploy-supabase
 on:
   workflow_dispatch:
     inputs:
+      language:
+        description: Server email language
+        type: choice
+        options: [de, en, fr, es]
+        default: de
+        required: true
       web:
         description: Also publish the web app on GitHub Pages
         type: boolean
@@ -35,6 +41,7 @@ jobs:
       SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
       PROJECT: ${{ secrets.SUPABASE_PROJECT_ID }}
       SETUP_TOKEN: ${{ secrets.WUSELWALL_SETUP_TOKEN }}
+      MAIL_LANGUAGE: ${{ inputs.language }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -78,7 +85,7 @@ jobs:
 
       - name: Email code templates
         # SMTP fallback must contain the code the app requests, for signup and sign-in.
-        # Upload canonical bilingual templates and verify the exact settings by readback.
+        # Upload canonical single-language templates and verify settings by readback.
         run: node scripts/hosted-email-templates.mjs
 
       - name: Edge Functions
@@ -87,6 +94,7 @@ jobs:
           echo "::add-mask::$secret"
           echo "CRON_SECRET=$secret" >> "$GITHUB_ENV"
           npx supabase secrets set --project-ref "$PROJECT" "CRON_SECRET=$secret"
+          npx supabase secrets set --project-ref "$PROJECT" "MAIL_LANGUAGE=$MAIL_LANGUAGE"
           # verify_jwt per function comes from config.toml ([functions.*]).
           npx supabase functions deploy --project-ref "$PROJECT" --use-api
 

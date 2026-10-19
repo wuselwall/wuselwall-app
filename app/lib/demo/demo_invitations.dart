@@ -16,8 +16,12 @@ class DemoInvitationRepository implements InvitationRepository {
     ),
   ];
 
-  static String get _household =>
-      DemoData.tr('Familie Becker', 'The Becker family');
+  static String get _household => DemoData.tr4(
+    'Familie Becker',
+    'The Becker family',
+    'Famille Becker',
+    'Familia Becker',
+  );
 
   @override
   Future<Result<CreatedInvitation>> create({

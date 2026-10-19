@@ -74,12 +74,12 @@ queues. It holds no business rules.
 | Models | **freezed** + `json_serializable` | Immutable value types and JSON mapping without hand-written boilerplate. |
 | Offline store | **drift** (SQLite) | The shopping list's mirror and outbox ([07](07-module-meals-shopping.md#offline--the-one-place-it-is-non-negotiable)). Typed queries, migrations, reactive streams. |
 | Secrets on device | `flutter_secure_storage` | Keychain on iOS, Keystore-backed on Android — where the device session lives. |
-| Localisation | Flutter **gen-l10n**, ARB files | German and English, always both (NFR-14); generated, type-safe message accessors. |
+| Localisation | Flutter **gen-l10n**, ARB files | German, English, French and Spanish, always all four (NFR-14); generated, type-safe message accessors. |
 | Backend platform | **Supabase, self-hosted only**: every household's own stack, or its own hosted Supabase project | User decision. Auth, a REST layer, realtime and functions around PostgreSQL. `supabase/` is the server release other families install; the store app has no default backend ([ADR-018](adr/ADR-018-self-hosted-only.md), replacing ADR-015's Cloud). |
 | Database | **PostgreSQL** (the version Supabase's image ships — pin the tag) | Recurrence ranges, ledgers, arrays, `pg_trgm` for shopping capture, `pg_cron` for jobs. |
 | Domain logic | **SQL and PL/pgSQL** in the `api` schema | Transactional writes, guardian checks and audit in one place. |
 | Authorisation | **Row-level security**, forced on every table | The primary control: the anon key ships in every app. |
-| Auth | **Supabase Auth** (GoTrue) + a custom access-token hook | Adult accounts (email code, password; [ADR-014](adr/ADR-014-self-service-onboarding.md)) and per-device users; household and device in the JWT. A send-email hook localises auth mail. |
+| Auth | **Supabase Auth** (GoTrue) + a custom access-token hook | Adult accounts (email code, password; [ADR-014](adr/ADR-014-self-service-onboarding.md)) and per-device users; household and device in the JWT. Hook and SMTP localise auth mail to the installation's single `MAIL_LANGUAGE` (`de/en/fr/es`, default `de`), not the recipient's locale. |
 | Composed reads, public endpoints | **Supabase Edge Functions** (Deno, TypeScript) | RFC 5545 via `rrule`, the timetable projection, ICS output via `ical-generator`, device enrolment, the send-email hook, account deletion; later MCP and Shortcuts. |
 | Background jobs | **pg_cron**, with **pg_net** to invoke Edge Functions | No worker container. Jobs and their history are visible in SQL. |
 | Realtime | **Supabase Realtime**, broadcast from triggers on a private per-household channel | Invalidations, not data: the client refetches. |
@@ -100,7 +100,7 @@ wuselwall/
 │  │  └─ features/
 │  │     ├─ setup/  devices/  shopping/  tasks/  calendar/  school/  meals/  board/
 │  │     │   each: data/ (repository: api views + RPC)  domain/ (models)  ui/
-│  ├─ l10n/app_en.arb  app_de.arb   every user-facing string, in both languages
+│  ├─ l10n/app_{en,de,fr,es}.arb     every user-facing string, in all four languages
 │  ├─ test/                    unit and widget tests
 │  ├─ integration_test/        on-device flows (later)
 │  ├─ env/                     store.json, ci.json, dev.json (git-ignored) — --dart-define-from-file

@@ -3560,6 +3560,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get householdLanguageEn => 'English';
 
   @override
+  String get householdLanguageFr => 'French';
+
+  @override
+  String get householdLanguageEs => 'Spanish';
+
+  @override
   String get householdNewFounderCode => 'Setup code';
 
   @override

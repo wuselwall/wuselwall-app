@@ -1349,6 +1349,8 @@
   },
   "householdLanguageDe": "Deutsch",
   "householdLanguageEn": "Englisch",
+  "householdLanguageFr": "Französisch",
+  "householdLanguageEs": "Spanisch",
   "householdNewFounderCode": "Einrichtungscode",
   "householdNewFounderHelp": "Nimm den Einrichtungscode aus der Serverinstallation oder frage die Person, die euren Server betreibt. Das ist nicht der Code aus deiner Anmelde-E-Mail.",
   "householdNewCodeSaved": "Einrichtungscode aus deinem Einrichtungslink gespeichert. Du musst ihn nicht erneut eingeben.",
