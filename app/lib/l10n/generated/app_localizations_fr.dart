@@ -2026,14 +2026,15 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get baselineTitle => 'Lieu habituel';
+  String get baselineTitle => 'Semaine habituelle';
 
   @override
-  String get baselineSettingsSubtitle => 'Où chacun se trouve habituellement';
+  String get baselineSettingsSubtitle =>
+      'Où chacun se trouve habituellement, jour par jour';
 
   @override
   String get baselineHelp =>
-      'L’endroit où tu te trouves d’habitude. Seules les exceptions sont à saisir : une journée normale reste vide.';
+      'L’endroit où tu te trouves d’habitude, pour chaque jour de la semaine. Seules les exceptions sont à saisir : une semaine normale reste vide.';
 
   @override
   String get baselineNone => 'Rien de défini';
@@ -2046,6 +2047,67 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get baselineSaved => 'Enregistré.';
+
+  @override
+  String get usualCopyMonday => 'Du mardi au vendredi comme le lundi';
+
+  @override
+  String usualDayTitle(String name, String weekday) {
+    return '$name le $weekday';
+  }
+
+  @override
+  String get usualDayApply => 'Appliquer';
+
+  @override
+  String get usualWholeDay => 'Toute la journée';
+
+  @override
+  String get usualSlots => 'Créneaux';
+
+  @override
+  String get usualSlotState => 'Où';
+
+  @override
+  String get usualSlotFrom => 'De';
+
+  @override
+  String get usualSlotUntil => 'À';
+
+  @override
+  String get usualAddSlot => 'Ajouter un créneau';
+
+  @override
+  String get usualRemoveSlot => 'Supprimer le créneau';
+
+  @override
+  String get usualSlotsInvalid =>
+      'Chaque créneau se termine après son début, et les créneaux ne se chevauchent pas.';
+
+  @override
+  String get usualAlternating => 'Semaines alternées (A/B)';
+
+  @override
+  String get usualAlternatingHelp =>
+      'Pour un planning qui se répète toutes les deux semaines.';
+
+  @override
+  String get usualWeekA => 'Semaine A';
+
+  @override
+  String get usualWeekB => 'Semaine B';
+
+  @override
+  String usualThisWeekIs(String week) {
+    return 'Cette semaine : $week.';
+  }
+
+  @override
+  String get usualWhichWeek => 'Quelle semaine est-ce cette semaine ?';
+
+  @override
+  String get errUsualWeekInvalid =>
+      'Cette semaine habituelle n’est pas valide.';
 
   @override
   String get busyTitle => 'Rendez-vous jusqu’à';

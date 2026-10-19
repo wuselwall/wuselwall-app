@@ -1098,13 +1098,48 @@
       }
     }
   },
-  "baselineTitle": "Lieu habituel",
-  "baselineSettingsSubtitle": "Où chacun se trouve habituellement",
-  "baselineHelp": "L’endroit où tu te trouves d’habitude. Seules les exceptions sont à saisir : une journée normale reste vide.",
+  "baselineTitle": "Semaine habituelle",
+  "baselineSettingsSubtitle": "Où chacun se trouve habituellement, jour par jour",
+  "baselineHelp": "L’endroit où tu te trouves d’habitude, pour chaque jour de la semaine. Seules les exceptions sont à saisir : une semaine normale reste vide.",
   "baselineNone": "Rien de défini",
   "baselineLabelField": "Libellé personnel (facultatif)",
   "baselineLabelHint": "par exemple à la maison",
   "baselineSaved": "Enregistré.",
+  "usualCopyMonday": "Du mardi au vendredi comme le lundi",
+  "usualDayTitle": "{name} le {weekday}",
+  "@usualDayTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "weekday": {
+        "type": "String"
+      }
+    }
+  },
+  "usualDayApply": "Appliquer",
+  "usualWholeDay": "Toute la journée",
+  "usualSlots": "Créneaux",
+  "usualSlotState": "Où",
+  "usualSlotFrom": "De",
+  "usualSlotUntil": "À",
+  "usualAddSlot": "Ajouter un créneau",
+  "usualRemoveSlot": "Supprimer le créneau",
+  "usualSlotsInvalid": "Chaque créneau se termine après son début, et les créneaux ne se chevauchent pas.",
+  "usualAlternating": "Semaines alternées (A/B)",
+  "usualAlternatingHelp": "Pour un planning qui se répète toutes les deux semaines.",
+  "usualWeekA": "Semaine A",
+  "usualWeekB": "Semaine B",
+  "usualThisWeekIs": "Cette semaine : {week}.",
+  "@usualThisWeekIs": {
+    "placeholders": {
+      "week": {
+        "type": "String"
+      }
+    }
+  },
+  "usualWhichWeek": "Quelle semaine est-ce cette semaine ?",
+  "errUsualWeekInvalid": "Cette semaine habituelle n’est pas valide.",
   "busyTitle": "Rendez-vous jusqu’à",
   "busyPickTime": "Choisir une heure",
   "busyThisDay": "Ce jour uniquement",

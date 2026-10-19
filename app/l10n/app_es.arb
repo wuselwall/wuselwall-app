@@ -1098,13 +1098,48 @@
       }
     }
   },
-  "baselineTitle": "Lugar habitual",
-  "baselineSettingsSubtitle": "Dónde suele estar cada persona",
-  "baselineHelp": "Dónde sueles estar. Solo se introducen los cambios, así que un día normal queda vacío.",
+  "baselineTitle": "Semana habitual",
+  "baselineSettingsSubtitle": "Dónde suele estar cada persona, día a día",
+  "baselineHelp": "Dónde sueles estar cada día de la semana. Solo se introducen los cambios, así que una semana normal queda vacía.",
   "baselineNone": "Sin definir",
   "baselineLabelField": "Etiqueta propia (opcional)",
   "baselineLabelHint": "p. ej., en casa",
   "baselineSaved": "Guardado.",
+  "usualCopyMonday": "De martes a viernes como el lunes",
+  "usualDayTitle": "{name} el {weekday}",
+  "@usualDayTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "weekday": {
+        "type": "String"
+      }
+    }
+  },
+  "usualDayApply": "Aplicar",
+  "usualWholeDay": "Todo el día",
+  "usualSlots": "Franjas horarias",
+  "usualSlotState": "Dónde",
+  "usualSlotFrom": "Desde",
+  "usualSlotUntil": "Hasta",
+  "usualAddSlot": "Añadir franja horaria",
+  "usualRemoveSlot": "Quitar franja horaria",
+  "usualSlotsInvalid": "Cada franja termina después de empezar y las franjas no se solapan.",
+  "usualAlternating": "Semanas alternas (A/B)",
+  "usualAlternatingHelp": "Para un plan que se repite cada dos semanas.",
+  "usualWeekA": "Semana A",
+  "usualWeekB": "Semana B",
+  "usualThisWeekIs": "Esta semana: {week}.",
+  "@usualThisWeekIs": {
+    "placeholders": {
+      "week": {
+        "type": "String"
+      }
+    }
+  },
+  "usualWhichWeek": "¿Qué semana es esta?",
+  "errUsualWeekInvalid": "Esta semana habitual no es válida.",
   "busyTitle": "Reuniones hasta",
   "busyPickTime": "Elegir hora",
   "busyThisDay": "Solo este día",
