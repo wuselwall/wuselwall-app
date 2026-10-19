@@ -1,6 +1,6 @@
 # Pull requests get the fast checks: format, analyse, unit and widget tests, the dependency
-# audit. Marketing CI lives in wuselwall/wuselwall-website. A tag v*.*.* (the release, next
-# to release-ios.yml and release-android.yml) or "Run workflow" adds the web build. The
+# audit and the release web build's server-discovery browser regression. Marketing CI
+# lives in wuselwall/wuselwall-website. The
 # disposable backend (migrations, pgTAP, the Flutter integration test) and the Deno unit
 # tests for Edge Functions live in backend-ci.yml, which runs on every pull request and skips
 # its heavy jobs through its own change detector rather than a workflow-level path filter,
@@ -38,8 +38,17 @@ jobs:
       # sometimes segfaults while the coverage of a finished file is collected (upstream
       # flutter/flutter#124145, #151546), failing a job whose tests all passed.
       - run: flutter test   # includes the en/de ARB parity test
-      - run: flutter build web --release --dart-define-from-file=env/ci.json
-        if: github.event_name != 'pull_request'
+      # Exercise real encrypted browser storage across a backend/key migration.
+      # Fresh-context tests alone miss a cached browser using a retired API.
+      - run: flutter build web --release --no-web-resources-cdn --dart-define=ENV=release -o build/web-live
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with: { node-version: 22 }
+      - run: npm ci --include=dev
+        working-directory: .
+      - run: npx playwright install --with-deps chromium
+        working-directory: .
+      - run: node scripts/web-server-discovery.browser.mjs
+        working-directory: .
 
   # Server-upgrade scripts and the code-based SMTP fallback on Compose and hosted servers.
   scripts:

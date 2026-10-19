@@ -54,6 +54,9 @@ scp dist/wuselwall-server-0.1.0.tar.gz server:     # dann auf dem Server: tar xz
 
 Die Web-App unter `https://web.example.org` liest die Serveradresse aus eurer
 Installation. Du musst dafür keine Adresse oder Schlüssel in die App einbauen.
+Beim Laden übernimmt sie die aktuelle Konfiguration, auch wenn der Browser noch
+eine alte Serveradresse gespeichert hat. Offline nutzt sie die letzte gespeicherte
+Konfiguration. Bei einer geänderten Serveradresse meldest du dich erneut an.
 
 Öffne den Einrichtungslink aus der Installation im Browser oder scanne den zugehörigen
 QR-Code. Er enthält den Server und den Einrichtungscode. WuselWall merkt sich den

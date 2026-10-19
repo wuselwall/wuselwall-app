@@ -15,6 +15,11 @@ Failure mapError(Object error, [StackTrace? stackTrace]) {
 
   final failure = switch (error) {
     PostgrestException() => _fromPostgrest(error),
+    // GoTrue wraps browser fetch/CORS failures; no session was rejected here.
+    AuthRetryableFetchException() ||
+    AuthUnknownException(
+      originalError: http.ClientException(),
+    ) => NetworkFailure(cause: error),
     AuthException() => AuthFailure(code: _authCode(error), cause: error),
     SocketException() ||
     TimeoutException() ||
