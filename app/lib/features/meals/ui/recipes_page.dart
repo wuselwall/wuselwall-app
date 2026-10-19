@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
-import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/text/fold.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/empty_view.dart';
 import 'package:wuselwall/features/meals/application/meals_providers.dart';
 
 /// Every recipe, searchable by title and tag. Recipes are optional enrichment, so the
@@ -24,7 +24,6 @@ class _RecipesPageState extends ConsumerState<RecipesPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final ww = context.ww;
     final recipes = ref.watch(recipesProvider);
     return Scaffold(
       appBar: AppBar(title: Text(l10n.mealsRecipesTitle)),
@@ -51,15 +50,15 @@ class _RecipesPageState extends ConsumerState<RecipesPage> {
               onRetry: () => ref.invalidate(recipesProvider),
               data: (all) {
                 if (all.isEmpty) {
-                  return Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(Tokens.space6),
-                      child: Text(
-                        l10n.mealsRecipesEmpty,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: ww.ink2),
+                  return EmptyView(
+                    message: l10n.mealsRecipesEmpty,
+                    actions: [
+                      FilledButton.icon(
+                        onPressed: () => context.push(Routes.recipeEdit),
+                        icon: const Icon(Icons.add),
+                        label: Text(l10n.mealsRecipeNew),
                       ),
-                    ),
+                    ],
                   );
                 }
                 final shown = [
