@@ -50,6 +50,7 @@ class BaselinePage extends ConsumerWidget {
           board: board,
           card: (m) => _UsualWeekCard(
             member: m,
+            today: board.today,
             week:
                 weeks.where((w) => w.profileId == m.id).firstOrNull ??
                 UsualWeek(profileId: m.id),
@@ -124,15 +125,20 @@ class _MemberHeader extends StatelessWidget {
 DateTime _dayOfWeek(int weekday) => DateTime(2024, 1, weekday);
 
 /// One member's week: a row per weekday with its usual places, tapped to change the
-/// day. Saved as one `member_usual_week_set` call, which keeps week B and the anchor.
+/// day, and optionally a second week for a plan that alternates. Saved as one
+/// `member_usual_week_set` call.
 class _UsualWeekCard extends ConsumerStatefulWidget {
   const _UsualWeekCard({
     required this.member,
+    required this.today,
     required this.week,
     required this.actingId,
   });
 
   final BoardMember member;
+
+  /// The household's today, which says which week is A when alternating is switched on.
+  final DateTime today;
   final UsualWeek week;
   final String? actingId;
 
@@ -144,11 +150,57 @@ class _UsualWeekCardState extends ConsumerState<_UsualWeekCard> {
   late UsualWeek _week = widget.week;
   bool _saving = false;
 
+  /// The week the rows show and edit: 0 (A, or every week) or 1 (B).
+  int _shown = 0;
+
   @override
   void didUpdateWidget(_UsualWeekCard old) {
     super.didUpdateWidget(old);
     // The refetch after a save brings the server's week.
-    if (!identical(old.week, widget.week) && !_saving) _week = widget.week;
+    if (!identical(old.week, widget.week) && !_saving) {
+      _week = widget.week;
+      if (_week.anchor == null) _shown = 0;
+    }
+  }
+
+  /// Switching on asks which week this one is, and anchors week A on its Monday.
+  /// Switching off drops week B when the week is saved.
+  Future<void> _setAlternating(bool on) async {
+    if (!on) {
+      setState(() {
+        _week = _week.withAnchor(null);
+        _shown = 0;
+      });
+      return;
+    }
+    final l10n = context.l10n;
+    final which = await showDialog<int>(
+      context: context,
+      builder: (context) => SimpleDialog(
+        title: Text(l10n.usualWhichWeek),
+        children: [
+          SimpleDialogOption(
+            onPressed: () => Navigator.pop(context, 0),
+            child: Text(l10n.usualWeekA),
+          ),
+          SimpleDialogOption(
+            onPressed: () => Navigator.pop(context, 1),
+            child: Text(l10n.usualWeekB),
+          ),
+        ],
+      ),
+    );
+    if (which == null || !mounted) return;
+    final t = widget.today;
+    final monday = DateTime(t.year, t.month, t.day - (t.weekday - 1));
+    setState(() {
+      _week = _week.withAnchor(
+        which == 0
+            ? monday
+            : DateTime(monday.year, monday.month, monday.day - 7),
+      );
+      _shown = which;
+    });
   }
 
   Future<void> _editDay(int weekday) async {
@@ -159,19 +211,19 @@ class _UsualWeekCardState extends ConsumerState<_UsualWeekCard> {
       builder: (_) => _DaySheet(
         member: widget.member,
         weekday: weekday,
-        places: _week.day(weekday),
+        places: _week.day(weekday, week: _shown),
       ),
     );
     if (places != null && mounted) {
-      setState(() => _week = _week.withDay(weekday, places));
+      setState(() => _week = _week.withDay(weekday, places, week: _shown));
     }
   }
 
   void _copyMonday() {
-    final monday = _week.day(DateTime.monday);
+    final monday = _week.day(DateTime.monday, week: _shown);
     setState(() {
       for (var d = DateTime.tuesday; d <= DateTime.friday; d++) {
-        _week = _week.withDay(d, monday);
+        _week = _week.withDay(d, monday, week: _shown);
       }
     });
   }
@@ -202,6 +254,7 @@ class _UsualWeekCardState extends ConsumerState<_UsualWeekCard> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final alternating = _week.anchor != null;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(Tokens.space3),
@@ -209,12 +262,38 @@ class _UsualWeekCardState extends ConsumerState<_UsualWeekCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _MemberHeader(member: widget.member),
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              value: alternating,
+              onChanged: _setAlternating,
+              title: Text(l10n.usualAlternating),
+              subtitle: Text(l10n.usualAlternatingHelp),
+            ),
+            if (alternating) ...[
+              SegmentedButton<int>(
+                segments: [
+                  ButtonSegment(value: 0, label: Text(l10n.usualWeekA)),
+                  ButtonSegment(value: 1, label: Text(l10n.usualWeekB)),
+                ],
+                selected: {_shown},
+                onSelectionChanged: (s) => setState(() => _shown = s.single),
+              ),
+              const SizedBox(height: Tokens.space1),
+              Text(
+                l10n.usualThisWeekIs(
+                  _week.weekOf(widget.today) == 0
+                      ? l10n.usualWeekA
+                      : l10n.usualWeekB,
+                ),
+                style: TextStyle(color: context.ww.ink2),
+              ),
+            ],
             const SizedBox(height: Tokens.space2),
             for (var d = DateTime.monday; d <= DateTime.sunday; d++)
               _DayRow(
                 member: widget.member,
                 weekday: d,
-                places: _week.day(d),
+                places: _week.day(d, week: _shown),
                 onTap: () => _editDay(d),
               ),
             const SizedBox(height: Tokens.space2),
@@ -225,7 +304,7 @@ class _UsualWeekCardState extends ConsumerState<_UsualWeekCard> {
               runSpacing: Tokens.space2,
               children: [
                 TextButton(
-                  onPressed: _week.day(DateTime.monday).isEmpty
+                  onPressed: _week.day(DateTime.monday, week: _shown).isEmpty
                       ? null
                       : _copyMonday,
                   child: Text(l10n.usualCopyMonday),
@@ -306,8 +385,9 @@ class _DayRow extends StatelessWidget {
   }
 }
 
-/// One weekday: "nothing" or one of the six states, with an optional own label. Pops
-/// the day's new places; closing it without "Apply" changes nothing.
+/// One weekday: for the whole day "nothing" or one of the six states, or up to three
+/// time slots, each with its state; all with an optional own label. Pops the day's new
+/// places; closing it without "Apply" changes nothing.
 class _DaySheet extends StatefulWidget {
   const _DaySheet({
     required this.member,
@@ -323,25 +403,130 @@ class _DaySheet extends StatefulWidget {
   State<_DaySheet> createState() => _DaySheetState();
 }
 
+/// A time slot being edited.
+class _SlotDraft {
+  _SlotDraft({
+    required this.state,
+    required this.starts,
+    required this.ends,
+    String? label,
+  }) : label = TextEditingController(text: label ?? '');
+
+  PresenceState state;
+  TimeOfDay starts;
+  TimeOfDay ends;
+  final TextEditingController label;
+
+  UsualPlace toPlace() {
+    final text = label.text.trim();
+    return UsualPlace(
+      state: state,
+      label: text.isEmpty ? null : text,
+      starts: starts,
+      ends: ends,
+    );
+  }
+}
+
 class _DaySheetState extends State<_DaySheet> {
+  late bool _timed = widget.places.any((p) => !p.isWholeDay);
   late PresenceState? _state = widget.places.firstOrNull?.state;
   late final _label = TextEditingController(
     text: widget.places.firstOrNull?.label ?? '',
   );
+  late final _slots = [
+    for (final p in widget.places)
+      if (!p.isWholeDay)
+        _SlotDraft(
+          state: p.state,
+          starts: p.starts!,
+          ends: p.ends!,
+          label: p.label,
+        ),
+  ];
+  bool _invalid = false;
 
   @override
   void dispose() {
     _label.dispose();
+    for (final s in _slots) {
+      s.label.dispose();
+    }
     super.dispose();
   }
 
+  void _setTimed(bool timed) {
+    setState(() {
+      _timed = timed;
+      _invalid = false;
+      // The first slot starts from the whole day's choice: a morning by default.
+      if (timed && _slots.isEmpty) {
+        _slots.add(
+          _SlotDraft(
+            state: _state ?? PresenceState.working,
+            starts: const TimeOfDay(hour: 8, minute: 0),
+            ends: const TimeOfDay(hour: 12, minute: 0),
+            label: _label.text,
+          ),
+        );
+      }
+    });
+  }
+
+  /// A further slot from the end of the last one, four hours long (to 23:59 at most).
+  void _addSlot() {
+    final last = _slots.last;
+    final from = minutesOf(last.ends);
+    final to = from + 4 * 60 > 23 * 60 + 59 ? 23 * 60 + 59 : from + 4 * 60;
+    setState(
+      () => _slots.add(
+        _SlotDraft(
+          state: last.state,
+          starts: last.ends,
+          ends: TimeOfDay(hour: to ~/ 60, minute: to % 60),
+        ),
+      ),
+    );
+  }
+
+  void _removeSlot(_SlotDraft slot) {
+    setState(() => _slots.remove(slot));
+    slot.label.dispose();
+  }
+
+  Future<void> _pickTime(_SlotDraft slot, {required bool start}) async {
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: start ? slot.starts : slot.ends,
+    );
+    if (picked == null || !mounted) return;
+    setState(() {
+      if (start) {
+        slot.starts = picked;
+      } else {
+        slot.ends = picked;
+      }
+      _invalid = false;
+    });
+  }
+
   void _apply() {
-    final state = _state;
-    final text = _label.text.trim();
-    Navigator.pop<List<UsualPlace>>(context, [
-      if (state != null)
-        UsualPlace(state: state, label: text.isEmpty ? null : text),
-    ]);
+    final List<UsualPlace> places;
+    if (_timed) {
+      places = [for (final s in _slots) s.toPlace()];
+    } else {
+      final state = _state;
+      final text = _label.text.trim();
+      places = [
+        if (state != null)
+          UsualPlace(state: state, label: text.isEmpty ? null : text),
+      ];
+    }
+    if (!usualDayValid(places)) {
+      setState(() => _invalid = true);
+      return;
+    }
+    Navigator.pop<List<UsualPlace>>(context, places);
   }
 
   @override
@@ -370,14 +555,51 @@ class _DaySheetState extends State<_DaySheet> {
                 style: theme.textTheme.titleLarge,
               ),
               const SizedBox(height: Tokens.space2),
-              _PlaceChoice(
-                member: widget.member,
-                state: _state,
-                fontSize: fontSize,
-                onChanged: (s) => setState(() => _state = s),
+              SegmentedButton<bool>(
+                segments: [
+                  ButtonSegment(value: false, label: Text(l10n.usualWholeDay)),
+                  ButtonSegment(value: true, label: Text(l10n.usualSlots)),
+                ],
+                selected: {_timed},
+                onSelectionChanged: (s) => _setTimed(s.single),
               ),
               const SizedBox(height: Tokens.space2),
-              _LabelField(controller: _label, enabled: _state != null),
+              if (!_timed) ...[
+                _PlaceChoice(
+                  member: widget.member,
+                  state: _state,
+                  fontSize: fontSize,
+                  onChanged: (s) => setState(() => _state = s),
+                ),
+                const SizedBox(height: Tokens.space2),
+                _LabelField(controller: _label, enabled: _state != null),
+              ] else ...[
+                for (final slot in _slots)
+                  _SlotEditor(
+                    key: ObjectKey(slot),
+                    slot: slot,
+                    onState: (s) => setState(() => slot.state = s),
+                    onPickStart: () => _pickTime(slot, start: true),
+                    onPickEnd: () => _pickTime(slot, start: false),
+                    onRemove: _slots.length > 1
+                        ? () => _removeSlot(slot)
+                        : null,
+                  ),
+                if (_slots.length < 3)
+                  TextButton.icon(
+                    onPressed: _addSlot,
+                    icon: const Icon(Icons.add),
+                    label: Text(l10n.usualAddSlot),
+                  ),
+              ],
+              if (_invalid)
+                Padding(
+                  padding: const EdgeInsets.only(top: Tokens.space2),
+                  child: Text(
+                    l10n.usualSlotsInvalid,
+                    style: TextStyle(color: theme.colorScheme.error),
+                  ),
+                ),
               const SizedBox(height: Tokens.space2),
               Align(
                 alignment: Alignment.centerRight,
@@ -388,6 +610,88 @@ class _DaySheetState extends State<_DaySheet> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// One time slot: its state, its times and its own label.
+class _SlotEditor extends StatelessWidget {
+  const _SlotEditor({
+    required this.slot,
+    required this.onState,
+    required this.onPickStart,
+    required this.onPickEnd,
+    required this.onRemove,
+    super.key,
+  });
+
+  final _SlotDraft slot;
+  final ValueChanged<PresenceState> onState;
+  final VoidCallback onPickStart;
+  final VoidCallback onPickEnd;
+
+  /// Null for the day's only slot: switch to the whole day instead.
+  final VoidCallback? onRemove;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return Card.outlined(
+      margin: const EdgeInsets.only(bottom: Tokens.space2),
+      child: Padding(
+        padding: const EdgeInsets.all(Tokens.space2),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: DropdownButtonFormField<PresenceState>(
+                    initialValue: slot.state,
+                    decoration: InputDecoration(labelText: l10n.usualSlotState),
+                    items: [
+                      for (final s in PresenceState.values)
+                        DropdownMenuItem(
+                          value: s,
+                          child: Text(context.presenceLabel(s)),
+                        ),
+                    ],
+                    onChanged: (s) {
+                      if (s != null) onState(s);
+                    },
+                  ),
+                ),
+                if (onRemove != null)
+                  IconButton(
+                    tooltip: l10n.usualRemoveSlot,
+                    onPressed: onRemove,
+                    icon: const Icon(Icons.delete_outline),
+                  ),
+              ],
+            ),
+            const SizedBox(height: Tokens.space2),
+            Wrap(
+              spacing: Tokens.space2,
+              runSpacing: Tokens.space2,
+              children: [
+                OutlinedButton(
+                  onPressed: onPickStart,
+                  child: Text(
+                    '${l10n.usualSlotFrom} ${context.time(slot.starts)}',
+                  ),
+                ),
+                OutlinedButton(
+                  onPressed: onPickEnd,
+                  child: Text(
+                    '${l10n.usualSlotUntil} ${context.time(slot.ends)}',
+                  ),
+                ),
+              ],
+            ),
+            _LabelField(controller: slot.label, enabled: true),
+          ],
         ),
       ),
     );

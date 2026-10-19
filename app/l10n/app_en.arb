@@ -1118,6 +1118,27 @@
     }
   },
   "usualDayApply": "Apply",
+  "usualWholeDay": "Whole day",
+  "usualSlots": "Time slots",
+  "usualSlotState": "Where",
+  "usualSlotFrom": "From",
+  "usualSlotUntil": "Until",
+  "usualAddSlot": "Add time slot",
+  "usualRemoveSlot": "Remove time slot",
+  "usualSlotsInvalid": "Each time slot ends after it starts, and slots do not overlap.",
+  "usualAlternating": "Alternating weeks (A/B)",
+  "usualAlternatingHelp": "For a plan that repeats every two weeks.",
+  "usualWeekA": "Week A",
+  "usualWeekB": "Week B",
+  "usualThisWeekIs": "This week is {week}.",
+  "@usualThisWeekIs": {
+    "placeholders": {
+      "week": {
+        "type": "String"
+      }
+    }
+  },
+  "usualWhichWeek": "Which week is this week?",
   "errUsualWeekInvalid": "This usual week is not valid.",
   "busyTitle": "Meetings until",
   "busyPickTime": "Choose a time",

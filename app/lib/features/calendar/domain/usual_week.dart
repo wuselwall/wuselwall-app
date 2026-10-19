@@ -73,6 +73,57 @@ class UsualWeek {
         ],
       );
 
+  /// This week alternating from [anchor] (the Monday of a week A), or, with null, the
+  /// same every week: week B's places are dropped then.
+  UsualWeek withAnchor(DateTime? anchor) => UsualWeek(
+    profileId: profileId,
+    anchor: anchor,
+    slots: anchor == null
+        ? [
+            for (final s in slots)
+              if (s.week == 0) s,
+          ]
+        : slots,
+  );
+
+  /// 0 for week A (or every week without an anchor), 1 for week B, counted from the
+  /// anchor as the server counts (`_shared/usual_week.ts`).
+  int weekOf(DateTime date) {
+    final a = anchor;
+    if (a == null) return 0;
+    final monday = DateTime.utc(
+      date.year,
+      date.month,
+      date.day - (date.weekday - 1),
+    );
+    final weeks =
+        (monday.difference(DateTime.utc(a.year, a.month, a.day)).inDays / 7)
+            .round();
+    return weeks.isEven ? 0 : 1;
+  }
+
   static int _order(UsualPlace p) =>
       p.starts == null ? -1 : minutesOf(p.starts!);
+}
+
+/// Whether [places] can be one day of a usual week, as `api.member_usual_week_set`
+/// checks it: nothing, one whole-day place, or up to three time slots that each end
+/// after they start and do not overlap.
+bool usualDayValid(List<UsualPlace> places) {
+  if (places.length == 1 && places.single.isWholeDay) return true;
+  if (places.length > 3 || places.any((p) => p.isWholeDay || p.ends == null)) {
+    return false;
+  }
+  final sorted = [...places]
+    ..sort((a, b) => minutesOf(a.starts!).compareTo(minutesOf(b.starts!)));
+  for (var i = 0; i < sorted.length; i++) {
+    if (minutesOf(sorted[i].starts!) >= minutesOf(sorted[i].ends!)) {
+      return false;
+    }
+    if (i > 0 &&
+        minutesOf(sorted[i].starts!) < minutesOf(sorted[i - 1].ends!)) {
+      return false;
+    }
+  }
+  return true;
 }

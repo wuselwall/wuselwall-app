@@ -386,6 +386,132 @@ void main() {
         await unmountApp(tester, container);
       },
     );
+    Future<(RecordingCalendar, ProviderContainer)> openWeek(
+      WidgetTester tester, {
+      List<UsualWeek> usual = const [],
+    }) async {
+      final calendar = RecordingCalendar(usual: usual);
+      await pumpApp(
+        tester,
+        overrides: baseOverrides(
+          identity: FakeIdentityRepository(current: device()),
+        ),
+        board: FakeBoardRepository(boardWith([_papaRow], usual: true)),
+        calendar: calendar,
+      );
+      final container = ProviderScope.containerOf(
+        tester.element(find.byType(Scaffold).first),
+      );
+      container.read(routerProvider).go(Routes.baselines);
+      await tester.pumpAndSettle();
+      return (calendar, container);
+    }
+
+    testWidgets('sets a day in two time slots', (tester) async {
+      final (calendar, container) = await openWeek(tester);
+
+      await tester.tap(find.text('Mo'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Zeitfenster'));
+      await tester.pumpAndSettle();
+      expect(find.text('Von 8:00'), findsOneWidget);
+      await tester.tap(find.text('Zeitfenster hinzufügen'));
+      await tester.pumpAndSettle();
+      expect(find.text('Von 12:00'), findsOneWidget);
+      expect(find.text('Bis 16:00'), findsOneWidget);
+      await tester.tap(
+        find.byType(DropdownButtonFormField<PresenceState>).last,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Homeoffice').last);
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(
+        find.widgetWithText(FilledButton, 'Übernehmen'),
+      );
+      await tester.tap(find.widgetWithText(FilledButton, 'Übernehmen'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(FilledButton, 'Speichern'));
+      await tester.pumpAndSettle();
+
+      final monday = calendar.weeks.single.day(1);
+      expect(monday.map((p) => (p.state, p.starts, p.ends)), [
+        (
+          PresenceState.working,
+          const TimeOfDay(hour: 8, minute: 0),
+          const TimeOfDay(hour: 12, minute: 0),
+        ),
+        (
+          PresenceState.homeOffice,
+          const TimeOfDay(hour: 12, minute: 0),
+          const TimeOfDay(hour: 16, minute: 0),
+        ),
+      ]);
+      await unmountApp(tester, container);
+    });
+
+    testWidgets('switches on alternating weeks with this week as week B', (
+      tester,
+    ) async {
+      final (calendar, container) = await openWeek(tester);
+
+      await tester.tap(find.text('Abwechselnde Wochen (A/B)'));
+      await tester.pumpAndSettle();
+      expect(find.text('Welche Woche ist diese Woche?'), findsOneWidget);
+      await tester.tap(find.text('Woche B'));
+      await tester.pumpAndSettle();
+      expect(find.text('Diese Woche ist Woche B.'), findsOneWidget);
+      await tester.tap(find.text('Mo'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Homeoffice').last);
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(FilledButton, 'Übernehmen'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(FilledButton, 'Speichern'));
+      await tester.pumpAndSettle();
+
+      // Today is Wednesday 14 October: week A started on Monday 5 October.
+      final week = calendar.weeks.single;
+      expect(week.anchor, DateTime(2026, 10, 5));
+      expect(week.day(1, week: 1).single.state, PresenceState.homeOffice);
+      expect(week.day(1), isEmpty);
+      await unmountApp(tester, container);
+    });
+
+    testWidgets('switching alternating off saves the week without week B', (
+      tester,
+    ) async {
+      final (calendar, container) = await openWeek(
+        tester,
+        usual: [
+          UsualWeek(
+            profileId: guardianId,
+            anchor: DateTime(2026, 10, 12),
+            slots: const [
+              UsualSlot(
+                weekday: 2,
+                place: UsualPlace(state: PresenceState.working),
+              ),
+              UsualSlot(
+                week: 1,
+                weekday: 2,
+                place: UsualPlace(state: PresenceState.off),
+              ),
+            ],
+          ),
+        ],
+      );
+
+      expect(find.text('Diese Woche ist Woche A.'), findsOneWidget);
+      await tester.tap(find.text('Abwechselnde Wochen (A/B)'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(FilledButton, 'Speichern'));
+      await tester.pumpAndSettle();
+
+      final week = calendar.weeks.single;
+      expect(week.anchor, isNull);
+      expect(week.slots.map((s) => (s.week, s.weekday)), [(0, 2)]);
+      await unmountApp(tester, container);
+    });
   });
 
   // A server without the usual week (its board days carry no usual places).

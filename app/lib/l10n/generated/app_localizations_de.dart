@@ -2051,6 +2051,52 @@ class AppLocalizationsDe extends AppLocalizations {
   String get usualDayApply => 'Übernehmen';
 
   @override
+  String get usualWholeDay => 'Ganzer Tag';
+
+  @override
+  String get usualSlots => 'Zeitfenster';
+
+  @override
+  String get usualSlotState => 'Wo';
+
+  @override
+  String get usualSlotFrom => 'Von';
+
+  @override
+  String get usualSlotUntil => 'Bis';
+
+  @override
+  String get usualAddSlot => 'Zeitfenster hinzufügen';
+
+  @override
+  String get usualRemoveSlot => 'Zeitfenster entfernen';
+
+  @override
+  String get usualSlotsInvalid =>
+      'Jedes Zeitfenster endet nach seinem Beginn, und Zeitfenster überschneiden sich nicht.';
+
+  @override
+  String get usualAlternating => 'Abwechselnde Wochen (A/B)';
+
+  @override
+  String get usualAlternatingHelp =>
+      'Für einen Plan, der sich alle zwei Wochen wiederholt.';
+
+  @override
+  String get usualWeekA => 'Woche A';
+
+  @override
+  String get usualWeekB => 'Woche B';
+
+  @override
+  String usualThisWeekIs(String week) {
+    return 'Diese Woche ist $week.';
+  }
+
+  @override
+  String get usualWhichWeek => 'Welche Woche ist diese Woche?';
+
+  @override
   String get errUsualWeekInvalid => 'Diese übliche Woche ist nicht gültig.';
 
   @override
