@@ -4,6 +4,7 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/empty_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
@@ -25,29 +26,42 @@ class TasksRewardsTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final rewards = ref.watch(rewardsProvider);
+    // Without rewards and without a history there is nothing to list but the way in.
+    final noHistory = ref.watch(redemptionsProvider).value?.isEmpty ?? false;
     return AsyncValueView<List<Reward>>(
       value: rewards,
       onRetry: () => ref.invalidate(rewardsProvider),
-      data: (list) => ListView(
-        padding: const EdgeInsets.all(Tokens.space4),
-        children: [
-          Align(
-            alignment: AlignmentDirectional.centerEnd,
-            child: FilledButton.icon(
-              onPressed: () => _edit(context, ref),
-              icon: const Icon(Icons.add),
-              label: Text(context.l10n.tasksNewReward),
+      data: (list) => list.isEmpty && noHistory
+          ? EmptyView(
+              message: context.l10n.tasksNoRewards,
+              actions: [
+                FilledButton.icon(
+                  onPressed: () => _edit(context, ref),
+                  icon: const Icon(Icons.add),
+                  label: Text(context.l10n.tasksNewReward),
+                ),
+              ],
+            )
+          : ListView(
+              padding: const EdgeInsets.all(Tokens.space4),
+              children: [
+                Align(
+                  alignment: AlignmentDirectional.centerEnd,
+                  child: FilledButton.icon(
+                    onPressed: () => _edit(context, ref),
+                    icon: const Icon(Icons.add),
+                    label: Text(context.l10n.tasksNewReward),
+                  ),
+                ),
+                const SizedBox(height: Tokens.space2),
+                if (list.isEmpty)
+                  Text(context.l10n.tasksNoRewards)
+                else
+                  for (final r in list) _RewardTile(reward: r),
+                const SizedBox(height: Tokens.space6),
+                const _History(),
+              ],
             ),
-          ),
-          const SizedBox(height: Tokens.space2),
-          if (list.isEmpty)
-            Text(context.l10n.tasksNoRewards)
-          else
-            for (final r in list) _RewardTile(reward: r),
-          const SizedBox(height: Tokens.space6),
-          const _History(),
-        ],
-      ),
     );
   }
 

@@ -4,6 +4,7 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/empty_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
@@ -37,7 +38,7 @@ class TasksApprovalsTab extends ConsumerWidget {
           ];
           final l10n = context.l10n;
           if (pending.isEmpty && requests.isEmpty) {
-            return Center(child: Text(l10n.tasksApprovalsEmpty));
+            return EmptyView(message: l10n.tasksApprovalsEmpty);
           }
           final members = ref.watch(membersProvider).value ?? const <Member>[];
           final rewards = ref.watch(rewardsProvider).value ?? const <Reward>[];
