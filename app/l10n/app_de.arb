@@ -1579,7 +1579,7 @@
   "inviteWithdrawn": "Einladung zurückgezogen.",
   "inviteScanTitle": "Einladung scannen",
   "accountDeleteTile": "Konto löschen",
-  "accountDeleteExplain": "Dein Konto und seine Anmeldemethoden werden gelöscht, und du wirst überall abgemeldet. Dein Profil bleibt mit allem, was du getan hast, in der Familie. Der Apple-Zugriff wird widerrufen.",
+  "accountDeleteExplain": "Dein Konto und seine Anmeldemethoden werden gelöscht, und du wirst überall abgemeldet. Dein Profil bleibt mit allem, was du getan hast, in der Familie.",
   "accountDeleteBlocked": "Du bist die letzte Elternperson mit Konto in dieser Familie. Lade zuerst eine zweite erwachsene Person ein oder lösche die Familie.",
   "accountDeleteDialogTitle": "Konto löschen?",
   "accountDeleteDialogBody": "Das lässt sich nicht rückgängig machen. Deine Anmeldung wird entfernt, und dein Profil bleibt in der Familie.",
