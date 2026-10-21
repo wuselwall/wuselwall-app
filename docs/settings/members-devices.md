@@ -4,6 +4,12 @@ Das gehört den **Erziehungsberechtigten**. Öffne dazu auf deinem Handy das Zah
 
 <Shot name="settings-phone" alt="Einstellungen mit Mitgliedern und Geräten" />
 
+## Einfach oder Erweitert {#ansicht}
+
+Oben in den Einstellungen wählst du die Ansicht. **Einfach** ist der Standard und zeigt das Wichtigste: Haushalt einstellen, übliche Woche, Erinnerungen, Darstellung, Erste Schritte, Mitglieder und Geräte, auf deinem eigenen Handy außerdem **Konto löschen**. **Erweitert** zeigt zusätzlich Familienkalender teilen, Kalender von außen, Apps und KI-Assistenten, den Server, den Datenexport, Anmeldung, Sicherheit und Familie verlassen.
+
+Was ausgeblendet ist, **gilt trotzdem weiter**. Die Ansicht ändert nur, was du siehst, und WuselWall merkt sie sich für jedes Gerät. Dasselbe gilt unter **Haushalt einstellen**.
+
 ## Erwachsene Person einladen
 
 Eine Person, die mit eigenem Konto in der Familie mitmachen soll, lädst du ein. Tippe unter **Mitglieder** auf **Erwachsene Person einladen**:
@@ -56,13 +62,13 @@ Auf deinem eigenen Handy kannst du dich mit **Dieses Gerät abmelden** auch selb
 
 ## Server {#server}
 
-Hier steht, mit welchem Server diese App spricht, mit seinem **QR-Code**. Ein neues Gerät scannt ihn bei der Frage **Mit welchem Server?** und ist dann mit demselben Server verbunden.
+Unter **Erweitert** steht, mit welchem Server diese App spricht, mit seinem **QR-Code**. Ein neues Gerät scannt ihn bei der Frage **Mit welchem Server?** und ist dann mit demselben Server verbunden.
 
 **Server wechseln** brauchst du nur, wenn eure Familie auf einen anderen Server umzieht. Das Gerät meldet sich dabei ab und vergisst alles, was darauf gespeichert ist, auch Einkäufe, die es noch nicht senden konnte. Auf geteilten Geräten fragt WuselWall vorher nach der PIN eines Erziehungsberechtigten.
 
 ## Daten exportieren
 
-Erziehungsberechtigte können alle Daten eurer Familie als eine ZIP-Datei speichern, zum Beispiel für einen Umzug auf einen anderen Server. Das geht unten in den Einstellungen im Bereich **Familie** mit **Daten exportieren**, und nur vom eigenen Handy eines Erziehungsberechtigten aus.
+Erziehungsberechtigte können alle Daten eurer Familie als eine ZIP-Datei speichern, zum Beispiel für einen Umzug auf einen anderen Server. Das geht unten in den Einstellungen (Ansicht **Erweitert**) im Bereich **Familie** mit **Daten exportieren**, und nur vom eigenen Handy eines Erziehungsberechtigten aus.
 
 Die Datei enthält die Angaben, die ihr eingegeben habt: Mitglieder, Termine, Stundenpläne, Aufgaben, Rezepte, Einkaufslisten und so weiter. Passwörter, PINs und Anmeldedaten sind **nicht** enthalten, und Geräte erscheinen nur mit Namen und Datum.
 
@@ -72,7 +78,7 @@ Familie löschen und verlassen steht unter [Konto und Familie](/settings/account
 
 ## Kalender von außen
 
-Kalender von Vereinen oder der Gemeinde abonnierst du unter **Einstellungen → Kalender von außen hinzufügen**. Wie das funktioniert und was zu beachten ist, steht unter [Kalender](/calendar/#kalender-von-aussen).
+Kalender von Vereinen oder der Gemeinde abonnierst du unter **Einstellungen → Erweitert → Kalender von außen hinzufügen**. Wie das funktioniert und was zu beachten ist, steht unter [Kalender](/calendar/#kalender-von-aussen).
 
 ## Erste Schritte wieder anzeigen
 

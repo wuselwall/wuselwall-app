@@ -215,7 +215,7 @@ void main() {
     await tester.tap(find.byType(FloatingActionButton));
     await tester.pumpAndSettle();
     expect(find.widgetWithText(ChoiceChip, 'Anna'), findsOneWidget);
-    await tester.tap(find.text('Assistent'));
+    await tester.tap(find.text('KI-Assistent'));
     await tester.pumpAndSettle();
     // The only other member is a child: no choice of person is left.
     expect(find.byType(ChoiceChip), findsNothing);
@@ -238,7 +238,7 @@ void main() {
     await _open(tester, FakeShortcutRepository(), profileId: kidId);
     await tester.tap(find.byType(FloatingActionButton));
     await tester.pumpAndSettle();
-    expect(find.text('Assistent'), findsNothing);
+    expect(find.text('KI-Assistent'), findsNothing);
   });
 
   testWidgets('assistant keys are listed under their own heading', (

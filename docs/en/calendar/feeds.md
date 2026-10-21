@@ -2,7 +2,7 @@
 
 A **subscription** shows the family calendar in another app. It is read-only: you still change appointments in WuselWall. The other way round, bringing outside calendars into WuselWall, is under [Outside calendars](/en/calendar/#outside-calendars).
 
-Open **Settings → Share the family calendar** and tap **New subscription**.
+Open **Settings → Advanced → Share the family calendar** and tap **New subscription**.
 
 ## Creating a subscription
 

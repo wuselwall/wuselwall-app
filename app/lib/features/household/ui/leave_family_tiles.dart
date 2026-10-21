@@ -87,8 +87,8 @@ class _LeaveFamilyTileState extends ConsumerState<LeaveFamilyTile> {
 }
 
 /// "Familie löschen" in Einstellungen → Familie (specs/20 J6): a guardian on their own phone
-/// types the family's name and deletes it. Every device signs out; the family is kept for
-/// 14 days, then purged. Used inside the family section, which already gates it.
+/// types the family's name, then the word LÖSCHEN (DELETE), and the family is deleted at once
+/// and for good. Every device signs out. Used inside the family section, which already gates it.
 class DeleteFamilyTile extends ConsumerWidget {
   const DeleteFamilyTile({super.key});
 
@@ -117,11 +117,40 @@ class DeleteFamilyTile extends ConsumerWidget {
     final name = ref.read(myAccountProvider).value?.householdName;
     if (profileId == null || name == null || !context.mounted) return;
 
+    final l10n = context.l10n;
     final typed = await showDialog<String>(
       context: context,
-      builder: (_) => _DeleteFamilyDialog(familyName: name),
+      builder: (_) => _TypeToConfirmDialog(
+        title: l10n.leaveDeleteDialogTitle,
+        body: l10n.leaveDeleteDialogBody,
+        label: l10n.leaveDeleteNameLabel(name),
+        // The same comparison the server makes: trimmed, case-insensitive.
+        matches: (text) =>
+            text.trim().toLowerCase() == name.trim().toLowerCase(),
+        confirm: l10n.leaveDeleteNext,
+        fieldKey: const ValueKey('delete-family-name'),
+        confirmKey: const ValueKey('delete-family-next'),
+      ),
     );
     if (typed == null || !context.mounted) return;
+
+    // A second, separate step: the deletion is immediate and cannot be undone.
+    final word = l10n.leaveDeleteWord;
+    final sure = await showDialog<String>(
+      context: context,
+      builder: (_) => _TypeToConfirmDialog(
+        title: l10n.leaveDeleteWordTitle,
+        body: l10n.leaveDeleteWordBody,
+        label: l10n.leaveDeleteWordLabel(word),
+        matches: (text) => text.trim() == word,
+        confirm: l10n.leaveDeleteConfirm,
+        fieldKey: const ValueKey('delete-family-word'),
+        confirmKey: const ValueKey('delete-family-confirm'),
+        capitals: true,
+        destructive: true,
+      ),
+    );
+    if (sure == null || !context.mounted) return;
 
     final result = await ref
         .read(householdLeaveRepositoryProvider)
@@ -137,22 +166,41 @@ class DeleteFamilyTile extends ConsumerWidget {
   }
 }
 
-class _DeleteFamilyDialog extends StatefulWidget {
-  const _DeleteFamilyDialog({required this.familyName});
+/// One step of the deletion: the button stays off until the typed text [matches]. Pops the
+/// trimmed text, or null when cancelled.
+class _TypeToConfirmDialog extends StatefulWidget {
+  const _TypeToConfirmDialog({
+    required this.title,
+    required this.body,
+    required this.label,
+    required this.matches,
+    required this.confirm,
+    required this.fieldKey,
+    required this.confirmKey,
+    this.capitals = false,
+    this.destructive = false,
+  });
 
-  final String familyName;
+  final String title;
+  final String body;
+  final String label;
+  final bool Function(String text) matches;
+  final String confirm;
+  final Key fieldKey;
+  final Key confirmKey;
+
+  /// The keyboard offers capitals, for a word typed in capitals.
+  final bool capitals;
+
+  /// The confirm button is in the error colour: this step deletes.
+  final bool destructive;
 
   @override
-  State<_DeleteFamilyDialog> createState() => _DeleteFamilyDialogState();
+  State<_TypeToConfirmDialog> createState() => _TypeToConfirmDialogState();
 }
 
-class _DeleteFamilyDialogState extends State<_DeleteFamilyDialog> {
+class _TypeToConfirmDialogState extends State<_TypeToConfirmDialog> {
   final _typed = TextEditingController();
-
-  /// The same comparison the server makes: trimmed, case-insensitive.
-  bool get _matches =>
-      _typed.text.trim().toLowerCase() ==
-      widget.familyName.trim().toLowerCase();
 
   @override
   void initState() {
@@ -171,19 +219,22 @@ class _DeleteFamilyDialogState extends State<_DeleteFamilyDialog> {
     final l10n = context.l10n;
     final theme = Theme.of(context);
     return AlertDialog(
-      title: Text(l10n.leaveDeleteDialogTitle),
+      title: Text(widget.title),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(l10n.leaveDeleteDialogBody),
+          Text(widget.body),
           const SizedBox(height: Tokens.space4),
           TextField(
-            key: const ValueKey('delete-family-name'),
+            key: widget.fieldKey,
             controller: _typed,
-            decoration: InputDecoration(
-              labelText: l10n.leaveDeleteNameLabel(widget.familyName),
-            ),
+            autocorrect: false,
+            enableSuggestions: false,
+            textCapitalization: widget.capitals
+                ? TextCapitalization.characters
+                : TextCapitalization.none,
+            decoration: InputDecoration(labelText: widget.label),
           ),
         ],
       ),
@@ -193,15 +244,17 @@ class _DeleteFamilyDialogState extends State<_DeleteFamilyDialog> {
           child: Text(l10n.leaveCancel),
         ),
         FilledButton(
-          key: const ValueKey('delete-family-confirm'),
-          style: FilledButton.styleFrom(
-            backgroundColor: theme.colorScheme.error,
-            foregroundColor: theme.colorScheme.onError,
-          ),
-          onPressed: _matches
+          key: widget.confirmKey,
+          style: widget.destructive
+              ? FilledButton.styleFrom(
+                  backgroundColor: theme.colorScheme.error,
+                  foregroundColor: theme.colorScheme.onError,
+                )
+              : null,
+          onPressed: widget.matches(_typed.text)
               ? () => Navigator.of(context).pop(_typed.text.trim())
               : null,
-          child: Text(l10n.leaveDeleteConfirm),
+          child: Text(widget.confirm),
         ),
       ],
     );

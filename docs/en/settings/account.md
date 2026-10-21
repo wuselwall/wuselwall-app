@@ -1,10 +1,10 @@
 # Account and family
 
-These steps concern **your account** or the **whole family**. They are at the bottom of the settings on your **personal phone**, and only there. Know what happens first: the steps cannot be undone, except deleting a family within the 14 days described below.
+These steps concern **your account** or the **whole family**. They are at the bottom of the settings on your **personal phone**, and only there. **Delete account** is always shown; the other steps are in the **Advanced** view. Know what happens first: none of the steps can be undone.
 
 ## Password
 
-Under **Settings → Sign-in → Password** you set or change a password. At least 10 characters; a whole sentence is better. The code by email still works too.
+Under **Settings → Advanced → Sign-in → Password** you set or change a password. At least 10 characters; a whole sentence is better. The code by email still works too.
 
 ## Leave the family
 
@@ -18,12 +18,10 @@ This is not possible if you are the **last guardian with an account**. Then invi
 
 ## Delete the family
 
-Only a guardian can delete a family, on their own phone. Tap **Delete family**, type the **family's name** to confirm, and tap **Delete family**.
+Only a guardian can delete a family, on their own phone. Tap **Delete family**, type the **family's name**, and tap **Next**. In the second step, type **DELETE** (in capitals) and tap **Delete family**.
 
-- All devices sign out at once. Nobody can get in any more.
-- **For 14 days** a guardian can **restore** the family. Sign in on your own phone and tap **Restore**. All data is still there.
-- After that all data is **permanently deleted**.
-- If you sign in again during this time, WuselWall offers **Restore** (guardians only) or **Start afresh**. Starting afresh means your account leaves the deleted family, and you create a new one or join another.
+- The family is deleted with **all its data immediately and permanently**. There is no waiting period and no way to restore it, not even for a guardian.
+- All devices sign out at once. The adults' accounts remain: whoever signs in again can start a new family or join another.
 
 ## Delete your account
 

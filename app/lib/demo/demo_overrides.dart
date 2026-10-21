@@ -43,6 +43,7 @@ import 'package:wuselwall/features/kid/data/kid_badges_repository.dart';
 import 'package:wuselwall/features/meals/data/meals_repository.dart';
 import 'package:wuselwall/features/region/data/region_repository.dart';
 import 'package:wuselwall/features/school/data/school_repository.dart';
+import 'package:wuselwall/features/settings/application/settings_view.dart';
 import 'package:wuselwall/features/settings/data/household_export_repository.dart';
 import 'package:wuselwall/features/settings/data/household_settings_repository.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
@@ -157,4 +158,6 @@ List<Override> _overrides(String scenario) => [
   nightProvider.overrideWith(_Day.new),
   // The screenshots take both themes from the browser's colour scheme.
   appearanceStoreProvider.overrideWithValue(MemoryAppearanceStore()),
+  // Basic, as on a new device; the screenshots switch to Advanced where they need it.
+  settingsViewStoreProvider.overrideWithValue(MemorySettingsViewStore()),
 ];

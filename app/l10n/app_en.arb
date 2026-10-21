@@ -2083,13 +2083,28 @@
   "leaveLeaveConfirm": "Leave",
   "leaveCancel": "Cancel",
   "leaveDeleteTile": "Delete family",
-  "leaveDeleteExplain": "All devices sign out at once. For 14 days a guardian can restore the family; after that all data is deleted for good.",
+  "leaveDeleteExplain": "The family and all its data are deleted immediately and permanently. All devices sign out. This cannot be undone.",
   "leaveDeleteDialogTitle": "Delete the family?",
-  "leaveDeleteDialogBody": "All devices sign out and nobody can reach the family any more. For 14 days a guardian can restore it. After that all data is gone.",
+  "leaveDeleteDialogBody": "All devices sign out, and the family is permanently deleted with all its data.",
   "leaveDeleteNameLabel": "Type ‘{name}’ to confirm",
   "@leaveDeleteNameLabel": {
     "placeholders": {
       "name": {
+        "type": "String"
+      }
+    }
+  },
+  "leaveDeleteNext": "Next",
+  "leaveDeleteWordTitle": "Delete for good?",
+  "leaveDeleteWordBody": "The family and all its data are deleted immediately and permanently. Nobody can restore them, not even a guardian. Export the data first if you want to keep it.",
+  "leaveDeleteWord": "DELETE",
+  "@leaveDeleteWord": {
+    "description": "The word the guardian types in capitals to delete the family for good."
+  },
+  "leaveDeleteWordLabel": "Type {word} to delete the family for good",
+  "@leaveDeleteWordLabel": {
+    "placeholders": {
+      "word": {
         "type": "String"
       }
     }
@@ -2336,9 +2351,9 @@
   "settingsServerSwitchConfirm": "This device will be signed out and forget everything stored on it. Then you can choose another server.",
   "setupPhoneTitle": "Continue on your phone",
   "setupPhoneBody": "Open the WuselWall app on your phone, choose this server by scanning the code, then sign in there.",
-  "shortcutTitle": "Siri and Shortcuts",
-  "shortcutSettingsSubtitle": "Shopping list, the day and more by voice",
-  "shortcutIntro": "A key connects a shortcut on the iPhone with WuselWall. With it, Siri puts things on the shopping list and tells you what is on today, what there is to eat or who has PE tomorrow. A key belongs to one person: it can read and add, but it cannot delete or manage anything. A key for an AI assistant (MCP) only reads.",
+  "shortcutTitle": "Apps and AI assistants",
+  "shortcutSettingsSubtitle": "Siri, automations and AI assistants (MCP), each with a key",
+  "shortcutIntro": "A key lets another app use WuselWall as one person. An automation key, for example for a shortcut with Siri on the iPhone or any other app that can call a web address, reads and adds: it puts things on the shopping list and tells you what is on today, what there is to eat or who has PE tomorrow. It cannot delete or manage anything. A key for an AI assistant (MCP, such as Claude) only reads.",
   "shortcutEmpty": "No keys yet.",
   "shortcutKioskNote": "Keys are created on a personal phone, not on the wall display.",
   "shortcutNew": "New key",
@@ -2355,7 +2370,7 @@
       }
     }
   },
-  "shortcutKeyOnce": "This key is shown only now. Whoever has it can read and add as {name}, so treat it like a password. The Shortcuts app syncs it through iCloud.",
+  "shortcutKeyOnce": "This key is shown only now. Whoever has it can read and add as {name}, so treat it like a password. In Apple’s Shortcuts app it syncs through iCloud.",
   "@shortcutKeyOnce": {
     "placeholders": {
       "name": {
@@ -2368,7 +2383,7 @@
   "shortcutCopyAddress": "Copy address",
   "shortcutCopied": "Copied.",
   "shortcutHowTitle": "How it works",
-  "shortcutHowSteps": "In the Shortcuts app, create a shortcut with the action “Get Contents of URL”: the address with /today at the end, and a header “Authorization” with “Bearer ”, a space and the key. Then add “Show Result” or “Speak Text”. The guide at wuselwall.app/docs/en/settings/shortcuts shows every shortcut.",
+  "shortcutHowSteps": "Any app sends the same request. With Apple Shortcuts, create a shortcut with the action “Get Contents of URL”: the address with /today at the end, and a header “Authorization” with “Bearer ”, a space and the key. Then add “Show Result” or “Speak Text”. The guide at wuselwall.app/docs/en/settings/shortcuts shows every shortcut.",
   "shortcutLastUsed": "Last used: {when}",
   "@shortcutLastUsed": {
     "placeholders": {
@@ -2398,10 +2413,11 @@
   },
   "shortcutErrLabel": "Please enter a name of at most 60 characters.",
   "shortcutErrLimit": "This person already has ten keys. Please revoke one first.",
+  "shortcutSectionAutomations": "Automations",
   "shortcutSectionAssistants": "AI assistants",
-  "shortcutKindShortcut": "Siri",
-  "shortcutKindAssistant": "Assistant",
-  "shortcutKindShortcutHelp": "For a shortcut on the iPhone: it reads and adds, for example to the shopping list.",
+  "shortcutKindShortcut": "Automation",
+  "shortcutKindAssistant": "AI assistant",
+  "shortcutKindShortcutHelp": "For Siri and Apple Shortcuts, or any app that can call a web address: it reads and adds, for example to the shopping list.",
   "shortcutKindAssistantHelp": "For an AI assistant that speaks MCP, such as Claude: it only reads, and only adults get one.",
   "shortcutAssistantLabelHint": "e.g. Claude on the laptop",
   "shortcutAssistantKeyOnce": "This key is shown only now. With it, an assistant reads the whole family's week as {name}: appointments, who is away, the children's timetables, tasks, meals and the shopping list. What it reads goes to the assistant's provider. Treat the key like a password.",
@@ -2433,5 +2449,10 @@
   "appearanceSystemHelp": "Light or dark, as set on this device",
   "appearanceLight": "Light",
   "appearanceDark": "Dark",
-  "appearanceNightNote": "At night the wall display always shows its night view."
+  "appearanceNightNote": "At night the wall display always shows its night view.",
+  "settingsViewLabel": "Which settings to show",
+  "settingsViewBasic": "Basic",
+  "settingsViewAdvanced": "Advanced",
+  "settingsViewMoreHint": "More settings are under Advanced. Hidden settings still apply.",
+  "settingsViewShowAll": "Show all settings"
 }

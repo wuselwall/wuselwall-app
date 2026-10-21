@@ -3840,18 +3840,36 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get leaveDeleteExplain =>
-      'Tous les appareils seront immédiatement déconnectés. Un responsable parental pourra restaurer la famille pendant 14 jours ; ensuite, toutes les données seront définitivement supprimées.';
+      'La famille et toutes ses données sont supprimées immédiatement et définitivement. Tous les appareils sont déconnectés. Cette action est irréversible.';
 
   @override
   String get leaveDeleteDialogTitle => 'Supprimer la famille ?';
 
   @override
   String get leaveDeleteDialogBody =>
-      'Tous les appareils seront déconnectés et personne ne pourra plus accéder à la famille. Un responsable parental pourra la restaurer pendant 14 jours. Ensuite, toutes les données seront supprimées.';
+      'Tous les appareils sont déconnectés et la famille est définitivement supprimée avec toutes ses données.';
 
   @override
   String leaveDeleteNameLabel(String name) {
     return 'Saisis « $name » pour confirmer';
+  }
+
+  @override
+  String get leaveDeleteNext => 'Suivant';
+
+  @override
+  String get leaveDeleteWordTitle => 'Supprimer définitivement ?';
+
+  @override
+  String get leaveDeleteWordBody =>
+      'La famille et toutes ses données sont supprimées immédiatement et définitivement. Personne ne peut les restaurer, pas même un responsable. Exportez d’abord les données si vous souhaitez les conserver.';
+
+  @override
+  String get leaveDeleteWord => 'SUPPRIMER';
+
+  @override
+  String leaveDeleteWordLabel(String word) {
+    return 'Saisissez $word pour supprimer définitivement la famille';
   }
 
   @override
@@ -4245,15 +4263,15 @@ class AppLocalizationsFr extends AppLocalizations {
       'Ouvre l’application WuselWall sur ton téléphone, choisis ce serveur en scannant le code, puis connecte-toi dessus.';
 
   @override
-  String get shortcutTitle => 'Siri et Raccourcis';
+  String get shortcutTitle => 'Applications et assistants IA';
 
   @override
   String get shortcutSettingsSubtitle =>
-      'Liste de courses, programme du jour et plus, à la voix';
+      'Siri, automatisations et assistants IA (MCP), chacun avec une clé';
 
   @override
   String get shortcutIntro =>
-      'Une clé relie un raccourci de l’iPhone à WuselWall. Siri peut ainsi ajouter des articles à la liste de courses et te dire ce qui est prévu aujourd’hui, ce qu’il y a à manger ou qui a sport demain. Une clé appartient à une personne : elle permet de lire et d’ajouter, mais pas de supprimer ni de gérer quoi que ce soit. Une clé pour un assistant IA (MCP) permet uniquement de lire.';
+      'Une clé permet à une autre application d’utiliser WuselWall au nom d’une personne. Une clé d’automatisation, par exemple pour un raccourci Siri sur iPhone ou toute application pouvant appeler une adresse web, permet de lire et d’ajouter : elle ajoute des articles à la liste de courses et indique le programme du jour, le repas ou qui a sport demain. Elle ne permet ni de supprimer ni de gérer les données. Une clé pour un assistant IA (MCP, comme Claude) permet uniquement de lire.';
 
   @override
   String get shortcutEmpty => 'Pas encore de clés.';
@@ -4288,7 +4306,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String shortcutKeyOnce(String name) {
-    return 'Cette clé n’est affichée que maintenant. Toute personne qui la possède peut lire et ajouter au nom de $name : protège-la comme un mot de passe. L’application Raccourcis la synchronise via iCloud.';
+    return 'Cette clé n’est affichée que maintenant. Quiconque la possède peut lire et ajouter au nom de $name : traitez-la comme un mot de passe. Dans l’application Raccourcis d’Apple, elle est synchronisée via iCloud.';
   }
 
   @override
@@ -4308,7 +4326,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get shortcutHowSteps =>
-      'Dans l’application Raccourcis, crée un raccourci avec l’action « Obtenir le contenu de l’URL » : l’adresse terminée par /today et un en-tête « Authorization » contenant « Bearer », une espace et la clé. Ajoute ensuite « Afficher le résultat » ou « Énoncer le texte ». Le guide sur wuselwall.app/docs/en/settings/shortcuts présente tous les raccourcis.';
+      'Toute application envoie la même requête. Avec Raccourcis d’Apple, créez un raccourci avec l’action « Obtenir le contenu de l’URL » : l’adresse se terminant par /today et un en-tête « Authorization » contenant « Bearer », un espace et la clé. Ajoutez ensuite « Afficher le résultat » ou « Énoncer le texte ». Le guide sur wuselwall.app/docs/en/settings/shortcuts présente chaque raccourci.';
 
   @override
   String shortcutLastUsed(String when) {
@@ -4348,17 +4366,20 @@ class AppLocalizationsFr extends AppLocalizations {
       'Cette personne possède déjà dix clés. Révoque d’abord l’une d’elles.';
 
   @override
+  String get shortcutSectionAutomations => 'Automatisations';
+
+  @override
   String get shortcutSectionAssistants => 'Assistants IA';
 
   @override
-  String get shortcutKindShortcut => 'Siri';
+  String get shortcutKindShortcut => 'Automatisation';
 
   @override
-  String get shortcutKindAssistant => 'Assistant';
+  String get shortcutKindAssistant => 'Assistant IA';
 
   @override
   String get shortcutKindShortcutHelp =>
-      'Pour un raccourci sur l’iPhone : il lit et ajoute, par exemple à la liste de courses.';
+      'Pour Siri et Raccourcis d’Apple, ou toute application pouvant appeler une adresse web : permet de lire et d’ajouter, par exemple à la liste de courses.';
 
   @override
   String get shortcutKindAssistantHelp =>
@@ -4416,4 +4437,20 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get appearanceNightNote =>
       'La nuit, l’écran mural affiche toujours sa vue de nuit.';
+
+  @override
+  String get settingsViewLabel => 'Paramètres à afficher';
+
+  @override
+  String get settingsViewBasic => 'Essentiels';
+
+  @override
+  String get settingsViewAdvanced => 'Avancés';
+
+  @override
+  String get settingsViewMoreHint =>
+      'D’autres paramètres se trouvent dans Avancés. Les paramètres masqués restent actifs.';
+
+  @override
+  String get settingsViewShowAll => 'Afficher tous les paramètres';
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:wuselwall/features/settings/application/settings_view.dart';
 
 import '../support/fakes.dart';
 
@@ -25,6 +26,7 @@ void main() {
       await pumpApp(
         t,
         overrides: baseOverrides(
+          settingsView: SettingsView.advanced,
           identity: FakeIdentityRepository(current: device()),
           shopping: FakeShoppingRepository([]),
         ),

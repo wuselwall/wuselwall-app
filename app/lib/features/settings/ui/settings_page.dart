@@ -11,6 +11,7 @@ import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/config/config_providers.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/notifications/notification_scheduler_provider.dart';
 import 'package:wuselwall/core/server/server_address.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/qr_code_view.dart';
@@ -30,8 +31,10 @@ import 'package:wuselwall/features/identity/ui/guardian_gate.dart';
 import 'package:wuselwall/features/identity/ui/set_password_dialog.dart';
 import 'package:wuselwall/features/invitations/ui/members_invitations.dart';
 import 'package:wuselwall/features/settings/application/household_export_providers.dart';
+import 'package:wuselwall/features/settings/application/settings_view.dart';
 import 'package:wuselwall/features/settings/data/household_export_repository.dart';
 import 'package:wuselwall/features/settings/ui/appearance_tile.dart';
+import 'package:wuselwall/features/settings/ui/settings_view_switch.dart';
 import 'package:wuselwall/features/shopping/data/shopping_store.dart';
 import 'package:wuselwall/features/system/ui/class_labels.dart';
 import 'package:wuselwall/features/today/application/today_providers.dart';
@@ -39,6 +42,9 @@ import 'package:wuselwall/features/today/data/getting_started_repository.dart';
 
 /// Members and devices. Reading is open to the household; every change is a guardian
 /// action and goes through [ensureGuardian] (PIN step-up on shared devices).
+///
+/// Basic shows what a family needs to get going; Advanced adds the rest. Hiding a row
+/// changes nothing it controls.
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
 
@@ -49,6 +55,11 @@ class SettingsPage extends ConsumerWidget {
     final devices = ref.watch(devicesProvider);
     final thisDevice = ref.watch(deviceProvider).value;
     final canApprove = ref.watch(canApprovePairingProvider);
+    final advanced = ref.watch(showAdvancedSettingsProvider);
+    // Reminders exist only on a personal phone that can show notifications.
+    final reminders =
+        thisDevice?.deviceClass == DeviceClass.personal &&
+        ref.watch(notificationSchedulerProvider).available;
 
     return Scaffold(
       appBar: AppBar(
@@ -58,6 +69,7 @@ class SettingsPage extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(Tokens.space4),
         children: [
+          const SettingsViewSwitch(),
           ListTile(
             leading: const Icon(Icons.tune),
             title: Text(l10n.householdSettingsTitle),
@@ -65,20 +77,22 @@ class SettingsPage extends ConsumerWidget {
             trailing: const Icon(Icons.chevron_right),
             onTap: () => context.go(Routes.householdSettings),
           ),
-          ListTile(
-            leading: const Icon(Icons.rss_feed),
-            title: Text(l10n.feedTitle),
-            subtitle: Text(l10n.feedSettingsSubtitle),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => context.go(Routes.feedTokens),
-          ),
-          ListTile(
-            leading: const Icon(Icons.cloud_download_outlined),
-            title: Text(l10n.extCalTitle),
-            subtitle: Text(l10n.extCalSettingsSubtitle),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => context.go(Routes.externalCalendars),
-          ),
+          if (advanced) ...[
+            ListTile(
+              leading: const Icon(Icons.rss_feed),
+              title: Text(l10n.feedTitle),
+              subtitle: Text(l10n.feedSettingsSubtitle),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => context.go(Routes.feedTokens),
+            ),
+            ListTile(
+              leading: const Icon(Icons.cloud_download_outlined),
+              title: Text(l10n.extCalTitle),
+              subtitle: Text(l10n.extCalSettingsSubtitle),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => context.go(Routes.externalCalendars),
+            ),
+          ],
           ListTile(
             leading: const Icon(Icons.home_outlined),
             title: Text(l10n.baselineTitle),
@@ -86,17 +100,18 @@ class SettingsPage extends ConsumerWidget {
             trailing: const Icon(Icons.chevron_right),
             onTap: () => context.go(Routes.baselines),
           ),
-          ListTile(
-            leading: const Icon(Icons.notifications_outlined),
-            title: Text(l10n.reminderSettingsTitle),
-            subtitle: Text(l10n.reminderSettingsSubtitle),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => context.go(Routes.reminders),
-          ),
-          const AppearanceTile(),
-          if (thisDevice?.deviceClass != DeviceClass.kiosk)
+          if (reminders)
             ListTile(
-              leading: const Icon(Icons.keyboard_voice_outlined),
+              leading: const Icon(Icons.notifications_outlined),
+              title: Text(l10n.reminderSettingsTitle),
+              subtitle: Text(l10n.reminderSettingsSubtitle),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => context.go(Routes.reminders),
+            ),
+          const AppearanceTile(),
+          if (advanced && thisDevice?.deviceClass != DeviceClass.kiosk)
+            ListTile(
+              leading: const Icon(Icons.hub_outlined),
               title: Text(l10n.shortcutTitle),
               subtitle: Text(l10n.shortcutSettingsSubtitle),
               trailing: const Icon(Icons.chevron_right),
@@ -172,10 +187,11 @@ class SettingsPage extends ConsumerWidget {
               icon: const Icon(Icons.add_to_home_screen),
               label: Text(l10n.pairConnectAction),
             ),
-            TextButton(
-              onPressed: () => _addDevice(context, ref),
-              child: Text(l10n.pairOldCodeAction),
-            ),
+            if (advanced)
+              TextButton(
+                onPressed: () => _addDevice(context, ref),
+                child: Text(l10n.pairOldCodeAction),
+              ),
             const SizedBox(height: Tokens.space2),
           ],
           AsyncValueView<List<DeviceEntry>>(
@@ -205,15 +221,22 @@ class SettingsPage extends ConsumerWidget {
               ],
             ),
           ),
-          const _ServerSection(),
-          if (thisDevice?.deviceClass == DeviceClass.personal) ...[
-            const _FamilySection(),
-            const SizedBox(height: Tokens.space6),
-            const _SignInMethodsSection(),
-            const LeaveFamilyTile(),
-            const DeleteAccountTile(),
-            const SizedBox(height: Tokens.space6),
-            const _SecuritySection(),
+          if (advanced) ...[
+            const _ServerSection(),
+            if (thisDevice?.deviceClass == DeviceClass.personal) ...[
+              const _FamilySection(),
+              const SizedBox(height: Tokens.space6),
+              const _SignInMethodsSection(),
+              const LeaveFamilyTile(),
+              const DeleteAccountTile(),
+              const SizedBox(height: Tokens.space6),
+              const _SecuritySection(),
+            ],
+          ] else ...[
+            // Account deletion stays easy to find (App Store guideline 5.1.1(v)).
+            if (thisDevice?.deviceClass == DeviceClass.personal)
+              const DeleteAccountTile(),
+            const MoreSettingsHint(),
           ],
           const SizedBox(height: Tokens.space6),
           OutlinedButton.icon(

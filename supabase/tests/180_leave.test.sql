@@ -1,7 +1,8 @@
 begin;
-select plan(85);
+select plan(91);
 
--- J6 Leave (specs/20, specs/16 step 9.6): leave, delete, restore, leave a deleted family, purge.
+-- J6 Leave (specs/20, specs/16 step 9.6): leave, delete (at once), and for a family deleted before
+-- deletion was immediate: restore, leave a deleted family, purge.
 -- Start from an empty system, whatever the database already holds (all rolled back).
 delete from app.household;
 delete from app.setup_token;
@@ -121,7 +122,7 @@ begin
 end $$;
 
 -- ============================================================ households and people
-insert into hh (name, id) select n, gen_random_uuid() from unnest(array['Huser', 'Last', 'Bauer', 'Cora', 'Alt', 'Frisch', 'Live']) n;
+insert into hh (name, id) select n, gen_random_uuid() from unnest(array['Huser', 'Last', 'Bauer', 'Rest', 'Cora', 'Alt', 'Frisch', 'Live']) n;
 insert into app.household (id, name) select id, name from hh;
 
 -- Huser: Daniel (guardian, phone), Julia (guardian, no account), Paul (adult member, phone),
@@ -246,60 +247,82 @@ select throws_ok(format($$ select api.household_delete(%L, 'Bauer') $$, (select 
 select pg_temp.as_phone('Bruno-Phone');
 select throws_ok(format($$ select api.household_delete(%L, 'Bauerr') $$, (select prof from pp where name = 'Bruno')),
   '22023', 'family name does not match', 'a wrong name is refused');
-select is((select deleted_at is null from app.household where name = 'Bauer'), true,
+select pg_temp.owner();
+select is((select count(*) from app.household where name = 'Bauer' and deleted_at is null), 1::bigint,
   'a refused delete does not delete');
+select pg_temp.as_phone('Bruno-Phone');
 insert into res select api.household_delete((select prof from pp where name = 'Bruno'), '  bAUER ');
 select pg_temp.owner();
 select is((select r ->> 'ok' from res), 'true', 'the typed name, trimmed and in any case, deletes the family');
-select is((select (r ->> 'purge_after')::timestamptz - deleted_at from res, app.household where name = 'Bauer'),
-  interval '14 days', 'the purge date is 14 days after the delete');
-select is((select deleted_at is not null from app.household where name = 'Bauer'), true,
-  'the household is marked deleted');
-select is((select count(*) from app.device where household_id = (select id from hh where name = 'Bauer') and revoked_at is null),
-  0::bigint, 'every device of the family is revoked');
+select is((select r ->> 'purge_after' from res) is not null, true, 'the answer keeps purge_after for the previous app');
+select is((select count(*) from app.household where name = 'Bauer'), 0::bigint, 'the household is deleted at once');
+select is((select count(*) from app.profile where household_id = (select id from hh where name = 'Bauer')), 0::bigint,
+  'its profiles go with it');
+select is((select count(*) from app.device where household_id = (select id from hh where name = 'Bauer')), 0::bigint,
+  'its devices go with it');
 select is((select count(*) from auth.sessions where id in ((select sid from pp where name = 'Bruno'), (select sid from pp where name = 'Mia'))),
   0::bigint, 'every session of the family is ended');
 select is((select count(*) from auth.users where id in (select uid from dd where name in ('B-iPad', 'B-Kiosk'))),
-  2::bigint, 'the device users are kept until the purge');
-select is((select consumed_at is not null from app.enrolment_code where code_hash = 'codehash-bauer'), true,
-  'open enrolment codes are closed');
-select is((select revoked_at is not null from app.calendar_feed_token where token_hash = 'feedhash-bauer-0123456789'), true,
-  'calendar feed tokens are revoked');
-select is((select status from app.pairing_request where code_hash = 'pairhash-bauer'), 'claimed',
-  'pairing requests are closed');
-select is((select count(*) from app.audit_log where action = 'delete' and entity_type = 'household'),
-  1::bigint, 'the delete is audited');
+  0::bigint, 'the Auth users of its shared tablet and kiosk are deleted');
+select is((select count(*) from auth.users where id in (select uid from pp where name in ('Bruno', 'Mia'))),
+  2::bigint, 'adult accounts are kept');
+select is((select count(*) from app.enrolment_code where code_hash = 'codehash-bauer'), 0::bigint,
+  'its enrolment codes are gone');
+select is((select count(*) from app.calendar_feed_token where token_hash = 'feedhash-bauer-0123456789'), 0::bigint,
+  'its calendar feed tokens are gone');
+select is((select count(*) from app.pairing_request where code_hash = 'pairhash-bauer'), 0::bigint,
+  'its pairing requests are gone');
+select is((select count(*) from app.audit_log where household_id = (select id from hh where name = 'Bauer')), 0::bigint,
+  'nothing of the family is kept, not even its audit rows');
+
+-- Afterwards both accounts are in no family, with nothing to restore, and may start another.
+select pg_temp.new_session('Bruno');
+select pg_temp.as_account('Bruno');
+select is((api.my_account() ->> 'has_household')::boolean, false, 'the guardian is in no family after the delete');
+select is(api.my_account() ->> 'deleted_household', null, 'and has no deleted family to restore');
+select throws_ok($$ select api.household_restore() $$, '42501', 'no deleted household', 'a deleted family cannot be restored');
+select pg_temp.owner();
+select pg_temp.new_session('Mia');
+select pg_temp.as_account('Mia');
+select is((api.household_create('Mia neu', 'Mia', '#08737F', 'Europe/Berlin', 'de-DE', null, false, 'Mias Telefon') ->> 'ok'),
+  'true', 'a member of the deleted family starts a new family at once');
+select pg_temp.owner();
+
+-- ============================================================ a family deleted before (J6)
+-- Rest: deleted the way household_delete did before 20261019120000 (marked, devices revoked),
+-- still within its 14 days. Rita (guardian, phone), Max (adult member, phone).
+select pg_temp.person('Rita', (select id from hh where name = 'Rest'), 'guardian', 'adult', 'rita@example.org');
+select pg_temp.phone('Rita', 'Rita-Phone', 'adult');
+select pg_temp.person('Max', (select id from hh where name = 'Rest'), 'member', 'adult', 'max@example.org');
+select pg_temp.phone('Max', 'Max-Phone', 'adult');
+update app.household set deleted_at = now() where name = 'Rest';
+update app.device set revoked_at = now() where household_id = (select id from hh where name = 'Rest');
 
 -- The token hook gives no claims for a deleted family, even for a device that is not revoked.
-update app.device set revoked_at = null where label = 'Bruno-Phone';
-select is(pg_temp.hook_claims('Bruno') ->> 'household_id', null, 'the token hook gives no claims for a deleted family');
+update app.device set revoked_at = null where label = 'Rita-Phone';
+select is(pg_temp.hook_claims('Rita') ->> 'household_id', null, 'the token hook gives no claims for a deleted family');
 
 -- Device access is closed in the database too: the actor refuses, and RLS hides every row.
-select pg_temp.as_phone('Bruno-Phone');
-select throws_ok(format($$ select api.household_export(%L) $$, (select prof from pp where name = 'Bruno')),
+select pg_temp.as_phone('Rita-Phone');
+select throws_ok(format($$ select api.household_export(%L) $$, (select prof from pp where name = 'Rita')),
   '42501', 'household deleted', 'the actor refuses inside a deleted family');
 select is(pg_temp.visible_rows(), 0::bigint, 'api views are empty for a deleted family');
 select is((select count(*) from app.household), 0::bigint, 'the household row is unreadable through RLS');
 select pg_temp.owner();
-update app.device set revoked_at = now() where label = 'Bruno-Phone';
+update app.device set revoked_at = now() where label = 'Rita-Phone';
 
 -- The account view: a guardian may restore, a member may not.
-select pg_temp.as_account('Bruno');
+select pg_temp.as_account('Rita');
 select is((api.my_account() -> 'deleted_household' ->> 'can_restore')::boolean, true,
   'a guardian of a deleted family can restore it');
 select is((api.my_account() ->> 'has_household')::boolean, false, 'a deleted family is not a household for the app');
 select is(api.my_account() ->> 'household_id', null, 'and it has no household id');
-select is((api.my_account() -> 'deleted_household' ->> 'name'), 'Bauer', 'the deleted family is named');
+select is((api.my_account() -> 'deleted_household' ->> 'name'), 'Rest', 'the deleted family is named');
 select is((api.my_account() -> 'deleted_household' ->> 'purge_after') is not null, true, 'the purge date is given');
-select pg_temp.as_account('Mia');
+select pg_temp.as_account('Max');
 select is((api.my_account() -> 'deleted_household' ->> 'can_restore')::boolean, false, 'a member cannot restore');
 select is((select api.my_profile()) is null, true, 'a deleted family is not a profile for the app');
-
--- Mia's session ended with the delete: a new sign-in gives a new session.
-select pg_temp.owner();
-select pg_temp.new_session('Mia');
-select pg_temp.as_account('Mia');
-select throws_ok($$ select api.household_create('Mia neu', 'Mia', '#08737F', 'Europe/Berlin', 'de-DE', null, false, 'x') $$,
+select throws_ok($$ select api.household_create('Max neu', 'Max', '#08737F', 'Europe/Berlin', 'de-DE', null, false, 'x') $$,
   '42501', 'already in a household', 'a deleted family blocks a new one until it is restored or left');
 select throws_ok($$ select api.household_restore() $$, '42501', 'guardian required', 'a member cannot restore');
 
@@ -308,11 +331,11 @@ select is((api.account_leave_deleted() ->> 'ok'), 'true', 'a member leaves a del
 select is((api.my_account() ->> 'has_household')::boolean, false, 'after that the account has no household');
 select is(api.my_account() ->> 'deleted_household', null, 'and no deleted family is shown');
 select pg_temp.owner();
-select is((select auth_user_id from app.profile where display_name = 'Mia'), null::uuid,
+select is((select auth_user_id from app.profile where display_name = 'Max'), null::uuid,
   'the leave unlinks the profile from the deleted family');
-select pg_temp.new_session('Mia');
-select pg_temp.as_account('Mia');
-select is((api.household_create('Mia neu', 'Mia', '#08737F', 'Europe/Berlin', 'de-DE', null, false, 'Mias Telefon') ->> 'ok'),
+select pg_temp.new_session('Max');
+select pg_temp.as_account('Max');
+select is((api.household_create('Max neu', 'Max', '#08737F', 'Europe/Berlin', 'de-DE', null, false, 'Max Telefon') ->> 'ok'),
   'true', 'after that the account starts a new family');
 select pg_temp.owner();
 select pg_temp.as_account('Solo');
@@ -320,23 +343,23 @@ select throws_ok($$ select api.account_leave_deleted() $$, '42501', 'no deleted 
   'nothing to leave when the account is in no deleted family');
 
 -- ============================================================ restore (J6)
--- Bruno restores within 14 days, on a new session (the delete ended the old one).
+-- Rita restores within 14 days, on a new session.
 select pg_temp.owner();
-select pg_temp.new_session('Bruno');
-select pg_temp.as_account('Bruno');
+select pg_temp.new_session('Rita');
+select pg_temp.as_account('Rita');
 select is((api.household_restore() ->> 'ok'), 'true', 'a guardian restores the family within 14 days');
 select pg_temp.owner();
-select is((select deleted_at is null from app.household where name = 'Bauer'), true, 'the family is live again');
-select is((select count(*) from app.device where profile_id = (select prof from pp where name = 'Bruno')
-             and class = 'personal' and revoked_at is null and auth_session_id = (select sid from pp where name = 'Bruno')),
+select is((select deleted_at is null from app.household where name = 'Rest'), true, 'the family is live again');
+select is((select count(*) from app.device where profile_id = (select prof from pp where name = 'Rita')
+             and class = 'personal' and revoked_at is null and auth_session_id = (select sid from pp where name = 'Rita')),
   1::bigint, 'this session is the family phone');
-select is((select label from app.device where profile_id = (select prof from pp where name = 'Bruno')
-             and class = 'personal' and revoked_at is null), 'Bruno-Phone', 'the phone keeps its label');
-select is((select count(*) from app.device where household_id = (select id from hh where name = 'Bauer') and revoked_at is null),
+select is((select label from app.device where profile_id = (select prof from pp where name = 'Rita')
+             and class = 'personal' and revoked_at is null), 'Rita-Phone', 'the phone keeps its label');
+select is((select count(*) from app.device where household_id = (select id from hh where name = 'Rest') and revoked_at is null),
   1::bigint, 'the other devices stay revoked');
-select is(pg_temp.hook_claims('Bruno') ->> 'household_id', (select id::text from hh where name = 'Bauer'),
+select is(pg_temp.hook_claims('Rita') ->> 'household_id', (select id::text from hh where name = 'Rest'),
   'the restored session gets the family claims');
-select pg_temp.as_account('Bruno');
+select pg_temp.as_account('Rita');
 select throws_ok($$ select api.household_restore() $$, '42501', 'already in a household', 'a restored family is not restored again');
 
 -- Cora: deleted 15 days ago, so the window is over.
@@ -409,7 +432,7 @@ select is((select count(*) from auth.users where id = (select uid from dd where 
 select is((select count(*) from app.household where name = 'Live'), 1::bigint, 'a live family is kept');
 select is((select count(*) from auth.users where id = (select uid from dd where name = 'Live-iPad')), 1::bigint,
   'and so is its device user');
-select is((select count(*) from app.household where name in ('Bauer', 'Cora')), 1::bigint,
+select is((select count(*) from app.household where name in ('Rest', 'Cora')), 1::bigint,
   'the restored family stays and Cora, deleted 15 days ago, is gone');
 
 select * from finish();

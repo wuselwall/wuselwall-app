@@ -3818,18 +3818,36 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get leaveDeleteExplain =>
-      'Alle Geräte melden sich sofort ab. 14 Tage lang kann eine Elternperson die Familie wiederherstellen, danach werden alle Daten endgültig gelöscht.';
+      'Die Familie wird mit allen Daten sofort und endgültig gelöscht. Alle Geräte melden sich ab. Das lässt sich nicht rückgängig machen.';
 
   @override
   String get leaveDeleteDialogTitle => 'Familie löschen?';
 
   @override
   String get leaveDeleteDialogBody =>
-      'Alle Geräte melden sich ab, und niemand kommt mehr an die Familie. 14 Tage lang kann eine Elternperson sie wiederherstellen. Danach sind alle Daten weg.';
+      'Alle Geräte melden sich ab, und die Familie wird mit allen Daten endgültig gelöscht.';
 
   @override
   String leaveDeleteNameLabel(String name) {
     return 'Tippe ‚$name‘ zum Bestätigen';
+  }
+
+  @override
+  String get leaveDeleteNext => 'Weiter';
+
+  @override
+  String get leaveDeleteWordTitle => 'Endgültig löschen?';
+
+  @override
+  String get leaveDeleteWordBody =>
+      'Die Familie und alle ihre Daten werden sofort und endgültig gelöscht. Niemand kann sie wiederherstellen, auch keine Elternperson. Willst du etwas behalten, exportiere die Daten vorher.';
+
+  @override
+  String get leaveDeleteWord => 'LÖSCHEN';
+
+  @override
+  String leaveDeleteWordLabel(String word) {
+    return 'Tippe $word, um die Familie endgültig zu löschen';
   }
 
   @override
@@ -4220,15 +4238,15 @@ class AppLocalizationsDe extends AppLocalizations {
       'Öffne die WuselWall-App auf deinem Handy, wähle diesen Server, indem du den Code scannst, und melde dich dort an.';
 
   @override
-  String get shortcutTitle => 'Siri und Kurzbefehle';
+  String get shortcutTitle => 'Apps und KI-Assistenten';
 
   @override
   String get shortcutSettingsSubtitle =>
-      'Einkaufsliste, Tagesplan und mehr per Sprachbefehl';
+      'Siri, Automationen und KI-Assistenten (MCP), jeweils mit Schlüssel';
 
   @override
   String get shortcutIntro =>
-      'Ein Schlüssel verbindet einen Kurzbefehl auf dem iPhone mit WuselWall. Damit setzt Siri Dinge auf die Einkaufsliste und sagt, was heute ansteht, was es zu essen gibt oder wer morgen Sport hat. Ein Schlüssel gehört zu einer Person: Er kann lesen und hinzufügen, aber nichts löschen und nichts verwalten. Ein Schlüssel für einen KI-Assistenten (MCP) liest nur.';
+      'Ein Schlüssel lässt eine andere App als eine bestimmte Person mit WuselWall arbeiten. Ein Schlüssel für Automationen, zum Beispiel für einen Kurzbefehl mit Siri auf dem iPhone oder jede andere App, die eine Webadresse aufrufen kann, liest und fügt hinzu: Er setzt Dinge auf die Einkaufsliste und sagt, was heute ansteht, was es zu essen gibt oder wer morgen Sport hat. Löschen oder verwalten kann er nichts. Ein Schlüssel für einen KI-Assistenten (MCP, etwa Claude) liest nur.';
 
   @override
   String get shortcutEmpty => 'Noch keine Schlüssel.';
@@ -4263,7 +4281,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String shortcutKeyOnce(String name) {
-    return 'Dieser Schlüssel wird nur jetzt angezeigt. Wer ihn hat, kann als $name lesen und hinzufügen, also behandle ihn wie ein Passwort. Die Kurzbefehle-App synchronisiert ihn über iCloud.';
+    return 'Dieser Schlüssel wird nur jetzt angezeigt. Wer ihn hat, kann als $name lesen und hinzufügen, also behandle ihn wie ein Passwort. In Apples Kurzbefehle-App wird er über iCloud synchronisiert.';
   }
 
   @override
@@ -4283,7 +4301,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get shortcutHowSteps =>
-      'In der Kurzbefehle-App einen Kurzbefehl mit der Aktion „Inhalte von URL abrufen“ anlegen: die Adresse mit /today am Ende und als Header „Authorization“ mit „Bearer “, einem Leerzeichen und dem Schlüssel. Danach „Ergebnis anzeigen“ oder „Text sprechen“ dazunehmen. Die Anleitung auf wuselwall.app/docs/settings/shortcuts zeigt alle Kurzbefehle.';
+      'Jede App schickt dieselbe Anfrage. In Apples Kurzbefehle-App einen Kurzbefehl mit der Aktion „Inhalte von URL abrufen“ anlegen: die Adresse mit /today am Ende und als Header „Authorization“ mit „Bearer “, einem Leerzeichen und dem Schlüssel. Danach „Ergebnis anzeigen“ oder „Text sprechen“ dazunehmen. Die Anleitung auf wuselwall.app/docs/settings/shortcuts zeigt alle Kurzbefehle.';
 
   @override
   String shortcutLastUsed(String when) {
@@ -4324,17 +4342,20 @@ class AppLocalizationsDe extends AppLocalizations {
       'Diese Person hat schon zehn Schlüssel. Bitte zuerst einen sperren.';
 
   @override
+  String get shortcutSectionAutomations => 'Automationen';
+
+  @override
   String get shortcutSectionAssistants => 'KI-Assistenten';
 
   @override
-  String get shortcutKindShortcut => 'Siri';
+  String get shortcutKindShortcut => 'Automation';
 
   @override
-  String get shortcutKindAssistant => 'Assistent';
+  String get shortcutKindAssistant => 'KI-Assistent';
 
   @override
   String get shortcutKindShortcutHelp =>
-      'Für einen Kurzbefehl auf dem iPhone: Er liest und fügt hinzu, zum Beispiel zur Einkaufsliste.';
+      'Für Siri und Apples Kurzbefehle oder jede App, die eine Webadresse aufrufen kann: Er liest und fügt hinzu, zum Beispiel zur Einkaufsliste.';
 
   @override
   String get shortcutKindAssistantHelp =>
@@ -4390,4 +4411,20 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get appearanceNightNote =>
       'Nachts zeigt das Wanddisplay immer seine Nachtansicht.';
+
+  @override
+  String get settingsViewLabel => 'Welche Einstellungen angezeigt werden';
+
+  @override
+  String get settingsViewBasic => 'Einfach';
+
+  @override
+  String get settingsViewAdvanced => 'Erweitert';
+
+  @override
+  String get settingsViewMoreHint =>
+      'Weitere Einstellungen findest du unter „Erweitert“. Ausgeblendete Einstellungen gelten weiterhin.';
+
+  @override
+  String get settingsViewShowAll => 'Alle Einstellungen zeigen';
 }
