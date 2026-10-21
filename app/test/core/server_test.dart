@@ -250,12 +250,11 @@ void main() {
       supabasePublishableKey: '',
     );
 
-    test("another operator's server gets no passkeys", () {
-      // No WW_FIRST_PARTY_HOSTS in tests: every server is someone else's.
+    test('a chosen server gets no passkeys', () {
       final c = AppConfig.forServer(build, info());
       expect(c.supabaseUrl, 'https://api.example.org');
       expect(c.supabasePublishableKey, 'sb_publishable_abc');
-      expect(c.nativeSignIn, isFalse);
+      expect(c.passkeys, isFalse);
       expect(c.hasFixedServer, isFalse);
     });
 

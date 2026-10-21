@@ -238,7 +238,7 @@ use without a release — and a second household needs no code change.
 | Change | Answer | Where |
 |---|---|---|
 | Hosting | Two flavours from one codebase. **WuselWall Cloud** is a hosted Supabase project in the user's account (Frankfurt, Pro) and the store app's default. **Self-hosted** is any server, reached through "Eigener Server" | [ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md), [10](10-deployment-and-ops.md#wuselwall-cloud) |
-| Sign-in on custom servers | Email code and password. Passkeys on first-party servers only, so that a hostile server cannot replay assertions to them *(Apple and Google removed 2026-10-17)* | [ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md), [20](20-onboarding.md#on-a-self-hosted-server) |
+| Sign-in on custom servers | Email code and password. Passkeys only in builds that name their own server (no first-party servers since 2026-10-21) *(Apple and Google removed 2026-10-17)* | [ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md), [20](20-onboarding.md#on-a-self-hosted-server) |
 | Email | Decided: Scaleway Transactional Email, one project per environment, a sending subdomain with SPF/DKIM/DMARC, the code in the subject | [10](10-deployment-and-ops.md#email-setup), [Q41](14-open-questions.md) |
 | Distribution | Public App Store and Google Play listings once the developer accounts exist | [ADR-015](adr/ADR-015-saas-and-self-hosted-flavours.md), Q42 |
 | Captcha | None | Q44 |
