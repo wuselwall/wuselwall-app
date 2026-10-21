@@ -42,6 +42,22 @@ void main() {
       expect(failure.code, 'rrule_invalid');
     });
 
+    test('a function the server does not have is not found', () {
+      final failure = mapError(
+        functionError(
+          'household-export',
+          const FunctionException(
+            status: 404,
+            details: {
+              'code': 'NOT_FOUND',
+              'message': 'Requested function was not found',
+            },
+          ),
+        ),
+      );
+      expect(failure, isA<NotFoundFailure>());
+    });
+
     test('a bare 400 is a validation failure without a domain code', () {
       final failure = mapError(
         functionError('occurrences', const FunctionException(status: 400)),

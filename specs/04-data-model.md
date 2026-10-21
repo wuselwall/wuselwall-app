@@ -313,10 +313,24 @@ Notices themselves are not stored: `api.notices` derives them from `audit_log` a
 rows and drops anything older than 14 days.
 
 The card's items are derived from data and never ticked by hand (`api.getting_started`).
-The export (`api.household_export`) has no table of its own: it reads every household table
-and leaves out secrets (password and PIN hashes, token and code hashes, Auth ids) and the
-technical bookkeeping listed in migration `160`. A pgTAP guard fails when a new household
-table is neither exported nor listed there.
+The export reads every household table on the list `app.export_table` (name, order, and the
+columns that stay in the database: `omit`, or `keep` for a table whose new columns must not
+leak, such as `device`) and leaves out secrets (password and PIN hashes, token and code
+hashes, Auth ids) in every table and the technical bookkeeping listed in migration `160`. A
+pgTAP guard (`145`) fails when a new household table is neither on the list nor excluded there:
+a new household table is one insert into `app.export_table`.
+
+Since 2026-10-21 (migration `20261019130000_export_paged`) the export is read in pages, so
+households with years of data fit: `api.household_export_begin` checks the caller (a
+guardian on a personal device) and writes the audit row, `api.household_export_page` returns
+up to 5000 rows of one table after a cursor in primary-key order (an index range scan on
+`(household_id, <primary key>)` for the tables that grow with the years), and the Edge
+Function `household-export` streams them as a zip file: `tables/<table>.json` per table (a
+JSON array, one row per line) and `export.json` (format version 2, the household, the row
+count of each file). The function holds one page at a time; a failure after the first byte
+breaks the download off, and the app refuses a zip without its end record. The one-document
+`api.household_export` (format version 1) stays for the previous app release and for the
+app's fallback on a server without the function.
 
 ### External calendars
 
