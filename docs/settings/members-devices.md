@@ -68,9 +68,11 @@ Unter **Erweitert** steht, mit welchem Server diese App spricht, mit seinem **QR
 
 ## Daten exportieren
 
-Erziehungsberechtigte können alle Daten eurer Familie als eine Datei speichern, zum Beispiel für einen Umzug auf einen anderen Server. Das geht unten in den Einstellungen (Ansicht **Erweitert**) im Bereich **Familie** mit **Daten exportieren**, und nur vom eigenen Handy eines Erziehungsberechtigten aus.
+Erziehungsberechtigte können alle Daten eurer Familie als eine ZIP-Datei speichern, zum Beispiel für einen Umzug auf einen anderen Server. Das geht unten in den Einstellungen (Ansicht **Erweitert**) im Bereich **Familie** mit **Daten exportieren**, und nur vom eigenen Handy eines Erziehungsberechtigten aus.
 
 Die Datei enthält die Angaben, die ihr eingegeben habt: Mitglieder, Termine, Stundenpläne, Aufgaben, Rezepte, Einkaufslisten und so weiter. Passwörter, PINs und Anmeldedaten sind **nicht** enthalten, und Geräte erscheinen nur mit Namen und Datum.
+
+In der ZIP-Datei liegt für jede Art von Daten eine eigene JSON-Datei im Ordner `tables`, dazu `export.json`, die beschreibt, was enthalten ist und wie viele Einträge jede Datei hat. Nach einigen Jahren mit WuselWall kann der Export eine Minute dauern; lasst die App so lange offen. Ein älterer Server liefert stattdessen eine einzelne JSON-Datei.
 
 Familie löschen und verlassen steht unter [Konto und Familie](/settings/account).
 

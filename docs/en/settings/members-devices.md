@@ -68,9 +68,11 @@ You only need **Change server** when your family moves to another server. The de
 
 ## Export data
 
-Guardians can save all data of your family as one file, for example for a move to another server. It is under **Family** at the bottom of the settings (**Advanced** view), with **Export data**, and only from a guardian's own phone.
+Guardians can save all data of your family as one zip file, for example for a move to another server. It is under **Family** at the bottom of the settings (**Advanced** view), with **Export data**, and only from a guardian's own phone.
 
 The file contains what you entered: members, appointments, timetables, tasks, recipes, shopping lists and so on. Passwords, PINs and sign-in data are **not** included, and devices appear only with their name and date.
+
+The zip file holds one JSON file per kind of data in the `tables` folder, plus `export.json`, which says what is included and how many entries each file has. After a few years with WuselWall the export can take a minute; keep the app open until it is done. An older server gives you a single JSON file instead.
 
 Leaving and deleting a family is described under [Account and family](/en/settings/account).
 
