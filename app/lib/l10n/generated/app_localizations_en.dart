@@ -1618,7 +1618,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String schoolEnterTimetableBody(String name) {
-    return '$name has no timetable for this term yet.';
+    return '$name has no timetable for the week shown yet.';
   }
 
   @override
@@ -4393,4 +4393,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsViewShowAll => 'Show all settings';
+
+  @override
+  String get schoolTimetableNeedsTerm =>
+      'First add a term for the week shown. Choose a name and date range, then continue to enter the lessons.';
+
+  @override
+  String get schoolTermContinue => 'Save term and continue';
 }

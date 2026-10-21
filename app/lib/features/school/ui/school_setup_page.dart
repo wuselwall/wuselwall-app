@@ -594,7 +594,7 @@ class _Terms extends ConsumerWidget {
         onPressed: () async {
           final term = await showDialog<TermRecord>(
             context: context,
-            builder: (_) => _TermDialog(schoolId: school.id),
+            builder: (_) => SchoolTermDialog(schoolId: school.id),
           );
           if (term == null || !context.mounted) return;
           await _write(
@@ -619,7 +619,8 @@ class _Terms extends ConsumerWidget {
               onTap: () async {
                 final edited = await showDialog<TermRecord>(
                   context: context,
-                  builder: (_) => _TermDialog(schoolId: school.id, term: t),
+                  builder: (_) =>
+                      SchoolTermDialog(schoolId: school.id, term: t),
                 );
                 if (edited == null || !context.mounted) return;
                 await _write(
@@ -637,23 +638,33 @@ class _Terms extends ConsumerWidget {
   }
 }
 
-class _TermDialog extends StatefulWidget {
-  const _TermDialog({required this.schoolId, this.term});
+/// Creates or edits a term, optionally before entering a timetable.
+class SchoolTermDialog extends StatefulWidget {
+  const SchoolTermDialog({
+    required this.schoolId,
+    this.term,
+    this.forTimetableOn,
+    super.key,
+  });
 
   final String schoolId;
   final TermRecord? term;
+  final DateTime? forTimetableOn;
 
   @override
-  State<_TermDialog> createState() => _TermDialogState();
+  State<SchoolTermDialog> createState() => _SchoolTermDialogState();
 }
 
-class _TermDialogState extends State<_TermDialog> {
+class _SchoolTermDialogState extends State<SchoolTermDialog> {
   late final _name = TextEditingController(text: widget.term?.name ?? '');
   late final _anchor = TextEditingController(
     text: widget.term?.abAnchorWeek?.toString() ?? '',
   );
-  late DateTime _from = widget.term?.startsOn ?? DateTime.now();
-  late DateTime _to = widget.term?.endsOn ?? DateTime.now();
+  late DateTime _from =
+      widget.term?.startsOn ?? widget.forTimetableOn ?? DateTime.now();
+  late DateTime? _to =
+      widget.term?.endsOn ??
+      (widget.forTimetableOn == null ? DateTime.now() : null);
   late bool _current = widget.term?.isCurrent ?? false;
 
   @override
@@ -666,7 +677,7 @@ class _TermDialogState extends State<_TermDialog> {
   Future<void> _date({required bool from}) async {
     final picked = await showDatePicker(
       context: context,
-      initialDate: from ? _from : _to,
+      initialDate: from ? _from : _to ?? _from,
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
     );
@@ -689,8 +700,13 @@ class _TermDialogState extends State<_TermDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            if (widget.forTimetableOn != null) ...[
+              Text(l10n.schoolTimetableNeedsTerm),
+              const SizedBox(height: 16),
+            ],
             TextField(
               controller: _name,
+              onChanged: (_) => setState(() {}),
               decoration: InputDecoration(labelText: l10n.schoolTermName),
             ),
             Row(
@@ -707,7 +723,9 @@ class _TermDialogState extends State<_TermDialog> {
                   child: TextButton(
                     onPressed: () => _date(from: false),
                     child: Text(
-                      '${l10n.schoolTo} ${context.dayMonth(_to)} ${_to.year}',
+                      _to == null
+                          ? l10n.schoolTo
+                          : '${l10n.schoolTo} ${context.dayMonth(_to!)} ${_to!.year}',
                     ),
                   ),
                 ),
@@ -736,23 +754,33 @@ class _TermDialogState extends State<_TermDialog> {
           child: Text(l10n.cancel),
         ),
         FilledButton(
-          onPressed: () {
-            final name = _name.text.trim();
-            if (name.isEmpty) return;
-            final anchor = int.tryParse(_anchor.text.trim());
-            Navigator.of(context).pop(
-              TermRecord(
-                id: widget.term?.id ?? '',
-                schoolId: widget.schoolId,
-                name: name,
-                startsOn: _from,
-                endsOn: _to,
-                abAnchorWeek: anchor,
-                isCurrent: _current,
-              ),
-            );
-          },
-          child: Text(l10n.save),
+          onPressed:
+              _name.text.trim().isEmpty ||
+                  _to == null ||
+                  _to!.isBefore(_from) ||
+                  (widget.forTimetableOn != null &&
+                      (widget.forTimetableOn!.isBefore(_from) ||
+                          widget.forTimetableOn!.isAfter(_to!)))
+              ? null
+              : () {
+                  final name = _name.text.trim();
+                  if (name.isEmpty) return;
+                  final anchor = int.tryParse(_anchor.text.trim());
+                  Navigator.of(context).pop(
+                    TermRecord(
+                      id: widget.term?.id ?? '',
+                      schoolId: widget.schoolId,
+                      name: name,
+                      startsOn: _from,
+                      endsOn: _to!,
+                      abAnchorWeek: anchor,
+                      isCurrent: _current,
+                    ),
+                  );
+                },
+          child: Text(
+            widget.forTimetableOn == null ? l10n.save : l10n.schoolTermContinue,
+          ),
         ),
       ],
     );

@@ -2919,7 +2919,7 @@ abstract class AppLocalizations {
   /// No description provided for @schoolEnterTimetableBody.
   ///
   /// In en, this message translates to:
-  /// **'{name} has no timetable for this term yet.'**
+  /// **'{name} has no timetable for the week shown yet.'**
   String schoolEnterTimetableBody(String name);
 
   /// No description provided for @schoolEnterTimetableAction.
@@ -7624,6 +7624,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Show all settings'**
   String get settingsViewShowAll;
+
+  /// No description provided for @schoolTimetableNeedsTerm.
+  ///
+  /// In en, this message translates to:
+  /// **'First add a term for the week shown. Choose a name and date range, then continue to enter the lessons.'**
+  String get schoolTimetableNeedsTerm;
+
+  /// No description provided for @schoolTermContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Save term and continue'**
+  String get schoolTermContinue;
 }
 
 class _AppLocalizationsDelegate

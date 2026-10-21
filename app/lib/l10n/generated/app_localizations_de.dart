@@ -1634,7 +1634,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String schoolEnterTimetableBody(String name) {
-    return 'Für $name ist für diesen Zeitraum noch kein Stundenplan eingetragen.';
+    return 'Für $name ist für die angezeigte Woche noch kein Stundenplan eingetragen.';
   }
 
   @override
@@ -4427,4 +4427,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get settingsViewShowAll => 'Alle Einstellungen zeigen';
+
+  @override
+  String get schoolTimetableNeedsTerm =>
+      'Lege zuerst einen Zeitraum für die angezeigte Woche an. Wähle einen Namen und das Anfangs- und Enddatum. Danach trägst du die Stunden ein.';
+
+  @override
+  String get schoolTermContinue => 'Zeitraum speichern und weiter';
 }

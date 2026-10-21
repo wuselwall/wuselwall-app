@@ -127,7 +127,7 @@ void main() {
     /// Saves the draft with the page's Save button.
     Future<void> save(WidgetTester t) async {
       final button = find.text(de.schoolSaveTimetable);
-      await t.ensureVisible(button);
+      expect(button.hitTestable(), findsOneWidget);
       await t.tap(button);
       await t.pumpAndSettle();
     }
