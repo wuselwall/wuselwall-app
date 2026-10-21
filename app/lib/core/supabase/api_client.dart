@@ -57,7 +57,8 @@ class ApiClient {
 /// [Failure] an `api` function's would. A transport failure (status 0) becomes a
 /// network error. A JSON reply carrying `code` (SQLSTATE) and `hint` keeps them; without
 /// them the HTTP status stands in for the SQLSTATE the `api` functions would raise
-/// (401 auth, 403 permission, 404 not found, 400 and 422 invalid input).
+/// (401 auth, 403 permission, 404 not found, 400 and 422 invalid input). A function that
+/// is not deployed at all is "not found" too.
 Object functionError(String name, FunctionException error) {
   if (error.status == 0) {
     return http.ClientException('Edge Function $name unreachable');
@@ -65,8 +66,11 @@ Object functionError(String name, FunctionException error) {
   final details = error.details is Map
       ? error.details as Map<Object?, Object?>
       : const <Object?, Object?>{};
+  final code = details['code'] as String?;
   final sqlState =
-      details['code'] as String? ??
+      // The functions router's own reply when the function is not deployed: a server
+      // older than the function.
+      (code == 'NOT_FOUND' ? 'PGRST202' : code) ??
       switch (error.status) {
         401 => 'PGRST301',
         403 => '42501',

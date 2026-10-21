@@ -4,10 +4,11 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/features/settings/data/household_export_repository.dart';
 
-/// The export of the reference household, shaped like the server's document but small.
+/// The export of the reference household, shaped like the server's one-document export but
+/// small (the demo has no server to stream a zip from).
 class DemoHouseholdExportRepository implements HouseholdExportRepository {
   @override
-  Future<Result<String>> export({required String? actor}) async {
+  Future<Result<HouseholdExportFile>> export({required String? actor}) async {
     final document = {
       'format': 'wuselwall-export',
       'version': 1,
@@ -43,9 +44,13 @@ class DemoHouseholdExportRepository implements HouseholdExportRepository {
         ],
       },
     };
-    return Ok(_pretty(document));
+    return Ok(
+      HouseholdExportFile(
+        bytes: utf8.encode(
+          const JsonEncoder.withIndent('  ').convert(document),
+        ),
+        zip: false,
+      ),
+    );
   }
-
-  static String _pretty(Object document) =>
-      const JsonEncoder.withIndent('  ').convert(document);
 }
