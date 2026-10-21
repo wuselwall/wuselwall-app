@@ -48,7 +48,11 @@ If your children go to different schools, add each school: on the school page ta
 
 ## Entering a timetable
 
-For each child, enter the timetable for a term. Tap a cell in the grid and choose the subject.
+For each child, enter the timetable for a term. Tap **Enter timetable**. If no term covers the week shown, first enter its name and start and end dates. **Save term and continue** takes you straight to the timetable editor.
+
+At the top you can see the child, school and term with its dates. Tap a cell in the grid and choose the subject. **Save timetable** stays visible at the bottom of the screen as you scroll through the timetable.
+
+<Shot name="school-editor" alt="Timetable editor with the school, term and visible Save button" />
 
 - With **Week rhythm** choose **Every week** or **A/B weeks**. With A/B weeks you enter the A and the B week separately.
 - Under **After school care** add rows, for example the after-school club with its days and times.
@@ -66,6 +70,10 @@ In the timetable editor each day has a **Day actions** menu:
 These steps change only the draft. **Save timetable** writes them. **Undo** takes back the last step.
 
 ## The week
+
+The child selector, **This week**, **Edit school** and **Edit timetable** share one toolbar. Child selection stays on the left, **This week** is centered, and the edit buttons stay on the right. On smaller screens, **This week** stays centered on its own line and the edit buttons appear below, aligned to the right. **Edit school** has a school icon; the gear at the top opens the general settings. The previous-week arrow sits beside Monday and the next-week arrow beside Friday, in the row of weekday dates. There is no separate week-number or date-range row.
+
+Choose a child at the top to see their timetable. The selected child has a tinted background, a strong border and a checkmark beside their name.
 
 The week view shows lesson by lesson. Move with **Previous week**, **Next week** and **This week**. Holidays appear as a band above the week, and public holidays in the day's header.
 

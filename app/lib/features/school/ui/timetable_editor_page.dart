@@ -46,28 +46,38 @@ class _TimetableEditorPageState extends ConsumerState<TimetableEditorPage> {
     final l10n = context.l10n;
     final args = widget.args;
     final data = ref.watch(schoolDataProvider);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          args == null ? l10n.schoolEditTimetable : _title(context, data, args),
+    final title = args == null
+        ? l10n.schoolEditTimetable
+        : _title(context, data, args);
+    if (args == null) {
+      return Scaffold(
+        appBar: AppBar(title: Text(title)),
+        body: Center(child: Text(l10n.comingSoon)),
+      );
+    }
+    return data.when(
+      loading: () => Scaffold(
+        appBar: AppBar(title: Text(title)),
+        body: const Center(child: CircularProgressIndicator()),
+      ),
+      error: (error, _) => Scaffold(
+        appBar: AppBar(title: Text(title)),
+        body: ErrorView(
+          error: error,
+          onRetry: () => ref.invalidate(schoolDataProvider),
         ),
       ),
-      body: args == null
-          ? Center(child: Text(l10n.comingSoon))
-          : AsyncValueView(
-              value: data,
-              onRetry: () => ref.invalidate(schoolDataProvider),
-              data: (d) => _EditorBody(
-                key: ValueKey(_generation),
-                data: d,
-                args: args,
-                onCopied: () async {
-                  ref.invalidate(schoolDataProvider);
-                  await ref.read(schoolDataProvider.future);
-                  if (mounted) setState(() => _generation++);
-                },
-              ),
-            ),
+      data: (d) => _EditorBody(
+        key: ValueKey(_generation),
+        title: title,
+        data: d,
+        args: args,
+        onCopied: () async {
+          ref.invalidate(schoolDataProvider);
+          await ref.read(schoolDataProvider.future);
+          if (mounted) setState(() => _generation++);
+        },
+      ),
     );
   }
 
@@ -245,12 +255,14 @@ class _CopyDayDialogState extends State<_CopyDayDialog> {
 
 class _EditorBody extends ConsumerStatefulWidget {
   const _EditorBody({
+    required this.title,
     required this.data,
     required this.args,
     required this.onCopied,
     super.key,
   });
 
+  final String title;
   final SchoolData data;
   final TimetableEditArgs args;
   final Future<void> Function() onCopied;
@@ -260,7 +272,7 @@ class _EditorBody extends ConsumerStatefulWidget {
 }
 
 class _EditorBodyState extends ConsumerState<_EditorBody> {
-  late final TimetableRecord? _timetable = widget.data.timetableOf(
+  late TimetableRecord? _timetable = widget.data.timetableOf(
     widget.args.profileId,
     widget.args.termId,
   );
@@ -516,8 +528,8 @@ class _EditorBodyState extends ConsumerState<_EditorBody> {
     );
     final metaChanged =
         _timetable == null ||
-        _timetable.classLabel != meta.classLabel ||
-        _timetable.weekCycle != meta.weekCycle;
+        _timetable?.classLabel != meta.classLabel ||
+        _timetable?.weekCycle != meta.weekCycle;
     if (metaChanged) {
       final saved = await repo.saveTimetable(actor: actor, timetable: meta);
       if (!mounted) return;
@@ -527,6 +539,17 @@ class _EditorBodyState extends ConsumerState<_EditorBody> {
         return;
       }
       timetableId = saved.valueOrNull;
+      // Retain the created identity, also when saving lessons fails and is retried.
+      _timetable = TimetableRecord(
+        id: timetableId!,
+        profileId: meta.profileId,
+        schoolId: meta.schoolId,
+        termId: meta.termId,
+        classLabel: meta.classLabel,
+        weekCycle: meta.weekCycle,
+        validFrom: meta.validFrom,
+        validTo: meta.validTo,
+      );
     }
 
     final result = await repo.setLessons(
@@ -608,99 +631,121 @@ class _EditorBodyState extends ConsumerState<_EditorBody> {
         p,
     ]..sort((a, b) => minutesOf(a.starts).compareTo(minutesOf(b.starts)));
     final days = [1, 2, 3, 4, 5];
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        if (_school case final school?) ...[
+    return Scaffold(
+      appBar: AppBar(title: Text(widget.title)),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          if (_school case final school?) ...[
+            Text(
+              l10n.schoolsUiSchoolOf(school.name),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 8),
+          ],
+          if (_term case final term?) ...[
+            Text(
+              '${l10n.schoolTermEdit}: ${term.name} · '
+              '${context.dayMonth(term.startsOn)} ${term.startsOn.year} – '
+              '${context.dayMonth(term.endsOn)} ${term.endsOn.year}',
+            ),
+            const SizedBox(height: 12),
+          ],
+          TextField(
+            controller: _class,
+            decoration: InputDecoration(labelText: l10n.schoolEditorClass),
+          ),
+          const SizedBox(height: 12),
+          SegmentedButton<String>(
+            segments: [
+              ButtonSegment(
+                value: 'weekly',
+                label: Text(l10n.schoolCycleWeekly),
+              ),
+              ButtonSegment(value: 'ab', label: Text(l10n.schoolCycleAb)),
+            ],
+            selected: {_cycle},
+            onSelectionChanged: (s) => setState(() => _cycle = s.first),
+          ),
+          const SizedBox(height: 8),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton.icon(
+              onPressed: _copy,
+              icon: const Icon(Icons.content_copy_outlined),
+              label: Text(l10n.schoolCopyFrom),
+            ),
+          ),
+          if (widget.data.subjects.isEmpty) Text(l10n.schoolNoSubjects),
+          const SizedBox(height: 8),
+          _Header(days: days, onDayAction: _onDayAction, labelWidth: 84),
+          for (final p in periods)
+            if (p.isBreak)
+              const SizedBox(height: 6)
+            else
+              _Row(
+                label: '${p.index}. · ${context.span(p.starts, p.ends)}',
+                cells: [
+                  for (final d in days)
+                    _CellTile(
+                      weekday: d,
+                      period: p.index,
+                      drafts: [
+                        for (final parity in const ['all', 'a', 'b'])
+                          if (_cells['$d:${p.index}:$parity'] != null)
+                            _cells['$d:${p.index}:$parity']!,
+                      ],
+                      subjectOf: _subjectOf,
+                      onTap: () => _editCell(d, p.index),
+                      onClear: () => _clearCell(d, p.index),
+                    ),
+                ],
+              ),
+          const SizedBox(height: 24),
           Text(
-            l10n.schoolsUiSchoolOf(school.name),
+            l10n.schoolCareRows,
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
-        ],
-        TextField(
-          controller: _class,
-          decoration: InputDecoration(labelText: l10n.schoolEditorClass),
-        ),
-        const SizedBox(height: 12),
-        SegmentedButton<String>(
-          segments: [
-            ButtonSegment(value: 'weekly', label: Text(l10n.schoolCycleWeekly)),
-            ButtonSegment(value: 'ab', label: Text(l10n.schoolCycleAb)),
-          ],
-          selected: {_cycle},
-          onSelectionChanged: (s) => setState(() => _cycle = s.first),
-        ),
-        const SizedBox(height: 8),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: TextButton.icon(
-            onPressed: _copy,
-            icon: const Icon(Icons.content_copy_outlined),
-            label: Text(l10n.schoolCopyFrom),
-          ),
-        ),
-        if (widget.data.subjects.isEmpty) Text(l10n.schoolNoSubjects),
-        const SizedBox(height: 8),
-        _Header(days: days, onDayAction: _onDayAction, labelWidth: 84),
-        for (final p in periods)
-          if (p.isBreak)
-            const SizedBox(height: 6)
-          else
-            _Row(
-              label: '${p.index}. · ${context.span(p.starts, p.ends)}',
-              cells: [
-                for (final d in days)
-                  _CellTile(
-                    weekday: d,
-                    period: p.index,
-                    drafts: [
-                      for (final parity in const ['all', 'a', 'b'])
-                        if (_cells['$d:${p.index}:$parity'] != null)
-                          _cells['$d:${p.index}:$parity']!,
-                    ],
-                    subjectOf: _subjectOf,
-                    onTap: () => _editCell(d, p.index),
-                    onClear: () => _clearCell(d, p.index),
-                  ),
-              ],
+          for (var i = 0; i < _care.length; i++)
+            _CareCard(
+              key: ObjectKey(_care[i]),
+              block: _care[i],
+              onChanged: () => setState(() {}),
+              onRemove: () => setState(() => _care.removeAt(i)),
             ),
-        const SizedBox(height: 24),
-        Text(
-          l10n.schoolCareRows,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-        const SizedBox(height: 8),
-        for (var i = 0; i < _care.length; i++)
-          _CareCard(
-            key: ObjectKey(_care[i]),
-            block: _care[i],
-            onChanged: () => setState(() {}),
-            onRemove: () => setState(() => _care.removeAt(i)),
-          ),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: OutlinedButton.icon(
-            onPressed: () => setState(
-              () => _care.add(
-                _CareBlock(
-                  title: '',
-                  starts: const TimeOfDay(hour: 13, minute: 0),
-                  ends: const TimeOfDay(hour: 15, minute: 30),
-                  days: {},
+          Align(
+            alignment: Alignment.centerLeft,
+            child: OutlinedButton.icon(
+              onPressed: () => setState(
+                () => _care.add(
+                  _CareBlock(
+                    title: '',
+                    starts: const TimeOfDay(hour: 13, minute: 0),
+                    ends: const TimeOfDay(hour: 15, minute: 30),
+                    days: {},
+                  ),
                 ),
               ),
+              icon: const Icon(Icons.add),
+              label: Text(l10n.schoolAddCare),
             ),
-            icon: const Icon(Icons.add),
-            label: Text(l10n.schoolAddCare),
+          ),
+        ],
+      ),
+      bottomNavigationBar: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: SizedBox(
+            width: double.infinity,
+            child: FilledButton(
+              onPressed: _busy ? null : _save,
+              child: Text(l10n.schoolSaveTimetable),
+            ),
           ),
         ),
-        const SizedBox(height: 24),
-        FilledButton(
-          onPressed: _busy ? null : _save,
-          child: Text(l10n.schoolSaveTimetable),
-        ),
-      ],
+      ),
     );
   }
 }

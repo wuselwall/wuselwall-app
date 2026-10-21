@@ -1642,7 +1642,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String schoolEnterTimetableBody(String name) {
-    return 'Il n’y a pas encore d’emploi du temps pour $name pour cette période scolaire.';
+    return 'Il n’y a pas encore d’emploi du temps pour $name pour la semaine affichée.';
   }
 
   @override
@@ -4453,4 +4453,11 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get settingsViewShowAll => 'Afficher tous les paramètres';
+
+  @override
+  String get schoolTimetableNeedsTerm =>
+      'Ajoutez d’abord une période couvrant la semaine affichée. Choisissez un nom et les dates de début et de fin, puis passez à la saisie des cours.';
+
+  @override
+  String get schoolTermContinue => 'Enregistrer la période et continuer';
 }

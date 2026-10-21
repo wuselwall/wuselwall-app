@@ -12,6 +12,77 @@ import 'package:wuselwall/features/school/ui/school_icons.dart';
 const _days = 5;
 const _labelWidth = 84.0;
 
+/// Weekday dates, optionally with navigation beside Monday and Friday.
+/// The left gutter matches the grid's period labels; the next-week button adds a
+/// trailing 48 px gutter, which the parent also leaves beside the lesson grid.
+class SchoolWeekHeader extends StatelessWidget {
+  const SchoolWeekHeader({
+    required this.dates,
+    this.raisedIndex,
+    this.onPrevious,
+    this.onNext,
+    super.key,
+  });
+
+  final List<DateTime> dates;
+  final int? raisedIndex;
+  final VoidCallback? onPrevious;
+  final VoidCallback? onNext;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final ww = context.ww;
+    return Row(
+      children: [
+        SizedBox(
+          width: _labelWidth,
+          child: onPrevious == null
+              ? null
+              : Align(
+                  alignment: Alignment.centerLeft,
+                  child: IconButton(
+                    tooltip: context.l10n.schoolPrevWeek,
+                    icon: const Icon(Icons.chevron_left),
+                    onPressed: onPrevious,
+                  ),
+                ),
+        ),
+        for (var i = 0; i < _days; i++)
+          Expanded(
+            child: Column(
+              children: [
+                Text(
+                  context.weekdayShort(dates[i]),
+                  style: TextStyle(
+                    fontFamily: Tokens.fontUi,
+                    fontWeight: FontWeight.w700,
+                    color: raisedIndex == i ? scheme.primary : ww.ink2,
+                  ),
+                ),
+                Text(
+                  context.dayMonth(dates[i]),
+                  style: SchoolWeekGrid._numeric(
+                    raisedIndex == i ? scheme.primary : ww.ink3,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        if (onNext != null)
+          SizedBox(
+            width: 48,
+            child: IconButton(
+              tooltip: context.l10n.schoolNextWeek,
+              icon: const Icon(Icons.chevron_right),
+              onPressed: onNext,
+            ),
+          ),
+      ],
+    );
+  }
+}
+
 /// A child's week as a paper grid (specs/15 "Views"): numbered Stunden with their bell
 /// times down the left, Monday to Friday across. The [raisedIndex] column is today, or
 /// the next school day. Cancelled lessons stay in place, struck through. Care and club
@@ -26,10 +97,14 @@ class SchoolWeekGrid extends StatelessWidget {
     this.nowMinutes,
     this.iconKeyOf,
     this.onLesson,
+    this.showHeader = true,
     super.key,
   });
 
   final BoardTimetable timetable;
+
+  /// False when the parent supplies a shared header with week navigation.
+  final bool showHeader;
 
   /// Five dates, Monday to Friday.
   final List<DateTime> dates;
@@ -74,31 +149,6 @@ class SchoolWeekGrid extends StatelessWidget {
     }
     final extraRows = extras.values.toList()
       ..sort((a, b) => minutesOf(a.starts).compareTo(minutesOf(b.starts)));
-
-    Widget header() => Row(
-      children: [
-        const SizedBox(width: _labelWidth),
-        for (var i = 0; i < _days; i++)
-          Expanded(
-            child: Column(
-              children: [
-                Text(
-                  context.weekdayShort(dates[i]),
-                  style: TextStyle(
-                    fontFamily: Tokens.fontUi,
-                    fontWeight: FontWeight.w700,
-                    color: raised == i ? scheme.primary : ww.ink2,
-                  ),
-                ),
-                Text(
-                  context.dayMonth(dates[i]),
-                  style: _numeric(raised == i ? scheme.primary : ww.ink3),
-                ),
-              ],
-            ),
-          ),
-      ],
-    );
 
     Widget row({required Widget label, required List<Lesson?> cells}) =>
         IntrinsicHeight(
@@ -148,8 +198,10 @@ class SchoolWeekGrid extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        header(),
-        const SizedBox(height: 4),
+        if (showHeader) ...[
+          SchoolWeekHeader(dates: dates, raisedIndex: raisedIndex),
+          const SizedBox(height: 4),
+        ],
         for (final p in timetable.periods)
           if (p.kind == PeriodKind.breakTime)
             Padding(

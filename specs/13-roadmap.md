@@ -20,6 +20,16 @@ application/server responses and one installation-selected email language (NFR-1
 integration verification and publication remain separate gates. Step 10's journey gaps
 precede M1.6.
 
+Timetable entry (2026-10-21) now creates a missing term inline and continues to the
+child's lesson grid, with the selected term and dates visible and a fixed Save action.
+Child selection, This week and the labeled school/timetable edit actions share one
+responsive toolbar; the school action uses a school icon instead of a second gear.
+Week navigation sits beside Monday and Friday in the weekday header, without a
+separate week-number or date-range row.
+It no longer falls back to an old term when the displayed week has no matching term.
+The DE/EN family guides include the editor; separate bilingual public-progress copy
+remains to be coordinated in `wuselwall-website`.
+
 ## A note on the "all four modules at once" decision
 
 You chose to build all four modules in the first release rather than starting with one.
