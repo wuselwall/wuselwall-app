@@ -48,7 +48,11 @@ Geht ein Kind an eine andere Schule als das andere, legt jede Schule an: Auf der
 
 ## Stundenplan eintragen
 
-Für jedes Kind tragt ihr den Plan für einen Zeitraum ein. Tippe ein Feld im Raster an und wähle das Fach.
+Für jedes Kind tragt ihr den Plan für einen Zeitraum ein. Tippe auf **Stundenplan eingeben**. Fehlt für die angezeigte Woche ein Zeitraum, gibst du zuerst seinen Namen und die Anfangs- und Enddaten ein. Mit **Zeitraum speichern und weiter** öffnet sich direkt der Stundenplan-Editor.
+
+Oben siehst du das Kind, die Schule und den Zeitraum mit seinen Daten. Tippe ein Feld im Raster an und wähle das Fach. **Stundenplan speichern** bleibt am unteren Bildschirmrand sichtbar, auch wenn du durch den Plan scrollst.
+
+<Shot name="school-editor" alt="Stundenplan-Editor mit Schule, Zeitraum und sichtbarer Speichern-Schaltfläche" />
 
 - Mit **Wochenrhythmus** wählst du **Jede Woche** oder **A/B-Wochen**. Bei A/B-Wochen tragt ihr die A- und die B-Woche getrennt ein.
 - Unter **Hort und Betreuung** legst du Zeilen an, zum Beispiel den Hort mit Tagen und Zeiten.
@@ -66,6 +70,10 @@ Im Stundenplan-Editor hat jeder Tag ein Menü **Tagesaktionen**:
 Diese Schritte ändern nur den Entwurf. Erst **Stundenplan speichern** schreibt sie fest. Mit **Rückgängig** nimmst du den letzten Schritt zurück.
 
 ## Die Woche
+
+Die Auswahl des Kindes, **Diese Woche**, **Schule bearbeiten** und **Stundenplan bearbeiten** stehen gemeinsam in einer Leiste. Die Kinderauswahl steht links, **Diese Woche** mittig und die Bearbeiten-Schaltflächen rechts. Auf kleinen Bildschirmen steht **Diese Woche** mittig in einer eigenen Zeile; darunter folgen die Bearbeiten-Schaltflächen rechtsbündig. **Schule bearbeiten** trägt ein Schulsymbol; das Zahnrad oben öffnet die allgemeinen Einstellungen. Der Pfeil zur vorigen Woche steht neben Montag, der zur nächsten Woche neben Freitag, direkt in der Zeile mit den Wochentagen und ihren Daten. Eine eigene Zeile mit Kalenderwoche oder Datumsbereich entfällt.
+
+Wähle oben ein Kind aus, um seinen Stundenplan zu sehen. Das ausgewählte Kind erkennst du am farbig hinterlegten Namen, dem kräftigen Rahmen und dem Häkchen.
 
 Die Wochenansicht zeigt Stunde für Stunde. Mit **Vorige Woche**, **Nächste Woche** und **Diese Woche** blätterst du. Ferien stehen als Band über der Woche, Feiertage im Kopf des Tages.
 
