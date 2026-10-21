@@ -24,10 +24,10 @@ On the server, in a directory of your choice, ideally on a fast disk (SSD). The 
 ```bash
 curl -fsSL https://github.com/wuselwall/wuselwall-app/releases/download/server-v1.0.0/wuselwall-server-1.0.0.tar.gz | tar xz
 cd wuselwall
-./wuselwall install --api https://api.example.org --web https://web.example.org --caddy
+./wuselwall install --api https://api.example.org --web https://web.example.org --language fr --caddy
 ```
 
-The first time this takes a few minutes, because Docker downloads several gigabytes of images. The tool
+`--language` chooses the **email language** (`de`, `en`, `fr` or `es`, default `de`); it does not change the app's language. The first time this takes a few minutes, because Docker downloads several gigabytes of images. The tool
 
 - generates every key and password (`stack/.env`),
 - starts the stack, with **Caddy**, which fetches Let's Encrypt certificates for both addresses,
@@ -79,6 +79,14 @@ One line in the server's crontab (`crontab -e`, or your NAS's task scheduler) ba
 ```
 
 The tool checks every backup and keeps 14 days. Without `BACKUP_DIR` they go to `backups/` next to the tool; a different disk than the database's is better. How to get the backups out of the house as well is in the [Extras](/en/server/extras#off-site-backup), how to restore one under [Restoring a backup](/en/server/restore).
+
+## Changing the email language {#email-language}
+
+```bash
+./wuselwall language en
+```
+
+`de`, `en`, `fr` and `es` are allowed. The tool writes `MAIL_LANGUAGE` to `stack/.env`, selects the matching subjects and mail templates and restarts only sign-in and functions. Existing keys are kept, and the chosen language survives later updates. Older installations without a value count as German. For a server installed from a repository checkout, change it after deployment with `scripts/remote-stack.sh language en`.
 
 ## Updates
 

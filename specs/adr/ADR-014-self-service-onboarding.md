@@ -96,6 +96,16 @@ create its own household", chose **self-service households**.
    self-hosted stacks that do not run Edge Functions). Its SMTP provider is [Q41](../14-open-questions.md)
    (decided: Scaleway Transactional Email).
 
+## Amendment 2026-10-19: installation-selected email language
+
+Decision 9's bilingual fallback and recipient-selected language are historical. Auth mail
+now uses only the server installation's `MAIL_LANGUAGE` (`de`, `en`, `fr`, `es`; default
+German), in the subject and both bodies. Hook and SMTP have the same selection and
+content; recipient metadata does not override it. Updates preserve the selected language
+and existing keys. The application and other server responses support all four languages
+under [ADR-010's amendment](ADR-010-flutter-and-self-hosted-supabase.md#amendment-2026-10-19-four-application-languages-and-one-email-language).
+This does not revive Cloud or change the self-hosted-only amendments in ADR-018.
+
 ## Alternatives considered
 
 **Invited adults only, one household per deployment.** Everything in this ADR except

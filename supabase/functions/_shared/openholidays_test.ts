@@ -4,8 +4,8 @@ import {
   endpointUrl,
   fetchCountry,
   flattenSubdivisions,
-  isCountry,
   holidayName,
+  isCountry,
   OpenHolidaysError,
   parseHolidays,
   regionCovers,
@@ -510,4 +510,20 @@ Deno.test("holidayName: the locale's language, then German, then the first name"
 
 Deno.test("holidayName: no names is the empty text", () => {
   assertEquals(holidayName({}, "de-DE"), "");
+});
+
+Deno.test("holidayName: all four household languages pick their own name", () => {
+  const names = {
+    de: "Auffahrt",
+    en: "Ascension Day",
+    fr: "Ascension",
+    es: "Ascensión",
+  };
+  assertEquals(holidayName(names, "de-AT"), "Auffahrt");
+  assertEquals(holidayName(names, "en-GB"), "Ascension Day");
+  assertEquals(holidayName(names, "fr-FR"), "Ascension");
+  assertEquals(holidayName(names, "es-ES"), "Ascensión");
+  // An unsupported language and a missing name both fall back to German, then any name.
+  assertEquals(holidayName(names, "it-IT"), "Auffahrt");
+  assertEquals(holidayName({ en: "Ascension Day" }, "es-ES"), "Ascension Day");
 });

@@ -55,6 +55,12 @@ Deno.test("a day's places come from its weekday and week, in slot order", () => 
   assertEquals(usualOn(week, "2026-10-20").map((s) => s.state), ["home_office"]);
   assertEquals(usualOn(week, "2026-10-27"), [], "week B has no Tuesday");
   assertEquals(usualOn(week, "2026-10-24"), [], "nothing on a free weekend");
+  const unanchored = { ...week, anchor: null };
+  assertEquals(
+    usualOn(unanchored, "2026-10-26").map((s) => s.state),
+    ["working", "home_office"],
+    "without an anchor a kept week B is never used",
+  );
 });
 
 Deno.test("a board day lists every member's places in member order, and none on a holiday", () => {

@@ -162,9 +162,10 @@ and no Xcode debugger. See [Q35](14-open-questions.md).
    NSAllowsLocalNetworking` and an Android network-security config permitting cleartext
    to the private address range, for a throwaway stack on the laptop. A live server is
    HTTPS.
-6. **Localisation from the first widget**: `app/l10n.yaml` with `app/l10n/app_en.arb`
-   (template) and `app/l10n/app_de.arb`, both locales supported with German first, and
-   `untranslated-messages-file` so CI can fail on a string missing from either. No string literal is ever shown to a user (see `CLAUDE.md`).
+6.   **Localisation from the first widget**: `app/l10n.yaml` with `app/l10n/app_en.arb`
+   (template) and complete `app_de.arb`, `app_fr.arb`, `app_es.arb` catalogues, all four
+   shipped with regional variants accepted and German first as unsupported fallback, and
+   `untranslated-messages-file` so CI can fail on a string missing from any. No string literal is ever shown to a user (see [AGENTS.md](../AGENTS.md)).
 7. **Three registers**: a `UiRegister` enum (`adult`, `kid`, `kiosk`) read from the
    device record, three `ThemeData` variants built from shared tokens (type scales and
    touch targets from [09](09-clients-and-ux.md#design-system)), and one router whose
@@ -176,7 +177,7 @@ and no Xcode debugger. See [Q35](14-open-questions.md).
    laptop's Supabase.
 
 **Done when** the dev build runs on the Android device and in the browser, shows German
-text, and the System page reports the database round-trip.
+text and locale selection/fallback behavior, and the System page reports the database round-trip.
 
 ---
 
@@ -267,8 +268,8 @@ Notes:
   `functions`/`backend` pair is replaced by the always-reporting aggregate; enforcement
   remains unavailable as noted above.
 
-**Done when** a pull request that breaks a migration, an RLS test, a missing German
-string or the formatting is blocked.
+**Done when** a pull request that breaks a migration, an RLS test, a missing DE/EN/FR/ES
+message, an incomplete native permission prompt or the formatting is blocked.
 
 ---
 
@@ -500,10 +501,10 @@ keys, and the restore drill has restored a nightly dump once. *(Restore drill fi
 > 4. Pairing: built. The code enrolment stays for one release.
 > 5. Getting started and deferred PIN: built.
 > 6. Leaving: built (leave, delete with 14 days to restore, purge job, account deletion, second-factor reset, export). Since 2026-10-19 deleting a family is immediate and final, with a second typed step.
-> 7. Localised mail: built, through the send-email hook and Scaleway Transactional Email when configured; the bilingual GoTrue template remains the fallback.
+> 7. Single-language mail: built, through the send-email hook and Scaleway Transactional Email when configured, with same-language SMTP templates as fallback; language selected at installation (`MAIL_LANGUAGE`, default German) and changeable without key rotation. The earlier bilingual fallback is superseded by [ADR-010's 2026-10-19 amendment](adr/ADR-010-flutter-and-self-hosted-supabase.md#amendment-2026-10-19-four-application-languages-and-one-email-language).
 > 7a. Any server, chosen in the app: built (the server choice, the demo, discovery and compatibility, the self-hosting kit), and since 2026-10-15 the server in the fragment of invitation and pairing links.
 > 8. Tests: the pgTAP suites and the Dart tests are built with the features. Since 2026-10-15 the journeys J1–J3 are written: `app/test/integration/onboarding_integration_test.dart` drives the repositories against a throwaway stack (the email code read from Mailpit, founder codes planted by `supabase/seed.sql`) and runs in CI's `backend` job, and `app/test/journeys/` drives the real screens with fakes and asserts the screen counts of NFR-17 on every PR. Still open: the timings (90 s, 60 s, 30 s) on the release checklist.
-> 9. User documentation: `docs/guide/setup.md` and its screenshots rewritten (both languages).
+> 9. User documentation: `docs/guide/setup.md` and its screenshots rewritten (both guide languages: DE/EN; FR/ES app screens are not docs screenshots).
 >
 > **Next:** step 10, then M1.6. Gaps found in the journeys after this step was built are step 10's slices 4 (servers without mail), 7 (loose ends) and 10 (retiring the M0.1 paths).
 >
@@ -549,10 +550,13 @@ Order chosen so that each slice is usable on its own:
 6. **Leaving.** `api.account_leave`, `api.household_delete/_restore` and the 14-day purge
    job (`pg_cron`), the `account-delete` Edge Function (Admin API), `guardian_reset_mfa`,
    data export.
-7. **Localised mail.** The send-email hook in `supabase/functions/` with the message files
-   in `_shared/`, sending through the operator's provider (Scaleway TEM's HTTP API
-   recommended), on the compose stack (which runs Edge Functions since A11 was fixed). A bilingual GoTrue
-   template over SMTP remains the fallback for self-hosted stacks without the hook.
+7. **Single-language mail.** The send-email hook in `supabase/functions/` with the DE/EN/FR/ES
+   message files in `_shared/`, sending through the operator's provider (Scaleway TEM's
+   HTTP API recommended), on the compose stack (which runs Edge Functions since A11 was fixed).
+   SMTP templates come from the same catalogues, in `supabase/templates/{de,en,fr,es}/`
+   with a monolingual German root fallback, selected by `MAIL_LANGUAGE`. Installation
+   (`--language`), hosted workflow input and language-change commands all preserve selection
+   and keys; see [10](10-deployment-and-ops.md#email-setup).
 7a. **Any server, chosen in the app** ([ADR-018](adr/ADR-018-self-hosted-only.md), replacing
    ADR-015's two flavours; [20](20-onboarding.md#choosing-the-server)):
    - store builds without a default backend; S0 before the front door (QR code, typed
@@ -657,7 +661,7 @@ languages. A slice that changes the app–server contract raises `api_version`.
      with a new password. It uses the service role and acts only on that profile's Auth user,
      so it joins the list of service-role functions in `CLAUDE.md`.
    - Docs: `docs/server` (index and extras) and [20](20-onboarding.md#choosing-the-server)
-     corrected, both languages.
+     corrected in both guide languages (DE/EN), with no expansion of that matrix to FR/ES.
    - Tests: Deno tests for the discovery flag; pgTAP for the reset code (single use,
      expiry, guardian only, cross-household); the J1 integration test once more on a stack
      with autoconfirm.

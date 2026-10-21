@@ -1,6 +1,11 @@
 import { assert, assertEquals } from "jsr:@std/assert@1.0.13";
 import type { EventRow } from "./occurrences.ts";
-import type { ExceptionRow, LessonRow, PeriodRow, SubjectRow } from "./school.ts";
+import type {
+  ExceptionRow,
+  LessonRow,
+  PeriodRow,
+  SubjectRow,
+} from "./school.ts";
 import {
   answerChoreDone,
   answerChorePick,
@@ -41,8 +46,20 @@ const members: MemberRow[] = [
   member("paul", "Paul", "member", "child"),
 ];
 
-function member(id: string, name: string, role: "guardian" | "member", kind: "adult" | "child"): MemberRow {
-  return { id, display_name: name, role, kind, default_presence_state: null, default_presence_label: null };
+function member(
+  id: string,
+  name: string,
+  role: "guardian" | "member",
+  kind: "adult" | "child",
+): MemberRow {
+  return {
+    id,
+    display_name: name,
+    role,
+    kind,
+    default_presence_state: null,
+    default_presence_label: null,
+  };
 }
 
 function event(id: string, extra: Partial<EventRow>): EventRow {
@@ -70,7 +87,12 @@ function event(id: string, extra: Partial<EventRow>): EventRow {
   };
 }
 
-function task(id: string, title: string, assigned: string | null, points = 2): TaskRow {
+function task(
+  id: string,
+  title: string,
+  assigned: string | null,
+  points = 2,
+): TaskRow {
   return {
     id,
     title,
@@ -85,8 +107,19 @@ function task(id: string, title: string, assigned: string | null, points = 2): T
 
 function ctx(extra: Partial<ShortcutContext> = {}): ShortcutContext {
   return {
-    holder: { profile_id: "thomas", display_name: "Thomas", role: "guardian", kind: "adult" },
-    household: { name: "Huser", timezone: "Europe/Berlin", locale: "de-DE", today: TODAY, region: null },
+    holder: {
+      profile_id: "thomas",
+      display_name: "Thomas",
+      role: "guardian",
+      kind: "adult",
+    },
+    household: {
+      name: "Huser",
+      timezone: "Europe/Berlin",
+      locale: "de-DE",
+      today: TODAY,
+      region: null,
+    },
     window: { from: TODAY, to: TODAY },
     members,
     points: 0,
@@ -103,11 +136,26 @@ Deno.test("shopping: amounts with a unit become the quantity, bare numbers the c
     { name: "Milch", quantity: "2 l" },
     { name: "Eier" },
   ]);
-  assertEquals(parseShoppingText("3 Äpfel, Brot"), [{ name: "Äpfel", count: 3 }, { name: "Brot" }]);
-  assertEquals(parseShoppingText("zwei Gurken"), [{ name: "Gurken", count: 2 }]);
-  assertEquals(parseShoppingText("500g Mehl"), [{ name: "Mehl", quantity: "500 g" }]);
-  assertEquals(parseShoppingText("1,5 kg Kartoffeln"), [{ name: "Kartoffeln", quantity: "1,5 kg" }]);
-  assertEquals(parseShoppingText("eine Packung Reis"), [{ name: "Reis", quantity: "1 Packung" }]);
+  assertEquals(parseShoppingText("3 Äpfel, Brot"), [
+    { name: "Äpfel", count: 3 },
+    { name: "Brot" },
+  ]);
+  assertEquals(parseShoppingText("zwei Gurken"), [{
+    name: "Gurken",
+    count: 2,
+  }]);
+  assertEquals(parseShoppingText("500g Mehl"), [{
+    name: "Mehl",
+    quantity: "500 g",
+  }]);
+  assertEquals(parseShoppingText("1,5 kg Kartoffeln"), [{
+    name: "Kartoffeln",
+    quantity: "1,5 kg",
+  }]);
+  assertEquals(parseShoppingText("eine Packung Reis"), [{
+    name: "Reis",
+    quantity: "1 Packung",
+  }]);
 });
 
 Deno.test("shopping: fillers, punctuation and English", () => {
@@ -116,8 +164,13 @@ Deno.test("shopping: fillers, punctuation and English", () => {
     { name: "Eggs", quantity: "1 dozen" },
     { name: "Milk" },
   ]);
-  assertEquals(parseShoppingText("2 cans of tomatoes"), [{ name: "Tomatoes", quantity: "2 cans" }]);
-  assertEquals(parseShoppingText("Milch & Brot + Käse"), [{ name: "Milch" }, { name: "Brot" }, {
+  assertEquals(parseShoppingText("2 cans of tomatoes"), [{
+    name: "Tomatoes",
+    quantity: "2 cans",
+  }]);
+  assertEquals(parseShoppingText("Milch & Brot + Käse"), [{ name: "Milch" }, {
+    name: "Brot",
+  }, {
     name: "Käse",
   }]);
 });
@@ -145,18 +198,86 @@ Deno.test("shopping: the answer names what was filed, and the list when not the 
       { id: "2", name: "Äpfel", merged: true, count: 3 },
     ],
   };
-  assertEquals(answerShopping(result, [], true, DE).text, "Milch und Äpfel (3×) sind auf der Liste.");
   assertEquals(
-    answerShopping({ ...result, list: "Baumarkt", items: [result.items[0]] }, [], false, DE).text,
+    answerShopping(result, [], true, DE).text,
+    "Milch und Äpfel (3×) sind auf der Liste.",
+  );
+  assertEquals(
+    answerShopping(
+      { ...result, list: "Baumarkt", items: [result.items[0]] },
+      [],
+      false,
+      DE,
+    ).text,
     "Milch ist auf der Liste „Baumarkt“.",
   );
-  assertEquals(answerShopping(result, [], true, EN).text, "Milch and Äpfel (3×) are on the list.");
+  assertEquals(
+    answerShopping(result, [], true, EN).text,
+    "Milch and Äpfel (3×) are on the list.",
+  );
   // A replay carries no items: the sentence is built from what was sent.
   assertEquals(
-    answerShopping({ status: "duplicate", list: "Supermarkt", locale: "de-DE" }, [{ name: "Brot" }], true, DE)
+    answerShopping(
+      { status: "duplicate", list: "Supermarkt", locale: "de-DE" },
+      [{ name: "Brot" }],
+      true,
+      DE,
+    )
       .text,
     "Brot ist auf der Liste.",
   );
+});
+
+Deno.test("shortcuts understand French and Spanish dictated shopping and days", () => {
+  assertEquals(parseShoppingText("deux litres de lait et trois pommes"), [
+    { name: "Lait", quantity: "2 l" },
+    { name: "Pommes", count: 3 },
+  ]);
+  assertEquals(
+    parseShoppingText("dos litros de leche y una docena de huevos"),
+    [
+      { name: "Leche", quantity: "2 l" },
+      { name: "Huevos", quantity: "1 docena" },
+    ],
+  );
+  for (const text of ["aujourd’hui", "aujourd'hui", "hoy"]) {
+    assertEquals(parseDay(text), { kind: "offset", days: 0 });
+  }
+  for (const text of ["demain", "mañana"]) {
+    assertEquals(parseDay(text), { kind: "offset", days: 1 });
+  }
+  for (
+    const text of [
+      "après-demain",
+      "pasado mañana",
+      "¿Tiene Mia pasado mañana deporte?",
+    ]
+  ) {
+    assertEquals(parseDay(text), { kind: "offset", days: 2 });
+  }
+  const fr = [
+    "lundi",
+    "mardi",
+    "mercredi",
+    "jeudi",
+    "vendredi",
+    "samedi",
+    "dimanche",
+  ];
+  const es = [
+    "lunes",
+    "martes",
+    "miércoles",
+    "jueves",
+    "viernes",
+    "sábado",
+    "domingo",
+  ];
+  for (const weekdays of [fr, es]) {
+    weekdays.forEach((day, i) =>
+      assertEquals(parseDay(day), { kind: "weekday", weekday: i + 1 })
+    );
+  }
 });
 
 // ── days and names ───────────────────────────────────────────────────────────────
@@ -174,12 +295,27 @@ Deno.test("days: words, weekdays and dates, in either language", () => {
 });
 
 Deno.test("days: a weekday is the next one, today included", () => {
-  assertEquals(resolveDay({ kind: "weekday", weekday: 4 }, TODAY), "2026-10-15");
-  assertEquals(resolveDay({ kind: "weekday", weekday: 5 }, TODAY), "2026-10-16");
-  assertEquals(resolveDay({ kind: "weekday", weekday: 1 }, TODAY), "2026-10-19");
-  assertEquals(windowFor({ kind: "weekday", weekday: 1 }), { from: null, days: 7 });
+  assertEquals(
+    resolveDay({ kind: "weekday", weekday: 4 }, TODAY),
+    "2026-10-15",
+  );
+  assertEquals(
+    resolveDay({ kind: "weekday", weekday: 5 }, TODAY),
+    "2026-10-16",
+  );
+  assertEquals(
+    resolveDay({ kind: "weekday", weekday: 1 }, TODAY),
+    "2026-10-19",
+  );
+  assertEquals(windowFor({ kind: "weekday", weekday: 1 }), {
+    from: null,
+    days: 7,
+  });
   assertEquals(windowFor({ kind: "offset", days: 1 }), { from: null, days: 2 });
-  assertEquals(windowFor({ kind: "date", date: "2026-11-01" }), { from: "2026-11-01", days: 1 });
+  assertEquals(windowFor({ kind: "date", date: "2026-11-01" }), {
+    from: "2026-11-01",
+    days: 1,
+  });
 });
 
 Deno.test("days: today, tomorrow, and a date written out", () => {
@@ -203,9 +339,110 @@ Deno.test("names: folded, by prefix when unique, or found in a question", () => 
 
 Deno.test("language: the parameter, then Accept-Language, then the household", () => {
   assertEquals(pickLang("en", "de-CH", "de-DE"), "en");
-  assertEquals(pickLang(undefined, "fr-FR, en-US;q=0.8", "de-DE"), "en");
+  assertEquals(pickLang(undefined, "fr-FR, en-US;q=0.8", "de-DE"), "fr");
   assertEquals(pickLang(undefined, null, "en-GB"), "en");
-  assertEquals(pickLang("xx", "fr", null), "de");
+  assertEquals(pickLang("xx", "it", null), "de");
+});
+
+Deno.test("language: four languages, regional tags, quality ordering and German fallback", () => {
+  assertEquals(pickLang(" ES-mx ", "fr", "de-DE"), "es");
+  assertEquals(pickLang(undefined, null, "fr-FR"), "fr");
+  assertEquals(pickLang(undefined, null, "es-ES"), "es");
+  assertEquals(
+    pickLang(undefined, "de;q=0.2, fr-CA;q=0.9, en;q=0.7", "es"),
+    "fr",
+  );
+  assertEquals(pickLang(undefined, "fr;q=0, es;q=0.5", "de"), "es");
+  assertEquals(pickLang(undefined, "fr;q=0.7, es;q=0.7", "de"), "fr");
+  assertEquals(
+    pickLang(undefined, "fr;q=invalid, es;q=1.1, en;q=0.6", "de"),
+    "en",
+  );
+  assertEquals(pickLang(undefined, "*;q=0.8, it;q=1", "es-ES"), "es");
+  assertEquals(pickLang(undefined, null, "it-IT"), "de");
+});
+
+Deno.test("French and Spanish shortcut catalogs render answers, errors and dates", () => {
+  const fr = messagesFor("fr");
+  const es = messagesFor("es");
+  assertEquals(fr.locale, "fr-FR");
+  assertEquals(es.locale, "es-ES");
+  assertEquals(answerPoints(ctx({ points: 1 }), fr).text, "Tu as 1 point.");
+  assertEquals(answerPoints(ctx({ points: 2 }), es).text, "Tienes 2 puntos.");
+  assertEquals(
+    answerDay(ctx(), TODAY, fr).text,
+    "Rien au calendrier aujourd’hui.",
+  );
+  assertEquals(
+    answerDay(ctx(), TODAY, es).text,
+    "No hay nada en el calendario hoy.",
+  );
+  assertEquals(
+    answerMeals(ctx(), TODAY, fr).text,
+    "Aucun repas prévu aujourd’hui pour le moment.",
+  );
+  assertEquals(
+    answerMeals(ctx(), TODAY, es).text,
+    "Todavía no hay ninguna comida prevista hoy.",
+  );
+  assertEquals(
+    fr.memberUnknown("X"),
+    "Personne dans la famille ne s’appelle « X ».",
+  );
+  assertEquals(es.memberUnknown("X"), "Nadie en la familia se llama «X».");
+  assertEquals(fr.joinList(["A", "B", "C"]), "A, B et C");
+  assertEquals(es.joinList(["A", "B", "C"]), "A, B y C");
+  assertEquals(whenOf("2026-10-19", TODAY, fr), "le lundi 19 octobre");
+  assertEquals(whenOf("2026-10-19", TODAY, es), "el lunes, 19 de octubre");
+  assertEquals(
+    fr.schoolDay("Mia", fr.tomorrow, "08:00", "13:00", ["Maths"]),
+    "Mia a école demain de 08:00 à 13:00 : Maths.",
+  );
+  assertEquals(
+    es.presenceAwayUntil("Mia", es.state.away, es.tomorrow, "18:00"),
+    "Mia está fuera y vuelve mañana a las 18:00.",
+  );
+});
+
+Deno.test("French and Spanish multi-day presence does not repeat date prepositions", () => {
+  const fr = messagesFor("fr");
+  const es = messagesFor("es");
+  assertEquals(
+    fr.presenceAwayDays(
+      "Mia",
+      fr.state.travel,
+      "vendredi 16 octobre",
+      "demain",
+    ),
+    "Mia est en déplacement jusqu’au vendredi 16 octobre et revient demain.",
+  );
+  assertEquals(
+    es.presenceAwayDays(
+      "Mia",
+      es.state.travel,
+      "viernes, 16 de octubre",
+      "mañana",
+    ),
+    "Mia está de viaje hasta el viernes, 16 de octubre y vuelve mañana.",
+  );
+  assertEquals(
+    fr.presenceAwayDays(
+      "Mia",
+      fr.state.travel,
+      "vendredi 16 octobre",
+      "le lundi 19 octobre",
+    ),
+    "Mia est en déplacement jusqu’au vendredi 16 octobre et revient le lundi 19 octobre.",
+  );
+  assertEquals(
+    es.presenceAwayDays(
+      "Mia",
+      es.state.travel,
+      "viernes, 16 de octubre",
+      "el lunes, 19 de octubre",
+    ),
+    "Mia está de viaje hasta el viernes, 16 de octubre y vuelve el lunes, 19 de octubre.",
+  );
 });
 
 // ── chores ───────────────────────────────────────────────────────────────────────
@@ -239,7 +476,12 @@ Deno.test("chores: a spoken title finds the task; a tie is not guessed", () => {
 
 Deno.test("chores: a member may claim an unassigned task; none open is said so", () => {
   const c = ctx({
-    holder: { profile_id: "paul", display_name: "Paul", role: "member", kind: "child" },
+    holder: {
+      profile_id: "paul",
+      display_name: "Paul",
+      role: "member",
+      kind: "child",
+    },
     tasks: [task("t4", "Müll rausbringen", null)],
   });
   const pick = pickChore(c, "Müll");
@@ -262,7 +504,11 @@ Deno.test("chores: done, credited or waiting for a guardian", () => {
     "Erledigt: Müll rausbringen. 2 Punkte dazu.",
   );
   assertEquals(
-    answerChoreDone({ ...done, points_credited: 0, requires_verification: true }, DE).text,
+    answerChoreDone({
+      ...done,
+      points_credited: 0,
+      requires_verification: true,
+    }, DE).text,
     "Erledigt: Müll rausbringen. Die Punkte gibt es, sobald es bestätigt ist.",
   );
   assertEquals(
@@ -273,7 +519,10 @@ Deno.test("chores: done, credited or waiting for a guardian", () => {
 
 Deno.test("points: singular and plural", () => {
   assertEquals(answerPoints(ctx({ points: 1 }), DE).text, "Du hast 1 Punkt.");
-  assertEquals(answerPoints(ctx({ points: 42 }), EN).text, "You have 42 points.");
+  assertEquals(
+    answerPoints(ctx({ points: 42 }), EN).text,
+    "You have 42 points.",
+  );
 });
 
 // ── the day ──────────────────────────────────────────────────────────────────────
@@ -286,7 +535,11 @@ Deno.test("today: appointments with their people, the meals and my tasks; presen
         ends_at: "2026-10-15T07:30:00Z",
         attendee_ids: ["emma"],
       }),
-      event("Elternabend", { is_all_day: true, start_date: TODAY, end_date: TODAY }),
+      event("Elternabend", {
+        is_all_day: true,
+        start_date: TODAY,
+        end_date: TODAY,
+      }),
       event("Schicht", {
         kind: "presence",
         presence_state: "working",
@@ -294,12 +547,24 @@ Deno.test("today: appointments with their people, the meals and my tasks; presen
         ends_at: "2026-10-15T12:00:00Z",
         attendee_ids: ["julia"],
       }),
-      event("Morgen", { starts_at: "2026-10-16T06:30:00Z", ends_at: "2026-10-16T07:30:00Z" }),
+      event("Morgen", {
+        starts_at: "2026-10-16T06:30:00Z",
+        ends_at: "2026-10-16T07:30:00Z",
+      }),
     ],
     overrides: [],
     external: [],
-    meals: [{ on_date: TODAY, slot: "dinner", title: "Spaghetti", cook_profile_id: "julia", at_time: null }],
-    tasks: [task("t1", "Spülmaschine ausräumen", "thomas"), task("t4", "Müll rausbringen", null)],
+    meals: [{
+      on_date: TODAY,
+      slot: "dinner",
+      title: "Spaghetti",
+      cook_profile_id: "julia",
+      at_time: null,
+    }],
+    tasks: [
+      task("t1", "Spülmaschine ausräumen", "thomas"),
+      task("t4", "Müll rausbringen", null),
+    ],
   });
   assertEquals(
     answerDay(c, TODAY, DE).text,
@@ -310,8 +575,14 @@ Deno.test("today: appointments with their people, the meals and my tasks; presen
     answerDay(ctx({ events: [], meals: [], tasks: [] }), TODAY, EN).text,
     "Nothing on the calendar today.",
   );
-  assertEquals(answerMeals(c, TODAY, DE).text, "Essen heute: Abendessen: Spaghetti. Julia kocht.");
-  assertEquals(answerMeals(ctx({ meals: [] }), "2026-10-16", DE).text, "Morgen ist noch kein Essen geplant.");
+  assertEquals(
+    answerMeals(c, TODAY, DE).text,
+    "Essen heute: Abendessen: Spaghetti. Julia kocht.",
+  );
+  assertEquals(
+    answerMeals(ctx({ meals: [] }), "2026-10-16", DE).text,
+    "Morgen ist noch kein Essen geplant.",
+  );
 });
 
 // ── school ───────────────────────────────────────────────────────────────────────
@@ -328,7 +599,12 @@ function period(index: number, starts: string, ends: string): PeriodRow {
   };
 }
 
-function subject(id: string, name: string, short: string, equipment: string | null = null): SubjectRow {
+function subject(
+  id: string,
+  name: string,
+  short: string,
+  equipment: string | null = null,
+): SubjectRow {
   return {
     id,
     name,
@@ -340,7 +616,12 @@ function subject(id: string, name: string, short: string, equipment: string | nu
   };
 }
 
-function lesson(id: string, weekday: number, periodIndex: number, subjectId: string): LessonRow {
+function lesson(
+  id: string,
+  weekday: number,
+  periodIndex: number,
+  subjectId: string,
+): LessonRow {
   return {
     id,
     timetable_id: "tt",
@@ -377,7 +658,11 @@ function schoolCtx(exceptions: ExceptionRow[] = []) {
         timezone: "Europe/Berlin",
         created_at: "2026-08-01T00:00:00Z",
       }],
-      periods: [period(1, "08:00", "08:45"), period(2, "08:50", "09:35"), period(3, "09:55", "10:40")],
+      periods: [
+        period(1, "08:00", "08:45"),
+        period(2, "08:50", "09:35"),
+        period(3, "09:55", "10:40"),
+      ],
       terms: [{
         id: "term",
         school_id: "s1",
@@ -401,7 +686,11 @@ function schoolCtx(exceptions: ExceptionRow[] = []) {
         source_ref: null,
         updated_at: "2026-08-01T00:00:00Z",
       }],
-      lessons: [lesson("l1", 5, 1, "d"), lesson("l2", 5, 2, "m"), lesson("l3", 5, 3, "sp")],
+      lessons: [
+        lesson("l1", 5, 1, "d"),
+        lesson("l2", 5, 2, "m"),
+        lesson("l3", 5, 3, "sp"),
+      ],
       exceptions,
       holidays: [],
       public_feed: [],
@@ -419,7 +708,13 @@ Deno.test("school: has Emma Sport tomorrow, and the day with what to pack", () =
     "Ja, Emma hat morgen Sport in der 3. Stunde (09:55–10:40).",
   );
   assertEquals(
-    answerSchool(c, emma, "2026-10-16", { name: "Latein", short_name: null }, DE).text,
+    answerSchool(
+      c,
+      emma,
+      "2026-10-16",
+      { name: "Latein", short_name: null },
+      DE,
+    ).text,
     "Nein, Emma hat morgen kein Latein.",
   );
   assertEquals(
@@ -544,7 +839,10 @@ Deno.test("presence: at work until a time; otherwise here, with the next trip", 
     answerPresence(c, members[0], NOW, DE).text,
     "Thomas ist laut Kalender da. Als Nächstes: auf Reise von Mittwoch, 21. Oktober bis Freitag, 23. Oktober.",
   );
-  assertEquals(answerPresence(c, members[2], NOW, EN).text, "Emma is here, according to the calendar.");
+  assertEquals(
+    answerPresence(c, members[2], NOW, EN).text,
+    "Emma is here, according to the calendar.",
+  );
 });
 
 Deno.test("presence: an all-day shift is today, not until the next free day", () => {
@@ -558,7 +856,18 @@ Deno.test("presence: an all-day shift is today, not until the next free day", ()
       attendee_ids: ["julia"],
     })
   );
-  const c = ctx({ window: { from: TODAY, to: "2026-11-13" }, events: shifts, overrides: [], external: [] });
-  assertEquals(answerPresence(c, members[1], NOW, DE).text, "Julia ist heute bei der Arbeit.");
-  assertEquals(answerPresence(c, members[1], NOW, EN).text, "Julia is at work today.");
+  const c = ctx({
+    window: { from: TODAY, to: "2026-11-13" },
+    events: shifts,
+    overrides: [],
+    external: [],
+  });
+  assertEquals(
+    answerPresence(c, members[1], NOW, DE).text,
+    "Julia ist heute bei der Arbeit.",
+  );
+  assertEquals(
+    answerPresence(c, members[1], NOW, EN).text,
+    "Julia is at work today.",
+  );
 });

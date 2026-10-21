@@ -34,10 +34,13 @@ import {
 } from "./school.ts";
 import { SHORTCUTS_DE } from "./shortcuts_de.ts";
 import { SHORTCUTS_EN } from "./shortcuts_en.ts";
+import { SHORTCUTS_FR } from "./shortcuts_fr.ts";
+import { SHORTCUTS_ES } from "./shortcuts_es.ts";
 
 // ── the context (api.shortcut_context) ────────────────────────────────────────────
 
-export type Lang = "de" | "en";
+import type { Lang } from "./locale.ts";
+export { type Lang, pickLang } from "./locale.ts";
 
 export type MemberRow = {
   id: string;
@@ -167,47 +170,53 @@ export interface ShortcutMessages {
   noTimetable(name: string): string;
   weekend(name: string, when: string): string;
   holiday(name: string, when: string, holiday: string | null): string;
-  schoolDay(name: string, when: string, from: string, to: string, subjects: string[]): string;
+  schoolDay(
+    name: string,
+    when: string,
+    from: string,
+    to: string,
+    subjects: string[],
+  ): string;
   noLessons(name: string, when: string): string;
   equipment(items: string[]): string;
-  hasSubject(name: string, when: string, subject: string, period: number | null, time: string): string;
+  hasSubject(
+    name: string,
+    when: string,
+    subject: string,
+    period: number | null,
+    time: string,
+  ): string;
   hasNotSubject(name: string, when: string, subject: string): string;
   subjectCancelled(name: string, when: string, subject: string): string;
 
   state: Record<PresenceState, string>;
   presenceHere(name: string): string;
   /** Away for whole days: the last day away and the day of return, both written out. */
-  presenceAwayDays(name: string, state: string, lastDay: string, back: string): string;
+  presenceAwayDays(
+    name: string,
+    state: string,
+    lastDay: string,
+    back: string,
+  ): string;
   /** Away until a time: `when` is today/tomorrow/on…, `time` "18:00". */
-  presenceAwayUntil(name: string, state: string, when: string, time: string): string;
+  presenceAwayUntil(
+    name: string,
+    state: string,
+    when: string,
+    time: string,
+  ): string;
   /** Away for the whole of today, home in the evening (an all-day shift). */
   presenceToday(name: string, state: string): string;
   presenceNext(state: string, from: string, to: string): string;
 }
 
 export function messagesFor(lang: Lang): ShortcutMessages {
-  return lang === "en" ? SHORTCUTS_EN : SHORTCUTS_DE;
-}
-
-/**
- * The language of the answer: an explicit `lang` ("de", "en-GB"), else the first supported
- * language of Accept-Language, else the household's locale, else German (NFR-14).
- */
-export function pickLang(
-  param: unknown,
-  acceptLanguage: string | null,
-  householdLocale: string | null,
-): Lang {
-  const of = (tag: string): Lang | null => {
-    const primary = tag.trim().toLowerCase().split(/[-_;]/)[0];
-    return primary === "de" || primary === "en" ? primary : null;
-  };
-  if (typeof param === "string" && of(param)) return of(param)!;
-  for (const part of (acceptLanguage ?? "").split(",")) {
-    const lang = of(part);
-    if (lang) return lang;
-  }
-  return (householdLocale && of(householdLocale)) || "de";
+  return ({
+    de: SHORTCUTS_DE,
+    en: SHORTCUTS_EN,
+    fr: SHORTCUTS_FR,
+    es: SHORTCUTS_ES,
+  })[lang];
 }
 
 // ── text helpers ──────────────────────────────────────────────────────────────────
@@ -269,6 +278,31 @@ const NUMBER_WORDS: Record<string, number> = {
   nine: 9,
   ten: 10,
   twelve: 12,
+  un: 1,
+  une: 1,
+  deux: 2,
+  trois: 3,
+  quatre: 4,
+  cinq: 5,
+  sept: 7,
+  huit: 8,
+  neuf: 9,
+  dix: 10,
+  onze: 11,
+  douze: 12,
+  uno: 1,
+  una: 1,
+  dos: 2,
+  tres: 3,
+  cuatro: 4,
+  cinco: 5,
+  seis: 6,
+  siete: 7,
+  ocho: 8,
+  nueve: 9,
+  diez: 10,
+  once: 11,
+  doce: 12,
 };
 
 // Spoken units → how they are written on the list. Folded keys.
@@ -329,10 +363,42 @@ const UNITS: Record<string, string> = {
   bags: "bags",
   dozen: "dozen",
   dutzend: "Dutzend",
+  litro: "l",
+  litros: "l",
+  grammes: "g",
+  gramo: "g",
+  gramos: "g",
+  kilogramme: "kg",
+  kilogrammes: "kg",
+  kilogramo: "kg",
+  kilogramos: "kg",
+  paquet: "paquet",
+  paquets: "paquets",
+  paquete: "paquete",
+  paquetes: "paquetes",
+  boite: "boîte",
+  boites: "boîtes",
+  lata: "lata",
+  latas: "latas",
+  bouteille: "bouteille",
+  bouteilles: "bouteilles",
+  botella: "botella",
+  botellas: "botellas",
+  douzaine: "douzaine",
+  docena: "docena",
 };
 
 // Words that add nothing when they open an item ("Bitte Milch", "noch Eier", "some milk").
-const FILLERS = new Set(["bitte", "noch", "auch", "etwas", "some", "please", "more", "also"]);
+const FILLERS = new Set([
+  "bitte",
+  "noch",
+  "auch",
+  "etwas",
+  "some",
+  "please",
+  "more",
+  "also",
+]);
 
 /** The most items one call adds (api.shortcut_shopping_add takes 20). */
 export const MAX_ITEMS = 20;
@@ -346,7 +412,9 @@ export const MAX_ITEMS = 20;
  */
 export function parseShoppingText(text: string): ShoppingItem[] {
   const parts = text
-    .split(/(?<!\d),|,(?!\d)|[;\n]+|\s+(?:und|and|sowie)\s+|\s*&\s*|\s*\+\s*/i)
+    .split(
+      /(?<!\d),|,(?!\d)|[;\n]+|\s+(?:und|and|sowie|et|y)\s+|\s*&\s*|\s*\+\s*/i,
+    )
     .map((p) => p.trim().replace(/[.!?]+$/, "").trim())
     .filter((p) => p !== "");
   const items: ShoppingItem[] = [];
@@ -367,7 +435,11 @@ function parseItem(part: string): ShoppingItem | null {
   // "2l Milch", "500g Mehl": the unit glued to the number.
   const glued = /^(\d+(?:[.,]\d+)?)([a-zA-Z]+)$/.exec(first);
   if (glued && fold(glued[2]) in UNITS) {
-    return finish(tokens.slice(1), `${glued[1]} ${UNITS[fold(glued[2])]}`, null);
+    return finish(
+      tokens.slice(1),
+      `${glued[1]} ${UNITS[fold(glued[2])]}`,
+      null,
+    );
   }
 
   // "2", "2,5", "2x", "zwei", "a".
@@ -383,11 +455,15 @@ function parseItem(part: string): ShoppingItem | null {
   if (rest.length > 1 && fold(rest[0]) in UNITS) {
     const unit = UNITS[fold(rest[0])];
     const name = rest.slice(1);
-    if (name.length > 1 && ["of", "von"].includes(fold(name[0]))) name.shift();
+    if (name.length > 1 && ["of", "von", "de"].includes(fold(name[0]))) {
+      name.shift();
+    }
     return finish(name, `${amount} ${unit}`, null);
   }
   const n = Number(amount.replace(",", "."));
-  return Number.isInteger(n) && n >= 1 && n <= 99 ? finish(rest, null, n) : finish(rest, amount, null);
+  return Number.isInteger(n) && n >= 1 && n <= 99
+    ? finish(rest, null, n)
+    : finish(rest, amount, null);
 }
 
 function finish(
@@ -419,6 +495,9 @@ const DAY_WORDS: Record<string, DaySpec> = {
   morgen: { kind: "offset", days: 1 },
   tomorrow: { kind: "offset", days: 1 },
   uebermorgen: { kind: "offset", days: 2 },
+  demain: { kind: "offset", days: 1 },
+  hoy: { kind: "offset", days: 0 },
+  manana: { kind: "offset", days: 1 },
 };
 
 const WEEKDAYS: Record<string, number> = {
@@ -437,6 +516,20 @@ const WEEKDAYS: Record<string, number> = {
   friday: 5,
   saturday: 6,
   sunday: 7,
+  lundi: 1,
+  mardi: 2,
+  mercredi: 3,
+  jeudi: 4,
+  vendredi: 5,
+  samedi: 6,
+  dimanche: 7,
+  lunes: 1,
+  martes: 2,
+  miercoles: 3,
+  jueves: 4,
+  viernes: 5,
+  sabado: 6,
+  domingo: 7,
 };
 
 /**
@@ -447,11 +540,21 @@ const WEEKDAYS: Record<string, number> = {
 export function parseDay(text: string): DaySpec | null {
   const trimmed = text.trim();
   if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
-    const ok = new Date(`${trimmed}T00:00:00Z`).toISOString().slice(0, 10) === trimmed;
+    const ok =
+      new Date(`${trimmed}T00:00:00Z`).toISOString().slice(0, 10) === trimmed;
     return ok ? { kind: "date", date: trimmed } : null;
   }
   const ws = words(trimmed);
-  if (containsWords(ws, ["day", "after", "tomorrow"])) return { kind: "offset", days: 2 };
+  if (containsWords(ws, ["day", "after", "tomorrow"])) {
+    return { kind: "offset", days: 2 };
+  }
+  if (
+    containsWords(ws, ["apres", "demain"]) ||
+    containsWords(ws, ["pasado", "manana"])
+  ) {
+    return { kind: "offset", days: 2 };
+  }
+  if (containsWords(ws, ["aujourd", "hui"])) return { kind: "offset", days: 0 };
   for (const w of ws) {
     if (w in DAY_WORDS) return DAY_WORDS[w];
     if (w in WEEKDAYS) return { kind: "weekday", weekday: WEEKDAYS[w] };
@@ -460,7 +563,9 @@ export function parseDay(text: string): DaySpec | null {
 }
 
 /** The window the context must load for a day: [from (null = today), days]. */
-export function windowFor(spec: DaySpec): { from: string | null; days: number } {
+export function windowFor(
+  spec: DaySpec,
+): { from: string | null; days: number } {
   switch (spec.kind) {
     case "offset":
       return { from: null, days: spec.days + 1 };
@@ -490,7 +595,11 @@ export function resolveDay(spec: DaySpec, today: string): string {
 }
 
 /** "heute", "morgen", "übermorgen" or "am Freitag, 18. Oktober". */
-export function whenOf(date: string, today: string, m: ShortcutMessages): string {
+export function whenOf(
+  date: string,
+  today: string,
+  m: ShortcutMessages,
+): string {
   if (date === today) return m.today;
   if (date === addDays(today, 1)) return m.tomorrow;
   if (date === addDays(today, 2)) return m.dayAfterTomorrow;
@@ -513,7 +622,10 @@ export function longDate(date: string, m: ShortcutMessages): string {
  * The member a name means: the same name folded, else the only one it starts, else null.
  * "emma" finds Emma, "Em" finds her when nobody else starts so.
  */
-export function findMember(members: MemberRow[], name: string): MemberRow | null {
+export function findMember(
+  members: MemberRow[],
+  name: string,
+): MemberRow | null {
   const q = fold(name.trim());
   if (q === "") return null;
   const exact = members.filter((m) => fold(m.display_name) === q);
@@ -523,11 +635,16 @@ export function findMember(members: MemberRow[], name: string): MemberRow | null
 }
 
 /** The member a question names as a word ("Hat Mia morgen Sport?"); the longest name wins. */
-export function memberInText(members: MemberRow[], text: string): MemberRow | null {
+export function memberInText(
+  members: MemberRow[],
+  text: string,
+): MemberRow | null {
   const ws = words(text);
   const found = members
     .filter((m) => containsWords(ws, words(m.display_name)))
-    .sort((a, b) => words(b.display_name).length - words(a.display_name).length);
+    .sort((a, b) =>
+      words(b.display_name).length - words(a.display_name).length
+    );
   return found[0] ?? null;
 }
 
@@ -552,11 +669,16 @@ export function answerShopping(
   m: ShortcutMessages,
 ): Answer {
   // A replay has no items of its own; the sentence is the one the first call gave.
-  const names = (result.items ?? sent.map((s) => ({ name: s.name, count: s.count ?? 1 })))
-    .map((i) => (i.count > 1 ? `${i.name} (${i.count}×)` : i.name));
+  const names =
+    (result.items ?? sent.map((s) => ({ name: s.name, count: s.count ?? 1 })))
+      .map((i) => (i.count > 1 ? `${i.name} (${i.count}×)` : i.name));
   return {
     text: m.shoppingAdded(names, defaultList ? null : result.list),
-    data: { list: result.list, status: result.status, items: result.items ?? [] },
+    data: {
+      list: result.list,
+      status: result.status,
+      items: result.items ?? [],
+    },
   };
 }
 
@@ -580,10 +702,18 @@ function onDay(o: Occurrence, date: string): boolean {
 }
 
 /** "08:00 Zahnarzt (Emma)", "Elternabend (ganztägig)". Whole-family events name nobody. */
-function eventLine(ctx: ShortcutContext, o: Occurrence, date: string, m: ShortcutMessages): string {
-  const who = o.attendee_ids.length > 0 && o.attendee_ids.length < ctx.members.length
-    ? o.attendee_ids.map((id) => nameOf(ctx, id)).filter((n): n is string => n !== null)
-    : [];
+function eventLine(
+  ctx: ShortcutContext,
+  o: Occurrence,
+  date: string,
+  m: ShortcutMessages,
+): string {
+  const who =
+    o.attendee_ids.length > 0 && o.attendee_ids.length < ctx.members.length
+      ? o.attendee_ids.map((id) => nameOf(ctx, id)).filter((n): n is string =>
+        n !== null
+      )
+      : [];
   const people = who.length > 0 ? ` (${m.joinList(who)})` : "";
   if (o.all_day) return `${o.title}${people} (${m.allDay})`;
   // A timed event that began on an earlier day shows no start time.
@@ -607,21 +737,34 @@ function mealsOn(ctx: ShortcutContext, date: string): MealRow[] {
 /** The holder's own open chores of a day (the unassigned ones are not "yours" yet). */
 function choresOn(ctx: ShortcutContext, date: string): TaskRow[] {
   return (ctx.tasks ?? []).filter((t) =>
-    t.assigned_profile_id === ctx.holder.profile_id && t.opens_on <= date && t.closes_on >= date
+    t.assigned_profile_id === ctx.holder.profile_id && t.opens_on <= date &&
+    t.closes_on >= date
   );
 }
 
 /** "What's on today": the appointments, the meals and the holder's chores of one day. */
-export function answerDay(ctx: ShortcutContext, date: string, m: ShortcutMessages): Answer {
+export function answerDay(
+  ctx: ShortcutContext,
+  date: string,
+  m: ShortcutMessages,
+): Answer {
   const when = whenOf(date, ctx.household.today, m);
-  const events = occurrencesOf(ctx).filter((o) => o.kind === "appointment" && onDay(o, date));
+  const events = occurrencesOf(ctx).filter((o) =>
+    o.kind === "appointment" && onDay(o, date)
+  );
   const meals = mealsOn(ctx, date);
   const chores = choresOn(ctx, date);
   const sentences = [
-    events.length === 0 ? m.noEvents(when) : m.events(when, events.map((o) => eventLine(ctx, o, date, m))),
+    events.length === 0
+      ? m.noEvents(when)
+      : m.events(when, events.map((o) => eventLine(ctx, o, date, m))),
   ];
-  if (meals.length > 0) sentences.push(m.meals(when, meals.map((x) => mealLine(x, m))));
-  if (chores.length > 0) sentences.push(m.yourChores(chores.map((t) => t.title)));
+  if (meals.length > 0) {
+    sentences.push(m.meals(when, meals.map((x) => mealLine(x, m))));
+  }
+  if (chores.length > 0) {
+    sentences.push(m.yourChores(chores.map((t) => t.title)));
+  }
   return {
     text: sentences.join(" "),
     data: {
@@ -631,21 +774,43 @@ export function answerDay(ctx: ShortcutContext, date: string, m: ShortcutMessage
         all_day: o.all_day,
         starts: o.local_starts,
         ends: o.local_ends,
-        members: o.attendee_ids.map((id) => nameOf(ctx, id)).filter((n) => n !== null),
+        members: o.attendee_ids.map((id) => nameOf(ctx, id)).filter((n) =>
+          n !== null
+        ),
       })),
-      meals: meals.map((x) => ({ slot: x.slot, title: x.title, cook: nameOf(ctx, x.cook_profile_id) })),
-      chores: chores.map((t) => ({ id: t.id, title: t.title, points: t.points })),
+      meals: meals.map((x) => ({
+        slot: x.slot,
+        title: x.title,
+        cook: nameOf(ctx, x.cook_profile_id),
+      })),
+      chores: chores.map((t) => ({
+        id: t.id,
+        title: t.title,
+        points: t.points,
+      })),
     },
   };
 }
 
 /** "What's for dinner": the meals of one day, with who cooks. */
-export function answerMeals(ctx: ShortcutContext, date: string, m: ShortcutMessages): Answer {
+export function answerMeals(
+  ctx: ShortcutContext,
+  date: string,
+  m: ShortcutMessages,
+): Answer {
   const when = whenOf(date, ctx.household.today, m);
   const meals = mealsOn(ctx, date);
-  if (meals.length === 0) return { text: m.noMeals(when), data: { date, meals: [] } };
+  if (meals.length === 0) {
+    return { text: m.noMeals(when), data: { date, meals: [] } };
+  }
   const sentences = [m.meals(when, meals.map((x) => mealLine(x, m)))];
-  const cooks = [...new Set(meals.map((x) => nameOf(ctx, x.cook_profile_id)).filter((n) => n !== null))];
+  const cooks = [
+    ...new Set(
+      meals.map((x) => nameOf(ctx, x.cook_profile_id)).filter((n) =>
+        n !== null
+      ),
+    ),
+  ];
   for (const cook of cooks) sentences.push(m.cooks(cook!));
   return {
     text: sentences.join(" "),
@@ -661,7 +826,10 @@ export function answerMeals(ctx: ShortcutContext, date: string, m: ShortcutMessa
   };
 }
 
-export function answerPoints(ctx: ShortcutContext, m: ShortcutMessages): Answer {
+export function answerPoints(
+  ctx: ShortcutContext,
+  m: ShortcutMessages,
+): Answer {
   return {
     text: m.points(ctx.points),
     data: { member: ctx.holder.display_name, points: ctx.points },
@@ -716,15 +884,24 @@ export function pickChore(ctx: ShortcutContext, text: string): ChorePick {
     .sort((a, b) => b.hits - a.hits);
   if (scored.length === 0) return { kind: "no_match", open };
   const best = scored.filter((x) => x.hits === scored[0].hits).map((x) => x.t);
-  return best.length === 1 ? { kind: "task", task: best[0] } : { kind: "ambiguous", candidates: best };
+  return best.length === 1
+    ? { kind: "task", task: best[0] }
+    : { kind: "ambiguous", candidates: best };
 }
 
-export function answerChorePick(pick: ChorePick, text: string, m: ShortcutMessages): Answer {
+export function answerChorePick(
+  pick: ChorePick,
+  text: string,
+  m: ShortcutMessages,
+): Answer {
   switch (pick.kind) {
     case "none_open":
       return { text: m.choreNoneOpen, data: { open: [] } };
     case "list":
-      return { text: m.choreOpen(pick.open.map((t) => t.title)), data: { open: pick.open.map(choreData) } };
+      return {
+        text: m.choreOpen(pick.open.map((t) => t.title)),
+        data: { open: pick.open.map(choreData) },
+      };
     case "no_match":
       return {
         text: m.choreNoMatch(text.trim(), pick.open.map((t) => t.title)),
@@ -732,7 +909,10 @@ export function answerChorePick(pick: ChorePick, text: string, m: ShortcutMessag
       };
     case "ambiguous":
       return {
-        text: m.choreAmbiguous(text.trim(), pick.candidates.map((t) => t.title)),
+        text: m.choreAmbiguous(
+          text.trim(),
+          pick.candidates.map((t) => t.title),
+        ),
         data: { candidates: pick.candidates.map(choreData) },
       };
     case "task":
@@ -752,8 +932,12 @@ export type ChoreResult = {
   requires_verification: boolean;
 };
 
-export function answerChoreDone(result: ChoreResult, m: ShortcutMessages): Answer {
-  const text = result.requires_verification && result.status === "done" && result.points_credited === 0
+export function answerChoreDone(
+  result: ChoreResult,
+  m: ShortcutMessages,
+): Answer {
+  const text = result.requires_verification && result.status === "done" &&
+      result.points_credited === 0
     ? m.choreAwaitsCheck(result.title)
     : m.choreDone(result.title, result.points_credited);
   return { text, data: result as unknown as Record<string, unknown> };
@@ -774,7 +958,12 @@ export function schoolDataOf(ctx: ShortcutContext): SchoolData {
     exceptions: s.exceptions,
     holidays: [
       ...s.holidays,
-      ...publicHolidayRows(s.schools, s.public_feed, s.holidays, ctx.household.locale),
+      ...publicHolidayRows(
+        s.schools,
+        s.public_feed,
+        s.holidays,
+        ctx.household.locale,
+      ),
     ],
   };
 }
@@ -784,17 +973,26 @@ export function schoolDaysOf(ctx: ShortcutContext): SchoolDayJson[] {
 }
 
 /** The subject a question names ("Sport", "Mathe"), from the household's subjects. */
-export function subjectInText(subjects: SubjectRow[], text: string): SubjectRow | null {
+export function subjectInText(
+  subjects: SubjectRow[],
+  text: string,
+): SubjectRow | null {
   const ws = words(text);
   const named = subjects.filter((s) =>
-    containsWords(ws, words(s.name)) || (s.short_name !== null && containsWords(ws, words(s.short_name)))
+    containsWords(ws, words(s.name)) ||
+    (s.short_name !== null && containsWords(ws, words(s.short_name)))
   );
-  return named.sort((a, b) => words(b.name).length - words(a.name).length)[0] ?? null;
+  return named.sort((a, b) => words(b.name).length - words(a.name).length)[0] ??
+    null;
 }
 
-function lessonIs(lesson: LessonJson, subject: { name: string; short_name: string | null }): boolean {
+function lessonIs(
+  lesson: LessonJson,
+  subject: { name: string; short_name: string | null },
+): boolean {
   return fold(lesson.subject) === fold(subject.name) ||
-    (subject.short_name !== null && lesson.short !== null && fold(lesson.short) === fold(subject.short_name));
+    (subject.short_name !== null && lesson.short !== null &&
+      fold(lesson.short) === fold(subject.short_name));
 }
 
 /** Equipment of the lessons that take place, each once (the board's rule, week_board.dart). */
@@ -821,10 +1019,16 @@ export function answerSchool(
 ): Answer {
   const when = whenOf(date, ctx.household.today, m);
   const name = member.display_name;
-  const day = schoolDaysOf(ctx).find((d) => d.member_id === member.id && d.date === date);
+  const day = schoolDaysOf(ctx).find((d) =>
+    d.member_id === member.id && d.date === date
+  );
   const base = { member: name, date };
-  if (!day) return { text: m.noTimetable(name), data: { ...base, school: false } };
-  if (day.free === "weekend") return { text: m.weekend(name, when), data: { ...base, free: "weekend" } };
+  if (!day) {
+    return { text: m.noTimetable(name), data: { ...base, school: false } };
+  }
+  if (day.free === "weekend") {
+    return { text: m.weekend(name, when), data: { ...base, free: "weekend" } };
+  }
   if (day.free === "holiday") {
     return {
       text: m.holiday(name, when, day.holiday_name),
@@ -854,14 +1058,25 @@ export function answerSchool(
     if (held.length > 0) {
       const first = held[0];
       return {
-        text: m.hasSubject(name, when, subject.name, first.period, `${first.starts}–${first.ends}`),
+        text: m.hasSubject(
+          name,
+          when,
+          subject.name,
+          first.period,
+          `${first.starts}–${first.ends}`,
+        ),
         data: { ...data, subject: subject.name, has_subject: true },
       };
     }
     if (matching.length > 0) {
       return {
         text: m.subjectCancelled(name, when, subject.name),
-        data: { ...data, subject: subject.name, has_subject: false, cancelled: true },
+        data: {
+          ...data,
+          subject: subject.name,
+          has_subject: false,
+          cancelled: true,
+        },
       };
     }
     return {
@@ -904,14 +1119,20 @@ export function answerPresence(
   const name = member.display_name;
   const nowMs = now.getTime();
   const own = occurrencesOf(ctx).filter((o) =>
-    o.kind === "presence" && o.presence_state !== null && AWAY_STATES.has(o.presence_state) &&
+    o.kind === "presence" && o.presence_state !== null &&
+    AWAY_STATES.has(o.presence_state) &&
     o.attendee_ids.includes(member.id)
   );
-  const covers = (o: Occurrence, ms: number) => Date.parse(o.start) <= ms && ms < Date.parse(o.end);
+  const covers = (o: Occurrence, ms: number) =>
+    Date.parse(o.start) <= ms && ms < Date.parse(o.end);
   // A trip wins over a shift on the same day: it is the longer absence.
-  const current = own.find((o) => covers(o, nowMs) && OVERNIGHT_STATES.has(o.presence_state!)) ??
-    own.find((o) => covers(o, nowMs));
-  const stateOf = (o: Occurrence) => m.state[o.presence_state as PresenceState] ?? o.presence_state!;
+  const current =
+    own.find((o) =>
+      covers(o, nowMs) && OVERNIGHT_STATES.has(o.presence_state!)
+    ) ??
+      own.find((o) => covers(o, nowMs));
+  const stateOf = (o: Occurrence) =>
+    m.state[o.presence_state as PresenceState] ?? o.presence_state!;
 
   if (current && OVERNIGHT_STATES.has(current.presence_state!)) {
     // Join trips that follow without a gap: Tuesday's trip and Wednesday's day away are one absence.
@@ -919,7 +1140,8 @@ export function answerPresence(
     let last = current;
     for (;;) {
       const next = own.find((o) =>
-        o !== last && OVERNIGHT_STATES.has(o.presence_state!) && Date.parse(o.start) <= endMs &&
+        o !== last && OVERNIGHT_STATES.has(o.presence_state!) &&
+        Date.parse(o.start) <= endMs &&
         Date.parse(o.end) > endMs
       );
       if (!next) break;
@@ -950,23 +1172,36 @@ export function answerPresence(
     };
   }
   if (current) {
-    const data = { member: name, here: false, state: current.presence_state, until: current.end };
+    const data = {
+      member: name,
+      here: false,
+      state: current.presence_state,
+      until: current.end,
+    };
     return {
-      text: current.all_day ? m.presenceToday(name, stateOf(current)) : m.presenceAwayUntil(
-        name,
-        stateOf(current),
-        whenOf(current.local_end_date, today, m),
-        current.local_ends ?? "",
-      ),
+      text: current.all_day
+        ? m.presenceToday(name, stateOf(current))
+        : m.presenceAwayUntil(
+          name,
+          stateOf(current),
+          whenOf(current.local_end_date, today, m),
+          current.local_ends ?? "",
+        ),
       data,
     };
   }
 
   const sentences = [m.presenceHere(name)];
-  const next = own.find((o) => Date.parse(o.start) > nowMs && OVERNIGHT_STATES.has(o.presence_state!));
+  const next = own.find((o) =>
+    Date.parse(o.start) > nowMs && OVERNIGHT_STATES.has(o.presence_state!)
+  );
   if (next) {
     sentences.push(
-      m.presenceNext(stateOf(next), longDate(next.local_start_date, m), longDate(next.local_end_date, m)),
+      m.presenceNext(
+        stateOf(next),
+        longDate(next.local_start_date, m),
+        longDate(next.local_end_date, m),
+      ),
     );
   }
   return {
@@ -975,7 +1210,11 @@ export function answerPresence(
       member: name,
       here: true,
       next: next
-        ? { state: next.presence_state, from: next.local_start_date, to: next.local_end_date }
+        ? {
+          state: next.presence_state,
+          from: next.local_start_date,
+          to: next.local_end_date,
+        }
         : null,
     },
   };

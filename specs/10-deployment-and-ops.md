@@ -137,20 +137,39 @@ servers in the build's `WW_FIRST_PARTY_HOSTS` (a CI secret)
 ### Email setup
 
 *Decided 2026-10-11 ([Q41](14-open-questions.md)), generalised 2026-10-14.* Sign-in codes
-are the only mail WuselWall will send, apart from the "new sign-in" notice; nothing sends
-mail yet (accounts are created with confirmed addresses). The recommendation for an
-operator who wants it:
+are the only mail WuselWall sends, apart from the "new sign-in" notice. Email confirmation
+is required (`ENABLE_EMAIL_AUTOCONFIRM=false`); configuring SMTP or the send-email hook is
+currently necessary for first sign-in. The original setup policy was amended 2026-10-19
+to one installation-selected language (ADR-010 and ADR-014). The recommendation:
 
 | Topic | Recommendation | Why |
 |---|---|---|
 | Provider | A transactional-mail service in the EU, e.g. **Scaleway Transactional Email** | Transactional only, so its shared IPs are not dragged down by newsletters; free tier enough for a family; no branding footer |
 | Sending domain | A domain or subdomain without mailboxes, with the SPF, DKIM and DMARC records the provider names; DMARC from `p=none` to `p=quarantine` after two clean weeks | Without SPF and DKIM the codes go to spam |
 | Content | Plain text plus minimal HTML, no tracking; **the code in the subject** | Readable from the notification; tracking would contradict NFR-9 |
-| Language | Per recipient (`locale` from sign-in), through the send-email hook; a bilingual GoTrue template where the hook is not running | The localisation rule |
+| Language | One installation choice: `MAIL_LANGUAGE=de|en|fr|es`, default German (`de`); subject, HTML and plain text monolingual, the same for hook and SMTP | Independent of device, household and recipient metadata; updates preserve the choice |
 | Rate limits | Auth's email limit raised to fit, per-address resend at most every 60 s | Hosted Supabase's default limit is for testing and fails silently |
 
 Check deliverability with a code to Gmail, Outlook.com, GMX and iCloud addresses before
 relying on it, and after any DNS change.
+
+**Selecting the email language:**
+
+- New release installation: `./wuselwall install --api https://api.example.org --web https://web.example.org --language fr --caddy`.
+  `--language` accepts `de`, `en`, `fr`, `es`; omit it for German. It configures email, not
+  the app UI. On an installed release use `./wuselwall language fr`; only Auth/functions
+  restart, with existing keys retained. Do not rerun installation or regenerate `.env`.
+- Checkout installation: set `WW_MAIL_LANGUAGE` for `scripts/remote-stack.sh init-env`
+  only; it seeds the stack's `MAIL_LANGUAGE` (default `de`). After deployment use
+  `scripts/remote-stack.sh language fr` to change it. Changing the init variable alone
+  does not change an existing installation.
+- Both update paths keep an existing selection; legacy/unset installations become German.
+  `MAIL_CODE_SUBJECT` is derived from the selected catalogue and normalized on update or
+  language change. No key rotation or database migration is needed for this change.
+- Hosted Supabase: select the required **language** choice in **deploy-supabase** (`de`
+  default). Every run applies the chosen SMTP templates/subjects and the matching
+  `MAIL_LANGUAGE` Edge secret. Re-select the intended language on later runs: the workflow
+  input is not inferred from the device or the previously chosen value.
 
 **Switching the hook on** (built 2026-10-15):
 
@@ -171,20 +190,22 @@ relying on it, and after any DNS change.
    hook address other than localhost and then does not start at all, hook on or off.
 5. Check with a code to a Gmail, an Outlook.com, a GMX and an iCloud address, as below.
 
-The hook renders each mail in the recipient's language. With the hook off, any configured
-SMTP relay sends the bilingual code templates in `supabase/templates/`, generated from the
-hook's renderer (`deno run --allow-write supabase/functions/_shared/mail_templates_write.ts`;
-a test fails when they drift). The HTML is built for every mail client (Outlook's Word engine
-included): layout tables, inline styles only, no images and no links; the plain-text part
-carries all of it. Both are used: for first signup
-(`confirmation`) and later email sign-in (`magic_link`). The CLI reads these files directly.
-Compose fetches them from the internal-only `mail-templates` service (no published port,
-independent of Caddy); release packaging and checkout deployment copy the canonical files
-into `stack/volumes/mail-templates/`. A checkout used directly with Compose must copy
-`supabase/templates/*.html` into `infra/supabase/volumes/mail-templates/` first. The hosted
-`deploy-supabase` workflow uploads the same contents and subjects through the Management API,
-sets six digits and a 600-second lifetime, and reads every changed setting back. It does
-not change the SMTP provider or switch off an existing hook.
+The hook renders every mail using only `MAIL_LANGUAGE`, never sign-in `locale` or
+recipient metadata. With the hook off, SMTP uses the same language's code templates in
+`supabase/templates/{de,en,fr,es}/`, generated from the hook's renderer
+(`deno run --allow-write supabase/functions/_shared/mail_templates_write.ts`; a test fails
+when they drift). Root `supabase/templates/*.html` remains a monolingual German CLI
+fallback, not a bilingual message. The HTML supports Outlook's Word engine: layout tables,
+inline styles only, no images and no links; plain text carries the same message. Both
+first signup (`confirmation`) and returning sign-in (`magic_link`) carry a six-digit code.
+Compose fetches the selected templates from the internal-only `mail-templates` service
+(no published port, independent of Caddy). Release installation/update/language change and
+checkout deployment/language change copy the selected canonical files into the stack's
+`volumes/mail-templates/`; a checkout used directly with Compose must copy its chosen
+language's files to `infra/supabase/volumes/mail-templates/` as well. Hosted
+`deploy-supabase` applies that language's contents/subjects through the Management API and
+sets the same `MAIL_LANGUAGE` Edge secret, six digits and a 600-second lifetime, with
+readback. It does not change the SMTP provider or switch off an existing hook.
 A failed hook send remains a 5xx, not a retry through SMTP; the app reports that failure.
 The function logs name the mail kind, locale and error code, never the address or code.
 

@@ -24,6 +24,13 @@ String possessiveName(String name, String localeName) {
   if (localeName.startsWith('de')) {
     return 'sßxz'.contains(last) ? '$n’' : '${n}s';
   }
+  if (localeName.startsWith('fr')) {
+    // French appends nothing: "l’iPhone de Thomas" carries the possessive.
+    return n;
+  }
+  if (localeName.startsWith('es')) {
+    return n;
+  }
   return last == 's' ? "$n'" : "$n's";
 }
 
