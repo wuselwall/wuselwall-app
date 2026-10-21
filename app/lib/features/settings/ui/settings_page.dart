@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -597,8 +595,12 @@ class _FamilySectionState extends ConsumerState<_FamilySection> {
         case Ok(:final value):
           final shared = await Result.guard(
             () => ref.read(shareExportProvider)(
-              fileName: householdExportFileName(DateTime.now()),
-              bytes: Uint8List.fromList(utf8.encode(value)),
+              fileName: householdExportFileName(
+                DateTime.now(),
+                value.extension,
+              ),
+              bytes: value.bytes,
+              mimeType: value.mimeType,
               origin: origin,
             ),
           );

@@ -1,5 +1,5 @@
 begin;
-select plan(29);
+select plan(54);
 
 -- Start from an empty system, whatever the database already holds (all rolled back).
 delete from app.household;
@@ -142,6 +142,78 @@ select is((select count(*)::int from app.audit_log al join app.household h on h.
 select ok(not (current_setting('test.export_papa')::jsonb -> 'tables') ?| array['region', 'holiday_feed', 'holiday_feed_sync', 'setting_definition', 'enrolment_code'],
   'public reference data and one-time codes are not household data and are not exported');
 
+-- ---- the paged export (format version 2) ------------------------------------------------------
+-- Enough rows to need several pages: five shopping items, three closed days (a two-column key).
+insert into app.shopping_item (list_id, household_id, name, folded_name)
+  select l.id, l.household_id, 'Milch-A' || n, 'milch-a' || n from app.shopping_list l, generate_series(2, 5) n
+   where l.household_id = (select household_id from app.profile where display_name = 'Papa');
+insert into app.tasks_day_closed (household_id, day)
+  select household_id, date '2024-01-01' + n from app.profile, generate_series(0, 2) n where display_name = 'Papa';
+
+create temp table pages (tbl text, n int, page jsonb);
+grant all on pages to public;
+create function pg_temp.page_through(p_table text, p_limit int) returns void language plpgsql as $$
+declare v_after jsonb; v_page jsonb; n int := 0;
+begin
+  loop
+    v_page := api.household_export_page(null, p_table, v_after, p_limit);
+    n := n + 1;
+    insert into pg_temp.pages values (p_table, n, v_page);
+    v_after := v_page -> 'next';
+    exit when jsonb_typeof(v_after) is distinct from 'object' or n > 20;
+  end loop;
+end $$;
+
+select pg_temp.act_as_dev('papa');
+select lives_ok($$ select set_config('test.begin_papa', api.household_export_begin(null)::text, false) $$,
+  'a guardian on a personal phone starts a paged export');
+select pg_temp.page_through('shopping_item', 2);
+select pg_temp.page_through('tasks_day_closed', 2);
+select pg_temp.page_through('calendar_feed_token', 1000);
+select pg_temp.page_through('device', 1000);
+select throws_ok($$ select api.household_export_page(null, 'region') $$, '22023', 'unknown export table',
+  'a table that is not on the export list is refused');
+select throws_ok($$ select api.household_export_page(null, 'shopping_item', null, 0) $$, '22023', 'page size out of range',
+  'a page size below one is refused');
+select throws_ok($$ select api.household_export_page(null, 'shopping_item', null, 5001) $$, '22023', 'page size out of range',
+  'a page size above 5000 is refused');
+reset role;
+
+select is((select count(*)::int from app.audit_log al join app.household h on h.id = al.household_id
+            where h.name = 'A' and al.action = 'export'), 2, 'starting a paged export writes one audit row; pages write none');
+select is((current_setting('test.begin_papa')::jsonb ->> 'version')::int, 2, 'the paged export is format version 2');
+select is(current_setting('test.begin_papa')::jsonb #>> '{household,name}', 'A', 'the paged export starts with the household');
+select is(current_setting('test.begin_papa')::jsonb -> 'tables',
+  (select jsonb_agg(name order by position) from app.export_table), 'it names the tables to read, in order');
+
+select is((select count(*)::int from pages where tbl = 'shopping_item'), 3, 'five rows in pages of two are three pages');
+select is((select array_agg(jsonb_array_length(page -> 'rows') order by n) from pages where tbl = 'shopping_item'),
+  array[2, 2, 1], 'every page but the last is full');
+select is((select count(distinct r ->> 'id')::int from pages p, jsonb_array_elements(p.page -> 'rows') r where tbl = 'shopping_item'),
+  5, 'every row comes exactly once across the pages');
+select ok((select bool_and(prev is null or id > prev) from (
+             select (r ->> 'id')::uuid id, lag((r ->> 'id')::uuid) over (order by p.n, o) prev
+               from pages p, jsonb_array_elements(p.page -> 'rows') with ordinality e(r, o) where tbl = 'shopping_item') x),
+  'the rows come in key order');
+select is((select page -> 'next' from pages where tbl = 'shopping_item' and n = 3), 'null'::jsonb,
+  'the last page has no cursor');
+select is((select count(*)::int from pages p, jsonb_array_elements(p.page -> 'rows') r
+            where tbl = 'shopping_item' and r ->> 'name' = 'Geheimes-B'), 0, 'pages carry no row of another household');
+select is((select array_agg(r ->> 'day' order by p.n, o) from pages p, jsonb_array_elements(p.page -> 'rows') with ordinality e(r, o)
+            where tbl = 'tasks_day_closed'), array['2024-01-01', '2024-01-02', '2024-01-03'],
+  'a table with a two-column key pages through every row once, in order');
+select is((select count(*)::int from pages p, jsonb_array_elements(p.page -> 'rows') r
+            where tbl = 'calendar_feed_token' and (r ? 'token_hash' or r::text like '%feedtokenhash%')), 0,
+  'pages carry no token hash');
+select is((select count(*)::int from pages p, jsonb_array_elements(p.page -> 'rows') r
+            where tbl = 'calendar_feed_token'), 1, 'the feed token itself is exported');
+select is((select coalesce(string_agg(distinct k, ', '), '') from pages p, jsonb_array_elements(p.page -> 'rows') r, jsonb_object_keys(r) k
+            where tbl = 'device' and k <> all (array['id', 'label', 'class', 'register', 'profile_id',
+                                                      'created_at', 'last_seen_at', 'revoked_at'])), '',
+  'device pages carry only label, class, holder and dates');
+select is((select count(*)::int from pages p, jsonb_array_elements(p.page -> 'rows') r where tbl = 'device'), 5,
+  'device pages list every device');
+
 -- ---- household B's guardian gets only B -----------------------------------------------------
 select pg_temp.act_as_dev('bruno');
 select lives_ok($$ select set_config('test.export_bruno', api.household_export(null)::text, false) $$,
@@ -184,9 +256,28 @@ select throws_ok($$ select api.household_export(null) $$, '42501', 'permission d
   'anonymous callers cannot export');
 reset role;
 
+select pg_temp.act_as_dev('emma');
+select throws_ok($$ select api.household_export_begin(null) $$, '42501', 'guardian required',
+  'a child cannot start a paged export');
+select throws_ok($$ select api.household_export_page(null, 'profile') $$, '42501', 'guardian required',
+  'a child cannot read a page');
+reset role;
+
+select pg_temp.act_as_dev('ipad');
+select throws_ok($$ select api.household_export_page((select id from app.profile where display_name = 'Papa'), 'profile') $$,
+  '42501', 'guardian required', 'a shared iPad cannot read a page');
+reset role;
+
+set local role anon;
+select throws_ok($$ select api.household_export_begin(null) $$, '42501', 'permission denied for function household_export_begin',
+  'anonymous callers cannot start a paged export');
+select throws_ok($$ select api.household_export_page(null, 'profile') $$, '42501', 'permission denied for function household_export_page',
+  'anonymous callers cannot read a page');
+reset role;
+
 -- ---- the guard: no household table can be forgotten silently ----------------------------------
--- Every app table with a household_id column is either a key of the export or listed here on
--- purpose. A new table fails this test until someone decides which it is.
+-- Every app table with a household_id column is either on the export list (app.export_table) or
+-- listed here on purpose. A new table fails this test until someone decides which it is.
 select is((select coalesce(string_agg(c.relname, ', ' order by c.relname), '') from pg_attribute a
             join pg_class c on c.oid = a.attrelid join pg_namespace n on n.oid = c.relnamespace
            where n.nspname = 'app' and c.relkind in ('r', 'p') and a.attname = 'household_id'
@@ -194,18 +285,21 @@ select is((select coalesce(string_agg(c.relname, ', ' order by c.relname), '') f
              and c.relname <> all (array['enrolment_code', 'busy_until', 'shopping_op', 'shopping_item_alias',
                                        'getting_started_dismissal', 'notice_dismissal', 'external_occurrence',
                                        'pairing_request'])
-             and not (current_setting('test.export_papa')::jsonb -> 'tables') ? c.relname),
+             and not exists (select 1 from app.export_table t where t.name = c.relname)),
   '', 'every household table is exported or excluded on purpose');
 
-select is((select coalesce(string_agg(k, ', '), '') from jsonb_object_keys(current_setting('test.export_papa')::jsonb -> 'tables') k
+select is((select array_agg(k order by k) from jsonb_object_keys(current_setting('test.export_papa')::jsonb -> 'tables') k),
+  (select array_agg(name order by name) from app.export_table), 'the one-document export carries every table of the list');
+
+select is((select coalesce(string_agg(name, ', '), '') from app.export_table k
             where not exists (select 1 from pg_attribute a join pg_class c on c.oid = a.attrelid
                                 join pg_namespace n on n.oid = c.relnamespace
-                               where n.nspname = 'app' and c.relname = k and a.attname = 'household_id' and not a.attisdropped)),
+                               where n.nspname = 'app' and c.relname = k.name and a.attname = 'household_id' and not a.attisdropped)),
   '', 'every exported table is an app table with a household_id');
 
 select is((select count(*)::int from information_schema.tables t
             where t.table_schema = 'app' and t.table_name in ('region', 'holiday_feed', 'holiday_feed_sync', 'setting_definition', 'enrolment_code')
-              and t.table_name in (select jsonb_object_keys(current_setting('test.export_papa')::jsonb -> 'tables'))),
+              and t.table_name in (select name from app.export_table)),
   0, 'no reference table is exported');
 
 select * from finish();
