@@ -121,7 +121,13 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed # v2.0.5
         with: { deno-version: '2.5.6' }
+      # Deno's module cache lives in this job's own temp directory, not the default under
+      # $HOME: on a self-hosted runner Deno could not write there ("Failed caching
+      # 'https://jsr.io/...'" right after a successful download). The runner empties
+      # runner.temp for every job, so each run starts cold and --frozen checks every
+      # module against deno.lock instead of trusting another job's downloads.
       - run: deno test supabase/functions/ --allow-env --allow-read --node-modules-dir=none --lock=deno.lock --frozen
+        env: { DENO_DIR: '${{ runner.temp }}/deno' }
 
   backend:
     needs: changes
