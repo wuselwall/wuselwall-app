@@ -7,6 +7,7 @@ import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/enrol_code.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/identity/ui/enrolment_qr.dart';
+import 'package:wuselwall/features/settings/application/settings_view.dart';
 
 import '../support/fakes.dart';
 
@@ -112,6 +113,7 @@ void main() {
       await pumpApp(
         t,
         overrides: baseOverrides(
+          settingsView: SettingsView.advanced,
           identity: identity,
           shopping: FakeShoppingRepository([]),
         ),
@@ -143,6 +145,7 @@ void main() {
       await pumpApp(
         t,
         overrides: baseOverrides(
+          settingsView: SettingsView.advanced,
           identity: FakeIdentityRepository(current: device()),
           shopping: FakeShoppingRepository([]),
         ),

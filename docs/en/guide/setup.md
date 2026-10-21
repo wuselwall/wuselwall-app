@@ -25,7 +25,7 @@ address; it is different from the setup code for a new server.
 
 <Shot name="setup-sign-in" alt="Signing in with email" />
 
-Prefer a password? Tap **I have a password**. You set the password under **Settings → Sign-in**, at least 10 characters. The code by email always stays possible.
+Prefer a password? Tap **I have a password**. You set the password under **Settings → Advanced → Sign-in**, at least 10 characters. The code by email always stays possible.
 
 The first time you create an account, WuselWall asks once how you want to sign in from now on: with the **code by email** (nothing to remember) or with a **password**.
 
@@ -85,5 +85,5 @@ This is how the **wall display** in the kitchen, a **kids' tablet** or a **share
 After that the new device is ready. The wall display shows a short checklist once, so that it keeps running (see [Wall display and kids](/en/guide/wall)). The code is valid for **10 minutes** and works **once**. If it does not match, start again on the new device.
 
 ::: tip Older devices
-A device with an older version of WuselWall still takes the old code: under **Settings → Devices** tap **Create a code for an older device**. This option goes away with the next version.
+A device with an older version of WuselWall still takes the old code: under **Settings → Advanced → Devices** tap **Create a code for an older device**. This option goes away with the next version.
 :::

@@ -4,9 +4,13 @@ Not every family does things the same way: how many points a chore earns, whethe
 
 <Shot name="settings-household" alt="Household settings with the areas tasks, calendar, meals and kitchen display" />
 
+The **Basic** view shows only the most important ones: the region, streak jokers, whether rewards need approval, whether children change their own appointments, the warm meal on school days and free days, this device's night hours, the sound when a chore is ticked, the morning summary and the reminder before appointments. **Advanced** shows all the others (switch at the top, or tap **Show all settings** at the bottom). Hidden settings still apply.
+
 Every setting has a **default**, which WuselWall suggests. It suits most families. If your value differs, the setting says **Customised**. **Reset to default** brings it back at any time.
 
 ## The areas
+
+In the **Advanced** view:
 
 - **Household and members**: the **region** (country, canton or state, municipality) that public and school holidays follow, and whether the kitchen wall shows **full names** or only **initials**. You choose the region when you add the first school; you can change it here later
 - **Tasks**: points for a duty and for a bonus chore, whether new chores are duties or bonuses, whether guardians check chores, how many **streak jokers** there are per month and whether **rewards need approval**

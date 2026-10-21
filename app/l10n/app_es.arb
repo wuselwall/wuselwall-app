@@ -2087,9 +2087,9 @@
   "leaveLeaveConfirm": "Salir",
   "leaveCancel": "Cancelar",
   "leaveDeleteTile": "Eliminar familia",
-  "leaveDeleteExplain": "Se cierra la sesión en todos los dispositivos de inmediato. Durante 14 días, un responsable podrá restaurar la familia; después se eliminarán todos los datos definitivamente.",
+  "leaveDeleteExplain": "La familia y todos sus datos se eliminan de inmediato y de forma permanente. Se cierra la sesión en todos los dispositivos. Esta acción no se puede deshacer.",
   "leaveDeleteDialogTitle": "¿Eliminar la familia?",
-  "leaveDeleteDialogBody": "Se cerrará la sesión en todos los dispositivos y nadie podrá acceder a la familia. Durante 14 días, un responsable podrá restaurarla. Después se perderán todos los datos.",
+  "leaveDeleteDialogBody": "Se cierra la sesión en todos los dispositivos y se elimina la familia de forma permanente con todos sus datos.",
   "leaveDeleteNameLabel": "Escribe «{name}» para confirmar",
   "@leaveDeleteNameLabel": {
     "placeholders": {
@@ -2340,9 +2340,9 @@
   "settingsServerSwitchConfirm": "Se cerrará la sesión de este dispositivo y se borrará todo lo que tenga guardado. Después podrás elegir otro servidor.",
   "setupPhoneTitle": "Continuar en tu teléfono",
   "setupPhoneBody": "Abre la aplicación WuselWall en tu teléfono, escanea el código para elegir este servidor e inicia sesión allí.",
-  "shortcutTitle": "Siri y Atajos",
-  "shortcutSettingsSubtitle": "Lista de la compra, plan del día y más por voz",
-  "shortcutIntro": "Una clave conecta un atajo del iPhone con WuselWall. Con ella, Siri añade productos a la lista de la compra y te dice qué hay previsto hoy, qué hay para comer o quién tiene Educación Física mañana. Cada clave pertenece a una persona: permite leer y añadir, pero no eliminar ni administrar nada. Una clave para un asistente de IA (MCP) solo permite leer.",
+  "shortcutTitle": "Aplicaciones y asistentes de IA",
+  "shortcutSettingsSubtitle": "Siri, automatizaciones y asistentes de IA (MCP), cada uno con su clave",
+  "shortcutIntro": "Una clave permite que otra aplicación use WuselWall en nombre de una persona. Una clave de automatización, por ejemplo para un atajo de Siri en el iPhone o cualquier aplicación que pueda llamar a una dirección web, permite leer y añadir: añade artículos a la lista de la compra e indica qué hay hoy, qué hay para comer o quién tiene educación física mañana. No permite eliminar ni administrar nada. Una clave para un asistente de IA (MCP, como Claude) solo permite leer.",
   "shortcutEmpty": "Aún no hay claves.",
   "shortcutKioskNote": "Las claves se crean en un teléfono personal, no en la pantalla de pared.",
   "shortcutNew": "Nueva clave",
@@ -2359,7 +2359,7 @@
       }
     }
   },
-  "shortcutKeyOnce": "Esta clave solo se muestra ahora. Quien la tenga podrá leer y añadir como {name}, así que trátala como una contraseña. La aplicación Atajos la sincroniza mediante iCloud.",
+  "shortcutKeyOnce": "Esta clave solo se muestra ahora. Quien la tenga puede leer y añadir en nombre de {name}, así que trátala como una contraseña. En la aplicación Atajos de Apple se sincroniza a través de iCloud.",
   "@shortcutKeyOnce": {
     "placeholders": {
       "name": {
@@ -2372,7 +2372,7 @@
   "shortcutCopyAddress": "Copiar dirección",
   "shortcutCopied": "Copiado.",
   "shortcutHowTitle": "Cómo funciona",
-  "shortcutHowSteps": "En la aplicación Atajos, crea un atajo con la acción «Obtener contenido de URL»: usa la dirección terminada en /today y una cabecera «Authorization» con «Bearer », un espacio y la clave. Después añade «Mostrar resultado» o «Leer texto». La guía de wuselwall.app/docs/en/settings/shortcuts muestra todos los atajos.",
+  "shortcutHowSteps": "Todas las aplicaciones envían la misma solicitud. Con Atajos de Apple, crea un atajo con la acción «Obtener contenido de URL»: la dirección terminada en /today y una cabecera «Authorization» con «Bearer», un espacio y la clave. Después añade «Mostrar resultado» o «Leer texto». La guía de wuselwall.app/docs/en/settings/shortcuts muestra cada atajo.",
   "shortcutLastUsed": "Último uso: {when}",
   "@shortcutLastUsed": {
     "placeholders": {
@@ -2403,9 +2403,9 @@
   "shortcutErrLabel": "Introduce un nombre de 60 caracteres como máximo.",
   "shortcutErrLimit": "Esta persona ya tiene diez claves. Primero revoca una.",
   "shortcutSectionAssistants": "Asistentes de IA",
-  "shortcutKindShortcut": "Siri",
-  "shortcutKindAssistant": "Asistente",
-  "shortcutKindShortcutHelp": "Para un atajo del iPhone: permite leer y añadir, por ejemplo a la lista de la compra.",
+  "shortcutKindShortcut": "Automatización",
+  "shortcutKindAssistant": "Asistente de IA",
+  "shortcutKindShortcutHelp": "Para Siri y Atajos de Apple, o cualquier aplicación que pueda llamar a una dirección web: permite leer y añadir, por ejemplo a la lista de la compra.",
   "shortcutKindAssistantHelp": "Para un asistente de IA compatible con MCP, como Claude: solo permite leer y solo está disponible para adultos.",
   "shortcutAssistantLabelHint": "p. ej., Claude en el portátil",
   "shortcutAssistantKeyOnce": "Esta clave solo se muestra ahora. Con ella, un asistente lee como {name} toda la semana de la familia: citas, quién está fuera, horarios escolares, tareas, comidas y lista de la compra. Lo que lee se envía al proveedor del asistente. Trata la clave como una contraseña.",
@@ -2437,5 +2437,16 @@
   "appearanceSystemHelp": "Claro u oscuro, según el ajuste de este dispositivo",
   "appearanceLight": "Claro",
   "appearanceDark": "Oscuro",
-  "appearanceNightNote": "Por la noche, la pantalla de pared siempre muestra su vista nocturna."
+  "appearanceNightNote": "Por la noche, la pantalla de pared siempre muestra su vista nocturna.",
+  "leaveDeleteNext": "Siguiente",
+  "leaveDeleteWordTitle": "¿Eliminar para siempre?",
+  "leaveDeleteWordBody": "La familia y todos sus datos se eliminan de inmediato y de forma permanente. Nadie puede recuperarlos, ni siquiera un tutor. Exporta primero los datos si quieres conservarlos.",
+  "leaveDeleteWord": "ELIMINAR",
+  "leaveDeleteWordLabel": "Escribe {word} para eliminar la familia para siempre",
+  "shortcutSectionAutomations": "Automatizaciones",
+  "settingsViewLabel": "Qué ajustes mostrar",
+  "settingsViewBasic": "Básicos",
+  "settingsViewAdvanced": "Avanzados",
+  "settingsViewMoreHint": "Hay más ajustes en Avanzados. Los ajustes ocultos siguen activos.",
+  "settingsViewShowAll": "Mostrar todos los ajustes"
 }

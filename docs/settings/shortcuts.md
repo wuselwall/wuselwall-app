@@ -1,8 +1,13 @@
-# Siri und Kurzbefehle
+# Apps und KI-Assistenten
+
+Mit einem **Schlüssel** aus WuselWall arbeitet eine andere App als eine bestimmte Person mit euren Familiendaten. Es gibt zwei Arten:
+
+- **Automation**: liest und fügt hinzu, zum Beispiel für Siri auf dem iPhone oder jede andere App, die eine Webadresse aufrufen kann (etwa Automations-Apps auf Android oder Home Assistant). Die Beispiele unten zeigen Apples Kurzbefehle; andere Apps schicken dieselben Anfragen.
+- **KI-Assistent**: liest nur, für einen Assistenten, der MCP spricht, etwa Claude (siehe [unten](#ki-assistenten-mcp)).
 
 Mit der **Kurzbefehle**-App auf dem iPhone sprichst du mit WuselWall über Siri: „Hey Siri, Einkaufsliste“ – „Was brauchst du?“ – „Milch und zwei Gurken“ – „Milch und Gurken (2×) sind auf der Liste.“ Dafür braucht es keine zusätzliche App, nur einen **Schlüssel** aus WuselWall.
 
-<Shot name="shortcuts" alt="Einstellungen → Siri und Kurzbefehle mit zwei Schlüsseln" />
+<Shot name="shortcuts" alt="Einstellungen → Apps und KI-Assistenten mit zwei Schlüsseln" />
 
 ## Was ein Schlüssel darf
 
@@ -15,7 +20,7 @@ Ein Schlüssel gehört zu **einer Person**. Ein Kurzbefehl mit diesem Schlüssel
 
 ## Einen Schlüssel erstellen
 
-1. Öffne **Einstellungen → Siri und Kurzbefehle** und tippe auf **Neuer Schlüssel**.
+1. Öffne **Einstellungen → Erweitert → Apps und KI-Assistenten** und tippe auf **Neuer Schlüssel**.
 2. Gib ihm einen **Namen**, zum Beispiel „iPhone“.
 3. Als Erziehungsberechtigte·r wählst du unter **Für wen?** die Person. Alle anderen erstellen ihren eigenen Schlüssel auf dem eigenen Handy.
 4. Tippe auf **Schlüssel erstellen**.
@@ -68,7 +73,7 @@ Erziehungsberechtigte sehen und sperren alle Schlüssel der Familie, alle andere
 
 Ein KI-Assistent, der **MCP** spricht (das Model Context Protocol, zum Beispiel Claude), kann mit einem eigenen Schlüssel in WuselWall **nachlesen**: „Was steht diese Woche an?“, „Was gibt es am Donnerstag zu essen?“, „Wann hat Emma morgen Schluss?“. Er kann **nichts eintragen, ändern oder löschen**.
 
-Wähle beim Erstellen **Assistent** statt **Siri**. Einen Schlüssel für einen Assistenten bekommen nur Erwachsene. Er erscheint in der Liste unter **KI-Assistenten** und wird gesperrt wie jeder andere Schlüssel.
+Wähle beim Erstellen **KI-Assistent** statt **Automation**. Einen Schlüssel für einen Assistenten bekommen nur Erwachsene. Er erscheint in der Liste unter **KI-Assistenten** und wird gesperrt wie jeder andere Schlüssel.
 
 ::: warning Was der Assistent liest, verlässt euren Server
 Der Assistent liest die Woche der ganzen Familie: Termine, wer wann weg ist, die Stundenpläne der Kinder, Aufgaben, Punkte, Essen, Rezepte und die Einkaufsliste. Diese Daten gehen an den Anbieter des Assistenten und unterliegen dessen Datenschutzbedingungen. Überlegt deshalb gemeinsam, ob ihr das wollt.

@@ -1,6 +1,6 @@
 # Sicherheit
 
-Anmeldung und Sicherheit gibt es nur auf dem **persönlichen Handy** eines Erziehungsberechtigten: **Einstellungen → Anmeldung** und **Einstellungen → Sicherheit**.
+Anmeldung und Sicherheit gibt es nur auf dem **persönlichen Handy** eines Erziehungsberechtigten: **Einstellungen → Erweitert → Anmeldung** und **Einstellungen → Erweitert → Sicherheit**.
 
 ## Anmeldung
 

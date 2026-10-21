@@ -62,7 +62,7 @@ The family calendar can be shown as a **subscription** in Outlook or on an iPhon
 
 Appointments from outside come into the family calendar through a **subscription**: a club's fixture list, the town's bin collection calendar, school events. You need only the calendar's address, usually a file ending in **.ics**. **webcal://** addresses work too.
 
-A guardian manages subscriptions under **Settings → Add outside calendars**. **Subscribe to a calendar** opens the form with name, address, colour, **Who?** (without a choice the calendar is for the whole family) and **Show on the kitchen display**. The appointments appear in the calendar in the calendar's colour, with a subscription mark. They are read-only: changes come from the source.
+A guardian manages subscriptions under **Settings → Advanced → Add outside calendars**. **Subscribe to a calendar** opens the form with name, address, colour, **Who?** (without a choice the calendar is for the whole family) and **Show on the kitchen display**. The appointments appear in the calendar in the calendar's colour, with a subscription mark. They are read-only: changes come from the source.
 
 Your server fetches each calendar about once an hour. **Refresh now** does it at once. If a fetch fails, the reason shows on the calendar, for example "The address cannot be reached right now."
 

@@ -1458,13 +1458,25 @@
   "leaveLeaveConfirm": "Verlassen",
   "leaveCancel": "Abbrechen",
   "leaveDeleteTile": "Familie löschen",
-  "leaveDeleteExplain": "Alle Geräte melden sich sofort ab. 14 Tage lang kann eine Elternperson die Familie wiederherstellen, danach werden alle Daten endgültig gelöscht.",
+  "leaveDeleteExplain": "Die Familie wird mit allen Daten sofort und endgültig gelöscht. Alle Geräte melden sich ab. Das lässt sich nicht rückgängig machen.",
   "leaveDeleteDialogTitle": "Familie löschen?",
-  "leaveDeleteDialogBody": "Alle Geräte melden sich ab, und niemand kommt mehr an die Familie. 14 Tage lang kann eine Elternperson sie wiederherstellen. Danach sind alle Daten weg.",
+  "leaveDeleteDialogBody": "Alle Geräte melden sich ab, und die Familie wird mit allen Daten endgültig gelöscht.",
   "leaveDeleteNameLabel": "Tippe ‚{name}‘ zum Bestätigen",
   "@leaveDeleteNameLabel": {
     "placeholders": {
       "name": {
+        "type": "String"
+      }
+    }
+  },
+  "leaveDeleteNext": "Weiter",
+  "leaveDeleteWordTitle": "Endgültig löschen?",
+  "leaveDeleteWordBody": "Die Familie und alle ihre Daten werden sofort und endgültig gelöscht. Niemand kann sie wiederherstellen, auch keine Elternperson. Willst du etwas behalten, exportiere die Daten vorher.",
+  "leaveDeleteWord": "LÖSCHEN",
+  "leaveDeleteWordLabel": "Tippe {word}, um die Familie endgültig zu löschen",
+  "@leaveDeleteWordLabel": {
+    "placeholders": {
+      "word": {
         "type": "String"
       }
     }
@@ -1711,9 +1723,9 @@
   "settingsServerSwitchConfirm": "Dieses Gerät wird abgemeldet und vergisst alles, was darauf gespeichert ist. Danach kannst du einen anderen Server wählen.",
   "setupPhoneTitle": "Auf dem Handy weitermachen",
   "setupPhoneBody": "Öffne die WuselWall-App auf deinem Handy, wähle diesen Server, indem du den Code scannst, und melde dich dort an.",
-  "shortcutTitle": "Siri und Kurzbefehle",
-  "shortcutSettingsSubtitle": "Einkaufsliste, Tagesplan und mehr per Sprachbefehl",
-  "shortcutIntro": "Ein Schlüssel verbindet einen Kurzbefehl auf dem iPhone mit WuselWall. Damit setzt Siri Dinge auf die Einkaufsliste und sagt, was heute ansteht, was es zu essen gibt oder wer morgen Sport hat. Ein Schlüssel gehört zu einer Person: Er kann lesen und hinzufügen, aber nichts löschen und nichts verwalten. Ein Schlüssel für einen KI-Assistenten (MCP) liest nur.",
+  "shortcutTitle": "Apps und KI-Assistenten",
+  "shortcutSettingsSubtitle": "Siri, Automationen und KI-Assistenten (MCP), jeweils mit Schlüssel",
+  "shortcutIntro": "Ein Schlüssel lässt eine andere App als eine bestimmte Person mit WuselWall arbeiten. Ein Schlüssel für Automationen, zum Beispiel für einen Kurzbefehl mit Siri auf dem iPhone oder jede andere App, die eine Webadresse aufrufen kann, liest und fügt hinzu: Er setzt Dinge auf die Einkaufsliste und sagt, was heute ansteht, was es zu essen gibt oder wer morgen Sport hat. Löschen oder verwalten kann er nichts. Ein Schlüssel für einen KI-Assistenten (MCP, etwa Claude) liest nur.",
   "shortcutEmpty": "Noch keine Schlüssel.",
   "shortcutKioskNote": "Schlüssel werden auf einem eigenen Handy erstellt, nicht an der Wand.",
   "shortcutNew": "Neuer Schlüssel",
@@ -1723,13 +1735,13 @@
   "shortcutForWhomHelp": "Der Kurzbefehl handelt als diese Person: Er hakt ihre Aufgaben ab und nennt ihre Punkte.",
   "shortcutCreate": "Schlüssel erstellen",
   "shortcutKeyTitle": "Schlüssel für {name}",
-  "shortcutKeyOnce": "Dieser Schlüssel wird nur jetzt angezeigt. Wer ihn hat, kann als {name} lesen und hinzufügen, also behandle ihn wie ein Passwort. Die Kurzbefehle-App synchronisiert ihn über iCloud.",
+  "shortcutKeyOnce": "Dieser Schlüssel wird nur jetzt angezeigt. Wer ihn hat, kann als {name} lesen und hinzufügen, also behandle ihn wie ein Passwort. In Apples Kurzbefehle-App wird er über iCloud synchronisiert.",
   "shortcutCopyKey": "Schlüssel kopieren",
   "shortcutAddressLabel": "Adresse",
   "shortcutCopyAddress": "Adresse kopieren",
   "shortcutCopied": "Kopiert.",
   "shortcutHowTitle": "So geht’s",
-  "shortcutHowSteps": "In der Kurzbefehle-App einen Kurzbefehl mit der Aktion „Inhalte von URL abrufen“ anlegen: die Adresse mit /today am Ende und als Header „Authorization“ mit „Bearer “, einem Leerzeichen und dem Schlüssel. Danach „Ergebnis anzeigen“ oder „Text sprechen“ dazunehmen. Die Anleitung auf wuselwall.app/docs/settings/shortcuts zeigt alle Kurzbefehle.",
+  "shortcutHowSteps": "Jede App schickt dieselbe Anfrage. In Apples Kurzbefehle-App einen Kurzbefehl mit der Aktion „Inhalte von URL abrufen“ anlegen: die Adresse mit /today am Ende und als Header „Authorization“ mit „Bearer “, einem Leerzeichen und dem Schlüssel. Danach „Ergebnis anzeigen“ oder „Text sprechen“ dazunehmen. Die Anleitung auf wuselwall.app/docs/settings/shortcuts zeigt alle Kurzbefehle.",
   "shortcutLastUsed": "Zuletzt benutzt: {when}",
   "shortcutNeverUsed": "Noch nie benutzt",
   "shortcutUseCount": "{count, plural, =1{1 Abfrage} other{{count} Abfragen}}",
@@ -1738,10 +1750,11 @@
   "shortcutRevokeConfirm": "„{label}“ sperren? Der Kurzbefehl funktioniert sofort nicht mehr.",
   "shortcutErrLabel": "Bitte einen Namen mit höchstens 60 Zeichen eingeben.",
   "shortcutErrLimit": "Diese Person hat schon zehn Schlüssel. Bitte zuerst einen sperren.",
+  "shortcutSectionAutomations": "Automationen",
   "shortcutSectionAssistants": "KI-Assistenten",
-  "shortcutKindShortcut": "Siri",
-  "shortcutKindAssistant": "Assistent",
-  "shortcutKindShortcutHelp": "Für einen Kurzbefehl auf dem iPhone: Er liest und fügt hinzu, zum Beispiel zur Einkaufsliste.",
+  "shortcutKindShortcut": "Automation",
+  "shortcutKindAssistant": "KI-Assistent",
+  "shortcutKindShortcutHelp": "Für Siri und Apples Kurzbefehle oder jede App, die eine Webadresse aufrufen kann: Er liest und fügt hinzu, zum Beispiel zur Einkaufsliste.",
   "shortcutKindAssistantHelp": "Für einen KI-Assistenten, der MCP spricht, etwa Claude: Er liest nur, und nur Erwachsene bekommen einen.",
   "shortcutAssistantLabelHint": "z. B. Claude auf dem Laptop",
   "shortcutAssistantKeyOnce": "Dieser Schlüssel wird nur jetzt angezeigt. Damit liest ein Assistent als {name} die ganze Woche der Familie: Termine, wer weg ist, die Stundenpläne der Kinder, Aufgaben, Essen und die Einkaufsliste. Was er liest, geht an den Anbieter des Assistenten. Behandle den Schlüssel wie ein Passwort.",
@@ -1756,5 +1769,10 @@
   "appearanceSystemHelp": "Hell oder dunkel, wie auf diesem Gerät eingestellt",
   "appearanceLight": "Hell",
   "appearanceDark": "Dunkel",
-  "appearanceNightNote": "Nachts zeigt das Wanddisplay immer seine Nachtansicht."
+  "appearanceNightNote": "Nachts zeigt das Wanddisplay immer seine Nachtansicht.",
+  "settingsViewLabel": "Welche Einstellungen angezeigt werden",
+  "settingsViewBasic": "Einfach",
+  "settingsViewAdvanced": "Erweitert",
+  "settingsViewMoreHint": "Weitere Einstellungen findest du unter „Erweitert“. Ausgeblendete Einstellungen gelten weiterhin.",
+  "settingsViewShowAll": "Alle Einstellungen zeigen"
 }

@@ -12,6 +12,7 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/supabase/api_client.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/settings/application/household_export_providers.dart';
+import 'package:wuselwall/features/settings/application/settings_view.dart';
 import 'package:wuselwall/features/settings/data/household_export_repository.dart';
 
 import '../support/fakes.dart';
@@ -52,7 +53,10 @@ void main() {
     final container = await pumpApp(
       t,
       overrides: [
-        ...baseOverrides(identity: FakeIdentityRepository(current: device)),
+        ...baseOverrides(
+          settingsView: SettingsView.advanced,
+          identity: FakeIdentityRepository(current: device),
+        ),
         householdExportRepositoryProvider.overrideWithValue(repo),
         shareExportProvider.overrideWithValue(({
           required String fileName,

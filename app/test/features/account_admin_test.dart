@@ -8,6 +8,7 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/features/account/domain/member_security.dart';
 import 'package:wuselwall/features/household/domain/household_models.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
+import 'package:wuselwall/features/settings/application/settings_view.dart';
 
 import '../support/fakes.dart';
 
@@ -65,6 +66,7 @@ Future<Pumped> pumpSettings(
     t,
     size: size,
     overrides: baseOverrides(
+      settingsView: SettingsView.advanced,
       identity: identity,
       accountAdmin: accountAdmin,
       household: FakeHouseholdOnboardingRepository(

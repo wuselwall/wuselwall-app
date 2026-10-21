@@ -1,6 +1,6 @@
 # Erinnerungen
 
-Erinnerungen bekommst du auf **deinem eigenen Handy**, wenn du sie einschaltest: unter **Einstellungen → Erinnerungen**. Sie entstehen auf dem Telefon selbst. **Nichts davon wird an einen Server oder an Dritte geschickt.** Deshalb gibt es sie nur auf dem persönlichen Gerät eines Familienmitglieds, nicht auf einem Kinder-Tablet oder der Wandanzeige.
+Erinnerungen bekommst du auf **deinem eigenen Handy**, wenn du sie einschaltest: unter **Einstellungen → Erinnerungen**. Sie entstehen auf dem Telefon selbst. **Nichts davon wird an einen Server oder an Dritte geschickt.** Deshalb gibt es sie nur auf dem persönlichen Gerät eines Familienmitglieds, nicht auf einem Kinder-Tablet oder der Wandanzeige. Auf Geräten, die keine Erinnerungen zeigen können, fehlt der Eintrag in den Einstellungen.
 
 <Shot name="reminders" alt="Einstellungen → Erinnerungen" />
 

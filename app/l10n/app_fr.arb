@@ -2087,9 +2087,9 @@
   "leaveLeaveConfirm": "Quitter",
   "leaveCancel": "Annuler",
   "leaveDeleteTile": "Supprimer la famille",
-  "leaveDeleteExplain": "Tous les appareils seront immédiatement déconnectés. Un responsable parental pourra restaurer la famille pendant 14 jours ; ensuite, toutes les données seront définitivement supprimées.",
+  "leaveDeleteExplain": "La famille et toutes ses données sont supprimées immédiatement et définitivement. Tous les appareils sont déconnectés. Cette action est irréversible.",
   "leaveDeleteDialogTitle": "Supprimer la famille ?",
-  "leaveDeleteDialogBody": "Tous les appareils seront déconnectés et personne ne pourra plus accéder à la famille. Un responsable parental pourra la restaurer pendant 14 jours. Ensuite, toutes les données seront supprimées.",
+  "leaveDeleteDialogBody": "Tous les appareils sont déconnectés et la famille est définitivement supprimée avec toutes ses données.",
   "leaveDeleteNameLabel": "Saisis « {name} » pour confirmer",
   "@leaveDeleteNameLabel": {
     "placeholders": {
@@ -2340,9 +2340,9 @@
   "settingsServerSwitchConfirm": "Cet appareil sera déconnecté et toutes les données qui y sont stockées seront effacées. Tu pourras ensuite choisir un autre serveur.",
   "setupPhoneTitle": "Continuer sur ton téléphone",
   "setupPhoneBody": "Ouvre l’application WuselWall sur ton téléphone, choisis ce serveur en scannant le code, puis connecte-toi dessus.",
-  "shortcutTitle": "Siri et Raccourcis",
-  "shortcutSettingsSubtitle": "Liste de courses, programme du jour et plus, à la voix",
-  "shortcutIntro": "Une clé relie un raccourci de l’iPhone à WuselWall. Siri peut ainsi ajouter des articles à la liste de courses et te dire ce qui est prévu aujourd’hui, ce qu’il y a à manger ou qui a sport demain. Une clé appartient à une personne : elle permet de lire et d’ajouter, mais pas de supprimer ni de gérer quoi que ce soit. Une clé pour un assistant IA (MCP) permet uniquement de lire.",
+  "shortcutTitle": "Applications et assistants IA",
+  "shortcutSettingsSubtitle": "Siri, automatisations et assistants IA (MCP), chacun avec une clé",
+  "shortcutIntro": "Une clé permet à une autre application d’utiliser WuselWall au nom d’une personne. Une clé d’automatisation, par exemple pour un raccourci Siri sur iPhone ou toute application pouvant appeler une adresse web, permet de lire et d’ajouter : elle ajoute des articles à la liste de courses et indique le programme du jour, le repas ou qui a sport demain. Elle ne permet ni de supprimer ni de gérer les données. Une clé pour un assistant IA (MCP, comme Claude) permet uniquement de lire.",
   "shortcutEmpty": "Pas encore de clés.",
   "shortcutKioskNote": "Les clés se créent sur un téléphone personnel, pas sur l’écran mural.",
   "shortcutNew": "Nouvelle clé",
@@ -2359,7 +2359,7 @@
       }
     }
   },
-  "shortcutKeyOnce": "Cette clé n’est affichée que maintenant. Toute personne qui la possède peut lire et ajouter au nom de {name} : protège-la comme un mot de passe. L’application Raccourcis la synchronise via iCloud.",
+  "shortcutKeyOnce": "Cette clé n’est affichée que maintenant. Quiconque la possède peut lire et ajouter au nom de {name} : traitez-la comme un mot de passe. Dans l’application Raccourcis d’Apple, elle est synchronisée via iCloud.",
   "@shortcutKeyOnce": {
     "placeholders": {
       "name": {
@@ -2372,7 +2372,7 @@
   "shortcutCopyAddress": "Copier l’adresse",
   "shortcutCopied": "Copié.",
   "shortcutHowTitle": "Comment faire",
-  "shortcutHowSteps": "Dans l’application Raccourcis, crée un raccourci avec l’action « Obtenir le contenu de l’URL » : l’adresse terminée par /today et un en-tête « Authorization » contenant « Bearer », une espace et la clé. Ajoute ensuite « Afficher le résultat » ou « Énoncer le texte ». Le guide sur wuselwall.app/docs/en/settings/shortcuts présente tous les raccourcis.",
+  "shortcutHowSteps": "Toute application envoie la même requête. Avec Raccourcis d’Apple, créez un raccourci avec l’action « Obtenir le contenu de l’URL » : l’adresse se terminant par /today et un en-tête « Authorization » contenant « Bearer », un espace et la clé. Ajoutez ensuite « Afficher le résultat » ou « Énoncer le texte ». Le guide sur wuselwall.app/docs/en/settings/shortcuts présente chaque raccourci.",
   "shortcutLastUsed": "Dernière utilisation : {when}",
   "@shortcutLastUsed": {
     "placeholders": {
@@ -2403,9 +2403,9 @@
   "shortcutErrLabel": "Saisis un nom de 60 caractères maximum.",
   "shortcutErrLimit": "Cette personne possède déjà dix clés. Révoque d’abord l’une d’elles.",
   "shortcutSectionAssistants": "Assistants IA",
-  "shortcutKindShortcut": "Siri",
-  "shortcutKindAssistant": "Assistant",
-  "shortcutKindShortcutHelp": "Pour un raccourci sur l’iPhone : il lit et ajoute, par exemple à la liste de courses.",
+  "shortcutKindShortcut": "Automatisation",
+  "shortcutKindAssistant": "Assistant IA",
+  "shortcutKindShortcutHelp": "Pour Siri et Raccourcis d’Apple, ou toute application pouvant appeler une adresse web : permet de lire et d’ajouter, par exemple à la liste de courses.",
   "shortcutKindAssistantHelp": "Pour un assistant IA compatible MCP, comme Claude : il lit uniquement, et seuls les adultes peuvent avoir une clé.",
   "shortcutAssistantLabelHint": "par exemple Claude sur l’ordinateur portable",
   "shortcutAssistantKeyOnce": "Cette clé n’est affichée que maintenant. Avec elle, un assistant lit toute la semaine de la famille au nom de {name} : rendez-vous, absences, emplois du temps des enfants, tâches, repas et liste de courses. Ce qu’il lit est transmis au fournisseur de l’assistant. Protège la clé comme un mot de passe.",
@@ -2437,5 +2437,16 @@
   "appearanceSystemHelp": "Clair ou sombre, selon le réglage de cet appareil",
   "appearanceLight": "Clair",
   "appearanceDark": "Sombre",
-  "appearanceNightNote": "La nuit, l’écran mural affiche toujours sa vue de nuit."
+  "appearanceNightNote": "La nuit, l’écran mural affiche toujours sa vue de nuit.",
+  "leaveDeleteNext": "Suivant",
+  "leaveDeleteWordTitle": "Supprimer définitivement ?",
+  "leaveDeleteWordBody": "La famille et toutes ses données sont supprimées immédiatement et définitivement. Personne ne peut les restaurer, pas même un responsable. Exportez d’abord les données si vous souhaitez les conserver.",
+  "leaveDeleteWord": "SUPPRIMER",
+  "leaveDeleteWordLabel": "Saisissez {word} pour supprimer définitivement la famille",
+  "shortcutSectionAutomations": "Automatisations",
+  "settingsViewLabel": "Paramètres à afficher",
+  "settingsViewBasic": "Essentiels",
+  "settingsViewAdvanced": "Avancés",
+  "settingsViewMoreHint": "D’autres paramètres se trouvent dans Avancés. Les paramètres masqués restent actifs.",
+  "settingsViewShowAll": "Afficher tous les paramètres"
 }

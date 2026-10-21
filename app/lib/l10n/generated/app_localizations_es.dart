@@ -3828,18 +3828,36 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get leaveDeleteExplain =>
-      'Se cierra la sesión en todos los dispositivos de inmediato. Durante 14 días, un responsable podrá restaurar la familia; después se eliminarán todos los datos definitivamente.';
+      'La familia y todos sus datos se eliminan de inmediato y de forma permanente. Se cierra la sesión en todos los dispositivos. Esta acción no se puede deshacer.';
 
   @override
   String get leaveDeleteDialogTitle => '¿Eliminar la familia?';
 
   @override
   String get leaveDeleteDialogBody =>
-      'Se cerrará la sesión en todos los dispositivos y nadie podrá acceder a la familia. Durante 14 días, un responsable podrá restaurarla. Después se perderán todos los datos.';
+      'Se cierra la sesión en todos los dispositivos y se elimina la familia de forma permanente con todos sus datos.';
 
   @override
   String leaveDeleteNameLabel(String name) {
     return 'Escribe «$name» para confirmar';
+  }
+
+  @override
+  String get leaveDeleteNext => 'Siguiente';
+
+  @override
+  String get leaveDeleteWordTitle => '¿Eliminar para siempre?';
+
+  @override
+  String get leaveDeleteWordBody =>
+      'La familia y todos sus datos se eliminan de inmediato y de forma permanente. Nadie puede recuperarlos, ni siquiera un tutor. Exporta primero los datos si quieres conservarlos.';
+
+  @override
+  String get leaveDeleteWord => 'ELIMINAR';
+
+  @override
+  String leaveDeleteWordLabel(String word) {
+    return 'Escribe $word para eliminar la familia para siempre';
   }
 
   @override
@@ -4232,15 +4250,15 @@ class AppLocalizationsEs extends AppLocalizations {
       'Abre la aplicación WuselWall en tu teléfono, escanea el código para elegir este servidor e inicia sesión allí.';
 
   @override
-  String get shortcutTitle => 'Siri y Atajos';
+  String get shortcutTitle => 'Aplicaciones y asistentes de IA';
 
   @override
   String get shortcutSettingsSubtitle =>
-      'Lista de la compra, plan del día y más por voz';
+      'Siri, automatizaciones y asistentes de IA (MCP), cada uno con su clave';
 
   @override
   String get shortcutIntro =>
-      'Una clave conecta un atajo del iPhone con WuselWall. Con ella, Siri añade productos a la lista de la compra y te dice qué hay previsto hoy, qué hay para comer o quién tiene Educación Física mañana. Cada clave pertenece a una persona: permite leer y añadir, pero no eliminar ni administrar nada. Una clave para un asistente de IA (MCP) solo permite leer.';
+      'Una clave permite que otra aplicación use WuselWall en nombre de una persona. Una clave de automatización, por ejemplo para un atajo de Siri en el iPhone o cualquier aplicación que pueda llamar a una dirección web, permite leer y añadir: añade artículos a la lista de la compra e indica qué hay hoy, qué hay para comer o quién tiene educación física mañana. No permite eliminar ni administrar nada. Una clave para un asistente de IA (MCP, como Claude) solo permite leer.';
 
   @override
   String get shortcutEmpty => 'Aún no hay claves.';
@@ -4275,7 +4293,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String shortcutKeyOnce(String name) {
-    return 'Esta clave solo se muestra ahora. Quien la tenga podrá leer y añadir como $name, así que trátala como una contraseña. La aplicación Atajos la sincroniza mediante iCloud.';
+    return 'Esta clave solo se muestra ahora. Quien la tenga puede leer y añadir en nombre de $name, así que trátala como una contraseña. En la aplicación Atajos de Apple se sincroniza a través de iCloud.';
   }
 
   @override
@@ -4295,7 +4313,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get shortcutHowSteps =>
-      'En la aplicación Atajos, crea un atajo con la acción «Obtener contenido de URL»: usa la dirección terminada en /today y una cabecera «Authorization» con «Bearer », un espacio y la clave. Después añade «Mostrar resultado» o «Leer texto». La guía de wuselwall.app/docs/en/settings/shortcuts muestra todos los atajos.';
+      'Todas las aplicaciones envían la misma solicitud. Con Atajos de Apple, crea un atajo con la acción «Obtener contenido de URL»: la dirección terminada en /today y una cabecera «Authorization» con «Bearer», un espacio y la clave. Después añade «Mostrar resultado» o «Leer texto». La guía de wuselwall.app/docs/en/settings/shortcuts muestra cada atajo.';
 
   @override
   String shortcutLastUsed(String when) {
@@ -4336,17 +4354,20 @@ class AppLocalizationsEs extends AppLocalizations {
       'Esta persona ya tiene diez claves. Primero revoca una.';
 
   @override
+  String get shortcutSectionAutomations => 'Automatizaciones';
+
+  @override
   String get shortcutSectionAssistants => 'Asistentes de IA';
 
   @override
-  String get shortcutKindShortcut => 'Siri';
+  String get shortcutKindShortcut => 'Automatización';
 
   @override
-  String get shortcutKindAssistant => 'Asistente';
+  String get shortcutKindAssistant => 'Asistente de IA';
 
   @override
   String get shortcutKindShortcutHelp =>
-      'Para un atajo del iPhone: permite leer y añadir, por ejemplo a la lista de la compra.';
+      'Para Siri y Atajos de Apple, o cualquier aplicación que pueda llamar a una dirección web: permite leer y añadir, por ejemplo a la lista de la compra.';
 
   @override
   String get shortcutKindAssistantHelp =>
@@ -4403,4 +4424,20 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get appearanceNightNote =>
       'Por la noche, la pantalla de pared siempre muestra su vista nocturna.';
+
+  @override
+  String get settingsViewLabel => 'Qué ajustes mostrar';
+
+  @override
+  String get settingsViewBasic => 'Básicos';
+
+  @override
+  String get settingsViewAdvanced => 'Avanzados';
+
+  @override
+  String get settingsViewMoreHint =>
+      'Hay más ajustes en Avanzados. Los ajustes ocultos siguen activos.';
+
+  @override
+  String get settingsViewShowAll => 'Mostrar todos los ajustes';
 }

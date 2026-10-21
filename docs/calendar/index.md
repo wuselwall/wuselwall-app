@@ -62,7 +62,7 @@ Der Familienkalender lässt sich als **Abo** in Outlook oder auf dem iPhone anze
 
 Termine von außen kommen mit einem **Abo** in den Familienkalender: der Spielplan des Vereins, der Abfuhrkalender der Gemeinde, Schulveranstaltungen. Ihr braucht dafür nur die Adresse des Kalenders, meist eine Datei, die auf **.ics** endet. Adressen mit **webcal://** gehen auch.
 
-Abos verwaltet ein Erziehungsberechtigter unter **Einstellungen → Kalender von außen hinzufügen**. **Kalender abonnieren** öffnet das Formular mit Name, Adresse, Farbe, **Für wen?** (ohne Auswahl gilt der Kalender für die ganze Familie) und **Auf dem Küchendisplay zeigen**. Die Termine erscheinen im Kalender in der Farbe des Kalenders, mit einem Abo-Symbol. Sie sind nur zum Lesen: Änderungen kommen von der Quelle.
+Abos verwaltet ein Erziehungsberechtigter unter **Einstellungen → Erweitert → Kalender von außen hinzufügen**. **Kalender abonnieren** öffnet das Formular mit Name, Adresse, Farbe, **Für wen?** (ohne Auswahl gilt der Kalender für die ganze Familie) und **Auf dem Küchendisplay zeigen**. Die Termine erscheinen im Kalender in der Farbe des Kalenders, mit einem Abo-Symbol. Sie sind nur zum Lesen: Änderungen kommen von der Quelle.
 
 Euer Server holt jeden Kalender etwa einmal pro Stunde. Mit **Jetzt aktualisieren** geht es sofort. Schlägt der Abruf fehl, steht der Grund bei dem Kalender, zum Beispiel „Die Adresse ist gerade nicht erreichbar“.
 
