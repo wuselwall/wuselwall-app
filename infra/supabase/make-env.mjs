@@ -145,8 +145,7 @@ const out = {
   SITE_URL: `${web.origin}/`,
   // The web app.
   ADDITIONAL_REDIRECT_URLS: `${web.origin}/**`,
-  // Passkeys work in the native apps only for the first-party hosts (ADR-018); elsewhere
-  // the web app's own host is the relying party.
+  // The relying party is the web app's own host: the store app offers passkeys to no chosen server (ADR-018).
   PASSKEY_RP_ID: option('rp-id') ?? web.hostname,
   PASSKEY_RP_ORIGINS: web.origin,
   // Read by the Caddy front (docker-compose.caddy.yml); harmless without it.

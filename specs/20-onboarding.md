@@ -7,7 +7,7 @@ underneath (device sessions, tap-to-switch, the guardian PIN) is unchanged and l
 *into* it.
 
 > **2026-10-17: no Sign in with Apple or Google.** Adults sign in with a code by email or a
-> password, and passkeys stay with the first-party servers. This document describes the app
+> password, and passkeys only exist in builds that name their own server. This document describes the app
 > without the two providers; [ADR-014](adr/ADR-014-self-service-onboarding.md) records the change.
 
 Onboarding is where a family app is won or lost. A household decides in the first ten
@@ -161,15 +161,13 @@ an invitation or pairing link, which carries the server:
     email match is off, and a guardian resets a forgotten password with a one-time code
     ([Q48](14-open-questions.md), [16, step 10.4](16-setup-plan.md#step-10--journey-gaps-before-launch-m15));
 
-  Passkeys appear only on the first-party servers named at build time
-  (`WW_FIRST_PARTY_HOSTS`). Otherwise a hostile server could collect assertions for a
-  first-party server (ADR-018, decision 6). The app never shows a button that will fail.
+  Passkeys appear only in a build that names its own server; the store app offers them to no chosen server (ADR-018, amended 2026-10-21). The app never shows a button that will fail.
 
 ### Several ways into one account
 
 Every account has its email code, and may add a password. In **Einstellungen → Konto →
 Anmeldung** an adult sees the address the code goes to and sets or changes the password.
-Passkeys sit in Einstellungen → Sicherheit, on the first-party servers only.
+Passkeys sit in Einstellungen → Sicherheit, only in a build that names its own server.
 
 ## J1 — Start a family
 

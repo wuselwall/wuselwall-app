@@ -749,8 +749,8 @@ class _SecuritySection extends ConsumerWidget {
           ),
         ),
         // Not on the web until the passkeys SDK is self-hosted (web/index.html), and
-        // only with the project's own servers (ADR-018).
-        if (!kIsWeb && ref.watch(appConfigProvider).nativeSignIn)
+        // only in a build that names its own server (ADR-018).
+        if (!kIsWeb && ref.watch(appConfigProvider).passkeys)
           ListTile(
             leading: const Icon(Icons.fingerprint),
             title: Text(l10n.passkeyTitle),

@@ -43,9 +43,9 @@ function payload(opts: {
     email_data: {
       token: opts.token ?? "123456",
       token_hash: "a".repeat(32),
-      redirect_to: "https://web.wuselwall.app/",
+      redirect_to: "https://web.example.org/",
       email_action_type: opts.kind ?? "magiclink",
-      site_url: "https://web.wuselwall.app/",
+      site_url: "https://web.example.org/",
       token_new: opts.tokenNew ?? "",
       token_hash_new: "",
     },

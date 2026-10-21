@@ -130,9 +130,8 @@ per client and globally (`app.founder_attempt`).
 ### 4. Sign-in and mail
 
 Email codes and passwords work on every server; there are no external sign-in providers
-(Sign in with Apple and Google were removed 2026-10-17). Passkeys are offered only for
-servers in the build's `WW_FIRST_PARTY_HOSTS` (a CI secret)
-([ADR-018](adr/ADR-018-self-hosted-only.md), decision 6). Email codes need a mail service:
+(Sign in with Apple and Google were removed 2026-10-17). Passkeys are offered only by a build that names its own server
+([ADR-018](adr/ADR-018-self-hosted-only.md), amendment 2026-10-21). Email codes need a mail service:
 
 ### Email setup
 
