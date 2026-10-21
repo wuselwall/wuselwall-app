@@ -899,7 +899,7 @@
   "schoolSetupCardBody": "Añade el colegio, las horas de clase y los periodos lectivos. Después podrás introducir el horario.",
   "schoolSetupAction": "Configurar colegio",
   "schoolEnterTimetableTitle": "Introducir el horario",
-  "schoolEnterTimetableBody": "{name} aún no tiene horario para este periodo lectivo.",
+  "schoolEnterTimetableBody": "{name} aún no tiene horario para la semana mostrada.",
   "@schoolEnterTimetableBody": {
     "placeholders": {
       "name": {
@@ -2448,5 +2448,7 @@
   "settingsViewBasic": "Básicos",
   "settingsViewAdvanced": "Avanzados",
   "settingsViewMoreHint": "Hay más ajustes en Avanzados. Los ajustes ocultos siguen activos.",
-  "settingsViewShowAll": "Mostrar todos los ajustes"
+  "settingsViewShowAll": "Mostrar todos los ajustes",
+  "schoolTimetableNeedsTerm": "Primero añade un período que incluya la semana mostrada. Elige un nombre y las fechas de inicio y fin; después podrás introducir las clases.",
+  "schoolTermContinue": "Guardar período y continuar"
 }

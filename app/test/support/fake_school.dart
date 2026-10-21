@@ -312,12 +312,14 @@ SchoolData _withData(
   SchoolData d, {
   List<SchoolRecord>? schools,
   List<LessonRecord>? lessons,
+  List<TermRecord>? terms,
+  List<TimetableRecord>? timetables,
 }) => SchoolData(
   schools: schools ?? d.schools,
   periods: d.periods,
-  terms: d.terms,
+  terms: terms ?? d.terms,
   subjects: d.subjects,
-  timetables: d.timetables,
+  timetables: timetables ?? d.timetables,
   lessons: lessons ?? d.lessons,
   exceptions: d.exceptions,
   holidays: d.holidays,
@@ -334,6 +336,7 @@ class FakeSchoolRepository implements SchoolRepository {
   final periodSets = <List<PeriodRecord>>[];
   final lessonSets = <({String timetableId, List<LessonRecord> lessons})>[];
   final timetableSaves = <TimetableRecord>[];
+  final termSaves = <TermRecord>[];
   final schoolSaves =
       <({String? id, String name, String? regionCode, String? timezone})>[];
   final actors = <String?>[];
@@ -425,13 +428,56 @@ class FakeSchoolRepository implements SchoolRepository {
   }
 
   @override
+  Future<Result<String>> saveTerm({
+    required String? actor,
+    required TermRecord term,
+  }) async {
+    actors.add(actor);
+    termSaves.add(term);
+    final id = term.id.isEmpty ? 'term-new-${termSaves.length}' : term.id;
+    data = _withData(
+      data,
+      terms: [
+        ...data.terms.where((t) => t.id != id),
+        TermRecord(
+          id: id,
+          schoolId: term.schoolId,
+          name: term.name,
+          startsOn: term.startsOn,
+          endsOn: term.endsOn,
+          abAnchorWeek: term.abAnchorWeek,
+          isCurrent: term.isCurrent,
+        ),
+      ],
+    );
+    return Ok(id);
+  }
+
+  @override
   Future<Result<String>> saveTimetable({
     required String? actor,
     required TimetableRecord timetable,
   }) async {
     actors.add(actor);
     timetableSaves.add(timetable);
-    return const Ok('tt-kid');
+    final id = timetable.id.isEmpty ? 'tt-kid' : timetable.id;
+    data = _withData(
+      data,
+      timetables: [
+        ...data.timetables.where((t) => t.id != id),
+        TimetableRecord(
+          id: id,
+          profileId: timetable.profileId,
+          schoolId: timetable.schoolId,
+          termId: timetable.termId,
+          classLabel: timetable.classLabel,
+          weekCycle: timetable.weekCycle,
+          validFrom: timetable.validFrom,
+          validTo: timetable.validTo,
+        ),
+      ],
+    );
+    return Ok(id);
   }
 
   @override

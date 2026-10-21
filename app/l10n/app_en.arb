@@ -899,7 +899,7 @@
   "schoolSetupCardBody": "Add the school, its bell times and the terms. Then the timetable can be entered.",
   "schoolSetupAction": "Set up school",
   "schoolEnterTimetableTitle": "Enter the timetable",
-  "schoolEnterTimetableBody": "{name} has no timetable for this term yet.",
+  "schoolEnterTimetableBody": "{name} has no timetable for the week shown yet.",
   "@schoolEnterTimetableBody": {
     "placeholders": {
       "name": {
@@ -2454,5 +2454,7 @@
   "settingsViewBasic": "Basic",
   "settingsViewAdvanced": "Advanced",
   "settingsViewMoreHint": "More settings are under Advanced. Hidden settings still apply.",
-  "settingsViewShowAll": "Show all settings"
+  "settingsViewShowAll": "Show all settings",
+  "schoolTimetableNeedsTerm": "First add a term for the week shown. Choose a name and date range, then continue to enter the lessons.",
+  "schoolTermContinue": "Save term and continue"
 }

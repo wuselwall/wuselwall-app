@@ -1636,7 +1636,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String schoolEnterTimetableBody(String name) {
-    return '$name aún no tiene horario para este periodo lectivo.';
+    return '$name aún no tiene horario para la semana mostrada.';
   }
 
   @override
@@ -4440,4 +4440,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingsViewShowAll => 'Mostrar todos los ajustes';
+
+  @override
+  String get schoolTimetableNeedsTerm =>
+      'Primero añade un período que incluya la semana mostrada. Elige un nombre y las fechas de inicio y fin; después podrás introducir las clases.';
+
+  @override
+  String get schoolTermContinue => 'Guardar período y continuar';
 }

@@ -556,7 +556,7 @@
   "schoolSetupCardBody": "Lege Schule, Klingelzeiten und Zeiträume an. Danach lässt sich der Stundenplan eintragen.",
   "schoolSetupAction": "Schule einrichten",
   "schoolEnterTimetableTitle": "Stundenplan eingeben",
-  "schoolEnterTimetableBody": "Für {name} ist für diesen Zeitraum noch kein Stundenplan eingetragen.",
+  "schoolEnterTimetableBody": "Für {name} ist für die angezeigte Woche noch kein Stundenplan eingetragen.",
   "schoolEnterTimetableAction": "Stundenplan eingeben",
   "schoolNoChildren": "Im Haushalt ist noch kein Kind eingetragen.",
   "schoolEditSchool": "Schule bearbeiten",
@@ -1774,5 +1774,7 @@
   "settingsViewBasic": "Einfach",
   "settingsViewAdvanced": "Erweitert",
   "settingsViewMoreHint": "Weitere Einstellungen findest du unter „Erweitert“. Ausgeblendete Einstellungen gelten weiterhin.",
-  "settingsViewShowAll": "Alle Einstellungen zeigen"
+  "settingsViewShowAll": "Alle Einstellungen zeigen",
+  "schoolTimetableNeedsTerm": "Lege zuerst einen Zeitraum für die angezeigte Woche an. Wähle einen Namen und das Anfangs- und Enddatum. Danach trägst du die Stunden ein.",
+  "schoolTermContinue": "Zeitraum speichern und weiter"
 }

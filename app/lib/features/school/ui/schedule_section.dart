@@ -4,21 +4,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/router.dart';
+import 'package:wuselwall/app/theme/ww_colors.dart';
+import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/empty_view.dart';
-import 'package:wuselwall/core/ui/ringed_avatar.dart';
+import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
-import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
 import 'package:wuselwall/features/home/application/home_section.dart';
+import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/identity/ui/guardian_gate.dart';
 import 'package:wuselwall/features/school/application/school_providers.dart';
+import 'package:wuselwall/features/school/data/school_repository.dart';
 import 'package:wuselwall/features/school/domain/school_models.dart';
 import 'package:wuselwall/features/school/ui/lesson_sheet.dart';
+import 'package:wuselwall/features/school/ui/school_setup_page.dart';
 import 'package:wuselwall/features/school/ui/school_week_grid.dart';
 import 'package:wuselwall/features/school/ui/timetable_editor_page.dart';
 
@@ -67,57 +71,122 @@ class _Children extends ConsumerWidget {
         final picked = ref.watch(selectedChildIdProvider);
         final child =
             kids.where((k) => k.id == picked).firstOrNull ?? kids.first;
+        final choices = <Widget>[
+          for (final k in kids)
+            ChoiceChip(
+              showCheckmark: false,
+              avatar: MemberAvatar(member: _boardMember(context, k), size: 24),
+              selectedColor: context.ww.member(k.color).tint,
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              side: BorderSide(
+                color: k.id == child.id
+                    ? context.ww.member(k.color).ink
+                    : Theme.of(context).colorScheme.outline,
+                width: k.id == child.id ? 2 : 1,
+              ),
+              labelStyle: TextStyle(
+                color: k.id == child.id
+                    ? context.ww.member(k.color).ink
+                    : Theme.of(context).colorScheme.onSurface,
+                fontWeight: k.id == child.id
+                    ? FontWeight.w700
+                    : FontWeight.w400,
+              ),
+              label: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Flexible(
+                    child: Text(k.displayName, overflow: TextOverflow.ellipsis),
+                  ),
+                  if (k.id == child.id) ...[
+                    const SizedBox(width: 8),
+                    Icon(
+                      Icons.check,
+                      size: 18,
+                      color: context.ww.member(k.color).ink,
+                    ),
+                  ],
+                ],
+              ),
+              selected: k.id == child.id,
+              onSelected: (_) =>
+                  ref.read(selectedChildIdProvider.notifier).select(k.id),
+            ),
+        ];
+        final thisWeek = TextButton(
+          onPressed: ref.read(selectedWeekProvider.notifier).thisWeek,
+          child: Text(l10n.schoolThisWeek),
+        );
+        final actions = <Widget>[
+          Tooltip(
+            message: l10n.schoolEditSchool,
+            child: TextButton.icon(
+              icon: const Icon(Icons.school_outlined),
+              label: Text(l10n.schoolEditSchool),
+              onPressed: () async {
+                if (await ensureGuardian(context, ref) && context.mounted) {
+                  unawaited(context.push(Routes.schoolSetup));
+                }
+              },
+            ),
+          ),
+          Tooltip(
+            message: l10n.schoolEditTimetable,
+            child: TextButton.icon(
+              icon: const Icon(Icons.edit_calendar_outlined),
+              label: Text(l10n.schoolEditTimetable),
+              onPressed: () => openTimetableEditor(
+                context,
+                ref,
+                data: data,
+                profileId: child.id,
+              ),
+            ),
+          ),
+        ];
         return ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                IconButton(
-                  tooltip: l10n.schoolEditSchool,
-                  icon: const Icon(Icons.settings_outlined),
-                  onPressed: () async {
-                    if (await ensureGuardian(context, ref) && context.mounted) {
-                      unawaited(context.push(Routes.schoolSetup));
-                    }
-                  },
-                ),
-                IconButton(
-                  tooltip: l10n.schoolEditTimetable,
-                  icon: const Icon(Icons.edit_calendar_outlined),
-                  onPressed: () => openTimetableEditor(
-                    context,
-                    ref,
-                    data: data,
-                    profileId: child.id,
-                  ),
-                ),
-              ],
-            ),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                for (final k in kids)
-                  ChoiceChip(
-                    showCheckmark: false,
-                    avatar: RingedAvatar(
-                      selected: k.id == child.id,
-                      child: MemberAvatar(
-                        member: _boardMember(context, k),
-                        size: 24,
-                      ),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final selection = Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: choices,
+                );
+                final editing = Wrap(
+                  alignment: WrapAlignment.end,
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: actions,
+                );
+                final wide =
+                    constraints.maxWidth /
+                        MediaQuery.textScalerOf(context).scale(1) >=
+                    800;
+                final toolbar = Row(
+                  children: [
+                    Expanded(child: selection),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: thisWeek,
                     ),
-                    label: Text(k.displayName),
-                    selected: k.id == child.id,
-                    onSelected: (_) =>
-                        ref.read(selectedChildIdProvider.notifier).select(k.id),
-                  ),
-              ],
+                    Expanded(child: wide ? editing : const SizedBox.shrink()),
+                  ],
+                );
+                if (wide) return toolbar;
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    selection,
+                    Center(child: thisWeek),
+                    editing,
+                  ],
+                );
+              },
             ),
             const SizedBox(height: 12),
-            _WeekNav(data: data, child: child),
-            const SizedBox(height: 8),
             _Week(data: data, child: child),
           ],
         );
@@ -135,50 +204,6 @@ BoardMember _boardMember(BuildContext context, Member m) => BoardMember(
   kind: MemberKind.child,
 );
 
-class _WeekNav extends ConsumerWidget {
-  const _WeekNav({required this.data, required this.child});
-
-  final SchoolData data;
-  final Member child;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = context.l10n;
-    final monday = ref.watch(selectedWeekProvider);
-    final sunday = monday.add(const Duration(days: 6));
-    final notifier = ref.read(selectedWeekProvider.notifier);
-    return Row(
-      children: [
-        IconButton(
-          tooltip: l10n.schoolPrevWeek,
-          icon: const Icon(Icons.chevron_left),
-          onPressed: notifier.previous,
-        ),
-        Expanded(
-          child: Text(
-            l10n.schoolWeekLabel(
-              isoWeekOf(monday),
-              context.dayMonth(monday),
-              context.dayMonth(sunday),
-            ),
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-        ),
-        IconButton(
-          tooltip: l10n.schoolNextWeek,
-          icon: const Icon(Icons.chevron_right),
-          onPressed: notifier.next,
-        ),
-        TextButton(
-          onPressed: notifier.thisWeek,
-          child: Text(l10n.schoolThisWeek),
-        ),
-      ],
-    );
-  }
-}
-
 class _Week extends ConsumerWidget {
   const _Week({required this.data, required this.child});
 
@@ -191,6 +216,8 @@ class _Week extends ConsumerWidget {
     final monday = ref.watch(selectedWeekProvider);
     final sunday = monday.add(const Duration(days: 6));
     final week = ref.watch(schoolWeekProvider((monday, sunday)));
+    final dates = [for (var i = 0; i < 5; i++) monday.add(Duration(days: i))];
+    final navigation = ref.read(selectedWeekProvider.notifier);
     final now = ref.watch(nowProvider);
     final tomorrow = DateTime(now.year, now.month, now.day + 1);
     final pack = ref.watch(schoolWeekProvider((tomorrow, tomorrow)));
@@ -200,6 +227,15 @@ class _Week extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        SchoolWeekHeader(
+          dates: dates,
+          raisedIndex: _raisedIndex([
+            for (final date in dates) week.value?.dayOf(child.id, date),
+          ], dates.indexWhere((date) => _sameDay(date, now))),
+          onPrevious: navigation.previous,
+          onNext: navigation.next,
+        ),
+        const SizedBox(height: 4),
         AsyncValueView(
           value: week,
           onRetry: () => ref.invalidate(schoolWeekProvider),
@@ -208,9 +244,6 @@ class _Week extends ConsumerWidget {
             if (timetable == null) {
               return _EnterCard(data: data, child: child, monday: monday);
             }
-            final dates = [
-              for (var i = 0; i < 5; i++) monday.add(Duration(days: i)),
-            ];
             final days = [for (final d in dates) w.dayOf(child.id, d)];
             final allHoliday = days.every((d) => d?.free == FreeReason.holiday);
             if (allHoliday) {
@@ -225,15 +258,19 @@ class _Week extends ConsumerWidget {
             final todayIndex = dates.indexWhere((d) => _sameDay(d, now));
             final raised = _raisedIndex(days, todayIndex);
             final isTodayRaised = raised != null && raised == todayIndex;
-            return SchoolWeekGrid(
-              timetable: timetable,
-              dates: dates,
-              days: days,
-              raisedIndex: raised,
-              nowMinutes: isTodayRaised ? now.hour * 60 + now.minute : null,
-              iconKeyOf: data.iconKeyFor,
-              onLesson: (i, lesson) =>
-                  _openSheet(context, ref, dates[i], lesson),
+            return Padding(
+              padding: const EdgeInsets.only(right: 48),
+              child: SchoolWeekGrid(
+                showHeader: false,
+                timetable: timetable,
+                dates: dates,
+                days: days,
+                raisedIndex: raised,
+                nowMinutes: isTodayRaised ? now.hour * 60 + now.minute : null,
+                iconKeyOf: data.iconKeyFor,
+                onLesson: (i, lesson) =>
+                    _openSheet(context, ref, dates[i], lesson),
+              ),
             );
           },
         ),
@@ -284,8 +321,8 @@ class _Week extends ConsumerWidget {
 
 /// Opens the timetable editor for [profileId] on the term of [monday] (default: the
 /// week on screen), after the guardian check. With siblings at several schools, the
-/// household first says which school the timetable is for. Without a term for that
-/// school, the setup page comes first, since a term is what a timetable is entered for.
+/// household first says which school the timetable is for. A missing term is created
+/// inline before continuing to lesson entry.
 Future<void> openTimetableEditor(
   BuildContext context,
   WidgetRef ref, {
@@ -294,7 +331,7 @@ Future<void> openTimetableEditor(
   DateTime? monday,
 }) async {
   if (!await ensureGuardian(context, ref) || !context.mounted) return;
-  String? schoolId;
+  String? schoolId = data.schools.firstOrNull?.id;
   if (data.schools.length > 1) {
     final picked = await showDialog<SchoolRecord>(
       context: context,
@@ -312,27 +349,36 @@ Future<void> openTimetableEditor(
     if (picked == null || !context.mounted) return;
     schoolId = picked.id;
   }
-  final term = data.termFor(
-    monday ?? ref.read(selectedWeekProvider),
-    schoolId: schoolId,
-  );
-  if (term == null) {
-    unawaited(
-      context.push(
-        schoolId == null
-            ? Routes.schoolSetup
-            : Uri(
-                path: Routes.schoolSetup,
-                queryParameters: {'school': schoolId},
-              ).toString(),
-      ),
-    );
+  if (schoolId == null) {
+    unawaited(context.push(Routes.schoolSetup));
     return;
+  }
+  final DateTime selectedDate = monday ?? ref.read(selectedWeekProvider);
+  var termId = data.termFor(selectedDate, schoolId: schoolId)?.id;
+  if (termId == null) {
+    final draft = await showDialog<TermRecord>(
+      context: context,
+      builder: (_) =>
+          SchoolTermDialog(schoolId: schoolId!, forTimetableOn: selectedDate),
+    );
+    if (draft == null || !context.mounted) return;
+    final result = await ref
+        .read(schoolRepositoryProvider)
+        .saveTerm(actor: ref.read(actingProfileProvider), term: draft);
+    if (!context.mounted) return;
+    switch (result) {
+      case Err(:final failure):
+        context.showFailure(failure);
+        return;
+      case Ok(:final value):
+        termId = value;
+        ref.invalidate(schoolDataProvider);
+    }
   }
   unawaited(
     context.push(
       Routes.timetableEdit,
-      extra: TimetableEditArgs(profileId: profileId, termId: term.id),
+      extra: TimetableEditArgs(profileId: profileId, termId: termId),
     ),
   );
 }

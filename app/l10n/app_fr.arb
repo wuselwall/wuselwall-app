@@ -899,7 +899,7 @@
   "schoolSetupCardBody": "Ajoute l’école, ses horaires de cours et les périodes scolaires. Tu pourras ensuite saisir l’emploi du temps.",
   "schoolSetupAction": "Configurer l’école",
   "schoolEnterTimetableTitle": "Saisir l’emploi du temps",
-  "schoolEnterTimetableBody": "Il n’y a pas encore d’emploi du temps pour {name} pour cette période scolaire.",
+  "schoolEnterTimetableBody": "Il n’y a pas encore d’emploi du temps pour {name} pour la semaine affichée.",
   "@schoolEnterTimetableBody": {
     "placeholders": {
       "name": {
@@ -2448,5 +2448,7 @@
   "settingsViewBasic": "Essentiels",
   "settingsViewAdvanced": "Avancés",
   "settingsViewMoreHint": "D’autres paramètres se trouvent dans Avancés. Les paramètres masqués restent actifs.",
-  "settingsViewShowAll": "Afficher tous les paramètres"
+  "settingsViewShowAll": "Afficher tous les paramètres",
+  "schoolTimetableNeedsTerm": "Ajoutez d’abord une période couvrant la semaine affichée. Choisissez un nom et les dates de début et de fin, puis passez à la saisie des cours.",
+  "schoolTermContinue": "Enregistrer la période et continuer"
 }

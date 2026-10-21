@@ -449,16 +449,14 @@ class SchoolData {
   String? iconKeyFor(String subjectName) =>
       subjects.where((s) => s.name == subjectName).firstOrNull?.iconKey;
 
-  /// The term the editor opens on for a week: the one covering [day], else the
-  /// current one, else the last. With [schoolId], only that school's terms count.
+  /// The term covering [day]. With [schoolId], only that school's terms count.
+  /// Never reuse another term: the projected week would still have no timetable.
   TermRecord? termFor(DateTime day, {String? schoolId}) {
     final own = [
       for (final t in terms)
         if (schoolId == null || t.schoolId == schoolId) t,
     ];
-    return own.where((t) => t.covers(day)).firstOrNull ??
-        own.where((t) => t.isCurrent).firstOrNull ??
-        (own.isEmpty ? null : own.last);
+    return own.where((t) => t.covers(day)).firstOrNull;
   }
 }
 
