@@ -25,8 +25,7 @@ export type DiscoveryDocument = {
   api_version: number;
   min_app_version: string;
   household_creation: string;
-  /** Email codes and passwords, on every server. Passkeys are decided by the app
-   * (WW_FIRST_PARTY_HOSTS), never by a server. */
+  /** Email codes and passwords, on every server. Passkeys are decided by the app (only builds that name their own server), never by a server. */
   sign_in: { password: true };
   features: string[];
 };

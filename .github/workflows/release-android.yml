@@ -42,19 +42,13 @@ jobs:
       # though the count restarted at 1 when the workflow was renamed from build-android.yml
       # (whose last build was 14). A tag sets the version name; a manual run keeps the one
       # in pubspec.yaml.
-      # No server is compiled in (env/store.json, ADR-018). The first first-party host is
-      # where a device updated from an earlier build finds its server again, so a release
-      # without it would strand them.
+      # No server is compiled in (env/store.json, ADR-018): the person chooses one.
       - run: |
-          [ -n "$FIRST_PARTY_HOSTS" ] || { echo "::error::set the secret WW_FIRST_PARTY_HOSTS"; exit 1; }
           args=(--build-number=$(( ${{ github.run_number }} + 100 )))
           if [[ "$GITHUB_REF_TYPE" == tag ]]; then args+=(--build-name="${GITHUB_REF_NAME#v}"); fi
           for target in apk appbundle; do
-            flutter build "$target" --release "${args[@]}" --dart-define-from-file=env/store.json \
-              --dart-define=WW_FIRST_PARTY_HOSTS="$FIRST_PARTY_HOSTS"
+            flutter build "$target" --release "${args[@]}" --dart-define-from-file=env/store.json
           done
-        env:
-          FIRST_PARTY_HOSTS: ${{ secrets.WW_FIRST_PARTY_HOSTS }}
       - run: |
           mv build/app/outputs/flutter-apk/app-release.apk build/wuselwall.apk
           mv build/app/outputs/bundle/release/app-release.aab build/wuselwall.aab

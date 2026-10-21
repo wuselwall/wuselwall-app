@@ -62,7 +62,7 @@ See [specs/03-architecture.md](specs/03-architecture.md),
   changes the app–server contract raises `api_version`; each app release supports the
   current and the previous one, so never assume every server runs the latest release.
 - No household's server is hard-coded in the app either: the store app has no default
-  backend. Passkeys only for `WW_FIRST_PARTY_HOSTS`.
+  backend, and the project runs no server of its own. Passkeys only in builds that name their own server.
 
 - Tables live in the `app` schema and are never exposed. PostgREST exposes only `api`:
   `security_invoker` views for reads, one function per write use case.

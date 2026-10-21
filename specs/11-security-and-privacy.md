@@ -282,11 +282,7 @@ With Supabase, row-level security is not defence in depth; it is the perimeter.
   the requesting device. The approval screen repeats the code and warns against
   approving a device that is not in front of you. That is the one social-engineering
   path, and it ends in a shared device a guardian can see and revoke in Geräte.
-- **Other servers cannot harvest sign-ins meant for a first-party server** ([ADR-018](adr/ADR-018-self-hosted-only.md),
-  decision 6; first argued for Cloud in ADR-015). The store app offers passkeys only
-  against the first-party servers named at build time (`WW_FIRST_PARTY_HOSTS`); against
-  any other server it offers email codes and passwords. The app shows the server's host
-  on every sign-in screen.
+- **No server can harvest passkey sign-ins** ([ADR-018](adr/ADR-018-self-hosted-only.md), amendment 2026-10-21; first argued for Cloud in ADR-015). The store app offers passkeys to no chosen server, only builds that name their own server do; against every other server it offers email codes and passwords. The app shows the server's host on every sign-in screen.
 - **Cross-household isolation is now about strangers.** The pgTAP cross-household cases
   (T9) are release-blocking, and the catalogue test pins the exact list of
   anon-callable functions.
