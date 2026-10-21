@@ -1,4 +1,3 @@
-import 'package:wuselwall/core/server/first_party.dart';
 import 'package:wuselwall/core/server/server_info.dart';
 
 /// The configuration the app runs with: the build's
@@ -15,18 +14,19 @@ class AppConfig {
     required this.environment,
     required this.supabaseUrl,
     required this.supabasePublishableKey,
-    this.nativeSignIn = true,
+    this.passkeys = true,
     this.server,
   });
 
-  /// The build combined with a chosen server. Passkeys stay with the project's own
-  /// servers (ADR-018, decision 6).
+  /// The build combined with a chosen server. No passkeys: they bind to the app's
+  /// associated domain, which no family's server shares, and the project runs no
+  /// server of its own (ADR-018, amended 2026-10-21).
   factory AppConfig.forServer(AppConfig build, ServerInfo server) {
     return AppConfig(
       environment: build.environment,
       supabaseUrl: server.supabaseUrl.toString().replaceAll(RegExp(r'/$'), ''),
       supabasePublishableKey: server.publishableKey,
-      nativeSignIn: isFirstParty(server.supabaseUrl),
+      passkeys: false,
       server: server,
     );
   }
@@ -42,9 +42,9 @@ class AppConfig {
   final String supabaseUrl;
   final String supabasePublishableKey;
 
-  /// Whether passkeys may be used: only with the project's own servers
-  /// (WW_FIRST_PARTY_HOSTS) and builds that name their server.
-  final bool nativeSignIn;
+  /// Whether passkeys may be offered: only in a build that names its own server,
+  /// whose associated domains it controls. A chosen server never gets them.
+  final bool passkeys;
 
   /// The chosen server, or null for a build that names its own (`SUPABASE_URL`).
   final ServerInfo? server;

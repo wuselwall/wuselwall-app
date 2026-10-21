@@ -754,7 +754,6 @@ manager.
 | `PLAY_SERVICE_ACCOUNT_JSON` | GitHub secrets | Play upload |
 | `WW_JWT_SECRET`, `WW_SECRET_KEY` | `supabase/.env` on the development machine | the Supabase stack (CLI) |
 | `RESTIC_PASSWORD`, backup-target credentials, healthchecks URL | `backup.env` next to the server's tool (`BACKUP_ENV`) | backups |
-| `WW_FIRST_PARTY_HOSTS` (not secret, but kept out of public logs) | GitHub secret | the hosts with native sign-in and passkeys in release builds |
 | `DOCS_DEPLOY_KEY`, `DOCS_DEPLOY_KNOWN_HOSTS`, `DOCS_DEPLOY_TARGET` | GitHub secrets | publishing the docs |
 | Push credentials (APNs key, FCM service account) — only if a relay is ever built ([Q47](14-open-questions.md)) | Edge Function secrets | a future `push-send` |
 | Scaleway TEM credentials: project ID and the secret key of an IAM application limited to Transactional Email, one pair per environment | The server's stack `.env` (`SMTP_USER`, `SMTP_PASS`) and Edge Function secrets, or a hosted project's Auth settings. Throwaway stacks use Mailpit | Supabase Auth email ([10](10-deployment-and-ops.md#email-setup)), the send-email hook |

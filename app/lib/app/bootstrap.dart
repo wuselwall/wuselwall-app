@@ -19,7 +19,6 @@ import 'package:wuselwall/core/logging/log.dart';
 import 'package:wuselwall/core/notifications/notification_scheduler.dart';
 import 'package:wuselwall/core/notifications/notification_scheduler_provider.dart';
 import 'package:wuselwall/core/notifications/plugin_notification_scheduler.dart';
-import 'package:wuselwall/core/server/first_party.dart';
 import 'package:wuselwall/core/server/server_address.dart';
 import 'package:wuselwall/core/server/server_compat.dart';
 import 'package:wuselwall/core/server/server_discovery.dart';
@@ -41,8 +40,6 @@ import 'package:wuselwall/features/setup/ui/server_choice_page.dart';
 /// - A store build starts on the server it chose before; it checks that server's
 ///   discovery document again in the background and stops at a server it no longer
 ///   fits (decision 5).
-/// - A store build updated from one that had a first-party server compiled in finds a
-///   session but no server, and keeps that server ([legacyServer]).
 /// - An invitation or pairing link names its server ([links]); with no server chosen the app
 ///   uses that one and skips the question.
 /// - The web app refreshes its own origin before using a cached server/key; it uses
@@ -322,15 +319,6 @@ class _BootstrapState extends State<Bootstrap> {
       unawaited(_recheck(stored));
       return;
     }
-    final legacy = legacyServer;
-    if (legacy != null && await widget.hasSession()) {
-      final problem = await _connect(legacy);
-      if (problem == null) return;
-      // Offline at the first start after the update: the address is known, ask again.
-      _show(_Choosing(prefill: displayServerAddress(legacy), problem: problem));
-      return;
-    }
-
     // A link that opened the app names its server: wait a moment for it rather than ask.
     if (widget.links != null) {
       await _firstLink.future.timeout(

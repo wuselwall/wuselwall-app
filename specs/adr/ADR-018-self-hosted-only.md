@@ -9,7 +9,7 @@ site stays where it is); answers [Q40](../14-open-questions.md) anew and opens Q
 Decision 6 is narrowed on 2026-10-17: Sign in with Apple and Google are gone
 ([ADR-014](ADR-014-self-service-onboarding.md)'s amendment), so `WW_FIRST_PARTY_HOSTS` gates
 passkeys only, the discovery document no longer reports Apple or Google, and the store app
-carries no Google sign-in library
+carries no Google sign-in library. Decision 6's first-party hosts are gone on 2026-10-21, see the [amendment](#amendment-2026-10-21-no-first-party-servers).
 
 ## Context
 
@@ -194,7 +194,7 @@ What exists now, decision by decision, and where it differs from the text above.
   guardian action) empties the local store and signs the device out. A build with
   `SUPABASE_URL` (development) never asks. A store build that finds a session but no stored
   server, because it was updated from a build with a server compiled in, keeps the first
-  first-party host.
+  first-party host. *(Gone 2026-10-21.)*
 - **4 (demo).** Built: "Try it without a server" runs the docs' in-memory household
   (`lib/demo/demo_overrides.dart`) under a banner with a way out.
 - **5 (compatibility).** `api.server_info()` returns `api_version` 1 and `min_app_version`
@@ -204,7 +204,7 @@ What exists now, decision by decision, and where it differs from the text above.
 - **6 (sign-in per server).** The discovery document reports Apple and Google from Auth's
   settings; the app offers them through the server's redirect. The native sheets and
   passkeys need the server's host in `WW_FIRST_PARTY_HOSTS`, a build-time define that CI
-  supplies from a repository secret (masked in the public logs); no committed file names a host.
+  supplies from a repository secret (masked in the public logs); no committed file names a host. *(Gone 2026-10-21, see below.)*
 - **7 (each server serves its web app).** A server release carries one web build without a
   server; it reads the discovery document at its own origin, and asks otherwise. The Caddy
   layer serves it next to the API.
@@ -237,3 +237,19 @@ is tested, and the docs name none.
 first-party servers serve `server-info`; otherwise an updated device finds no discovery
 document and has to be pointed at its server by hand.
 
+## Amendment 2026-10-21: no first-party servers
+
+The project runs no server, not even for its maintainers' own household (user,
+2026-10-19: "we will NOT host a public server for other people"). The servers that
+decision 6 called first-party were one operator's servers, and they are no longer
+public. So:
+
+- **`WW_FIRST_PARTY_HOSTS` is gone** from the app and the release workflows; the
+  repository secret can be deleted.
+- **Passkeys** are offered only by a build that names its own server (`SUPABASE_URL`),
+  whose associated domains its operator controls. The store app offers them to no chosen
+  server: they would bind to the app's own domain, which no family's server shares. Every
+  server keeps email codes and passwords.
+- **A device updated from a build before the server choice** no longer falls back to a
+  compiled-in server. It asks for its server like a new installation; the person types its
+  address or scans its QR code once.
