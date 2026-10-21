@@ -1,4 +1,4 @@
-// Writes the bilingual GoTrue fallback templates (supabase/templates/) from the renderer
+// Writes single-language GoTrue fallback templates (supabase/templates/) from the renderer
 // the send-email hook uses, so the two never drift apart. mail_render_test.ts fails when a
 // committed template differs from this output. From the repository root:
 //
@@ -6,14 +6,24 @@
 import {
   FALLBACK_TEMPLATES,
   type FallbackTemplateKind,
+  MAIL_LOCALES,
   renderFallbackTemplate,
 } from "./mail_render.ts";
 
-for (const [kind, file] of Object.entries(FALLBACK_TEMPLATES)) {
-  const target = new URL(`../../templates/${file}`, import.meta.url);
-  await Deno.writeTextFile(
-    target,
-    renderFallbackTemplate(kind as FallbackTemplateKind),
+// Root files preserve the German default for existing config.toml installations.
+for (const prefix of ["", ...MAIL_LOCALES] as const) {
+  const directory = new URL(
+    `../../templates/${prefix ? `${prefix}/` : ""}`,
+    import.meta.url,
   );
-  console.log(`wrote supabase/templates/${file}`);
+  await Deno.mkdir(directory, { recursive: true });
+  for (const [kind, file] of Object.entries(FALLBACK_TEMPLATES)) {
+    await Deno.writeTextFile(
+      new URL(file, directory),
+      renderFallbackTemplate(kind as FallbackTemplateKind, prefix || "de"),
+    );
+    console.log(
+      `wrote supabase/templates/${prefix ? `${prefix}/` : ""}${file}`,
+    );
+  }
 }

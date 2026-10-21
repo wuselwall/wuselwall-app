@@ -1118,6 +1118,27 @@
     }
   },
   "usualDayApply": "Apply",
+  "usualWholeDay": "Whole day",
+  "usualSlots": "Time slots",
+  "usualSlotState": "Where",
+  "usualSlotFrom": "From",
+  "usualSlotUntil": "Until",
+  "usualAddSlot": "Add time slot",
+  "usualRemoveSlot": "Remove time slot",
+  "usualSlotsInvalid": "Each time slot ends after it starts, and slots do not overlap.",
+  "usualAlternating": "Alternating weeks (A/B)",
+  "usualAlternatingHelp": "For a plan that repeats every two weeks.",
+  "usualWeekA": "Week A",
+  "usualWeekB": "Week B",
+  "usualThisWeekIs": "This week is {week}.",
+  "@usualThisWeekIs": {
+    "placeholders": {
+      "week": {
+        "type": "String"
+      }
+    }
+  },
+  "usualWhichWeek": "Which week is this week?",
   "errUsualWeekInvalid": "This usual week is not valid.",
   "busyTitle": "Meetings until",
   "busyPickTime": "Choose a time",
@@ -1196,7 +1217,6 @@
   },
   "tasksNoteOptional": "Note (optional)",
   "tasksNoChores": "No chores yet.",
-  "tasksStarterTitle": "Start with the starter pack",
   "tasksStarterHelp": "Five chores, three rewards and four badges to begin with. Everything can be changed afterwards.",
   "tasksStarterAdd": "Add starter pack",
   "tasksStarterDone": "Starter pack added.",
@@ -1953,6 +1973,8 @@
   },
   "householdLanguageDe": "German",
   "householdLanguageEn": "English",
+  "householdLanguageFr": "French",
+  "householdLanguageEs": "Spanish",
   "householdNewFounderCode": "Setup code",
   "householdNewFounderHelp": "Use the setup code shown when your server was installed, or ask the person who runs it. This is not the code from your sign-in email.",
   "householdNewCodeSaved": "Setup code saved from your setup link. You do not need to enter it again.",

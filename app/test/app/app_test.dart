@@ -32,7 +32,7 @@ void main() {
     });
 
     testWidgets('falls back to German for unsupported locales', (t) async {
-      await pump(t, locale: const Locale('fr'));
+      await pump(t, locale: const Locale('it'));
       expect(find.text('Willkommen bei WuselWall'), findsOneWidget);
     });
 

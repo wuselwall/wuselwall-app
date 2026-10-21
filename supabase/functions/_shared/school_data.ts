@@ -67,26 +67,33 @@ export async function loadSchoolData(
   );
   const timetableIds = timetables.map((t) => t.id);
 
-  const [schools, periods, subjects, lessons, exceptions, ownHolidays, household] =
-    await Promise.all([
-      rows<SchoolRow>(client.from("schools").select("*")),
-      rows<PeriodRow>(client.from("school_periods").select("*")),
-      rows<SubjectRow>(client.from("subjects").select("*")),
-      timetableIds.length === 0 ? [] : rows<LessonRow>(
-        client.from("timetable_lessons").select("*")
-          .in("timetable_id", timetableIds),
-      ),
-      timetableIds.length === 0 ? [] : rows<ExceptionRow>(
-        client.from("timetable_exceptions").select("*")
-          .in("timetable_id", timetableIds)
-          .gte("on_date", from).lte("on_date", to),
-      ),
-      rows<HolidayRow>(
-        client.from("school_holidays").select("*")
-          .lte("starts_on", to).gte("ends_on", from),
-      ),
-      loadHousehold(client),
-    ]);
+  const [
+    schools,
+    periods,
+    subjects,
+    lessons,
+    exceptions,
+    ownHolidays,
+    household,
+  ] = await Promise.all([
+    rows<SchoolRow>(client.from("schools").select("*")),
+    rows<PeriodRow>(client.from("school_periods").select("*")),
+    rows<SubjectRow>(client.from("subjects").select("*")),
+    timetableIds.length === 0 ? [] : rows<LessonRow>(
+      client.from("timetable_lessons").select("*")
+        .in("timetable_id", timetableIds),
+    ),
+    timetableIds.length === 0 ? [] : rows<ExceptionRow>(
+      client.from("timetable_exceptions").select("*")
+        .in("timetable_id", timetableIds)
+        .gte("on_date", from).lte("on_date", to),
+    ),
+    rows<HolidayRow>(
+      client.from("school_holidays").select("*")
+        .lte("starts_on", to).gte("ends_on", from),
+    ),
+    loadHousehold(client),
+  ]);
 
   const subjectsShown = household.equipmentHint
     ? subjects

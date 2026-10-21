@@ -27,7 +27,10 @@ export const MCP_EN: McpMessages = {
   noTasks: "No tasks.",
   noMeals: "No meals planned.",
   guests: (n) => (n === 1 ? "+1 guest" : `+${n} guests`),
-  shopping: (list, n) => (n === 0 ? `${list}: nothing open.` : `${list}: ${n} open`),
+  shopping: (
+    list,
+    n,
+  ) => (n === 0 ? `${list}: nothing open.` : `${list}: ${n} open`),
   noList: "No shopping list yet: it is made with the first item.",
   category: {
     produce: "Fruit & vegetables",
@@ -73,7 +76,8 @@ export const MCP_EN: McpMessages = {
   windowInvalid:
     "Please give a range of at most 62 days, starting no more than 7 days ago, from not after to, as YYYY-MM-DD.",
   memberRequired: "Please name a child (member).",
-  dateInvalid: (key, value) => `${key} must be a date as YYYY-MM-DD, not ${value}.`,
+  dateInvalid: (key, value) =>
+    `${key} must be a date as YYYY-MM-DD, not ${value}.`,
   notText: (key) => `${key} must be text.`,
   statusInvalid: "status is open, done or all.",
   queryRequired: "Please say what to look for (query).",

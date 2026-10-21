@@ -8,6 +8,7 @@ import 'package:wuselwall/core/config/config_providers.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/empty_view.dart';
 import 'package:wuselwall/core/ui/qr_code_view.dart';
 import 'package:wuselwall/core/ui/ringed_avatar.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
@@ -44,9 +45,15 @@ class FeedTokensPage extends ConsumerWidget {
         value: tokens,
         onRetry: () => ref.invalidate(feedTokensProvider),
         data: (list) => list.isEmpty
-            ? Padding(
-                padding: const EdgeInsets.all(Tokens.space4),
-                child: Text(l10n.feedEmpty),
+            ? EmptyView(
+                message: l10n.feedEmpty,
+                actions: [
+                  FilledButton.icon(
+                    onPressed: () => _create(context, ref),
+                    icon: const Icon(Icons.add),
+                    label: Text(l10n.feedNew),
+                  ),
+                ],
               )
             : ListView(
                 padding: const EdgeInsets.fromLTRB(

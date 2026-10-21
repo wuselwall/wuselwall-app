@@ -238,10 +238,16 @@ Deno.test("an imported calendar is on the board only when it shows there, as key
     });
   const board = fillBoard(
     base(),
-    [imported("i-show", true, "Abfall"), imported("i-hidden", false, "Spielplan")],
+    [
+      imported("i-show", true, "Abfall"),
+      imported("i-hidden", false, "Spielplan"),
+    ],
     [],
   );
-  assertEquals(dayOf(board, "2026-10-14").events.map((e) => [e.id, e.key]), [["i-show", true]]);
+  assertEquals(dayOf(board, "2026-10-14").events.map((e) => [e.id, e.key]), [[
+    "i-show",
+    true,
+  ]]);
 });
 
 Deno.test("the key and tentative flags come from importance and status", () => {
@@ -729,17 +735,60 @@ function withHolidays(
 }
 
 Deno.test("a region's public holiday marks its day, named in the household's language", () => {
-  const feed = [{ ...ASCENSION, starts_on: "2026-10-14", ends_on: "2026-10-14" }];
+  const feed = [{
+    ...ASCENSION,
+    starts_on: "2026-10-14",
+    ends_on: "2026-10-14",
+  }];
   const german = withHolidays("CH-ZH-ZH-ZH", "de-DE", [], feed);
-  assertEquals(dayOf(german, "2026-10-14").holiday, { name: "Auffahrt", source: "region" });
+  assertEquals(dayOf(german, "2026-10-14").holiday, {
+    name: "Auffahrt",
+    source: "region",
+  });
   assertEquals(dayOf(german, "2026-10-13").holiday, null);
   const english = withHolidays("CH-ZH", "en-GB", [], feed);
-  assertEquals(dayOf(english, "2026-10-14").holiday, { name: "Ascension Day", source: "region" });
+  assertEquals(dayOf(english, "2026-10-14").holiday, {
+    name: "Ascension Day",
+    source: "region",
+  });
+});
+
+Deno.test("a region's holiday is named in French and Spanish, German as the fallback", () => {
+  const feed = [{
+    ...ASCENSION,
+    names: {
+      de: "Auffahrt",
+      en: "Ascension Day",
+      fr: "Ascension",
+      es: "Ascensión",
+    },
+    starts_on: "2026-10-14",
+    ends_on: "2026-10-14",
+  }];
+  const french = withHolidays("CH-ZH", "fr-FR", [], feed);
+  assertEquals(dayOf(french, "2026-10-14").holiday, {
+    name: "Ascension",
+    source: "region",
+  });
+  const spanish = withHolidays("CH-ZH", "es-ES", [], feed);
+  assertEquals(dayOf(spanish, "2026-10-14").holiday, {
+    name: "Ascensión",
+    source: "region",
+  });
+  // An unsupported household language falls back to German.
+  const italian = withHolidays("CH-ZH", "it-IT", [], feed);
+  assertEquals(dayOf(italian, "2026-10-14").holiday, {
+    name: "Auffahrt",
+    source: "region",
+  });
 });
 
 Deno.test("a canton-only holiday covers its region's municipalities, not another canton", () => {
   const inZh = withHolidays("CH-ZH-ZH-ZH");
-  assertEquals(dayOf(inZh, "2026-10-12").holiday, { name: "Sechseläuten", source: "region" });
+  assertEquals(dayOf(inZh, "2026-10-12").holiday, {
+    name: "Sechseläuten",
+    source: "region",
+  });
   const inAg = withHolidays("CH-AG");
   assertEquals(dayOf(inAg, "2026-10-12").holiday, null);
 });
@@ -747,13 +796,23 @@ Deno.test("a canton-only holiday covers its region's municipalities, not another
 Deno.test("without a household region only the family's own holidays mark a day", () => {
   const board = withHolidays(null, "de-DE", [OWN]);
   assertEquals(dayOf(board, "2026-10-12").holiday, null);
-  assertEquals(dayOf(board, "2026-10-16").holiday, { name: "Brückentag", source: "household" });
+  assertEquals(dayOf(board, "2026-10-16").holiday, {
+    name: "Brückentag",
+    source: "household",
+  });
 });
 
 Deno.test("the family's own holiday row wins over the cache and carries its own name", () => {
-  const feed = [{ ...ASCENSION, starts_on: "2026-10-16", ends_on: "2026-10-16" }];
+  const feed = [{
+    ...ASCENSION,
+    starts_on: "2026-10-16",
+    ends_on: "2026-10-16",
+  }];
   const board = withHolidays("CH-ZH", "de-DE", [OWN], feed);
-  assertEquals(dayOf(board, "2026-10-16").holiday, { name: "Brückentag", source: "household" });
+  assertEquals(dayOf(board, "2026-10-16").holiday, {
+    name: "Brückentag",
+    source: "household",
+  });
 });
 
 Deno.test("a school's row for one school does not mark the household's day", () => {

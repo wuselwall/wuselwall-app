@@ -4,6 +4,7 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/empty_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
@@ -30,6 +31,9 @@ class TasksChoresTab extends ConsumerWidget {
       onRetry: () => ref.invalidate(taskDefinitionsProvider),
       data: (list) {
         final l10n = context.l10n;
+        if (list.isEmpty) {
+          return _Starter(onNew: () => _open(context, ref, members));
+        }
         return ListView(
           padding: const EdgeInsets.all(Tokens.space4),
           children: [
@@ -42,15 +46,12 @@ class TasksChoresTab extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: Tokens.space2),
-            if (list.isEmpty)
-              _StarterCard(members: members)
-            else
-              for (final d in list)
-                _DefinitionTile(
-                  definition: d,
-                  members: members,
-                  onTap: () => _open(context, ref, members, existing: d),
-                ),
+            for (final d in list)
+              _DefinitionTile(
+                definition: d,
+                members: members,
+                onTap: () => _open(context, ref, members, existing: d),
+              ),
           ],
         );
       },
@@ -132,36 +133,31 @@ class _DefinitionTile extends StatelessWidget {
   };
 }
 
-/// Offers the starter pack (specs/21) to a household without chores. The server
-/// skips the chores whose pool would be empty, so it is safe for any family.
-class _StarterCard extends ConsumerWidget {
-  const _StarterCard({required this.members});
+/// Offers the starter pack (specs/21) to a household without chores, next to a first
+/// chore of its own. The server skips the chores whose pool would be empty, so it is
+/// safe for any family.
+class _Starter extends ConsumerWidget {
+  const _Starter({required this.onNew});
 
-  final List<Member> members;
+  final VoidCallback onNew;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final theme = Theme.of(context);
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(Tokens.space4),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(l10n.tasksNoChores, style: theme.textTheme.titleSmall),
-            const SizedBox(height: Tokens.space2),
-            Text(l10n.tasksStarterTitle, style: theme.textTheme.titleMedium),
-            const SizedBox(height: Tokens.space1),
-            Text(l10n.tasksStarterHelp),
-            const SizedBox(height: Tokens.space3),
-            FilledButton(
-              onPressed: () => _seed(context, ref),
-              child: Text(l10n.tasksStarterAdd),
-            ),
-          ],
+    return EmptyView(
+      title: l10n.tasksNoChores,
+      message: l10n.tasksStarterHelp,
+      actions: [
+        FilledButton(
+          onPressed: () => _seed(context, ref),
+          child: Text(l10n.tasksStarterAdd),
         ),
-      ),
+        OutlinedButton.icon(
+          onPressed: onNew,
+          icon: const Icon(Icons.add),
+          label: Text(l10n.tasksNewChore),
+        ),
+      ],
     );
   }
 

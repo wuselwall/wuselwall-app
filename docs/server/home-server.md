@@ -24,10 +24,10 @@ Auf dem Server, in einem Verzeichnis deiner Wahl, am besten auf einer schnellen 
 ```bash
 curl -fsSL https://github.com/wuselwall/wuselwall-app/releases/download/server-v1.0.0/wuselwall-server-1.0.0.tar.gz | tar xz
 cd wuselwall
-./wuselwall install --api https://api.example.org --web https://web.example.org --caddy
+./wuselwall install --api https://api.example.org --web https://web.example.org --language fr --caddy
 ```
 
-Das dauert beim ersten Mal ein paar Minuten, weil Docker einige Gigabyte an Images lädt. Das Werkzeug
+`--language` wählt die **E-Mail-Sprache** (`de`, `en`, `fr` oder `es`, Standard `de`); es ändert nicht die Sprache der App. Das dauert beim ersten Mal ein paar Minuten, weil Docker einige Gigabyte an Images lädt. Das Werkzeug
 
 - erzeugt alle Schlüssel und Passwörter (`stack/.env`),
 - startet den Stack, mit **Caddy**, der für beide Adressen Zertifikate von Let's Encrypt holt,
@@ -80,6 +80,14 @@ Eine Zeile in der Crontab des Servers (`crontab -e`, oder die Zeitplanung deines
 ```
 
 Das Werkzeug prüft jede Sicherung und behält sie 14 Tage. Ohne `BACKUP_DIR` landen sie in `backups/` neben dem Werkzeug. Besser ist eine andere Platte als die der Datenbank. Wie die Sicherungen zusätzlich aus dem Haus kommen, steht in den [Extras](/server/extras#backup-ausser-haus), wie du eine zurückspielst, unter [Backup zurückspielen](/server/restore).
+
+## E-Mail-Sprache ändern {#email-sprache}
+
+```bash
+./wuselwall language en
+```
+
+Erlaubt sind `de`, `en`, `fr` und `es`. Das Werkzeug schreibt `MAIL_LANGUAGE` in `stack/.env`, wählt passende Betreffzeilen und Mail-Vorlagen und startet nur Anmeldung und Funktionen neu. Bestehende Schlüssel bleiben erhalten, und die gewählte Sprache bleibt bei späteren Updates bestehen. Ältere Installationen ohne Angabe gelten als deutschsprachig. Für einen Server aus einem Repository-Checkout änderst du die Sprache nach dem Deployment mit `scripts/remote-stack.sh language en`.
 
 ## Updates
 

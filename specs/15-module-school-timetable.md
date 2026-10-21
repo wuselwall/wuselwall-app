@@ -272,7 +272,8 @@ regular days would be loud bands every week. So the baseline is set per weekday
    times is the whole day and is then the day's only one; slots do not overlap.
 3. **Alternating weeks A and B**, anchored on the Monday of a week A
    (`profile.usual_week_anchor`). Not calendar-week parity: a year with a week 53 would
-   put two odd weeks in a row and slip the rota.
+   put two odd weeks in a row and slip the rota. Switching alternating off clears the
+   anchor but keeps week B, unused, so switching it on again brings it back.
 
 The board-week function resolves it per day (`_shared/usual_week.ts`). A public holiday
 has no usual place, and a presence entry on a day replaces the whole usual day, as
@@ -371,7 +372,7 @@ with confirm and delete as the two actions.
 
 ## German glossary
 
-The UI is German and English (NFR-14, [CLAUDE.md](../CLAUDE.md)), German by default; the code is English. This table is the German side. Fix the pairing
+The UI is German, English, French and Spanish (NFR-14, [AGENTS.md](../AGENTS.md)), with German as the unsupported-language fallback; the code is English. This table is the German side. Fix the pairing
 once, in the i18n catalogue, before any of these strings reaches a component:
 
 | Code | UI (de-DE) |

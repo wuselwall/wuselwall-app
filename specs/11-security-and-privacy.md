@@ -127,7 +127,8 @@ shortcut key is a bearer credential in the Shortcuts app, synced through iCloud.
   Passkeys are offered from the getting-started card once verified on hardware.
 - Email codes: 6 digits, 10 minutes, single use, a resend at most every 60 s, and
   verification attempts rate-limited per IP by Supabase Auth. The mail says what the code
-  is for, in the recipient's language, and that nobody from WuselWall will ever ask for it.
+  is for in the installation's single email language (`MAIL_LANGUAGE`: DE/EN/FR/ES, default
+  German), and that nobody from WuselWall will ever ask for it.
 - A new sign-in on an account notifies its other devices.
 - Supabase Auth's rate limits on sign-in, plus a rate limit at nginx or Cloudflare; PINs hashed with
   bcrypt, with exponential backoff per profile.
@@ -305,7 +306,7 @@ With Supabase, row-level security is not defence in depth; it is the perimeter.
 - **Founder codes.** A founder code is what starts a family in `code` mode. It is issued by the operator (`scripts/remote-setup-token.sh --founder`), shown once, and guesses are limited in `app.founder_attempt`. The exact thresholds are in the migrations.
 - **No autoconfirm.** `ENABLE_EMAIL_AUTOCONFIRM=false` and `enable_confirmations = true`: an address counts as the person's only after they confirm it, because invitations match confirmed addresses.
 - **Account deletion.** A fresh sign-in is required only when the server requires one (5 minutes), by email code.
-- **Mail hook.** The send-email hook checks its signature (`SEND_EMAIL_HOOK_SECRET`) before it sends anything, and it writes only the code mail, in the recipient's language.
+- **Mail hook.** The send-email hook checks its signature (`SEND_EMAIL_HOOK_SECRET`) before it sends anything, and it writes only the code mail, in the installation's `MAIL_LANGUAGE` (`de/en/fr/es`, default `de`).
 - **Account administration.** `account-delete` and the MFA reset verify the caller's JWT and act only on that caller, or, for the reset, on a co-guardian (ADR-014).
 
 
@@ -367,7 +368,7 @@ With Supabase, row-level security is not defence in depth; it is the perimeter.
 - [ ] Anonymous users disabled; `household_creation` is `code`; the stack runs on its own keys, not the CLI defaults
 - [ ] No `dev-setup` founder code on a live server; the household's own founder code used and consumed
 - [ ] Sign-in with email code and password each tested on a real device; the
-      email-code mail arrives (not in spam) in both languages
+      email-code mail arrives (not in spam) in the installation-selected email language (`MAIL_LANGUAGE`)
 - [ ] A stranger's fresh account sees nothing: one manual probe of `api` with its token
 - [ ] Invitation and pairing tested end to end, including an expired and a withdrawn invitation
 - [ ] Account deletion tested

@@ -2,9 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/empty_view.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 import 'package:wuselwall/features/home/application/home_tab.dart';
 import 'package:wuselwall/features/meals/domain/meal_models.dart';
@@ -17,14 +20,16 @@ import 'package:wuselwall/features/today/ui/notice_cards.dart';
 
 /// The adult home's first tab (specs/09 "Screens by register"): the setup card, then
 /// what today holds for the acting profile. Each block hides when it is empty; when
-/// nothing is left, one line says so.
+/// nothing is left, one line in the middle of the rest says so and offers an event.
 class TodayPage extends ConsumerWidget {
   const TodayPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final agenda = ref.watch(todayAgendaProvider);
     final shoppingOpen = ref.watch(defaultShoppingOpenProvider);
+    final empty = (agenda.value?.isEmpty ?? false) && shoppingOpen == 0;
     return RefreshIndicator(
       onRefresh: () async {
         ref
@@ -32,21 +37,43 @@ class TodayPage extends ConsumerWidget {
           ..invalidate(gettingStartedProvider)
           ..invalidate(noticesProvider);
       },
-      child: ListView(
-        padding: const EdgeInsets.fromLTRB(
-          Tokens.space4,
-          Tokens.space2,
-          Tokens.space4,
-          Tokens.space6,
-        ),
-        children: [
-          const NoticeCards(),
-          const GettingStartedCard(),
-          AsyncValueView<TodayAgenda>(
-            value: agenda,
-            onRetry: () => ref.invalidate(todayAgendaProvider),
-            data: (a) => _Agenda(agenda: a, shoppingOpen: shoppingOpen),
+      child: CustomScrollView(
+        slivers: [
+          SliverPadding(
+            padding: EdgeInsets.fromLTRB(
+              Tokens.space4,
+              Tokens.space2,
+              Tokens.space4,
+              empty ? 0 : Tokens.space6,
+            ),
+            sliver: SliverList.list(
+              children: [
+                const NoticeCards(),
+                const GettingStartedCard(),
+                if (!empty)
+                  AsyncValueView<TodayAgenda>(
+                    value: agenda,
+                    onRetry: () => ref.invalidate(todayAgendaProvider),
+                    data: (a) => _Agenda(agenda: a, shoppingOpen: shoppingOpen),
+                  ),
+              ],
+            ),
           ),
+          if (empty)
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: EmptyView(
+                message: l10n.todayEmpty,
+                scrolls: false,
+                actions: [
+                  FilledButton.icon(
+                    onPressed: () => context.push(Routes.eventNew),
+                    icon: const Icon(Icons.add),
+                    label: Text(l10n.calendarNewEvent),
+                  ),
+                ],
+              ),
+            ),
         ],
       ),
     );
@@ -62,12 +89,6 @@ class _Agenda extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    if (agenda.isEmpty && shoppingOpen == 0) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: Tokens.space6),
-        child: Text(l10n.todayEmpty, textAlign: TextAlign.center),
-      );
-    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [

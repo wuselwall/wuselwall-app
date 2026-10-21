@@ -95,7 +95,7 @@ Deno.test("refuses missing headers and a non-numeric timestamp", async () => {
   );
 });
 
-Deno.test("a malformed secret throws, so the caller reports an operator error", async () => {
+Deno.test("a malformed secret throws, so the caller reports an operator error", () => {
   assertThrows(() => decodeSecret("whsec_AAAA"), Error, "v1,whsec_");
   assertThrows(() => decodeSecret("v1,whsec_!!!not-base64"), Error, "base64");
   assertThrows(() => decodeSecret("v1,whsec_"), Error, "empty");

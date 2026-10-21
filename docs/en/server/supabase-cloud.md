@@ -42,9 +42,9 @@ A prepared workflow on GitHub does this, in your own copy of WuselWall. You inst
    | `SUPABASE_DB_PASSWORD` | the database password |
    | `WUSELWALL_SETUP_TOKEN` | a phrase of your choice made of letters and digits, e.g. `CakeOnSunday2026`. You need it once, to found the family |
 
-5. Open the **Actions** tab. In a copy, workflows start out switched off: tap **I understand my workflows, go ahead and enable them**. Then **deploy-supabase → Run workflow**. Tick **web** if you want the web app (step 4), and tap **Run workflow**.
+5. Open the **Actions** tab. In a copy, workflows start out switched off: tap **I understand my workflows, go ahead and enable them**. Then **deploy-supabase → Run workflow**. Under **language**, choose the language of the sign-in emails: `de` (default), `en`, `fr` or `es`. Tick **web** if you want the web app (step 4), and tap **Run workflow**.
 
-After a few minutes the run turns green. Its summary shows your server's address. The workflow sets up the database, configures sign-in and data access, uploads the server functions and schedules the nightly jobs.
+After a few minutes the run turns green. Its summary shows your server's address. The workflow sets up the database, configures sign-in and data access, uploads the server functions, applies the mail templates and subjects in the chosen email language and schedules the nightly jobs.
 
 ::: tip Secrets stay secret
 Anyone can see your copy's logs, but not the secrets: GitHub hides them everywhere. The server keeps only a fingerprint of the phrase for founding the family.

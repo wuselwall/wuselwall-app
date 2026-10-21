@@ -24,7 +24,7 @@ decision already taken, linked so it is not argued again.
 | P6 | **Capture in three seconds, the wall readable from two metres, the week visible without asking.** A feature that slows any of the three is not worth it | [01, the vision](01-vision-and-scope.md#the-vision) |
 | P7 | **Deepen against observed use, not imagined use.** A conditional item waits for evidence from a real family | [13, milestone discipline](13-roadmap.md#milestone-discipline) |
 | P8 | **Do not become a second Nextcloud.** No chat, photo sharing, document storage, budgeting or two-way calendar sync | [01, out of scope](01-vision-and-scope.md#explicitly-out-of-scope), [ADR-001](adr/ADR-001-calendar-backbone.md) |
-| P9 | **German and English, accessible, portable.** Both ARB files, both `docs/` languages, the targets of NFR-13/16, and a server that still runs on any Supabase stack inside the `api_version` window | [AGENTS.md](../AGENTS.md), [ADR-018](adr/ADR-018-self-hosted-only.md) |
+| P9 | **Four application languages, accessible, portable.** Complete DE/EN/FR/ES ARB and server catalogues, DE/EN family guides, the targets of NFR-13/16, one installation-selected email language, and a server that still runs on any Supabase stack inside the `api_version` window | [AGENTS.md](../AGENTS.md), [ADR-010](adr/ADR-010-flutter-and-self-hosted-supabase.md#amendment-2026-10-19-four-application-languages-and-one-email-language), [ADR-018](adr/ADR-018-self-hosted-only.md) |
 
 The rules every slice follows in the build (pgTAP for the cross-household, revoked-device
 and unauthenticated cases; `api_version` raised for a contract change; the docs page in both
@@ -104,7 +104,7 @@ it, and the answer goes into [14](14-open-questions.md).
 | **R4.2** One account in two households | Separated parents and a child with two homes ([Q43](14-open-questions.md)) | A real family with that case, and a design that keeps every read inside one household |
 | **R4.3** CalDAV for the phones | Is the read-only feed too limiting on the move ([05](05-module-calendar.md#later-two-way-for-the-phones))? | Entering events in WuselWall proves to be the reason they are not entered. Never Outlook two-way (P8) |
 | **R4.4** A school portal import | Does a family's school publish substitutions (Q20, FR-7.14)? | A school with a documented feed; manual entry stays the default |
-| **R4.5** A third language | French or Italian for Swiss families, since the regions already reach the Gemeinde | A maintainer who keeps every string, the docs and the server messages complete in that language (P9) |
+| **R4.5** More languages | Further languages beyond the built DE/EN/FR/ES set, e.g. Italian for Swiss families, since the regions already reach the Gemeinde | A maintainer who keeps every app/server string and native permission prompt complete in that language (P9); family-guide translation stays a separate DE/EN decision |
 
 ## Not on the roadmap, and why
 
@@ -127,5 +127,5 @@ Recorded so that they are not proposed again every few weeks.
 
 When an item is built, strike it here and record it where 13 records built work. When R1's
 findings change the order, change the tables, not the phases. When the "next step" changes,
-the public "Where we are" list on the website and the status line in `AGENTS.md` change in
-the same commit.
+the DE/EN public "Where we are" list on the website and the status line in `AGENTS.md` change
+in the same commit; the website copy itself is a separate repository change.

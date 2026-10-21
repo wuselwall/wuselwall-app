@@ -160,7 +160,9 @@ export function holidayOn(
   if (region === null) return null;
   for (const f of feed) {
     if (f.kind !== "public" || date < f.starts_on || date > f.ends_on) continue;
-    if (!regionCovers(region, f.country, f.nationwide, f.subdivisions)) continue;
+    if (!regionCovers(region, f.country, f.nationwide, f.subdivisions)) {
+      continue;
+    }
     const name = holidayName(f.names, locale);
     if (name !== "") return { name, source: "region" };
   }

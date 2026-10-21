@@ -2034,6 +2034,51 @@ class AppLocalizationsEn extends AppLocalizations {
   String get usualDayApply => 'Apply';
 
   @override
+  String get usualWholeDay => 'Whole day';
+
+  @override
+  String get usualSlots => 'Time slots';
+
+  @override
+  String get usualSlotState => 'Where';
+
+  @override
+  String get usualSlotFrom => 'From';
+
+  @override
+  String get usualSlotUntil => 'Until';
+
+  @override
+  String get usualAddSlot => 'Add time slot';
+
+  @override
+  String get usualRemoveSlot => 'Remove time slot';
+
+  @override
+  String get usualSlotsInvalid =>
+      'Each time slot ends after it starts, and slots do not overlap.';
+
+  @override
+  String get usualAlternating => 'Alternating weeks (A/B)';
+
+  @override
+  String get usualAlternatingHelp => 'For a plan that repeats every two weeks.';
+
+  @override
+  String get usualWeekA => 'Week A';
+
+  @override
+  String get usualWeekB => 'Week B';
+
+  @override
+  String usualThisWeekIs(String week) {
+    return 'This week is $week.';
+  }
+
+  @override
+  String get usualWhichWeek => 'Which week is this week?';
+
+  @override
   String get errUsualWeekInvalid => 'This usual week is not valid.';
 
   @override
@@ -2163,9 +2208,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tasksNoChores => 'No chores yet.';
-
-  @override
-  String get tasksStarterTitle => 'Start with the starter pack';
 
   @override
   String get tasksStarterHelp =>
@@ -3513,6 +3555,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get householdLanguageEn => 'English';
+
+  @override
+  String get householdLanguageFr => 'French';
+
+  @override
+  String get householdLanguageEs => 'Spanish';
 
   @override
   String get householdNewFounderCode => 'Setup code';

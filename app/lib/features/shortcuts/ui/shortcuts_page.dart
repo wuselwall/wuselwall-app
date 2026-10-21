@@ -8,6 +8,7 @@ import 'package:wuselwall/core/config/config_providers.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/empty_view.dart';
 import 'package:wuselwall/core/ui/ringed_avatar.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
@@ -66,6 +67,19 @@ class ShortcutsPage extends ConsumerWidget {
                 ? () => _revoke(context, ref, t)
                 : null,
           );
+          if (visible.isEmpty && !kiosk) {
+            return EmptyView(
+              title: l10n.shortcutEmpty,
+              message: l10n.shortcutIntro,
+              actions: [
+                FilledButton.icon(
+                  onPressed: () => _create(context, ref),
+                  icon: const Icon(Icons.add),
+                  label: Text(l10n.shortcutNew),
+                ),
+              ],
+            );
+          }
           final automations = visible
               .where((t) => t.kind == KeyKind.shortcut)
               .toList();
@@ -93,7 +107,6 @@ class ShortcutsPage extends ConsumerWidget {
               Text(l10n.shortcutIntro),
               const SizedBox(height: Tokens.space4),
               if (kiosk) Text(l10n.shortcutKioskNote),
-              if (visible.isEmpty && !kiosk) Text(l10n.shortcutEmpty),
               if (automations.isNotEmpty) ...[
                 header(l10n.shortcutSectionAutomations),
                 for (final t in automations) tile(t),

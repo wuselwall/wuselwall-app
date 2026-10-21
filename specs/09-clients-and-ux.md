@@ -222,7 +222,7 @@ replace the kiosk's text scaler to make the board fit. At larger text sizes, sho
 fewer summaries using the degradation rules above, while keeping the seven-day
 geometry, all zones, readable overflow indicators and access to full detail. The
 reference acceptance viewport is 1280×800 logical pixels in landscape, with the
-reference household, in German and English. No RenderFlex overflow, overlapping
+reference household, in each application language (DE/EN/FR/ES). No RenderFlex overflow, overlapping
 text or clipped controls is acceptable at 100%, 150% or 200%. This does not claim
 that every appointment title fits in full on the board.
 
@@ -377,11 +377,22 @@ Concrete values — palette, typefaces, icon sets, shape and motion tokens — a
 
 ## Language
 
-German and English UI, English code and documentation (NFR-14). Flutter's `gen-l10n` with
-`app/l10n/app_en.arb` and `app/l10n/app_de.arb` from the first widget — every string is
-always written in both, German is the default locale — and CI failing on any message
-missing from either file. Retrofitting i18n into a finished UI is tedious. It also keeps user-facing strings
-out of widgets, which makes them easier to review for tone — and tone matters when the
-reader is seven. Strings produced on the server — push notifications, ICS summaries, MCP
-and Shortcuts responses — live in one message file per language (German, English) in
-`supabase/functions/_shared/`.
+German, English, French and Spanish throughout the application and server responses
+(NFR-14). Code, comments and developer documentation remain English; family guides remain
+German/English. Flutter's `gen-l10n` uses `app/l10n/app_en.arb` as the template and
+`app_{de,fr,es}.arb` beside it. Every message and placeholder must be complete in all four
+in the same change; no literal user-facing text in widgets. Tone matters when the reader
+is seven. Check ICU plurals and layouts as well as catalogue parity.
+
+The app follows the device language, including regional variants such as `fr-CA` and
+`es-MX`; unsupported languages fall back to German. New families store the matching
+`de-DE`, `en-GB`, `fr-FR` or `es-ES` locale. Native iOS permission prompts follow the same
+four-language rule. Existing screens need FR/ES layout checks, not a new screen or an
+automatic expansion of the guide's DE/EN screenshot matrix.
+
+Server-produced text — notifications, ICS summaries, MCP and Shortcuts responses — lives
+in language catalogues in `supabase/functions/_shared/`, supporting the same four languages
+under each endpoint's existing selection rules. Email alone uses the installation's
+`MAIL_LANGUAGE` (`de/en/fr/es`, default `de`): subject, HTML and plain text in one language,
+for hook and SMTP alike, independent of device, household or recipient metadata.
+FR/ES app privacy/legal links use existing English website pages; the website is DE/EN.

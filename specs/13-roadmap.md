@@ -15,7 +15,10 @@ assistive-technology and Outlook/iOS feed checks and the two-week family trial r
 operator gates in the [release checklist](release-checklist.md). The integration candidate
 requires exact-commit automated checks and independent review before pilot authorization.
 Shortcuts, read-only MCP and the packing reminder are built in main; push and public store
-release remain separately gated. Step 10's journey gaps precede M1.6.
+release remain separately gated. The 2026-10-19 language scope adds complete DE/EN/FR/ES
+application/server responses and one installation-selected email language (NFR-14);
+integration verification and publication remain separate gates. Step 10's journey gaps
+precede M1.6.
 
 ## A note on the "all four modules at once" decision
 

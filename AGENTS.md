@@ -26,8 +26,10 @@ own tables, optionally in the outbound feed), local reminders (Q47), the QR scan
 in `app.shortcut_token`, the `shortcuts` function), the MCP server with `family:read` (M2,
 Part 2: the `mcp` function, read-only `wwa_` assistant keys as the Q15 interim, no OAuth yet),
 the evening packing reminder (FR-7.12, `notify.packing_reminder`), and the usual week
-(issue #81, specs/15 "The baseline": a usual place per weekday, time slots and A/B weeks
-in the data model; the editor has the weekdays).
+(issue #81, specs/15 "The baseline": a usual place per weekday, up to three time slots a
+day and alternating weeks A/B).
+The current language scope is DE/EN/FR/ES throughout the app and server responses, with
+one installation-selected email language (NFR-14); release evidence remains a separate gate.
 `scripts/local-pgtap` runs every migration and pgTAP suite on a throwaway local Postgres (no
 Docker). The server runs four scheduled jobs: `tasks-nightly`,
 `holidays-sync` (weekly), `calendar-import` (hourly) and `household-purge` (daily). Next: the
@@ -150,19 +152,29 @@ screen gets its shot in `screenshots.mjs`.** Playwright's Chromium needs
 
 ## Localization
 
-All user-facing text in the built application must exist in **both English and German**,
-always. This is not optional and not deferred to a later milestone — it applies as soon as
-any UI work starts. Never add a string in one language only.
+All user-facing application and server-response text must exist in **German, English,
+French and Spanish**, in the same change. This is not deferred to a later milestone.
+The family guide and marketing/legal site remain DE/EN; that does not limit app locales.
 
-- Shipped locales are `de` and `en` (NFR-14, see [specs/02-requirements.md](specs/02-requirements.md)).
-  German is the default and the fallback for unsupported device locales.
-- Code, comments and documentation stay in English — only user-facing strings are localized.
-- Strings live in `app/l10n/app_en.arb` (template) and `app/l10n/app_de.arb`, generated with
+- Shipped locales are `de`, `en`, `fr` and `es` (NFR-14, see [specs/02-requirements.md](specs/02-requirements.md)).
+  The app follows the device language, including regional variants; unsupported languages
+  fall back to German. New families store `de-DE`, `en-GB`, `fr-FR` or `es-ES` accordingly.
+- Code, comments and developer documentation stay in English; family guides remain DE/EN.
+- Strings live in `app/l10n/app_en.arb` (template) and `app/l10n/app_{de,fr,es}.arb`, generated with
   Flutter `gen-l10n` and read through `context.l10n` (see
   [specs/09-clients-and-ux.md](specs/09-clients-and-ux.md#language)). No literal string may land
-  in a widget, even as a placeholder — add the key to both ARB files in the same change.
+  in a widget, even as a placeholder — add the key to all four ARB files in the same change.
+  Test key/placeholder parity, ICU formatting and locale resolution; check FR/ES layouts
+  and native permission prompts, not just generated files.
 - This covers UI copy, error messages, notifications, ICS summaries, and the MCP and
   Shortcuts responses (see [specs/12-mcp-and-assistants.md](specs/12-mcp-and-assistants.md)) —
   anything a household member reads or hears from the app. Server-side strings live in
   `supabase/functions/_shared/`, one message file per language. iOS permission prompts live
-  in `app/ios/Runner/{de,en}.lproj/InfoPlist.strings` (Info.plist keeps the German text).
+  in `app/ios/Runner/{de,en,fr,es}.lproj/InfoPlist.strings` (Info.plist keeps the German text).
+- Email is the exception to device/household language selection: every message uses only
+  the installation's `MAIL_LANGUAGE` (`de|en|fr|es`, German when unset), including its subject
+  and both body parts. Hook and SMTP templates must agree; never derive mail language from
+  recipient metadata. Install/update/language-change tests must preserve keys and the
+  selected language. See [specs/10](specs/10-deployment-and-ops.md#email-setup).
+- FR/ES app privacy/legal links deliberately fall back to existing English website pages.
+  Do not invent FR/ES website URLs or expand the DE/EN docs screenshot matrix implicitly.

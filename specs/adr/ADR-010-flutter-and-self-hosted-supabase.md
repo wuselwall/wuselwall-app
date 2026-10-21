@@ -77,6 +77,8 @@ leaves it, and no Supabase-the-company service is contacted at runtime. *(Since
 
 ### Localisation: English and German, always both
 
+*Historical 2026-10-11 scope; superseded by the 2026-10-19 amendment below.*
+
 *Amended 2026-10-11 — this replaces "German only" in the original decision and in
 NFR-14.*
 
@@ -93,6 +95,30 @@ NFR-14.*
   MCP and Shortcuts responses): one message file per language in
   `supabase/functions/_shared/`, language chosen from the recipient's profile.
 - Code, comments and documentation remain English.
+
+### Amendment 2026-10-19: four application languages and one email language
+
+This supersedes the two-locale scope and recipient-selected mail language above, not the
+Flutter/ARB architecture. The earlier German-only and then DE/EN decisions remain history.
+
+- Ship complete German (`de`), English (`en`), French (`fr`) and Spanish (`es`) application
+  text and server responses, including errors, notifications, ICS, MCP, Shortcuts and native
+  permission prompts. Every new message and placeholder lands in all four catalogues.
+- The app continues to follow the device language; regional variants resolve by language,
+  unsupported languages fall back to German. A new household stores `de-DE`, `en-GB`,
+  `fr-FR` or `es-ES`. No database migration is needed for these existing locale fields.
+- Keep `app_en.arb` as template, with `app_de.arb`, `app_fr.arb` and `app_es.arb`; server
+  message catalogues and iOS `InfoPlist.strings` cover the same four languages.
+- **Email has one installation language**, `MAIL_LANGUAGE=de|en|fr|es`, German when unset.
+  Subject, HTML and plain text contain only that language, identically for the send-email
+  hook and SMTP templates. Device language and recipient metadata must not override it.
+  Installation asks for the choice; updates preserve it and do not rotate keys.
+- Code, comments and developer documentation stay English. Family guides and marketing/legal
+  pages remain DE/EN; FR/ES app legal links deliberately use English pages. Coordinate
+  website copy/progress separately in its repository; this decision does not deploy it.
+- Acceptance includes catalogue/placeholder parity, ICU plurals, regional/unsupported locale
+  resolution, FR/ES screen layout checks and email selection/preservation tests. Neither
+  generated strings nor this amendment alone establish release, device or deployment proof.
 
 ### Backend
 
