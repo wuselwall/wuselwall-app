@@ -4442,9 +4442,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settingsViewLabel => 'Paramètres à afficher';
 
   @override
-  String get settingsViewBasic => 'Essentiels';
-
-  @override
   String get settingsViewAdvanced => 'Avancés';
 
   @override

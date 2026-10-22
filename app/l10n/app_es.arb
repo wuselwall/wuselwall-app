@@ -2445,7 +2445,6 @@
   "leaveDeleteWordLabel": "Escribe {word} para eliminar la familia para siempre",
   "shortcutSectionAutomations": "Automatizaciones",
   "settingsViewLabel": "Qué ajustes mostrar",
-  "settingsViewBasic": "Básicos",
   "settingsViewAdvanced": "Avanzados",
   "settingsViewMoreHint": "Hay más ajustes en Avanzados. Los ajustes ocultos siguen activos.",
   "settingsViewShowAll": "Mostrar todos los ajustes",
