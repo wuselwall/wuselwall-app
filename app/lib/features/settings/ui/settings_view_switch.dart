@@ -4,36 +4,30 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/features/settings/application/settings_view.dart';
 
-/// Basic or Advanced, at the top of each settings screen. Not a guardian action: it only
-/// changes what this device shows.
+/// The "Advanced" toggle in the app bar of each settings screen: off shows Basic, on
+/// shows everything. Not a guardian action: it only changes what this device shows.
 class SettingsViewSwitch extends ConsumerWidget {
   const SettingsViewSwitch({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final view = ref.watch(settingsViewProvider).value ?? SettingsView.basic;
+    final advanced = ref.watch(showAdvancedSettingsProvider);
     return Padding(
-      padding: const EdgeInsets.only(bottom: Tokens.space4),
-      child: Semantics(
-        label: l10n.settingsViewLabel,
-        container: true,
-        child: SegmentedButton<SettingsView>(
-          key: const ValueKey('settings-view'),
-          showSelectedIcon: false,
-          segments: [
-            ButtonSegment(
-              value: SettingsView.basic,
-              label: Text(l10n.settingsViewBasic),
-            ),
-            ButtonSegment(
-              value: SettingsView.advanced,
-              label: Text(l10n.settingsViewAdvanced),
-            ),
-          ],
-          selected: {view},
-          onSelectionChanged: (s) =>
-              ref.read(settingsViewProvider.notifier).select(s.first),
+      padding: const EdgeInsetsDirectional.only(end: Tokens.space2),
+      child: Center(
+        child: Tooltip(
+          message: l10n.settingsViewLabel,
+          child: FilterChip(
+            key: const ValueKey('settings-view'),
+            label: Text(l10n.settingsViewAdvanced),
+            selected: advanced,
+            visualDensity: VisualDensity.compact,
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            onSelected: (on) => ref
+                .read(settingsViewProvider.notifier)
+                .select(on ? SettingsView.advanced : SettingsView.basic),
+          ),
         ),
       ),
     );

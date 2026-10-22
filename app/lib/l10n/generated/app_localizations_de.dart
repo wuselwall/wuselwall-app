@@ -4416,9 +4416,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get settingsViewLabel => 'Welche Einstellungen angezeigt werden';
 
   @override
-  String get settingsViewBasic => 'Einfach';
-
-  @override
   String get settingsViewAdvanced => 'Erweitert';
 
   @override

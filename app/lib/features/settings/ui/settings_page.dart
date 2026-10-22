@@ -65,11 +65,11 @@ class SettingsPage extends ConsumerWidget {
       appBar: AppBar(
         title: Text(l10n.settingsTitle),
         leading: BackButton(onPressed: () => context.go(Routes.home)),
+        actions: const [SettingsViewSwitch()],
       ),
       body: ListView(
         padding: const EdgeInsets.all(Tokens.space4),
         children: [
-          const SettingsViewSwitch(),
           ListTile(
             leading: const Icon(Icons.tune),
             title: Text(l10n.householdSettingsTitle),

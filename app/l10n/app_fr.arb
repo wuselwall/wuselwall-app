@@ -2445,7 +2445,6 @@
   "leaveDeleteWordLabel": "Saisissez {word} pour supprimer définitivement la famille",
   "shortcutSectionAutomations": "Automatisations",
   "settingsViewLabel": "Paramètres à afficher",
-  "settingsViewBasic": "Essentiels",
   "settingsViewAdvanced": "Avancés",
   "settingsViewMoreHint": "D’autres paramètres se trouvent dans Avancés. Les paramètres masqués restent actifs.",
   "settingsViewShowAll": "Afficher tous les paramètres",
