@@ -52,6 +52,8 @@ For each child, enter the timetable for a term. Tap **Enter timetable**. If no t
 
 At the top you can see the child, school and term with its dates. Tap a cell in the grid and choose the subject. **Save timetable** stays visible at the bottom of the screen as you scroll through the timetable.
 
+When no timetable exists yet, the view shows a message about the selected child and the **Enter timetable** button.
+
 <Shot name="school-editor" alt="Timetable editor with the school, term and visible Save button" />
 
 - With **Week rhythm** choose **Every week** or **A/B weeks**. With A/B weeks you enter the A and the B week separately.

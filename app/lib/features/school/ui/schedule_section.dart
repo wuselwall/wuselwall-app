@@ -459,7 +459,6 @@ class _EnterCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     return _Card(
-      title: l10n.schoolEnterTimetableTitle,
       body: l10n.schoolEnterTimetableBody(child.displayName),
       action: l10n.schoolEnterTimetableAction,
       onPressed: () async {
@@ -477,13 +476,13 @@ class _EnterCard extends ConsumerWidget {
 
 class _Card extends StatelessWidget {
   const _Card({
-    required this.title,
+    this.title,
     required this.body,
     required this.action,
     required this.onPressed,
   });
 
-  final String title;
+  final String? title;
   final String body;
   final String action;
   final VoidCallback onPressed;

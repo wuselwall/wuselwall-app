@@ -256,7 +256,7 @@ void main() {
     );
 
     testWidgets(
-      'an open invitation is listed as Eingeladen, and can be shared again or withdrawn',
+      'an open invitation appears inside its member row and can be shared or withdrawn',
       (t) async {
         final invitations = FakeInvitationRepository(open: [openInvitation()]);
         await pumpMembers(
@@ -265,7 +265,15 @@ void main() {
           members: [...testMembers, _julia],
         );
 
-        expect(find.textContaining('Eingeladen · bis'), findsOneWidget);
+        expect(find.text('Julia'), findsOneWidget);
+        final memberRow = find.byKey(const ValueKey('member-p-julia'));
+        expect(
+          find.descendant(
+            of: memberRow,
+            matching: find.textContaining('Eingeladen · bis'),
+          ),
+          findsOneWidget,
+        );
         expect(
           find.byKey(const ValueKey('invite-member-p-julia')),
           findsNothing,
@@ -285,6 +293,46 @@ void main() {
         expect(find.textContaining('Eingeladen · bis'), findsNothing);
       },
     );
+
+    testWidgets('invitations match profile IDs even when names are identical', (
+      t,
+    ) async {
+      const otherJulia = Member(
+        id: 'p-other-julia',
+        displayName: 'Julia',
+        color: Color(0xFF08737F),
+        role: Role.member,
+        active: true,
+        hasAccount: false,
+      );
+      await pumpMembers(
+        t,
+        invitations: FakeInvitationRepository(
+          open: [openInvitation(profileName: 'Previous name')],
+        ),
+        members: [...testMembers, otherJulia, _julia],
+      );
+      expect(find.text('Julia'), findsNWidgets(2));
+      expect(find.text('Previous name'), findsNothing);
+      expect(
+        find.descendant(
+          of: find.byKey(const ValueKey('member-p-other-julia')),
+          matching: find.textContaining('Eingeladen · bis'),
+        ),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const ValueKey('invite-member-p-other-julia')),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: find.byKey(const ValueKey('member-p-julia')),
+          matching: find.textContaining('Eingeladen · bis'),
+        ),
+        findsOneWidget,
+      );
+    });
 
     testWidgets('a child on a phone sees the invitation but no actions', (
       t,
@@ -325,7 +373,7 @@ void main() {
         members: [...testMembers, _julia],
         size: const Size(390, 844),
       );
-      final row = find.byKey(const ValueKey('open-invitation-inv-1'));
+      final row = find.byKey(const ValueKey('member-p-julia'));
       await t.scrollUntilVisible(row, 200);
       final title = find.descendant(of: row, matching: find.text('Julia'));
       expect(t.getSize(title).width, greaterThan(40));
