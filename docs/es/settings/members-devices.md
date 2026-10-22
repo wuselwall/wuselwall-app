@@ -22,7 +22,7 @@ Bajo los miembros, toca **Invitar a un adulto**:
 
 Comparte código, servidor, enlace o QR en un mensaje. Enlace y QR llevan el servidor y abren la invitación directamente. Con código solo, se introduce también el servidor si se pide ([Unirse](/es/guide/setup#_3-joining-a-family)).
 
-La invitación dura **7 días** y funciona **una vez**. Las abiertas muestran su caducidad; puedes compartirlas otra vez o retirarlas. Un miembro sin cuenta puede recibir invitación desde su fila. Sin correo, tendrá que introducir el código.
+La invitación dura **7 días** y funciona **una vez**. Las abiertas muestran su caducidad directamente en la fila de la persona invitada; puedes compartirlas otra vez o retirarlas. Un miembro sin cuenta puede recibir invitación desde su fila. Sin correo, tendrá que introducir el código.
 
 Cuando alguien se une, todos los adultos responsables reciben un aviso en **Hoy**. Pueden descartarlo o abrir los miembros. Desaparece automáticamente a los 14 días.
 

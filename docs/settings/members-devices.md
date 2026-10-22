@@ -22,7 +22,7 @@ Eine Person, die mit eigenem Konto in der Familie mitmachen soll, lädst du ein.
 
 Dann zeigt WuselWall den **Code**, den **Server** eurer Familie, einen **QR-Code** und den **Link**. Tippe auf **Teilen**, dann schickst du sie zum Beispiel per Nachricht. Link und QR-Code nennen den Server: Die Person tippt auf den Link oder scannt den QR-Code, und WuselWall öffnet sich direkt mit der Einladung, ohne dass sie einen Server auswählen muss. Wer nur den Code hat, gibt ihn in WuselWall ein, bei Bedarf zusammen mit dem Server; so geht es unter [Anmelden und verbinden](/guide/setup#_3-einer-familie-beitreten).
 
-Die Einladung gilt **7 Tage** und funktioniert **einmal**. Offene Einladungen stehen in der Liste mit ihrem Ablaufdatum: **Erneut teilen** schickt sie noch einmal, **Zurückziehen** macht sie ungültig.
+Die Einladung gilt **7 Tage** und funktioniert **einmal**. Offene Einladungen stehen direkt bei der eingeladenen Person mit ihrem Ablaufdatum: **Erneut teilen** schickt sie noch einmal, **Zurückziehen** macht sie ungültig.
 
 Sobald die Person beigetreten ist, bekommt **jede erziehungsberechtigte Person** auf dem Tab **Heute** einen Hinweis („Julia ist beigetreten“). **Gesehen** blendet ihn aus, **Mitglieder** führt zur Liste. Hinweise verschwinden nach 14 Tagen von selbst.
 

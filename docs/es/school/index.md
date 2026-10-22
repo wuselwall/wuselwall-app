@@ -50,6 +50,8 @@ Añade el horario de cada niño para un periodo. Si no hay periodo que cubra la 
 
 Arriba aparecen niño, colegio, periodo y fechas. Toca una celda para elegir asignatura. El botón de guardar permanece abajo mientras te desplazas.
 
+Si aún no hay horario, la vista muestra un mensaje sobre el niño seleccionado y el botón **Introducir horario**.
+
 <Shot name="school-editor" alt="El editor con colegio, periodo y botón Guardar visible" />
 
 Elige ritmo semanal o semanas A/B, que se rellenan por separado. Añade cuidado extraescolar con días y horas. Copia de un hermano o del periodo anterior para ahorrar escritura. Guarda la cuadrícula.
