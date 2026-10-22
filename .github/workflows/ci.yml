@@ -32,15 +32,16 @@ jobs:
       - run: flutter gen-l10n
       - run: dart format --output=none --set-exit-if-changed lib test
       - run: flutter analyze --fatal-infos
-      # No --coverage: nothing reads lcov.info, and on the self-hosted runners flutter_tester
-      # sometimes segfaults while the coverage of a finished file is collected (upstream
-      # flutter/flutter#124145, #151546), failing a job whose tests all passed.
-      - run: flutter test   # includes the en/de ARB parity test
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with: { node-version: 22 }
+      # flutter test (includes the ARB parity test). On the self-hosted runners flutter_tester
+      # sometimes segfaults after a file's tests have all passed, with or without --coverage
+      # (upstream flutter/flutter#124145, #151546). The wrapper prints the runner facts for a
+      # diagnosis and reruns only such files, once; every other failure keeps the job red.
+      - run: node ../scripts/flutter-test-ci.mjs
       # Exercise real encrypted browser storage across a backend/key migration.
       # Fresh-context tests alone miss a cached browser using a retired API.
       - run: flutter build web --release --no-web-resources-cdn --dart-define=ENV=release -o build/web-live
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with: { node-version: 22 }
       - run: npm ci --include=dev
         working-directory: .
       - run: npx playwright install --with-deps chromium
@@ -55,7 +56,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with: { node-version: 22 }
-      - run: node --test scripts/hosted-retire-social.test.mjs scripts/retire-social-sign-in.test.mjs scripts/email-code-templates.test.mjs scripts/hosted-email-templates.test.mjs scripts/deploy-web.test.mjs scripts/mail-language.test.mjs scripts/image-pull.test.mjs
+      - run: node --test scripts/hosted-retire-social.test.mjs scripts/retire-social-sign-in.test.mjs scripts/email-code-templates.test.mjs scripts/hosted-email-templates.test.mjs scripts/deploy-web.test.mjs scripts/mail-language.test.mjs scripts/image-pull.test.mjs scripts/flutter-test-ci.test.mjs
       - run: node scripts/email-code-smtp.smoke.mjs
 
   # Known vulnerabilities in every lockfile (specs/11, T5). Accepted ones, each with a
