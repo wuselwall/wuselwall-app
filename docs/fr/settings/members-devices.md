@@ -6,7 +6,7 @@ Les **parents** administrent le foyer depuis l’engrenage **Paramètres** de le
 
 ## Vue de base ou avancée {#view}
 
-La vue **Essentiels** montre les paramètres du foyer, la semaine habituelle, les rappels, l’apparence, les premiers pas, les membres et appareils, et la suppression du compte sur votre téléphone. **Avancés** ajoute les calendriers, assistants, serveur, export, connexion, sécurité et départ du foyer.
+La vue **Essentiels** montre les paramètres du foyer, la semaine habituelle, les rappels, la langue, l’apparence, les premiers pas, les membres et appareils, et la suppression du compte sur votre téléphone. **Avancés** ajoute les calendriers, assistants, serveur, export, connexion, sécurité et départ du foyer.
 
 Les réglages masqués restent actifs. L’app mémorise la vue pour chaque appareil ; les paramètres du foyer possèdent aussi ces deux vues.
 

@@ -9,6 +9,7 @@ import 'package:wuselwall/app/theme/appearance.dart';
 import 'package:wuselwall/app/theme/night.dart';
 import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
+import 'package:wuselwall/core/l10n/app_language.dart';
 import 'package:wuselwall/core/l10n/app_locale.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
@@ -39,6 +40,8 @@ class WuselWallApp extends ConsumerWidget {
     return MaterialApp.router(
       onGenerateTitle: (context) => context.l10n.appTitle,
       routerConfig: ref.watch(routerProvider),
+      // This installation's language; null lets Flutter pick from the device's.
+      locale: ref.watch(appLanguageProvider).value,
       supportedLocales: supportedLocales,
       localizationsDelegates: localizationsDelegates,
       theme: AppTheme.build(register, night ? Shade.night : Shade.light),

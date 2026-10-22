@@ -6,7 +6,7 @@ Das gehört den **Erziehungsberechtigten**. Öffne dazu auf deinem Handy das Zah
 
 ## Einfach oder Erweitert {#ansicht}
 
-Oben in den Einstellungen wählst du die Ansicht. **Einfach** ist der Standard und zeigt das Wichtigste: Haushalt einstellen, übliche Woche, Erinnerungen, Darstellung, Erste Schritte, Mitglieder und Geräte, auf deinem eigenen Handy außerdem **Konto löschen**. **Erweitert** zeigt zusätzlich Familienkalender teilen, Kalender von außen, Apps und KI-Assistenten, den Server, den Datenexport, Anmeldung, Sicherheit und Familie verlassen.
+Oben in den Einstellungen wählst du die Ansicht. **Einfach** ist der Standard und zeigt das Wichtigste: Haushalt einstellen, übliche Woche, Erinnerungen, Sprache, Darstellung, Erste Schritte, Mitglieder und Geräte, auf deinem eigenen Handy außerdem **Konto löschen**. **Erweitert** zeigt zusätzlich Familienkalender teilen, Kalender von außen, Apps und KI-Assistenten, den Server, den Datenexport, Anmeldung, Sicherheit und Familie verlassen.
 
 Was ausgeblendet ist, **gilt trotzdem weiter**. Die Ansicht ändert nur, was du siehst, und WuselWall merkt sie sich für jedes Gerät. Dasselbe gilt unter **Haushalt einstellen**.
 

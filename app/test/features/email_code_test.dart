@@ -318,6 +318,7 @@ void main() {
 
       expect(find.text('daniel@example.org — immer verfügbar'), findsOneWidget);
       await t.ensureVisible(find.text('Passwort festlegen'));
+      await t.pumpAndSettle();
       await t.tap(find.text('Passwort festlegen'));
       await t.pumpAndSettle();
 

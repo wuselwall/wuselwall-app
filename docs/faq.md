@@ -25,4 +25,4 @@ Wird derselbe Name ein zweites Mal hinzugefügt, zählt WuselWall ihn als **2×*
 Kacheln entstehen, wenn ihr einen Einkauf **beendet**. Bis dahin tippst du Namen ein; beim ersten Einkauf wird daraus eine Kachel.
 
 ## Wie ändere ich die Sprache?
-WuselWall folgt der Sprache deines Geräts (Deutsch, Englisch, Französisch oder Spanisch); bei anderen Sprachen erscheint die deutsche Version.
+Unter **Einstellungen → Sprache** wählst du Deutsch, Englisch, Französisch oder Spanisch für dieses Gerät; das gilt auch für die Erinnerungen auf dem Handy. Mit **Automatisch** folgt WuselWall der Sprache deines Geräts (bei anderen Sprachen erscheint die deutsche Version). Die Wahl bleibt auf dem Gerät, im Browser bei der Web-App: jedes Handy, Tablet und jeder Browser der Familie kann eine andere Sprache zeigen.

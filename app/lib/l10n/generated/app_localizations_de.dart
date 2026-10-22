@@ -4413,6 +4413,33 @@ class AppLocalizationsDe extends AppLocalizations {
       'Nachts zeigt das Wanddisplay immer seine Nachtansicht.';
 
   @override
+  String get languageTitle => 'Sprache';
+
+  @override
+  String get languageSystem => 'Automatisch';
+
+  @override
+  String languageSystemCurrent(String name) {
+    return 'Automatisch: $name';
+  }
+
+  @override
+  String get languageSystemHelp =>
+      'Die Sprache dieses Geräts; Deutsch, wenn die App sie nicht hat';
+
+  @override
+  String get languageNameDe => 'Deutsch';
+
+  @override
+  String get languageNameEn => 'English';
+
+  @override
+  String get languageNameFr => 'Français';
+
+  @override
+  String get languageNameEs => 'Español';
+
+  @override
   String get settingsViewLabel => 'Welche Einstellungen angezeigt werden';
 
   @override

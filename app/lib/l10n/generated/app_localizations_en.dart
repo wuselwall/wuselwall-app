@@ -4379,6 +4379,33 @@ class AppLocalizationsEn extends AppLocalizations {
       'At night the wall display always shows its night view.';
 
   @override
+  String get languageTitle => 'Language';
+
+  @override
+  String get languageSystem => 'Automatic';
+
+  @override
+  String languageSystemCurrent(String name) {
+    return 'Automatic: $name';
+  }
+
+  @override
+  String get languageSystemHelp =>
+      'The language of this device; German when the app does not have it';
+
+  @override
+  String get languageNameDe => 'Deutsch';
+
+  @override
+  String get languageNameEn => 'English';
+
+  @override
+  String get languageNameFr => 'Français';
+
+  @override
+  String get languageNameEs => 'Español';
+
+  @override
   String get settingsViewLabel => 'Which settings to show';
 
   @override

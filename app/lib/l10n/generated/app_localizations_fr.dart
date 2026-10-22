@@ -4439,6 +4439,33 @@ class AppLocalizationsFr extends AppLocalizations {
       'La nuit, l’écran mural affiche toujours sa vue de nuit.';
 
   @override
+  String get languageTitle => 'Langue';
+
+  @override
+  String get languageSystem => 'Automatique';
+
+  @override
+  String languageSystemCurrent(String name) {
+    return 'Automatique : $name';
+  }
+
+  @override
+  String get languageSystemHelp =>
+      'La langue de cet appareil ; l’allemand si l’app ne la propose pas';
+
+  @override
+  String get languageNameDe => 'Deutsch';
+
+  @override
+  String get languageNameEn => 'English';
+
+  @override
+  String get languageNameFr => 'Français';
+
+  @override
+  String get languageNameEs => 'Español';
+
+  @override
   String get settingsViewLabel => 'Paramètres à afficher';
 
   @override
