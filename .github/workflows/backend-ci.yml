@@ -121,9 +121,17 @@ jobs:
     needs: changes
     if: needs.changes.outputs.backend == 'true'
     runs-on: [self-hosted, Linux, build]
+    # One repository-wide group: one disposable stack at a time across all pull requests.
+    # `queue: max` keeps every waiting backend job in FIFO order (up to 100). Without it
+    # GitHub allows a single pending job per group and cancels it when the next pull
+    # request's backend job arrives ("Canceling since a higher priority waiting request
+    # for backend-ci-local-stack exists"), which fails that PR's `required` check. A newer
+    # push to the same PR still removes the stale run through the workflow-level group.
+    # `queue: max` cannot be combined with `cancel-in-progress: true`.
     concurrency:
       group: backend-ci-local-stack
       cancel-in-progress: false
+      queue: max
     # Every CLI image (the stack, pg_prove for `test db`) from GHCR rather than the default
     # ECR Public, whose anonymous data limit the shared egress IPs of GitHub-hosted runners
     # regularly exhaust ("toomanyrequests: Data limit exceeded"). Supabase mirrors each image

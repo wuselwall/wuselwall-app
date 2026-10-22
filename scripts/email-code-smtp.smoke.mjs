@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { randomBytes } from 'node:crypto';
 import { readFileSync } from 'node:fs';
+import { pullImage } from './image-pull.mjs';
 
 const prefix = `ww-mail-smoke-${randomBytes(5).toString('hex')}`;
 const names = ['db', 'mailpit', 'templates', 'auth'].map((n) => `${prefix}-${n}`);
@@ -13,23 +14,16 @@ const docker = (...args) => execFileSync('docker', args, { encoding: 'utf8', std
 const delay = () => new Promise((r) => setTimeout(r, 500));
 // Supabase's images from GHCR, not ECR Public: GitHub-hosted runners share egress IPs that
 // regularly exhaust ECR's anonymous data limit.
+// A runner whose GHCR pulls are refused falls back to the same digest on ECR Public or
+// Docker Hub (scripts/image-pull.mjs); the digests are the multi-arch index each registry
+// serves for the tag.
 const mailpitImage = 'ghcr.io/supabase/mailpit:v1.31.3';
-const images = ['postgres:15-alpine', mailpitImage, 'nginx:1.28.0-alpine',
-  'ghcr.io/supabase/gotrue:v2.197.0'];
-// The tags are pinned, so an image already on this Docker host (self-hosted runner,
-// developer machine) is used as is. Shared CI egress can briefly hit anonymous registry
-// limits. Retry only those.
-async function pull(image) {
-  try { docker('image', 'inspect', image); return; } catch { /* not cached */ }
-  for (let attempt = 1; ; attempt++) {
-    try { docker('pull', '--quiet', image); return; } catch (error) {
-      const limited = /toomanyrequests|rate limit|data limit exceeded/i.test(String(error.stderr ?? error.message));
-      if (!limited || attempt === 4) throw error;
-      console.warn(`Registry limit while pulling ${image}; retrying (${attempt}/3)`);
-      await new Promise((r) => setTimeout(r, attempt * 15000));
-    }
-  }
-}
+const gotrueImage = 'ghcr.io/supabase/gotrue:v2.197.0';
+const images = ['postgres:15-alpine', 'nginx:1.28.0-alpine',
+  { ref: mailpitImage, digest: 'sha256:ed9b00c609e77e99c79b93f1178255ebc271868920f2c69a8d166bd5634ed10d',
+    mirrors: ['public.ecr.aws/supabase/mailpit'] },
+  { ref: gotrueImage, digest: 'sha256:1736a63078f5922b198c4cbe50f80ab9a2d3b54fe8b7b6cfb2e9dc5dbbc12c6b',
+    mirrors: ['public.ecr.aws/supabase/gotrue', 'docker.io/supabase/gotrue'] }];
 async function until(fn) {
   let error;
   for (let n = 0; n < 120; n++) {
@@ -43,7 +37,7 @@ function request(host, path, body) {
   return JSON.parse(docker(...args, `http://${host}${path}`));
 }
 try {
-  for (const image of images) await pull(image);
+  for (const image of images) await pullImage(image, { docker });
   docker('network', 'create', prefix);
   docker('run', '-d', '--name', db, '--network', prefix, '--network-alias', 'db',
     '-e', 'POSTGRES_PASSWORD=throwaway-mail-test', 'postgres:15-alpine');
@@ -94,7 +88,7 @@ try {
       'smoke must stay aligned with Compose selection');
   }
   docker('run', '-d', '--name', auth, '--network', prefix, '--network-alias', 'auth',
-    ...Object.entries(env).flatMap(([k, v]) => ['-e', `${k}=${v}`]), 'ghcr.io/supabase/gotrue:v2.197.0');
+    ...Object.entries(env).flatMap(([k, v]) => ['-e', `${k}=${v}`]), gotrueImage);
   await until(() => request('auth:9999', '/health'));
   const email = 'otp-smoke@example.org';
   for (const [index, marker] of ['Confirmez votre adresse e-mail', 'Votre code de connexion'].entries()) {
