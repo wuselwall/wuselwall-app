@@ -4426,6 +4426,33 @@ class AppLocalizationsEs extends AppLocalizations {
       'Por la noche, la pantalla de pared siempre muestra su vista nocturna.';
 
   @override
+  String get languageTitle => 'Idioma';
+
+  @override
+  String get languageSystem => 'Automático';
+
+  @override
+  String languageSystemCurrent(String name) {
+    return 'Automático: $name';
+  }
+
+  @override
+  String get languageSystemHelp =>
+      'El idioma de este dispositivo; alemán si la app no lo tiene';
+
+  @override
+  String get languageNameDe => 'Deutsch';
+
+  @override
+  String get languageNameEn => 'English';
+
+  @override
+  String get languageNameFr => 'Français';
+
+  @override
+  String get languageNameEs => 'Español';
+
+  @override
   String get settingsViewLabel => 'Qué ajustes mostrar';
 
   @override

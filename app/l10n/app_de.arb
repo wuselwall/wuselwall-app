@@ -1770,6 +1770,21 @@
   "appearanceLight": "Hell",
   "appearanceDark": "Dunkel",
   "appearanceNightNote": "Nachts zeigt das Wanddisplay immer seine Nachtansicht.",
+  "languageTitle": "Sprache",
+  "languageSystem": "Automatisch",
+  "languageSystemCurrent": "Automatisch: {name}",
+  "@languageSystemCurrent": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "languageSystemHelp": "Die Sprache dieses Geräts; Deutsch, wenn die App sie nicht hat",
+  "languageNameDe": "Deutsch",
+  "languageNameEn": "English",
+  "languageNameFr": "Français",
+  "languageNameEs": "Español",
   "settingsViewLabel": "Welche Einstellungen angezeigt werden",
   "settingsViewAdvanced": "Erweitert",
   "settingsViewMoreHint": "Weitere Einstellungen findest du unter „Erweitert“. Ausgeblendete Einstellungen gelten weiterhin.",

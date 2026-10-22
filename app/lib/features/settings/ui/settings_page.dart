@@ -34,6 +34,7 @@ import 'package:wuselwall/features/settings/application/household_export_provide
 import 'package:wuselwall/features/settings/application/settings_view.dart';
 import 'package:wuselwall/features/settings/data/household_export_repository.dart';
 import 'package:wuselwall/features/settings/ui/appearance_tile.dart';
+import 'package:wuselwall/features/settings/ui/language_tile.dart';
 import 'package:wuselwall/features/settings/ui/settings_view_switch.dart';
 import 'package:wuselwall/features/shopping/data/shopping_store.dart';
 import 'package:wuselwall/features/system/ui/class_labels.dart';
@@ -108,6 +109,7 @@ class SettingsPage extends ConsumerWidget {
               trailing: const Icon(Icons.chevron_right),
               onTap: () => context.go(Routes.reminders),
             ),
+          const LanguageTile(),
           const AppearanceTile(),
           if (advanced && thisDevice?.deviceClass != DeviceClass.kiosk)
             ListTile(

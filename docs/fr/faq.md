@@ -34,4 +34,4 @@ Elles apparaissent quand vous terminez les achats. Les premiers produits se sais
 
 ## Comment changer la langue ?
 
-L’app suit la langue de l’appareil : allemand, anglais, français ou espagnol, avec repli sur l’allemand. Le menu de langue de ce guide change seulement la documentation.
+Dans **Paramètres → Langue**, choisissez l’allemand, l’anglais, le français ou l’espagnol pour cet appareil ; les rappels du téléphone suivent aussi. Avec **Automatique**, l’app suit la langue de l’appareil, avec repli sur l’allemand. Le choix reste sur l’appareil, dans le navigateur pour l’app web : chaque téléphone, tablette ou navigateur de la famille peut afficher une autre langue. Le menu de langue de ce guide change seulement la documentation.

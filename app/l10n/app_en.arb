@@ -2450,6 +2450,21 @@
   "appearanceLight": "Light",
   "appearanceDark": "Dark",
   "appearanceNightNote": "At night the wall display always shows its night view.",
+  "languageTitle": "Language",
+  "languageSystem": "Automatic",
+  "languageSystemCurrent": "Automatic: {name}",
+  "@languageSystemCurrent": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "languageSystemHelp": "The language of this device; German when the app does not have it",
+  "languageNameDe": "Deutsch",
+  "languageNameEn": "English",
+  "languageNameFr": "Français",
+  "languageNameEs": "Español",
   "settingsViewLabel": "Which settings to show",
   "settingsViewAdvanced": "Advanced",
   "settingsViewMoreHint": "More settings are under Advanced. Hidden settings still apply.",

@@ -2438,6 +2438,21 @@
   "appearanceLight": "Claro",
   "appearanceDark": "Oscuro",
   "appearanceNightNote": "Por la noche, la pantalla de pared siempre muestra su vista nocturna.",
+  "languageTitle": "Idioma",
+  "languageSystem": "Automático",
+  "languageSystemCurrent": "Automático: {name}",
+  "@languageSystemCurrent": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "languageSystemHelp": "El idioma de este dispositivo; alemán si la app no lo tiene",
+  "languageNameDe": "Deutsch",
+  "languageNameEn": "English",
+  "languageNameFr": "Français",
+  "languageNameEs": "Español",
   "leaveDeleteNext": "Siguiente",
   "leaveDeleteWordTitle": "¿Eliminar para siempre?",
   "leaveDeleteWordBody": "La familia y todos sus datos se eliminan de inmediato y de forma permanente. Nadie puede recuperarlos, ni siquiera un tutor. Exporta primero los datos si quieres conservarlos.",
