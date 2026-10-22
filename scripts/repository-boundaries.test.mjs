@@ -77,6 +77,8 @@ test('the reusable backend runner serializes and removes its disposable stack', 
   const backend = workflow.split('\n  backend:\n')[1].split('\n  required:\n')[0];
   assert.match(backend, /group: backend-ci-local-stack/);
   assert.match(backend, /cancel-in-progress: false/);
+  // Without a queue, a second pull request's pending backend job cancels the first one's.
+  assert.match(backend, /group: backend-ci-local-stack\n\s+cancel-in-progress: false\n\s+queue: max\n/);
   assert.match(backend, /name: Stop the disposable backend\n\s+if: always\(\)/);
   assert.match(backend, /npx --no-install supabase stop --no-backup/);
 });
