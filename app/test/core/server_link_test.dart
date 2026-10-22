@@ -62,16 +62,22 @@ void main() {
       expect(parsePairingCode('K7QM3XRP@api.example.org')?.server, server);
     });
 
-    test('the English landing path is read too', () {
-      expect(
-        parseInvitation('https://wuselwall.app/en/i/#$token@api.example.org'),
-        LinkSecret(token, server: server),
-      );
-      expect(
-        parseAppLink('https://wuselwall.app/en/p/#K7QM3XRP@api.example.org'),
-        OpenedLink(LinkKind.pairing, 'K7QM3XRP', server: server),
-      );
-    });
+    for (final language in ['en', 'fr', 'es']) {
+      test('the $language landing path is read too', () {
+        expect(
+          parseInvitation(
+            'https://wuselwall.app/$language/i/#$token@api.example.org',
+          ),
+          LinkSecret(token, server: server),
+        );
+        expect(
+          parseAppLink(
+            'https://wuselwall.app/$language/p/#K7QM3XRP@api.example.org',
+          ),
+          OpenedLink(LinkKind.pairing, 'K7QM3XRP', server: server),
+        );
+      });
+    }
 
     test('a host that cannot be a server makes the link unreadable', () {
       expect(

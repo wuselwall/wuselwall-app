@@ -24,8 +24,8 @@ plan authorizes an unreviewed production operation.
 3. Review/merge the app separation PR. App CI must not reference `website/`, its lockfile
    or the private marketing checkout. Docs and store-artwork generation stay functional.
 4. Coordinate PR #58's pending CI/docs remediation by intent: it overlaps `ci.yml` and
-   `docs.yml`. Do not reintroduce removed website jobs, SSH docs publishing or persistent
-   PR runners when either branch is updated. Rerun checks on the actual merged candidate.
+   `docs.yml`. Do not reintroduce removed website jobs or SSH docs publishing. PRs now use the
+   self-hosted build fleet, separate from production/deployment credentials. Rerun checks on the actual merged candidate.
 5. Do not delete the old live website deployment or static `/docs/` directory. Source
    removal is not server cleanup. Existing builds and deep links keep working.
 

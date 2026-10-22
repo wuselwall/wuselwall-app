@@ -30,6 +30,12 @@ It no longer falls back to an old term when the displayed week has no matching t
 The DE/EN family guides include the editor; separate bilingual public-progress copy
 remains to be coordinated in `wuselwall-website`.
 
+Website localization (issue #6, 2026-10-21): the separate website worktree adds
+French/Spanish pages, browser-language defaults, remembered language and light/dark choices,
+and app-demo screenshot exports in all four languages and both themes. The app accepts
+the localized invitation/pairing routes. Family guides now cover DE/EN/FR/ES; app legal links stay
+on the existing English pages until website publication. Merge and deployment are separate gates.
+
 ## A note on the "all four modules at once" decision
 
 You chose to build all four modules in the first release rather than starting with one.
@@ -381,3 +387,14 @@ module.
 though the calendar is still missing. Long-lived unreleased work is where solo projects
 go to die, and a family that watches the app grow every fortnight is a family that will
 adopt it.
+
+Documentation localization (2026-10-21): French and Spanish now cover all 27 guide
+routes, alongside German and English, including navigation, local search, theme controls
+and matching screenshots in both themes. The capture/check pipeline covers all four
+languages; the website selects the matching guide language under the existing docs base.
+Both `/docs/` hosting and the future Pages root are build targets; publication is separate.
+
+CI runner routing (2026-10-22): all jobs select self-hosted runners, including PR checks,
+docs/Pages and hosted-project installation. Linux uses the build fleet, iOS retains
+the Mac runner, and the website keeps its separate deployment runner. Backend CI
+serializes and cleans up its disposable Docker stack; publication gates are unchanged.

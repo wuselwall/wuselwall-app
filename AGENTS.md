@@ -135,18 +135,18 @@ repository keeps its own committed copies and never checks out private app sourc
 
 ## End-user documentation (`docs/`)
 
-VitePress site in German (root) and English (`/en/`), written for the family, not for
-developers (the specification is `specs/`). `.github/workflows/docs.yml` prepares GitHub
+VitePress site in German (root), English (`/en/`), French (`/fr/`) and Spanish (`/es/`),
+written for the family, not for developers (the specification is `specs/`). `.github/workflows/docs.yml` prepares GitHub
 Pages publishing at `https://docs.wuselwall.app/`, opt-in through `DOCS_PAGES_ENABLED`
 once this repository is public and Pages and DNS are configured. Until then the guide at
 `wuselwall.app/docs/` stays as last deployed (main no longer updates it); keep its links. Screenshots come from the Flutter web
 demo (`app/lib/main_demo.dart`, in-memory data) driven by Playwright
-(`docs/tools/screenshots.mjs`): every shot in both languages and both themes (`name.png`,
+(`docs/tools/screenshots.mjs`): every shot in all four languages and both themes (`name.png`,
 `name-dark.png`). They are build output, not committed: `npm run docs:screenshots` makes
 them locally. Pages show them with `<Shot name="…" alt="…" />` (add `wide` for tablet and
 wall shots), never a plain `<img>`; `npm run docs:check` fails when a page uses a shot the
 script does not take. `npm run docs:dev` previews, `npm run docs:build` checks links.
-**When a screen or a label changes, update the matching page in both languages; a new
+**When a screen or a label changes, update the matching page in all four languages; a new
 screen gets its shot in `screenshots.mjs`.** Playwright's Chromium needs
 `sudo npx playwright install-deps chromium` once on the development machine.
 
@@ -154,12 +154,13 @@ screen gets its shot in `screenshots.mjs`.** Playwright's Chromium needs
 
 All user-facing application and server-response text must exist in **German, English,
 French and Spanish**, in the same change. This is not deferred to a later milestone.
-The family guide and marketing/legal site remain DE/EN; that does not limit app locales.
+The family guide now covers DE/EN/FR/ES; marketing/legal translations in the separate website
+repository now cover DE/EN/FR/ES (issue #6, publication separately gated).
 
 - Shipped locales are `de`, `en`, `fr` and `es` (NFR-14, see [specs/02-requirements.md](specs/02-requirements.md)).
   The app follows the device language, including regional variants; unsupported languages
   fall back to German. New families store `de-DE`, `en-GB`, `fr-FR` or `es-ES` accordingly.
-- Code, comments and developer documentation stay in English; family guides remain DE/EN.
+- Code, comments and developer documentation stay in English; family guides cover DE/EN/FR/ES.
 - Strings live in `app/l10n/app_en.arb` (template) and `app/l10n/app_{de,fr,es}.arb`, generated with
   Flutter `gen-l10n` and read through `context.l10n` (see
   [specs/09-clients-and-ux.md](specs/09-clients-and-ux.md#language)). No literal string may land
@@ -177,4 +178,5 @@ The family guide and marketing/legal site remain DE/EN; that does not limit app 
   recipient metadata. Install/update/language-change tests must preserve keys and the
   selected language. See [specs/10](specs/10-deployment-and-ops.md#email-setup).
 - FR/ES app privacy/legal links deliberately fall back to existing English website pages.
-  Do not invent FR/ES website URLs or expand the DE/EN docs screenshot matrix implicitly.
+  Keep this fallback until the separate website release publishes its localized legal pages.
+  Both the explicit website export and default family-guide screenshot matrix cover all four locales.

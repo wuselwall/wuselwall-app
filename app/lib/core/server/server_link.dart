@@ -9,8 +9,8 @@ import 'package:wuselwall/core/server/server_address.dart';
 /// The host the links site is served from.
 const linkSiteHost = 'wuselwall.app';
 
-final _invitationPath = RegExp(r'^(/en)?/i/?$');
-final _pairingPath = RegExp(r'^(/en)?/p(/[^/]*)?/?$');
+final _invitationPath = RegExp(r'^(/(?:en|fr|es))?/i/?$');
+final _pairingPath = RegExp(r'^(/(?:en|fr|es))?/p(/[^/]*)?/?$');
 final _tokenPattern = RegExp(r'^[0-9a-f]{32}$');
 final _codePattern = RegExp(r'^[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{8}$');
 
@@ -78,7 +78,7 @@ bool sameServer(Uri a, Uri b) =>
     a.host.toLowerCase() == b.host.toLowerCase() && a.port == b.port;
 
 /// Reads an opened, scanned or pasted `https://wuselwall.app/i/…` or `/p/…` link (also
-/// under `/en/`). Returns null for anything else.
+/// under `/en/`, `/fr/` or `/es/`). Returns null for anything else.
 OpenedLink? parseAppLink(String raw) {
   final uri = Uri.tryParse(raw.trim());
   if (uri == null || !uri.hasScheme || uri.host != linkSiteHost) return null;

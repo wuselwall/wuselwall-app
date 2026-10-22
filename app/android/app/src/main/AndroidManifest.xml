@@ -47,8 +47,12 @@
               <data android:scheme="https" android:host="wuselwall.app" />
               <data android:pathPrefix="/i/" />
               <data android:pathPrefix="/en/i/" />
+              <data android:pathPrefix="/fr/i/" />
+              <data android:pathPrefix="/es/i/" />
               <data android:pathPrefix="/p/" />
               <data android:pathPrefix="/en/p/" />
+              <data android:pathPrefix="/fr/p/" />
+              <data android:pathPrefix="/es/p/" />
             </intent-filter>
         </activity>
         <!-- flutter_local_notifications: shows scheduled reminders and restores them after

@@ -1,12 +1,14 @@
 # Server bei Supabase einrichten
 
-WuselWall läuft auf [Supabase](https://supabase.com/). Supabase vermietet solche Server auch fertig eingerichtet, also braucht ihr keinen eigenen Rechner und keine Domain. Das Projekt gehört **euch**: Ihr habt das Supabase-Konto, und ihr allein entscheidet über die Daten. Wir haben keinen Zugriff darauf.
+WuselWall läuft auf [Supabase](https://supabase.com/). Supabase vermietet solche Server auch fertig eingerichtet, also braucht euer Familienserver keinen eigenen Rechner und keine Domain. Der Installations-Workflow braucht aber einen Build-Runner, siehe unten. Das Projekt gehört **euch**: Ihr habt das Supabase-Konto, und ihr allein entscheidet über die Daten. Wir haben keinen Zugriff darauf.
 
 Die Daten liegen damit bei **Supabase Inc.**, einer US-Firma. Gespeichert werden sie in einem Rechenzentrum, das ihr beim Anlegen wählt. Nehmt eines in Europa, etwa Frankfurt oder Zürich.
 
 ::: warning Noch nicht ganz erprobt
 Auf Supabase ist WuselWall noch nicht vollständig durchgetestet. Wenn ein Schritt scheitert, meldet es bitte auf [GitHub](https://github.com/wuselwall/wuselwall-app/issues). Eure Daten gehören nicht in die Meldung.
 :::
+
+Für diesen Workflow braucht euer GitHub-Repository Zugriff auf einen selbst gehosteten Linux-Runner mit den Labels `self-hosted`, `Linux` und `build`. Ein Workflow-Fork übernimmt keine Runner-Berechtigungen des ursprünglichen Projekts.
 
 ## Free oder Pro?
 
