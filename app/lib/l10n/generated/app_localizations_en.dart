@@ -4382,9 +4382,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsViewLabel => 'Which settings to show';
 
   @override
-  String get settingsViewBasic => 'Basic';
-
-  @override
   String get settingsViewAdvanced => 'Advanced';
 
   @override

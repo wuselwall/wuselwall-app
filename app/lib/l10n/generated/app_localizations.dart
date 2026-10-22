@@ -7601,12 +7601,6 @@ abstract class AppLocalizations {
   /// **'Which settings to show'**
   String get settingsViewLabel;
 
-  /// No description provided for @settingsViewBasic.
-  ///
-  /// In en, this message translates to:
-  /// **'Basic'**
-  String get settingsViewBasic;
-
   /// No description provided for @settingsViewAdvanced.
   ///
   /// In en, this message translates to:

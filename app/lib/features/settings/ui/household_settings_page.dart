@@ -30,6 +30,7 @@ class HouseholdSettingsPage extends ConsumerWidget {
       appBar: AppBar(
         title: Text(l10n.householdSettingsTitle),
         leading: BackButton(onPressed: () => context.go(Routes.settings)),
+        actions: const [SettingsViewSwitch()],
       ),
       body: AsyncValueView<List<SettingEntry>>(
         value: settings,
@@ -133,7 +134,6 @@ class _SettingsList extends ConsumerWidget {
     return ListView(
       padding: const EdgeInsets.all(Tokens.space4),
       children: [
-        const SettingsViewSwitch(),
         for (final section in sections) ...[
           Padding(
             padding: const EdgeInsets.only(
