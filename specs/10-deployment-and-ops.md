@@ -225,6 +225,9 @@ signup and returning sign-in messages in Mailpit, and verifies each mailed OTP w
 It reuses images already on the Docker host; when GHCR keeps answering `toomanyrequests`
 it pulls the same pinned digest from ECR Public or Docker Hub (`scripts/image-pull.mjs`).
 Any other pull error, and every failed assertion, still fails the run.
+Backend CI does the same for the Supabase CLI's disposable stack before `supabase start`
+(`scripts/backend-stack-images.mjs`); its pins must match the CLI's `supabase services`
+versions, so a CLI bump updates them in the same change.
 
 
 ---
