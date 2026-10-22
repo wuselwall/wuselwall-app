@@ -1,12 +1,14 @@
 # Setting up a server at Supabase
 
-WuselWall runs on [Supabase](https://supabase.com/). Supabase also rents out such servers ready-made, so you need no machine of your own and no domain. The project belongs to **you**: you hold the Supabase account, and you alone decide about the data. We have no access to it.
+WuselWall runs on [Supabase](https://supabase.com/). Supabase also rents out such servers ready-made, so the family server needs no machine or domain of your own. The installation workflow needs a build runner, as explained below. The project belongs to **you**: you hold the Supabase account, and you alone decide about the data. We have no access to it.
 
 The data then lives with **Supabase Inc.**, a US company. It is stored in a data centre you choose when you create the project. Choose one in Europe, such as Frankfurt or Zurich.
 
 ::: warning Not fully tested yet
 WuselWall has not been fully tested on Supabase yet. If a step fails, please report it on [GitHub](https://github.com/wuselwall/wuselwall-app/issues). Your data does not belong in the report.
 :::
+
+This workflow requires your GitHub repository to have access to a self-hosted Linux runner with the labels `self-hosted`, `Linux` and `build`. Forking the workflow does not grant access to the original project’s runners.
 
 ## Free or Pro?
 

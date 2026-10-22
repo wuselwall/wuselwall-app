@@ -1,7 +1,7 @@
 # Household data, security (RLS) and Edge Function changes get an executable gate before
 # the pilot rollout (specs/03, ADR-013). Four jobs:
 #
-#   changes           always runs, on a GitHub-hosted runner, for every pull request. It
+#   changes           always runs, on the self-hosted build fleet, for every pull request. It
 #                     only reads `git diff` between the PR's base and head commit -- it
 #                     never builds, installs or executes anything from the PR -- and
 #                     decides whether the backend-sensitive inputs below changed. A tag
@@ -25,7 +25,7 @@
 #                     official stack, heavier than the app's fast checks in ci.yml, so it
 #                     runs only when `changes` says it is needed.
 #
-#   required          always runs (if: always()), on a GitHub-hosted runner, after the two
+#   required          always runs (if: always()), on the self-hosted build fleet, after the two
 #                     jobs above. It is the one check to mark "required" in branch
 #                     protection: a workflow-level `paths:` filter leaves GitHub's status
 #                     for a skipped run at Pending forever (documented GitHub behaviour,
@@ -37,16 +37,9 @@
 #                     protection at job `required` (check name "backend-ci / required"),
 #                     not at `edge-functions` or `backend` directly.
 #
-# Untrusted PR code never runs on the self-hosted fleet: `edge-functions` executes
-# PR-supplied Deno code (the test subjects' own imports, not just the test harness), so for
-# a `pull_request` event it runs on the GitHub-hosted `ubuntu-latest` runner, torn down
-# after the job, rather than on [self-hosted, Linux, build]; the host-side fast checks in
-# ci.yml get the same treatment. `backend` already runs on `ubuntu-latest` (it needs a
-# Docker daemon of its own for `supabase start`), which also keeps its `npm ci` / `flutter
-# pub get` install-time code off self-hosted hardware for a pull_request. Approving a fork
-# PR for CI is not containment by itself -- the runner itself must not be shared,
-# persistent or credentialed; this workflow intentionally never uses `pull_request_target`,
-# which would hand PR-controlled code the base ref's secrets.
+# All jobs use the self-hosted build fleet. Backend tests require a CI-only Docker
+# daemon, never a family server's daemon. Serialize the local stack and stop it after
+# every run so a reusable runner cannot retain the previous job's database.
 name: backend-ci
 on:
   workflow_dispatch:
@@ -60,12 +53,9 @@ permissions:
   contents: read
 
 jobs:
-  # Decides whether this pull request can plausibly affect the backend or the Flutter
-  # integration suite that runs against it. Reads `git diff` only -- no PR code is
-  # installed, built or executed here -- so this job is safe on any runner; it stays on
-  # ubuntu-latest because it is cheap and has no self-hosted dependency.
+  # Read the base/head diff before deciding which backend checks are needed.
   changes:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, build]
     if: always()
     outputs:
       backend: ${{ steps.detect.outputs.backend }}
@@ -114,9 +104,7 @@ jobs:
   edge-functions:
     needs: changes
     if: needs.changes.outputs.backend == 'true'
-    # Runs PR-supplied Deno code (the modules under test, not just the harness): a
-    # GitHub-hosted, ephemeral runner for a pull_request, never the self-hosted fleet.
-    runs-on: ${{ github.event_name == 'pull_request' && 'ubuntu-latest' || fromJSON('["self-hosted","Linux","build"]') }}
+    runs-on: [self-hosted, Linux, build]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed # v2.0.5
@@ -132,7 +120,10 @@ jobs:
   backend:
     needs: changes
     if: needs.changes.outputs.backend == 'true'
-    runs-on: ubuntu-latest   # supabase start needs a Docker daemon of its own
+    runs-on: [self-hosted, Linux, build]
+    concurrency:
+      group: backend-ci-local-stack
+      cancel-in-progress: false
     # Every CLI image (the stack, pg_prove for `test db`) from GHCR rather than the default
     # ECR Public, whose anonymous data limit the shared egress IPs of GitHub-hosted runners
     # regularly exhaust ("toomanyrequests: Data limit exceeded"). Supabase mirrors each image
@@ -161,6 +152,9 @@ jobs:
         with: { flutter-version-file: app/pubspec.yaml, cache: true }
       - run: flutter pub get --enforce-lockfile && flutter test test/integration --dart-define-from-file=env/ci.json -j 1
         working-directory: app
+      - name: Stop the disposable backend
+        if: always()
+        run: npx --no-install supabase stop --no-backup
 
   # The single required status check for branch protection (see the file header). Always
   # runs and always terminates with success or failure, whether edge-functions/backend ran
@@ -168,7 +162,7 @@ jobs:
   required:
     needs: [changes, edge-functions, backend]
     if: always()
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, build]
     steps:
       - name: Aggregate edge-functions and backend results
         run: |

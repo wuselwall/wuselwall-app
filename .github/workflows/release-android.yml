@@ -67,12 +67,12 @@ jobs:
           path: app/build/wuselwall.aab
           retention-days: 30
 
-  # A GitHub-hosted runner, so the Play key never reaches the shared build machine. Testers
-  # on the internal track receive the build as soon as Play has processed it.
+  # Upload on the self-hosted build fleet only for a release tag or an explicit request.
+  # Testers receive the build once Play has processed it.
   play:
     needs: apk
     if: github.ref_type == 'tag' || inputs.upload
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, build]
     defaults: { run: { working-directory: app/android } }
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

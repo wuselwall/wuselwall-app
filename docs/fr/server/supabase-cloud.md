@@ -6,6 +6,8 @@ Votre projet [Supabase](https://supabase.com/) vous appartient : votre compte, v
 L’installation hébergée n’a pas encore été entièrement validée pour WuselWall. Signalez un problème sur [GitHub](https://github.com/wuselwall/wuselwall-app/issues), sans y joindre les données de votre famille.
 :::
 
+Ce workflow exige un runner Linux auto-hébergé accessible à votre dépôt GitHub, avec les labels `self-hosted`, `Linux` et `build`. Un fork ne donne pas accès aux runners du projet d’origine.
+
 ## Gratuit ou payant ? {#free-or-pro}
 
 L’offre gratuite convient à un essai, mais peut mettre un projet inactif en pause et ne fournit pas les mêmes sauvegardes qu’une offre payante. Vérifiez les limites, la conservation des sauvegardes et les [tarifs actuels](https://supabase.com/pricing) avant l’utilisation quotidienne. Un serveur en pause ne sert plus l’écran mural.
