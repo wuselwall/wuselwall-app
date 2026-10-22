@@ -44,7 +44,7 @@ Future<void> _completeTerm(WidgetTester t, Locale locale) async {
   // A date range is an explicit choice, rather than silently saving a one-day term.
   final next = find.widgetWithText(FilledButton, l10n.schoolTermContinue);
   expect(t.widget<FilledButton>(next).onPressed, isNull);
-  await t.tap(find.widgetWithText(TextButton, l10n.schoolTo));
+  await t.tap(find.byKey(const ValueKey('term-to')));
   await t.pumpAndSettle();
   final material = MaterialLocalizations.of(
     t.element(find.byType(DatePickerDialog)),

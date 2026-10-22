@@ -10,7 +10,7 @@ The first time, tap **Set up school**. This covers:
 
 - the **school** with its name and **region**: country, then canton or state, and if you like district or municipality. The region decides the public and school holidays, see below
 - the **bell times**: lessons and breaks with start and end (**Add lesson**, **Add break**)
-- the **terms**, for example half-years, with **From** and **To**. If there are A and B weeks, enter an **A/B anchor week**: a calendar week that is an A week
+- the **terms**, for example half-years, with **From** and **To**. If the timetable alternates between two weeks, switch on **A and B weeks** and enter the **calendar week of an A week**; every second week after it is a B week
 - the **subjects** with a short name and a colour. For each subject you can list **Things to bring**, for example sports kit, and decide whether it shows on the wall. The subjects are a starting suggestion that fits your country: rename or delete them
 - the **holidays and free days**
 
@@ -48,7 +48,7 @@ If your children go to different schools, add each school: on the school page ta
 
 ## Entering a timetable
 
-For each child, enter the timetable for a term. Tap **Enter timetable**. If no term covers the week shown, first enter its name and start and end dates. **Save term and continue** takes you straight to the timetable editor.
+For each child, enter the timetable for a term. Tap **Enter timetable**. If no term covers the week shown, the app first asks for that term: its name, **From** and **To**. The dates must include the week shown; the dialog says so next to the date if they do not. **Save term and continue** takes you straight to the timetable editor.
 
 At the top you can see the child, school and term with its dates. Tap a cell in the grid and choose the subject. **Save timetable** stays visible at the bottom of the screen as you scroll through the timetable.
 
