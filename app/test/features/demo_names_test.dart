@@ -50,6 +50,25 @@ void main() {
     expect(DemoData.languageCode, 'fr');
   });
 
+  test('shopping suggestions and items use the translated product name', () {
+    for (final entry in {'fr': 'Beurre', 'es': 'Mantequilla'}.entries) {
+      DemoData.useLanguageOf([Locale(entry.key)]);
+      expect(
+        DemoData.catalogue().map((item) => item.name),
+        contains(entry.value),
+      );
+      expect(DemoData.items().map((item) => item.name), contains(entry.value));
+      expect(
+        DemoData.tripItems('t-2').map((item) => item.name),
+        contains(entry.value),
+      );
+      expect(
+        DemoData.items().map((item) => item.name),
+        isNot(contains('Butter')),
+      );
+    }
+  });
+
   test('every shipped language has its own demo prose', () {
     const german = 'Mathematik';
     const expected = {

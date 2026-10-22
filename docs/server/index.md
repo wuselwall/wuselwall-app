@@ -7,7 +7,7 @@ Diese Seiten sind für die Person, die den Server einrichtet. Programmieren muss
 ::: warning Stand Oktober 2026
 - **Geht:** einen Server bei Supabase oder zu Hause einrichten. Die App fragt beim ersten Start, mit welchem Server sie sich verbinden soll, und kann auch ohne Server eine Beispielfamilie zeigen.
 - **Noch nicht:** WuselWall steht noch nicht öffentlich im **App Store** und bei **Google Play**. Bis dahin benutzt ihr die **Web-App** im Browser, am Handy auch als Symbol auf dem Home-Bildschirm.
-- **Noch nicht:** Einladungslinks und Push-Benachrichtigungen.
+- **Funktioniert:** Einladungslinks. **Noch nicht:** Push-Benachrichtigungen.
 :::
 
 ## Ein Server, eine Familie
