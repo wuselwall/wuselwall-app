@@ -52,6 +52,8 @@ Für jedes Kind tragt ihr den Plan für einen Zeitraum ein. Tippe auf **Stundenp
 
 Oben siehst du das Kind, die Schule und den Zeitraum mit seinen Daten. Tippe ein Feld im Raster an und wähle das Fach. **Stundenplan speichern** bleibt am unteren Bildschirmrand sichtbar, auch wenn du durch den Plan scrollst.
 
+Wenn noch kein Plan vorliegt, zeigt die Ansicht einen Hinweis zum gewählten Kind und den Button **Stundenplan eingeben**.
+
 <Shot name="school-editor" alt="Stundenplan-Editor mit Schule, Zeitraum und sichtbarer Speichern-Schaltfläche" />
 
 - Mit **Wochenrhythmus** wählst du **Jede Woche** oder **A/B-Wochen**. Bei A/B-Wochen tragt ihr die A- und die B-Woche getrennt ein.

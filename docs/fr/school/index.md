@@ -50,6 +50,8 @@ Pour chaque enfant, saisissez les cours d’une période. Si aucune période ne 
 
 L’en-tête indique l’enfant, l’école, la période et ses dates. Touchez une cellule pour choisir une matière. Le bouton d’enregistrement reste visible en bas pendant le défilement.
 
+Si aucun emploi du temps n’existe encore, la vue affiche un message concernant l’enfant sélectionné et le bouton **Saisir l’emploi du temps**.
+
 <Shot name="school-editor" alt="L’éditeur avec l’école, la période et le bouton d’enregistrement visible" />
 
 Choisissez un rythme hebdomadaire ou des semaines A/B, saisies séparément. Ajoutez la garde après l’école avec les jours et horaires. Copiez un emploi du temps d’un frère, d’une sœur ou de la période précédente pour éviter de tout ressaisir. Enregistrez la grille.

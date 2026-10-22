@@ -22,7 +22,7 @@ Sous les membres, touchez **Inviter un adulte** :
 
 Partagez le code, le serveur, le lien ou le code QR dans un message. Le lien et le QR contiennent le serveur et ouvrent directement l’invitation dans l’app. Avec le code seul, la personne saisit aussi le serveur si nécessaire ([Rejoindre la famille](/fr/guide/setup#_3-joining-a-family)).
 
-Une invitation dure **7 jours** et sert **une seule fois**. Les invitations ouvertes affichent leur échéance ; vous pouvez les repartager ou les retirer. Un membre sans compte peut être invité depuis sa ligne. Sans adresse e-mail, la personne doit saisir le code.
+Une invitation dure **7 jours** et sert **une seule fois**. Les invitations ouvertes affichent leur échéance directement dans la ligne de la personne invitée ; vous pouvez les repartager ou les retirer. Un membre sans compte peut être invité depuis sa ligne. Sans adresse e-mail, la personne doit saisir le code.
 
 Quand quelqu’un rejoint la famille, chaque parent reçoit un avis dans **Aujourd’hui**. Il peut l’acquitter ou ouvrir les membres ; l’avis disparaît après 14 jours.
 
