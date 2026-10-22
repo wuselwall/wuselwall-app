@@ -6,7 +6,7 @@ Los adultos mantienen el horario. Cada niño consulta su semana y los cambios, t
 
 ## Configurar el colegio {#setting-up}
 
-La primera vez define:
+La primera vez toca **Configurar colegio**, escribe el nombre y la **región** del colegio y toca **Crear colegio**. No hace falta más: se proponen horas de clase y una lista de asignaturas, y en **Siguientes pasos** aparece cada niño al que aún le falta el horario, con un botón para introducirlo o importarlo. Después, la página del colegio contiene:
 
 - nombre y **región** del colegio;
 - horas de inicio y fin de **clases y descansos**;
@@ -46,15 +46,25 @@ Añade otro colegio cuando haga falta y elige arriba cuál editar. Cada horario 
 
 ## Introducir el horario {#entering-a-timetable}
 
-Añade el horario de cada niño para un periodo. Si no hay periodo que cubra la semana visible, la app pide primero ese periodo: nombre, **Desde** y **Hasta**. Las fechas deben incluir la semana visible; si no, lo indica junto a la fecha. Guárdalo para continuar a la cuadrícula.
+Añade el horario de cada niño para un periodo. Si no hay periodo que cubra la semana visible, la app propone el curso escolar actual, del 1 de agosto al 31 de julio, con nombre y fechas ya rellenos. Si encaja, toca **Guardar periodo y continuar**; si tu colegio lo cuenta de otra forma, cambia antes el nombre o las fechas. Las fechas deben incluir la semana visible; si no, lo indica junto a la fecha.
 
-Arriba aparecen niño, colegio, periodo y fechas. Toca una celda para elegir asignatura. El botón de guardar permanece abajo mientras te desplazas.
+Arriba aparecen niño, colegio, periodo y fechas. Toca una celda para elegir asignatura. Si falta una asignatura, escribe su abreviatura en la búsqueda y elige **Crear la asignatura «…»**: la asignatura existe al momento y rellena la celda; color, icono y cosas que llevar vienen después en **Editar colegio**. El botón de guardar permanece abajo mientras te desplazas.
 
 Si aún no hay horario, la vista muestra un mensaje sobre el niño seleccionado y el botón **Introducir horario**.
 
 <Shot name="school-editor" alt="El editor con colegio, periodo y botón Guardar visible" />
 
 Elige ritmo semanal o semanas A/B, que se rellenan por separado. Añade cuidado extraescolar con días y horas. Copia de un hermano o del periodo anterior para ahorrar escritura. Guarda la cuadrícula.
+
+## Importar un horario {#reading-in}
+
+En vez de teclear cada clase, puedes hacer que se lea la hoja. Las tres vías terminan en la misma **vista previa**: muestra el niño, el colegio, el periodo, la cuadrícula tal como se guardaría, las asignaturas que se crearán y cada aviso, por ejemplo cuando se sustituye un horario o tiene más clases que las horas de clase. Solo **Aplicar** escribe algo; **Descartar** lo deja todo como estaba.
+
+**Desde texto, con vuestro asistente de IA.** En un niño sin horario toca **Importar…** y luego **Pegar como texto** (o **Importar…** arriba en el horario). **Copiar las instrucciones para el asistente** deja un texto en el portapapeles: dáselo, junto con una foto del horario, al asistente en el que confiáis, por ejemplo en su app del móvil. Responde en un formato fijo que WuselWall sabe leer. Pega la respuesta en el campo y toca **Importar**. La foto solo va al asistente que elijáis; WuselWall no envía nada a nadie.
+
+**Como propuesta de un asistente.** Un asistente conectado a WuselWall ([Apps y asistentes de IA](/es/settings/shortcuts)) puede dejar un horario como **propuesta**. No cambia nada: en **Hoy** y sobre el horario aparece una tarjeta «Propuesta de Claude» con **Revisar** y **Descartar**. **Revisar** abre la vista previa. Las propuestas caducan a los 14 días.
+
+**Como foto, leída por vuestro servidor.** Si vuestro servidor tiene reconocimiento de texto ([Extras para el servidor](/es/server/extras#text-recognition)), toca **Importar…** y **Escanear una foto**, haz una foto de la hoja o elige una. La foto va a vuestro propio servidor y a ningún otro sitio; el servidor reconoce los días, las clases y las asignaturas y muestra la vista previa. Una foto recta y luminosa de toda la hoja da el mejor resultado. La vista previa nombra los fragmentos de texto que no encajan en ninguna casilla, para compararlos con la hoja. Sin reconocimiento de texto, la app lo dice y remite a importar desde texto.
 
 ## Editar días enteros {#editing-whole-days}
 

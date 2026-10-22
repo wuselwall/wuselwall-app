@@ -78,4 +78,14 @@ export const MCP_ES: McpMessages = {
   notText: (key) => `${key} debe ser texto.`,
   statusInvalid: "status debe ser open, done o all.",
   queryRequired: "Indica qué quieres buscar (query).",
+  proposed: (name, n) =>
+    `Propuesta guardada: horario de ${name}, ${
+      n === 1 ? "1 clase" : `${n} clases`
+    }. Un adulto responsable la revisa en WuselWall en Horario escolar y la aplica o la descarta.`,
+  proposeInvalid:
+    "La propuesta tiene un formato no válido: cada entrada de lessons necesita day, period (o starts y ends) y subject, 200 entradas como máximo.",
+  proposeLimit:
+    "Ya hay cinco propuestas esperando. Que las revisen o descarten primero en WuselWall.",
+  proposeUnavailable: "Este servidor aún no acepta propuestas.",
+  lessonsRequired: "lessons falta o está vacío.",
 };

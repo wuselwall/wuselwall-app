@@ -181,6 +181,7 @@ intentions than forty that match database tables.
 | `create_task` | `title`, `dueOn?`, `assignee?`, `points?` | One-off tasks only; no recurrence over MCP |
 | `create_event` | `title`, `start`, `end`, `attendees?` | Times resolved in the household timezone |
 | `set_meal` | `date`, `slot`, `description` or `recipeId` | Overwrites the slot |
+| `propose_timetable` | `member`, `lessons[]`, `class?`, `week_cycle?`, `periods?`, `care?`, `client_key?` | *Built 2026-10-22* ([24](24-school-import.md)): stores a proposal, changes nothing; a guardian reviews it in the app. Under the assistant key for now, under `import:propose` once scopes exist |
 
 **Resources** for cheap read-only context:
 `family://agenda/today` · `family://shopping/current` · `family://meals/week` · `family://members`
@@ -191,9 +192,12 @@ intentions than forty that match database tables.
   surface these to users, and getting them wrong erodes the consent model.
 - Every tool takes an explicit `member` where the acting person is ambiguous. Never let
   the assistant guess who completed a chore.
-- **Lessons are read-only over MCP, permanently.** There is no `set_lesson` and no
+- **Lessons are never changed over MCP.** There is no `set_lesson` and no
   `cancel_lesson`: an assistant that misunderstands "Mathe fällt aus" should not be able
   to rewrite a term's timetable. Entering a Vertretung takes two taps in the app.
+  *Amended 2026-10-22 ([24](24-school-import.md)):* an assistant may **propose** a whole
+  timetable it read from a sheet (`propose_timetable`); the proposal is stored with shape
+  checks only and a guardian applies or discards it in the app. Nothing changes until then.
 - `create_event` sets `kind='appointment'` and `importance='normal'` always. Deciding what
   belongs on the kitchen wall is a human decision, and an assistant that could set it
   would eventually fill the display.

@@ -58,7 +58,7 @@ Révoquez-la si le téléphone est perdu ou si elle n’est plus utile. L’effe
 
 ## Assistants IA et MCP {#ai-assistants-mcp}
 
-Un assistant compatible **Model Context Protocol** peut consulter la semaine, les événements, tâches, repas, courses, points, recettes, emplois du temps et présences. Il **ne peut rien ajouter, modifier ou supprimer**.
+Un assistant compatible **Model Context Protocol** peut consulter la semaine, les événements, tâches, repas, courses, points, recettes, emplois du temps et présences. Il **ne peut rien ajouter, modifier ou supprimer**. La seule chose qu’il peut déposer est une **proposition** : un emploi du temps lu sur une feuille. Elle apparaît comme carte sur **Aujourd’hui**, et seul un parent l’applique ou la rejette, voir [Importer un emploi du temps](/fr/school/#reading-in).
 
 Créez une clé de type **Assistant IA**, réservée aux adultes, au lieu d’une clé d’automatisation.
 

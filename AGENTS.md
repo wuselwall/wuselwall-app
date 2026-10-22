@@ -27,7 +27,10 @@ in `app.shortcut_token`, the `shortcuts` function), the MCP server with `family:
 Part 2: the `mcp` function, read-only `wwa_` assistant keys as the Q15 interim, no OAuth yet),
 the evening packing reminder (FR-7.12, `notify.packing_reminder`), and the usual week
 (issue #81, specs/15 "The baseline": a usual place per weekday, up to three time slots a
-day and alternating weeks A/B).
+day and alternating weeks A/B), and the school import of [specs/24](specs/24-school-import.md)
+(2026-10-22): the proposed term, subjects from the cell, the paste import with its preview,
+proposals (`app.proposal`, `api.mcp_propose`, the `propose_timetable` tool, cards on Today),
+and the photo scan (`timetable-scan` with the optional `ocr` container, RapidOCR on the CPU).
 The current language scope is DE/EN/FR/ES throughout the app and server responses, with
 one installation-selected email language (NFR-14); release evidence remains a separate gate.
 `scripts/local-pgtap` runs every migration and pgTAP suite on a throwaway local Postgres (no

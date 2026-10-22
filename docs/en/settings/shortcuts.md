@@ -71,7 +71,7 @@ Guardians see and revoke every key of the family, everyone else their own. The [
 
 ## AI assistants (MCP)
 
-An AI assistant that speaks **MCP** (the Model Context Protocol, for example Claude) can **look things up** in WuselWall with a key of its own: "What's on this week?", "What's for dinner on Thursday?", "When does Olivia finish school tomorrow?". It can **neither add, change nor delete anything**.
+An AI assistant that speaks **MCP** (the Model Context Protocol, for example Claude) can **look things up** in WuselWall with a key of its own: "What's on this week?", "What's for dinner on Thursday?", "When does Olivia finish school tomorrow?". It can **neither add, change nor delete anything**. The one thing it can hand in is a **proposal**: a timetable it read from a sheet. That lands as a card on **Today**, and only a parent applies or discards it, see [Reading in a timetable](/en/school/#reading-in-a-timetable).
 
 When creating a key, choose **AI assistant** instead of **Automation**. Only adults get a key for an assistant. It appears in the list under **AI assistants** and is revoked like any other key.
 

@@ -405,7 +405,7 @@ the work.
 | Erinnerungen einschalten | A personal device on Android or iOS | This device granted the notification permission (local reminders, Q47) | Per device |
 | Kalender abonnieren (Outlook, iPhone) | The ICS feed is built (M1.3a) | A feed token exists | Household |
 | Schneller anmelden mit Passkey | Passkeys verified on this platform | The account has a passkey | Per account |
-| Stundenplan eintragen | A child profile exists | A school and a timetable exist (added 2026-10-14) | Household |
+| Stundenplan eintragen | A child profile exists | A school and a timetable exist (added 2026-10-14; since 2026-10-22 the school page proposes the term, lists the children as next steps and reads a sheet in: [24](24-school-import.md)) | Household |
 
 *Built 2026-10-14:* the card with the items above except the passkey, which waits for
 passkeys to be verified on a real device; the reminders row followed on 2026-10-15, and its
