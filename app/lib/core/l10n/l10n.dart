@@ -65,6 +65,13 @@ extension FailureL10n on Failure {
       'shortcut_label_invalid' => l10n.shortcutErrLabel,
       'shortcut_token_limit' => l10n.shortcutErrLimit,
       'assistant_adult_only' => l10n.shortcutErrAdultOnly,
+      'proposal_invalid' => l10n.schoolProposalErrInvalid,
+      'proposal_limit' => l10n.schoolProposalErrLimit,
+      'proposal_not_found' || 'proposal_not_open' => l10n.schoolProposalErrGone,
+      'ocr_not_configured' => l10n.schoolScanNotConfigured,
+      'scan_nothing_found' => l10n.schoolScanNothingFound,
+      'image_too_large' => l10n.schoolScanTooLarge,
+      'image_invalid' || 'ocr_failed' => l10n.schoolScanFailed,
       _ => null,
     };
     if (byCode != null) return byCode;

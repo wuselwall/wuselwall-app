@@ -896,7 +896,7 @@
   "mealsKioskHint": "Tap a dot to change who is eating",
   "errMealInvalid": "That meal could not be saved. Check the entry and try again.",
   "schoolSetupCardTitle": "Set up the school",
-  "schoolSetupCardBody": "Add the school, its bell times and the terms. Then the timetable can be entered.",
+  "schoolSetupCardBody": "Add the school. Bell times and subjects are proposed; then enter the timetable or read it in.",
   "schoolSetupAction": "Set up school",
   "schoolEnterTimetableTitle": "Enter the timetable",
   "schoolEnterTimetableBody": "{name} has no timetable for the week shown yet.",
@@ -2495,5 +2495,183 @@
   "settingsViewMoreHint": "More settings are under Advanced. Hidden settings still apply.",
   "settingsViewShowAll": "Show all settings",
   "schoolTimetableNeedsTerm": "The week shown is not in any term yet. Add the term it belongs to, then enter the lessons.",
-  "schoolTermContinue": "Save term and continue"
+  "schoolTermContinue": "Save term and continue",
+  "schoolSetupFirstHint": "Bell times (from 8:00, 45 minutes) and a subject list are proposed. Both can be adjusted afterwards.",
+  "schoolSetupCreate": "Add school",
+  "schoolNextSteps": "Next steps",
+  "schoolNextStepEnter": "Enter {name}’s timetable",
+  "@schoolNextStepEnter": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "schoolTermProposedHint": "Proposed: the current school year. Adjust the name and dates if your school counts differently.",
+  "schoolYearName": "School year {from}/{to}",
+  "@schoolYearName": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "schoolCreateSubject": "Add “{name}” as a subject",
+  "@schoolCreateSubject": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "schoolImportAction": "Read in…",
+  "schoolImportFromText": "Paste as text",
+  "schoolImportFromPhoto": "Scan a photo",
+  "schoolImportTitle": "Read in a timetable",
+  "schoolImportProposedBy": "Proposed by {assistant}",
+  "@schoolImportProposedBy": {
+    "placeholders": {
+      "assistant": {
+        "type": "String"
+      }
+    }
+  },
+  "schoolImportLessons": "{count, plural, one{1 lesson} other{{count} lessons}}",
+  "@schoolImportLessons": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "schoolImportTermNew": "Term: {name} (will be created)",
+  "@schoolImportTermNew": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "schoolImportTermExisting": "Term: {name}",
+  "@schoolImportTermExisting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "schoolImportReplaces": "Replaces {name}’s existing timetable ({count} lessons).",
+  "@schoolImportReplaces": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "schoolImportNewSubjects": "New subjects",
+  "schoolImportCreateSubjects": "Create the new subjects",
+  "schoolImportSkipNewSubjects": "Lessons with new subjects are left out.",
+  "schoolImportWarnUnmatchedTimes": "{count, plural, one{1 lesson matches no bell time and is left out.} other{{count} lessons match no bell time and are left out.}}",
+  "@schoolImportWarnUnmatchedTimes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "schoolImportWarnPeriodsExtended": "{count, plural, one{The bell times get 1 more lesson.} other{The bell times get {count} more lessons.}}",
+  "@schoolImportWarnPeriodsExtended": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "schoolImportWarnPeriodsDiffer": "The bell times on the sheet differ from the school’s; the school’s stay.",
+  "schoolImportWarnSchoolDiffers": "The sheet names another school: {name}.",
+  "@schoolImportWarnSchoolDiffers": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "schoolImportApply": "Apply",
+  "schoolImportDiscard": "Discard",
+  "schoolImportApplied": "Timetable applied.",
+  "schoolImportDiscarded": "Proposal discarded.",
+  "schoolImportNoChild": "Add a child under Members first.",
+  "schoolImportPasteTitle": "Read in from text",
+  "schoolImportPasteIntro": "Photograph the timetable and ask the assistant you trust to put it into the WuselWall format. Paste its answer here. You see a preview before anything is saved.",
+  "schoolImportCopyPrompt": "Copy the instructions for the assistant",
+  "schoolImportPromptCopied": "Instructions copied.",
+  "schoolImportPrompt": "Please read the timetable in the photo and return it as JSON in the format below, with no other text. Days as Mo, Tu, We, Th, Fr; periods as a number (1 = first lesson) or with start and end times; subjects with the short code on the sheet and, if known, the full name. Leave empty cells out. For A and B weeks set week: a or b. After-school care goes under care.",
+  "schoolImportPasteHint": "Paste the answer here",
+  "schoolImportRead": "Read in",
+  "schoolImportErrNotJson": "That is no timetable in the WuselWall format. Paste the assistant’s whole answer.",
+  "schoolImportErrNoLessons": "The text contains no lessons.",
+  "schoolImportErrTooMany": "That is more entries than a timetable can have.",
+  "schoolImportErrBadLesson": "A lesson has no day, no period or no subject.",
+  "schoolImportErrBadDay": "“{value}” is no weekday.",
+  "@schoolImportErrBadDay": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "schoolImportErrBadTime": "“{value}” is no time of day.",
+  "@schoolImportErrBadTime": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "schoolProposalTitle": "Proposal from {assistant}",
+  "@schoolProposalTitle": {
+    "placeholders": {
+      "assistant": {
+        "type": "String"
+      }
+    }
+  },
+  "schoolProposalSummary": "Timetable for {name}, {count} lessons",
+  "@schoolProposalSummary": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "schoolProposalReview": "Review",
+  "schoolProposalUnreadable": "This proposal has a format this app version cannot read.",
+  "schoolProposalErrInvalid": "The proposal has an invalid format.",
+  "schoolProposalErrLimit": "Five proposals are already waiting. Review or discard them first.",
+  "schoolProposalErrGone": "This proposal is already settled or has expired.",
+  "schoolScanIntro": "Your server reads the photo; it never leaves your home. A straight, bright photo of the whole sheet works best.",
+  "schoolScanCamera": "Take a photo",
+  "schoolScanPick": "Choose a photo",
+  "schoolScanBusy": "Reading the sheet…",
+  "schoolScanNotConfigured": "Your server has no text recognition set up. The guide’s “Extras for the server” says how to add it. Until then: read in from text.",
+  "schoolScanNothingFound": "No timetable was found in the photo. Try a straighter, brighter photo, or read the plan in from text.",
+  "schoolScanTooLarge": "The photo is too large (6 MB at most).",
+  "schoolScanFailed": "The server’s text recognition did not answer. Try again later.",
+  "schoolScanWarnUnplaced": "{count, plural, one{1 piece of text fit no cell. Compare the preview with the sheet.} other{{count} pieces of text fit no cell. Compare the preview with the sheet.}}",
+  "@schoolScanWarnUnplaced": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

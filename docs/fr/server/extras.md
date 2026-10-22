@@ -37,6 +37,18 @@ Ces anciens comptes utilisent désormais le code envoyé à leur adresse e-mail,
 
 Votre serveur consulte [OpenHolidays](https://www.openholidaysapi.org/) chaque semaine pour les pays choisis. Il transmet les codes de pays, pas les membres ni les écoles ; l’app ne contacte pas ce service. Sans accès Internet du serveur, ces données peuvent manquer, mais les autres fonctions continuent.
 
+## Reconnaissance de texte pour les emplois du temps {#text-recognition}
+
+Avec la reconnaissance de texte, l’app peut importer un emploi du temps photographié ([Importer un emploi du temps](/fr/school/#reading-in)). C’est un conteneur à part dans la pile, qui tourne uniquement sur le processeur de votre serveur : la photo va du téléphone à votre serveur, le conteneur lit le texte, et rien ne quitte la maison. Il n’a besoin ni d’internet ni de carte graphique, et d’environ 1 Go de mémoire ; sur un petit serveur domestique, une feuille prend quelques secondes.
+
+Pour l’installer, dans le dossier de la pile :
+
+1. Ajouter la ligne `OCR_URL=http://ocr:9003/ocr` au fichier `.env`.
+2. Construire et démarrer le conteneur : `docker compose --profile ocr up -d --build`. La première construction télécharge les modèles de reconnaissance (environ 20 Mo) ; ensuite il tourne sans internet.
+3. Redémarrer les fonctions pour qu’elles connaissent l’adresse : `docker compose restart functions`.
+
+L’app propose alors **Scanner une photo** sous **Importer…**. Sans cette ligne, l’entrée reste, mais l’app indique que le serveur n’a pas de reconnaissance de texte. La reconnaissance utilise RapidOCR avec les modèles PP-OCR de PaddleOCR (tous deux Apache-2.0, la même base que le gestionnaire de photos Immich utilise pour sa reconnaissance de texte).
+
 ## Sauvegarde hors site {#off-site-backup}
 
 Un autre disque local ne protège pas contre le vol ou l’incendie. L’outil peut envoyer les sauvegardes **chiffrées** avec [restic](https://restic.net/) vers Backblaze B2 ou un stockage S3. Le fournisseur ne voit que le contenu chiffré.

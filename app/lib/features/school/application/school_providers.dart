@@ -1,8 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/core/realtime/household_channel.dart';
+import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
+import 'package:wuselwall/features/school/data/proposals_repository.dart';
 import 'package:wuselwall/features/school/data/school_repository.dart';
+import 'package:wuselwall/features/school/domain/proposal_models.dart';
 import 'package:wuselwall/features/school/domain/school_models.dart';
 
 /// Everything the Stundenplan reads through the views. Refetched when another device
@@ -81,4 +84,34 @@ class SelectedWeekNotifier extends Notifier<DateTime> {
 DateTime mondayOf(DateTime day) {
   final d = DateTime(day.year, day.month, day.day);
   return d.subtract(Duration(days: d.weekday - 1));
+}
+
+/// The open proposals an assistant handed the family (specs/24), for guardians. A
+/// failure (a server without proposals, offline) shows none: they are a courtesy. Refetched
+/// with the school topic, which the server broadcasts on every proposal.
+final openProposalsProvider = FutureProvider.autoDispose<List<ProposalRecord>>((
+  ref,
+) async {
+  ref.watch(deviceKeyProvider);
+  final householdId = ref.watch(deviceProvider).value?.householdId;
+  if (householdId != null) {
+    refreshOnInvalidation(ref, householdId: householdId, topic: 'school');
+  }
+  final members = ref.watch(membersProvider).value ?? const <Member>[];
+  final acting = ref.watch(actingProfileProvider);
+  final guardian = members.any((m) => m.id == acting && m.isGuardian);
+  if (!guardian) return const [];
+  final result = await ref.watch(proposalsRepositoryProvider).open();
+  return result.valueOrNull ?? const [];
+});
+
+/// The school year around [day], as the region's schools count it: from 1 August to
+/// 31 July (specs/24 "Fewer required facts"). The term a family gets without being asked.
+({DateTime from, DateTime to, int startYear}) schoolYearAround(DateTime day) {
+  final startYear = day.month >= 8 ? day.year : day.year - 1;
+  return (
+    from: DateTime(startYear, 8),
+    to: DateTime(startYear + 1, 7, 31),
+    startYear: startYear,
+  );
 }

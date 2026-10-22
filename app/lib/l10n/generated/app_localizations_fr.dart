@@ -1632,7 +1632,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get schoolSetupCardBody =>
-      'Ajoute l’école, ses horaires de cours et les périodes scolaires. Tu pourras ensuite saisir l’emploi du temps.';
+      'Ajoute l’école. Les horaires de cours et les matières sont proposés ; ensuite, saisis l’emploi du temps ou importe-le.';
 
   @override
   String get schoolSetupAction => 'Configurer l’école';
@@ -4524,4 +4524,252 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get schoolTermContinue => 'Enregistrer la période et continuer';
+
+  @override
+  String get schoolSetupFirstHint =>
+      'Des horaires de cours (dès 8h00, 45 minutes) et une liste de matières sont proposés. Tu pourras les adapter ensuite.';
+
+  @override
+  String get schoolSetupCreate => 'Créer l’école';
+
+  @override
+  String get schoolNextSteps => 'Prochaines étapes';
+
+  @override
+  String schoolNextStepEnter(String name) {
+    return 'Saisir l’emploi du temps de $name';
+  }
+
+  @override
+  String get schoolTermProposedHint =>
+      'Proposé : l’année scolaire en cours. Adapte le nom et les dates si ton école compte autrement.';
+
+  @override
+  String schoolYearName(String from, String to) {
+    return 'Année scolaire $from/$to';
+  }
+
+  @override
+  String schoolCreateSubject(String name) {
+    return 'Créer la matière « $name »';
+  }
+
+  @override
+  String get schoolImportAction => 'Importer…';
+
+  @override
+  String get schoolImportFromText => 'Coller du texte';
+
+  @override
+  String get schoolImportFromPhoto => 'Scanner une photo';
+
+  @override
+  String get schoolImportTitle => 'Importer un emploi du temps';
+
+  @override
+  String schoolImportProposedBy(String assistant) {
+    return 'Proposition de $assistant';
+  }
+
+  @override
+  String schoolImportLessons(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count cours',
+      one: '1 cours',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String schoolImportTermNew(String name) {
+    return 'Période : $name (sera créée)';
+  }
+
+  @override
+  String schoolImportTermExisting(String name) {
+    return 'Période : $name';
+  }
+
+  @override
+  String schoolImportReplaces(String name, int count) {
+    return 'Remplace l’emploi du temps existant de $name ($count cours).';
+  }
+
+  @override
+  String get schoolImportNewSubjects => 'Nouvelles matières';
+
+  @override
+  String get schoolImportCreateSubjects => 'Créer les nouvelles matières';
+
+  @override
+  String get schoolImportSkipNewSubjects =>
+      'Les cours avec de nouvelles matières sont omis.';
+
+  @override
+  String schoolImportWarnUnmatchedTimes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count cours ne correspondent à aucun horaire de cours et sont omis.',
+      one: '1 cours ne correspond à aucun horaire de cours et est omis.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String schoolImportWarnPeriodsExtended(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Les horaires de cours reçoivent $count cours de plus.',
+      one: 'Les horaires de cours reçoivent 1 cours de plus.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get schoolImportWarnPeriodsDiffer =>
+      'Les horaires de la feuille diffèrent de ceux de l’école ; ceux de l’école sont conservés.';
+
+  @override
+  String schoolImportWarnSchoolDiffers(String name) {
+    return 'La feuille indique une autre école : $name.';
+  }
+
+  @override
+  String get schoolImportApply => 'Appliquer';
+
+  @override
+  String get schoolImportDiscard => 'Rejeter';
+
+  @override
+  String get schoolImportApplied => 'Emploi du temps appliqué.';
+
+  @override
+  String get schoolImportDiscarded => 'Proposition rejetée.';
+
+  @override
+  String get schoolImportNoChild => 'Ajoute d’abord un enfant sous Membres.';
+
+  @override
+  String get schoolImportPasteTitle => 'Importer du texte';
+
+  @override
+  String get schoolImportPasteIntro =>
+      'Photographie l’emploi du temps et demande à l’assistant de confiance de le mettre au format WuselWall. Colle sa réponse ici. Tu verras un aperçu avant d’enregistrer.';
+
+  @override
+  String get schoolImportCopyPrompt =>
+      'Copier les instructions pour l’assistant';
+
+  @override
+  String get schoolImportPromptCopied => 'Instructions copiées.';
+
+  @override
+  String get schoolImportPrompt =>
+      'Lis l’emploi du temps sur la photo et renvoie-le en JSON dans le format ci-dessous, sans autre texte. Jours en lun, mar, mer, jeu, ven ; cours par numéro (1 = premier cours) ou avec heure de début et de fin ; matières avec l’abréviation de la feuille et, si tu la connais, le nom complet. Omets les cases vides. Pour les semaines A et B, indique week: a ou b. La garderie va sous care.';
+
+  @override
+  String get schoolImportPasteHint => 'Colle la réponse ici';
+
+  @override
+  String get schoolImportRead => 'Importer';
+
+  @override
+  String get schoolImportErrNotJson =>
+      'Ce n’est pas un emploi du temps au format WuselWall. Colle la réponse complète de l’assistant.';
+
+  @override
+  String get schoolImportErrNoLessons => 'Le texte ne contient aucun cours.';
+
+  @override
+  String get schoolImportErrTooMany =>
+      'C’est plus d’entrées qu’un emploi du temps ne peut en avoir.';
+
+  @override
+  String get schoolImportErrBadLesson =>
+      'Un cours n’a pas de jour, de numéro ou de matière.';
+
+  @override
+  String schoolImportErrBadDay(String value) {
+    return '« $value » n’est pas un jour de la semaine.';
+  }
+
+  @override
+  String schoolImportErrBadTime(String value) {
+    return '« $value » n’est pas une heure.';
+  }
+
+  @override
+  String schoolProposalTitle(String assistant) {
+    return 'Proposition de $assistant';
+  }
+
+  @override
+  String schoolProposalSummary(String name, int count) {
+    return 'Emploi du temps de $name, $count cours';
+  }
+
+  @override
+  String get schoolProposalReview => 'Vérifier';
+
+  @override
+  String get schoolProposalUnreadable =>
+      'Cette proposition a un format que cette version de l’app ne peut pas lire.';
+
+  @override
+  String get schoolProposalErrInvalid =>
+      'La proposition a un format non valide.';
+
+  @override
+  String get schoolProposalErrLimit =>
+      'Cinq propositions sont déjà en attente. Vérifie-les ou rejette-les d’abord.';
+
+  @override
+  String get schoolProposalErrGone =>
+      'Cette proposition est déjà traitée ou a expiré.';
+
+  @override
+  String get schoolScanIntro =>
+      'Ton serveur lit la photo ; elle ne quitte pas la maison. Une photo droite et lumineuse de toute la feuille donne le meilleur résultat.';
+
+  @override
+  String get schoolScanCamera => 'Prendre une photo';
+
+  @override
+  String get schoolScanPick => 'Choisir une photo';
+
+  @override
+  String get schoolScanBusy => 'Lecture de la feuille…';
+
+  @override
+  String get schoolScanNotConfigured =>
+      'Ton serveur n’a pas de reconnaissance de texte. Le guide « Extras pour le serveur » explique comment l’ajouter. En attendant : importer du texte.';
+
+  @override
+  String get schoolScanNothingFound =>
+      'Aucun emploi du temps reconnu sur la photo. Essaie une photo plus droite et plus lumineuse, ou importe du texte.';
+
+  @override
+  String get schoolScanTooLarge =>
+      'La photo est trop grande (6 Mo au maximum).';
+
+  @override
+  String get schoolScanFailed =>
+      'La reconnaissance de texte du serveur n’a pas répondu. Réessaie plus tard.';
+
+  @override
+  String schoolScanWarnUnplaced(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count fragments de texte n’ont pu être placés dans aucune case. Compare l’aperçu avec la feuille.',
+      one: '1 fragment de texte n’a pu être placé dans aucune case. Compare l’aperçu avec la feuille.',
+    );
+    return '$_temp0';
+  }
 }

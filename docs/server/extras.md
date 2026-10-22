@@ -46,6 +46,18 @@ Bis Oktober 2026 konnte man sich bei WuselWall auch mit Apple oder Google anmeld
 
 Für die Wochentafel holt der Server einmal pro Woche die Feiertage und Schulferien der Länder, die ihr in den Einstellungen gewählt habt. Die Quelle ist die freie [OpenHolidays API](https://www.openholidaysapi.org/). Der Server schickt dabei nur Ländercodes, nichts über eure Familie, und die Apps fragen OpenHolidays nie selbst. Kommt der Server nicht ins Internet, fehlen die Feiertage, alles andere läuft weiter.
 
+## Texterkennung für Stundenpläne {#texterkennung}
+
+Mit der Texterkennung kann die App einen fotografierten Stundenplan einlesen ([Stundenplan einlesen](/school/#stundenplan-einlesen)). Sie ist ein eigener Container im Stack, der nur auf der Rechenleistung eures Servers läuft: Das Foto geht vom Handy an euren Server, der Container liest den Text, und nichts davon verlässt das Haus. Er braucht kein Internet, keine Grafikkarte und etwa 1 GB Arbeitsspeicher; auf einem kleinen Heimserver dauert ein Blatt einige Sekunden.
+
+Einrichten, im Ordner des Stacks:
+
+1. In die `.env` eine Zeile `OCR_URL=http://ocr:9003/ocr` eintragen.
+2. Den Container bauen und starten: `docker compose --profile ocr up -d --build`. Beim ersten Bau lädt er die Erkennungsmodelle (etwa 20 MB) herunter; danach läuft er ohne Internet.
+3. Die Funktionen neu starten, damit sie die Adresse kennen: `docker compose restart functions`.
+
+Danach bietet die App unter **Einlesen…** den Punkt **Foto scannen** an. Ohne diese Zeile fehlt er nicht, aber die App sagt, dass der Server keine Texterkennung hat. Die Erkennung nutzt RapidOCR mit den PP-OCR-Modellen von PaddleOCR (beides Apache-2.0, derselbe Unterbau, den auch die Fotoverwaltung Immich für ihre Texterkennung verwendet).
+
 ## Backup außer Haus {#backup-ausser-haus}
 
 Ein Backup auf demselben Server hilft bei einem Fehler, aber nicht bei einem Brand, einem Diebstahl oder einer kaputten Platte. `wuselwall backup` kann jede Sicherung zusätzlich **verschlüsselt** in einen Cloud-Speicher kopieren, mit [restic](https://restic.net/), z. B. zu Backblaze B2 oder einem S3-Speicher. Der Anbieter sieht nur verschlüsselte Daten.

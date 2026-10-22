@@ -1,6 +1,13 @@
+import 'dart:typed_data';
+
+import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/features/school/data/proposals_repository.dart';
+import 'package:wuselwall/features/school/data/scan_repository.dart';
 import 'package:wuselwall/features/school/data/school_repository.dart';
+import 'package:wuselwall/features/school/domain/proposal_models.dart';
 import 'package:wuselwall/features/school/domain/school_models.dart';
+import 'package:wuselwall/features/school/domain/timetable_import.dart';
 
 import 'fakes.dart';
 
@@ -337,6 +344,7 @@ class FakeSchoolRepository implements SchoolRepository {
   final lessonSets = <({String timetableId, List<LessonRecord> lessons})>[];
   final timetableSaves = <TimetableRecord>[];
   final termSaves = <TermRecord>[];
+  final subjectSaves = <SubjectRecord>[];
   final schoolSaves =
       <({String? id, String name, String? regionCode, String? timezone})>[];
   final actors = <String?>[];
@@ -453,6 +461,41 @@ class FakeSchoolRepository implements SchoolRepository {
     return Ok(id);
   }
 
+  /// Saved subjects join [data] with an id, as the server's refetch would carry them.
+  @override
+  Future<Result<String>> saveSubject({
+    required String? actor,
+    required SubjectRecord subject,
+  }) async {
+    actors.add(actor);
+    subjectSaves.add(subject);
+    final id = subject.id.isEmpty
+        ? 'sub-new-${subjectSaves.length}'
+        : subject.id;
+    data = SchoolData(
+      schools: data.schools,
+      periods: data.periods,
+      terms: data.terms,
+      subjects: [
+        ...data.subjects.where((s) => s.id != id),
+        SubjectRecord(
+          id: id,
+          name: subject.name,
+          shortName: subject.shortName,
+          tint: subject.tint,
+          iconKey: subject.iconKey,
+          equipmentNote: subject.equipmentNote,
+          notableDefault: subject.notableDefault,
+        ),
+      ],
+      timetables: data.timetables,
+      lessons: data.lessons,
+      exceptions: data.exceptions,
+      holidays: data.holidays,
+    );
+    return Ok(id);
+  }
+
   @override
   Future<Result<String>> saveTimetable({
     required String? actor,
@@ -482,4 +525,62 @@ class FakeSchoolRepository implements SchoolRepository {
 
   @override
   dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
+}
+
+/// In-memory proposals: serves [open] and records every verdict.
+class FakeProposalsRepository implements ProposalsRepository {
+  FakeProposalsRepository({List<ProposalRecord>? open}) : open_ = open ?? [];
+
+  final List<ProposalRecord> open_;
+  final resolved = <({String id, bool applied})>[];
+
+  @override
+  Future<Result<List<ProposalRecord>>> open() async =>
+      Ok(open_.where((p) => p.isOpen).toList());
+
+  @override
+  Future<Result<void>> resolve({
+    required String? actor,
+    required String id,
+    required bool applied,
+  }) async {
+    resolved.add((id: id, applied: applied));
+    open_.removeWhere((p) => p.id == id);
+    return const Ok(null);
+  }
+}
+
+/// A proposal from "Claude" with [payload] (the paste format), open for 14 days.
+ProposalRecord proposalFrom(String payload, {String id = 'prop-1'}) =>
+    ProposalRecord.fromJson({
+      'id': id,
+      'kind': 'timetable',
+      'payload': parseTimetableImport(payload).toJson(),
+      'source': 'mcp',
+      'status': 'open',
+      'created_at': DateTime.now().toIso8601String(),
+      'expires_at': DateTime.now()
+          .add(const Duration(days: 14))
+          .toIso8601String(),
+      'assistant_label': 'Claude',
+      'summary': null,
+    })!;
+
+/// A scan that answers with [result], or with a failure.
+class FakeScanRepository implements ScanRepository {
+  FakeScanRepository({this.result, this.failure});
+
+  final ScanResult? result;
+  final Failure? failure;
+  final scans = <({int bytes, String mime})>[];
+
+  @override
+  Future<Result<ScanResult>> scan({
+    required Uint8List image,
+    required String mime,
+  }) async {
+    scans.add((bytes: image.length, mime: mime));
+    if (failure != null) return Err(failure!);
+    return Ok(result!);
+  }
 }

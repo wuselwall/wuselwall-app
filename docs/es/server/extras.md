@@ -37,6 +37,18 @@ En casa, `wuselwall update` retira valores Apple/Google, la antigua dirección d
 
 El servidor consulta [OpenHolidays](https://www.openholidaysapi.org/) cada semana para los países elegidos. Envía códigos de país, no miembros ni colegios; la app no lo contacta. Sin Internet pueden faltar estos datos, pero lo demás sigue funcionando.
 
+## Reconocimiento de texto para horarios {#text-recognition}
+
+Con el reconocimiento de texto, la app puede importar un horario fotografiado ([Importar un horario](/es/school/#reading-in)). Es un contenedor propio dentro de la pila que funciona solo con el procesador de vuestro servidor: la foto va del móvil a vuestro servidor, el contenedor lee el texto y nada sale de casa. No necesita internet ni tarjeta gráfica, y alrededor de 1 GB de memoria; en un servidor doméstico pequeño una hoja tarda unos segundos.
+
+Para configurarlo, en la carpeta de la pila:
+
+1. Añade la línea `OCR_URL=http://ocr:9003/ocr` al archivo `.env`.
+2. Construye y arranca el contenedor: `docker compose --profile ocr up -d --build`. La primera construcción descarga los modelos de reconocimiento (unos 20 MB); después funciona sin internet.
+3. Reinicia las funciones para que conozcan la dirección: `docker compose restart functions`.
+
+La app ofrece entonces **Escanear una foto** en **Importar…**. Sin esa línea la opción sigue ahí, pero la app dice que el servidor no tiene reconocimiento de texto. El reconocimiento usa RapidOCR con los modelos PP-OCR de PaddleOCR (ambos Apache-2.0, la misma base que usa el gestor de fotos Immich para su reconocimiento de texto).
+
 ## Copia fuera de casa {#off-site-backup}
 
 Otro disco local no protege del robo o incendio. La herramienta puede enviar copias **cifradas** con [restic](https://restic.net/) a Backblaze B2 o S3. El proveedor solo ve datos cifrados.

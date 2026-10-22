@@ -194,6 +194,12 @@ Realistically this is done twice a year, in a hurry, on a laptop, from a sheet o
 - **Starter content** when a school is added: a bell-time template and a German subject
   list with colours and icons ([21](21-household-settings.md#calendar-presence-and-school-m13)).
 
+*Built 2026-10-22 ([24](24-school-import.md)):* the term is proposed (the school year around
+the week, one tap), a subject typed into a cell is created on the spot, the first school asks
+for name and region only and lists the children without a timetable as next steps; a sheet
+comes in as text (the assistant the family already has), as a proposal over MCP, or as a photo
+read by the family's own server, all through one preview.
+
 ### Holidays
 
 Built 2026-10-14. Ferien and bewegliche

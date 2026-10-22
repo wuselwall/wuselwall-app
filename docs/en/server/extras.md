@@ -46,6 +46,18 @@ Until October 2026 you could also sign in to WuselWall with Apple or Google. Any
 
 For the week board, the server fetches the public and school holidays of the countries you chose in the settings, once a week. The source is the free [OpenHolidays API](https://www.openholidaysapi.org/). The server sends only country codes, nothing about your family, and the apps never ask OpenHolidays themselves. If the server can't reach the internet, the holidays are missing; everything else keeps working.
 
+## Text recognition for timetables {#text-recognition}
+
+With text recognition the app can read in a photographed timetable ([Reading in a timetable](/en/school/#reading-in-a-timetable)). It is a container of its own in the stack that runs on your server's CPU only: the photo goes from the phone to your server, the container reads the text, and none of it leaves the house. It needs no internet, no graphics card and about 1 GB of memory; on a small home server a sheet takes a few seconds.
+
+To set it up, in the stack's folder:
+
+1. Add the line `OCR_URL=http://ocr:9003/ocr` to the `.env`.
+2. Build and start the container: `docker compose --profile ocr up -d --build`. The first build downloads the recognition models (about 20 MB); after that it runs without internet.
+3. Restart the functions so they know the address: `docker compose restart functions`.
+
+The app then offers **Scan a photo** under **Read in…**. Without that line the entry is still there, but the app says the server has no text recognition. Recognition uses RapidOCR with PaddleOCR's PP-OCR models (both Apache-2.0, the same stack the photo manager Immich uses for its text recognition).
+
 ## Off-site backup {#off-site-backup}
 
 A backup on the same server helps after a mistake, but not after a fire, a theft or a dead disk. `wuselwall backup` can also copy every backup **encrypted** to cloud storage, with [restic](https://restic.net/), for example to Backblaze B2 or any S3 storage. The provider sees only encrypted data.

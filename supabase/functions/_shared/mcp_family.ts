@@ -1,6 +1,8 @@
 // The family:read tools and resources of the `mcp` function (specs/12 "Tools"): coarse,
 // verb-shaped reads over the same context the shortcuts use (api.mcp_context), so the
-// occurrence expansion and the school projection are the app's own.
+// occurrence expansion and the school projection are the app's own. Plus the one write an
+// assistant gets (specs/24 "Proposals"): propose_timetable stores a payload a guardian
+// reviews in the app; nothing of the household changes until that review.
 //
 // Design rules from specs/12: read-only annotations; every id comes with a name; both a short
 // human summary (in the household's language, mcp_de.ts / mcp_en.ts) and structured content;
@@ -93,6 +95,18 @@ export type Load = (
   days: number,
 ) => Promise<McpContext>;
 
+/**
+ * Stores a proposal for the key's household (api.mcp_propose): the kind, the payload of
+ * specs/24, a one-line summary and the client's idempotency key. Rejects with the
+ * database's `{hint}`: proposal_invalid, proposal_limit.
+ */
+export type Propose = (
+  kind: string,
+  payload: unknown,
+  summary: string | null,
+  clientKey: string | null,
+) => Promise<{ id: string; created: boolean }>;
+
 // ── the wording ─────────────────────────────────────────────────────────────────
 
 export interface McpMessages {
@@ -131,6 +145,12 @@ export interface McpMessages {
   notText(key: string): string;
   statusInvalid: string;
   queryRequired: string;
+  /** "Proposal stored: Emma's timetable, 24 lessons. A parent reviews it in WuselWall." */
+  proposed(name: string, n: number): string;
+  proposeInvalid: string;
+  proposeLimit: string;
+  proposeUnavailable: string;
+  lessonsRequired: string;
 }
 
 export function mcpMessagesFor(lang: Lang): McpMessages {
@@ -141,6 +161,13 @@ export function mcpMessagesFor(lang: Lang): McpMessages {
 
 const READ_ONLY = {
   readOnlyHint: true,
+  destructiveHint: false,
+  idempotentHint: true,
+  openWorldHint: false,
+};
+/** A proposal is a write, but a reversible one: nothing exists until a guardian applies it. */
+const PROPOSE = {
+  readOnlyHint: false,
   destructiveHint: false,
   idempotentHint: true,
   openWorldHint: false,
@@ -161,6 +188,7 @@ function tool(
   description: string,
   properties: Record<string, unknown>,
   required: string[] = [],
+  annotations: Record<string, unknown> = READ_ONLY,
 ): ToolDef {
   return {
     name,
@@ -172,9 +200,44 @@ function tool(
       required,
       additionalProperties: false,
     },
-    annotations: { title, ...READ_ONLY },
+    annotations: { title, ...annotations },
   };
 }
+
+const CLOCK = { type: "string", description: "HH:MM, 24 hours" };
+const LESSON = {
+  type: "object",
+  properties: {
+    day: {
+      type: ["integer", "string"],
+      description:
+        "Weekday: 1-7 (Monday = 1) or a name such as 'Mo', 'Montag', 'Thu'",
+    },
+    period: {
+      type: ["integer", "string"],
+      description: "The lesson's number on the sheet, 1 = first lesson",
+    },
+    starts: { ...CLOCK, description: "Start time, instead of a period" },
+    ends: { ...CLOCK, description: "End time, with starts" },
+    subject: {
+      type: "string",
+      description: "The short code on the sheet, e.g. 'Ma'",
+    },
+    name: {
+      type: "string",
+      description: "The subject's full name, if known, e.g. 'Mathematik'",
+    },
+    teacher: { type: "string" },
+    room: { type: "string" },
+    week: {
+      type: "string",
+      enum: ["a", "b"],
+      description: "Only for A/B weeks",
+    },
+  },
+  required: ["day", "subject"],
+  additionalProperties: false,
+};
 
 // Sorted by name: a deterministic order lets clients cache the list (2026-07-28).
 export const TOOLS: ToolDef[] = [
@@ -276,6 +339,67 @@ export const TOOLS: ToolDef[] = [
       to: DATE,
     },
   ),
+  tool(
+    "propose_timetable",
+    "Propose a timetable",
+    "Hands the family a child's school timetable read from a sheet or a photo, as a proposal. Nothing changes: a parent reviews it in the app, sees every lesson and subject it would create, and applies or discards it. Use the short subject codes as the sheet shows them; the app matches them to the family's subjects.",
+    {
+      member: { ...MEMBER, description: "The child's name" },
+      lessons: { type: "array", items: LESSON, minItems: 1, maxItems: 200 },
+      class: {
+        type: "string",
+        description: "The class, e.g. '3b', if on the sheet",
+      },
+      school: {
+        type: "string",
+        description: "The school's name, if on the sheet",
+      },
+      week_cycle: {
+        type: "string",
+        enum: ["weekly", "ab"],
+        description: "'ab' when the sheet alternates A and B weeks",
+      },
+      periods: {
+        type: "array",
+        description: "The bell times on the sheet, if shown",
+        items: {
+          type: "object",
+          properties: {
+            index: { type: "integer" },
+            starts: CLOCK,
+            ends: CLOCK,
+          },
+          required: ["index", "starts", "ends"],
+          additionalProperties: false,
+        },
+        maxItems: 15,
+      },
+      care: {
+        type: "array",
+        description:
+          "After-school care (Hort) or clubs: name, weekdays and times",
+        items: {
+          type: "object",
+          properties: {
+            title: { type: "string" },
+            days: { type: "array", items: { type: ["integer", "string"] } },
+            starts: CLOCK,
+            ends: CLOCK,
+          },
+          required: ["title", "days", "starts", "ends"],
+          additionalProperties: false,
+        },
+        maxItems: 10,
+      },
+      client_key: {
+        type: "string",
+        description:
+          "Any id of your own for this proposal; sending it again returns the same proposal instead of a second one",
+      },
+    },
+    ["member", "lessons"],
+    PROPOSE,
+  ),
 ];
 
 export const RESOURCES: ResourceDef[] = [
@@ -312,9 +436,11 @@ export const RESOURCES: ResourceDef[] = [
 
 export const INSTRUCTIONS =
   "WuselWall is one family's organiser: calendar, presence, school timetables, tasks with points, " +
-  "meals and shopping. This connection reads only; it cannot add, change or delete anything. Dates are " +
-  "YYYY-MM-DD in the family's time zone. Refer to people by the names the tools return, and ask rather " +
-  "than guess when a name is ambiguous. get_week_board answers 'what is going on this week' in one call.";
+  "meals and shopping. This connection reads; the one thing it can hand in is a proposal " +
+  "(propose_timetable), which a parent reviews in the app before anything changes. It cannot add, " +
+  "change or delete anything else. Dates are YYYY-MM-DD in the family's time zone. Refer to people " +
+  "by the names the tools return, and ask rather than guess when a name is ambiguous. get_week_board " +
+  "answers 'what is going on this week' in one call.";
 
 // ── helpers ─────────────────────────────────────────────────────────────────────
 
@@ -394,6 +520,7 @@ export function familyServer(
   loadRows: Load,
   lang: (locale: string | null) => Lang,
   version: string,
+  propose?: Propose,
 ): Server {
   // The household's locale once a context was read: the language of the summaries and errors.
   let locale: string | null = null;
@@ -531,7 +658,8 @@ export function familyServer(
         out.push({
           member: { id: mem.id, name: mem.display_name },
           state: place.state,
-          label: place.label ?? sc.state[place.state as PresenceState] ?? place.state,
+          label: place.label ?? sc.state[place.state as PresenceState] ??
+            place.state,
           from: place.starts,
           until: place.ends,
           usual: true,
@@ -934,7 +1062,11 @@ export function familyServer(
     },
 
     async get_presence(args) {
-      const { ctx, from, to } = await loadWindow(["calendar", "school", "usual"], args);
+      const { ctx, from, to } = await loadWindow([
+        "calendar",
+        "school",
+        "usual",
+      ], args);
       const { m, sc } = words(ctx);
       const only = member(ctx, stringArg(args, "member"));
       const occ = occurrencesOf(ctx);
@@ -1006,6 +1138,56 @@ export function familyServer(
     },
   };
   Object.assign(tools, more);
+
+  tools.propose_timetable = async (args) => {
+    if (!propose) throw new ToolError((m) => m.proposeUnavailable);
+    const name = stringArg(args, "member");
+    if (name === null) throw new ToolError((m) => m.memberRequired);
+    const base = await load([], null, 1);
+    const child = member(base, name)!;
+    const lessons = args.lessons;
+    if (!Array.isArray(lessons) || lessons.length === 0) {
+      throw new ToolError((m) => m.lessonsRequired);
+    }
+    const payload: Record<string, unknown> = {
+      format: "wuselwall-timetable/1",
+      member: child.display_name,
+      lessons,
+    };
+    for (const key of ["class", "school", "week_cycle", "periods", "care"]) {
+      if (args[key] !== undefined && args[key] !== null) {
+        payload[key] = args[key];
+      }
+    }
+    const { m } = words(base);
+    const summary =
+      m.proposed(child.display_name, lessons.length).split(/[.。]/)[0];
+    let out: { id: string; created: boolean };
+    try {
+      out = await propose(
+        "timetable",
+        payload,
+        summary,
+        stringArg(args, "client_key"),
+      );
+    } catch (err) {
+      const hint = (err as { hint?: unknown } | null)?.hint;
+      if (hint === "proposal_invalid") {
+        throw new ToolError((m) => m.proposeInvalid);
+      }
+      if (hint === "proposal_limit") throw new ToolError((m) => m.proposeLimit);
+      throw err;
+    }
+    return {
+      text: m.proposed(child.display_name, lessons.length),
+      structured: {
+        proposal_id: out.id,
+        created: out.created,
+        member: { id: child.id, name: child.display_name },
+        lessons: lessons.length,
+      },
+    };
+  };
 
   return {
     info: { name: "wuselwall", version },

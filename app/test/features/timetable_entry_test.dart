@@ -33,26 +33,23 @@ class _FailedTermRepository extends FakeSchoolRepository {
   }) async => const Err(NetworkFailure());
 }
 
+/// The dialog comes prefilled with the school year around the week (specs/24), so one
+/// tap continues; the name and both dates are already there.
 Future<void> _completeTerm(WidgetTester t, Locale locale) async {
   final l10n = lookupAppLocalizations(locale);
-  final dialog = find.byType(AlertDialog);
-  await t.enterText(
-    find.descendant(of: dialog, matching: find.byType(TextField)).first,
-    'New term',
-  );
-  await t.pumpAndSettle();
-  // A date range is an explicit choice, rather than silently saving a one-day term.
   final next = find.widgetWithText(FilledButton, l10n.schoolTermContinue);
-  expect(t.widget<FilledButton>(next).onPressed, isNull);
-  await t.tap(find.byKey(const ValueKey('term-to')));
-  await t.pumpAndSettle();
-  final material = MaterialLocalizations.of(
-    t.element(find.byType(DatePickerDialog)),
-  );
-  await t.tap(find.text(material.okButtonLabel));
-  await t.pumpAndSettle();
+  expect(t.widget<FilledButton>(next).onPressed, isNotNull);
   await t.tap(next);
   await t.pumpAndSettle();
+}
+
+/// "Schuljahr 2026/27" for the school year around [day], in [locale].
+String _yearName(Locale locale, DateTime day) {
+  final year = schoolYearAround(day);
+  return lookupAppLocalizations(locale).schoolYearName(
+    year.startYear.toString(),
+    (year.startYear + 1).toString().substring(2),
+  );
 }
 
 void main() {
@@ -87,13 +84,19 @@ void main() {
         await t.pumpAndSettle();
         await t.tap(enter);
         await t.pumpAndSettle();
-        expect(find.text(l10n.schoolTimetableNeedsTerm), findsOneWidget);
+        expect(find.text(l10n.schoolTermProposedHint), findsOneWidget);
         expect(find.text(l10n.schoolSetupTitle), findsNothing);
+        // The proposed school year covers the week, and is the school's first term.
+        final year = schoolYearAround(monday);
+        expect(find.text(_yearName(locale, monday)), findsOneWidget);
         await _completeTerm(t, locale);
 
-        expect(school.termSaves.single.startsOn, monday);
+        expect(school.termSaves.single.startsOn, year.from);
+        expect(school.termSaves.single.endsOn, year.to);
+        expect(school.termSaves.single.name, _yearName(locale, monday));
+        expect(school.termSaves.single.isCurrent, isTrue);
         expect(school.actors.single, guardianId);
-        expect(find.textContaining('New term'), findsOneWidget);
+        expect(find.textContaining(_yearName(locale, monday)), findsOneWidget);
         final save = find.widgetWithText(
           FilledButton,
           l10n.schoolSaveTimetable,
@@ -149,7 +152,12 @@ void main() {
     await t.pumpAndSettle();
     await t.tap(find.byTooltip(l10n.schoolEditTimetable));
     await t.pumpAndSettle();
-    expect(find.text(l10n.schoolTimetableNeedsTerm), findsOneWidget);
+    expect(find.text(l10n.schoolTermProposedHint), findsOneWidget);
+    // A school with a term already has a current one: the proposal is not current.
+    final current = t.widget<SwitchListTile>(
+      find.widgetWithText(SwitchListTile, l10n.schoolCurrentTerm),
+    );
+    expect(current.value, isFalse);
     await t.tap(find.text(l10n.cancel));
     await t.pumpAndSettle();
     expect(school.termSaves, isEmpty);
