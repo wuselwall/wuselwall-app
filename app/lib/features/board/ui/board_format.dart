@@ -64,6 +64,9 @@ extension BoardFormat on BuildContext {
   /// "Mittwoch, 2. September" / "Wednesday, September 2".
   String fullDate(DateTime d) => DateFormat.MMMMEEEEd(_locale).format(d);
 
+  /// "19. Okt. 2026" / "Oct 19, 2026": a date with its year, as a form field shows it.
+  String mediumDate(DateTime d) => DateFormat.yMMMd(_locale).format(d);
+
   /// The household's own label for a presence state, or the state's name.
   String presenceLabel(PresenceState state, [String? label]) {
     if (label != null && label.trim().isNotEmpty) return label;

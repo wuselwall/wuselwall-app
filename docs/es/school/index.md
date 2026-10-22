@@ -10,7 +10,7 @@ La primera vez define:
 
 - nombre y **región** del colegio;
 - horas de inicio y fin de **clases y descansos**;
-- **periodos**, con fechas y una semana A de referencia si se alternan semanas A/B;
+- **periodos**, con fechas; si el horario alterna cada semana, activa **Semanas A y B** e indica el **número de semana de una semana A**;
 - **asignaturas**, abreviatura, color, material necesario y visibilidad en la pared; las sugerencias del país son editables;
 - vacaciones y días sin clase.
 
@@ -46,7 +46,7 @@ Añade otro colegio cuando haga falta y elige arriba cuál editar. Cada horario 
 
 ## Introducir el horario {#entering-a-timetable}
 
-Añade el horario de cada niño para un periodo. Si no hay periodo que cubra la semana visible, introduce primero nombre y fechas y guárdalo para continuar a la cuadrícula.
+Añade el horario de cada niño para un periodo. Si no hay periodo que cubra la semana visible, la app pide primero ese periodo: nombre, **Desde** y **Hasta**. Las fechas deben incluir la semana visible; si no, lo indica junto a la fecha. Guárdalo para continuar a la cuadrícula.
 
 Arriba aparecen niño, colegio, periodo y fechas. Toca una celda para elegir asignatura. El botón de guardar permanece abajo mientras te desplazas.
 
