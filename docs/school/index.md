@@ -10,7 +10,7 @@ Beim ersten Mal tippst du auf **Schule einrichten**. Dazu gehören:
 
 - die **Schule** mit Name und **Region**: Land, Kanton oder Bundesland und auf Wunsch Bezirk oder Gemeinde. Die Region bestimmt die Feiertage und Ferien, siehe unten
 - die **Klingelzeiten**: Stunden und Pausen mit Beginn und Ende (**Stunde hinzufügen**, **Pause hinzufügen**)
-- die **Zeiträume**, zum Beispiel Halbjahre, mit **Von** und **Bis**. Gibt es A- und B-Wochen, tragt ihr eine **A/B-Ankerwoche** ein: eine Kalenderwoche, die eine A-Woche ist
+- die **Zeiträume**, zum Beispiel Halbjahre, mit **Von** und **Bis**. Wechselt sich der Stundenplan wöchentlich ab, schaltet ihr **A- und B-Wochen** ein und tragt die **Kalenderwoche einer A-Woche** ein; jede zweite Woche danach ist eine B-Woche
 - die **Fächer** mit Kürzel und Farbe. Pro Fach könnt ihr **Sachen zum Mitnehmen** eintragen, zum Beispiel Sportsachen, und festlegen, ob das Fach auf der Wand erscheinen soll. Die Fächer sind ein Vorschlag, der zu eurem Land passt: ihr benennt sie um oder löscht sie
 - die **Ferien und freie Tage**
 
@@ -48,7 +48,7 @@ Geht ein Kind an eine andere Schule als das andere, legt jede Schule an: Auf der
 
 ## Stundenplan eintragen
 
-Für jedes Kind tragt ihr den Plan für einen Zeitraum ein. Tippe auf **Stundenplan eingeben**. Fehlt für die angezeigte Woche ein Zeitraum, gibst du zuerst seinen Namen und die Anfangs- und Enddaten ein. Mit **Zeitraum speichern und weiter** öffnet sich direkt der Stundenplan-Editor.
+Für jedes Kind tragt ihr den Plan für einen Zeitraum ein. Tippe auf **Stundenplan eingeben**. Fehlt für die angezeigte Woche ein Zeitraum, fragt die App zuerst danach: Name, **Von** und **Bis**. Die Daten müssen die angezeigte Woche enthalten; sonst steht das direkt beim Datum. Mit **Zeitraum speichern und weiter** öffnet sich direkt der Stundenplan-Editor.
 
 Oben siehst du das Kind, die Schule und den Zeitraum mit seinen Daten. Tippe ein Feld im Raster an und wähle das Fach. **Stundenplan speichern** bleibt am unteren Bildschirmrand sichtbar, auch wenn du durch den Plan scrollst.
 

@@ -1761,10 +1761,17 @@ class AppLocalizationsFr extends AppLocalizations {
   String get schoolAddTerm => 'Ajouter une période';
 
   @override
-  String get schoolTermEdit => 'Période scolaire';
+  String get schoolTermEdit => 'Modifier la période';
+
+  @override
+  String get schoolTermNew => 'Nouvelle période';
 
   @override
   String get schoolTermName => 'Nom';
+
+  @override
+  String get schoolTermNameHint =>
+      'p. ex. Année scolaire 2026/27 ou 1er semestre';
 
   @override
   String get schoolFrom => 'Du';
@@ -1773,14 +1780,47 @@ class AppLocalizationsFr extends AppLocalizations {
   String get schoolTo => 'Au';
 
   @override
-  String get schoolAbWeek => 'Semaine de référence A/B (numéro de semaine)';
+  String get schoolTermPickDate => 'Choisir une date';
+
+  @override
+  String get schoolTermEndBeforeStart => 'Se termine avant le début';
+
+  @override
+  String schoolTermMustCoverWeek(String week) {
+    return 'Doit inclure la semaine affichée ($week)';
+  }
+
+  @override
+  String get schoolAbWeeks => 'Semaines A et B';
+
+  @override
+  String get schoolAbWeeksHint =>
+      'À activer si l’emploi du temps alterne d’une semaine à l’autre.';
+
+  @override
+  String get schoolAbWeek => 'Numéro d’une semaine A';
 
   @override
   String get schoolAbWeekHint =>
-      'Une semaine qui correspond à une semaine A. Laisser vide si toutes les semaines sont identiques.';
+      'Numéro de semaine, par exemple 43. Ensuite les semaines alternent : B, A, B…';
+
+  @override
+  String schoolAbWeekShown(int week) {
+    return 'La semaine affichée est la semaine $week.';
+  }
+
+  @override
+  String get schoolAbWeekInvalid => 'Saisissez un numéro de semaine de 1 à 53';
 
   @override
   String get schoolCurrent => 'en cours';
+
+  @override
+  String get schoolCurrentTerm => 'Période en cours';
+
+  @override
+  String get schoolCurrentTermHint =>
+      'Marque la période où vous êtes maintenant. Une seule par école.';
 
   @override
   String get schoolSubjects => 'Matières';
@@ -4453,7 +4493,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get schoolTimetableNeedsTerm =>
-      'Ajoutez d’abord une période couvrant la semaine affichée. Choisissez un nom et les dates de début et de fin, puis passez à la saisie des cours.';
+      'La semaine affichée n’appartient encore à aucune période. Ajoutez la période à laquelle elle appartient, puis saisissez les cours.';
 
   @override
   String get schoolTermContinue => 'Enregistrer la période et continuer';
