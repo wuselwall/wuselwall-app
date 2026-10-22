@@ -222,6 +222,9 @@ Local regression checks (no operator environment, household data or real mail):
 checks Compose, the actual release archive and hosted API payload/readback behavior;
 `node scripts/email-code-smtp.smoke.mjs` starts isolated disposable Docker services, captures
 signup and returning sign-in messages in Mailpit, and verifies each mailed OTP with GoTrue.
+It reuses images already on the Docker host; when GHCR keeps answering `toomanyrequests`
+it pulls the same pinned digest from ECR Public or Docker Hub (`scripts/image-pull.mjs`).
+Any other pull error, and every failed assertion, still fails the run.
 
 
 ---
