@@ -281,7 +281,7 @@ and **Zurückziehen**.
    at the front door with a banner: "Thomas hat dich zu *Familie Becker* eingeladen". The
    banner text comes from `api.invitation_preview`, which shows the household's name and
    the inviter's first name, and nothing else.
-2. **App not installed:** the link opens a small DE/EN landing page with the store
+2. **App not installed:** the link opens a small DE/EN/FR/ES landing page with the store
    buttons and the code in large type. After installing, "Ich habe einen
    Einladungscode" on the front door. No third-party deferred-deep-link service is used
    (NFR-9). The code or the email match does that job.
@@ -541,10 +541,12 @@ served on `wuselwall.app`, beside the website ([ADR-017](adr/ADR-017-wuselwall-a
 server's invitations use it. The token and the server travel in the fragment, so the site
 never receives them ([ADR-018](adr/ADR-018-self-hosted-only.md), decision 8). The landing
 page reads the fragment in the browser, and the app gets the whole URL. The
-landing pages are DE/EN, script-free HTML: what this is, the store buttons, the code
-in large type, and a link to the privacy policy. They are not expanded to FR/ES; app
-privacy/legal links deliberately use the existing English website pages. The
-deletion-request page (Play) sits alongside.
+landing pages support DE/EN/FR/ES in the separate website repository, with optional
+language and theme controls. They explain the invitation or pairing flow and link to
+the stores and privacy policy. Switching language preserves the token and server in
+the fragment. The app's privacy/legal links continue to use the existing English
+website pages until the localized website release is published. The deletion-request
+page (Play) sits alongside.
 
 ## How "smooth" is checked
 

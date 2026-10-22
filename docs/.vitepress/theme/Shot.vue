@@ -8,7 +8,7 @@ import { useData, withBase } from 'vitepress'
 
 const props = defineProps<{ name: string; alt: string; wide?: boolean }>()
 const { lang } = useData()
-const dir = computed(() => (lang.value.startsWith('en') ? 'en' : 'de'))
+const dir = computed(() => ['en', 'fr', 'es'].find((code) => lang.value.startsWith(code)) ?? 'de')
 const src = (suffix: string) => withBase(`/screenshots/${dir.value}/${props.name}${suffix}.png`)
 </script>
 

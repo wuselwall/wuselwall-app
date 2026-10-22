@@ -415,11 +415,11 @@ Until the Play listing exists, `release-android.yml` builds a signed APK and
 
 ### The user documentation
 
-`docs/` stays with the app and is built on GitHub's ephemeral `ubuntu-latest` runners,
-for pull requests and `main` alike (Flutter demo,
-Playwright screenshots in both languages/themes, VitePress with `DOCS_BASE=/`). The
+`docs/` stays with the app and is built on self-hosted Linux build runners,
+for pull requests and `main` alike (Flutter demo, Playwright screenshots in all four
+languages/both themes, VitePress with `DOCS_BASE=/`). The
 prepared publisher uses a GitHub Pages artifact and OIDC with job-scoped `pages: write`
-and `id-token: write`; it no longer uses a self-hosted deploy runner or SSH secrets.
+and `id-token: write`; it uses the build fleet rather than the production deploy runner and needs no SSH secrets.
 
 Publishing stays disabled until `DOCS_PAGES_ENABLED=true` is set after the operator
 makes the app repository public, configures Pages and `docs.wuselwall.app`, and
@@ -454,3 +454,18 @@ Keep it proportionate — this is a family app, not a service with an SLA.
 - **Uptime monitoring** on `https://<server>/.well-known/wuselwall.json`: an answer means
   gateway, functions, PostgREST and Auth are up.
 - **Logs**: `wuselwall logs <service>` or `docker compose logs -f <service>`.
+
+
+### Self-hosted Actions runners (2026-10-22)
+
+Every job uses a self-hosted runner: Linux jobs select `[self-hosted, Linux, build]`,
+iOS selects `[self-hosted, macOS]`, and website deployment retains its dedicated
+`[self-hosted, linux, wuselwall-deploy]` assignment in the separate repository.
+This also applies to PRs, change detection, required checks, docs/Pages, Play uploads
+and the manual hosted-Supabase installer. Forks must provide their own runner access.
+Build runners need the toolchains used by their jobs, including Docker/Compose for the
+backend and website checks and Chromium system dependencies for browser tests.
+Backend runners must have a CI-only Docker daemon, never access to a family's live
+stack. The backend job serializes its local stack and removes it after each run.
+No changes to runner registration, billing, repository visibility or deployment settings
+are implied; existing publishing gates and deployment secrets remain scoped to their jobs.

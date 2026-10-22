@@ -14,6 +14,8 @@ Dafür braucht der Server einen SMTP-Dienst, also einen Anbieter, der Mails vers
 
 **Zu Hause:** Trag in `stack/.env` die Werte `SMTP_HOST`, `SMTP_PORT` (meist `587`), `SMTP_USER`, `SMTP_PASS` und als Absender `SMTP_ADMIN_EMAIL` ein, in einfachen Anführungszeichen wie die anderen Werte. Dann:
 
+Ein Server mit Mailversand setzt `ENABLE_EMAIL_AUTOCONFIRM=false` in `stack/.env`.
+
 ```bash
 ./wuselwall compose up -d auth
 ```

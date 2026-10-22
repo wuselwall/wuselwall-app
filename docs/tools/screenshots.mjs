@@ -1,10 +1,15 @@
 // Takes the user documentation's screenshots from the Flutter web demo build
 // (app/lib/main_demo.dart, in-memory data, no backend):
 //   npm run docs:screenshots
-// To take only some shots while debugging, pass their names (both languages and themes):
+// To take only some shots while debugging, pass their names (all languages and both themes):
 //   node docs/tools/screenshots.mjs today meals-suggest
-// Each shot is rendered in German and English, and in the light (name.png) and dark
-// (name-dark.png) theme: the docs' <Shot> component shows the one matching the reader's.
+// Each shot is rendered in German, English, French and Spanish, in both the light
+// (name.png) and dark (name-dark.png) theme. <Shot> follows the reader’s language/theme.
+// To restrict the languages or export elsewhere (for the marketing website):
+//   SHOT_LANGS=fr,es SHOT_OUT=/abs/dir node docs/tools/screenshots.mjs wall-board
+// SHOT_LANGS is a comma-separated list of de, en, fr, es (default de,en,fr,es); SHOT_OUT is where the
+// <lang>/ folders are written (default docs/public/screenshots). The demo takes its language,
+// names and sample data from the browser's locale, which the script sets per language.
 // Flutter draws to a canvas, so the script switches on the accessibility tree
 // (Flutter's semantics) and drives the page by the same labels a screen reader gets.
 import { chromium } from 'playwright';
@@ -14,7 +19,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const root = path.resolve('app/build/web-demo');
-const out = path.resolve('docs/public/screenshots');
+const out = path.resolve(process.env.SHOT_OUT || 'docs/public/screenshots');
+const LOCALES = { de: 'de-DE', en: 'en-US', fr: 'fr-FR', es: 'es-ES' };
+const langs = [...new Set((process.env.SHOT_LANGS || 'de,en,fr,es').split(',').map((l) => l.trim()).filter(Boolean))];
+if (!langs.length || langs.some((lang) => !Object.hasOwn(LOCALES, lang))) {
+  throw new Error('SHOT_LANGS must contain one or more of de,en,fr,es');
+}
+
 if (!fs.existsSync(root)) {
   console.log('Building the demo first …');
   execFileSync('flutter', ['build', 'web', '-t', 'lib/main_demo.dart', '--release', '-o', 'build/web-demo'], {
@@ -37,8 +48,10 @@ const WALL = { width: 1280, height: 800 }; // the recommended wall resolution
 
 /** Labels differ per language; the steps look them up here. */
 const T = {
-  de: { grandma: 'Oma Ruth', newList: 'Neue Liste', name: 'Name', save: 'Speichern', search: 'Suchen oder hinzufügen', settings: 'Einstellungen', oldCode: 'Code für ein älteres Gerät erzeugen', deviceName: 'Gerätename', createCode: 'Code erzeugen', addMember: 'Mitglied hinzufügen', history: 'Verlauf', trolley: 'Im Wagen', household: 'Neue Familie anlegen', signIn: 'Mit E-Mail fortfahren', enrol: 'Mit Code verbinden', papa: 'Thomas', daughter: 'Emma', wholemeal: /Vollkorn/, kitchenTablet: 'Küchen-Tablet', close: 'Schließen', shopping: 'Einkauf', kidShopping: 'Einkaufen', calendar: 'Kalender', week: 'Woche', newEvent: 'Neuer Termin', schedule: 'Stundenplan', tasks: 'Aufgaben', meals: 'Essen', householdSettings: 'Haushalt einstellen', today: 'Heute', editSchool: 'Schule bearbeiten', editTimetable: 'Stundenplan bearbeiten', editorSchool: 'Gemeinschaftsschule am Park', region: 'Region', importHolidays: 'Ferien übernehmen', addMeal: 'Mahlzeit hinzufügen', pairFront: 'Familien-Tablet oder Wanddisplay verbinden', pairConnect: 'Gerät verbinden', pairCode: 'Code vom neuen Gerät', next: 'Weiter', inviteAdult: 'Erwachsene Person einladen', inviteName: 'Name', inviteCreate: 'Einladung erstellen', reminders: 'Erinnerungen', advanced: 'Erweitert', setPassword: 'Passwort festlegen' },
-  en: { grandma: 'Grandma Ruth', newList: 'New list', name: 'Name', save: 'Save', search: 'Search or add', settings: 'Settings', oldCode: 'Create a code for an older device', deviceName: 'Device name', createCode: 'Create code', addMember: 'Add member', history: 'History', trolley: 'In the trolley', household: 'Start a new family', signIn: 'Continue with email', enrol: 'Connect with a code', papa: 'David', daughter: 'Olivia', wholemeal: /Wholemeal/, kitchenTablet: 'Kitchen tablet', close: 'Close', shopping: 'Shopping', kidShopping: 'Shopping', calendar: 'Calendar', week: 'Week', newEvent: 'New event', schedule: 'Timetable', tasks: 'Tasks', meals: 'Meals', householdSettings: 'Household settings', today: 'Today', editSchool: 'Edit school', editTimetable: 'Edit timetable', editorSchool: 'Parkside School', region: 'Region', importHolidays: 'Import school holidays', addMeal: 'Add meal', pairFront: 'Connect a family tablet or wall display', pairConnect: 'Connect device', pairCode: 'Code from the new device', next: 'Next', inviteAdult: 'Invite an adult', inviteName: 'Name', inviteCreate: 'Create invitation', reminders: 'Reminders', advanced: 'Advanced', setPassword: 'Set password' },
+  de: { grandma: 'Oma Ruth', newList: 'Neue Liste', name: 'Name', save: 'Speichern', search: 'Suchen oder hinzufügen', settings: 'Einstellungen', oldCode: 'Code für ein älteres Gerät erzeugen', deviceName: 'Gerätename', createCode: 'Code erzeugen', addMember: 'Mitglied hinzufügen', history: 'Verlauf', trolley: 'Im Wagen', household: 'Neue Familie anlegen', signIn: 'Mit E-Mail fortfahren', enrol: 'Mit Code verbinden', papa: 'Thomas', daughter: 'Emma', wholemeal: /Vollkorn/, kitchenTablet: 'Küchen-Tablet', close: 'Schließen', shopping: 'Einkauf', kidShopping: 'Einkaufen', calendar: 'Kalender', week: 'Woche', newEvent: 'Neuer Termin', schedule: 'Stundenplan', tasks: 'Aufgaben', meals: 'Essen', householdSettings: 'Haushalt einstellen', today: 'Heute', editSchool: 'Schule bearbeiten', region: 'Region', importHolidays: 'Ferien übernehmen', addMeal: 'Mahlzeit hinzufügen', pairFront: 'Familien-Tablet oder Wanddisplay verbinden', pairConnect: 'Gerät verbinden', pairCode: 'Code vom neuen Gerät', next: 'Weiter', inviteAdult: 'Erwachsene Person einladen', inviteName: 'Name', inviteCreate: 'Einladung erstellen', reminders: 'Erinnerungen', advanced: 'Erweitert', setPassword: 'Passwort festlegen', editTimetable: "Stundenplan bearbeiten", editorSchool: "Gemeinschaftsschule am Park", searchQuery: "mil" },
+  en: { grandma: 'Grandma Ruth', newList: 'New list', name: 'Name', save: 'Save', search: 'Search or add', settings: 'Settings', oldCode: 'Create a code for an older device', deviceName: 'Device name', createCode: 'Create code', addMember: 'Add member', history: 'History', trolley: 'In the trolley', household: 'Start a new family', signIn: 'Continue with email', enrol: 'Connect with a code', papa: 'David', daughter: 'Olivia', wholemeal: /Wholemeal/, kitchenTablet: 'Kitchen tablet', close: 'Close', shopping: 'Shopping', kidShopping: 'Shopping', calendar: 'Calendar', week: 'Week', newEvent: 'New event', schedule: 'Timetable', tasks: 'Tasks', meals: 'Meals', householdSettings: 'Household settings', today: 'Today', editSchool: 'Edit school', region: 'Region', importHolidays: 'Import school holidays', addMeal: 'Add meal', pairFront: 'Connect a family tablet or wall display', pairConnect: 'Connect device', pairCode: 'Code from the new device', next: 'Next', inviteAdult: 'Invite an adult', inviteName: 'Name', inviteCreate: 'Create invitation', reminders: 'Reminders', advanced: 'Advanced', setPassword: 'Set password', editTimetable: "Edit timetable", editorSchool: "Parkside School", searchQuery: "mil" },
+  fr: { grandma: "Mamie Ruth", newList: "Nouvelle liste", name: "Nom", save: "Enregistrer", search: "Rechercher ou ajouter", settings: "Paramètres", oldCode: "Créer un code pour un ancien appareil", deviceName: "Nom de l’appareil", createCode: "Créer un code", addMember: "Ajouter un membre", history: "Historique", trolley: "Dans le chariot", household: "Créer une nouvelle famille", signIn: "Continuer par e-mail", papa: "Thomas", daughter: "Emma", wholemeal: /Complet/, kitchenTablet: "Tablette de cuisine", close: "Fermer", shopping: "Courses", kidShopping: "Courses", calendar: "Calendrier", week: "Semaine", newEvent: "Nouvel événement", schedule: "Emploi du temps", tasks: "Tâches", meals: "Repas", householdSettings: "Paramètres du foyer", today: "Aujourd’hui", editSchool: "Modifier l’école", region: "Région", importHolidays: "Importer les vacances scolaires", addMeal: "Ajouter un repas", pairFront: "Connecter une tablette familiale ou un écran mural", pairConnect: "Connecter un appareil", pairCode: "Code du nouvel appareil", next: "Suivant", inviteAdult: "Inviter un adulte", inviteName: "Prénom", inviteCreate: "Créer l’invitation", reminders: "Rappels", advanced: "Avancés", setPassword: "Définir un mot de passe" , enrol: "Connecter avec un code", editTimetable: "Modifier l’emploi du temps", editorSchool: "École du parc", searchQuery: "lai" },
+  es: { grandma: "Abuela Ruth", newList: "Nueva lista", name: "Nombre", save: "Guardar", search: "Buscar o añadir", settings: "Ajustes", oldCode: "Crear un código para un dispositivo antiguo", deviceName: "Nombre del dispositivo", createCode: "Crear código", addMember: "Añadir miembro", history: "Historial", trolley: "En el carrito", household: "Crear una familia nueva", signIn: "Continuar con correo electrónico", papa: "David", daughter: "Olivia", wholemeal: /Integral/, kitchenTablet: "Tableta de la cocina", close: "Cerrar", shopping: "Compra", kidShopping: "Compra", calendar: "Calendario", week: "Semana", newEvent: "Nuevo evento", schedule: "Horario escolar", tasks: "Tareas", meals: "Comidas", householdSettings: "Ajustes del hogar", today: "Hoy", editSchool: "Editar colegio", region: "Región", importHolidays: "Importar vacaciones escolares", addMeal: "Añadir comida", pairFront: "Conectar una tableta familiar o pantalla de pared", pairConnect: "Conectar un dispositivo", pairCode: "Código del nuevo dispositivo", next: "Siguiente", inviteAdult: "Invitar a un adulto", inviteName: "Nombre", inviteCreate: "Crear invitación", reminders: "Recordatorios", advanced: "Avanzados", setPassword: "Establecer contraseña" , enrol: "Conectar con un código", editTimetable: "Editar horario", editorSchool: "Colegio del parque", searchQuery: "lec" },
 };
 
 async function open(page, scenario, route = '') {
@@ -113,7 +126,7 @@ const shots = [
   { name: 'setup-sign-in', scenario: 'setup', viewport: PHONE, steps: async (p, t) => press(p, t.signIn) },
   // The adult home opens on the calendar, so the shopping shots first press its nav destination.
   { name: 'shopping-phone', scenario: 'adult', viewport: PHONE, steps: async (p, t) => tapAny(p, t.shopping, { exact: false }) },
-  { name: 'shopping-search', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.shopping, { exact: false }); await p.getByRole('textbox', { name: t.search }).fill('mil'); await settle(p); } },
+  { name: 'shopping-search', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.shopping, { exact: false }); await p.getByRole('textbox', { name: t.search }).fill(t.searchQuery); await settle(p); } },
   { name: 'shopping-new-list', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.shopping, { exact: false }); await tapNode(p, 'checkbox', t.newList); } },
   { name: 'shopping-laptop', scenario: 'adult', viewport: TABLET, steps: async (p, t) => tapAny(p, t.shopping, { exact: false }) },
   { name: 'shopping-edit-item', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.shopping, { exact: false }); await longPress(p, p.getByRole('checkbox', { name: t.wholemeal }).first()); } },
@@ -124,12 +137,12 @@ const shots = [
   { name: 'calendar-phone', scenario: 'adult', viewport: PHONE, steps: async (p, t) => tapAny(p, t.calendar) },
   { name: 'calendar-editor', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.calendar); await tapAny(p, t.newEvent); } },
   { name: 'school-week', scenario: 'adult', viewport: TABLET, steps: async (p, t) => tapAny(p, t.schedule, { exact: false }) },
-  { name: 'school-editor', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.schedule, { exact: false }); await tapAny(p, t.editTimetable); await press(p, t.editorSchool); } },
+  { name: 'school-editor', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.schedule, { exact: false }); await press(p, t.editTimetable, { exact: false }); await press(p, t.editorSchool); } },
   // The adult home opens on Today, the first destination.
   { name: 'today', scenario: 'adult', viewport: PHONE, steps: async (p, t) => tapAny(p, t.today) },
   // The school page's settings icon opens the school form; the region field opens the picker.
-  { name: 'region-picker', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.schedule, { exact: false }); await tapAny(p, t.editSchool); await tapAny(p, t.region, { exact: false }); } },
-  { name: 'holiday-import', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.schedule); await tapAny(p, t.editSchool); await scrollUntil(p, t.importHolidays); await tapNode(p, 'button', t.importHolidays); } },
+  { name: 'region-picker', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.schedule, { exact: false }); await press(p, t.editSchool, { exact: false }); await tapAny(p, t.region, { exact: false }); } },
+  { name: 'holiday-import', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.schedule); await press(p, t.editSchool, { exact: false }); await scrollUntil(p, t.importHolidays); await tapNode(p, 'button', t.importHolidays); } },
   // The add action is a popup on each day: its name doubles the tooltip, so match it loosely,
   // then pick the first free slot, which opens the meal editor with the suggestions.
   { name: 'meals-suggest', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.meals); await press(p, t.addMeal, { exact: false }); await p.getByRole('menuitem').first().click(); await settle(p, 1200); } },
@@ -140,7 +153,7 @@ const shots = [
   { name: 'kid-shopping', scenario: 'kid', viewport: TABLET, steps: async (p, t) => { await press(p, t.daughter); await tapAny(p, t.kidShopping, { exact: false }); } },
   { name: 'wall-board', scenario: 'kiosk', viewport: WALL },
   { name: 'wall-child-week', scenario: 'kiosk', viewport: WALL, steps: async (p, t) => press(p, new RegExp(`^${t.daughter},`)) },
-  { name: 'wall-day', scenario: 'kiosk', viewport: WALL, steps: async (p) => { await p.getByRole('button', { name: /^(Mittwoch|Wednesday)/ }).first().click(); await settle(p); } },
+  { name: 'wall-day', scenario: 'kiosk', viewport: WALL, steps: async (p) => { await p.getByRole('button', { name: /^(Mittwoch|Wednesday|mercredi|miércoles)/i }).first().click(); await settle(p); } },
   // The board has no avatars: open the footer's shopping list first, then tap the name in its bar.
   { name: 'wall-shopping', scenario: 'kiosk', viewport: WALL, steps: async (p, t) => { await p.getByRole('button', { name: t.shopping }).first().click(); await settle(p); await p.getByRole('button', { name: t.daughter, exact: true }).last().click(); await settle(p); } },
   { name: 'settings-phone', scenario: 'adult', viewport: PHONE, steps: async (p, t) => press(p, t.settings) },
@@ -167,12 +180,12 @@ const browser = await chromium.launch({
   args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'],
 });
 let failed = 0;
-for (const lang of ['de', 'en']) {
+for (const lang of langs) {
   fs.mkdirSync(path.join(out, lang), { recursive: true });
   for (const shot of shots) {
     if (only.length && !only.includes(shot.name)) continue;
     const ctx = await browser.newContext({
-      viewport: shot.viewport, deviceScaleFactor: 2, locale: lang === 'de' ? 'de-DE' : 'en-US',
+      viewport: shot.viewport, deviceScaleFactor: 2, locale: LOCALES[lang],
       colorScheme: 'light', timezoneId: 'Europe/Berlin',
     });
     const page = await ctx.newPage();
@@ -181,7 +194,7 @@ for (const lang of ['de', 'en']) {
       if (shot.steps) await shot.steps(page, T[lang]);
     } catch (e) {
       failed++;
-      console.warn(`! ${lang}/${shot.name}: ${e.message.split('\n')[0]}`);
+      console.warn(`! ${lang}/${shot.name}: ${e.message}`);
     }
     // Software-rendered wall shots (2x, SwiftShader) can exceed Playwright's 30 s default
     // on a busy shared runner; the capture itself is not a failure signal.
@@ -198,6 +211,6 @@ await browser.close();
 server.close();
 if (failed) {
   console.warn(`${failed} step(s) failed — check the images above.`);
-  // In CI a failed step would publish a wrong picture.
-  if (process.env.CI) process.exit(1);
+  // A failed step must never look like a successful screenshot export.
+  process.exitCode = 1;
 }
