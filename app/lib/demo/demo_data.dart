@@ -162,7 +162,7 @@ abstract final class DemoData {
     (tr4('Brot', 'Bread', 'Pain', 'Pan'), 'bakery', 35, 'bread'),
     (tr4('Bananen', 'Bananas', 'Bananes', 'Plátanos'), 'produce', 31, 'banana'),
     (tr4('Äpfel', 'Apples', 'Pommes', 'Manzanas'), 'produce', 24, 'apple'),
-    ('Butter', 'dairy', 22, 'butter'),
+    (tr4('Butter', 'Butter', 'Beurre', 'Mantequilla'), 'dairy', 22, 'butter'),
     (tr4('Eier', 'Eggs', 'Œufs', 'Huevos'), 'dairy', 21, 'egg'),
     (tr4('Nudeln', 'Pasta', 'Pâtes', 'Pasta'), 'pantry', 19, 'pasta'),
     (tr4('Joghurt', 'Yoghurt', 'Yaourt', 'Yogur'), 'dairy', 18, 'bowl'),
@@ -286,7 +286,14 @@ abstract final class DemoData {
       mama,
       true,
     ),
-    ('Butter', 'dairy', 1, null, papa, true),
+    (
+      tr4('Butter', 'Butter', 'Beurre', 'Mantequilla'),
+      'dairy',
+      1,
+      null,
+      papa,
+      true,
+    ),
   ];
 
   static List<ShoppingItem> items() => [

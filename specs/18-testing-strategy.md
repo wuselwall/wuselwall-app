@@ -215,3 +215,11 @@ bug ever shows up; its free tier allows a few physical-device runs a day.
 From then on, each new module comes with layers 1, 3, 4 and 6 in the same change, adds
 goldens for the screens it introduces, and adds an on-device flow only for what crosses
 the native boundary or the network.
+
+## Localized family guide
+
+`npm run docs:check` checks FR/ES page and screenshot-reference parity with the English
+guide, declared capture names and all four locales’ light/dark PNGs. `npm run docs:build`
+checks internal links. `DOCS_BASE=/docs/ npm run docs:build` also verifies the retained
+marketing-site mount; `npm run docs:browser` exercises navigation, local search, screenshot
+locales and themes against that local build. CI exports all locales and checks every home page.

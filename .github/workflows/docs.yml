@@ -39,11 +39,15 @@ jobs:
       - run: npm run docs:check
       - run: npm run docs:build
         env: { DOCS_BASE: / }
+      - run: npm run docs:browser
+        env: { DOCS_BASE: / }
       - name: Check the custom-domain output
         run: |
           test "$(cat docs/.vitepress/dist/CNAME)" = docs.wuselwall.app
           test -s docs/.vitepress/dist/index.html
           test -s docs/.vitepress/dist/en/index.html
+          test -s docs/.vitepress/dist/fr/index.html
+          test -s docs/.vitepress/dist/es/index.html
           test -s docs/.vitepress/dist/sitemap.xml
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with: { name: docs-site, path: docs/.vitepress/dist, retention-days: 7 }
