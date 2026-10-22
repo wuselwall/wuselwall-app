@@ -1771,7 +1771,6 @@
   "appearanceDark": "Dunkel",
   "appearanceNightNote": "Nachts zeigt das Wanddisplay immer seine Nachtansicht.",
   "settingsViewLabel": "Welche Einstellungen angezeigt werden",
-  "settingsViewBasic": "Einfach",
   "settingsViewAdvanced": "Erweitert",
   "settingsViewMoreHint": "Weitere Einstellungen findest du unter „Erweitert“. Ausgeblendete Einstellungen gelten weiterhin.",
   "settingsViewShowAll": "Alle Einstellungen zeigen",

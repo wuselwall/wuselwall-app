@@ -2451,7 +2451,6 @@
   "appearanceDark": "Dark",
   "appearanceNightNote": "At night the wall display always shows its night view.",
   "settingsViewLabel": "Which settings to show",
-  "settingsViewBasic": "Basic",
   "settingsViewAdvanced": "Advanced",
   "settingsViewMoreHint": "More settings are under Advanced. Hidden settings still apply.",
   "settingsViewShowAll": "Show all settings",
