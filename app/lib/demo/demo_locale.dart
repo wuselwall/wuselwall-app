@@ -43,7 +43,7 @@ const Map<String, Map<String, String>> demoTexts = {
     // Presence
     'Dienst': 'Bureau',
     'Büro Hamburg': 'Bureau à Hambourg',
-    'Dienstreise Berlin': 'Déplacement à Berlin',
+    'Dienstreise Berlin': 'Déplacement à Lyon',
     'Oma': 'Mamie',
     'zu Hause': 'À la maison',
     'Büro': 'Bureau',
@@ -159,7 +159,7 @@ const Map<String, Map<String, String>> demoTexts = {
     // Presence
     'Dienst': 'Oficina',
     'Büro Hamburg': 'Oficina de Hamburgo',
-    'Dienstreise Berlin': 'Viaje a Berlín',
+    'Dienstreise Berlin': 'Viaje a Madrid',
     'Oma': 'Abuela',
     'zu Hause': 'En casa',
     'Büro': 'Oficina',
