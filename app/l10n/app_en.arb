@@ -979,13 +979,38 @@
   "schoolEnd": "End",
   "schoolTerms": "Terms",
   "schoolAddTerm": "Add term",
-  "schoolTermEdit": "Term",
+  "schoolTermEdit": "Edit term",
+  "schoolTermNew": "New term",
   "schoolTermName": "Name",
+  "schoolTermNameHint": "e.g. School year 2026/27 or 1st half-year",
   "schoolFrom": "From",
   "schoolTo": "To",
-  "schoolAbWeek": "A/B anchor week (calendar week)",
-  "schoolAbWeekHint": "A week that is an A week. Empty: every week is the same.",
+  "schoolTermPickDate": "Choose a date",
+  "schoolTermEndBeforeStart": "Ends before it starts",
+  "schoolTermMustCoverWeek": "Must include the week shown ({week})",
+  "@schoolTermMustCoverWeek": {
+    "placeholders": {
+      "week": {
+        "type": "String"
+      }
+    }
+  },
+  "schoolAbWeeks": "A and B weeks",
+  "schoolAbWeeksHint": "Turn on if the timetable alternates between two weeks.",
+  "schoolAbWeek": "Calendar week of an A week",
+  "schoolAbWeekHint": "Week number, for example 43. From there the weeks alternate: B, A, B, …",
+  "schoolAbWeekShown": "The week shown is calendar week {week}.",
+  "@schoolAbWeekShown": {
+    "placeholders": {
+      "week": {
+        "type": "int"
+      }
+    }
+  },
+  "schoolAbWeekInvalid": "Enter a week number from 1 to 53",
   "schoolCurrent": "current",
+  "schoolCurrentTerm": "Current term",
+  "schoolCurrentTermHint": "Marks the term you are in now. Only one per school.",
   "schoolSubjects": "Subjects",
   "schoolAddSubject": "Add subject",
   "schoolSubjectEdit": "Subject",
@@ -2469,6 +2494,6 @@
   "settingsViewAdvanced": "Advanced",
   "settingsViewMoreHint": "More settings are under Advanced. Hidden settings still apply.",
   "settingsViewShowAll": "Show all settings",
-  "schoolTimetableNeedsTerm": "First add a term for the week shown. Choose a name and date range, then continue to enter the lessons.",
+  "schoolTimetableNeedsTerm": "The week shown is not in any term yet. Add the term it belongs to, then enter the lessons.",
   "schoolTermContinue": "Save term and continue"
 }

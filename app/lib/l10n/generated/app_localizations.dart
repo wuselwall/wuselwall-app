@@ -3141,14 +3141,26 @@ abstract class AppLocalizations {
   /// No description provided for @schoolTermEdit.
   ///
   /// In en, this message translates to:
-  /// **'Term'**
+  /// **'Edit term'**
   String get schoolTermEdit;
+
+  /// No description provided for @schoolTermNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New term'**
+  String get schoolTermNew;
 
   /// No description provided for @schoolTermName.
   ///
   /// In en, this message translates to:
   /// **'Name'**
   String get schoolTermName;
+
+  /// No description provided for @schoolTermNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. School year 2026/27 or 1st half-year'**
+  String get schoolTermNameHint;
 
   /// No description provided for @schoolFrom.
   ///
@@ -3162,23 +3174,77 @@ abstract class AppLocalizations {
   /// **'To'**
   String get schoolTo;
 
+  /// No description provided for @schoolTermPickDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a date'**
+  String get schoolTermPickDate;
+
+  /// No description provided for @schoolTermEndBeforeStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Ends before it starts'**
+  String get schoolTermEndBeforeStart;
+
+  /// No description provided for @schoolTermMustCoverWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Must include the week shown ({week})'**
+  String schoolTermMustCoverWeek(String week);
+
+  /// No description provided for @schoolAbWeeks.
+  ///
+  /// In en, this message translates to:
+  /// **'A and B weeks'**
+  String get schoolAbWeeks;
+
+  /// No description provided for @schoolAbWeeksHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on if the timetable alternates between two weeks.'**
+  String get schoolAbWeeksHint;
+
   /// No description provided for @schoolAbWeek.
   ///
   /// In en, this message translates to:
-  /// **'A/B anchor week (calendar week)'**
+  /// **'Calendar week of an A week'**
   String get schoolAbWeek;
 
   /// No description provided for @schoolAbWeekHint.
   ///
   /// In en, this message translates to:
-  /// **'A week that is an A week. Empty: every week is the same.'**
+  /// **'Week number, for example 43. From there the weeks alternate: B, A, B, …'**
   String get schoolAbWeekHint;
+
+  /// No description provided for @schoolAbWeekShown.
+  ///
+  /// In en, this message translates to:
+  /// **'The week shown is calendar week {week}.'**
+  String schoolAbWeekShown(int week);
+
+  /// No description provided for @schoolAbWeekInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a week number from 1 to 53'**
+  String get schoolAbWeekInvalid;
 
   /// No description provided for @schoolCurrent.
   ///
   /// In en, this message translates to:
   /// **'current'**
   String get schoolCurrent;
+
+  /// No description provided for @schoolCurrentTerm.
+  ///
+  /// In en, this message translates to:
+  /// **'Current term'**
+  String get schoolCurrentTerm;
+
+  /// No description provided for @schoolCurrentTermHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Marks the term you are in now. Only one per school.'**
+  String get schoolCurrentTermHint;
 
   /// No description provided for @schoolSubjects.
   ///
@@ -7670,7 +7736,7 @@ abstract class AppLocalizations {
   /// No description provided for @schoolTimetableNeedsTerm.
   ///
   /// In en, this message translates to:
-  /// **'First add a term for the week shown. Choose a name and date range, then continue to enter the lessons.'**
+  /// **'The week shown is not in any term yet. Add the term it belongs to, then enter the lessons.'**
   String get schoolTimetableNeedsTerm;
 
   /// No description provided for @schoolTermContinue.

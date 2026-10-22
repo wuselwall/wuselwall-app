@@ -9,6 +9,7 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
+import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/region/ui/holiday_import_sheet.dart';
@@ -612,8 +613,8 @@ class _Terms extends ConsumerWidget {
             child: ListTile(
               title: Text(t.name),
               subtitle: Text(
-                '${context.dayMonth(t.startsOn)} ${t.startsOn.year} – '
-                '${context.dayMonth(t.endsOn)} ${t.endsOn.year}'
+                '${context.mediumDate(t.startsOn)} – '
+                '${context.mediumDate(t.endsOn)}'
                 '${t.isCurrent ? ' · ${l10n.schoolCurrent}' : ''}',
               ),
               onTap: () async {
@@ -638,7 +639,8 @@ class _Terms extends ConsumerWidget {
   }
 }
 
-/// Creates or edits a term, optionally before entering a timetable.
+/// Creates or edits a term, optionally before entering a timetable: then the term must
+/// cover the week the timetable is for, and the dialog says so next to the date.
 class SchoolTermDialog extends StatefulWidget {
   const SchoolTermDialog({
     required this.schoolId,
@@ -649,6 +651,8 @@ class SchoolTermDialog extends StatefulWidget {
 
   final String schoolId;
   final TermRecord? term;
+
+  /// The Monday of the week whose timetable is about to be entered.
   final DateTime? forTimetableOn;
 
   @override
@@ -661,10 +665,13 @@ class _SchoolTermDialogState extends State<SchoolTermDialog> {
     text: widget.term?.abAnchorWeek?.toString() ?? '',
   );
   late DateTime _from =
-      widget.term?.startsOn ?? widget.forTimetableOn ?? DateTime.now();
-  late DateTime? _to =
-      widget.term?.endsOn ??
-      (widget.forTimetableOn == null ? DateTime.now() : null);
+      widget.term?.startsOn ??
+      widget.forTimetableOn ??
+      DateUtils.dateOnly(DateTime.now());
+
+  /// Null until chosen: a term is a range, never silently one day long.
+  late DateTime? _to = widget.term?.endsOn;
+  late bool _abWeeks = widget.term?.abAnchorWeek != null;
   late bool _current = widget.term?.isCurrent ?? false;
 
   @override
@@ -691,57 +698,138 @@ class _SchoolTermDialogState extends State<SchoolTermDialog> {
     });
   }
 
+  int? get _anchorWeek => int.tryParse(_anchor.text.trim());
+
+  bool get _anchorValid {
+    if (!_abWeeks) return true;
+    final week = _anchorWeek;
+    return week != null && week >= 1 && week <= 53;
+  }
+
+  /// The week shown as "19.10. – 25.10.", when the dialog opens from the timetable.
+  String? _weekLabel(BuildContext context) {
+    final monday = widget.forTimetableOn;
+    if (monday == null) return null;
+    final sunday = monday.add(const Duration(days: 6));
+    return '${context.dayMonth(monday)} – ${context.dayMonth(sunday)}';
+  }
+
+  /// The anchor is read in the ISO year the term starts in, so the number of the week
+  /// shown only helps when both lie in the same ISO year.
+  bool get _shownWeekHelps {
+    final monday = widget.forTimetableOn;
+    return monday != null && _isoYearOf(monday) == _isoYearOf(_from);
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final monday = widget.forTimetableOn;
+    final week = _weekLabel(context);
+    final fromError = monday != null && monday.isBefore(_from)
+        ? l10n.schoolTermMustCoverWeek(week!)
+        : null;
+    final to = _to;
+    final String? toError;
+    if (to == null) {
+      toError = null;
+    } else if (to.isBefore(_from)) {
+      toError = l10n.schoolTermEndBeforeStart;
+    } else if (monday != null && monday.isAfter(to)) {
+      toError = l10n.schoolTermMustCoverWeek(week!);
+    } else {
+      toError = null;
+    }
+    final anchorError =
+        _abWeeks && _anchor.text.trim().isNotEmpty && !_anchorValid
+        ? l10n.schoolAbWeekInvalid
+        : null;
+    final canSave =
+        _name.text.trim().isNotEmpty &&
+        to != null &&
+        fromError == null &&
+        toError == null &&
+        _anchorValid;
     return AlertDialog(
-      title: Text(l10n.schoolTermEdit),
+      title: Text(
+        widget.term == null ? l10n.schoolTermNew : l10n.schoolTermEdit,
+      ),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            if (widget.forTimetableOn != null) ...[
+            if (monday != null) ...[
               Text(l10n.schoolTimetableNeedsTerm),
-              const SizedBox(height: 16),
+              const SizedBox(height: Tokens.space4),
             ],
             TextField(
               controller: _name,
+              autofocus: widget.term == null,
+              textCapitalization: TextCapitalization.sentences,
               onChanged: (_) => setState(() {}),
-              decoration: InputDecoration(labelText: l10n.schoolTermName),
+              decoration: InputDecoration(
+                labelText: l10n.schoolTermName,
+                hintText: l10n.schoolTermNameHint,
+              ),
             ),
+            const SizedBox(height: Tokens.space4),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: TextButton(
-                    onPressed: () => _date(from: true),
-                    child: Text(
-                      '${l10n.schoolFrom} ${context.dayMonth(_from)} ${_from.year}',
-                    ),
+                  child: _DateField(
+                    key: const ValueKey('term-from'),
+                    label: l10n.schoolFrom,
+                    date: _from,
+                    errorText: fromError,
+                    onTap: () => _date(from: true),
                   ),
                 ),
+                const SizedBox(width: Tokens.space2),
                 Expanded(
-                  child: TextButton(
-                    onPressed: () => _date(from: false),
-                    child: Text(
-                      _to == null
-                          ? l10n.schoolTo
-                          : '${l10n.schoolTo} ${context.dayMonth(_to!)} ${_to!.year}',
-                    ),
+                  child: _DateField(
+                    key: const ValueKey('term-to'),
+                    label: l10n.schoolTo,
+                    date: to,
+                    hint: l10n.schoolTermPickDate,
+                    errorText: toError,
+                    onTap: () => _date(from: false),
                   ),
                 ),
               ],
             ),
-            TextField(
-              controller: _anchor,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: l10n.schoolAbWeek,
-                helperText: l10n.schoolAbWeekHint,
-              ),
-            ),
+            const SizedBox(height: Tokens.space2),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
-              title: Text(l10n.schoolCurrent),
+              title: Text(l10n.schoolAbWeeks),
+              subtitle: Text(l10n.schoolAbWeeksHint),
+              value: _abWeeks,
+              onChanged: (v) => setState(() => _abWeeks = v),
+            ),
+            if (_abWeeks) ...[
+              TextField(
+                key: const ValueKey('term-anchor'),
+                controller: _anchor,
+                keyboardType: TextInputType.number,
+                onChanged: (_) => setState(() {}),
+                decoration: InputDecoration(
+                  labelText: l10n.schoolAbWeek,
+                  helperText: [
+                    l10n.schoolAbWeekHint,
+                    if (_shownWeekHelps)
+                      l10n.schoolAbWeekShown(isoWeekOf(monday!)),
+                  ].join(' '),
+                  helperMaxLines: 4,
+                  errorText: anchorError,
+                ),
+              ),
+              const SizedBox(height: Tokens.space2),
+            ],
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(l10n.schoolCurrentTerm),
+              subtitle: Text(l10n.schoolCurrentTermHint),
               value: _current,
               onChanged: (v) => setState(() => _current = v),
             ),
@@ -754,30 +842,19 @@ class _SchoolTermDialogState extends State<SchoolTermDialog> {
           child: Text(l10n.cancel),
         ),
         FilledButton(
-          onPressed:
-              _name.text.trim().isEmpty ||
-                  _to == null ||
-                  _to!.isBefore(_from) ||
-                  (widget.forTimetableOn != null &&
-                      (widget.forTimetableOn!.isBefore(_from) ||
-                          widget.forTimetableOn!.isAfter(_to!)))
+          onPressed: !canSave
               ? null
-              : () {
-                  final name = _name.text.trim();
-                  if (name.isEmpty) return;
-                  final anchor = int.tryParse(_anchor.text.trim());
-                  Navigator.of(context).pop(
-                    TermRecord(
-                      id: widget.term?.id ?? '',
-                      schoolId: widget.schoolId,
-                      name: name,
-                      startsOn: _from,
-                      endsOn: _to!,
-                      abAnchorWeek: anchor,
-                      isCurrent: _current,
-                    ),
-                  );
-                },
+              : () => Navigator.of(context).pop(
+                  TermRecord(
+                    id: widget.term?.id ?? '',
+                    schoolId: widget.schoolId,
+                    name: _name.text.trim(),
+                    startsOn: _from,
+                    endsOn: to,
+                    abAnchorWeek: _abWeeks ? _anchorWeek : null,
+                    isCurrent: _current,
+                  ),
+                ),
           child: Text(
             widget.forTimetableOn == null ? l10n.save : l10n.schoolTermContinue,
           ),
@@ -785,6 +862,54 @@ class _SchoolTermDialogState extends State<SchoolTermDialog> {
       ],
     );
   }
+}
+
+/// A date as a form field: the label stays above, the value or a prompt sits in the
+/// box, and a tap opens the picker.
+class _DateField extends StatelessWidget {
+  const _DateField({
+    required this.label,
+    required this.date,
+    required this.onTap,
+    this.hint,
+    this.errorText,
+    super.key,
+  });
+
+  final String label;
+  final DateTime? date;
+  final VoidCallback onTap;
+  final String? hint;
+  final String? errorText;
+
+  @override
+  Widget build(BuildContext context) {
+    final date = this.date;
+    // One style for value and prompt, so an empty field is as tall as a filled one.
+    final style = Theme.of(context).textTheme.bodyLarge;
+    return InkWell(
+      onTap: onTap,
+      child: InputDecorator(
+        baseStyle: style,
+        decoration: InputDecoration(
+          labelText: label,
+          hintText: hint,
+          errorText: errorText,
+          errorMaxLines: 3,
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          suffixIcon: const Icon(Icons.calendar_today_outlined),
+        ),
+        isEmpty: date == null,
+        child: Text(date == null ? '' : context.mediumDate(date), style: style),
+      ),
+    );
+  }
+}
+
+/// The ISO year of [date]: the year of its week's Thursday.
+int _isoYearOf(DateTime date) {
+  final d = DateTime.utc(date.year, date.month, date.day);
+  return d.add(Duration(days: 4 - d.weekday)).year;
 }
 
 class _Subjects extends ConsumerWidget {

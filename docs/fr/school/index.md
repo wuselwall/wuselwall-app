@@ -10,7 +10,7 @@ Lors de la première utilisation, configurez :
 
 - le **nom de l’école** et sa **région** ;
 - les **horaires des cours et des pauses**, avec début et fin ;
-- les **périodes**, avec leurs dates et, pour les semaines A/B, une semaine de référence A ;
+- les **périodes**, avec leurs dates ; si l’emploi du temps alterne d’une semaine à l’autre, activez **Semaines A et B** et indiquez le **numéro d’une semaine A** ;
 - les **matières**, leur abréviation, couleur, matériel à apporter et affichage sur le mur ; les suggestions adaptées au pays sont modifiables ;
 - les **vacances et jours sans cours**.
 
@@ -46,7 +46,7 @@ Ajoutez une autre école si nécessaire, puis choisissez en haut celle à modifi
 
 ## Saisir un emploi du temps {#entering-a-timetable}
 
-Pour chaque enfant, saisissez les cours d’une période. Si aucune période ne couvre la semaine affichée, renseignez d’abord son nom et ses dates ; enregistrez-la pour continuer vers la grille.
+Pour chaque enfant, saisissez les cours d’une période. Si aucune période ne couvre la semaine affichée, l’app demande d’abord cette période : nom, **Du** et **Au**. Les dates doivent inclure la semaine affichée ; sinon, le dialogue le signale à côté de la date. Enregistrez-la pour continuer vers la grille.
 
 L’en-tête indique l’enfant, l’école, la période et ses dates. Touchez une cellule pour choisir une matière. Le bouton d’enregistrement reste visible en bas pendant le défilement.
 

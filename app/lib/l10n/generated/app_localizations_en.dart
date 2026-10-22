@@ -1737,10 +1737,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get schoolAddTerm => 'Add term';
 
   @override
-  String get schoolTermEdit => 'Term';
+  String get schoolTermEdit => 'Edit term';
+
+  @override
+  String get schoolTermNew => 'New term';
 
   @override
   String get schoolTermName => 'Name';
+
+  @override
+  String get schoolTermNameHint => 'e.g. School year 2026/27 or 1st half-year';
 
   @override
   String get schoolFrom => 'From';
@@ -1749,14 +1755,47 @@ class AppLocalizationsEn extends AppLocalizations {
   String get schoolTo => 'To';
 
   @override
-  String get schoolAbWeek => 'A/B anchor week (calendar week)';
+  String get schoolTermPickDate => 'Choose a date';
+
+  @override
+  String get schoolTermEndBeforeStart => 'Ends before it starts';
+
+  @override
+  String schoolTermMustCoverWeek(String week) {
+    return 'Must include the week shown ($week)';
+  }
+
+  @override
+  String get schoolAbWeeks => 'A and B weeks';
+
+  @override
+  String get schoolAbWeeksHint =>
+      'Turn on if the timetable alternates between two weeks.';
+
+  @override
+  String get schoolAbWeek => 'Calendar week of an A week';
 
   @override
   String get schoolAbWeekHint =>
-      'A week that is an A week. Empty: every week is the same.';
+      'Week number, for example 43. From there the weeks alternate: B, A, B, …';
+
+  @override
+  String schoolAbWeekShown(int week) {
+    return 'The week shown is calendar week $week.';
+  }
+
+  @override
+  String get schoolAbWeekInvalid => 'Enter a week number from 1 to 53';
 
   @override
   String get schoolCurrent => 'current';
+
+  @override
+  String get schoolCurrentTerm => 'Current term';
+
+  @override
+  String get schoolCurrentTermHint =>
+      'Marks the term you are in now. Only one per school.';
 
   @override
   String get schoolSubjects => 'Subjects';
@@ -4420,7 +4459,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get schoolTimetableNeedsTerm =>
-      'First add a term for the week shown. Choose a name and date range, then continue to enter the lessons.';
+      'The week shown is not in any term yet. Add the term it belongs to, then enter the lessons.';
 
   @override
   String get schoolTermContinue => 'Save term and continue';

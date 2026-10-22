@@ -1753,10 +1753,16 @@ class AppLocalizationsDe extends AppLocalizations {
   String get schoolAddTerm => 'Zeitraum hinzufügen';
 
   @override
-  String get schoolTermEdit => 'Zeitraum';
+  String get schoolTermEdit => 'Zeitraum bearbeiten';
+
+  @override
+  String get schoolTermNew => 'Neuer Zeitraum';
 
   @override
   String get schoolTermName => 'Name';
+
+  @override
+  String get schoolTermNameHint => 'z. B. Schuljahr 2026/27 oder 1. Halbjahr';
 
   @override
   String get schoolFrom => 'Von';
@@ -1765,14 +1771,47 @@ class AppLocalizationsDe extends AppLocalizations {
   String get schoolTo => 'Bis';
 
   @override
-  String get schoolAbWeek => 'A/B-Ankerwoche (Kalenderwoche)';
+  String get schoolTermPickDate => 'Datum wählen';
+
+  @override
+  String get schoolTermEndBeforeStart => 'Endet vor dem Anfang';
+
+  @override
+  String schoolTermMustCoverWeek(String week) {
+    return 'Muss die angezeigte Woche ($week) enthalten';
+  }
+
+  @override
+  String get schoolAbWeeks => 'A- und B-Wochen';
+
+  @override
+  String get schoolAbWeeksHint =>
+      'Einschalten, wenn sich der Stundenplan wöchentlich abwechselt.';
+
+  @override
+  String get schoolAbWeek => 'Kalenderwoche einer A-Woche';
 
   @override
   String get schoolAbWeekHint =>
-      'Eine Kalenderwoche, die eine A-Woche ist. Leer: jede Woche ist gleich.';
+      'Wochennummer, zum Beispiel 43. Danach wechseln sich B, A, B … ab.';
+
+  @override
+  String schoolAbWeekShown(int week) {
+    return 'Die angezeigte Woche ist Kalenderwoche $week.';
+  }
+
+  @override
+  String get schoolAbWeekInvalid => 'Wochennummer von 1 bis 53 eingeben';
 
   @override
   String get schoolCurrent => 'aktuell';
+
+  @override
+  String get schoolCurrentTerm => 'Aktueller Zeitraum';
+
+  @override
+  String get schoolCurrentTermHint =>
+      'Markiert den Zeitraum, in dem ihr gerade seid. Nur einer pro Schule.';
 
   @override
   String get schoolSubjects => 'Fächer';
@@ -4454,7 +4493,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get schoolTimetableNeedsTerm =>
-      'Lege zuerst einen Zeitraum für die angezeigte Woche an. Wähle einen Namen und das Anfangs- und Enddatum. Danach trägst du die Stunden ein.';
+      'Die angezeigte Woche gehört noch zu keinem Zeitraum. Lege den Zeitraum an, zu dem sie gehört, und trage danach die Stunden ein.';
 
   @override
   String get schoolTermContinue => 'Zeitraum speichern und weiter';
