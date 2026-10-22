@@ -47,5 +47,5 @@ Everything belongs to one **household**: your family. A household has **members*
 Each device shows WuselWall in the **view** that suits it: compact for adults, larger and simpler for children, extra large for the wall. Guardians choose a device's view when they set it up.
 
 ::: tip Language and theme
-WuselWall speaks German, English, French and Spanish and follows your device's language; other languages show the German version. It also follows the device's light or dark theme at first; under **Settings → Appearance** you can set this device to **Light** or **Dark** (or back to **Automatic**). The wall display turns dark automatically from 21:00, whatever is set.
+WuselWall speaks German, English, French and Spanish and follows your device's language at first; other languages show the German version. Under **Settings → Language** you set the language for this device. It also follows the device's light or dark theme at first; under **Settings → Appearance** you can set this device to **Light** or **Dark** (or back to **Automatic**). The wall display turns dark automatically from 21:00, whatever is set.
 :::

@@ -7595,6 +7595,54 @@ abstract class AppLocalizations {
   /// **'At night the wall display always shows its night view.'**
   String get appearanceNightNote;
 
+  /// No description provided for @languageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get languageTitle;
+
+  /// No description provided for @languageSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic'**
+  String get languageSystem;
+
+  /// No description provided for @languageSystemCurrent.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic: {name}'**
+  String languageSystemCurrent(String name);
+
+  /// No description provided for @languageSystemHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The language of this device; German when the app does not have it'**
+  String get languageSystemHelp;
+
+  /// No description provided for @languageNameDe.
+  ///
+  /// In en, this message translates to:
+  /// **'Deutsch'**
+  String get languageNameDe;
+
+  /// No description provided for @languageNameEn.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get languageNameEn;
+
+  /// No description provided for @languageNameFr.
+  ///
+  /// In en, this message translates to:
+  /// **'Français'**
+  String get languageNameFr;
+
+  /// No description provided for @languageNameEs.
+  ///
+  /// In en, this message translates to:
+  /// **'Español'**
+  String get languageNameEs;
+
   /// No description provided for @settingsViewLabel.
   ///
   /// In en, this message translates to:

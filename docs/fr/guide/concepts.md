@@ -43,5 +43,5 @@ Tout appartient à un **foyer**, votre famille. Il comprend des **membres**, ave
 Les parents choisissent une vue adaptée aux adultes, aux enfants ou au mur lors de la connexion de l’appareil.
 
 ::: tip Langue et thème
-WuselWall suit la langue de l’appareil : allemand, anglais, français ou espagnol. Les autres langues affichent l’allemand. Le thème suit d’abord le système ; **Paramètres → Apparence** permet de choisir **Clair**, **Sombre** ou **Automatique**. L’écran mural passe automatiquement au thème de nuit à partir de 21 h.
+WuselWall suit d’abord la langue de l’appareil : allemand, anglais, français ou espagnol. Les autres langues affichent l’allemand. **Paramètres → Langue** fixe la langue de cet appareil. Le thème suit d’abord le système ; **Paramètres → Apparence** permet de choisir **Clair**, **Sombre** ou **Automatique**. L’écran mural passe automatiquement au thème de nuit à partir de 21 h.
 :::
