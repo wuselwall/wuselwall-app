@@ -6,7 +6,7 @@ This belongs to the **guardians**. On your phone, open the cog at the top right 
 
 ## Basic or Advanced {#view}
 
-At the top of the settings you choose the view. **Basic** is the default and shows what matters most: household settings, usual week, reminders, appearance, getting started, members and devices, and on your own phone also **Delete account**. **Advanced** also shows sharing the family calendar, outside calendars, apps and AI assistants, the server, the data export, sign-in, security, and leaving the family.
+At the top of the settings you choose the view. **Basic** is the default and shows what matters most: household settings, usual week, reminders, language, appearance, getting started, members and devices, and on your own phone also **Delete account**. **Advanced** also shows sharing the family calendar, outside calendars, apps and AI assistants, the server, the data export, sign-in, security, and leaving the family.
 
 Whatever is hidden **still applies**. The view only changes what you see, and WuselWall remembers it for each device. The same goes for **Household settings**.
 

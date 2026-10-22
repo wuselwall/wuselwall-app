@@ -13,6 +13,7 @@ import 'package:wuselwall/core/config/config_providers.dart';
 import 'package:wuselwall/core/connectivity/connectivity_provider.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/core/l10n/app_language.dart';
 import 'package:wuselwall/core/notifications/notification_scheduler_provider.dart';
 import 'package:wuselwall/core/realtime/household_channel.dart';
 import 'package:wuselwall/core/server/setup_store.dart';
@@ -644,6 +645,7 @@ List<Override> baseOverrides({
   MemoryInvitationStore? invitationStore,
   SetupStore? setupStore,
   AppearanceStore? appearance,
+  AppLanguageStore? language,
 
   /// Basic, as on a new device; tests of an Advanced row pass [SettingsView.advanced].
   SettingsView settingsView = SettingsView.basic,
@@ -687,6 +689,9 @@ List<Override> baseOverrides({
   reminderDebounceProvider.overrideWithValue(Duration.zero),
   appearanceStoreProvider.overrideWithValue(
     appearance ?? MemoryAppearanceStore(),
+  ),
+  appLanguageStoreProvider.overrideWithValue(
+    language ?? MemoryAppLanguageStore(),
   ),
   settingsViewStoreProvider.overrideWithValue(
     settingsViewStore ?? MemorySettingsViewStore(settingsView),

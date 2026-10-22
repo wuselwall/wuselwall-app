@@ -25,4 +25,4 @@ Adding the same name a second time makes WuselWall count it up to **2×** instea
 Tiles appear when you **finish** a trip. Until then you type names; after the first trip each becomes a tile.
 
 ## How do I change the language?
-WuselWall follows your device's language (German, English, French or Spanish); other languages show the German version.
+Under **Settings → Language** you choose German, English, French or Spanish for this device; the phone's reminders follow it too. With **Automatic** WuselWall follows your device's language (other languages show the German version). The choice stays on the device, in the browser for the web app: every phone, tablet and browser in the family can show a different language.

@@ -10,6 +10,7 @@ import 'package:wuselwall/app/theme/night.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/config/app_config.dart';
 import 'package:wuselwall/core/config/config_providers.dart';
+import 'package:wuselwall/core/l10n/app_language.dart';
 import 'package:wuselwall/core/realtime/household_channel.dart';
 import 'package:wuselwall/core/supabase/supabase_providers.dart';
 import 'package:wuselwall/demo/demo_board.dart';
@@ -158,6 +159,8 @@ List<Override> _overrides(String scenario) => [
   nightProvider.overrideWith(_Day.new),
   // The screenshots take both themes from the browser's colour scheme.
   appearanceStoreProvider.overrideWithValue(MemoryAppearanceStore()),
+  // The screenshots take their language from the browser.
+  appLanguageStoreProvider.overrideWithValue(MemoryAppLanguageStore()),
   // Basic, as on a new device; the screenshots switch to Advanced where they need it.
   settingsViewStoreProvider.overrideWithValue(MemorySettingsViewStore()),
 ];

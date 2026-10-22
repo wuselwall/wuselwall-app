@@ -2438,6 +2438,21 @@
   "appearanceLight": "Clair",
   "appearanceDark": "Sombre",
   "appearanceNightNote": "La nuit, l’écran mural affiche toujours sa vue de nuit.",
+  "languageTitle": "Langue",
+  "languageSystem": "Automatique",
+  "languageSystemCurrent": "Automatique : {name}",
+  "@languageSystemCurrent": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "languageSystemHelp": "La langue de cet appareil ; l’allemand si l’app ne la propose pas",
+  "languageNameDe": "Deutsch",
+  "languageNameEn": "English",
+  "languageNameFr": "Français",
+  "languageNameEs": "Español",
   "leaveDeleteNext": "Suivant",
   "leaveDeleteWordTitle": "Supprimer définitivement ?",
   "leaveDeleteWordBody": "La famille et toutes ses données sont supprimées immédiatement et définitivement. Personne ne peut les restaurer, pas même un responsable. Exportez d’abord les données si vous souhaitez les conserver.",

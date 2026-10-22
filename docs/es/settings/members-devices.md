@@ -6,7 +6,7 @@ Los **adultos responsables** administran el hogar desde el engranaje **Ajustes**
 
 ## Vista básica o avanzada {#view}
 
-La vista **Básicos** muestra hogar, semana habitual, recordatorios, apariencia, primeros pasos, miembros y dispositivos, y eliminación de cuenta en tu móvil. **Avanzados** añade calendarios, asistentes, servidor, exportación, inicio de sesión, seguridad y salida del hogar.
+La vista **Básicos** muestra hogar, semana habitual, recordatorios, idioma, apariencia, primeros pasos, miembros y dispositivos, y eliminación de cuenta en tu móvil. **Avanzados** añade calendarios, asistentes, servidor, exportación, inicio de sesión, seguridad y salida del hogar.
 
 Lo oculto sigue activo. La app recuerda la vista por dispositivo. Los ajustes del hogar también tienen estas dos vistas.
 

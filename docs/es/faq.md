@@ -34,4 +34,4 @@ Se crean al terminar la compra. Los primeros productos se escriben; la primera c
 
 ## ¿Cómo cambio el idioma?
 
-La app sigue el idioma del dispositivo: alemán, inglés, francés o español, con alemán para otros idiomas. El selector de esta guía cambia solo la documentación.
+En **Ajustes → Idioma** eliges alemán, inglés, francés o español para este dispositivo; los recordatorios del móvil también lo siguen. Con **Automático**, la app sigue el idioma del dispositivo, con alemán para otros idiomas. La elección se queda en el dispositivo, en el navegador en el caso de la app web: cada móvil, tableta o navegador de la familia puede mostrar otro idioma. El selector de esta guía cambia solo la documentación.

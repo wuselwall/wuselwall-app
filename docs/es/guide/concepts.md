@@ -43,5 +43,5 @@ Todo pertenece a un **hogar**, tu familia, con **miembros** (nombre y color prop
 Al conectar el dispositivo, un adulto elige la vista para adultos, niños o pared.
 
 ::: tip Idioma y tema
-La app sigue el idioma del dispositivo: alemán, inglés, francés o español; para otros idiomas muestra alemán. Al principio el tema sigue el sistema. En **Ajustes → Apariencia** puedes elegir **Claro**, **Oscuro** o **Automático**. La pantalla de pared pasa al tema nocturno a partir de las 21:00.
+Al principio la app sigue el idioma del dispositivo: alemán, inglés, francés o español; para otros idiomas muestra alemán. En **Ajustes → Idioma** fijas el idioma de este dispositivo. Al principio el tema sigue el sistema. En **Ajustes → Apariencia** puedes elegir **Claro**, **Oscuro** o **Automático**. La pantalla de pared pasa al tema nocturno a partir de las 21:00.
 :::

@@ -385,7 +385,10 @@ in the same change; no literal user-facing text in widgets. Tone matters when th
 is seven. Check ICU plurals and layouts as well as catalogue parity.
 
 The app follows the device language, including regional variants such as `fr-CA` and
-`es-MX`; unsupported languages fall back to German. New families store the matching
+`es-MX`; unsupported languages fall back to German. Each installation can fix its own
+language under Settings → Language (`appLanguageProvider` in `core/l10n/app_language.dart`,
+kept in the device's secure storage like the appearance, never on the server; the web app
+keeps it in the browser). The phone's reminders follow the same choice. New families store the matching
 `de-DE`, `en-GB`, `fr-FR` or `es-ES` locale. Native iOS permission prompts follow the same
 four-language rule. Existing screens need FR/ES layout checks, not a new screen or an
 automatic expansion of the guide's DE/EN screenshot matrix.
