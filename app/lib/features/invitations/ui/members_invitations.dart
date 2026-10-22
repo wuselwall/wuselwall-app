@@ -6,52 +6,47 @@ import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/invitations/application/invitation_providers.dart';
 import 'package:wuselwall/features/invitations/ui/invite_flow.dart';
 
-/// Under Mitglieder: the household's open invitations, with "Erneut teilen" and
-/// "Zurückziehen" below each one for a guardian on a personal phone.
-class OpenInvitationRows extends ConsumerWidget {
-  const OpenInvitationRows({super.key});
+/// The open invitation belonging to this member, shown below their role.
+class MemberInvitationDetails extends ConsumerWidget {
+  const MemberInvitationDetails({required this.member, super.key});
+
+  final Member member;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final open = (ref.watch(openInvitationsProvider).value ?? const [])
-        .where((i) => i.isOpen)
-        .toList();
-    if (open.isEmpty) return const SizedBox.shrink();
+    final open = (ref.watch(openInvitationsProvider).value ?? const []).where(
+      (i) => i.isOpen && i.profileId == member.id,
+    );
     final canInvite = ref.watch(canInviteProvider);
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         for (final invitation in open)
-          ListTile(
+          Column(
             key: ValueKey('open-invitation-${invitation.id}'),
-            leading: const Icon(Icons.mark_email_unread_outlined),
-            title: Text(invitation.profileName),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  l10n.inviteOpenUntil(
-                    inviteDate(context, invitation.expiresAt),
-                  ),
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10n.inviteOpenUntil(inviteDate(context, invitation.expiresAt)),
+              ),
+              if (canInvite)
+                Wrap(
+                  spacing: Tokens.space1,
+                  children: [
+                    TextButton(
+                      onPressed: () =>
+                          reshareInvitation(context, ref, invitation),
+                      child: Text(l10n.inviteShareAgain),
+                    ),
+                    TextButton(
+                      onPressed: () =>
+                          withdrawInvitation(context, ref, invitation),
+                      child: Text(l10n.inviteWithdraw),
+                    ),
+                  ],
                 ),
-                if (canInvite)
-                  Wrap(
-                    spacing: Tokens.space1,
-                    children: [
-                      TextButton(
-                        onPressed: () =>
-                            reshareInvitation(context, ref, invitation),
-                        child: Text(l10n.inviteShareAgain),
-                      ),
-                      TextButton(
-                        onPressed: () =>
-                            withdrawInvitation(context, ref, invitation),
-                        child: Text(l10n.inviteWithdraw),
-                      ),
-                    ],
-                  ),
-              ],
-            ),
+            ],
           ),
       ],
     );

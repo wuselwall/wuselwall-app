@@ -20,6 +20,15 @@ application/server responses and one installation-selected email language (NFR-1
 integration verification and publication remain separate gates. Step 10's journey gaps
 precede M1.6.
 
+The empty timetable view (2026-10-22) now shows the child-specific explanation and
+entry button without repeating the action as a heading. Family guides are updated in
+DE/EN/FR/ES; separate website public-progress coordination remains pending.
+
+Member invitations (2026-10-22) now show their expiry and share/withdraw actions in
+the matching member's row, joined by profile ID. The DE/EN/FR/ES family guides describe
+the combined row. Separate bilingual public-progress copy remains to be coordinated in
+`wuselwall-website`.
+
 Timetable entry (2026-10-21) now creates a missing term inline and continues to the
 child's lesson grid, with the selected term and dates visible and a fixed Save action.
 Child selection, This week and the labeled school/timetable edit actions share one

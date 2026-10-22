@@ -22,7 +22,7 @@ Invite a person who should take part in the family with their own account. Under
 
 WuselWall then shows the **code**, your family's **server**, a **QR code** and the **link**. Tap **Share** to send them, for example in a message. The link and the QR code name the server: the person taps the link or scans the QR code, and WuselWall opens directly with the invitation, without choosing a server. Whoever only has the code enters it in WuselWall, together with the server if asked; see [Signing in and connecting](/en/guide/setup#_3-joining-a-family).
 
-An invitation is valid for **7 days** and works **once**. Open invitations are listed with their expiry date: **Share again** sends it once more, **Withdraw** cancels it.
+An invitation is valid for **7 days** and works **once**. Open invitations appear directly in the invited member’s row with their expiry date: **Share again** sends it once more, **Withdraw** cancels it.
 
 Once the person has joined, **every guardian** gets a notice on the **Today** tab ("Sarah joined"). **Got it** hides it, **Members** leads to the list. Notices disappear on their own after 14 days.
 

@@ -139,6 +139,7 @@ class SettingsPage extends ConsumerWidget {
               children: [
                 for (final m in list)
                   ListTile(
+                    key: ValueKey('member-${m.id}'),
                     leading: CircleAvatar(
                       backgroundColor: m.color,
                       child: Text(m.initial),
@@ -150,6 +151,7 @@ class SettingsPage extends ConsumerWidget {
                         Text(
                           m.isGuardian ? l10n.roleGuardian : l10n.roleMember,
                         ),
+                        MemberInvitationDetails(member: m),
                         // Below the role, not beside it: at phone width a trailing
                         // action squeezes the role into a sliver (as #29 did).
                         Wrap(
@@ -162,7 +164,6 @@ class SettingsPage extends ConsumerWidget {
                       ],
                     ),
                   ),
-                const OpenInvitationRows(),
                 const InviteAdultTile(),
               ],
             ),
