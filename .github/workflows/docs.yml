@@ -1,8 +1,6 @@
-# VitePress source remains with the app. The build executes PR-supplied code (npm ci,
-# Playwright, Flutter, the screenshot script), so it always runs on the GitHub-hosted,
-# ephemeral ubuntu-latest runner and never holds production credentials. Pages publishing
-# is opt-in after plan/visibility, Pages and DNS are configured: set the repository variable
-# DOCS_PAGES_ENABLED=true. The deploy job never runs for a pull_request.
+# VitePress source remains with the app. Build and Pages publishing use the self-hosted
+# build fleet. Build jobs have read-only repository access and no deployment secrets.
+# Pages publishing stays opt-in through DOCS_PAGES_ENABLED and never runs for a PR.
 # See specs/website-and-docs-migration.md.
 name: docs
 on:
@@ -20,7 +18,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, build]
     steps:
       # A job-local npm cache avoids restoring archives with paths from another runner home.
       - run: echo "npm_config_cache=$RUNNER_TEMP/npm-cache" >> "$GITHUB_ENV"
@@ -61,7 +59,7 @@ jobs:
   deploy:
     needs: build
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.DOCS_PAGES_ENABLED == 'true'
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, build]
     permissions:
       pages: write
       id-token: write

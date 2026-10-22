@@ -2,7 +2,7 @@
 # of this repository, without installing anything (docs/server/supabase-cloud). Started by
 # hand ("Run workflow"); run it again for an update. The project runs nothing here: the
 # workflow runs in the family's repository, with the family's secrets, against the
-# family's project.
+# family's project. The repository needs access to a self-hosted Linux runner labeled build.
 #
 # Repository secrets (Settings → Secrets and variables → Actions):
 #   SUPABASE_ACCESS_TOKEN   an access token of the family's Supabase account
@@ -35,7 +35,7 @@ permissions:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, build]
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
@@ -141,7 +141,7 @@ jobs:
   web:
     if: inputs.web
     needs: deploy
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux, build]
     permissions:
       pages: write
       id-token: write

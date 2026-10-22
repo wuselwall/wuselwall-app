@@ -393,3 +393,8 @@ routes, alongside German and English, including navigation, local search, theme 
 and matching screenshots in both themes. The capture/check pipeline covers all four
 languages; the website selects the matching guide language under the existing docs base.
 Both `/docs/` hosting and the future Pages root are build targets; publication is separate.
+
+CI runner routing (2026-10-22): all jobs select self-hosted runners, including PR checks,
+docs/Pages and hosted-project installation. Linux uses the build fleet, iOS retains
+the Mac runner, and the website keeps its separate deployment runner. Backend CI
+serializes and cleans up its disposable Docker stack; publication gates are unchanged.

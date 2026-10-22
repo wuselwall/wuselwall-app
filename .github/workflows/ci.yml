@@ -6,10 +6,8 @@
 # its heavy jobs through its own change detector rather than a workflow-level path filter,
 # and always in full on a tag or "Run workflow" (specs/10).
 #
-# Every job here executes PR-supplied code (dependency installs included), so for a
-# pull_request event it runs on the GitHub-hosted, ephemeral ubuntu-latest runner rather
-# than the self-hosted fleet; only a push tag or a manual "Run workflow" (both
-# maintainer-triggered, not PR-controlled) uses [self-hosted, Linux, build].
+# All events use the self-hosted build fleet, including pull requests. Build runners
+# execute repository code and must stay separate from production/deployment credentials.
 name: ci
 on:
   workflow_dispatch:
@@ -24,7 +22,7 @@ permissions:
 
 jobs:
   app:
-    runs-on: ${{ github.event_name == 'pull_request' && 'ubuntu-latest' || fromJSON('["self-hosted","Linux","build"]') }}
+    runs-on: [self-hosted, Linux, build]
     defaults: { run: { working-directory: app } }
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -52,7 +50,7 @@ jobs:
 
   # Server-upgrade scripts and the code-based SMTP fallback on Compose and hosted servers.
   scripts:
-    runs-on: ${{ github.event_name == 'pull_request' && 'ubuntu-latest' || fromJSON('["self-hosted","Linux","build"]') }}
+    runs-on: [self-hosted, Linux, build]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -63,7 +61,7 @@ jobs:
   # Known vulnerabilities in every lockfile (specs/11, T5). Accepted ones, each with a
   # reason and an expiry, live in osv-scanner.toml next to the lockfile.
   audit:
-    runs-on: ${{ github.event_name == 'pull_request' && 'ubuntu-latest' || fromJSON('["self-hosted","Linux","build"]') }}
+    runs-on: [self-hosted, Linux, build]
     env:
       OSV_VERSION: v2.6.0
       OSV_SHA256: ca69b3d3cd08f889a49dc0a383122f71cc528b83803671df5fd874d97485b108

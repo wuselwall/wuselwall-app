@@ -183,17 +183,15 @@ build is promoted to the family, run [`specs/release-checklist.md`](release-chec
 
 | When | Where | What |
 |---|---|---|
-| Every PR | GitHub Actions, `ci.yml` `app`, `website` and `audit` jobs (GitHub-hosted for a pull request; self-hosted build fleet only for a tag or manual run, candidate) | Layers 3 and 4. Layer 5 is not built. |
+| Every PR | GitHub Actions, `ci.yml` `app`, `website` and `audit` jobs (self-hosted build fleet for every event) | Layers 3 and 4. Layer 5 is not built. |
 | Every PR | GitHub Actions, `backend-ci.yml` (candidate): `changes` always; `edge-functions` and `backend` only when a backend-sensitive path changed; `required` always, as the one required check | Layers 1, 2 and 6, when they run. A skipped run is not a pass for them. |
-| A tag `v*.*.*`, or "Run workflow" on a branch (always before a migration) | GitHub Actions: `backend-ci.yml` `edge-functions` (self-hosted for a manual or tag run, candidate) and `backend` (`ubuntu-latest`) | Layers 1, 2 and 6. Layer 8 is not built. Target: under 10 minutes, not measured. |
-| Nightly on `main` | GitHub Actions, `ubuntu-latest` with KVM, Android Emulator (`e2e.yml`) | Not built: no `e2e.yml`. Planned: Layer 7, hermetic and backed, on a phone AVD and a 10" tablet AVD |
+| A tag `v*.*.*`, or "Run workflow" on a branch (always before a migration) | GitHub Actions: `backend-ci.yml` `edge-functions` and `backend` (self-hosted Linux build fleet) | Layers 1, 2 and 6. Layer 8 is not built. Target: under 10 minutes, not measured. |
+| Nightly on `main` | GitHub Actions, self-hosted Linux with KVM, Android Emulator (`e2e.yml`) | Not built: no `e2e.yml`. Planned: Layer 7, hermetic and backed, on a phone AVD and a 10" tablet AVD |
 | Before a release | The MacBook: `scripts/e2e.sh ios` (not built; the script does not exist) | Planned: Layer 7 on iPhone and iPad simulators, then on the physical iPhone, iPad and Samsung over USB |
 | Before promoting a build | The three devices, by hand | Layer 9 |
 
-Why not iOS in CI: macOS runners bill at ten times the Linux rate, which would eat a
-private repository's free minutes within a few nightly runs. The MacBook does that job
-before each release, and a self-hosted runner on it can be added later if releases become
-frequent.
+The iOS release build uses the existing self-hosted Mac runner. Simulator end-to-end
+coverage remains a separate planned check; changing runner routing does not implement it.
 
 **Device farms** (Firebase Test Lab, BrowserStack, AWS Device Farm) are not needed: four
 users, four devices, and the family's own hardware already covers the real-device matrix.
