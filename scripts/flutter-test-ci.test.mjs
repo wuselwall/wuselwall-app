@@ -4,7 +4,7 @@ import { chmodSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'nod
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
-import { CRASH, retryableCrashes } from './flutter-test-ci.mjs';
+import { CRASH, assessCrash } from './flutter-test-ci.mjs';
 
 const script = new URL('./flutter-test-ci.mjs', import.meta.url).pathname;
 const A = '/work/app/test/a_test.dart';
@@ -48,35 +48,35 @@ const crashText = (path) => `unhandled error during finalization of test:\n${pat
 
 test('a crash after a file whose tests all passed is retried, for that file only', () => {
   const json = report({ [A]: ['success', 'success'], [B]: ['success'] });
-  assert.deepEqual(retryableCrashes(`00:10 +3: All tests passed!\n${crashText(A)}`, json), [A]);
+  assert.deepEqual(assessCrash(`00:10 +3: All tests passed!\n${crashText(A)}`, json).files, [A]);
 });
 
 test('the crash may also reach the JSON report, on the crashed file loading step', () => {
   const json = report({ [A]: ['success'], [B]: ['success'] }, { crashed: [A] });
-  assert.deepEqual(retryableCrashes(crashText(A), json), [A]);
+  assert.deepEqual(assessCrash(crashText(A), json).files, [A]);
 });
 
 test('a failing test anywhere keeps the run failed', () => {
-  assert.equal(retryableCrashes(crashText(A), report({ [A]: ['success'], [B]: ['failure'] })), null);
-  assert.equal(retryableCrashes(crashText(A), report({ [A]: ['success'], [B]: ['error'] })), null);
+  assert.equal(assessCrash(crashText(A), report({ [A]: ['success'], [B]: ['failure'] })).files, undefined);
+  assert.equal(assessCrash(crashText(A), report({ [A]: ['success'], [B]: ['error'] })).files, undefined);
 });
 
 test('a crash before the file finished keeps the run failed', () => {
-  assert.equal(retryableCrashes(crashText(A), report({ [A]: ['success', 'unfinished'] })), null);
+  assert.equal(assessCrash(crashText(A), report({ [A]: ['success', 'unfinished'] })).files, undefined);
   // A file that reported fewer tests than it has: the crash cut it short.
   const json = report({ [A]: ['success'] }).map((line) => line.replace('"testCount":1', '"testCount":2'));
-  assert.equal(retryableCrashes(crashText(A), json), null);
+  assert.equal(assessCrash(crashText(A), json).files, undefined);
 });
 
 test('any other error or an unseen file keeps the run failed', () => {
   const other = report({ [A]: ['success'] }, { errors: ['Failed to load "a_test.dart": compile error'] });
-  assert.equal(retryableCrashes(crashText(A), other), null);
+  assert.equal(assessCrash(crashText(A), other).files, undefined);
   const otherUnhandled = `unhandled error during test:\n${A}\nSocketException: boom\n`;
-  assert.equal(retryableCrashes(crashText(A) + otherUnhandled, report({ [A]: ['success'] })), null);
-  assert.equal(retryableCrashes(crashText(B), report({ [A]: ['success'] })), null);
-  assert.equal(retryableCrashes(crashText(A), report({ [A]: ['success'] }).slice(0, -3)), null);
-  assert.equal(retryableCrashes('Some tests failed.', report({ [A]: ['failure'] })), null);
-  assert.equal(retryableCrashes(crashText(A), ['not json']), null);
+  assert.equal(assessCrash(crashText(A) + otherUnhandled, report({ [A]: ['success'] })).files, undefined);
+  assert.equal(assessCrash(crashText(B), report({ [A]: ['success'] })).files, undefined);
+  assert.equal(assessCrash(crashText(A), report({ [A]: ['success'] }).slice(0, -3)).files, undefined);
+  assert.equal(assessCrash('Some tests failed.', report({ [A]: ['failure'] })).files, undefined);
+  assert.equal(assessCrash(crashText(A), ['not json']).files, undefined);
 });
 
 // End to end with a stand-in `flutter` that plays one scripted run per call.
@@ -133,4 +133,12 @@ test('a real failure fails the job with its own status and no rerun', () => {
   assert.equal(result.status, 1);
   assert.equal(result.calls.length, 1);
   assert.doesNotMatch(result.stdout, /::warning/);
+});
+
+test('a crash it will not rerun says why', () => {
+  const result = run([{ status: 1, out: crashText(A), json: report({ [A]: ['success', 'unfinished'] }) }]);
+  assert.equal(result.status, 1);
+  assert.equal(result.calls.length, 1);
+  assert.match(result.stdout, /the run stands \(a test started and never finished\)/);
+  assert.match(result.stdout, /unfinished: \/work\/app\/test\/a_test\.dart: test \d+/);
 });
