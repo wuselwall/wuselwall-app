@@ -8,7 +8,8 @@
 // The caller is a signed-in member: the JWT is verified with Auth. Reading a sheet changes
 // nothing, so no guardian check here; applying it needs a guardian, in the app's own writes.
 //
-// Body: {image: <base64>, mime: "image/jpeg" | "image/png" | "image/webp"}. At most 6 MB.
+// Body: {image: <base64>, mime: "image/jpeg" | "image/png" | "image/webp" | "image/heic" | "application/pdf"}.
+// At most 6 MB.
 // Answer: {payload, placed, unplaced, columns, rows, lines}.
 // Errors (code, HTTP): ocr_not_configured 503, image_invalid 400, image_too_large 413,
 // ocr_failed 502, scan_nothing_found 422.
@@ -21,12 +22,25 @@ import {
   RequestError,
   requirePost,
 } from "../_shared/client.ts";
-import { type OcrLine, parseTimetableScan } from "../_shared/timetable_ocr.ts";
+import {
+  type OcrLine,
+  parseTimetableScan,
+  type ScanHints,
+} from "../_shared/timetable_ocr.ts";
 
 const MAX_IMAGE_BYTES = 6 * 1024 * 1024;
 const OCR_TIMEOUT_MS = 60_000;
 const MAX_LINES = 2000;
-const MIMES = new Set(["image/jpeg", "image/png", "image/webp"]);
+// A photo, a shared original from an iPhone, or the PDF a school hands out: the OCR service
+// reads a PDF's text layer directly and renders a scanned one.
+const MIMES = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/heic",
+  "image/heif",
+  "application/pdf",
+]);
 
 /** The OCR service's answer: `{lines: [{text, box, score}]}` (infra/ocr/server.py). */
 function linesOf(data: unknown): OcrLine[] {
@@ -104,6 +118,35 @@ export async function recognise(
   return linesOf(data);
 }
 
+/** The family's language(s) and subjects, so the parser reads the sheet with the right words
+ *  (specs/24): bounded, text only, anything else ignored. */
+function hintsOf(body: Record<string, unknown>): ScanHints {
+  const texts = (value: unknown, max: number, length: number): string[] =>
+    Array.isArray(value)
+      ? value.filter((v): v is string =>
+        typeof v === "string" && v.length <= length
+      ).slice(0, max)
+      : [];
+  const subjectList = Array.isArray(body.subjectList)
+    ? body.subjectList.slice(0, 150).flatMap((item: unknown) => {
+      if (typeof item !== "object" || item === null) return [];
+      const o = item as Record<string, unknown>;
+      if (typeof o.short !== "string" || typeof o.name !== "string") return [];
+      if (o.short.length > 12 || o.name.length > 60) return [];
+      return [{
+        short: o.short,
+        name: o.name,
+        aliases: texts(o.aliases, 20, 40),
+      }];
+    })
+    : undefined;
+  return {
+    languages: texts(body.languages, 8, 10),
+    subjects: texts(body.subjects, 150, 60),
+    subjectList,
+  };
+}
+
 function decodeImage(
   body: Record<string, unknown>,
 ): { image: Uint8Array; mime: string } {
@@ -112,7 +155,7 @@ function decodeImage(
     throw new RequestError(
       400,
       "image_invalid",
-      "mime must be jpeg, png or webp",
+      "mime must be jpeg, png, webp, heic or pdf",
     );
   }
   const encoded = body.image;
@@ -157,9 +200,10 @@ Deno.serve(async (req: Request): Promise<Response> => {
         "ocr_not_configured",
       );
     }
-    const { image, mime } = decodeImage(await readBody(req));
+    const body = await readBody(req);
+    const { image, mime } = decodeImage(body);
     const lines = await recognise(url, image, mime);
-    const result = parseTimetableScan(lines);
+    const result = parseTimetableScan(lines, hintsOf(body));
     if (!result) {
       throw new RequestError(
         422,

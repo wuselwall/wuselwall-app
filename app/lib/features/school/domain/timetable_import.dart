@@ -31,6 +31,7 @@ class ImportLesson {
     this.teacher,
     this.room,
     this.parity = 'all',
+    this.like,
   });
 
   /// ISO weekday, 1 = Monday.
@@ -49,6 +50,10 @@ class ImportLesson {
 
   /// 'all', 'a' or 'b'.
   final String parity;
+
+  /// The household's subject this word may be, by the scan's reading ("HSU" is
+  /// Sachunterricht): the preview offers it instead of a new subject.
+  final String? like;
 }
 
 /// A care row (Hort, an AG): a name, times and weekdays.
@@ -127,6 +132,7 @@ class TimetableImport {
           'ends': ?_hmOrNull(l.ends),
           'subject': l.subject,
           'name': ?l.subjectName,
+          'like': ?l.like,
           'teacher': ?l.teacher,
           'room': ?l.room,
           if (l.parity != 'all') 'week': l.parity,
@@ -387,6 +393,7 @@ ImportLesson? _lesson(Map<String, dynamic> item) {
     teacher: _str(item['teacher'], 60),
     room: _str(item['room'], 40),
     parity: week == 'a' || week == 'b' ? week! : 'all',
+    like: _str(item['like'], 60),
   );
 }
 
@@ -508,12 +515,22 @@ class NewSubject {
     required this.key,
     required this.name,
     required this.shortName,
+    required this.word,
+    this.suggestedId,
   });
 
   /// The folded short name, what the lessons refer to.
   final String key;
   final String name;
   final String shortName;
+
+  /// The word as the sheet had it, remembered as an alias when the parent takes an existing
+  /// subject instead.
+  final String word;
+
+  /// An existing subject the scan took this for ("HSU" for Sachunterricht), preselected in
+  /// the preview.
+  final String? suggestedId;
 }
 
 /// One lesson ready for the grid: a period, and a subject that exists ([subjectId]) or
@@ -584,8 +601,9 @@ class ResolvedImport {
   int get lessonCount => lessons.length;
 }
 
-/// Matches [import]'s subjects to [subjects] (short name first, then name, folded) and
-/// its lessons to [periods] (by index, or by start time within five minutes).
+/// Matches [import]'s subjects to [subjects] (short name first, then name, then the
+/// remembered aliases, folded) and its lessons to [periods] (by index, or by start time
+/// within five minutes).
 ResolvedImport resolveImport(
   TimetableImport import, {
   required List<SubjectRecord> subjects,
@@ -595,6 +613,16 @@ ResolvedImport resolveImport(
 }) {
   final byShort = {for (final s in subjects) foldText(s.shortName): s};
   final byName = {for (final s in subjects) foldText(s.name): s};
+  final byAlias = {
+    for (final s in subjects)
+      for (final a in s.aliases) foldText(a): s,
+  };
+  SubjectRecord? find(String? word) {
+    if (word == null) return null;
+    final key = foldText(word);
+    return byShort[key] ?? byName[key] ?? byAlias[key];
+  }
+
   final lessonPeriods = periods.where((p) => !p.isBreak).toList()
     ..sort((a, b) => a.index.compareTo(b.index));
   final newSubjects = <String, NewSubject>{};
@@ -617,10 +645,7 @@ ResolvedImport resolveImport(
     }
     if (period > maxPeriod) maxPeriod = period;
     final key = foldText(l.subject);
-    final existing =
-        byShort[key] ??
-        byName[key] ??
-        (l.subjectName == null ? null : byName[foldText(l.subjectName!)]);
+    final existing = find(l.subject) ?? find(l.subjectName);
     String? newKey;
     if (existing == null) {
       newKey = key;
@@ -630,6 +655,8 @@ ResolvedImport resolveImport(
           key: key,
           name: l.subjectName ?? l.subject,
           shortName: _clip(l.subject, 12),
+          word: l.subject,
+          suggestedId: find(l.like)?.id,
         ),
       );
     }

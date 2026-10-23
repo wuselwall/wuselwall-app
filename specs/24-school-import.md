@@ -242,10 +242,73 @@ their own, `import:propose`, granted separately from `shopping:write`.
   six tenths of a column or row spacing, or counts as unplaced. In a cell, the first token is
   the subject, tokens with digits the room, the rest the teacher. Tested on synthetic sheets
   (`timetable_ocr_test.ts`); the unplaced count reaches the preview as a warning.
-- The app: *Einlesen… → Foto scannen*, a sheet saying the photo stays at home, camera or
+- The app: *Einlesen… → Foto scannen*, a sheet saying the file stays at home, camera or
   gallery through `image_picker` (Flutter's own plugin, no telemetry, pictures resized to
-  2400 px), a busy dialog, then the preview. A server without OCR gets the message pointing
-  at the guide.
+  2400 px and re-encoded, so an iPhone's HEIC arrives as a JPEG), or *Datei wählen* through
+  `file_picker` for the school's PDF or a picture kept elsewhere, a busy dialog, then the
+  preview. A server without OCR gets the message pointing at the guide.
+- **PDF** (*added 2026-10-23*): the function accepts `application/pdf` and `image/heic`; the
+  service reads a PDF's **text layer** with positions through `pypdfium2` (no OCR at all,
+  exact), joining the per-character rectangles into words along their baselines, and renders
+  the first page for OCR only when the layer holds fewer than eight pieces (a scan). The pilot's
+  own school PDF came through the text layer as five days, eight rows with both breaks and all
+  eight bell times, better than the OCR of its rendering. HEIC originals decode through
+  `pillow-heif`.
+- **The family's words** (*added 2026-10-23*): the app sends its language and the household's
+  subject names (short and long) with the scan. The parser then uses only that language's
+  short weekday forms, since short codes collide across languages ("Ma" is Mathe in German and
+  mardi in French; "SU" is Sachunterricht and the English Sunday), while the full names of
+  every language stay matchable by prefix, so a French sheet in a German family still reads.
+  A token that is one of the family's subjects is never a weekday by guess. Without hints, every
+  short form counts, as before. Which subject names and codes exist per region, how they
+  group, and which codes collide (with weekdays and with each other) is researched in
+  `specs/research/school-subjects/`; its section 6 says how the matcher and the starter
+  subject lists should use it.
+- **The language's words** (*added 2026-10-23*): `_shared/school_subjects.ts` carries the
+  subject names and codes of German (DE, AT, CH), French (FR, Romandie), Spanish (with the
+  co-official languages' words), Italian (Ticino) and English, from the research. With the
+  family's language known, a cell's code gets its full name in the payload (`name`:
+  "SU · Sachunterricht", "EPS · Éducation physique et sportive"), so the preview and a
+  created subject carry both; a long name is one subject even across words ("Natur, Mensch,
+  Gesellschaft", "Calcul mental", "ARTS PLASTIQUES"), the words after it the teacher; a word
+  the OCR almost read snaps to the family's own word or the language's name (one edit for
+  five letters, two for nine: "Sachuntericht", "MATHEMATIQUE", "ARBEITSGEMEINSCHAFTEN"),
+  short codes never snap; a cell that is a break ("Pause", "Récré", "Esplai", "Mittag") is
+  no lesson; a code with several meanings in the language ("TG", "AP", "CS") stays bare for
+  the parent to name; without a language no code is named, since "Ma" is Mathematik in
+  German and Mathématiques in French. The Spanish two-letter weekdays "Lu Ma Mi" count only
+  for a Spanish family, as "Ma" is Mathe on every German sheet. Over the corpus the grids
+  and lesson counts stay the same; the named cells go from none to most (Alpuente 53 of 61,
+  Wangen 33 of 38, Leonhard 23 of 24, the own PDF snaps its one misread "Sachuntericht").
+  Where the family's language and the sheet's differ, a near name of the family's language
+  can win ("English" → "Englisch"); acceptable for the family that would name it so.
+- **The sheet's own words, and the family's** (*added 2026-10-23, roadmap steps 1 to 7*):
+  the parser reads the **legend** many sheets print under the grid (a code and its name in
+  one box, or in two boxes on one line, in a one- or two-column legend); only codes that
+  stand in a cell count, the lines read no longer count as unplaced, and a legend name the
+  language almost knows snaps to it ("BMewegung und Sport"). The legend beats the language's
+  word, so Wangen's "GES tc" reads Technisches Gestalten and Augustinum's "E4" Englisch für
+  die 4. Schulstufe. A subject **remembers the words** sheets used for it (`subject.aliases`,
+  migration `20261023110000`): the scan sends them (`subjectList` with short name, name and
+  aliases), a cell with any of a subject's words gets the subject's short name, and the
+  app's resolver matches aliases too. In the preview every new subject has a list: **create
+  it**, or **take it as** an existing subject, which then remembers the sheet's word; the
+  scan **preselects** the family's subject of the same group when exactly one exists
+  (`like`: "HSU" at the family's Sachunterricht, never "F" at Englisch, since every language
+  is its own group). A **week marker** on the cell ("A", "B", "Q2", "A-Woche") becomes the
+  lesson's parity; a word in capitals in parentheses is a **room**; a word the OCR split at
+  a line break is **joined** when the join is a word of the family's or of the language
+  ("Sachunter richt", "Mathe matik"); a level behind a code keeps the name ("E1"); a **care
+  word** on a row with clock times (Hort, Mittagstisch, Cantine, Comedor) becomes a care row
+  of the payload. Ten public sheets of the corpus live as **fixtures** with their expected
+  grid sizes (`_shared/fixtures/timetables/`, `timetable_ocr_corpus_test.ts`), so a tuning
+  that loses a sheet fails in CI; the own sheets never. Over the whole corpus no grid or
+  lesson count changes.
+- **Starter subjects per region** (*added 2026-10-23*, specs/21): the first school brings
+  the subject list of its region in the words its sheets print, so the scan matches them:
+  Germany, Austria (2023/24 names), German-, French- and Italian-speaking Switzerland,
+  France, Spain with the co-official language of the region. The app sends its language
+  with the school for the bilingual cantons and for countries without a list.
 
 ### What was not verified
 
@@ -296,11 +359,71 @@ is the one look-alike that parses, and every other look-alike, poor photograph, 
 and sheet in an unsupported language gives "no grid". Handwriting itself stays beyond the
 OCR: the diary page yields its six days and nine periods but a third of its cells.
 
-What remains open is the real photograph from a phone: paper, shadows, a slant. The
-preview's warnings exist so that a parent sees what the parser missed. The
+*Fourth round, the pilot household's own sheets:* seven iPhone photographs (HEIC, as the
+picker converts them to JPEG for the app), a software-made PNG and the school's PDF. They
+taught what no public file had: a phone photo tilts, by a few degrees or by ninety when the
+sheet was held sideways, and a child's hand writes "Pierstag" and "Pornerstag". Built since:
+the sheet is **levelled** first, by the median direction of its words taken from the OCR's
+quads, and read in all four orientations after that; weekday names may be two edits off when
+they are long; "Ma" is Mathe, never mardi, so the two-letter French abbreviations went; the
+header band is one text line, with a looser second try; a period label is the whole text, so
+"1. Semester" in a remark is none; whichever kind of label, number or clock, marks more rows
+defines them; a bare "800" on a label is 08:00. Result: eight of the nine own sheets yield
+a grid, with the cells readable and the bell times taken from the labels; the ninth is a
+Kindergarten plan whose handwritten header defeats the OCR itself. The corpus stands at 89
+files: 59 grids, 30 "no grid", and every look-alike and poor photograph on the right side.
+
+What remains is handwriting the OCR cannot read, and the Swiss sheets' "×" marks, which the
+preview shows as subjects named "×" until the parent clears them. The preview's warnings exist
+so that a parent sees what the parser missed. The
 RapidOCR language switch is used when the installed version has it, with the default models
 as fallback, so an API change in `rapidocr` degrades to "reads Latin letters without
 accents" rather than to a failed build.
+
+## Recognition roadmap
+
+What the research and the corpus say the next steps are, in the order they pay off. None
+needs a model; all stay on the family's server. *Status 2026-10-23: steps 1 to 7 are built
+(see "The sheet's own words, and the family's" above); 8 to 10 stay open, 10 in part: the
+preview lists each new subject with its name and the list to take it as an existing one, the
+grid still shows short names only.*
+
+1. **Read the legend.** Swiss, Spanish and most Untis sheets print `CODE Name` pairs under
+   or beside the grid. A block of short-code-plus-name lines outside the grid resolves every
+   code on that sheet with certainty and beats every list above. Parser only, tested on the
+   corpus sheets that have one (Wangen, Sumiswald, Alpuente, the Berlin legend).
+2. **Remember the family's corrections.** When the parent renames a scanned subject in the
+   preview or merges it into an existing one, keep the sheet's word as an alias of that
+   subject (`subject.aliases`, sent with the hints). The next scan, twice a year, then needs
+   no correction. Table column, one function change, the preview's merge action.
+3. **Match by group in the app.** The resolver matches by short name and name only. Give
+   each vocabulary entry its research group (17 groups) and let the preview offer "same as
+   Sachunterricht?" when a scanned "Sachkunde" or "HSU" has no match but an existing subject
+   of the same group exists, instead of creating a second one.
+4. **Strip what is not the subject.** Week markers (`A`/`B`, `Q1`/`Q2`, `S1`/`S2`) become the
+   lesson's parity (the payload has it); level and group suffixes (`E1`, `F3`, `Math Sek`,
+   `Knaben D`) come off the code; Valencian rooms in parentheses (`(MAT1)`, `(PATI1)`) are
+   rooms, never subjects.
+5. **Join wrapped cells.** Spanish and French sheets wrap a name over two lines ("Diseño Web /
+   y redes", "Cumunic / aciones") and put the teacher on the next. Joining vertically adjacent
+   lines inside one cell when the join is a known word, before `lessonOf`, reads these; the
+   vocabulary says when a join is a word.
+6. **Care rows from care words.** Hort, Mittagstisch, périscolaire, comedor, Betreuung cells
+   become `care` entries of the payload (it has them) rather than lessons, so the timetable
+   shows them as the module intends (specs/15).
+7. **A regression corpus in CI.** The OCR line files of the public sheets (Wikimedia Commons,
+   school websites) can live in the repository with the expected grid sizes; a test runs the
+   parser over them so a tuning never silently loses a sheet. The own sheets never.
+8. **Starter lists checked against sheets.** No real sheet was found for Rheinland-Pfalz,
+   Sachsen-Anhalt, Thüringen, NRW primary, the Romandie, Ticino, the Basque Country, Navarra
+   and the Balearics; their lists and codes are official names and conventions. One sheet per
+   region, read through the scan, settles the short names. Belgium, Luxembourg and the
+   Netherlands have no list yet.
+9. **OCR accents.** RapidOCR's latin model reads é, ñ, ç and ß on the corpus; a French or
+   Spanish sheet with many accents deserves a check of the recognition model's language
+   dictionary before the pilot families there.
+10. **The preview shows the name.** The code with its name underneath, and the merge action
+    of step 3, are the app's side of this; the payload carries the name already.
 
 ## What is not built
 
@@ -337,4 +460,6 @@ thresholds and the warnings, not into new screens.
 | 2 | The payload, the preview, the paste import | Built |
 | 3 | Proposals: table, functions, tests; the MCP tool; the cards | Built |
 | 4 | Scanning: the container, the function, the parser, the app's way in | Built, unverified on real sheets |
-| 5 | The pilot's measurements, threshold tuning, iOS Vision if the server path is not enough | Open |
+| 5 | The language's words and the starter lists per region, from the research | Built |
+| 6 | The recognition roadmap, steps 1 to 7: legend, aliases, suggestions, markers, wrapped words, care rows, the corpus in CI | Built |
+| 7 | The pilot's measurements, roadmap steps 8 to 10, iOS Vision if the server path is not enough | Open |

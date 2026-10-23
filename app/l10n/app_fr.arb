@@ -2497,6 +2497,8 @@
   "schoolImportNewSubjects": "Nouvelles matières",
   "schoolImportCreateSubjects": "Créer les nouvelles matières",
   "schoolImportSkipNewSubjects": "Les cours avec de nouvelles matières sont omis.",
+  "schoolImportCreateNew": "Créer",
+  "schoolImportMergeHint": "La matière existe déjà ? Choisis-la, et WuselWall retient le mot de la feuille.",
   "schoolImportWarnUnmatchedTimes": "{count, plural, one{1 cours ne correspond à aucun horaire de cours et est omis.} other{{count} cours ne correspondent à aucun horaire de cours et sont omis.}}",
   "schoolImportWarnPeriodsExtended": "{count, plural, one{Les horaires de cours reçoivent 1 cours de plus.} other{Les horaires de cours reçoivent {count} cours de plus.}}",
   "schoolImportWarnPeriodsDiffer": "Les horaires de la feuille diffèrent de ceux de l’école ; ceux de l’école sont conservés.",
@@ -2526,7 +2528,7 @@
   "schoolProposalErrInvalid": "La proposition a un format non valide.",
   "schoolProposalErrLimit": "Cinq propositions sont déjà en attente. Vérifie-les ou rejette-les d’abord.",
   "schoolProposalErrGone": "Cette proposition est déjà traitée ou a expiré.",
-  "schoolScanIntro": "Ton serveur lit la photo ; elle ne quitte pas la maison. Une photo droite et lumineuse de toute la feuille donne le meilleur résultat.",
+  "schoolScanIntro": "Ton serveur lit la photo ou le PDF ; rien ne quitte la maison. Une photo droite et lumineuse de toute la feuille donne le meilleur résultat ; le PDF de l’école est le plus précis.",
   "schoolScanCamera": "Prendre une photo",
   "schoolScanPick": "Choisir une photo",
   "schoolScanBusy": "Lecture de la feuille…",
@@ -2587,5 +2589,6 @@
   "shoppingTileRename": "Renommer la tuile",
   "shoppingTileForget": "Ne plus proposer",
   "shoppingTileForgetHelp": "La tuile disparaît ; l’historique la garde.",
-  "shoppingTileForgetConfirm": "Retirer la tuile « {name} » ? Le prochain achat la fera revenir."
+  "shoppingTileForgetConfirm": "Retirer la tuile « {name} » ? Le prochain achat la fera revenir.",
+  "schoolScanFile": "Choisir un fichier (PDF ou image)"
 }

@@ -1,10 +1,13 @@
 import { assert, assertEquals } from "jsr:@std/assert@1.0.13";
 import {
   clocksOf,
+  labelClocks,
   lessonOf,
   type OcrLine,
   parseTimetableScan,
   periodOf,
+  subjectKey,
+  vocabOf,
   weekdayOf,
   weekdaysIn,
 } from "./timetable_ocr.ts";
@@ -48,7 +51,6 @@ Deno.test("words: weekdays, periods and clocks", () => {
   assertEquals(weekdayOf("Mittwoch"), 3);
   assertEquals(weekdayOf("Do. 15.10."), 4);
   assertEquals(weekdayOf("mié"), 3);
-  assertEquals(weekdayOf("Ma"), 2); // French "mardi" in a header; in a cell it is a subject
   assertEquals(weekdayOf("Mathe"), null);
   // What real sheets yield: letter-spaced print, a typo, a truncated column, Dutch.
   assertEquals(weekdayOf("M ittw och"), 3);
@@ -60,6 +62,18 @@ Deno.test("words: weekdays, periods and clocks", () => {
   assertEquals(weekdayOf("Montag (Langtag)"), 1);
   assertEquals(weekdayOf("Musik"), null);
   assertEquals(weekdayOf("Sport"), null);
+  // Subject codes that look like a French two-letter weekday are subjects.
+  assertEquals(weekdayOf("Ma"), null);
+  assertEquals(weekdayOf("Me"), null);
+  assertEquals(weekdayOf("mar."), 2);
+  // A child's hand, read by the OCR with two letters wrong.
+  assertEquals(weekdayOf("Pornerstag"), 4);
+  assertEquals(weekdayOf("Pierstag"), 2);
+  assertEquals(weekdayOf("Freizeit"), null);
+  // Sachunterricht and Werken are subjects, not Sunday and Wednesday.
+  assertEquals(weekdayOf("SU"), null);
+  assertEquals(weekdayOf("We"), null);
+  assertEquals(weekdayOf("Wed"), 3);
   assertEquals(
     weekdaysIn("Maandag Dinsdag Woensdag Donderdag Vrijdag").map((w) => w.day),
     [1, 2, 3, 4, 5],
@@ -72,8 +86,13 @@ Deno.test("words: weekdays, periods and clocks", () => {
   assertEquals(periodOf("3. Stunde"), 3);
   assertEquals(periodOf("12"), 12);
   assertEquals(periodOf("R12"), null);
+  assertEquals(periodOf("1. Semester GES tc"), null);
+  assertEquals(periodOf("1. Klasse"), null);
+  assertEquals(periodOf("Lektion 2"), 2);
   assertEquals(clocksOf("08:00 - 08:45"), ["08:00", "08:45"]);
   assertEquals(clocksOf("8.50–9.35 Uhr"), ["08:50", "09:35"]);
+  assertEquals(clocksOf("8 00 - 8 45"), ["08:00", "08:45"]);
+  assertEquals(clocksOf("Raum 124"), []);
 });
 
 Deno.test("a cell's text becomes subject, room and teacher", () => {
@@ -358,4 +377,346 @@ Deno.test("a weekday list with one row of text is a rota or a menu, not a timeta
     lines.push(at(`Apotheke ${i + 1}`, 0.6, 0.2 + i * 0.1, 0.2));
   });
   assertEquals(parseTimetableScan(lines), null);
+});
+
+Deno.test("rows a hair below the header stay rows, and Ma is Mathe", () => {
+  // Large print: the row pitch is barely above the text height, and every cell says Ma.
+  const lines: OcrLine[] = [];
+  DAYS.forEach((d, i) => lines.push(at(d, COLS[i], 0.15, 0.08, 0.05)));
+  const rows = [0.21, 0.27, 0.33];
+  rows.forEach((y, i) => {
+    lines.push(at(`${i + 1}.`, 0.1, y, 0.04, 0.05));
+    COLS.forEach((cx) => lines.push(at("Ma", cx, y, 0.06, 0.05)));
+  });
+  const result = parseTimetableScan(lines);
+  assert(result);
+  assertEquals(result.transposed, false);
+  assertEquals(result.columns, 5);
+  assertEquals(result.rows, 3);
+  assertEquals(result.unplaced, 0);
+  assertEquals(result.payload.lessons.length, 15);
+});
+
+Deno.test("a photo taken sideways the other way round: days run upwards", () => {
+  // Freitag at the top, Montag at the bottom, each day's lessons to its right.
+  const lines: OcrLine[] = [];
+  const ys = [0.2, 0.35, 0.5, 0.65, 0.8];
+  ["Freitag", "Donnerstag", "Mittwoch", "Dienstag", "Montag"].forEach((d, i) =>
+    lines.push(at(d, 0.15, ys[i], 0.1))
+  );
+  const periods = [0.35, 0.5, 0.65, 0.8];
+  periods.forEach((x, i) => lines.push(at(String(i + 1), x, 0.1, 0.03)));
+  ys.forEach((y, r) =>
+    periods.forEach((x, c) =>
+      lines.push(at(["D", "Ma", "E", "Sp"][(r + c) % 4], x, y))
+    )
+  );
+  const result = parseTimetableScan(lines);
+  assert(result);
+  assert(result.transposed);
+  assertEquals(result.columns, 5);
+  assertEquals(result.rows, 4);
+  assertEquals(result.unplaced, 0);
+  // Montag is the bottom row; its first lesson is D at the first period.
+  assertEquals(
+    result.payload.lessons.find((l) => l.day === 1 && l.period === 1)?.subject,
+    "D",
+  );
+  assertEquals(
+    result.payload.lessons.find((l) => l.day === 5 && l.period === 1)?.subject,
+    "D",
+  );
+  assertEquals(
+    result.payload.lessons.find((l) => l.day === 5 && l.period === 2)?.subject,
+    "Ma",
+  );
+});
+
+/** [lines] rotated by [degrees] about the picture's centre, quads and all, as a tilted
+ *  photo would present them. */
+function rotated(lines: OcrLine[], degrees: number): OcrLine[] {
+  const a = (degrees * Math.PI) / 180;
+  const c = Math.cos(a), s = Math.sin(a);
+  return lines.map((l) => {
+    const box: number[] = [];
+    for (let i = 0; i < 8; i += 2) {
+      const x = l.box[i] - 0.5, y = l.box[i + 1] - 0.5;
+      box.push(x * c - y * s + 0.5, x * s + y * c + 0.5);
+    }
+    return { ...l, box };
+  });
+}
+
+Deno.test("a tilted photo is read level: the reference sheet at 12 degrees, and at 90", () => {
+  const level = parseTimetableScan(sheet())!;
+  for (const degrees of [12, -8, 90]) {
+    const result = parseTimetableScan(rotated(sheet(), degrees));
+    assert(result, `${degrees} degrees`);
+    assertEquals(result.columns, 5, `${degrees} degrees`);
+    assertEquals(result.rows, 4, `${degrees} degrees`);
+    assertEquals(
+      result.payload.lessons,
+      level.payload.lessons,
+      `${degrees} degrees`,
+    );
+  }
+});
+
+Deno.test("row numbers and bare clock labels in two columns give one row per period", () => {
+  const lines: OcrLine[] = [];
+  DAYS.forEach((d, i) => lines.push(at(d, COLS[i], 0.15)));
+  const rows = [0.3, 0.42, 0.54];
+  const clocks = [["800", "845"], ["850", "935"], ["955", "1040"]];
+  rows.forEach((y, i) => {
+    lines.push(at(`${i + 1}.`, 0.06, y, 0.03));
+    lines.push(at(clocks[i][0], 0.13, y - 0.02, 0.04));
+    lines.push(at(clocks[i][1], 0.13, y + 0.02, 0.04));
+    lines.push(at("Ma", COLS[0], y));
+  });
+  const result = parseTimetableScan(lines);
+  assert(result);
+  assertEquals(result.rows, 3);
+  assertEquals(result.unplaced, 0);
+  assertEquals(result.payload.periods, [
+    { index: 1, starts: "08:00", ends: "08:45" },
+    { index: 2, starts: "08:50", ends: "09:35" },
+    { index: 3, starts: "09:55", ends: "10:40" },
+  ]);
+  assertEquals(labelClocks("1040"), ["10:40"]);
+  assertEquals(labelClocks("2500"), []);
+  assertEquals(labelClocks("08:00 - 08:45"), ["08:00", "08:45"]);
+});
+
+Deno.test("the family's language and subjects steer the words", () => {
+  const de = vocabOf({
+    languages: ["de-CH"],
+    subjects: ["Mar", "Ven", "SU", "Fr"],
+  });
+  // German short forms only: the French "mar." is no Tuesday here, "Fr" stays Freitag.
+  assertEquals(weekdayOf("mar.", de), null);
+  assertEquals(weekdayOf("Fr", de), 5);
+  assertEquals(weekdayOf("Mo", de), 1);
+  // Full names of every language still match by prefix: a French sheet in a German family.
+  assertEquals(weekdayOf("lun.", de), 1);
+  assertEquals(weekdayOf("mercredi", de), 3);
+  // A subject of the family is never a weekday by guess ("Ven" is close to vendredi).
+  assertEquals(weekdayOf("Ven", de), null);
+  assertEquals(weekdayOf("Ven", vocabOf({ languages: ["fr"] })), 5);
+  // Unknown languages fall back to every short form.
+  assertEquals(weekdayOf("mar", vocabOf({ languages: ["xx"] })), 2);
+  // A Spanish sheet's "Lu Ma Mi" count only for a Spanish family.
+  assertEquals(weekdayOf("Ma", vocabOf({ languages: ["es"] })), 2);
+  assertEquals(weekdayOf("Mi", vocabOf({ languages: ["es"] })), 3);
+  assertEquals(weekdayOf("Ma", vocabOf({ languages: ["xx"] })), null);
+  // The reference sheet reads the same with hints.
+  const plain = parseTimetableScan(sheet())!;
+  const hinted = parseTimetableScan(sheet(), {
+    languages: ["de"],
+    subjects: ["Ma", "D", "Sp", "SU", "E"],
+  })!;
+  assertEquals(
+    hinted.payload.lessons.map((l) => l.subject),
+    plain.payload.lessons.map((l) => l.subject),
+  );
+  // The language's words name the codes; without a language nothing is named.
+  assertEquals(
+    hinted.payload.lessons.find((l) => l.subject === "SU")?.name,
+    "Sachunterricht",
+  );
+  assertEquals(
+    plain.payload.lessons.find((l) => l.subject === "SU")?.name,
+    undefined,
+  );
+});
+
+Deno.test("the language's subject words name, join, snap and drop", () => {
+  const de = vocabOf({
+    languages: ["de"],
+    subjects: ["Sachunterricht", "SU", "Mathe", "Ma"],
+  });
+  // A code gets the language's name; the room stays a room.
+  assertEquals(lessonOf(1, 1, "SU R12", de), {
+    day: 1,
+    period: 1,
+    subject: "SU",
+    name: "Sachunterricht",
+    room: "R12",
+  });
+  // The family's spelling is the subject, the language's the name.
+  assertEquals(lessonOf(1, 1, "Mathe", de), {
+    day: 1,
+    period: 1,
+    subject: "Mathe",
+    name: "Mathematik",
+  });
+  // A long name is one subject, the words after it the teacher.
+  assertEquals(lessonOf(1, 1, "Natur, Mensch, Gesellschaft Frau Keller", de), {
+    day: 1,
+    period: 1,
+    subject: "Natur, Mensch, Gesellschaft",
+    teacher: "Frau Keller",
+  });
+  // An OCR slip snaps to the family's word; a short code never snaps.
+  assertEquals(lessonOf(1, 1, "Sachunterrlcht", de)?.subject, "Sachunterricht");
+  assertEquals(lessonOf(1, 1, "Mathematlk 2", de), {
+    day: 1,
+    period: 1,
+    subject: "Mathematik",
+    room: "2",
+  });
+  assertEquals(lessonOf(1, 1, "Mo", de)?.subject, "Mo");
+  // A code with several meanings in the language stays bare.
+  assertEquals(lessonOf(1, 1, "TG", de), { day: 1, period: 1, subject: "TG" });
+  // Without a language no code is named.
+  assertEquals(lessonOf(1, 1, "SU"), { day: 1, period: 1, subject: "SU" });
+  // A break is no lesson.
+  assertEquals(lessonOf(1, 1, "Pause", de), null);
+  assertEquals(lessonOf(1, 1, "Grosse Pause", de), null);
+  assertEquals(lessonOf(1, 1, "Mittag", de), null);
+  // French and Spanish words.
+  const fr = vocabOf({ languages: ["fr"] });
+  assertEquals(lessonOf(1, 1, "EPS M. Dupont", fr), {
+    day: 1,
+    period: 1,
+    subject: "EPS",
+    name: "Éducation physique et sportive",
+    teacher: "M. Dupont",
+  });
+  assertEquals(lessonOf(1, 1, "Récré", fr), null);
+  assertEquals(lessonOf(1, 1, "Hist-Géo", fr)?.name, "Histoire-géographie");
+  const es = vocabOf({ languages: ["es"] });
+  assertEquals(lessonOf(1, 1, "E. Física (GIMNÀS)", es), {
+    day: 1,
+    period: 1,
+    subject: "E. Física",
+    name: "Educación Física",
+    room: "GIMNÀS",
+  });
+  assertEquals(lessonOf(1, 1, "ESPLAI", es), null);
+  // A language's subject word is never a weekday by guess: "Sam" is Samstag only in German.
+  assertEquals(weekdayOf("Sam", vocabOf({ languages: ["de"] })), 6);
+  assertEquals(weekdayOf("Mittag", de), null);
+  assertEquals(
+    subjectKey("Natur, Mensch,  Gesellschaft."),
+    "natur mensch gesellschaft",
+  );
+});
+
+Deno.test("the sheet's legend names the codes, and its lines are no longer unplaced", () => {
+  const lines = sheet();
+  const plain = parseTimetableScan(lines, { languages: ["de"] })!;
+  // "Ma" and its name in two boxes, "SU Sachkunde" in one, under the grid.
+  const legend = [
+    ...lines,
+    at("Ma", 0.1, 0.9, 0.03),
+    at("Mathe", 0.2, 0.9, 0.08),
+    at("SU Sachkunde", 0.5, 0.9, 0.16),
+    at("Fächer:", 0.1, 0.85, 0.08),
+  ];
+  const read = parseTimetableScan(legend, { languages: ["de"] })!;
+  assertEquals(read.payload.lessons.length, plain.payload.lessons.length);
+  const ma = read.payload.lessons.find((l) => l.subject === "Ma")!;
+  const su = read.payload.lessons.find((l) => l.subject === "SU")!;
+  // The legend beats the language's word.
+  assertEquals(ma.name, "Mathe");
+  assertEquals(su.name, "Sachkunde");
+  assertEquals(
+    read.unplaced,
+    plain.unplaced + 1,
+    "only 'Fächer:' stays unplaced",
+  );
+});
+
+Deno.test("week markers, rooms in capitals, wrapped words, aliases and a suggestion", () => {
+  const de = vocabOf({
+    languages: ["de"],
+    subjectList: [
+      { short: "SU", name: "Sachunterricht", aliases: ["Sachkunde"] },
+      { short: "Ma", name: "Mathematik" },
+      { short: "Sp", name: "Sport" },
+    ],
+  });
+  // A week marker before or after the subject becomes the parity.
+  assertEquals(lessonOf(1, 1, "Ma A R12", de), {
+    day: 1,
+    period: 1,
+    subject: "Ma",
+    name: "Mathematik",
+    room: "R12",
+    parity: "a",
+  });
+  assertEquals(lessonOf(1, 1, "B Ma", de)?.parity, "b");
+  assertEquals(lessonOf(1, 1, "Chemie Q2", de)?.parity, "b");
+  assertEquals(lessonOf(1, 1, "Ma (Hen)", de)?.teacher, "Hen");
+  // A remembered alias names the family's subject by its short name.
+  assertEquals(lessonOf(1, 1, "Sachkunde", de), {
+    day: 1,
+    period: 1,
+    subject: "SU",
+    name: "Sachunterricht",
+  });
+  assertEquals(lessonOf(1, 1, "Sachunterricht Keller", de)?.subject, "SU");
+  // A word the OCR split at a line break is joined.
+  assertEquals(lessonOf(1, 1, "Sachunter richt", de)?.subject, "SU");
+  assertEquals(lessonOf(1, 1, "Mathe matik 2", de), {
+    day: 1,
+    period: 1,
+    subject: "Ma",
+    name: "Mathematik",
+    room: "2",
+  });
+  // A word of the group of exactly one family subject points at it; a family word never.
+  assertEquals(lessonOf(1, 1, "HSU", de), {
+    day: 1,
+    period: 1,
+    subject: "HSU",
+    name: "Sachunterricht",
+    like: "SU",
+  });
+  assertEquals(lessonOf(1, 1, "BS", de)?.like, "Sp");
+  assertEquals(lessonOf(1, 1, "Ma", de)?.like, undefined);
+  assertEquals(
+    lessonOf(1, 1, "E", de)?.like,
+    undefined,
+    "no family subject in the group",
+  );
+  // A level behind the code keeps the name.
+  assertEquals(lessonOf(1, 1, "E1", de)?.name, "Englisch");
+  // Rooms in capitals, on a Spanish sheet.
+  const es = vocabOf({ languages: ["es"] });
+  assertEquals(lessonOf(1, 1, "EF (GIMNÀS)", es)?.room, "GIMNÀS");
+  assertEquals(lessonOf(1, 1, "MAT (AULA1)", es)?.room, "AULA1");
+});
+
+Deno.test("a care word on a row with clock times becomes a care row", () => {
+  const lines: OcrLine[] = [];
+  DAYS.forEach((d, i) => lines.push(at(d, COLS[i], 0.15)));
+  const rows = [0.3, 0.42, 0.54];
+  const clocks = ["08:00 - 08:45", "08:50 - 09:35", "12:00 - 14:00"];
+  rows.forEach((y, i) => lines.push(at(clocks[i], 0.1, y, 0.1)));
+  const grid = [
+    ["Ma", "D", "Ma", "SU", "Ma"],
+    ["D", "Ma", "Sp", "D", "E"],
+    ["Hort", "Hort", null, "Hort", "Mittagstisch"],
+  ];
+  grid.forEach((row, r) =>
+    row.forEach((cell, c) => {
+      if (cell) lines.push(at(cell, COLS[c], rows[r]));
+    })
+  );
+  const read = parseTimetableScan(lines, { languages: ["de"] })!;
+  assertEquals(read.payload.lessons.length, 10);
+  assertEquals(read.payload.care, [
+    { title: "Hort", days: [1, 2, 4], starts: "12:00", ends: "14:00" },
+    { title: "Mittagstisch", days: [5], starts: "12:00", ends: "14:00" },
+  ]);
+  // Without clock times the words stay lessons for the parent to sort.
+  const numbered = lines.map((l) =>
+    clocks.includes(l.text)
+      ? { ...l, text: `${clocks.indexOf(l.text) + 1}.` }
+      : l
+  );
+  const plain = parseTimetableScan(numbered, { languages: ["de"] })!;
+  assertEquals(plain.payload.care, undefined);
+  assertEquals(plain.payload.lessons.length, 14);
 });

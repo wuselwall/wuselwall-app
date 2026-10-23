@@ -2579,6 +2579,8 @@
   "schoolImportNewSubjects": "New subjects",
   "schoolImportCreateSubjects": "Create the new subjects",
   "schoolImportSkipNewSubjects": "Lessons with new subjects are left out.",
+  "schoolImportCreateNew": "Create new",
+  "schoolImportMergeHint": "Already have this subject? Pick it, and WuselWall remembers the sheet's word.",
   "schoolImportWarnUnmatchedTimes": "{count, plural, one{1 lesson matches no bell time and is left out.} other{{count} lessons match no bell time and are left out.}}",
   "@schoolImportWarnUnmatchedTimes": {
     "placeholders": {
@@ -2660,7 +2662,7 @@
   "schoolProposalErrInvalid": "The proposal has an invalid format.",
   "schoolProposalErrLimit": "Five proposals are already waiting. Review or discard them first.",
   "schoolProposalErrGone": "This proposal is already settled or has expired.",
-  "schoolScanIntro": "Your server reads the photo; it never leaves your home. A straight, bright photo of the whole sheet works best.",
+  "schoolScanIntro": "Your server reads the photo or the PDF; nothing leaves your home. A straight, bright photo of the whole sheet works best; the school's PDF is the most exact.",
   "schoolScanCamera": "Take a photo",
   "schoolScanPick": "Choose a photo",
   "schoolScanBusy": "Reading the sheet…",
@@ -2777,5 +2779,6 @@
         "type": "String"
       }
     }
-  }
+  },
+  "schoolScanFile": "Choose a file (PDF or picture)"
 }

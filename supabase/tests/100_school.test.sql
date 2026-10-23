@@ -1,5 +1,5 @@
 begin;
-select plan(98);
+select plan(103);
 
 -- Start from an empty system, whatever the database already holds (all rolled back).
 delete from app.household;
@@ -102,7 +102,7 @@ select is((select ends_at from api.school_periods where school_id = (select id f
              and kind = 'lesson' and index = 1), '08:45'::time, 'the first lesson ends at 08:45');
 select is((select ends_at - starts_at from api.school_periods where school_id = (select id from ids where name = 'sch1')
              and kind = 'break' and index = 2), interval '20 minutes', 'the break after the second lesson is 20 minutes');
-select is((select count(*)::int from api.subjects), 9, 'the first school brings the nine starter subjects');
+select is((select count(*)::int from api.subjects), 11, 'the first school brings the eleven starter subjects');
 select ok((select notable_default and equipment_note = 'Sportsachen' from api.subjects where short_name = 'Sp'),
   'Sport is notable by default and needs its kit');
 
@@ -112,7 +112,7 @@ select is((select name from api.schools where id = (select id from ids where nam
   'the rename is saved');
 
 insert into ids select 'sch2', (api.school_save(null, '{"name":"Gymnasium Nord","state_code":"DE-NI"}'::jsonb) ->> 'id')::uuid;
-select is((select count(*)::int from api.subjects), 9, 'a second school does not duplicate the starter subjects');
+select is((select count(*)::int from api.subjects), 11, 'a second school does not duplicate the starter subjects');
 select is((select count(*)::int from api.school_periods where school_id = (select id from ids where name = 'sch2')),
   11, 'a second school gets its own bell-time template');
 
@@ -166,19 +166,31 @@ insert into ids select 't_s2', (api.school_term_save(null, jsonb_build_object(
   'starts_on', '2026-08-20', 'ends_on', '2027-02-05')) ->> 'id')::uuid;
 
 -- ---- subjects -----------------------------------------------------------------------------------
-insert into ids select 'werken', (api.subject_save(null, '{"name":"Werken","short_name":"Wk","tint":"stone","icon_key":"hammer"}'::jsonb) ->> 'id')::uuid;
-select is((select count(*)::int from api.subjects), 10, 'a guardian adds a subject');
+insert into ids select 'werken', (api.subject_save(null, '{"name":"Töpfern","short_name":"Tö","tint":"stone","icon_key":"hammer"}'::jsonb) ->> 'id')::uuid;
+select is((select count(*)::int from api.subjects), 12, 'a guardian adds a subject');
 select lives_ok($$ select api.subject_save(null, jsonb_build_object('id', (select id from ids where name = 'werken'),
-  'name', 'Werken', 'short_name', 'Wk', 'tint', 'lemon')) $$, 'a guardian changes the colour of a subject');
+  'name', 'Töpfern', 'short_name', 'Tö', 'tint', 'lemon')) $$, 'a guardian changes the colour of a subject');
 select is((select tint from api.subjects where id = (select id from ids where name = 'werken')), 'lemon',
   'the colour change is saved');
 select throws_ok($$ select api.subject_save(null, '{"name":"Lila","short_name":"Li","tint":"purple"}'::jsonb) $$,
   '22023', 'WW-SCH-001 school invalid', 'a subject colour must be one of the palette');
 select throws_ok($$ select api.subject_save(null, '{"name":"Deutsch","short_name":"Dt","tint":"rose"}'::jsonb) $$,
   '22023', 'WW-SCH-001 school invalid', 'a subject name is unique in the household');
+select lives_ok($$ select api.subject_save(null, jsonb_build_object('id', (select id from ids where name = 'werken'),
+  'name', 'Töpfern', 'short_name', 'Tö', 'tint', 'lemon', 'aliases', '["Ton", " Töpferei ", "Ton", ""]'::jsonb)) $$,
+  'a subject remembers the words a sheet used for it');
+select is((select aliases from api.subjects where id = (select id from ids where name = 'werken')),
+  array['Ton', 'Töpferei'], 'the aliases are trimmed, distinct and in order');
+select lives_ok($$ select api.subject_save(null, jsonb_build_object('id', (select id from ids where name = 'werken'),
+  'name', 'Töpfern', 'short_name', 'Tö', 'tint', 'lemon')) $$, 'a save without the key keeps the aliases');
+select is((select cardinality(aliases) from api.subjects where id = (select id from ids where name = 'werken')), 2,
+  'the aliases stay');
+select throws_ok($$ select api.subject_save(null, jsonb_build_object('id', (select id from ids where name = 'werken'),
+  'name', 'Töpfern', 'short_name', 'Tö', 'tint', 'lemon', 'aliases', '"Ton"'::jsonb)) $$,
+  '22023', 'WW-SCH-001 school invalid', 'the aliases must be a list');
 select lives_ok($$ select api.subject_delete(null, (select id from ids where name = 'werken')) $$,
   'a subject no lesson uses can be deleted');
-select is((select count(*)::int from api.subjects), 9, 'the deleted subject is gone');
+select is((select count(*)::int from api.subjects), 11, 'the deleted subject is gone');
 
 -- ---- timetables and grids -----------------------------------------------------------------------
 insert into ids select 'subj_d', id from app.subject

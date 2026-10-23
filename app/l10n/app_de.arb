@@ -1823,6 +1823,8 @@
   "schoolImportNewSubjects": "Neue Fächer",
   "schoolImportCreateSubjects": "Neue Fächer anlegen",
   "schoolImportSkipNewSubjects": "Stunden mit neuen Fächern werden weggelassen.",
+  "schoolImportCreateNew": "Neu anlegen",
+  "schoolImportMergeHint": "Gibt es das Fach schon? Wähle es aus, dann merkt sich WuselWall das Wort vom Blatt.",
   "schoolImportWarnUnmatchedTimes": "{count, plural, one{1 Stunde passt zu keiner Klingelzeit und wird weggelassen.} other{{count} Stunden passen zu keiner Klingelzeit und werden weggelassen.}}",
   "schoolImportWarnPeriodsExtended": "{count, plural, one{Die Klingelzeiten bekommen 1 weitere Stunde.} other{Die Klingelzeiten bekommen {count} weitere Stunden.}}",
   "schoolImportWarnPeriodsDiffer": "Die Klingelzeiten auf dem Blatt weichen von denen der Schule ab; die der Schule bleiben.",
@@ -1852,7 +1854,7 @@
   "schoolProposalErrInvalid": "Der Vorschlag hat ein ungültiges Format.",
   "schoolProposalErrLimit": "Es warten schon fünf Vorschläge. Prüfe oder verwirf sie zuerst.",
   "schoolProposalErrGone": "Dieser Vorschlag ist schon erledigt oder abgelaufen.",
-  "schoolScanIntro": "Dein Server liest das Foto; es verlässt euer Zuhause nicht. Ein gerades, helles Foto des ganzen Blatts klappt am besten.",
+  "schoolScanIntro": "Dein Server liest das Foto oder die PDF-Datei; nichts verlässt euer Zuhause. Ein gerades, helles Foto des ganzen Blatts klappt am besten; die PDF-Datei der Schule ist am genauesten.",
   "schoolScanCamera": "Foto aufnehmen",
   "schoolScanPick": "Foto auswählen",
   "schoolScanBusy": "Das Blatt wird gelesen…",
@@ -1913,5 +1915,6 @@
   "shoppingTileRename": "Kachel umbenennen",
   "shoppingTileForget": "Nicht mehr vorschlagen",
   "shoppingTileForgetHelp": "Die Kachel verschwindet; der Verlauf behält sie.",
-  "shoppingTileForgetConfirm": "Die Kachel „{name}“ entfernen? Beim nächsten Kauf kommt sie zurück."
+  "shoppingTileForgetConfirm": "Die Kachel „{name}“ entfernen? Beim nächsten Kauf kommt sie zurück.",
+  "schoolScanFile": "Datei wählen (PDF oder Bild)"
 }

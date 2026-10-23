@@ -4615,6 +4615,13 @@ class AppLocalizationsFr extends AppLocalizations {
       'Les cours avec de nouvelles matières sont omis.';
 
   @override
+  String get schoolImportCreateNew => 'Créer';
+
+  @override
+  String get schoolImportMergeHint =>
+      'La matière existe déjà ? Choisis-la, et WuselWall retient le mot de la feuille.';
+
+  @override
   String schoolImportWarnUnmatchedTimes(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -4741,7 +4748,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get schoolScanIntro =>
-      'Ton serveur lit la photo ; elle ne quitte pas la maison. Une photo droite et lumineuse de toute la feuille donne le meilleur résultat.';
+      'Ton serveur lit la photo ou le PDF ; rien ne quitte la maison. Une photo droite et lumineuse de toute la feuille donne le meilleur résultat ; le PDF de l’école est le plus précis.';
 
   @override
   String get schoolScanCamera => 'Prendre une photo';
@@ -4966,4 +4973,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String shoppingTileForgetConfirm(String name) {
     return 'Retirer la tuile « $name » ? Le prochain achat la fera revenir.';
   }
+
+  @override
+  String get schoolScanFile => 'Choisir un fichier (PDF ou image)';
 }

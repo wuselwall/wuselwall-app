@@ -19,6 +19,8 @@ RUN pip install --no-cache-dir \
       "uvicorn==0.38.0" \
       "python-multipart==0.0.20" \
       "pillow==12.0.0" \
+      "pillow-heif==1.1.0" \
+      "pypdfium2==5.0.0" \
       "numpy==2.3.4"
 
 WORKDIR /app

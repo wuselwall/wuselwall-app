@@ -159,19 +159,41 @@ Turning any of these on is one deliberate checkbox on that token
 
 - A **bell-time template**: 45-minute Stunden from 08:00, a 20-minute break after the
   2nd and the 4th, 5 minutes otherwise. Edited to match the school's sheet.
-- A **subject list** with colours and icons, following the school's country (*added 2026-10-14*):
-  - **Germany** (and any country without a list of its own): Deutsch, Mathematik,
-    Sachunterricht, Englisch, Musik, Kunst, Religion/Ethik;
-    Sport and Schwimmen, which are notable by default and carry an equipment note;
-  - **Austria**: Deutsch, Mathematik, Sachunterricht, Englisch, Bildnerische Erziehung,
-    Musikerziehung, Bewegung und Sport (notable, Sportsachen), Technisches und textiles Werken,
-    Religion;
-  - **Switzerland and Liechtenstein** (Lehrplan 21 fields): Deutsch, Mathematik,
-    Natur, Mensch, Gesellschaft, Englisch, Französisch, Bildnerisches Gestalten, Textiles und
-    Technisches Gestalten, Musik, Bewegung und Sport (notable, Sportsachen), Medien und
-    Informatik.
-  The list is written only into an empty subject list, and the family renames or removes
-  any of it. Starter content is example data, not a rule of the module.
+- A **subject list** with colours and icons, following the school's region (*added
+  2026-10-14, lists revised 2026-10-23 after the research in
+  `specs/research/school-subjects/`*). Names and short names are the ones the region's
+  sheets print, so a scanned sheet matches them:
+  - **Germany** (and any country without a list of its own): Deutsch D, Mathematik Ma,
+    Sachunterricht SU, Englisch E, Musik Mu, Kunst Ku, Werken We, Religion/Ethik Rel,
+    Förderunterricht Fö; Sport Sp and Schwimmen Sw, which are notable by default and carry an
+    equipment note;
+  - **Austria** (the names of 2023/24): Deutsch D, Mathematik M, Sachunterricht SU, Englisch E,
+    Kunst und Gestaltung KuG, Musik Mu, Technik und Design TD, Religion Rel, Förderunterricht
+    FU, Bewegung und Sport BS (notable, Sportsachen);
+  - **German-speaking Switzerland and Liechtenstein** (Lehrplan 21 fields): Deutsch D,
+    Mathematik M, Natur, Mensch, Gesellschaft NMG, Englisch E, Französisch F, Bildnerisches
+    Gestalten BG, Textiles und Technisches Gestalten TTG, Musik Mu, Bewegung und Sport BS
+    (notable, Sportsachen), Medien und Informatik MI;
+  - **Romandie** (GE, VD, NE, JU, and a bilingual canton when the app runs in French; PER
+    fields): Français FRA, Mathématiques MAT, Allemand ALL, Anglais ANG, Sciences de la nature
+    SN, Histoire HIS, Géographie GEO, Arts visuels AVI, Activités créatrices manuelles ACM,
+    Musique MUS, Éthique et cultures religieuses ECR, Éducation physique EPH (notable);
+  - **Ticino** (and a bilingual canton when the app runs in Italian): Italiano ITA, Matematica
+    MAT, Tedesco TED, Francese FRA, Studio d'ambiente AMB, Educazione visiva EV, Educazione
+    alle arti plastiche EAP, Educazione musicale EM, Educazione fisica EF (notable);
+  - **France**: Français FR, Mathématiques MATHS, Anglais ANG, Questionner le monde QLM,
+    Sciences et technologie SCI, Histoire-géographie HG, Enseignement moral et civique EMC,
+    Arts plastiques ARTS, Éducation musicale EM, EPS (notable) and Natation NAT (notable);
+  - **Spain**: Lengua Castellana y Literatura LCL, Matemáticas MAT, Inglés ING, Conocimiento
+    del Medio CM, Educación Plástica y Visual PLAS, Música MUS, Religión REL, Atención
+    Educativa AE, Valores Cívicos y Éticos VCE, Tutoría TUT, Educación Física EF (notable);
+    plus the region's co-official language (Català in CT and IB, Valencià in VC, Galego in
+    GA, Euskara in PV and NC).
+  A country without a list follows the app's language (French or Spanish, else German). The
+  app sends its language with the school (`language` in `school_save`); the previous app
+  release sends none and gets the German, Austrian or Swiss German list. The list is written
+  only into an empty subject list, and the family renames or removes any of it. Starter
+  content is example data, not a rule of the module.
 - A new timetable is `weekly`. A/B weeks are switched on per timetable.
 - Hort and Betreuung are `care` rows on the timetable, not presence entries (Q22,
   decided).

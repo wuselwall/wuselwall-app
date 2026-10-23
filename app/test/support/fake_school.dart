@@ -357,6 +357,7 @@ class FakeSchoolRepository implements SchoolRepository {
     required String name,
     String? regionCode,
     String? timezone,
+    String? language,
   }) async {
     actors.add(actor);
     schoolSaves.add((
@@ -486,6 +487,7 @@ class FakeSchoolRepository implements SchoolRepository {
           iconKey: subject.iconKey,
           equipmentNote: subject.equipmentNote,
           notableDefault: subject.notableDefault,
+          aliases: subject.aliases,
         ),
       ],
       timetables: data.timetables,
@@ -572,14 +574,30 @@ class FakeScanRepository implements ScanRepository {
 
   final ScanResult? result;
   final Failure? failure;
-  final scans = <({int bytes, String mime})>[];
+  final scans =
+      <
+        ({
+          int bytes,
+          String mime,
+          List<String> languages,
+          List<String> subjects,
+        })
+      >[];
 
   @override
   Future<Result<ScanResult>> scan({
     required Uint8List image,
     required String mime,
+    List<String> languages = const [],
+    List<String> subjects = const [],
+    List<SubjectRecord> subjectList = const [],
   }) async {
-    scans.add((bytes: image.length, mime: mime));
+    scans.add((
+      bytes: image.length,
+      mime: mime,
+      languages: languages,
+      subjects: subjects,
+    ));
     if (failure != null) return Err(failure!);
     return Ok(result!);
   }

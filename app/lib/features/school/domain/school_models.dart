@@ -137,6 +137,7 @@ class SubjectRecord {
     this.iconKey,
     this.equipmentNote,
     this.notableDefault = false,
+    this.aliases = const [],
   });
 
   factory SubjectRecord.fromJson(Map<String, dynamic> json) => SubjectRecord(
@@ -147,6 +148,9 @@ class SubjectRecord {
     iconKey: json['icon_key'] as String?,
     equipmentNote: json['equipment_note'] as String?,
     notableDefault: json['notable_default'] as bool? ?? false,
+    aliases: [
+      for (final a in (json['aliases'] as List?) ?? const []) a.toString(),
+    ],
   );
 
   final String id;
@@ -161,6 +165,10 @@ class SubjectRecord {
   final String? equipmentNote;
   final bool notableDefault;
 
+  /// The words sheets used for this subject before ("Sachkunde" for Sachunterricht): the
+  /// import matches them, and the scan sends them along (specs/24).
+  final List<String> aliases;
+
   Map<String, dynamic> toJson() => {
     'id': id,
     'name': name,
@@ -169,6 +177,7 @@ class SubjectRecord {
     'icon_key': iconKey,
     'equipment_note': equipmentNote,
     'notable_default': notableDefault,
+    'aliases': aliases,
   };
 }
 

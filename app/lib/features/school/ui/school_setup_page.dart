@@ -372,6 +372,7 @@ class _SchoolFormState extends ConsumerState<_SchoolForm>
     final settings =
         ref.read(householdSettingsProvider).value ?? const <SettingEntry>[];
     final region = _regionOn(settings);
+    final language = Localizations.localeOf(context).languageCode;
     String? savedId;
     final saved = await _write(context, ref, (actor) async {
       final result = await ref
@@ -383,6 +384,7 @@ class _SchoolFormState extends ConsumerState<_SchoolForm>
             regionCode: region,
             // A new school takes the household's timezone on the server.
             timezone: widget.school?.timezone,
+            language: language,
           );
       savedId = result.valueOrNull;
       return result;
@@ -1190,6 +1192,7 @@ class _SubjectDialogState extends State<_SubjectDialog> {
                     ? null
                     : _equipment.text.trim(),
                 notableDefault: _notable,
+                aliases: widget.subject?.aliases ?? const [],
               ),
             );
           },

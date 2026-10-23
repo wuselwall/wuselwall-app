@@ -1,0 +1,92 @@
+{
+  "commons_beispielstundenplan.png.lines.json": {
+    "language": "de",
+    "columns": 5,
+    "rows": 7,
+    "lessons": 35,
+    "named": 4,
+    "periods": 0,
+    "care": 0
+  },
+  "commons_grade10_gymnasium2003.png.lines.json": {
+    "language": "de",
+    "columns": 5,
+    "rows": 8,
+    "lessons": 32,
+    "named": 9,
+    "periods": 8,
+    "care": 0
+  },
+  "commons_nederlands_lesrooster.jpg.lines.json": {
+    "language": "de",
+    "columns": 5,
+    "rows": 8,
+    "lessons": 33,
+    "named": 0,
+    "periods": 0,
+    "care": 0
+  },
+  "commons_school_timetable_en.jpg.lines.json": {
+    "language": "de",
+    "columns": 5,
+    "rows": 11,
+    "lessons": 40,
+    "named": 17,
+    "periods": 0,
+    "care": 0
+  },
+  "commons_stundenplan_klasse10.png.lines.json": {
+    "language": "de",
+    "columns": 5,
+    "rows": 8,
+    "lessons": 32,
+    "named": 7,
+    "periods": 0,
+    "care": 0
+  },
+  "commons_stundenplan_klasse8.png.lines.json": {
+    "language": "de",
+    "columns": 5,
+    "rows": 6,
+    "lessons": 30,
+    "named": 6,
+    "periods": 0,
+    "care": 0
+  },
+  "commons_stundenplan_typisch.png.lines.json": {
+    "language": "de",
+    "columns": 5,
+    "rows": 6,
+    "lessons": 29,
+    "named": 7,
+    "periods": 0,
+    "care": 0
+  },
+  "es_commons_horario_btpi.jpg.lines.json": {
+    "language": "es",
+    "columns": 4,
+    "rows": 4,
+    "lessons": 15,
+    "named": 1,
+    "periods": 0,
+    "care": 0
+  },
+  "fr_commons_5eme_alsace.png.lines.json": {
+    "language": "fr",
+    "columns": 5,
+    "rows": 8,
+    "lessons": 33,
+    "named": 11,
+    "periods": 8,
+    "care": 0
+  },
+  "fr_commons_6eme_alsace.png.lines.json": {
+    "language": "fr",
+    "columns": 5,
+    "rows": 8,
+    "lessons": 32,
+    "named": 16,
+    "periods": 8,
+    "care": 0
+  }
+}

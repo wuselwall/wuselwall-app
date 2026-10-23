@@ -87,6 +87,60 @@ void main() {
     expect(find.text(de.schoolImportApplied), findsOneWidget);
   });
 
+  testWidgets('a new subject taken as an existing one remembers the word', (
+    t,
+  ) async {
+    final school = FakeSchoolRepository(
+      data: referenceSchoolData(withTimetable: false),
+    );
+    await pumpApp(
+      t,
+      overrides: baseOverrides(
+        identity: FakeIdentityRepository(current: device()),
+      ),
+      school: school,
+    );
+    await _openSchedule(t);
+    await t.tap(find.widgetWithText(OutlinedButton, de.schoolImportAction));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const ValueKey('import-way-text')));
+    await t.pumpAndSettle();
+    // "Mathe" is new to the household; the scan's like-word points at Mathematik, the
+    // parent takes "Rechnen" as Deutsch by hand.
+    await t.enterText(find.byKey(const ValueKey('import-paste')), '''
+{"format": "wuselwall-timetable/1", "lessons": [
+  {"day": "Mo", "period": 1, "subject": "Mathe", "like": "Ma"},
+  {"day": "Di", "period": 1, "subject": "Rechnen"}
+]}''');
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const ValueKey('import-read')));
+    await t.pumpAndSettle();
+    expect(find.text(de.schoolImportMergeHint), findsOneWidget);
+    // The suggestion is preselected; the other one is new until chosen.
+    expect(
+      t
+          .widget<DropdownButton<String>>(
+            find.byKey(const ValueKey('import-merge-mathe')),
+          )
+          .value,
+      'sub-ma',
+    );
+    await t.tap(find.byKey(const ValueKey('import-merge-rechnen')));
+    await t.pumpAndSettle();
+    await t.tap(find.text('Deutsch').last);
+    await t.pumpAndSettle();
+    expect(find.text(de.schoolImportCreateSubjects), findsNothing);
+
+    await t.tap(find.byKey(const ValueKey('import-apply')));
+    await t.pumpAndSettle();
+    // Both existing subjects remember the sheet's word; nothing was created.
+    expect(school.subjectSaves.map((s) => s.id), ['sub-ma', 'sub-d']);
+    expect(school.subjectSaves[0].aliases, ['Mathe']);
+    expect(school.subjectSaves[1].aliases, ['Rechnen']);
+    final sent = school.lessonSets.single.lessons;
+    expect(sent.map((l) => l.subjectId), ['sub-ma', 'sub-d']);
+  });
+
   testWidgets('a text that is no payload says why, and nothing is written', (
     t,
   ) async {

@@ -7871,6 +7871,18 @@ abstract class AppLocalizations {
   /// **'Lessons with new subjects are left out.'**
   String get schoolImportSkipNewSubjects;
 
+  /// No description provided for @schoolImportCreateNew.
+  ///
+  /// In en, this message translates to:
+  /// **'Create new'**
+  String get schoolImportCreateNew;
+
+  /// No description provided for @schoolImportMergeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have this subject? Pick it, and WuselWall remembers the sheet\'s word.'**
+  String get schoolImportMergeHint;
+
   /// No description provided for @schoolImportWarnUnmatchedTimes.
   ///
   /// In en, this message translates to:
@@ -8048,7 +8060,7 @@ abstract class AppLocalizations {
   /// No description provided for @schoolScanIntro.
   ///
   /// In en, this message translates to:
-  /// **'Your server reads the photo; it never leaves your home. A straight, bright photo of the whole sheet works best.'**
+  /// **'Your server reads the photo or the PDF; nothing leaves your home. A straight, bright photo of the whole sheet works best; the school\'s PDF is the most exact.'**
   String get schoolScanIntro;
 
   /// No description provided for @schoolScanCamera.
@@ -8416,6 +8428,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Remove the tile “{name}”? Buying it again brings it back.'**
   String shoppingTileForgetConfirm(String name);
+
+  /// No description provided for @schoolScanFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a file (PDF or picture)'**
+  String get schoolScanFile;
 }
 
 class _AppLocalizationsDelegate
