@@ -77,10 +77,10 @@ const tapNode = async (page, role, name) => {
 // and by aria-label when the role is missing. A substring match tolerates a suffix such as "Tab 2 of 5",
 // but it also matches cards that mention the name (the Today card "Warmes Essen … Einkaufsliste"),
 // so an exact match always wins and the substring is only the fallback, on buttons and tabs.
+const anyNamed = (page, name, exact) => page.getByRole('button', { name, exact }).or(page.getByRole('tab', { name, exact }))
+  .or(page.locator(`flt-semantics[aria-label${exact ? '=' : '*='}"${name}"]`));
 const tapAny = async (page, name, { exact = true } = {}) => {
-  const find = (ex) => page.getByRole('button', { name, exact: ex }).or(page.getByRole('tab', { name, exact: ex }))
-    .or(page.locator(`flt-semantics[aria-label${ex ? '=' : '*='}"${name}"]`));
-  const target = (await find(true).count()) ? find(true) : find(exact);
+  const target = (await anyNamed(page, name, true).count()) ? anyNamed(page, name, true) : anyNamed(page, name, exact);
   await target.first().dispatchEvent('click');
   await settle(page);
 };
@@ -99,8 +99,10 @@ const scrollDown = async (page, px = 600) => {
   await settle(page);
 };
 // Long lists build their semantics lazily: scroll in steps until the control is in the tree.
-const scrollUntil = async (page, name, role = 'button') => {
-  const loc = page.getByRole(role, { name, exact: true });
+// `any` looks the way tapAny does (buttons, tabs and plain labels, as a substring), for a
+// list tile without a button role.
+const scrollUntil = async (page, name, { role = 'button', any = false } = {}) => {
+  const loc = any ? anyNamed(page, name, false) : page.getByRole(role, { name, exact: true });
   for (let i = 0; i < 30 && !(await loc.count()); i++) await scrollDown(page, 600);
 };
 // The semantics layer turns any pointer press into a tap, so for a long press the
@@ -172,7 +174,9 @@ const shots = [
   { name: 'pair-approve', scenario: 'adult', viewport: PHONE, route: '/settings/devices/pair', steps: async (p, t) => { await p.getByRole('textbox', { name: t.pairCode }).fill('K7QM3XRP'); await press(p, t.next); } },
   // Inviting an adult: the name, then the result sheet with the code, QR code and share action.
   { name: 'invite-sheet', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await press(p, t.settings); await scrollUntil(p, t.inviteAdult); await tapAny(p, t.inviteAdult, { exact: false }); await p.getByRole('textbox', { name: t.inviteName }).fill(t.grandma); await press(p, t.inviteCreate); } },
-  { name: 'reminders', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await press(p, t.settings); await tapAny(p, t.reminders, { exact: false }); } },
+  // Reminders sit under "This device", below the members and the devices: scroll them into
+  // the semantics tree first.
+  { name: 'reminders', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await press(p, t.settings); await scrollUntil(p, t.reminders, { any: true }); await tapAny(p, t.reminders, { exact: false }); } },
   // Siri and Shortcuts: the keys of the family, one in use and one not yet.
   { name: 'shortcuts', scenario: 'adult', viewport: PHONE, route: '/settings/shortcuts' },
 ];
