@@ -94,7 +94,7 @@ jobs:
           # build and run (repository code, pubspec lock, the ci.json dart-define file,
           # dart_test.yaml). A test-only or app-only PR that touches any of these must not
           # skip this gate.
-          pattern='^(supabase/|package\.json$|package-lock\.json$|deno\.lock$|\.github/workflows/backend-ci\.yml$|app/test/integration/|app/lib/|app/pubspec\.yaml$|app/pubspec\.lock$|app/env/ci\.json$|app/dart_test\.yaml$)'
+          pattern='^(supabase/|package\.json$|package-lock\.json$|deno\.lock$|\.github/workflows/backend-ci\.yml$|scripts/backend-stack-images\.mjs$|scripts/image-pull\.mjs$|app/test/integration/|app/lib/|app/pubspec\.yaml$|app/pubspec\.lock$|app/env/ci\.json$|app/dart_test\.yaml$)'
           if echo "$changed" | grep -Eq "$pattern"; then
             echo "backend=true" >> "$GITHUB_OUTPUT"
           else
@@ -150,6 +150,11 @@ jobs:
           WW_PUBLISHABLE_KEY=sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH
           WW_SECRET_KEY=sb_secret_N7UND0UgjKTVK-Uodkm0Hg_xSvEMPvz
           EOF
+      # Every image the CLI needs below, by pinned digest, before the CLI looks for it. A
+      # runner whose GHCR pulls keep answering `toomanyrequests` gets the same digest from
+      # ECR Public or Docker Hub; any other pull error, or pins that no longer match this
+      # CLI's versions, fail here (scripts/backend-stack-images.mjs).
+      - run: node scripts/backend-stack-images.mjs
       - run: npx supabase start -x studio,imgproxy,logflare,vector
       - run: npx supabase db reset      # every migration from zero, plus seed
       - run: npx supabase test db       # pgTAP
