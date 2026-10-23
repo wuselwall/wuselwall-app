@@ -265,3 +265,25 @@ Deno.test("weekdays the OCR garbled are inferred from an even header spacing", (
     "6:Rel",
   ]);
 });
+
+Deno.test("left-aligned sheets keep a cell's right-hand teacher code in its own column", () => {
+  // Headers and subjects start at the cell's left edge; the teacher code sits at its right,
+  // closer to the next header's centre than to its own.
+  const lefts = [0.2, 0.36, 0.52, 0.68, 0.84];
+  const lines: OcrLine[] = [];
+  DAYS.forEach((d, i) => lines.push(at(d, lefts[i] + 0.02, 0.15, 0.04)));
+  lines.push(at("1", 0.1, 0.3, 0.03));
+  lefts.forEach((x, i) => {
+    lines.push(at(["MAT", "DEU", "ENG", "FRA", "NMG"][i], x + 0.04, 0.3, 0.06));
+    lines.push(
+      at(["kob", "mhe", "skn", "mhe", "ata"][i], x + 0.125, 0.3, 0.04),
+    );
+  });
+  const result = parseTimetableScan(lines);
+  assert(result);
+  assertEquals(result.unplaced, 0);
+  assertEquals(
+    result.payload.lessons.map((l) => `${l.day}:${l.subject}/${l.teacher}`),
+    ["1:MAT/kob", "2:DEU/mhe", "3:ENG/skn", "4:FRA/mhe", "5:NMG/ata"],
+  );
+});

@@ -325,7 +325,10 @@ function cluster<T>(
   return out;
 }
 
-type Column = { day: number; cx: number };
+/** A weekday column: the header text's centre and its left edge. Cells are assigned by
+ *  boundaries halfway between neighbouring left edges, so a sheet that left-aligns its
+ *  text (Excel, Untis) keeps a cell's right-hand teacher code in its own column. */
+type Column = { day: number; cx: number; left: number };
 type Row = { index: number; cy: number };
 
 /** The header: the horizontal band with the most distinct weekdays (at least three). A box
@@ -335,13 +338,15 @@ function findColumns(
   lines: Line[],
   h: number,
 ): { columns: Column[]; headerY: number } | null {
-  const named: { l: Line; day: number; cx: number }[] = [];
+  const named: { l: Line; day: number; cx: number; left: number }[] = [];
   for (const l of lines) {
     const found = weekdaysIn(l.text);
     const len = Math.max(1, fold(l.text).length);
     for (const f of found) {
       const mid = found.length === 1 ? 0.5 : (f.start + f.end) / 2 / len;
-      named.push({ l, day: f.day, cx: l.cx - l.w / 2 + l.w * mid });
+      const x0 = l.cx - l.w / 2;
+      const start = found.length === 1 ? 0 : f.start / len;
+      named.push({ l, day: f.day, cx: x0 + l.w * mid, left: x0 + l.w * start });
     }
   }
   const bands = cluster(named, (x) => x.l.cy, h * 1.2);
@@ -364,7 +369,7 @@ function findColumns(
     if (seen.has(m.day)) continue;
     seen.add(m.day);
     m.l.used = true;
-    columns.push({ day: m.day, cx: m.cx });
+    columns.push({ day: m.day, cx: m.cx, left: m.left });
   }
   // A header is in weekday order left to right; a stray weekday elsewhere is noise.
   columns.sort((a, b) => a.cx - b.cx);
@@ -375,6 +380,27 @@ function findColumns(
     if (Math.abs(l.cy - best.centre) <= h * 0.9) l.used = true;
   }
   return { columns: fillGaps(columns), headerY: best.centre };
+}
+
+/**
+ * Where each column begins and ends: from just before a header's left edge to just before
+ * the next header's. A sheet that left-aligns its text (Excel, Untis) starts its cell text
+ * at the header's left edge and may put a teacher code at the cell's right, which a
+ * boundary halfway between the headers would hand to the next column. A sheet that centres
+ * its text keeps every box's middle at the cell's middle, which lies inside these bounds
+ * as well, so one rule serves both.
+ */
+function columnBounds(
+  columns: Column[],
+  spacing: number,
+): { from: number; to: number }[] {
+  const margin = spacing * 0.05;
+  return columns.map((c, i) => ({
+    from: i === 0 ? c.left - spacing * 0.5 : c.left - margin,
+    to: i === columns.length - 1
+      ? c.left + spacing * 0.95
+      : columns[i + 1].left - margin,
+  }));
 }
 
 /**
@@ -395,7 +421,12 @@ function fillGaps(columns: Column[]): Column[] {
     const next = columns[i + 1];
     if (!next) break;
     for (let d = columns[i].day + 1; d < next.day; d++) {
-      out.push({ day: d, cx: columns[i].cx + step * (d - columns[i].day) });
+      const shift = step * (d - columns[i].day);
+      out.push({
+        day: d,
+        cx: columns[i].cx + shift,
+        left: columns[i].left + shift,
+      });
     }
   }
   return out;
@@ -498,18 +529,17 @@ export function parseTimetableScan(input: OcrLine[]): ScanResult | null {
   const rowGaps = rows.slice(1).map((r, i) => r.cy - rows[i].cy);
   const rowSpacing = rowGaps.length > 0 ? median(rowGaps) : h * 2;
 
+  const bounds = columnBounds(columns, spacing);
   const cells = new Map<string, Line[]>();
   let placed = 0;
   let unplaced = 0;
   for (const l of lines) {
     if (l.used || l.cy <= headerY + h / 2) continue;
     let column: Column | null = null;
-    for (const c of columns) {
-      if (
-        Math.abs(c.cx - l.cx) <= spacing * 0.6 &&
-        (!column || Math.abs(c.cx - l.cx) < Math.abs(column.cx - l.cx))
-      ) {
-        column = c;
+    for (let i = 0; i < columns.length; i++) {
+      if (l.cx >= bounds[i].from && l.cx < bounds[i].to) {
+        column = columns[i];
+        break;
       }
     }
     let row: Row | null = null;
