@@ -251,10 +251,53 @@ their own, `import:propose`, granted separately from `shopping:write`.
 
 The container was built from the Dockerfile and read a rendered sheet (five weekdays, five
 numbered periods with bell times, twenty-one cells) without a miss, and the parser placed
-every cell and took the bell times from the labels. It has not yet read a photographed
-sheet from a real family: paper, shadows, a slanted phone. The parser's thresholds come
-from synthetic grids; the first real photographs will tune them, and the preview's warnings
-exist so that a parent sees what the parser missed. The
+every cell and took the bell times from the labels.
+
+*2026-10-23:* sixteen public sheets (Wikimedia Commons renders and scans, school and
+ministry PDFs from Germany, Austria, Switzerland, England and Canada, one worn handwritten
+card) went through the container and the parser, locally, never committed. Fifteen yield a
+grid; the sixteenth is a bell-time regulation sheet, so "no grid" is right. What the first
+real sheets taught, all built since: letter-spaced print ("M ittw och"), a typo ("Dinstag")
+and truncated columns ("Dinsd") are matched against the full names by prefix or one edit;
+a header the OCR returns as one box is split along its width; "Stunde 3" counts as a row
+label; text in the header band is not a lesson; row labels may sit close to the first
+column; a name in parentheses is the teacher; weekdays the OCR garbled are inferred when
+the header's spacing per day is even. The clean renders and scans come back complete, with
+subject and room per cell; the handwritten card gives six columns but only a third of its
+cells.
+
+*Second round, same day, 48 more files from four searches:* software-made sheets (Austrian
+Volksschulen, Swiss Excel and Untis-style sheets with teacher codes, a Canva design), French
+and Spanish sheets, eight look-alikes (a shift rota, a bus timetable, a canteen menu, a
+bell-time table, a holiday calendar, a gym course plan) and eight poor photographs (skewed,
+blurred, frosted, an LED board, a 330-pixel thumbnail). What it taught, built since: a sheet
+that left-aligns its text puts the teacher code at the cell's right edge, so cells now run
+from a header's left edge to the next one's, which also holds for centred text. Results:
+every German, Austrian, Swiss, French and Spanish class sheet yields a grid; the Swiss
+Excel sheets with stacked class-split cells and legends leave a third to a half of their
+text unplaced, which the preview reports; dense two-line cells without a label per row are
+halved. Seven of the eight look-alikes give "no grid"; the gym course plan parses, as any
+weekly grid with weekday headers will, and only the subjects on the preview tell a parent.
+No poor photograph produced a false grid, and the thumbnail parsed completely. Whole-school
+master plans and a substitution plan give "no grid".
+
+*Third round, twelve photographed sheets* (Commons and Flickr: a crumpled sheet held in two
+hands, a hand-drawn plan under museum glass, Kurrent handwriting from 1898, a diary page, a
+projector screen, a corkboard, sheets in Finnish, Korean and Russian). Two of them run the
+days down the left and the periods across the top, as a diary page or a hand-drawn sheet
+often does, and so did the Spanish photo of the second round: the parser now reads a sheet
+**turned** when no horizontal header exists, by swapping the axes and running the same
+algorithm. That pass needed a **plausibility check**, which now guards both readings: at
+least two periods (three when turned, since a one-row list of weekdays is a rota or a menu),
+at most four text pieces per cell (a master plan packs dozens into what looks like one), and a
+turned reading that placed more than it dropped. With it, the whole corpus of 80 files
+classifies as it should: every class sheet in five languages is a grid, the gym course plan
+is the one look-alike that parses, and every other look-alike, poor photograph, master plan
+and sheet in an unsupported language gives "no grid". Handwriting itself stays beyond the
+OCR: the diary page yields its six days and nine periods but a third of its cells.
+
+What remains open is the real photograph from a phone: paper, shadows, a slant. The
+preview's warnings exist so that a parent sees what the parser missed. The
 RapidOCR language switch is used when the installed version has it, with the default models
 as fallback, so an API change in `rapidocr` degrades to "reads Latin letters without
 accents" rather than to a failed build.
