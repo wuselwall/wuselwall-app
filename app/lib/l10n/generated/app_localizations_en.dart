@@ -2925,6 +2925,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'Show the setup card on the Today tab again';
 
   @override
+  String get settingsLicenses => 'Open-source licenses';
+
+  @override
+  String get settingsLicensesSubtitle =>
+      'The licenses of the software and fonts WuselWall is built from';
+
+  @override
   String get exportFamilyTitle => 'Family';
 
   @override

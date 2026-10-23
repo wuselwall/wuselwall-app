@@ -982,6 +982,8 @@
   "todayStartSchool": "Stundenplan eintragen",
   "settingsGettingStarted": "Erste Schritte",
   "settingsGettingStartedSubtitle": "Die Einrichtungskarte wieder auf dem Heute-Tab zeigen",
+  "settingsLicenses": "Open-Source-Lizenzen",
+  "settingsLicensesSubtitle": "Die Lizenzen der Software und Schriften, aus denen WuselWall gebaut ist",
   "exportFamilyTitle": "Familie",
   "exportAction": "Daten exportieren",
   "exportExplanation": "Alle Daten eurer Familie als Datei, z. B. für einen Umzug auf einen anderen Server.",

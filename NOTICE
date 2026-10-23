@@ -10,9 +10,12 @@ no right to use them for other products or services (Apache License 2.0, section
 Third-party material in this repository, under its own terms and not covered by the
 licence above:
 
-- infra/supabase/docker-compose.yml and infra/supabase/volumes/: copied from the
-  Supabase project (https://github.com/supabase/supabase), Apache License 2.0,
-  Copyright Supabase, Inc.
+- infra/supabase/docker-compose.yml and infra/supabase/volumes/ (api/, db/ and
+  functions/deno.jsonc): copied from the Supabase project
+  (https://github.com/supabase/supabase), Apache License 2.0, Copyright Supabase, Inc.
+  Modified: infra/supabase/volumes/functions/main/index.ts (marked "WuselWall:" in the
+  file). Not from Supabase: infra/supabase/volumes/caddy/ and the other files in
+  infra/supabase/, which are part of WuselWall.
 
 - app/assets/fonts/: Atkinson Hyperlegible Next and Barlow Semi Condensed, SIL Open
   Font License 1.1; the licence texts are in that folder (OFL-*.txt).
@@ -20,7 +23,18 @@ licence above:
   (https://github.com/microsoft/fluentui-emoji), MIT License, Copyright (c) Microsoft
   Corporation; the licence text is in that folder (LICENSE-FluentEmoji.txt).
 
-
 - Holiday data (regions, public and school holidays): data from the OpenHolidays API,
   https://www.openholidaysapi.org, Open Database License 1.0 (ODbL). The server fetches it
-  and caches it; the cached rows are not part of this repository.
+  and caches it; the cached rows are not part of this repository, except for the few
+  rows kept as test fixtures in supabase/functions/_shared/fixtures/.
+
+- Software dependencies (Dart and Flutter packages, npm and Deno packages) are not part of
+  this repository; each is used under its own licence (BSD, MIT, Apache-2.0, MPL-2.0). The
+  app lists them under Settings, "Open-source licenses". ical.js (MPL-2.0) is used
+  unmodified.
+
+- infra/supabase/ocr/ (optional): the container installs RapidOCR (Apache-2.0) and
+  downloads PP-OCR models (PaddleOCR, Apache-2.0) when the image is built; none of it is
+  part of this repository.
+
+- Server releases (scripts/build-server-release.sh) carry this file and the LICENSE.

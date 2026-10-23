@@ -5184,6 +5184,18 @@ abstract class AppLocalizations {
   /// **'Show the setup card on the Today tab again'**
   String get settingsGettingStartedSubtitle;
 
+  /// No description provided for @settingsLicenses.
+  ///
+  /// In en, this message translates to:
+  /// **'Open-source licenses'**
+  String get settingsLicenses;
+
+  /// No description provided for @settingsLicensesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The licenses of the software and fonts WuselWall is built from'**
+  String get settingsLicensesSubtitle;
+
   /// No description provided for @exportFamilyTitle.
   ///
   /// In en, this message translates to:
