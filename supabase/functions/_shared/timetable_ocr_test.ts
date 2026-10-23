@@ -6,6 +6,7 @@ import {
   type OcrLine,
   parseTimetableScan,
   periodOf,
+  vocabOf,
   weekdayOf,
   weekdaysIn,
 } from "./timetable_ocr.ts";
@@ -483,4 +484,30 @@ Deno.test("row numbers and bare clock labels in two columns give one row per per
   assertEquals(labelClocks("1040"), ["10:40"]);
   assertEquals(labelClocks("2500"), []);
   assertEquals(labelClocks("08:00 - 08:45"), ["08:00", "08:45"]);
+});
+
+Deno.test("the family's language and subjects steer the words", () => {
+  const de = vocabOf({
+    languages: ["de-CH"],
+    subjects: ["Mar", "Ven", "SU", "Fr"],
+  });
+  // German short forms only: the French "mar." is no Tuesday here, "Fr" stays Freitag.
+  assertEquals(weekdayOf("mar.", de), null);
+  assertEquals(weekdayOf("Fr", de), 5);
+  assertEquals(weekdayOf("Mo", de), 1);
+  // Full names of every language still match by prefix: a French sheet in a German family.
+  assertEquals(weekdayOf("lun.", de), 1);
+  assertEquals(weekdayOf("mercredi", de), 3);
+  // A subject of the family is never a weekday by guess ("Ven" is close to vendredi).
+  assertEquals(weekdayOf("Ven", de), null);
+  assertEquals(weekdayOf("Ven", vocabOf({ languages: ["fr"] })), 5);
+  // Unknown languages fall back to every short form.
+  assertEquals(weekdayOf("mar", vocabOf({ languages: ["xx"] })), 2);
+  // The reference sheet reads the same with hints.
+  const plain = parseTimetableScan(sheet())!;
+  const hinted = parseTimetableScan(sheet(), {
+    languages: ["de"],
+    subjects: ["Ma", "D", "Sp", "SU", "E"],
+  })!;
+  assertEquals(hinted.payload.lessons, plain.payload.lessons);
 });

@@ -22,14 +22,25 @@ import {
   RequestError,
   requirePost,
 } from "../_shared/client.ts";
-import { type OcrLine, parseTimetableScan } from "../_shared/timetable_ocr.ts";
+import {
+  type OcrLine,
+  parseTimetableScan,
+  type ScanHints,
+} from "../_shared/timetable_ocr.ts";
 
 const MAX_IMAGE_BYTES = 6 * 1024 * 1024;
 const OCR_TIMEOUT_MS = 60_000;
 const MAX_LINES = 2000;
 // A photo, a shared original from an iPhone, or the PDF a school hands out: the OCR service
 // reads a PDF's text layer directly and renders a scanned one.
-const MIMES = new Set(["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif", "application/pdf"]);
+const MIMES = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/heic",
+  "image/heif",
+  "application/pdf",
+]);
 
 /** The OCR service's answer: `{lines: [{text, box, score}]}` (infra/ocr/server.py). */
 function linesOf(data: unknown): OcrLine[] {
@@ -107,6 +118,21 @@ export async function recognise(
   return linesOf(data);
 }
 
+/** The family's language(s) and subjects, so the parser reads the sheet with the right words
+ *  (specs/24): bounded, text only, anything else ignored. */
+function hintsOf(body: Record<string, unknown>): ScanHints {
+  const texts = (value: unknown, max: number, length: number): string[] =>
+    Array.isArray(value)
+      ? value.filter((v): v is string =>
+        typeof v === "string" && v.length <= length
+      ).slice(0, max)
+      : [];
+  return {
+    languages: texts(body.languages, 8, 10),
+    subjects: texts(body.subjects, 150, 60),
+  };
+}
+
 function decodeImage(
   body: Record<string, unknown>,
 ): { image: Uint8Array; mime: string } {
@@ -160,9 +186,10 @@ Deno.serve(async (req: Request): Promise<Response> => {
         "ocr_not_configured",
       );
     }
-    const { image, mime } = decodeImage(await readBody(req));
+    const body = await readBody(req);
+    const { image, mime } = decodeImage(body);
     const lines = await recognise(url, image, mime);
-    const result = parseTimetableScan(lines);
+    const result = parseTimetableScan(lines, hintsOf(body));
     if (!result) {
       throw new RequestError(
         422,

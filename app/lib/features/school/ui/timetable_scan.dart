@@ -12,6 +12,7 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/identity/ui/guardian_gate.dart';
+import 'package:wuselwall/features/school/application/school_providers.dart';
 import 'package:wuselwall/features/school/data/scan_repository.dart';
 import 'package:wuselwall/features/school/ui/timetable_import_page.dart';
 
@@ -131,9 +132,20 @@ Future<void> showTimetableScan(
     mime = mimeOf(file.name, reported: file.mimeType);
   }
 
+  // The family's language and its subjects steer the server's reading (specs/24).
+  final subjects = ref.read(schoolDataProvider).value?.subjects ?? const [];
   final result = await _busy(
     context,
-    ref.read(scanRepositoryProvider).scan(image: bytes, mime: mime),
+    ref
+        .read(scanRepositoryProvider)
+        .scan(
+          image: bytes,
+          mime: mime,
+          languages: [Localizations.localeOf(context).languageCode],
+          subjects: [
+            for (final s in subjects) ...[s.shortName, s.name],
+          ],
+        ),
   );
   if (!context.mounted) return;
   switch (result) {

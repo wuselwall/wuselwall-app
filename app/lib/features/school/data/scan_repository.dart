@@ -36,12 +36,22 @@ class ScanRepository {
 
   final ApiClient _api;
 
+  /// [languages] and [subjects] tell the server's parser which words to expect: the
+  /// family's language(s) and its subject names, so a subject code is never read as a
+  /// weekday of another language.
   Future<Result<ScanResult>> scan({
     required Uint8List image,
     required String mime,
+    List<String> languages = const [],
+    List<String> subjects = const [],
   }) => _api.function(
     'timetable-scan',
-    body: {'image': base64Encode(image), 'mime': mime},
+    body: {
+      'image': base64Encode(image),
+      'mime': mime,
+      'languages': languages,
+      'subjects': subjects,
+    },
     parse: (json) => ScanResult.fromJson(json! as Map<String, dynamic>),
   );
 }

@@ -254,6 +254,13 @@ their own, `import:propose`, granted separately from `shopping:write`.
   own school PDF came through the text layer as five days, eight rows with both breaks and all
   eight bell times, better than the OCR of its rendering. HEIC originals decode through
   `pillow-heif`.
+- **The family's words** (*added 2026-10-23*): the app sends its language and the household's
+  subject names (short and long) with the scan. The parser then uses only that language's
+  short weekday forms, since short codes collide across languages ("Ma" is Mathe in German and
+  mardi in French; "SU" is Sachunterricht and the English Sunday), while the full names of
+  every language stay matchable by prefix, so a French sheet in a German family still reads.
+  A token that is one of the family's subjects is never a weekday by guess. Without hints, every
+  short form counts, as before.
 
 ### What was not verified
 
