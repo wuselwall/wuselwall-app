@@ -30,6 +30,8 @@ export type ScanPayload = {
 
 export type ScanResult = {
   payload: ScanPayload;
+  /** The sheet had its days down the left and its periods across the top. */
+  transposed: boolean;
   /** Text pieces that landed in a cell. */
   placed: number;
   /** Text pieces that fit no column or row: the parent should look at the sheet. */
@@ -518,6 +520,39 @@ export function lessonOf(
 export function parseTimetableScan(input: OcrLine[]): ScanResult | null {
   const lines = input.map(lineOf).filter((l): l is Line => l !== null);
   if (lines.length < 4) return null;
+  const upright = parseGrid(lines);
+  if (upright && plausible(upright)) return upright;
+  // A diary page or a hand-drawn sheet often runs the days down the left and the periods
+  // across the top: the same grid, turned. Swap the axes and read it the same way.
+  const turned = lines.map((l) => ({
+    ...l,
+    cx: l.cy,
+    cy: l.cx,
+    w: l.h,
+    h: l.w,
+    used: false,
+  }));
+  const result = parseGrid(turned);
+  if (!result) return null;
+  const read = { ...result, transposed: true };
+  return plausible(read) ? read : null;
+}
+
+/**
+ * A grid a family could mean: at least two periods (three when the sheet was read turned,
+ * where a one-row list of weekdays is a menu or a rota, not a timetable), at most four text
+ * pieces per cell (a whole-school master plan packs dozens into what looks like one cell),
+ * and a turned reading that placed more than it dropped.
+ */
+function plausible(r: ScanResult): boolean {
+  if (r.rows < (r.transposed ? 3 : 2)) return false;
+  if (r.placed > r.rows * r.columns * 4) return false;
+  if (r.transposed && r.unplaced > r.placed) return false;
+  return true;
+}
+
+function parseGrid(input: Line[]): ScanResult | null {
+  const lines = input.map((l) => ({ ...l, used: false }));
   const h = median(lines.map((l) => l.h));
   const header = findColumns(lines, h);
   if (!header) return null;
@@ -585,5 +620,6 @@ export function parseTimetableScan(input: OcrLine[]): ScanResult | null {
     unplaced,
     columns: columns.length,
     rows: rows.length,
+    transposed: false,
   };
 }

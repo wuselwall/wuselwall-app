@@ -279,9 +279,25 @@ text unplaced, which the preview reports; dense two-line cells without a label p
 halved. Seven of the eight look-alikes give "no grid"; the gym course plan parses, as any
 weekly grid with weekday headers will, and only the subjects on the preview tell a parent.
 No poor photograph produced a false grid, and the thumbnail parsed completely. Whole-school
-master plans, a substitution plan and a transposed sheet (days down the left) give "no
-grid". What remains open is the real photograph from a phone: paper, shadows, a slant.
-The preview's warnings exist so that a parent sees what the parser missed. The
+master plans and a substitution plan give "no grid".
+
+*Third round, twelve photographed sheets* (Commons and Flickr: a crumpled sheet held in two
+hands, a hand-drawn plan under museum glass, Kurrent handwriting from 1898, a diary page, a
+projector screen, a corkboard, sheets in Finnish, Korean and Russian). Two of them run the
+days down the left and the periods across the top, as a diary page or a hand-drawn sheet
+often does, and so did the Spanish photo of the second round: the parser now reads a sheet
+**turned** when no horizontal header exists, by swapping the axes and running the same
+algorithm. That pass needed a **plausibility check**, which now guards both readings: at
+least two periods (three when turned, since a one-row list of weekdays is a rota or a menu),
+at most four text pieces per cell (a master plan packs dozens into what looks like one), and a
+turned reading that placed more than it dropped. With it, the whole corpus of 80 files
+classifies as it should: every class sheet in five languages is a grid, the gym course plan
+is the one look-alike that parses, and every other look-alike, poor photograph, master plan
+and sheet in an unsupported language gives "no grid". Handwriting itself stays beyond the
+OCR: the diary page yields its six days and nine periods but a third of its cells.
+
+What remains open is the real photograph from a phone: paper, shadows, a slant. The
+preview's warnings exist so that a parent sees what the parser missed. The
 RapidOCR language switch is used when the installed version has it, with the default models
 as fallback, so an API change in `rapidocr` degrades to "reads Latin letters without
 accents" rather than to a failed build.
