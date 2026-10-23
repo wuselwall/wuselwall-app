@@ -408,6 +408,10 @@ short name and let the parent name it in the preview.
 
 ## 6. What this means for the matcher and the starter lists
 
+*Status 2026-10-23: items 1 to 3, 5 (breaks and parentheses) and 6 are implemented in
+`supabase/functions/_shared/school_subjects.ts` and the starter lists of `api.school_save`;
+item 4 (the legend) and the rest of item 5 are in the recognition roadmap of specs/24.*
+
 1. **Match the family's own subjects first.** The scan already sends the household's short
    names and names (specs/24). Exact match on the folded token, then prefix, then one edit for
    tokens of five letters or more. Nothing in this research gives a better signal than that

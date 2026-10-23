@@ -6,6 +6,7 @@ import {
   type OcrLine,
   parseTimetableScan,
   periodOf,
+  subjectKey,
   vocabOf,
   weekdayOf,
   weekdaysIn,
@@ -503,11 +504,100 @@ Deno.test("the family's language and subjects steer the words", () => {
   assertEquals(weekdayOf("Ven", vocabOf({ languages: ["fr"] })), 5);
   // Unknown languages fall back to every short form.
   assertEquals(weekdayOf("mar", vocabOf({ languages: ["xx"] })), 2);
+  // A Spanish sheet's "Lu Ma Mi" count only for a Spanish family.
+  assertEquals(weekdayOf("Ma", vocabOf({ languages: ["es"] })), 2);
+  assertEquals(weekdayOf("Mi", vocabOf({ languages: ["es"] })), 3);
+  assertEquals(weekdayOf("Ma", vocabOf({ languages: ["xx"] })), null);
   // The reference sheet reads the same with hints.
   const plain = parseTimetableScan(sheet())!;
   const hinted = parseTimetableScan(sheet(), {
     languages: ["de"],
     subjects: ["Ma", "D", "Sp", "SU", "E"],
   })!;
-  assertEquals(hinted.payload.lessons, plain.payload.lessons);
+  assertEquals(
+    hinted.payload.lessons.map((l) => l.subject),
+    plain.payload.lessons.map((l) => l.subject),
+  );
+  // The language's words name the codes; without a language nothing is named.
+  assertEquals(
+    hinted.payload.lessons.find((l) => l.subject === "SU")?.name,
+    "Sachunterricht",
+  );
+  assertEquals(
+    plain.payload.lessons.find((l) => l.subject === "SU")?.name,
+    undefined,
+  );
+});
+
+Deno.test("the language's subject words name, join, snap and drop", () => {
+  const de = vocabOf({
+    languages: ["de"],
+    subjects: ["Sachunterricht", "SU", "Mathe", "Ma"],
+  });
+  // A code gets the language's name; the room stays a room.
+  assertEquals(lessonOf(1, 1, "SU R12", de), {
+    day: 1,
+    period: 1,
+    subject: "SU",
+    name: "Sachunterricht",
+    room: "R12",
+  });
+  // The family's spelling is the subject, the language's the name.
+  assertEquals(lessonOf(1, 1, "Mathe", de), {
+    day: 1,
+    period: 1,
+    subject: "Mathe",
+    name: "Mathematik",
+  });
+  // A long name is one subject, the words after it the teacher.
+  assertEquals(lessonOf(1, 1, "Natur, Mensch, Gesellschaft Frau Keller", de), {
+    day: 1,
+    period: 1,
+    subject: "Natur, Mensch, Gesellschaft",
+    teacher: "Frau Keller",
+  });
+  // An OCR slip snaps to the family's word; a short code never snaps.
+  assertEquals(lessonOf(1, 1, "Sachunterrlcht", de)?.subject, "Sachunterricht");
+  assertEquals(lessonOf(1, 1, "Mathematlk 2", de), {
+    day: 1,
+    period: 1,
+    subject: "Mathematik",
+    room: "2",
+  });
+  assertEquals(lessonOf(1, 1, "Mo", de)?.subject, "Mo");
+  // A code with several meanings in the language stays bare.
+  assertEquals(lessonOf(1, 1, "TG", de), { day: 1, period: 1, subject: "TG" });
+  // Without a language no code is named.
+  assertEquals(lessonOf(1, 1, "SU"), { day: 1, period: 1, subject: "SU" });
+  // A break is no lesson.
+  assertEquals(lessonOf(1, 1, "Pause", de), null);
+  assertEquals(lessonOf(1, 1, "Grosse Pause", de), null);
+  assertEquals(lessonOf(1, 1, "Mittag", de), null);
+  // French and Spanish words.
+  const fr = vocabOf({ languages: ["fr"] });
+  assertEquals(lessonOf(1, 1, "EPS M. Dupont", fr), {
+    day: 1,
+    period: 1,
+    subject: "EPS",
+    name: "Éducation physique et sportive",
+    teacher: "M. Dupont",
+  });
+  assertEquals(lessonOf(1, 1, "Récré", fr), null);
+  assertEquals(lessonOf(1, 1, "Hist-Géo", fr)?.name, "Histoire-géographie");
+  const es = vocabOf({ languages: ["es"] });
+  assertEquals(lessonOf(1, 1, "E. Física (GIMNÀS)", es), {
+    day: 1,
+    period: 1,
+    subject: "E. Física",
+    name: "Educación Física",
+    teacher: "GIMNÀS",
+  });
+  assertEquals(lessonOf(1, 1, "ESPLAI", es), null);
+  // A language's subject word is never a weekday by guess: "Sam" is Samstag only in German.
+  assertEquals(weekdayOf("Sam", vocabOf({ languages: ["de"] })), 6);
+  assertEquals(weekdayOf("Mittag", de), null);
+  assertEquals(
+    subjectKey("Natur, Mensch,  Gesellschaft."),
+    "natur mensch gesellschaft",
+  );
 });

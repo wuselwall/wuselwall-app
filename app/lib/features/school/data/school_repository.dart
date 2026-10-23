@@ -86,13 +86,16 @@ class SchoolRepository {
 
   /// [regionCode] is any depth (`DE-BE`, `CH-ZH-ZH-ZH`); null clears it. [timezone] is sent
   /// only when given: the server takes the household's for a new school and keeps the
-  /// stored value of an existing one.
+  /// stored value of an existing one. [language] is the app's language; a new school's
+  /// starter subjects follow the region, and the language where the region leaves it open
+  /// (a bilingual canton, a country without a list).
   Future<Result<String>> saveSchool({
     required String? actor,
     String? id,
     required String name,
     String? regionCode,
     String? timezone,
+    String? language,
   }) => _api.rpc(
     'school_save',
     params: {
@@ -102,6 +105,7 @@ class SchoolRepository {
         'name': name,
         'region_code': regionCode,
         'timezone': ?timezone,
+        'language': ?language,
       },
     },
     parse: _id,
