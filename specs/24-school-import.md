@@ -109,8 +109,9 @@ only (the server refuses the writes of anyone else):
 - the term the import lands in: the one covering the week on screen, else the proposed
   school year, marked "(wird angelegt)";
 - the count, the class, the cycle, and a line when an existing timetable will be replaced;
-- the grid as it will be saved, with the bell times, new subjects in bold, dropped ones
-  struck through;
+- the grid as it will be saved: each period with its clock span, each subject's short name
+  with its name underneath (on a phone the cells are too narrow, a long press shows it), new
+  subjects in bold, dropped ones struck through;
 - the subjects that will be created, with a switch to leave them (and their lessons) out;
 - the care rows;
 - every warning: lessons whose time matched no bell time (dropped), periods beyond the bell
@@ -387,10 +388,9 @@ accents" rather than to a failed build.
 ## Recognition roadmap
 
 What the research and the corpus say the next steps are, in the order they pay off. None
-needs a model; all stay on the family's server. *Status 2026-10-23: steps 1 to 7 and 9 are
-built (see "The sheet's own words, and the family's" and "Accents" above); 8 and 10 stay
-open, 10 in part: the preview lists each new subject with its name and the list to take it as
-an existing one, the grid still shows short names only.*
+needs a model; all stay on the family's server. *Status 2026-10-23: steps 1 to 7, 9 and 10
+are built (see "The sheet's own words, and the family's", "Accents" and "The preview" above);
+8 stays open.*
 
 1. **Read the legend.** Swiss, Spanish and most Untis sheets print `CODE Name` pairs under
    or beside the grid. A block of short-code-plus-name lines outside the grid resolves every
@@ -445,8 +445,10 @@ an existing one, the grid still shows short names only.*
    accent costs one edit, which `snapSubject` absorbs for words of five letters or more
    ("Fran6ais" snaps to Français), and `fold` maps œ and æ to oe and ae as the app's
    `foldText` does.
-10. **The preview shows the name.** The code with its name underneath, and the merge action
-    of step 3, are the app's side of this; the payload carries the name already.
+10. **The preview shows the name.** Built: the grid shows each subject's name under its
+    short name (on a phone, where five columns leave no room, a long press shows it), the
+    row header shows the period's clock span, and the merge action of step 3 is in the list
+    of new subjects; the payload carries the name already.
 
 ## What is not built
 

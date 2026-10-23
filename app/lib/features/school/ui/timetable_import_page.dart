@@ -731,90 +731,139 @@ class _Grid extends StatelessWidget {
 
     bool dropped(ResolvedLesson l) => idOf(l) == null && !createSubjects;
 
-    return Table(
-      border: TableBorder.all(color: ww.line),
-      columnWidths: const {0: FixedColumnWidth(72)},
-      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-      children: [
-        TableRow(
+    // The subject's name under its short name; null when the name is only the word
+    // again (a new "Hort" shows once).
+    String? nameOf(ResolvedLesson l) {
+      final id = idOf(l);
+      final name = id != null ? byId[id]?.name : byKey[l.newSubjectKey]?.name;
+      if (name == null || foldText(name) == foldText(label(l))) return null;
+      return name;
+    }
+
+    Widget cell(ResolvedLesson l, bool compact) {
+      final name = nameOf(l);
+      final row = Row(
+        children: [
+          if (l.parity != 'all')
+            Text(
+              l.parity.toUpperCase(),
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: theme.colorScheme.primary,
+              ),
+            ),
+          if (idOf(l) != null) ...[
+            Icon(schoolIcon(byId[idOf(l)]?.iconKey), size: 14),
+            const SizedBox(width: 2),
+          ],
+          Expanded(
+            child: Text(
+              label(l),
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                color: dropped(l) ? ww.ink2 : null,
+                decoration: dropped(l) ? TextDecoration.lineThrough : null,
+              ),
+            ),
+          ),
+          if (l.room != null)
+            Text(l.room!, style: TextStyle(fontSize: 11, color: ww.ink2)),
+        ],
+      );
+      if (name == null) return row;
+      if (compact) {
+        // No room for the name on a phone: a long press tells it.
+        return Tooltip(
+          message: '${label(l)} · $name',
+          triggerMode: TooltipTriggerMode.longPress,
+          child: row,
+        );
+      }
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          row,
+          Text(
+            name,
+            key: ValueKey('import-cell-name-${l.weekday}-${l.period}'),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 11,
+              color: ww.ink2,
+              decoration: dropped(l) ? TextDecoration.lineThrough : null,
+            ),
+          ),
+        ],
+      );
+    }
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Five day columns beside the label column leave a phone about 54 px a cell.
+        final compact = constraints.maxWidth < 560;
+        return Table(
+          border: TableBorder.all(color: ww.line),
+          columnWidths: {
+            0: const FixedColumnWidth(80),
+            for (var i = 1; i <= days.length; i++) i: const FlexColumnWidth(),
+          },
+          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
           children: [
-            const SizedBox.shrink(),
-            for (final d in days)
-              Padding(
-                padding: const EdgeInsets.all(4),
-                child: Text(
-                  context.weekdayShort(_weekdayDate(d)),
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.titleSmall,
-                ),
+            TableRow(
+              children: [
+                const SizedBox.shrink(),
+                for (final d in days)
+                  Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: Text(
+                      context.weekdayShort(_weekdayDate(d)),
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.titleSmall,
+                    ),
+                  ),
+              ],
+            ),
+            for (final p in periods)
+              TableRow(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${p.index}.',
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        Text(
+                          context.span(p.starts, p.ends),
+                          style: TextStyle(fontSize: 11, color: ww.ink2),
+                        ),
+                      ],
+                    ),
+                  ),
+                  for (final d in days)
+                    Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          for (final l in lessons)
+                            if (l.weekday == d && l.period == p.index)
+                              cell(l, compact),
+                        ],
+                      ),
+                    ),
+                ],
               ),
           ],
-        ),
-        for (final p in periods)
-          TableRow(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(4),
-                child: Text(
-                  '${p.index}. ${context.time(p.starts)}',
-                  style: theme.textTheme.labelSmall,
-                ),
-              ),
-              for (final d in days)
-                Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      for (final l in lessons)
-                        if (l.weekday == d && l.period == p.index)
-                          Row(
-                            children: [
-                              if (l.parity != 'all')
-                                Text(
-                                  l.parity.toUpperCase(),
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w700,
-                                    color: theme.colorScheme.primary,
-                                  ),
-                                ),
-                              if (idOf(l) != null) ...[
-                                Icon(
-                                  schoolIcon(byId[idOf(l)]?.iconKey),
-                                  size: 14,
-                                ),
-                                const SizedBox(width: 2),
-                              ],
-                              Expanded(
-                                child: Text(
-                                  label(l),
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    color: dropped(l) ? ww.ink2 : null,
-                                    decoration: dropped(l)
-                                        ? TextDecoration.lineThrough
-                                        : null,
-                                  ),
-                                ),
-                              ),
-                              if (l.room != null)
-                                Text(
-                                  l.room!,
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    color: ww.ink2,
-                                  ),
-                                ),
-                            ],
-                          ),
-                    ],
-                  ),
-                ),
-            ],
-          ),
-      ],
+        );
+      },
     );
   }
 }

@@ -24,6 +24,10 @@ Future<void> _openSchedule(WidgetTester t) async {
   await t.pumpAndSettle();
 }
 
+/// A text inside the preview's grid (the closed merge list prints subject names too).
+Finder _inGrid(String text) =>
+    find.descendant(of: find.byType(Table), matching: find.text(text));
+
 void main() {
   testWidgets('paste import: preview, then one tap writes everything', (
     t,
@@ -63,6 +67,14 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Englisch (En)'), findsOneWidget);
+    // The grid names each subject under its short name, the row header shows the span.
+    expect(_inGrid('Mathematik'), findsOneWidget);
+    expect(_inGrid('Deutsch'), findsOneWidget);
+    expect(
+      t.widget<Text>(find.byKey(const ValueKey('import-cell-name-2-1'))).data,
+      'Englisch',
+    );
+    expect(_inGrid('8–8:45'), findsOneWidget);
     expect(school.subjectSaves, isEmpty, reason: 'nothing before Übernehmen');
 
     await t.tap(find.byKey(const ValueKey('import-apply')));
@@ -130,6 +142,11 @@ void main() {
     await t.tap(find.text('Deutsch').last);
     await t.pumpAndSettle();
     expect(find.text(de.schoolImportCreateSubjects), findsNothing);
+    expect(
+      _inGrid('Deutsch'),
+      findsOneWidget,
+      reason: 'Di/1 shows the subject taken',
+    );
 
     await t.tap(find.byKey(const ValueKey('import-apply')));
     await t.pumpAndSettle();
@@ -139,6 +156,43 @@ void main() {
     expect(school.subjectSaves[1].aliases, ['Rechnen']);
     final sent = school.lessonSets.single.lessons;
     expect(sent.map((l) => l.subjectId), ['sub-ma', 'sub-d']);
+  });
+
+  testWidgets('on a phone the grid keeps the names for a long press', (
+    t,
+  ) async {
+    final school = FakeSchoolRepository(
+      data: referenceSchoolData(withTimetable: false),
+    );
+    await pumpApp(
+      t,
+      overrides: baseOverrides(
+        identity: FakeIdentityRepository(current: device()),
+      ),
+      school: school,
+    );
+    await _openSchedule(t);
+    await t.tap(find.widgetWithText(OutlinedButton, de.schoolImportAction));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const ValueKey('import-way-text')));
+    await t.pumpAndSettle();
+    await t.enterText(find.byKey(const ValueKey('import-paste')), _payload);
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const ValueKey('import-read')));
+    await t.pumpAndSettle();
+    // Phone width only for the preview: the tab bar needs the default size.
+    t.view.physicalSize = const Size(390, 844);
+    await t.pumpAndSettle();
+
+    // Five columns leave no room for a name: the cell shows the short name only
+    // and a long press tells the rest.
+    expect(_inGrid('Mathematik'), findsNothing);
+    expect(find.byKey(const ValueKey('import-cell-name-2-1')), findsNothing);
+    final tip = find.byTooltip('Ma · Mathematik');
+    expect(tip, findsOneWidget);
+    await t.longPress(tip);
+    await t.pump(const Duration(milliseconds: 200));
+    expect(find.text('Ma · Mathematik'), findsOneWidget);
   });
 
   testWidgets('a text that is no payload says why, and nothing is written', (
