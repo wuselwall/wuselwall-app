@@ -251,10 +251,21 @@ their own, `import:propose`, granted separately from `shopping:write`.
 
 The container was built from the Dockerfile and read a rendered sheet (five weekdays, five
 numbered periods with bell times, twenty-one cells) without a miss, and the parser placed
-every cell and took the bell times from the labels. It has not yet read a photographed
-sheet from a real family: paper, shadows, a slanted phone. The parser's thresholds come
-from synthetic grids; the first real photographs will tune them, and the preview's warnings
-exist so that a parent sees what the parser missed. The
+every cell and took the bell times from the labels.
+
+*2026-10-23:* sixteen public sheets (Wikimedia Commons renders and scans, school and
+ministry PDFs from Germany, Austria, Switzerland, England and Canada, one worn handwritten
+card) went through the container and the parser, locally, never committed. Fifteen yield a
+grid; the sixteenth is a bell-time regulation sheet, so "no grid" is right. What the first
+real sheets taught, all built since: letter-spaced print ("M ittw och"), a typo ("Dinstag")
+and truncated columns ("Dinsd") are matched against the full names by prefix or one edit;
+a header the OCR returns as one box is split along its width; "Stunde 3" counts as a row
+label; text in the header band is not a lesson; row labels may sit close to the first
+column; a name in parentheses is the teacher; weekdays the OCR garbled are inferred when
+the header's spacing per day is even. The clean renders and scans come back complete, with
+subject and room per cell; the handwritten card gives six columns but only a third of its
+cells. What remains open is the real photograph from a phone: paper, shadows, a slant.
+The preview's warnings exist so that a parent sees what the parser missed. The
 RapidOCR language switch is used when the installed version has it, with the default models
 as fallback, so an API change in `rapidocr` degrades to "reads Latin letters without
 accents" rather than to a failed build.

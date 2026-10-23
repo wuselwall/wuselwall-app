@@ -131,11 +131,118 @@ export function fold(text: string): string {
     .toLowerCase().trim();
 }
 
-/** The weekday a header cell names ("Mo", "Montag", "Mo. 12.10.", "Thu"), else null. */
+/** The full names, for truncated ("Dinsd"), letter-spaced ("M ittw och") and misspelt
+ *  ("Dinstag") headers: a real photograph rarely yields the exact word. */
+const FULL_NAMES: [string, number][] = [
+  ["montag", 1],
+  ["dienstag", 2],
+  ["mittwoch", 3],
+  ["donnerstag", 4],
+  ["freitag", 5],
+  ["samstag", 6],
+  ["sonntag", 7],
+  ["monday", 1],
+  ["tuesday", 2],
+  ["wednesday", 3],
+  ["thursday", 4],
+  ["friday", 5],
+  ["saturday", 6],
+  ["sunday", 7],
+  ["lundi", 1],
+  ["mardi", 2],
+  ["mercredi", 3],
+  ["jeudi", 4],
+  ["vendredi", 5],
+  ["samedi", 6],
+  ["dimanche", 7],
+  ["lunes", 1],
+  ["martes", 2],
+  ["miercoles", 3],
+  ["jueves", 4],
+  ["viernes", 5],
+  ["sabado", 6],
+  ["domingo", 7],
+  ["maandag", 1],
+  ["dinsdag", 2],
+  ["woensdag", 3],
+  ["donderdag", 4],
+  ["vrijdag", 5],
+  ["zaterdag", 6],
+  ["zondag", 7],
+];
+
+/** True when `a` and `b` differ by at most one edit (insert, delete or replace). */
+function withinOneEdit(a: string, b: string): boolean {
+  if (Math.abs(a.length - b.length) > 1) return false;
+  let i = 0, j = 0, edits = 0;
+  while (i < a.length && j < b.length) {
+    if (a[i] === b[j]) {
+      i++;
+      j++;
+      continue;
+    }
+    if (++edits > 1) return false;
+    if (a.length > b.length) i++;
+    else if (a.length < b.length) j++;
+    else {
+      i++;
+      j++;
+    }
+  }
+  return edits + (a.length - i) + (b.length - j) <= 1;
+}
+
+/** The weekday one folded token names: exact, else a prefix of a full name (three letters
+ *  or more), else one edit away from a full name (five letters or more). Null when none or
+ *  when the candidates disagree. */
+function dayOfToken(token: string): number | null {
+  if (token.length === 0) return null;
+  const exact = WEEKDAYS[token];
+  if (exact !== undefined) return exact;
+  const days = new Set<number>();
+  for (const [name, day] of FULL_NAMES) {
+    if (token.length >= 3 && name.startsWith(token)) days.add(day);
+    else if (token.length >= 5 && withinOneEdit(token, name)) days.add(day);
+  }
+  return days.size === 1 ? [...days][0] : null;
+}
+
+const SEPARATORS = /[\s.,:/()\[\]]+/;
+
+/** The weekday a header cell names ("Mo", "Montag", "Mo. 12.10.", "Thu", "M ittw och"), else null. */
 export function weekdayOf(text: string): number | null {
-  const first = fold(text).split(/[\s.,:/]+/).find((t) => t.length > 0);
-  if (!first) return null;
-  return WEEKDAYS[first] ?? null;
+  const tokens = fold(text).split(SEPARATORS).filter((t) => t.length > 0);
+  if (tokens.length === 0) return null;
+  if (WEEKDAYS[tokens[0]] !== undefined) return WEEKDAYS[tokens[0]];
+  // Letter-spaced print ("Mon tag", "D ien s tag"): the text without its spaces.
+  if (tokens.length >= 2) {
+    const compact = dayOfToken(tokens.join(""));
+    if (compact !== null) return compact;
+  }
+  return dayOfToken(tokens[0]);
+}
+
+/** Every weekday named in one text with its character span, for a header the OCR returned
+ *  as one box ("Maandag Dinsdag Woensdag Donderdag Vrijdag"). A letter-spaced single name
+ *  is one entry over the whole text. */
+export function weekdaysIn(
+  text: string,
+): { day: number; start: number; end: number }[] {
+  const folded = fold(text);
+  const out: { day: number; start: number; end: number }[] = [];
+  for (const m of folded.matchAll(/[^\s.,:/()\[\]]+/g)) {
+    const day = dayOfToken(m[0]);
+    if (day !== null) {
+      out.push({ day, start: m.index!, end: m.index! + m[0].length });
+    }
+  }
+  if (out.length >= 2) {
+    const days = out.map((o) => o.day);
+    const ordered = days.every((d, i) => i === 0 || d > days[i - 1]);
+    if (ordered) return out;
+  }
+  const single = weekdayOf(text);
+  return single === null ? [] : [{ day: single, start: 0, end: folded.length }];
 }
 
 const CLOCK = /(\d{1,2})\s*[:.h]\s*(\d{2})/g;
@@ -158,7 +265,10 @@ export function periodOf(text: string): number | null {
   // "08:00" and "8.50" are clocks, not periods: a dot or colon followed by digits is skipped.
   const m =
     /^\s*(\d{1,2})\s*(\.(?!\s*\d)|\)|:(?!\s*\d)|std|stunde|h\b|period|lesson|$)/i
-      .exec(text);
+      .exec(text) ??
+      // "Stunde 3", "Std. 2", "Period 4", "Uur 1", "Hora 2", "Cours 3".
+      /^\s*(?:stunde|std\.?|lektion|period|lesson|les|uur|hora|cours|h)\s*(\d{1,2})\s*$/i
+        .exec(text);
   if (!m) return null;
   const n = Number(m[1]);
   return n >= 1 && n <= 15 ? n : null;
@@ -218,14 +328,22 @@ function cluster<T>(
 type Column = { day: number; cx: number };
 type Row = { index: number; cy: number };
 
-/** The header: the horizontal band with the most distinct weekdays (at least three). */
+/** The header: the horizontal band with the most distinct weekdays (at least three). A box
+ *  that holds several weekday names is split along its width. Every box in the band is then
+ *  out of the cells, so "(Langtag)" next to "Montag" does not become a first lesson. */
 function findColumns(
   lines: Line[],
   h: number,
 ): { columns: Column[]; headerY: number } | null {
-  const named = lines.map((l) => ({ l, day: weekdayOf(l.text) })).filter((x) =>
-    x.day !== null
-  );
+  const named: { l: Line; day: number; cx: number }[] = [];
+  for (const l of lines) {
+    const found = weekdaysIn(l.text);
+    const len = Math.max(1, fold(l.text).length);
+    for (const f of found) {
+      const mid = found.length === 1 ? 0.5 : (f.start + f.end) / 2 / len;
+      named.push({ l, day: f.day, cx: l.cx - l.w / 2 + l.w * mid });
+    }
+  }
   const bands = cluster(named, (x) => x.l.cy, h * 1.2);
   let best: typeof bands[number] | null = null;
   let bestDays = 0;
@@ -242,18 +360,45 @@ function findColumns(
   if (!best || bestDays < 3) return null;
   const columns: Column[] = [];
   const seen = new Set<number>();
-  for (const m of [...best.members].sort((a, b) => a.l.cx - b.l.cx)) {
-    if (seen.has(m.day!)) continue;
-    seen.add(m.day!);
+  for (const m of [...best.members].sort((a, b) => a.cx - b.cx)) {
+    if (seen.has(m.day)) continue;
+    seen.add(m.day);
     m.l.used = true;
-    columns.push({ day: m.day!, cx: m.l.cx });
+    columns.push({ day: m.day, cx: m.cx });
   }
   // A header is in weekday order left to right; a stray weekday elsewhere is noise.
   columns.sort((a, b) => a.cx - b.cx);
   for (let i = 1; i < columns.length; i++) {
     if (columns[i].day <= columns[i - 1].day) return null;
   }
-  return { columns, headerY: best.centre };
+  for (const l of lines) {
+    if (Math.abs(l.cy - best.centre) <= h * 0.9) l.used = true;
+  }
+  return { columns: fillGaps(columns), headerY: best.centre };
+}
+
+/**
+ * Weekdays the OCR missed between recognised ones ("Mo", "Do", "Sa" read, "Di", "Mi", "Fr"
+ * garbled): when the distance per day step is even across the header, the missing days
+ * get their columns at the interpolated positions. Nothing is added at the edges.
+ */
+function fillGaps(columns: Column[]): Column[] {
+  if (columns.length < 3) return columns;
+  const steps = columns.slice(1).map((c, i) =>
+    (c.cx - columns[i].cx) / (c.day - columns[i].day)
+  );
+  const step = median(steps);
+  if (!steps.every((s) => Math.abs(s - step) <= step * 0.25)) return columns;
+  const out: Column[] = [];
+  for (let i = 0; i < columns.length; i++) {
+    out.push(columns[i]);
+    const next = columns[i + 1];
+    if (!next) break;
+    for (let d = columns[i].day + 1; d < next.day; d++) {
+      out.push({ day: d, cx: columns[i].cx + step * (d - columns[i].day) });
+    }
+  }
+  return out;
 }
 
 /**
@@ -267,7 +412,8 @@ function findRows(
   spacing: number,
   h: number,
 ): { rows: Row[]; periods: ScanPeriod[] } {
-  const leftEdge = columns[0].cx - spacing / 2;
+  // Labels may sit close to the first column on a narrow table: a third of a spacing.
+  const leftEdge = columns[0].cx - spacing * 0.35;
   const labels = lines.filter((l) =>
     !l.used && l.cy > headerY + h / 2 && l.cx < leftEdge
   );
@@ -284,7 +430,7 @@ function findRows(
     next = idx + 1;
     for (const m of band.members) m.used = true;
     rows.push({ index: idx, cy: band.centre });
-    if (clocks.length >= 2) {
+    if (clocks.length >= 2 && !periods.some((p) => p.index === idx)) {
       periods.push({ index: idx, starts: clocks[0], ends: clocks[1] });
     }
   }
@@ -309,9 +455,16 @@ export function lessonOf(
   period: number,
   text: string,
 ): ScanLesson | null {
-  const tokens = text.replace(/[|_]+/g, " ").split(/\s+/).filter((t) =>
-    t.length > 0
-  );
+  // A name in parentheses is the teacher ("M rot (Hen)"), or the room when it has digits.
+  const bracketed: string[] = [];
+  const plain = text.replace(/\(([^()]{1,30})\)/g, (_, inner: string) => {
+    bracketed.push(inner.trim());
+    return " ";
+  });
+  const tokens = [
+    ...plain.replace(/[|_]+/g, " ").split(/\s+/).filter((t) => t.length > 0),
+    ...bracketed,
+  ];
   if (tokens.length === 0) return null;
   const subject = tokens[0].replace(/[.,:;]+$/, "");
   if (subject.length === 0 || /^[-–—]+$/.test(subject)) return null;
