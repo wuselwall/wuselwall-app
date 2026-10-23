@@ -77,6 +77,7 @@ abstract final class DemoData {
       role: Role.member,
       active: true,
       isChild: true,
+      hasAccount: false,
     ),
     Member(
       id: son,
@@ -85,6 +86,7 @@ abstract final class DemoData {
       role: Role.member,
       active: true,
       isChild: true,
+      hasAccount: false,
     ),
   ];
 

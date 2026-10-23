@@ -18,7 +18,7 @@ This is not possible if you are the **last guardian with an account**. Then invi
 
 ## Delete the family
 
-Only a guardian can delete a family, on their own phone. Tap **Delete family**, type the **family's name**, and tap **Next**. In the second step, type **DELETE** (in capitals) and tap **Delete family**.
+Only a guardian can delete a family, on their own phone, under **Settings → Family** (**Advanced** view). Tap **Delete family**, type the **family's name**, and tap **Next**. In the second step, type **DELETE** (in capitals) and tap **Delete family**.
 
 - The family is deleted with **all its data immediately and permanently**. There is no waiting period and no way to restore it, not even for a guardian.
 - All devices sign out at once. The adults' accounts remain: whoever signs in again can start a new family or join another.

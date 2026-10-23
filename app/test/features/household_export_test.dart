@@ -68,7 +68,7 @@ void main() {
         }),
       ],
     );
-    container.read(routerProvider).go(Routes.settings);
+    container.read(routerProvider).go(Routes.family);
     await t.pumpAndSettle();
     return (container: container, repo: repo, shares: shares);
   }
@@ -77,7 +77,7 @@ void main() {
     'a guardian on a personal phone sees the export with its explanation',
     (t) async {
       final s = await pumpSettings(t, device: device());
-      expect(find.text('Familie'), findsOneWidget);
+      expect(find.text('Familie'), findsWidgets);
       expect(find.byKey(exportTile), findsOneWidget);
       expect(find.text('Daten exportieren'), findsOneWidget);
       expect(

@@ -13,10 +13,12 @@ import 'package:wuselwall/core/text/fold.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/empty_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
+import 'package:wuselwall/core/ui/text_prompt.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
+import 'package:wuselwall/features/identity/ui/guardian_gate.dart';
 import 'package:wuselwall/features/shopping/application/shopping_providers.dart';
 import 'package:wuselwall/features/shopping/application/shopping_sync.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
@@ -89,6 +91,98 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody> {
     }
     final item = open();
     if (item != null && mounted) await _edit(item);
+  }
+
+  /// Long press on a tile: the item's note, or the tile itself (its name; "Nicht mehr
+  /// vorschlagen"). A typed name that is no tile yet goes straight to the note.
+  Future<void> _tileSheet(String name, ShoppingList list) async {
+    final l10n = context.l10n;
+    final tile = (ref.read(shoppingCatalogProvider).value ?? const [])
+        .where((c) => c.listId == list.id && c.foldedName == fold(name))
+        .firstOrNull;
+    if (tile == null) return _addAndEdit(name, list);
+    final choice = await showModalBottomSheet<String>(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: Text(
+                tile.name,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ),
+            ListTile(
+              key: const ValueKey('tile-add-edit'),
+              leading: const Icon(Icons.edit_note),
+              title: Text(l10n.shoppingTileAddEdit),
+              onTap: () => Navigator.pop(context, 'edit'),
+            ),
+            ListTile(
+              key: const ValueKey('tile-rename'),
+              leading: const Icon(Icons.drive_file_rename_outline),
+              title: Text(l10n.shoppingTileRename),
+              onTap: () => Navigator.pop(context, 'rename'),
+            ),
+            ListTile(
+              key: const ValueKey('tile-forget'),
+              leading: const Icon(Icons.visibility_off_outlined),
+              title: Text(l10n.shoppingTileForget),
+              subtitle: Text(l10n.shoppingTileForgetHelp),
+              onTap: () => Navigator.pop(context, 'forget'),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (!mounted) return;
+    switch (choice) {
+      case 'edit':
+        await _addAndEdit(name, list);
+      case 'rename':
+        final newName = await askText(
+          context,
+          title: l10n.shoppingTileRename,
+          label: l10n.shoppingListName,
+          initial: tile.name,
+          maxLength: 120,
+          fieldKey: const ValueKey('tile-name'),
+        );
+        final trimmed = newName?.trim() ?? '';
+        if (trimmed.isEmpty || trimmed == tile.name || !mounted) return;
+        await _run(
+          () => _repo.updateCatalogItem(
+            actor: _actor,
+            itemId: tile.id,
+            name: trimmed,
+          ),
+        );
+      case 'forget':
+        final ok = await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: Text(l10n.shoppingTileForgetConfirm(tile.name)),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: Text(l10n.cancel),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: Text(l10n.shoppingTileForget),
+              ),
+            ],
+          ),
+        );
+        if (ok != true || !mounted) return;
+        if (!await ensureGuardian(context, ref) || !mounted) return;
+        await _run(
+          () => _repo.deleteCatalogItem(actor: _actor, itemId: tile.id),
+        );
+      default:
+        return;
+    }
   }
 
   Future<void> _edit(ShoppingItem item) async {
@@ -202,9 +296,8 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody> {
                 _ListSwitcher(
                   selected: list.id,
                   onNew: _newList,
-                  onDefault: () => _run(
-                    () => _repo.setDefaultList(actor: _actor, listId: list.id),
-                  ),
+                  onEdit: () =>
+                      context.push(Routes.shoppingListEdit, extra: list.id),
                 ),
               if (pending > 0) _PendingBanner(count: pending),
               // A5: the picker and the item list share one scrollable instead of the
@@ -222,7 +315,7 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody> {
                         showSearch: !kiosk,
                         busy: _busy,
                         onAdd: (name) => _addName(name, list),
-                        onLongPress: (name) => _addAndEdit(name, list),
+                        onLongPress: (name) => _tileSheet(name, list),
                       ),
                     ),
                     const SliverToBoxAdapter(child: Divider(height: 1)),
@@ -344,12 +437,14 @@ class _ListSwitcher extends ConsumerWidget {
   const _ListSwitcher({
     required this.selected,
     required this.onNew,
-    required this.onDefault,
+    required this.onEdit,
   });
 
   final String selected;
   final VoidCallback onNew;
-  final VoidCallback onDefault;
+
+  /// "Liste bearbeiten" for the selected list: the pencil, or a long press on its chip.
+  final VoidCallback onEdit;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -360,40 +455,60 @@ class _ListSwitcher extends ConsumerWidget {
       // A6: tall enough for the touch target plus the row's own padding — the chips
       // used to be capped at 40 px by this box regardless of their own minimum.
       height: touch + Tokens.space2 * 2,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(
-          horizontal: Tokens.space4,
-          vertical: Tokens.space2,
-        ),
+      child: Row(
         children: [
-          for (final (i, l) in lists.indexed)
-            Padding(
-              padding: const EdgeInsets.only(right: Tokens.space2),
-              child: FocusTraversalOrder(
-                order: NumericFocusOrder(i.toDouble()),
-                child: _ListChip(
-                  key: ValueKey(l.id),
-                  minHeight: touch,
-                  onLongPress: l.id == selected && !l.isDefault
-                      ? onDefault
-                      : null,
-                  selected: l.id == selected,
-                  avatar: l.isDefault ? const Icon(Icons.star, size: 18) : null,
-                  label: l.openCount == 0
-                      ? l.name
-                      : '${l.name} · ${l.openCount}',
-                  onSelected: () =>
-                      ref.read(selectedListIdProvider.notifier).select(l.id),
-                ),
+          Expanded(
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(
+                horizontal: Tokens.space4,
+                vertical: Tokens.space2,
               ),
+              children: [
+                for (final (i, l) in lists.indexed)
+                  Padding(
+                    padding: const EdgeInsets.only(right: Tokens.space2),
+                    child: FocusTraversalOrder(
+                      order: NumericFocusOrder(i.toDouble()),
+                      child: _ListChip(
+                        key: ValueKey(l.id),
+                        minHeight: touch,
+                        onLongPress: l.id == selected ? onEdit : null,
+                        selected: l.id == selected,
+                        avatar: l.isDefault
+                            ? const Icon(Icons.star, size: 18)
+                            : null,
+                        label: l.openCount == 0
+                            ? l.name
+                            : '${l.name} · ${l.openCount}',
+                        onSelected: () => ref
+                            .read(selectedListIdProvider.notifier)
+                            .select(l.id),
+                      ),
+                    ),
+                  ),
+                FocusTraversalOrder(
+                  order: NumericFocusOrder(lists.length.toDouble()),
+                  child: _NewListChip(
+                    minHeight: touch,
+                    label: l10n.shoppingNewList,
+                    onPressed: onNew,
+                  ),
+                ),
+              ],
             ),
+          ),
+          // Outside the scrolling row, so it is always in reach on a phone.
           FocusTraversalOrder(
-            order: NumericFocusOrder(lists.length.toDouble()),
-            child: _NewListChip(
-              minHeight: touch,
-              label: l10n.shoppingNewList,
-              onPressed: onNew,
+            order: NumericFocusOrder(lists.length + 1),
+            child: Padding(
+              padding: const EdgeInsetsDirectional.only(end: Tokens.space2),
+              child: IconButton(
+                key: const ValueKey('edit-list'),
+                tooltip: l10n.shoppingEditList,
+                onPressed: onEdit,
+                icon: const Icon(Icons.edit_outlined),
+              ),
             ),
           ),
         ],

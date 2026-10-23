@@ -4708,4 +4708,189 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get savedMessage => 'Saved.';
+
+  @override
+  String get settingsSectionFamily => 'Family';
+
+  @override
+  String get settingsSectionThisDevice => 'This device';
+
+  @override
+  String get settingsSectionConnect => 'Sharing and connections';
+
+  @override
+  String get settingsMembersHint =>
+      'Tap a person to change their name, colour, picture or role. Drag the handle to change the order on the wall.';
+
+  @override
+  String get familyTitle => 'Family';
+
+  @override
+  String get familySettingsSubtitle => 'Name, time zone, data export, delete';
+
+  @override
+  String get familyTimezone => 'Time zone';
+
+  @override
+  String get familyTimezoneHelp => 'The wall and reminders follow this zone.';
+
+  @override
+  String get familyTimezoneSearch => 'Search time zone';
+
+  @override
+  String get familyLocale => 'Language on the wall';
+
+  @override
+  String get familyLocaleHelp =>
+      'Public holidays on the wall display are named in this language.';
+
+  @override
+  String get familyErrTimezone => 'Unknown time zone.';
+
+  @override
+  String get memberColour => 'Colour';
+
+  @override
+  String get memberAvatar => 'Picture';
+
+  @override
+  String get memberAvatarInitial => 'Initial';
+
+  @override
+  String get memberKind => 'Child or adult';
+
+  @override
+  String get memberRole => 'Role';
+
+  @override
+  String get memberRoleHelp =>
+      'Guardians see everything and approve rewards. Members tick off tasks.';
+
+  @override
+  String get memberReadOnlyHint =>
+      'Only guardians change other people. You can change your own name, colour and picture.';
+
+  @override
+  String get memberInactive => 'No longer with us';
+
+  @override
+  String get memberInactiveBody =>
+      'Off the wall, the avatar rows and new chores. History and points stay.';
+
+  @override
+  String get memberDeactivate => 'No longer with us';
+
+  @override
+  String memberDeactivateBody(String name) {
+    return '$name disappears from the wall, the avatar rows and new chores. History and points stay, and you can bring the person back here.';
+  }
+
+  @override
+  String memberDeactivateConfirm(String name) {
+    return 'Remove $name from the family\'s screens? History and points stay.';
+  }
+
+  @override
+  String get memberReactivate => 'Back with us';
+
+  @override
+  String memberHasAccountHint(String name) {
+    return '$name has an account and leaves the family from their own phone (Settings → Leave family).';
+  }
+
+  @override
+  String get memberReorderHandle => 'Change order';
+
+  @override
+  String get memberErrKindAdult =>
+      'A guardian, or someone with an account, is an adult.';
+
+  @override
+  String get memberErrRoleChild =>
+      'A child cannot be a guardian. Make the person an adult first.';
+
+  @override
+  String get memberErrSelf =>
+      'You cannot remove yourself. Another guardian can.';
+
+  @override
+  String get memberErrHasAccount =>
+      'This person has an account and leaves from their own phone.';
+
+  @override
+  String get deviceRename => 'Rename device';
+
+  @override
+  String deviceLastSeen(String ago) {
+    return 'last active $ago';
+  }
+
+  @override
+  String get deviceNeverSeen => 'not active yet';
+
+  @override
+  String get shoppingEditList => 'Edit list';
+
+  @override
+  String get shoppingListDefault => 'Default list';
+
+  @override
+  String get shoppingListDefaultHelp =>
+      'The wall display writes to the default list.';
+
+  @override
+  String get shoppingCategories => 'Categories';
+
+  @override
+  String get shoppingCategoriesHelp =>
+      'In the order you walk through the shop. Drag the handle to reorder.';
+
+  @override
+  String get shoppingCategoryAdd => 'Add category';
+
+  @override
+  String get shoppingCategoryRename => 'Rename category';
+
+  @override
+  String get shoppingCategoryName => 'Category name';
+
+  @override
+  String shoppingCategoryDeleteConfirm(String name) {
+    return 'Remove “$name”? Its items stay on the list without a category.';
+  }
+
+  @override
+  String get shoppingListDelete => 'Delete list';
+
+  @override
+  String shoppingListDeleteConfirm(String name) {
+    return 'Delete “$name”? Open items move to the default list; its history and tiles are gone.';
+  }
+
+  @override
+  String get shoppingErrListDefault =>
+      'The default list cannot be deleted. Make another list the default first.';
+
+  @override
+  String get shoppingErrTileExists => 'A tile with this name already exists.';
+
+  @override
+  String get shoppingTileAddEdit => 'Add and edit';
+
+  @override
+  String get shoppingTileRename => 'Rename tile';
+
+  @override
+  String get shoppingTileForget => 'Don\'t suggest any more';
+
+  @override
+  String get shoppingTileForgetHelp => 'The tile goes; the history keeps it.';
+
+  @override
+  String shoppingTileForgetConfirm(String name) {
+    return 'Remove the tile “$name”? Buying it again brings it back.';
+  }
 }

@@ -72,6 +72,25 @@ extension FailureL10n on Failure {
       'scan_nothing_found' => l10n.schoolScanNothingFound,
       'image_too_large' => l10n.schoolScanTooLarge,
       'image_invalid' || 'ocr_failed' => l10n.schoolScanFailed,
+      'name_invalid' => l10n.errNameRequired,
+      'color_invalid' ||
+      'avatar_invalid' ||
+      'kind_invalid' => l10n.errorValidation,
+      'kind_adult_required' => l10n.memberErrKindAdult,
+      'members_invalid' || 'categories_invalid' => l10n.errorValidation,
+      'role_invalid' => l10n.errorValidation,
+      'role_child' => l10n.memberErrRoleChild,
+      'member_self' => l10n.memberErrSelf,
+      'member_has_account' => l10n.memberErrHasAccount,
+      'member_not_found' => l10n.errorNotFound,
+      'household_name_invalid' => l10n.errNameRequired,
+      'timezone_invalid' => l10n.familyErrTimezone,
+      'locale_invalid' => l10n.errorValidation,
+      'label_invalid' => l10n.errNameRequired,
+      'device_not_found' => l10n.errorNotFound,
+      'list_not_found' || 'catalog_not_found' => l10n.errorNotFound,
+      'list_default' => l10n.shoppingErrListDefault,
+      'catalog_exists' => l10n.shoppingErrTileExists,
       _ => null,
     };
     if (byCode != null) return byCode;

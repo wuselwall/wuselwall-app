@@ -14,7 +14,7 @@ El **último adulto responsable con cuenta** no puede salir: invita antes a otro
 
 ## Eliminar la familia {#delete-the-family}
 
-Solo un adulto responsable desde su móvil personal puede hacerlo. Escribe primero el **nombre de la familia**, pasa al siguiente paso, escribe **ELIMINAR**, en mayúsculas, y confirma.
+Solo un adulto responsable desde su móvil personal puede hacerlo, en **Ajustes → Familia** (vista **Avanzados**). Escribe primero el **nombre de la familia**, pasa al siguiente paso, escribe **ELIMINAR**, en mayúsculas, y confirma.
 
 **Todos los datos se eliminan de inmediato y de forma permanente**, sin plazo de espera ni restauración. Todos los dispositivos cierran sesión. Las cuentas adultas siguen disponibles para crear otra familia o unirse a una.
 

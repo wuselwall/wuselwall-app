@@ -2673,5 +2673,107 @@
         "type": "int"
       }
     }
+  },
+  "savedMessage": "Saved.",
+  "settingsSectionFamily": "Family",
+  "settingsSectionThisDevice": "This device",
+  "settingsSectionConnect": "Sharing and connections",
+  "settingsMembersHint": "Tap a person to change their name, colour, picture or role. Drag the handle to change the order on the wall.",
+  "familyTitle": "Family",
+  "familySettingsSubtitle": "Name, time zone, data export, delete",
+  "familyTimezone": "Time zone",
+  "familyTimezoneHelp": "The wall and reminders follow this zone.",
+  "familyTimezoneSearch": "Search time zone",
+  "familyLocale": "Language on the wall",
+  "familyLocaleHelp": "Public holidays on the wall display are named in this language.",
+  "familyErrTimezone": "Unknown time zone.",
+  "memberColour": "Colour",
+  "memberAvatar": "Picture",
+  "memberAvatarInitial": "Initial",
+  "memberKind": "Child or adult",
+  "memberRole": "Role",
+  "memberRoleHelp": "Guardians see everything and approve rewards. Members tick off tasks.",
+  "memberReadOnlyHint": "Only guardians change other people. You can change your own name, colour and picture.",
+  "memberInactive": "No longer with us",
+  "memberInactiveBody": "Off the wall, the avatar rows and new chores. History and points stay.",
+  "memberDeactivate": "No longer with us",
+  "memberDeactivateBody": "{name} disappears from the wall, the avatar rows and new chores. History and points stay, and you can bring the person back here.",
+  "@memberDeactivateBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "memberDeactivateConfirm": "Remove {name} from the family's screens? History and points stay.",
+  "@memberDeactivateConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "memberReactivate": "Back with us",
+  "memberHasAccountHint": "{name} has an account and leaves the family from their own phone (Settings → Leave family).",
+  "@memberHasAccountHint": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "memberReorderHandle": "Change order",
+  "memberErrKindAdult": "A guardian, or someone with an account, is an adult.",
+  "memberErrRoleChild": "A child cannot be a guardian. Make the person an adult first.",
+  "memberErrSelf": "You cannot remove yourself. Another guardian can.",
+  "memberErrHasAccount": "This person has an account and leaves from their own phone.",
+  "deviceRename": "Rename device",
+  "deviceLastSeen": "last active {ago}",
+  "@deviceLastSeen": {
+    "placeholders": {
+      "ago": {
+        "type": "String"
+      }
+    }
+  },
+  "deviceNeverSeen": "not active yet",
+  "shoppingEditList": "Edit list",
+  "shoppingListDefault": "Default list",
+  "shoppingListDefaultHelp": "The wall display writes to the default list.",
+  "shoppingCategories": "Categories",
+  "shoppingCategoriesHelp": "In the order you walk through the shop. Drag the handle to reorder.",
+  "shoppingCategoryAdd": "Add category",
+  "shoppingCategoryRename": "Rename category",
+  "shoppingCategoryName": "Category name",
+  "shoppingCategoryDeleteConfirm": "Remove “{name}”? Its items stay on the list without a category.",
+  "@shoppingCategoryDeleteConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shoppingListDelete": "Delete list",
+  "shoppingListDeleteConfirm": "Delete “{name}”? Open items move to the default list; its history and tiles are gone.",
+  "@shoppingListDeleteConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shoppingErrListDefault": "The default list cannot be deleted. Make another list the default first.",
+  "shoppingErrTileExists": "A tile with this name already exists.",
+  "shoppingTileAddEdit": "Add and edit",
+  "shoppingTileRename": "Rename tile",
+  "shoppingTileForget": "Don't suggest any more",
+  "shoppingTileForgetHelp": "The tile goes; the history keeps it.",
+  "shoppingTileForgetConfirm": "Remove the tile “{name}”? Buying it again brings it back.",
+  "@shoppingTileForgetConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   }
 }

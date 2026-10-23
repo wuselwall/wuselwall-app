@@ -146,10 +146,31 @@ final deviceKeyProvider = Provider<DeviceKey>((ref) {
   );
 });
 
-/// Household members (without secrets), refetched on demand.
+/// Household members (without secrets), refetched on demand. Only the people who are with
+/// the family; [allMembersProvider] has the retired ones too.
 final membersProvider = FutureProvider.autoDispose<List<Member>>((ref) async {
   ref.watch(deviceKeyProvider);
   return (await ref.watch(identityRepositoryProvider).members()).unwrap();
+});
+
+/// Every member, the retired ones included: the member list under Einstellungen, where
+/// "Nicht mehr dabei" can be undone.
+final allMembersProvider = FutureProvider.autoDispose<List<Member>>((
+  ref,
+) async {
+  ref.watch(deviceKeyProvider);
+  return (await ref
+          .watch(identityRepositoryProvider)
+          .members(includeInactive: true))
+      .unwrap();
+});
+
+/// The family's own row: name, time zone and locale.
+final householdInfoProvider = FutureProvider.autoDispose<HouseholdInfo>((
+  ref,
+) async {
+  ref.watch(deviceKeyProvider);
+  return (await ref.watch(identityRepositoryProvider).household()).unwrap();
 });
 
 final devicesProvider = FutureProvider.autoDispose<List<DeviceEntry>>((

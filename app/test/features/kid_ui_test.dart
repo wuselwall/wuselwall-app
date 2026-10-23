@@ -53,7 +53,8 @@ class _KidIdentity extends FakeIdentityRepository {
       );
 
   @override
-  Future<Result<List<Member>>> members() async => Ok(_kidMembers);
+  Future<Result<List<Member>>> members({bool includeInactive = false}) async =>
+      Ok(_kidMembers);
 }
 
 /// The `api` layer after a tick: Emma's balance rises by the points credited, as the

@@ -6,9 +6,9 @@ Das gehört den **Erziehungsberechtigten**. Öffne dazu auf deinem Handy das Zah
 
 ## Einfach oder Erweitert {#ansicht}
 
-Oben in den Einstellungen wählst du die Ansicht. **Einfach** ist der Standard und zeigt das Wichtigste: Haushalt einstellen, übliche Woche, Erinnerungen, Sprache, Darstellung, Erste Schritte, Mitglieder und Geräte, auf deinem eigenen Handy außerdem **Konto löschen**. **Erweitert** zeigt zusätzlich Familienkalender teilen, Kalender von außen, Apps und KI-Assistenten, den Server, den Datenexport, Anmeldung, Sicherheit und Familie verlassen.
+Oben in den Einstellungen wählst du die Ansicht. **Einfach** ist der Standard und zeigt das Wichtigste, in drei Gruppen: **Familie** (Haushalt einstellen, Familie, übliche Woche, Mitglieder, Geräte), **Dieses Gerät** (Erinnerungen, Sprache, Darstellung, Erste Schritte) und auf deinem eigenen Handy **Konto löschen**. **Erweitert** zeigt zusätzlich **Teilen und Verbindungen** (Familienkalender teilen, Kalender von außen, Apps und KI-Assistenten), den Server, Anmeldung, Sicherheit und Familie verlassen.
 
-Was ausgeblendet ist, **gilt trotzdem weiter**. Die Ansicht ändert nur, was du siehst, und WuselWall merkt sie sich für jedes Gerät. Dasselbe gilt unter **Haushalt einstellen**.
+Was ausgeblendet ist, **gilt trotzdem weiter**. Die Ansicht ändert nur, was du siehst, und WuselWall merkt sie sich für jedes Gerät. Dasselbe gilt unter **Haushalt einstellen**, auf der Seite einer Person, unter **Familie** und beim Bearbeiten einer Einkaufsliste: Einfach zeigt, was die meisten brauchen, Erweitert den Rest.
 
 ## Erwachsene Person einladen
 
@@ -38,6 +38,20 @@ Kinder brauchen keine Einladung. Sie legst du als Mitglied mit Namen an, und ihr
 
 Mit dem Symbol neben **Mitglieder** legst du eine Person nur mit **Namen** an, zum Beispiel ein Kind oder jemanden, der nicht selbst in WuselWall ist. WuselWall vergibt automatisch die nächste freie **Farbe**.
 
+## Mitglied bearbeiten {#mitglied-bearbeiten}
+
+Tippe in der Liste auf eine Person. Auf ihrer Seite änderst du den **Namen**, die **Farbe** und das **Bild**: statt der Initiale ein Tier oder ein Symbol, das auf dem Kinder-Tablet und in den Listen erscheint. **Kind oder Erwachsen** legt fest, ob die Person das Kinder-Tablet, Starter-Aufgaben und den Stundenplan bekommt; Erziehungsberechtigte und Personen mit Konto sind immer Erwachsene. Von hier führt auch ein Link zur **üblichen Woche** der Person.
+
+<Shot name="settings-member" alt="Seite eines Mitglieds mit Name, Farbe, Bild und Kind oder Erwachsen" />
+
+In der Ansicht **Erweitert** steht darunter die **Rolle** (Erziehungsberechtigt oder Mitglied; ein Kind kann nicht erziehungsberechtigt sein, und die letzte erziehungsberechtigte Person mit Konto bleibt es) und **Nicht mehr dabei**: Die Person verschwindet von der Wand, aus den Avatar-Reihen und aus neuen Aufgaben; Verlauf und Punkte bleiben, und du kannst sie hier jederzeit zurückholen. Eine erwachsene Person mit Konto nimmst du so nicht heraus; sie verlässt die Familie vom eigenen Handy aus (siehe [Konto und Familie](/settings/account)).
+
+Jede Person kann ihren eigenen Namen, ihre Farbe und ihr Bild selbst ändern. Alles andere ist Sache der Erziehungsberechtigten, auf geteilten Geräten mit PIN.
+
+### Reihenfolge ändern
+
+Die Reihenfolge der Mitglieder in der Liste ist die Reihenfolge auf der Wand und in allen Listen. Erziehungsberechtigte ziehen eine Person am **Griff** rechts an eine andere Stelle.
+
 ## Zwei-Faktor zurücksetzen
 
 Hat eine andere Erziehungsberechtigte Person ihren zweiten Faktor verloren, tippst du bei ihrem Namen auf **Zwei-Faktor zurücksetzen**. Danach kann sie sich ohne den zweiten Faktor anmelden und ihn neu einrichten (siehe [Sicherheit](/settings/security#zwei-faktor-anmeldung)).
@@ -51,6 +65,10 @@ Ein Kinder-Tablet, ein Tablet für alle oder die Wandanzeige verbindest du so: T
 Du musst den Code nicht abtippen: Das neue Gerät zeigt einen QR-Code, den du mit der Kamera deines Handys scannst. Er enthält auch den Server; WuselWall öffnet sich direkt bei der Bestätigung. Gehört der Link zu einem anderen Server als dem, auf dem du angemeldet bist, folgt die App ihm nicht von selbst, sondern sagt dir das.
 
 Ältere Geräte mit einer älteren Version von WuselWall bekommen noch einen Code über **Code für ein älteres Gerät erzeugen**. Diese Möglichkeit verschwindet mit der nächsten Version.
+
+## Gerät umbenennen
+
+Tippe in der Geräteliste auf ein Gerät, um ihm einen anderen **Namen** zu geben, zum Beispiel „Küchen-Tablet“ statt „iPad“. Unter jedem Gerät steht, wann es **zuletzt aktiv** war („zuletzt aktiv vor 3 Tagen“), damit du vor dem Sperren weißt, welches Gerät das ist. Das eigene Gerät kann jeder umbenennen; fremde Geräte benennen Erziehungsberechtigte um.
 
 ## Gerät sperren
 
@@ -66,9 +84,15 @@ Unter **Erweitert** steht, mit welchem Server diese App spricht, mit seinem **QR
 
 **Server wechseln** brauchst du nur, wenn eure Familie auf einen anderen Server umzieht. Das Gerät meldet sich dabei ab und vergisst alles, was darauf gespeichert ist, auch Einkäufe, die es noch nicht senden konnte. Auf geteilten Geräten fragt WuselWall vorher nach der PIN eines Erziehungsberechtigten.
 
+## Familie {#familie}
+
+Unter **Einstellungen → Familie** änderst du den **Namen der Familie**, den ihr beim Anlegen gewählt habt. In der Ansicht **Erweitert** stehen dort außerdem die **Zeitzone** (nach ihr richten sich Wand und Erinnerungen; tippe sie an und suche zum Beispiel „Zurich“) und die **Sprache auf der Wand**, in der Feiertage auf der Wandanzeige heißen. Alles davon ist Sache der Erziehungsberechtigten.
+
+<Shot name="settings-family" alt="Seite Familie mit Name, Zeitzone, Sprache auf der Wand und Datenexport" />
+
 ## Daten exportieren
 
-Erziehungsberechtigte können alle Daten eurer Familie als eine ZIP-Datei speichern, zum Beispiel für einen Umzug auf einen anderen Server. Das geht unten in den Einstellungen (Ansicht **Erweitert**) im Bereich **Familie** mit **Daten exportieren**, und nur vom eigenen Handy eines Erziehungsberechtigten aus.
+Erziehungsberechtigte können alle Daten eurer Familie als eine ZIP-Datei speichern, zum Beispiel für einen Umzug auf einen anderen Server. Das geht unter **Einstellungen → Familie** (Ansicht **Erweitert**) mit **Daten exportieren**, und nur vom eigenen Handy eines Erziehungsberechtigten aus.
 
 Die Datei enthält die Angaben, die ihr eingegeben habt: Mitglieder, Termine, Stundenpläne, Aufgaben, Rezepte, Einkaufslisten und so weiter. Passwörter, PINs und Anmeldedaten sind **nicht** enthalten, und Geräte erscheinen nur mit Namen und Datum.
 

@@ -12,7 +12,7 @@ Jede Kachel zeigt ein Bild dazu: WuselWall erkennt gängige Artikel am Namen, et
 
 - **Einmal tippen** setzt den Artikel auf die Liste. Die Kachel wird grün hinterlegt.
 - **Nochmal tippen** zählt hoch: „2×“, „3×“ … Mit dem kleinen **−** in der Liste nimmst du eins wieder weg.
-- **Lange drücken** öffnet eine Notiz für diesen Artikel, zum Beispiel „Bio“, „500 g“ oder „Dose“.
+- **Lange drücken** öffnet ein kleines Menü: **Hinzufügen und bearbeiten** setzt den Artikel auf die Liste und öffnet seine Notiz (zum Beispiel „Bio“, „500 g“ oder „Dose“); **Kachel umbenennen** korrigiert einen Tippfehler, den sich WuselWall gemerkt hat; **Nicht mehr vorschlagen** nimmt die Kachel weg (Erziehungsberechtigte; der Verlauf behält den Artikel, und beim nächsten Kauf kommt die Kachel zurück).
 
 ## Suchen und neu anlegen
 
