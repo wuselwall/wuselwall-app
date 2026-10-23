@@ -275,7 +275,8 @@ export function labelClocks(text: string): string[] {
     const digits = m[1];
     const h = Number(digits.slice(0, digits.length - 2));
     const min = Number(digits.slice(-2));
-    if (h <= 23 && min <= 59) {
+    // A school day: a bare "124" is a room or a fragment, not 01:24.
+    if (h >= 6 && h <= 19 && min <= 59) {
       out.push(`${String(h).padStart(2, "0")}:${String(min).padStart(2, "0")}`);
     }
   }

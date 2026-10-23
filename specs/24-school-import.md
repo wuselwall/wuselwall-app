@@ -296,8 +296,23 @@ is the one look-alike that parses, and every other look-alike, poor photograph, 
 and sheet in an unsupported language gives "no grid". Handwriting itself stays beyond the
 OCR: the diary page yields its six days and nine periods but a third of its cells.
 
-What remains open is the real photograph from a phone: paper, shadows, a slant. The
-preview's warnings exist so that a parent sees what the parser missed. The
+*Fourth round, the pilot household's own sheets:* seven iPhone photographs (HEIC, as the
+picker converts them to JPEG for the app), a software-made PNG and the school's PDF. They
+taught what no public file had: a phone photo tilts, by a few degrees or by ninety when the
+sheet was held sideways, and a child's hand writes "Pierstag" and "Pornerstag". Built since:
+the sheet is **levelled** first, by the median direction of its words taken from the OCR's
+quads, and read in all four orientations after that; weekday names may be two edits off when
+they are long; "Ma" is Mathe, never mardi, so the two-letter French abbreviations went; the
+header band is one text line, with a looser second try; a period label is the whole text, so
+"1. Semester" in a remark is none; whichever kind of label, number or clock, marks more rows
+defines them; a bare "800" on a label is 08:00. Result: eight of the nine own sheets yield
+a grid, with the cells readable and the bell times taken from the labels; the ninth is a
+Kindergarten plan whose handwritten header defeats the OCR itself. The corpus stands at 89
+files: 59 grids, 30 "no grid", and every look-alike and poor photograph on the right side.
+
+What remains is handwriting the OCR cannot read, and the Swiss sheets' "×" marks, which the
+preview shows as subjects named "×" until the parent clears them. The preview's warnings exist
+so that a parent sees what the parser missed. The
 RapidOCR language switch is used when the installed version has it, with the default models
 as fallback, so an API change in `rapidocr` degrades to "reads Latin letters without
 accents" rather than to a failed build.
