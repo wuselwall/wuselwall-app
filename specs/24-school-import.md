@@ -264,7 +264,23 @@ label; text in the header band is not a lesson; row labels may sit close to the 
 column; a name in parentheses is the teacher; weekdays the OCR garbled are inferred when
 the header's spacing per day is even. The clean renders and scans come back complete, with
 subject and room per cell; the handwritten card gives six columns but only a third of its
-cells. What remains open is the real photograph from a phone: paper, shadows, a slant.
+cells.
+
+*Second round, same day, 48 more files from four searches:* software-made sheets (Austrian
+Volksschulen, Swiss Excel and Untis-style sheets with teacher codes, a Canva design), French
+and Spanish sheets, eight look-alikes (a shift rota, a bus timetable, a canteen menu, a
+bell-time table, a holiday calendar, a gym course plan) and eight poor photographs (skewed,
+blurred, frosted, an LED board, a 330-pixel thumbnail). What it taught, built since: a sheet
+that left-aligns its text puts the teacher code at the cell's right edge, so cells now run
+from a header's left edge to the next one's, which also holds for centred text. Results:
+every German, Austrian, Swiss, French and Spanish class sheet yields a grid; the Swiss
+Excel sheets with stacked class-split cells and legends leave a third to a half of their
+text unplaced, which the preview reports; dense two-line cells without a label per row are
+halved. Seven of the eight look-alikes give "no grid"; the gym course plan parses, as any
+weekly grid with weekday headers will, and only the subjects on the preview tell a parent.
+No poor photograph produced a false grid, and the thumbnail parsed completely. Whole-school
+master plans, a substitution plan and a transposed sheet (days down the left) give "no
+grid". What remains open is the real photograph from a phone: paper, shadows, a slant.
 The preview's warnings exist so that a parent sees what the parser missed. The
 RapidOCR language switch is used when the installed version has it, with the default models
 as fallback, so an API change in `rapidocr` degrades to "reads Latin letters without
