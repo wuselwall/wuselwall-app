@@ -18,7 +18,7 @@ Das geht nicht, wenn du die **letzte Elternperson mit Konto** bist. Lade dann zu
 
 ## Familie löschen
 
-Eine Familie löscht nur eine Elternperson, und zwar auf dem eigenen Handy. Tippe auf **Familie löschen**, tippe den **Namen der Familie** und dann auf **Weiter**. Im zweiten Schritt tippst du **LÖSCHEN** (in Großbuchstaben) und dann auf **Familie löschen**.
+Eine Familie löscht nur eine Elternperson, und zwar auf dem eigenen Handy, unter **Einstellungen → Familie** (Ansicht **Erweitert**). Tippe auf **Familie löschen**, tippe den **Namen der Familie** und dann auf **Weiter**. Im zweiten Schritt tippst du **LÖSCHEN** (in Großbuchstaben) und dann auf **Familie löschen**.
 
 - Die Familie wird mit **allen Daten sofort und endgültig gelöscht**. Es gibt keine Wartezeit und kein Wiederherstellen, auch nicht für Elternpersonen.
 - Alle Geräte melden sich sofort ab. Die Konten der Erwachsenen bleiben bestehen: Wer sich wieder anmeldet, kann eine neue Familie gründen oder einer anderen beitreten.

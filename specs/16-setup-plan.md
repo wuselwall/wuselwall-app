@@ -596,7 +596,12 @@ account leaves nothing reachable.
 ## Step 10 — Journey gaps before launch (M1.5)
 
 *Added 2026-10-16, from a walk through the journeys J1–J6 ([20](20-onboarding.md)) and every
-module's screens against the code.* None of this is a new feature. Each slice closes a
+module's screens against the code. Slices 1–3 built 2026-10-23 (migration
+`20261023100000_editable_household.sql`, pgTAP 230): the member page, the family page and
+"Liste bearbeiten" each carry the Basic/Advanced switch, with the role, "Nicht mehr dabei",
+the time zone, the categories and deletion under Advanced. The wall board still draws the
+initial; the avatar picture appears in the app's lists and on the kid picker.* None of this
+is a new feature. Each slice closes a
 place where the pilot household would get stuck in its first weeks, with nothing in the app
 to get it out. They are ordered by how soon a family runs into them. Every slice follows the
 architecture rules ([03](03-architecture.md)): one `api` function per write, starting with

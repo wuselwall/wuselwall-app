@@ -65,6 +65,7 @@ flutter:
     - assets/emoji/shopping/
     - assets/emoji/tasks/
     - assets/emoji/extras/
+    - assets/emoji/avatars/
   fonts:
     - family: AtkinsonHyperlegibleNext
       fonts:

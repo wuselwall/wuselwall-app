@@ -33,7 +33,9 @@ import 'package:wuselwall/features/reminders/ui/reminders_page.dart';
 import 'package:wuselwall/features/school/ui/school_setup_page.dart';
 import 'package:wuselwall/features/school/ui/timetable_editor_page.dart';
 import 'package:wuselwall/features/school/ui/timetable_import_page.dart';
+import 'package:wuselwall/features/settings/ui/family_page.dart';
 import 'package:wuselwall/features/settings/ui/household_settings_page.dart';
+import 'package:wuselwall/features/settings/ui/member_page.dart';
 import 'package:wuselwall/features/settings/ui/settings_page.dart';
 import 'package:wuselwall/features/setup/ui/email_code_page.dart';
 import 'package:wuselwall/features/setup/ui/enrol_page.dart';
@@ -47,6 +49,7 @@ import 'package:wuselwall/features/setup/ui/sign_in_page.dart';
 import 'package:wuselwall/features/setup/ui/splash_page.dart';
 import 'package:wuselwall/features/setup/ui/wizard_page.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_history_page.dart';
+import 'package:wuselwall/features/shopping/ui/shopping_list_edit_page.dart';
 import 'package:wuselwall/features/shortcuts/ui/shortcuts_page.dart';
 import 'package:wuselwall/features/system/ui/system_page.dart';
 
@@ -72,6 +75,9 @@ abstract final class Routes {
   static const home = '/';
   static const settings = '/settings';
   static const householdSettings = '/settings/household';
+  static const family = '/settings/family';
+  static const member = '/settings/member';
+  static const shoppingListEdit = '/shopping/list';
   static const system = '/system';
   static const shoppingHistory = '/shopping/history';
   static const eventNew = '/calendar/new';
@@ -250,6 +256,16 @@ final routerProvider = Provider<GoRouter>((ref) {
         ),
       ),
       GoRoute(path: Routes.settings, builder: (_, _) => const SettingsPage()),
+      GoRoute(path: Routes.family, builder: (_, _) => const FamilyPage()),
+      GoRoute(
+        path: Routes.member,
+        builder: (_, state) => MemberPage(profileId: state.extra! as String),
+      ),
+      GoRoute(
+        path: Routes.shoppingListEdit,
+        builder: (_, state) =>
+            ShoppingListEditPage(listId: state.extra! as String),
+      ),
       GoRoute(
         path: Routes.devicePair,
         builder: (_, state) => DevicePairPage(

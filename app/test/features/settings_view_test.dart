@@ -91,6 +91,13 @@ void main() {
       await t.pumpAndSettle();
 
       expect(store.view, SettingsView.advanced);
+      // The export lives on the family page now; the page itself is in both views.
+      expect(find.byKey(const ValueKey('settings-family')), findsOneWidget);
+      await t.scrollUntilVisible(
+        find.text(_de.feedTitle),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
       expect(find.text(_de.feedTitle), findsOneWidget);
       expect(find.text(_de.extCalTitle), findsOneWidget);
       await t.scrollUntilVisible(
@@ -98,7 +105,6 @@ void main() {
         300,
         scrollable: find.byType(Scrollable).first,
       );
-      expect(find.byKey(const ValueKey('export-data')), findsOneWidget);
       expect(find.text(_de.settingsViewMoreHint), findsNothing);
     });
 

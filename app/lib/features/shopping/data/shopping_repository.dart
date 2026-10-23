@@ -177,6 +177,90 @@ class ShoppingRepository {
     parse: (_) {},
   );
 
+  Future<Result<void>> renameList({
+    required String? actor,
+    required String listId,
+    required String name,
+  }) => _api.rpc(
+    'shopping_list_update',
+    params: {'p_actor': actor, 'p_list': listId, 'p_name': name},
+    parse: (_) {},
+  );
+
+  /// Never the default list; its open items move there (guardians only).
+  Future<Result<void>> deleteList({
+    required String? actor,
+    required String listId,
+  }) => _api.rpc(
+    'shopping_list_delete',
+    params: {'p_actor': actor, 'p_list': listId},
+    parse: (_) {},
+  );
+
+  /// A new category at the end of the walk ([categoryId] null), or a new name for one.
+  Future<Result<String>> saveCategory({
+    required String? actor,
+    required String listId,
+    String? categoryId,
+    required String name,
+  }) => _api.rpc(
+    'shopping_category_save',
+    params: {
+      'p_actor': actor,
+      'p_list': listId,
+      'p_category': categoryId,
+      'p_name': name,
+    },
+    parse: (id) => id! as String,
+  );
+
+  /// Its items become uncategorised (guardians only).
+  Future<Result<void>> deleteCategory({
+    required String? actor,
+    required String categoryId,
+  }) => _api.rpc(
+    'shopping_category_delete',
+    params: {'p_actor': actor, 'p_category': categoryId},
+    parse: (_) {},
+  );
+
+  Future<Result<void>> reorderCategories({
+    required String? actor,
+    required String listId,
+    required List<String> categoryIds,
+  }) => _api.rpc(
+    'shopping_categories_reorder',
+    params: {'p_actor': actor, 'p_list': listId, 'p_category_ids': categoryIds},
+    parse: (_) {},
+  );
+
+  /// A tile's name and category; a null keeps the value.
+  Future<Result<void>> updateCatalogItem({
+    required String? actor,
+    required String itemId,
+    String? name,
+    String? categoryId,
+  }) => _api.rpc(
+    'catalog_item_update',
+    params: {
+      'p_actor': actor,
+      'p_item': itemId,
+      'p_name': name,
+      'p_category': categoryId,
+    },
+    parse: (_) {},
+  );
+
+  /// "Nicht mehr vorschlagen": the tile goes, the history keeps its text (guardians only).
+  Future<Result<void>> deleteCatalogItem({
+    required String? actor,
+    required String itemId,
+  }) => _api.rpc(
+    'catalog_item_delete',
+    params: {'p_actor': actor, 'p_item': itemId},
+    parse: (_) {},
+  );
+
   Future<Result<ShoppingFinishResult>> finish({
     required String? actor,
     String? listId,

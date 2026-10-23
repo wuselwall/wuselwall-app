@@ -24,11 +24,42 @@ class IdentityRepository {
         json == null ? null : DeviceInfo.fromJson(json as Map<String, dynamic>),
   );
 
-  Future<Result<List<Member>>> members() => _api.select(
-    'members',
-    parse: Member.fromJson,
-    // The household's own order (specs/21): every member list follows it.
-    build: (q) => q.order('sort_order').order('display_name'),
+  /// The household's people. Those who are no longer with the family are left out, as
+  /// everywhere in the app; only the member list under Einstellungen asks for them too.
+  Future<Result<List<Member>>> members({bool includeInactive = false}) =>
+      _api.select(
+        'members',
+        parse: Member.fromJson,
+        // The household's own order (specs/21): every member list follows it.
+        build: (q) {
+          final rows = includeInactive ? q : q.eq('active', true);
+          return rows.order('sort_order').order('display_name');
+        },
+      );
+
+  Future<Result<HouseholdInfo>> household() async {
+    final rows = await _api.select<HouseholdInfo>(
+      'household',
+      parse: HouseholdInfo.fromJson,
+    );
+    return rows.map((list) => list.first);
+  }
+
+  /// Name, time zone and locale of the family; a null keeps the value.
+  Future<Result<void>> updateHousehold({
+    required String? actor,
+    String? name,
+    String? timezone,
+    String? locale,
+  }) => _api.rpc(
+    'household_update',
+    params: {
+      'p_actor': actor,
+      'p_name': name,
+      'p_timezone': timezone,
+      'p_locale': locale,
+    },
+    parse: (_) {},
   );
 
   Future<Result<List<DeviceEntry>>> devices() => _api.select(
@@ -172,6 +203,16 @@ class IdentityRepository {
     parse: (_) {},
   );
 
+  Future<Result<void>> renameDevice({
+    required String? actor,
+    required String deviceId,
+    required String label,
+  }) => _api.rpc(
+    'device_rename',
+    params: {'p_actor': actor, 'p_device': deviceId, 'p_label': label.trim()},
+    parse: (_) {},
+  );
+
   Future<Result<void>> addMember({
     required String? actor,
     required String name,
@@ -183,6 +224,64 @@ class IdentityRepository {
       'p_display_name': name.trim(),
       'p_color': colorHex,
     },
+    parse: (_) {},
+  );
+
+  /// Name, colour, kind and avatar; a null keeps the value, the empty avatar key removes
+  /// the picture. Members may change their own name, colour and avatar; the rest is a
+  /// guardian action (the server decides).
+  Future<Result<void>> updateMember({
+    required String? actor,
+    required String profileId,
+    String? name,
+    String? colorHex,
+    bool? isChild,
+    String? avatarKey,
+  }) => _api.rpc(
+    'member_update',
+    params: {
+      'p_actor': actor,
+      'p_profile': profileId,
+      'p_display_name': name?.trim(),
+      'p_color': colorHex,
+      'p_kind': switch (isChild) {
+        null => null,
+        true => 'child',
+        false => 'adult',
+      },
+      'p_avatar_key': avatarKey,
+    },
+    parse: (_) {},
+  );
+
+  /// The board's member order: these ids first, in this order.
+  Future<Result<void>> reorderMembers({
+    required String? actor,
+    required List<String> profileIds,
+  }) => _api.rpc(
+    'members_reorder',
+    params: {'p_actor': actor, 'p_profile_ids': profileIds},
+    parse: (_) {},
+  );
+
+  Future<Result<void>> setMemberRole({
+    required String? actor,
+    required String profileId,
+    required Role role,
+  }) => _api.rpc(
+    'member_set_role',
+    params: {'p_actor': actor, 'p_profile': profileId, 'p_role': role.name},
+    parse: (_) {},
+  );
+
+  /// "Nicht mehr dabei" and back: off the board and the rotations, history kept.
+  Future<Result<void>> setMemberActive({
+    required String? actor,
+    required String profileId,
+    required bool active,
+  }) => _api.rpc(
+    active ? 'member_reactivate' : 'member_deactivate',
+    params: {'p_actor': actor, 'p_profile': profileId},
     parse: (_) {},
   );
 

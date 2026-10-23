@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart' show TimeOfDay;
+import 'package:flutter/material.dart' show Color, TimeOfDay;
 import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/core/text/fold.dart';
 import 'package:wuselwall/demo/demo_board.dart';
 import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/demo/demo_english.dart';
@@ -35,10 +36,151 @@ class DemoIdentityRepository implements IdentityRepository {
   Future<Result<DeviceInfo?>> currentDevice() async => Ok(device);
 
   @override
-  Future<Result<List<Member>>> members() async => Ok(List.of(_members));
+  Future<Result<List<Member>>> members({bool includeInactive = false}) async =>
+      Ok([
+        for (final m in _members)
+          if (includeInactive || m.active) m,
+      ]);
+
+  final _devices = DemoData.devices;
 
   @override
-  Future<Result<List<DeviceEntry>>> devices() async => Ok(DemoData.devices);
+  Future<Result<List<DeviceEntry>>> devices() async => Ok(List.of(_devices));
+
+  var _household = const HouseholdInfo(
+    id: 'h-demo',
+    name: 'Familie Muster',
+    timezone: 'Europe/Berlin',
+    locale: 'de-DE',
+  );
+
+  @override
+  Future<Result<HouseholdInfo>> household() async => Ok(_household);
+
+  @override
+  Future<Result<void>> updateHousehold({
+    required String? actor,
+    String? name,
+    String? timezone,
+    String? locale,
+  }) async {
+    _household = HouseholdInfo(
+      id: _household.id,
+      name: name ?? _household.name,
+      timezone: timezone ?? _household.timezone,
+      locale: locale ?? _household.locale,
+    );
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<void>> renameDevice({
+    required String? actor,
+    required String deviceId,
+    required String label,
+  }) async {
+    final i = _devices.indexWhere((d) => d.id == deviceId);
+    if (i < 0) return const Err(NotFoundFailure(code: 'device_not_found'));
+    final d = _devices[i];
+    _devices[i] = DeviceEntry(
+      id: d.id,
+      label: label,
+      deviceClass: d.deviceClass,
+      register: d.register,
+      revoked: d.revoked,
+      lastSeenAt: d.lastSeenAt,
+    );
+    return const Ok(null);
+  }
+
+  Member _copy(
+    Member m, {
+    String? name,
+    Color? color,
+    Role? role,
+    bool? active,
+    bool? isChild,
+    String? avatarKey,
+    bool clearAvatar = false,
+    int? sortOrder,
+  }) => Member(
+    id: m.id,
+    displayName: name ?? m.displayName,
+    color: color ?? m.color,
+    role: role ?? m.role,
+    active: active ?? m.active,
+    isChild: isChild ?? m.isChild,
+    sortOrder: sortOrder ?? m.sortOrder,
+    hasAccount: m.hasAccount,
+    avatarKey: clearAvatar ? null : (avatarKey ?? m.avatarKey),
+  );
+
+  @override
+  Future<Result<void>> updateMember({
+    required String? actor,
+    required String profileId,
+    String? name,
+    String? colorHex,
+    bool? isChild,
+    String? avatarKey,
+  }) async {
+    final i = _members.indexWhere((m) => m.id == profileId);
+    if (i < 0) return const Err(NotFoundFailure(code: 'member_not_found'));
+    _members[i] = _copy(
+      _members[i],
+      name: name,
+      color: colorHex == null ? null : parseHexColor(colorHex),
+      isChild: isChild,
+      avatarKey: avatarKey == null || avatarKey.isEmpty ? null : avatarKey,
+      clearAvatar: avatarKey == '',
+    );
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<void>> reorderMembers({
+    required String? actor,
+    required List<String> profileIds,
+  }) async {
+    final named = [
+      for (final id in profileIds) _members.firstWhere((m) => m.id == id),
+    ];
+    final rest = _members.where((m) => !profileIds.contains(m.id)).toList();
+    _members
+      ..clear()
+      ..addAll([
+        for (final (i, m) in [...named, ...rest].indexed)
+          _copy(m, sortOrder: (i + 1) * 10),
+      ]);
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<void>> setMemberRole({
+    required String? actor,
+    required String profileId,
+    required Role role,
+  }) async {
+    final i = _members.indexWhere((m) => m.id == profileId);
+    if (i < 0) return const Err(NotFoundFailure(code: 'member_not_found'));
+    if (role == Role.guardian && _members[i].isChild) {
+      return const Err(ValidationFailure(code: 'role_child'));
+    }
+    _members[i] = _copy(_members[i], role: role);
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<void>> setMemberActive({
+    required String? actor,
+    required String profileId,
+    required bool active,
+  }) async {
+    final i = _members.indexWhere((m) => m.id == profileId);
+    if (i < 0) return const Err(NotFoundFailure(code: 'member_not_found'));
+    _members[i] = _copy(_members[i], active: active);
+    return const Ok(null);
+  }
 
   @override
   Future<Result<void>> signIn(String email, String password) async =>
@@ -132,6 +274,8 @@ class DemoShoppingRepository implements ShoppingRepository {
     for (final (id, name, def) in DemoData.lists)
       (id: id, name: name, isDefault: def),
   ];
+  final _categories = DemoData.categories();
+  final _catalog = DemoData.catalogue();
   var _next = 0;
 
   @override
@@ -165,8 +309,8 @@ class DemoShoppingRepository implements ShoppingRepository {
     ShoppingSnapshot(
       items: List.of(_items),
       lists: (await lists()).valueOrNull!,
-      categories: DemoData.categories(),
-      catalog: DemoData.catalogue(),
+      categories: List.of(_categories),
+      catalog: List.of(_catalog),
     ),
   );
 
@@ -205,11 +349,145 @@ class DemoShoppingRepository implements ShoppingRepository {
 
   @override
   Future<Result<List<ShoppingCategory>>> categories() async =>
-      Ok(DemoData.categories());
+      Ok(List.of(_categories));
 
   @override
-  Future<Result<List<CatalogEntry>>> catalog() async =>
-      Ok(DemoData.catalogue());
+  Future<Result<List<CatalogEntry>>> catalog() async => Ok(List.of(_catalog));
+
+  @override
+  Future<Result<void>> renameList({
+    required String? actor,
+    required String listId,
+    required String name,
+  }) async {
+    final i = _lists.indexWhere((l) => l.id == listId);
+    if (i < 0) return const Err(NotFoundFailure(code: 'list_not_found'));
+    _lists[i] = (id: listId, name: name, isDefault: _lists[i].isDefault);
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<void>> deleteList({
+    required String? actor,
+    required String listId,
+  }) async {
+    final i = _lists.indexWhere((l) => l.id == listId);
+    if (i < 0) return const Err(NotFoundFailure(code: 'list_not_found'));
+    if (_lists[i].isDefault) {
+      return const Err(ValidationFailure(code: 'list_default'));
+    }
+    // The demo's items stay where they are; the server moves them to the default list.
+    _lists.removeAt(i);
+    _categories.removeWhere((c) => c.listId == listId);
+    _catalog.removeWhere((c) => c.listId == listId);
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<String>> saveCategory({
+    required String? actor,
+    required String listId,
+    String? categoryId,
+    required String name,
+  }) async {
+    if (categoryId == null) {
+      final id = 'c-new-${_categories.length}';
+      final last = _categories
+          .where((c) => c.listId == listId)
+          .fold(-10, (a, c) => c.sortOrder > a ? c.sortOrder : a);
+      _categories.add(
+        ShoppingCategory(
+          id: id,
+          listId: listId,
+          key: null,
+          name: name,
+          sortOrder: last + 10,
+        ),
+      );
+      return Ok(id);
+    }
+    final i = _categories.indexWhere((c) => c.id == categoryId);
+    if (i < 0) return const Err(NotFoundFailure(code: 'category_not_found'));
+    final c = _categories[i];
+    _categories[i] = ShoppingCategory(
+      id: c.id,
+      listId: c.listId,
+      key: c.key,
+      name: name,
+      sortOrder: c.sortOrder,
+    );
+    return Ok(categoryId);
+  }
+
+  @override
+  Future<Result<void>> deleteCategory({
+    required String? actor,
+    required String categoryId,
+  }) async {
+    _categories.removeWhere((c) => c.id == categoryId);
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<void>> reorderCategories({
+    required String? actor,
+    required String listId,
+    required List<String> categoryIds,
+  }) async {
+    for (final (i, c) in _categories.indexed) {
+      final pos = categoryIds.indexOf(c.id);
+      if (pos >= 0) {
+        _categories[i] = ShoppingCategory(
+          id: c.id,
+          listId: c.listId,
+          key: c.key,
+          name: c.name,
+          sortOrder: pos * 10,
+        );
+      } else if (c.listId == listId) {
+        _categories[i] = ShoppingCategory(
+          id: c.id,
+          listId: c.listId,
+          key: c.key,
+          name: c.name,
+          sortOrder: (categoryIds.length + i) * 10,
+        );
+      }
+    }
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<void>> updateCatalogItem({
+    required String? actor,
+    required String itemId,
+    String? name,
+    String? categoryId,
+  }) async {
+    final i = _catalog.indexWhere((c) => c.id == itemId);
+    if (i < 0) return const Err(NotFoundFailure(code: 'catalog_not_found'));
+    final c = _catalog[i];
+    _catalog[i] = CatalogEntry(
+      id: c.id,
+      listId: c.listId,
+      name: name ?? c.name,
+      foldedName: name == null ? c.foldedName : fold(name),
+      categoryId: categoryId ?? c.categoryId,
+      purchaseCount: c.purchaseCount,
+      lastPurchasedAt: c.lastPurchasedAt,
+      iconKey: c.iconKey,
+    );
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<void>> deleteCatalogItem({
+    required String? actor,
+    required String itemId,
+  }) async {
+    _catalog.removeWhere((c) => c.id == itemId);
+    return const Ok(null);
+  }
 
   @override
   Future<Result<List<ShoppingTrip>>> trips(String listId) async =>

@@ -8086,6 +8086,324 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, one{1 piece of text fit no cell. Compare the preview with the sheet.} other{{count} pieces of text fit no cell. Compare the preview with the sheet.}}'**
   String schoolScanWarnUnplaced(int count);
+
+  /// No description provided for @savedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved.'**
+  String get savedMessage;
+
+  /// No description provided for @settingsSectionFamily.
+  ///
+  /// In en, this message translates to:
+  /// **'Family'**
+  String get settingsSectionFamily;
+
+  /// No description provided for @settingsSectionThisDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'This device'**
+  String get settingsSectionThisDevice;
+
+  /// No description provided for @settingsSectionConnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Sharing and connections'**
+  String get settingsSectionConnect;
+
+  /// No description provided for @settingsMembersHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a person to change their name, colour, picture or role. Drag the handle to change the order on the wall.'**
+  String get settingsMembersHint;
+
+  /// No description provided for @familyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Family'**
+  String get familyTitle;
+
+  /// No description provided for @familySettingsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Name, time zone, data export, delete'**
+  String get familySettingsSubtitle;
+
+  /// No description provided for @familyTimezone.
+  ///
+  /// In en, this message translates to:
+  /// **'Time zone'**
+  String get familyTimezone;
+
+  /// No description provided for @familyTimezoneHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The wall and reminders follow this zone.'**
+  String get familyTimezoneHelp;
+
+  /// No description provided for @familyTimezoneSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search time zone'**
+  String get familyTimezoneSearch;
+
+  /// No description provided for @familyLocale.
+  ///
+  /// In en, this message translates to:
+  /// **'Language on the wall'**
+  String get familyLocale;
+
+  /// No description provided for @familyLocaleHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Public holidays on the wall display are named in this language.'**
+  String get familyLocaleHelp;
+
+  /// No description provided for @familyErrTimezone.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown time zone.'**
+  String get familyErrTimezone;
+
+  /// No description provided for @memberColour.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour'**
+  String get memberColour;
+
+  /// No description provided for @memberAvatar.
+  ///
+  /// In en, this message translates to:
+  /// **'Picture'**
+  String get memberAvatar;
+
+  /// No description provided for @memberAvatarInitial.
+  ///
+  /// In en, this message translates to:
+  /// **'Initial'**
+  String get memberAvatarInitial;
+
+  /// No description provided for @memberKind.
+  ///
+  /// In en, this message translates to:
+  /// **'Child or adult'**
+  String get memberKind;
+
+  /// No description provided for @memberRole.
+  ///
+  /// In en, this message translates to:
+  /// **'Role'**
+  String get memberRole;
+
+  /// No description provided for @memberRoleHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Guardians see everything and approve rewards. Members tick off tasks.'**
+  String get memberRoleHelp;
+
+  /// No description provided for @memberReadOnlyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Only guardians change other people. You can change your own name, colour and picture.'**
+  String get memberReadOnlyHint;
+
+  /// No description provided for @memberInactive.
+  ///
+  /// In en, this message translates to:
+  /// **'No longer with us'**
+  String get memberInactive;
+
+  /// No description provided for @memberInactiveBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Off the wall, the avatar rows and new chores. History and points stay.'**
+  String get memberInactiveBody;
+
+  /// No description provided for @memberDeactivate.
+  ///
+  /// In en, this message translates to:
+  /// **'No longer with us'**
+  String get memberDeactivate;
+
+  /// No description provided for @memberDeactivateBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} disappears from the wall, the avatar rows and new chores. History and points stay, and you can bring the person back here.'**
+  String memberDeactivateBody(String name);
+
+  /// No description provided for @memberDeactivateConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {name} from the family\'s screens? History and points stay.'**
+  String memberDeactivateConfirm(String name);
+
+  /// No description provided for @memberReactivate.
+  ///
+  /// In en, this message translates to:
+  /// **'Back with us'**
+  String get memberReactivate;
+
+  /// No description provided for @memberHasAccountHint.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} has an account and leaves the family from their own phone (Settings → Leave family).'**
+  String memberHasAccountHint(String name);
+
+  /// No description provided for @memberReorderHandle.
+  ///
+  /// In en, this message translates to:
+  /// **'Change order'**
+  String get memberReorderHandle;
+
+  /// No description provided for @memberErrKindAdult.
+  ///
+  /// In en, this message translates to:
+  /// **'A guardian, or someone with an account, is an adult.'**
+  String get memberErrKindAdult;
+
+  /// No description provided for @memberErrRoleChild.
+  ///
+  /// In en, this message translates to:
+  /// **'A child cannot be a guardian. Make the person an adult first.'**
+  String get memberErrRoleChild;
+
+  /// No description provided for @memberErrSelf.
+  ///
+  /// In en, this message translates to:
+  /// **'You cannot remove yourself. Another guardian can.'**
+  String get memberErrSelf;
+
+  /// No description provided for @memberErrHasAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'This person has an account and leaves from their own phone.'**
+  String get memberErrHasAccount;
+
+  /// No description provided for @deviceRename.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename device'**
+  String get deviceRename;
+
+  /// No description provided for @deviceLastSeen.
+  ///
+  /// In en, this message translates to:
+  /// **'last active {ago}'**
+  String deviceLastSeen(String ago);
+
+  /// No description provided for @deviceNeverSeen.
+  ///
+  /// In en, this message translates to:
+  /// **'not active yet'**
+  String get deviceNeverSeen;
+
+  /// No description provided for @shoppingEditList.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit list'**
+  String get shoppingEditList;
+
+  /// No description provided for @shoppingListDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Default list'**
+  String get shoppingListDefault;
+
+  /// No description provided for @shoppingListDefaultHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The wall display writes to the default list.'**
+  String get shoppingListDefaultHelp;
+
+  /// No description provided for @shoppingCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'Categories'**
+  String get shoppingCategories;
+
+  /// No description provided for @shoppingCategoriesHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'In the order you walk through the shop. Drag the handle to reorder.'**
+  String get shoppingCategoriesHelp;
+
+  /// No description provided for @shoppingCategoryAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add category'**
+  String get shoppingCategoryAdd;
+
+  /// No description provided for @shoppingCategoryRename.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename category'**
+  String get shoppingCategoryRename;
+
+  /// No description provided for @shoppingCategoryName.
+  ///
+  /// In en, this message translates to:
+  /// **'Category name'**
+  String get shoppingCategoryName;
+
+  /// No description provided for @shoppingCategoryDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove “{name}”? Its items stay on the list without a category.'**
+  String shoppingCategoryDeleteConfirm(String name);
+
+  /// No description provided for @shoppingListDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete list'**
+  String get shoppingListDelete;
+
+  /// No description provided for @shoppingListDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete “{name}”? Open items move to the default list; its history and tiles are gone.'**
+  String shoppingListDeleteConfirm(String name);
+
+  /// No description provided for @shoppingErrListDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'The default list cannot be deleted. Make another list the default first.'**
+  String get shoppingErrListDefault;
+
+  /// No description provided for @shoppingErrTileExists.
+  ///
+  /// In en, this message translates to:
+  /// **'A tile with this name already exists.'**
+  String get shoppingErrTileExists;
+
+  /// No description provided for @shoppingTileAddEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Add and edit'**
+  String get shoppingTileAddEdit;
+
+  /// No description provided for @shoppingTileRename.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename tile'**
+  String get shoppingTileRename;
+
+  /// No description provided for @shoppingTileForget.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t suggest any more'**
+  String get shoppingTileForget;
+
+  /// No description provided for @shoppingTileForgetHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The tile goes; the history keeps it.'**
+  String get shoppingTileForgetHelp;
+
+  /// No description provided for @shoppingTileForgetConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove the tile “{name}”? Buying it again brings it back.'**
+  String shoppingTileForgetConfirm(String name);
 }
 
 class _AppLocalizationsDelegate

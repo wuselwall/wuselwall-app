@@ -4743,4 +4743,192 @@ class AppLocalizationsDe extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get savedMessage => 'Gespeichert.';
+
+  @override
+  String get settingsSectionFamily => 'Familie';
+
+  @override
+  String get settingsSectionThisDevice => 'Dieses Gerät';
+
+  @override
+  String get settingsSectionConnect => 'Teilen und Verbindungen';
+
+  @override
+  String get settingsMembersHint =>
+      'Tippe auf eine Person, um Name, Farbe, Bild oder Rolle zu ändern. Ziehe am Griff, um die Reihenfolge auf der Wand zu ändern.';
+
+  @override
+  String get familyTitle => 'Familie';
+
+  @override
+  String get familySettingsSubtitle => 'Name, Zeitzone, Datenexport, Löschen';
+
+  @override
+  String get familyTimezone => 'Zeitzone';
+
+  @override
+  String get familyTimezoneHelp =>
+      'Wand und Erinnerungen folgen dieser Zeitzone.';
+
+  @override
+  String get familyTimezoneSearch => 'Zeitzone suchen';
+
+  @override
+  String get familyLocale => 'Sprache auf der Wand';
+
+  @override
+  String get familyLocaleHelp =>
+      'Feiertage auf der Wandanzeige heißen in dieser Sprache.';
+
+  @override
+  String get familyErrTimezone => 'Unbekannte Zeitzone.';
+
+  @override
+  String get memberColour => 'Farbe';
+
+  @override
+  String get memberAvatar => 'Bild';
+
+  @override
+  String get memberAvatarInitial => 'Initiale';
+
+  @override
+  String get memberKind => 'Kind oder Erwachsen';
+
+  @override
+  String get memberRole => 'Rolle';
+
+  @override
+  String get memberRoleHelp =>
+      'Erziehungsberechtigte sehen alles und bestätigen Belohnungen. Mitglieder haken Aufgaben ab.';
+
+  @override
+  String get memberReadOnlyHint =>
+      'Andere Personen ändern nur Erziehungsberechtigte. Deinen eigenen Namen, deine Farbe und dein Bild kannst du selbst ändern.';
+
+  @override
+  String get memberInactive => 'Nicht mehr dabei';
+
+  @override
+  String get memberInactiveBody =>
+      'Nicht auf der Wand, in den Avatar-Reihen und bei neuen Aufgaben. Verlauf und Punkte bleiben.';
+
+  @override
+  String get memberDeactivate => 'Nicht mehr dabei';
+
+  @override
+  String memberDeactivateBody(String name) {
+    return '$name verschwindet von der Wand, aus den Avatar-Reihen und aus neuen Aufgaben. Verlauf und Punkte bleiben, und du kannst die Person hier zurückholen.';
+  }
+
+  @override
+  String memberDeactivateConfirm(String name) {
+    return '$name von den Bildschirmen der Familie nehmen? Verlauf und Punkte bleiben.';
+  }
+
+  @override
+  String get memberReactivate => 'Wieder dabei';
+
+  @override
+  String memberHasAccountHint(String name) {
+    return '$name hat ein Konto und verlässt die Familie vom eigenen Handy aus (Einstellungen → Familie verlassen).';
+  }
+
+  @override
+  String get memberReorderHandle => 'Reihenfolge ändern';
+
+  @override
+  String get memberErrKindAdult =>
+      'Erziehungsberechtigte und Personen mit Konto sind Erwachsene.';
+
+  @override
+  String get memberErrRoleChild =>
+      'Ein Kind kann nicht erziehungsberechtigt sein. Mache die Person zuerst zum Erwachsenen.';
+
+  @override
+  String get memberErrSelf =>
+      'Dich selbst kannst du nicht entfernen. Eine andere erziehungsberechtigte Person kann es.';
+
+  @override
+  String get memberErrHasAccount =>
+      'Diese Person hat ein Konto und verlässt die Familie vom eigenen Handy aus.';
+
+  @override
+  String get deviceRename => 'Gerät umbenennen';
+
+  @override
+  String deviceLastSeen(String ago) {
+    return 'zuletzt aktiv $ago';
+  }
+
+  @override
+  String get deviceNeverSeen => 'noch nicht aktiv';
+
+  @override
+  String get shoppingEditList => 'Liste bearbeiten';
+
+  @override
+  String get shoppingListDefault => 'Standardliste';
+
+  @override
+  String get shoppingListDefaultHelp =>
+      'Die Wandanzeige schreibt auf die Standardliste.';
+
+  @override
+  String get shoppingCategories => 'Kategorien';
+
+  @override
+  String get shoppingCategoriesHelp =>
+      'In der Reihenfolge, in der man durch den Laden geht. Ziehe am Griff, um sie zu ändern.';
+
+  @override
+  String get shoppingCategoryAdd => 'Kategorie hinzufügen';
+
+  @override
+  String get shoppingCategoryRename => 'Kategorie umbenennen';
+
+  @override
+  String get shoppingCategoryName => 'Name der Kategorie';
+
+  @override
+  String shoppingCategoryDeleteConfirm(String name) {
+    return '„$name“ entfernen? Ihre Artikel bleiben ohne Kategorie auf der Liste.';
+  }
+
+  @override
+  String get shoppingListDelete => 'Liste löschen';
+
+  @override
+  String shoppingListDeleteConfirm(String name) {
+    return '„$name“ löschen? Offene Artikel wandern auf die Standardliste; Verlauf und Kacheln dieser Liste sind weg.';
+  }
+
+  @override
+  String get shoppingErrListDefault =>
+      'Die Standardliste kann nicht gelöscht werden. Mache zuerst eine andere Liste zur Standardliste.';
+
+  @override
+  String get shoppingErrTileExists =>
+      'Eine Kachel mit diesem Namen gibt es schon.';
+
+  @override
+  String get shoppingTileAddEdit => 'Hinzufügen und bearbeiten';
+
+  @override
+  String get shoppingTileRename => 'Kachel umbenennen';
+
+  @override
+  String get shoppingTileForget => 'Nicht mehr vorschlagen';
+
+  @override
+  String get shoppingTileForgetHelp =>
+      'Die Kachel verschwindet; der Verlauf behält sie.';
+
+  @override
+  String shoppingTileForgetConfirm(String name) {
+    return 'Die Kachel „$name“ entfernen? Beim nächsten Kauf kommt sie zurück.';
+  }
 }

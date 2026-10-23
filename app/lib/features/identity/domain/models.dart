@@ -70,6 +70,7 @@ class Member {
     this.isChild = false,
     this.sortOrder = 0,
     this.hasAccount = true,
+    this.avatarKey,
   });
 
   factory Member.fromJson(Map<String, dynamic> json) => Member(
@@ -82,6 +83,7 @@ class Member {
     sortOrder: json['sort_order'] as int? ?? 0,
     // Older servers do not say; an unknown person is treated as one with an account.
     hasAccount: json['has_account'] as bool? ?? true,
+    avatarKey: json['avatar_key'] as String?,
   );
 
   final String id;
@@ -99,6 +101,9 @@ class Member {
 
   /// The household's member order (`profile.sort_order`).
   final int sortOrder;
+
+  /// The picture shown instead of the initial (`profile.avatar_key`); null is the initial.
+  final String? avatarKey;
 
   bool get isGuardian => role == Role.guardian;
 
@@ -215,4 +220,26 @@ class GuardianProfile {
 
   final String profileId;
   final String displayName;
+}
+
+/// The family's own row (`api.household`): what a guardian edits on the family page.
+class HouseholdInfo {
+  const HouseholdInfo({
+    required this.id,
+    required this.name,
+    required this.timezone,
+    required this.locale,
+  });
+
+  factory HouseholdInfo.fromJson(Map<String, dynamic> json) => HouseholdInfo(
+    id: json['id'] as String,
+    name: json['name'] as String,
+    timezone: json['timezone'] as String,
+    locale: json['locale'] as String,
+  );
+
+  final String id;
+  final String name;
+  final String timezone;
+  final String locale;
 }

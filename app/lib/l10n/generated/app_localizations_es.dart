@@ -4757,4 +4757,192 @@ class AppLocalizationsEs extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get savedMessage => 'Guardado.';
+
+  @override
+  String get settingsSectionFamily => 'Familia';
+
+  @override
+  String get settingsSectionThisDevice => 'Este dispositivo';
+
+  @override
+  String get settingsSectionConnect => 'Compartir y conexiones';
+
+  @override
+  String get settingsMembersHint =>
+      'Toca a una persona para cambiar su nombre, color, imagen o rol. Arrastra el asa para cambiar el orden en la pared.';
+
+  @override
+  String get familyTitle => 'Familia';
+
+  @override
+  String get familySettingsSubtitle =>
+      'Nombre, zona horaria, exportación de datos, eliminar';
+
+  @override
+  String get familyTimezone => 'Zona horaria';
+
+  @override
+  String get familyTimezoneHelp =>
+      'La pared y los recordatorios siguen esta zona.';
+
+  @override
+  String get familyTimezoneSearch => 'Buscar zona horaria';
+
+  @override
+  String get familyLocale => 'Idioma en la pared';
+
+  @override
+  String get familyLocaleHelp =>
+      'Los días festivos en la pantalla de pared se nombran en este idioma.';
+
+  @override
+  String get familyErrTimezone => 'Zona horaria desconocida.';
+
+  @override
+  String get memberColour => 'Color';
+
+  @override
+  String get memberAvatar => 'Imagen';
+
+  @override
+  String get memberAvatarInitial => 'Inicial';
+
+  @override
+  String get memberKind => 'Niño o adulto';
+
+  @override
+  String get memberRole => 'Rol';
+
+  @override
+  String get memberRoleHelp =>
+      'Los adultos responsables ven todo y aprueban las recompensas. Los miembros marcan tareas.';
+
+  @override
+  String get memberReadOnlyHint =>
+      'Solo los adultos responsables cambian a otras personas. Puedes cambiar tu propio nombre, color e imagen.';
+
+  @override
+  String get memberInactive => 'Ya no está en la familia';
+
+  @override
+  String get memberInactiveBody =>
+      'Fuera de la pared, de las filas de avatares y de las tareas nuevas. El historial y los puntos se conservan.';
+
+  @override
+  String get memberDeactivate => 'Ya no está en la familia';
+
+  @override
+  String memberDeactivateBody(String name) {
+    return '$name desaparece de la pared, de las filas de avatares y de las tareas nuevas. El historial y los puntos se conservan, y puedes traer a la persona de vuelta aquí.';
+  }
+
+  @override
+  String memberDeactivateConfirm(String name) {
+    return '¿Quitar a $name de las pantallas de la familia? El historial y los puntos se conservan.';
+  }
+
+  @override
+  String get memberReactivate => 'De vuelta';
+
+  @override
+  String memberHasAccountHint(String name) {
+    return '$name tiene una cuenta y sale de la familia desde su propio móvil (Ajustes → Salir de la familia).';
+  }
+
+  @override
+  String get memberReorderHandle => 'Cambiar el orden';
+
+  @override
+  String get memberErrKindAdult =>
+      'Un adulto responsable, o alguien con cuenta, es adulto.';
+
+  @override
+  String get memberErrRoleChild =>
+      'Un niño no puede ser adulto responsable. Primero conviértelo en adulto.';
+
+  @override
+  String get memberErrSelf =>
+      'No puedes quitarte a ti mismo. Otro adulto responsable puede hacerlo.';
+
+  @override
+  String get memberErrHasAccount =>
+      'Esta persona tiene una cuenta y sale de la familia desde su propio móvil.';
+
+  @override
+  String get deviceRename => 'Renombrar dispositivo';
+
+  @override
+  String deviceLastSeen(String ago) {
+    return 'activo por última vez $ago';
+  }
+
+  @override
+  String get deviceNeverSeen => 'aún no activo';
+
+  @override
+  String get shoppingEditList => 'Editar lista';
+
+  @override
+  String get shoppingListDefault => 'Lista predeterminada';
+
+  @override
+  String get shoppingListDefaultHelp =>
+      'La pantalla de pared añade a la lista predeterminada.';
+
+  @override
+  String get shoppingCategories => 'Categorías';
+
+  @override
+  String get shoppingCategoriesHelp =>
+      'En el orden de los pasillos. Arrastra el asa para reordenarlas.';
+
+  @override
+  String get shoppingCategoryAdd => 'Añadir categoría';
+
+  @override
+  String get shoppingCategoryRename => 'Renombrar categoría';
+
+  @override
+  String get shoppingCategoryName => 'Nombre de la categoría';
+
+  @override
+  String shoppingCategoryDeleteConfirm(String name) {
+    return '¿Quitar «$name»? Sus productos se quedan en la lista sin categoría.';
+  }
+
+  @override
+  String get shoppingListDelete => 'Eliminar lista';
+
+  @override
+  String shoppingListDeleteConfirm(String name) {
+    return '¿Eliminar «$name»? Los productos pendientes pasan a la lista predeterminada; su historial y sus tarjetas desaparecen.';
+  }
+
+  @override
+  String get shoppingErrListDefault =>
+      'La lista predeterminada no se puede eliminar. Elige antes otra lista como predeterminada.';
+
+  @override
+  String get shoppingErrTileExists => 'Ya existe una tarjeta con este nombre.';
+
+  @override
+  String get shoppingTileAddEdit => 'Añadir y editar';
+
+  @override
+  String get shoppingTileRename => 'Renombrar tarjeta';
+
+  @override
+  String get shoppingTileForget => 'No sugerir más';
+
+  @override
+  String get shoppingTileForgetHelp =>
+      'La tarjeta desaparece; el historial la conserva.';
+
+  @override
+  String shoppingTileForgetConfirm(String name) {
+    return '¿Quitar la tarjeta «$name»? La próxima compra la traerá de vuelta.';
+  }
 }

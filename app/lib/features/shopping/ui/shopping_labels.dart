@@ -4,7 +4,9 @@ import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 
 /// Display name of a category: seeded ones are localised by key, custom ones keep
 /// their own name.
+/// A category's name: the one the family gave it, else the seeded key's translation.
 String categoryLabel(AppLocalizations l10n, ShoppingCategory c) =>
+    c.name ??
     switch (c.key) {
       'produce' => l10n.shoppingCat_produce,
       'bakery' => l10n.shoppingCat_bakery,

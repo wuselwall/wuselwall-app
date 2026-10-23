@@ -16,8 +16,10 @@ import 'package:wuselwall/core/server/server_address.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/qr_code_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
+import 'package:wuselwall/core/ui/text_prompt.dart';
 import 'package:wuselwall/features/account/ui/delete_account_tile.dart';
 import 'package:wuselwall/features/account/ui/mfa_reset_button.dart';
+import 'package:wuselwall/features/calendar/ui/external_calendar_text.dart';
 import 'package:wuselwall/features/home/application/home_tab.dart';
 import 'package:wuselwall/features/household/application/household_leave_providers.dart';
 import 'package:wuselwall/features/household/ui/leave_family_tiles.dart';
@@ -28,11 +30,10 @@ import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/identity/ui/enrolment_qr.dart';
 import 'package:wuselwall/features/identity/ui/guardian_gate.dart';
+import 'package:wuselwall/features/identity/ui/member_circle.dart';
 import 'package:wuselwall/features/identity/ui/set_password_dialog.dart';
 import 'package:wuselwall/features/invitations/ui/members_invitations.dart';
-import 'package:wuselwall/features/settings/application/household_export_providers.dart';
 import 'package:wuselwall/features/settings/application/settings_view.dart';
-import 'package:wuselwall/features/settings/data/household_export_repository.dart';
 import 'package:wuselwall/features/settings/ui/appearance_tile.dart';
 import 'package:wuselwall/features/settings/ui/language_tile.dart';
 import 'package:wuselwall/features/settings/ui/settings_view_switch.dart';
@@ -41,8 +42,10 @@ import 'package:wuselwall/features/system/ui/class_labels.dart';
 import 'package:wuselwall/features/today/application/today_providers.dart';
 import 'package:wuselwall/features/today/data/getting_started_repository.dart';
 
-/// Members and devices. Reading is open to the household; every change is a guardian
-/// action and goes through [ensureGuardian] (PIN step-up on shared devices).
+/// Einstellungen: the family (its settings, its name, the usual week, members and
+/// devices), then this device, then under Advanced the connections, the server and the
+/// account. Reading is open to the household; every change is a guardian action and goes
+/// through [ensureGuardian] (PIN step-up on shared devices).
 ///
 /// Basic shows what a family needs to get going; Advanced adds the rest. Hiding a row
 /// changes nothing it controls.
@@ -52,7 +55,7 @@ class SettingsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final members = ref.watch(membersProvider);
+    final theme = Theme.of(context);
     final devices = ref.watch(devicesProvider);
     final thisDevice = ref.watch(deviceProvider).value;
     final canApprove = ref.watch(canApprovePairingProvider);
@@ -68,186 +71,192 @@ class SettingsPage extends ConsumerWidget {
         leading: BackButton(onPressed: () => context.go(Routes.home)),
         actions: const [SettingsViewSwitch()],
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(Tokens.space4),
-        children: [
-          ListTile(
-            leading: const Icon(Icons.tune),
-            title: Text(l10n.householdSettingsTitle),
-            subtitle: Text(l10n.householdSettingsSubtitle),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => context.go(Routes.householdSettings),
-          ),
-          if (advanced) ...[
-            ListTile(
-              leading: const Icon(Icons.rss_feed),
-              title: Text(l10n.feedTitle),
-              subtitle: Text(l10n.feedSettingsSubtitle),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => context.go(Routes.feedTokens),
+      // One scrollable: the member rows are a sliver reorderable list in the middle, so
+      // dragging works without a nested list of its own.
+      body: CustomScrollView(
+        slivers: [
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(
+              Tokens.space4,
+              Tokens.space4,
+              Tokens.space4,
+              0,
             ),
-            ListTile(
-              leading: const Icon(Icons.cloud_download_outlined),
-              title: Text(l10n.extCalTitle),
-              subtitle: Text(l10n.extCalSettingsSubtitle),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => context.go(Routes.externalCalendars),
-            ),
-          ],
-          ListTile(
-            leading: const Icon(Icons.home_outlined),
-            title: Text(l10n.baselineTitle),
-            subtitle: Text(l10n.baselineSettingsSubtitle),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => context.go(Routes.baselines),
-          ),
-          if (reminders)
-            ListTile(
-              leading: const Icon(Icons.notifications_outlined),
-              title: Text(l10n.reminderSettingsTitle),
-              subtitle: Text(l10n.reminderSettingsSubtitle),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => context.go(Routes.reminders),
-            ),
-          const LanguageTile(),
-          const AppearanceTile(),
-          if (advanced && thisDevice?.deviceClass != DeviceClass.kiosk)
-            ListTile(
-              leading: const Icon(Icons.hub_outlined),
-              title: Text(l10n.shortcutTitle),
-              subtitle: Text(l10n.shortcutSettingsSubtitle),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => context.go(Routes.shortcuts),
-            ),
-          ListTile(
-            leading: const Icon(Icons.flag_outlined),
-            title: Text(l10n.settingsGettingStarted),
-            subtitle: Text(l10n.settingsGettingStartedSubtitle),
-            onTap: () => _showGettingStarted(context, ref),
-          ),
-          const SizedBox(height: Tokens.space6),
-          _Header(
-            title: l10n.settingsMembers,
-            action: IconButton(
-              tooltip: l10n.addMember,
-              icon: const Icon(Icons.person_add_alt_1),
-              onPressed: () => _addMember(context, ref),
-            ),
-          ),
-          AsyncValueView<List<Member>>(
-            value: members,
-            onRetry: () => ref.invalidate(membersProvider),
-            data: (list) => Column(
+            sliver: SliverList.list(
               children: [
-                for (final m in list)
-                  ListTile(
-                    key: ValueKey('member-${m.id}'),
-                    leading: CircleAvatar(
-                      backgroundColor: m.color,
-                      child: Text(m.initial),
-                    ),
-                    title: Text(m.displayName),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          m.isGuardian ? l10n.roleGuardian : l10n.roleMember,
-                        ),
-                        MemberInvitationDetails(member: m),
-                        // Below the role, not beside it: at phone width a trailing
-                        // action squeezes the role into a sliver (as #29 did).
-                        Wrap(
-                          spacing: Tokens.space1,
-                          children: [
-                            MfaResetButton(member: m),
-                            InviteMemberButton(member: m),
-                          ],
-                        ),
-                      ],
-                    ),
+                _Header(
+                  title: l10n.settingsSectionFamily,
+                  action: const SizedBox.shrink(),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.tune),
+                  title: Text(l10n.householdSettingsTitle),
+                  subtitle: Text(l10n.householdSettingsSubtitle),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => context.go(Routes.householdSettings),
+                ),
+                ListTile(
+                  key: const ValueKey('settings-family'),
+                  leading: const Icon(Icons.family_restroom_outlined),
+                  title: Text(l10n.familyTitle),
+                  subtitle: Text(l10n.familySettingsSubtitle),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => context.go(Routes.family),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.home_outlined),
+                  title: Text(l10n.baselineTitle),
+                  subtitle: Text(l10n.baselineSettingsSubtitle),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => context.go(Routes.baselines),
+                ),
+                const SizedBox(height: Tokens.space6),
+                _Header(
+                  title: l10n.settingsMembers,
+                  action: IconButton(
+                    tooltip: l10n.addMember,
+                    icon: const Icon(Icons.person_add_alt_1),
+                    onPressed: () => _addMember(context, ref),
                   ),
-                const InviteAdultTile(),
+                ),
+                Text(
+                  l10n.settingsMembersHint,
+                  style: theme.textTheme.bodySmall,
+                ),
               ],
             ),
           ),
-          const SizedBox(height: Tokens.space6),
-          _Header(
-            title: l10n.settingsDevices,
-            action: canApprove
-                ? const SizedBox.shrink()
-                : IconButton(
-                    tooltip: l10n.addDevice,
+          const SliverPadding(
+            padding: EdgeInsets.symmetric(horizontal: Tokens.space4),
+            sliver: _MembersList(),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(
+              Tokens.space4,
+              0,
+              Tokens.space4,
+              Tokens.space4,
+            ),
+            sliver: SliverList.list(
+              children: [
+                const SizedBox(height: Tokens.space6),
+                _Header(
+                  title: l10n.settingsDevices,
+                  action: canApprove
+                      ? const SizedBox.shrink()
+                      : IconButton(
+                          tooltip: l10n.addDevice,
+                          icon: const Icon(Icons.add_to_home_screen),
+                          onPressed: () => _addDevice(context, ref),
+                        ),
+                ),
+                // J3: the new device shows the code, this phone approves it. The code the old
+                // way stays for one release, for devices on an older app.
+                if (canApprove) ...[
+                  FilledButton.icon(
+                    key: const ValueKey('connect-device'),
+                    onPressed: () => context.push<void>(Routes.devicePair),
                     icon: const Icon(Icons.add_to_home_screen),
-                    onPressed: () => _addDevice(context, ref),
+                    label: Text(l10n.pairConnectAction),
                   ),
-          ),
-          // J3: the new device shows the code, this phone approves it. The code the old
-          // way stays for one release, for devices on an older app.
-          if (canApprove) ...[
-            FilledButton.icon(
-              key: const ValueKey('connect-device'),
-              onPressed: () => context.push<void>(Routes.devicePair),
-              icon: const Icon(Icons.add_to_home_screen),
-              label: Text(l10n.pairConnectAction),
-            ),
-            if (advanced)
-              TextButton(
-                onPressed: () => _addDevice(context, ref),
-                child: Text(l10n.pairOldCodeAction),
-              ),
-            const SizedBox(height: Tokens.space2),
-          ],
-          AsyncValueView<List<DeviceEntry>>(
-            value: devices,
-            onRetry: () => ref.invalidate(devicesProvider),
-            data: (list) => Column(
-              children: [
-                for (final d in list)
+                  if (advanced)
+                    TextButton(
+                      onPressed: () => _addDevice(context, ref),
+                      child: Text(l10n.pairOldCodeAction),
+                    ),
+                  const SizedBox(height: Tokens.space2),
+                ],
+                AsyncValueView<List<DeviceEntry>>(
+                  value: devices,
+                  onRetry: () => ref.invalidate(devicesProvider),
+                  data: (list) => Column(
+                    children: [
+                      for (final d in list)
+                        _DeviceTile(
+                          key: ValueKey('device-${d.id}'),
+                          device: d,
+                          isThis: d.id == thisDevice?.deviceId,
+                          onRename: () => _renameDevice(context, ref, d),
+                          onRevoke: () => _revoke(context, ref, d),
+                        ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: Tokens.space6),
+                _Header(
+                  title: l10n.settingsSectionThisDevice,
+                  action: const SizedBox.shrink(),
+                ),
+                if (reminders)
                   ListTile(
-                    leading: const Icon(Icons.devices),
-                    title: Text(
-                      d.id == thisDevice?.deviceId
-                          ? '${d.label} (${l10n.thisDevice})'
-                          : d.label,
-                    ),
-                    subtitle: Text(
-                      '${d.deviceClass.label(l10n)} · ${d.register.label(l10n)}'
-                      '${d.revoked ? ' · ${l10n.deviceRevoked}' : ''}',
-                    ),
-                    trailing: d.revoked
-                        ? null
-                        : TextButton(
-                            onPressed: () => _revoke(context, ref, d),
-                            child: Text(l10n.revoke),
-                          ),
+                    leading: const Icon(Icons.notifications_outlined),
+                    title: Text(l10n.reminderSettingsTitle),
+                    subtitle: Text(l10n.reminderSettingsSubtitle),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => context.go(Routes.reminders),
                   ),
+                const LanguageTile(),
+                const AppearanceTile(),
+                ListTile(
+                  leading: const Icon(Icons.flag_outlined),
+                  title: Text(l10n.settingsGettingStarted),
+                  subtitle: Text(l10n.settingsGettingStartedSubtitle),
+                  onTap: () => _showGettingStarted(context, ref),
+                ),
+                if (advanced) ...[
+                  const SizedBox(height: Tokens.space6),
+                  _Header(
+                    title: l10n.settingsSectionConnect,
+                    action: const SizedBox.shrink(),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.rss_feed),
+                    title: Text(l10n.feedTitle),
+                    subtitle: Text(l10n.feedSettingsSubtitle),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => context.go(Routes.feedTokens),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.cloud_download_outlined),
+                    title: Text(l10n.extCalTitle),
+                    subtitle: Text(l10n.extCalSettingsSubtitle),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => context.go(Routes.externalCalendars),
+                  ),
+                  if (thisDevice?.deviceClass != DeviceClass.kiosk)
+                    ListTile(
+                      leading: const Icon(Icons.hub_outlined),
+                      title: Text(l10n.shortcutTitle),
+                      subtitle: Text(l10n.shortcutSettingsSubtitle),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () => context.go(Routes.shortcuts),
+                    ),
+                  const _ServerSection(),
+                  if (thisDevice?.deviceClass == DeviceClass.personal) ...[
+                    const SizedBox(height: Tokens.space6),
+                    const _SignInMethodsSection(),
+                    const LeaveFamilyTile(),
+                    const DeleteAccountTile(),
+                    const SizedBox(height: Tokens.space6),
+                    const _SecuritySection(),
+                  ],
+                ] else ...[
+                  // Account deletion stays easy to find (App Store guideline 5.1.1(v)).
+                  if (thisDevice?.deviceClass == DeviceClass.personal)
+                    const DeleteAccountTile(),
+                  const MoreSettingsHint(),
+                ],
+                const SizedBox(height: Tokens.space6),
+                OutlinedButton.icon(
+                  onPressed: () =>
+                      thisDevice?.deviceClass == DeviceClass.personal
+                      ? ref.read(identityRepositoryProvider).signOutDevice()
+                      : ref.read(identityRepositoryProvider).signOut(),
+                  icon: const Icon(Icons.logout),
+                  label: Text(l10n.signOutDevice),
+                ),
               ],
             ),
-          ),
-          if (advanced) ...[
-            const _ServerSection(),
-            if (thisDevice?.deviceClass == DeviceClass.personal) ...[
-              const _FamilySection(),
-              const SizedBox(height: Tokens.space6),
-              const _SignInMethodsSection(),
-              const LeaveFamilyTile(),
-              const DeleteAccountTile(),
-              const SizedBox(height: Tokens.space6),
-              const _SecuritySection(),
-            ],
-          ] else ...[
-            // Account deletion stays easy to find (App Store guideline 5.1.1(v)).
-            if (thisDevice?.deviceClass == DeviceClass.personal)
-              const DeleteAccountTile(),
-            const MoreSettingsHint(),
-          ],
-          const SizedBox(height: Tokens.space6),
-          OutlinedButton.icon(
-            onPressed: () => thisDevice?.deviceClass == DeviceClass.personal
-                ? ref.read(identityRepositoryProvider).signOutDevice()
-                : ref.read(identityRepositoryProvider).signOut(),
-            icon: const Icon(Icons.logout),
-            label: Text(l10n.signOutDevice),
           ),
         ],
       ),
@@ -278,7 +287,11 @@ class SettingsPage extends ConsumerWidget {
   Future<void> _addMember(BuildContext context, WidgetRef ref) async {
     if (!await ensureGuardian(context, ref) || !context.mounted) return;
     final l10n = context.l10n;
-    final name = await _askText(context, l10n.addMember, l10n.memberName);
+    final name = await askText(
+      context,
+      title: l10n.addMember,
+      label: l10n.memberName,
+    );
     if (name == null || !context.mounted) return;
 
     final colors = [0xFFE57373, 0xFFFFB74D, 0xFF64B5F6, 0xFFBA68C8, 0xFF81C784];
@@ -292,7 +305,9 @@ class SettingsPage extends ConsumerWidget {
         );
     if (!context.mounted) return;
     result.when(
-      ok: (_) => ref.invalidate(membersProvider),
+      ok: (_) => ref
+        ..invalidate(membersProvider)
+        ..invalidate(allMembersProvider),
       err: context.showFailure,
     );
   }
@@ -324,6 +339,37 @@ class SettingsPage extends ConsumerWidget {
       case Err(:final failure):
         context.showFailure(failure);
     }
+  }
+
+  /// A guardian names any device; a device may rename itself without the PIN.
+  Future<void> _renameDevice(
+    BuildContext context,
+    WidgetRef ref,
+    DeviceEntry d,
+  ) async {
+    final isThis = d.id == ref.read(deviceProvider).value?.deviceId;
+    if (!isThis && (!await ensureGuardian(context, ref) || !context.mounted)) {
+      return;
+    }
+    final l10n = context.l10n;
+    final label = await askText(
+      context,
+      title: l10n.deviceRename,
+      label: l10n.deviceLabel,
+      initial: d.label,
+      maxLength: 60,
+    );
+    if (label == null || label == d.label || !context.mounted) return;
+    final result = await ref
+        .read(identityRepositoryProvider)
+        .renameDevice(actor: _actor(ref), deviceId: d.id, label: label);
+    if (!context.mounted) return;
+    result.when(
+      ok: (_) => ref
+        ..invalidate(devicesProvider)
+        ..invalidate(deviceProvider),
+      err: context.showFailure,
+    );
   }
 
   Future<void> _revoke(
@@ -360,35 +406,6 @@ class SettingsPage extends ConsumerWidget {
       err: context.showFailure,
     );
   }
-}
-
-Future<String?> _askText(BuildContext context, String title, String label) {
-  final controller = TextEditingController();
-  final l10n = context.l10n;
-  return showDialog<String>(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text(title),
-      content: TextField(
-        controller: controller,
-        autofocus: true,
-        decoration: InputDecoration(labelText: label),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text(l10n.cancel),
-        ),
-        FilledButton(
-          onPressed: () => Navigator.pop(
-            context,
-            controller.text.trim().isEmpty ? null : controller.text.trim(),
-          ),
-          child: Text(l10n.save),
-        ),
-      ],
-    ),
-  ).whenComplete(controller.dispose);
 }
 
 class _Header extends StatelessWidget {
@@ -544,98 +561,6 @@ class _CodeDialog extends ConsumerWidget {
         ),
       ],
     );
-  }
-}
-
-/// Family-wide actions. Only a guardian on their own phone sees the export (GDPR Art. 20);
-/// the server refuses everyone else too.
-class _FamilySection extends ConsumerStatefulWidget {
-  const _FamilySection();
-
-  @override
-  ConsumerState<_FamilySection> createState() => _FamilySectionState();
-}
-
-class _FamilySectionState extends ConsumerState<_FamilySection> {
-  var _exporting = false;
-
-  bool get _canExport {
-    final device = ref.watch(deviceProvider).value;
-    if (device?.deviceClass != DeviceClass.personal) return false;
-    final acting = ref.watch(actingProfileProvider);
-    final members = ref.watch(membersProvider).value ?? const <Member>[];
-    return members.any((m) => m.id == acting && m.isGuardian);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (!_canExport) return const SizedBox.shrink();
-    final l10n = context.l10n;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: Tokens.space6),
-        Text(
-          l10n.exportFamilyTitle,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-        ListTile(
-          key: const ValueKey('export-data'),
-          leading: const Icon(Icons.download_outlined),
-          title: Text(l10n.exportAction),
-          subtitle: Text(l10n.exportExplanation),
-          trailing: _exporting
-              ? Semantics(
-                  label: l10n.exportInProgress,
-                  child: const SizedBox.square(
-                    dimension: 24,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
-                )
-              : null,
-          onTap: _exporting ? null : _export,
-        ),
-        const DeleteFamilyTile(),
-      ],
-    );
-  }
-
-  Future<void> _export() async {
-    if (!await ensureGuardian(context, ref) || !mounted) return;
-    // Read before the first await: the share sheet is anchored to this tile on iPad.
-    final box = context.findRenderObject() as RenderBox?;
-    final origin = box == null
-        ? null
-        : box.localToGlobal(Offset.zero) & box.size;
-    final actor = ref.read(actingProfileProvider);
-
-    setState(() => _exporting = true);
-    try {
-      final result = await ref
-          .read(householdExportRepositoryProvider)
-          .export(actor: actor);
-      if (!mounted) return;
-      switch (result) {
-        case Err(:final failure):
-          context.showFailure(failure);
-        case Ok(:final value):
-          final shared = await Result.guard(
-            () => ref.read(shareExportProvider)(
-              fileName: householdExportFileName(
-                DateTime.now(),
-                value.extension,
-              ),
-              bytes: value.bytes,
-              mimeType: value.mimeType,
-              origin: origin,
-            ),
-          );
-          if (!mounted) return;
-          shared.when(ok: (_) {}, err: context.showFailure);
-      }
-    } finally {
-      if (mounted) setState(() => _exporting = false);
-    }
   }
 }
 
@@ -989,5 +914,190 @@ class _ServerSection extends ConsumerWidget {
     // Like "Sign out": a personal phone also gives up its device record.
     await (personal ? identity.signOutDevice() : identity.signOut());
     await session.leave?.call();
+  }
+}
+
+/// The people of the family, in the board's order, each a row that opens the member
+/// page. Guardians drag the handle to reorder; the server keeps the new order for every
+/// screen. People who are no longer with the family sit at the end, greyed. A sliver, so
+/// the settings page stays one scrollable.
+class _MembersList extends ConsumerStatefulWidget {
+  const _MembersList();
+
+  @override
+  ConsumerState<_MembersList> createState() => _MembersListState();
+}
+
+class _MembersListState extends ConsumerState<_MembersList> {
+  /// The order on screen while a drag's write is in flight.
+  List<Member>? _dragged;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final members = ref.watch(allMembersProvider);
+    final acting = ref.watch(actingProfileProvider);
+    final list = members.value;
+    if (list == null) {
+      return SliverToBoxAdapter(
+        child: AsyncValueView<List<Member>>(
+          value: members,
+          onRetry: () => ref.invalidate(allMembersProvider),
+          data: (_) => const SizedBox.shrink(),
+        ),
+      );
+    }
+    final active = _dragged ?? list.where((m) => m.active).toList();
+    final retired = list.where((m) => !m.active).toList();
+    final isGuardian = list.any((m) => m.id == acting && m.isGuardian);
+    return SliverMainAxisGroup(
+      slivers: [
+        SliverReorderableList(
+          key: const ValueKey('members-list'),
+          itemCount: active.length,
+          onReorderItem: (from, to) => _reorder(active, from, to),
+          // The row in flight is drawn in the overlay: give it the Material its tile needs.
+          proxyDecorator: (child, _, _) => Material(elevation: 2, child: child),
+          itemBuilder: (context, i) {
+            final m = active[i];
+            return _MemberTile(
+              key: ValueKey('member-${m.id}'),
+              member: m,
+              handle: isGuardian && active.length > 1
+                  ? ReorderableDragStartListener(
+                      index: i,
+                      child: Tooltip(
+                        message: l10n.memberReorderHandle,
+                        child: const Padding(
+                          padding: EdgeInsets.all(Tokens.space2),
+                          child: Icon(Icons.drag_handle),
+                        ),
+                      ),
+                    )
+                  : null,
+            );
+          },
+        ),
+        SliverList.list(
+          children: [
+            for (final m in retired)
+              _MemberTile(key: ValueKey('member-${m.id}'), member: m),
+            const InviteAdultTile(),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Future<void> _reorder(List<Member> current, int from, int to) async {
+    final next = List.of(current);
+    final moved = next.removeAt(from);
+    next.insert(to, moved);
+    setState(() => _dragged = next);
+    if (!await ensureGuardian(context, ref) || !mounted) {
+      setState(() => _dragged = null);
+      return;
+    }
+    final result = await ref
+        .read(identityRepositoryProvider)
+        .reorderMembers(
+          actor: ref.read(actingProfileProvider),
+          profileIds: [for (final m in next) m.id],
+        );
+    if (!mounted) return;
+    ref
+      ..invalidate(allMembersProvider)
+      ..invalidate(membersProvider);
+    setState(() => _dragged = null);
+    result.when(ok: (_) {}, err: context.showFailure);
+  }
+}
+
+class _MemberTile extends StatelessWidget {
+  const _MemberTile({required this.member, this.handle, super.key});
+
+  final Member member;
+  final Widget? handle;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final role = member.isGuardian ? l10n.roleGuardian : l10n.roleMember;
+    return ListTile(
+      leading: Opacity(
+        opacity: member.active ? 1 : 0.5,
+        child: MemberCircle(member: member),
+      ),
+      title: Text(member.displayName),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            member.active
+                ? (member.isChild ? l10n.householdKindChild : role)
+                : l10n.memberInactive,
+          ),
+          MemberInvitationDetails(member: member),
+          // Below the role, not beside it: at phone width a trailing action
+          // squeezes the role into a sliver (as #29 did).
+          Wrap(
+            spacing: Tokens.space1,
+            children: [
+              MfaResetButton(member: member),
+              InviteMemberButton(member: member),
+            ],
+          ),
+        ],
+      ),
+      // The handle is the affordance when there is one: a chevron beside it would
+      // squeeze the role into a sliver at phone width.
+      trailing: handle ?? const Icon(Icons.chevron_right),
+      onTap: () => context.go(Routes.member, extra: member.id),
+    );
+  }
+}
+
+/// One device: tap to rename, "Sperren" to revoke. "zuletzt aktiv vor 3 Tagen" makes
+/// the revoke of J4 an informed choice.
+class _DeviceTile extends ConsumerWidget {
+  const _DeviceTile({
+    required this.device,
+    required this.isThis,
+    required this.onRename,
+    required this.onRevoke,
+    super.key,
+  });
+
+  final DeviceEntry device;
+  final bool isThis;
+  final VoidCallback onRename;
+  final VoidCallback onRevoke;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final d = device;
+    final seen = d.lastSeenAt;
+    final lastSeen = d.revoked
+        ? l10n.deviceRevoked
+        : seen == null
+        ? l10n.deviceNeverSeen
+        : l10n.deviceLastSeen(agoText(l10n, seen, DateTime.now()));
+    return ListTile(
+      leading: Icon(switch (d.deviceClass) {
+        DeviceClass.personal => Icons.smartphone,
+        DeviceClass.shared => Icons.tablet_android,
+        DeviceClass.kiosk => Icons.tv,
+      }),
+      title: Text(isThis ? '${d.label} (${l10n.thisDevice})' : d.label),
+      subtitle: Text(
+        '${d.deviceClass.label(l10n)} · ${d.register.label(l10n)}\n$lastSeen',
+      ),
+      isThreeLine: true,
+      trailing: d.revoked
+          ? null
+          : TextButton(onPressed: onRevoke, child: Text(l10n.revoke)),
+      onTap: d.revoked ? null : onRename,
+    );
   }
 }

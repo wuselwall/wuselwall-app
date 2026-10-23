@@ -6,7 +6,7 @@ Les **parents** administrent le foyer depuis l’engrenage **Paramètres** de le
 
 ## Vue de base ou avancée {#view}
 
-La vue **Essentiels** montre les paramètres du foyer, la semaine habituelle, les rappels, la langue, l’apparence, les premiers pas, les membres et appareils, et la suppression du compte sur votre téléphone. **Avancés** ajoute les calendriers, assistants, serveur, export, connexion, sécurité et départ du foyer.
+La vue **Essentiels** montre l’essentiel en trois groupes : **Famille** (paramètres du foyer, famille, semaine habituelle, membres, appareils), **Cet appareil** (rappels, langue, apparence, premiers pas) et, sur votre téléphone, la suppression du compte. **Avancés** ajoute **Partage et connexions** (calendriers partagés, calendriers externes, assistants), le serveur, la connexion, la sécurité et le départ du foyer. La même bascule existe dans les paramètres du foyer, sur la page d’une personne, sous **Famille** et dans la modification d’une liste de courses.
 
 Les réglages masqués restent actifs. L’app mémorise la vue pour chaque appareil ; les paramètres du foyer possèdent aussi ces deux vues.
 
@@ -32,6 +32,20 @@ Les enfants n’ont pas besoin de compte ni d’invitation : ajoutez leur préno
 
 L’icône près des membres ajoute une personne par son prénom. L’app attribue la prochaine couleur disponible.
 
+## Modifier un membre {#edit-a-member}
+
+Touchez une personne de la liste. Sur sa page, vous changez le **nom**, la **couleur** et l’**image** (un animal ou un symbole à la place de l’initiale, visible sur la tablette des enfants et dans les listes). **Enfant ou adulte** décide de la tablette des enfants, des tâches de départ et de l’emploi du temps ; les parents et les personnes avec un compte sont toujours des adultes. Un lien mène à la **semaine habituelle** de la personne.
+
+<Shot name="settings-member" alt="La page d’un membre avec nom, couleur, image et enfant ou adulte" />
+
+En vue **Avancés**, la page montre aussi le **rôle** (parent ou membre ; un enfant ne peut pas être parent, et le dernier parent avec un compte le reste) et **Ne fait plus partie du foyer** : la personne disparaît du mur, des rangées d’avatars et des nouvelles tâches ; l’historique et les points restent, et vous pouvez la ramener ici. Un adulte avec un compte quitte la famille depuis son propre téléphone (voir [Compte et famille](/fr/settings/account)).
+
+Chacun change lui-même son nom, sa couleur et son image. Le reste revient aux parents, avec le PIN sur les appareils partagés.
+
+### Changer l’ordre
+
+L’ordre des membres dans la liste est l’ordre sur le mur et dans toutes les listes. Les parents déplacent une personne avec la **poignée** à droite.
+
 ## Réinitialiser la double authentification {#reset-two-factor}
 
 Si un autre parent a perdu son deuxième facteur, utilisez l’action près de son nom. Il pourra se connecter et la [configurer à nouveau](/fr/settings/security#two-factor-sign-in).
@@ -43,6 +57,10 @@ Sous les appareils, touchez **Connecter un appareil**. Scannez le QR ou saisisse
 <Shot name="pair-approve" alt="La vérification et l’approbation du nouvel appareil" />
 
 Le QR peut être ouvert avec la caméra du téléphone : il contient le serveur. Si le lien vise un autre serveur que celui où vous êtes connecté, l’app vous le signale et ne bascule pas automatiquement. Une ancienne version peut encore utiliser l’option de création de code pour ancien appareil.
+
+## Renommer un appareil {#renaming-a-device}
+
+Touchez un appareil de la liste pour lui donner un autre **nom**, par exemple « Tablette de cuisine » au lieu de « iPad ». Sous chaque appareil figure sa dernière activité (« actif pour la dernière fois il y a 3 jours »), pour savoir de quel appareil il s’agit avant de le bloquer. Chacun renomme son propre appareil ; les autres appareils sont renommés par les parents.
 
 ## Bloquer un appareil {#blocking-a-device}
 
@@ -56,9 +74,15 @@ Dans **Avancés**, l’adresse et le QR du serveur permettent de configurer un a
 
 **Changer de serveur** sert au déménagement du foyer. Cela déconnecte l’appareil et efface ses données locales, **y compris les courses non envoyées**. Un appareil partagé demande d’abord le PIN parental.
 
+## Famille {#family}
+
+Sous **Paramètres → Famille**, vous changez le **nom de la famille** choisi à la création. En vue **Avancés**, la page montre aussi le **fuseau horaire** (le mur et les rappels le suivent ; touchez-le et cherchez par exemple « Zurich ») et la **langue sur le mur**, dans laquelle les jours fériés sont nommés sur l’écran mural. Tout cela revient aux parents.
+
+<Shot name="settings-family" alt="La page Famille avec nom, fuseau horaire, langue sur le mur et export" />
+
 ## Exporter les données {#export-data}
 
-Depuis son téléphone personnel, un parent peut exporter le foyer dans **Avancés → Famille → Exporter les données**.
+Depuis son téléphone personnel, un parent peut exporter le foyer dans **Paramètres → Famille** (vue **Avancés**) → **Exporter les données**.
 
 L’archive zip contient membres, événements, emplois du temps, tâches, recettes, courses, etc. Elle **ne contient pas de mots de passe, PIN ou données de connexion**. Les appareils n’y figurent qu’avec nom et dates.
 
