@@ -2945,6 +2945,13 @@ class AppLocalizationsDe extends AppLocalizations {
       'Die Einrichtungskarte wieder auf dem Heute-Tab zeigen';
 
   @override
+  String get settingsLicenses => 'Open-Source-Lizenzen';
+
+  @override
+  String get settingsLicensesSubtitle =>
+      'Die Lizenzen der Software und Schriften, aus denen WuselWall gebaut ist';
+
+  @override
   String get exportFamilyTitle => 'Familie';
 
   @override

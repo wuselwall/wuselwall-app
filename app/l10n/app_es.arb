@@ -1604,6 +1604,8 @@
   "todayStartSchool": "Añade el horario escolar",
   "settingsGettingStarted": "Primeros pasos",
   "settingsGettingStartedSubtitle": "Volver a mostrar la tarjeta de configuración en la pestaña Hoy",
+  "settingsLicenses": "Licencias de código abierto",
+  "settingsLicensesSubtitle": "Las licencias del software y las fuentes con los que está hecho WuselWall",
   "exportFamilyTitle": "Familia",
   "exportAction": "Exportar datos",
   "exportExplanation": "Todos los datos de vuestra familia en un archivo, por ejemplo para trasladarlos a otro servidor.",

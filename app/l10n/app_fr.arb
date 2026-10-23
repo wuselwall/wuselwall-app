@@ -1604,6 +1604,8 @@
   "todayStartSchool": "Ajouter l’emploi du temps",
   "settingsGettingStarted": "Premiers pas",
   "settingsGettingStartedSubtitle": "Réafficher la carte de configuration dans l’onglet Aujourd’hui",
+  "settingsLicenses": "Licences open source",
+  "settingsLicensesSubtitle": "Les licences des logiciels et des polices utilisés par WuselWall",
   "exportFamilyTitle": "Famille",
   "exportAction": "Exporter les données",
   "exportExplanation": "Toutes les données de votre famille dans un fichier, par exemple pour passer sur un autre serveur.",

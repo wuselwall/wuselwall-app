@@ -20,6 +20,9 @@ mkdir -p "$root"/{stack,migrations,jobs,backup}
 
 cp server/wuselwall "$root/wuselwall"
 echo "$version" > "$root/VERSION"
+# Apache-2.0 section 4(a): every copy that is handed on carries the licence and the notices
+# (the stack below includes files from Supabase, the web build includes third-party packages).
+cp LICENSE NOTICE "$root/"
 rsync -a \
   --exclude .env --exclude '.env.*' \
   --exclude volumes/db/data/ --exclude volumes/storage/ --exclude volumes/snippets/ \

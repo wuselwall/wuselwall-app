@@ -1,9 +1,12 @@
 # WuselWall's layer over Supabase's official self-hosting compose file (ADR-013 amendment).
 #
-# docker-compose.yml and volumes/ are upstream, copied verbatim from
+# docker-compose.yml and volumes/ (api/, db/, functions/deno.jsonc) are upstream, copied
+# verbatim from
 #   https://github.com/supabase/supabase/tree/3fc8af387ec4dfb449510828a938e1f6e57a9575/docker
 # Never edit them; every change lives here, so an upstream update is a copy plus a diff
-# of this file (specs/10#updates).
+# of this file (specs/10#updates). Two exceptions, listed in NOTICE: volumes/functions/
+# main/index.ts is upstream's router with a few marked WuselWall lines, and volumes/caddy/
+# is WuselWall's own.
 #
 # What this file changes, and why:
 # - Images: the exact versions the pinned Supabase CLI (package.json) runs, so the home

@@ -2950,6 +2950,13 @@ class AppLocalizationsEs extends AppLocalizations {
       'Volver a mostrar la tarjeta de configuración en la pestaña Hoy';
 
   @override
+  String get settingsLicenses => 'Licencias de código abierto';
+
+  @override
+  String get settingsLicensesSubtitle =>
+      'Las licencias del software y las fuentes con los que está hecho WuselWall';
+
+  @override
   String get exportFamilyTitle => 'Familia';
 
   @override

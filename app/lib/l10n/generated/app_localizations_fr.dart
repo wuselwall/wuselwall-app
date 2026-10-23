@@ -2963,6 +2963,13 @@ class AppLocalizationsFr extends AppLocalizations {
       'Réafficher la carte de configuration dans l’onglet Aujourd’hui';
 
   @override
+  String get settingsLicenses => 'Licences open source';
+
+  @override
+  String get settingsLicensesSubtitle =>
+      'Les licences des logiciels et des polices utilisés par WuselWall';
+
+  @override
   String get exportFamilyTitle => 'Famille';
 
   @override

@@ -124,6 +124,27 @@ void main() {
       const ValueKey('setting-tasks.verification_default'),
     );
 
+    testWidgets('the licenses page opens from Basic, with the project notice', (
+      t,
+    ) async {
+      await open(t, Routes.settings, store: MemorySettingsViewStore());
+
+      await t.scrollUntilVisible(
+        find.text(_de.settingsLicenses),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await t.tap(find.text(_de.settingsLicenses));
+      await t.pumpAndSettle();
+
+      expect(find.byType(LicensePage), findsOneWidget);
+      expect(find.text('WuselWall'), findsWidgets);
+      expect(
+        find.textContaining('Apache License, Version 2.0'),
+        findsOneWidget,
+      );
+    });
+
     testWidgets('Basic shows the main settings only', (t) async {
       await open(t, Routes.householdSettings, store: MemorySettingsViewStore());
 

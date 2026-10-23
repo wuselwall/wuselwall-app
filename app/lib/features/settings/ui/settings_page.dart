@@ -203,6 +203,19 @@ class SettingsPage extends ConsumerWidget {
                   subtitle: Text(l10n.settingsGettingStartedSubtitle),
                   onTap: () => _showGettingStarted(context, ref),
                 ),
+                ListTile(
+                  leading: const Icon(Icons.gavel_outlined),
+                  title: Text(l10n.settingsLicenses),
+                  subtitle: Text(l10n.settingsLicensesSubtitle),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => showLicensePage(
+                    context: context,
+                    applicationName: 'WuselWall',
+                    applicationLegalese:
+                        'Copyright 2026 Daniel Huser and the WuselWall contributors.\n'
+                        'Licensed under the Apache License, Version 2.0.',
+                  ),
+                ),
                 if (advanced) ...[
                   const SizedBox(height: Tokens.space6),
                   _Header(
