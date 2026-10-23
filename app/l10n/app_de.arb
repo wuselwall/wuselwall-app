@@ -1821,6 +1821,8 @@
   "schoolImportNewSubjects": "Neue Fächer",
   "schoolImportCreateSubjects": "Neue Fächer anlegen",
   "schoolImportSkipNewSubjects": "Stunden mit neuen Fächern werden weggelassen.",
+  "schoolImportCreateNew": "Neu anlegen",
+  "schoolImportMergeHint": "Gibt es das Fach schon? Wähle es aus, dann merkt sich WuselWall das Wort vom Blatt.",
   "schoolImportWarnUnmatchedTimes": "{count, plural, one{1 Stunde passt zu keiner Klingelzeit und wird weggelassen.} other{{count} Stunden passen zu keiner Klingelzeit und werden weggelassen.}}",
   "schoolImportWarnPeriodsExtended": "{count, plural, one{Die Klingelzeiten bekommen 1 weitere Stunde.} other{Die Klingelzeiten bekommen {count} weitere Stunden.}}",
   "schoolImportWarnPeriodsDiffer": "Die Klingelzeiten auf dem Blatt weichen von denen der Schule ab; die der Schule bleiben.",

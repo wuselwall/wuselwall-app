@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/supabase/api_client.dart';
 import 'package:wuselwall/core/supabase/supabase_providers.dart';
+import 'package:wuselwall/features/school/domain/school_models.dart';
 import 'package:wuselwall/features/school/domain/timetable_import.dart';
 
 /// What the family's server read from a photo (specs/24 "Scanning"): the payload the
@@ -38,12 +39,14 @@ class ScanRepository {
 
   /// [languages] and [subjects] tell the server's parser which words to expect: the
   /// family's language(s) and its subject names, so a subject code is never read as a
-  /// weekday of another language.
+  /// weekday of another language. [subjectList] carries the same subjects with their
+  /// remembered aliases, so a word a sheet used before names the subject straight away.
   Future<Result<ScanResult>> scan({
     required Uint8List image,
     required String mime,
     List<String> languages = const [],
     List<String> subjects = const [],
+    List<SubjectRecord> subjectList = const [],
   }) => _api.function(
     'timetable-scan',
     body: {
@@ -51,6 +54,10 @@ class ScanRepository {
       'mime': mime,
       'languages': languages,
       'subjects': subjects,
+      'subjectList': [
+        for (final s in subjectList)
+          {'short': s.shortName, 'name': s.name, 'aliases': s.aliases},
+      ],
     },
     parse: (json) => ScanResult.fromJson(json! as Map<String, dynamic>),
   );

@@ -282,6 +282,28 @@ their own, `import:propose`, granted separately from `shopping:write`.
   Wangen 33 of 38, Leonhard 23 of 24, the own PDF snaps its one misread "Sachuntericht").
   Where the family's language and the sheet's differ, a near name of the family's language
   can win ("English" → "Englisch"); acceptable for the family that would name it so.
+- **The sheet's own words, and the family's** (*added 2026-10-23, roadmap steps 1 to 7*):
+  the parser reads the **legend** many sheets print under the grid (a code and its name in
+  one box, or in two boxes on one line, in a one- or two-column legend); only codes that
+  stand in a cell count, the lines read no longer count as unplaced, and a legend name the
+  language almost knows snaps to it ("BMewegung und Sport"). The legend beats the language's
+  word, so Wangen's "GES tc" reads Technisches Gestalten and Augustinum's "E4" Englisch für
+  die 4. Schulstufe. A subject **remembers the words** sheets used for it (`subject.aliases`,
+  migration `20261023110000`): the scan sends them (`subjectList` with short name, name and
+  aliases), a cell with any of a subject's words gets the subject's short name, and the
+  app's resolver matches aliases too. In the preview every new subject has a list: **create
+  it**, or **take it as** an existing subject, which then remembers the sheet's word; the
+  scan **preselects** the family's subject of the same group when exactly one exists
+  (`like`: "HSU" at the family's Sachunterricht, never "F" at Englisch, since every language
+  is its own group). A **week marker** on the cell ("A", "B", "Q2", "A-Woche") becomes the
+  lesson's parity; a word in capitals in parentheses is a **room**; a word the OCR split at
+  a line break is **joined** when the join is a word of the family's or of the language
+  ("Sachunter richt", "Mathe matik"); a level behind a code keeps the name ("E1"); a **care
+  word** on a row with clock times (Hort, Mittagstisch, Cantine, Comedor) becomes a care row
+  of the payload. Ten public sheets of the corpus live as **fixtures** with their expected
+  grid sizes (`_shared/fixtures/timetables/`, `timetable_ocr_corpus_test.ts`), so a tuning
+  that loses a sheet fails in CI; the own sheets never. Over the whole corpus no grid or
+  lesson count changes.
 - **Starter subjects per region** (*added 2026-10-23*, specs/21): the first school brings
   the subject list of its region in the words its sheets print, so the scan matches them:
   Germany, Austria (2023/24 names), German-, French- and Italian-speaking Switzerland,
@@ -361,7 +383,10 @@ accents" rather than to a failed build.
 ## Recognition roadmap
 
 What the research and the corpus say the next steps are, in the order they pay off. None
-needs a model; all stay on the family's server.
+needs a model; all stay on the family's server. *Status 2026-10-23: steps 1 to 7 are built
+(see "The sheet's own words, and the family's" above); 8 to 10 stay open, 10 in part: the
+preview lists each new subject with its name and the list to take it as an existing one, the
+grid still shows short names only.*
 
 1. **Read the legend.** Swiss, Spanish and most Untis sheets print `CODE Name` pairs under
    or beside the grid. A block of short-code-plus-name lines outside the grid resolves every
@@ -436,4 +461,5 @@ thresholds and the warnings, not into new screens.
 | 3 | Proposals: table, functions, tests; the MCP tool; the cards | Built |
 | 4 | Scanning: the container, the function, the parser, the app's way in | Built, unverified on real sheets |
 | 5 | The language's words and the starter lists per region, from the research | Built |
-| 6 | The pilot's measurements, the recognition roadmap, iOS Vision if the server path is not enough | Open |
+| 6 | The recognition roadmap, steps 1 to 7: legend, aliases, suggestions, markers, wrapped words, care rows, the corpus in CI | Built |
+| 7 | The pilot's measurements, roadmap steps 8 to 10, iOS Vision if the server path is not enough | Open |

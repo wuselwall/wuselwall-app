@@ -2495,6 +2495,8 @@
   "schoolImportNewSubjects": "Asignaturas nuevas",
   "schoolImportCreateSubjects": "Crear las asignaturas nuevas",
   "schoolImportSkipNewSubjects": "Las clases con asignaturas nuevas se omiten.",
+  "schoolImportCreateNew": "Crear nueva",
+  "schoolImportMergeHint": "¿Ya existe la asignatura? Elígela y WuselWall recordará la palabra de la hoja.",
   "schoolImportWarnUnmatchedTimes": "{count, plural, one{1 clase no coincide con ninguna hora de clase y se omite.} other{{count} clases no coinciden con ninguna hora de clase y se omiten.}}",
   "schoolImportWarnPeriodsExtended": "{count, plural, one{Las horas de clase reciben 1 clase más.} other{Las horas de clase reciben {count} clases más.}}",
   "schoolImportWarnPeriodsDiffer": "Las horas de la hoja difieren de las del colegio; se mantienen las del colegio.",

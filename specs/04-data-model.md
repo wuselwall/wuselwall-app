@@ -222,7 +222,8 @@ subject
   id, household_id, name,                       -- "Mathematik"
   short_name TEXT,                              -- "Ma"
   colour_hex, icon_key,
-  equipment_note TEXT NULL                      -- "Sportsachen" — FR-7.12
+  equipment_note TEXT NULL,                     -- "Sportsachen" — FR-7.12
+  aliases TEXT[]                                -- words sheets used for it: "Sachkunde" (24)
 
 timetable                        -- one child, one term
   id, household_id, profile_id, school_id, term_id,

@@ -58,7 +58,7 @@ Elige ritmo semanal o semanas A/B, que se rellenan por separado. Añade cuidado 
 
 ## Importar un horario {#reading-in}
 
-En vez de teclear cada clase, puedes hacer que se lea la hoja. Las tres vías terminan en la misma **vista previa**: muestra el niño, el colegio, el periodo, la cuadrícula tal como se guardaría, las asignaturas que se crearán y cada aviso, por ejemplo cuando se sustituye un horario o tiene más clases que las horas de clase. Solo **Aplicar** escribe algo; **Descartar** lo deja todo como estaba.
+En vez de teclear cada clase, puedes hacer que se lea la hoja. Las tres vías terminan en la misma **vista previa**: muestra el niño, el colegio, el periodo, la cuadrícula tal como se guardaría, las asignaturas que se crearán y cada aviso, por ejemplo cuando se sustituye un horario o tiene más clases que las horas de clase. Una asignatura nueva que ya tenéis con otra palabra la eliges allí en la lista; WuselWall recuerda la palabra de la hoja y la reconoce sola la próxima vez. Solo **Aplicar** escribe algo; **Descartar** lo deja todo como estaba.
 
 **Desde texto, con vuestro asistente de IA.** En un niño sin horario toca **Importar…** y luego **Pegar como texto** (o **Importar…** arriba en el horario). **Copiar las instrucciones para el asistente** deja un texto en el portapapeles: dáselo, junto con una foto del horario, al asistente en el que confiáis, por ejemplo en su app del móvil. Responde en un formato fijo que WuselWall sabe leer. Pega la respuesta en el campo y toca **Importar**. La foto solo va al asistente que elijáis; WuselWall no envía nada a nadie.
 

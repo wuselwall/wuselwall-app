@@ -4547,6 +4547,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'Lessons with new subjects are left out.';
 
   @override
+  String get schoolImportCreateNew => 'Create new';
+
+  @override
+  String get schoolImportMergeHint =>
+      'Already have this subject? Pick it, and WuselWall remembers the sheet\'s word.';
+
+  @override
   String schoolImportWarnUnmatchedTimes(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

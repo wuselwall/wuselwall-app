@@ -4581,6 +4581,13 @@ class AppLocalizationsDe extends AppLocalizations {
       'Stunden mit neuen Fächern werden weggelassen.';
 
   @override
+  String get schoolImportCreateNew => 'Neu anlegen';
+
+  @override
+  String get schoolImportMergeHint =>
+      'Gibt es das Fach schon? Wähle es aus, dann merkt sich WuselWall das Wort vom Blatt.';
+
+  @override
   String schoolImportWarnUnmatchedTimes(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

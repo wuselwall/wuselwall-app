@@ -143,8 +143,9 @@ Future<void> showTimetableScan(
           mime: mime,
           languages: [Localizations.localeOf(context).languageCode],
           subjects: [
-            for (final s in subjects) ...[s.shortName, s.name],
+            for (final s in subjects) ...[s.shortName, s.name, ...s.aliases],
           ],
+          subjectList: subjects,
         ),
   );
   if (!context.mounted) return;

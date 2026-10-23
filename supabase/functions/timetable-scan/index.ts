@@ -127,9 +127,23 @@ function hintsOf(body: Record<string, unknown>): ScanHints {
         typeof v === "string" && v.length <= length
       ).slice(0, max)
       : [];
+  const subjectList = Array.isArray(body.subjectList)
+    ? body.subjectList.slice(0, 150).flatMap((item: unknown) => {
+      if (typeof item !== "object" || item === null) return [];
+      const o = item as Record<string, unknown>;
+      if (typeof o.short !== "string" || typeof o.name !== "string") return [];
+      if (o.short.length > 12 || o.name.length > 60) return [];
+      return [{
+        short: o.short,
+        name: o.name,
+        aliases: texts(o.aliases, 20, 40),
+      }];
+    })
+    : undefined;
   return {
     languages: texts(body.languages, 8, 10),
     subjects: texts(body.subjects, 150, 60),
+    subjectList,
   };
 }
 

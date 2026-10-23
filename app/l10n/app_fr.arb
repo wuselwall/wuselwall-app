@@ -2495,6 +2495,8 @@
   "schoolImportNewSubjects": "Nouvelles matières",
   "schoolImportCreateSubjects": "Créer les nouvelles matières",
   "schoolImportSkipNewSubjects": "Les cours avec de nouvelles matières sont omis.",
+  "schoolImportCreateNew": "Créer",
+  "schoolImportMergeHint": "La matière existe déjà ? Choisis-la, et WuselWall retient le mot de la feuille.",
   "schoolImportWarnUnmatchedTimes": "{count, plural, one{1 cours ne correspond à aucun horaire de cours et est omis.} other{{count} cours ne correspondent à aucun horaire de cours et sont omis.}}",
   "schoolImportWarnPeriodsExtended": "{count, plural, one{Les horaires de cours reçoivent 1 cours de plus.} other{Les horaires de cours reçoivent {count} cours de plus.}}",
   "schoolImportWarnPeriodsDiffer": "Les horaires de la feuille diffèrent de ceux de l’école ; ceux de l’école sont conservés.",

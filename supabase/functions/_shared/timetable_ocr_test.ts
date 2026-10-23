@@ -590,7 +590,7 @@ Deno.test("the language's subject words name, join, snap and drop", () => {
     period: 1,
     subject: "E. Física",
     name: "Educación Física",
-    teacher: "GIMNÀS",
+    room: "GIMNÀS",
   });
   assertEquals(lessonOf(1, 1, "ESPLAI", es), null);
   // A language's subject word is never a weekday by guess: "Sam" is Samstag only in German.
@@ -600,4 +600,123 @@ Deno.test("the language's subject words name, join, snap and drop", () => {
     subjectKey("Natur, Mensch,  Gesellschaft."),
     "natur mensch gesellschaft",
   );
+});
+
+Deno.test("the sheet's legend names the codes, and its lines are no longer unplaced", () => {
+  const lines = sheet();
+  const plain = parseTimetableScan(lines, { languages: ["de"] })!;
+  // "Ma" and its name in two boxes, "SU Sachkunde" in one, under the grid.
+  const legend = [
+    ...lines,
+    at("Ma", 0.1, 0.9, 0.03),
+    at("Mathe", 0.2, 0.9, 0.08),
+    at("SU Sachkunde", 0.5, 0.9, 0.16),
+    at("Fächer:", 0.1, 0.85, 0.08),
+  ];
+  const read = parseTimetableScan(legend, { languages: ["de"] })!;
+  assertEquals(read.payload.lessons.length, plain.payload.lessons.length);
+  const ma = read.payload.lessons.find((l) => l.subject === "Ma")!;
+  const su = read.payload.lessons.find((l) => l.subject === "SU")!;
+  // The legend beats the language's word.
+  assertEquals(ma.name, "Mathe");
+  assertEquals(su.name, "Sachkunde");
+  assertEquals(
+    read.unplaced,
+    plain.unplaced + 1,
+    "only 'Fächer:' stays unplaced",
+  );
+});
+
+Deno.test("week markers, rooms in capitals, wrapped words, aliases and a suggestion", () => {
+  const de = vocabOf({
+    languages: ["de"],
+    subjectList: [
+      { short: "SU", name: "Sachunterricht", aliases: ["Sachkunde"] },
+      { short: "Ma", name: "Mathematik" },
+      { short: "Sp", name: "Sport" },
+    ],
+  });
+  // A week marker before or after the subject becomes the parity.
+  assertEquals(lessonOf(1, 1, "Ma A R12", de), {
+    day: 1,
+    period: 1,
+    subject: "Ma",
+    name: "Mathematik",
+    room: "R12",
+    parity: "a",
+  });
+  assertEquals(lessonOf(1, 1, "B Ma", de)?.parity, "b");
+  assertEquals(lessonOf(1, 1, "Chemie Q2", de)?.parity, "b");
+  assertEquals(lessonOf(1, 1, "Ma (Hen)", de)?.teacher, "Hen");
+  // A remembered alias names the family's subject by its short name.
+  assertEquals(lessonOf(1, 1, "Sachkunde", de), {
+    day: 1,
+    period: 1,
+    subject: "SU",
+    name: "Sachunterricht",
+  });
+  assertEquals(lessonOf(1, 1, "Sachunterricht Keller", de)?.subject, "SU");
+  // A word the OCR split at a line break is joined.
+  assertEquals(lessonOf(1, 1, "Sachunter richt", de)?.subject, "SU");
+  assertEquals(lessonOf(1, 1, "Mathe matik 2", de), {
+    day: 1,
+    period: 1,
+    subject: "Ma",
+    name: "Mathematik",
+    room: "2",
+  });
+  // A word of the group of exactly one family subject points at it; a family word never.
+  assertEquals(lessonOf(1, 1, "HSU", de), {
+    day: 1,
+    period: 1,
+    subject: "HSU",
+    name: "Sachunterricht",
+    like: "SU",
+  });
+  assertEquals(lessonOf(1, 1, "BS", de)?.like, "Sp");
+  assertEquals(lessonOf(1, 1, "Ma", de)?.like, undefined);
+  assertEquals(
+    lessonOf(1, 1, "E", de)?.like,
+    undefined,
+    "no family subject in the group",
+  );
+  // A level behind the code keeps the name.
+  assertEquals(lessonOf(1, 1, "E1", de)?.name, "Englisch");
+  // Rooms in capitals, on a Spanish sheet.
+  const es = vocabOf({ languages: ["es"] });
+  assertEquals(lessonOf(1, 1, "EF (GIMNÀS)", es)?.room, "GIMNÀS");
+  assertEquals(lessonOf(1, 1, "MAT (AULA1)", es)?.room, "AULA1");
+});
+
+Deno.test("a care word on a row with clock times becomes a care row", () => {
+  const lines: OcrLine[] = [];
+  DAYS.forEach((d, i) => lines.push(at(d, COLS[i], 0.15)));
+  const rows = [0.3, 0.42, 0.54];
+  const clocks = ["08:00 - 08:45", "08:50 - 09:35", "12:00 - 14:00"];
+  rows.forEach((y, i) => lines.push(at(clocks[i], 0.1, y, 0.1)));
+  const grid = [
+    ["Ma", "D", "Ma", "SU", "Ma"],
+    ["D", "Ma", "Sp", "D", "E"],
+    ["Hort", "Hort", null, "Hort", "Mittagstisch"],
+  ];
+  grid.forEach((row, r) =>
+    row.forEach((cell, c) => {
+      if (cell) lines.push(at(cell, COLS[c], rows[r]));
+    })
+  );
+  const read = parseTimetableScan(lines, { languages: ["de"] })!;
+  assertEquals(read.payload.lessons.length, 10);
+  assertEquals(read.payload.care, [
+    { title: "Hort", days: [1, 2, 4], starts: "12:00", ends: "14:00" },
+    { title: "Mittagstisch", days: [5], starts: "12:00", ends: "14:00" },
+  ]);
+  // Without clock times the words stay lessons for the parent to sort.
+  const numbered = lines.map((l) =>
+    clocks.includes(l.text)
+      ? { ...l, text: `${clocks.indexOf(l.text) + 1}.` }
+      : l
+  );
+  const plain = parseTimetableScan(numbered, { languages: ["de"] })!;
+  assertEquals(plain.payload.care, undefined);
+  assertEquals(plain.payload.lessons.length, 14);
 });

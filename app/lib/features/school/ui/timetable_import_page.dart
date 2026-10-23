@@ -60,6 +60,13 @@ class _TimetableImportPageState extends ConsumerState<TimetableImportPage> {
   bool _createSubjects = true;
   bool _busy = false;
 
+  /// The parent's choice per new subject: an existing subject's id, or null for "create
+  /// new". A key not in here follows the scan's suggestion.
+  final Map<String, String?> _mergeInto = {};
+
+  String? _targetOf(NewSubject s) =>
+      _mergeInto.containsKey(s.key) ? _mergeInto[s.key] : s.suggestedId;
+
   TimetableImport get _import => widget.args!.import;
 
   @override
@@ -133,10 +140,12 @@ class _TimetableImportPageState extends ConsumerState<TimetableImportPage> {
               child: child,
               school: school,
               createSubjects: _createSubjects,
+              targetOf: _targetOf,
               busy: _busy,
               onChild: (id) => setState(() => _profileId = id),
               onSchool: (id) => setState(() => _schoolId = id),
               onCreateSubjects: (v) => setState(() => _createSubjects = v),
+              onMergeInto: (key, id) => setState(() => _mergeInto[key] = id),
               onApply: (resolved, term) =>
                   _apply(d, child, school, term, resolved),
               onDiscard: args.proposalId == null ? null : _discard,
@@ -216,12 +225,44 @@ class _TimetableImportPageState extends ConsumerState<TimetableImportPage> {
       }
     }
 
-    // 3. The subjects the household does not have yet.
+    // 3. The subjects the household does not have yet: taken as an existing one, which
+    //    then remembers the sheet's word, or created.
     final created = <String, String>{};
+    final existing = [...d.subjects];
+    for (final s in resolved.newSubjects) {
+      final target = _targetOf(s);
+      if (target == null) continue;
+      created[s.key] = target;
+      final subject = existing.where((x) => x.id == target).firstOrNull;
+      if (subject == null) continue;
+      final known = {
+        foldText(subject.shortName),
+        foldText(subject.name),
+        for (final a in subject.aliases) foldText(a),
+      };
+      if (known.contains(foldText(s.word)) || subject.aliases.length >= 20) {
+        continue;
+      }
+      final remembered = SubjectRecord(
+        id: subject.id,
+        name: subject.name,
+        shortName: subject.shortName,
+        tint: subject.tint,
+        iconKey: subject.iconKey,
+        equipmentNote: subject.equipmentNote,
+        notableDefault: subject.notableDefault,
+        aliases: [...subject.aliases, s.word],
+      );
+      if (!await run(
+        () => repo.saveSubject(actor: actor, subject: remembered),
+      )) {
+        return;
+      }
+    }
     if (_createSubjects) {
-      final existing = [...d.subjects];
       var i = 0;
       for (final s in resolved.newSubjects) {
+        if (created.containsKey(s.key)) continue;
         final record = SubjectRecord(
           id: '',
           name: s.name,
@@ -355,10 +396,12 @@ class _Preview extends ConsumerWidget {
     required this.child,
     required this.school,
     required this.createSubjects,
+    required this.targetOf,
     required this.busy,
     required this.onChild,
     required this.onSchool,
     required this.onCreateSubjects,
+    required this.onMergeInto,
     required this.onApply,
     required this.onDiscard,
   });
@@ -369,10 +412,14 @@ class _Preview extends ConsumerWidget {
   final Member child;
   final SchoolRecord school;
   final bool createSubjects;
+
+  /// The existing subject a new one is taken as, or null for a new subject.
+  final String? Function(NewSubject) targetOf;
   final bool busy;
   final ValueChanged<String> onChild;
   final ValueChanged<String> onSchool;
   final ValueChanged<bool> onCreateSubjects;
+  final void Function(String key, String? subjectId) onMergeInto;
   final void Function(ResolvedImport resolved, TermRecord? term) onApply;
   final VoidCallback? onDiscard;
 
@@ -507,6 +554,9 @@ class _Preview extends ConsumerWidget {
                 lessons: resolved.lessons,
                 subjects: data.subjects,
                 newSubjects: resolved.newSubjects,
+                targets: {
+                  for (final s in resolved.newSubjects) s.key: targetOf(s),
+                },
                 createSubjects: createSubjects,
                 iconKeyOf: data.iconKeyFor,
               ),
@@ -531,19 +581,42 @@ class _Preview extends ConsumerWidget {
                 ),
                 const SizedBox(height: Tokens.space1),
                 Text(
-                  resolved.newSubjects
-                      .map((s) => '${s.name} (${s.shortName})')
-                      .join(', '),
+                  l10n.schoolImportMergeHint,
+                  style: theme.textTheme.bodySmall,
                 ),
-                SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(l10n.schoolImportCreateSubjects),
-                  subtitle: createSubjects
-                      ? null
-                      : Text(l10n.schoolImportSkipNewSubjects),
-                  value: createSubjects,
-                  onChanged: onCreateSubjects,
-                ),
+                for (final s in resolved.newSubjects)
+                  Row(
+                    children: [
+                      Expanded(child: Text('${s.name} (${s.shortName})')),
+                      DropdownButton<String>(
+                        key: ValueKey('import-merge-${s.key}'),
+                        value: targetOf(s) ?? '',
+                        underline: const SizedBox.shrink(),
+                        items: [
+                          DropdownMenuItem(
+                            value: '',
+                            child: Text(l10n.schoolImportCreateNew),
+                          ),
+                          for (final x in data.subjects)
+                            DropdownMenuItem(value: x.id, child: Text(x.name)),
+                        ],
+                        onChanged: (v) => onMergeInto(
+                          s.key,
+                          v == null || v.isEmpty ? null : v,
+                        ),
+                      ),
+                    ],
+                  ),
+                if (resolved.newSubjects.any((s) => targetOf(s) == null))
+                  SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(l10n.schoolImportCreateSubjects),
+                    subtitle: createSubjects
+                        ? null
+                        : Text(l10n.schoolImportSkipNewSubjects),
+                    value: createSubjects,
+                    onChanged: onCreateSubjects,
+                  ),
               ],
             ],
           ),
@@ -624,6 +697,7 @@ class _Grid extends StatelessWidget {
     required this.lessons,
     required this.subjects,
     required this.newSubjects,
+    required this.targets,
     required this.createSubjects,
     required this.iconKeyOf,
   });
@@ -632,6 +706,9 @@ class _Grid extends StatelessWidget {
   final List<ResolvedLesson> lessons;
   final List<SubjectRecord> subjects;
   final List<NewSubject> newSubjects;
+
+  /// Per new subject key, the existing subject it is taken as (null: created).
+  final Map<String, String?> targets;
   final bool createSubjects;
   final String? Function(String name) iconKeyOf;
 
@@ -645,10 +722,14 @@ class _Grid extends StatelessWidget {
     ];
     final byId = {for (final s in subjects) s.id: s};
     final byKey = {for (final s in newSubjects) s.key: s};
+    String? idOf(ResolvedLesson l) => l.subjectId ?? targets[l.newSubjectKey];
     String label(ResolvedLesson l) {
-      if (l.subjectId != null) return byId[l.subjectId]?.shortName ?? '?';
+      final id = idOf(l);
+      if (id != null) return byId[id]?.shortName ?? '?';
       return byKey[l.newSubjectKey]?.shortName ?? '?';
     }
+
+    bool dropped(ResolvedLesson l) => idOf(l) == null && !createSubjects;
 
     return Table(
       border: TableBorder.all(color: ww.line),
@@ -698,9 +779,9 @@ class _Grid extends StatelessWidget {
                                     color: theme.colorScheme.primary,
                                   ),
                                 ),
-                              if (l.subjectId != null) ...[
+                              if (idOf(l) != null) ...[
                                 Icon(
-                                  schoolIcon(byId[l.subjectId]?.iconKey),
+                                  schoolIcon(byId[idOf(l)]?.iconKey),
                                   size: 14,
                                 ),
                                 const SizedBox(width: 2),
@@ -711,12 +792,8 @@ class _Grid extends StatelessWidget {
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontWeight: FontWeight.w700,
-                                    color:
-                                        l.subjectId == null && !createSubjects
-                                        ? ww.ink2
-                                        : null,
-                                    decoration:
-                                        l.subjectId == null && !createSubjects
+                                    color: dropped(l) ? ww.ink2 : null,
+                                    decoration: dropped(l)
                                         ? TextDecoration.lineThrough
                                         : null,
                                   ),

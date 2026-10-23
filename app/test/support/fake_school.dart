@@ -487,6 +487,7 @@ class FakeSchoolRepository implements SchoolRepository {
           iconKey: subject.iconKey,
           equipmentNote: subject.equipmentNote,
           notableDefault: subject.notableDefault,
+          aliases: subject.aliases,
         ),
       ],
       timetables: data.timetables,
@@ -589,6 +590,7 @@ class FakeScanRepository implements ScanRepository {
     required String mime,
     List<String> languages = const [],
     List<String> subjects = const [],
+    List<SubjectRecord> subjectList = const [],
   }) async {
     scans.add((
       bytes: image.length,

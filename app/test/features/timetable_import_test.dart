@@ -181,6 +181,39 @@ void main() {
       );
     });
 
+    test(
+      'a remembered alias matches, and a like-word preselects a subject',
+      () {
+        final subjects = [
+          ...data.subjects,
+          const SubjectRecord(
+            id: 'sub-su',
+            name: 'Sachunterricht',
+            shortName: 'SU',
+            tint: 'leaf',
+            aliases: ['Sachkunde'],
+          ),
+        ];
+        final import = parseTimetableImport('''
+{"format": "wuselwall-timetable/1", "lessons": [
+  {"day": "Mo", "period": 1, "subject": "Sachkunde"},
+  {"day": "Mo", "period": 2, "subject": "HSU", "like": "SU"},
+  {"day": "Mo", "period": 3, "subject": "Werken"}
+]}''');
+        final resolved = resolveImport(
+          import,
+          subjects: subjects,
+          periods: data.periods,
+          schoolId: 'school-1',
+        );
+        expect(resolved.lessons[0].subjectId, 'sub-su');
+        expect(resolved.lessons[1].subjectId, isNull);
+        expect(resolved.newSubjects.map((s) => s.word), ['HSU', 'Werken']);
+        expect(resolved.newSubjects[0].suggestedId, 'sub-su');
+        expect(resolved.newSubjects[1].suggestedId, isNull);
+      },
+    );
+
     test('drops a time that matches no bell time, and says so', () {
       final import = parseTimetableImport(
         '{"lessons": [{"day": 1, "starts": "14:00", "subject": "Ma"}, {"day": 1, "period": 1, "subject": "Ma"}]}',

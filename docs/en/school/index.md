@@ -63,7 +63,7 @@ When no timetable exists yet, the view shows a message about the selected child 
 
 ## Reading in a timetable
 
-Instead of typing every lesson, you can have the sheet read in. All three ways end on the same **preview**: it shows the child, the school, the term, the grid as it would be saved, the subjects that will be created, and every note, for example when a timetable is replaced or has more lessons than the bell times. Only **Apply** writes anything; **Discard** leaves everything as it was.
+Instead of typing every lesson, you can have the sheet read in. All three ways end on the same **preview**: it shows the child, the school, the term, the grid as it would be saved, the subjects that will be created, and every note, for example when a timetable is replaced or has more lessons than the bell times. A new subject you already have under another word you pick from the list there; WuselWall remembers the sheet's word and recognises it by itself next time. Only **Apply** writes anything; **Discard** leaves everything as it was.
 
 **From text, with your AI assistant.** For a child without a timetable, tap **Read in…** and then **Paste as text** (or **Read in…** at the top of the timetable). **Copy the instructions for the assistant** puts a text on the clipboard: give it to the assistant you trust together with a photo of the timetable, for example in its app on your phone. It answers in a fixed format WuselWall can read. Paste the answer into the field and tap **Read in**. The photo goes only to the assistant of your choice; WuselWall sends nothing to anyone.
 

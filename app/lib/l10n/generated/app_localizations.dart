@@ -7859,6 +7859,18 @@ abstract class AppLocalizations {
   /// **'Lessons with new subjects are left out.'**
   String get schoolImportSkipNewSubjects;
 
+  /// No description provided for @schoolImportCreateNew.
+  ///
+  /// In en, this message translates to:
+  /// **'Create new'**
+  String get schoolImportCreateNew;
+
+  /// No description provided for @schoolImportMergeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have this subject? Pick it, and WuselWall remembers the sheet\'s word.'**
+  String get schoolImportMergeHint;
+
   /// No description provided for @schoolImportWarnUnmatchedTimes.
   ///
   /// In en, this message translates to:

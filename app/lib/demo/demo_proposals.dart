@@ -5,6 +5,7 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/features/school/data/proposals_repository.dart';
 import 'package:wuselwall/features/school/data/scan_repository.dart';
 import 'package:wuselwall/features/school/domain/proposal_models.dart';
+import 'package:wuselwall/features/school/domain/school_models.dart';
 
 /// The demo has no assistant and no OCR service: no proposals, and a scan that answers
 /// as a server without OCR would, so the screens show their real words.
@@ -31,5 +32,6 @@ class DemoScanRepository implements ScanRepository {
     required String mime,
     List<String> languages = const [],
     List<String> subjects = const [],
+    List<SubjectRecord> subjectList = const [],
   }) async => const Err(NotFoundFailure(code: 'ocr_not_configured'));
 }

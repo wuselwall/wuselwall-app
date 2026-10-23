@@ -58,7 +58,7 @@ Choisissez un rythme hebdomadaire ou des semaines A/B, saisies séparément. Ajo
 
 ## Importer un emploi du temps {#reading-in}
 
-Au lieu de taper chaque cours, tu peux faire lire la feuille. Les trois façons aboutissent au même **aperçu** : l’enfant, l’école, la période, la grille telle qu’elle serait enregistrée, les matières qui seront créées et chaque remarque, par exemple quand un emploi du temps est remplacé ou compte plus de cours que les horaires. Seul **Appliquer** écrit quelque chose ; **Rejeter** laisse tout en l’état.
+Au lieu de taper chaque cours, tu peux faire lire la feuille. Les trois façons aboutissent au même **aperçu** : l’enfant, l’école, la période, la grille telle qu’elle serait enregistrée, les matières qui seront créées et chaque remarque, par exemple quand un emploi du temps est remplacé ou compte plus de cours que les horaires. Une nouvelle matière que vous avez déjà sous un autre mot, tu la choisis là dans la liste ; WuselWall retient le mot de la feuille et le reconnaît tout seul la prochaine fois. Seul **Appliquer** écrit quelque chose ; **Rejeter** laisse tout en l’état.
 
 **Depuis du texte, avec votre assistant IA.** Pour un enfant sans emploi du temps, touche **Importer…** puis **Coller du texte** (ou **Importer…** en haut de l’emploi du temps). **Copier les instructions pour l’assistant** place un texte dans le presse-papiers : donne-le, avec une photo de l’emploi du temps, à l’assistant de confiance, par exemple dans son app sur le téléphone. Il répond dans un format fixe que WuselWall sait lire. Colle la réponse dans le champ et touche **Importer**. La photo ne va qu’à l’assistant de votre choix ; WuselWall n’envoie rien à personne.
 

@@ -4608,6 +4608,13 @@ class AppLocalizationsFr extends AppLocalizations {
       'Les cours avec de nouvelles matières sont omis.';
 
   @override
+  String get schoolImportCreateNew => 'Créer';
+
+  @override
+  String get schoolImportMergeHint =>
+      'La matière existe déjà ? Choisis-la, et WuselWall retient le mot de la feuille.';
+
+  @override
   String schoolImportWarnUnmatchedTimes(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

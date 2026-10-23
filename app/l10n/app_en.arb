@@ -2577,6 +2577,8 @@
   "schoolImportNewSubjects": "New subjects",
   "schoolImportCreateSubjects": "Create the new subjects",
   "schoolImportSkipNewSubjects": "Lessons with new subjects are left out.",
+  "schoolImportCreateNew": "Create new",
+  "schoolImportMergeHint": "Already have this subject? Pick it, and WuselWall remembers the sheet's word.",
   "schoolImportWarnUnmatchedTimes": "{count, plural, one{1 lesson matches no bell time and is left out.} other{{count} lessons match no bell time and are left out.}}",
   "@schoolImportWarnUnmatchedTimes": {
     "placeholders": {

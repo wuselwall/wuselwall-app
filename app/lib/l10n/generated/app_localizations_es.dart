@@ -4593,6 +4593,13 @@ class AppLocalizationsEs extends AppLocalizations {
       'Las clases con asignaturas nuevas se omiten.';
 
   @override
+  String get schoolImportCreateNew => 'Crear nueva';
+
+  @override
+  String get schoolImportMergeHint =>
+      '¿Ya existe la asignatura? Elígela y WuselWall recordará la palabra de la hoja.';
+
+  @override
   String schoolImportWarnUnmatchedTimes(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

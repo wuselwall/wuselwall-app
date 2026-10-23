@@ -1192,6 +1192,7 @@ class _SubjectDialogState extends State<_SubjectDialog> {
                     ? null
                     : _equipment.text.trim(),
                 notableDefault: _notable,
+                aliases: widget.subject?.aliases ?? const [],
               ),
             );
           },

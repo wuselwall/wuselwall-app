@@ -63,7 +63,7 @@ Wenn noch kein Plan vorliegt, zeigt die Ansicht einen Hinweis zum gewählten Kin
 
 ## Stundenplan einlesen
 
-Statt jede Stunde zu tippen, kannst du den Plan vom Blatt einlesen lassen. Alle drei Wege enden auf derselben **Vorschau**: Sie zeigt das Kind, die Schule, den Zeitraum, das Raster, wie es gespeichert würde, die Fächer, die neu angelegt werden, und jeden Hinweis, zum Beispiel wenn ein Plan ersetzt wird oder mehr Stunden hat als die Klingelzeiten. Erst **Übernehmen** schreibt etwas; **Verwerfen** lässt alles, wie es war.
+Statt jede Stunde zu tippen, kannst du den Plan vom Blatt einlesen lassen. Alle drei Wege enden auf derselben **Vorschau**: Sie zeigt das Kind, die Schule, den Zeitraum, das Raster, wie es gespeichert würde, die Fächer, die neu angelegt werden, und jeden Hinweis, zum Beispiel wenn ein Plan ersetzt wird oder mehr Stunden hat als die Klingelzeiten. Ein neues Fach, das es bei euch schon gibt, nur unter einem anderen Wort, wählst du dort aus der Liste; WuselWall merkt sich das Wort vom Blatt und erkennt es beim nächsten Mal von selbst. Erst **Übernehmen** schreibt etwas; **Verwerfen** lässt alles, wie es war.
 
 **Aus Text, mit eurem KI-Assistenten.** Tippe bei einem Kind ohne Plan auf **Einlesen…** und dann auf **Aus Text einfügen** (oder im Stundenplan oben auf **Einlesen…**). **Anleitung für den Assistenten kopieren** legt einen Text in die Zwischenablage: Gib ihn zusammen mit einem Foto des Stundenplans dem Assistenten, dem ihr vertraut, zum Beispiel in dessen App auf dem Handy. Er antwortet in einem festen Format, das WuselWall lesen kann. Füge die Antwort in das Feld ein und tippe auf **Einlesen**. Das Foto geht dabei nur an den Assistenten eurer Wahl; WuselWall schickt nichts an niemanden.
 

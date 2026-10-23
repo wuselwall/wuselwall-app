@@ -1,5 +1,5 @@
 begin;
-select plan(98);
+select plan(103);
 
 -- Start from an empty system, whatever the database already holds (all rolled back).
 delete from app.household;
@@ -176,6 +176,18 @@ select throws_ok($$ select api.subject_save(null, '{"name":"Lila","short_name":"
   '22023', 'WW-SCH-001 school invalid', 'a subject colour must be one of the palette');
 select throws_ok($$ select api.subject_save(null, '{"name":"Deutsch","short_name":"Dt","tint":"rose"}'::jsonb) $$,
   '22023', 'WW-SCH-001 school invalid', 'a subject name is unique in the household');
+select lives_ok($$ select api.subject_save(null, jsonb_build_object('id', (select id from ids where name = 'werken'),
+  'name', 'Töpfern', 'short_name', 'Tö', 'tint', 'lemon', 'aliases', '["Ton", " Töpferei ", "Ton", ""]'::jsonb)) $$,
+  'a subject remembers the words a sheet used for it');
+select is((select aliases from api.subjects where id = (select id from ids where name = 'werken')),
+  array['Ton', 'Töpferei'], 'the aliases are trimmed, distinct and in order');
+select lives_ok($$ select api.subject_save(null, jsonb_build_object('id', (select id from ids where name = 'werken'),
+  'name', 'Töpfern', 'short_name', 'Tö', 'tint', 'lemon')) $$, 'a save without the key keeps the aliases');
+select is((select cardinality(aliases) from api.subjects where id = (select id from ids where name = 'werken')), 2,
+  'the aliases stay');
+select throws_ok($$ select api.subject_save(null, jsonb_build_object('id', (select id from ids where name = 'werken'),
+  'name', 'Töpfern', 'short_name', 'Tö', 'tint', 'lemon', 'aliases', '"Ton"'::jsonb)) $$,
+  '22023', 'WW-SCH-001 school invalid', 'the aliases must be a list');
 select lives_ok($$ select api.subject_delete(null, (select id from ids where name = 'werken')) $$,
   'a subject no lesson uses can be deleted');
 select is((select count(*)::int from api.subjects), 11, 'the deleted subject is gone');
