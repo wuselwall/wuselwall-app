@@ -671,12 +671,18 @@ Deno.test("week markers, rooms in capitals, wrapped words, aliases and a suggest
     room: "2",
   });
   // A word of the group of exactly one family subject points at it; a family word never.
+  assertEquals(lessonOf(1, 1, "HSK", de), {
+    day: 1,
+    period: 1,
+    subject: "HSK",
+    name: "Sachunterricht",
+    like: "SU",
+  });
+  // "HSU" is Heimat- und Sachunterricht in Bayern and Herkunftssprache in NRW: bare.
   assertEquals(lessonOf(1, 1, "HSU", de), {
     day: 1,
     period: 1,
     subject: "HSU",
-    name: "Sachunterricht",
-    like: "SU",
   });
   assertEquals(lessonOf(1, 1, "BS", de)?.like, "Sp");
   assertEquals(lessonOf(1, 1, "Ma", de)?.like, undefined);

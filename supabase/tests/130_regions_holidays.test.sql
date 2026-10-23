@@ -1,5 +1,5 @@
 begin;
-select plan(112);
+select plan(116);
 
 -- Start from an empty system, whatever the database already holds (all rolled back).
 delete from app.household;
@@ -386,9 +386,19 @@ select is(app.starter_subjects((select id from hh where name = 'FR'), 'FR-IDF', 
 select ok(exists (select 1 from app.subject where household_id = (select id from hh where name = 'FR')
   and name = 'Questionner le monde' and short_name = 'QLM'), 'the French list has Questionner le monde');
 select is(app.starter_subjects((select id from hh where name = 'ES-VC'), 'ES-VC', 'es'), 12,
-  'a Valencian school brings the Spanish list plus Valencià');
+  'a Valencian school brings the Catalan-language list with Valencià');
 select ok(exists (select 1 from app.subject where household_id = (select id from hh where name = 'ES-VC')
-  and short_name = 'VAL'), 'the Valencian list has Valencià');
+  and short_name = 'VAL' and name = 'Valencià: Llengua i Literatura'), 'the Valencian list has Valencià');
+select ok(exists (select 1 from app.subject where household_id = (select id from hh where name = 'ES-VC')
+  and name = 'Matemàtiques'), 'the Valencian list is in Catalan');
+insert into app.household (name) values ('ES-PV'), ('ES-AN');
+insert into hh select name, id from app.household where name in ('ES-PV', 'ES-AN');
+select is(app.starter_subjects((select id from hh where name = 'ES-PV'), 'ES-PV', 'es'), 11,
+  'a Basque school brings the Basque list');
+select ok(exists (select 1 from app.subject where household_id = (select id from hh where name = 'ES-PV')
+  and name = 'Gorputz Hezkuntza' and notable_default), 'the Basque list has Gorputz Hezkuntza');
+select is(app.starter_subjects((select id from hh where name = 'ES-AN'), 'ES-AN', 'es'), 11,
+  'an Andalusian school brings the Spanish list');
 select is(app.starter_subjects((select id from hh where name = 'CH-GE'), 'CH-GE-GE-GE', 'de'), 12,
   'a Geneva school brings the French-speaking Swiss list, whatever the app language');
 select ok(exists (select 1 from app.subject where household_id = (select id from hh where name = 'CH-GE')

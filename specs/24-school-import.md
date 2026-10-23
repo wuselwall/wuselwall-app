@@ -390,7 +390,7 @@ accents" rather than to a failed build.
 What the research and the corpus say the next steps are, in the order they pay off. None
 needs a model; all stay on the family's server. *Status 2026-10-23: steps 1 to 7, 9 and 10
 are built (see "The sheet's own words, and the family's", "Accents" and "The preview" above);
-8 stays open.*
+8 is done for the regions where a sheet was found and stays open for the rest.*
 
 1. **Read the legend.** Swiss, Spanish and most Untis sheets print `CODE Name` pairs under
    or beside the grid. A block of short-code-plus-name lines outside the grid resolves every
@@ -418,11 +418,23 @@ are built (see "The sheet's own words, and the family's", "Accents" and "The pre
 7. **A regression corpus in CI.** The OCR line files of the public sheets (Wikimedia Commons,
    school websites) can live in the repository with the expected grid sizes; a test runs the
    parser over them so a tuning never silently loses a sheet. The own sheets never.
-8. **Starter lists checked against sheets.** No real sheet was found for Rheinland-Pfalz,
-   Sachsen-Anhalt, Thüringen, NRW primary, the Romandie, Ticino, the Basque Country, Navarra
-   and the Balearics; their lists and codes are official names and conventions. One sheet per
-   region, read through the scan, settles the short names. Belgium, Luxembourg and the
-   Netherlands have no list yet.
+8. **Starter lists checked against sheets.** *Second round 2026-10-23, in part.* Three
+   research passes (`specs/research/school-subjects/`, the three parts named "second round")
+   found real sheets for Sachsen-Anhalt, NRW primary, Vaud, Neuchâtel, Fribourg, Ticino, the
+   Basque Country, Catalonia and Andalusia. What they print went into the vocabulary as
+   aliases (`SaU`, `Gestalten`, `ILZ`, `IFA`; `GEOCIT`, `FORGEN`, `EFA`, `MCC`, the Vaud and
+   Neuchâtel options; `EFI`, `EVI`, `EMU`, `APLA`, `STO`, `SCI`, `OCL`; the Basque, Catalan
+   and Galician subject names and the Séneca codes `ATED`, `RCat`, `EVCE`, `TECD`), two codes
+   became ambiguous because real sheets disagree (`HSU` is Heimat- und Sachunterricht in
+   Bayern and Herkunftssprachlicher Unterricht in NRW; `RU` is Russisch and Religion), and
+   the starter lists changed where the sheets said so: the Romandie prints `SCN`, Ticino's
+   scuola media prints `EFI`, `EVI`, `EMU`, `APLA`, and Catalonia, the Balearics, Valencia,
+   the Basque Country and Galicia get their lists in the co-official language, since their
+   sheets print those words in full. Regional German lists were not added: Sachsen-Anhalt
+   and NRW rest on one school each, so their codes are aliases, not standards. Still unseen,
+   and therefore still official names and conventions only: Rheinland-Pfalz, Thüringen,
+   Geneva, Valais, Jura, Belgium, Luxembourg, Navarra, the Balearics (whose timetables live
+   in a portal and are not published).
 9. **OCR accents.** *Checked 2026-10-23; nothing to change.* The service selects RapidOCR's
    PP-OCRv5 Latin-script recognition model explicitly, and its dictionary (503 entries, in
    the model's metadata) holds every accented letter of German, French and Spanish. The
@@ -487,4 +499,5 @@ thresholds and the warnings, not into new screens.
 | 4 | Scanning: the container, the function, the parser, the app's way in | Built, unverified on real sheets |
 | 5 | The language's words and the starter lists per region, from the research | Built |
 | 6 | The recognition roadmap, steps 1 to 7: legend, aliases, suggestions, markers, wrapped words, care rows, the corpus in CI | Built |
-| 7 | The pilot's measurements, roadmap steps 8 to 10, iOS Vision if the server path is not enough | Open |
+| 7 | Roadmap steps 8 to 10: the second research round and the regional lists, the accent check, the names in the grid | Built, 8 in part |
+| 8 | The pilot's measurements, the regions still unseen, iOS Vision if the server path is not enough | Open |

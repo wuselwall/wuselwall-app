@@ -2,6 +2,8 @@
 -- specs/research/school-subjects/). The first school of a household brings a subject list in
 -- the words its sheets use: Germany, Austria (the 2023/24 names), German-, French- and
 -- Italian-speaking Switzerland, France, and Spain with the region's co-official language.
+-- Catalonia, the Balearics, Valencia, the Basque Country and Galicia get their lists in the
+-- co-official language, since their sheets print those words (specs/research/school-subjects).
 -- The list is written only into an empty subject list and belongs to the family from then on.
 --
 -- api.school_save gains an optional key: p_school ->> 'language' (the app's language, two
@@ -25,7 +27,13 @@ begin
   v_list := case
     when v_country = 'AT' then 'at'
     when v_country = 'FR' then 'fr'
-    when v_country = 'ES' then 'es'
+    when v_country = 'ES' then
+      case
+        when v_state in ('CT', 'IB', 'VC') then 'es-ca'
+        when v_state = 'PV' then 'es-eu'
+        when v_state = 'GA' then 'es-gl'
+        else 'es'
+      end
     when v_country in ('CH', 'LI') then
       case
         when v_state in ('GE', 'VD', 'NE', 'JU') then 'ch-fr'
@@ -87,7 +95,7 @@ begin
       (p_household, 'Mathématiques', 'MAT', 'blue', 'numbers', null, false),
       (p_household, 'Allemand', 'ALL', 'lilac', 'chat', null, false),
       (p_household, 'Anglais', 'ANG', 'mint', 'chat', null, false),
-      (p_household, 'Sciences de la nature', 'SN', 'leaf', 'globe', null, false),
+      (p_household, 'Sciences de la nature', 'SCN', 'leaf', 'globe', null, false),
       (p_household, 'Histoire', 'HIS', 'stone', 'globe', null, false),
       (p_household, 'Géographie', 'GEO', 'leaf', 'globe', null, false),
       (p_household, 'Arts visuels', 'AVI', 'peach', 'palette', null, false),
@@ -103,10 +111,10 @@ begin
       (p_household, 'Tedesco', 'TED', 'lilac', 'chat', null, false),
       (p_household, 'Francese', 'FRA', 'mint', 'chat', null, false),
       (p_household, 'Studio d''ambiente', 'AMB', 'leaf', 'globe', null, false),
-      (p_household, 'Educazione visiva', 'EV', 'peach', 'palette', null, false),
-      (p_household, 'Educazione alle arti plastiche', 'EAP', 'stone', 'hands', null, false),
-      (p_household, 'Educazione musicale', 'EM', 'lemon', 'music', null, false),
-      (p_household, 'Educazione fisica', 'EF', 'peach', 'run', 'Tenuta da ginnastica', true);
+      (p_household, 'Educazione visiva', 'EVI', 'peach', 'palette', null, false),
+      (p_household, 'Educazione alle arti plastiche', 'APLA', 'stone', 'hands', null, false),
+      (p_household, 'Educazione musicale', 'EMU', 'lemon', 'music', null, false),
+      (p_household, 'Educazione fisica', 'EFI', 'peach', 'run', 'Tenuta da ginnastica', true);
   elsif v_list = 'fr' then
     insert into app.subject (household_id, name, short_name, tint, icon_key, equipment_note, notable_default)
     values
@@ -135,20 +143,59 @@ begin
       (p_household, 'Valores Cívicos y Éticos', 'VCE', 'stone', 'hands', null, false),
       (p_household, 'Tutoría', 'TUT', 'lilac', 'chat', null, false),
       (p_household, 'Educación Física', 'EF', 'peach', 'run', 'Ropa de deporte', true);
-    -- The region's co-official language, where the school teaches one.
-    if v_state in ('CT', 'IB') then
-      insert into app.subject (household_id, name, short_name, tint, icon_key, equipment_note, notable_default)
-      values (p_household, 'Llengua Catalana i Literatura', 'CAT', 'rose', 'book', null, false);
-    elsif v_state = 'VC' then
-      insert into app.subject (household_id, name, short_name, tint, icon_key, equipment_note, notable_default)
-      values (p_household, 'Valencià: Llengua i Literatura', 'VAL', 'rose', 'book', null, false);
-    elsif v_state = 'GA' then
-      insert into app.subject (household_id, name, short_name, tint, icon_key, equipment_note, notable_default)
-      values (p_household, 'Lingua Galega e Literatura', 'LG', 'rose', 'book', null, false);
-    elsif v_state in ('PV', 'NC') then
+    if v_state = 'NC' then
       insert into app.subject (household_id, name, short_name, tint, icon_key, equipment_note, notable_default)
       values (p_household, 'Euskara eta Literatura', 'EUS', 'rose', 'book', null, false);
     end if;
+  elsif v_list = 'es-ca' then
+    -- Catalonia, the Balearics and Valencia print Catalan names; Valencia calls the language
+    -- Valencià.
+    insert into app.subject (household_id, name, short_name, tint, icon_key, equipment_note, notable_default)
+    values
+      (p_household, case when v_state = 'VC' then 'Valencià: Llengua i Literatura' else 'Llengua Catalana i Literatura' end,
+                    case when v_state = 'VC' then 'VAL' else 'CAT' end, 'rose', 'book', null, false),
+      (p_household, 'Llengua Castellana i Literatura', 'CAST', 'rose', 'book', null, false),
+      (p_household, 'Matemàtiques', 'MAT', 'blue', 'numbers', null, false),
+      (p_household, 'Anglès', 'ANG', 'lilac', 'chat', null, false),
+      (p_household, 'Coneixement del Medi', 'MEDI', 'leaf', 'globe', null, false),
+      (p_household, 'Educació Plàstica i Visual', 'PLAS', 'mint', 'palette', null, false),
+      (p_household, 'Música', 'MUS', 'lemon', 'music', null, false),
+      (p_household, 'Religió', 'REL', 'stone', 'hands', null, false),
+      (p_household, 'Valors Cívics i Ètics', 'VALORS', 'stone', 'hands', null, false),
+      (p_household, 'Tutoria', 'TUT', 'lilac', 'chat', null, false),
+      (p_household, 'Lectura', 'LECT', 'rose', 'book', null, false),
+      (p_household, 'Educació Física', 'EF', 'peach', 'run', 'Roba d''esport', true);
+  elsif v_list = 'es-eu' then
+    -- The Basque Country prints Basque names in full.
+    insert into app.subject (household_id, name, short_name, tint, icon_key, equipment_note, notable_default)
+    values
+      (p_household, 'Euskara eta Literatura', 'EUS', 'rose', 'book', null, false),
+      (p_household, 'Gaztelania eta Literatura', 'GAZT', 'rose', 'book', null, false),
+      (p_household, 'Ingelesa', 'ING', 'lilac', 'chat', null, false),
+      (p_household, 'Matematika', 'MAT', 'blue', 'numbers', null, false),
+      (p_household, 'Ingurunea', 'INGU', 'leaf', 'globe', null, false),
+      (p_household, 'Musika', 'MUS', 'lemon', 'music', null, false),
+      (p_household, 'Plastika', 'PLAS', 'mint', 'palette', null, false),
+      (p_household, 'Erlijioa', 'REL', 'stone', 'hands', null, false),
+      (p_household, 'Balio Zibiko eta Etikoak', 'BAL', 'stone', 'hands', null, false),
+      (p_household, 'Tutoretza', 'TUT', 'lilac', 'chat', null, false),
+      (p_household, 'Gorputz Hezkuntza', 'GH', 'peach', 'run', 'Kirol arropa', true);
+  elsif v_list = 'es-gl' then
+    -- Galicia prints Galician names.
+    insert into app.subject (household_id, name, short_name, tint, icon_key, equipment_note, notable_default)
+    values
+      (p_household, 'Lingua Galega e Literatura', 'LG', 'rose', 'book', null, false),
+      (p_household, 'Lingua Castelá e Literatura', 'LC', 'rose', 'book', null, false),
+      (p_household, 'Matemáticas', 'MAT', 'blue', 'numbers', null, false),
+      (p_household, 'Inglés', 'ING', 'lilac', 'chat', null, false),
+      (p_household, 'Coñecemento do Medio', 'CM', 'leaf', 'globe', null, false),
+      (p_household, 'Educación Plástica e Visual', 'PLAS', 'mint', 'palette', null, false),
+      (p_household, 'Música', 'MUS', 'lemon', 'music', null, false),
+      (p_household, 'Relixión', 'REL', 'stone', 'hands', null, false),
+      (p_household, 'Alternativa', 'ALT', 'stone', 'book', null, false),
+      (p_household, 'Valores Sociais e Cívicos', 'VSC', 'stone', 'hands', null, false),
+      (p_household, 'Titoría', 'TIT', 'lilac', 'chat', null, false),
+      (p_household, 'Educación Física', 'EF', 'peach', 'run', 'Roupa de deporte', true);
   end if;
 
   select count(*) into v_n from app.subject s where s.household_id = p_household;
