@@ -357,6 +357,7 @@ class FakeSchoolRepository implements SchoolRepository {
     required String name,
     String? regionCode,
     String? timezone,
+    String? language,
   }) async {
     actors.add(actor);
     schoolSaves.add((

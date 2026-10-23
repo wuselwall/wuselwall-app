@@ -1,5 +1,5 @@
 begin;
-select plan(100);
+select plan(112);
 
 -- Start from an empty system, whatever the database already holds (all rolled back).
 delete from app.household;
@@ -142,11 +142,11 @@ select is((select region_code from api.schools where id = (select id from ids wh
 select is((select state_code from api.schools where id = (select id from ids where name = 'sch_ch')), 'CH-ZH',
   'the state is the first two segments of the region');
 select is((select count(*)::int from api.subjects), 10, 'a Swiss school brings the ten Lehrplan 21 starter subjects');
-select ok(exists (select 1 from api.subjects where name = 'Französisch' and short_name = 'Fr'),
+select ok(exists (select 1 from api.subjects where name = 'Französisch' and short_name = 'F'),
   'the Swiss starter list has French');
 select ok(not exists (select 1 from api.subjects where name = 'Sachunterricht'),
   'the Swiss starter list does not carry the German list');
-select ok((select notable_default and equipment_note = 'Sportsachen' from api.subjects where short_name = 'Sp'),
+select ok((select notable_default and equipment_note = 'Sportsachen' from api.subjects where short_name = 'BS'),
   'Bewegung und Sport is notable and needs its kit');
 
 -- A state_code only save (the previous app release) sets the region as well.
@@ -192,9 +192,9 @@ reset role;
 delete from app.subject where household_id = (select id from ids where name = 'hh_a');
 select pg_temp.act_as_dev('papa');
 insert into ids select 'sch_at', (api.school_save(null, '{"name":"Schule Wien","region_code":"AT-9"}'::jsonb) ->> 'id')::uuid;
-select is((select count(*)::int from api.subjects), 9, 'an Austrian school brings the nine Austrian starter subjects');
-select ok(exists (select 1 from api.subjects where name = 'Bildnerische Erziehung' and short_name = 'BE'),
-  'the Austrian starter list has Bildnerische Erziehung');
+select is((select count(*)::int from api.subjects), 10, 'an Austrian school brings the ten Austrian starter subjects');
+select ok(exists (select 1 from api.subjects where name = 'Kunst und Gestaltung' and short_name = 'KuG'),
+  'the Austrian starter list has Kunst und Gestaltung');
 reset role;
 delete from app.subject where household_id = (select id from ids where name = 'hh_a');
 select pg_temp.act_as_dev('papa');
@@ -202,7 +202,7 @@ insert into ids select 'sch_de', (api.school_save(null, '{"name":"Grundschule","
 select ok(exists (select 1 from api.subjects where name = 'Sachunterricht')
           and exists (select 1 from api.subjects where name = 'Religion/Ethik'),
   'a German school keeps the German starter list');
-select is((select count(*)::int from api.subjects), 9, 'the German starter list has nine subjects');
+select is((select count(*)::int from api.subjects), 11, 'the German starter list has eleven subjects');
 
 -- ---- holidays: the preview -----------------------------------------------------------------------
 -- A manual holiday of the household for the school, overlapping the Herbstferien of Zürich
@@ -376,6 +376,35 @@ select is((select last_error from api.holiday_feed_status where country = 'AT'),
 reset role;
 select ok((select app.region_covers('AT-9', h.country, h.nationwide, h.subdivisions)
              from app.holiday_feed h where h.id = 'feed-at'), 'the stored subdivisions are a text array');
+
+-- ---- starter subjects per region and language (app.starter_subjects, direct) ----------------------
+create temp table hh (name text primary key, id uuid);
+insert into app.household (name) values ('FR'), ('ES-VC'), ('CH-GE'), ('CH-FR-fr'), ('CH-TI'), ('AT'), ('BE-fr');
+insert into hh select name, id from app.household where name in ('FR', 'ES-VC', 'CH-GE', 'CH-FR-fr', 'CH-TI', 'AT', 'BE-fr');
+select is(app.starter_subjects((select id from hh where name = 'FR'), 'FR-IDF', 'fr'), 11,
+  'a French school brings the eleven French starter subjects');
+select ok(exists (select 1 from app.subject where household_id = (select id from hh where name = 'FR')
+  and name = 'Questionner le monde' and short_name = 'QLM'), 'the French list has Questionner le monde');
+select is(app.starter_subjects((select id from hh where name = 'ES-VC'), 'ES-VC', 'es'), 12,
+  'a Valencian school brings the Spanish list plus Valencià');
+select ok(exists (select 1 from app.subject where household_id = (select id from hh where name = 'ES-VC')
+  and short_name = 'VAL'), 'the Valencian list has Valencià');
+select is(app.starter_subjects((select id from hh where name = 'CH-GE'), 'CH-GE-GE-GE', 'de'), 12,
+  'a Geneva school brings the French-speaking Swiss list, whatever the app language');
+select ok(exists (select 1 from app.subject where household_id = (select id from hh where name = 'CH-GE')
+  and name = 'Activités créatrices manuelles'), 'the Romandie list has ACM');
+select is(app.starter_subjects((select id from hh where name = 'CH-FR-fr'), 'CH-FR', 'fr'), 12,
+  'a bilingual canton follows the app language');
+select is(app.starter_subjects((select id from hh where name = 'CH-TI'), 'CH-TI', 'de'), 9,
+  'Ticino brings the Italian list');
+select is(app.starter_subjects((select id from hh where name = 'AT'), 'AT-9', null), 10,
+  'an Austrian school brings the ten Austrian starter subjects');
+select ok(exists (select 1 from app.subject where household_id = (select id from hh where name = 'AT')
+  and name = 'Kunst und Gestaltung' and short_name = 'KuG'), 'the Austrian list carries the 2023/24 names');
+select is(app.starter_subjects((select id from hh where name = 'BE-fr'), 'BE-WAL', 'fr'), 11,
+  'a country without a list follows the app language');
+select is(app.starter_subjects((select id from hh where name = 'BE-fr'), 'BE-WAL', 'fr'), 0,
+  'a household with subjects gets no starter list');
 
 select * from finish();
 rollback;

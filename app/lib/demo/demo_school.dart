@@ -302,6 +302,7 @@ class DemoSchoolRepository implements SchoolRepository {
     required String name,
     String? regionCode,
     String? timezone,
+    String? language,
   }) async => Ok(id ?? 'school-new');
 
   @override

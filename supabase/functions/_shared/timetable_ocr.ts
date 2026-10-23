@@ -8,6 +8,8 @@
 // The payload is the one the app's paste import reads (timetable_import.dart) and the
 // server's proposal check accepts (app.proposal_check): names, never ids.
 
+import { AMBIGUOUS, BREAKS, SUBJECTS } from "./school_subjects.ts";
+
 /** One line of text an OCR service found: its text and its box, 8 numbers (x1 y1 … x4 y4),
  *  normalised to 0..1 or in pixels; either works, the parser only compares. */
 export type OcrLine = { text: string; box: number[]; score?: number };
@@ -15,7 +17,10 @@ export type OcrLine = { text: string; box: number[]; score?: number };
 export type ScanLesson = {
   day: number;
   period: number;
+  /** The word on the sheet ("SU"), or the family's own word it snapped to. */
   subject: string;
+  /** The full name, when the family's language knows the word ("Sachunterricht"). */
+  name?: string;
   teacher?: string;
   room?: string;
 };
@@ -152,26 +157,89 @@ const SHORT_FORMS: Record<string, Record<string, number>> = {
   },
 };
 
-/** The words one scan is read with. */
-type Vocab = { short: Record<string, number>; subjects: Set<string> };
+/** Short forms that count only when the family named the language: Spanish sheets print
+ *  "Lu Ma Mi Ju Vi", but "Ma" is Mathe on every German sheet and "Mi" its Medien und
+ *  Informatik, so without a language these stay subjects. */
+const EXPLICIT_SHORT_FORMS: Record<string, Record<string, number>> = {
+  es: { lu: 1, ma: 2, mi: 3 },
+};
 
-/** The vocabulary for [hints]: the short forms of the named languages (every language when
- *  none is named or known), and the family's subjects, which are never weekdays unless they
- *  are one in the family's own language. */
-export function vocabOf(hints?: ScanHints): Vocab {
-  const known = (hints?.languages ?? [])
-    .map((l) => l.toLowerCase().split(/[-_]/)[0])
-    .filter((l) => l in SHORT_FORMS);
-  const languages = known.length > 0
-    ? [...new Set(known)]
-    : Object.keys(SHORT_FORMS);
-  const short: Record<string, number> = {};
-  for (const language of languages) Object.assign(short, SHORT_FORMS[language]);
-  const subjects = new Set(
-    (hints?.subjects ?? []).map(fold).filter((t) => t.length > 0),
-  );
-  return { short, subjects };
+/** The words one scan is read with. */
+type Vocab = {
+  /** The short weekday forms of the family's language(s). */
+  short: Record<string, number>;
+  /** Every subject word, the family's and the language's: never a weekday by guess. */
+  known: Set<string>;
+  /** The family's own words, by key, as the family spelt them. */
+  family: Map<string, string>;
+  /** The language's subject names by the key of a code or of the name itself. */
+  names: Map<string, string>;
+  /** The longest subject word, in tokens, so a cell "Natur, Mensch, Gesellschaft" is one. */
+  maxTokens: number;
+};
+
+/** The key a subject word is matched by: folded, punctuation gone, one space between words. */
+export function subjectKey(text: string): string {
+  return fold(text).replace(/[.,:;'’"!?]+/g, " ").replace(/\s+/g, " ").trim();
 }
+
+/** The vocabulary for [hints]: the short weekday forms of the named languages (every
+ *  language when none is named or known), the family's subjects, and the subject words of the
+ *  named languages (specs/research/school-subjects). Without a known language no code gets a
+ *  name, since "Ma" is Mathematik in German and Mathématiques in French. */
+export function vocabOf(hints?: ScanHints): Vocab {
+  const asked = (hints?.languages ?? [])
+    .map((l) => l.toLowerCase().split(/[-_]/)[0])
+    .filter((l) => l in SHORT_FORMS || l in SUBJECTS);
+  const languages = asked.length > 0 ? [...new Set(asked)] : [];
+  const short: Record<string, number> = {};
+  for (
+    const language of languages.length > 0
+      ? languages
+      : Object.keys(SHORT_FORMS)
+  ) {
+    Object.assign(short, SHORT_FORMS[language] ?? {});
+  }
+  for (const language of languages) {
+    Object.assign(short, EXPLICIT_SHORT_FORMS[language] ?? {});
+  }
+  const known = new Set<string>();
+  const family = new Map<string, string>();
+  for (const word of hints?.subjects ?? []) {
+    const key = subjectKey(word);
+    if (key.length === 0) continue;
+    known.add(key);
+    if (!family.has(key)) family.set(key, word.trim());
+  }
+  const names = new Map<string, string>();
+  const clashing = new Set<string>();
+  let maxTokens = 1;
+  const wordLists = languages.length > 0 ? languages : Object.keys(SUBJECTS);
+  for (const language of wordLists) {
+    for (const entry of SUBJECTS[language] ?? []) {
+      for (const word of [entry.name, ...entry.codes]) {
+        const key = subjectKey(word);
+        known.add(key);
+        maxTokens = Math.max(maxTokens, key.split(" ").length);
+        if (languages.length === 0) continue;
+        const seen = names.get(key);
+        if (seen !== undefined && seen !== entry.name) clashing.add(key);
+        else names.set(key, entry.name);
+      }
+    }
+    for (const code of AMBIGUOUS[language] ?? []) {
+      known.add(subjectKey(code));
+      clashing.add(subjectKey(code));
+    }
+  }
+  for (const key of clashing) names.delete(key);
+  for (const key of family.keys()) {
+    maxTokens = Math.max(maxTokens, key.split(" ").length);
+  }
+  return { short, known, family, names, maxTokens };
+}
+
+const BREAK_KEYS = new Set(BREAKS.map(subjectKey));
 
 const DEFAULT_VOCAB: Vocab = vocabOf();
 
@@ -250,8 +318,9 @@ function dayOfToken(
   if (token.length === 0) return null;
   const exact = vocab.short[token];
   if (exact !== undefined) return exact;
-  // One of the family's subjects: no guessing by prefix or edit distance from here.
-  if (vocab.subjects.has(token)) return null;
+  // A subject word (the family's, or the language's): no guessing by prefix or edit
+  // distance from here.
+  if (vocab.known.has(token)) return null;
   const days = new Set<number>();
   for (const [name, day] of FULL_NAMES) {
     if (token.length >= 3 && name.startsWith(token)) days.add(day);
@@ -633,11 +702,15 @@ function findRows(
 
 // ── cells ─────────────────────────────────────────────────────────────────────
 
-/** "Ma R12" → subject Ma, room R12; "Mathe Fr. Kurz" → subject Mathe, teacher Fr. Kurz. */
+/** "Ma R12" → subject Ma, room R12; "Mathe Fr. Kurz" → subject Mathe, teacher Fr. Kurz.
+ *  With a vocabulary: "Natur, Mensch, Gesellschaft" is one subject, "SU" is named
+ *  Sachunterricht, "Sachunterrlcht" snaps to the family's "Sachunterricht", and "Pause" is
+ *  no lesson. */
 export function lessonOf(
   day: number,
   period: number,
   text: string,
+  vocab: Vocab = DEFAULT_VOCAB,
 ): ScanLesson | null {
   // A name in parentheses is the teacher ("M rot (Hen)"), or the room when it has digits.
   const bracketed: string[] = [];
@@ -645,23 +718,101 @@ export function lessonOf(
     bracketed.push(inner.trim());
     return " ";
   });
-  const tokens = [
-    ...plain.replace(/[|_]+/g, " ").split(/\s+/).filter((t) => t.length > 0),
-    ...bracketed,
-  ];
-  if (tokens.length === 0) return null;
-  const subject = tokens[0].replace(/[.,:;]+$/, "");
-  if (subject.length === 0 || /^[-–—]+$/.test(subject)) return null;
+  const words = plain.replace(/[|_]+/g, " ").split(/\s+/).filter((t) =>
+    t.length > 0
+  );
+  if (words.length === 0 && bracketed.length === 0) return null;
+  if (BREAK_KEYS.has(subjectKey(words.join(" ")))) return null;
+  const tokens = [...words, ...bracketed];
+
+  // The subject: the longest run of leading words that is a known subject, else the first.
+  let take = 1;
+  let subject = "";
+  let name: string | undefined;
+  for (let n = Math.min(vocab.maxTokens, words.length); n >= 1; n--) {
+    const key = subjectKey(words.slice(0, n).join(" "));
+    const own = vocab.family.get(key);
+    if (own !== undefined) {
+      take = n;
+      subject = own;
+      name = vocab.names.get(key);
+      break;
+    }
+    const named = vocab.names.get(key);
+    if (named !== undefined) {
+      take = n;
+      subject = words.slice(0, n).join(" ").replace(/[.,:;]+$/, "");
+      name = named;
+      break;
+    }
+  }
+  if (subject.length === 0) {
+    subject = tokens[0].replace(/[.,:;]+$/, "");
+    if (subject.length === 0 || /^[-–—]+$/.test(subject)) return null;
+    const snapped = snapSubject(subjectKey(subject), vocab);
+    if (snapped !== null) {
+      subject = snapped.word;
+      name = snapped.name;
+    }
+  }
   const rooms: string[] = [];
   const names: string[] = [];
-  for (const t of tokens.slice(1)) {
+  for (const t of tokens.slice(take)) {
     if (/\d/.test(t)) rooms.push(t);
     else names.push(t);
   }
   const out: ScanLesson = { day, period, subject: subject.slice(0, 60) };
+  if (name !== undefined && name !== out.subject) out.name = name;
   if (rooms.length > 0) out.room = rooms.join(" ").slice(0, 40);
   if (names.length > 0) out.teacher = names.join(" ").slice(0, 60);
   return out;
+}
+
+type Snap = { word: string; name?: string };
+
+/** The family's word or the language's name that [key] almost is: one edit away for five
+ *  letters or more, two for nine or more. The family's words come first. Null when none, or
+ *  when two candidates are equally close. */
+function snapSubject(key: string, vocab: Vocab): Snap | null {
+  if (key.length < 5) return null;
+  const max = key.length >= 9 ? 2 : 1;
+  const own: [string, Snap][] = [];
+  for (const [candidate, word] of vocab.family) {
+    own.push([candidate, { word, name: vocab.names.get(candidate) }]);
+  }
+  const named: [string, Snap][] = [];
+  for (const [candidate, name] of vocab.names) {
+    if (candidate === subjectKey(name)) {
+      named.push([candidate, { word: name, name }]);
+    }
+  }
+  return nearest(key, own, max) ?? nearest(key, named, max);
+}
+
+/** The candidate nearest to [key] within [max] edits; null when none or when two tie. */
+function nearest(
+  key: string,
+  candidates: [string, Snap][],
+  max: number,
+): Snap | null {
+  let best: Snap | null = null;
+  let bestDistance = max + 1;
+  let tied = false;
+  for (const [candidate, snap] of candidates) {
+    if (candidate.length < 5) continue;
+    const distance = editDistance(key, candidate, max);
+    if (distance > max) continue;
+    if (distance < bestDistance) {
+      best = snap;
+      bestDistance = distance;
+      tied = false;
+    } else if (
+      distance === bestDistance && best !== null && best.word !== snap.word
+    ) {
+      tied = true;
+    }
+  }
+  return tied ? null : best;
 }
 
 /**
@@ -779,7 +930,12 @@ function parseGrid(input: Line[], vocab: Vocab): ScanResult | null {
       a,
       b,
     ) => (Math.abs(a.cy - b.cy) > h / 2 ? a.cy - b.cy : a.cx - b.cx));
-    const lesson = lessonOf(day, period, members.map((m) => m.text).join(" "));
+    const lesson = lessonOf(
+      day,
+      period,
+      members.map((m) => m.text).join(" "),
+      vocab,
+    );
     if (lesson) lessons.push(lesson);
   }
   lessons.sort((a, b) => a.day - b.day || a.period - b.period);
