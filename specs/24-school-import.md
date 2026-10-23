@@ -309,6 +309,10 @@ their own, `import:propose`, granted separately from `shopping:write`.
   Germany, Austria (2023/24 names), German-, French- and Italian-speaking Switzerland,
   France, Spain with the co-official language of the region. The app sends its language
   with the school for the bilingual cantons and for countries without a list.
+- **Accents** (*checked 2026-10-23*, roadmap step 9): the Latin-script recognition model
+  reads the accented letters of the German, French and Spanish subject names at 98.7 to 100
+  percent in four fonts from 18 px up, so no sheet needs another model; `fold` maps œ and æ
+  to oe and ae as the app does.
 
 ### What was not verified
 
@@ -383,10 +387,10 @@ accents" rather than to a failed build.
 ## Recognition roadmap
 
 What the research and the corpus say the next steps are, in the order they pay off. None
-needs a model; all stay on the family's server. *Status 2026-10-23: steps 1 to 7 are built
-(see "The sheet's own words, and the family's" above); 8 to 10 stay open, 10 in part: the
-preview lists each new subject with its name and the list to take it as an existing one, the
-grid still shows short names only.*
+needs a model; all stay on the family's server. *Status 2026-10-23: steps 1 to 7 and 9 are
+built (see "The sheet's own words, and the family's" and "Accents" above); 8 and 10 stay
+open, 10 in part: the preview lists each new subject with its name and the list to take it as
+an existing one, the grid still shows short names only.*
 
 1. **Read the legend.** Swiss, Spanish and most Untis sheets print `CODE Name` pairs under
    or beside the grid. A block of short-code-plus-name lines outside the grid resolves every
@@ -419,9 +423,28 @@ grid still shows short names only.*
    and the Balearics; their lists and codes are official names and conventions. One sheet per
    region, read through the scan, settles the short names. Belgium, Luxembourg and the
    Netherlands have no list yet.
-9. **OCR accents.** RapidOCR's latin model reads é, ñ, ç and ß on the corpus; a French or
-   Spanish sheet with many accents deserves a check of the recognition model's language
-   dictionary before the pilot families there.
+9. **OCR accents.** *Checked 2026-10-23; nothing to change.* The service selects RapidOCR's
+   PP-OCRv5 Latin-script recognition model explicitly, and its dictionary (503 entries, in
+   the model's metadata) holds every accented letter of German, French and Spanish. The
+   measurement: the 54 accented words of the subject lists of de, fr and es (Français,
+   Mathématiques, Educación, Física, Förderunterricht, ...), set in 5x5 grids under a weekday
+   header with four real fonts (DejaVu Sans, Liberation Sans, FreeSerif, Lato) at 18, 26 and
+   36 px, posted to the container and aligned letter by letter: the accented letters came
+   back at 98.7 to 100 percent and the plain letters at 99.0 to 100 percent for every font
+   and size. The only confusion is FreeSerif's "rn" read as "m" at 18 px (twice in 606
+   letters); no letter ever became a digit; upscaling the sheet twofold before recognition
+   moves the misses around and changes no figure. The misses that remain are a detection
+   quirk unrelated to accents: the box around "Tutoría" is sometimes not found at all, and
+   plain "Tutoria" just as often, while "Teoría" and "Autoría" are found every time. A
+   caution for whoever repeats this: Pillow's bundled fallback font (`ImageFont.load_default`)
+   has no proper glyphs for accented letters and draws other marks in their place, so a sheet
+   drawn with it loses every accent (0 of 77); that is the font, not the model, and no reason
+   to change anything. Should a real sheet ever show the model losing accents, PP-OCRv6's
+   multilingual small recognition model (`lang_type` EN, `ocr_version` PPOCRV6, `model_type`
+   SMALL) is already in the image as the ready fallback. On the parser's side a dropped
+   accent costs one edit, which `snapSubject` absorbs for words of five letters or more
+   ("Fran6ais" snaps to Français), and `fold` maps œ and æ to oe and ae as the app's
+   `foldText` does.
 10. **The preview shows the name.** The code with its name underneath, and the merge action
     of step 3, are the app's side of this; the payload carries the name already.
 

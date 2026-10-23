@@ -584,6 +584,8 @@ Deno.test("the language's subject words name, join, snap and drop", () => {
   });
   assertEquals(lessonOf(1, 1, "Récré", fr), null);
   assertEquals(lessonOf(1, 1, "Hist-Géo", fr)?.name, "Histoire-géographie");
+  // An accent the OCR turned into a digit still snaps to the language's name.
+  assertEquals(lessonOf(1, 1, "Fran6ais", fr)?.subject, "Français");
   const es = vocabOf({ languages: ["es"] });
   assertEquals(lessonOf(1, 1, "E. Física (GIMNÀS)", es), {
     day: 1,
@@ -596,6 +598,9 @@ Deno.test("the language's subject words name, join, snap and drop", () => {
   // A language's subject word is never a weekday by guess: "Sam" is Samstag only in German.
   assertEquals(weekdayOf("Sam", vocabOf({ languages: ["de"] })), 6);
   assertEquals(weekdayOf("Mittag", de), null);
+  // Ligatures fold as the app folds them.
+  assertEquals(subjectKey("Cœur"), "coeur");
+  assertEquals(subjectKey("Æther"), "aether");
   assertEquals(
     subjectKey("Natur, Mensch,  Gesellschaft."),
     "natur mensch gesellschaft",
