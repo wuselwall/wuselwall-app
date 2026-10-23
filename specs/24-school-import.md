@@ -242,10 +242,18 @@ their own, `import:propose`, granted separately from `shopping:write`.
   six tenths of a column or row spacing, or counts as unplaced. In a cell, the first token is
   the subject, tokens with digits the room, the rest the teacher. Tested on synthetic sheets
   (`timetable_ocr_test.ts`); the unplaced count reaches the preview as a warning.
-- The app: *Einlesen… → Foto scannen*, a sheet saying the photo stays at home, camera or
+- The app: *Einlesen… → Foto scannen*, a sheet saying the file stays at home, camera or
   gallery through `image_picker` (Flutter's own plugin, no telemetry, pictures resized to
-  2400 px), a busy dialog, then the preview. A server without OCR gets the message pointing
-  at the guide.
+  2400 px and re-encoded, so an iPhone's HEIC arrives as a JPEG), or *Datei wählen* through
+  `file_picker` for the school's PDF or a picture kept elsewhere, a busy dialog, then the
+  preview. A server without OCR gets the message pointing at the guide.
+- **PDF** (*added 2026-10-23*): the function accepts `application/pdf` and `image/heic`; the
+  service reads a PDF's **text layer** with positions through `pypdfium2` (no OCR at all,
+  exact), joining the per-character rectangles into words along their baselines, and renders
+  the first page for OCR only when the layer holds fewer than eight pieces (a scan). The pilot's
+  own school PDF came through the text layer as five days, eight rows with both breaks and all
+  eight bell times, better than the OCR of its rendering. HEIC originals decode through
+  `pillow-heif`.
 
 ### What was not verified
 

@@ -68,6 +68,10 @@ Deno.test("words: weekdays, periods and clocks", () => {
   assertEquals(weekdayOf("Pornerstag"), 4);
   assertEquals(weekdayOf("Pierstag"), 2);
   assertEquals(weekdayOf("Freizeit"), null);
+  // Sachunterricht and Werken are subjects, not Sunday and Wednesday.
+  assertEquals(weekdayOf("SU"), null);
+  assertEquals(weekdayOf("We"), null);
+  assertEquals(weekdayOf("Wed"), 3);
   assertEquals(
     weekdaysIn("Maandag Dinsdag Woensdag Donderdag Vrijdag").map((w) => w.day),
     [1, 2, 3, 4, 5],
@@ -85,6 +89,8 @@ Deno.test("words: weekdays, periods and clocks", () => {
   assertEquals(periodOf("Lektion 2"), 2);
   assertEquals(clocksOf("08:00 - 08:45"), ["08:00", "08:45"]);
   assertEquals(clocksOf("8.50–9.35 Uhr"), ["08:50", "09:35"]);
+  assertEquals(clocksOf("8 00 - 8 45"), ["08:00", "08:45"]);
+  assertEquals(clocksOf("Raum 124"), []);
 });
 
 Deno.test("a cell's text becomes subject, room and teacher", () => {

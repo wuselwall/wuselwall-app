@@ -8,7 +8,8 @@
 // The caller is a signed-in member: the JWT is verified with Auth. Reading a sheet changes
 // nothing, so no guardian check here; applying it needs a guardian, in the app's own writes.
 //
-// Body: {image: <base64>, mime: "image/jpeg" | "image/png" | "image/webp"}. At most 6 MB.
+// Body: {image: <base64>, mime: "image/jpeg" | "image/png" | "image/webp" | "image/heic" | "application/pdf"}.
+// At most 6 MB.
 // Answer: {payload, placed, unplaced, columns, rows, lines}.
 // Errors (code, HTTP): ocr_not_configured 503, image_invalid 400, image_too_large 413,
 // ocr_failed 502, scan_nothing_found 422.
@@ -26,7 +27,9 @@ import { type OcrLine, parseTimetableScan } from "../_shared/timetable_ocr.ts";
 const MAX_IMAGE_BYTES = 6 * 1024 * 1024;
 const OCR_TIMEOUT_MS = 60_000;
 const MAX_LINES = 2000;
-const MIMES = new Set(["image/jpeg", "image/png", "image/webp"]);
+// A photo, a shared original from an iPhone, or the PDF a school hands out: the OCR service
+// reads a PDF's text layer directly and renders a scanned one.
+const MIMES = new Set(["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif", "application/pdf"]);
 
 /** The OCR service's answer: `{lines: [{text, box, score}]}` (infra/ocr/server.py). */
 function linesOf(data: unknown): OcrLine[] {
@@ -112,7 +115,7 @@ function decodeImage(
     throw new RequestError(
       400,
       "image_invalid",
-      "mime must be jpeg, png or webp",
+      "mime must be jpeg, png, webp, heic or pdf",
     );
   }
   const encoded = body.image;

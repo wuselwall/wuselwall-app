@@ -4706,7 +4706,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get schoolScanIntro =>
-      'Dein Server liest das Foto; es verlässt euer Zuhause nicht. Ein gerades, helles Foto des ganzen Blatts klappt am besten.';
+      'Dein Server liest das Foto oder die PDF-Datei; nichts verlässt euer Zuhause. Ein gerades, helles Foto des ganzen Blatts klappt am besten; die PDF-Datei der Schule ist am genauesten.';
 
   @override
   String get schoolScanCamera => 'Foto aufnehmen';
@@ -4931,4 +4931,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String shoppingTileForgetConfirm(String name) {
     return 'Die Kachel „$name“ entfernen? Beim nächsten Kauf kommt sie zurück.';
   }
+
+  @override
+  String get schoolScanFile => 'Datei wählen (PDF oder Bild)';
 }

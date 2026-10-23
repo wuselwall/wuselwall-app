@@ -4671,7 +4671,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get schoolScanIntro =>
-      'Your server reads the photo; it never leaves your home. A straight, bright photo of the whole sheet works best.';
+      'Your server reads the photo or the PDF; nothing leaves your home. A straight, bright photo of the whole sheet works best; the school\'s PDF is the most exact.';
 
   @override
   String get schoolScanCamera => 'Take a photo';
@@ -4893,4 +4893,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String shoppingTileForgetConfirm(String name) {
     return 'Remove the tile “$name”? Buying it again brings it back.';
   }
+
+  @override
+  String get schoolScanFile => 'Choose a file (PDF or picture)';
 }

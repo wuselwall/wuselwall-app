@@ -2524,7 +2524,7 @@
   "schoolProposalErrInvalid": "La propuesta tiene un formato no válido.",
   "schoolProposalErrLimit": "Ya hay cinco propuestas esperando. Revísalas o descártalas primero.",
   "schoolProposalErrGone": "Esta propuesta ya está resuelta o ha caducado.",
-  "schoolScanIntro": "Tu servidor lee la foto; nunca sale de casa. Una foto recta y luminosa de toda la hoja da el mejor resultado.",
+  "schoolScanIntro": "Tu servidor lee la foto o el PDF; nada sale de casa. Una foto recta y luminosa de toda la hoja da el mejor resultado; el PDF del colegio es el más exacto.",
   "schoolScanCamera": "Hacer una foto",
   "schoolScanPick": "Elegir una foto",
   "schoolScanBusy": "Leyendo la hoja…",
@@ -2585,5 +2585,6 @@
   "shoppingTileRename": "Renombrar tarjeta",
   "shoppingTileForget": "No sugerir más",
   "shoppingTileForgetHelp": "La tarjeta desaparece; el historial la conserva.",
-  "shoppingTileForgetConfirm": "¿Quitar la tarjeta «{name}»? La próxima compra la traerá de vuelta."
+  "shoppingTileForgetConfirm": "¿Quitar la tarjeta «{name}»? La próxima compra la traerá de vuelta.",
+  "schoolScanFile": "Elegir un archivo (PDF o imagen)"
 }
