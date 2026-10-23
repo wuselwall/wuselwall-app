@@ -260,7 +260,10 @@ their own, `import:propose`, granted separately from `shopping:write`.
   mardi in French; "SU" is Sachunterricht and the English Sunday), while the full names of
   every language stay matchable by prefix, so a French sheet in a German family still reads.
   A token that is one of the family's subjects is never a weekday by guess. Without hints, every
-  short form counts, as before.
+  short form counts, as before. Which subject names and codes exist per region, how they
+  group, and which codes collide (with weekdays and with each other) is researched in
+  `specs/research/school-subjects/`; its section 6 says how the matcher and the starter
+  subject lists should use it.
 
 ### What was not verified
 
