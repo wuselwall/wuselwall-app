@@ -189,15 +189,16 @@ Deno.test("a header in English and a stray weekday elsewhere", () => {
   );
   lines.push(at("1", 0.1, 0.3, 0.03));
   lines.push(at("Maths", COLS[0], 0.3));
+  lines.push(at("2", 0.1, 0.42, 0.03));
+  lines.push(at("English", COLS[0], 0.42));
   lines.push(at("Fri", 0.5, 0.8)); // a note "Fri: no school" below the grid
   const result = parseTimetableScan(lines);
   assert(result);
   assertEquals(result.columns, 5);
-  assertEquals(result.payload.lessons, [{
-    day: 1,
-    period: 1,
-    subject: "Maths",
-  }]);
+  assertEquals(result.payload.lessons, [
+    { day: 1, period: 1, subject: "Maths" },
+    { day: 1, period: 2, subject: "English" },
+  ]);
 });
 
 Deno.test("a header the OCR returned as one box is split into columns", () => {
@@ -209,13 +210,15 @@ Deno.test("a header the OCR returned as one box is split into columns", () => {
   cols.forEach((cx, i) =>
     lines.push(at(["ges", "anw", "wis", "ne", "ma"][i], cx, 0.3))
   );
+  lines.push(at("2", 0.1, 0.42, 0.03));
+  lines.push(at("nl", cols[0], 0.42));
   const result = parseTimetableScan(lines);
   assert(result);
   assertEquals(result.columns, 5);
   assertEquals(result.unplaced, 0);
   assertEquals(
     result.payload.lessons.map((l) => `${l.day}:${l.subject}`),
-    ["1:ges", "2:anw", "3:wis", "4:ne", "5:ma"],
+    ["1:ges", "1:nl", "2:anw", "3:wis", "4:ne", "5:ma"],
   );
 });
 
@@ -253,11 +256,14 @@ Deno.test("weekdays the OCR garbled are inferred from an even header spacing", (
   [0.3, 0.42, 0.54, 0.66, 0.78, 0.9].forEach((cx, i) =>
     lines.push(at(["E", "D", "Ge", "M", "Ch", "Rel"][i], cx, 0.3))
   );
+  lines.push(at("2", 0.1, 0.42, 0.03));
+  lines.push(at("F", 0.3, 0.42));
   const result = parseTimetableScan(lines);
   assert(result);
   assertEquals(result.columns, 6);
   assertEquals(result.payload.lessons.map((l) => `${l.day}:${l.subject}`), [
     "1:E",
+    "1:F",
     "2:D",
     "3:Ge",
     "4:M",
@@ -279,11 +285,77 @@ Deno.test("left-aligned sheets keep a cell's right-hand teacher code in its own 
       at(["kob", "mhe", "skn", "mhe", "ata"][i], x + 0.125, 0.3, 0.04),
     );
   });
+  lines.push(at("2", 0.1, 0.42, 0.03));
+  lines.push(at("RZG", lefts[0] + 0.04, 0.42, 0.06));
+  lines.push(at("skn", lefts[0] + 0.125, 0.42, 0.04));
   const result = parseTimetableScan(lines);
   assert(result);
   assertEquals(result.unplaced, 0);
   assertEquals(
     result.payload.lessons.map((l) => `${l.day}:${l.subject}/${l.teacher}`),
-    ["1:MAT/kob", "2:DEU/mhe", "3:ENG/skn", "4:FRA/mhe", "5:NMG/ata"],
+    [
+      "1:MAT/kob",
+      "1:RZG/skn",
+      "2:DEU/mhe",
+      "3:ENG/skn",
+      "4:FRA/mhe",
+      "5:NMG/ata",
+    ],
   );
+});
+
+Deno.test("days down the left and periods across the top: the grid is read turned", () => {
+  // A school diary page: MON. to FRI. in a column, 1 to 4 along the top.
+  const lines: OcrLine[] = [];
+  const periods = [0.3, 0.45, 0.6, 0.75];
+  periods.forEach((x, i) => lines.push(at(String(i + 1), x, 0.1, 0.03)));
+  const days = ["MON.", "TUES.", "WED.", "THUR.", "FRI."];
+  const rows = [0.25, 0.4, 0.55, 0.7, 0.85];
+  days.forEach((d, i) => lines.push(at(d, 0.1, rows[i], 0.08)));
+  const grid = [
+    ["Maths", "Eng", "Phys", "Art"],
+    ["Eng", "Maths", "Bio", ""],
+    ["Phys", "Chem", "Maths", "PE"],
+    ["Hist", "Eng", "", "Maths"],
+    ["Maths", "Geo", "Eng", "Music"],
+  ];
+  grid.forEach((row, r) =>
+    row.forEach((cell, c) => cell && lines.push(at(cell, periods[c], rows[r])))
+  );
+  const result = parseTimetableScan(lines);
+  assert(result);
+  assert(result.transposed);
+  assertEquals(result.columns, 5);
+  assertEquals(result.rows, 4);
+  assertEquals(result.unplaced, 0);
+  assertEquals(
+    result.payload.lessons.find((l) => l.day === 2 && l.period === 3),
+    {
+      day: 2,
+      period: 3,
+      subject: "Bio",
+    },
+  );
+  assertEquals(
+    result.payload.lessons.filter((l) => l.day === 5).map((l) => l.subject),
+    ["Maths", "Geo", "Eng", "Music"],
+  );
+});
+
+Deno.test("a weekday list with one row of text is a rota or a menu, not a timetable", () => {
+  // Seven weekday names down the left, one pharmacy name next to each.
+  const lines: OcrLine[] = [];
+  [
+    "Montag",
+    "Dienstag",
+    "Mittwoch",
+    "Donnerstag",
+    "Freitag",
+    "Samstag",
+    "Sonntag",
+  ].forEach((d, i) => {
+    lines.push(at(d, 0.2, 0.2 + i * 0.1, 0.12));
+    lines.push(at(`Apotheke ${i + 1}`, 0.6, 0.2 + i * 0.1, 0.2));
+  });
+  assertEquals(parseTimetableScan(lines), null);
 });
