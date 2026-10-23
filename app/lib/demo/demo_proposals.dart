@@ -29,5 +29,7 @@ class DemoScanRepository implements ScanRepository {
   Future<Result<ScanResult>> scan({
     required Uint8List image,
     required String mime,
+    List<String> languages = const [],
+    List<String> subjects = const [],
   }) async => const Err(NotFoundFailure(code: 'ocr_not_configured'));
 }

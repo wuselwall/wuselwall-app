@@ -56,74 +56,124 @@ type Line = {
 
 // ── words ─────────────────────────────────────────────────────────────────────
 
-const WEEKDAYS: Record<string, number> = {
-  mo: 1,
-  mon: 1,
-  montag: 1,
-  monday: 1,
-  lun: 1,
-  lundi: 1,
-  lunes: 1,
-  di: 2,
-  die: 2,
-  dienstag: 2,
-  tu: 2,
-  tue: 2,
-  tues: 2,
-  tuesday: 2,
-  mar: 2,
-  mardi: 2,
-  martes: 2,
-  mi: 3,
-  mit: 3,
-  mittwoch: 3,
-  wed: 3,
-  wednesday: 3,
-  mer: 3,
-  mercredi: 3,
-  mie: 3,
-  miercoles: 3,
-  do: 4,
-  don: 4,
-  donnerstag: 4,
-  th: 4,
-  thu: 4,
-  thur: 4,
-  thurs: 4,
-  thursday: 4,
-  jeu: 4,
-  jeudi: 4,
-  ju: 4,
-  jue: 4,
-  jueves: 4,
-  fr: 5,
-  fre: 5,
-  freitag: 5,
-  fri: 5,
-  friday: 5,
-  ven: 5,
-  vendredi: 5,
-  vi: 5,
-  vie: 5,
-  viernes: 5,
-  sa: 6,
-  sam: 6,
-  samstag: 6,
-  sat: 6,
-  saturday: 6,
-  samedi: 6,
-  sab: 6,
-  sabado: 6,
-  so: 7,
-  son: 7,
-  sonntag: 7,
-  sun: 7,
-  sunday: 7,
-  dim: 7,
-  dimanche: 7,
-  dom: 7,
-  domingo: 7,
+/** What the family tells the scan: its language(s) and its subjects (short names and names). */
+export type ScanHints = { languages?: string[]; subjects?: string[] };
+
+/** The short weekday forms per language. A family's sheet is read with its own language's
+ *  forms, since short codes collide across languages (German "Ma" is Mathe, French "ma." is
+ *  mardi); the full names of every language stay matchable by prefix. */
+const SHORT_FORMS: Record<string, Record<string, number>> = {
+  de: {
+    mo: 1,
+    mon: 1,
+    montag: 1,
+    di: 2,
+    die: 2,
+    dienstag: 2,
+    mi: 3,
+    mit: 3,
+    mittwoch: 3,
+    do: 4,
+    don: 4,
+    donnerstag: 4,
+    fr: 5,
+    fre: 5,
+    freitag: 5,
+    sa: 6,
+    sam: 6,
+    samstag: 6,
+    so: 7,
+    son: 7,
+    sonntag: 7,
+  },
+  en: {
+    mon: 1,
+    monday: 1,
+    tu: 2,
+    tue: 2,
+    tues: 2,
+    tuesday: 2,
+    wed: 3,
+    wednesday: 3,
+    th: 4,
+    thu: 4,
+    thur: 4,
+    thurs: 4,
+    thursday: 4,
+    fri: 5,
+    friday: 5,
+    sat: 6,
+    saturday: 6,
+    sun: 7,
+    sunday: 7,
+  },
+  fr: {
+    lun: 1,
+    lundi: 1,
+    mar: 2,
+    mardi: 2,
+    mer: 3,
+    mercredi: 3,
+    jeu: 4,
+    jeudi: 4,
+    ven: 5,
+    vendredi: 5,
+    sam: 6,
+    samedi: 6,
+    dim: 7,
+    dimanche: 7,
+  },
+  es: {
+    lun: 1,
+    lunes: 1,
+    mar: 2,
+    martes: 2,
+    mie: 3,
+    miercoles: 3,
+    ju: 4,
+    jue: 4,
+    jueves: 4,
+    vi: 5,
+    vie: 5,
+    viernes: 5,
+    sab: 6,
+    sabado: 6,
+    dom: 7,
+    domingo: 7,
+  },
+  nl: {
+    maandag: 1,
+    dinsdag: 2,
+    woensdag: 3,
+    donderdag: 4,
+    vrijdag: 5,
+    zaterdag: 6,
+    zondag: 7,
+  },
 };
+
+/** The words one scan is read with. */
+type Vocab = { short: Record<string, number>; subjects: Set<string> };
+
+/** The vocabulary for [hints]: the short forms of the named languages (every language when
+ *  none is named or known), and the family's subjects, which are never weekdays unless they
+ *  are one in the family's own language. */
+export function vocabOf(hints?: ScanHints): Vocab {
+  const known = (hints?.languages ?? [])
+    .map((l) => l.toLowerCase().split(/[-_]/)[0])
+    .filter((l) => l in SHORT_FORMS);
+  const languages = known.length > 0
+    ? [...new Set(known)]
+    : Object.keys(SHORT_FORMS);
+  const short: Record<string, number> = {};
+  for (const language of languages) Object.assign(short, SHORT_FORMS[language]);
+  const subjects = new Set(
+    (hints?.subjects ?? []).map(fold).filter((t) => t.length > 0),
+  );
+  return { short, subjects };
+}
+
+const DEFAULT_VOCAB: Vocab = vocabOf();
 
 /** Lowercase without accents. */
 export function fold(text: string): string {
@@ -193,10 +243,15 @@ function editDistance(a: string, b: string, max: number): number {
  *  or more), else one edit away from a full name of five letters or more, or two edits away
  *  from one of eight or more ("Pornerstag", "Pierstag" in a child's hand). Null when none or
  *  when the candidates disagree. */
-function dayOfToken(token: string): number | null {
+function dayOfToken(
+  token: string,
+  vocab: Vocab = DEFAULT_VOCAB,
+): number | null {
   if (token.length === 0) return null;
-  const exact = WEEKDAYS[token];
+  const exact = vocab.short[token];
   if (exact !== undefined) return exact;
+  // One of the family's subjects: no guessing by prefix or edit distance from here.
+  if (vocab.subjects.has(token)) return null;
   const days = new Set<number>();
   for (const [name, day] of FULL_NAMES) {
     if (token.length >= 3 && name.startsWith(token)) days.add(day);
@@ -214,16 +269,19 @@ function dayOfToken(token: string): number | null {
 const SEPARATORS = /[\s.,:/()\[\]]+/;
 
 /** The weekday a header cell names ("Mo", "Montag", "Mo. 12.10.", "Thu", "M ittw och"), else null. */
-export function weekdayOf(text: string): number | null {
+export function weekdayOf(
+  text: string,
+  vocab: Vocab = DEFAULT_VOCAB,
+): number | null {
   const tokens = fold(text).split(SEPARATORS).filter((t) => t.length > 0);
   if (tokens.length === 0) return null;
-  if (WEEKDAYS[tokens[0]] !== undefined) return WEEKDAYS[tokens[0]];
+  if (vocab.short[tokens[0]] !== undefined) return vocab.short[tokens[0]];
   // Letter-spaced print ("Mon tag", "D ien s tag"): the text without its spaces.
   if (tokens.length >= 2) {
-    const compact = dayOfToken(tokens.join(""));
+    const compact = dayOfToken(tokens.join(""), vocab);
     if (compact !== null) return compact;
   }
-  return dayOfToken(tokens[0]);
+  return dayOfToken(tokens[0], vocab);
 }
 
 /** Every weekday named in one text with its character span, for a header the OCR returned
@@ -231,11 +289,12 @@ export function weekdayOf(text: string): number | null {
  *  is one entry over the whole text. */
 export function weekdaysIn(
   text: string,
+  vocab: Vocab = DEFAULT_VOCAB,
 ): { day: number; start: number; end: number }[] {
   const folded = fold(text);
   const out: { day: number; start: number; end: number }[] = [];
   for (const m of folded.matchAll(/[^\s.,:/()\[\]]+/g)) {
-    const day = dayOfToken(m[0]);
+    const day = dayOfToken(m[0], vocab);
     if (day !== null) {
       out.push({ day, start: m.index!, end: m.index! + m[0].length });
     }
@@ -245,7 +304,7 @@ export function weekdaysIn(
     const ordered = days.every((d, i) => i === 0 || d > days[i - 1]);
     if (ordered) return out;
   }
-  const single = weekdayOf(text);
+  const single = weekdayOf(text, vocab);
   return single === null ? [] : [{ day: single, start: 0, end: folded.length }];
 }
 
@@ -404,10 +463,11 @@ type Row = { index: number; cy: number };
 function findColumns(
   lines: Line[],
   h: number,
+  vocab: Vocab,
 ): { columns: Column[]; headerY: number } | null {
   const named: { l: Line; day: number; cx: number; left: number }[] = [];
   for (const l of lines) {
-    const found = weekdaysIn(l.text);
+    const found = weekdaysIn(l.text, vocab);
     const len = Math.max(1, fold(l.text).length);
     for (const f of found) {
       const mid = found.length === 1 ? 0.5 : (f.start + f.end) / 2 / len;
@@ -608,16 +668,20 @@ export function lessonOf(
  * The grid in the lines, or null when no weekday header was found (the photo shows no
  * timetable the parser can read).
  */
-export function parseTimetableScan(input: OcrLine[]): ScanResult | null {
+export function parseTimetableScan(
+  input: OcrLine[],
+  hints?: ScanHints,
+): ScanResult | null {
   const lines = input.map(lineOf).filter((l): l is Line => l !== null);
   if (lines.length < 4) return null;
+  const vocab = vocabOf(hints);
   // A tilted photo is read level first; the raw boxes are the fallback.
   const tilt = skewOf(lines);
   const sets = Math.abs(tilt) > 0.015
     ? [straighten(lines, tilt), lines]
     : [lines];
   for (const set of sets) {
-    const result = readAnyWay(set);
+    const result = readAnyWay(set, vocab);
     if (result) return result;
   }
   return null;
@@ -629,7 +693,7 @@ export function parseTimetableScan(input: OcrLine[]): ScanResult | null {
  * taken sideways the other way round or upside down runs the days backwards. Each is the same
  * grid under a swap or a mirror of the axes; the first plausible reading wins.
  */
-function readAnyWay(lines: Line[]): ScanResult | null {
+function readAnyWay(lines: Line[], vocab: Vocab): ScanResult | null {
   const variants: [boolean, (l: Line) => Line][] = [
     [false, (l) => ({ ...l })],
     [true, (l) => ({ ...l, cx: l.cy, cy: l.cx, w: l.h, h: l.w })],
@@ -637,7 +701,10 @@ function readAnyWay(lines: Line[]): ScanResult | null {
     [true, (l) => ({ ...l, cx: -l.cy, cy: l.cx, w: l.h, h: l.w })],
   ];
   for (const [transposed, map] of variants) {
-    const result = parseGrid(lines.map((l) => ({ ...map(l), used: false })));
+    const result = parseGrid(
+      lines.map((l) => ({ ...map(l), used: false })),
+      vocab,
+    );
     if (!result) continue;
     const read = { ...result, transposed };
     if (plausible(read)) return read;
@@ -659,10 +726,10 @@ function plausible(r: ScanResult): boolean {
   return true;
 }
 
-function parseGrid(input: Line[]): ScanResult | null {
+function parseGrid(input: Line[], vocab: Vocab): ScanResult | null {
   const lines = input.map((l) => ({ ...l, used: false }));
   const h = median(lines.map((l) => l.h));
-  const header = findColumns(lines, h);
+  const header = findColumns(lines, h, vocab);
   if (!header) return null;
   const { columns, headerY } = header;
   const gaps = columns.slice(1).map((c, i) => c.cx - columns[i].cx);
