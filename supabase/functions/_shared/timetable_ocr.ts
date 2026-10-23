@@ -77,7 +77,6 @@ const WEEKDAYS: Record<string, number> = {
   mi: 3,
   mit: 3,
   mittwoch: 3,
-  we: 3,
   wed: 3,
   wednesday: 3,
   mer: 3,
@@ -118,7 +117,6 @@ const WEEKDAYS: Record<string, number> = {
   so: 7,
   son: 7,
   sonntag: 7,
-  su: 7,
   sun: 7,
   sunday: 7,
   dim: 7,
@@ -251,7 +249,8 @@ export function weekdaysIn(
   return single === null ? [] : [{ day: single, start: 0, end: folded.length }];
 }
 
-const CLOCK = /(\d{1,2})\s*[:.h]\s*(\d{2})/g;
+// "08:00", "8.50", "8h00", and the "8 00" of a PDF whose dot came as a rectangle of its own.
+const CLOCK = /(\d{1,2})(?:\s*[:.h]\s*|\s)(\d{2})(?!\d)/g;
 
 /** Every clock time in the text, as "HH:MM". */
 export function clocksOf(text: string): string[] {

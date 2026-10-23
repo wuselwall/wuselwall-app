@@ -2524,7 +2524,7 @@
   "schoolProposalErrInvalid": "La proposition a un format non valide.",
   "schoolProposalErrLimit": "Cinq propositions sont déjà en attente. Vérifie-les ou rejette-les d’abord.",
   "schoolProposalErrGone": "Cette proposition est déjà traitée ou a expiré.",
-  "schoolScanIntro": "Ton serveur lit la photo ; elle ne quitte pas la maison. Une photo droite et lumineuse de toute la feuille donne le meilleur résultat.",
+  "schoolScanIntro": "Ton serveur lit la photo ou le PDF ; rien ne quitte la maison. Une photo droite et lumineuse de toute la feuille donne le meilleur résultat ; le PDF de l’école est le plus précis.",
   "schoolScanCamera": "Prendre une photo",
   "schoolScanPick": "Choisir une photo",
   "schoolScanBusy": "Lecture de la feuille…",
@@ -2532,5 +2532,6 @@
   "schoolScanNothingFound": "Aucun emploi du temps reconnu sur la photo. Essaie une photo plus droite et plus lumineuse, ou importe du texte.",
   "schoolScanTooLarge": "La photo est trop grande (6 Mo au maximum).",
   "schoolScanFailed": "La reconnaissance de texte du serveur n’a pas répondu. Réessaie plus tard.",
-  "schoolScanWarnUnplaced": "{count, plural, one{1 fragment de texte n’a pu être placé dans aucune case. Compare l’aperçu avec la feuille.} other{{count} fragments de texte n’ont pu être placés dans aucune case. Compare l’aperçu avec la feuille.}}"
+  "schoolScanWarnUnplaced": "{count, plural, one{1 fragment de texte n’a pu être placé dans aucune case. Compare l’aperçu avec la feuille.} other{{count} fragments de texte n’ont pu être placés dans aucune case. Compare l’aperçu avec la feuille.}}",
+  "schoolScanFile": "Choisir un fichier (PDF ou image)"
 }

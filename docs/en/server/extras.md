@@ -48,7 +48,7 @@ For the week board, the server fetches the public and school holidays of the cou
 
 ## Text recognition for timetables {#text-recognition}
 
-With text recognition the app can read in a photographed timetable ([Reading in a timetable](/en/school/#reading-in-a-timetable)). It is a container of its own in the stack that runs on your server's CPU only: the photo goes from the phone to your server, the container reads the text, and none of it leaves the house. It needs no internet, no graphics card and about 1 GB of memory; on a small home server a sheet takes a few seconds.
+With text recognition the app can read in a photographed timetable or the school's PDF ([Reading in a timetable](/en/school/#reading-in-a-timetable)); a PDF's text is read directly, a scanned PDF like a photo. It is a container of its own in the stack that runs on your server's CPU only: the photo goes from the phone to your server, the container reads the text, and none of it leaves the house. It needs no internet, no graphics card and about 1 GB of memory; on a small home server a sheet takes a few seconds.
 
 To set it up, in the stack's folder:
 

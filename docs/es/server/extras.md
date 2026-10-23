@@ -39,7 +39,7 @@ El servidor consulta [OpenHolidays](https://www.openholidaysapi.org/) cada seman
 
 ## Reconocimiento de texto para horarios {#text-recognition}
 
-Con el reconocimiento de texto, la app puede importar un horario fotografiado ([Importar un horario](/es/school/#reading-in)). Es un contenedor propio dentro de la pila que funciona solo con el procesador de vuestro servidor: la foto va del móvil a vuestro servidor, el contenedor lee el texto y nada sale de casa. No necesita internet ni tarjeta gráfica, y alrededor de 1 GB de memoria; en un servidor doméstico pequeño una hoja tarda unos segundos.
+Con el reconocimiento de texto, la app puede importar un horario fotografiado o el PDF del colegio ([Importar un horario](/es/school/#reading-in)); el texto de un PDF se lee directamente, un PDF escaneado como una foto. Es un contenedor propio dentro de la pila que funciona solo con el procesador de vuestro servidor: la foto va del móvil a vuestro servidor, el contenedor lee el texto y nada sale de casa. No necesita internet ni tarjeta gráfica, y alrededor de 1 GB de memoria; en un servidor doméstico pequeño una hoja tarda unos segundos.
 
 Para configurarlo, en la carpeta de la pila:
 

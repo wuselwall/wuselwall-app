@@ -2524,7 +2524,7 @@
   "schoolProposalErrInvalid": "La propuesta tiene un formato no válido.",
   "schoolProposalErrLimit": "Ya hay cinco propuestas esperando. Revísalas o descártalas primero.",
   "schoolProposalErrGone": "Esta propuesta ya está resuelta o ha caducado.",
-  "schoolScanIntro": "Tu servidor lee la foto; nunca sale de casa. Una foto recta y luminosa de toda la hoja da el mejor resultado.",
+  "schoolScanIntro": "Tu servidor lee la foto o el PDF; nada sale de casa. Una foto recta y luminosa de toda la hoja da el mejor resultado; el PDF del colegio es el más exacto.",
   "schoolScanCamera": "Hacer una foto",
   "schoolScanPick": "Elegir una foto",
   "schoolScanBusy": "Leyendo la hoja…",
@@ -2532,5 +2532,6 @@
   "schoolScanNothingFound": "No se reconoció ningún horario en la foto. Prueba con una foto más recta y luminosa, o importa desde texto.",
   "schoolScanTooLarge": "La foto es demasiado grande (6 MB como máximo).",
   "schoolScanFailed": "El reconocimiento de texto del servidor no respondió. Inténtalo más tarde.",
-  "schoolScanWarnUnplaced": "{count, plural, one{1 fragmento de texto no encajó en ninguna casilla. Compara la vista previa con la hoja.} other{{count} fragmentos de texto no encajaron en ninguna casilla. Compara la vista previa con la hoja.}}"
+  "schoolScanWarnUnplaced": "{count, plural, one{1 fragmento de texto no encajó en ninguna casilla. Compara la vista previa con la hoja.} other{{count} fragmentos de texto no encajaron en ninguna casilla. Compara la vista previa con la hoja.}}",
+  "schoolScanFile": "Elegir un archivo (PDF o imagen)"
 }

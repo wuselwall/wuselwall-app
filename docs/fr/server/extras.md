@@ -39,7 +39,7 @@ Votre serveur consulte [OpenHolidays](https://www.openholidaysapi.org/) chaque s
 
 ## Reconnaissance de texte pour les emplois du temps {#text-recognition}
 
-Avec la reconnaissance de texte, l’app peut importer un emploi du temps photographié ([Importer un emploi du temps](/fr/school/#reading-in)). C’est un conteneur à part dans la pile, qui tourne uniquement sur le processeur de votre serveur : la photo va du téléphone à votre serveur, le conteneur lit le texte, et rien ne quitte la maison. Il n’a besoin ni d’internet ni de carte graphique, et d’environ 1 Go de mémoire ; sur un petit serveur domestique, une feuille prend quelques secondes.
+Avec la reconnaissance de texte, l’app peut importer un emploi du temps photographié ou le PDF de l’école ([Importer un emploi du temps](/fr/school/#reading-in)) ; le texte d’un PDF est lu directement, un PDF scanné comme une photo. C’est un conteneur à part dans la pile, qui tourne uniquement sur le processeur de votre serveur : la photo va du téléphone à votre serveur, le conteneur lit le texte, et rien ne quitte la maison. Il n’a besoin ni d’internet ni de carte graphique, et d’environ 1 Go de mémoire ; sur un petit serveur domestique, une feuille prend quelques secondes.
 
 Pour l’installer, dans le dossier de la pile :
 

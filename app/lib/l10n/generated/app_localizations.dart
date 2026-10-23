@@ -8036,7 +8036,7 @@ abstract class AppLocalizations {
   /// No description provided for @schoolScanIntro.
   ///
   /// In en, this message translates to:
-  /// **'Your server reads the photo; it never leaves your home. A straight, bright photo of the whole sheet works best.'**
+  /// **'Your server reads the photo or the PDF; nothing leaves your home. A straight, bright photo of the whole sheet works best; the school\'s PDF is the most exact.'**
   String get schoolScanIntro;
 
   /// No description provided for @schoolScanCamera.
@@ -8086,6 +8086,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, one{1 piece of text fit no cell. Compare the preview with the sheet.} other{{count} pieces of text fit no cell. Compare the preview with the sheet.}}'**
   String schoolScanWarnUnplaced(int count);
+
+  /// No description provided for @schoolScanFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a file (PDF or picture)'**
+  String get schoolScanFile;
 }
 
 class _AppLocalizationsDelegate

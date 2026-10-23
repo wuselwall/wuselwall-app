@@ -2658,7 +2658,7 @@
   "schoolProposalErrInvalid": "The proposal has an invalid format.",
   "schoolProposalErrLimit": "Five proposals are already waiting. Review or discard them first.",
   "schoolProposalErrGone": "This proposal is already settled or has expired.",
-  "schoolScanIntro": "Your server reads the photo; it never leaves your home. A straight, bright photo of the whole sheet works best.",
+  "schoolScanIntro": "Your server reads the photo or the PDF; nothing leaves your home. A straight, bright photo of the whole sheet works best; the school's PDF is the most exact.",
   "schoolScanCamera": "Take a photo",
   "schoolScanPick": "Choose a photo",
   "schoolScanBusy": "Reading the sheet…",
@@ -2673,5 +2673,6 @@
         "type": "int"
       }
     }
-  }
+  },
+  "schoolScanFile": "Choose a file (PDF or picture)"
 }

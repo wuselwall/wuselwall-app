@@ -148,8 +148,9 @@ List<Override> _overrides(String scenario) => [
     const DemoProposalsRepository(),
   ),
   scanRepositoryProvider.overrideWithValue(const DemoScanRepository()),
-  // No camera in the demo: picking a picture gives none.
+  // No camera and no files in the demo: picking gives none.
   imagePickerProvider.overrideWithValue((_) async => null),
+  filePickerProvider.overrideWithValue(() async => null),
   regionRepositoryProvider.overrideWithValue(DemoRegionRepository()),
   mealsRepositoryProvider.overrideWithValue(DemoMealsRepository()),
   calendarRepositoryProvider.overrideWithValue(DemoCalendarRepository()),

@@ -1850,7 +1850,7 @@
   "schoolProposalErrInvalid": "Der Vorschlag hat ein ungültiges Format.",
   "schoolProposalErrLimit": "Es warten schon fünf Vorschläge. Prüfe oder verwirf sie zuerst.",
   "schoolProposalErrGone": "Dieser Vorschlag ist schon erledigt oder abgelaufen.",
-  "schoolScanIntro": "Dein Server liest das Foto; es verlässt euer Zuhause nicht. Ein gerades, helles Foto des ganzen Blatts klappt am besten.",
+  "schoolScanIntro": "Dein Server liest das Foto oder die PDF-Datei; nichts verlässt euer Zuhause. Ein gerades, helles Foto des ganzen Blatts klappt am besten; die PDF-Datei der Schule ist am genauesten.",
   "schoolScanCamera": "Foto aufnehmen",
   "schoolScanPick": "Foto auswählen",
   "schoolScanBusy": "Das Blatt wird gelesen…",
@@ -1858,5 +1858,6 @@
   "schoolScanNothingFound": "Auf dem Foto wurde kein Stundenplan erkannt. Versuche ein geraderes, helleres Foto, oder lies den Plan aus Text ein.",
   "schoolScanTooLarge": "Das Foto ist zu groß (höchstens 6 MB).",
   "schoolScanFailed": "Die Texterkennung auf dem Server hat nicht geantwortet. Versuche es später noch einmal.",
-  "schoolScanWarnUnplaced": "{count, plural, one{1 Textstück konnte keinem Feld zugeordnet werden. Vergleiche die Vorschau mit dem Blatt.} other{{count} Textstücke konnten keinem Feld zugeordnet werden. Vergleiche die Vorschau mit dem Blatt.}}"
+  "schoolScanWarnUnplaced": "{count, plural, one{1 Textstück konnte keinem Feld zugeordnet werden. Vergleiche die Vorschau mit dem Blatt.} other{{count} Textstücke konnten keinem Feld zugeordnet werden. Vergleiche die Vorschau mit dem Blatt.}}",
+  "schoolScanFile": "Datei wählen (PDF oder Bild)"
 }

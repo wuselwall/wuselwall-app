@@ -4719,7 +4719,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get schoolScanIntro =>
-      'Tu servidor lee la foto; nunca sale de casa. Una foto recta y luminosa de toda la hoja da el mejor resultado.';
+      'Tu servidor lee la foto o el PDF; nada sale de casa. Una foto recta y luminosa de toda la hoja da el mejor resultado; el PDF del colegio es el más exacto.';
 
   @override
   String get schoolScanCamera => 'Hacer una foto';
@@ -4757,4 +4757,7 @@ class AppLocalizationsEs extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get schoolScanFile => 'Elegir un archivo (PDF o imagen)';
 }

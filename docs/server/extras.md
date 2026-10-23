@@ -48,7 +48,7 @@ Für die Wochentafel holt der Server einmal pro Woche die Feiertage und Schulfer
 
 ## Texterkennung für Stundenpläne {#texterkennung}
 
-Mit der Texterkennung kann die App einen fotografierten Stundenplan einlesen ([Stundenplan einlesen](/school/#stundenplan-einlesen)). Sie ist ein eigener Container im Stack, der nur auf der Rechenleistung eures Servers läuft: Das Foto geht vom Handy an euren Server, der Container liest den Text, und nichts davon verlässt das Haus. Er braucht kein Internet, keine Grafikkarte und etwa 1 GB Arbeitsspeicher; auf einem kleinen Heimserver dauert ein Blatt einige Sekunden.
+Mit der Texterkennung kann die App einen fotografierten Stundenplan oder die PDF-Datei der Schule einlesen ([Stundenplan einlesen](/school/#stundenplan-einlesen)); bei einer PDF-Datei liest der Container den Text direkt, ein eingescanntes PDF liest er wie ein Foto. Sie ist ein eigener Container im Stack, der nur auf der Rechenleistung eures Servers läuft: Das Foto geht vom Handy an euren Server, der Container liest den Text, und nichts davon verlässt das Haus. Er braucht kein Internet, keine Grafikkarte und etwa 1 GB Arbeitsspeicher; auf einem kleinen Heimserver dauert ein Blatt einige Sekunden.
 
 Einrichten, im Ordner des Stacks:
 
