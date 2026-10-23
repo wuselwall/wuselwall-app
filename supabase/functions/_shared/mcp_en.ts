@@ -81,4 +81,14 @@ export const MCP_EN: McpMessages = {
   notText: (key) => `${key} must be text.`,
   statusInvalid: "status is open, done or all.",
   queryRequired: "Please say what to look for (query).",
+  proposed: (name, n) =>
+    `Proposal stored: ${name}'s timetable, ${
+      n === 1 ? "1 lesson" : `${n} lessons`
+    }. A parent reviews it in WuselWall under Timetable and applies or discards it.`,
+  proposeInvalid:
+    "The proposal has an invalid format: each entry of lessons needs day, period (or starts and ends) and subject, at most 200 entries.",
+  proposeLimit:
+    "Five proposals are already waiting. Please have them reviewed or discarded in WuselWall first.",
+  proposeUnavailable: "This server does not take proposals yet.",
+  lessonsRequired: "lessons is missing or empty.",
 };

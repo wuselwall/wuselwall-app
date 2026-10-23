@@ -81,4 +81,14 @@ export const MCP_DE: McpMessages = {
   notText: (key) => `${key} muss ein Text sein.`,
   statusInvalid: "status ist open, done oder all.",
   queryRequired: "Bitte angeben, wonach gesucht wird (query).",
+  proposed: (name, n) =>
+    `Vorschlag gespeichert: Stundenplan für ${name}, ${
+      n === 1 ? "1 Stunde" : `${n} Stunden`
+    }. Eine erziehungsberechtigte Person prüft ihn in WuselWall unter Stundenplan und übernimmt oder verwirft ihn.`,
+  proposeInvalid:
+    "Der Vorschlag hat ein ungültiges Format: lessons braucht je Eintrag day, period (oder starts und ends) und subject, höchstens 200 Einträge.",
+  proposeLimit:
+    "Es warten schon fünf Vorschläge. Bitte erst in WuselWall prüfen oder verwerfen.",
+  proposeUnavailable: "Dieser Server nimmt noch keine Vorschläge an.",
+  lessonsRequired: "lessons fehlt oder ist leer.",
 };

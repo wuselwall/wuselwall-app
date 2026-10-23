@@ -6,7 +6,7 @@ Les adultes saisissent l’emploi du temps ; chaque enfant consulte sa semaine e
 
 ## Configurer l’école {#setting-up}
 
-Lors de la première utilisation, configurez :
+Lors de la première utilisation, touche **Configurer l’école**, saisis le nom et la **région** de l’école et touche **Créer l’école**. C’est tout : les horaires de cours et une liste de matières sont proposés, et **Prochaines étapes** liste chaque enfant dont l’emploi du temps manque encore, avec un bouton pour le saisir ou l’importer. La page de l’école contient ensuite :
 
 - le **nom de l’école** et sa **région** ;
 - les **horaires des cours et des pauses**, avec début et fin ;
@@ -46,15 +46,25 @@ Ajoutez une autre école si nécessaire, puis choisissez en haut celle à modifi
 
 ## Saisir un emploi du temps {#entering-a-timetable}
 
-Pour chaque enfant, saisissez les cours d’une période. Si aucune période ne couvre la semaine affichée, l’app demande d’abord cette période : nom, **Du** et **Au**. Les dates doivent inclure la semaine affichée ; sinon, le dialogue le signale à côté de la date. Enregistrez-la pour continuer vers la grille.
+Pour chaque enfant, saisissez les cours d’une période. Si aucune période ne couvre la semaine affichée, l’app propose l’année scolaire en cours, du 1er août au 31 juillet, nom et dates déjà remplis. Si cela convient, touche **Enregistrer la période et continuer** ; si ton école compte autrement, change d’abord le nom ou les dates. Les dates doivent inclure la semaine affichée ; sinon, le dialogue le signale à côté de la date.
 
-L’en-tête indique l’enfant, l’école, la période et ses dates. Touchez une cellule pour choisir une matière. Le bouton d’enregistrement reste visible en bas pendant le défilement.
+L’en-tête indique l’enfant, l’école, la période et ses dates. Touchez une cellule pour choisir une matière. S’il manque une matière, tape son abréviation dans la recherche et choisis **Créer la matière « … »** : la matière existe aussitôt et remplit la case ; couleur, icône et affaires à emporter viennent plus tard sous **Modifier l’école**. Le bouton d’enregistrement reste visible en bas pendant le défilement.
 
 Si aucun emploi du temps n’existe encore, la vue affiche un message concernant l’enfant sélectionné et le bouton **Saisir l’emploi du temps**.
 
 <Shot name="school-editor" alt="L’éditeur avec l’école, la période et le bouton d’enregistrement visible" />
 
 Choisissez un rythme hebdomadaire ou des semaines A/B, saisies séparément. Ajoutez la garde après l’école avec les jours et horaires. Copiez un emploi du temps d’un frère, d’une sœur ou de la période précédente pour éviter de tout ressaisir. Enregistrez la grille.
+
+## Importer un emploi du temps {#reading-in}
+
+Au lieu de taper chaque cours, tu peux faire lire la feuille. Les trois façons aboutissent au même **aperçu** : l’enfant, l’école, la période, la grille telle qu’elle serait enregistrée, les matières qui seront créées et chaque remarque, par exemple quand un emploi du temps est remplacé ou compte plus de cours que les horaires. Seul **Appliquer** écrit quelque chose ; **Rejeter** laisse tout en l’état.
+
+**Depuis du texte, avec votre assistant IA.** Pour un enfant sans emploi du temps, touche **Importer…** puis **Coller du texte** (ou **Importer…** en haut de l’emploi du temps). **Copier les instructions pour l’assistant** place un texte dans le presse-papiers : donne-le, avec une photo de l’emploi du temps, à l’assistant de confiance, par exemple dans son app sur le téléphone. Il répond dans un format fixe que WuselWall sait lire. Colle la réponse dans le champ et touche **Importer**. La photo ne va qu’à l’assistant de votre choix ; WuselWall n’envoie rien à personne.
+
+**Comme proposition d’un assistant.** Un assistant connecté à WuselWall ([Apps et assistants IA](/fr/settings/shortcuts)) peut déposer un emploi du temps comme **proposition**. Il ne change rien : une carte « Proposition de Claude » avec **Vérifier** et **Rejeter** apparaît sur **Aujourd’hui** et au-dessus de l’emploi du temps. **Vérifier** ouvre l’aperçu. Les propositions expirent après 14 jours.
+
+**Comme photo, lue par votre serveur.** Si votre serveur a la reconnaissance de texte ([Extras pour le serveur](/fr/server/extras#text-recognition)), touche **Importer…** et **Scanner une photo**, prends la feuille en photo ou choisis-en une. La photo va à votre propre serveur et nulle part ailleurs ; le serveur reconnaît les jours, les cours et les matières et montre l’aperçu. Une photo droite et lumineuse de toute la feuille donne le meilleur résultat. L’aperçu nomme les fragments de texte qui ne correspondent à aucune case, pour comparer avec la feuille. Sans reconnaissance de texte, l’app le dit et renvoie à l’import de texte.
 
 ## Modifier des journées entières {#editing-whole-days}
 

@@ -103,7 +103,7 @@ it, and the answer goes into [14](14-open-questions.md).
 | **R4.1** A push relay | Do local reminders and the Today notices miss something that matters ([Q47](14-open-questions.md), Q38)? | A real missed event. The relay would be the one service the project runs: stateless, a device token and an end-to-end-encrypted payload, no household data |
 | **R4.2** One account in two households | Separated parents and a child with two homes ([Q43](14-open-questions.md)) | A real family with that case, and a design that keeps every read inside one household |
 | **R4.3** CalDAV for the phones | Is the read-only feed too limiting on the move ([05](05-module-calendar.md#later-two-way-for-the-phones))? | Entering events in WuselWall proves to be the reason they are not entered. Never Outlook two-way (P8) |
-| **R4.4** A school portal import | Does a family's school publish substitutions (Q20, FR-7.14)? | A school with a documented feed; manual entry stays the default |
+| **R4.4** A school portal import | Does a family's school publish substitutions (Q20, FR-7.14)? | A school with a documented feed; manual entry stays the default. *2026-10-22: the pilot's schools publish paper and closed platforms, so the sheet comes in by paste, proposal or photo instead ([24](24-school-import.md))* |
 | **R4.5** More languages | Further languages beyond the built DE/EN/FR/ES set, e.g. Italian for Swiss families, since the regions already reach the Gemeinde | A maintainer who keeps every app/server string and native permission prompt complete in that language (P9); family-guide translation stays a separate DE/EN decision |
 
 ## Not on the roadmap, and why

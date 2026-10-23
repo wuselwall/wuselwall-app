@@ -2901,7 +2901,7 @@ abstract class AppLocalizations {
   /// No description provided for @schoolSetupCardBody.
   ///
   /// In en, this message translates to:
-  /// **'Add the school, its bell times and the terms. Then the timetable can be entered.'**
+  /// **'Add the school. Bell times and subjects are proposed; then enter the timetable or read it in.'**
   String get schoolSetupCardBody;
 
   /// No description provided for @schoolSetupAction.
@@ -7744,6 +7744,348 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save term and continue'**
   String get schoolTermContinue;
+
+  /// No description provided for @schoolSetupFirstHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Bell times (from 8:00, 45 minutes) and a subject list are proposed. Both can be adjusted afterwards.'**
+  String get schoolSetupFirstHint;
+
+  /// No description provided for @schoolSetupCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Add school'**
+  String get schoolSetupCreate;
+
+  /// No description provided for @schoolNextSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'Next steps'**
+  String get schoolNextSteps;
+
+  /// No description provided for @schoolNextStepEnter.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter {name}’s timetable'**
+  String schoolNextStepEnter(String name);
+
+  /// No description provided for @schoolTermProposedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Proposed: the current school year. Adjust the name and dates if your school counts differently.'**
+  String get schoolTermProposedHint;
+
+  /// No description provided for @schoolYearName.
+  ///
+  /// In en, this message translates to:
+  /// **'School year {from}/{to}'**
+  String schoolYearName(String from, String to);
+
+  /// No description provided for @schoolCreateSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Add “{name}” as a subject'**
+  String schoolCreateSubject(String name);
+
+  /// No description provided for @schoolImportAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Read in…'**
+  String get schoolImportAction;
+
+  /// No description provided for @schoolImportFromText.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste as text'**
+  String get schoolImportFromText;
+
+  /// No description provided for @schoolImportFromPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan a photo'**
+  String get schoolImportFromPhoto;
+
+  /// No description provided for @schoolImportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Read in a timetable'**
+  String get schoolImportTitle;
+
+  /// No description provided for @schoolImportProposedBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Proposed by {assistant}'**
+  String schoolImportProposedBy(String assistant);
+
+  /// No description provided for @schoolImportLessons.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 lesson} other{{count} lessons}}'**
+  String schoolImportLessons(int count);
+
+  /// No description provided for @schoolImportTermNew.
+  ///
+  /// In en, this message translates to:
+  /// **'Term: {name} (will be created)'**
+  String schoolImportTermNew(String name);
+
+  /// No description provided for @schoolImportTermExisting.
+  ///
+  /// In en, this message translates to:
+  /// **'Term: {name}'**
+  String schoolImportTermExisting(String name);
+
+  /// No description provided for @schoolImportReplaces.
+  ///
+  /// In en, this message translates to:
+  /// **'Replaces {name}’s existing timetable ({count} lessons).'**
+  String schoolImportReplaces(String name, int count);
+
+  /// No description provided for @schoolImportNewSubjects.
+  ///
+  /// In en, this message translates to:
+  /// **'New subjects'**
+  String get schoolImportNewSubjects;
+
+  /// No description provided for @schoolImportCreateSubjects.
+  ///
+  /// In en, this message translates to:
+  /// **'Create the new subjects'**
+  String get schoolImportCreateSubjects;
+
+  /// No description provided for @schoolImportSkipNewSubjects.
+  ///
+  /// In en, this message translates to:
+  /// **'Lessons with new subjects are left out.'**
+  String get schoolImportSkipNewSubjects;
+
+  /// No description provided for @schoolImportWarnUnmatchedTimes.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 lesson matches no bell time and is left out.} other{{count} lessons match no bell time and are left out.}}'**
+  String schoolImportWarnUnmatchedTimes(int count);
+
+  /// No description provided for @schoolImportWarnPeriodsExtended.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{The bell times get 1 more lesson.} other{The bell times get {count} more lessons.}}'**
+  String schoolImportWarnPeriodsExtended(int count);
+
+  /// No description provided for @schoolImportWarnPeriodsDiffer.
+  ///
+  /// In en, this message translates to:
+  /// **'The bell times on the sheet differ from the school’s; the school’s stay.'**
+  String get schoolImportWarnPeriodsDiffer;
+
+  /// No description provided for @schoolImportWarnSchoolDiffers.
+  ///
+  /// In en, this message translates to:
+  /// **'The sheet names another school: {name}.'**
+  String schoolImportWarnSchoolDiffers(String name);
+
+  /// No description provided for @schoolImportApply.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get schoolImportApply;
+
+  /// No description provided for @schoolImportDiscard.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get schoolImportDiscard;
+
+  /// No description provided for @schoolImportApplied.
+  ///
+  /// In en, this message translates to:
+  /// **'Timetable applied.'**
+  String get schoolImportApplied;
+
+  /// No description provided for @schoolImportDiscarded.
+  ///
+  /// In en, this message translates to:
+  /// **'Proposal discarded.'**
+  String get schoolImportDiscarded;
+
+  /// No description provided for @schoolImportNoChild.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a child under Members first.'**
+  String get schoolImportNoChild;
+
+  /// No description provided for @schoolImportPasteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Read in from text'**
+  String get schoolImportPasteTitle;
+
+  /// No description provided for @schoolImportPasteIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Photograph the timetable and ask the assistant you trust to put it into the WuselWall format. Paste its answer here. You see a preview before anything is saved.'**
+  String get schoolImportPasteIntro;
+
+  /// No description provided for @schoolImportCopyPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy the instructions for the assistant'**
+  String get schoolImportCopyPrompt;
+
+  /// No description provided for @schoolImportPromptCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Instructions copied.'**
+  String get schoolImportPromptCopied;
+
+  /// No description provided for @schoolImportPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Please read the timetable in the photo and return it as JSON in the format below, with no other text. Days as Mo, Tu, We, Th, Fr; periods as a number (1 = first lesson) or with start and end times; subjects with the short code on the sheet and, if known, the full name. Leave empty cells out. For A and B weeks set week: a or b. After-school care goes under care.'**
+  String get schoolImportPrompt;
+
+  /// No description provided for @schoolImportPasteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste the answer here'**
+  String get schoolImportPasteHint;
+
+  /// No description provided for @schoolImportRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Read in'**
+  String get schoolImportRead;
+
+  /// No description provided for @schoolImportErrNotJson.
+  ///
+  /// In en, this message translates to:
+  /// **'That is no timetable in the WuselWall format. Paste the assistant’s whole answer.'**
+  String get schoolImportErrNotJson;
+
+  /// No description provided for @schoolImportErrNoLessons.
+  ///
+  /// In en, this message translates to:
+  /// **'The text contains no lessons.'**
+  String get schoolImportErrNoLessons;
+
+  /// No description provided for @schoolImportErrTooMany.
+  ///
+  /// In en, this message translates to:
+  /// **'That is more entries than a timetable can have.'**
+  String get schoolImportErrTooMany;
+
+  /// No description provided for @schoolImportErrBadLesson.
+  ///
+  /// In en, this message translates to:
+  /// **'A lesson has no day, no period or no subject.'**
+  String get schoolImportErrBadLesson;
+
+  /// No description provided for @schoolImportErrBadDay.
+  ///
+  /// In en, this message translates to:
+  /// **'“{value}” is no weekday.'**
+  String schoolImportErrBadDay(String value);
+
+  /// No description provided for @schoolImportErrBadTime.
+  ///
+  /// In en, this message translates to:
+  /// **'“{value}” is no time of day.'**
+  String schoolImportErrBadTime(String value);
+
+  /// No description provided for @schoolProposalTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Proposal from {assistant}'**
+  String schoolProposalTitle(String assistant);
+
+  /// No description provided for @schoolProposalSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Timetable for {name}, {count} lessons'**
+  String schoolProposalSummary(String name, int count);
+
+  /// No description provided for @schoolProposalReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Review'**
+  String get schoolProposalReview;
+
+  /// No description provided for @schoolProposalUnreadable.
+  ///
+  /// In en, this message translates to:
+  /// **'This proposal has a format this app version cannot read.'**
+  String get schoolProposalUnreadable;
+
+  /// No description provided for @schoolProposalErrInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'The proposal has an invalid format.'**
+  String get schoolProposalErrInvalid;
+
+  /// No description provided for @schoolProposalErrLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Five proposals are already waiting. Review or discard them first.'**
+  String get schoolProposalErrLimit;
+
+  /// No description provided for @schoolProposalErrGone.
+  ///
+  /// In en, this message translates to:
+  /// **'This proposal is already settled or has expired.'**
+  String get schoolProposalErrGone;
+
+  /// No description provided for @schoolScanIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Your server reads the photo; it never leaves your home. A straight, bright photo of the whole sheet works best.'**
+  String get schoolScanIntro;
+
+  /// No description provided for @schoolScanCamera.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo'**
+  String get schoolScanCamera;
+
+  /// No description provided for @schoolScanPick.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a photo'**
+  String get schoolScanPick;
+
+  /// No description provided for @schoolScanBusy.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading the sheet…'**
+  String get schoolScanBusy;
+
+  /// No description provided for @schoolScanNotConfigured.
+  ///
+  /// In en, this message translates to:
+  /// **'Your server has no text recognition set up. The guide’s “Extras for the server” says how to add it. Until then: read in from text.'**
+  String get schoolScanNotConfigured;
+
+  /// No description provided for @schoolScanNothingFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No timetable was found in the photo. Try a straighter, brighter photo, or read the plan in from text.'**
+  String get schoolScanNothingFound;
+
+  /// No description provided for @schoolScanTooLarge.
+  ///
+  /// In en, this message translates to:
+  /// **'The photo is too large (6 MB at most).'**
+  String get schoolScanTooLarge;
+
+  /// No description provided for @schoolScanFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The server’s text recognition did not answer. Try again later.'**
+  String get schoolScanFailed;
+
+  /// No description provided for @schoolScanWarnUnplaced.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 piece of text fit no cell. Compare the preview with the sheet.} other{{count} pieces of text fit no cell. Compare the preview with the sheet.}}'**
+  String schoolScanWarnUnplaced(int count);
 }
 
 class _AppLocalizationsDelegate

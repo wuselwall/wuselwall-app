@@ -6,7 +6,7 @@ Der Stundenplan zeigt jedem Kind seine Woche: welche Stunden, welche Fächer und
 
 ## Einrichten
 
-Beim ersten Mal tippst du auf **Schule einrichten**. Dazu gehören:
+Beim ersten Mal tippst du auf **Schule einrichten**, gibst Name und **Region** der Schule ein und tippst auf **Schule anlegen**. Mehr braucht es nicht: Klingelzeiten und eine Fächerliste werden vorgeschlagen, und unter **Nächste Schritte** steht für jedes Kind, dessen Stundenplan noch fehlt, ein Knopf zum Eintragen oder Einlesen. Auf der Schulseite findest du danach:
 
 - die **Schule** mit Name und **Region**: Land, Kanton oder Bundesland und auf Wunsch Bezirk oder Gemeinde. Die Region bestimmt die Feiertage und Ferien, siehe unten
 - die **Klingelzeiten**: Stunden und Pausen mit Beginn und Ende (**Stunde hinzufügen**, **Pause hinzufügen**)
@@ -48,9 +48,9 @@ Geht ein Kind an eine andere Schule als das andere, legt jede Schule an: Auf der
 
 ## Stundenplan eintragen
 
-Für jedes Kind tragt ihr den Plan für einen Zeitraum ein. Tippe auf **Stundenplan eingeben**. Fehlt für die angezeigte Woche ein Zeitraum, fragt die App zuerst danach: Name, **Von** und **Bis**. Die Daten müssen die angezeigte Woche enthalten; sonst steht das direkt beim Datum. Mit **Zeitraum speichern und weiter** öffnet sich direkt der Stundenplan-Editor.
+Für jedes Kind tragt ihr den Plan für einen Zeitraum ein. Tippe auf **Stundenplan eingeben**. Fehlt für die angezeigte Woche ein Zeitraum, schlägt die App das laufende Schuljahr vor, vom 1. August bis zum 31. Juli, mit Namen und Daten schon ausgefüllt. Passt es, tippst du nur auf **Zeitraum speichern und weiter**; zählt eure Schule anders, änderst du Name oder Daten vorher. Die Daten müssen die angezeigte Woche enthalten; sonst steht das direkt beim Datum.
 
-Oben siehst du das Kind, die Schule und den Zeitraum mit seinen Daten. Tippe ein Feld im Raster an und wähle das Fach. **Stundenplan speichern** bleibt am unteren Bildschirmrand sichtbar, auch wenn du durch den Plan scrollst.
+Oben siehst du das Kind, die Schule und den Zeitraum mit seinen Daten. Tippe ein Feld im Raster an und wähle das Fach. Fehlt ein Fach, tippst du sein Kürzel in die Suche und wählst **„…“ als Fach anlegen**: Das Fach entsteht sofort und steht im Feld; Farbe, Symbol und Sachen zum Mitnehmen ergänzt du später unter **Schule bearbeiten**. **Stundenplan speichern** bleibt am unteren Bildschirmrand sichtbar, auch wenn du durch den Plan scrollst.
 
 Wenn noch kein Plan vorliegt, zeigt die Ansicht einen Hinweis zum gewählten Kind und den Button **Stundenplan eingeben**.
 
@@ -60,6 +60,16 @@ Wenn noch kein Plan vorliegt, zeigt die Ansicht einen Hinweis zum gewählten Kin
 - Unter **Hort und Betreuung** legst du Zeilen an, zum Beispiel den Hort mit Tagen und Zeiten.
 - **Kopieren von…** übernimmt einen Plan von Geschwistern oder aus dem letzten Zeitraum. Das spart viel Tipperei.
 - Speichern mit **Stundenplan speichern**.
+
+## Stundenplan einlesen
+
+Statt jede Stunde zu tippen, kannst du den Plan vom Blatt einlesen lassen. Alle drei Wege enden auf derselben **Vorschau**: Sie zeigt das Kind, die Schule, den Zeitraum, das Raster, wie es gespeichert würde, die Fächer, die neu angelegt werden, und jeden Hinweis, zum Beispiel wenn ein Plan ersetzt wird oder mehr Stunden hat als die Klingelzeiten. Erst **Übernehmen** schreibt etwas; **Verwerfen** lässt alles, wie es war.
+
+**Aus Text, mit eurem KI-Assistenten.** Tippe bei einem Kind ohne Plan auf **Einlesen…** und dann auf **Aus Text einfügen** (oder im Stundenplan oben auf **Einlesen…**). **Anleitung für den Assistenten kopieren** legt einen Text in die Zwischenablage: Gib ihn zusammen mit einem Foto des Stundenplans dem Assistenten, dem ihr vertraut, zum Beispiel in dessen App auf dem Handy. Er antwortet in einem festen Format, das WuselWall lesen kann. Füge die Antwort in das Feld ein und tippe auf **Einlesen**. Das Foto geht dabei nur an den Assistenten eurer Wahl; WuselWall schickt nichts an niemanden.
+
+**Als Vorschlag eines Assistenten.** Ein Assistent, der mit WuselWall verbunden ist ([Apps und KI-Assistenten](/settings/shortcuts)), kann einen Stundenplan als **Vorschlag** hinterlegen. Er ändert dabei nichts: Auf **Heute** und über dem Stundenplan erscheint eine Karte „Vorschlag von Claude“ mit **Prüfen** und **Verwerfen**. **Prüfen** öffnet die Vorschau. Vorschläge verfallen nach 14 Tagen.
+
+**Als Foto, gelesen von eurem Server.** Hat euer Server die Texterkennung eingerichtet ([Extras für den Server](/server/extras#texterkennung)), tippst du auf **Einlesen…** und **Foto scannen**, nimmst das Blatt auf oder wählst ein Foto. Das Foto geht an euren eigenen Server und sonst nirgendwohin; der Server erkennt die Wochentage, die Stunden und die Fächer und zeigt die Vorschau. Ein gerades, helles Foto des ganzen Blatts klappt am besten. Textstücke, die zu keinem Feld passen, nennt die Vorschau, damit du mit dem Blatt vergleichst. Ohne Texterkennung sagt die App das und verweist auf das Einlesen aus Text.
 
 ## Ganze Tage bearbeiten
 
