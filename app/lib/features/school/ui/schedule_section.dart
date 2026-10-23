@@ -5,26 +5,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
-import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/empty_view.dart';
-import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
 import 'package:wuselwall/features/home/application/home_section.dart';
-import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/identity/ui/guardian_gate.dart';
 import 'package:wuselwall/features/school/application/school_providers.dart';
-import 'package:wuselwall/features/school/data/school_repository.dart';
 import 'package:wuselwall/features/school/domain/school_models.dart';
 import 'package:wuselwall/features/school/ui/lesson_sheet.dart';
-import 'package:wuselwall/features/school/ui/school_setup_page.dart';
+import 'package:wuselwall/features/school/ui/open_timetable_editor.dart';
+import 'package:wuselwall/features/school/ui/proposal_cards.dart';
 import 'package:wuselwall/features/school/ui/school_week_grid.dart';
-import 'package:wuselwall/features/school/ui/timetable_editor_page.dart';
+import 'package:wuselwall/features/school/ui/timetable_import_menu.dart';
 
 /// The adult home's Stundenplan (specs/15 "Views", specs/09): a child switcher, the
 /// week for the chosen child as a paper grid, and the line for tomorrow's things.
@@ -143,10 +140,12 @@ class _Children extends ConsumerWidget {
               ),
             ),
           ),
+          TimetableImportMenu(profileId: child.id),
         ];
         return ListView(
           padding: const EdgeInsets.all(16),
           children: [
+            const ProposalCards(),
             LayoutBuilder(
               builder: (context, constraints) {
                 final selection = Wrap(
@@ -319,70 +318,6 @@ class _Week extends ConsumerWidget {
   }
 }
 
-/// Opens the timetable editor for [profileId] on the term of [monday] (default: the
-/// week on screen), after the guardian check. With siblings at several schools, the
-/// household first says which school the timetable is for. A missing term is created
-/// inline before continuing to lesson entry.
-Future<void> openTimetableEditor(
-  BuildContext context,
-  WidgetRef ref, {
-  required SchoolData data,
-  required String profileId,
-  DateTime? monday,
-}) async {
-  if (!await ensureGuardian(context, ref) || !context.mounted) return;
-  String? schoolId = data.schools.firstOrNull?.id;
-  if (data.schools.length > 1) {
-    final picked = await showDialog<SchoolRecord>(
-      context: context,
-      builder: (dialogContext) => SimpleDialog(
-        title: Text(dialogContext.l10n.schoolsUiAskSchool),
-        children: [
-          for (final s in data.schools)
-            SimpleDialogOption(
-              onPressed: () => Navigator.of(dialogContext).pop(s),
-              child: Text(s.name),
-            ),
-        ],
-      ),
-    );
-    if (picked == null || !context.mounted) return;
-    schoolId = picked.id;
-  }
-  if (schoolId == null) {
-    unawaited(context.push(Routes.schoolSetup));
-    return;
-  }
-  final DateTime selectedDate = monday ?? ref.read(selectedWeekProvider);
-  var termId = data.termFor(selectedDate, schoolId: schoolId)?.id;
-  if (termId == null) {
-    final draft = await showDialog<TermRecord>(
-      context: context,
-      builder: (_) =>
-          SchoolTermDialog(schoolId: schoolId!, forTimetableOn: selectedDate),
-    );
-    if (draft == null || !context.mounted) return;
-    final result = await ref
-        .read(schoolRepositoryProvider)
-        .saveTerm(actor: ref.read(actingProfileProvider), term: draft);
-    if (!context.mounted) return;
-    switch (result) {
-      case Err(:final failure):
-        context.showFailure(failure);
-        return;
-      case Ok(:final value):
-        termId = value;
-        ref.invalidate(schoolDataProvider);
-    }
-  }
-  unawaited(
-    context.push(
-      Routes.timetableEdit,
-      extra: TimetableEditArgs(profileId: profileId, termId: termId),
-    ),
-  );
-}
-
 bool _sameDay(DateTime a, DateTime b) =>
     a.year == b.year && a.month == b.month && a.day == b.day;
 
@@ -470,6 +405,12 @@ class _EnterCard extends ConsumerWidget {
           monday: monday,
         );
       },
+      secondary: OutlinedButton.icon(
+        onPressed: () =>
+            showTimetableImportMenu(context, ref, profileId: child.id),
+        icon: const Icon(Icons.upload_file_outlined),
+        label: Text(l10n.schoolImportAction),
+      ),
     );
   }
 }
@@ -480,17 +421,22 @@ class _Card extends StatelessWidget {
     required this.body,
     required this.action,
     required this.onPressed,
+    this.secondary,
   });
 
   final String? title;
   final String body;
   final String action;
   final VoidCallback onPressed;
+  final Widget? secondary;
 
   @override
   Widget build(BuildContext context) => EmptyView(
     title: title,
     message: body,
-    actions: [FilledButton(onPressed: onPressed, child: Text(action))],
+    actions: [
+      FilledButton(onPressed: onPressed, child: Text(action)),
+      ?secondary,
+    ],
   );
 }

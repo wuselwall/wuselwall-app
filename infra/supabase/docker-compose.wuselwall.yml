@@ -137,6 +137,26 @@ services:
       MAIL_FROM: ${MAIL_FROM:-}
       MAIL_FROM_NAME: ${MAIL_FROM_NAME:-WuselWall}
       MAIL_LANGUAGE: ${MAIL_LANGUAGE:-de}
+      # The family's own text recognition for photographed timetables (specs/24, the
+      # timetable-scan function): the address of the optional ocr service below. Empty = the
+      # app offers the paste import only.
+      OCR_URL: ${OCR_URL:-}
+
+  # Optional (profile `ocr`): RapidOCR on the CPU, built from ./ocr, no public port, no internet
+  # once built. docs/server/extras.md "Texterkennung". Start with
+  #   docker compose --profile ocr up -d --build
+  # and set OCR_URL=http://ocr:9003/ocr in .env.
+  ocr:
+    build: ./ocr
+    image: wuselwall/ocr:local
+    profiles: [ocr]
+    restart: unless-stopped
+    mem_limit: 2g
+    healthcheck:
+      test: [CMD-SHELL, "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:9003/health')\""]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
   db:
     # Postgres 15, as supabase/config.toml ([db] major_version) and CI.

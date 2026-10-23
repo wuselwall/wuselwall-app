@@ -38,6 +38,8 @@ import 'package:wuselwall/features/meals/data/meals_repository.dart';
 import 'package:wuselwall/features/region/data/region_repository.dart';
 import 'package:wuselwall/features/reminders/application/reminder_providers.dart';
 import 'package:wuselwall/features/reminders/data/reminder_dismissal_store.dart';
+import 'package:wuselwall/features/school/data/proposals_repository.dart';
+import 'package:wuselwall/features/school/data/scan_repository.dart';
 import 'package:wuselwall/features/school/data/school_repository.dart';
 import 'package:wuselwall/features/settings/application/settings_view.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
@@ -738,6 +740,8 @@ Future<ProviderContainer> pumpApp(
   FakeTasksApi? tasks,
   FakeMealsRepository? meals,
   FakeSchoolRepository? school,
+  FakeProposalsRepository? proposals,
+  FakeScanRepository? scan,
   FakeGettingStartedRepository? gettingStarted,
   FakeNoticesRepository? notices,
   FakeRegionRepository? region,
@@ -775,6 +779,12 @@ Future<ProviderContainer> pumpApp(
       mealsRepositoryProvider.overrideWithValue(meals ?? FakeMealsRepository()),
       schoolRepositoryProvider.overrideWithValue(
         school ?? FakeSchoolRepository(),
+      ),
+      proposalsRepositoryProvider.overrideWithValue(
+        proposals ?? FakeProposalsRepository(),
+      ),
+      scanRepositoryProvider.overrideWithValue(
+        scan ?? FakeScanRepository(failure: const NetworkFailure()),
       ),
       regionRepositoryProvider.overrideWithValue(
         region ?? FakeRegionRepository(),

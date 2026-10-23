@@ -507,13 +507,99 @@ Deno.test("categories: the MCP catalog matches the app's names in all four langu
   }
 });
 
-Deno.test("tools: read-only, sorted, each with a schema", () => {
+Deno.test("tools: read-only but the proposal, sorted, each with a schema", () => {
   assertEquals(TOOLS.map((t) => t.name), [...TOOLS.map((t) => t.name)].sort());
   for (const t of TOOLS) {
-    assertEquals(t.annotations.readOnlyHint, true);
+    assertEquals(t.annotations.readOnlyHint, t.name !== "propose_timetable");
     assertEquals(t.annotations.destructiveHint, false);
     assertEquals((t.inputSchema as Any).type, "object");
   }
+});
+
+Deno.test("propose_timetable: stores the payload for the named child, nothing else", async () => {
+  const stored: unknown[] = [];
+  const server = familyServer(
+    (_parts, from, days) => Promise.resolve(rows(from ?? TODAY, days)),
+    () => "de",
+    "test",
+    (kind, payload, summary, clientKey) => {
+      stored.push({ kind, payload, summary, clientKey });
+      return Promise.resolve({ id: "p1", created: true });
+    },
+  );
+  const lessons = [
+    { day: "Mo", period: 1, subject: "Ma" },
+    { day: 2, starts: "08:50", ends: "09:35", subject: "D", name: "Deutsch" },
+  ];
+  const out = await server.callTool("propose_timetable", {
+    member: "emma",
+    lessons,
+    class: "3b",
+    client_key: "claude-1",
+  });
+  assert(!out.isError);
+  assertEquals(
+    out.text,
+    "Vorschlag gespeichert: Stundenplan für Emma, 2 Stunden. Eine erziehungsberechtigte Person prüft ihn in WuselWall unter Stundenplan und übernimmt oder verwirft ihn.",
+  );
+  assertEquals(out.structured, {
+    proposal_id: "p1",
+    created: true,
+    member: { id: "emma", name: "Emma" },
+    lessons: 2,
+  });
+  assertEquals(stored, [{
+    kind: "timetable",
+    payload: {
+      format: "wuselwall-timetable/1",
+      member: "Emma",
+      lessons,
+      class: "3b",
+    },
+    summary: "Vorschlag gespeichert: Stundenplan für Emma, 2 Stunden",
+    clientKey: "claude-1",
+  }]);
+});
+
+Deno.test("propose_timetable: the errors an assistant can act on", async () => {
+  const refusing = (hint: string) =>
+    familyServer(
+      (_parts, from, days) => Promise.resolve(rows(from ?? TODAY, days)),
+      () => "en",
+      "test",
+      () => Promise.reject({ code: "22023", hint }),
+    );
+  const lessons = [{ day: 1, period: 1, subject: "Ma" }];
+  const who = await refusing("proposal_invalid").callTool("propose_timetable", {
+    member: "Oma",
+    lessons,
+  });
+  assert(who.isError);
+  assert(who.text.startsWith("Nobody in the family is called"));
+  const none = await refusing("proposal_invalid").callTool(
+    "propose_timetable",
+    { member: "Emma", lessons: [] },
+  );
+  assert(none.isError);
+  assertEquals(none.text, "lessons is missing or empty.");
+  const bad = await refusing("proposal_invalid").callTool("propose_timetable", {
+    member: "Emma",
+    lessons,
+  });
+  assert(bad.isError);
+  assert(bad.text.startsWith("The proposal has an invalid format"));
+  const full = await refusing("proposal_limit").callTool("propose_timetable", {
+    member: "Emma",
+    lessons,
+  });
+  assert(full.isError);
+  assert(full.text.startsWith("Five proposals are already waiting"));
+  const old = await serverFor("en").server.callTool("propose_timetable", {
+    member: "Emma",
+    lessons,
+  });
+  assert(old.isError);
+  assertEquals(old.text, "This server does not take proposals yet.");
 });
 
 Deno.test("agenda: appointments with names, tasks due with their assignee", async () => {
@@ -709,9 +795,33 @@ Deno.test("presence: the usual week's places of the day, none on a public holida
           profile_id: "thomas",
           anchor: null,
           slots: [
-            { week: 0, weekday: 4, position: 1, state: "working", label: "Büro", starts: "08:00", ends: "12:00" },
-            { week: 0, weekday: 4, position: 2, state: "home_office", label: null, starts: "13:00", ends: "17:00" },
-            { week: 0, weekday: 5, position: 1, state: "home_office", label: null, starts: null, ends: null },
+            {
+              week: 0,
+              weekday: 4,
+              position: 1,
+              state: "working",
+              label: "Büro",
+              starts: "08:00",
+              ends: "12:00",
+            },
+            {
+              week: 0,
+              weekday: 4,
+              position: 2,
+              state: "home_office",
+              label: null,
+              starts: "13:00",
+              ends: "17:00",
+            },
+            {
+              week: 0,
+              weekday: 5,
+              position: 1,
+              state: "home_office",
+              label: null,
+              starts: null,
+              ends: null,
+            },
           ],
         }],
         school: {
@@ -733,7 +843,11 @@ Deno.test("presence: the usual week's places of the day, none on a public holida
     () => "de",
     "test",
   );
-  const r = await server.callTool("get_presence", { from: TODAY, to: "2026-10-16", member: "Thomas" });
+  const r = await server.callTool("get_presence", {
+    from: TODAY,
+    to: "2026-10-16",
+    member: "Thomas",
+  });
   assertEquals(
     r.text,
     "Do., 15.10.: Thomas Büro 08:00–12:00 (üblicherweise); Thomas im Homeoffice 13:00–17:00 (üblicherweise)\n" +

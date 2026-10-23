@@ -1,4 +1,5 @@
-// POST /functions/v1/mcp → the family's MCP server, family:read (specs/12 "Part 2", FR-6.1).
+// POST /functions/v1/mcp → the family's MCP server, family:read (specs/12 "Part 2", FR-6.1),
+// plus the one write of specs/24: a proposal (api.mcp_propose), reviewed by a guardian in the app.
 //
 // Streamable HTTP, stateless: every JSON-RPC message is its own POST and is answered with one
 // JSON object (_shared/mcp.ts); the tools are _shared/mcp_family.ts. GET and DELETE are 405: no
@@ -11,14 +12,23 @@
 // api.mcp_context starts from the key, reads as its holder only and returns only the key's
 // household (migrations/20261016120000_assistant_keys.sql). The key is never logged.
 import { serviceClient } from "../_shared/client.ts";
-import { handle, INTERNAL_ERROR, PARSE_ERROR, UNAUTHORIZED } from "../_shared/mcp.ts";
+import {
+  handle,
+  INTERNAL_ERROR,
+  PARSE_ERROR,
+  UNAUTHORIZED,
+} from "../_shared/mcp.ts";
 import { familyServer, type McpContext } from "../_shared/mcp_family.ts";
 import { pickLang } from "../_shared/shortcuts.ts";
 
 const VERSION = "1.0.0";
 const KEY = /^wwa_[A-Za-z0-9_-]{20,200}$/;
 
-function reply(status: number, body: unknown | null, headers: Record<string, string> = {}): Response {
+function reply(
+  status: number,
+  body: unknown | null,
+  headers: Record<string, string> = {},
+): Response {
   return new Response(body === null ? null : JSON.stringify(body), {
     status,
     headers: {
@@ -37,7 +47,10 @@ function rpcError(code: number, message: string) {
 function unauthorized(): Response {
   return reply(
     401,
-    rpcError(UNAUTHORIZED, "A valid WuselWall assistant key is required (Authorization: Bearer wwa_…)."),
+    rpcError(
+      UNAUTHORIZED,
+      "A valid WuselWall assistant key is required (Authorization: Bearer wwa_…).",
+    ),
     {
       "WWW-Authenticate": 'Bearer realm="WuselWall", error="invalid_token"',
     },
@@ -51,7 +64,9 @@ Deno.serve(async (req: Request): Promise<Response> => {
   if (req.headers.get("Origin") !== null) {
     return reply(403, rpcError(-32000, "Browser origins are not accepted."));
   }
-  const match = /^Bearer\s+(\S+)$/i.exec(req.headers.get("Authorization") ?? "");
+  const match = /^Bearer\s+(\S+)$/i.exec(
+    req.headers.get("Authorization") ?? "",
+  );
   const key = match && KEY.test(match[1]) ? match[1] : null;
   if (key === null) return unauthorized();
 
@@ -63,7 +78,11 @@ Deno.serve(async (req: Request): Promise<Response> => {
   }
 
   const acceptLanguage = req.headers.get("Accept-Language");
-  const read = async (parts: string[], from: string | null, days: number): Promise<McpContext> => {
+  const read = async (
+    parts: string[],
+    from: string | null,
+    days: number,
+  ): Promise<McpContext> => {
     const { data, error } = await serviceClient().rpc("mcp_context", {
       p_token: key,
       p_parts: parts,
@@ -75,6 +94,26 @@ Deno.serve(async (req: Request): Promise<Response> => {
       throw error;
     }
     return data as McpContext;
+  };
+
+  const propose = async (
+    kind: string,
+    payload: unknown,
+    summary: string | null,
+    clientKey: string | null,
+  ) => {
+    const { data, error } = await serviceClient().rpc("mcp_propose", {
+      p_token: key,
+      p_kind: kind,
+      p_payload: payload,
+      p_summary: summary,
+      p_client_key: clientKey,
+    });
+    if (error) {
+      if (error.hint === "shortcut_token_invalid") throw new KeyRefused();
+      throw error;
+    }
+    return data as { id: string; created: boolean };
   };
 
   try {
@@ -89,15 +128,24 @@ Deno.serve(async (req: Request): Promise<Response> => {
       ) => (parts.length === 0 && from === null && days === 1
         ? Promise.resolve(base)
         : read(parts, from, days)),
-      (locale) => pickLang(undefined, acceptLanguage, locale ?? base.household.locale),
+      (locale) =>
+        pickLang(undefined, acceptLanguage, locale ?? base.household.locale),
       VERSION,
+      propose,
     );
     const out = await handle(body, (name) => req.headers.get(name), server);
     return reply(out.status, out.body, out.headers);
   } catch (err) {
     if (err instanceof KeyRefused) return unauthorized();
-    console.error("mcp failed with", (err as { code?: unknown } | null)?.code ?? "no code");
+    console.error(
+      "mcp failed with",
+      (err as { code?: unknown } | null)?.code ?? "no code",
+    );
     const id = (body as { id?: unknown } | null)?.id ?? null;
-    return reply(500, { jsonrpc: "2.0", id, error: { code: INTERNAL_ERROR, message: "Internal error" } });
+    return reply(500, {
+      jsonrpc: "2.0",
+      id,
+      error: { code: INTERNAL_ERROR, message: "Internal error" },
+    });
   }
 });

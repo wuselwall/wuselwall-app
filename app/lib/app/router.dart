@@ -32,6 +32,7 @@ import 'package:wuselwall/features/meals/ui/recipes_page.dart';
 import 'package:wuselwall/features/reminders/ui/reminders_page.dart';
 import 'package:wuselwall/features/school/ui/school_setup_page.dart';
 import 'package:wuselwall/features/school/ui/timetable_editor_page.dart';
+import 'package:wuselwall/features/school/ui/timetable_import_page.dart';
 import 'package:wuselwall/features/settings/ui/household_settings_page.dart';
 import 'package:wuselwall/features/settings/ui/settings_page.dart';
 import 'package:wuselwall/features/setup/ui/email_code_page.dart';
@@ -80,6 +81,7 @@ abstract final class Routes {
   static const recipeView = '/meals/recipes/view';
   static const schoolSetup = '/school/setup';
   static const timetableEdit = '/school/timetable';
+  static const timetableImport = '/school/import';
   static const feedTokens = '/settings/feeds';
   static const externalCalendars = '/settings/calendars';
   static const externalCalendarNew = '/settings/calendars/new';
@@ -323,6 +325,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: Routes.timetableEdit,
         builder: (_, state) =>
             TimetableEditorPage(args: state.extra as TimetableEditArgs?),
+      ),
+      GoRoute(
+        path: Routes.timetableImport,
+        builder: (_, state) =>
+            TimetableImportPage(args: state.extra as TimetableImportArgs?),
       ),
     ],
   );

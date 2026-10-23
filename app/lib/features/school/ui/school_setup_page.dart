@@ -12,12 +12,16 @@ import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
+import 'package:wuselwall/features/identity/application/device_providers.dart';
+import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/region/ui/holiday_import_sheet.dart';
 import 'package:wuselwall/features/region/ui/region_field.dart';
 import 'package:wuselwall/features/school/application/school_providers.dart';
 import 'package:wuselwall/features/school/data/school_repository.dart';
 import 'package:wuselwall/features/school/domain/school_models.dart';
+import 'package:wuselwall/features/school/ui/open_timetable_editor.dart';
 import 'package:wuselwall/features/school/ui/school_icons.dart';
+import 'package:wuselwall/features/school/ui/timetable_import_menu.dart';
 import 'package:wuselwall/features/settings/application/household_settings_providers.dart';
 import 'package:wuselwall/features/settings/data/household_settings_repository.dart';
 import 'package:wuselwall/features/settings/domain/household_setting.dart';
@@ -107,9 +111,12 @@ class _SchoolSetupPageState extends ConsumerState<SchoolSetupPage> {
                 ? null
                 : d.schools.where((s) => s.id == _selectedId).firstOrNull ??
                       d.schools.firstOrNull;
+            final first = d.schools.isEmpty;
             return ListView(
               padding: const EdgeInsets.all(16),
               children: [
+                if (school != null && !_adding)
+                  _NextSteps(data: d, school: school),
                 if (d.schools.length > 1)
                   _SchoolSwitcher(
                     schools: d.schools,
@@ -142,6 +149,21 @@ class _SchoolSetupPageState extends ConsumerState<SchoolSetupPage> {
                     _selectedId = id;
                   }),
                 ),
+                if (school == null) ...[
+                  // The first school, or another one: name and region are all it takes.
+                  // Bell times and subjects come as starter content (specs/21).
+                  Text(l10n.schoolSetupFirstHint),
+                  const SizedBox(height: 12),
+                  FilledButton(
+                    key: const ValueKey('school-create'),
+                    onPressed:
+                        _saving || !(_formKey.currentState?.isValid ?? false)
+                        ? null
+                        : _save,
+                    child: Text(l10n.schoolSetupCreate),
+                  ),
+                  if (first) const SizedBox(height: 24),
+                ],
                 if (school != null) ...[
                   _BellTimes(
                     key: _bellsKey,
@@ -152,12 +174,66 @@ class _SchoolSetupPageState extends ConsumerState<SchoolSetupPage> {
                   _Terms(data: d, school: school),
                   _Holidays(data: d, school: school),
                 ],
-                _Subjects(data: d),
+                if (!first) _Subjects(data: d),
               ],
             );
           },
         ),
       ),
+    );
+  }
+}
+
+/// What comes after the school exists (specs/24 "Fewer required facts"): the children
+/// without a timetable in the current term, each one tap from the editor or the import.
+/// Nothing is shown when every child has one.
+class _NextSteps extends ConsumerWidget {
+  const _NextSteps({required this.data, required this.school});
+
+  final SchoolData data;
+  final SchoolRecord school;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final members = ref.watch(membersProvider).value ?? const <Member>[];
+    final today = DateTime.now();
+    final term = data.termFor(today, schoolId: school.id);
+    final kids = [
+      for (final m in members)
+        if (m.active &&
+            m.isChild &&
+            (term == null || data.timetableOf(m.id, term.id) == null) &&
+            !data.timetables.any(
+              (t) => t.profileId == m.id && t.schoolId == school.id,
+            ))
+          m,
+    ];
+    if (kids.isEmpty) return const SizedBox.shrink();
+    return _Section(
+      title: l10n.schoolNextSteps,
+      children: [
+        for (final k in kids)
+          Card(
+            child: ListTile(
+              key: ValueKey('next-step-${k.id}'),
+              leading: const Icon(Icons.edit_calendar_outlined),
+              title: Text(l10n.schoolNextStepEnter(k.displayName)),
+              trailing: TextButton(
+                onPressed: () =>
+                    showTimetableImportMenu(context, ref, profileId: k.id),
+                child: Text(l10n.schoolImportAction),
+              ),
+              onTap: () => openTimetableEditor(
+                context,
+                ref,
+                data: data,
+                profileId: k.id,
+                monday: today,
+              ),
+            ),
+          ),
+      ],
     );
   }
 }
@@ -646,6 +722,7 @@ class SchoolTermDialog extends StatefulWidget {
     required this.schoolId,
     this.term,
     this.forTimetableOn,
+    this.proposed,
     super.key,
   });
 
@@ -655,24 +732,30 @@ class SchoolTermDialog extends StatefulWidget {
   /// The Monday of the week whose timetable is about to be entered.
   final DateTime? forTimetableOn;
 
+  /// A prefilled new term (the school year around the week, specs/24), so one tap
+  /// continues. Ignored when [term] is set.
+  final TermRecord? proposed;
+
   @override
   State<SchoolTermDialog> createState() => _SchoolTermDialogState();
 }
 
 class _SchoolTermDialogState extends State<SchoolTermDialog> {
-  late final _name = TextEditingController(text: widget.term?.name ?? '');
+  TermRecord? get _given => widget.term ?? widget.proposed;
+
+  late final _name = TextEditingController(text: _given?.name ?? '');
   late final _anchor = TextEditingController(
     text: widget.term?.abAnchorWeek?.toString() ?? '',
   );
   late DateTime _from =
-      widget.term?.startsOn ??
+      _given?.startsOn ??
       widget.forTimetableOn ??
       DateUtils.dateOnly(DateTime.now());
 
-  /// Null until chosen: a term is a range, never silently one day long.
-  late DateTime? _to = widget.term?.endsOn;
+  /// Null until chosen or proposed: a term is a range, never silently one day long.
+  late DateTime? _to = _given?.endsOn;
   late bool _abWeeks = widget.term?.abAnchorWeek != null;
-  late bool _current = widget.term?.isCurrent ?? false;
+  late bool _current = _given?.isCurrent ?? false;
 
   @override
   void dispose() {
@@ -760,7 +843,11 @@ class _SchoolTermDialogState extends State<SchoolTermDialog> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             if (monday != null) ...[
-              Text(l10n.schoolTimetableNeedsTerm),
+              Text(
+                widget.proposed != null && widget.term == null
+                    ? l10n.schoolTermProposedHint
+                    : l10n.schoolTimetableNeedsTerm,
+              ),
               const SizedBox(height: Tokens.space4),
             ],
             TextField(

@@ -58,7 +58,7 @@ Revócala si pierdes el móvil o deja de ser necesaria. El efecto es inmediato y
 
 ## Asistentes de IA y MCP {#ai-assistants-mcp}
 
-Un asistente compatible con **Model Context Protocol** puede consultar semana, citas, tareas, comidas, compra, puntos, recetas, horarios y presencia. **No puede añadir, modificar ni eliminar**.
+Un asistente compatible con **Model Context Protocol** puede consultar semana, citas, tareas, comidas, compra, puntos, recetas, horarios y presencia. **No puede añadir, modificar ni eliminar**. Lo único que puede entregar es una **propuesta**: un horario leído de una hoja. Aparece como tarjeta en **Hoy**, y solo un adulto responsable la aplica o la descarta, ver [Importar un horario](/es/school/#reading-in).
 
 Crea una clave de tipo **Asistente de IA**, reservada a adultos, en lugar de automatización.
 

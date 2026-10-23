@@ -15,6 +15,7 @@ import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/school/application/school_providers.dart';
 import 'package:wuselwall/features/school/data/school_repository.dart';
 import 'package:wuselwall/features/school/domain/school_models.dart';
+import 'package:wuselwall/features/school/domain/timetable_import.dart';
 import 'package:wuselwall/features/school/ui/school_icons.dart';
 
 /// What the editor opens on: a child and a term (specs/15 "Maintaining it").
@@ -308,6 +309,10 @@ class _EditorBodyState extends ConsumerState<_EditorBody> {
   late final List<_CareBlock> _care = _careFromLessons();
   bool _busy = false;
 
+  /// Subjects created from a cell while editing (specs/24 "Fewer required facts"),
+  /// until the refetched data carries them.
+  final List<SubjectRecord> _created = [];
+
   static String _key(LessonRecord l) =>
       '${l.weekday}:${l.periodIndex}:${l.weekParity}';
 
@@ -340,7 +345,45 @@ class _EditorBodyState extends ConsumerState<_EditorBody> {
     super.dispose();
   }
 
-  List<SubjectRecord> get _subjects => widget.data.subjects;
+  List<SubjectRecord> get _subjects {
+    final ids = {for (final s in widget.data.subjects) s.id};
+    return [
+      ...widget.data.subjects,
+      for (final s in _created)
+        if (!ids.contains(s.id)) s,
+    ];
+  }
+
+  /// Creates a subject named as typed in the cell: name and short name from the text,
+  /// the least used tint. Returns it with its id, or null when the server refused.
+  Future<SubjectRecord?> _createSubject(String text) async {
+    final name = text.trim();
+    final record = SubjectRecord(
+      id: '',
+      name: name,
+      shortName: name.length <= 12 ? name : name.substring(0, 12),
+      tint: nextSubjectTint(_subjects, 0),
+    );
+    final result = await ref
+        .read(schoolRepositoryProvider)
+        .saveSubject(actor: ref.read(actingProfileProvider), subject: record);
+    if (!mounted) return null;
+    switch (result) {
+      case Err(:final failure):
+        context.showFailure(failure);
+        return null;
+      case Ok(:final value):
+        final created = SubjectRecord(
+          id: value,
+          name: record.name,
+          shortName: record.shortName,
+          tint: record.tint,
+        );
+        setState(() => _created.add(created));
+        ref.invalidate(schoolDataProvider);
+        return created;
+    }
+  }
 
   SubjectRecord? _subjectOf(String? id) =>
       _subjects.where((s) => s.id == id).firstOrNull;
@@ -488,6 +531,7 @@ class _EditorBodyState extends ConsumerState<_EditorBody> {
           for (final p in const ['all', 'a', 'b'])
             p: _cells['$weekday:$period:$p'],
         },
+        onCreateSubject: _createSubject,
       ),
     );
     if (result == null) return;
@@ -941,6 +985,7 @@ class _CellDialog extends StatefulWidget {
     required this.weekday,
     required this.period,
     required this.existing,
+    required this.onCreateSubject,
   });
 
   final List<SubjectRecord> subjects;
@@ -948,6 +993,9 @@ class _CellDialog extends StatefulWidget {
   final int weekday;
   final int period;
   final Map<String, _Draft?> existing;
+
+  /// Creates the subject typed into the search and returns it, or null on failure.
+  final Future<SubjectRecord?> Function(String name) onCreateSubject;
 
   @override
   State<_CellDialog> createState() => _CellDialogState();
@@ -962,7 +1010,31 @@ class _CellDialogState extends State<_CellDialog> {
   late final _room = TextEditingController();
   late final _teacher = TextEditingController();
 
+  /// Subjects created from this dialog, shown with the rest.
+  final List<SubjectRecord> _created = [];
+  bool _creating = false;
+  late final _search = TextEditingController();
+
   _Draft? get _current => widget.existing[_parity];
+
+  List<SubjectRecord> get _all => [...widget.subjects, ..._created];
+
+  Future<void> _create() async {
+    final text = _filter.trim();
+    if (text.isEmpty || _creating) return;
+    setState(() => _creating = true);
+    final created = await widget.onCreateSubject(text);
+    if (!mounted) return;
+    setState(() {
+      _creating = false;
+      if (created != null) {
+        _created.add(created);
+        _subjectId = created.id;
+        _filter = '';
+        _search.clear();
+      }
+    });
+  }
 
   @override
   void initState() {
@@ -977,6 +1049,7 @@ class _CellDialogState extends State<_CellDialog> {
   void dispose() {
     _room.dispose();
     _teacher.dispose();
+    _search.dispose();
     super.dispose();
   }
 
@@ -984,7 +1057,7 @@ class _CellDialogState extends State<_CellDialog> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final q = _filter.trim().toLowerCase();
-    final subjects = widget.subjects
+    final subjects = _all
         .where(
           (s) =>
               q.isEmpty ||
@@ -992,6 +1065,13 @@ class _CellDialogState extends State<_CellDialog> {
               s.shortName.toLowerCase().contains(q),
         )
         .toList();
+    // Nothing matches what was typed exactly: offer to create it (specs/24).
+    final folded = foldText(_filter);
+    final canCreate =
+        folded.isNotEmpty &&
+        !_all.any(
+          (s) => foldText(s.shortName) == folded || foldText(s.name) == folded,
+        );
     return AlertDialog(
       title: Text(l10n.schoolPickSubject),
       content: SingleChildScrollView(
@@ -1018,12 +1098,17 @@ class _CellDialogState extends State<_CellDialog> {
                 }),
               ),
             TextField(
+              key: const ValueKey('cell-subject-search'),
               autofocus: true,
+              controller: _search,
               decoration: InputDecoration(
                 labelText: l10n.schoolSearchSubject,
                 prefixIcon: const Icon(Icons.search),
               ),
               onChanged: (v) => setState(() => _filter = v),
+              onSubmitted: (_) {
+                if (subjects.isEmpty && canCreate) _create();
+              },
             ),
             const SizedBox(height: 8),
             Wrap(
@@ -1036,6 +1121,19 @@ class _CellDialogState extends State<_CellDialog> {
                     label: Text(s.shortName),
                     selected: _subjectId == s.id,
                     onSelected: (_) => setState(() => _subjectId = s.id),
+                  ),
+                if (canCreate)
+                  ActionChip(
+                    key: const ValueKey('cell-create-subject'),
+                    avatar: _creating
+                        ? const SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.add, size: 18),
+                    label: Text(l10n.schoolCreateSubject(_filter.trim())),
+                    onPressed: _creating ? null : _create,
                   ),
               ],
             ),

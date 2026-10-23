@@ -349,7 +349,9 @@ reminders (Q47), the QR scanner without ML Kit (Q49), "Alle Termine" on the week
 ## M3 — Depth
 
 - Substitution import from a school portal, *if* either school ever publishes one
-- MCP write scopes with consent and grant management
+- MCP write scopes with consent and grant management (*2026-10-22: the first assistant
+  write is a proposal, not a change: [24](24-school-import.md); the timetable itself comes in
+  by paste, proposal or photo since then*)
 - Recipe import from URL
 - Family goal bar and ageing bonuses on open tasks
 - CalDAV for two-way phone editing, if read-only proves limiting

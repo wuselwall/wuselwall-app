@@ -6,7 +6,7 @@ The timetable shows each child their week: which lessons, which subjects and wha
 
 ## Setting up
 
-The first time, tap **Set up school**. This covers:
+The first time, tap **Set up school**, enter the school's name and **region** and tap **Add school**. That is all it takes: bell times and a subject list are proposed, and **Next steps** lists every child whose timetable is still missing, with a button to enter it or read it in. Afterwards the school page holds:
 
 - the **school** with its name and **region**: country, then canton or state, and if you like district or municipality. The region decides the public and school holidays, see below
 - the **bell times**: lessons and breaks with start and end (**Add lesson**, **Add break**)
@@ -48,9 +48,9 @@ If your children go to different schools, add each school: on the school page ta
 
 ## Entering a timetable
 
-For each child, enter the timetable for a term. Tap **Enter timetable**. If no term covers the week shown, the app first asks for that term: its name, **From** and **To**. The dates must include the week shown; the dialog says so next to the date if they do not. **Save term and continue** takes you straight to the timetable editor.
+For each child, enter the timetable for a term. Tap **Enter timetable**. If no term covers the week shown, the app proposes the current school year, 1 August to 31 July, with its name and dates already filled in. If that fits, tap **Save term and continue**; if your school counts differently, change the name or the dates first. The dates must include the week shown; the dialog says so next to the date if they do not.
 
-At the top you can see the child, school and term with its dates. Tap a cell in the grid and choose the subject. **Save timetable** stays visible at the bottom of the screen as you scroll through the timetable.
+At the top you can see the child, school and term with its dates. Tap a cell in the grid and choose the subject. If a subject is missing, type its short code into the search and choose **Add “…” as a subject**: the subject exists at once and fills the cell; colour, icon and things to bring come later under **Edit school**. **Save timetable** stays visible at the bottom of the screen as you scroll through the timetable.
 
 When no timetable exists yet, the view shows a message about the selected child and the **Enter timetable** button.
 
@@ -60,6 +60,16 @@ When no timetable exists yet, the view shows a message about the selected child 
 - Under **After school care** add rows, for example the after-school club with its days and times.
 - **Copy from…** takes over a timetable from a sibling or from the last term. That saves a lot of typing.
 - Save with **Save timetable**.
+
+## Reading in a timetable
+
+Instead of typing every lesson, you can have the sheet read in. All three ways end on the same **preview**: it shows the child, the school, the term, the grid as it would be saved, the subjects that will be created, and every note, for example when a timetable is replaced or has more lessons than the bell times. Only **Apply** writes anything; **Discard** leaves everything as it was.
+
+**From text, with your AI assistant.** For a child without a timetable, tap **Read in…** and then **Paste as text** (or **Read in…** at the top of the timetable). **Copy the instructions for the assistant** puts a text on the clipboard: give it to the assistant you trust together with a photo of the timetable, for example in its app on your phone. It answers in a fixed format WuselWall can read. Paste the answer into the field and tap **Read in**. The photo goes only to the assistant of your choice; WuselWall sends nothing to anyone.
+
+**As a proposal from an assistant.** An assistant connected to WuselWall ([Apps and AI assistants](/en/settings/shortcuts)) can hand in a timetable as a **proposal**. It changes nothing: a card “Proposal from Claude” with **Review** and **Discard** appears on **Today** and above the timetable. **Review** opens the preview. Proposals expire after 14 days.
+
+**As a photo, read by your server.** If your server has text recognition set up ([Extras for the server](/en/server/extras#text-recognition)), tap **Read in…** and **Scan a photo**, take the sheet or choose a photo. The photo goes to your own server and nowhere else; the server recognises the weekdays, the periods and the subjects and shows the preview. A straight, bright photo of the whole sheet works best. The preview names the pieces of text that fit no cell, so you can compare with the sheet. Without text recognition the app says so and points to reading in from text.
 
 ## Editing whole days
 

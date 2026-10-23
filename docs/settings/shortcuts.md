@@ -71,7 +71,7 @@ Erziehungsberechtigte sehen und sperren alle Schlüssel der Familie, alle andere
 
 ## KI-Assistenten (MCP)
 
-Ein KI-Assistent, der **MCP** spricht (das Model Context Protocol, zum Beispiel Claude), kann mit einem eigenen Schlüssel in WuselWall **nachlesen**: „Was steht diese Woche an?“, „Was gibt es am Donnerstag zu essen?“, „Wann hat Emma morgen Schluss?“. Er kann **nichts eintragen, ändern oder löschen**.
+Ein KI-Assistent, der **MCP** spricht (das Model Context Protocol, zum Beispiel Claude), kann mit einem eigenen Schlüssel in WuselWall **nachlesen**: „Was steht diese Woche an?“, „Was gibt es am Donnerstag zu essen?“, „Wann hat Emma morgen Schluss?“. Er kann **nichts eintragen, ändern oder löschen**. Das Einzige, was er abgeben kann, ist ein **Vorschlag**: einen Stundenplan, den er von einem Blatt gelesen hat. Der landet als Karte auf **Heute**, und erst eine erziehungsberechtigte Person übernimmt oder verwirft ihn, siehe [Stundenplan einlesen](/school/#stundenplan-einlesen).
 
 Wähle beim Erstellen **KI-Assistent** statt **Automation**. Einen Schlüssel für einen Assistenten bekommen nur Erwachsene. Er erscheint in der Liste unter **KI-Assistenten** und wird gesperrt wie jeder andere Schlüssel.
 

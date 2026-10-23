@@ -1608,7 +1608,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get schoolSetupCardBody =>
-      'Add the school, its bell times and the terms. Then the timetable can be entered.';
+      'Add the school. Bell times and subjects are proposed; then enter the timetable or read it in.';
 
   @override
   String get schoolSetupAction => 'Set up school';
@@ -4463,4 +4463,249 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get schoolTermContinue => 'Save term and continue';
+
+  @override
+  String get schoolSetupFirstHint =>
+      'Bell times (from 8:00, 45 minutes) and a subject list are proposed. Both can be adjusted afterwards.';
+
+  @override
+  String get schoolSetupCreate => 'Add school';
+
+  @override
+  String get schoolNextSteps => 'Next steps';
+
+  @override
+  String schoolNextStepEnter(String name) {
+    return 'Enter $name’s timetable';
+  }
+
+  @override
+  String get schoolTermProposedHint =>
+      'Proposed: the current school year. Adjust the name and dates if your school counts differently.';
+
+  @override
+  String schoolYearName(String from, String to) {
+    return 'School year $from/$to';
+  }
+
+  @override
+  String schoolCreateSubject(String name) {
+    return 'Add “$name” as a subject';
+  }
+
+  @override
+  String get schoolImportAction => 'Read in…';
+
+  @override
+  String get schoolImportFromText => 'Paste as text';
+
+  @override
+  String get schoolImportFromPhoto => 'Scan a photo';
+
+  @override
+  String get schoolImportTitle => 'Read in a timetable';
+
+  @override
+  String schoolImportProposedBy(String assistant) {
+    return 'Proposed by $assistant';
+  }
+
+  @override
+  String schoolImportLessons(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count lessons',
+      one: '1 lesson',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String schoolImportTermNew(String name) {
+    return 'Term: $name (will be created)';
+  }
+
+  @override
+  String schoolImportTermExisting(String name) {
+    return 'Term: $name';
+  }
+
+  @override
+  String schoolImportReplaces(String name, int count) {
+    return 'Replaces $name’s existing timetable ($count lessons).';
+  }
+
+  @override
+  String get schoolImportNewSubjects => 'New subjects';
+
+  @override
+  String get schoolImportCreateSubjects => 'Create the new subjects';
+
+  @override
+  String get schoolImportSkipNewSubjects =>
+      'Lessons with new subjects are left out.';
+
+  @override
+  String schoolImportWarnUnmatchedTimes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count lessons match no bell time and are left out.',
+      one: '1 lesson matches no bell time and is left out.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String schoolImportWarnPeriodsExtended(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'The bell times get $count more lessons.',
+      one: 'The bell times get 1 more lesson.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get schoolImportWarnPeriodsDiffer =>
+      'The bell times on the sheet differ from the school’s; the school’s stay.';
+
+  @override
+  String schoolImportWarnSchoolDiffers(String name) {
+    return 'The sheet names another school: $name.';
+  }
+
+  @override
+  String get schoolImportApply => 'Apply';
+
+  @override
+  String get schoolImportDiscard => 'Discard';
+
+  @override
+  String get schoolImportApplied => 'Timetable applied.';
+
+  @override
+  String get schoolImportDiscarded => 'Proposal discarded.';
+
+  @override
+  String get schoolImportNoChild => 'Add a child under Members first.';
+
+  @override
+  String get schoolImportPasteTitle => 'Read in from text';
+
+  @override
+  String get schoolImportPasteIntro =>
+      'Photograph the timetable and ask the assistant you trust to put it into the WuselWall format. Paste its answer here. You see a preview before anything is saved.';
+
+  @override
+  String get schoolImportCopyPrompt =>
+      'Copy the instructions for the assistant';
+
+  @override
+  String get schoolImportPromptCopied => 'Instructions copied.';
+
+  @override
+  String get schoolImportPrompt =>
+      'Please read the timetable in the photo and return it as JSON in the format below, with no other text. Days as Mo, Tu, We, Th, Fr; periods as a number (1 = first lesson) or with start and end times; subjects with the short code on the sheet and, if known, the full name. Leave empty cells out. For A and B weeks set week: a or b. After-school care goes under care.';
+
+  @override
+  String get schoolImportPasteHint => 'Paste the answer here';
+
+  @override
+  String get schoolImportRead => 'Read in';
+
+  @override
+  String get schoolImportErrNotJson =>
+      'That is no timetable in the WuselWall format. Paste the assistant’s whole answer.';
+
+  @override
+  String get schoolImportErrNoLessons => 'The text contains no lessons.';
+
+  @override
+  String get schoolImportErrTooMany =>
+      'That is more entries than a timetable can have.';
+
+  @override
+  String get schoolImportErrBadLesson =>
+      'A lesson has no day, no period or no subject.';
+
+  @override
+  String schoolImportErrBadDay(String value) {
+    return '“$value” is no weekday.';
+  }
+
+  @override
+  String schoolImportErrBadTime(String value) {
+    return '“$value” is no time of day.';
+  }
+
+  @override
+  String schoolProposalTitle(String assistant) {
+    return 'Proposal from $assistant';
+  }
+
+  @override
+  String schoolProposalSummary(String name, int count) {
+    return 'Timetable for $name, $count lessons';
+  }
+
+  @override
+  String get schoolProposalReview => 'Review';
+
+  @override
+  String get schoolProposalUnreadable =>
+      'This proposal has a format this app version cannot read.';
+
+  @override
+  String get schoolProposalErrInvalid => 'The proposal has an invalid format.';
+
+  @override
+  String get schoolProposalErrLimit =>
+      'Five proposals are already waiting. Review or discard them first.';
+
+  @override
+  String get schoolProposalErrGone =>
+      'This proposal is already settled or has expired.';
+
+  @override
+  String get schoolScanIntro =>
+      'Your server reads the photo; it never leaves your home. A straight, bright photo of the whole sheet works best.';
+
+  @override
+  String get schoolScanCamera => 'Take a photo';
+
+  @override
+  String get schoolScanPick => 'Choose a photo';
+
+  @override
+  String get schoolScanBusy => 'Reading the sheet…';
+
+  @override
+  String get schoolScanNotConfigured =>
+      'Your server has no text recognition set up. The guide’s “Extras for the server” says how to add it. Until then: read in from text.';
+
+  @override
+  String get schoolScanNothingFound =>
+      'No timetable was found in the photo. Try a straighter, brighter photo, or read the plan in from text.';
+
+  @override
+  String get schoolScanTooLarge => 'The photo is too large (6 MB at most).';
+
+  @override
+  String get schoolScanFailed =>
+      'The server’s text recognition did not answer. Try again later.';
+
+  @override
+  String schoolScanWarnUnplaced(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count pieces of text fit no cell. Compare the preview with the sheet.',
+      one: '1 piece of text fit no cell. Compare the preview with the sheet.',
+    );
+    return '$_temp0';
+  }
 }

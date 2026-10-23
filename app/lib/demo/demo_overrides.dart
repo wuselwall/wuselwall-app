@@ -23,6 +23,7 @@ import 'package:wuselwall/demo/demo_kid.dart';
 import 'package:wuselwall/demo/demo_meals.dart';
 import 'package:wuselwall/demo/demo_notices.dart';
 import 'package:wuselwall/demo/demo_pairing.dart';
+import 'package:wuselwall/demo/demo_proposals.dart';
 import 'package:wuselwall/demo/demo_region.dart';
 import 'package:wuselwall/demo/demo_repositories.dart';
 import 'package:wuselwall/demo/demo_school.dart';
@@ -43,7 +44,10 @@ import 'package:wuselwall/features/invitations/data/invitation_repository.dart';
 import 'package:wuselwall/features/kid/data/kid_badges_repository.dart';
 import 'package:wuselwall/features/meals/data/meals_repository.dart';
 import 'package:wuselwall/features/region/data/region_repository.dart';
+import 'package:wuselwall/features/school/data/proposals_repository.dart';
+import 'package:wuselwall/features/school/data/scan_repository.dart';
 import 'package:wuselwall/features/school/data/school_repository.dart';
+import 'package:wuselwall/features/school/ui/timetable_scan.dart';
 import 'package:wuselwall/features/settings/application/settings_view.dart';
 import 'package:wuselwall/features/settings/data/household_export_repository.dart';
 import 'package:wuselwall/features/settings/data/household_settings_repository.dart';
@@ -140,6 +144,12 @@ List<Override> _overrides(String scenario) => [
   ),
   boardRepositoryProvider.overrideWithValue(DemoBoardRepository()),
   schoolRepositoryProvider.overrideWithValue(DemoSchoolRepository()),
+  proposalsRepositoryProvider.overrideWithValue(
+    const DemoProposalsRepository(),
+  ),
+  scanRepositoryProvider.overrideWithValue(const DemoScanRepository()),
+  // No camera in the demo: picking a picture gives none.
+  imagePickerProvider.overrideWithValue((_) async => null),
   regionRepositoryProvider.overrideWithValue(DemoRegionRepository()),
   mealsRepositoryProvider.overrideWithValue(DemoMealsRepository()),
   calendarRepositoryProvider.overrideWithValue(DemoCalendarRepository()),
