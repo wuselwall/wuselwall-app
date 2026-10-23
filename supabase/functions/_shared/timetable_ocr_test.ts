@@ -1,6 +1,7 @@
 import { assert, assertEquals } from "jsr:@std/assert@1.0.13";
 import {
   clocksOf,
+  labelClocks,
   lessonOf,
   type OcrLine,
   parseTimetableScan,
@@ -48,7 +49,6 @@ Deno.test("words: weekdays, periods and clocks", () => {
   assertEquals(weekdayOf("Mittwoch"), 3);
   assertEquals(weekdayOf("Do. 15.10."), 4);
   assertEquals(weekdayOf("mié"), 3);
-  assertEquals(weekdayOf("Ma"), 2); // French "mardi" in a header; in a cell it is a subject
   assertEquals(weekdayOf("Mathe"), null);
   // What real sheets yield: letter-spaced print, a typo, a truncated column, Dutch.
   assertEquals(weekdayOf("M ittw och"), 3);
@@ -60,6 +60,14 @@ Deno.test("words: weekdays, periods and clocks", () => {
   assertEquals(weekdayOf("Montag (Langtag)"), 1);
   assertEquals(weekdayOf("Musik"), null);
   assertEquals(weekdayOf("Sport"), null);
+  // Subject codes that look like a French two-letter weekday are subjects.
+  assertEquals(weekdayOf("Ma"), null);
+  assertEquals(weekdayOf("Me"), null);
+  assertEquals(weekdayOf("mar."), 2);
+  // A child's hand, read by the OCR with two letters wrong.
+  assertEquals(weekdayOf("Pornerstag"), 4);
+  assertEquals(weekdayOf("Pierstag"), 2);
+  assertEquals(weekdayOf("Freizeit"), null);
   assertEquals(
     weekdaysIn("Maandag Dinsdag Woensdag Donderdag Vrijdag").map((w) => w.day),
     [1, 2, 3, 4, 5],
@@ -72,6 +80,9 @@ Deno.test("words: weekdays, periods and clocks", () => {
   assertEquals(periodOf("3. Stunde"), 3);
   assertEquals(periodOf("12"), 12);
   assertEquals(periodOf("R12"), null);
+  assertEquals(periodOf("1. Semester GES tc"), null);
+  assertEquals(periodOf("1. Klasse"), null);
+  assertEquals(periodOf("Lektion 2"), 2);
   assertEquals(clocksOf("08:00 - 08:45"), ["08:00", "08:45"]);
   assertEquals(clocksOf("8.50–9.35 Uhr"), ["08:50", "09:35"]);
 });
@@ -358,4 +369,112 @@ Deno.test("a weekday list with one row of text is a rota or a menu, not a timeta
     lines.push(at(`Apotheke ${i + 1}`, 0.6, 0.2 + i * 0.1, 0.2));
   });
   assertEquals(parseTimetableScan(lines), null);
+});
+
+Deno.test("rows a hair below the header stay rows, and Ma is Mathe", () => {
+  // Large print: the row pitch is barely above the text height, and every cell says Ma.
+  const lines: OcrLine[] = [];
+  DAYS.forEach((d, i) => lines.push(at(d, COLS[i], 0.15, 0.08, 0.05)));
+  const rows = [0.21, 0.27, 0.33];
+  rows.forEach((y, i) => {
+    lines.push(at(`${i + 1}.`, 0.1, y, 0.04, 0.05));
+    COLS.forEach((cx) => lines.push(at("Ma", cx, y, 0.06, 0.05)));
+  });
+  const result = parseTimetableScan(lines);
+  assert(result);
+  assertEquals(result.transposed, false);
+  assertEquals(result.columns, 5);
+  assertEquals(result.rows, 3);
+  assertEquals(result.unplaced, 0);
+  assertEquals(result.payload.lessons.length, 15);
+});
+
+Deno.test("a photo taken sideways the other way round: days run upwards", () => {
+  // Freitag at the top, Montag at the bottom, each day's lessons to its right.
+  const lines: OcrLine[] = [];
+  const ys = [0.2, 0.35, 0.5, 0.65, 0.8];
+  ["Freitag", "Donnerstag", "Mittwoch", "Dienstag", "Montag"].forEach((d, i) =>
+    lines.push(at(d, 0.15, ys[i], 0.1))
+  );
+  const periods = [0.35, 0.5, 0.65, 0.8];
+  periods.forEach((x, i) => lines.push(at(String(i + 1), x, 0.1, 0.03)));
+  ys.forEach((y, r) =>
+    periods.forEach((x, c) =>
+      lines.push(at(["D", "Ma", "E", "Sp"][(r + c) % 4], x, y))
+    )
+  );
+  const result = parseTimetableScan(lines);
+  assert(result);
+  assert(result.transposed);
+  assertEquals(result.columns, 5);
+  assertEquals(result.rows, 4);
+  assertEquals(result.unplaced, 0);
+  // Montag is the bottom row; its first lesson is D at the first period.
+  assertEquals(
+    result.payload.lessons.find((l) => l.day === 1 && l.period === 1)?.subject,
+    "D",
+  );
+  assertEquals(
+    result.payload.lessons.find((l) => l.day === 5 && l.period === 1)?.subject,
+    "D",
+  );
+  assertEquals(
+    result.payload.lessons.find((l) => l.day === 5 && l.period === 2)?.subject,
+    "Ma",
+  );
+});
+
+/** [lines] rotated by [degrees] about the picture's centre, quads and all, as a tilted
+ *  photo would present them. */
+function rotated(lines: OcrLine[], degrees: number): OcrLine[] {
+  const a = (degrees * Math.PI) / 180;
+  const c = Math.cos(a), s = Math.sin(a);
+  return lines.map((l) => {
+    const box: number[] = [];
+    for (let i = 0; i < 8; i += 2) {
+      const x = l.box[i] - 0.5, y = l.box[i + 1] - 0.5;
+      box.push(x * c - y * s + 0.5, x * s + y * c + 0.5);
+    }
+    return { ...l, box };
+  });
+}
+
+Deno.test("a tilted photo is read level: the reference sheet at 12 degrees, and at 90", () => {
+  const level = parseTimetableScan(sheet())!;
+  for (const degrees of [12, -8, 90]) {
+    const result = parseTimetableScan(rotated(sheet(), degrees));
+    assert(result, `${degrees} degrees`);
+    assertEquals(result.columns, 5, `${degrees} degrees`);
+    assertEquals(result.rows, 4, `${degrees} degrees`);
+    assertEquals(
+      result.payload.lessons,
+      level.payload.lessons,
+      `${degrees} degrees`,
+    );
+  }
+});
+
+Deno.test("row numbers and bare clock labels in two columns give one row per period", () => {
+  const lines: OcrLine[] = [];
+  DAYS.forEach((d, i) => lines.push(at(d, COLS[i], 0.15)));
+  const rows = [0.3, 0.42, 0.54];
+  const clocks = [["800", "845"], ["850", "935"], ["955", "1040"]];
+  rows.forEach((y, i) => {
+    lines.push(at(`${i + 1}.`, 0.06, y, 0.03));
+    lines.push(at(clocks[i][0], 0.13, y - 0.02, 0.04));
+    lines.push(at(clocks[i][1], 0.13, y + 0.02, 0.04));
+    lines.push(at("Ma", COLS[0], y));
+  });
+  const result = parseTimetableScan(lines);
+  assert(result);
+  assertEquals(result.rows, 3);
+  assertEquals(result.unplaced, 0);
+  assertEquals(result.payload.periods, [
+    { index: 1, starts: "08:00", ends: "08:45" },
+    { index: 2, starts: "08:50", ends: "09:35" },
+    { index: 3, starts: "09:55", ends: "10:40" },
+  ]);
+  assertEquals(labelClocks("1040"), ["10:40"]);
+  assertEquals(labelClocks("2500"), []);
+  assertEquals(labelClocks("08:00 - 08:45"), ["08:00", "08:45"]);
 });

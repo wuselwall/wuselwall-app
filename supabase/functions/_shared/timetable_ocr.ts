@@ -46,6 +46,11 @@ type Line = {
   cy: number;
   w: number;
   h: number;
+  /** The text's direction in radians, (-π/2, π/2]: 0 is level, a phone photo tilts it. */
+  angle: number;
+  /** The quad's edges: along the text and across it, whatever the tilt. */
+  along: number;
+  across: number;
   used: boolean;
 };
 
@@ -56,7 +61,6 @@ const WEEKDAYS: Record<string, number> = {
   mon: 1,
   montag: 1,
   monday: 1,
-  lu: 1,
   lun: 1,
   lundi: 1,
   lunes: 1,
@@ -67,7 +71,6 @@ const WEEKDAYS: Record<string, number> = {
   tue: 2,
   tues: 2,
   tuesday: 2,
-  ma: 2,
   mar: 2,
   mardi: 2,
   martes: 2,
@@ -77,7 +80,6 @@ const WEEKDAYS: Record<string, number> = {
   we: 3,
   wed: 3,
   wednesday: 3,
-  me: 3,
   mer: 3,
   mercredi: 3,
   mie: 3,
@@ -90,7 +92,6 @@ const WEEKDAYS: Record<string, number> = {
   thur: 4,
   thurs: 4,
   thursday: 4,
-  je: 4,
   jeu: 4,
   jeudi: 4,
   ju: 4,
@@ -101,7 +102,6 @@ const WEEKDAYS: Record<string, number> = {
   freitag: 5,
   fri: 5,
   friday: 5,
-  ve: 5,
   ven: 5,
   vendredi: 5,
   vi: 5,
@@ -173,29 +173,27 @@ const FULL_NAMES: [string, number][] = [
   ["zondag", 7],
 ];
 
-/** True when `a` and `b` differ by at most one edit (insert, delete or replace). */
-function withinOneEdit(a: string, b: string): boolean {
-  if (Math.abs(a.length - b.length) > 1) return false;
-  let i = 0, j = 0, edits = 0;
-  while (i < a.length && j < b.length) {
-    if (a[i] === b[j]) {
-      i++;
-      j++;
-      continue;
+/** The Levenshtein distance of two short words, capped at `max` + 1. */
+function editDistance(a: string, b: string, max: number): number {
+  if (Math.abs(a.length - b.length) > max) return max + 1;
+  let prev = Array.from({ length: b.length + 1 }, (_, j) => j);
+  for (let i = 1; i <= a.length; i++) {
+    const cur = [i];
+    for (let j = 1; j <= b.length; j++) {
+      cur[j] = Math.min(
+        prev[j] + 1,
+        cur[j - 1] + 1,
+        prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1),
+      );
     }
-    if (++edits > 1) return false;
-    if (a.length > b.length) i++;
-    else if (a.length < b.length) j++;
-    else {
-      i++;
-      j++;
-    }
+    prev = cur;
   }
-  return edits + (a.length - i) + (b.length - j) <= 1;
+  return prev[b.length];
 }
 
 /** The weekday one folded token names: exact, else a prefix of a full name (three letters
- *  or more), else one edit away from a full name (five letters or more). Null when none or
+ *  or more), else one edit away from a full name of five letters or more, or two edits away
+ *  from one of eight or more ("Pornerstag", "Pierstag" in a child's hand). Null when none or
  *  when the candidates disagree. */
 function dayOfToken(token: string): number | null {
   if (token.length === 0) return null;
@@ -204,7 +202,13 @@ function dayOfToken(token: string): number | null {
   const days = new Set<number>();
   for (const [name, day] of FULL_NAMES) {
     if (token.length >= 3 && name.startsWith(token)) days.add(day);
-    else if (token.length >= 5 && withinOneEdit(token, name)) days.add(day);
+    else if (
+      token.length >= 5 &&
+      editDistance(token, name, 2) <=
+        (token.length >= 8 && name.length >= 8 ? 2 : 1)
+    ) {
+      days.add(day);
+    }
   }
   return days.size === 1 ? [...days][0] : null;
 }
@@ -262,11 +266,28 @@ export function clocksOf(text: string): string[] {
   return out;
 }
 
+/** The clocks a row label shows: "08:00 - 08:45", and the bare "800" or "1040" of a sheet
+ *  that drops the colon (or an OCR that lost it). Only for labels: a cell's "124" is a room. */
+export function labelClocks(text: string): string[] {
+  const out = clocksOf(text);
+  if (out.length > 0) return out;
+  for (const m of text.matchAll(/(?<!\d)(\d{3,4})(?!\d)/g)) {
+    const digits = m[1];
+    const h = Number(digits.slice(0, digits.length - 2));
+    const min = Number(digits.slice(-2));
+    if (h <= 23 && min <= 59) {
+      out.push(`${String(h).padStart(2, "0")}:${String(min).padStart(2, "0")}`);
+    }
+  }
+  return out;
+}
+
 /** The period index a row label names ("1", "1.", "1. Std", "3. Stunde"), else null. */
 export function periodOf(text: string): number | null {
-  // "08:00" and "8.50" are clocks, not periods: a dot or colon followed by digits is skipped.
+  // The whole text, so that "1. Semester GES tc" in a remark is no label. "08:00" and
+  // "8.50" are clocks, not periods: a dot or colon followed by digits is skipped.
   const m =
-    /^\s*(\d{1,2})\s*(\.(?!\s*\d)|\)|:(?!\s*\d)|std|stunde|h\b|period|lesson|$)/i
+    /^\s*(\d{1,2})\s*(?:\.(?!\s*\d)|\))?\s*(?:std\.?|stunde|lektion|period|lesson|les|uur|hora|cours|h\b)?\s*$/i
       .exec(text) ??
       // "Stunde 3", "Std. 2", "Period 4", "Uur 1", "Hora 2", "Cours 3".
       /^\s*(?:stunde|std\.?|lektion|period|lesson|les|uur|hora|cours|h)\s*(\d{1,2})\s*$/i
@@ -287,14 +308,58 @@ function lineOf(l: OcrLine): Line | null {
     x1 = Math.max(...xs),
     y0 = Math.min(...ys),
     y1 = Math.max(...ys);
+  // The quad's first edge runs along the text; its length and the next edge's are the
+  // text's own width and height, whatever the tilt. The bounding box only centres it.
+  let angle = Math.atan2(ys[1] - ys[0], xs[1] - xs[0]);
+  if (angle > Math.PI / 2) angle -= Math.PI;
+  if (angle <= -Math.PI / 2) angle += Math.PI;
+  const along = Math.hypot(xs[1] - xs[0], ys[1] - ys[0]);
+  const across = Math.hypot(xs[2] - xs[1], ys[2] - ys[1]);
+  // Sizes along the picture's axes here; the text's own sizes once the sheet is read level
+  // (straighten), since the OCR does not always start a quad at the same corner.
   return {
     text,
     cx: (x0 + x1) / 2,
     cy: (y0 + y1) / 2,
     w: x1 - x0,
     h: y1 - y0,
+    angle,
+    along: along > 0 ? along : x1 - x0,
+    across: across > 0 ? across : y1 - y0,
     used: false,
   };
+}
+
+/**
+ * How much the sheet tilts: the median direction of its words (boxes clearly wider than
+ * tall). A phone photo is rarely level, and a sheet photographed sideways reads at ±90°.
+ */
+function skewOf(lines: Line[]): number {
+  const words = lines.filter((l) => l.along > l.across * 1.5);
+  if (words.length < 3) return 0;
+  const angles = words.map((l) => l.angle).sort((a, b) => a - b);
+  return angles[Math.floor(angles.length / 2)];
+}
+
+/** The lines turned by -tilt about the origin, so that their text runs level, each with its
+ *  text's own length and height (a quad the OCR started at another corner has them swapped). */
+function straighten(lines: Line[], tilt: number): Line[] {
+  const c = Math.cos(tilt), si = Math.sin(tilt);
+  return lines.map((l) => {
+    let off = l.angle - tilt;
+    if (off > Math.PI / 2) off -= Math.PI;
+    if (off <= -Math.PI / 2) off += Math.PI;
+    const level = Math.abs(off) < Math.PI / 4;
+    return {
+      ...l,
+      cx: l.cx * c + l.cy * si,
+      cy: -l.cx * si + l.cy * c,
+      w: level ? l.along : l.across,
+      h: level ? l.across : l.along,
+      angle: 0,
+      used: false,
+    };
+  });
 }
 
 function median(values: number[]): number {
@@ -351,18 +416,23 @@ function findColumns(
       named.push({ l, day: f.day, cx: x0 + l.w * mid, left: x0 + l.w * start });
     }
   }
-  const bands = cluster(named, (x) => x.l.cy, h * 1.2);
-  let best: typeof bands[number] | null = null;
+  // One line of text: a row pitch barely above the text height must not join the band.
+  // One line of text first: a row pitch barely above the text height must not join the band.
+  // A header the OCR read a little unevenly gets a second, looser try.
+  let best: { centre: number; members: typeof named } | null = null;
   let bestDays = 0;
-  for (const band of bands) {
-    const days = new Set(band.members.map((m) => m.day));
-    if (
-      days.size > bestDays ||
-      (days.size === bestDays && best && band.centre < best.centre)
-    ) {
-      best = band;
-      bestDays = days.size;
+  for (const gap of [0.6, 1.2]) {
+    for (const band of cluster(named, (x) => x.l.cy, h * gap)) {
+      const days = new Set(band.members.map((m) => m.day));
+      if (
+        days.size > bestDays ||
+        (days.size === bestDays && best && band.centre < best.centre)
+      ) {
+        best = band;
+        bestDays = days.size;
+      }
     }
+    if (bestDays >= 3) break;
   }
   if (!best || bestDays < 3) return null;
   const columns: Column[] = [];
@@ -447,21 +517,42 @@ function findRows(
 ): { rows: Row[]; periods: ScanPeriod[] } {
   // Labels may sit close to the first column on a narrow table: a third of a spacing.
   const leftEdge = columns[0].cx - spacing * 0.35;
+  const rightEdge = columns[columns.length - 1].cx + spacing * 0.6;
   const labels = lines.filter((l) =>
-    !l.used && l.cy > headerY + h / 2 && l.cx < leftEdge
+    !l.used && l.cy > headerY + h / 2 && (l.cx < leftEdge || l.cx > rightEdge)
   );
-  const bands = cluster(labels, (l) => l.cy, h * 0.9);
+  // Numbered labels define the rows; the clocks next to them become the bell times. Two
+  // label columns (number, times) interleave, so clustering them together would chain the
+  // rows into one. Without numbers, the clocks define the rows.
+  const numbered = labels.filter((l) => periodOf(l.text) !== null);
+  const clocked = labels.filter((l) => labelClocks(l.text).length > 0);
+  const numberBands = cluster(numbered, (l) => l.cy, h * 0.6);
+  const clockBands = cluster(clocked, (l) => l.cy, h * 0.9);
+  // The numbers are the sheet's own when they mark at least two rows and the clocks are
+  // not more than two per row (start above, end below). Otherwise whichever kind marks
+  // more rows wins, so a stray "1." in a remark cannot hide a column of bell times.
+  const byNumber = numberBands.length >= 2
+    ? clockBands.length <= numberBands.length * 2
+    : numberBands.length >= clockBands.length;
+  const bands = byNumber ? numberBands : clockBands;
   const rows: Row[] = [];
   const periods: ScanPeriod[] = [];
   let next = 1;
   for (const band of bands) {
-    const texts = band.members.map((m) => m.text);
-    const index = texts.map(periodOf).find((p) => p !== null) ?? null;
-    const clocks = texts.flatMap(clocksOf);
-    if (index === null && clocks.length === 0) continue;
+    const index = byNumber
+      ? band.members.map((m) => periodOf(m.text)).find((p) => p !== null) ??
+        null
+      : null;
     const idx = index ?? next;
     next = idx + 1;
     for (const m of band.members) m.used = true;
+    const near = clocked.filter((c) =>
+      !c.used && Math.abs(c.cy - band.centre) <= h
+    );
+    const clocks = [...band.members, ...near].flatMap((m) =>
+      labelClocks(m.text)
+    );
+    for (const c of near) c.used = true;
     rows.push({ index: idx, cy: band.centre });
     if (clocks.length >= 2 && !periods.some((p) => p.index === idx)) {
       periods.push({ index: idx, starts: clocks[0], ends: clocks[1] });
@@ -520,22 +611,38 @@ export function lessonOf(
 export function parseTimetableScan(input: OcrLine[]): ScanResult | null {
   const lines = input.map(lineOf).filter((l): l is Line => l !== null);
   if (lines.length < 4) return null;
-  const upright = parseGrid(lines);
-  if (upright && plausible(upright)) return upright;
-  // A diary page or a hand-drawn sheet often runs the days down the left and the periods
-  // across the top: the same grid, turned. Swap the axes and read it the same way.
-  const turned = lines.map((l) => ({
-    ...l,
-    cx: l.cy,
-    cy: l.cx,
-    w: l.h,
-    h: l.w,
-    used: false,
-  }));
-  const result = parseGrid(turned);
-  if (!result) return null;
-  const read = { ...result, transposed: true };
-  return plausible(read) ? read : null;
+  // A tilted photo is read level first; the raw boxes are the fallback.
+  const tilt = skewOf(lines);
+  const sets = Math.abs(tilt) > 0.015
+    ? [straighten(lines, tilt), lines]
+    : [lines];
+  for (const set of sets) {
+    const result = readAnyWay(set);
+    if (result) return result;
+  }
+  return null;
+}
+
+/**
+ * The four ways a sheet can lie: upright; turned, as a diary page or a hand-drawn sheet runs
+ * the days down the left and the periods across the top; and each of them mirrored, as a photo
+ * taken sideways the other way round or upside down runs the days backwards. Each is the same
+ * grid under a swap or a mirror of the axes; the first plausible reading wins.
+ */
+function readAnyWay(lines: Line[]): ScanResult | null {
+  const variants: [boolean, (l: Line) => Line][] = [
+    [false, (l) => ({ ...l })],
+    [true, (l) => ({ ...l, cx: l.cy, cy: l.cx, w: l.h, h: l.w })],
+    [false, (l) => ({ ...l, cx: -l.cx })],
+    [true, (l) => ({ ...l, cx: -l.cy, cy: l.cx, w: l.h, h: l.w })],
+  ];
+  for (const [transposed, map] of variants) {
+    const result = parseGrid(lines.map((l) => ({ ...map(l), used: false })));
+    if (!result) continue;
+    const read = { ...result, transposed };
+    if (plausible(read)) return read;
+  }
+  return null;
 }
 
 /**
@@ -547,7 +654,8 @@ export function parseTimetableScan(input: OcrLine[]): ScanResult | null {
 function plausible(r: ScanResult): boolean {
   if (r.rows < (r.transposed ? 3 : 2)) return false;
   if (r.placed > r.rows * r.columns * 4) return false;
-  if (r.transposed && r.unplaced > r.placed) return false;
+  // A grid that leaves most of the text outside is a photo of something else.
+  if (r.unplaced > r.placed * (r.transposed ? 1 : 1.5)) return false;
   return true;
 }
 
