@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
-import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
+import 'package:wuselwall/features/identity/ui/member_circle.dart';
 
 /// "Wer bist du?" on a shared kid device: one big avatar per member. Tapping one makes
 /// that person the acting profile, and the screen behind it appears.
@@ -66,7 +66,6 @@ class _Choice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.ww.member(member.color);
     return Semantics(
       button: true,
       focusable: true,
@@ -80,24 +79,7 @@ class _Choice extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: 132,
-              height: 132,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: colors.ink,
-                shape: BoxShape.circle,
-              ),
-              child: Text(
-                member.initial,
-                style: TextStyle(
-                  fontFamily: Tokens.fontUi,
-                  fontSize: 56,
-                  fontWeight: FontWeight.w800,
-                  color: colors.onInk,
-                ),
-              ),
-            ),
+            MemberCircle(member: member, size: 132),
             const SizedBox(height: Tokens.space2),
             SizedBox(
               width: 150,

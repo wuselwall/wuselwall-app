@@ -10,7 +10,7 @@ Les produits achetés le plus **récemment** et le plus **souvent** apparaissent
 
 - **Un toucher** ajoute le produit et colore sa tuile.
 - **Un autre toucher** augmente la quantité : **2×**, **3×**… Le **−** de la liste retire une unité.
-- **Un appui long** ajoute une précision : « bio », « 500 g », « boîte ».
+- **Un appui long** ouvre un petit menu : **Ajouter et modifier** met l’article sur la liste et ouvre sa précision (« bio », « 500 g », « boîte ») ; **Renommer la tuile** corrige une faute mémorisée ; **Ne plus proposer** retire la tuile (parents ; l’historique garde l’article, et le prochain achat fait revenir la tuile).
 
 ## Chercher et créer {#search-and-create}
 

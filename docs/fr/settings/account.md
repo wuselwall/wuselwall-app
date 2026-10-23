@@ -14,7 +14,7 @@ Le **dernier parent ayant un compte** ne peut pas partir : invitez d’abord un 
 
 ## Supprimer la famille {#delete-the-family}
 
-Seul un parent, sur son téléphone personnel, peut le faire. Saisissez d’abord le **nom de la famille**, passez à l’étape suivante, puis saisissez **SUPPRIMER**, en majuscules, et confirmez.
+Seul un parent, sur son téléphone personnel, peut le faire, sous **Paramètres → Famille** (vue **Avancés**). Saisissez d’abord le **nom de la famille**, passez à l’étape suivante, puis saisissez **SUPPRIMER**, en majuscules, et confirmez.
 
 **La suppression de toutes les données est immédiate et définitive**, sans délai ni restauration possible. Tous les appareils sont déconnectés. Les comptes adultes restent utilisables pour créer ou rejoindre une autre famille.
 

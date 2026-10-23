@@ -30,16 +30,20 @@ the evening packing reminder (FR-7.12, `notify.packing_reminder`), and the usual
 day and alternating weeks A/B), and the school import of [specs/24](specs/24-school-import.md)
 (2026-10-22): the proposed term, subjects from the cell, the paste import with its preview,
 proposals (`app.proposal`, `api.mcp_propose`, the `propose_timetable` tool, cards on Today),
-and the photo scan (`timetable-scan` with the optional `ocr` container, RapidOCR on the CPU).
+and the photo scan (`timetable-scan` with the optional `ocr` container, RapidOCR on the CPU),
+and step 10's slices 1–3 (2026-10-23): members editable (name, colour, avatar picture, kind,
+role, order by dragging, "Nicht mehr dabei"), the family (name, time zone, locale) and devices
+(rename, last active) on their own pages, and the shopping structure (lists renamed and
+removed, categories added, renamed, ordered and removed, catalogue tiles renamed and
+forgotten), each page with the Basic/Advanced switch of specs/21.
 The current language scope is DE/EN/FR/ES throughout the app and server responses, with
 one installation-selected email language (NFR-14); release evidence remains a separate gate.
 `scripts/local-pgtap` runs every migration and pgTAP suite on a throwaway local Postgres (no
 Docker). The server runs four scheduled jobs: `tasks-nightly`,
 `holidays-sync` (weekly), `calendar-import` (hourly) and `household-purge` (daily). Next: the
 journey gaps of [specs/16 step 10](specs/16-setup-plan.md#step-10--journey-gaps-before-launch-m15)
-(members, the family and devices editable; lists and categories; servers without mail;
-approvals on Today; the wall's offline start; the deletion page and the release checklist),
-then M1.6. Merged migrations and functions reach a live server after a backup
+(servers without mail; approvals on Today; the wall's offline start; the deletion page and the
+release checklist; slices 1–3 are built), then M1.6. Merged migrations and functions reach a live server after a backup
 (`scripts/remote-backup.sh` first); a server with mail sets `ENABLE_EMAIL_AUTOCONFIRM=false`.
 
 **Never describe a particular operator's server in a committed file** — not a host, path,

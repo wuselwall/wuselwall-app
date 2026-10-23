@@ -12,7 +12,7 @@ Each tile shows a picture of the item: WuselWall recognises common items by thei
 
 - **Tap once** to put the item on the list. Its tile turns green.
 - **Tap again** to count up: "2×", "3×" … The small **−** in the list takes one away.
-- **Press and hold** to add a note for that item, such as "organic", "500 g" or "tin".
+- **Press and hold** for a small menu: **Add and edit** puts the item on the list and opens its note (such as "organic", "500 g" or "tin"); **Rename tile** fixes a typo WuselWall remembered; **Don't suggest any more** removes the tile (guardians; the history keeps the item, and buying it again brings the tile back).
 
 ## Search and create
 

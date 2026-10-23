@@ -6,9 +6,9 @@ This belongs to the **guardians**. On your phone, open the cog at the top right 
 
 ## Basic or Advanced {#view}
 
-At the top of the settings you choose the view. **Basic** is the default and shows what matters most: household settings, usual week, reminders, language, appearance, getting started, members and devices, and on your own phone also **Delete account**. **Advanced** also shows sharing the family calendar, outside calendars, apps and AI assistants, the server, the data export, sign-in, security, and leaving the family.
+At the top of the settings you choose the view. **Basic** is the default and shows what matters most, in three groups: **Family** (household settings, family, usual week, members, devices), **This device** (reminders, language, appearance, getting started), and on your own phone **Delete account**. **Advanced** also shows **Sharing and connections** (sharing the family calendar, outside calendars, apps and AI assistants), the server, sign-in, security, and leaving the family.
 
-Whatever is hidden **still applies**. The view only changes what you see, and WuselWall remembers it for each device. The same goes for **Household settings**.
+Whatever is hidden **still applies**. The view only changes what you see, and WuselWall remembers it for each device. The same goes for **Household settings**, a person's page, **Family** and editing a shopping list: Basic shows what most families need, Advanced the rest.
 
 ## Invite an adult
 
@@ -38,6 +38,20 @@ Children do not need an invitation. Add them as a member with a name, and connec
 
 With the icon next to **Members** you add a person by **name** only, for example a child or someone who is not on WuselWall. WuselWall gives the next free **colour** automatically.
 
+## Edit a member {#edit-a-member}
+
+Tap a person in the list. On their page you change the **name**, the **colour** and the **picture**: an animal or a symbol instead of the initial, shown on the kids' tablet and in the lists. **Child or adult** decides whether the person gets the kids' tablet, starter chores and the timetable; guardians and people with an account are always adults. A link to the person's **usual week** is there too.
+
+<Shot name="settings-member" alt="A member's page with name, colour, picture and child or adult" />
+
+In the **Advanced** view the page also shows the **role** (guardian or member; a child cannot be a guardian, and the last guardian with an account stays one) and **No longer with us**: the person disappears from the wall, the avatar rows and new chores; history and points stay, and you can bring them back here at any time. An adult with an account is not removed this way; they leave the family from their own phone (see [Account and family](/en/settings/account)).
+
+Everyone can change their own name, colour and picture. Everything else is for guardians, with the PIN on shared devices.
+
+### Changing the order
+
+The order of the members in the list is the order on the wall and in every list. Guardians drag a person by the **handle** on the right to another place.
+
 ## Reset two-factor
 
 If another guardian has lost their second factor, tap **Reset two-factor** next to their name. Then they can sign in without the second factor and set it up again (see [Security](/en/settings/security#two-factor-sign-in)).
@@ -51,6 +65,10 @@ To connect a kids' tablet, a shared tablet or the wall display: under **Devices*
 You do not need to type the code: the new device shows a QR code that you scan with your phone's camera. It also contains the server; WuselWall opens right at the confirmation. If the link belongs to a different server than the one you are signed in on, the app does not follow it by itself but tells you so.
 
 Older devices with an older version of WuselWall still get a code from **Create a code for an older device**. This option goes away with the next version.
+
+## Rename a device
+
+Tap a device in the list to give it another **name**, for example "Kitchen tablet" instead of "iPad". Under each device you see when it was **last active** ("last active 3 days ago"), so you know which device it is before blocking it. Anyone can rename their own device; other devices are renamed by guardians.
 
 ## Block a device
 
@@ -66,9 +84,15 @@ Under **Advanced**, this shows which server the app talks to, with its **QR code
 
 You only need **Change server** when your family moves to another server. The device signs out and forgets everything stored on it, including shopping it could not send yet. On shared devices WuselWall asks for a guardian's PIN first.
 
+## Family {#family}
+
+Under **Settings → Family** you change the **family's name** chosen when it was started. In the **Advanced** view the page also has the **time zone** (the wall and reminders follow it; tap it and search, for example, "Zurich") and the **language on the wall**, in which public holidays are named on the wall display. All of this is for guardians.
+
+<Shot name="settings-family" alt="The Family page with name, time zone, language on the wall and data export" />
+
 ## Export data
 
-Guardians can save all data of your family as one zip file, for example for a move to another server. It is under **Family** at the bottom of the settings (**Advanced** view), with **Export data**, and only from a guardian's own phone.
+Guardians can save all data of your family as one zip file, for example for a move to another server. It is under **Settings → Family** (**Advanced** view), with **Export data**, and only from a guardian's own phone.
 
 The file contains what you entered: members, appointments, timetables, tasks, recipes, shopping lists and so on. Passwords, PINs and sign-in data are **not** included, and devices appear only with their name and date.
 

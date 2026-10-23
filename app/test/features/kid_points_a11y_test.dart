@@ -48,7 +48,8 @@ class _KidIdentity extends FakeIdentityRepository {
       );
 
   @override
-  Future<Result<List<Member>>> members() async => Ok(_members);
+  Future<Result<List<Member>>> members({bool includeInactive = false}) async =>
+      Ok(_members);
 }
 
 FakeTasksApi _api() => FakeTasksApi(

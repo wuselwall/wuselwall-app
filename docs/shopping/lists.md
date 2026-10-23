@@ -14,6 +14,12 @@ Die Aufteilung legt die **Kategorien** fest, in der Reihenfolge, in der man durc
 
 ## Die Standardliste
 
-Ein Stern markiert die **Standardliste** (am Anfang der Supermarkt). Sie ist die einzige, auf die die **Wandanzeige** schreibt. Eine andere Liste machst du zur Standardliste, indem du sie auswählst und dann **lange auf ihren Namen drückst**.
+Ein Stern markiert die **Standardliste** (am Anfang der Supermarkt). Sie ist die einzige, auf die die **Wandanzeige** schreibt. Eine andere Liste machst du unter **Liste bearbeiten** zur Standardliste.
+
+## Liste bearbeiten
+
+Wähle die Liste aus und tippe auf den **Stift** rechts neben den Listen (oder drücke lange auf ihren Namen). Dort änderst du den **Namen** und machst sie zur **Standardliste**. In der Ansicht **Erweitert** kommen die **Kategorien** dazu, in der Reihenfolge, in der ihr durch den Laden geht: Ziehe eine Kategorie am Griff an eine andere Stelle, benenne sie um, lege eine neue an oder entferne sie (ihre Artikel bleiben ohne Kategorie auf der Liste). Ganz unten steht **Liste löschen**: Offene Artikel wandern auf die Standardliste, Verlauf und Kacheln dieser Liste sind weg. Die Standardliste selbst lässt sich nicht löschen. Löschen ist Sache der Erziehungsberechtigten; umbenennen und ordnen darf jeder.
+
+<Shot name="shopping-edit-list" alt="Liste bearbeiten mit Name, Standardliste und Kategorien" />
 
 Jede Liste hat ihre **eigenen Kacheln**: Was ihr im Baumarkt kauft, taucht nicht im Supermarkt auf.

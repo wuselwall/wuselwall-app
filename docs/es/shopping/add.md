@@ -10,7 +10,7 @@ Los productos comprados más **recientemente** y con más **frecuencia** aparece
 
 - **Un toque** añade el producto y colorea su tarjeta.
 - **Otro toque** aumenta la cantidad: **2×**, **3×**… El **−** de la lista quita una unidad.
-- **Una pulsación larga** añade una nota: «ecológico», «500 g», «lata».
+- **Una pulsación larga** abre un pequeño menú: **Añadir y editar** pone el producto en la lista y abre su nota («ecológico», «500 g», «lata»); **Renombrar tarjeta** corrige una errata memorizada; **No sugerir más** quita la tarjeta (adultos responsables; el historial conserva el producto, y la próxima compra trae la tarjeta de vuelta).
 
 ## Buscar y crear {#search-and-create}
 

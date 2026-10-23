@@ -96,6 +96,8 @@ class DeleteFamilyTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
+    // The dialog names the family from the account; keep it loaded while the tile shows.
+    ref.watch(myAccountProvider);
     return ListTile(
       key: const ValueKey('delete-family'),
       leading: Icon(

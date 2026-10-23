@@ -6,7 +6,7 @@ Los **adultos responsables** administran el hogar desde el engranaje **Ajustes**
 
 ## Vista básica o avanzada {#view}
 
-La vista **Básicos** muestra hogar, semana habitual, recordatorios, idioma, apariencia, primeros pasos, miembros y dispositivos, y eliminación de cuenta en tu móvil. **Avanzados** añade calendarios, asistentes, servidor, exportación, inicio de sesión, seguridad y salida del hogar.
+La vista **Básicos** muestra lo esencial en tres grupos: **Familia** (ajustes del hogar, familia, semana habitual, miembros, dispositivos), **Este dispositivo** (recordatorios, idioma, apariencia, primeros pasos) y, en tu móvil, la eliminación de la cuenta. **Avanzados** añade **Compartir y conexiones** (calendarios compartidos, calendarios externos, asistentes), el servidor, el inicio de sesión, la seguridad y la salida del hogar. El mismo interruptor existe en los ajustes del hogar, en la página de una persona, en **Familia** y al editar una lista de la compra.
 
 Lo oculto sigue activo. La app recuerda la vista por dispositivo. Los ajustes del hogar también tienen estas dos vistas.
 
@@ -32,6 +32,20 @@ Los niños no necesitan invitación ni cuenta: añade su nombre y conecta su dis
 
 El icono junto a los miembros añade una persona por nombre. La app asigna el siguiente color libre.
 
+## Editar un miembro {#edit-a-member}
+
+Toca a una persona de la lista. En su página cambias el **nombre**, el **color** y la **imagen** (un animal o un símbolo en lugar de la inicial, visible en la tableta de los niños y en las listas). **Niño o adulto** decide la tableta de los niños, las tareas iniciales y el horario; los adultos responsables y las personas con cuenta son siempre adultos. Un enlace lleva a la **semana habitual** de la persona.
+
+<Shot name="settings-member" alt="La página de un miembro con nombre, color, imagen y niño o adulto" />
+
+En la vista **Avanzados**, la página muestra además el **rol** (adulto responsable o miembro; un niño no puede ser adulto responsable, y el último adulto responsable con cuenta lo sigue siendo) y **Ya no está en la familia**: la persona desaparece de la pared, de las filas de avatares y de las tareas nuevas; el historial y los puntos se conservan, y puedes traerla de vuelta aquí. Un adulto con cuenta sale de la familia desde su propio móvil (ver [Cuenta y familia](/es/settings/account)).
+
+Cada persona cambia su propio nombre, color e imagen. El resto corresponde a los adultos responsables, con el PIN en los dispositivos compartidos.
+
+### Cambiar el orden
+
+El orden de los miembros en la lista es el orden en la pared y en todas las listas. Los adultos responsables arrastran a una persona con el **asa** de la derecha.
+
 ## Restablecer el segundo factor {#reset-two-factor}
 
 Si otro adulto perdió su segundo factor, usa la acción junto a su nombre. Podrá acceder y [configurarlo otra vez](/es/settings/security#two-factor-sign-in).
@@ -43,6 +57,10 @@ Bajo los dispositivos, toca **Conectar un dispositivo**, escanea el QR o introdu
 <Shot name="pair-approve" alt="La revisión y aprobación del nuevo dispositivo" />
 
 También puedes abrir el QR con la cámara del móvil: incluye el servidor. Si pertenece a otro servidor, la app avisa y no cambia automáticamente. Para versiones antiguas sigue disponible temporalmente la creación de un código antiguo.
+
+## Renombrar un dispositivo {#renaming-a-device}
+
+Toca un dispositivo de la lista para darle otro **nombre**, por ejemplo «Tableta de la cocina» en lugar de «iPad». Bajo cada dispositivo aparece su última actividad («activo por última vez hace 3 días»), para saber de qué dispositivo se trata antes de bloquearlo. Cada uno renombra su propio dispositivo; los demás los renombran los adultos responsables.
 
 ## Bloquear un dispositivo {#blocking-a-device}
 
@@ -56,9 +74,15 @@ En **Avanzados**, la dirección y el QR sirven para configurar otro equipo desde
 
 **Cambiar servidor** se usa al trasladar el hogar. Cierra la sesión y borra los datos locales, **incluida la compra aún no enviada**. Un dispositivo compartido pide antes el PIN de responsable.
 
+## Familia {#family}
+
+En **Ajustes → Familia** cambias el **nombre de la familia** elegido al crearla. En la vista **Avanzados**, la página muestra también la **zona horaria** (la pared y los recordatorios la siguen; tócala y busca, por ejemplo, «Zurich») y el **idioma en la pared**, en el que se nombran los festivos en la pantalla de pared. Todo esto corresponde a los adultos responsables.
+
+<Shot name="settings-family" alt="La página Familia con nombre, zona horaria, idioma en la pared y exportación" />
+
 ## Exportar datos {#export-data}
 
-Un adulto responsable puede exportar desde su móvil, en **Avanzados → Familia → Exportar datos**.
+Un adulto responsable puede exportar desde su móvil, en **Ajustes → Familia** (vista **Avanzados**) → **Exportar datos**.
 
 El zip contiene miembros, citas, horarios, tareas, recetas, compra y el resto de datos introducidos. **No incluye contraseñas, PIN ni datos de acceso**. Los dispositivos figuran solo con nombre y fechas.
 

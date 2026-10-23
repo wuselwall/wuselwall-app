@@ -203,7 +203,7 @@ void main() {
           ),
         ),
       );
-      container.read(routerProvider).go(Routes.settings);
+      container.read(routerProvider).go(Routes.family);
       await t.pumpAndSettle();
       return (container: container, identity: identity, leave: leave);
     }

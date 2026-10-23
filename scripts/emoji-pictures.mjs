@@ -11,6 +11,8 @@
 //             lists them.
 //   tasks     the task and reward icons, stored with the tasks; the tasks UI lists them.
 //   extras    a few pictures shown next to text.
+//   avatars   the pictures a member can pick instead of their initial (profile.avatar_key);
+//             app/lib/features/identity/domain/avatars.dart lists them.
 // Emoji are never drawn as text: on the web Flutter would fetch an emoji font from Google
 // (NFR-9), and the pictures look the same on every platform.
 import fs from 'node:fs/promises';
@@ -77,6 +79,17 @@ const sets = {
   extras: {
     fire: 'Fire/Flat/fire_flat.svg', party: 'Party popper/Flat/party_popper_flat.svg',
     gift: 'Wrapped gift/Flat/wrapped_gift_flat.svg',
+  },
+  avatars: {
+    cat: 'Cat face/Flat/cat_face_flat.svg', dog: 'Dog face/Flat/dog_face_flat.svg',
+    fox: 'Fox/Flat/fox_flat.svg', lion: 'Lion/Flat/lion_flat.svg',
+    tiger: 'Tiger face/Flat/tiger_face_flat.svg', panda: 'Panda/Flat/panda_flat.svg',
+    koala: 'Koala/Flat/koala_flat.svg', rabbit: 'Rabbit face/Flat/rabbit_face_flat.svg',
+    bear: 'Bear/Flat/bear_flat.svg', frog: 'Frog/Flat/frog_flat.svg',
+    unicorn: 'Unicorn/Flat/unicorn_flat.svg', owl: 'Owl/Flat/owl_flat.svg',
+    penguin: 'Penguin/Flat/penguin_flat.svg', dolphin: 'Dolphin/Flat/dolphin_flat.svg',
+    butterfly: 'Butterfly/Flat/butterfly_flat.svg', dino: 'T-rex/Flat/t-rex_flat.svg',
+    rocket: 'Rocket/Flat/rocket_flat.svg', football: 'Soccer ball/Flat/soccer_ball_flat.svg',
   },
 };
 

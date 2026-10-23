@@ -71,6 +71,7 @@ final testMembers = [
     role: Role.guardian,
     active: true,
   ),
+  // A child has no account of their own (ADR-014).
   const Member(
     id: kidId,
     displayName: 'Anna',
@@ -78,6 +79,7 @@ final testMembers = [
     role: Role.member,
     active: true,
     isChild: true,
+    hasAccount: false,
   ),
 ];
 
@@ -105,7 +107,7 @@ class FakeIdentityRepository implements IdentityRepository {
     this.profile,
     this.enrolResult = const Err(ValidationFailure(code: 'code_invalid')),
     List<Member>? members,
-  }) : _people = members ?? testMembers;
+  }) : _people = List.of(members ?? testMembers);
 
   /// The household's people, as `members()` returns them.
   final List<Member> _people;
@@ -143,7 +145,149 @@ class FakeIdentityRepository implements IdentityRepository {
   Future<Result<DeviceInfo?>> currentDevice() async => Ok(current);
 
   @override
-  Future<Result<List<Member>>> members() async => Ok(_people);
+  Future<Result<List<Member>>> members({bool includeInactive = false}) async =>
+      Ok([
+        for (final m in _people)
+          if (includeInactive || m.active) m,
+      ]);
+
+  /// What the member, family and device edits asked for.
+  final memberUpdates =
+      <
+        ({
+          String id,
+          String? name,
+          String? colorHex,
+          bool? isChild,
+          String? avatarKey,
+        })
+      >[];
+  final reorders = <List<String>>[];
+  final roleChanges = <({String id, Role role})>[];
+  final activeChanges = <({String id, bool active})>[];
+  final householdUpdates =
+      <({String? name, String? timezone, String? locale})>[];
+  final deviceRenames = <({String id, String label})>[];
+  HouseholdInfo household_ = const HouseholdInfo(
+    id: 'h1',
+    name: 'Familie Test',
+    timezone: 'Europe/Berlin',
+    locale: 'de-DE',
+  );
+
+  @override
+  Future<Result<HouseholdInfo>> household() async => Ok(household_);
+
+  @override
+  Future<Result<void>> updateHousehold({
+    required String? actor,
+    String? name,
+    String? timezone,
+    String? locale,
+  }) async {
+    householdUpdates.add((name: name, timezone: timezone, locale: locale));
+    household_ = HouseholdInfo(
+      id: household_.id,
+      name: name ?? household_.name,
+      timezone: timezone ?? household_.timezone,
+      locale: locale ?? household_.locale,
+    );
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<void>> renameDevice({
+    required String? actor,
+    required String deviceId,
+    required String label,
+  }) async {
+    deviceRenames.add((id: deviceId, label: label));
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<void>> updateMember({
+    required String? actor,
+    required String profileId,
+    String? name,
+    String? colorHex,
+    bool? isChild,
+    String? avatarKey,
+  }) async {
+    memberUpdates.add((
+      id: profileId,
+      name: name,
+      colorHex: colorHex,
+      isChild: isChild,
+      avatarKey: avatarKey,
+    ));
+    final i = _people.indexWhere((m) => m.id == profileId);
+    if (i >= 0) {
+      final m = _people[i];
+      _people[i] = Member(
+        id: m.id,
+        displayName: name ?? m.displayName,
+        color: colorHex == null ? m.color : parseHexColor(colorHex),
+        role: m.role,
+        active: m.active,
+        isChild: isChild ?? m.isChild,
+        sortOrder: m.sortOrder,
+        hasAccount: m.hasAccount,
+        avatarKey: avatarKey == null
+            ? m.avatarKey
+            : (avatarKey.isEmpty ? null : avatarKey),
+      );
+    }
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<void>> reorderMembers({
+    required String? actor,
+    required List<String> profileIds,
+  }) async {
+    reorders.add(profileIds);
+    _people.sort((a, b) {
+      final ia = profileIds.indexOf(a.id), ib = profileIds.indexOf(b.id);
+      return (ia < 0 ? 1 << 20 : ia).compareTo(ib < 0 ? 1 << 20 : ib);
+    });
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<void>> setMemberRole({
+    required String? actor,
+    required String profileId,
+    required Role role,
+  }) async {
+    roleChanges.add((id: profileId, role: role));
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<void>> setMemberActive({
+    required String? actor,
+    required String profileId,
+    required bool active,
+  }) async {
+    activeChanges.add((id: profileId, active: active));
+    final i = _people.indexWhere((m) => m.id == profileId);
+    if (i >= 0) {
+      final m = _people[i];
+      _people[i] = Member(
+        id: m.id,
+        displayName: m.displayName,
+        color: m.color,
+        role: m.role,
+        active: active,
+        isChild: m.isChild,
+        sortOrder: m.sortOrder,
+        hasAccount: m.hasAccount,
+        avatarKey: m.avatarKey,
+      );
+    }
+    return const Ok(null);
+  }
 
   @override
   Future<Result<PinResult>> verifyPin({
@@ -157,8 +301,11 @@ class FakeIdentityRepository implements IdentityRepository {
   @override
   Future<void> signOut() async => signedOut = true;
 
+  /// The family's devices, as the settings page lists them.
+  List<DeviceEntry> devices_ = const [];
+
   @override
-  Future<Result<List<DeviceEntry>>> devices() async => const Ok([]);
+  Future<Result<List<DeviceEntry>>> devices() async => Ok(devices_);
 
   @override
   Future<Result<void>> signIn(String email, String password) async {
@@ -423,7 +570,7 @@ class FakeShoppingRepository implements ShoppingRepository {
     ShoppingSnapshot(
       items: list,
       lists: (await lists()).valueOrNull!,
-      categories: const [],
+      categories: categories_,
       catalog: const [],
     ),
   );
@@ -449,13 +596,108 @@ class FakeShoppingRepository implements ShoppingRepository {
     );
   }
 
-  @override
-  Future<Result<List<ShoppingList>>> lists() async => const Ok([
+  /// The lists and categories the fake serves; tests change them to see the editor.
+  List<ShoppingList> lists_ = const [
     ShoppingList(id: 'l1', name: 'Supermarkt', isDefault: true, openCount: 0),
-  ]);
+  ];
+  List<ShoppingCategory> categories_ = const [];
+  final renames = <({String id, String name})>[];
+  final deletedLists = <String>[];
+  final savedCategories = <({String listId, String? id, String name})>[];
+  final deletedCategories = <String>[];
+  final reorderedCategories = <List<String>>[];
+  final catalogUpdates = <({String id, String? name})>[];
+  final forgottenTiles = <String>[];
 
   @override
-  Future<Result<List<ShoppingCategory>>> categories() async => const Ok([]);
+  Future<Result<List<ShoppingList>>> lists() async => Ok(lists_);
+
+  @override
+  Future<Result<List<ShoppingCategory>>> categories() async => Ok(categories_);
+
+  @override
+  Future<Result<void>> renameList({
+    required String? actor,
+    required String listId,
+    required String name,
+  }) async {
+    renames.add((id: listId, name: name));
+    lists_ = [
+      for (final l in lists_)
+        l.id == listId
+            ? ShoppingList(
+                id: l.id,
+                name: name,
+                isDefault: l.isDefault,
+                openCount: l.openCount,
+              )
+            : l,
+    ];
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<void>> deleteList({
+    required String? actor,
+    required String listId,
+  }) async {
+    deletedLists.add(listId);
+    lists_ = [
+      for (final l in lists_)
+        if (l.id != listId) l,
+    ];
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<String>> saveCategory({
+    required String? actor,
+    required String listId,
+    String? categoryId,
+    required String name,
+  }) async {
+    savedCategories.add((listId: listId, id: categoryId, name: name));
+    return Ok(categoryId ?? 'c-new');
+  }
+
+  @override
+  Future<Result<void>> deleteCategory({
+    required String? actor,
+    required String categoryId,
+  }) async {
+    deletedCategories.add(categoryId);
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<void>> reorderCategories({
+    required String? actor,
+    required String listId,
+    required List<String> categoryIds,
+  }) async {
+    reorderedCategories.add(categoryIds);
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<void>> updateCatalogItem({
+    required String? actor,
+    required String itemId,
+    String? name,
+    String? categoryId,
+  }) async {
+    catalogUpdates.add((id: itemId, name: name));
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<void>> deleteCatalogItem({
+    required String? actor,
+    required String itemId,
+  }) async {
+    forgottenTiles.add(itemId);
+    return const Ok(null);
+  }
 
   @override
   Future<Result<List<CatalogEntry>>> catalog() async => const Ok([]);

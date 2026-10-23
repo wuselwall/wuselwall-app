@@ -4772,4 +4772,191 @@ class AppLocalizationsFr extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get savedMessage => 'Enregistré.';
+
+  @override
+  String get settingsSectionFamily => 'Famille';
+
+  @override
+  String get settingsSectionThisDevice => 'Cet appareil';
+
+  @override
+  String get settingsSectionConnect => 'Partage et connexions';
+
+  @override
+  String get settingsMembersHint =>
+      'Touchez une personne pour changer son nom, sa couleur, son image ou son rôle. Faites glisser la poignée pour changer l’ordre sur le mur.';
+
+  @override
+  String get familyTitle => 'Famille';
+
+  @override
+  String get familySettingsSubtitle =>
+      'Nom, fuseau horaire, export des données, suppression';
+
+  @override
+  String get familyTimezone => 'Fuseau horaire';
+
+  @override
+  String get familyTimezoneHelp => 'Le mur et les rappels suivent ce fuseau.';
+
+  @override
+  String get familyTimezoneSearch => 'Rechercher un fuseau horaire';
+
+  @override
+  String get familyLocale => 'Langue sur le mur';
+
+  @override
+  String get familyLocaleHelp =>
+      'Les jours fériés sur l’écran mural sont nommés dans cette langue.';
+
+  @override
+  String get familyErrTimezone => 'Fuseau horaire inconnu.';
+
+  @override
+  String get memberColour => 'Couleur';
+
+  @override
+  String get memberAvatar => 'Image';
+
+  @override
+  String get memberAvatarInitial => 'Initiale';
+
+  @override
+  String get memberKind => 'Enfant ou adulte';
+
+  @override
+  String get memberRole => 'Rôle';
+
+  @override
+  String get memberRoleHelp =>
+      'Les parents voient tout et approuvent les récompenses. Les membres cochent les tâches.';
+
+  @override
+  String get memberReadOnlyHint =>
+      'Seuls les parents modifient les autres personnes. Vous pouvez changer votre propre nom, couleur et image.';
+
+  @override
+  String get memberInactive => 'Ne fait plus partie du foyer';
+
+  @override
+  String get memberInactiveBody =>
+      'Retiré du mur, des rangées d’avatars et des nouvelles tâches. L’historique et les points restent.';
+
+  @override
+  String get memberDeactivate => 'Ne fait plus partie du foyer';
+
+  @override
+  String memberDeactivateBody(String name) {
+    return '$name disparaît du mur, des rangées d’avatars et des nouvelles tâches. L’historique et les points restent, et vous pouvez ramener la personne ici.';
+  }
+
+  @override
+  String memberDeactivateConfirm(String name) {
+    return 'Retirer $name des écrans de la famille ? L’historique et les points restent.';
+  }
+
+  @override
+  String get memberReactivate => 'De retour';
+
+  @override
+  String memberHasAccountHint(String name) {
+    return '$name a un compte et quitte la famille depuis son propre téléphone (Paramètres → Quitter la famille).';
+  }
+
+  @override
+  String get memberReorderHandle => 'Changer l’ordre';
+
+  @override
+  String get memberErrKindAdult =>
+      'Un parent, ou une personne avec un compte, est un adulte.';
+
+  @override
+  String get memberErrRoleChild =>
+      'Un enfant ne peut pas être parent. Faites-en d’abord un adulte.';
+
+  @override
+  String get memberErrSelf =>
+      'Vous ne pouvez pas vous retirer vous-même. Un autre parent peut le faire.';
+
+  @override
+  String get memberErrHasAccount =>
+      'Cette personne a un compte et quitte la famille depuis son propre téléphone.';
+
+  @override
+  String get deviceRename => 'Renommer l’appareil';
+
+  @override
+  String deviceLastSeen(String ago) {
+    return 'actif pour la dernière fois $ago';
+  }
+
+  @override
+  String get deviceNeverSeen => 'pas encore actif';
+
+  @override
+  String get shoppingEditList => 'Modifier la liste';
+
+  @override
+  String get shoppingListDefault => 'Liste par défaut';
+
+  @override
+  String get shoppingListDefaultHelp =>
+      'L’écran mural ajoute à la liste par défaut.';
+
+  @override
+  String get shoppingCategories => 'Catégories';
+
+  @override
+  String get shoppingCategoriesHelp =>
+      'Dans l’ordre des rayons. Faites glisser la poignée pour les réordonner.';
+
+  @override
+  String get shoppingCategoryAdd => 'Ajouter une catégorie';
+
+  @override
+  String get shoppingCategoryRename => 'Renommer la catégorie';
+
+  @override
+  String get shoppingCategoryName => 'Nom de la catégorie';
+
+  @override
+  String shoppingCategoryDeleteConfirm(String name) {
+    return 'Retirer « $name » ? Ses articles restent sur la liste sans catégorie.';
+  }
+
+  @override
+  String get shoppingListDelete => 'Supprimer la liste';
+
+  @override
+  String shoppingListDeleteConfirm(String name) {
+    return 'Supprimer « $name » ? Les articles ouverts passent sur la liste par défaut ; son historique et ses tuiles disparaissent.';
+  }
+
+  @override
+  String get shoppingErrListDefault =>
+      'La liste par défaut ne peut pas être supprimée. Choisissez d’abord une autre liste par défaut.';
+
+  @override
+  String get shoppingErrTileExists => 'Une tuile porte déjà ce nom.';
+
+  @override
+  String get shoppingTileAddEdit => 'Ajouter et modifier';
+
+  @override
+  String get shoppingTileRename => 'Renommer la tuile';
+
+  @override
+  String get shoppingTileForget => 'Ne plus proposer';
+
+  @override
+  String get shoppingTileForgetHelp =>
+      'La tuile disparaît ; l’historique la garde.';
+
+  @override
+  String shoppingTileForgetConfirm(String name) {
+    return 'Retirer la tuile « $name » ? Le prochain achat la fera revenir.';
+  }
 }
