@@ -129,6 +129,9 @@ measure themselves against.
   subscription and are built for the US (Hearth specifies 110–120 V). Sales in Germany could
   not be confirmed.
 
+*What users of these apps ask for and complain about, and where WuselWall's own friction is,
+is in [research/family-apps](research/family-apps/README.md) (2026-10-24).*
+
 ## Implications for WuselWall
 
 - **The commercial market has a gap.** No commercial app combines a German UI, chores with
