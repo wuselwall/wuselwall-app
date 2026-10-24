@@ -509,8 +509,6 @@ class _EventEditorFormState extends ConsumerState<_EventEditorForm> {
                       ..key = value;
                   }),
           ),
-          if (_draft.kind != EventKind.presence)
-            EventRitualFields(draft: _draft, onChanged: () => setState(() {})),
           const SizedBox(height: 16),
           RepeatSection(
             recurrence: _draft.recurrence,
@@ -519,6 +517,9 @@ class _EventEditorFormState extends ConsumerState<_EventEditorForm> {
             onChanged: (recurrence) =>
                 setState(() => _draft.recurrence = recurrence),
           ),
+          // A picture, Vorfreude and traditions (specs/27), after the repeat.
+          if (_draft.kind != EventKind.presence)
+            EventRitualFields(draft: _draft, onChanged: () => setState(() {})),
           const SizedBox(height: 24),
           FilledButton(
             onPressed: _saving ? null : _save,

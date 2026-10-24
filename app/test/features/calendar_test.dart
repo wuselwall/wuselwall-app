@@ -191,6 +191,10 @@ void main() {
         'rdates',
         'exdates',
         'attendee_ids',
+        // A lighter day (specs/27); an older server ignores them.
+        'icon_key',
+        'countdown',
+        'tradition',
       });
       expect(json['status'], 'tentative');
       expect(json['starts_at'], '2026-10-17T14:00:00.000Z');

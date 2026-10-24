@@ -871,6 +871,215 @@ const _catalogue = <_Definition>[
     constraints: {},
     selfService: true,
   ),
+  // A lighter day (specs/21, 20261024100000).
+  (
+    key: 'member.wusel',
+    scope: SettingScope.member,
+    type: SettingType.enumeration,
+    defaultValue: 'auto',
+    constraints: {
+      'values': ['auto', 'lively', 'quiet', 'off'],
+    },
+    selfService: true,
+  ),
+  (
+    key: 'member.wusel_outfit',
+    scope: SettingScope.member,
+    type: SettingType.enumeration,
+    defaultValue: 'none',
+    constraints: {
+      'values': [
+        'none',
+        'party',
+        'crown',
+        'wizard',
+        'wreath',
+        'sunglasses',
+        'scarf',
+        'headphones',
+        'bow',
+      ],
+    },
+    selfService: true,
+  ),
+  (
+    key: 'device.wusel',
+    scope: SettingScope.device,
+    type: SettingType.enumeration,
+    defaultValue: 'lively',
+    constraints: {
+      'values': ['lively', 'quiet', 'off'],
+    },
+    selfService: false,
+  ),
+  (
+    key: 'device.sounds',
+    scope: SettingScope.device,
+    type: SettingType.enumeration,
+    defaultValue: 'auto',
+    constraints: {
+      'values': ['auto', 'on', 'off'],
+    },
+    selfService: false,
+  ),
+  (
+    key: 'device.sky',
+    scope: SettingScope.device,
+    type: SettingType.boolean,
+    defaultValue: true,
+    constraints: {},
+    selfService: false,
+  ),
+  (
+    key: 'device.pixel_shift',
+    scope: SettingScope.device,
+    type: SettingType.enumeration,
+    defaultValue: 'auto',
+    constraints: {
+      'values': ['auto', 'on', 'off'],
+    },
+    selfService: false,
+  ),
+  (
+    key: 'ambience.season',
+    scope: SettingScope.household,
+    type: SettingType.boolean,
+    defaultValue: true,
+    constraints: {},
+    selfService: false,
+  ),
+  (
+    key: 'ambience.birthdays',
+    scope: SettingScope.household,
+    type: SettingType.boolean,
+    defaultValue: true,
+    constraints: {},
+    selfService: false,
+  ),
+  (
+    key: 'ambience.ferien',
+    scope: SettingScope.household,
+    type: SettingType.boolean,
+    defaultValue: true,
+    constraints: {},
+    selfService: false,
+  ),
+  (
+    key: 'ambience.advent',
+    scope: SettingScope.household,
+    type: SettingType.enumeration,
+    defaultValue: 'auto',
+    constraints: {
+      'values': ['auto', 'on', 'off'],
+    },
+    selfService: false,
+  ),
+  (
+    key: 'ambience.easter_western',
+    scope: SettingScope.household,
+    type: SettingType.enumeration,
+    defaultValue: 'auto',
+    constraints: {
+      'values': ['auto', 'on', 'off'],
+    },
+    selfService: false,
+  ),
+  (
+    key: 'ambience.easter_orthodox',
+    scope: SettingScope.household,
+    type: SettingType.enumeration,
+    defaultValue: 'auto',
+    constraints: {
+      'values': ['auto', 'on', 'off'],
+    },
+    selfService: false,
+  ),
+  (
+    key: 'ambience.new_year',
+    scope: SettingScope.household,
+    type: SettingType.boolean,
+    defaultValue: false,
+    constraints: {},
+    selfService: false,
+  ),
+  (
+    key: 'rituals.countdown_days',
+    scope: SettingScope.household,
+    type: SettingType.integer,
+    defaultValue: 14,
+    constraints: {'min': 7, 'max': 60},
+    selfService: false,
+  ),
+  (
+    key: 'rituals.countdown_return',
+    scope: SettingScope.household,
+    type: SettingType.boolean,
+    defaultValue: true,
+    constraints: {},
+    selfService: false,
+  ),
+  (
+    key: 'meals.wishes',
+    scope: SettingScope.household,
+    type: SettingType.enumeration,
+    defaultValue: 'children',
+    constraints: {
+      'values': ['children', 'everyone', 'off'],
+    },
+    selfService: false,
+  ),
+  (
+    key: 'meals.wishes_per_week',
+    scope: SettingScope.household,
+    type: SettingType.integer,
+    defaultValue: 1,
+    constraints: {'min': 1, 'max': 3},
+    selfService: false,
+  ),
+  (
+    key: 'rituals.table_question',
+    scope: SettingScope.household,
+    type: SettingType.enumeration,
+    defaultValue: 'warm_meal',
+    constraints: {
+      'values': ['warm_meal', 'main_meals', 'off'],
+    },
+    selfService: false,
+  ),
+  (
+    key: 'rituals.table_question.lunch',
+    scope: SettingScope.household,
+    type: SettingType.timeRange,
+    defaultValue: {'from': '11:30', 'to': '13:30'},
+    constraints: {},
+    selfService: false,
+  ),
+  (
+    key: 'rituals.table_question.dinner',
+    scope: SettingScope.household,
+    type: SettingType.timeRange,
+    defaultValue: {'from': '17:30', 'to': '19:30'},
+    constraints: {},
+    selfService: false,
+  ),
+  (
+    key: 'rituals.table_question_deck',
+    scope: SettingScope.household,
+    type: SettingType.enumeration,
+    defaultValue: 'family',
+    constraints: {
+      'values': ['family', 'older'],
+    },
+    selfService: false,
+  ),
+  (
+    key: 'rituals.week_review',
+    scope: SettingScope.household,
+    type: SettingType.weekdayTime,
+    defaultValue: {'weekday': 7, 'time': '16:00'},
+    constraints: {'nullable': true},
+    selfService: false,
+  ),
 ];
 
 /// The household-level rows of [_catalogue], sorted by key, as `api.settings` returns them.
@@ -1046,6 +1255,10 @@ class DemoCalendarRepository implements CalendarRepository {
       exdates: event.exdates,
       attendeeIds: event.attendeeIds,
       location: event.location,
+      iconKey: event.iconKey,
+      countdown: event.countdown,
+      tradition: event.tradition,
+      traditionMeal: event.traditionMeal,
     );
     _deleted.remove(id);
     _saved
@@ -1273,11 +1486,15 @@ class _Weekly {
     required this.attendees,
     this.presence,
     this.location,
+    this.tradition = false,
+    this.iconKey,
   });
 
   final String id;
   final String title;
   final int weekday;
+  final bool tradition;
+  final String? iconKey;
   final TimeOfDay start;
   final TimeOfDay end;
   final List<String> attendees;
@@ -1310,6 +1527,8 @@ class _Weekly {
     localEnds: end,
     attendeeIds: attendees,
     isRecurring: recurring,
+    tradition: tradition,
+    iconKey: iconKey,
   );
 
   CalendarEvent event(DateTime monday) {
@@ -1331,6 +1550,8 @@ class _Weekly {
       rrule: 'FREQ=WEEKLY;BYDAY=${_byDay[weekday]}',
       attendeeIds: attendees,
       location: location,
+      tradition: tradition,
+      iconKey: iconKey,
     );
   }
 
@@ -1357,11 +1578,15 @@ class _OneOff {
     this.end,
     this.presence,
     this.tentative = false,
+    this.countdown = false,
+    this.iconKey,
   });
 
   final String id;
   final String title;
   final int firstDay;
+  final bool countdown;
+  final String? iconKey;
   final int lastDay;
   final List<String> attendees;
 
@@ -1400,6 +1625,8 @@ class _OneOff {
       localStarts: start,
       localEnds: end,
       attendeeIds: attendees,
+      countdown: countdown,
+      iconKey: iconKey,
     );
   }
 
@@ -1429,6 +1656,8 @@ class _OneOff {
       startDate: timed ? null : first,
       endDate: timed ? null : last,
       attendeeIds: attendees,
+      countdown: countdown,
+      iconKey: iconKey,
     );
   }
 }
@@ -1458,6 +1687,17 @@ List<_Weekly> get _weekly => [
     start: const TimeOfDay(hour: 15, minute: 30),
     end: const TimeOfDay(hour: 16, minute: 0),
     attendees: const [DemoData.daughter],
+  ),
+  // A family tradition (specs/27): every Friday, the whole family.
+  _Weekly(
+    id: 'e-spieleabend',
+    title: demoText('Spieleabend'),
+    weekday: DateTime.friday,
+    start: const TimeOfDay(hour: 18, minute: 30),
+    end: const TimeOfDay(hour: 20, minute: 0),
+    attendees: _allFour,
+    tradition: true,
+    iconKey: 'game_die',
   ),
   _Weekly(
     id: 'e-dienst-mo',
@@ -1503,6 +1743,16 @@ List<_OneOff> get _oneOffs => [
     attendees: const [DemoData.mama],
     start: const TimeOfDay(hour: 19, minute: 30),
     end: const TimeOfDay(hour: 21, minute: 0),
+  ),
+  // Something to look forward to (specs/27 "Vorfreude"): next week's Saturday.
+  _OneOff(
+    id: 'e-zoo',
+    title: demoText('Zoo-Ausflug'),
+    firstDay: 12,
+    lastDay: 12,
+    attendees: _allFour,
+    countdown: true,
+    iconKey: 'zoo',
   ),
   _OneOff(
     id: 'e-grillen',

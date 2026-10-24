@@ -502,6 +502,8 @@ Map<String, dynamic> _ev(
   String? place,
   bool tentative = false,
   bool key = true,
+  bool tradition = false,
+  String? icon,
 }) => {
   'title': demoText(title),
   'location': demoTextOrNull(place),
@@ -510,6 +512,8 @@ Map<String, dynamic> _ev(
   'attendee_ids': who,
   'tentative': tentative,
   'key': key,
+  if (tradition) 'tradition': true,
+  'icon_key': ?icon,
 };
 
 /// The day's appointments, all-day first, then by start.
@@ -538,11 +542,15 @@ List<Map<String, dynamic>> _events(int day) {
       ], place: 'Musikschule'),
     ],
     4 => [
-      _ev('Kinoabend', '18:00', '19:00', [
-        DemoData.daughter,
-        DemoData.son,
-        DemoData.mama,
-      ]),
+      // A family tradition with its picture (specs/27).
+      _ev(
+        'Kinoabend',
+        '18:00',
+        '19:00',
+        [DemoData.daughter, DemoData.son, DemoData.mama],
+        tradition: true,
+        icon: 'cinema',
+      ),
     ],
     5 => [
       _ev('Fußballturnier', '10:00', '11:00', [
@@ -573,5 +581,7 @@ Map<String, dynamic> _meal(int day) {
     'cook_id': cook,
     'eating': eating,
     'guests': guests,
+    // Wednesday's dinner is the son's wish (specs/27 "Wunschessen").
+    if (day == 2) 'wished_by': DemoData.son,
   };
 }
