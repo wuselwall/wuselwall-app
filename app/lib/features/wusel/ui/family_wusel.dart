@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
+import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/wusel/wusel.dart';
+import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
 
 /// Wusel as this family sees it (specs/25): the tufts in the members' colours, the
@@ -40,7 +42,7 @@ class FamilyWusel extends ConsumerWidget {
     if (day.wusel == WuselPresence.quiet && !quietAllowed) {
       return const SizedBox.shrink();
     }
-    Widget wusel = Wusel(
+    return Wusel(
       colors: WuselColors.of(context.ww.shade, ref.watch(wuselTuftsProvider)),
       pose: pose,
       size: size,
@@ -48,16 +50,17 @@ class FamilyWusel extends ConsumerWidget {
       frontTuft: ref.watch(wuselFrontTuftProvider),
       moment: moment,
       onTap: tappable && day.wusel == WuselPresence.lively ? () {} : null,
-    );
-    if (day.wusel == WuselPresence.quiet) {
       // Quiet is still: the pose's still look, no motion.
-      wusel = MediaQuery(
-        data: MediaQuery.of(context).copyWith(disableAnimations: true),
-        child: wusel,
-      );
-    }
-    return wusel;
+      still: day.wusel == WuselPresence.quiet,
+      // The wall rests between moments (specs/25 "Power on the wall").
+      restAfter: ref.watch(uiRegisterProvider) == UiRegister.kiosk
+          ? wallRestAfter
+          : null,
+    );
   }
+
+  /// How long the wall's Wusel keeps blinking after a moment.
+  static const wallRestAfter = Duration(seconds: 60);
 }
 
 /// Wusel with a line in a speech bubble beside it. The line is ordinary text in the

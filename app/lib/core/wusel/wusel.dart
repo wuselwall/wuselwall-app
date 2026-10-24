@@ -30,6 +30,8 @@ class Wusel extends StatefulWidget {
     this.frontTuft,
     this.moment,
     this.onTap,
+    this.still = false,
+    this.restAfter,
     super.key,
   });
 
@@ -46,6 +48,14 @@ class Wusel extends StatefulWidget {
 
   /// A tap gives one of three small reactions (specs/25 "Poses"); null for none.
   final VoidCallback? onTap;
+
+  /// Holds the pose's still look, as under reduced motion: a quiet Wusel, a picker.
+  final bool still;
+
+  /// Stops the idle blink this long after the last moment (a new pose, [moment] or a
+  /// tap), until the next one: the wall rests after 60 s (specs/25 "Power on the
+  /// wall"). Null blinks for as long as Wusel is shown.
+  final Duration? restAfter;
 
   /// Below this Wusel stops reading as a character (specs/25 "The drawing").
   static const minSize = 32.0;
@@ -69,6 +79,11 @@ class _WuselState extends State<Wusel> with SingleTickerProviderStateMixin {
   Timer? _pulseTimer;
   int _reaction = 0;
 
+  /// Runs from the last moment until [Wusel.restAfter]; once it has fired, no blink is
+  /// scheduled until the next moment.
+  Timer? _restTimer;
+  bool _resting = false;
+
   static const _blend = Duration(milliseconds: 250);
   static const _blinkLength = Duration(milliseconds: 180);
   static const _pulseLength = Duration(seconds: 3);
@@ -80,7 +95,11 @@ class _WuselState extends State<Wusel> with SingleTickerProviderStateMixin {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final moving = motionAllowed(context);
+    _updateMotion();
+  }
+
+  void _updateMotion() {
+    final moving = !widget.still && motionAllowed(context);
     if (moving == _moving) return;
     final first = _moving == null;
     _moving = moving;
@@ -100,6 +119,10 @@ class _WuselState extends State<Wusel> with SingleTickerProviderStateMixin {
   @override
   void didUpdateWidget(Wusel old) {
     super.didUpdateWidget(old);
+    if (old.still != widget.still) {
+      _updateMotion();
+      return;
+    }
     if (old.pose == widget.pose && old.moment == widget.moment) return;
     if (_moving != true) {
       setState(() => _look = widget.pose.still);
@@ -118,8 +141,10 @@ class _WuselState extends State<Wusel> with SingleTickerProviderStateMixin {
   void _stopAll() {
     _blinkTimer?.cancel();
     _pulseTimer?.cancel();
+    _restTimer?.cancel();
     _blinkTimer = null;
     _pulseTimer = null;
+    _restTimer = null;
     _run = null;
     if (_ticker.isTicking) _ticker.stop();
   }
@@ -128,6 +153,7 @@ class _WuselState extends State<Wusel> with SingleTickerProviderStateMixin {
     _blinkTimer?.cancel();
     _pulseTimer?.cancel();
     if (_ticker.isTicking) _ticker.stop();
+    if (kind == _RunKind.pose || kind == _RunKind.reaction) _momentNow();
     _run = _Run(kind);
     _blendFrom = from;
     _now = Duration.zero;
@@ -196,7 +222,22 @@ class _WuselState extends State<Wusel> with SingleTickerProviderStateMixin {
     });
   }
 
+  /// A moment happened: blink again, and rest [Wusel.restAfter] from now.
+  void _momentNow() {
+    _resting = false;
+    _restTimer?.cancel();
+    final after = widget.restAfter;
+    _restTimer = after == null
+        ? null
+        : Timer(after, () {
+            _resting = true;
+            _blinkTimer?.cancel();
+            _blinkTimer = null;
+          });
+  }
+
   void _scheduleBlink() {
+    if (_resting) return;
     _blinkTimer = Timer(
       Duration(milliseconds: 3000 + _random.nextInt(4000)),
       () {

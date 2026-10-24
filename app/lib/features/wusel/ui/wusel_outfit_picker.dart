@@ -34,8 +34,10 @@ class WuselOutfitPicker extends ConsumerWidget {
             button: true,
             selected: outfit == selected,
             label: wuselOutfitName(context.l10n, outfit),
+            // The name is read once, from the label above; the tooltip is for eyes.
             child: Tooltip(
               message: wuselOutfitName(context.l10n, outfit),
+              excludeFromSemantics: true,
               child: InkWell(
                 key: ValueKey('wusel-outfit-${outfit.name}'),
                 borderRadius: BorderRadius.circular(14),
@@ -52,10 +54,11 @@ class WuselOutfitPicker extends ConsumerWidget {
                     ),
                   ),
                   // Still: a row of nine moving Wusels would be a lot.
-                  child: MediaQuery(
-                    data: MediaQuery.of(context)
-                        .copyWith(disableAnimations: true),
-                    child: Wusel(colors: colors, outfit: outfit, size: 56),
+                  child: Wusel(
+                    colors: colors,
+                    outfit: outfit,
+                    size: 56,
+                    still: true,
                   ),
                 ),
               ),
