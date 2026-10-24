@@ -144,6 +144,9 @@ services:
       # timetable-scan function): the address of the optional ocr service below. Empty = the
       # app offers the paste import only.
       OCR_URL: ${OCR_URL:-}
+      # The server release the stack runs (server/wuselwall writes it on install and update):
+      # the discovery document announces it, and the app's settings show it.
+      WW_SERVER_VERSION: ${WW_SERVER_VERSION:-}
 
   # Optional (profile `ocr`): RapidOCR on the CPU, built from ./ocr, no public port, no internet
   # once built. docs/server/extras.md "Texterkennung". Start with

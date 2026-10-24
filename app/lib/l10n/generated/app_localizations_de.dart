@@ -4967,4 +4967,19 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get schoolScanFile => 'Datei wählen (PDF oder Bild)';
+
+  @override
+  String get schoolImportPhotoUnavailable =>
+      'Dein Server liest noch keine Fotos.';
+
+  @override
+  String get settingsVersions => 'Versionen';
+
+  @override
+  String settingsVersionsLine(String app, String server, String api) {
+    return 'App $app · Server $server · Schnittstelle $api';
+  }
+
+  @override
+  String get settingsVersionUnknown => 'unbekannt';
 }

@@ -1922,5 +1922,9 @@
   "shoppingTileForget": "Nicht mehr vorschlagen",
   "shoppingTileForgetHelp": "Die Kachel verschwindet; der Verlauf behält sie.",
   "shoppingTileForgetConfirm": "Die Kachel „{name}“ entfernen? Beim nächsten Kauf kommt sie zurück.",
-  "schoolScanFile": "Datei wählen (PDF oder Bild)"
+  "schoolScanFile": "Datei wählen (PDF oder Bild)",
+  "schoolImportPhotoUnavailable": "Dein Server liest noch keine Fotos.",
+  "settingsVersions": "Versionen",
+  "settingsVersionsLine": "App {app} · Server {server} · Schnittstelle {api}",
+  "settingsVersionUnknown": "unbekannt"
 }

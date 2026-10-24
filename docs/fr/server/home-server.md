@@ -73,6 +73,12 @@ Les quatre codes de langue sont acceptés. L’outil écrit `MAIL_LANGUAGE`, cho
 
 L’outil sauvegarde avant de télécharger et d’appliquer la nouvelle version, y compris la base, l’app web et les tâches planifiées. Si vous utilisiez Apple ou Google pour la connexion, lisez d’abord la [migration](/fr/server/extras#retiring-social-sign-in).
 
+### Quelle app avec quel serveur {#compatibilite}
+
+L’app vérifie elle-même, en se connectant, qu’elle va avec ton serveur, et te dit quand l’app ou le serveur a besoin d’une mise à jour. Chaque app comprend l’API de son serveur et celle d’avant ; le serveur indique aussi l’app la plus ancienne avec laquelle il fonctionne encore. Ce qui tourne s’affiche dans l’app sous **Réglages → Versions**, par exemple « App 1.1.0 · Serveur 0.3.0 · API 1 ». À partir du serveur 0.3.0, le serveur y indique sa version ; l’app ne propose la reconnaissance de texte que si le serveur l’a installée.
+
+<CompatTable />
+
 ::: warning Mises à jour coordonnées
 N’utilisez pas Watchtower ni les mises à jour automatiques de conteneurs du NAS pour cette pile. Passez par `wuselwall update` pour conserver un ensemble compatible.
 :::

@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/server/server_providers.dart';
+import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/school/ui/timetable_paste_sheet.dart';
 import 'package:wuselwall/features/school/ui/timetable_scan.dart';
 
@@ -19,6 +21,7 @@ class TimetableImportMenu extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
+    final scan = ref.watch(serverSupportsProvider(featureTimetableScan));
     return PopupMenuButton<TimetableImportWay>(
       tooltip: l10n.schoolImportAction,
       onSelected: (way) => unawaited(
@@ -37,6 +40,8 @@ class TimetableImportMenu extends ConsumerWidget {
           child: ListTile(
             leading: const Icon(Icons.document_scanner_outlined),
             title: Text(l10n.schoolImportFromPhoto),
+            subtitle: scan ? null : Text(l10n.schoolImportPhotoUnavailable),
+            enabled: scan,
           ),
         ),
       ],
@@ -63,6 +68,7 @@ Future<void> showTimetableImportMenu(
     showDragHandle: true,
     builder: (sheetContext) {
       final l10n = sheetContext.l10n;
+      final scan = ref.read(serverSupportsProvider(featureTimetableScan));
       return SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -78,6 +84,10 @@ Future<void> showTimetableImportMenu(
               key: const ValueKey('import-way-photo'),
               leading: const Icon(Icons.document_scanner_outlined),
               title: Text(l10n.schoolImportFromPhoto),
+              // Greyed out, not hidden, where the server cannot read photos: the tap
+              // says why and where its operator finds the guide.
+              subtitle: scan ? null : Text(l10n.schoolImportPhotoUnavailable),
+              enabled: scan,
               onTap: () =>
                   Navigator.of(sheetContext).pop(TimetableImportWay.photo),
             ),
@@ -91,6 +101,20 @@ Future<void> showTimetableImportMenu(
 }
 
 Future<void> runTimetableImport(
+  BuildContext context,
+  WidgetRef ref,
+  TimetableImportWay way, {
+  String? profileId,
+}) async {
+  if (way == TimetableImportWay.photo &&
+      !ref.read(serverSupportsProvider(featureTimetableScan))) {
+    context.showMessage(context.l10n.schoolScanNotConfigured);
+    return;
+  }
+  await _run(context, ref, way, profileId: profileId);
+}
+
+Future<void> _run(
   BuildContext context,
   WidgetRef ref,
   TimetableImportWay way, {

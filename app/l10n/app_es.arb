@@ -2596,5 +2596,9 @@
   "shoppingTileForget": "No sugerir más",
   "shoppingTileForgetHelp": "La tarjeta desaparece; el historial la conserva.",
   "shoppingTileForgetConfirm": "¿Quitar la tarjeta «{name}»? La próxima compra la traerá de vuelta.",
-  "schoolScanFile": "Elegir un archivo (PDF o imagen)"
+  "schoolScanFile": "Elegir un archivo (PDF o imagen)",
+  "schoolImportPhotoUnavailable": "Tu servidor todavía no lee fotos.",
+  "settingsVersions": "Versiones",
+  "settingsVersionsLine": "App {app} · Servidor {server} · API {api}",
+  "settingsVersionUnknown": "desconocida"
 }

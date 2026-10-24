@@ -8470,6 +8470,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Choose a file (PDF or picture)'**
   String get schoolScanFile;
+
+  /// No description provided for @schoolImportPhotoUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Your server can\'t read photos yet.'**
+  String get schoolImportPhotoUnavailable;
+
+  /// No description provided for @settingsVersions.
+  ///
+  /// In en, this message translates to:
+  /// **'Versions'**
+  String get settingsVersions;
+
+  /// No description provided for @settingsVersionsLine.
+  ///
+  /// In en, this message translates to:
+  /// **'App {app} · Server {server} · API {api}'**
+  String settingsVersionsLine(String app, String server, String api);
+
+  /// No description provided for @settingsVersionUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'unknown'**
+  String get settingsVersionUnknown;
 }
 
 class _AppLocalizationsDelegate

@@ -103,6 +103,12 @@ the sign-in methods and `features`. A front of the server's own also
 serves it at `/.well-known/wuselwall.json`. The app reads the `.well-known` path first,
 then the function, so a hosted project's `https://<id>.supabase.co` is a complete address.
 
+*Added 2026-10-24:* the function adds the features that depend on the stack's
+configuration rather than its migrations (`timetable-scan` when `OCR_URL` is set; the app
+greys the photo import out and says why where it is missing), and `server_version`, the
+release from `WW_SERVER_VERSION`, which `wuselwall install` and `update` write into the
+stack's `.env`. The app shows "App · Server · API" under Settings → Versions.
+
 ### The scheduled jobs
 
 `tasks-nightly` (daily), `holidays-sync` (weekly) and `calendar-import` (hourly, the
@@ -308,7 +314,11 @@ built 2026-10-14.* The project ships a **server release**, not a service.
   through the Management API's query endpoint; optionally the web app on GitHub Pages.
 - **Compatibility:** a migration that changes the app–server contract raises `api_version`
   in `api.server_info()`. Each app release supports the current and the previous one; a
-  server can turn old apps away with `min_app_version`.
+  server can turn old apps away with `min_app_version`. Release numbers of the apps and
+  the server are independent; the docs' server page shows which release speaks which API
+  in a table the docs build reads from the release tags (`docs/.vitepress/theme/
+  compat.data.mts`), so it cannot fall behind a release. An addition within one API
+  version that an old server lacks is announced in `features`, not by a new API version.
 - **Support boundary:** the guide in `docs/` and GitHub issues. The project never sees,
   backs up or restores a household's data.
 
