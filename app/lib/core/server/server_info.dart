@@ -9,6 +9,7 @@ class ServerInfo {
     required this.minAppVersion,
     this.householdCreation = 'token',
     this.features = const [],
+    this.serverVersion,
   });
 
   /// Reads a discovery document fetched from [origin]. The server names its own
@@ -24,6 +25,7 @@ class ServerInfo {
     final api = json['api_version'];
     final min = json['min_app_version'];
     final features = json['features'];
+    final release = json['server_version'];
     if (supabaseUrl == null ||
         !supabaseUrl.hasScheme ||
         supabaseUrl.host.isEmpty ||
@@ -47,6 +49,9 @@ class ServerInfo {
       features: features is List
           ? features.whereType<String>().toList()
           : const [],
+      serverVersion: release is String && _semver.hasMatch(release)
+          ? release
+          : null,
     );
   }
 
@@ -58,6 +63,10 @@ class ServerInfo {
   final String householdCreation;
   final List<String> features;
 
+  /// The server release ("0.2.0"), when the server announces it; servers from before
+  /// 0.3.0 and stacks run from a checkout do not.
+  final String? serverVersion;
+
   /// The form the app keeps on the device; [ServerInfo.fromDiscovery] reads it back.
   Map<String, Object?> toJson() => {
     'wuselwall': 1,
@@ -68,6 +77,7 @@ class ServerInfo {
     'household_creation': householdCreation,
     'sign_in': {'password': true},
     'features': features,
+    'server_version': ?serverVersion,
   };
 
   static final _semver = RegExp(r'^\d+\.\d+\.\d+$');

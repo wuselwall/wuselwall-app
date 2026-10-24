@@ -723,3 +723,26 @@ insert into app.export_table (name, position, omit, keep) values
   ('tradition_meal', 275, '{}', null),
   ('meal_wish',      276, '{}', null),
   ('table_question', 277, '{}', null);
+
+-- ================================================================== announce
+
+-- The server says it has a lighter day, so an app hides the controls that would write these
+-- fields on a server that lacks them (api.server_info's `features`, ADR-018).
+create or replace function api.server_info()
+returns jsonb
+language sql
+immutable
+security invoker
+set search_path = ''
+as $$
+  select jsonb_build_object(
+    'api_version', 1,
+    'min_app_version', '1.0.0',
+    'household_creation', 'token',
+    'features', jsonb_build_array(
+      'calendar', 'ics', 'calendar-import', 'school', 'tasks', 'meals', 'shopping', 'holidays',
+      'lighter-day'
+    )
+  );
+$$;
+

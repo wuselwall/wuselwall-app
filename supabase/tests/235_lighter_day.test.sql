@@ -1,5 +1,5 @@
 begin;
-select plan(57);
+select plan(58);
 
 
 -- Start from an empty system, whatever the database already holds (all rolled back).
@@ -252,6 +252,8 @@ select api.event_save(null, jsonb_build_object('id', (select id from api.events 
   'kind', 'appointment', 'is_all_day', true, 'start_date', '2026-11-06', 'end_date', '2026-11-06', 'importance', 'normal'));
 select is((select importance from api.events where title = 'Pizza'), 'key', 'a tradition stays on the board when an older app saves it');
 
+
+select ok(api.server_info() -> 'features' ? 'lighter-day', 'the server announces a lighter day');
 
 select * from finish();
 rollback;

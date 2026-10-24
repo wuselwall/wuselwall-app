@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
+import 'package:wuselwall/core/server/server_providers.dart';
 import 'package:wuselwall/core/wusel/wusel.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
@@ -169,15 +170,10 @@ final wuselFrontTuftProvider = Provider.autoDispose<int?>((ref) {
   return i < 0 ? null : i;
 });
 
-/// Whether the household's server knows a lighter day (migration 20261024100000): its
-/// settings catalogue has the rituals' rows. Against an older server the controls that
-/// would write the new fields stay hidden instead of failing (each app release supports
-/// the previous server release too).
+/// Whether the household's server knows a lighter day: it announces the feature in its
+/// discovery document (ADR-020). Against an older server the controls that would write
+/// the new fields stay hidden instead of failing (each app release supports the previous
+/// server release too).
 final lighterDaySupportedProvider = Provider.autoDispose<bool>(
-  (ref) =>
-      ref
-          .watch(householdSettingsProvider)
-          .value
-          ?.any((e) => e.key == 'rituals.countdown_days') ??
-      false,
+  (ref) => ref.watch(serverSupportsProvider(featureLighterDay)),
 );

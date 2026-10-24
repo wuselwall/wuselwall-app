@@ -114,6 +114,26 @@ void main() {
       expect(s.features, ['calendar', 'shopping']);
     });
 
+    test('reads the server release when it is announced, and keeps it', () {
+      expect(info().serverVersion, isNull);
+      final s = ServerInfo.fromDiscovery({
+        ...doc(),
+        'server_version': '0.3.0',
+      }, origin: Uri.parse('https://api.example.org'));
+      expect(s.serverVersion, '0.3.0');
+      final back = ServerInfo.fromDiscovery(
+        s.toJson(),
+        origin: Uri.parse('https://api.example.org'),
+      );
+      expect(back.serverVersion, '0.3.0');
+      // Anything that is no version is left out, not shown.
+      final odd = ServerInfo.fromDiscovery({
+        ...doc(),
+        'server_version': 'dev',
+      }, origin: Uri.parse('https://api.example.org'));
+      expect(odd.serverVersion, isNull);
+    });
+
     test('without supabase_url the document speaks for its own origin', () {
       final s = ServerInfo.fromDiscovery(
         doc(url: null),

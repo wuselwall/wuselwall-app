@@ -40,9 +40,9 @@ try {
   await page.locator('#drawer-handle').click();
   await row.locator('[data-drop]').click();
   assert.equal(await row.count(), 0);
+  await page.locator('#drawer-handle').click();
   await tile.click();
   assert.equal(await row.count(), 1);
-  await page.locator('#drawer-handle').click();
 
   await tile.click({ delay: 550 });
   assert.equal(await page.locator('#np-name').textContent(), name);

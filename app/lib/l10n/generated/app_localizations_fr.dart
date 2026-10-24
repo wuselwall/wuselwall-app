@@ -4997,6 +4997,21 @@ class AppLocalizationsFr extends AppLocalizations {
   String get schoolScanFile => 'Choisir un fichier (PDF ou image)';
 
   @override
+  String get schoolImportPhotoUnavailable =>
+      'Ton serveur ne lit pas encore les photos.';
+
+  @override
+  String get settingsVersions => 'Versions';
+
+  @override
+  String settingsVersionsLine(String app, String server, String api) {
+    return 'App $app · Serveur $server · API $api';
+  }
+
+  @override
+  String get settingsVersionUnknown => 'inconnue';
+
+  @override
   String get settingsSectionRituals => 'Rituels';
 
   @override

@@ -1,18 +1,22 @@
 #!/usr/bin/env node
 // `flutter test` for CI, run from app/. On the self-hosted runners flutter_tester sometimes
-// dies of SIGSEGV after a test file has finished: every test of the file passed, then
-// flutter_tools prints "unhandled error during finalization of test: <file>
-// TestDeviceException(Shell subprocess crashed with segmentation fault.)" and exits 1.
-// It happens with and without --coverage, on files that differ from run to run, and was
-// never reproduced off those runners; the native cause is unknown.
+// dies of SIGSEGV while a test file runs: flutter_tools prints "unhandled error during
+// finalization of test: <file> TestDeviceException(Shell subprocess crashed with segmentation
+// fault.)" and exits 1. It happens with and without --coverage, on files that differ from run
+// to run, and was never reproduced off those runners; the native cause is unknown.
+//
+// The crash cuts the file short. package:test completes the test that was running and every
+// later test of that file as soon as the tester's channel closes, without an error event; the
+// JSON reporter calls each of them "error" (the console reporter shows them as passed). So
+// the file's tests did not all run, and the file has to run again as a whole.
 //
 // This wrapper prints the runner facts a native diagnosis needs, runs the suite once and, only
-// when the sole problem is that crash after files whose tests all passed, runs those files
-// once more and returns that run's status. Only a flutter exit status of 1 qualifies: a
-// flutter killed by a signal, any other status, a failing, erroring or unfinished test, any
-// other error, or a crash in the second run keeps the job red. Each rerun leaves a warning
-// annotation; when it declines to rerun, it says why. Where gdb is installed it also lets the
-// tester dump core and prints the crashing thread's backtrace.
+// when the sole problem is that crash, runs the crashed files once more and returns that run's
+// status. Only a flutter exit status of 1 qualifies: a flutter killed by a signal, any other
+// status, a failing or unfinished test, an error event other than the crash, a test outside
+// the crashed files that did not pass, or a crash in the second run keeps the job red. Each
+// rerun leaves a warning annotation; when it declines to rerun, it says why. Where gdb is
+// installed it also lets the tester dump core and prints the crashing thread's backtrace.
 import { spawn, spawnSync } from 'node:child_process';
 import { arch, availableParallelism, constants, cpus, freemem, release, totalmem } from 'node:os';
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync } from 'node:fs';
@@ -23,9 +27,10 @@ export const CRASH = 'TestDeviceException(Shell subprocess crashed with segmenta
 const UNHANDLED = /unhandled error during (finalization of )?test:$/;
 
 /**
- * Decides whether a failed run failed only because flutter_tester crashed after files whose
- * tests had all passed. Takes the console output and the JSON reporter's lines. Returns
- * { files } to run again, or { reason, events } when the run's result must stand.
+ * Decides whether a failed run failed only because flutter_tester crashed. Takes the console
+ * output and the JSON reporter's lines. Returns { files, cut } to run again (cut: file -> the
+ * number of its tests the crash cut short), or { reason, events } when the run's result must
+ * stand.
  */
 export function assessCrash(output, jsonLines) {
   const crashed = new Set();
@@ -63,10 +68,14 @@ export function assessCrash(output, jsonLines) {
   const crashedSuites = new Set([...suites].filter(([, path]) => crashed.has(path)).map(([id]) => id));
   if (crashedSuites.size !== crashed.size) return { reason: 'a crashed file is missing from the JSON report' };
   const isCrashLoader = (test) => test?.name.startsWith('loading ') && crashedSuites.has(test.suiteID);
+  // A test the crash cut short: completed when the channel closed, so "error" with no error event.
+  const errored = new Set(errors.map((e) => e.testID));
+  const isCutShort = (test) => crashedSuites.has(test.suiteID) && test.result === 'error' && !errored.has(test.id);
   const describe = (test) => `${suites.get(test?.suiteID)}: ${test?.name}`;
   const events = [
     ...errors.map((e) => `error on ${describe(tests.get(e.testID))}: ${String(e.error).slice(0, 200)}`),
-    ...[...tests.values()].filter((t) => t.result !== 'success').map((t) => `${t.result ?? 'unfinished'}: ${describe(t)}`),
+    ...[...tests.values()].filter((t) => t.result !== 'success')
+      .map((t) => `${isCutShort(t) ? 'cut short by the crash' : t.result ?? 'unfinished'}: ${describe(t)}`),
   ];
 
   // The only error allowed is the crash itself, reported on a crashed file's loading step.
@@ -75,19 +84,24 @@ export function assessCrash(output, jsonLines) {
   }
   for (const test of tests.values()) {
     if (test.result === undefined) return { reason: 'a test started and never finished', events };
-    if (test.result !== 'success' && !isCrashLoader(test)) return { reason: 'a test did not pass', events };
+    if (test.result !== 'success' && !isCrashLoader(test) && !isCutShort(test)) return { reason: 'a test did not pass', events };
   }
-  // Every file loaded and every one of its tests finished; a crash mid-file leaves some unrun.
+  // Every file loaded, and every file the tester did not crash in finished all its tests. A
+  // crashed file may have fewer: it runs again as a whole.
   if (suiteCount === undefined || suites.size !== suiteCount) {
     return { reason: `${suites.size} of ${suiteCount ?? '?'} files reported`, events };
   }
   for (const id of suites.keys()) {
+    if (crashedSuites.has(id)) continue;
     const finished = [...tests.values()].filter((t) => t.suiteID === id && !t.hidden).length;
     if (!expected.has(id) || finished !== expected.get(id)) {
       return { reason: `${suites.get(id)}: ${finished} of ${expected.get(id) ?? '?'} tests finished`, events };
     }
   }
-  return { files: [...crashed].sort() };
+  const cut = Object.fromEntries([...crashedSuites].map((id) => [
+    suites.get(id), [...tests.values()].filter((t) => t.suiteID === id && isCutShort(t)).length,
+  ]));
+  return { files: [...crashed].sort(), cut };
 }
 
 const sh = (command) => spawnSync('sh', ['-c', command], { encoding: 'utf8' }).stdout?.trim() || '';
@@ -185,7 +199,8 @@ async function main() {
     return first.status;
   }
   for (const file of verdict.files) {
-    console.log(`::warning title=flutter_tester crashed after its tests passed::${file} (SIGSEGV after every test passed). Running this file once more.`);
+    const cut = verdict.cut[file] ? `, ${verdict.cut[file]} of its tests cut short` : ', after its tests passed';
+    console.log(`::warning title=flutter_tester crashed::${file} (SIGSEGV${cut}). Running this file once more.`);
   }
   const retry = await flutterTest(verdict.files, 'build/test-results-retry.json');
   if (gdb) backtraces();

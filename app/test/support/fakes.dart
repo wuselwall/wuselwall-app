@@ -16,6 +16,7 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/app_language.dart';
 import 'package:wuselwall/core/notifications/notification_scheduler_provider.dart';
 import 'package:wuselwall/core/realtime/household_channel.dart';
+import 'package:wuselwall/core/server/server_providers.dart';
 import 'package:wuselwall/core/server/setup_store.dart';
 import 'package:wuselwall/core/supabase/supabase_providers.dart';
 import 'package:wuselwall/features/account/application/account_admin_providers.dart';
@@ -899,6 +900,10 @@ List<Override> baseOverrides({
   /// Basic, as on a new device; tests of an Advanced row pass [SettingsView.advanced].
   SettingsView settingsView = SettingsView.basic,
   SettingsViewStore? settingsViewStore,
+
+  /// The app's configuration; a test of a server's discovery document passes one with
+  /// [AppConfig.server] set.
+  AppConfig? appConfig,
   bool signedIn = true,
   bool online = true,
 
@@ -949,12 +954,14 @@ List<Override> baseOverrides({
     externalCalendars ?? FakeExternalCalendarsRepository(),
   ),
   appConfigProvider.overrideWithValue(
-    const AppConfig(
-      environment: 'test',
-      supabaseUrl: 'http://localhost',
-      supabasePublishableKey: 'key',
-    ),
+    appConfig ??
+        const AppConfig(
+          environment: 'test',
+          supabaseUrl: 'http://localhost',
+          supabasePublishableKey: 'key',
+        ),
   ),
+  appVersionProvider.overrideWith((ref) async => '1.1.0'),
   sessionUser ??
       sessionUserIdProvider.overrideWithValue(signedIn ? 'user-1' : null),
   identityRepositoryProvider.overrideWithValue(identity),

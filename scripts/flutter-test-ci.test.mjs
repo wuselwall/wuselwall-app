@@ -11,7 +11,8 @@ const A = '/work/app/test/a_test.dart';
 const B = '/work/app/test/b_test.dart';
 
 // The JSON reporter's events for files with the given test results ('success' | 'failure' |
-// 'error' | 'unfinished'), in the shape flutter test --file-reporter=json writes them.
+// 'error' | 'unfinished' | 'cut'), in the shape flutter test --file-reporter=json writes them.
+// 'cut' is a test the tester's crash cut short: done as "error", with no error event.
 function report(files, { crashed = [], errors = [] } = {}) {
   const events = [{ type: 'start', protocolVersion: '0.1.1' }];
   let id = 0;
@@ -33,7 +34,8 @@ function report(files, { crashed = [], errors = [] } = {}) {
       const t = id++;
       events.push({ type: 'testStart', test: { id: t, name: `test ${t}`, suiteID: suite, groupIDs: [group] } });
       if (result === 'failure') events.push({ type: 'error', testID: t, error: 'Expected: 1', isFailure: true });
-      if (result !== 'unfinished') events.push({ type: 'testDone', testID: t, result, skipped: false, hidden: false });
+      if (result === 'error') events.push({ type: 'error', testID: t, error: 'Bad state: boom', isFailure: false });
+      if (result !== 'unfinished') events.push({ type: 'testDone', testID: t, result: result === 'cut' ? 'error' : result, skipped: false, hidden: false });
     }
   }
   for (const path of crashed) events.push({ type: 'error', testID: loaders.get(path), error: CRASH, isFailure: false });
@@ -61,11 +63,27 @@ test('a failing test anywhere keeps the run failed', () => {
   assert.equal(assessCrash(crashText(A), report({ [A]: ['success'], [B]: ['error'] })).files, undefined);
 });
 
-test('a crash before the file finished keeps the run failed', () => {
+test('a crash mid-file reruns the whole file, counting the tests it cut short', () => {
+  const json = report({ [A]: ['success', 'cut', 'cut'], [B]: ['success'] });
+  assert.deepEqual(assessCrash(crashText(A), json), { files: [A], cut: { [A]: 2 } });
+  // The crash may also come before later tests of the file even start.
+  const fewer = report({ [A]: ['success', 'cut'] }).map((line) => line.replace('"testCount":2', '"testCount":5'));
+  assert.deepEqual(assessCrash(crashText(A), fewer).files, [A]);
+});
+
+test('a crash mid-file does not excuse a real failure, before it or elsewhere', () => {
+  assert.equal(assessCrash(crashText(A), report({ [A]: ['failure', 'cut'] })).files, undefined);
+  assert.equal(assessCrash(crashText(A), report({ [A]: ['error', 'cut'] })).files, undefined);
+  // "error" without an error event counts as cut short only in a file the tester crashed in.
+  assert.equal(assessCrash(crashText(A), report({ [A]: ['cut'], [B]: ['cut'] })).files, undefined);
+  // A file without a crash still has to finish every test.
+  const short = report({ [A]: ['cut'], [B]: ['success'] })
+    .map((line) => (line.includes('"suiteID":2,"parentID":null') ? line.replace('"testCount":1', '"testCount":2') : line));
+  assert.equal(assessCrash(crashText(A), short).files, undefined);
+});
+
+test('a test started and never finished keeps the run failed, even in the crashed file', () => {
   assert.equal(assessCrash(crashText(A), report({ [A]: ['success', 'unfinished'] })).files, undefined);
-  // A file that reported fewer tests than it has: the crash cut it short.
-  const json = report({ [A]: ['success'] }).map((line) => line.replace('"testCount":1', '"testCount":2'));
-  assert.equal(assessCrash(crashText(A), json).files, undefined);
 });
 
 test('any other error or an unseen file keeps the run failed', () => {
@@ -74,7 +92,8 @@ test('any other error or an unseen file keeps the run failed', () => {
   const otherUnhandled = `unhandled error during test:\n${A}\nSocketException: boom\n`;
   assert.equal(assessCrash(crashText(A) + otherUnhandled, report({ [A]: ['success'] })).files, undefined);
   assert.equal(assessCrash(crashText(B), report({ [A]: ['success'] })).files, undefined);
-  assert.equal(assessCrash(crashText(A), report({ [A]: ['success'] }).slice(0, -3)).files, undefined);
+  // The last file, which did not crash, lost its test's events.
+  assert.equal(assessCrash(crashText(A), report({ [A]: ['success'], [B]: ['success'] }).slice(0, -3)).files, undefined);
   assert.equal(assessCrash('Some tests failed.', report({ [A]: ['failure'] })).files, undefined);
   assert.equal(assessCrash(crashText(A), ['not json']).files, undefined);
 });
@@ -132,7 +151,15 @@ test('a crash-only failure reruns the crashed file once, with a warning, and tak
   const result = run([crashed, passed]);
   assert.equal(result.status, 0, result.stderr);
   assert.deepEqual(result.calls.map((args) => args.filter((a) => !a.startsWith('--file-reporter'))), [['test'], ['test', A]]);
-  assert.match(result.stdout, /::warning title=flutter_tester crashed after its tests passed::\/work\/app\/test\/a_test\.dart/);
+  assert.match(result.stdout, /::warning title=flutter_tester crashed::\/work\/app\/test\/a_test\.dart \(SIGSEGV, after its tests passed\)/);
+});
+
+test('a crash mid-file reruns that file, with a warning that says how many tests it cut short', () => {
+  const midFile = { status: 1, out: crashText(A), json: report({ [A]: ['success', 'cut', 'cut', 'cut'], [B]: ['success'] }) };
+  const result = run([midFile, passed]);
+  assert.equal(result.status, 0, result.stderr);
+  assert.deepEqual(result.calls.map((args) => args.filter((a) => !a.startsWith('--file-reporter'))), [['test'], ['test', A]]);
+  assert.match(result.stdout, /::warning title=flutter_tester crashed::\/work\/app\/test\/a_test\.dart \(SIGSEGV, 3 of its tests cut short\)/);
 });
 
 test('a second crash fails the job, without a third run', () => {
