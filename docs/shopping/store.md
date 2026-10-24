@@ -28,6 +28,8 @@ Wenn ihr fertig seid, tippt ihr unten auf **Einkauf beenden**.
 
 Der Knopf ist erst aktiv, wenn mindestens ein Artikel abgehakt ist.
 
+Ist der letzte Artikel abgehakt oder der Einkauf beendet, gibt es auf dem Handy einen kleinen Konfetti-Gruß und ein leichtes Vibrieren, einmal pro Einkauf und ohne Ton (siehe [Wusel und Farben](/guide/wusel#sounds)).
+
 ## Ohne Netz
 
 Die Liste funktioniert auch ohne Empfang: Hinzufügen, Abhaken, Anzahl ändern und **Einkauf beenden** gehen weiter wie gewohnt. Was noch nicht beim Server angekommen ist, trägt ein kleines Wolken-Symbol, und oben steht zum Beispiel **„2 Änderungen warten aufs Senden“**. Sobald wieder Netz da ist, schickt WuselWall alles von selbst und in der richtigen Reihenfolge.

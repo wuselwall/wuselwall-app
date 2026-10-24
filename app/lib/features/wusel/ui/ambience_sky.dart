@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
+import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/motion.dart';
 import 'package:wuselwall/features/wusel/application/ambience.dart';
 import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
@@ -12,10 +13,21 @@ import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
 /// moon, a hill, the season and today's occasions. It changes decoration only, never
 /// the layout, and nothing on it carries meaning: the text in front of it stays `ink`.
 /// Without `device.sky` it is the module's plain band.
+///
+/// On the first and the last day of the Ferien a ribbon hangs from the sky's top edge
+/// ([FerienRibbon]), unless [ribbon] is false because the screen shows it in its own
+/// layout (Today puts it beside its title).
 class AmbienceSky extends ConsumerWidget {
-  const AmbienceSky({required this.child, this.fallback, super.key});
+  const AmbienceSky({
+    required this.child,
+    this.fallback,
+    this.ribbon = true,
+    super.key,
+  });
 
   final Widget child;
+
+  final bool ribbon;
 
   /// The ground when the sky is switched off; the shade's surface if null.
   final Color? fallback;
@@ -56,6 +68,22 @@ class AmbienceSky extends ConsumerWidget {
             ),
           ),
           child,
+          // In front of what the header shows, so nothing covers its words; it takes
+          // no taps. Below the birthday bunting when both hang there.
+          if (ribbon)
+            Positioned(
+              top:
+                  MediaQuery.paddingOf(context).top +
+                  (ambience.birthdays.isEmpty ? 0 : 13),
+              left: 0,
+              right: 0,
+              child: const IgnorePointer(
+                child: Align(
+                  alignment: Alignment(0.25, -1),
+                  child: FerienRibbon(),
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -108,6 +136,7 @@ class SkyPainter extends CustomPainter {
       return;
     }
     _sun(canvas, size, phase);
+    if (phase == SkyPhase.day) _clouds(canvas, size);
     _hill(canvas, size);
     if (ambience.season case final season?) _season(canvas, size, season);
     if (ambience.easter) _eggs(canvas, size);
@@ -118,10 +147,12 @@ class SkyPainter extends CustomPainter {
   void _sun(Canvas canvas, Size size, SkyPhase phase) {
     // Rising at the lower left in the morning, high at noon, setting at the right:
     // half behind the edges, so it never sits on the clock's or the title's middle.
+    // In the hour before night the evening sun sinks below the band's lower edge
+    // (specs/26), in twelve steps.
     final (x, y) = switch (phase) {
       SkyPhase.morning => (0.02, 0.85),
       SkyPhase.day => (0.62, -0.05),
-      _ => (0.985, 0.92),
+      _ => (0.985, 0.92 + 0.42 * ambience.sunset),
     };
     final r = size.height * 0.32;
     final colour = shade == Shade.light
@@ -132,6 +163,38 @@ class SkyPainter extends CustomPainter {
       r,
       Paint()..color = colour,
     );
+  }
+
+  /// Two soft clouds in the day's sky, in the right two thirds: the clock and the
+  /// title sit on the left. Pale in light, a faint lighter shape on the dark band.
+  void _clouds(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = shade == Shade.light
+          ? Palette.light.surface.withValues(alpha: 0.9)
+          : Palette.dark.ink.withValues(alpha: 0.12);
+    for (final (x, y, scale) in const [(0.44, 0.3, 1.0), (0.8, 0.52, 0.75)]) {
+      final r = size.height * 0.11 * scale;
+      final c = Offset(size.width * x, size.height * y);
+      final cloud = Path()
+        ..addRRect(
+          RRect.fromRectAndRadius(
+            Rect.fromCenter(
+              center: c + Offset(0, r * 0.45),
+              width: r * 4.4,
+              height: r * 1.3,
+            ),
+            Radius.circular(r * 0.65),
+          ),
+        )
+        ..addOval(Rect.fromCircle(center: c + Offset(-r * 0.9, 0), radius: r))
+        ..addOval(
+          Rect.fromCircle(
+            center: c + Offset(r * 0.5, -r * 0.35),
+            radius: r * 1.3,
+          ),
+        );
+      canvas.drawPath(cloud, paint);
+    }
   }
 
   void _moon(Canvas canvas, Size size) {
@@ -304,4 +367,72 @@ class SkyPainter extends CustomPainter {
   @override
   bool shouldRepaint(SkyPainter old) =>
       old.ambience != ambience || old.shade != shade;
+}
+
+/// The ribbon of the Ferien's first and last day (specs/26 "Seasons and occasions"):
+/// "Ferien!" or "Letzter Ferientag" on a small banner with notched ends. Nothing on
+/// other days, when the household switched `ambience.ferien` off, without the sky, and
+/// at night, when decoration is off. The words are ordinary text a screen reader
+/// reads; the banner behind them is decoration.
+class FerienRibbon extends ConsumerWidget {
+  const FerienRibbon({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (!ref.watch(lighterDayProvider.select((d) => d.sky))) {
+      return const SizedBox.shrink();
+    }
+    final edge = ref.watch(ambienceProvider.select((a) => a.ferien));
+    final shade = context.ww.shade;
+    if (edge == null || shade == Shade.night) return const SizedBox.shrink();
+    final l10n = context.l10n;
+    return CustomPaint(
+      key: const ValueKey('ferien-ribbon'),
+      painter: _RibbonPainter(Decor.sun.of(shade)),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 2, 16, 3),
+        child: Text(
+          switch (edge) {
+            FerienEdge.first => l10n.ambienceFerienFirst,
+            FerienEdge.last => l10n.ambienceFerienLast,
+          },
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          // Text on decoration: ink in light, the dark ground in dark (specs/26).
+          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+            color: Decor.onDecor(shade),
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A banner with a notch cut into each end.
+class _RibbonPainter extends CustomPainter {
+  const _RibbonPainter(this.colour);
+
+  final Color colour;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    const notch = 7.0;
+    final w = size.width;
+    final h = size.height;
+    canvas.drawPath(
+      Path()
+        ..moveTo(0, 0)
+        ..lineTo(w, 0)
+        ..lineTo(w - notch, h / 2)
+        ..lineTo(w, h)
+        ..lineTo(0, h)
+        ..lineTo(notch, h / 2)
+        ..close(),
+      Paint()..color = colour,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_RibbonPainter old) => old.colour != colour;
 }

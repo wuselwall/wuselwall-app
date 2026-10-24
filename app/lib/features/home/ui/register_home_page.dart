@@ -4,9 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/palette.dart';
+import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/module_band.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/ui/week_board_page.dart';
 import 'package:wuselwall/features/calendar/ui/calendar_section.dart';
@@ -55,7 +57,7 @@ class RegisterHomePage extends ConsumerWidget {
     // What waits for the acting guardian, on the Tasks destination (specs/16 step 10.5).
     final approvals = adult ? ref.watch(guardianApprovalsProvider).total : 0;
 
-    final actions = <Widget>[
+    final controls = <Widget>[
       if (kDebugMode)
         IconButton(
           tooltip: l10n.systemTitle,
@@ -70,7 +72,21 @@ class RegisterHomePage extends ConsumerWidget {
     ];
     // Each module has its band (specs/26): the app bar and the selected destination
     // take it, so moving between modules is moving between colours.
-    final band = context.ww.band(homeTabModule(tab));
+    final module = homeTabModule(tab);
+    final band = context.ww.band(module);
+    // The module's picture stands before the buttons where the bar has room: beside a
+    // plain title when the title leaves it, beside a section's own toolbar only on a
+    // wide screen. Today's picture is its sky.
+    final illustrated =
+        tab != HomeTab.today &&
+        (section.appBar == null
+            ? ModuleIllustration.fits(
+                context,
+                title: section.label(l10n),
+                controls: kMinInteractiveDimension * controls.length,
+              )
+            : homeBarIsWide(context));
+    final actions = [if (illustrated) ModuleIllustration(module), ...controls];
     final base = Theme.of(context);
     final home = Theme(
       data: base.copyWith(
@@ -83,12 +99,33 @@ class RegisterHomePage extends ConsumerWidget {
         appBar:
             section.appBar?.call(context, actions) ??
             AppBar(
-              title: Text(section.label(l10n)),
+              title: tab == HomeTab.today
+                  // The Ferien's first and last day hang their ribbon beside the
+                  // title, where it never covers it (specs/26).
+                  ? Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(child: Text(section.label(l10n))),
+                        const Flexible(
+                          child: Padding(
+                            padding: EdgeInsetsDirectional.only(
+                              start: Tokens.space3,
+                            ),
+                            child: FerienRibbon(),
+                          ),
+                        ),
+                      ],
+                    )
+                  : Text(section.label(l10n)),
               bottom: section.bottom,
               actions: actions,
               // Today's header is the sky of the hour (specs/26 "Ambience").
               flexibleSpace: tab == HomeTab.today
-                  ? AmbienceSky(fallback: band, child: const SizedBox.expand())
+                  ? AmbienceSky(
+                      fallback: band,
+                      ribbon: false,
+                      child: const SizedBox.expand(),
+                    )
                   : null,
             ),
         body: SafeArea(

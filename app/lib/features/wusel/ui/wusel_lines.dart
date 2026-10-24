@@ -15,6 +15,10 @@ enum WuselMoment {
   rewardSent,
   wallMorning,
   wallMemberDone,
+
+  /// The wall's morning on a tradition's day; [WuselLines.pick]'s `name` is the
+  /// tradition ("Heute ist Spieleabend!", specs/27).
+  wallTradition,
 }
 
 bool get _underTest =>
@@ -106,6 +110,11 @@ abstract final class WuselLines {
       l10n.wuselWallMemberDone1(name),
       l10n.wuselWallMemberDone2(name),
       l10n.wuselWallMemberDone3(name),
+    ],
+    WuselMoment.wallTradition => [
+      l10n.wuselWallTradition1(name),
+      l10n.wuselWallTradition2(name),
+      l10n.wuselWallTradition3(name),
     ],
   };
 

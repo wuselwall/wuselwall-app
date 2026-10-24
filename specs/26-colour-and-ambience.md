@@ -29,19 +29,27 @@ viewer loses nothing.
 
 Each module's top-level screen gets a **header band**: as built, the module's app bar takes
 the band colour, and so does the selected destination in the navigation (adult and kid). The
-rest of the screen keeps `bg` and white cards. The pictures of the `scenes` set
-(`assets/emoji/scenes/`) are rendered for module illustrations but not placed yet. On the wall, the bands appear only in tap-through details, because the week board
-keeps its own zones.
+rest of the screen keeps `bg` and white cards. Each band carries a small picture
+(built 2026-10-24, `core/ui/module_band.dart`): drawn in code from the decorative colours,
+at most two per picture, standing on the band's lower edge and cropped by it, with no
+asset and no package. It sits in the app bar's actions before the buttons, so it takes
+its own room and never lies under the title or a control: beside a plain title when the
+title leaves room, beside a section's own toolbar (Kalender, Essen) only on a wide
+screen, and never on a narrow phone where it would crowd the title. It is decoration:
+excluded from semantics, no text on it, nothing at night. The `scenes` pictures
+(`assets/emoji/scenes/`) stay unused. On the wall, the bands appear only in tap-through
+details, because the week board keeps its own zones. The Settings screen takes the
+`stein` band.
 
-| Module | Key | Light band | Dark band | Illustration (Fluent Emoji, large, cropped) |
+| Module | Key | Light band | Dark band | Illustration (drawn in code, cropped) |
 |---|---|---|---|---|
 | Heute | `sonne` | `#FFF0C2` | `#3A3216` | The day-phase sky (see [Ambience](#ambience)) |
-| Kalender | `himmel` | `#DCEBFF` | `#1B2B40` | 🗓️ |
-| Aufgaben | `koralle` | `#FFE1D6` | `#3D2420` | 🧹 ⭐ |
-| Essen | `aprikose` | `#FFE5C7` | `#3B2A18` | 🍲 |
-| Einkauf | `minze` | `#D5F2E6` | `#173429` | 🧺 |
-| Stundenplan | `flieder` | `#EEE8FF` | `#2A2342` | 🎒 |
-| Einstellungen | `stein` | `#ECE8E0` | `#26282B` | none (settings stay calm) |
+| Kalender | `himmel` | `#DCEBFF` | `#1B2B40` | A calendar page with its rings, one day marked (`sky`, `lilac`) |
+| Aufgaben | `koralle` | `#FFE1D6` | `#3D2420` | A broom and two stars (`apricot`, `sun`) |
+| Essen | `aprikose` | `#FFE5C7` | `#3B2A18` | A pot with steam (`coral`, `apricot`) |
+| Einkauf | `minze` | `#D5F2E6` | `#173429` | A basket with two fruits (`mint`, `sun`) |
+| Stundenplan | `flieder` | `#EEE8FF` | `#2A2342` | A school bag (`lilac`, `sky`) |
+| Einstellungen | `stein` | `#ECE8E0` | `#26282B` | Two sliders and nothing else: settings stay calm (`sky`, `mint`) |
 
 Contrast, checked 2026-10-24 with the WCAG 2.x formula of [17's method](17-design-system.md#method):
 
@@ -113,8 +121,8 @@ and its holidays, with no network. It changes decoration only, never layout or c
 | Phase | From–to | Sky (top → bottom) | Notes |
 |---|---|---|---|
 | Morgen | night end (`device.night_hours`, default 06:00) – 10:00 | `#FFD9B8` → `#FFF3E4` | Peach dawn, a low sun |
-| Tag | 10:00 – the second `board.day_parts` time (default 17:00) | `#CFE6FF` → `#F2F8FF` | Pale sky, two clouds |
-| Abend | 17:00 – night start (default 21:00) | `#FFC9A8` → `#EBD9F2` | Dusk; the sun sets in the band during the hour before night |
+| Tag | 10:00 – the second `board.day_parts` time (default 17:00) | `#CFE6FF` → `#F2F8FF` | Pale sky, two clouds (in the right two thirds, clear of the clock and the title) |
+| Abend | 17:00 – night start (default 21:00) | `#FFC9A8` → `#EBD9F2` | Dusk; the sun sets in the band during the hour before night, in five-minute steps (`Ambience.sunset`), so the sky repaints twelve times in that hour |
 | Nacht | Night hours | The night theme of 17; a sky `#0B0A09` → `#1A1630` with a few dim stars, only in the kiosk header | Decoration off; Wusel sleeps |
 
 Text over the sky is `ink` (≥ 11.2:1 on every stop) or `ink-2` (≥ 5.5:1). Member inks over
@@ -136,7 +144,7 @@ country ([Settings](#settings), [defaults per country](#defaults-per-country)):
 |---|---|---|
 | Season | Spring Mar–May, summer Jun–Aug, autumn Sep–Nov, winter Dec–Feb (northern hemisphere; Q52) | One small layer in the sky: blossoms, sun rays, leaves, snowflakes. Wusel's Mütze und Schal on the wall in winter |
 | Birthday | A member's `birthday` ([27](27-family-rituals.md#birthdays)) | Bunting in that member's ink across the board's header, the Partyhut, a banner "Olivia hat Geburtstag!" |
-| Ferien | The first and last day of imported or hand-entered Ferien | A ribbon "Ferien!" / "Morgen ist wieder Schule" in the day header |
+| Ferien | The first and last day of imported or hand-entered Ferien; back-to-back holidays are one stretch | A ribbon "Ferien!" / "Letzter Ferientag" hanging from the wall's sky; on Today beside the title, where it never covers it. Not without the sky, not at night. ("Morgen ist wieder Schule" was dropped: the last day of the holidays is often a Saturday or Sunday) |
 | Advent | The four Sundays before 24 December through the 24th | A candle row in the header; one more lit each Advent Sunday |
 | Ostern | Easter Sunday ± 2 days, **computed for each year**: Western Easter with the Gregorian computus, Orthodox Easter with the Julian computus converted to the Gregorian calendar. The two coincide in some years and are up to five weeks apart in others | Eggs in the hill layer |
 | Silvester / Neujahr | 31 Dec – 1 Jan | Small fireworks in the night sky (static under reduce motion) |
@@ -184,7 +192,7 @@ the date alone, with no table to download. The country is the first part of
 | The last chore of the day | kid, kiosk | Wusel `cheer` with confetti in the family's member inks plus `points` gold; a medium haptic; the *fertig* sound | 1.2 s |
 | A reward redeemed, a badge earned | kid | Wusel `proud`; the badge grows in from the centre on a spring; the *badge* sound | 1.2 s |
 | A birthday, first open that day | kid | Full-screen confetti behind Wusel with the Partyhut; the *badge* sound | 2 s, tap to skip |
-| A shopping trip finished (the last item ticked) | adult | A small burst over the list, a light haptic; no sound in a shop | 600 ms |
+| A shopping trip finished (the last open item ticked, or the trip finished) | adult | A small burst over the list, a light haptic; no sound in a shop. Once per trip (`Celebration.tripOf`): ticking the last item and then finishing is one moment. The haptic follows the night and `device.sounds` | 600 ms |
 | The Wochenrückblick opened | all | The cards slide in one after another on springs | 250 ms each |
 
 - **Confetti** is a small `CustomPainter` (about 40 particles, under 150 lines) in
@@ -249,7 +257,11 @@ New rows in [21](21-household-settings.md#a-lighter-day):
   light/dark) and `SkyPhase` (four phases × gradient stops). `WwColors` exposes
   `context.ww.band(Module.tasks)` and `context.ww.decor(Decor.sun)`.
 - `RegisterHomePage` and `KidHome` give the app bar and the navigation indicator the band of
-  the selected destination through one `Theme` wrapper; no widget picks band colours itself.
+  the selected destination through one `Theme` wrapper; no widget picks band colours itself,
+  except `SettingsPage`, which is no destination and gives its own bar the `stein` band.
+  `ModuleIllustration` (`core/ui/module_band.dart`) paints each band's picture and says
+  whether it `fits` beside a title; goldens in `test/golden/goldens/module_illustrations_*.png`,
+  and the sky's in `ambience_sky_*.png`.
 - `ambienceProvider` (`features/wusel/application/ambience.dart`) combines the clock, the night,
   the household's region, holidays, birthdays and the `ambience.*` switches into an `Ambience`
   value (phase, season, today's occasions). `AmbienceSky` paints it behind the wall's header and

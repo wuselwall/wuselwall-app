@@ -15,7 +15,7 @@ For all of them:
 
 You enter a birthday on the person's page: **Settings → Members**, tap the person, **Birthday → Choose a date** (see [Edit a member](/en/settings/members-devices#edit-a-member)). Everyone can enter their own; guardians enter everyone else's.
 
-Before the day it is counted down (see [Looking forward](#countdowns)), with the age the person turns: "Emma turns 9 · 3 more sleeps". On the day, bunting in the person's colour hangs over the wall, Wusel wears the party hat, **Today** shows a birthday card, and on the kids' tablet Wusel cheers for the birthday child.
+Before the day it is counted down (see [Looking forward](#countdowns)), with the age the person turns: "Emma turns 9 · 3 more sleeps". On the wall the birthday stands under the date of its day all week, with a cake: "Emma turns 9". On the day, bunting in the person's colour hangs over the wall, Wusel wears the party hat, **Today** shows a birthday card, and on the kids' tablet Wusel cheers for the birthday child. With the occasion **Birthdays** switched off under **Seasons and occasions** (see [Wusel and colours](/en/guide/wusel#occasions)), none of this happens; the countdown stays.
 
 Grandparents and friends stay yearly events, as before; you can mark them for looking forward.
 
@@ -32,13 +32,15 @@ In a [subscription to the family calendar](/en/calendar/feeds) each birthday is 
 
 You see it on the **wall** in the footer, as many as fit; on **My day** under **Looking forward to** (the child's own countdowns and the whole family's); and on **Today** as one line with the nearest countdown.
 
-Children and the wall count in nights up to a week ahead ("3 more sleeps"), and in days before that ("9 more days"). Adults read "in 3 days". The day before says **Tomorrow!**, the day itself **Today!**, and then the countdown is gone.
+Children and the wall count in nights up to a week ahead ("3 more sleeps"), and in days before that ("9 more days"). Adults read "in 3 days". The day before says **Tomorrow!**, the day itself **Today!**, and Wusel waves at the top of the wall. Then the countdown is gone.
 
 How many days ahead it starts is set by **Start looking forward** (default 14 days, 7 to 60). **Count down to a parent's return** (default on) switches off the countdown for trips.
 
 ## Family traditions {#traditions}
 
-Game night, pizza Friday, Sunday breakfast: whatever your family does again and again, create it as a repeating event and switch on **Family tradition** in the editor. A tradition is **always on the wall**, even without **Show on the kitchen display**, with a lemon-yellow ribbon and its **picture**. Under **With a meal** you note which meal belongs to it, and whether it is lunch or dinner. When that meal is still free on the tradition's day, the [meal plan](/en/meals/) suggests it; one tap plans it. It never lands on the plan by itself.
+Game night, pizza Friday, Sunday breakfast: whatever your family does again and again is easiest to start in the [calendar](/en/calendar/#new-tradition) with **New tradition**. You choose from **Game night**, **Pizza Friday**, **Film night**, **Sunday breakfast**, **Story time** and **Day out**, or **Your own tradition**. WuselWall fills in the editor: every week, the whole family, with a picture, and for Pizza Friday pizza for dinner. You change the day and time there before you save. Any repeating event also becomes a tradition when you switch on **Family tradition** in the editor. A tradition is **always on the wall**, even without **Show on the kitchen display**, with a lemon-yellow ribbon and its **picture**. Under **With a meal** you note which meal belongs to it, and whether it is lunch or dinner. When that meal is still free on the tradition's day, the [meal plan](/en/meals/) suggests it; one tap plans it. It never lands on the plan by itself.
+
+On a tradition's day Wusel says in the morning on the wall, for example, "It's Game night today!".
 
 If a tradition doesn't happen one week, delete **Only this event**. Nothing remembers that it was skipped.
 

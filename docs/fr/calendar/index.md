@@ -44,6 +44,14 @@ En bas de l’éditeur, trois réglages rendent le quotidien plus léger (voir [
 
 <Shot name="calendar-rituals" alt="Le bas de l’éditeur d’événement avec l’image, On a hâte et une tradition familiale avec un repas" />
 
+## Nouvelle tradition {#new-tradition}
+
+Au-dessus de **Nouvel événement** se trouve un petit bouton avec des confettis : **Nouvelle tradition**. Il ouvre un choix de six modèles, **Soirée jeux**, **Vendredi pizza**, **Soirée cinéma**, **Petit-déjeuner du dimanche**, **Heure des histoires** et **Journée sortie**, et en dessous **Ta propre tradition**. Chaque modèle indique quand il commence, par exemple « Chaque vendredi, 18:00 ».
+
+L’éditeur habituel s’ouvre ensuite, déjà rempli : le nom, l’image, **Toutes les semaines** le bon jour, toute la famille sous **Qui** et **Tradition familiale** activée. Le vendredi pizza apporte **Avec un repas** « Pizza » au dîner. Ajustez le jour, l’heure et les personnes, puis touchez **Enregistrer**. Avec **Ta propre tradition**, vous saisissez vous-même le nom et l’image. Plus d’informations dans [Traditions familiales](/fr/guide/rituals#traditions).
+
+<Shot name="calendar-tradition" alt="Le choix Nouvelle tradition avec six modèles et Ta propre tradition" />
+
 ## Réunions jusqu’à… {#meetings-until}
 
 Touchez l’en-tête d’un jour pour indiquer jusqu’à quelle heure vous êtes en réunion. Le mur affiche seulement cette heure, sans détails des rendez-vous. Vous pouvez l’appliquer aux cinq jours ouvrables de la semaine.

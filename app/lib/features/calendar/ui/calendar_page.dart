@@ -94,29 +94,7 @@ class CalendarToolbar extends ConsumerWidget {
         style: Theme.of(context).textTheme.titleSmall,
       ),
     );
-    if (!compact) {
-      // Wide: the navigation stays together after the title, the view on the right.
-      return Row(
-        children: [
-          TextButton(onPressed: nav.today, child: Text(l10n.calendarToday)),
-          previous,
-          next,
-          const SizedBox(width: 8),
-          Expanded(child: range(TextAlign.start)),
-          const SizedBox(width: 12),
-          SegmentedButton<CalendarMode>(
-            showSelectedIcon: false,
-            segments: [
-              for (final mode in modes.entries)
-                ButtonSegment(value: mode.key, label: Text(mode.value)),
-            ],
-            selected: {view.mode},
-            onSelectionChanged: (modes) => nav.setMode(modes.first),
-          ),
-        ],
-      );
-    }
-    return Row(
+    Widget narrow() => Row(
       children: [
         previous,
         Expanded(child: range(TextAlign.center)),
@@ -146,5 +124,45 @@ class CalendarToolbar extends ConsumerWidget {
         ),
       ],
     );
+    // Wide: the navigation stays together after the title, the view on the right.
+    // "Heute" is a word where there is room for it, else the icon of the narrow bar.
+    Widget wide({required bool todayWord}) => Row(
+      children: [
+        if (todayWord)
+          TextButton(onPressed: nav.today, child: Text(l10n.calendarToday))
+        else
+          IconButton(
+            tooltip: l10n.calendarToday,
+            icon: const Icon(Icons.today_outlined),
+            onPressed: nav.today,
+          ),
+        previous,
+        next,
+        const SizedBox(width: 8),
+        Expanded(child: range(TextAlign.start)),
+        const SizedBox(width: 12),
+        SegmentedButton<CalendarMode>(
+          showSelectedIcon: false,
+          segments: [
+            for (final mode in modes.entries)
+              ButtonSegment(value: mode.key, label: Text(mode.value)),
+          ],
+          selected: {view.mode},
+          onSelectionChanged: (modes) => nav.setMode(modes.first),
+        ),
+      ],
+    );
+    if (!compact) {
+      // The French and Spanish labels are longer: a tablet in portrait has room for the
+      // view buttons only without the word, and a narrower bar takes the narrow one.
+      return LayoutBuilder(
+        builder: (context, box) {
+          final room = box.maxWidth / MediaQuery.textScalerOf(context).scale(1);
+          if (room < 600) return narrow();
+          return wide(todayWord: room >= 760);
+        },
+      );
+    }
+    return narrow();
   }
 }

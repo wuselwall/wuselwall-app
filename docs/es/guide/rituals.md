@@ -15,7 +15,7 @@ Para todos vale:
 
 El cumpleaños se introduce en la página de la persona: **Ajustes → Miembros**, toca a la persona, **Cumpleaños → Elegir una fecha** (ver [Editar un miembro](/es/settings/members-devices#edit-a-member)). Cada persona puede poner el suyo; los adultos responsables, el de los demás.
 
-Antes del día hay una cuenta atrás (ver [Cuentas atrás](#countdowns)), con los años que cumple la persona: «Emma cumple 9 años · 3 noches más». Ese día cuelgan banderines del color de la persona sobre la pared, Wusel lleva gorro de fiesta, **Hoy** muestra una tarjeta de cumpleaños y en la tableta infantil Wusel lo celebra con quien cumple años.
+Antes del día hay una cuenta atrás (ver [Cuentas atrás](#countdowns)), con los años que cumple la persona: «Emma cumple 9 años · 3 noches más». En la pared, el cumpleaños aparece toda la semana bajo la fecha de su día, con una tarta: «Emma cumple 9 años». Ese día cuelgan banderines del color de la persona sobre la pared, Wusel lleva gorro de fiesta, **Hoy** muestra una tarjeta de cumpleaños y en la tableta infantil Wusel lo celebra con quien cumple años. Si la celebración **Cumpleaños** está desactivada en **Estaciones y celebraciones** (ver [Wusel y los colores](/es/guide/wusel#occasions)), nada de esto aparece; la cuenta atrás se queda.
 
 Abuelos y amigos siguen siendo eventos anuales, como antes; podéis marcarlos para una cuenta atrás.
 
@@ -32,13 +32,15 @@ En una [suscripción al calendario familiar](/es/calendar/feeds) cada cumpleaño
 
 Aparece en la **pared**, en el pie (tantas como quepan), en **Mi día** bajo **Lo que me hace ilusión** (las cuentas atrás del niño y las de toda la familia) y en **Hoy** como una línea con la más próxima.
 
-Los niños y la pared cuentan en noches hasta una semana antes («3 noches más») y en días antes de eso («faltan 9 días»). Los adultos leen «en 3 días». La víspera dice **¡Mañana!**, el mismo día **¡Hoy!**, y después la cuenta atrás desaparece.
+Los niños y la pared cuentan en noches hasta una semana antes («3 noches más») y en días antes de eso («faltan 9 días»). Los adultos leen «en 3 días». La víspera dice **¡Mañana!**, el mismo día **¡Hoy!**, y Wusel saluda arriba en la pared. Después la cuenta atrás desaparece.
 
 **La cuenta atrás empieza** fija cuántos días antes (14 días por defecto, de 7 a 60). **Cuenta atrás hasta una vuelta** (activada por defecto) desactiva la de los viajes.
 
 ## Tradiciones familiares {#traditions}
 
-Noche de juegos, viernes de pizza, desayuno del domingo: lo que vuestra familia hace una y otra vez, créalo como evento repetido y activa **Tradición familiar** en el editor. Una tradición está **siempre en la pared**, incluso sin **Mostrar en la pantalla de la cocina**, con una cinta amarillo limón y su **imagen**. En **Con comida** anotas qué comida la acompaña, y si es en el **Almuerzo** o la **Cena**. Si esa comida sigue libre el día de la tradición, el [plan de comidas](/es/meals/) la propone; un toque la planifica. Nunca entra sola en el plan.
+Noche de juegos, viernes de pizza, desayuno del domingo: lo que vuestra familia hace una y otra vez se crea más fácil en el [calendario](/es/calendar/#new-tradition) con **Nueva tradición**. Puedes elegir **Noche de juegos**, **Viernes de pizza**, **Noche de cine**, **Desayuno del domingo**, **Hora del cuento** y **Día de excursión**, o **Tradición propia**. WuselWall rellena el editor: cada semana, toda la familia, con imagen, y el viernes de pizza con pizza para cenar. El día y la hora los cambias allí antes de guardar. Cualquier evento repetido también se convierte en tradición si activas **Tradición familiar** en el editor. Una tradición está **siempre en la pared**, incluso sin **Mostrar en la pantalla de la cocina**, con una cinta amarillo limón y su **imagen**. En **Con comida** anotas qué comida la acompaña, y si es en el **Almuerzo** o la **Cena**. Si esa comida sigue libre el día de la tradición, el [plan de comidas](/es/meals/) la propone; un toque la planifica. Nunca entra sola en el plan.
+
+El día de una tradición, Wusel dice por la mañana en la pared, por ejemplo, «¡Hoy es Noche de juegos!».
 
 Si una semana no se hace, elimina **Solo este evento**. Nada recuerda que no se hizo.
 

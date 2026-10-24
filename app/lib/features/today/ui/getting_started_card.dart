@@ -225,6 +225,12 @@ final _setupProgressProvider =
       _SetupProgressNotifier.new,
     );
 
+/// Whether Today shows the getting-started cheer right now: then that Wusel is the
+/// screen's one (specs/25).
+final setupCheerShowingProvider = Provider<bool>(
+  (ref) => ref.watch(_setupProgressProvider) == _SetupProgress.justFinished,
+);
+
 /// The last item of getting started is done: Wusel cheers, quietly or not, and the card
 /// goes when it is tapped away (specs/25 "Where Wusel appears", adult).
 class _SetupDone extends ConsumerWidget {

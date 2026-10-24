@@ -145,13 +145,16 @@ visit, and a tap on its speech bubble hides the line for that moment.
 | | Night hours | `sleep`, small, in the corner | — |
 | | Offline ([09, Freshness](09-clients-and-ux.md#freshness-and-failure)) | `think` beside the freshness note | — |
 | **adult** | Empty states | `peek`, 48 px, static unless `member.wusel = lively` | The module's empty text |
-| | Today on a special day (a birthday, the first day of Ferien, the Wochenrückblick) | `wave` or `cheer` in the Today header | Yes |
+| | Today on a special day (a birthday, the first day of Ferien, the Wochenrückblick) | `wave` or `cheer` in a card at the top of Today; the birthday's `cheer` takes precedence over the Ferien `wave`, and either over the empty state's `peek`, so Today keeps one Wusel | Yes |
+| | The shopping list is empty (decided 2026-10-24: a family that does not want Wusel there switches Wusel off) | `peek` over the empty list, below the tiles | The empty text; with tiles on the list "Noch nichts auf der Liste. Tipp auf eine Kachel." |
 | | The getting-started card completed while Today is open (a card that loads already complete stays hidden, so it happens once) | `cheer`, until tapped away | Yes |
 
 ### Where Wusel never appears
 
-- Any **capture flow**: the shopping tiles and quick add, the event and chore editors, the
-  timetable grid, the scanner. That protects P6's three seconds.
+- Any **capture flow**: the shopping tiles, their typeahead and quick add, the event and
+  chore editors, the timetable grid, the scanner. That protects P6's three seconds. The
+  empty shopping list below the tiles is an empty state, not the capture itself, so
+  Wusel peeks there (decided 2026-10-24); it never stands among the tiles.
 - **Errors, warnings, destructive confirmations, the PIN pad, sign-in, pairing, invitations
   and deletion.** A mascot beside "Familie löschen" is not funny.
 - **Settings**, except the outfit picker and Wusel's own setting.
@@ -220,8 +223,10 @@ The code lives in `app/lib/core/wusel/`.
   same with Wusel on and off, written down in the release checklist.
 - **Tests.** Goldens (`app/test/golden/`, the repository's first) for every pose in three
   shades, every outfit and one to six tufts; `test/core/wusel_test.dart` for still mode and the
-  frames a pose draws. A widget test that the
-  capture routes and the PIN pad render no `Wusel`. A unit test that line rotation never
+  frames a pose draws. A widget test
+  (`test/features/wusel_absent_test.dart`) that the capture routes, the shopping tiles
+  and their typeahead and the PIN pad render no `Wusel`, and that the empty shopping
+  list shows exactly one. A unit test that line rotation never
   repeats. The voice rules are a review checklist item for every ARB change under `wusel*`,
   because a word-list test cannot work across four languages.
 - **Brand.** `specs/brand/wuselchen[-dark].svg` become `wusel[-dark].svg`, and

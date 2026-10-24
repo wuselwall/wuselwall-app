@@ -47,6 +47,14 @@ At the bottom of the editor are three things that make the day lighter (see [Rit
 
 <Shot name="calendar-rituals" alt="Bottom of the event editor with picture, We are looking forward to it and a family tradition with a meal" />
 
+## New tradition {#new-tradition}
+
+Above **New event** sits a small button with confetti: **New tradition**. It opens a choice of six starters, **Game night**, **Pizza Friday**, **Film night**, **Sunday breakfast**, **Story time** and **Day out**, and below them **Your own tradition**. Each starter says when it begins, such as "Every Friday, 6:00 PM".
+
+Then the usual editor opens, already filled in: the name, the picture, **Weekly** on the right day, the whole family under **Who** and **Family tradition** switched on. Pizza Friday brings **With a meal** "Pizza" for dinner. Adjust the day, the time and the people, then tap **Save**. With **Your own tradition** you enter the name and picture yourself. More under [Family traditions](/en/guide/rituals#traditions).
+
+<Shot name="calendar-tradition" alt="The New tradition choice with six starters and Your own tradition" />
+
 ## Meetings until …
 
 Tap a day's heading to set **Meetings until**: from that time on you are not available. It shows on the kitchen wall, for example as "Meetings until 17". It shows only the time, no appointments and no details. With **Apply to the whole week (Mon–Fri)** it applies to every weekday of that week.
