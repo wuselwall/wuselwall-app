@@ -29,6 +29,7 @@ class EventDraft {
     this.tradition = false,
     this.traditionMeal = '',
     this.traditionMealSlot = 'dinner',
+    this.traditionMealRecipe,
   }) : duration = _positive(end.difference(start)) ?? const Duration(hours: 1);
 
   /// A new event on [day] (local), starting at [startHour] and lasting an hour.
@@ -76,6 +77,13 @@ class EventDraft {
       traditionMeal:
           event.traditionMeal?.freeText ?? event.traditionMeal?.title ?? '',
       traditionMealSlot: event.traditionMeal?.slot ?? 'dinner',
+      traditionMealRecipe: switch (event.traditionMeal) {
+        TraditionMeal(:final recipeId?, :final freeText, :final title) => (
+          recipeId: recipeId,
+          words: freeText ?? title ?? '',
+        ),
+        _ => null,
+      },
     );
   }
 
@@ -119,6 +127,10 @@ class EventDraft {
   /// A tradition's meal in a few words ("Pizza"); empty for none.
   String traditionMeal;
   String traditionMealSlot;
+
+  /// The stored meal's recipe and the words it showed as. The editor takes only words,
+  /// so the recipe is kept while those words stay unchanged.
+  final ({String recipeId, String words})? traditionMealRecipe;
 
   bool effectiveKey(bool defaultKey) =>
       tradition || (keyTouched ? key : defaultKey);
@@ -214,12 +226,16 @@ class EventDraft {
       countdown: kind != EventKind.presence && countdown,
       tradition: kind != EventKind.presence && tradition,
       traditionMeal: tradition && traditionMeal.trim().isNotEmpty
-          ? TraditionMeal(
-              slot: traditionMealSlot,
-              freeText: traditionMeal.trim(),
-            )
+          ? _meal(traditionMeal.trim())
           : null,
     );
+  }
+
+  TraditionMeal _meal(String words) {
+    final recipe = traditionMealRecipe;
+    return recipe != null && recipe.words.trim() == words
+        ? TraditionMeal(slot: traditionMealSlot, recipeId: recipe.recipeId)
+        : TraditionMeal(slot: traditionMealSlot, freeText: words);
   }
 
   /// The change to one occurrence of a series ("Nur dieser Termin").
