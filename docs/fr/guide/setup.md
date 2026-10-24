@@ -2,19 +2,23 @@
 
 Au premier démarrage, choisissez le serveur ([Installer l’app](/fr/guide/install)). L’écran d’accueil propose ensuite de vous connecter, de rejoindre une famille sur invitation ou de connecter un appareil partagé.
 
+Hors ligne, l’écran d’accueil explique qu’une connexion Internet est nécessaire pour
+se connecter, accepter une invitation ou connecter un appareil partagé. Ces options
+réapparaissent dès que vous êtes de nouveau en ligne.
+
 <Shot name="setup-start" alt="L’écran d’accueil de WuselWall" />
 
 En bas, **Politique de confidentialité** ouvre la page dans le navigateur. Le lien est désactivé sans connexion ; le texte n’est pas enregistré dans l’app.
 
 ## 1. Se connecter {#_1-signing-in}
 
-Sur votre téléphone personnel, touchez **Continuer par e-mail** et saisissez votre adresse. Vous recevez un **code à six chiffres**, valable **10 minutes**. Gardez le champ ouvert et saisissez-y le code reçu. Consultez les indésirables si le message n’arrive pas ; un nouvel envoi est possible au plus tôt après une minute.
+Sur votre téléphone personnel, touchez **Continuer par e-mail** et saisissez une adresse valide. L’app vérifie le champ avant tout envoi. Vous recevez un **code à six chiffres**, valable **10 minutes**. Gardez le champ ouvert et saisissez-y le code reçu. Consultez les indésirables si le message n’arrive pas ; un nouvel envoi est possible au plus tôt après une minute.
 
 Ce code vérifie votre adresse. Il est différent du **code de configuration du serveur** et ne demande ni lien de connexion ni deuxième connexion.
 
 <Shot name="setup-sign-in" alt="La connexion par e-mail" />
 
-Pour utiliser un mot de passe, choisissez l’option correspondante. Vous pouvez en définir un dans **Paramètres → Avancés → Connexion** : au moins **10 caractères**. Le code par e-mail reste disponible. Lors de la création du compte, l’app demande une fois quelle méthode vous préférez. Si la double authentification est activée, saisissez ensuite le code de l’app d’authentification ([Sécurité](/fr/settings/security)).
+Pour utiliser un mot de passe, choisissez l’option correspondante et saisissez votre adresse e-mail et votre mot de passe. L’app vérifie les deux champs avant la connexion. Vous pouvez définir votre mot de passe dans **Paramètres → Avancés → Connexion** : au moins **10 caractères**. Le code par e-mail reste disponible. Lors de la création du compte, l’app demande une fois quelle méthode vous préférez. Si la double authentification est activée, saisissez ensuite le code de l’app d’authentification ([Sécurité](/fr/settings/security)).
 
 ## 2. Créer une famille {#_2-creating-a-new-family}
 

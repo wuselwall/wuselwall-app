@@ -6,7 +6,7 @@ Der Kalender ist die Startseite der Erwachsenen: alle Termine der Familie und, w
 
 ## Ansichten
 
-Titel, Datumsnavigation, Ansichtswahl und Einstellungen teilen sich eine kompakte Leiste. Auf dem Handy wählst du unter **Kalenderansicht** zwischen **Tag**, **3 Tage** und **Woche**; das Kalendersymbol führt zu **Heute**.
+Titel, Datumsnavigation, Ansichtswahl und Einstellungen teilen sich eine kompakte Leiste. Auf dem Handy startet der Kalender in der **Tagesansicht**, damit die Termine gut lesbar sind. Unter **Kalenderansicht** kannst du jederzeit **Tag**, **3 Tage** oder **Woche** wählen; auf einem großen Bildschirm startet er mit der Woche. Deine eigene Auswahl bleibt beim Wechsel zu einem anderen Tab und beim Drehen des Geräts erhalten. Das Kalendersymbol führt zu **Heute**.
 
 <Shot name="calendar-phone" alt="Kalender auf dem Handy mit Datumsnavigation und Ansichtsmenü in einer Leiste" />
 

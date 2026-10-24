@@ -69,7 +69,7 @@ class KidHome extends ConsumerWidget {
                   tooltip: l10n.settingsTitle,
                   icon: const Icon(Icons.settings_outlined),
                   color: context.ww.ink3,
-                  onPressed: () => context.go(Routes.settings),
+                  onPressed: () => context.push<void>(Routes.settings),
                 ),
               ),
             ),

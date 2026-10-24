@@ -26,34 +26,56 @@ class CalendarView {
 
   /// The first and last column (inclusive local dates).
   DateTime get from => switch (mode) {
-    CalendarMode.week => anchor.subtract(
-      Duration(days: anchor.weekday - DateTime.monday),
+    CalendarMode.week => _addCalendarDays(
+      anchor,
+      DateTime.monday - anchor.weekday,
     ),
     _ => anchor,
   };
 
-  DateTime get to => from.add(Duration(days: mode.days - 1));
+  DateTime get to => _addCalendarDays(from, mode.days - 1);
 
   /// The day columns, from [from] on.
   List<DateTime> get days => [
-    for (var i = 0; i < mode.days; i++) from.add(Duration(days: i)),
+    for (var i = 0; i < mode.days; i++) _addCalendarDays(from, i),
   ];
+
+  /// Moves by calendar days, preserving the local midnight across DST changes.
+  CalendarView shifted(int direction) => CalendarView(
+    mode: mode,
+    anchor: _addCalendarDays(anchor, direction * mode.days),
+  );
 }
+
+DateTime _addCalendarDays(DateTime date, int days) =>
+    DateTime(date.year, date.month, date.day + days);
 
 /// The calendar's mode and anchor. Previous and next move by the mode's span; in week
 /// mode they move by a week, always keeping the Monday of the week in view.
 class CalendarViewNotifier extends Notifier<CalendarView> {
+  bool _modeWasSelected = false;
+
   @override
   CalendarView build() {
     final now = DateTime.now();
     return CalendarView(
-      mode: CalendarMode.week,
+      // CalendarPage chooses the responsive default once it knows the viewport.
+      mode: CalendarMode.day,
       anchor: DateTime(now.year, now.month, now.day),
     );
   }
 
-  void setMode(CalendarMode mode) =>
-      state = CalendarView(mode: mode, anchor: state.anchor);
+  /// Applies a phone/tablet default while the person has not chosen a view.
+  /// Explicit selections survive tab changes and viewport rotations.
+  void setResponsiveMode(CalendarMode mode) {
+    if (_modeWasSelected || state.mode == mode) return;
+    state = CalendarView(mode: mode, anchor: state.anchor);
+  }
+
+  void setMode(CalendarMode mode) {
+    _modeWasSelected = true;
+    state = CalendarView(mode: mode, anchor: state.anchor);
+  }
 
   void previous() => _shift(-1);
 
@@ -67,10 +89,7 @@ class CalendarViewNotifier extends Notifier<CalendarView> {
     );
   }
 
-  void _shift(int direction) => state = CalendarView(
-    mode: state.mode,
-    anchor: state.anchor.add(Duration(days: direction * state.mode.days)),
-  );
+  void _shift(int direction) => state = state.shifted(direction);
 }
 
 /// Not auto-disposed: the mode and the week in view survive a trip to the shopping tab.

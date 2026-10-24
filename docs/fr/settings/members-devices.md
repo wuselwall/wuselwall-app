@@ -1,6 +1,7 @@
 # Membres et appareils
 
 Les **parents** administrent le foyer depuis l’engrenage **Paramètres** de leur téléphone.
+Depuis une autre vue, faites glisser votre doigt du bord gauche vers la droite sur iPhone ou iPad pour revenir ; la flèche de retour en haut à gauche fonctionne aussi.
 
 <Shot name="settings-phone" alt="Les paramètres avec les membres et les appareils" />
 

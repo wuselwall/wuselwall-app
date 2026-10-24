@@ -24,6 +24,12 @@ The empty timetable view (2026-10-22) now shows the child-specific explanation a
 entry button without repeating the action as a heading. Family guides are updated in
 DE/EN/FR/ES; separate website public-progress coordination remains pending.
 
+Issue [#117](https://github.com/wuselwall/wuselwall-app/issues/117) (2026-10-24) records
+sampled API 36 Android phone and tablet demo UI checks and iOS-targeted widget regressions
+for shared Flutter fixes, including Settings navigation. These checks are not release
+evidence; native iPhone/iPad validation, real authentication and two-device synchronization
+remain separate gates.
+
 Member invitations (2026-10-22) now show their expiry and share/withdraw actions in
 the matching member's row, joined by profile ID. The DE/EN/FR/ES family guides describe
 the combined row. Separate bilingual public-progress copy remains to be coordinated in

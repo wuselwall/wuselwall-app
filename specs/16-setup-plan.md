@@ -609,6 +609,12 @@ architecture rules ([03](03-architecture.md)): one `api` function per write, sta
 unauthenticated cases; strings in both ARB files; and the matching `docs/` page in both
 languages. A slice that changes the app–server contract raises `api_version`.
 
+Issue [#117](https://github.com/wuselwall/wuselwall-app/issues/117) (2026-10-24) records
+sampled API 36 Android phone and tablet demo UI checks and iOS-targeted widget regressions
+for shared Flutter fixes, including Settings navigation. These checks are not release
+evidence; native iPhone/iPad validation, real authentication and two-device synchronization
+remain separate gates.
+
 1. **Members can be edited** (FR-5.1, [20 H2](20-onboarding.md#j1--start-a-family),
    [21](21-household-settings.md#the-kitchen-display)). Today a profile has only two writes,
    `api.members_add` and `api.member_baseline_set`. A misspelt name, two people with one

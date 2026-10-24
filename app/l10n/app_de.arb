@@ -36,6 +36,7 @@
     }
   },
   "setupHeadline": "Willkommen bei WuselWall",
+  "setupOfflineWelcome": "Du bist offline. Verbinde dich mit dem Internet, um dich anzumelden, eine Einladung anzunehmen oder ein gemeinsames Gerät zu verbinden. Danach sind diese Möglichkeiten wieder verfügbar.",
   "doorTagline": "Der Familienplan für die Küchenwand",
   "setupHouseholdAction": "Neue Familie anlegen",
   "wizardTitle": "Neuer Haushalt",
@@ -1413,6 +1414,11 @@
   "emailWrongCredentials": "E-Mail oder Passwort stimmt nicht.",
   "emailUseCodeInstead": "Stattdessen Code per E-Mail",
   "emailOffline": "Keine Verbindung – die Anmeldung per E-Mail braucht eine Verbindung.",
+  "emailRequired": "Gib deine E-Mail-Adresse ein.",
+  "emailInvalid": "Gib eine gültige E-Mail-Adresse ein.",
+  "passwordRequired": "Gib dein Passwort ein.",
+  "emailSendingCode": "Code wird gesendet …",
+  "signInProgress": "Anmeldung läuft …",
   "emailCodeTitle": "Code aus der E-Mail",
   "emailCodeSent": "Wir haben einen 6-stelligen Code an {email} geschickt. Er ist 10 Minuten gültig.",
   "@emailCodeSent": {

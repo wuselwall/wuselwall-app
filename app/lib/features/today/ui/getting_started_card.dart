@@ -99,27 +99,40 @@ class _ItemRow extends ConsumerWidget {
     final theme = Theme.of(context);
     final item = entry.item;
     final done = entry.done;
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      minVerticalPadding: Tokens.space1,
-      leading: Icon(
-        item.icon,
-        color: done ? ww.success : theme.colorScheme.onSurface,
-      ),
-      title: Text(
-        startItemLabel(l10n, item),
-        style: TextStyle(
-          decoration: done ? TextDecoration.lineThrough : null,
-          color: done ? theme.colorScheme.onSurfaceVariant : null,
-        ),
-      ),
-      trailing: done
-          ? Icon(Icons.check_circle, color: ww.success)
-          : TextButton(
-              onPressed: () => unawaited(_dismiss(context, ref, item)),
-              child: Text(l10n.todayStartNotNeeded),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final effectiveWidth =
+            constraints.maxWidth / MediaQuery.textScalerOf(context).scale(1);
+        final stackAction = !done && effectiveWidth < 400;
+        final dismissButton = TextButton(
+          onPressed: () => unawaited(_dismiss(context, ref, item)),
+          child: Text(l10n.todayStartNotNeeded),
+        );
+        return ListTile(
+          contentPadding: EdgeInsets.zero,
+          minVerticalPadding: Tokens.space1,
+          leading: Icon(
+            item.icon,
+            color: done ? ww.success : theme.colorScheme.onSurface,
+          ),
+          title: Text(
+            startItemLabel(l10n, item),
+            style: TextStyle(
+              decoration: done ? TextDecoration.lineThrough : null,
+              color: done ? theme.colorScheme.onSurfaceVariant : null,
             ),
-      onTap: done ? null : () => unawaited(_open(context, ref, item)),
+          ),
+          subtitle: stackAction
+              ? Align(alignment: Alignment.centerRight, child: dismissButton)
+              : null,
+          trailing: done
+              ? Icon(Icons.check_circle, color: ww.success)
+              : stackAction
+              ? null
+              : dismissButton,
+          onTap: done ? null : () => unawaited(_open(context, ref, item)),
+        );
+      },
     );
   }
 }

@@ -31,9 +31,12 @@ class SignInPage extends ConsumerStatefulWidget {
 }
 
 class _SignInPageState extends ConsumerState<SignInPage> {
+  final _emailKey = GlobalKey<FormFieldState<String>>();
+  final _passwordKey = GlobalKey<FormFieldState<String>>();
   late final _email = TextEditingController(text: widget.initialEmail ?? '');
   final _password = TextEditingController();
-  bool _busy = false;
+  _SignInAction? _busyAction;
+  bool get _busy => _busyAction != null;
   bool _showPassword = false;
   bool _wrongCredentials = false;
 
@@ -53,8 +56,9 @@ class _SignInPageState extends ConsumerState<SignInPage> {
   }
 
   Future<void> _sendCode() async {
+    if (_busy || !(_emailKey.currentState?.validate() ?? false)) return;
     final email = _email.text.trim();
-    setState(() => _busy = true);
+    setState(() => _busyAction = _SignInAction.emailCode);
     final result = await ref
         .read(identityRepositoryProvider)
         .sendEmailCode(
@@ -62,7 +66,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
           locale: Localizations.localeOf(context).languageCode,
         );
     if (!mounted) return;
-    setState(() => _busy = false);
+    setState(() => _busyAction = null);
     switch (result) {
       case Ok():
         unawaited(context.push(emailCodeLocation(email)));
@@ -72,15 +76,20 @@ class _SignInPageState extends ConsumerState<SignInPage> {
   }
 
   Future<void> _signInWithPassword() async {
+    if (_busy ||
+        !(_emailKey.currentState?.validate() ?? false) ||
+        !(_passwordKey.currentState?.validate() ?? false)) {
+      return;
+    }
     setState(() {
-      _busy = true;
+      _busyAction = _SignInAction.password;
       _wrongCredentials = false;
     });
     final result = await ref
         .read(identityRepositoryProvider)
-        .signIn(_email.text, _password.text);
+        .signIn(_email.text.trim(), _password.text);
     if (!mounted) return;
-    setState(() => _busy = false);
+    setState(() => _busyAction = null);
     switch (result) {
       // Success: the router moves on once the session state is read.
       case Ok():
@@ -94,12 +103,13 @@ class _SignInPageState extends ConsumerState<SignInPage> {
   }
 
   Future<void> _passkey() async {
-    setState(() => _busy = true);
+    if (_busy) return;
+    setState(() => _busyAction = _SignInAction.passkey);
     final result = await ref
         .read(identityRepositoryProvider)
         .signInWithPasskey();
     if (!mounted) return;
-    setState(() => _busy = false);
+    setState(() => _busyAction = null);
     result.failureOrNull.let(context.showFailure);
   }
 
@@ -126,18 +136,60 @@ class _SignInPageState extends ConsumerState<SignInPage> {
           ),
           const SizedBox(height: Tokens.space4),
         ],
-        TextField(
-          controller: _email,
-          autofocus: true,
-          keyboardType: TextInputType.emailAddress,
-          autofillHints: const [AutofillHints.email],
-          decoration: InputDecoration(labelText: l10n.fieldEmail),
-          onSubmitted: (_) => busy ? null : _sendCode(),
+        Form(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TextFormField(
+                key: _emailKey,
+                controller: _email,
+                autofocus: true,
+                keyboardType: TextInputType.emailAddress,
+                autofillHints: const [AutofillHints.email],
+                textInputAction: TextInputAction.next,
+                decoration: InputDecoration(labelText: l10n.fieldEmail),
+                validator: (value) {
+                  final email = value?.trim() ?? '';
+                  if (email.isEmpty) return l10n.emailRequired;
+                  if (!RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(email)) {
+                    return l10n.emailInvalid;
+                  }
+                  return null;
+                },
+                onFieldSubmitted: (_) {
+                  if (busy) return;
+                  if (_showPassword) {
+                    FocusScope.of(context).nextFocus();
+                  } else {
+                    _sendCode();
+                  }
+                },
+              ),
+              if (_showPassword) ...[
+                const SizedBox(height: Tokens.space6),
+                TextFormField(
+                  key: _passwordKey,
+                  controller: _password,
+                  obscureText: true,
+                  autofillHints: const [AutofillHints.password],
+                  textInputAction: TextInputAction.done,
+                  decoration: InputDecoration(
+                    labelText: l10n.fieldPasswordSimple,
+                  ),
+                  validator: (value) =>
+                      (value?.isEmpty ?? true) ? l10n.passwordRequired : null,
+                  onFieldSubmitted: (_) => busy ? null : _signInWithPassword(),
+                ),
+              ],
+            ],
+          ),
         ),
         const SizedBox(height: Tokens.space6),
         FilledButton(
           onPressed: busy ? null : _sendCode,
-          child: Text(l10n.emailContinue),
+          child: _busyAction == _SignInAction.emailCode
+              ? _BusyButtonLabel(label: l10n.emailSendingCode)
+              : Text(l10n.emailContinue),
         ),
         if (!_showPassword)
           TextButton(
@@ -146,13 +198,6 @@ class _SignInPageState extends ConsumerState<SignInPage> {
           )
         else ...[
           const SizedBox(height: Tokens.space4),
-          TextField(
-            controller: _password,
-            obscureText: true,
-            autofillHints: const [AutofillHints.password],
-            decoration: InputDecoration(labelText: l10n.fieldPasswordSimple),
-            onSubmitted: (_) => busy ? null : _signInWithPassword(),
-          ),
           if (_wrongCredentials) ...[
             const SizedBox(height: Tokens.space3),
             Text(
@@ -163,11 +208,15 @@ class _SignInPageState extends ConsumerState<SignInPage> {
           const SizedBox(height: Tokens.space3),
           OutlinedButton(
             onPressed: busy ? null : _signInWithPassword,
-            child: Text(l10n.signInAction),
+            child: _busyAction == _SignInAction.password
+                ? _BusyButtonLabel(label: l10n.signInProgress)
+                : Text(l10n.signInAction),
           ),
           TextButton(
             onPressed: busy ? null : _sendCode,
-            child: Text(l10n.emailUseCodeInstead),
+            child: _busyAction == _SignInAction.emailCode
+                ? _BusyButtonLabel(label: l10n.emailSendingCode)
+                : Text(l10n.emailUseCodeInstead),
           ),
         ],
         // Passkeys need a JavaScript SDK on the web that is not self-hosted yet
@@ -178,13 +227,37 @@ class _SignInPageState extends ConsumerState<SignInPage> {
           OutlinedButton.icon(
             onPressed: busy ? null : _passkey,
             icon: const Icon(Icons.fingerprint),
-            label: Text(l10n.signInPasskey),
+            label: _busyAction == _SignInAction.passkey
+                ? _BusyButtonLabel(label: l10n.signInProgress)
+                : Text(l10n.signInPasskey),
           ),
         ],
       ],
     );
   }
 }
+
+class _BusyButtonLabel extends StatelessWidget {
+  const _BusyButtonLabel({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) => Wrap(
+    alignment: WrapAlignment.center,
+    spacing: 8,
+    runSpacing: 4,
+    children: [
+      const SizedBox.square(
+        dimension: 16,
+        child: CircularProgressIndicator(strokeWidth: 2),
+      ),
+      Text(label),
+    ],
+  );
+}
+
+enum _SignInAction { emailCode, password, passkey }
 
 /// Where E1 sends the person: E2 with the address it mailed.
 String emailCodeLocation(String email) =>

@@ -36,6 +36,7 @@
     }
   },
   "setupHeadline": "Te damos la bienvenida a WuselWall",
+  "setupOfflineWelcome": "No tienes conexión. Conéctate a Internet para iniciar sesión, aceptar una invitación o conectar un dispositivo compartido. Estas opciones estarán disponibles cuando vuelvas a conectarte.",
   "doorTagline": "El plan familiar para la pared de la cocina",
   "setupHouseholdAction": "Crear una familia nueva",
   "wizardTitle": "Nuevo hogar",
@@ -2042,6 +2043,11 @@
   "emailWrongCredentials": "El correo o la contraseña son incorrectos.",
   "emailUseCodeInstead": "Usar un código por correo",
   "emailOffline": "Sin conexión: necesitas conexión para iniciar sesión por correo.",
+  "emailRequired": "Introduce tu dirección de correo electrónico.",
+  "emailInvalid": "Introduce una dirección de correo electrónico válida.",
+  "passwordRequired": "Introduce tu contraseña.",
+  "emailSendingCode": "Enviando código…",
+  "signInProgress": "Iniciando sesión…",
   "emailCodeTitle": "Código del correo",
   "emailCodeSent": "Hemos enviado un código de 6 dígitos a {email}. Es válido durante 10 minutos.",
   "@emailCodeSent": {

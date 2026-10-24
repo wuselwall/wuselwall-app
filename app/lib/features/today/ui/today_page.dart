@@ -187,16 +187,19 @@ class _EventRow extends StatelessWidget {
         : MaterialLocalizations.of(context)
               .formatTimeOfDay(start, alwaysUse24HourFormat: true);
     return ListTile(
-      leading: SizedBox(
-        width: 56,
-        child: Text(
-          when,
-          style: theme.textTheme.labelLarge?.copyWith(
-            color: theme.colorScheme.primary,
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            when,
+            style: theme.textTheme.labelLarge?.copyWith(
+              color: theme.colorScheme.primary,
+            ),
           ),
-        ),
+          Text(event.title),
+        ],
       ),
-      title: Text(event.title),
       subtitle: event.location == null ? null : Text(event.location!),
     );
   }

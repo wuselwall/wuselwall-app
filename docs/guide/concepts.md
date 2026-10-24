@@ -17,11 +17,11 @@ Die Erwachsenen-Ansicht hat diese Bereiche:
 
 ## Heute und die ersten Schritte
 
-**Heute** ist die erste Seite der Erwachsenen. Sie zeigt die Termine des Tages, deine Aufgaben für heute zum Abhaken, das warme Essen und wie viele Artikel auf der Einkaufsliste noch offen sind.
+**Heute** ist die erste Seite der Erwachsenen. Sie zeigt die Termine des Tages, deine Aufgaben für heute zum Abhaken, das warme Essen und wie viele Artikel auf der Einkaufsliste noch offen sind. Bei Terminen steht die Uhrzeit über dem Titel, damit sie auch mit größerer Schrift gut lesbar bleibt.
 
 <Shot name="today" alt="Der Tab Heute mit der Karte Erste Schritte, den Terminen und dem warmen Essen" />
 
-Solange noch etwas zur Einrichtung fehlt, steht oben die Karte **Erste Schritte**: Partner:in einladen, Familien-Tablet verbinden, Wandanzeige einrichten, deine PIN festlegen, Kalender abonnieren und Stundenplan eintragen. Jeder Punkt verschwindet, sobald er erledigt ist. Was ihr nicht braucht, tippst du auf **Brauchen wir nicht**. Die Karte sehen Erziehungsberechtigte auf dem eigenen Handy und auf geteilten Geräten; unter **Einstellungen → Erste Schritte** kommt sie zurück.
+Solange noch etwas zur Einrichtung fehlt, steht oben die Karte **Erste Schritte**: Partner:in einladen, Familien-Tablet verbinden, Wandanzeige einrichten, deine PIN festlegen, Kalender abonnieren und Stundenplan eintragen. Jeder Punkt verschwindet, sobald er erledigt ist. Was ihr nicht braucht, tippst du auf **Brauchen wir nicht**. Auf schmalen Bildschirmen oder bei größerer Schrift stehen die Schaltflächen unter dem Text. Die Karte sehen Erziehungsberechtigte auf dem eigenen Handy und auf geteilten Geräten; unter **Einstellungen → Erste Schritte** kommt sie zurück.
 
 ## Der Haushalt
 

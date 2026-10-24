@@ -1,4 +1,6 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart' as flutter;
+import 'package:flutter/widgets.dart' as widgets;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/server_session.dart';
@@ -100,6 +102,28 @@ abstract final class Routes {
       path == setup || path.startsWith('$setup/');
 }
 
+/// Builds a Flutter MaterialPage explicitly. GoRouter's default app-type
+/// detection checks a separate MaterialApp package and misses WuselWall's
+/// Flutter MaterialApp.router, otherwise disabling platform page transitions.
+GoRoute _materialRoute({
+  required String path,
+  required widgets.Widget Function(widgets.BuildContext, GoRouterState) builder,
+  List<RouteBase> routes = const [],
+}) => GoRoute(
+  path: path,
+  pageBuilder: (context, state) => flutter.MaterialPage<void>(
+    key: state.pageKey,
+    name: state.name ?? state.path,
+    arguments: <String, String>{
+      ...state.pathParameters,
+      ...state.uri.queryParameters,
+    },
+    restorationId: state.pageKey.value,
+    child: widgets.Builder(builder: (context) => builder(context, state)),
+  ),
+  routes: routes,
+);
+
 /// One router; what it shows is decided by the device record behind the session:
 /// not enrolled → setup screens, enrolled → home in the device's register.
 final routerProvider = Provider<GoRouter>((ref) {
@@ -164,13 +188,19 @@ final routerProvider = Provider<GoRouter>((ref) {
       };
     },
     routes: [
-      GoRoute(path: Routes.splash, builder: (_, _) => const SplashPage()),
-      GoRoute(
+      _materialRoute(
+        path: Routes.splash,
+        builder: (_, _) => const SplashPage(),
+      ),
+      _materialRoute(
         path: Routes.setup,
         builder: (_, _) => const SetupPage(),
         routes: [
-          GoRoute(path: 'household', builder: (_, _) => const WizardPage()),
-          GoRoute(
+          _materialRoute(
+            path: 'household',
+            builder: (_, _) => const WizardPage(),
+          ),
+          _materialRoute(
             path: 'invite',
             builder: (_, state) => InviteCodePage(
               initialSecret: state.extra is String
@@ -178,11 +208,11 @@ final routerProvider = Provider<GoRouter>((ref) {
                   : null,
             ),
           ),
-          GoRoute(
+          _materialRoute(
             path: 'invitations',
             builder: (_, _) => const InvitePendingPage(),
           ),
-          GoRoute(
+          _materialRoute(
             path: 'join',
             builder: (_, state) => JoinInvitePage(
               pending: state.extra is PendingInvitation
@@ -190,7 +220,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                   : null,
             ),
           ),
-          GoRoute(
+          _materialRoute(
             path: 'new-family',
             builder: (_, _) => Consumer(
               builder: (_, ref, _) {
@@ -201,21 +231,21 @@ final routerProvider = Provider<GoRouter>((ref) {
               },
             ),
           ),
-          GoRoute(
+          _materialRoute(
             path: 'sign-in',
             builder: (_, state) =>
                 SignInPage(initialEmail: state.uri.queryParameters['email']),
           ),
-          GoRoute(
+          _materialRoute(
             path: 'email-code',
             builder: (_, state) =>
                 EmailCodePage(email: state.uri.queryParameters['email'] ?? ''),
           ),
-          GoRoute(
+          _materialRoute(
             path: 'sign-in-choice',
             builder: (_, _) => const SignInChoicePage(),
           ),
-          GoRoute(
+          _materialRoute(
             path: 'deleted-family',
             builder: (_, _) => Consumer(
               builder: (_, ref, _) {
@@ -226,10 +256,13 @@ final routerProvider = Provider<GoRouter>((ref) {
               },
             ),
           ),
-          GoRoute(path: 'enrol', builder: (_, _) => const EnrolPage()),
-          GoRoute(path: 'pair', builder: (_, _) => const PairPage()),
-          GoRoute(path: 'mfa', builder: (_, _) => const MfaChallengePage()),
-          GoRoute(
+          _materialRoute(path: 'enrol', builder: (_, _) => const EnrolPage()),
+          _materialRoute(path: 'pair', builder: (_, _) => const PairPage()),
+          _materialRoute(
+            path: 'mfa',
+            builder: (_, _) => const MfaChallengePage(),
+          ),
+          _materialRoute(
             path: 'register',
             builder: (_, _) => Consumer(
               builder: (_, ref, _) {
@@ -244,36 +277,42 @@ final routerProvider = Provider<GoRouter>((ref) {
           ),
         ],
       ),
-      GoRoute(
+      _materialRoute(
         path: Routes.welcomeMembers,
         builder: (_, _) => const MembersPage(),
       ),
-      GoRoute(
+      _materialRoute(
         path: Routes.home,
         builder: (_, _) => Consumer(
           builder: (_, ref, _) =>
               RegisterHomePage(register: ref.watch(uiRegisterProvider)),
         ),
       ),
-      GoRoute(path: Routes.settings, builder: (_, _) => const SettingsPage()),
-      GoRoute(path: Routes.family, builder: (_, _) => const FamilyPage()),
-      GoRoute(
+      _materialRoute(
+        path: Routes.settings,
+        builder: (_, _) => const SettingsPage(),
+      ),
+      _materialRoute(
+        path: Routes.family,
+        builder: (_, _) => const FamilyPage(),
+      ),
+      _materialRoute(
         path: Routes.member,
         builder: (_, state) => MemberPage(profileId: state.extra! as String),
       ),
-      GoRoute(
+      _materialRoute(
         path: Routes.shoppingListEdit,
         builder: (_, state) =>
             ShoppingListEditPage(listId: state.extra! as String),
       ),
-      GoRoute(
+      _materialRoute(
         path: Routes.devicePair,
         builder: (_, state) => DevicePairPage(
           initialKind: PairingKind.fromWire(state.uri.queryParameters['kind']),
           initialCode: state.extra is String ? state.extra! as String : null,
         ),
       ),
-      GoRoute(
+      _materialRoute(
         path: Routes.firstRun,
         builder: (_, _) => Consumer(
           builder: (_, ref, _) {
@@ -282,67 +321,82 @@ final routerProvider = Provider<GoRouter>((ref) {
           },
         ),
       ),
-      GoRoute(
+      _materialRoute(
         path: Routes.householdSettings,
         builder: (_, _) => const HouseholdSettingsPage(),
       ),
-      GoRoute(path: Routes.system, builder: (_, _) => const SystemPage()),
-      GoRoute(
+      _materialRoute(
+        path: Routes.system,
+        builder: (_, _) => const SystemPage(),
+      ),
+      _materialRoute(
         path: Routes.feedTokens,
         builder: (_, _) => const FeedTokensPage(),
       ),
-      GoRoute(
+      _materialRoute(
         path: Routes.externalCalendars,
         builder: (_, _) => const ExternalCalendarsPage(),
       ),
-      GoRoute(
+      _materialRoute(
         path: Routes.externalCalendarNew,
         builder: (_, _) => const ExternalCalendarFormPage(),
       ),
-      GoRoute(
+      _materialRoute(
         path: Routes.externalCalendarEdit,
         builder: (_, state) => ExternalCalendarFormPage(
           calendar: state.extra as ExternalCalendar?,
         ),
       ),
-      GoRoute(path: Routes.baselines, builder: (_, _) => const BaselinePage()),
-      GoRoute(path: Routes.reminders, builder: (_, _) => const RemindersPage()),
-      GoRoute(path: Routes.shortcuts, builder: (_, _) => const ShortcutsPage()),
-      GoRoute(
+      _materialRoute(
+        path: Routes.baselines,
+        builder: (_, _) => const BaselinePage(),
+      ),
+      _materialRoute(
+        path: Routes.reminders,
+        builder: (_, _) => const RemindersPage(),
+      ),
+      _materialRoute(
+        path: Routes.shortcuts,
+        builder: (_, _) => const ShortcutsPage(),
+      ),
+      _materialRoute(
         path: Routes.shoppingHistory,
         builder: (_, _) => const ShoppingHistoryPage(),
       ),
-      GoRoute(
+      _materialRoute(
         path: Routes.eventNew,
         builder: (_, state) =>
             EventEditorPage(args: state.extra as EventEditArgs?),
       ),
-      GoRoute(
+      _materialRoute(
         path: Routes.eventEdit,
         builder: (_, state) =>
             EventEditorPage(args: state.extra as EventEditArgs?),
       ),
-      GoRoute(path: Routes.recipes, builder: (_, _) => const RecipesPage()),
-      GoRoute(
+      _materialRoute(
+        path: Routes.recipes,
+        builder: (_, _) => const RecipesPage(),
+      ),
+      _materialRoute(
         path: Routes.recipeEdit,
         builder: (_, state) => RecipeEditorPage(recipe: state.extra as Recipe?),
       ),
-      GoRoute(
+      _materialRoute(
         path: Routes.recipeView,
         builder: (_, state) => RecipeViewPage(initial: state.extra! as Recipe),
       ),
-      GoRoute(
+      _materialRoute(
         path: Routes.schoolSetup,
         builder: (_, state) => SchoolSetupPage(
           initialSchoolId: state.uri.queryParameters['school'],
         ),
       ),
-      GoRoute(
+      _materialRoute(
         path: Routes.timetableEdit,
         builder: (_, state) =>
             TimetableEditorPage(args: state.extra as TimetableEditArgs?),
       ),
-      GoRoute(
+      _materialRoute(
         path: Routes.timetableImport,
         builder: (_, state) =>
             TimetableImportPage(args: state.extra as TimetableImportArgs?),

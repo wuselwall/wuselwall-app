@@ -276,6 +276,12 @@ abstract class AppLocalizations {
   /// **'Welcome to WuselWall'**
   String get setupHeadline;
 
+  /// No description provided for @setupOfflineWelcome.
+  ///
+  /// In en, this message translates to:
+  /// **'You’re offline. Connect to the internet to sign in, accept an invitation, or connect a shared device. These options will be available when you reconnect.'**
+  String get setupOfflineWelcome;
+
   /// No description provided for @doorTagline.
   ///
   /// In en, this message translates to:
@@ -6491,6 +6497,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No connection – signing in by email needs one.'**
   String get emailOffline;
+
+  /// No description provided for @emailRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email address.'**
+  String get emailRequired;
+
+  /// No description provided for @emailInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid email address.'**
+  String get emailInvalid;
+
+  /// No description provided for @passwordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your password.'**
+  String get passwordRequired;
+
+  /// No description provided for @emailSendingCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending code…'**
+  String get emailSendingCode;
+
+  /// No description provided for @signInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Signing in…'**
+  String get signInProgress;
 
   /// No description provided for @emailCodeTitle.
   ///

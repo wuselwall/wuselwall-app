@@ -17,11 +17,11 @@ The adults' view has these areas:
 
 ## Today and getting started
 
-**Today** is the adults' first page. It shows the day's appointments, your chores for today to tick off, the warm meal and how many shopping list items are still open.
+**Today** is the adults' first page. It shows the day's appointments, your chores for today to tick off, the warm meal and how many shopping list items are still open. Appointment times appear above their titles, so they stay readable with larger text.
 
 <Shot name="today" alt="The Today tab with the Getting started card, the appointments and the warm meal" />
 
-As long as something from the setup is missing, the **Getting started** card is at the top: invite your partner, connect the family tablet, set up the wall display, set your PIN, subscribe to the calendar and add the timetable. Each item disappears once it is done. If you do not need one, tap **Not needed**. Guardians see the card on their own phone and on shared devices; under **Settings → Getting started** it comes back.
+As long as something from the setup is missing, the **Getting started** card is at the top: invite your partner, connect the family tablet, set up the wall display, set your PIN, subscribe to the calendar and add the timetable. Each item disappears once it is done. If you do not need one, tap **Not needed**. On narrow screens or with larger text, buttons appear below the message. Guardians see the card on their own phone and on shared devices; under **Settings → Getting started** it comes back.
 
 ## The household
 
