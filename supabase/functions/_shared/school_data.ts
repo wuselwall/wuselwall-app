@@ -153,7 +153,7 @@ export async function loadHousehold(
  * The public holiday cache rows of the countries the regions belong to, overlapping the
  * window. No region, no request.
  */
-async function loadPublicFeed(
+export async function loadPublicFeed(
   client: Client,
   from: string,
   to: string,

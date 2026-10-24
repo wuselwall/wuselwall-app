@@ -172,6 +172,29 @@ export function holidayOn(
   return null;
 }
 
+/** A public holiday on one date of a window, for the calendar's month view. */
+export type DatedHolidayJson = DayHolidayJson & { date: string };
+
+/**
+ * The public holidays of the local dates `from`..`to` (inclusive), one entry per date
+ * that has one, by the rule of holidayOn: the family's own row first, else the region's.
+ */
+export function holidaysBetween(
+  from: string,
+  to: string,
+  holidays: HolidayRow[],
+  feed: HolidayFeedRow[],
+  region: string | null,
+  locale: string,
+): DatedHolidayJson[] {
+  const out: DatedHolidayJson[] = [];
+  for (let date = from; date <= to; date = addDays(date, 1)) {
+    const holiday = holidayOn(date, holidays, feed, region, locale);
+    if (holiday) out.push({ date, ...holiday });
+  }
+  return out;
+}
+
 /**
  * Returns a new board with `timetables` and each day's `school` filled from the school
  * projection (school.ts). `days` is the projected school days of the board's week, one
