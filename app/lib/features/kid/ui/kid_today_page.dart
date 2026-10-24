@@ -35,6 +35,7 @@ import 'package:wuselwall/features/tasks/application/tasks_providers.dart';
 import 'package:wuselwall/features/tasks/data/tasks_repository.dart';
 import 'package:wuselwall/features/tasks/domain/tasks_models.dart';
 import 'package:wuselwall/features/tasks/ui/task_widgets.dart';
+import 'package:wuselwall/features/wusel/application/ambience.dart';
 import 'package:wuselwall/features/wusel/application/celebration.dart';
 import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
 import 'package:wuselwall/features/wusel/ui/family_wusel.dart';
@@ -605,14 +606,22 @@ class _KidGreetingState extends ConsumerState<_KidGreeting> {
     final l10n = context.l10n;
     final member = widget.member;
     final night = ref.watch(nightProvider);
-    final present = ref.watch(lighterDayProvider).wusel == WuselPresence.lively;
     final title = Theme.of(context).textTheme.headlineSmall
         ?.copyWith(fontWeight: FontWeight.w800);
     final Widget greeting;
-    // The child's own birthday: Wusel cheers in the party hat (specs/25).
-    final birthday = ref
-        .watch(birthdaysTodayMembersProvider)
-        .any((m) => m.id == member.id);
+    // The child's own birthday: Wusel cheers in the party hat (specs/25), where the
+    // household keeps the birthday ambience on.
+    final birthday =
+        ref
+            .watch(birthdaysTodayMembersProvider)
+            .any((m) => m.id == member.id) &&
+        ref.watch(ambienceProvider.select((a) => a.birthdays.isNotEmpty));
+    // A quiet Wusel still comes for the special day, held still.
+    final special = birthday && !night;
+    final presence = ref.watch(lighterDayProvider).wusel;
+    final present =
+        presence == WuselPresence.lively ||
+        (presence == WuselPresence.quiet && special);
     if (_lineAtNight != night) {
       _line = null;
       _lineAtNight = night;
@@ -634,7 +643,8 @@ class _KidGreetingState extends ConsumerState<_KidGreeting> {
             : birthday
             ? WuselPose.cheer
             : WuselPose.wave,
-        outfit: birthday && !night ? WuselOutfit.party : null,
+        outfit: special ? WuselOutfit.party : null,
+        quietAllowed: special,
         size: 88,
         tappable: true,
         style: title,

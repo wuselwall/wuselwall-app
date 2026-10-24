@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/core/wusel/wusel.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/kid/ui/kid_widgets.dart';
 import 'package:wuselwall/features/tasks/ui/task_widgets.dart';
+import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
 
 import '../support/fake_tasks.dart';
 import '../support/fakes.dart';
@@ -55,6 +58,27 @@ class _KidIdentity extends FakeIdentityRepository {
   @override
   Future<Result<List<Member>>> members({bool includeInactive = false}) async =>
       Ok(_kidMembers);
+}
+
+/// The same household on Emma's birthday.
+class _BirthdayIdentity extends _KidIdentity {
+  @override
+  Future<Result<List<Member>>> members({bool includeInactive = false}) async {
+    final now = DateTime.now();
+    final emma = _kidMembers.first;
+    return Ok([
+      Member(
+        id: emma.id,
+        displayName: emma.displayName,
+        color: emma.color,
+        role: emma.role,
+        active: true,
+        isChild: true,
+        birthday: DateTime(now.year - 8, now.month, now.day),
+      ),
+      ..._kidMembers.skip(1),
+    ]);
+  }
 }
 
 /// The `api` layer after a tick: Emma's balance rises by the points credited, as the
@@ -415,5 +439,62 @@ void main() {
     expect(node.flagsCollection.isHeader, isTrue);
     await unmountApp(tester, container);
     handle.dispose();
+  });
+
+  group('Emma\'s birthday', () {
+    Finder greetingWusel() => find.descendant(
+      of: find.byKey(const ValueKey('kid-greeting')),
+      matching: find.byType(Wusel),
+    );
+
+    Future<ProviderContainer> open(WidgetTester tester, LighterDay day) async {
+      final container = await pumpApp(
+        tester,
+        overrides: [
+          ...baseOverrides(identity: _BirthdayIdentity()),
+          lighterDayProvider.overrideWithValue(day),
+        ],
+        tasks: _TickingApi(),
+      );
+      await _pickEmma(tester);
+      return container;
+    }
+
+    testWidgets('a quiet Wusel still comes, in the party hat', (tester) async {
+      final c = await open(
+        tester,
+        const LighterDay(wusel: WuselPresence.quiet),
+      );
+      expect(greetingWusel(), findsOneWidget);
+      expect(tester.widget<Wusel>(greetingWusel()).outfit, WuselOutfit.party);
+      expect(tester.widget<Wusel>(greetingWusel()).still, isTrue);
+      await unmountApp(tester, c);
+    });
+
+    testWidgets('with the birthday ambience off it is an ordinary day', (
+      tester,
+    ) async {
+      final c = await open(
+        tester,
+        const LighterDay(
+          wusel: WuselPresence.quiet,
+          occasionSwitches: {'ambience.birthdays': false},
+        ),
+      );
+      expect(greetingWusel(), findsNothing);
+      await unmountApp(tester, c);
+    });
+
+    testWidgets('a lively Wusel without the ambience wears no party hat', (
+      tester,
+    ) async {
+      final c = await open(
+        tester,
+        const LighterDay(occasionSwitches: {'ambience.birthdays': false}),
+      );
+      expect(greetingWusel(), findsOneWidget);
+      expect(tester.widget<Wusel>(greetingWusel()).outfit, WuselOutfit.none);
+      await unmountApp(tester, c);
+    });
   });
 }

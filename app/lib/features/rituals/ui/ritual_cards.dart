@@ -8,6 +8,7 @@ import 'package:wuselwall/features/rituals/ui/countdown_widgets.dart';
 import 'package:wuselwall/features/rituals/ui/meal_wish_widgets.dart';
 import 'package:wuselwall/features/rituals/ui/table_question_widgets.dart';
 import 'package:wuselwall/features/rituals/ui/week_review_widgets.dart';
+import 'package:wuselwall/features/wusel/application/ambience.dart';
 import 'package:wuselwall/features/wusel/ui/family_wusel.dart';
 
 /// The rituals on Today (specs/27): a birthday, the Sunday look-back, the table
@@ -33,7 +34,8 @@ class RitualCards extends StatelessWidget {
 }
 
 /// A special day on Today: Wusel in the party hat, even when it is quiet for this
-/// grown-up (specs/25 "Where Wusel appears").
+/// grown-up (specs/25 "Where Wusel appears"). A household that switched the birthday
+/// ambience off gets none of it; the birthday itself is still on the calendar.
 class _BirthdayCard extends ConsumerWidget {
   const _BirthdayCard();
 
@@ -43,6 +45,10 @@ class _BirthdayCard extends ConsumerWidget {
       for (final m in ref.watch(birthdaysTodayMembersProvider)) m.displayName,
     ];
     if (names.isEmpty) return const SizedBox.shrink();
+    final on = ref.watch(
+      ambienceProvider.select((a) => a.birthdays.isNotEmpty),
+    );
+    if (!on) return const SizedBox.shrink();
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(Tokens.space3),
