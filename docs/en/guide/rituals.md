@@ -15,7 +15,7 @@ For all of them:
 
 You enter a birthday on the person's page: **Settings → Members**, tap the person, **Birthday → Choose a date** (see [Edit a member](/en/settings/members-devices#edit-a-member)). Everyone can enter their own; guardians enter everyone else's.
 
-Before the day it is counted down (see [Looking forward](#countdowns)), with the age the person turns: "Emma turns 9 · 3 more sleeps". On the wall the birthday stands under the date of its day all week, with a cake: "Emma turns 9". On the day, bunting in the person's colour hangs over the wall, Wusel wears the party hat, **Today** shows a birthday card, and on the kids' tablet Wusel cheers for the birthday child. With the occasion **Birthdays** switched off under **Seasons and occasions** (see [Wusel and colours](/en/guide/wusel#occasions)), none of this happens; the countdown stays.
+Before the day it is counted down (see [Looking forward](#countdowns)), with the age the person turns: "Emma turns 9 · 3 more sleeps". On the wall the birthday stands under the date of its day all week, with a cake: "Emma turns 9". On the day, bunting in the person's colour hangs over the wall, Wusel wears the party hat, **Today** shows a birthday card, and on the kids' tablet Wusel cheers for the birthday child. With the occasion **Birthdays** switched off under **Seasons and occasions** (see [Wusel and colours](/en/guide/wusel#occasions)), none of this happens; the countdown stays, and the [calendar's month view](/en/calendar/#month) still shows the birthday with its cake and age.
 
 Grandparents and friends stay yearly events, as before; you can mark them for looking forward.
 
