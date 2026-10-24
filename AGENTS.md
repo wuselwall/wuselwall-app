@@ -43,7 +43,9 @@ Docker). The server runs four scheduled jobs: `tasks-nightly`,
 `holidays-sync` (weekly), `calendar-import` (hourly) and `household-purge` (daily). Next: the
 journey gaps of [specs/16 step 10](specs/16-setup-plan.md#step-10--journey-gaps-before-launch-m15)
 (servers without mail; approvals on Today; the wall's offline start; the deletion page and the
-release checklist; slices 1–3 are built), then M1.6. Merged migrations and functions reach a live server after a backup
+release checklist; slices 1–3 are built), then [specs/16 step 11](specs/16-setup-plan.md#step-11--a-lighter-day-m15)
+(a lighter day, ADR-020: Wusel, colour and ambience, birthdays and the family rituals of specs/25–27),
+then M1.6. Merged migrations and functions reach a live server after a backup
 (`scripts/remote-backup.sh` first); a server with mail sets `ENABLE_EMAIL_AUTOCONFIRM=false`.
 
 **Never describe a particular operator's server in a committed file** — not a host, path,

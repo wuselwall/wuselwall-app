@@ -23,6 +23,8 @@ specification; `app/`, `supabase/` and `infra/` hold the implementation.
 | Origin | Specification carried over from BretApp; code starts from scratch |
 | Latest change | 2026-10-23 — the school without typing: the term is proposed, a subject is created from the cell, and a timetable comes in as pasted text, as an assistant's proposal over MCP, or as a photo read by the family's own server ([24](specs/24-school-import.md), [the guide](docs/en/school/index.md#reading-in-a-timetable)). Before: 2026-10-22 — the empty timetable view keeps the child-specific explanation and entry button without a duplicate heading. Before: 2026-10-22 — open invitations appear in the matching member’s row, with expiry, sharing and withdrawal actions ([guide](docs/en/settings/members-devices.md)). Before: 2026-10-22 — all Actions jobs use self-hosted runners; backend CI serializes and cleans its disposable stack ([operations](specs/10-deployment-and-ops.md#self-hosted-actions-runners-2026-10-22)). Before: 2026-10-21 — French and Spanish family guides alongside DE/EN, with localized navigation, search and screenshots in both themes ([French](docs/fr/index.md), [Spanish](docs/es/index.md)); publication remains separate. Before: the timetable combines child selection and labeled actions in one toolbar, with week arrows in the weekday header; entry creates missing terms inline, shows the selected term and keeps Save visible ([the guide](docs/en/school/index.md)). Before: 2026-10-19 — German, English, French and Spanish throughout the application and server responses; installation-selected, single-language email ([NFR-14](specs/02-requirements.md), [operator setup](docs/server/extras.md#e-mail)). Validation and publication remain separate gates. Before: 2026-10-14 — every family's own server: the store app chooses its server, a server release with an installer, hosted Supabase without tools ([ADR-018](specs/adr/ADR-018-self-hosted-only.md#amendment-2026-10-14-built), [the guide](docs/server/index.md)). Before: 2026-10-13 — the domain `wuselwall.app` for the website ([ADR-017](specs/adr/ADR-017-wuselwall-app-domain.md)). Before: 2026-10-11 — household settings with curated defaults ([21](specs/21-household-settings.md)); the official compose stack ([ADR-013](specs/adr/ADR-013-self-hosted-compose-stack.md#amendment-2026-10-11-the-official-compose-stack)) |
 
+Issue [#117](https://github.com/wuselwall/wuselwall-app/issues/117) records sampled API 36 Android phone and tablet demo UI checks and iOS-targeted widget regressions for shared Flutter fixes, including Settings navigation. These checks are not release evidence; native iPhone/iPad validation, real authentication and two-device synchronization remain separate gates.
+
 The app follows the device language (`de`, `en`, `fr`, `es`, including regional variants),
 with German as the unsupported-language fallback. Server email instead uses one language
 chosen at installation, independent of device or recipient. Family guides now cover German, English, French and Spanish.
@@ -83,6 +85,9 @@ specifications you hand to a coding session, one at a time.
 | 13 | [Roadmap](specs/13-roadmap.md) | Milestones, per-module v1 scope cuts, rough effort |
 | 14 | [Open Questions](specs/14-open-questions.md) | Decisions deliberately deferred, with the deadline for each |
 | 23 | [Roadmap after the Alpha](specs/23-roadmap-after-alpha.md) | What follows M1.6, in four phases, each item checked against the principles; and what is deliberately not on it |
+| 25 | [Wusel](specs/25-wusel.md) | The family's companion: who Wusel is, the drawing, seven poses, outfits, the voice rules, where it appears and never appears |
+| 26 | [Colour, ambience, celebration](specs/26-colour-and-ambience.md) | Direction A+: module bands, decoration, the wall's day phases and occasions, celebrations, springs, sound and haptics |
+| 27 | [Family rituals](specs/27-family-rituals.md) | Tischfrage, Wochenrückblick, traditions, Vorfreude and Wunschessen, with birthdays, and how the trial judges each |
 | 24 | [School setup without typing](specs/24-school-import.md) | Fewer required facts, the timetable payload and preview, proposals from assistants, and the photo scan on the family's own server |
 | 16 | [Setup Plan](specs/16-setup-plan.md) | **The build order for M0**: tools and accounts, repository, local Supabase, app shell, identity, CI, mobile releases, deployment — with the workflows and the secrets inventory |
 | 19 | [Security & Architecture Review](specs/19-security-and-architecture-review.md) | Findings of the 2026-10-11 review, what is fixed and what the operator still has to do |
@@ -92,9 +97,10 @@ specifications you hand to a coding session, one at a time.
 | — | [Market Research](specs/market-research.md) | Family planners with meal planning in the German-speaking market: feature matrix, pros and cons, open-source and self-hosted options, implications for ADR-002 |
 | — | [Design system mockup](specs/mockups/design-system.html) | The three directions on the same Monday, switchable between light, dark and night, with simulated colour-blindness |
 | — | [Logo proposal](specs/mockups/logo.html) | Logo concepts (Familien-W, Wuselchen, Wuselpunkte) next to the ADR-012 icon, as app icons at real sizes, in dark and themed variants |
+| — | [Wusel and colour mockup](specs/mockups/wusel-and-colour.html) | Wusel's poses and outfits, the module bands, the decoration, the wall's day phases and the kid sticker cards, in light and dark |
 | — | [Kiosk mockup](specs/mockups/kiosk-week-board.html) | The kitchen display's week board, interactive and in German — the asset for agreeing the layout with the family before it is built |
 | — | [Shopping capture mockup](specs/mockups/shopping-quick-add.html) | The three-second capture path: a tile picker over the learned catalogue, with the offline queue made visible |
-| — | [Decision Records](specs/adr/README.md) | Eleven ADRs recording the choices made and the alternatives rejected |
+| — | [Decision Records](specs/adr/README.md) | Twenty ADRs recording the choices made and the alternatives rejected |
 
 ## The decisions that shape everything else
 

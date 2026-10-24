@@ -8,6 +8,10 @@ Implemented in `app/lib/app/theme/` — `palette.dart` holds every value below, 
 `test/app/theme_test.dart` re-checks each contrast pair. The member palette, presence
 treatments and accessibility rules were never part of the choice.*
 
+*Extended 2026-10-24 by [26 — Colour, ambience, celebration](26-colour-and-ambience.md)
+(direction A+, [ADR-020](adr/ADR-020-a-lighter-day.md)): module bands, decoration, the wall's
+day phases, the kid register's sticker skin, springs and sound. Nothing below changes.*
+
 **Mockup:** [`specs/mockups/design-system.html`](mockups/design-system.html). Switch
 between the directions, the light, dark and night themes, and four simulated kinds of
 colour vision.
@@ -152,10 +156,10 @@ There are two sets, each used for one job only, as specs/09 asks ("one coherent 
   readable at 2 m. It supplies the `icon_key` for `catalog_item`, `subject`,
   `task_definition` and `reward`.
 
-The **logo** (Wuselpunkte) and the **mascot** (Wuselchen) are neither: they are brand
-assets in [specs/brand/](brand/), with their rules in
-[ADR-012](adr/ADR-012-product-name.md#logo-and-mascot). Wuselchen is drawn only from
-member colours and `brand`, so it follows the theme like everything else.
+The **logo** (Wuselpunkte) and the **mascot** (Wusel, called Wuselchen until 2026-10-24) are
+neither: they are brand assets in [specs/brand/](brand/), with their rules in
+[ADR-012](adr/ADR-012-product-name.md#logo-and-mascot) and [25](25-wusel.md). Wusel is drawn
+only from member colours and `brand`, so it follows the theme like everything else.
 
 ## Shape, depth and motion
 
@@ -203,7 +207,8 @@ register's energy reaches the shared shell.
 **Decided: A, in every register.** The kid register differs only by the register
 tokens it already has (larger type, 56 px targets, radius 18). Borrowing B's outlines and
 sticker shadows for the kid register was considered and not adopted. It remains the
-obvious next step if the children find A too plain.
+obvious next step if the children find A too plain. *Adopted 2026-10-24 for the kid
+register only ([26](26-colour-and-ambience.md#the-kid-registers-sticker-skin)).*
 
 ## Flutter mapping
 

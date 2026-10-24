@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wusel und Farbe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;700;800&family=Barlow+Semi+Condensed:wght@500;600;700&display=swap">
+<style>
+/* ─────────────────────────────────────────────────────────────
+   WuselWall — Wusel und Farbe (proposal for specs/25 and specs/26)
+   One page: Wusel's poses and outfits, the module bands, decoration,
+   the wall's day phases, the kid sticker skin and the ritual cards.
+   Every colour value is the one the specs list and the theme test
+   will check. Shade: light / dark / night via the control bar.
+   ───────────────────────────────────────────────────────────── */
+:root {
+  --bg:#F7F4EE; --surface:#FFFFFF; --sunken:#EFEBE3; --line:#DDD8CF;
+  --ink:#1C1F23; --ink-2:#4A5058; --ink-3:#656B75;
+  --brand:#2D6A4F; --on-brand:#FFFFFF; --brand-tint:#DCEBE2;
+  --points:#F2B705; --on-points:#3E2A00;
+  --b-sonne:#FFF0C2; --b-himmel:#DCEBFF; --b-koralle:#FFE1D6; --b-aprikose:#FFE5C7;
+  --b-minze:#D5F2E6; --b-flieder:#EEE8FF; --b-stein:#ECE8E0;
+  --d-sun:#FFC94D; --d-sky:#8EC5FF; --d-coral:#FF9F85; --d-apricot:#FFB570; --d-mint:#7FD8B5; --d-lilac:#B9A3FF;
+  --on-decor:#1C1F23;
+  --m1:#7B3FE4; --m2:#08737F; --m3:#9A5300; --m4:#C2255C;
+  --sticker-border: rgba(28,31,35,.85);
+  --f-ui:"Atkinson Hyperlegible Next","Segoe UI",system-ui,sans-serif;
+  --f-num:"Barlow Semi Condensed","Arial Narrow",system-ui,sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="night"]) {
+    --bg:#14171A; --surface:#1C2024; --sunken:#101315; --line:#2E343A;
+    --ink:#ECE8E1; --ink-2:#B5B2AB; --ink-3:#8E8B85;
+    --brand:#6CC79A; --on-brand:#0C2A1D; --brand-tint:#1D3A2C;
+    --b-sonne:#3A3216; --b-himmel:#1B2B40; --b-koralle:#3D2420; --b-aprikose:#3B2A18;
+    --b-minze:#173429; --b-flieder:#2A2342; --b-stein:#26282B;
+    --d-sun:#C9A23E; --d-sky:#6E9BCB; --d-coral:#CC8370; --d-apricot:#B7834F; --d-mint:#4E9A7E; --d-lilac:#9585D4;
+    --on-decor:#14171A;
+    --m1:#C3A6FF; --m2:#4FCBD6; --m3:#F0A84E; --m4:#FF85AE;
+    --sticker-border: #2E343A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#14171A; --surface:#1C2024; --sunken:#101315; --line:#2E343A;
+  --ink:#ECE8E1; --ink-2:#B5B2AB; --ink-3:#8E8B85;
+  --brand:#6CC79A; --on-brand:#0C2A1D; --brand-tint:#1D3A2C;
+  --b-sonne:#3A3216; --b-himmel:#1B2B40; --b-koralle:#3D2420; --b-aprikose:#3B2A18;
+  --b-minze:#173429; --b-flieder:#2A2342; --b-stein:#26282B;
+  --d-sun:#C9A23E; --d-sky:#6E9BCB; --d-coral:#CC8370; --d-apricot:#B7834F; --d-mint:#4E9A7E; --d-lilac:#9585D4;
+  --on-decor:#14171A;
+  --m1:#C3A6FF; --m2:#4FCBD6; --m3:#F0A84E; --m4:#FF85AE;
+  --sticker-border: #2E343A;
+  color-scheme: dark;
+}
+/* Night: the kiosk's amber theme of specs/17. No bands, no decoration. */
+:root[data-theme="night"] {
+  --bg:#0B0A09; --surface:#15130F; --sunken:#080706; --line:#26221C;
+  --ink:#CDB994; --ink-2:#A8977A; --ink-3:#938366;
+  --brand:#E0A458; --on-brand:#1E1406; --brand-tint:#2A2013;
+  --b-sonne:#15130F; --b-himmel:#15130F; --b-koralle:#15130F; --b-aprikose:#15130F;
+  --b-minze:#15130F; --b-flieder:#15130F; --b-stein:#15130F;
+  --d-sun:#26221C; --d-sky:#26221C; --d-coral:#26221C; --d-apricot:#26221C; --d-mint:#26221C; --d-lilac:#26221C;
+  --on-decor:#CDB994;
+  --m1:#8F7AB8; --m2:#3F9299; --m3:#AC7A3E; --m4:#B5627F;
+  --sticker-border: #26221C;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.5 var(--f-ui); }
+main { max-width: 1120px; margin: 0 auto; padding: 0 16px 64px; }
+h1 { font-size: 32px; line-height:1.15; margin: 24px 0 4px; font-weight: 800; }
+h2 { font-size: 22px; margin: 40px 0 4px; font-weight: 800; }
+p.lead, p.note { color: var(--ink-2); margin: 4px 0 16px; max-width: 70ch; }
+code { font-size: .9em; }
+
+.bar { position: sticky; top: 0; z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line);
+  padding: 10px 16px; display:flex; gap: 8px; flex-wrap: wrap; align-items:center; }
+.bar .lbl { color: var(--ink-2); font-size: 14px; margin-right: 4px; }
+.seg { display:inline-flex; border:1px solid var(--line); border-radius:999px; overflow:hidden; background:var(--surface); }
+.seg button { font: inherit; font-size: 14px; border:0; background:none; color:var(--ink); padding: 8px 14px; min-height: 40px; cursor:pointer; }
+.seg button[aria-pressed="true"] { background: var(--brand); color: var(--on-brand); font-weight:700; }
+.bar label { font-size: 14px; color: var(--ink-2); display:inline-flex; gap:6px; align-items:center; margin-left: 8px; }
+
+.grid { display:grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+.card { background: var(--surface); border:1px solid var(--line); border-radius: 10px; padding: 12px; }
+.pose svg { width: 100%; height: auto; max-height: 140px; display:block; }
+.pose .name { font-weight: 800; }
+.pose .use { color: var(--ink-2); font-size: 14px; }
+
+/* Module bands */
+.phones { display:grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+.phone { background: var(--bg); border:1px solid var(--line); border-radius: 18px; overflow: hidden; }
+.band { padding: 14px 14px 12px; position: relative; min-height: 104px; }
+.band h3 { margin: 0; font-size: 22px; font-weight: 800; color: var(--ink); }
+.band .cap { color: var(--ink-2); font-size: 14px; }
+.band .ill { position:absolute; right: 8px; top: 6px; font-size: 52px; line-height: 1; opacity: .95; }
+:root[data-theme="night"] .band .ill { display:none; }
+.band .chips { display:flex; gap: 6px; margin-top: 8px; }
+.chip { display:inline-flex; align-items:center; gap:6px; border-radius:999px; padding: 2px 10px 2px 3px; font-size: 13px; font-weight: 700; background: var(--surface); border:1px solid var(--line); }
+.chip i { width: 20px; height: 20px; border-radius: 50%; display:inline-grid; place-items:center; color:#fff; font-style: normal; font-size: 11px; }
+:root[data-theme="dark"] .chip i, :root[data-theme="night"] .chip i { color:#14171A; }
+.phone .body { padding: 12px; display:grid; gap: 8px; }
+.row { background: var(--surface); border:1px solid var(--line); border-radius: 10px; padding: 10px 12px; font-size: 15px; display:flex; justify-content: space-between; gap: 8px; }
+.row small { color: var(--ink-2); }
+.nav { display:flex; justify-content: space-around; border-top: 1px solid var(--line); background: var(--surface); padding: 6px 4px 8px; }
+.nav span { font-size: 11px; text-align:center; color: var(--ink-2); padding: 4px 6px; border-radius: 999px; }
+.nav span.on { color: var(--ink); font-weight: 800; }
+
+/* Decoration */
+.swatches { display:grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+.sw { border-radius: 10px; border:1px solid var(--line); overflow:hidden; background: var(--surface); }
+.sw .blob { height: 72px; display:grid; place-items:center; font-weight:800; color: var(--on-decor); }
+.sw .meta { padding: 8px 10px; font-size: 13px; color: var(--ink-2); }
+
+/* Kiosk header phases */
+.kiosk { border-radius: 14px; overflow:hidden; border:1px solid var(--line); margin-bottom: 12px; background: var(--surface); }
+.sky { position: relative; height: 128px; padding: 14px 18px; display:flex; align-items:flex-start; justify-content: space-between; gap: 16px; overflow:hidden; }
+.sky .clock { font: 700 48px/1 var(--f-num); color: #1C1F23; }
+.sky .date { font: 600 20px/1.2 var(--f-num); color: #4A5058; }
+.sky .vf { display:flex; gap: 8px; flex-wrap: wrap; justify-content:flex-end; position: relative; z-index: 1; max-width: 60%; }
+.sky .vf span { background: rgba(255,255,255,.92); color:#1C1F23; border-radius: 10px; padding: 6px 10px; font: 600 18px/1.2 var(--f-num); border: 1px solid #DDD8CF; }
+.sky .hill { position:absolute; left:-5%; right:-5%; bottom:-44px; height: 64px; border-radius: 50%; background: var(--b-sonne); opacity: .9; }
+.sky .orb { position:absolute; width: 46px; height:46px; border-radius:50%; }
+.sky .wusel { position:absolute; left: 290px; bottom: -4px; width: 84px; z-index: 2; }
+.sky.night .clock { color:#CDB994; } .sky.night .date { color:#A8977A; }
+.sky.night .vf span { background:#15130F; color:#CDB994; border-color:#26221C; }
+.sky.night .hill { background:#15130F; }
+.sky .star { position:absolute; width:2px; height:2px; background:#A8977A; border-radius:50%; opacity:.7; }
+.kiosk .lbl { padding: 8px 18px; font-size: 14px; color: var(--ink-2); border-top: 1px solid var(--line); }
+
+/* Kid sticker skin */
+.kid { display:grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.sticker { background: var(--surface); border: 2px solid var(--sticker-border); border-radius: 22px; padding: 14px 16px;
+  box-shadow: 0 4px 0 0 color-mix(in srgb, var(--d-coral) 60%, transparent); display:flex; align-items:center; gap: 14px;
+  min-height: 76px; font-size: 19px; font-weight: 700; cursor: pointer; transition: transform 120ms cubic-bezier(.2,1.4,.4,1), box-shadow 120ms; user-select:none; }
+.sticker:active { transform: translateY(3px); box-shadow: 0 1px 0 0 color-mix(in srgb, var(--d-coral) 60%, transparent); }
+.sticker .emo { font-size: 36px; }
+.sticker .pts { margin-left:auto; background: var(--points); color: var(--on-points); border-radius: 999px; padding: 2px 10px; font-size: 16px; }
+.sticker.done { background: var(--brand-tint); }
+.sticker .tick { margin-left:auto; width: 36px; height: 36px; border-radius: 50%; background: var(--brand); color: var(--on-brand); display:grid; place-items:center; font-size: 22px; }
+.sticker.plain { border: 2px solid var(--line); box-shadow: none; border-radius: 18px; }
+
+/* Ritual cards */
+.rituals { display:grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+.tq { background: var(--b-sonne); border-radius: 14px; border: 1px solid var(--line); padding: 16px; display:flex; gap: 12px; align-items: center; }
+.tq svg { width: 96px; flex: none; }
+.tq .q { font: 700 26px/1.2 var(--f-ui); }
+.tq .again { margin-top: 10px; display:inline-flex; min-height: 56px; align-items:center; padding: 0 18px; border-radius: 14px; background: var(--surface); border:1px solid var(--line); font-weight: 700; }
+.wr { background: var(--surface); border:1px solid var(--line); border-radius: 14px; overflow:hidden; }
+.wr .top { background: var(--d-lilac); color: var(--on-decor); padding: 12px 16px; font-weight: 800; font-size: 18px; }
+.wr ul { margin: 0; padding: 12px 16px 14px; list-style: none; display:grid; gap: 8px; }
+.wr li { display:flex; gap: 10px; align-items: baseline; }
+.wr li b { min-width: 64px; }
+.wish { background: var(--surface); border:1px solid var(--line); border-radius: 14px; padding: 14px 16px; }
+.wish .tray { display:flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.wish .tray span { background: var(--b-aprikose); border-radius: 999px; padding: 6px 12px; font-weight: 700; border:1px solid var(--line); }
+.foot { color: var(--ink-3); font-size: 14px; margin-top: 40px; }
+@media (prefers-reduced-motion: reduce) { .sticker { transition: none; } }
+</style>
+</head>
+<body>
+<div class="bar" role="toolbar" aria-label="Darstellung">
+  <span class="lbl">Shade</span>
+  <span class="seg" id="shade">
+    <button data-v="light" aria-pressed="true">Hell</button>
+    <button data-v="dark" aria-pressed="false">Dunkel</button>
+    <button data-v="night" aria-pressed="false">Nacht</button>
+  </span>
+  <label><input type="checkbox" id="motion" checked> Bewegung</label>
+</div>
+<main>
+  <h1>Wusel und Farbe</h1>
+  <p class="lead">Proposal for <a href="../25-wusel.md">25 — Wusel</a> and <a href="../26-colour-and-ambience.md">26 — Colour, ambience, celebration</a> (ADR-020, 2026-10-24). Direction A "Küchentisch" stays; this shows the layers on top. Switch the shade above; untick <em>Bewegung</em> to see what Reduce Motion leaves.</p>
+
+  <h2>Wusel: seven poses</h2>
+  <p class="note">One drawing, seven parameter sets. Tufts are the family's member inks in board order; the body is <code>brand</code> of the shade. Sleepy is not sad. There is no sad pose.</p>
+  <div class="grid" id="poses"></div>
+
+  <h2>Outfits</h2>
+  <p class="note">Free from the start, never earned, never lost. A member's choice shows wherever Wusel speaks to them; the Partyhut overrides it on their birthday.</p>
+  <div class="grid" id="outfits"></div>
+
+  <h2>Module bands</h2>
+  <p class="note">Modules are paper, like subjects and categories, so any hue is allowed. Text on a band is <code>ink</code> or <code>ink-2</code>, never <code>ink-3</code>. The member chips stay the loudest thing on the screen. At night there are no bands.</p>
+  <div class="phones" id="phones"></div>
+
+  <h2>Decoration</h2>
+  <p class="note">For illustration only: blobs, confetti, the Rückblick's cards and the kid shadows. At most two per screen. Text on decoration is <code>ink</code> (light) or <code>#14171A</code> (dark).</p>
+  <div class="swatches" id="decor"></div>
+
+  <h2>The wall's header through the day</h2>
+  <p class="note">Computed on the device from the clock; cross-fades over 30 s. Text on the sky is ink. Member colours never sit on the sky. The Vorfreude strip shares the header slot with the Tischfrage and the Rückblick tile (Q57).</p>
+  <div id="phases"></div>
+
+  <h2>Kid register: sticker skin</h2>
+  <p class="note">Direction B's outlines and offset shadow, A's colours, kid register only. Press a card: it moves 3 px down on a spring. The last card shows today's flat style for comparison.</p>
+  <div class="kid">
+    <div class="sticker"><span class="emo">🍽️</span>Tisch decken<span class="pts">+1</span></div>
+    <div class="sticker done"><span class="emo">🦷</span>Zähne putzen<span class="tick">✓</span></div>
+    <div class="sticker" style="box-shadow:0 4px 0 0 color-mix(in srgb, var(--d-sky) 60%, transparent)"><span class="emo">🎒</span>Ranzen packen<span class="pts">+1</span></div>
+    <div class="sticker plain"><span class="emo">🧺</span>Wäsche wegräumen <small style="margin-left:auto;color:var(--ink-2)">(heute)</small></div>
+  </div>
+
+  <h2>Rituals</h2>
+  <p class="note">From <a href="../27-family-rituals.md">27 — Family rituals</a>. Nothing about the answers is stored; nobody's line can be compared against another's.</p>
+  <div class="rituals">
+    <div class="tq"><span id="tq-wusel"></span><div><div class="q">Wenn unser Kühlschrank sprechen könnte – was würde er sagen?</div><span class="again">Andere Frage ↻</span></div></div>
+    <div class="wr"><div class="top">Unsere Woche ✨</div><ul>
+      <li><b>Zusammen</b> 41 Aufgaben geschafft 🧹</li>
+      <li><b>Olivia</b> Neues Abzeichen: Spülmaschinen-Profi 🏅</li>
+      <li><b>Jack</b> 14 Tage Zähneputzen am Stück 🦷</li>
+      <li><b>Sarah</b> Ihr Wunschessen: Shakshuka ⭐</li>
+      <li><b>David</b> War drei Tage unterwegs ✈️</li>
+      <li><b>Nächste Woche</b> 🏖️ Herbstferien · 🎂 Olivia wird 10</li>
+    </ul></div>
+    <div class="wish"><b>Wünsche diese Woche</b><div class="tray"><span>Olivia · 🥞 Pfannkuchen</span><span>Jack · 🍕 Pizza</span></div><p class="note" style="margin:10px 0 0">In the planner: tap a wish, then a day. Never "abgelehnt": an unplanned wish moves to next week.</p></div>
+  </div>
+
+  <p class="foot">Mockup only: the app draws Wusel with a CustomPainter and bundles its fonts; this page loads Atkinson Hyperlegible Next and Barlow from Google Fonts like the other mockups. Emoji render in the system's font here, Fluent Emoji Flat in the app.</p>
+</main>
+<script>
+(() => {
+  const root = document.documentElement;
+  const shades = {
+    light: { body:'#2D6A4F', limb:'#245A42', tufts:['#7B3FE4','#08737F','#9A5300','#C2255C'], sclera:'#FFFFFF', pupil:'#1C1F23', mouth:'#F7F4EE' },
+    dark:  { body:'#6CC79A', limb:'#57B086', tufts:['#C3A6FF','#4FCBD6','#F0A84E','#FF85AE'], sclera:'#FFFFFF', pupil:'#1C1F23', mouth:'#14171A' },
+  };
+  // Night: dark values mixed 72 % over the night ground (specs/17).
+  const mix = (hex, over='#0B0A09', a=.72) => {
+    const p = h => [1,3,5].map(i => parseInt(h.slice(i,i+2),16));
+    const [r,g,b] = p(hex), [R,G,B] = p(over);
+    return '#' + [r*a+R*(1-a), g*a+G*(1-a), b*a+B*(1-a)].map(v => Math.round(v).toString(16).padStart(2,'0')).join('');
+  };
+  shades.night = { body:mix('#6CC79A'), limb:mix('#57B086'), tufts:shades.dark.tufts.map(t=>mix(t)), sclera:'#CDB994', pupil:'#0B0A09', mouth:'#0B0A09' };
+
+  const shade = () => root.dataset.theme === 'night' ? 'night'
+    : root.dataset.theme === 'dark' || (!root.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+  const moving = () => document.getElementById('motion').checked && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const tuftPaths = {
+    up:    ['M37 32 Q31 22 33 13','M46 28 Q44 18 47 9','M55 28 Q58 18 57 9','M64 32 Q71 23 70 14'],
+    fly:   ['M37 32 Q27 20 26 8','M46 28 Q42 15 44 3','M55 28 Q60 15 58 3','M64 32 Q75 20 76 8'],
+    droop: ['M37 32 Q28 28 24 32','M46 28 Q40 22 35 23','M55 28 Q61 22 66 23','M64 32 Q73 28 77 32'],
+  };
+  const arm = (x1,y1,x2,y2,c) => `<path d="M${x1} ${y1} L${x2} ${y2}" stroke="${c}" stroke-width="9" stroke-linecap="round"/>`;
+
+  function wusel({ pose='idle', outfit='none', s=shade() } = {}) {
+    const c = shades[s];
+    const tufts = pose==='cheer' ? tuftPaths.fly : pose==='sleep' ? tuftPaths.droop : tuftPaths.up;
+    const lift = pose==='cheer' ? -6 : pose==='sleep' ? 4 : 0;
+    let eyes;
+    if (pose==='cheer') eyes = `<path d="M29 58 q8 -10 16 0 M55 58 q8 -10 16 0" stroke="${c.pupil}" stroke-width="4.5" fill="none" stroke-linecap="round"/>`;
+    else if (pose==='sleep') eyes = `<path d="M30 56 q7 6 14 0 M56 56 q7 6 14 0" stroke="${c.pupil}" stroke-width="4" fill="none" stroke-linecap="round"/>`;
+    else {
+      const [dx,dy] = pose==='think' ? [3,-4] : pose==='peek' ? [1,3] : [2,-2];
+      eyes = `<circle cx="37" cy="56" r="9.5" fill="${c.sclera}"/><circle cx="63" cy="56" r="9.5" fill="${c.sclera}"/>
+        <circle cx="${37+dx}" cy="${56+dy}" r="5" fill="${c.pupil}"/><circle cx="${63+dx}" cy="${56+dy}" r="5" fill="${c.pupil}"/>`;
+    }
+    const mouth = pose==='cheer'
+      ? `<path d="M39 69 Q50 84 61 69 Z" fill="${c.mouth}"/>`
+      : pose==='sleep' ? `<path d="M45 72 q5 3 10 0" stroke="${c.mouth}" stroke-width="3.2" fill="none" stroke-linecap="round"/>`
+      : `<path d="M40 71 q5 7 10 0 q5 7 10 0" fill="none" stroke="${c.mouth}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>`;
+    let limbs = '', extra = '';
+    if (pose==='wave') limbs = arm(85,62,99,42,c.limb) + arm(15,66,8,74,c.limb);
+    if (pose==='cheer') { limbs = arm(15,62,2,40,c.limb) + arm(85,62,98,40,c.limb) + `<path d="M38 90 v6 M62 90 v6" stroke="${c.limb}" stroke-width="8" stroke-linecap="round"/>`;
+      const conf = ['#7B3FE4','#F2B705','#08737F','#C2255C','#F2B705','#9A5300'];
+      extra = conf.map((col,i)=>`<rect x="${8+i*17}" y="${-4+(i%3)*7}" width="6" height="10" rx="2" fill="${col}" transform="rotate(${i*37} ${11+i*17} ${1+(i%3)*7})"/>`).join(''); }
+    if (pose==='proud') { limbs = arm(85,62,97,44,c.limb) + arm(15,66,8,74,c.limb);
+      extra = `<path d="M100 26 l4.7 9.6 10.6 1.5 -7.7 7.5 1.8 10.5 -9.4 -5 -9.4 5 1.8 -10.5 -7.7 -7.5 10.6 -1.5 z" fill="#F2B705" stroke="#3E2A00" stroke-width="2" stroke-linejoin="round"/>`; }
+    if (pose==='think') { limbs = arm(30,86,40,80,c.limb);
+      extra = `<circle cx="84" cy="30" r="3" fill="${c.limb}"/><circle cx="93" cy="22" r="4" fill="${c.limb}"/><circle cx="104" cy="12" r="5" fill="${c.limb}"/>`; }
+    if (pose==='sleep') extra = `<text x="80" y="30" font-family="var(--f-ui)" font-weight="800" font-size="16" fill="${c.limb}" class="z">z</text><text x="92" y="16" font-family="var(--f-ui)" font-weight="800" font-size="12" fill="${c.limb}" class="z z2">z</text>`;
+    const hat = {
+      none: '',
+      party: `<path d="M50 -6 L36 26 L64 26 Z" fill="#FF9F85" stroke="#1C1F23" stroke-width="2" stroke-linejoin="round"/><circle cx="50" cy="-7" r="4" fill="#F2B705"/><circle cx="46" cy="14" r="2.4" fill="#FFF"/><circle cx="54" cy="20" r="2.4" fill="#FFF"/>`,
+      crown: `<path d="M34 28 L34 10 L42 18 L50 6 L58 18 L66 10 L66 28 Z" fill="#F2B705" stroke="#3E2A00" stroke-width="2" stroke-linejoin="round"/>`,
+      wizard: `<path d="M50 -10 L32 28 L68 28 Z" fill="#1A4FA8" stroke="#1C1F23" stroke-width="2" stroke-linejoin="round"/><path d="M26 28 h48" stroke="#1C1F23" stroke-width="5" stroke-linecap="round"/><text x="44" y="18" font-size="10" fill="#F2B705">★</text>`,
+      wreath: [30,40,50,60,70].map((x,i)=>`<circle cx="${x}" cy="${30-(i===2?4:i%2?2:0)}" r="5" fill="${['#FF85AE','#FFC94D','#FFFFFF','#FFC94D','#FF85AE'][i]}" stroke="#1C1F23" stroke-width="1.2"/>`).join(''),
+      sunglasses: `<rect x="25" y="49" width="24" height="14" rx="6" fill="#1C1F23"/><rect x="51" y="49" width="24" height="14" rx="6" fill="#1C1F23"/><path d="M49 54 h2" stroke="#1C1F23" stroke-width="3"/>`,
+      scarf: `<path d="M18 74 Q50 86 82 74 L82 82 Q50 94 18 82 Z" fill="#C2255C"/><path d="M70 80 l4 16 l7 -2 l-3 -15" fill="#C2255C"/><path d="M30 28 Q50 4 70 28 Z" fill="#C2255C"/><circle cx="50" cy="10" r="5" fill="#FFF"/>`,
+      headphones: `<path d="M20 58 Q20 20 50 20 Q80 20 80 58" fill="none" stroke="#1C1F23" stroke-width="4"/><rect x="12" y="52" width="12" height="18" rx="5" fill="#08737F"/><rect x="76" y="52" width="12" height="18" rx="5" fill="#08737F"/>`,
+      bow: `<path d="M50 30 L36 20 L36 38 Z M50 30 L64 20 L64 38 Z" fill="#FF85AE" stroke="#1C1F23" stroke-width="1.6" stroke-linejoin="round"/><circle cx="50" cy="30" r="4" fill="#C2255C"/>`,
+    }[outfit];
+    const over = outfit==='sunglasses' ? hat : '';
+    const under = outfit!=='sunglasses' ? hat : '';
+    const body = `<g transform="translate(0 ${lift})">
+      <g fill="none" stroke-linecap="round" stroke-width="6.5">${tufts.map((d,i)=>`<path d="${d}" stroke="${c.tufts[i]}"/>`).join('')}</g>
+      ${limbs}
+      <path d="M50 27 C75 27 88 42 88 61 C88 81 72 90 50 90 C28 90 12 81 12 61 C12 42 25 27 50 27 Z" fill="${c.body}"/>
+      <ellipse cx="27" cy="70" rx="6" ry="3.6" fill="#FF85AE" opacity=".6"/><ellipse cx="73" cy="70" rx="6" ry="3.6" fill="#FF85AE" opacity=".6"/>
+      ${eyes}${mouth}${over}${under}</g>${extra}`;
+    if (pose==='peek') return `<svg viewBox="-10 -14 120 80" role="img" aria-label="Wusel schaut hervor" class="${moving() ? 'mv mv-peek' : ''}"><defs><clipPath id="pk"><rect x="-10" y="-14" width="120" height="76"/></clipPath></defs><g clip-path="url(#pk)"><g transform="translate(0 -4)">${body}</g></g><path d="M-10 62 H110" stroke="var(--ink-3)" stroke-width="2"/></svg>`;
+    return `<svg viewBox="-10 -14 125 114" role="img" aria-label="Wusel: ${pose}" class="${moving() ? 'mv mv-'+pose : ''}">${body}</svg>`;
+  }
+
+  const poses = [
+    ['idle','Ruhig','Default when present'], ['wave','Winken','Kid home, the wall in the morning'],
+    ['cheer','Jubeln','The last chore, a birthday'], ['proud','Stolz','A badge, a reward'],
+    ['peek','Hervorschauen','Empty states'], ['think','Nachdenken','Waiting, offline (kid, wall)'],
+    ['sleep','Schlafen','The wall at night'],
+  ];
+  const outfits = [['party','Partyhut'],['crown','Krone'],['wizard','Zauberhut'],['wreath','Blumenkranz'],['sunglasses','Sonnenbrille'],['scarf','Mütze und Schal'],['headphones','Kopfhörer'],['bow','Schleife']];
+
+  const modules = [
+    ['sonne','Heute','Mittwoch, 4. November','☀️',[['O','m1','Olivia'],['J','m2','Jack']]],
+    ['himmel','Kalender','Woche 45','🗓️',[['S','m3','Sarah']]],
+    ['koralle','Aufgaben','3 von 5 erledigt','🧹',[['J','m2','Jack']]],
+    ['aprikose','Essen','Abendessen 18:00','🍲',[['D','m4','David']]],
+    ['minze','Einkauf','Wocheneinkauf · 7 Dinge','🧺',[]],
+    ['flieder','Stundenplan','Olivia · Woche A','🎒',[['O','m1','Olivia']]],
+    ['stein','Einstellungen','Familie Huber','',[]],
+  ];
+  const decor = [['sun','Sonne'],['sky','Himmel'],['coral','Koralle'],['apricot','Aprikose'],['mint','Minze'],['lilac','Flieder']];
+
+  const phases = [
+    ['Morgen · 07:12','linear-gradient(#FFD9B8,#FFF3E4)','#FFC94D','46%','62px','wave', false, '07:12'],
+    ['Tag · 13:40','linear-gradient(#CFE6FF,#F2F8FF)','#FFE27A','40%','16px','idle', false, '13:40'],
+    ['Abend · 18:30','linear-gradient(#FFC9A8,#EBD9F2)','#FF9F85','50%','74px','idle', false, '18:30'],
+    ['Nacht · 22:05 (night theme of specs/17)','linear-gradient(#0B0A09,#1A1630)','#CDB994','52%','22px','sleep', true, '22:05'],
+  ];
+
+  function render() {
+    const s = shade();
+    document.getElementById('poses').innerHTML = poses.map(([k,n,u]) =>
+      `<div class="card pose">${wusel({pose:k,s})}<div class="name">${n} <code>${k}</code></div><div class="use">${u}</div></div>`).join('');
+    document.getElementById('outfits').innerHTML = outfits.map(([k,n]) =>
+      `<div class="card pose">${wusel({pose:'idle',outfit:k,s})}<div class="name">${n}</div></div>`).join('');
+    document.getElementById('phones').innerHTML = modules.map(([key,title,cap,ill,chips],i) => `
+      <div class="phone"><div class="band" style="background:var(--b-${key})">
+        <span class="ill" aria-hidden="true">${ill}</span><h3>${title}</h3><div class="cap">${cap}</div>
+        <div class="chips">${chips.map(([ini,m,name])=>`<span class="chip"><i style="background:var(--${m})">${ini}</i>${name}</span>`).join('')}</div></div>
+        <div class="body"><div class="row">${['Zahnarzt Jack','Tisch decken','Milch','Spaghetti','Haferflocken','Mathe','Mitglieder'][i]}<small>${['15:30','+1','2×','18:00','','1. Std.',''][i]}</small></div>
+        <div class="row">${['Fußball Olivia','Zähne putzen','Bananen','Wunsch: Pizza ⭐','Brot','Sport 🏃','Geräte'][i]}<small>${['17:00','✓','','Fr','','3. Std.',''][i]}</small></div></div>
+        <div class="nav">${['Heute','Kalender','Aufgaben','Essen','Einkauf'].map((n,j)=>`<span class="${j===Math.min(i,4)&&i<5?'on':''}" style="${j===i&&i<5?`background:var(--b-${key})`:''}">${n}</span>`).join('')}</div></div>`).join('');
+    document.getElementById('decor').innerHTML = decor.map(([k,n]) =>
+      `<div class="sw"><div class="blob" style="background:var(--d-${k});border-radius:${['48% 52% 60% 40%','60% 40% 45% 55%','40% 60% 55% 45%','55% 45% 40% 60%','45% 55% 60% 40%','50%'][decor.findIndex(d=>d[0]===k)]}">${n}</div><div class="meta"><code>${k}</code> · illustration only</div></div>`).join('');
+    document.getElementById('phases').innerHTML = phases.map(([lbl,grad,orb,x,y,pose,night,time]) => `
+      <div class="kiosk"><div class="sky ${night?'night':''}" style="background:${grad}">
+        ${night ? [12,30,44,58,71,86].map((l,i)=>`<span class="star" style="left:${l}%;top:${18+(i%3)*22}px"></span>`).join('') : ''}
+        <span class="orb" style="background:${orb};left:${x};top:${y};${night?'box-shadow:inset -12px -4px 0 0 #0B0A09':''}"></span>
+        <span class="hill"></span>
+        <div style="position:relative;z-index:1"><div class="clock">${time}</div><div class="date">Mittwoch, 4. November</div></div>
+        <div class="vf">${night ? '' : '<span>🎂 Olivia · noch 3× schlafen</span><span>🏖️ Herbstferien · noch 5× schlafen</span><span>✈️ Papa · Freitag zurück</span>'}</div>
+        <span class="wusel">${wusel({pose, s: night ? 'night' : 'light'})}</span>
+      </div><div class="lbl">${lbl}</div></div>`).join('');
+    document.getElementById('tq-wusel').innerHTML = wusel({pose:'idle', s});
+  }
+
+  document.querySelectorAll('#shade button').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('#shade button').forEach(x => x.setAttribute('aria-pressed', x===b));
+    root.dataset.theme = b.dataset.v; render();
+  }));
+  document.getElementById('motion').addEventListener('change', render);
+  if (matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.querySelectorAll('#shade button').forEach(x => x.setAttribute('aria-pressed', x.dataset.v==='dark'));
+  }
+  render();
+
+  const st = document.createElement('style');
+  st.textContent = `
+    @keyframes breathe { 50% { transform: scaleY(.98) translateY(1px); } }
+    @keyframes wave { 0%,100% { transform: rotate(0); } 25%,75% { transform: rotate(-6deg); } 50% { transform: rotate(5deg); } }
+    @keyframes jump { 0%,100% { transform: translateY(0) scaleY(1); } 20% { transform: translateY(2px) scaleY(.94); } 50% { transform: translateY(-8px) scaleY(1.04); } }
+    @keyframes zz { 0%,100% { opacity: 0; } 50% { opacity: 1; } }
+    svg.mv { transform-origin: 50% 90%; }
+    svg.mv-idle, svg.mv-peek, svg.mv-think, svg.mv-sleep { animation: breathe 3.2s ease-in-out infinite; }
+    svg.mv-wave { animation: wave 1.4s ease-in-out 3; }
+    svg.mv-cheer { animation: jump 1.2s cubic-bezier(.3,1.5,.5,1) infinite; animation-delay: .4s; }
+    svg.mv-proud { animation: breathe 2.4s ease-in-out infinite; }
+    svg.mv-sleep .z { animation: zz 4s ease-in-out infinite; } svg.mv-sleep .z2 { animation-delay: 2s; }
+  `;
+  document.head.appendChild(st);
+})();
+</script>
+</body>
+</html>

@@ -24,6 +24,12 @@ The empty timetable view (2026-10-22) now shows the child-specific explanation a
 entry button without repeating the action as a heading. Family guides are updated in
 DE/EN/FR/ES; separate website public-progress coordination remains pending.
 
+Issue [#117](https://github.com/wuselwall/wuselwall-app/issues/117) (2026-10-24) records
+sampled API 36 Android phone and tablet demo UI checks and iOS-targeted widget regressions
+for shared Flutter fixes, including Settings navigation. These checks are not release
+evidence; native iPhone/iPad validation, real authentication and two-device synchronization
+remain separate gates.
+
 Member invitations (2026-10-22) now show their expiry and share/withdraw actions in
 the matching member's row, joined by profile ID. The DE/EN/FR/ES family guides describe
 the combined row. Separate bilingual public-progress copy remains to be coordinated in
@@ -246,7 +252,10 @@ finished · **the journey gaps** of [16, step 10](16-setup-plan.md#step-10--jour
 (added 2026-10-16): members, the family and devices editable; lists and categories
 editable; servers without mail; pending approvals on Today; the wall's offline start; the
 account-deletion page; the release checklist; the M0.1 paths retired; a navigation rail on
-wide screens.
+wide screens · **a lighter day** of [16, step 11](16-setup-plan.md#step-11--a-lighter-day-m15)
+(added 2026-10-24, [ADR-020](adr/ADR-020-a-lighter-day.md)): Wusel ([25](25-wusel.md)), colour,
+ambience and celebration ([26](26-colour-and-ambience.md)), birthdays and the five rituals
+([27](27-family-rituals.md)).
 
 What needs the real household and its hardware — the mounted display, the feed in Outlook,
 the timed journeys — is M1.6.
@@ -283,7 +292,10 @@ remains the last resort only for an adult who has lost both their mailbox and ev
 linked provider.
 
 **Done when:** every member of the household uses it daily for two weeks without asking you to fix
-anything.
+anything, and each part of step 11 has a keep, tone-down or remove verdict against the
+criteria in its spec ([25](25-wusel.md#how-the-trial-judges-wusel),
+[26](26-colour-and-ambience.md#how-the-trial-judges-the-colour),
+[27](27-family-rituals.md#how-the-trial-judges-the-rituals)).
 
 ---
 

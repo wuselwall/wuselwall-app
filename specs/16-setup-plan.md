@@ -30,6 +30,7 @@ change and a tag producing installable builds. Once that works, every module aft
 | 8 | M0.3 | A self-hosted server ([ADR-013](adr/ADR-013-self-hosted-compose-stack.md)): own keys, an allow-list front, backups | 1 evening |
 | 9 | M1.0 | Onboarding ([ADR-014](adr/ADR-014-self-service-onboarding.md)): email code and password; households, invitations, pairing, getting started, deletion | 2–3 weekends |
 | 10 | M1.5 | Journey gaps before launch: members, family and devices editable, shopping structure, servers without mail, approvals on Today, the wall's offline start, the release checklist | 2 weekends |
+| 11 | M1.5 | A lighter day ([ADR-020](adr/ADR-020-a-lighter-day.md)): Wusel, colour layers and ambience, celebrations, birthdays, Vorfreude, traditions, Wunschessen, Tischfrage, Wochenrückblick | 5–7 weekends |
 
 Steps 1–4 can be done in a single long weekend. Step 7 waits on the Apple and Google
 accounts from step 0, which is why those are applied for first.
@@ -609,6 +610,12 @@ architecture rules ([03](03-architecture.md)): one `api` function per write, sta
 unauthenticated cases; strings in both ARB files; and the matching `docs/` page in both
 languages. A slice that changes the app–server contract raises `api_version`.
 
+Issue [#117](https://github.com/wuselwall/wuselwall-app/issues/117) (2026-10-24) records
+sampled API 36 Android phone and tablet demo UI checks and iOS-targeted widget regressions
+for shared Flutter fixes, including Settings navigation. These checks are not release
+evidence; native iPhone/iPad validation, real authentication and two-device synchronization
+remain separate gates.
+
 1. **Members can be edited** (FR-5.1, [20 H2](20-onboarding.md#j1--start-a-family),
    [21](21-household-settings.md#the-kitchen-display)). Today a profile has only two writes,
    `api.members_add` and `api.member_baseline_set`. A misspelt name, two people with one
@@ -718,6 +725,84 @@ languages. A slice that changes the app–server contract raises `api_version`.
 entered during J1 without help; a fresh server release without SMTP takes a family from S0
 to Today; a reward request is seen by a guardian the same day without anyone opening the
 Tasks tab; and the wall shows the week after a power cut, with the router still off.
+
+---
+
+## Step 11 — A lighter day (M1.5)
+
+*Added 2026-10-24 with [ADR-020](adr/ADR-020-a-lighter-day.md).* This step makes the app
+warmer before the pilot household lives with it. The specs are [25](25-wusel.md) (Wusel),
+[26](26-colour-and-ambience.md) (colour, ambience, celebration) and
+[27](27-family-rituals.md) (rituals). It runs after step 10 and before M1.6, as the user
+decided, so every slice has to stay thin. The two weeks of M1.6 judge each part against
+the criteria its spec names ([ADR-020, decision 8](adr/ADR-020-a-lighter-day.md#decision)).
+The architecture rules of step 10 apply to every slice unchanged.
+
+The slices are ordered so that each one is visible on its own, and so that the long pole,
+writing the question decks in four languages, starts on day one.
+
+0. **Start the writing** (in parallel with everything else). Write the DE and EN
+   table-question decks (about 150 questions each, each written in its own language) and the
+   Wusel lines in all four languages, using the voice rules of [25](25-wusel.md#voice). The FR
+   and ES decks come later; until then the Tischfrage is hidden on FR and ES devices
+   ([Q53](14-open-questions.md), [27](27-family-rituals.md#tischfrage)).
+1. **Foundations** ([26](26-colour-and-ambience.md)). Build `motionAllowed(context)`, with
+   today's `disableAnimationsOf` calls moved behind it, and check iOS Reduce Motion on a real
+   iPad first ([Q55](14-open-questions.md)). Add the two spring tokens; the bands, decorative
+   colours and sky stops in `palette.dart`, with every pair in `theme_test.dart`; and a
+   `Feedback` service for sounds and haptics, with the player's latency measured on the kids'
+   tablets before the package is accepted. Add one settings-catalogue migration with every new
+   row of [21](21-household-settings.md#a-lighter-day).
+2. **Wusel drawn** ([25](25-wusel.md#implementation)). Build `WuselLook`, `WuselPose`, the
+   painter, the eight outfits and the `Wusel` widget, with goldens for each pose in three
+   shades. Rename the brand files to `wusel[-dark].svg` and update `scripts/brand-assets.js`.
+   Build a demo page under the demo mode that shows every pose, so the household can meet
+   Wusel before it appears anywhere.
+3. **Colour and celebration.** Add `ModuleHeader` on the top screen of each module, the
+   navigation indicator in the module's colour, and the kid sticker skin. Add
+   `core/ui/confetti.dart` and the celebrations table of
+   [26](26-colour-and-ambience.md#celebrations), wired to the kid task screen, the wall's
+   last-chore moment, badges, rewards and the end of a shopping trip. Add the sounds.
+4. **Wusel in place** ([25, where Wusel appears](25-wusel.md#where-wusel-appears)). Add
+   `EmptyView`'s `wusel` parameter; the kid home greeting; the wall's morning, night and
+   offline moments; the adult special days; and the `member.wusel`, `device.wusel` and outfit
+   settings. Add the widget test that capture routes and the PIN pad have no Wusel.
+5. **Ambience** ([26](26-colour-and-ambience.md#ambience)). Build `ambienceProvider`, the sky
+   painter in the Today header and the board header, the occasions catalogue with Western
+   and Orthodox Easter computed per year and the defaults per country, `ambience.occasions`
+   under *Erweitert*, and `device.pixel_shift` ([Q54](14-open-questions.md)). Unit tests pin
+   both Easter computations against known dates for 2000–2050.
+6. **Birthdays and Vorfreude** ([27](27-family-rituals.md#birthdays)). Migrate
+   `profile.birthday`, `event.countdown` and `event.icon_key`; give `api.member_update` and the
+   event functions the new parameters; add the projected birthday occurrences (board, month
+   view, feed); add `countdowns` in `api.board_week`; build the wall strip, the kid card and
+   the Today line. Raise `api_version` here, once, for slices 6–10 together, which merge as one
+   release.
+7. **Traditions** ([27](27-family-rituals.md#familientraditionen)). Add `event.tradition`,
+   `tradition_meal`, the localised starter set, the ribbon on the board and the planner's
+   suggestion.
+8. **Wunschessen** ([27](27-family-rituals.md#wunschessen)). Add `meal_wish`, the
+   `api.meal_wish_*` functions with their pgTAP, the kid card and picker, the planner's tray,
+   the card on Today, and the star on the board.
+9. **Tischfrage** ([27](27-family-rituals.md#tischfrage)). Add the deck assets, the household
+   shuffle, the wall card with Wusel, the kid and Today cards, `table_question` with its two
+   functions, and hiding.
+10. **Wochenrückblick** ([27](27-family-rituals.md#wochenrückblick)). Add `api.week_review`
+    with pgTAP, including a test that no member's line ever carries a number another
+    member's line could be compared against. Build the five-card story, the Today and kid
+    cards, and the wall tile.
+11. **Docs and the checklist.** Write the family guide pages *Wusel*, *Rituale* and the
+    module pages' new parts in DE/EN/FR/ES, with screenshots from the demo household (whose
+    demo data gains birthdays, two traditions, a wish and a countdown). Add three lines to the
+    release checklist: Reduce Motion on iOS and Android, sound latency on each tablet, and the
+    wall's CPU use idle for ten minutes with Wusel on and off.
+
+**Done when** a child opening the kid home is greeted by Wusel with something true about
+their day; the last chore of the day ends in a cheer; the wall wakes up in the morning, holds
+a question at dinner and falls asleep at night; a birthday, Ferien and a parent's return
+count down on the wall; the family has entered one tradition and each child one wish; Sunday
+ends with the family's story of its week; and none of it has added a second to adding kitchen
+roll to the list.
 
 ---
 
