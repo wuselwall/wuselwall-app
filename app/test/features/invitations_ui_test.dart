@@ -512,6 +512,34 @@ void main() {
       expect(s.leave.leaves, isEmpty);
     });
 
+    testWidgets('another family with the same name can still be joined', (
+      t,
+    ) async {
+      final s = await pumpInFamily(
+        t,
+        household: 'Familie Huser',
+        invitations: FakeInvitationRepository(
+          previewResult: Ok(
+            PreviewValid(
+              InvitationPreview(
+                householdName: 'Familie Huser',
+                inviterFirstName: 'Clara',
+                profileName: 'Julia',
+                role: InvitationRole.guardian,
+                expiresAt: DateTime.now().add(const Duration(days: 7)),
+              ),
+            ),
+          ),
+        ),
+      );
+      await openLink(t, s.container);
+      expect(
+        find.byKey(const ValueKey('already-in-leave')),
+        findsOneWidget,
+        reason: 'Clara is no guardian here, so this is a different family',
+      );
+    });
+
     testWidgets('the last guardian is told why leaving is not possible', (
       t,
     ) async {

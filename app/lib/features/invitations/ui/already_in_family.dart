@@ -8,6 +8,7 @@ import 'package:wuselwall/features/household/application/household_leave_provide
 import 'package:wuselwall/features/household/domain/household_models.dart';
 import 'package:wuselwall/features/household/ui/leave_family_tiles.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
+import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/invitations/data/invitation_repository.dart';
 import 'package:wuselwall/features/invitations/domain/invitation.dart';
 
@@ -62,10 +63,17 @@ Future<void> showAlreadyInFamily(
   if (!context.mounted) return;
   final device = ref.read(deviceProvider).value;
   final current = account?.householdName;
+  List<Member> members;
+  try {
+    members = await ref.read(membersProvider.future);
+  } on Object {
+    members = const [];
+  }
+  if (!context.mounted) return;
   final same =
       invitation != null &&
       current != null &&
-      _sameName(invitation.householdName, current);
+      _sameFamily(invitation, current, members);
 
   final leave = await showDialog<bool>(
     context: context,
@@ -94,8 +102,24 @@ Future<void> showAlreadyInFamily(
   if (!left && invitation != null) await store.clear();
 }
 
-/// The preview names a household only by its name (no id leaves the server for a stranger), so
-/// the names are compared, trimmed and ignoring case.
+/// The preview names a household only by its name (no id leaves the server for a stranger).
+/// Family names repeat (they start from a surname), so the same name counts as this family
+/// only when the inviter is also one of its guardians; without an inviter the name decides.
+bool _sameFamily(
+  StoredInvitation invitation,
+  String current,
+  List<Member> members,
+) {
+  if (!_sameName(invitation.householdName, current)) return false;
+  final inviter = invitation.inviterFirstName;
+  if (inviter == null) return true;
+  return members.any(
+    (m) =>
+        m.isGuardian &&
+        _sameName(m.displayName.trim().split(' ').first, inviter),
+  );
+}
+
 bool _sameName(String a, String b) =>
     a.trim().toLowerCase() == b.trim().toLowerCase();
 
