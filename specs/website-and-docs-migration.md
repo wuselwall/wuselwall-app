@@ -4,12 +4,28 @@
 
 | Repository | Owns | Delivery |
 |---|---|---|
-| `wuselwall/wuselwall-app` (visibility unchanged) | App, backend, specs, VitePress source and screenshot generator | Existing app/server releases; prepared GitHub Pages docs |
+| `wuselwall/wuselwall-app` (public) | App, backend, specs, VitePress source and screenshot generator | Existing app/server releases; prepared GitHub Pages docs |
 | `wuselwall/wuselwall-website` (private) | Astro marketing/legal pages, public app-link files, copied screenshots, website container and deploy helper | Website CI; the operator deploys to their own server with `scripts/remote-web.sh deploy` |
 
-The intended docs address is **https://docs.wuselwall.app/** (English `/en/`).
+The docs address is **https://docs.wuselwall.app/** (German `/`, English `/en/`,
+French `/fr/`, Spanish `/es/`).
 The old address is still operationally significant until cutover. No command in this
 plan authorizes an unreviewed production operation.
+
+## Activation status — 2026-10-24
+
+- The app repository is public. GitHub Pages is configured with **GitHub Actions** as
+  the publishing source and **docs.wuselwall.app** as its custom domain.
+- **DOCS_PAGES_ENABLED=true** enables the existing main-only, OIDC Pages deployment.
+- The first deployment is running through the existing docs workflow. DNS, the HTTPS
+  certificate and the published guide must pass the checks below before website links
+  switch. Source configuration alone does not establish that the guide is live.
+- Public website progress is updated separately in all four languages. Existing app
+  releases still link to `/docs/`; preserve that service until path- and query-preserving
+  redirects have been applied and checked.
+
+The phases below retain the original preparation and cutover procedure. The repository
+visibility prerequisite is now satisfied; DNS and delivery are independently verified.
 
 ## Phase 1 — review and merge source separation
 
@@ -53,12 +69,12 @@ plan authorizes an unreviewed production operation.
    homepage, nested guide pages, assets, search and screenshots. Test a direct deep-link
    refresh, mobile navigation and light/dark shots. Check CNAME and sitemap output.
 2. In the website repository set `docsOnPages = true` in `src/config/site.ts` (switches
-   the links and the bilingual privacy section to GitHub Pages together), merge, and
+   the links and all four privacy sections to GitHub Pages together), merge, and
    deploy with `scripts/remote-web.sh deploy`.
 3. Only then configure the existing marketing front end to redirect `/docs` and
    `/docs/<path>` to `https://docs.wuselwall.app/` and the matching `<path>`, preserving
    language and query strings. Test `/docs/en/guide/setup` and `/docs/settings/shortcuts`.
-4. Update app help/Shortcuts copy and Play listing docs URLs in DE/EN in a separate
+4. Update app help/Shortcuts copy and Play listing docs URLs in DE/EN/FR/ES in a separate
    release-safe change once the target is reachable. This preparation intentionally
    leaves existing shipped links unchanged. Retain redirects for old app releases.
 5. Retire old docs SSH credentials/runner access only after verification; review scopes
@@ -80,6 +96,7 @@ After cutover, if verification fails, disable Pages publishing and restore the p
 working website routing/static snapshot through an authorized deployment. Do not point
 old links at an unavailable host, delete backups or reset any household's database.
 
-No repository visibility change, DNS write, secret transfer, production deploy,
-app/server release or automatic merge is part of these PRs. Such actions require their
-own approval. The private website can be reviewed independently of Pages eligibility.
+The original separation PRs did not authorize operational changes. The documentation
+activation above is a separately requested cutover; it does not authorize app/server
+releases, secret transfers or automatic merges. Website changes follow that repository’s
+review and deployment rules.
