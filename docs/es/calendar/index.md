@@ -6,7 +6,7 @@ El calendario reúne las citas y la presencia de toda la familia.
 
 ## Vistas {#views}
 
-La fecha, las flechas, el selector de vista y los ajustes comparten una barra compacta. En el móvil, abre el menú para elegir **Día**, **3 días** o **Semana**. El icono de calendario vuelve a **Hoy**.
+La fecha, las flechas, el selector de vista y los ajustes comparten una barra compacta. En el móvil, el calendario se abre en vista **Día** para que las citas se lean bien. En el menú puedes elegir **Día**, **3 días** o **Semana**. En una pantalla ancha se abre en Semana. La vista elegida se conserva al cambiar de pestaña o girar el dispositivo. El icono de calendario vuelve a **Hoy**.
 
 <Shot name="calendar-phone" alt="El calendario en el móvil y su selector de vista" />
 

@@ -146,7 +146,7 @@ class BoardHeader extends ConsumerWidget {
                     iconSize: 30,
                     color: ww.ink3,
                     icon: const Icon(Icons.settings_outlined),
-                    onPressed: () => context.go(Routes.settings),
+                    onPressed: () => context.push<void>(Routes.settings),
                   ),
                 ),
               ],

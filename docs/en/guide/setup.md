@@ -4,6 +4,10 @@ At the very first start, the app asks which server to connect to ([Installing th
 
 The start screen is where everything begins. You sign in with your account, join a family by **invitation**, or connect a **shared device**.
 
+When you are offline, the start screen explains that signing in, accepting invitations,
+and connecting shared devices need an internet connection. These options return when
+you reconnect.
+
 <Shot name="setup-start" alt="WuselWall start screen" />
 
 At the bottom, **Privacy policy** opens the policy in your browser. Without a connection
@@ -17,7 +21,7 @@ The start screen has three ways in:
 
 ## 1. Signing in
 
-Tap **Continue with email** and enter your email address. WuselWall sends you a **six-digit code**. It is valid for **10 minutes**. Enter it and you are in. If it does not arrive, check your spam folder or tap **No code? Send again**; a new code comes at the earliest after one minute.
+Tap **Continue with email** and enter a valid email address. The app checks the field before sending anything. WuselWall sends you a **six-digit code**. It is valid for **10 minutes**. Enter it and you are in. If it does not arrive, check your spam folder or tap **No code? Send again**; a new code comes at the earliest after one minute.
 
 Keep the page with the code field open and enter the code from the email there.
 You do not need a sign-in link or a second sign-in. The email code verifies your
@@ -25,7 +29,7 @@ address; it is different from the setup code for a new server.
 
 <Shot name="setup-sign-in" alt="Signing in with email" />
 
-Prefer a password? Tap **I have a password**. You set the password under **Settings → Advanced → Sign-in**, at least 10 characters. The code by email always stays possible.
+Prefer a password? Tap **I have a password**. Enter your email address and password; the app checks both before signing in. You set the password under **Settings → Advanced → Sign-in**, at least 10 characters. The code by email always stays possible.
 
 The first time you create an account, WuselWall asks once how you want to sign in from now on: with the **code by email** (nothing to remember) or with a **password**.
 

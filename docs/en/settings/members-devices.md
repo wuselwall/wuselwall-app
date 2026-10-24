@@ -1,6 +1,7 @@
 # Members and devices
 
 This belongs to the **guardians**. On your phone, open the cog at the top right (**Settings**).
+When you came from another view, swipe inward from the left edge on iPhone or iPad to return; the back arrow at the top left works too.
 
 <Shot name="settings-phone" alt="Settings with members and devices" />
 

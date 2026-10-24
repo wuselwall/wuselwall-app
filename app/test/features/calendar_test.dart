@@ -373,7 +373,11 @@ void main() {
           await t.pumpAndSettle();
           expect(
             container.read(calendarViewProvider).anchor,
-            initial.anchor.add(const Duration(days: 3)),
+            DateTime(
+              initial.anchor.year,
+              initial.anchor.month,
+              initial.anchor.day + 3,
+            ),
           );
           await t.tap(previous);
           await t.pumpAndSettle();

@@ -76,7 +76,7 @@ class KidHome extends ConsumerWidget {
                     icon: const Icon(Icons.settings_outlined),
                     // ink2: ink3 is not used on a band (specs/26).
                     color: context.ww.ink2,
-                    onPressed: () => context.go(Routes.settings),
+                    onPressed: () => context.push<void>(Routes.settings),
                   ),
                 ),
               ),

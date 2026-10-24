@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/demo/demo_repositories.dart';
+import 'package:wuselwall/features/home/application/home_tab.dart';
 import 'package:wuselwall/features/settings/application/settings_view.dart';
 import 'package:wuselwall/features/settings/data/household_settings_repository.dart';
 
@@ -54,6 +55,55 @@ void main() {
   }
 
   group('Einstellungen', () {
+    testWidgets('Android Back returns to the home tab that opened settings', (
+      t,
+    ) async {
+      final container = await pumpApp(
+        t,
+        overrides: baseOverrides(
+          identity: FakeIdentityRepository(current: device()),
+        ),
+      );
+      container.read(homeTabProvider.notifier).select(HomeTab.shopping);
+      await t.pumpAndSettle();
+
+      await t.tap(find.byTooltip(_de.settingsTitle));
+      await t.pumpAndSettle();
+      expect(find.byKey(const ValueKey('settings-family')), findsOneWidget);
+
+      await t.binding.handlePopRoute();
+      await t.pumpAndSettle();
+
+      expect(
+        container.read(routerProvider).routeInformationProvider.value.uri.path,
+        Routes.home,
+      );
+      expect(container.read(homeTabProvider), HomeTab.shopping);
+      expect(
+        t.widget<NavigationBar>(find.byType(NavigationBar)).selectedIndex,
+        5,
+      );
+    });
+
+    testWidgets('Android Back from directly opened settings falls back home', (
+      t,
+    ) async {
+      final container = await open(
+        t,
+        Routes.settings,
+        store: MemorySettingsViewStore(),
+      );
+
+      await t.binding.handlePopRoute();
+      await t.pumpAndSettle();
+
+      expect(
+        container.read(routerProvider).routeInformationProvider.value.uri.path,
+        Routes.home,
+      );
+      expect(find.byType(NavigationBar), findsOneWidget);
+    });
+
     testWidgets('Basic hides the advanced rows and says they still apply', (
       t,
     ) async {

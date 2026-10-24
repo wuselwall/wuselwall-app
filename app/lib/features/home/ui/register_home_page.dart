@@ -60,7 +60,7 @@ class RegisterHomePage extends ConsumerWidget {
       IconButton(
         tooltip: l10n.settingsTitle,
         icon: const Icon(Icons.settings),
-        onPressed: () => context.go(Routes.settings),
+        onPressed: () => context.push<void>(Routes.settings),
       ),
     ];
     // Each module has its band (specs/26): the app bar and the selected destination

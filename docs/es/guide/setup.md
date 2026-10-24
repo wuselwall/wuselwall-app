@@ -2,19 +2,23 @@
 
 En el primer inicio elige el servidor ([Instalar la app](/es/guide/install)). Después, la pantalla inicial permite iniciar sesión, aceptar una invitación o conectar un dispositivo compartido.
 
+Si no tienes conexión, la pantalla inicial explica que necesitas Internet para iniciar
+sesión, aceptar invitaciones o conectar dispositivos compartidos. Estas opciones vuelven
+a estar disponibles cuando te conectas de nuevo.
+
 <Shot name="setup-start" alt="La pantalla inicial de WuselWall" />
 
 Abajo, **Política de privacidad** abre la página en el navegador. Sin conexión, el enlace está desactivado; la política no se almacena en la app.
 
 ## 1. Iniciar sesión {#_1-signing-in}
 
-En tu móvil personal, toca **Continuar con correo electrónico** e introduce tu dirección. Recibirás un **código de seis cifras**, válido durante **10 minutos**. Mantén abierto el campo y escribe allí el código del mensaje. Revisa el correo no deseado si no llega; puedes solicitar otro tras un minuto como mínimo.
+En tu móvil personal, toca **Continuar con correo electrónico** e introduce una dirección válida. La app comprueba el campo antes de enviar nada. Recibirás un **código de seis cifras**, válido durante **10 minutos**. Mantén abierto el campo y escribe allí el código del mensaje. Revisa el correo no deseado si no llega; puedes solicitar otro tras un minuto como mínimo.
 
 El código verifica tu dirección. No es el **código de configuración del servidor** y no requiere un enlace ni otro inicio de sesión.
 
 <Shot name="setup-sign-in" alt="El inicio de sesión por correo electrónico" />
 
-Si prefieres contraseña, elige esa opción. Puedes definirla en **Ajustes → Avanzados → Inicio de sesión**, con al menos **10 caracteres**. El código por correo sigue disponible. Al crear la cuenta, la app pregunta una vez qué método prefieres. Si activaste el segundo factor, después tendrás que introducir el código de tu app de autenticación ([Seguridad](/es/settings/security)).
+Si prefieres contraseña, elige esa opción e introduce tu dirección de correo y la contraseña. La app comprueba ambos campos antes de iniciar sesión. Puedes definirla en **Ajustes → Avanzados → Inicio de sesión**, con al menos **10 caracteres**. El código por correo sigue disponible. Al crear la cuenta, la app pregunta una vez qué método prefieres. Si activaste el segundo factor, después tendrás que introducir el código de tu app de autenticación ([Seguridad](/es/settings/security)).
 
 ## 2. Crear una familia {#_2-creating-a-new-family}
 

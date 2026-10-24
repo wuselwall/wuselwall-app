@@ -1,6 +1,7 @@
 # Miembros y dispositivos
 
 Los **adultos responsables** administran el hogar desde el engranaje **Ajustes** del móvil.
+Si vienes de otra vista, desliza hacia dentro desde el borde izquierdo en iPhone o iPad para volver; también puedes usar la flecha de retroceso de arriba a la izquierda.
 
 <Shot name="settings-phone" alt="Los ajustes con miembros y dispositivos" />
 

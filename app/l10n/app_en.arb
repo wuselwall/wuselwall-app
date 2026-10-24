@@ -36,6 +36,7 @@
     }
   },
   "setupHeadline": "Welcome to WuselWall",
+  "setupOfflineWelcome": "You’re offline. Connect to the internet to sign in, accept an invitation, or connect a shared device. These options will be available when you reconnect.",
   "doorTagline": "The family plan for the kitchen wall",
   "setupHouseholdAction": "Start a new family",
   "wizardTitle": "New household",
@@ -2056,6 +2057,11 @@
   "emailWrongCredentials": "Email or password is incorrect.",
   "emailUseCodeInstead": "Use an email code instead",
   "emailOffline": "No connection – signing in by email needs one.",
+  "emailRequired": "Enter your email address.",
+  "emailInvalid": "Enter a valid email address.",
+  "passwordRequired": "Enter your password.",
+  "emailSendingCode": "Sending code…",
+  "signInProgress": "Signing in…",
   "emailCodeTitle": "Code from the email",
   "emailCodeSent": "We sent a 6-digit code to {email}. It is valid for 10 minutes.",
   "@emailCodeSent": {

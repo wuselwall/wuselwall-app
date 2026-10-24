@@ -6,7 +6,7 @@ Le calendrier réunit les rendez-vous et les présences de toute la famille.
 
 ## Les vues {#views}
 
-La date, les flèches, le choix de vue et les paramètres partagent une barre compacte. Sur téléphone, ouvrez le menu de vue pour choisir **Jour**, **3 jours** ou **Semaine**. L’icône de calendrier revient à **Aujourd’hui**.
+La date, les flèches, le choix de vue et les paramètres partagent une barre compacte. Sur téléphone, le calendrier s’ouvre en vue **Jour** pour garder les rendez-vous lisibles. Le menu permet de choisir **Jour**, **3 jours** ou **Semaine**. Sur un grand écran, il s’ouvre en vue Semaine. Votre choix reste en place lorsque vous changez d’onglet ou faites pivoter l’appareil. L’icône de calendrier revient à **Aujourd’hui**.
 
 <Shot name="calendar-phone" alt="Le calendrier sur téléphone et son menu de vue" />
 

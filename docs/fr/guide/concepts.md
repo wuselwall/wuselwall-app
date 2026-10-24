@@ -15,11 +15,11 @@ WuselWall organise la vie de famille : **calendrier**, **emploi du temps**, **t�
 
 ## Aujourd’hui et les premiers pas {#today-and-getting-started}
 
-**Aujourd’hui** est la première page des adultes. Elle affiche les rendez-vous, les tâches du jour à cocher, le repas chaud et le nombre d’articles restant à acheter. Les petits [rituels](/fr/guide/rituals) s’y ajoutent : le prochain compte à rebours sous **On a hâte**, les repas souhaités des enfants, la question à table pendant le repas, **Notre semaine** le dimanche soir et, le jour d’un anniversaire, une carte avec [Wusel](/fr/guide/wusel).
+**Aujourd’hui** est la première page des adultes. Elle affiche les rendez-vous, les tâches du jour à cocher, le repas chaud et le nombre d’articles restant à acheter. Les petits [rituels](/fr/guide/rituals) s’y ajoutent : le prochain compte à rebours sous **On a hâte**, les repas souhaités des enfants, la question à table pendant le repas, **Notre semaine** le dimanche soir et, le jour d’un anniversaire, une carte avec [Wusel](/fr/guide/wusel). L’heure apparaît au-dessus du titre du rendez-vous pour rester lisible avec des caractères plus grands.
 
 <Shot name="today" alt="L’onglet Aujourd’hui, les premiers pas, les rendez-vous et le repas chaud" />
 
-La carte **Premiers pas** reste en haut tant que la configuration est incomplète : inviter un adulte, connecter la tablette, préparer l’écran mural, définir le PIN, s’abonner au calendrier et saisir l’emploi du temps. Chaque étape disparaît une fois terminée. Vous pouvez choisir de ne pas en avoir besoin. Les parents voient la carte sur leur téléphone et les appareils partagés. **Paramètres → Premiers pas** la réaffiche.
+La carte **Premiers pas** reste en haut tant que la configuration est incomplète : inviter un adulte, connecter la tablette, préparer l’écran mural, définir le PIN, s’abonner au calendrier et saisir l’emploi du temps. Chaque étape disparaît une fois terminée. Vous pouvez choisir de ne pas en avoir besoin. Sur un écran étroit ou avec des caractères plus grands, les boutons passent sous le texte. Les parents voient la carte sur leur téléphone et les appareils partagés. **Paramètres → Premiers pas** la réaffiche.
 
 ## Le foyer {#the-household}
 
