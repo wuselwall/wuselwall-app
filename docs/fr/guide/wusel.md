@@ -15,10 +15,12 @@ Wusel félicite ce qui s’est passé, pas la personne : « Tout est fait. Ça s
 - **Ma journée** sur la tablette des enfants : Wusel fait signe et salue l’enfant par son prénom, parfois avec une information utile, comme « Aujourd’hui, tu commences par maths. »
 - **La dernière tâche du jour** : Wusel fait la fête, avec des confettis et un petit son.
 - **Une récompense demandée** : Wusel est fier : « Envoyé ! Un adulte va décider. »
+- **Un nouveau badge** : Wusel lève une étoile et nomme le badge, pendant deux jours sur **Ma journée** et sous **Points**.
 - **Les pages vides** : Wusel regarde par-dessus le bord, par exemple sur une liste de courses vide.
 - **Sur l’écran mural**, Wusel est dans l’en-tête. Dans la première demi-heure après la nuit (en général de 6 h à 6 h 30), Wusel fait signe et dit « Bonjour tout le monde ! ». La nuit, Wusel dort ; sans connexion, Wusel réfléchit ; et un jour d’anniversaire, il porte un chapeau de fête.
 - **Sur le tableau des tâches du mur**, Wusel fait la fête en haut de la colonne d’une personne dès qu’elle a fini toutes ses tâches du jour.
 - **Aujourd’hui** sur le téléphone : avec une carte le jour d’un anniversaire.
+- **Premiers pas terminés** : quand le dernier point de la carte **Premiers pas** est fait, Wusel applaudit une fois : « Tout est prêt. Bienvenue chez vous ! »
 
 Wusel n’apparaît jamais pendant une saisie (tuiles de courses, éditeurs d’événements et de tâches), ni à côté d’une erreur, du PIN, de la connexion ou d’une suppression. Ce que dit Wusel est toujours aussi écrit en texte ; toucher la bulle masque la phrase.
 

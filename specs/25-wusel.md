@@ -133,7 +133,7 @@ visit, and a tap on its speech bubble hides the line for that moment.
 | **kid** | Kid home, on opening | `wave` | Greeting plus the day's first useful fact (a lesson, a meal, a countdown) |
 | | A single chore ticked | none: the points fly as in [06](06-module-tasks.md#screens) | — |
 | | The last of today's chores ticked | `cheer` | Yes |
-| | Reward requested, badge earned | `proud` | Yes |
+| | Reward requested; a badge earned in the last two days (on *Mein Tag* and *Punkte*, the badge sound once per badge while the app runs) | `proud` | Yes |
 | | Empty states | `peek` | The module's empty text |
 | | Waiting, offline | `think` | Only after 2 s |
 | | The child's birthday, first open that day | `cheer` + Partyhut, full screen once | Yes |
@@ -146,7 +146,7 @@ visit, and a tap on its speech bubble hides the line for that moment.
 | | Offline ([09, Freshness](09-clients-and-ux.md#freshness-and-failure)) | `think` beside the freshness note | — |
 | **adult** | Empty states | `peek`, 48 px, static unless `member.wusel = lively` | The module's empty text |
 | | Today on a special day (a birthday, the first day of Ferien, the Wochenrückblick) | `wave` or `cheer` in the Today header | Yes |
-| | The getting-started card completed | `cheer`, once ever | Yes |
+| | The getting-started card completed while Today is open (a card that loads already complete stays hidden, so it happens once) | `cheer`, until tapped away | Yes |
 
 ### Where Wusel never appears
 

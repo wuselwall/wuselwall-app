@@ -22,6 +22,10 @@ class DemoKidBadgesRepository implements KidBadgesRepository {
         'Primera tarea completada',
       ),
       earned: profileId == DemoData.daughter,
+      // Earned an hour ago, so the demo shows Wusel proud of it (specs/25).
+      awardedAt: profileId == DemoData.daughter
+          ? DateTime.now().subtract(const Duration(hours: 1))
+          : null,
     ),
     KidBadge(
       id: 'b-week',

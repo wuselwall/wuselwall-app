@@ -15,10 +15,12 @@ Wusel celebra lo que ha pasado, no a la persona: «¡Todo hecho! Ha salido muy b
 - **Mi día** en la tableta infantil: Wusel saluda al niño por su nombre, a veces con algo útil, como «Hoy empiezas con matemáticas.»
 - **La última tarea del día**: Wusel lo celebra, con confeti y un sonido corto.
 - **Una recompensa pedida**: Wusel está orgulloso: «¡Enviado! Ahora decide un adulto.»
+- **Una insignia nueva**: Wusel levanta una estrella y nombra la insignia, durante dos días en **Mi día** y en **Puntos**.
 - **Páginas vacías**: Wusel asoma por el borde inferior, por ejemplo en una lista de la compra vacía.
 - **En la pantalla de pared**, Wusel está en la cabecera. En la primera media hora después de la noche (normalmente de 6:00 a 6:30) saluda con la mano y dice «¡Buenos días a todos!». De noche Wusel duerme, sin conexión Wusel piensa, y en un cumpleaños lleva gorro de fiesta.
 - **En el tablero de tareas de la pared**, Wusel lo celebra en lo alto de la columna de una persona en cuanto ha hecho todas sus tareas del día.
 - **Hoy** en el móvil: con una tarjeta el día de un cumpleaños.
+- **Primeros pasos completados**: cuando el último punto de la tarjeta **Primeros pasos** está hecho, Wusel lo celebra una vez: «Todo listo. ¡Bienvenidos a casa!»
 
 Wusel nunca aparece mientras escribes algo (las tarjetas de la compra, los editores de eventos y tareas), ni junto a errores, el PIN, el inicio de sesión o una eliminación. Lo que dice Wusel aparece siempre también como texto; un toque en el bocadillo oculta la frase.
 

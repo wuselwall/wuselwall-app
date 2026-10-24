@@ -11,6 +11,7 @@ class KidBadge {
     required this.earned,
     this.description,
     this.iconKey,
+    this.awardedAt,
   });
 
   final String id;
@@ -18,6 +19,9 @@ class KidBadge {
   final String? description;
   final String? iconKey;
   final bool earned;
+
+  /// When the child earned it; null when not earned.
+  final DateTime? awardedAt;
 }
 
 /// The badges of one child, read through the `api` views `badge_definitions` and
@@ -42,6 +46,9 @@ class KidBadgesRepository {
       parse: (row) => (
         profileId: row['profile_id'] as String,
         badgeId: row['badge_definition_id'] as String,
+        awardedAt: row['awarded_at'] == null
+            ? null
+            : DateTime.parse(row['awarded_at'] as String).toLocal(),
       ),
       build: (q) => q.eq('profile_id', profileId),
     );
@@ -49,7 +56,7 @@ class KidBadgesRepository {
     if (awards case Err(:final failure)) return Err(failure);
     final earned = {
       for (final a in awards.valueOrNull!)
-        if (a.profileId == profileId) a.badgeId,
+        if (a.profileId == profileId) a.badgeId: a.awardedAt,
     };
     return Ok([
       for (final b in defs.valueOrNull!)
@@ -58,7 +65,8 @@ class KidBadgesRepository {
           title: b.title,
           description: b.description,
           iconKey: b.iconKey,
-          earned: earned.contains(b.id),
+          earned: earned.containsKey(b.id),
+          awardedAt: earned[b.id],
         ),
     ]);
   }

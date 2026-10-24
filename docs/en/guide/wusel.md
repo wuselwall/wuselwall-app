@@ -15,10 +15,12 @@ Wusel praises what happened, not the person: "All done. That went well!" rather 
 - **My day** on the kids' tablet: Wusel waves and greets the child by name, sometimes with something useful, such as "You've got maths first today."
 - **The last chore of the day**: Wusel cheers, with confetti and a short sound.
 - **A reward requested**: Wusel is proud: "Sent! A grown-up will decide."
+- **A new badge**: Wusel holds up a star and names the badge, for two days on **My day** and under **Points**.
 - **Empty pages**: Wusel peeks over the bottom edge, for example on an empty shopping list.
 - **On the wall** Wusel sits in the header. In the first half hour after the night ends (usually 6:00 to 6:30) Wusel waves and says "Good morning, everyone!". At night Wusel sleeps, without a connection Wusel is thinking, and on a birthday there is a party hat.
 - **On the wall's chore board** Wusel cheers at the top of a person's column as soon as they have done all of today's chores.
 - **Today** on the phone: on a birthday, with a card.
+- **Getting started done**: when the last item of the **Getting started** card is done, Wusel cheers once: "That's everything set up. Welcome home!"
 
 Wusel never appears where you are entering something (the shopping tiles, the event and chore editors), and never next to errors, the PIN, signing in or deleting. What Wusel says is always there as text as well; a tap on the speech bubble hides the line.
 

@@ -14,6 +14,7 @@ import 'package:wuselwall/core/wusel/wusel.dart';
 import 'package:wuselwall/features/kid/application/kid_logic.dart';
 import 'package:wuselwall/features/kid/application/kid_providers.dart';
 import 'package:wuselwall/features/kid/data/kid_badges_repository.dart';
+import 'package:wuselwall/features/kid/ui/kid_new_badge.dart';
 import 'package:wuselwall/features/kid/ui/kid_widgets.dart';
 import 'package:wuselwall/features/tasks/application/tasks_providers.dart';
 import 'package:wuselwall/features/tasks/data/tasks_repository.dart';
@@ -94,6 +95,8 @@ class _KidPointsPageState extends ConsumerState<KidPointsPage> {
       padding: const EdgeInsets.all(Tokens.space4),
       children: [
         _BalanceCard(balance: balance),
+        // A new badge, unless Wusel is already proud of a reward just asked for.
+        if (_proudLine == null) KidNewBadge(actor: widget.actor),
         if (_proudLine case final line?)
           Padding(
             padding: const EdgeInsets.only(top: Tokens.space3),

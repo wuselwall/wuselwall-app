@@ -21,6 +21,7 @@ import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/kid/application/kid_logic.dart';
 import 'package:wuselwall/features/kid/application/kid_providers.dart';
+import 'package:wuselwall/features/kid/ui/kid_new_badge.dart';
 import 'package:wuselwall/features/kid/ui/kid_widgets.dart';
 import 'package:wuselwall/features/rituals/application/ritual_providers.dart';
 import 'package:wuselwall/features/rituals/ui/countdown_widgets.dart';
@@ -77,6 +78,7 @@ class _KidTodayPageState extends ConsumerState<KidTodayPage> {
           onInk: colors.onInk,
           balance: KidBalancePill(key: _balanceKey, balance: points),
         ),
+        KidNewBadge(actor: member.id),
         const WeekReviewCard(kid: true),
         const TableQuestionCard(kid: true),
         KidSectionTitle(l10n.kidTasksTitle),

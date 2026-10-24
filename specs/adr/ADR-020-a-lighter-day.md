@@ -125,6 +125,6 @@ these places, each recorded in its spec:
 - **Still mode** (`?still=1` in the demo build) holds every animation and fixes Wusel's words
   for screenshots; the docs' screenshot tool always passes it.
 - **Not built yet:** the planner's one-tap suggestion of a tradition's meal, the Ferien ribbon
-  text in the sky, the module illustrations in the bands, Wusel's `proud` for a badge earned (it
-  is proud for a reward requested), and its cheer when the getting-started card is completed.
+  text in the sky, and the module illustrations in the bands. (Wusel's `proud` for a badge
+  earned and its cheer when the getting-started card is completed followed the same day.)
 

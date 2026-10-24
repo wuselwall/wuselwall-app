@@ -94,8 +94,11 @@ abstract final class WuselLines {
     ],
   };
 
-  /// The greeting for the time of day: morning until 11, evening from 17.
-  static WuselMoment helloAt(DateTime now) => now.hour < 11
+  /// The greeting for the time of day: morning until 11, evening from 17. In still mode
+  /// always the daytime one, so a screenshot does not depend on when it was taken.
+  static WuselMoment helloAt(DateTime now) => StillMode.enabled
+      ? WuselMoment.helloDay
+      : now.hour < 11
       ? WuselMoment.helloMorning
       : now.hour < 17
       ? WuselMoment.helloDay

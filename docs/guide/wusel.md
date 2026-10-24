@@ -15,10 +15,12 @@ Wusel lobt, was passiert ist, nicht die Person: „Alles erledigt. Das hat gut g
 - **Mein Tag** auf dem Kinder-Tablet: Wusel winkt und begrüßt das Kind mit Namen, manchmal mit etwas Nützlichem dazu, etwa „Heute hast du zuerst Mathe.“
 - **Die letzte Aufgabe des Tages**: Wusel jubelt, mit Konfetti und einem kurzen Ton.
 - **Eine Belohnung gewünscht**: Wusel ist stolz: „Abgeschickt! Jetzt entscheidet ein Erwachsener.“
+- **Ein neues Abzeichen**: Wusel hält einen Stern hoch und nennt das Abzeichen, zwei Tage lang auf **Mein Tag** und unter **Punkte**.
 - **Leere Seiten**: Wusel schaut über den unteren Rand, zum Beispiel bei einer leeren Einkaufsliste.
 - **Auf der Wand** sitzt Wusel oben in der Kopfzeile. In der ersten halben Stunde nach der Nachtzeit (normalerweise 6:00 bis 6:30) winkt Wusel und sagt „Guten Morgen, ihr alle!“. Nachts schläft Wusel, ohne Verbindung denkt Wusel nach, und an einem Geburtstag gibt es den Partyhut.
 - **Im Aufgabenbrett der Wand** jubelt Wusel oben in der Spalte einer Person, sobald sie alle Aufgaben für heute erledigt hat.
 - **Heute** auf dem Handy: an einem Geburtstag mit einer Karte.
+- **Erste Schritte geschafft**: Ist der letzte Punkt der Karte **Erste Schritte** erledigt, jubelt Wusel einmal: „Alles eingerichtet. Willkommen zu Hause!“
 
 Wusel taucht nie dort auf, wo ihr gerade etwas eingebt (Einkaufskacheln, Termin- und Aufgabeneditor), und nie bei Fehlern, der PIN, beim Anmelden oder Löschen. Was Wusel sagt, steht immer auch als Text da; ein Tipp auf die Sprechblase blendet den Satz aus.
 
