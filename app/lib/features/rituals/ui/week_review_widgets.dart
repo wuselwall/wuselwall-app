@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
@@ -30,13 +31,15 @@ String highlightLine(AppLocalizations l10n, WeekHighlight h) =>
       HighlightKind.allDone => l10n.weekHighlightAllDone,
       HighlightKind.reward => l10n.weekHighlightReward(h.title ?? ''),
       HighlightKind.wish => l10n.weekHighlightWish(h.title ?? ''),
+      HighlightKind.attended => l10n.weekHighlightAttended(h.title ?? ''),
       HighlightKind.cooked => l10n.weekHighlightCooked(h.title ?? ''),
       HighlightKind.helped => l10n.weekHighlightHelped,
       HighlightKind.here => l10n.weekHighlightHere,
     };
 
-/// Opens the look-back of the week starting [weekStart]: a page on a phone or tablet,
-/// a tap-through detail on the wall that returns to the board like every detail.
+/// Opens the look-back of the week starting [weekStart] as a story: full screen on a
+/// phone or tablet, a tap-through detail on the wall that returns to the board like every
+/// detail (specs/27).
 Future<void> openWeekReview(
   BuildContext context,
   DateTime weekStart, {
@@ -46,34 +49,63 @@ Future<void> openWeekReview(
     return showBoardDetail(
       context,
       title: context.l10n.weekReviewTitle,
-      body: WeekReviewStory(weekStart: weekStart, board: true),
+      body: Builder(
+        builder: (context) => WeekReviewStory(
+          weekStart: weekStart,
+          board: true,
+          // The detail has its own way back; the end of the story returns to the week.
+          onDone: () => unawaited(Navigator.of(context).maybePop()),
+        ),
+      ),
     );
   }
   return Navigator.of(context).push(
     MaterialPageRoute<void>(
+      fullscreenDialog: true,
       builder: (context) => Scaffold(
-        appBar: AppBar(title: Text(context.l10n.weekReviewTitle)),
-        body: WeekReviewStory(weekStart: weekStart),
+        body: SafeArea(
+          child: WeekReviewStory(
+            weekStart: weekStart,
+            onClose: () => unawaited(Navigator.of(context).maybePop()),
+          ),
+        ),
       ),
     ),
   );
 }
 
-/// The five cards of "Unsere Woche" (specs/27), sliding in one after another.
+/// "Unsere Woche" (specs/27): the cards of the week as a story, one at a time. A tap on
+/// the right goes on, a tap on the left goes back, and so do a swipe and the arrow keys.
+/// A card with nothing to say is left out. Nothing moves by itself.
 class WeekReviewStory extends ConsumerWidget {
   const WeekReviewStory({
     required this.weekStart,
     this.board = false,
+    this.onClose,
+    this.onDone,
     super.key,
   });
 
   final DateTime weekStart;
+
+  /// Sized for the wall: larger type and targets, and no close button of its own.
   final bool board;
+
+  /// Shows a close button; Escape closes too. Going on from the last card closes as well.
+  final VoidCallback? onClose;
+
+  /// Going on from the last card, where there is no close button (the wall).
+  final VoidCallback? onDone;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final review = ref.watch(weekReviewProvider(weekStart)).value;
+    final loaded = ref.watch(weekReviewProvider(weekStart));
+    // The family's number only once it is known: never a "0" while it loads.
+    if (loaded.isLoading && !loaded.hasValue) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    final review = loaded.value;
     final members = {
       for (final m in ref.watch(membersProvider).value ?? const <Member>[])
         m.id: m,
@@ -83,49 +115,73 @@ class WeekReviewStory extends ConsumerWidget {
       weekStart.month,
       weekStart.day + 6,
     );
-    final traditions = <String, Occurrence>{
-      for (final o
-          in ref
-                  .watch(occurrencesProvider((from: weekStart, to: weekEnd)))
-                  .value
-                  ?.occurrences ??
-              const <Occurrence>[])
-        if (o.tradition) o.eventId: o,
-    };
     final today = ref.watch(ritualTodayProvider);
+    final occurrences =
+        ref
+            .watch(occurrencesProvider((from: weekStart, to: weekEnd)))
+            .value
+            ?.occurrences ??
+        const <Occurrence>[];
+    // The traditions that happened: begun by today, not called off.
+    final traditions = <String, Occurrence>{
+      for (final o in occurrences)
+        if (o.tradition &&
+            o.status != EventStatus.cancelled &&
+            !o.localStartDate.isAfter(today))
+          o.eventId: o,
+    };
+    final highlights = review == null
+        ? const <WeekHighlight>[]
+        : withEventHighlights(
+            review.members,
+            occurrences,
+            weekStart: weekStart,
+            today: today,
+          );
     final ahead = [
       for (final c in ref.watch(countdownsProvider))
         if (c.daysFrom(today) <= 8) c,
     ].take(3).toList();
+    final body = _body(context);
 
-    final cards = <Widget>[
-      // The family's number only once it is known: never a "0" while it loads.
+    final cards = <_StoryPage>[
       if (review != null)
-        _StoryCard(
+        _StoryPage(
           decor: Decor.sun,
           title: l10n.weekReviewTogether,
+          board: board,
           child: Text(
             l10n.weekReviewChores(review.choresDone),
             style: _big(context),
           ),
         ),
-      if (review != null && review.members.isNotEmpty)
-        _StoryCard(
+      if (highlights.isNotEmpty)
+        _StoryPage(
           decor: Decor.lilac,
           title: l10n.weekReviewMoments,
+          board: board,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              for (final h in review.members)
+              for (final h in highlights)
                 if (members[h.profileId] case final m?)
-                  _MemberLine(member: m, line: highlightLine(l10n, h)),
+                  _MemberLine(
+                    member: m,
+                    line: highlightLine(l10n, h),
+                    iconKey: h.kind == HighlightKind.attended
+                        ? h.iconKey
+                        : null,
+                    style: body,
+                    board: board,
+                  ),
             ],
           ),
         ),
       if (review != null && review.meals.isNotEmpty)
-        _StoryCard(
+        _StoryPage(
           decor: Decor.apricot,
           title: l10n.weekReviewMeals,
+          board: board,
           child: Wrap(
             spacing: Tokens.space2,
             runSpacing: Tokens.space2,
@@ -137,6 +193,7 @@ class WeekReviewStory extends ConsumerWidget {
                       : meal.firstTime
                       ? const Icon(Icons.auto_awesome)
                       : null,
+                  labelStyle: board ? boardUi(22) : null,
                   label: Text(
                     meal.firstTime
                         ? '${meal.title} · ${l10n.weekReviewNewRecipe}'
@@ -147,9 +204,10 @@ class WeekReviewStory extends ConsumerWidget {
           ),
         ),
       if (traditions.isNotEmpty)
-        _StoryCard(
+        _StoryPage(
           decor: Decor.mint,
           title: l10n.weekReviewTraditions,
+          board: board,
           child: Wrap(
             spacing: Tokens.space3,
             runSpacing: Tokens.space2,
@@ -160,19 +218,20 @@ class WeekReviewStory extends ConsumerWidget {
                   children: [
                     EmojiPicture(
                       eventIconAsset(o.iconKey) ?? eventIconAsset('star')!,
-                      size: 28,
+                      size: board ? 40 : 28,
                     ),
                     const SizedBox(width: Tokens.space1),
-                    Text(o.title, style: _body(context)),
+                    Text(o.title, style: body),
                   ],
                 ),
             ],
           ),
         ),
       // The story's one Wusel cheers at its end (specs/27, card 5).
-      _StoryCard(
+      _StoryPage(
         decor: Decor.sky,
         title: l10n.weekReviewNext,
+        board: board,
         child: Row(
           children: [
             Expanded(
@@ -180,18 +239,18 @@ class WeekReviewStory extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (ahead.isEmpty)
-                    Text(l10n.weekReviewCalmAhead, style: _body(context)),
+                    Text(l10n.weekReviewCalmAhead, style: body),
                   for (final c in ahead)
                     Text(
                       '${countdownTitle(l10n, c)} · ${countdownWhen(l10n, c, today)}',
-                      style: _body(context),
+                      style: body,
                     ),
                 ],
               ),
             ),
-            const FamilyWusel(
+            FamilyWusel(
               pose: WuselPose.cheer,
-              size: 96,
+              size: board ? 140 : 96,
               quietAllowed: true,
             ),
           ],
@@ -199,40 +258,266 @@ class WeekReviewStory extends ConsumerWidget {
       ),
     ];
 
-    return ListView(
-      padding: const EdgeInsets.all(Tokens.space4),
-      children: [
-        for (final (i, card) in cards.indexed) _SlideIn(index: i, child: card),
-      ],
+    return _StoryPager(
+      pages: cards,
+      board: board,
+      onClose: onClose,
+      onDone: onDone ?? onClose,
     );
   }
 
   TextStyle? _big(BuildContext context) => board
-      ? boardUi(40, weight: FontWeight.w800)
+      ? boardUi(56, weight: FontWeight.w800)
       : Theme.of(context).textTheme.headlineMedium
             ?.copyWith(fontWeight: FontWeight.w800);
 
   TextStyle? _body(BuildContext context) => board
-      ? boardUi(26, weight: FontWeight.w600)
+      ? boardUi(30, weight: FontWeight.w600)
       : Theme.of(context).textTheme.titleMedium;
 }
 
-class _StoryCard extends StatelessWidget {
-  const _StoryCard({
+/// The story itself: a progress bar of segments, one card at a time, and the ways
+/// between them. Under reduced motion a card replaces the one before without sliding.
+class _StoryPager extends StatefulWidget {
+  const _StoryPager({
+    required this.pages,
+    required this.board,
+    required this.onClose,
+    required this.onDone,
+  });
+
+  final List<_StoryPage> pages;
+  final bool board;
+  final VoidCallback? onClose;
+  final VoidCallback? onDone;
+
+  @override
+  State<_StoryPager> createState() => _StoryPagerState();
+}
+
+class _StoryPagerState extends State<_StoryPager> {
+  final _controller = PageController();
+  var _index = 0;
+
+  int get _count => widget.pages.length;
+
+  @override
+  void didUpdateWidget(covariant _StoryPager old) {
+    super.didUpdateWidget(old);
+    // A card that arrives or goes while the story is open (a late load) keeps the
+    // reader within the story.
+    if (_index >= _count) {
+      _index = _count - 1;
+      if (_controller.hasClients) _controller.jumpToPage(_index);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _go(int to) {
+    if (to < 0) return;
+    if (to >= _count) {
+      widget.onDone?.call();
+      return;
+    }
+    if (to == _index) return;
+    setState(() => _index = to);
+    if (!_controller.hasClients) return;
+    if (motionAllowed(context)) {
+      unawaited(
+        _controller.animateToPage(
+          to,
+          duration: Tokens.motionEmphasised,
+          curve: Curves.easeOutCubic,
+        ),
+      );
+    } else {
+      _controller.jumpToPage(to);
+    }
+  }
+
+  void _next() => _go(_index + 1);
+
+  void _previous() => _go(_index - 1);
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final board = widget.board;
+    final target = board ? 56.0 : 48.0;
+    final rtl = Directionality.of(context) == TextDirection.rtl;
+    return CallbackShortcuts(
+      bindings: {
+        const SingleActivator(LogicalKeyboardKey.arrowRight): rtl
+            ? _previous
+            : _next,
+        const SingleActivator(LogicalKeyboardKey.arrowLeft): rtl
+            ? _next
+            : _previous,
+        const SingleActivator(LogicalKeyboardKey.escape): ?widget.onClose,
+      },
+      child: Focus(
+        autofocus: true,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(
+                Tokens.space4,
+                Tokens.space2,
+                widget.onClose == null ? Tokens.space4 : Tokens.space1,
+                Tokens.space2,
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: _Progress(
+                      count: _count,
+                      index: _index,
+                      height: board ? 8 : 4,
+                    ),
+                  ),
+                  if (widget.onClose case final close?)
+                    IconButton(
+                      key: const ValueKey('week-review-close'),
+                      tooltip: l10n.close,
+                      icon: const Icon(Icons.close),
+                      onPressed: close,
+                    ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Semantics(
+                container: true,
+                liveRegion: true,
+                label: l10n.weekReviewCardOf(_index + 1, _count),
+                child: LayoutBuilder(
+                  builder: (context, constraints) => GestureDetector(
+                    key: const ValueKey('week-review-pages'),
+                    behavior: HitTestBehavior.opaque,
+                    // A third on the reading side goes back, the rest goes on.
+                    onTapUp: (d) {
+                      final third = constraints.maxWidth / 3;
+                      final back = rtl
+                          ? d.localPosition.dx > constraints.maxWidth - third
+                          : d.localPosition.dx < third;
+                      back ? _previous() : _next();
+                    },
+                    onHorizontalDragEnd: (d) {
+                      final v = d.primaryVelocity ?? 0;
+                      if (v.abs() < 50) return;
+                      (v < 0) != rtl ? _next() : _previous();
+                    },
+                    child: PageView(
+                      controller: _controller,
+                      // The gestures above move the story, so reduced motion holds.
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: widget.pages,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                Tokens.space4,
+                0,
+                Tokens.space4,
+                Tokens.space3,
+              ),
+              child: Row(
+                children: [
+                  IconButton.filledTonal(
+                    key: const ValueKey('week-review-previous'),
+                    tooltip: l10n.weekReviewPreviousCard,
+                    constraints: BoxConstraints.tight(Size.square(target)),
+                    icon: const Icon(Icons.chevron_left),
+                    onPressed: _index == 0 ? null : _previous,
+                  ),
+                  const Spacer(),
+                  IconButton.filledTonal(
+                    key: const ValueKey('week-review-next'),
+                    tooltip: l10n.weekReviewNextCard,
+                    constraints: BoxConstraints.tight(Size.square(target)),
+                    icon: const Icon(Icons.chevron_right),
+                    onPressed: _index == _count - 1 && widget.onDone == null
+                        ? null
+                        : _next,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// The segments at the top of the story: one per card, the ones seen filled.
+class _Progress extends StatelessWidget {
+  const _Progress({
+    required this.count,
+    required this.index,
+    required this.height,
+  });
+
+  final int count;
+  final int index;
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final ww = context.ww;
+    return ExcludeSemantics(
+      child: Row(
+        children: [
+          for (var i = 0; i < count; i++)
+            Expanded(
+              child: AnimatedContainer(
+                duration: motionAllowed(context)
+                    ? Tokens.motionStandard
+                    : Duration.zero,
+                height: height,
+                margin: const EdgeInsets.symmetric(horizontal: 2),
+                decoration: BoxDecoration(
+                  color: i <= index ? scheme.primary : ww.line,
+                  borderRadius: BorderRadius.circular(height),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+/// One card of the story, filling the page: its colour band and title, then what it says.
+class _StoryPage extends StatelessWidget {
+  const _StoryPage({
     required this.decor,
     required this.title,
+    required this.board,
     required this.child,
   });
 
   final Decor decor;
   final String title;
+  final bool board;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
     final ww = context.ww;
+    final pad = board ? Tokens.space6 : Tokens.space4;
     return Padding(
-      padding: const EdgeInsets.only(bottom: Tokens.space3),
+      padding: EdgeInsets.symmetric(horizontal: Tokens.space4),
       child: Container(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surfaceContainerLow,
@@ -246,23 +531,34 @@ class _StoryCard extends StatelessWidget {
             ColoredBox(
               color: ww.decor(decor),
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: Tokens.space4,
-                  vertical: Tokens.space2,
+                padding: EdgeInsets.symmetric(
+                  horizontal: pad,
+                  vertical: board ? Tokens.space4 : Tokens.space3,
                 ),
                 child: Semantics(
                   header: true,
                   child: Text(
                     title,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w800,
-                      color: ww.onDecor,
-                    ),
+                    style: board
+                        ? boardUi(
+                            36,
+                            weight: FontWeight.w800,
+                            color: ww.onDecor,
+                          )
+                        : Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.w800,
+                            color: ww.onDecor,
+                          ),
                   ),
                 ),
               ),
             ),
-            Padding(padding: const EdgeInsets.all(Tokens.space4), child: child),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.all(pad),
+                child: child,
+              ),
+            ),
           ],
         ),
       ),
@@ -271,19 +567,32 @@ class _StoryCard extends StatelessWidget {
 }
 
 class _MemberLine extends StatelessWidget {
-  const _MemberLine({required this.member, required this.line});
+  const _MemberLine({
+    required this.member,
+    required this.line,
+    required this.style,
+    required this.board,
+    this.iconKey,
+  });
 
   final Member member;
   final String line;
+  final TextStyle? style;
+  final bool board;
+
+  /// The picture of the tradition or event the line names, when it has one.
+  final String? iconKey;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.ww.member(member.color);
+    final picture = eventIconAsset(iconKey);
     return Padding(
       padding: const EdgeInsets.only(bottom: Tokens.space2),
       child: Row(
         children: [
           CircleAvatar(
+            radius: board ? 28 : 20,
             backgroundColor: colors.ink,
             foregroundColor: colors.onInk,
             child: Text(member.initial),
@@ -300,71 +609,17 @@ class _MemberLine extends StatelessWidget {
                   TextSpan(text: line),
                 ],
               ),
-              style: Theme.of(context).textTheme.titleMedium,
+              style: style,
             ),
           ),
+          if (picture != null) ...[
+            const SizedBox(width: Tokens.space2),
+            EmojiPicture(picture, size: board ? 40 : 28),
+          ],
         ],
       ),
     );
   }
-}
-
-/// Each card slides in a beat after the one before (250 ms each); still under
-/// reduced motion.
-class _SlideIn extends StatefulWidget {
-  const _SlideIn({required this.index, required this.child});
-
-  final int index;
-  final Widget child;
-
-  @override
-  State<_SlideIn> createState() => _SlideInState();
-}
-
-class _SlideInState extends State<_SlideIn>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _c = AnimationController(
-    vsync: this,
-    duration: Tokens.motionEmphasised,
-  );
-  Timer? _delay;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_c.isAnimating || _c.value > 0 || _delay != null) return;
-    if (!motionAllowed(context)) {
-      _c.value = 1;
-      return;
-    }
-    _delay = Timer(
-      Duration(milliseconds: 120 * widget.index),
-      () => unawaited(_c.forward()),
-    );
-  }
-
-  @override
-  void dispose() {
-    _delay?.cancel();
-    _c.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) => AnimatedBuilder(
-    animation: _c,
-    builder: (context, child) {
-      final t = Curves.easeOutBack.transform(_c.value);
-      return Opacity(
-        opacity: _c.value,
-        child: Transform.translate(
-          offset: Offset(0, 24 * (1 - t)),
-          child: child,
-        ),
-      );
-    },
-    child: widget.child,
-  );
 }
 
 /// "Unsere Woche" on Today and the kid tablet while the look-back is open.

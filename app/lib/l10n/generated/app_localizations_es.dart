@@ -5672,6 +5672,136 @@ class AppLocalizationsEs extends AppLocalizations {
   String get wishPickerSend => 'Pido esto';
 
   @override
+  String get wishPickerRecipes => 'Nuestras recetas';
+
+  @override
+  String get wishPickerSearch => 'Buscar una receta';
+
+  @override
+  String get wishPickerNoMatch =>
+      'Ninguna receta con ese nombre. Pídela abajo.';
+
+  @override
+  String get wishPickerIcon => 'Elige una imagen';
+
+  @override
+  String get mealsWishEarlier => 'de la semana pasada';
+
+  @override
+  String get mealsWishOlder => 'de hace unas semanas';
+
+  @override
+  String get mealsWishMine => 'Pedir algo';
+
+  @override
+  String get mealsWishMineChange => 'Cambiar mi deseo';
+
+  @override
+  String get mealIcon_pizza => 'Pizza';
+
+  @override
+  String get mealIcon_pasta => 'Pasta';
+
+  @override
+  String get mealIcon_pancakes => 'Tortitas';
+
+  @override
+  String get mealIcon_waffle => 'Gofres';
+
+  @override
+  String get mealIcon_burger => 'Hamburguesa';
+
+  @override
+  String get mealIcon_fries => 'Patatas fritas';
+
+  @override
+  String get mealIcon_hotdog => 'Perrito caliente';
+
+  @override
+  String get mealIcon_sandwich => 'Bocadillo';
+
+  @override
+  String get mealIcon_taco => 'Tacos';
+
+  @override
+  String get mealIcon_burrito => 'Burrito';
+
+  @override
+  String get mealIcon_kebab => 'Kebab';
+
+  @override
+  String get mealIcon_curry => 'Curry';
+
+  @override
+  String get mealIcon_rice => 'Arroz';
+
+  @override
+  String get mealIcon_noodles => 'Sopa de fideos';
+
+  @override
+  String get mealIcon_soup => 'Sopa o guiso';
+
+  @override
+  String get mealIcon_paella => 'Paella';
+
+  @override
+  String get mealIcon_salad => 'Ensalada';
+
+  @override
+  String get mealIcon_sushi => 'Sushi';
+
+  @override
+  String get mealIcon_dumpling => 'Empanadillas';
+
+  @override
+  String get mealIcon_chicken => 'Pollo';
+
+  @override
+  String get mealIcon_fish => 'Pescado';
+
+  @override
+  String get mealIcon_meat => 'Carne';
+
+  @override
+  String get mealIcon_egg => 'Huevos';
+
+  @override
+  String get mealIcon_falafel => 'Falafel';
+
+  @override
+  String get mealIcon_fondue => 'Fondue';
+
+  @override
+  String get mealIcon_pie => 'Pastel salado';
+
+  @override
+  String get mealIcon_cake => 'Tarta';
+
+  @override
+  String get mealIcon_ice_cream => 'Helado';
+
+  @override
+  String get mealIcon_bread => 'Pan';
+
+  @override
+  String get mealIcon_pretzel => 'Pretzel';
+
+  @override
+  String get mealIcon_croissant => 'Cruasán';
+
+  @override
+  String get mealIcon_potato => 'Patatas';
+
+  @override
+  String get mealIcon_cheese => 'Queso';
+
+  @override
+  String get mealIcon_porridge => 'Gachas';
+
+  @override
+  String get mealIcon_vegetables => 'Verduras';
+
+  @override
   String get mealsWishesTray => 'Deseos';
 
   @override
@@ -5801,6 +5931,17 @@ class AppLocalizationsEs extends AppLocalizations {
   String get weekReviewCalmAhead => 'Viene una semana tranquila.';
 
   @override
+  String weekReviewCardOf(int index, int count) {
+    return 'Tarjeta $index de $count';
+  }
+
+  @override
+  String get weekReviewNextCard => 'Tarjeta siguiente';
+
+  @override
+  String get weekReviewPreviousCard => 'Tarjeta anterior';
+
+  @override
   String weekHighlightBadge(String title) {
     return 'Insignia nueva: $title';
   }
@@ -5826,6 +5967,11 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String weekHighlightCooked(String title) {
     return 'cocinó $title';
+  }
+
+  @override
+  String weekHighlightAttended(String title) {
+    return 'estuvo en $title';
   }
 
   @override
