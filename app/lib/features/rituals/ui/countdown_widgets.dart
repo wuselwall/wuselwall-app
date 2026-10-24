@@ -97,9 +97,26 @@ class BoardCountdowns extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final today = ref.watch(ritualTodayProvider);
-    final list = ref.watch(countdownsProvider).take(2).toList();
-    if (list.isEmpty) return const SizedBox.shrink();
+    final all = ref.watch(countdownsProvider);
+    if (all.isEmpty) return const SizedBox.shrink();
     final ink = Theme.of(context).colorScheme.onSurface;
+    // Two when there is room for both at full length, else the nearest one.
+    return LayoutBuilder(
+      builder: (context, constraints) => _strip(
+        l10n,
+        today,
+        all.take(constraints.maxWidth >= 860 ? 2 : 1).toList(),
+        ink,
+      ),
+    );
+  }
+
+  Widget _strip(
+    AppLocalizations l10n,
+    DateTime today,
+    List<Countdown> list,
+    Color ink,
+  ) {
     return Semantics(
       label: l10n.todayLookingForward,
       container: true,

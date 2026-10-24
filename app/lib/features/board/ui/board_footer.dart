@@ -69,8 +69,8 @@ class BoardFooter extends StatelessWidget {
               ),
               // Sunday's look-back, while it is open (specs/27).
               const BoardWeekReviewTile(),
-              // Vorfreude: the nearest countdowns (specs/27), giving way first.
-              const Flexible(flex: 2, child: Center(child: BoardCountdowns())),
+              // Vorfreude: the nearest countdowns (specs/27), as many as fit.
+              const Expanded(flex: 2, child: Center(child: BoardCountdowns())),
               const SizedBox(width: 16),
               if (night) ...[
                 Icon(Icons.nightlight_round, size: 28, color: ww.ink3),
