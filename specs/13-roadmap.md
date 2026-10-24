@@ -1,428 +1,163 @@
 # 13 — Roadmap
 
-> **WuselWall restart, 2026-10-11.** This roadmap was carried over from BretApp, where
-> M0 and M1.1 had been built on the TypeScript stack. WuselWall starts again from M0.0 on
-> Flutter and self-hosted Supabase ([ADR-010](adr/ADR-010-flutter-and-self-hosted-supabase.md)).
-> M0 has been re-cut for the new stack and gained a release-pipeline step (M0.4); the
-> step-by-step build order is [16 — Setup Plan](16-setup-plan.md). The status column
-> tracks this repository only.
+Updated 2026-10-24. One build order, four milestones. This replaces the overlapping
+M1/M2 and R1–R4 schedules; the old identifiers remain only to keep specification links
+and decisions readable. [16 — Build plan](16-setup-plan.md) describes the next slices;
+[23 — After the Alpha](23-roadmap-after-alpha.md) holds the later candidates and cut lines.
 
 ## Current qualification status
 
-Built in code is not deployed or pilot-approved. This repository does not verify a live
-server's migrations, functions, scheduled jobs, backups or data. Real-device, native
-assistive-technology and Outlook/iOS feed checks and the two-week family trial remain
-operator gates in the [release checklist](release-checklist.md). The integration candidate
-requires exact-commit automated checks and independent review before pilot authorization.
-Shortcuts, read-only MCP and the packing reminder are built in main; push and public store
-release remain separately gated. The 2026-10-19 language scope adds complete DE/EN/FR/ES
-application/server responses and one installation-selected email language (NFR-14);
-integration verification and publication remain separate gates. Step 10's journey gaps
-precede M1.6.
+**Core features and “A lighter day” are built; the family Alpha is next after the
+remaining journeys.** Shopping with an offline outbox, tasks and points, calendar and
+presence, school timetables and import, meals, onboarding, household settings and the
+week board exist in code. Shortcuts, read-only MCP, timetable proposals, ICS subscriptions,
+local reminders and the packing reminder are also built. They are not new milestones.
 
-The empty timetable view (2026-10-22) now shows the child-specific explanation and
-entry button without repeating the action as a heading. Family guides are updated in
-DE/EN/FR/ES; separate website public-progress coordination remains pending.
+Member, family, device and shopping-structure editing (old step 10.1–10.3) are built.
+A lighter day ([ADR-020](adr/ADR-020-a-lighter-day.md)) was built 2026-10-24 and shipped in
+app v1.3.0 and server release 0.4.0, with the exceptions its
+[amendment](adr/ADR-020-a-lighter-day.md#amendment-2026-10-24-built) lists.
+The [release checklist](release-checklist.md) exists; executing it is still open.
+Issue [#117](https://github.com/wuselwall/wuselwall-app/issues/117) records Android demo
+checks and iOS-targeted widget regressions, including Settings navigation. It does not
+establish native iOS behaviour, real authentication or two-device synchronization.
 
-Issue [#117](https://github.com/wuselwall/wuselwall-app/issues/117) (2026-10-24) records
-sampled API 36 Android phone and tablet demo UI checks and iOS-targeted widget regressions
-for shared Flutter fixes, including Settings navigation. These checks are not release
-evidence; native iPhone/iPad validation, real authentication and two-device synchronization
-remain separate gates.
+“Built” describes repository implementation. It does not establish a deployed server,
+working store distribution or a successful pilot. DE/EN/FR/ES application/server text,
+installation-selected email language and all four family guides remain the language scope.
 
-Member invitations (2026-10-22) now show their expiry and share/withdraw actions in
-the matching member's row, joined by profile ID. The DE/EN/FR/ES family guides describe
-the combined row. Separate bilingual public-progress copy remains to be coordinated in
-`wuselwall-website`.
+## The roadmap at a glance
 
-Timetable entry (2026-10-21) now creates a missing term inline and continues to the
-child's lesson grid, with the selected term and dates visible and a fixed Save action.
-Child selection, This week and the labeled school/timetable edit actions share one
-responsive toolbar; the school action uses a school icon instead of a second gear.
-Week navigation sits beside Monday and Friday in the weekday header, without a
-separate week-number or date-range row.
-It no longer falls back to an old term when the displayed week has no matching term.
-The DE/EN family guides include the editor; separate bilingual public-progress copy
-remains to be coordinated in `wuselwall-website`.
+```mermaid
+flowchart LR
+    A["1 · Everyday essentials\nFinish the journeys"] --> B["2 · A lighter day\nWusel, colour and rituals"]
+    B --> C["3 · Family Alpha\nValidate, try, learn"]
+    C --> D["4 · Other families\nInstall, update, publish"]
+```
 
-Website localization (issue #6, 2026-10-21): the separate website worktree adds
-French/Spanish pages, browser-language defaults, remembered language and light/dark choices,
-and app-demo screenshot exports in all four languages and both themes. The app accepts
-the localized invitation/pairing routes. Family guides now cover DE/EN/FR/ES; app legal links stay
-on the existing English pages until website publication. Merge and deployment are separate gates.
+| Order | Milestone | Status | Done when |
+|---|---|---|---|
+| **1** | [**Everyday essentials**](https://github.com/wuselwall/wuselwall-app/milestone/1) | Now | A family can start without SMTP, guardians see approvals, the wall starts offline, and onboarding and wide-screen navigation have no remaining dead ends |
+| **2** | [**A lighter day**](https://github.com/wuselwall/wuselwall-app/milestone/2) | Built; three small pieces open | Wusel, colour, ambience, birthdays and all five agreed rituals work together, with accessible motion and controls |
+| **3** | [**Family Alpha**](https://github.com/wuselwall/wuselwall-app/milestone/3) | After 1–2 | Candidate checks pass, the household completes two weeks of everyday use, blockers are fixed and every new delight has a keep/change/remove verdict |
+| **4** | [**Ready for other families**](https://github.com/wuselwall/wuselwall-app/milestone/4) | After the Alpha | Another household can install and update safely, compatibility and security checks pass, and the store, legal and publication gates are complete |
 
-A lighter day ([ADR-020](adr/ADR-020-a-lighter-day.md), 2026-10-24) is built on its branch:
-Wusel, the colour layers and ambience, celebrations, birthdays and the five rituals of
-[25](25-wusel.md)–[27](27-family-rituals.md), with the exceptions its amendment lists. The
-two-week verdicts of M1.6's "Done when" still need the pilot household's use.
+The [pinned roadmap](https://github.com/wuselwall/wuselwall-app/issues/125) links all
+14 work issues to these milestones. No due dates are promised. Within a milestone, work
+follows the dependency order in [16](16-setup-plan.md).
 
-## A note on the "all four modules at once" decision
+## 1 — Everyday essentials
 
-You chose to build all four modules in the first release rather than starting with one.
-That is workable, and it has a real advantage: a family organiser with only a shopping
-list is not a family organiser, and the household will not change its habits for a
-partial system. Adoption is genuinely easier with a complete-feeling first release.
+Old step 10, grouped into four pieces of work:
 
-The risk is equally real and worth naming. Four modules at once means the first useful
-thing arrives months rather than weeks after you start, motivation has to survive a long
-stretch with nothing to show, and the natural failure mode — building each module to the
-depth it deserves rather than the depth v1 needs — turns a three-month project into an
-abandoned one.
+1. **Start without mail:** discovery, password sign-up/sign-in, guardian-assisted recovery,
+   installation defaults and invitations that do not trust an unverified email address.
+2. **Approvals on Today:** guardian card, Tasks badge and the local morning summary.
+3. **Offline cold start:** persist the last wall board and kid day; show their freshness
+   and recover when connectivity returns. Shopping retains its existing offline outbox.
+4. **Finish the journeys:** resume household setup, single-guardian MFA warning,
+   notification-permission progress, wide-screen navigation and review of the existing
+   deletion-page/checklist work. Retire old enrolment paths only after the supported
+   previous app release no longer needs them.
 
-The plan below manages that in two ways. **Milestone 0** puts one thin vertical slice —
-the shopping list, on real devices — in front of the family early, so the adoption
-question is answered before months of domain complexity land on top. And each module in
-Milestone 1 has an explicit cut line — the "out" lists in documents [05](05-module-calendar.md) through
-[07](07-module-meals-shopping.md) are not suggestions. Ship narrow, then deepen against
-observed use rather than imagined use.
+Member and shopping editing are verification coverage, not new implementation tasks.
+The public account-deletion page belongs to the separate website repository; confirm its
+content and store URL, and coordinate a separate website change if needed.
 
----
+## 2 — A lighter day
 
-## M0 — Walking skeleton
+Old step 11; [ADR-020](adr/ADR-020-a-lighter-day.md) keeps the complete package **before**
+the Alpha. **Built 2026-10-24** (app v1.3.0, server 0.4.0) in five pieces; still open are the
+planner's one-tap suggestion of a tradition's meal, the Ferien ribbon text in the sky and the
+module illustrations in the bands. Native checks (Reduce Motion on a real iPad, sound latency
+on the tablets, the wall's idle CPU) belong to the Alpha's qualification.
 
-*Goal: something real the family can use for one trivial thing.*
+1. **Foundations and writing:** motion, palette, feedback, settings and content. Q55–Q57
+   are decided: Reduce Motion read from the platform's accessibility features, synthesised
+   sounds, and the Tischfrage in the header's middle with Vorfreude and the review in the footer.
+2. **Wusel:** code-drawn poses, free outfits, short lines, register-specific appearances
+   and controls; no mascot in capture, PIN entry or notifications ([25](25-wusel.md)).
+3. **Colour and ambience:** module bands, kid cards, celebrations, day phases, occasions
+   and OLED pixel shift ([26](26-colour-and-ambience.md)).
+4. **Dates to look forward to:** birthdays, countdowns and family traditions, projected
+   into the existing calendar and board ([27](27-family-rituals.md)). A month view is a
+   later candidate, not a new dependency for birthday projection.
+5. **Taking part together:** meal wishes, table questions and the weekly review
+   ([27](27-family-rituals.md)). Include export/deletion coverage for the new data.
 
-**Reordered on 2026-09-02.** The original plan ended M0 on the real domain over real
-TLS, on the argument that everything genuinely hard about operating this system is in
-M0 and easier to debug with nothing else to blame. That argument still holds, but the
-deployment work (M0.3) is held back until the app is worth
-deploying.
+Keep Q53 visible: the agreed first table-question decks are DE/EN; the feature stays hidden
+on FR/ES devices until those decks exist. All interface text, Wusel lines, server responses
+and guides remain complete in DE/EN/FR/ES. This recorded content exception does not reduce
+the rest of the language scope.
 
-The reason is not cost (€7–9/month is not the risk here). It is that the open question
-is no longer *"can this be operated?"* but *"will the family actually use it?"* — and
-that question is answerable on the home network, without a domain, a VPS or a
-certificate. Standing up production infrastructure for a system the household has not
-yet tried is building the wrong thing carefully.
+## 3 — Family Alpha
 
-*Superseded 2026-10-11 by [ADR-013](adr/ADR-013-self-hosted-compose-stack.md): the pilot
-runs on a public self-hosted server from the start, so M0.3 shrank to securing it and was
-built straight away.*
+<a id="m16-launch"></a>
 
-| | Status |
+This is the former M1.6, including the learning and default review formerly split into R1.
+It has two steps:
+
+1. **Qualify a candidate.** Use the [release checklist](release-checklist.md): exact-commit
+   CI and independent review, signed builds, real authentication and pairing, two-device
+   sync, Outlook/iOS feeds, local reminders, native accessibility, offline restart and an
+   isolated restore drill. Back up before applying any live migration. Record evidence
+   without server identities or secrets.
+2. **Use it for two weeks, then act on the findings.** Gather feedback directly from the
+   household, fix blockers, recalibrate defaults without overwriting overrides, and judge
+   Wusel, colour and each ritual against [25](25-wusel.md#how-the-trial-judges-wusel),
+   [26](26-colour-and-ambience.md#how-the-trial-judges-the-colour) and
+   [27](27-family-rituals.md#how-the-trial-judges-the-rituals). Tone down, switch off or remove
+   the parts that fail their criteria. Reserve capacity for what the trial reveals.
+
+A passed widget suite or a closed implementation issue does not close this milestone.
+
+## 4 — Ready for other families
+
+<a id="opening-to-other-households"></a>
+
+This combines the old opening gate and R2. The project remains self-hosted only
+([ADR-018](adr/ADR-018-self-hosted-only.md)); each operator chooses their own household
+creation mode. Public store distribution waits for all three work packages:
+
+| Work package | Required result |
 |---|---|
-| **M0.0** Repository skeleton · local Supabase with the first migration, RLS and pgTAP harness · Flutter shell with three registers and German l10n · `ci.yml` ([16](16-setup-plan.md) steps 1–4) | Built — CI green on `main` since PR #3; the RLS catalogue test (`040_catalogue`) exists |
-| **M0.1** Identity: setup wizard, guardian accounts, device enrolment, tap-to-switch, guardian PIN, revocation (step 5) | Built and tested (pgTAP + end-to-end), incl. per-phone devices, TOTP, QR enrolment, rate limiting; passkeys wired, untested until the production domain exists — see ADR-010 implementation notes |
-| **M0.2** The shopping list, online only: add, tick, finish, live across devices (step 6) | Built and tested; not yet tried on a pilot household's devices |
-| **M0.4** Mobile release pipeline: signing, `release-ios.yml` and `release-android.yml`, TestFlight and the Play internal track (step 7) | In progress — Apple account active, iOS signing and `release-ios.yml` (then `release-mobile.yml`) written 2026-10-12; **first TestFlight build uploaded 2026-10-12**; Android: **first App Bundle on the Play internal track by hand 2026-10-17**, the upload from `release-android.yml` written the same day; the signed APK (`scripts/deploy-apk.sh`) stays the fallback |
-| **M0.3** A self-hosted server ([ADR-013](adr/ADR-013-self-hosted-compose-stack.md)): own keys, a public HTTPS front, nightly backups, restore drill (step 8) | Built 2026-10-11; **moved the same day to the official compose stack** ([ADR-013 amendment](adr/ADR-013-self-hosted-compose-stack.md#amendment-2026-10-11-the-official-compose-stack)). The pilot household starts fresh on it |
+| **Portable, safe server releases** | Current app tested against the previous server release; unsupported versions refused clearly; backup-first updates with failure guidance; server/job/backup status that stays on the family's server; 30-day empty-account cleanup scheduled |
+| **An independent household succeeds** | Clean install-to-Today walkthrough with and without SMTP; guide reviewed in all four languages; native accessibility and cross-household security reviewed; export and deletion checked on disposable data, with pilot operations governed by the release checklist |
+| **Store and publication readiness** | Honest privacy/Data safety forms, demo access for review, verified mail setup, contact/legal and account-deletion pages, signed release channels, screenshots, docs hosting and separately coordinated website progress; complete [11's legal gate](11-security-and-privacy.md#privacy-and-legal) |
 
-M0.4 is new and comes **before** M0.3. A PWA reached the phones by URL; a native app
-reaches an iPhone only through a signed build, and without a Mac the release pipeline is
-the only way to get one there. So distribution is proven during M0, while deployment of
-the backend can still wait.
+The server kit, guide and discovery already exist. This milestone proves and hardens them;
+it does not rebuild them. The project's website and docs are separate publication gates.
 
-**Done when:** the shopping list is used on both parents' phones for one real supermarket
-trip — installed from TestFlight or Play, talking to the household's own server.
+## Later — choose from use
 
-### A real server from the start
+<a id="m2--assistants-and-the-obvious-gaps"></a>
+<a id="m3--depth"></a>
+<a id="m4--speculative"></a>
 
-*Rewritten 2026-10-11 for [ADR-013](adr/ADR-013-self-hosted-compose-stack.md).* The plan
-used to trial on the home network against a laptop stack and stand up production at
-M1.6. Now the pilot runs on a public self-hosted server from day one, so the trial and the
-real thing are the same. What the LAN
-trial could not show is no longer blocked by infrastructure:
-
-- **Use outside the house** works as soon as the apps are installed.
-- **The ICS feed into Outlook** can be tested as soon as the feed exists (M1.3a).
-- **Reminders** are local to each phone (Q47, built 2026-10-15); push waits for a relay
-  that is built only if families miss it.
-
-The price is that development and the family share one database; see ADR-013 for the
-safeguards (a dump before every migration, no `db reset`, the integration test kept on
-throwaway stacks).
-
-## M1 — The four modules, thin
-
-Four blocks, each buildable in a handful of focused sessions. Order matters: shopping
-first because it is already started, tasks second because it is the heaviest, calendar and
-Stundenplan third, meals last because it depends on shopping's catalogue. The week board
-is assembled in M1.5, once all of its sources exist.
-
-### M1.0 Onboarding
-
-*Added 2026-10-11 ([ADR-014](adr/ADR-014-self-service-onboarding.md),
-[20](20-onboarding.md), [16 step 9](16-setup-plan.md#step-9--onboarding-m10)).* Can be built
-alongside M1.1–M1.4 and must be finished **before M1.6**, because the family's real
-household is set up through it.
-
-The front door (email code, password; Apple and Google removed 2026-10-17) · household creation in `code` mode
-with H1/H2 and seeded examples · invitations by link, code, QR and email match ·
-reverse pairing for shared devices, with the PIN deferred to the first one · the
-getting-started card · account and household deletion, leave, data export · localised
-auth mail · the landing pages and `/.well-known` files · M0.1's setup wizard and code
-entry retired one release later.
-
-**Done when** the second parent joins from a WhatsApp message in under a minute, the wall
-tablet is connected without anyone touching its keyboard, and both are timed on the
-release checklist.
-
-> **Built 2026-10-14 and 2026-10-15, merged to `main`:** the front door with email codes
-> and passwords (E1–E3; Apple and Google removed 2026-10-17); households (H1/H2, founder codes); invitations by link, code and
-> QR, with universal links and App Links carrying the server; pairing; the getting-started
-> card (FR-5.17); the join and new-sign-in notices on Today; leaving, deleting and restoring
-> a family, account deletion, the second-factor reset and the data export (FR-5.16); the
-> localised mail; the server choice and the demo (ADR-018). The journeys J1–J3 are
-> integration tests and screen-count tests. **Open for M1.0:** the gaps the journeys still
-> have ([16, step 10](16-setup-plan.md#step-10--journey-gaps-before-launch-m15): servers
-> without mail, the loose ends, retiring the M0.1 paths) and the timed device checks of the
-> release checklist (step 10.9).
-
-### M1.1 Shopping, complete
-
-> **Offline outbox built 2026-10-12:** drift mirror and outbox, `api.shopping_apply` with
-> per-op idempotency keys, aliases for merged adds and per-op rejection; pending state shown
-> on each item and in a banner ([07](07-module-meals-shopping.md#offline--the-one-place-it-is-non-negotiable)).
->
-> **Built 2026-10-11 (online):** several lists with a default, categories per list as the
-> store layout, the catalogue learned on purchase, the tile picker with folded ranked
-> typeahead and tap-again counts, long-press notes and category correction, the trolley
-> section, trips and the history page; catalogue pictures chosen by the server from the item's name
-> (2026-10-15). **Still open:** editing lists, categories and their walking order, and
-> removing a learned tile ([16, step 10.3](16-setup-plan.md#step-10--journey-gaps-before-launch-m15)),
-> and the kiosk tile layout polish.
-
-**Scope (as reached in BretApp, 2026-09-12, on the old stack — the mechanisms map to
-drift and Supabase Realtime as described in [07](07-module-meals-shopping.md)):** Categories and store layouts (a category belongs to a list rather
-than a separate `store` entity — v1's three lists already map onto real venues, so the
-category *is* the layout) · catalogue with a self-hosted icon set, populated lazily on
-purchase rather than on capture · **the tile picker** with folded, ranked typeahead and
-"tap again for 2×" · **several lists with a default**, each with its own catalogue ·
-the offline outbox (IndexedDB mirror, idempotent replay against the existing form
-actions, a caught-in-testing fix for a request that hangs rather than rejects when
-connectivity drops mid-flight) · SSE live updates, proven with two real enrolled devices
-syncing with neither told to reload.
-
-**One deliberate simplification:** the spec's long-press-for-quantity became a plain
-tap-to-edit field — a real long-press gesture's pointer-timing and scroll-cancellation
-logic wasn't judged worth the fragility yet. Revisit if it is missed in practice.
-
-**Archive and history, added 2026-09-13:** `/verlauf`, grouped by trip — every item
-`finishShopping` stamped with the same `boughtAt` in one "Einkauf beenden" is one trip,
-so there is no separate trip entity to keep in sync. Reachable per list from the main
-screen and from its own list switcher.
-
-### M1.2 Tasks and gamification
-> **Built 2026-10-13:** household settings with the Einstellungen screen; definitions with RRULE, the four policies, the materialiser (`tasks-materialise`, `tasks-nightly`), the ledger, rewards with approval, streaks with jokers, four badges, the starter pack, the adult screens and the kiosk family task board; the kid screens. Scheduling options are built in `infra/jobs/schedule.sql` and `infra/cron/`; which a server runs is unverified. **Open:** pending approvals on Today, since there is no push ([16, step 10.5](16-setup-plan.md#step-10--journey-gaps-before-launch-m15)); real-device use is M1.6's.
-
-**Household settings first** ([21](21-household-settings.md)): `setting_definition`, the
-override table, `api.settings` / `api.set_setting`, and the Einstellungen screen — M1.2 is
-the first module whose behaviour is tuned per household. Its defaults (Q4–Q7, issues
-#6–#9) are data, so the build does not wait for them ·
-Definitions with RRULE · the materialiser job · four assignment policies · the point
-ledger · rewards with the approval flow · streaks with jokers · three or four badges ·
-kid task screen · the family task board (reached from the week board's footer in M1.5) ·
-guardian PIN and approvals
-
-### M1.3 Calendar, presence and Stundenplan
-> **Built 2026-10-13:** M1.3a — events, attendees, presence with six states, recurrence with overrides and `rdates` (the Dienstplan grid), tentative, the key flag, busy-until, day/3-day/week views and the editor, the signed ICS feed with per-token filters (school day or lessons included). M1.3b — schools, bell times, terms, subjects, A/B weeks, care rows, exceptions, holidays, the projection (`_shared/school.ts`) and the grid editor. **Open:** the feed verified against real Outlook and real iOS (M1.6).
-
-*Grew on 2026-08-30 with the A5 addition; the largest single block after tasks.*
-
-**M1.3a — Calendar core.** Events, all-day and timed · attendees · recurrence with
-overrides · `rdates` and the tap-the-days rota editor · presence kind with its six states ·
-tentative status · the key-appointment flag · day/3-day/week views · the signed ICS feed
-with per-token filtering by member, calendar and kind · verified against real Outlook and
-real iOS.
-
-**M1.3b — Stundenplan.** School, bell times, terms, subjects · the timetable grid editor ·
-A/B weeks · care and club rows · per-date exceptions · hand-entered holidays · the
-projection function and its test suite · the Stundenplan grid view in the adult and kid
-registers · the collapsed school-day block in the feed, off by default.
-
-Build 1.3a fully before starting 1.3b: the projection has nowhere to render until the
-calendar's occurrence-source seam exists.
-
-> **Built 2026-10-14:** regions to any depth (Germany, Austria, Switzerland to the Gemeinde, Liechtenstein) from the public OpenHolidays dataset, fetched by the server; public holidays (Feiertage) automatic, for school days, the week board's day header and the free-day meal; school holidays (Ferien) imported with a preview and editable afterwards (the M2 item, built early); several schools per household; day operations in the timetable editor (clear, copy, swap, with undo until Save). Details: [15](15-module-school-timetable.md#holidays).
-
-### M1.4 Meals
-> **Built 2026-10-13:** the week plan (free text or recipe, cook, guests), recipes, who-is-eating with the defaulting rule (computed with the board in `board-week`), shopping generation with the mandatory preview, the kiosk correction dots.
-
-Meal plan week grid · recipes with ingredients · who is eating at home, with the defaulting
-rule from presence and Hort · generation into the shopping list, with the mandatory
-preview · the meal zone of the week board
-
-> **Built 2026-10-14:** meal suggestions in the meal editor from the last 365 days of cooked meals ("Oft bei uns", "Lange nicht gegessen" after 90 and 60 days — FR-3.8), the meal behind each generated shopping item (FR-3.7), and undo when a planned meal is cleared.
-
-### M1.5 Polish
-> **Week board built early, 2026-10-13:** the board, its tap-through details and the
-> `api.board_week` read model exist before their sources. The read model's JSON is the
-> contract (`app/lib/features/board/domain/week_board.dart`): each module fills its own
-> part — presence and events (M1.3a, through the `board-week` Edge Function), school days
-> (M1.3b), meals (M1.4), open tasks (M1.2) — so the board is built once, not twice. Until
-> then its zones are present and empty, as the degradation rules require.
-
-**The week board** — the composed `api.board_week` read model, the four zones, today
-emphasis, degradation rules, tap-through detail, night variant · three UI registers
-finished · **the journey gaps** of [16, step 10](16-setup-plan.md#step-10--journey-gaps-before-launch-m15)
-(added 2026-10-16): members, the family and devices editable; lists and categories
-editable; servers without mail; pending approvals on Today; the wall's offline start; the
-account-deletion page; the release checklist; the M0.1 paths retired; a navigation rail on
-wide screens · **a lighter day** of [16, step 11](16-setup-plan.md#step-11--a-lighter-day-m15)
-(added 2026-10-24, [ADR-020](adr/ADR-020-a-lighter-day.md)): Wusel ([25](25-wusel.md)), colour,
-ambience and celebration ([26](26-colour-and-ambience.md)), birthdays and the five rituals
-([27](27-family-rituals.md)).
-
-What needs the real household and its hardware — the mounted display, the feed in Outlook,
-the timed journeys — is M1.6.
-
-The week board comes last on purpose: it is a composition of all four modules plus the
-Stundenplan, and building it before its sources exist means building it twice. It is also
-the screen the household judges the whole system by, so it should be built when there is
-real data to put on it — and the
-[mockup](mockups/kiosk-week-board.html) agreed with the family beforehand is what keeps
-that session short.
-
-### M1.6 Launch
-
-*Re-scoped 2026-10-11 by [ADR-013](adr/ADR-013-self-hosted-compose-stack.md): there is
-no separate deployment any more, so this is the launch checklist for the pilot household's
-server.*
-
-The pilot household set up through the M1.0 flow with a founder code
-(`wuselwall setup-token`), the second parent joined by invitation and the devices
-paired · development data removed only by an explicit operator decision after a verified
-backup (never an automatic checklist step) · every merged migration and
-function applied, after a backup ([10](10-deployment-and-ops.md#changing-the-database)) · the
-four jobs scheduled · local reminders checked on both parents' phones (Q47; no push
-credentials) · the release checklist (step 10.9) filled in once · the ICS feed verified
-against real Outlook and real iOS ·
-nightly backups with the dead-man's switch and an off-site copy (Q14) · **a restore drill
-on the real data, with the date written down** · the pre-launch checklist in
-[11](11-security-and-privacy.md) · wall display mounted in the kitchen, the app pinned in
-kiosk mode.
-
-Account *recovery*, the gap this paragraph used to record, is closed by M1.0: an email
-code replaces a forgotten password, and a co-guardian resets a lost second factor. Studio
-remains the last resort only for an adult who has lost both their mailbox and every
-linked provider.
-
-**Done when:** every member of the household uses it daily for two weeks without asking you to fix
-anything, and each part of step 11 has a keep, tone-down or remove verdict against the
-criteria in its spec ([25](25-wusel.md#how-the-trial-judges-wusel),
-[26](26-colour-and-ambience.md#how-the-trial-judges-the-colour),
-[27](27-family-rituals.md#how-the-trial-judges-the-rituals)).
-
----
-
-## Opening to other households
-
-*Added 2026-10-11 ([ADR-014](adr/ADR-014-self-service-onboarding.md)).* Not a milestone
-with features but a **gate**: the instance stays in `code` mode, and strangers cannot
-start a household, until every line below is true. It sits after M1.6 on purpose. The
-pilot household uses the flows for weeks first, and its hesitations are fixed before anyone else
-meets them.
-
-- ~~WuselWall Cloud live~~ — dropped 2026-10-13 ([ADR-018](adr/ADR-018-self-hosted-only.md)):
-  the project runs no instance for anyone.
-- **The self-hosting kit** ([ADR-018](adr/ADR-018-self-hosted-only.md),
-  [10](10-deployment-and-ops.md#other-families-servers)): tagged server releases with
-  install, migrate and update scripts and the server's QR code; `/.well-known/wuselwall.json`
-  with `api_version`; the app's server choice (S0), demo mode and the `api_version`
-  window, tested against the previous server release in CI; a self-hosting guide in
-  `docs/` for a parent with a NAS (email-only sign-in, SMTP).
-- **The domain** — decided 2026-10-13: `wuselwall.app`
-  ([ADR-017](adr/ADR-017-wuselwall-app-domain.md), [Q45](14-open-questions.md)).
-- **Email** ([Q41](14-open-questions.md)): the sending domain verified, and the
-  deliverability check in [10](10-deployment-and-ops.md#email-setup) passed.
-- **Store listings** ([Q42](14-open-questions.md), decided: App Store and Google Play):
-  store privacy labels and the Data safety form filled in honestly, and App Review pointed
-  at the demo mode.
-- **Legal:** the privacy policy for the website, the apps and the email sign-in
-  (published 2026-10-13, operator details still to fill in), and a contact address. The
-  record of processing and processor agreements cover what the project itself runs (the
-  website and the docs); each operator is the controller for their own server ([11](11-security-and-privacy.md#privacy-and-legal)).
-- **Abuse controls** live: Auth's and the front's rate limits, the 30-day clean-up of empty
-  accounts (not built yet: a fifth job), the attempt logs ([11, T11](11-security-and-privacy.md#t11--the-open-front-door)).
-- **Deletion and export** tested on a real household.
-- **The cross-household pgTAP suite** reviewed once more with "a stranger is on the other
-  side" in mind.
-- Then: the store listings go public. `household_creation` stays `code` on the family's
-  server. Other operators choose their own mode.
-
-## M2 — Assistants and the obvious gaps
-
-*Ordered with M3 and the open questions into phases after the Alpha in
-[23 — Roadmap after the Alpha](23-roadmap-after-alpha.md) (2026-10-18).*
-
-- ~~Shortcuts endpoints and per-person tokens~~ — built on `feature/shortcuts` (2026-10-16), see [12](12-mcp-and-assistants.md#the-endpoint-as-built)
-- ~~MCP server, `family:read` scope~~ — built on `feature/mcp-read` (2026-10-16) with assistant keys as the Q15 interim, see [12](12-mcp-and-assistants.md#part-2--the-mcp-server)
-- ~~Equipment reminders from tomorrow's subjects ("Morgen brauchst du: Sportsachen")~~ — built on `feature/equipment-reminder` (2026-10-16): the evening notification `notify.packing_reminder`, and `school.equipment_hint` now honoured everywhere, see [15](15-module-school-timetable.md)
-- The audit log in Einstellungen (FR-5.9 records everything; nothing shows it yet): the last
-  30 days, by member, guardians only. It is the counterweight J2 promises for guardian
-  invitations, and it answers "who ticked my chore on the wall?"
-- A month overview in the calendar, read-only, for Ferien and birthdays (the views stop at
-  a week today)
-- Birthdays, once [Q50](14-open-questions.md) is answered
-- The push relay, only if the first weeks show that local reminders and the Today notices
-  miss something that matters (Q47)
-- Whatever the first two weeks of real use made obviously necessary — reserve capacity
-  for this rather than planning around it
-
-*Built early, ahead of M2 (2026-10-14/15):* Ferien import by region, subscribed external
-calendars (FR-1.9, also in the outbound feed), meal suggestions from history, local
-reminders (Q47), the QR scanner without ML Kit (Q49), "Alle Termine" on the week board
-(FR-8.11).
-
-## M3 — Depth
-
-- Substitution import from a school portal, *if* either school ever publishes one
-- MCP write scopes with consent and grant management (*2026-10-22: the first assistant
-  write is a proposal, not a change: [24](24-school-import.md); the timetable itself comes in
-  by paste, proposal or photo since then*)
-- Recipe import from URL
-- Family goal bar and ageing bonuses on open tasks
-- CalDAV for two-way phone editing, if read-only proves limiting
-- Richer badges and a wider reward catalogue
-- Keyboard shortcuts and bulk editing in the adult register (moved from [09](09-clients-and-ux.md) on 2026-10-16)
-- One account in two households, for separated parents and a child with two homes (Q43),
-  when a real family asks
-
-## M4 — Speculative
-
-Photo proof of chores · allowance payouts · household inventory and pantry stock ·
-budget tracking · natural-language event entry · a native iOS wrapper, if and only if a
-specific capability demands it
-
----
+[23](23-roadmap-after-alpha.md) is the single later backlog. Audit history, a month view,
+assistant-origin markers, richer assistant consent, recipe import and desktop tools are
+candidates, without a promised release or due date. Push relay, multiple households and
+school-portal imports require a real case first. Birthdays are already in milestone 2;
+Shortcuts and read-only MCP are already built.
 
 ## Effort
 
-Rough, for a solo developer working evenings and weekends with AI assistance. Treat as
-order-of-magnitude, not commitment.
-
-| Milestone | Calendar time | Where it goes wrong |
-|---|---|---|
-| M0 | 3–4 weekends, plus waiting for Apple and Google | Signing and the first TestFlight build without a Mac; WSL networking for the LAN trial; writing the first RLS policies and `api` functions well enough to serve as templates. |
-| M1.1 | 2 weeks | The offline outbox is the whole cost; the tile picker and several lists add a few days. |
-| M1.2 | 2–3 weeks | The largest module. The materialiser and rotation logic need real tests. |
-| M1.3a | 2–3 weeks | Recurrence and ICS correctness. Timezones and all-day events will each cost you a day. |
-| M1.3b | 1–2 weeks | The projection function: A/B weeks × holidays × exceptions is where the edge cases live. Write the tests first, genuinely. |
-| M1.4 | 1–2 weeks | Quantity aggregation and unit handling is fiddlier than it looks. |
-| M1.5 | 2–3 weeks | Always underestimated. The week board is built; what remains is step 10's journey gaps, about two weekends, and the register polish. |
-| M1.6 | 1–2 evenings | The real household, the release checklist, the restore drill on real data. TLS, DNS and the stack already exist (ADR-013), and the release pipeline is proven from M0.4. |
-| **M1 total** | **~3–4 months** | The A5 addition (Stundenplan, presence, week board) added roughly a month. Supabase saves the auth, realtime and job plumbing; PL/pgSQL and pgTAP cost some of that back. |
-| M2 | 2–3 weeks | |
+Plan one work package at a time. The old estimates for already-built modules and the
+“one or two evenings” launch estimate are retired. The Alpha itself needs **two weeks of
+use**, in addition to candidate qualification and follow-up. Estimate remaining code only
+after reviewing a package against the current implementation; external store and device
+availability do not have a reliable development estimate.
 
 ## Milestone discipline
 
-Two rules that decide whether this ships.
-
-**A module is done when its "in" list is done.** Every idea that arrives mid-build goes
-into [14 — Open Questions](14-open-questions.md) or the M3 list. Not into the current
-module.
-
-**Deploy at the end of every block.** M1.2 goes to production before M1.3 starts, even
-though the calendar is still missing. Long-lived unreleased work is where solo projects
-go to die, and a family that watches the app grow every fortnight is a family that will
-adopt it.
-
-Documentation localization (2026-10-21): French and Spanish now cover all 27 guide
-routes, alongside German and English, including navigation, local search, theme controls
-and matching screenshots in both themes. The capture/check pipeline covers all four
-languages; the website selects the matching guide language under the existing docs base.
-Both `/docs/` hosting and the future Pages root are build targets; publication is separate.
-
-CI runner routing (2026-10-22): all jobs select self-hosted runners, including PR checks,
-docs/Pages and hosted-project installation. Linux uses the build fleet, iOS retains
-the Mac runner, and the website keeps its separate deployment runner. Backend CI
-serializes and cleans up its disposable Docker stack; publication gates are unchanged.
+- Keep one active build milestone; start writing the milestone-2 content early if useful.
+- Each issue has one outcome and belongs to one milestone. Acceptance criteria are
+  checkboxes inside the issue; do not mirror every specification paragraph as an issue.
+- New ideas go to [23](23-roadmap-after-alpha.md), unless they fix a blocker for the current
+  outcome. Preserve the scope cuts in [05](05-module-calendar.md), [06](06-module-tasks.md),
+  [07](07-module-meals-shopping.md) and [15](15-module-school-timetable.md).
+- Every slice follows the architecture, localization and compatibility rules in
+  [AGENTS.md](../AGENTS.md). Deployable changes follow the backup/update procedure;
+  a roadmap issue does not authorize an operation on a family's live data.
+- Update GitHub and this plan together. Coordinate public-progress copy separately in
+  `wuselwall-website`; app contributions do not require access to that repository.

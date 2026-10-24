@@ -1,41 +1,137 @@
-# 16 — Basic Setup Plan: from empty repository to a release pipeline
+# 16 — Build plan
 
-*Added 2026-10-11 with the move to Flutter and self-hosted Supabase
-([ADR-010](adr/ADR-010-flutter-and-self-hosted-supabase.md),
-[ADR-011](adr/ADR-011-native-distribution-and-ci-cd.md)); step 8 rewritten the same day
-for a self-hosted server ([ADR-013](adr/ADR-013-self-hosted-compose-stack.md)). This is the build order for
-milestone M0 in [13](13-roadmap.md): everything that has to exist before the first
-module is worth building. Step 9 (onboarding, M1.0) and step 10 (the journey gaps found
-before launch, M1.5) were added later; the modules themselves are planned in their own
-documents.*
+Updated 2026-10-24. [13 — Roadmap](13-roadmap.md) owns the four milestones and their exit
+criteria. This file is the implementation order. Old step/slice numbers stay in the tables
+so existing specification links and ADR-020 remain usable.
 
-The goal of M0 is not features. It is to prove every layer end to end with the thinnest
-possible content: a Flutter app on a real iPhone, iPad and Android tablet, talking to
-Supabase, enrolled as a device, writing one table under RLS, with CI checking every
-change and a tag producing installable builds. Once that works, every module after it is
-"more of the same".
+## What to do next
 
-## Overview
-
-| Step | Milestone | Delivers | Rough effort |
+| Order | Work | Status | Plan |
 |---|---|---|---|
-| 0 | — | Tools installed, accounts applied for | 1 evening + waiting for Apple and Google |
-| 1 | M0.0 | Repository skeleton, conventions, Dependabot | 1 evening |
-| 2 | M0.0 | Local Supabase, first migration, RLS and pgTAP harness | 1–2 evenings |
-| 3 | M0.0 | Flutter app shell: three registers, German l10n, health check | 1–2 evenings |
-| 4 | M0.0 | `ci.yml`: every pull request tested | 1 evening |
-| 5 | M0.1 | Identity: setup wizard, guardian accounts, device enrolment, tap-to-switch, PIN | 1 weekend |
-| 6 | M0.2 | The shopping list, online only — the first real feature | 1–2 evenings |
-| 7 | M0.4 | `release-ios.yml` and `release-android.yml`: a tag puts builds on the testers' devices | 1 weekend |
-| 8 | M0.3 | A self-hosted server ([ADR-013](adr/ADR-013-self-hosted-compose-stack.md)): own keys, an allow-list front, backups | 1 evening |
-| 9 | M1.0 | Onboarding ([ADR-014](adr/ADR-014-self-service-onboarding.md)): email code and password; households, invitations, pairing, getting started, deletion | 2–3 weekends |
-| 10 | M1.5 | Journey gaps before launch: members, family and devices editable, shopping structure, servers without mail, approvals on Today, the wall's offline start, the release checklist | 2 weekends |
-| 11 | M1.5 | A lighter day ([ADR-020](adr/ADR-020-a-lighter-day.md)): Wusel, colour layers and ambience, celebrations, birthdays, Vorfreude, traditions, Wunschessen, Tischfrage, Wochenrückblick | 5–7 weekends |
+| 1 | Everyday essentials | Partly built; remaining work below | Step 10 |
+| 2 | A lighter day | Built 2026-10-24 (app v1.3.0, server 0.4.0); three small pieces open | Step 11 |
+| 3 | Qualify, trial and learn | Evidence not yet recorded | [Family Alpha](13-roadmap.md#3--family-alpha), [release checklist](release-checklist.md) |
+| 4 | Ready for other families | After the Alpha | [Opening gate](13-roadmap.md#opening-to-other-households) |
 
-Steps 1–4 can be done in a single long weekend. Step 7 waits on the Apple and Google
-accounts from step 0, which is why those are applied for first.
+Steps 0–9 are foundation reference, collapsed below. Their implementation exists; mobile
+signing, distribution and real-device behaviour still need candidate-specific evidence.
+Do not repeat the repository setup or count built features as open work.
 
----
+## Rules for each slice
+
+Follow [AGENTS.md](../AGENTS.md): repositories and `api` boundaries, actor context and audit,
+forced RLS with negative pgTAP cases, forward-only migrations and the supported previous app
+release. Change `api_version` when the contract changes. Ship interface/server text and the
+matching family guide in DE/EN/FR/ES, with screenshots for a new screen. Q53's table-question
+content exception is recorded explicitly in step 11; it does not apply to interface copy.
+Use CI or a throwaway stack for integration tests; never a live household server.
+
+## Step 10 — Journey gaps before launch (M1.5)
+
+This is milestone **1 — Everyday essentials**. Slices 1–3 are built (2026-10-23,
+`20261023100000_editable_household.sql`, pgTAP 230). They cover editable members, family,
+devices, lists, categories and catalogue tiles, with Basic/Advanced controls. Keep them in
+regression coverage rather than scheduling them again. The wall still uses initials;
+avatar pictures appear in member lists and the kid picker.
+
+| Build order | Old slices | Work package | Acceptance |
+|---|---|---|---|
+| 1 | 10.4 | **Start without mail** | A fresh server without SMTP reaches Today; password sign-up/sign-in and guardian-assisted recovery work; email auto-matching cannot trust an autoconfirmed address |
+| 2 | 10.5 | **Approvals on Today** | Guardians see pending chore/reward counts on Today and the Tasks badge; the local morning summary uses the loaded pending count; deciding clears the derived notice |
+| 3 | 10.6 | **Offline cold start** | After an app/device restart without network, the wall shows its stored week and the kid home its stored day, with freshness shown; reconnect refreshes normally |
+| 4 | 10.7–10.11 | **Finish the journeys** | Setup resumes, MFA/notification progress is clear, wide screens use the rail, and deletion-page and checklist dependencies have an explicit result |
+
+Implementation boundaries for these four packages:
+
+- **Without mail:** installers enable autoconfirm only when SMTP is absent;
+  `server-info` publishes `sign_in.email_code`; the app skips code-first E2/E3 on that
+  server. Suppress invitation matching by email there. Guardian-created reset codes are
+  single-use, expire after ten minutes and target only an adult in that household. The
+  rate-limited `password-reset` Edge Function uses the service role only for that verified
+  target. Cover discovery, recovery authorization, expiry and J1 on a disposable no-mail
+  stack. Update the server guides in all four languages ([Q48](14-open-questions.md)).
+- **Approvals:** derived `redemption_pending` and `verification_pending` notices are
+  guardian-only, not dismissible, and disappear when decided. Reuse existing approval
+  actions; no push relay ([Q47](14-open-questions.md)).
+- **Offline:** persist the last successful `board_week` JSON and kid day using the existing
+  local-store pattern; cover cold start with a failing repository and stored data.
+- **Journey finish:** local H1 draft, single-guardian TOTP warning, notification permission
+  in getting-started progress, `NavigationRail` at 840 px. Passkeys wait for their native
+  verification. Review [#117](https://github.com/wuselwall/wuselwall-app/issues/117)'s
+  existing fixes before duplicating work. Verify the public account-deletion page in the
+  separate website repository; coordinate changes there. The checklist already lives at
+  [release-checklist.md](release-checklist.md): extend and execute it, do not create a
+  second checklist. Retire the legacy wizard/enrolment APIs only after a distributed app
+  release and the supported-version window permit it (old 10.10); keep that conditional
+  cleanup open separately if the precondition has not happened.
+
+**Done when:** the four acceptance rows pass. Timed native journeys, store delivery and the
+family trial belong to milestone 3, not to an implementation-only “done” claim.
+
+## Step 11 — A lighter day (M1.5)
+
+This is milestone **2 — A lighter day**, after step 10 and before the Alpha, as agreed in
+[ADR-020](adr/ADR-020-a-lighter-day.md). The detailed designs remain in [25](25-wusel.md),
+[26](26-colour-and-ambience.md) and [27](27-family-rituals.md); this table replaces the long
+parallel task list with five work packages.
+
+**Built 2026-10-24** on `feat/a-lighter-day` (PR #123; migrations `20261024100000` and
+`20261024110000`, pgTAP 235) and shipped in app v1.3.0 and server release 0.4.0. What was
+built differs from the plan where [ADR-020's amendment](adr/ADR-020-a-lighter-day.md#amendment-2026-10-24-built)
+says so. Still open: the planner's one-tap suggestion of a tradition's meal, the Ferien ribbon
+text in the sky, and the module illustrations in the bands. The rows below stay as the
+acceptance record for the Alpha.
+
+| Build order | Old slices | Work package | Acceptance |
+|---|---|---|---|
+| 1 | 11.0–11.1 | **Foundations and writing** | Shared motion check, tested palette/sky tokens, settings, sound/haptic service and licensed assets; start question decks and Wusel lines |
+| 2 | 11.2 + 11.4 | **Wusel** | Painter, seven poses, eight free outfits, demo coverage, localized voice and settings; appearances fit each register and stay out of capture/PIN flows |
+| 3 | 11.3 + 11.5 | **Colour and ambience** | Module bands, kid cards, celebrations, day/season/occasion layers, country defaults and OLED pixel shift; quiet/reduced-motion variants work |
+| 4 | 11.6–11.7 | **Dates to look forward to** | Birthday field and projections, countdowns, named traditions and their meal suggestion on the existing calendar/board |
+| 5 | 11.8–11.10 | **Taking part together** | Meal wishes reach the planner; the question appears in the meal window; the week review tells a shared story without comparing members |
+
+Docs and evidence (old 11.11) are part of every package, rather than a final translation
+batch. Add demo data, guide pages and screenshot capture coverage in DE/EN/FR/ES. Extend the
+release checklist for native Reduce Motion, tablet sound latency, and wall idle CPU with
+Wusel on/off. The Alpha judges the result against each design's keep/change/remove criteria.
+
+The questions this step depended on are decided ([14](14-open-questions.md)):
+
+| Question | Decision | Still to check |
+|---|---|---|
+| Q55 — native Reduce Motion | Read from the platform's accessibility features, not `disableAnimations` | On a real iPad, in the Alpha's qualification |
+| Q56 — sound rights and latency | Synthesised for the project by `scripts/sound-effects.mjs`; no third-party sound | Latency on the target tablets |
+| Q57 — shared wall-header slot | The Tischfrage in the header's middle during its window; Vorfreude and the review tile in the footer | Two-metre reading distance on the mounted wall |
+
+Keep these scope decisions visible:
+
+- Start writing early: DE/EN question decks and Wusel lines in all four languages. Under
+  the recorded [Q53](14-open-questions.md) exception, hide Tischfrage on FR/ES devices
+  until their decks exist; all other strings and guides remain DE/EN/FR/ES.
+- Wusel is code-drawn; no Rive/Lottie dependency, earned outfits, pet care or notifications.
+  Rename the reference brand files and update `scripts/brand-assets.js` with that slice.
+- Birthdays project into existing views and the feed. The later month-view candidate is
+  not a prerequisite. Add countdown/tradition fields, meal wishes, table questions and
+  `api.week_review` through the existing actor/audit/RLS boundaries. Include the new data
+  in export and deletion. Release old 11.6–11.10 as one compatible contract increment;
+  do not publish intermediate fields under an unchanged contract version.
+- Country-dependent occasions, Western/Orthodox Easter and pixel shift follow [26](26-colour-and-ambience.md).
+  Pin date computations with known-date tests. Colour tests preserve AA in every shade.
+- Keep three-second capture, two-metre wall reading and non-comparative celebrations as
+  acceptance checks, alongside the guide and native-device checks.
+
+**Done when:** the five acceptance rows pass and the whole package is ready for the
+milestone-3 trial. The rows are built; the three open pieces above remain. The final keep/change/remove decisions require that trial.
+
+## Foundation reference — steps 0–9
+
+<details>
+<summary>Earlier setup instructions, signing workflows and onboarding implementation</summary>
+
+These are the historical build recipes, not an open task list. Current commands and
+operator procedures are owned by [10](10-deployment-and-ops.md); current qualification is
+owned by the [release checklist](release-checklist.md). Any old language counts or platform
+assumptions below are superseded by [AGENTS.md](../AGENTS.md).
 
 ## Step 0 — Tools and accounts
 
@@ -594,220 +690,11 @@ account leaves nothing reachable.
 
 ---
 
-## Step 10 — Journey gaps before launch (M1.5)
 
-*Added 2026-10-16, from a walk through the journeys J1–J6 ([20](20-onboarding.md)) and every
-module's screens against the code. Slices 1–3 built 2026-10-23 (migration
-`20261023100000_editable_household.sql`, pgTAP 230): the member page, the family page and
-"Liste bearbeiten" each carry the Basic/Advanced switch, with the role, "Nicht mehr dabei",
-the time zone, the categories and deletion under Advanced. The wall board still draws the
-initial; the avatar picture appears in the app's lists and on the kid picker.* None of this
-is a new feature. Each slice closes a
-place where the pilot household would get stuck in its first weeks, with nothing in the app
-to get it out. They are ordered by how soon a family runs into them. Every slice follows the
-architecture rules ([03](03-architecture.md)): one `api` function per write, starting with
-`app.actor()` and auditing; pgTAP for the cross-household, revoked-device and
-unauthenticated cases; strings in both ARB files; and the matching `docs/` page in both
-languages. A slice that changes the app–server contract raises `api_version`.
+</details>
 
-Issue [#117](https://github.com/wuselwall/wuselwall-app/issues/117) (2026-10-24) records
-sampled API 36 Android phone and tablet demo UI checks and iOS-targeted widget regressions
-for shared Flutter fixes, including Settings navigation. These checks are not release
-evidence; native iPhone/iPad validation, real authentication and two-device synchronization
-remain separate gates.
-
-1. **Members can be edited** (FR-5.1, [20 H2](20-onboarding.md#j1--start-a-family),
-   [21](21-household-settings.md#the-kitchen-display)). Today a profile has only two writes,
-   `api.members_add` and `api.member_baseline_set`. A misspelt name, two people with one
-   colour, the board's member order, or an adult entered as *Kind* in H2 cannot be
-   corrected, although H2 promises "changeable later".
-   - Migration: `profile.avatar_key` (an emoji from the design system's set, null = the
-     initial); `api.member_update(actor, profile, display_name, color, kind, avatar_key)`;
-     `api.members_reorder(actor, profile_ids uuid[])`, which re-spaces `sort_order` in steps
-     of ten; `api.member_set_role(actor, profile, role)` (a guardian is always
-     `kind = adult`; refused when it would leave no guardian with an account; demoting ends
-     that profile's PIN window); `api.member_deactivate` and `_reactivate`
-     (`active = false`: off the board, the avatar rows, rotations and new assignments, with
-     history and points kept; refused for a profile with an account, whose adult leaves
-     first, J6). The views and the materialiser skip inactive profiles.
-   - App: Einstellungen → Mitglieder → a person opens a member page (name, colour, avatar,
-     Kind/Erwachsen, role, baseline, invite, second-factor reset, *Nicht mehr dabei*), and
-     the list reorders by dragging. Members change their own name, colour and avatar;
-     everything else is a guardian action (the PIN on shared devices).
-   - Tests: pgTAP for each function (a member edits only themselves, the last guardian, an
-     inactive member drops out of rotations); a widget test for the reorder.
-2. **The family and its devices can be renamed** (H1: "changed in Settings later").
-   `api.household_update(actor, name, timezone, locale)`; `api.device_rename(actor, device,
-   label)`; the device list shows `last_seen_at` ("zuletzt aktiv vor 3 Tagen"), so the
-   "revoke the old phone" of J4 is an informed choice. App: Einstellungen → Familie (name,
-   timezone, beside export and delete) and a rename action on each device.
-3. **Shopping structure is editable** (FR-4.4, [21](21-household-settings.md#shopping):
-   "Lists can be renamed, added and removed"). Lists can be created and made the default,
-   but not renamed or removed; categories cannot be added, renamed or put in walking order;
-   and a typo the catalogue learned stays a tile for ever.
-   - Migration: `api.shopping_list_update(actor, list, name)`; `api.shopping_list_delete`
-     (never the default; its open items move to the default list);
-     `api.shopping_category_save(actor, list, id, name, icon)`, `_delete` (its items become
-     uncategorised) and `api.shopping_categories_reorder(actor, list, ids uuid[])`;
-     `api.catalog_item_update(actor, item, name, category)` and `_delete` (the tile goes; the
-     history keeps its text). Each broadcasts `shopping:changed`. Structure edits are
-     online only; items stay offline-capable ([ADR-006](adr/ADR-006-offline-strategy.md)),
-     and the mirror refetches the structure on the broadcast.
-   - App: "Liste bearbeiten" from the list switcher (name, default, categories with drag
-     handles, add and remove), and "Nicht mehr vorschlagen" on a tile's long-press sheet.
-4. **Servers without mail can start a family** ([Q48](14-open-questions.md)). This blocks
-   the self-hosting kit. A release installs with `ENABLE_EMAIL_AUTOCONFIRM=false`, so
-   without SMTP E1's code never arrives and no other way creates an account, while
-   [docs/server](../docs/server/index.md) tells operators that no mail is needed.
-   - Server: `make-env.mjs` and `wuselwall install` set `ENABLE_EMAIL_AUTOCONFIRM=true` only
-     when no `SMTP_HOST` is given; the discovery document gains `sign_in.email_code`, false
-     when Auth's settings report `mailer_autoconfirm`.
-   - App: on such a server E1 is email and password, for sign-up and sign-in alike; E2 and
-     E3 are skipped.
-   - Safety: with autoconfirm any typed address counts as confirmed, so H0's automatic
-     invitation match is off on these servers (`api.my_account` lists no pending invitations
-     by email). Invitations go by link, QR or code only.
-   - A forgotten password: `api.member_password_reset_create(actor, profile)` gives a
-     guardian on a personal device a one-time code (10 minutes, single use) for an adult of
-     the household. A `password-reset` Edge Function (anon, rate-limited) redeems the code
-     with a new password. It uses the service role and acts only on that profile's Auth user,
-     so it joins the list of service-role functions in `CLAUDE.md`.
-   - Docs: `docs/server` (index and extras) and [20](20-onboarding.md#choosing-the-server)
-     corrected in both guide languages (DE/EN), with no expansion of that matrix to FR/ES.
-   - Tests: Deno tests for the discovery flag; pgTAP for the reset code (single use,
-     expiry, guardian only, cross-household); the J1 integration test once more on a stack
-     with autoconfirm.
-5. **Approvals reach a guardian without push** ([Q47](14-open-questions.md)). With local
-   reminders only, a child's reward request and a chore waiting for verification sit in
-   Aufgaben → Freigaben until a guardian happens to look, and the child's "wartet auf
-   Freigabe" turns into "it never works". `api.notices` gains two derived kinds,
-   `redemption_pending` and `verification_pending` (a count and the oldest, for guardians;
-   gone once decided, so no dismissal), shown as one card on Today. The Tasks tab carries the
-   count as a badge, and the local morning summary adds "2 Freigaben warten" from the data
-   loaded when it was planned.
-6. **The wall survives a reboot without network** (FR-8.10, NFR-3). The last good board is
-   kept in memory only, so a tablet that restarts during an outage (a power cut takes the
-   router down too) shows an error instead of the week. Store the last `board_week` JSON on
-   the device (drift, as the shopping mirror does), show it at cold start with the
-   "zuletzt aktualisiert" marker, and do the same for the kid home's day. Test: a widget
-   test that starts with a failing repository and a stored board.
-7. **Onboarding loose ends** from [20](20-onboarding.md#failures-and-interruptions): the
-   local H1 draft for an account that closed the app before H1; the single-guardian warning
-   when turning on TOTP (J4); the getting-started reminders row, done when this device has
-   granted the notification permission. Passkeys (E3's third option, the getting-started
-   item) stay behind the real-device test of step 5.7.
-8. **The account-deletion web page** that Google Play requires
-   ([20 J6](20-onboarding.md#j6--leave)): `/konto-loeschen` and `/en/delete-account` on the
-   website, with `paths` entries and strings in `website/src/i18n/index.ts`. It explains
-   Einstellungen → Konto → Konto löschen and Familie löschen, and that each family's data
-   lives on its own server, whose operator answers requests; the project holds none. Needed
-   for the Data safety form of the Play closed test, so before the first store upload, not
-   at the gate.
-9. **The release checklist** that NFR-17, M1.0 and M1.6 refer to and that does not exist
-   yet: `specs/22-release-checklist.md`. The device matrix (iPhone, iPad, an Android phone,
-   the wall tablet, the web build); J1–J3 timed by someone new to the build, with every
-   hesitation written down; email-code sign-in on real devices; an invitation link and
-   a pairing QR opened from the camera app on both platforms (universal links, App Links); a
-   wall reboot with the network off (slice 6); a local reminder firing; the TestFlight expiry
-   date; the date of the last restore drill. Each release links its filled-in copy in its
-   GitHub release notes.
-10. **Retire the one-release leftovers**, once a store build with pairing and invitations
-    has been out for one release: the wizard and `api.setup_household`, `api.enrol_device`
-    and `api.devices_create_enrolment_code`, the code-entry screen and "Code für ein älteres
-    Gerät erzeugen". Raise `api_version` and `min_app_version`; the catalogue test's anon
-    list becomes `health, invitation_preview, pairing_poll, pairing_start, server_info`.
-11. **The adult register on a wide screen** ([09](09-clients-and-ux.md#one-application-three-registers)).
-    At 840 px and wider (the web build, an iPad set up as *Tablet für alle*), a
-    `NavigationRail` replaces the six-item bottom bar. Keyboard shortcuts and bulk editing,
-    which 09 used to promise, are M3.
-
-**Done when** the pilot household can correct every name, colour, order and list it
-entered during J1 without help; a fresh server release without SMTP takes a family from S0
-to Today; a reward request is seen by a guardian the same day without anyone opening the
-Tasks tab; and the wall shows the week after a power cut, with the router still off.
-
----
-
-## Step 11 — A lighter day (M1.5)
-
-*Added 2026-10-24 with [ADR-020](adr/ADR-020-a-lighter-day.md). Built 2026-10-24 on
-`feat/a-lighter-day`, after M1.6 rather than before it (M1.6 was largely done): every slice
-below, with the exceptions listed in [ADR-020's amendment](adr/ADR-020-a-lighter-day.md#amendment-2026-10-24-built).*
-This step makes the app
-warmer before the pilot household lives with it. The specs are [25](25-wusel.md) (Wusel),
-[26](26-colour-and-ambience.md) (colour, ambience, celebration) and
-[27](27-family-rituals.md) (rituals). It runs after step 10 and before M1.6, as the user
-decided, so every slice has to stay thin. The two weeks of M1.6 judge each part against
-the criteria its spec names ([ADR-020, decision 8](adr/ADR-020-a-lighter-day.md#decision)).
-The architecture rules of step 10 apply to every slice unchanged.
-
-The slices are ordered so that each one is visible on its own, and so that the long pole,
-writing the question decks in four languages, starts on day one.
-
-0. **Start the writing** (in parallel with everything else). Write the DE and EN
-   table-question decks (about 150 questions each, each written in its own language) and the
-   Wusel lines in all four languages, using the voice rules of [25](25-wusel.md#voice). The FR
-   and ES decks come later; until then the Tischfrage is hidden on FR and ES devices
-   ([Q53](14-open-questions.md), [27](27-family-rituals.md#tischfrage)).
-1. **Foundations** ([26](26-colour-and-ambience.md)). Build `motionAllowed(context)`, with
-   today's `disableAnimationsOf` calls moved behind it, and check iOS Reduce Motion on a real
-   iPad first ([Q55](14-open-questions.md)). Add the two spring tokens; the bands, decorative
-   colours and sky stops in `palette.dart`, with every pair in `theme_test.dart`; and a
-   `Feedback` service for sounds and haptics, with the player's latency measured on the kids'
-   tablets before the package is accepted. Add one settings-catalogue migration with every new
-   row of [21](21-household-settings.md#a-lighter-day).
-2. **Wusel drawn** ([25](25-wusel.md#implementation)). Build `WuselLook`, `WuselPose`, the
-   painter, the eight outfits and the `Wusel` widget, with goldens for each pose in three
-   shades. Rename the brand files to `wusel[-dark].svg` and update `scripts/brand-assets.js`.
-   Build a demo page under the demo mode that shows every pose, so the household can meet
-   Wusel before it appears anywhere.
-3. **Colour and celebration.** Add `ModuleHeader` on the top screen of each module, the
-   navigation indicator in the module's colour, and the kid sticker skin. Add
-   `core/ui/confetti.dart` and the celebrations table of
-   [26](26-colour-and-ambience.md#celebrations), wired to the kid task screen, the wall's
-   last-chore moment, badges, rewards and the end of a shopping trip. Add the sounds.
-4. **Wusel in place** ([25, where Wusel appears](25-wusel.md#where-wusel-appears)). Add
-   `EmptyView`'s `wusel` parameter; the kid home greeting; the wall's morning, night and
-   offline moments; the adult special days; and the `member.wusel`, `device.wusel` and outfit
-   settings. Add the widget test that capture routes and the PIN pad have no Wusel.
-5. **Ambience** ([26](26-colour-and-ambience.md#ambience)). Build `ambienceProvider`, the sky
-   painter in the Today header and the board header, the occasions catalogue with Western
-   and Orthodox Easter computed per year and the defaults per country, `ambience.occasions`
-   under *Erweitert*, and `device.pixel_shift` ([Q54](14-open-questions.md)). Unit tests pin
-   both Easter computations against known dates for 2000–2050.
-6. **Birthdays and Vorfreude** ([27](27-family-rituals.md#birthdays)). Migrate
-   `profile.birthday`, `event.countdown` and `event.icon_key`; give `api.member_update` and the
-   event functions the new parameters; add the projected birthday occurrences (board, month
-   view, feed); add `countdowns` in `api.board_week`; build the wall strip, the kid card and
-   the Today line. Raise `api_version` here, once, for slices 6–10 together, which merge as one
-   release.
-7. **Traditions** ([27](27-family-rituals.md#familientraditionen)). Add `event.tradition`,
-   `tradition_meal`, the localised starter set, the ribbon on the board and the planner's
-   suggestion.
-8. **Wunschessen** ([27](27-family-rituals.md#wunschessen)). Add `meal_wish`, the
-   `api.meal_wish_*` functions with their pgTAP, the kid card and picker, the planner's tray,
-   the card on Today, and the star on the board.
-9. **Tischfrage** ([27](27-family-rituals.md#tischfrage)). Add the deck assets, the household
-   shuffle, the wall card with Wusel, the kid and Today cards, `table_question` with its two
-   functions, and hiding.
-10. **Wochenrückblick** ([27](27-family-rituals.md#wochenrückblick)). Add `api.week_review`
-    with pgTAP, including a test that no member's line ever carries a number another
-    member's line could be compared against. Build the five-card story, the Today and kid
-    cards, and the wall tile.
-11. **Docs and the checklist.** Write the family guide pages *Wusel*, *Rituale* and the
-    module pages' new parts in DE/EN/FR/ES, with screenshots from the demo household (whose
-    demo data gains birthdays, two traditions, a wish and a countdown). Add three lines to the
-    release checklist: Reduce Motion on iOS and Android, sound latency on each tablet, and the
-    wall's CPU use idle for ten minutes with Wusel on and off.
-
-**Done when** a child opening the kid home is greeted by Wusel with something true about
-their day; the last chore of the day ends in a cheer; the wall wakes up in the morning, holds
-a question at dinner and falls asleep at night; a birthday, Ferien and a parent's return
-count down on the wall; the family has entered one tradition and each child one wish; Sunday
-ends with the family's story of its week; and none of it has added a second to adding kitchen
-roll to the list.
-
----
+<details>
+<summary>CI/CD reference and original setup risks</summary>
 
 ## CI/CD at a glance
 
@@ -867,3 +754,5 @@ CI, not in the app, not in a shell history.
 | PL/pgSQL slows feature work | Simple functions take an evening each | Write the first three carefully as templates; generate the rest from them; revisit the escape hatch in ADR-010 |
 | macOS CI minutes run out | Billing warning | iOS builds only on tags already; Codemagic's free tier as an overflow |
 | Self-hosted Supabase upgrade breaks something | Containers fail after `pull` | Images pinned by digest; upgrades only deliberately, after a backup, following the self-hosting changelog |
+
+</details>

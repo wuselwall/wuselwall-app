@@ -4,6 +4,23 @@ Decisions deliberately deferred. Each has a point by which it must be answered, 
 none of them quietly becomes a blocker. Anything that surfaces during implementation
 lands here rather than in the module being built.
 
+## Current decision queue
+
+The [four-milestone roadmap](13-roadmap.md) replaces the old M0/M1/M2 deadlines below.
+Those sections preserve the decision record and stable question IDs; they are not a
+second schedule. The remaining decisions follow the next work package:
+
+| When | Questions | Next action |
+|---|---|---|
+| **3 — Family Alpha: qualification** | Q55–Q57 (decided; native checks) | Check Reduce Motion on a real iPad, sound latency on the tablets and the wall header at two metres |
+| **3 — Family Alpha: qualification** | Q37; household choices Q11/Q12/Q14 | Verify the available child-device distribution route; record display and backup choices privately in the release evidence ([#135](https://github.com/wuselwall/wuselwall-app/issues/135)) |
+| **3 — Family Alpha: learn** | Curated defaults, including Q13 and Q25–Q27 | Review after two weeks of use; preserve household overrides ([#136](https://github.com/wuselwall/wuselwall-app/issues/136)) |
+| **Later, with a real case** | Q15–Q17, Q20, Q28, Q38/Q47, Q43 | Select from [23](23-roadmap-after-alpha.md), without a promised release |
+
+Q48 (no-mail sign-up), Q50 (birthdays) and Q51–Q57 are decided implementation scope,
+not unanswered blockers. Q48 belongs to milestone 1; Q50–Q57 were built with milestone 2. Q53's recorded
+DE/EN-first question-deck exception does not reduce the four-language interface scope.
+
 **Since 2026-10-11, a question whose answer differs between households is a setting.**
 What stays open here is only the *curated default*; each household sets its own value in
 Einstellungen ([21 — Household settings](21-household-settings.md)). All proposed defaults
