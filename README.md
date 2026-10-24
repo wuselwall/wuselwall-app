@@ -56,7 +56,7 @@ building the demo. The default documentation screenshot matrix covers DE/EN/FR/E
 app/               Flutter — iOS, Android and web; three UI registers, de/en/fr/es l10n
 supabase/          migrations (tables in `app`, views and functions in `api`, RLS),
                    Edge Functions, pgTAP tests, seed
-docs/              VitePress family documentation (de/en/fr/es), prepared for GitHub Pages
+docs/              VitePress family documentation (de/en/fr/es), GitHub Pages publishing enabled
 infra/             the compose stack and its layers, jobs, backups
 server/            the operator's tool in a server release: install, update, backup, restore
 scripts/           release builder; remote-* to drive a server over SSH from a checkout
@@ -72,10 +72,11 @@ transaction; the Flutter app holds no business rules. See
 
 The marketing website and its CI/CD live separately in
 [`wuselwall/wuselwall-website`](https://github.com/wuselwall/wuselwall-website).
-Documentation source stays here. Its intended GitHub Pages address is
-`https://docs.wuselwall.app/`; hosting activation is separate from merging this change.
+Documentation source stays in this public repository. GitHub Actions publishing is
+enabled for GitHub Pages at `https://docs.wuselwall.app/` (DE/EN/FR/ES);
+DNS, HTTPS and the first deployment are verified separately before website links switch.
 See the [migration and cutover plan](specs/website-and-docs-migration.md) for prerequisites,
-existing-link preservation and rollback. This split does not change repository visibility.
+existing-link preservation and rollback. Older app releases keep their `/docs/` links.
 
 Start with **01** and **02** to understand what is being built and why. Read **03**
 before writing any code. The module documents (**05**–**07** and **15**) are the

@@ -1,6 +1,7 @@
 # ADR-019: Separate marketing source and publish docs with GitHub Pages
 
-**Status:** Accepted; hosting activation pending operator prerequisites.
+**Status:** Accepted; GitHub Pages activation started 2026-10-24 after the app repository became public.
+See the [cutover status](../website-and-docs-migration.md#activation-status--2026-10-24) for delivery verification.
 
 ## Context
 
