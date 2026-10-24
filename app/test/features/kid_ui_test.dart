@@ -272,6 +272,16 @@ void main() {
       // Reduced motion (the test default): no coin in the overlay.
       expect(find.text('+3'), findsNothing);
       expect(find.text('Rückgängig'), findsOneWidget);
+      // Done, the card keeps full contrast: no strike-through, no fading (specs/26).
+      final title = tester.widget<Text>(find.text('Tisch decken'));
+      expect(title.style?.decoration, isNot(TextDecoration.lineThrough));
+      expect(
+        find.ancestor(
+          of: find.text('Tisch decken'),
+          matching: find.byType(Opacity),
+        ),
+        findsNothing,
+      );
 
       await tester.tap(find.text('Rückgängig'));
       await tester.pumpAndSettle();

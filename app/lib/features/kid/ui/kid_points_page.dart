@@ -66,7 +66,11 @@ class _KidPointsPageState extends ConsumerState<KidPointsPage> {
               ? WuselLines.pick(l10n, WuselMoment.rewardSent)
               : l10n.kidRedeemed;
         });
-        unawaited(container.read(celebrationProvider).cue(Cue.badge));
+        // The badge sound is for a reward redeemed (specs/26); a request that waits
+        // for a grown-up's yes is not there yet, and Wusel's line carries it.
+        if (value != RedemptionStatus.requested) {
+          unawaited(container.read(celebrationProvider).cue(Cue.badge));
+        }
       case Err(:final failure):
         context.showFailure(failure);
     }
