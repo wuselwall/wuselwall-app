@@ -61,7 +61,7 @@ The sky also dresses up for special days. Each occasion has its own switch under
 |---|---|---|
 | **Seasons** | blossom, sun, leaves or snowflakes in the sky | on |
 | **Birthdays** | bunting in the person's colour and a party hat for Wusel | on |
-| **School holidays** | a ribbon, "Holidays!" on the first and "Last day of the holidays" on the last day; on **Today** it sits beside the title | on |
+| **School holidays** | a ribbon, "Holidays!" on the first free day and "School again tomorrow" on the last (weekends and public holidays right before and after count too); on **Today** it sits beside the title | on |
 | **Advent** | candles in the header, one more on each Advent Sunday | by your region |
 | **Easter** | eggs in the hills from two days before to two days after Easter Sunday | by your region |
 | **Orthodox Easter** | the same eggs on the Orthodox date | by your region |

@@ -5469,7 +5469,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get ambienceFerienFirst => 'Ferien!';
 
   @override
-  String get ambienceFerienLast => 'Letzter Ferientag';
+  String get ambienceFerienLast => 'Morgen ist wieder Schule';
 
   @override
   String get shoppingEmptyTapTile =>

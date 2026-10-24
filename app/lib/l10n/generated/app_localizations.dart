@@ -9242,7 +9242,7 @@ abstract class AppLocalizations {
   /// No description provided for @ambienceFerienLast.
   ///
   /// In en, this message translates to:
-  /// **'Last day of the holidays'**
+  /// **'School again tomorrow'**
   String get ambienceFerienLast;
 
   /// No description provided for @shoppingEmptyTapTile.

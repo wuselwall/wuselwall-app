@@ -61,7 +61,7 @@ El cielo también se adorna en días especiales. Cada ocasión tiene su propio i
 |---|---|---|
 | **Estaciones** | flores, sol, hojas o copos de nieve en el cielo | activado |
 | **Cumpleaños** | banderines del color de la persona y un gorro de fiesta para Wusel | activado |
-| **Vacaciones escolares** | una cinta, «¡Vacaciones!» el primer día y «Último día de vacaciones» el último; en **Hoy** aparece junto al título | activado |
+| **Vacaciones escolares** | una cinta, «¡Vacaciones!» el primer día libre y «Mañana vuelve el cole» el último (los fines de semana y festivos justo antes y después también cuentan); en **Hoy** aparece junto al título | activado |
 | **Adviento** | velas en la cabecera, una más cada domingo de Adviento | según vuestra región |
 | **Pascua** | huevos en las colinas, desde dos días antes hasta dos días después del Domingo de Pascua | según vuestra región |
 | **Pascua ortodoxa** | los mismos huevos en la fecha ortodoxa | según vuestra región |

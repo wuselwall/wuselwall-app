@@ -61,7 +61,7 @@ Le ciel se décore aussi pour les jours particuliers. Chaque occasion a son inte
 |---|---|---|
 | **Saisons** | fleurs, soleil, feuilles ou flocons dans le ciel | activé |
 | **Anniversaires** | des fanions à la couleur de la personne et un chapeau de fête pour Wusel | activé |
-| **Vacances scolaires** | un ruban, « Vacances ! » le premier et « Dernier jour de vacances » le dernier jour ; sur **Aujourd’hui** il se place à côté du titre | activé |
+| **Vacances scolaires** | un ruban, « Vacances ! » le premier jour libre et « Demain, c’est l’école » le dernier (les week-ends et jours fériés juste avant et après comptent aussi) ; sur **Aujourd’hui** il se place à côté du titre | activé |
 | **Avent** | des bougies dans l’en-tête, une de plus chaque dimanche de l’Avent | selon votre région |
 | **Pâques** | des œufs dans les collines, deux jours avant et après le dimanche de Pâques | selon votre région |
 | **Pâques orthodoxes** | les mêmes œufs à la date orthodoxe | selon votre région |
