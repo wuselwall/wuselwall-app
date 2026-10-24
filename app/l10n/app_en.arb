@@ -2867,7 +2867,7 @@
   "settingMemberWuselTitle": "Wusel",
   "settingMemberWuselHelp": "How much Wusel shows up for you. Automatic: lively for children, quiet for adults.",
   "settingMemberWuselOutfitTitle": "Wusel's outfit",
-  "settingMemberWuselOutfitHelp": "What Wusel wears when it is talking to you. Every outfit is there from the start.",
+  "settingMemberWuselOutfitHelp": "What Wusel wears when talking to you. Every outfit is there from the start.",
   "settingDeviceWuselTitle": "Wusel on this device",
   "settingDeviceWuselHelp": "How lively Wusel is here while nobody is chosen. A person's own setting wins while they are chosen.",
   "settingDeviceSoundsTitle": "Sounds on this device",
@@ -3040,6 +3040,7 @@
   "wuselAllDone4": "Your list is empty. Time to play!",
   "wuselRewardSent1": "Sent! A grown-up will decide.",
   "wuselRewardSent2": "Your wish is on its way.",
+  "wuselRewardSent3": "Wish sent! Now a grown-up takes a look.",
   "wuselBadge": "A new badge: {badge}!",
   "@wuselBadge": {
     "placeholders": {
@@ -3063,6 +3064,14 @@
   },
   "wuselWallMemberDone2": "All ticked off, {name}. Thanks!",
   "@wuselWallMemberDone2": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "wuselWallMemberDone3": "{name}'s tasks are all done today!",
+  "@wuselWallMemberDone3": {
     "placeholders": {
       "name": {
         "type": "String"
