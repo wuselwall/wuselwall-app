@@ -12,6 +12,8 @@ import 'package:wuselwall/features/tasks/application/task_defaults.dart';
 import 'package:wuselwall/features/tasks/domain/tasks_models.dart';
 import 'package:wuselwall/features/tasks/ui/task_editor.dart';
 import 'package:wuselwall/features/tasks/ui/task_widgets.dart';
+import 'package:wuselwall/features/wusel/ui/family_wusel.dart';
+import 'package:wuselwall/features/wusel/ui/wusel_lines.dart';
 import 'package:wuselwall/l10n/generated/app_localizations.dart';
 import 'package:wuselwall/l10n/generated/app_localizations_de.dart';
 
@@ -511,4 +513,125 @@ void main() {
       await unmountApp(t, container);
     },
   );
+
+  testWidgets(
+    'Wusel cheers for 4 s when a member ticks their last chore on the wall',
+    (t) async {
+      final api = FakeTasksApi(
+        tables: {
+          'task_instances': [
+            instanceRow(id: 'i-1', title: 'Tisch decken', assignee: kidId),
+          ],
+        },
+      );
+      final container = await pumpApp(
+        t,
+        overrides: baseOverrides(
+          identity: FakeIdentityRepository(
+            current: device(
+              deviceClass: DeviceClass.kiosk,
+              register: UiRegister.kiosk,
+            ),
+          ),
+        ),
+        board: FakeBoardRepository(_kioskBoard()),
+        tasks: api,
+      );
+      await t.tap(find.text('Heute offen'));
+      await t.pumpAndSettle();
+
+      final de = lookupAppLocalizations(const Locale('de'));
+      final lines = WuselLines.variants(
+        de,
+        WuselMoment.wallMemberDone,
+        name: 'Anna',
+      );
+      final line = find.descendant(
+        of: find.byType(TaskBoardDetailBody),
+        matching: find.byWidgetPredicate(
+          (w) => w is Text && lines.contains(w.data),
+        ),
+      );
+      final cheer = find.descendant(
+        of: find.byType(TaskBoardDetailBody),
+        matching: find.byType(WuselSays),
+      );
+      expect(line, findsNothing);
+
+      // The server now has the chore ticked; the board refetches after the tick.
+      api.tables['task_instances'] = [
+        instanceRow(
+          id: 'i-1',
+          title: 'Tisch decken',
+          assignee: kidId,
+          status: 'done',
+          completedBy: kidId,
+        ),
+      ];
+      container.read(actingProfileProvider.notifier).select(kidId);
+      await t.pump();
+      await t.tap(find.text('Tisch decken'));
+      await t.pumpAndSettle();
+      expect(cheer, findsOneWidget);
+      expect(line, findsOneWidget);
+
+      // The moment passes; the line stays, plain.
+      await t.pump(const Duration(seconds: 4));
+      await t.pumpAndSettle();
+      expect(cheer, findsNothing);
+      expect(line, findsOneWidget);
+      await unmountApp(t, container);
+    },
+  );
+
+  testWidgets('a column that opens already done does not cheer', (t) async {
+    final api = FakeTasksApi(
+      tables: {
+        'task_instances': [
+          instanceRow(
+            id: 'i-1',
+            title: 'Tisch decken',
+            assignee: kidId,
+            status: 'done',
+            completedBy: kidId,
+          ),
+        ],
+      },
+    );
+    final container = await pumpApp(
+      t,
+      overrides: baseOverrides(
+        identity: FakeIdentityRepository(
+          current: device(
+            deviceClass: DeviceClass.kiosk,
+            register: UiRegister.kiosk,
+          ),
+        ),
+      ),
+      board: FakeBoardRepository(_kioskBoard()),
+      tasks: api,
+    );
+    await t.tap(find.text('Heute offen'));
+    await t.pumpAndSettle();
+    expect(find.byType(TaskBoardDetailBody), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byType(TaskBoardDetailBody),
+        matching: find.byType(WuselSays),
+      ),
+      findsNothing,
+    );
+    // The line is there, as text.
+    final de = lookupAppLocalizations(const Locale('de'));
+    final lines = WuselLines.variants(
+      de,
+      WuselMoment.wallMemberDone,
+      name: 'Anna',
+    );
+    expect(
+      find.byWidgetPredicate((w) => w is Text && lines.contains(w.data)),
+      findsOneWidget,
+    );
+    await unmountApp(t, container);
+  });
 }

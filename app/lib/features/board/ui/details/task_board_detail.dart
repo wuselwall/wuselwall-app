@@ -208,21 +208,17 @@ class _Column extends StatelessWidget {
         : ListView(
             padding: const EdgeInsets.all(Tokens.space2),
             children: [
-              // A member's chores all done: Wusel cheers at the top of their column,
-              // their own moment and nobody else's (specs/25, specs/27 rule 2).
-              if (m != null && tasks.every((t) => t.isTicked))
-                Padding(
-                  padding: const EdgeInsets.only(bottom: Tokens.space2),
-                  child: WuselSays(
-                    line: WuselLines.stable(
-                      l10n,
-                      WuselMoment.wallMemberDone,
-                      seed: _seed(m.id),
-                      name: m.displayName,
-                    ),
-                    pose: WuselPose.cheer,
-                    size: 80,
-                    style: boardUi(24, weight: FontWeight.w700),
+              // A member's chores all done: their own moment and nobody else's
+              // (specs/25, specs/27 rule 2).
+              if (m != null)
+                _MemberDone(
+                  key: ValueKey('member-done-${m.id}'),
+                  done: tasks.every((t) => t.isTicked),
+                  line: WuselLines.stable(
+                    l10n,
+                    WuselMoment.wallMemberDone,
+                    seed: _seed(m.id),
+                    name: m.displayName,
                   ),
                 ),
               for (final t in tasks)
@@ -243,6 +239,63 @@ class _Column extends StatelessWidget {
         padding: const EdgeInsets.all(Tokens.space1),
         child: column,
       ),
+    );
+  }
+}
+
+/// The line over a member's column once their chores are all ticked. Wusel cheers
+/// beside it for [cheerFor] when the last one is ticked while the board is open
+/// (specs/25 "Where Wusel appears", kiosk); a column that opens already done, and the
+/// rest of the day, show the line alone.
+class _MemberDone extends StatefulWidget {
+  const _MemberDone({required this.done, required this.line, super.key});
+
+  final bool done;
+  final String line;
+
+  static const cheerFor = Duration(seconds: 4);
+
+  @override
+  State<_MemberDone> createState() => _MemberDoneState();
+}
+
+class _MemberDoneState extends State<_MemberDone> {
+  Timer? _cheer;
+
+  @override
+  void didUpdateWidget(_MemberDone old) {
+    super.didUpdateWidget(old);
+    if (widget.done && !old.done) {
+      _cheer?.cancel();
+      _cheer = Timer(_MemberDone.cheerFor, () {
+        if (mounted) setState(() => _cheer = null);
+      });
+    } else if (!widget.done) {
+      _cheer?.cancel();
+      _cheer = null;
+    }
+  }
+
+  @override
+  void dispose() {
+    _cheer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!widget.done) return const SizedBox.shrink();
+    final style = boardUi(24, weight: FontWeight.w700);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: Tokens.space2),
+      child: _cheer == null
+          ? Text(widget.line, style: style)
+          : WuselSays(
+              line: widget.line,
+              pose: WuselPose.cheer,
+              size: 80,
+              style: style,
+            ),
     );
   }
 }
