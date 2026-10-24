@@ -51,6 +51,11 @@ and app-demo screenshot exports in all four languages and both themes. The app a
 the localized invitation/pairing routes. Family guides now cover DE/EN/FR/ES; app legal links stay
 on the existing English pages until website publication. Merge and deployment are separate gates.
 
+A lighter day ([ADR-020](adr/ADR-020-a-lighter-day.md), 2026-10-24) is built on its branch:
+Wusel, the colour layers and ambience, celebrations, birthdays and the five rituals of
+[25](25-wusel.md)–[27](27-family-rituals.md), with the exceptions its amendment lists. The
+two-week verdicts of M1.6's "Done when" still need the pilot household's use.
+
 ## A note on the "all four modules at once" decision
 
 You chose to build all four modules in the first release rather than starting with one.
