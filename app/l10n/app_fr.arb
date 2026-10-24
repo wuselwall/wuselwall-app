@@ -36,6 +36,7 @@
     }
   },
   "setupHeadline": "Bienvenue sur WuselWall",
+  "setupOfflineWelcome": "Vous êtes hors ligne. Connectez-vous à Internet pour vous connecter, accepter une invitation ou connecter un appareil partagé. Ces options seront disponibles dès que vous serez de nouveau en ligne.",
   "doorTagline": "Le planning familial sur le mur de la cuisine",
   "setupHouseholdAction": "Créer une nouvelle famille",
   "wizardTitle": "Nouveau foyer",
@@ -2042,6 +2043,11 @@
   "emailWrongCredentials": "L’adresse e-mail ou le mot de passe est incorrect.",
   "emailUseCodeInstead": "Utiliser plutôt un code par e-mail",
   "emailOffline": "Pas de connexion : une connexion est nécessaire pour se connecter par e-mail.",
+  "emailRequired": "Saisissez votre adresse e-mail.",
+  "emailInvalid": "Saisissez une adresse e-mail valide.",
+  "passwordRequired": "Saisissez votre mot de passe.",
+  "emailSendingCode": "Envoi du code…",
+  "signInProgress": "Connexion en cours…",
   "emailCodeTitle": "Code reçu par e-mail",
   "emailCodeSent": "Nous avons envoyé un code à 6 chiffres à {email}. Il est valable 10 minutes.",
   "@emailCodeSent": {

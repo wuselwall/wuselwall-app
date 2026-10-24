@@ -4,6 +4,10 @@ Beim allerersten Start fragt die App, mit welchem Server sie sich verbinden soll
 
 Auf dem Startbildschirm beginnt alles. Du meldest dich mit deinem Konto an, trittst einer Familie per **Einladung** bei oder verbindest ein **geteiltes Gerät**.
 
+Bist du offline, erklärt die Startseite, dass Anmeldung, Einladungen und das Verbinden
+geteilter Geräte eine Internetverbindung brauchen. Diese Wege werden wieder verfügbar,
+sobald du online bist.
+
 <Shot name="setup-start" alt="Startbildschirm von WuselWall" />
 
 Unten öffnet **Datenschutz** die Datenschutzerklärung in deinem Browser. Ohne Verbindung
@@ -17,7 +21,7 @@ Der Startbildschirm hat drei Wege:
 
 ## 1. Anmelden
 
-Tippe auf **Mit E-Mail fortfahren** und gib deine E-Mail-Adresse ein. WuselWall schickt dir einen **6-stelligen Code**. Er gilt **10 Minuten**. Gib ihn ein, dann bist du drin. Kommt er nicht an, schau im Spam-Ordner nach oder tippe auf **Erneut senden**; einen neuen Code gibt es frühestens nach einer Minute.
+Tippe auf **Mit E-Mail fortfahren** und gib eine gültige E-Mail-Adresse ein. Die App prüft das Feld, bevor sie etwas sendet. WuselWall schickt dir einen **6-stelligen Code**. Er gilt **10 Minuten**. Gib ihn ein, dann bist du drin. Kommt er nicht an, schau im Spam-Ordner nach oder tippe auf **Erneut senden**; einen neuen Code gibt es frühestens nach einer Minute.
 
 Lass die Seite mit dem Codefeld geöffnet und übertrage den Code aus der E-Mail dorthin.
 Du brauchst keinen Anmeldelink und keine zweite Anmeldung. Der E-Mail-Code bestätigt
@@ -25,7 +29,7 @@ deine Adresse; er ist etwas anderes als der Einrichtungscode für einen neuen Se
 
 <Shot name="setup-sign-in" alt="Anmeldung mit E-Mail" />
 
-Lieber mit Passwort? Tippe auf **Ich habe ein Passwort**. Das Passwort legst du unter **Einstellungen → Erweitert → Anmeldung** fest, mindestens 10 Zeichen. Der Code per E-Mail bleibt immer möglich.
+Lieber mit Passwort? Tippe auf **Ich habe ein Passwort**. Gib deine E-Mail-Adresse und dein Passwort ein; beide Felder werden vor der Anmeldung geprüft. Das Passwort legst du unter **Einstellungen → Erweitert → Anmeldung** fest, mindestens 10 Zeichen. Der Code per E-Mail bleibt immer möglich.
 
 Beim allerersten Mal fragt WuselWall einmal, wie du dich künftig anmelden möchtest: mit dem **Code per E-Mail** (nichts zu merken) oder mit einem **Passwort**.
 

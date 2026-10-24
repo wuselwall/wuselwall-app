@@ -11,11 +11,29 @@ import 'package:wuselwall/features/identity/domain/models.dart';
 
 /// The calendar tab's body: the grid for the chosen mode. The home page owns the app
 /// bar (its toolbar is [CalendarToolbar]), so this has no Scaffold of its own.
-class CalendarPage extends ConsumerWidget {
+class CalendarPage extends ConsumerStatefulWidget {
   const CalendarPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<CalendarPage> createState() => _CalendarPageState();
+}
+
+class _CalendarPageState extends ConsumerState<CalendarPage> {
+  bool? _lastCompact;
+
+  @override
+  Widget build(BuildContext context) {
+    final compact = MediaQuery.sizeOf(context).width < 600;
+    if (_lastCompact != compact) {
+      _lastCompact = compact;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        ref
+            .read(calendarViewProvider.notifier)
+            .setResponsiveMode(compact ? CalendarMode.day : CalendarMode.week);
+      });
+    }
+
     final view = ref.watch(calendarViewProvider);
     final window = (from: view.from, to: view.to);
     final occurrences = ref.watch(occurrencesProvider(window));

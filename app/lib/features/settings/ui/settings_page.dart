@@ -67,214 +67,230 @@ class SettingsPage extends ConsumerWidget {
         thisDevice?.deviceClass == DeviceClass.personal &&
         ref.watch(notificationSchedulerProvider).available;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.settingsTitle),
-        leading: BackButton(onPressed: () => context.go(Routes.home)),
-        actions: const [SettingsViewSwitch()],
-      ),
-      // One scrollable: the member rows are a sliver reorderable list in the middle, so
-      // dragging works without a nested list of its own.
-      body: CustomScrollView(
-        slivers: [
-          SliverPadding(
-            padding: const EdgeInsets.fromLTRB(
-              Tokens.space4,
-              Tokens.space4,
-              Tokens.space4,
-              0,
-            ),
-            sliver: SliverList.list(
-              children: [
-                _Header(
-                  title: l10n.settingsSectionFamily,
-                  action: const SizedBox.shrink(),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.tune),
-                  title: Text(l10n.householdSettingsTitle),
-                  subtitle: Text(l10n.householdSettingsSubtitle),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => context.go(Routes.householdSettings),
-                ),
-                ListTile(
-                  key: const ValueKey('settings-family'),
-                  leading: const Icon(Icons.family_restroom_outlined),
-                  title: Text(l10n.familyTitle),
-                  subtitle: Text(l10n.familySettingsSubtitle),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => context.go(Routes.family),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.home_outlined),
-                  title: Text(l10n.baselineTitle),
-                  subtitle: Text(l10n.baselineSettingsSubtitle),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => context.go(Routes.baselines),
-                ),
-                const SizedBox(height: Tokens.space6),
-                _Header(
-                  title: l10n.settingsMembers,
-                  action: IconButton(
-                    tooltip: l10n.addMember,
-                    icon: const Icon(Icons.person_add_alt_1),
-                    onPressed: () => _addMember(context, ref),
-                  ),
-                ),
-                Text(
-                  l10n.settingsMembersHint,
-                  style: theme.textTheme.bodySmall,
-                ),
-              ],
-            ),
+    return PopScope<Object?>(
+      // Settings can also be opened directly (for example from a deep link). In that
+      // case the platform Back gesture has no home route to pop to.
+      canPop: context.canPop(),
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) context.go(Routes.home);
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(l10n.settingsTitle),
+          leading: BackButton(
+            onPressed: () {
+              if (context.canPop()) {
+                context.pop();
+              } else {
+                context.go(Routes.home);
+              }
+            },
           ),
-          const SliverPadding(
-            padding: EdgeInsets.symmetric(horizontal: Tokens.space4),
-            sliver: _MembersList(),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.fromLTRB(
-              Tokens.space4,
-              0,
-              Tokens.space4,
-              Tokens.space4,
-            ),
-            sliver: SliverList.list(
-              children: [
-                const SizedBox(height: Tokens.space6),
-                _Header(
-                  title: l10n.settingsDevices,
-                  action: canApprove
-                      ? const SizedBox.shrink()
-                      : IconButton(
-                          tooltip: l10n.addDevice,
-                          icon: const Icon(Icons.add_to_home_screen),
-                          onPressed: () => _addDevice(context, ref),
-                        ),
-                ),
-                // J3: the new device shows the code, this phone approves it. The code the old
-                // way stays for one release, for devices on an older app.
-                if (canApprove) ...[
-                  FilledButton.icon(
-                    key: const ValueKey('connect-device'),
-                    onPressed: () => context.push<void>(Routes.devicePair),
-                    icon: const Icon(Icons.add_to_home_screen),
-                    label: Text(l10n.pairConnectAction),
-                  ),
-                  if (advanced)
-                    TextButton(
-                      onPressed: () => _addDevice(context, ref),
-                      child: Text(l10n.pairOldCodeAction),
-                    ),
-                  const SizedBox(height: Tokens.space2),
-                ],
-                AsyncValueView<List<DeviceEntry>>(
-                  value: devices,
-                  onRetry: () => ref.invalidate(devicesProvider),
-                  data: (list) => Column(
-                    children: [
-                      for (final d in list)
-                        _DeviceTile(
-                          key: ValueKey('device-${d.id}'),
-                          device: d,
-                          isThis: d.id == thisDevice?.deviceId,
-                          onRename: () => _renameDevice(context, ref, d),
-                          onRevoke: () => _revoke(context, ref, d),
-                        ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: Tokens.space6),
-                _Header(
-                  title: l10n.settingsSectionThisDevice,
-                  action: const SizedBox.shrink(),
-                ),
-                if (reminders)
-                  ListTile(
-                    leading: const Icon(Icons.notifications_outlined),
-                    title: Text(l10n.reminderSettingsTitle),
-                    subtitle: Text(l10n.reminderSettingsSubtitle),
-                    trailing: const Icon(Icons.chevron_right),
-                    onTap: () => context.go(Routes.reminders),
-                  ),
-                const LanguageTile(),
-                const AppearanceTile(),
-                ListTile(
-                  leading: const Icon(Icons.flag_outlined),
-                  title: Text(l10n.settingsGettingStarted),
-                  subtitle: Text(l10n.settingsGettingStartedSubtitle),
-                  onTap: () => _showGettingStarted(context, ref),
-                ),
-                const _VersionsTile(),
-                ListTile(
-                  leading: const Icon(Icons.gavel_outlined),
-                  title: Text(l10n.settingsLicenses),
-                  subtitle: Text(l10n.settingsLicensesSubtitle),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => showLicensePage(
-                    context: context,
-                    applicationName: 'WuselWall',
-                    applicationLegalese:
-                        'Copyright 2026 Daniel Huser and the WuselWall contributors.\n'
-                        'Licensed under the Apache License, Version 2.0.',
-                  ),
-                ),
-                if (advanced) ...[
-                  const SizedBox(height: Tokens.space6),
+          actions: const [SettingsViewSwitch()],
+        ),
+        // One scrollable: the member rows are a sliver reorderable list in the middle, so
+        // dragging works without a nested list of its own.
+        body: CustomScrollView(
+          slivers: [
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(
+                Tokens.space4,
+                Tokens.space4,
+                Tokens.space4,
+                0,
+              ),
+              sliver: SliverList.list(
+                children: [
                   _Header(
-                    title: l10n.settingsSectionConnect,
+                    title: l10n.settingsSectionFamily,
                     action: const SizedBox.shrink(),
                   ),
                   ListTile(
-                    leading: const Icon(Icons.rss_feed),
-                    title: Text(l10n.feedTitle),
-                    subtitle: Text(l10n.feedSettingsSubtitle),
+                    leading: const Icon(Icons.tune),
+                    title: Text(l10n.householdSettingsTitle),
+                    subtitle: Text(l10n.householdSettingsSubtitle),
                     trailing: const Icon(Icons.chevron_right),
-                    onTap: () => context.go(Routes.feedTokens),
+                    onTap: () => context.go(Routes.householdSettings),
                   ),
                   ListTile(
-                    leading: const Icon(Icons.cloud_download_outlined),
-                    title: Text(l10n.extCalTitle),
-                    subtitle: Text(l10n.extCalSettingsSubtitle),
+                    key: const ValueKey('settings-family'),
+                    leading: const Icon(Icons.family_restroom_outlined),
+                    title: Text(l10n.familyTitle),
+                    subtitle: Text(l10n.familySettingsSubtitle),
                     trailing: const Icon(Icons.chevron_right),
-                    onTap: () => context.go(Routes.externalCalendars),
+                    onTap: () => context.go(Routes.family),
                   ),
-                  if (thisDevice?.deviceClass != DeviceClass.kiosk)
-                    ListTile(
-                      leading: const Icon(Icons.hub_outlined),
-                      title: Text(l10n.shortcutTitle),
-                      subtitle: Text(l10n.shortcutSettingsSubtitle),
-                      trailing: const Icon(Icons.chevron_right),
-                      onTap: () => context.go(Routes.shortcuts),
+                  ListTile(
+                    leading: const Icon(Icons.home_outlined),
+                    title: Text(l10n.baselineTitle),
+                    subtitle: Text(l10n.baselineSettingsSubtitle),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => context.go(Routes.baselines),
+                  ),
+                  const SizedBox(height: Tokens.space6),
+                  _Header(
+                    title: l10n.settingsMembers,
+                    action: IconButton(
+                      tooltip: l10n.addMember,
+                      icon: const Icon(Icons.person_add_alt_1),
+                      onPressed: () => _addMember(context, ref),
                     ),
-                  const _ServerSection(),
-                  if (thisDevice?.deviceClass == DeviceClass.personal) ...[
-                    const SizedBox(height: Tokens.space6),
-                    const _SignInMethodsSection(),
-                    const LeaveFamilyTile(),
-                    const DeleteAccountTile(),
-                    const SizedBox(height: Tokens.space6),
-                    const _SecuritySection(),
-                  ],
-                ] else ...[
-                  // Account deletion stays easy to find (App Store guideline 5.1.1(v)).
-                  if (thisDevice?.deviceClass == DeviceClass.personal)
-                    const DeleteAccountTile(),
-                  const MoreSettingsHint(),
+                  ),
+                  Text(
+                    l10n.settingsMembersHint,
+                    style: theme.textTheme.bodySmall,
+                  ),
                 ],
-                const SizedBox(height: Tokens.space6),
-                OutlinedButton.icon(
-                  onPressed: () =>
-                      thisDevice?.deviceClass == DeviceClass.personal
-                      ? ref.read(identityRepositoryProvider).signOutDevice()
-                      : ref.read(identityRepositoryProvider).signOut(),
-                  icon: const Icon(Icons.logout),
-                  label: Text(l10n.signOutDevice),
-                ),
-              ],
+              ),
             ),
-          ),
-        ],
+            const SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: Tokens.space4),
+              sliver: _MembersList(),
+            ),
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(
+                Tokens.space4,
+                0,
+                Tokens.space4,
+                Tokens.space4,
+              ),
+              sliver: SliverList.list(
+                children: [
+                  const SizedBox(height: Tokens.space6),
+                  _Header(
+                    title: l10n.settingsDevices,
+                    action: canApprove
+                        ? const SizedBox.shrink()
+                        : IconButton(
+                            tooltip: l10n.addDevice,
+                            icon: const Icon(Icons.add_to_home_screen),
+                            onPressed: () => _addDevice(context, ref),
+                          ),
+                  ),
+                  // J3: the new device shows the code, this phone approves it. The code the old
+                  // way stays for one release, for devices on an older app.
+                  if (canApprove) ...[
+                    FilledButton.icon(
+                      key: const ValueKey('connect-device'),
+                      onPressed: () => context.push<void>(Routes.devicePair),
+                      icon: const Icon(Icons.add_to_home_screen),
+                      label: Text(l10n.pairConnectAction),
+                    ),
+                    if (advanced)
+                      TextButton(
+                        onPressed: () => _addDevice(context, ref),
+                        child: Text(l10n.pairOldCodeAction),
+                      ),
+                    const SizedBox(height: Tokens.space2),
+                  ],
+                  AsyncValueView<List<DeviceEntry>>(
+                    value: devices,
+                    onRetry: () => ref.invalidate(devicesProvider),
+                    data: (list) => Column(
+                      children: [
+                        for (final d in list)
+                          _DeviceTile(
+                            key: ValueKey('device-${d.id}'),
+                            device: d,
+                            isThis: d.id == thisDevice?.deviceId,
+                            onRename: () => _renameDevice(context, ref, d),
+                            onRevoke: () => _revoke(context, ref, d),
+                          ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: Tokens.space6),
+                  _Header(
+                    title: l10n.settingsSectionThisDevice,
+                    action: const SizedBox.shrink(),
+                  ),
+                  if (reminders)
+                    ListTile(
+                      leading: const Icon(Icons.notifications_outlined),
+                      title: Text(l10n.reminderSettingsTitle),
+                      subtitle: Text(l10n.reminderSettingsSubtitle),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () => context.go(Routes.reminders),
+                    ),
+                  const LanguageTile(),
+                  const AppearanceTile(),
+                  ListTile(
+                    leading: const Icon(Icons.flag_outlined),
+                    title: Text(l10n.settingsGettingStarted),
+                    subtitle: Text(l10n.settingsGettingStartedSubtitle),
+                    onTap: () => _showGettingStarted(context, ref),
+                  ),
+                  const _VersionsTile(),
+                  ListTile(
+                    leading: const Icon(Icons.gavel_outlined),
+                    title: Text(l10n.settingsLicenses),
+                    subtitle: Text(l10n.settingsLicensesSubtitle),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => showLicensePage(
+                      context: context,
+                      applicationName: 'WuselWall',
+                      applicationLegalese:
+                          'Copyright 2026 Daniel Huser and the WuselWall contributors.\n'
+                          'Licensed under the Apache License, Version 2.0.',
+                    ),
+                  ),
+                  if (advanced) ...[
+                    const SizedBox(height: Tokens.space6),
+                    _Header(
+                      title: l10n.settingsSectionConnect,
+                      action: const SizedBox.shrink(),
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.rss_feed),
+                      title: Text(l10n.feedTitle),
+                      subtitle: Text(l10n.feedSettingsSubtitle),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () => context.go(Routes.feedTokens),
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.cloud_download_outlined),
+                      title: Text(l10n.extCalTitle),
+                      subtitle: Text(l10n.extCalSettingsSubtitle),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () => context.go(Routes.externalCalendars),
+                    ),
+                    if (thisDevice?.deviceClass != DeviceClass.kiosk)
+                      ListTile(
+                        leading: const Icon(Icons.hub_outlined),
+                        title: Text(l10n.shortcutTitle),
+                        subtitle: Text(l10n.shortcutSettingsSubtitle),
+                        trailing: const Icon(Icons.chevron_right),
+                        onTap: () => context.go(Routes.shortcuts),
+                      ),
+                    const _ServerSection(),
+                    if (thisDevice?.deviceClass == DeviceClass.personal) ...[
+                      const SizedBox(height: Tokens.space6),
+                      const _SignInMethodsSection(),
+                      const LeaveFamilyTile(),
+                      const DeleteAccountTile(),
+                      const SizedBox(height: Tokens.space6),
+                      const _SecuritySection(),
+                    ],
+                  ] else ...[
+                    // Account deletion stays easy to find (App Store guideline 5.1.1(v)).
+                    if (thisDevice?.deviceClass == DeviceClass.personal)
+                      const DeleteAccountTile(),
+                    const MoreSettingsHint(),
+                  ],
+                  const SizedBox(height: Tokens.space6),
+                  OutlinedButton.icon(
+                    onPressed: () =>
+                        thisDevice?.deviceClass == DeviceClass.personal
+                        ? ref.read(identityRepositoryProvider).signOutDevice()
+                        : ref.read(identityRepositoryProvider).signOut(),
+                    icon: const Icon(Icons.logout),
+                    label: Text(l10n.signOutDevice),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

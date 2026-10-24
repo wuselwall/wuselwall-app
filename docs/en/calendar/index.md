@@ -6,7 +6,7 @@ The calendar is the adults' home screen: everyone's appointments and, at a glanc
 
 ## Views
 
-The title, date navigation, view selector and settings share one compact bar. On phones, open **Calendar view** to choose **Day**, **3 days** or **Week**; the calendar icon returns to **Today**.
+The title, date navigation, view selector and settings share one compact bar. On a phone, the calendar opens in **Day** so appointments are easy to read. Open **Calendar view** to choose **Day**, **3 days** or **Week** at any time; on a wide screen it opens in Week. Your choice stays when you switch tabs or rotate the device. The calendar icon returns to **Today**.
 
 <Shot name="calendar-phone" alt="Calendar on a phone with date navigation and the view menu in one bar" />
 

@@ -15,11 +15,11 @@ WuselWall reúne el **calendario**, el **horario escolar**, las **tareas**, las 
 
 ## Hoy y los primeros pasos {#today-and-getting-started}
 
-**Hoy** es la primera página de los adultos. Muestra las citas, las tareas para marcar, la comida caliente y los productos pendientes.
+**Hoy** es la primera página de los adultos. Muestra las citas, las tareas para marcar, la comida caliente y los productos pendientes. La hora aparece encima del título de la cita para seguir siendo legible con letra más grande.
 
 <Shot name="today" alt="La pestaña Hoy con los primeros pasos, las citas y la comida caliente" />
 
-La tarjeta **Primeros pasos** aparece mientras falte configurar algo: invitar a un adulto, conectar una tableta, preparar la pantalla de pared, definir el PIN, suscribirse al calendario o añadir el horario escolar. Cada paso desaparece al terminarlo. También puedes indicar que no lo necesitas. Los responsables adultos la ven en su móvil y en dispositivos compartidos. **Ajustes → Primeros pasos** permite recuperarla.
+La tarjeta **Primeros pasos** aparece mientras falte configurar algo: invitar a un adulto, conectar una tableta, preparar la pantalla de pared, definir el PIN, suscribirse al calendario o añadir el horario escolar. Cada paso desaparece al terminarlo. También puedes indicar que no lo necesitas. En pantallas estrechas o con letra más grande, los botones aparecen debajo del texto. Los responsables adultos la ven en su móvil y en dispositivos compartidos. **Ajustes → Primeros pasos** permite recuperarla.
 
 ## El hogar {#the-household}
 

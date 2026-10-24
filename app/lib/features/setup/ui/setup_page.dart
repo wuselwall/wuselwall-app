@@ -58,6 +58,28 @@ class _SetupPageState extends ConsumerState<SetupPage> {
                 Text(l10n.setupHeadline, style: theme.textTheme.headlineSmall),
                 const SizedBox(height: Tokens.space2),
                 Text(l10n.doorTagline),
+                if (!online) ...[
+                  const SizedBox(height: Tokens.space4),
+                  Semantics(
+                    container: true,
+                    liveRegion: true,
+                    child: Container(
+                      padding: const EdgeInsets.all(Tokens.space3),
+                      color: theme.colorScheme.surfaceContainerHighest,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.wifi_off,
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                          const SizedBox(width: Tokens.space3),
+                          Expanded(child: Text(l10n.setupOfflineWelcome)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
                 const SizedBox(height: Tokens.space6),
                 // E1: the address, then a code by e-mail (E2, E3).
                 OutlinedButton.icon(

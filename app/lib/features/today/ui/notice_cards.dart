@@ -55,27 +55,59 @@ class _NoticeCard extends ConsumerWidget {
       margin: const EdgeInsets.only(bottom: Tokens.space3),
       child: Padding(
         padding: const EdgeInsets.all(Tokens.space3),
-        child: Row(
-          children: [
-            Icon(icon, color: theme.colorScheme.primary),
-            const SizedBox(width: Tokens.space3),
-            Expanded(
-              child: Text(
-                text,
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final effectiveWidth =
+                constraints.maxWidth /
+                MediaQuery.textScalerOf(context).scale(1);
+            final stackActions = effectiveWidth < 500;
+            final message = Text(
+              text,
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w700,
               ),
-            ),
-            TextButton(
+            );
+            final settingsButton = TextButton(
               onPressed: () => unawaited(context.push<void>(Routes.settings)),
               child: Text(linkLabel),
-            ),
-            TextButton(
+            );
+            final dismissButton = TextButton(
               onPressed: () => unawaited(_dismiss(context, ref)),
               child: Text(l10n.todayNoticeDismiss),
-            ),
-          ],
+            );
+
+            if (stackActions) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(icon, color: theme.colorScheme.primary),
+                      const SizedBox(width: Tokens.space3),
+                      Expanded(child: message),
+                    ],
+                  ),
+                  const SizedBox(height: Tokens.space1),
+                  Wrap(
+                    alignment: WrapAlignment.end,
+                    spacing: Tokens.space1,
+                    children: [settingsButton, dismissButton],
+                  ),
+                ],
+              );
+            }
+
+            return Row(
+              children: [
+                Icon(icon, color: theme.colorScheme.primary),
+                const SizedBox(width: Tokens.space3),
+                Expanded(child: message),
+                settingsButton,
+                dismissButton,
+              ],
+            );
+          },
         ),
       ),
     );

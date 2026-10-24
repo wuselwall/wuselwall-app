@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
+import 'package:wuselwall/features/calendar/application/calendar_providers.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 import 'package:wuselwall/features/calendar/ui/calendar_board.dart';
+import 'package:wuselwall/features/home/application/home_tab.dart';
+import 'package:wuselwall/l10n/generated/app_localizations_de.dart';
 
 import '../support/fakes.dart';
 
@@ -58,6 +61,78 @@ Finder textWith(String needle) => find.byWidgetPredicate(
 );
 
 void main() {
+  test(
+    'calendar ranges and navigation use local calendar days across fall DST',
+    () {
+      final view = CalendarView(
+        mode: CalendarMode.threeDays,
+        anchor: DateTime(2026, 10, 24),
+      );
+
+      expect(view.from, DateTime(2026, 10, 24));
+      expect(view.to, DateTime(2026, 10, 26));
+      expect(view.days, [
+        DateTime(2026, 10, 24),
+        DateTime(2026, 10, 25),
+        DateTime(2026, 10, 26),
+      ]);
+      expect(view.shifted(-1).days, [
+        DateTime(2026, 10, 21),
+        DateTime(2026, 10, 22),
+        DateTime(2026, 10, 23),
+      ]);
+      expect(view.shifted(1).days, [
+        DateTime(2026, 10, 27),
+        DateTime(2026, 10, 28),
+        DateTime(2026, 10, 29),
+      ]);
+      final week = CalendarView(
+        mode: CalendarMode.week,
+        anchor: DateTime(2026, 10, 25),
+      );
+      expect(week.from, DateTime(2026, 10, 19));
+      expect(week.to, DateTime(2026, 10, 25));
+      expect(week.days.first, DateTime(2026, 10, 19));
+      expect(week.days.last, DateTime(2026, 10, 25));
+    },
+  );
+
+  test(
+    'calendar ranges and navigation use local calendar days across spring DST',
+    () {
+      final view = CalendarView(
+        mode: CalendarMode.threeDays,
+        anchor: DateTime(2026, 3, 28),
+      );
+
+      expect(view.from, DateTime(2026, 3, 28));
+      expect(view.to, DateTime(2026, 3, 30));
+      expect(view.days, [
+        DateTime(2026, 3, 28),
+        DateTime(2026, 3, 29),
+        DateTime(2026, 3, 30),
+      ]);
+      expect(view.shifted(-1).days, [
+        DateTime(2026, 3, 25),
+        DateTime(2026, 3, 26),
+        DateTime(2026, 3, 27),
+      ]);
+      expect(view.shifted(1).days, [
+        DateTime(2026, 3, 31),
+        DateTime(2026, 4, 1),
+        DateTime(2026, 4, 2),
+      ]);
+      final week = CalendarView(
+        mode: CalendarMode.week,
+        anchor: DateTime(2026, 3, 29),
+      );
+      expect(week.from, DateTime(2026, 3, 23));
+      expect(week.to, DateTime(2026, 3, 29));
+      expect(week.days.first, DateTime(2026, 3, 23));
+      expect(week.days.last, DateTime(2026, 3, 29));
+    },
+  );
+
   testWidgets('a presence band across two days renders its label once', (
     t,
   ) async {
@@ -160,11 +235,66 @@ void main() {
       ]),
     );
     await openTab(t, 'Kalender');
+    await t.tap(find.byTooltip(_de.calendarChooseView));
+    await t.pumpAndSettle();
+    await _chooseMode(t, _de.calendarWeek);
 
     expect(t.takeException(), isNull);
     expect(find.text('Elternabend'), findsOneWidget);
     // Too narrow for a title: the block shows its first attendee's initial.
     expect(find.text('P'), findsWidgets);
+  });
+
+  testWidgets(
+    'phone starts in Day and explicit mode survives tab changes and rotation',
+    (t) async {
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+      final container = await pumpApp(
+        t,
+        size: const Size(390, 844),
+        overrides: baseOverrides(
+          identity: FakeIdentityRepository(current: device()),
+        ),
+        calendar: FakeCalendarRepository([
+          occ(
+            title: 'Dentist appointment',
+            day: today,
+            from: const TimeOfDay(hour: 10, minute: 0),
+            to: const TimeOfDay(hour: 11, minute: 0),
+            attendees: const [guardianId],
+          ),
+        ]),
+      );
+      await openTab(t, 'Kalender');
+      expect(container.read(calendarViewProvider).mode, CalendarMode.day);
+      expect(find.text('Dentist appointment'), findsOneWidget);
+
+      await t.tap(find.byTooltip(_de.calendarChooseView));
+      await t.pumpAndSettle();
+      await _chooseMode(t, _de.calendarThreeDays);
+      expect(container.read(calendarViewProvider).mode, CalendarMode.threeDays);
+      container.read(homeTabProvider.notifier).select(HomeTab.shopping);
+      await t.pumpAndSettle();
+      container.read(homeTabProvider.notifier).select(HomeTab.calendar);
+      await t.pumpAndSettle();
+
+      t.view.physicalSize = const Size(1000, 844);
+      await t.pumpAndSettle();
+      expect(container.read(calendarViewProvider).mode, CalendarMode.threeDays);
+    },
+  );
+
+  testWidgets('wide calendar starts in Week', (t) async {
+    final container = await pumpApp(
+      t,
+      size: const Size(1000, 844),
+      overrides: baseOverrides(
+        identity: FakeIdentityRepository(current: device()),
+      ),
+    );
+    await openTab(t, 'Kalender');
+    expect(container.read(calendarViewProvider).mode, CalendarMode.week);
   });
 
   testWidgets('the grid opens at 07:00 when the first appointment is later', (
@@ -202,8 +332,21 @@ void main() {
   });
 }
 
+final _de = AppLocalizationsDe();
+
 /// The text a Text widget found by [finder] shows, plain.
 String plainText(WidgetTester t, Finder finder) {
   final w = t.widget<Text>(finder);
   return w.data ?? w.textSpan!.toPlainText();
+}
+
+Future<void> _chooseMode(WidgetTester tester, String label) async {
+  final menuItem = find.ancestor(
+    of: find.text(label),
+    matching: find.byWidgetPredicate(
+      (widget) => widget is CheckedPopupMenuItem,
+    ),
+  );
+  await tester.tap(menuItem);
+  await tester.pumpAndSettle();
 }

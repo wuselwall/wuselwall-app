@@ -1,6 +1,7 @@
 # Mitglieder und Geräte
 
 Das gehört den **Erziehungsberechtigten**. Öffne dazu auf deinem Handy das Zahnrad oben rechts (**Einstellungen**).
+Wenn du von einer anderen Ansicht kommst, kannst du auf iPhone und iPad am linken Bildschirmrand nach rechts wischen, um zurückzukehren; der Zurück-Pfeil oben links geht ebenfalls.
 
 <Shot name="settings-phone" alt="Einstellungen mit Mitgliedern und Geräten" />
 

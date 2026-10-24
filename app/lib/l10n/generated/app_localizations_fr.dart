@@ -101,6 +101,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get setupHeadline => 'Bienvenue sur WuselWall';
 
   @override
+  String get setupOfflineWelcome =>
+      'Vous êtes hors ligne. Connectez-vous à Internet pour vous connecter, accepter une invitation ou connecter un appareil partagé. Ces options seront disponibles dès que vous serez de nouveau en ligne.';
+
+  @override
   String get doorTagline => 'Le planning familial sur le mur de la cuisine';
 
   @override
@@ -3768,6 +3772,21 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get emailOffline =>
       'Pas de connexion : une connexion est nécessaire pour se connecter par e-mail.';
+
+  @override
+  String get emailRequired => 'Saisissez votre adresse e-mail.';
+
+  @override
+  String get emailInvalid => 'Saisissez une adresse e-mail valide.';
+
+  @override
+  String get passwordRequired => 'Saisissez votre mot de passe.';
+
+  @override
+  String get emailSendingCode => 'Envoi du code…';
+
+  @override
+  String get signInProgress => 'Connexion en cours…';
 
   @override
   String get emailCodeTitle => 'Code reçu par e-mail';
