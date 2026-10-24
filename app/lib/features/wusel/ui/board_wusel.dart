@@ -29,7 +29,8 @@ class BoardWusel extends ConsumerWidget {
     final night = ref.watch(nightProvider);
     final ambience = ref.watch(ambienceProvider);
     final birthday = ambience.birthdays.isNotEmpty;
-    final morning = !night && now.hour == 6 && now.minute < 30;
+    final morning =
+        !night && isMorningWaveAt(now, ref.watch(nightHoursProvider));
     final style = boardUi(24, weight: FontWeight.w700);
 
     if (night) {

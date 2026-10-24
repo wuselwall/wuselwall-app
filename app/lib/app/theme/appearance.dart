@@ -5,7 +5,7 @@ import 'package:wuselwall/core/logging/log.dart';
 
 /// Whether this device shows the light or the dark theme, or follows the OS (the
 /// default). Per device, like the OS setting it replaces: a family's phones need not
-/// agree. The kiosk's night shade (`nightProvider`) still wins from 21:00 to 06:00.
+/// agree. The kiosk's night shade (`nightProvider`) still wins during its night hours.
 abstract class AppearanceStore {
   Future<ThemeMode> read();
 

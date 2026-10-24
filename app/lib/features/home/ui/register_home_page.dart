@@ -44,7 +44,9 @@ class RegisterHomePage extends ConsumerWidget {
         ),
       );
     }
-    if (register == UiRegister.kid) return const KidHome();
+    // `device.pixel_shift` may be on for any device (specs/26); PixelShift does
+    // nothing while it is off.
+    if (register == UiRegister.kid) return const PixelShift(child: KidHome());
 
     final l10n = context.l10n;
     final adult = register == UiRegister.adult;
@@ -70,7 +72,7 @@ class RegisterHomePage extends ConsumerWidget {
     // take it, so moving between modules is moving between colours.
     final band = context.ww.band(homeTabModule(tab));
     final base = Theme.of(context);
-    return Theme(
+    final home = Theme(
       data: base.copyWith(
         appBarTheme: base.appBarTheme.copyWith(backgroundColor: band),
         navigationBarTheme: base.navigationBarTheme.copyWith(
@@ -129,6 +131,7 @@ class RegisterHomePage extends ConsumerWidget {
             : null,
       ),
     );
+    return PixelShift(child: home);
   }
 }
 

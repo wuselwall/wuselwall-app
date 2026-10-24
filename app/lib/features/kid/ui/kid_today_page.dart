@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/night.dart';
 import 'package:wuselwall/app/theme/palette.dart';
@@ -11,6 +12,7 @@ import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/confetti.dart';
 import 'package:wuselwall/core/ui/emoji_picture.dart';
+import 'package:wuselwall/core/ui/motion.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/core/wusel/wusel.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
@@ -210,7 +212,12 @@ class _TasksSectionState extends ConsumerState<_TasksSection> {
       actor,
     );
     final last = mine.where((t) => !_done(t) && t.id != task.id).isEmpty;
-    unawaited(celebration.cue(Cue.tick));
+    // The tick sounds with the tick the child sees, at once: a sound 300 ms late feels
+    // broken (specs/26). If the server then refuses, the card un-ticks with a message.
+    // The last chore waits for the server instead and sounds only *fertig*, so the
+    // child never hears two sounds on top of each other, nor a celebration for a tick
+    // that did not count.
+    if (!last) unawaited(celebration.cue(Cue.tick));
     setState(() => _pending.add(task.id));
     final result = await container
         .read(tasksRepositoryProvider)
@@ -230,7 +237,9 @@ class _TasksSectionState extends ConsumerState<_TasksSection> {
             points: value.pointsCredited,
           );
         }
-        if (last) {
+        // One celebration per moment: ticking, undoing and ticking the last chore
+        // again does not burst twice (specs/26).
+        if (last && celebration.claimMoment(Celebration.lastChoreOf(actor))) {
           setState(() {
             _celebrations++;
             _allDoneLine = null;
@@ -246,6 +255,9 @@ class _TasksSectionState extends ConsumerState<_TasksSection> {
           unawaited(celebration.cue(Cue.fertig));
         } else if (value.pointsCredited > 0) {
           unawaited(celebration.cue(Cue.coin));
+        } else if (last) {
+          // The day was celebrated already: this is an ordinary tick.
+          unawaited(celebration.cue(Cue.tick));
         }
         messenger
           ..hideCurrentSnackBar()
@@ -303,83 +315,134 @@ class _TaskCard extends StatelessWidget {
     final l10n = context.l10n;
     final theme = Theme.of(context);
     final ww = context.ww;
-    final reduce = kidReduceMotion(context);
-    final motion = reduce ? Duration.zero : Tokens.motionEmphasised;
     final status = task.awaitsApproval
         ? l10n.kidAwaitsCheck
         : (done ? l10n.kidDone : null);
-    return Opacity(
-      opacity: done ? 0.6 : 1,
-      child: Semantics(
-        button: true,
-        enabled: !done,
-        label: [
-          task.title,
-          ?status,
-          if (!done && task.points > 0) l10n.tasksPointsCount(task.points),
-        ].join(', '),
-        child: KidCard(
-          onTap: done ? null : onTap,
-          child: ExcludeSemantics(
-            // One spoken label for the card (title, status, points): the children would
-            // otherwise repeat the title (A10).
-            child: Row(
-              children: [
-                ExcludeSemantics(
-                  child: EmojiPicture(
-                    taskIconAsset(task.iconKey) ?? taskIconAsset('star')!,
-                    size: 40,
-                  ),
+    // Done, the card fills with the brand tint and keeps full contrast: no fading
+    // and no strike-through (specs/26 "The kid register's sticker skin").
+    return Semantics(
+      button: true,
+      enabled: !done,
+      label: [
+        task.title,
+        ?status,
+        if (!done && task.points > 0) l10n.tasksPointsCount(task.points),
+      ].join(', '),
+      child: KidCard(
+        onTap: done ? null : onTap,
+        color: done ? ww.successContainer : null,
+        child: ExcludeSemantics(
+          // One spoken label for the card (title, status, points): the children would
+          // otherwise repeat the title (A10).
+          child: Row(
+            children: [
+              ExcludeSemantics(
+                child: EmojiPicture(
+                  taskIconAsset(task.iconKey) ?? taskIconAsset('star')!,
+                  size: 40,
                 ),
-                const SizedBox(width: Tokens.space3),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ExcludeSemantics(
-                        // The card's label already says the title; it is not read twice.
-                        child: Text(
-                          task.title,
-                          style: theme.textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.w800,
-                            decoration: done
-                                ? TextDecoration.lineThrough
-                                : null,
-                          ),
+              ),
+              const SizedBox(width: Tokens.space3),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ExcludeSemantics(
+                      // The card's label already says the title; it is not read twice.
+                      child: Text(
+                        task.title,
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w800,
                         ),
                       ),
-                      Wrap(
-                        spacing: Tokens.space3,
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: [
-                          if (!done && task.points > 0)
-                            PointsCoin(points: task.points, fontSize: 19),
-                          if (status != null)
-                            Text(status, style: theme.textTheme.bodyLarge),
-                        ],
-                      ),
-                    ],
-                  ),
+                    ),
+                    Wrap(
+                      spacing: Tokens.space3,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        if (!done && task.points > 0)
+                          PointsCoin(points: task.points, fontSize: 19),
+                        if (status != null)
+                          Text(status, style: theme.textTheme.bodyLarge),
+                      ],
+                    ),
+                  ],
                 ),
-                AnimatedScale(
-                  scale: done ? 1 : 0.85,
-                  duration: motion,
-                  curve: Curves.easeOutCubic,
-                  child: Icon(
-                    done
-                        ? Icons.check_circle_rounded
-                        : Icons.radio_button_unchecked_rounded,
-                    size: 44,
-                    color: done ? ww.success : theme.colorScheme.onSurface,
-                  ),
+              ),
+              _TickPop(
+                done: done,
+                child: Icon(
+                  done
+                      ? Icons.check_circle_rounded
+                      : Icons.radio_button_unchecked_rounded,
+                  size: 44,
+                  color: done ? ww.success : theme.colorScheme.onSurface,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
+}
+
+/// The tick on a chore card: it pops in on the snappy spring when the chore is done,
+/// overshooting a little, and settles back small when it is undone. Under reduced
+/// motion it lands at once (specs/26 "Motion").
+class _TickPop extends StatefulWidget {
+  const _TickPop({required this.done, required this.child});
+
+  final bool done;
+  final Widget child;
+
+  /// The open circle sits a little smaller than the tick.
+  static const open = 0.85;
+
+  /// Where the pop starts from.
+  static const from = 0.5;
+
+  @override
+  State<_TickPop> createState() => _TickPopState();
+}
+
+class _TickPopState extends State<_TickPop>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _scale = AnimationController.unbounded(
+    vsync: this,
+    value: widget.done ? 1 : _TickPop.open,
+  );
+
+  @override
+  void didUpdateWidget(_TickPop old) {
+    super.didUpdateWidget(old);
+    if (old.done == widget.done) return;
+    final target = widget.done ? 1.0 : _TickPop.open;
+    if (!motionAllowed(context)) {
+      _scale.value = target;
+      return;
+    }
+    unawaited(
+      _scale.animateWith(
+        SpringSimulation(
+          Tokens.springSnappy,
+          widget.done ? _TickPop.from : _scale.value,
+          target,
+          0,
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _scale.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) =>
+      ScaleTransition(scale: _scale, child: widget.child);
 }
 
 /// Today's lessons, from `school-week` (today and tomorrow in one call). The lesson

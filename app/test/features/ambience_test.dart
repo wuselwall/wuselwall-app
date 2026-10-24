@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:wuselwall/app/theme/night.dart';
 import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/features/wusel/application/ambience.dart';
 import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
@@ -28,10 +29,9 @@ void main() {
 
     test('the two coincide in some years and are weeks apart in others', () {
       expect(westernEaster(2025), orthodoxEaster(2025));
-      // In UTC: the clocks change between the two dates.
-      DateTime utc(DateTime d) => DateTime.utc(d.year, d.month, d.day);
+      // Counted in calendar days: the clocks change between the two dates.
       expect(
-        utc(orthodoxEaster(2024)).difference(utc(westernEaster(2024))).inDays,
+        calendarDaysBetween(westernEaster(2024), orthodoxEaster(2024)),
         35,
       );
     });
@@ -97,6 +97,70 @@ void main() {
     expect(
       ambienceFor(DateTime(2024, 4, 15, 9), night: false, day: day).easter,
       isFalse,
+    );
+  });
+
+  group('Easter ± 2 days, across a clock change', () {
+    // In 2024 and 2016 Western Easter fell on the night the clocks went forward in
+    // central Europe, so local midnights after it are a multiple of 24 h minus one
+    // hour away. These hold in every time zone; under a DST zone (TZ=Europe/Zurich)
+    // they also catch a day count taken from Duration.inDays.
+    const day = LighterDay(country: 'DE');
+    bool eggs(DateTime d) => ambienceFor(d, night: false, day: day).easter;
+
+    test('2024: Easter 31 March', () {
+      expect(eggs(DateTime(2024, 3, 28)), isFalse);
+      expect(eggs(DateTime(2024, 3, 29)), isTrue);
+      expect(eggs(DateTime(2024, 4, 2)), isTrue);
+      expect(eggs(DateTime(2024, 4, 3)), isFalse);
+    });
+
+    test('2016: Easter 27 March', () {
+      expect(westernEaster(2016), DateTime(2016, 3, 27));
+      expect(eggs(DateTime(2016, 3, 29)), isTrue);
+      expect(eggs(DateTime(2016, 3, 30)), isFalse);
+    });
+
+    test('days are counted on the calendar, not in hours', () {
+      expect(
+        calendarDaysBetween(
+          DateTime(2024, 3, 31, 23, 30),
+          DateTime(2024, 4, 3),
+        ),
+        3,
+      );
+      expect(
+        calendarDaysBetween(DateTime(2024, 3, 31), DateTime(2024, 4, 3, 0, 30)),
+        3,
+      );
+      expect(
+        calendarDaysBetween(DateTime(2024, 4, 3), DateTime(2024, 3, 31)),
+        -3,
+      );
+    });
+  });
+
+  test('the sky follows the night hours and board.day_parts', () {
+    final hours = NightHours.parse(const {'from': '22:00', 'to': '07:00'});
+    DateTime at(int h, int m) => DateTime(2026, 10, 24, h, m);
+    SkyPhase phase(DateTime t) => skyPhaseAt(
+      t,
+      night: hours.contains(t),
+      hours: hours,
+      eveningStart: 18 * 60 + 30,
+    );
+    expect(phase(at(6, 59)), SkyPhase.night);
+    expect(phase(at(7, 0)), SkyPhase.morning);
+    expect(phase(at(10, 0)), SkyPhase.day);
+    expect(phase(at(18, 29)), SkyPhase.day);
+    expect(phase(at(18, 30)), SkyPhase.evening);
+    expect(phase(at(21, 59)), SkyPhase.evening);
+    expect(phase(at(22, 0)), SkyPhase.night);
+    // A night that begins after midnight keeps the evening's sky until then.
+    final late = NightHours.parse(const {'from': '01:00', 'to': '06:00'});
+    expect(
+      skyPhaseAt(at(0, 30), night: late.contains(at(0, 30)), hours: late),
+      SkyPhase.evening,
     );
   });
 

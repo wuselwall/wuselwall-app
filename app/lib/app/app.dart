@@ -13,6 +13,7 @@ import 'package:wuselwall/core/l10n/app_language.dart';
 import 'package:wuselwall/core/l10n/app_locale.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/empty_view.dart';
+import 'package:wuselwall/core/ui/motion.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
@@ -34,9 +35,9 @@ class WuselWallApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final register = ref.watch(uiRegisterProvider);
-    // The wall display switches to its night shade from 21:00 whatever the OS or the
-    // device's appearance says; otherwise the appearance picks light or dark, by
-    // default as the OS does.
+    // The wall display switches to its night shade in its night hours
+    // (`device.night_hours`) whatever the OS or the device's appearance says;
+    // otherwise the appearance picks light or dark, by default as the OS does.
     final night = register == UiRegister.kiosk && ref.watch(nightProvider);
 
     return MaterialApp.router(
@@ -50,10 +51,12 @@ class WuselWallApp extends ConsumerWidget {
       darkTheme: AppTheme.build(register, night ? Shade.night : Shade.dark),
       themeMode: ref.watch(appearanceProvider).value ?? ThemeMode.system,
       builder: (context, child) {
-        final app = LinkHost(
-          child: _ReminderHost(
-            child: _MemberAccent(
-              child: EmptyIllustration(builder: _emptyWusel, child: child!),
+        final app = MotionScope(
+          child: LinkHost(
+            child: _ReminderHost(
+              child: _MemberAccent(
+                child: EmptyIllustration(builder: _emptyWusel, child: child!),
+              ),
             ),
           ),
         );

@@ -4,7 +4,7 @@ En **Ajustes → Ajustes del hogar**, adapta WuselWall a tu familia.
 
 <Shot name="settings-household" alt="Los ajustes de tareas, calendario, comidas y pantalla de cocina" />
 
-La vista básica muestra región, comodines, aprobación de recompensas, citas de niños, comida caliente en días escolares y libres, pregunta en la mesa, nuestra semana, comida deseada, Wusel, sonido de tareas, resumen matinal y recordatorios. **Avanzados**, arriba o al final, muestra el resto. Los ajustes ocultos siguen activos.
+La vista básica muestra región, comodines, aprobación de recompensas, citas de niños, comida caliente en días escolares y libres, pregunta en la mesa, nuestra semana, comida deseada, horas nocturnas, Wusel, sonido de tareas, resumen matinal y recordatorios. **Avanzados**, arriba o al final, muestra el resto. Los ajustes ocultos siguen activos.
 
 Cada ajuste tiene un valor predeterminado. Si lo cambias, aparece como personalizado. Puedes restaurar el original cuando quieras.
 
@@ -16,7 +16,7 @@ Cada ajuste tiene un valor predeterminado. Si lo cambias, aparece como personali
 - **Comidas**: comida caliente según días de colegio o libres, ausencia como no comer y cuidado extraescolar para el almuerzo.
 - **Pantalla de cocina**: paso a la semana siguiente y límites entre mañana/tarde/noche.
 - **Rituales** y **Estaciones y celebraciones**: ver [más abajo](#rituals).
-- **Este dispositivo**: los ajustes de Wusel, los sonidos, el cielo y la protección contra quemaduras. El tema nocturno se aplica de 21:00 a 06:00, y un detalle abierto vuelve a la pared al cabo de un minuto (ver [más abajo](#this-device)).
+- **Este dispositivo**: horario nocturno y los ajustes de Wusel, los sonidos, el cielo y la protección contra quemaduras. Un detalle abierto vuelve a la pared al cabo de un minuto (ver [más abajo](#this-device)).
 - **Mis ajustes**: **Wusel** y **La ropa de Wusel**, sonidos, resumen matinal y recordatorios antes de las citas. Solo afectan a la persona elegida arriba (ver [Wusel y los colores](/es/guide/wusel#how-lively)).
 
 La explicación bajo cada ajuste describe su efecto. Prueba los valores iniciales y cambia después lo que no encaje.

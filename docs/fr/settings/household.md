@@ -4,7 +4,7 @@ Dans **Paramètres → Paramètres du foyer**, adaptez WuselWall à votre famill
 
 <Shot name="settings-household" alt="Les paramètres des tâches, du calendrier, des repas et de l’écran de cuisine" />
 
-La vue de base montre les réglages essentiels : région, jokers, approbation des récompenses, rendez-vous des enfants, repas chaud les jours d’école et libres, question à table, notre semaine, repas souhaités, Wusel, son des tâches, résumé du matin et rappels. La vue **Avancés**, accessible en haut ou en bas, montre tout. Les paramètres masqués restent actifs.
+La vue de base montre les réglages essentiels : région, jokers, approbation des récompenses, rendez-vous des enfants, repas chaud les jours d’école et libres, question à table, notre semaine, repas souhaités, heures de nuit, Wusel, son des tâches, résumé du matin et rappels. La vue **Avancés**, accessible en haut ou en bas, montre tout. Les paramètres masqués restent actifs.
 
 Chaque réglage propose une valeur par défaut. Une valeur différente est signalée comme personnalisée ; vous pouvez rétablir la valeur par défaut à tout moment.
 
@@ -16,7 +16,7 @@ Chaque réglage propose une valeur par défaut. Une valeur différente est signa
 - **Repas** : repas chaud selon les jours d’école et libres, absence signifiant ne pas manger, et prise en compte de la garde pour le déjeuner.
 - **Écran de cuisine** : passage à la semaine suivante et limites entre matin/après-midi/soir.
 - **Rituels** et **Saisons et fêtes** : voir [plus bas](#rituals).
-- **Cet appareil** : les réglages de Wusel, des sons, du ciel et de la protection contre le marquage. Le thème de nuit s’applique de 21 h à 6 h, et un détail ouvert revient au mur après une minute (voir [plus bas](#this-device)).
+- **Cet appareil** : heures de nuit et les réglages de Wusel, des sons, du ciel et de la protection contre le marquage. Un détail ouvert revient au mur après une minute (voir [plus bas](#this-device)).
 - **Mes paramètres** : **Wusel** et **La tenue de Wusel**, son des tâches, résumé du matin et rappels avant les rendez-vous. Ils concernent seulement la personne sélectionnée en haut (voir [Wusel et les couleurs](/fr/guide/wusel#how-lively)).
 
 La description sous chaque réglage explique son effet. Essayez les valeurs par défaut, puis ajustez ce qui gêne après quelques semaines.

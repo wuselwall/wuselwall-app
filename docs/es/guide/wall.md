@@ -43,7 +43,7 @@ Abre la compra desde el pie y toca tu nombre. La pared añade solo a la **lista 
 
 ### Noche y desconexión {#night-and-no-connection}
 
-Desde las 21:00 aparece el tema nocturno y Wusel duerme. La pared solo suena si activáis los sonidos, y nunca de noche. Para que nada se queme, la imagen se mueve hasta 2 píxeles cada 10 minutos (ver [Wusel y los colores](/es/guide/wusel#burn-in)). Sin conexión se conserva el último plan, se indica cuándo se actualizó y Wusel piensa. Mientras todo funciona, esa información queda discreta.
+Desde las 21:00 (o el horario nocturno de este dispositivo) aparece el tema nocturno y Wusel duerme. La pared solo suena si activáis los sonidos, y nunca de noche. Para que nada se queme, la imagen se mueve hasta 2 píxeles cada 10 minutos (ver [Wusel y los colores](/es/guide/wusel#burn-in)). Sin conexión se conserva el último plan, se indica cuándo se actualizó y Wusel piensa. Mientras todo funciona, esa información queda discreta.
 
 La vista infantil tiene las pestañas **Mi día**, **Horario escolar**, **Puntos**, **Compra** y **Familia**.
 

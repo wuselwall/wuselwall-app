@@ -3,7 +3,8 @@
 //   node scripts/sound-effects.mjs            (from the repo root)
 // They are synthesised here from sine tones, so they belong to the project and need no
 // licence entry beyond the repository's own (Q56). Each is mono 16-bit PCM at 16 kHz (the highest partial is near 5.3 kHz),
-// under one second and under 30 KB, with a soft attack and a decay so nothing clicks.
+// under one second and under 30 KB, with a soft attack, a decay and a short linear release
+// at the end of each note, so nothing clicks.
 //   tick    a chore ticked: one short, bright blip
 //   coin    points arriving: two quick rising notes
 //   fertig  the last chore of the day: a rising major arpeggio
@@ -13,6 +14,9 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const RATE = 16000;
+// The last 8 ms of every note fade to zero: the decay alone leaves a note at about 6 % of
+// its peak when it ends, and that step is an audible click.
+const RELEASE = Math.round(0.008 * RATE);
 const out = path.join(path.dirname(fileURLToPath(import.meta.url)), '../app/assets/sounds');
 
 const hz = (note) => 440 * 2 ** ((note - 69) / 12); // MIDI note number to frequency
@@ -28,9 +32,10 @@ function render(notes, seconds) {
       const t = i / RATE;
       const attack = Math.min(1, t / 0.006);
       const decay = Math.exp(-t / (len * 0.35));
+      const release = Math.min(1, (n - i) / RELEASE);
       // A sine with a quiet octave on top: rounder than a pure tone, never harsh.
       const v = Math.sin(2 * Math.PI * f * t) + 0.25 * Math.sin(4 * Math.PI * f * t);
-      samples[start + i] += gain * attack * decay * v;
+      samples[start + i] += gain * attack * decay * release * v;
     }
   }
   return samples;

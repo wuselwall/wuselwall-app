@@ -62,7 +62,7 @@ Mehr kann die Wand nicht ändern: Sie setzt Artikel auf die Einkaufsliste und ko
 
 ### Nachts und ohne Verbindung
 
-- Ab 21 Uhr wechselt die Anzeige automatisch in eine ruhige Nachtansicht, und Wusel schläft. Töne gibt es an der Wand nur, wenn ihr sie einschaltet, und nachts nie.
+- Ab 21 Uhr (oder zur Nachtzeit, die für dieses Gerät eingestellt ist) wechselt die Anzeige automatisch in eine ruhige Nachtansicht, und Wusel schläft. Töne gibt es an der Wand nur, wenn ihr sie einschaltet, und nachts nie.
 - Damit sich nichts einbrennt, verschiebt sich die Anzeige alle 10 Minuten um bis zu 2 Pixel (siehe [Wusel und Farben](/guide/wusel#burn-in)).
 - Bricht die Verbindung ab, bleibt der letzte Stand sichtbar, mit dem Hinweis „Keine Verbindung“, und Wusel denkt nach; oben rechts steht, wann er zuletzt aktualisiert wurde. Solange alles läuft, zeigt die Wand dazu nichts an.
 

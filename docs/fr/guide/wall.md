@@ -43,7 +43,7 @@ Touchez les courses dans le pied de page, puis votre prénom. Le mur ajoute uniq
 
 ### Nuit et perte de connexion {#night-and-no-connection}
 
-À partir de 21 h, le mur adopte le thème de nuit et Wusel dort. Le mur ne joue de sons que si vous les activez, et jamais la nuit. Pour éviter le marquage, l’affichage se décale de 2 pixels au plus toutes les 10 minutes (voir [Wusel et les couleurs](/fr/guide/wusel#burn-in)). Sans connexion, il conserve le dernier plan et indique la dernière actualisation, et Wusel réfléchit. Quand tout fonctionne, ces indications restent discrètes.
+À partir de 21 h (ou des heures de nuit réglées pour cet appareil), le mur adopte le thème de nuit et Wusel dort. Le mur ne joue de sons que si vous les activez, et jamais la nuit. Pour éviter le marquage, l’affichage se décale de 2 pixels au plus toutes les 10 minutes (voir [Wusel et les couleurs](/fr/guide/wusel#burn-in)). Sans connexion, il conserve le dernier plan et indique la dernière actualisation, et Wusel réfléchit. Quand tout fonctionne, ces indications restent discrètes.
 
 La vue des enfants possède les onglets **Ma journée**, **Emploi du temps**, **Points**, **Courses** et **Famille**.
 

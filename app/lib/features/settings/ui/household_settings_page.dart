@@ -41,12 +41,10 @@ class HouseholdSettingsPage extends ConsumerWidget {
   }
 }
 
-/// In the catalogue but read by nothing yet, so not offered: the night is fixed at
-/// 21:00–06:00 (app/theme/night.dart), the idle return at 60 s, and the two notifications
-/// wait for #143. They come back here once something applies them.
+/// In the catalogue but read by nothing yet, so not offered: the idle return is fixed at
+/// 60 s, and the two notifications wait for #143. They come back here once something applies them.
 @visibleForTesting
 const unusedSettingKeys = {
-  'device.night_hours',
   'device.idle_revert_seconds',
   'notify.task_verified',
   'notify.redemption_request',
@@ -61,6 +59,7 @@ const _basicKeys = {
   'calendar.members_edit_own_events',
   'meals.warm_meal.school_day',
   'meals.warm_meal.free_day',
+  'device.night_hours',
   'member.completion_sound',
   'notify.morning_summary',
   'notify.event_reminder',
@@ -143,6 +142,7 @@ class _SettingsList extends ConsumerWidget {
         'ambience.new_year',
       ]),
       _SectionSpec(l10n.settingsSectionDevice, const [
+        'device.night_hours',
         'device.wusel',
         'device.sounds',
         'device.sky',
