@@ -13,15 +13,28 @@ laptop) on a **self-hosted Supabase** backend.
 This repository holds **both the planning documents and the code**. `specs/` is the
 specification; `app/`, `supabase/` and `infra/` hold the implementation.
 
-## Status
+## Status and roadmap
 
-| | |
-|---|---|
-| Phase | Built in code: M0.0–M0.3; the M0.4 pipeline (first TestFlight upload 2026-10-12; first Play internal release done, the Play upload from CI written); M1.0 onboarding, steps 1–9 (sign-in with email codes and passwords only); M1.1–M1.4; the M1.5 week board; the Q47 local reminders. Built is not deployed: no server's state is verified, and no pilot evidence is recorded. Next: M1.6 pilot validation with the [release checklist](specs/release-checklist.md); store and signing gates are separate. Status and history: [13 — Roadmap](specs/13-roadmap.md#current-status-2026-10-17-base-43ac2e5) |
-| Started | 2026-10-11 |
-| Decision set | Locked for v1 (see `specs/adr/`) |
-| Origin | Specification carried over from BretApp; code starts from scratch |
-| Latest change | 2026-10-23 — the school without typing: the term is proposed, a subject is created from the cell, and a timetable comes in as pasted text, as an assistant's proposal over MCP, or as a photo read by the family's own server ([24](specs/24-school-import.md), [the guide](docs/en/school/index.md#reading-in-a-timetable)). Before: 2026-10-22 — the empty timetable view keeps the child-specific explanation and entry button without a duplicate heading. Before: 2026-10-22 — open invitations appear in the matching member’s row, with expiry, sharing and withdrawal actions ([guide](docs/en/settings/members-devices.md)). Before: 2026-10-22 — all Actions jobs use self-hosted runners; backend CI serializes and cleans its disposable stack ([operations](specs/10-deployment-and-ops.md#self-hosted-actions-runners-2026-10-22)). Before: 2026-10-21 — French and Spanish family guides alongside DE/EN, with localized navigation, search and screenshots in both themes ([French](docs/fr/index.md), [Spanish](docs/es/index.md)); publication remains separate. Before: the timetable combines child selection and labeled actions in one toolbar, with week arrows in the weekday header; entry creates missing terms inline, shows the selected term and keeps Save visible ([the guide](docs/en/school/index.md)). Before: 2026-10-19 — German, English, French and Spanish throughout the application and server responses; installation-selected, single-language email ([NFR-14](specs/02-requirements.md), [operator setup](docs/server/extras.md#e-mail)). Validation and publication remain separate gates. Before: 2026-10-14 — every family's own server: the store app chooses its server, a server release with an installer, hosted Supabase without tools ([ADR-018](specs/adr/ADR-018-self-hosted-only.md#amendment-2026-10-14-built), [the guide](docs/server/index.md)). Before: 2026-10-13 — the domain `wuselwall.app` for the website ([ADR-017](specs/adr/ADR-017-wuselwall-app-domain.md)). Before: 2026-10-11 — household settings with curated defaults ([21](specs/21-household-settings.md)); the official compose stack ([ADR-013](specs/adr/ADR-013-self-hosted-compose-stack.md#amendment-2026-10-11-the-official-compose-stack)) |
+**Core features are built.** Shopping (including offline capture), tasks and points,
+calendar and school timetables, meals, onboarding, household settings and the wall board
+exist in code. Shortcuts, read-only MCP, local reminders and timetable import are built too.
+Native-device qualification and the family trial remain open; implementation is not release
+evidence ([#117](https://github.com/wuselwall/wuselwall-app/issues/117)).
+
+| Order | Milestone | Outcome | Status |
+|---|---|---|---|
+| **1** | [**Everyday essentials**](https://github.com/wuselwall/wuselwall-app/milestone/1) | Start without mail, see approvals, restart the wall offline, finish onboarding/navigation | **Now** |
+| **2** | [**A lighter day**](https://github.com/wuselwall/wuselwall-app/milestone/2) | Wusel, colour and ambience, birthdays and five family rituals | Built (v1.3.0) |
+| **3** | [**Family Alpha**](https://github.com/wuselwall/wuselwall-app/milestone/3) | Qualify on real devices, use for two weeks, fix blockers and judge what helps | After 1–2 |
+| **4** | [**Ready for other families**](https://github.com/wuselwall/wuselwall-app/milestone/4) | Safe install/update, compatibility, independent walkthrough, store/legal readiness | After the Alpha |
+
+Follow the [pinned GitHub roadmap](https://github.com/wuselwall/wuselwall-app/issues/125)
+and [milestones](https://github.com/wuselwall/wuselwall-app/milestones).
+[13 — Roadmap](specs/13-roadmap.md) defines the outcomes;
+[16 — Build plan](specs/16-setup-plan.md) gives the remaining slices;
+[23 — After the Alpha](specs/23-roadmap-after-alpha.md) keeps later candidates out of the
+current release. Wusel and the full agreed rituals are built and stay before the Alpha ([ADR-020](specs/adr/ADR-020-a-lighter-day.md)).
+No release dates are promised. Started 2026-10-11; plan simplified 2026-10-24.
 
 Issue [#117](https://github.com/wuselwall/wuselwall-app/issues/117) records sampled API 36 Android phone and tablet demo UI checks and iOS-targeted widget regressions for shared Flutter fixes, including Settings navigation. These checks are not release evidence; native iPhone/iPad validation, real authentication and two-device synchronization remain separate gates.
 
@@ -41,7 +54,7 @@ building the demo. The default documentation screenshot matrix covers DE/EN/FR/E
 app/               Flutter — iOS, Android and web; three UI registers, de/en/fr/es l10n
 supabase/          migrations (tables in `app`, views and functions in `api`, RLS),
                    Edge Functions, pgTAP tests, seed
-docs/              VitePress family documentation (de/en), prepared for GitHub Pages
+docs/              VitePress family documentation (de/en/fr/es), prepared for GitHub Pages
 infra/             the compose stack and its layers, jobs, backups
 server/            the operator's tool in a server release: install, update, backup, restore
 scripts/           release builder; remote-* to drive a server over SSH from a checkout
@@ -82,14 +95,14 @@ specifications you hand to a coding session, one at a time.
 | 10 | [Deployment & Operations](specs/10-deployment-and-ops.md) | B3 — running a server: the stack, keys, backups, updates, server releases |
 | 11 | [Security & Privacy](specs/11-security-and-privacy.md) | Threat model and the controls that answer each threat |
 | 12 | [MCP & Assistants](specs/12-mcp-and-assistants.md) | B4 — MCP server design, Siri via Shortcuts today |
-| 13 | [Roadmap](specs/13-roadmap.md) | Milestones, per-module v1 scope cuts, rough effort |
+| 13 | [Roadmap](specs/13-roadmap.md) | Four outcomes, current implementation status and release gates |
 | 14 | [Open Questions](specs/14-open-questions.md) | Decisions deliberately deferred, with the deadline for each |
-| 23 | [Roadmap after the Alpha](specs/23-roadmap-after-alpha.md) | What follows M1.6, in four phases, each item checked against the principles; and what is deliberately not on it |
+| 23 | [Roadmap after the Alpha](specs/23-roadmap-after-alpha.md) | Candidates chosen from real use, principles and deliberate exclusions |
 | 25 | [Wusel](specs/25-wusel.md) | The family's companion: who Wusel is, the drawing, seven poses, outfits, the voice rules, where it appears and never appears |
 | 26 | [Colour, ambience, celebration](specs/26-colour-and-ambience.md) | Direction A+: module bands, decoration, the wall's day phases and occasions, celebrations, springs, sound and haptics |
 | 27 | [Family rituals](specs/27-family-rituals.md) | Tischfrage, Wochenrückblick, traditions, Vorfreude and Wunschessen, with birthdays, and how the trial judges each |
 | 24 | [School setup without typing](specs/24-school-import.md) | Fewer required facts, the timetable payload and preview, proposals from assistants, and the photo scan on the family's own server |
-| 16 | [Setup Plan](specs/16-setup-plan.md) | **The build order for M0**: tools and accounts, repository, local Supabase, app shell, identity, CI, mobile releases, deployment — with the workflows and the secrets inventory |
+| 16 | [Setup Plan](specs/16-setup-plan.md) | Remaining work in grouped slices; completed setup and CI/signing recipes kept as reference |
 | 19 | [Security & Architecture Review](specs/19-security-and-architecture-review.md) | Findings of the 2026-10-11 review, what is fixed and what the operator still has to do |
 | 17 | [Design System](specs/17-design-system.md) | Colour, type and form: the member palette (colour-blind-checked), presence treatments, night theme, three design directions, A "Küchentisch" chosen |
 | 21 | [Household Settings](specs/21-household-settings.md) | The reference household, the settings model, the setup wizard and every curated default with its reasoning |
