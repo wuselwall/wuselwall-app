@@ -132,7 +132,9 @@ creation mode. Public store distribution waits for all three work packages:
 | **Store and publication readiness** | Honest privacy/Data safety forms, demo access for review, verified mail setup, contact/legal and account-deletion pages, signed release channels, screenshots, docs hosting and separately coordinated website progress; complete [11's legal gate](11-security-and-privacy.md#privacy-and-legal) |
 
 The server kit, guide and discovery already exist. This milestone proves and hardens them;
-it does not rebuild them. The project's website and docs are separate publication gates.
+it does not rebuild them. The four-language guide is now live at [docs.wuselwall.app](https://docs.wuselwall.app/).
+Website progress and legacy-link redirects remain a separate operator handoff; see the
+[cutover record](website-and-docs-migration.md#activation-status--2026-10-24).
 
 ## Later — choose from use
 

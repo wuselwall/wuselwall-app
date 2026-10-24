@@ -24,3 +24,5 @@ features:
   - title: Your data stays with you
     details: WuselWall runs on the family's own server. No ads, no sharing.
 ---
+
+The **Modules** menu at the top leads to the calendar, timetable, tasks, meals and shopping list.

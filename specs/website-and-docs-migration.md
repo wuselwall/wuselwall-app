@@ -4,7 +4,7 @@
 
 | Repository | Owns | Delivery |
 |---|---|---|
-| `wuselwall/wuselwall-app` (public) | App, backend, specs, VitePress source and screenshot generator | Existing app/server releases; prepared GitHub Pages docs |
+| `wuselwall/wuselwall-app` (public) | App, backend, specs, VitePress source and screenshot generator | Existing app/server releases; live GitHub Pages guide |
 | `wuselwall/wuselwall-website` (private) | Astro marketing/legal pages, public app-link files, copied screenshots, website container and deploy helper | Website CI; the operator deploys to their own server with `scripts/remote-web.sh deploy` |
 
 The docs address is **https://docs.wuselwall.app/** (German `/`, English `/en/`,
@@ -17,12 +17,18 @@ plan authorizes an unreviewed production operation.
 - The app repository is public. GitHub Pages is configured with **GitHub Actions** as
   the publishing source and **docs.wuselwall.app** as its custom domain.
 - **DOCS_PAGES_ENABLED=true** enables the existing main-only, OIDC Pages deployment.
-- The DNS-only CNAME **docs → wuselwall.github.io** is published. The first deployment
-  is running through the existing docs workflow. The HTTPS certificate is approved and
-  HTTPS enforcement is enabled; the published guide must still pass the checks below
-  before website links switch. Source configuration
-  alone does not establish that the guide is live.
-- Public website progress is updated separately in all four languages. Existing app
+- The DNS-only CNAME **docs → wuselwall.github.io** is published. The HTTPS certificate
+  is approved and HTTPS enforcement is enabled.
+- The [first successful deployment](https://github.com/wuselwall/wuselwall-app/actions/runs/40132037828)
+  published app revision `63a02f6f24307dae73122cc49b44da9548c7783b`. Live checks passed
+  for all four homepages, nested-page refreshes, screenshots in both themes, localized
+  search, mobile navigation, CNAME and sitemap.
+- The live desktop check also found that the old seven-link German header pushes its
+  theme button outside a 1280px viewport. The follow-up groups the module links in all
+  four languages and extends browser coverage to DE/EN at that width; its next main
+  deployment delivers this correction.
+- [Website PR #16](https://github.com/wuselwall/wuselwall-website/pull/16) updates progress,
+  all 32 copied screenshots, guide links and hosting disclosure in all four languages. Existing app
   releases still link to `/docs/`; preserve that service until path- and query-preserving
   redirects have been applied and checked.
 

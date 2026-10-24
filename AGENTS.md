@@ -156,12 +156,14 @@ repository keeps its own committed copies and never checks out private app sourc
 ## End-user documentation (`docs/`)
 
 VitePress site in German (root), English (`/en/`), French (`/fr/`) and Spanish (`/es/`),
-written for the family, not for developers (the specification is `specs/`). `.github/workflows/docs.yml` prepares GitHub
-Pages publishing at `https://docs.wuselwall.app/`. This repository is public; Actions Pages
-and its custom domain are configured and `DOCS_PAGES_ENABLED=true`. Verify the first
-deployment, DNS and HTTPS before switching website links (see
-[cutover status](specs/website-and-docs-migration.md#activation-status--2026-10-24)). Until then the guide at
-`wuselwall.app/docs/` stays as last deployed (main no longer updates it); keep its links. Screenshots come from the Flutter web
+written for the family, not for developers (the specification is `specs/`).
+`.github/workflows/docs.yml` publishes at `https://docs.wuselwall.app/` from this public
+repository. Actions Pages, the custom domain and HTTPS are enabled;
+`DOCS_PAGES_ENABLED=true`. The first deployment and live checks passed 2026-10-24
+(see [cutover status](specs/website-and-docs-migration.md#activation-status--2026-10-24)).
+The website's links and privacy text switch together in its own repository. Keep the old
+`wuselwall.app/docs/` links working for older app releases; their path- and query-preserving
+redirects are a separate operator change. Screenshots come from the Flutter web
 demo (`app/lib/main_demo.dart`, in-memory data) driven by Playwright
 (`docs/tools/screenshots.mjs`): every shot in all four languages and both themes (`name.png`,
 `name-dark.png`). They are build output, not committed: `npm run docs:screenshots` makes

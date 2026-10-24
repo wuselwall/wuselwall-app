@@ -24,3 +24,5 @@ features:
   - title: Tus datos se quedan contigo
     details: WuselWall funciona en el servidor de tu familia. Sin publicidad ni cesión de datos.
 ---
+
+El menú **Módulos** de arriba lleva al calendario, el horario escolar, las tareas, las comidas y la lista de la compra.

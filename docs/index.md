@@ -24,3 +24,5 @@ features:
   - title: Eure Daten bleiben bei euch
     details: WuselWall läuft auf einem eigenen Server der Familie. Keine Werbung, keine Weitergabe.
 ---
+
+Im Menü **Module** oben findest du Kalender, Stundenplan, Aufgaben, Essen und Einkaufsliste.

@@ -24,3 +24,5 @@ features:
   - title: Vos données restent chez vous
     details: WuselWall fonctionne sur le serveur de votre famille. Sans publicité ni partage de vos données.
 ---
+
+Le menu **Modules** en haut mène au calendrier, à l’emploi du temps, aux tâches, aux repas et à la liste de courses.
