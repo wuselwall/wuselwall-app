@@ -89,10 +89,11 @@ class BoardHeader extends ConsumerWidget {
                       if (!compact)
                         Text(
                           context.l10n.boardWeekNumber(board.isoWeek),
+                          // On the sky: ink-2, never ink-3 (specs/26, 3.6:1).
                           style: boardNum(
                             24,
                             weight: FontWeight.w600,
-                            color: ww.ink3,
+                            color: ww.ink2,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
