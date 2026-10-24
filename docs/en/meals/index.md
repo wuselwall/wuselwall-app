@@ -11,6 +11,7 @@ The week shows each day with **Breakfast**, **Lunch**, **Dinner** and **Snack**.
 - A meal is a **dish or a note**, such as "Pizza" or "Leftovers", or a **recipe**.
 - You also set the **servings**, who **cooks**, a **time** and **guests**.
 - To move a meal, long-press it and drop it on another day.
+- On the day of a [family tradition](/en/guide/rituals#traditions) with a meal, the day shows a suggestion such as "Pizza" while that meal is free. One tap plans it.
 
 ## Wishes {#wishes}
 

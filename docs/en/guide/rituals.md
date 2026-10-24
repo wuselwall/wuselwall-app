@@ -15,9 +15,11 @@ For all of them:
 
 You enter a birthday on the person's page: **Settings → Members**, tap the person, **Birthday → Choose a date** (see [Edit a member](/en/settings/members-devices#edit-a-member)). Everyone can enter their own; guardians enter everyone else's.
 
-Before the day it is counted down (see [Looking forward](#countdowns)). On the day, bunting in the person's colour hangs over the wall, Wusel wears the party hat, **Today** shows a birthday card, and on the kids' tablet Wusel cheers for the birthday child.
+Before the day it is counted down (see [Looking forward](#countdowns)), with the age the person turns: "Emma turns 9 · 3 more sleeps". On the day, bunting in the person's colour hangs over the wall, Wusel wears the party hat, **Today** shows a birthday card, and on the kids' tablet Wusel cheers for the birthday child.
 
 Grandparents and friends stay yearly events, as before; you can mark them for looking forward.
+
+In a [subscription to the family calendar](/en/calendar/feeds) each birthday is a yearly all-day event, without the age. When someone is **No longer with us**, their birthday is deleted.
 
 ## Looking forward {#countdowns}
 
@@ -36,7 +38,7 @@ How many days ahead it starts is set by **Start looking forward** (default 14 da
 
 ## Family traditions {#traditions}
 
-Game night, pizza Friday, Sunday breakfast: whatever your family does again and again, create it as a repeating event and switch on **Family tradition** in the editor. A tradition is **always on the wall**, even without **Show on the kitchen display**, with a lemon-yellow ribbon and its **picture**. Under **With a meal** you note which meal belongs to it, and whether it is lunch or dinner.
+Game night, pizza Friday, Sunday breakfast: whatever your family does again and again, create it as a repeating event and switch on **Family tradition** in the editor. A tradition is **always on the wall**, even without **Show on the kitchen display**, with a lemon-yellow ribbon and its **picture**. Under **With a meal** you note which meal belongs to it, and whether it is lunch or dinner. When that meal is still free on the tradition's day, the [meal plan](/en/meals/) suggests it; one tap plans it. It never lands on the plan by itself.
 
 If a tradition doesn't happen one week, delete **Only this event**. Nothing remembers that it was skipped.
 

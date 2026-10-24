@@ -47,7 +47,7 @@ Unter **Geburtstag** wählst du mit **Datum wählen** den Geburtstag. Er steht a
 
 <Shot name="settings-member" alt="Seite eines Mitglieds mit Name, Farbe, Bild und Geburtstag" />
 
-In der Ansicht **Erweitert** steht darunter die **Rolle** (Erziehungsberechtigt oder Mitglied; ein Kind kann nicht erziehungsberechtigt sein, und die letzte erziehungsberechtigte Person mit Konto bleibt es) und **Nicht mehr dabei**: Die Person verschwindet von der Wand, aus den Avatar-Reihen und aus neuen Aufgaben; Verlauf und Punkte bleiben, und du kannst sie hier jederzeit zurückholen. Eine erwachsene Person mit Konto nimmst du so nicht heraus; sie verlässt die Familie vom eigenen Handy aus (siehe [Konto und Familie](/settings/account)).
+In der Ansicht **Erweitert** steht darunter die **Rolle** (Erziehungsberechtigt oder Mitglied; ein Kind kann nicht erziehungsberechtigt sein, und die letzte erziehungsberechtigte Person mit Konto bleibt es) und **Nicht mehr dabei**: Die Person verschwindet von der Wand, aus den Avatar-Reihen und aus neuen Aufgaben; Verlauf und Punkte bleiben, der Geburtstag wird gelöscht, und du kannst sie hier jederzeit zurückholen. Eine erwachsene Person mit Konto nimmst du so nicht heraus; sie verlässt die Familie vom eigenen Handy aus (siehe [Konto und Familie](/settings/account)).
 
 Jede Person kann ihren eigenen Namen, ihre Farbe, ihr Bild und ihren Geburtstag selbst ändern. Alles andere ist Sache der Erziehungsberechtigten, auf geteilten Geräten mit PIN.
 

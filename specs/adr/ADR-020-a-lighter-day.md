@@ -124,7 +124,9 @@ these places, each recorded in its spec:
   enum value `auto`.
 - **Still mode** (`?still=1` in the demo build) holds every animation and fixes Wusel's words
   for screenshots; the docs' screenshot tool always passes it.
-- **Not built yet:** the planner's one-tap suggestion of a tradition's meal, the Ferien ribbon
-  text in the sky, and the module illustrations in the bands. (Wusel's `proud` for a badge
-  earned and its cheer when the getting-started card is completed followed the same day.)
+- **Not built yet:** the Ferien ribbon text in the sky, and the module illustrations in the
+  bands. (Wusel's `proud` for a badge earned and its cheer when the getting-started card is
+  completed followed the same day; the planner's one-tap suggestion of a tradition's meal, the
+  age in birthday countdowns and the birthdays in the ICS feed followed after the review, with
+  migration `20261025100000`.)
 

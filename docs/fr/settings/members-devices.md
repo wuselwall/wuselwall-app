@@ -41,7 +41,7 @@ Sous **Anniversaire**, **Choisir une date** enregistre la date de naissance. L�
 
 <Shot name="settings-member" alt="La page d’un membre avec nom, couleur, image et anniversaire" />
 
-En vue **Avancés**, la page montre aussi le **rôle** (parent ou membre ; un enfant ne peut pas être parent, et le dernier parent avec un compte le reste) et **Ne fait plus partie du foyer** : la personne disparaît du mur, des rangées d’avatars et des nouvelles tâches ; l’historique et les points restent, et vous pouvez la ramener ici. Un adulte avec un compte quitte la famille depuis son propre téléphone (voir [Compte et famille](/fr/settings/account)).
+En vue **Avancés**, la page montre aussi le **rôle** (parent ou membre ; un enfant ne peut pas être parent, et le dernier parent avec un compte le reste) et **Ne fait plus partie du foyer** : la personne disparaît du mur, des rangées d’avatars et des nouvelles tâches ; l’historique et les points restent, l’anniversaire est effacé, et vous pouvez la ramener ici. Un adulte avec un compte quitte la famille depuis son propre téléphone (voir [Compte et famille](/fr/settings/account)).
 
 Chacun change lui-même son nom, sa couleur, son image et son anniversaire. Le reste revient aux parents, avec le PIN sur les appareils partagés.
 

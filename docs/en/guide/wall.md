@@ -28,7 +28,7 @@ The seven days stand side by side, Monday to Sunday. Today's column is wider and
 - **Appointments**: morning, afternoon and evening. Only appointments marked for the kitchen display are shown. A dot shows who is involved. Dashed and with a "?" means not certain yet. If there is no room left, it says "+2 more". A [family tradition](/en/guide/rituals#traditions) is always shown, with a lemon-yellow ribbon and its picture.
   With **All events** (at the right of the band above the appointments) every column shows all its appointments, not only the marked ones. The tick goes off again by itself when nobody touches the wall.
 - **Hot meal** (named at the left of its row): the one warm meal of the day — sun for lunch, moon for dinner — with the dish. A dot per person shows who eats with us (filled) and who is not there (hollow). It also shows who cooks. A star means someone wished for it ([meal wishes](/en/guide/rituals#meal-wishes)).
-- **Footer**: each person's open tasks for today; a tap on **Open today** opens the family's chore board. Also the number of items on the shopping list. In between are the next [countdowns](/en/guide/rituals#countdowns), such as "Olivia's birthday · 3 more sleeps", as many as fit, and on Sunday evening the tile **Our week**.
+- **Footer**: each person's open tasks for today; a tap on **Open today** opens the family's chore board. Also the number of items on the shopping list. In between are the next [countdowns](/en/guide/rituals#countdowns), such as "Olivia turns 10 · 3 more sleeps", as many as fit, and on Sunday evening the tile **Our week**.
 
 On the chore board Wusel cheers at the top of a person's column as soon as they have done everything for today.
 

@@ -15,9 +15,11 @@ Para todos vale:
 
 El cumpleaños se introduce en la página de la persona: **Ajustes → Miembros**, toca a la persona, **Cumpleaños → Elegir una fecha** (ver [Editar un miembro](/es/settings/members-devices#edit-a-member)). Cada persona puede poner el suyo; los adultos responsables, el de los demás.
 
-Antes del día hay una cuenta atrás (ver [Cuentas atrás](#countdowns)). Ese día cuelgan banderines del color de la persona sobre la pared, Wusel lleva gorro de fiesta, **Hoy** muestra una tarjeta de cumpleaños y en la tableta infantil Wusel lo celebra con quien cumple años.
+Antes del día hay una cuenta atrás (ver [Cuentas atrás](#countdowns)), con los años que cumple la persona: «Emma cumple 9 años · 3 noches más». Ese día cuelgan banderines del color de la persona sobre la pared, Wusel lleva gorro de fiesta, **Hoy** muestra una tarjeta de cumpleaños y en la tableta infantil Wusel lo celebra con quien cumple años.
 
 Abuelos y amigos siguen siendo eventos anuales, como antes; podéis marcarlos para una cuenta atrás.
+
+En una [suscripción al calendario familiar](/es/calendar/feeds) cada cumpleaños es un evento anual de día completo, sin la edad. Cuando alguien **Ya no está en la familia**, su cumpleaños se borra.
 
 ## Cuentas atrás {#countdowns}
 
@@ -36,7 +38,7 @@ Los niños y la pared cuentan en noches hasta una semana antes («3 noches más�
 
 ## Tradiciones familiares {#traditions}
 
-Noche de juegos, viernes de pizza, desayuno del domingo: lo que vuestra familia hace una y otra vez, créalo como evento repetido y activa **Tradición familiar** en el editor. Una tradición está **siempre en la pared**, incluso sin **Mostrar en la pantalla de la cocina**, con una cinta amarillo limón y su **imagen**. En **Con comida** anotas qué comida la acompaña, y si es en el **Almuerzo** o la **Cena**.
+Noche de juegos, viernes de pizza, desayuno del domingo: lo que vuestra familia hace una y otra vez, créalo como evento repetido y activa **Tradición familiar** en el editor. Una tradición está **siempre en la pared**, incluso sin **Mostrar en la pantalla de la cocina**, con una cinta amarillo limón y su **imagen**. En **Con comida** anotas qué comida la acompaña, y si es en el **Almuerzo** o la **Cena**. Si esa comida sigue libre el día de la tradición, el [plan de comidas](/es/meals/) la propone; un toque la planifica. Nunca entra sola en el plan.
 
 Si una semana no se hace, elimina **Solo este evento**. Nada recuerda que no se hizo.
 

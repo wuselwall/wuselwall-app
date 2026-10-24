@@ -41,7 +41,7 @@ En **Cumpleaños**, **Elegir una fecha** guarda el cumpleaños. Aparece en la pa
 
 <Shot name="settings-member" alt="La página de un miembro con nombre, color, imagen y cumpleaños" />
 
-En la vista **Avanzados**, la página muestra además el **rol** (adulto responsable o miembro; un niño no puede ser adulto responsable, y el último adulto responsable con cuenta lo sigue siendo) y **Ya no está en la familia**: la persona desaparece de la pared, de las filas de avatares y de las tareas nuevas; el historial y los puntos se conservan, y puedes traerla de vuelta aquí. Un adulto con cuenta sale de la familia desde su propio móvil (ver [Cuenta y familia](/es/settings/account)).
+En la vista **Avanzados**, la página muestra además el **rol** (adulto responsable o miembro; un niño no puede ser adulto responsable, y el último adulto responsable con cuenta lo sigue siendo) y **Ya no está en la familia**: la persona desaparece de la pared, de las filas de avatares y de las tareas nuevas; el historial y los puntos se conservan, el cumpleaños se borra, y puedes traerla de vuelta aquí. Un adulto con cuenta sale de la familia desde su propio móvil (ver [Cuenta y familia](/es/settings/account)).
 
 Cada persona cambia su propio nombre, color, imagen y cumpleaños. El resto corresponde a los adultos responsables, con el PIN en los dispositivos compartidos.
 

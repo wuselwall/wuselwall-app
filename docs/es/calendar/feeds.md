@@ -6,7 +6,7 @@ En **Ajustes → Avanzados → Compartir el calendario familiar**, crea una susc
 
 1. Ponle nombre, por ejemplo «Outlook del trabajo».
 2. Elige eventos y opciones: presencia, colegio (días completos, clases individuales o desactivado) y calendarios externos, desactivados por defecto. Cada suscripción decide por separado si los incluye. Evita compartir presencia en equipos laborales o infantiles si no es necesaria.
-3. Elige personas, o ninguna para incluir a todos.
+3. Elige personas, o ninguna para incluir a todos. Sus cumpleaños se incluyen como eventos anuales, sin la edad.
 4. Crea la suscripción.
 
 ## La dirección {#the-address}

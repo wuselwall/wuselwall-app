@@ -39,9 +39,16 @@ moved forward: **a field on the profile** (`profile.birthday DATE NULL`, already
 [04](04-data-model.md#identity), not yet migrated).
 
 - A guardian sets it on the member page of [16, step 10.1](16-setup-plan.md#step-10--journey-gaps-before-launch-m15).
-  `api.member_update` gains `p_birthday`, and members may set their own.
+  `api.member_update` gains `p_birthday`, and members may set their own. The wall sets no
+  one's: `api.member_update` refuses a kiosk (`20261025100000`), and the member page there only
+  shows. "Nicht mehr dabei" clears the birthday.
 - It is projected like a public holiday, as a read-only occurrence: "Olivia wird 10" on the
-  board's day header, in the month view, on the kid home and in the ICS feed.
+  board's day header, in the month view, on the kid home and in the ICS feed. *Built:* the
+  countdown says the age ("Paul wird 8 · noch 3× schlafen", `ageOn` in `countdown.dart`), and the
+  ICS feed has one yearly all-day event per member (`RRULE:FREQ=YEARLY`, a UID per profile, no
+  age so the series never changes, 29 February on the year's 60th day as in the app) for the
+  token's members, not in a presence-only or calendar-narrowed feed. The board's day header and
+  the month view do not show birthdays yet.
 - On the day: [26's](26-colour-and-ambience.md#seasons-and-occasions) bunting in the member's
   ink, Wusel's Partyhut, and a one-time cheer on that child's own device.
 - Grandparents and friends stay yearly events, as 23 decided. A yearly event can be marked
@@ -84,7 +91,9 @@ The wording uses the member labels the household already uses on the board
 
 **Data.** `event.countdown BOOLEAN DEFAULT false` and `event.icon_key TEXT NULL` (one of the 20
 pictures of the `events` set, `assets/emoji/events/`). Both travel in `api.event_save`'s JSON.
-Members who may edit their own events (`calendar.members_edit_own_events`) may mark them. The
+Members who may edit their own events (`calendar.members_edit_own_events`) may mark them. A
+presence entry carries none of the flags: `api.event_save` refuses them (`20261025100000`); the
+way home counts down by itself. The
 countdowns are **computed in the app** (`features/rituals/domain/countdown.dart`) from the
 occurrences of the horizon, the members' birthdays and the school holidays it already reads;
 the occurrences carry `icon_key`, `countdown` and `tradition`.
@@ -104,9 +113,10 @@ The family's own recurring rituals, by name: Spieleabend, Pizza-Freitag, Sonntag
 - **Skipping one week** is an ordinary exception date (`exdates`). It simply does not show.
   Nothing records that a tradition did not happen.
 - **A meal tradition** (Pizza-Freitag) may carry a meal: `tradition_meal(event_id, slot,
-  recipe_id NULL, free_text NULL)`; the editor takes a few words and lunch or dinner. *Not
-  built yet:* the planner's one-tap suggestion on the tradition's day. The board shows only
-  planned meals, as today.
+  recipe_id NULL, free_text NULL)`; the editor takes a few words and lunch or dinner. On the
+  tradition's day, while that meal is empty, the planner offers it as a chip; one tap plans it
+  with `api.meal_set`. Nothing is planned by itself, and the board shows only planned meals, as
+  today.
 - Traditions reach the ICS feed like any other event.
 
 ## Wunschessen
