@@ -315,6 +315,11 @@ A setting the app does not know follows its key's prefix into the matching group
 (`unusedSettingKeys`) are not offered. The pages take a parent route and may leave out the
 Basic/Advanced chip, so a shared device can show one group (Personal) on its own.
 
+*On a family tablet or the kitchen wall* ([09](09-clients-and-ux.md#screens-by-register)) a
+guardian sees all of this; a child, or an adult who is not a guardian, sees only the member-scope
+`self_service` rows of Personal (`member.wusel`, `member.wusel_outfit`, `member.completion_sound`;
+`SettingsEnv.ownOnly`), always as in Advanced; nobody acting means no settings.
+
 ## Fixed by design — not settings
 
 Recorded so that nobody turns these into options:

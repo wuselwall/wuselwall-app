@@ -25,6 +25,8 @@ Jede Einstellung hat einen **Standard**. Den schlägt WuselWall vor, und er pass
 
 Ganz unten auf der Liste steht **Dieses Gerät abmelden**.
 
+Auf einem Tablet für alle oder an der Wandanzeige sehen Erziehungsberechtigte, die ihren Namen getippt haben, alles. Alle anderen finden nur ihre eigenen Einstellungen (Wusel, Was Wusel trägt, Ton), und ohne ausgewählte Person gibt es auf dem Tablet gar keine; siehe [Wer bist du?](/guide/who-are-you#settings-on-shared-devices).
+
 <Shot name="settings-tasks" alt="Die Gruppe Aufgaben & Belohnungen mit ihren Einstellungen" />
 
 Die Beschreibung jeder Einstellung steht direkt darunter. Sie erklärt, was sich ändert.

@@ -25,6 +25,8 @@ Chaque réglage propose une valeur par défaut. Une valeur différente est signa
 
 **Déconnecter cet appareil** se trouve tout en bas de la liste.
 
+Sur une tablette pour tous ou l’écran mural, les parents qui ont touché leur prénom voient tout. Les autres ne trouvent que leurs propres paramètres (Wusel, la tenue de Wusel, son), et sans personne de sélectionné la tablette n’en a aucun ; voir [Qui êtes-vous ?](/fr/guide/who-are-you#settings-on-shared-devices).
+
 <Shot name="settings-tasks" alt="Le groupe Tâches et récompenses avec ses réglages" />
 
 La description sous chaque réglage explique son effet. Essayez les valeurs par défaut, puis ajustez ce qui gêne après quelques semaines.

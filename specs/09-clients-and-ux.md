@@ -56,6 +56,27 @@ on the parent's phone gives `kid` or `kiosk`.
   family, and every other setting, including any a newer catalogue adds.
   The choice is per device and purely visual: a hidden setting keeps its value and applies.
 
+**Settings on a shared device** (*added 2026-10-24*, device classes of [08](08-users-auth-permissions.md)).
+What the gear opens depends on the device class and the acting person
+(`settingsAccessProvider`); the router and every settings page apply the same rule, so a page
+opened with a push also leaves when the acting person changes:
+
+| Device | Acting | Gear | Settings |
+|---|---|---|---|
+| personal phone | the device's own profile | shown | everything, as before |
+| family tablet (`shared`), kid or adult register | nobody | **hidden** | none: `/settings...` redirects home |
+| family tablet | a guardian | shown | everything; writes still go through `ensureGuardian` (PIN) |
+| family tablet | a child, or an adult who is not a guardian | shown | **their own page only** (below) |
+| kitchen wall (`kiosk`) | nobody | shown; tapping asks **Who are you?** (the active members) and sets the acting person, **Cancel** opens nothing | none until someone picked |
+| kitchen wall | a guardian / anyone else | shown | as on the tablet |
+
+A member's own page is the Personal group narrowed to the settings the server lets a member
+change for themselves (member scope, `self_service`): Wusel, Wusel's outfit and the completion
+sound, titled with their name, with no Basic/Advanced chip, no other group, no Sign out and no
+device list. `/settings` and `/settings/personal` show it; every other `/settings/...` route
+sends them to `/settings`. The wall's 60 s idle return also runs on settings pages (a touch there
+counts); when the acting person becomes nobody, the open settings page leaves for home.
+
 **kid**
 - My day (my tasks + today's meal + my events + today's lessons)
 - Mein Stundenplan (the week's grid, today's lessons as large cards)
