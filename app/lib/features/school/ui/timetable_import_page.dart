@@ -768,19 +768,29 @@ class _Grid extends StatelessWidget {
               ),
             ),
           ),
-          if (l.room != null)
-            Text(l.room!, style: TextStyle(fontSize: 11, color: ww.ink2)),
+          // On a phone the room would push the short name out of its cell: it goes into
+          // the long press with the name.
+          if (l.room != null && !compact)
+            Flexible(
+              child: Text(
+                l.room!,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 11, color: ww.ink2),
+              ),
+            ),
         ],
       );
-      if (name == null) return row;
       if (compact) {
-        // No room for the name on a phone: a long press tells it.
+        if (name == null && l.room == null) return row;
+        // No room for the name on a phone: a long press tells it, and the room.
         return Tooltip(
-          message: '${label(l)} · $name',
+          message: [label(l), ?name, ?l.room].join(' · '),
           triggerMode: TooltipTriggerMode.longPress,
           child: row,
         );
       }
+      if (name == null) return row;
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

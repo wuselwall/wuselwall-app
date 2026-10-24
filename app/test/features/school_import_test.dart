@@ -184,15 +184,21 @@ void main() {
     t.view.physicalSize = const Size(390, 844);
     await t.pumpAndSettle();
 
-    // Five columns leave no room for a name: the cell shows the short name only
-    // and a long press tells the rest.
+    // Five columns leave no room for a name or a room: the cell shows the short name
+    // only and a long press tells the rest.
     expect(_inGrid('Mathematik'), findsNothing);
+    expect(_inGrid('R1'), findsNothing);
     expect(find.byKey(const ValueKey('import-cell-name-2-1')), findsNothing);
-    final tip = find.byTooltip('Ma · Mathematik');
+    expect(
+      _inGrid('Ma'),
+      findsOneWidget,
+      reason: 'the short name stays visible',
+    );
+    final tip = find.byTooltip('Ma · Mathematik · R1');
     expect(tip, findsOneWidget);
     await t.longPress(tip);
     await t.pump(const Duration(milliseconds: 200));
-    expect(find.text('Ma · Mathematik'), findsOneWidget);
+    expect(find.text('Ma · Mathematik · R1'), findsOneWidget);
   });
 
   testWidgets('a text that is no payload says why, and nothing is written', (
