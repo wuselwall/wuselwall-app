@@ -20,6 +20,8 @@ On the kids' tablet and on the wall, [Wusel](/en/guide/wusel) joins in: when the
 
 Everything that someone needs to confirm lands here: finished chores that should be checked, and **reward requests**. Tap **Approve** or **Decline**.
 
+Guardians also see what is waiting on **Today**: the card **Waiting for your approval**, for example "2 chores to check · 1 reward request". Tapping it opens the approvals. The **Tasks** icon at the bottom shows the same number. The card cannot be dismissed; it disappears once everything is decided. Members without guardian rights do not see it.
+
 ## Creating chores
 
 In the **Chores** tab, tap **New chore**:

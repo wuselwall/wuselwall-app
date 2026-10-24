@@ -14,6 +14,8 @@ En la tableta infantil y en la pared, [Wusel](/es/guide/wusel) se alegra con vos
 
 Aquí llegan las tareas por revisar y las solicitudes de recompensa. Un adulto responsable las aprueba o rechaza.
 
+Los adultos responsables ven también en **Hoy** lo que espera: la tarjeta **Pendiente de tu aprobación**, por ejemplo «2 tareas por revisar · 1 solicitud de recompensa». Al tocarla se abren las aprobaciones. El icono de tareas, abajo, muestra el mismo número. La tarjeta no se puede descartar: desaparece en cuanto todo está decidido. Los miembros sin derechos de responsable no la ven.
+
 ## Crear tareas {#creating-chores}
 
 En la pestaña de tareas, crea una y elige:

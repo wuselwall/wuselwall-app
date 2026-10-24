@@ -5124,6 +5124,24 @@ abstract class AppLocalizations {
   /// **'Devices'**
   String get todayNoticeDevices;
 
+  /// No description provided for @todayApprovalsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for your approval'**
+  String get todayApprovalsTitle;
+
+  /// No description provided for @todayApprovalsChecks.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 chore to check} other{{count} chores to check}}'**
+  String todayApprovalsChecks(int count);
+
+  /// No description provided for @todayApprovalsRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 reward request} other{{count} reward requests}}'**
+  String todayApprovalsRequests(int count);
+
   /// No description provided for @todayStartTitle.
   ///
   /// In en, this message translates to:
@@ -5867,6 +5885,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Today: {tasks, plural, one{1 chore} other{{tasks} chores}}'**
   String reminderMorningTasksOnly(int tasks);
+
+  /// No description provided for @reminderMorningApprovals.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 approval waiting} other{{count} approvals waiting}}'**
+  String reminderMorningApprovals(int count);
 
   /// No description provided for @reminderMorningNoEvents.
   ///

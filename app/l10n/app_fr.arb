@@ -1584,6 +1584,23 @@
   "todayNoticeDismiss": "Compris",
   "todayNoticeMembers": "Membres",
   "todayNoticeDevices": "Appareils",
+  "todayApprovalsTitle": "En attente de ton approbation",
+  "todayApprovalsChecks": "{count, plural, one{1 tâche à vérifier} other{{count} tâches à vérifier}}",
+  "@todayApprovalsChecks": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "todayApprovalsRequests": "{count, plural, one{1 demande de récompense} other{{count} demandes de récompense}}",
+  "@todayApprovalsRequests": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "todayStartTitle": "Premiers pas",
   "todayStartProgress": "{done} sur {total}",
   "@todayStartProgress": {
@@ -1855,6 +1872,14 @@
   "@reminderMorningTasksOnly": {
     "placeholders": {
       "tasks": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderMorningApprovals": "{count, plural, one{1 approbation en attente} other{{count} approbations en attente}}",
+  "@reminderMorningApprovals": {
+    "placeholders": {
+      "count": {
         "type": "int"
       }
     }

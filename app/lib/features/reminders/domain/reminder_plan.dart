@@ -57,6 +57,9 @@ const planDays = 7;
 /// A null [morningAt] switches the summary off, a null [eventMinutes] the reminders.
 /// [packingAt] is the evening "Für morgen einpacken" (`notify.packing_reminder`): on the
 /// evening before each day of [packs] that has something to pack; a null switches it off.
+/// [pendingApprovals] is what waited for [actor] as a guardian when the plan was made
+/// (zero for anyone else): only the next morning summary names it, since a later one
+/// would be guessing (specs/16 step 10.5), and that summary comes even on an empty day.
 /// Presence entries, cancelled events and all-day events get no event reminder; an
 /// event counts for [actor] when it is theirs or for the whole family.
 ReminderPlan planReminders({
@@ -69,6 +72,7 @@ ReminderPlan planReminders({
   required List<TaskInstance> tasks,
   TimeOfDay? packingAt,
   List<PackList> packs = const [],
+  int pendingApprovals = 0,
 }) {
   final today = DateTime(now.year, now.month, now.day);
   final end = DateTime(today.year, today.month, today.day + planDays);
@@ -80,6 +84,7 @@ ReminderPlan planReminders({
   ];
 
   if (morningAt != null) {
+    var approvals = pendingApprovals;
     for (var i = 0; i < planDays; i++) {
       final day = DateTime(today.year, today.month, today.day + i);
       final at = DateTime(
@@ -102,14 +107,23 @@ ReminderPlan planReminders({
               _sameDay(t.dueOn, day))
             t,
       ];
-      if (dayEvents.isEmpty && openChores.isEmpty) continue;
+      final waiting = approvals;
+      approvals = 0;
+      final busy = dayEvents.isNotEmpty || openChores.isNotEmpty;
+      if (!busy && waiting == 0) continue;
+      final firstLine = dayEvents.isEmpty
+          ? l10n.reminderMorningNoEvents
+          : _firstLine(l10n, dayEvents.first);
+      // "2 Freigaben warten" leads an empty day and follows the first line of a busy one.
       reminders.add(
         Reminder(
           when: at,
-          title: _morningTitle(l10n, dayEvents.length, openChores.length),
-          body: dayEvents.isEmpty
-              ? l10n.reminderMorningNoEvents
-              : _firstLine(l10n, dayEvents.first),
+          title: busy
+              ? _morningTitle(l10n, dayEvents.length, openChores.length)
+              : l10n.reminderMorningApprovals(waiting),
+          body: busy && waiting > 0
+              ? '$firstLine · ${l10n.reminderMorningApprovals(waiting)}'
+              : firstLine,
         ),
       );
     }

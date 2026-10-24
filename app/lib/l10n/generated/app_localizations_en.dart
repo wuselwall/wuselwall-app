@@ -2893,6 +2893,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get todayNoticeDevices => 'Devices';
 
   @override
+  String get todayApprovalsTitle => 'Waiting for your approval';
+
+  @override
+  String todayApprovalsChecks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count chores to check',
+      one: '1 chore to check',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String todayApprovalsRequests(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count reward requests',
+      one: '1 reward request',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get todayStartTitle => 'Getting started';
 
   @override
@@ -3364,6 +3389,17 @@ class AppLocalizationsEn extends AppLocalizations {
       one: '1 chore',
     );
     return 'Today: $_temp0';
+  }
+
+  @override
+  String reminderMorningApprovals(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count approvals waiting',
+      one: '1 approval waiting',
+    );
+    return '$_temp0';
   }
 
   @override

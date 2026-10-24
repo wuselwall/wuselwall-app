@@ -6,7 +6,7 @@ Activez les rappels sur **votre téléphone personnel**, dans **Paramètres → 
 
 ## Les rappels proposés {#what-you-get}
 
-- **Résumé du matin** : rendez-vous, tâches, premier événement et, pour les parents, récompenses à approuver. L’heure est réglable.
+- **Résumé du matin** : rendez-vous, tâches et premier événement. L’heure est réglable. Pour les parents, le prochain résumé compte aussi les tâches et les demandes de récompense en attente d’approbation (« 2 approbations en attente »), telles que le téléphone les connaissait en planifiant les rappels ; ouvrir l’app met le nombre à jour.
 - **Avant un rendez-vous** : pour les événements auxquels vous participez.
 - **Préparation du cartable la veille** : le matériel des [cours du lendemain](/fr/school/#pack-for-tomorrow). Un parent voit tous les enfants ; un enfant sur son téléphone voit son propre matériel. Rien n’est envoyé s’il n’y a rien à préparer.
 

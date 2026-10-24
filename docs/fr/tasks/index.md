@@ -14,6 +14,8 @@ Sur la tablette des enfants et sur le mur, [Wusel](/fr/guide/wusel) participe : 
 
 Les tâches à vérifier et les demandes de récompense arrivent ici. Un parent les approuve ou les refuse.
 
+Les parents voient aussi ce qui attend sur **Aujourd’hui** : la carte **En attente de ton approbation**, par exemple « 2 tâches à vérifier · 1 demande de récompense ». Un appui ouvre les approbations. L’icône des tâches, en bas, affiche le même nombre. La carte ne se ferme pas à la main : elle disparaît dès que tout est décidé. Les membres sans droits parentaux ne la voient pas.
+
 ## Créer des tâches {#creating-chores}
 
 Dans l’onglet des tâches, créez-en une et choisissez :
