@@ -49,6 +49,8 @@ Para configurarlo, en la carpeta de la pila:
 
 La app ofrece entonces **Escanear una foto** en **Importar…**. Sin esa línea la opción sigue ahí, pero la app dice que el servidor no tiene reconocimiento de texto. El reconocimiento usa RapidOCR con los modelos PP-OCR de PaddleOCR (ambos Apache-2.0, la misma base que usa el gestor de fotos Immich para su reconocimiento de texto).
 
+Con la imagen, la app envía su idioma y los nombres y abreviaturas de vuestras asignaturas. Así el servidor lee vuestras palabras como vuestras asignaturas. La función acepta fotos (JPEG, PNG, WebP, HEIC) y PDF de hasta 6 MB, no guarda nada y no escribe ninguna imagen en el registro. Lo que el servidor lee de una hoja, y dónde están sus límites, está en [Importar un horario](/es/school/#reading-in).
+
 ## Copia fuera de casa {#off-site-backup}
 
 Otro disco local no protege del robo o incendio. La herramienta puede enviar copias **cifradas** con [restic](https://restic.net/) a Backblaze B2 o S3. El proveedor solo ve datos cifrados.

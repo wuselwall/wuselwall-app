@@ -53,6 +53,15 @@ const T = {
   fr: { familyTile: 'fuseau horaire, export', editList: 'Modifier la liste', grandma: "Mamie Ruth", newList: "Nouvelle liste", name: "Nom", save: "Enregistrer", search: "Rechercher ou ajouter", settings: "Paramètres", oldCode: "Créer un code pour un ancien appareil", deviceName: "Nom de l’appareil", createCode: "Créer un code", addMember: "Ajouter un membre", history: "Historique", trolley: "Dans le chariot", household: "Créer une nouvelle famille", signIn: "Continuer par e-mail", papa: "Thomas", daughter: "Emma", wholemeal: /Complet/, kitchenTablet: "Tablette de cuisine", close: "Fermer", shopping: "Courses", kidShopping: "Courses", calendar: "Calendrier", week: "Semaine", newEvent: "Nouvel événement", schedule: "Emploi du temps", tasks: "Tâches", meals: "Repas", householdSettings: "Paramètres du foyer", today: "Aujourd’hui", editSchool: "Modifier l’école", region: "Région", importHolidays: "Importer les vacances scolaires", addMeal: "Ajouter un repas", pairFront: "Connecter une tablette familiale ou un écran mural", pairConnect: "Connecter un appareil", pairCode: "Code du nouvel appareil", next: "Suivant", inviteAdult: "Inviter un adulte", inviteName: "Prénom", inviteCreate: "Créer l’invitation", reminders: "Rappels", advanced: "Avancés", setPassword: "Définir un mot de passe" , enrol: "Connecter avec un code", editTimetable: "Modifier l’emploi du temps", editorSchool: "École du parc", searchQuery: "lai" },
   es: { familyTile: 'zona horaria, exportación', editList: 'Editar lista', grandma: "Abuela Ruth", newList: "Nueva lista", name: "Nombre", save: "Guardar", search: "Buscar o añadir", settings: "Ajustes", oldCode: "Crear un código para un dispositivo antiguo", deviceName: "Nombre del dispositivo", createCode: "Crear código", addMember: "Añadir miembro", history: "Historial", trolley: "En el carrito", household: "Crear una familia nueva", signIn: "Continuar con correo electrónico", papa: "David", daughter: "Olivia", wholemeal: /Integral/, kitchenTablet: "Tableta de la cocina", close: "Cerrar", shopping: "Compra", kidShopping: "Compra", calendar: "Calendario", week: "Semana", newEvent: "Nuevo evento", schedule: "Horario escolar", tasks: "Tareas", meals: "Comidas", householdSettings: "Ajustes del hogar", today: "Hoy", editSchool: "Editar colegio", region: "Región", importHolidays: "Importar vacaciones escolares", addMeal: "Añadir comida", pairFront: "Conectar una tableta familiar o pantalla de pared", pairConnect: "Conectar un dispositivo", pairCode: "Código del nuevo dispositivo", next: "Siguiente", inviteAdult: "Invitar a un adulto", inviteName: "Nombre", inviteCreate: "Crear invitación", reminders: "Recordatorios", advanced: "Avanzados", setPassword: "Establecer contraseña" , enrol: "Conectar con un código", editTimetable: "Editar horario", editorSchool: "Colegio del parque", searchQuery: "lec" },
 };
+// The school setup and the timetable import (specs/24): the first school, the import menu,
+// the scan sheet and an assistant's proposal.
+const SCHOOL_IMPORT = {
+  de: { setupSchool: 'Schule einrichten', schoolName: 'Name der Schule', firstSchool: 'Grundschule Lindenhof', importAction: 'Einlesen…', importFromPhoto: 'Foto scannen', review: 'Prüfen', newSubjects: 'Neue Fächer', country: 'Deutschland', state: 'Berlin' },
+  en: { setupSchool: 'Set up school', schoolName: 'Name of the school', firstSchool: 'Hollybrook Primary', importAction: 'Read in…', importFromPhoto: 'Scan a photo', review: 'Review', newSubjects: 'New subjects', country: 'Germany', state: 'Berlin' },
+  fr: { setupSchool: 'Configurer l’école', schoolName: 'Nom de l’école', firstSchool: 'École primaire du Linde', importAction: 'Importer…', importFromPhoto: 'Scanner une photo', review: 'Vérifier', newSubjects: 'Nouvelles matières', country: 'Allemagne', state: 'Berlin' },
+  es: { setupSchool: 'Configurar colegio', schoolName: 'Nombre del colegio', firstSchool: 'Primaria del tilo', importAction: 'Importar…', importFromPhoto: 'Escanear una foto', review: 'Revisar', newSubjects: 'Asignaturas nuevas', country: 'Alemania', state: 'Berlín' },
+};
+for (const [lang, labels] of Object.entries(SCHOOL_IMPORT)) Object.assign(T[lang], labels);
 
 async function open(page, scenario, route = '') {
   await page.goto(`${base}/?scenario=${scenario}${route ? `#${route}` : ''}`);
@@ -146,6 +155,24 @@ const shots = [
   // The school page's settings icon opens the school form; the region field opens the picker.
   { name: 'region-picker', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.schedule, { exact: false }); await press(p, t.editSchool, { exact: false }); await tapAny(p, t.region, { exact: false }); } },
   { name: 'holiday-import', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.schedule); await press(p, t.editSchool, { exact: false }); await scrollUntil(p, t.importHolidays); await tapNode(p, 'button', t.importHolidays); } },
+  // A family without a school (scenario noschool): the first school asks for name and region only.
+  { name: 'school-first', scenario: 'noschool', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.schedule, { exact: false }); await tapAny(p, t.setupSchool); await p.getByRole('textbox', { name: t.schoolName }).fill(t.firstSchool); await settle(p); await tapAny(p, t.region, { exact: false }); await tapAny(p, t.country, { exact: false }); await settle(p, 1200); await tapAny(p, t.state, { exact: false }); await settle(p, 1200); } },
+  // "Read in…" above the timetable, then "Scan a photo": the sheet with its three choices.
+  { name: 'timetable-scan', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.schedule, { exact: false }); await tapAny(p, t.importAction); await p.getByRole('menuitem', { name: t.importFromPhoto }).first().click(); await settle(p, 1200); } },
+  // An assistant's proposal (scenario import) opens the preview that paste and scan open too.
+  // The tablet is wide enough for each subject's name under its short name.
+  { name: 'timetable-import', scenario: 'import', viewport: TABLET, steps: async (p, t) => { await press(p, t.review); await settle(p, 1200); } },
+  // The same preview on a phone, scrolled to the new subjects and their take-as list.
+  { name: 'timetable-import-subjects', scenario: 'import', viewport: PHONE, steps: async (p, t) => {
+    await press(p, t.review); await settle(p, 1200);
+    const heading = p.getByText(t.newSubjects, { exact: true });
+    for (let i = 0; i < 10 && !(await heading.count()); i++) await scrollDown(p, 500);
+    for (let i = 0; i < 3; i++) {
+      const box = await heading.first().boundingBox();
+      if (!box || box.y < 120) break;
+      await scrollDown(p, box.y - 72);
+    }
+  } },
   // The add action is a popup on each day: its name doubles the tooltip, so match it loosely,
   // then pick the first free slot, which opens the meal editor with the suggestions.
   { name: 'meals-suggest', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.meals); await press(p, t.addMeal, { exact: false }); await p.getByRole('menuitem').first().click(); await settle(p, 1200); } },
