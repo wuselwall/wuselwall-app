@@ -1,13 +1,10 @@
-# Apps and AI assistants
+# Apps and automations
 
-With a **key** from WuselWall, another app works with your family's data as one person. There are two kinds:
-
-- **Automation**: reads and adds, for example for Siri on the iPhone or any other app that can call a web address (such as automation apps on Android or Home Assistant). The examples below use Apple's Shortcuts; other apps send the same requests.
-- **AI assistant**: only reads, for an assistant that speaks MCP, such as Claude (see [below](#ai-assistants-mcp)).
+With a **key** from WuselWall, another app works with your family's data as one person. Siri, Shortcuts and other automation apps can read and add things. The examples below use Apple's Shortcuts; other apps send the same requests.
 
 With the **Shortcuts** app on the iPhone you talk to WuselWall through Siri: "Hey Siri, shopping list" – "What do you need?" – "Milk and two cucumbers" – "Milk and Cucumbers (2×) are on the list." No extra app is needed, only a **key** from WuselWall.
 
-<Shot name="shortcuts" alt="Settings → Apps and AI assistants with two keys" />
+<Shot name="shortcuts" alt="Settings → Apps and automations with two keys" />
 
 ## What a key may do
 
@@ -20,7 +17,7 @@ A key belongs to **one person**. A shortcut with that key acts as that person: i
 
 ## Creating a key
 
-1. Open **Settings → Advanced → Apps and AI assistants** and tap **New key**.
+1. Open **Settings → Advanced → Apps and automations** and tap **New key**.
 2. Give it a **name**, for example "iPhone".
 3. As a guardian, choose the person under **For whom?**. Everyone else creates their own key on their own phone.
 4. Tap **Create key**.
@@ -68,27 +65,6 @@ Answers come in the iPhone's language when it is German, English, French or Span
 If a phone is lost, or someone no longer needs the shortcut, tap **Revoke** in the list. It takes effect at once: the shortcut then only answers that it is no longer valid. The list shows when a key was last used. When someone leaves the family, their keys are revoked automatically.
 
 Guardians see and revoke every key of the family, everyone else their own. The [data export](/en/settings/members-devices#export-data) lists each key with its name and date, but not the key itself.
-
-## AI assistants (MCP)
-
-An AI assistant that speaks **MCP** (the Model Context Protocol, for example Claude) can **look things up** in WuselWall with a key of its own: "What's on this week?", "What's for dinner on Thursday?", "When does Olivia finish school tomorrow?". It can **neither add, change nor delete anything**. The one thing it can hand in is a **proposal**: a timetable it read from a sheet. That lands as a card on **Today**, and only a parent applies or discards it, see [Reading in a timetable](/en/school/#reading-in-a-timetable).
-
-When creating a key, choose **AI assistant** instead of **Automation**. Only adults get a key for an assistant. It appears in the list under **AI assistants** and is revoked like any other key.
-
-::: warning What the assistant reads leaves your server
-The assistant reads the whole family's week: appointments, who is away when, the children's timetables, tasks, points, meals, recipes and the shopping list. That data goes to the assistant's provider and is subject to its privacy terms. Decide together whether you want that.
-:::
-
-The assistant finds these lookups: the week overview, appointments, tasks, the meal plan, the shopping list, points, recipes, the timetable and who is home. Every answer names people by their names.
-
-**Connecting:** add an MCP server in the assistant with the address from WuselWall, for example `https://api.example.org/functions/v1/mcp`, and send the key as the header `Authorization: Bearer wwa_…`. In Claude Code:
-
-```sh
-claude mcp add --transport http wuselwall https://api.example.org/functions/v1/mcp \
-  --header "Authorization: Bearer wwa_…"
-```
-
-Assistants that can only sign in with OAuth and allow no header of your own cannot connect yet. A sign-in with a consent page will come together with adding things through assistants.
 
 ::: info Without an iPhone
 A shortcut is an ordinary web request. Any app that can send a request with a header works the same way.

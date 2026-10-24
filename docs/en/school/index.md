@@ -83,11 +83,9 @@ When no timetable exists yet, the view shows a message about the selected child 
 
 ## Reading in a timetable
 
-Instead of typing every lesson, you can have the sheet read in. There are three ways. All of them end on the same [preview](#preview), and only **Apply** writes anything.
+Instead of typing every lesson, you can have the sheet read in. There are two ways. All of them end on the same [preview](#preview), and only **Apply** writes anything.
 
-**From text, with your AI assistant.** For a child without a timetable, tap **Read in…** and then **Paste as text** (or **Read in…** at the top of the timetable). **Copy the instructions for the assistant** puts a text on the clipboard: give it to the assistant you trust together with a photo of the timetable, for example in its app on your phone. It answers in a fixed format WuselWall can read. Paste the answer into the field and tap **Read in**. The photo goes only to the assistant of your choice; WuselWall sends nothing to anyone.
-
-**As a proposal from an assistant.** An assistant connected to WuselWall ([Apps and AI assistants](/en/settings/shortcuts)) can hand in a timetable as a **proposal**. It changes nothing: a card “Proposal from Claude” with **Review** and **Discard** appears on **Today** and above the timetable. **Review** opens the preview. Proposals expire after 14 days.
+**From structured text.** Tap **Read in…** and **Paste as text**. Paste timetable JSON in the WuselWall format, then tap **Read in** to open the preview. Ordinary prose is not automatically converted into a timetable.
 
 **As a photo or a PDF, read by your server.** If your server has text recognition set up ([Extras for the server](/en/server/extras#text-recognition)), tap **Read in…** and **Scan a photo**. Then choose **Take a photo**, **Choose a photo** or **Choose a file (PDF or picture)**, for example for the PDF the school sent you.
 
@@ -132,7 +130,7 @@ Under **New subjects** you see every subject on the sheet that you do not have y
 
 If you switch off **Create the new subjects**, the lessons with new subjects are left out; the grid shows them struck through.
 
-**Apply** creates the term if it is missing, extends the bell times, creates the new subjects and saves the timetable. **Discard** leaves everything as it was; a proposal is then rejected.
+**Apply** creates the term if it is missing, extends the bell times, creates the new subjects and saves the timetable. Use the back arrow to leave the preview without saving.
 
 ## Editing whole days
 

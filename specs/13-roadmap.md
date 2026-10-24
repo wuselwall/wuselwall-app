@@ -10,8 +10,10 @@ and decisions readable. [16 — Build plan](16-setup-plan.md) describes the next
 **Core features and “A lighter day” are built; the family Alpha is next after the
 remaining journeys.** Shopping with an offline outbox, tasks and points, calendar and
 presence, school timetables and import, meals, onboarding, household settings and the
-week board exist in code. Shortcuts, read-only MCP, timetable proposals, ICS subscriptions,
-local reminders and the packing reminder are also built. They are not new milestones.
+week board exist in code. Shortcuts, ICS subscriptions, local reminders and the packing
+reminder are also built. They are not new milestones. **MCP and AI assistants are on hold**
+(2026-10-24), removed from the app UI, with their backend and design retained in the
+[deferred-work record](deferred/mcp-and-ai-assistants.md). They are not Alpha or release gates.
 
 Member, family, device and shopping-structure editing (old step 10.1–10.3) are built.
 A lighter day ([ADR-020](adr/ADR-020-a-lighter-day.md)) was built 2026-10-24 and shipped in
@@ -135,10 +137,12 @@ it does not rebuild them. The project's website and docs are separate publicatio
 <a id="m4--speculative"></a>
 
 [23](23-roadmap-after-alpha.md) is the single later backlog. Audit history, a month view,
-assistant-origin markers, richer assistant consent, recipe import and desktop tools are
-candidates, without a promised release or due date. Push relay, multiple households and
+automation-origin markers, recipe import and desktop tools are candidates, without a
+promised release or due date. MCP/AI assistant setup, consent, scopes and proposals are
+parked together in [23's on-hold section](23-roadmap-after-alpha.md#on-hold--mcp-and-ai-assistants).
+Push relay, multiple households and
 school-portal imports require a real case first. Birthdays are already in milestone 2;
-Shortcuts and read-only MCP are already built.
+Shortcuts is already built; the retained MCP implementation is deferred.
 
 ## Effort
 

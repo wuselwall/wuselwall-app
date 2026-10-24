@@ -3,7 +3,7 @@ import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/features/shortcuts/data/shortcut_repository.dart';
 
 /// Keys for the screenshots: the father's phone, in use, the daughter's tablet, never used
-/// yet, and the mother's assistant. A new key is made up and kept until the demo is reloaded.
+/// yet. A new key is made up and kept until the demo is reloaded.
 class DemoShortcutRepository implements ShortcutRepository {
   DemoShortcutRepository()
     : _tokens = [
@@ -21,15 +21,6 @@ class DemoShortcutRepository implements ShortcutRepository {
           label: 'iPad',
           createdAt: DateTime(2026, 10, 9),
           useCount: 0,
-        ),
-        ShortcutToken(
-          id: 's-3',
-          profileId: DemoData.mama,
-          label: 'Claude',
-          createdAt: DateTime(2026, 10, 12),
-          lastUsedAt: DateTime.now().subtract(const Duration(days: 1)),
-          useCount: 7,
-          kind: KeyKind.assistant,
         ),
       ];
 

@@ -4399,15 +4399,15 @@ class AppLocalizationsEs extends AppLocalizations {
       'Abre la aplicación WuselWall en tu teléfono, escanea el código para elegir este servidor e inicia sesión allí.';
 
   @override
-  String get shortcutTitle => 'Aplicaciones y asistentes de IA';
+  String get shortcutTitle => 'Apps y automatizaciones';
 
   @override
   String get shortcutSettingsSubtitle =>
-      'Siri, automatizaciones y asistentes de IA (MCP), cada uno con su clave';
+      'Siri y otras automatizaciones, cada una con su clave';
 
   @override
   String get shortcutIntro =>
-      'Una clave permite que otra aplicación use WuselWall en nombre de una persona. Una clave de automatización, por ejemplo para un atajo de Siri en el iPhone o cualquier aplicación que pueda llamar a una dirección web, permite leer y añadir: añade artículos a la lista de la compra e indica qué hay hoy, qué hay para comer o quién tiene educación física mañana. No permite eliminar ni administrar nada. Una clave para un asistente de IA (MCP, como Claude) solo permite leer.';
+      'Una clave permite que otra aplicación use WuselWall en nombre de una persona. Una clave de automatización, por ejemplo para un atajo de Siri en el iPhone o cualquier aplicación que pueda llamar a una dirección web, permite leer y añadir: añade artículos a la lista de la compra e indica qué hay hoy, qué hay para comer o quién tiene educación física mañana. No permite eliminar ni administrar nada.';
 
   @override
   String get shortcutEmpty => 'Aún no hay claves.';
@@ -4762,7 +4762,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get schoolImportPasteIntro =>
-      'Fotografía el horario y pide al asistente en el que confiáis que lo pase al formato de WuselWall. Pega aquí su respuesta. Verás una vista previa antes de guardar.';
+      'Pega un horario en JSON con el formato de WuselWall. Verás una vista previa antes de guardar.';
 
   @override
   String get schoolImportCopyPrompt =>
@@ -4776,14 +4776,14 @@ class AppLocalizationsEs extends AppLocalizations {
       'Lee el horario de la foto y devuélvelo como JSON en el formato siguiente, sin más texto. Días como lun, mar, mié, jue, vie; clases por número (1 = primera clase) o con hora de inicio y fin; asignaturas con la abreviatura de la hoja y, si la conoces, el nombre completo. Omite las casillas vacías. Para semanas A y B indica week: a o b. El comedor o la guardería van en care.';
 
   @override
-  String get schoolImportPasteHint => 'Pega aquí la respuesta';
+  String get schoolImportPasteHint => 'Pega aquí el horario en JSON';
 
   @override
   String get schoolImportRead => 'Importar';
 
   @override
   String get schoolImportErrNotJson =>
-      'Eso no es un horario en el formato de WuselWall. Pega la respuesta completa del asistente.';
+      'Eso no es un horario en el formato de WuselWall. Pega el texto JSON completo.';
 
   @override
   String get schoolImportErrNoLessons => 'El texto no contiene clases.';

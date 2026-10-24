@@ -8,8 +8,7 @@ import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/school/ui/timetable_paste_sheet.dart';
 import 'package:wuselwall/features/school/ui/timetable_scan.dart';
 
-/// The two ways a timetable comes in without typing (specs/24): the assistant's answer
-/// pasted as text, or a photo read by the family's own server.
+/// Import structured timetable text or a photo read by the family's own server (specs/24).
 enum TimetableImportWay { text, photo }
 
 /// "Einlesen…" as a toolbar button with the two ways as a menu.

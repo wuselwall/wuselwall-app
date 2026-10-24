@@ -7,7 +7,7 @@ Si vienes de otra vista, desliza hacia dentro desde el borde izquierdo en iPhone
 
 ## Vista básica o avanzada {#view}
 
-La vista **Básicos** muestra lo esencial en tres grupos: **Familia** (ajustes del hogar, familia, semana habitual, miembros, dispositivos), **Este dispositivo** (recordatorios, idioma, apariencia, primeros pasos) y, en tu móvil, la eliminación de la cuenta. **Avanzados** añade **Compartir y conexiones** (calendarios compartidos, calendarios externos, asistentes), el servidor, el inicio de sesión, la seguridad y la salida del hogar. El mismo interruptor existe en los ajustes del hogar, en la página de una persona, en **Familia** y al editar una lista de la compra.
+La vista **Básicos** muestra lo esencial en tres grupos: **Familia** (ajustes del hogar, familia, semana habitual, miembros, dispositivos), **Este dispositivo** (recordatorios, idioma, apariencia, primeros pasos) y, en tu móvil, la eliminación de la cuenta. **Avanzados** añade **Compartir y conexiones** (calendarios compartidos, calendarios externos, apps y automatizaciones), el servidor, el inicio de sesión, la seguridad y la salida del hogar. El mismo interruptor existe en los ajustes del hogar, en la página de una persona, en **Familia** y al editar una lista de la compra.
 
 Lo oculto sigue activo. La app recuerda la vista por dispositivo. Los ajustes del hogar también tienen estas dos vistas.
 

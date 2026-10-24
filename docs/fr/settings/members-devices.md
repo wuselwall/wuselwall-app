@@ -7,7 +7,7 @@ Depuis une autre vue, faites glisser votre doigt du bord gauche vers la droite s
 
 ## Vue de base ou avancée {#view}
 
-La vue **Essentiels** montre l’essentiel en trois groupes : **Famille** (paramètres du foyer, famille, semaine habituelle, membres, appareils), **Cet appareil** (rappels, langue, apparence, premiers pas) et, sur votre téléphone, la suppression du compte. **Avancés** ajoute **Partage et connexions** (calendriers partagés, calendriers externes, assistants), le serveur, la connexion, la sécurité et le départ du foyer. La même bascule existe dans les paramètres du foyer, sur la page d’une personne, sous **Famille** et dans la modification d’une liste de courses.
+La vue **Essentiels** montre l’essentiel en trois groupes : **Famille** (paramètres du foyer, famille, semaine habituelle, membres, appareils), **Cet appareil** (rappels, langue, apparence, premiers pas) et, sur votre téléphone, la suppression du compte. **Avancés** ajoute **Partage et connexions** (calendriers partagés, calendriers externes, apps et automatisations), le serveur, la connexion, la sécurité et le départ du foyer. La même bascule existe dans les paramètres du foyer, sur la page d’une personne, sous **Famille** et dans la modification d’une liste de courses.
 
 Les réglages masqués restent actifs. L’app mémorise la vue pour chaque appareil ; les paramètres du foyer possèdent aussi ces deux vues.
 

@@ -24,10 +24,10 @@ import 'package:wuselwall/demo/demo_kid.dart';
 import 'package:wuselwall/demo/demo_meals.dart';
 import 'package:wuselwall/demo/demo_notices.dart';
 import 'package:wuselwall/demo/demo_pairing.dart';
-import 'package:wuselwall/demo/demo_proposals.dart';
 import 'package:wuselwall/demo/demo_region.dart';
 import 'package:wuselwall/demo/demo_repositories.dart';
 import 'package:wuselwall/demo/demo_rituals.dart';
+import 'package:wuselwall/demo/demo_scan.dart';
 import 'package:wuselwall/demo/demo_school.dart';
 import 'package:wuselwall/demo/demo_shortcuts.dart';
 import 'package:wuselwall/demo/demo_tasks.dart';
@@ -47,7 +47,6 @@ import 'package:wuselwall/features/kid/data/kid_badges_repository.dart';
 import 'package:wuselwall/features/meals/data/meals_repository.dart';
 import 'package:wuselwall/features/region/data/region_repository.dart';
 import 'package:wuselwall/features/rituals/data/rituals_repository.dart';
-import 'package:wuselwall/features/school/data/proposals_repository.dart';
 import 'package:wuselwall/features/school/data/scan_repository.dart';
 import 'package:wuselwall/features/school/data/school_repository.dart';
 import 'package:wuselwall/features/school/ui/timetable_scan.dart';
@@ -100,9 +99,9 @@ DeviceInfo? _device(String scenario) => switch (scenario) {
 };
 
 /// Every repository and session provider replaced by its in-memory demo.
-/// [scenario]: setup | newfamily (signed in, no family yet) | adult | kid | kiosk, and two
-/// adult variants for the docs: noschool (no school yet) and import (a timetable waits as
-/// an assistant's proposal). The family's names follow the device's language, as the
+/// [scenario]: setup | newfamily (signed in, no family yet) | adult | kid | kiosk, and an
+/// adult variant for the docs: noschool (no school yet). The family's names follow
+/// the device's language, as the
 /// app's own text does.
 List<Override> demoOverrides({String scenario = 'adult'}) {
   DemoData.useLanguageOf(PlatformDispatcher.instance.locales);
@@ -151,9 +150,6 @@ List<Override> _overrides(String scenario) => [
   boardRepositoryProvider.overrideWithValue(DemoBoardRepository()),
   schoolRepositoryProvider.overrideWithValue(
     DemoSchoolRepository(empty: scenario == 'noschool'),
-  ),
-  proposalsRepositoryProvider.overrideWithValue(
-    DemoProposalsRepository(timetable: scenario == 'import'),
   ),
   scanRepositoryProvider.overrideWithValue(const DemoScanRepository()),
   // No camera and no files in the demo: picking gives none.

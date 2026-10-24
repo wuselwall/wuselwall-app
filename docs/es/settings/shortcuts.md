@@ -1,13 +1,10 @@
-# Apps y asistentes de IA
+# Apps y automatizaciones
 
-Una **clave** permite a otra app usar datos familiares como una persona:
-
-- **Automatización**: lee y añade, por ejemplo con Siri, Atajos de Apple, una app Android o Home Assistant capaz de enviar peticiones web.
-- **Asistente de IA**: solo lee, mediante MCP, por ejemplo Claude.
+Una **clave** de WuselWall permite a otra app usar los datos familiares como una persona. Siri, Atajos y otras apps de automatización pueden leer y añadir elementos. Los ejemplos usan Atajos de Apple; las otras apps envían las mismas peticiones.
 
 Con Siri: «Lista de la compra» → «¿Qué necesitas?» → «Leche y dos pepinos». Basta la app Atajos y una clave de WuselWall.
 
-<Shot name="shortcuts" alt="Las claves de automatización y asistentes en los ajustes" />
+<Shot name="shortcuts" alt="Las claves de automatización en los ajustes" />
 
 ## Permisos de una clave {#what-a-key-may-do}
 
@@ -15,7 +12,7 @@ Pertenece a **una persona**. Lee día, comidas, colegio, presencia y puntos. Pue
 
 ## Crear una clave {#creating-a-key}
 
-En **Ajustes → Avanzados → Apps y asistentes de IA**, crea una clave y ponle nombre. Un adulto responsable puede elegir a la persona; los demás crean la propia en su móvil. Copia **clave y dirección del servidor**, que se muestran una vez.
+En **Ajustes → Avanzados → Apps y automatizaciones**, crea una clave y ponle nombre. Un adulto responsable puede elegir a la persona; los demás crean la propia en su móvil. Copia **clave y dirección del servidor**, que se muestran una vez.
 
 Trátala como una contraseña. Atajos la sincroniza entre tus dispositivos Apple por iCloud.
 
@@ -55,22 +52,3 @@ La respuesta sigue el idioma admitido del móvil o, en otro caso, el del hogar. 
 ## Revocar una clave {#revoking-a-key}
 
 Revócala si pierdes el móvil o deja de ser necesaria. El efecto es inmediato y la lista indica el último uso. Salir del hogar revoca tus claves automáticamente. Los adultos responsables gestionan todas; los miembros, las suyas. La [exportación](/es/settings/members-devices#export-data) incluye nombres y fechas, nunca secretos.
-
-## Asistentes de IA y MCP {#ai-assistants-mcp}
-
-Un asistente compatible con **Model Context Protocol** puede consultar semana, citas, tareas, comidas, compra, puntos, recetas, horarios y presencia. **No puede añadir, modificar ni eliminar**. Lo único que puede entregar es una **propuesta**: un horario leído de una hoja. Aparece como tarjeta en **Hoy**, y solo un adulto responsable la aplica o la descarta, ver [Importar un horario](/es/school/#reading-in).
-
-Crea una clave de tipo **Asistente de IA**, reservada a adultos, en lugar de automatización.
-
-::: warning Los datos consultados salen del servidor
-El asistente lee información de toda la familia, incluidas ausencias y horarios de niños. Se transmite a su proveedor y queda sujeta a sus condiciones de privacidad. Decidid en familia si lo queréis.
-:::
-
-Añade la dirección MCP que ofrece WuselWall y la cabecera `Authorization: Bearer wwa_…`. En Claude Code:
-
-```sh
-claude mcp add --transport http wuselwall https://api.example.org/functions/v1/mcp \
-  --header "Authorization: Bearer wwa_…"
-```
-
-Los asistentes que exigen OAuth y no admiten cabecera propia aún no pueden conectarse. El consentimiento mediante inicio de sesión llegará junto con futuras funciones de escritura. Sin iPhone, cualquier app capaz de enviar una petición con cabecera puede usar las automatizaciones.

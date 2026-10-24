@@ -7,7 +7,7 @@ When you came from another view, swipe inward from the left edge on iPhone or iP
 
 ## Basic or Advanced {#view}
 
-At the top of the settings you choose the view. **Basic** is the default and shows what matters most, in three groups: **Family** (household settings, family, usual week, members, devices), **This device** (reminders, language, appearance, getting started), and on your own phone **Delete account**. **Advanced** also shows **Sharing and connections** (sharing the family calendar, outside calendars, apps and AI assistants), the server, sign-in, security, and leaving the family.
+At the top of the settings you choose the view. **Basic** is the default and shows what matters most, in three groups: **Family** (household settings, family, usual week, members, devices), **This device** (reminders, language, appearance, getting started), and on your own phone **Delete account**. **Advanced** also shows **Sharing and connections** (sharing the family calendar, outside calendars, apps and automations), the server, sign-in, security, and leaving the family.
 
 Whatever is hidden **still applies**. The view only changes what you see, and WuselWall remembers it for each device. The same goes for **Household settings**, a person's page, **Family** and editing a shopping list: Basic shows what most families need, Advanced the rest.
 

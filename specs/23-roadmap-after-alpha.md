@@ -16,8 +16,9 @@ keep/change/remove verdict. A feedback screen is not a prerequisite for talking 
 pilot household. Any future diagnostic report is previewed and sent deliberately, without
 household data or automatic telemetry.
 
-Birthdays (old R1.5) have moved to **2 — A lighter day**. Already-built Shortcuts, read-only
-MCP, reminders, ICS import and timetable import do not return as future tasks.
+Birthdays (old R1.5) have moved to **2 — A lighter day**. Already-built Shortcuts,
+reminders, ICS import and timetable text/photo import do not return as future tasks.
+MCP and AI assistants are on hold below.
 
 <a id="r2--ready-for-other-families"></a>
 
@@ -38,13 +39,38 @@ promised bundle or a gate for public release unless the trial shows why it must 
 |---|---|---|
 | R1.1 | Previewed, member-sent feedback/diagnostics | Families need an easier way to report a problem than the pilot conversation |
 | R1.3 | Guardian audit history, last 30 days, by member/origin | A family needs to understand who changed something; the audit data already exists |
-| R1.4 | Assistant-origin markers | Shortcuts/MCP additions are being confused with manual entries |
+| R1.4 | Automation-origin markers | Shortcuts additions are being confused with manual entries; MCP markers are on hold |
 | R1.6 | Read-only calendar month | Planning Ferien, birthdays or appointments across weeks is awkward |
 | R1.8 | Further wall quiet-hour/layout controls | The built night/ambience settings do not solve an observed display problem |
 | 10.10 | Retire legacy wizard/enrolment paths | A distributed release and the supported previous-version window no longer require them; remove only then |
 
 R1.2 (defaults) is in milestone 3; R1.7 (backup visibility/verification) is in milestone 4.
 Any missed native accessibility check remains a release gate, not a backlog preference.
+
+## On hold — MCP and AI assistants
+
+**Paused 2026-10-24 by product decision.** Removed from the apps: assistant key setup and
+lists, MCP connection instructions, timetable proposal cards and assistant prompts in
+text import. No active milestone or release gate includes them. The backend, existing
+credentials and stored proposals remain for compatibility; this UI change does not
+revoke credentials or disable an installed endpoint.
+
+Keep the implementation/design and resume checklist in
+[deferred/mcp-and-ai-assistants.md](deferred/mcp-and-ai-assistants.md).
+It links the earlier UI revision, [12](12-mcp-and-assistants.md), ADR-007 and [24](24-school-import.md).
+Siri and ordinary automations, structured-text paste and the family's own OCR scan remain.
+
+The following former candidates are parked together, without an automatic restart after
+the Alpha:
+
+| Old item | Retained work |
+|---|---|
+| R3.1 / Q15 | Assistant OAuth, login/consent screens and grant management |
+| R3.2 / Q16 | MCP shopping write scope and any later write scopes |
+| Q17 / assistant part of R1.4 | Assistant-origin markers |
+| specs/24 | Assistant timetable proposals, review cards and assistant-guided paste |
+
+Revisit only with a concrete family need and an explicit decision to resume.
 
 ## The test every item passes
 
@@ -78,8 +104,6 @@ household is expected to need them, and that order changes with the Alpha's find
 
 | Item | What | Passes because |
 |---|---|---|
-| **R3.1** OAuth for assistants | Supabase Auth's OAuth 2.1 server with the server's own login and consent screens, and grant management in Einstellungen, replacing the `wwa_` interim keys ([Q15](14-open-questions.md), [12](12-mcp-and-assistants.md#part-2--the-mcp-server)) | The family's own assistant talks to the family's own server; the project is not in the path (P1) |
-| **R3.2** The first MCP write scope: shopping | `shopping:write` only ([Q16](14-open-questions.md)): add and tick items, attributed to the person who granted it, marked as R1.4 does | The most useful and least destructive write; attributable (P4) |
 | **R3.3** Recipe import from a URL | The family's server fetches the page, reads schema.org JSON-LD and shows a preview before saving (FR-3.9). Private addresses refused, size and time limited | The server, not the app, contacts the site (P2); nothing is kept but the recipe |
 | **R3.4** A family goal | One shared goal the whole family's points fill ("Zoo-Ausflug"), shown on the wall without a per-child breakdown ([06](06-module-tasks.md)) | Cooperative, never comparative (P3) |
 | **R3.5** Ageing bonuses | An open bonus task slowly gains points until someone takes it; a household setting, off by default | Rewards picking the task up; nobody loses anything (P3, P5) |
@@ -99,7 +123,7 @@ it, and the answer goes into [14](14-open-questions.md).
 | **R4.1** A push relay | Do local reminders and the Today notices miss something that matters ([Q47](14-open-questions.md), Q38)? | A real missed event. The relay would be the one service the project runs: stateless, a device token and an end-to-end-encrypted payload, no household data |
 | **R4.2** One account in two households | Separated parents and a child with two homes ([Q43](14-open-questions.md)) | A real family with that case, and a design that keeps every read inside one household |
 | **R4.3** CalDAV for the phones | Is the read-only feed too limiting on the move ([05](05-module-calendar.md#later-two-way-for-the-phones))? | Entering events in WuselWall proves to be the reason they are not entered. Never Outlook two-way (P8) |
-| **R4.4** A school portal import | Does a family's school publish substitutions (Q20, FR-7.14)? | A school with a documented feed; manual entry stays the default. *2026-10-22: the pilot's schools publish paper and closed platforms, so the sheet comes in by paste, proposal or photo instead ([24](24-school-import.md))* |
+| **R4.4** A school portal import | Does a family's school publish substitutions (Q20, FR-7.14)? | A school with a documented feed; manual entry stays the default. *2026-10-22: the pilot's schools publish paper and closed platforms; structured text and photo import serve that case ([24](24-school-import.md)). 2026-10-24: assistant proposals are on hold.* |
 | **R4.5** More languages | Further languages beyond the built DE/EN/FR/ES set, e.g. Italian for Swiss families, since the regions already reach the Gemeinde | A maintainer who keeps every app/server string and native permission prompt complete in that language (P9); family guides need their own maintained translation |
 
 ## Not on the roadmap, and why
@@ -113,7 +137,7 @@ Recorded so that they are not proposed again every few weeks.
 | Two-way sync with Outlook or Google | [ADR-001](adr/ADR-001-calendar-backbone.md), P8 | The ICS feed; CalDAV only through R4.3 |
 | Family chat, photo sharing, document storage, budgeting | P8 | The tools a family already uses for them |
 | Crash reporting or analytics services | P2 | R1.1's feedback the member sends by hand |
-| An AI meal planner or chatbot run by the project | P1, P2 | The family's own assistant through MCP (R3.1, R3.2) |
+| An AI meal planner or chatbot run by the project | P1, P2 | Meal planning by the family; MCP/AI assistants remain on hold |
 | A hosted WuselWall, paid plans, ads | ADR-018, [01](01-vision-and-scope.md#explicitly-out-of-scope) | The self-hosting kit (R2) |
 | Weather or traffic on the wall | P2: a third party for something every phone already shows | Reopen only through R3.8 with a server-side, coarse-location, opt-in design |
 | Homework, grades, absence reporting | [15](15-module-school-timetable.md#v1-scope-cut): the school already has one | — |

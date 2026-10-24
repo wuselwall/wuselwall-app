@@ -17,6 +17,11 @@ Steps 0–9 are foundation reference, collapsed below. Their implementation exis
 signing, distribution and real-device behaviour still need candidate-specific evidence.
 Do not repeat the repository setup or count built features as open work.
 
+MCP and AI assistants are on hold as of 2026-10-24, with no active build step or release
+gate. Their UI is removed; retained work and the conditions for reconsideration live in
+[23](23-roadmap-after-alpha.md#on-hold--mcp-and-ai-assistants) and its linked record.
+Siri/automations and timetable text/photo import remain.
+
 ## Rules for each slice
 
 Follow [AGENTS.md](../AGENTS.md): repositories and `api` boundaries, actor context and audit,

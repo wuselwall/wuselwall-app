@@ -7,7 +7,7 @@ Wenn du von einer anderen Ansicht kommst, kannst du auf iPhone und iPad am linke
 
 ## Einfach oder Erweitert {#ansicht}
 
-Oben in den Einstellungen wählst du die Ansicht. **Einfach** ist der Standard und zeigt das Wichtigste, in drei Gruppen: **Familie** (Haushalt einstellen, Familie, übliche Woche, Mitglieder, Geräte), **Dieses Gerät** (Erinnerungen, Sprache, Darstellung, Erste Schritte) und auf deinem eigenen Handy **Konto löschen**. **Erweitert** zeigt zusätzlich **Teilen und Verbindungen** (Familienkalender teilen, Kalender von außen, Apps und KI-Assistenten), den Server, Anmeldung, Sicherheit und Familie verlassen.
+Oben in den Einstellungen wählst du die Ansicht. **Einfach** ist der Standard und zeigt das Wichtigste, in drei Gruppen: **Familie** (Haushalt einstellen, Familie, übliche Woche, Mitglieder, Geräte), **Dieses Gerät** (Erinnerungen, Sprache, Darstellung, Erste Schritte) und auf deinem eigenen Handy **Konto löschen**. **Erweitert** zeigt zusätzlich **Teilen und Verbindungen** (Familienkalender teilen, Kalender von außen, Apps und Automationen), den Server, Anmeldung, Sicherheit und Familie verlassen.
 
 Was ausgeblendet ist, **gilt trotzdem weiter**. Die Ansicht ändert nur, was du siehst, und WuselWall merkt sie sich für jedes Gerät. Dasselbe gilt unter **Haushalt einstellen**, auf der Seite einer Person, unter **Familie** und beim Bearbeiten einer Einkaufsliste: Einfach zeigt, was die meisten brauchen, Erweitert den Rest.
 
