@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
+import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/wusel/wusel.dart';
+import 'package:wuselwall/features/rituals/application/ritual_providers.dart';
 import 'package:wuselwall/features/rituals/ui/countdown_widgets.dart';
 import 'package:wuselwall/features/rituals/ui/meal_wish_widgets.dart';
 import 'package:wuselwall/features/rituals/ui/table_question_widgets.dart';
 import 'package:wuselwall/features/rituals/ui/week_review_widgets.dart';
+import 'package:wuselwall/features/wusel/ui/family_wusel.dart';
 
-/// The rituals on Today (specs/27): the nearest countdown, the table question during
-/// the meal, the Sunday look-back and new meal wishes. Each shows only when it has
-/// something to say; none of them is a notification.
+/// The rituals on Today (specs/27): a birthday, the Sunday look-back, the table
+/// question during the meal, the nearest countdown and new meal wishes. Each shows
+/// only when it has something to say; none of them is a notification.
 class RitualCards extends StatelessWidget {
   const RitualCards({super.key});
 
@@ -17,6 +22,7 @@ class RitualCards extends StatelessWidget {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        _BirthdayCard(),
         WeekReviewCard(),
         TableQuestionCard(),
         TodayCountdown(),
@@ -24,4 +30,30 @@ class RitualCards extends StatelessWidget {
       ],
     ),
   );
+}
+
+/// A special day on Today: Wusel in the party hat, even when it is quiet for this
+/// grown-up (specs/25 "Where Wusel appears").
+class _BirthdayCard extends ConsumerWidget {
+  const _BirthdayCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final names = [
+      for (final m in ref.watch(birthdaysTodayMembersProvider)) m.displayName,
+    ];
+    if (names.isEmpty) return const SizedBox.shrink();
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(Tokens.space3),
+        child: WuselSays(
+          line: context.l10n.wuselFactBirthday(names.join(' & ')),
+          pose: WuselPose.cheer,
+          outfit: WuselOutfit.party,
+          size: 72,
+          quietAllowed: true,
+        ),
+      ),
+    );
+  }
 }

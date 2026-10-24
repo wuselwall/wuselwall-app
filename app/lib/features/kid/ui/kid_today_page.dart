@@ -22,6 +22,7 @@ import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/kid/application/kid_logic.dart';
 import 'package:wuselwall/features/kid/application/kid_providers.dart';
 import 'package:wuselwall/features/kid/ui/kid_widgets.dart';
+import 'package:wuselwall/features/rituals/application/ritual_providers.dart';
 import 'package:wuselwall/features/rituals/ui/countdown_widgets.dart';
 import 'package:wuselwall/features/rituals/ui/meal_wish_widgets.dart';
 import 'package:wuselwall/features/rituals/ui/table_question_widgets.dart';
@@ -603,9 +604,15 @@ class _KidGreetingState extends ConsumerState<_KidGreeting> {
     final title = Theme.of(context).textTheme.headlineSmall
         ?.copyWith(fontWeight: FontWeight.w800);
     final Widget greeting;
+    // The child's own birthday: Wusel cheers in the party hat (specs/25).
+    final birthday = ref
+        .watch(birthdaysTodayMembersProvider)
+        .any((m) => m.id == member.id);
     if (present) {
       final line = _line ??= night
           ? l10n.wuselHelloNight(member.displayName)
+          : birthday
+          ? '${WuselLines.pick(l10n, WuselLines.helloAt(DateTime.now()), name: member.displayName)} ${l10n.wuselFactBirthdayYou}'
           : WuselLines.pick(
               l10n,
               WuselLines.helloAt(DateTime.now()),
@@ -613,7 +620,12 @@ class _KidGreetingState extends ConsumerState<_KidGreeting> {
             );
       greeting = WuselSays(
         line: line,
-        pose: night ? WuselPose.sleep : WuselPose.wave,
+        pose: night
+            ? WuselPose.sleep
+            : birthday
+            ? WuselPose.cheer
+            : WuselPose.wave,
+        outfit: birthday && !night ? WuselOutfit.party : null,
         size: 88,
         tappable: true,
         style: title,
