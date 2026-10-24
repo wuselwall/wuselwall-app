@@ -40,6 +40,13 @@ class CalendarView {
     for (var i = 0; i < mode.days; i++) _addCalendarDays(from, i),
   ];
 
+  /// The day a new event starts on (local midnight): [today] while it is in view,
+  /// otherwise the first day shown.
+  DateTime newEventDay(DateTime today) {
+    final day = DateTime(today.year, today.month, today.day);
+    return days.contains(day) ? day : from;
+  }
+
   /// Moves by calendar days, preserving the local midnight across DST changes.
   CalendarView shifted(int direction) => CalendarView(
     mode: mode,

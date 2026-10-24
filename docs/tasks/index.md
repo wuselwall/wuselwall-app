@@ -31,6 +31,8 @@ Tippe im Tab **Aufgaben** auf **Neue Aufgabe**:
 - **Wer**: **Eine Person** (fest), **Reihum**, **Wer will** (offen) oder **Jede Person**
 - **Freigabe durch Erwachsene**: Punkte gibt es erst nach einer Prüfung
 
+Eine neue Aufgabe ist täglich und geht **Reihum** durch alle Kinder (ohne Kinder: **Wer will**). Ein Titel genügt also zum Speichern.
+
 Eine Aufgabe, die nicht mehr gebraucht wird, archivierst du. Ihre offenen Termine in der Zukunft verschwinden dann.
 
 ::: tip Mit dem Startpaket beginnen

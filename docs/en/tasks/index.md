@@ -31,6 +31,8 @@ In the **Chores** tab, tap **New chore**:
 - **Who**: **One person** (fixed), **Taking turns**, **Whoever wants** (open) or **Everyone**
 - **Approval by a grown-up**: points come only after a check
 
+A new chore is daily and goes to all the children **Taking turns** (with no children: **Whoever wants**), so a title is enough to save it.
+
 A chore you no longer need can be archived. Its open future entries are then removed.
 
 ::: tip Start with the starter pack
