@@ -42,7 +42,7 @@ Si una semana no se hace, elimina **Solo este evento**. Nada recuerda que no se 
 
 ## Comida deseada {#meal-wishes}
 
-Una vez por semana, cada niño puede pedir una comida. Así los niños opinan sobre el menú.
+Cada niño puede pedir una comida; vosotros decidís cuántos deseos pueden esperar a la vez (uno por defecto). Así los niños opinan sobre el menú.
 
 - **En Mi día** aparece la tarjeta **Tu comida favorita**. **Pedir** abre la elección: una de vuestras recetas, u **Otra cosa** con unas pocas palabras, como «tortitas». Con **Pido esto**, el deseo va de camino. Hasta que se planifique, se puede **cambiar**.
 - **Los adultos** ven los deseos arriba del [menú](/es/meals/#wishes) bajo **Deseos**, y en una tarjeta discreta en **Hoy**. Toca un deseo, elige día y comida, y queda planificado.

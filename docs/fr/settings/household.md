@@ -31,10 +31,12 @@ Les [rituels](/fr/guide/rituals) sont tous activés au départ. Chacun se modifi
 | **Question au déjeuner**, **Question au dîner** | les horaires de la question | 11 h 30–13 h 30, 17 h 30–19 h 30 ; en France dîner 19 h–21 h, en Espagne 13 h 30–15 h 30 et 20 h–22 h |
 | **Questions pour** | **Tous les âges** ou **Aussi les plus grands** (questions plus profondes dès 8 ans) | Tous les âges |
 | **Notre semaine** | jour et heure du retour sur la semaine, ou désactivé | dimanche 16 h |
-| **Repas souhaités** | qui peut souhaiter un repas chaque semaine : **Enfants**, **Tout le monde** ou **Désactivé** | Enfants |
+| **Repas souhaités** | qui peut souhaiter un repas : **Enfants**, **Tout le monde** ou **Désactivé** | Enfants |
 | **Souhaits ouverts par personne** | combien de souhaits peuvent attendre à la fois (1 à 3) | 1 |
 | **Le compte à rebours commence** | combien de jours avant un compte à rebours apparaît (7 à 60) | 14 jours |
 | **Compte à rebours avant un retour** | « De retour dans 2 dodos » quand un adulte part deux nuits ou plus | activé |
+
+Sous les rituels, **Nos questions** mène aux questions de la famille pour la [question à table](/fr/guide/rituals#table-question), à toute heure.
 
 <Shot name="settings-rituals" alt="Paramètres du foyer, vue Avancés : la rubrique Rituels avec la question à table et ses horaires" />
 

@@ -42,7 +42,7 @@ If a tradition doesn't happen one week, delete **Only this event**. Nothing reme
 
 ## Meal wishes {#meal-wishes}
 
-Once a week each child may wish for a meal. That way the children have a say in the meal plan.
+Each child may wish for a meal; you decide how many wishes may be open at once (one by default). That way the children have a say in the meal plan.
 
 - **On My day** there is the card **Your meal wish**. **Wish** opens the choice: one of your recipes, or **Something else** with a few words, such as "pancakes". With **Wish for this** the wish is on its way. Until it is planned it can be **changed**.
 - **The grown-ups** see the wishes at the top of the [meal plan](/en/meals/#wishes) under **Wishes**, and as a quiet card on **Today**. Tap a wish, pick a day and a meal, and it is planned.

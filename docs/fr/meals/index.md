@@ -12,9 +12,9 @@ Un repas est un plat, une note comme « restes », ou une recette. Indiquez les 
 
 ## Souhaits {#wishes}
 
-Une fois par semaine, les enfants souhaitent un repas dans **Ma journée** sur leur tablette (voir [Repas souhaités](/fr/guide/rituals#meal-wishes)). Les souhaits en attente s’affichent en haut des menus sous **Souhaits**, par exemple « Paul : Crêpes », et dans une carte dans **Aujourd’hui**.
+Les enfants souhaitent un repas dans **Ma journée** sur leur tablette (voir [Repas souhaités](/fr/guide/rituals#meal-wishes)). Les souhaits en attente s’affichent en haut des menus sous **Souhaits**, par exemple « Paul : Crêpes », et dans une carte dans **Aujourd’hui**.
 
-Touchez un souhait, choisissez un jour et un repas : il est planifié. Un souhait de recette alimente la liste de courses comme toute recette. Un souhait planifié porte une étoile et « Souhait de Paul » dans les menus et sur le mur. La **×** retire un souhait (**Retirer le souhait**) ; les parents et l’auteur du souhait le peuvent. Un souhait n’est jamais refusé : ce qui n’est pas planifié attend. Qui peut souhaiter, et combien de souhaits peuvent attendre, se règle dans les [paramètres du foyer](/fr/settings/household#rituals).
+Touchez un souhait, choisissez un jour et un repas : il est planifié. Chaque repas indique ce qui est déjà prévu. Si un repas est déjà prévu, l’appli demande avant que le souhait le remplace ; le cuisinier, l’heure et les portions restent. Un souhait de recette alimente la liste de courses comme toute recette. Un souhait planifié porte une étoile et « Souhait de Paul » dans les menus et sur le mur. La **×** retire un souhait (**Retirer le souhait**) ; les parents et l’auteur du souhait le peuvent. Un souhait n’est jamais refusé : ce qui n’est pas planifié attend. Qui peut souhaiter, et combien de souhaits peuvent attendre, se règle dans les [paramètres du foyer](/fr/settings/household#rituals).
 
 <Shot name="meals-wishes" alt="Les menus sur téléphone avec le souhait Paul : Crêpes au-dessus de la semaine" />
 

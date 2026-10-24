@@ -42,7 +42,7 @@ Si une tradition n’a pas lieu une semaine, supprimez **Cet événement uniquem
 
 ## Repas souhaités {#meal-wishes}
 
-Une fois par semaine, chaque enfant peut souhaiter un repas. Les enfants ont ainsi leur mot à dire sur les menus.
+Chaque enfant peut souhaiter un repas ; vous décidez combien de souhaits peuvent attendre à la fois (un par défaut). Les enfants ont ainsi leur mot à dire sur les menus.
 
 - **Dans Ma journée**, la carte **Ton repas préféré** s’affiche. **Choisir** ouvre le choix : une de vos recettes, ou **Autre chose** en quelques mots, comme « des crêpes ». Avec **Je choisis ça**, le souhait est parti. Tant qu’il n’est pas planifié, il peut être **changé**.
 - **Les adultes** voient les souhaits en haut des [menus](/fr/meals/#wishes) sous **Souhaits**, et dans une carte discrète dans **Aujourd’hui**. Touchez un souhait, choisissez un jour et un repas : il est planifié.

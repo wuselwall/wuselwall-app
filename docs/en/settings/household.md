@@ -33,10 +33,12 @@ The [rituals](/en/guide/rituals) are all on at the start. Each can be changed or
 | **Question at lunch**, **Question at dinner** | the times when the question shows | 11:30–13:30, 17:30–19:30; in France dinner 19:00–21:00, in Spain 13:30–15:30 and 20:00–22:00 |
 | **Questions for** | **All ages** or **Older children too** (deeper questions for 8 and over) | All ages |
 | **Our week** | weekday and time of the look back at the week, or off | Sunday 16:00 |
-| **Meal wishes** | who may wish for a meal each week: **Children**, **Everyone** or **Off** | Children |
+| **Meal wishes** | who may wish for a meal: **Children**, **Everyone** or **Off** | Children |
 | **Open wishes per person** | how many wishes may wait at once (1–3) | 1 |
 | **Start looking forward** | how many days ahead a countdown appears (7–60) | 14 days |
 | **Count down to a parent's return** | "Back in 2 sleeps" when an adult travels for two nights or more | on |
+
+Below the rituals, **Our questions** leads to the family's own questions for the [question at the table](/en/guide/rituals#table-question), at any time of day.
 
 <Shot name="settings-rituals" alt="Household settings, Advanced view: the Rituals section with the question at the table and its times" />
 
