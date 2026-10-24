@@ -6,6 +6,7 @@ import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/demo/demo_repositories.dart';
 import 'package:wuselwall/features/home/application/home_tab.dart';
+import 'package:wuselwall/features/settings/application/settings_groups.dart';
 import 'package:wuselwall/features/settings/application/settings_view.dart';
 import 'package:wuselwall/features/settings/data/household_settings_repository.dart';
 
@@ -54,6 +55,9 @@ void main() {
     return container;
   }
 
+  Finder groupTile(SettingsGroup g) =>
+      find.byKey(ValueKey('settings-group-${g.name}'));
+
   group('Einstellungen', () {
     testWidgets('Android Back returns to the home tab that opened settings', (
       t,
@@ -69,7 +73,7 @@ void main() {
 
       await t.tap(find.byTooltip(_de.settingsTitle));
       await t.pumpAndSettle();
-      expect(find.byKey(const ValueKey('settings-family')), findsOneWidget);
+      expect(groupTile(SettingsGroup.family), findsOneWidget);
 
       await t.binding.handlePopRoute();
       await t.pumpAndSettle();
@@ -104,25 +108,54 @@ void main() {
       expect(find.byType(NavigationBar), findsOneWidget);
     });
 
-    testWidgets('Basic hides the advanced rows and says they still apply', (
+    testWidgets('Back from a group page leads to the list of groups', (
+      t,
+    ) async {
+      final container = await open(
+        t,
+        Routes.settingsTasks,
+        store: MemorySettingsViewStore(),
+      );
+      expect(find.text(_de.settingsGroupTasksTitle), findsOneWidget);
+
+      await t.tap(find.byType(BackButton));
+      await t.pumpAndSettle();
+
+      expect(
+        container.read(routerProvider).routeInformationProvider.value.uri.path,
+        Routes.settings,
+      );
+      expect(groupTile(SettingsGroup.tasks), findsOneWidget);
+    });
+
+    testWidgets('Basic lists the groups a family needs and says more exists', (
       t,
     ) async {
       await open(t, Routes.settings, store: MemorySettingsViewStore());
 
       expect(find.byKey(const ValueKey('settings-view')), findsOneWidget);
-      expect(find.text(_de.householdSettingsTitle), findsOneWidget);
-      expect(find.text(_de.settingsMembers), findsOneWidget);
-      expect(find.text(_de.feedTitle), findsNothing);
-      expect(find.text(_de.extCalTitle), findsNothing);
-      expect(find.text(_de.settingsSecurity), findsNothing);
-      expect(find.byKey(const ValueKey('export-data')), findsNothing);
-      expect(find.byKey(const ValueKey('leave-family')), findsNothing);
-      // Account deletion stays easy to find (App Store guideline 5.1.1(v)).
-      await t.scrollUntilVisible(
-        find.byKey(const ValueKey('delete-account')),
-        300,
-        scrollable: find.byType(Scrollable).first,
-      );
+      for (final group in const [
+        SettingsGroup.personal,
+        SettingsGroup.family,
+        SettingsGroup.tasks,
+        SettingsGroup.calendar,
+        SettingsGroup.meals,
+        SettingsGroup.rituals,
+        SettingsGroup.celebrations,
+        SettingsGroup.devices,
+        // Account deletion stays easy to find (App Store guideline 5.1.1(v)).
+        SettingsGroup.account,
+        SettingsGroup.help,
+      ]) {
+        expect(groupTile(group), findsOneWidget, reason: group.name);
+      }
+      // These hold Advanced settings only.
+      for (final group in const [
+        SettingsGroup.kitchen,
+        SettingsGroup.server,
+      ]) {
+        expect(groupTile(group), findsNothing, reason: group.name);
+      }
       await t.scrollUntilVisible(
         find.text(_de.settingsViewMoreHint),
         300,
@@ -131,7 +164,37 @@ void main() {
       expect(find.text(_de.settingsViewMoreHint), findsOneWidget);
     });
 
-    testWidgets('Advanced shows everything and is kept for the next start', (
+    testWidgets('Basic keeps Delete account and hides the rest of Konto', (
+      t,
+    ) async {
+      await open(t, Routes.settingsAccount, store: MemorySettingsViewStore());
+
+      expect(find.byKey(const ValueKey('delete-account')), findsOneWidget);
+      expect(find.text(_de.settingsSecurity), findsNothing);
+      expect(find.text(_de.signInMethodsTitle), findsNothing);
+      expect(find.byKey(const ValueKey('leave-family')), findsNothing);
+      expect(find.text(_de.settingsViewMoreHint), findsOneWidget);
+    });
+
+    testWidgets('Basic hides the sharing and the export, Advanced shows them', (
+      t,
+    ) async {
+      final store = MemorySettingsViewStore();
+      await open(t, Routes.settingsCalendar, store: store);
+      expect(find.text(_de.feedTitle), findsNothing);
+      expect(find.text(_de.extCalTitle), findsNothing);
+      expect(find.text(_de.settingsViewMoreHint), findsOneWidget);
+
+      await t.tap(find.text(_de.settingsViewAdvanced));
+      await t.pumpAndSettle();
+
+      expect(store.view, SettingsView.advanced);
+      expect(find.text(_de.feedTitle), findsOneWidget);
+      expect(find.text(_de.extCalTitle), findsOneWidget);
+      expect(find.text(_de.settingsViewMoreHint), findsNothing);
+    });
+
+    testWidgets('Advanced lists every group and is kept for the next start', (
       t,
     ) async {
       final store = MemorySettingsViewStore();
@@ -141,49 +204,50 @@ void main() {
       await t.pumpAndSettle();
 
       expect(store.view, SettingsView.advanced);
-      // The export lives on the family page now; the page itself is in both views.
-      expect(find.byKey(const ValueKey('settings-family')), findsOneWidget);
-      await t.scrollUntilVisible(
-        find.text(_de.feedTitle),
-        300,
-        scrollable: find.byType(Scrollable).first,
-      );
-      expect(find.text(_de.feedTitle), findsOneWidget);
-      expect(find.text(_de.extCalTitle), findsOneWidget);
-      await t.scrollUntilVisible(
-        find.text(_de.settingsSecurity),
-        300,
-        scrollable: find.byType(Scrollable).first,
-      );
+      for (final group in SettingsGroup.values) {
+        // The server group only exists for a build that chose its server.
+        if (group == SettingsGroup.server) continue;
+        expect(groupTile(group), findsOneWidget, reason: group.name);
+      }
       expect(find.text(_de.settingsViewMoreHint), findsNothing);
     });
 
     testWidgets('a saved Advanced applies at start', (t) async {
       await open(
         t,
-        Routes.settings,
+        Routes.settingsCalendar,
         store: MemorySettingsViewStore(SettingsView.advanced),
       );
       expect(find.text(_de.feedTitle), findsOneWidget);
     });
+
+    testWidgets('the old Haushalt einstellen address opens the groups', (
+      t,
+    ) async {
+      final container = await open(
+        t,
+        Routes.householdSettings,
+        store: MemorySettingsViewStore(),
+      );
+      expect(
+        container.read(routerProvider).routeInformationProvider.value.uri.path,
+        Routes.settings,
+      );
+      expect(groupTile(SettingsGroup.tasks), findsOneWidget);
+    });
   });
 
-  group('Haushalt einstellen', () {
-    final kitchen = find.text(_de.settingsSectionKitchen);
+  group('Gruppenseiten', () {
     final verification = find.byKey(
       const ValueKey('setting-tasks.verification_default'),
     );
+    final jokers = find.byKey(const ValueKey('setting-tasks.jokers_per_month'));
 
     testWidgets('the licenses page opens from Basic, with the project notice', (
       t,
     ) async {
-      await open(t, Routes.settings, store: MemorySettingsViewStore());
+      await open(t, Routes.settingsHelp, store: MemorySettingsViewStore());
 
-      await t.scrollUntilVisible(
-        find.text(_de.settingsLicenses),
-        300,
-        scrollable: find.byType(Scrollable).first,
-      );
       await t.tap(find.text(_de.settingsLicenses));
       await t.pumpAndSettle();
 
@@ -195,45 +259,35 @@ void main() {
       );
     });
 
-    testWidgets('Basic shows the main settings only', (t) async {
-      await open(t, Routes.householdSettings, store: MemorySettingsViewStore());
+    testWidgets('Basic shows the main settings of a group only', (t) async {
+      await open(t, Routes.settingsTasks, store: MemorySettingsViewStore());
+
+      expect(jokers, findsOneWidget);
+      expect(verification, findsNothing);
+      expect(find.byKey(const ValueKey('settings-show-all')), findsOneWidget);
+    });
+
+    testWidgets('Basic shows the region in the Family group', (t) async {
+      await open(t, Routes.settingsFamily, store: MemorySettingsViewStore());
 
       expect(
         find.byKey(const ValueKey('setting-household.region')),
         findsOneWidget,
       );
-      await t.scrollUntilVisible(
-        find.byKey(const ValueKey('settings-show-all')),
-        300,
-        scrollable: find.byType(Scrollable).last,
-      );
-      expect(kitchen, findsNothing);
-      expect(verification, findsNothing);
     });
 
     testWidgets('"Show all settings" switches to Advanced', (t) async {
       final store = MemorySettingsViewStore();
-      await open(t, Routes.householdSettings, store: store);
+      await open(t, Routes.settingsTasks, store: store);
 
       final showAll = find.byKey(const ValueKey('settings-show-all'));
-      await t.scrollUntilVisible(
-        showAll,
-        300,
-        scrollable: find.byType(Scrollable).last,
-      );
-      // Built in the list's cache is not yet on screen.
       await t.ensureVisible(showAll);
       await t.pumpAndSettle();
       await t.tap(showAll);
       await t.pumpAndSettle();
 
       expect(store.view, SettingsView.advanced);
-      await t.scrollUntilVisible(
-        kitchen,
-        300,
-        scrollable: find.byType(Scrollable).last,
-      );
-      expect(kitchen, findsOneWidget);
+      expect(verification, findsOneWidget);
       expect(showAll, findsNothing);
     });
   });

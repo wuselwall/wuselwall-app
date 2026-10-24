@@ -43,4 +43,4 @@ Le solde et les mouvements détaillent les tâches terminées ou annulées, réc
 
 ## Pourquoi ce fonctionnement ? {#why-it-is-built-this-way}
 
-Les obligations rapportent peu ; leur régularité compte davantage. Aucun classement n’oppose les enfants ; même [Notre semaine](/fr/guide/rituals#week-review) montre les tâches en un seul nombre pour toute la famille. Une petite tâche bonus doit permettre une première récompense. Les jokers évitent qu’une maladie efface une série. Ajustez ces valeurs dans les [paramètres du foyer](/fr/settings/household).
+Les obligations rapportent peu ; leur régularité compte davantage. Aucun classement n’oppose les enfants ; même [Notre semaine](/fr/guide/rituals#week-review) montre les tâches en un seul nombre pour toute la famille. Une petite tâche bonus doit permettre une première récompense. Les jokers évitent qu’une maladie efface une série. Ajustez ces valeurs dans [Paramètres → Tâches et récompenses](/fr/settings/household).

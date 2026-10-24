@@ -26,7 +26,7 @@ Toca **Nuevo evento**: empieza el día que muestra el calendario (hoy, mientras 
 
 <Shot name="calendar-editor" alt="El editor con personas y repetición" />
 
-El comportamiento inicial de los eventos se elige en los [ajustes del hogar](/es/settings/household).
+El comportamiento inicial de los eventos se elige en [Ajustes → Calendario y colegio](/es/settings/household).
 
 ### Repetir {#repeating}
 
@@ -66,7 +66,7 @@ Después solo introduces las excepciones. Los festivos, la pared no muestra un l
 
 ## Niños y citas {#children-and-appointments}
 
-Los [ajustes del hogar](/es/settings/household) deciden si los niños pueden crear y cambiar sus citas. Eliminar las de otra persona sigue reservado a adultos responsables.
+El grupo [Ajustes → Calendario y colegio](/es/settings/household) decide si los niños pueden crear y cambiar sus citas. Eliminar las de otra persona sigue reservado a adultos responsables.
 
 ## Outlook y iPhone {#appointments-in-outlook-or-on-an-iphone}
 

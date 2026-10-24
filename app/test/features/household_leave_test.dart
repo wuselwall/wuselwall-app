@@ -62,7 +62,7 @@ void main() {
           ),
         ),
       );
-      container.read(routerProvider).go(Routes.settings);
+      container.read(routerProvider).go(Routes.settingsAccount);
       await t.pumpAndSettle();
       // The account tiles are at the end of a lazily built list.
       await t.drag(find.byType(Scrollable).first, const Offset(0, -3000));
@@ -203,7 +203,7 @@ void main() {
           ),
         ),
       );
-      container.read(routerProvider).go(Routes.family);
+      container.read(routerProvider).go(Routes.familyProfile);
       await t.pumpAndSettle();
       return (container: container, identity: identity, leave: leave);
     }

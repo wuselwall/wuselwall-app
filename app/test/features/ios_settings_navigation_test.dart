@@ -66,7 +66,7 @@ void main() {
         // restore normal motion so Cupertino's interactive route gesture is active.
         t.platformDispatcher.clearAccessibilityFeaturesTestValue();
         await t.pump();
-        final settings = find.byKey(const ValueKey('settings-family'));
+        final settings = find.byKey(const ValueKey('settings-group-devices'));
         expect(settings, findsOneWidget);
         final settingsRoute = ModalRoute.of(t.element(settings));
         expect(settingsRoute, isA<PageRoute<dynamic>>());
@@ -86,7 +86,10 @@ void main() {
 
         await _swipeBack(t, size, routeContext: t.element(settings));
 
-        expect(find.byKey(const ValueKey('settings-family')), findsNothing);
+        expect(
+          find.byKey(const ValueKey('settings-group-devices')),
+          findsNothing,
+        );
         expect(container.read(homeTabProvider), HomeTab.shopping);
         expect(
           t.widget<NavigationBar>(find.byType(NavigationBar)).selectedIndex,
@@ -114,11 +117,17 @@ void main() {
 
       container.read(routerProvider).go(Routes.settings);
       await t.pumpAndSettle();
-      expect(find.byKey(const ValueKey('settings-family')), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('settings-group-devices')),
+        findsOneWidget,
+      );
       await t.tap(find.byType(BackButton));
       await t.pumpAndSettle();
 
-      expect(find.byKey(const ValueKey('settings-family')), findsNothing);
+      expect(
+        find.byKey(const ValueKey('settings-group-devices')),
+        findsNothing,
+      );
       expect(find.byType(NavigationBar), findsOneWidget);
       await unmountApp(t, container);
     }),
@@ -144,12 +153,18 @@ void main() {
       await t.pumpAndSettle();
       await t.tap(find.byTooltip(_de.settingsTitle));
       await t.pumpAndSettle();
-      expect(find.byKey(const ValueKey('settings-family')), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('settings-group-devices')),
+        findsOneWidget,
+      );
 
       await t.tap(find.byType(BackButton));
       await t.pumpAndSettle();
 
-      expect(find.byKey(const ValueKey('settings-family')), findsNothing);
+      expect(
+        find.byKey(const ValueKey('settings-group-devices')),
+        findsNothing,
+      );
       expect(find.byTooltip(_de.settingsTitle), findsOneWidget);
       expect(container.read(routerProvider).canPop(), isFalse);
       await unmountApp(t, container);
@@ -178,12 +193,18 @@ void main() {
       );
       await t.tap(find.byTooltip(_de.settingsTitle));
       await t.pumpAndSettle();
-      expect(find.byKey(const ValueKey('settings-family')), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('settings-group-devices')),
+        findsOneWidget,
+      );
 
       await t.tap(find.byType(BackButton));
       await t.pumpAndSettle();
 
-      expect(find.byKey(const ValueKey('settings-family')), findsNothing);
+      expect(
+        find.byKey(const ValueKey('settings-group-devices')),
+        findsNothing,
+      );
       expect(find.byTooltip(_de.settingsTitle), findsOneWidget);
       expect(container.read(routerProvider).canPop(), isFalse);
       await unmountApp(t, container);

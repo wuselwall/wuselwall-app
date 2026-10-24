@@ -43,4 +43,4 @@ El saldo y los movimientos detallan tareas hechas o deshechas, recompensas, corr
 
 ## Por qué funciona así {#why-it-is-built-this-way}
 
-Las obligaciones dan pocos puntos; importa la constancia. No hay clasificaciones entre niños; también [Nuestra semana](/es/guide/rituals#week-review) muestra las tareas como un solo número para toda la familia. Una pequeña tarea bonus permite una primera recompensa. Un día de enfermedad no borra una racha gracias a los comodines. Ajusta los valores en los [ajustes del hogar](/es/settings/household).
+Las obligaciones dan pocos puntos; importa la constancia. No hay clasificaciones entre niños; también [Nuestra semana](/es/guide/rituals#week-review) muestra las tareas como un solo número para toda la familia. Una pequeña tarea bonus permite una primera recompensa. Un día de enfermedad no borra una racha gracias a los comodines. Ajusta los valores en [Ajustes → Tareas y recompensas](/es/settings/household).

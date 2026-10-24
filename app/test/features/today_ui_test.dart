@@ -5,6 +5,7 @@ import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/meals/application/meals_providers.dart';
 import 'package:wuselwall/features/meals/domain/meal_models.dart';
+import 'package:wuselwall/features/settings/application/settings_groups.dart';
 import 'package:wuselwall/features/today/domain/getting_started.dart';
 import 'package:wuselwall/l10n/generated/app_localizations_de.dart';
 import 'package:wuselwall/l10n/generated/app_localizations_en.dart';
@@ -284,6 +285,7 @@ void main() {
 
     await t.tap(find.byIcon(Icons.settings));
     await t.pumpAndSettle();
+    await openSettingsGroup(t, SettingsGroup.help);
     await t.tap(find.text(_de.settingsGettingStarted));
     await t.pumpAndSettle();
 

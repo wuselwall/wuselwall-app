@@ -7,13 +7,13 @@ Wenn du von einer anderen Ansicht kommst, kannst du auf iPhone und iPad am linke
 
 ## Einfach oder Erweitert {#ansicht}
 
-Oben in den Einstellungen wählst du die Ansicht. **Einfach** ist der Standard und zeigt das Wichtigste, in drei Gruppen: **Familie** (Haushalt einstellen, Familie, übliche Woche, Mitglieder, Geräte), **Dieses Gerät** (Erinnerungen, Sprache, Darstellung, Erste Schritte) und auf deinem eigenen Handy **Konto löschen**. **Erweitert** zeigt zusätzlich **Teilen und Verbindungen** (Familienkalender teilen, Kalender von außen, Apps und Automationen), den Server, Anmeldung, Sicherheit und Familie verlassen.
+Oben in den Einstellungen wählst du die Ansicht. **Einfach** ist der Standard und zeigt das Wichtigste. Die Einstellungen sind in Gruppen geordnet (siehe [Alle Einstellungen](/settings/household)). **Einfach** zeigt nur die Gruppen, in denen etwas Wichtiges steht: **Persönlich**, **Familie** (Familienprofil, Region, Mitglieder, übliche Woche), **Aufgaben & Belohnungen**, **Kalender & Schule**, **Essen**, **Rituale**, **Geräte** (Dieses Gerät, Alle Geräte), **Hilfe & Info** und auf deinem eigenen Handy **Konto & Sicherheit** mit **Konto löschen**. **Erweitert** zeigt zusätzlich **Feste & Jahreszeiten**, **Küchenwand**, **Teilen und Verbindungen** (Familienkalender teilen, Kalender von außen), den **Server**, Anmeldung, Sicherheit und Familie verlassen.
 
-Was ausgeblendet ist, **gilt trotzdem weiter**. Die Ansicht ändert nur, was du siehst, und WuselWall merkt sie sich für jedes Gerät. Dasselbe gilt unter **Haushalt einstellen**, auf der Seite einer Person, unter **Familie** und beim Bearbeiten einer Einkaufsliste: Einfach zeigt, was die meisten brauchen, Erweitert den Rest.
+Was ausgeblendet ist, **gilt trotzdem weiter**. Die Ansicht ändert nur, was du siehst, und WuselWall merkt sie sich für jedes Gerät. Dasselbe gilt auf den Seiten der Gruppen, auf der Seite einer Person, unter **Familienprofil** und beim Bearbeiten einer Einkaufsliste: Einfach zeigt, was die meisten brauchen, Erweitert den Rest.
 
 ## Erwachsene Person einladen
 
-Eine Person, die mit eigenem Konto in der Familie mitmachen soll, lädst du ein. Tippe unter **Mitglieder** auf **Erwachsene Person einladen**:
+Eine Person, die mit eigenem Konto in der Familie mitmachen soll, lädst du ein. Öffne **Einstellungen → Familie → Mitglieder** und tippe auf **Erwachsene Person einladen**:
 
 1. Gib den **Namen** ein und wähle die **Rolle**: **Erziehungsberechtigt** sieht alles und bestätigt Belohnungen. **Mitglied** erledigt Aufgaben, bestätigt aber keine Belohnungen (zum Beispiel für eine Au-pair oder die Großeltern).
 2. Optional eine **E-Mail-Adresse**. Meldet sich die Person mit genau dieser Adresse an, findet sie die Einladung von selbst.
@@ -39,7 +39,7 @@ Kinder brauchen keine Einladung. Sie legst du als Mitglied mit Namen an, und ihr
 
 ## Mitglied hinzufügen
 
-Mit dem Symbol neben **Mitglieder** legst du eine Person nur mit **Namen** an, zum Beispiel ein Kind oder jemanden, der nicht selbst in WuselWall ist. WuselWall vergibt automatisch die nächste freie **Farbe**.
+Mit dem Symbol oben auf der Seite **Mitglieder** legst du eine Person nur mit **Namen** an, zum Beispiel ein Kind oder jemanden, der nicht selbst in WuselWall ist. WuselWall vergibt automatisch die nächste freie **Farbe**.
 
 ## Mitglied bearbeiten {#mitglied-bearbeiten}
 
@@ -63,7 +63,7 @@ Hat eine andere Erziehungsberechtigte Person ihren zweiten Faktor verloren, tipp
 
 ## Gerät verbinden
 
-Ein Kinder-Tablet, ein Tablet für alle oder die Wandanzeige verbindest du so: Tippe unter **Geräte** auf **Gerät verbinden**, scanne den QR-Code oder tippe den Code ab, den das neue Gerät zeigt, und wähle die Art und einen Namen. Den ganzen Ablauf zeigt [Anmelden und verbinden](/guide/setup#_4-familien-tablet-oder-wanddisplay-verbinden).
+Ein Kinder-Tablet, ein Tablet für alle oder die Wandanzeige verbindest du so: Tippe unter **Einstellungen → Geräte → Alle Geräte** auf **Gerät verbinden**, scanne den QR-Code oder tippe den Code ab, den das neue Gerät zeigt, und wähle die Art und einen Namen. Den ganzen Ablauf zeigt [Anmelden und verbinden](/guide/setup#_4-familien-tablet-oder-wanddisplay-verbinden).
 
 <Shot name="pair-approve" alt="Handy eines Erwachsenen: Gerät prüfen und verbinden" />
 
@@ -85,19 +85,19 @@ Auf deinem eigenen Handy kannst du dich mit **Dieses Gerät abmelden** auch selb
 
 ## Server {#server}
 
-Unter **Erweitert** steht, mit welchem Server diese App spricht, mit seinem **QR-Code**. Ein neues Gerät scannt ihn bei der Frage **Mit welchem Server?** und ist dann mit demselben Server verbunden.
+Unter **Einstellungen → Server** (Ansicht **Erweitert**) steht, mit welchem Server diese App spricht, mit seinem **QR-Code**. Ein neues Gerät scannt ihn bei der Frage **Mit welchem Server?** und ist dann mit demselben Server verbunden.
 
 **Server wechseln** brauchst du nur, wenn eure Familie auf einen anderen Server umzieht. Das Gerät meldet sich dabei ab und vergisst alles, was darauf gespeichert ist, auch Einkäufe, die es noch nicht senden konnte. Auf geteilten Geräten fragt WuselWall vorher nach der PIN eines Erziehungsberechtigten.
 
 ## Familie {#familie}
 
-Unter **Einstellungen → Familie** änderst du den **Namen der Familie**, den ihr beim Anlegen gewählt habt. In der Ansicht **Erweitert** stehen dort außerdem die **Zeitzone** (nach ihr richten sich Wand und Erinnerungen; tippe sie an und suche zum Beispiel „Zurich“) und die **Sprache auf der Wand**, in der Feiertage auf der Wandanzeige heißen. Alles davon ist Sache der Erziehungsberechtigten.
+Unter **Einstellungen → Familie → Familienprofil** änderst du den **Namen der Familie**, den ihr beim Anlegen gewählt habt. In der Ansicht **Erweitert** stehen dort außerdem die **Zeitzone** (nach ihr richten sich Wand und Erinnerungen; tippe sie an und suche zum Beispiel „Zurich“) und die **Sprache auf der Wand**, in der Feiertage auf der Wandanzeige heißen. Alles davon ist Sache der Erziehungsberechtigten.
 
 <Shot name="settings-family" alt="Seite Familie mit Name, Zeitzone, Sprache auf der Wand und Datenexport" />
 
 ## Daten exportieren
 
-Erziehungsberechtigte können alle Daten eurer Familie als eine ZIP-Datei speichern, zum Beispiel für einen Umzug auf einen anderen Server. Das geht unter **Einstellungen → Familie** (Ansicht **Erweitert**) mit **Daten exportieren**, und nur vom eigenen Handy eines Erziehungsberechtigten aus.
+Erziehungsberechtigte können alle Daten eurer Familie als eine ZIP-Datei speichern, zum Beispiel für einen Umzug auf einen anderen Server. Das geht unter **Einstellungen → Familie → Familienprofil** (Ansicht **Erweitert**) mit **Daten exportieren**, und nur vom eigenen Handy eines Erziehungsberechtigten aus.
 
 Die Datei enthält die Angaben, die ihr eingegeben habt: Mitglieder, Termine, Stundenpläne, Aufgaben, Rezepte, Einkaufslisten und so weiter. Passwörter, PINs und Anmeldedaten sind **nicht** enthalten, und Geräte erscheinen nur mit Namen und Datum.
 
@@ -107,8 +107,8 @@ Familie löschen und verlassen steht unter [Konto und Familie](/settings/account
 
 ## Kalender von außen
 
-Kalender von Vereinen oder der Gemeinde abonnierst du unter **Einstellungen → Erweitert → Kalender von außen hinzufügen**. Wie das funktioniert und was zu beachten ist, steht unter [Kalender](/calendar/#kalender-von-aussen).
+Kalender von Vereinen oder der Gemeinde abonnierst du unter **Einstellungen → Kalender & Schule → Kalender von außen hinzufügen** (Ansicht **Erweitert**). Wie das funktioniert und was zu beachten ist, steht unter [Kalender](/calendar/#kalender-von-aussen).
 
 ## Erste Schritte wieder anzeigen
 
-Hast du die Karte **Erste Schritte** auf dem Heute-Tab ausgeblendet, holst du sie unter **Einstellungen → Erste Schritte** zurück. Die Karte zeigt, was noch fehlt: Erwachsene einladen, Tablet verbinden, Wandanzeige einrichten, PIN festlegen, Kalender abonnieren, Stundenplan eintragen und Erinnerungen einschalten (siehe [Erinnerungen](/settings/reminders)).
+Hast du die Karte **Erste Schritte** auf dem Heute-Tab ausgeblendet, holst du sie unter **Einstellungen → Hilfe & Info → Erste Schritte** zurück. Die Karte zeigt, was noch fehlt: Erwachsene einladen, Tablet verbinden, Wandanzeige einrichten, PIN festlegen, Kalender abonnieren, Stundenplan eintragen und Erinnerungen einschalten (siehe [Erinnerungen](/settings/reminders)).

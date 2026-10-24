@@ -7,13 +7,13 @@ When you came from another view, swipe inward from the left edge on iPhone or iP
 
 ## Basic or Advanced {#view}
 
-At the top of the settings you choose the view. **Basic** is the default and shows what matters most, in three groups: **Family** (household settings, family, usual week, members, devices), **This device** (reminders, language, appearance, getting started), and on your own phone **Delete account**. **Advanced** also shows **Sharing and connections** (sharing the family calendar, outside calendars, apps and automations), the server, sign-in, security, and leaving the family.
+At the top of the settings you choose the view. **Basic** is the default and shows what matters most. The settings are sorted into groups (see [All settings](/en/settings/household)). **Basic** shows only the groups with something important in them: **Personal**, **Family** (family profile, region, members, usual week), **Tasks & rewards**, **Calendar & school**, **Meals**, **Rituals**, **Devices** (This device, All devices), **Help & about** and, on your own phone, **Account & security** with **Delete account**. **Advanced** also shows **Celebrations & seasons**, **Kitchen wall**, **Sharing and connections** (sharing the family calendar, outside calendars), the **server**, sign-in, security, and leaving the family.
 
-Whatever is hidden **still applies**. The view only changes what you see, and WuselWall remembers it for each device. The same goes for **Household settings**, a person's page, **Family** and editing a shopping list: Basic shows what most families need, Advanced the rest.
+Whatever is hidden **still applies**. The view only changes what you see, and WuselWall remembers it for each device. The same goes for the group pages, a person's page, the **family profile** and editing a shopping list: Basic shows what most families need, Advanced the rest.
 
 ## Invite an adult
 
-Invite a person who should take part in the family with their own account. Under **Members**, tap **Invite an adult**:
+Invite a person who should take part in the family with their own account. Open **Settings → Family → Members** and tap **Invite an adult**:
 
 1. Enter the **name** and choose the **role**: **Guardian** sees everything and approves rewards. **Member** does tasks but does not approve rewards (for example an au pair or grandparents).
 2. Optionally an **email address**. If the person signs in with exactly this address, they find the invitation by themselves.
@@ -39,7 +39,7 @@ Children do not need an invitation. Add them as a member with a name, and connec
 
 ## Add member
 
-With the icon next to **Members** you add a person by **name** only, for example a child or someone who is not on WuselWall. WuselWall gives the next free **colour** automatically.
+With the icon at the top of the **Members** page you add a person by **name** only, for example a child or someone who is not on WuselWall. WuselWall gives the next free **colour** automatically.
 
 ## Edit a member {#edit-a-member}
 
@@ -63,7 +63,7 @@ If another guardian has lost their second factor, tap **Reset two-factor** next 
 
 ## Connect a device
 
-To connect a kids' tablet, a shared tablet or the wall display: under **Devices**, tap **Connect a device**, scan the QR code or type in the code the new device shows, and choose the kind and a name. The whole process is shown under [Signing in and connecting](/en/guide/setup#_4-connecting-a-family-tablet-or-wall-display).
+To connect a kids' tablet, a shared tablet or the wall display: under **Settings → Devices → All devices**, tap **Connect a device**, scan the QR code or type in the code the new device shows, and choose the kind and a name. The whole process is shown under [Signing in and connecting](/en/guide/setup#_4-connecting-a-family-tablet-or-wall-display).
 
 <Shot name="pair-approve" alt="A guardian's phone: check the device and connect it" />
 
@@ -85,19 +85,19 @@ On your own phone you can also sign yourself out with **Sign out this device**.
 
 ## Server {#server}
 
-Under **Advanced**, this shows which server the app talks to, with its **QR code**. A new device scans it at the question **Which server?** and is then connected to the same server.
+Under **Settings → Server** (**Advanced** view), this shows which server the app talks to, with its **QR code**. A new device scans it at the question **Which server?** and is then connected to the same server.
 
 You only need **Change server** when your family moves to another server. The device signs out and forgets everything stored on it, including shopping it could not send yet. On shared devices WuselWall asks for a guardian's PIN first.
 
 ## Family {#family}
 
-Under **Settings → Family** you change the **family's name** chosen when it was started. In the **Advanced** view the page also has the **time zone** (the wall and reminders follow it; tap it and search, for example, "Zurich") and the **language on the wall**, in which public holidays are named on the wall display. All of this is for guardians.
+Under **Settings → Family → Family profile** you change the **family's name** chosen when it was started. In the **Advanced** view the page also has the **time zone** (the wall and reminders follow it; tap it and search, for example, "Zurich") and the **language on the wall**, in which public holidays are named on the wall display. All of this is for guardians.
 
 <Shot name="settings-family" alt="The Family page with name, time zone, language on the wall and data export" />
 
 ## Export data
 
-Guardians can save all data of your family as one zip file, for example for a move to another server. It is under **Settings → Family** (**Advanced** view), with **Export data**, and only from a guardian's own phone.
+Guardians can save all data of your family as one zip file, for example for a move to another server. It is under **Settings → Family → Family profile** (**Advanced** view), with **Export data**, and only from a guardian's own phone.
 
 The file contains what you entered: members, appointments, timetables, tasks, recipes, shopping lists and so on. Passwords, PINs and sign-in data are **not** included, and devices appear only with their name and date.
 
@@ -107,8 +107,8 @@ Leaving and deleting a family is described under [Account and family](/en/settin
 
 ## Outside calendars
 
-You subscribe to calendars from clubs or the town under **Settings → Advanced → Add outside calendars**. How this works and what to note is described under [Calendar](/en/calendar/#outside-calendars).
+You subscribe to calendars from clubs or the town under **Settings → Calendar & school → Add outside calendars** (**Advanced** view). How this works and what to note is described under [Calendar](/en/calendar/#outside-calendars).
 
 ## Show Getting started again
 
-If you hid the **Getting started** card on the Today tab, bring it back under **Settings → Getting started**. The card shows what is still missing: inviting adults, connecting a tablet, setting up the wall display, setting the PIN, subscribing to calendars, entering the timetable and switching on reminders (see [Reminders](/en/settings/reminders)).
+If you hid the **Getting started** card on the Today tab, bring it back under **Settings → Help & about → Getting started**. The card shows what is still missing: inviting adults, connecting a tablet, setting up the wall display, setting the PIN, subscribing to calendars, entering the timetable and switching on reminders (see [Reminders](/en/settings/reminders)).

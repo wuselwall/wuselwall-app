@@ -60,4 +60,4 @@ Der Tab **Punkte** zeigt den **Stand** jeder Person und alle **Bewegungen**: erl
 - **Kleine Belohnungen sind früh erreichbar.** Eine Extra-Aufgabe reicht für die günstigste Belohnung.
 - **Ein Krankheitstag zerstört keine Serie.** Dafür gibt es die Serien-Joker.
 
-Die Werte dafür stellt ihr unter [Haushalt einstellen](/settings/household) ein.
+Die Werte dafür stellt ihr unter [Einstellungen → Aufgaben & Belohnungen](/settings/household) ein.

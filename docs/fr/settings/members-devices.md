@@ -7,13 +7,13 @@ Depuis une autre vue, faites glisser votre doigt du bord gauche vers la droite s
 
 ## Vue de base ou avancée {#view}
 
-La vue **Essentiels** montre l’essentiel en trois groupes : **Famille** (paramètres du foyer, famille, semaine habituelle, membres, appareils), **Cet appareil** (rappels, langue, apparence, premiers pas) et, sur votre téléphone, la suppression du compte. **Avancés** ajoute **Partage et connexions** (calendriers partagés, calendriers externes, apps et automatisations), le serveur, la connexion, la sécurité et le départ du foyer. La même bascule existe dans les paramètres du foyer, sur la page d’une personne, sous **Famille** et dans la modification d’une liste de courses.
+La vue **Essentiels** montre l’essentiel. Les paramètres sont rangés en groupes (voir [Tous les paramètres](/fr/settings/household)) ; elle ne montre que les groupes où quelque chose d’important se trouve : **Personnel**, **Famille** (profil de la famille, région, membres, semaine habituelle), **Tâches et récompenses**, **Calendrier et école**, **Repas**, **Rituels**, **Appareils** (Cet appareil, Tous les appareils), **Aide et infos** et, sur votre téléphone, **Compte et sécurité** avec la suppression du compte. **Avancés** ajoute **Fêtes et saisons**, **Écran de la cuisine**, **Partage et connexions** (calendriers partagés, calendriers externes), le serveur, la connexion, la sécurité et le départ du foyer. La même bascule existe sur chaque page de groupe, sur la page d’une personne, sous **Profil de la famille** et dans la modification d’une liste de courses.
 
-Les réglages masqués restent actifs. L’app mémorise la vue pour chaque appareil ; les paramètres du foyer possèdent aussi ces deux vues.
+Les réglages masqués restent actifs. L’app mémorise la vue pour chaque appareil ; les pages de groupe possèdent aussi ces deux vues.
 
 ## Inviter un adulte {#invite-an-adult}
 
-Sous les membres, touchez **Inviter un adulte** :
+Ouvrez **Paramètres → Famille → Membres** et touchez **Inviter un adulte** :
 
 1. Saisissez son prénom et choisissez le rôle : **Responsable parental** pour administrer et approuver, **Membre** pour participer sans ces droits, par exemple un grand-parent.
 2. Ajoutez éventuellement son adresse e-mail. Avec cette adresse exacte, l’invitation se présente automatiquement après connexion.
@@ -33,7 +33,7 @@ Les enfants n’ont pas besoin de compte ni d’invitation : ajoutez leur préno
 
 ## Ajouter un membre {#add-member}
 
-L’icône près des membres ajoute une personne par son prénom. L’app attribue la prochaine couleur disponible.
+L’icône en haut de la page **Membres** ajoute une personne par son prénom. L’app attribue la prochaine couleur disponible.
 
 ## Modifier un membre {#edit-a-member}
 
@@ -57,7 +57,7 @@ Si un autre parent a perdu son deuxième facteur, utilisez l’action près de s
 
 ## Connecter un appareil {#connect-a-device}
 
-Sous les appareils, touchez **Connecter un appareil**. Scannez le QR ou saisissez le code affiché par le nouvel appareil, puis choisissez son type et son nom. La [procédure complète](/fr/guide/setup#_4-connecting-a-family-tablet-or-wall-display) décrit les étapes.
+Sous **Paramètres → Appareils → Tous les appareils**, touchez **Connecter un appareil**. Scannez le QR ou saisissez le code affiché par le nouvel appareil, puis choisissez son type et son nom. La [procédure complète](/fr/guide/setup#_4-connecting-a-family-tablet-or-wall-display) décrit les étapes.
 
 <Shot name="pair-approve" alt="La vérification et l’approbation du nouvel appareil" />
 
@@ -75,19 +75,19 @@ Une connexion de votre compte sur un nouveau téléphone produit un avis sur vos
 
 ## Serveur {#server}
 
-Dans **Avancés**, l’adresse et le QR du serveur permettent de configurer un autre appareil dès **Quel serveur ?**.
+Sous **Paramètres → Serveur** (vue **Avancés**), l’adresse et le QR du serveur permettent de configurer un autre appareil dès **Quel serveur ?**.
 
 **Changer de serveur** sert au déménagement du foyer. Cela déconnecte l’appareil et efface ses données locales, **y compris les courses non envoyées**. Un appareil partagé demande d’abord le PIN parental.
 
 ## Famille {#family}
 
-Sous **Paramètres → Famille**, vous changez le **nom de la famille** choisi à la création. En vue **Avancés**, la page montre aussi le **fuseau horaire** (le mur et les rappels le suivent ; touchez-le et cherchez par exemple « Zurich ») et la **langue sur le mur**, dans laquelle les jours fériés sont nommés sur l’écran mural. Tout cela revient aux parents.
+Sous **Paramètres → Famille → Profil de la famille**, vous changez le **nom de la famille** choisi à la création. En vue **Avancés**, la page montre aussi le **fuseau horaire** (le mur et les rappels le suivent ; touchez-le et cherchez par exemple « Zurich ») et la **langue sur le mur**, dans laquelle les jours fériés sont nommés sur l’écran mural. Tout cela revient aux parents.
 
 <Shot name="settings-family" alt="La page Famille avec nom, fuseau horaire, langue sur le mur et export" />
 
 ## Exporter les données {#export-data}
 
-Depuis son téléphone personnel, un parent peut exporter le foyer dans **Paramètres → Famille** (vue **Avancés**) → **Exporter les données**.
+Depuis son téléphone personnel, un parent peut exporter le foyer dans **Paramètres → Famille → Profil de la famille** (vue **Avancés**) → **Exporter les données**.
 
 L’archive zip contient membres, événements, emplois du temps, tâches, recettes, courses, etc. Elle **ne contient pas de mots de passe, PIN ou données de connexion**. Les appareils n’y figurent qu’avec nom et dates.
 
@@ -97,8 +97,8 @@ Pour quitter ou supprimer le foyer, consultez [Compte et famille](/fr/settings/a
 
 ## Calendriers externes {#outside-calendars}
 
-Les abonnements se gèrent dans **Paramètres → Avancés → Ajouter des calendriers externes**. Consultez le [calendrier](/fr/calendar/#outside-calendars).
+Les abonnements se gèrent dans **Paramètres → Calendrier et école → Ajouter des calendriers externes** (vue **Avancés**). Consultez le [calendrier](/fr/calendar/#outside-calendars).
 
 ## Réafficher les premiers pas {#show-getting-started-again}
 
-**Paramètres → Premiers pas** réaffiche la carte sur Aujourd’hui. Elle recense les étapes restantes : invitations, tablette, mur, PIN, calendrier, emploi du temps et rappels.
+**Paramètres → Aide et infos → Premiers pas** réaffiche la carte sur Aujourd’hui. Elle recense les étapes restantes : invitations, tablette, mur, PIN, calendrier, emploi du temps et rappels.

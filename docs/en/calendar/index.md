@@ -25,7 +25,7 @@ Tap **New event**. It starts on the day the calendar is showing (today, while to
 - choose between **Appointment** and **Presence**. Presence has six states: At work, Home office, Travelling, Away, Off and Childcare
 - make it **All day**, or set **Starts** and **Ends**
 - pick people under **Who**. If nobody is picked, the event is for the whole family
-- switch **Show on the kitchen display** on or off right below. A line says whether the event will show on the kitchen display and changes as you pick people: on their own, only events for the whole family go there. What new events do by default is set under [Household settings](/en/settings/household)
+- switch **Show on the kitchen display** on or off right below. A line says whether the event will show on the kitchen display and changes as you pick people: on their own, only events for the whole family go there. What new events do by default is set under [Settings → Calendar & school](/en/settings/household)
 - tick **Not sure yet** if it is still unclear whether it happens
 - choose a **Picture** and mark the event as **We are looking forward to it** or **Family tradition** (see [below](#picture-countdown-tradition))
 
@@ -71,7 +71,7 @@ After that you only enter the exceptions. A normal week stays empty. On a public
 
 ## Children and appointments
 
-You decide under [Household settings](/en/settings/household) whether children may create and change appointments. Deleting someone else's appointment stays with the guardians.
+You decide under [Settings → Calendar & school](/en/settings/household) whether children may create and change appointments. Deleting someone else's appointment stays with the guardians.
 
 ## Appointments in Outlook or on an iPhone
 

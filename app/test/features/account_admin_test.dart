@@ -56,6 +56,9 @@ Future<Pumped> pumpSettings(
   List<Member>? members,
   FakeAccountAdminRepository? admin,
   Size size = const Size(1000, 1600),
+
+  /// Account tiles live on Konto & Sicherheit; the member rows on Mitglieder.
+  String route = Routes.settingsAccount,
 }) async {
   final identity = FakeIdentityRepository(
     current: device ?? testDevice(),
@@ -75,7 +78,7 @@ Future<Pumped> pumpSettings(
       ),
     ),
   );
-  container.read(routerProvider).go(Routes.settings);
+  container.read(routerProvider).go(route);
   await t.pumpAndSettle();
   return (container: container, identity: identity, admin: accountAdmin);
 }
@@ -265,7 +268,12 @@ void main() {
           ..security = const [
             MemberSecurity(profileId: mamaId, hasAccount: true, hasMfa: true),
           ];
-        final s = await pumpSettings(t, members: people, admin: admin);
+        final s = await pumpSettings(
+          t,
+          members: people,
+          admin: admin,
+          route: Routes.settingsMembers,
+        );
         await t.ensureVisible(resetButton);
         expect(find.text('Zwei-Faktor zurücksetzen'), findsOneWidget);
         await t.tap(resetButton);
@@ -300,11 +308,12 @@ void main() {
         members: people,
         admin: admin,
         size: const Size(390, 844),
+        route: Routes.settingsMembers,
       );
       // The settings list builds rows lazily: scroll the member row into the tree first.
       await t.dragUntilVisible(
         resetButton,
-        find.byType(ListView).first,
+        find.byType(Scrollable).first,
         const Offset(0, -300),
       );
       final row = find.ancestor(
@@ -332,7 +341,12 @@ void main() {
         ..security = const [
           MemberSecurity(profileId: mamaId, hasAccount: true, hasMfa: false),
         ];
-      final s = await pumpSettings(t, members: people, admin: admin);
+      final s = await pumpSettings(
+        t,
+        members: people,
+        admin: admin,
+        route: Routes.settingsMembers,
+      );
       expect(resetButton, findsNothing);
       await unmountApp(t, s.container);
     });
@@ -350,6 +364,7 @@ void main() {
         members: people,
         device: device(deviceClass: DeviceClass.shared),
         admin: admin,
+        route: Routes.settingsMembers,
       );
       expect(resetButton, findsNothing);
       await unmountApp(t, shared.container);
@@ -371,6 +386,7 @@ void main() {
               m,
         ],
         admin: admin,
+        route: Routes.settingsMembers,
       );
       expect(resetButton, findsNothing);
       await unmountApp(t, member.container);

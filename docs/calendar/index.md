@@ -25,7 +25,7 @@ Tippe auf **Neuer Termin**. Der Termin beginnt an dem Tag, den der Kalender gera
 - zwischen **Termin** und **Anwesenheit** wählen. Anwesenheit hat sechs Zustände: Arbeit, Homeoffice, Unterwegs, Weg, Frei und Betreuung
 - den Termin **ganztägig** machen oder **Beginn** und **Ende** setzen
 - unter **Wer** Personen auswählen. Ist niemand ausgewählt, gilt der Termin für die ganze Familie
-- gleich darunter **Auf dem Küchendisplay zeigen** an- oder ausschalten. Eine Zeile sagt, ob der Termin auf dem Küchendisplay erscheint, und ändert sich, sobald du Personen auswählst: Von selbst stehen dort nur Termine der ganzen Familie. Was neue Termine standardmäßig tun, legt ihr unter [Haushalt einstellen](/settings/household) fest
+- gleich darunter **Auf dem Küchendisplay zeigen** an- oder ausschalten. Eine Zeile sagt, ob der Termin auf dem Küchendisplay erscheint, und ändert sich, sobald du Personen auswählst: Von selbst stehen dort nur Termine der ganzen Familie. Was neue Termine standardmäßig tun, legt ihr unter [Einstellungen → Kalender & Schule](/settings/household) fest
 - **Noch nicht sicher** ankreuzen, wenn noch unklar ist, ob er stattfindet
 - ein **Bild** wählen und den Termin als **Darauf freuen wir uns** oder **Familientradition** markieren (siehe [unten](#picture-countdown-tradition))
 
@@ -71,7 +71,7 @@ Danach tragt ihr nur noch Abweichungen ein. Eine normale Woche bleibt leer. An e
 
 ## Kinder und Termine
 
-Ob Kinder Termine anlegen und ändern dürfen, legt ihr unter [Haushalt einstellen](/settings/household) fest. Fremde Termine löschen bleibt Sache der Erziehungsberechtigten.
+Ob Kinder Termine anlegen und ändern dürfen, legt ihr unter [Einstellungen → Kalender & Schule](/settings/household) fest. Fremde Termine löschen bleibt Sache der Erziehungsberechtigten.
 
 ## Termine in Outlook oder auf dem iPhone
 

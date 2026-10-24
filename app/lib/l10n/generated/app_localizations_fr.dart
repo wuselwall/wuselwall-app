@@ -905,34 +905,6 @@ class AppLocalizationsFr extends AppLocalizations {
       'Ce paramètre ne peut pas être modifié pour cette personne ou cet appareil.';
 
   @override
-  String get householdSettingsTitle => 'Paramètres du foyer';
-
-  @override
-  String get householdSettingsSubtitle =>
-      'Valeurs par défaut pour les tâches, le calendrier, les repas et l’écran de la cuisine';
-
-  @override
-  String get settingsSectionHousehold => 'Foyer et membres';
-
-  @override
-  String get settingsSectionTasks => 'Tâches';
-
-  @override
-  String get settingsSectionCalendar => 'Calendrier et école';
-
-  @override
-  String get settingsSectionMeals => 'Repas';
-
-  @override
-  String get settingsSectionKitchen => 'Écran de la cuisine';
-
-  @override
-  String get settingsSectionDevice => 'Cet appareil';
-
-  @override
-  String get settingsSectionMine => 'Mes paramètres';
-
-  @override
   String get settingPickPersonFirst =>
       'Choisis d’abord qui tu es. Tes paramètres personnels apparaîtront ensuite ici.';
 
@@ -4416,10 +4388,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get shortcutTitle => 'Apps et automatisations';
 
   @override
-  String get shortcutSettingsSubtitle =>
-      'Siri et autres automatisations, chacune avec une clé';
-
-  @override
   String get shortcutIntro =>
       'Une clé permet à une autre application d’utiliser WuselWall au nom d’une personne. Une clé d’automatisation, par exemple pour un raccourci Siri sur iPhone ou toute application pouvant appeler une adresse web, permet de lire et d’ajouter : elle ajoute des articles à la liste de courses et indique le programme du jour, le repas ou qui a sport demain. Elle ne permet ni de supprimer ni de gérer les données.';
 
@@ -4894,9 +4862,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get savedMessage => 'Enregistré.';
 
   @override
-  String get settingsSectionFamily => 'Famille';
-
-  @override
   String get settingsSectionThisDevice => 'Cet appareil';
 
   @override
@@ -5098,12 +5063,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get settingsVersionUnknown => 'inconnue';
-
-  @override
-  String get settingsSectionRituals => 'Rituels';
-
-  @override
-  String get settingsSectionOccasions => 'Saisons et fêtes';
 
   @override
   String get settingMemberWuselTitle => 'Wusel';
@@ -6072,4 +6031,126 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get weekHighlightHere => 'était de la partie cette semaine';
+
+  @override
+  String get settingsGroupPersonalTitle => 'Personnel';
+
+  @override
+  String get settingsGroupPersonalSubtitle => 'Wusel, sons et rappels pour toi';
+
+  @override
+  String get settingsGroupFamilyTitle => 'Famille';
+
+  @override
+  String get settingsGroupFamilySubtitle =>
+      'Nom, fuseau horaire, membres et semaine habituelle';
+
+  @override
+  String get settingsGroupTasksTitle => 'Tâches et récompenses';
+
+  @override
+  String get settingsGroupTasksSubtitle =>
+      'Points, jokers de série et approbations';
+
+  @override
+  String get settingsGroupCalendarTitle => 'Calendrier et école';
+
+  @override
+  String get settingsGroupCalendarSubtitle =>
+      'Événements, changements d’emploi du temps et partage';
+
+  @override
+  String get settingsGroupMealsTitle => 'Repas';
+
+  @override
+  String get settingsGroupMealsSubtitle =>
+      'Repas chaud, repas souhaités et déjeuner en garde';
+
+  @override
+  String get settingsGroupRitualsTitle => 'Rituels';
+
+  @override
+  String get settingsGroupRitualsSubtitle =>
+      'Question à table, notre semaine, comptes à rebours';
+
+  @override
+  String get settingsGroupCelebrationsTitle => 'Fêtes et saisons';
+
+  @override
+  String get settingsGroupCelebrationsSubtitle =>
+      'Avent, Pâques, Nouvel An, anniversaires et saisons';
+
+  @override
+  String get settingsGroupKitchenTitle => 'Écran de la cuisine';
+
+  @override
+  String get settingsGroupKitchenSubtitle =>
+      'Prénoms, changement de semaine et moments de la journée';
+
+  @override
+  String get settingsGroupDevicesTitle => 'Appareils';
+
+  @override
+  String get settingsGroupDevicesSubtitle =>
+      'Cet appareil et tous ceux de la famille';
+
+  @override
+  String get settingsGroupAccountTitle => 'Compte et sécurité';
+
+  @override
+  String get settingsGroupAccountSubtitle =>
+      'Connexion, mot de passe, double authentification, quitter la famille';
+
+  @override
+  String get settingsGroupServerTitle => 'Serveur';
+
+  @override
+  String get settingsGroupServerSubtitle =>
+      'Adresse, code QR et changement de serveur';
+
+  @override
+  String get settingsGroupHelpTitle => 'Aide et infos';
+
+  @override
+  String get settingsGroupHelpSubtitle => 'Premiers pas, versions, licences';
+
+  @override
+  String get settingsSectionWusel => 'Wusel';
+
+  @override
+  String get settingsSectionSound => 'Son';
+
+  @override
+  String get settingsSectionNotifications => 'Notifications';
+
+  @override
+  String get settingsSectionTableQuestion => 'Question à table';
+
+  @override
+  String get settingsSectionWeekReview => 'Bilan de la semaine';
+
+  @override
+  String get settingsSectionCountdowns => 'Comptes à rebours';
+
+  @override
+  String get settingsSectionHolidays => 'Jours de fête';
+
+  @override
+  String get settingsSectionThroughYear => 'Au fil de l’année';
+
+  @override
+  String get settingsSectionAllDevices => 'Tous les appareils';
+
+  @override
+  String get settingsSectionLeave => 'Quitter ou supprimer';
+
+  @override
+  String get settingsSectionOther => 'Autres paramètres';
+
+  @override
+  String get familyProfileTitle => 'Profil de la famille';
+
+  @override
+  String get settingsMembersSubtitle =>
+      'Prénoms, couleurs, rôles et ordre sur le mur';
 }

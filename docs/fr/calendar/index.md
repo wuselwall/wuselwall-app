@@ -26,7 +26,7 @@ Touchez **Nouvel événement** : il commence le jour affiché par le calendrier 
 
 <Shot name="calendar-editor" alt="La création d’un événement avec les participants et la répétition" />
 
-Le comportement par défaut des nouveaux événements se règle dans les [paramètres du foyer](/fr/settings/household).
+Le comportement par défaut des nouveaux événements se règle dans [Paramètres → Calendrier et école](/fr/settings/household).
 
 ### Répéter {#repeating}
 
@@ -68,7 +68,7 @@ Ensuite, saisissez seulement les exceptions. Les jours fériés, le mur n’affi
 
 ## Les enfants {#children-and-appointments}
 
-Les [paramètres du foyer](/fr/settings/household) déterminent si les enfants peuvent créer et modifier leurs rendez-vous. Supprimer le rendez-vous d’une autre personne reste réservé aux parents.
+Le groupe [Paramètres → Calendrier et école](/fr/settings/household) détermine si les enfants peuvent créer et modifier leurs rendez-vous. Supprimer le rendez-vous d’une autre personne reste réservé aux parents.
 
 ## Outlook et iPhone {#appointments-in-outlook-or-on-an-iphone}
 

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/features/settings/application/settings_groups.dart';
 import 'package:wuselwall/features/settings/application/settings_view.dart';
 
 import '../support/fakes.dart';
@@ -202,6 +203,7 @@ void main() {
       );
       await t.tap(find.byIcon(Icons.settings));
       await t.pumpAndSettle();
+      await openSettingsGroup(t, SettingsGroup.account);
 
       expect(find.text('Anmeldung'), findsOneWidget);
       expect(find.text('daniel@example.org — immer verfügbar'), findsOneWidget);

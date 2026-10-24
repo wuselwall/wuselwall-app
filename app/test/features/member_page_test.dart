@@ -28,7 +28,7 @@ void main() {
       t,
       overrides: baseOverrides(identity: identity, settingsView: view),
     );
-    container.read(routerProvider).go(Routes.settings);
+    container.read(routerProvider).go(Routes.settingsMembers);
     await t.pumpAndSettle();
     return identity;
   }
@@ -185,7 +185,7 @@ void main() {
       t,
       overrides: baseOverrides(identity: identity),
     );
-    container.read(routerProvider).go(Routes.settings);
+    container.read(routerProvider).go(Routes.settingsDevices);
     await t.pumpAndSettle();
 
     await scrollTo(t, find.byKey(const ValueKey('device-d-ipad')));

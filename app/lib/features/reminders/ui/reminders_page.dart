@@ -37,7 +37,9 @@ class RemindersPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.reminderSettingsTitle),
-        leading: BackButton(onPressed: () => context.go(Routes.settings)),
+        leading: BackButton(
+          onPressed: () => context.go(Routes.settingsPersonal),
+        ),
       ),
       body: ListView(
         padding: const EdgeInsets.all(Tokens.space4),

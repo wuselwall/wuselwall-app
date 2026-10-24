@@ -7,7 +7,7 @@ For all of them:
 - **A ritual is never a chore.** It earns no points, keeps no streak and cannot be "missed". If you skip it, nothing is left behind.
 - **Nobody is compared.** Nothing counts one person against another.
 - **No notifications.** Rituals show up where you look anyway: on the wall, on **Today** and on the children's **My day**.
-- **Everything can be switched off**, each one on its own, under **Settings → Household settings → Rituals** (see [Household settings](/en/settings/household#rituals)). At the start everything is on.
+- **Everything can be switched off**, each one on its own, under **Settings → Rituals** (see [All settings](/en/settings/household#rituals)). At the start everything is on.
 
 <Shot name="wall-board" alt="Wall display with Wusel in the header, a family tradition on Friday, a wished-for meal with a star and the birthday countdown in the footer" wide />
 

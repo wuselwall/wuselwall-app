@@ -7,7 +7,7 @@ Para todos vale:
 - **Un ritual nunca es una obligación.** No da puntos, no tiene racha y no se puede «perder». Si os lo saltáis, no queda rastro.
 - **Nadie se compara.** Nada cuenta a una persona frente a otra.
 - **Sin notificaciones.** Los rituales aparecen donde ya miráis: en la pared, en **Hoy** y en **Mi día** de los niños.
-- **Todo se puede desactivar**, cada uno por separado, en **Ajustes → Ajustes del hogar → Rituales** (ver [Ajustes del hogar](/es/settings/household#rituals)). Al principio todo está activado.
+- **Todo se puede desactivar**, cada uno por separado, en **Ajustes → Rituales** (ver [Todos los ajustes](/es/settings/household#rituals)). Al principio todo está activado.
 
 <Shot name="wall-board" alt="La pantalla de pared con Wusel en la cabecera, una tradición familiar el viernes, una comida deseada con estrella y la cuenta atrás de un cumpleaños en el pie" wide />
 

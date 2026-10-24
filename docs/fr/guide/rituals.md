@@ -7,7 +7,7 @@ Pour tous :
 - **Un rituel n’est jamais une corvée.** Il ne rapporte pas de points, n’a pas de série et ne peut pas être « manqué ». Si vous le sautez, rien n’en garde la trace.
 - **Personne n’est comparé.** Rien ne compte une personne contre une autre.
 - **Pas de notifications.** Les rituels apparaissent là où vous regardez déjà : sur le mur, dans **Aujourd’hui** et dans **Ma journée** des enfants.
-- **Tout se désactive**, chacun séparément, dans **Paramètres → Paramètres du foyer → Rituels** (voir [Paramètres du foyer](/fr/settings/household#rituals)). Au départ, tout est activé.
+- **Tout se désactive**, chacun séparément, dans **Paramètres → Rituels** (voir [Tous les paramètres](/fr/settings/household#rituals)). Au départ, tout est activé.
 
 <Shot name="wall-board" alt="L’écran mural avec Wusel dans l’en-tête, une tradition familiale le vendredi, un repas souhaité avec une étoile et le compte à rebours d’un anniversaire en pied de page" wide />
 

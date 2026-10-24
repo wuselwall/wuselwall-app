@@ -7,13 +7,13 @@ Si vienes de otra vista, desliza hacia dentro desde el borde izquierdo en iPhone
 
 ## Vista básica o avanzada {#view}
 
-La vista **Básicos** muestra lo esencial en tres grupos: **Familia** (ajustes del hogar, familia, semana habitual, miembros, dispositivos), **Este dispositivo** (recordatorios, idioma, apariencia, primeros pasos) y, en tu móvil, la eliminación de la cuenta. **Avanzados** añade **Compartir y conexiones** (calendarios compartidos, calendarios externos, apps y automatizaciones), el servidor, el inicio de sesión, la seguridad y la salida del hogar. El mismo interruptor existe en los ajustes del hogar, en la página de una persona, en **Familia** y al editar una lista de la compra.
+La vista **Básicos** muestra lo esencial. Los ajustes están ordenados en grupos (ver [Todos los ajustes](/es/settings/household)); solo muestra los grupos con algo importante: **Personal**, **Familia** (perfil de la familia, región, miembros, semana habitual), **Tareas y recompensas**, **Calendario y colegio**, **Comidas**, **Rituales**, **Dispositivos** (Este dispositivo, Todos los dispositivos), **Ayuda e información** y, en tu móvil, **Cuenta y seguridad** con la eliminación de la cuenta. **Avanzados** añade **Celebraciones y estaciones**, **Pantalla de la cocina**, **Compartir y conexiones** (calendarios compartidos, calendarios externos), el servidor, el inicio de sesión, la seguridad y la salida del hogar. El mismo interruptor existe en cada página de grupo, en la página de una persona, en el **perfil de la familia** y al editar una lista de la compra.
 
-Lo oculto sigue activo. La app recuerda la vista por dispositivo. Los ajustes del hogar también tienen estas dos vistas.
+Lo oculto sigue activo. La app recuerda la vista por dispositivo. Las páginas de grupo también tienen estas dos vistas.
 
 ## Invitar a un adulto {#invite-an-adult}
 
-Bajo los miembros, toca **Invitar a un adulto**:
+Abre **Ajustes → Familia → Miembros** y toca **Invitar a un adulto**:
 
 1. Introduce nombre y rol: responsable adulto para administrar y aprobar, o miembro para participar sin esos permisos, como un abuelo.
 2. Añade un correo opcional. Con esa dirección exacta, la invitación aparece automáticamente al iniciar sesión.
@@ -33,7 +33,7 @@ Los niños no necesitan invitación ni cuenta: añade su nombre y conecta su dis
 
 ## Añadir un miembro {#add-member}
 
-El icono junto a los miembros añade una persona por nombre. La app asigna el siguiente color libre.
+El icono de la parte superior de la página **Miembros** añade una persona por nombre. La app asigna el siguiente color libre.
 
 ## Editar un miembro {#edit-a-member}
 
@@ -57,7 +57,7 @@ Si otro adulto perdió su segundo factor, usa la acción junto a su nombre. Podr
 
 ## Conectar un dispositivo {#connect-a-device}
 
-Bajo los dispositivos, toca **Conectar un dispositivo**, escanea el QR o introduce el código del nuevo equipo y elige tipo y nombre. La [guía de conexión](/es/guide/setup#_4-connecting-a-family-tablet-or-wall-display) detalla el proceso.
+En **Ajustes → Dispositivos → Todos los dispositivos**, toca **Conectar un dispositivo**, escanea el QR o introduce el código del nuevo equipo y elige tipo y nombre. La [guía de conexión](/es/guide/setup#_4-connecting-a-family-tablet-or-wall-display) detalla el proceso.
 
 <Shot name="pair-approve" alt="La revisión y aprobación del nuevo dispositivo" />
 
@@ -75,19 +75,19 @@ Una sesión nueva de tu cuenta produce un aviso en **Hoy** en tus otros móviles
 
 ## Servidor {#server}
 
-En **Avanzados**, la dirección y el QR sirven para configurar otro equipo desde **¿Qué servidor?**.
+En **Ajustes → Servidor** (vista **Avanzados**), la dirección y el QR sirven para configurar otro equipo desde **¿Qué servidor?**.
 
 **Cambiar servidor** se usa al trasladar el hogar. Cierra la sesión y borra los datos locales, **incluida la compra aún no enviada**. Un dispositivo compartido pide antes el PIN de responsable.
 
 ## Familia {#family}
 
-En **Ajustes → Familia** cambias el **nombre de la familia** elegido al crearla. En la vista **Avanzados**, la página muestra también la **zona horaria** (la pared y los recordatorios la siguen; tócala y busca, por ejemplo, «Zurich») y el **idioma en la pared**, en el que se nombran los festivos en la pantalla de pared. Todo esto corresponde a los adultos responsables.
+En **Ajustes → Familia → Perfil de la familia** cambias el **nombre de la familia** elegido al crearla. En la vista **Avanzados**, la página muestra también la **zona horaria** (la pared y los recordatorios la siguen; tócala y busca, por ejemplo, «Zurich») y el **idioma en la pared**, en el que se nombran los festivos en la pantalla de pared. Todo esto corresponde a los adultos responsables.
 
 <Shot name="settings-family" alt="La página Familia con nombre, zona horaria, idioma en la pared y exportación" />
 
 ## Exportar datos {#export-data}
 
-Un adulto responsable puede exportar desde su móvil, en **Ajustes → Familia** (vista **Avanzados**) → **Exportar datos**.
+Un adulto responsable puede exportar desde su móvil, en **Ajustes → Familia → Perfil de la familia** (vista **Avanzados**) → **Exportar datos**.
 
 El zip contiene miembros, citas, horarios, tareas, recetas, compra y el resto de datos introducidos. **No incluye contraseñas, PIN ni datos de acceso**. Los dispositivos figuran solo con nombre y fechas.
 
@@ -97,8 +97,8 @@ Para salir o eliminar el hogar, consulta [Cuenta y familia](/es/settings/account
 
 ## Calendarios externos {#outside-calendars}
 
-Se gestionan en **Ajustes → Avanzados → Añadir calendarios externos**. Consulta [Calendario](/es/calendar/#outside-calendars).
+Se gestionan en **Ajustes → Calendario y colegio → Añadir calendarios externos** (vista **Avanzados**). Consulta [Calendario](/es/calendar/#outside-calendars).
 
 ## Recuperar los primeros pasos {#show-getting-started-again}
 
-**Ajustes → Primeros pasos** recupera la tarjeta en Hoy. Recoge invitaciones, tableta, pared, PIN, calendario, horario escolar y recordatorios pendientes.
+**Ajustes → Ayuda e información → Primeros pasos** recupera la tarjeta en Hoy. Recoge invitaciones, tableta, pared, PIN, calendario, horario escolar y recordatorios pendientes.

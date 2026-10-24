@@ -44,7 +44,7 @@ Choisissez le pays (**Allemagne, Autriche, Suisse ou Liechtenstein**), le canton
 
 Les régions sont classées de Z à A dans la langue de l’app. Les cantons suisses affichent aussi leur abréviation, par exemple AG. La recherche accepte le nom ou l’abréviation.
 
-Vous pouvez continuer sans région ; il n’y a alors aucun jour férié automatique et les vacances se saisissent manuellement. La région du foyer se règle aussi dans les [paramètres](/fr/settings/household).
+Vous pouvez continuer sans région ; il n’y a alors aucun jour férié automatique et les vacances se saisissent manuellement. La région du foyer se règle aussi sous [Paramètres → Famille](/fr/settings/household).
 
 Les **jours fériés** s’appliquent automatiquement. Le jour est sans cours, son nom apparaît dans l’en-tête et les repas le traitent comme un jour libre.
 
@@ -145,4 +145,4 @@ Le mur et la journée de l’enfant indiquent le matériel pour le lendemain, pa
 
 ## Les enfants signalent un changement {#children-report-changes}
 
-Seuls les parents gèrent l’emploi du temps. Vous pouvez autoriser les membres à signaler une annulation, à confirmer ensuite par un parent, dans les [paramètres du foyer](/fr/settings/household).
+Seuls les parents gèrent l’emploi du temps. Vous pouvez autoriser les membres à signaler une annulation, à confirmer ensuite par un parent, dans [Paramètres → Calendrier et école](/fr/settings/household).
