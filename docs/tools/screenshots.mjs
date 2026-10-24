@@ -71,6 +71,9 @@ const SETTINGS_GROUPS = {
   es: { gPersonal: 'Personal', gFamily: 'Familia', gTasks: 'Tareas y recompensas', gRituals: 'Rituales', gDevices: 'Dispositivos', gAccount: 'Cuenta y seguridad', gHelp: 'Ayuda e información', members: 'Miembros', familyProfile: 'Perfil de la familia' },
 };
 for (const [lang, labels] of Object.entries(SETTINGS_GROUPS)) Object.assign(T[lang], labels);
+// The calendar bar's view menu (its tooltip), where the bar has no room for the view buttons.
+const CALENDAR_VIEW = { de: 'Kalenderansicht', en: 'Calendar view', fr: 'Vue du calendrier', es: 'Vista del calendario' };
+for (const [lang, chooseView] of Object.entries(CALENDAR_VIEW)) T[lang].chooseView = chooseView;
 
 async function open(page, scenario, route = '') {
   // still=1: nothing moves and Wusel's words are fixed, so every run gives the same picture.
@@ -113,6 +116,39 @@ const showAdvanced = async (page, t) => {
 };
 // Opens a group of the Einstellungen top page by its title (a tile with a subtitle, so a substring).
 const openGroup = (page, name) => tapAny(page, name, { exact: false });
+// The calendar bar (CalendarToolbar) shows the views as buttons where it has room and
+// in a menu where it has not, which depends on the viewport and the language. Choose the
+// view in whichever the bar shows, then check that it is the selected one: a segment
+// reports aria-current, a menu item aria-checked (read by opening the menu once more).
+const chooseView = async (page, t, name) => {
+  const segment = page.getByRole('banner').getByRole('button', { name, exact: true });
+  const menu = page.getByRole('button', { name: t.chooseView, exact: true });
+  await segment.or(menu).first().waitFor();
+  if (await segment.count()) {
+    await segment.first().dispatchEvent('click');
+    await settle(page);
+    const current = await segment.first().getAttribute('aria-current');
+    if (current !== 'true') throw new Error(`calendar view "${name}" is not selected (aria-current=${current})`);
+    return;
+  }
+  const item = page.getByRole('menuitemcheckbox', { name, exact: true });
+  await menu.first().dispatchEvent('click');
+  await settle(page);
+  // A menu item's semantics node is not tappable on the web (no flt-tappable), so it
+  // takes a real pointer click; the menu is on screen, unlike a scrolled-away widget.
+  await item.first().click();
+  await settle(page);
+  await menu.first().dispatchEvent('click');
+  await settle(page);
+  const checked = await item.first().getAttribute('aria-checked');
+  // Close it by choosing the view again, not with Escape: a key press switches Flutter to
+  // keyboard focus highlights, which would ring the menu button in the picture.
+  await item.first().click();
+  await page.mouse.move(0, 0);
+  await settle(page);
+  if (checked !== 'true') throw new Error(`calendar view "${name}" is not selected (aria-checked=${checked})`);
+  if (await item.count()) throw new Error('the calendar view menu is still open');
+};
 const scrollDown = async (page, px = 600) => {
   const vp = page.viewportSize();
   await page.mouse.move(vp.width / 2, vp.height * 0.6);
@@ -193,11 +229,11 @@ const shots = [
   { name: 'shopping-trolley', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.shopping, { exact: false }); await scrollDown(p, 1500); await tapAny(p, t.trolley, { exact: false }); await scrollDown(p, 3000); } },
   { name: 'shopping-history', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.shopping, { exact: false }); await press(p, t.history); await p.getByRole('button', { name: /14/ }).first().click().catch(() => {}); await settle(p); } },
   // Calendar, timetable, tasks, meals and household settings.
-  { name: 'calendar-week', scenario: 'adult', viewport: TABLET, steps: async (p, t) => { await tapAny(p, t.calendar); await tapAny(p, t.week); } },
+  { name: 'calendar-week', scenario: 'adult', viewport: TABLET, steps: async (p, t) => { await tapAny(p, t.calendar); await chooseView(p, t, t.week); } },
   { name: 'calendar-phone', scenario: 'adult', viewport: PHONE, steps: async (p, t) => tapAny(p, t.calendar) },
   // The month view (specs/05 "Views"): wide enough for the bar's view buttons. The demo has
   // the month's public holidays, a birthday and one stretch of Ferien (lib/demo/demo_holidays.dart).
-  { name: 'calendar-month', scenario: 'adult', viewport: WALL, steps: async (p, t) => { await tapAny(p, t.calendar); await tapAny(p, t.month); } },
+  { name: 'calendar-month', scenario: 'adult', viewport: WALL, steps: async (p, t) => { await tapAny(p, t.calendar); await chooseView(p, t, t.month); } },
   { name: 'calendar-editor', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.calendar); await tapAny(p, t.newEvent); } },
   { name: 'school-week', scenario: 'adult', viewport: TABLET, steps: async (p, t) => tapAny(p, t.schedule, { exact: false }) },
   { name: 'school-editor', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.schedule, { exact: false }); await press(p, t.editTimetable, { exact: false }); await press(p, t.editorSchool); } },
