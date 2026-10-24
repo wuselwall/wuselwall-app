@@ -2,6 +2,7 @@
 //   flutter build web -t lib/main_demo.dart
 // The app runs on in-memory data (lib/demo). The scenario comes from the URL:
 //   ?scenario=setup | newfamily | adult | kid | kiosk   (default adult)
+//   ?scenario=noschool | import   adult, with no school yet, or with a timetable proposal
 //   ?scenario=server   the store app's first question: which server (ADR-018)
 // Language and light/dark follow the browser, as on a real device.
 import 'package:flutter/material.dart';

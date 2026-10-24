@@ -49,6 +49,8 @@ Pour l’installer, dans le dossier de la pile :
 
 L’app propose alors **Scanner une photo** sous **Importer…**. Sans cette ligne, l’entrée reste, mais l’app indique que le serveur n’a pas de reconnaissance de texte. La reconnaissance utilise RapidOCR avec les modèles PP-OCR de PaddleOCR (tous deux Apache-2.0, la même base que le gestionnaire de photos Immich utilise pour sa reconnaissance de texte).
 
+Avec l’image, l’app envoie sa langue ainsi que les noms et abréviations de vos matières. Ainsi le serveur lit vos mots comme vos matières. La fonction accepte des photos (JPEG, PNG, WebP, HEIC) et des PDF jusqu’à 6 Mo, ne garde rien et n’écrit aucune image dans le journal. Ce que le serveur lit sur une feuille, et ses limites, figure sous [Importer un emploi du temps](/fr/school/#reading-in).
+
 ## Sauvegarde hors site {#off-site-backup}
 
 Un autre disque local ne protège pas contre le vol ou l’incendie. L’outil peut envoyer les sauvegardes **chiffrées** avec [restic](https://restic.net/) vers Backblaze B2 ou un stockage S3. Le fournisseur ne voit que le contenu chiffré.

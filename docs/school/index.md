@@ -6,17 +6,37 @@ Der Stundenplan zeigt jedem Kind seine Woche: welche Stunden, welche Fächer und
 
 ## Einrichten
 
-Beim ersten Mal tippst du auf **Schule einrichten**, gibst Name und **Region** der Schule ein und tippst auf **Schule anlegen**. Mehr braucht es nicht: Klingelzeiten und eine Fächerliste werden vorgeschlagen, und unter **Nächste Schritte** steht für jedes Kind, dessen Stundenplan noch fehlt, ein Knopf zum Eintragen oder Einlesen. Auf der Schulseite findest du danach:
+Beim ersten Mal tippst du auf **Schule einrichten**. Die erste Schule braucht nur zwei Angaben: den **Namen der Schule** und die **Region**. Dann tippst du auf **Schule anlegen**.
 
-- die **Schule** mit Name und **Region**: Land, Kanton oder Bundesland und auf Wunsch Bezirk oder Gemeinde. Die Region bestimmt die Feiertage und Ferien, siehe unten
+<Shot name="school-first" alt="Die erste Schule: nur Name und Region, darunter Schule anlegen" />
+
+Mehr braucht es nicht. Klingelzeiten und eine Fächerliste werden vorgeschlagen: Stunden zu 45 Minuten ab 8:00, nach der 2. und der 4. Stunde 20 Minuten Pause, sonst 5 Minuten. Hat euer Haushalt noch keine Region, bekommt er die Region der ersten Schule. Unter **Nächste Schritte** steht danach jedes Kind, dessen Stundenplan noch fehlt. Tippe auf die Zeile, um den Plan einzutragen, oder auf **Einlesen…**, um ihn vom Blatt zu holen.
+
+Auf der Schulseite findest du danach:
+
+- die **Schule** mit Name und **Region**: Land, Kanton oder Bundesland und auf Wunsch Bezirk oder Gemeinde. Die Region bestimmt die Feiertage, die Ferien und die vorgeschlagenen Fächer, siehe unten
 - die **Klingelzeiten**: Stunden und Pausen mit Beginn und Ende (**Stunde hinzufügen**, **Pause hinzufügen**)
 - die **Zeiträume**, zum Beispiel Halbjahre, mit **Von** und **Bis**. Wechselt sich der Stundenplan wöchentlich ab, schaltet ihr **A- und B-Wochen** ein und tragt die **Kalenderwoche einer A-Woche** ein; jede zweite Woche danach ist eine B-Woche
-- die **Fächer** mit Kürzel und Farbe. Pro Fach könnt ihr **Sachen zum Mitnehmen** eintragen, zum Beispiel Sportsachen, und festlegen, ob das Fach auf der Wand erscheinen soll. Die Fächer sind ein Vorschlag, der zu eurem Land passt: ihr benennt sie um oder löscht sie
+- die **Fächer** mit Kürzel und Farbe. Pro Fach könnt ihr **Sachen zum Mitnehmen** eintragen, zum Beispiel Sportsachen, und festlegen, ob das Fach auf der Wand erscheinen soll
 - die **Ferien und freie Tage**
 
 **Speichern** erscheint oben rechts, sobald ihr den Schulnamen, die Region oder die Klingelzeiten geändert habt. Damit speichert ihr alle geänderten Abschnitte gemeinsam.
 
 Die Klingelzeiten laufen von früh nach spät: Die erste Stunde heißt **1. Stunde**, die Pausen stehen zwischen den Stunden.
+
+### Die vorgeschlagenen Fächer
+
+Die Fächerliste richtet sich nach der Region der Schule. Sie nimmt die Namen und Kürzel, die auf den Stundenplänen dieser Region stehen. So erkennt das Einlesen sie auf dem Blatt wieder.
+
+- **Deutschland**: zum Beispiel Deutsch (D), Mathematik (Ma), Sachunterricht (SU), Sport (Sp) und Schwimmen (Sw)
+- **Österreich**: die Namen des Lehrplans 2023/24, zum Beispiel Kunst und Gestaltung (KuG) und Bewegung und Sport (BS)
+- **Deutschschweiz und Liechtenstein**: die Fachbereiche des Lehrplans 21, zum Beispiel Natur, Mensch, Gesellschaft (NMG) und Textiles und Technisches Gestalten (TTG)
+- **Romandie** (Genf, Waadt, Neuenburg, Jura): auf Französisch, zum Beispiel Français (FRA) und Sciences de la nature (SCN)
+- **Tessin**: auf Italienisch, zum Beispiel Italiano (ITA) und Studio d’ambiente (AMB)
+
+In einem zweisprachigen Kanton, zum Beispiel Freiburg oder Wallis, entscheidet die Sprache der App: Auf Französisch kommt die Liste der Romandie, auf Italienisch die des Tessins, sonst die der Deutschschweiz. Wählt ihr **Anderes Land (ohne Region)**, entscheidet ebenfalls die Sprache der App: auf Französisch die Liste für Frankreich, auf Spanisch die für Spanien, sonst die deutsche.
+
+Die Liste kommt nur, solange ihr noch keine Fächer habt. Danach gehört sie euch: Benennt Fächer um, löscht sie oder legt neue an.
 
 ## Feiertage und Ferien
 
@@ -63,13 +83,56 @@ Wenn noch kein Plan vorliegt, zeigt die Ansicht einen Hinweis zum gewählten Kin
 
 ## Stundenplan einlesen
 
-Statt jede Stunde zu tippen, kannst du den Plan vom Blatt einlesen lassen. Alle drei Wege enden auf derselben **Vorschau**: Sie zeigt das Kind, die Schule, den Zeitraum, das Raster, wie es gespeichert würde, die Fächer, die neu angelegt werden, und jeden Hinweis, zum Beispiel wenn ein Plan ersetzt wird oder mehr Stunden hat als die Klingelzeiten. Ein neues Fach, das es bei euch schon gibt, nur unter einem anderen Wort, wählst du dort aus der Liste; WuselWall merkt sich das Wort vom Blatt und erkennt es beim nächsten Mal von selbst. Erst **Übernehmen** schreibt etwas; **Verwerfen** lässt alles, wie es war.
+Statt jede Stunde zu tippen, kannst du den Plan vom Blatt einlesen lassen. Es gibt drei Wege. Alle enden auf derselben [Vorschau](#die-vorschau), und erst **Übernehmen** schreibt etwas.
 
 **Aus Text, mit eurem KI-Assistenten.** Tippe bei einem Kind ohne Plan auf **Einlesen…** und dann auf **Aus Text einfügen** (oder im Stundenplan oben auf **Einlesen…**). **Anleitung für den Assistenten kopieren** legt einen Text in die Zwischenablage: Gib ihn zusammen mit einem Foto des Stundenplans dem Assistenten, dem ihr vertraut, zum Beispiel in dessen App auf dem Handy. Er antwortet in einem festen Format, das WuselWall lesen kann. Füge die Antwort in das Feld ein und tippe auf **Einlesen**. Das Foto geht dabei nur an den Assistenten eurer Wahl; WuselWall schickt nichts an niemanden.
 
 **Als Vorschlag eines Assistenten.** Ein Assistent, der mit WuselWall verbunden ist ([Apps und KI-Assistenten](/settings/shortcuts)), kann einen Stundenplan als **Vorschlag** hinterlegen. Er ändert dabei nichts: Auf **Heute** und über dem Stundenplan erscheint eine Karte „Vorschlag von Claude“ mit **Prüfen** und **Verwerfen**. **Prüfen** öffnet die Vorschau. Vorschläge verfallen nach 14 Tagen.
 
-**Als Foto oder PDF, gelesen von eurem Server.** Hat euer Server die Texterkennung eingerichtet ([Extras für den Server](/server/extras#texterkennung)), tippst du auf **Einlesen…** und **Foto scannen**, nimmst das Blatt auf, wählst ein Foto oder mit **Datei wählen** die PDF-Datei der Schule. Die Datei geht an euren eigenen Server und sonst nirgendwohin; der Server erkennt die Wochentage, die Stunden und die Fächer und zeigt die Vorschau. Die PDF-Datei ist am genauesten, weil der Server ihren Text direkt liest; bei einem Foto klappt ein gerades, helles Bild des ganzen Blatts am besten, ein schiefes richtet der Server selbst aus. Textstücke, die zu keinem Feld passen, nennt die Vorschau, damit du mit dem Blatt vergleichst. Ohne Texterkennung sagt die App das und verweist auf das Einlesen aus Text.
+**Als Foto oder PDF, gelesen von eurem Server.** Hat euer Server die Texterkennung eingerichtet ([Extras für den Server](/server/extras#texterkennung)), tippst du auf **Einlesen…** und **Foto scannen**. Dann wählst du **Foto aufnehmen**, **Foto auswählen** oder **Datei wählen (PDF oder Bild)**, zum Beispiel für die PDF-Datei, die die Schule verschickt hat.
+
+<Shot name="timetable-scan" alt="Foto scannen: der Hinweis, dass die Datei zu Hause bleibt, und die drei Wege Foto aufnehmen, Foto auswählen und Datei wählen" />
+
+Die Datei geht an euren eigenen Server und sonst nirgendwohin. Der Server speichert sie nicht. Er liest das Blatt und zeigt die Vorschau. Damit er eure Fächer erkennt, schickt die App ihre Sprache und die Namen und Kürzel eurer Fächer mit.
+
+Das liest der Server vom Blatt:
+
+- die Wochentage, die Stunden und ihre Uhrzeiten, wenn sie am Rand stehen
+- in jedem Feld das Fach, den Raum und die Lehrkraft. Ein Wort, das auf dem Blatt in die nächste Zeile umbricht, setzt er wieder zusammen
+- die **Legende** unter oder neben dem Plan, also Kürzel mit ihrem Namen, zum Beispiel „NMG Natur, Mensch, Gesellschaft“
+- **A- und B-Wochen**, wenn ein Feld „A“ oder „B“ trägt
+- Zeilen für **Hort**, Mittagstisch oder Betreuung mit ihren Uhrzeiten. Sie werden Betreuungszeilen, keine Stunden
+
+So klappt es am besten:
+
+- Die **PDF-Datei der Schule** ist am genauesten, weil der Server ihren Text direkt liest. Ein eingescanntes PDF liest er wie ein Foto.
+- Bei einem **Foto**: gerade, hell und das ganze Blatt. Ein schiefes oder quer gehaltenes Foto richtet der Server selbst aus. Fotos vom iPhone (HEIC) gehen auch.
+- Die Datei darf höchstens 6 MB groß sein.
+
+**Handschrift** liest die Texterkennung kaum. Bei einem handgeschriebenen Plan kommt nur ein Teil der Felder an; den Rest trägst du danach im Editor nach. Findet der Server gar keinen Stundenplan, sagt die App das. Versuche dann ein geraderes, helleres Foto oder lies den Plan aus Text ein. Hat euer Server keine Texterkennung, sagt die App das ebenfalls und verweist auf das Einlesen aus Text.
+
+### Die Vorschau
+
+Die Vorschau zeigt, was gespeichert würde. Noch ist nichts geändert.
+
+<Shot name="timetable-import" alt="Die Vorschau: Kind, Schule, Zeitraum und das Raster mit dem Namen jedes Fachs unter seinem Kürzel" wide />
+
+- oben das **Kind** und, wenn es mehrere gibt, die **Schule**. Beides kannst du ändern
+- die Zahl der Stunden, die Klasse, der Wochenrhythmus und der **Zeitraum**. Fehlt der Zeitraum noch, steht „(wird angelegt)“ dabei. Hat das Kind in diesem Zeitraum schon einen Plan, steht dort, dass er ersetzt wird
+- das **Raster**: jede Stunde mit ihrer Uhrzeit, in jedem Feld das Kürzel und darunter der Name des Fachs. Auf dem Handy ist dafür kein Platz: Halte ein Feld gedrückt, dann zeigt es den Namen. Eine Stunde nur in A- oder B-Wochen trägt ein A oder B
+- **Hort und Betreuung**, wenn das Blatt welche hat
+- jeder **Hinweis**: eine Stunde passt zu keiner Klingelzeit, das Blatt hat mehr Stunden als eure Klingelzeiten (dann kommen Stunden dazu), andere Klingelzeiten (dann bleiben eure) oder nennt eine andere Schule. Nach einem Scan nennt die Vorschau auch die Textstücke, die zu keinem Feld passten. Vergleiche dann mit dem Blatt
+
+<Shot name="timetable-import-subjects" alt="Neue Fächer in der Vorschau: HSU wird als bestehender Sachunterricht übernommen, Englisch wird neu angelegt" />
+
+Unter **Neue Fächer** steht jedes Fach vom Blatt, das es bei euch noch nicht gibt. Daneben wählst du:
+
+- **Neu anlegen**: Das Fach entsteht mit Kürzel und Name vom Blatt.
+- ein **bestehendes Fach**, wenn ihr es schon habt, nur unter einem anderen Wort, zum Beispiel „HSU“ für euren Sachunterricht. WuselWall merkt sich das Wort vom Blatt bei diesem Fach und erkennt es beim nächsten Einlesen von selbst. Findet der Scan genau ein passendes Fach, ist es schon ausgewählt.
+
+Schaltest du **Neue Fächer anlegen** aus, werden die Stunden mit neuen Fächern weggelassen; im Raster sind sie durchgestrichen.
+
+**Übernehmen** legt den Zeitraum an, wenn er fehlt, ergänzt die Klingelzeiten, legt die neuen Fächer an und speichert den Plan. **Verwerfen** lässt alles, wie es war; ein Vorschlag ist dann abgelehnt.
 
 ## Ganze Tage bearbeiten
 

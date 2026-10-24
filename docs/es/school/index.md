@@ -6,15 +6,35 @@ Los adultos mantienen el horario. Cada niño consulta su semana y los cambios, t
 
 ## Configurar el colegio {#setting-up}
 
-La primera vez toca **Configurar colegio**, escribe el nombre y la **región** del colegio y toca **Crear colegio**. No hace falta más: se proponen horas de clase y una lista de asignaturas, y en **Siguientes pasos** aparece cada niño al que aún le falta el horario, con un botón para introducirlo o importarlo. Después, la página del colegio contiene:
+La primera vez toca **Configurar colegio**. El primer colegio solo necesita dos datos: el **nombre del colegio** y la **región**. Después toca **Crear colegio**.
 
-- nombre y **región** del colegio;
+<Shot name="school-first" alt="El primer colegio: solo nombre y región, con Crear colegio debajo" />
+
+No hace falta más. Se proponen horas de clase y una lista de asignaturas: clases de 45 minutos desde las 8:00, un descanso de 20 minutos después de la 2.ª y la 4.ª clase, y de 5 minutos en las demás. Si vuestro hogar aún no tiene región, toma la del primer colegio. Después, en **Siguientes pasos** aparece cada niño al que aún le falta el horario. Toca la fila para introducirlo, o **Importar…** para leerlo de la hoja.
+
+Después, la página del colegio contiene:
+
+- nombre y **región** del colegio: país, luego cantón o estado, y si quieres distrito o municipio. La región decide los festivos, las vacaciones y las asignaturas propuestas, ver abajo;
 - horas de inicio y fin de **clases y descansos**;
 - **periodos**, con fechas; si el horario alterna cada semana, activa **Semanas A y B** e indica el **número de semana de una semana A**;
-- **asignaturas**, abreviatura, color, material necesario y visibilidad en la pared; las sugerencias del país son editables;
+- **asignaturas**, abreviatura, color, material necesario y visibilidad en la pared;
 - vacaciones y días sin clase.
 
 **Guardar**, arriba a la derecha, aparece cuando hay cambios en nombre, región u horas y los guarda juntos. Las clases siguen el orden cronológico, con descansos entre ellas.
+
+### Las asignaturas propuestas {#proposed-subjects}
+
+La lista de asignaturas sigue la región del colegio. Usa los nombres y abreviaturas que imprimen los horarios de esa región. Así la importación los reconoce en la hoja.
+
+- **Alemania**: por ejemplo Deutsch (D), Mathematik (Ma), Sachunterricht (SU), Sport (Sp) y Schwimmen (Sw);
+- **Austria**: los nombres del plan de estudios 2023/24, por ejemplo Kunst und Gestaltung (KuG) y Bewegung und Sport (BS);
+- **Suiza germanófona y Liechtenstein**: las áreas del Lehrplan 21, por ejemplo Natur, Mensch, Gesellschaft (NMG) y Textiles und Technisches Gestalten (TTG);
+- **Romandía** (Ginebra, Vaud, Neuchâtel, Jura): en francés, por ejemplo Français (FRA) y Sciences de la nature (SCN);
+- **Tesino**: en italiano, por ejemplo Italiano (ITA) y Studio d’ambiente (AMB).
+
+En un cantón bilingüe, por ejemplo Friburgo o Valais, decide el idioma de la app: en francés llega la lista de la Romandía, en italiano la del Tesino y, si no, la de la Suiza germanófona. Si eliges **Otro país (sin región)**, también decide el idioma de la app: en francés la lista de Francia, en español la de España y, si no, la alemana.
+
+La lista solo llega mientras no tengáis ninguna asignatura. Después es vuestra: cambia nombres, borra asignaturas o añade otras.
 
 ## Festivos y vacaciones {#public-and-school-holidays}
 
@@ -58,13 +78,56 @@ Elige ritmo semanal o semanas A/B, que se rellenan por separado. Añade cuidado 
 
 ## Importar un horario {#reading-in}
 
-En vez de teclear cada clase, puedes hacer que se lea la hoja. Las tres vías terminan en la misma **vista previa**: muestra el niño, el colegio, el periodo, la cuadrícula tal como se guardaría, las asignaturas que se crearán y cada aviso, por ejemplo cuando se sustituye un horario o tiene más clases que las horas de clase. Una asignatura nueva que ya tenéis con otra palabra la eliges allí en la lista; WuselWall recuerda la palabra de la hoja y la reconoce sola la próxima vez. Solo **Aplicar** escribe algo; **Descartar** lo deja todo como estaba.
+En vez de teclear cada clase, puedes hacer que se lea la hoja. Hay tres caminos. Todos terminan en la misma [vista previa](#preview), y solo **Aplicar** escribe algo.
 
 **Desde texto, con vuestro asistente de IA.** En un niño sin horario toca **Importar…** y luego **Pegar como texto** (o **Importar…** arriba en el horario). **Copiar las instrucciones para el asistente** deja un texto en el portapapeles: dáselo, junto con una foto del horario, al asistente en el que confiáis, por ejemplo en su app del móvil. Responde en un formato fijo que WuselWall sabe leer. Pega la respuesta en el campo y toca **Importar**. La foto solo va al asistente que elijáis; WuselWall no envía nada a nadie.
 
 **Como propuesta de un asistente.** Un asistente conectado a WuselWall ([Apps y asistentes de IA](/es/settings/shortcuts)) puede dejar un horario como **propuesta**. No cambia nada: en **Hoy** y sobre el horario aparece una tarjeta «Propuesta de Claude» con **Revisar** y **Descartar**. **Revisar** abre la vista previa. Las propuestas caducan a los 14 días.
 
-**Como foto o PDF, leído por vuestro servidor.** Si vuestro servidor tiene reconocimiento de texto ([Extras para el servidor](/es/server/extras#text-recognition)), toca **Importar…** y **Escanear una foto**, haz una foto de la hoja, elige una, o elige el PDF del colegio con **Elegir un archivo**. El archivo va a vuestro propio servidor y a ningún otro sitio; el servidor reconoce los días, las clases y las asignaturas y muestra la vista previa. El PDF es el más exacto, porque el servidor lee su texto directamente; en una foto, una imagen recta y luminosa de toda la hoja da el mejor resultado, y el servidor endereza por sí mismo una foto torcida. La vista previa nombra los fragmentos de texto que no encajan en ninguna casilla, para compararlos con la hoja. Sin reconocimiento de texto, la app lo dice y remite a importar desde texto.
+**Como foto o PDF, leído por vuestro servidor.** Si vuestro servidor tiene reconocimiento de texto ([Extras para el servidor](/es/server/extras#text-recognition)), toca **Importar…** y **Escanear una foto**. Después elige **Hacer una foto**, **Elegir una foto** o **Elegir un archivo (PDF o imagen)**, por ejemplo para el PDF que envió el colegio.
+
+<Shot name="timetable-scan" alt="Escanear una foto: el aviso de que el archivo se queda en casa y los tres caminos Hacer una foto, Elegir una foto y Elegir un archivo" />
+
+El archivo va a vuestro propio servidor y a ningún otro sitio. El servidor no lo guarda. Lee la hoja y muestra la vista previa. Para que reconozca vuestras asignaturas, la app envía también su idioma y los nombres y abreviaturas de vuestras asignaturas.
+
+Lo que el servidor lee de la hoja:
+
+- los días, las clases y sus horas, si están impresas en el margen;
+- en cada casilla la asignatura, el aula y el profesor. Una palabra que la hoja parte al final de la línea se vuelve a unir;
+- la **leyenda** debajo o al lado de la tabla, es decir, abreviaturas con su nombre, por ejemplo «NMG Natur, Mensch, Gesellschaft»;
+- las **semanas A y B**, cuando una casilla lleva una «A» o una «B»;
+- las filas de **cuidado** con sus horas, como las imprimen las hojas alemanas, francesas o españolas (Hort, Mittagstisch, cantine, comedor). Se convierten en filas de cuidado, no en clases.
+
+Lo que mejor funciona:
+
+- El **PDF del colegio** es lo más exacto, porque el servidor lee su texto directamente. Un PDF escaneado se lee como una foto.
+- En una **foto**: recta, luminosa y la hoja entera. El servidor endereza por sí mismo una foto torcida o hecha de lado. Las fotos de iPhone (HEIC) también sirven.
+- El archivo puede tener como máximo 6 MB.
+
+El reconocimiento de texto apenas lee la **letra a mano**. De un horario escrito a mano solo llega una parte de las casillas; el resto lo completas después en el editor. Si el servidor no encuentra ningún horario, la app lo dice. Prueba entonces con una foto más recta y luminosa, o importa desde texto. Si vuestro servidor no tiene reconocimiento de texto, la app también lo dice y remite a importar desde texto.
+
+### La vista previa {#preview}
+
+La vista previa muestra lo que se guardaría. Todavía no ha cambiado nada.
+
+<Shot name="timetable-import" alt="La vista previa: niño, colegio, periodo y la tabla con el nombre de cada asignatura bajo su abreviatura" wide />
+
+- arriba el **niño** y, si hay varios, el **colegio**. Puedes cambiar ambos;
+- el número de clases, la clase, el ritmo semanal y el **periodo**. Si el periodo aún no existe, pone «(se creará)». Si el niño ya tiene un horario en ese periodo, indica que se sustituirá;
+- la **tabla**: cada clase con sus horas, en cada casilla la abreviatura y debajo el nombre de la asignatura. En un móvil no hay sitio: mantén pulsada una casilla para ver el nombre. Una clase solo en semanas A o B lleva una A o una B;
+- el **cuidado extraescolar**, si la hoja lo tiene;
+- cada **aviso**: una clase no encaja con ninguna hora, la hoja tiene más clases que vuestras horas (entonces se añaden), otras horas (entonces se quedan las vuestras) o nombra otro colegio. Después de un escaneo, la vista previa nombra también los fragmentos de texto que no encajan en ninguna casilla. Compáralos entonces con la hoja.
+
+<Shot name="timetable-import-subjects" alt="Asignaturas nuevas en la vista previa: CM se toma como el Conocimiento del medio existente, Inglés se crea nueva" />
+
+En **Asignaturas nuevas** aparece cada asignatura de la hoja que aún no tenéis. Al lado eliges:
+
+- **Crear nueva**: la asignatura se crea con la abreviatura y el nombre de la hoja;
+- una **asignatura existente**, si ya la tenéis con otra palabra, por ejemplo «CM» para vuestro Conocimiento del medio. WuselWall recuerda la palabra de la hoja para esa asignatura y la reconoce sola la próxima vez. Si el escaneo encuentra exactamente una asignatura que encaja, ya está elegida.
+
+Si desactivas **Crear las asignaturas nuevas**, las clases con asignaturas nuevas se dejan fuera; la tabla las muestra tachadas.
+
+**Aplicar** crea el periodo si falta, amplía las horas de clase, crea las asignaturas nuevas y guarda el horario. **Descartar** lo deja todo como estaba; una propuesta queda entonces rechazada.
 
 ## Editar días enteros {#editing-whole-days}
 

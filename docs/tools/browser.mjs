@@ -31,7 +31,7 @@ try {
     await page.goto(`${origin}${base}${lang}/school/`);
     assert.equal(await page.locator('html').getAttribute('lang'), lang);
     await page.waitForFunction((code) => [...document.querySelectorAll('img.shot')].every((img) => img.src.includes(`/screenshots/${code}/`)), lang);
-    assert.equal(await page.locator('img.shot-light').count(), 4);
+    assert.equal(await page.locator('img.shot-light').count(), 8);
     for (const img of await page.locator('img.shot').all()) {
       const src = await img.getAttribute('src');
       assert.ok(src.startsWith(`${base}screenshots/${lang}/`), `mounted ${lang} screenshot URL`);
