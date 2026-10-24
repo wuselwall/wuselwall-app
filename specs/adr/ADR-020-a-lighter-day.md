@@ -128,5 +128,8 @@ these places, each recorded in its spec:
   bands. (Wusel's `proud` for a badge earned and its cheer when the getting-started card is
   completed followed the same day; the planner's one-tap suggestion of a tradition's meal, the
   age in birthday countdowns and the birthdays in the ICS feed followed after the review, with
-  migration `20261025100000`.)
+  migration `20261025100000`. Kalender → *Neue Tradition* with the six starters, the wall's morning
+  line naming today's tradition, Wusel's wave for a countdown at "Morgen!" or "Heute!" (the wall's
+  corner Wusel only, one Wusel per screen) and the birthdays in the board's day header followed
+  after that, without a migration. The month view still shows no birthdays.)
 
