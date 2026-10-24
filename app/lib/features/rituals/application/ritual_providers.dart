@@ -143,96 +143,54 @@ final bundledDeckProvider = FutureProvider.family<List<TableQuestion>, String>((
   }
 });
 
-/// The meal the table question belongs to right now.
-typedef TableMoment = ({
-  int window,
-  bool dinner,
-  List<TableQuestion> questions,
-});
-
-/// Minutes after midnight of a `HH:mm` setting value.
-int? _minutes(Object? hhmm) {
-  if (hhmm is! String) return null;
-  final parts = hhmm.split(':');
-  if (parts.length != 2) return null;
-  return int.parse(parts[0]) * 60 + int.parse(parts[1]);
-}
-
-bool _inRange(Object? range, int now, String from, String to) {
-  final r = range is Map ? range : const <String, Object?>{};
-  final a = _minutes(r['from']) ?? _minutes(from)!;
-  final b = _minutes(r['to']) ?? _minutes(to)!;
-  return now >= a && now < b;
-}
-
-/// The household's walk through its questions for a device in [lang]: the bundled deck
-/// (the household's choice of ages, minus what it hid) and its own questions, shuffled
-/// once per household. Cached apart from the clock, so the minute ticking by does not
-/// shuffle again.
+/// The household's questions for a device in [lang]: the bundled deck (the household's
+/// choice of ages, minus what it hid) and its own questions. Their order comes from
+/// [householdQuestion], per household and walk, so nothing here depends on the clock.
 final householdDeckProvider = Provider.autoDispose
     .family<List<TableQuestion>, String>((ref, lang) {
       final day = ref.watch(lighterDayProvider);
-      final householdId = ref.watch(deviceProvider).value?.householdId ?? '';
-      final older = day.value('rituals.table_question_deck') == 'older';
-      final family =
-          ref.watch(familyQuestionsProvider).value ?? const <FamilyQuestion>[];
-      final hidden = {
-        for (final q in family)
-          if (q.hiddenKey != null) q.hiddenKey!,
-      };
-      final deck = <TableQuestion>[
-        for (final q
-            in ref.watch(bundledDeckProvider(lang)).value ??
-                const <TableQuestion>[])
-          if ((older || q.deck == 'family') && !hidden.contains(q.key)) q,
-        for (final q in family)
-          if (q.text != null)
-            TableQuestion(key: q.id, text: q.text!, authorId: q.createdBy),
-      ];
-      return householdShuffle(deck, householdId);
+      return householdDeck(
+        bundled:
+            ref.watch(bundledDeckProvider(lang)).value ??
+            const <TableQuestion>[],
+        family:
+            ref.watch(familyQuestionsProvider).value ??
+            const <FamilyQuestion>[],
+        older: day.value('rituals.table_question_deck') == 'older',
+      );
     });
 
 /// The Tischfrage of this moment for a device in [lang] (specs/27): null outside the
 /// meal windows, when the household switched it off, or in a language without a deck.
-/// Every device walks the same household shuffle. Recomputed once a minute, not with
+/// Every device walks the same household order. Recomputed once a minute, not with
 /// every tick of the clock.
 final tableMomentProvider = Provider.autoDispose.family<TableMoment?, String>((
   ref,
   lang,
 ) {
   final day = ref.watch(lighterDayProvider);
-  final mode = day.value('rituals.table_question') ?? 'warm_meal';
+  final mode = day.value('rituals.table_question');
   if (mode == 'off' || !tableQuestionLanguages.contains(lang)) return null;
   final now = ref.watch(
     nowProvider.select(
       (n) => DateTime(n.year, n.month, n.day, n.hour, n.minute),
     ),
   );
-  final minutes = now.hour * 60 + now.minute;
-  final lunch = _inRange(
-    day.value('rituals.table_question.lunch'),
-    minutes,
-    '11:30',
-    '13:30',
-  );
-  final dinner = _inRange(
-    day.value('rituals.table_question.dinner'),
-    minutes,
-    '17:30',
-    '19:30',
-  );
-  if (!lunch && !dinner) return null;
-  final warmOnly = mode == 'warm_meal';
-  if (warmOnly) {
-    final warm = ref.watch(warmSlotProvider(DateUtils.dateOnly(now)));
-    if ((warm == PlanSlot.dinner) != dinner) return null;
-  }
-  final questions = ref.watch(householdDeckProvider(lang));
-  if (questions.isEmpty) return null;
-  return (
-    window: mealWindowIndex(now, dinner: dinner, twoADay: !warmOnly),
-    dinner: dinner,
-    questions: questions,
+  final deck = ref.watch(householdDeckProvider(lang));
+  return tableMomentAt(
+    now: now,
+    mode: mode,
+    lunch: day.value('rituals.table_question.lunch'),
+    dinner: day.value('rituals.table_question.dinner'),
+    warmIsDinner: (d) => ref.watch(warmSlotProvider(d)) == PlanSlot.dinner,
+    deck: deck,
+    householdId: ref.watch(deviceProvider).value?.householdId ?? '',
+    cycleLength: tableCycleLength(
+      bundled:
+          ref.watch(bundledDeckProvider(lang)).value ?? const <TableQuestion>[],
+      older: day.value('rituals.table_question_deck') == 'older',
+      deckSize: deck.length,
+    ),
   );
 });
 
@@ -249,6 +207,19 @@ final tableSkipProvider = NotifierProvider<TableSkipNotifier, Map<int, int>>(
   TableSkipNotifier.new,
 );
 
+/// The meal windows whose table question this device put away on Today (specs/27: "a
+/// dismissible card"). Local and in memory: the next meal brings the card back.
+class TableDismissNotifier extends Notifier<Set<int>> {
+  @override
+  Set<int> build() => const {};
+
+  void dismiss(int window) => state = {...state, window};
+}
+
+final tableDismissProvider = NotifierProvider<TableDismissNotifier, Set<int>>(
+  TableDismissNotifier.new,
+);
+
 /// The Monday of the week the look-back is about, while its window is open; null
 /// otherwise (specs/27 "Wochenrückblick"). `rituals.week_review` sets when it opens
 /// (default Sunday 16:00); it stays until 10:00 the next morning. Never rotates onto
@@ -263,14 +234,16 @@ final weekReviewDueProvider = Provider.autoDispose<DateTime?>((ref) {
   final setting = value is Map
       ? value
       : const <String, Object?>{'weekday': 7, 'time': '16:00'};
-  final weekday = (setting['weekday'] as num?)?.toInt() ?? 7;
-  final parts = ((setting['time'] as String?) ?? '16:00').split(':');
+  // A malformed value falls back to the default rather than breaking Today.
+  final day = setting['weekday'];
+  final weekday = day is num && day >= 1 && day <= 7 ? day.toInt() : 7;
+  final time = minutesOfDay(setting['time']) ?? 16 * 60;
   final now = ref.watch(nowProvider);
   return weekReviewWeek(
     now,
     weekday: weekday,
-    hour: int.parse(parts[0]),
-    minute: int.parse(parts[1]),
+    hour: time ~/ 60,
+    minute: time % 60,
   );
 });
 
