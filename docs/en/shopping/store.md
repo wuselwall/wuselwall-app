@@ -28,6 +28,8 @@ When you're done, tap **Finish shopping** at the bottom.
 
 The button is only active once at least one item is ticked.
 
+When the last item is ticked or the trip is finished, the phone shows a small burst of confetti and gives a light vibration, once per trip and without a sound (see [Wusel and colours](/en/guide/wusel#sounds)).
+
 ## Offline
 
 The list works without signal too: adding, ticking, changing the count and **Finish shopping** carry on as usual. Anything the server has not received yet carries a small cloud icon, and the top of the list says, for example, **"2 changes waiting to be sent"**. As soon as there is a connection again, WuselWall sends everything by itself, in the right order.
