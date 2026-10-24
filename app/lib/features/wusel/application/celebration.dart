@@ -41,14 +41,35 @@ abstract interface class SoundPlayer {
   Future<void> play(Cue cue);
 }
 
+/// How the sounds share the device's audio (specs/26 "Sound and haptics"): on iOS the
+/// ambient session, which the silent switch and the ring/silent setting mute and which
+/// mixes with whatever else plays; on Android a short sonification on the
+/// notification stream (silent in silent mode) that asks for no audio focus, so the
+/// family's music keeps playing.
+final celebrationAudioContext = AudioContext(
+  iOS: AudioContextIOS(category: AVAudioSessionCategory.ambient),
+  android: const AudioContextAndroid(
+    contentType: AndroidContentType.sonification,
+    usageType: AndroidUsageType.notificationEvent,
+    audioFocus: AndroidAudioFocus.none,
+  ),
+);
+
 /// A low-latency player per cue, created when first needed: a tick that arrives
 /// 300 ms late feels broken (specs/26).
 class AudioplayersSoundPlayer implements SoundPlayer {
   final _players = <Cue, AudioPlayer>{};
 
+  /// Set once, before the first player exists: on Android new players copy the
+  /// global context, on iOS it is the app's audio session.
+  Future<void>? _context;
+
   @override
   Future<void> play(Cue cue) async {
     try {
+      await (_context ??= AudioPlayer.global.setAudioContext(
+        celebrationAudioContext,
+      ));
       var player = _players[cue];
       if (player == null) {
         player = _players[cue] = AudioPlayer();
@@ -82,21 +103,50 @@ final soundPlayerProvider = Provider<SoundPlayer>(
 
 /// Plays a cue's sound and haptic when the rules allow (specs/26 "Sound and haptics"):
 /// the device's `device.sounds`, the acting member's `member.completion_sound`, never at
-/// night, and never in the adult register except as a haptic.
+/// night, and nothing in the adult register (its one haptic, the end of a shopping
+/// trip, is not a cue). The haptic follows the register and the night only.
 class Celebration {
   Celebration(this._ref);
 
   final Ref _ref;
 
+  /// The moments already celebrated, and when the running burst ends.
+  final _celebrated = <String>{};
+  DateTime? _burstUntil;
+
+  /// How long a burst counts as running: the confetti's 1.4 s.
+  static const burst = Duration(milliseconds: 1400);
+
   Future<void> cue(Cue cue) async {
+    if (_quiet()) return;
     unawaited(cue.haptic());
     if (!_soundAllowed()) return;
     await _ref.read(soundPlayerProvider).play(cue);
   }
 
+  /// Whether the moment [key] (say, one person's last chore of one day) may celebrate:
+  /// once per moment, and not while another burst still runs (specs/26 "The budget is
+  /// one celebration per moment"). A true answer claims it.
+  bool claimMoment(String key, {DateTime? now}) {
+    final at = now ?? DateTime.now();
+    if (_burstUntil case final until? when at.isBefore(until)) return false;
+    if (!_celebrated.add(key)) return false;
+    _burstUntil = at.add(burst);
+    return true;
+  }
+
+  /// The moment of [profileId]'s last chore today.
+  static String lastChoreOf(String profileId, {DateTime? now}) {
+    final d = now ?? DateTime.now();
+    return 'last-chore/$profileId/${d.year}-${d.month}-${d.day}';
+  }
+
+  /// No haptic and no sound: the adult register and the night.
+  bool _quiet() =>
+      _ref.read(uiRegisterProvider) == UiRegister.adult ||
+      _ref.read(nightProvider);
+
   bool _soundAllowed() {
-    if (_ref.read(uiRegisterProvider) == UiRegister.adult) return false;
-    if (_ref.read(nightProvider)) return false;
     if (!_ref.read(lighterDayProvider).sounds) return false;
     final acting = _ref.read(actingProfileProvider);
     if (acting == null) return true;

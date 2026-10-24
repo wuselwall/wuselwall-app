@@ -55,8 +55,11 @@ Future<void> tickTask(
       context.showFailure(failure);
     case Ok():
       // The last chore is a moment on the wall and the kid tablet; on a grown-up's
-      // phone it stays a tick (specs/26 "Celebrations").
-      if (last && container.read(uiRegisterProvider) != UiRegister.adult) {
+      // phone it stays a tick (specs/26 "Celebrations"). Each person's day celebrates
+      // once, and not over a burst that is still running.
+      if (last &&
+          container.read(uiRegisterProvider) != UiRegister.adult &&
+          celebration.claimMoment(Celebration.lastChoreOf(whose))) {
         final ww = context.ww;
         showConfetti(
           context,
