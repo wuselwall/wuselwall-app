@@ -12,9 +12,11 @@ Wusel praises what happened, not the person: "All done. That went well!" rather 
 
 ## Where Wusel appears {#where}
 
-- **My day** on the kids' tablet: Wusel waves and greets the child by name, sometimes with something useful, such as "You've got maths first today."
+- **My day** on the kids' tablet: Wusel waves and greets the child by name, with one useful thing about today: their own birthday, a family tradition ("Today is Pizza Friday!"), the first lesson ("Today you start with maths."), the warm meal, or what the child is looking forward to.
+- **The child's own birthday**: the first time **My day** opens that day, Wusel in the party hat fills the whole screen with confetti for two seconds (a tap closes it sooner). Once a day per device, not during the night hours, and only while the **Birthdays** occasion is on.
+- **Waiting and no connection**: if **My day** takes longer than two seconds to load, or the tablet has no connection, Wusel thinks: "Just a moment…" or "Hang on, looking for the internet…".
 - **The last chore of the day**: Wusel cheers, with confetti and a short sound.
-- **A reward requested**: Wusel is proud: "Sent! A grown-up will decide."
+- **A reward requested**: Wusel is proud: "Sent! A grown-up will decide." When a grown-up says yes on another device, the kids' tablet plays the badge sound.
 - **A new badge**: Wusel holds up a star and names the badge, for two days on **My day** and under **Points**.
 - **Empty pages**: Wusel peeks over the bottom edge, for example on an empty shopping list.
 - **On the wall** Wusel sits in the header. In the first half hour after the night ends (usually 6:00 to 6:30) Wusel waves and says "Good morning, everyone!". At night Wusel sleeps, without a connection Wusel is thinking, and on a birthday there is a party hat.
