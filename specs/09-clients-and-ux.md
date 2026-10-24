@@ -45,7 +45,7 @@ on the parent's phone gives `kid` or `kiosk`.
   settings, usual week, reminders, appearance, getting started, members and devices, account
   deletion on a personal phone (easy to find, App Store guideline 5.1.1(v)), and
   of the household settings only region, streak jokers, reward approval, members editing
-  their own events, the warm meal, completion sound, morning summary and event
+  their own events, the warm meal, night hours, completion sound, morning summary and event
   reminder. **Advanced** shows everything else: feed tokens, subscribed calendars,
   apps and AI assistants (specs/12), the server, export, sign-in, security, leaving
   and deleting the family, and every other household setting, including any a newer catalogue adds.

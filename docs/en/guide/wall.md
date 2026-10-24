@@ -62,7 +62,7 @@ The wall can do no more than that: it adds items to the shopping list and correc
 
 ### Night and no connection
 
-- From 21:00 the display switches by itself to a calm night view, and Wusel sleeps. The wall plays sounds only if you switch them on, and never at night.
+- From 21:00 (or the night hours set for this device) the display switches by itself to a calm night view, and Wusel sleeps. The wall plays sounds only if you switch them on, and never at night.
 - So that nothing burns in, the display moves by up to 2 pixels every 10 minutes (see [Wusel and colours](/en/guide/wusel#burn-in)).
 - If the connection drops, the last plan stays visible with the note "No connection", and Wusel is thinking; the top right says when it was last updated. While everything works, the wall shows nothing about it.
 

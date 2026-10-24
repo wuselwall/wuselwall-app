@@ -237,7 +237,7 @@ rules, not settings.
 |---|---|---|---|---|---|
 | `board.rollover` | household | Saturday 12:00 | weekday + time | When the board moves to the coming week. Sunday-evening planning wants next week; Saturday morning still wants this week | Q26 |
 | `board.day_parts` | household | 12:00 · 17:00 | two times | Where the appointment zone splits morning, afternoon and evening | [09](09-clients-and-ux.md#the-zones) |
-| `device.night_hours` | device | 21:00–06:00 | time range | When the kiosk switches to the amber night theme *(Not offered in the app since 2026-10-24: nothing reads it yet, so the default applies; see [research](research/family-apps/friction-audit.md#0-cross-cutting-findings).)* | [17](17-design-system.md) |
+| `device.night_hours` | device | 21:00–06:00 | time range | When the kiosk switches to the amber night theme | [17](17-design-system.md) |
 | `device.idle_revert_seconds` | device | 60 | 30–300 | How long a tapped profile or detail view stays open before the kiosk returns to the board *(Not offered in the app since 2026-10-24: nothing reads it yet, so the default applies; see [research](research/family-apps/friction-audit.md#0-cross-cutting-findings).)* | [08](08-users-auth-permissions.md#profile-switching-ux) |
 
 Member order on the board is `profile.sort_order`. New members are appended, and the
