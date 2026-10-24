@@ -234,7 +234,7 @@ void main() {
           }),
         ],
       );
-      container.read(routerProvider).go(Routes.settings);
+      container.read(routerProvider).go(Routes.settingsMembers);
       await t.pumpAndSettle();
       return container;
     }

@@ -72,7 +72,7 @@ class BaselinePage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.baselineTitle),
-        leading: BackButton(onPressed: () => context.go(Routes.settings)),
+        leading: BackButton(onPressed: () => context.go(Routes.settingsFamily)),
       ),
       body: body,
     );

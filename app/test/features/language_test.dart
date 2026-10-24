@@ -45,7 +45,7 @@ void main() {
           pendingFirstRunProvider.overrideWith((ref) async => null),
         ],
       );
-      container.read(routerProvider).go(Routes.settings);
+      container.read(routerProvider).go(Routes.settingsDevices);
       await t.pumpAndSettle();
       return container;
     }
@@ -74,7 +74,7 @@ void main() {
       // The whole screen switches: the tile and the page title.
       expect(find.widgetWithText(ListTile, 'Language'), findsOneWidget);
       expect(find.text('Sprache'), findsNothing);
-      expect(find.text('Settings'), findsOneWidget);
+      expect(find.text('Devices'), findsOneWidget);
     });
 
     testWidgets('a saved choice applies at start', (t) async {

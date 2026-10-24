@@ -6,6 +6,7 @@ import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/ui/week_board_page.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
+import 'package:wuselwall/features/settings/application/settings_groups.dart';
 
 import '../support/fakes.dart';
 
@@ -113,6 +114,9 @@ void main() {
       await t.pump();
       await t.tap(find.byTooltip('Einstellungen'));
       await t.pumpAndSettle();
+      await openSettingsGroup(t, SettingsGroup.family);
+      await t.tap(find.byKey(const ValueKey('settings-members')));
+      await t.pumpAndSettle();
       await t.tap(find.byIcon(Icons.person_add_alt_1));
       await t.pumpAndSettle();
     }
@@ -176,6 +180,9 @@ void main() {
       container.read(actingProfileProvider.notifier).select(kidId);
       await t.pump();
       await t.tap(find.byTooltip('Einstellungen'));
+      await t.pumpAndSettle();
+      await openSettingsGroup(t, SettingsGroup.family);
+      await t.tap(find.byKey(const ValueKey('settings-members')));
       await t.pumpAndSettle();
       await t.tap(find.byIcon(Icons.person_add_alt_1));
       await t.pumpAndSettle();

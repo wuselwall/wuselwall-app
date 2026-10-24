@@ -7,6 +7,7 @@ import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/enrol_code.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/identity/ui/enrolment_qr.dart';
+import 'package:wuselwall/features/settings/application/settings_groups.dart';
 import 'package:wuselwall/features/settings/application/settings_view.dart';
 
 import '../support/fakes.dart';
@@ -120,6 +121,7 @@ void main() {
       );
       await t.tap(find.byIcon(Icons.settings));
       await t.pumpAndSettle();
+      await openSettingsGroup(t, SettingsGroup.devices);
       // A guardian on a personal phone connects devices by scanning; the code for an older
       // device is the secondary action.
       await t.tap(find.text('Code für ein älteres Gerät erzeugen'));
@@ -152,6 +154,7 @@ void main() {
       );
       await t.tap(find.byIcon(Icons.settings));
       await t.pumpAndSettle();
+      await openSettingsGroup(t, SettingsGroup.account);
       // The security section sits below the settings entries; the list builds lazily.
       await t.scrollUntilVisible(
         find.text('Zwei-Faktor-Anmeldung'),

@@ -69,7 +69,7 @@ class _FamilyPageState extends ConsumerState<FamilyPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.familyTitle),
-        leading: BackButton(onPressed: () => context.go(Routes.settings)),
+        leading: BackButton(onPressed: () => context.go(Routes.settingsFamily)),
         actions: const [SettingsViewSwitch()],
       ),
       body: AsyncValueView<HouseholdInfo>(

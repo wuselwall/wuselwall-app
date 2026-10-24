@@ -49,7 +49,7 @@ void main() {
           pendingFirstRunProvider.overrideWith((ref) async => null),
         ],
       );
-      container.read(routerProvider).go(Routes.settings);
+      container.read(routerProvider).go(Routes.settingsDevices);
       await t.pumpAndSettle();
       return container;
     }

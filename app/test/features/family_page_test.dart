@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/features/settings/application/settings_groups.dart';
 import 'package:wuselwall/features/settings/application/settings_view.dart';
 
 import '../support/fakes.dart';
@@ -21,6 +22,7 @@ void main() {
     );
     container.read(routerProvider).go(Routes.settings);
     await t.pumpAndSettle();
+    await openSettingsGroup(t, SettingsGroup.family);
     await t.tap(find.byKey(const ValueKey('settings-family')));
     await t.pumpAndSettle();
     return identity;

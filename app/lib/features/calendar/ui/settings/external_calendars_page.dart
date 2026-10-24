@@ -51,7 +51,7 @@ class _ExternalCalendarsPageState extends ConsumerState<ExternalCalendarsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.extCalTitle),
-        leading: BackButton(onPressed: () => context.go(Routes.settings)),
+        leading: BackButton(onPressed: () => context.go(Routes.settingsCalendar)),
       ),
       floatingActionButton: canManage
           ? FloatingActionButton.extended(

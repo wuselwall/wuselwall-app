@@ -172,7 +172,7 @@ class _DevicePairPageState extends ConsumerState<DevicePairPage> {
         if (context.canPop()) {
           context.pop(true);
         } else {
-          context.go(Routes.settings);
+          context.go(Routes.settingsDevices);
         }
     }
   }

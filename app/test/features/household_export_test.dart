@@ -68,7 +68,7 @@ void main() {
         }),
       ],
     );
-    container.read(routerProvider).go(Routes.family);
+    container.read(routerProvider).go(Routes.familyProfile);
     await t.pumpAndSettle();
     return (container: container, repo: repo, shares: shares);
   }

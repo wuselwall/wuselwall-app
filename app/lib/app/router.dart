@@ -35,9 +35,12 @@ import 'package:wuselwall/features/reminders/ui/reminders_page.dart';
 import 'package:wuselwall/features/school/ui/school_setup_page.dart';
 import 'package:wuselwall/features/school/ui/timetable_editor_page.dart';
 import 'package:wuselwall/features/school/ui/timetable_import_page.dart';
+import 'package:wuselwall/features/settings/application/settings_groups.dart';
+import 'package:wuselwall/features/settings/ui/family_members_page.dart';
 import 'package:wuselwall/features/settings/ui/family_page.dart';
-import 'package:wuselwall/features/settings/ui/household_settings_page.dart';
 import 'package:wuselwall/features/settings/ui/member_page.dart';
+import 'package:wuselwall/features/settings/ui/settings_group_page.dart';
+import 'package:wuselwall/features/settings/ui/settings_group_text.dart';
 import 'package:wuselwall/features/settings/ui/settings_page.dart';
 import 'package:wuselwall/features/setup/ui/email_code_page.dart';
 import 'package:wuselwall/features/setup/ui/enrol_page.dart';
@@ -76,8 +79,27 @@ abstract final class Routes {
   static const welcomeMembers = '/welcome/members';
   static const home = '/';
   static const settings = '/settings';
+
+  /// The old one-page "Household settings" (before the groups): opens [settings].
   static const householdSettings = '/settings/household';
-  static const family = '/settings/family';
+
+  // The groups of Einstellungen (specs/21), each its own page under /settings.
+  static const settingsPersonal = '/settings/personal';
+  static const settingsFamily = '/settings/family';
+  static const settingsTasks = '/settings/tasks';
+  static const settingsCalendar = '/settings/calendar-school';
+  static const settingsMeals = '/settings/meals';
+  static const settingsRituals = '/settings/rituals';
+  static const settingsCelebrations = '/settings/celebrations';
+  static const settingsKitchen = '/settings/kitchen-wall';
+  static const settingsDevices = '/settings/devices';
+  static const settingsAccount = '/settings/account';
+  static const settingsServer = '/settings/server';
+  static const settingsHelp = '/settings/help';
+
+  // Pages inside a group.
+  static const familyProfile = '/settings/family/profile';
+  static const settingsMembers = '/settings/members';
   static const member = '/settings/member';
   static const shoppingListEdit = '/shopping/list';
   static const system = '/system';
@@ -156,6 +178,9 @@ final routerProvider = Provider<GoRouter>((ref) {
       if (!session.hasValue && !session.hasError) {
         return path == Routes.splash ? null : Routes.splash;
       }
+
+      // The one-page household settings became the groups of Einstellungen.
+      if (path == Routes.householdSettings) return Routes.settings;
 
       // The System page is a developer tool and does not exist in release builds.
       if (path == Routes.system) return kDebugMode ? null : Routes.home;
@@ -293,9 +318,18 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, _) => const SettingsPage(),
       ),
       _materialRoute(
-        path: Routes.family,
+        path: Routes.familyProfile,
         builder: (_, _) => const FamilyPage(),
       ),
+      _materialRoute(
+        path: Routes.settingsMembers,
+        builder: (_, _) => const FamilyMembersPage(),
+      ),
+      for (final group in SettingsGroup.values)
+        _materialRoute(
+          path: group.route,
+          builder: (_, _) => SettingsGroupPage(group: group),
+        ),
       _materialRoute(
         path: Routes.member,
         builder: (_, state) => MemberPage(profileId: state.extra! as String),
@@ -320,10 +354,6 @@ final routerProvider = Provider<GoRouter>((ref) {
             return kind == null ? const SplashPage() : FirstRunPage(kind: kind);
           },
         ),
-      ),
-      _materialRoute(
-        path: Routes.householdSettings,
-        builder: (_, _) => const HouseholdSettingsPage(),
       ),
       _materialRoute(
         path: Routes.system,

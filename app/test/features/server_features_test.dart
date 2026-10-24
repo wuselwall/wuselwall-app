@@ -87,7 +87,7 @@ void main() {
         appConfig: serverConfig(release: '0.3.0'),
       ),
     );
-    container.read(routerProvider).go(Routes.settings);
+    container.read(routerProvider).go(Routes.settingsHelp);
     await t.pumpAndSettle();
     final tile = find.byKey(const ValueKey('settings-versions'));
     await t.scrollUntilVisible(tile, 200);
@@ -110,7 +110,7 @@ void main() {
         appConfig: serverConfig(),
       ),
     );
-    container.read(routerProvider).go(Routes.settings);
+    container.read(routerProvider).go(Routes.settingsHelp);
     await t.pumpAndSettle();
     final tile = find.byKey(const ValueKey('settings-versions'));
     await t.scrollUntilVisible(tile, 200);

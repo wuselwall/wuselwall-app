@@ -747,7 +747,7 @@ void main() {
           notifications: FakeNotificationScheduler(available: available),
         ),
       );
-      container.read(routerProvider).go(Routes.settings);
+      container.read(routerProvider).go(Routes.settingsPersonal);
       await t.pumpAndSettle();
     }
 

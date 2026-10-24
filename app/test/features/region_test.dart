@@ -764,7 +764,7 @@ void main() {
           householdSettingsRepositoryProvider.overrideWithValue(settings),
         ],
       );
-      container.read(routerProvider).go(Routes.householdSettings);
+      container.read(routerProvider).go(Routes.settingsFamily);
       await t.pumpAndSettle();
       expect(
         find.byKey(const ValueKey('setting-household.region')),

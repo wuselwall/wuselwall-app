@@ -5833,4 +5833,128 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get weekHighlightHere => 'formó parte de nuestra semana';
+
+  @override
+  String get settingsGroupPersonalTitle => 'Personal';
+
+  @override
+  String get settingsGroupPersonalSubtitle =>
+      'Wusel, sonidos y recordatorios para ti';
+
+  @override
+  String get settingsGroupFamilyTitle => 'Familia';
+
+  @override
+  String get settingsGroupFamilySubtitle =>
+      'Nombre, zona horaria, miembros y semana habitual';
+
+  @override
+  String get settingsGroupTasksTitle => 'Tareas y recompensas';
+
+  @override
+  String get settingsGroupTasksSubtitle =>
+      'Puntos, comodines de racha y aprobaciones';
+
+  @override
+  String get settingsGroupCalendarTitle => 'Calendario y colegio';
+
+  @override
+  String get settingsGroupCalendarSubtitle =>
+      'Eventos, cambios de horario y compartir';
+
+  @override
+  String get settingsGroupMealsTitle => 'Comidas';
+
+  @override
+  String get settingsGroupMealsSubtitle =>
+      'Comida caliente, comida deseada y almuerzo en el cuidado';
+
+  @override
+  String get settingsGroupRitualsTitle => 'Rituales';
+
+  @override
+  String get settingsGroupRitualsSubtitle =>
+      'Pregunta en la mesa, nuestra semana, cuentas atrás';
+
+  @override
+  String get settingsGroupCelebrationsTitle => 'Celebraciones y estaciones';
+
+  @override
+  String get settingsGroupCelebrationsSubtitle =>
+      'Adviento, Pascua, Nochevieja, cumpleaños y estaciones';
+
+  @override
+  String get settingsGroupKitchenTitle => 'Pantalla de la cocina';
+
+  @override
+  String get settingsGroupKitchenSubtitle =>
+      'Nombres, cambio de semana y momentos del día';
+
+  @override
+  String get settingsGroupDevicesTitle => 'Dispositivos';
+
+  @override
+  String get settingsGroupDevicesSubtitle =>
+      'Este dispositivo y todos los de la familia';
+
+  @override
+  String get settingsGroupAccountTitle => 'Cuenta y seguridad';
+
+  @override
+  String get settingsGroupAccountSubtitle =>
+      'Inicio de sesión, contraseña, doble factor, salir de la familia';
+
+  @override
+  String get settingsGroupServerTitle => 'Servidor';
+
+  @override
+  String get settingsGroupServerSubtitle =>
+      'Dirección, código QR y cambio de servidor';
+
+  @override
+  String get settingsGroupHelpTitle => 'Ayuda e información';
+
+  @override
+  String get settingsGroupHelpSubtitle =>
+      'Primeros pasos, versiones, licencias';
+
+  @override
+  String get settingsSectionWusel => 'Wusel';
+
+  @override
+  String get settingsSectionSound => 'Sonido';
+
+  @override
+  String get settingsSectionNotifications => 'Notificaciones';
+
+  @override
+  String get settingsSectionTableQuestion => 'Pregunta en la mesa';
+
+  @override
+  String get settingsSectionWeekReview => 'Repaso de la semana';
+
+  @override
+  String get settingsSectionCountdowns => 'Cuentas atrás';
+
+  @override
+  String get settingsSectionHolidays => 'Fiestas';
+
+  @override
+  String get settingsSectionThroughYear => 'A lo largo del año';
+
+  @override
+  String get settingsSectionAllDevices => 'Todos los dispositivos';
+
+  @override
+  String get settingsSectionLeave => 'Salir o eliminar';
+
+  @override
+  String get settingsSectionOther => 'Otros ajustes';
+
+  @override
+  String get familyProfileTitle => 'Perfil de la familia';
+
+  @override
+  String get settingsMembersSubtitle =>
+      'Nombres, colores, roles y el orden en la pared';
 }

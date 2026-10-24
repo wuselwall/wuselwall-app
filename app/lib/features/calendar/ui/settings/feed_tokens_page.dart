@@ -34,7 +34,7 @@ class FeedTokensPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.feedTitle),
-        leading: BackButton(onPressed: () => context.go(Routes.settings)),
+        leading: BackButton(onPressed: () => context.go(Routes.settingsCalendar)),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _create(context, ref),

@@ -9795,6 +9795,228 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'was part of our week'**
   String get weekHighlightHere;
+
+  /// No description provided for @settingsGroupPersonalTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal'**
+  String get settingsGroupPersonalTitle;
+
+  /// No description provided for @settingsGroupPersonalSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Wusel, sounds and reminders for you'**
+  String get settingsGroupPersonalSubtitle;
+
+  /// No description provided for @settingsGroupFamilyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Family'**
+  String get settingsGroupFamilyTitle;
+
+  /// No description provided for @settingsGroupFamilySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Name, time zone, members and the usual week'**
+  String get settingsGroupFamilySubtitle;
+
+  /// No description provided for @settingsGroupTasksTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks & rewards'**
+  String get settingsGroupTasksTitle;
+
+  /// No description provided for @settingsGroupTasksSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Points, streak jokers and approvals'**
+  String get settingsGroupTasksSubtitle;
+
+  /// No description provided for @settingsGroupCalendarTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar & school'**
+  String get settingsGroupCalendarTitle;
+
+  /// No description provided for @settingsGroupCalendarSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Events, timetable changes and sharing'**
+  String get settingsGroupCalendarSubtitle;
+
+  /// No description provided for @settingsGroupMealsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Meals'**
+  String get settingsGroupMealsTitle;
+
+  /// No description provided for @settingsGroupMealsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Warm meals, meal wishes and care lunch'**
+  String get settingsGroupMealsSubtitle;
+
+  /// No description provided for @settingsGroupRitualsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Rituals'**
+  String get settingsGroupRitualsTitle;
+
+  /// No description provided for @settingsGroupRitualsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Question at the table, our week, countdowns'**
+  String get settingsGroupRitualsSubtitle;
+
+  /// No description provided for @settingsGroupCelebrationsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Celebrations & seasons'**
+  String get settingsGroupCelebrationsTitle;
+
+  /// No description provided for @settingsGroupCelebrationsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Advent, Easter, New Year, birthdays and the seasons'**
+  String get settingsGroupCelebrationsSubtitle;
+
+  /// No description provided for @settingsGroupKitchenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Kitchen wall'**
+  String get settingsGroupKitchenTitle;
+
+  /// No description provided for @settingsGroupKitchenSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Names, the change of week and the parts of the day'**
+  String get settingsGroupKitchenSubtitle;
+
+  /// No description provided for @settingsGroupDevicesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Devices'**
+  String get settingsGroupDevicesTitle;
+
+  /// No description provided for @settingsGroupDevicesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'This device and every device of the family'**
+  String get settingsGroupDevicesSubtitle;
+
+  /// No description provided for @settingsGroupAccountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Account & security'**
+  String get settingsGroupAccountTitle;
+
+  /// No description provided for @settingsGroupAccountSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-in, password, two-factor, leaving the family'**
+  String get settingsGroupAccountSubtitle;
+
+  /// No description provided for @settingsGroupServerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Server'**
+  String get settingsGroupServerTitle;
+
+  /// No description provided for @settingsGroupServerSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Address, QR code and changing the server'**
+  String get settingsGroupServerSubtitle;
+
+  /// No description provided for @settingsGroupHelpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Help & about'**
+  String get settingsGroupHelpTitle;
+
+  /// No description provided for @settingsGroupHelpSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Getting started, versions, licenses'**
+  String get settingsGroupHelpSubtitle;
+
+  /// No description provided for @settingsSectionWusel.
+  ///
+  /// In en, this message translates to:
+  /// **'Wusel'**
+  String get settingsSectionWusel;
+
+  /// No description provided for @settingsSectionSound.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound'**
+  String get settingsSectionSound;
+
+  /// No description provided for @settingsSectionNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get settingsSectionNotifications;
+
+  /// No description provided for @settingsSectionTableQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Question at the table'**
+  String get settingsSectionTableQuestion;
+
+  /// No description provided for @settingsSectionWeekReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Week review'**
+  String get settingsSectionWeekReview;
+
+  /// No description provided for @settingsSectionCountdowns.
+  ///
+  /// In en, this message translates to:
+  /// **'Countdowns'**
+  String get settingsSectionCountdowns;
+
+  /// No description provided for @settingsSectionHolidays.
+  ///
+  /// In en, this message translates to:
+  /// **'Holiday celebrations'**
+  String get settingsSectionHolidays;
+
+  /// No description provided for @settingsSectionThroughYear.
+  ///
+  /// In en, this message translates to:
+  /// **'Through the year'**
+  String get settingsSectionThroughYear;
+
+  /// No description provided for @settingsSectionAllDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'All devices'**
+  String get settingsSectionAllDevices;
+
+  /// No description provided for @settingsSectionLeave.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave or delete'**
+  String get settingsSectionLeave;
+
+  /// No description provided for @settingsSectionOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other settings'**
+  String get settingsSectionOther;
+
+  /// No description provided for @familyProfileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Family profile'**
+  String get familyProfileTitle;
+
+  /// No description provided for @settingsMembersSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Names, colours, roles and the order on the wall'**
+  String get settingsMembersSubtitle;
 }
 
 class _AppLocalizationsDelegate

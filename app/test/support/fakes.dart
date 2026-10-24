@@ -42,6 +42,7 @@ import 'package:wuselwall/features/reminders/data/reminder_dismissal_store.dart'
 import 'package:wuselwall/features/school/data/proposals_repository.dart';
 import 'package:wuselwall/features/school/data/scan_repository.dart';
 import 'package:wuselwall/features/school/data/school_repository.dart';
+import 'package:wuselwall/features/settings/application/settings_groups.dart';
 import 'package:wuselwall/features/settings/application/settings_view.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 import 'package:wuselwall/features/shopping/data/shopping_store.dart';
@@ -1062,6 +1063,15 @@ Future<void> openTab(WidgetTester tester, String label) async {
   await tester.tap(
     find.descendant(of: find.byType(NavigationBar), matching: find.text(label)),
   );
+  await tester.pumpAndSettle();
+}
+
+/// On the top page of Einstellungen: opens [group] through its tile.
+Future<void> openSettingsGroup(WidgetTester tester, SettingsGroup group) async {
+  final tile = find.byKey(ValueKey('settings-group-${group.name}'));
+  await tester.ensureVisible(tile);
+  await tester.pumpAndSettle();
+  await tester.tap(tile);
   await tester.pumpAndSettle();
 }
 

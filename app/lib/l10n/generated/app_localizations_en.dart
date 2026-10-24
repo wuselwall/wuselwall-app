@@ -5776,4 +5776,127 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get weekHighlightHere => 'was part of our week';
+
+  @override
+  String get settingsGroupPersonalTitle => 'Personal';
+
+  @override
+  String get settingsGroupPersonalSubtitle =>
+      'Wusel, sounds and reminders for you';
+
+  @override
+  String get settingsGroupFamilyTitle => 'Family';
+
+  @override
+  String get settingsGroupFamilySubtitle =>
+      'Name, time zone, members and the usual week';
+
+  @override
+  String get settingsGroupTasksTitle => 'Tasks & rewards';
+
+  @override
+  String get settingsGroupTasksSubtitle =>
+      'Points, streak jokers and approvals';
+
+  @override
+  String get settingsGroupCalendarTitle => 'Calendar & school';
+
+  @override
+  String get settingsGroupCalendarSubtitle =>
+      'Events, timetable changes and sharing';
+
+  @override
+  String get settingsGroupMealsTitle => 'Meals';
+
+  @override
+  String get settingsGroupMealsSubtitle =>
+      'Warm meals, meal wishes and care lunch';
+
+  @override
+  String get settingsGroupRitualsTitle => 'Rituals';
+
+  @override
+  String get settingsGroupRitualsSubtitle =>
+      'Question at the table, our week, countdowns';
+
+  @override
+  String get settingsGroupCelebrationsTitle => 'Celebrations & seasons';
+
+  @override
+  String get settingsGroupCelebrationsSubtitle =>
+      'Advent, Easter, New Year, birthdays and the seasons';
+
+  @override
+  String get settingsGroupKitchenTitle => 'Kitchen wall';
+
+  @override
+  String get settingsGroupKitchenSubtitle =>
+      'Names, the change of week and the parts of the day';
+
+  @override
+  String get settingsGroupDevicesTitle => 'Devices';
+
+  @override
+  String get settingsGroupDevicesSubtitle =>
+      'This device and every device of the family';
+
+  @override
+  String get settingsGroupAccountTitle => 'Account & security';
+
+  @override
+  String get settingsGroupAccountSubtitle =>
+      'Sign-in, password, two-factor, leaving the family';
+
+  @override
+  String get settingsGroupServerTitle => 'Server';
+
+  @override
+  String get settingsGroupServerSubtitle =>
+      'Address, QR code and changing the server';
+
+  @override
+  String get settingsGroupHelpTitle => 'Help & about';
+
+  @override
+  String get settingsGroupHelpSubtitle => 'Getting started, versions, licenses';
+
+  @override
+  String get settingsSectionWusel => 'Wusel';
+
+  @override
+  String get settingsSectionSound => 'Sound';
+
+  @override
+  String get settingsSectionNotifications => 'Notifications';
+
+  @override
+  String get settingsSectionTableQuestion => 'Question at the table';
+
+  @override
+  String get settingsSectionWeekReview => 'Week review';
+
+  @override
+  String get settingsSectionCountdowns => 'Countdowns';
+
+  @override
+  String get settingsSectionHolidays => 'Holiday celebrations';
+
+  @override
+  String get settingsSectionThroughYear => 'Through the year';
+
+  @override
+  String get settingsSectionAllDevices => 'All devices';
+
+  @override
+  String get settingsSectionLeave => 'Leave or delete';
+
+  @override
+  String get settingsSectionOther => 'Other settings';
+
+  @override
+  String get familyProfileTitle => 'Family profile';
+
+  @override
+  String get settingsMembersSubtitle =>
+      'Names, colours, roles and the order on the wall';
 }

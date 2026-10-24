@@ -107,7 +107,9 @@ class _MemberPageState extends ConsumerState<MemberPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(member?.displayName ?? l10n.settingsMembers),
-        leading: BackButton(onPressed: () => context.go(Routes.settings)),
+        leading: BackButton(
+          onPressed: () => context.go(Routes.settingsMembers),
+        ),
         actions: const [SettingsViewSwitch()],
       ),
       body: AsyncValueView<List<Member>>(
@@ -447,7 +449,7 @@ class _MemberPageState extends ConsumerState<MemberPage> {
           _repo.setMemberActive(actor: _actor, profileId: m.id, active: false),
       guardian: true,
     );
-    if (done && mounted) context.go(Routes.settings);
+    if (done && mounted) context.go(Routes.settingsMembers);
   }
 }
 
