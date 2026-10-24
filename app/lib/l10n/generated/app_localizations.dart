@@ -2334,6 +2334,24 @@ abstract class AppLocalizations {
   /// **'Show on the kitchen display'**
   String get eventKeyDisplay;
 
+  /// No description provided for @eventKeyDisplayOn.
+  ///
+  /// In en, this message translates to:
+  /// **'This event shows on the kitchen display.'**
+  String get eventKeyDisplayOn;
+
+  /// No description provided for @eventKeyDisplayOff.
+  ///
+  /// In en, this message translates to:
+  /// **'This event won’t show on the kitchen display.'**
+  String get eventKeyDisplayOff;
+
+  /// No description provided for @eventKeyDisplayOffWholeFamily.
+  ///
+  /// In en, this message translates to:
+  /// **'Not on the kitchen display: only events for the whole family go there by default.'**
+  String get eventKeyDisplayOffWholeFamily;
+
   /// No description provided for @eventRepeat.
   ///
   /// In en, this message translates to:

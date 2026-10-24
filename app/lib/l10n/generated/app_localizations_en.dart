@@ -1282,6 +1282,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get eventKeyDisplay => 'Show on the kitchen display';
 
   @override
+  String get eventKeyDisplayOn => 'This event shows on the kitchen display.';
+
+  @override
+  String get eventKeyDisplayOff =>
+      'This event won’t show on the kitchen display.';
+
+  @override
+  String get eventKeyDisplayOffWholeFamily =>
+      'Not on the kitchen display: only events for the whole family go there by default.';
+
+  @override
   String get eventRepeat => 'Repeat';
 
   @override

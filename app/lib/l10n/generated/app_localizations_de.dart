@@ -1294,6 +1294,18 @@ class AppLocalizationsDe extends AppLocalizations {
   String get eventKeyDisplay => 'Auf dem Küchendisplay zeigen';
 
   @override
+  String get eventKeyDisplayOn =>
+      'Dieser Termin erscheint auf dem Küchendisplay.';
+
+  @override
+  String get eventKeyDisplayOff =>
+      'Dieser Termin erscheint nicht auf dem Küchendisplay.';
+
+  @override
+  String get eventKeyDisplayOffWholeFamily =>
+      'Nicht auf dem Küchendisplay: Dort stehen von selbst nur Termine der ganzen Familie.';
+
+  @override
   String get eventRepeat => 'Wiederholung';
 
   @override

@@ -91,7 +91,9 @@ class _TaskEditorDialogState extends ConsumerState<TaskEditorDialog> {
       text: '${e?.points ?? widget.defaults.pointsFor(_kind)}',
     );
     _icon = e?.iconKey;
-    _repeat = e == null ? TaskRepeat.once : parsed.repeat;
+    // A new chore is a daily one (the starter chores of specs/21 mostly are), so a
+    // title alone is enough to save it.
+    _repeat = e == null ? TaskRepeat.daily : parsed.repeat;
     _weekdays = e == null
         ? {today.weekday}
         : parsed.weekdays.isEmpty
@@ -99,8 +101,16 @@ class _TaskEditorDialogState extends ConsumerState<TaskEditorDialog> {
         : parsed.weekdays;
     _startsOn = e?.startsOn ?? today;
     _window = e?.windowDays ?? 1;
-    _assignment = e?.assignment ?? TaskAssignment.rotating;
-    _assignees = {...?e?.assigneeIds};
+    // A new chore rotates through the active children; without children it is open
+    // for anyone. An existing chore keeps what it has.
+    final children = [
+      for (final m in widget.members)
+        if (m.active && m.isChild) m.id,
+    ];
+    _assignment =
+        e?.assignment ??
+        (children.isEmpty ? TaskAssignment.open : TaskAssignment.rotating);
+    _assignees = e == null ? children.toSet() : {...e.assigneeIds};
     _verification = e?.requiresVerification ?? widget.defaults.verification;
   }
 

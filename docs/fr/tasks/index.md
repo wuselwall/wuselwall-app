@@ -25,6 +25,8 @@ Dans l’onglet des tâches, créez-en une et choisissez :
 - **personnes** : une personne, à tour de rôle, volontaire ou tout le monde ;
 - éventuelle **approbation d’un adulte**, avant attribution des points.
 
+Une nouvelle tâche est quotidienne et revient à tour de rôle à tous les enfants (sans enfant : au volontaire) ; un titre suffit donc pour l’enregistrer.
+
 Archiver une tâche supprime ses occurrences futures encore ouvertes. Le kit de départ propose cinq tâches, trois récompenses et quatre badges, tous modifiables.
 
 ## Récompenses {#rewards}

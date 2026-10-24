@@ -14,13 +14,14 @@ Les **présences**, une ligne par personne, et les événements de **toute la jo
 
 ## Créer un rendez-vous {#creating-an-appointment}
 
-Touchez **Nouvel événement**, puis indiquez :
+Touchez **Nouvel événement** : il commence le jour affiché par le calendrier (aujourd’hui tant qu’aujourd’hui est visible), à la prochaine heure pleine. Indiquez ensuite :
 
 - le **titre**, le **lieu** et les **notes** ;
 - **Rendez-vous** ou **Présence** : travail, télétravail, déplacement, absence, repos ou garde ;
 - toute la journée, ou les heures de début et de fin ;
 - les personnes concernées, ou personne pour toute la famille ;
-- une éventuelle incertitude et l’affichage sur l’écran de cuisine ;
+- juste en dessous, l’affichage sur l’écran de la cuisine : une ligne indique si l’événement y apparaîtra et change dès que vous choisissez des personnes. Par défaut, seuls les événements de toute la famille y apparaissent ;
+- une éventuelle incertitude ;
 - une **image**, et si l’événement est attendu avec impatience (**On a hâte**) ou une **Tradition familiale** (voir [plus bas](#picture-countdown-tradition)).
 
 <Shot name="calendar-editor" alt="La création d’un événement avec les participants et la répétition" />

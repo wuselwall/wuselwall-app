@@ -25,6 +25,8 @@ En la pestaña de tareas, crea una y elige:
 - personas: una fija, por turnos, voluntaria o todo el mundo;
 - si necesita aprobación de un adulto antes de recibir puntos.
 
+Una tarea nueva es diaria y va por turnos entre todos los niños (sin niños: voluntaria), así que basta con un título para guardarla.
+
 Archivar elimina las próximas ocurrencias aún abiertas. El paquete inicial ofrece cinco tareas, tres recompensas y cuatro insignias, todo editable.
 
 ## Recompensas {#rewards}
