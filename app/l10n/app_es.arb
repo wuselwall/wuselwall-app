@@ -2224,6 +2224,29 @@
       }
     }
   },
+  "inviteAlreadyInTitle": "Ya formas parte de {household}",
+  "@inviteAlreadyInTitle": {
+    "placeholders": {
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteAlreadyInSame": "Esta invitación es para {household}, y ya formas parte de ella. No tienes que hacer nada más.",
+  "@inviteAlreadyInSame": {
+    "placeholders": {
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteAlreadyInLeaveHint": "Una cuenta pertenece a una sola familia. Para unirte, sal primero de tu familia actual; después la invitación sigue.",
+  "inviteAlreadyInLeaveHintUnknown": "Una cuenta pertenece a una sola familia. Para unirte a otra, sal primero de tu familia actual y luego abre de nuevo la invitación.",
+  "inviteAlreadyInDevice": "Este dispositivo ya pertenece a una familia. Abre la invitación en el móvil de la persona invitada.",
+  "invitePartnerPickTitle": "¿A quién quieres invitar?",
+  "invitePartnerExisting": "Ya está en la familia, todavía sin cuenta",
+  "invitePartnerSomeoneElse": "Otra persona",
+  "invitePartnerSomeoneElseHint": "Añade un nuevo adulto a la familia",
   "inviteNothingKept": "Ya no hay ninguna invitación para unirse.",
   "inviteResultTitle": "Invitación para {name}",
   "@inviteResultTitle": {

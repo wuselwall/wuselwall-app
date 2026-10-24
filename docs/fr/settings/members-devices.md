@@ -25,6 +25,8 @@ Partagez le code, le serveur, le lien ou le code QR dans un message. Le lien et 
 
 Une invitation dure **7 jours** et sert **une seule fois**. Les invitations ouvertes affichent leur échéance directement dans la ligne de la personne invitée ; vous pouvez les repartager ou les retirer. Un membre sans compte peut être invité depuis sa ligne. Sans adresse e-mail, la personne doit saisir le code.
 
+**Inviter ton ou ta partenaire**, sur la carte **Premiers pas**, demande d’abord **Qui veux-tu inviter ?** lorsque la famille compte déjà des adultes sans compte, par exemple la personne ajoutée à la création de la famille. Choisissez-la : l’invitation lui est destinée et elle n’est pas ajoutée une seconde fois. **Quelqu’un d’autre** ajoute une nouvelle personne.
+
 Quand quelqu’un rejoint la famille, chaque parent reçoit un avis dans **Aujourd’hui**. Il peut l’acquitter ou ouvrir les membres ; l’avis disparaît après 14 jours.
 
 Les enfants n’ont pas besoin de compte ni d’invitation : ajoutez leur prénom et connectez leur appareil.

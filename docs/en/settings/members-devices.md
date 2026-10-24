@@ -31,6 +31,8 @@ If you left out the email address, the code is all there is. The person then has
 
 For an existing **member** without an account, invite them from the member list with **Invite**.
 
+**Invite your partner** on the **Getting started** card first asks **Who would you like to invite?** when the family already has adults without an account, such as the person you added when you created the family. Pick them, and the invitation is for exactly that person, without adding them a second time. **Someone else** adds a new person.
+
 ::: tip No account needed
 Children do not need an invitation. Add them as a member with a name, and connect their device as described under [Connect a device](#connect-a-device).
 :::

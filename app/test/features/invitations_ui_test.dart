@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/app/router.dart';
+import 'package:wuselwall/app/server_session.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/core/server/server_link.dart';
 import 'package:wuselwall/features/household/domain/household_models.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/invitations/application/invitation_providers.dart';
 import 'package:wuselwall/features/invitations/domain/invitation.dart';
+import 'package:wuselwall/features/today/domain/getting_started.dart';
 
+import '../support/fake_getting_started.dart';
 import '../support/fake_invitations.dart';
 import '../support/fakes.dart';
 
@@ -40,6 +44,20 @@ const _julia = Member(
   active: true,
   hasAccount: false,
 );
+
+/// The account of a guardian whose phone is already in [household].
+Account _inFamily(String household, {String? leaveBlocked}) => Account(
+  userId: 'user-1',
+  email: 'daniel@example.org',
+  hasHousehold: true,
+  householdId: 'h1',
+  profileId: guardianId,
+  creation: HouseholdCreation.code,
+  householdName: household,
+  leaveBlocked: leaveBlocked,
+);
+
+const _secret = '0123456789abcdef0123456789abcdef';
 
 void main() {
   group('H0', () {
@@ -389,4 +407,308 @@ void main() {
       expect(t.takeException(), isNull);
     });
   });
+
+  group('an invitation while already in a family', () {
+    Future<
+      ({
+        ProviderContainer container,
+        FakeHouseholdLeaveRepository leave,
+        MemoryInvitationStore store,
+      })
+    >
+    pumpInFamily(
+      WidgetTester t, {
+      required String household,
+      String? leaveBlocked,
+      StoredInvitation? kept,
+      FakeInvitationRepository? invitations,
+    }) async {
+      final identity = FakeIdentityRepository(current: device());
+      final leave = FakeHouseholdLeaveRepository();
+      final store = MemoryInvitationStore(kept);
+      final container = await pumpApp(
+        t,
+        overrides: baseOverrides(
+          identity: identity,
+          leave: leave,
+          invitations: invitations,
+          invitationStore: store,
+          household: FakeHouseholdOnboardingRepository(
+            identity: identity,
+            accountValue: _inFamily(household, leaveBlocked: leaveBlocked),
+          ),
+        ),
+      );
+      return (container: container, leave: leave, store: store);
+    }
+
+    Future<void> openLink(WidgetTester t, ProviderContainer container) async {
+      container.read(serverSessionProvider).inbox.value = const LinkEvent(
+        OpenLinkFixture.link,
+        LinkVerdict.proceed,
+      );
+      await t.pumpAndSettle();
+    }
+
+    testWidgets(
+      'names both families and leads to leaving, never leaving by itself',
+      (t) async {
+        final s = await pumpInFamily(t, household: 'Familie Becker');
+        await openLink(t, s.container);
+
+        expect(find.byKey(const ValueKey('already-in-family')), findsOneWidget);
+        expect(find.text('Du bist schon in Familie Becker'), findsOneWidget);
+        expect(
+          find.text('Papa hat dich zu Familie Huser eingeladen'),
+          findsOneWidget,
+        );
+        expect(s.leave.leaves, isEmpty);
+
+        await t.tap(find.byKey(const ValueKey('already-in-leave')));
+        await t.pumpAndSettle();
+        expect(find.text('Familie verlassen?'), findsOneWidget);
+        expect(s.leave.leaves, isEmpty, reason: 'only after the confirmation');
+
+        await t.tap(find.byKey(const ValueKey('leave-family-confirm')));
+        await t.pumpAndSettle();
+        expect(s.leave.leaves, [guardianId]);
+        expect(
+          s.store.value?.secret,
+          _secret,
+          reason: 'kept, so the join confirmation follows the leave',
+        );
+        expect(s.store.value?.householdName, 'Familie Huser');
+      },
+    );
+
+    testWidgets('cancelling keeps the family and the invitation goes', (
+      t,
+    ) async {
+      final s = await pumpInFamily(t, household: 'Familie Becker');
+      await openLink(t, s.container);
+      await t.tap(find.text('Abbrechen'));
+      await t.pumpAndSettle();
+
+      expect(find.byKey(const ValueKey('already-in-family')), findsNothing);
+      expect(s.leave.leaves, isEmpty);
+      expect(s.store.value, isNull);
+    });
+
+    testWidgets('an invitation to the same family just says so', (t) async {
+      final s = await pumpInFamily(t, household: 'Familie Huser');
+      await openLink(t, s.container);
+
+      expect(find.text('Du bist schon in Familie Huser'), findsOneWidget);
+      expect(
+        find.text(
+          'Diese Einladung ist für Familie Huser, und da bist du schon dabei. Du musst nichts weiter tun.',
+        ),
+        findsOneWidget,
+      );
+      expect(find.byKey(const ValueKey('already-in-leave')), findsNothing);
+      await t.tap(find.byKey(const ValueKey('already-in-close')));
+      await t.pumpAndSettle();
+      expect(find.byKey(const ValueKey('already-in-family')), findsNothing);
+      expect(s.leave.leaves, isEmpty);
+    });
+
+    testWidgets('another family with the same name can still be joined', (
+      t,
+    ) async {
+      final s = await pumpInFamily(
+        t,
+        household: 'Familie Huser',
+        invitations: FakeInvitationRepository(
+          previewResult: Ok(
+            PreviewValid(
+              InvitationPreview(
+                householdName: 'Familie Huser',
+                inviterFirstName: 'Clara',
+                profileName: 'Julia',
+                role: InvitationRole.guardian,
+                expiresAt: DateTime.now().add(const Duration(days: 7)),
+              ),
+            ),
+          ),
+        ),
+      );
+      await openLink(t, s.container);
+      expect(
+        find.byKey(const ValueKey('already-in-leave')),
+        findsOneWidget,
+        reason: 'Clara is no guardian here, so this is a different family',
+      );
+    });
+
+    testWidgets('the last guardian is told why leaving is not possible', (
+      t,
+    ) async {
+      final s = await pumpInFamily(
+        t,
+        household: 'Familie Becker',
+        leaveBlocked: 'last_guardian',
+      );
+      await openLink(t, s.container);
+      expect(
+        find.text(
+          'Lade zuerst eine zweite erwachsene Person ein oder lösche die Familie.',
+        ),
+        findsOneWidget,
+      );
+      expect(find.byKey(const ValueKey('already-in-leave')), findsNothing);
+    });
+
+    testWidgets('an invitation that is no longer valid only says that', (
+      t,
+    ) async {
+      final s = await pumpInFamily(
+        t,
+        household: 'Familie Becker',
+        invitations: FakeInvitationRepository(
+          previewResult: const Ok(PreviewRefused('expired')),
+        ),
+      );
+      await openLink(t, s.container);
+      expect(find.byKey(const ValueKey('already-in-family')), findsNothing);
+      expect(find.textContaining('gilt nicht mehr'), findsOneWidget);
+    });
+
+    testWidgets(
+      'an invitation kept through the sign-in is explained, then forgotten',
+      (t) async {
+        final s = await pumpInFamily(
+          t,
+          household: 'Familie Becker',
+          kept: const StoredInvitation(
+            secret: _secret,
+            householdName: 'Familie Huser',
+            inviterFirstName: 'Papa',
+            profileName: 'Julia',
+            role: InvitationRole.guardian,
+          ),
+        );
+        expect(find.text('Du bist schon in Familie Becker'), findsOneWidget);
+        await t.tap(find.text('Abbrechen'));
+        await t.pumpAndSettle();
+        expect(s.store.value, isNull);
+      },
+    );
+  });
+
+  group('inviting the partner from the getting-started card', () {
+    Future<void> pumpCard(
+      WidgetTester t, {
+      required FakeInvitationRepository invitations,
+      required List<Member> members,
+      ValueChanged<String>? shared,
+    }) async {
+      await pumpApp(
+        t,
+        overrides: [
+          ...baseOverrides(
+            identity: FakeIdentityRepository(
+              current: device(),
+              members: members,
+            ),
+            invitations: invitations,
+          ),
+          inviteSharerProvider.overrideWithValue((text) async {
+            shared?.call(text);
+          }),
+        ],
+        gettingStarted: FakeGettingStartedRepository(const [
+          GettingStartedItem(item: StartItem.invitePartner, done: false),
+        ]),
+      );
+      await t.tap(find.text('Partner:in einladen'));
+      await t.pumpAndSettle();
+    }
+
+    testWidgets(
+      'the adult added at the start is offered and invited as themselves',
+      (t) async {
+        final invitations = FakeInvitationRepository();
+        final shared = <String>[];
+        await pumpCard(
+          t,
+          invitations: invitations,
+          members: [...testMembers, _julia],
+          shared: shared.add,
+        );
+
+        expect(find.text('Wen möchtest du einladen?'), findsOneWidget);
+        expect(
+          find.byKey(const ValueKey('invite-pick-p-julia')),
+          findsOneWidget,
+        );
+        expect(find.text('Jemand anderes'), findsOneWidget);
+        expect(
+          find.byKey(const ValueKey('invite-pick-$guardianId')),
+          findsNothing,
+          reason: 'who already has an account is not offered',
+        );
+        expect(
+          find.byKey(const ValueKey('invite-pick-$kidId')),
+          findsNothing,
+          reason: 'a child is not invited',
+        );
+
+        await t.tap(find.byKey(const ValueKey('invite-pick-p-julia')));
+        await t.pumpAndSettle();
+
+        final sent = invitations.created.single;
+        expect(sent.profileId, 'p-julia');
+        expect(sent.displayName, isNull, reason: 'no second Julia is created');
+        expect(find.text('Einladung für Julia'), findsOneWidget);
+
+        // Sharing is the primary action; "Fertig" only closes.
+        final share = find.byKey(const ValueKey('invite-share'));
+        expect(
+          find.ancestor(
+            of: find.text('Teilen'),
+            matching: find.byType(FilledButton),
+          ),
+          findsOneWidget,
+        );
+        expect(
+          find.ancestor(
+            of: find.text('Fertig'),
+            matching: find.byType(TextButton),
+          ),
+          findsOneWidget,
+        );
+        await t.tap(share);
+        await t.pumpAndSettle();
+        expect(shared.single, contains('K7QM-3XRP'));
+      },
+    );
+
+    testWidgets('"Jemand anderes" opens the form for a new adult', (t) async {
+      final invitations = FakeInvitationRepository();
+      await pumpCard(
+        t,
+        invitations: invitations,
+        members: [...testMembers, _julia],
+      );
+      await t.tap(find.byKey(const ValueKey('invite-pick-new')));
+      await t.pumpAndSettle();
+      expect(find.text('Rolle'), findsOneWidget);
+      expect(invitations.created, isEmpty);
+    });
+
+    testWidgets('without such an adult the form opens at once', (t) async {
+      await pumpCard(
+        t,
+        invitations: FakeInvitationRepository(),
+        members: testMembers,
+      );
+      expect(find.text('Wen möchtest du einladen?'), findsNothing);
+      expect(find.text('Rolle'), findsOneWidget);
+    });
+  });
+}
+
+/// The invitation link of the tests, as the bootstrap hands it to the running app.
+abstract final class OpenLinkFixture {
+  static const link = OpenedLink(LinkKind.invitation, _secret);
 }

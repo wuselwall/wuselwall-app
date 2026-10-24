@@ -25,6 +25,8 @@ Comparte código, servidor, enlace o QR en un mensaje. Enlace y QR llevan el ser
 
 La invitación dura **7 días** y funciona **una vez**. Las abiertas muestran su caducidad directamente en la fila de la persona invitada; puedes compartirlas otra vez o retirarlas. Un miembro sin cuenta puede recibir invitación desde su fila. Sin correo, tendrá que introducir el código.
 
+**Invita a tu pareja**, en la tarjeta **Primeros pasos**, pregunta primero **¿A quién quieres invitar?** cuando la familia ya tiene adultos sin cuenta, como la persona que añadiste al crear la familia. Elígela y la invitación será para ella, sin añadirla dos veces. **Otra persona** añade a alguien nuevo.
+
 Cuando alguien se une, todos los adultos responsables reciben un aviso en **Hoy**. Pueden descartarlo o abrir los miembros. Desaparece automáticamente a los 14 días.
 
 Los niños no necesitan invitación ni cuenta: añade su nombre y conecta su dispositivo.

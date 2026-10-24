@@ -72,6 +72,8 @@ If you only got the code, you enter it in the app:
 
 If the family entered your email address, you need to enter nothing: after signing in, WuselWall shows the invitation by itself. Invitations are valid for **7 days** and work **once**; how to send them is described under [Members and devices](/en/settings/members-devices#invite-an-adult).
 
+An account belongs to exactly **one** family. If you open an invitation while you are already in a family, WuselWall shows **You're already in ‹family›** and who invited you where. **Leave family** takes you through leaving, with a confirmation; after that the invitation carries on directly. **Cancel** leaves everything as it is. If the invitation is for the family you are already in, WuselWall just says so.
+
 ## 4. Connecting a family tablet or wall display
 
 This is how the **wall display** in the kitchen, a **kids' tablet** or a **shared tablet** join the household. You do not type a code, only briefly use your phone. The new device's QR code also names the server; if you open it with your phone's camera, WuselWall starts right at the confirmation:
