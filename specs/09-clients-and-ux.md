@@ -30,7 +30,7 @@ on the parent's phone gives `kid` or `kiosk`.
 
 **adult**
 - Today (agenda + tasks + tonight's meal + list count)
-- Calendar: day / 3-day / week, presence bands, the rota month-grid editor
+- Calendar: day / 3-day / week, a read-only month, presence bands, the rota month-grid editor
 - Stundenplan: the grid per child, exceptions, terms, bell times, holidays
 - Tasks: my tasks, family board, definitions admin, approvals
 - Meals: week grid, recipes

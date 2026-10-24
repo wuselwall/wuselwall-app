@@ -17,13 +17,20 @@ class CalendarRepository {
   final ApiClient _api;
 
   /// Occurrences from [from] to [to], both inclusive local dates (at most 62 days).
-  Future<Result<OccurrenceWindow>> occurrences(DateTime from, DateTime to) =>
-      _api.function(
-        'occurrences',
-        body: {'from': isoDate(from), 'to': isoDate(to)},
-        parse: (json) =>
-            OccurrenceWindow.fromJson(json! as Map<String, dynamic>),
-      );
+  /// With [holidays] the window also carries its public holidays (the month view).
+  Future<Result<OccurrenceWindow>> occurrences(
+    DateTime from,
+    DateTime to, {
+    bool holidays = false,
+  }) => _api.function(
+    'occurrences',
+    body: {
+      'from': isoDate(from),
+      'to': isoDate(to),
+      if (holidays) 'holidays': true,
+    },
+    parse: (json) => OccurrenceWindow.fromJson(json! as Map<String, dynamic>),
+  );
 
   /// One event for the editor. Missing or deleted events are a [NotFoundFailure].
   Future<Result<CalendarEvent>> event(String id) async {

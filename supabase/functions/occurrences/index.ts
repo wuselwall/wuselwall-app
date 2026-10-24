@@ -1,6 +1,8 @@
-// POST {from, to} → the household's occurrences and busy_until in that window.
+// POST {from, to, holidays?} → the household's occurrences and busy_until in that window.
 // Expansion runs here, never in SQL or the app (specs/05). Acts as the caller: RLS
-// decides what is visible, so a revoked device gets a 403.
+// decides what is visible, so a revoked device gets a 403. With `holidays: true` (the
+// calendar's month view) the answer also carries the window's public holidays, one per
+// date, by the week board's rule; older apps never ask, older servers never answer.
 import {
   errorResponse,
   json,
@@ -9,7 +11,11 @@ import {
   requirePost,
   userClient,
 } from "../_shared/client.ts";
-import { checkWindow, loadCalendar } from "../_shared/calendar_data.ts";
+import {
+  checkWindow,
+  loadCalendar,
+  loadPublicHolidays,
+} from "../_shared/calendar_data.ts";
 
 Deno.serve(async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") return preflight();
@@ -27,11 +33,15 @@ Deno.serve(async (req: Request): Promise<Response> => {
     if (error) throw error;
     const timezone = String((base as { timezone: unknown }).timezone);
 
-    const calendar = await loadCalendar(client, from, to, timezone);
+    const [calendar, holidays] = await Promise.all([
+      loadCalendar(client, from, to, timezone),
+      body.holidays === true ? loadPublicHolidays(client, from, to) : null,
+    ]);
     return json({
       timezone,
       occurrences: calendar.occurrences,
       busy_until: calendar.busy_until,
+      ...(holidays === null ? {} : { holidays }),
     });
   } catch (err) {
     return errorResponse(err);

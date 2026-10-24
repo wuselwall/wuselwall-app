@@ -64,6 +64,12 @@ extension BoardFormat on BuildContext {
   /// "Mittwoch, 2. September" / "Wednesday, September 2".
   String fullDate(DateTime d) => DateFormat.MMMMEEEEd(_locale).format(d);
 
+  /// "Oktober 2026" / "October 2026": the calendar's month view title.
+  String monthYear(DateTime d) => DateFormat.yMMMM(_locale).format(d);
+
+  /// "Okt. 2026" / "Oct 2026": the month view's title in a phone's narrow bar.
+  String monthYearShort(DateTime d) => DateFormat.yMMM(_locale).format(d);
+
   /// "19. Okt. 2026" / "Oct 19, 2026": a date with its year, as a form field shows it.
   String mediumDate(DateTime d) => DateFormat.yMMMd(_locale).format(d);
 

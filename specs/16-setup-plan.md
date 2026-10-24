@@ -115,7 +115,7 @@ Keep these scope decisions visible:
   until their decks exist; all other strings and guides remain DE/EN/FR/ES.
 - Wusel is code-drawn; no Rive/Lottie dependency, earned outfits, pet care or notifications.
   Rename the reference brand files and update `scripts/brand-assets.js` with that slice.
-- Birthdays project into existing views and the feed. The later month-view candidate is
+- Birthdays project into existing views and the feed. The month view (built 2026-10-24) was
   not a prerequisite. Add countdown/tradition fields, meal wishes, table questions and
   `api.week_review` through the existing actor/audit/RLS boundaries. Include the new data
   in export and deletion. Release old 11.6–11.10 as one compatible contract increment;

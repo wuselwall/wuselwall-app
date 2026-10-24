@@ -6,11 +6,28 @@ El calendario reúne las citas y la presencia de toda la familia.
 
 ## Vistas {#views}
 
-La fecha, las flechas, el selector de vista y los ajustes comparten una barra compacta. En el móvil, el calendario se abre en vista **Día** para que las citas se lean bien. En el menú puedes elegir **Día**, **3 días** o **Semana**. En una pantalla ancha se abre en Semana. La vista elegida se conserva al cambiar de pestaña o girar el dispositivo. El icono de calendario vuelve a **Hoy**.
+La fecha, las flechas, el selector de vista y los ajustes comparten una barra compacta. En el móvil, el calendario se abre en vista **Día** para que las citas se lean bien. En el menú puedes elegir **Día**, **3 días**, **Semana** o **Mes**. En una pantalla ancha se abre en Semana. La vista elegida se conserva al cambiar de pestaña o girar el dispositivo. El icono de calendario vuelve a **Hoy**.
 
 <Shot name="calendar-phone" alt="El calendario en el móvil y su selector de vista" />
 
 Arriba permanecen la **presencia**, una fila por persona, y los eventos de **todo el día**. Debajo, las citas siguen el orden horario. Usa las flechas y **Hoy** para moverte.
+
+## Mes {#month}
+
+La vista **Mes** muestra seis semanas de un vistazo, de lunes a domingo, con el número de semana a la izquierda. Sirve para planificar, no para editar. Cada día muestra:
+
+- los **festivos**, con su nombre. Vienen de la región de tu hogar (ver [Horario escolar](/es/school/));
+- los **cumpleaños**, con una tarta y la edad, por ejemplo «Olivia cumple 9 años». Quien nació un 29 de febrero aparece el 1 de marzo los demás años;
+- las **vacaciones escolares**, como una banda clara sobre sus días, con su nombre;
+- los eventos que se **muestran en la pantalla de la cocina** y las **tradiciones familiares**, con título e imagen.
+
+Las demás citas solo se cuentan, por ejemplo «+2». Si no cabe todo, en el móvil o con letra grande, el número cuenta también lo que no tiene sitio. La presencia no aparece en el mes.
+
+Hoy está enmarcado. **Anterior** y **Siguiente** avanzan un mes, **Hoy** vuelve al mes actual. Toca un día para abrirlo en la vista **Día**: allí ves todas las citas y las editas.
+
+Los cumpleaños aparecen siempre en el mes, aunque la celebración **Cumpleaños** esté desactivada en **Estaciones y celebraciones** (ver [Wusel y los colores](/es/guide/wusel#occasions)). Ese ajuste solo afecta a la decoración; el mes sirve para consultar.
+
+<Shot name="calendar-month" alt="Vista Mes del calendario con números de semana, festivos, un cumpleaños con tarta y las vacaciones escolares como banda" wide />
 
 ## Crear una cita {#creating-an-appointment}
 

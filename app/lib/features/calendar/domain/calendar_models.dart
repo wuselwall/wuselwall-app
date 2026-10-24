@@ -376,11 +376,13 @@ class OccurrenceWindow {
     required this.timezone,
     required this.occurrences,
     this.busyUntil = const {},
+    this.publicHolidays,
   });
 
   factory OccurrenceWindow.fromJson(Map<String, dynamic> json) {
     final rows = ((json['busy_until'] as List?) ?? const [])
         .cast<Map<String, dynamic>>();
+    final holidays = (json['holidays'] as List?)?.cast<Map<String, dynamic>>();
     return OccurrenceWindow(
       timezone: json['timezone'] as String? ?? 'UTC',
       occurrences: ((json['occurrences'] as List?) ?? const [])
@@ -396,6 +398,12 @@ class OccurrenceWindow {
             row['until'] as String,
           ),
       },
+      publicHolidays: holidays == null
+          ? null
+          : {
+              for (final row in holidays)
+                parseDate(row['date'] as String): row['name'] as String,
+            },
     );
   }
 
@@ -406,6 +414,11 @@ class OccurrenceWindow {
 
   /// "Termine bis 17:00", keyed by member and local date.
   final Map<BusyKey, TimeOfDay> busyUntil;
+
+  /// The public holiday of each local date that has one, named in the household's
+  /// language, when the window was asked for with its holidays (the month view). Null
+  /// when not asked, and from a server that does not send them yet.
+  final Map<DateTime, String>? publicHolidays;
 }
 
 typedef BusyKey = ({String profileId, DateTime date});

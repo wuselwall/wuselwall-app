@@ -40,11 +40,12 @@ promised bundle or a gate for public release unless the trial shows why it must 
 | R1.1 | Previewed, member-sent feedback/diagnostics | Families need an easier way to report a problem than the pilot conversation |
 | R1.3 | Guardian audit history, last 30 days, by member/origin | A family needs to understand who changed something; the audit data already exists |
 | R1.4 | Automation-origin markers | Shortcuts additions are being confused with manual entries; MCP markers are on hold |
-| R1.6 | Read-only calendar month | Planning Ferien, birthdays or appointments across weeks is awkward |
 | R1.8 | Further wall quiet-hour/layout controls | The built night/ambience settings do not solve an observed display problem |
 | 10.10 | Retire legacy wizard/enrolment paths | A distributed release and the supported previous-version window no longer require them; remove only then |
 
 R1.2 (defaults) is in milestone 3; R1.7 (backup visibility/verification) is in milestone 4.
+R1.6, the read-only calendar month (Ferien, public holidays, birthdays and key appointments
+across six weeks), is built (2026-10-24, [05](05-module-calendar.md#views)).
 Any missed native accessibility check remains a release gate, not a backlog preference.
 
 ## On hold — MCP and AI assistants
