@@ -1,6 +1,6 @@
 # ADR-020 — A lighter day: joy as a product goal, Wusel, colour layers and family rituals
 
-**Status:** Accepted · 2026-10-24 · Not built · Amends [ADR-012](ADR-012-product-name.md)
+**Status:** Accepted · 2026-10-24 · Built 2026-10-24 on `feat/a-lighter-day`, see the [amendment](#amendment-2026-10-24-built) · Amends [ADR-012](ADR-012-product-name.md)
 (the mascot is renamed *Wusel* and given poses and a voice) and
 [01](../01-vision-and-scope.md) (a fourth property of the vision, a seventh principle, a
 seventh success criterion); extends [17](../17-design-system.md) without reopening
@@ -104,3 +104,27 @@ promises:
   `specs/mockups/logo.html` keeps the old name as a historical record.
 - The theme test (`test/app/theme_test.dart`) grows to cover the new bands, decorative
   colours and sky stops, so new decoration cannot break AA.
+
+## Amendment 2026-10-24: built
+
+M1.6 was largely done when the build began, so step 11 ran after it rather than before, and
+the user asked for everything in one branch. What was built differs from the decision in
+these places, each recorded in its spec:
+
+- **`api_version` stays 1.** Every change is additive, as the repository's convention for
+  this case says: columns with defaults, new tables, view columns at the end, new functions,
+  `api.member_update` with a last parameter that has a default, and `api.event_save` with the
+  same signature (the original moved to `app.event_save_core` and is wrapped).
+- **Countdowns are computed in the app** from the occurrences it already reads, not in
+  `api.board_week`. The board's events and meals carry `tradition`, `icon_key` and `wished_by`
+  only when set.
+- **Settings are one row per switch** with existing types. The occasions are seven rows
+  (`ambience.*`), the Tischfrage windows are two `time_range` rows, and hidden questions are
+  rows of `app.table_question`, not a setting. A default that depends on who or where is the
+  enum value `auto`.
+- **Still mode** (`?still=1` in the demo build) holds every animation and fixes Wusel's words
+  for screenshots; the docs' screenshot tool always passes it.
+- **Not built yet:** the planner's one-tap suggestion of a tradition's meal, the Ferien ribbon
+  text in the sky, the module illustrations in the bands, Wusel's `proud` for a badge earned (it
+  is proud for a reward requested), and its cheer when the getting-started card is completed.
+

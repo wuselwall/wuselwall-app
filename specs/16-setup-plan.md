@@ -730,7 +730,10 @@ Tasks tab; and the wall shows the week after a power cut, with the router still 
 
 ## Step 11 — A lighter day (M1.5)
 
-*Added 2026-10-24 with [ADR-020](adr/ADR-020-a-lighter-day.md).* This step makes the app
+*Added 2026-10-24 with [ADR-020](adr/ADR-020-a-lighter-day.md). Built 2026-10-24 on
+`feat/a-lighter-day`, after M1.6 rather than before it (M1.6 was largely done): every slice
+below, with the exceptions listed in [ADR-020's amendment](adr/ADR-020-a-lighter-day.md#amendment-2026-10-24-built).*
+This step makes the app
 warmer before the pilot household lives with it. The specs are [25](25-wusel.md) (Wusel),
 [26](26-colour-and-ambience.md) (colour, ambience, celebration) and
 [27](27-family-rituals.md) (rituals). It runs after step 10 and before M1.6, as the user

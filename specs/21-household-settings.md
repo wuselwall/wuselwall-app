@@ -268,22 +268,23 @@ Everything else here is under **Erweitert**, including each occasion and the pix
 
 | Key | Scope | Default | Range | Context | Source |
 |---|---|---|---|---|---|
-| `member.wusel` | member, self | children `lively`, adults `quiet` | lively · quiet · off | How present Wusel is for this member. *Quiet* means static, and only in empty states and on special days | [25](25-wusel.md#settings) |
-| `member.wusel_outfit` | member, self | none | none · one of eight | What Wusel wears for this member. Free from the start, never earned | [25](25-wusel.md#outfits) |
+| `member.wusel` | member, self | `auto`: children lively, adults quiet | auto · lively · quiet · off | How present Wusel is for this member. *Quiet* means still, and only in empty states and on special days | [25](25-wusel.md#settings) |
+| `member.wusel_outfit` | member, self | none | none · eight outfits | What Wusel wears for this member. Free from the start, never earned | [25](25-wusel.md#outfits) |
 | `device.wusel` | device | lively | lively · quiet · off | Wusel on a wall or shared device while no member is active | [25](25-wusel.md#settings) |
-| `device.sounds` | device | kiosk off, others on | on · off | Silences a device; `member.completion_sound` still governs the member. Never at night | [26](26-colour-and-ambience.md#sound-and-haptics) |
-| `ambience.occasions` | household | by country of `household.region`: season, birthday and Ferien everywhere; Advent and Western Ostern where the region's Easter is Western; Orthodox Ostern where it is Orthodox | one switch per occasion | Which dates decorate the wall and the Today header. Easter is computed each year, Western and Orthodox separately. *Decided 2026-10-24* | [26](26-colour-and-ambience.md#defaults-per-country), Q52 |
-| `device.pixel_shift` | device | kiosk on, others off | on · off | Shifts the whole screen by up to 2 px every 10 minutes against OLED burn-in. The OS's own protection does not cover a static full-screen app. *Decided 2026-10-24* | [26](26-colour-and-ambience.md#protecting-the-wall), Q54 |
-| `ambience.sky` | device | on | on · off | The time-of-day sky behind the board's and Today's header | [26](26-colour-and-ambience.md#day-phases) |
+| `device.sounds` | device | `auto`: kiosk off, others on | auto · on · off | Silences a device; `member.completion_sound` still governs the member. Never at night | [26](26-colour-and-ambience.md#sound-and-haptics) |
+| `device.sky` | device | on | on · off | The time-of-day sky behind the board's and Today's header | [26](26-colour-and-ambience.md#day-phases) |
+| `device.pixel_shift` | device | `auto`: kiosk on, others off | auto · on · off | Shifts the whole screen by up to 2 px every 10 minutes against OLED burn-in. The OS's own protection does not cover a static full-screen app. *Decided 2026-10-24* | [26](26-colour-and-ambience.md#protecting-the-wall), Q54 |
+| `ambience.season`, `ambience.birthdays`, `ambience.ferien` | household | on | on · off | Seasons, birthday bunting and the holidays' first and last day in the sky | [26](26-colour-and-ambience.md#seasons-and-occasions) |
+| `ambience.advent`, `ambience.easter_western`, `ambience.easter_orthodox` | household | `auto`: by the country of `household.region` | auto · on · off | Easter is computed each year, Western and Orthodox separately. *Decided 2026-10-24* | [26](26-colour-and-ambience.md#defaults-per-country), Q52 |
+| `ambience.new_year` | household | off | on · off | Small fireworks in the night sky on 31 December and 1 January | [26](26-colour-and-ambience.md#seasons-and-occasions) |
 | `rituals.countdown_days` | household | 14 | 7–60 | How far ahead Vorfreude starts counting | [27](27-family-rituals.md#vorfreude) |
 | `rituals.countdown_return` | household | on | on · off | "Papa ist in 2× schlafen zurück" for an adult's travel of two nights or more | [27](27-family-rituals.md#vorfreude) |
 | `meals.wishes` | household | children | children · everyone · off | Who may wish a meal | [27](27-family-rituals.md#wunschessen) |
 | `meals.wishes_per_week` | household | 1 | 1–3 | Open wishes per member | [27](27-family-rituals.md#wunschessen) |
-| `rituals.table_question` | household | warm meal | warm meal · every main meal · off | When the Tischfrage appears | [27](27-family-rituals.md#tischfrage) |
-| `rituals.table_question_times` | household | lunch 11:30–13:30 · dinner 17:30–19:30 | two time ranges | The meal windows; there are no meal times anywhere else | [27](27-family-rituals.md#tischfrage) |
-| `rituals.table_question_deck` | household | Familie | Familie · Ältere | *Ältere* adds questions for 8 and over | [27](27-family-rituals.md#tischfrage) |
-| `rituals.table_question_hidden` | household | none | list of question ids | Bundled questions this family does not want | [27](27-family-rituals.md#tischfrage) |
-| `rituals.week_review` | household | Sunday 16:00 – Monday 10:00 | weekday + time range · off | When "Unsere Woche" appears | [27](27-family-rituals.md#wochenrückblick) |
+| `rituals.table_question` | household | warm meal | warm meal · lunch and dinner · off | When the Tischfrage appears | [27](27-family-rituals.md#tischfrage) |
+| `rituals.table_question.lunch`, `.dinner` | household | 11:30–13:30, 17:30–19:30 | time range | The meal windows; there are no meal times anywhere else | [27](27-family-rituals.md#tischfrage) |
+| `rituals.table_question_deck` | household | family | family · older | *Older* adds questions for 8 and over | [27](27-family-rituals.md#tischfrage) |
+| `rituals.week_review` | household | Sunday 16:00 | weekday + time · off | When "Unsere Woche" opens; it stays until 10:00 the next morning | [27](27-family-rituals.md#wochenrückblick) |
 
 ## Fixed by design — not settings
 

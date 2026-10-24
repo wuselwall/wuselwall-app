@@ -1,6 +1,6 @@
 # 26 — Colour, ambience, celebration: direction A+
 
-*Added 2026-10-24 with [ADR-020](adr/ADR-020-a-lighter-day.md). Not built.* This extends
+*Added 2026-10-24 with [ADR-020](adr/ADR-020-a-lighter-day.md). Built 2026-10-24 (values in `palette.dart`, checked by `test/app/theme_test.dart`).* This extends
 [17 — Design system](17-design-system.md) and changes none of its verified values. Direction
 A "Küchentisch" stays. Its member palette, presence treatments and AA rules stay. This
 document adds four layers on top: colour by module, decoration, ambience on the wall, and
@@ -27,9 +27,10 @@ viewer loses nothing.
 
 ## Module bands
 
-Each module's top-level screen gets a **header band**: a full-width area behind the title,
-the week or day switcher and the module's illustration. The rest of the screen keeps `bg` and
-white cards. On the wall, the bands appear only in tap-through details, because the week board
+Each module's top-level screen gets a **header band**: as built, the module's app bar takes
+the band colour, and so does the selected destination in the navigation (adult and kid). The
+rest of the screen keeps `bg` and white cards. The pictures of the `scenes` set
+(`assets/emoji/scenes/`) are rendered for module illustrations but not placed yet. On the wall, the bands appear only in tap-through details, because the week board
 keeps its own zones.
 
 | Module | Key | Light band | Dark band | Illustration (Fluent Emoji, large, cropped) |
@@ -92,7 +93,7 @@ Direction B's form, without B's colours ([17, the three directions](17-design-sy
 | Token | Kid (new) | Was |
 |---|---|---|
 | Card border | 2 px `ink` at 85 % (dark: `line` at full) | 2 px `line` |
-| Card shadow | Offset 0 / 4 px, no blur, in the card's module decorative colour at 60 % | none |
+| Card shadow | Offset 0 / 4 px, no blur, in the tab's decorative colour at 60 %; only on cards that can be tapped, so the shadow promises a press | none |
 | Radius, cards and controls | 22 | 18 |
 | Pressed state | The card moves 3 px down and the shadow shrinks to 1 px (a spring, see [Motion](#motion)) | Ripple only |
 | Task card, done | Fills with `brand-tint`; the tick pops in on a spring | Strike-through |
@@ -205,18 +206,19 @@ the date alone, with no table to download. The country is the first part of
   `motor` package (MIT) is optional and not needed.
 - **One motion check**, `motionAllowed(context)` in `core/ui/motion.dart`. Every animation in
   this document asks it, and today's direct calls to `MediaQuery.disableAnimationsOf` move
-  behind it. It must also honour iOS *Reduce Motion*. Whether that sets `disableAnimations` in
-  current Flutter is unverified ([Q55](14-open-questions.md)), so step 11 starts with a test
-  on a real iPad.
+  behind it. It must also honour iOS *Reduce Motion*, which does not set `disableAnimations`
+  (Flutter 3.47's own documentation says so), so `motionAllowed` reads
+  `AccessibilityFeatures.reduceMotion` as well ([Q55](14-open-questions.md), decided
+  2026-10-24).
 - When motion is not allowed, springs snap to their end, confetti and Wusel's motion are
   skipped, and the static pose and the text carry the moment.
 
 ## Sound and haptics
 
 - **Four sounds**, bundled and each under 1 s and 30 KB: *tick* (a chore ticked), *fertig* (the
-  last chore), *badge* (a reward or a badge), and *coin* (points arriving). They are written for
-  the project or taken from CC0 sources, with each file's origin recorded in `NOTICE`
-  ([Q56](14-open-questions.md)).
+  last chore), *badge* (a reward or a badge), and *coin* (points arriving). They are synthesised
+  from sine tones by `scripts/sound-effects.mjs` (mono, 16 kHz WAV), so they belong to the
+  project ([Q56](14-open-questions.md), decided 2026-10-24).
 - **Playback** uses a small player package (`audioplayers`, MIT, is the candidate), measured
   for latency on the kids' tablets before it is accepted. A *tick* that arrives 300 ms late
   feels broken.
@@ -234,25 +236,27 @@ New rows in [21](21-household-settings.md#a-lighter-day):
 
 | Key | Scope | Default | Values |
 |---|---|---|---|
-| `ambience.occasions` | household, under *Erweitert* | by country, see [defaults per country](#defaults-per-country) | one switch per occasion |
-| `ambience.sky` | device | on | on · off (a plain band instead of the sky) |
-| `device.sounds` | device | kiosk off, other devices on | on · off |
-| `device.pixel_shift` | device, under *Erweitert* | kiosk on, other devices off | on · off |
+| `ambience.season`, `ambience.birthdays`, `ambience.ferien` | household, under *Erweitert* | on | on · off |
+| `ambience.advent`, `ambience.easter_western`, `ambience.easter_orthodox` | household, under *Erweitert* | `auto`: by country, see [defaults per country](#defaults-per-country) | `auto` · on · off |
+| `ambience.new_year` | household, under *Erweitert* | off | on · off |
+| `device.sky` | device | on | on · off (a plain band instead of the sky) |
+| `device.sounds` | device | `auto`: kiosk off, other devices on | `auto` · on · off |
+| `device.pixel_shift` | device, under *Erweitert* | `auto`: kiosk on, other devices off | `auto` · on · off |
 
 ## Flutter mapping
 
 - `palette.dart` gains `ModuleBand` (seven keys × light/dark), `Decor` (six keys ×
   light/dark) and `SkyPhase` (four phases × gradient stops). `WwColors` exposes
   `context.ww.band(Module.tasks)` and `context.ww.decor(Decor.sun)`.
-- A `ModuleScaffold` (or a `ModuleHeader` sliver) draws the band, the illustration and an
-  optional Wusel. Each module's top screen adopts it once. No widget picks band colours itself.
-- `ambienceProvider` (Riverpod) combines the clock (rebuilding at phase boundaries, like
-  `nightProvider`), the household's region, holidays, birthdays and `ambience.occasions` into
-  an `Ambience` value (phase, season, today's occasions). The sky painter and Wusel's outfit
-  read it.
+- `RegisterHomePage` and `KidHome` give the app bar and the navigation indicator the band of
+  the selected destination through one `Theme` wrapper; no widget picks band colours itself.
+- `ambienceProvider` (`features/wusel/application/ambience.dart`) combines the clock, the night,
+  the household's region, holidays, birthdays and the `ambience.*` switches into an `Ambience`
+  value (phase, season, today's occasions). `AmbienceSky` paints it behind the wall's header and
+  Today's app bar. Easter (Western and Orthodox) and Advent are pure functions with tests.
 - `test/app/theme_test.dart` gains every pair in this document: text on bands, text on
-  decoration, text on every sky stop, and member inks on bands. The `ink-3`-on-band ban is
-  enforced by a lint-style test over `ModuleHeader`'s text styles.
+  decoration, text on every sky stop, and member inks on bands. `ink-3` is not among the
+  pairs checked against bands, and nothing drawn on a band uses it.
 
 ## How the trial judges the colour
 

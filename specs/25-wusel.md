@@ -1,6 +1,6 @@
 # 25 — Wusel: the family's companion
 
-*Added 2026-10-24 with [ADR-020](adr/ADR-020-a-lighter-day.md). Not built.* Wusel is the
+*Added 2026-10-24 with [ADR-020](adr/ADR-020-a-lighter-day.md). Built 2026-10-24: `app/lib/core/wusel/` (the drawing) and `app/lib/features/wusel/` (the family's Wusel, its settings and lines).* Wusel is the
 mascot chosen in [ADR-012](adr/ADR-012-product-name.md#logo-and-mascot) as *Wuselchen* and
 renamed here. This document says who Wusel is, how it is drawn and moves, what it says, and
 where it may and may not appear. The colour and motion rules it shares with the rest of the
@@ -73,14 +73,14 @@ tuft spin, a blink-wink). Tapping more often never makes Wusel refuse or tell th
 A child can dress Wusel from the start. Nothing is earned, bought, rare or lost
 ([ADR-020, decision 5](adr/ADR-020-a-lighter-day.md#decision)).
 
-- **Eight outfits:** Partyhut, Krone, Zauberhut, Blumenkranz, Sonnenbrille, Mütze und Schal,
-  Kopfhörer and Schleife. Each is a small path set the painter draws on top of the body.
+- **Eight outfits:** Partyhut, Krone, Zauberhut, Blumenkranz, Sonnenbrille, Schal, Kopfhörer
+  and Schleife. (A beanie was dropped while drawing: it hid the family's tufts.) Each is a small path set the painter draws on top of the body.
 - **Own outfit.** `member.wusel_outfit` holds a member's choice. It shows wherever Wusel
   speaks to that member: their kid home, their phone, or the wall after they tap their
   avatar.
 - **Occasion outfits** override the member's choice on the day itself, where
   [26's ambience](26-colour-and-ambience.md#ambience) is on: the Partyhut on a member's
-  birthday, Mütze und Schal on snowy-season days on the wall. The wall otherwise shows Wusel
+  birthday. The wall otherwise shows Wusel
   without an outfit, because the wall belongs to everyone.
 
 ## Voice
@@ -175,7 +175,7 @@ New rows in [21](21-household-settings.md#a-lighter-day):
 
 | Key | Scope | Default | Values |
 |---|---|---|---|
-| `member.wusel` | member, self | children `lively`, adults `quiet` | `lively` · `quiet` (static, empty states and special days only) · `off` |
+| `member.wusel` | member, self | `auto`: children `lively`, adults `quiet` | `auto` · `lively` · `quiet` (static, empty states and special days only) · `off` |
 | `member.wusel_outfit` | member, self | none | none · one of the eight outfits |
 | `device.wusel` | device (kiosk, shared) | `lively` | `lively` · `quiet` · `off`; a member's own setting wins while their profile is active |
 
@@ -198,17 +198,24 @@ The code lives in `app/lib/core/wusel/`.
   the steps with the spring motion of [26](26-colour-and-ambience.md#motion) and schedules
   blinks with a jittered timer. It stops every ticker when the route is not visible or the app
   is in the background, and it falls back to the static look under reduce motion.
-- **`WuselLines`** picks a variant for a moment from the ARB catalogue. Rotation is per
-  device and stored with the device's other preferences, so the same line never repeats twice
-  in a row.
-- **`EmptyView`** (`core/ui/empty_view.dart`) gains an optional `wusel` parameter (default
-  `peek`), so its 17 call sites get Wusel by passing nothing new. A screen that must not show
-  Wusel passes `WuselPresence.none`.
+- **`WuselLines`** picks a variant for a moment from the ARB catalogue, never the same twice
+  in a row on one device while the app runs; `WuselLines.stable` picks by a seed for lines a
+  stateless screen draws (the wall's). Under `flutter test` and in still mode it always takes
+  the first variant.
+- **`EmptyView`** (`core/ui/empty_view.dart`) draws whatever the app root provides through
+  `EmptyIllustration`; the app installs a peeking Wusel there, so its 17 call sites get Wusel
+  without knowing it, and `core/` stays free of features. `illustrated: false` leaves it out.
+- **Still mode.** `StillMode.enabled` (`core/ui/motion.dart`) makes `motionAllowed` false
+  everywhere: each pose's still look, no blink, no confetti, the first line variant. The demo
+  build turns it on with `?still=1`, and `docs/tools/screenshots.mjs` always passes it, so
+  Wusel never changes a screenshot from one run to the next.
 - **Power on the wall.** The kiosk animates only for a moment and then rests: idle blinking
   stops after 60 s without a moment, and sleep breathing runs at a low frame rate. The
   acceptance check is CPU use on the wall tablet with the board idle for ten minutes, the
   same with Wusel on and off, written down in the release checklist.
-- **Tests.** Goldens for every pose × light/dark/night × one outfit. A widget test that the
+- **Tests.** Goldens (`app/test/golden/`, the repository's first) for every pose in three
+  shades, every outfit and one to six tufts; `test/core/wusel_test.dart` for still mode and the
+  frames a pose draws. A widget test that the
   capture routes and the PIN pad render no `Wusel`. A unit test that line rotation never
   repeats. The voice rules are a review checklist item for every ARB change under `wusel*`,
   because a word-list test cannot work across four languages.

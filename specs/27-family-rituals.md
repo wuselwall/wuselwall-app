@@ -1,6 +1,7 @@
 # 27 — Family rituals: Tischfrage, Wochenrückblick, traditions, Vorfreude, Wunschessen
 
-*Added 2026-10-24 with [ADR-020](adr/ADR-020-a-lighter-day.md). Not built.* Builds on
+*Added 2026-10-24 with [ADR-020](adr/ADR-020-a-lighter-day.md). Built 2026-10-24: migration
+`20261024110000_lighter_day_rituals.sql` (pgTAP 235) and `app/lib/features/rituals/`.* Builds on
 [05](05-module-calendar.md) (events), [07](07-module-meals-shopping.md) (the meal plan),
 [06](06-module-tasks.md) (tasks and points) and the week board of [09](09-clients-and-ux.md#the-week-board).
 Wusel's part in each ritual is in [25](25-wusel.md); the colours and celebrations are in
@@ -65,9 +66,10 @@ The wording uses the member labels the household already uses on the board
 
 **Where it shows**
 
-- **Wall:** a *Vorfreude* strip in the board header with the three nearest countdowns, each an
-  icon, a short title and the count. The header's space is shared with the Tischfrage and the
-  Wochenrückblick tile ([Q57](14-open-questions.md)).
+- **Wall:** a *Vorfreude* strip in the board's footer with the nearest countdowns, as many as
+  fit (one or two), each an icon, a short title and the count ([Q57](14-open-questions.md),
+  decided: the header's middle is the Tischfrage's during the meal; Vorfreude and the
+  Rückblick tile live in the footer).
 - **Kid home:** "Worauf ich mich freue". These are the countdowns the child attends, plus the
   whole-family ones.
 - **Adult Today:** one line with the nearest countdown, only within the horizon.
@@ -80,12 +82,12 @@ The wording uses the member labels the household already uses on the board
 - The day before says "Morgen!" and the day itself "Heute!", with Wusel's `wave`. After that
   the countdown is gone. There is no "vorbei".
 
-**Data.** `event.countdown BOOLEAN DEFAULT false` and `event.icon_key TEXT NULL` (a Fluent
-Emoji key from [17's content icons](17-design-system.md#icons); the icon also helps every
-other event). Both are parameters of the event create and update functions. Members who may
-edit their own events (`calendar.members_edit_own_events`) may mark them. The board's read
-model `api.board_week` gains a `countdowns` array, computed with the same expansion as the
-board's events, which is a contract change.
+**Data.** `event.countdown BOOLEAN DEFAULT false` and `event.icon_key TEXT NULL` (one of the 20
+pictures of the `events` set, `assets/emoji/events/`). Both travel in `api.event_save`'s JSON.
+Members who may edit their own events (`calendar.members_edit_own_events`) may mark them. The
+countdowns are **computed in the app** (`features/rituals/domain/countdown.dart`) from the
+occurrences of the horizon, the members' birthdays and the school holidays it already reads;
+the occurrences carry `icon_key`, `countdown` and `tradition`.
 
 ## Familientraditionen
 
@@ -102,8 +104,8 @@ The family's own recurring rituals, by name: Spieleabend, Pizza-Freitag, Sonntag
 - **Skipping one week** is an ordinary exception date (`exdates`). It simply does not show.
   Nothing records that a tradition did not happen.
 - **A meal tradition** (Pizza-Freitag) may carry a meal: `tradition_meal(event_id, slot,
-  recipe_id NULL, free_text NULL)`. On its day, if that slot in the meal plan is empty, the
-  planner offers it as the first suggestion with one tap to plan. The board shows only
+  recipe_id NULL, free_text NULL)`; the editor takes a few words and lunch or dinner. *Not
+  built yet:* the planner's one-tap suggestion on the tradition's day. The board shows only
   planned meals, as today.
 - Traditions reach the ICS feed like any other event.
 
@@ -132,7 +134,7 @@ Once a week each child picks a meal, which gives children a voice in the plan.
 
   ```
   meal_wish
-    id, household_id, profile_id, week_start DATE,
+    id, household_id, profile_id,
     recipe_id NULL, free_text NULL, icon_key NULL,       -- recipe_id or free_text
     status ENUM('open','planned','withdrawn'),
     meal_plan_entry_id NULL, created_at
@@ -141,8 +143,8 @@ Once a week each child picks a meal, which gives children a voice in the plan.
     + wished_by_profile_id NULL
   ```
 
-  The API is `api.meal_wish_set(actor, recipe_id, free_text, icon_key)`, which creates or
-  replaces the actor's own open wish; `api.meal_wish_withdraw(actor, wish)` (the wisher, or a
+  The API is `api.meal_wish_set(actor, recipe_id, free_text, icon_key)`, which creates a wish or,
+  once the actor has `meals.wishes_per_week` open ones, replaces their newest; `api.meal_wish_withdraw(actor, wish)` (the wisher, or a
   guardian); `api.meal_wish_plan(actor, wish, on_date, slot)` (whoever may edit the meal plan),
   which creates the entry and links it; and the view `api.meal_wishes`. Invariant: at most
   `meals.wishes_per_week` open wishes per member. pgTAP covers that invariant, the
@@ -155,7 +157,7 @@ A question for the table during the meal, answered aloud, with nothing recorded.
 
 - **When:** during the warm meal's window. `rituals.table_question` is *warm meal* (default,
   following `meals.warm_meal.school_day` and `.free_day`), *every main meal* or *off*.
-  `rituals.table_question_times` sets the windows (lunch 11:30–13:30, dinner 17:30–19:30). A
+  `rituals.table_question.lunch` and `.dinner` set the windows (11:30–13:30, 17:30–19:30). A
   meal does not have to be planned.
 - **Where:**
   - On the **wall**, a card in the board header for the window. Wusel holds it, the question
@@ -190,8 +192,8 @@ A question for the table during the meal, answered aloud, with nothing recorded.
 - **The family's own questions:** `table_question(id, household_id, text, created_by_profile_id,
   created_at)`, written with `api.table_question_add` and `_remove`. Any member may add one; a
   guardian or the author removes it. Own questions mix into the shuffle and show "Frage von
-  Jack". A household can hide any bundled question (`rituals.table_question_hidden`, a list of
-  ids).
+  Jack". A guardian can hide any bundled question (`api.table_question_hide`): a row of
+  `table_question` with `hidden_key` instead of `text`.
 - **Nothing about the answers is stored.** Who answered, what they said and whether the
   question was used at all are never recorded.
 
@@ -199,8 +201,8 @@ A question for the table during the meal, answered aloud, with nothing recorded.
 
 A look back on Sunday at what *we* did.
 
-- **When:** `rituals.week_review` sets it; the default runs from Sunday 16:00 to Monday 10:00
-  (any weekday and time, or *off*).
+- **When:** `rituals.week_review` sets when it opens (default Sunday 16:00; any weekday and
+  time, or *off*); it stays until 10:00 the next morning.
 - **Where:**
   - On **Today** and the **kid home**, a card "Unsere Woche ✨".
   - On the **wall**, a tile in the board header that opens a full-screen story as a
@@ -236,11 +238,11 @@ A look back on Sunday at what *we* did.
 | `tradition_meal` | Table, written with the tradition's event |
 | `meal_wish`, `meal_plan_entry.wished_by_profile_id` | Table and column; `api.meal_wish_*` |
 | `table_question` | Table; `api.table_question_add` and `_remove` |
-| `api.board_week` gains `countdowns`, `traditions` and the Wochenrückblick tile flag | Read-model contract |
+| The board's events gain `tradition` and `icon_key`, its meals `wished_by`, each only when set | Read model, additive |
 | `api.week_review` | New read function |
 | Settings rows of [21](21-household-settings.md#a-lighter-day) | Catalogue migration |
 
-Together these raise `api_version` once. The previous app release keeps working: it ignores
+All of it is additive, so `api_version` stays 1 (the repository's convention). The previous app release keeps working: it ignores
 the new fields, and a tradition looks like a recurring event to it. The data export
 (`export-zip`) includes the new tables, and household deletion removes them.
 
