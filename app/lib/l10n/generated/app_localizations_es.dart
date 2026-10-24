@@ -901,34 +901,6 @@ class AppLocalizationsEs extends AppLocalizations {
       'Este ajuste no se puede cambiar para esta persona o dispositivo.';
 
   @override
-  String get householdSettingsTitle => 'Ajustes del hogar';
-
-  @override
-  String get householdSettingsSubtitle =>
-      'Valores predeterminados para tareas, calendario, comidas y pantalla de la cocina';
-
-  @override
-  String get settingsSectionHousehold => 'Hogar y miembros';
-
-  @override
-  String get settingsSectionTasks => 'Tareas';
-
-  @override
-  String get settingsSectionCalendar => 'Calendario y colegio';
-
-  @override
-  String get settingsSectionMeals => 'Comidas';
-
-  @override
-  String get settingsSectionKitchen => 'Pantalla de la cocina';
-
-  @override
-  String get settingsSectionDevice => 'Este dispositivo';
-
-  @override
-  String get settingsSectionMine => 'Mis ajustes';
-
-  @override
   String get settingPickPersonFirst =>
       'Primero elige quién eres. Después aparecerán aquí tus ajustes.';
 
@@ -4402,10 +4374,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get shortcutTitle => 'Apps y automatizaciones';
 
   @override
-  String get shortcutSettingsSubtitle =>
-      'Siri y otras automatizaciones, cada una con su clave';
-
-  @override
   String get shortcutIntro =>
       'Una clave permite que otra aplicación use WuselWall en nombre de una persona. Una clave de automatización, por ejemplo para un atajo de Siri en el iPhone o cualquier aplicación que pueda llamar a una dirección web, permite leer y añadir: añade artículos a la lista de la compra e indica qué hay hoy, qué hay para comer o quién tiene educación física mañana. No permite eliminar ni administrar nada.';
 
@@ -4880,9 +4848,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get savedMessage => 'Guardado.';
 
   @override
-  String get settingsSectionFamily => 'Familia';
-
-  @override
   String get settingsSectionThisDevice => 'Este dispositivo';
 
   @override
@@ -5085,12 +5050,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingsVersionUnknown => 'desconocida';
-
-  @override
-  String get settingsSectionRituals => 'Rituales';
-
-  @override
-  String get settingsSectionOccasions => 'Estaciones y celebraciones';
 
   @override
   String get settingMemberWuselTitle => 'Wusel';

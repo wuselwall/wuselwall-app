@@ -1644,60 +1644,6 @@ abstract class AppLocalizations {
   /// **'That setting cannot be changed for this person or device.'**
   String get errSettingTarget;
 
-  /// No description provided for @householdSettingsTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Household settings'**
-  String get householdSettingsTitle;
-
-  /// No description provided for @householdSettingsSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Defaults for tasks, calendar, meals and the kitchen display'**
-  String get householdSettingsSubtitle;
-
-  /// No description provided for @settingsSectionHousehold.
-  ///
-  /// In en, this message translates to:
-  /// **'Household and members'**
-  String get settingsSectionHousehold;
-
-  /// No description provided for @settingsSectionTasks.
-  ///
-  /// In en, this message translates to:
-  /// **'Tasks'**
-  String get settingsSectionTasks;
-
-  /// No description provided for @settingsSectionCalendar.
-  ///
-  /// In en, this message translates to:
-  /// **'Calendar and school'**
-  String get settingsSectionCalendar;
-
-  /// No description provided for @settingsSectionMeals.
-  ///
-  /// In en, this message translates to:
-  /// **'Meals'**
-  String get settingsSectionMeals;
-
-  /// No description provided for @settingsSectionKitchen.
-  ///
-  /// In en, this message translates to:
-  /// **'Kitchen display'**
-  String get settingsSectionKitchen;
-
-  /// No description provided for @settingsSectionDevice.
-  ///
-  /// In en, this message translates to:
-  /// **'This device'**
-  String get settingsSectionDevice;
-
-  /// No description provided for @settingsSectionMine.
-  ///
-  /// In en, this message translates to:
-  /// **'My settings'**
-  String get settingsSectionMine;
-
   /// No description provided for @settingPickPersonFirst.
   ///
   /// In en, this message translates to:
@@ -7529,12 +7475,6 @@ abstract class AppLocalizations {
   /// **'Apps and automations'**
   String get shortcutTitle;
 
-  /// No description provided for @shortcutSettingsSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Siri and other automations, each with a key'**
-  String get shortcutSettingsSubtitle;
-
   /// No description provided for @shortcutIntro.
   ///
   /// In en, this message translates to:
@@ -8249,12 +8189,6 @@ abstract class AppLocalizations {
   /// **'Saved.'**
   String get savedMessage;
 
-  /// No description provided for @settingsSectionFamily.
-  ///
-  /// In en, this message translates to:
-  /// **'Family'**
-  String get settingsSectionFamily;
-
   /// No description provided for @settingsSectionThisDevice.
   ///
   /// In en, this message translates to:
@@ -8596,18 +8530,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'unknown'**
   String get settingsVersionUnknown;
-
-  /// No description provided for @settingsSectionRituals.
-  ///
-  /// In en, this message translates to:
-  /// **'Rituals'**
-  String get settingsSectionRituals;
-
-  /// No description provided for @settingsSectionOccasions.
-  ///
-  /// In en, this message translates to:
-  /// **'Seasons and occasions'**
-  String get settingsSectionOccasions;
 
   /// No description provided for @settingMemberWuselTitle.
   ///

@@ -893,34 +893,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'That setting cannot be changed for this person or device.';
 
   @override
-  String get householdSettingsTitle => 'Household settings';
-
-  @override
-  String get householdSettingsSubtitle =>
-      'Defaults for tasks, calendar, meals and the kitchen display';
-
-  @override
-  String get settingsSectionHousehold => 'Household and members';
-
-  @override
-  String get settingsSectionTasks => 'Tasks';
-
-  @override
-  String get settingsSectionCalendar => 'Calendar and school';
-
-  @override
-  String get settingsSectionMeals => 'Meals';
-
-  @override
-  String get settingsSectionKitchen => 'Kitchen display';
-
-  @override
-  String get settingsSectionDevice => 'This device';
-
-  @override
-  String get settingsSectionMine => 'My settings';
-
-  @override
   String get settingPickPersonFirst =>
       'Choose who you are first. Your own settings appear here then.';
 
@@ -4355,10 +4327,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shortcutTitle => 'Apps and automations';
 
   @override
-  String get shortcutSettingsSubtitle =>
-      'Siri and other automations, each with a key';
-
-  @override
   String get shortcutIntro =>
       'A key lets another app use WuselWall as one person. An automation key, for example for a shortcut with Siri on the iPhone or any other app that can call a web address, reads and adds: it puts things on the shopping list and tells you what is on today, what there is to eat or who has PE tomorrow. It cannot delete or manage anything.';
 
@@ -4827,9 +4795,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get savedMessage => 'Saved.';
 
   @override
-  String get settingsSectionFamily => 'Family';
-
-  @override
   String get settingsSectionThisDevice => 'This device';
 
   @override
@@ -5029,12 +4994,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsVersionUnknown => 'unknown';
-
-  @override
-  String get settingsSectionRituals => 'Rituals';
-
-  @override
-  String get settingsSectionOccasions => 'Seasons and occasions';
 
   @override
   String get settingMemberWuselTitle => 'Wusel';
