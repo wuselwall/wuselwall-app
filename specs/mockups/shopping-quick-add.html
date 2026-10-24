@@ -747,21 +747,28 @@ function matches() {
 const $ = id => document.getElementById(id);
 const results = $("results");
 
+// Search text, new catalogue names and notes can contain HTML metacharacters.
+// Escape for both text and double-quoted attributes before building markup.
+const escapeHtml = text => text.replace(/&/g, "&amp;")
+  .replace(/</g, "&lt;").replace(/>/g, "&gt;")
+  .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+
 function tile(item) {
   const on = list().get(item.name);
-  return `<button class="tile ${on ? "on" : ""}" data-add="${item.name}"
+  const name = escapeHtml(item.name);
+  return `<button class="tile ${on ? "on" : ""}" data-add="${name}"
       title="Antippen = auf die Liste · lange drücken = mit Zusatz">
     ${on ? `<span class="badge">${on.q > 1 ? on.q + " ×" : "✓"}</span>
-            <span class="minus" data-remove="${item.name}" role="button" aria-label="weniger">−</span>` : ""}
+            <span class="minus" data-remove="${name}" role="button" aria-label="weniger">−</span>` : ""}
     <span class="em">${item.em}</span>
-    <span class="nm">${item.name}</span>
+    <span class="nm">${name}</span>
     ${on && on.note ? `<span class="note-flag">Zusatz</span>` : ""}
   </button>`;
 }
 
 function section(label, items, hint) {
   if (!items.length) return "";
-  return `<div class="sec-label">${label}${hint ? `<span class="hintlet">${hint}</span>` : ""}</div>
+  return `<div class="sec-label">${escapeHtml(label)}${hint ? `<span class="hintlet">${escapeHtml(hint)}</span>` : ""}</div>
     <div class="grid">${items.map(tile).join("")}</div>`;
 }
 
@@ -796,7 +803,7 @@ function render() {
       html += `<div class="sec-label">Nicht dabei?</div><div class="grid">
         <button class="tile new" data-new="1" style="grid-column: span 2">
           <span class="em">＋</span>
-          <span class="nm">„${query}" neu anlegen</span>
+          <span class="nm">„${escapeHtml(query)}" neu anlegen</span>
           <span class="unit">landet im Katalog</span>
         </button></div>`;
     }
@@ -834,11 +841,11 @@ function renderList() {
       const who = PEOPLE[e.by] || PEOPLE[ME];
       html += `<div class="li ${e.pending ? "pending" : ""}">
         <span class="em">${e.item.em}</span>
-        <span>${e.item.name}${e.note ? ` <span class="note">${e.note}</span>` : ""}</span>
+        <span>${escapeHtml(e.item.name)}${e.note ? ` <span class="note">${escapeHtml(e.note)}</span>` : ""}</span>
         ${e.q > 1 ? `<span class="q">${e.q} ×</span>` : ""}
         ${e.pending ? `<span class="wait">wartet</span>` : ""}
         <span class="by" style="--c:${who.c}" title="von ${who.name}"></span>
-        <button class="rm" data-drop="${e.item.name}" aria-label="entfernen">✕</button>
+        <button class="rm" data-drop="${escapeHtml(e.item.name)}" aria-label="entfernen">✕</button>
       </div>`;
     });
   });

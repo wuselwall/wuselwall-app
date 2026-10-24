@@ -162,8 +162,12 @@ Deno.test("every line ends with CRLF and none exceeds 75 octets", () => {
   for (const line of out.split("\r\n")) {
     assert(enc.encode(line).length <= 75, `line too long: ${line}`);
   }
-  // Folding loses nothing: the unfolded SUMMARY is the full title.
-  assert(unfolded(out).includes(`SUMMARY:${title.replace(/,/g, "\\,")}`));
+  // An independent parser must recover the full title after unfolding and unescaping.
+  const root = new ICAL.Component(ICAL.parse(out));
+  assertEquals(
+    root.getFirstSubcomponent("vevent").getFirstPropertyValue("summary"),
+    title,
+  );
 });
 
 Deno.test("foldLine never splits a multi-byte character", () => {
