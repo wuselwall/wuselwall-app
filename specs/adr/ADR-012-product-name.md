@@ -47,7 +47,7 @@ is the kitchen display that shows the household's busy week at a glance.
   an icon, a splash screen or the web title.
 
 The source files are in [specs/brand/](../brand/): `wuselwall-mark[-dark].svg`,
-`wuselwall-icon[-dark].svg`, the Android adaptive layers, and `wuselchen[-dark].svg`.
+`wuselwall-icon[-dark].svg`, the Android adaptive layers, and `wusel[-dark].svg` (`wuselchen[-dark].svg` until 2026-10-24).
 `npm run brand` (`scripts/brand-assets.js`) regenerates them and the PNGs in
 `app/assets/icon/`. `dart run flutter_launcher_icons` in `app/` then rebuilds the iOS,
 Android and web icons.

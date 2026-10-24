@@ -6,6 +6,7 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/motion.dart';
 import 'package:wuselwall/features/board/ui/board_grid.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
@@ -235,7 +236,7 @@ class _Counter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final still = MediaQuery.disableAnimationsOf(context);
+    final still = !motionAllowed(context);
     return AnimatedSwitcher(
       duration: still ? Duration.zero : Tokens.motionStandard,
       switchInCurve: Curves.easeOutCubic,
@@ -263,7 +264,7 @@ class _TaskCard extends StatelessWidget {
     final ww = context.ww;
     final scheme = Theme.of(context).colorScheme;
     final ticked = task.isTicked;
-    final still = MediaQuery.disableAnimationsOf(context);
+    final still = !motionAllowed(context);
     final caption = task.awaitsApproval
         ? l10n.tasksWaitingApproval
         : (ticked ? l10n.tasksDone : null);

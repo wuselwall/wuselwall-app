@@ -294,3 +294,113 @@ abstract final class PaperTints {
     PaperTint('stone', Color(0xFFE8E4DC), Color(0xFF2C2A26)),
   ];
 }
+
+/// The six parts of the app a person moves between, plus settings. Each has a pale
+/// band (specs/26 "Module bands"): modules are paper like subjects, so any hue is
+/// allowed, and the member inks stay the loudest colour on screen.
+enum AppModule { today, calendar, schedule, tasks, meals, shopping, settings }
+
+/// One module's band. Night has none: the night theme stays as specs/17 has it.
+@immutable
+class ModuleBand {
+  const ModuleBand(this.module, this.light, this.dark);
+
+  final AppModule module;
+  final Color light;
+  final Color dark;
+
+  Color of(Shade shade) => switch (shade) {
+    Shade.light => light,
+    Shade.dark => dark,
+    Shade.night => Palette.night.surface,
+  };
+}
+
+abstract final class ModuleBands {
+  /// Text on a band is `ink` or `ink2`, never `ink3`: that fails AA on most of them.
+  /// Every member ink reaches 4.5:1 on every band, so a member chip may sit on one.
+  static const bands = <ModuleBand>[
+    ModuleBand(AppModule.today, Color(0xFFFFF0C2), Color(0xFF3A3216)), // sonne
+    ModuleBand(
+      AppModule.calendar,
+      Color(0xFFDCEBFF),
+      Color(0xFF1B2B40),
+    ), // himmel
+    ModuleBand(
+      AppModule.schedule,
+      Color(0xFFEEE8FF),
+      Color(0xFF2A2342),
+    ), // flieder
+    ModuleBand(
+      AppModule.tasks,
+      Color(0xFFFFE1D6),
+      Color(0xFF3D2420),
+    ), // koralle
+    ModuleBand(
+      AppModule.meals,
+      Color(0xFFFFE5C7),
+      Color(0xFF3B2A18),
+    ), // aprikose
+    ModuleBand(
+      AppModule.shopping,
+      Color(0xFFD5F2E6),
+      Color(0xFF173429),
+    ), // minze
+    ModuleBand(
+      AppModule.settings,
+      Color(0xFFECE8E0),
+      Color(0xFF26282B),
+    ), // stein
+  ];
+
+  static ModuleBand of(AppModule module) =>
+      bands.firstWhere((b) => b.module == module);
+}
+
+/// Colours for illustration only (specs/26 "Decoration"): blobs, confetti, the
+/// look-back's cards and the kid register's offset shadows. They carry no meaning.
+/// Text on them is `ink` in light and the dark ground in dark; at night they fade
+/// into the surface.
+enum Decor {
+  sun(Color(0xFFFFC94D), Color(0xFFC9A23E)),
+  sky(Color(0xFF8EC5FF), Color(0xFF6E9BCB)),
+  coral(Color(0xFFFF9F85), Color(0xFFCC8370)),
+  apricot(Color(0xFFFFB570), Color(0xFFB7834F)),
+  mint(Color(0xFF7FD8B5), Color(0xFF4E9A7E)),
+  lilac(Color(0xFFB9A3FF), Color(0xFF9585D4));
+
+  const Decor(this.light, this.dark);
+
+  final Color light;
+  final Color dark;
+
+  Color of(Shade shade) => switch (shade) {
+    Shade.light => light,
+    Shade.dark => dark,
+    Shade.night => Palette.night.line,
+  };
+
+  /// Text on this decoration.
+  static Color onDecor(Shade shade) => switch (shade) {
+    Shade.light => Palette.light.ink,
+    Shade.dark => Palette.dark.bg,
+    Shade.night => Palette.night.ink,
+  };
+}
+
+/// The wall's sky through the day (specs/26 "Day phases"), top to bottom. Text over a
+/// sky is `ink` or `ink2` of light; member inks never sit on it.
+enum SkyPhase {
+  morning(Color(0xFFFFD9B8), Color(0xFFFFF3E4), Color(0xFFFFC94D)),
+  day(Color(0xFFCFE6FF), Color(0xFFF2F8FF), Color(0xFFFFE27A)),
+  evening(Color(0xFFFFC9A8), Color(0xFFEBD9F2), Color(0xFFFF9F85)),
+  night(Color(0xFF0B0A09), Color(0xFF1A1630), Color(0xFFCDB994));
+
+  const SkyPhase(this.top, this.bottom, this.orb);
+
+  final Color top;
+  final Color bottom;
+
+  /// The sun, or at night the moon.
+  final Color orb;
+}

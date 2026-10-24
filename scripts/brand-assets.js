@@ -1,4 +1,4 @@
-// Writes specs/brand/*.svg and app/assets/icon/*.png from the Wuselpunkte and Wuselchen
+// Writes specs/brand/*.svg and app/assets/icon/*.png from the Wuselpunkte and Wusel
 // symbols in specs/mockups/logo.html (ADR-012). Usage: node scripts/brand-assets.js, then
 // `dart run flutter_launcher_icons` in app/.
 const fs = require('fs');
@@ -31,8 +31,8 @@ const punkte = (c) => `
     <circle cx="92" cy="12" r="3.2" fill="${c.m4}" opacity=".55"/>
     <circle cx="96" cy="4.5" r="2" fill="${c.m4}" opacity=".35"/>`;
 
-// Wuselchen: the mascot. Four tufts in the family colours, a "w" for a mouth.
-const wuselchen = (c) => `
+// Wusel: the mascot (specs/25; called Wuselchen until 2026-10-24). Four tufts in the family colours, a "w" for a mouth.
+const wusel = (c) => `
     <g fill="none" stroke-linecap="round" stroke-width="6.5">
       <path d="M37 32 Q31 22 33 13" stroke="${c.m1}"/>
       <path d="M46 28 Q44 18 47 9" stroke="${c.m2}"/>
@@ -64,8 +64,8 @@ const files = {
   // mark inside the 66 % safe zone, so they carry no padding of their own.
   'wuselwall-adaptive-foreground.svg': svg('WuselWall', punkte(paper), 1024),
   'wuselwall-monochrome.svg': svg('WuselWall', punkte(mono), 1024),
-  'wuselchen.svg': svg('Wuselchen', wuselchen(paper)),
-  'wuselchen-dark.svg': svg('Wuselchen', wuselchen(dark)),
+  'wusel.svg': svg('Wusel', wusel(paper)),
+  'wusel-dark.svg': svg('Wusel', wusel(dark)),
 };
 for (const [name, text] of Object.entries(files)) fs.writeFileSync(path.join(brand, name), text);
 

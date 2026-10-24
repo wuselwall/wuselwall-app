@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/motion.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
@@ -40,7 +41,7 @@ class _BoardNextUpState extends ConsumerState<BoardNextUp>
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Reduced motion: the dot stays solid and nothing animates.
-    if (MediaQuery.disableAnimationsOf(context)) {
+    if (!motionAllowed(context)) {
       _pulse
         ..stop()
         ..value = 1;

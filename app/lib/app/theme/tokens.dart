@@ -1,3 +1,5 @@
+import 'package:flutter/physics.dart';
+
 /// Shared design tokens (specs/17-design-system.md). Registers scale these; they do
 /// not redefine them. Colours live in `palette.dart`.
 abstract final class Tokens {
@@ -20,4 +22,11 @@ abstract final class Tokens {
   /// Motion (specs/17): brief, and off when the system asks for reduced motion.
   static const Duration motionStandard = Duration(milliseconds: 150);
   static const Duration motionEmphasised = Duration(milliseconds: 250);
+
+  /// Springs (specs/26 "Motion"): snappy for a press or a tick, bouncy for Wusel's
+  /// jumps and a badge. Both are skipped, landing at once, when motion is not allowed.
+  static final SpringDescription springSnappy =
+      SpringDescription.withDampingRatio(mass: 1, stiffness: 600, ratio: 0.7);
+  static final SpringDescription springBouncy =
+      SpringDescription.withDampingRatio(mass: 1, stiffness: 300, ratio: 0.5);
 }

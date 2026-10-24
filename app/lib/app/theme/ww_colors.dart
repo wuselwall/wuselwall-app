@@ -41,6 +41,13 @@ class WwColors extends ThemeExtension<WwColors> {
 
   Color paper(PaperTint tint) => tint.of(shade);
 
+  /// A module's pale band (specs/26): headers, the selected navigation item.
+  Color band(AppModule module) => ModuleBands.of(module).of(shade);
+
+  /// An illustration colour (specs/26 "Decoration"), and the text that may sit on it.
+  Color decor(Decor decor) => decor.of(shade);
+  Color get onDecor => Decor.onDecor(shade);
+
   @override
   WwColors copyWith({Shade? shade}) => WwColors(shade: shade ?? this.shade);
 

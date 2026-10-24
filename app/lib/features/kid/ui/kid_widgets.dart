@@ -6,6 +6,7 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/motion.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
@@ -74,8 +75,7 @@ class KidSectionTitle extends StatelessWidget {
 }
 
 /// Reduced motion (specs/17): nothing flies, counts or pulses.
-bool kidReduceMotion(BuildContext context) =>
-    MediaQuery.disableAnimationsOf(context);
+bool kidReduceMotion(BuildContext context) => !motionAllowed(context);
 
 /// The points balance, gold. When it changes it counts to the new value over 600 ms
 /// (`easeOutCubic`) and gives a small coin tick; under reduced motion it jumps.
