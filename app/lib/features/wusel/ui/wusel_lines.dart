@@ -34,6 +34,18 @@ abstract final class WuselLines {
     return variants[i];
   }
 
+  /// A variant chosen by [seed], the same on every rebuild and every device: for a
+  /// line drawn by a stateless screen, such as the wall's (a member and a date).
+  static String stable(
+    AppLocalizations l10n,
+    WuselMoment moment, {
+    required int seed,
+    String name = '',
+  }) {
+    final variants = _variants(l10n, moment, name);
+    return variants[seed.abs() % variants.length];
+  }
+
   @visibleForTesting
   static void reset() => _last.clear();
 

@@ -2,13 +2,19 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wuselwall/app/theme/ui_register.dart';
+import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/confetti.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
+import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/tasks/application/tasks_providers.dart';
 import 'package:wuselwall/features/tasks/data/tasks_repository.dart';
 import 'package:wuselwall/features/tasks/domain/tasks_models.dart';
+import 'package:wuselwall/features/wusel/application/celebration.dart';
+import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
 
 /// Ticks [task] as the acting profile. Without one, nothing is sent: the caller shows
 /// the "who are you?" bar. Adult screens offer "Rückgängig" in the snackbar; the kiosk
@@ -28,6 +34,17 @@ Future<void> tickTask(
     context.showMessage(l10n.actingWho);
     return;
   }
+  // Whether this tick finishes that person's chores for today (specs/26).
+  final whose = task.assignedProfileId ?? actor;
+  final last = (container.read(tasksTodayProvider).value ?? const [])
+      .where(
+        (t) =>
+            (t.assignedProfileId ?? actor) == whose &&
+            t.id != task.id &&
+            !t.isTicked,
+      )
+      .isEmpty;
+  final celebration = container.read(celebrationProvider);
   final result = await container
       .read(tasksRepositoryProvider)
       .complete(actor: actor, instanceId: task.id);
@@ -37,6 +54,22 @@ Future<void> tickTask(
     case Err(:final failure):
       context.showFailure(failure);
     case Ok():
+      // The last chore is a moment on the wall and the kid tablet; on a grown-up's
+      // phone it stays a tick (specs/26 "Celebrations").
+      if (last && container.read(uiRegisterProvider) != UiRegister.adult) {
+        final ww = context.ww;
+        showConfetti(
+          context,
+          colors: [
+            for (final c in container.read(wuselTuftsProvider))
+              ww.member(c).ink,
+            ww.points,
+          ],
+        );
+        unawaited(celebration.cue(Cue.fertig));
+      } else {
+        unawaited(celebration.cue(Cue.tick));
+      }
       if (!offerUndo) return;
       final messenger = ScaffoldMessenger.of(context);
       messenger

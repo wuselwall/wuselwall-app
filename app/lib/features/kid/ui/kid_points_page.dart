@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
@@ -8,6 +10,7 @@ import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/emoji_picture.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
+import 'package:wuselwall/core/wusel/wusel.dart';
 import 'package:wuselwall/features/kid/application/kid_logic.dart';
 import 'package:wuselwall/features/kid/application/kid_providers.dart';
 import 'package:wuselwall/features/kid/data/kid_badges_repository.dart';
@@ -16,6 +19,9 @@ import 'package:wuselwall/features/tasks/application/tasks_providers.dart';
 import 'package:wuselwall/features/tasks/data/tasks_repository.dart';
 import 'package:wuselwall/features/tasks/domain/tasks_models.dart';
 import 'package:wuselwall/features/tasks/ui/task_widgets.dart';
+import 'package:wuselwall/features/wusel/application/celebration.dart';
+import 'package:wuselwall/features/wusel/ui/family_wusel.dart';
+import 'package:wuselwall/features/wusel/ui/wusel_lines.dart';
 
 /// "Punkte": the acting child's balance, the reward shop, badges and streaks. Only this
 /// child's numbers are read here; no other balance, streak or ranking appears.
@@ -30,6 +36,11 @@ class KidPointsPage extends ConsumerStatefulWidget {
 
 class _KidPointsPageState extends ConsumerState<KidPointsPage> {
   final _asking = <String>{};
+
+  /// What Wusel says after a reward was asked for or redeemed on this visit, and a
+  /// counter so it is proud again for the next one (specs/25 `proud`).
+  String? _proudLine;
+  int _proudMoment = 0;
 
   Future<void> _ask(Reward reward) async {
     final l10n = context.l10n;
@@ -48,6 +59,13 @@ class _KidPointsPageState extends ConsumerState<KidPointsPage> {
               ? l10n.kidRequestSent
               : l10n.kidRedeemed,
         );
+        setState(() {
+          _proudMoment++;
+          _proudLine = value == RedemptionStatus.requested
+              ? WuselLines.pick(l10n, WuselMoment.rewardSent)
+              : l10n.kidRedeemed;
+        });
+        unawaited(container.read(celebrationProvider).cue(Cue.badge));
       case Err(:final failure):
         context.showFailure(failure);
     }
@@ -76,6 +94,17 @@ class _KidPointsPageState extends ConsumerState<KidPointsPage> {
       padding: const EdgeInsets.all(Tokens.space4),
       children: [
         _BalanceCard(balance: balance),
+        if (_proudLine case final line?)
+          Padding(
+            padding: const EdgeInsets.only(top: Tokens.space3),
+            child: WuselSays(
+              line: line,
+              pose: WuselPose.proud,
+              size: 96,
+              moment: _proudMoment,
+              tappable: true,
+            ),
+          ),
         KidSectionTitle(l10n.kidRewardsTitle),
         AsyncValueView<List<Reward>>(
           value: rewards,

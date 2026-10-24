@@ -2,14 +2,17 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wuselwall/app/theme/night.dart';
 import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/confetti.dart';
 import 'package:wuselwall/core/ui/emoji_picture.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
+import 'package:wuselwall/core/wusel/wusel.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
@@ -26,6 +29,10 @@ import 'package:wuselwall/features/tasks/application/tasks_providers.dart';
 import 'package:wuselwall/features/tasks/data/tasks_repository.dart';
 import 'package:wuselwall/features/tasks/domain/tasks_models.dart';
 import 'package:wuselwall/features/tasks/ui/task_widgets.dart';
+import 'package:wuselwall/features/wusel/application/celebration.dart';
+import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
+import 'package:wuselwall/features/wusel/ui/family_wusel.dart';
+import 'package:wuselwall/features/wusel/ui/wusel_lines.dart';
 
 /// "Mein Tag": the acting child's day. Chores as big cards that tick with a coin flying
 /// to the balance; then today's lessons, tonight's meal and today's appointments.
@@ -58,46 +65,12 @@ class _KidTodayPageState extends ConsumerState<KidTodayPage> {
         Tokens.space8,
       ),
       children: [
-        Container(
-          padding: const EdgeInsets.all(Tokens.space4),
-          decoration: BoxDecoration(
-            color: colors.tint,
-            borderRadius: BorderRadius.circular(18),
-          ),
-          child: Row(
-            children: [
-              ExcludeSemantics(
-                // The initial is decoration: the greeting already names the child.
-                child: Container(
-                  width: 56,
-                  height: 56,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: colors.ink,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Text(
-                    member.initial,
-                    style: TextStyle(
-                      fontFamily: Tokens.fontUi,
-                      fontSize: 26,
-                      fontWeight: FontWeight.w800,
-                      color: colors.onInk,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: Tokens.space3),
-              Expanded(
-                child: Text(
-                  l10n.kidGreeting(member.displayName),
-                  style: Theme.of(context).textTheme.headlineSmall
-                      ?.copyWith(fontWeight: FontWeight.w800),
-                ),
-              ),
-              KidBalancePill(key: _balanceKey, balance: points),
-            ],
-          ),
+        _KidGreeting(
+          member: member,
+          tint: colors.tint,
+          ink: colors.ink,
+          onInk: colors.onInk,
+          balance: KidBalancePill(key: _balanceKey, balance: points),
         ),
         KidSectionTitle(l10n.kidTasksTitle),
         _TasksSection(actor: member.id, balanceKey: _balanceKey),
@@ -128,6 +101,13 @@ class _TasksSection extends ConsumerStatefulWidget {
 class _TasksSectionState extends ConsumerState<_TasksSection> {
   /// Ticked by the child but not yet confirmed by the list.
   final _pending = <String>{};
+
+  /// Wusel's line for the finished list, picked once per visit so a rebuild does not
+  /// change what it says.
+  String? _allDoneLine;
+
+  /// Counts the finished lists of this visit, so Wusel cheers again for each.
+  int _celebrations = 0;
   final _cardKeys = <String, GlobalKey>{};
 
   GlobalKey _keyFor(String id) => _cardKeys.putIfAbsent(id, GlobalKey.new);
@@ -173,6 +153,19 @@ class _TasksSectionState extends ConsumerState<_TasksSection> {
                         const EmojiPicture(emojiParty, size: 32),
                       ],
                     ),
+                    const SizedBox(height: Tokens.space2),
+                    // The last chore of the day: Wusel cheers (specs/25).
+                    WuselSays(
+                      line: _allDoneLine ??= WuselLines.pick(
+                        l10n,
+                        WuselMoment.allDone,
+                      ),
+                      pose: WuselPose.cheer,
+                      size: 112,
+                      moment: _celebrations,
+                      tappable: true,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
                     Text(l10n.kidTasksAllDoneBody),
                   ],
                 ),
@@ -199,6 +192,14 @@ class _TasksSectionState extends ConsumerState<_TasksSection> {
     final messenger = ScaffoldMessenger.of(context);
     final reduce = kidReduceMotion(context);
     final actor = widget.actor;
+    final celebration = container.read(celebrationProvider);
+    // Whether this tick finishes the day's list (specs/26 "Celebrations").
+    final mine = kidMyTasks(
+      container.read(tasksTodayProvider).value ?? const [],
+      actor,
+    );
+    final last = mine.where((t) => !_done(t) && t.id != task.id).isEmpty;
+    unawaited(celebration.cue(Cue.tick));
     setState(() => _pending.add(task.id));
     final result = await container
         .read(tasksRepositoryProvider)
@@ -217,6 +218,23 @@ class _TasksSectionState extends ConsumerState<_TasksSection> {
             to: widget.balanceKey,
             points: value.pointsCredited,
           );
+        }
+        if (last) {
+          setState(() {
+            _celebrations++;
+            _allDoneLine = null;
+          });
+          showConfetti(
+            context,
+            colors: [
+              for (final c in container.read(wuselTuftsProvider))
+                context.ww.member(c).ink,
+              context.ww.points,
+            ],
+          );
+          unawaited(celebration.cue(Cue.fertig));
+        } else if (value.pointsCredited > 0) {
+          unawaited(celebration.cue(Cue.coin));
         }
         messenger
           ..hideCurrentSnackBar()
@@ -539,6 +557,108 @@ class _EventsSection extends ConsumerWidget {
           ],
         );
       },
+    );
+  }
+}
+
+/// The top of "Mein Tag": Wusel waves and greets the child by name, with the points
+/// beside it (specs/25 "Where Wusel appears"). At night Wusel sleeps. Without Wusel
+/// (switched off) it is the child's initial and the plain greeting, as before.
+class _KidGreeting extends ConsumerStatefulWidget {
+  const _KidGreeting({
+    required this.member,
+    required this.tint,
+    required this.ink,
+    required this.onInk,
+    required this.balance,
+  });
+
+  final Member member;
+  final Color tint;
+  final Color ink;
+  final Color onInk;
+  final Widget balance;
+
+  @override
+  ConsumerState<_KidGreeting> createState() => _KidGreetingState();
+}
+
+class _KidGreetingState extends ConsumerState<_KidGreeting> {
+  String? _line;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final member = widget.member;
+    final night = ref.watch(nightProvider);
+    final present = ref.watch(lighterDayProvider).wusel == WuselPresence.lively;
+    final title = Theme.of(context).textTheme.headlineSmall
+        ?.copyWith(fontWeight: FontWeight.w800);
+    final Widget greeting;
+    if (present) {
+      final line = _line ??= night
+          ? l10n.wuselHelloNight(member.displayName)
+          : WuselLines.pick(
+              l10n,
+              WuselLines.helloAt(DateTime.now()),
+              name: member.displayName,
+            );
+      greeting = WuselSays(
+        line: line,
+        pose: night ? WuselPose.sleep : WuselPose.wave,
+        size: 88,
+        tappable: true,
+        style: title,
+      );
+    } else {
+      greeting = Row(
+        children: [
+          ExcludeSemantics(
+            // The initial is decoration: the greeting already names the child.
+            child: Container(
+              width: 56,
+              height: 56,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: widget.ink,
+                shape: BoxShape.circle,
+              ),
+              child: Text(
+                member.initial,
+                style: TextStyle(
+                  fontFamily: Tokens.fontUi,
+                  fontSize: 26,
+                  fontWeight: FontWeight.w800,
+                  color: widget.onInk,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: Tokens.space3),
+          Flexible(
+            child: Text(l10n.kidGreeting(member.displayName), style: title),
+          ),
+        ],
+      );
+    }
+    return Container(
+      padding: const EdgeInsets.all(Tokens.space4),
+      decoration: BoxDecoration(
+        color: widget.tint,
+        borderRadius: BorderRadius.circular(KidCard.radius),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: KeyedSubtree(
+              key: const ValueKey('kid-greeting'),
+              child: greeting,
+            ),
+          ),
+          const SizedBox(width: Tokens.space2),
+          widget.balance,
+        ],
+      ),
     );
   }
 }

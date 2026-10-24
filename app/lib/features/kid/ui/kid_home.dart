@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/router.dart';
+import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
@@ -15,6 +16,7 @@ import 'package:wuselwall/features/kid/ui/kid_picker.dart';
 import 'package:wuselwall/features/kid/ui/kid_points_page.dart';
 import 'package:wuselwall/features/kid/ui/kid_timetable_page.dart';
 import 'package:wuselwall/features/kid/ui/kid_today_page.dart';
+import 'package:wuselwall/features/kid/ui/kid_widgets.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_page.dart';
 
 /// The children's iPad (specs/09 "Screens by register"): five big destinations, icons
@@ -50,6 +52,7 @@ class KidHome extends ConsumerWidget {
       ),
     };
 
+    final band = context.ww.band(_module(tab));
     return Scaffold(
       body: SafeArea(
         bottom: false,
@@ -57,23 +60,30 @@ class KidHome extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Quiet, for the grown-ups: settings, where guardian actions ask for the PIN.
-            // Its own row, so it never sits on top of a page's content.
-            Align(
-              alignment: Alignment.centerRight,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  top: Tokens.space1,
-                  right: Tokens.space1,
-                ),
-                child: IconButton(
-                  tooltip: l10n.settingsTitle,
-                  icon: const Icon(Icons.settings_outlined),
-                  color: context.ww.ink3,
-                  onPressed: () => context.go(Routes.settings),
+            // Its own row, so it never sits on top of a page's content. The row is the
+            // tab's band (specs/26), so each destination has its colour.
+            ColoredBox(
+              color: band,
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    top: Tokens.space1,
+                    right: Tokens.space1,
+                  ),
+                  child: IconButton(
+                    tooltip: l10n.settingsTitle,
+                    icon: const Icon(Icons.settings_outlined),
+                    // ink2: ink3 is not used on a band (specs/26).
+                    color: context.ww.ink2,
+                    onPressed: () => context.go(Routes.settings),
+                  ),
                 ),
               ),
             ),
-            Expanded(child: body),
+            Expanded(
+              child: KidDecorScope(decor: _decor(tab), child: body),
+            ),
           ],
         ),
       ),
@@ -85,6 +95,7 @@ class KidHome extends ConsumerWidget {
             Theme(
               data: Theme.of(context).copyWith(
                 navigationBarTheme: NavigationBarThemeData(
+                  indicatorColor: band,
                   labelTextStyle: WidgetStatePropertyAll(
                     TextStyle(
                       fontFamily: Tokens.fontUi,
@@ -131,6 +142,25 @@ class KidHome extends ConsumerWidget {
       ),
     );
   }
+
+  /// The band of each kid destination: the same colours as the adult modules, so a
+  /// child learns "yellow is my day" once (specs/26).
+  static AppModule _module(KidTab tab) => switch (tab) {
+    KidTab.today => AppModule.today,
+    KidTab.school => AppModule.schedule,
+    KidTab.points => AppModule.tasks,
+    KidTab.shopping => AppModule.shopping,
+    KidTab.family => AppModule.calendar,
+  };
+
+  /// The offset shadows of the tab's cards.
+  static Decor _decor(KidTab tab) => switch (tab) {
+    KidTab.today => Decor.sun,
+    KidTab.school => Decor.lilac,
+    KidTab.points => Decor.coral,
+    KidTab.shopping => Decor.mint,
+    KidTab.family => Decor.sky,
+  };
 
   static IconData _icon(KidTab tab) => switch (tab) {
     KidTab.today => Icons.wb_sunny_rounded,
