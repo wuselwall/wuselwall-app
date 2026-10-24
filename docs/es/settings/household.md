@@ -4,7 +4,7 @@ En **Ajustes → Ajustes del hogar**, adapta WuselWall a tu familia.
 
 <Shot name="settings-household" alt="Los ajustes de tareas, calendario, comidas y pantalla de cocina" />
 
-La vista básica muestra región, comodines, aprobación de recompensas, citas de niños, comida caliente en días escolares y libres, pregunta en la mesa, nuestra semana, comida deseada, horas nocturnas, Wusel, sonido de tareas, resumen matinal y recordatorios. **Avanzados**, arriba o al final, muestra el resto. Los ajustes ocultos siguen activos.
+La vista básica muestra región, comodines, aprobación de recompensas, citas de niños, comida caliente en días escolares y libres, pregunta en la mesa, nuestra semana, comida deseada, Wusel, sonido de tareas, resumen matinal y recordatorios. **Avanzados**, arriba o al final, muestra el resto. Los ajustes ocultos siguen activos.
 
 Cada ajuste tiene un valor predeterminado. Si lo cambias, aparece como personalizado. Puedes restaurar el original cuando quieras.
 
@@ -16,8 +16,8 @@ Cada ajuste tiene un valor predeterminado. Si lo cambias, aparece como personali
 - **Comidas**: comida caliente según días de colegio o libres, ausencia como no comer y cuidado extraescolar para el almuerzo.
 - **Pantalla de cocina**: paso a la semana siguiente y límites entre mañana/tarde/noche.
 - **Rituales** y **Estaciones y celebraciones**: ver [más abajo](#rituals).
-- **Este dispositivo**: horario nocturno, regreso automático desde detalles, y los ajustes de Wusel, los sonidos, el cielo y la protección contra quemaduras (ver [más abajo](#this-device)).
-- **Mis ajustes**: **Wusel** y **La ropa de Wusel**, sonidos, resumen y notificaciones. Solo afectan a la persona elegida arriba (ver [Wusel y los colores](/es/guide/wusel#how-lively)).
+- **Este dispositivo**: los ajustes de Wusel, los sonidos, el cielo y la protección contra quemaduras. El tema nocturno se aplica de 21:00 a 06:00, y un detalle abierto vuelve a la pared al cabo de un minuto (ver [más abajo](#this-device)).
+- **Mis ajustes**: **Wusel** y **La ropa de Wusel**, sonidos, resumen matinal y recordatorios antes de las citas. Solo afectan a la persona elegida arriba (ver [Wusel y los colores](/es/guide/wusel#how-lively)).
 
 La explicación bajo cada ajuste describe su efecto. Prueba los valores iniciales y cambia después lo que no encaje.
 
@@ -28,15 +28,13 @@ Los [rituales](/es/guide/rituals) empiezan todos activados. Cada uno se cambia o
 | Ajuste | Qué hace | Predeterminado |
 |---|---|---|
 | **Pregunta en la mesa** | cuándo aparece una pregunta para conversar: **Comida caliente**, **Comida y cena** o **Desactivado** | Comida caliente |
-| **Pregunta en la comida**, **Pregunta en la cena** | las horas de la pregunta | 11:30–13:30, 17:30–19:30 |
+| **Pregunta en la comida**, **Pregunta en la cena** | las horas de la pregunta | 11:30–13:30, 17:30–19:30; en Francia, cena 19:00–21:00; en España, 13:30–15:30 y 20:00–22:00 |
 | **Preguntas para** | **Todas las edades** o **También niños mayores** (preguntas más profundas a partir de 8) | Todas las edades |
 | **Nuestra semana** | día y hora del repaso de la semana, o desactivado | domingo 16:00 |
 | **Comida deseada** | quién puede pedir una comida cada semana: **Niños**, **Todos** o **Desactivado** | Niños |
 | **Deseos abiertos por persona** | cuántos deseos pueden esperar a la vez (1–3) | 1 |
 | **La cuenta atrás empieza** | cuántos días antes aparece una cuenta atrás (7–60) | 14 días |
 | **Cuenta atrás hasta una vuelta** | «Vuelve en 2 noches» cuando un adulto viaja dos noches o más | activado |
-
-La pregunta en la mesa todavía no aparece en un dispositivo en español (ver [Pregunta en la mesa](/es/guide/rituals#table-question)).
 
 <Shot name="settings-rituals" alt="Ajustes del hogar, vista Avanzados: la sección Rituales con la pregunta en la mesa y sus horas" />
 

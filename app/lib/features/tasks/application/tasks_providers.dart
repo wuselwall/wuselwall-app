@@ -1,7 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show ProviderOrFamily;
 import 'package:wuselwall/core/realtime/household_channel.dart';
+import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
+import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/tasks/data/tasks_repository.dart';
 import 'package:wuselwall/features/tasks/domain/tasks_models.dart';
 
@@ -73,15 +75,32 @@ final streaksProvider = FutureProvider.autoDispose<List<Streak>>((ref) async {
   return (await ref.watch(tasksRepositoryProvider).streaks()).unwrap();
 });
 
-/// Things waiting for a guardian: chores to check and reward requests. Drives the badge
-/// on the Freigaben tab; zero while either list is still loading.
-final approvalCountProvider = Provider.autoDispose<int>((ref) {
-  final checks = ref.watch(pendingVerificationsProvider).value?.length ?? 0;
-  final requests =
-      (ref.watch(redemptionsProvider).value ?? const <RewardRedemption>[])
-          .where((r) => r.status == RedemptionStatus.requested)
-          .length;
-  return checks + requests;
+/// Things waiting for a guardian: chores to check and reward requests; none while
+/// either list is still loading.
+final pendingApprovalsProvider = Provider.autoDispose<PendingApprovals>(
+  (ref) => PendingApprovals.of(
+    checks: ref.watch(pendingVerificationsProvider).value ?? const [],
+    redemptions: ref.watch(redemptionsProvider).value ?? const [],
+  ),
+);
+
+/// Drives the badge on the Freigaben tab.
+final approvalCountProvider = Provider.autoDispose<int>(
+  (ref) => ref.watch(pendingApprovalsProvider).total,
+);
+
+/// [pendingApprovalsProvider] for the acting guardian only (specs/16 step 10.5): the
+/// card on Today and the badge on the Tasks destination. Members, and a device with
+/// nobody at it, get none and fetch nothing. Derived from the lists of the Freigaben
+/// tab, so it clears as soon as a request is decided and needs nothing new from the
+/// server.
+final guardianApprovalsProvider = Provider.autoDispose<PendingApprovals>((ref) {
+  final acting = ref.watch(actingProfileProvider);
+  final members = ref.watch(membersProvider).value ?? const <Member>[];
+  if (!members.any((m) => m.id == acting && m.isGuardian)) {
+    return PendingApprovals.none;
+  }
+  return ref.watch(pendingApprovalsProvider);
 });
 
 /// Drops every tasks provider so the screen refetches after one of its own writes, not

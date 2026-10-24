@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:wuselwall/app/theme/app_theme.dart';
+import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/details/task_board_detail.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
+import 'package:wuselwall/features/tasks/application/task_defaults.dart';
+import 'package:wuselwall/features/tasks/domain/tasks_models.dart';
+import 'package:wuselwall/features/tasks/ui/task_editor.dart';
 import 'package:wuselwall/features/tasks/ui/task_widgets.dart';
+import 'package:wuselwall/l10n/generated/app_localizations.dart';
+import 'package:wuselwall/l10n/generated/app_localizations_de.dart';
 
 import '../support/fake_tasks.dart';
 import '../support/fakes.dart';
@@ -93,6 +100,33 @@ Future<void> tapIn(WidgetTester t, Finder finder) async {
   await t.pumpAndSettle();
 }
 
+/// The chore editor alone, in German, for [members].
+Future<void> _pumpEditor(
+  WidgetTester t,
+  List<Member> members, {
+  TaskDefinition? existing,
+}) async {
+  await t.pumpWidget(
+    ProviderScope(
+      child: MaterialApp(
+        theme: AppTheme.build(UiRegister.adult, Shade.light),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('de'),
+        home: TaskEditorDialog(
+          members: members,
+          defaults: const TaskDefaults.curated(),
+          existing: existing,
+        ),
+      ),
+    ),
+  );
+  await t.pumpAndSettle();
+}
+
+bool _chosen(WidgetTester t, String label) =>
+    t.widget<ChoiceChip>(find.widgetWithText(ChoiceChip, label)).selected;
+
 void main() {
   group('today', () {
     testWidgets('ticking a chore completes it as the acting profile', (
@@ -159,6 +193,63 @@ void main() {
   });
 
   group('chore editor', () {
+    testWidgets('a title alone saves a daily chore that rotates among the '
+        'children', (t) async {
+      final api = FakeTasksApi(tables: {'task_instances': const []});
+      await pumpTasks(t, api);
+
+      await t.tap(find.widgetWithText(Tab, 'Aufgaben'));
+      await t.pumpAndSettle();
+      await t.tap(find.text('Neue Aufgabe'));
+      await t.pumpAndSettle();
+
+      await t.enterText(find.byType(TextField).first, 'Blumen gießen');
+      await tapIn(t, find.widgetWithText(FilledButton, 'Speichern'));
+
+      final def =
+          api.named('task_definition_save').single.params!['p_def']
+              as Map<String, dynamic>;
+      expect(def['title'], 'Blumen gießen');
+      expect(def['rrule'], 'FREQ=DAILY');
+      expect(def['assignment'], 'rotating');
+      expect(def['assignee_profile_ids'], [kidId]);
+    });
+
+    testWidgets('without children a new chore is open for anyone', (t) async {
+      final de = AppLocalizationsDe();
+      await _pumpEditor(t, [testMembers.first]);
+      expect(_chosen(t, de.tasksWhoOpen), isTrue);
+      expect(_chosen(t, de.tasksRepeatDaily), isTrue);
+    });
+
+    testWidgets('an existing one-off chore keeps its repeat and its person', (
+      t,
+    ) async {
+      final de = AppLocalizationsDe();
+      await _pumpEditor(
+        t,
+        testMembers,
+        existing: TaskDefinition(
+          id: 'd-1',
+          title: 'Keller',
+          kind: TaskKind.duty,
+          points: 1,
+          startsOn: DateTime(2026, 10, 14),
+          windowDays: 1,
+          assignment: TaskAssignment.fixed,
+          assigneeIds: const [guardianId],
+          requiresVerification: false,
+          isActive: true,
+        ),
+      );
+      expect(_chosen(t, de.tasksRepeatOnce), isTrue);
+      expect(_chosen(t, de.tasksWhoFixed), isTrue);
+      expect(
+        t.widget<FilterChip>(find.widgetWithText(FilterChip, 'Anna')).selected,
+        isFalse,
+      );
+    });
+
     testWidgets('a weekly Saturday chore is saved and then materialised', (
       t,
     ) async {
@@ -174,7 +265,7 @@ void main() {
       await tapIn(t, find.widgetWithText(ChoiceChip, 'Wöchentlich'));
       // Weekly keeps one weekday: Saturday replaces the default Monday-of-today.
       await tapIn(t, find.widgetWithText(FilterChip, 'Sa'));
-      await tapIn(t, find.widgetWithText(FilterChip, 'Anna'));
+      // Anna, the only child, is in the pool already.
       await tapIn(t, find.widgetWithText(FilledButton, 'Speichern'));
       await t.pumpAndSettle();
 

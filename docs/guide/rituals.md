@@ -65,10 +65,10 @@ Die Frage erscheint während des Essens: oben in der Kopfzeile der Wand, auf **M
 - **Unsere Fragen** (auf der Karte der Tischfrage unter **Heute**): Mit **Frage hinzufügen** schreibt jede Person eigene Fragen dazu. Sie erscheinen mit „Frage von Emma“. Eine eigene Frage entfernt, wer sie geschrieben hat, oder ein Erziehungsberechtigter.
 - Eine mitgelieferte Frage, die nicht zu euch passt, nehmen Erziehungsberechtigte mit **Diese Frage nicht mehr stellen** heraus. Unter **Weggelassene Fragen** holt **Wieder stellen** sie zurück.
 
-Einstellungen: **Tischfrage** gilt für die **Warme Mahlzeit** (Standard), für **Mittag- und Abendessen** oder ist **Aus**. **Tischfrage mittags** (Standard 11:30 bis 13:30) und **Tischfrage abends** (17:30 bis 19:30) legen die Zeiten fest; geplant sein muss dafür kein Essen. **Fragen für**: **Alle Alter** passt schon für Fünfjährige, **Auch ältere Kinder** ergänzt tiefere Fragen ab 8.
+Einstellungen: **Tischfrage** gilt für die **Warme Mahlzeit** (Standard), für **Mittag- und Abendessen** oder ist **Aus**. **Tischfrage mittags** und **Tischfrage abends** legen die Zeiten fest; geplant sein muss dafür kein Essen. Der Standard folgt dem Land eurer Region: 11:30 bis 13:30 und 17:30 bis 19:30, in Frankreich abends 19:00 bis 21:00, in Spanien 13:30 bis 15:30 und 20:00 bis 22:00. **Fragen für**: **Alle Alter** passt schon für Fünfjährige, **Auch ältere Kinder** ergänzt tiefere Fragen ab 8.
 
 ::: info Sprachen
-Die Fragen gibt es bisher auf Deutsch und Englisch. Auf einem Gerät in Französisch oder Spanisch erscheint die Tischfrage noch nicht.
+Jedes Gerät zeigt die Fragen in seiner Sprache: rund 150 auf Deutsch und Englisch, vorerst 50 auf Französisch und Spanisch.
 :::
 
 ## Wochenrückblick {#week-review}

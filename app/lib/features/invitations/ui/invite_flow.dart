@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
+import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/server/server_address.dart';
@@ -33,21 +34,39 @@ class AdultInvite {
 }
 
 /// Invites an adult. With [member] (an adult of the household without an account) the
-/// invitation is for that profile; without it, the dialog creates the person first.
+/// invitation is for that profile; without it, the dialog creates the person first. With
+/// [offerExisting] (the getting-started card's "Partner:in einladen") the adults the family
+/// already has without an account are offered first, so the partner added at the start (H2)
+/// is invited as themselves instead of a second time.
 Future<void> inviteAdultFlow(
   BuildContext context,
   WidgetRef ref, {
   Member? member,
+  bool offerExisting = false,
 }) async {
   if (!await ensureGuardian(context, ref) || !context.mounted) return;
-  final request = member == null
+  var chosen = member;
+  if (chosen == null && offerExisting) {
+    final candidates = await _adultsWithoutAccount(ref);
+    if (!context.mounted) return;
+    if (candidates.isNotEmpty) {
+      final pick = await showDialog<_AdultChoice>(
+        context: context,
+        builder: (_) => _PickAdultDialog(candidates: candidates),
+      );
+      if (pick == null || !context.mounted) return;
+      chosen = pick.member;
+    }
+  }
+  final existing = chosen;
+  final request = existing == null
       ? await showDialog<AdultInvite>(
           context: context,
           builder: (_) => const _AdultInviteDialog(),
         )
       : AdultInvite(
-          name: member.displayName,
-          role: member.isGuardian
+          name: existing.displayName,
+          role: existing.isGuardian
               ? InvitationRole.guardian
               : InvitationRole.member,
         );
@@ -55,13 +74,81 @@ Future<void> inviteAdultFlow(
   final result = await ref
       .read(invitationRepositoryProvider)
       .create(
-        profileId: member?.id,
-        displayName: member == null ? request.name : null,
+        profileId: existing?.id,
+        displayName: existing == null ? request.name : null,
         role: request.role,
         email: request.email,
       );
   if (!context.mounted) return;
   await _showResult(context, ref, result, name: request.name);
+}
+
+/// The household's adults who have not signed in yet: the ones an invitation can be for.
+/// Empty when the members cannot be read; the person is then created as before.
+Future<List<Member>> _adultsWithoutAccount(WidgetRef ref) async {
+  try {
+    final members = await ref.read(membersProvider.future);
+    return [
+      for (final m in members)
+        if (m.active && !m.isChild && !m.hasAccount) m,
+    ];
+  } on Object {
+    return const [];
+  }
+}
+
+/// What the guardian picked: one of the family's adults, or someone new ([member] null).
+class _AdultChoice {
+  const _AdultChoice(this.member);
+  final Member? member;
+}
+
+/// "Wen möchtest du einladen?": an adult the family already has, or someone else.
+class _PickAdultDialog extends StatelessWidget {
+  const _PickAdultDialog({required this.candidates});
+
+  final List<Member> candidates;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return AlertDialog(
+      title: Text(l10n.invitePartnerPickTitle),
+      contentPadding: const EdgeInsets.symmetric(vertical: Tokens.space3),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (final m in candidates)
+              ListTile(
+                key: ValueKey('invite-pick-${m.id}'),
+                leading: CircleAvatar(
+                  backgroundColor: context.ww.member(m.color).ink,
+                  foregroundColor: context.ww.member(m.color).onInk,
+                  child: Text(m.initial),
+                ),
+                title: Text(m.displayName),
+                subtitle: Text(l10n.invitePartnerExisting),
+                onTap: () => Navigator.pop(context, _AdultChoice(m)),
+              ),
+            ListTile(
+              key: const ValueKey('invite-pick-new'),
+              leading: const Icon(Icons.person_add_alt_1),
+              title: Text(l10n.invitePartnerSomeoneElse),
+              subtitle: Text(l10n.invitePartnerSomeoneElseHint),
+              onTap: () => Navigator.pop(context, const _AdultChoice(null)),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(l10n.cancel),
+        ),
+      ],
+    );
+  }
 }
 
 /// "Erneut teilen": the token is shown only once, so a new invitation replaces the open one
@@ -186,6 +273,12 @@ class _InviteResultDialog extends ConsumerWidget {
       ),
       actions: [
         TextButton(
+          key: const ValueKey('invite-done'),
+          onPressed: () => Navigator.pop(context),
+          child: Text(l10n.inviteDone),
+        ),
+        // Sharing is what the guardian came for; "Fertig" only closes.
+        FilledButton.icon(
           key: const ValueKey('invite-share'),
           onPressed: household.hasValue
               ? () => ref.read(inviteSharerProvider)(
@@ -197,11 +290,8 @@ class _InviteResultDialog extends ConsumerWidget {
                   ),
                 )
               : null,
-          child: Text(l10n.inviteShare),
-        ),
-        FilledButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text(l10n.inviteDone),
+          icon: const Icon(Icons.ios_share),
+          label: Text(l10n.inviteShare),
         ),
       ],
     );

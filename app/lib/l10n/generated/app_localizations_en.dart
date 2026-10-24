@@ -1282,6 +1282,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get eventKeyDisplay => 'Show on the kitchen display';
 
   @override
+  String get eventKeyDisplayOn => 'This event shows on the kitchen display.';
+
+  @override
+  String get eventKeyDisplayOff =>
+      'This event won’t show on the kitchen display.';
+
+  @override
+  String get eventKeyDisplayOffWholeFamily =>
+      'Not on the kitchen display: only events for the whole family go there by default.';
+
+  @override
   String get eventRepeat => 'Repeat';
 
   @override
@@ -2893,6 +2904,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get todayNoticeDevices => 'Devices';
 
   @override
+  String get todayApprovalsTitle => 'Waiting for your approval';
+
+  @override
+  String todayApprovalsChecks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count chores to check',
+      one: '1 chore to check',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String todayApprovalsRequests(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count reward requests',
+      one: '1 reward request',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get todayStartTitle => 'Getting started';
 
   @override
@@ -3364,6 +3400,17 @@ class AppLocalizationsEn extends AppLocalizations {
       one: '1 chore',
     );
     return 'Today: $_temp0';
+  }
+
+  @override
+  String reminderMorningApprovals(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count approvals waiting',
+      one: '1 approval waiting',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -4002,6 +4049,40 @@ class AppLocalizationsEn extends AppLocalizations {
   String inviteAlreadyIn(String household) {
     return 'You are already in $household.';
   }
+
+  @override
+  String inviteAlreadyInTitle(String household) {
+    return 'You\'re already in $household';
+  }
+
+  @override
+  String inviteAlreadyInSame(String household) {
+    return 'This invitation is for $household, and you\'re already in it. There\'s nothing more to do.';
+  }
+
+  @override
+  String get inviteAlreadyInLeaveHint =>
+      'An account belongs to one family only. To join, first leave the family you\'re in now; the invitation then carries on.';
+
+  @override
+  String get inviteAlreadyInLeaveHintUnknown =>
+      'An account belongs to one family only. To join another, first leave the family you\'re in now, then open the invitation again.';
+
+  @override
+  String get inviteAlreadyInDevice =>
+      'This device already belongs to a family. Open the invitation on the invited person\'s own phone.';
+
+  @override
+  String get invitePartnerPickTitle => 'Who would you like to invite?';
+
+  @override
+  String get invitePartnerExisting => 'Already in the family, no account yet';
+
+  @override
+  String get invitePartnerSomeoneElse => 'Someone else';
+
+  @override
+  String get invitePartnerSomeoneElseHint => 'Adds a new adult to the family';
 
   @override
   String get inviteNothingKept => 'There is no invitation to join any more.';

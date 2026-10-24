@@ -72,7 +72,7 @@ The children's view has the tabs **My day**, **Timetable**, **Points**, **Shoppi
 
 ## Connecting
 
-You connect the wall display without typing a code: on the device, tap **Connect a family tablet or wall display**. On your phone choose **Settings → Devices → Connect a device**, pick the kind **Wall display**, scan the QR code and give the device a name. The whole process is shown under [Signing in and connecting](/en/guide/setup#_4-connecting-a-family-tablet-or-wall-display).
+If the app is new on the device, it first asks for the server. You don't have to type the address: scan the QR code your phone shows under **Settings → Advanced → Server**. Then you connect the wall display without typing a code: on the device, tap **Connect a family tablet or wall display**. On your phone choose **Settings → Devices → Connect a device**, pick the kind **Wall display**, scan the QR code and give the device a name. The whole process is shown under [Signing in and connecting](/en/guide/setup#_4-connecting-a-family-tablet-or-wall-display).
 
 The first time, the wall display shows a **checklist** with three steps, which you go through once on the device:
 

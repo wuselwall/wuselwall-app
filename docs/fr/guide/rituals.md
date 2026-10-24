@@ -65,10 +65,10 @@ La question apparaît pendant le repas : en haut de l’en-tête du mur, dans **
 - **Nos questions** (sur la carte de la question dans **Aujourd’hui**) : avec **Ajouter une question**, chacun ajoute les siennes. Elles s’affichent avec « Question de Emma ». Une question ajoutée est supprimée par son auteur ou par un parent.
 - Une question fournie qui ne vous convient pas, un parent l’écarte avec **Ne plus poser cette question**. Dans **Questions écartées**, **Reposer** la fait revenir.
 
-Réglages : **Question à table** s’applique au **Repas chaud** (par défaut), au **Déjeuner et dîner**, ou est **Désactivé**. **Question au déjeuner** (11 h 30 à 13 h 30 par défaut) et **Question au dîner** (17 h 30 à 19 h 30) fixent les horaires ; aucun repas n’a besoin d’être planifié. **Questions pour** : **Tous les âges** convient dès 5 ans, **Aussi les plus grands** ajoute des questions plus profondes dès 8 ans.
+Réglages : **Question à table** s’applique au **Repas chaud** (par défaut), au **Déjeuner et dîner**, ou est **Désactivé**. **Question au déjeuner** et **Question au dîner** fixent les horaires ; aucun repas n’a besoin d’être planifié. Par défaut, ils suivent le pays de votre région : 11 h 30 à 13 h 30 et 17 h 30 à 19 h 30, en France 19 h à 21 h pour le dîner, en Espagne 13 h 30 à 15 h 30 et 20 h à 22 h. **Questions pour** : **Tous les âges** convient dès 5 ans, **Aussi les plus grands** ajoute des questions plus profondes dès 8 ans.
 
-::: warning Pas encore en français
-Les questions existent pour l’instant en allemand et en anglais. Sur un appareil réglé en français, la question à table n’apparaît pas encore.
+::: info Langues
+Chaque appareil affiche les questions dans sa langue : environ 150 en allemand et en anglais, 50 pour l’instant en français et en espagnol.
 :::
 
 ## Notre semaine {#week-review}

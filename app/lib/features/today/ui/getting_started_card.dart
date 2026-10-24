@@ -154,7 +154,7 @@ class _ItemRow extends ConsumerWidget {
 Future<void> _open(BuildContext context, WidgetRef ref, StartItem item) async {
   final container = ProviderScope.containerOf(context);
   if (item == StartItem.invitePartner) {
-    await inviteAdultFlow(context, ref);
+    await inviteAdultFlow(context, ref, offerExisting: true);
     container.invalidate(gettingStartedProvider);
     return;
   }

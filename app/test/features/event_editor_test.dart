@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/ui/ringed_avatar.dart';
+import 'package:wuselwall/features/calendar/application/calendar_providers.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 import 'package:wuselwall/features/calendar/ui/event_edit_args.dart';
 import 'package:wuselwall/features/settings/data/household_settings_repository.dart';
@@ -130,7 +131,101 @@ CalendarEvent _fixture({
   );
 }
 
+/// Today at 09:30, so the calendar's own "today" and the app clock agree.
+DateTime _todayMorning() {
+  final now = DateTime.now();
+  return DateTime(now.year, now.month, now.day, 9, 30);
+}
+
+/// Taps the calendar's "Neuer Termin" button, titles the event and saves it.
+Future<CalendarEvent> _saveFromFab(
+  WidgetTester t,
+  FakeCalendarRepository cal,
+) async {
+  await _tap(
+    t,
+    find.widgetWithText(FloatingActionButton, _de.calendarNewEvent),
+  );
+  await _title(t, 'Elternabend');
+  await _save(t);
+  return cal.saved.single;
+}
+
 void main() {
+  group('new event from the calendar', () {
+    testWidgets('starts on the day in view, at the next full hour', (t) async {
+      final cal = FakeCalendarRepository();
+      final now = _todayMorning();
+      final container = await _app(t, calendar: cal, now: now);
+      container.read(calendarViewProvider.notifier)
+        ..setMode(CalendarMode.day)
+        ..next()
+        ..next();
+      await t.pumpAndSettle();
+
+      final event = await _saveFromFab(t, cal);
+      expect(event.startsAt, DateTime(now.year, now.month, now.day + 2, 10));
+    });
+
+    testWidgets('starts today while today is in view', (t) async {
+      final cal = FakeCalendarRepository();
+      final now = _todayMorning();
+      final container = await _app(t, calendar: cal, now: now);
+      container.read(calendarViewProvider.notifier).setMode(CalendarMode.week);
+      await t.pumpAndSettle();
+
+      final event = await _saveFromFab(t, cal);
+      expect(event.startsAt, DateTime(now.year, now.month, now.day, 10));
+    });
+
+    test('a week in view that is not this one starts on its Monday', () {
+      final view = CalendarView(
+        mode: CalendarMode.week,
+        anchor: DateTime(2026, 10, 21), // a Wednesday
+      );
+      expect(
+        view.newEventDay(DateTime(2026, 10, 14, 9)),
+        DateTime(2026, 10, 19),
+      );
+      expect(
+        view.newEventDay(DateTime(2026, 10, 23, 9)),
+        DateTime(2026, 10, 23),
+      );
+    });
+  });
+
+  group('kitchen display line', () {
+    testWidgets('follows the attendees live and names the reason', (t) async {
+      await _open(t, args: EventEditArgs(date: _day));
+
+      // Only Papa: the whole-family default keeps it off the wall, and says so.
+      expect(find.text(_de.eventKeyDisplayOffWholeFamily), findsOneWidget);
+      expect(find.text(_de.eventKeyDisplayOn), findsNothing);
+
+      await _tap(t, find.widgetWithText(FilterChip, 'Anna'));
+      expect(find.text(_de.eventKeyDisplayOn), findsOneWidget);
+      expect(find.text(_de.eventKeyDisplayOffWholeFamily), findsNothing);
+
+      await _tap(t, find.widgetWithText(FilterChip, 'Anna'));
+      expect(find.text(_de.eventKeyDisplayOffWholeFamily), findsOneWidget);
+
+      // The switch sits right there; switched on by hand, the line follows.
+      await _tap(t, find.widgetWithText(SwitchListTile, _de.eventKeyDisplay));
+      expect(find.text(_de.eventKeyDisplayOn), findsOneWidget);
+      await _tap(t, find.widgetWithText(SwitchListTile, _de.eventKeyDisplay));
+      expect(find.text(_de.eventKeyDisplayOff), findsOneWidget);
+    });
+
+    testWidgets('key_default all says it shows for one person too', (t) async {
+      await _open(
+        t,
+        args: EventEditArgs(date: _day),
+        settings: [_keyDefault('all')],
+      );
+      expect(find.text(_de.eventKeyDisplayOn), findsOneWidget);
+    });
+  });
+
   group('new event', () {
     testWidgets('a timed event saves its start, end, attendee and kind', (
       t,

@@ -9,7 +9,10 @@ void main() {
       final deck = parseDeck(
         File('assets/table_questions/$lang.json').readAsStringSync(),
       );
-      expect(deck.length, greaterThanOrEqualTo(100));
+      expect(deck.length, greaterThanOrEqualTo(50));
+      for (final group in ['family', 'older']) {
+        expect(deck.where((q) => q.deck == group), isNotEmpty, reason: group);
+      }
       expect(deck.map((q) => q.key).toSet().length, deck.length);
       for (final q in deck) {
         expect(q.key, startsWith('$lang:'));
@@ -25,9 +28,8 @@ void main() {
     });
   }
 
-  test('French and Spanish decks come later (Q53)', () {
-    expect(tableQuestionLanguages, isNot(contains('fr')));
-    expect(tableQuestionLanguages, isNot(contains('es')));
+  test('every app language has a deck (Q53)', () {
+    expect(tableQuestionLanguages, {'de', 'en', 'fr', 'es'});
   });
 
   test('a household walks the same shuffle on every device', () {

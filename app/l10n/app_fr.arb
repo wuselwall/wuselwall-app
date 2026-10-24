@@ -696,6 +696,12 @@
   "@eventTentative": {},
   "eventKeyDisplay": "Afficher sur l’écran de la cuisine",
   "@eventKeyDisplay": {},
+  "eventKeyDisplayOn": "Cet événement s’affiche sur l’écran de la cuisine.",
+  "@eventKeyDisplayOn": {},
+  "eventKeyDisplayOff": "Cet événement ne s’affiche pas sur l’écran de la cuisine.",
+  "@eventKeyDisplayOff": {},
+  "eventKeyDisplayOffWholeFamily": "Pas sur l’écran de la cuisine : par défaut, seuls les événements de toute la famille y apparaissent.",
+  "@eventKeyDisplayOffWholeFamily": {},
   "eventRepeat": "Répétition",
   "@eventRepeat": {},
   "eventRepeatNever": "Jamais",
@@ -1584,6 +1590,23 @@
   "todayNoticeDismiss": "Compris",
   "todayNoticeMembers": "Membres",
   "todayNoticeDevices": "Appareils",
+  "todayApprovalsTitle": "En attente de ton approbation",
+  "todayApprovalsChecks": "{count, plural, one{1 tâche à vérifier} other{{count} tâches à vérifier}}",
+  "@todayApprovalsChecks": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "todayApprovalsRequests": "{count, plural, one{1 demande de récompense} other{{count} demandes de récompense}}",
+  "@todayApprovalsRequests": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "todayStartTitle": "Premiers pas",
   "todayStartProgress": "{done} sur {total}",
   "@todayStartProgress": {
@@ -1855,6 +1878,14 @@
   "@reminderMorningTasksOnly": {
     "placeholders": {
       "tasks": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderMorningApprovals": "{count, plural, one{1 approbation en attente} other{{count} approbations en attente}}",
+  "@reminderMorningApprovals": {
+    "placeholders": {
+      "count": {
         "type": "int"
       }
     }
@@ -2193,6 +2224,29 @@
       }
     }
   },
+  "inviteAlreadyInTitle": "Tu fais déjà partie de {household}",
+  "@inviteAlreadyInTitle": {
+    "placeholders": {
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteAlreadyInSame": "Cette invitation concerne {household}, dont tu fais déjà partie. Tu n’as rien d’autre à faire.",
+  "@inviteAlreadyInSame": {
+    "placeholders": {
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteAlreadyInLeaveHint": "Un compte n’appartient qu’à une seule famille. Pour la rejoindre, quitte d’abord ta famille actuelle ; l’invitation se poursuit ensuite.",
+  "inviteAlreadyInLeaveHintUnknown": "Un compte n’appartient qu’à une seule famille. Pour en rejoindre une autre, quitte d’abord ta famille actuelle, puis ouvre de nouveau l’invitation.",
+  "inviteAlreadyInDevice": "Cet appareil appartient déjà à une famille. Ouvre l’invitation sur le téléphone de la personne invitée.",
+  "invitePartnerPickTitle": "Qui veux-tu inviter ?",
+  "invitePartnerExisting": "Déjà dans la famille, sans compte pour l’instant",
+  "invitePartnerSomeoneElse": "Quelqu’un d’autre",
+  "invitePartnerSomeoneElseHint": "Ajoute un nouvel adulte à la famille",
   "inviteNothingKept": "Il n’y a plus d’invitation à accepter.",
   "inviteResultTitle": "Invitation pour {name}",
   "@inviteResultTitle": {

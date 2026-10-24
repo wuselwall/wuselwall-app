@@ -148,10 +148,9 @@ class _EventEditorFormState extends ConsumerState<_EventEditorForm> {
     return [...ordered, ...chosen.where((id) => !ordered.contains(id))];
   }
 
-  /// What `calendar.key_default` says about the current attendees.
-  bool _defaultKey({
+  /// The household's `calendar.key_default` (`whole_family`, `all` or `none`).
+  String? _keySetting({
     required List<SettingEntry> settings,
-    required List<Member> members,
     required String? actor,
     required String? deviceId,
   }) {
@@ -161,8 +160,22 @@ class _EventEditorFormState extends ConsumerState<_EventEditorForm> {
       profileId: actor,
       deviceId: deviceId,
     );
+    return (entry?.value ?? entry?.defaultValue) as String?;
+  }
+
+  /// What `calendar.key_default` says about the current attendees.
+  bool _defaultKey({
+    required List<SettingEntry> settings,
+    required List<Member> members,
+    required String? actor,
+    required String? deviceId,
+  }) {
     return defaultKeyFor(
-      setting: (entry?.value ?? entry?.defaultValue) as String?,
+      setting: _keySetting(
+        settings: settings,
+        actor: actor,
+        deviceId: deviceId,
+      ),
       attendees: _draft.attendeeIds,
       activeMembers: members.where((m) => m.active).map((m) => m.id),
     );
@@ -341,6 +354,18 @@ class _EventEditorFormState extends ConsumerState<_EventEditorForm> {
         deviceId: deviceId,
       ),
     );
+    // Says live whether the kitchen display shows this event, and why not when the
+    // household's "whole family" default leaves it off.
+    final keySetting = _keySetting(
+      settings: settings,
+      actor: actor,
+      deviceId: deviceId,
+    );
+    final keyLine = key
+        ? l10n.eventKeyDisplayOn
+        : !_draft.keyTouched && keySetting != 'all' && keySetting != 'none'
+        ? l10n.eventKeyDisplayOffWholeFamily
+        : l10n.eventKeyDisplayOff;
     final error = _submitted ? _draft.validate() : null;
     final firstAttendee = [
       for (final m in members)
@@ -479,7 +504,23 @@ class _EventEditorFormState extends ConsumerState<_EventEditorForm> {
               padding: const EdgeInsets.only(top: 4),
               child: Text(l10n.eventAttendeesWholeFamily),
             ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 8),
+          // Right under the people: who attends decides the default (specs/21).
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(l10n.eventKeyDisplay),
+            subtitle: Text(keyLine),
+            value: key,
+            // A tradition is always on the wall (specs/27).
+            onChanged: _draft.tradition
+                ? null
+                : (value) => setState(() {
+                    _draft
+                      ..keyTouched = true
+                      ..key = value;
+                  }),
+          ),
+          const SizedBox(height: 8),
           TextField(
             controller: _locationText,
             decoration: InputDecoration(labelText: l10n.eventLocation),
@@ -496,19 +537,6 @@ class _EventEditorFormState extends ConsumerState<_EventEditorForm> {
             title: Text(l10n.eventTentative),
             value: _draft.tentative,
             onChanged: (value) => setState(() => _draft.tentative = value),
-          ),
-          SwitchListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Text(l10n.eventKeyDisplay),
-            value: key,
-            // A tradition is always on the wall (specs/27).
-            onChanged: _draft.tradition
-                ? null
-                : (value) => setState(() {
-                    _draft
-                      ..keyTouched = true
-                      ..key = value;
-                  }),
           ),
           const SizedBox(height: 16),
           RepeatSection(

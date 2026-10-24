@@ -696,6 +696,12 @@
   "@eventTentative": {},
   "eventKeyDisplay": "Show on the kitchen display",
   "@eventKeyDisplay": {},
+  "eventKeyDisplayOn": "This event shows on the kitchen display.",
+  "@eventKeyDisplayOn": {},
+  "eventKeyDisplayOff": "This event won’t show on the kitchen display.",
+  "@eventKeyDisplayOff": {},
+  "eventKeyDisplayOffWholeFamily": "Not on the kitchen display: only events for the whole family go there by default.",
+  "@eventKeyDisplayOffWholeFamily": {},
   "eventRepeat": "Repeat",
   "@eventRepeat": {},
   "eventRepeatNever": "Never",
@@ -1598,6 +1604,23 @@
   "todayNoticeDismiss": "Got it",
   "todayNoticeMembers": "Members",
   "todayNoticeDevices": "Devices",
+  "todayApprovalsTitle": "Waiting for your approval",
+  "todayApprovalsChecks": "{count, plural, one{1 chore to check} other{{count} chores to check}}",
+  "@todayApprovalsChecks": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "todayApprovalsRequests": "{count, plural, one{1 reward request} other{{count} reward requests}}",
+  "@todayApprovalsRequests": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "todayStartTitle": "Getting started",
   "todayStartProgress": "{done} of {total}",
   "@todayStartProgress": {
@@ -1869,6 +1892,14 @@
   "@reminderMorningTasksOnly": {
     "placeholders": {
       "tasks": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderMorningApprovals": "{count, plural, one{1 approval waiting} other{{count} approvals waiting}}",
+  "@reminderMorningApprovals": {
+    "placeholders": {
+      "count": {
         "type": "int"
       }
     }
@@ -2222,6 +2253,29 @@
       }
     }
   },
+  "inviteAlreadyInTitle": "You're already in {household}",
+  "@inviteAlreadyInTitle": {
+    "placeholders": {
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteAlreadyInSame": "This invitation is for {household}, and you're already in it. There's nothing more to do.",
+  "@inviteAlreadyInSame": {
+    "placeholders": {
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteAlreadyInLeaveHint": "An account belongs to one family only. To join, first leave the family you're in now; the invitation then carries on.",
+  "inviteAlreadyInLeaveHintUnknown": "An account belongs to one family only. To join another, first leave the family you're in now, then open the invitation again.",
+  "inviteAlreadyInDevice": "This device already belongs to a family. Open the invitation on the invited person's own phone.",
+  "invitePartnerPickTitle": "Who would you like to invite?",
+  "invitePartnerExisting": "Already in the family, no account yet",
+  "invitePartnerSomeoneElse": "Someone else",
+  "invitePartnerSomeoneElseHint": "Adds a new adult to the family",
   "inviteNothingKept": "There is no invitation to join any more.",
   "inviteResultTitle": "Invitation for {name}",
   "@inviteResultTitle": {

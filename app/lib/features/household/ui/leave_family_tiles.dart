@@ -24,50 +24,20 @@ class LeaveFamilyTile extends ConsumerStatefulWidget {
 class _LeaveFamilyTileState extends ConsumerState<LeaveFamilyTile> {
   var _busy = false;
 
-  Future<void> _leave(String profileId) async {
-    final l10n = context.l10n;
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.leaveLeaveDialogTitle),
-        content: Text(l10n.leaveLeaveDialogBody),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text(l10n.leaveCancel),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: Text(l10n.leaveLeaveConfirm),
-          ),
-        ],
-      ),
-    );
-    if (confirmed != true || !mounted) return;
-
-    setState(() => _busy = true);
-    final result = await ref
-        .read(householdLeaveRepositoryProvider)
-        .leaveFamily(profileId: profileId);
-    if (!mounted) return;
-    setState(() => _busy = false);
-    switch (result) {
-      case Err(:final failure):
-        context.showFailure(failure);
-      case Ok():
-        // The session is refreshed; the router takes the account to the new-family page.
-        ref.invalidate(myAccountProvider);
-    }
-  }
+  Future<void> _leave(String profileId) => confirmAndLeaveFamily(
+    context,
+    ref,
+    profileId: profileId,
+    onBusy: (busy) {
+      if (mounted) setState(() => _busy = busy);
+    },
+  );
 
   @override
   Widget build(BuildContext context) {
     final device = ref.watch(deviceProvider).value;
     final profileId = device?.profileId;
-    if (device == null ||
-        device.deviceClass != DeviceClass.personal ||
-        device.register != UiRegister.adult ||
-        profileId == null) {
+    if (!canLeaveFamilyHere(device) || profileId == null) {
       return const SizedBox.shrink();
     }
     final account = ref.watch(myAccountProvider).value;
@@ -83,6 +53,62 @@ class _LeaveFamilyTileState extends ConsumerState<LeaveFamilyTile> {
       enabled: !blocked && !_busy,
       onTap: _busy ? null : () => _leave(profileId),
     );
+  }
+}
+
+/// Whether this device may leave its family here: an adult's own phone (specs/20 J6).
+bool canLeaveFamilyHere(DeviceInfo? device) =>
+    device != null &&
+    device.deviceClass == DeviceClass.personal &&
+    device.register == UiRegister.adult &&
+    device.profileId != null;
+
+/// "Familie verlassen?" and, once confirmed, the leave (specs/20 J6). Shared by the tile in
+/// Einstellungen → Konto and the notice for an invitation opened while already in a family.
+/// [beforeLeave] runs once confirmed, just before the server is asked; [onBusy] brackets the
+/// call. Returns whether the account left; the session is refreshed and the router takes the
+/// account on (to the join confirmation of a kept invitation, otherwise the new-family page).
+Future<bool> confirmAndLeaveFamily(
+  BuildContext context,
+  WidgetRef ref, {
+  required String profileId,
+  Future<void> Function()? beforeLeave,
+  void Function(bool busy)? onBusy,
+}) async {
+  final l10n = context.l10n;
+  final confirmed = await showDialog<bool>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text(l10n.leaveLeaveDialogTitle),
+      content: Text(l10n.leaveLeaveDialogBody),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(false),
+          child: Text(l10n.leaveCancel),
+        ),
+        FilledButton(
+          key: const ValueKey('leave-family-confirm'),
+          onPressed: () => Navigator.of(context).pop(true),
+          child: Text(l10n.leaveLeaveConfirm),
+        ),
+      ],
+    ),
+  );
+  if (confirmed != true || !context.mounted) return false;
+
+  onBusy?.call(true);
+  await beforeLeave?.call();
+  final result = await ref
+      .read(householdLeaveRepositoryProvider)
+      .leaveFamily(profileId: profileId);
+  onBusy?.call(false);
+  switch (result) {
+    case Err(:final failure):
+      if (context.mounted) context.showFailure(failure);
+      return false;
+    case Ok():
+      ref.invalidate(myAccountProvider);
+      return true;
   }
 }
 

@@ -8,6 +8,9 @@ import 'package:wuselwall/features/settings/application/household_settings_provi
 import 'package:wuselwall/features/settings/application/settings_view.dart';
 import 'package:wuselwall/features/settings/data/household_settings_repository.dart';
 import 'package:wuselwall/features/settings/domain/household_setting.dart';
+import 'package:wuselwall/features/settings/ui/household_settings_page.dart';
+import 'package:wuselwall/features/settings/ui/setting_labels.dart';
+import 'package:wuselwall/l10n/generated/app_localizations.dart';
 
 import '../support/fakes.dart';
 
@@ -340,6 +343,23 @@ void main() {
           scrollable: scrollable,
         );
         expect(find.text(title), findsOneWidget);
+      }
+    });
+
+    testWidgets('settings nothing reads yet are not offered', (tester) async {
+      await pumpPage(tester, rows: rowsWithOneCustomised());
+      final scrollable = find.byType(Scrollable).last;
+      await tester.scrollUntilVisible(
+        find.text('My settings'),
+        300,
+        scrollable: scrollable,
+      );
+      for (final key in unusedSettingKeys) {
+        final title = settingText(
+          lookupAppLocalizations(const Locale('en')),
+          key,
+        ).title;
+        expect(find.text(title), findsNothing, reason: key);
       }
     });
 

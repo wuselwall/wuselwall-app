@@ -1,6 +1,6 @@
 # Calendar
 
-The calendar is the adults' home screen: everyone's appointments and, at a glance, who is where.
+The calendar shows everyone's appointments and, at a glance, who is where. The adults' home screen is **Today**.
 
 <Shot name="calendar-week" alt="Week view of the calendar with presence at the top and appointments below" wide />
 
@@ -19,14 +19,14 @@ Below them, the appointments follow by time.
 
 ## Creating an appointment
 
-Tap **New event**. You can:
+Tap **New event**. It starts on the day the calendar is showing (today, while today is in view), at the next full hour. You can:
 
 - enter a **Title**, a **Location** and **Notes**
 - choose between **Appointment** and **Presence**. Presence has six states: At work, Home office, Travelling, Away, Off and Childcare
 - make it **All day**, or set **Starts** and **Ends**
 - pick people under **Who**. If nobody is picked, the event is for the whole family
+- switch **Show on the kitchen display** on or off right below. A line says whether the event will show on the kitchen display and changes as you pick people: on their own, only events for the whole family go there. What new events do by default is set under [Household settings](/en/settings/household)
 - tick **Not sure yet** if it is still unclear whether it happens
-- tick **Show on the kitchen display**. What new events do by default is set under [Household settings](/en/settings/household)
 - choose a **Picture** and mark the event as **We are looking forward to it** or **Family tradition** (see [below](#picture-countdown-tradition))
 
 <Shot name="calendar-editor" alt="Editor for a new event with title, who and repeat" />

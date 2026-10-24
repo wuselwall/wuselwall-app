@@ -17,6 +17,7 @@ import 'package:wuselwall/features/kid/ui/kid_home.dart';
 import 'package:wuselwall/features/meals/ui/meals_section.dart';
 import 'package:wuselwall/features/school/ui/schedule_section.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_section.dart';
+import 'package:wuselwall/features/tasks/application/tasks_providers.dart';
 import 'package:wuselwall/features/tasks/ui/tasks_section.dart';
 import 'package:wuselwall/features/today/ui/today_section.dart';
 import 'package:wuselwall/features/wusel/ui/ambience_sky.dart';
@@ -49,6 +50,8 @@ class RegisterHomePage extends ConsumerWidget {
     final adult = register == UiRegister.adult;
     final tab = adult ? ref.watch(homeTabProvider) : HomeTab.shopping;
     final section = homeSections[tab]!;
+    // What waits for the acting guardian, on the Tasks destination (specs/16 step 10.5).
+    final approvals = adult ? ref.watch(guardianApprovalsProvider).total : 0;
 
     final actions = <Widget>[
       if (kDebugMode)
@@ -110,7 +113,11 @@ class RegisterHomePage extends ConsumerWidget {
                 destinations: [
                   for (final t in HomeTab.values)
                     NavigationDestination(
-                      icon: Icon(homeSections[t]!.icon),
+                      icon: Badge.count(
+                        count: approvals,
+                        isLabelVisible: t == HomeTab.tasks && approvals > 0,
+                        child: Icon(homeSections[t]!.icon),
+                      ),
                       label:
                           (homeSections[t]!.navLabel ?? homeSections[t]!.label)(
                             l10n,

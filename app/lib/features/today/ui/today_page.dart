@@ -14,9 +14,11 @@ import 'package:wuselwall/features/meals/domain/meal_models.dart';
 import 'package:wuselwall/features/rituals/ui/ritual_cards.dart';
 import 'package:wuselwall/features/school/ui/proposal_cards.dart';
 import 'package:wuselwall/features/tasks/application/task_actions.dart';
+import 'package:wuselwall/features/tasks/application/tasks_providers.dart';
 import 'package:wuselwall/features/tasks/domain/tasks_models.dart';
 import 'package:wuselwall/features/tasks/ui/task_widgets.dart';
 import 'package:wuselwall/features/today/application/today_providers.dart';
+import 'package:wuselwall/features/today/ui/approvals_card.dart';
 import 'package:wuselwall/features/today/ui/getting_started_card.dart';
 import 'package:wuselwall/features/today/ui/notice_cards.dart';
 
@@ -37,7 +39,9 @@ class TodayPage extends ConsumerWidget {
         ref
           ..invalidate(todayAgendaProvider)
           ..invalidate(gettingStartedProvider)
-          ..invalidate(noticesProvider);
+          ..invalidate(noticesProvider)
+          ..invalidate(pendingVerificationsProvider)
+          ..invalidate(redemptionsProvider);
       },
       child: CustomScrollView(
         slivers: [
@@ -51,6 +55,7 @@ class TodayPage extends ConsumerWidget {
             sliver: SliverList.list(
               children: [
                 const NoticeCards(),
+                const ApprovalsCard(),
                 const ProposalCards(),
                 const GettingStartedCard(),
                 const RitualCards(),

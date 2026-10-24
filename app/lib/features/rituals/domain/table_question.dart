@@ -35,9 +35,9 @@ class TableQuestion {
   bool get isOwn => category == 'own';
 }
 
-/// The languages with a written deck. French and Spanish come later (Q53): until then
-/// the Tischfrage stays away on a device in those languages.
-const tableQuestionLanguages = {'de', 'en'};
+/// The languages with a written deck (Q53: German and English carry about 150 questions,
+/// French and Spanish 50). On a device in any other language the Tischfrage stays away.
+const tableQuestionLanguages = {'de', 'en', 'fr', 'es'};
 
 /// Reads a bundled deck (`assets/table_questions/<lang>.json`).
 List<TableQuestion> parseDeck(String json) {

@@ -2334,6 +2334,24 @@ abstract class AppLocalizations {
   /// **'Show on the kitchen display'**
   String get eventKeyDisplay;
 
+  /// No description provided for @eventKeyDisplayOn.
+  ///
+  /// In en, this message translates to:
+  /// **'This event shows on the kitchen display.'**
+  String get eventKeyDisplayOn;
+
+  /// No description provided for @eventKeyDisplayOff.
+  ///
+  /// In en, this message translates to:
+  /// **'This event won’t show on the kitchen display.'**
+  String get eventKeyDisplayOff;
+
+  /// No description provided for @eventKeyDisplayOffWholeFamily.
+  ///
+  /// In en, this message translates to:
+  /// **'Not on the kitchen display: only events for the whole family go there by default.'**
+  String get eventKeyDisplayOffWholeFamily;
+
   /// No description provided for @eventRepeat.
   ///
   /// In en, this message translates to:
@@ -5124,6 +5142,24 @@ abstract class AppLocalizations {
   /// **'Devices'**
   String get todayNoticeDevices;
 
+  /// No description provided for @todayApprovalsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for your approval'**
+  String get todayApprovalsTitle;
+
+  /// No description provided for @todayApprovalsChecks.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 chore to check} other{{count} chores to check}}'**
+  String todayApprovalsChecks(int count);
+
+  /// No description provided for @todayApprovalsRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 reward request} other{{count} reward requests}}'**
+  String todayApprovalsRequests(int count);
+
   /// No description provided for @todayStartTitle.
   ///
   /// In en, this message translates to:
@@ -5867,6 +5903,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Today: {tasks, plural, one{1 chore} other{{tasks} chores}}'**
   String reminderMorningTasksOnly(int tasks);
+
+  /// No description provided for @reminderMorningApprovals.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 approval waiting} other{{count} approvals waiting}}'**
+  String reminderMorningApprovals(int count);
 
   /// No description provided for @reminderMorningNoEvents.
   ///
@@ -6977,6 +7019,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You are already in {household}.'**
   String inviteAlreadyIn(String household);
+
+  /// No description provided for @inviteAlreadyInTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re already in {household}'**
+  String inviteAlreadyInTitle(String household);
+
+  /// No description provided for @inviteAlreadyInSame.
+  ///
+  /// In en, this message translates to:
+  /// **'This invitation is for {household}, and you\'re already in it. There\'s nothing more to do.'**
+  String inviteAlreadyInSame(String household);
+
+  /// No description provided for @inviteAlreadyInLeaveHint.
+  ///
+  /// In en, this message translates to:
+  /// **'An account belongs to one family only. To join, first leave the family you\'re in now; the invitation then carries on.'**
+  String get inviteAlreadyInLeaveHint;
+
+  /// No description provided for @inviteAlreadyInLeaveHintUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'An account belongs to one family only. To join another, first leave the family you\'re in now, then open the invitation again.'**
+  String get inviteAlreadyInLeaveHintUnknown;
+
+  /// No description provided for @inviteAlreadyInDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'This device already belongs to a family. Open the invitation on the invited person\'s own phone.'**
+  String get inviteAlreadyInDevice;
+
+  /// No description provided for @invitePartnerPickTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Who would you like to invite?'**
+  String get invitePartnerPickTitle;
+
+  /// No description provided for @invitePartnerExisting.
+  ///
+  /// In en, this message translates to:
+  /// **'Already in the family, no account yet'**
+  String get invitePartnerExisting;
+
+  /// No description provided for @invitePartnerSomeoneElse.
+  ///
+  /// In en, this message translates to:
+  /// **'Someone else'**
+  String get invitePartnerSomeoneElse;
+
+  /// No description provided for @invitePartnerSomeoneElseHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Adds a new adult to the family'**
+  String get invitePartnerSomeoneElseHint;
 
   /// No description provided for @inviteNothingKept.
   ///

@@ -4,7 +4,7 @@ Nicht jede Familie macht es gleich: Wie viele Punkte eine Aufgabe bringt, ob Kin
 
 <Shot name="settings-household" alt="Haushalt einstellen mit den Bereichen Aufgaben, Kalender, Essen und Küchenwand" />
 
-In der Ansicht **Einfach** siehst du nur die wichtigsten: die Region, die Serien-Joker, ob Belohnungen Freigabe brauchen, ob Kinder ihre eigenen Termine ändern, die warme Mahlzeit an Schultagen und freien Tagen, die Tischfrage, den Wochenrückblick, das Wunschessen, die Nachtzeit dieses Geräts, Wusel, den Ton beim Abhaken, die Morgenübersicht und die Erinnerung vor Terminen. Alle anderen zeigt **Erweitert** (oben umschalten oder unten **Alle Einstellungen zeigen**). Ausgeblendete Einstellungen gelten trotzdem weiter.
+In der Ansicht **Einfach** siehst du nur die wichtigsten: die Region, die Serien-Joker, ob Belohnungen Freigabe brauchen, ob Kinder ihre eigenen Termine ändern, die warme Mahlzeit an Schultagen und freien Tagen, die Tischfrage, den Wochenrückblick, das Wunschessen, Wusel, den Ton beim Abhaken, die Morgenübersicht und die Erinnerung vor Terminen. Alle anderen zeigt **Erweitert** (oben umschalten oder unten **Alle Einstellungen zeigen**). Ausgeblendete Einstellungen gelten trotzdem weiter.
 
 Jede Einstellung hat einen **Standard**. Den schlägt WuselWall vor, und er passt für die meisten Familien. Weicht euer Wert davon ab, steht dort **angepasst**. Mit **Auf Standard zurücksetzen** geht es jederzeit zurück.
 
@@ -18,8 +18,8 @@ In der Ansicht **Erweitert**:
 - **Essen**: ob es an **Schultagen** und an **freien Tagen** (Wochenende, Feiertage, Ferien) eine warme Mahlzeit gibt, dass **abwesend heißt nicht essen** und bis wann Betreuung mittags zählt
 - **Küchenwand**: wann die Wand zur kommenden Woche wechselt und wo Vormittag, Nachmittag und Abend getrennt werden
 - **Rituale** und **Jahreszeiten und Anlässe**: siehe [unten](#rituals)
-- **Dieses Gerät**: wann das Nachtdesign gilt, wann ein geöffnetes Detail zur Wand zurückspringt, und die Einstellungen für Wusel, Töne, Himmel und Einbrennschutz (siehe [unten](#this-device))
-- **Meine Einstellungen**: **Wusel** und **Was Wusel trägt**, der Ton beim Abhaken, die Morgenübersicht, Erinnerungen vor Terminen und Benachrichtigungen, wenn eine Aufgabe bestätigt oder eine Belohnung angefragt wird. Sie gelten nur für die Person, die du oben gewählt hast (siehe [Wusel und Farben](/guide/wusel#how-lively)).
+- **Dieses Gerät**: die Einstellungen für Wusel, Töne, Himmel und Einbrennschutz. Das Nachtdesign gilt von 21 bis 6 Uhr, und ein geöffnetes Detail springt nach einer Minute zur Wand zurück (siehe [unten](#this-device))
+- **Meine Einstellungen**: **Wusel** und **Was Wusel trägt**, der Ton beim Abhaken, die Morgenübersicht und Erinnerungen vor Terminen. Sie gelten nur für die Person, die du oben gewählt hast (siehe [Wusel und Farben](/guide/wusel#how-lively)).
 
 Die Beschreibung jeder Einstellung steht direkt darunter. Sie erklärt, was sich ändert.
 
@@ -30,7 +30,7 @@ Die [Rituale](/guide/rituals) sind am Anfang alle eingeschaltet. Jedes lässt si
 | Einstellung | Was sie tut | Standard |
 |---|---|---|
 | **Tischfrage** | wann eine Gesprächsfrage erscheint: **Warme Mahlzeit**, **Mittag- und Abendessen** oder **Aus** | Warme Mahlzeit |
-| **Tischfrage mittags**, **Tischfrage abends** | die Zeiten, in denen die Frage steht | 11:30–13:30, 17:30–19:30 |
+| **Tischfrage mittags**, **Tischfrage abends** | die Zeiten, in denen die Frage steht | 11:30–13:30, 17:30–19:30; in Frankreich abends 19:00–21:00, in Spanien 13:30–15:30 und 20:00–22:00 |
 | **Fragen für** | **Alle Alter** oder **Auch ältere Kinder** (tiefere Fragen ab 8) | Alle Alter |
 | **Unsere Woche** | Wochentag und Uhrzeit des Wochenrückblicks, oder aus | Sonntag 16:00 |
 | **Wunschessen** | wer sich jede Woche ein Essen wünschen darf: **Kinder**, **Alle** oder **Aus** | Kinder |

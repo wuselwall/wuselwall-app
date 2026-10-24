@@ -72,7 +72,7 @@ Die Ansicht für Kinder hat die Reiter **Mein Tag**, **Stundenplan**, **Punkte**
 
 ## Verbinden
 
-Die Wandanzeige verbindest du ohne Tippen von Code: Auf dem Gerät tippst du auf **Familien-Tablet oder Wanddisplay verbinden**. Auf deinem Handy wählst du unter **Einstellungen → Geräte → Gerät verbinden** die Art **Wanddisplay**, scannst den QR-Code und gibst dem Gerät einen Namen. Den ganzen Ablauf zeigt [Anmelden und verbinden](/guide/setup#_4-familien-tablet-oder-wanddisplay-verbinden).
+Ist die App auf dem Gerät neu, fragt sie zuerst nach dem Server. Tippen musst du die Adresse nicht: Scanne den QR-Code, den dein Handy unter **Einstellungen → Erweitert → Server** zeigt. Danach verbindest du die Wandanzeige ohne Tippen von Code: Auf dem Gerät tippst du auf **Familien-Tablet oder Wanddisplay verbinden**. Auf deinem Handy wählst du unter **Einstellungen → Geräte → Gerät verbinden** die Art **Wanddisplay**, scannst den QR-Code und gibst dem Gerät einen Namen. Den ganzen Ablauf zeigt [Anmelden und verbinden](/guide/setup#_4-familien-tablet-oder-wanddisplay-verbinden).
 
 Beim ersten Start zeigt die Wandanzeige eine **Checkliste** mit drei Schritten, die du einmal auf dem Gerät durchgehst:
 

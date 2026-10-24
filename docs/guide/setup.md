@@ -72,6 +72,8 @@ Hast du nur den Code bekommen, gibst du ihn in der App ein:
 
 Hat die Familie deine E-Mail-Adresse eingetragen, brauchst du gar nichts einzugeben: Nach der Anmeldung zeigt WuselWall die Einladung von selbst. Einladungen gelten **7 Tage** und funktionieren **einmal**; wie man sie verschickt, steht unter [Mitglieder und Geräte](/settings/members-devices#erwachsene-person-einladen).
 
+Ein Konto gehört zu genau **einer** Familie. Öffnest du eine Einladung, während du schon in einer Familie bist, zeigt WuselWall **Du bist schon in ‹Familie›** und, wer dich wohin eingeladen hat. **Familie verlassen** führt dich mit einer Rückfrage durch das Verlassen; danach geht es direkt mit der Einladung weiter. **Abbrechen** lässt alles, wie es ist. Ist die Einladung für die Familie, in der du schon bist, sagt WuselWall nur, dass du schon dabei bist.
+
 ## 4. Familien-Tablet oder Wanddisplay verbinden
 
 So kommen das **Wanddisplay** in der Küche, ein **Kinder-Tablet** oder ein **Tablet für alle** in den Haushalt. Du brauchst dafür keinen Code abzutippen, nur kurz dein Handy. Der QR-Code des neuen Geräts nennt auch den Server; öffnest du ihn mit der Kamera deines Handys, startet WuselWall direkt bei der Bestätigung:

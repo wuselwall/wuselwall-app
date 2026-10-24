@@ -49,6 +49,8 @@ Con un código solo:
 
 Si te invitaron con tu correo exacto, la invitación aparece al iniciar sesión con él. Dura **7 días** y se usa **una vez**. Consulta [Invitar a un adulto](/es/settings/members-devices#invite-an-adult).
 
+Una cuenta pertenece a **una sola** familia. Si abres una invitación cuando ya estás en una familia, WuselWall muestra **Ya formas parte de ‹familia›** y quién te invita y a dónde. **Salir de la familia** te guía, con una confirmación; después la invitación sigue directamente. **Cancelar** lo deja todo como está. Si la invitación es para la familia en la que ya estás, WuselWall solo te lo dice.
+
 ## 4. Conectar una tableta familiar o pantalla de pared {#_4-connecting-a-family-tablet-or-wall-display}
 
 Un adulto aprueba el nuevo dispositivo desde su móvil:

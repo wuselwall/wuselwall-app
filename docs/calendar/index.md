@@ -1,6 +1,6 @@
 # Kalender
 
-Der Kalender ist die Startseite der Erwachsenen: alle Termine der Familie und, wer wo ist, auf einen Blick.
+Der Kalender zeigt alle Termine der Familie und, wer wo ist, auf einen Blick. Die Startseite der Erwachsenen ist **Heute**.
 
 <Shot name="calendar-week" alt="Wochenansicht des Kalenders mit Anwesenheit oben und Terminen darunter" wide />
 
@@ -19,14 +19,14 @@ Darunter stehen die Termine nach Uhrzeit.
 
 ## Termin anlegen
 
-Tippe auf **Neuer Termin**. Du kannst:
+Tippe auf **Neuer Termin**. Der Termin beginnt an dem Tag, den der Kalender gerade zeigt (heute, solange heute zu sehen ist), zur nächsten vollen Stunde. Du kannst:
 
 - einen **Titel**, einen **Ort** und **Notizen** eintragen
 - zwischen **Termin** und **Anwesenheit** wählen. Anwesenheit hat sechs Zustände: Arbeit, Homeoffice, Unterwegs, Weg, Frei und Betreuung
 - den Termin **ganztägig** machen oder **Beginn** und **Ende** setzen
 - unter **Wer** Personen auswählen. Ist niemand ausgewählt, gilt der Termin für die ganze Familie
+- gleich darunter **Auf dem Küchendisplay zeigen** an- oder ausschalten. Eine Zeile sagt, ob der Termin auf dem Küchendisplay erscheint, und ändert sich, sobald du Personen auswählst: Von selbst stehen dort nur Termine der ganzen Familie. Was neue Termine standardmäßig tun, legt ihr unter [Haushalt einstellen](/settings/household) fest
 - **Noch nicht sicher** ankreuzen, wenn noch unklar ist, ob er stattfindet
-- **Auf dem Küchendisplay zeigen** ankreuzen. Was neue Termine standardmäßig tun, legt ihr unter [Haushalt einstellen](/settings/household) fest
 - ein **Bild** wählen und den Termin als **Darauf freuen wir uns** oder **Familientradition** markieren (siehe [unten](#picture-countdown-tradition))
 
 <Shot name="calendar-editor" alt="Editor für einen neuen Termin mit Titel, Wer und Wiederholung" />

@@ -14,13 +14,14 @@ Arriba permanecen la **presencia**, una fila por persona, y los eventos de **tod
 
 ## Crear una cita {#creating-an-appointment}
 
-Toca **Nuevo evento** y añade:
+Toca **Nuevo evento**: empieza el día que muestra el calendario (hoy, mientras hoy esté a la vista), a la siguiente hora en punto. Añade:
 
 - título, lugar y notas;
 - cita o presencia: trabajo, teletrabajo, viaje, ausencia, descanso o cuidado;
 - todo el día, o inicio y fin;
 - personas, o ninguna para toda la familia;
-- si aún es incierto y si debe verse en la pantalla de cocina;
+- justo debajo, si debe verse en la pantalla de la cocina: una línea indica si aparecerá allí y cambia en cuanto eliges personas. Por defecto solo aparecen los eventos de toda la familia;
+- si aún es incierto;
 - una **imagen**, y si es algo que **Nos hace ilusión** o una **Tradición familiar** (ver [más abajo](#picture-countdown-tradition)).
 
 <Shot name="calendar-editor" alt="El editor con personas y repetición" />

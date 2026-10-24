@@ -65,10 +65,10 @@ The question appears during the meal: at the top of the wall's header, on **My d
 - **Our questions** (on the question's card on **Today**): with **Add a question** anyone writes their own. They show "Question from Olivia". An own question is removed by whoever wrote it or by a guardian.
 - A bundled question that doesn't suit you is taken out by a guardian with **Don't ask this one again**. Under **Questions we left out**, **Ask again** brings it back.
 
-Settings: **Question at the table** applies to the **Warm meal** (default), to **Lunch and dinner**, or is **Off**. **Question at lunch** (default 11:30 to 13:30) and **Question at dinner** (17:30 to 19:30) set the times; no meal has to be planned for it. **Questions for**: **All ages** works for a five-year-old, **Older children too** adds deeper questions for 8 and over.
+Settings: **Question at the table** applies to the **Warm meal** (default), to **Lunch and dinner**, or is **Off**. **Question at lunch** and **Question at dinner** set the times; no meal has to be planned for it. The default follows your region's country: 11:30 to 13:30 and 17:30 to 19:30, in France 19:00 to 21:00 for dinner, in Spain 13:30 to 15:30 and 20:00 to 22:00. **Questions for**: **All ages** works for a five-year-old, **Older children too** adds deeper questions for 8 and over.
 
 ::: info Languages
-The questions exist in German and English so far. On a device set to French or Spanish the question at the table does not appear yet.
+Each device shows the questions in its own language: about 150 in German and English, 50 in French and Spanish for now.
 :::
 
 ## Our week {#week-review}
