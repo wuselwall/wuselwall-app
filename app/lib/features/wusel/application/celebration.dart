@@ -104,7 +104,8 @@ final soundPlayerProvider = Provider<SoundPlayer>(
 /// Plays a cue's sound and haptic when the rules allow (specs/26 "Sound and haptics"):
 /// the device's `device.sounds`, the acting member's `member.completion_sound`, never at
 /// night, and nothing in the adult register (its one haptic, the end of a shopping
-/// trip, is not a cue). The haptic follows the register and the night only.
+/// trip, is [shoppingTrip], not a cue). The haptic follows the register and the night
+/// only.
 class Celebration {
   Celebration(this._ref);
 
@@ -139,6 +140,22 @@ class Celebration {
   static String lastChoreOf(String profileId, {DateTime? now}) {
     final d = now ?? DateTime.now();
     return 'last-chore/$profileId/${d.year}-${d.month}-${d.day}';
+  }
+
+  /// The moment of the shopping trip on [listId] that bought [itemIds]: ticking the
+  /// last item and then finishing the trip is one moment, so it celebrates once. Items
+  /// added and bought afterwards make a new trip.
+  static String tripOf(String listId, Iterable<String> itemIds) =>
+      'shopping-trip/$listId/${(itemIds.toList()..sort()).join(',')}';
+
+  /// The end of a shopping trip (specs/26 "Celebrations"): the adult register's one
+  /// haptic, a light one, and never a sound, because the phone is in a shop. Nothing
+  /// at night or on a device that `device.sounds` keeps quiet.
+  Future<void> shoppingTrip() async {
+    if (_ref.read(nightProvider) || !_ref.read(lighterDayProvider).sounds) {
+      return;
+    }
+    await HapticFeedback.lightImpact();
   }
 
   /// No haptic and no sound: the adult register and the night.
