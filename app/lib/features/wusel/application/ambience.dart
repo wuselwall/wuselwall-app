@@ -5,6 +5,7 @@ import 'package:wuselwall/app/theme/night.dart';
 import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/rituals/application/ritual_providers.dart';
+import 'package:wuselwall/features/settings/application/household_settings_providers.dart';
 import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
 
 /// The seasons of the northern hemisphere, by month (specs/26 "Seasons and occasions").
@@ -29,14 +30,39 @@ enum Occasion {
   newYear,
 }
 
+/// When the evening's sky begins: the second time of `board.day_parts` (specs/26 "Day
+/// phases"), 17:00 when unset.
+const defaultEveningStart = 17 * 60;
+
+/// The day's sky turns to morning's after [NightHours.end] and to the day's at 10:00.
+const _dayStart = 10 * 60;
+
 /// The phase of the day the sky shows (specs/26 "Day phases"): morning from the end of
-/// the night until 10, day until 17, evening until the night begins.
-SkyPhase skyPhaseAt(DateTime now, {required bool night}) {
+/// the night ([hours]) until 10, day until [eveningStart] (minutes after midnight),
+/// evening until the night begins. A night that starts after midnight keeps the
+/// evening's sky until then.
+SkyPhase skyPhaseAt(
+  DateTime now, {
+  required bool night,
+  NightHours hours = NightHours.standard,
+  int eveningStart = defaultEveningStart,
+}) {
   if (night) return SkyPhase.night;
-  if (now.hour < 10) return SkyPhase.morning;
-  if (now.hour < 17) return SkyPhase.day;
+  final m = now.hour * 60 + now.minute;
+  if (m >= hours.end && m < _dayStart) return SkyPhase.morning;
+  if (m >= _dayStart && m < eveningStart) return SkyPhase.day;
   return SkyPhase.evening;
 }
+
+/// Whole calendar days from [from] to [to], whatever their times of day. Counted on
+/// UTC dates: two local midnights are 23 or 25 hours apart across a clock change, so
+/// `difference().inDays` would lose a day there.
+@visibleForTesting
+int calendarDaysBetween(DateTime from, DateTime to) => DateTime.utc(
+  to.year,
+  to.month,
+  to.day,
+).difference(DateTime.utc(from.year, from.month, from.day)).inDays;
 
 /// Western Easter Sunday, by the Gregorian computus (the "anonymous" algorithm).
 DateTime westernEaster(int year) {
@@ -234,22 +260,27 @@ class Ambience {
 /// The first or the last day of the school holidays.
 enum FerienEdge { first, last }
 
-/// Computes today's [Ambience] from the date and the household's switches.
+/// Computes today's [Ambience] from the date and the household's switches. [phase],
+/// when given, is the sky's phase already worked out from the time of day.
 @visibleForTesting
 Ambience ambienceFor(
   DateTime now, {
   required bool night,
   required LighterDay day,
+  NightHours hours = NightHours.standard,
+  int eveningStart = defaultEveningStart,
+  SkyPhase? phase,
   FerienEdge? ferien,
   List<Color> birthdays = const [],
 }) {
   bool on(Occasion o) =>
       occasionOn(o, day.occasionSwitches[_key(o)], day.country);
-  final today = DateUtils.dateOnly(now);
   bool aroundEaster(DateTime easter) =>
-      today.difference(easter).inDays.abs() <= 2;
+      calendarDaysBetween(easter, now).abs() <= 2;
   return Ambience(
-    phase: skyPhaseAt(now, night: night),
+    phase:
+        phase ??
+        skyPhaseAt(now, night: night, hours: hours, eveningStart: eveningStart),
     season: on(Occasion.season) ? seasonOf(now) : null,
     advent: on(Occasion.advent) ? adventCandles(now) : 0,
     easter:
@@ -264,17 +295,36 @@ Ambience ambienceFor(
   );
 }
 
-/// Today's ambience for this household. Rebuilds once an hour, and equal values do not
-/// repaint the sky.
+/// When this household's evening sky begins: the second time of `board.day_parts`, or
+/// 17:00 while the settings load and against a server without them.
+final eveningStartProvider = Provider.autoDispose<int>((ref) {
+  final entries = ref.watch(householdSettingsProvider).value;
+  if (entries == null) return defaultEveningStart;
+  final parts = resolveSetting(entries, 'board.day_parts')?.value;
+  if (parts is! List || parts.length < 2) return defaultEveningStart;
+  return clockMinutes(parts[1]) ?? defaultEveningStart;
+});
+
+/// Today's ambience for this household. Rebuilds when the date or the phase changes,
+/// and equal values do not repaint the sky.
 final ambienceProvider = Provider.autoDispose<Ambience>((ref) {
-  // The hour is enough: the phases change on the hour.
-  final now = ref.watch(
-    nowProvider.select((n) => DateTime(n.year, n.month, n.day, n.hour)),
-  );
   final night = ref.watch(nightProvider);
+  final hours = ref.watch(nightHoursProvider);
+  final eveningStart = ref.watch(eveningStartProvider);
+  // The phases change on the minute the settings say, not on the hour; the clock ticks
+  // every second, so only the date and the phase are selected.
+  final (date, phase) = ref.watch(
+    nowProvider.select(
+      (n) => (
+        DateUtils.dateOnly(n),
+        skyPhaseAt(n, night: night, hours: hours, eveningStart: eveningStart),
+      ),
+    ),
+  );
   final day = ref.watch(lighterDayProvider);
   return ambienceFor(
-    now,
+    date,
+    phase: phase,
     night: night,
     day: day,
     ferien: ref.watch(ferienEdgeTodayProvider),

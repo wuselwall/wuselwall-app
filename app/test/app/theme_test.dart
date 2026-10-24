@@ -180,6 +180,42 @@ void main() {
         DateTime(2026, 10, 13, 6),
       );
     });
+
+    test('follows device.night_hours, the default when it is missing', () {
+      final hours = NightHours.parse(const {'from': '22:30', 'to': '07:15'});
+      expect(isNightAt(DateTime(2026, 10, 12, 22, 29), hours), isFalse);
+      expect(isNightAt(DateTime(2026, 10, 12, 22, 30), hours), isTrue);
+      expect(isNightAt(DateTime(2026, 10, 13, 7, 14), hours), isTrue);
+      expect(isNightAt(DateTime(2026, 10, 13, 7, 15), hours), isFalse);
+      expect(
+        nextNightBoundary(DateTime(2026, 10, 12, 14), hours),
+        DateTime(2026, 10, 12, 22, 30),
+      );
+      expect(
+        nextNightBoundary(DateTime(2026, 10, 12, 23), hours),
+        DateTime(2026, 10, 13, 7, 15),
+      );
+      // A night that does not cross midnight.
+      final early = NightHours.parse(const {'from': '00:30', 'to': '05:00'});
+      expect(isNightAt(DateTime(2026, 10, 12, 23, 59), early), isFalse);
+      expect(isNightAt(DateTime(2026, 10, 13, 1), early), isTrue);
+      for (final stored in [
+        null,
+        'x',
+        const {'from': '25:00', 'to': '06:00'},
+      ]) {
+        expect(NightHours.parse(stored), NightHours.standard);
+      }
+    });
+
+    test('Wusel waves in the first half hour after the night', () {
+      expect(isMorningWaveAt(DateTime(2026, 10, 13, 6, 10)), isTrue);
+      expect(isMorningWaveAt(DateTime(2026, 10, 13, 6, 30)), isFalse);
+      expect(isMorningWaveAt(DateTime(2026, 10, 13, 5, 50)), isFalse);
+      final late = NightHours.parse(const {'from': '21:00', 'to': '07:15'});
+      expect(isMorningWaveAt(DateTime(2026, 10, 13, 6, 10), late), isFalse);
+      expect(isMorningWaveAt(DateTime(2026, 10, 13, 7, 20), late), isTrue);
+    });
   });
 
   group('a lighter day (specs/26)', () {
