@@ -214,6 +214,7 @@ Personal phones only. Pushes are not built ([14](14-open-questions.md), Q38 and 
 | X4 | Device language German, English, French, Spanish and one unsupported locale: no string from another application language leaks, unsupported falls back to German | Manual | None | NOT RUN | screenshots |
 | X5 | DE/EN/FR/ES app/server messages and native permission prompts are in parity | CI, A1 (ARB and catalogue parity tests) | Green | NOT RUN | CI run link |
 | X6 | Email hook and SMTP send subject/HTML/plain in only `MAIL_LANGUAGE` (test each of `de`, `en`, `fr`, `es`, plus legacy/unset → German) and preserve the selection across update/language change | CI + manual | No recipient-locale override; keys unchanged | NOT RUN | CI run link, mail samples |
+| X7 | Reduce Motion on: iOS (Settings → Accessibility → Motion → Reduce Motion) and Android (Remove animations). Tick the last chore in the kid register, open Today at a phase change, and toggle the setting while the app runs | Manual | No confetti, no Wusel motion, springs land at once, the sky changes without a cross-fade; toggling takes effect without a restart (specs/26 "Motion") | NOT RUN | notes per platform |
 
 ## 11. Tablets and the wall display
 
@@ -222,6 +223,8 @@ Personal phones only. Pushes are not built ([14](14-open-questions.md), Q38 and 
 | K1 | iPad: rotation and split view on the adult register. The kid register is readable at arm's length | Manual | No layout break | NOT RUN | screenshots |
 | K2 | Wall display mounted in the kitchen, the app pinned in kiosk mode, the week board shown, and the 60-second revert back to the board after an interaction | Manual | Board visible from the usual standing place. The revert happens | NOT RUN | photo path, timing |
 | K3 | The wall display recovers after a power cut and a network restart: the app starts pinned again | Manual | Starts without a keyboard | NOT RUN | observed result |
+| K4 | Sound latency on each tablet (kid tablets and the wall with `device.sounds` on): tick a chore and time the *tick* against the touch (slow-motion video), with the silent switch on and off and with music playing | Manual | The sound follows the touch within about 100 ms; nothing plays with the silent switch on; music keeps playing (specs/26 "Sound and haptics") | NOT RUN | video timings per device |
+| K5 | The wall's idle CPU for ten minutes with the week board shown and nobody touching it, once with Wusel on (`device.wusel` lively) and once off | Manual | Both readings recorded; with Wusel on the CPU stays near the reading with it off (no constant repaint) | NOT RUN | both readings, tool used |
 
 ## 12. Pilot outcome (two weeks)
 
