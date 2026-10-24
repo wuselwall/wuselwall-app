@@ -4,14 +4,23 @@ import type { McpMessages } from "./mcp_family.ts";
 
 const points = (n: number) => (n === 1 ? "1 point" : `${n} points`);
 
+// "Thu, 15 Oct": the parts come from Intl, the pattern is ours. ICU's own en-GB pattern
+// changed between releases (newer ICU drops the comma, as Deno 2.9 does), and an assistant's
+// summary should not change with the runtime.
+const dayParts = new Intl.DateTimeFormat("en-GB", {
+  weekday: "short",
+  day: "numeric",
+  month: "short",
+  timeZone: "UTC",
+});
+
 export const MCP_EN: McpMessages = {
-  day: (date) =>
-    new Date(`${date}T12:00:00Z`).toLocaleDateString("en-GB", {
-      weekday: "short",
-      day: "numeric",
-      month: "short",
-      timeZone: "UTC",
-    }),
+  day: (date) => {
+    const parts = dayParts.formatToParts(new Date(`${date}T12:00:00Z`));
+    const part = (type: Intl.DateTimeFormatPartTypes) =>
+      parts.find((p) => p.type === type)?.value ?? "";
+    return `${part("weekday")}, ${part("day")} ${part("month")}`;
+  },
   noAppointments: "nothing on",
   tasks: "Tasks",
   anyone: "anyone",
