@@ -23,19 +23,24 @@ day operations, meal suggestions, the Today tab with the getting-started card, t
 export, subscribed ICS calendars (FR-1.9: `calendar-import`, read-only occurrences in their
 own tables, optionally in the outbound feed), local reminders (Q47), the QR scanner on
 `camera` and `zxing2` (Q49), Siri via Apple Shortcuts (M2, specs/12 Part 1: per-person keys
-in `app.shortcut_token`, the `shortcuts` function), the MCP server with `family:read` (M2,
-Part 2: the `mcp` function, read-only `wwa_` assistant keys as the Q15 interim, no OAuth yet),
+in `app.shortcut_token`, the `shortcuts` function),
 the evening packing reminder (FR-7.12, `notify.packing_reminder`), and the usual week
 (issue #81, specs/15 "The baseline": a usual place per weekday, up to three time slots a
 day and alternating weeks A/B), and the school import of [specs/24](specs/24-school-import.md)
 (2026-10-22): the proposed term, subjects from the cell, the paste import with its preview,
-proposals (`app.proposal`, `api.mcp_propose`, the `propose_timetable` tool, cards on Today),
+the retained proposal backend (`app.proposal`, `api.mcp_propose`, `propose_timetable`),
 and the photo scan (`timetable-scan` with the optional `ocr` container, RapidOCR on the CPU),
 and step 10's slices 1–3 (2026-10-23): members editable (name, colour, avatar picture, kind,
 role, order by dragging, "Nicht mehr dabei"), the family (name, time zone, locale) and devices
 (rename, last active) on their own pages, and the shopping structure (lists renamed and
 removed, categories added, renamed, ordered and removed, catalogue tiles renamed and
 forgotten), each page with the Basic/Advanced switch of specs/21.
+MCP and AI assistant work is **on hold** (2026-10-24), removed from the app UI and active
+milestones. The backend, keys and proposal data are retained for compatibility; existing
+MCP clients are not disabled. Siri/automations, structured timetable text import and the
+server's photo/PDF scan remain. Resume only by an explicit product decision; see
+[the deferred-work record](specs/deferred/mcp-and-ai-assistants.md) and
+[specs/23](specs/23-roadmap-after-alpha.md#on-hold--mcp-and-ai-assistants).
 The current language scope is DE/EN/FR/ES throughout the app and server responses, with
 one installation-selected email language (NFR-14); release evidence remains a separate gate.
 `scripts/local-pgtap` runs every migration and pgTAP suite on a throwaway local Postgres (no

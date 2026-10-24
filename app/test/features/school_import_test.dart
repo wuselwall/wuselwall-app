@@ -49,6 +49,8 @@ void main() {
     await t.tap(find.byKey(const ValueKey('import-way-text')));
     await t.pumpAndSettle();
     expect(find.text(de.schoolImportPasteTitle), findsOneWidget);
+    expect(find.text(de.schoolImportCopyPrompt), findsNothing);
+    expect(find.text(de.schoolImportPasteIntro), findsOneWidget);
     await t.enterText(find.byKey(const ValueKey('import-paste')), _payload);
     await t.pumpAndSettle();
     await t.tap(find.byKey(const ValueKey('import-read')));
@@ -231,36 +233,7 @@ void main() {
     expect(school.timetableSaves, isEmpty);
   });
 
-  testWidgets(
-    'a proposal on Today: review, apply, and the verdict is recorded',
-    (t) async {
-      final school = FakeSchoolRepository(
-        data: referenceSchoolData(withTimetable: false),
-      );
-      final proposals = FakeProposalsRepository(open: [proposalFrom(_payload)]);
-      await pumpApp(
-        t,
-        overrides: baseOverrides(
-          identity: FakeIdentityRepository(current: device()),
-        ),
-        school: school,
-        proposals: proposals,
-      );
-      expect(find.text(de.schoolProposalTitle('Claude')), findsOneWidget);
-      expect(find.text(de.schoolProposalSummary('Anna', 3)), findsOneWidget);
-      await t.tap(find.text(de.schoolProposalReview));
-      await t.pumpAndSettle();
-      expect(find.text(de.schoolImportProposedBy('Claude')), findsOneWidget);
-      expect(find.byKey(const ValueKey('import-discard')), findsOneWidget);
-      await t.tap(find.byKey(const ValueKey('import-apply')));
-      await t.pumpAndSettle();
-      expect(proposals.resolved, [(id: 'prop-1', applied: true)]);
-      expect(school.lessonSets.single.lessons, hasLength(4));
-      expect(find.text(de.schoolProposalTitle('Claude')), findsNothing);
-    },
-  );
-
-  testWidgets('a proposal can be discarded from its card without a look', (
+  testWidgets('assistant proposals are absent from Today and the timetable', (
     t,
   ) async {
     final proposals = FakeProposalsRepository(open: [proposalFrom(_payload)]);
@@ -269,15 +242,15 @@ void main() {
       overrides: baseOverrides(
         identity: FakeIdentityRepository(current: device()),
       ),
-      school: FakeSchoolRepository(
-        data: referenceSchoolData(withTimetable: false),
-      ),
+      school: FakeSchoolRepository(),
       proposals: proposals,
     );
-    await t.tap(find.text(de.schoolImportDiscard));
-    await t.pumpAndSettle();
-    expect(proposals.resolved, [(id: 'prop-1', applied: false)]);
-    expect(find.text(de.schoolImportDiscarded), findsOneWidget);
+    expect(find.byKey(const ValueKey('proposal-prop-1')), findsNothing);
+    expect(find.text(de.schoolProposalTitle('Claude')), findsNothing);
+    await _openSchedule(t);
+    expect(find.byKey(const ValueKey('proposal-prop-1')), findsNothing);
+    expect(find.text(de.schoolProposalTitle('Claude')), findsNothing);
+    expect(proposals.resolved, isEmpty);
   });
 
   testWidgets('a subject typed into a cell is created on the spot', (t) async {

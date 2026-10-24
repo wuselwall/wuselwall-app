@@ -1,13 +1,10 @@
-# Apps und KI-Assistenten
+# Apps und Automationen
 
-Mit einem **Schlüssel** aus WuselWall arbeitet eine andere App als eine bestimmte Person mit euren Familiendaten. Es gibt zwei Arten:
-
-- **Automation**: liest und fügt hinzu, zum Beispiel für Siri auf dem iPhone oder jede andere App, die eine Webadresse aufrufen kann (etwa Automations-Apps auf Android oder Home Assistant). Die Beispiele unten zeigen Apples Kurzbefehle; andere Apps schicken dieselben Anfragen.
-- **KI-Assistent**: liest nur, für einen Assistenten, der MCP spricht, etwa Claude (siehe [unten](#ki-assistenten-mcp)).
+Mit einem **Schlüssel** aus WuselWall arbeitet eine andere App als eine bestimmte Person mit euren Familiendaten. Siri, Kurzbefehle und andere Automations-Apps können damit nachlesen und Dinge hinzufügen. Die Beispiele unten zeigen Apples Kurzbefehle; andere Apps schicken dieselben Anfragen.
 
 Mit der **Kurzbefehle**-App auf dem iPhone sprichst du mit WuselWall über Siri: „Hey Siri, Einkaufsliste“ – „Was brauchst du?“ – „Milch und zwei Gurken“ – „Milch und Gurken (2×) sind auf der Liste.“ Dafür braucht es keine zusätzliche App, nur einen **Schlüssel** aus WuselWall.
 
-<Shot name="shortcuts" alt="Einstellungen → Apps und KI-Assistenten mit zwei Schlüsseln" />
+<Shot name="shortcuts" alt="Einstellungen → Apps und Automationen mit zwei Schlüsseln" />
 
 ## Was ein Schlüssel darf
 
@@ -20,7 +17,7 @@ Ein Schlüssel gehört zu **einer Person**. Ein Kurzbefehl mit diesem Schlüssel
 
 ## Einen Schlüssel erstellen
 
-1. Öffne **Einstellungen → Erweitert → Apps und KI-Assistenten** und tippe auf **Neuer Schlüssel**.
+1. Öffne **Einstellungen → Erweitert → Apps und Automationen** und tippe auf **Neuer Schlüssel**.
 2. Gib ihm einen **Namen**, zum Beispiel „iPhone“.
 3. Als Erziehungsberechtigte·r wählst du unter **Für wen?** die Person. Alle anderen erstellen ihren eigenen Schlüssel auf dem eigenen Handy.
 4. Tippe auf **Schlüssel erstellen**.
@@ -68,27 +65,6 @@ Die Antworten kommen in der Sprache des iPhones, wenn es Deutsch, Englisch, Fran
 Ist ein Handy weg oder braucht jemand den Kurzbefehl nicht mehr, tippe in der Liste auf **Sperren**. Das wirkt sofort: Der Kurzbefehl antwortet dann nur noch, dass er nicht mehr gilt. Die Liste zeigt, wann ein Schlüssel zuletzt benutzt wurde. Verlässt jemand die Familie, werden die Schlüssel dieser Person automatisch gesperrt.
 
 Erziehungsberechtigte sehen und sperren alle Schlüssel der Familie, alle anderen ihre eigenen. Der [Datenexport](/settings/members-devices#daten-exportieren) enthält jeden Schlüssel mit Namen und Datum, aber nicht den Schlüssel selbst.
-
-## KI-Assistenten (MCP)
-
-Ein KI-Assistent, der **MCP** spricht (das Model Context Protocol, zum Beispiel Claude), kann mit einem eigenen Schlüssel in WuselWall **nachlesen**: „Was steht diese Woche an?“, „Was gibt es am Donnerstag zu essen?“, „Wann hat Emma morgen Schluss?“. Er kann **nichts eintragen, ändern oder löschen**. Das Einzige, was er abgeben kann, ist ein **Vorschlag**: einen Stundenplan, den er von einem Blatt gelesen hat. Der landet als Karte auf **Heute**, und erst eine erziehungsberechtigte Person übernimmt oder verwirft ihn, siehe [Stundenplan einlesen](/school/#stundenplan-einlesen).
-
-Wähle beim Erstellen **KI-Assistent** statt **Automation**. Einen Schlüssel für einen Assistenten bekommen nur Erwachsene. Er erscheint in der Liste unter **KI-Assistenten** und wird gesperrt wie jeder andere Schlüssel.
-
-::: warning Was der Assistent liest, verlässt euren Server
-Der Assistent liest die Woche der ganzen Familie: Termine, wer wann weg ist, die Stundenpläne der Kinder, Aufgaben, Punkte, Essen, Rezepte und die Einkaufsliste. Diese Daten gehen an den Anbieter des Assistenten und unterliegen dessen Datenschutzbedingungen. Überlegt deshalb gemeinsam, ob ihr das wollt.
-:::
-
-Der Assistent findet diese Abfragen: Wochenübersicht, Termine, Aufgaben, Essensplan, Einkaufsliste, Punkte, Rezepte, Stundenplan und wer zu Hause ist. Jede Antwort nennt die Personen beim Namen.
-
-**Verbinden:** Trage im Assistenten einen MCP-Server mit der Adresse aus WuselWall ein, also etwa `https://api.example.org/functions/v1/mcp`, und schicke den Schlüssel als Header `Authorization: Bearer wwa_…`. In Claude Code geht das so:
-
-```sh
-claude mcp add --transport http wuselwall https://api.example.org/functions/v1/mcp \
-  --header "Authorization: Bearer wwa_…"
-```
-
-Assistenten, die sich nur per OAuth anmelden können und keinen eigenen Header erlauben, lassen sich noch nicht verbinden. Eine Anmeldung mit Zustimmungsseite kommt zusammen mit dem Eintragen über Assistenten.
 
 ::: info Ohne iPhone
 Ein Kurzbefehl ist eine gewöhnliche Web-Anfrage. Jede App, die eine Anfrage mit einem Header schicken kann, funktioniert genauso.

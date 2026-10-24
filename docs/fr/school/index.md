@@ -78,11 +78,9 @@ Choisissez un rythme hebdomadaire ou des semaines A/B, saisies séparément. Ajo
 
 ## Importer un emploi du temps {#reading-in}
 
-Au lieu de taper chaque cours, tu peux faire lire la feuille. Il y a trois façons. Toutes aboutissent au même [aperçu](#preview), et seul **Appliquer** écrit quelque chose.
+Au lieu de taper chaque cours, tu peux faire lire la feuille. Il y a deux façons. Toutes aboutissent au même [aperçu](#preview), et seul **Appliquer** écrit quelque chose.
 
-**Depuis du texte, avec votre assistant IA.** Pour un enfant sans emploi du temps, touche **Importer…** puis **Coller du texte** (ou **Importer…** en haut de l’emploi du temps). **Copier les instructions pour l’assistant** place un texte dans le presse-papiers : donne-le, avec une photo de l’emploi du temps, à l’assistant de confiance, par exemple dans son app sur le téléphone. Il répond dans un format fixe que WuselWall sait lire. Colle la réponse dans le champ et touche **Importer**. La photo ne va qu’à l’assistant de votre choix ; WuselWall n’envoie rien à personne.
-
-**Comme proposition d’un assistant.** Un assistant connecté à WuselWall ([Apps et assistants IA](/fr/settings/shortcuts)) peut déposer un emploi du temps comme **proposition**. Il ne change rien : une carte « Proposition de Claude » avec **Vérifier** et **Rejeter** apparaît sur **Aujourd’hui** et au-dessus de l’emploi du temps. **Vérifier** ouvre l’aperçu. Les propositions expirent après 14 jours.
+**Depuis du texte structuré.** Touche **Importer…**, puis **Coller du texte**. Colle un emploi du temps en JSON au format WuselWall, puis touche **Importer** pour ouvrir l’aperçu. Un texte ordinaire n’est pas automatiquement converti en emploi du temps.
 
 **Comme photo ou PDF, lu par votre serveur.** Si votre serveur a la reconnaissance de texte ([Extras pour le serveur](/fr/server/extras#text-recognition)), touche **Importer…** et **Scanner une photo**. Choisis ensuite **Prendre une photo**, **Choisir une photo** ou **Choisir un fichier (PDF ou image)**, par exemple pour le PDF envoyé par l’école.
 
@@ -127,7 +125,7 @@ Sous **Nouvelles matières** figure chaque matière de la feuille que vous n’a
 
 Si tu désactives **Créer les nouvelles matières**, les cours avec de nouvelles matières sont laissés de côté ; la grille les montre barrés.
 
-**Appliquer** crée la période si elle manque, complète les horaires, crée les nouvelles matières et enregistre l’emploi du temps. **Rejeter** laisse tout en l’état ; une proposition est alors refusée.
+**Appliquer** crée la période si elle manque, complète les horaires, crée les nouvelles matières et enregistre l’emploi du temps. La flèche de retour quitte l’aperçu sans enregistrer.
 
 ## Modifier des journées entières {#editing-whole-days}
 

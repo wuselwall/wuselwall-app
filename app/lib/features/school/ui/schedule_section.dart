@@ -19,7 +19,6 @@ import 'package:wuselwall/features/school/application/school_providers.dart';
 import 'package:wuselwall/features/school/domain/school_models.dart';
 import 'package:wuselwall/features/school/ui/lesson_sheet.dart';
 import 'package:wuselwall/features/school/ui/open_timetable_editor.dart';
-import 'package:wuselwall/features/school/ui/proposal_cards.dart';
 import 'package:wuselwall/features/school/ui/school_week_grid.dart';
 import 'package:wuselwall/features/school/ui/timetable_import_menu.dart';
 
@@ -145,7 +144,6 @@ class _Children extends ConsumerWidget {
         return ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            const ProposalCards(),
             LayoutBuilder(
               builder: (context, constraints) {
                 final selection = Wrap(

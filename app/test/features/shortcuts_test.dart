@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/features/shortcuts/data/shortcut_repository.dart';
 
 import '../support/fakes.dart';
@@ -67,9 +68,12 @@ Future<void> _open(
   WidgetTester tester,
   FakeShortcutRepository keys, {
   String? profileId = guardianId,
+  Locale locale = const Locale('de'),
 }) async {
   await pumpApp(
     tester,
+    locale: locale,
+    size: const Size(390, 844),
     overrides: [
       ...baseOverrides(
         identity: FakeIdentityRepository(current: device(profileId: profileId)),
@@ -206,33 +210,31 @@ void main() {
     expect(keys.revoked, [(actor: guardianId, id: 's1')]);
   });
 
-  testWidgets('an assistant key is for adults and shows the MCP address', (
-    tester,
-  ) async {
-    final keys = FakeShortcutRepository();
-    await _open(tester, keys);
-
-    await tester.tap(find.byType(FloatingActionButton));
-    await tester.pumpAndSettle();
-    expect(find.widgetWithText(ChoiceChip, 'Anna'), findsOneWidget);
-    await tester.tap(find.text('KI-Assistent'));
-    await tester.pumpAndSettle();
-    // The only other member is a child: no choice of person is left.
-    expect(find.byType(ChoiceChip), findsNothing);
-    await tester.enterText(find.byType(TextField).first, 'Claude');
-    await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(FilledButton, 'Schlüssel erstellen'));
-    await tester.pumpAndSettle();
-
-    expect(keys.created.single.kind, KeyKind.assistant);
-    expect(keys.created.single.profileId, guardianId);
-    final shown = tester
-        .widgetList<SelectableText>(find.byType(SelectableText))
-        .map((w) => w.data)
-        .toList();
-    expect(shown, contains('wwa_key456'));
-    expect(shown, contains('http://localhost/functions/v1/mcp'));
-  });
+  for (final language in ['de', 'en', 'fr', 'es']) {
+    testWidgets('only automation setup is offered in $language', (
+      tester,
+    ) async {
+      final locale = Locale(language);
+      final l10n = lookupAppLocalizations(locale);
+      final keys = FakeShortcutRepository();
+      await _open(tester, keys, locale: locale);
+      expect(find.text(l10n.shortcutTitle), findsOneWidget);
+      await tester.tap(find.byType(FloatingActionButton));
+      await tester.pumpAndSettle();
+      expect(find.byType(SegmentedButton<KeyKind>), findsNothing);
+      expect(find.text(l10n.shortcutKindAssistant), findsNothing);
+      await tester.enterText(find.byType(TextField).first, 'Phone');
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(FilledButton, l10n.shortcutCreate));
+      await tester.pumpAndSettle();
+      expect(keys.created.single.kind, KeyKind.shortcut);
+      final shown = tester
+          .widgetList<SelectableText>(find.byType(SelectableText))
+          .map((w) => w.data);
+      expect(shown, contains('http://localhost/functions/v1/shortcuts'));
+      expect(tester.takeException(), isNull);
+    });
+  }
 
   testWidgets('a child is offered shortcut keys only', (tester) async {
     await _open(tester, FakeShortcutRepository(), profileId: kidId);
@@ -241,7 +243,7 @@ void main() {
     expect(find.text('KI-Assistent'), findsNothing);
   });
 
-  testWidgets('assistant keys are listed under their own heading', (
+  testWidgets('existing assistant keys are excluded from the automation page', (
     tester,
   ) async {
     await _open(
@@ -260,8 +262,10 @@ void main() {
         ],
       ),
     );
-    expect(find.text('KI-Assistenten'), findsOneWidget);
-    expect(find.byIcon(Icons.smart_toy_outlined), findsOneWidget);
+    expect(find.text('iPhone'), findsOneWidget);
+    expect(find.text('Claude'), findsNothing);
+    expect(find.text('KI-Assistenten'), findsNothing);
+    expect(find.byIcon(Icons.smart_toy_outlined), findsNothing);
   });
 
   test('mcpAddress is the mcp function under the server', () {

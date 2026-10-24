@@ -1,5 +1,10 @@
 # ADR-007 — Remote MCP server over Streamable HTTP; Apple Shortcuts for Siri today
 
+> **Amendment 2026-10-24 — product pause.** The MCP/AI assistant part of this decision is **on hold**, with its UI removed and
+> implementation retained. Siri and ordinary automations remain available. The original
+> MCP decision below is design history and does not authorize continued feature work.
+> See [the retained-work record](../deferred/mcp-and-ai-assistants.md).
+
 **Status:** Accepted · 2026-08-29 · Amended by [ADR-010](ADR-010-flutter-and-self-hosted-supabase.md) on 2026-10-11 — both endpoints become Edge Functions; the OAuth server question moves from Better Auth to Supabase Auth
 
 ## Context

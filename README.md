@@ -17,7 +17,9 @@ specification; `app/`, `supabase/` and `infra/` hold the implementation.
 
 **Core features are built.** Shopping (including offline capture), tasks and points,
 calendar and school timetables, meals, onboarding, household settings and the wall board
-exist in code. Shortcuts, read-only MCP, local reminders and timetable import are built too.
+exist in code. Shortcuts, local reminders and timetable import are built too.
+MCP and AI assistant work is **on hold** and removed from the app interface; its backend
+and design are retained for [possible reconsideration](specs/deferred/mcp-and-ai-assistants.md).
 Native-device qualification and the family trial remain open; implementation is not release
 evidence ([#117](https://github.com/wuselwall/wuselwall-app/issues/117)).
 
@@ -94,14 +96,14 @@ specifications you hand to a coding session, one at a time.
 | 09 | [Clients & UX](specs/09-clients-and-ux.md) | B2 — one Flutter app, three UI registers, **the kitchen week board**, platform constraints |
 | 10 | [Deployment & Operations](specs/10-deployment-and-ops.md) | B3 — running a server: the stack, keys, backups, updates, server releases |
 | 11 | [Security & Privacy](specs/11-security-and-privacy.md) | Threat model and the controls that answer each threat |
-| 12 | [MCP & Assistants](specs/12-mcp-and-assistants.md) | B4 — MCP server design, Siri via Shortcuts today |
+| 12 | [MCP & Assistants](specs/12-mcp-and-assistants.md) | B4 — Siri via Shortcuts; MCP/AI assistants on hold |
 | 13 | [Roadmap](specs/13-roadmap.md) | Four outcomes, current implementation status and release gates |
 | 14 | [Open Questions](specs/14-open-questions.md) | Decisions deliberately deferred, with the deadline for each |
 | 23 | [Roadmap after the Alpha](specs/23-roadmap-after-alpha.md) | Candidates chosen from real use, principles and deliberate exclusions |
 | 25 | [Wusel](specs/25-wusel.md) | The family's companion: who Wusel is, the drawing, seven poses, outfits, the voice rules, where it appears and never appears |
 | 26 | [Colour, ambience, celebration](specs/26-colour-and-ambience.md) | Direction A+: module bands, decoration, the wall's day phases and occasions, celebrations, springs, sound and haptics |
 | 27 | [Family rituals](specs/27-family-rituals.md) | Tischfrage, Wochenrückblick, traditions, Vorfreude and Wunschessen, with birthdays, and how the trial judges each |
-| 24 | [School setup without typing](specs/24-school-import.md) | Fewer required facts, the timetable payload and preview, proposals from assistants, and the photo scan on the family's own server |
+| 24 | [School setup without typing](specs/24-school-import.md) | Fewer required facts, timetable text/photo import and preview; assistant proposals on hold |
 | 16 | [Setup Plan](specs/16-setup-plan.md) | Remaining work in grouped slices; completed setup and CI/signing recipes kept as reference |
 | 19 | [Security & Architecture Review](specs/19-security-and-architecture-review.md) | Findings of the 2026-10-11 review, what is fixed and what the operator still has to do |
 | 17 | [Design System](specs/17-design-system.md) | Colour, type and form: the member palette (colour-blind-checked), presence treatments, night theme, three design directions, A "Küchentisch" chosen |
@@ -132,8 +134,8 @@ specifications you hand to a coding session, one at a time.
    → [ADR-013](specs/adr/ADR-013-self-hosted-compose-stack.md), [ADR-017](specs/adr/ADR-017-wuselwall-app-domain.md), [ADR-018](specs/adr/ADR-018-self-hosted-only.md)
 6. **Server-authoritative data**, with a narrow offline queue for the shopping list only —
    no general-purpose sync engine. → [ADR-006](specs/adr/ADR-006-offline-strategy.md)
-7. **A remote MCP server** over Streamable HTTP with OAuth; Apple Shortcuts is the
-   near-term Siri path. → [ADR-007](specs/adr/ADR-007-assistant-integration.md)
+7. **Apple Shortcuts for Siri.** The remote MCP/AI assistant design is on hold
+   ([retained work](specs/deferred/mcp-and-ai-assistants.md)). → [ADR-007](specs/adr/ADR-007-assistant-integration.md)
 8. **The Stundenplan is a pattern, not sixty recurring events** — stored as a grid per
    term, projected into the calendar at read time, minus Ferien, plus per-date
    exceptions. → [ADR-008](specs/adr/ADR-008-school-timetable-model.md)

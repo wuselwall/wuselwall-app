@@ -78,11 +78,9 @@ Elige ritmo semanal o semanas A/B, que se rellenan por separado. Añade cuidado 
 
 ## Importar un horario {#reading-in}
 
-En vez de teclear cada clase, puedes hacer que se lea la hoja. Hay tres caminos. Todos terminan en la misma [vista previa](#preview), y solo **Aplicar** escribe algo.
+En vez de teclear cada clase, puedes hacer que se lea la hoja. Hay dos caminos. Todos terminan en la misma [vista previa](#preview), y solo **Aplicar** escribe algo.
 
-**Desde texto, con vuestro asistente de IA.** En un niño sin horario toca **Importar…** y luego **Pegar como texto** (o **Importar…** arriba en el horario). **Copiar las instrucciones para el asistente** deja un texto en el portapapeles: dáselo, junto con una foto del horario, al asistente en el que confiáis, por ejemplo en su app del móvil. Responde en un formato fijo que WuselWall sabe leer. Pega la respuesta en el campo y toca **Importar**. La foto solo va al asistente que elijáis; WuselWall no envía nada a nadie.
-
-**Como propuesta de un asistente.** Un asistente conectado a WuselWall ([Apps y asistentes de IA](/es/settings/shortcuts)) puede dejar un horario como **propuesta**. No cambia nada: en **Hoy** y sobre el horario aparece una tarjeta «Propuesta de Claude» con **Revisar** y **Descartar**. **Revisar** abre la vista previa. Las propuestas caducan a los 14 días.
+**Desde texto estructurado.** Toca **Importar…** y **Pegar como texto**. Pega un horario en JSON con el formato de WuselWall y toca **Importar** para abrir la vista previa. Un texto normal no se convierte automáticamente en un horario.
 
 **Como foto o PDF, leído por vuestro servidor.** Si vuestro servidor tiene reconocimiento de texto ([Extras para el servidor](/es/server/extras#text-recognition)), toca **Importar…** y **Escanear una foto**. Después elige **Hacer una foto**, **Elegir una foto** o **Elegir un archivo (PDF o imagen)**, por ejemplo para el PDF que envió el colegio.
 
@@ -127,7 +125,7 @@ En **Asignaturas nuevas** aparece cada asignatura de la hoja que aún no tenéis
 
 Si desactivas **Crear las asignaturas nuevas**, las clases con asignaturas nuevas se dejan fuera; la tabla las muestra tachadas.
 
-**Aplicar** crea el periodo si falta, amplía las horas de clase, crea las asignaturas nuevas y guarda el horario. **Descartar** lo deja todo como estaba; una propuesta queda entonces rechazada.
+**Aplicar** crea el periodo si falta, amplía las horas de clase, crea las asignaturas nuevas y guarda el horario. La flecha de volver cierra la vista previa sin guardar.
 
 ## Editar días enteros {#editing-whole-days}
 

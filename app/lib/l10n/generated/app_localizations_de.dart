@@ -4386,15 +4386,15 @@ class AppLocalizationsDe extends AppLocalizations {
       'Öffne die WuselWall-App auf deinem Handy, wähle diesen Server, indem du den Code scannst, und melde dich dort an.';
 
   @override
-  String get shortcutTitle => 'Apps und KI-Assistenten';
+  String get shortcutTitle => 'Apps und Automationen';
 
   @override
   String get shortcutSettingsSubtitle =>
-      'Siri, Automationen und KI-Assistenten (MCP), jeweils mit Schlüssel';
+      'Siri und andere Automationen, jeweils mit Schlüssel';
 
   @override
   String get shortcutIntro =>
-      'Ein Schlüssel lässt eine andere App als eine bestimmte Person mit WuselWall arbeiten. Ein Schlüssel für Automationen, zum Beispiel für einen Kurzbefehl mit Siri auf dem iPhone oder jede andere App, die eine Webadresse aufrufen kann, liest und fügt hinzu: Er setzt Dinge auf die Einkaufsliste und sagt, was heute ansteht, was es zu essen gibt oder wer morgen Sport hat. Löschen oder verwalten kann er nichts. Ein Schlüssel für einen KI-Assistenten (MCP, etwa Claude) liest nur.';
+      'Ein Schlüssel lässt eine andere App als eine bestimmte Person mit WuselWall arbeiten. Ein Schlüssel für Automationen, zum Beispiel für einen Kurzbefehl mit Siri auf dem iPhone oder jede andere App, die eine Webadresse aufrufen kann, liest und fügt hinzu: Er setzt Dinge auf die Einkaufsliste und sagt, was heute ansteht, was es zu essen gibt oder wer morgen Sport hat. Löschen oder verwalten kann er nichts.';
 
   @override
   String get shortcutEmpty => 'Noch keine Schlüssel.';
@@ -4748,7 +4748,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get schoolImportPasteIntro =>
-      'Fotografiere den Stundenplan und bitte den Assistenten, dem ihr vertraut, ihn in das WuselWall-Format zu bringen. Füge seine Antwort hier ein. Vor dem Speichern siehst du eine Vorschau.';
+      'Füge einen Stundenplan als JSON im WuselWall-Format ein. Vor dem Speichern siehst du eine Vorschau.';
 
   @override
   String get schoolImportCopyPrompt => 'Anleitung für den Assistenten kopieren';
@@ -4761,14 +4761,14 @@ class AppLocalizationsDe extends AppLocalizations {
       'Bitte lies den Stundenplan auf dem Foto und gib ihn als JSON im folgenden Format zurück, ohne weiteren Text. Tage als Mo, Di, Mi, Do, Fr; Stunden als Nummer (1 = erste Stunde) oder mit Beginn und Ende; Fächer mit dem Kürzel vom Blatt und, wenn bekannt, dem vollen Namen. Leere Felder weglassen. Bei A- und B-Wochen trägst du week: a oder b ein. Hort oder Betreuung kommen unter care.';
 
   @override
-  String get schoolImportPasteHint => 'Antwort hier einfügen';
+  String get schoolImportPasteHint => 'Stundenplan als JSON hier einfügen';
 
   @override
   String get schoolImportRead => 'Einlesen';
 
   @override
   String get schoolImportErrNotJson =>
-      'Das ist kein Stundenplan im WuselWall-Format. Füge die ganze Antwort des Assistenten ein.';
+      'Das ist kein Stundenplan im WuselWall-Format. Füge den vollständigen JSON-Text ein.';
 
   @override
   String get schoolImportErrNoLessons => 'Der Text enthält keine Stunden.';

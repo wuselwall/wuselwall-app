@@ -1,5 +1,12 @@
 # 12 — MCP & Assistant Integration (B4)
 
+> **Amendment 2026-10-24 — product pause.** MCP and AI assistant work (Part 2, scopes, consent and assistant setup) is **on hold**.
+> The app exposes only **Apps and automations** for Siri/Shortcuts and ordinary web-request
+> automations. Assistant setup, key lists, proposal cards and prompts are removed.
+> The MCP backend and existing credentials remain compatible; no server is disabled.
+> Part 2 below is retained design history, not a current UI guide or scheduled work.
+> See [the retained-work record](deferred/mcp-and-ai-assistants.md).
+
 Implements FR-6.1 – FR-6.6. Decision context: [ADR-007](adr/ADR-007-assistant-integration.md);
 both endpoints run as Supabase Edge Functions since [ADR-010](adr/ADR-010-flutter-and-self-hosted-supabase.md).
 
@@ -7,7 +14,7 @@ Two separate things, on different timelines:
 
 - **Today: Siri**, via Apple Shortcuts calling a REST endpoint. Works now, needs no
   native Siri code in the app, and about an hour of work.
-- **Now and later: MCP**, so Claude or any other MCP-speaking assistant can read and act
+- **On hold: MCP**, so Claude or any other MCP-speaking assistant can read and act
   on family data on your behalf.
 
 ---
@@ -15,7 +22,7 @@ Two separate things, on different timelines:
 ## Part 1 — Siri today, via Shortcuts
 
 > **Built 2026-10-16 on `feature/shortcuts`, not yet on the server:** the `shortcuts` Edge
-> Function, `app.shortcut_token` with Settings → Erweitert → Apps und KI-Assistenten (named "Siri und Kurzbefehle" until 2026-10-19), and every shortcut below
+> Function, `app.shortcut_token` with Settings → Erweitert → Apps und Automationen (renamed 2026-10-24), and every shortcut below
 > except "Wann ist …" for a member's baseline (only presence entries are read). The contract is
 > under [The endpoint as built](#the-endpoint-as-built); the family's guide is
 > `docs/settings/shortcuts.md`.

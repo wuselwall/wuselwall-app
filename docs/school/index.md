@@ -83,11 +83,9 @@ Wenn noch kein Plan vorliegt, zeigt die Ansicht einen Hinweis zum gewählten Kin
 
 ## Stundenplan einlesen
 
-Statt jede Stunde zu tippen, kannst du den Plan vom Blatt einlesen lassen. Es gibt drei Wege. Alle enden auf derselben [Vorschau](#die-vorschau), und erst **Übernehmen** schreibt etwas.
+Statt jede Stunde zu tippen, kannst du den Plan vom Blatt einlesen lassen. Es gibt zwei Wege. Alle enden auf derselben [Vorschau](#die-vorschau), und erst **Übernehmen** schreibt etwas.
 
-**Aus Text, mit eurem KI-Assistenten.** Tippe bei einem Kind ohne Plan auf **Einlesen…** und dann auf **Aus Text einfügen** (oder im Stundenplan oben auf **Einlesen…**). **Anleitung für den Assistenten kopieren** legt einen Text in die Zwischenablage: Gib ihn zusammen mit einem Foto des Stundenplans dem Assistenten, dem ihr vertraut, zum Beispiel in dessen App auf dem Handy. Er antwortet in einem festen Format, das WuselWall lesen kann. Füge die Antwort in das Feld ein und tippe auf **Einlesen**. Das Foto geht dabei nur an den Assistenten eurer Wahl; WuselWall schickt nichts an niemanden.
-
-**Als Vorschlag eines Assistenten.** Ein Assistent, der mit WuselWall verbunden ist ([Apps und KI-Assistenten](/settings/shortcuts)), kann einen Stundenplan als **Vorschlag** hinterlegen. Er ändert dabei nichts: Auf **Heute** und über dem Stundenplan erscheint eine Karte „Vorschlag von Claude“ mit **Prüfen** und **Verwerfen**. **Prüfen** öffnet die Vorschau. Vorschläge verfallen nach 14 Tagen.
+**Aus strukturiertem Text.** Tippe auf **Einlesen…** und **Aus Text einfügen**. Füge einen Stundenplan als JSON im WuselWall-Format ein und tippe auf **Einlesen**. Vor dem Speichern siehst du die Vorschau. Gewöhnlicher Fließtext wird nicht automatisch in einen Stundenplan umgewandelt.
 
 **Als Foto oder PDF, gelesen von eurem Server.** Hat euer Server die Texterkennung eingerichtet ([Extras für den Server](/server/extras#texterkennung)), tippst du auf **Einlesen…** und **Foto scannen**. Dann wählst du **Foto aufnehmen**, **Foto auswählen** oder **Datei wählen (PDF oder Bild)**, zum Beispiel für die PDF-Datei, die die Schule verschickt hat.
 
@@ -132,7 +130,7 @@ Unter **Neue Fächer** steht jedes Fach vom Blatt, das es bei euch noch nicht gi
 
 Schaltest du **Neue Fächer anlegen** aus, werden die Stunden mit neuen Fächern weggelassen; im Raster sind sie durchgestrichen.
 
-**Übernehmen** legt den Zeitraum an, wenn er fehlt, ergänzt die Klingelzeiten, legt die neuen Fächer an und speichert den Plan. **Verwerfen** lässt alles, wie es war; ein Vorschlag ist dann abgelehnt.
+**Übernehmen** legt den Zeitraum an, wenn er fehlt, ergänzt die Klingelzeiten, legt die neuen Fächer an und speichert den Plan. Über den Zurück-Pfeil verlässt du die Vorschau, ohne etwas zu speichern.
 
 ## Ganze Tage bearbeiten
 

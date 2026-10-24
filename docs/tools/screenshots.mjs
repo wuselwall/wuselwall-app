@@ -54,12 +54,12 @@ const T = {
   es: { familyTile: 'zona horaria, exportación', editList: 'Editar lista', grandma: "Abuela Ruth", newList: "Nueva lista", name: "Nombre", save: "Guardar", search: "Buscar o añadir", settings: "Ajustes", oldCode: "Crear un código para un dispositivo antiguo", deviceName: "Nombre del dispositivo", createCode: "Crear código", addMember: "Añadir miembro", history: "Historial", trolley: "En el carrito", household: "Crear una familia nueva", signIn: "Continuar con correo electrónico", papa: "David", daughter: "Olivia", wholemeal: /Integral/, kitchenTablet: "Tableta de la cocina", close: "Cerrar", shopping: "Compra", kidShopping: "Compra", calendar: "Calendario", week: "Semana", newEvent: "Nuevo evento", schedule: "Horario escolar", tasks: "Tareas", meals: "Comidas", householdSettings: "Ajustes del hogar", today: "Hoy", editSchool: "Editar colegio", region: "Región", importHolidays: "Importar vacaciones escolares", addMeal: "Añadir comida", pairFront: "Conectar una tableta familiar o pantalla de pared", pairConnect: "Conectar un dispositivo", pairCode: "Código del nuevo dispositivo", next: "Siguiente", inviteAdult: "Invitar a un adulto", inviteName: "Nombre", inviteCreate: "Crear invitación", reminders: "Recordatorios", advanced: "Avanzados", setPassword: "Establecer contraseña" , enrol: "Conectar con un código", editTimetable: "Editar horario", editorSchool: "Colegio del parque", searchQuery: "lec" },
 };
 // The school setup and the timetable import (specs/24): the first school, the import menu,
-// the scan sheet and an assistant's proposal.
+// the scan sheet and the structured-text import preview.
 const SCHOOL_IMPORT = {
-  de: { setupSchool: 'Schule einrichten', schoolName: 'Name der Schule', firstSchool: 'Grundschule Lindenhof', importAction: 'Einlesen…', importFromPhoto: 'Foto scannen', review: 'Prüfen', newSubjects: 'Neue Fächer', country: 'Deutschland', state: 'Berlin' },
-  en: { setupSchool: 'Set up school', schoolName: 'Name of the school', firstSchool: 'Hollybrook Primary', importAction: 'Read in…', importFromPhoto: 'Scan a photo', review: 'Review', newSubjects: 'New subjects', country: 'Germany', state: 'Berlin' },
-  fr: { setupSchool: 'Configurer l’école', schoolName: 'Nom de l’école', firstSchool: 'École primaire du Linde', importAction: 'Importer…', importFromPhoto: 'Scanner une photo', review: 'Vérifier', newSubjects: 'Nouvelles matières', country: 'Allemagne', state: 'Berlin' },
-  es: { setupSchool: 'Configurar colegio', schoolName: 'Nombre del colegio', firstSchool: 'Primaria del tilo', importAction: 'Importar…', importFromPhoto: 'Escanear una foto', review: 'Revisar', newSubjects: 'Asignaturas nuevas', country: 'Alemania', state: 'Berlín' },
+  de: { setupSchool: 'Schule einrichten', schoolName: 'Name der Schule', firstSchool: 'Grundschule Lindenhof', importAction: 'Einlesen…', importFromPhoto: 'Foto scannen', newSubjects: 'Neue Fächer', country: 'Deutschland', state: 'Berlin' },
+  en: { setupSchool: 'Set up school', schoolName: 'Name of the school', firstSchool: 'Hollybrook Primary', importAction: 'Read in…', importFromPhoto: 'Scan a photo', newSubjects: 'New subjects', country: 'Germany', state: 'Berlin' },
+  fr: { setupSchool: 'Configurer l’école', schoolName: 'Nom de l’école', firstSchool: 'École primaire du Linde', importAction: 'Importer…', importFromPhoto: 'Scanner une photo', newSubjects: 'Nouvelles matières', country: 'Allemagne', state: 'Berlin' },
+  es: { setupSchool: 'Configurar colegio', schoolName: 'Nombre del colegio', firstSchool: 'Primaria del tilo', importAction: 'Importar…', importFromPhoto: 'Escanear una foto', newSubjects: 'Asignaturas nuevas', country: 'Alemania', state: 'Berlín' },
 };
 for (const [lang, labels] of Object.entries(SCHOOL_IMPORT)) Object.assign(T[lang], labels);
 
@@ -153,6 +153,21 @@ const longPress = async (page, locator) => {
  * Steps that fail log a warning and the shot is still taken, so one fragile step does
  * not lose the others.
  */
+const openTimetablePreview = async (p, t) => {
+  await tapAny(p, t.schedule, { exact: false });
+  await tapAny(p, t.importAction);
+  await p.getByRole('menuitem', { name: t.importFromText }).first().click();
+  await settle(p);
+  // Focus the real editing element before inserting: a fill on a newly created
+  // Flutter semantics field can precede its text-input connection.
+  await p.getByRole('textbox', { name: t.importPasteHint }).click();
+  await settle(p);
+  await p.keyboard.insertText(t.timetablePayload);
+  await settle(p);
+  await press(p, t.importRead, { exact: true });
+  await settle(p, 1200);
+};
+
 const shots = [
   { name: 'setup-server', scenario: 'server', viewport: PHONE },
   { name: 'setup-start', scenario: 'setup', viewport: PHONE },
@@ -181,12 +196,12 @@ const shots = [
   { name: 'school-first', scenario: 'noschool', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.schedule, { exact: false }); await tapAny(p, t.setupSchool); await p.getByRole('textbox', { name: t.schoolName }).fill(t.firstSchool); await settle(p); await tapAny(p, t.region, { exact: false }); await tapAny(p, t.country, { exact: false }); await settle(p, 1200); await tapAny(p, t.state, { exact: false }); await settle(p, 1200); } },
   // "Read in…" above the timetable, then "Scan a photo": the sheet with its three choices.
   { name: 'timetable-scan', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.schedule, { exact: false }); await tapAny(p, t.importAction); await p.getByRole('menuitem', { name: t.importFromPhoto }).first().click(); await settle(p, 1200); } },
-  // An assistant's proposal (scenario import) opens the preview that paste and scan open too.
+  // Structured text opens the preview that the photo scan uses too.
   // The tablet is wide enough for each subject's name under its short name.
-  { name: 'timetable-import', scenario: 'import', viewport: TABLET, steps: async (p, t) => { await press(p, t.review); await settle(p, 1200); } },
+  { name: 'timetable-import', scenario: 'adult', viewport: TABLET, steps: openTimetablePreview },
   // The same preview on a phone, scrolled to the new subjects and their take-as list.
-  { name: 'timetable-import-subjects', scenario: 'import', viewport: PHONE, steps: async (p, t) => {
-    await press(p, t.review); await settle(p, 1200);
+  { name: 'timetable-import-subjects', scenario: 'adult', viewport: PHONE, steps: async (p, t) => {
+    await openTimetablePreview(p, t);
     const heading = p.getByText(t.newSubjects, { exact: true });
     for (let i = 0; i < 10 && !(await heading.count()); i++) await scrollDown(p, 500);
     for (let i = 0; i < 3; i++) {
@@ -260,6 +275,31 @@ const RITUALS = {
   es: { tradition: 'Tradición familiar', rituals: 'Rituales', wishTitle: 'Tu comida favorita', mine: 'Mis ajustes' },
 };
 for (const [lang, labels] of Object.entries(RITUALS)) Object.assign(T[lang], labels);
+
+// Preview fixtures enter through the same paste sheet as a family's structured text.
+const IMPORT_SAMPLES = {
+  de: { member: 'Paul', codes: ['D', 'Ma', 'Mu', 'Sp', 'Sw', 'Ku', 'SU'], other: ['HSU', 'Heimat- und Sachunterricht'], added: ['E', 'Englisch'], care: 'Hort' },
+  en: { member: 'Jack', codes: ['En', 'Ma', 'Mu', 'PE', 'Sw', 'Art', 'Top'], other: ['Geo', 'Geography'], added: ['Fr', 'French'], care: 'After-school club' },
+  fr: { member: 'Paul', codes: ['Al', 'Ma', 'Mus', 'EPS', 'Nat', 'Arts', 'Déc'], other: ['QLM', 'Questionner le monde'], added: ['Ang', 'Anglais'], care: 'Accueil périscolaire' },
+  es: { member: 'Pablo', codes: ['Ale', 'Mat', 'Mús', 'EF', 'Nat', 'Plás', 'Con'], other: ['CM', 'Conocimiento del Medio'], added: ['Ing', 'Inglés'], care: 'Cuidado extraescolar' },
+};
+for (const [lang, sample] of Object.entries(IMPORT_SAMPLES)) {
+  const l10n = JSON.parse(fs.readFileSync(`app/l10n/app_${lang}.arb`, 'utf8'));
+  const [d, ma, mu, sport, swim, art, topic] = sample.codes;
+  const other = { subject: sample.other[0], name: sample.other[1], like: topic };
+  const added = { subject: sample.added[0], name: sample.added[1] };
+  Object.assign(T[lang], {
+    importFromText: l10n.schoolImportFromText,
+    importPasteHint: l10n.schoolImportPasteHint,
+    importRead: l10n.schoolImportRead,
+    timetablePayload: JSON.stringify({
+      format: 'wuselwall-timetable/1', member: sample.member, school: T[lang].firstSchool,
+      week_cycle: 'weekly',
+      grid: { 1: [d, ma, other, sport], 2: [ma, d, mu, added, other], 3: [swim, swim, d, ma], 4: [d, ma, other, mu, sport], 5: [ma, d, art, art, added] },
+      care: [{ title: sample.care, days: [1, 2, 4], starts: '12:45', ends: '15:00' }],
+    }),
+  });
+}
 
 const only = process.argv.slice(2);
 const SHOT_TIMEOUT = 120_000;

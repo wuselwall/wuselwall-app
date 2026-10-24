@@ -1,5 +1,12 @@
 # 24 — School setup without typing: fewer facts, imports, proposals, scanning
 
+> **Amendment 2026-10-24 — product pause.** Assistant-connected proposals and assistant-guided paste are **on hold**. The app no
+> longer offers assistant prompts, proposal cards or assistant review/discard controls.
+> Structured JSON paste, the shared preview and photo/PDF OCR on the family's own server
+> remain. Proposal backend/data are retained; the assistant-specific sections below are
+> historical design, not current UI or scheduled work.
+> See [the retained-work record](deferred/mcp-and-ai-assistants.md).
+
 *Added 2026-10-22.* Builds on [15](15-module-school-timetable.md) (the Stundenplan),
 [12](12-mcp-and-assistants.md) (assistants) and [20](20-onboarding.md) (onboarding).
 Decision context: the onboarding review of 2026-10-22 with the pilot household's own

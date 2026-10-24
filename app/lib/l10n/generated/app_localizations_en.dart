@@ -4352,15 +4352,15 @@ class AppLocalizationsEn extends AppLocalizations {
       'Open the WuselWall app on your phone, choose this server by scanning the code, then sign in there.';
 
   @override
-  String get shortcutTitle => 'Apps and AI assistants';
+  String get shortcutTitle => 'Apps and automations';
 
   @override
   String get shortcutSettingsSubtitle =>
-      'Siri, automations and AI assistants (MCP), each with a key';
+      'Siri and other automations, each with a key';
 
   @override
   String get shortcutIntro =>
-      'A key lets another app use WuselWall as one person. An automation key, for example for a shortcut with Siri on the iPhone or any other app that can call a web address, reads and adds: it puts things on the shopping list and tells you what is on today, what there is to eat or who has PE tomorrow. It cannot delete or manage anything. A key for an AI assistant (MCP, such as Claude) only reads.';
+      'A key lets another app use WuselWall as one person. An automation key, for example for a shortcut with Siri on the iPhone or any other app that can call a web address, reads and adds: it puts things on the shopping list and tells you what is on today, what there is to eat or who has PE tomorrow. It cannot delete or manage anything.';
 
   @override
   String get shortcutEmpty => 'No keys yet.';
@@ -4711,7 +4711,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get schoolImportPasteIntro =>
-      'Photograph the timetable and ask the assistant you trust to put it into the WuselWall format. Paste its answer here. You see a preview before anything is saved.';
+      'Paste a timetable as JSON in the WuselWall format. You see a preview before anything is saved.';
 
   @override
   String get schoolImportCopyPrompt =>
@@ -4725,14 +4725,14 @@ class AppLocalizationsEn extends AppLocalizations {
       'Please read the timetable in the photo and return it as JSON in the format below, with no other text. Days as Mo, Tu, We, Th, Fr; periods as a number (1 = first lesson) or with start and end times; subjects with the short code on the sheet and, if known, the full name. Leave empty cells out. For A and B weeks set week: a or b. After-school care goes under care.';
 
   @override
-  String get schoolImportPasteHint => 'Paste the answer here';
+  String get schoolImportPasteHint => 'Paste timetable JSON here';
 
   @override
   String get schoolImportRead => 'Read in';
 
   @override
   String get schoolImportErrNotJson =>
-      'That is no timetable in the WuselWall format. Paste the assistant’s whole answer.';
+      'That is not a timetable in the WuselWall format. Paste the complete JSON text.';
 
   @override
   String get schoolImportErrNoLessons => 'The text contains no lessons.';

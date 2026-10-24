@@ -12,26 +12,20 @@ import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/school/application/school_providers.dart';
-import 'package:wuselwall/features/school/data/proposals_repository.dart';
 import 'package:wuselwall/features/school/data/school_repository.dart';
 import 'package:wuselwall/features/school/domain/school_models.dart';
 import 'package:wuselwall/features/school/domain/timetable_import.dart';
 import 'package:wuselwall/features/school/ui/school_icons.dart';
 
-/// What the import preview opens on: a parsed payload, and the proposal it came from
-/// when an assistant handed it in (specs/24).
+/// What the import preview opens on: a parsed payload from text or a photo (specs/24).
 class TimetableImportArgs {
   const TimetableImportArgs({
     required this.import,
-    this.proposalId,
-    this.assistantLabel,
     this.profileId,
     this.unplaced = 0,
   });
 
   final TimetableImport import;
-  final String? proposalId;
-  final String? assistantLabel;
 
   /// The child to preselect; else the one the payload names, else the first.
   final String? profileId;
@@ -42,8 +36,8 @@ class TimetableImportArgs {
 
 /// The preview before anything is written (specs/24 "The preview"): the child, the
 /// school, the term it will land in, the grid as it will look, the subjects that will be
-/// created, and every warning. Nothing exists until Übernehmen; a proposal is marked
-/// applied or rejected with the same tap. Guardian only (the server decides).
+/// created, and every warning. Nothing exists until Übernehmen.
+/// Guardian only (the server decides).
 class TimetableImportPage extends ConsumerStatefulWidget {
   const TimetableImportPage({required this.args, super.key});
 
@@ -150,7 +144,6 @@ class _TimetableImportPageState extends ConsumerState<TimetableImportPage> {
               onMergeInto: (key, id) => setState(() => _mergeInto[key] = id),
               onApply: (resolved, term) =>
                   _apply(d, child, school, term, resolved),
-              onDiscard: args.proposalId == null ? null : _discard,
             );
           },
         ),
@@ -345,48 +338,13 @@ class _TimetableImportPageState extends ConsumerState<TimetableImportPage> {
       return;
     }
 
-    // 5. The verdict on the proposal, when there was one.
-    final proposalId = widget.args?.proposalId;
-    if (proposalId != null) {
-      if (!await run(
-        () => ref
-            .read(proposalsRepositoryProvider)
-            .resolve(actor: actor, id: proposalId, applied: true),
-      )) {
-        return;
-      }
-    }
-
     ref
       ..invalidate(schoolDataProvider)
-      ..invalidate(schoolWeekProvider)
-      ..invalidate(openProposalsProvider);
+      ..invalidate(schoolWeekProvider);
     ref.read(selectedChildIdProvider.notifier).select(child.id);
     if (!mounted) return;
     context.showMessage(l10n.schoolImportApplied);
     Navigator.of(context).pop(true);
-  }
-
-  Future<void> _discard() async {
-    final proposalId = widget.args!.proposalId!;
-    setState(() => _busy = true);
-    final result = await ref
-        .read(proposalsRepositoryProvider)
-        .resolve(
-          actor: ref.read(actingProfileProvider),
-          id: proposalId,
-          applied: false,
-        );
-    if (!mounted) return;
-    switch (result) {
-      case Err(:final failure):
-        setState(() => _busy = false);
-        context.showFailure(failure);
-      case Ok():
-        ref.invalidate(openProposalsProvider);
-        context.showMessage(context.l10n.schoolImportDiscarded);
-        Navigator.of(context).pop(false);
-    }
   }
 }
 
@@ -405,7 +363,6 @@ class _Preview extends ConsumerWidget {
     required this.onCreateSubjects,
     required this.onMergeInto,
     required this.onApply,
-    required this.onDiscard,
   });
 
   final TimetableImportArgs args;
@@ -423,7 +380,6 @@ class _Preview extends ConsumerWidget {
   final ValueChanged<bool> onCreateSubjects;
   final void Function(String key, String? subjectId) onMergeInto;
   final void Function(ResolvedImport resolved, TermRecord? term) onApply;
-  final VoidCallback? onDiscard;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -464,21 +420,6 @@ class _Preview extends ConsumerWidget {
           child: ListView(
             padding: const EdgeInsets.all(Tokens.space4),
             children: [
-              if (args.assistantLabel case final assistant?) ...[
-                Row(
-                  children: [
-                    Icon(Icons.auto_awesome, color: theme.colorScheme.primary),
-                    const SizedBox(width: Tokens.space2),
-                    Expanded(
-                      child: Text(
-                        l10n.schoolImportProposedBy(assistant),
-                        style: theme.textTheme.titleMedium,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: Tokens.space3),
-              ],
               Text(l10n.schoolChooseChild, style: theme.textTheme.labelLarge),
               const SizedBox(height: Tokens.space2),
               Wrap(
@@ -629,16 +570,6 @@ class _Preview extends ConsumerWidget {
             padding: const EdgeInsets.all(Tokens.space4),
             child: Row(
               children: [
-                if (onDiscard != null) ...[
-                  Expanded(
-                    child: OutlinedButton(
-                      key: const ValueKey('import-discard'),
-                      onPressed: busy ? null : onDiscard,
-                      child: Text(l10n.schoolImportDiscard),
-                    ),
-                  ),
-                  const SizedBox(width: Tokens.space3),
-                ],
                 Expanded(
                   flex: 2,
                   child: FilledButton(

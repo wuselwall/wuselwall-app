@@ -1,13 +1,10 @@
-# Apps et assistants IA
+# Apps et automatisations
 
-Une **clé** autorise une autre app à agir avec les données familiales au nom d’une personne :
-
-- **Automatisation** : lit et ajoute, par exemple avec Siri, Raccourcis d’Apple, une app Android ou Home Assistant capable d’envoyer une requête web.
-- **Assistant IA** : lit seulement, avec un assistant compatible MCP, par exemple Claude.
+Avec une **clé** WuselWall, une autre app utilise les données familiales au nom d’une personne. Siri, Raccourcis et les autres apps d’automatisation peuvent lire et ajouter des éléments. Les exemples utilisent Raccourcis d’Apple ; les autres apps envoient les mêmes requêtes.
 
 Avec Siri : « Liste de courses » → « De quoi avez-vous besoin ? » → « Du lait et deux concombres ». Une clé WuselWall et l’app Raccourcis suffisent.
 
-<Shot name="shortcuts" alt="Les clés d’automatisation et d’assistants dans les paramètres" />
+<Shot name="shortcuts" alt="Les clés d’automatisation dans les paramètres" />
 
 ## Droits d’une clé {#what-a-key-may-do}
 
@@ -15,7 +12,7 @@ La clé appartient à **une personne** : elle lit la journée, les repas, l’é
 
 ## Créer une clé {#creating-a-key}
 
-Dans **Paramètres → Avancés → Apps et assistants IA**, créez une clé et donnez-lui un nom. Un parent peut choisir la personne ; les autres créent leur propre clé sur leur téléphone. Copiez **la clé et l’adresse du serveur**, affichées une seule fois.
+Dans **Paramètres → Avancés → Apps et automatisations**, créez une clé et donnez-lui un nom. Un parent peut choisir la personne ; les autres créent leur propre clé sur leur téléphone. Copiez **la clé et l’adresse du serveur**, affichées une seule fois.
 
 Gardez la clé comme un mot de passe. Raccourcis la synchronise entre vos appareils Apple par iCloud.
 
@@ -55,22 +52,3 @@ Les réponses suivent la langue prise en charge du téléphone, sinon celle du f
 ## Révoquer une clé {#revoking-a-key}
 
 Révoquez-la si le téléphone est perdu ou si elle n’est plus utile. L’effet est immédiat. La liste indique la dernière utilisation. Quitter le foyer révoque automatiquement vos clés. Les parents gèrent toutes les clés ; les membres, les leurs. L’[export](/fr/settings/members-devices#export-data) montre noms et dates, jamais les secrets.
-
-## Assistants IA et MCP {#ai-assistants-mcp}
-
-Un assistant compatible **Model Context Protocol** peut consulter la semaine, les événements, tâches, repas, courses, points, recettes, emplois du temps et présences. Il **ne peut rien ajouter, modifier ou supprimer**. La seule chose qu’il peut déposer est une **proposition** : un emploi du temps lu sur une feuille. Elle apparaît comme carte sur **Aujourd’hui**, et seul un parent l’applique ou la rejette, voir [Importer un emploi du temps](/fr/school/#reading-in).
-
-Créez une clé de type **Assistant IA**, réservée aux adultes, au lieu d’une clé d’automatisation.
-
-::: warning Les données consultées quittent votre serveur
-L’assistant lit les informations de toute la famille, y compris les absences et les emplois du temps des enfants. Elles sont transmises à son fournisseur et soumises à ses règles de confidentialité. Décidez ensemble si vous le souhaitez.
-:::
-
-Ajoutez dans l’assistant l’adresse MCP fournie par WuselWall, avec l’en-tête `Authorization: Bearer wwa_…`. Dans Claude Code :
-
-```sh
-claude mcp add --transport http wuselwall https://api.example.org/functions/v1/mcp \
-  --header "Authorization: Bearer wwa_…"
-```
-
-Les assistants imposant OAuth sans en-tête personnalisé ne peuvent pas encore se connecter. L’autorisation avec page de consentement accompagnera les futures écritures par assistant. Sans iPhone, toute app capable d’envoyer une requête avec cet en-tête peut utiliser les automatisations.

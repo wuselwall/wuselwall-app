@@ -1,35 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
-import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/identity/ui/guardian_gate.dart';
 import 'package:wuselwall/features/school/domain/timetable_import.dart';
 import 'package:wuselwall/features/school/ui/timetable_import_page.dart';
 
-/// The payload's shape, for the assistant's instructions. English like every contract;
-/// the sentences around it are in the family's language ([AppLocalizations.schoolImportPrompt]).
-const timetableImportFormatSpec = '''
-{
-  "format": "wuselwall-timetable/1",
-  "member": "<child's first name>",
-  "school": "<school name, if on the sheet>",
-  "class": "<class, e.g. 3b, if on the sheet>",
-  "week_cycle": "weekly" | "ab",
-  "periods": [{"index": 1, "starts": "08:00", "ends": "08:45"}],
-  "lessons": [
-    {"day": "Mo", "period": 1, "subject": "Ma", "name": "Mathematik", "teacher": "", "room": "", "week": "a" | "b" | null}
-  ],
-  "care": [{"title": "Hort", "days": ["Mo", "Di"], "starts": "13:30", "ends": "15:30"}]
-}''';
-
-/// Opens the paste sheet for [profileId]. The parent pastes an assistant's answer; a
-/// readable payload opens the import preview.
+/// Opens the paste sheet for [profileId]. Structured timetable text opens the preview.
 Future<void> showTimetablePasteSheet(
   BuildContext context,
   WidgetRef ref, {
@@ -62,16 +43,6 @@ class _TimetablePasteSheetState extends State<TimetablePasteSheet> {
   void dispose() {
     _text.dispose();
     super.dispose();
-  }
-
-  Future<void> _copyPrompt() async {
-    final l10n = context.l10n;
-    await Clipboard.setData(
-      ClipboardData(
-        text: '${l10n.schoolImportPrompt}\n\n$timetableImportFormatSpec',
-      ),
-    );
-    if (mounted) context.showMessage(l10n.schoolImportPromptCopied);
   }
 
   void _read() {
@@ -118,15 +89,6 @@ class _TimetablePasteSheetState extends State<TimetablePasteSheet> {
           Text(l10n.schoolImportPasteTitle, style: theme.textTheme.titleLarge),
           const SizedBox(height: Tokens.space2),
           Text(l10n.schoolImportPasteIntro),
-          const SizedBox(height: Tokens.space3),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: OutlinedButton.icon(
-              onPressed: _copyPrompt,
-              icon: const Icon(Icons.copy_outlined),
-              label: Text(l10n.schoolImportCopyPrompt),
-            ),
-          ),
           const SizedBox(height: Tokens.space3),
           TextField(
             key: const ValueKey('import-paste'),

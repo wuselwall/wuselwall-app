@@ -4413,15 +4413,15 @@ class AppLocalizationsFr extends AppLocalizations {
       'Ouvre l’application WuselWall sur ton téléphone, choisis ce serveur en scannant le code, puis connecte-toi dessus.';
 
   @override
-  String get shortcutTitle => 'Applications et assistants IA';
+  String get shortcutTitle => 'Apps et automatisations';
 
   @override
   String get shortcutSettingsSubtitle =>
-      'Siri, automatisations et assistants IA (MCP), chacun avec une clé';
+      'Siri et autres automatisations, chacune avec une clé';
 
   @override
   String get shortcutIntro =>
-      'Une clé permet à une autre application d’utiliser WuselWall au nom d’une personne. Une clé d’automatisation, par exemple pour un raccourci Siri sur iPhone ou toute application pouvant appeler une adresse web, permet de lire et d’ajouter : elle ajoute des articles à la liste de courses et indique le programme du jour, le repas ou qui a sport demain. Elle ne permet ni de supprimer ni de gérer les données. Une clé pour un assistant IA (MCP, comme Claude) permet uniquement de lire.';
+      'Une clé permet à une autre application d’utiliser WuselWall au nom d’une personne. Une clé d’automatisation, par exemple pour un raccourci Siri sur iPhone ou toute application pouvant appeler une adresse web, permet de lire et d’ajouter : elle ajoute des articles à la liste de courses et indique le programme du jour, le repas ou qui a sport demain. Elle ne permet ni de supprimer ni de gérer les données.';
 
   @override
   String get shortcutEmpty => 'Pas encore de clés.';
@@ -4776,7 +4776,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get schoolImportPasteIntro =>
-      'Photographie l’emploi du temps et demande à l’assistant de confiance de le mettre au format WuselWall. Colle sa réponse ici. Tu verras un aperçu avant d’enregistrer.';
+      'Colle un emploi du temps en JSON au format WuselWall. Tu verras un aperçu avant d’enregistrer.';
 
   @override
   String get schoolImportCopyPrompt =>
@@ -4790,14 +4790,14 @@ class AppLocalizationsFr extends AppLocalizations {
       'Lis l’emploi du temps sur la photo et renvoie-le en JSON dans le format ci-dessous, sans autre texte. Jours en lun, mar, mer, jeu, ven ; cours par numéro (1 = premier cours) ou avec heure de début et de fin ; matières avec l’abréviation de la feuille et, si tu la connais, le nom complet. Omets les cases vides. Pour les semaines A et B, indique week: a ou b. La garderie va sous care.';
 
   @override
-  String get schoolImportPasteHint => 'Colle la réponse ici';
+  String get schoolImportPasteHint => 'Colle ici l’emploi du temps en JSON';
 
   @override
   String get schoolImportRead => 'Importer';
 
   @override
   String get schoolImportErrNotJson =>
-      'Ce n’est pas un emploi du temps au format WuselWall. Colle la réponse complète de l’assistant.';
+      'Ce n’est pas un emploi du temps au format WuselWall. Colle le texte JSON complet.';
 
   @override
   String get schoolImportErrNoLessons => 'Le texte ne contient aucun cours.';

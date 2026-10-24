@@ -105,8 +105,10 @@ Priority: **M** = must have in v1 · **S** = should have · **C** = could have �
 
 ## FR-6 Assistant Integration (B4)
 
-*Scheduled for M2 ([13](13-roadmap.md)). The pilot launch (M1.6) ships without it, so "M"
-here means "before v1 is called done", not "before the household uses it".*
+*2026-10-24: FR-6.1–FR-6.4 and FR-6.6 are on hold, outside the active milestones and
+release gates. Priorities below record the original design, not a current commitment.
+FR-6.5 (Siri/Shortcuts) is built and remains available. Retained work:
+[the deferred record](deferred/mcp-and-ai-assistants.md).*
 
 | ID | Requirement | Prio | Origin |
 |---|---|---|---|

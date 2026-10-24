@@ -126,7 +126,11 @@ editor is built, not after.*
 | Q33 | Should the kiosk be able to add to the shopping list? | **Decided 2026-09-02: yes**, tiles only, no search field, default list only (FR-8.12) |
 | Q34 | Merge "wer ist wo" and "Termine" on the week board? | **Decided 2026-09-02: no** — see the rejected layouts in [09](09-clients-and-ux.md#considered-and-rejected-merging-the-zones) |
 
-## Before M2 (assistants and the obvious gaps)
+## Later questions (former M2)
+
+**2026-10-24:** Q15–Q17 are parked with
+[MCP and AI assistants](deferred/mcp-and-ai-assistants.md). Their original leanings below
+are retained research, with no active milestone or instruction to verify/build now.
 
 | # | Question | Why it matters | Leaning |
 |---|---|---|---|

@@ -7526,19 +7526,19 @@ abstract class AppLocalizations {
   /// No description provided for @shortcutTitle.
   ///
   /// In en, this message translates to:
-  /// **'Apps and AI assistants'**
+  /// **'Apps and automations'**
   String get shortcutTitle;
 
   /// No description provided for @shortcutSettingsSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Siri, automations and AI assistants (MCP), each with a key'**
+  /// **'Siri and other automations, each with a key'**
   String get shortcutSettingsSubtitle;
 
   /// No description provided for @shortcutIntro.
   ///
   /// In en, this message translates to:
-  /// **'A key lets another app use WuselWall as one person. An automation key, for example for a shortcut with Siri on the iPhone or any other app that can call a web address, reads and adds: it puts things on the shopping list and tells you what is on today, what there is to eat or who has PE tomorrow. It cannot delete or manage anything. A key for an AI assistant (MCP, such as Claude) only reads.'**
+  /// **'A key lets another app use WuselWall as one person. An automation key, for example for a shortcut with Siri on the iPhone or any other app that can call a web address, reads and adds: it puts things on the shopping list and tells you what is on today, what there is to eat or who has PE tomorrow. It cannot delete or manage anything.'**
   String get shortcutIntro;
 
   /// No description provided for @shortcutEmpty.
@@ -8078,7 +8078,7 @@ abstract class AppLocalizations {
   /// No description provided for @schoolImportPasteIntro.
   ///
   /// In en, this message translates to:
-  /// **'Photograph the timetable and ask the assistant you trust to put it into the WuselWall format. Paste its answer here. You see a preview before anything is saved.'**
+  /// **'Paste a timetable as JSON in the WuselWall format. You see a preview before anything is saved.'**
   String get schoolImportPasteIntro;
 
   /// No description provided for @schoolImportCopyPrompt.
@@ -8102,7 +8102,7 @@ abstract class AppLocalizations {
   /// No description provided for @schoolImportPasteHint.
   ///
   /// In en, this message translates to:
-  /// **'Paste the answer here'**
+  /// **'Paste timetable JSON here'**
   String get schoolImportPasteHint;
 
   /// No description provided for @schoolImportRead.
@@ -8114,7 +8114,7 @@ abstract class AppLocalizations {
   /// No description provided for @schoolImportErrNotJson.
   ///
   /// In en, this message translates to:
-  /// **'That is no timetable in the WuselWall format. Paste the assistant’s whole answer.'**
+  /// **'That is not a timetable in the WuselWall format. Paste the complete JSON text.'**
   String get schoolImportErrNotJson;
 
   /// No description provided for @schoolImportErrNoLessons.
