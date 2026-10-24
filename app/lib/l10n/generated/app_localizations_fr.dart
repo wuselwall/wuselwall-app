@@ -5536,4 +5536,39 @@ class AppLocalizationsFr extends AppLocalizations {
   String mealsWishedBy(String name) {
     return 'Souhait de $name';
   }
+
+  @override
+  String get tableQuestionTitle => 'Question à table';
+
+  @override
+  String get tableQuestionNext => 'Autre question';
+
+  @override
+  String get tableQuestionAnswer => 'Voir la réponse';
+
+  @override
+  String tableQuestionFrom(String name) {
+    return 'Question de $name';
+  }
+
+  @override
+  String get tableQuestionsManage => 'Nos questions';
+
+  @override
+  String get tableQuestionAdd => 'Ajouter une question';
+
+  @override
+  String get tableQuestionAddHint => 'Que veux-tu demander à table ?';
+
+  @override
+  String get tableQuestionHide => 'Ne plus poser cette question';
+
+  @override
+  String get tableQuestionRemove => 'Supprimer la question';
+
+  @override
+  String get tableQuestionsHidden => 'Questions écartées';
+
+  @override
+  String get tableQuestionShowAgain => 'Reposer';
 }

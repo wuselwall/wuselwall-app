@@ -2073,5 +2073,16 @@
   "mealsWishChip": "{name}: {title}",
   "mealsWishPlan": "Einplanen",
   "mealsWishRemove": "Wunsch entfernen",
-  "mealsWishedBy": "Wunsch von {name}"
+  "mealsWishedBy": "Wunsch von {name}",
+  "tableQuestionTitle": "Tischfrage",
+  "tableQuestionNext": "Andere Frage",
+  "tableQuestionAnswer": "Antwort zeigen",
+  "tableQuestionFrom": "Frage von {name}",
+  "tableQuestionsManage": "Unsere Fragen",
+  "tableQuestionAdd": "Frage hinzufügen",
+  "tableQuestionAddHint": "Was möchtest du am Tisch fragen?",
+  "tableQuestionHide": "Diese Frage nicht mehr stellen",
+  "tableQuestionRemove": "Frage entfernen",
+  "tableQuestionsHidden": "Weggelassene Fragen",
+  "tableQuestionShowAgain": "Wieder stellen"
 }

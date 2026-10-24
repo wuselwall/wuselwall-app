@@ -3120,5 +3120,23 @@
         "type": "String"
       }
     }
-  }
+  },
+  "tableQuestionTitle": "Question at the table",
+  "tableQuestionNext": "Another question",
+  "tableQuestionAnswer": "Show the answer",
+  "tableQuestionFrom": "Question from {name}",
+  "@tableQuestionFrom": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tableQuestionsManage": "Our questions",
+  "tableQuestionAdd": "Add a question",
+  "tableQuestionAddHint": "What would you like to ask at the table?",
+  "tableQuestionHide": "Don't ask this one again",
+  "tableQuestionRemove": "Remove the question",
+  "tableQuestionsHidden": "Questions we left out",
+  "tableQuestionShowAgain": "Ask again"
 }

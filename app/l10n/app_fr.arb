@@ -2743,5 +2743,16 @@
   "mealsWishChip": "{name} : {title}",
   "mealsWishPlan": "Planifier",
   "mealsWishRemove": "Retirer le souhait",
-  "mealsWishedBy": "Souhait de {name}"
+  "mealsWishedBy": "Souhait de {name}",
+  "tableQuestionTitle": "Question à table",
+  "tableQuestionNext": "Autre question",
+  "tableQuestionAnswer": "Voir la réponse",
+  "tableQuestionFrom": "Question de {name}",
+  "tableQuestionsManage": "Nos questions",
+  "tableQuestionAdd": "Ajouter une question",
+  "tableQuestionAddHint": "Que veux-tu demander à table ?",
+  "tableQuestionHide": "Ne plus poser cette question",
+  "tableQuestionRemove": "Supprimer la question",
+  "tableQuestionsHidden": "Questions écartées",
+  "tableQuestionShowAgain": "Reposer"
 }

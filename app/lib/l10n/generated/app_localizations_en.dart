@@ -5469,4 +5469,39 @@ class AppLocalizationsEn extends AppLocalizations {
   String mealsWishedBy(String name) {
     return '$name\'s wish';
   }
+
+  @override
+  String get tableQuestionTitle => 'Question at the table';
+
+  @override
+  String get tableQuestionNext => 'Another question';
+
+  @override
+  String get tableQuestionAnswer => 'Show the answer';
+
+  @override
+  String tableQuestionFrom(String name) {
+    return 'Question from $name';
+  }
+
+  @override
+  String get tableQuestionsManage => 'Our questions';
+
+  @override
+  String get tableQuestionAdd => 'Add a question';
+
+  @override
+  String get tableQuestionAddHint => 'What would you like to ask at the table?';
+
+  @override
+  String get tableQuestionHide => 'Don\'t ask this one again';
+
+  @override
+  String get tableQuestionRemove => 'Remove the question';
+
+  @override
+  String get tableQuestionsHidden => 'Questions we left out';
+
+  @override
+  String get tableQuestionShowAgain => 'Ask again';
 }

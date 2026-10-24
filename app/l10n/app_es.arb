@@ -2743,5 +2743,16 @@
   "mealsWishChip": "{name}: {title}",
   "mealsWishPlan": "Planificar",
   "mealsWishRemove": "Quitar el deseo",
-  "mealsWishedBy": "Deseo de {name}"
+  "mealsWishedBy": "Deseo de {name}",
+  "tableQuestionTitle": "Pregunta en la mesa",
+  "tableQuestionNext": "Otra pregunta",
+  "tableQuestionAnswer": "Ver la respuesta",
+  "tableQuestionFrom": "Pregunta de {name}",
+  "tableQuestionsManage": "Nuestras preguntas",
+  "tableQuestionAdd": "Añadir una pregunta",
+  "tableQuestionAddHint": "¿Qué quieres preguntar en la mesa?",
+  "tableQuestionHide": "No volver a preguntar esto",
+  "tableQuestionRemove": "Quitar la pregunta",
+  "tableQuestionsHidden": "Preguntas apartadas",
+  "tableQuestionShowAgain": "Volver a preguntar"
 }

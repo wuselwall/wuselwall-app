@@ -8,6 +8,8 @@ import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/board/ui/board_grid.dart';
 import 'package:wuselwall/features/board/ui/board_next_up.dart';
+import 'package:wuselwall/features/rituals/application/ritual_providers.dart';
+import 'package:wuselwall/features/rituals/ui/table_question_widgets.dart';
 import 'package:wuselwall/features/wusel/ui/ambience_sky.dart';
 import 'package:wuselwall/features/wusel/ui/board_wusel.dart';
 
@@ -29,6 +31,9 @@ class BoardHeader extends ConsumerWidget {
     final ww = context.ww;
     final scheme = Theme.of(context).colorScheme;
     final compact = MediaQuery.textScalerOf(context).scale(24) > 32;
+    final tableMoment = ref.watch(
+      tableMomentProvider(Localizations.localeOf(context).languageCode),
+    );
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -105,22 +110,25 @@ class BoardHeader extends ConsumerWidget {
                   ),
                 ),
                 Expanded(
-                  child: Center(
-                    // On a nearly opaque pill, so the member dots never sit on the sky.
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 14,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: scheme.surfaceContainerLow.withValues(
-                          alpha: 0.92,
+                  // During the meal the table question takes the middle (specs/27).
+                  child: tableMoment != null
+                      ? const Center(child: BoardTableQuestion())
+                      : Center(
+                          // On a nearly opaque pill, so the member dots never sit on the sky.
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: scheme.surfaceContainerLow.withValues(
+                                alpha: 0.92,
+                              ),
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                            child: BoardNextUp(frame: frame),
+                          ),
                         ),
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      child: BoardNextUp(frame: frame),
-                    ),
-                  ),
                 ),
                 const SizedBox(width: 12),
                 Center(child: BoardWusel(stale: snapshot.isStale)),

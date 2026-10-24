@@ -9352,6 +9352,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{name}\'s wish'**
   String mealsWishedBy(String name);
+
+  /// No description provided for @tableQuestionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Question at the table'**
+  String get tableQuestionTitle;
+
+  /// No description provided for @tableQuestionNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Another question'**
+  String get tableQuestionNext;
+
+  /// No description provided for @tableQuestionAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Show the answer'**
+  String get tableQuestionAnswer;
+
+  /// No description provided for @tableQuestionFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'Question from {name}'**
+  String tableQuestionFrom(String name);
+
+  /// No description provided for @tableQuestionsManage.
+  ///
+  /// In en, this message translates to:
+  /// **'Our questions'**
+  String get tableQuestionsManage;
+
+  /// No description provided for @tableQuestionAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a question'**
+  String get tableQuestionAdd;
+
+  /// No description provided for @tableQuestionAddHint.
+  ///
+  /// In en, this message translates to:
+  /// **'What would you like to ask at the table?'**
+  String get tableQuestionAddHint;
+
+  /// No description provided for @tableQuestionHide.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t ask this one again'**
+  String get tableQuestionHide;
+
+  /// No description provided for @tableQuestionRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove the question'**
+  String get tableQuestionRemove;
+
+  /// No description provided for @tableQuestionsHidden.
+  ///
+  /// In en, this message translates to:
+  /// **'Questions we left out'**
+  String get tableQuestionsHidden;
+
+  /// No description provided for @tableQuestionShowAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask again'**
+  String get tableQuestionShowAgain;
 }
 
 class _AppLocalizationsDelegate
