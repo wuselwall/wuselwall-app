@@ -15,9 +15,11 @@ export 'package:wuselwall/core/wusel/wusel_pose.dart';
 /// Wusel, the family's companion (specs/25), in one [pose].
 ///
 /// The pose moves for a moment and then rests: the widget draws frames only while
-/// something is happening (the pose's own motion, a blink, the sleeping "z"), so a
-/// wall that shows Wusel all day is not redrawing it all day. Under reduced motion
-/// ([motionAllowed]) it shows the pose's still look and never ticks.
+/// something is happening (the pose's own motion, a blink), so a wall that shows Wusel
+/// all day is not redrawing it all day. A sleeping Wusel breathes all night, but at
+/// [sleepFrame] intervals from a timer rather than on every frame, and not at all
+/// while its route is hidden. Under reduced motion ([motionAllowed]) it shows the
+/// pose's still look and never ticks.
 ///
 /// The drawing is decoration and is hidden from screen readers; whatever Wusel says
 /// belongs in the screen's own text (see `WuselSays`).
@@ -60,6 +62,10 @@ class Wusel extends StatefulWidget {
   /// Below this Wusel stops reading as a character (specs/25 "The drawing").
   static const minSize = 32.0;
 
+  /// How often a sleeping Wusel draws its breath: five frames a second, enough for a
+  /// 4.5 s breath and the drifting "z" (specs/25 "Power on the wall").
+  static const sleepFrame = Duration(milliseconds: 200);
+
   @override
   State<Wusel> createState() => _WuselState();
 }
@@ -76,8 +82,12 @@ class _WuselState extends State<Wusel> with SingleTickerProviderStateMixin {
   late WuselLook _look = widget.pose.still;
 
   Timer? _blinkTimer;
-  Timer? _pulseTimer;
   int _reaction = 0;
+
+  /// Draws the sleeping look at [Wusel.sleepFrame] intervals while [WuselPose.sleep]
+  /// rests; [_sleepClock] is how long Wusel has slept, counted in those frames.
+  Timer? _sleepTimer;
+  Duration _sleepClock = Duration.zero;
 
   /// Runs from the last moment until [Wusel.restAfter]; once it has fired, no blink is
   /// scheduled until the next moment.
@@ -86,7 +96,6 @@ class _WuselState extends State<Wusel> with SingleTickerProviderStateMixin {
 
   static const _blend = Duration(milliseconds: 250);
   static const _blinkLength = Duration(milliseconds: 180);
-  static const _pulseLength = Duration(seconds: 3);
   static const _reactionLength = Duration(milliseconds: 600);
 
   /// Null until the first build has asked [motionAllowed].
@@ -96,6 +105,22 @@ class _WuselState extends State<Wusel> with SingleTickerProviderStateMixin {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _updateMotion();
+    _followVisibility();
+  }
+
+  /// A sleeping Wusel on a hidden route stops breathing until it is seen again.
+  void _followVisibility() {
+    final visible = _visible;
+    if (!visible && _sleepTimer != null) {
+      _sleepTimer!.cancel();
+      _sleepTimer = null;
+    } else if (visible &&
+        _sleepTimer == null &&
+        _moving == true &&
+        _run == null &&
+        widget.pose == WuselPose.sleep) {
+      _sleepTimer = Timer.periodic(Wusel.sleepFrame, _onSleepFrame);
+    }
   }
 
   void _updateMotion() {
@@ -140,10 +165,10 @@ class _WuselState extends State<Wusel> with SingleTickerProviderStateMixin {
 
   void _stopAll() {
     _blinkTimer?.cancel();
-    _pulseTimer?.cancel();
+    _sleepTimer?.cancel();
     _restTimer?.cancel();
     _blinkTimer = null;
-    _pulseTimer = null;
+    _sleepTimer = null;
     _restTimer = null;
     _run = null;
     if (_ticker.isTicking) _ticker.stop();
@@ -151,9 +176,14 @@ class _WuselState extends State<Wusel> with SingleTickerProviderStateMixin {
 
   void _start(_RunKind kind, {required WuselLook? from}) {
     _blinkTimer?.cancel();
-    _pulseTimer?.cancel();
+    _sleepTimer?.cancel();
+    _sleepTimer = null;
     if (_ticker.isTicking) _ticker.stop();
     if (kind == _RunKind.pose || kind == _RunKind.reaction) _momentNow();
+    if (kind == _RunKind.pose && widget.pose == WuselPose.sleep) {
+      _fallAsleep(from: from);
+      return;
+    }
     _run = _Run(kind);
     _blendFrom = from;
     _now = Duration.zero;
@@ -178,9 +208,6 @@ class _WuselState extends State<Wusel> with SingleTickerProviderStateMixin {
           eyeOpen: p >= 1 ? 1 : (1 - math.sin(math.pi * p)).clamp(0.0, 1.0),
         );
         done = elapsed >= _blinkLength;
-      case _RunKind.pulse:
-        next = pose.pulse(elapsed);
-        done = elapsed >= _pulseLength;
       case _RunKind.reaction:
         next = _reactionLook(pose.rest, elapsed);
         done = elapsed >= _reactionLength;
@@ -202,24 +229,47 @@ class _WuselState extends State<Wusel> with SingleTickerProviderStateMixin {
     _run = null;
     _ticker.stop();
     if (!mounted) return;
+    if (widget.pose == WuselPose.sleep) {
+      // After a tap's reaction: back to sleep.
+      setState(() => _fallAsleep(from: null));
+      return;
+    }
     setState(() => _look = widget.pose.rest);
     if (widget.pose.blinks) _scheduleBlink();
-    _schedulePulse();
   }
 
-  /// The pose's own moment while it rests (the sleeping "z"). Offstage it waits for the
-  /// next turn instead of stopping for good.
-  void _schedulePulse() {
-    final every = widget.pose.pulseEvery;
-    if (every == null) return;
-    _pulseTimer = Timer(every, () {
-      if (!mounted) return;
-      if (_visible && _run == null) {
-        _start(_RunKind.pulse, from: null);
+  /// Sleeps: the breath and the "z" come from a slow timer instead of the ticker.
+  /// Sets [_look] for the build that follows.
+  void _fallAsleep({required WuselLook? from}) {
+    _run = null;
+    _blendFrom = from;
+    _sleepClock = Duration.zero;
+    _look = from ?? widget.pose.sleeping(Duration.zero);
+    _sleepTimer?.cancel();
+    _sleepTimer = _visible
+        ? Timer.periodic(Wusel.sleepFrame, _onSleepFrame)
+        : null;
+  }
+
+  void _onSleepFrame(Timer timer) {
+    if (!mounted) return;
+    if (!_visible) {
+      // Hidden: no breath until the route shows again (see [_followVisibility]).
+      timer.cancel();
+      _sleepTimer = null;
+      return;
+    }
+    _sleepClock += Wusel.sleepFrame;
+    var next = widget.pose.sleeping(_sleepClock);
+    if (_blendFrom case final from?) {
+      final t = _sleepClock.inMicroseconds / _blend.inMicroseconds;
+      if (t >= 1) {
+        _blendFrom = null;
       } else {
-        _schedulePulse();
+        next = WuselLook.lerp(from, next, Curves.easeOutCubic.transform(t));
       }
-    });
+    }
+    setState(() => _look = next);
   }
 
   /// A moment happened: blink again, and rest [Wusel.restAfter] from now.
@@ -337,7 +387,7 @@ class _WuselState extends State<Wusel> with SingleTickerProviderStateMixin {
   static const _peekWindow = 0.68;
 }
 
-enum _RunKind { pose, blink, pulse, reaction }
+enum _RunKind { pose, blink, reaction }
 
 class _Run {
   _Run(this.kind);
