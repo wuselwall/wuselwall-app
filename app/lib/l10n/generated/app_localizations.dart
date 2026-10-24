@@ -9233,6 +9233,42 @@ abstract class AppLocalizations {
   /// **'Hide what Wusel says'**
   String get wuselHideLine;
 
+  /// No description provided for @wuselFerienFirst1.
+  ///
+  /// In en, this message translates to:
+  /// **'The holidays start today. Enjoy the time off!'**
+  String get wuselFerienFirst1;
+
+  /// No description provided for @wuselFerienFirst2.
+  ///
+  /// In en, this message translates to:
+  /// **'Holidays! The free days begin today.'**
+  String get wuselFerienFirst2;
+
+  /// No description provided for @wuselFerienFirst3.
+  ///
+  /// In en, this message translates to:
+  /// **'First day of the holidays. Enjoy it together!'**
+  String get wuselFerienFirst3;
+
+  /// No description provided for @ambienceFerienFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Holidays!'**
+  String get ambienceFerienFirst;
+
+  /// No description provided for @ambienceFerienLast.
+  ///
+  /// In en, this message translates to:
+  /// **'Last day of the holidays'**
+  String get ambienceFerienLast;
+
+  /// No description provided for @shoppingEmptyTapTile.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing on the list yet. Tap a tile.'**
+  String get shoppingEmptyTapTile;
+
   /// No description provided for @memberBirthday.
   ///
   /// In en, this message translates to:

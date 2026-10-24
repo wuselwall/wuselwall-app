@@ -11,6 +11,7 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/text/fold.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/confetti.dart';
 import 'package:wuselwall/core/ui/empty_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/core/ui/text_prompt.dart';
@@ -24,6 +25,8 @@ import 'package:wuselwall/features/shopping/application/shopping_sync.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_labels.dart';
+import 'package:wuselwall/features/wusel/application/celebration.dart';
+import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
 
 /// The shared lists: pick a list, tap tiles to add, tick off while shopping, finish the
 /// trip. Every item change goes through the offline outbox and shows at once; creating a
@@ -219,6 +222,30 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody> {
     if (id != null) ref.read(selectedListIdProvider.notifier).select(id);
   }
 
+  /// The trip that bought [bought] on [listId] is done (specs/26 "Celebrations"): on a
+  /// grown-up's phone a small, short burst over the list and a light haptic, never a
+  /// sound. Once per trip, however it ends: the last item ticked, then the trip
+  /// finished, is one moment. The burst asks [motionAllowed]; the haptic the night and
+  /// `device.sounds`.
+  void _celebrateTrip(String listId, Iterable<String> bought) {
+    if (ref.read(uiRegisterProvider) != UiRegister.adult || bought.isEmpty) {
+      return;
+    }
+    final celebration = ref.read(celebrationProvider);
+    if (!celebration.claimMoment(Celebration.tripOf(listId, bought))) return;
+    final ww = context.ww;
+    showConfetti(
+      context,
+      colors: [
+        for (final c in ref.read(wuselTuftsProvider)) ww.member(c).ink,
+        ww.points,
+      ],
+      count: 24,
+      duration: tripBurst,
+    );
+    unawaited(celebration.shoppingTrip());
+  }
+
   Future<void> _finish(ShoppingList list) async {
     final l10n = context.l10n;
     final ok = await showDialog<bool>(
@@ -241,12 +268,16 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody> {
     final onList = (ref.read(shoppingItemsProvider).value ?? const [])
         .where((i) => i.listId == list.id)
         .toList();
-    final bought = onList.where((i) => i.checked).length;
+    final bought = [
+      for (final i in onList)
+        if (i.checked) i.id,
+    ];
     await _sync.finish(actor: _actor, listId: list.id);
     if (mounted) {
       context.showMessage(
-        l10n.shoppingFinished(bought, onList.length - bought),
+        l10n.shoppingFinished(bought.length, onList.length - bought.length),
       );
+      _celebrateTrip(list.id, bought);
     }
   }
 
@@ -285,6 +316,8 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody> {
           (v) =>
               v.where((i) => i.listId == null || i.listId == list.id).toList(),
         );
+        final hasTiles = (ref.watch(shoppingCatalogProvider).value ?? const [])
+            .any((c) => c.listId == list.id);
         // A4: one explicit traversal order for the whole body (lists, search,
         // catalogue, items, finish, then whatever sits outside this widget), instead
         // of whatever ambient order the nested scrollables would otherwise produce.
@@ -309,6 +342,7 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody> {
                   slivers: [
                     SliverToBoxAdapter(
                       child: _TilePicker(
+                        key: const ValueKey('shopping-tiles'),
                         list: list,
                         items: items.value ?? const [],
                         search: _search,
@@ -320,12 +354,15 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody> {
                     ),
                     const SliverToBoxAdapter(child: Divider(height: 1)),
                     // An empty list takes the rest of the screen, its line centred
-                    // there; the tiles above are the way to add the first item.
+                    // there; the tiles above are the way to add the first item. Wusel
+                    // peeks here (specs/25), never among the tiles themselves.
                     if (items.value?.isEmpty ?? false)
                       SliverFillRemaining(
                         hasScrollBody: false,
                         child: EmptyView(
-                          message: l10n.shoppingEmpty,
+                          message: hasTiles
+                              ? l10n.shoppingEmptyTapTile
+                              : l10n.shoppingEmpty,
                           scrolls: false,
                         ),
                       )
@@ -348,6 +385,8 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody> {
                               delta: -1,
                             ),
                             onEdit: _edit,
+                            onTripDone: (bought) =>
+                                _celebrateTrip(list.id, bought),
                           ),
                         ),
                       ),
@@ -671,6 +710,7 @@ class _TilePicker extends ConsumerStatefulWidget {
     required this.busy,
     required this.onAdd,
     required this.onLongPress,
+    super.key,
   });
 
   final ShoppingList list;
@@ -935,6 +975,7 @@ class _ItemList extends ConsumerStatefulWidget {
     required this.onToggle,
     required this.onLess,
     required this.onEdit,
+    required this.onTripDone,
   });
 
   final List<ShoppingItem> items;
@@ -942,6 +983,9 @@ class _ItemList extends ConsumerStatefulWidget {
   final void Function(ShoppingItem) onToggle;
   final void Function(ShoppingItem) onLess;
   final void Function(ShoppingItem) onEdit;
+
+  /// The last open item was just ticked: every item on the list is bought.
+  final void Function(Iterable<String> bought) onTripDone;
 
   @override
   ConsumerState<_ItemList> createState() => _ItemListState();
@@ -977,6 +1021,11 @@ class _ItemListState extends ConsumerState<_ItemList> {
     setState(() {
       if (_ticked.remove(item.id) == null) _ticked[item.id] = item;
     });
+    // The tick shows at once and is sent a moment later; the trip's end shows with it.
+    if (_ticked.containsKey(item.id) &&
+        widget.items.every((i) => i.checked || _ticked.containsKey(i.id))) {
+      widget.onTripDone([for (final i in widget.items) i.id]);
+    }
     _settle?.cancel();
     if (_ticked.isNotEmpty) {
       _settle = Timer(_quiet, () {
@@ -1400,3 +1449,6 @@ class _NewListDialogState extends State<_NewListDialog> {
     );
   }
 }
+
+/// How long the burst at the end of a shopping trip lasts (specs/26 "Celebrations").
+const tripBurst = Duration(milliseconds: 600);

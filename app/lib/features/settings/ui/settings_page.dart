@@ -5,9 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/server_session.dart';
+import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/register_labels.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
+import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/config/config_providers.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
@@ -16,6 +18,7 @@ import 'package:wuselwall/core/server/server_address.dart';
 import 'package:wuselwall/core/server/server_compat.dart';
 import 'package:wuselwall/core/server/server_providers.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/module_band.dart';
 import 'package:wuselwall/core/ui/qr_code_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/core/ui/text_prompt.dart';
@@ -76,6 +79,8 @@ class SettingsPage extends ConsumerWidget {
       },
       child: Scaffold(
         appBar: AppBar(
+          // Settings have their band too, the calm `stein` (specs/26).
+          backgroundColor: context.ww.band(AppModule.settings),
           title: Text(l10n.settingsTitle),
           leading: BackButton(
             onPressed: () {
@@ -86,7 +91,16 @@ class SettingsPage extends ConsumerWidget {
               }
             },
           ),
-          actions: const [SettingsViewSwitch()],
+          actions: [
+            // The back button, and the Advanced chip at its widest language.
+            if (ModuleIllustration.fits(
+              context,
+              title: l10n.settingsTitle,
+              controls: kMinInteractiveDimension + 160,
+            ))
+              const ModuleIllustration(AppModule.settings),
+            const SettingsViewSwitch(),
+          ],
         ),
         // One scrollable: the member rows are a sliver reorderable list in the middle, so
         // dragging works without a nested list of its own.

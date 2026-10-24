@@ -5,6 +5,7 @@ import 'package:wuselwall/app/theme/night.dart';
 import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/rituals/application/ritual_providers.dart';
+import 'package:wuselwall/features/school/domain/school_models.dart';
 import 'package:wuselwall/features/settings/application/household_settings_providers.dart';
 import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
 
@@ -52,6 +53,43 @@ SkyPhase skyPhaseAt(
   if (m >= hours.end && m < _dayStart) return SkyPhase.morning;
   if (m >= _dayStart && m < eveningStart) return SkyPhase.day;
   return SkyPhase.evening;
+}
+
+/// How far the evening sun has set (specs/26 "Day phases": it sets in the band during
+/// the hour before night): 0 until an hour before [NightHours.start], then up to 11/12
+/// in five-minute steps, so the sky repaints twelve times in that hour and no more.
+/// Without a night ([NightHours.start] equal to its end) the sun never sets.
+double sunsetAt(DateTime now, {NightHours hours = NightHours.standard}) {
+  if (hours.start == hours.end) return 0;
+  final m = now.hour * 60 + now.minute;
+  final untilNight = (hours.start - m) % (24 * 60);
+  if (untilNight == 0 || untilNight > 60) return 0;
+  return ((60 - untilNight) ~/ 5) / 12;
+}
+
+/// Whether [date] is the first or the last day of the school holidays (`kind`
+/// `holiday`) in [holidays], or neither. Back-to-back or overlapping holidays (two
+/// schools, a bridge day entered by hand) count as one stretch: its first day is the
+/// first with no holiday the day before, its last the last with none the day after.
+FerienEdge? ferienEdgeOn(Iterable<HolidayRecord> holidays, DateTime date) {
+  final ferien = [
+    for (final h in holidays)
+      if (h.kind == 'holiday') h,
+  ];
+  bool covers(DateTime d) => ferien.any(
+    (h) =>
+        !d.isBefore(DateUtils.dateOnly(h.startsOn)) &&
+        !d.isAfter(DateUtils.dateOnly(h.endsOn)),
+  );
+  final today = DateUtils.dateOnly(date);
+  if (!covers(today)) return null;
+  if (!covers(DateTime(today.year, today.month, today.day - 1))) {
+    return FerienEdge.first;
+  }
+  if (!covers(DateTime(today.year, today.month, today.day + 1))) {
+    return FerienEdge.last;
+  }
+  return null;
 }
 
 /// Whole calendar days from [from] to [to], whatever their times of day. Counted on
@@ -213,9 +251,13 @@ class Ambience {
     this.newYear = false,
     this.ferien,
     this.birthdays = const [],
+    this.sunset = 0,
   });
 
   final SkyPhase phase;
+
+  /// How far the evening sun has gone down, 0–1 ([sunsetAt]).
+  final double sunset;
 
   /// Null when the household switched the seasons off.
   final Season? season;
@@ -243,6 +285,7 @@ class Ambience {
       other.easter == easter &&
       other.newYear == newYear &&
       other.ferien == ferien &&
+      other.sunset == sunset &&
       listEquals(other.birthdays, birthdays);
 
   @override
@@ -253,6 +296,7 @@ class Ambience {
     easter,
     newYear,
     ferien,
+    sunset,
     Object.hashAll(birthdays),
   );
 }
@@ -272,6 +316,7 @@ Ambience ambienceFor(
   SkyPhase? phase,
   FerienEdge? ferien,
   List<Color> birthdays = const [],
+  double? sunset,
 }) {
   bool on(Occasion o) =>
       occasionOn(o, day.occasionSwitches[_key(o)], day.country);
@@ -292,6 +337,7 @@ Ambience ambienceFor(
             (now.month == 1 && now.day == 1)),
     ferien: on(Occasion.ferien) ? ferien : null,
     birthdays: on(Occasion.birthday) ? birthdays : const [],
+    sunset: sunset ?? sunsetAt(now, hours: hours),
   );
 }
 
@@ -305,19 +351,20 @@ final eveningStartProvider = Provider.autoDispose<int>((ref) {
   return clockMinutes(parts[1]) ?? defaultEveningStart;
 });
 
-/// Today's ambience for this household. Rebuilds when the date or the phase changes,
-/// and equal values do not repaint the sky.
+/// Today's ambience for this household. Rebuilds when the date, the phase or the
+/// sunset's step changes, and equal values do not repaint the sky.
 final ambienceProvider = Provider.autoDispose<Ambience>((ref) {
   final night = ref.watch(nightProvider);
   final hours = ref.watch(nightHoursProvider);
   final eveningStart = ref.watch(eveningStartProvider);
   // The phases change on the minute the settings say, not on the hour; the clock ticks
   // every second, so only the date and the phase are selected.
-  final (date, phase) = ref.watch(
+  final (date, phase, sunset) = ref.watch(
     nowProvider.select(
       (n) => (
         DateUtils.dateOnly(n),
         skyPhaseAt(n, night: night, hours: hours, eveningStart: eveningStart),
+        sunsetAt(n, hours: hours),
       ),
     ),
   );
@@ -325,6 +372,7 @@ final ambienceProvider = Provider.autoDispose<Ambience>((ref) {
   return ambienceFor(
     date,
     phase: phase,
+    sunset: sunset,
     night: night,
     day: day,
     ferien: ref.watch(ferienEdgeTodayProvider),

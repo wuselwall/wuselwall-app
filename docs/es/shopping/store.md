@@ -20,6 +20,8 @@ Las marcas de otra persona aparecen en uno o dos segundos, sin recargar nada.
 
 Toca **Terminar la compra**: los productos marcados pasan al [historial](/es/shopping/history), los demás siguen en la lista y lo comprado alimenta las tarjetas. El botón se activa al marcar al menos un producto.
 
+Al marcar el último producto o terminar la compra, el móvil muestra un pequeño estallido de confeti y vibra suavemente, una vez por compra y sin sonido (ver [Wusel y los colores](/es/guide/wusel#sounds)).
+
 ## Sin conexión {#offline}
 
 Añadir, marcar, cambiar cantidades y terminar la compra funciona sin cobertura. Una nube y un contador indican los cambios pendientes. Cuando vuelve la conexión, la app los envía en el orden correcto.

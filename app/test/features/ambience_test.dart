@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/app/theme/night.dart';
 import 'package:wuselwall/app/theme/palette.dart';
+import 'package:wuselwall/features/school/domain/school_models.dart';
 import 'package:wuselwall/features/wusel/application/ambience.dart';
 import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
 
@@ -175,5 +176,116 @@ void main() {
       SkyPhase.evening,
     );
     expect(skyPhaseAt(DateTime(2026, 10, 24, 22), night: true), SkyPhase.night);
+  });
+
+  group('the evening sun sets in the hour before night (specs/26)', () {
+    DateTime at(int h, int m) => DateTime(2026, 10, 24, h, m);
+
+    test('still up until an hour before, then down in five-minute steps', () {
+      expect(sunsetAt(at(19, 59)), 0);
+      expect(sunsetAt(at(20, 0)), 0);
+      expect(sunsetAt(at(20, 4)), 0);
+      expect(sunsetAt(at(20, 5)), 1 / 12);
+      expect(sunsetAt(at(20, 30)), 6 / 12);
+      expect(sunsetAt(at(20, 59)), 11 / 12);
+      // The night has begun: the night sky takes over.
+      expect(sunsetAt(at(21, 0)), 0);
+    });
+
+    test('follows the device\'s night hours, across midnight too', () {
+      final late = NightHours.parse(const {'from': '00:30', 'to': '06:00'});
+      expect(sunsetAt(at(23, 0), hours: late), 0);
+      expect(sunsetAt(at(23, 45), hours: late), 3 / 12);
+      expect(sunsetAt(at(0, 15), hours: late), 9 / 12);
+    });
+
+    test('a device without a night never sees the sun set', () {
+      const none = NightHours(start: 0, end: 0);
+      expect(sunsetAt(at(23, 30), hours: none), 0);
+    });
+
+    test('the ambience carries it, so the sky repaints with each step', () {
+      const day = LighterDay();
+      expect(ambienceFor(at(20, 30), night: false, day: day).sunset, 0.5);
+      expect(
+        ambienceFor(at(20, 30), night: false, day: day),
+        isNot(ambienceFor(at(20, 40), night: false, day: day)),
+      );
+      expect(
+        ambienceFor(at(20, 31), night: false, day: day),
+        ambienceFor(at(20, 34), night: false, day: day),
+      );
+    });
+  });
+
+  group('the Ferien ribbon\'s days', () {
+    HolidayRecord ferien(
+      DateTime from,
+      DateTime to, {
+      String kind = 'holiday',
+    }) => HolidayRecord(
+      id: '$from',
+      name: 'Herbstferien',
+      startsOn: from,
+      endsOn: to,
+      kind: kind,
+    );
+    final autumn = ferien(DateTime(2026, 10, 10), DateTime(2026, 10, 25));
+
+    test('the first and the last day, nothing before, between or after', () {
+      expect(ferienEdgeOn([autumn], DateTime(2026, 10, 9, 12)), isNull);
+      expect(
+        ferienEdgeOn([autumn], DateTime(2026, 10, 10, 7)),
+        FerienEdge.first,
+      );
+      expect(ferienEdgeOn([autumn], DateTime(2026, 10, 17)), isNull);
+      expect(
+        ferienEdgeOn([autumn], DateTime(2026, 10, 25, 20)),
+        FerienEdge.last,
+      );
+      expect(ferienEdgeOn([autumn], DateTime(2026, 10, 26)), isNull);
+    });
+
+    test('back-to-back holidays are one stretch', () {
+      final bridge = ferien(DateTime(2026, 10, 26), DateTime(2026, 10, 26));
+      expect(ferienEdgeOn([autumn, bridge], DateTime(2026, 10, 25)), isNull);
+      expect(
+        ferienEdgeOn([autumn, bridge], DateTime(2026, 10, 26)),
+        FerienEdge.last,
+      );
+    });
+
+    test('a single free day is a first day; other kinds are no Ferien', () {
+      final day = ferien(DateTime(2026, 11, 2), DateTime(2026, 11, 2));
+      expect(ferienEdgeOn([day], DateTime(2026, 11, 2)), FerienEdge.first);
+      final closure = ferien(
+        DateTime(2026, 11, 2),
+        DateTime(2026, 11, 2),
+        kind: 'closure',
+      );
+      expect(ferienEdgeOn([closure], DateTime(2026, 11, 2)), isNull);
+    });
+
+    test('the household\'s switch turns the ribbon off', () {
+      const off = LighterDay(occasionSwitches: {'ambience.ferien': false});
+      expect(
+        ambienceFor(
+          DateTime(2026, 10, 10),
+          night: false,
+          day: const LighterDay(),
+          ferien: FerienEdge.first,
+        ).ferien,
+        FerienEdge.first,
+      );
+      expect(
+        ambienceFor(
+          DateTime(2026, 10, 10),
+          night: false,
+          day: off,
+          ferien: FerienEdge.first,
+        ).ferien,
+        isNull,
+      );
+    });
   });
 }

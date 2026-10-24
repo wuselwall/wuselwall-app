@@ -102,17 +102,12 @@ final birthdaysTodayMembersProvider = Provider.autoDispose<List<Member>>((ref) {
 });
 
 /// Today's first or last day of the school holidays, for the sky's ribbon.
-final ferienEdgeTodayProvider = Provider.autoDispose<FerienEdge?>((ref) {
-  final today = ref.watch(ritualTodayProvider);
-  for (final h
-      in ref.watch(schoolDataProvider).value?.holidays ??
-          const <HolidayRecord>[]) {
-    if (h.kind != 'holiday') continue;
-    if (DateUtils.isSameDay(h.startsOn, today)) return FerienEdge.first;
-    if (DateUtils.isSameDay(h.endsOn, today)) return FerienEdge.last;
-  }
-  return null;
-});
+final ferienEdgeTodayProvider = Provider.autoDispose<FerienEdge?>(
+  (ref) => ferienEdgeOn(
+    ref.watch(schoolDataProvider).value?.holidays ?? const <HolidayRecord>[],
+    ref.watch(ritualTodayProvider),
+  ),
+);
 
 /// The household's open and recently planned meal wishes; empty on a server without
 /// them, so the wish cards stay away rather than showing an error.

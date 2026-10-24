@@ -56,13 +56,17 @@ void main() {
         .setMockMethodCallHandler(SystemChannels.platform, null),
   );
 
-  Celebration celebration(UiRegister register, {bool night = false}) {
+  Celebration celebration(
+    UiRegister register, {
+    bool night = false,
+    LighterDay day = const LighterDay(),
+  }) {
     final container = ProviderContainer(
       overrides: [
         uiRegisterProvider.overrideWithValue(register),
         nightProvider.overrideWith(() => _Night(night)),
         actingProfileProvider.overrideWith(_Nobody.new),
-        lighterDayProvider.overrideWith((ref) => const LighterDay()),
+        lighterDayProvider.overrideWith((ref) => day),
         householdSettingsProvider.overrideWith(
           (ref) async => const <SettingEntry>[],
         ),
@@ -96,6 +100,42 @@ void main() {
       await celebration(UiRegister.kid, night: true).cue(Cue.tick);
       expect(haptics, isEmpty);
       expect(sounds.played, isEmpty);
+    });
+  });
+
+  group('the end of a shopping trip (specs/26)', () {
+    test('adult: a light haptic and never a sound', () async {
+      await celebration(UiRegister.adult).shoppingTrip();
+      expect(haptics, ['HapticFeedbackType.lightImpact']);
+      expect(sounds.played, isEmpty);
+    });
+
+    test('nothing at night', () async {
+      await celebration(UiRegister.adult, night: true).shoppingTrip();
+      expect(haptics, isEmpty);
+    });
+
+    test('nothing on a device that device.sounds keeps quiet', () async {
+      await celebration(
+        UiRegister.adult,
+        day: const LighterDay(sounds: false),
+      ).shoppingTrip();
+      expect(haptics, isEmpty);
+    });
+
+    test('one trip is one moment, whichever order its items came in', () {
+      expect(
+        Celebration.tripOf('l1', ['b', 'a']),
+        Celebration.tripOf('l1', ['a', 'b']),
+      );
+      expect(
+        Celebration.tripOf('l1', ['a', 'b']),
+        isNot(Celebration.tripOf('l1', ['a', 'b', 'c'])),
+      );
+      expect(
+        Celebration.tripOf('l1', ['a']),
+        isNot(Celebration.tripOf('l2', ['a'])),
+      );
     });
   });
 
