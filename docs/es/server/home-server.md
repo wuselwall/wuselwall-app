@@ -73,6 +73,12 @@ Se admiten los cuatro idiomas. Cambia `MAIL_LANGUAGE`, asuntos y plantillas, y r
 
 Se hace una copia antes de descargar y aplicar la versión, con base, app web y tareas programadas. Si usabas acceso Apple o Google, consulta antes la [migración](/es/server/extras#retiring-social-sign-in).
 
+### Qué app va con qué servidor {#compatibilidad}
+
+La app comprueba por sí misma, al conectarse, si va con tu servidor, y te avisa cuando la app o el servidor necesitan una actualización. Cada app entiende la API de su servidor y la anterior; el servidor indica además la app más antigua con la que todavía funciona. Lo que está en marcha se ve en la app en **Ajustes → Versiones**, por ejemplo «App 1.1.0 · Servidor 0.3.0 · API 1». A partir del servidor 0.3.0, el servidor indica ahí su versión; la app solo ofrece el reconocimiento de texto si el servidor lo tiene instalado.
+
+<CompatTable />
+
 ::: warning Actualizaciones coordinadas
 No uses Watchtower ni actualizaciones automáticas de contenedores del NAS para esta pila. Usa `wuselwall update` para mantener versiones compatibles.
 :::

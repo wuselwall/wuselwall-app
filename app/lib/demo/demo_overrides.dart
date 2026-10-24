@@ -12,6 +12,7 @@ import 'package:wuselwall/core/config/app_config.dart';
 import 'package:wuselwall/core/config/config_providers.dart';
 import 'package:wuselwall/core/l10n/app_language.dart';
 import 'package:wuselwall/core/realtime/household_channel.dart';
+import 'package:wuselwall/core/server/server_providers.dart';
 import 'package:wuselwall/core/supabase/supabase_providers.dart';
 import 'package:wuselwall/demo/demo_board.dart';
 import 'package:wuselwall/demo/demo_data.dart';
@@ -114,6 +115,7 @@ List<Override> _overrides(String scenario) => [
       supabasePublishableKey: 'demo',
     ),
   ),
+  appVersionProvider.overrideWith((ref) async => 'demo'),
   authStateProvider.overrideWith((ref) => const Stream<AuthState>.empty()),
   sessionUserIdProvider.overrideWithValue(
     scenario == 'setup' ? null : 'demo-user',

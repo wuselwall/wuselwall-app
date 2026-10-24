@@ -2590,5 +2590,9 @@
   "shoppingTileForget": "Ne plus proposer",
   "shoppingTileForgetHelp": "La tuile disparaît ; l’historique la garde.",
   "shoppingTileForgetConfirm": "Retirer la tuile « {name} » ? Le prochain achat la fera revenir.",
-  "schoolScanFile": "Choisir un fichier (PDF ou image)"
+  "schoolScanFile": "Choisir un fichier (PDF ou image)",
+  "schoolImportPhotoUnavailable": "Ton serveur ne lit pas encore les photos.",
+  "settingsVersions": "Versions",
+  "settingsVersionsLine": "App {app} · Serveur {server} · API {api}",
+  "settingsVersionUnknown": "inconnue"
 }

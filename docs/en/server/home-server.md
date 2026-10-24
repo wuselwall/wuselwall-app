@@ -98,6 +98,12 @@ The tool backs up the database first, downloads the new version, restarts the st
 
 Coming from a version with sign-in through Apple or Google? Read [Updating from a version with Apple and Google sign-in](/en/server/extras#retiring-social-sign-in) first.
 
+### Which app fits which server {#compatibility}
+
+The app checks by itself whether it fits your server when it connects, and tells you when the app or the server needs an update. Every app speaks its server's API and the one before it; the server also names the oldest app it still works with. What is running shows in the app under **Settings → Versions**, for example "App 1.1.0 · Server 0.3.0 · API 1". From server 0.3.0 on the server names its release there; the app offers text recognition only when the server has it set up.
+
+<CompatTable />
+
 ::: warning No automatic updates for the stack
 Keep every auto-updater (Watchtower, a NAS's automatic container updates) away from WuselWall's containers. Updates come with `wuselwall update`, in a tested combination.
 :::

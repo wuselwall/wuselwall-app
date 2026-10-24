@@ -4910,4 +4910,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get schoolScanFile => 'Choose a file (PDF or picture)';
+
+  @override
+  String get schoolImportPhotoUnavailable =>
+      'Your server can\'t read photos yet.';
+
+  @override
+  String get settingsVersions => 'Versions';
+
+  @override
+  String settingsVersionsLine(String app, String server, String api) {
+    return 'App $app · Server $server · API $api';
+  }
+
+  @override
+  String get settingsVersionUnknown => 'unknown';
 }

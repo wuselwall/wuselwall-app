@@ -99,6 +99,12 @@ Das Werkzeug sichert zuerst die Datenbank, lädt die neue Version, startet den S
 
 Kommst du von einer Version mit Anmeldung über Apple oder Google? Lies zuerst [Update von einer Version mit Apple- und Google-Anmeldung](/server/extras#social-stilllegen).
 
+### Welche App zu welchem Server passt {#kompatibilitaet}
+
+Die App prüft beim Verbinden selbst, ob sie zu deinem Server passt, und sagt dir, wenn die App oder der Server ein Update braucht. Jede App versteht die Schnittstelle ihres Servers und die eine davor; der Server nennt außerdem die älteste App, mit der er noch arbeitet. Was gerade läuft, zeigt die App unter **Einstellungen → Versionen**, zum Beispiel „App 1.1.0 · Server 0.3.0 · Schnittstelle 1“. Ab Server 0.3.0 nennt der Server dort seine Version; die Texterkennung bietet die App nur an, wenn der Server sie eingerichtet hat.
+
+<CompatTable />
+
 ::: warning Kein automatisches Update für den Stack
 Lass keinen Auto-Updater (Watchtower, die automatischen Container-Updates eines NAS) an die Container von WuselWall. Updates kommen mit `wuselwall update`, in einer geprüften Kombination.
 :::

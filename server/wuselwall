@@ -41,6 +41,15 @@ die() { printf 'wuselwall: %s\n' "$*" >&2; exit 1; }
 compose() { (cd "$STACK" && docker compose "$@"); }
 psql_db() { docker exec -i "$DB" psql -U postgres -X -q -t -A -v ON_ERROR_STOP=1 "$@"; }
 env_value() { sed -n "s/^$1='\(.*\)'$/\1/p" "$STACK/.env"; }
+# Sets NAME='value' in the stack's .env, replacing the line or adding it.
+set_env() {
+  local name=$1 value=$2
+  if grep -q "^$name=" "$STACK/.env"; then
+    sed -i "s|^$name=.*|$name='$value'|" "$STACK/.env"
+  else
+    printf "%s='%s'\n" "$name" "$value" >> "$STACK/.env"
+  fi
+}
 
 preflight() {
   docker compose version > /dev/null 2>&1 || die "Docker Compose v2 is missing ('docker compose version')"
@@ -192,6 +201,7 @@ cmd_install() {
     mv "$STACK/.env.new" "$STACK/.env"
   fi
   sh "$STACK/mail-language.sh" "$STACK/.env" "$language"
+  set_env WW_SERVER_VERSION "$(cat "$ROOT/VERSION")"
   chmod 600 "$STACK/.env"
   umask 022
 
@@ -268,6 +278,8 @@ cmd_update() {
   # the .env before Auth restarts (specs/10).
   sh "$STACK/retire-social-sign-in.sh" "$STACK/.env"
   sh "$STACK/mail-language.sh" "$STACK/.env"
+  # The release the app's settings show (the discovery document's server_version).
+  set_env WW_SERVER_VERSION "$(cat "$ROOT/VERSION")"
   compose up -d --remove-orphans
   wait_for_db
   wait_for_stack

@@ -13,6 +13,8 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/notifications/notification_scheduler_provider.dart';
 import 'package:wuselwall/core/server/server_address.dart';
+import 'package:wuselwall/core/server/server_compat.dart';
+import 'package:wuselwall/core/server/server_providers.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/qr_code_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
@@ -203,6 +205,7 @@ class SettingsPage extends ConsumerWidget {
                   subtitle: Text(l10n.settingsGettingStartedSubtitle),
                   onTap: () => _showGettingStarted(context, ref),
                 ),
+                const _VersionsTile(),
                 ListTile(
                   leading: const Icon(Icons.gavel_outlined),
                   title: Text(l10n.settingsLicenses),
@@ -1111,6 +1114,33 @@ class _DeviceTile extends ConsumerWidget {
           ? null
           : TextButton(onPressed: onRevoke, child: Text(l10n.revoke)),
       onTap: d.revoked ? null : onRename,
+    );
+  }
+}
+
+/// "App 1.1.0 · Server 0.3.0 · API 1": which pair runs here, the first thing support asks.
+/// The app only runs on a server it fits (server_compat.dart), so the line needs no
+/// verdict of its own.
+class _VersionsTile extends ConsumerWidget {
+  const _VersionsTile();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final server = ref.watch(appConfigProvider).server;
+    final app =
+        ref.watch(appVersionProvider).value ?? l10n.settingsVersionUnknown;
+    return ListTile(
+      key: const ValueKey('settings-versions'),
+      leading: const Icon(Icons.info_outline),
+      title: Text(l10n.settingsVersions),
+      subtitle: Text(
+        l10n.settingsVersionsLine(
+          app,
+          server?.serverVersion ?? l10n.settingsVersionUnknown,
+          (server?.apiVersion ?? appApiVersion).toString(),
+        ),
+      ),
     );
   }
 }
