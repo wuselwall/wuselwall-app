@@ -46,13 +46,14 @@ If a tradition doesn't happen one week, delete **Only this event**. Nothing reme
 
 Each child may wish for a meal; you decide how many wishes may be open at once (one by default). That way the children have a say in the meal plan.
 
-- **On My day** there is the card **Your meal wish**. **Wish** opens the choice: one of your recipes, or **Something else** with a few words, such as "pancakes". With **Wish for this** the wish is on its way. Until it is planned it can be **changed**.
-- **The grown-ups** see the wishes at the top of the [meal plan](/en/meals/#wishes) under **Wishes**, and as a quiet card on **Today**. Tap a wish, pick a day and a meal, and it is planned.
+- **On My day** there is the card **Your meal wish**. **Wish** opens the choice: first **Family favourites**, the meals you have cooked most often lately, then **Our recipes**, each with a picture (with many recipes, **Find a recipe** helps), and at the bottom **Something else** with a few words, such as "pancakes", and a picture to go with them (**Pick a picture**). With **Wish for this** the wish is on its way. Until it is planned it can be **changed**.
+- **The grown-ups** see the wishes at the top of the [meal plan](/en/meals/#wishes) under **Wishes**, each with its picture, and as a quiet card on **Today**. Tap a wish, pick a day and a meal, and it is planned.
+- **When everyone may wish**, the grown-ups wish for themselves in the meal plan: **Make a wish** in the **Wishes** row opens the same choice, and **Change my wish** changes the open one.
 - **Once planned**, the meal carries a star and "Jack's wish" in the plan and on the wall. The child's card then says, for example, "Your wish Pancakes is on Thursday!".
 
 <Shot name="kid-wish" alt="My day on the kids' tablet with the card Your meal wish" wide />
 
-A wish is **never turned down** in the app. A wish that isn't planned simply keeps waiting. Guardians can remove a wish; why is something you talk about together.
+A wish is **never turned down** in the app. A wish that isn't planned simply keeps waiting, the next week marked **from last week**. After four weeks a wish that was never planned quietly leaves the list and no longer counts; the child can simply wish for something new. Guardians can remove a wish; why is something you talk about together.
 
 Who may wish is set by **Meal wishes**: **Children** (default), **Everyone** or **Off**. **Open wishes per person** allows up to three at once (default 1).
 
@@ -75,10 +76,14 @@ Each device shows the questions in its own language: about 150 in German and Eng
 
 ## Our week {#week-review}
 
-On Sunday you look back together at **Our week**: what *we* did. From Sunday 16:00 until Monday 10:00 there is a card on **Today** and **My day**, and a tile in the wall's footer. A tap opens five cards one after another:
+On Sunday you look back together at **Our week**: what *we* did. From Sunday 16:00 until Monday 10:00 there is a card on **Today** and **My day**, and a tile in the wall's footer. A tap opens a story of up to five cards, one at a time, filling the screen:
+
+- **On** with a tap on the right, a swipe to the left or the arrow key; **back** with a tap on the left third, a swipe to the right or the other arrow key. The arrows at the bottom do the same.
+- The bars at the top show how many cards there are and where you are. After the last card, with **Close** or with Esc, the look back closes.
+- A card with nothing in it is left out, such as **Our traditions** in a week without one. With "reduce motion" on the device, the next card appears without sliding. Screen readers say "Card 2 of 4".
 
 1. **What we did together**: the whole family's chores done, as one number
-2. **Everyone had a moment**: one line for each person, such as a new badge, a day with everything ticked off, or simply "was part of our week". Nobody gets two, and nothing is a number compared with someone else's.
+2. **Everyone had a moment**: one line for each person, such as a new badge, a day with everything ticked off, "was there for Games night" for a tradition or a key event, or simply "was part of our week". Nobody gets two, and nothing is a number compared with someone else's.
 3. **Yum**: the week's meals, wishes with a star, new recipes marked "new"
 4. **Our traditions**: the traditions that happened
 5. **Next week we look forward to**: the nearest countdowns

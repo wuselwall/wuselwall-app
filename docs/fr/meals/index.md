@@ -14,7 +14,7 @@ Le jour d’une [tradition familiale](/fr/guide/rituals#traditions) avec un repa
 
 ## Souhaits {#wishes}
 
-Les enfants souhaitent un repas dans **Ma journée** sur leur tablette (voir [Repas souhaités](/fr/guide/rituals#meal-wishes)). Les souhaits en attente s’affichent en haut des menus sous **Souhaits**, par exemple « Paul : Crêpes », et dans une carte dans **Aujourd’hui**.
+Les enfants souhaitent un repas dans **Ma journée** sur leur tablette (voir [Repas souhaités](/fr/guide/rituals#meal-wishes)). Les souhaits en attente s’affichent en haut des menus sous **Souhaits**, par exemple « Paul : Crêpes » avec une image, et dans une carte dans **Aujourd’hui**. Un souhait qui attend depuis une semaine précédente porte la mention **de la semaine dernière**. Quand tout le monde peut souhaiter, **Faire un souhait** est là pour vous aussi.
 
 Touchez un souhait, choisissez un jour et un repas : il est planifié. Chaque repas indique ce qui est déjà prévu. Si un repas est déjà prévu, l’appli demande avant que le souhait le remplace ; le cuisinier, l’heure et les portions restent. Un souhait de recette alimente la liste de courses comme toute recette. Un souhait planifié porte une étoile et « Souhait de Paul » dans les menus et sur le mur. La **×** retire un souhait (**Retirer le souhait**) ; les parents et l’auteur du souhait le peuvent. Un souhait n’est jamais refusé : ce qui n’est pas planifié attend. Qui peut souhaiter, et combien de souhaits peuvent attendre, se règle dans les [paramètres du foyer](/fr/settings/household#rituals).
 

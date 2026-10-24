@@ -46,13 +46,14 @@ Fällt eine Tradition einmal aus, löschst du **Nur dieser Termin**. Nichts merk
 
 Jedes Kind darf sich ein Essen wünschen; wie viele Wünsche gleichzeitig offen sein dürfen, legt ihr fest (Standard: einer). So reden die Kinder beim Essensplan mit.
 
-- **Auf Mein Tag** steht die Karte **Dein Wunschessen**. **Wünschen** öffnet die Auswahl: eines eurer Rezepte oder **Etwas anderes** mit ein paar Worten, etwa „Pfannkuchen“. Mit **Das wünsche ich mir** ist der Wunsch unterwegs. Bis er geplant ist, lässt er sich **ändern**.
-- **Die Erwachsenen** sehen die Wünsche oben im [Essensplan](/meals/#wishes) unter **Wünsche** und als ruhige Karte auf **Heute**. Ein Tipp auf einen Wunsch, dann Tag und Mahlzeit wählen, und er ist eingeplant.
+- **Auf Mein Tag** steht die Karte **Dein Wunschessen**. **Wünschen** öffnet die Auswahl: zuerst **Oft bei uns**, die Essen, die ihr in letzter Zeit am häufigsten gekocht habt, dann **Unsere Rezepte**, alle mit Bild (bei vielen Rezepten hilft **Rezept suchen**), und unten **Etwas anderes** mit ein paar Worten, etwa „Pfannkuchen“, und einem Bild dazu (**Such dir ein Bild aus**). Mit **Das wünsche ich mir** ist der Wunsch unterwegs. Bis er geplant ist, lässt er sich **ändern**.
+- **Die Erwachsenen** sehen die Wünsche oben im [Essensplan](/meals/#wishes) unter **Wünsche**, jeden mit seinem Bild, und als ruhige Karte auf **Heute**. Ein Tipp auf einen Wunsch, dann Tag und Mahlzeit wählen, und er ist eingeplant.
+- **Wünschen alle**, wünschen sich die Erwachsenen im Essensplan selbst etwas: **Selbst wünschen** in der Zeile **Wünsche** öffnet dieselbe Auswahl, **Meinen Wunsch ändern** ändert den offenen.
 - **Geplant** trägt das Essen im Plan und an der Wand einen Stern und „Wunsch von Paul“. Auf der Karte des Kindes steht dann zum Beispiel „Dein Wunsch Pfannkuchen gibt es am Donnerstag!“.
 
 <Shot name="kid-wish" alt="Mein Tag auf dem Kinder-Tablet mit der Karte Dein Wunschessen" wide />
 
-Ein Wunsch wird in der App **nie abgelehnt**. Ein nicht geplanter Wunsch wartet einfach weiter. Erziehungsberechtigte können einen Wunsch entfernen; warum, besprecht ihr miteinander.
+Ein Wunsch wird in der App **nie abgelehnt**. Ein nicht geplanter Wunsch wartet einfach weiter, in der nächsten Woche mit dem Zusatz **von letzter Woche**. Nach vier Wochen verschwindet ein Wunsch, der nie geplant wurde, still aus der Liste und zählt nicht mehr mit; das Kind kann sich einfach Neues wünschen. Erziehungsberechtigte können einen Wunsch entfernen; warum, besprecht ihr miteinander.
 
 Wer wünschen darf, legt **Wunschessen** fest: **Kinder** (Standard), **Alle** oder **Aus**. **Offene Wünsche pro Person** erlaubt bis zu drei gleichzeitig (Standard 1).
 
@@ -75,10 +76,14 @@ Jedes Gerät zeigt die Fragen in seiner Sprache: rund 150 auf Deutsch und Englis
 
 ## Wochenrückblick {#week-review}
 
-Am Sonntag schaut ihr zusammen auf **Unsere Woche**: was *wir* gemacht haben. Ab Sonntag 16 Uhr bis Montag 10 Uhr steht auf **Heute** und **Mein Tag** eine Karte, an der Wand eine Kachel in der Fußzeile. Ein Tipp öffnet fünf Karten nacheinander:
+Am Sonntag schaut ihr zusammen auf **Unsere Woche**: was *wir* gemacht haben. Ab Sonntag 16 Uhr bis Montag 10 Uhr steht auf **Heute** und **Mein Tag** eine Karte, an der Wand eine Kachel in der Fußzeile. Ein Tipp öffnet eine Geschichte aus bis zu fünf Karten, eine nach der anderen, bildschirmfüllend:
+
+- **Weiter** mit einem Tipp auf die rechte Seite, einem Wisch nach links oder der Pfeiltaste; **zurück** mit einem Tipp auf das linke Drittel, einem Wisch nach rechts oder der anderen Pfeiltaste. Die Pfeile unten tun dasselbe.
+- Die Striche oben zeigen, wie viele Karten es sind und wo ihr steht. Nach der letzten Karte, mit **Schließen** oder mit Esc ist der Rückblick zu.
+- Eine Karte ohne Inhalt fällt weg, etwa **Unsere Traditionen** in einer Woche ohne Tradition. Ist auf dem Gerät „Bewegung reduzieren“ eingeschaltet, erscheint die nächste Karte ohne Gleiten. Bildschirmleser sagen „Karte 2 von 4“.
 
 1. **Das haben wir zusammen geschafft**: die erledigten Aufgaben der ganzen Familie als eine Zahl
-2. **Jede und jeder hatte einen Moment**: eine Zeile für jede Person, etwa ein neues Abzeichen, ein Tag, an dem alles erledigt war, oder einfach „war diese Woche mit dabei“. Niemand bekommt zwei, und nichts ist eine Zahl im Vergleich zu anderen.
+2. **Jede und jeder hatte einen Moment**: eine Zeile für jede Person, etwa ein neues Abzeichen, ein Tag, an dem alles erledigt war, „war bei Spieleabend dabei“ für eine Tradition oder einen wichtigen Termin, oder einfach „war diese Woche mit dabei“. Niemand bekommt zwei, und nichts ist eine Zahl im Vergleich zu anderen.
 3. **Lecker**: die Essen der Woche, Wünsche mit Stern, neue Rezepte mit „neu“
 4. **Unsere Traditionen**: die Traditionen, die stattgefunden haben
 5. **Nächste Woche freuen wir uns auf**: die nächsten Countdowns
