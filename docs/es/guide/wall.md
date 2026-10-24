@@ -49,7 +49,7 @@ La vista infantil tiene las pestañas **Mi día**, **Horario escolar**, **Puntos
 
 ## Conectar y preparar {#connecting}
 
-En el nuevo equipo, elige **Conectar una tableta familiar o pantalla de pared**. En el móvil abre **Ajustes → Dispositivos → Conectar un dispositivo**, escanea el QR, elige pantalla de pared y nómbrala. Consulta el [proceso completo](/es/guide/setup#_4-connecting-a-family-tablet-or-wall-display).
+Si la app es nueva en el equipo, primero pide el servidor. No hace falta escribir la dirección: escanea el QR que tu móvil muestra en **Ajustes → Avanzados → Servidor**. Después, en el nuevo equipo, elige **Conectar una tableta familiar o pantalla de pared**. En el móvil abre **Ajustes → Dispositivos → Conectar un dispositivo**, escanea el QR, elige pantalla de pared y nómbrala. Consulta el [proceso completo](/es/guide/setup#_4-connecting-a-family-tablet-or-wall-display).
 
 La lista inicial recuerda:
 

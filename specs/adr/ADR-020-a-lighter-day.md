@@ -91,9 +91,9 @@ promises:
   roughly five to seven weekends to the Alpha.
 - The Wusel lines and every ritual's text cost translation in four languages
   ([NFR-14](../02-requirements.md)). The question deck is the largest single writing job in the
-  app so far. It ships in DE and EN only, and the Tischfrage stays hidden on FR and ES devices
-  until those decks exist. That is a recorded exception to P9 for one content catalogue
-  ([Q53](../14-open-questions.md)), decided 2026-10-24.
+  app so far: about 150 questions in DE and EN, and 50 each in FR and ES, chosen from
+  researched drafts without a native review ([Q53](../14-open-questions.md), decided and
+  revised 2026-10-24).
 - New data: `profile.birthday` (already in [04](../04-data-model.md)), `event.icon_key`,
   `event.countdown`, `event.tradition`, `meal_wish`, `meal_plan_entry.wished_by_profile_id`,
   and `table_question`. Each write path goes through an `api` function with `app.actor()` and

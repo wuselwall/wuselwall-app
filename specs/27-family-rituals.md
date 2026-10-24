@@ -29,7 +29,7 @@ promises that a ritual makes anyone happier.
 5. **Attributable** (P4). Every write is an `api` function with `app.actor()` and an audit
    row. What is only shown and never written, such as the table question, stores nothing.
 6. **Four languages** (P9). Every text is complete in DE/EN/FR/ES in the same change. The
-   one exception is the Tischfrage's FR and ES decks ([below](#tischfrage)).
+   Tischfrage's FR and ES decks are smaller than the DE and EN ones ([below](#tischfrage)).
 
 ## Birthdays
 
@@ -159,6 +159,14 @@ A question for the table during the meal, answered aloud, with nothing recorded.
   following `meals.warm_meal.school_day` and `.free_day`), *every main meal* or *off*.
   `rituals.table_question.lunch` and `.dinner` set the windows (11:30–13:30, 17:30–19:30). A
   meal does not have to be planned.
+- **The windows follow the country.** *Added 2026-10-24.* Those defaults miss both meals in
+  Spain (comida about 14:00–15:30, cena about 21:00) and most French dinners (between about
+  18:50 and 21:30, most often 20:00, per INSEE's time-use surveys). The country of
+  `household.region` picks a default from `app.setting_country_default` (migration
+  `20261024150000_setting_country_defaults.sql`, pgTAP 240): Spain 13:30–15:30 and
+  20:00–22:00, France dinner 19:00–21:00. `api.settings` reports it as the default, and a
+  reset returns to it; a household without a region keeps the catalogue's. Research:
+  [research/family-apps](research/family-apps/README.md#table-questions-fr-and-es).
 - **Where:**
   - On the **wall**, a card in the board header for the window. Wusel holds it, the question
     is set at kiosk size 34 or larger, and an *Andere Frage ↻* button has a 56 px target.
@@ -170,7 +178,7 @@ A question for the table during the meal, answered aloud, with nothing recorded.
   no question repeats before the deck is through. *Andere Frage* steps forward on that device
   only. A shared "next" would be a write per tap, and the family can just say "nimm die
   nächste".
-- **The deck:** about 150 questions per language at launch, in
+- **The deck:** about 150 questions in German and English and 50 in French and Spanish, in
   `app/assets/table_questions/{de,en,fr,es}.json`, with stable ids and categories:
   - *Quatsch*: "Wenn unser Kühlschrank sprechen könnte, was würde er sagen?"
   - *Heute*: "Was war heute das Lustigste?"
@@ -183,12 +191,14 @@ A question for the table during the meal, answered aloud, with nothing recorded.
   `rituals.table_question_deck` chooses *Familie* (default, fine for a five-year-old) or
   *Ältere* (adds questions for 8+). Each language's deck is **written in that language**, not
   translated, and none is copied from a commercial card game.
-- **DE and EN first.** *Decided 2026-10-24 ([Q53](14-open-questions.md)).* Step 11 ships the
-  German and English decks. On a device set to French or Spanish the Tischfrage does not
-  appear, and its setting says "Noch nicht in deiner Sprache" in that language, until each
-  deck exists. This is a deliberate, recorded exception to P9 for one content catalogue.
-  Every other string of these features, Wusel's lines included, is complete in all four
-  languages.
+- **FR and ES with 50 questions each.** *Decided 2026-10-24 ([Q53](14-open-questions.md)),
+  changed the same day.* The French and Spanish decks were researched and drafted at 150
+  questions each, without a native reviewer. The app ships 50 of each: a third of every
+  (category, deck) group of the German deck, leaving out every question the drafts' notes
+  flag as unsure and every riddle whose tradition could not be traced. The drafts and notes
+  are in [research/family-apps](research/family-apps/README.md#table-questions-fr-and-es). A
+  household walks through 50 questions in about seven weeks of warm meals before one comes
+  back; a later change can add from the drafts without changing the existing ids.
 - **The family's own questions:** `table_question(id, household_id, text, created_by_profile_id,
   created_at)`, written with `api.table_question_add` and `_remove`. Any member may add one; a
   guardian or the author removes it. Own questions mix into the shuffle and show "Frage von

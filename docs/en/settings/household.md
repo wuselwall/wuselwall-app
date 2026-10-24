@@ -4,7 +4,7 @@ Not every family does things the same way: how many points a chore earns, whethe
 
 <Shot name="settings-household" alt="Household settings with the areas tasks, calendar, meals and kitchen display" />
 
-The **Basic** view shows only the most important ones: the region, streak jokers, whether rewards need approval, whether children change their own appointments, the warm meal on school days and free days, the question at the table, our week, meal wishes, this device's night hours, Wusel, the sound when a chore is ticked, the morning summary and the reminder before appointments. **Advanced** shows all the others (switch at the top, or tap **Show all settings** at the bottom). Hidden settings still apply.
+The **Basic** view shows only the most important ones: the region, streak jokers, whether rewards need approval, whether children change their own appointments, the warm meal on school days and free days, the question at the table, our week, meal wishes, Wusel, the sound when a chore is ticked, the morning summary and the reminder before appointments. **Advanced** shows all the others (switch at the top, or tap **Show all settings** at the bottom). Hidden settings still apply.
 
 Every setting has a **default**, which WuselWall suggests. It suits most families. If your value differs, the setting says **Customised**. **Reset to default** brings it back at any time.
 
@@ -18,8 +18,8 @@ In the **Advanced** view:
 - **Meals**: whether there is a **warm meal** on **school days** and on **free days** (weekends, public holidays, school holidays), that **away means not eating**, and until when care counts as lunch
 - **Kitchen display**: when the wall moves on to the coming week and where morning, afternoon and evening split
 - **Rituals** and **Seasons and occasions**: see [below](#rituals)
-- **This device**: the night theme hours, when an opened detail returns to the wall, and the settings for Wusel, sounds, the sky and burn-in protection (see [below](#this-device))
-- **My settings**: **Wusel** and **Wusel's outfit**, the sound when a chore is ticked, the morning summary, reminders before appointments, and notifications when a chore is confirmed or a reward is requested. These apply only to the person you chose at the top (see [Wusel and colours](/en/guide/wusel#how-lively)).
+- **This device**: the settings for Wusel, sounds, the sky and burn-in protection. The night theme applies from 21:00 to 06:00, and an opened detail returns to the wall after a minute (see [below](#this-device))
+- **My settings**: **Wusel** and **Wusel's outfit**, the sound when a chore is ticked, the morning summary and reminders before appointments. These apply only to the person you chose at the top (see [Wusel and colours](/en/guide/wusel#how-lively)).
 
 Each setting's description is right below it and explains what changes.
 
@@ -30,7 +30,7 @@ The [rituals](/en/guide/rituals) are all on at the start. Each can be changed or
 | Setting | What it does | Default |
 |---|---|---|
 | **Question at the table** | when a conversation question appears: **Warm meal**, **Lunch and dinner** or **Off** | Warm meal |
-| **Question at lunch**, **Question at dinner** | the times when the question shows | 11:30–13:30, 17:30–19:30 |
+| **Question at lunch**, **Question at dinner** | the times when the question shows | 11:30–13:30, 17:30–19:30; in France dinner 19:00–21:00, in Spain 13:30–15:30 and 20:00–22:00 |
 | **Questions for** | **All ages** or **Older children too** (deeper questions for 8 and over) | All ages |
 | **Our week** | weekday and time of the look back at the week, or off | Sunday 16:00 |
 | **Meal wishes** | who may wish for a meal each week: **Children**, **Everyone** or **Off** | Children |

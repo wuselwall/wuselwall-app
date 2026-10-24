@@ -49,7 +49,7 @@ La vue des enfants possède les onglets **Ma journée**, **Emploi du temps**, **
 
 ## Connecter et préparer l’appareil {#connecting}
 
-Sur le nouvel appareil, choisissez **Connecter une tablette familiale ou un écran mural**. Sur votre téléphone, ouvrez **Paramètres → Appareils → Connecter un appareil**, scannez le QR, choisissez l’écran mural et nommez-le. Voir la [procédure](/fr/guide/setup#_4-connecting-a-family-tablet-or-wall-display).
+Si l’application est nouvelle sur l’appareil, elle demande d’abord le serveur. Inutile de saisir l’adresse : scannez le QR que votre téléphone affiche sous **Paramètres → Avancés → Serveur**. Ensuite, sur le nouvel appareil, choisissez **Connecter une tablette familiale ou un écran mural**. Sur votre téléphone, ouvrez **Paramètres → Appareils → Connecter un appareil**, scannez le QR, choisissez l’écran mural et nommez-le. Voir la [procédure](/fr/guide/setup#_4-connecting-a-family-tablet-or-wall-display).
 
 La première fois, une liste de préparation rappelle de :
 

@@ -65,10 +65,10 @@ La pregunta aparece durante la comida: arriba en la cabecera de la pared, en **M
 - **Nuestras preguntas** (en la tarjeta de la pregunta en **Hoy**): con **Añadir una pregunta** cualquiera escribe las suyas. Aparecen con «Pregunta de Olivia». Una pregunta propia la quita quien la escribió o un adulto responsable.
 - Una pregunta incluida que no encaja con vosotros, un adulto responsable la aparta con **No volver a preguntar esto**. En **Preguntas apartadas**, **Volver a preguntar** la recupera.
 
-Ajustes: **Pregunta en la mesa** vale para la **Comida caliente** (predeterminado), para **Comida y cena**, o está **Desactivado**. **Pregunta en la comida** (11:30 a 13:30 por defecto) y **Pregunta en la cena** (17:30 a 19:30) fijan las horas; no hace falta planificar ninguna comida. **Preguntas para**: **Todas las edades** sirve desde los cinco años, **También niños mayores** añade preguntas más profundas a partir de 8.
+Ajustes: **Pregunta en la mesa** vale para la **Comida caliente** (predeterminado), para **Comida y cena**, o está **Desactivado**. **Pregunta en la comida** y **Pregunta en la cena** fijan las horas; no hace falta planificar ninguna comida. Por defecto siguen el país de vuestra región: 11:30 a 13:30 y 17:30 a 19:30; en Francia, la cena de 19:00 a 21:00; en España, 13:30 a 15:30 y 20:00 a 22:00. **Preguntas para**: **Todas las edades** sirve desde los cinco años, **También niños mayores** añade preguntas más profundas a partir de 8.
 
-::: warning Aún no en español
-Por ahora las preguntas existen en alemán e inglés. En un dispositivo en español, la pregunta en la mesa todavía no aparece.
+::: info Idiomas
+Cada dispositivo muestra las preguntas en su idioma: unas 150 en alemán e inglés y, por ahora, 50 en francés y español.
 :::
 
 ## Nuestra semana {#week-review}

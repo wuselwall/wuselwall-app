@@ -1,6 +1,6 @@
 # Kalender
 
-Der Kalender ist die Startseite der Erwachsenen: alle Termine der Familie und, wer wo ist, auf einen Blick.
+Der Kalender zeigt alle Termine der Familie und, wer wo ist, auf einen Blick. Die Startseite der Erwachsenen ist **Heute**.
 
 <Shot name="calendar-week" alt="Wochenansicht des Kalenders mit Anwesenheit oben und Terminen darunter" wide />
 

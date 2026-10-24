@@ -1,6 +1,6 @@
 # Calendar
 
-The calendar is the adults' home screen: everyone's appointments and, at a glance, who is where.
+The calendar shows everyone's appointments and, at a glance, who is where. The adults' home screen is **Today**.
 
 <Shot name="calendar-week" alt="Week view of the calendar with presence at the top and appointments below" wide />
 
