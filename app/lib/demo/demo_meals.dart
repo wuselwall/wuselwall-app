@@ -210,6 +210,8 @@ class DemoMealsRepository implements MealsRepository {
           guests: guests,
           // Thursday: Papa is at the late meeting, set by hand.
           eatingOverrides: day == 3 ? {DemoData.papa: false} : const {},
+          // Wednesday's chili is the son's wish, as on the wall (specs/27).
+          wishedBy: day == 2 ? DemoData.son : null,
         ),
       );
     }
