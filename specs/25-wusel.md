@@ -179,6 +179,10 @@ New rows in [21](21-household-settings.md#a-lighter-day):
 | `member.wusel_outfit` | member, self | none | none · one of the eight outfits |
 | `device.wusel` | device (kiosk, shared) | `lively` | `lively` · `quiet` · `off`; a member's own setting wins while their profile is active |
 
+`auto` is no choice of its own: on the wall a member on `auto` gets the wall's
+`device.wusel`, so the corner Wusel stays when a grown-up taps their avatar; on a phone
+and in the kid register `auto` means lively for children and quiet for adults.
+
 ## Implementation
 
 The code lives in `app/lib/core/wusel/`.
