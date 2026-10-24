@@ -3138,5 +3138,66 @@
   "tableQuestionHide": "Don't ask this one again",
   "tableQuestionRemove": "Remove the question",
   "tableQuestionsHidden": "Questions we left out",
-  "tableQuestionShowAgain": "Ask again"
+  "tableQuestionShowAgain": "Ask again",
+  "weekReviewTitle": "Our week",
+  "weekReviewOpen": "Look back at our week",
+  "weekReviewTogether": "What we did together",
+  "weekReviewChores": "{count, plural, =0{A week to catch our breath} =1{1 chore done} other{{count} chores done}}",
+  "@weekReviewChores": {
+    "description": "The family's chores of the week as one number, the family's (specs/27).",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "weekReviewMoments": "Everyone had a moment",
+  "weekReviewMeals": "Yum",
+  "weekReviewNewRecipe": "new",
+  "weekReviewTraditions": "Our traditions",
+  "weekReviewNext": "Next week we look forward to",
+  "weekReviewCalmAhead": "A calm week ahead.",
+  "weekHighlightBadge": "New badge: {title}",
+  "@weekHighlightBadge": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "weekHighlightStreak": "{title}, every day",
+  "@weekHighlightStreak": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "weekHighlightAllDone": "had a day with everything ticked off",
+  "weekHighlightReward": "Reward: {title}",
+  "@weekHighlightReward": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "weekHighlightWish": "Wish on the table: {title}",
+  "@weekHighlightWish": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "weekHighlightCooked": "cooked {title}",
+  "@weekHighlightCooked": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "weekHighlightHelped": "helped with the chores",
+  "weekHighlightHere": "was part of our week"
 }

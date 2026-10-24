@@ -15,6 +15,7 @@ import 'package:wuselwall/features/rituals/domain/ritual_models.dart';
 import 'package:wuselwall/features/rituals/domain/table_question.dart';
 import 'package:wuselwall/features/school/application/school_providers.dart';
 import 'package:wuselwall/features/school/domain/school_models.dart';
+import 'package:wuselwall/features/settings/application/household_settings_providers.dart';
 import 'package:wuselwall/features/wusel/application/ambience.dart';
 import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
 
@@ -229,3 +230,48 @@ class TableSkipNotifier extends Notifier<Map<int, int>> {
 final tableSkipProvider = NotifierProvider<TableSkipNotifier, Map<int, int>>(
   TableSkipNotifier.new,
 );
+
+/// The Monday of the week the look-back is about, while its window is open; null
+/// otherwise (specs/27 "Wochenrückblick"). `rituals.week_review` sets when it opens
+/// (default Sunday 16:00); it stays until 10:00 the next morning. Never rotates onto
+/// the wall by itself.
+final weekReviewDueProvider = Provider.autoDispose<DateTime?>((ref) {
+  final value = ref.watch(lighterDayProvider).value('rituals.week_review');
+  if (value == null) {
+    // Switched off (JSON null) or not yet loaded: the default only once loaded.
+    final loaded = ref.watch(householdSettingsProvider).hasValue;
+    if (loaded) return null;
+  }
+  final setting = value is Map
+      ? value
+      : const <String, Object?>{'weekday': 7, 'time': '16:00'};
+  final weekday = (setting['weekday'] as num?)?.toInt() ?? 7;
+  final parts = ((setting['time'] as String?) ?? '16:00').split(':');
+  final now = ref.watch(nowProvider);
+  return weekReviewWeek(
+    now,
+    weekday: weekday,
+    hour: int.parse(parts[0]),
+    minute: int.parse(parts[1]),
+  );
+});
+
+/// The reviewed week's Monday when [now] falls between the opening on [weekday] at
+/// [hour]:[minute] and 10:00 the next morning; else null.
+DateTime? weekReviewWeek(
+  DateTime now, {
+  required int weekday,
+  required int hour,
+  required int minute,
+}) {
+  for (final back in const [0, 1]) {
+    final day = DateTime(now.year, now.month, now.day - back);
+    if (day.weekday != weekday) continue;
+    final opens = DateTime(day.year, day.month, day.day, hour, minute);
+    final closes = DateTime(day.year, day.month, day.day + 1, 10);
+    if (!now.isBefore(opens) && now.isBefore(closes)) {
+      return DateTime(day.year, day.month, day.day - (day.weekday - 1));
+    }
+  }
+  return null;
+}

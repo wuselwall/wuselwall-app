@@ -5544,4 +5544,78 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get tableQuestionShowAgain => 'Wieder stellen';
+
+  @override
+  String get weekReviewTitle => 'Unsere Woche';
+
+  @override
+  String get weekReviewOpen => 'Auf unsere Woche zurückschauen';
+
+  @override
+  String get weekReviewTogether => 'Das haben wir zusammen geschafft';
+
+  @override
+  String weekReviewChores(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Aufgaben erledigt',
+      one: '1 Aufgabe erledigt',
+      zero: 'Eine Woche zum Durchatmen',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get weekReviewMoments => 'Jede und jeder hatte einen Moment';
+
+  @override
+  String get weekReviewMeals => 'Lecker';
+
+  @override
+  String get weekReviewNewRecipe => 'neu';
+
+  @override
+  String get weekReviewTraditions => 'Unsere Traditionen';
+
+  @override
+  String get weekReviewNext => 'Nächste Woche freuen wir uns auf';
+
+  @override
+  String get weekReviewCalmAhead => 'Eine ruhige Woche kommt.';
+
+  @override
+  String weekHighlightBadge(String title) {
+    return 'Neues Abzeichen: $title';
+  }
+
+  @override
+  String weekHighlightStreak(String title) {
+    return '$title, jeden Tag geschafft';
+  }
+
+  @override
+  String get weekHighlightAllDone =>
+      'hatte einen Tag, an dem alles erledigt war';
+
+  @override
+  String weekHighlightReward(String title) {
+    return 'Belohnung: $title';
+  }
+
+  @override
+  String weekHighlightWish(String title) {
+    return 'Wunschessen auf dem Tisch: $title';
+  }
+
+  @override
+  String weekHighlightCooked(String title) {
+    return 'hat $title gekocht';
+  }
+
+  @override
+  String get weekHighlightHelped => 'hat bei den Aufgaben mitgeholfen';
+
+  @override
+  String get weekHighlightHere => 'war diese Woche mit dabei';
 }

@@ -9418,6 +9418,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Ask again'**
   String get tableQuestionShowAgain;
+
+  /// No description provided for @weekReviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Our week'**
+  String get weekReviewTitle;
+
+  /// No description provided for @weekReviewOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Look back at our week'**
+  String get weekReviewOpen;
+
+  /// No description provided for @weekReviewTogether.
+  ///
+  /// In en, this message translates to:
+  /// **'What we did together'**
+  String get weekReviewTogether;
+
+  /// The family's chores of the week as one number, the family's (specs/27).
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{A week to catch our breath} =1{1 chore done} other{{count} chores done}}'**
+  String weekReviewChores(int count);
+
+  /// No description provided for @weekReviewMoments.
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone had a moment'**
+  String get weekReviewMoments;
+
+  /// No description provided for @weekReviewMeals.
+  ///
+  /// In en, this message translates to:
+  /// **'Yum'**
+  String get weekReviewMeals;
+
+  /// No description provided for @weekReviewNewRecipe.
+  ///
+  /// In en, this message translates to:
+  /// **'new'**
+  String get weekReviewNewRecipe;
+
+  /// No description provided for @weekReviewTraditions.
+  ///
+  /// In en, this message translates to:
+  /// **'Our traditions'**
+  String get weekReviewTraditions;
+
+  /// No description provided for @weekReviewNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next week we look forward to'**
+  String get weekReviewNext;
+
+  /// No description provided for @weekReviewCalmAhead.
+  ///
+  /// In en, this message translates to:
+  /// **'A calm week ahead.'**
+  String get weekReviewCalmAhead;
+
+  /// No description provided for @weekHighlightBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'New badge: {title}'**
+  String weekHighlightBadge(String title);
+
+  /// No description provided for @weekHighlightStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'{title}, every day'**
+  String weekHighlightStreak(String title);
+
+  /// No description provided for @weekHighlightAllDone.
+  ///
+  /// In en, this message translates to:
+  /// **'had a day with everything ticked off'**
+  String get weekHighlightAllDone;
+
+  /// No description provided for @weekHighlightReward.
+  ///
+  /// In en, this message translates to:
+  /// **'Reward: {title}'**
+  String weekHighlightReward(String title);
+
+  /// No description provided for @weekHighlightWish.
+  ///
+  /// In en, this message translates to:
+  /// **'Wish on the table: {title}'**
+  String weekHighlightWish(String title);
+
+  /// No description provided for @weekHighlightCooked.
+  ///
+  /// In en, this message translates to:
+  /// **'cooked {title}'**
+  String weekHighlightCooked(String title);
+
+  /// No description provided for @weekHighlightHelped.
+  ///
+  /// In en, this message translates to:
+  /// **'helped with the chores'**
+  String get weekHighlightHelped;
+
+  /// No description provided for @weekHighlightHere.
+  ///
+  /// In en, this message translates to:
+  /// **'was part of our week'**
+  String get weekHighlightHere;
 }
 
 class _AppLocalizationsDelegate
