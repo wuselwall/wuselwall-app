@@ -4,7 +4,7 @@ Dans **Paramètres**, adaptez WuselWall à votre famille. La page est une courte
 
 <Shot name="settings-phone" alt="Paramètres : la liste des groupes, de Personnel à Aide et infos" />
 
-La vue de base montre les réglages essentiels : région, jokers, approbation des récompenses, rendez-vous des enfants, repas chaud les jours d’école et libres, question à table, notre semaine, repas souhaités, heures de nuit, Wusel, son des tâches, résumé du matin et rappels. La vue **Avancés**, accessible en haut ou en bas, montre tout. Un groupe où la vue ne montre rien n’apparaît pas dans la liste. Les paramètres masqués restent actifs.
+La vue de base montre les réglages essentiels : région, jokers, approbation des récompenses, rendez-vous des enfants, repas chaud les jours d’école et libres, question à table, notre semaine, repas souhaités, heures de nuit, Wusel, son des tâches, résumé du matin, rappels et fêtes (Avent, Pâques, Pâques orthodoxes, Nouvel An). La vue **Avancés**, accessible en haut ou en bas, montre tout. Un groupe où la vue ne montre rien n’apparaît pas dans la liste. Les paramètres masqués restent actifs.
 
 Chaque réglage propose une valeur par défaut. Une valeur différente est signalée comme personnalisée ; vous pouvez rétablir la valeur par défaut à tout moment.
 

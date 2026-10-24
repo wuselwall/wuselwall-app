@@ -4,7 +4,7 @@ En **Ajustes**, adapta WuselWall a tu familia. La página es una lista corta de 
 
 <Shot name="settings-phone" alt="Ajustes: la lista de grupos, de Personal a Ayuda e información" />
 
-La vista básica muestra región, comodines, aprobación de recompensas, citas de niños, comida caliente en días escolares y libres, pregunta en la mesa, nuestra semana, comida deseada, horas nocturnas, Wusel, sonido de tareas, resumen matinal y recordatorios. **Avanzados**, arriba o al final, muestra el resto. Un grupo en el que la vista no muestra nada no aparece en la lista. Los ajustes ocultos siguen activos.
+La vista básica muestra región, comodines, aprobación de recompensas, citas de niños, comida caliente en días escolares y libres, pregunta en la mesa, nuestra semana, comida deseada, horas nocturnas, Wusel, sonido de tareas, resumen matinal, recordatorios y fiestas (Adviento, Pascua, Pascua ortodoxa, Nochevieja). **Avanzados**, arriba o al final, muestra el resto. Un grupo en el que la vista no muestra nada no aparece en la lista. Los ajustes ocultos siguen activos.
 
 Cada ajuste tiene un valor predeterminado. Si lo cambias, aparece como personalizado. Puedes restaurar el original cuando quieras.
 

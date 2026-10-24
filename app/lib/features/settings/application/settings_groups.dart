@@ -285,6 +285,11 @@ const basicSettingKeys = {
   'rituals.table_question',
   'meals.wishes',
   'rituals.week_review',
+  // The holiday celebrations: a family looks for these by name.
+  'ambience.advent',
+  'ambience.easter_western',
+  'ambience.easter_orthodox',
+  'ambience.new_year',
 };
 
 /// Every catalogue key the groups place, in page order.

@@ -141,6 +141,7 @@ void main() {
         SettingsGroup.calendar,
         SettingsGroup.meals,
         SettingsGroup.rituals,
+        SettingsGroup.celebrations,
         SettingsGroup.devices,
         // Account deletion stays easy to find (App Store guideline 5.1.1(v)).
         SettingsGroup.account,
@@ -150,7 +151,6 @@ void main() {
       }
       // These hold Advanced settings only.
       for (final group in const [
-        SettingsGroup.celebrations,
         SettingsGroup.kitchen,
         SettingsGroup.server,
       ]) {
