@@ -39,9 +39,23 @@ class _PixelShiftState extends ConsumerState<PixelShift> {
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(PixelShift.every, (_) {
-      if (mounted) setState(() => _step++);
-    });
+    // The timer runs only while the shift is on, and stops when it is switched off.
+    ref.listenManual(
+      lighterDayProvider.select((d) => d.pixelShift),
+      (_, on) => _arm(on),
+      fireImmediately: true,
+    );
+  }
+
+  void _arm(bool on) {
+    if (on && _timer == null) {
+      _timer = Timer.periodic(PixelShift.every, (_) {
+        if (mounted) setState(() => _step++);
+      });
+    } else if (!on) {
+      _timer?.cancel();
+      _timer = null;
+    }
   }
 
   @override
@@ -52,9 +66,12 @@ class _PixelShiftState extends ConsumerState<PixelShift> {
 
   @override
   Widget build(BuildContext context) {
-    if (!ref.watch(lighterDayProvider).pixelShift) return widget.child;
+    final on = ref.watch(lighterDayProvider.select((d) => d.pixelShift));
+    // Always the same tree, so switching the shift on or off keeps the screen's state.
     return Transform.translate(
-      offset: PixelShift.offsets[_step % PixelShift.offsets.length],
+      offset: on
+          ? PixelShift.offsets[_step % PixelShift.offsets.length]
+          : Offset.zero,
       child: widget.child,
     );
   }
