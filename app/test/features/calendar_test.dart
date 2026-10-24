@@ -482,7 +482,10 @@ void main() {
       await t.tap(find.descendant(of: bar, matching: find.text('Kalender')));
       await t.pumpAndSettle();
       expect(find.text('Milch'), findsNothing);
-      expect(find.byType(FloatingActionButton), findsOneWidget);
+      expect(
+        find.widgetWithText(FloatingActionButton, 'Neuer Termin'),
+        findsOneWidget,
+      );
     });
 
     testWidgets(
@@ -514,7 +517,7 @@ void main() {
 
         await t.tap(find.byType(BackButton));
         await t.pumpAndSettle();
-        await t.tap(find.byType(FloatingActionButton));
+        await t.tap(find.widgetWithText(FloatingActionButton, 'Neuer Termin'));
         await t.pumpAndSettle();
         expect(find.byType(EventEditorPage), findsOneWidget);
         expect(find.widgetWithText(AppBar, 'Neuer Termin'), findsOneWidget);

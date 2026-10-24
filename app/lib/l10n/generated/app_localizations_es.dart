@@ -5464,6 +5464,21 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String wuselWallTradition1(String name) {
+    return '¡Hoy es $name!';
+  }
+
+  @override
+  String wuselWallTradition2(String name) {
+    return '¡Qué bien, hoy toca $name!';
+  }
+
+  @override
+  String wuselWallTradition3(String name) {
+    return '¡Buenos días! Hoy toca $name.';
+  }
+
+  @override
   String get wuselSetupDone => 'Todo listo. ¡Os damos la bienvenida a casa!';
 
   @override
@@ -5573,6 +5588,51 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get eventTraditionMealHint => 'p. ej. pizza';
+
+  @override
+  String get calendarNewTradition => 'Nueva tradición';
+
+  @override
+  String get traditionStartersHelp =>
+      'Elige una para empezar. Después puedes cambiar el día y la hora.';
+
+  @override
+  String get traditionStarterGameNight => 'Noche de juegos';
+
+  @override
+  String get traditionStarterPizzaFriday => 'Viernes de pizza';
+
+  @override
+  String get traditionStarterFilmNight => 'Noche de cine';
+
+  @override
+  String get traditionStarterSundayBreakfast => 'Desayuno del domingo';
+
+  @override
+  String get traditionStarterStoryTime => 'Hora del cuento';
+
+  @override
+  String get traditionStarterDayOut => 'Día de excursión';
+
+  @override
+  String get traditionStarterPizzaMeal => 'Pizza';
+
+  @override
+  String get traditionStarterOwn => 'Tradición propia';
+
+  @override
+  String get traditionStarterOwnHelp =>
+      'Tú eliges el nombre, la imagen y el día.';
+
+  @override
+  String traditionStarterWhen(String weekday, String time) {
+    return 'Cada $weekday, $time';
+  }
+
+  @override
+  String traditionStarterWhenAllDay(String weekday) {
+    return 'Cada $weekday, todo el día';
+  }
 
   @override
   String get eventIcon_cake => 'Tarta de cumpleaños';

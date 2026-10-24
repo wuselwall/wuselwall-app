@@ -6,14 +6,26 @@ import 'package:wuselwall/core/wusel/wusel.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/ui/board_grid.dart';
 import 'package:wuselwall/features/rituals/application/ritual_providers.dart';
+import 'package:wuselwall/features/rituals/application/today_tradition_provider.dart';
+import 'package:wuselwall/features/rituals/domain/countdown.dart';
 import 'package:wuselwall/features/wusel/application/ambience.dart';
 import 'package:wuselwall/features/wusel/ui/family_wusel.dart';
 import 'package:wuselwall/features/wusel/ui/wusel_lines.dart';
 
+/// The countdown Wusel waves for on [today]: the nearest one, when it is tomorrow or
+/// today. The countdowns come nearest first.
+Countdown? waveFor(List<Countdown> countdowns, DateTime today) =>
+    switch (countdowns.firstOrNull) {
+      final c? when c.daysFrom(today) <= 1 => c,
+      _ => null,
+    };
+
 /// Wusel in the wall's header (specs/25 "Where Wusel appears", kiosk): it waves for the
 /// first half hour of the morning, wears the party hat on a birthday and cheers once
-/// on the hour, thinks while the board is offline, and sleeps at night. In between it
-/// sits still in its corner: nothing moves at two metres but a moment.
+/// on the hour, thinks while the board is offline, and sleeps at night. Its morning
+/// line names today's tradition, and it waves when a countdown says "Morgen!" or
+/// "Heute!". In between it sits still in its corner: nothing moves at two metres but
+/// a moment.
 class BoardWusel extends ConsumerWidget {
   const BoardWusel({required this.stale, super.key});
 
@@ -60,14 +72,34 @@ class BoardWusel extends ConsumerWidget {
       );
     }
     if (morning) {
+      // On a tradition's day the morning names it (specs/27 "Familientraditionen").
+      final tradition = ref.watch(todayTraditionProvider);
       return ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 380),
         child: WuselSays(
-          line: WuselLines.stable(l10n, WuselMoment.wallMorning, seed: now.day),
+          line: tradition != null
+              ? WuselLines.stable(
+                  l10n,
+                  WuselMoment.wallTradition,
+                  seed: now.day,
+                  name: tradition,
+                )
+              : WuselLines.stable(l10n, WuselMoment.wallMorning, seed: now.day),
           pose: WuselPose.wave,
           size: size,
           style: style,
         ),
+      );
+    }
+    // A countdown at "Morgen!" or "Heute!" in the footer: this corner Wusel waves for
+    // it, the screen's one Wusel (specs/27 "Vorfreude", specs/25), and the footer
+    // keeps the words.
+    if (waveFor(ref.watch(countdownsProvider), ref.watch(ritualTodayProvider))
+        case final soon?) {
+      return FamilyWusel(
+        pose: WuselPose.wave,
+        size: size,
+        moment: (soon.kind, soon.date, soon.title),
       );
     }
     return const FamilyWusel(size: size);

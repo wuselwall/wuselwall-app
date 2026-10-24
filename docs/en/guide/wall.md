@@ -18,13 +18,13 @@ The wall display is made to be read from two and a half metres: big type, clear 
 
 ### At the top
 
-The clock, the date and the calendar week. Next to it is **Up next**: the next appointment of today, with a countdown. During the meal the [question at the table](/en/guide/rituals#table-question) stands there instead. [Wusel](/en/guide/wusel) sits on the right, and behind the header a sky shows the time of day.
+The clock, the date and the calendar week. Next to it is **Up next**: the next appointment of today, with a countdown. During the meal the [question at the table](/en/guide/rituals#table-question) stands there instead. [Wusel](/en/guide/wusel) sits on the right, and behind the header a sky shows the time of day. On the morning of a tradition Wusel says "It's Game night today!", and when a countdown says **Tomorrow!** or **Today!**, Wusel waves.
 
 ### One column per day
 
 The seven days stand side by side, Monday to Sunday. Today's column is wider and framed, past days are paler. Every column has the same three areas in the same order, separated by narrow strips:
 
-- **Who is where**: one row per family member. For children, this shows school time (for example 8–14:25), notable lessons such as sport or swimming, and the end of after-school care. For adults, a pale strip shows their usual state, such as home office. Anything different — duty, business trip, office — appears as a coloured band; a multi-day trip is one continuous band. A small clock with "until 17" means appointments until 17:00. A public holiday is named above its column; children without school show "free". **Pale = as usual, bold = different.**
+- **Who is where**: one row per family member. For children, this shows school time (for example 8–14:25), notable lessons such as sport or swimming, and the end of after-school care. For adults, a pale strip shows their usual state, such as home office. Anything different — duty, business trip, office — appears as a coloured band; a multi-day trip is one continuous band. A small clock with "until 17" means appointments until 17:00. A public holiday is named above its column, and so is a birthday, with a cake and the age, such as "Emma turns 9"; children without school show "free". **Pale = as usual, bold = different.**
 - **Appointments**: morning, afternoon and evening. Only appointments marked for the kitchen display are shown. A dot shows who is involved. Dashed and with a "?" means not certain yet. If there is no room left, it says "+2 more". A [family tradition](/en/guide/rituals#traditions) is always shown, with a lemon-yellow ribbon and its picture.
   With **All events** (at the right of the band above the appointments) every column shows all its appointments, not only the marked ones. The tick goes off again by itself when nobody touches the wall.
 - **Hot meal** (named at the left of its row): the one warm meal of the day — sun for lunch, moon for dinner — with the dish. A dot per person shows who eats with us (filled) and who is not there (hollow). It also shows who cooks. A star means someone wished for it ([meal wishes](/en/guide/rituals#meal-wishes)).
