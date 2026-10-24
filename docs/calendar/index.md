@@ -47,6 +47,14 @@ Unten im Editor stehen drei Dinge, die den Alltag leichter machen (siehe [Ritual
 
 <Shot name="calendar-rituals" alt="Unterer Teil des Termin-Editors mit Bild, Darauf freuen wir uns und Familientradition mit Essen" />
 
+## Neue Tradition {#new-tradition}
+
+Über **Neuer Termin** sitzt ein kleiner Knopf mit Konfetti: **Neue Tradition**. Er öffnet eine Auswahl mit sechs Vorlagen, **Spieleabend**, **Pizza-Freitag**, **Filmabend**, **Sonntagsfrühstück**, **Vorlesezeit** und **Ausflugstag**, und darunter **Eigene Tradition**. Jede Vorlage sagt, wann sie beginnt, etwa „Jeden Freitag, 18:00“.
+
+Nach der Wahl öffnet sich der gewohnte Editor, schon ausgefüllt: der Name, das Bild, **Wöchentlich** am passenden Tag, die ganze Familie unter **Wer** und **Familientradition** eingeschaltet. Der Pizza-Freitag bringt **Mit Essen** „Pizza“ zum Abendessen mit. Passe Tag, Uhrzeit und Personen an und tippe auf **Speichern**. Bei **Eigene Tradition** gibst du Name und Bild selbst ein. Mehr dazu unter [Familientraditionen](/guide/rituals#traditions).
+
+<Shot name="calendar-tradition" alt="Auswahl Neue Tradition mit sechs Vorlagen und Eigene Tradition" />
+
 ## Termine bis …
 
 Tippe auf die Überschrift eines Tages, um **Termine bis** zu setzen: Ab dieser Uhrzeit bist du nicht verfügbar. Das erscheint auf der Küchenwand, zum Beispiel als „Termine bis 17“. Es zeigt nur die Uhrzeit, keine Termine und keine Details. Mit **Für die ganze Woche übernehmen (Mo–Fr)** gilt es für jeden Werktag der Woche.

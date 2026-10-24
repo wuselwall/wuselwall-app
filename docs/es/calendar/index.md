@@ -42,6 +42,14 @@ Al final del editor hay tres cosas que hacen el día más ligero (ver [Rituales]
 
 <Shot name="calendar-rituals" alt="El final del editor de eventos con la imagen, Nos hace ilusión y una tradición familiar con comida" />
 
+## Nueva tradición {#new-tradition}
+
+Encima de **Nuevo evento** hay un botón pequeño con confeti: **Nueva tradición**. Abre una lista con seis propuestas, **Noche de juegos**, **Viernes de pizza**, **Noche de cine**, **Desayuno del domingo**, **Hora del cuento** y **Día de excursión**, y debajo **Tradición propia**. Cada propuesta dice cuándo empieza, por ejemplo «Cada viernes, 18:00».
+
+Después se abre el editor de siempre, ya rellenado: el nombre, la imagen, **Cada semana** el día adecuado, toda la familia en **Quién** y **Tradición familiar** activada. El viernes de pizza trae **Con comida** «Pizza» para la cena. Ajusta el día, la hora y las personas y toca **Guardar**. Con **Tradición propia** escribes tú el nombre y eliges la imagen. Más en [Tradiciones familiares](/es/guide/rituals#traditions).
+
+<Shot name="calendar-tradition" alt="La lista Nueva tradición con seis propuestas y Tradición propia" />
+
 ## Reuniones hasta… {#meetings-until}
 
 Toca la cabecera de un día para indicar hasta qué hora estás en reuniones. La pared solo muestra la hora, sin detalles. Puedes aplicarla a todos los días laborables de esa semana.

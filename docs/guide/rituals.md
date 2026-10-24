@@ -15,7 +15,7 @@ Für alle gilt:
 
 Den Geburtstag trägst du auf der Seite einer Person ein: **Einstellungen → Mitglieder**, Person antippen, **Geburtstag → Datum wählen** (siehe [Mitglied bearbeiten](/settings/members-devices#mitglied-bearbeiten)). Jede Person kann ihren eigenen eintragen, alle anderen die Erziehungsberechtigten.
 
-Vorher wird heruntergezählt (siehe [Vorfreude](#countdowns)), mit dem Alter, das die Person wird: „Emma wird 9 · noch 3× schlafen“. Am Tag selbst hängen Wimpel in der Farbe der Person über der Wand, Wusel trägt den Partyhut, auf **Heute** steht eine Geburtstagskarte, und auf dem Kinder-Tablet jubelt Wusel dem Geburtstagskind zu.
+Vorher wird heruntergezählt (siehe [Vorfreude](#countdowns)), mit dem Alter, das die Person wird: „Emma wird 9 · noch 3× schlafen“. An der Wand steht der Geburtstag die ganze Woche unter dem Datum seines Tages, mit einem Kuchen: „Emma wird 9“. Am Tag selbst hängen Wimpel in der Farbe der Person über der Wand, Wusel trägt den Partyhut, auf **Heute** steht eine Geburtstagskarte, und auf dem Kinder-Tablet jubelt Wusel dem Geburtstagskind zu. Ist der Anlass **Geburtstage** unter **Jahreszeiten und Anlässe** ausgeschaltet (siehe [Wusel und Farben](/guide/wusel#occasions)), entfällt all das; der Countdown bleibt.
 
 Großeltern und Freunde tragt ihr wie bisher als jährlichen Termin ein; den könnt ihr für die Vorfreude markieren.
 
@@ -32,13 +32,15 @@ In einem [Abo des Familienkalenders](/calendar/feeds) steht jeder Geburtstag als
 
 Zu sehen ist er auf der **Wand** in der Fußzeile, so viele wie hineinpassen, auf **Mein Tag** unter **Worauf ich mich freue** (die Countdowns des Kindes und die der ganzen Familie) und auf **Heute** als eine Zeile mit dem nächsten Countdown.
 
-Kinder und Wand zählen bis zu einer Woche vorher in Nächten („noch 3× schlafen“), davor in Tagen („noch 9 Tage“). Erwachsene lesen „in 3 Tagen“. Am Vortag steht dort **Morgen!**, am Tag selbst **Heute!**, danach verschwindet der Countdown.
+Kinder und Wand zählen bis zu einer Woche vorher in Nächten („noch 3× schlafen“), davor in Tagen („noch 9 Tage“). Erwachsene lesen „in 3 Tagen“. Am Vortag steht dort **Morgen!**, am Tag selbst **Heute!**, und Wusel winkt oben in der Kopfzeile der Wand dazu. Danach verschwindet der Countdown.
 
 Wie viele Tage vorher es losgeht, stellt ihr mit **Vorfreude beginnt** ein (Standard 14 Tage, 7 bis 60). **Countdown bis jemand zurückkommt** (Standard an) schaltet die Rückkehr von Reisen aus.
 
 ## Familientraditionen {#traditions}
 
-Spieleabend, Pizza-Freitag, Sonntagsfrühstück: Was eure Familie immer wieder macht, legst du als wiederholten Termin an und schaltest im Editor **Familientradition** ein. Eine Tradition steht **immer an der Wand**, auch ohne **Auf dem Küchendisplay zeigen**, mit einem zitronengelben Band und ihrem **Bild**. Unter **Mit Essen** hältst du fest, welches Essen dazugehört, und ob mittags oder abends. Ist diese Mahlzeit am Tag der Tradition noch frei, schlägt der [Essensplan](/meals/) das Essen vor; ein Tipp plant es ein. Von selbst kommt es nie auf den Plan.
+Spieleabend, Pizza-Freitag, Sonntagsfrühstück: Was eure Familie immer wieder macht, legst du am einfachsten im [Kalender](/calendar/#new-tradition) mit **Neue Tradition** an. Zur Wahl stehen **Spieleabend**, **Pizza-Freitag**, **Filmabend**, **Sonntagsfrühstück**, **Vorlesezeit** und **Ausflugstag**, oder eine **Eigene Tradition**. WuselWall füllt den Editor aus: jede Woche, die ganze Familie, mit Bild, beim Pizza-Freitag mit Pizza zum Abendessen. Tag und Uhrzeit änderst du dort, bevor du speicherst. Jeder wiederholte Termin wird auch zur Tradition, wenn du im Editor **Familientradition** einschaltest. Eine Tradition steht **immer an der Wand**, auch ohne **Auf dem Küchendisplay zeigen**, mit einem zitronengelben Band und ihrem **Bild**. Unter **Mit Essen** hältst du fest, welches Essen dazugehört, und ob mittags oder abends. Ist diese Mahlzeit am Tag der Tradition noch frei, schlägt der [Essensplan](/meals/) das Essen vor; ein Tipp plant es ein. Von selbst kommt es nie auf den Plan.
+
+Am Tag einer Tradition sagt Wusel morgens an der Wand zum Beispiel „Heute ist Spieleabend!“.
 
 Fällt eine Tradition einmal aus, löschst du **Nur dieser Termin**. Nichts merkt sich, dass sie ausgefallen ist.
 

@@ -8,9 +8,12 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/empty_view.dart';
+import 'package:wuselwall/core/ui/motion.dart';
+import 'package:wuselwall/core/wusel/wusel.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 import 'package:wuselwall/features/home/application/home_tab.dart';
 import 'package:wuselwall/features/meals/domain/meal_models.dart';
+import 'package:wuselwall/features/rituals/application/ritual_providers.dart';
 import 'package:wuselwall/features/rituals/ui/ritual_cards.dart';
 import 'package:wuselwall/features/tasks/application/task_actions.dart';
 import 'package:wuselwall/features/tasks/application/tasks_providers.dart';
@@ -20,6 +23,20 @@ import 'package:wuselwall/features/today/application/today_providers.dart';
 import 'package:wuselwall/features/today/ui/approvals_card.dart';
 import 'package:wuselwall/features/today/ui/getting_started_card.dart';
 import 'package:wuselwall/features/today/ui/notice_cards.dart';
+import 'package:wuselwall/features/wusel/application/ambience.dart';
+import 'package:wuselwall/features/wusel/ui/family_wusel.dart';
+
+/// Whether Today greets the first day of the Ferien with Wusel (specs/25 "Where Wusel
+/// appears", a special day): only while the household keeps the Ferien occasion on,
+/// and only when no other Wusel has the screen, since there is one per screen. The
+/// birthday's party hat and the getting-started cheer come first.
+final ferienWuselTodayProvider = Provider.autoDispose<bool>((ref) {
+  final (edge, birthday) = ref.watch(
+    ambienceProvider.select((a) => (a.ferien, a.birthdays.isNotEmpty)),
+  );
+  if (edge != FerienEdge.first || birthday) return false;
+  return !ref.watch(setupCheerShowingProvider);
+});
 
 /// The adult home's first tab (specs/09 "Screens by register"): the setup card, then
 /// what today holds for the acting profile. Each block hides when it is empty; when
@@ -33,6 +50,7 @@ class TodayPage extends ConsumerWidget {
     final agenda = ref.watch(todayAgendaProvider);
     final shoppingOpen = ref.watch(defaultShoppingOpenProvider);
     final empty = (agenda.value?.isEmpty ?? false) && shoppingOpen == 0;
+    final ferienWusel = ref.watch(ferienWuselTodayProvider);
     return RefreshIndicator(
       onRefresh: () async {
         ref
@@ -56,6 +74,7 @@ class TodayPage extends ConsumerWidget {
                 const NoticeCards(),
                 const ApprovalsCard(),
                 const GettingStartedCard(),
+                if (ferienWusel) const _FerienWusel(),
                 const RitualCards(),
                 if (!empty)
                   AsyncValueView<TodayAgenda>(
@@ -72,6 +91,8 @@ class TodayPage extends ConsumerWidget {
               child: EmptyView(
                 message: l10n.todayEmpty,
                 scrolls: false,
+                // The Ferien's Wusel is the screen's one.
+                illustrated: !ferienWusel,
                 actions: [
                   FilledButton.icon(
                     onPressed: () => context.push(Routes.eventNew),
@@ -82,6 +103,44 @@ class TodayPage extends ConsumerWidget {
               ),
             ),
         ],
+      ),
+    );
+  }
+}
+
+/// The first day of the Ferien: Wusel waves, even for a grown-up who keeps it quiet,
+/// because this is a special day. The line rotates by the date, so it is not the same
+/// every holiday, and stays the first one in still mode.
+class _FerienWusel extends ConsumerWidget {
+  const _FerienWusel();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final today = ref.watch(ritualTodayProvider);
+    final lines = [
+      l10n.wuselFerienFirst1,
+      l10n.wuselFerienFirst2,
+      l10n.wuselFerienFirst3,
+    ];
+    final dayOfYear = DateTime.utc(
+      today.year,
+      today.month,
+      today.day,
+    ).difference(DateTime.utc(today.year)).inDays;
+    return Padding(
+      padding: const EdgeInsets.only(top: Tokens.space2),
+      child: Card(
+        key: const ValueKey('today-ferien-wusel'),
+        child: Padding(
+          padding: const EdgeInsets.all(Tokens.space3),
+          child: WuselSays(
+            line: lines[StillMode.enabled ? 0 : dayOfYear % lines.length],
+            pose: WuselPose.wave,
+            size: 72,
+            quietAllowed: true,
+          ),
+        ),
       ),
     );
   }

@@ -265,6 +265,8 @@ const shots = [
     await scrollUntil(p, t.tradition, { any: true }); await tapAny(p, t.tradition, { exact: false });
     await scrollDown(p, 3000); await p.mouse.move(386, 840); await settle(p);
   } },
+  // Kalender → Neue Tradition: the six starters and the family's own.
+  { name: 'calendar-tradition', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.calendar); await tapAny(p, t.newTradition); } },
   // Further down the kid's day: her meal wish card.
   { name: 'kid-wish', scenario: 'kid', viewport: TABLET, steps: async (p, t) => { await press(p, t.daughter); await scrollToHeading(p, t.wishTitle, 360); } },
   // The Rituals group of the Einstellungen, Advanced: the table question and its times.
@@ -277,10 +279,10 @@ const shots = [
   } },
 ];
 const RITUALS = {
-  de: { tradition: 'Familientradition', wishTitle: 'Dein Wunschessen' },
-  en: { tradition: 'Family tradition', wishTitle: 'Your meal wish' },
-  fr: { tradition: 'Tradition familiale', wishTitle: 'Ton repas préféré' },
-  es: { tradition: 'Tradición familiar', wishTitle: 'Tu comida favorita' },
+  de: { tradition: 'Familientradition', newTradition: 'Neue Tradition', wishTitle: 'Dein Wunschessen' },
+  en: { tradition: 'Family tradition', newTradition: 'New tradition', wishTitle: 'Your meal wish' },
+  fr: { tradition: 'Tradition familiale', newTradition: 'Nouvelle tradition', wishTitle: 'Ton repas préféré' },
+  es: { tradition: 'Tradición familiar', newTradition: 'Nueva tradición', wishTitle: 'Tu comida favorita' },
 };
 for (const [lang, labels] of Object.entries(RITUALS)) Object.assign(T[lang], labels);
 

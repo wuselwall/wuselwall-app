@@ -47,8 +47,10 @@ moved forward: **a field on the profile** (`profile.birthday DATE NULL`, already
   countdown says the age ("Paul wird 8 · noch 3× schlafen", `ageOn` in `countdown.dart`), and the
   ICS feed has one yearly all-day event per member (`RRULE:FREQ=YEARLY`, a UID per profile, no
   age so the series never changes, 29 February on the year's 60th day as in the app) for the
-  token's members, not in a presence-only or calendar-narrowed feed. The board's day header and
-  the month view do not show birthdays yet.
+  token's members, not in a presence-only or calendar-narrowed feed. The board's day header
+  shows "Paul wird 8" with a cake under the date (`weekBirthdaysProvider`), with `ambience.birthdays`
+  on, and grows to its second line as for a holiday; a holiday on the same day follows after " · ".
+  The month view does not show birthdays yet.
 - On the day: [26's](26-colour-and-ambience.md#seasons-and-occasions) bunting in the member's
   ink, Wusel's Partyhut, and a one-time cheer on that child's own device.
 - Grandparents and friends stay yearly events, as 23 decided. A yearly event can be marked
@@ -87,7 +89,11 @@ The wording uses the member labels the household already uses on the board
   wall count **nights** ("noch 3× schlafen"); beyond 7 days they say "noch 9 Tage", and the
   adult register always says "in 3 Tagen".
 - The day before says "Morgen!" and the day itself "Heute!", with Wusel's `wave`. After that
-  the countdown is gone. There is no "vorbei".
+  the countdown is gone. There is no "vorbei". *Built:* on the wall the header's corner Wusel
+  waves when the nearest countdown is tomorrow or today, since a second Wusel beside the footer
+  strip would break [25's](25-wusel.md#where-wusel-appears) one Wusel per screen. The kid home
+  (its greeting holds the screen's Wusel) and Today (its birthday card, the getting-started
+  cheer and the empty state may hold it) add none.
 
 **Data.** `event.countdown BOOLEAN DEFAULT false` and `event.icon_key TEXT NULL` (one of the 20
 pictures of the `events` set, `assets/emoji/events/`). Both travel in `api.event_save`'s JSON.
@@ -106,10 +112,17 @@ The family's own recurring rituals, by name: Spieleabend, Pizza-Freitag, Sonntag
   family attending by default. It is created from a starter set or from scratch, in
   Kalender → *Neue Tradition*. The starters are Spieleabend 🎲, Pizza-Freitag 🍕, Filmabend 🎬,
   Sonntagsfrühstück 🥐, Vorlesezeit 📖 and Ausflugstag 🥾. Each language has its own set, and
-  the starters are a localised catalogue like the chore examples.
+  the starters are a localised catalogue like the chore examples. *Built:* a small button above
+  the calendar's *Neuer Termin* (only where the server announces `lighter-day`) opens the six and
+  *Eigene Tradition*; a choice opens the ordinary editor with a weekly whole-family tradition
+  filled in (`calendar/domain/tradition_starters.dart`: Spieleabend Friday 19:00, Pizza-Freitag
+  Friday 18:00 with "Pizza" for dinner, Filmabend Saturday 19:00, Sonntagsfrühstück Sunday 9:00,
+  Vorlesezeit Wednesday 19:00, Ausflugstag Sunday all day), starting on the day in view or later.
+  Nothing is saved until the editor saves.
 - **On the board** a tradition always shows: it is implicitly `key`, drawn as a ribbon
   in the `lemon` paper tint with its icon, unlike an appointment's band. On its day, Wusel's
-  morning line on the wall and the kid home's first fact may name it ("Heute ist Spieleabend!").
+  morning line on the wall and the kid home's first fact may name it ("Heute ist Spieleabend!";
+  *built* for the wall, moment `wallTradition`, from `todayTraditionProvider`).
 - **Skipping one week** is an ordinary exception date (`exdates`). It simply does not show.
   Nothing records that a tradition did not happen.
 - **A meal tradition** (Pizza-Freitag) may carry a meal: `tradition_meal(event_id, slot,

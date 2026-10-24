@@ -13,13 +13,17 @@ import 'package:wuselwall/features/board/ui/board_geometry.dart';
 import 'package:wuselwall/features/board/ui/board_grid.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
 import 'package:wuselwall/features/board/ui/details/board_details.dart';
+import 'package:wuselwall/features/identity/domain/models.dart';
+import 'package:wuselwall/features/rituals/application/birthday_providers.dart';
+import 'package:wuselwall/features/rituals/domain/countdown.dart';
 import 'package:wuselwall/features/rituals/domain/event_icons.dart';
 
 /// The day names row: each column's weekday and date,
 /// today's column marked with a bar and "Heute" in place of its weekday. A public holiday
-/// of the week shows its name under the date, which makes the row taller for that week.
-/// Tapping a column opens that day.
-class DayHeaderRow extends StatelessWidget {
+/// of the week shows its name under the date, and a member's birthday the age they turn
+/// with a cake ("Paul wird 8", specs/27 "Birthdays"), which makes the row taller for
+/// that week. Tapping a column opens that day.
+class DayHeaderRow extends ConsumerWidget {
   const DayHeaderRow({required this.frame, super.key});
 
   // A6: this row is each day's primary tap target (it opens that day's detail),
@@ -27,21 +31,27 @@ class DayHeaderRow extends StatelessWidget {
   // 56 px minimum (specs/17, t_da411148) — not the 44 px it used before.
   static const height = 56.0;
 
-  /// The row's height when a day of the week is a public holiday: a second line for it.
+  /// The row's height when a day of the week is a public holiday or a birthday: a
+  /// second line for it.
   static const holidayHeight = 72.0;
 
-  /// The height the row needs for [board]: [holidayHeight] when any day has a holiday.
-  static double heightOf(WeekBoard board) =>
-      board.days.any((d) => d.holiday != null) ? holidayHeight : height;
+  /// The height the row needs for [board]: [holidayHeight] when any day has a holiday,
+  /// or when [birthdays] says a day of the week has a birthday
+  /// ([weekBirthdaysProvider]).
+  static double heightOf(WeekBoard board, {bool birthdays = false}) =>
+      birthdays || board.days.any((d) => d.holiday != null)
+      ? holidayHeight
+      : height;
 
   final BoardFrame frame;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final board = frame.board;
     final g = frame.geometry;
     final scheme = Theme.of(context).colorScheme;
     final today = frame.todayIndex;
+    final birthdays = ref.watch(weekBirthdaysProvider(board.days.first.date));
 
     return BoardRow(
       geometry: g,
@@ -53,7 +63,7 @@ class DayHeaderRow extends StatelessWidget {
             top: 0,
             bottom: 0,
             child: BoardTap(
-              label: _label(context, board.days[i]),
+              label: _label(context, board.days[i], birthdays[i]),
               onTap: () => unawaited(openDayDetail(context, board, i)),
               child: Stack(
                 fit: StackFit.expand,
@@ -105,12 +115,30 @@ class DayHeaderRow extends StatelessWidget {
                           ],
                         ),
                         if (MediaQuery.textScalerOf(context).scale(24) <= 28)
-                          if (board.days[i].holiday case final holiday?)
-                            Text(
-                              holiday.name,
-                              style: boardCell(24, color: context.ww.ink2),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                          if (_secondLine(context, board.days[i], birthdays[i])
+                              case final line?)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                if (birthdays[i].isNotEmpty) ...[
+                                  EmojiPicture(
+                                    eventIconAsset('cake')!,
+                                    size: 22,
+                                  ),
+                                  const SizedBox(width: 4),
+                                ],
+                                Flexible(
+                                  child: Text(
+                                    line,
+                                    style: boardCell(
+                                      24,
+                                      color: context.ww.ink2,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
                             ),
                       ],
                     ),
@@ -124,13 +152,35 @@ class DayHeaderRow extends StatelessWidget {
   }
 }
 
-/// The column's label for screen readers: the date, and the holiday when there is one.
-String _label(BuildContext context, BoardDay day) {
-  final date = context.fullDate(day.date);
+/// "Paul wird 8", or whose birthday it is when the age is unknown.
+String _birthdayOf(AppLocalizations l10n, Member m, DateTime day) {
+  final age = ageOn(m.birthday!, day);
+  return age > 0
+      ? l10n.countdownBirthdayTurns(m.displayName, age)
+      : l10n.countdownBirthdayOf(m.displayName);
+}
+
+/// The line under the date: the birthdays first, then the holiday; null for neither.
+String? _secondLine(
+  BuildContext context,
+  BoardDay day,
+  List<Member> birthdays,
+) {
+  final parts = [
+    for (final m in birthdays) _birthdayOf(context.l10n, m, day.date),
+    ?day.holiday?.name,
+  ];
+  return parts.isEmpty ? null : parts.join(' · ');
+}
+
+/// The column's label for screen readers: the date, the birthdays and the holiday.
+String _label(BuildContext context, BoardDay day, List<Member> birthdays) {
   final holiday = day.holiday;
-  return holiday == null
-      ? date
-      : '$date, ${context.l10n.boardHolidayLabel(holiday.name)}';
+  return [
+    context.fullDate(day.date),
+    for (final m in birthdays) _birthdayOf(context.l10n, m, day.date),
+    if (holiday != null) context.l10n.boardHolidayLabel(holiday.name),
+  ].join(', ');
 }
 
 /// Zone "Termine": three fixed day parts, each row holding the key appointments of that

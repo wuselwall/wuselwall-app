@@ -15,7 +15,7 @@ Pour tous :
 
 L’anniversaire se saisit sur la page de la personne : **Paramètres → Membres**, touchez la personne, **Anniversaire → Choisir une date** (voir [Modifier un membre](/fr/settings/members-devices#edit-a-member)). Chacun peut saisir le sien ; les parents saisissent ceux des autres.
 
-Avant le jour, un compte à rebours apparaît (voir [Comptes à rebours](#countdowns)), avec l’âge que la personne va avoir : « Les 9 ans de Emma · encore 3 dodos ». Le jour même, des fanions à la couleur de la personne ornent le mur, Wusel porte un chapeau de fête, **Aujourd’hui** affiche une carte d’anniversaire, et sur la tablette des enfants Wusel fait la fête pour l’enfant dont c’est l’anniversaire.
+Avant le jour, un compte à rebours apparaît (voir [Comptes à rebours](#countdowns)), avec l’âge que la personne va avoir : « Les 9 ans de Emma · encore 3 dodos ». Sur le mur, l’anniversaire figure toute la semaine sous la date de son jour, avec un gâteau : « Les 9 ans de Emma ». Le jour même, des fanions à la couleur de la personne ornent le mur, Wusel porte un chapeau de fête, **Aujourd’hui** affiche une carte d’anniversaire, et sur la tablette des enfants Wusel fait la fête pour l’enfant dont c’est l’anniversaire. Si la fête **Anniversaires** est désactivée sous **Saisons et fêtes** (voir [Wusel et les couleurs](/fr/guide/wusel#occasions)), rien de tout cela n’apparaît ; le compte à rebours reste.
 
 Grands-parents et amis restent des événements annuels, comme avant ; vous pouvez les marquer pour un compte à rebours.
 
@@ -32,13 +32,15 @@ Dans un [abonnement au calendrier familial](/fr/calendar/feeds), chaque annivers
 
 Il s’affiche sur le **mur** en pied de page (autant qu’il en tient), dans **Ma journée** sous **Ce qui m’attend** (les comptes à rebours de l’enfant et ceux de toute la famille) et dans **Aujourd’hui** sur une ligne avec le plus proche.
 
-Les enfants et le mur comptent en nuits jusqu’à une semaine avant (« encore 3 dodos »), en jours avant cela (« encore 9 jours »). Les adultes lisent « dans 3 jours ». La veille affiche **Demain !**, le jour même **Aujourd’hui !**, puis le compte à rebours disparaît.
+Les enfants et le mur comptent en nuits jusqu’à une semaine avant (« encore 3 dodos »), en jours avant cela (« encore 9 jours »). Les adultes lisent « dans 3 jours ». La veille affiche **Demain !**, le jour même **Aujourd’hui !**, et Wusel fait signe en haut du mur. Puis le compte à rebours disparaît.
 
 **Le compte à rebours commence** règle combien de jours avant (14 jours par défaut, de 7 à 60). **Compte à rebours avant un retour** (activé par défaut) désactive celui des voyages.
 
 ## Traditions familiales {#traditions}
 
-Soirée jeux, pizza du vendredi, petit-déjeuner du dimanche : ce que votre famille fait encore et encore, créez-le comme événement répété et activez **Tradition familiale** dans l’éditeur. Une tradition est **toujours sur le mur**, même sans **Afficher sur l’écran de la cuisine**, avec un ruban jaune citron et son **image**. **Avec un repas** note le plat qui l’accompagne, au déjeuner ou au dîner. Si ce repas est encore libre le jour de la tradition, le [planning des repas](/fr/meals/) le propose ; une touche suffit pour le prévoir. Il n’arrive jamais tout seul dans le planning.
+Soirée jeux, pizza du vendredi, petit-déjeuner du dimanche : ce que votre famille fait encore et encore se crée le plus simplement dans le [calendrier](/fr/calendar/#new-tradition) avec **Nouvelle tradition**. Au choix : **Soirée jeux**, **Vendredi pizza**, **Soirée cinéma**, **Petit-déjeuner du dimanche**, **Heure des histoires** et **Journée sortie**, ou **Ta propre tradition**. WuselWall remplit l’éditeur : chaque semaine, toute la famille, avec une image, et pour le vendredi pizza une pizza au dîner. Vous changez le jour et l’heure avant d’enregistrer. Tout événement répété devient aussi une tradition quand vous activez **Tradition familiale** dans l’éditeur. Une tradition est **toujours sur le mur**, même sans **Afficher sur l’écran de la cuisine**, avec un ruban jaune citron et son **image**. **Avec un repas** note le plat qui l’accompagne, au déjeuner ou au dîner. Si ce repas est encore libre le jour de la tradition, le [planning des repas](/fr/meals/) le propose ; une touche suffit pour le prévoir. Il n’arrive jamais tout seul dans le planning.
+
+Le jour d’une tradition, Wusel dit le matin sur le mur par exemple « Aujourd’hui, c’est Soirée jeux ! ».
 
 Si une tradition n’a pas lieu une semaine, supprimez **Cet événement uniquement**. Rien ne garde la trace de l’absence.
 

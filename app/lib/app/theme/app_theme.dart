@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
@@ -119,6 +121,13 @@ abstract final class AppTheme {
           visualDensity: VisualDensity.standard,
         ),
       ),
+      segmentedButtonTheme: _segmentedButtonTheme(
+        scheme,
+        textTheme.labelLarge!,
+        touch,
+        shape,
+      ),
+      chipTheme: _chipTheme(scheme),
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(borderRadius: radius),
       ),
@@ -142,17 +151,115 @@ abstract final class AppTheme {
     );
   }
 
+  /// A selected segment is `primaryContainer` with `onPrimaryContainer` text. Material
+  /// 3 would paint it `secondaryContainer`, which this palette maps to `sunken`: a
+  /// selected segment then sat on the page at 1.02-1.08 : 1 and could not be told from
+  /// an unselected one (a 40 px pill with the check icon switched off in settings).
+  /// Built from [scheme] so [forMember] can rebuild it with the member's colours.
+  static SegmentedButtonThemeData _segmentedButtonTheme(
+    ColorScheme scheme,
+    TextStyle labelStyle,
+    double touch,
+    OutlinedBorder shape,
+  ) {
+    return SegmentedButtonThemeData(
+      style: ButtonStyle(
+        minimumSize: WidgetStatePropertyAll(Size(touch, touch)),
+        // Pinned like the button themes above, so the page-level `comfortable`
+        // density (kid, kiosk) does not shave 4 px off.
+        visualDensity: VisualDensity.standard,
+        // SegmentedButton ignores `minimumSize` (it sizes its segments as
+        // max(font size + vertical padding, 40)), so the register's touch target
+        // (NFR-13) is reached by padding: the label centred in a `touch` tall segment.
+        padding: WidgetStatePropertyAll(
+          EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: math.max(0, (touch - labelStyle.fontSize!) / 2),
+          ),
+        ),
+        shape: WidgetStatePropertyAll(shape),
+        side: WidgetStateProperty.resolveWith(
+          (states) => BorderSide(
+            color: states.contains(WidgetState.disabled)
+                ? scheme.onSurface.withValues(alpha: 0.12)
+                : scheme.outline,
+          ),
+        ),
+        backgroundColor: WidgetStateProperty.resolveWith(
+          (states) =>
+              states.contains(WidgetState.selected) &&
+                  !states.contains(WidgetState.disabled)
+              ? scheme.primaryContainer
+              : null,
+        ),
+        foregroundColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.disabled)) {
+            return scheme.onSurface.withValues(alpha: 0.38);
+          }
+          return states.contains(WidgetState.selected)
+              ? scheme.onPrimaryContainer
+              : scheme.onSurface;
+        }),
+        overlayColor: WidgetStateProperty.resolveWith((states) {
+          final on = states.contains(WidgetState.selected)
+              ? scheme.onPrimaryContainer
+              : scheme.onSurface;
+          if (states.contains(WidgetState.pressed) ||
+              states.contains(WidgetState.focused)) {
+            return on.withValues(alpha: 0.1);
+          }
+          if (states.contains(WidgetState.hovered)) {
+            return on.withValues(alpha: 0.08);
+          }
+          return null;
+        }),
+        // Fill alone is a weak cue (brand-tint is 1.1-1.5 : 1 against the page), so
+        // the selected label is also heavier: not colour alone.
+        textStyle: WidgetStateProperty.resolveWith(
+          (states) => labelStyle.copyWith(
+            fontWeight: states.contains(WidgetState.selected)
+                ? FontWeight.w700
+                : FontWeight.w500,
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Selected `FilterChip` and `ChoiceChip` take the same fill as a selected segment;
+  /// the label stays `onSecondaryContainer` (ink), which reads on the brand tint and on
+  /// the member tints some chips set themselves.
+  static ChipThemeData _chipTheme(ColorScheme scheme) => ChipThemeData(
+    selectedColor: scheme.primaryContainer,
+    checkmarkColor: scheme.onPrimaryContainer,
+  );
+
   /// [base] with a member's colour as the accent. On shared and kiosk devices the
   /// whole interface takes the acting member's colour, so "who am I right now" is
   /// answerable from across the room (specs/08).
   static ThemeData forMember(ThemeData base, Color stored) {
     final m = base.extension<WwColors>()!.member(stored);
+    final scheme = base.colorScheme.copyWith(
+      primary: m.ink,
+      onPrimary: m.onInk,
+      primaryContainer: m.tint,
+      onPrimaryContainer: base.colorScheme.onSurface,
+    );
+    // The selection themes captured the base scheme's colours; rebuild them so a
+    // selected segment or chip takes the member's tint too.
+    final segmentedStyle = base.segmentedButtonTheme.style!;
+    final minimum = segmentedStyle.minimumSize!.resolve({})!;
     return base.copyWith(
-      colorScheme: base.colorScheme.copyWith(
-        primary: m.ink,
-        onPrimary: m.onInk,
-        primaryContainer: m.tint,
-        onPrimaryContainer: base.colorScheme.onSurface,
+      colorScheme: scheme,
+      segmentedButtonTheme: _segmentedButtonTheme(
+        scheme,
+        base.textTheme.labelLarge!,
+        minimum.height,
+        segmentedStyle.shape!.resolve({})!,
+      ),
+      chipTheme: base.chipTheme.copyWith(
+        selectedColor: scheme.primaryContainer,
+        checkmarkColor: scheme.onPrimaryContainer,
       ),
     );
   }

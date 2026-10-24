@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/router.dart';
+import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
+import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/module_band.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
@@ -36,6 +39,8 @@ class SettingsPage extends ConsumerWidget {
       },
       child: Scaffold(
         appBar: AppBar(
+          // Settings have their band too, the calm `stein` (specs/26).
+          backgroundColor: context.ww.band(AppModule.settings),
           title: Text(l10n.settingsTitle),
           leading: BackButton(
             onPressed: () {
@@ -46,7 +51,16 @@ class SettingsPage extends ConsumerWidget {
               }
             },
           ),
-          actions: const [SettingsViewSwitch()],
+          actions: [
+            // The back button, and the Advanced chip at its widest language.
+            if (ModuleIllustration.fits(
+              context,
+              title: l10n.settingsTitle,
+              controls: kMinInteractiveDimension + 160,
+            ))
+              const ModuleIllustration(AppModule.settings),
+            const SettingsViewSwitch(),
+          ],
         ),
         body: ListView(
           padding: const EdgeInsets.all(Tokens.space4),

@@ -11,6 +11,7 @@ import 'package:wuselwall/features/identity/ui/pin_pad.dart';
 import 'package:wuselwall/features/school/domain/school_models.dart';
 import 'package:wuselwall/features/school/domain/timetable_import.dart';
 import 'package:wuselwall/features/school/ui/timetable_import_page.dart';
+import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 import 'package:wuselwall/features/shortcuts/application/shortcut_providers.dart';
 
 import '../support/fake_school.dart';
@@ -43,6 +44,21 @@ Future<void> _open(WidgetTester t, String route, {Object? extra}) async {
   container.read(routerProvider).go(route, extra: extra);
   await t.pumpAndSettle();
 }
+
+/// The adult home's shopping tab with [items] on the default list.
+Future<void> _shopping(WidgetTester t, List<ShoppingItem> items) async {
+  await pumpApp(
+    t,
+    overrides: baseOverrides(
+      identity: FakeIdentityRepository(current: device()),
+      shopping: FakeShoppingRepository(items),
+    ),
+  );
+  await t.tap(find.text('Einkauf').last);
+  await t.pumpAndSettle();
+}
+
+final _tiles = find.byKey(const ValueKey('shopping-tiles'));
 
 /// specs/25 "Where Wusel never appears": settings (but the outfit picker and Wusel's
 /// own setting), the PIN pad, errors and capture flows. Their empty states leave the
@@ -96,5 +112,31 @@ void main() {
       ),
       findsNothing,
     );
+  });
+
+  // Decided 2026-10-24: Wusel peeks over the empty shopping list (a family that does
+  // not want it switches Wusel off), but never stands among the tiles and the
+  // typeahead, the capture itself.
+  testWidgets('the empty shopping list shows Wusel once, not in the tiles', (
+    t,
+  ) async {
+    await _shopping(t, const []);
+    expect(_tiles, findsOneWidget);
+    expect(find.byType(Wusel), findsOneWidget);
+    expect(
+      find.descendant(of: _tiles, matching: find.byType(Wusel)),
+      findsNothing,
+    );
+  });
+
+  testWidgets('a list with items, while typing, shows no Wusel', (t) async {
+    await _shopping(t, [item('1', 'Milch')]);
+    expect(find.byType(Wusel), findsNothing);
+    await t.enterText(
+      find.descendant(of: _tiles, matching: find.byType(TextField)),
+      'Br',
+    );
+    await t.pumpAndSettle();
+    expect(find.byType(Wusel), findsNothing);
   });
 }

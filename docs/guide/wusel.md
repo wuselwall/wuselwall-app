@@ -18,13 +18,13 @@ Wusel lobt, was passiert ist, nicht die Person: „Alles erledigt. Das hat gut g
 - **Die letzte Aufgabe des Tages**: Wusel jubelt, mit Konfetti und einem kurzen Ton.
 - **Eine Belohnung gewünscht**: Wusel ist stolz: „Abgeschickt! Jetzt entscheidet ein Erwachsener.“ Sagt ein Erwachsener auf einem anderen Gerät Ja, spielt das Kinder-Tablet den Abzeichen-Ton.
 - **Ein neues Abzeichen**: Wusel hält einen Stern hoch und nennt das Abzeichen, zwei Tage lang auf **Mein Tag** und unter **Punkte**.
-- **Leere Seiten**: Wusel schaut über den unteren Rand, zum Beispiel bei einer leeren Einkaufsliste.
+- **Leere Seiten**: Wusel schaut über den unteren Rand, zum Beispiel bei einer leeren Einkaufsliste: „Noch nichts auf der Liste. Tipp auf eine Kachel.“
 - **Auf der Wand** sitzt Wusel oben in der Kopfzeile. In der ersten halben Stunde nach der Nachtzeit (normalerweise 6:00 bis 6:30) winkt Wusel und sagt „Guten Morgen, ihr alle!“. Nachts schläft Wusel, ohne Verbindung denkt Wusel nach, und an einem Geburtstag gibt es den Partyhut.
 - **Im Aufgabenbrett der Wand** jubelt Wusel oben in der Spalte einer Person, sobald sie alle Aufgaben für heute erledigt hat.
-- **Heute** auf dem Handy: an einem Geburtstag mit einer Karte.
+- **Heute** auf dem Handy: an einem Geburtstag mit einer Karte, und am ersten Ferientag winkt Wusel und wünscht schöne freie Tage.
 - **Erste Schritte geschafft**: Ist der letzte Punkt der Karte **Erste Schritte** erledigt, jubelt Wusel einmal: „Alles eingerichtet. Willkommen zu Hause!“
 
-Wusel taucht nie dort auf, wo ihr gerade etwas eingebt (Einkaufskacheln, Termin- und Aufgabeneditor), und nie bei Fehlern, der PIN, beim Anmelden oder Löschen. Was Wusel sagt, steht immer auch als Text da; ein Tipp auf die Sprechblase blendet den Satz aus.
+Wusel taucht nie dort auf, wo ihr gerade etwas eingebt (bei den Einkaufskacheln und beim Suchen darüber, im Termin- und Aufgabeneditor), und nie bei Fehlern, der PIN, beim Anmelden oder Löschen. Was Wusel sagt, steht immer auch als Text da; ein Tipp auf die Sprechblase blendet den Satz aus.
 
 ## Was Wusel trägt {#outfits}
 
@@ -49,9 +49,9 @@ Ist auf dem Gerät **Bewegung reduzieren** eingeschaltet, steht Wusel still, und
 
 ## Farben {#colours}
 
-- **Jeder Bereich hat seine Farbe**: die obere Leiste und der gewählte Reiter unten. Heute ist gelb, Kalender blau, Aufgaben koralle, Essen aprikose, Einkauf mint, Stundenplan flieder. Die Farben helfen nur bei der Orientierung; die Farben der Personen bleiben die kräftigsten.
+- **Jeder Bereich hat seine Farbe**: die obere Leiste und der gewählte Reiter unten. Heute ist gelb, Kalender blau, Aufgaben koralle, Essen aprikose, Einkauf mint, Stundenplan flieder, Einstellungen steingrau. Wo die Leiste Platz hat, steht darin ein kleines Bild: ein Korb beim Einkauf, ein Besen und Sterne bei den Aufgaben, ein Kalenderblatt, ein Topf, ein Schulranzen und, ganz ruhig, zwei Schieberegler bei den Einstellungen. Auf einem schmalen Handy lassen sie dem Titel den Vortritt. Die Farben und Bilder helfen nur bei der Orientierung; die Farben der Personen bleiben die kräftigsten.
 - **Auf dem Kinder-Tablet** sehen Karten, die man antippen kann, wie Sticker aus: mit dunklem Rand und einem farbigen Schatten. Beim Drücken sinken sie ein.
-- **Der Himmel**: In der Kopfzeile der Wand und auf **Heute** zeigt ein Himmel die Tageszeit: Morgenrot, heller Tag, Abenddämmerung, und auf der Wand nachts ein dunkler Himmel mit Sternen. Mit **Himmel in der Kopfzeile** (unter **Dieses Gerät**) schaltest du ihn aus.
+- **Der Himmel**: In der Kopfzeile der Wand und auf **Heute** zeigt ein Himmel die Tageszeit: Morgenrot, heller Tag mit zwei Wolken, Abenddämmerung (in der Stunde vor der Nachtzeit geht die Sonne unter), und auf der Wand nachts ein dunkler Himmel mit Sternen. Mit **Himmel in der Kopfzeile** (unter **Dieses Gerät**) schaltest du ihn aus.
 
 ### Jahreszeiten und Anlässe {#occasions}
 
@@ -61,7 +61,7 @@ Der Himmel schmückt sich auch für besondere Tage. Jeder Anlass hat einen eigen
 |---|---|---|
 | **Jahreszeiten** | Blüten, Sonne, Blätter oder Schneeflocken am Himmel | an |
 | **Geburtstage** | Wimpel in der Farbe der Person und ein Partyhut für Wusel | an |
-| **Ferien** | ein Band am ersten und am letzten Ferientag | an |
+| **Ferien** | ein Band „Ferien!“ am ersten und „Letzter Ferientag“ am letzten Ferientag; auf **Heute** steht es neben dem Titel | an |
 | **Advent** | Kerzen in der Kopfzeile, an jedem Adventssonntag eine mehr | nach eurer Region |
 | **Ostern** | Eier in den Hügeln, zwei Tage vor bis zwei Tage nach dem Ostersonntag | nach eurer Region |
 | **Orthodoxes Ostern** | dieselben Eier am orthodoxen Datum | nach eurer Region |
@@ -72,6 +72,8 @@ Der Himmel schmückt sich auch für besondere Tage. Jeder Anlass hat einen eigen
 ## Töne {#sounds}
 
 WuselWall hat vier kurze Töne: beim Abhaken, wenn Punkte ankommen, wenn alles erledigt ist, und für ein Abzeichen oder eine Belohnung. Ob sie für dich klingen, legt **Ton beim Abhaken einer Aufgabe** unter **Einstellungen → Persönlich** fest. **Töne auf diesem Gerät** (unter **Dieses Gerät**) schaltet ein ganzes Gerät stumm; **Automatisch** heißt: an der Wand aus, sonst an. Nachts gibt es nie einen Ton.
+
+Beim Einkaufen gibt es keinen Ton: Ist der letzte Artikel abgehakt oder der Einkauf beendet, gibt es auf dem Handy einen kleinen Konfetti-Gruß und ein leichtes Vibrieren, einmal pro Einkauf. Nachts und mit **Töne auf diesem Gerät** aus vibriert nichts.
 
 ## Die Wand schonen {#burn-in}
 

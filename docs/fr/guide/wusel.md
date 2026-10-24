@@ -18,13 +18,13 @@ Wusel félicite ce qui s’est passé, pas la personne : « Tout est fait. Ça s
 - **La dernière tâche du jour** : Wusel fait la fête, avec des confettis et un petit son.
 - **Une récompense demandée** : Wusel est fier : « Envoyé ! Un adulte va décider. » Quand un adulte dit oui sur un autre appareil, la tablette des enfants joue le son du badge.
 - **Un nouveau badge** : Wusel lève une étoile et nomme le badge, pendant deux jours sur **Ma journée** et sous **Points**.
-- **Les pages vides** : Wusel regarde par-dessus le bord, par exemple sur une liste de courses vide.
+- **Les pages vides** : Wusel regarde par-dessus le bord, par exemple sur une liste de courses vide : « La liste est vide. Touche une vignette. »
 - **Sur l’écran mural**, Wusel est dans l’en-tête. Dans la première demi-heure après la nuit (en général de 6 h à 6 h 30), Wusel fait signe et dit « Bonjour tout le monde ! ». La nuit, Wusel dort ; sans connexion, Wusel réfléchit ; et un jour d’anniversaire, il porte un chapeau de fête.
 - **Sur le tableau des tâches du mur**, Wusel fait la fête en haut de la colonne d’une personne dès qu’elle a fini toutes ses tâches du jour.
-- **Aujourd’hui** sur le téléphone : avec une carte le jour d’un anniversaire.
+- **Aujourd’hui** sur le téléphone : avec une carte le jour d’un anniversaire, et le premier jour des vacances scolaires Wusel fait signe et souhaite de bonnes journées libres.
 - **Premiers pas terminés** : quand le dernier point de la carte **Premiers pas** est fait, Wusel applaudit une fois : « Tout est prêt. Bienvenue chez vous ! »
 
-Wusel n’apparaît jamais pendant une saisie (tuiles de courses, éditeurs d’événements et de tâches), ni à côté d’une erreur, du PIN, de la connexion ou d’une suppression. Ce que dit Wusel est toujours aussi écrit en texte ; toucher la bulle masque la phrase.
+Wusel n’apparaît jamais pendant une saisie (tuiles de courses et recherche au-dessus, éditeurs d’événements et de tâches), ni à côté d’une erreur, du PIN, de la connexion ou d’une suppression. Ce que dit Wusel est toujours aussi écrit en texte ; toucher la bulle masque la phrase.
 
 ## La tenue de Wusel {#outfits}
 
@@ -49,9 +49,9 @@ Si **Réduire les animations** est activé sur l’appareil, Wusel reste immobil
 
 ## Les couleurs {#colours}
 
-- **Chaque espace a sa couleur** : la barre du haut et l’onglet choisi en bas. Aujourd’hui est jaune, Calendrier bleu, Tâches corail, Repas abricot, Courses menthe, Emploi du temps lilas. Ces couleurs aident seulement à s’orienter ; les couleurs des personnes restent les plus fortes.
+- **Chaque espace a sa couleur** : la barre du haut et l’onglet choisi en bas. Aujourd’hui est jaune, Calendrier bleu, Tâches corail, Repas abricot, Courses menthe, Emploi du temps lilas, Paramètres pierre. Quand la barre a de la place, elle montre un petit dessin : un panier pour les courses, un balai et des étoiles pour les tâches, une page de calendrier, une marmite, un cartable et, tout en calme, deux curseurs dans les paramètres. Sur un téléphone étroit, ils laissent la place au titre. Couleurs et dessins aident seulement à s’orienter ; les couleurs des personnes restent les plus fortes.
 - **Sur la tablette des enfants**, les cartes que l’on peut toucher ressemblent à des autocollants : un bord foncé et une ombre colorée. Elles s’enfoncent quand on appuie.
-- **Le ciel** : dans l’en-tête du mur et sur **Aujourd’hui**, un ciel montre le moment de la journée : aube, plein jour, crépuscule, et sur le mur la nuit un ciel sombre avec des étoiles. **Ciel dans l’en-tête** (dans **Cet appareil**) le désactive.
+- **Le ciel** : dans l’en-tête du mur et sur **Aujourd’hui**, un ciel montre le moment de la journée : aube, plein jour avec deux nuages, crépuscule (le soleil se couche dans l’heure qui précède la nuit), et sur le mur la nuit un ciel sombre avec des étoiles. **Ciel dans l’en-tête** (dans **Cet appareil**) le désactive.
 
 ### Saisons et fêtes {#occasions}
 
@@ -61,7 +61,7 @@ Le ciel se décore aussi pour les jours particuliers. Chaque occasion a son inte
 |---|---|---|
 | **Saisons** | fleurs, soleil, feuilles ou flocons dans le ciel | activé |
 | **Anniversaires** | des fanions à la couleur de la personne et un chapeau de fête pour Wusel | activé |
-| **Vacances scolaires** | un ruban le premier et le dernier jour des vacances | activé |
+| **Vacances scolaires** | un ruban, « Vacances ! » le premier et « Dernier jour de vacances » le dernier jour ; sur **Aujourd’hui** il se place à côté du titre | activé |
 | **Avent** | des bougies dans l’en-tête, une de plus chaque dimanche de l’Avent | selon votre région |
 | **Pâques** | des œufs dans les collines, deux jours avant et après le dimanche de Pâques | selon votre région |
 | **Pâques orthodoxes** | les mêmes œufs à la date orthodoxe | selon votre région |
@@ -72,6 +72,8 @@ Le ciel se décore aussi pour les jours particuliers. Chaque occasion a son inte
 ## Les sons {#sounds}
 
 WuselWall a quatre petits sons : une tâche cochée, des points qui arrivent, tout est fait, et un badge ou une récompense. **Son quand une tâche est cochée** (dans **Paramètres → Personnel**) décide s’ils sonnent pour vous. **Sons sur cet appareil** (dans **Cet appareil**) coupe le son d’un appareil entier ; **Automatique** signifie coupés sur l’écran mural, actifs ailleurs. La nuit, jamais de son.
+
+Les courses ne font pas de bruit : quand le dernier article est coché ou les courses terminées, le téléphone montre un petit éclat de confettis et vibre légèrement, une fois par course. La nuit, et avec **Sons sur cet appareil** désactivé, il ne vibre pas.
 
 ## Protéger l’écran mural {#burn-in}
 

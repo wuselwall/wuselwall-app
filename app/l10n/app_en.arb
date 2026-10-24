@@ -3112,8 +3112,39 @@
       }
     }
   },
+  "wuselWallTradition1": "It's {name} today!",
+  "@wuselWallTradition1": {
+    "description": "Wusel's morning line on the wall when today has a family tradition; name is the tradition (specs/27: Heute ist Spieleabend!).",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "wuselWallTradition2": "Hooray, today is {name}!",
+  "@wuselWallTradition2": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "wuselWallTradition3": "Good morning! Today is {name}.",
+  "@wuselWallTradition3": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "wuselSetupDone": "That's everything set up. Welcome home!",
   "wuselHideLine": "Hide what Wusel says",
+  "wuselFerienFirst1": "The holidays start today. Enjoy the time off!",
+  "wuselFerienFirst2": "Holidays! The free days begin today.",
+  "wuselFerienFirst3": "First day of the holidays. Enjoy it together!",
+  "ambienceFerienFirst": "Holidays!",
+  "ambienceFerienLast": "Last day of the holidays",
+  "shoppingEmptyTapTile": "Nothing on the list yet. Tap a tile.",
   "memberBirthday": "Birthday",
   "memberBirthdayHelp": "Shown on the wall on the day, and counted down to before it.",
   "memberBirthdayPick": "Choose a date",
@@ -3183,6 +3214,46 @@
   "eventTraditionHelp": "Something the family does again and again. Always on the wall, with a ribbon.",
   "eventTraditionMeal": "With a meal",
   "eventTraditionMealHint": "e.g. pizza",
+  "calendarNewTradition": "New tradition",
+  "@calendarNewTradition": {
+    "description": "Calendar: the button and sheet that start a family tradition from a starter (specs/27)."
+  },
+  "traditionStartersHelp": "Pick one to start with. You can change the day and time next.",
+  "traditionStarterGameNight": "Game night",
+  "@traditionStarterGameNight": {
+    "description": "A starter tradition's name, written per language (specs/27: Spieleabend)."
+  },
+  "traditionStarterPizzaFriday": "Pizza Friday",
+  "traditionStarterFilmNight": "Film night",
+  "traditionStarterSundayBreakfast": "Sunday breakfast",
+  "traditionStarterStoryTime": "Story time",
+  "traditionStarterDayOut": "Day out",
+  "traditionStarterPizzaMeal": "Pizza",
+  "@traditionStarterPizzaMeal": {
+    "description": "The meal Pizza Friday carries, in a few words; the planner offers it on the day."
+  },
+  "traditionStarterOwn": "Your own tradition",
+  "traditionStarterOwnHelp": "You choose the name, picture and day.",
+  "traditionStarterWhen": "Every {weekday}, {time}",
+  "@traditionStarterWhen": {
+    "description": "When a starter tradition happens: the weekday's full name and the start time.",
+    "placeholders": {
+      "weekday": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "traditionStarterWhenAllDay": "Every {weekday}, all day",
+  "@traditionStarterWhenAllDay": {
+    "placeholders": {
+      "weekday": {
+        "type": "String"
+      }
+    }
+  },
   "eventIcon_cake": "Birthday cake",
   "eventIcon_game_die": "Game",
   "eventIcon_pizza": "Pizza",

@@ -18,13 +18,13 @@ Wusel praises what happened, not the person: "All done. That went well!" rather 
 - **The last chore of the day**: Wusel cheers, with confetti and a short sound.
 - **A reward requested**: Wusel is proud: "Sent! A grown-up will decide." When a grown-up says yes on another device, the kids' tablet plays the badge sound.
 - **A new badge**: Wusel holds up a star and names the badge, for two days on **My day** and under **Points**.
-- **Empty pages**: Wusel peeks over the bottom edge, for example on an empty shopping list.
+- **Empty pages**: Wusel peeks over the bottom edge, for example on an empty shopping list: "Nothing on the list yet. Tap a tile."
 - **On the wall** Wusel sits in the header. In the first half hour after the night ends (usually 6:00 to 6:30) Wusel waves and says "Good morning, everyone!". At night Wusel sleeps, without a connection Wusel is thinking, and on a birthday there is a party hat.
 - **On the wall's chore board** Wusel cheers at the top of a person's column as soon as they have done all of today's chores.
-- **Today** on the phone: on a birthday, with a card.
+- **Today** on the phone: on a birthday, with a card, and on the first day of the school holidays Wusel waves and wishes you a good time off.
 - **Getting started done**: when the last item of the **Getting started** card is done, Wusel cheers once: "That's everything set up. Welcome home!"
 
-Wusel never appears where you are entering something (the shopping tiles, the event and chore editors), and never next to errors, the PIN, signing in or deleting. What Wusel says is always there as text as well; a tap on the speech bubble hides the line.
+Wusel never appears where you are entering something (the shopping tiles and the search above them, the event and chore editors), and never next to errors, the PIN, signing in or deleting. What Wusel says is always there as text as well; a tap on the speech bubble hides the line.
 
 ## Wusel's outfit {#outfits}
 
@@ -49,9 +49,9 @@ If **Reduce motion** is on for the device, Wusel stays still and there is no con
 
 ## Colours {#colours}
 
-- **Every area has its colour**: the bar at the top and the selected tab at the bottom. Today is yellow, Calendar blue, Tasks coral, Meals apricot, Shopping mint, Timetable lilac. The colours only help you find your way; the people's colours stay the strongest.
+- **Every area has its colour**: the bar at the top and the selected tab at the bottom. Today is yellow, Calendar blue, Tasks coral, Meals apricot, Shopping mint, Timetable lilac, Settings stone. Where the bar has room it shows a small picture: a basket for shopping, a broom and stars for tasks, a calendar page, a pot, a school bag and, quietly, two sliders in the settings. On a narrow phone they leave the room to the title. The colours and pictures only help you find your way; the people's colours stay the strongest.
 - **On the kids' tablet** cards you can tap look like stickers: a dark edge and a coloured shadow. They sink in when pressed.
-- **The sky**: in the wall's header and on **Today** a sky shows the time of day: dawn, bright day, dusk, and on the wall at night a dark sky with stars. **Sky in the header** (under **This device**) switches it off.
+- **The sky**: in the wall's header and on **Today** a sky shows the time of day: dawn, bright day with two clouds, dusk (the sun sets in the hour before the night hours), and on the wall at night a dark sky with stars. **Sky in the header** (under **This device**) switches it off.
 
 ### Seasons and occasions {#occasions}
 
@@ -61,7 +61,7 @@ The sky also dresses up for special days. Each occasion has its own switch under
 |---|---|---|
 | **Seasons** | blossom, sun, leaves or snowflakes in the sky | on |
 | **Birthdays** | bunting in the person's colour and a party hat for Wusel | on |
-| **School holidays** | a ribbon on the first and the last day of the holidays | on |
+| **School holidays** | a ribbon, "Holidays!" on the first and "Last day of the holidays" on the last day; on **Today** it sits beside the title | on |
 | **Advent** | candles in the header, one more on each Advent Sunday | by your region |
 | **Easter** | eggs in the hills from two days before to two days after Easter Sunday | by your region |
 | **Orthodox Easter** | the same eggs on the Orthodox date | by your region |
@@ -72,6 +72,8 @@ The sky also dresses up for special days. Each occasion has its own switch under
 ## Sounds {#sounds}
 
 WuselWall has four short sounds: a tick, points arriving, everything done, and a badge or reward. Whether they play for you is set by **Sound when a chore is ticked** in **Settings → Personal**. **Sounds on this device** (under **This device**) silences a whole device; **Automatic** means off on the wall and on elsewhere. There is never a sound at night.
+
+Shopping makes no sound: when the last item is ticked or the trip is finished, the phone shows a small burst of confetti and gives a light vibration, once per trip. At night, and with **Sounds on this device** off, it does not vibrate.
 
 ## Looking after the wall {#burn-in}
 
