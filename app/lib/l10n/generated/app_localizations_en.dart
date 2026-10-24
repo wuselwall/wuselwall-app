@@ -5401,7 +5401,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ambienceFerienFirst => 'Holidays!';
 
   @override
-  String get ambienceFerienLast => 'Last day of the holidays';
+  String get ambienceFerienLast => 'School again tomorrow';
 
   @override
   String get shoppingEmptyTapTile => 'Nothing on the list yet. Tap a tile.';
