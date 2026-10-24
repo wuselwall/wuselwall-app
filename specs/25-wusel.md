@@ -214,7 +214,8 @@ The code lives in `app/lib/core/wusel/`.
   build turns it on with `?still=1`, and `docs/tools/screenshots.mjs` always passes it, so
   Wusel never changes a screenshot from one run to the next.
 - **Power on the wall.** The kiosk animates only for a moment and then rests: idle blinking
-  stops after 60 s without a moment, and sleep breathing runs at a low frame rate. The
+  stops after 60 s without a moment, and sleep breathing runs at a low frame rate (five
+  frames a second from a timer, not the ticker, and none while the route is hidden). The
   acceptance check is CPU use on the wall tablet with the board idle for ten minutes, the
   same with Wusel on and off, written down in the release checklist.
 - **Tests.** Goldens (`app/test/golden/`, the repository's first) for every pose in three

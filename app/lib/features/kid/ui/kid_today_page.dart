@@ -7,6 +7,7 @@ import 'package:wuselwall/app/theme/night.dart';
 import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
+import 'package:wuselwall/core/connectivity/connectivity_provider.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
@@ -23,9 +24,11 @@ import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/kid/application/kid_logic.dart';
 import 'package:wuselwall/features/kid/application/kid_providers.dart';
+import 'package:wuselwall/features/kid/ui/kid_birthday.dart';
 import 'package:wuselwall/features/kid/ui/kid_new_badge.dart';
 import 'package:wuselwall/features/kid/ui/kid_widgets.dart';
 import 'package:wuselwall/features/rituals/application/ritual_providers.dart';
+import 'package:wuselwall/features/rituals/application/today_tradition_provider.dart';
 import 'package:wuselwall/features/rituals/ui/countdown_widgets.dart';
 import 'package:wuselwall/features/rituals/ui/meal_wish_widgets.dart';
 import 'package:wuselwall/features/rituals/ui/table_question_widgets.dart';
@@ -65,6 +68,8 @@ class _KidTodayPageState extends ConsumerState<KidTodayPage> {
     final colors = context.ww.member(member.color);
     final balance = ref.watch(pointBalancesProvider).value;
     final points = kidBalanceOf(balance ?? const {}, member.id);
+    // A grown-up's yes to a wished reward, from another device: the badge sound.
+    kidListenForApprovals(ref, member.id);
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(
@@ -659,16 +664,49 @@ class _KidGreeting extends ConsumerStatefulWidget {
 }
 
 class _KidGreetingState extends ConsumerState<_KidGreeting> {
-  String? _line;
+  /// The hello, picked once per visit so a rebuild does not change its words.
+  String? _hello;
 
-  /// Whether [_line] was picked for the night: a new one when the night begins or ends.
-  bool? _lineAtNight;
+  /// Whether [_hello] was picked for the night: a new one when the night begins or
+  /// ends.
+  bool? _helloAtNight;
+
+  /// Runs while the day loads or the device is offline. Wusel thinks only once it has
+  /// fired (specs/25: "only after 2 s"), so a quick load never shows a thinking Wusel.
+  Timer? _waitTimer;
+  bool _thinking = false;
+
+  /// Whether this visit has asked for the birthday's full screen.
+  bool _birthdayAsked = false;
+
+  @override
+  void dispose() {
+    _waitTimer?.cancel();
+    super.dispose();
+  }
+
+  /// Starts the wait when [waiting] begins and forgets it when it ends.
+  void _followWait(bool waiting) {
+    if (waiting == (_waitTimer != null || _thinking)) return;
+    _waitTimer?.cancel();
+    _waitTimer = null;
+    _thinking = false;
+    if (!waiting) return;
+    _waitTimer = Timer(kidThinkAfter, () {
+      if (!mounted) return;
+      setState(() {
+        _waitTimer = null;
+        _thinking = true;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final member = widget.member;
     final night = ref.watch(nightProvider);
+    final today = ref.watch(kidTodayProvider);
     final title = Theme.of(context).textTheme.headlineSmall
         ?.copyWith(fontWeight: FontWeight.w800);
     final Widget greeting;
@@ -681,28 +719,79 @@ class _KidGreetingState extends ConsumerState<_KidGreeting> {
         ref.watch(ambienceProvider.select((a) => a.birthdays.isNotEmpty));
     // A quiet Wusel still comes for the special day, held still.
     final special = birthday && !night;
+    if (special && !_birthdayAsked) {
+      // The first open of the day: the full screen, once per device (specs/25).
+      _birthdayAsked = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        unawaited(
+          showKidBirthdayOnce(context, ref, member: member, today: today),
+        );
+      });
+    }
     final presence = ref.watch(lighterDayProvider).wusel;
     final present =
         presence == WuselPresence.lively ||
         (presence == WuselPresence.quiet && special);
-    if (_lineAtNight != night) {
-      _line = null;
-      _lineAtNight = night;
+
+    // Offline (no network, or the board's last refresh failed, as on the wall) or the
+    // day's chores still loading: after 2 s Wusel thinks instead of waving.
+    final offline =
+        ref.watch(connectivityProvider).value == false ||
+        ref.watch(boardProvider.select((s) => s.isStale));
+    final loading = ref.watch(
+      tasksTodayProvider.select((t) => t.isLoading && !t.hasValue),
+    );
+    _followWait(offline || loading);
+    final thinking = _thinking && !night && presence == WuselPresence.lively;
+
+    if (_helloAtNight != night) {
+      _hello = null;
+      _helloAtNight = night;
     }
     if (present) {
-      final line = _line ??= night
+      final hello = _hello ??= night
           ? l10n.wuselHelloNight(member.displayName)
-          : birthday
-          ? '${WuselLines.pick(l10n, WuselLines.helloAt(DateTime.now()), name: member.displayName)} ${l10n.wuselFactBirthdayYou}'
           : WuselLines.pick(
               l10n,
               WuselLines.helloAt(DateTime.now()),
               name: member.displayName,
             );
+      // After the hello, the day's first useful fact (specs/25).
+      final fact = night || thinking
+          ? null
+          : kidFirstFact(
+              ownBirthday: birthday,
+              minutesNow: ref.watch(kidMinutesProvider),
+              tradition: ref.watch(todayTraditionProvider),
+              school: ref
+                  .watch(schoolWeekProvider((today, kidTomorrowOf(today))))
+                  .value
+                  ?.dayOf(member.id, today),
+              meal: ref.watch(
+                boardProvider.select(
+                  (s) => s.board?.days
+                      .where((d) => d.date == today)
+                      .firstOrNull
+                      ?.meal,
+                ),
+              ),
+              countdown: ref
+                  .watch(countdownsProvider)
+                  .where((c) => c.isFor(member.id))
+                  .firstOrNull,
+            );
+      final line = thinking
+          ? (offline ? l10n.wuselOffline : l10n.wuselWaiting)
+          : fact == null
+          ? hello
+          : '$hello ${_factLine(l10n, fact, today)}';
       greeting = WuselSays(
         line: line,
         pose: night
             ? WuselPose.sleep
+            : thinking
+            ? WuselPose.think
             : birthday
             ? WuselPose.cheer
             : WuselPose.wave,
@@ -764,3 +853,21 @@ class _KidGreetingState extends ConsumerState<_KidGreeting> {
     );
   }
 }
+
+/// How long the kid home waits, loading or offline, before Wusel thinks (specs/25).
+const kidThinkAfter = Duration(seconds: 2);
+
+/// What Wusel says about [fact], at most eight words (specs/25 "Voice").
+String _factLine(AppLocalizations l10n, KidFact fact, DateTime today) =>
+    switch (fact) {
+      KidBirthdayFact() => l10n.wuselFactBirthdayYou,
+      KidTraditionFact(:final title) => l10n.wuselFactTradition(title),
+      KidFirstLessonFact(:final subject) => l10n.wuselFactFirstLesson(subject),
+      KidMealFact(slot: MealSlot.dinner, :final dish) =>
+        l10n.wuselFactMealDinner(dish),
+      KidMealFact(:final dish) => l10n.wuselFactMealLunch(dish),
+      KidCountdownFact(:final countdown) => l10n.wuselFactCountdown(
+        countdownTitle(l10n, countdown),
+        countdownWhen(l10n, countdown, today),
+      ),
+    };

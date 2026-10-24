@@ -79,6 +79,15 @@ class _KidPointsPageState extends ConsumerState<KidPointsPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    // A grown-up said yes on another device: the badge sound, and Wusel is proud.
+    kidListenForApprovals(
+      ref,
+      widget.actor,
+      onApproved: () => setState(() {
+        _proudMoment++;
+        _proudLine = l10n.kidRedeemed;
+      }),
+    );
     final balances = ref.watch(pointBalancesProvider).value ?? const {};
     final balance = kidBalanceOf(balances, widget.actor);
     final rewards = ref.watch(rewardsProvider);

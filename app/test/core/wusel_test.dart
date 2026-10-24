@@ -133,6 +133,62 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
+  testWidgets(
+    'asleep, Wusel breathes a few frames a second, never on a ticker',
+    (tester) async {
+      await tester.pumpWidget(
+        _host(Wusel(colors: _colors, pose: WuselPose.sleep)),
+      );
+      // No frame is ever waiting between two breaths: nothing runs at 60 fps.
+      var frames = 0;
+      var sawZ = false;
+      final looks = <WuselLook>{};
+      for (var i = 0; i < 125; i++) {
+        await tester.pump(const Duration(milliseconds: 200));
+        expect(tester.binding.hasScheduledFrame, isFalse);
+        frames++;
+        looks.add(_look(tester));
+        if (_look(tester).sleepZ > 0.5) sawZ = true;
+      }
+      // 25 s: the breath moved, and the "z" drifted by within 20 s.
+      expect(frames, 125);
+      expect(looks.length, greaterThan(10));
+      expect(sawZ, isTrue);
+      expect(_look(tester).eyes, WuselEyes.closed);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
+  testWidgets('asleep on a hidden route, Wusel does not draw at all', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _host(
+        TickerMode(
+          enabled: false,
+          child: Wusel(colors: _colors, pose: WuselPose.sleep),
+        ),
+      ),
+    );
+    final first = _look(tester);
+    await tester.pump(const Duration(seconds: 30));
+    expect(tester.binding.hasScheduledFrame, isFalse);
+    expect(_look(tester), first);
+
+    // Shown again, it breathes again.
+    await tester.pumpWidget(
+      _host(
+        TickerMode(
+          enabled: true,
+          child: Wusel(colors: _colors, pose: WuselPose.sleep),
+        ),
+      ),
+    );
+    await tester.pump(const Duration(seconds: 2));
+    expect(_look(tester), isNot(first));
+    await tester.pumpWidget(const SizedBox());
+  });
+
   testWidgets('below 32 px Wusel is not drawn', (tester) async {
     await tester.pumpWidget(_host(Wusel(colors: _colors, size: 24)));
     expect(

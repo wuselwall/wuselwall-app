@@ -167,6 +167,19 @@ enum WuselPose {
     return rest.copyWith(sleepZ: t >= 1 ? 0 : math.sin(math.pi * t));
   }
 
+  /// The sleeping look [elapsed] after Wusel fell asleep: a slow breath that goes on
+  /// all night, and the "z" drifting by for 3 s every [pulseEvery]. Wusel draws it a
+  /// few frames a second, not sixty (specs/25 "Power on the wall"), so only the slow
+  /// parts of [sleep] are here.
+  WuselLook sleeping(Duration elapsed) {
+    final t = elapsed.inMicroseconds / 1e6;
+    final every =
+        (pulseEvery ?? const Duration(seconds: 20)).inMicroseconds / 1e6;
+    final inCycle = Duration(microseconds: ((t % every) * 1e6).round());
+    return pulse(inCycle)
+        .copyWith(squash: -0.02 + 0.02 * math.sin(2 * math.pi * t / 4.5));
+  }
+
   static double _ease(double t) {
     final x = t.clamp(0.0, 1.0);
     return 1 - math.pow(1 - x, 3).toDouble();

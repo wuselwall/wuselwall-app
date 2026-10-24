@@ -1,18 +1,24 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/motion.dart';
 import 'package:wuselwall/core/wusel/wusel.dart';
+import 'package:wuselwall/features/kid/application/kid_logic.dart';
 import 'package:wuselwall/features/kid/application/kid_providers.dart';
 import 'package:wuselwall/features/kid/ui/kid_widgets.dart';
+import 'package:wuselwall/features/tasks/application/tasks_providers.dart';
+import 'package:wuselwall/features/tasks/domain/tasks_models.dart';
 import 'package:wuselwall/features/wusel/application/celebration.dart';
 import 'package:wuselwall/features/wusel/ui/family_wusel.dart';
 
 /// A badge the child earned in the last two days: Wusel holds up the star and names it
-/// (specs/25, pose `proud`). The badge sound plays once per badge while the app runs,
-/// not on every visit.
+/// (specs/25, pose `proud`). The card grows in from the centre on the bouncy spring
+/// (specs/26). The badge sound plays once per badge while the app runs, not on every
+/// visit.
 class KidNewBadge extends ConsumerStatefulWidget {
   const KidNewBadge({required this.actor, super.key});
 
@@ -39,17 +45,95 @@ class _KidNewBadgeState extends ConsumerState<KidNewBadge> {
     }
     return Padding(
       padding: const EdgeInsets.only(top: Tokens.space3),
-      child: KidCard(
-        child: WuselSays(
-          line: context.l10n.wuselBadge(badge.title),
-          pose: WuselPose.proud,
-          size: 96,
-          moment: badge.id,
-          tappable: true,
-          style: Theme.of(context).textTheme.titleLarge
-              ?.copyWith(fontWeight: FontWeight.w800),
+      child: KidGrowIn(
+        // A new badge grows in again.
+        key: ValueKey(badge.id),
+        child: KidCard(
+          child: WuselSays(
+            line: context.l10n.wuselBadge(badge.title),
+            pose: WuselPose.proud,
+            size: 96,
+            moment: badge.id,
+            tappable: true,
+            style: Theme.of(context).textTheme.titleLarge
+                ?.copyWith(fontWeight: FontWeight.w800),
+          ),
         ),
       ),
     );
   }
+}
+
+/// Grows [child] in from its centre on [Tokens.springBouncy] when it first appears,
+/// overshooting a little (specs/26 "Celebrations"). Under reduced motion it is there
+/// at once.
+class KidGrowIn extends StatefulWidget {
+  const KidGrowIn({required this.child, super.key});
+
+  final Widget child;
+
+  @override
+  State<KidGrowIn> createState() => _KidGrowInState();
+}
+
+class _KidGrowInState extends State<KidGrowIn>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _scale = AnimationController.unbounded(
+    vsync: this,
+  );
+  bool _started = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_started) return;
+    _started = true;
+    if (!motionAllowed(context)) {
+      _scale.value = 1;
+      return;
+    }
+    unawaited(
+      _scale.animateWith(SpringSimulation(Tokens.springBouncy, 0, 1, 0)),
+    );
+  }
+
+  @override
+  void dispose() {
+    _scale.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) =>
+      ScaleTransition(scale: _scale, child: widget.child);
+}
+
+/// Plays the badge sound once when a reward the child asked for is approved on another
+/// device and arrives here with the realtime refresh (specs/26: the badge sound is for
+/// a reward redeemed). [onApproved] lets the screen show it too. Call from `build`.
+void kidListenForApprovals(
+  WidgetRef ref,
+  String actor, {
+  VoidCallback? onApproved,
+}) {
+  ref.listen<AsyncValue<List<RewardRedemption>>>(redemptionsProvider, (
+    previous,
+    next,
+  ) {
+    final before = previous?.value;
+    final after = next.value;
+    if (before == null || after == null) return;
+    final approved = kidNewlyApproved(before, after, actor);
+    if (approved.isEmpty) return;
+    final celebration = ref.read(celebrationProvider);
+    // One celebration per moment: the same yes never sounds twice, and two yeses at
+    // once sound as one.
+    final fresh = [
+      for (final id in approved)
+        if (celebration.claimMoment('reward-approved/$id')) id,
+    ];
+    if (fresh.isEmpty) return;
+    unawaited(celebration.cue(Cue.badge));
+    onApproved?.call();
+  });
 }

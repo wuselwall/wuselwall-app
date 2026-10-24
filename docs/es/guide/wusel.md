@@ -12,9 +12,11 @@ Wusel celebra lo que ha pasado, no a la persona: «¡Todo hecho! Ha salido muy b
 
 ## Dónde aparece Wusel {#where}
 
-- **Mi día** en la tableta infantil: Wusel saluda al niño por su nombre, a veces con algo útil, como «Hoy empiezas con matemáticas.»
+- **Mi día** en la tableta infantil: Wusel saluda al niño por su nombre, con una cosa útil de hoy: su propio cumpleaños, una tradición familiar («¡Hoy toca viernes de pizza!»), la primera clase («Hoy empiezas con matemáticas.»), la comida caliente o lo que el niño espera con ilusión.
+- **Su propio cumpleaños**: la primera vez que se abre **Mi día** ese día, Wusel con gorro de fiesta llena toda la pantalla de confeti durante dos segundos (un toque la cierra antes). Una vez al día por dispositivo, nunca en las horas de noche, y solo si la ocasión **Cumpleaños** está activada.
+- **Esperando y sin conexión**: si **Mi día** tarda más de dos segundos en cargar, o la tableta no tiene conexión, Wusel piensa: «Un momento…» o «Un momento, busco internet…».
 - **La última tarea del día**: Wusel lo celebra, con confeti y un sonido corto.
-- **Una recompensa pedida**: Wusel está orgulloso: «¡Enviado! Ahora decide un adulto.»
+- **Una recompensa pedida**: Wusel está orgulloso: «¡Enviado! Ahora decide un adulto.» Cuando un adulto dice que sí en otro dispositivo, la tableta infantil reproduce el sonido de insignia.
 - **Una insignia nueva**: Wusel levanta una estrella y nombra la insignia, durante dos días en **Mi día** y en **Puntos**.
 - **Páginas vacías**: Wusel asoma por el borde inferior, por ejemplo en una lista de la compra vacía.
 - **En la pantalla de pared**, Wusel está en la cabecera. En la primera media hora después de la noche (normalmente de 6:00 a 6:30) saluda con la mano y dice «¡Buenos días a todos!». De noche Wusel duerme, sin conexión Wusel piensa, y en un cumpleaños lleva gorro de fiesta.

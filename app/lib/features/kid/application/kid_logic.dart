@@ -2,6 +2,7 @@ import 'package:flutter/material.dart' show TimeOfDay;
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 import 'package:wuselwall/features/kid/data/kid_badges_repository.dart';
+import 'package:wuselwall/features/rituals/domain/countdown.dart';
 import 'package:wuselwall/features/tasks/domain/tasks_models.dart';
 
 /// Pure rules of the kid register. Kept apart from the widgets so they can be read and
@@ -120,4 +121,101 @@ List<({int days, String title})> kidStreakRows({
           titles[s.definitionId] != null)
         (days: s.currentLength, title: titles[s.definitionId]!),
   ]..sort((a, b) => b.days.compareTo(a.days));
+}
+
+/// The one fact Wusel adds to a child's greeting (specs/25 "Where Wusel appears"):
+/// the most useful thing about today, never a list.
+sealed class KidFact {
+  const KidFact();
+}
+
+/// It is the child's own birthday.
+class KidBirthdayFact extends KidFact {
+  const KidBirthdayFact();
+}
+
+/// Today is one of the family's traditions ("Pizza-Freitag").
+class KidTraditionFact extends KidFact {
+  const KidTraditionFact(this.title);
+
+  final String title;
+}
+
+/// School starts with this subject; said until the first lesson begins.
+class KidFirstLessonFact extends KidFact {
+  const KidFirstLessonFact(this.subject);
+
+  final String subject;
+}
+
+/// Today's warm meal.
+class KidMealFact extends KidFact {
+  const KidMealFact(this.slot, this.dish);
+
+  final MealSlot slot;
+  final String dish;
+}
+
+/// The nearest thing the child looks forward to.
+class KidCountdownFact extends KidFact {
+  const KidCountdownFact(this.countdown);
+
+  final Countdown countdown;
+}
+
+/// Lunch stops being news at two (minutes since midnight).
+const _lunchOver = 14 * 60;
+
+/// The first useful fact of a child's day, in the order of specs/25: their own
+/// birthday, today's tradition, the first lesson (until it starts), today's warm meal
+/// (lunch until two), then the nearest countdown. Null when there is nothing to say.
+KidFact? kidFirstFact({
+  required bool ownBirthday,
+  required int minutesNow,
+  String? tradition,
+  SchoolDay? school,
+  BoardMeal? meal,
+  Countdown? countdown,
+}) {
+  if (ownBirthday) return const KidBirthdayFact();
+  if (tradition != null && tradition.trim().isNotEmpty) {
+    return KidTraditionFact(tradition);
+  }
+  if (school != null && school.hasSchool) {
+    final lessons = [
+      for (final l in school.lessons)
+        if (l.kind == LessonKind.lesson && l.status != LessonStatus.cancelled)
+          l,
+    ]..sort((a, b) => minutesOf(a.starts).compareTo(minutesOf(b.starts)));
+    if (lessons.isNotEmpty && minutesNow < minutesOf(lessons.first.starts)) {
+      return KidFirstLessonFact(lessons.first.subject);
+    }
+  }
+  if (meal != null &&
+      meal.title != null &&
+      (meal.slot == MealSlot.dinner || minutesNow < _lunchOver)) {
+    return KidMealFact(meal.slot, meal.title!);
+  }
+  if (countdown != null) return KidCountdownFact(countdown);
+  return null;
+}
+
+/// The redemptions of [actor] that were waiting in [before] and that a grown-up has
+/// since approved or handed over in [after]: a yes that arrived from another device.
+List<String> kidNewlyApproved(
+  List<RewardRedemption> before,
+  List<RewardRedemption> after,
+  String actor,
+) {
+  final waiting = {
+    for (final r in before)
+      if (r.profileId == actor && r.status == RedemptionStatus.requested) r.id,
+  };
+  return [
+    for (final r in after)
+      if (waiting.contains(r.id) &&
+          (r.status == RedemptionStatus.approved ||
+              r.status == RedemptionStatus.fulfilled))
+        r.id,
+  ];
 }

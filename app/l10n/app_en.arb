@@ -3038,6 +3038,49 @@
       }
     }
   },
+  "wuselFactTradition": "Today is {tradition}!",
+  "@wuselFactTradition": {
+    "placeholders": {
+      "tradition": {
+        "type": "String"
+      }
+    }
+  },
+  "wuselFactMealDinner": "Tonight there's {dish}.",
+  "@wuselFactMealDinner": {
+    "placeholders": {
+      "dish": {
+        "type": "String"
+      }
+    }
+  },
+  "wuselFactMealLunch": "For lunch there's {dish}.",
+  "@wuselFactMealLunch": {
+    "placeholders": {
+      "dish": {
+        "type": "String"
+      }
+    }
+  },
+  "wuselFactCountdown": "{what}: {when}",
+  "@wuselFactCountdown": {
+    "placeholders": {
+      "what": {
+        "type": "String"
+      },
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "wuselBirthdayCheer": "Happy birthday, {name}!",
+  "@wuselBirthdayCheer": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "wuselAllDone1": "All done. That went well!",
   "wuselAllDone2": "Everything's ticked off. Thank you!",
   "wuselAllDone3": "Done for today. The house says thanks!",
