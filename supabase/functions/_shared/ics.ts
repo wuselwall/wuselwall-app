@@ -71,6 +71,16 @@ export type IcsFeed = {
   members?: Record<string, string>;
   /** Imported occurrences (FR-1.9). Present only when the token is subscribed; see subscribedOccurrences. */
   external?: ExternalOccurrence[];
+  /** The active members' birthdays (specs/27); absent on servers before 20261025100000. See feedBirthdays. */
+  birthdays?: FeedBirthday[];
+};
+
+/** A member's birthday, as api.ics_feed sends it. */
+export type FeedBirthday = {
+  profile_id: string;
+  name: string;
+  /** The birth date, `YYYY-MM-DD`. */
+  birthday: string;
 };
 
 /** One occurrence of an imported calendar, as api.ics_feed sends it. The raw UID never leaves the database. */
@@ -299,6 +309,8 @@ function yearSpan(feed: IcsFeed, now: Date): { from: number; to: number } {
 
 export interface IcsMessages {
   school: string;
+  /** A birthday's summary; `{name}` is the member's name. No age, so the series never changes. */
+  birthday: string;
   withAttendees: string;
   lessonStatus: Record<Exclude<LessonJson["status"], "normal">, string>;
   presence: Record<
@@ -593,6 +605,55 @@ function externalVEvent(o: ExternalOccurrence, dtstamp: string): string[] {
   return lines;
 }
 
+// ── birthdays (specs/27 "Birthdays") ─────────────────────────────────────────────
+
+/**
+ * The birthdays a token gets: those of the members it names (all when it names none), and none
+ * when the token is narrowed to presence entries or to particular calendars, neither of which a
+ * birthday belongs to.
+ */
+export function feedBirthdays(feed: IcsFeed): FeedBirthday[] {
+  const filter = feed.filter as
+    | { profile_ids?: unknown; kinds?: unknown; calendar_ids?: unknown }
+    | null
+    | undefined;
+  const strings = (v: unknown): string[] | null =>
+    Array.isArray(v)
+      ? v.filter((x): x is string => typeof x === "string")
+      : null;
+  const kinds = strings(filter?.kinds);
+  if (kinds !== null && !kinds.includes("appointment")) return [];
+  if ((strings(filter?.calendar_ids) ?? []).length > 0) return [];
+  const named = strings(filter?.profile_ids) ?? [];
+  return (feed.birthdays ?? []).filter((b) =>
+    named.length === 0 || named.includes(b.profile_id)
+  );
+}
+
+/**
+ * One birthday: a yearly all-day VEVENT from the birth date, with a UID per member, so a
+ * subscriber's calendar keeps one series that does not change from year to year. A birthday on
+ * 29 February falls on the 60th day of the year: 29 February in a leap year, 1 March otherwise,
+ * as in the app.
+ */
+function birthdayVEvent(ctx: Ctx, b: FeedBirthday): string[] {
+  const start = Temporal.PlainDate.from(b.birthday);
+  const leapDay = start.month === 2 && start.day === 29;
+  return [
+    "BEGIN:VEVENT",
+    `UID:${escapeText(`birthday-${b.profile_id}@wuselwall.app`)}`,
+    `DTSTAMP:${ctx.dtstamp}`,
+    `DTSTART;VALUE=DATE:${ymd(start)}`,
+    `DTEND;VALUE=DATE:${ymd(start.add({ days: 1 }))}`,
+    leapDay ? "RRULE:FREQ=YEARLY;BYYEARDAY=60" : "RRULE:FREQ=YEARLY",
+    `SUMMARY:${escapeText(ctx.messages.birthday.replace("{name}", b.name))}`,
+    "STATUS:CONFIRMED",
+    "TRANSP:TRANSPARENT",
+    "X-WUSELWALL-KIND:birthday",
+    "END:VEVENT",
+  ];
+}
+
 // ── school days (specs/15 "What goes into the ICS feed") ─────────────────────────
 
 /** The projection window: 30 days back and 120 ahead of today in the household's zone. */
@@ -855,6 +916,7 @@ export function renderIcs(feed: IcsFeed, opts: RenderOptions): string {
     }
   }
 
+  for (const b of feedBirthdays(feed)) lines.push(...birthdayVEvent(ctx, b));
   for (const e of school) lines.push(...e.lines);
   for (const o of subscribedOccurrences(feed)) {
     lines.push(...externalVEvent(o, ctx.dtstamp));

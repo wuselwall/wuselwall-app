@@ -1084,3 +1084,100 @@ Deno.test("imported occurrences are read as a plain VEVENT by an ICS parser", ()
   }) => String(v.getFirstPropertyValue("uid")).startsWith(`ext-${CAL_FAMILY}`));
   assertEquals(allDay.getFirstPropertyValue("dtstart").isDate, true);
 });
+
+// ── birthdays (specs/27) ──────────────────────────────────────────────────────────
+
+const BIRTHDAYS = [
+  { profile_id: MEMBER_EMMA, name: "Emma", birthday: "2017-03-09" },
+  { profile_id: MEMBER_PAUL, name: "Paul", birthday: "2016-02-29" },
+];
+
+function birthdayBlocks(text: string): string[][] {
+  return veventBlocks(text).filter((b) =>
+    b.includes("X-WUSELWALL-KIND:birthday")
+  );
+}
+
+Deno.test("each birthday is one yearly all-day VEVENT with a stable UID and no age", () => {
+  const out = render(feed({ birthdays: BIRTHDAYS }));
+  const [emma, paul] = birthdayBlocks(out);
+  assertEquals(
+    lineStartingWith(emma, "UID:"),
+    `UID:birthday-${MEMBER_EMMA}@wuselwall.app`,
+  );
+  assertEquals(
+    lineStartingWith(emma, "DTSTART"),
+    "DTSTART;VALUE=DATE:20170309",
+  );
+  assertEquals(lineStartingWith(emma, "DTEND"), "DTEND;VALUE=DATE:20170310");
+  assertEquals(lineStartingWith(emma, "RRULE:"), "RRULE:FREQ=YEARLY");
+  assertEquals(
+    lineStartingWith(emma, "SUMMARY:"),
+    "SUMMARY:Geburtstag von Emma",
+  );
+  assertEquals(lineStartingWith(emma, "TRANSP:"), "TRANSP:TRANSPARENT");
+  // 29 February: the 60th day, 1 March in other years, as the app counts it.
+  assertEquals(
+    lineStartingWith(paul, "RRULE:"),
+    "RRULE:FREQ=YEARLY;BYYEARDAY=60",
+  );
+  // The same text a year later: nothing in it depends on today.
+  const later = renderIcs(feed({ birthdays: BIRTHDAYS }), {
+    now: new Date("2027-10-13T10:00:00Z"),
+    host: HOST,
+  });
+  const stable = (b: string[]) => b.filter((l) => !l.startsWith("DTSTAMP:"));
+  assertEquals(birthdayBlocks(later).map(stable), [emma, paul].map(stable));
+});
+
+Deno.test("birthday summaries in all four languages", () => {
+  for (
+    const [locale, summary] of [
+      ["de-DE", "Geburtstag von Emma"],
+      ["en-GB", "Emma's birthday"],
+      ["fr-FR", "Anniversaire de Emma"],
+      ["es-ES", "Cumpleaños de Emma"],
+    ] as const
+  ) {
+    const f = feed({ birthdays: [BIRTHDAYS[0]] });
+    const out = render({ ...f, household: { ...f.household, locale } });
+    assertEquals(
+      lineStartingWith(birthdayBlocks(out)[0], "SUMMARY:"),
+      `SUMMARY:${summary}`,
+    );
+  }
+});
+
+Deno.test("the token's filter decides whose birthdays it carries", () => {
+  const names = (filter: unknown) =>
+    birthdayBlocks(render(feed({ birthdays: BIRTHDAYS, filter }))).map((b) =>
+      lineStartingWith(b, "SUMMARY:")
+    );
+  const base = { calendar_ids: [], kinds: ["appointment"], school: "off" };
+  assertEquals(names({ ...base, profile_ids: [] }), [
+    "SUMMARY:Geburtstag von Emma",
+    "SUMMARY:Geburtstag von Paul",
+  ]);
+  assertEquals(names({ ...base, profile_ids: [MEMBER_EMMA] }), [
+    "SUMMARY:Geburtstag von Emma",
+  ]);
+  assertEquals(names({ ...base, profile_ids: [], kinds: ["presence"] }), []);
+  assertEquals(names({ ...base, profile_ids: [], calendar_ids: ["c1"] }), []);
+});
+
+Deno.test("a server without birthdays renders the feed as before", () => {
+  assertEquals(birthdayBlocks(render(feed({}))), []);
+});
+
+Deno.test("a birthday is read as a yearly all-day event by an ICS parser", () => {
+  const out = render(feed({ birthdays: [BIRTHDAYS[1]] }));
+  const root = new ICAL.Component(ICAL.parse(out));
+  const ev = new ICAL.Event(root.getFirstSubcomponent("vevent"));
+  assert(ev.isRecurring(), "the birthday recurs");
+  assertEquals(ev.startDate.isDate, true);
+  const it = ev.iterator();
+  const next = [it.next(), it.next(), it.next()].map((
+    t: { toString(): string },
+  ) => t.toString());
+  assertEquals(next, ["2016-02-29", "2017-03-01", "2018-03-01"]);
+});
