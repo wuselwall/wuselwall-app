@@ -5413,6 +5413,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get wuselHideLine => 'Hide what Wusel says';
 
   @override
+  String get wuselFerienFirst1 =>
+      'The holidays start today. Enjoy the time off!';
+
+  @override
+  String get wuselFerienFirst2 => 'Holidays! The free days begin today.';
+
+  @override
+  String get wuselFerienFirst3 =>
+      'First day of the holidays. Enjoy it together!';
+
+  @override
+  String get ambienceFerienFirst => 'Holidays!';
+
+  @override
+  String get ambienceFerienLast => 'Last day of the holidays';
+
+  @override
+  String get shoppingEmptyTapTile => 'Nothing on the list yet. Tap a tile.';
+
+  @override
   String get memberBirthday => 'Birthday';
 
   @override

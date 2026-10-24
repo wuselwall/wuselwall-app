@@ -5456,6 +5456,26 @@ class AppLocalizationsDe extends AppLocalizations {
   String get wuselHideLine => 'Wusels Satz ausblenden';
 
   @override
+  String get wuselFerienFirst1 => 'Die Ferien fangen an. Schöne freie Tage!';
+
+  @override
+  String get wuselFerienFirst2 => 'Ferien! Heute beginnt die freie Zeit.';
+
+  @override
+  String get wuselFerienFirst3 =>
+      'Erster Ferientag. Genießt die Zeit zusammen!';
+
+  @override
+  String get ambienceFerienFirst => 'Ferien!';
+
+  @override
+  String get ambienceFerienLast => 'Letzter Ferientag';
+
+  @override
+  String get shoppingEmptyTapTile =>
+      'Noch nichts auf der Liste. Tipp auf eine Kachel.';
+
+  @override
   String get memberBirthday => 'Geburtstag';
 
   @override

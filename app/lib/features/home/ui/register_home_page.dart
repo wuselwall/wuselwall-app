@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/palette.dart';
+import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
@@ -83,12 +84,33 @@ class RegisterHomePage extends ConsumerWidget {
         appBar:
             section.appBar?.call(context, actions) ??
             AppBar(
-              title: Text(section.label(l10n)),
+              title: tab == HomeTab.today
+                  // The Ferien's first and last day hang their ribbon beside the
+                  // title, where it never covers it (specs/26).
+                  ? Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(child: Text(section.label(l10n))),
+                        const Flexible(
+                          child: Padding(
+                            padding: EdgeInsetsDirectional.only(
+                              start: Tokens.space3,
+                            ),
+                            child: FerienRibbon(),
+                          ),
+                        ),
+                      ],
+                    )
+                  : Text(section.label(l10n)),
               bottom: section.bottom,
               actions: actions,
               // Today's header is the sky of the hour (specs/26 "Ambience").
               flexibleSpace: tab == HomeTab.today
-                  ? AmbienceSky(fallback: band, child: const SizedBox.expand())
+                  ? AmbienceSky(
+                      fallback: band,
+                      ribbon: false,
+                      child: const SizedBox.expand(),
+                    )
                   : null,
             ),
         body: SafeArea(
