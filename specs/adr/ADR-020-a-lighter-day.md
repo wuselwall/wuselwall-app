@@ -129,4 +129,12 @@ these places, each recorded in its spec:
   completed followed the same day; the planner's one-tap suggestion of a tradition's meal, the
   age in birthday countdowns and the birthdays in the ICS feed followed after the review, with
   migration `20261025100000`.)
+- **Built after, with migration `20261025130000` (pgTAP 239):** the Wochenrückblick as a
+  tap-through story; the wish picker with "Oft bei uns", every recipe with a search, and dish
+  pictures picked on the server from a name (`app.meal_icon_for`, a new `meals` picture set);
+  "von letzter Woche" in the tray; open wishes leave the tray after four weeks (a view filter,
+  no job); grown-ups wish from the planner when `meals.wishes` is *everyone*; and "a tradition
+  or key event attended" among the highlights, decided in the app from the occurrences it
+  already reads, because recurring events are expanded only in the Edge Functions. All
+  additive: `api_version` stays 1.
 
