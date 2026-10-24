@@ -19,6 +19,7 @@ import 'package:wuselwall/features/school/ui/schedule_section.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_section.dart';
 import 'package:wuselwall/features/tasks/ui/tasks_section.dart';
 import 'package:wuselwall/features/today/ui/today_section.dart';
+import 'package:wuselwall/features/wusel/ui/ambience_sky.dart';
 import 'package:wuselwall/features/wusel/ui/pixel_shift.dart';
 
 /// Home for every register (specs/09 "Screens by register"). The adult home has one tab
@@ -80,6 +81,10 @@ class RegisterHomePage extends ConsumerWidget {
               title: Text(section.label(l10n)),
               bottom: section.bottom,
               actions: actions,
+              // Today's header is the sky of the hour (specs/26 "Ambience").
+              flexibleSpace: tab == HomeTab.today
+                  ? AmbienceSky(fallback: band, child: const SizedBox.expand())
+                  : null,
             ),
         body: SafeArea(
           bottom: false,

@@ -92,18 +92,14 @@ class SkyPainter extends CustomPainter {
   }
 
   void _sun(Canvas canvas, Size size, SkyPhase phase) {
-    // Low in the morning on the left, high at noon, setting on the right.
-    final x = switch (phase) {
-      SkyPhase.morning => 0.42,
-      SkyPhase.day => 0.36,
-      _ => 0.52,
+    // Rising at the lower left in the morning, high at noon, setting at the right:
+    // half behind the edges, so it never sits on the clock's or the title's middle.
+    final (x, y) = switch (phase) {
+      SkyPhase.morning => (0.02, 0.85),
+      SkyPhase.day => (0.62, -0.05),
+      _ => (0.985, 0.92),
     };
-    final y = switch (phase) {
-      SkyPhase.morning => 0.62,
-      SkyPhase.day => 0.22,
-      _ => 0.72,
-    };
-    final r = size.height * 0.2;
+    final r = size.height * 0.32;
     final colour = shade == Shade.light
         ? phase.orb
         : Decor.sun.dark.withValues(alpha: 0.7);
