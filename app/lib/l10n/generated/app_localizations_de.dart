@@ -5299,4 +5299,158 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get wuselHideLine => 'Wusels Satz ausblenden';
+
+  @override
+  String get memberBirthday => 'Geburtstag';
+
+  @override
+  String get memberBirthdayHelp =>
+      'Steht am Tag an der Wand, und vorher wird heruntergezählt.';
+
+  @override
+  String get memberBirthdayPick => 'Datum wählen';
+
+  @override
+  String get memberBirthdayClear => 'Geburtstag entfernen';
+
+  @override
+  String countdownBirthdayOf(String name) {
+    return 'Geburtstag von $name';
+  }
+
+  @override
+  String countdownHomecoming(String name) {
+    return '$name kommt nach Hause';
+  }
+
+  @override
+  String countdownSleeps(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'noch $count× schlafen',
+      one: 'noch 1× schlafen',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String countdownDaysLeft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'noch $count Tage',
+      one: 'noch 1 Tag',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String countdownInDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'in $count Tagen',
+      one: 'in 1 Tag',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get countdownTomorrow => 'Morgen!';
+
+  @override
+  String get countdownToday => 'Heute!';
+
+  @override
+  String get kidLookingForward => 'Worauf ich mich freue';
+
+  @override
+  String get todayLookingForward => 'Vorfreude';
+
+  @override
+  String get eventIconNone => 'Kein Bild';
+
+  @override
+  String get eventIconLabel => 'Bild';
+
+  @override
+  String get eventCountdownTitle => 'Darauf freuen wir uns';
+
+  @override
+  String get eventCountdownHelp =>
+      'Zählt an der Wand und auf dem Kinder-Tablet herunter.';
+
+  @override
+  String get eventTraditionTitle => 'Familientradition';
+
+  @override
+  String get eventTraditionHelp =>
+      'Etwas, das die Familie immer wieder macht. Steht immer an der Wand, mit einem Band.';
+
+  @override
+  String get eventTraditionMeal => 'Mit Essen';
+
+  @override
+  String get eventTraditionMealHint => 'z. B. Pizza';
+
+  @override
+  String get eventIcon_cake => 'Geburtstagskuchen';
+
+  @override
+  String get eventIcon_game_die => 'Spiel';
+
+  @override
+  String get eventIcon_pizza => 'Pizza';
+
+  @override
+  String get eventIcon_cinema => 'Film';
+
+  @override
+  String get eventIcon_croissant => 'Frühstück';
+
+  @override
+  String get eventIcon_book => 'Lesen';
+
+  @override
+  String get eventIcon_hiking => 'Wandern';
+
+  @override
+  String get eventIcon_beach => 'Ferien';
+
+  @override
+  String get eventIcon_plane => 'Reise';
+
+  @override
+  String get eventIcon_zoo => 'Zoo';
+
+  @override
+  String get eventIcon_tent => 'Zelten';
+
+  @override
+  String get eventIcon_football => 'Sport';
+
+  @override
+  String get eventIcon_music => 'Musik';
+
+  @override
+  String get eventIcon_gift => 'Geschenk';
+
+  @override
+  String get eventIcon_balloon => 'Feier';
+
+  @override
+  String get eventIcon_backpack => 'Schule';
+
+  @override
+  String get eventIcon_swim => 'Schwimmen';
+
+  @override
+  String get eventIcon_ferris => 'Rummel';
+
+  @override
+  String get eventIcon_house => 'Zuhause';
+
+  @override
+  String get eventIcon_star => 'Besonderes';
 }

@@ -103,6 +103,8 @@ class DemoIdentityRepository implements IdentityRepository {
     String? avatarKey,
     bool clearAvatar = false,
     int? sortOrder,
+    DateTime? birthday,
+    bool clearBirthday = false,
   }) => Member(
     id: m.id,
     displayName: name ?? m.displayName,
@@ -113,6 +115,7 @@ class DemoIdentityRepository implements IdentityRepository {
     sortOrder: sortOrder ?? m.sortOrder,
     hasAccount: m.hasAccount,
     avatarKey: clearAvatar ? null : (avatarKey ?? m.avatarKey),
+    birthday: clearBirthday ? null : (birthday ?? m.birthday),
   );
 
   @override
@@ -123,6 +126,7 @@ class DemoIdentityRepository implements IdentityRepository {
     String? colorHex,
     bool? isChild,
     String? avatarKey,
+    String? birthday,
   }) async {
     final i = _members.indexWhere((m) => m.id == profileId);
     if (i < 0) return const Err(NotFoundFailure(code: 'member_not_found'));
@@ -133,6 +137,10 @@ class DemoIdentityRepository implements IdentityRepository {
       isChild: isChild,
       avatarKey: avatarKey == null || avatarKey.isEmpty ? null : avatarKey,
       clearAvatar: avatarKey == '',
+      birthday: birthday == null || birthday.isEmpty
+          ? null
+          : DateTime.parse(birthday),
+      clearBirthday: birthday == '',
     );
     return const Ok(null);
   }

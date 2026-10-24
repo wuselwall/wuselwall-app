@@ -5,6 +5,7 @@ import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/wusel/wusel.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/ui/board_grid.dart';
+import 'package:wuselwall/features/rituals/application/ritual_providers.dart';
 import 'package:wuselwall/features/wusel/application/ambience.dart';
 import 'package:wuselwall/features/wusel/ui/family_wusel.dart';
 import 'package:wuselwall/features/wusel/ui/wusel_lines.dart';
@@ -41,7 +42,12 @@ class BoardWusel extends ConsumerWidget {
       return ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 380),
         child: WuselSays(
-          line: ref.watch(birthdayLineProvider) ?? '',
+          line: l10n.wuselFactBirthday(
+            ref
+                .watch(birthdaysTodayMembersProvider)
+                .map((m) => m.displayName)
+                .join(' & '),
+          ),
           pose: WuselPose.cheer,
           size: size,
           // Once on each hour: the wall's quietest loud moment.
@@ -66,6 +72,3 @@ class BoardWusel extends ConsumerWidget {
     return const FamilyWusel(size: size);
   }
 }
-
-/// "Olivia hat Geburtstag!" for today's birthdays; null when there are none.
-final birthdayLineProvider = Provider.autoDispose<String?>((ref) => null);

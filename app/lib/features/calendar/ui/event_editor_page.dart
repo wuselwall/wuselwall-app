@@ -22,6 +22,7 @@ import 'package:wuselwall/features/calendar/ui/event_edit_args.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
+import 'package:wuselwall/features/rituals/ui/event_ritual_fields.dart';
 import 'package:wuselwall/features/settings/application/household_settings_providers.dart';
 import 'package:wuselwall/features/settings/domain/household_setting.dart';
 
@@ -499,12 +500,17 @@ class _EventEditorFormState extends ConsumerState<_EventEditorForm> {
             contentPadding: EdgeInsets.zero,
             title: Text(l10n.eventKeyDisplay),
             value: key,
-            onChanged: (value) => setState(() {
-              _draft
-                ..keyTouched = true
-                ..key = value;
-            }),
+            // A tradition is always on the wall (specs/27).
+            onChanged: _draft.tradition
+                ? null
+                : (value) => setState(() {
+                    _draft
+                      ..keyTouched = true
+                      ..key = value;
+                  }),
           ),
+          if (_draft.kind != EventKind.presence)
+            EventRitualFields(draft: _draft, onChanged: () => setState(() {})),
           const SizedBox(height: 16),
           RepeatSection(
             recurrence: _draft.recurrence,

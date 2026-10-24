@@ -2993,5 +2993,82 @@
     }
   },
   "wuselSetupDone": "That's everything set up. Welcome home!",
-  "wuselHideLine": "Hide what Wusel says"
+  "wuselHideLine": "Hide what Wusel says",
+  "memberBirthday": "Birthday",
+  "memberBirthdayHelp": "Shown on the wall on the day, and counted down to before it.",
+  "memberBirthdayPick": "Choose a date",
+  "memberBirthdayClear": "Remove the birthday",
+  "countdownBirthdayOf": "{name}'s birthday",
+  "@countdownBirthdayOf": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "countdownHomecoming": "{name} comes home",
+  "@countdownHomecoming": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "countdownSleeps": "{count, plural, =1{1 more sleep} other{{count} more sleeps}}",
+  "@countdownSleeps": {
+    "description": "Countdown for children and the wall: nights until it happens (specs/27).",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "countdownDaysLeft": "{count, plural, =1{1 more day} other{{count} more days}}",
+  "@countdownDaysLeft": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "countdownInDays": "{count, plural, =1{in 1 day} other{in {count} days}}",
+  "@countdownInDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "countdownTomorrow": "Tomorrow!",
+  "countdownToday": "Today!",
+  "kidLookingForward": "Looking forward to",
+  "todayLookingForward": "Looking forward",
+  "eventIconNone": "No picture",
+  "eventIconLabel": "Picture",
+  "eventCountdownTitle": "We are looking forward to it",
+  "eventCountdownHelp": "Counts down on the wall and on the children's tablet.",
+  "eventTraditionTitle": "Family tradition",
+  "eventTraditionHelp": "Something the family does again and again. Always on the wall, with a ribbon.",
+  "eventTraditionMeal": "With a meal",
+  "eventTraditionMealHint": "e.g. pizza",
+  "eventIcon_cake": "Birthday cake",
+  "eventIcon_game_die": "Game",
+  "eventIcon_pizza": "Pizza",
+  "eventIcon_cinema": "Film",
+  "eventIcon_croissant": "Breakfast",
+  "eventIcon_book": "Reading",
+  "eventIcon_hiking": "Walk",
+  "eventIcon_beach": "Holidays",
+  "eventIcon_plane": "Trip",
+  "eventIcon_zoo": "Zoo",
+  "eventIcon_tent": "Camping",
+  "eventIcon_football": "Sport",
+  "eventIcon_music": "Music",
+  "eventIcon_gift": "Present",
+  "eventIcon_balloon": "Party",
+  "eventIcon_backpack": "School",
+  "eventIcon_swim": "Swimming",
+  "eventIcon_ferris": "Fair",
+  "eventIcon_house": "Home",
+  "eventIcon_star": "Special"
 }

@@ -96,6 +96,9 @@ class Occurrence {
     this.isOverride = false,
     this.source = OccurrenceSource.event,
     this.colourHex,
+    this.iconKey,
+    this.countdown = false,
+    this.tradition = false,
   });
 
   factory Occurrence.fromJson(Map<String, dynamic> json) => Occurrence(
@@ -124,6 +127,10 @@ class Occurrence {
     isOverride: json['is_override'] as bool? ?? false,
     source: OccurrenceSource.parse(json['source'] as String?),
     colourHex: json['colour_hex'] as String?,
+    // Absent on servers before the rituals (specs/27): plain events.
+    iconKey: json['icon_key'] as String?,
+    countdown: json['countdown'] as bool? ?? false,
+    tradition: json['tradition'] as bool? ?? false,
   );
 
   final String id;
@@ -164,6 +171,15 @@ class Occurrence {
   /// The imported calendar's colour; null for events, which take their members' colour.
   final String? colourHex;
 
+  /// The event's content icon (specs/27), a Fluent Emoji key; null for none.
+  final String? iconKey;
+
+  /// "Darauf freuen wir uns": counted down to (specs/27 "Vorfreude").
+  final bool countdown;
+
+  /// One of the family's traditions (specs/27 "Familientraditionen").
+  final bool tradition;
+
   bool get isImported => source == OccurrenceSource.imported;
   bool get isPresence => kind == EventKind.presence;
   bool get isTentative => status == EventStatus.tentative;
@@ -201,6 +217,10 @@ class CalendarEvent {
     this.uid,
     this.sequence = 0,
     this.attendeeIds = const [],
+    this.iconKey,
+    this.countdown = false,
+    this.tradition = false,
+    this.traditionMeal,
   });
 
   factory CalendarEvent.fromJson(Map<String, dynamic> json) => CalendarEvent(
@@ -227,6 +247,14 @@ class CalendarEvent {
     uid: json['uid'] as String?,
     sequence: json['sequence'] as int? ?? 0,
     attendeeIds: ((json['attendee_ids'] as List?) ?? const []).cast<String>(),
+    iconKey: json['icon_key'] as String?,
+    countdown: json['countdown'] as bool? ?? false,
+    tradition: json['tradition'] as bool? ?? false,
+    traditionMeal: json['tradition_meal'] is Map
+        ? TraditionMeal.fromJson(
+            (json['tradition_meal'] as Map).cast<String, dynamic>(),
+          )
+        : null,
   );
 
   /// Null for a new event: the server generates the id.
@@ -268,6 +296,18 @@ class CalendarEvent {
   /// Replaces the attendee set on save; order is the household's member order.
   final List<String> attendeeIds;
 
+  /// A content icon (specs/27); null for none.
+  final String? iconKey;
+
+  /// "Darauf freuen wir uns": counted down to on the wall and the kid tablet.
+  final bool countdown;
+
+  /// A family tradition: always on the board, with a ribbon (specs/27).
+  final bool tradition;
+
+  /// The meal a tradition carries (Pizza-Freitag); only with [tradition].
+  final TraditionMeal? traditionMeal;
+
   bool get isRecurring => rrule != null || rdates.isNotEmpty;
 
   Map<String, dynamic> toJson() => {
@@ -290,6 +330,42 @@ class CalendarEvent {
     'rdates': [for (final d in rdates) isoDate(d)],
     'exdates': [for (final d in exdates) isoDate(d)],
     'attendee_ids': attendeeIds,
+    // A server before the rituals ignores these keys (specs/27).
+    'icon_key': iconKey ?? '',
+    'countdown': countdown,
+    'tradition': tradition,
+    if (tradition) 'tradition_meal': traditionMeal?.toJson(),
+  };
+}
+
+/// The meal a tradition carries: a slot and a recipe or a few words.
+class TraditionMeal {
+  const TraditionMeal({
+    required this.slot,
+    this.recipeId,
+    this.freeText,
+    this.title,
+  });
+
+  factory TraditionMeal.fromJson(Map<String, dynamic> json) => TraditionMeal(
+    slot: json['slot'] as String,
+    recipeId: json['recipe_id'] as String?,
+    freeText: json['free_text'] as String?,
+    title: json['title'] as String?,
+  );
+
+  /// `breakfast`, `lunch`, `dinner` or `snack`.
+  final String slot;
+  final String? recipeId;
+  final String? freeText;
+
+  /// The recipe's title or the words, as the server resolves them.
+  final String? title;
+
+  Map<String, dynamic> toJson() => {
+    'slot': slot,
+    if (recipeId != null) 'recipe_id': recipeId,
+    if (recipeId == null) 'free_text': freeText,
   };
 }
 

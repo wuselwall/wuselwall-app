@@ -213,6 +213,7 @@ class FakeIdentityRepository implements IdentityRepository {
     String? colorHex,
     bool? isChild,
     String? avatarKey,
+    String? birthday,
   }) async {
     memberUpdates.add((
       id: profileId,
@@ -236,6 +237,9 @@ class FakeIdentityRepository implements IdentityRepository {
         avatarKey: avatarKey == null
             ? m.avatarKey
             : (avatarKey.isEmpty ? null : avatarKey),
+        birthday: birthday == null
+            ? m.birthday
+            : (birthday.isEmpty ? null : DateTime.parse(birthday)),
       );
     }
     return const Ok(null);
@@ -284,6 +288,7 @@ class FakeIdentityRepository implements IdentityRepository {
         sortOrder: m.sortOrder,
         hasAccount: m.hasAccount,
         avatarKey: m.avatarKey,
+        birthday: m.birthday,
       );
     }
     return const Ok(null);

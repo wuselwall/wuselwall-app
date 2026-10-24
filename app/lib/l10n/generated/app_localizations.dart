@@ -9010,6 +9010,252 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hide what Wusel says'**
   String get wuselHideLine;
+
+  /// No description provided for @memberBirthday.
+  ///
+  /// In en, this message translates to:
+  /// **'Birthday'**
+  String get memberBirthday;
+
+  /// No description provided for @memberBirthdayHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Shown on the wall on the day, and counted down to before it.'**
+  String get memberBirthdayHelp;
+
+  /// No description provided for @memberBirthdayPick.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a date'**
+  String get memberBirthdayPick;
+
+  /// No description provided for @memberBirthdayClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove the birthday'**
+  String get memberBirthdayClear;
+
+  /// No description provided for @countdownBirthdayOf.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}\'s birthday'**
+  String countdownBirthdayOf(String name);
+
+  /// No description provided for @countdownHomecoming.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} comes home'**
+  String countdownHomecoming(String name);
+
+  /// Countdown for children and the wall: nights until it happens (specs/27).
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 more sleep} other{{count} more sleeps}}'**
+  String countdownSleeps(int count);
+
+  /// No description provided for @countdownDaysLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 more day} other{{count} more days}}'**
+  String countdownDaysLeft(int count);
+
+  /// No description provided for @countdownInDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{in 1 day} other{in {count} days}}'**
+  String countdownInDays(int count);
+
+  /// No description provided for @countdownTomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow!'**
+  String get countdownTomorrow;
+
+  /// No description provided for @countdownToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today!'**
+  String get countdownToday;
+
+  /// No description provided for @kidLookingForward.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking forward to'**
+  String get kidLookingForward;
+
+  /// No description provided for @todayLookingForward.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking forward'**
+  String get todayLookingForward;
+
+  /// No description provided for @eventIconNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No picture'**
+  String get eventIconNone;
+
+  /// No description provided for @eventIconLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Picture'**
+  String get eventIconLabel;
+
+  /// No description provided for @eventCountdownTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We are looking forward to it'**
+  String get eventCountdownTitle;
+
+  /// No description provided for @eventCountdownHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Counts down on the wall and on the children\'s tablet.'**
+  String get eventCountdownHelp;
+
+  /// No description provided for @eventTraditionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Family tradition'**
+  String get eventTraditionTitle;
+
+  /// No description provided for @eventTraditionHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Something the family does again and again. Always on the wall, with a ribbon.'**
+  String get eventTraditionHelp;
+
+  /// No description provided for @eventTraditionMeal.
+  ///
+  /// In en, this message translates to:
+  /// **'With a meal'**
+  String get eventTraditionMeal;
+
+  /// No description provided for @eventTraditionMealHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. pizza'**
+  String get eventTraditionMealHint;
+
+  /// No description provided for @eventIcon_cake.
+  ///
+  /// In en, this message translates to:
+  /// **'Birthday cake'**
+  String get eventIcon_cake;
+
+  /// No description provided for @eventIcon_game_die.
+  ///
+  /// In en, this message translates to:
+  /// **'Game'**
+  String get eventIcon_game_die;
+
+  /// No description provided for @eventIcon_pizza.
+  ///
+  /// In en, this message translates to:
+  /// **'Pizza'**
+  String get eventIcon_pizza;
+
+  /// No description provided for @eventIcon_cinema.
+  ///
+  /// In en, this message translates to:
+  /// **'Film'**
+  String get eventIcon_cinema;
+
+  /// No description provided for @eventIcon_croissant.
+  ///
+  /// In en, this message translates to:
+  /// **'Breakfast'**
+  String get eventIcon_croissant;
+
+  /// No description provided for @eventIcon_book.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading'**
+  String get eventIcon_book;
+
+  /// No description provided for @eventIcon_hiking.
+  ///
+  /// In en, this message translates to:
+  /// **'Walk'**
+  String get eventIcon_hiking;
+
+  /// No description provided for @eventIcon_beach.
+  ///
+  /// In en, this message translates to:
+  /// **'Holidays'**
+  String get eventIcon_beach;
+
+  /// No description provided for @eventIcon_plane.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip'**
+  String get eventIcon_plane;
+
+  /// No description provided for @eventIcon_zoo.
+  ///
+  /// In en, this message translates to:
+  /// **'Zoo'**
+  String get eventIcon_zoo;
+
+  /// No description provided for @eventIcon_tent.
+  ///
+  /// In en, this message translates to:
+  /// **'Camping'**
+  String get eventIcon_tent;
+
+  /// No description provided for @eventIcon_football.
+  ///
+  /// In en, this message translates to:
+  /// **'Sport'**
+  String get eventIcon_football;
+
+  /// No description provided for @eventIcon_music.
+  ///
+  /// In en, this message translates to:
+  /// **'Music'**
+  String get eventIcon_music;
+
+  /// No description provided for @eventIcon_gift.
+  ///
+  /// In en, this message translates to:
+  /// **'Present'**
+  String get eventIcon_gift;
+
+  /// No description provided for @eventIcon_balloon.
+  ///
+  /// In en, this message translates to:
+  /// **'Party'**
+  String get eventIcon_balloon;
+
+  /// No description provided for @eventIcon_backpack.
+  ///
+  /// In en, this message translates to:
+  /// **'School'**
+  String get eventIcon_backpack;
+
+  /// No description provided for @eventIcon_swim.
+  ///
+  /// In en, this message translates to:
+  /// **'Swimming'**
+  String get eventIcon_swim;
+
+  /// No description provided for @eventIcon_ferris.
+  ///
+  /// In en, this message translates to:
+  /// **'Fair'**
+  String get eventIcon_ferris;
+
+  /// No description provided for @eventIcon_house.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get eventIcon_house;
+
+  /// No description provided for @eventIcon_star.
+  ///
+  /// In en, this message translates to:
+  /// **'Special'**
+  String get eventIcon_star;
 }
 
 class _AppLocalizationsDelegate

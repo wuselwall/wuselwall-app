@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/night.dart';
 import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
+import 'package:wuselwall/features/rituals/application/ritual_providers.dart';
 import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
 
 /// The seasons of the northern hemisphere, by month (specs/26 "Seasons and occasions").
@@ -249,16 +250,9 @@ final ambienceProvider = Provider.autoDispose<Ambience>((ref) {
     now,
     night: night,
     day: day,
-    ferien: ref.watch(ferienEdgeProvider),
-    birthdays: ref.watch(birthdaysTodayProvider),
+    ferien: ref.watch(ferienEdgeTodayProvider),
+    birthdays: [
+      for (final m in ref.watch(birthdaysTodayMembersProvider)) m.color,
+    ],
   );
 });
-
-/// Whether today is the first or last day of the school holidays. Filled in by the
-/// board's data where it knows the holidays; null otherwise.
-final ferienEdgeProvider = Provider.autoDispose<FerienEdge?>((ref) => null);
-
-/// The stored colours of the members whose birthday is today.
-final birthdaysTodayProvider = Provider.autoDispose<List<Color>>(
-  (ref) => const [],
-);
