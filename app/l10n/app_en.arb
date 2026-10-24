@@ -2780,5 +2780,10 @@
       }
     }
   },
-  "schoolScanFile": "Choose a file (PDF or picture)"
+  "schoolScanFile": "Choose a file (PDF or picture)",
+  "schoolImportPhotoUnavailable": "Your server can't read photos yet.",
+  "settingsVersions": "Versions",
+  "settingsVersionsLine": "App {app} · Server {server} · API {api}",
+  "settingsVersionUnknown": "unknown",
+  "@settingsVersionsLine": {"placeholders": {"app": {"type": "String"}, "server": {"type": "String"}, "api": {"type": "String"}}}
 }

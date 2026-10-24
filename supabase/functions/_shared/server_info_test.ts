@@ -4,6 +4,8 @@ import {
   discoveryDocument,
   publicUrl,
   publishableKey,
+  runtimeFeatures,
+  serverVersion,
 } from "./server_info.ts";
 
 const env = (vars: Record<string, string>) => (name: string) => vars[name];
@@ -47,7 +49,10 @@ Deno.test("publicUrl takes hosted Supabase's public SUPABASE_URL", () => {
 });
 
 Deno.test("publicUrl refuses a path or plain http", () => {
-  assertEquals(publicUrl(env({ WW_PUBLIC_URL: "http://example.org" })), undefined);
+  assertEquals(
+    publicUrl(env({ WW_PUBLIC_URL: "http://example.org" })),
+    undefined,
+  );
   assertEquals(
     publicUrl(env({ WW_PUBLIC_URL: "https://example.org/supabase" })),
     undefined,
@@ -66,14 +71,21 @@ Deno.test("publishableKey reads the default publishable key", () => {
 
 Deno.test("publishableKey never returns a secret key", () => {
   assertEquals(
-    publishableKey(env({ SUPABASE_PUBLISHABLE_KEYS: '{"default":"sb_secret_x"}' })),
+    publishableKey(
+      env({ SUPABASE_PUBLISHABLE_KEYS: '{"default":"sb_secret_x"}' }),
+    ),
     undefined,
   );
 });
 
 Deno.test("publishableKey falls back to the legacy anon key", () => {
   assertEquals(
-    publishableKey(env({ SUPABASE_PUBLISHABLE_KEYS: '{"default":""}', SUPABASE_ANON_KEY: "eyJ.anon" })),
+    publishableKey(
+      env({
+        SUPABASE_PUBLISHABLE_KEYS: '{"default":""}',
+        SUPABASE_ANON_KEY: "eyJ.anon",
+      }),
+    ),
     "eyJ.anon",
   );
   assertEquals(publishableKey(env({})), undefined);
@@ -87,7 +99,11 @@ Deno.test("checkRow refuses a half-migrated answer", () => {
 });
 
 Deno.test("discoveryDocument shapes the row", () => {
-  const doc = discoveryDocument(row, "sb_publishable_abc", "https://api.example.org");
+  const doc = discoveryDocument(
+    row,
+    "sb_publishable_abc",
+    "https://api.example.org",
+  );
   assertEquals(doc, {
     wuselwall: 1,
     supabase_url: "https://api.example.org",
@@ -103,4 +119,30 @@ Deno.test("discoveryDocument shapes the row", () => {
 Deno.test("discoveryDocument leaves the address out when it is unknown", () => {
   const doc = discoveryDocument(row, "k", undefined);
   assertEquals("supabase_url" in doc, false);
+});
+
+Deno.test("the stack adds the scan where its OCR service is configured", () => {
+  assertEquals(runtimeFeatures(env({ OCR_URL: "http://ocr:9003/ocr" })), [
+    "timetable-scan",
+  ]);
+  assertEquals(runtimeFeatures(env({ OCR_URL: " " })), []);
+  assertEquals(runtimeFeatures(env({})), []);
+  const doc = discoveryDocument(row, "k", undefined, {
+    features: ["timetable-scan", "calendar"],
+  });
+  assertEquals(doc.features, ["calendar", "shopping", "timetable-scan"]);
+});
+
+Deno.test("the release version is announced when it is one", () => {
+  assertEquals(serverVersion(env({ WW_SERVER_VERSION: "0.3.0" })), "0.3.0");
+  assertEquals(serverVersion(env({ WW_SERVER_VERSION: "dev" })), undefined);
+  assertEquals(serverVersion(env({})), undefined);
+  assertEquals(
+    discoveryDocument(row, "k", undefined, { version: "0.3.0" }).server_version,
+    "0.3.0",
+  );
+  assertEquals(
+    "server_version" in discoveryDocument(row, "k", undefined),
+    false,
+  );
 });

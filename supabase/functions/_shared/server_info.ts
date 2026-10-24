@@ -28,7 +28,30 @@ export type DiscoveryDocument = {
   /** Email codes and passwords, on every server. Passkeys are decided by the app (only builds that name their own server), never by a server. */
   sign_in: { password: true };
   features: string[];
+  /** The server release this stack was installed or updated from ("0.2.0"); absent on a
+   * stack run from a checkout. Shown in the app's settings next to the app's own version. */
+  server_version?: string;
 };
+
+/** What the running stack adds to the database's features: abilities that depend on its
+ * configuration, not on its migrations. `timetable-scan` needs the optional OCR service
+ * (OCR_URL, specs/24): an app hides the scan where it is missing. */
+export function runtimeFeatures(
+  env: (name: string) => string | undefined,
+): string[] {
+  const features: string[] = [];
+  if (env("OCR_URL")?.trim()) features.push("timetable-scan");
+  return features;
+}
+
+/** The release in WW_SERVER_VERSION, which `wuselwall install` and `update` write into the
+ * stack's settings; undefined when unset or not a version. */
+export function serverVersion(
+  env: (name: string) => string | undefined,
+): string | undefined {
+  const value = env("WW_SERVER_VERSION")?.trim();
+  return value && /^\d+\.\d+\.\d+$/.test(value) ? value : undefined;
+}
 
 /**
  * The server's public address: WW_PUBLIC_URL if the operator set one, else
@@ -36,7 +59,9 @@ export type DiscoveryDocument = {
  * (hosted Supabase). The compose stack's SUPABASE_URL is the internal gateway
  * (http://api-gw:8000) and must never reach a client.
  */
-export function publicUrl(env: (name: string) => string | undefined): string | undefined {
+export function publicUrl(
+  env: (name: string) => string | undefined,
+): string | undefined {
   for (const name of ["WW_PUBLIC_URL", "SUPABASE_PUBLIC_URL", "SUPABASE_URL"]) {
     const value = env(name)?.trim().replace(/\/+$/, "");
     if (value && /^https:\/\/[^/]+$/.test(value)) return value;
@@ -48,13 +73,17 @@ export function publicUrl(env: (name: string) => string | undefined): string | u
  * The key the apps use: the publishable key (opaque, `sb_publishable_…`), or the legacy
  * anon JWT where a stack has no publishable key. Never a secret or service-role key.
  */
-export function publishableKey(env: (name: string) => string | undefined): string | undefined {
+export function publishableKey(
+  env: (name: string) => string | undefined,
+): string | undefined {
   const keys = env("SUPABASE_PUBLISHABLE_KEYS");
   if (keys) {
     try {
       const parsed = JSON.parse(keys) as Record<string, unknown>;
       const key = parsed["default"] ?? Object.values(parsed)[0];
-      if (typeof key === "string" && key.startsWith("sb_publishable_")) return key;
+      if (typeof key === "string" && key.startsWith("sb_publishable_")) {
+        return key;
+      }
     } catch {
       // Malformed: fall through to the legacy key.
     }
@@ -72,7 +101,8 @@ export function checkRow(row: unknown): ServerInfoRow {
     typeof r.api_version !== "number" || !Number.isInteger(r.api_version) ||
     typeof r.min_app_version !== "string" ||
     typeof r.household_creation !== "string" ||
-    !Array.isArray(r.features) || !r.features.every((f) => typeof f === "string")
+    !Array.isArray(r.features) ||
+    !r.features.every((f) => typeof f === "string")
   ) {
     throw new Error("api.server_info() returned an unexpected shape");
   }
@@ -83,6 +113,7 @@ export function discoveryDocument(
   row: ServerInfoRow,
   key: string,
   url: string | undefined,
+  stack: { features?: string[]; version?: string } = {},
 ): DiscoveryDocument {
   return {
     wuselwall: DISCOVERY_FORMAT,
@@ -92,6 +123,7 @@ export function discoveryDocument(
     min_app_version: row.min_app_version,
     household_creation: row.household_creation,
     sign_in: { password: true },
-    features: row.features,
+    features: [...new Set([...row.features, ...(stack.features ?? [])])],
+    ...(stack.version ? { server_version: stack.version } : {}),
   };
 }
