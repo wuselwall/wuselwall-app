@@ -210,7 +210,10 @@ select is((select count(*)::int from wr, jsonb_array_elements(r -> 'members') m,
             where jsonb_typeof(kv.value) = 'number'), 0,
   'no member''s line carries a number another line could be compared with');
 select is((select m -> 'highlight' ->> 'kind' from wr, jsonb_array_elements(r -> 'members') m
-            where m ->> 'profile_id' = pg_temp.id('emma')::text), 'wish', 'Emma''s wish was on the table');
+            where m ->> 'profile_id' = pg_temp.id('emma')::text),
+  -- A wish counts once its day has come (migration 20261025110000).
+  case when (now() at time zone 'Europe/Berlin')::date >= date '2026-10-29' then 'wish' else 'here' end,
+  'Emma''s wish was on the table, once its day had come');
 select is((select jsonb_typeof(r -> 'chores_done') from wr), 'number', 'the family''s chores are one number, the family''s');
 select is((select count(*)::int from wr, jsonb_array_elements(r -> 'meals') x where (x ->> 'wished_by_profile_id') is not null), 1,
   'the wished meal is marked');
