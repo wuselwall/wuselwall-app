@@ -65,6 +65,8 @@ class _ExternalCalendarsPageState extends ConsumerState<ExternalCalendarsPage> {
         onRetry: () => ref.invalidate(externalCalendarsProvider),
         data: (list) => list.isEmpty
             ? EmptyView(
+                // A settings page: no Wusel (specs/25 "Where Wusel never appears").
+                illustrated: false,
                 message: canManage
                     ? l10n.extCalEmpty
                     : '${l10n.extCalEmpty}\n\n${l10n.extCalReadOnlyHint}',

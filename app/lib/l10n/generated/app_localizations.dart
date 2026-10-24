@@ -8624,7 +8624,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingMemberWuselOutfitHelp.
   ///
   /// In en, this message translates to:
-  /// **'What Wusel wears when it is talking to you. Every outfit is there from the start.'**
+  /// **'What Wusel wears when talking to you. Every outfit is there from the start.'**
   String get settingMemberWuselOutfitHelp;
 
   /// No description provided for @settingDeviceWuselTitle.
@@ -9107,6 +9107,12 @@ abstract class AppLocalizations {
   /// **'Your wish is on its way.'**
   String get wuselRewardSent2;
 
+  /// No description provided for @wuselRewardSent3.
+  ///
+  /// In en, this message translates to:
+  /// **'Wish sent! Now a grown-up takes a look.'**
+  String get wuselRewardSent3;
+
   /// No description provided for @wuselBadge.
   ///
   /// In en, this message translates to:
@@ -9154,6 +9160,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All ticked off, {name}. Thanks!'**
   String wuselWallMemberDone2(String name);
+
+  /// No description provided for @wuselWallMemberDone3.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}\'s tasks are all done today!'**
+  String wuselWallMemberDone3(String name);
 
   /// No description provided for @wuselSetupDone.
   ///

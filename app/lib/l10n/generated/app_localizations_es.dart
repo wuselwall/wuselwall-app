@@ -5397,6 +5397,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get wuselRewardSent2 => 'Tu deseo va de camino.';
 
   @override
+  String get wuselRewardSent3 => '¡Deseo enviado! Un adulto lo mirará.';
+
+  @override
   String wuselBadge(String badge) {
     return '¡Una insignia nueva: $badge!';
   }
@@ -5427,7 +5430,12 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get wuselSetupDone => 'Todo listo. ¡Bienvenidos a casa!';
+  String wuselWallMemberDone3(String name) {
+    return '¡Las tareas de $name están todas hechas!';
+  }
+
+  @override
+  String get wuselSetupDone => 'Todo listo. ¡Os damos la bienvenida a casa!';
 
   @override
   String get wuselHideLine => 'Ocultar lo que dice Wusel';

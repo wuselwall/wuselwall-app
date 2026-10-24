@@ -5084,7 +5084,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get settingMemberWuselOutfitHelp =>
-      'Was Wusel anhat, wenn es mit dir spricht. Alle Sachen sind von Anfang an da.';
+      'Was Wusel im Gespräch mit dir anhat. Alle Sachen sind von Anfang an da.';
 
   @override
   String get settingDeviceWuselTitle => 'Wusel auf diesem Gerät';
@@ -5382,6 +5382,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get wuselRewardSent2 => 'Dein Wunsch ist unterwegs.';
 
   @override
+  String get wuselRewardSent3 =>
+      'Wunsch verschickt! Ein Erwachsener schaut ihn sich an.';
+
+  @override
   String wuselBadge(String badge) {
     return 'Ein neues Abzeichen: $badge!';
   }
@@ -5409,6 +5413,11 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String wuselWallMemberDone2(String name) {
     return 'Alles abgehakt, $name. Danke!';
+  }
+
+  @override
+  String wuselWallMemberDone3(String name) {
+    return 'Alle Aufgaben von $name sind erledigt!';
   }
 
   @override

@@ -69,6 +69,8 @@ class ShortcutsPage extends ConsumerWidget {
           );
           if (visible.isEmpty && !kiosk) {
             return EmptyView(
+              // A settings page: no Wusel (specs/25 "Where Wusel never appears").
+              illustrated: false,
               title: l10n.shortcutEmpty,
               message: l10n.shortcutIntro,
               actions: [

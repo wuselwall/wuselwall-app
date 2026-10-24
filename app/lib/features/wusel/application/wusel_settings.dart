@@ -74,28 +74,29 @@ LighterDay resolveLighterDay({
         deviceId: device,
       )?.value;
 
-  WuselPresence presence(Object? v) => switch (v) {
+  WuselPresence? presence(Object? v) => switch (v) {
     'lively' => WuselPresence.lively,
     'quiet' => WuselPresence.quiet,
     'off' => WuselPresence.off,
-    _ => WuselPresence.lively,
+    _ => null,
   };
 
-  // The person's own setting wins while they are at the device (specs/25).
-  final memberValue = acting == null
+  // The person's own choice wins while they are at the device (specs/25); `auto` (or a
+  // server without the key) is no choice. Then the wall follows its own setting, and
+  // a phone or the kid register the default: children lively, adults quiet.
+  final memberChoice = acting == null
       ? null
-      : read('member.wusel', profileId: acting.id);
+      : presence(read('member.wusel', profileId: acting.id));
   final WuselPresence wusel;
-  if (memberValue != null && memberValue != 'auto') {
-    wusel = presence(memberValue);
-  } else if (acting != null && memberValue == 'auto') {
-    wusel = acting.isChild ? WuselPresence.lively : WuselPresence.quiet;
-  } else if (register == UiRegister.adult) {
-    wusel = acting?.isChild ?? false
-        ? WuselPresence.lively
-        : WuselPresence.quiet;
+  if (memberChoice != null) {
+    wusel = memberChoice;
+  } else if (register == UiRegister.kiosk) {
+    wusel =
+        presence(read('device.wusel', device: deviceId)) ??
+        WuselPresence.lively;
   } else {
-    wusel = presence(read('device.wusel', device: deviceId) ?? 'lively');
+    final child = acting?.isChild ?? register == UiRegister.kid;
+    wusel = child ? WuselPresence.lively : WuselPresence.quiet;
   }
 
   final outfit = acting == null

@@ -5113,7 +5113,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get settingMemberWuselOutfitHelp =>
-      'Ce que Wusel porte quand il te parle. Toutes les tenues sont là dès le début.';
+      'Ce que Wusel porte en te parlant. Toutes les tenues sont là dès le début.';
 
   @override
   String get settingDeviceWuselTitle => 'Wusel sur cet appareil';
@@ -5410,6 +5410,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get wuselRewardSent2 => 'Ta demande est partie.';
 
   @override
+  String get wuselRewardSent3 => 'Souhait envoyé ! Un adulte va le regarder.';
+
+  @override
   String wuselBadge(String badge) {
     return 'Un nouveau badge : $badge !';
   }
@@ -5437,6 +5440,11 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String wuselWallMemberDone2(String name) {
     return 'Tout est coché, $name. Merci !';
+  }
+
+  @override
+  String wuselWallMemberDone3(String name) {
+    return 'Les tâches de $name sont toutes faites !';
   }
 
   @override

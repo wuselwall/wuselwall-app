@@ -22,7 +22,14 @@ bool get _underTest =>
 
 abstract final class WuselLines {
   static final _last = <WuselMoment, int>{};
-  static final _random = math.Random();
+
+  /// Null takes the first variant every time: tests need the same words on every run.
+  static math.Random? _random = _underTest ? null : math.Random();
+
+  /// Lets a test rotate the lines with a seeded source; null goes back to the first
+  /// variant.
+  @visibleForTesting
+  static set random(math.Random? random) => _random = random;
 
   /// A variant of [moment] other than the one shown last on this device.
   static String pick(
@@ -30,10 +37,11 @@ abstract final class WuselLines {
     WuselMoment moment, {
     String name = '',
   }) {
-    final variants = _variants(l10n, moment, name);
-    // Screenshots and tests need the same words every time.
-    if (StillMode.enabled || _underTest) return variants.first;
-    var i = _random.nextInt(variants.length);
+    final variants = WuselLines.variants(l10n, moment, name: name);
+    final random = _random;
+    // Screenshots need the same words every time.
+    if (StillMode.enabled || random == null) return variants.first;
+    var i = random.nextInt(variants.length);
     if (variants.length > 1 && i == _last[moment]) {
       i = (i + 1) % variants.length;
     }
@@ -49,18 +57,20 @@ abstract final class WuselLines {
     required int seed,
     String name = '',
   }) {
-    final variants = _variants(l10n, moment, name);
+    final variants = WuselLines.variants(l10n, moment, name: name);
     return variants[seed.abs() % variants.length];
   }
 
   @visibleForTesting
   static void reset() => _last.clear();
 
-  static List<String> _variants(
+  /// Every variant of [moment], in catalogue order.
+  @visibleForTesting
+  static List<String> variants(
     AppLocalizations l10n,
-    WuselMoment moment,
-    String name,
-  ) => switch (moment) {
+    WuselMoment moment, {
+    String name = '',
+  }) => switch (moment) {
     WuselMoment.helloMorning => [
       l10n.wuselHelloMorning1(name),
       l10n.wuselHelloMorning2(name),
@@ -82,7 +92,11 @@ abstract final class WuselLines {
       l10n.wuselAllDone3,
       l10n.wuselAllDone4,
     ],
-    WuselMoment.rewardSent => [l10n.wuselRewardSent1, l10n.wuselRewardSent2],
+    WuselMoment.rewardSent => [
+      l10n.wuselRewardSent1,
+      l10n.wuselRewardSent2,
+      l10n.wuselRewardSent3,
+    ],
     WuselMoment.wallMorning => [
       l10n.wuselWallMorning1,
       l10n.wuselWallMorning2,
@@ -91,6 +105,7 @@ abstract final class WuselLines {
     WuselMoment.wallMemberDone => [
       l10n.wuselWallMemberDone1(name),
       l10n.wuselWallMemberDone2(name),
+      l10n.wuselWallMemberDone3(name),
     ],
   };
 
