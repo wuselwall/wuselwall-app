@@ -32,14 +32,14 @@ three guide pages that promised more than the app does.
 
 **Decisions opened as issues** (two or three parts agree on each):
 
-1. The second parent's first minutes: land on what is theirs, keep the invitation through the
+1. #141 The second parent's first minutes: land on what is theirs, keep the invitation through the
    install, no account wall before value.
-2. Fast capture: a quick-add on Today, then home-screen widgets for Today and shopping.
-3. Notifications as two daily digests, with immediate alerts only for what concerns the reader.
-4. Setting up the wall without typing on it.
-5. Kids' routines: picture checklists for morning and evening, one completion, no per-step points.
-6. Events from a school letter or a forwarded mail, reviewed before saving (extends spec 24).
-7. Two homes: a per-child week A/B pattern.
+2. #142 Fast capture: a quick-add on Today, then home-screen widgets for Today and shopping.
+3. #143 Notifications as two daily digests, with immediate alerts only for what concerns the reader.
+4. #144 Setting up the wall without typing on it.
+5. #145 Kids' routines: picture checklists for morning and evening, one completion, no per-step points.
+6. #146 Events from a school letter or a forwarded mail, reviewed before saving (extends spec 24).
+7. #147 Two homes: a per-child week A/B pattern.
 
 **Declined because they conflict with the principles** (market-wishes.md section on
 conflicts): a pocket-money ledger tied to points, a pet that must be fed, leaderboards,
