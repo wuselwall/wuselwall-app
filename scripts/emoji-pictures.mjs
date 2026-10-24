@@ -12,6 +12,7 @@
 //   tasks     the task and reward icons, stored with the tasks; the tasks UI lists them.
 //   extras    a few pictures shown next to text.
 //   events    the icons of events, countdowns and traditions (event.icon_key, specs/27).
+//   meals     dishes: recipes, meal suggestions and meal wishes (meal_wish.icon_key, specs/27).
 //   scenes    the modules' header illustrations (specs/26).
 //   avatars   the pictures a member can pick instead of their initial (profile.avatar_key);
 //             app/lib/features/identity/domain/avatars.dart lists them.
@@ -94,6 +95,32 @@ const sets = {
     balloon: 'Balloon/Flat/balloon_flat.svg', backpack: 'Backpack/Flat/backpack_flat.svg',
     swim: 'Water wave/Flat/water_wave_flat.svg', ferris: 'Ferris wheel/Flat/ferris_wheel_flat.svg',
     house: 'House/Flat/house_flat.svg', star: 'Star/Flat/star_flat.svg',
+  },
+  // Dishes: the pictures of recipes, meal suggestions and meal wishes (specs/27
+  // "Wunschessen"); meal_wish.icon_key, and the icon_key app.meal_icon_for() picks from a
+  // title. app/lib/features/rituals/domain/meal_icons.dart lists them.
+  meals: {
+    pizza: 'Pizza/Flat/pizza_flat.svg', pasta: 'Spaghetti/Flat/spaghetti_flat.svg',
+    pancakes: 'Pancakes/Flat/pancakes_flat.svg', waffle: 'Waffle/Flat/waffle_flat.svg',
+    burger: 'Hamburger/Flat/hamburger_flat.svg', fries: 'French fries/Flat/french_fries_flat.svg',
+    hotdog: 'Hot dog/Flat/hot_dog_flat.svg', sandwich: 'Sandwich/Flat/sandwich_flat.svg',
+    taco: 'Taco/Flat/taco_flat.svg', burrito: 'Burrito/Flat/burrito_flat.svg',
+    kebab: 'Stuffed flatbread/Flat/stuffed_flatbread_flat.svg',
+    curry: 'Curry rice/Flat/curry_rice_flat.svg', rice: 'Cooked rice/Flat/cooked_rice_flat.svg',
+    noodles: 'Steaming bowl/Flat/steaming_bowl_flat.svg', soup: 'Pot of food/Flat/pot_of_food_flat.svg',
+    paella: 'Shallow pan of food/Flat/shallow_pan_of_food_flat.svg',
+    salad: 'Green salad/Flat/green_salad_flat.svg', sushi: 'Sushi/Flat/sushi_flat.svg',
+    dumpling: 'Dumpling/Flat/dumpling_flat.svg', chicken: 'Poultry leg/Flat/poultry_leg_flat.svg',
+    fish: 'Fish/Flat/fish_flat.svg', meat: 'Cut of meat/Flat/cut_of_meat_flat.svg',
+    egg: 'Cooking/Flat/cooking_flat.svg', falafel: 'Falafel/Flat/falafel_flat.svg',
+    fondue: 'Fondue/Flat/fondue_flat.svg', pie: 'Pie/Flat/pie_flat.svg',
+    cake: 'Shortcake/Flat/shortcake_flat.svg', ice_cream: 'Ice cream/Flat/ice_cream_flat.svg',
+    bread: 'Bread/Flat/bread_flat.svg', pretzel: 'Pretzel/Flat/pretzel_flat.svg',
+    croissant: 'Croissant/Flat/croissant_flat.svg',
+    potato: 'Roasted sweet potato/Flat/roasted_sweet_potato_flat.svg',
+    cheese: 'Cheese wedge/Flat/cheese_wedge_flat.svg',
+    porridge: 'Bowl with spoon/Flat/bowl_with_spoon_flat.svg',
+    vegetables: 'Broccoli/Flat/broccoli_flat.svg',
   },
   // The modules' header illustrations (specs/26 "Module bands").
   scenes: {
