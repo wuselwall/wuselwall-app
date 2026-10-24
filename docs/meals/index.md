@@ -11,6 +11,7 @@ Die Woche zeigt jeden Tag mit **Frühstück**, **Mittagessen**, **Abendessen** u
 - Eine Mahlzeit ist ein **Gericht oder eine Notiz**, etwa „Pizza“ oder „Reste“, oder ein **Rezept**.
 - Dazu legst du die **Portionen**, wer **kocht**, eine **Uhrzeit** und **Gäste** fest.
 - Eine Mahlzeit verschiebst du, indem du sie gedrückt hältst und auf einen anderen Tag ziehst.
+- Am Tag einer [Familientradition](/guide/rituals#traditions) mit Essen steht ein Vorschlag im Tag, etwa „Pizza“, solange die Mahlzeit frei ist. Ein Tipp plant es ein.
 
 ## Wünsche {#wishes}
 

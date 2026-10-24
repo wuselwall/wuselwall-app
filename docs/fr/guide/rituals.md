@@ -15,9 +15,11 @@ Pour tous :
 
 L’anniversaire se saisit sur la page de la personne : **Paramètres → Membres**, touchez la personne, **Anniversaire → Choisir une date** (voir [Modifier un membre](/fr/settings/members-devices#edit-a-member)). Chacun peut saisir le sien ; les parents saisissent ceux des autres.
 
-Avant le jour, un compte à rebours apparaît (voir [Comptes à rebours](#countdowns)). Le jour même, des fanions à la couleur de la personne ornent le mur, Wusel porte un chapeau de fête, **Aujourd’hui** affiche une carte d’anniversaire, et sur la tablette des enfants Wusel fait la fête pour l’enfant dont c’est l’anniversaire.
+Avant le jour, un compte à rebours apparaît (voir [Comptes à rebours](#countdowns)), avec l’âge que la personne va avoir : « Les 9 ans de Emma · encore 3 dodos ». Le jour même, des fanions à la couleur de la personne ornent le mur, Wusel porte un chapeau de fête, **Aujourd’hui** affiche une carte d’anniversaire, et sur la tablette des enfants Wusel fait la fête pour l’enfant dont c’est l’anniversaire.
 
 Grands-parents et amis restent des événements annuels, comme avant ; vous pouvez les marquer pour un compte à rebours.
+
+Dans un [abonnement au calendrier familial](/fr/calendar/feeds), chaque anniversaire est un événement annuel sur toute la journée, sans l’âge. Quand une personne **ne fait plus partie du foyer**, son anniversaire est effacé.
 
 ## Comptes à rebours {#countdowns}
 
@@ -36,7 +38,7 @@ Les enfants et le mur comptent en nuits jusqu’à une semaine avant (« encore 
 
 ## Traditions familiales {#traditions}
 
-Soirée jeux, pizza du vendredi, petit-déjeuner du dimanche : ce que votre famille fait encore et encore, créez-le comme événement répété et activez **Tradition familiale** dans l’éditeur. Une tradition est **toujours sur le mur**, même sans **Afficher sur l’écran de la cuisine**, avec un ruban jaune citron et son **image**. **Avec un repas** note le plat qui l’accompagne, au déjeuner ou au dîner.
+Soirée jeux, pizza du vendredi, petit-déjeuner du dimanche : ce que votre famille fait encore et encore, créez-le comme événement répété et activez **Tradition familiale** dans l’éditeur. Une tradition est **toujours sur le mur**, même sans **Afficher sur l’écran de la cuisine**, avec un ruban jaune citron et son **image**. **Avec un repas** note le plat qui l’accompagne, au déjeuner ou au dîner. Si ce repas est encore libre le jour de la tradition, le [planning des repas](/fr/meals/) le propose ; une touche suffit pour le prévoir. Il n’arrive jamais tout seul dans le planning.
 
 Si une tradition n’a pas lieu une semaine, supprimez **Cet événement uniquement**. Rien ne garde la trace de l’absence.
 

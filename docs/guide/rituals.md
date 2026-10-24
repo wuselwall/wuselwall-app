@@ -15,9 +15,11 @@ Für alle gilt:
 
 Den Geburtstag trägst du auf der Seite einer Person ein: **Einstellungen → Mitglieder**, Person antippen, **Geburtstag → Datum wählen** (siehe [Mitglied bearbeiten](/settings/members-devices#mitglied-bearbeiten)). Jede Person kann ihren eigenen eintragen, alle anderen die Erziehungsberechtigten.
 
-Vorher wird heruntergezählt (siehe [Vorfreude](#countdowns)). Am Tag selbst hängen Wimpel in der Farbe der Person über der Wand, Wusel trägt den Partyhut, auf **Heute** steht eine Geburtstagskarte, und auf dem Kinder-Tablet jubelt Wusel dem Geburtstagskind zu.
+Vorher wird heruntergezählt (siehe [Vorfreude](#countdowns)), mit dem Alter, das die Person wird: „Emma wird 9 · noch 3× schlafen“. Am Tag selbst hängen Wimpel in der Farbe der Person über der Wand, Wusel trägt den Partyhut, auf **Heute** steht eine Geburtstagskarte, und auf dem Kinder-Tablet jubelt Wusel dem Geburtstagskind zu.
 
 Großeltern und Freunde tragt ihr wie bisher als jährlichen Termin ein; den könnt ihr für die Vorfreude markieren.
+
+In einem [Abo des Familienkalenders](/calendar/feeds) steht jeder Geburtstag als jährlicher ganztägiger Termin, ohne Alter. Wer **Nicht mehr dabei** ist, dessen Geburtstag wird gelöscht.
 
 ## Vorfreude {#countdowns}
 
@@ -36,7 +38,7 @@ Wie viele Tage vorher es losgeht, stellt ihr mit **Vorfreude beginnt** ein (Stan
 
 ## Familientraditionen {#traditions}
 
-Spieleabend, Pizza-Freitag, Sonntagsfrühstück: Was eure Familie immer wieder macht, legst du als wiederholten Termin an und schaltest im Editor **Familientradition** ein. Eine Tradition steht **immer an der Wand**, auch ohne **Auf dem Küchendisplay zeigen**, mit einem zitronengelben Band und ihrem **Bild**. Unter **Mit Essen** hältst du fest, welches Essen dazugehört, und ob mittags oder abends.
+Spieleabend, Pizza-Freitag, Sonntagsfrühstück: Was eure Familie immer wieder macht, legst du als wiederholten Termin an und schaltest im Editor **Familientradition** ein. Eine Tradition steht **immer an der Wand**, auch ohne **Auf dem Küchendisplay zeigen**, mit einem zitronengelben Band und ihrem **Bild**. Unter **Mit Essen** hältst du fest, welches Essen dazugehört, und ob mittags oder abends. Ist diese Mahlzeit am Tag der Tradition noch frei, schlägt der [Essensplan](/meals/) das Essen vor; ein Tipp plant es ein. Von selbst kommt es nie auf den Plan.
 
 Fällt eine Tradition einmal aus, löschst du **Nur dieser Termin**. Nichts merkt sich, dass sie ausgefallen ist.
 

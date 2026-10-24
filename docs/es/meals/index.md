@@ -10,6 +10,8 @@ Cada día ofrece desayuno, almuerzo, cena y tentempié. Toca una comida o **Aña
 
 Una comida puede ser plato, nota como «sobras» o receta. Define raciones, quién cocina, hora e invitados. Mantén pulsado para moverla a otro día.
 
+El día de una [tradición familiar](/es/guide/rituals#traditions) con comida, el día propone ese plato, por ejemplo «Pizza», mientras la comida esté libre. Un toque la planifica.
+
 ## Deseos {#wishes}
 
 Una vez por semana, los niños piden una comida en **Mi día** de su tableta (ver [Comida deseada](/es/guide/rituals#meal-wishes)). Los deseos pendientes aparecen arriba del menú bajo **Deseos**, por ejemplo «Pablo: Tortitas», y en una tarjeta en **Hoy**.

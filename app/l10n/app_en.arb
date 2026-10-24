@@ -2762,6 +2762,10 @@
   "memberRole": "Role",
   "memberRoleHelp": "Guardians see everything and approve rewards. Members tick off tasks.",
   "memberReadOnlyHint": "Only guardians change other people. You can change your own name, colour and picture.",
+  "memberKioskReadOnly": "Nobody is changed on the wall display. Change names, colours, pictures and birthdays in the app on a phone or tablet.",
+  "@memberKioskReadOnly": {
+    "description": "On the member page of a wall display, which may not edit members (the server refuses a kiosk)."
+  },
   "memberInactive": "No longer with us",
   "memberInactiveBody": "Off the wall, the avatar rows and new chores. History and points stay.",
   "memberDeactivate": "No longer with us",
@@ -3092,6 +3096,18 @@
       }
     }
   },
+  "countdownBirthdayTurns": "{age, plural, =1{{name} turns 1} other{{name} turns {age}}}",
+  "@countdownBirthdayTurns": {
+    "description": "A birthday countdown's title with the age the member turns that day (specs/27: Olivia wird 10).",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "age": {
+        "type": "int"
+      }
+    }
+  },
   "countdownHomecoming": "{name} comes home",
   "@countdownHomecoming": {
     "placeholders": {
@@ -3203,6 +3219,18 @@
   "@mealsWishedBy": {
     "placeholders": {
       "name": {
+        "type": "String"
+      }
+    }
+  },
+  "mealsTraditionSuggestion": "Plan {meal} ({tradition})",
+  "@mealsTraditionSuggestion": {
+    "description": "The meal planner's one-tap suggestion on a tradition's day (specs/27): the tooltip of the chip that plans the tradition's meal.",
+    "placeholders": {
+      "meal": {
+        "type": "String"
+      },
+      "tradition": {
         "type": "String"
       }
     }

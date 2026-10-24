@@ -9,8 +9,13 @@ import 'package:wuselwall/features/rituals/application/ritual_providers.dart';
 import 'package:wuselwall/features/rituals/domain/countdown.dart';
 import 'package:wuselwall/features/rituals/domain/event_icons.dart';
 
-/// What a countdown is called on screen.
+/// What a countdown is called on screen: a birthday says the age the member turns
+/// ("Paul wird 8", specs/27), or just whose birthday it is when the age is unknown.
 String countdownTitle(AppLocalizations l10n, Countdown c) => switch (c.kind) {
+  CountdownKind.birthday when c.age != null => l10n.countdownBirthdayTurns(
+    c.title,
+    c.age!,
+  ),
   CountdownKind.birthday => l10n.countdownBirthdayOf(c.title),
   CountdownKind.homecoming => l10n.countdownHomecoming(c.title),
   CountdownKind.ferien || CountdownKind.event => c.title,

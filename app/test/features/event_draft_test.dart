@@ -92,4 +92,90 @@ void main() {
       expect(draft.end, DateTime(2026, 10, 14, 1));
     });
   });
+
+  group('the rituals of specs/27 survive a round trip through the editor', () {
+    CalendarEvent tradition({TraditionMeal? meal}) => CalendarEvent(
+      id: 'e1',
+      title: 'Pizza-Freitag',
+      kind: EventKind.appointment,
+      isAllDay: true,
+      startDate: DateTime(2026, 10, 30),
+      endDate: DateTime(2026, 10, 30),
+      rrule: 'FREQ=WEEKLY;BYDAY=FR',
+      importance: Importance.key,
+      iconKey: 'pizza',
+      countdown: true,
+      tradition: true,
+      traditionMeal: meal,
+    );
+
+    test('a tradition with its meal in words', () {
+      final json = _saved(
+        EventDraft.fromEvent(
+          tradition(
+            meal: const TraditionMeal(
+              slot: 'lunch',
+              freeText: 'Pizza',
+              title: 'Pizza',
+            ),
+          ),
+        ),
+      ).toJson();
+      expect(json['tradition'], isTrue);
+      expect(json['countdown'], isTrue);
+      expect(json['icon_key'], 'pizza');
+      expect(json['tradition_meal'], {'slot': 'lunch', 'free_text': 'Pizza'});
+    });
+
+    test('a recipe meal stays the recipe while its words are unchanged', () {
+      const meal = TraditionMeal(
+        slot: 'dinner',
+        recipeId: 'r1',
+        freeText: 'Pfannkuchen',
+        title: 'Pfannkuchen',
+      );
+      final draft = EventDraft.fromEvent(tradition(meal: meal));
+      expect(_saved(draft).toJson()['tradition_meal'], {
+        'slot': 'dinner',
+        'recipe_id': 'r1',
+      });
+      draft.traditionMeal = 'Waffeln';
+      expect(_saved(draft).toJson()['tradition_meal'], {
+        'slot': 'dinner',
+        'free_text': 'Waffeln',
+      });
+    });
+
+    test('no meal words: the meal is cleared', () {
+      final draft = EventDraft.fromEvent(
+        tradition(
+          meal: const TraditionMeal(slot: 'dinner', freeText: 'Pizza'),
+        ),
+      )..traditionMeal = '  ';
+      final json = _saved(draft).toJson();
+      expect(json.containsKey('tradition_meal'), isTrue);
+      expect(json['tradition_meal'], isNull);
+    });
+
+    test('no longer a tradition: neither the flag nor a meal is sent', () {
+      final draft = EventDraft.fromEvent(
+        tradition(
+          meal: const TraditionMeal(slot: 'dinner', freeText: 'Pizza'),
+        ),
+      )..tradition = false;
+      final json = _saved(draft).toJson();
+      expect(json['tradition'], isFalse);
+      expect(json.containsKey('tradition_meal'), isFalse);
+    });
+
+    test('a presence entry carries no ritual, whatever the draft held', () {
+      final draft = EventDraft.fromEvent(tradition())
+        ..kind = EventKind.presence;
+      final json = _saved(draft).toJson();
+      expect(json['icon_key'], '');
+      expect(json['countdown'], isFalse);
+      expect(json['tradition'], isFalse);
+      expect(json.containsKey('tradition_meal'), isFalse);
+    });
+  });
 }

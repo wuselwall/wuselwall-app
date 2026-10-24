@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart' show DateUtils;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wuselwall/core/logging/log.dart';
 import 'package:wuselwall/core/realtime/household_channel.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/calendar/application/calendar_providers.dart';
@@ -30,21 +31,43 @@ final countdownHorizonProvider = Provider.autoDispose<int>((ref) {
   return v is num ? v.toInt() : 14;
 });
 
+/// The longest window the `occurrences` function answers, both ends included
+/// (`MAX_WINDOW_DAYS` in `supabase/functions/_shared/calendar_data.ts`).
+const maxOccurrenceWindowDays = 62;
+
+/// The window Vorfreude reads for a horizon of [days]: today to [days] ahead, and up
+/// to 14 days back as far as the server's limit leaves room. The function returns
+/// every occurrence overlapping the window, so travel that began before it still
+/// counts down to the way home; the look back is only a margin. Calendar days, not
+/// 24-hour durations: a clock change must not move the edge.
+({DateTime from, DateTime to}) countdownWindow(DateTime today, int days) {
+  final ahead = days.clamp(0, maxOccurrenceWindowDays - 1);
+  final back = (maxOccurrenceWindowDays - 1 - ahead).clamp(0, 14);
+  return (
+    from: DateTime(today.year, today.month, today.day - back),
+    to: DateTime(today.year, today.month, today.day + ahead),
+  );
+}
+
 /// The occurrences of the next [countdownHorizonProvider] days: the source of the
-/// marked events and the homecomings.
+/// marked events and the homecomings. A failed refetch keeps what was loaded before
+/// and is logged, never shown on the wall.
 final _horizonOccurrencesProvider = Provider.autoDispose<List<Occurrence>>((
   ref,
 ) {
-  final today = ref.watch(ritualTodayProvider);
-  final days = ref.watch(countdownHorizonProvider);
-  // Travel that began before today still counts down to the way home.
-  // Calendar days, not 24-hour durations: a clock change must not move the edge.
-  final window = (
-    from: DateTime(today.year, today.month, today.day - 14),
-    to: DateTime(today.year, today.month, today.day + days),
+  final window = countdownWindow(
+    ref.watch(ritualTodayProvider),
+    ref.watch(countdownHorizonProvider),
   );
-  return ref.watch(occurrencesProvider(window)).value?.occurrences ??
-      const <Occurrence>[];
+  final loaded = ref.watch(occurrencesProvider(window));
+  if (loaded.hasError) {
+    logError(
+      'Vorfreude: the occurrences of the horizon did not load',
+      error: loaded.error,
+      stackTrace: loaded.stackTrace,
+    );
+  }
+  return loaded.value?.occurrences ?? const <Occurrence>[];
 });
 
 /// Everything the family looks forward to, nearest first (specs/27 "Vorfreude"). While

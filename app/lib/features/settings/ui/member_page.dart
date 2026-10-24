@@ -135,7 +135,10 @@ class _MemberPageState extends ConsumerState<MemberPage> {
     final viewer = all.where((x) => x.id == acting).firstOrNull;
     final isGuardian = viewer?.isGuardian ?? false;
     final isSelf = acting == m.id;
-    final canEditBasics = isGuardian || isSelf;
+    // The wall edits no one: the server refuses a kiosk (20261025100000).
+    final kiosk =
+        ref.watch(deviceProvider).value?.deviceClass == DeviceClass.kiosk;
+    final canEditBasics = !kiosk && (isGuardian || isSelf);
     final advanced = ref.watch(showAdvancedSettingsProvider);
     final nameChanged = _name.text.trim() != m.displayName;
 
@@ -156,7 +159,7 @@ class _MemberPageState extends ConsumerState<MemberPage> {
           Padding(
             padding: const EdgeInsets.only(bottom: Tokens.space4),
             child: Text(
-              l10n.memberReadOnlyHint,
+              kiosk ? l10n.memberKioskReadOnly : l10n.memberReadOnlyHint,
               style: theme.textTheme.bodySmall,
             ),
           ),

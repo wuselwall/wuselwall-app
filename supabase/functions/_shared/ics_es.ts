@@ -3,6 +3,7 @@ import type { IcsMessages } from "./ics.ts";
 
 export const ICS_ES: IcsMessages = {
   "school": "Colegio",
+  "birthday": "Cumpleaños de {name}",
   "withAttendees": "Con",
   "lessonStatus": {
     "cancelled": "Cancelada",

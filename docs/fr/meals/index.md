@@ -10,6 +10,8 @@ Chaque jour propose petit-déjeuner, déjeuner, dîner et collation. Touchez un 
 
 Un repas est un plat, une note comme « restes », ou une recette. Indiquez les portions, la personne qui cuisine, l’heure et les invités. Un appui long permet de le déplacer vers un autre jour.
 
+Le jour d’une [tradition familiale](/fr/guide/rituals#traditions) avec un repas, le jour propose ce plat, par exemple « Pizza », tant que le repas est libre. Une touche suffit pour le prévoir.
+
 ## Souhaits {#wishes}
 
 Une fois par semaine, les enfants souhaitent un repas dans **Ma journée** sur leur tablette (voir [Repas souhaités](/fr/guide/rituals#meal-wishes)). Les souhaits en attente s’affichent en haut des menus sous **Souhaits**, par exemple « Paul : Crêpes », et dans une carte dans **Aujourd’hui**.

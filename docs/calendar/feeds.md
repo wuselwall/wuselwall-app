@@ -11,7 +11,7 @@ Ein **Abo** zeigt den Familienkalender in einer anderen App. Es ist nur zum Lese
    - **Anwesenheit** zeigt, wer wo ist (Arbeit, Homeoffice, Frei …). Für Arbeitsgeräte und Kinder lässt man das besser aus.
    - **Schule** zeigt Schultage als ganzen Tag oder jede Unterrichtsstunde. Oder aus.
    - **Kalender von außen einschließen** nimmt auch die Termine aus Kalendern von außen auf, zum Beispiel vom Verein oder der Müllabfuhr. Das ist **aus**, bis du es anhakst. Jedes Abo entscheidet also selbst, ob seine Termine mitkommen.
-3. Unter **Wessen Termine** wählst du Personen. Ohne Auswahl sind alle Mitglieder dabei.
+3. Unter **Wessen Termine** wählst du Personen. Ohne Auswahl sind alle Mitglieder dabei. Ihre Geburtstage kommen als jährlicher Termin mit, ohne Alter.
 4. Tippe auf **Abo erstellen**.
 
 ## Die Adresse

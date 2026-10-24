@@ -11,7 +11,7 @@ Open **Settings → Advanced → Share the family calendar** and tap **New subsc
    - **Presence** shows who is where (at work, home office, off …). For work devices and children it is better to leave this off.
    - **School** shows school days as one all-day entry, or every lesson. Or off.
    - **Include outside calendars** adds the appointments from outside calendars, for example a club or the bin collection. It is **off** until you tick it. Each subscription decides for itself whether its appointments come along.
-3. Under **Whose events** choose people. With nobody chosen, all members are included.
+3. Under **Whose events** choose people. With nobody chosen, all members are included. Their birthdays come along as yearly events, without the age.
 4. Tap **Create subscription**.
 
 ## The address

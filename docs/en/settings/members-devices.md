@@ -49,7 +49,7 @@ Under **Birthday**, **Choose a date** sets the birthday. It is shown on the wall
 
 <Shot name="settings-member" alt="A member's page with name, colour, picture and birthday" />
 
-In the **Advanced** view the page also shows the **role** (guardian or member; a child cannot be a guardian, and the last guardian with an account stays one) and **No longer with us**: the person disappears from the wall, the avatar rows and new chores; history and points stay, and you can bring them back here at any time. An adult with an account is not removed this way; they leave the family from their own phone (see [Account and family](/en/settings/account)).
+In the **Advanced** view the page also shows the **role** (guardian or member; a child cannot be a guardian, and the last guardian with an account stays one) and **No longer with us**: the person disappears from the wall, the avatar rows and new chores; history and points stay, the birthday is deleted, and you can bring them back here at any time. An adult with an account is not removed this way; they leave the family from their own phone (see [Account and family](/en/settings/account)).
 
 Everyone can change their own name, colour, picture and birthday. Everything else is for guardians, with the PIN on shared devices.
 

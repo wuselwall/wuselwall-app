@@ -8,6 +8,7 @@ import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/emoji_picture.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
@@ -19,6 +20,8 @@ import 'package:wuselwall/features/meals/domain/meal_models.dart';
 import 'package:wuselwall/features/meals/ui/meal_editor_sheet.dart';
 import 'package:wuselwall/features/meals/ui/meals_format.dart';
 import 'package:wuselwall/features/meals/ui/shopping_preview_sheet.dart';
+import 'package:wuselwall/features/rituals/application/tradition_meal_providers.dart';
+import 'package:wuselwall/features/rituals/domain/event_icons.dart';
 import 'package:wuselwall/features/rituals/ui/meal_wish_widgets.dart';
 
 /// The week's navigation, in the app bar: the week before, the week after, and a tap on
@@ -256,6 +259,13 @@ class _DayCell extends ConsumerWidget {
       for (final s in PlanSlot.values)
         if (s != warm && !others.any((e) => e.slot == s)) s,
     ];
+    // A tradition's meal on its day, while that meal is still open (specs/27).
+    final traditionMeals = [
+      for (final s in ref.watch(traditionMealSuggestionsProvider(weekStart)))
+        if (_sameDay(s.date, date) &&
+            !dayEntries.any((e) => e.slot == s.slot && e.hasDish))
+          s,
+    ];
 
     return DragTarget<_MealRef>(
       onWillAcceptWithDetails: (d) =>
@@ -302,6 +312,18 @@ class _DayCell extends ConsumerWidget {
                 const SizedBox(height: Tokens.space2),
                 _SlotCard(date: date, slot: e.slot, entry: e),
               ],
+              for (final s in traditionMeals)
+                Padding(
+                  padding: const EdgeInsets.only(top: Tokens.space2),
+                  child: Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: _TraditionMealChip(
+                      suggestion: s,
+                      warm: s.slot == warm,
+                      onPressed: () => _planTradition(context, ref, s),
+                    ),
+                  ),
+                ),
               if (freeSlots.isNotEmpty)
                 Align(
                   alignment: AlignmentDirectional.centerStart,
@@ -343,6 +365,30 @@ class _DayCell extends ConsumerWidget {
         );
       },
     );
+  }
+
+  /// Plans the tradition's meal in its slot: one tap, the usual meal_set.
+  Future<void> _planTradition(
+    BuildContext context,
+    WidgetRef ref,
+    TraditionMealSuggestion s,
+  ) async {
+    final result = await ref
+        .read(mealsRepositoryProvider)
+        .setMeal(
+          actor: ref.read(actingProfileProvider),
+          date: date,
+          slot: s.slot,
+          recipeId: s.recipeId,
+          freeText: s.recipeId == null ? s.title : null,
+        );
+    if (!context.mounted) return;
+    switch (result) {
+      case Ok():
+        ref.invalidate(mealEntriesProvider(weekStart));
+      case Err(:final failure):
+        context.showFailure(failure);
+    }
   }
 
   Future<void> _move(
@@ -488,6 +534,40 @@ class _SlotCard extends ConsumerWidget {
       ),
       childWhenDragging: Opacity(opacity: 0.4, child: card),
       child: card,
+    );
+  }
+}
+
+/// The one-tap suggestion of a tradition's meal ("🍕 Pizza") on its day; outside the
+/// warm meal it names its slot too.
+class _TraditionMealChip extends StatelessWidget {
+  const _TraditionMealChip({
+    required this.suggestion,
+    required this.warm,
+    required this.onPressed,
+  });
+
+  final TraditionMealSuggestion suggestion;
+  final bool warm;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final s = suggestion;
+    final icon = eventIconAsset(s.iconKey);
+    return Tooltip(
+      message: context.l10n.mealsTraditionSuggestion(s.title, s.tradition),
+      child: ActionChip(
+        avatar: icon == null
+            ? const Icon(Icons.add, size: 18)
+            : EmojiPicture(icon, size: 18),
+        label: Text(
+          warm ? s.title : '${s.title} · ${context.planSlotLabel(s.slot)}',
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        onPressed: onPressed,
+      ),
     );
   }
 }

@@ -6,7 +6,7 @@ Dans **Paramètres → Avancés → Partager le calendrier familial**, créez un
 
 1. Donnez-lui un **nom**, par exemple « Outlook au travail ».
 2. Choisissez les événements et les options : **présences**, **école** (journées entières, cours individuels ou désactivée) et **calendriers externes**, désactivés par défaut. Chaque abonnement décide séparément de les inclure. Évitez les présences sur un appareil professionnel ou destiné aux enfants si elles ne sont pas nécessaires.
-3. Choisissez les personnes, ou aucune pour tous les membres.
+3. Choisissez les personnes, ou aucune pour tous les membres. Leurs anniversaires suivent comme événements annuels, sans l’âge.
 4. Créez l’abonnement.
 
 ## L’adresse {#the-address}

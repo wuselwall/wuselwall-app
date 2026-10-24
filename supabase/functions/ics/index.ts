@@ -69,7 +69,9 @@ Deno.serve(async (req: Request): Promise<Response> => {
   // The imported occurrences change without a revision bump (their own store), so they are hashed too.
   const shape = JSON.stringify(feed.filter ?? {}) +
     (feed.school ? JSON.stringify([feed.school, feed.members ?? null]) : "") +
-    (feed.external ? JSON.stringify(feed.external) : "");
+    (feed.external ? JSON.stringify(feed.external) : "") +
+    // A birthday lives on the profile, which the revision does not see either.
+    (feed.birthdays ? JSON.stringify(feed.birthdays) : "");
   const etag = `"${feed.revision}-${await shortHash(shape)}"`;
   const cacheHeaders = {
     ETag: etag,
