@@ -176,19 +176,28 @@ Turning any of these on is one deliberate checkbox on that token
     (notable, Sportsachen), Medien und Informatik MI;
   - **Romandie** (GE, VD, NE, JU, and a bilingual canton when the app runs in French; PER
     fields): Français FRA, Mathématiques MAT, Allemand ALL, Anglais ANG, Sciences de la nature
-    SN, Histoire HIS, Géographie GEO, Arts visuels AVI, Activités créatrices manuelles ACM,
+    SCN, Histoire HIS, Géographie GEO, Arts visuels AVI, Activités créatrices manuelles ACM,
     Musique MUS, Éthique et cultures religieuses ECR, Éducation physique EPH (notable);
   - **Ticino** (and a bilingual canton when the app runs in Italian): Italiano ITA, Matematica
-    MAT, Tedesco TED, Francese FRA, Studio d'ambiente AMB, Educazione visiva EV, Educazione
-    alle arti plastiche EAP, Educazione musicale EM, Educazione fisica EF (notable);
+    MAT, Tedesco TED, Francese FRA, Studio d'ambiente AMB, Educazione visiva EVI, Educazione
+    alle arti plastiche APLA, Educazione musicale EMU, Educazione fisica EFI (notable);
   - **France**: Français FR, Mathématiques MATHS, Anglais ANG, Questionner le monde QLM,
     Sciences et technologie SCI, Histoire-géographie HG, Enseignement moral et civique EMC,
     Arts plastiques ARTS, Éducation musicale EM, EPS (notable) and Natation NAT (notable);
   - **Spain**: Lengua Castellana y Literatura LCL, Matemáticas MAT, Inglés ING, Conocimiento
     del Medio CM, Educación Plástica y Visual PLAS, Música MUS, Religión REL, Atención
     Educativa AE, Valores Cívicos y Éticos VCE, Tutoría TUT, Educación Física EF (notable);
-    plus the region's co-official language (Català in CT and IB, Valencià in VC, Galego in
-    GA, Euskara in PV and NC).
+    Navarra adds Euskara eta Literatura EUS. The regions whose sheets print the co-official
+    language get the list in that language (*revised 2026-10-23 after real sheets*):
+    **Catalonia, the Balearics and Valencia** in Catalan (Llengua Catalana i Literatura CAT,
+    or Valencià: Llengua i Literatura VAL in Valencia; Llengua Castellana CAST, Matemàtiques
+    MAT, Anglès ANG, Coneixement del Medi MEDI, Educació Plàstica PLAS, Música MUS, Religió REL,
+    Valors VALORS, Tutoria TUT, Lectura LECT, Educació Física EF), the **Basque Country** in
+    Basque (Euskara EUS, Gaztelania GAZT, Ingelesa ING, Matematika MAT, Ingurunea INGU, Musika
+    MUS, Plastika PLAS, Erlijioa REL, Balio Zibiko eta Etikoak BAL, Tutoretza TUT, Gorputz
+    Hezkuntza GH), **Galicia** in Galician (Lingua Galega LG, Lingua Castelá LC, Matemáticas
+    MAT, Inglés ING, Coñecemento do Medio CM, Plástica PLAS, Música MUS, Relixión REL,
+    Alternativa ALT, Valores Sociais e Cívicos VSC, Titoría TIT, Educación Física EF).
   A country without a list follows the app's language (French or Spanish, else German). The
   app sends its language with the school (`language` in `school_save`); the previous app
   release sends none and gets the German, Austrian or Swiss German list. The list is written

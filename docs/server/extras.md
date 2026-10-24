@@ -58,6 +58,8 @@ Einrichten, im Ordner des Stacks:
 
 Danach bietet die App unter **Einlesen…** den Punkt **Foto scannen** an. Ohne diese Zeile fehlt er nicht, aber die App sagt, dass der Server keine Texterkennung hat. Die Erkennung nutzt RapidOCR mit den PP-OCR-Modellen von PaddleOCR (beides Apache-2.0, derselbe Unterbau, den auch die Fotoverwaltung Immich für ihre Texterkennung verwendet).
 
+Mit dem Bild schickt die App ihre Sprache und die Namen und Kürzel eurer Fächer. So liest der Server eure Wörter als eure Fächer. Die Funktion nimmt Fotos (JPEG, PNG, WebP, HEIC) und PDF-Dateien bis 6 MB an, speichert nichts und schreibt kein Bild ins Protokoll. Was der Server vom Blatt liest und wo seine Grenzen sind, steht unter [Stundenplan einlesen](/school/#stundenplan-einlesen).
+
 ## Backup außer Haus {#backup-ausser-haus}
 
 Ein Backup auf demselben Server hilft bei einem Fehler, aber nicht bei einem Brand, einem Diebstahl oder einer kaputten Platte. `wuselwall backup` kann jede Sicherung zusätzlich **verschlüsselt** in einen Cloud-Speicher kopieren, mit [restic](https://restic.net/), z. B. zu Backblaze B2 oder einem S3-Speicher. Der Anbieter sieht nur verschlüsselte Daten.

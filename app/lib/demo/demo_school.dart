@@ -8,39 +8,50 @@ import 'package:wuselwall/features/school/domain/school_models.dart';
 /// (`lib/main_demo.dart`). The grids are the ones `demo_board.dart` draws; the views
 /// and the `school-week` reply are built as JSON and run through the same parsers the
 /// app uses. Writes change in-memory lists, so the editor and the sheets work in the demo.
+/// With [empty] (the `noschool` scenario of the docs' screenshots) the family has no
+/// school yet, so the first-school page shows.
 class DemoSchoolRepository implements SchoolRepository {
-  DemoSchoolRepository({DateTime Function()? clock})
+  DemoSchoolRepository({DateTime Function()? clock, this.empty = false})
     : _clock = clock ?? DateTime.now {
     _exceptions = _seedExceptions();
   }
 
   final DateTime Function() _clock;
 
+  /// No school, no subjects and no timetables.
+  final bool empty;
+
+  List<_Plan> get _active => empty ? const [] : _plans;
+
   late final List<Map<String, dynamic>> _exceptions;
 
   List<Map<String, dynamic>> _seedExceptions() => [
-    for (final e in _exceptionSeeds)
-      {
-        'id': 'ex-${e.$1}-${e.$2}-${e.$3}',
-        'timetable_id': _plans.firstWhere((p) => p.member == e.$1).timetableId,
-        'on_date': _dateOfWeekday(e.$2),
-        'period_index': e.$3,
-        'kind': e.$4,
-        'note': demoText(e.$5),
-      },
+    if (!empty)
+      for (final e in _exceptionSeeds)
+        {
+          'id': 'ex-${e.$1}-${e.$2}-${e.$3}',
+          'timetable_id': _plans
+              .firstWhere((p) => p.member == e.$1)
+              .timetableId,
+          'on_date': _dateOfWeekday(e.$2),
+          'period_index': e.$3,
+          'kind': e.$4,
+          'note': demoText(e.$5),
+        },
   ];
 
-  final List<Map<String, dynamic>> _subjects = [
-    for (final e in _subjectCodes.entries)
-      {
-        'id': _subjectId(e.key),
-        'name': demoText(e.value),
-        'short_name': demoShort(e.key),
-        'tint': _tints[e.key] ?? 'stone',
-        'icon_key': _icons[e.key],
-        'equipment_note': demoTextOrNull(_equipment[e.key]),
-        'notable_default': _notable.containsKey(e.key),
-      },
+  late final List<Map<String, dynamic>> _subjects = [
+    if (!empty)
+      for (final e in _subjectCodes.entries)
+        {
+          'id': _subjectId(e.key),
+          'name': demoText(e.value),
+          'short_name': demoShort(e.key),
+          'tint': _tints[e.key] ?? 'stone',
+          'icon_key': _icons[e.key],
+          'equipment_note': demoTextOrNull(_equipment[e.key]),
+          'notable_default': _notable.containsKey(e.key),
+        },
   ];
 
   /// Ids for the exceptions the demo's writes create.
@@ -60,7 +71,7 @@ class DemoSchoolRepository implements SchoolRepository {
       '${d.day.toString().padLeft(2, '0')}';
 
   List<Map<String, dynamic>> get _schoolRows => [
-    for (final p in _plans)
+    for (final p in _active)
       {
         'id': p.schoolId,
         'name': demoText(p.school),
@@ -71,7 +82,7 @@ class DemoSchoolRepository implements SchoolRepository {
   ];
 
   List<Map<String, dynamic>> get _periodRows => [
-    for (final p in _plans)
+    for (final p in _active)
       for (final row in _periods())
         {
           'id': '${p.schoolId}-${row['index']}-${row['kind']}',
@@ -83,7 +94,7 @@ class DemoSchoolRepository implements SchoolRepository {
   ];
 
   List<Map<String, dynamic>> get _termRows => [
-    for (final p in _plans)
+    for (final p in _active)
       {
         'id': 'term-${p.member}',
         'school_id': p.schoolId,
@@ -96,7 +107,7 @@ class DemoSchoolRepository implements SchoolRepository {
   ];
 
   List<Map<String, dynamic>> get _timetableRows => [
-    for (final p in _plans)
+    for (final p in _active)
       {
         'id': p.timetableId,
         'profile_id': p.member,
@@ -110,7 +121,7 @@ class DemoSchoolRepository implements SchoolRepository {
   ];
 
   List<Map<String, dynamic>> get _lessonRows => [
-    for (final p in _plans)
+    for (final p in _active)
       for (var d = 0; d < p.grid.length; d++)
         for (var i = 0; i < p.grid[d].length; i++)
           if (p.grid[d][i] != null)
@@ -130,7 +141,7 @@ class DemoSchoolRepository implements SchoolRepository {
               'is_notable': _notable.containsKey(p.grid[d][i]),
               'note': null,
             },
-    for (final p in _plans)
+    for (final p in _active)
       for (final e in p.hort.entries)
         {
           'id': '${p.timetableId}-hort-${e.key}',
@@ -208,12 +219,12 @@ class DemoSchoolRepository implements SchoolRepository {
     ];
     final days = [
       for (final date in dates)
-        for (final p in _plans) {'date': _ymd(date), ..._day(p, date)},
+        for (final p in _active) {'date': _ymd(date), ..._day(p, date)},
     ];
     return Ok(
       SchoolWeek.fromJson({
         'timetables': [
-          for (final p in _plans)
+          for (final p in _active)
             {
               'member_id': p.member,
               'class_label': demoText(p.klasse),

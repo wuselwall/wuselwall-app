@@ -6,17 +6,37 @@ The timetable shows each child their week: which lessons, which subjects and wha
 
 ## Setting up
 
-The first time, tap **Set up school**, enter the school's name and **region** and tap **Add school**. That is all it takes: bell times and a subject list are proposed, and **Next steps** lists every child whose timetable is still missing, with a button to enter it or read it in. Afterwards the school page holds:
+The first time, tap **Set up school**. The first school needs only two things: the **name of the school** and the **region**. Then tap **Add school**.
 
-- the **school** with its name and **region**: country, then canton or state, and if you like district or municipality. The region decides the public and school holidays, see below
+<Shot name="school-first" alt="The first school: only name and region, with Add school below" />
+
+That is all it takes. Bell times and a subject list are proposed: 45-minute lessons from 8:00, a 20-minute break after the 2nd and the 4th lesson, 5 minutes otherwise. If your household has no region yet, it takes the region of the first school. **Next steps** then lists every child whose timetable is still missing. Tap the row to enter the timetable, or tap **Read in…** to take it from the sheet.
+
+Afterwards the school page holds:
+
+- the **school** with its name and **region**: country, then canton or state, and if you like district or municipality. The region decides the public and school holidays and the proposed subjects, see below
 - the **bell times**: lessons and breaks with start and end (**Add lesson**, **Add break**)
 - the **terms**, for example half-years, with **From** and **To**. If the timetable alternates between two weeks, switch on **A and B weeks** and enter the **calendar week of an A week**; every second week after it is a B week
-- the **subjects** with a short name and a colour. For each subject you can list **Things to bring**, for example sports kit, and decide whether it shows on the wall. The subjects are a starting suggestion that fits your country: rename or delete them
+- the **subjects** with a short name and a colour. For each subject you can list **Things to bring**, for example sports kit, and decide whether it shows on the wall
 - the **holidays and free days**
 
 The **Save** action appears at the top right only when you have unsaved changes to the school name, region or bell times. It saves all changed sections together.
 
 Bell times run from earliest to latest, with the first lesson shown as **Period 1** and breaks between lessons.
+
+### The proposed subjects {#proposed-subjects}
+
+The subject list follows the school's region. It uses the names and short names that the timetables of that region print. That way, reading in a sheet recognises them.
+
+- **Germany**: for example Deutsch (D), Mathematik (Ma), Sachunterricht (SU), Sport (Sp) and Schwimmen (Sw)
+- **Austria**: the names of the 2023/24 curriculum, for example Kunst und Gestaltung (KuG) and Bewegung und Sport (BS)
+- **German-speaking Switzerland and Liechtenstein**: the subject areas of Lehrplan 21, for example Natur, Mensch, Gesellschaft (NMG) and Textiles und Technisches Gestalten (TTG)
+- **Romandie** (Geneva, Vaud, Neuchâtel, Jura): in French, for example Français (FRA) and Sciences de la nature (SCN)
+- **Ticino**: in Italian, for example Italiano (ITA) and Studio d’ambiente (AMB)
+
+In a bilingual canton, for example Fribourg or Valais, the app's language decides: in French you get the Romandie list, in Italian the Ticino list, otherwise the German-speaking Swiss list. If you choose **Other country (no region)**, the app's language decides too: in French the list for France, in Spanish the list for Spain, otherwise the German one.
+
+The list comes only while you have no subjects yet. After that it is yours: rename subjects, delete them or add new ones.
 
 ## Public and school holidays
 
@@ -63,13 +83,56 @@ When no timetable exists yet, the view shows a message about the selected child 
 
 ## Reading in a timetable
 
-Instead of typing every lesson, you can have the sheet read in. All three ways end on the same **preview**: it shows the child, the school, the term, the grid as it would be saved, the subjects that will be created, and every note, for example when a timetable is replaced or has more lessons than the bell times. A new subject you already have under another word you pick from the list there; WuselWall remembers the sheet's word and recognises it by itself next time. Only **Apply** writes anything; **Discard** leaves everything as it was.
+Instead of typing every lesson, you can have the sheet read in. There are three ways. All of them end on the same [preview](#preview), and only **Apply** writes anything.
 
 **From text, with your AI assistant.** For a child without a timetable, tap **Read in…** and then **Paste as text** (or **Read in…** at the top of the timetable). **Copy the instructions for the assistant** puts a text on the clipboard: give it to the assistant you trust together with a photo of the timetable, for example in its app on your phone. It answers in a fixed format WuselWall can read. Paste the answer into the field and tap **Read in**. The photo goes only to the assistant of your choice; WuselWall sends nothing to anyone.
 
 **As a proposal from an assistant.** An assistant connected to WuselWall ([Apps and AI assistants](/en/settings/shortcuts)) can hand in a timetable as a **proposal**. It changes nothing: a card “Proposal from Claude” with **Review** and **Discard** appears on **Today** and above the timetable. **Review** opens the preview. Proposals expire after 14 days.
 
-**As a photo or a PDF, read by your server.** If your server has text recognition set up ([Extras for the server](/en/server/extras#text-recognition)), tap **Read in…** and **Scan a photo**, take the sheet, choose a photo, or choose the school's PDF with **Choose a file**. The file goes to your own server and nowhere else; the server recognises the weekdays, the periods and the subjects and shows the preview. The PDF is the most exact, because the server reads its text directly; for a photo a straight, bright picture of the whole sheet works best, and a tilted one is straightened by the server. The preview names the pieces of text that fit no cell, so you can compare with the sheet. Without text recognition the app says so and points to reading in from text.
+**As a photo or a PDF, read by your server.** If your server has text recognition set up ([Extras for the server](/en/server/extras#text-recognition)), tap **Read in…** and **Scan a photo**. Then choose **Take a photo**, **Choose a photo** or **Choose a file (PDF or picture)**, for example for the PDF the school sent you.
+
+<Shot name="timetable-scan" alt="Scan a photo: the note that the file stays at home, and the three ways Take a photo, Choose a photo and Choose a file" />
+
+The file goes to your own server and nowhere else. The server does not keep it. It reads the sheet and shows the preview. So that it recognises your subjects, the app sends its language and the names and short names of your subjects along.
+
+What the server reads from the sheet:
+
+- the weekdays, the periods and their times, when they are printed at the edge
+- in each cell the subject, the room and the teacher. A word that the sheet wraps onto the next line is joined again
+- the **legend** below or beside the grid, that is short names with their full names, for example “NMG Natur, Mensch, Gesellschaft”
+- **A and B weeks**, when a cell carries an “A” or a “B”
+- rows for **care** with their times, as German, French and Spanish sheets print them (Hort, Mittagstisch, cantine, comedor). They become care rows, not lessons
+
+What works best:
+
+- The **school's PDF** is the most exact, because the server reads its text directly. A scanned PDF is read like a photo.
+- For a **photo**: straight, bright and the whole sheet. A tilted photo, or one taken sideways, is straightened by the server. iPhone photos (HEIC) work too.
+- The file can be at most 6 MB.
+
+Text recognition can hardly read **handwriting**. From a handwritten timetable only some of the cells come through; you add the rest in the editor afterwards. If the server finds no timetable at all, the app says so. Then try a straighter, brighter photo or read the timetable in from text. If your server has no text recognition, the app says that too and points to reading in from text.
+
+### The preview {#preview}
+
+The preview shows what would be saved. Nothing has changed yet.
+
+<Shot name="timetable-import" alt="The preview: child, school, term and the grid with each subject's name under its short name" wide />
+
+- at the top the **child** and, if there are several, the **school**. You can change both
+- the number of lessons, the class, the week rhythm and the **term**. If the term does not exist yet, it says “(will be created)”. If the child already has a timetable in this term, it says that it will be replaced
+- the **grid**: each period with its times, in each cell the short name and the subject's name below it. On a phone there is no room for that: press and hold a cell to see the name. A lesson only in A or B weeks carries an A or a B
+- **After school care**, if the sheet has any
+- every **note**: a lesson matches no bell time, the sheet has more lessons than your bell times (then lessons are added), other bell times (then yours stay) or names another school. After a scan, the preview also names the pieces of text that fit no cell. Then compare with the sheet
+
+<Shot name="timetable-import-subjects" alt="New subjects in the preview: Geo is taken as the existing Topic, French is created" />
+
+Under **New subjects** you see every subject on the sheet that you do not have yet. Next to it you choose:
+
+- **Create new**: the subject is created with the short name and name from the sheet.
+- an **existing subject**, if you already have it under another word, for example “Geo” for your Topic. WuselWall remembers the sheet's word for that subject and recognises it by itself the next time. If the scan finds exactly one matching subject, it is already selected.
+
+If you switch off **Create the new subjects**, the lessons with new subjects are left out; the grid shows them struck through.
+
+**Apply** creates the term if it is missing, extends the bell times, creates the new subjects and saves the timetable. **Discard** leaves everything as it was; a proposal is then rejected.
 
 ## Editing whole days
 

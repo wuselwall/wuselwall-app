@@ -304,10 +304,11 @@ const BREAK_KEYS = new Set(BREAKS.map(subjectKey));
 
 const DEFAULT_VOCAB: Vocab = vocabOf();
 
-/** Lowercase without accents. */
+/** Lowercase without accents; ß becomes ss, œ and æ become oe and ae, as the app's
+ *  foldText does, so "Cœur" and "Coeur" are one key. */
 export function fold(text: string): string {
   return text.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/ß/g, "ss")
-    .toLowerCase().trim();
+    .toLowerCase().replace(/œ/g, "oe").replace(/æ/g, "ae").trim();
 }
 
 /** The full names, for truncated ("Dinsd"), letter-spaced ("M ittw och") and misspelt

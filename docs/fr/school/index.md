@@ -6,15 +6,35 @@ Les adultes saisissent l’emploi du temps ; chaque enfant consulte sa semaine e
 
 ## Configurer l’école {#setting-up}
 
-Lors de la première utilisation, touche **Configurer l’école**, saisis le nom et la **région** de l’école et touche **Créer l’école**. C’est tout : les horaires de cours et une liste de matières sont proposés, et **Prochaines étapes** liste chaque enfant dont l’emploi du temps manque encore, avec un bouton pour le saisir ou l’importer. La page de l’école contient ensuite :
+La première fois, touche **Configurer l’école**. La première école ne demande que deux choses : le **nom de l’école** et la **région**. Touche ensuite **Créer l’école**.
 
-- le **nom de l’école** et sa **région** ;
+<Shot name="school-first" alt="La première école : seulement le nom et la région, avec Créer l’école en dessous" />
+
+C’est tout. Des horaires et une liste de matières sont proposés : des cours de 45 minutes dès 8h00, une pause de 20 minutes après le 2e et le 4e cours, 5 minutes sinon. Si votre foyer n’a pas encore de région, il prend celle de la première école. **Prochaines étapes** liste ensuite chaque enfant dont l’emploi du temps manque. Touche la ligne pour le saisir, ou **Importer…** pour le lire sur la feuille.
+
+La page de l’école contient ensuite :
+
+- le **nom de l’école** et sa **région** : pays, puis canton ou État, et si tu veux district ou commune. La région décide des jours fériés, des vacances et des matières proposées, voir plus bas ;
 - les **horaires des cours et des pauses**, avec début et fin ;
-- les **périodes**, avec leurs dates ; si l’emploi du temps alterne d’une semaine à l’autre, activez **Semaines A et B** et indiquez le **numéro d’une semaine A** ;
-- les **matières**, leur abréviation, couleur, matériel à apporter et affichage sur le mur ; les suggestions adaptées au pays sont modifiables ;
+- les **périodes**, avec leurs dates ; si l’emploi du temps alterne d’une semaine à l’autre, active **Semaines A et B** et indique le **numéro d’une semaine A** ;
+- les **matières**, leur abréviation, couleur, matériel à apporter et affichage sur le mur ;
 - les **vacances et jours sans cours**.
 
 **Enregistrer**, en haut à droite, apparaît quand le nom, la région ou les horaires ont changé et enregistre ces sections ensemble. Les cours suivent l’ordre chronologique, avec les pauses entre eux.
+
+### Les matières proposées {#proposed-subjects}
+
+La liste de matières suit la région de l’école. Elle reprend les noms et abréviations imprimés sur les emplois du temps de cette région. Ainsi, l’import les reconnaît sur la feuille.
+
+- **Allemagne** : par exemple Deutsch (D), Mathematik (Ma), Sachunterricht (SU), Sport (Sp) et Schwimmen (Sw) ;
+- **Autriche** : les noms du programme 2023/24, par exemple Kunst und Gestaltung (KuG) et Bewegung und Sport (BS) ;
+- **Suisse alémanique et Liechtenstein** : les domaines du Lehrplan 21, par exemple Natur, Mensch, Gesellschaft (NMG) et Textiles und Technisches Gestalten (TTG) ;
+- **Romandie** (Genève, Vaud, Neuchâtel, Jura) : en français, selon le PER, par exemple Français (FRA) et Sciences de la nature (SCN) ;
+- **Tessin** : en italien, par exemple Italiano (ITA) et Studio d’ambiente (AMB).
+
+Dans un canton bilingue, par exemple Fribourg ou le Valais, la langue de l’app décide : en français vient la liste romande, en italien celle du Tessin, sinon celle de Suisse alémanique. Si tu choisis **Autre pays (sans région)**, la langue de l’app décide aussi : en français la liste pour la France, en espagnol celle pour l’Espagne, sinon la liste allemande.
+
+La liste n’arrive que tant que vous n’avez aucune matière. Ensuite, elle vous appartient : renomme des matières, supprime-les ou ajoutes-en.
 
 ## Jours fériés et vacances scolaires {#public-and-school-holidays}
 
@@ -58,13 +78,56 @@ Choisissez un rythme hebdomadaire ou des semaines A/B, saisies séparément. Ajo
 
 ## Importer un emploi du temps {#reading-in}
 
-Au lieu de taper chaque cours, tu peux faire lire la feuille. Les trois façons aboutissent au même **aperçu** : l’enfant, l’école, la période, la grille telle qu’elle serait enregistrée, les matières qui seront créées et chaque remarque, par exemple quand un emploi du temps est remplacé ou compte plus de cours que les horaires. Une nouvelle matière que vous avez déjà sous un autre mot, tu la choisis là dans la liste ; WuselWall retient le mot de la feuille et le reconnaît tout seul la prochaine fois. Seul **Appliquer** écrit quelque chose ; **Rejeter** laisse tout en l’état.
+Au lieu de taper chaque cours, tu peux faire lire la feuille. Il y a trois façons. Toutes aboutissent au même [aperçu](#preview), et seul **Appliquer** écrit quelque chose.
 
 **Depuis du texte, avec votre assistant IA.** Pour un enfant sans emploi du temps, touche **Importer…** puis **Coller du texte** (ou **Importer…** en haut de l’emploi du temps). **Copier les instructions pour l’assistant** place un texte dans le presse-papiers : donne-le, avec une photo de l’emploi du temps, à l’assistant de confiance, par exemple dans son app sur le téléphone. Il répond dans un format fixe que WuselWall sait lire. Colle la réponse dans le champ et touche **Importer**. La photo ne va qu’à l’assistant de votre choix ; WuselWall n’envoie rien à personne.
 
 **Comme proposition d’un assistant.** Un assistant connecté à WuselWall ([Apps et assistants IA](/fr/settings/shortcuts)) peut déposer un emploi du temps comme **proposition**. Il ne change rien : une carte « Proposition de Claude » avec **Vérifier** et **Rejeter** apparaît sur **Aujourd’hui** et au-dessus de l’emploi du temps. **Vérifier** ouvre l’aperçu. Les propositions expirent après 14 jours.
 
-**Comme photo ou PDF, lu par votre serveur.** Si votre serveur a la reconnaissance de texte ([Extras pour le serveur](/fr/server/extras#text-recognition)), touche **Importer…** et **Scanner une photo**, prends la feuille en photo, choisis-en une, ou choisis le PDF de l’école avec **Choisir un fichier**. Le fichier va à votre propre serveur et nulle part ailleurs ; le serveur reconnaît les jours, les cours et les matières et montre l’aperçu. Le PDF est le plus précis, car le serveur lit son texte directement ; pour une photo, une image droite et lumineuse de toute la feuille donne le meilleur résultat, et le serveur redresse lui-même une photo penchée. L’aperçu nomme les fragments de texte qui ne correspondent à aucune case, pour comparer avec la feuille. Sans reconnaissance de texte, l’app le dit et renvoie à l’import de texte.
+**Comme photo ou PDF, lu par votre serveur.** Si votre serveur a la reconnaissance de texte ([Extras pour le serveur](/fr/server/extras#text-recognition)), touche **Importer…** et **Scanner une photo**. Choisis ensuite **Prendre une photo**, **Choisir une photo** ou **Choisir un fichier (PDF ou image)**, par exemple pour le PDF envoyé par l’école.
+
+<Shot name="timetable-scan" alt="Scanner une photo : la remarque que le fichier reste à la maison, et les trois choix Prendre une photo, Choisir une photo et Choisir un fichier" />
+
+Le fichier va à votre propre serveur et nulle part ailleurs. Le serveur ne le garde pas. Il lit la feuille et montre l’aperçu. Pour qu’il reconnaisse vos matières, l’app envoie aussi sa langue ainsi que les noms et abréviations de vos matières.
+
+Ce que le serveur lit sur la feuille :
+
+- les jours, les cours et leurs horaires, s’ils figurent dans la marge ;
+- dans chaque case la matière, la salle et l’enseignant. Un mot que la feuille coupe en fin de ligne est recollé ;
+- la **légende** sous ou à côté de la grille, c’est-à-dire les abréviations avec leur nom, par exemple « NMG Natur, Mensch, Gesellschaft » ;
+- les **semaines A et B**, quand une case porte un « A » ou un « B » ;
+- les lignes d’**accueil** avec leurs horaires, comme les imprime une feuille allemande, française ou espagnole (Hort, Mittagstisch, cantine, comedor). Elles deviennent des lignes d’accueil, pas des cours.
+
+Ce qui marche le mieux :
+
+- Le **PDF de l’école** est le plus précis, car le serveur lit son texte directement. Un PDF scanné est lu comme une photo.
+- Pour une **photo** : droite, lumineuse, la feuille entière. Le serveur redresse lui-même une photo penchée ou prise de travers. Les photos d’iPhone (HEIC) fonctionnent aussi.
+- Le fichier fait au plus 6 Mo.
+
+La reconnaissance de texte lit mal l’**écriture manuscrite**. D’un emploi du temps écrit à la main, seule une partie des cases arrive ; tu complètes le reste ensuite dans l’éditeur. Si le serveur ne trouve aucun emploi du temps, l’app le dit. Essaie alors une photo plus droite et plus lumineuse, ou importe le texte. Si votre serveur n’a pas de reconnaissance de texte, l’app le dit aussi et renvoie à l’import de texte.
+
+### L’aperçu {#preview}
+
+L’aperçu montre ce qui serait enregistré. Rien n’a encore changé.
+
+<Shot name="timetable-import" alt="L’aperçu : l’enfant, l’école, la période et la grille avec le nom de chaque matière sous son abréviation" wide />
+
+- en haut l’**enfant** et, s’il y en a plusieurs, l’**école**. Tu peux changer les deux ;
+- le nombre de cours, la classe, le rythme et la **période**. Si elle n’existe pas encore, « (sera créée) » est indiqué. Si l’enfant a déjà un emploi du temps dans cette période, l’aperçu dit qu’il sera remplacé ;
+- la **grille** : chaque cours avec ses horaires, dans chaque case l’abréviation et en dessous le nom de la matière. Sur un téléphone, il n’y a pas la place : appuie longuement sur une case pour voir le nom. Un cours seulement en semaine A ou B porte un A ou un B ;
+- l’**accueil périscolaire**, si la feuille en a ;
+- chaque **remarque** : un cours ne correspond à aucun horaire, la feuille a plus de cours que vos horaires (des cours sont alors ajoutés), d’autres horaires (les vôtres restent) ou nomme une autre école. Après un scan, l’aperçu nomme aussi les fragments de texte qui ne vont dans aucune case. Compare alors avec la feuille.
+
+<Shot name="timetable-import-subjects" alt="Nouvelles matières dans l’aperçu : QLM est reprise comme Découverte du monde existante, Anglais est créée" />
+
+Sous **Nouvelles matières** figure chaque matière de la feuille que vous n’avez pas encore. À côté, tu choisis :
+
+- **Créer** : la matière est créée avec l’abréviation et le nom de la feuille ;
+- une **matière existante**, si vous l’avez déjà sous un autre mot, par exemple « QLM » pour votre Découverte du monde. WuselWall retient le mot de la feuille pour cette matière et le reconnaît tout seul la prochaine fois. Si le scan trouve exactement une matière qui correspond, elle est déjà choisie.
+
+Si tu désactives **Créer les nouvelles matières**, les cours avec de nouvelles matières sont laissés de côté ; la grille les montre barrés.
+
+**Appliquer** crée la période si elle manque, complète les horaires, crée les nouvelles matières et enregistre l’emploi du temps. **Rejeter** laisse tout en l’état ; une proposition est alors refusée.
 
 ## Modifier des journées entières {#editing-whole-days}
 
