@@ -6020,6 +6020,11 @@ class AppLocalizationsEs extends AppLocalizations {
   String get weekHighlightHere => 'formó parte de nuestra semana';
 
   @override
+  String settingsOwnTitle(String name) {
+    return 'Ajustes de $name';
+  }
+
+  @override
   String get settingsGroupPersonalTitle => 'Personal';
 
   @override

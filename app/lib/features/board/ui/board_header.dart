@@ -1,7 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
@@ -10,6 +10,7 @@ import 'package:wuselwall/features/board/ui/board_grid.dart';
 import 'package:wuselwall/features/board/ui/board_next_up.dart';
 import 'package:wuselwall/features/rituals/application/ritual_providers.dart';
 import 'package:wuselwall/features/rituals/ui/table_question_widgets.dart';
+import 'package:wuselwall/features/settings/ui/open_settings.dart';
 import 'package:wuselwall/features/wusel/ui/ambience_sky.dart';
 import 'package:wuselwall/features/wusel/ui/board_wusel.dart';
 
@@ -147,7 +148,8 @@ class BoardHeader extends ConsumerWidget {
                     iconSize: 30,
                     color: ww.ink3,
                     icon: const Icon(Icons.settings_outlined),
-                    onPressed: () => context.push<void>(Routes.settings),
+                    // Nobody selected: asks who is asking first (specs/09).
+                    onPressed: () => unawaited(openSettings(context, ref)),
                   ),
                 ),
               ],

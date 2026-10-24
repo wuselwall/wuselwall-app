@@ -2238,6 +2238,14 @@
   "weekHighlightAttended": "war bei {title} dabei",
   "weekHighlightHelped": "hat bei den Aufgaben mitgeholfen",
   "weekHighlightHere": "war diese Woche mit dabei",
+  "settingsOwnTitle": "Einstellungen für {name}",
+  "@settingsOwnTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsGroupPersonalTitle": "Persönlich",
   "settingsGroupPersonalSubtitle": "Wusel, Töne und Erinnerungen für dich",
   "settingsGroupFamilyTitle": "Familie",

@@ -6033,6 +6033,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get weekHighlightHere => 'était de la partie cette semaine';
 
   @override
+  String settingsOwnTitle(String name) {
+    return 'Paramètres de $name';
+  }
+
+  @override
   String get settingsGroupPersonalTitle => 'Personnel';
 
   @override

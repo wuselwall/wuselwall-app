@@ -3530,6 +3530,14 @@
   },
   "weekHighlightHelped": "helped with the chores",
   "weekHighlightHere": "was part of our week",
+  "settingsOwnTitle": "Settings for {name}",
+  "@settingsOwnTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsGroupPersonalTitle": "Personal",
   "settingsGroupPersonalSubtitle": "Wusel, sounds and reminders for you",
   "settingsGroupFamilyTitle": "Family",

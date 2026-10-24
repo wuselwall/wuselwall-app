@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/appearance.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
+import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/first_run.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 
@@ -37,6 +38,7 @@ void main() {
       WidgetTester t, {
       required AppearanceStore store,
       DeviceInfo? current,
+      String? acting,
     }) async {
       final container = await pumpApp(
         t,
@@ -49,6 +51,9 @@ void main() {
           pendingFirstRunProvider.overrideWith((ref) async => null),
         ],
       );
+      if (acting != null) {
+        container.read(actingProfileProvider.notifier).select(acting);
+      }
       container.read(routerProvider).go(Routes.settingsDevices);
       await t.pumpAndSettle();
       return container;
@@ -96,6 +101,8 @@ void main() {
           deviceClass: DeviceClass.kiosk,
           register: UiRegister.kiosk,
         ),
+        // The wall opens settings for whoever picked themselves.
+        acting: guardianId,
       );
       final tile = find.text('Darstellung');
       await t.ensureVisible(tile);

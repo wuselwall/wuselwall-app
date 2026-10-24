@@ -149,7 +149,8 @@ void main() {
           ),
         ),
       );
-      await t.tap(find.byKey(const ValueKey('kid-pick-$kidId')));
+      // A guardian: a child's Settings is their own page, without the device group.
+      await t.tap(find.byKey(const ValueKey('kid-pick-$guardianId')));
       await t.pumpAndSettle();
       await t.tap(find.byTooltip(_de.settingsTitle));
       await t.pumpAndSettle();
@@ -192,6 +193,9 @@ void main() {
         TargetPlatform.iOS,
       );
       await t.tap(find.byTooltip(_de.settingsTitle));
+      await t.pumpAndSettle();
+      // Nobody selected on the wall: it asks who is asking first.
+      await t.tap(find.byKey(const ValueKey('who-pick-$guardianId')));
       await t.pumpAndSettle();
       expect(
         find.byKey(const ValueKey('settings-group-devices')),

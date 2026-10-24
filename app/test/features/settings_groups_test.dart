@@ -1,12 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/demo/demo_repositories.dart';
+import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/settings/application/settings_groups.dart';
 import 'package:wuselwall/features/settings/application/settings_view.dart';
@@ -277,6 +279,8 @@ void main() {
           e,
     ];
 
+    late ProviderContainer container;
+
     Future<FakeHouseholdSettingsRepository> pumpRoute(
       WidgetTester tester,
       String route, {
@@ -284,11 +288,12 @@ void main() {
       Locale locale = const Locale('en'),
       SettingsView view = SettingsView.advanced,
       DeviceInfo? current,
+      String? acting,
     }) async {
       final repo = FakeHouseholdSettingsRepository(
         rows ?? rowsWithOneCustomised(),
       );
-      final container = await pumpApp(
+      container = await pumpApp(
         tester,
         locale: locale,
         overrides: [
@@ -299,6 +304,9 @@ void main() {
           householdSettingsRepositoryProvider.overrideWithValue(repo),
         ],
       );
+      if (acting != null) {
+        container.read(actingProfileProvider.notifier).select(acting);
+      }
       container.read(routerProvider).go(route);
       await tester.pumpAndSettle();
       return repo;
@@ -468,7 +476,9 @@ void main() {
       );
     });
 
-    testWidgets('Personal is not offered with nobody acting', (tester) async {
+    testWidgets('a shared device with nobody acting has no settings', (
+      tester,
+    ) async {
       await pumpRoute(
         tester,
         Routes.settings,
@@ -478,7 +488,25 @@ void main() {
         ),
       );
       expect(groupTile(SettingsGroup.personal), findsNothing);
+      expect(groupTile(SettingsGroup.family), findsNothing);
+    });
+
+    testWidgets('a guardian at a shared device sees Personal and Family', (
+      tester,
+    ) async {
+      await pumpRoute(
+        tester,
+        Routes.settings,
+        current: device(
+          deviceClass: DeviceClass.shared,
+          register: UiRegister.kid,
+        ),
+        acting: guardianId,
+      );
+      expect(groupTile(SettingsGroup.personal), findsOneWidget);
       expect(groupTile(SettingsGroup.family), findsOneWidget);
+      // The kid home behind it greeted the acting guardian and started the board's timers.
+      await unmountApp(tester, container);
     });
 
     testWidgets('a server without the rituals has no tile for them', (
@@ -518,8 +546,11 @@ void main() {
           deviceClass: DeviceClass.shared,
           register: UiRegister.kid,
         ),
+        acting: guardianId,
       );
+      expect(groupTile(SettingsGroup.family), findsOneWidget);
       expect(groupTile(SettingsGroup.account), findsNothing);
+      await unmountApp(tester, container);
     });
 
     testWidgets('settings nothing reads yet are not offered', (tester) async {

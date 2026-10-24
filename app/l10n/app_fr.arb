@@ -2911,6 +2911,14 @@
   "weekHighlightAttended": "était là pour : {title}",
   "weekHighlightHelped": "a aidé aux tâches",
   "weekHighlightHere": "était de la partie cette semaine",
+  "settingsOwnTitle": "Paramètres de {name}",
+  "@settingsOwnTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "settingsGroupPersonalTitle": "Personnel",
   "settingsGroupPersonalSubtitle": "Wusel, sons et rappels pour toi",
   "settingsGroupFamilyTitle": "Famille",

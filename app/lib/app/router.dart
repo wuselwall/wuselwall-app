@@ -21,7 +21,9 @@ import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/application/first_run.dart';
 import 'package:wuselwall/features/identity/application/pairing_providers.dart';
 import 'package:wuselwall/features/identity/application/sign_in_choice.dart';
+import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/identity/domain/pairing.dart';
+import 'package:wuselwall/features/identity/ui/acting_profile_bar.dart';
 import 'package:wuselwall/features/identity/ui/device_pair_page.dart';
 import 'package:wuselwall/features/invitations/domain/invitation.dart';
 import 'package:wuselwall/features/invitations/ui/invite_code_page.dart';
@@ -35,10 +37,12 @@ import 'package:wuselwall/features/reminders/ui/reminders_page.dart';
 import 'package:wuselwall/features/school/ui/school_setup_page.dart';
 import 'package:wuselwall/features/school/ui/timetable_editor_page.dart';
 import 'package:wuselwall/features/school/ui/timetable_import_page.dart';
+import 'package:wuselwall/features/settings/application/settings_access.dart';
 import 'package:wuselwall/features/settings/application/settings_groups.dart';
 import 'package:wuselwall/features/settings/ui/family_members_page.dart';
 import 'package:wuselwall/features/settings/ui/family_page.dart';
 import 'package:wuselwall/features/settings/ui/member_page.dart';
+import 'package:wuselwall/features/settings/ui/own_settings_page.dart';
 import 'package:wuselwall/features/settings/ui/settings_group_page.dart';
 import 'package:wuselwall/features/settings/ui/settings_group_text.dart';
 import 'package:wuselwall/features/settings/ui/settings_page.dart';
@@ -124,10 +128,70 @@ abstract final class Routes {
       path == setup || path.startsWith('$setup/');
 }
 
+/// Einstellungen and every page below it.
+bool isSettingsPath(String path) =>
+    path == Routes.settings || path.startsWith('${Routes.settings}/');
+
+/// Who may open which settings page (specs/09, "Settings on a shared device"). On a
+/// personal phone, and for a guardian at a shared device or the wall, everything; with
+/// nobody acting, nothing; for anyone else only their own page, at `/settings` or
+/// `/settings/personal`. Null: the page stays.
+String? settingsRedirect(SettingsAccess access, String path) {
+  if (!isSettingsPath(path)) return null;
+  return switch (access) {
+    SettingsAccess.full => null,
+    SettingsAccess.none => Routes.home,
+    SettingsAccess.own =>
+      path == Routes.settings || path == Routes.settingsPersonal
+          ? null
+          : Routes.settings,
+  };
+}
+
+/// What every settings page stands in. The redirect of the router covers navigation with
+/// `go`, but a page opened with `push` (the gear does) sits above the location the router
+/// re-checks, so the page watches who is acting itself: when that person may no longer see
+/// it (the wall's 60 s idle return, someone else tapping their avatar) it shows nothing and
+/// moves on at once rather than leave stale content up. The wall also goes back to nobody
+/// after 60 s without a touch, and the home board that counts that is not under a settings
+/// page, so settings count it themselves.
+class _SettingsScope extends ConsumerWidget {
+  const _SettingsScope({required this.path, required this.child});
+
+  final String path;
+  final widgets.Widget child;
+
+  @override
+  widgets.Widget build(widgets.BuildContext context, WidgetRef ref) {
+    final target = settingsRedirect(ref.watch(settingsAccessProvider), path);
+    if (target != null) {
+      widgets.WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (context.mounted) context.go(target);
+      });
+      return const widgets.SizedBox.shrink();
+    }
+    return ref.watch(deviceProvider).value?.deviceClass == DeviceClass.kiosk
+        ? IdleReverter(child: child)
+        : child;
+  }
+}
+
 /// Builds a Flutter MaterialPage explicitly. GoRouter's default app-type
 /// detection checks a separate MaterialApp package and misses WuselWall's
 /// Flutter MaterialApp.router, otherwise disabling platform page transitions.
 GoRoute _materialRoute({
+  required String path,
+  required widgets.Widget Function(widgets.BuildContext, GoRouterState) builder,
+  List<RouteBase> routes = const [],
+}) {
+  final page = isSettingsPath(path)
+      ? (widgets.BuildContext context, GoRouterState state) =>
+            _SettingsScope(path: path, child: builder(context, state))
+      : builder;
+  return _plainRoute(path: path, builder: page, routes: routes);
+}
+
+GoRoute _plainRoute({
   required String path,
   required widgets.Widget Function(widgets.BuildContext, GoRouterState) builder,
   List<RouteBase> routes = const [],
@@ -159,6 +223,9 @@ final routerProvider = Provider<GoRouter>((ref) {
     ..listen(sessionStateProvider, (_, _) => refresh.value++)
     ..listen(pendingFirstRunProvider, (_, _) => refresh.value++)
     ..listen(signInChoiceOwedProvider, (_, _) => refresh.value++)
+    // Whoever acts decides what settings they may open; a change (the wall's idle
+    // return, a switch to someone else) moves a settings page they may no longer see.
+    ..listen(settingsAccessProvider, (_, _) => refresh.value++)
     ..onDispose(refresh.dispose);
 
   return GoRouter(
@@ -199,7 +266,9 @@ final routerProvider = Provider<GoRouter>((ref) {
         // A founder who has just created the household sees H2 once, before Today.
         Ready() when ref.read(onboardingPlanProvider) != null =>
           path == Routes.welcomeMembers ? null : Routes.welcomeMembers,
-        Ready() => _readyRedirect(ref, path),
+        Ready() =>
+          settingsRedirect(ref.read(settingsAccessProvider), path) ??
+              _readyRedirect(ref, path),
         // SignedOut, or an error on first load (the splash page shows it).
         _ =>
           session.hasError
@@ -328,7 +397,14 @@ final routerProvider = Provider<GoRouter>((ref) {
       for (final group in SettingsGroup.values)
         _materialRoute(
           path: group.route,
-          builder: (_, _) => SettingsGroupPage(group: group),
+          builder: (_, _) => group == SettingsGroup.personal
+              ? Consumer(
+                  builder: (_, ref, _) =>
+                      ref.watch(settingsAccessProvider) == SettingsAccess.own
+                      ? const OwnSettingsPage()
+                      : SettingsGroupPage(group: group),
+                )
+              : SettingsGroupPage(group: group),
         ),
       _materialRoute(
         path: Routes.member,

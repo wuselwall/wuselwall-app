@@ -6006,6 +6006,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get weekHighlightHere => 'war diese Woche mit dabei';
 
   @override
+  String settingsOwnTitle(String name) {
+    return 'Einstellungen für $name';
+  }
+
+  @override
   String get settingsGroupPersonalTitle => 'Persönlich';
 
   @override
