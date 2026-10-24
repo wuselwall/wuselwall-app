@@ -109,8 +109,9 @@ only (the server refuses the writes of anyone else):
 - the term the import lands in: the one covering the week on screen, else the proposed
   school year, marked "(wird angelegt)";
 - the count, the class, the cycle, and a line when an existing timetable will be replaced;
-- the grid as it will be saved, with the bell times, new subjects in bold, dropped ones
-  struck through;
+- the grid as it will be saved: each period with its clock span, each subject's short name
+  with its name underneath (on a phone the cells are too narrow, a long press shows it), new
+  subjects in bold, dropped ones struck through;
 - the subjects that will be created, with a switch to leave them (and their lessons) out;
 - the care rows;
 - every warning: lessons whose time matched no bell time (dropped), periods beyond the bell
@@ -309,6 +310,10 @@ their own, `import:propose`, granted separately from `shopping:write`.
   Germany, Austria (2023/24 names), German-, French- and Italian-speaking Switzerland,
   France, Spain with the co-official language of the region. The app sends its language
   with the school for the bilingual cantons and for countries without a list.
+- **Accents** (*checked 2026-10-23*, roadmap step 9): the Latin-script recognition model
+  reads the accented letters of the German, French and Spanish subject names at 98.7 to 100
+  percent in four fonts from 18 px up, so no sheet needs another model; `fold` maps œ and æ
+  to oe and ae as the app does.
 
 ### What was not verified
 
@@ -383,10 +388,9 @@ accents" rather than to a failed build.
 ## Recognition roadmap
 
 What the research and the corpus say the next steps are, in the order they pay off. None
-needs a model; all stay on the family's server. *Status 2026-10-23: steps 1 to 7 are built
-(see "The sheet's own words, and the family's" above); 8 to 10 stay open, 10 in part: the
-preview lists each new subject with its name and the list to take it as an existing one, the
-grid still shows short names only.*
+needs a model; all stay on the family's server. *Status 2026-10-23: steps 1 to 7, 9 and 10
+are built (see "The sheet's own words, and the family's", "Accents" and "The preview" above);
+8 is done for the regions where a sheet was found and stays open for the rest.*
 
 1. **Read the legend.** Swiss, Spanish and most Untis sheets print `CODE Name` pairs under
    or beside the grid. A block of short-code-plus-name lines outside the grid resolves every
@@ -414,16 +418,49 @@ grid still shows short names only.*
 7. **A regression corpus in CI.** The OCR line files of the public sheets (Wikimedia Commons,
    school websites) can live in the repository with the expected grid sizes; a test runs the
    parser over them so a tuning never silently loses a sheet. The own sheets never.
-8. **Starter lists checked against sheets.** No real sheet was found for Rheinland-Pfalz,
-   Sachsen-Anhalt, Thüringen, NRW primary, the Romandie, Ticino, the Basque Country, Navarra
-   and the Balearics; their lists and codes are official names and conventions. One sheet per
-   region, read through the scan, settles the short names. Belgium, Luxembourg and the
-   Netherlands have no list yet.
-9. **OCR accents.** RapidOCR's latin model reads é, ñ, ç and ß on the corpus; a French or
-   Spanish sheet with many accents deserves a check of the recognition model's language
-   dictionary before the pilot families there.
-10. **The preview shows the name.** The code with its name underneath, and the merge action
-    of step 3, are the app's side of this; the payload carries the name already.
+8. **Starter lists checked against sheets.** *Second round 2026-10-23, in part.* Three
+   research passes (`specs/research/school-subjects/`, the three parts named "second round")
+   found real sheets for Sachsen-Anhalt, NRW primary, Vaud, Neuchâtel, Fribourg, Ticino, the
+   Basque Country, Catalonia and Andalusia. What they print went into the vocabulary as
+   aliases (`SaU`, `Gestalten`, `ILZ`, `IFA`; `GEOCIT`, `FORGEN`, `EFA`, `MCC`, the Vaud and
+   Neuchâtel options; `EFI`, `EVI`, `EMU`, `APLA`, `STO`, `SCI`, `OCL`; the Basque, Catalan
+   and Galician subject names and the Séneca codes `ATED`, `RCat`, `EVCE`, `TECD`), two codes
+   became ambiguous because real sheets disagree (`HSU` is Heimat- und Sachunterricht in
+   Bayern and Herkunftssprachlicher Unterricht in NRW; `RU` is Russisch and Religion), and
+   the starter lists changed where the sheets said so: the Romandie prints `SCN`, Ticino's
+   scuola media prints `EFI`, `EVI`, `EMU`, `APLA`, and Catalonia, the Balearics, Valencia,
+   the Basque Country and Galicia get their lists in the co-official language, since their
+   sheets print those words in full. Regional German lists were not added: Sachsen-Anhalt
+   and NRW rest on one school each, so their codes are aliases, not standards. Still unseen,
+   and therefore still official names and conventions only: Rheinland-Pfalz, Thüringen,
+   Geneva, Valais, Jura, Belgium, Luxembourg, Navarra, the Balearics (whose timetables live
+   in a portal and are not published).
+9. **OCR accents.** *Checked 2026-10-23; nothing to change.* The service selects RapidOCR's
+   PP-OCRv5 Latin-script recognition model explicitly, and its dictionary (503 entries, in
+   the model's metadata) holds every accented letter of German, French and Spanish. The
+   measurement: the 54 accented words of the subject lists of de, fr and es (Français,
+   Mathématiques, Educación, Física, Förderunterricht, ...), set in 5x5 grids under a weekday
+   header with four real fonts (DejaVu Sans, Liberation Sans, FreeSerif, Lato) at 18, 26 and
+   36 px, posted to the container and aligned letter by letter: the accented letters came
+   back at 98.7 to 100 percent and the plain letters at 99.0 to 100 percent for every font
+   and size. The only confusion is FreeSerif's "rn" read as "m" at 18 px (twice in 606
+   letters); no letter ever became a digit; upscaling the sheet twofold before recognition
+   moves the misses around and changes no figure. The misses that remain are a detection
+   quirk unrelated to accents: the box around "Tutoría" is sometimes not found at all, and
+   plain "Tutoria" just as often, while "Teoría" and "Autoría" are found every time. A
+   caution for whoever repeats this: Pillow's bundled fallback font (`ImageFont.load_default`)
+   has no proper glyphs for accented letters and draws other marks in their place, so a sheet
+   drawn with it loses every accent (0 of 77); that is the font, not the model, and no reason
+   to change anything. Should a real sheet ever show the model losing accents, PP-OCRv6's
+   multilingual small recognition model (`lang_type` EN, `ocr_version` PPOCRV6, `model_type`
+   SMALL) is already in the image as the ready fallback. On the parser's side a dropped
+   accent costs one edit, which `snapSubject` absorbs for words of five letters or more
+   ("Fran6ais" snaps to Français), and `fold` maps œ and æ to oe and ae as the app's
+   `foldText` does.
+10. **The preview shows the name.** Built: the grid shows each subject's name under its
+    short name (on a phone, where five columns leave no room, a long press shows it), the
+    row header shows the period's clock span, and the merge action of step 3 is in the list
+    of new subjects; the payload carries the name already.
 
 ## What is not built
 
@@ -462,4 +499,5 @@ thresholds and the warnings, not into new screens.
 | 4 | Scanning: the container, the function, the parser, the app's way in | Built, unverified on real sheets |
 | 5 | The language's words and the starter lists per region, from the research | Built |
 | 6 | The recognition roadmap, steps 1 to 7: legend, aliases, suggestions, markers, wrapped words, care rows, the corpus in CI | Built |
-| 7 | The pilot's measurements, roadmap steps 8 to 10, iOS Vision if the server path is not enough | Open |
+| 7 | Roadmap steps 8 to 10: the second research round and the regional lists, the accent check, the names in the grid | Built, 8 in part |
+| 8 | The pilot's measurements, the regions still unseen, iOS Vision if the server path is not enough | Open |

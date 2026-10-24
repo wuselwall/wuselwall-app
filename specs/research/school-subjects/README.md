@@ -10,6 +10,9 @@ subject lists. Compiled 2026-10-23 from five research parts kept beside this fil
 | [ch-at.md](ch-at.md) | Switzerland (Lehrplan 21, PER, Ticino, Graubünden), Austria |
 | [fr.md](fr.md) | France (école, collège, lycée, lycée professionnel) |
 | [es.md](es.md) | Spain (Primaria, ESO, Bachillerato, co-official languages) |
+| [de-rp-st-th-nrw.md](de-rp-st-th-nrw.md) | Second round (2026-10-23): real sheets for Sachsen-Anhalt and NRW primary; names only for Rheinland-Pfalz and Thüringen |
+| [ch-romandie-ticino-be-lu.md](ch-romandie-ticino-be-lu.md) | Second round: real sheets for Vaud and Ticino, lists for Neuchâtel and Fribourg; nothing readable for Geneva, Valais, Jura, Belgium, Luxembourg |
+| [es-regions.md](es-regions.md) | Second round: Basque ESO sheets and primary names, Catalan primary sheets, an Andalusian Séneca export; nothing for Navarra and the Balearics |
 
 The parts carry per-state and per-level tables with a source for every row. This summary
 merges them into one list per subject group and one collision table, and says what the
@@ -408,9 +411,14 @@ short name and let the parent name it in the preview.
 
 ## 6. What this means for the matcher and the starter lists
 
-*Status 2026-10-23: items 1 to 3, 5 (breaks and parentheses) and 6 are implemented in
-`supabase/functions/_shared/school_subjects.ts` and the starter lists of `api.school_save`;
-item 4 (the legend) and the rest of item 5 are in the recognition roadmap of specs/24.*
+*Status 2026-10-23: items 1 to 6 are implemented in
+`supabase/functions/_shared/school_subjects.ts` and the starter lists of `api.school_save`
+(the legend reader, aliases and the rest of the roadmap in specs/24). The second round of
+research (the three parts at the end of the table) added the codes real sheets print in
+Sachsen-Anhalt, NRW primary, Vaud, Neuchâtel, Fribourg, Ticino, the Basque Country,
+Catalonia and Andalusia, and gave Catalonia, the Balearics, Valencia, the Basque Country and
+Galicia starter lists in their own language. Still unseen: Rheinland-Pfalz, Thüringen,
+Geneva, Valais, Jura, Belgium, Luxembourg, Navarra, the Balearics.*
 
 1. **Match the family's own subjects first.** The scan already sends the household's short
    names and names (specs/24). Exact match on the folded token, then prefix, then one edit for
