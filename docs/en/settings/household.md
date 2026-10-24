@@ -25,6 +25,8 @@ Every setting has a **default**, which WuselWall suggests. It suits most familie
 
 **Sign out this device** is at the very bottom of the list.
 
+On a tablet for everyone or the wall display, guardians who have tapped their name see everything. Everyone else finds only their own settings (Wusel, Wusel's outfit, sound), and with nobody selected the tablet has none at all; see [Who are you?](/en/guide/who-are-you#settings-on-shared-devices).
+
 <Shot name="settings-tasks" alt="The Tasks & rewards group with its settings" />
 
 Each setting's description is right below it and explains what changes.

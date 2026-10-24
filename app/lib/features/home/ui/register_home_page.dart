@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,6 +20,8 @@ import 'package:wuselwall/features/identity/ui/acting_profile_bar.dart';
 import 'package:wuselwall/features/kid/ui/kid_home.dart';
 import 'package:wuselwall/features/meals/ui/meals_section.dart';
 import 'package:wuselwall/features/school/ui/schedule_section.dart';
+import 'package:wuselwall/features/settings/application/settings_access.dart';
+import 'package:wuselwall/features/settings/ui/open_settings.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_section.dart';
 import 'package:wuselwall/features/tasks/application/tasks_providers.dart';
 import 'package:wuselwall/features/tasks/ui/tasks_section.dart';
@@ -64,11 +68,13 @@ class RegisterHomePage extends ConsumerWidget {
           icon: const Icon(Icons.developer_mode),
           onPressed: () => context.go(Routes.system),
         ),
-      IconButton(
-        tooltip: l10n.settingsTitle,
-        icon: const Icon(Icons.settings),
-        onPressed: () => context.push<void>(Routes.settings),
-      ),
+      // A family tablet with nobody selected has no gear (specs/09).
+      if (ref.watch(settingsGearVisibleProvider))
+        IconButton(
+          tooltip: l10n.settingsTitle,
+          icon: const Icon(Icons.settings),
+          onPressed: () => unawaited(openSettings(context, ref)),
+        ),
     ];
     // Each module has its band (specs/26): the app bar and the selected destination
     // take it, so moving between modules is moving between colours.

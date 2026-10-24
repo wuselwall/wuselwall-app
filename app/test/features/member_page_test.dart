@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/first_run.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/settings/application/settings_view.dart';
@@ -224,6 +225,8 @@ void main() {
           ),
         ],
       );
+      // The wall opens settings only for someone who picked themselves.
+      container.read(actingProfileProvider.notifier).select(guardianId);
       container.read(routerProvider).go(Routes.member, extra: kidId);
       await t.pumpAndSettle();
 

@@ -5961,6 +5961,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get weekHighlightHere => 'was part of our week';
 
   @override
+  String settingsOwnTitle(String name) {
+    return 'Settings for $name';
+  }
+
+  @override
   String get settingsGroupPersonalTitle => 'Personal';
 
   @override

@@ -10,7 +10,9 @@ import 'package:wuselwall/core/ui/module_band.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
+import 'package:wuselwall/features/settings/application/settings_access.dart';
 import 'package:wuselwall/features/settings/application/settings_groups.dart';
+import 'package:wuselwall/features/settings/ui/own_settings_page.dart';
 import 'package:wuselwall/features/settings/ui/settings_group_text.dart';
 import 'package:wuselwall/features/settings/ui/settings_view_switch.dart';
 
@@ -26,6 +28,10 @@ class SettingsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // A child, or an adult who is not a guardian, at a shared device: their own page only.
+    if (ref.watch(settingsAccessProvider) == SettingsAccess.own) {
+      return const OwnSettingsPage();
+    }
     final l10n = context.l10n;
     final env = ref.watch(settingsEnvProvider);
     final thisDevice = ref.watch(deviceProvider).value;

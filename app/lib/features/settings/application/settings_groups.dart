@@ -5,6 +5,7 @@ import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/settings/application/household_settings_providers.dart';
+import 'package:wuselwall/features/settings/application/settings_access.dart';
 import 'package:wuselwall/features/settings/application/settings_view.dart';
 import 'package:wuselwall/features/settings/domain/household_setting.dart';
 
@@ -332,6 +333,7 @@ class SettingsEnv {
     this.acting,
     this.notificationsAvailable = false,
     this.hasServer = false,
+    this.ownOnly = false,
   });
 
   final List<SettingEntry> entries;
@@ -341,6 +343,10 @@ class SettingsEnv {
   final String? acting;
   final bool notificationsAvailable;
   final bool hasServer;
+
+  /// A non-guardian at a shared or kiosk device: only the settings the server lets a
+  /// member change for themselves (`self_service`, member scope), no tiles.
+  final bool ownOnly;
 
   bool get personalPhone => deviceClass == DeviceClass.personal;
 
@@ -352,6 +358,7 @@ class SettingsEnv {
     acting: acting,
     notificationsAvailable: notificationsAvailable,
     hasServer: hasServer,
+    ownOnly: ownOnly,
   );
 
   /// The definition of [key] in the catalogue, or null on a server without it.
@@ -365,6 +372,10 @@ class SettingsEnv {
     final definition = resolve(key);
     if (definition == null) return false;
     if (!advanced && !basicSettingKeys.contains(key)) return false;
+    if (ownOnly &&
+        !(definition.scope == SettingScope.member && definition.selfService)) {
+      return false;
+    }
     return switch (definition.scope) {
       SettingScope.member => acting != null,
       SettingScope.device => deviceId != null,
@@ -405,7 +416,7 @@ List<VisibleSection> visibleSections(SettingsGroup group, SettingsEnv env) {
         if (switch (item) {
           SettingKey(:final key) => env.showsKey(key),
           SettingTileItem(:final tile) =>
-            (env.advanced || tile.basic) && tile.visible(env),
+            !env.ownOnly && (env.advanced || tile.basic) && tile.visible(env),
         })
           item,
     ];
@@ -450,9 +461,12 @@ bool hasHiddenSettings(SettingsEnv env, {SettingsGroup? group}) {
 /// stay.
 final settingsEnvProvider = Provider.autoDispose<SettingsEnv>((ref) {
   final device = ref.watch(deviceProvider).value;
+  // A member's own page has no Basic/Advanced switch: it lists everything they may change.
+  final ownOnly = ref.watch(settingsAccessProvider) == SettingsAccess.own;
   return SettingsEnv(
     entries: ref.watch(householdSettingsProvider).value ?? const [],
-    advanced: ref.watch(showAdvancedSettingsProvider),
+    advanced: ownOnly || ref.watch(showAdvancedSettingsProvider),
+    ownOnly: ownOnly,
     deviceClass: device?.deviceClass,
     deviceId: device?.deviceId,
     acting: ref.watch(actingProfileProvider),

@@ -8,6 +8,7 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/features/household/domain/household_models.dart';
 import 'package:wuselwall/features/household/ui/deleted_family_page.dart';
 import 'package:wuselwall/features/household/ui/new_family_page.dart';
+import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/settings/application/settings_view.dart';
 
@@ -47,6 +48,7 @@ void main() {
       WidgetTester t, {
       required DeviceInfo device,
       Account? acc,
+      String? acting,
     }) async {
       final identity = FakeIdentityRepository(current: device);
       final leave = FakeHouseholdLeaveRepository();
@@ -62,6 +64,9 @@ void main() {
           ),
         ),
       );
+      if (acting != null) {
+        container.read(actingProfileProvider.notifier).select(acting);
+      }
       container.read(routerProvider).go(Routes.settingsAccount);
       await t.pumpAndSettle();
       // The account tiles are at the end of a lazily built list.
@@ -154,6 +159,7 @@ void main() {
           deviceClass: DeviceClass.kiosk,
           register: UiRegister.kiosk,
         ),
+        acting: guardianId,
       );
       expect(leaveTile, findsNothing);
       await unmountApp(t, kiosk.container);

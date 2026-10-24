@@ -6,6 +6,16 @@ En dispositivos compartidos y en la pantalla de pared, toca **tu nombre y color*
 
 Sin elegir un nombre no se puede modificar nada. En la pantalla de pared, la selección desaparece tras **un minuto sin tocar**, para que nadie actúe por accidente con tu nombre.
 
+## Los ajustes en la tableta y en la pared {#settings-on-shared-devices}
+
+En una **tableta para todos**, la rueda de **Ajustes** solo aparece cuando alguien ha tocado su nombre. Lo que encuentras entonces depende de quién seas:
+
+- Los **responsables** ven todos los ajustes, como en su propio teléfono. Confirman los cambios con su PIN (ver abajo).
+- Los **niños y los adultos que no son responsables** solo ven **sus propios ajustes**: **Wusel**, **La ropa de Wusel** y el **sonido** de las tareas. No necesitan PIN para ello, y no hay otros ajustes para ellos.
+- En la **pantalla de pared** la rueda siempre está. Si nadie está elegido, WuselWall pregunta primero **¿Quién eres?** Los ajustes solo se abren cuando has tocado tu nombre; **Cancelar** no abre nada.
+
+Cuando el dispositivo vuelve a «nadie», por ejemplo tras un minuto sin tocar la pared, los ajustes también se cierran.
+
 ## El PIN de responsable {#the-guardian-pin}
 
 Añadir o bloquear dispositivos está reservado a los adultos responsables. En un dispositivo **compartido**, toca tu nombre e introduce tu **PIN de seis cifras**. La autorización dura **15 minutos** y solo es tuya: elegir otro nombre no transfiere permisos.

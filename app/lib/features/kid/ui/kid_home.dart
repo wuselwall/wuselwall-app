@@ -1,7 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
@@ -17,6 +17,8 @@ import 'package:wuselwall/features/kid/ui/kid_points_page.dart';
 import 'package:wuselwall/features/kid/ui/kid_timetable_page.dart';
 import 'package:wuselwall/features/kid/ui/kid_today_page.dart';
 import 'package:wuselwall/features/kid/ui/kid_widgets.dart';
+import 'package:wuselwall/features/settings/application/settings_access.dart';
+import 'package:wuselwall/features/settings/ui/open_settings.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_page.dart';
 
 /// The children's iPad (specs/09 "Screens by register"): five big destinations, icons
@@ -71,13 +73,20 @@ class KidHome extends ConsumerWidget {
                     top: Tokens.space1,
                     right: Tokens.space1,
                   ),
-                  child: IconButton(
-                    tooltip: l10n.settingsTitle,
-                    icon: const Icon(Icons.settings_outlined),
-                    // ink2: ink3 is not used on a band (specs/26).
-                    color: context.ww.ink2,
-                    onPressed: () => context.push<void>(Routes.settings),
-                  ),
+                  // A family tablet with nobody selected has no gear (specs/09); the row
+                  // keeps its height so nothing jumps when someone picks their name.
+                  child: ref.watch(settingsGearVisibleProvider)
+                      ? IconButton(
+                          tooltip: l10n.settingsTitle,
+                          icon: const Icon(Icons.settings_outlined),
+                          // ink2: ink3 is not used on a band (specs/26).
+                          color: context.ww.ink2,
+                          onPressed: () =>
+                              unawaited(openSettings(context, ref)),
+                        )
+                      : const SizedBox.square(
+                          dimension: kMinInteractiveDimension,
+                        ),
                 ),
               ),
             ),

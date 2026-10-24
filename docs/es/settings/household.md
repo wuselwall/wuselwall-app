@@ -25,6 +25,8 @@ Cada ajuste tiene un valor predeterminado. Si lo cambias, aparece como personali
 
 **Cerrar sesión en este dispositivo** está al final de la lista.
 
+En una tableta para todos o en la pantalla de pared, los responsables que han tocado su nombre lo ven todo. Los demás solo encuentran sus propios ajustes (Wusel, la ropa de Wusel, sonido), y sin nadie elegido la tableta no tiene ninguno; ver [¿Quién eres?](/es/guide/who-are-you#settings-on-shared-devices).
+
 <Shot name="settings-tasks" alt="El grupo Tareas y recompensas con sus ajustes" />
 
 La explicación bajo cada ajuste describe su efecto. Prueba los valores iniciales y cambia después lo que no encaje.

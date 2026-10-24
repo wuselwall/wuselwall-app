@@ -10132,6 +10132,12 @@ abstract class AppLocalizations {
   /// **'was part of our week'**
   String get weekHighlightHere;
 
+  /// No description provided for @settingsOwnTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings for {name}'**
+  String settingsOwnTitle(String name);
+
   /// No description provided for @settingsGroupPersonalTitle.
   ///
   /// In en, this message translates to:

@@ -175,10 +175,19 @@ void main() {
       },
     );
 
+    // A member's own phone still opens the whole of Einstellungen; a shared device
+    // shows a non-guardian only their own page (settings_shared_device_test.dart).
     testWidgets('a member cannot start a guardian action', (t) async {
-      final container = await pumpShared(t, identity: sharedIdentity());
-      container.read(actingProfileProvider.notifier).select(kidId);
-      await t.pump();
+      await pumpApp(
+        t,
+        overrides: [
+          ...baseOverrides(
+            identity: FakeIdentityRepository(current: device(profileId: kidId)),
+            shopping: FakeShoppingRepository([item('1', 'Milch')]),
+          ),
+          boardProvider.overrideWith(_StaticBoard.new),
+        ],
+      );
       await t.tap(find.byTooltip('Einstellungen'));
       await t.pumpAndSettle();
       await openSettingsGroup(t, SettingsGroup.family);

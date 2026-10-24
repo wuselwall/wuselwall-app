@@ -31,19 +31,23 @@ import 'package:wuselwall/features/settings/ui/settings_view_switch.dart';
 /// and device settings are guardian actions; a member's own settings are not.
 ///
 /// The page stands on its own: [parentRoute] is where Back leads and [showViewSwitch]
-/// leaves out the Basic/Advanced chip, so a device that shows one group only (a family
-/// tablet's Personal page) can reuse it.
+/// leaves out the Basic/Advanced chip and [title] names the page, so a device that shows
+/// one group only (a member's own page on a shared device) can reuse it.
 class SettingsGroupPage extends ConsumerWidget {
   const SettingsGroupPage({
     required this.group,
     this.parentRoute = Routes.settings,
     this.showViewSwitch = true,
+    this.title,
     super.key,
   });
 
   final SettingsGroup group;
   final String parentRoute;
   final bool showViewSwitch;
+
+  /// Replaces the group's own title, such as the person's name on their page.
+  final String? title;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -62,7 +66,7 @@ class SettingsGroupPage extends ConsumerWidget {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(group.title(l10n)),
+          title: Text(title ?? group.title(l10n)),
           leading: BackButton(onPressed: () => context.go(parentRoute)),
           actions: [if (showViewSwitch) const SettingsViewSwitch()],
         ),
