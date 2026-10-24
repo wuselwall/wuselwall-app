@@ -90,7 +90,13 @@ List<Countdown> countdowns({
   bool ferien = true,
 }) {
   final t = _day(today);
-  final last = t.add(Duration(days: horizonDays));
+  // Calendar days, not 24-hour durations: a clock change must not move the edge.
+  final last = DateTime(t.year, t.month, t.day + horizonDays);
+  int nights(DateTime from, DateTime to) => DateTime.utc(
+    to.year,
+    to.month,
+    to.day,
+  ).difference(DateTime.utc(from.year, from.month, from.day)).inDays;
   bool within(DateTime d) => !d.isBefore(t) && !d.isAfter(last);
   final out = <Countdown>[];
 
@@ -140,7 +146,7 @@ List<Countdown> countdowns({
     if (homecomings &&
         o.isPresence &&
         o.presenceState == PresenceState.travel &&
-        o.localEndDate.difference(o.localStartDate).inDays >= 2 &&
+        nights(o.localStartDate, o.localEndDate) >= 2 &&
         !o.localStartDate.isAfter(t) &&
         within(o.localEndDate)) {
       // Counted only while the person is away: "Papa ist in 2× schlafen zurück".

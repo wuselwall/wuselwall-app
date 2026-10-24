@@ -168,3 +168,16 @@ final wuselFrontTuftProvider = Provider.autoDispose<int?>((ref) {
   final i = members.take(6).toList().indexWhere((m) => m.id == acting);
   return i < 0 ? null : i;
 });
+
+/// Whether the household's server knows a lighter day (migration 20261024100000): its
+/// settings catalogue has the rituals' rows. Against an older server the controls that
+/// would write the new fields stay hidden instead of failing (each app release supports
+/// the previous server release too).
+final lighterDaySupportedProvider = Provider.autoDispose<bool>(
+  (ref) =>
+      ref
+          .watch(householdSettingsProvider)
+          .value
+          ?.any((e) => e.key == 'rituals.countdown_days') ??
+      false,
+);

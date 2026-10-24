@@ -18,6 +18,19 @@ void main() {
     },
   );
 
+  test('a look-back on a Monday morning is about the week just ended', () {
+    // 26 October 2026 is a Monday.
+    expect(
+      weekReviewWeek(
+        DateTime(2026, 10, 26, 9),
+        weekday: DateTime.monday,
+        hour: 8,
+        minute: 0,
+      ),
+      DateTime(2026, 10, 19),
+    );
+  });
+
   test('a highlight carries no number, whatever the server sends', () {
     final h = WeekHighlight.fromJson({
       'profile_id': 'p',

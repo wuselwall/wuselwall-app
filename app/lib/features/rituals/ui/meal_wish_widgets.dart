@@ -110,10 +110,12 @@ Future<void> showWishPicker(
     builder: (_) => const _WishPicker(),
   );
   if (choice == null || !context.mounted) return;
-  final result = await ref
+  // The container, not the ref: the child's page may be gone when the server answers.
+  final container = ProviderScope.containerOf(context);
+  final result = await container
       .read(ritualsRepositoryProvider)
       .setWish(actor: actor, recipeId: choice.recipeId, freeText: choice.text);
-  ref.invalidate(mealWishesProvider);
+  container.invalidate(mealWishesProvider);
   if (!context.mounted) return;
   switch (result) {
     case Ok():
@@ -281,9 +283,24 @@ class _WishChip extends ConsumerWidget {
       label: Text(l10n.mealsWishChip(m?.displayName ?? '', wish.title)),
       tooltip: l10n.mealsWishPlan,
       onPressed: () => unawaited(_plan(context, ref)),
-      onDeleted: () => unawaited(_remove(context, ref)),
+      // Removing someone else's wish is a guardian's (api.meal_wish_withdraw).
+      onDeleted: _mayRemove(ref)
+          ? () => unawaited(_remove(context, ref))
+          : null,
       deleteButtonTooltipMessage: l10n.mealsWishRemove,
     );
+  }
+
+  bool _mayRemove(WidgetRef ref) {
+    final acting = ref.watch(actingProfileProvider);
+    if (acting == wish.profileId) return true;
+    return ref
+            .watch(membersProvider)
+            .value
+            ?.where((m) => m.id == acting)
+            .firstOrNull
+            ?.isGuardian ??
+        false;
   }
 
   Future<void> _plan(BuildContext context, WidgetRef ref) async {
@@ -292,15 +309,16 @@ class _WishChip extends ConsumerWidget {
       builder: (_) => _PlanDialog(weekStart: weekStart),
     );
     if (picked == null || !context.mounted) return;
-    final result = await ref
+    final container = ProviderScope.containerOf(context);
+    final result = await container
         .read(ritualsRepositoryProvider)
         .planWish(
-          actor: ref.read(actingProfileProvider),
+          actor: container.read(actingProfileProvider),
           id: wish.id,
           onDate: picked.$1,
           slot: picked.$2,
         );
-    ref
+    container
       ..invalidate(mealWishesProvider)
       ..invalidate(mealEntriesProvider(weekStart));
     if (!context.mounted) return;
@@ -308,10 +326,14 @@ class _WishChip extends ConsumerWidget {
   }
 
   Future<void> _remove(BuildContext context, WidgetRef ref) async {
-    final result = await ref
+    final container = ProviderScope.containerOf(context);
+    final result = await container
         .read(ritualsRepositoryProvider)
-        .withdrawWish(actor: ref.read(actingProfileProvider), id: wish.id);
-    ref.invalidate(mealWishesProvider);
+        .withdrawWish(
+          actor: container.read(actingProfileProvider),
+          id: wish.id,
+        );
+    container.invalidate(mealWishesProvider);
     if (!context.mounted) return;
     if (result case Err(:final failure)) context.showFailure(failure);
   }

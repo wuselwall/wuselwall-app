@@ -100,15 +100,18 @@ class BoardCountdowns extends ConsumerWidget {
     final all = ref.watch(countdownsProvider);
     if (all.isEmpty) return const SizedBox.shrink();
     final ink = Theme.of(context).colorScheme.onSurface;
-    // Two when there is room for both at full length, else the nearest one.
-    return LayoutBuilder(
-      builder: (context, constraints) => _strip(
-        l10n,
-        today,
-        all.take(constraints.maxWidth >= 860 ? 2 : 1).toList(),
-        ink,
-      ),
+    // Two when both are short enough to fit the footer at full length, else the nearest
+    // one. Measured by length, not by a LayoutBuilder: the footer asks its children for
+    // their intrinsic height, which a LayoutBuilder cannot answer.
+    final two = all.take(2).toList();
+    final length = two.fold<int>(
+      0,
+      (n, c) =>
+          n +
+          countdownTitle(l10n, c).length +
+          countdownWhen(l10n, c, today).length,
     );
+    return _strip(l10n, today, length <= 52 ? two : all.take(1).toList(), ink);
   }
 
   Widget _strip(

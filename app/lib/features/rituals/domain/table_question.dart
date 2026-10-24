@@ -79,12 +79,14 @@ TableQuestion? questionFor(
   int skip = 0,
 }) => shuffled.isEmpty ? null : shuffled[(window + skip) % shuffled.length];
 
-/// Two windows a day, lunch and dinner, counted from 1 January 2024.
-int mealWindowIndex(DateTime day, {required bool dinner}) {
+/// The running number of a meal window, counted from 1 January 2024: one a day when the
+/// Tischfrage belongs to the warm meal only, two (lunch and dinner) otherwise. Stepping by
+/// one through the shuffle is what lets every question come round before any repeats.
+int mealWindowIndex(DateTime day, {required bool dinner, bool twoADay = true}) {
   final days = DateTime.utc(
     day.year,
     day.month,
     day.day,
   ).difference(DateTime.utc(2024)).inDays;
-  return days * 2 + (dinner ? 1 : 0);
+  return twoADay ? days * 2 + (dinner ? 1 : 0) : days;
 }

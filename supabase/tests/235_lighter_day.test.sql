@@ -1,5 +1,5 @@
 begin;
-select plan(47);
+select plan(57);
 
 
 -- Start from an empty system, whatever the database already holds (all rolled back).
@@ -214,6 +214,44 @@ select is((select m -> 'highlight' ->> 'kind' from wr, jsonb_array_elements(r ->
 select is((select jsonb_typeof(r -> 'chores_done') from wr), 'number', 'the family''s chores are one number, the family''s');
 select is((select count(*)::int from wr, jsonb_array_elements(r -> 'meals') x where (x ->> 'wished_by_profile_id') is not null), 1,
   'the wished meal is marked');
+
+-- ---- the star follows the dish (review findings 1 and 2) ----
+select pg_temp.act_as_dev('ipad');
+select api.meal_wish_set(pg_temp.id('emma'), pg_temp.id('pancakes'));
+select is((select free_text from app.meal_wish where profile_id = pg_temp.id('emma') and status = 'open'),
+  'Pfannkuchen', 'a recipe wish keeps the recipe''s title as words');
+select pg_temp.act_as_dev('papa');
+select api.meal_wish_plan(null, (select id from api.meal_wishes where profile_id = pg_temp.id('emma') and status = 'open'),
+  '2026-10-30', 'dinner');
+select api.meal_move(null, '2026-10-29', 'dinner', '2026-10-30', 'dinner');
+select is((select string_agg(on_date || ':' || coalesce(wished_by_profile_id = pg_temp.id('emma'), false)::text, ',' order by on_date)
+             from app.meal_plan_entry where on_date in ('2026-10-29', '2026-10-30') and slot = 'dinner'),
+  '2026-10-29:true,2026-10-30:true', 'a swap keeps both meals'' stars');
+select is((select count(*)::int from app.meal_wish where profile_id = pg_temp.id('emma') and status = 'planned'), 2,
+  'and both wishes stay planned');
+select api.meal_set(null, jsonb_build_object('on_date', '2026-10-30', 'slot', 'dinner', 'free_text', 'Suppe'));
+select is((select wished_by_profile_id from app.meal_plan_entry where on_date = '2026-10-30' and slot = 'dinner'), null,
+  'another dish on that meal takes the star off');
+select is((select count(*)::int from app.meal_wish where profile_id = pg_temp.id('emma') and status = 'open'), 1,
+  'and gives the wish back to the child, open again');
+select api.meal_clear(null, '2026-10-29', 'dinner');
+select is((select count(*)::int from app.meal_wish where profile_id = pg_temp.id('emma') and status = 'open'), 2,
+  'clearing a wished meal gives its wish back too');
+select is(pg_temp.error_hint(format($q$ select api.recipe_delete(null, %L) $q$, pg_temp.id('pancakes'))), null,
+  'a recipe someone wished for can still be deleted');
+select ok(exists (select 1 from api.meal_wishes where profile_id = pg_temp.id('emma') and recipe_id is null
+                   and title = 'Pfannkuchen'), 'and the wish keeps its words');
+select ok(exists (select 1 from pg_trigger t join pg_class c on c.oid = t.tgrelid
+                   where c.relname = 'profile' and t.tgname = 'profile_broadcast'
+                     and pg_get_triggerdef(t.oid) like '%birthday%'),
+  'a birthday change wakes the other screens');
+-- An older app saves a tradition without the flag and with its own importance.
+select api.event_save(null, jsonb_build_object('title', 'Pizza', 'kind', 'appointment', 'is_all_day', true,
+  'start_date', '2026-11-06', 'end_date', '2026-11-06', 'tradition', true));
+select api.event_save(null, jsonb_build_object('id', (select id from api.events where title = 'Pizza'), 'title', 'Pizza',
+  'kind', 'appointment', 'is_all_day', true, 'start_date', '2026-11-06', 'end_date', '2026-11-06', 'importance', 'normal'));
+select is((select importance from api.events where title = 'Pizza'), 'key', 'a tradition stays on the board when an older app saves it');
+
 
 select * from finish();
 rollback;

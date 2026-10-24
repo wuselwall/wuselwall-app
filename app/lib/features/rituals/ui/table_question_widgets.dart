@@ -177,7 +177,8 @@ class TableQuestionCard extends ConsumerWidget {
                     ),
                     child: Text(l10n.tableQuestionsManage),
                   ),
-                if (!kid && !q.isOwn)
+                // Hiding a bundled question is a guardian's (api.table_question_hide).
+                if (!kid && !q.isOwn && _isGuardian(ref))
                   TextButton(
                     onPressed: () => unawaited(_hide(context, ref, q)),
                     child: Text(l10n.tableQuestionHide),
@@ -195,10 +196,11 @@ class TableQuestionCard extends ConsumerWidget {
     WidgetRef ref,
     TableQuestion q,
   ) async {
-    final result = await ref
+    final container = ProviderScope.containerOf(context);
+    final result = await container
         .read(ritualsRepositoryProvider)
-        .hideQuestion(actor: ref.read(actingProfileProvider), key: q.key);
-    ref.invalidate(familyQuestionsProvider);
+        .hideQuestion(actor: container.read(actingProfileProvider), key: q.key);
+    container.invalidate(familyQuestionsProvider);
     if (!context.mounted) return;
     if (result case Err(:final failure)) context.showFailure(failure);
   }
@@ -258,9 +260,10 @@ class _FamilyQuestionsPageState extends ConsumerState<FamilyQuestionsPage> {
   }
 
   Future<void> _run(Future<Result<void>> Function() call) async {
+    final container = ProviderScope.containerOf(context);
     setState(() => _busy = true);
     final result = await call();
-    ref.invalidate(familyQuestionsProvider);
+    container.invalidate(familyQuestionsProvider);
     if (!mounted) return;
     setState(() => _busy = false);
     if (result case Err(:final failure)) context.showFailure(failure);
@@ -366,4 +369,16 @@ class _FamilyQuestionsPageState extends ConsumerState<FamilyQuestionsPage> {
       ),
     );
   }
+}
+
+/// Whether the person at the device is a guardian.
+bool _isGuardian(WidgetRef ref) {
+  final acting = ref.watch(actingProfileProvider);
+  return ref
+          .watch(membersProvider)
+          .value
+          ?.where((m) => m.id == acting)
+          .firstOrNull
+          ?.isGuardian ??
+      false;
 }

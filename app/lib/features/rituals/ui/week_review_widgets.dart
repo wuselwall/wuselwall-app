@@ -99,14 +99,16 @@ class WeekReviewStory extends ConsumerWidget {
     ].take(3).toList();
 
     final cards = <Widget>[
-      _StoryCard(
-        decor: Decor.sun,
-        title: l10n.weekReviewTogether,
-        child: Text(
-          l10n.weekReviewChores(review?.choresDone ?? 0),
-          style: _big(context),
+      // The family's number only once it is known: never a "0" while it loads.
+      if (review != null)
+        _StoryCard(
+          decor: Decor.sun,
+          title: l10n.weekReviewTogether,
+          child: Text(
+            l10n.weekReviewChores(review.choresDone),
+            style: _big(context),
+          ),
         ),
-      ),
       if (review != null && review.members.isNotEmpty)
         _StoryCard(
           decor: Decor.lilac,

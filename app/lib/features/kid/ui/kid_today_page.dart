@@ -595,6 +595,9 @@ class _KidGreeting extends ConsumerStatefulWidget {
 class _KidGreetingState extends ConsumerState<_KidGreeting> {
   String? _line;
 
+  /// Whether [_line] was picked for the night: a new one when the night begins or ends.
+  bool? _lineAtNight;
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -608,6 +611,10 @@ class _KidGreetingState extends ConsumerState<_KidGreeting> {
     final birthday = ref
         .watch(birthdaysTodayMembersProvider)
         .any((m) => m.id == member.id);
+    if (_lineAtNight != night) {
+      _line = null;
+      _lineAtNight = night;
+    }
     if (present) {
       final line = _line ??= night
           ? l10n.wuselHelloNight(member.displayName)

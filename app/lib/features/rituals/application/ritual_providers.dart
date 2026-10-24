@@ -38,9 +38,10 @@ final _horizonOccurrencesProvider = Provider.autoDispose<List<Occurrence>>((
   final today = ref.watch(ritualTodayProvider);
   final days = ref.watch(countdownHorizonProvider);
   // Travel that began before today still counts down to the way home.
+  // Calendar days, not 24-hour durations: a clock change must not move the edge.
   final window = (
-    from: today.subtract(const Duration(days: 14)),
-    to: today.add(Duration(days: days)),
+    from: DateTime(today.year, today.month, today.day - 14),
+    to: DateTime(today.year, today.month, today.day + days),
   );
   return ref.watch(occurrencesProvider(window)).value?.occurrences ??
       const <Occurrence>[];
@@ -164,10 +165,37 @@ bool _inRange(Object? range, int now, String from, String to) {
   return now >= a && now < b;
 }
 
+/// The household's walk through its questions for a device in [lang]: the bundled deck
+/// (the household's choice of ages, minus what it hid) and its own questions, shuffled
+/// once per household. Cached apart from the clock, so the minute ticking by does not
+/// shuffle again.
+final householdDeckProvider = Provider.autoDispose
+    .family<List<TableQuestion>, String>((ref, lang) {
+      final day = ref.watch(lighterDayProvider);
+      final householdId = ref.watch(deviceProvider).value?.householdId ?? '';
+      final older = day.value('rituals.table_question_deck') == 'older';
+      final family =
+          ref.watch(familyQuestionsProvider).value ?? const <FamilyQuestion>[];
+      final hidden = {
+        for (final q in family)
+          if (q.hiddenKey != null) q.hiddenKey!,
+      };
+      final deck = <TableQuestion>[
+        for (final q
+            in ref.watch(bundledDeckProvider(lang)).value ??
+                const <TableQuestion>[])
+          if ((older || q.deck == 'family') && !hidden.contains(q.key)) q,
+        for (final q in family)
+          if (q.text != null)
+            TableQuestion(key: q.id, text: q.text!, authorId: q.createdBy),
+      ];
+      return householdShuffle(deck, householdId);
+    });
+
 /// The Tischfrage of this moment for a device in [lang] (specs/27): null outside the
 /// meal windows, when the household switched it off, or in a language without a deck.
-/// Every device walks the same household shuffle; the family's own questions are in
-/// it and the ones it hid are not.
+/// Every device walks the same household shuffle. Recomputed once a minute, not with
+/// every tick of the clock.
 final tableMomentProvider = Provider.autoDispose.family<TableMoment?, String>((
   ref,
   lang,
@@ -175,7 +203,11 @@ final tableMomentProvider = Provider.autoDispose.family<TableMoment?, String>((
   final day = ref.watch(lighterDayProvider);
   final mode = day.value('rituals.table_question') ?? 'warm_meal';
   if (mode == 'off' || !tableQuestionLanguages.contains(lang)) return null;
-  final now = ref.watch(nowProvider);
+  final now = ref.watch(
+    nowProvider.select(
+      (n) => DateTime(n.year, n.month, n.day, n.hour, n.minute),
+    ),
+  );
   final minutes = now.hour * 60 + now.minute;
   final lunch = _inRange(
     day.value('rituals.table_question.lunch'),
@@ -190,31 +222,17 @@ final tableMomentProvider = Provider.autoDispose.family<TableMoment?, String>((
     '19:30',
   );
   if (!lunch && !dinner) return null;
-  if (mode == 'warm_meal') {
+  final warmOnly = mode == 'warm_meal';
+  if (warmOnly) {
     final warm = ref.watch(warmSlotProvider(DateUtils.dateOnly(now)));
     if ((warm == PlanSlot.dinner) != dinner) return null;
   }
-  final householdId = ref.watch(deviceProvider).value?.householdId ?? '';
-  final older = day.value('rituals.table_question_deck') == 'older';
-  final family = ref.watch(familyQuestionsProvider).value ?? const [];
-  final hidden = {
-    for (final q in family)
-      if (q.hiddenKey != null) q.hiddenKey!,
-  };
-  final deck = <TableQuestion>[
-    for (final q
-        in ref.watch(bundledDeckProvider(lang)).value ??
-            const <TableQuestion>[])
-      if ((older || q.deck == 'family') && !hidden.contains(q.key)) q,
-    for (final q in family)
-      if (q.text != null)
-        TableQuestion(key: q.id, text: q.text!, authorId: q.createdBy),
-  ];
-  if (deck.isEmpty) return null;
+  final questions = ref.watch(householdDeckProvider(lang));
+  if (questions.isEmpty) return null;
   return (
-    window: mealWindowIndex(now, dinner: dinner),
+    window: mealWindowIndex(now, dinner: dinner, twoADay: !warmOnly),
     dinner: dinner,
-    questions: householdShuffle(deck, householdId),
+    questions: questions,
   );
 });
 
@@ -257,7 +275,9 @@ final weekReviewDueProvider = Provider.autoDispose<DateTime?>((ref) {
 });
 
 /// The reviewed week's Monday when [now] falls between the opening on [weekday] at
-/// [hour]:[minute] and 10:00 the next morning; else null.
+/// [hour]:[minute] and 10:00 the next morning; else null. Opening at the weekend looks
+/// back at that week; opening on a weekday looks back at the week before, so a look-back
+/// on a Monday morning is not about the week that has only just begun.
 DateTime? weekReviewWeek(
   DateTime now, {
   required int weekday,
@@ -270,7 +290,10 @@ DateTime? weekReviewWeek(
     final opens = DateTime(day.year, day.month, day.day, hour, minute);
     final closes = DateTime(day.year, day.month, day.day + 1, 10);
     if (!now.isBefore(opens) && now.isBefore(closes)) {
-      return DateTime(day.year, day.month, day.day - (day.weekday - 1));
+      final monday = DateTime(day.year, day.month, day.day - (day.weekday - 1));
+      return day.weekday >= DateTime.saturday
+          ? monday
+          : DateTime(monday.year, monday.month, monday.day - 7);
     }
   }
   return null;

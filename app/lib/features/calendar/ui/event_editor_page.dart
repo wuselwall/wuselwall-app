@@ -25,6 +25,7 @@ import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/rituals/ui/event_ritual_fields.dart';
 import 'package:wuselwall/features/settings/application/household_settings_providers.dart';
 import 'package:wuselwall/features/settings/domain/household_setting.dart';
+import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
 
 /// The adult event editor (specs/05, specs/15, specs/21): a new event or an existing
 /// one, loaded by id. A change to one occurrence of a series asks whether it applies to
@@ -518,7 +519,8 @@ class _EventEditorFormState extends ConsumerState<_EventEditorForm> {
                 setState(() => _draft.recurrence = recurrence),
           ),
           // A picture, Vorfreude and traditions (specs/27), after the repeat.
-          if (_draft.kind != EventKind.presence)
+          if (_draft.kind != EventKind.presence &&
+              ref.watch(lighterDaySupportedProvider))
             EventRitualFields(draft: _draft, onChanged: () => setState(() {})),
           const SizedBox(height: 24),
           FilledButton(

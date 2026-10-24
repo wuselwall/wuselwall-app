@@ -183,31 +183,37 @@ void main() {
   });
 
   group('a lighter day (specs/26)', () {
-    test('ink and ink2 reach AA on every module band, ink3 is not used there', () {
-      for (final shade in [Shade.light, Shade.dark]) {
-        final c = Palette.of(shade);
-        for (final band in ModuleBands.bands) {
-          final ground = band.of(shade);
-          final where = '${band.module.name} (${shade.name})';
-          expectAA(c.ink, ground, 'ink on $where');
-          expectAA(c.ink2, ground, 'ink2 on $where');
-        }
-      }
-    });
-
-    test('every member ink reaches AA on every band, so a chip may sit on one', () {
-      for (final shade in [Shade.light, Shade.dark]) {
-        for (final band in ModuleBands.bands) {
-          for (final m in MemberPalette.swatches) {
-            expectAA(
-              m.ink(shade),
-              band.of(shade),
-              '${m.key} on ${band.module.name} (${shade.name})',
-            );
+    test(
+      'ink and ink2 reach AA on every module band, ink3 is not used there',
+      () {
+        for (final shade in [Shade.light, Shade.dark]) {
+          final c = Palette.of(shade);
+          for (final band in ModuleBands.bands) {
+            final ground = band.of(shade);
+            final where = '${band.module.name} (${shade.name})';
+            expectAA(c.ink, ground, 'ink on $where');
+            expectAA(c.ink2, ground, 'ink2 on $where');
           }
         }
-      }
-    });
+      },
+    );
+
+    test(
+      'every member ink reaches AA on every band, so a chip may sit on one',
+      () {
+        for (final shade in [Shade.light, Shade.dark]) {
+          for (final band in ModuleBands.bands) {
+            for (final m in MemberPalette.swatches) {
+              expectAA(
+                m.ink(shade),
+                band.of(shade),
+                '${m.key} on ${band.module.name} (${shade.name})',
+              );
+            }
+          }
+        }
+      },
+    );
 
     test('text on decoration reaches AA', () {
       for (final shade in [Shade.light, Shade.dark]) {

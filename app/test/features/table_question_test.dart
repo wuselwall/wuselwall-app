@@ -58,4 +58,26 @@ void main() {
     expect(mealWindowIndex(DateTime(2026, 10, 24), dinner: true), lunch + 1);
     expect(mealWindowIndex(DateTime(2026, 10, 25), dinner: false), lunch + 2);
   });
+
+  test(
+    'with one warm meal a day the whole deck comes round (review finding)',
+    () {
+      final deck = [
+        for (var i = 0; i < 150; i++) TableQuestion(key: 'de:q-$i', text: '$i'),
+      ];
+      final shuffled = householdShuffle(deck, 'h');
+      final seen = {
+        for (var d = 0; d < 150; d++)
+          questionFor(
+            shuffled,
+            mealWindowIndex(
+              DateTime(2026, 10, 24 + d),
+              dinner: true,
+              twoADay: false,
+            ),
+          )!.key,
+      };
+      expect(seen.length, 150);
+    },
+  );
 }

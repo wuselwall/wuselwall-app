@@ -178,11 +178,22 @@ class _WuselState extends State<Wusel> with SingleTickerProviderStateMixin {
     if (!mounted) return;
     setState(() => _look = widget.pose.rest);
     if (widget.pose.blinks) _scheduleBlink();
-    if (widget.pose.pulseEvery case final every?) {
-      _pulseTimer = Timer(every, () {
-        if (mounted && _visible) _start(_RunKind.pulse, from: null);
-      });
-    }
+    _schedulePulse();
+  }
+
+  /// The pose's own moment while it rests (the sleeping "z"). Offstage it waits for the
+  /// next turn instead of stopping for good.
+  void _schedulePulse() {
+    final every = widget.pose.pulseEvery;
+    if (every == null) return;
+    _pulseTimer = Timer(every, () {
+      if (!mounted) return;
+      if (_visible && _run == null) {
+        _start(_RunKind.pulse, from: null);
+      } else {
+        _schedulePulse();
+      }
+    });
   }
 
   void _scheduleBlink() {

@@ -171,4 +171,14 @@ void main() {
     );
     expect(list.map((c) => c.title), ['b', 'a']);
   });
+
+  test('the horizon counts calendar days across a clock change', () {
+    // The clocks go back on 25 October 2026 in Europe; 7 November is 14 days on.
+    final list = countdowns(
+      today: DateTime(2026, 10, 24),
+      horizonDays: 14,
+      members: [_member('a', birthday: DateTime(2016, 11, 7))],
+    );
+    expect(list.single.daysFrom(DateTime(2026, 10, 24)), 14);
+  });
 }

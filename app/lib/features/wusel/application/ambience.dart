@@ -206,6 +206,29 @@ class Ambience {
 
   /// The stored colours of the members whose birthday is today.
   final List<Color> birthdays;
+
+  // By value: the sky repaints only when what it shows changes.
+  @override
+  bool operator ==(Object other) =>
+      other is Ambience &&
+      other.phase == phase &&
+      other.season == season &&
+      other.advent == advent &&
+      other.easter == easter &&
+      other.newYear == newYear &&
+      other.ferien == ferien &&
+      listEquals(other.birthdays, birthdays);
+
+  @override
+  int get hashCode => Object.hash(
+    phase,
+    season,
+    advent,
+    easter,
+    newYear,
+    ferien,
+    Object.hashAll(birthdays),
+  );
 }
 
 /// The first or the last day of the school holidays.
@@ -241,9 +264,13 @@ Ambience ambienceFor(
   );
 }
 
-/// Today's ambience for this household. Rebuilds with the board's clock.
+/// Today's ambience for this household. Rebuilds once an hour, and equal values do not
+/// repaint the sky.
 final ambienceProvider = Provider.autoDispose<Ambience>((ref) {
-  final now = ref.watch(nowProvider);
+  // The hour is enough: the phases change on the hour.
+  final now = ref.watch(
+    nowProvider.select((n) => DateTime(n.year, n.month, n.day, n.hour)),
+  );
   final night = ref.watch(nightProvider);
   final day = ref.watch(lighterDayProvider);
   return ambienceFor(

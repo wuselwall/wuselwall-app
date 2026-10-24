@@ -34,6 +34,14 @@ alter table app.profile add column birthday date
   check (birthday is null or birthday between date '1900-01-01' and date '2100-12-31');
 grant select (birthday) on app.profile to authenticated;
 
+-- The birthday is on the wall and dresses Wusel up, so a change wakes the screens too.
+drop trigger profile_broadcast on app.profile;
+create trigger profile_broadcast
+  after insert or update of display_name, color, role, active, sort_order, kind,
+                            default_presence_state, default_presence_label, avatar_key, birthday
+  or delete on app.profile
+  for each row execute function app.profile_broadcast();
+
 create or replace view api.members with (security_invoker = true) as
   select id, household_id, display_name, color, role, active,
          sort_order, kind, default_presence_state, default_presence_label,
@@ -130,7 +138,8 @@ alter table app.event
   add column tradition boolean not null default false;
 
 -- A tradition's meal (Pizza-Freitag): offered by the planner on the tradition's days when that
--- slot is empty. Never put on the plan by itself.
+-- slot is empty. Never put on the plan by itself. A recipe's title is kept in free_text as well,
+-- so deleting the recipe leaves the words (the check would otherwise refuse the delete).
 create table app.tradition_meal (
   event_id     uuid primary key references app.event on delete cascade,
   household_id uuid not null references app.household on delete cascade,
@@ -201,7 +210,11 @@ begin
     raise exception 'WW-CAL-001 invalid event' using errcode = '22023', hint = 'event_invalid';
   end if;
   v_tradition := (p_event ->> 'tradition')::boolean;
-  if v_tradition then
+  -- A tradition stays on the board even when an older app, which does not send the flag,
+  -- saves it with its own importance.
+  if coalesce(v_tradition, (select e.tradition from app.event e
+                             where (p_event ->> 'id') ~* '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+                               and e.id = (p_event ->> 'id')::uuid), false) then
     v_event := v_event || jsonb_build_object('importance', 'key');
   end if;
 
@@ -233,7 +246,8 @@ begin
         raise exception 'WW-CAL-001 invalid event' using errcode = '22023', hint = 'event_invalid';
       end if;
       insert into app.tradition_meal (event_id, household_id, slot, recipe_id, free_text)
-      values (v_id, a.household_id, v_slot, v_recipe, v_free)
+      values (v_id, a.household_id, v_slot, v_recipe,
+              coalesce(v_free, (select left(r.title, 120) from app.recipe r where r.id = v_recipe)))
       on conflict (event_id) do update set
         slot = excluded.slot, recipe_id = excluded.recipe_id, free_text = excluded.free_text;
     end if;
@@ -333,7 +347,8 @@ begin
   if a.profile_id is null then
     raise exception 'WW-MEAL-010 wish invalid' using errcode = '22023', hint = 'wish_invalid';
   end if;
-  select p.kind into v_kind from app.profile p where p.id = a.profile_id;
+  -- One member's wishes are written one at a time, so the limit holds under double taps.
+  select p.kind into v_kind from app.profile p where p.id = a.profile_id for update;
   if v_who = 'off' or (v_who = 'children' and v_kind is distinct from 'child') then
     raise exception 'WW-MEAL-012 wishes are off' using errcode = '42501', hint = 'wishes_off';
   end if;
@@ -343,6 +358,10 @@ begin
      or (p_recipe_id is not null and not exists (
            select 1 from app.recipe r where r.id = p_recipe_id and r.household_id = a.household_id)) then
     raise exception 'WW-MEAL-010 wish invalid' using errcode = '22023', hint = 'wish_invalid';
+  end if;
+  -- The recipe's title is kept as words too, so deleting the recipe leaves the wish.
+  if p_recipe_id is not null then
+    select left(r.title, 60) into v_free from app.recipe r where r.id = p_recipe_id;
   end if;
 
   -- Replacing: the newest open wish of the actor changes; otherwise a new one, within the limit.
@@ -409,6 +428,87 @@ begin
                     jsonb_build_object('on_date', p_on_date, 'slot', p_slot));
   perform app.broadcast(a.household_id, 'meals');
   return jsonb_build_object('id', v_entry);
+end $$;
+
+-- The star goes with the dish (specs/27): changing what is cooked takes the wish off that meal
+-- and gives it back to the child; so does removing the meal. Nothing is ever declined.
+create function app.meal_wish_follow() returns trigger
+language plpgsql security definer set search_path = '' as $$
+begin
+  if tg_op = 'DELETE'
+     or new.recipe_id is distinct from old.recipe_id
+     or new.free_text is distinct from old.free_text then
+    update app.meal_wish set status = 'open', meal_plan_entry_id = null, updated_at = now()
+     where meal_plan_entry_id = old.id and status = 'planned';
+    if tg_op = 'DELETE' then
+      return old;
+    end if;
+    new.wished_by_profile_id := null;
+  end if;
+  return new;
+end $$;
+revoke all on function app.meal_wish_follow() from public, anon, authenticated;
+
+create trigger meal_wish_follow before update of recipe_id, free_text or delete
+  on app.meal_plan_entry for each row execute function app.meal_wish_follow();
+
+-- api.meal_move keeps a swapped meal's wish: the swap deletes and re-inserts the other meal,
+-- which would otherwise give its wish back. Same function, the wish carried across.
+create or replace function api.meal_move(p_actor uuid, p_from_date date, p_from_slot text,
+                              p_to_date date, p_to_slot text)
+returns void language plpgsql security definer set search_path = '' as $$
+declare
+  a        app.actor_t := app.actor(p_actor);
+  v_src    app.meal_plan_entry;
+  v_dst    app.meal_plan_entry;
+  v_has_dst boolean;
+  v_wishes uuid[];
+begin
+  if a.device_class = 'kiosk' then
+    raise exception 'not allowed on a kiosk' using errcode = '42501', hint = 'kiosk_forbidden';
+  end if;
+  if p_from_date is null or p_to_date is null
+     or p_from_slot not in ('breakfast', 'lunch', 'dinner', 'snack')
+     or p_to_slot not in ('breakfast', 'lunch', 'dinner', 'snack') then
+    raise exception 'WW-MEAL-001 meal invalid' using errcode = '22023', hint = 'meal_invalid';
+  end if;
+
+  select * into v_src from app.meal_plan_entry
+   where household_id = a.household_id and on_date = p_from_date and slot = p_from_slot
+   for update;
+  if not found then
+    raise exception 'meal not found' using errcode = 'P0002', hint = 'meal_not_found';
+  end if;
+  if p_from_date = p_to_date and p_from_slot = p_to_slot then
+    return;
+  end if;
+
+  select * into v_dst from app.meal_plan_entry
+   where household_id = a.household_id and on_date = p_to_date and slot = p_to_slot
+   for update;
+  v_has_dst := found;
+  if v_has_dst then
+    v_wishes := array(select w.id from app.meal_wish w where w.meal_plan_entry_id = v_dst.id);
+    delete from app.meal_plan_entry where id = v_dst.id;
+  end if;
+
+  update app.meal_plan_entry set on_date = p_to_date, slot = p_to_slot where id = v_src.id;
+  if v_has_dst then
+    insert into app.meal_plan_entry (id, household_id, on_date, slot, recipe_id, free_text, servings,
+                                     cook_profile_id, at_time, guests, eating_overrides,
+                                     shopping_generated_at, wished_by_profile_id)
+    values (v_dst.id, v_dst.household_id, p_from_date, p_from_slot, v_dst.recipe_id, v_dst.free_text,
+            v_dst.servings, v_dst.cook_profile_id, v_dst.at_time, v_dst.guests, v_dst.eating_overrides,
+            v_dst.shopping_generated_at, v_dst.wished_by_profile_id);
+    update app.meal_wish set status = 'planned', meal_plan_entry_id = v_dst.id
+     where id = any (v_wishes);
+  end if;
+
+  perform app.audit(a, 'meal_plan_entry', v_src.id, 'move',
+                    jsonb_build_object('from', jsonb_build_array(p_from_date, p_from_slot),
+                                       'to', jsonb_build_array(p_to_date, p_to_slot),
+                                       'swapped', v_has_dst));
+  perform app.broadcast(a.household_id, 'meals');
 end $$;
 
 revoke all on function api.meal_wish_set(uuid, uuid, text, text), api.meal_wish_withdraw(uuid, uuid),
