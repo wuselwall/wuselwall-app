@@ -4962,4 +4962,354 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get schoolScanFile => 'Elegir un archivo (PDF o imagen)';
+
+  @override
+  String get settingsSectionRituals => 'Rituales';
+
+  @override
+  String get settingsSectionOccasions => 'Estaciones y celebraciones';
+
+  @override
+  String get settingMemberWuselTitle => 'Wusel';
+
+  @override
+  String get settingMemberWuselHelp =>
+      'Cuánto aparece Wusel para ti. Automático: animado para los niños, tranquilo para los adultos.';
+
+  @override
+  String get settingMemberWuselOutfitTitle => 'La ropa de Wusel';
+
+  @override
+  String get settingMemberWuselOutfitHelp =>
+      'Lo que lleva Wusel cuando habla contigo. Toda la ropa está disponible desde el principio.';
+
+  @override
+  String get settingDeviceWuselTitle => 'Wusel en este dispositivo';
+
+  @override
+  String get settingDeviceWuselHelp =>
+      'Lo animado que está Wusel aquí mientras no hay nadie elegido. El ajuste propio de una persona vale mientras está elegida.';
+
+  @override
+  String get settingDeviceSoundsTitle => 'Sonidos en este dispositivo';
+
+  @override
+  String get settingDeviceSoundsHelp =>
+      'Automático: apagados en la pantalla de pared, encendidos en los demás. Nunca de noche.';
+
+  @override
+  String get settingDeviceSkyTitle => 'Cielo en la cabecera';
+
+  @override
+  String get settingDeviceSkyHelp =>
+      'La cabecera muestra un cielo que cambia con la hora del día.';
+
+  @override
+  String get settingDevicePixelShiftTitle =>
+      'Proteger la pantalla de quemaduras';
+
+  @override
+  String get settingDevicePixelShiftHelp =>
+      'Mueve todo hasta 2 píxeles cada 10 minutos, para pantallas OLED siempre encendidas. Automático: activado en la pantalla de pared.';
+
+  @override
+  String get settingAmbienceSeasonTitle => 'Estaciones';
+
+  @override
+  String get settingAmbienceSeasonHelp =>
+      'Flores, sol, hojas o copos de nieve en el cielo.';
+
+  @override
+  String get settingAmbienceBirthdaysTitle => 'Cumpleaños';
+
+  @override
+  String get settingAmbienceBirthdaysHelp =>
+      'Banderines del color de la persona y un gorro de fiesta para Wusel en su cumpleaños.';
+
+  @override
+  String get settingAmbienceFerienTitle => 'Vacaciones escolares';
+
+  @override
+  String get settingAmbienceFerienHelp =>
+      'Una cinta el primer y el último día de vacaciones.';
+
+  @override
+  String get settingAmbienceAdventTitle => 'Adviento';
+
+  @override
+  String get settingAmbienceAdventHelp =>
+      'Velas en la cabecera, una más cada uno de los cuatro domingos antes de Navidad. Automático: según vuestra región.';
+
+  @override
+  String get settingAmbienceEasterWesternTitle => 'Pascua';
+
+  @override
+  String get settingAmbienceEasterWesternHelp =>
+      'Huevos en las colinas, desde dos días antes hasta dos días después del Domingo de Pascua. Automático: según vuestra región.';
+
+  @override
+  String get settingAmbienceEasterOrthodoxTitle => 'Pascua ortodoxa';
+
+  @override
+  String get settingAmbienceEasterOrthodoxHelp =>
+      'Los mismos huevos en la fecha ortodoxa, que se calcula cada año. Automático: según vuestra región.';
+
+  @override
+  String get settingAmbienceNewYearTitle => 'Nochevieja';
+
+  @override
+  String get settingAmbienceNewYearHelp =>
+      'Pequeños fuegos artificiales en el cielo nocturno el 31 de diciembre y el 1 de enero.';
+
+  @override
+  String get settingRitualsCountdownDaysTitle => 'La cuenta atrás empieza';
+
+  @override
+  String get settingRitualsCountdownDaysHelp =>
+      'Cuántos días antes de un cumpleaños, las vacaciones o una cita marcada aparece la cuenta atrás.';
+
+  @override
+  String get settingRitualsCountdownReturnTitle =>
+      'Cuenta atrás hasta una vuelta';
+
+  @override
+  String get settingRitualsCountdownReturnHelp =>
+      '«Vuelve en 2 noches» cuando un adulto viaja dos noches o más.';
+
+  @override
+  String get settingMealsWishesTitle => 'Comida deseada';
+
+  @override
+  String get settingMealsWishesHelp =>
+      'Quién puede pedir una comida cada semana. La app nunca rechaza un deseo; espera hasta que se planifica.';
+
+  @override
+  String get settingMealsWishesPerWeekTitle => 'Deseos abiertos por persona';
+
+  @override
+  String get settingMealsWishesPerWeekHelp =>
+      'Cuántos deseos puede tener cada persona esperando a la vez.';
+
+  @override
+  String get settingTableQuestionTitle => 'Pregunta en la mesa';
+
+  @override
+  String get settingTableQuestionHelp =>
+      'Una pregunta para conversar, en la pantalla de pared y en la app durante la comida. Se responde en voz alta y no se guarda nada.';
+
+  @override
+  String get settingTableQuestionLunchTitle => 'Pregunta en la comida';
+
+  @override
+  String get settingTableQuestionLunchHelp =>
+      'Cuándo aparece la pregunta al mediodía.';
+
+  @override
+  String get settingTableQuestionDinnerTitle => 'Pregunta en la cena';
+
+  @override
+  String get settingTableQuestionDinnerHelp =>
+      'Cuándo aparece la pregunta en la cena.';
+
+  @override
+  String get settingTableQuestionDeckTitle => 'Preguntas para';
+
+  @override
+  String get settingTableQuestionDeckHelp =>
+      'Todas las edades sirve desde los cinco años; niños mayores añade preguntas más profundas a partir de 8.';
+
+  @override
+  String get settingWeekReviewTitle => 'Nuestra semana';
+
+  @override
+  String get settingWeekReviewHelp =>
+      'Cuándo aparece el repaso de la semana. Se queda hasta la mañana siguiente.';
+
+  @override
+  String get settingValueAuto => 'Automático';
+
+  @override
+  String get settingValueLively => 'Animado';
+
+  @override
+  String get settingValueQuiet => 'Tranquilo';
+
+  @override
+  String get settingValueOn => 'Activado';
+
+  @override
+  String get settingValueOff => 'Desactivado';
+
+  @override
+  String get settingValueChildren => 'Niños';
+
+  @override
+  String get settingValueEveryone => 'Todos';
+
+  @override
+  String get settingValueWarmMeal => 'Comida caliente';
+
+  @override
+  String get settingValueMainMeals => 'Comida y cena';
+
+  @override
+  String get settingValueAllAges => 'Todas las edades';
+
+  @override
+  String get settingValueOlderChildren => 'También niños mayores';
+
+  @override
+  String settingUnitDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count días',
+      one: '1 día',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get wuselOutfitNone => 'Nada';
+
+  @override
+  String get wuselOutfitParty => 'Gorro de fiesta';
+
+  @override
+  String get wuselOutfitCrown => 'Corona';
+
+  @override
+  String get wuselOutfitWizard => 'Sombrero de mago';
+
+  @override
+  String get wuselOutfitWreath => 'Corona de flores';
+
+  @override
+  String get wuselOutfitSunglasses => 'Gafas de sol';
+
+  @override
+  String get wuselOutfitScarf => 'Bufanda';
+
+  @override
+  String get wuselOutfitHeadphones => 'Auriculares';
+
+  @override
+  String get wuselOutfitBow => 'Lazo';
+
+  @override
+  String wuselHelloMorning1(String name) {
+    return '¡Buenos días, $name!';
+  }
+
+  @override
+  String wuselHelloMorning2(String name) {
+    return '¡Hola, $name! Un día nuevo.';
+  }
+
+  @override
+  String wuselHelloMorning3(String name) {
+    return '¡Hola, $name! Qué bien verte.';
+  }
+
+  @override
+  String wuselHelloDay1(String name) {
+    return '¡Hola, $name!';
+  }
+
+  @override
+  String wuselHelloDay2(String name) {
+    return '¡Ahí estás, $name!';
+  }
+
+  @override
+  String wuselHelloDay3(String name) {
+    return '¡Qué bien verte, $name!';
+  }
+
+  @override
+  String wuselHelloEvening1(String name) {
+    return '¡Buenas tardes, $name!';
+  }
+
+  @override
+  String wuselHelloEvening2(String name) {
+    return '¡Hola, $name! Qué día.';
+  }
+
+  @override
+  String wuselHelloEvening3(String name) {
+    return '¡Hola, $name! Pronto toca descansar.';
+  }
+
+  @override
+  String wuselHelloNight(String name) {
+    return 'Que duermas bien, $name.';
+  }
+
+  @override
+  String get wuselFactBirthdayYou => '¡Feliz cumpleaños!';
+
+  @override
+  String wuselFactBirthday(String name) {
+    return '¡Es el cumpleaños de $name!';
+  }
+
+  @override
+  String wuselFactFirstLesson(String subject) {
+    return 'Hoy empiezas con $subject.';
+  }
+
+  @override
+  String get wuselAllDone1 => '¡Todo hecho! Ha salido muy bien.';
+
+  @override
+  String get wuselAllDone2 => 'Todo marcado. ¡Gracias!';
+
+  @override
+  String get wuselAllDone3 => '¡Listo por hoy! La casa te da las gracias.';
+
+  @override
+  String get wuselAllDone4 => 'Tu lista está vacía. ¡A jugar!';
+
+  @override
+  String get wuselRewardSent1 => '¡Enviado! Ahora decide un adulto.';
+
+  @override
+  String get wuselRewardSent2 => 'Tu deseo va de camino.';
+
+  @override
+  String wuselBadge(String badge) {
+    return '¡Una insignia nueva: $badge!';
+  }
+
+  @override
+  String get wuselWaiting => 'Un momento…';
+
+  @override
+  String get wuselOffline => 'Un momento, busco internet…';
+
+  @override
+  String get wuselWallMorning1 => '¡Buenos días a todos!';
+
+  @override
+  String get wuselWallMorning2 => '¡Arriba, familia!';
+
+  @override
+  String get wuselWallMorning3 => 'Un día nuevo para todos.';
+
+  @override
+  String wuselWallMemberDone1(String name) {
+    return '¡$name ya lo ha hecho todo por hoy!';
+  }
+
+  @override
+  String wuselWallMemberDone2(String name) {
+    return 'Todo marcado, $name. ¡Gracias!';
+  }
+
+  @override
+  String get wuselSetupDone => 'Todo listo. ¡Bienvenidos a casa!';
+
+  @override
+  String get wuselHideLine => 'Ocultar lo que dice Wusel';
 }

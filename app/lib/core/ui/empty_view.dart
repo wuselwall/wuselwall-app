@@ -2,6 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 
+/// What every [EmptyView] below it shows above its text: the app puts Wusel here
+/// (specs/25, `peek`), so empty states get the mascot without each screen knowing it.
+class EmptyIllustration extends InheritedWidget {
+  const EmptyIllustration({
+    required this.builder,
+    required super.child,
+    super.key,
+  });
+
+  final WidgetBuilder builder;
+
+  static WidgetBuilder? maybeOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<EmptyIllustration>()?.builder;
+
+  @override
+  bool updateShouldNotify(EmptyIllustration old) => old.builder != builder;
+}
+
 /// What a screen shows when it has nothing to show: always centred in the space it is
 /// given, with buttons that lead to the first entry where adding one makes sense. In
 /// bounded space it scrolls, so a surrounding [RefreshIndicator] still pulls.
@@ -11,8 +29,13 @@ class EmptyView extends StatelessWidget {
     this.title,
     this.actions = const [],
     this.scrolls = true,
+    this.illustrated = true,
     super.key,
   });
+
+  /// False where the [EmptyIllustration] would be out of place (an error, a capture
+  /// flow); the text alone is then the empty state.
+  final bool illustrated;
 
   final String message;
   final String? title;
@@ -28,11 +51,15 @@ class EmptyView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final illustration = illustrated
+        ? EmptyIllustration.maybeOf(context)
+        : null;
     final content = Padding(
       padding: const EdgeInsets.all(Tokens.space6),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          ?illustration?.call(context),
           if (title case final title?) ...[
             Text(
               title,

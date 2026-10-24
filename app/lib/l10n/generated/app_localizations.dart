@@ -8434,6 +8434,582 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Choose a file (PDF or picture)'**
   String get schoolScanFile;
+
+  /// No description provided for @settingsSectionRituals.
+  ///
+  /// In en, this message translates to:
+  /// **'Rituals'**
+  String get settingsSectionRituals;
+
+  /// No description provided for @settingsSectionOccasions.
+  ///
+  /// In en, this message translates to:
+  /// **'Seasons and occasions'**
+  String get settingsSectionOccasions;
+
+  /// No description provided for @settingMemberWuselTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Wusel'**
+  String get settingMemberWuselTitle;
+
+  /// No description provided for @settingMemberWuselHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'How much Wusel shows up for you. Automatic: lively for children, quiet for adults.'**
+  String get settingMemberWuselHelp;
+
+  /// No description provided for @settingMemberWuselOutfitTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Wusel\'s outfit'**
+  String get settingMemberWuselOutfitTitle;
+
+  /// No description provided for @settingMemberWuselOutfitHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'What Wusel wears when it is talking to you. Every outfit is there from the start.'**
+  String get settingMemberWuselOutfitHelp;
+
+  /// No description provided for @settingDeviceWuselTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Wusel on this device'**
+  String get settingDeviceWuselTitle;
+
+  /// No description provided for @settingDeviceWuselHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'How lively Wusel is here while nobody is chosen. A person\'s own setting wins while they are chosen.'**
+  String get settingDeviceWuselHelp;
+
+  /// No description provided for @settingDeviceSoundsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sounds on this device'**
+  String get settingDeviceSoundsTitle;
+
+  /// No description provided for @settingDeviceSoundsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic: off on the wall, on elsewhere. Never at night.'**
+  String get settingDeviceSoundsHelp;
+
+  /// No description provided for @settingDeviceSkyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sky in the header'**
+  String get settingDeviceSkyTitle;
+
+  /// No description provided for @settingDeviceSkyHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The header shows a sky that changes with the time of day.'**
+  String get settingDeviceSkyHelp;
+
+  /// No description provided for @settingDevicePixelShiftTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Protect the screen from burn-in'**
+  String get settingDevicePixelShiftTitle;
+
+  /// No description provided for @settingDevicePixelShiftHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Moves everything by up to 2 pixels every 10 minutes, for OLED screens that stay on. Automatic: on for the wall.'**
+  String get settingDevicePixelShiftHelp;
+
+  /// No description provided for @settingAmbienceSeasonTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Seasons'**
+  String get settingAmbienceSeasonTitle;
+
+  /// No description provided for @settingAmbienceSeasonHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Blossom, sun, leaves or snowflakes in the sky.'**
+  String get settingAmbienceSeasonHelp;
+
+  /// No description provided for @settingAmbienceBirthdaysTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Birthdays'**
+  String get settingAmbienceBirthdaysTitle;
+
+  /// No description provided for @settingAmbienceBirthdaysHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Bunting in the member\'s colour and a party hat for Wusel on their birthday.'**
+  String get settingAmbienceBirthdaysHelp;
+
+  /// No description provided for @settingAmbienceFerienTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'School holidays'**
+  String get settingAmbienceFerienTitle;
+
+  /// No description provided for @settingAmbienceFerienHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'A ribbon on the first and the last day of the holidays.'**
+  String get settingAmbienceFerienHelp;
+
+  /// No description provided for @settingAmbienceAdventTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Advent'**
+  String get settingAmbienceAdventTitle;
+
+  /// No description provided for @settingAmbienceAdventHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Candles in the header, one more on each of the four Sundays before Christmas. Automatic: by your region.'**
+  String get settingAmbienceAdventHelp;
+
+  /// No description provided for @settingAmbienceEasterWesternTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Easter'**
+  String get settingAmbienceEasterWesternTitle;
+
+  /// No description provided for @settingAmbienceEasterWesternHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Eggs in the hills from two days before to two days after Easter Sunday. Automatic: by your region.'**
+  String get settingAmbienceEasterWesternHelp;
+
+  /// No description provided for @settingAmbienceEasterOrthodoxTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Orthodox Easter'**
+  String get settingAmbienceEasterOrthodoxTitle;
+
+  /// No description provided for @settingAmbienceEasterOrthodoxHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The same eggs on the Orthodox date, which is calculated for every year. Automatic: by your region.'**
+  String get settingAmbienceEasterOrthodoxHelp;
+
+  /// No description provided for @settingAmbienceNewYearTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New Year\'s Eve'**
+  String get settingAmbienceNewYearTitle;
+
+  /// No description provided for @settingAmbienceNewYearHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Small fireworks in the night sky on 31 December and 1 January.'**
+  String get settingAmbienceNewYearHelp;
+
+  /// No description provided for @settingRitualsCountdownDaysTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Start looking forward'**
+  String get settingRitualsCountdownDaysTitle;
+
+  /// No description provided for @settingRitualsCountdownDaysHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'How many days before a birthday, the holidays or a marked event the countdown appears.'**
+  String get settingRitualsCountdownDaysHelp;
+
+  /// No description provided for @settingRitualsCountdownReturnTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Count down to a parent\'s return'**
+  String get settingRitualsCountdownReturnTitle;
+
+  /// No description provided for @settingRitualsCountdownReturnHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'\"Back in 2 sleeps\" when an adult travels for two nights or more.'**
+  String get settingRitualsCountdownReturnHelp;
+
+  /// No description provided for @settingMealsWishesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal wishes'**
+  String get settingMealsWishesTitle;
+
+  /// No description provided for @settingMealsWishesHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Who may wish for a meal each week. A wish is never turned down in the app; it waits until it is planned.'**
+  String get settingMealsWishesHelp;
+
+  /// No description provided for @settingMealsWishesPerWeekTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Open wishes per person'**
+  String get settingMealsWishesPerWeekTitle;
+
+  /// No description provided for @settingMealsWishesPerWeekHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'How many wishes each person may have waiting at once.'**
+  String get settingMealsWishesPerWeekHelp;
+
+  /// No description provided for @settingTableQuestionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Question at the table'**
+  String get settingTableQuestionTitle;
+
+  /// No description provided for @settingTableQuestionHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'A conversation question on the wall and in the app during the meal. It is answered aloud and nothing is recorded.'**
+  String get settingTableQuestionHelp;
+
+  /// No description provided for @settingTableQuestionLunchTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Question at lunch'**
+  String get settingTableQuestionLunchTitle;
+
+  /// No description provided for @settingTableQuestionLunchHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'When the question shows at lunch.'**
+  String get settingTableQuestionLunchHelp;
+
+  /// No description provided for @settingTableQuestionDinnerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Question at dinner'**
+  String get settingTableQuestionDinnerTitle;
+
+  /// No description provided for @settingTableQuestionDinnerHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'When the question shows at dinner.'**
+  String get settingTableQuestionDinnerHelp;
+
+  /// No description provided for @settingTableQuestionDeckTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Questions for'**
+  String get settingTableQuestionDeckTitle;
+
+  /// No description provided for @settingTableQuestionDeckHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'All ages works for a five-year-old; older children adds deeper questions for 8 and over.'**
+  String get settingTableQuestionDeckHelp;
+
+  /// No description provided for @settingWeekReviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Our week'**
+  String get settingWeekReviewTitle;
+
+  /// No description provided for @settingWeekReviewHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'When the look back at the week appears. It stays until the next morning.'**
+  String get settingWeekReviewHelp;
+
+  /// No description provided for @settingValueAuto.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic'**
+  String get settingValueAuto;
+
+  /// No description provided for @settingValueLively.
+  ///
+  /// In en, this message translates to:
+  /// **'Lively'**
+  String get settingValueLively;
+
+  /// No description provided for @settingValueQuiet.
+  ///
+  /// In en, this message translates to:
+  /// **'Quiet'**
+  String get settingValueQuiet;
+
+  /// No description provided for @settingValueOn.
+  ///
+  /// In en, this message translates to:
+  /// **'On'**
+  String get settingValueOn;
+
+  /// No description provided for @settingValueOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get settingValueOff;
+
+  /// No description provided for @settingValueChildren.
+  ///
+  /// In en, this message translates to:
+  /// **'Children'**
+  String get settingValueChildren;
+
+  /// No description provided for @settingValueEveryone.
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone'**
+  String get settingValueEveryone;
+
+  /// No description provided for @settingValueWarmMeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Warm meal'**
+  String get settingValueWarmMeal;
+
+  /// No description provided for @settingValueMainMeals.
+  ///
+  /// In en, this message translates to:
+  /// **'Lunch and dinner'**
+  String get settingValueMainMeals;
+
+  /// No description provided for @settingValueAllAges.
+  ///
+  /// In en, this message translates to:
+  /// **'All ages'**
+  String get settingValueAllAges;
+
+  /// No description provided for @settingValueOlderChildren.
+  ///
+  /// In en, this message translates to:
+  /// **'Older children too'**
+  String get settingValueOlderChildren;
+
+  /// No description provided for @settingUnitDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day} other{{count} days}}'**
+  String settingUnitDays(int count);
+
+  /// No description provided for @wuselOutfitNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing'**
+  String get wuselOutfitNone;
+
+  /// No description provided for @wuselOutfitParty.
+  ///
+  /// In en, this message translates to:
+  /// **'Party hat'**
+  String get wuselOutfitParty;
+
+  /// No description provided for @wuselOutfitCrown.
+  ///
+  /// In en, this message translates to:
+  /// **'Crown'**
+  String get wuselOutfitCrown;
+
+  /// No description provided for @wuselOutfitWizard.
+  ///
+  /// In en, this message translates to:
+  /// **'Wizard hat'**
+  String get wuselOutfitWizard;
+
+  /// No description provided for @wuselOutfitWreath.
+  ///
+  /// In en, this message translates to:
+  /// **'Flower wreath'**
+  String get wuselOutfitWreath;
+
+  /// No description provided for @wuselOutfitSunglasses.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunglasses'**
+  String get wuselOutfitSunglasses;
+
+  /// No description provided for @wuselOutfitScarf.
+  ///
+  /// In en, this message translates to:
+  /// **'Scarf'**
+  String get wuselOutfitScarf;
+
+  /// No description provided for @wuselOutfitHeadphones.
+  ///
+  /// In en, this message translates to:
+  /// **'Headphones'**
+  String get wuselOutfitHeadphones;
+
+  /// No description provided for @wuselOutfitBow.
+  ///
+  /// In en, this message translates to:
+  /// **'Bow'**
+  String get wuselOutfitBow;
+
+  /// Wusel greets a child in the morning (specs/25 voice rules: short, no guilt).
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning, {name}!'**
+  String wuselHelloMorning1(String name);
+
+  /// No description provided for @wuselHelloMorning2.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning, {name}! A new day.'**
+  String wuselHelloMorning2(String name);
+
+  /// No description provided for @wuselHelloMorning3.
+  ///
+  /// In en, this message translates to:
+  /// **'Hello {name}, nice that you are up.'**
+  String wuselHelloMorning3(String name);
+
+  /// No description provided for @wuselHelloDay1.
+  ///
+  /// In en, this message translates to:
+  /// **'Hi {name}!'**
+  String wuselHelloDay1(String name);
+
+  /// No description provided for @wuselHelloDay2.
+  ///
+  /// In en, this message translates to:
+  /// **'There you are, {name}!'**
+  String wuselHelloDay2(String name);
+
+  /// No description provided for @wuselHelloDay3.
+  ///
+  /// In en, this message translates to:
+  /// **'Nice to see you, {name}.'**
+  String wuselHelloDay3(String name);
+
+  /// No description provided for @wuselHelloEvening1.
+  ///
+  /// In en, this message translates to:
+  /// **'Good evening, {name}!'**
+  String wuselHelloEvening1(String name);
+
+  /// No description provided for @wuselHelloEvening2.
+  ///
+  /// In en, this message translates to:
+  /// **'Evening, {name}! What a day.'**
+  String wuselHelloEvening2(String name);
+
+  /// No description provided for @wuselHelloEvening3.
+  ///
+  /// In en, this message translates to:
+  /// **'Hi {name}! Time to rest soon.'**
+  String wuselHelloEvening3(String name);
+
+  /// No description provided for @wuselHelloNight.
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep well, {name}.'**
+  String wuselHelloNight(String name);
+
+  /// No description provided for @wuselFactBirthdayYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Happy birthday!'**
+  String get wuselFactBirthdayYou;
+
+  /// No description provided for @wuselFactBirthday.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s {name}\'s birthday!'**
+  String wuselFactBirthday(String name);
+
+  /// No description provided for @wuselFactFirstLesson.
+  ///
+  /// In en, this message translates to:
+  /// **'Today you start with {subject}.'**
+  String wuselFactFirstLesson(String subject);
+
+  /// No description provided for @wuselAllDone1.
+  ///
+  /// In en, this message translates to:
+  /// **'All done. That went well!'**
+  String get wuselAllDone1;
+
+  /// No description provided for @wuselAllDone2.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything\'s ticked off. Thank you!'**
+  String get wuselAllDone2;
+
+  /// No description provided for @wuselAllDone3.
+  ///
+  /// In en, this message translates to:
+  /// **'Done for today. The house says thanks!'**
+  String get wuselAllDone3;
+
+  /// No description provided for @wuselAllDone4.
+  ///
+  /// In en, this message translates to:
+  /// **'Your list is empty. Time to play!'**
+  String get wuselAllDone4;
+
+  /// No description provided for @wuselRewardSent1.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent! A grown-up will decide.'**
+  String get wuselRewardSent1;
+
+  /// No description provided for @wuselRewardSent2.
+  ///
+  /// In en, this message translates to:
+  /// **'Your wish is on its way.'**
+  String get wuselRewardSent2;
+
+  /// No description provided for @wuselBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'A new badge: {badge}!'**
+  String wuselBadge(String badge);
+
+  /// No description provided for @wuselWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Just a moment…'**
+  String get wuselWaiting;
+
+  /// No description provided for @wuselOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Hang on, looking for the internet…'**
+  String get wuselOffline;
+
+  /// No description provided for @wuselWallMorning1.
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning, everyone!'**
+  String get wuselWallMorning1;
+
+  /// No description provided for @wuselWallMorning2.
+  ///
+  /// In en, this message translates to:
+  /// **'Rise and shine, family!'**
+  String get wuselWallMorning2;
+
+  /// No description provided for @wuselWallMorning3.
+  ///
+  /// In en, this message translates to:
+  /// **'A new day for all of us.'**
+  String get wuselWallMorning3;
+
+  /// No description provided for @wuselWallMemberDone1.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} has done everything for today!'**
+  String wuselWallMemberDone1(String name);
+
+  /// No description provided for @wuselWallMemberDone2.
+  ///
+  /// In en, this message translates to:
+  /// **'All ticked off, {name}. Thanks!'**
+  String wuselWallMemberDone2(String name);
+
+  /// No description provided for @wuselSetupDone.
+  ///
+  /// In en, this message translates to:
+  /// **'That\'s everything set up. Welcome home!'**
+  String get wuselSetupDone;
+
+  /// No description provided for @wuselHideLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide what Wusel says'**
+  String get wuselHideLine;
 }
 
 class _AppLocalizationsDelegate

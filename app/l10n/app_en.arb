@@ -1667,8 +1667,12 @@
   "regionNameWithAbbreviation": "{name} ({abbreviation})",
   "@regionNameWithAbbreviation": {
     "placeholders": {
-      "name": {"type": "String"},
-      "abbreviation": {"type": "String"}
+      "name": {
+        "type": "String"
+      },
+      "abbreviation": {
+        "type": "String"
+      }
     }
   },
   "regionNameTop": "{category} {name}",
@@ -2780,5 +2784,214 @@
       }
     }
   },
-  "schoolScanFile": "Choose a file (PDF or picture)"
+  "schoolScanFile": "Choose a file (PDF or picture)",
+  "settingsSectionRituals": "Rituals",
+  "settingsSectionOccasions": "Seasons and occasions",
+  "settingMemberWuselTitle": "Wusel",
+  "settingMemberWuselHelp": "How much Wusel shows up for you. Automatic: lively for children, quiet for adults.",
+  "settingMemberWuselOutfitTitle": "Wusel's outfit",
+  "settingMemberWuselOutfitHelp": "What Wusel wears when it is talking to you. Every outfit is there from the start.",
+  "settingDeviceWuselTitle": "Wusel on this device",
+  "settingDeviceWuselHelp": "How lively Wusel is here while nobody is chosen. A person's own setting wins while they are chosen.",
+  "settingDeviceSoundsTitle": "Sounds on this device",
+  "settingDeviceSoundsHelp": "Automatic: off on the wall, on elsewhere. Never at night.",
+  "settingDeviceSkyTitle": "Sky in the header",
+  "settingDeviceSkyHelp": "The header shows a sky that changes with the time of day.",
+  "settingDevicePixelShiftTitle": "Protect the screen from burn-in",
+  "settingDevicePixelShiftHelp": "Moves everything by up to 2 pixels every 10 minutes, for OLED screens that stay on. Automatic: on for the wall.",
+  "settingAmbienceSeasonTitle": "Seasons",
+  "settingAmbienceSeasonHelp": "Blossom, sun, leaves or snowflakes in the sky.",
+  "settingAmbienceBirthdaysTitle": "Birthdays",
+  "settingAmbienceBirthdaysHelp": "Bunting in the member's colour and a party hat for Wusel on their birthday.",
+  "settingAmbienceFerienTitle": "School holidays",
+  "settingAmbienceFerienHelp": "A ribbon on the first and the last day of the holidays.",
+  "settingAmbienceAdventTitle": "Advent",
+  "settingAmbienceAdventHelp": "Candles in the header, one more on each of the four Sundays before Christmas. Automatic: by your region.",
+  "settingAmbienceEasterWesternTitle": "Easter",
+  "settingAmbienceEasterWesternHelp": "Eggs in the hills from two days before to two days after Easter Sunday. Automatic: by your region.",
+  "settingAmbienceEasterOrthodoxTitle": "Orthodox Easter",
+  "settingAmbienceEasterOrthodoxHelp": "The same eggs on the Orthodox date, which is calculated for every year. Automatic: by your region.",
+  "settingAmbienceNewYearTitle": "New Year's Eve",
+  "settingAmbienceNewYearHelp": "Small fireworks in the night sky on 31 December and 1 January.",
+  "settingRitualsCountdownDaysTitle": "Start looking forward",
+  "settingRitualsCountdownDaysHelp": "How many days before a birthday, the holidays or a marked event the countdown appears.",
+  "settingRitualsCountdownReturnTitle": "Count down to a parent's return",
+  "settingRitualsCountdownReturnHelp": "\"Back in 2 sleeps\" when an adult travels for two nights or more.",
+  "settingMealsWishesTitle": "Meal wishes",
+  "settingMealsWishesHelp": "Who may wish for a meal each week. A wish is never turned down in the app; it waits until it is planned.",
+  "settingMealsWishesPerWeekTitle": "Open wishes per person",
+  "settingMealsWishesPerWeekHelp": "How many wishes each person may have waiting at once.",
+  "settingTableQuestionTitle": "Question at the table",
+  "settingTableQuestionHelp": "A conversation question on the wall and in the app during the meal. It is answered aloud and nothing is recorded.",
+  "settingTableQuestionLunchTitle": "Question at lunch",
+  "settingTableQuestionLunchHelp": "When the question shows at lunch.",
+  "settingTableQuestionDinnerTitle": "Question at dinner",
+  "settingTableQuestionDinnerHelp": "When the question shows at dinner.",
+  "settingTableQuestionDeckTitle": "Questions for",
+  "settingTableQuestionDeckHelp": "All ages works for a five-year-old; older children adds deeper questions for 8 and over.",
+  "settingWeekReviewTitle": "Our week",
+  "settingWeekReviewHelp": "When the look back at the week appears. It stays until the next morning.",
+  "settingValueAuto": "Automatic",
+  "settingValueLively": "Lively",
+  "settingValueQuiet": "Quiet",
+  "settingValueOn": "On",
+  "settingValueOff": "Off",
+  "settingValueChildren": "Children",
+  "settingValueEveryone": "Everyone",
+  "settingValueWarmMeal": "Warm meal",
+  "settingValueMainMeals": "Lunch and dinner",
+  "settingValueAllAges": "All ages",
+  "settingValueOlderChildren": "Older children too",
+  "settingUnitDays": "{count, plural, =1{1 day} other{{count} days}}",
+  "@settingUnitDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "wuselOutfitNone": "Nothing",
+  "wuselOutfitParty": "Party hat",
+  "wuselOutfitCrown": "Crown",
+  "wuselOutfitWizard": "Wizard hat",
+  "wuselOutfitWreath": "Flower wreath",
+  "wuselOutfitSunglasses": "Sunglasses",
+  "wuselOutfitScarf": "Scarf",
+  "wuselOutfitHeadphones": "Headphones",
+  "wuselOutfitBow": "Bow",
+  "wuselHelloMorning1": "Good morning, {name}!",
+  "@wuselHelloMorning1": {
+    "description": "Wusel greets a child in the morning (specs/25 voice rules: short, no guilt).",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "wuselHelloMorning2": "Morning, {name}! A new day.",
+  "@wuselHelloMorning2": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "wuselHelloMorning3": "Hello {name}, nice that you are up.",
+  "@wuselHelloMorning3": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "wuselHelloDay1": "Hi {name}!",
+  "@wuselHelloDay1": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "wuselHelloDay2": "There you are, {name}!",
+  "@wuselHelloDay2": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "wuselHelloDay3": "Nice to see you, {name}.",
+  "@wuselHelloDay3": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "wuselHelloEvening1": "Good evening, {name}!",
+  "@wuselHelloEvening1": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "wuselHelloEvening2": "Evening, {name}! What a day.",
+  "@wuselHelloEvening2": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "wuselHelloEvening3": "Hi {name}! Time to rest soon.",
+  "@wuselHelloEvening3": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "wuselHelloNight": "Sleep well, {name}.",
+  "@wuselHelloNight": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "wuselFactBirthdayYou": "Happy birthday!",
+  "wuselFactBirthday": "It's {name}'s birthday!",
+  "@wuselFactBirthday": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "wuselFactFirstLesson": "Today you start with {subject}.",
+  "@wuselFactFirstLesson": {
+    "placeholders": {
+      "subject": {
+        "type": "String"
+      }
+    }
+  },
+  "wuselAllDone1": "All done. That went well!",
+  "wuselAllDone2": "Everything's ticked off. Thank you!",
+  "wuselAllDone3": "Done for today. The house says thanks!",
+  "wuselAllDone4": "Your list is empty. Time to play!",
+  "wuselRewardSent1": "Sent! A grown-up will decide.",
+  "wuselRewardSent2": "Your wish is on its way.",
+  "wuselBadge": "A new badge: {badge}!",
+  "@wuselBadge": {
+    "placeholders": {
+      "badge": {
+        "type": "String"
+      }
+    }
+  },
+  "wuselWaiting": "Just a moment…",
+  "wuselOffline": "Hang on, looking for the internet…",
+  "wuselWallMorning1": "Good morning, everyone!",
+  "wuselWallMorning2": "Rise and shine, family!",
+  "wuselWallMorning3": "A new day for all of us.",
+  "wuselWallMemberDone1": "{name} has done everything for today!",
+  "@wuselWallMemberDone1": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "wuselWallMemberDone2": "All ticked off, {name}. Thanks!",
+  "@wuselWallMemberDone2": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "wuselSetupDone": "That's everything set up. Welcome home!",
+  "wuselHideLine": "Hide what Wusel says"
 }
