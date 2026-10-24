@@ -57,7 +57,7 @@ void main() {
 
   testWidgets('the last day has its ribbon and no Wusel of its own', (t) async {
     await _today(t, DateTime(2026, 10, 25, 9));
-    expect(find.text('Letzter Ferientag'), findsOneWidget);
+    expect(find.text('Morgen ist wieder Schule'), findsOneWidget);
     expect(_ferienWusel, findsNothing);
   });
 

@@ -61,7 +61,7 @@ Der Himmel schmückt sich auch für besondere Tage. Jeder Anlass hat einen eigen
 |---|---|---|
 | **Jahreszeiten** | Blüten, Sonne, Blätter oder Schneeflocken am Himmel | an |
 | **Geburtstage** | Wimpel in der Farbe der Person und ein Partyhut für Wusel | an |
-| **Ferien** | ein Band „Ferien!“ am ersten und „Letzter Ferientag“ am letzten Ferientag; auf **Heute** steht es neben dem Titel | an |
+| **Ferien** | ein Band „Ferien!“ am ersten freien Tag und „Morgen ist wieder Schule“ am letzten (Wochenenden und Feiertage direkt davor und danach zählen dazu); auf **Heute** steht es neben dem Titel | an |
 | **Advent** | Kerzen in der Kopfzeile, an jedem Adventssonntag eine mehr | nach eurer Region |
 | **Ostern** | Eier in den Hügeln, zwei Tage vor bis zwei Tage nach dem Ostersonntag | nach eurer Region |
 | **Orthodoxes Ostern** | dieselben Eier am orthodoxen Datum | nach eurer Region |

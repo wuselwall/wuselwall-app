@@ -255,9 +255,52 @@ void main() {
       );
     });
 
-    test('a single free day is a first day; other kinds are no Ferien', () {
+    test('the weekends around weekday Ferien belong to them', () {
+      // Monday 12 to Friday 23 October: school ends Friday the 9th and starts again
+      // Monday the 26th.
+      final weekdays = ferien(DateTime(2026, 10, 12), DateTime(2026, 10, 23));
+      expect(ferienEdgeOn([weekdays], DateTime(2026, 10, 9)), isNull);
+      expect(
+        ferienEdgeOn([weekdays], DateTime(2026, 10, 10)),
+        FerienEdge.first,
+      );
+      expect(ferienEdgeOn([weekdays], DateTime(2026, 10, 12)), isNull);
+      expect(ferienEdgeOn([weekdays], DateTime(2026, 10, 23)), isNull);
+      expect(ferienEdgeOn([weekdays], DateTime(2026, 10, 25)), FerienEdge.last);
+      expect(ferienEdgeOn([weekdays], DateTime(2026, 10, 26)), isNull);
+    });
+
+    test('a public holiday after the Ferien moves the last day', () {
+      // Osterferien until Friday 3 April 2026, Ostermontag on the 6th.
+      final easter = ferien(DateTime(2026, 3, 23), DateTime(2026, 4, 3));
+      final monday = ferien(
+        DateTime(2026, 4, 6),
+        DateTime(2026, 4, 6),
+        kind: 'public_holiday',
+      );
+      expect(ferienEdgeOn([easter, monday], DateTime(2026, 4, 5)), isNull);
+      expect(
+        ferienEdgeOn([easter, monday], DateTime(2026, 4, 6)),
+        FerienEdge.last,
+      );
+    });
+
+    test('a long weekend without Ferien is no stretch', () {
+      final monday = ferien(
+        DateTime(2026, 4, 6),
+        DateTime(2026, 4, 6),
+        kind: 'public_holiday',
+      );
+      expect(ferienEdgeOn([monday], DateTime(2026, 4, 4)), isNull);
+      expect(ferienEdgeOn([monday], DateTime(2026, 4, 6)), isNull);
+      expect(ferienEdgeOn(const [], DateTime(2026, 4, 4)), isNull);
+    });
+
+    test('one Ferien day joins its weekend; other kinds are no Ferien', () {
+      // Monday 2 November 2026: the weekend before it starts the stretch.
       final day = ferien(DateTime(2026, 11, 2), DateTime(2026, 11, 2));
-      expect(ferienEdgeOn([day], DateTime(2026, 11, 2)), FerienEdge.first);
+      expect(ferienEdgeOn([day], DateTime(2026, 10, 31)), FerienEdge.first);
+      expect(ferienEdgeOn([day], DateTime(2026, 11, 2)), FerienEdge.last);
       final closure = ferien(
         DateTime(2026, 11, 2),
         DateTime(2026, 11, 2),

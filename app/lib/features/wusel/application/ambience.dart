@@ -67,29 +67,38 @@ double sunsetAt(DateTime now, {NightHours hours = NightHours.standard}) {
   return ((60 - untilNight) ~/ 5) / 12;
 }
 
-/// Whether [date] is the first or the last day of the school holidays (`kind`
-/// `holiday`) in [holidays], or neither. Back-to-back or overlapping holidays (two
-/// schools, a bridge day entered by hand) count as one stretch: its first day is the
-/// first with no holiday the day before, its last the last with none the day after.
+/// Whether [date] is the first or the last free day of the school holidays in
+/// [holidays], or neither. The stretch is every free day in a row around the Ferien
+/// (`kind` `holiday`): the weekends before and after them, public holidays and closure
+/// days count too, and back-to-back holidays are one stretch. So the ribbon says
+/// "Ferien!" on the Saturday school ended for, and "Morgen ist wieder Schule" on the
+/// Sunday before it starts again. A long weekend without Ferien is no stretch.
 FerienEdge? ferienEdgeOn(Iterable<HolidayRecord> holidays, DateTime date) {
-  final ferien = [
-    for (final h in holidays)
-      if (h.kind == 'holiday') h,
-  ];
-  bool covers(DateTime d) => ferien.any(
-    (h) =>
-        !d.isBefore(DateUtils.dateOnly(h.startsOn)) &&
-        !d.isAfter(DateUtils.dateOnly(h.endsOn)),
-  );
+  bool on(DateTime d, HolidayRecord h) =>
+      !d.isBefore(DateUtils.dateOnly(h.startsOn)) &&
+      !d.isAfter(DateUtils.dateOnly(h.endsOn));
+  bool ferien(DateTime d) =>
+      holidays.any((h) => h.kind == 'holiday' && on(d, h));
+  bool free(DateTime d) =>
+      d.weekday == DateTime.saturday ||
+      d.weekday == DateTime.sunday ||
+      holidays.any((h) => on(d, h));
+  DateTime shift(DateTime d, int days) =>
+      DateTime(d.year, d.month, d.day + days);
+
   final today = DateUtils.dateOnly(date);
-  if (!covers(today)) return null;
-  if (!covers(DateTime(today.year, today.month, today.day - 1))) {
-    return FerienEdge.first;
+  if (!free(today)) return null;
+  final first = !free(shift(today, -1));
+  final last = !free(shift(today, 1));
+  if (!first && !last) return null;
+  // The stretch must hold Ferien; summer holidays are long, so look far enough.
+  var hasFerien = false;
+  for (var d = today; free(d) && !hasFerien; d = shift(d, first ? 1 : -1)) {
+    hasFerien = ferien(d);
+    if (calendarDaysBetween(today, d).abs() > 120) break;
   }
-  if (!covers(DateTime(today.year, today.month, today.day + 1))) {
-    return FerienEdge.last;
-  }
-  return null;
+  if (!hasFerien) return null;
+  return first ? FerienEdge.first : FerienEdge.last;
 }
 
 /// Whole calendar days from [from] to [to], whatever their times of day. Counted on
