@@ -171,6 +171,8 @@ only from member colours and `brand`, so it follows the theme like everything el
 | Elevation | None. Borders separate, shadows only on sheets and dialogs | Same | None |
 | Touch target | 44 | 56 | 56 |
 
+A selected segment (`SegmentedButton`) or chip is `brand-tint` (the acting member's tint under `forMember`) with AA text, set once in `AppTheme` and never `sunken`, which is invisible on the page; a selected segment's label is also bold, so the cue is not colour alone.
+
 **Clarified 2026-10-17 (A6, `t_da411148`):** targets are actual non-overlapping
 hit areas in logical pixels, minimum width **and** height, after visual density,
 padding and layout constraints. A nominal `minimumSize` of 56 is not sufficient if
