@@ -46,6 +46,8 @@ class FeedTokensPage extends ConsumerWidget {
         onRetry: () => ref.invalidate(feedTokensProvider),
         data: (list) => list.isEmpty
             ? EmptyView(
+                // A settings page: no Wusel (specs/25 "Where Wusel never appears").
+                illustrated: false,
                 message: l10n.feedEmpty,
                 actions: [
                   FilledButton.icon(

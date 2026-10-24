@@ -126,6 +126,8 @@ class _TimetableImportPageState extends ConsumerState<TimetableImportPage> {
             final school = _school(d);
             if (kids.isEmpty || school == null) {
               return EmptyView(
+                // A settings page: no Wusel (specs/25 "Where Wusel never appears").
+                illustrated: false,
                 message: kids.isEmpty
                     ? l10n.schoolImportNoChild
                     : l10n.schoolSetupCardBody,
