@@ -4,7 +4,7 @@ Nicht jede Familie macht es gleich: Wie viele Punkte eine Aufgabe bringt, ob Kin
 
 <Shot name="settings-phone" alt="Einstellungen: die Liste der Gruppen von Persönlich bis Hilfe & Info" />
 
-In der Ansicht **Einfach** siehst du nur die wichtigsten Einstellungen: die Region, die Serien-Joker, ob Belohnungen Freigabe brauchen, ob Kinder ihre eigenen Termine ändern, die warme Mahlzeit an Schultagen und freien Tagen, die Tischfrage, den Wochenrückblick, das Wunschessen, die Nachtzeit dieses Geräts, Wusel, den Ton beim Abhaken, die Morgenübersicht und die Erinnerung vor Terminen. Alle anderen zeigt **Erweitert** (oben umschalten oder unten **Alle Einstellungen zeigen**). Eine Gruppe, in der die Ansicht nichts zeigt, steht gar nicht in der Liste. Ausgeblendete Einstellungen gelten trotzdem weiter.
+In der Ansicht **Einfach** siehst du nur die wichtigsten Einstellungen: die Region, die Serien-Joker, ob Belohnungen Freigabe brauchen, ob Kinder ihre eigenen Termine ändern, die warme Mahlzeit an Schultagen und freien Tagen, die Tischfrage, den Wochenrückblick, das Wunschessen, die Nachtzeit dieses Geräts, Wusel, den Ton beim Abhaken, die Morgenübersicht, die Erinnerung vor Terminen und die Feiertage (Advent, Ostern, Orthodoxes Ostern, Silvester). Alle anderen zeigt **Erweitert** (oben umschalten oder unten **Alle Einstellungen zeigen**). Eine Gruppe, in der die Ansicht nichts zeigt, steht gar nicht in der Liste. Ausgeblendete Einstellungen gelten trotzdem weiter.
 
 Jede Einstellung hat einen **Standard**. Den schlägt WuselWall vor, und er passt für die meisten Familien. Weicht euer Wert davon ab, steht dort **angepasst**. Mit **Auf Standard zurücksetzen** geht es jederzeit zurück.
 

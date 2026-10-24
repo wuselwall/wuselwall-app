@@ -4,7 +4,7 @@ Not every family does things the same way: how many points a chore earns, whethe
 
 <Shot name="settings-phone" alt="Settings: the list of groups from Personal to Help & about" />
 
-The **Basic** view shows only the most important settings: the region, streak jokers, whether rewards need approval, whether children change their own appointments, the warm meal on school days and free days, the question at the table, our week, meal wishes, this device's night hours, Wusel, the sound when a chore is ticked, the morning summary and the reminder before appointments. **Advanced** shows all the others (switch at the top, or tap **Show all settings** at the bottom). A group in which the view shows nothing is not in the list at all. Hidden settings still apply.
+The **Basic** view shows only the most important settings: the region, streak jokers, whether rewards need approval, whether children change their own appointments, the warm meal on school days and free days, the question at the table, our week, meal wishes, this device's night hours, Wusel, the sound when a chore is ticked, the morning summary, the reminder before appointments and the holiday celebrations (Advent, Easter, Orthodox Easter, New Year's Eve). **Advanced** shows all the others (switch at the top, or tap **Show all settings** at the bottom). A group in which the view shows nothing is not in the list at all. Hidden settings still apply.
 
 Every setting has a **default**, which WuselWall suggests. It suits most families. If your value differs, the setting says **Customised**. **Reset to default** brings it back at any time.
 
