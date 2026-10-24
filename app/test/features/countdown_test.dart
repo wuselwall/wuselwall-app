@@ -172,6 +172,158 @@ void main() {
     expect(list.map((c) => c.title), ['b', 'a']);
   });
 
+  group('ageOn', () {
+    test('counts whole years, the birthday itself included', () {
+      final b = DateTime(2018, 10, 24);
+      expect(ageOn(b, DateTime(2026, 10, 23)), 7);
+      expect(ageOn(b, DateTime(2026, 10, 24)), 8);
+      expect(ageOn(b, DateTime(2026, 10, 24, 23, 59)), 8);
+    });
+
+    test(
+      '29 February: reached on the day in a leap year, on 1 March in others',
+      () {
+        final b = DateTime(2016, 2, 29);
+        expect(ageOn(b, DateTime(2024, 2, 28)), 7);
+        expect(ageOn(b, DateTime(2024, 2, 29)), 8);
+        expect(ageOn(b, DateTime(2027, 2, 28)), 10);
+        expect(ageOn(b, DateTime(2027, 3, 1)), 11);
+      },
+    );
+  });
+
+  test('a birthday countdown knows the age turned on the day', () {
+    final paul = _member('paul', birthday: DateTime(2018, 10, 27));
+    final c = countdowns(today: today, horizonDays: 14, members: [paul]).single;
+    expect(c.age, 8);
+  });
+
+  test('a birthday today counts 0 days and carries the new age', () {
+    final paul = _member('paul', birthday: DateTime(2018, 10, 24));
+    final c = countdowns(today: today, horizonDays: 14, members: [paul]).single;
+    expect(c.daysFrom(today), 0);
+    expect(c.age, 8);
+  });
+
+  test(
+    'a birthday early in January is counted down to across the new year',
+    () {
+      final paul = _member('paul', birthday: DateTime(2019, 1, 2));
+      final c = countdowns(
+        today: DateTime(2026, 12, 30),
+        horizonDays: 14,
+        members: [paul],
+      ).single;
+      expect(c.date, DateTime(2027, 1, 2));
+      expect(c.daysFrom(DateTime(2026, 12, 30)), 3);
+      expect(c.age, 8);
+    },
+  );
+
+  test('29 February counts down to 1 March in a common year, and to the day in a leap year', () {
+    final leap = _member('leap', birthday: DateTime(2016, 2, 29));
+    final common = countdowns(
+      today: DateTime(2027, 2, 25),
+      horizonDays: 14,
+      members: [leap],
+    ).single;
+    expect(common.date, DateTime(2027, 3, 1));
+    expect(common.age, 11);
+    final leapYear = countdowns(
+      today: DateTime(2028, 2, 25),
+      horizonDays: 14,
+      members: [leap],
+    ).single;
+    expect(leapYear.date, DateTime(2028, 2, 29));
+    expect(leapYear.age, 12);
+  });
+
+  test('a baby born today has no age to tell yet', () {
+    final baby = _member('baby', birthday: today);
+    final c = countdowns(today: today, horizonDays: 14, members: [baby]).single;
+    expect(c.age, isNull);
+  });
+
+  test('a recurring marked event counts down to its next occurrence only', () {
+    Occurrence week(DateTime day) => Occurrence(
+      id: 'pizza-${day.day}',
+      eventId: 'pizza',
+      calendarId: 'c',
+      title: 'Pizza-Freitag',
+      kind: EventKind.appointment,
+      status: EventStatus.confirmed,
+      importance: Importance.key,
+      allDay: true,
+      start: day,
+      end: day,
+      localStartDate: day,
+      localEndDate: day,
+      isRecurring: true,
+      countdown: true,
+    );
+    final list = countdowns(
+      today: today,
+      horizonDays: 14,
+      members: const [],
+      occurrences: [
+        week(DateTime(2026, 10, 23)),
+        week(DateTime(2026, 11, 6)),
+        week(DateTime(2026, 10, 30)),
+      ],
+    );
+    // The one of last week is gone; of this week's and the next, only the nearest.
+    expect(list.single.date, DateTime(2026, 10, 30));
+  });
+
+  test('a homecoming still counts on the last day, as "today"', () {
+    final papa = _member('papa', child: false);
+    final trip = _occ(
+      'trip',
+      DateTime(2026, 10, 20),
+      DateTime(2026, 10, 24),
+      presence: PresenceState.travel,
+      attendees: ['papa'],
+    );
+    final c = countdowns(
+      today: today,
+      horizonDays: 14,
+      members: [papa],
+      occurrences: [trip],
+    ).single;
+    expect(c.kind, CountdownKind.homecoming);
+    expect(c.daysFrom(today), 0);
+    expect(
+      countdowns(
+        today: DateTime(2026, 10, 25),
+        horizonDays: 14,
+        members: [papa],
+        occurrences: [trip],
+      ),
+      isEmpty,
+      reason: 'the day after, it is gone',
+    );
+  });
+
+  test('a child away is not counted down to', () {
+    final emma = _member('emma');
+    final trip = _occ(
+      'camp',
+      DateTime(2026, 10, 20),
+      DateTime(2026, 10, 26),
+      presence: PresenceState.travel,
+      attendees: ['emma'],
+    );
+    expect(
+      countdowns(
+        today: today,
+        horizonDays: 14,
+        members: [emma],
+        occurrences: [trip],
+      ),
+      isEmpty,
+    );
+  });
+
   test('the horizon counts calendar days across a clock change', () {
     // The clocks go back on 25 October 2026 in Europe; 7 November is 14 days on.
     final list = countdowns(

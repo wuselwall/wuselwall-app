@@ -4843,6 +4843,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Andere Personen ändern nur Erziehungsberechtigte. Deinen eigenen Namen, deine Farbe und dein Bild kannst du selbst ändern.';
 
   @override
+  String get memberKioskReadOnly =>
+      'An der Wandanzeige wird niemand geändert. Namen, Farben, Bilder und Geburtstage änderst du in der App auf einem Handy oder Tablet.';
+
+  @override
   String get memberInactive => 'Nicht mehr dabei';
 
   @override
@@ -5353,6 +5357,17 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String countdownBirthdayTurns(String name, int age) {
+    String _temp0 = intl.Intl.pluralLogic(
+      age,
+      locale: localeName,
+      other: '$name wird $age',
+      one: '$name wird 1',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String countdownHomecoming(String name) {
     return '$name kommt nach Hause';
   }
@@ -5542,6 +5557,11 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String mealsWishedBy(String name) {
     return 'Wunsch von $name';
+  }
+
+  @override
+  String mealsTraditionSuggestion(String meal, String tradition) {
+    return '$meal einplanen ($tradition)';
   }
 
   @override

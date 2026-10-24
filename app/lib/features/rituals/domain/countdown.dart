@@ -30,6 +30,7 @@ class Countdown {
     this.memberId,
     this.iconKey,
     this.forMembers = const [],
+    this.age,
   });
 
   final CountdownKind kind;
@@ -49,6 +50,10 @@ class Countdown {
 
   /// Who it is for: an event's attendees. Empty means the whole family.
   final List<String> forMembers;
+
+  /// For a birthday, the age the member turns on [date] ("Paul wird 8"); null for
+  /// everything else, and for a birthday whose age is unknown or zero.
+  final int? age;
 
   /// Whole days from [today] until it happens: 0 today, 1 tomorrow.
   int daysFrom(DateTime today) => DateTime.utc(
@@ -74,6 +79,16 @@ DateTime nextBirthday(DateTime birthday, DateTime today) {
     next = DateTime(t.year + 1, birthday.month, birthday.day);
   }
   return next;
+}
+
+/// How old someone born on [birthday] is on [date]: whole years, counting the
+/// birthday itself. A 29 February birthday is reached on 1 March in other years, as
+/// [nextBirthday] has it.
+int ageOn(DateTime birthday, DateTime date) {
+  final d = _day(date);
+  final thisYear = DateTime(d.year, birthday.month, birthday.day);
+  final age = d.year - birthday.year;
+  return d.isBefore(thisYear) ? age - 1 : age;
 }
 
 /// Everything to look forward to from [today] until [horizonDays] ahead, nearest first
@@ -105,6 +120,7 @@ List<Countdown> countdowns({
       if (!m.active || m.birthday == null) continue;
       final next = nextBirthday(m.birthday!, t);
       if (within(next)) {
+        final age = ageOn(m.birthday!, next);
         out.add(
           Countdown(
             kind: CountdownKind.birthday,
@@ -112,6 +128,7 @@ List<Countdown> countdowns({
             title: m.displayName,
             memberId: m.id,
             iconKey: 'cake',
+            age: age > 0 ? age : null,
           ),
         );
       }
@@ -141,7 +158,11 @@ List<Countdown> countdowns({
   };
   final byId = {for (final m in members) m.id: m};
   final seenEvents = <String>{};
-  for (final o in occurrences) {
+  // Nearest first, whatever order they came in: a recurring event keeps only its next
+  // occurrence below.
+  final byStart = [...occurrences]
+    ..sort((a, b) => a.localStartDate.compareTo(b.localStartDate));
+  for (final o in byStart) {
     if (o.isImported) continue;
     if (homecomings &&
         o.isPresence &&

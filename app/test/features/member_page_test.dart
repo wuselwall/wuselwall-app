@@ -3,9 +3,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/features/identity/application/first_run.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/settings/application/settings_view.dart';
 
+import '../support/fake_pairing.dart';
 import '../support/fakes.dart';
 
 final _de = lookupAppLocalizations(const Locale('de'));
@@ -199,4 +201,43 @@ void main() {
 
     expect(identity.deviceRenames.single, (id: 'd-ipad', label: 'Kinder-iPad'));
   });
+
+  testWidgets(
+    'on the wall display the member page only shows: the server refuses a kiosk',
+    (t) async {
+      final identity = FakeIdentityRepository(
+        current: device(
+          deviceClass: DeviceClass.kiosk,
+          register: UiRegister.kiosk,
+        ),
+      );
+      final container = await pumpApp(
+        t,
+        size: const Size(1920, 1200),
+        overrides: [
+          ...baseOverrides(
+            identity: identity,
+            shopping: FakeShoppingRepository([]),
+          ),
+          firstRunStoreProvider.overrideWithValue(
+            FakeFirstRunStore()..seen.add('d1'),
+          ),
+        ],
+      );
+      container.read(routerProvider).go(Routes.member, extra: kidId);
+      await t.pumpAndSettle();
+
+      expect(find.text(_de.memberKioskReadOnly), findsOneWidget);
+      final name = t.widget<TextField>(
+        find.byKey(const ValueKey('member-name')),
+      );
+      expect(name.enabled, isFalse);
+      final birthday = find.byKey(const ValueKey('member-birthday'));
+      if (birthday.evaluate().isNotEmpty) {
+        expect(t.widget<OutlinedButton>(birthday).onPressed, isNull);
+      }
+      expect(identity.memberUpdates, isEmpty);
+      await unmountApp(t, container);
+    },
+  );
 }

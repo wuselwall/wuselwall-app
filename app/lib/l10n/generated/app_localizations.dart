@@ -8267,6 +8267,12 @@ abstract class AppLocalizations {
   /// **'Only guardians change other people. You can change your own name, colour and picture.'**
   String get memberReadOnlyHint;
 
+  /// On the member page of a wall display, which may not edit members (the server refuses a kiosk).
+  ///
+  /// In en, this message translates to:
+  /// **'Nobody is changed on the wall display. Change names, colours, pictures and birthdays in the app on a phone or tablet.'**
+  String get memberKioskReadOnly;
+
   /// No description provided for @memberInactive.
   ///
   /// In en, this message translates to:
@@ -9101,6 +9107,12 @@ abstract class AppLocalizations {
   /// **'{name}\'s birthday'**
   String countdownBirthdayOf(String name);
 
+  /// A birthday countdown's title with the age the member turns that day (specs/27: Olivia wird 10).
+  ///
+  /// In en, this message translates to:
+  /// **'{age, plural, =1{{name} turns 1} other{{name} turns {age}}}'**
+  String countdownBirthdayTurns(String name, int age);
+
   /// No description provided for @countdownHomecoming.
   ///
   /// In en, this message translates to:
@@ -9412,6 +9424,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{name}\'s wish'**
   String mealsWishedBy(String name);
+
+  /// The meal planner's one-tap suggestion on a tradition's day (specs/27): the tooltip of the chip that plans the tradition's meal.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan {meal} ({tradition})'**
+  String mealsTraditionSuggestion(String meal, String tradition);
 
   /// No description provided for @tableQuestionTitle.
   ///
