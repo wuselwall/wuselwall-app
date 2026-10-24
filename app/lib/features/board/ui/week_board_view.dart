@@ -13,6 +13,7 @@ import 'package:wuselwall/features/board/ui/board_meal.dart';
 import 'package:wuselwall/features/board/ui/board_presence.dart';
 import 'package:wuselwall/features/board/ui/board_zones.dart';
 import 'package:wuselwall/features/board/ui/kiosk_canvas.dart';
+import 'package:wuselwall/features/rituals/application/birthday_providers.dart';
 
 /// The kiosk week board, drawn at canvas size (wrap it in [KioskCanvas]).
 ///
@@ -46,6 +47,13 @@ class WeekBoardView extends ConsumerWidget {
     );
     final ww = context.ww;
     final scheme = Theme.of(context).colorScheme;
+    // A birthday this week takes the day names' second line, as a holiday does.
+    final headerHeight = DayHeaderRow.heightOf(
+      board,
+      birthdays: ref
+          .watch(weekBirthdaysProvider(board.days.first.date))
+          .any((d) => d.isNotEmpty),
+    );
     // Past days and, at night, every day but today and tomorrow recede through their
     // ground colour rather than through opacity on their own text (A6/A7,
     // `t_da411148`): the text keeps its full, contrast-checked colour in every shade.
@@ -84,7 +92,7 @@ class WeekBoardView extends ConsumerWidget {
                   builder: (context, constraints) {
                     final scaler = MediaQuery.textScalerOf(context);
                     final reserved =
-                        DayHeaderRow.heightOf(board) +
+                        headerHeight +
                         56 * board.members.length +
                         math.max(56, scaler.scale(24) * 1.15 + 12) +
                         2 * BoardDivider.height +
@@ -96,7 +104,7 @@ class WeekBoardView extends ConsumerWidget {
                     return Column(
                       children: [
                         SizedBox(
-                          height: DayHeaderRow.heightOf(board),
+                          height: headerHeight,
                           child: DayHeaderRow(frame: frame),
                         ),
                         const BoardDivider(),

@@ -105,8 +105,19 @@ class _EventEditorFormState extends ConsumerState<_EventEditorForm> {
   void initState() {
     super.initState();
     final initial = widget.initial;
+    final tradition = widget.args?.tradition;
     if (initial != null) {
       _draft = EventDraft.fromEvent(initial);
+    } else if (tradition != null) {
+      // The whole family attends a tradition by default (specs/27).
+      final members = ref.read(membersProvider).value ?? const <Member>[];
+      _draft = EventDraft.fromTradition(
+        tradition,
+        attendeeIds: {
+          for (final m in members)
+            if (m.active) m.id,
+        },
+      );
     } else {
       final now = ref.read(nowProvider);
       final day = widget.args?.date ?? now;
@@ -375,7 +386,13 @@ class _EventEditorFormState extends ConsumerState<_EventEditorForm> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEdit ? l10n.eventEditTitle : l10n.calendarNewEvent),
+        title: Text(
+          _isEdit
+              ? l10n.eventEditTitle
+              : widget.args?.tradition != null
+              ? l10n.calendarNewTradition
+              : l10n.calendarNewEvent,
+        ),
         actions: [
           if (_isEdit)
             IconButton(

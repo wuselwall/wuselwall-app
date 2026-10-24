@@ -9203,6 +9203,24 @@ abstract class AppLocalizations {
   /// **'{name}\'s tasks are all done today!'**
   String wuselWallMemberDone3(String name);
 
+  /// Wusel's morning line on the wall when today has a family tradition; name is the tradition (specs/27: Heute ist Spieleabend!).
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s {name} today!'**
+  String wuselWallTradition1(String name);
+
+  /// No description provided for @wuselWallTradition2.
+  ///
+  /// In en, this message translates to:
+  /// **'Hooray, today is {name}!'**
+  String wuselWallTradition2(String name);
+
+  /// No description provided for @wuselWallTradition3.
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning! Today is {name}.'**
+  String wuselWallTradition3(String name);
+
   /// No description provided for @wuselSetupDone.
   ///
   /// In en, this message translates to:
@@ -9346,6 +9364,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'e.g. pizza'**
   String get eventTraditionMealHint;
+
+  /// Calendar: the button and sheet that start a family tradition from a starter (specs/27).
+  ///
+  /// In en, this message translates to:
+  /// **'New tradition'**
+  String get calendarNewTradition;
+
+  /// No description provided for @traditionStartersHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick one to start with. You can change the day and time next.'**
+  String get traditionStartersHelp;
+
+  /// A starter tradition's name, written per language (specs/27: Spieleabend).
+  ///
+  /// In en, this message translates to:
+  /// **'Game night'**
+  String get traditionStarterGameNight;
+
+  /// No description provided for @traditionStarterPizzaFriday.
+  ///
+  /// In en, this message translates to:
+  /// **'Pizza Friday'**
+  String get traditionStarterPizzaFriday;
+
+  /// No description provided for @traditionStarterFilmNight.
+  ///
+  /// In en, this message translates to:
+  /// **'Film night'**
+  String get traditionStarterFilmNight;
+
+  /// No description provided for @traditionStarterSundayBreakfast.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunday breakfast'**
+  String get traditionStarterSundayBreakfast;
+
+  /// No description provided for @traditionStarterStoryTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Story time'**
+  String get traditionStarterStoryTime;
+
+  /// No description provided for @traditionStarterDayOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Day out'**
+  String get traditionStarterDayOut;
+
+  /// The meal Pizza Friday carries, in a few words; the planner offers it on the day.
+  ///
+  /// In en, this message translates to:
+  /// **'Pizza'**
+  String get traditionStarterPizzaMeal;
+
+  /// No description provided for @traditionStarterOwn.
+  ///
+  /// In en, this message translates to:
+  /// **'Your own tradition'**
+  String get traditionStarterOwn;
+
+  /// No description provided for @traditionStarterOwnHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'You choose the name, picture and day.'**
+  String get traditionStarterOwnHelp;
+
+  /// When a starter tradition happens: the weekday's full name and the start time.
+  ///
+  /// In en, this message translates to:
+  /// **'Every {weekday}, {time}'**
+  String traditionStarterWhen(String weekday, String time);
+
+  /// No description provided for @traditionStarterWhenAllDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Every {weekday}, all day'**
+  String traditionStarterWhenAllDay(String weekday);
 
   /// No description provided for @eventIcon_cake.
   ///

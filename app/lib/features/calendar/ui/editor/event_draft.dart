@@ -1,5 +1,6 @@
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
+import 'package:wuselwall/features/calendar/domain/tradition_starters.dart';
 import 'package:wuselwall/features/calendar/ui/editor/recurrence.dart';
 
 /// What the editor shows while the user types or picks: an event being made or
@@ -45,6 +46,28 @@ class EventDraft {
       attendeeIds: attendeeIds,
     );
   }
+
+  /// A new family tradition from Kalender → *Neue Tradition* (specs/27): weekly on its
+  /// start's weekday, [attendeeIds] (the whole family), always on the wall.
+  factory EventDraft.fromTradition(
+    TraditionTemplate t, {
+    required Set<String> attendeeIds,
+  }) => EventDraft(
+    start: t.start,
+    end: t.end,
+    title: t.title,
+    isAllDay: t.allDay,
+    attendeeIds: attendeeIds,
+    key: true,
+    recurrence: Recurrence(
+      kind: RepeatKind.weekly,
+      weekdays: {t.start.weekday},
+    ),
+    iconKey: t.iconKey,
+    tradition: true,
+    traditionMeal: t.meal,
+    traditionMealSlot: t.mealSlot,
+  );
 
   factory EventDraft.fromEvent(CalendarEvent event) {
     final start = event.isAllDay ? event.startDate! : event.startsAt!.toLocal();
