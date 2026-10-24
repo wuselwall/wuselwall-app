@@ -4034,6 +4034,41 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String inviteAlreadyInTitle(String household) {
+    return 'Du bist schon in $household';
+  }
+
+  @override
+  String inviteAlreadyInSame(String household) {
+    return 'Diese Einladung ist für $household, und da bist du schon dabei. Du musst nichts weiter tun.';
+  }
+
+  @override
+  String get inviteAlreadyInLeaveHint =>
+      'Ein Konto gehört zu genau einer Familie. Um beizutreten, verlässt du zuerst deine jetzige Familie; danach geht es mit der Einladung weiter.';
+
+  @override
+  String get inviteAlreadyInLeaveHintUnknown =>
+      'Ein Konto gehört zu genau einer Familie. Um einer anderen beizutreten, verlässt du zuerst deine jetzige Familie und öffnest die Einladung danach noch einmal.';
+
+  @override
+  String get inviteAlreadyInDevice =>
+      'Dieses Gerät gehört schon zu einer Familie. Öffne die Einladung auf dem eigenen Handy der eingeladenen Person.';
+
+  @override
+  String get invitePartnerPickTitle => 'Wen möchtest du einladen?';
+
+  @override
+  String get invitePartnerExisting => 'Schon in der Familie, noch ohne Konto';
+
+  @override
+  String get invitePartnerSomeoneElse => 'Jemand anderes';
+
+  @override
+  String get invitePartnerSomeoneElseHint =>
+      'Legt eine neue erwachsene Person an';
+
+  @override
   String get inviteNothingKept => 'Es liegt keine Einladung mehr vor.';
 
   @override

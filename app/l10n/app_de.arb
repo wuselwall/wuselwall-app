@@ -1580,6 +1580,29 @@
       }
     }
   },
+  "inviteAlreadyInTitle": "Du bist schon in {household}",
+  "@inviteAlreadyInTitle": {
+    "placeholders": {
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteAlreadyInSame": "Diese Einladung ist für {household}, und da bist du schon dabei. Du musst nichts weiter tun.",
+  "@inviteAlreadyInSame": {
+    "placeholders": {
+      "household": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteAlreadyInLeaveHint": "Ein Konto gehört zu genau einer Familie. Um beizutreten, verlässt du zuerst deine jetzige Familie; danach geht es mit der Einladung weiter.",
+  "inviteAlreadyInLeaveHintUnknown": "Ein Konto gehört zu genau einer Familie. Um einer anderen beizutreten, verlässt du zuerst deine jetzige Familie und öffnest die Einladung danach noch einmal.",
+  "inviteAlreadyInDevice": "Dieses Gerät gehört schon zu einer Familie. Öffne die Einladung auf dem eigenen Handy der eingeladenen Person.",
+  "invitePartnerPickTitle": "Wen möchtest du einladen?",
+  "invitePartnerExisting": "Schon in der Familie, noch ohne Konto",
+  "invitePartnerSomeoneElse": "Jemand anderes",
+  "invitePartnerSomeoneElseHint": "Legt eine neue erwachsene Person an",
   "inviteNothingKept": "Es liegt keine Einladung mehr vor.",
   "inviteResultTitle": "Einladung für {name}",
   "@inviteResultTitle": {

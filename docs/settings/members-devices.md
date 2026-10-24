@@ -31,6 +31,8 @@ Hast du bei der E-Mail-Adresse nichts angegeben, gibt es den Code allein. Die Pe
 
 Zu einem bestehenden **Mitglied** ohne Konto lädst du die Person direkt in der Mitgliederliste über **Einladen** ein.
 
+**Partner:in einladen** auf der Karte **Erste Schritte** fragt zuerst **Wen möchtest du einladen?**, wenn es in der Familie schon Erwachsene ohne Konto gibt, etwa die Person, die du beim Anlegen der Familie eingetragen hast. Wähle sie aus, dann gilt die Einladung genau ihr und sie wird nicht doppelt angelegt. **Jemand anderes** legt eine neue Person an.
+
 ::: tip Kein Konto nötig
 Kinder brauchen keine Einladung. Sie legst du als Mitglied mit Namen an, und ihr Gerät verbindest du wie unter [Gerät verbinden](#gerat-verbinden) beschrieben.
 :::

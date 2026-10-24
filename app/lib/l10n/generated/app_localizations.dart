@@ -6978,6 +6978,60 @@ abstract class AppLocalizations {
   /// **'You are already in {household}.'**
   String inviteAlreadyIn(String household);
 
+  /// No description provided for @inviteAlreadyInTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re already in {household}'**
+  String inviteAlreadyInTitle(String household);
+
+  /// No description provided for @inviteAlreadyInSame.
+  ///
+  /// In en, this message translates to:
+  /// **'This invitation is for {household}, and you\'re already in it. There\'s nothing more to do.'**
+  String inviteAlreadyInSame(String household);
+
+  /// No description provided for @inviteAlreadyInLeaveHint.
+  ///
+  /// In en, this message translates to:
+  /// **'An account belongs to one family only. To join, first leave the family you\'re in now; the invitation then carries on.'**
+  String get inviteAlreadyInLeaveHint;
+
+  /// No description provided for @inviteAlreadyInLeaveHintUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'An account belongs to one family only. To join another, first leave the family you\'re in now, then open the invitation again.'**
+  String get inviteAlreadyInLeaveHintUnknown;
+
+  /// No description provided for @inviteAlreadyInDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'This device already belongs to a family. Open the invitation on the invited person\'s own phone.'**
+  String get inviteAlreadyInDevice;
+
+  /// No description provided for @invitePartnerPickTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Who would you like to invite?'**
+  String get invitePartnerPickTitle;
+
+  /// No description provided for @invitePartnerExisting.
+  ///
+  /// In en, this message translates to:
+  /// **'Already in the family, no account yet'**
+  String get invitePartnerExisting;
+
+  /// No description provided for @invitePartnerSomeoneElse.
+  ///
+  /// In en, this message translates to:
+  /// **'Someone else'**
+  String get invitePartnerSomeoneElse;
+
+  /// No description provided for @invitePartnerSomeoneElseHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Adds a new adult to the family'**
+  String get invitePartnerSomeoneElseHint;
+
   /// No description provided for @inviteNothingKept.
   ///
   /// In en, this message translates to:
