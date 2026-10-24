@@ -221,6 +221,9 @@ void main() {
         300,
         scrollable: find.byType(Scrollable).last,
       );
+      // Built in the list's cache is not yet on screen.
+      await t.ensureVisible(showAll);
+      await t.pumpAndSettle();
       await t.tap(showAll);
       await t.pumpAndSettle();
 

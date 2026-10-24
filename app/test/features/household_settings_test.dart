@@ -346,6 +346,42 @@ void main() {
       }
     });
 
+    testWidgets('a server without the rituals shows no empty headings', (
+      tester,
+    ) async {
+      // The previous server release: no rituals, no occasions.
+      await pumpPage(
+        tester,
+        rows: [
+          for (final e in rowsWithOneCustomised())
+            if (!e.key.startsWith('rituals.') &&
+                !e.key.startsWith('ambience.') &&
+                !e.key.startsWith('meals.wishes'))
+              e,
+        ],
+      );
+      final scrollable = find.byType(Scrollable).last;
+      await tester.scrollUntilVisible(
+        find.text('My settings'),
+        300,
+        scrollable: scrollable,
+      );
+      expect(find.text('Rituals'), findsNothing);
+      expect(find.text('Seasons and occasions'), findsNothing);
+    });
+
+    testWidgets("the rituals lead to the family's own table questions", (
+      tester,
+    ) async {
+      await pumpPage(tester, rows: rowsWithOneCustomised());
+      await tester.scrollUntilVisible(
+        find.byKey(const ValueKey('family-questions')),
+        300,
+        scrollable: find.byType(Scrollable).last,
+      );
+      expect(find.text('Our questions'), findsOneWidget);
+    });
+
     testWidgets('settings nothing reads yet are not offered', (tester) async {
       await pumpPage(tester, rows: rowsWithOneCustomised());
       final scrollable = find.byType(Scrollable).last;
