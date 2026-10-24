@@ -64,7 +64,8 @@ const SCHOOL_IMPORT = {
 for (const [lang, labels] of Object.entries(SCHOOL_IMPORT)) Object.assign(T[lang], labels);
 
 async function open(page, scenario, route = '') {
-  await page.goto(`${base}/?scenario=${scenario}${route ? `#${route}` : ''}`);
+  // still=1: nothing moves and Wusel's words are fixed, so every run gives the same picture.
+  await page.goto(`${base}/?scenario=${scenario}&still=1${route ? `#${route}` : ''}`);
   await page.waitForSelector('flt-glass-pane', { state: 'attached', timeout: 90000 });
   await page.locator('flt-semantics-placeholder').evaluate((e) => e.click()).catch(() => {});
   await page.waitForSelector('flt-semantics', { state: 'attached', timeout: 30000 });

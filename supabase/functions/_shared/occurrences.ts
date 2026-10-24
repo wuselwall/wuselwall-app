@@ -34,6 +34,10 @@ export type EventRow = {
   rdates: string[] | null;
   exdates: string[] | null;
   attendee_ids: string[];
+  /** A lighter day (specs/27): absent on servers before 20261024110000. */
+  icon_key?: string | null;
+  countdown?: boolean;
+  tradition?: boolean;
 };
 
 export type OverrideRow = {
@@ -75,6 +79,10 @@ export type Occurrence = {
   source: "event" | "imported";
   /** The imported calendar's colour; null for the household's events (they take member colours). */
   colour_hex: string | null;
+  /** The event's content icon, "Darauf freuen wir uns" and the family tradition (specs/27). */
+  icon_key?: string | null;
+  countdown?: boolean;
+  tradition?: boolean;
 };
 
 /** A row of api.external_occurrences (migrations/20261014150000_external_calendars.sql). */
@@ -635,6 +643,9 @@ function expandEvent(
       is_override: isOverride,
       source: "event",
       colour_hex: null,
+      icon_key: ev.icon_key ?? null,
+      countdown: ev.countdown ?? false,
+      tradition: ev.tradition ?? false,
     });
     if (out.length >= MAX_PER_EVENT) break;
   }

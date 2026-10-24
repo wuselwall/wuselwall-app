@@ -1,7 +1,9 @@
+import 'dart:io' show Platform;
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/motion.dart';
 
 /// The moments Wusel has something to say (specs/25 "Voice"). Each has three to five
 /// variants, written per language, never the same twice in a row on one device.
@@ -15,6 +17,9 @@ enum WuselMoment {
   wallMemberDone,
 }
 
+bool get _underTest =>
+    !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
+
 abstract final class WuselLines {
   static final _last = <WuselMoment, int>{};
   static final _random = math.Random();
@@ -26,6 +31,8 @@ abstract final class WuselLines {
     String name = '',
   }) {
     final variants = _variants(l10n, moment, name);
+    // Screenshots and tests need the same words every time.
+    if (StillMode.enabled || _underTest) return variants.first;
     var i = _random.nextInt(variants.length);
     if (variants.length > 1 && i == _last[moment]) {
       i = (i + 1) % variants.length;
