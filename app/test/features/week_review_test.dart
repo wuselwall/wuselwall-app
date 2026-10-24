@@ -1,6 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/features/rituals/application/ritual_providers.dart';
 import 'package:wuselwall/features/rituals/domain/ritual_models.dart';
+import 'package:wuselwall/features/rituals/ui/week_review_widgets.dart';
 
 void main() {
   DateTime? at(DateTime now) =>
@@ -31,7 +33,7 @@ void main() {
     );
   });
 
-  test('a highlight carries no number, whatever the server sends', () {
+  test('an unknown kind reads as the always-true line', () {
     final h = WeekHighlight.fromJson({
       'profile_id': 'p',
       'highlight': {'kind': 'streak', 'title': 'Zähne putzen'},
@@ -43,5 +45,36 @@ void main() {
     });
     // A kind this app does not know reads as the always-true line.
     expect(unknown.kind, HighlightKind.here);
+  });
+
+  // P10: nobody's line is a number another line could be compared with. The server
+  // sends no number (pgTAP 235 and 237); the app's sentences add none either.
+  for (final lang in AppLocalizations.supportedLocales) {
+    test('no member line has a number in it (${lang.languageCode})', () {
+      final l10n = lookupAppLocalizations(lang);
+      for (final kind in HighlightKind.values) {
+        final line = highlightLine(
+          l10n,
+          WeekHighlight(profileId: 'p', kind: kind, title: 'Pfannkuchen'),
+        );
+        expect(line, isNotEmpty);
+        expect(
+          RegExp(r'[0-9]').hasMatch(line),
+          isFalse,
+          reason: '$kind: "$line"',
+        );
+      }
+    });
+  }
+
+  test('a clock change does not move the look-back', () {
+    // 25 October 2026 and 29 March 2026: the clocks change in much of Europe. Calendar
+    // days, not 24-hour spans, so the window is the same whatever the device's zone.
+    expect(at(DateTime(2026, 10, 25, 16)), DateTime(2026, 10, 19));
+    expect(at(DateTime(2026, 10, 26, 9, 59)), DateTime(2026, 10, 19));
+    expect(at(DateTime(2026, 10, 26, 10)), isNull);
+    expect(at(DateTime(2026, 3, 29, 16, 30)), DateTime(2026, 3, 23));
+    expect(at(DateTime(2026, 3, 30, 9)), DateTime(2026, 3, 23));
+    expect(at(DateTime(2026, 3, 29, 15, 59)), isNull);
   });
 }

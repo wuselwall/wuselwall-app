@@ -44,7 +44,7 @@ Fällt eine Tradition einmal aus, löschst du **Nur dieser Termin**. Nichts merk
 
 ## Wunschessen {#meal-wishes}
 
-Einmal pro Woche darf sich jedes Kind ein Essen wünschen. So reden die Kinder beim Essensplan mit.
+Jedes Kind darf sich ein Essen wünschen; wie viele Wünsche gleichzeitig offen sein dürfen, legt ihr fest (Standard: einer). So reden die Kinder beim Essensplan mit.
 
 - **Auf Mein Tag** steht die Karte **Dein Wunschessen**. **Wünschen** öffnet die Auswahl: eines eurer Rezepte oder **Etwas anderes** mit ein paar Worten, etwa „Pfannkuchen“. Mit **Das wünsche ich mir** ist der Wunsch unterwegs. Bis er geplant ist, lässt er sich **ändern**.
 - **Die Erwachsenen** sehen die Wünsche oben im [Essensplan](/meals/#wishes) unter **Wünsche** und als ruhige Karte auf **Heute**. Ein Tipp auf einen Wunsch, dann Tag und Mahlzeit wählen, und er ist eingeplant.

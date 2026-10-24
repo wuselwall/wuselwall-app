@@ -542,14 +542,14 @@ List<Map<String, dynamic>> _events(int day) {
       ], place: 'Musikschule'),
     ],
     4 => [
-      // A family tradition with its picture (specs/27).
+      // The family's Friday tradition, as the calendar has it (specs/27).
       _ev(
-        'Kinoabend',
-        '18:00',
-        '19:00',
-        [DemoData.daughter, DemoData.son, DemoData.mama],
+        'Spieleabend',
+        '18:30',
+        '20:00',
+        _family,
         tradition: true,
-        icon: 'cinema',
+        icon: 'game_die',
       ),
     ],
     5 => [
@@ -581,7 +581,8 @@ Map<String, dynamic> _meal(int day) {
     'cook_id': cook,
     'eating': eating,
     'guests': guests,
-    // Wednesday's dinner is the son's wish (specs/27 "Wunschessen").
+    // Wednesday's dinner is the son's wish (specs/27 "Wunschessen"), planned in the
+    // rituals' and the meal plan's demo data as well.
     if (day == 2) 'wished_by': DemoData.son,
   };
 }

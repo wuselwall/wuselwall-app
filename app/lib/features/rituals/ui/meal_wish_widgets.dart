@@ -7,6 +7,7 @@ import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
+import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/home/application/home_tab.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
@@ -14,6 +15,7 @@ import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/kid/ui/kid_widgets.dart';
 import 'package:wuselwall/features/meals/application/meals_providers.dart';
 import 'package:wuselwall/features/meals/domain/meal_models.dart';
+import 'package:wuselwall/features/meals/ui/meals_format.dart';
 import 'package:wuselwall/features/rituals/application/ritual_providers.dart';
 import 'package:wuselwall/features/rituals/data/rituals_repository.dart';
 import 'package:wuselwall/features/rituals/domain/ritual_models.dart';
@@ -27,8 +29,24 @@ bool mayWish(LighterDay day, Member member) =>
       _ => member.isChild,
     };
 
-/// "Dein Wunschessen" on the child's day (specs/27): the wish as it stands, or the
-/// invitation to make one. A wish not planned yet simply waits; it is never declined.
+/// Whether this household's server has meal wishes at all: it announces a lighter day
+/// and its settings carry `meals.wishes`. Against an older server nobody is invited to
+/// wish only for the write to fail.
+final wishesAvailableProvider = Provider.autoDispose<bool>(
+  (ref) =>
+      ref.watch(lighterDaySupportedProvider) &&
+      ref.watch(lighterDayProvider).values.containsKey('meals.wishes'),
+);
+
+/// How many wishes a member may have open at once (`meals.wishes_per_week`).
+int wishLimit(LighterDay day) {
+  final v = day.value('meals.wishes_per_week');
+  return v is num && v >= 1 ? v.toInt() : 1;
+}
+
+/// "Dein Wunschessen" on the child's day (specs/27): each open wish with the way to
+/// change or take it back, a planned one with its day, and the invitation while there
+/// is room for another. A wish not planned yet simply waits; it is never declined.
 class KidWishCard extends ConsumerWidget {
   const KidWishCard({required this.member, super.key});
 
@@ -38,34 +56,40 @@ class KidWishCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
-    if (!mayWish(ref.watch(lighterDayProvider), member)) {
+    final day = ref.watch(lighterDayProvider);
+    if (!ref.watch(wishesAvailableProvider) || !mayWish(day, member)) {
       return const SizedBox.shrink();
     }
+    final today = ref.watch(ritualTodayProvider);
     final wishes = [
       for (final w in ref.watch(mealWishesProvider).value ?? const <MealWish>[])
         if (w.profileId == member.id) w,
     ];
-    final open = wishes.where((w) => !w.planned).firstOrNull;
-    final planned = wishes.where((w) => w.planned).firstOrNull;
-    final today = ref.watch(ritualTodayProvider);
-    final String text;
-    if (planned != null &&
-        planned.plannedOn != null &&
-        !planned.plannedOn!.isBefore(today)) {
-      text = l10n.kidWishPlanned(
-        planned.title,
-        MaterialLocalizations.of(context).formatFullDate(planned.plannedOn!),
-      );
-    } else if (open != null) {
-      text = l10n.kidWishWaiting(open.title);
-    } else {
-      text = l10n.kidWishInvite;
-    }
+    final open = [
+      for (final w in wishes)
+        if (!w.planned) w,
+    ];
+    final planned = [
+      for (final w in wishes)
+        if (w.planned && w.plannedOn != null && !w.plannedOn!.isBefore(today))
+          w,
+    ]..sort((a, b) => a.plannedOn!.compareTo(b.plannedOn!));
+    final room = open.length < wishLimit(day);
+    void wish({String? change}) =>
+        unawaited(showWishPicker(context, ref, member.id, wishId: change));
+    final body = theme.textTheme.bodyLarge;
+    final action = theme.textTheme.titleMedium?.copyWith(
+      color: theme.colorScheme.primary,
+      fontWeight: FontWeight.w700,
+    );
+
     return Padding(
       padding: const EdgeInsets.only(top: Tokens.space3),
       child: KidCard(
-        onTap: () => unawaited(showWishPicker(context, ref, member.id)),
+        // With nothing open the whole card invites; otherwise its buttons speak.
+        onTap: open.isEmpty && room ? wish : null,
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Icon(Icons.star_rounded, size: 40),
             const SizedBox(width: Tokens.space3),
@@ -79,15 +103,44 @@ class KidWishCard extends ConsumerWidget {
                       fontWeight: FontWeight.w800,
                     ),
                   ),
-                  Text(text, style: theme.textTheme.bodyLarge),
+                  for (final w in planned)
+                    Text(
+                      l10n.kidWishPlanned(w.title, _when(context, w, today)),
+                      style: body,
+                    ),
+                  for (final w in open) ...[
+                    Text(l10n.kidWishWaiting(w.title), style: body),
+                    Wrap(
+                      spacing: Tokens.space2,
+                      children: [
+                        TextButton(
+                          onPressed: () => wish(change: w.id),
+                          child: Text(l10n.kidWishChange, style: action),
+                        ),
+                        TextButton(
+                          onPressed: () =>
+                              unawaited(_withdraw(context, member.id, w)),
+                          child: Text(l10n.kidWishWithdraw),
+                        ),
+                      ],
+                    ),
+                  ],
+                  if (room && open.isEmpty && planned.isEmpty)
+                    Text(l10n.kidWishInvite, style: body),
+                  if (room)
+                    Align(
+                      alignment: AlignmentDirectional.centerEnd,
+                      child: TextButton(
+                        onPressed: wish,
+                        child: Text(
+                          open.isEmpty && planned.isEmpty
+                              ? l10n.kidWishMake
+                              : l10n.kidWishAnother,
+                          style: action,
+                        ),
+                      ),
+                    ),
                 ],
-              ),
-            ),
-            Text(
-              open == null ? l10n.kidWishMake : l10n.kidWishChange,
-              style: theme.textTheme.titleMedium?.copyWith(
-                color: theme.colorScheme.primary,
-                fontWeight: FontWeight.w700,
               ),
             ),
           ],
@@ -95,14 +148,34 @@ class KidWishCard extends ConsumerWidget {
       ),
     );
   }
+
+  /// "am Donnerstag": the weekday within the coming week, the date beyond it.
+  static String _when(BuildContext context, MealWish w, DateTime today) {
+    final on = w.plannedOn!;
+    return on.difference(today).inDays < 7
+        ? context.weekdayLong(on)
+        : context.fullDate(on);
+  }
+
+  Future<void> _withdraw(BuildContext context, String actor, MealWish w) async {
+    final container = ProviderScope.containerOf(context);
+    final result = await container
+        .read(ritualsRepositoryProvider)
+        .withdrawWish(actor: actor, id: w.id);
+    container.invalidate(mealWishesProvider);
+    if (!context.mounted) return;
+    if (result case Err(:final failure)) context.showFailure(failure);
+  }
 }
 
 /// The wish picker: the family's recipes as big buttons, or a few words of one's own.
+/// [wishId] names the open wish this choice changes; without it the choice is a new wish.
 Future<void> showWishPicker(
   BuildContext context,
   WidgetRef ref,
-  String actor,
-) async {
+  String actor, {
+  String? wishId,
+}) async {
   final choice = await showModalBottomSheet<({String? recipeId, String? text})>(
     context: context,
     isScrollControlled: true,
@@ -114,7 +187,12 @@ Future<void> showWishPicker(
   final container = ProviderScope.containerOf(context);
   final result = await container
       .read(ritualsRepositoryProvider)
-      .setWish(actor: actor, recipeId: choice.recipeId, freeText: choice.text);
+      .setWish(
+        actor: actor,
+        recipeId: choice.recipeId,
+        freeText: choice.text,
+        wishId: wishId,
+      );
   container.invalidate(mealWishesProvider);
   if (!context.mounted) return;
   switch (result) {
@@ -213,6 +291,7 @@ class MealWishTray extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
+    if (!ref.watch(wishesAvailableProvider)) return const SizedBox.shrink();
     final wishes = [
       for (final w in ref.watch(mealWishesProvider).value ?? const <MealWish>[])
         if (!w.planned) w,
@@ -304,9 +383,9 @@ class _WishChip extends ConsumerWidget {
   }
 
   Future<void> _plan(BuildContext context, WidgetRef ref) async {
-    final picked = await showDialog<(DateTime, String)>(
+    final picked = await showDialog<PlannedWish>(
       context: context,
-      builder: (_) => _PlanDialog(weekStart: weekStart),
+      builder: (_) => WishPlanDialog(wish: wish, weekStart: weekStart),
     );
     if (picked == null || !context.mounted) return;
     final container = ProviderScope.containerOf(context);
@@ -315,8 +394,9 @@ class _WishChip extends ConsumerWidget {
         .planWish(
           actor: container.read(actingProfileProvider),
           id: wish.id,
-          onDate: picked.$1,
-          slot: picked.$2,
+          onDate: picked.day,
+          slot: picked.slot.name,
+          replace: picked.replace,
         );
     container
       ..invalidate(mealWishesProvider)
@@ -339,31 +419,54 @@ class _WishChip extends ConsumerWidget {
   }
 }
 
-class _PlanDialog extends StatefulWidget {
-  const _PlanDialog({required this.weekStart});
+/// Where a wish goes: a day, a meal, and whether the meal already there gives way.
+typedef PlannedWish = ({DateTime day, PlanSlot slot, bool replace});
 
+/// The days of the week from [weekStart] a wish can still go on: today and later. A
+/// week that is wholly past keeps all its days, so the dialog is never empty.
+List<DateTime> wishPlanDays(DateTime weekStart, DateTime today) {
+  final days = [
+    for (var i = 0; i < 7; i++)
+      DateTime(weekStart.year, weekStart.month, weekStart.day + i),
+  ];
+  final ahead = [
+    for (final d in days)
+      if (!d.isBefore(today)) d,
+  ];
+  return ahead.isEmpty ? days : ahead;
+}
+
+/// Picks a day and a meal for [wish], showing what each meal of that day already has.
+/// Putting a wish where a meal is planned asks first; nothing is replaced by surprise.
+class WishPlanDialog extends ConsumerStatefulWidget {
+  const WishPlanDialog({
+    required this.wish,
+    required this.weekStart,
+    super.key,
+  });
+
+  final MealWish wish;
   final DateTime weekStart;
 
   @override
-  State<_PlanDialog> createState() => _PlanDialogState();
+  ConsumerState<WishPlanDialog> createState() => _WishPlanDialogState();
 }
 
-class _PlanDialogState extends State<_PlanDialog> {
-  late DateTime _day = widget.weekStart;
-  String _slot = 'dinner';
+class _WishPlanDialogState extends ConsumerState<WishPlanDialog> {
+  DateTime? _day;
+  PlanSlot? _slot;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final loc = MaterialLocalizations.of(context);
-    final days = [
-      for (var i = 0; i < 7; i++)
-        DateTime(
-          widget.weekStart.year,
-          widget.weekStart.month,
-          widget.weekStart.day + i,
-        ),
-    ];
+    final days = wishPlanDays(widget.weekStart, ref.watch(ritualTodayProvider));
+    final day = _day ?? days.first;
+    final slot = _slot ?? _freeOrWarm(day);
+    final entries =
+        ref.watch(mealEntriesProvider(widget.weekStart)).value ??
+        const <MealEntry>[];
+    String? dish(PlanSlot s) => entryAt(entries, day, s)?.title;
+
     return AlertDialog(
       title: Text(l10n.mealsWishPlan),
       content: Column(
@@ -371,23 +474,31 @@ class _PlanDialogState extends State<_PlanDialog> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           DropdownButton<DateTime>(
-            value: _day,
+            value: day,
             isExpanded: true,
             items: [
               for (final d in days)
-                DropdownMenuItem(value: d, child: Text(loc.formatFullDate(d))),
+                DropdownMenuItem(value: d, child: Text(context.fullDate(d))),
             ],
-            onChanged: (d) => setState(() => _day = d ?? _day),
+            onChanged: (d) => setState(() {
+              _day = d ?? _day;
+              _slot = null;
+            }),
           ),
           const SizedBox(height: Tokens.space3),
-          SegmentedButton<String>(
-            segments: [
-              ButtonSegment(value: 'lunch', label: Text(l10n.mealsSlotLunch)),
-              ButtonSegment(value: 'dinner', label: Text(l10n.mealsSlotDinner)),
-            ],
-            selected: {_slot},
-            onSelectionChanged: (s) => setState(() => _slot = s.first),
-          ),
+          for (final s in const [PlanSlot.lunch, PlanSlot.dinner])
+            ListTile(
+              key: ValueKey('wish-slot-${s.name}'),
+              selected: s == slot,
+              leading: Icon(
+                s == slot
+                    ? Icons.radio_button_checked
+                    : Icons.radio_button_unchecked,
+              ),
+              title: Text(context.planSlotLabel(s)),
+              subtitle: Text(dish(s) ?? l10n.mealsWishSlotFree),
+              onTap: () => setState(() => _slot = s),
+            ),
         ],
       ),
       actions: [
@@ -396,11 +507,62 @@ class _PlanDialogState extends State<_PlanDialog> {
           child: Text(l10n.cancel),
         ),
         FilledButton(
-          onPressed: () => Navigator.of(context).pop((_day, _slot)),
+          onPressed: () => unawaited(_submit(context, day, slot, dish(slot))),
           child: Text(l10n.mealsWishPlan),
         ),
       ],
     );
+  }
+
+  /// The meal a wish most likely goes to: the day's warm meal, unless it is taken and
+  /// the other one is free.
+  PlanSlot _freeOrWarm(DateTime day) {
+    final warm = ref.watch(warmSlotProvider(day));
+    final entries =
+        ref.watch(mealEntriesProvider(widget.weekStart)).value ??
+        const <MealEntry>[];
+    final other = warm == PlanSlot.lunch ? PlanSlot.dinner : PlanSlot.lunch;
+    final warmTaken = entryAt(entries, day, warm)?.title != null;
+    final otherFree = entryAt(entries, day, other)?.title == null;
+    return warmTaken && otherFree ? other : warm;
+  }
+
+  Future<void> _submit(
+    BuildContext context,
+    DateTime day,
+    PlanSlot slot,
+    String? taken,
+  ) async {
+    if (taken != null) {
+      final l10n = context.l10n;
+      final replace = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(l10n.mealsWishReplaceTitle),
+          content: Text(
+            l10n.mealsWishReplaceBody(
+              taken,
+              context.planSlotLabel(slot),
+              context.fullDate(day),
+              widget.wish.title,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text(l10n.cancel),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(l10n.mealsWishReplace),
+            ),
+          ],
+        ),
+      );
+      if (replace != true || !context.mounted) return;
+    }
+    Navigator.of(context)
+        .pop<PlannedWish>((day: day, slot: slot, replace: taken != null));
   }
 }
 
@@ -412,6 +574,7 @@ class TodayWishCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
+    if (!ref.watch(wishesAvailableProvider)) return const SizedBox.shrink();
     final wishes = [
       for (final w in ref.watch(mealWishesProvider).value ?? const <MealWish>[])
         if (!w.planned) w,

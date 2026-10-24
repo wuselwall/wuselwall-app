@@ -4,17 +4,35 @@ import 'package:wuselwall/demo/demo_english.dart';
 import 'package:wuselwall/features/rituals/data/rituals_repository.dart';
 import 'package:wuselwall/features/rituals/domain/ritual_models.dart';
 
-/// The rituals of the demo family (specs/27): the son has wished for pancakes, the
-/// daughter added a table question of her own, and the week has a look-back with one
-/// line for everyone.
+/// The rituals of the demo family (specs/27): Wednesday's chili is the son's wish, the
+/// one the wall and the meal plan show with his star, and his next wish, pancakes,
+/// waits in the planner's tray. The daughter added a table question of her own, and the
+/// week has a look-back with one line for everyone, made of this week's meals.
 class DemoRitualsRepository implements RitualsRepository {
-  DemoRitualsRepository();
+  DemoRitualsRepository({DateTime Function()? clock})
+    : _clock = clock ?? DateTime.now;
 
-  var _next = 1;
+  final DateTime Function() _clock;
+
+  var _next = 2;
+
+  DateTime get _monday {
+    final now = _clock();
+    return DateTime(now.year, now.month, now.day - (now.weekday - 1));
+  }
 
   late final _wishes = <MealWish>[
     MealWish(
       id: 'w-1',
+      profileId: DemoData.son,
+      title: demoText('Chili sin Carne'),
+      freeText: demoText('Chili sin Carne'),
+      planned: true,
+      plannedOn: DateTime(_monday.year, _monday.month, _monday.day + 2),
+      plannedSlot: 'dinner',
+    ),
+    MealWish(
+      id: 'w-2',
       profileId: DemoData.son,
       title: demoText('Pfannkuchen'),
       freeText: demoText('Pfannkuchen'),
@@ -38,10 +56,16 @@ class DemoRitualsRepository implements RitualsRepository {
     String? recipeId,
     String? freeText,
     String? iconKey,
+    String? wishId,
   }) async {
     final who = actor ?? DemoData.daughter;
+    // One open wish each, as the default `meals.wishes_per_week`: a new one changes it.
     _wishes
-      ..removeWhere((w) => w.profileId == who && !w.planned)
+      ..removeWhere(
+        (w) => wishId == null
+            ? w.profileId == who && !w.planned
+            : w.id == wishId && !w.planned,
+      )
       ..add(
         MealWish(
           id: 'w-${++_next}',
@@ -70,6 +94,7 @@ class DemoRitualsRepository implements RitualsRepository {
     required String id,
     required DateTime onDate,
     required String slot,
+    bool replace = false,
   }) async {
     final i = _wishes.indexWhere((w) => w.id == id);
     if (i >= 0) {
@@ -134,7 +159,7 @@ class DemoRitualsRepository implements RitualsRepository {
         WeekHighlight(
           profileId: DemoData.papa,
           kind: HighlightKind.cooked,
-          title: demoText('Spaghetti'),
+          title: demoText('Nudelauflauf'),
         ),
         const WeekHighlight(
           profileId: DemoData.mama,
@@ -148,27 +173,30 @@ class DemoRitualsRepository implements RitualsRepository {
         WeekHighlight(
           profileId: DemoData.son,
           kind: HighlightKind.wish,
-          title: demoText('Pfannkuchen'),
+          title: demoText('Chili sin Carne'),
         ),
       ],
+      // The meals of the demo's meal plan, the son's wish on Wednesday.
       meals: [
-        WeekMeal(
-          onDate: weekStart,
-          slot: 'dinner',
-          title: demoText('Spaghetti'),
-        ),
-        WeekMeal(
-          onDate: weekStart.add(const Duration(days: 2)),
-          slot: 'dinner',
-          title: demoText('Pfannkuchen'),
-          wishedBy: DemoData.son,
-        ),
-        WeekMeal(
-          onDate: weekStart.add(const Duration(days: 4)),
-          slot: 'dinner',
-          title: demoText('Gemüsecurry'),
-          firstTime: true,
-        ),
+        for (final (day, slot, dish, wishedBy, firstTime) in [
+          (0, 'dinner', 'Kürbissuppe', null, false),
+          (1, 'dinner', 'Nudelauflauf', null, false),
+          (2, 'dinner', 'Chili sin Carne', DemoData.son, false),
+          (3, 'dinner', 'Fischstäbchen', null, false),
+          (5, 'lunch', 'Nudeln mit Pesto', null, true),
+          (6, 'lunch', 'Rinderbraten', null, false),
+        ])
+          WeekMeal(
+            onDate: DateTime(
+              weekStart.year,
+              weekStart.month,
+              weekStart.day + day,
+            ),
+            slot: slot,
+            title: demoText(dish),
+            wishedBy: wishedBy,
+            firstTime: firstTime,
+          ),
       ],
     ),
   );

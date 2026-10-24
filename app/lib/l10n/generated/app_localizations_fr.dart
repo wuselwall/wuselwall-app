@@ -5124,28 +5124,28 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get settingDeviceWuselHelp =>
-      'La vivacité de Wusel ici quand personne n\'est choisi. Le réglage d\'une personne s\'applique quand elle est choisie.';
+      'La vivacité de Wusel ici quand personne n’est choisi. Le réglage d’une personne s’applique quand elle est choisie.';
 
   @override
   String get settingDeviceSoundsTitle => 'Sons sur cet appareil';
 
   @override
   String get settingDeviceSoundsHelp =>
-      'Automatique : coupés sur l\'écran mural, actifs ailleurs. Jamais la nuit.';
+      'Automatique : coupés sur l’écran mural, actifs ailleurs. Jamais la nuit.';
 
   @override
-  String get settingDeviceSkyTitle => 'Ciel dans l\'en-tête';
+  String get settingDeviceSkyTitle => 'Ciel dans l’en-tête';
 
   @override
   String get settingDeviceSkyHelp =>
-      'L\'en-tête montre un ciel qui change avec l\'heure.';
+      'L’en-tête montre un ciel qui change avec l’heure.';
 
   @override
-  String get settingDevicePixelShiftTitle => 'Protéger l\'écran du marquage';
+  String get settingDevicePixelShiftTitle => 'Protéger l’écran du marquage';
 
   @override
   String get settingDevicePixelShiftHelp =>
-      'Déplace tout de 2 pixels au plus toutes les 10 minutes, pour les écrans OLED toujours allumés. Automatique : actif sur l\'écran mural.';
+      'Déplace tout de 2 pixels au plus toutes les 10 minutes, pour les écrans OLED toujours allumés. Automatique : actif sur l’écran mural.';
 
   @override
   String get settingAmbienceSeasonTitle => 'Saisons';
@@ -5173,7 +5173,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get settingAmbienceAdventHelp =>
-      'Des bougies dans l\'en-tête, une de plus chacun des quatre dimanches avant Noël. Automatique : selon votre région.';
+      'Des bougies dans l’en-tête, une de plus chacun des quatre dimanches avant Noël. Automatique : selon votre région.';
 
   @override
   String get settingAmbienceEasterWesternTitle => 'Pâques';
@@ -5194,7 +5194,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get settingAmbienceNewYearHelp =>
-      'Un petit feu d\'artifice dans le ciel de nuit les 31 décembre et 1er janvier.';
+      'Un petit feu d’artifice dans le ciel de nuit les 31 décembre et 1er janvier.';
 
   @override
   String get settingRitualsCountdownDaysTitle => 'Le compte à rebours commence';
@@ -5216,7 +5216,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get settingMealsWishesHelp =>
-      'Qui peut souhaiter un repas chaque semaine. L\'appli ne refuse jamais un souhait ; il attend d\'être planifié.';
+      'Qui peut souhaiter un repas. L’appli ne refuse jamais un souhait ; il attend d’être planifié.';
 
   @override
   String get settingMealsWishesPerWeekTitle => 'Souhaits ouverts par personne';
@@ -5230,7 +5230,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get settingTableQuestionHelp =>
-      'Une question pour discuter, sur l\'écran mural et dans l\'appli pendant le repas. On y répond à voix haute, rien n\'est enregistré.';
+      'Une question pour discuter, sur l’écran mural et dans l’appli pendant le repas. On y répond à voix haute, rien n’est enregistré.';
 
   @override
   String get settingTableQuestionLunchTitle => 'Question au déjeuner';
@@ -5258,7 +5258,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get settingWeekReviewHelp =>
-      'Quand le retour sur la semaine apparaît. Il reste jusqu\'au lendemain matin.';
+      'Quand le retour sur la semaine apparaît. Il reste jusqu’au lendemain matin.';
 
   @override
   String get settingValueAuto => 'Automatique';
@@ -5373,7 +5373,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String wuselHelloEvening3(String name) {
-    return 'Salut $name ! Bientôt l\'heure de se reposer.';
+    return 'Salut $name ! Bientôt l’heure de se reposer.';
   }
 
   @override
@@ -5386,23 +5386,22 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String wuselFactBirthday(String name) {
-    return 'C\'est l\'anniversaire de $name !';
+    return 'C’est l’anniversaire de $name !';
   }
 
   @override
   String wuselFactFirstLesson(String subject) {
-    return 'Aujourd\'hui, tu commences par $subject.';
+    return 'Aujourd’hui, tu commences par $subject.';
   }
 
   @override
-  String get wuselAllDone1 => 'Tout est fait. Ça s\'est bien passé !';
+  String get wuselAllDone1 => 'Tout est fait. Ça s’est bien passé !';
 
   @override
   String get wuselAllDone2 => 'Tout est coché. Merci !';
 
   @override
-  String get wuselAllDone3 =>
-      'Fini pour aujourd\'hui. La maison te dit merci !';
+  String get wuselAllDone3 => 'Fini pour aujourd’hui. La maison te dit merci !';
 
   @override
   String get wuselAllDone4 => 'Ta liste est vide. Place au jeu !';
@@ -5438,7 +5437,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String wuselWallMemberDone1(String name) {
-    return '$name a tout fait pour aujourd\'hui !';
+    return '$name a tout fait pour aujourd’hui !';
   }
 
   @override
@@ -5462,13 +5461,13 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get memberBirthdayHelp =>
-      'Affiché sur l\'écran mural le jour même, avec un compte à rebours avant.';
+      'Affiché sur l’écran mural le jour même, avec un compte à rebours avant.';
 
   @override
   String get memberBirthdayPick => 'Choisir une date';
 
   @override
-  String get memberBirthdayClear => 'Supprimer l\'anniversaire';
+  String get memberBirthdayClear => 'Supprimer l’anniversaire';
 
   @override
   String countdownBirthdayOf(String name) {
@@ -5528,16 +5527,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get countdownTomorrow => 'Demain !';
 
   @override
-  String get countdownToday => 'Aujourd\'hui !';
+  String get countdownToday => 'Aujourd’hui !';
 
   @override
-  String get kidLookingForward => 'Ce qui m\'attend';
+  String get kidLookingForward => 'Ce qui m’attend';
 
   @override
   String get todayLookingForward => 'On a hâte';
 
   @override
-  String get eventIconNone => 'Pas d\'image';
+  String get eventIconNone => 'Pas d’image';
 
   @override
   String get eventIconLabel => 'Image';
@@ -5547,14 +5546,14 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get eventCountdownHelp =>
-      'Compte à rebours sur l\'écran mural et la tablette des enfants.';
+      'Compte à rebours sur l’écran mural et la tablette des enfants.';
 
   @override
   String get eventTraditionTitle => 'Tradition familiale';
 
   @override
   String get eventTraditionHelp =>
-      'Ce que la famille fait encore et encore. Toujours sur l\'écran mural, avec un ruban.';
+      'Ce que la famille fait encore et encore. Toujours sur l’écran mural, avec un ruban.';
 
   @override
   String get eventTraditionMeal => 'Avec un repas';
@@ -5563,7 +5562,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get eventTraditionMealHint => 'p. ex. pizza';
 
   @override
-  String get eventIcon_cake => 'Gâteau d\'anniversaire';
+  String get eventIcon_cake => 'Gâteau d’anniversaire';
 
   @override
   String get eventIcon_game_die => 'Jeu';
@@ -5626,7 +5625,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get kidWishTitle => 'Ton repas préféré';
 
   @override
-  String get kidWishInvite => 'Qu\'aimerais-tu manger cette semaine ?';
+  String get kidWishInvite => 'Qu’aimerais-tu manger cette semaine ?';
 
   @override
   String kidWishWaiting(String title) {
@@ -5635,7 +5634,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String kidWishPlanned(String title, String day) {
-    return 'Ton souhait $title, c\'est pour le $day !';
+    return 'Ton souhait $title, c’est pour le $day !';
   }
 
   @override
@@ -5648,7 +5647,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get kidWishSent => 'Ton souhait est parti.';
 
   @override
-  String get wishPickerTitle => 'Qu\'aimerais-tu manger ?';
+  String get wishPickerTitle => 'Qu’aimerais-tu manger ?';
 
   @override
   String get wishPickerOwn => 'Autre chose';
@@ -5719,13 +5718,44 @@ class AppLocalizationsFr extends AppLocalizations {
   String get tableQuestionShowAgain => 'Reposer';
 
   @override
+  String get kidWishWithdraw => 'Retirer';
+
+  @override
+  String get kidWishAnother => 'Encore un souhait';
+
+  @override
+  String get mealsWishSlotFree => 'Rien de prévu';
+
+  @override
+  String get mealsWishReplaceTitle => 'Remplacer le repas ?';
+
+  @override
+  String mealsWishReplaceBody(
+    String dish,
+    String slot,
+    String day,
+    String wish,
+  ) {
+    return 'Déjà prévu : $dish ($slot, $day). Planifier le souhait $wish à la place ? Le cuisinier, l’heure et les portions restent.';
+  }
+
+  @override
+  String get mealsWishReplace => 'Remplacer';
+
+  @override
+  String get errSlotTaken => 'Un repas est déjà prévu à ce moment.';
+
+  @override
+  String get tableQuestionDismiss => 'Masquer pour ce repas';
+
+  @override
   String get weekReviewTitle => 'Notre semaine';
 
   @override
   String get weekReviewOpen => 'Revoir notre semaine';
 
   @override
-  String get weekReviewTogether => 'Ce qu\'on a fait ensemble';
+  String get weekReviewTogether => 'Ce qu’on a fait ensemble';
 
   @override
   String weekReviewChores(int count) {
@@ -5755,7 +5785,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get weekReviewNext => 'La semaine prochaine, on a hâte de';
 
   @override
-  String get weekReviewCalmAhead => 'Une semaine tranquille s\'annonce.';
+  String get weekReviewCalmAhead => 'Une semaine tranquille s’annonce.';
 
   @override
   String weekHighlightBadge(String title) {

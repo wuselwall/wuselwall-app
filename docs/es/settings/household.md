@@ -31,10 +31,12 @@ Los [rituales](/es/guide/rituals) empiezan todos activados. Cada uno se cambia o
 | **Pregunta en la comida**, **Pregunta en la cena** | las horas de la pregunta | 11:30–13:30, 17:30–19:30; en Francia, cena 19:00–21:00; en España, 13:30–15:30 y 20:00–22:00 |
 | **Preguntas para** | **Todas las edades** o **También niños mayores** (preguntas más profundas a partir de 8) | Todas las edades |
 | **Nuestra semana** | día y hora del repaso de la semana, o desactivado | domingo 16:00 |
-| **Comida deseada** | quién puede pedir una comida cada semana: **Niños**, **Todos** o **Desactivado** | Niños |
+| **Comida deseada** | quién puede pedir una comida: **Niños**, **Todos** o **Desactivado** | Niños |
 | **Deseos abiertos por persona** | cuántos deseos pueden esperar a la vez (1–3) | 1 |
 | **La cuenta atrás empieza** | cuántos días antes aparece una cuenta atrás (7–60) | 14 días |
 | **Cuenta atrás hasta una vuelta** | «Vuelve en 2 noches» cuando un adulto viaja dos noches o más | activado |
+
+Debajo de los rituales, **Nuestras preguntas** lleva a las preguntas propias de la familia para la [pregunta en la mesa](/es/guide/rituals#table-question), a cualquier hora.
 
 <Shot name="settings-rituals" alt="Ajustes del hogar, vista Avanzados: la sección Rituales con la pregunta en la mesa y sus horas" />
 

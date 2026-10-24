@@ -10,6 +10,7 @@ import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/ui/guardian_gate.dart';
+import 'package:wuselwall/features/rituals/ui/table_question_widgets.dart';
 import 'package:wuselwall/features/settings/application/household_settings_providers.dart';
 import 'package:wuselwall/features/settings/application/settings_view.dart';
 import 'package:wuselwall/features/settings/data/household_settings_repository.dart';
@@ -71,13 +72,21 @@ const _basicKeys = {
 };
 
 class _SectionSpec {
-  const _SectionSpec(this.title, this.keys, {this.personal = false});
+  const _SectionSpec(
+    this.title,
+    this.keys, {
+    this.personal = false,
+    this.footer,
+  });
 
   final String title;
   final List<String> keys;
 
   /// Settings of the person at the device; nothing to show until someone is chosen.
   final bool personal;
+
+  /// A row after the settings, such as the way to the family's own table questions.
+  final Widget? footer;
 }
 
 class _SettingsList extends ConsumerWidget {
@@ -131,7 +140,7 @@ class _SettingsList extends ConsumerWidget {
         'meals.wishes_per_week',
         'rituals.countdown_days',
         'rituals.countdown_return',
-      ]),
+      ], footer: const FamilyQuestionsTile()),
       _SectionSpec(l10n.settingsSectionOccasions, const [
         'ambience.season',
         'ambience.birthdays',
@@ -163,15 +172,25 @@ class _SettingsList extends ConsumerWidget {
         : [
             for (final section in all)
               if (section.keys.any(_basicKeys.contains))
-                _SectionSpec(section.title, [
-                  ...section.keys.where(_basicKeys.contains),
-                ], personal: section.personal),
+                _SectionSpec(
+                  section.title,
+                  [...section.keys.where(_basicKeys.contains)],
+                  personal: section.personal,
+                  footer: section.footer,
+                ),
           ];
+
+    // A server without a section's settings (an older release) shows no empty heading.
+    final visible = [
+      for (final section in sections)
+        if (section.keys.any((k) => resolveSetting(entries, k) != null))
+          section,
+    ];
 
     return ListView(
       padding: const EdgeInsets.all(Tokens.space4),
       children: [
-        for (final section in sections) ...[
+        for (final section in visible) ...[
           Padding(
             padding: const EdgeInsets.only(
               top: Tokens.space4,
@@ -190,6 +209,7 @@ class _SettingsList extends ConsumerWidget {
           else
             for (final key in section.keys)
               ..._rowFor(context, ref, key, deviceId, acting),
+          ?section.footer,
         ],
         if (!advanced) const MoreSettingsHint(),
       ],

@@ -8798,7 +8798,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingMealsWishesHelp.
   ///
   /// In en, this message translates to:
-  /// **'Who may wish for a meal each week. A wish is never turned down in the app; it waits until it is planned.'**
+  /// **'Who may wish for a meal. A wish is never turned down in the app; it waits until it is planned.'**
   String get settingMealsWishesHelp;
 
   /// No description provided for @settingMealsWishesPerWeekTitle.
@@ -9604,6 +9604,59 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Ask again'**
   String get tableQuestionShowAgain;
+
+  /// A child takes back their own open meal wish
+  ///
+  /// In en, this message translates to:
+  /// **'Take back'**
+  String get kidWishWithdraw;
+
+  /// Button on the child's wish card while more open wishes are allowed
+  ///
+  /// In en, this message translates to:
+  /// **'Wish for another'**
+  String get kidWishAnother;
+
+  /// Under a meal in the wish planning dialog when that meal has no dish yet
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing planned yet'**
+  String get mealsWishSlotFree;
+
+  /// Asks before a wish replaces a planned meal
+  ///
+  /// In en, this message translates to:
+  /// **'Replace the meal?'**
+  String get mealsWishReplaceTitle;
+
+  /// Before a wish replaces a planned meal: slot is Lunch/Dinner, day a full date, dish the planned meal, wish the wished meal
+  ///
+  /// In en, this message translates to:
+  /// **'Already planned: {dish} ({slot}, {day}). Plan the wish {wish} instead? The cook, the time and the servings stay.'**
+  String mealsWishReplaceBody(
+    String dish,
+    String slot,
+    String day,
+    String wish,
+  );
+
+  /// Confirms that a wish replaces a planned meal
+  ///
+  /// In en, this message translates to:
+  /// **'Replace'**
+  String get mealsWishReplace;
+
+  /// Server error slot_taken: a wish was planned onto a meal that already has a dish
+  ///
+  /// In en, this message translates to:
+  /// **'Something is already planned for that meal.'**
+  String get errSlotTaken;
+
+  /// Tooltip: puts Today's table question card away until the next meal
+  ///
+  /// In en, this message translates to:
+  /// **'Hide for this meal'**
+  String get tableQuestionDismiss;
 
   /// No description provided for @weekReviewTitle.
   ///

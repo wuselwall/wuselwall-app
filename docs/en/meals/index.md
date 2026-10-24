@@ -15,9 +15,9 @@ The week shows each day with **Breakfast**, **Lunch**, **Dinner** and **Snack**.
 
 ## Wishes {#wishes}
 
-Once a week children wish for a meal on **My day** on their tablet (see [Meal wishes](/en/guide/rituals#meal-wishes)). Open wishes are at the top of the meal plan under **Wishes**, for example "Jack: Pancakes", and as a card on **Today**.
+Children wish for a meal on **My day** on their tablet (see [Meal wishes](/en/guide/rituals#meal-wishes)). Open wishes are at the top of the meal plan under **Wishes**, for example "Jack: Pancakes", and as a card on **Today**.
 
-- Tap a wish, pick a day and a meal, and it is planned. A recipe wish fills the shopping list like any recipe.
+- Tap a wish, pick a day and a meal, and it is planned. Each meal shows what is already planned there. If a meal is planned, the app asks before the wish replaces it; the cook, the time and the servings stay. A recipe wish fills the shopping list like any recipe.
 - A planned wish carries a star and "Jack's wish" in the plan and on the wall.
 - The **×** removes a wish (**Remove the wish**). Guardians can do that, and so can whoever made the wish.
 

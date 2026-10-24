@@ -5188,7 +5188,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get settingMealsWishesHelp =>
-      'Wer sich jede Woche ein Essen wünschen darf. Ein Wunsch wird in der App nie abgelehnt; er wartet, bis er geplant ist.';
+      'Wer sich ein Essen wünschen darf. Ein Wunsch wird in der App nie abgelehnt; er wartet, bis er geplant ist.';
 
   @override
   String get settingMealsWishesPerWeekTitle => 'Offene Wünsche pro Person';
@@ -5690,6 +5690,37 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get tableQuestionShowAgain => 'Wieder stellen';
+
+  @override
+  String get kidWishWithdraw => 'Zurücknehmen';
+
+  @override
+  String get kidWishAnother => 'Noch etwas wünschen';
+
+  @override
+  String get mealsWishSlotFree => 'Noch nichts geplant';
+
+  @override
+  String get mealsWishReplaceTitle => 'Essen ersetzen?';
+
+  @override
+  String mealsWishReplaceBody(
+    String dish,
+    String slot,
+    String day,
+    String wish,
+  ) {
+    return 'Schon geplant: $dish ($slot, $day). Stattdessen den Wunsch $wish einplanen? Wer kocht, die Uhrzeit und die Portionen bleiben.';
+  }
+
+  @override
+  String get mealsWishReplace => 'Ersetzen';
+
+  @override
+  String get errSlotTaken => 'Für diese Mahlzeit ist schon etwas geplant.';
+
+  @override
+  String get tableQuestionDismiss => 'Für dieses Essen ausblenden';
 
   @override
   String get weekReviewTitle => 'Unsere Woche';

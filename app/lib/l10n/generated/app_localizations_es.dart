@@ -5204,7 +5204,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingMealsWishesHelp =>
-      'Quién puede pedir una comida cada semana. La app nunca rechaza un deseo; espera hasta que se planifica.';
+      'Quién puede pedir una comida. La app nunca rechaza un deseo; espera hasta que se planifica.';
 
   @override
   String get settingMealsWishesPerWeekTitle => 'Deseos abiertos por persona';
@@ -5704,6 +5704,37 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get tableQuestionShowAgain => 'Volver a preguntar';
+
+  @override
+  String get kidWishWithdraw => 'Retirar';
+
+  @override
+  String get kidWishAnother => 'Pedir otra';
+
+  @override
+  String get mealsWishSlotFree => 'Nada planificado';
+
+  @override
+  String get mealsWishReplaceTitle => '¿Reemplazar la comida?';
+
+  @override
+  String mealsWishReplaceBody(
+    String dish,
+    String slot,
+    String day,
+    String wish,
+  ) {
+    return 'Ya planificado: $dish ($slot, $day). ¿Planificar el deseo $wish en su lugar? Quien cocina, la hora y las raciones se mantienen.';
+  }
+
+  @override
+  String get mealsWishReplace => 'Reemplazar';
+
+  @override
+  String get errSlotTaken => 'Ya hay algo planificado para esa comida.';
+
+  @override
+  String get tableQuestionDismiss => 'Ocultar en esta comida';
 
   @override
   String get weekReviewTitle => 'Nuestra semana';

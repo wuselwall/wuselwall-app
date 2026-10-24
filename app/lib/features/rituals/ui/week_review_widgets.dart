@@ -169,6 +169,7 @@ class WeekReviewStory extends ConsumerWidget {
             ],
           ),
         ),
+      // The story's one Wusel cheers at its end (specs/27, card 5).
       _StoryCard(
         decor: Decor.sky,
         title: l10n.weekReviewNext,
@@ -386,11 +387,8 @@ class WeekReviewCard extends ConsumerWidget {
           onTap: open,
           child: Row(
             children: [
-              const FamilyWusel(
-                pose: WuselPose.wave,
-                size: 72,
-                quietAllowed: true,
-              ),
+              // No Wusel of its own: the kid home's greeting has the screen's one.
+              const Icon(Icons.auto_awesome, size: 40),
               const SizedBox(width: Tokens.space3),
               Expanded(
                 child: Text(

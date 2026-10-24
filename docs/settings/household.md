@@ -33,10 +33,12 @@ Die [Rituale](/guide/rituals) sind am Anfang alle eingeschaltet. Jedes lässt si
 | **Tischfrage mittags**, **Tischfrage abends** | die Zeiten, in denen die Frage steht | 11:30–13:30, 17:30–19:30; in Frankreich abends 19:00–21:00, in Spanien 13:30–15:30 und 20:00–22:00 |
 | **Fragen für** | **Alle Alter** oder **Auch ältere Kinder** (tiefere Fragen ab 8) | Alle Alter |
 | **Unsere Woche** | Wochentag und Uhrzeit des Wochenrückblicks, oder aus | Sonntag 16:00 |
-| **Wunschessen** | wer sich jede Woche ein Essen wünschen darf: **Kinder**, **Alle** oder **Aus** | Kinder |
+| **Wunschessen** | wer sich ein Essen wünschen darf: **Kinder**, **Alle** oder **Aus** | Kinder |
 | **Offene Wünsche pro Person** | wie viele Wünsche gleichzeitig warten dürfen (1–3) | 1 |
 | **Vorfreude beginnt** | wie viele Tage vorher ein Countdown erscheint (7–60) | 14 Tage |
 | **Countdown bis jemand zurückkommt** | „In 2× schlafen zurück“, wenn ein Erwachsener zwei Nächte oder länger verreist | an |
+
+Unter den Ritualen führt **Unsere Fragen** zu den eigenen Fragen der Familie für die [Tischfrage](/guide/rituals#table-question), zu jeder Tageszeit.
 
 <Shot name="settings-rituals" alt="Haushalt einstellen, Ansicht Erweitert: der Bereich Rituale mit Tischfrage und ihren Zeiten" />
 
