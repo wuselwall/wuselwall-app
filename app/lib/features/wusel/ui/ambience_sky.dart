@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
+import 'package:wuselwall/core/ui/motion.dart';
 import 'package:wuselwall/features/wusel/application/ambience.dart';
 import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
 
@@ -32,17 +33,36 @@ class AmbienceSky extends ConsumerWidget {
     // Clipped: the hill and the sun reach past the edge and must not paint on what
     // sits below the header.
     return ClipRect(
-      child: AnimatedSwitcher(
-        // The phase changes with a slow cross-fade nobody notices from two metres.
-        duration: const Duration(seconds: 30),
-        child: CustomPaint(
-          key: ValueKey((ambience.phase, ww.shade)),
-          painter: SkyPainter(ambience: ambience, shade: ww.shade),
-          child: child,
-        ),
+      child: Stack(
+        fit: StackFit.passthrough,
+        children: [
+          // Only the sky cross-fades; what stands in front of it (the clock, the
+          // title, Wusel) is built once and stays at full opacity.
+          Positioned.fill(
+            child: RepaintBoundary(
+              child: AnimatedSwitcher(
+                // The phase changes with a slow cross-fade nobody notices from two
+                // metres; under reduced motion it changes at once.
+                duration: motionAllowed(context) ? skyFade : Duration.zero,
+                layoutBuilder: (current, previous) => Stack(
+                  fit: StackFit.expand,
+                  children: [...previous, ?current],
+                ),
+                child: CustomPaint(
+                  key: ValueKey((ambience.phase, ww.shade)),
+                  painter: SkyPainter(ambience: ambience, shade: ww.shade),
+                ),
+              ),
+            ),
+          ),
+          child,
+        ],
       ),
     );
   }
+
+  /// How long one phase takes to fade into the next.
+  static const skyFade = Duration(seconds: 30);
 }
 
 /// Paints [ambience] for [shade]. In light the phase's gradient; in dark the sun band
@@ -169,6 +189,13 @@ class SkyPainter extends CustomPainter {
       Season.winter => const Color(0xFFFFFFFF),
     }.withValues(alpha: shade == Shade.light ? 0.85 : 0.5);
     final paint = Paint()..color = colour;
+    // White flakes vanish on the pale day sky: in light they get a rim of sky blue.
+    final rim = season == Season.winter && shade == Shade.light
+        ? (Paint()
+            ..color = Decor.sky.light
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 1.2)
+        : null;
     for (var i = 0; i < 9; i++) {
       // Only in the right two thirds: the clock and date sit on the left.
       final at = Offset(
@@ -187,6 +214,7 @@ class SkyPainter extends CustomPainter {
           canvas.drawCircle(at, 1.6, paint);
         case Season.spring || Season.winter:
           canvas.drawCircle(at, 2.4, paint);
+          if (rim != null) canvas.drawCircle(at, 2.4, rim);
       }
     }
   }
@@ -204,8 +232,15 @@ class SkyPainter extends CustomPainter {
 
   void _candles(Canvas canvas, Size size, int lit) {
     final base = size.height * 0.9;
+    // Four candles 14 px apart, 50 px in all: at 86 % of the width on a wide header,
+    // pulled in so the row ends 8 px from the edge on a narrow phone.
+    const row = 3 * 14 + 8;
+    final start = math.max(
+      0.0,
+      math.min(size.width * 0.86, size.width - row - 8),
+    );
     for (var i = 0; i < 4; i++) {
-      final x = size.width * 0.86 + i * 14;
+      final x = start + i * 14;
       canvas.drawRRect(
         RRect.fromRectAndRadius(
           Rect.fromLTWH(x, base - 22, 8, 22),
