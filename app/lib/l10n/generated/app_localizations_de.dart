@@ -6131,4 +6131,39 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get settingsMembersSubtitle =>
       'Namen, Farben, Rollen und die Reihenfolge an der Wand';
+
+  @override
+  String get calendarMonth => 'Monat';
+
+  @override
+  String get calendarWeekNumberShort => 'KW';
+
+  @override
+  String calendarWeekNumberLabel(int week) {
+    return 'Kalenderwoche $week';
+  }
+
+  @override
+  String calendarMonthMore(int count) {
+    return '+$count';
+  }
+
+  @override
+  String calendarMonthOthers(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count weitere Termine',
+      one: '1 weiterer Termin',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String calendarMonthFerien(String name) {
+    return 'Ferien: $name';
+  }
+
+  @override
+  String get calendarMonthOpenDay => 'Tag öffnen';
 }

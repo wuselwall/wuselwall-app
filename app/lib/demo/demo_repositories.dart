@@ -7,6 +7,7 @@ import 'package:wuselwall/demo/demo_board.dart';
 import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/demo/demo_english.dart';
 import 'package:wuselwall/demo/demo_external_calendars.dart';
+import 'package:wuselwall/demo/demo_holidays.dart';
 import 'package:wuselwall/features/account/data/account_admin_repository.dart';
 import 'package:wuselwall/features/account/domain/member_security.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
@@ -1186,8 +1187,9 @@ class DemoCalendarRepository implements CalendarRepository {
   @override
   Future<Result<OccurrenceWindow>> occurrences(
     DateTime from,
-    DateTime to,
-  ) async {
+    DateTime to, {
+    bool holidays = false,
+  }) async {
     final first = dateOnly(from);
     final last = dateOnly(to);
     final monday = _monday(_clock());
@@ -1215,7 +1217,13 @@ class DemoCalendarRepository implements CalendarRepository {
     }
     out.addAll(demoImportedOccurrences(monday, first, last));
     out.sort((a, b) => a.start.compareTo(b.start));
-    return Ok(OccurrenceWindow(timezone: 'Europe/Berlin', occurrences: out));
+    return Ok(
+      OccurrenceWindow(
+        timezone: 'Europe/Berlin',
+        occurrences: out,
+        publicHolidays: holidays ? demoPublicHolidays(first, last) : null,
+      ),
+    );
   }
 
   @override

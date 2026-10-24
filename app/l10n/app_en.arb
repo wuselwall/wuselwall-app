@@ -3574,5 +3574,53 @@
   "settingsSectionLeave": "Leave or delete",
   "settingsSectionOther": "Other settings",
   "familyProfileTitle": "Family profile",
-  "settingsMembersSubtitle": "Names, colours, roles and the order on the wall"
+  "settingsMembersSubtitle": "Names, colours, roles and the order on the wall",
+  "calendarMonth": "Month",
+  "@calendarMonth": {
+    "description": "The calendar view that shows a whole month (read-only overview)."
+  },
+  "calendarWeekNumberShort": "Wk",
+  "@calendarWeekNumberShort": {
+    "description": "Header of the month view's ISO week number column; as short as possible."
+  },
+  "calendarWeekNumberLabel": "Week {week}",
+  "@calendarWeekNumberLabel": {
+    "description": "Screen-reader label of an ISO week number in the month view.",
+    "placeholders": {
+      "week": {
+        "type": "int"
+      }
+    }
+  },
+  "calendarMonthMore": "+{count}",
+  "@calendarMonthMore": {
+    "description": "In a month view day cell: how many more entries are not shown, e.g. +2.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "calendarMonthOthers": "{count, plural, =1{1 more appointment} other{{count} more appointments}}",
+  "@calendarMonthOthers": {
+    "description": "Screen-reader text in a month view day: the appointments that the cell only counts.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "calendarMonthFerien": "School holidays: {name}",
+  "@calendarMonthFerien": {
+    "description": "Screen-reader text in a month view day that lies in the school holidays; {name} is their name, e.g. Herbstferien.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "calendarMonthOpenDay": "Open the day",
+  "@calendarMonthOpenDay": {
+    "description": "Screen-reader hint: tapping a day of the month view opens it in the day view."
+  }
 }

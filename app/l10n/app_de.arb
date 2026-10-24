@@ -2282,5 +2282,12 @@
   "settingsSectionLeave": "Verlassen oder löschen",
   "settingsSectionOther": "Weitere Einstellungen",
   "familyProfileTitle": "Familienprofil",
-  "settingsMembersSubtitle": "Namen, Farben, Rollen und die Reihenfolge an der Wand"
+  "settingsMembersSubtitle": "Namen, Farben, Rollen und die Reihenfolge an der Wand",
+  "calendarMonth": "Monat",
+  "calendarWeekNumberShort": "KW",
+  "calendarWeekNumberLabel": "Kalenderwoche {week}",
+  "calendarMonthMore": "+{count}",
+  "calendarMonthOthers": "{count, plural, =1{1 weiterer Termin} other{{count} weitere Termine}}",
+  "calendarMonthFerien": "Ferien: {name}",
+  "calendarMonthOpenDay": "Tag öffnen"
 }

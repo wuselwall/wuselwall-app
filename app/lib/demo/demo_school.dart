@@ -1,6 +1,7 @@
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/demo/demo_english.dart';
+import 'package:wuselwall/demo/demo_holidays.dart';
 import 'package:wuselwall/features/school/data/school_repository.dart';
 import 'package:wuselwall/features/school/domain/school_models.dart';
 
@@ -187,7 +188,11 @@ class DemoSchoolRepository implements SchoolRepository {
       Ok([for (final r in _exceptions) ExceptionRecord.fromJson(r)]);
 
   @override
-  Future<Result<List<HolidayRecord>>> holidays() async => const Ok([]);
+  Future<Result<List<HolidayRecord>>> holidays() async => Ok(_holidays);
+
+  /// The month's Ferien (demo_holidays.dart); none without a school.
+  List<HolidayRecord> get _holidays =>
+      empty ? const [] : demoSchoolHolidays(_clock());
 
   @override
   Future<Result<SchoolData>> all() async => Ok(
@@ -199,7 +204,7 @@ class DemoSchoolRepository implements SchoolRepository {
       timetables: [for (final r in _timetableRows) TimetableRecord.fromJson(r)],
       lessons: [for (final r in _lessonRows) LessonRecord.fromJson(r)],
       exceptions: [for (final r in _exceptions) ExceptionRecord.fromJson(r)],
-      holidays: const [],
+      holidays: _holidays,
     ),
   );
 

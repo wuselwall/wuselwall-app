@@ -2955,5 +2955,12 @@
   "settingsSectionLeave": "Salir o eliminar",
   "settingsSectionOther": "Otros ajustes",
   "familyProfileTitle": "Perfil de la familia",
-  "settingsMembersSubtitle": "Nombres, colores, roles y el orden en la pared"
+  "settingsMembersSubtitle": "Nombres, colores, roles y el orden en la pared",
+  "calendarMonth": "Mes",
+  "calendarWeekNumberShort": "Sem",
+  "calendarWeekNumberLabel": "Semana {week}",
+  "calendarMonthMore": "+{count}",
+  "calendarMonthOthers": "{count, plural, =1{1 cita más} other{{count} citas más}}",
+  "calendarMonthFerien": "Vacaciones escolares: {name}",
+  "calendarMonthOpenDay": "Abrir el día"
 }
