@@ -5395,6 +5395,31 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String wuselFactTradition(String tradition) {
+    return 'Aujourd’hui, c’est $tradition !';
+  }
+
+  @override
+  String wuselFactMealDinner(String dish) {
+    return 'Ce soir, il y a $dish.';
+  }
+
+  @override
+  String wuselFactMealLunch(String dish) {
+    return 'Ce midi, il y a $dish.';
+  }
+
+  @override
+  String wuselFactCountdown(String what, String when) {
+    return '$what : $when';
+  }
+
+  @override
+  String wuselBirthdayCheer(String name) {
+    return 'Joyeux anniversaire, $name !';
+  }
+
+  @override
   String get wuselAllDone1 => 'Tout est fait. Ça s’est bien passé !';
 
   @override

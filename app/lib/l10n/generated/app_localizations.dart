@@ -9077,6 +9077,36 @@ abstract class AppLocalizations {
   /// **'Today you start with {subject}.'**
   String wuselFactFirstLesson(String subject);
 
+  /// No description provided for @wuselFactTradition.
+  ///
+  /// In en, this message translates to:
+  /// **'Today is {tradition}!'**
+  String wuselFactTradition(String tradition);
+
+  /// No description provided for @wuselFactMealDinner.
+  ///
+  /// In en, this message translates to:
+  /// **'Tonight there\'s {dish}.'**
+  String wuselFactMealDinner(String dish);
+
+  /// No description provided for @wuselFactMealLunch.
+  ///
+  /// In en, this message translates to:
+  /// **'For lunch there\'s {dish}.'**
+  String wuselFactMealLunch(String dish);
+
+  /// No description provided for @wuselFactCountdown.
+  ///
+  /// In en, this message translates to:
+  /// **'{what}: {when}'**
+  String wuselFactCountdown(String what, String when);
+
+  /// No description provided for @wuselBirthdayCheer.
+  ///
+  /// In en, this message translates to:
+  /// **'Happy birthday, {name}!'**
+  String wuselBirthdayCheer(String name);
+
   /// No description provided for @wuselAllDone1.
   ///
   /// In en, this message translates to:

@@ -21,7 +21,7 @@ void showConfetti(
   late OverlayEntry entry;
   entry = OverlayEntry(
     builder: (_) => IgnorePointer(
-      child: _Confetti(
+      child: ConfettiBurst(
         colors: colors,
         origin: origin,
         count: count,
@@ -33,26 +33,34 @@ void showConfetti(
   overlay.insert(entry);
 }
 
-class _Confetti extends StatefulWidget {
-  const _Confetti({
+/// One burst of confetti filling its parent, for a screen that places the burst
+/// itself: the kid's birthday puts it behind Wusel (specs/26 "Celebrations"). The
+/// caller asks [motionAllowed] first; [showConfetti] does that for the overlay.
+class ConfettiBurst extends StatefulWidget {
+  const ConfettiBurst({
     required this.colors,
-    required this.origin,
-    required this.count,
-    required this.duration,
-    required this.onDone,
+    this.origin,
+    this.count = 40,
+    this.duration = const Duration(milliseconds: 1400),
+    this.onDone,
+    super.key,
   });
 
   final List<Color> colors;
+
+  /// Where the pieces start; a little above the middle when null.
   final Offset? origin;
   final int count;
   final Duration duration;
-  final VoidCallback onDone;
+
+  /// Called once the last piece has faded.
+  final VoidCallback? onDone;
 
   @override
-  State<_Confetti> createState() => _ConfettiState();
+  State<ConfettiBurst> createState() => _ConfettiState();
 }
 
-class _ConfettiState extends State<_Confetti>
+class _ConfettiState extends State<ConfettiBurst>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
     vsync: this,
@@ -61,16 +69,17 @@ class _ConfettiState extends State<_Confetti>
   late final List<_Piece> _pieces = _scatter(math.Random());
 
   List<_Piece> _scatter(math.Random r) => [
-    for (var i = 0; i < widget.count; i++)
-      _Piece(
-        color: widget.colors[i % widget.colors.length],
-        // Up and out, like a popper: an angle around straight up, a speed, a spin.
-        angle: -math.pi / 2 + (r.nextDouble() - 0.5) * math.pi * 0.9,
-        speed: 0.55 + r.nextDouble() * 0.6,
-        spin: (r.nextDouble() - 0.5) * 14,
-        size: 6 + r.nextDouble() * 6,
-        round: r.nextBool(),
-      ),
+    if (widget.colors.isNotEmpty)
+      for (var i = 0; i < widget.count; i++)
+        _Piece(
+          color: widget.colors[i % widget.colors.length],
+          // Up and out, like a popper: an angle around straight up, a speed, a spin.
+          angle: -math.pi / 2 + (r.nextDouble() - 0.5) * math.pi * 0.9,
+          speed: 0.55 + r.nextDouble() * 0.6,
+          spin: (r.nextDouble() - 0.5) * 14,
+          size: 6 + r.nextDouble() * 6,
+          round: r.nextBool(),
+        ),
   ];
 
   @override
@@ -78,7 +87,7 @@ class _ConfettiState extends State<_Confetti>
     super.initState();
     unawaited(
       _controller.forward().whenComplete(() {
-        if (mounted) widget.onDone();
+        if (mounted) widget.onDone?.call();
       }),
     );
   }
