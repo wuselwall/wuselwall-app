@@ -15,7 +15,7 @@ restoring a family, account deletion and the second-factor reset, localised mail
 `deploy-supabase.yml` for a family's own hosted project. The onboarding journeys J1–J3 are
 integration tests (CI's backend job) and screen-count tests (`app/test/journeys`). Built besides: household settings
 (specs/21), the kiosk week board (specs/09) with "Alle Termine", M1.3a calendar (events,
-presence, recurrence expanded in Edge Functions, the ICS feed with tokens), M1.3b Stundenplan
+presence, recurrence expanded in Edge Functions, the ICS feed with tokens, and since 2026-10-24 a read-only month view), M1.3b Stundenplan
 (the projection in `supabase/functions/_shared/school.ts`), M1.2 tasks and points, M1.4 meals,
 the kid register; regions to any depth and holidays (DE/AT/CH/LI from OpenHolidays, fetched
 by the server: public holidays automatic, Ferien imported), several schools, the timetable's

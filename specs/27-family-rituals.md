@@ -50,7 +50,8 @@ moved forward: **a field on the profile** (`profile.birthday DATE NULL`, already
   token's members, not in a presence-only or calendar-narrowed feed. The board's day header
   shows "Paul wird 8" with a cake under the date (`weekBirthdaysProvider`), with `ambience.birthdays`
   on, and grows to its second line as for a holiday; a holiday on the same day follows after " · ".
-  The month view does not show birthdays yet.
+  The month view (2026-10-24, [05](05-module-calendar.md#views)) shows them with a cake and
+  the age too, always: it is information, `ambience.birthdays` only governs the decoration.
 - On the day: [26's](26-colour-and-ambience.md#seasons-and-occasions) bunting in the member's
   ink, Wusel's Partyhut, and a one-time cheer on that child's own device.
 - Grandparents and friends stay yearly events, as 23 decided. A yearly event can be marked

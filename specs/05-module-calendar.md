@@ -111,7 +111,21 @@ is a source implementation rather than a UI change.
 | Week | adult | Planning. Presence bands behind, appointments in front |
 | **Week board** | kiosk | The kitchen's standard screen — [09](09-clients-and-ux.md#the-week-board) |
 | Stundenplan grid | adult, kid | The timetable as a grid — [15](15-module-school-timetable.md#views) |
-| Month | adult | Only where it earns its place: the rota editor and holidays |
+| Month | adult | A read-only overview for planning across weeks (built 2026-10-24, below); the rota editor's date grid |
+
+**The month view** (built 2026-10-24, formerly [23](23-roadmap-after-alpha.md) R1.6) is the fourth
+view in the adult calendar's switcher. Six weeks from the Monday on or before the first, ISO
+week numbers on the left, today framed. It only reads: each day names its public holiday, its
+birthdays with a cake ("Paul wird 8", 29 February on 1 March as `ageOn` has it) and its key
+appointments and traditions (title and icon), and only counts every other appointment as
+"+n" (also what does not fit at large text). Presence is left out. Ferien (`school_holiday`
+rows of kind `holiday`, back-to-back ones one stretch) run as a soft band across their days.
+Tapping a day opens the day view, where editing stays. Birthdays show whatever
+`ambience.birthdays` says: the month is information, the ambience switch only decoration. The
+public holidays come from the `occurrences` function when asked with `holidays: true`, by the
+week board's rule (the family's household-wide row first, else the region's, in the
+household's language); from an older server, only the family's own rows show. The kid
+register has no calendar and the wall its week board, so neither has the month.
 
 The week board is a *composition* of this module, `school` and `meals`, and it is the
 screen the household will look at most. Treat its query — seven days, key appointments,
