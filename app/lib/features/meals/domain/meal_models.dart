@@ -89,6 +89,7 @@ class Recipe {
     this.sourceUrl,
     this.tags = const [],
     this.ingredients = const [],
+    this.iconKey,
   });
 
   factory Recipe.fromJson(
@@ -103,6 +104,8 @@ class Recipe {
     sourceUrl: json['source_url'] as String?,
     tags: ((json['tags'] as List?) ?? const []).cast<String>(),
     ingredients: ingredients,
+    // Absent on servers before the dish pictures (specs/27).
+    iconKey: json['icon_key'] as String?,
   );
 
   final String id;
@@ -115,6 +118,9 @@ class Recipe {
   final String? sourceUrl;
   final List<String> tags;
   final List<RecipeIngredient> ingredients;
+
+  /// The dish picture the server picked from the title (`meals` set); null for none.
+  final String? iconKey;
 
   /// The steps as lines, without blank ones.
   List<String> get stepLines => [
@@ -140,6 +146,7 @@ class Recipe {
     sourceUrl: clearSourceUrl ? null : (sourceUrl ?? this.sourceUrl),
     tags: tags ?? this.tags,
     ingredients: ingredients ?? this.ingredients,
+    iconKey: iconKey,
   );
 }
 
@@ -266,11 +273,13 @@ class MealHistoryEntry {
     required this.firstOn,
     required this.lastOn,
     this.recipeId,
+    this.iconKey,
   });
 
   factory MealHistoryEntry.fromJson(Map<String, dynamic> json) =>
       MealHistoryEntry(
         recipeId: json['recipe_id'] as String?,
+        iconKey: json['icon_key'] as String?,
         title: json['title'] as String,
         times: json['times'] as int,
         firstOn: parseDate(json['first_on'] as String),
@@ -282,4 +291,7 @@ class MealHistoryEntry {
   final int times;
   final DateTime firstOn;
   final DateTime lastOn;
+
+  /// The dish picture the server picked from the title; null for none.
+  final String? iconKey;
 }

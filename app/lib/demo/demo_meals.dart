@@ -33,6 +33,7 @@ class DemoMealsRepository implements MealsRepository {
         Recipe(
           id: 'r-braten',
           title: demoText('Rinderbraten'),
+          iconKey: 'meat',
           servingsDefault: 4,
           steps: demoText(
             'Fleisch würzen und scharf anbraten.\n'
@@ -90,6 +91,7 @@ class DemoMealsRepository implements MealsRepository {
         Recipe(
           id: 'r-pesto',
           title: demoText('Nudeln mit Pesto'),
+          iconKey: 'pasta',
           servingsDefault: 4,
           steps: demoText(
             'Nudeln in Salzwasser kochen.\n'
@@ -281,6 +283,7 @@ class DemoMealsRepository implements MealsRepository {
       [
         MealHistoryEntry(
           title: demoText('Nudelauflauf'),
+          iconKey: 'pasta',
           times: 7,
           firstOn: ago(300),
           lastOn: ago(2),
@@ -288,18 +291,21 @@ class DemoMealsRepository implements MealsRepository {
         MealHistoryEntry(
           recipeId: 'r-braten',
           title: demoText('Rinderbraten'),
+          iconKey: 'meat',
           times: 4,
           firstOn: ago(150),
           lastOn: ago(9),
         ),
         MealHistoryEntry(
           title: demoText('Fischstäbchen'),
+          iconKey: 'fish',
           times: 6,
           firstOn: ago(200),
           lastOn: ago(70),
         ),
         MealHistoryEntry(
           title: demoText('Chili sin Carne'),
+          iconKey: 'soup',
           times: 3,
           firstOn: ago(120),
           lastOn: ago(5),
@@ -307,36 +313,42 @@ class DemoMealsRepository implements MealsRepository {
         MealHistoryEntry(
           recipeId: 'r-pesto',
           title: demoText('Nudeln mit Pesto'),
+          iconKey: 'pasta',
           times: 3,
           firstOn: ago(280),
           lastOn: ago(40),
         ),
         MealHistoryEntry(
           title: demoText('Kürbissuppe'),
+          iconKey: 'soup',
           times: 2,
           firstOn: ago(180),
           lastOn: ago(75),
         ),
         MealHistoryEntry(
           title: demoText('Gulaschsuppe'),
+          iconKey: 'soup',
           times: 5,
           firstOn: ago(340),
           lastOn: ago(120),
         ),
         MealHistoryEntry(
           title: demoText('Linseneintopf'),
+          iconKey: 'soup',
           times: 3,
           firstOn: ago(330),
           lastOn: ago(210),
         ),
         MealHistoryEntry(
           title: demoText('Pizza selbst gemacht'),
+          iconKey: 'pizza',
           times: 2,
           firstOn: ago(260),
           lastOn: ago(95),
         ),
         MealHistoryEntry(
           title: demoText('Hühnercurry'),
+          iconKey: 'curry',
           times: 2,
           firstOn: ago(250),
           lastOn: ago(130),

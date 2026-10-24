@@ -6,6 +6,8 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/text/fold.dart';
+import 'package:wuselwall/core/ui/emoji_picture.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/home/application/home_tab.dart';
@@ -15,9 +17,11 @@ import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/kid/ui/kid_widgets.dart';
 import 'package:wuselwall/features/meals/application/meals_providers.dart';
 import 'package:wuselwall/features/meals/domain/meal_models.dart';
+import 'package:wuselwall/features/meals/domain/meal_suggestions.dart';
 import 'package:wuselwall/features/meals/ui/meals_format.dart';
 import 'package:wuselwall/features/rituals/application/ritual_providers.dart';
 import 'package:wuselwall/features/rituals/data/rituals_repository.dart';
+import 'package:wuselwall/features/rituals/domain/meal_icons.dart';
 import 'package:wuselwall/features/rituals/domain/ritual_models.dart';
 import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
 
@@ -104,12 +108,18 @@ class KidWishCard extends ConsumerWidget {
                     ),
                   ),
                   for (final w in planned)
-                    Text(
-                      l10n.kidWishPlanned(w.title, _when(context, w, today)),
-                      style: body,
+                    _WithPicture(
+                      iconKey: w.iconKey,
+                      child: Text(
+                        l10n.kidWishPlanned(w.title, _when(context, w, today)),
+                        style: body,
+                      ),
                     ),
                   for (final w in open) ...[
-                    Text(l10n.kidWishWaiting(w.title), style: body),
+                    _WithPicture(
+                      iconKey: w.iconKey,
+                      child: Text(l10n.kidWishWaiting(w.title), style: body),
+                    ),
                     Wrap(
                       spacing: Tokens.space2,
                       children: [
@@ -168,19 +178,24 @@ class KidWishCard extends ConsumerWidget {
   }
 }
 
-/// The wish picker: the family's recipes as big buttons, or a few words of one's own.
-/// [wishId] names the open wish this choice changes; without it the choice is a new wish.
+/// What the picker hands back: a recipe, or a few words with an optional picture.
+typedef WishChoice = ({String? recipeId, String? text, String? iconKey});
+
+/// The wish picker (specs/27): the meals the family cooks most, the family's recipes with
+/// their pictures (all of them, with a search), or a few words of one's own with a
+/// picture. [wishId] names the open wish this choice changes; without it the choice is a
+/// new wish.
 Future<void> showWishPicker(
   BuildContext context,
   WidgetRef ref,
   String actor, {
   String? wishId,
 }) async {
-  final choice = await showModalBottomSheet<({String? recipeId, String? text})>(
+  final choice = await showModalBottomSheet<WishChoice>(
     context: context,
     isScrollControlled: true,
     showDragHandle: true,
-    builder: (_) => const _WishPicker(),
+    builder: (_) => const WishPicker(),
   );
   if (choice == null || !context.mounted) return;
   // The container, not the ref: the child's page may be gone when the server answers.
@@ -191,6 +206,7 @@ Future<void> showWishPicker(
         actor: actor,
         recipeId: choice.recipeId,
         freeText: choice.text,
+        iconKey: choice.iconKey,
         wishId: wishId,
       );
   container.invalidate(mealWishesProvider);
@@ -203,27 +219,53 @@ Future<void> showWishPicker(
   }
 }
 
-class _WishPicker extends ConsumerStatefulWidget {
-  const _WishPicker();
+/// The picker's sheet; pops a [WishChoice].
+class WishPicker extends ConsumerStatefulWidget {
+  const WishPicker({super.key});
+
+  /// From this many recipes on, the picker offers a search.
+  static const searchFrom = 7;
 
   @override
-  ConsumerState<_WishPicker> createState() => _WishPickerState();
+  ConsumerState<WishPicker> createState() => _WishPickerState();
 }
 
-class _WishPickerState extends ConsumerState<_WishPicker> {
+class _WishPickerState extends ConsumerState<WishPicker> {
+  final _search = TextEditingController();
   final _text = TextEditingController();
+  String? _icon;
 
   @override
   void dispose() {
+    _search.dispose();
     _text.dispose();
     super.dispose();
   }
+
+  void _pick(WishChoice choice) => Navigator.of(context).pop(choice);
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
     final recipes = ref.watch(recipesProvider).value ?? const <Recipe>[];
+    // "Oft bei uns": the meal suggestions of the meal editor (FR-3.8), first.
+    final often = suggestMeals(
+      ref.watch(mealHistoryProvider).value ?? const <MealHistoryEntry>[],
+      ref.watch(ritualTodayProvider),
+    ).often;
+    final query = fold(_search.text.trim());
+    final matches = query.isEmpty
+        ? recipes
+        : [
+            for (final r in recipes)
+              if (fold(r.title).contains(query)) r,
+          ];
+    final heading = theme.textTheme.titleMedium?.copyWith(
+      fontWeight: FontWeight.w700,
+    );
+    final text = _text.text.trim();
+
     return Padding(
       padding: EdgeInsets.only(
         left: Tokens.space4,
@@ -240,37 +282,98 @@ class _WishPickerState extends ConsumerState<_WishPicker> {
                 fontWeight: FontWeight.w800,
               ),
             ),
-            const SizedBox(height: Tokens.space3),
-            Wrap(
-              spacing: Tokens.space2,
-              runSpacing: Tokens.space2,
-              children: [
-                for (final r in recipes.take(24))
-                  ActionChip(
-                    label: Text(r.title),
-                    onPressed: () =>
-                        Navigator.of(context).pop((recipeId: r.id, text: null)),
+            if (often.isNotEmpty) ...[
+              const SizedBox(height: Tokens.space3),
+              Text(l10n.mealsUxSuggestOften, style: heading),
+              const SizedBox(height: Tokens.space2),
+              Wrap(
+                spacing: Tokens.space2,
+                runSpacing: Tokens.space2,
+                children: [
+                  for (final m in often)
+                    DishTile(
+                      key: ValueKey('wish-often-${m.title}'),
+                      title: m.title,
+                      iconKey: m.iconKey,
+                      onTap: () => _pick(
+                        m.recipeId != null
+                            ? (recipeId: m.recipeId, text: null, iconKey: null)
+                            : (
+                                recipeId: null,
+                                text: m.title,
+                                iconKey: m.iconKey,
+                              ),
+                      ),
+                    ),
+                ],
+              ),
+            ],
+            if (recipes.isNotEmpty) ...[
+              const SizedBox(height: Tokens.space4),
+              Text(l10n.wishPickerRecipes, style: heading),
+              if (recipes.length >= WishPicker.searchFrom) ...[
+                const SizedBox(height: Tokens.space2),
+                TextField(
+                  key: const ValueKey('wish-search'),
+                  controller: _search,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.search),
+                    labelText: l10n.wishPickerSearch,
                   ),
+                  onChanged: (_) => setState(() {}),
+                ),
               ],
-            ),
+              const SizedBox(height: Tokens.space2),
+              if (matches.isEmpty)
+                Text(l10n.wishPickerNoMatch, style: theme.textTheme.bodyLarge)
+              else
+                Wrap(
+                  spacing: Tokens.space2,
+                  runSpacing: Tokens.space2,
+                  children: [
+                    for (final r in matches)
+                      DishTile(
+                        key: ValueKey('wish-recipe-${r.id}'),
+                        title: r.title,
+                        iconKey: r.iconKey,
+                        onTap: () =>
+                            _pick((recipeId: r.id, text: null, iconKey: null)),
+                      ),
+                  ],
+                ),
+            ],
             const SizedBox(height: Tokens.space4),
+            Text(l10n.wishPickerOwn, style: heading),
+            const SizedBox(height: Tokens.space2),
             TextField(
               key: const ValueKey('wish-text'),
               controller: _text,
               maxLength: 60,
               textCapitalization: TextCapitalization.sentences,
-              decoration: InputDecoration(
-                labelText: l10n.wishPickerOwn,
-                hintText: l10n.wishPickerOwnHint,
-              ),
+              decoration: InputDecoration(hintText: l10n.wishPickerOwnHint),
               onChanged: (_) => setState(() {}),
             ),
+            Text(l10n.wishPickerIcon, style: theme.textTheme.labelLarge),
+            const SizedBox(height: Tokens.space2),
+            Wrap(
+              spacing: Tokens.space1,
+              runSpacing: Tokens.space1,
+              children: [
+                for (final key in mealIconKeys)
+                  _IconChoice(
+                    iconKey: key,
+                    selected: _icon == key,
+                    onTap: () =>
+                        setState(() => _icon = _icon == key ? null : key),
+                  ),
+              ],
+            ),
+            const SizedBox(height: Tokens.space3),
             FilledButton(
-              onPressed: _text.text.trim().isEmpty
+              key: const ValueKey('wish-send'),
+              onPressed: text.isEmpty
                   ? null
-                  : () =>
-                        Navigator.of(context)
-                            .pop((recipeId: null, text: _text.text.trim())),
+                  : () => _pick((recipeId: null, text: text, iconKey: _icon)),
               child: Text(l10n.wishPickerSend),
             ),
           ],
@@ -280,9 +383,138 @@ class _WishPickerState extends ConsumerState<_WishPicker> {
   }
 }
 
-/// The planner's wishes (specs/27): a chip per open wish above the week. A tap puts it
-/// on a day of the shown week; a guardian may remove one, and the child's card then
-/// simply invites a new wish.
+/// A dish to wish for: its picture and its name, a big target for small fingers.
+class DishTile extends StatelessWidget {
+  const DishTile({
+    required this.title,
+    required this.onTap,
+    this.iconKey,
+    super.key,
+  });
+
+  final String title;
+  final String? iconKey;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final picture = mealIconAsset(iconKey);
+    return SizedBox(
+      width: 112,
+      child: Material(
+        color: theme.colorScheme.surfaceContainerHigh,
+        borderRadius: BorderRadius.circular(12),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(Tokens.space2),
+            child: Column(
+              children: [
+                if (picture != null)
+                  EmojiPicture(picture, size: 40)
+                else
+                  Icon(
+                    Icons.restaurant,
+                    size: 40,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                const SizedBox(height: Tokens.space1),
+                Text(
+                  title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// One picture to go with a wish of one's own words.
+class _IconChoice extends StatelessWidget {
+  const _IconChoice({
+    required this.iconKey,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String iconKey;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final name = mealIconName(context.l10n, iconKey);
+    return Tooltip(
+      message: name,
+      child: Semantics(
+        button: true,
+        selected: selected,
+        label: name,
+        excludeSemantics: true,
+        child: InkWell(
+          key: ValueKey('wish-icon-$iconKey'),
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            width: 52,
+            height: 52,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: selected ? scheme.primaryContainer : null,
+              border: Border.all(
+                color: selected ? scheme.primary : Colors.transparent,
+                width: 2,
+              ),
+            ),
+            alignment: Alignment.center,
+            child: EmojiPicture(mealIconAsset(iconKey)!, size: 36),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// [child] with the wish's picture before it, when it has one.
+class _WithPicture extends StatelessWidget {
+  const _WithPicture({required this.iconKey, required this.child});
+
+  final String? iconKey;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final picture = mealIconAsset(iconKey);
+    if (picture == null) return child;
+    return Padding(
+      padding: const EdgeInsets.only(top: Tokens.space1),
+      child: Row(
+        children: [
+          EmojiPicture(picture, size: 32),
+          const SizedBox(width: Tokens.space2),
+          Expanded(child: child),
+        ],
+      ),
+    );
+  }
+}
+
+/// The planner's wishes (specs/27): a chip per open wish above the week, with its
+/// picture, and "von letzter Woche" on one that has waited since an earlier week. A tap
+/// puts it on a day of the shown week; a guardian may remove one, and the child's card
+/// then simply invites a new wish. When the family lets everyone wish
+/// (`meals.wishes`), the grown-up at the planner wishes here too, with the same picker.
 class MealWishTray extends ConsumerWidget {
   const MealWishTray({required this.weekStart, super.key});
 
@@ -296,11 +528,26 @@ class MealWishTray extends ConsumerWidget {
       for (final w in ref.watch(mealWishesProvider).value ?? const <MealWish>[])
         if (!w.planned) w,
     ];
-    if (wishes.isEmpty) return const SizedBox.shrink();
     final members = {
       for (final m in ref.watch(membersProvider).value ?? const <Member>[])
         m.id: m,
     };
+    final day = ref.watch(lighterDayProvider);
+    final acting = members[ref.watch(actingProfileProvider)];
+    // The server decides who may wish (api.meal_wish_set); this only offers it.
+    final canWish = acting != null && mayWish(day, acting);
+    if (wishes.isEmpty && !canWish) return const SizedBox.shrink();
+    final mine = [
+      for (final w in wishes)
+        if (w.profileId == acting?.id) w,
+    ];
+    final atLimit = mine.length >= wishLimit(day);
+    final today = ref.watch(ritualTodayProvider);
+    final lastMonday = DateTime(
+      today.year,
+      today.month,
+      today.day - (today.weekday - 1) - 7,
+    );
     return Padding(
       padding: const EdgeInsets.fromLTRB(
         Tokens.space4,
@@ -325,6 +572,29 @@ class MealWishTray extends ConsumerWidget {
                     wish: w,
                     member: members[w.profileId],
                     weekStart: weekStart,
+                    since: !w.earlierWeek
+                        ? null
+                        : w.wishedOn == null ||
+                              !w.wishedOn!.isBefore(lastMonday)
+                        ? l10n.mealsWishEarlier
+                        : l10n.mealsWishOlder,
+                  ),
+                if (canWish)
+                  ActionChip(
+                    key: const ValueKey('wish-mine'),
+                    avatar: const Icon(Icons.star_outline_rounded),
+                    label: Text(
+                      atLimit ? l10n.mealsWishMineChange : l10n.mealsWishMine,
+                    ),
+                    onPressed: () => unawaited(
+                      showWishPicker(
+                        context,
+                        ref,
+                        acting.id,
+                        // At the limit the newest of one's own wishes changes.
+                        wishId: atLimit ? mine.last.id : null,
+                      ),
+                    ),
                   ),
               ],
             ),
@@ -340,11 +610,15 @@ class _WishChip extends ConsumerWidget {
     required this.wish,
     required this.member,
     required this.weekStart,
+    this.since,
   });
 
   final MealWish wish;
   final Member? member;
   final DateTime weekStart;
+
+  /// "von letzter Woche" for a wish that has waited since an earlier week.
+  final String? since;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -359,7 +633,34 @@ class _WishChip extends ConsumerWidget {
               foregroundColor: colors.onInk,
               child: Text(m!.initial),
             ),
-      label: Text(l10n.mealsWishChip(m?.displayName ?? '', wish.title)),
+      label: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Flexible(
+            child: Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: l10n.mealsWishChip(m?.displayName ?? '', wish.title),
+                  ),
+                  if (since != null)
+                    TextSpan(
+                      text: ' · $since',
+                      style: TextStyle(
+                        color: context.ww.ink2,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+          if (mealIconAsset(wish.iconKey) case final picture?) ...[
+            const SizedBox(width: Tokens.space1),
+            EmojiPicture(picture, size: 20),
+          ],
+        ],
+      ),
       tooltip: l10n.mealsWishPlan,
       onPressed: () => unawaited(_plan(context, ref)),
       // Removing someone else's wish is a guardian's (api.meal_wish_withdraw).

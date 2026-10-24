@@ -9665,6 +9665,264 @@ abstract class AppLocalizations {
   /// **'Wish for this'**
   String get wishPickerSend;
 
+  /// No description provided for @wishPickerRecipes.
+  ///
+  /// In en, this message translates to:
+  /// **'Our recipes'**
+  String get wishPickerRecipes;
+
+  /// No description provided for @wishPickerSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Find a recipe'**
+  String get wishPickerSearch;
+
+  /// No description provided for @wishPickerNoMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'No recipe by that name. Wish for it below.'**
+  String get wishPickerNoMatch;
+
+  /// No description provided for @wishPickerIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a picture'**
+  String get wishPickerIcon;
+
+  /// Marks a wish in the planner tray made in an earlier week (specs/27).
+  ///
+  /// In en, this message translates to:
+  /// **'from last week'**
+  String get mealsWishEarlier;
+
+  /// No description provided for @mealsWishOlder.
+  ///
+  /// In en, this message translates to:
+  /// **'from a few weeks ago'**
+  String get mealsWishOlder;
+
+  /// No description provided for @mealsWishMine.
+  ///
+  /// In en, this message translates to:
+  /// **'Make a wish'**
+  String get mealsWishMine;
+
+  /// No description provided for @mealsWishMineChange.
+  ///
+  /// In en, this message translates to:
+  /// **'Change my wish'**
+  String get mealsWishMineChange;
+
+  /// No description provided for @mealIcon_pizza.
+  ///
+  /// In en, this message translates to:
+  /// **'Pizza'**
+  String get mealIcon_pizza;
+
+  /// No description provided for @mealIcon_pasta.
+  ///
+  /// In en, this message translates to:
+  /// **'Pasta'**
+  String get mealIcon_pasta;
+
+  /// No description provided for @mealIcon_pancakes.
+  ///
+  /// In en, this message translates to:
+  /// **'Pancakes'**
+  String get mealIcon_pancakes;
+
+  /// No description provided for @mealIcon_waffle.
+  ///
+  /// In en, this message translates to:
+  /// **'Waffles'**
+  String get mealIcon_waffle;
+
+  /// No description provided for @mealIcon_burger.
+  ///
+  /// In en, this message translates to:
+  /// **'Burger'**
+  String get mealIcon_burger;
+
+  /// No description provided for @mealIcon_fries.
+  ///
+  /// In en, this message translates to:
+  /// **'Chips'**
+  String get mealIcon_fries;
+
+  /// No description provided for @mealIcon_hotdog.
+  ///
+  /// In en, this message translates to:
+  /// **'Hot dog'**
+  String get mealIcon_hotdog;
+
+  /// No description provided for @mealIcon_sandwich.
+  ///
+  /// In en, this message translates to:
+  /// **'Sandwich'**
+  String get mealIcon_sandwich;
+
+  /// No description provided for @mealIcon_taco.
+  ///
+  /// In en, this message translates to:
+  /// **'Tacos'**
+  String get mealIcon_taco;
+
+  /// No description provided for @mealIcon_burrito.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrap'**
+  String get mealIcon_burrito;
+
+  /// No description provided for @mealIcon_kebab.
+  ///
+  /// In en, this message translates to:
+  /// **'Kebab'**
+  String get mealIcon_kebab;
+
+  /// No description provided for @mealIcon_curry.
+  ///
+  /// In en, this message translates to:
+  /// **'Curry'**
+  String get mealIcon_curry;
+
+  /// No description provided for @mealIcon_rice.
+  ///
+  /// In en, this message translates to:
+  /// **'Rice'**
+  String get mealIcon_rice;
+
+  /// No description provided for @mealIcon_noodles.
+  ///
+  /// In en, this message translates to:
+  /// **'Noodle soup'**
+  String get mealIcon_noodles;
+
+  /// No description provided for @mealIcon_soup.
+  ///
+  /// In en, this message translates to:
+  /// **'Soup or stew'**
+  String get mealIcon_soup;
+
+  /// No description provided for @mealIcon_paella.
+  ///
+  /// In en, this message translates to:
+  /// **'Paella'**
+  String get mealIcon_paella;
+
+  /// No description provided for @mealIcon_salad.
+  ///
+  /// In en, this message translates to:
+  /// **'Salad'**
+  String get mealIcon_salad;
+
+  /// No description provided for @mealIcon_sushi.
+  ///
+  /// In en, this message translates to:
+  /// **'Sushi'**
+  String get mealIcon_sushi;
+
+  /// No description provided for @mealIcon_dumpling.
+  ///
+  /// In en, this message translates to:
+  /// **'Dumplings'**
+  String get mealIcon_dumpling;
+
+  /// No description provided for @mealIcon_chicken.
+  ///
+  /// In en, this message translates to:
+  /// **'Chicken'**
+  String get mealIcon_chicken;
+
+  /// No description provided for @mealIcon_fish.
+  ///
+  /// In en, this message translates to:
+  /// **'Fish'**
+  String get mealIcon_fish;
+
+  /// No description provided for @mealIcon_meat.
+  ///
+  /// In en, this message translates to:
+  /// **'Meat'**
+  String get mealIcon_meat;
+
+  /// No description provided for @mealIcon_egg.
+  ///
+  /// In en, this message translates to:
+  /// **'Eggs'**
+  String get mealIcon_egg;
+
+  /// No description provided for @mealIcon_falafel.
+  ///
+  /// In en, this message translates to:
+  /// **'Falafel'**
+  String get mealIcon_falafel;
+
+  /// No description provided for @mealIcon_fondue.
+  ///
+  /// In en, this message translates to:
+  /// **'Fondue'**
+  String get mealIcon_fondue;
+
+  /// No description provided for @mealIcon_pie.
+  ///
+  /// In en, this message translates to:
+  /// **'Pie or quiche'**
+  String get mealIcon_pie;
+
+  /// No description provided for @mealIcon_cake.
+  ///
+  /// In en, this message translates to:
+  /// **'Cake'**
+  String get mealIcon_cake;
+
+  /// No description provided for @mealIcon_ice_cream.
+  ///
+  /// In en, this message translates to:
+  /// **'Ice cream'**
+  String get mealIcon_ice_cream;
+
+  /// No description provided for @mealIcon_bread.
+  ///
+  /// In en, this message translates to:
+  /// **'Bread'**
+  String get mealIcon_bread;
+
+  /// No description provided for @mealIcon_pretzel.
+  ///
+  /// In en, this message translates to:
+  /// **'Pretzel'**
+  String get mealIcon_pretzel;
+
+  /// No description provided for @mealIcon_croissant.
+  ///
+  /// In en, this message translates to:
+  /// **'Croissant'**
+  String get mealIcon_croissant;
+
+  /// No description provided for @mealIcon_potato.
+  ///
+  /// In en, this message translates to:
+  /// **'Potatoes'**
+  String get mealIcon_potato;
+
+  /// No description provided for @mealIcon_cheese.
+  ///
+  /// In en, this message translates to:
+  /// **'Cheese'**
+  String get mealIcon_cheese;
+
+  /// No description provided for @mealIcon_porridge.
+  ///
+  /// In en, this message translates to:
+  /// **'Porridge'**
+  String get mealIcon_porridge;
+
+  /// No description provided for @mealIcon_vegetables.
+  ///
+  /// In en, this message translates to:
+  /// **'Vegetables'**
+  String get mealIcon_vegetables;
+
   /// No description provided for @mealsWishesTray.
   ///
   /// In en, this message translates to:
@@ -9880,6 +10138,24 @@ abstract class AppLocalizations {
   /// **'A calm week ahead.'**
   String get weekReviewCalmAhead;
 
+  /// Screen readers: which card of the week-review story is shown (specs/27).
+  ///
+  /// In en, this message translates to:
+  /// **'Card {index} of {count}'**
+  String weekReviewCardOf(int index, int count);
+
+  /// No description provided for @weekReviewNextCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Next card'**
+  String get weekReviewNextCard;
+
+  /// No description provided for @weekReviewPreviousCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous card'**
+  String get weekReviewPreviousCard;
+
   /// No description provided for @weekHighlightBadge.
   ///
   /// In en, this message translates to:
@@ -9915,6 +10191,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'cooked {title}'**
   String weekHighlightCooked(String title);
+
+  /// A member line of the look-back: a tradition or key event they were at. Never a number (P10).
+  ///
+  /// In en, this message translates to:
+  /// **'was there for {title}'**
+  String weekHighlightAttended(String title);
 
   /// No description provided for @weekHighlightHelped.
   ///

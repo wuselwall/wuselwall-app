@@ -14,7 +14,7 @@ El día de una [tradición familiar](/es/guide/rituals#traditions) con comida, e
 
 ## Deseos {#wishes}
 
-Los niños piden una comida en **Mi día** de su tableta (ver [Comida deseada](/es/guide/rituals#meal-wishes)). Los deseos pendientes aparecen arriba del menú bajo **Deseos**, por ejemplo «Pablo: Tortitas», y en una tarjeta en **Hoy**.
+Los niños piden una comida en **Mi día** de su tableta (ver [Comida deseada](/es/guide/rituals#meal-wishes)). Los deseos pendientes aparecen arriba del menú bajo **Deseos**, por ejemplo «Pablo: Tortitas» con su imagen, y en una tarjeta en **Hoy**. Un deseo que espera desde una semana anterior lleva **de la semana pasada**. Cuando todos pueden pedir, también tienes **Pedir algo**.
 
 Toca un deseo, elige día y comida, y queda planificado. Cada comida muestra lo que ya está planificado. Si ya hay una comida, la app pregunta antes de que el deseo la reemplace; quien cocina, la hora y las raciones se mantienen. Un deseo de receta llena la lista de la compra como cualquier receta. Un deseo planificado lleva una estrella y «Deseo de Pablo» en el menú y en la pared. La **×** quita un deseo (**Quitar el deseo**); pueden hacerlo los adultos responsables y quien lo pidió. Un deseo nunca se rechaza: lo que no se planifica espera. Quién puede pedir y cuántos deseos pueden esperar se decide en los [ajustes del hogar](/es/settings/household#rituals).
 

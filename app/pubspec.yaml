@@ -69,6 +69,7 @@ flutter:
     - assets/emoji/extras/
     - assets/emoji/avatars/
     - assets/emoji/events/
+    - assets/emoji/meals/
     - assets/emoji/scenes/
     # The bundled Tischfrage decks (specs/27), one file per language.
     - assets/table_questions/

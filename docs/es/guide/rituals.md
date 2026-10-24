@@ -48,13 +48,14 @@ Si una semana no se hace, elimina **Solo este evento**. Nada recuerda que no se 
 
 Cada niño puede pedir una comida; vosotros decidís cuántos deseos pueden esperar a la vez (uno por defecto). Así los niños opinan sobre el menú.
 
-- **En Mi día** aparece la tarjeta **Tu comida favorita**. **Pedir** abre la elección: una de vuestras recetas, u **Otra cosa** con unas pocas palabras, como «tortitas». Con **Pido esto**, el deseo va de camino. Hasta que se planifique, se puede **cambiar**.
-- **Los adultos** ven los deseos arriba del [menú](/es/meals/#wishes) bajo **Deseos**, y en una tarjeta discreta en **Hoy**. Toca un deseo, elige día y comida, y queda planificado.
+- **En Mi día** aparece la tarjeta **Tu comida favorita**. **Pedir** abre la elección: primero **Favoritos de la familia**, las comidas que más habéis cocinado últimamente, después **Nuestras recetas**, cada una con su imagen (con muchas recetas ayuda **Buscar una receta**), y abajo **Otra cosa** con unas pocas palabras, como «tortitas», y una imagen (**Elige una imagen**). Con **Pido esto**, el deseo va de camino. Hasta que se planifique, se puede **cambiar**.
+- **Los adultos** ven los deseos arriba del [menú](/es/meals/#wishes) bajo **Deseos**, cada uno con su imagen, y en una tarjeta discreta en **Hoy**. Toca un deseo, elige día y comida, y queda planificado.
+- **Cuando todos pueden pedir**, los adultos también piden en el menú: **Pedir algo** en la fila **Deseos** abre la misma elección, y **Cambiar mi deseo** cambia el pendiente.
 - **Una vez planificado**, la comida lleva una estrella y «Deseo de Pablo» en el menú y en la pared. La tarjeta del niño dice entonces, por ejemplo: «¡Tu deseo, Tortitas, será el jueves!».
 
 <Shot name="kid-wish" alt="Mi día en la tableta infantil con la tarjeta Tu comida favorita" wide />
 
-La app **nunca rechaza** un deseo. Un deseo sin planificar simplemente espera. Los adultos responsables pueden quitar un deseo; el porqué se habla en familia.
+La app **nunca rechaza** un deseo. Un deseo sin planificar simplemente espera, la semana siguiente con la marca **de la semana pasada**. A las cuatro semanas, un deseo que nunca se planificó sale sin ruido de la lista y ya no cuenta; el niño puede pedir otra cosa. Los adultos responsables pueden quitar un deseo; el porqué se habla en familia.
 
 Quién puede pedir lo decide **Comida deseada**: **Niños** (predeterminado), **Todos** o **Desactivado**. **Deseos abiertos por persona** permite hasta tres a la vez (1 por defecto).
 
@@ -77,10 +78,14 @@ Cada dispositivo muestra las preguntas en su idioma: unas 150 en alemán e ingl�
 
 ## Nuestra semana {#week-review}
 
-El domingo repasáis juntos **Nuestra semana**: lo que *hemos* hecho. Desde el domingo a las 16:00 hasta el lunes a las 10:00 hay una tarjeta en **Hoy** y **Mi día**, y una tarjeta en el pie de la pared. Un toque abre cinco tarjetas, una tras otra:
+El domingo repasáis juntos **Nuestra semana**: lo que *hemos* hecho. Desde el domingo a las 16:00 hasta el lunes a las 10:00 hay una tarjeta en **Hoy** y **Mi día**, y una tarjeta en el pie de la pared. Un toque abre una historia de hasta cinco tarjetas, una cada vez, a pantalla completa:
+
+- **Siguiente** con un toque a la derecha, deslizando a la izquierda o con la tecla de flecha; **anterior** con un toque en el tercio izquierdo, deslizando a la derecha o con la otra flecha. Las flechas de abajo hacen lo mismo.
+- Las rayas de arriba muestran cuántas tarjetas hay y dónde estáis. Tras la última tarjeta, con **Cerrar** o con Esc, el repaso se cierra.
+- Una tarjeta sin contenido se salta, por ejemplo **Nuestras tradiciones** en una semana sin tradición. Si «reducir movimiento» está activado en el dispositivo, la siguiente tarjeta aparece sin deslizarse. Los lectores de pantalla dicen «Tarjeta 2 de 4».
 
 1. **Lo que hicimos juntos**: las tareas hechas por toda la familia, como un solo número
-2. **Cada uno tuvo su momento**: una línea para cada persona, por ejemplo una insignia nueva, un día con todo hecho, o simplemente «formó parte de nuestra semana». Nadie tiene dos, y nada es un número comparado con el de otro.
+2. **Cada uno tuvo su momento**: una línea para cada persona, por ejemplo una insignia nueva, un día con todo hecho, «estuvo en Noche de juegos» para una tradición o una cita importante, o simplemente «formó parte de nuestra semana». Nadie tiene dos, y nada es un número comparado con el de otro.
 3. **Qué rico**: las comidas de la semana, los deseos con estrella, las recetas nuevas marcadas «nuevo»
 4. **Nuestras tradiciones**: las tradiciones que hubo
 5. **La semana que viene nos hace ilusión**: las próximas cuentas atrás

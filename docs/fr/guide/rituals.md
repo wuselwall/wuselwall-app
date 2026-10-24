@@ -48,13 +48,14 @@ Si une tradition n’a pas lieu une semaine, supprimez **Cet événement uniquem
 
 Chaque enfant peut souhaiter un repas ; vous décidez combien de souhaits peuvent attendre à la fois (un par défaut). Les enfants ont ainsi leur mot à dire sur les menus.
 
-- **Dans Ma journée**, la carte **Ton repas préféré** s’affiche. **Choisir** ouvre le choix : une de vos recettes, ou **Autre chose** en quelques mots, comme « des crêpes ». Avec **Je choisis ça**, le souhait est parti. Tant qu’il n’est pas planifié, il peut être **changé**.
-- **Les adultes** voient les souhaits en haut des [menus](/fr/meals/#wishes) sous **Souhaits**, et dans une carte discrète dans **Aujourd’hui**. Touchez un souhait, choisissez un jour et un repas : il est planifié.
+- **Dans Ma journée**, la carte **Ton repas préféré** s’affiche. **Choisir** ouvre le choix : d’abord **Les favoris de la famille**, les repas que vous avez le plus cuisinés ces derniers temps, puis **Nos recettes**, chacune avec son image (avec beaucoup de recettes, **Chercher une recette** aide), et en bas **Autre chose** en quelques mots, comme « des crêpes », avec une image (**Choisis une image**). Avec **Je choisis ça**, le souhait est parti. Tant qu’il n’est pas planifié, il peut être **changé**.
+- **Les adultes** voient les souhaits en haut des [menus](/fr/meals/#wishes) sous **Souhaits**, chacun avec son image, et dans une carte discrète dans **Aujourd’hui**. Touchez un souhait, choisissez un jour et un repas : il est planifié.
+- **Quand tout le monde peut souhaiter**, les adultes font aussi leur souhait dans les menus : **Faire un souhait** dans la ligne **Souhaits** ouvre le même choix, **Changer mon souhait** change celui en attente.
 - **Une fois planifié**, le repas porte une étoile et « Souhait de Paul » dans les menus et sur le mur. La carte de l’enfant indique alors, par exemple : « Ton souhait Crêpes, c’est pour le jeudi ! ».
 
 <Shot name="kid-wish" alt="Ma journée sur la tablette des enfants avec la carte Ton repas préféré" wide />
 
-L’appli ne **refuse jamais** un souhait. Un souhait non planifié attend, tout simplement. Les parents peuvent retirer un souhait ; le pourquoi se discute en famille.
+L’appli ne **refuse jamais** un souhait. Un souhait non planifié attend, tout simplement, la semaine suivante avec la mention **de la semaine dernière**. Au bout de quatre semaines, un souhait jamais planifié quitte discrètement la liste et ne compte plus ; l’enfant peut simplement en faire un nouveau. Les parents peuvent retirer un souhait ; le pourquoi se discute en famille.
 
 **Repas souhaités** règle qui peut souhaiter : **Enfants** (par défaut), **Tout le monde** ou **Désactivé**. **Souhaits ouverts par personne** en autorise jusqu’à trois à la fois (1 par défaut).
 
@@ -77,10 +78,14 @@ Chaque appareil affiche les questions dans sa langue : environ 150 en allemand e
 
 ## Notre semaine {#week-review}
 
-Le dimanche, vous regardez ensemble **Notre semaine** : ce que *nous* avons fait. Du dimanche 16 h au lundi 10 h, une carte s’affiche dans **Aujourd’hui** et **Ma journée**, et une tuile dans le pied de page du mur. Un toucher ouvre cinq cartes l’une après l’autre :
+Le dimanche, vous regardez ensemble **Notre semaine** : ce que *nous* avons fait. Du dimanche 16 h au lundi 10 h, une carte s’affiche dans **Aujourd’hui** et **Ma journée**, et une tuile dans le pied de page du mur. Un toucher ouvre une histoire de cinq cartes au plus, une à la fois, en plein écran :
+
+- **Suivante** d’un toucher à droite, d’un glissement vers la gauche ou avec la touche flèche ; **précédente** d’un toucher sur le tiers gauche, d’un glissement vers la droite ou avec l’autre flèche. Les flèches en bas font de même.
+- Les traits en haut montrent combien de cartes il y a et où vous en êtes. Après la dernière carte, avec **Fermer** ou avec Échap, le récapitulatif se ferme.
+- Une carte vide est sautée, par exemple **Nos traditions** une semaine sans tradition. Si « réduire les animations » est activé sur l’appareil, la carte suivante apparaît sans glisser. Les lecteurs d’écran disent « Carte 2 sur 4 ».
 
 1. **Ce qu’on a fait ensemble** : les tâches faites par toute la famille, en un seul nombre
-2. **Chacun a eu son moment** : une ligne par personne, par exemple un nouveau badge, une journée où tout était fait, ou simplement « était de la partie cette semaine ». Personne n’en a deux, et rien n’est un nombre comparé à celui d’un autre.
+2. **Chacun a eu son moment** : une ligne par personne, par exemple un nouveau badge, une journée où tout était fait, « était là pour : Soirée jeux » pour une tradition ou un rendez-vous important, ou simplement « était de la partie cette semaine ». Personne n’en a deux, et rien n’est un nombre comparé à celui d’un autre.
 3. **Miam** : les repas de la semaine, les souhaits avec une étoile, les nouvelles recettes marquées « nouveau »
 4. **Nos traditions** : les traditions qui ont eu lieu
 5. **La semaine prochaine, on a hâte de** : les prochains comptes à rebours

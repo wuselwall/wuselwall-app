@@ -15,7 +15,7 @@ The week shows each day with **Breakfast**, **Lunch**, **Dinner** and **Snack**.
 
 ## Wishes {#wishes}
 
-Children wish for a meal on **My day** on their tablet (see [Meal wishes](/en/guide/rituals#meal-wishes)). Open wishes are at the top of the meal plan under **Wishes**, for example "Jack: Pancakes", and as a card on **Today**.
+Children wish for a meal on **My day** on their tablet (see [Meal wishes](/en/guide/rituals#meal-wishes)). Open wishes are at the top of the meal plan under **Wishes**, for example "Jack: Pancakes" with a picture, and as a card on **Today**. A wish that has waited since an earlier week says **from last week**. When everyone may wish, **Make a wish** is there for you too.
 
 - Tap a wish, pick a day and a meal, and it is planned. Each meal shows what is already planned there. If a meal is planned, the app asks before the wish replaces it; the cook, the time and the servings stay. A recipe wish fills the shopping list like any recipe.
 - A planned wish carries a star and "Jack's wish" in the plan and on the wall.

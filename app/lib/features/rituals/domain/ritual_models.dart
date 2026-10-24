@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart' show parseDate;
+import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 
 /// A child's meal wish (specs/27 "Wunschessen"), a row of `api.meal_wishes`. Open until a
 /// grown-up puts it on the plan; never declined.
@@ -15,6 +16,8 @@ class MealWish {
     this.planned = false,
     this.plannedOn,
     this.plannedSlot,
+    this.wishedOn,
+    this.earlierWeek = false,
   });
 
   factory MealWish.fromJson(Map<String, dynamic> json) => MealWish(
@@ -29,6 +32,11 @@ class MealWish {
         ? null
         : parseDate(json['planned_on'] as String),
     plannedSlot: json['planned_slot'] as String?,
+    // Both absent on servers before 20261025130000: every wish reads as this week's.
+    wishedOn: json['wished_on'] == null
+        ? null
+        : parseDate(json['wished_on'] as String),
+    earlierWeek: json['earlier_week'] as bool? ?? false,
   );
 
   final String id;
@@ -40,6 +48,13 @@ class MealWish {
   final bool planned;
   final DateTime? plannedOn;
   final String? plannedSlot;
+
+  /// The household day the wish was made or last changed.
+  final DateTime? wishedOn;
+
+  /// An open wish made before this household week began: the tray marks it "von letzter
+  /// Woche" (specs/27). The server decides, in the household's time zone.
+  final bool earlierWeek;
 }
 
 /// A row of `api.table_questions`: the family's own question, or a bundled one it hid.
@@ -74,6 +89,10 @@ enum HighlightKind {
   allDone,
   reward,
   wish,
+
+  /// A tradition or a key event they were at (computed in the app, see
+  /// [withEventHighlights]).
+  attended,
   cooked,
   helped,
   here,
@@ -169,4 +188,70 @@ class WeekReview {
   /// One line per active member, in board order.
   final List<WeekHighlight> members;
   final List<WeekMeal> meals;
+}
+
+/// The highlights that give way to a tradition or key event a member was at: the plain
+/// facts of a week (specs/27 lists "a tradition or key event they attended" after the
+/// badges, streaks, rewards, wishes and days with everything done, and before the
+/// fallback facts).
+const _givesWayToEvents = {
+  HighlightKind.cooked,
+  HighlightKind.helped,
+  HighlightKind.here,
+};
+
+/// [highlights] with "a tradition or key event they attended" put in (specs/27, card 2).
+///
+/// Recurring events are expanded only in the Edge Functions, never in SQL, so
+/// `api.week_review` cannot see them; the story already reads the week's occurrences for
+/// its traditions card, and the wall and the phones read the same ones, so this is
+/// decided here, the way Vorfreude's countdowns are. A member whose line is one of the
+/// plain facts gets the event instead: a tradition before a key event, the later one
+/// first, only events that have begun by [today], never a cancelled, presence or
+/// subscribed one. A tradition without attendees is the whole family's. The line names
+/// the event and never counts anything (P10).
+List<WeekHighlight> withEventHighlights(
+  List<WeekHighlight> highlights,
+  List<Occurrence> occurrences, {
+  required DateTime weekStart,
+  required DateTime today,
+}) {
+  final weekEnd = DateTime(weekStart.year, weekStart.month, weekStart.day + 6);
+  final last = today.isBefore(weekEnd) ? today : weekEnd;
+  final events =
+      [
+        for (final o in occurrences)
+          if (!o.isPresence &&
+              !o.isImported &&
+              o.status != EventStatus.cancelled &&
+              (o.tradition || o.importance == Importance.key) &&
+              !o.localStartDate.isBefore(weekStart) &&
+              !o.localStartDate.isAfter(last))
+            o,
+      ]..sort((a, b) {
+        if (a.tradition != b.tradition) return a.tradition ? -1 : 1;
+        return b.start.compareTo(a.start);
+      });
+  if (events.isEmpty) return highlights;
+  return [
+    for (final h in highlights)
+      if (!_givesWayToEvents.contains(h.kind))
+        h
+      else if (events
+              .where(
+                (o) =>
+                    o.attendeeIds.contains(h.profileId) ||
+                    (o.tradition && o.attendeeIds.isEmpty),
+              )
+              .firstOrNull
+          case final o?)
+        WeekHighlight(
+          profileId: h.profileId,
+          kind: HighlightKind.attended,
+          title: o.title,
+          iconKey: o.iconKey,
+        )
+      else
+        h,
+  ];
 }

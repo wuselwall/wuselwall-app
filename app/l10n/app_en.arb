@@ -3315,6 +3315,52 @@
   "wishPickerOwn": "Something else",
   "wishPickerOwnHint": "e.g. pancakes",
   "wishPickerSend": "Wish for this",
+  "wishPickerRecipes": "Our recipes",
+  "wishPickerSearch": "Find a recipe",
+  "wishPickerNoMatch": "No recipe by that name. Wish for it below.",
+  "wishPickerIcon": "Pick a picture",
+  "mealsWishEarlier": "from last week",
+  "@mealsWishEarlier": {
+    "description": "Marks a wish in the planner tray made in an earlier week (specs/27)."
+  },
+  "mealsWishOlder": "from a few weeks ago",
+  "mealsWishMine": "Make a wish",
+  "mealsWishMineChange": "Change my wish",
+  "mealIcon_pizza": "Pizza",
+  "mealIcon_pasta": "Pasta",
+  "mealIcon_pancakes": "Pancakes",
+  "mealIcon_waffle": "Waffles",
+  "mealIcon_burger": "Burger",
+  "mealIcon_fries": "Chips",
+  "mealIcon_hotdog": "Hot dog",
+  "mealIcon_sandwich": "Sandwich",
+  "mealIcon_taco": "Tacos",
+  "mealIcon_burrito": "Wrap",
+  "mealIcon_kebab": "Kebab",
+  "mealIcon_curry": "Curry",
+  "mealIcon_rice": "Rice",
+  "mealIcon_noodles": "Noodle soup",
+  "mealIcon_soup": "Soup or stew",
+  "mealIcon_paella": "Paella",
+  "mealIcon_salad": "Salad",
+  "mealIcon_sushi": "Sushi",
+  "mealIcon_dumpling": "Dumplings",
+  "mealIcon_chicken": "Chicken",
+  "mealIcon_fish": "Fish",
+  "mealIcon_meat": "Meat",
+  "mealIcon_egg": "Eggs",
+  "mealIcon_falafel": "Falafel",
+  "mealIcon_fondue": "Fondue",
+  "mealIcon_pie": "Pie or quiche",
+  "mealIcon_cake": "Cake",
+  "mealIcon_ice_cream": "Ice cream",
+  "mealIcon_bread": "Bread",
+  "mealIcon_pretzel": "Pretzel",
+  "mealIcon_croissant": "Croissant",
+  "mealIcon_potato": "Potatoes",
+  "mealIcon_cheese": "Cheese",
+  "mealIcon_porridge": "Porridge",
+  "mealIcon_vegetables": "Vegetables",
   "mealsWishesTray": "Wishes",
   "mealsWishChip": "{name}: {title}",
   "@mealsWishChip": {
@@ -3431,6 +3477,20 @@
   "weekReviewTraditions": "Our traditions",
   "weekReviewNext": "Next week we look forward to",
   "weekReviewCalmAhead": "A calm week ahead.",
+  "weekReviewCardOf": "Card {index} of {count}",
+  "@weekReviewCardOf": {
+    "description": "Screen readers: which card of the week-review story is shown (specs/27).",
+    "placeholders": {
+      "index": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "weekReviewNextCard": "Next card",
+  "weekReviewPreviousCard": "Previous card",
   "weekHighlightBadge": "New badge: {title}",
   "@weekHighlightBadge": {
     "placeholders": {
@@ -3466,6 +3526,15 @@
   },
   "weekHighlightCooked": "cooked {title}",
   "@weekHighlightCooked": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "weekHighlightAttended": "was there for {title}",
+  "@weekHighlightAttended": {
+    "description": "A member line of the look-back: a tradition or key event they were at. Never a number (P10).",
     "placeholders": {
       "title": {
         "type": "String"

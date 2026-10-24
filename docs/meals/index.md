@@ -15,7 +15,7 @@ Die Woche zeigt jeden Tag mit **Frühstück**, **Mittagessen**, **Abendessen** u
 
 ## Wünsche {#wishes}
 
-Kinder wünschen sich ein Essen auf **Mein Tag** ihres Tablets (siehe [Wunschessen](/guide/rituals#meal-wishes)). Offene Wünsche stehen oben im Essensplan unter **Wünsche**, zum Beispiel „Paul: Pfannkuchen“, und als Karte auf **Heute**.
+Kinder wünschen sich ein Essen auf **Mein Tag** ihres Tablets (siehe [Wunschessen](/guide/rituals#meal-wishes)). Offene Wünsche stehen oben im Essensplan unter **Wünsche**, zum Beispiel „Paul: Pfannkuchen“ mit Bild, und als Karte auf **Heute**. Ein Wunsch, der schon eine Woche wartet, trägt **von letzter Woche**. Dürfen alle wünschen, steht dort auch **Selbst wünschen** für dich.
 
 - Tippe auf einen Wunsch, wähle Tag und Mahlzeit, und er ist eingeplant. Unter jeder Mahlzeit steht, was dort schon geplant ist. Steht dort schon ein Essen, fragt die App, bevor der Wunsch es ersetzt; wer kocht, die Uhrzeit und die Portionen bleiben. Ein Rezept-Wunsch füllt die Einkaufsliste wie jedes Rezept.
 - Ein geplanter Wunsch trägt im Plan und an der Wand einen Stern und „Wunsch von Paul“.

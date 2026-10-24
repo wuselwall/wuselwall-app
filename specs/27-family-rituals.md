@@ -141,7 +141,13 @@ Once a week each child picks a meal, which gives children a voice in the plan.
 - **Kid home:** a card "Dein Wunschessen diese Woche". It opens a picker with the family's
   recipes (with their pictures), the meals cooked most often recently (the source of the meal
   suggestions, FR-3.8), or an icon plus a few typed words. The wish can be changed until it is
-  planned.
+  planned. *Built (migration `20261025130000`, pgTAP 239):* "Oft bei uns" first (the meal
+  editor's `suggestMeals`), then every recipe with a search from seven recipes on, then a few
+  words with a picture to choose. Recipes have no picture of their own: `app.meal_icon_for`
+  picks one of the app's dish pictures (the `meals` set, 35 Fluent Emoji) from a name in DE,
+  EN, FR and ES, kept in generated columns `recipe.icon_key` and `meal_plan_entry.icon_key`
+  and shown by `api.recipes` and `api.meal_history`; a wish without a chosen picture gets one
+  from its words. The tray's chips show the picture.
 - **Guardians** see a *Wünsche* tray at the top of the meal planner's week: "Olivia:
   Pfannkuchen 🥞 · Jack: Pizza 🍕". Placing a wish on a day and slot plans it. A new wish also
   appears as a quiet card on Today, among the pending items of
@@ -150,7 +156,16 @@ Once a week each child picks a meal, which gives children a voice in the plan.
   plan and on the board. The child's card says "Dein Wunsch gibt es am Donnerstag!", which is
   a small Vorfreude of its own. A recipe wish feeds the shopping list like any planned recipe.
 - **A wish not planned that week** stays in the tray into the next week, marked "von letzter
-  Woche". It counts as that child's open wish. The words *abgelehnt*, *rejected* and their
+  Woche". It counts as that child's open wish. *Built:* `api.meal_wishes` says `earlier_week`
+  (made or last changed before this household week's Monday) and `wished_on`; a wish older
+  than a week before that reads "von vor ein paar Wochen". **Ageing** (*decided 2026-10-24*,
+  the spec was silent): an open wish not planned within four weeks (28 days) of being made
+  leaves the view and no longer counts toward `meals.wishes_per_week`. Its row stays as it
+  is, no job runs for it, and nothing records that it was not cooked; the child simply wishes
+  again. Four weeks is a constant, not a setting, until a family asks for another.
+- **Grown-ups wishing.** With `meals.wishes` *everyone*, the tray offers the grown-up at the
+  planner "Selbst wünschen" (at the limit "Meinen Wunsch ändern"), the same picker. The server
+  decides who may wish; the app only offers it. The words *abgelehnt*, *rejected* and their
   equivalents do not exist in this feature. A guardian may remove a wish (audited); the child's
   card simply invites a new one. Why a wish did not happen is a conversation between people.
 - **Data:**
@@ -241,13 +256,24 @@ A look back on Sunday at what *we* did.
   - On the **wall**, a tile in the board header that opens a full-screen story as a
     tap-through detail. It returns to the board after `device.idle_revert_seconds`, like every
     detail. It never rotates in by itself, because the board must show the week (P6).
-- **The story** is five cards that slide in one after another ([26](26-colour-and-ambience.md#celebrations)):
+- **The story** is five cards that slide in one after another ([26](26-colour-and-ambience.md#celebrations)).
+  *Built as a tap-through story:* one card fills the page, a tap on the right or a swipe or
+  the arrow key goes on, the left third goes back, a progress bar of segments shows where one
+  is, a close button and Escape close it, and going on from the last card closes it (on the
+  wall it returns to the week). A card with nothing to say is left out. Screen readers hear
+  "Karte 2 von 4"; under reduced motion a card replaces the one before without sliding. The
+  wall's tile opens the same story at kiosk sizes with 56 px targets. Nothing advances by
+  itself.
   1. **"Das haben wir zusammen geschafft"**: the family's chores done this week as one number,
      the family's. There is no per-member split.
   2. **"Jede und jeder hatte einen Moment"**: exactly **one highlight per active member**, in
      board order. It is picked by priority: a badge earned, a streak reaching a multiple of
      7, a reward redeemed, a wish meal eaten, all of their chores done on some day, a
-     tradition or key event they attended. The fallback is a plain fact of their week that is
+     tradition or key event they attended (*built in the app:* recurring events are expanded
+     only in the Edge Functions, so `api.week_review` cannot see them; the story reads the
+     week's occurrences anyway, and `withEventHighlights` puts a tradition or key event the
+     member attended, begun by today and not cancelled, in place of a plain fact: cooked,
+     helped or "here"; a tradition without attendees is the whole family's). The fallback is a plain fact of their week that is
      always true and never a judgement ("Sarah war drei Tage unterwegs ✈️", "Jack hatte
      fünf Schultage 🎒"). Everyone gets one line; nobody gets two; nobody's line is a number
      compared with another's.
@@ -270,6 +296,7 @@ A look back on Sunday at what *we* did.
 | `event.countdown`, `event.icon_key`, `event.tradition` | Columns; event create and update gain them |
 | `tradition_meal` | Table, written with the tradition's event |
 | `meal_wish`, `meal_plan_entry.wished_by_profile_id` | Table and column; `api.meal_wish_*` |
+| `recipe.icon_key`, `meal_plan_entry.icon_key` (generated); `api.meal_wishes` gains `wished_on`, `earlier_week` | Columns at the end, additive (`20261025130000`) |
 | `table_question` | Table; `api.table_question_add` and `_remove` |
 | The board's events gain `tradition` and `icon_key`, its meals `wished_by`, each only when set | Read model, additive |
 | `api.week_review` | New read function |
