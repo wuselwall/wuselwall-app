@@ -205,7 +205,14 @@ void main() {
     await _pickEmma(tester);
 
     expect(find.byKey(const ValueKey('kid-picker')), findsNothing);
-    expect(find.text('Hallo, Emma!'), findsOneWidget);
+    // Wusel greets her by name; the words vary with the time of day (specs/25).
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey('kid-greeting')),
+        matching: find.textContaining('Emma'),
+      ),
+      findsOneWidget,
+    );
     expect(find.text('Tisch decken'), findsOneWidget);
     expect(find.text('Zimmer aufräumen'), findsNothing);
     await unmountApp(tester, container);
@@ -222,7 +229,12 @@ void main() {
     await _pickEmma(tester);
 
     final gear = tester.getRect(find.byTooltip('Einstellungen'));
-    final greeting = tester.getRect(find.textContaining('Hallo, Emma!'));
+    final greeting = tester.getRect(
+      find.descendant(
+        of: find.byKey(const ValueKey('kid-greeting')),
+        matching: find.textContaining('Emma'),
+      ),
+    );
     expect(gear.bottom, lessThanOrEqualTo(greeting.top));
     expect(gear.overlaps(greeting), isFalse);
     expect(

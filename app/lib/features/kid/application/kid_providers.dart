@@ -52,3 +52,22 @@ final kidBadgesProvider = FutureProvider.autoDispose
       return (await ref.watch(kidBadgesRepositoryProvider).badges(profileId))
           .unwrap();
     });
+
+/// The child's badge earned in the last two days, newest first; null for none. A badge
+/// usually arrives with the nightly job, so "new" lasts long enough to be seen the next
+/// day (specs/25: Wusel is proud of it).
+final kidNewBadgeProvider = Provider.autoDispose.family<KidBadge?, String>((
+  ref,
+  profileId,
+) {
+  final now = ref.watch(
+    nowProvider.select((n) => DateTime(n.year, n.month, n.day)),
+  );
+  final since = DateTime(now.year, now.month, now.day - 1);
+  final fresh = [
+    for (final b
+        in ref.watch(kidBadgesProvider(profileId)).value ?? const <KidBadge>[])
+      if (b.earned && b.awardedAt != null && !b.awardedAt!.isBefore(since)) b,
+  ]..sort((a, b) => b.awardedAt!.compareTo(a.awardedAt!));
+  return fresh.firstOrNull;
+});

@@ -11,6 +11,7 @@ import 'package:wuselwall/core/ui/empty_view.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 import 'package:wuselwall/features/home/application/home_tab.dart';
 import 'package:wuselwall/features/meals/domain/meal_models.dart';
+import 'package:wuselwall/features/rituals/ui/ritual_cards.dart';
 import 'package:wuselwall/features/school/ui/proposal_cards.dart';
 import 'package:wuselwall/features/tasks/application/task_actions.dart';
 import 'package:wuselwall/features/tasks/domain/tasks_models.dart';
@@ -52,6 +53,7 @@ class TodayPage extends ConsumerWidget {
                 const NoticeCards(),
                 const ProposalCards(),
                 const GettingStartedCard(),
+                const RitualCards(),
                 if (!empty)
                   AsyncValueView<TodayAgenda>(
                     value: agenda,

@@ -11,6 +11,8 @@
 //             lists them.
 //   tasks     the task and reward icons, stored with the tasks; the tasks UI lists them.
 //   extras    a few pictures shown next to text.
+//   events    the icons of events, countdowns and traditions (event.icon_key, specs/27).
+//   scenes    the modules' header illustrations (specs/26).
 //   avatars   the pictures a member can pick instead of their initial (profile.avatar_key);
 //             app/lib/features/identity/domain/avatars.dart lists them.
 // Emoji are never drawn as text: on the web Flutter would fetch an emoji font from Google
@@ -80,6 +82,25 @@ const sets = {
     fire: 'Fire/Flat/fire_flat.svg', party: 'Party popper/Flat/party_popper_flat.svg',
     gift: 'Wrapped gift/Flat/wrapped_gift_flat.svg',
   },
+  // Icons of events, countdowns and traditions (specs/27); event.icon_key.
+  events: {
+    cake: 'Birthday cake/Flat/birthday_cake_flat.svg', game_die: 'Game die/Flat/game_die_flat.svg',
+    pizza: 'Pizza/Flat/pizza_flat.svg', cinema: 'Clapper board/Flat/clapper_board_flat.svg',
+    croissant: 'Croissant/Flat/croissant_flat.svg', book: 'Books/Flat/books_flat.svg',
+    hiking: 'Hiking boot/Flat/hiking_boot_flat.svg', beach: 'Beach with umbrella/Flat/beach_with_umbrella_flat.svg',
+    plane: 'Airplane/Flat/airplane_flat.svg', zoo: 'Lion/Flat/lion_flat.svg',
+    tent: 'Camping/Flat/camping_flat.svg', football: 'Soccer ball/Flat/soccer_ball_flat.svg',
+    music: 'Musical notes/Flat/musical_notes_flat.svg', gift: 'Wrapped gift/Flat/wrapped_gift_flat.svg',
+    balloon: 'Balloon/Flat/balloon_flat.svg', backpack: 'Backpack/Flat/backpack_flat.svg',
+    swim: 'Water wave/Flat/water_wave_flat.svg', ferris: 'Ferris wheel/Flat/ferris_wheel_flat.svg',
+    house: 'House/Flat/house_flat.svg', star: 'Star/Flat/star_flat.svg',
+  },
+  // The modules' header illustrations (specs/26 "Module bands").
+  scenes: {
+    sun: 'Sun/Flat/sun_flat.svg', calendar: 'Spiral calendar/Flat/spiral_calendar_flat.svg',
+    broom: 'Broom/Flat/broom_flat.svg', pot: 'Pot of food/Flat/pot_of_food_flat.svg',
+    basket: 'Basket/Flat/basket_flat.svg', backpack: 'Backpack/Flat/backpack_flat.svg',
+  },
   avatars: {
     cat: 'Cat face/Flat/cat_face_flat.svg', dog: 'Dog face/Flat/dog_face_flat.svg',
     fox: 'Fox/Flat/fox_flat.svg', lion: 'Lion/Flat/lion_flat.svg',
@@ -122,8 +143,12 @@ async function render(svg, px) {
     .toBuffer();
 }
 
+// Sets named on the command line only (`node scripts/emoji-pictures.mjs events`), so adding a
+// set does not rewrite the others' files; all of them without arguments.
+const only = process.argv.slice(2);
 let total = 0;
 for (const [set, icons] of Object.entries(sets)) {
+  if (only.length > 0 && !only.includes(set)) continue;
   const outDir = path.join(emojiDir, set);
   const SIZES = [
     { dir: outDir, px: 48 },

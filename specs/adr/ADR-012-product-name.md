@@ -39,14 +39,15 @@ is the kitchen display that shows the household's busy week at a glance.
   colours, like magnets on the fridge or the "isst mit" dots on the board, with Tanne
   green at the centre peak and two small dots flying off to the top right. The app icon
   puts it on the paper ground (`#F7F4EE`); the night variant is on `#14171A`.
-- **Mascot: Wuselchen** (concept B). A round Tanne-green critter with four tufts of hair
+- **Mascot: Wuselchen** (concept B). *Renamed **Wusel** on 2026-10-24 and given poses, a
+  voice and appearance rules by [ADR-020](ADR-020-a-lighter-day.md) and [25](../25-wusel.md).* A round Tanne-green critter with four tufts of hair
   in the family's colours and a "w" for a mouth. It is a character, not the logo. It
   appears where the app speaks to the household: empty states, a finished chore list,
   the children's register, and the sleepy night display. It never replaces the logo on
   an icon, a splash screen or the web title.
 
 The source files are in [specs/brand/](../brand/): `wuselwall-mark[-dark].svg`,
-`wuselwall-icon[-dark].svg`, the Android adaptive layers, and `wuselchen[-dark].svg`.
+`wuselwall-icon[-dark].svg`, the Android adaptive layers, and `wusel[-dark].svg` (`wuselchen[-dark].svg` until 2026-10-24).
 `npm run brand` (`scripts/brand-assets.js`) regenerates them and the PNGs in
 `app/assets/icon/`. `dart run flutter_launcher_icons` in `app/` then rebuilds the iOS,
 Android and web icons.

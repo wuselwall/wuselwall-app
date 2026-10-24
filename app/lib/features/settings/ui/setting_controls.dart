@@ -3,9 +3,11 @@ import 'package:intl/intl.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
+import 'package:wuselwall/core/wusel/wusel.dart';
 import 'package:wuselwall/features/region/ui/region_field.dart';
 import 'package:wuselwall/features/settings/domain/household_setting.dart';
 import 'package:wuselwall/features/settings/ui/setting_labels.dart';
+import 'package:wuselwall/features/wusel/ui/wusel_outfit_picker.dart';
 
 /// One setting: title, the chip for default or customised, the explanation, the control
 /// for its type, and reset when it differs from the default. Writes go to [onChanged]
@@ -90,6 +92,13 @@ class _SettingControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final value = entry.value;
+    // Wusel's outfit is chosen by looking at it (specs/25 "Outfits").
+    if (entry.key == 'member.wusel_outfit') {
+      return WuselOutfitPicker(
+        selected: WuselOutfit.parse(value),
+        onChanged: (o) => onChanged(o.name),
+      );
+    }
     return switch (entry.type) {
       SettingType.boolean => Switch(value: value == true, onChanged: onChanged),
       SettingType.integer => _NullableSwitch(
@@ -114,9 +123,15 @@ class _SettingControl extends StatelessWidget {
         entry: entry,
         onChanged: onChanged,
       ),
-      SettingType.weekdayTime => _WeekdayTime(
-        value: value! as Map<String, dynamic>,
+      SettingType.weekdayTime => _NullableSwitch(
+        entry: entry,
         onChanged: onChanged,
+        child: value == null
+            ? const SizedBox.shrink()
+            : _WeekdayTime(
+                value: value as Map<String, dynamic>,
+                onChanged: onChanged,
+              ),
       ),
       SettingType.timeRange => _TimeRange(
         value: value! as Map<String, dynamic>,

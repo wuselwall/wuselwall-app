@@ -26,10 +26,11 @@ enum UiRegister {
     kiosk => 24,
   };
 
-  /// Corner radius of controls and cards (specs/17, "Shape, depth and motion").
+  /// Corner radius of controls and cards (specs/17, "Shape, depth and motion"; the
+  /// kid register's 22 is the sticker skin of specs/26).
   double get radius => switch (this) {
     adult => 10,
-    kid => 18,
+    kid => 22,
     kiosk => 14,
   };
 

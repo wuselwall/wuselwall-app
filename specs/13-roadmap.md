@@ -51,6 +51,11 @@ and app-demo screenshot exports in all four languages and both themes. The app a
 the localized invitation/pairing routes. Family guides now cover DE/EN/FR/ES; app legal links stay
 on the existing English pages until website publication. Merge and deployment are separate gates.
 
+A lighter day ([ADR-020](adr/ADR-020-a-lighter-day.md), 2026-10-24) is built on its branch:
+Wusel, the colour layers and ambience, celebrations, birthdays and the five rituals of
+[25](25-wusel.md)–[27](27-family-rituals.md), with the exceptions its amendment lists. The
+two-week verdicts of M1.6's "Done when" still need the pilot household's use.
+
 ## A note on the "all four modules at once" decision
 
 You chose to build all four modules in the first release rather than starting with one.
@@ -252,7 +257,10 @@ finished · **the journey gaps** of [16, step 10](16-setup-plan.md#step-10--jour
 (added 2026-10-16): members, the family and devices editable; lists and categories
 editable; servers without mail; pending approvals on Today; the wall's offline start; the
 account-deletion page; the release checklist; the M0.1 paths retired; a navigation rail on
-wide screens.
+wide screens · **a lighter day** of [16, step 11](16-setup-plan.md#step-11--a-lighter-day-m15)
+(added 2026-10-24, [ADR-020](adr/ADR-020-a-lighter-day.md)): Wusel ([25](25-wusel.md)), colour,
+ambience and celebration ([26](26-colour-and-ambience.md)), birthdays and the five rituals
+([27](27-family-rituals.md)).
 
 What needs the real household and its hardware — the mounted display, the feed in Outlook,
 the timed journeys — is M1.6.
@@ -289,7 +297,10 @@ remains the last resort only for an adult who has lost both their mailbox and ev
 linked provider.
 
 **Done when:** every member of the household uses it daily for two weeks without asking you to fix
-anything.
+anything, and each part of step 11 has a keep, tone-down or remove verdict against the
+criteria in its spec ([25](25-wusel.md#how-the-trial-judges-wusel),
+[26](26-colour-and-ambience.md#how-the-trial-judges-the-colour),
+[27](27-family-rituals.md#how-the-trial-judges-the-rituals)).
 
 ---
 

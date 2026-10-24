@@ -54,6 +54,11 @@ const _basicKeys = {
   'member.completion_sound',
   'notify.morning_summary',
   'notify.event_reminder',
+  // A lighter day (specs/21): switching Wusel off must be easy to find.
+  'member.wusel',
+  'rituals.table_question',
+  'meals.wishes',
+  'rituals.week_review',
 };
 
 class _SectionSpec {
@@ -107,11 +112,37 @@ class _SettingsList extends ConsumerWidget {
         'board.rollover',
         'board.day_parts',
       ]),
+      _SectionSpec(l10n.settingsSectionRituals, const [
+        'rituals.table_question',
+        'rituals.table_question.lunch',
+        'rituals.table_question.dinner',
+        'rituals.table_question_deck',
+        'rituals.week_review',
+        'meals.wishes',
+        'meals.wishes_per_week',
+        'rituals.countdown_days',
+        'rituals.countdown_return',
+      ]),
+      _SectionSpec(l10n.settingsSectionOccasions, const [
+        'ambience.season',
+        'ambience.birthdays',
+        'ambience.ferien',
+        'ambience.advent',
+        'ambience.easter_western',
+        'ambience.easter_orthodox',
+        'ambience.new_year',
+      ]),
       _SectionSpec(l10n.settingsSectionDevice, const [
         'device.night_hours',
         'device.idle_revert_seconds',
+        'device.wusel',
+        'device.sounds',
+        'device.sky',
+        'device.pixel_shift',
       ]),
       _SectionSpec(l10n.settingsSectionMine, const [
+        'member.wusel',
+        'member.wusel_outfit',
         'member.completion_sound',
         'calendar.tentative_nudge',
         'notify.morning_summary',

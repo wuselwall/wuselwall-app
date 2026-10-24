@@ -4,6 +4,8 @@
 
 La vista infantil es más grande y sencilla. Cada niño toca su nombre y añade o marca productos. Las tarjetas permiten participar sin saber escribir. Los niños no administran miembros ni dispositivos.
 
+En **Mi día**, [Wusel](/es/guide/wusel) saluda al niño. Debajo están sus tareas, **Lo que me hace ilusión**, el colegio, la comida, la tarjeta **Tu comida favorita** y las citas; durante la comida, la [pregunta en la mesa](/es/guide/rituals#table-question), y el domingo por la tarde **Nuestra semana** (ver [Rituales](/es/guide/rituals)).
+
 <Shot name="kid-shopping" alt="La compra en la vista infantil" wide />
 
 ## La pantalla de cocina {#wall-display-in-the-kitchen}
@@ -12,14 +14,14 @@ El **panel semanal** se lee a distancia, con letra grande y sin necesidad de tec
 
 <Shot name="wall-board" alt="Los siete días del panel semanal" wide />
 
-Arriba aparecen hora, fecha, número de semana y próxima cita del día con cuenta atrás. Las columnas van de lunes a domingo; hoy está enmarcado y los días pasados son más discretos.
+Arriba aparecen hora, fecha, número de semana y próxima cita del día con cuenta atrás; durante la comida, en su lugar, la [pregunta en la mesa](/es/guide/rituals#table-question). [Wusel](/es/guide/wusel) está a la derecha, y detrás de la cabecera un cielo muestra la hora del día. Las columnas van de lunes a domingo; hoy está enmarcado y los días pasados son más discretos.
 
 ### Zonas {#one-column-per-day}
 
 - **Quién está dónde**: una fila por persona. Para niños, horas escolares, deporte, natación y fin del cuidado. Para adultos, lugar habitual en tono tenue y excepciones en bandas de color. Un viaje de varios días forma una banda continua. El reloj con una hora indica reuniones hasta entonces, sin detalles. Los festivos llevan nombre y los niños sin colegio aparecen libres. **Tenue = habitual; destacado = distinto.**
-- **Citas**: mañana, tarde y noche. Puntos para personas; línea discontinua y «?» para incertidumbre; **+2** para más eventos. La opción de todos los eventos revela también los no marcados para la pared y se desactiva tras un tiempo sin tocar.
-- **Comida caliente**: plato, sol para mediodía o luna para la cena, quién cocina y puntos llenos o vacíos para quién come.
-- **Pie**: tareas abiertas del día y número de productos. Toca las tareas para abrir el tablero familiar.
+- **Citas**: mañana, tarde y noche. Puntos para personas; línea discontinua y «?» para incertidumbre; **+2** para más eventos. Una [tradición familiar](/es/guide/rituals#traditions) se muestra siempre, con una cinta amarillo limón y su imagen. La opción de todos los eventos revela también los no marcados para la pared y se desactiva tras un tiempo sin tocar.
+- **Comida caliente**: plato, sol para mediodía o luna para la cena, quién cocina y puntos llenos o vacíos para quién come. Una estrella marca una [comida deseada](/es/guide/rituals#meal-wishes).
+- **Pie**: tareas abiertas del día y número de productos. Toca las tareas para abrir el tablero familiar, donde Wusel lo celebra en lo alto de la columna de quien lo ha hecho todo. En medio, las próximas [cuentas atrás](/es/guide/rituals#countdowns), como «Cumpleaños de Olivia · 3 noches más», tantas como quepan, y el domingo por la tarde la tarjeta **Nuestra semana**.
 
 ### Abrir detalles {#tap-for-details}
 
@@ -41,7 +43,7 @@ Abre la compra desde el pie y toca tu nombre. La pared añade solo a la **lista 
 
 ### Noche y desconexión {#night-and-no-connection}
 
-Desde las 21:00 aparece el tema nocturno. Sin conexión se conserva el último plan y se indica cuándo se actualizó. Mientras todo funciona, esa información queda discreta.
+Desde las 21:00 aparece el tema nocturno y Wusel duerme. La pared solo suena si activáis los sonidos, y nunca de noche. Para que nada se queme, la imagen se mueve hasta 2 píxeles cada 10 minutos (ver [Wusel y los colores](/es/guide/wusel#burn-in)). Sin conexión se conserva el último plan, se indica cuándo se actualizó y Wusel piensa. Mientras todo funciona, esa información queda discreta.
 
 La vista infantil tiene las pestañas **Mi día**, **Horario escolar**, **Puntos**, **Compra** y **Familia**.
 

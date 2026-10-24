@@ -17,7 +17,7 @@ Die Erwachsenen-Ansicht hat diese Bereiche:
 
 ## Heute und die ersten Schritte
 
-**Heute** ist die erste Seite der Erwachsenen. Sie zeigt die Termine des Tages, deine Aufgaben für heute zum Abhaken, das warme Essen und wie viele Artikel auf der Einkaufsliste noch offen sind. Bei Terminen steht die Uhrzeit über dem Titel, damit sie auch mit größerer Schrift gut lesbar bleibt.
+**Heute** ist die erste Seite der Erwachsenen. Sie zeigt die Termine des Tages, deine Aufgaben für heute zum Abhaken, das warme Essen und wie viele Artikel auf der Einkaufsliste noch offen sind. Dazu kommen die kleinen [Rituale](/guide/rituals): der nächste Countdown unter **Vorfreude**, die Essenswünsche der Kinder, während des Essens die Tischfrage, am Sonntagabend **Unsere Woche** und an einem Geburtstag eine Karte mit [Wusel](/guide/wusel). Bei Terminen steht die Uhrzeit über dem Titel, damit sie auch mit größerer Schrift gut lesbar bleibt.
 
 <Shot name="today" alt="Der Tab Heute mit der Karte Erste Schritte, den Terminen und dem warmen Essen" />
 

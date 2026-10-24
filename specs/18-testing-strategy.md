@@ -36,7 +36,7 @@ nothing is tested twice at an expensive layer if a cheap one already covers it.
 | 2 | Edge Functions: ICS, recurrence, projection | `deno test` | `supabase/functions/**` | Same trigger as layer 1 (`edge-functions` job, `backend-ci.yml`, candidate) | Exists as `_shared/*_test.ts`; at the base no CI step ran it. Candidate adds the CI job; no run recorded here |
 | 3 | Dart unit: domain, error mapper, `Result` | `flutter test` | `app/test/core`, `…/domain` | Every PR | Exists |
 | 4 | Widget: screens with fake repositories | `flutter test` | `app/test/features`, `app/test/app` | Every PR | Exists; the extension below (`pumpWw`, guideline checks) is not built |
-| 5 | Golden: pixels per locale × theme × form factor | `flutter test` + `matchesGoldenFile` | `app/test/golden` | Every PR | Not built (no `app/test/golden`) |
+| 5 | Golden: pixels per locale × theme × form factor | `flutter test` + `matchesGoldenFile` | `app/test/golden` | Every PR | Started 2026-10-24: Wusel's poses, outfits and tufts (shapes only, no text) |
 | 6 | Repository integration: Dart repositories against a real stack | `flutter test --tags integration` | `app/test/integration` | Tag or manual run always; pull request when backend-sensitive paths change (`backend` job of `backend-ci.yml`, candidate) | Exists |
 | 7 | On-device E2E: the real app on a simulator, emulator or phone | `integration_test` + **Patrol** | `app/integration_test/` | Nightly (Android), before a release (iOS, devices) | Not built (no directory, no Patrol) |
 | 8 | Web smoke: the release web build in a browser | **Playwright** | `e2e/web/` | Tag or by hand | Not built (no directory) |

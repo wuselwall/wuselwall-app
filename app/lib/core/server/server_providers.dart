@@ -12,6 +12,11 @@ final currentServerProvider = Provider<Uri?>(
 /// (specs/24 "Scanning"). Announced by servers from 0.3.0 on.
 const featureTimetableScan = 'timetable-scan';
 
+/// The server has a lighter day (ADR-020): birthdays, event pictures, countdowns and
+/// traditions, meal wishes, table questions and the look-back. Announced by the migration
+/// 20261024110000.
+const featureLighterDay = 'lighter-day';
+
 /// Whether the server this app runs on announces [feature] in its discovery document.
 /// A build with a compiled-in server (development, the demo) has no document and is
 /// taken to support everything.

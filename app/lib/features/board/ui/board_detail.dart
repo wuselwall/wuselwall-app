@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/motion.dart';
 
 /// Opens a tap-through detail over the week board (specs/09 "Touch behaviour"). It
 /// fills the screen but for a margin that keeps the board visible behind it, and it
@@ -20,7 +21,7 @@ Future<void> showBoardDetail(
   barrierDismissible: true,
   barrierLabel: context.l10n.boardBackToWeek,
   barrierColor: Colors.black54,
-  transitionDuration: MediaQuery.disableAnimationsOf(context)
+  transitionDuration: !motionAllowed(context)
       ? Duration.zero
       : Tokens.motionEmphasised,
   pageBuilder: (context, _, _) => _BoardDetail(

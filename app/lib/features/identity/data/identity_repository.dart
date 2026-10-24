@@ -227,8 +227,8 @@ class IdentityRepository {
     parse: (_) {},
   );
 
-  /// Name, colour, kind and avatar; a null keeps the value, the empty avatar key removes
-  /// the picture. Members may change their own name, colour and avatar; the rest is a
+  /// Name, colour, kind, avatar and birthday (`YYYY-MM-DD`); a null keeps the value, the
+  /// empty avatar key removes the picture and the empty birthday the date. Members may change their own name, colour and avatar; the rest is a
   /// guardian action (the server decides).
   Future<Result<void>> updateMember({
     required String? actor,
@@ -237,9 +237,12 @@ class IdentityRepository {
     String? colorHex,
     bool? isChild,
     String? avatarKey,
+    String? birthday,
   }) => _api.rpc(
     'member_update',
     params: {
+      // Only when given: a server before the rituals has no such parameter.
+      'p_birthday': ?birthday,
       'p_actor': actor,
       'p_profile': profileId,
       'p_display_name': name?.trim(),

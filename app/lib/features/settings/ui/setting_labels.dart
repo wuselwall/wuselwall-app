@@ -114,6 +114,94 @@ SettingText settingText(AppLocalizations l10n, String key) => switch (key) {
     title: l10n.settingNotifyRedemptionTitle,
     help: l10n.settingNotifyRedemptionHelp,
   ),
+  'member.wusel' => (
+    title: l10n.settingMemberWuselTitle,
+    help: l10n.settingMemberWuselHelp,
+  ),
+  'member.wusel_outfit' => (
+    title: l10n.settingMemberWuselOutfitTitle,
+    help: l10n.settingMemberWuselOutfitHelp,
+  ),
+  'device.wusel' => (
+    title: l10n.settingDeviceWuselTitle,
+    help: l10n.settingDeviceWuselHelp,
+  ),
+  'device.sounds' => (
+    title: l10n.settingDeviceSoundsTitle,
+    help: l10n.settingDeviceSoundsHelp,
+  ),
+  'device.sky' => (
+    title: l10n.settingDeviceSkyTitle,
+    help: l10n.settingDeviceSkyHelp,
+  ),
+  'device.pixel_shift' => (
+    title: l10n.settingDevicePixelShiftTitle,
+    help: l10n.settingDevicePixelShiftHelp,
+  ),
+  'ambience.season' => (
+    title: l10n.settingAmbienceSeasonTitle,
+    help: l10n.settingAmbienceSeasonHelp,
+  ),
+  'ambience.birthdays' => (
+    title: l10n.settingAmbienceBirthdaysTitle,
+    help: l10n.settingAmbienceBirthdaysHelp,
+  ),
+  'ambience.ferien' => (
+    title: l10n.settingAmbienceFerienTitle,
+    help: l10n.settingAmbienceFerienHelp,
+  ),
+  'ambience.advent' => (
+    title: l10n.settingAmbienceAdventTitle,
+    help: l10n.settingAmbienceAdventHelp,
+  ),
+  'ambience.easter_western' => (
+    title: l10n.settingAmbienceEasterWesternTitle,
+    help: l10n.settingAmbienceEasterWesternHelp,
+  ),
+  'ambience.easter_orthodox' => (
+    title: l10n.settingAmbienceEasterOrthodoxTitle,
+    help: l10n.settingAmbienceEasterOrthodoxHelp,
+  ),
+  'ambience.new_year' => (
+    title: l10n.settingAmbienceNewYearTitle,
+    help: l10n.settingAmbienceNewYearHelp,
+  ),
+  'rituals.countdown_days' => (
+    title: l10n.settingRitualsCountdownDaysTitle,
+    help: l10n.settingRitualsCountdownDaysHelp,
+  ),
+  'rituals.countdown_return' => (
+    title: l10n.settingRitualsCountdownReturnTitle,
+    help: l10n.settingRitualsCountdownReturnHelp,
+  ),
+  'meals.wishes' => (
+    title: l10n.settingMealsWishesTitle,
+    help: l10n.settingMealsWishesHelp,
+  ),
+  'meals.wishes_per_week' => (
+    title: l10n.settingMealsWishesPerWeekTitle,
+    help: l10n.settingMealsWishesPerWeekHelp,
+  ),
+  'rituals.table_question' => (
+    title: l10n.settingTableQuestionTitle,
+    help: l10n.settingTableQuestionHelp,
+  ),
+  'rituals.table_question.lunch' => (
+    title: l10n.settingTableQuestionLunchTitle,
+    help: l10n.settingTableQuestionLunchHelp,
+  ),
+  'rituals.table_question.dinner' => (
+    title: l10n.settingTableQuestionDinnerTitle,
+    help: l10n.settingTableQuestionDinnerHelp,
+  ),
+  'rituals.table_question_deck' => (
+    title: l10n.settingTableQuestionDeckTitle,
+    help: l10n.settingTableQuestionDeckHelp,
+  ),
+  'rituals.week_review' => (
+    title: l10n.settingWeekReviewTitle,
+    help: l10n.settingWeekReviewHelp,
+  ),
   _ => (title: key, help: ''),
 };
 
@@ -131,6 +219,17 @@ String settingValueLabel(AppLocalizations l10n, String value) =>
       'none' => l10n.settingValueNone,
       'lunch' => l10n.settingValueLunch,
       'dinner' => l10n.settingValueDinner,
+      'auto' => l10n.settingValueAuto,
+      'lively' => l10n.settingValueLively,
+      'quiet' => l10n.settingValueQuiet,
+      'on' => l10n.settingValueOn,
+      'off' => l10n.settingValueOff,
+      'children' => l10n.settingValueChildren,
+      'everyone' => l10n.settingValueEveryone,
+      'warm_meal' => l10n.settingValueWarmMeal,
+      'main_meals' => l10n.settingValueMainMeals,
+      'family' => l10n.settingValueAllAges,
+      'older' => l10n.settingValueOlderChildren,
       _ => value,
     };
 
@@ -141,5 +240,6 @@ String settingIntegerLabel(AppLocalizations l10n, String key, int n) =>
       'tasks.points.bonus_default' => l10n.settingUnitPoints(n),
       'notify.event_reminder' => l10n.settingUnitMinutes(n),
       'device.idle_revert_seconds' => l10n.settingUnitSeconds(n),
+      'rituals.countdown_days' => l10n.settingUnitDays(n),
       _ => '$n',
     };

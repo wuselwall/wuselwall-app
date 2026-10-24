@@ -71,6 +71,7 @@ class Member {
     this.sortOrder = 0,
     this.hasAccount = true,
     this.avatarKey,
+    this.birthday,
   });
 
   factory Member.fromJson(Map<String, dynamic> json) => Member(
@@ -84,6 +85,10 @@ class Member {
     // Older servers do not say; an unknown person is treated as one with an account.
     hasAccount: json['has_account'] as bool? ?? true,
     avatarKey: json['avatar_key'] as String?,
+    // Absent on servers before the rituals (specs/27 "Birthdays").
+    birthday: json['birthday'] == null
+        ? null
+        : DateTime.parse(json['birthday'] as String),
   );
 
   final String id;
@@ -104,6 +109,10 @@ class Member {
 
   /// The picture shown instead of the initial (`profile.avatar_key`); null is the initial.
   final String? avatarKey;
+
+  /// The day of birth, set by the member or a guardian; null when not given. It counts
+  /// down on the wall and puts a party hat on Wusel (specs/27).
+  final DateTime? birthday;
 
   bool get isGuardian => role == Role.guardian;
 

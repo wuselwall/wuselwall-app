@@ -19,6 +19,7 @@ import 'package:wuselwall/features/identity/ui/member_circle.dart';
 import 'package:wuselwall/features/invitations/ui/members_invitations.dart';
 import 'package:wuselwall/features/settings/application/settings_view.dart';
 import 'package:wuselwall/features/settings/ui/settings_view_switch.dart';
+import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
 
 /// One person of the family (specs/16 step 10.1): name, colour, picture, child or adult,
 /// and under Advanced the role and "no longer with us". A member changes their own name,
@@ -52,6 +53,27 @@ class _MemberPageState extends ConsumerState<MemberPage> {
     ..invalidate(membersProvider);
 
   /// Runs a write; [guardian] asks for the PIN first where the server will insist on it.
+  Future<void> _pickBirthday(Member m, bool isSelf) async {
+    final now = DateTime.now();
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: m.birthday ?? DateTime(now.year - 8, now.month, now.day),
+      firstDate: DateTime(1900),
+      lastDate: now,
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
+      initialDatePickerMode: DatePickerMode.year,
+    );
+    if (picked == null || !mounted) return;
+    final iso =
+        '${picked.year.toString().padLeft(4, '0')}-'
+        '${picked.month.toString().padLeft(2, '0')}-'
+        '${picked.day.toString().padLeft(2, '0')}';
+    await _run(
+      () => _repo.updateMember(actor: _actor, profileId: m.id, birthday: iso),
+      guardian: !isSelf,
+    );
+  }
+
   Future<bool> _run(
     Future<Result<void>> Function() action, {
     required bool guardian,
@@ -226,6 +248,48 @@ class _MemberPageState extends ConsumerState<MemberPage> {
               ),
           ],
         ),
+        // The birthday counts down on the wall and dresses Wusel up (specs/27); only on a
+        // server that knows it.
+        if (ref.watch(lighterDaySupportedProvider)) ...[
+          const SizedBox(height: Tokens.space4),
+          Text(l10n.memberBirthday, style: theme.textTheme.labelLarge),
+          const SizedBox(height: Tokens.space1),
+          Text(l10n.memberBirthdayHelp, style: theme.textTheme.bodySmall),
+          const SizedBox(height: Tokens.space2),
+          Row(
+            children: [
+              OutlinedButton.icon(
+                key: const ValueKey('member-birthday'),
+                icon: const Icon(Icons.cake_outlined),
+                label: Text(
+                  m.birthday == null
+                      ? l10n.memberBirthdayPick
+                      : MaterialLocalizations.of(context)
+                            .formatMediumDate(m.birthday!),
+                ),
+                onPressed: !canEditBasics || _busy
+                    ? null
+                    : () => _pickBirthday(m, isSelf),
+              ),
+              if (m.birthday != null)
+                IconButton(
+                  key: const ValueKey('member-birthday-clear'),
+                  tooltip: l10n.memberBirthdayClear,
+                  icon: const Icon(Icons.close),
+                  onPressed: !canEditBasics || _busy
+                      ? null
+                      : () => _run(
+                          () => _repo.updateMember(
+                            actor: _actor,
+                            profileId: m.id,
+                            birthday: '',
+                          ),
+                          guardian: !isSelf,
+                        ),
+                ),
+            ],
+          ),
+        ],
         const SizedBox(height: Tokens.space6),
         // Child or adult: starter chores, the kid register and the timetable follow it.
         Text(l10n.memberKind, style: theme.textTheme.labelLarge),

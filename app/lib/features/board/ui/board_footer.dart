@@ -10,6 +10,8 @@ import 'package:wuselwall/features/board/ui/board_grid.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
 import 'package:wuselwall/features/board/ui/details/task_board_detail.dart';
 import 'package:wuselwall/features/identity/ui/acting_profile_bar.dart';
+import 'package:wuselwall/features/rituals/ui/countdown_widgets.dart';
+import 'package:wuselwall/features/rituals/ui/week_review_widgets.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_page.dart';
 
 /// The bottom line: open tasks per member, the night indicator, and the shopping count.
@@ -65,6 +67,11 @@ class BoardFooter extends StatelessWidget {
                   child: Center(child: _OpenTasks(board: board)),
                 ),
               ),
+              // Sunday's look-back, while it is open (specs/27).
+              const BoardWeekReviewTile(),
+              // Vorfreude: the nearest countdowns (specs/27), as many as fit.
+              const Expanded(flex: 2, child: Center(child: BoardCountdowns())),
+              const SizedBox(width: 16),
               if (night) ...[
                 Icon(Icons.nightlight_round, size: 28, color: ww.ink3),
                 const SizedBox(width: 8),

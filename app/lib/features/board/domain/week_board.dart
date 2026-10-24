@@ -459,6 +459,8 @@ class BoardEvent {
     this.ends,
     this.tentative = false,
     this.isKey = false,
+    this.tradition = false,
+    this.iconKey,
   });
 
   factory BoardEvent.fromJson(Map<String, dynamic> json) => BoardEvent(
@@ -470,7 +472,16 @@ class BoardEvent {
     attendeeIds: ((json['attendee_ids'] as List?) ?? const []).cast<String>(),
     tentative: json['tentative'] as bool? ?? false,
     isKey: json['key'] as bool? ?? false,
+    // Only sent when set (specs/27).
+    tradition: json['tradition'] as bool? ?? false,
+    iconKey: json['icon_key'] as String?,
   );
+
+  /// One of the family's traditions: drawn with a ribbon (specs/27).
+  final bool tradition;
+
+  /// The event's content icon, shown before its title.
+  final String? iconKey;
 
   final String id;
   final String title;
@@ -644,6 +655,7 @@ class BoardMeal {
     this.title,
     this.cookId,
     this.guests = 0,
+    this.wishedBy,
   });
 
   factory BoardMeal.fromJson(Map<String, dynamic> json) => BoardMeal(
@@ -653,6 +665,8 @@ class BoardMeal {
     cookId: json['cook_id'] as String?,
     eating: ((json['eating'] as List?) ?? const []).cast<String>().toSet(),
     guests: json['guests'] as int? ?? 0,
+    // Only sent when the meal is someone's wish (specs/27).
+    wishedBy: json['wished_by'] as String?,
   );
 
   final MealSlot slot;
@@ -665,6 +679,9 @@ class BoardMeal {
   /// Members eating (filled dot); every other member gets a hollow dot.
   final Set<String> eating;
   final int guests;
+
+  /// The member whose wish this meal is; null for none.
+  final String? wishedBy;
 
   bool get isPlanned => title != null;
 }

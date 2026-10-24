@@ -24,6 +24,11 @@ class EventDraft {
     this.key = false,
     this.recurrence = const Recurrence(),
     this.exdates = const [],
+    this.iconKey,
+    this.countdown = false,
+    this.tradition = false,
+    this.traditionMeal = '',
+    this.traditionMealSlot = 'dinner',
   }) : duration = _positive(end.difference(start)) ?? const Duration(hours: 1);
 
   /// A new event on [day] (local), starting at [startHour] and lasting an hour.
@@ -65,6 +70,12 @@ class EventDraft {
         rdates: event.rdates,
       ),
       exdates: event.exdates,
+      iconKey: event.iconKey,
+      countdown: event.countdown,
+      tradition: event.tradition,
+      traditionMeal:
+          event.traditionMeal?.freeText ?? event.traditionMeal?.title ?? '',
+      traditionMealSlot: event.traditionMeal?.slot ?? 'dinner',
     );
   }
 
@@ -96,7 +107,21 @@ class EventDraft {
   bool key;
   Recurrence recurrence;
 
-  bool effectiveKey(bool defaultKey) => keyTouched ? key : defaultKey;
+  /// A content icon (specs/27); null for none.
+  String? iconKey;
+
+  /// "Darauf freuen wir uns".
+  bool countdown;
+
+  /// A family tradition: always on the wall, so the key switch follows it.
+  bool tradition;
+
+  /// A tradition's meal in a few words ("Pizza"); empty for none.
+  String traditionMeal;
+  String traditionMealSlot;
+
+  bool effectiveKey(bool defaultKey) =>
+      tradition || (keyTouched ? key : defaultKey);
 
   /// Moves the start; a timed event keeps its length, an all-day end never sits
   /// before its start.
@@ -185,6 +210,15 @@ class EventDraft {
       rdates: recurrence.rdatesFor(start),
       exdates: exdates,
       attendeeIds: attendees,
+      iconKey: kind == EventKind.presence ? null : iconKey,
+      countdown: kind != EventKind.presence && countdown,
+      tradition: kind != EventKind.presence && tradition,
+      traditionMeal: tradition && traditionMeal.trim().isNotEmpty
+          ? TraditionMeal(
+              slot: traditionMealSlot,
+              freeText: traditionMeal.trim(),
+            )
+          : null,
     );
   }
 

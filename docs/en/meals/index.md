@@ -12,6 +12,18 @@ The week shows each day with **Breakfast**, **Lunch**, **Dinner** and **Snack**.
 - You also set the **servings**, who **cooks**, a **time** and **guests**.
 - To move a meal, long-press it and drop it on another day.
 
+## Wishes {#wishes}
+
+Once a week children wish for a meal on **My day** on their tablet (see [Meal wishes](/en/guide/rituals#meal-wishes)). Open wishes are at the top of the meal plan under **Wishes**, for example "Jack: Pancakes", and as a card on **Today**.
+
+- Tap a wish, pick a day and a meal, and it is planned. A recipe wish fills the shopping list like any recipe.
+- A planned wish carries a star and "Jack's wish" in the plan and on the wall.
+- The **×** removes a wish (**Remove the wish**). Guardians can do that, and so can whoever made the wish.
+
+A wish is never turned down; whatever isn't planned simply waits. Who may wish and how many wishes may be open is set under [Household settings](/en/settings/household#rituals).
+
+<Shot name="meals-wishes" alt="Meal plan on a phone with the wish Jack: Pancakes above the week" />
+
 ## Suggestions
 
 Not sure what to have? Leave the meal's name empty. WuselWall then shows two rows:
@@ -48,6 +60,6 @@ When you plan a meal, WuselWall suggests matching recipes (see [Suggestions](#su
 
 ## On the kitchen wall
 
-A tap on the meal area shows the week's meals. Tap a dot afterwards to change who is eating.
+A tap on the meal area shows the week's meals. A star marks a meal wish. Tap a dot afterwards to change who is eating.
 
 The wall shows one warm meal per day. Which meal that is, and how school days and free days count, is set under [Household settings](/en/settings/household).

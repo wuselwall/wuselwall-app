@@ -15,7 +15,7 @@ WuselWall organise la vie de famille : **calendrier**, **emploi du temps**, **t�
 
 ## Aujourd’hui et les premiers pas {#today-and-getting-started}
 
-**Aujourd’hui** est la première page des adultes. Elle affiche les rendez-vous, les tâches du jour à cocher, le repas chaud et le nombre d’articles restant à acheter. L’heure apparaît au-dessus du titre du rendez-vous pour rester lisible avec des caractères plus grands.
+**Aujourd’hui** est la première page des adultes. Elle affiche les rendez-vous, les tâches du jour à cocher, le repas chaud et le nombre d’articles restant à acheter. Les petits [rituels](/fr/guide/rituals) s’y ajoutent : le prochain compte à rebours sous **On a hâte**, les repas souhaités des enfants, la question à table pendant le repas, **Notre semaine** le dimanche soir et, le jour d’un anniversaire, une carte avec [Wusel](/fr/guide/wusel). L’heure apparaît au-dessus du titre du rendez-vous pour rester lisible avec des caractères plus grands.
 
 <Shot name="today" alt="L’onglet Aujourd’hui, les premiers pas, les rendez-vous et le repas chaud" />
 

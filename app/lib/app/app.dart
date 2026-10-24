@@ -12,10 +12,12 @@ import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/l10n/app_language.dart';
 import 'package:wuselwall/core/l10n/app_locale.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/empty_view.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/reminders/application/reminder_providers.dart';
+import 'package:wuselwall/features/wusel/ui/empty_wusel.dart';
 
 export 'package:wuselwall/core/l10n/app_locale.dart' show supportedLocales;
 
@@ -49,7 +51,11 @@ class WuselWallApp extends ConsumerWidget {
       themeMode: ref.watch(appearanceProvider).value ?? ThemeMode.system,
       builder: (context, child) {
         final app = LinkHost(
-          child: _ReminderHost(child: _MemberAccent(child: child!)),
+          child: _ReminderHost(
+            child: _MemberAccent(
+              child: EmptyIllustration(builder: _emptyWusel, child: child!),
+            ),
+          ),
         );
         final banner = ref.watch(appBannerProvider);
         if (banner == null) return app;
@@ -69,6 +75,8 @@ class WuselWallApp extends ConsumerWidget {
     );
   }
 }
+
+Widget _emptyWusel(BuildContext context) => const EmptyWusel();
 
 /// On shared and kiosk devices, the acting member's colour becomes the accent of the
 /// whole interface (specs/08). Personal devices keep the brand accent.

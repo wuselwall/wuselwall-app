@@ -85,6 +85,9 @@ specifications you hand to a coding session, one at a time.
 | 13 | [Roadmap](specs/13-roadmap.md) | Milestones, per-module v1 scope cuts, rough effort |
 | 14 | [Open Questions](specs/14-open-questions.md) | Decisions deliberately deferred, with the deadline for each |
 | 23 | [Roadmap after the Alpha](specs/23-roadmap-after-alpha.md) | What follows M1.6, in four phases, each item checked against the principles; and what is deliberately not on it |
+| 25 | [Wusel](specs/25-wusel.md) | The family's companion: who Wusel is, the drawing, seven poses, outfits, the voice rules, where it appears and never appears |
+| 26 | [Colour, ambience, celebration](specs/26-colour-and-ambience.md) | Direction A+: module bands, decoration, the wall's day phases and occasions, celebrations, springs, sound and haptics |
+| 27 | [Family rituals](specs/27-family-rituals.md) | Tischfrage, Wochenrückblick, traditions, Vorfreude and Wunschessen, with birthdays, and how the trial judges each |
 | 24 | [School setup without typing](specs/24-school-import.md) | Fewer required facts, the timetable payload and preview, proposals from assistants, and the photo scan on the family's own server |
 | 16 | [Setup Plan](specs/16-setup-plan.md) | **The build order for M0**: tools and accounts, repository, local Supabase, app shell, identity, CI, mobile releases, deployment — with the workflows and the secrets inventory |
 | 19 | [Security & Architecture Review](specs/19-security-and-architecture-review.md) | Findings of the 2026-10-11 review, what is fixed and what the operator still has to do |
@@ -94,9 +97,10 @@ specifications you hand to a coding session, one at a time.
 | — | [Market Research](specs/market-research.md) | Family planners with meal planning in the German-speaking market: feature matrix, pros and cons, open-source and self-hosted options, implications for ADR-002 |
 | — | [Design system mockup](specs/mockups/design-system.html) | The three directions on the same Monday, switchable between light, dark and night, with simulated colour-blindness |
 | — | [Logo proposal](specs/mockups/logo.html) | Logo concepts (Familien-W, Wuselchen, Wuselpunkte) next to the ADR-012 icon, as app icons at real sizes, in dark and themed variants |
+| — | [Wusel and colour mockup](specs/mockups/wusel-and-colour.html) | Wusel's poses and outfits, the module bands, the decoration, the wall's day phases and the kid sticker cards, in light and dark |
 | — | [Kiosk mockup](specs/mockups/kiosk-week-board.html) | The kitchen display's week board, interactive and in German — the asset for agreeing the layout with the family before it is built |
 | — | [Shopping capture mockup](specs/mockups/shopping-quick-add.html) | The three-second capture path: a tile picker over the learned catalogue, with the offline queue made visible |
-| — | [Decision Records](specs/adr/README.md) | Eleven ADRs recording the choices made and the alternatives rejected |
+| — | [Decision Records](specs/adr/README.md) | Twenty ADRs recording the choices made and the alternatives rejected |
 
 ## The decisions that shape everything else
 

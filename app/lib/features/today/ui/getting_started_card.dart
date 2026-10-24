@@ -9,6 +9,7 @@ import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
+import 'package:wuselwall/core/wusel/wusel.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/domain/pairing.dart';
 import 'package:wuselwall/features/identity/ui/guardian_gate.dart';
@@ -18,6 +19,7 @@ import 'package:wuselwall/features/reminders/ui/reminder_start_row.dart';
 import 'package:wuselwall/features/today/application/today_providers.dart';
 import 'package:wuselwall/features/today/data/getting_started_repository.dart';
 import 'package:wuselwall/features/today/domain/getting_started.dart';
+import 'package:wuselwall/features/wusel/ui/family_wusel.dart';
 
 /// At most this many open items are listed; the progress counts all of them.
 const _maxOpenItems = 4;
@@ -33,8 +35,18 @@ class GettingStartedCard extends ConsumerWidget {
         ref.watch(gettingStartedProvider).value ?? const <GettingStartedItem>[];
     // Client-side item: the phone's reminders (specs/20, "Erinnerungen einschalten").
     final reminderOpen = ref.watch(reminderCardProvider).value ?? false;
-    if (items.every((i) => i.done) && !reminderOpen) {
-      return const SizedBox.shrink();
+    final allDone = items.every((i) => i.done) && !reminderOpen;
+    // Seeing an open item and then none: the family has just finished setting up, and
+    // Wusel cheers once (specs/25). A card that loads already complete stays hidden.
+    if (!allDone && items.isNotEmpty) {
+      ref.read(_setupProgressProvider.notifier).sawOpen();
+    } else if (allDone) {
+      ref.read(_setupProgressProvider.notifier).sawDone();
+    }
+    if (allDone) {
+      return ref.watch(_setupProgressProvider) == _SetupProgress.justFinished
+          ? const _SetupDone()
+          : const SizedBox.shrink();
     }
 
     final l10n = context.l10n;
@@ -184,3 +196,64 @@ String startItemLabel(AppLocalizations l10n, StartItem item) => switch (item) {
   StartItem.subscribeFeed => l10n.todayStartSubscribeFeed,
   StartItem.school => l10n.todayStartSchool,
 };
+
+enum _SetupProgress { unknown, open, justFinished, closed }
+
+/// What this app run has seen of the getting-started card: open items, then none.
+class _SetupProgressNotifier extends Notifier<_SetupProgress> {
+  @override
+  _SetupProgress build() => _SetupProgress.unknown;
+
+  void sawOpen() {
+    if (state != _SetupProgress.open) {
+      // Changed after this frame: the card is building right now.
+      Future.microtask(() => state = _SetupProgress.open);
+    }
+  }
+
+  void sawDone() {
+    if (state == _SetupProgress.open) {
+      Future.microtask(() => state = _SetupProgress.justFinished);
+    }
+  }
+
+  void close() => state = _SetupProgress.closed;
+}
+
+final _setupProgressProvider =
+    NotifierProvider<_SetupProgressNotifier, _SetupProgress>(
+      _SetupProgressNotifier.new,
+    );
+
+/// The last item of getting started is done: Wusel cheers, quietly or not, and the card
+/// goes when it is tapped away (specs/25 "Where Wusel appears", adult).
+class _SetupDone extends ConsumerWidget {
+  const _SetupDone();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    return Card(
+      margin: const EdgeInsets.only(bottom: Tokens.space4),
+      child: Padding(
+        padding: const EdgeInsets.all(Tokens.space4),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            WuselSays(
+              line: l10n.wuselSetupDone,
+              pose: WuselPose.cheer,
+              size: 80,
+              quietAllowed: true,
+            ),
+            TextButton(
+              onPressed: () =>
+                  ref.read(_setupProgressProvider.notifier).close(),
+              child: Text(l10n.todayNoticeDismiss),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

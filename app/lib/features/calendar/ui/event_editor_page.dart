@@ -22,8 +22,10 @@ import 'package:wuselwall/features/calendar/ui/event_edit_args.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
+import 'package:wuselwall/features/rituals/ui/event_ritual_fields.dart';
 import 'package:wuselwall/features/settings/application/household_settings_providers.dart';
 import 'package:wuselwall/features/settings/domain/household_setting.dart';
+import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
 
 /// The adult event editor (specs/05, specs/15, specs/21): a new event or an existing
 /// one, loaded by id. A change to one occurrence of a series asks whether it applies to
@@ -499,11 +501,14 @@ class _EventEditorFormState extends ConsumerState<_EventEditorForm> {
             contentPadding: EdgeInsets.zero,
             title: Text(l10n.eventKeyDisplay),
             value: key,
-            onChanged: (value) => setState(() {
-              _draft
-                ..keyTouched = true
-                ..key = value;
-            }),
+            // A tradition is always on the wall (specs/27).
+            onChanged: _draft.tradition
+                ? null
+                : (value) => setState(() {
+                    _draft
+                      ..keyTouched = true
+                      ..key = value;
+                  }),
           ),
           const SizedBox(height: 16),
           RepeatSection(
@@ -513,6 +518,10 @@ class _EventEditorFormState extends ConsumerState<_EventEditorForm> {
             onChanged: (recurrence) =>
                 setState(() => _draft.recurrence = recurrence),
           ),
+          // A picture, Vorfreude and traditions (specs/27), after the repeat.
+          if (_draft.kind != EventKind.presence &&
+              ref.watch(lighterDaySupportedProvider))
+            EventRitualFields(draft: _draft, onChanged: () => setState(() {})),
           const SizedBox(height: 24),
           FilledButton(
             onPressed: _saving ? null : _save,

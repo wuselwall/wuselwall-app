@@ -5010,4 +5010,672 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get settingsVersionUnknown => 'inconnue';
+
+  @override
+  String get settingsSectionRituals => 'Rituels';
+
+  @override
+  String get settingsSectionOccasions => 'Saisons et fêtes';
+
+  @override
+  String get settingMemberWuselTitle => 'Wusel';
+
+  @override
+  String get settingMemberWuselHelp =>
+      'La présence de Wusel pour toi. Automatique : vif pour les enfants, discret pour les adultes.';
+
+  @override
+  String get settingMemberWuselOutfitTitle => 'La tenue de Wusel';
+
+  @override
+  String get settingMemberWuselOutfitHelp =>
+      'Ce que Wusel porte quand il te parle. Toutes les tenues sont là dès le début.';
+
+  @override
+  String get settingDeviceWuselTitle => 'Wusel sur cet appareil';
+
+  @override
+  String get settingDeviceWuselHelp =>
+      'La vivacité de Wusel ici quand personne n\'est choisi. Le réglage d\'une personne s\'applique quand elle est choisie.';
+
+  @override
+  String get settingDeviceSoundsTitle => 'Sons sur cet appareil';
+
+  @override
+  String get settingDeviceSoundsHelp =>
+      'Automatique : coupés sur l\'écran mural, actifs ailleurs. Jamais la nuit.';
+
+  @override
+  String get settingDeviceSkyTitle => 'Ciel dans l\'en-tête';
+
+  @override
+  String get settingDeviceSkyHelp =>
+      'L\'en-tête montre un ciel qui change avec l\'heure.';
+
+  @override
+  String get settingDevicePixelShiftTitle => 'Protéger l\'écran du marquage';
+
+  @override
+  String get settingDevicePixelShiftHelp =>
+      'Déplace tout de 2 pixels au plus toutes les 10 minutes, pour les écrans OLED toujours allumés. Automatique : actif sur l\'écran mural.';
+
+  @override
+  String get settingAmbienceSeasonTitle => 'Saisons';
+
+  @override
+  String get settingAmbienceSeasonHelp =>
+      'Fleurs, soleil, feuilles ou flocons dans le ciel.';
+
+  @override
+  String get settingAmbienceBirthdaysTitle => 'Anniversaires';
+
+  @override
+  String get settingAmbienceBirthdaysHelp =>
+      'Des fanions à la couleur de la personne et un chapeau de fête pour Wusel le jour de son anniversaire.';
+
+  @override
+  String get settingAmbienceFerienTitle => 'Vacances scolaires';
+
+  @override
+  String get settingAmbienceFerienHelp =>
+      'Un ruban le premier et le dernier jour des vacances.';
+
+  @override
+  String get settingAmbienceAdventTitle => 'Avent';
+
+  @override
+  String get settingAmbienceAdventHelp =>
+      'Des bougies dans l\'en-tête, une de plus chacun des quatre dimanches avant Noël. Automatique : selon votre région.';
+
+  @override
+  String get settingAmbienceEasterWesternTitle => 'Pâques';
+
+  @override
+  String get settingAmbienceEasterWesternHelp =>
+      'Des œufs dans les collines, deux jours avant et après le dimanche de Pâques. Automatique : selon votre région.';
+
+  @override
+  String get settingAmbienceEasterOrthodoxTitle => 'Pâques orthodoxes';
+
+  @override
+  String get settingAmbienceEasterOrthodoxHelp =>
+      'Les mêmes œufs à la date orthodoxe, calculée pour chaque année. Automatique : selon votre région.';
+
+  @override
+  String get settingAmbienceNewYearTitle => 'Nouvel An';
+
+  @override
+  String get settingAmbienceNewYearHelp =>
+      'Un petit feu d\'artifice dans le ciel de nuit les 31 décembre et 1er janvier.';
+
+  @override
+  String get settingRitualsCountdownDaysTitle => 'Le compte à rebours commence';
+
+  @override
+  String get settingRitualsCountdownDaysHelp =>
+      'Combien de jours avant un anniversaire, les vacances ou un évènement marqué le compte à rebours apparaît.';
+
+  @override
+  String get settingRitualsCountdownReturnTitle =>
+      'Compte à rebours avant un retour';
+
+  @override
+  String get settingRitualsCountdownReturnHelp =>
+      '« De retour dans 2 dodos » quand un adulte part deux nuits ou plus.';
+
+  @override
+  String get settingMealsWishesTitle => 'Repas souhaités';
+
+  @override
+  String get settingMealsWishesHelp =>
+      'Qui peut souhaiter un repas chaque semaine. L\'appli ne refuse jamais un souhait ; il attend d\'être planifié.';
+
+  @override
+  String get settingMealsWishesPerWeekTitle => 'Souhaits ouverts par personne';
+
+  @override
+  String get settingMealsWishesPerWeekHelp =>
+      'Combien de souhaits chaque personne peut avoir en attente à la fois.';
+
+  @override
+  String get settingTableQuestionTitle => 'Question à table';
+
+  @override
+  String get settingTableQuestionHelp =>
+      'Une question pour discuter, sur l\'écran mural et dans l\'appli pendant le repas. On y répond à voix haute, rien n\'est enregistré.';
+
+  @override
+  String get settingTableQuestionLunchTitle => 'Question au déjeuner';
+
+  @override
+  String get settingTableQuestionLunchHelp =>
+      'Quand la question apparaît au déjeuner.';
+
+  @override
+  String get settingTableQuestionDinnerTitle => 'Question au dîner';
+
+  @override
+  String get settingTableQuestionDinnerHelp =>
+      'Quand la question apparaît au dîner.';
+
+  @override
+  String get settingTableQuestionDeckTitle => 'Questions pour';
+
+  @override
+  String get settingTableQuestionDeckHelp =>
+      'Tous les âges convient dès 5 ans ; enfants plus grands ajoute des questions plus profondes dès 8 ans.';
+
+  @override
+  String get settingWeekReviewTitle => 'Notre semaine';
+
+  @override
+  String get settingWeekReviewHelp =>
+      'Quand le retour sur la semaine apparaît. Il reste jusqu\'au lendemain matin.';
+
+  @override
+  String get settingValueAuto => 'Automatique';
+
+  @override
+  String get settingValueLively => 'Vif';
+
+  @override
+  String get settingValueQuiet => 'Discret';
+
+  @override
+  String get settingValueOn => 'Activé';
+
+  @override
+  String get settingValueOff => 'Désactivé';
+
+  @override
+  String get settingValueChildren => 'Enfants';
+
+  @override
+  String get settingValueEveryone => 'Tout le monde';
+
+  @override
+  String get settingValueWarmMeal => 'Repas chaud';
+
+  @override
+  String get settingValueMainMeals => 'Déjeuner et dîner';
+
+  @override
+  String get settingValueAllAges => 'Tous les âges';
+
+  @override
+  String get settingValueOlderChildren => 'Aussi les plus grands';
+
+  @override
+  String settingUnitDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count jours',
+      one: '1 jour',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get wuselOutfitNone => 'Rien';
+
+  @override
+  String get wuselOutfitParty => 'Chapeau de fête';
+
+  @override
+  String get wuselOutfitCrown => 'Couronne';
+
+  @override
+  String get wuselOutfitWizard => 'Chapeau de magicien';
+
+  @override
+  String get wuselOutfitWreath => 'Couronne de fleurs';
+
+  @override
+  String get wuselOutfitSunglasses => 'Lunettes de soleil';
+
+  @override
+  String get wuselOutfitScarf => 'Écharpe';
+
+  @override
+  String get wuselOutfitHeadphones => 'Casque';
+
+  @override
+  String get wuselOutfitBow => 'Nœud';
+
+  @override
+  String wuselHelloMorning1(String name) {
+    return 'Bonjour, $name !';
+  }
+
+  @override
+  String wuselHelloMorning2(String name) {
+    return 'Coucou $name ! Une nouvelle journée.';
+  }
+
+  @override
+  String wuselHelloMorning3(String name) {
+    return 'Salut $name, ça fait plaisir de te voir.';
+  }
+
+  @override
+  String wuselHelloDay1(String name) {
+    return 'Salut $name !';
+  }
+
+  @override
+  String wuselHelloDay2(String name) {
+    return 'Te voilà, $name !';
+  }
+
+  @override
+  String wuselHelloDay3(String name) {
+    return 'Ça me fait plaisir de te voir, $name.';
+  }
+
+  @override
+  String wuselHelloEvening1(String name) {
+    return 'Bonsoir, $name !';
+  }
+
+  @override
+  String wuselHelloEvening2(String name) {
+    return 'Bonsoir $name ! Quelle journée.';
+  }
+
+  @override
+  String wuselHelloEvening3(String name) {
+    return 'Salut $name ! Bientôt l\'heure de se reposer.';
+  }
+
+  @override
+  String wuselHelloNight(String name) {
+    return 'Dors bien, $name.';
+  }
+
+  @override
+  String get wuselFactBirthdayYou => 'Joyeux anniversaire !';
+
+  @override
+  String wuselFactBirthday(String name) {
+    return 'C\'est l\'anniversaire de $name !';
+  }
+
+  @override
+  String wuselFactFirstLesson(String subject) {
+    return 'Aujourd\'hui, tu commences par $subject.';
+  }
+
+  @override
+  String get wuselAllDone1 => 'Tout est fait. Ça s\'est bien passé !';
+
+  @override
+  String get wuselAllDone2 => 'Tout est coché. Merci !';
+
+  @override
+  String get wuselAllDone3 =>
+      'Fini pour aujourd\'hui. La maison te dit merci !';
+
+  @override
+  String get wuselAllDone4 => 'Ta liste est vide. Place au jeu !';
+
+  @override
+  String get wuselRewardSent1 => 'Envoyé ! Un adulte va décider.';
+
+  @override
+  String get wuselRewardSent2 => 'Ta demande est partie.';
+
+  @override
+  String wuselBadge(String badge) {
+    return 'Un nouveau badge : $badge !';
+  }
+
+  @override
+  String get wuselWaiting => 'Un instant…';
+
+  @override
+  String get wuselOffline => 'Attends, je cherche Internet…';
+
+  @override
+  String get wuselWallMorning1 => 'Bonjour tout le monde !';
+
+  @override
+  String get wuselWallMorning2 => 'Debout, la famille !';
+
+  @override
+  String get wuselWallMorning3 => 'Une nouvelle journée pour nous tous.';
+
+  @override
+  String wuselWallMemberDone1(String name) {
+    return '$name a tout fait pour aujourd\'hui !';
+  }
+
+  @override
+  String wuselWallMemberDone2(String name) {
+    return 'Tout est coché, $name. Merci !';
+  }
+
+  @override
+  String get wuselSetupDone => 'Tout est prêt. Bienvenue chez vous !';
+
+  @override
+  String get wuselHideLine => 'Masquer ce que dit Wusel';
+
+  @override
+  String get memberBirthday => 'Anniversaire';
+
+  @override
+  String get memberBirthdayHelp =>
+      'Affiché sur l\'écran mural le jour même, avec un compte à rebours avant.';
+
+  @override
+  String get memberBirthdayPick => 'Choisir une date';
+
+  @override
+  String get memberBirthdayClear => 'Supprimer l\'anniversaire';
+
+  @override
+  String countdownBirthdayOf(String name) {
+    return 'Anniversaire de $name';
+  }
+
+  @override
+  String countdownHomecoming(String name) {
+    return '$name rentre à la maison';
+  }
+
+  @override
+  String countdownSleeps(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'encore $count dodos',
+      one: 'encore 1 dodo',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String countdownDaysLeft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'encore $count jours',
+      one: 'encore 1 jour',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String countdownInDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'dans $count jours',
+      one: 'dans 1 jour',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get countdownTomorrow => 'Demain !';
+
+  @override
+  String get countdownToday => 'Aujourd\'hui !';
+
+  @override
+  String get kidLookingForward => 'Ce qui m\'attend';
+
+  @override
+  String get todayLookingForward => 'On a hâte';
+
+  @override
+  String get eventIconNone => 'Pas d\'image';
+
+  @override
+  String get eventIconLabel => 'Image';
+
+  @override
+  String get eventCountdownTitle => 'On a hâte';
+
+  @override
+  String get eventCountdownHelp =>
+      'Compte à rebours sur l\'écran mural et la tablette des enfants.';
+
+  @override
+  String get eventTraditionTitle => 'Tradition familiale';
+
+  @override
+  String get eventTraditionHelp =>
+      'Ce que la famille fait encore et encore. Toujours sur l\'écran mural, avec un ruban.';
+
+  @override
+  String get eventTraditionMeal => 'Avec un repas';
+
+  @override
+  String get eventTraditionMealHint => 'p. ex. pizza';
+
+  @override
+  String get eventIcon_cake => 'Gâteau d\'anniversaire';
+
+  @override
+  String get eventIcon_game_die => 'Jeu';
+
+  @override
+  String get eventIcon_pizza => 'Pizza';
+
+  @override
+  String get eventIcon_cinema => 'Film';
+
+  @override
+  String get eventIcon_croissant => 'Petit-déjeuner';
+
+  @override
+  String get eventIcon_book => 'Lecture';
+
+  @override
+  String get eventIcon_hiking => 'Randonnée';
+
+  @override
+  String get eventIcon_beach => 'Vacances';
+
+  @override
+  String get eventIcon_plane => 'Voyage';
+
+  @override
+  String get eventIcon_zoo => 'Zoo';
+
+  @override
+  String get eventIcon_tent => 'Camping';
+
+  @override
+  String get eventIcon_football => 'Sport';
+
+  @override
+  String get eventIcon_music => 'Musique';
+
+  @override
+  String get eventIcon_gift => 'Cadeau';
+
+  @override
+  String get eventIcon_balloon => 'Fête';
+
+  @override
+  String get eventIcon_backpack => 'École';
+
+  @override
+  String get eventIcon_swim => 'Piscine';
+
+  @override
+  String get eventIcon_ferris => 'Fête foraine';
+
+  @override
+  String get eventIcon_house => 'Maison';
+
+  @override
+  String get eventIcon_star => 'Spécial';
+
+  @override
+  String get kidWishTitle => 'Ton repas préféré';
+
+  @override
+  String get kidWishInvite => 'Qu\'aimerais-tu manger cette semaine ?';
+
+  @override
+  String kidWishWaiting(String title) {
+    return 'Tu as choisi $title. Un adulte va trouver un jour.';
+  }
+
+  @override
+  String kidWishPlanned(String title, String day) {
+    return 'Ton souhait $title, c\'est pour le $day !';
+  }
+
+  @override
+  String get kidWishMake => 'Choisir';
+
+  @override
+  String get kidWishChange => 'Changer';
+
+  @override
+  String get kidWishSent => 'Ton souhait est parti.';
+
+  @override
+  String get wishPickerTitle => 'Qu\'aimerais-tu manger ?';
+
+  @override
+  String get wishPickerOwn => 'Autre chose';
+
+  @override
+  String get wishPickerOwnHint => 'p. ex. des crêpes';
+
+  @override
+  String get wishPickerSend => 'Je choisis ça';
+
+  @override
+  String get mealsWishesTray => 'Souhaits';
+
+  @override
+  String mealsWishChip(String name, String title) {
+    return '$name : $title';
+  }
+
+  @override
+  String get mealsWishPlan => 'Planifier';
+
+  @override
+  String get mealsWishRemove => 'Retirer le souhait';
+
+  @override
+  String mealsWishedBy(String name) {
+    return 'Souhait de $name';
+  }
+
+  @override
+  String get tableQuestionTitle => 'Question à table';
+
+  @override
+  String get tableQuestionNext => 'Autre question';
+
+  @override
+  String get tableQuestionAnswer => 'Voir la réponse';
+
+  @override
+  String tableQuestionFrom(String name) {
+    return 'Question de $name';
+  }
+
+  @override
+  String get tableQuestionsManage => 'Nos questions';
+
+  @override
+  String get tableQuestionAdd => 'Ajouter une question';
+
+  @override
+  String get tableQuestionAddHint => 'Que veux-tu demander à table ?';
+
+  @override
+  String get tableQuestionHide => 'Ne plus poser cette question';
+
+  @override
+  String get tableQuestionRemove => 'Supprimer la question';
+
+  @override
+  String get tableQuestionsHidden => 'Questions écartées';
+
+  @override
+  String get tableQuestionShowAgain => 'Reposer';
+
+  @override
+  String get weekReviewTitle => 'Notre semaine';
+
+  @override
+  String get weekReviewOpen => 'Revoir notre semaine';
+
+  @override
+  String get weekReviewTogether => 'Ce qu\'on a fait ensemble';
+
+  @override
+  String weekReviewChores(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tâches faites',
+      one: '1 tâche faite',
+      zero: 'Une semaine pour souffler',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get weekReviewMoments => 'Chacun a eu son moment';
+
+  @override
+  String get weekReviewMeals => 'Miam';
+
+  @override
+  String get weekReviewNewRecipe => 'nouveau';
+
+  @override
+  String get weekReviewTraditions => 'Nos traditions';
+
+  @override
+  String get weekReviewNext => 'La semaine prochaine, on a hâte de';
+
+  @override
+  String get weekReviewCalmAhead => 'Une semaine tranquille s\'annonce.';
+
+  @override
+  String weekHighlightBadge(String title) {
+    return 'Nouveau badge : $title';
+  }
+
+  @override
+  String weekHighlightStreak(String title) {
+    return '$title, chaque jour';
+  }
+
+  @override
+  String get weekHighlightAllDone => 'a eu une journée où tout était fait';
+
+  @override
+  String weekHighlightReward(String title) {
+    return 'Récompense : $title';
+  }
+
+  @override
+  String weekHighlightWish(String title) {
+    return 'Souhait servi : $title';
+  }
+
+  @override
+  String weekHighlightCooked(String title) {
+    return 'a cuisiné : $title';
+  }
+
+  @override
+  String get weekHighlightHelped => 'a aidé aux tâches';
+
+  @override
+  String get weekHighlightHere => 'était de la partie cette semaine';
 }

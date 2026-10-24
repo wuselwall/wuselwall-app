@@ -181,4 +181,81 @@ void main() {
       );
     });
   });
+
+  group('a lighter day (specs/26)', () {
+    test(
+      'ink and ink2 reach AA on every module band, ink3 is not used there',
+      () {
+        for (final shade in [Shade.light, Shade.dark]) {
+          final c = Palette.of(shade);
+          for (final band in ModuleBands.bands) {
+            final ground = band.of(shade);
+            final where = '${band.module.name} (${shade.name})';
+            expectAA(c.ink, ground, 'ink on $where');
+            expectAA(c.ink2, ground, 'ink2 on $where');
+          }
+        }
+      },
+    );
+
+    test(
+      'every member ink reaches AA on every band, so a chip may sit on one',
+      () {
+        for (final shade in [Shade.light, Shade.dark]) {
+          for (final band in ModuleBands.bands) {
+            for (final m in MemberPalette.swatches) {
+              expectAA(
+                m.ink(shade),
+                band.of(shade),
+                '${m.key} on ${band.module.name} (${shade.name})',
+              );
+            }
+          }
+        }
+      },
+    );
+
+    test('text on decoration reaches AA', () {
+      for (final shade in [Shade.light, Shade.dark]) {
+        for (final d in Decor.values) {
+          expectAA(
+            Decor.onDecor(shade),
+            d.of(shade),
+            'text on ${d.name} (${shade.name})',
+          );
+        }
+      }
+    });
+
+    test('ink and ink2 reach AA on every stop of the daytime skies', () {
+      for (final phase in [SkyPhase.morning, SkyPhase.day, SkyPhase.evening]) {
+        for (final stop in [phase.top, phase.bottom]) {
+          expectAA(Palette.light.ink, stop, 'ink on ${phase.name}');
+          expectAA(Palette.light.ink2, stop, 'ink2 on ${phase.name}');
+        }
+      }
+      for (final stop in [SkyPhase.night.top, SkyPhase.night.bottom]) {
+        expectAA(Palette.night.ink, stop, 'night ink on the night sky');
+        expectAA(Palette.night.ink2, stop, 'night ink2 on the night sky');
+      }
+    });
+
+    test('no band, decoration or sky is green or red', () {
+      bool greenOrRed(Color c) {
+        final hsl = HSLColor.fromColor(c);
+        final h = hsl.hue;
+        // Saturated green (done) or red (danger); pale mint paper is allowed.
+        return hsl.saturation > 0.5 &&
+            hsl.lightness < 0.6 &&
+            ((h >= 90 && h <= 160) || h < 8 || h > 352);
+      }
+
+      for (final band in ModuleBands.bands) {
+        expect(greenOrRed(band.light), isFalse, reason: band.module.name);
+      }
+      for (final d in Decor.values) {
+        expect(greenOrRed(d.light), isFalse, reason: d.name);
+      }
+    });
+  });
 }

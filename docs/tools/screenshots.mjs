@@ -64,7 +64,8 @@ const SCHOOL_IMPORT = {
 for (const [lang, labels] of Object.entries(SCHOOL_IMPORT)) Object.assign(T[lang], labels);
 
 async function open(page, scenario, route = '') {
-  await page.goto(`${base}/?scenario=${scenario}${route ? `#${route}` : ''}`);
+  // still=1: nothing moves and Wusel's words are fixed, so every run gives the same picture.
+  await page.goto(`${base}/?scenario=${scenario}&still=1${route ? `#${route}` : ''}`);
   await page.waitForSelector('flt-glass-pane', { state: 'attached', timeout: 90000 });
   await page.locator('flt-semantics-placeholder').evaluate((e) => e.click()).catch(() => {});
   await page.waitForSelector('flt-semantics', { state: 'attached', timeout: 30000 });
@@ -106,6 +107,27 @@ const scrollDown = async (page, px = 600) => {
   await page.mouse.move(vp.width / 2, vp.height * 0.6);
   await page.mouse.wheel(0, px);
   await settle(page);
+};
+// Scrolls until a heading is on screen, then brings it near the top. The semantics tree
+// keeps nodes that are scrolled away, so the test is the heading's box, not its presence.
+// The wheel turns at the left edge, where no control (a stepper, a time field) takes it,
+// and the pointer stays there, so no control shows a hover.
+const scrollToHeading = async (page, text, top = 90) => {
+  const vp = page.viewportSize();
+  const heading = page.getByText(text, { exact: true }).first();
+  const box = async () => heading.boundingBox({ timeout: 2000 }).catch(() => null);
+  const wheel = async (px) => { await page.mouse.move(4, vp.height * 0.6); await page.mouse.wheel(0, px); await settle(page); };
+  for (let i = 0; i < 60; i++) {
+    const b = await box();
+    if (b && b.y >= 0 && b.y < vp.height * 0.8) break;
+    await wheel(b && b.y < 0 ? -300 : 600);
+  }
+  // The wheel does not move the list by exactly its delta, so align in a few steps.
+  for (let i = 0; i < 10; i++) {
+    const b = await box();
+    if (!b || Math.abs(b.y - top) < 30) break;
+    await wheel(b.y - top);
+  }
 };
 // Long lists build their semantics lazily: scroll in steps until the control is in the tree.
 // `any` looks the way tapAny does (buttons, tabs and plain labels, as a substring), for a
@@ -206,7 +228,38 @@ const shots = [
   { name: 'reminders', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await press(p, t.settings); await scrollUntil(p, t.reminders, { any: true }); await tapAny(p, t.reminders, { exact: false }); } },
   // Siri and Shortcuts: the keys of the family, one in use and one not yet.
   { name: 'shortcuts', scenario: 'adult', viewport: PHONE, route: '/settings/shortcuts' },
+  // A lighter day (specs/25–27). still=1 fixes Wusel's words. The Tischfrage and the
+  // Wochenrückblick depend on the time of day, so no shot waits for them.
+  // The daughter's day on the kid tablet: Wusel's greeting, her countdowns and her meal wish.
+  { name: 'kid-today', scenario: 'kid', viewport: TABLET, steps: async (p, t) => press(p, t.daughter) },
+  // The meal plan with the children's wishes above the week.
+  { name: 'meals-wishes', scenario: 'adult', viewport: PHONE, steps: async (p, t) => tapAny(p, t.meals) },
+  // The event editor's last fields: the picture, "looking forward" and the family tradition.
+  { name: 'calendar-rituals', scenario: 'adult', viewport: PHONE, steps: async (p, t) => {
+    await tapAny(p, t.calendar); await tapAny(p, t.newEvent);
+    await scrollUntil(p, t.tradition, { any: true }); await tapAny(p, t.tradition, { exact: false });
+    await scrollDown(p, 3000); await p.mouse.move(386, 840); await settle(p);
+  } },
+  // Further down the kid's day: her meal wish card.
+  { name: 'kid-wish', scenario: 'kid', viewport: TABLET, steps: async (p, t) => { await press(p, t.daughter); await scrollToHeading(p, t.wishTitle, 360); } },
+  // Household settings, Advanced: the section "Rituale" at the top of the screen.
+  { name: 'settings-rituals', scenario: 'adult', viewport: PHONE, steps: async (p, t) => {
+    await press(p, t.settings); await tapAny(p, t.householdSettings, { exact: false }); await showAdvanced(p, t);
+    await scrollToHeading(p, t.rituals);
+  } },
+  // The same page further down, "My settings": Wusel and the outfit picker.
+  { name: 'settings-wusel', scenario: 'adult', viewport: PHONE, steps: async (p, t) => {
+    await press(p, t.settings); await tapAny(p, t.householdSettings, { exact: false }); await showAdvanced(p, t);
+    await scrollToHeading(p, t.mine);
+  } },
 ];
+const RITUALS = {
+  de: { tradition: 'Familientradition', rituals: 'Rituale', wishTitle: 'Dein Wunschessen', mine: 'Meine Einstellungen' },
+  en: { tradition: 'Family tradition', rituals: 'Rituals', wishTitle: 'Your meal wish', mine: 'My settings' },
+  fr: { tradition: 'Tradition familiale', rituals: 'Rituels', wishTitle: 'Ton repas préféré', mine: 'Mes paramètres' },
+  es: { tradition: 'Tradición familiar', rituals: 'Rituales', wishTitle: 'Tu comida favorita', mine: 'Mis ajustes' },
+};
+for (const [lang, labels] of Object.entries(RITUALS)) Object.assign(T[lang], labels);
 
 const only = process.argv.slice(2);
 const SHOT_TIMEOUT = 120_000;

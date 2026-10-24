@@ -78,6 +78,8 @@ abstract final class DemoData {
       active: true,
       isChild: true,
       hasAccount: false,
+      // Three days away, so the demo counts down to it (specs/27 "Vorfreude").
+      birthday: _inDays(3, yearsAgo: 9),
     ),
     Member(
       id: son,
@@ -87,8 +89,16 @@ abstract final class DemoData {
       active: true,
       isChild: true,
       hasAccount: false,
+      birthday: _inDays(140, yearsAgo: 7),
     ),
   ];
+
+  /// A birthday [days] from today, [yearsAgo] years back.
+  static DateTime _inDays(int days, {required int yearsAgo}) {
+    final now = DateTime.now();
+    final d = DateTime(now.year, now.month, now.day + days);
+    return DateTime(d.year - yearsAgo, d.month, d.day);
+  }
 
   static List<(String, String, bool)> get lists => [
     (

@@ -2,18 +2,36 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
-import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/motion.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
 import 'package:wuselwall/features/kid/application/kid_logic.dart';
 
-/// Large, friendly surfaces of the kid register: radius 18, a 2 px hairline, and a
-/// minimum height that is a touch target on its own.
-class KidCard extends StatelessWidget {
+/// Which decoration colour the kid cards below take for their offset shadow: each kid
+/// tab sets its own (specs/26 "The kid register's sticker skin").
+class KidDecorScope extends InheritedWidget {
+  const KidDecorScope({required this.decor, required super.child, super.key});
+
+  final Decor decor;
+
+  static Decor of(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<KidDecorScope>()?.decor ??
+      Decor.sun;
+
+  @override
+  bool updateShouldNotify(KidDecorScope old) => old.decor != decor;
+}
+
+/// Large, friendly surfaces of the kid register in the sticker skin (specs/26): radius
+/// 22, a 2 px outline, and a minimum height that is a touch target on its own. A card
+/// that can be pressed stands on an offset shadow in its tab's decoration colour and
+/// moves down onto it when pressed, so the seven-year-old sees what can be tapped.
+class KidCard extends StatefulWidget {
   const KidCard({
     required this.child,
     this.onTap,
@@ -26,28 +44,71 @@ class KidCard extends StatelessWidget {
   final VoidCallback? onTap;
   final Color? color;
 
-  /// A hairline in the primary colour: today, or the card the child is on.
+  /// An outline in the primary colour: today, or the card the child is on.
   final bool highlight;
+
+  static const radius = 22.0;
+  static const _lift = 4.0;
+
+  @override
+  State<KidCard> createState() => _KidCardState();
+}
+
+class _KidCardState extends State<KidCard> {
+  bool _pressed = false;
+
+  void _press(bool down) {
+    if (widget.onTap == null || down == _pressed) return;
+    setState(() => _pressed = down);
+  }
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    return Material(
-      color: color ?? scheme.surfaceContainerLow,
+    final ww = context.ww;
+    final tappable = widget.onTap != null;
+    final outline = widget.highlight
+        ? scheme.primary
+        : ww.shade == Shade.light
+        ? scheme.onSurface.withValues(alpha: 0.85)
+        : ww.line;
+    final shadow = ww.decor(KidDecorScope.of(context)).withValues(alpha: 0.6);
+    final moving = motionAllowed(context);
+    final down = _pressed ? KidCard._lift - 1 : 0.0;
+    final card = Material(
+      color: widget.color ?? scheme.surfaceContainerLow,
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(UiRegister.kid.radius),
-        side: BorderSide(
-          color: highlight ? scheme.primary : context.ww.line,
-          width: 2,
-        ),
+        borderRadius: BorderRadius.circular(KidCard.radius),
+        side: BorderSide(color: outline, width: 2),
       ),
       child: InkWell(
-        onTap: onTap,
+        onTap: widget.onTap,
+        onHighlightChanged: _press,
         child: Padding(
           padding: const EdgeInsets.all(Tokens.space4),
-          child: child,
+          child: widget.child,
         ),
+      ),
+    );
+    if (!tappable) return card;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: KidCard._lift),
+      child: TweenAnimationBuilder<double>(
+        tween: Tween(end: down),
+        duration: moving ? Tokens.motionStandard : Duration.zero,
+        curve: Curves.easeOutBack,
+        builder: (context, offset, child) => DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(KidCard.radius),
+            boxShadow: [
+              BoxShadow(color: shadow, offset: const Offset(0, KidCard._lift)),
+            ],
+          ),
+          position: DecorationPosition.background,
+          child: Transform.translate(offset: Offset(0, offset), child: child),
+        ),
+        child: card,
       ),
     );
   }
@@ -74,8 +135,7 @@ class KidSectionTitle extends StatelessWidget {
 }
 
 /// Reduced motion (specs/17): nothing flies, counts or pulses.
-bool kidReduceMotion(BuildContext context) =>
-    MediaQuery.disableAnimationsOf(context);
+bool kidReduceMotion(BuildContext context) => !motionAllowed(context);
 
 /// The points balance, gold. When it changes it counts to the new value over 600 ms
 /// (`easeOutCubic`) and gives a small coin tick; under reduced motion it jumps.

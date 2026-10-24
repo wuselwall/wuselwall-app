@@ -11,6 +11,7 @@ environment:
 
 dependencies:
   app_links: 7.2.2
+  audioplayers: ^6.8.1
   camera: ^0.12.1
   characters: ^1.4.0
   connectivity_plus: ^7.3.2
@@ -67,6 +68,12 @@ flutter:
     - assets/emoji/tasks/
     - assets/emoji/extras/
     - assets/emoji/avatars/
+    - assets/emoji/events/
+    - assets/emoji/scenes/
+    # The bundled Tischfrage decks (specs/27), one file per language.
+    - assets/table_questions/
+    # The four sounds of specs/26, synthesised by scripts/sound-effects.mjs.
+    - assets/sounds/
   fonts:
     - family: AtkinsonHyperlegibleNext
       fonts:

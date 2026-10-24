@@ -27,6 +27,7 @@ Tap **New event**. You can:
 - pick people under **Who**. If nobody is picked, the event is for the whole family
 - tick **Not sure yet** if it is still unclear whether it happens
 - tick **Show on the kitchen display**. What new events do by default is set under [Household settings](/en/settings/household)
+- choose a **Picture** and mark the event as **We are looking forward to it** or **Family tradition** (see [below](#picture-countdown-tradition))
 
 <Shot name="calendar-editor" alt="Editor for a new event with title, who and repeat" />
 
@@ -35,6 +36,16 @@ Tap **New event**. You can:
 Under **Repeat** you choose **Daily**, **Weekly**, **Every 2 weeks** or **Monthly**. For shift plans there is **Specific days (shift plan)**: you tap the days you work in a month grid. **Repeat ends** sets a date or a number of times.
 
 When you change or delete an event that repeats, WuselWall asks: **Only this event** or **All events in the series**.
+
+### Picture, looking forward and tradition {#picture-countdown-tradition}
+
+At the bottom of the editor are three things that make the day lighter (see [Rituals](/en/guide/rituals)):
+
+- **Picture**: one of 20 pictures, such as a cake, a pizza, the zoo or a tent. It is shown with the event on the wall and with its countdown. **No picture** is the default.
+- **We are looking forward to it**: the event counts down on the wall and on the kids' tablet, for example "Trip to the zoo: 3 more sleeps".
+- **Family tradition**: something the family does again and again, such as game night. A tradition is always on the wall, with a ribbon. Under **With a meal** you enter the meal that belongs to it and choose **Lunch** or **Dinner**.
+
+<Shot name="calendar-rituals" alt="Bottom of the event editor with picture, We are looking forward to it and a family tradition with a meal" />
 
 ## Meetings until …
 

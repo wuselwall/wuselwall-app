@@ -6,6 +6,8 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/motion.dart';
+import 'package:wuselwall/core/wusel/wusel.dart';
 import 'package:wuselwall/features/board/ui/board_grid.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
@@ -14,6 +16,8 @@ import 'package:wuselwall/features/tasks/application/task_actions.dart';
 import 'package:wuselwall/features/tasks/application/tasks_providers.dart';
 import 'package:wuselwall/features/tasks/domain/tasks_models.dart';
 import 'package:wuselwall/features/tasks/ui/task_widgets.dart';
+import 'package:wuselwall/features/wusel/ui/family_wusel.dart';
+import 'package:wuselwall/features/wusel/ui/wusel_lines.dart';
 
 /// The family task board (specs/09 "Touch behaviour"): today's chores in one column per
 /// member, opened from the footer's task count. Ticking a chore is one of the three
@@ -204,6 +208,23 @@ class _Column extends StatelessWidget {
         : ListView(
             padding: const EdgeInsets.all(Tokens.space2),
             children: [
+              // A member's chores all done: Wusel cheers at the top of their column,
+              // their own moment and nobody else's (specs/25, specs/27 rule 2).
+              if (m != null && tasks.every((t) => t.isTicked))
+                Padding(
+                  padding: const EdgeInsets.only(bottom: Tokens.space2),
+                  child: WuselSays(
+                    line: WuselLines.stable(
+                      l10n,
+                      WuselMoment.wallMemberDone,
+                      seed: _seed(m.id),
+                      name: m.displayName,
+                    ),
+                    pose: WuselPose.cheer,
+                    size: 80,
+                    style: boardUi(24, weight: FontWeight.w700),
+                  ),
+                ),
               for (final t in tasks)
                 _TaskCard(task: t, ink: mc?.ink, tint: mc?.tint),
             ],
@@ -235,7 +256,7 @@ class _Counter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final still = MediaQuery.disableAnimationsOf(context);
+    final still = !motionAllowed(context);
     return AnimatedSwitcher(
       duration: still ? Duration.zero : Tokens.motionStandard,
       switchInCurve: Curves.easeOutCubic,
@@ -263,7 +284,7 @@ class _TaskCard extends StatelessWidget {
     final ww = context.ww;
     final scheme = Theme.of(context).colorScheme;
     final ticked = task.isTicked;
-    final still = MediaQuery.disableAnimationsOf(context);
+    final still = !motionAllowed(context);
     final caption = task.awaitsApproval
         ? l10n.tasksWaitingApproval
         : (ticked ? l10n.tasksDone : null);
@@ -388,3 +409,7 @@ class _TickMark extends StatelessWidget {
     );
   }
 }
+
+/// The same number for a member on one day, on every device and every run.
+int _seed(String id) =>
+    id.codeUnits.fold(DateTime.now().day, (sum, unit) => sum + unit);

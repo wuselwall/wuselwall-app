@@ -12,9 +12,11 @@ adults carry the coordination load asymmetrically.
 
 > One screen in the kitchen and one app on every device that answers, without anyone
 > having to ask: *What does this week look like, who is where, what are we eating —
-> and who is eating with us — and what do we need to buy?*
+> and who is eating with us — and what do we need to buy?* — and that leaves the
+> family's day a little lighter than it found it.
 
-Three properties make or break this:
+Four properties make or break this. The first three take load off the family; the fourth
+*(added 2026-10-24, [ADR-020](adr/ADR-020-a-lighter-day.md))* gives something back:
 
 - **Capture must be effortless.** If adding "kitchen roll" takes more than three
   seconds while standing at the cupboard, the list will not be trusted, and an
@@ -26,6 +28,15 @@ Three properties make or break this:
   generate — *hat sie morgen Sport? arbeitest du Donnerstag? wer isst mit?* — are asked
   daily. A screen that answers them before they are asked is the difference between an
   app the family uses and one they remember to open.
+- **The day should feel lighter, not only tidier.** Less mental load is relief; it is not
+  yet joy. A family runs on routines (what needs to be done) and on rituals (who we
+  are), and an organiser that only knows the first kind feels like an office. So the app
+  also gives back: Wusel, who is pleased by what the family does ([25](25-wusel.md));
+  colour and a kitchen that changes with the time of day and the season
+  ([26](26-colour-and-ambience.md)); and a few small rituals: a question at the table, a
+  look back on Sunday, the family's own traditions, something to look forward to, and a
+  child's wish on the meal plan ([27](27-family-rituals.md)). None of it may cost the
+  first three properties a second.
 
 ## Users
 
@@ -58,9 +69,11 @@ cut lines):
   entries; both feeding the kitchen display's seven-day week board
 
 Plus the cross-cutting essentials: per-person identity, four device classes, a secure
-self-hosted deployment, an MCP endpoint for assistants, and *(since 2026-10-11)*
+self-hosted deployment, an MCP endpoint for assistants, *(since 2026-10-11)*
 **self-service onboarding**: adults sign up with email, create or join a
-household, and connect shared devices from their phone ([20](20-onboarding.md)).
+household, and connect shared devices from their phone ([20](20-onboarding.md)), and
+*(since 2026-10-24, [ADR-020](adr/ADR-020-a-lighter-day.md))* **a lighter day**: Wusel,
+colour and ambience, and five small family rituals ([25](25-wusel.md)–[27](27-family-rituals.md)).
 
 ## Explicitly out of scope
 
@@ -93,6 +106,10 @@ Concrete enough to check honestly three months after launch:
 5. Total running cost stays within NFR-7 — originally under €10/month, under revision
    since the move to native apps ([Q36](14-open-questions.md)).
 6. No unplanned data loss, ever. A restore has been tested at least once.
+7. *(Added 2026-10-24.)* The family has at least one ritual in the app that it would miss
+   (the table question, the Sunday look-back, a tradition, a countdown or a meal wish),
+   and the children talk about Wusel without being asked. Nobody has switched Wusel off
+   because it got in the way.
 
 ## Principles
 
@@ -112,3 +129,9 @@ These are the tie-breakers when a design question has no obvious answer.
    justify itself.
 6. **Ship thin slices end to end.** A module that is 60% done in all four layers beats
    two modules perfect in the database and absent from the screen.
+7. **Joy without levers.** *(Added 2026-10-24, [ADR-020](adr/ADR-020-a-lighter-day.md).)*
+   Delight answers a moment the family created: a finished list, a birthday, the dinner
+   table. It is never used to pull someone into the app. There is no mascot in a
+   notification, no streak to lose, no "come back", no engagement number and no second
+   currency for children. Something that makes the day lighter must not add a single step
+   to capture.

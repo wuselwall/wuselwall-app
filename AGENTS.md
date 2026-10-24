@@ -43,7 +43,12 @@ Docker). The server runs four scheduled jobs: `tasks-nightly`,
 `holidays-sync` (weekly), `calendar-import` (hourly) and `household-purge` (daily). Next: the
 journey gaps of [specs/16 step 10](specs/16-setup-plan.md#step-10--journey-gaps-before-launch-m15)
 (servers without mail; approvals on Today; the wall's offline start; the deletion page and the
-release checklist; slices 1–3 are built), then M1.6. Merged migrations and functions reach a live server after a backup
+release checklist; slices 1–3 are built), then M1.6. A lighter day ([ADR-020](specs/adr/ADR-020-a-lighter-day.md),
+[specs/16 step 11](specs/16-setup-plan.md#step-11--a-lighter-day-m15)) is built (2026-10-24): Wusel drawn in code
+(`app/lib/core/wusel/`, goldens in `app/test/golden/`), module bands, the wall's sky, occasions and pixel shift,
+celebrations with synthesised sounds (`scripts/sound-effects.mjs`), birthdays, Vorfreude, traditions,
+Wunschessen, the Tischfrage (DE/EN decks in `app/assets/table_questions/`) and the Wochenrückblick
+(migrations `20261024100000`/`20261024110000`, pgTAP 235). Screenshots hold still with `?still=1`. Merged migrations and functions reach a live server after a backup
 (`scripts/remote-backup.sh` first); a server with mail sets `ENABLE_EMAIL_AUTOCONFIRM=false`.
 
 **Never describe a particular operator's server in a committed file** — not a host, path,

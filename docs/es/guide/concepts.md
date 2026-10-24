@@ -15,7 +15,7 @@ WuselWall reúne el **calendario**, el **horario escolar**, las **tareas**, las 
 
 ## Hoy y los primeros pasos {#today-and-getting-started}
 
-**Hoy** es la primera página de los adultos. Muestra las citas, las tareas para marcar, la comida caliente y los productos pendientes. La hora aparece encima del título de la cita para seguir siendo legible con letra más grande.
+**Hoy** es la primera página de los adultos. Muestra las citas, las tareas para marcar, la comida caliente y los productos pendientes. Se suman los pequeños [rituales](/es/guide/rituals): la próxima cuenta atrás bajo **Con ilusión**, los deseos de comida de los niños, la pregunta en la mesa durante la comida, **Nuestra semana** el domingo por la tarde y, en un cumpleaños, una tarjeta con [Wusel](/es/guide/wusel). La hora aparece encima del título de la cita para seguir siendo legible con letra más grande.
 
 <Shot name="today" alt="La pestaña Hoy con los primeros pasos, las citas y la comida caliente" />
 

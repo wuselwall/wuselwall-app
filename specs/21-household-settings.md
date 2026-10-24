@@ -256,11 +256,44 @@ order can be changed by dragging.
 Over-notifying in week one trains a family to ignore the app, so everything except the
 morning summary is opt-in.
 
+### A lighter day
+
+*Added 2026-10-24 with [ADR-020](adr/ADR-020-a-lighter-day.md); not built.* Every ritual is
+on by default, because the M1.6 trial judges them ([27](27-family-rituals.md#how-the-trial-judges-the-rituals))
+and a default that is off cannot be judged. Einstellungen → Familie → *Rituale* groups the
+household rows, and the member and device rows sit with Appearance. The **Basic** view of
+[09](09-clients-and-ux.md#screens-by-register) gains `member.wusel` (switching Wusel off must
+be easy to find), `rituals.table_question`, `meals.wishes` and `rituals.week_review`.
+Everything else here is under **Erweitert**, including each occasion and the pixel shift.
+
+| Key | Scope | Default | Range | Context | Source |
+|---|---|---|---|---|---|
+| `member.wusel` | member, self | `auto`: children lively, adults quiet | auto · lively · quiet · off | How present Wusel is for this member. *Quiet* means still, and only in empty states and on special days | [25](25-wusel.md#settings) |
+| `member.wusel_outfit` | member, self | none | none · eight outfits | What Wusel wears for this member. Free from the start, never earned | [25](25-wusel.md#outfits) |
+| `device.wusel` | device | lively | lively · quiet · off | Wusel on a wall or shared device while no member is active | [25](25-wusel.md#settings) |
+| `device.sounds` | device | `auto`: kiosk off, others on | auto · on · off | Silences a device; `member.completion_sound` still governs the member. Never at night | [26](26-colour-and-ambience.md#sound-and-haptics) |
+| `device.sky` | device | on | on · off | The time-of-day sky behind the board's and Today's header | [26](26-colour-and-ambience.md#day-phases) |
+| `device.pixel_shift` | device | `auto`: kiosk on, others off | auto · on · off | Shifts the whole screen by up to 2 px every 10 minutes against OLED burn-in. The OS's own protection does not cover a static full-screen app. *Decided 2026-10-24* | [26](26-colour-and-ambience.md#protecting-the-wall), Q54 |
+| `ambience.season`, `ambience.birthdays`, `ambience.ferien` | household | on | on · off | Seasons, birthday bunting and the holidays' first and last day in the sky | [26](26-colour-and-ambience.md#seasons-and-occasions) |
+| `ambience.advent`, `ambience.easter_western`, `ambience.easter_orthodox` | household | `auto`: by the country of `household.region` | auto · on · off | Easter is computed each year, Western and Orthodox separately. *Decided 2026-10-24* | [26](26-colour-and-ambience.md#defaults-per-country), Q52 |
+| `ambience.new_year` | household | off | on · off | Small fireworks in the night sky on 31 December and 1 January | [26](26-colour-and-ambience.md#seasons-and-occasions) |
+| `rituals.countdown_days` | household | 14 | 7–60 | How far ahead Vorfreude starts counting | [27](27-family-rituals.md#vorfreude) |
+| `rituals.countdown_return` | household | on | on · off | "Papa ist in 2× schlafen zurück" for an adult's travel of two nights or more | [27](27-family-rituals.md#vorfreude) |
+| `meals.wishes` | household | children | children · everyone · off | Who may wish a meal | [27](27-family-rituals.md#wunschessen) |
+| `meals.wishes_per_week` | household | 1 | 1–3 | Open wishes per member | [27](27-family-rituals.md#wunschessen) |
+| `rituals.table_question` | household | warm meal | warm meal · lunch and dinner · off | When the Tischfrage appears | [27](27-family-rituals.md#tischfrage) |
+| `rituals.table_question.lunch`, `.dinner` | household | 11:30–13:30, 17:30–19:30 | time range | The meal windows; there are no meal times anywhere else | [27](27-family-rituals.md#tischfrage) |
+| `rituals.table_question_deck` | household | family | family · older | *Older* adds questions for 8 and over | [27](27-family-rituals.md#tischfrage) |
+| `rituals.week_review` | household | Sunday 16:00 | weekday + time · off | When "Unsere Woche" opens; it stays until 10:00 the next morning | [27](27-family-rituals.md#wochenrückblick) |
+
 ## Fixed by design — not settings
 
 Recorded so that nobody turns these into options:
 
 - No negative points, no leaderboard and no comparison between siblings ([06](06-module-tasks.md)).
+- Wusel is never sad, never speaks in a notification and never appears in a capture flow;
+  outfits are never earned ([25](25-wusel.md)). No ritual creates a task, a streak or a
+  "missed" state ([27](27-family-rituals.md#rules-every-ritual-follows)).
 - The points ledger, the snapshot of points onto instances, and approval before a debit.
 - The guardian PIN: 6 digits, a 15-minute window, and a lockout after 10 failures
   ([08](08-users-auth-permissions.md)).

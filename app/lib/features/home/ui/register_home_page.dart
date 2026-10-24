@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/router.dart';
+import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
+import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/ui/week_board_page.dart';
@@ -17,6 +19,8 @@ import 'package:wuselwall/features/school/ui/schedule_section.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_section.dart';
 import 'package:wuselwall/features/tasks/ui/tasks_section.dart';
 import 'package:wuselwall/features/today/ui/today_section.dart';
+import 'package:wuselwall/features/wusel/ui/ambience_sky.dart';
+import 'package:wuselwall/features/wusel/ui/pixel_shift.dart';
 
 /// Home for every register (specs/09 "Screens by register"). The adult home has one tab
 /// per module, each a [HomeSection] owned by its feature. The kid
@@ -34,7 +38,9 @@ class RegisterHomePage extends ConsumerWidget {
       return IdleReverter(
         // The board goes back to key appointments when nobody touches it (FR-8.11).
         onIdle: () => ref.read(boardAllEventsProvider.notifier).set(false),
-        child: const Scaffold(body: SafeArea(child: WeekBoardPage())),
+        child: const Scaffold(
+          body: SafeArea(child: PixelShift(child: WeekBoardPage())),
+        ),
       );
     }
     if (register == UiRegister.kid) return const KidHome();
@@ -57,50 +63,77 @@ class RegisterHomePage extends ConsumerWidget {
         onPressed: () => context.push<void>(Routes.settings),
       ),
     ];
-    return Scaffold(
-      appBar:
-          section.appBar?.call(context, actions) ??
-          AppBar(
-            title: Text(section.label(l10n)),
-            bottom: section.bottom,
-            actions: actions,
-          ),
-      body: SafeArea(
-        bottom: false,
-        child: Column(
-          children: [
-            Expanded(child: section.body),
-            const ActingProfileBar(),
-          ],
+    // Each module has its band (specs/26): the app bar and the selected destination
+    // take it, so moving between modules is moving between colours.
+    final band = context.ww.band(homeTabModule(tab));
+    final base = Theme.of(context);
+    return Theme(
+      data: base.copyWith(
+        appBarTheme: base.appBarTheme.copyWith(backgroundColor: band),
+        navigationBarTheme: base.navigationBarTheme.copyWith(
+          indicatorColor: band,
         ),
       ),
-      floatingActionButton: section.fab?.call(context),
-      bottomNavigationBar: adult
-          ? NavigationBar(
-              selectedIndex: tab.index,
-              onDestinationSelected: (i) =>
-                  ref.read(homeTabProvider.notifier).select(HomeTab.values[i]),
-              // Six destinations do not fit a phone with their labels: there only
-              // the selected one is labelled, the others keep their tooltip.
-              labelBehavior: MediaQuery.sizeOf(context).width < 600
-                  ? NavigationDestinationLabelBehavior.onlyShowSelected
+      child: Scaffold(
+        appBar:
+            section.appBar?.call(context, actions) ??
+            AppBar(
+              title: Text(section.label(l10n)),
+              bottom: section.bottom,
+              actions: actions,
+              // Today's header is the sky of the hour (specs/26 "Ambience").
+              flexibleSpace: tab == HomeTab.today
+                  ? AmbienceSky(fallback: band, child: const SizedBox.expand())
                   : null,
-              destinations: [
-                for (final t in HomeTab.values)
-                  NavigationDestination(
-                    icon: Icon(homeSections[t]!.icon),
-                    label:
-                        (homeSections[t]!.navLabel ?? homeSections[t]!.label)(
-                          l10n,
-                        ),
-                    tooltip: homeSections[t]!.label(l10n),
-                  ),
-              ],
-            )
-          : null,
+            ),
+        body: SafeArea(
+          bottom: false,
+          child: Column(
+            children: [
+              Expanded(child: section.body),
+              const ActingProfileBar(),
+            ],
+          ),
+        ),
+        floatingActionButton: section.fab?.call(context),
+        bottomNavigationBar: adult
+            ? NavigationBar(
+                selectedIndex: tab.index,
+                onDestinationSelected: (i) => ref
+                    .read(homeTabProvider.notifier)
+                    .select(HomeTab.values[i]),
+                // Six destinations do not fit a phone with their labels: there only
+                // the selected one is labelled, the others keep their tooltip.
+                labelBehavior: MediaQuery.sizeOf(context).width < 600
+                    ? NavigationDestinationLabelBehavior.onlyShowSelected
+                    : null,
+                destinations: [
+                  for (final t in HomeTab.values)
+                    NavigationDestination(
+                      icon: Icon(homeSections[t]!.icon),
+                      label:
+                          (homeSections[t]!.navLabel ?? homeSections[t]!.label)(
+                            l10n,
+                          ),
+                      tooltip: homeSections[t]!.label(l10n),
+                    ),
+                ],
+              )
+            : null,
+      ),
     );
   }
 }
+
+/// The colour of each destination (specs/26 "Module bands").
+AppModule homeTabModule(HomeTab tab) => switch (tab) {
+  HomeTab.today => AppModule.today,
+  HomeTab.calendar => AppModule.calendar,
+  HomeTab.schedule => AppModule.schedule,
+  HomeTab.tasks => AppModule.tasks,
+  HomeTab.meals => AppModule.meals,
+  HomeTab.shopping => AppModule.shopping,
+};
 
 /// Each destination's section, owned by its feature.
 final homeSections = <HomeTab, HomeSection>{
