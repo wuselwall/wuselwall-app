@@ -46,6 +46,8 @@ jobs:
         working-directory: .
       - run: npx playwright install --with-deps chromium
         working-directory: .
+      - run: node scripts/shopping-quick-add.browser.mjs
+        working-directory: .
       - run: node scripts/web-server-discovery.browser.mjs
         working-directory: .
 

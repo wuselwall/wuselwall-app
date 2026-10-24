@@ -154,8 +154,13 @@ test('a mixed allow-list keeps invitation, pairing and other entries and loses o
   assert.equal(p.state.auth.uri_allow_list, MIXED_KEPT.join(','), 'read back from the project');
   assert.equal(out.keptRedirects, 4);
   assert.ok(lines.includes('Auth: 4 other redirect allow-list entries kept'));
-  // The printed lines name counts, never the entries themselves.
-  for (const l of lines) assert.ok(!l.includes('example.org'), l);
+  // Check the complete output: no setting value, on any host, may be printed.
+  assert.deepEqual(lines, [
+    'Auth: switched off (Google sign-in is still enabled; Apple sign-in is still enabled; manual identity linking is still enabled; the redirect allow-list still holds the native OAuth callback)',
+    'Auth: 4 other redirect allow-list entries kept',
+    'Edge Function apple-token: deleted',
+    'Edge Function secrets deleted: APPLE_TEAM_ID, APPLE_KEY_ID, APPLE_PRIVATE_KEY, APPLE_CLIENT_ID, APPLE_TOKEN_KEY',
+  ]);
 });
 
 test('a mixed list is idempotent: the second run sends no allow-list and changes nothing', async () => {
