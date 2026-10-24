@@ -35,9 +35,9 @@ class WuselWallApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final register = ref.watch(uiRegisterProvider);
-    // The wall display switches to its night shade from 21:00 whatever the OS or the
-    // device's appearance says; otherwise the appearance picks light or dark, by
-    // default as the OS does.
+    // The wall display switches to its night shade in its night hours
+    // (`device.night_hours`) whatever the OS or the device's appearance says;
+    // otherwise the appearance picks light or dark, by default as the OS does.
     final night = register == UiRegister.kiosk && ref.watch(nightProvider);
 
     return MaterialApp.router(
