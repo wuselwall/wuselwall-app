@@ -20,6 +20,8 @@ Auf dem Kinder-Tablet und an der Wand freut sich [Wusel](/guide/wusel) mit: Ist 
 
 Hier landet alles, was jemand bestätigen muss: erledigte Aufgaben, die geprüft werden sollen, und **Belohnungswünsche**. Tippe auf **Freigeben** oder **Ablehnen**.
 
+Erziehungsberechtigte sehen auch auf **Heute**, was wartet: die Karte **Wartet auf deine Freigabe**, zum Beispiel „2 Aufgaben zu prüfen · 1 Belohnungswunsch“. Ein Tipp darauf öffnet die Freigaben. Am Symbol **Aufgaben** unten steht dieselbe Zahl. Die Karte lässt sich nicht wegtippen; sie verschwindet, sobald alles entschieden ist. Mitglieder ohne Erziehungsrecht sehen sie nicht.
+
 ## Aufgaben anlegen
 
 Tippe im Tab **Aufgaben** auf **Neue Aufgabe**:

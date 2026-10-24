@@ -128,6 +128,7 @@ void main() {
       List<Occurrence> occurrences = const [],
       List<TaskInstance> tasks = const [],
       DateTime? at,
+      int pendingApprovals = 0,
     }) => planReminders(
       now: at ?? now,
       l10n: _de,
@@ -136,6 +137,7 @@ void main() {
       eventMinutes: eventMinutes,
       occurrences: occurrences,
       tasks: tasks,
+      pendingApprovals: pendingApprovals,
     );
 
     test(
@@ -188,6 +190,48 @@ void main() {
         );
         expect(result.reminders.single.when, DateTime(2026, 10, 15, 7));
         expect(result.reminders.single.title, 'Heute: 1 Termin');
+      },
+    );
+
+    test('only the next summary names what waits for approval', () {
+      final result = plan(
+        pendingApprovals: 2,
+        tasks: [
+          chore('Müll', today, guardianId),
+          chore('Müll', DateTime(2026, 10, 15), guardianId),
+        ],
+      );
+
+      expect(
+        [for (final r in result.reminders) (r.title, r.body)],
+        [
+          (
+            'Heute: 1 Aufgabe',
+            'Heute steht kein Termin an. · 2 Freigaben warten',
+          ),
+          ('Heute: 1 Aufgabe', 'Heute steht kein Termin an.'),
+        ],
+      );
+    });
+
+    test(
+      'approvals alone make a summary; a past morning does not take them',
+      () {
+        // 06:00: this morning's summary is still to come and carries them.
+        final early = plan(pendingApprovals: 1).reminders.single;
+        expect(early.when, DateTime(2026, 10, 14, 7));
+        expect(early.title, '1 Freigabe wartet');
+        expect(early.body, 'Heute steht kein Termin an.');
+
+        // 09:00: this morning is gone, so tomorrow's summary carries them.
+        final late = plan(
+          pendingApprovals: 1,
+          at: DateTime(2026, 10, 14, 9),
+        ).reminders.single;
+        expect(late.when, DateTime(2026, 10, 15, 7));
+
+        // Nothing waits and nothing is on: no summary at all.
+        expect(plan().reminders, isEmpty);
       },
     );
 
@@ -525,6 +569,75 @@ void main() {
 
         expect(notifications.cancelAllCalls, greaterThan(before));
         expect(notifications.active, hasLength(2));
+      },
+    );
+
+    testWidgets(
+      "a guardian's next summary counts the approvals; a member's has none",
+      (t) async {
+        FakeTasksApi waiting() => FakeTasksApi(
+          tables: {
+            'settings': settingRows(),
+            'task_instances': [
+              instanceRow(
+                id: 'i-1',
+                title: 'Zimmer aufräumen',
+                assignee: kidId,
+                status: 'done',
+                verification: true,
+                completedBy: kidId,
+              ),
+            ],
+            'reward_redemptions': [
+              {
+                'id': 'rd-1',
+                'reward_id': 'r-movie',
+                'profile_id': kidId,
+                'cost_points': 5,
+                'status': 'requested',
+                'requested_at': '2026-10-14T07:00:00Z',
+              },
+            ],
+          },
+        );
+        final guardianPhone = FakeNotificationScheduler();
+        var container = await pumpApp(
+          t,
+          overrides: baseOverrides(
+            identity: FakeIdentityRepository(current: device()),
+            notifications: guardianPhone,
+          ),
+          tasks: waiting(),
+        );
+        expect(guardianPhone.active.map((n) => n.title), [
+          _de.reminderMorningApprovals(2),
+        ]);
+        await unmountApp(t, container);
+
+        const memberId = 'p-member';
+        final memberPhone = FakeNotificationScheduler();
+        container = await pumpApp(
+          t,
+          overrides: baseOverrides(
+            identity: FakeIdentityRepository(
+              current: device(profileId: memberId),
+              members: [
+                ...testMembers,
+                const Member(
+                  id: memberId,
+                  displayName: 'Julia',
+                  color: Color(0xFF3366CC),
+                  role: Role.member,
+                  active: true,
+                ),
+              ],
+            ),
+            notifications: memberPhone,
+          ),
+          tasks: waiting(),
+        );
+        expect(memberPhone.active, isEmpty);
+        await unmountApp(t, container);
       },
     );
 

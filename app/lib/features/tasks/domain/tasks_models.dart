@@ -345,6 +345,30 @@ class RewardRedemption {
   final String? note;
 }
 
+/// What waits for a guardian's decision: ticked chores to check ([checks]) and reward
+/// requests ([requests]).
+class PendingApprovals {
+  const PendingApprovals({required this.checks, required this.requests});
+
+  /// Counts [checks] and the redemptions still `requested` among [redemptions].
+  factory PendingApprovals.of({
+    required List<TaskInstance> checks,
+    required List<RewardRedemption> redemptions,
+  }) => PendingApprovals(
+    checks: checks.length,
+    requests: redemptions
+        .where((r) => r.status == RedemptionStatus.requested)
+        .length,
+  );
+
+  static const none = PendingApprovals(checks: 0, requests: 0);
+
+  final int checks;
+  final int requests;
+
+  int get total => checks + requests;
+}
+
 /// The run of a (profile, definition) pair. Shown as "you're on 12", never compared.
 class Streak {
   const Streak({

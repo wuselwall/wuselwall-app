@@ -977,6 +977,23 @@
   "todayNoticeDismiss": "Gesehen",
   "todayNoticeMembers": "Mitglieder",
   "todayNoticeDevices": "Geräte",
+  "todayApprovalsTitle": "Wartet auf deine Freigabe",
+  "todayApprovalsChecks": "{count, plural, one{1 Aufgabe zu prüfen} other{{count} Aufgaben zu prüfen}}",
+  "@todayApprovalsChecks": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "todayApprovalsRequests": "{count, plural, one{1 Belohnungswunsch} other{{count} Belohnungswünsche}}",
+  "@todayApprovalsRequests": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "todayStartNotNeeded": "Brauchen wir nicht",
   "todayStartInvitePartner": "Partner:in einladen",
   "todayStartConnectTablet": "Familien-Tablet verbinden",
@@ -1233,6 +1250,14 @@
   "@reminderMorningTasksOnly": {
     "placeholders": {
       "tasks": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderMorningApprovals": "{count, plural, one{1 Freigabe wartet} other{{count} Freigaben warten}}",
+  "@reminderMorningApprovals": {
+    "placeholders": {
+      "count": {
         "type": "int"
       }
     }

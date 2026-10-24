@@ -1604,6 +1604,23 @@
   "todayNoticeDismiss": "Got it",
   "todayNoticeMembers": "Members",
   "todayNoticeDevices": "Devices",
+  "todayApprovalsTitle": "Waiting for your approval",
+  "todayApprovalsChecks": "{count, plural, one{1 chore to check} other{{count} chores to check}}",
+  "@todayApprovalsChecks": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "todayApprovalsRequests": "{count, plural, one{1 reward request} other{{count} reward requests}}",
+  "@todayApprovalsRequests": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "todayStartTitle": "Getting started",
   "todayStartProgress": "{done} of {total}",
   "@todayStartProgress": {
@@ -1875,6 +1892,14 @@
   "@reminderMorningTasksOnly": {
     "placeholders": {
       "tasks": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderMorningApprovals": "{count, plural, one{1 approval waiting} other{{count} approvals waiting}}",
+  "@reminderMorningApprovals": {
+    "placeholders": {
+      "count": {
         "type": "int"
       }
     }

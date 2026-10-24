@@ -85,23 +85,48 @@ final reminderPlanProvider = FutureProvider.autoDispose<ReminderPlan>((
     tasks.addAll((await repository.instancesOn(day)).unwrap());
   }
 
+  final morningAt = morningTimeOf(morning?.value);
   final packingAt = morningTimeOf(packing?.value);
   final packs = packingAt == null
       ? const <PackList>[]
       : await _packLists(ref, actor, from);
+  final approvals = morningAt == null ? 0 : await _approvals(ref, actor);
 
   return planReminders(
     now: now,
     l10n: reminderL10n(ref.watch(appLanguageProvider).value),
     actor: actor,
-    morningAt: morningTimeOf(morning?.value),
+    morningAt: morningAt,
     eventMinutes: (event?.value as num?)?.toInt(),
     occurrences: window.occurrences,
     tasks: tasks,
     packingAt: packingAt,
     packs: packs,
+    pendingApprovals: approvals,
   );
 });
+
+/// What waits for [actor] as a guardian, for the next morning summary: chores to check
+/// and reward requests as the app sees them now (no push, specs/16 step 10.5). Zero for
+/// anyone else, and zero rather than no reminders when the lists cannot be loaded.
+Future<int> _approvals(Ref ref, String actor) async {
+  final members = await ref.watch(membersProvider.future);
+  if (!members.any((m) => m.id == actor && m.isGuardian)) return 0;
+  final repository = ref.watch(tasksRepositoryProvider);
+  try {
+    return PendingApprovals.of(
+      checks: (await repository.pendingVerifications()).unwrap(),
+      redemptions: (await repository.redemptions()).unwrap(),
+    ).total;
+  } on Object catch (error, stack) {
+    logError(
+      'Approvals left out of the morning summary',
+      error: error,
+      stackTrace: stack,
+    );
+    return 0;
+  }
+}
 
 /// What the children pack for each school day from tomorrow through the plan's last
 /// evening: a child's own phone covers that child, an adult's every child. A server or
