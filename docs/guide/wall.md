@@ -6,6 +6,8 @@ Ein Kinder-Gerät zeigt die Liste **größer und einfacher**. Die Kinder tippen 
 
 <Shot name="kid-shopping" alt="Kinder-Ansicht der Einkaufsliste" wide />
 
+Auf **Mein Tag** begrüßt [Wusel](/guide/wusel) das Kind. Darunter stehen seine Aufgaben, **Worauf ich mich freue**, die Schule, das Essen, die Karte **Dein Wunschessen** und die Termine; während des Essens die [Tischfrage](/guide/rituals#table-question) und am Sonntagabend **Unsere Woche** (siehe [Rituale](/guide/rituals)).
+
 Kinder können keine Geräte oder Mitglieder verwalten; das bleibt Erziehungsberechtigten vorbehalten.
 
 ## Wandanzeige in der Küche
@@ -16,17 +18,19 @@ Die Wandanzeige ist für den Blick aus zweieinhalb Metern gemacht: große Schrif
 
 ### Oben
 
-Uhr, Datum und Kalenderwoche. Darunter steht **Als Nächstes**: der nächste Termin von heute, mit einem Countdown.
+Uhr, Datum und Kalenderwoche. Daneben steht **Als Nächstes**: der nächste Termin von heute, mit einem Countdown. Während des Essens steht dort stattdessen die [Tischfrage](/guide/rituals#table-question). Rechts sitzt [Wusel](/guide/wusel), und hinter der Kopfzeile zeigt ein Himmel die Tageszeit.
 
 ### Eine Spalte pro Tag
 
 Die sieben Tage stehen nebeneinander, von Montag bis Sonntag. Heute ist die Spalte breiter und umrahmt, vergangene Tage sind blasser. Jede Spalte hat dieselben drei Bereiche in derselben Reihenfolge, getrennt durch schmale Streifen:
 
 - **Wer ist wo**: eine Zeile pro Familienmitglied. Bei Kindern stehen die Schulzeit (zum Beispiel 8–14:25), besondere Stunden wie Sport oder Schwimmen und das Hortende. Bei Erwachsenen zeigt ein blasser Streifen ihren üblichen Zustand, etwa Homeoffice. Alles, was anders ist – Dienst, Dienstreise, Büro –, erscheint als farbiges Band; eine mehrtägige Reise ist ein durchgehendes Band. Eine kleine Uhr mit „bis 17“ heißt: Termine bis 17 Uhr. Ein Feiertag steht über seiner Spalte; Kinder ohne Schule haben „frei“. **Blass = wie üblich, kräftig = anders.**
-- **Termine**: Vormittag, Nachmittag und Abend. Gezeigt werden nur Termine, die ihr für die Küchenanzeige markiert habt. Ein Punkt zeigt, wer dabei ist. Gestrichelt und mit „?“ heißt: noch nicht sicher. Passt nicht alles hinein, steht dort „+2 weitere“.
+- **Termine**: Vormittag, Nachmittag und Abend. Gezeigt werden nur Termine, die ihr für die Küchenanzeige markiert habt. Ein Punkt zeigt, wer dabei ist. Gestrichelt und mit „?“ heißt: noch nicht sicher. Passt nicht alles hinein, steht dort „+2 weitere“. Eine [Familientradition](/guide/rituals#traditions) steht immer da, mit einem zitronengelben Band und ihrem Bild.
   Mit **Alle Termine** (rechts im Streifen über den Terminen) zeigt jede Spalte alle ihre Termine, nicht nur die markierten. Das Häkchen geht von selbst wieder aus, wenn niemand die Wand berührt.
-- **Warmes Essen** (so steht es links in der Zeile): die warme Mahlzeit des Tages – Sonne für das Mittagessen, Mond für das Abendessen – mit dem Gericht. Ein Punkt pro Person zeigt, wer mitisst: gefüllt = isst mit uns, leer = ist nicht da. Dazu steht, wer kocht.
-- **Fußzeile**: die offenen Aufgaben jeder Person für heute, ein Tipp auf **Heute offen** öffnet das Aufgabenbrett der Familie, und die Anzahl der Artikel auf der Einkaufsliste.
+- **Warmes Essen** (so steht es links in der Zeile): die warme Mahlzeit des Tages – Sonne für das Mittagessen, Mond für das Abendessen – mit dem Gericht. Ein Punkt pro Person zeigt, wer mitisst: gefüllt = isst mit uns, leer = ist nicht da. Dazu steht, wer kocht. Ein Stern heißt: Das hat sich jemand gewünscht ([Wunschessen](/guide/rituals#meal-wishes)).
+- **Fußzeile**: die offenen Aufgaben jeder Person für heute, ein Tipp auf **Heute offen** öffnet das Aufgabenbrett der Familie, und die Anzahl der Artikel auf der Einkaufsliste. Dazwischen stehen die nächsten [Countdowns](/guide/rituals#countdowns), etwa „Geburtstag von Emma · noch 3× schlafen“, so viele wie hineinpassen, und am Sonntagabend die Kachel **Unsere Woche**.
+
+Im Aufgabenbrett jubelt Wusel oben in der Spalte einer Person, sobald sie für heute alles erledigt hat.
 
 ### Tippen für Details
 
@@ -58,8 +62,9 @@ Mehr kann die Wand nicht ändern: Sie setzt Artikel auf die Einkaufsliste und ko
 
 ### Nachts und ohne Verbindung
 
-- Ab 21 Uhr wechselt die Anzeige automatisch in eine ruhige Nachtansicht.
-- Bricht die Verbindung ab, bleibt der letzte Stand sichtbar, mit dem Hinweis „Keine Verbindung“; oben rechts steht, wann er zuletzt aktualisiert wurde. Solange alles läuft, zeigt die Wand dazu nichts an.
+- Ab 21 Uhr wechselt die Anzeige automatisch in eine ruhige Nachtansicht, und Wusel schläft. Töne gibt es an der Wand nur, wenn ihr sie einschaltet, und nachts nie.
+- Damit sich nichts einbrennt, verschiebt sich die Anzeige alle 10 Minuten um bis zu 2 Pixel (siehe [Wusel und Farben](/guide/wusel#burn-in)).
+- Bricht die Verbindung ab, bleibt der letzte Stand sichtbar, mit dem Hinweis „Keine Verbindung“, und Wusel denkt nach; oben rechts steht, wann er zuletzt aktualisiert wurde. Solange alles läuft, zeigt die Wand dazu nichts an.
 
 ::: tip Kinder-Tablet
 Die Ansicht für Kinder hat die Reiter **Mein Tag**, **Stundenplan**, **Punkte**, **Einkaufen** und **Familie**.

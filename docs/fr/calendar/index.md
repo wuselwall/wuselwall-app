@@ -20,7 +20,8 @@ Touchez **Nouvel événement**, puis indiquez :
 - **Rendez-vous** ou **Présence** : travail, télétravail, déplacement, absence, repos ou garde ;
 - toute la journée, ou les heures de début et de fin ;
 - les personnes concernées, ou personne pour toute la famille ;
-- une éventuelle incertitude et l’affichage sur l’écran de cuisine.
+- une éventuelle incertitude et l’affichage sur l’écran de cuisine ;
+- une **image**, et si l’événement est attendu avec impatience (**On a hâte**) ou une **Tradition familiale** (voir [plus bas](#picture-countdown-tradition)).
 
 <Shot name="calendar-editor" alt="La création d’un événement avec les participants et la répétition" />
 
@@ -31,6 +32,16 @@ Le comportement par défaut des nouveaux événements se règle dans les [param�
 Choisissez chaque jour, chaque semaine, toutes les deux semaines ou chaque mois. Le mode de jours précis permet de toucher les dates dans un calendrier pour les horaires de travail. La fin de répétition se définit par date ou par nombre d’occurrences.
 
 Pour modifier ou supprimer une série, choisissez entre cette occurrence seule et toute la série.
+
+### Image, compte à rebours et tradition {#picture-countdown-tradition}
+
+En bas de l’éditeur, trois réglages rendent le quotidien plus léger (voir [Rituels](/fr/guide/rituals)) :
+
+- **Image** : une des 20 images, comme un gâteau, une pizza, le zoo ou une tente. Elle accompagne l’événement sur le mur et son compte à rebours. **Pas d’image** par défaut.
+- **On a hâte** : l’événement a un compte à rebours sur l’écran mural et la tablette des enfants, par exemple « Sortie au zoo : encore 3 dodos ».
+- **Tradition familiale** : ce que la famille fait encore et encore, comme la soirée jeux. Une tradition est toujours sur le mur, avec un ruban. **Avec un repas** indique le plat qui l’accompagne, au **Déjeuner** ou au **Dîner**.
+
+<Shot name="calendar-rituals" alt="Le bas de l’éditeur d’événement avec l’image, On a hâte et une tradition familiale avec un repas" />
 
 ## Réunions jusqu’à… {#meetings-until}
 

@@ -14,6 +14,8 @@ This is where today's chores are listed, per person.
 
 On the kitchen wall, a tap on **Open today** opens the same family chore board.
 
+On the kids' tablet and on the wall, [Wusel](/en/guide/wusel) joins in: when the last chore of the day is ticked, Wusel cheers with confetti and a short sound, on the wall at the top of that person's column. When a child requests a reward, Wusel is proud. For a chore left undone, Wusel says nothing.
+
 ## Approvals
 
 Everything that someone needs to confirm lands here: finished chores that should be checked, and **reward requests**. Tap **Approve** or **Decline**.
@@ -50,7 +52,7 @@ The **Points** tab shows each person's **balance** and all **movements**: chores
 ## Why it is built this way
 
 - **Duties earn little.** What everyone is expected to do should not be paid like work. The streak is their reward.
-- **No ranking.** WuselWall does not set children against each other.
+- **No ranking.** WuselWall does not set children against each other. The [look back at our week](/en/guide/rituals#week-review) shows chores only as one number for the whole family.
 - **Small rewards come early.** One bonus chore is enough for the cheapest reward.
 - **A sick day does not wipe out a streak.** That is what the streak jokers are for.
 

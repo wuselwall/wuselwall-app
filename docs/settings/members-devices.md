@@ -42,11 +42,13 @@ Mit dem Symbol neben **Mitglieder** legst du eine Person nur mit **Namen** an, z
 
 Tippe in der Liste auf eine Person. Auf ihrer Seite änderst du den **Namen**, die **Farbe** und das **Bild**: statt der Initiale ein Tier oder ein Symbol, das auf dem Kinder-Tablet und in den Listen erscheint. **Kind oder Erwachsen** legt fest, ob die Person das Kinder-Tablet, Starter-Aufgaben und den Stundenplan bekommt; Erziehungsberechtigte und Personen mit Konto sind immer Erwachsene. Von hier führt auch ein Link zur **üblichen Woche** der Person.
 
-<Shot name="settings-member" alt="Seite eines Mitglieds mit Name, Farbe, Bild und Kind oder Erwachsen" />
+Unter **Geburtstag** wählst du mit **Datum wählen** den Geburtstag. Er steht am Tag an der Wand, vorher wird heruntergezählt, und Wusel trägt den Partyhut (siehe [Rituale](/guide/rituals#birthdays)). **Geburtstag entfernen** löscht ihn wieder.
+
+<Shot name="settings-member" alt="Seite eines Mitglieds mit Name, Farbe, Bild und Geburtstag" />
 
 In der Ansicht **Erweitert** steht darunter die **Rolle** (Erziehungsberechtigt oder Mitglied; ein Kind kann nicht erziehungsberechtigt sein, und die letzte erziehungsberechtigte Person mit Konto bleibt es) und **Nicht mehr dabei**: Die Person verschwindet von der Wand, aus den Avatar-Reihen und aus neuen Aufgaben; Verlauf und Punkte bleiben, und du kannst sie hier jederzeit zurückholen. Eine erwachsene Person mit Konto nimmst du so nicht heraus; sie verlässt die Familie vom eigenen Handy aus (siehe [Konto und Familie](/settings/account)).
 
-Jede Person kann ihren eigenen Namen, ihre Farbe und ihr Bild selbst ändern. Alles andere ist Sache der Erziehungsberechtigten, auf geteilten Geräten mit PIN.
+Jede Person kann ihren eigenen Namen, ihre Farbe, ihr Bild und ihren Geburtstag selbst ändern. Alles andere ist Sache der Erziehungsberechtigten, auf geteilten Geräten mit PIN.
 
 ### Reihenfolge ändern
 

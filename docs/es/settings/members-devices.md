@@ -36,11 +36,13 @@ El icono junto a los miembros añade una persona por nombre. La app asigna el si
 
 Toca a una persona de la lista. En su página cambias el **nombre**, el **color** y la **imagen** (un animal o un símbolo en lugar de la inicial, visible en la tableta de los niños y en las listas). **Niño o adulto** decide la tableta de los niños, las tareas iniciales y el horario; los adultos responsables y las personas con cuenta son siempre adultos. Un enlace lleva a la **semana habitual** de la persona.
 
-<Shot name="settings-member" alt="La página de un miembro con nombre, color, imagen y niño o adulto" />
+En **Cumpleaños**, **Elegir una fecha** guarda el cumpleaños. Aparece en la pared ese día, con una cuenta atrás antes, y Wusel lleva gorro de fiesta (ver [Rituales](/es/guide/rituals#birthdays)). **Quitar el cumpleaños** lo borra.
+
+<Shot name="settings-member" alt="La página de un miembro con nombre, color, imagen y cumpleaños" />
 
 En la vista **Avanzados**, la página muestra además el **rol** (adulto responsable o miembro; un niño no puede ser adulto responsable, y el último adulto responsable con cuenta lo sigue siendo) y **Ya no está en la familia**: la persona desaparece de la pared, de las filas de avatares y de las tareas nuevas; el historial y los puntos se conservan, y puedes traerla de vuelta aquí. Un adulto con cuenta sale de la familia desde su propio móvil (ver [Cuenta y familia](/es/settings/account)).
 
-Cada persona cambia su propio nombre, color e imagen. El resto corresponde a los adultos responsables, con el PIN en los dispositivos compartidos.
+Cada persona cambia su propio nombre, color, imagen y cumpleaños. El resto corresponde a los adultos responsables, con el PIN en los dispositivos compartidos.
 
 ### Cambiar el orden
 

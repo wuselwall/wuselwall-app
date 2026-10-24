@@ -27,6 +27,7 @@ Tippe auf **Neuer Termin**. Du kannst:
 - unter **Wer** Personen auswählen. Ist niemand ausgewählt, gilt der Termin für die ganze Familie
 - **Noch nicht sicher** ankreuzen, wenn noch unklar ist, ob er stattfindet
 - **Auf dem Küchendisplay zeigen** ankreuzen. Was neue Termine standardmäßig tun, legt ihr unter [Haushalt einstellen](/settings/household) fest
+- ein **Bild** wählen und den Termin als **Darauf freuen wir uns** oder **Familientradition** markieren (siehe [unten](#picture-countdown-tradition))
 
 <Shot name="calendar-editor" alt="Editor für einen neuen Termin mit Titel, Wer und Wiederholung" />
 
@@ -35,6 +36,16 @@ Tippe auf **Neuer Termin**. Du kannst:
 Unter **Wiederholung** wählst du **Täglich**, **Wöchentlich**, **Alle 2 Wochen** oder **Monatlich**. Für Schichtpläne gibt es **Bestimmte Tage (Dienstplan)**: Du tippst im Monatsraster die Tage an, an denen gearbeitet wird. Mit **Ende der Wiederholung** setzt du ein Datum oder eine Anzahl von Malen.
 
 Änderst oder löschst du einen Termin einer Wiederholung, fragt WuselWall: **Nur dieser Termin** oder **Alle Termine der Serie**.
+
+### Bild, Vorfreude und Tradition {#picture-countdown-tradition}
+
+Unten im Editor stehen drei Dinge, die den Alltag leichter machen (siehe [Rituale](/guide/rituals)):
+
+- **Bild**: eines von 20 Bildern, etwa Kuchen, Pizza, Zoo oder Zelt. Es steht beim Termin an der Wand und beim Countdown. **Kein Bild** ist der Standard.
+- **Darauf freuen wir uns**: Der Termin zählt an der Wand und auf dem Kinder-Tablet herunter, etwa „Zoo: noch 3× schlafen“.
+- **Familientradition**: etwas, das die Familie immer wieder macht, etwa der Spieleabend. Eine Tradition steht immer an der Wand, mit einem Band. Unter **Mit Essen** trägst du ein, welches Essen dazugehört, und wählst **Mittagessen** oder **Abendessen**.
+
+<Shot name="calendar-rituals" alt="Unterer Teil des Termin-Editors mit Bild, Darauf freuen wir uns und Familientradition mit Essen" />
 
 ## Termine bis …
 

@@ -8,6 +8,8 @@ L’espace **Tâches** comprend **Aujourd’hui**, les **approbations**, les **t
 
 Cochez une tâche terminée ; l’annulation permet de revenir en arrière. Les tâches ouvertes à tous reviennent à la première personne qui les prend. La **série** compte les jours consécutifs, et un **joker** la préserve en cas de journée manquée, par exemple pour maladie. Sur le mur, les tâches du jour ouvrent le même tableau familial.
 
+Sur la tablette des enfants et sur le mur, [Wusel](/fr/guide/wusel) participe : quand la dernière tâche du jour est cochée, Wusel fait la fête avec des confettis et un petit son, sur le mur en haut de la colonne de la personne. Quand un enfant demande une récompense, Wusel est fier. Pour une tâche restée en plan, Wusel ne dit rien.
+
 ## Approbations {#approvals}
 
 Les tâches à vérifier et les demandes de récompense arrivent ici. Un parent les approuve ou les refuse.
@@ -37,4 +39,4 @@ Le solde et les mouvements détaillent les tâches terminées ou annulées, réc
 
 ## Pourquoi ce fonctionnement ? {#why-it-is-built-this-way}
 
-Les obligations rapportent peu ; leur régularité compte davantage. Aucun classement n’oppose les enfants. Une petite tâche bonus doit permettre une première récompense. Les jokers évitent qu’une maladie efface une série. Ajustez ces valeurs dans les [paramètres du foyer](/fr/settings/household).
+Les obligations rapportent peu ; leur régularité compte davantage. Aucun classement n’oppose les enfants ; même [Notre semaine](/fr/guide/rituals#week-review) montre les tâches en un seul nombre pour toute la famille. Une petite tâche bonus doit permettre une première récompense. Les jokers évitent qu’une maladie efface une série. Ajustez ces valeurs dans les [paramètres du foyer](/fr/settings/household).

@@ -29,13 +29,17 @@ class AmbienceSky extends ConsumerWidget {
       );
     }
     final ambience = ref.watch(ambienceProvider);
-    return AnimatedSwitcher(
-      // The phase changes with a slow cross-fade nobody notices from two metres.
-      duration: const Duration(seconds: 30),
-      child: CustomPaint(
-        key: ValueKey((ambience.phase, ww.shade)),
-        painter: SkyPainter(ambience: ambience, shade: ww.shade),
-        child: child,
+    // Clipped: the hill and the sun reach past the edge and must not paint on what
+    // sits below the header.
+    return ClipRect(
+      child: AnimatedSwitcher(
+        // The phase changes with a slow cross-fade nobody notices from two metres.
+        duration: const Duration(seconds: 30),
+        child: CustomPaint(
+          key: ValueKey((ambience.phase, ww.shade)),
+          painter: SkyPainter(ambience: ambience, shade: ww.shade),
+          child: child,
+        ),
       ),
     );
   }

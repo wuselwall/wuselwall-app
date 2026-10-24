@@ -12,6 +12,18 @@ Die Woche zeigt jeden Tag mit **Frühstück**, **Mittagessen**, **Abendessen** u
 - Dazu legst du die **Portionen**, wer **kocht**, eine **Uhrzeit** und **Gäste** fest.
 - Eine Mahlzeit verschiebst du, indem du sie gedrückt hältst und auf einen anderen Tag ziehst.
 
+## Wünsche {#wishes}
+
+Kinder wünschen sich einmal pro Woche ein Essen, auf **Mein Tag** ihres Tablets (siehe [Wunschessen](/guide/rituals#meal-wishes)). Offene Wünsche stehen oben im Essensplan unter **Wünsche**, zum Beispiel „Paul: Pfannkuchen“, und als Karte auf **Heute**.
+
+- Tippe auf einen Wunsch, wähle Tag und Mahlzeit, und er ist eingeplant. Ein Rezept-Wunsch füllt die Einkaufsliste wie jedes Rezept.
+- Ein geplanter Wunsch trägt im Plan und an der Wand einen Stern und „Wunsch von Paul“.
+- Mit dem **×** entfernst du einen Wunsch (**Wunsch entfernen**). Das dürfen Erziehungsberechtigte und wer ihn sich gewünscht hat.
+
+Ein Wunsch wird nie abgelehnt; was nicht geplant ist, wartet einfach. Wer wünschen darf und wie viele Wünsche offen sein dürfen, legt ihr unter [Haushalt einstellen](/settings/household#rituals) fest.
+
+<Shot name="meals-wishes" alt="Essensplan auf dem Handy mit dem Wunsch Paul: Pfannkuchen über der Woche" />
+
 ## Vorschläge
 
 Weißt du nicht, was es geben soll, lass den Namen der Mahlzeit leer. Dann zeigt WuselWall zwei Reihen:
@@ -48,6 +60,6 @@ Beim Planen einer Mahlzeit schlägt WuselWall passende Rezepte vor (siehe [Vorsc
 
 ## Auf der Küchenwand
 
-Ein Tipp auf den Essensbereich zeigt die Mahlzeiten der Woche. Tippst du danach auf einen Punkt, änderst du, wer mitisst.
+Ein Tipp auf den Essensbereich zeigt die Mahlzeiten der Woche. Ein Stern markiert ein Wunschessen. Tippst du danach auf einen Punkt, änderst du, wer mitisst.
 
 Die Wand zeigt eine warme Mahlzeit pro Tag. Welche Mahlzeit das ist und wie Schultage und freie Tage zählen, legt ihr unter [Haushalt einstellen](/settings/household) fest.

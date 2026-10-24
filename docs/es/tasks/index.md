@@ -8,6 +8,8 @@ La sección **Tareas** reúne **Hoy**, aprobaciones, tareas, recompensas y punto
 
 Marca una tarea terminada; puedes deshacerlo. Las tareas abiertas las toma la primera persona que llega. La **racha** cuenta días consecutivos; un **comodín** la protege en un día perdido, por ejemplo por enfermedad. En la pared, las tareas abiertas del día abren el mismo tablero familiar.
 
+En la tableta infantil y en la pared, [Wusel](/es/guide/wusel) se alegra con vosotros: al marcar la última tarea del día, Wusel lo celebra con confeti y un sonido corto, en la pared en lo alto de la columna de esa persona. Cuando un niño pide una recompensa, Wusel está orgulloso. Por una tarea sin hacer, Wusel no dice nada.
+
 ## Aprobaciones {#approvals}
 
 Aquí llegan las tareas por revisar y las solicitudes de recompensa. Un adulto responsable las aprueba o rechaza.
@@ -37,4 +39,4 @@ El saldo y los movimientos detallan tareas hechas o deshechas, recompensas, corr
 
 ## Por qué funciona así {#why-it-is-built-this-way}
 
-Las obligaciones dan pocos puntos; importa la constancia. No hay clasificaciones entre niños. Una pequeña tarea bonus permite una primera recompensa. Un día de enfermedad no borra una racha gracias a los comodines. Ajusta los valores en los [ajustes del hogar](/es/settings/household).
+Las obligaciones dan pocos puntos; importa la constancia. No hay clasificaciones entre niños; también [Nuestra semana](/es/guide/rituals#week-review) muestra las tareas como un solo número para toda la familia. Una pequeña tarea bonus permite una primera recompensa. Un día de enfermedad no borra una racha gracias a los comodines. Ajusta los valores en los [ajustes del hogar](/es/settings/household).

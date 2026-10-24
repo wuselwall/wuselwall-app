@@ -14,6 +14,8 @@ Hier stehen die Aufgaben für heute, pro Person.
 
 Auf der Küchenwand öffnet ein Tipp auf **Heute offen** dasselbe Aufgabenbrett der Familie.
 
+Auf dem Kinder-Tablet und an der Wand freut sich [Wusel](/guide/wusel) mit: Ist die letzte Aufgabe des Tages abgehakt, jubelt Wusel mit Konfetti und einem kurzen Ton, an der Wand oben in der Spalte der Person. Wünscht sich ein Kind eine Belohnung, ist Wusel stolz. Für eine Aufgabe, die liegen bleibt, sagt Wusel nichts.
+
 ## Freigaben
 
 Hier landet alles, was jemand bestätigen muss: erledigte Aufgaben, die geprüft werden sollen, und **Belohnungswünsche**. Tippe auf **Freigeben** oder **Ablehnen**.
@@ -50,7 +52,7 @@ Der Tab **Punkte** zeigt den **Stand** jeder Person und alle **Bewegungen**: erl
 ## Warum es so gebaut ist
 
 - **Pflichten bringen wenig Punkte.** Was alle erwarten, soll nicht wie Arbeit bezahlt werden. Die Serie ist ihre Belohnung.
-- **Keine Rangliste.** WuselWall stellt Kinder nicht gegeneinander.
+- **Keine Rangliste.** WuselWall stellt Kinder nicht gegeneinander. Auch der [Wochenrückblick](/guide/rituals#week-review) zeigt die Aufgaben nur als eine Zahl für die ganze Familie.
 - **Kleine Belohnungen sind früh erreichbar.** Eine Extra-Aufgabe reicht für die günstigste Belohnung.
 - **Ein Krankheitstag zerstört keine Serie.** Dafür gibt es die Serien-Joker.
 

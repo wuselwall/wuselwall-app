@@ -20,7 +20,8 @@ Toca **Nuevo evento** y añade:
 - cita o presencia: trabajo, teletrabajo, viaje, ausencia, descanso o cuidado;
 - todo el día, o inicio y fin;
 - personas, o ninguna para toda la familia;
-- si aún es incierto y si debe verse en la pantalla de cocina.
+- si aún es incierto y si debe verse en la pantalla de cocina;
+- una **imagen**, y si es algo que **Nos hace ilusión** o una **Tradición familiar** (ver [más abajo](#picture-countdown-tradition)).
 
 <Shot name="calendar-editor" alt="El editor con personas y repetición" />
 
@@ -29,6 +30,16 @@ El comportamiento inicial de los eventos se elige en los [ajustes del hogar](/es
 ### Repetir {#repeating}
 
 Elige cada día, semana, dos semanas o mes. Para turnos, selecciona días concretos en el calendario. La repetición termina por fecha o por número de veces. Al cambiar o eliminar una serie, elige esa cita sola o toda la serie.
+
+### Imagen, cuenta atrás y tradición {#picture-countdown-tradition}
+
+Al final del editor hay tres cosas que hacen el día más ligero (ver [Rituales](/es/guide/rituals)):
+
+- **Imagen**: una de 20 imágenes, como una tarta, una pizza, el zoo o una tienda de campaña. Acompaña al evento en la pared y en su cuenta atrás. **Sin imagen** es lo predeterminado.
+- **Nos hace ilusión**: el evento tiene cuenta atrás en la pantalla de pared y en la tableta de los niños, por ejemplo «Excursión al zoo: 3 noches más».
+- **Tradición familiar**: algo que la familia hace una y otra vez, como la noche de juegos. Una tradición está siempre en la pared, con una cinta. En **Con comida** escribes la comida que la acompaña y eliges **Almuerzo** o **Cena**.
+
+<Shot name="calendar-rituals" alt="El final del editor de eventos con la imagen, Nos hace ilusión y una tradición familiar con comida" />
 
 ## Reuniones hasta… {#meetings-until}
 

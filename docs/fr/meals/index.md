@@ -10,6 +10,14 @@ Chaque jour propose petit-déjeuner, déjeuner, dîner et collation. Touchez un 
 
 Un repas est un plat, une note comme « restes », ou une recette. Indiquez les portions, la personne qui cuisine, l’heure et les invités. Un appui long permet de le déplacer vers un autre jour.
 
+## Souhaits {#wishes}
+
+Une fois par semaine, les enfants souhaitent un repas dans **Ma journée** sur leur tablette (voir [Repas souhaités](/fr/guide/rituals#meal-wishes)). Les souhaits en attente s’affichent en haut des menus sous **Souhaits**, par exemple « Paul : Crêpes », et dans une carte dans **Aujourd’hui**.
+
+Touchez un souhait, choisissez un jour et un repas : il est planifié. Un souhait de recette alimente la liste de courses comme toute recette. Un souhait planifié porte une étoile et « Souhait de Paul » dans les menus et sur le mur. La **×** retire un souhait (**Retirer le souhait**) ; les parents et l’auteur du souhait le peuvent. Un souhait n’est jamais refusé : ce qui n’est pas planifié attend. Qui peut souhaiter, et combien de souhaits peuvent attendre, se règle dans les [paramètres du foyer](/fr/settings/household#rituals).
+
+<Shot name="meals-wishes" alt="Les menus sur téléphone avec le souhait Paul : Crêpes au-dessus de la semaine" />
+
 ## Suggestions {#suggestions}
 
 Laissez le nom vide pour voir les **favoris familiaux**, cuisinés ces 90 derniers jours, et les plats **pas préparés depuis longtemps**, depuis plus de 60 jours. Un toucher reprend le nom et la recette ; les propositions viennent de vos menus passés.
@@ -30,4 +38,4 @@ Enregistrez les ingrédients avec quantités, unités et notes, les étapes (une
 
 ## Sur le mur {#on-the-kitchen-wall}
 
-Touchez les repas pour ouvrir la semaine, puis un point pour corriger la présence au repas. Le mur affiche un repas chaud par jour. Les [paramètres du foyer](/fr/settings/household) déterminent lequel, selon les jours d’école et les jours libres.
+Touchez les repas pour ouvrir la semaine, puis un point pour corriger la présence au repas. Une étoile signale un repas souhaité. Le mur affiche un repas chaud par jour. Les [paramètres du foyer](/fr/settings/household) déterminent lequel, selon les jours d’école et les jours libres.

@@ -17,7 +17,7 @@ The adults' view has these areas:
 
 ## Today and getting started
 
-**Today** is the adults' first page. It shows the day's appointments, your chores for today to tick off, the warm meal and how many shopping list items are still open.
+**Today** is the adults' first page. It shows the day's appointments, your chores for today to tick off, the warm meal and how many shopping list items are still open. The small [rituals](/en/guide/rituals) join in: the nearest countdown under **Looking forward**, the children's meal wishes, the question at the table during the meal, **Our week** on Sunday evening, and on a birthday a card with [Wusel](/en/guide/wusel).
 
 <Shot name="today" alt="The Today tab with the Getting started card, the appointments and the warm meal" />
 
