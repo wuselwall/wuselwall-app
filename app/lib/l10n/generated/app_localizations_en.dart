@@ -5143,7 +5143,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingMealsWishesHelp =>
-      'Who may wish for a meal each week. A wish is never turned down in the app; it waits until it is planned.';
+      'Who may wish for a meal. A wish is never turned down in the app; it waits until it is planned.';
 
   @override
   String get settingMealsWishesPerWeekTitle => 'Open wishes per person';
@@ -5619,6 +5619,37 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tableQuestionShowAgain => 'Ask again';
+
+  @override
+  String get kidWishWithdraw => 'Take back';
+
+  @override
+  String get kidWishAnother => 'Wish for another';
+
+  @override
+  String get mealsWishSlotFree => 'Nothing planned yet';
+
+  @override
+  String get mealsWishReplaceTitle => 'Replace the meal?';
+
+  @override
+  String mealsWishReplaceBody(
+    String dish,
+    String slot,
+    String day,
+    String wish,
+  ) {
+    return 'Already planned: $dish ($slot, $day). Plan the wish $wish instead? The cook, the time and the servings stay.';
+  }
+
+  @override
+  String get mealsWishReplace => 'Replace';
+
+  @override
+  String get errSlotTaken => 'Something is already planned for that meal.';
+
+  @override
+  String get tableQuestionDismiss => 'Hide for this meal';
 
   @override
   String get weekReviewTitle => 'Our week';

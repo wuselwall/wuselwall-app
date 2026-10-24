@@ -2895,7 +2895,7 @@
   "settingRitualsCountdownReturnTitle": "Count down to a parent's return",
   "settingRitualsCountdownReturnHelp": "\"Back in 2 sleeps\" when an adult travels for two nights or more.",
   "settingMealsWishesTitle": "Meal wishes",
-  "settingMealsWishesHelp": "Who may wish for a meal each week. A wish is never turned down in the app; it waits until it is planned.",
+  "settingMealsWishesHelp": "Who may wish for a meal. A wish is never turned down in the app; it waits until it is planned.",
   "settingMealsWishesPerWeekTitle": "Open wishes per person",
   "settingMealsWishesPerWeekHelp": "How many wishes each person may have waiting at once.",
   "settingTableQuestionTitle": "Question at the table",
@@ -3216,6 +3216,52 @@
   "tableQuestionRemove": "Remove the question",
   "tableQuestionsHidden": "Questions we left out",
   "tableQuestionShowAgain": "Ask again",
+  "kidWishWithdraw": "Take back",
+  "@kidWishWithdraw": {
+    "description": "A child takes back their own open meal wish"
+  },
+  "kidWishAnother": "Wish for another",
+  "@kidWishAnother": {
+    "description": "Button on the child's wish card while more open wishes are allowed"
+  },
+  "mealsWishSlotFree": "Nothing planned yet",
+  "@mealsWishSlotFree": {
+    "description": "Under a meal in the wish planning dialog when that meal has no dish yet"
+  },
+  "mealsWishReplaceTitle": "Replace the meal?",
+  "@mealsWishReplaceTitle": {
+    "description": "Asks before a wish replaces a planned meal"
+  },
+  "mealsWishReplaceBody": "Already planned: {dish} ({slot}, {day}). Plan the wish {wish} instead? The cook, the time and the servings stay.",
+  "@mealsWishReplaceBody": {
+    "description": "Before a wish replaces a planned meal: slot is Lunch/Dinner, day a full date, dish the planned meal, wish the wished meal",
+    "placeholders": {
+      "dish": {
+        "type": "String"
+      },
+      "slot": {
+        "type": "String"
+      },
+      "day": {
+        "type": "String"
+      },
+      "wish": {
+        "type": "String"
+      }
+    }
+  },
+  "mealsWishReplace": "Replace",
+  "@mealsWishReplace": {
+    "description": "Confirms that a wish replaces a planned meal"
+  },
+  "errSlotTaken": "Something is already planned for that meal.",
+  "@errSlotTaken": {
+    "description": "Server error slot_taken: a wish was planned onto a meal that already has a dish"
+  },
+  "tableQuestionDismiss": "Hide for this meal",
+  "@tableQuestionDismiss": {
+    "description": "Tooltip: puts Today's table question card away until the next meal"
+  },
   "weekReviewTitle": "Our week",
   "weekReviewOpen": "Look back at our week",
   "weekReviewTogether": "What we did together",
