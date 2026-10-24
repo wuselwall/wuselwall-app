@@ -2727,5 +2727,21 @@
   "eventIcon_swim": "Natación",
   "eventIcon_ferris": "Feria",
   "eventIcon_house": "Casa",
-  "eventIcon_star": "Especial"
+  "eventIcon_star": "Especial",
+  "kidWishTitle": "Tu comida favorita",
+  "kidWishInvite": "¿Qué te apetece comer esta semana?",
+  "kidWishWaiting": "Has pedido {title}. Un adulto buscará un día.",
+  "kidWishPlanned": "¡Tu deseo, {title}, será el {day}!",
+  "kidWishMake": "Pedir",
+  "kidWishChange": "Cambiar",
+  "kidWishSent": "Tu deseo va de camino.",
+  "wishPickerTitle": "¿Qué te apetece comer?",
+  "wishPickerOwn": "Otra cosa",
+  "wishPickerOwnHint": "p. ej. tortitas",
+  "wishPickerSend": "Pido esto",
+  "mealsWishesTray": "Deseos",
+  "mealsWishChip": "{name}: {title}",
+  "mealsWishPlan": "Planificar",
+  "mealsWishRemove": "Quitar el deseo",
+  "mealsWishedBy": "Deseo de {name}"
 }

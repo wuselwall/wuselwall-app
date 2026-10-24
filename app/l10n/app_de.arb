@@ -2057,5 +2057,21 @@
   "eventIcon_swim": "Schwimmen",
   "eventIcon_ferris": "Rummel",
   "eventIcon_house": "Zuhause",
-  "eventIcon_star": "Besonderes"
+  "eventIcon_star": "Besonderes",
+  "kidWishTitle": "Dein Wunschessen",
+  "kidWishInvite": "Was möchtest du diese Woche essen?",
+  "kidWishWaiting": "Du wünschst dir {title}. Ein Erwachsener sucht einen Tag aus.",
+  "kidWishPlanned": "Dein Wunsch {title} gibt es am {day}!",
+  "kidWishMake": "Wünschen",
+  "kidWishChange": "Ändern",
+  "kidWishSent": "Dein Wunsch ist unterwegs.",
+  "wishPickerTitle": "Was möchtest du essen?",
+  "wishPickerOwn": "Etwas anderes",
+  "wishPickerOwnHint": "z. B. Pfannkuchen",
+  "wishPickerSend": "Das wünsche ich mir",
+  "mealsWishesTray": "Wünsche",
+  "mealsWishChip": "{name}: {title}",
+  "mealsWishPlan": "Einplanen",
+  "mealsWishRemove": "Wunsch entfernen",
+  "mealsWishedBy": "Wunsch von {name}"
 }

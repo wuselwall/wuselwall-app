@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart' show DateUtils;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wuselwall/core/realtime/household_channel.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/calendar/application/calendar_providers.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
+import 'package:wuselwall/features/rituals/data/rituals_repository.dart';
 import 'package:wuselwall/features/rituals/domain/countdown.dart';
+import 'package:wuselwall/features/rituals/domain/ritual_models.dart';
 import 'package:wuselwall/features/school/application/school_providers.dart';
 import 'package:wuselwall/features/school/domain/school_models.dart';
 import 'package:wuselwall/features/wusel/application/ambience.dart';
@@ -81,3 +84,40 @@ final ferienEdgeTodayProvider = Provider.autoDispose<FerienEdge?>((ref) {
   }
   return null;
 });
+
+/// The household's open and recently planned meal wishes; empty on a server without
+/// them, so the wish cards stay away rather than showing an error.
+final mealWishesProvider = FutureProvider.autoDispose<List<MealWish>>((
+  ref,
+) async {
+  ref.watch(deviceKeyProvider);
+  final householdId = ref.watch(deviceProvider).value?.householdId;
+  if (householdId != null) {
+    refreshOnInvalidation(ref, householdId: householdId, topic: 'meals');
+  }
+  final result = await ref.watch(ritualsRepositoryProvider).wishes();
+  return result.valueOrNull ?? const <MealWish>[];
+});
+
+/// The family's own table questions and the bundled ones it hid.
+final familyQuestionsProvider =
+    FutureProvider.autoDispose<List<FamilyQuestion>>((ref) async {
+      ref.watch(deviceKeyProvider);
+      final householdId = ref.watch(deviceProvider).value?.householdId;
+      if (householdId != null) {
+        refreshOnInvalidation(ref, householdId: householdId, topic: 'meals');
+      }
+      final result = await ref.watch(ritualsRepositoryProvider).questions();
+      return result.valueOrNull ?? const <FamilyQuestion>[];
+    });
+
+/// The look-back at the week starting on [weekStart] (a Monday); null on a server
+/// without it.
+final weekReviewProvider = FutureProvider.autoDispose
+    .family<WeekReview?, DateTime>((ref, weekStart) async {
+      ref.watch(deviceKeyProvider);
+      final result = await ref
+          .watch(ritualsRepositoryProvider)
+          .weekReview(weekStart);
+      return result.valueOrNull;
+    });

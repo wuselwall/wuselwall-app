@@ -3070,5 +3070,55 @@
   "eventIcon_swim": "Swimming",
   "eventIcon_ferris": "Fair",
   "eventIcon_house": "Home",
-  "eventIcon_star": "Special"
+  "eventIcon_star": "Special",
+  "kidWishTitle": "Your meal wish",
+  "kidWishInvite": "What would you like to eat this week?",
+  "kidWishWaiting": "You wished for {title}. A grown-up will find a day.",
+  "@kidWishWaiting": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "kidWishPlanned": "Your wish {title} is on {day}!",
+  "@kidWishPlanned": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "kidWishMake": "Wish",
+  "kidWishChange": "Change",
+  "kidWishSent": "Your wish is on its way.",
+  "wishPickerTitle": "What would you like to eat?",
+  "wishPickerOwn": "Something else",
+  "wishPickerOwnHint": "e.g. pancakes",
+  "wishPickerSend": "Wish for this",
+  "mealsWishesTray": "Wishes",
+  "mealsWishChip": "{name}: {title}",
+  "@mealsWishChip": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "mealsWishPlan": "Put on the plan",
+  "mealsWishRemove": "Remove the wish",
+  "mealsWishedBy": "{name}'s wish",
+  "@mealsWishedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

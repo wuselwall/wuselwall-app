@@ -9256,6 +9256,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Special'**
   String get eventIcon_star;
+
+  /// No description provided for @kidWishTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your meal wish'**
+  String get kidWishTitle;
+
+  /// No description provided for @kidWishInvite.
+  ///
+  /// In en, this message translates to:
+  /// **'What would you like to eat this week?'**
+  String get kidWishInvite;
+
+  /// No description provided for @kidWishWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'You wished for {title}. A grown-up will find a day.'**
+  String kidWishWaiting(String title);
+
+  /// No description provided for @kidWishPlanned.
+  ///
+  /// In en, this message translates to:
+  /// **'Your wish {title} is on {day}!'**
+  String kidWishPlanned(String title, String day);
+
+  /// No description provided for @kidWishMake.
+  ///
+  /// In en, this message translates to:
+  /// **'Wish'**
+  String get kidWishMake;
+
+  /// No description provided for @kidWishChange.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get kidWishChange;
+
+  /// No description provided for @kidWishSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Your wish is on its way.'**
+  String get kidWishSent;
+
+  /// No description provided for @wishPickerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What would you like to eat?'**
+  String get wishPickerTitle;
+
+  /// No description provided for @wishPickerOwn.
+  ///
+  /// In en, this message translates to:
+  /// **'Something else'**
+  String get wishPickerOwn;
+
+  /// No description provided for @wishPickerOwnHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. pancakes'**
+  String get wishPickerOwnHint;
+
+  /// No description provided for @wishPickerSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Wish for this'**
+  String get wishPickerSend;
+
+  /// No description provided for @mealsWishesTray.
+  ///
+  /// In en, this message translates to:
+  /// **'Wishes'**
+  String get mealsWishesTray;
+
+  /// No description provided for @mealsWishChip.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}: {title}'**
+  String mealsWishChip(String name, String title);
+
+  /// No description provided for @mealsWishPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Put on the plan'**
+  String get mealsWishPlan;
+
+  /// No description provided for @mealsWishRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove the wish'**
+  String get mealsWishRemove;
+
+  /// No description provided for @mealsWishedBy.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}\'s wish'**
+  String mealsWishedBy(String name);
 }
 
 class _AppLocalizationsDelegate

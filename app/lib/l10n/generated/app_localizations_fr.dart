@@ -5480,4 +5480,60 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get eventIcon_star => 'Spécial';
+
+  @override
+  String get kidWishTitle => 'Ton repas préféré';
+
+  @override
+  String get kidWishInvite => 'Qu\'aimerais-tu manger cette semaine ?';
+
+  @override
+  String kidWishWaiting(String title) {
+    return 'Tu as choisi $title. Un adulte va trouver un jour.';
+  }
+
+  @override
+  String kidWishPlanned(String title, String day) {
+    return 'Ton souhait $title, c\'est pour le $day !';
+  }
+
+  @override
+  String get kidWishMake => 'Choisir';
+
+  @override
+  String get kidWishChange => 'Changer';
+
+  @override
+  String get kidWishSent => 'Ton souhait est parti.';
+
+  @override
+  String get wishPickerTitle => 'Qu\'aimerais-tu manger ?';
+
+  @override
+  String get wishPickerOwn => 'Autre chose';
+
+  @override
+  String get wishPickerOwnHint => 'p. ex. des crêpes';
+
+  @override
+  String get wishPickerSend => 'Je choisis ça';
+
+  @override
+  String get mealsWishesTray => 'Souhaits';
+
+  @override
+  String mealsWishChip(String name, String title) {
+    return '$name : $title';
+  }
+
+  @override
+  String get mealsWishPlan => 'Planifier';
+
+  @override
+  String get mealsWishRemove => 'Retirer le souhait';
+
+  @override
+  String mealsWishedBy(String name) {
+    return 'Souhait de $name';
+  }
 }

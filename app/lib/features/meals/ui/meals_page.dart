@@ -19,6 +19,7 @@ import 'package:wuselwall/features/meals/domain/meal_models.dart';
 import 'package:wuselwall/features/meals/ui/meal_editor_sheet.dart';
 import 'package:wuselwall/features/meals/ui/meals_format.dart';
 import 'package:wuselwall/features/meals/ui/shopping_preview_sheet.dart';
+import 'package:wuselwall/features/rituals/ui/meal_wish_widgets.dart';
 
 /// The week's navigation, in the app bar: the week before, the week after, and a tap on
 /// the range to come back to this week.
@@ -105,6 +106,8 @@ class MealsWeekBody extends ConsumerWidget {
             ],
           ),
         ),
+        // The children's wishes, waiting for a day (specs/27).
+        MealWishTray(weekStart: weekStart),
         Expanded(
           child: _WeekGrid(
             weekStart: weekStart,
@@ -424,6 +427,8 @@ class _SlotCard extends ConsumerWidget {
                 context.planSlotLabel(slot),
                 style: theme.textTheme.labelSmall?.copyWith(color: ww.ink2),
               ),
+              if (entry?.wishedBy case final wisher?)
+                _WishedBy(profileId: wisher),
               Text(
                 entry?.title ?? l10n.mealsNothingYet,
                 maxLines: 2,
@@ -483,6 +488,39 @@ class _SlotCard extends ConsumerWidget {
       ),
       childWhenDragging: Opacity(opacity: 0.4, child: card),
       child: card,
+    );
+  }
+}
+
+/// "Wunsch von Olivia" above a meal that was a child's wish (specs/27).
+class _WishedBy extends ConsumerWidget {
+  const _WishedBy({required this.profileId});
+
+  final String profileId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final member = ref
+        .watch(membersProvider)
+        .value
+        ?.where((m) => m.id == profileId)
+        .firstOrNull;
+    if (member == null) return const SizedBox.shrink();
+    final ink = context.ww.member(member.color).ink;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(Icons.star_rounded, size: 16, color: ink),
+        const SizedBox(width: 2),
+        Flexible(
+          child: Text(
+            context.l10n.mealsWishedBy(member.displayName),
+            style: Theme.of(context).textTheme.labelSmall,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
     );
   }
 }

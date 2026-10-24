@@ -164,6 +164,7 @@ class MealEntry {
     this.guests = 0,
     this.eatingOverrides = const {},
     this.shoppingGeneratedAt,
+    this.wishedBy,
   });
 
   factory MealEntry.fromJson(Map<String, dynamic> json) => MealEntry(
@@ -184,7 +185,12 @@ class MealEntry {
     shoppingGeneratedAt: json['shopping_generated_at'] == null
         ? null
         : DateTime.parse(json['shopping_generated_at'] as String),
+    // A child's meal wish (specs/27); absent on servers before it.
+    wishedBy: json['wished_by_profile_id'] as String?,
   );
+
+  /// Whose wish this meal is (specs/27 "Wunschessen"); null for none.
+  final String? wishedBy;
 
   final String id;
   final DateTime onDate;

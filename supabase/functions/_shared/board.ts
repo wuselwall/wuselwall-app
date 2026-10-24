@@ -37,6 +37,9 @@ export type BoardEventJson = {
   attendee_ids: string[];
   tentative: boolean;
   key: boolean;
+  /** Only when set (specs/27): a family tradition, and the event's content icon. */
+  tradition?: true;
+  icon_key?: string;
 };
 
 export type BusyUntilJson = { member_id: string; until: string };
@@ -244,6 +247,8 @@ function eventsOn(appointments: Occurrence[], date: string): BoardEventJson[] {
       attendee_ids: occ.attendee_ids,
       tentative: occ.status === "tentative",
       key: occ.importance === "key",
+      ...(occ.tradition ? { tradition: true as const } : {}),
+      ...(occ.icon_key ? { icon_key: occ.icon_key } : {}),
     });
   }
   return out.sort(compareEvents);
@@ -296,6 +301,8 @@ export type MealEntryRow = {
   at_time: string | null;
   guests: number;
   eating_overrides: Record<string, boolean> | null;
+  /** A child's meal wish (specs/27); absent before 20261024110000. */
+  wished_by_profile_id?: string | null;
 };
 
 /** The members the eating rule walks, in household order. */
@@ -320,6 +327,8 @@ export type MealJson = {
   cook_id: string | null;
   eating: string[];
   guests: number;
+  /** Only when the meal is someone's wish (specs/27). */
+  wished_by?: string;
 };
 
 /** Where a meal without a set time falls for the presence and care rules. */
@@ -392,6 +401,9 @@ export function fillMeals(base: BoardJson, input: MealInput): BoardJson {
         cook_id: entry?.cook_profile_id ?? null,
         eating: members.filter((m) => eating.has(m.id)).map((m) => m.id),
         guests: entry?.guests ?? 0,
+        ...(entry?.wished_by_profile_id
+          ? { wished_by: entry.wished_by_profile_id }
+          : {}),
       };
       return { ...day, meal };
     }),

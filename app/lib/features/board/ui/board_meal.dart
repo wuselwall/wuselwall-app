@@ -27,6 +27,8 @@ class MealRow extends StatelessWidget {
           if (day.meal case final meal?) ...[
             context.fullDate(day.date),
             meal.title ?? context.l10n.boardMealNothingPlanned,
+            if (board.member(meal.wishedBy ?? '') case final wisher?)
+              context.l10n.mealsWishedBy(context.memberName(board, wisher)),
             if (meal.time case final time?) context.time(time),
             if (board.member(meal.cookId ?? '') case final cook?)
               context.l10n.boardMealCook(context.memberName(board, cook)),
@@ -78,7 +80,11 @@ class MealRow extends StatelessWidget {
                             MediaQuery.textScalerOf(context).scale(112)
                         ? Align(
                             alignment: Alignment.centerLeft,
-                            child: _Dish(meal: meal, twoLines: false),
+                            child: _Dish(
+                              meal: meal,
+                              twoLines: false,
+                              wishInk: _wishInk(context, board, meal),
+                            ),
                           )
                         : ClipFit(
                             alignment: Alignment.topLeft,
@@ -163,7 +169,11 @@ class _MealCell extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 2),
-        _Dish(meal: meal, twoLines: twoLines),
+        _Dish(
+          meal: meal,
+          twoLines: twoLines,
+          wishInk: _wishInk(context, board, meal),
+        ),
         const SizedBox(height: 4),
         // The cook stays beside the dots while there is room, else takes the next
         // line; the dots and the guest count are separate Wrap children too, so a
@@ -219,10 +229,13 @@ class _MealCell extends StatelessWidget {
 /// The dish truncates at the real text size, including a single long word.
 /// A second line is allowed only when its scaled height fits the zone.
 class _Dish extends StatelessWidget {
-  const _Dish({required this.meal, required this.twoLines});
+  const _Dish({required this.meal, required this.twoLines, this.wishInk});
 
   final BoardMeal meal;
   final bool twoLines;
+
+  /// The wisher's ink: the dish then carries a star (specs/27 "Wunschessen").
+  final Color? wishInk;
 
   @override
   Widget build(BuildContext context) {
@@ -247,11 +260,27 @@ class _Dish extends StatelessWidget {
       color: Theme.of(context).colorScheme.onSurface,
     );
 
-    return Text(
+    final text = Text(
       title,
       style: style,
       maxLines: twoLines ? 2 : 1,
       overflow: TextOverflow.ellipsis,
     );
+    final ink = wishInk;
+    if (ink == null) return text;
+    return Row(
+      children: [
+        Icon(Icons.star_rounded, size: 26, color: ink),
+        const SizedBox(width: 4),
+        Expanded(child: text),
+      ],
+    );
   }
 }
+
+/// The ink of the member whose wish [meal] is, or null.
+Color? _wishInk(BuildContext context, WeekBoard board, BoardMeal meal) =>
+    switch (board.member(meal.wishedBy ?? '')) {
+      final m? => context.ww.member(m.color).ink,
+      null => null,
+    };

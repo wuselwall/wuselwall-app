@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/emoji_picture.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
@@ -11,6 +13,7 @@ import 'package:wuselwall/features/board/ui/board_geometry.dart';
 import 'package:wuselwall/features/board/ui/board_grid.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
 import 'package:wuselwall/features/board/ui/details/board_details.dart';
+import 'package:wuselwall/features/rituals/domain/event_icons.dart';
 
 /// The day names row: each column's weekday and date,
 /// today's column marked with a bar and "Heute" in place of its weekday. A public holiday
@@ -450,16 +453,23 @@ class _EventBlock extends StatelessWidget {
             if (dots.isNotEmpty) MemberDots(dots: dots, size: 12),
           ],
         ),
-        Text(
-          _titleOf(event),
-          style: boardCell(24, weight: FontWeight.w700, color: ink),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          softWrap: false,
+        Row(
+          children: [
+            ?_iconOf(event),
+            Expanded(
+              child: Text(
+                _titleOf(event),
+                style: boardCell(24, weight: FontWeight.w700, color: ink),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                softWrap: false,
+              ),
+            ),
+          ],
         ),
       ],
     );
-    return _tentative(context, event, block);
+    return _tradition(context, event, _tentative(context, event, block));
   }
 }
 
@@ -500,6 +510,7 @@ class _EventLine extends StatelessWidget {
           ),
           const SizedBox(width: 6),
         ],
+        ?_iconOf(event),
         Expanded(
           child: Text(
             _titleOf(event),
@@ -519,9 +530,32 @@ class _EventLine extends StatelessWidget {
         ],
       ],
     );
-    return _tentative(context, event, row);
+    return _tradition(context, event, _tentative(context, event, row));
   }
 }
+
+/// The event's picture before its title (specs/27), or nothing.
+Widget? _iconOf(BoardEvent e) => switch (eventIconAsset(e.iconKey)) {
+  final asset? => Padding(
+    padding: const EdgeInsets.only(right: 4),
+    child: EmojiPicture(asset, size: 24),
+  ),
+  null => null,
+};
+
+/// A family tradition sits on a lemon ribbon (specs/27): paper, so its text stays ink.
+Widget _tradition(BuildContext context, BoardEvent e, Widget child) =>
+    e.tradition
+    ? DecoratedBox(
+        decoration: BoxDecoration(
+          color: context.ww.paper(
+            PaperTints.tints.firstWhere((t) => t.key == 'lemon'),
+          ),
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Padding(padding: const EdgeInsets.all(2), child: child),
+      )
+    : child;
 
 /// When an appointment is over, in minutes after midnight; all-day ones never are.
 int _endMinutes(BoardEvent e) {

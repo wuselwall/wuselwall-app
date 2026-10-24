@@ -5453,4 +5453,60 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get eventIcon_star => 'Besonderes';
+
+  @override
+  String get kidWishTitle => 'Dein Wunschessen';
+
+  @override
+  String get kidWishInvite => 'Was möchtest du diese Woche essen?';
+
+  @override
+  String kidWishWaiting(String title) {
+    return 'Du wünschst dir $title. Ein Erwachsener sucht einen Tag aus.';
+  }
+
+  @override
+  String kidWishPlanned(String title, String day) {
+    return 'Dein Wunsch $title gibt es am $day!';
+  }
+
+  @override
+  String get kidWishMake => 'Wünschen';
+
+  @override
+  String get kidWishChange => 'Ändern';
+
+  @override
+  String get kidWishSent => 'Dein Wunsch ist unterwegs.';
+
+  @override
+  String get wishPickerTitle => 'Was möchtest du essen?';
+
+  @override
+  String get wishPickerOwn => 'Etwas anderes';
+
+  @override
+  String get wishPickerOwnHint => 'z. B. Pfannkuchen';
+
+  @override
+  String get wishPickerSend => 'Das wünsche ich mir';
+
+  @override
+  String get mealsWishesTray => 'Wünsche';
+
+  @override
+  String mealsWishChip(String name, String title) {
+    return '$name: $title';
+  }
+
+  @override
+  String get mealsWishPlan => 'Einplanen';
+
+  @override
+  String get mealsWishRemove => 'Wunsch entfernen';
+
+  @override
+  String mealsWishedBy(String name) {
+    return 'Wunsch von $name';
+  }
 }

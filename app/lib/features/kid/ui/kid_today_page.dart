@@ -23,6 +23,7 @@ import 'package:wuselwall/features/kid/application/kid_logic.dart';
 import 'package:wuselwall/features/kid/application/kid_providers.dart';
 import 'package:wuselwall/features/kid/ui/kid_widgets.dart';
 import 'package:wuselwall/features/rituals/ui/countdown_widgets.dart';
+import 'package:wuselwall/features/rituals/ui/meal_wish_widgets.dart';
 import 'package:wuselwall/features/school/application/school_providers.dart';
 import 'package:wuselwall/features/school/domain/school_models.dart';
 import 'package:wuselwall/features/school/ui/school_icons.dart';
@@ -80,6 +81,7 @@ class _KidTodayPageState extends ConsumerState<KidTodayPage> {
         _SchoolSection(actor: member.id),
         const SizedBox(height: Tokens.space4),
         _MealSection(actor: member.id),
+        KidWishCard(member: member),
         KidSectionTitle(l10n.kidEventsTitle),
         _EventsSection(actor: member.id),
       ],
