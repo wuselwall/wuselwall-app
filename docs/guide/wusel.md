@@ -30,13 +30,13 @@ Wusel taucht nie dort auf, wo ihr gerade etwas eingebt (Einkaufskacheln, Termin-
 
 Jede Person kann Wusel anziehen: **Partyhut**, **Krone**, **Zauberhut**, **Blumenkranz**, **Sonnenbrille**, **Schal**, **Kopfhörer** oder **Schleife**. Alles ist von Anfang an da und kostet nichts; man muss nichts verdienen. Wusel trägt es, sobald es um diese Person geht: auf ihrem Kinder-Tablet, auf ihrem Handy und an der Wand, wenn sie sich ausgewählt hat.
 
-Das stellst du unter **Einstellungen → Haushalt einstellen** ein, Ansicht **Erweitert**, im Bereich **Meine Einstellungen** bei **Was Wusel trägt**. Am eigenen Geburtstag trägt Wusel den Partyhut. Auf der Wand, die allen gehört, trägt Wusel sonst nichts.
+Das stellst du unter **Einstellungen → Persönlich** bei **Was Wusel trägt** ein (Ansicht **Erweitert**). Am eigenen Geburtstag trägt Wusel den Partyhut. Auf der Wand, die allen gehört, trägt Wusel sonst nichts.
 
-<Shot name="settings-wusel" alt="Meine Einstellungen mit Wusel und der Auswahl, was Wusel trägt" />
+<Shot name="settings-wusel" alt="Persönlich mit Wusel und der Auswahl, was Wusel trägt" />
 
 ## Wie lebhaft Wusel ist {#how-lively}
 
-Unter **Meine Einstellungen** stellt jede Person **Wusel** ein (auch in der Ansicht **Einfach**):
+Unter **Einstellungen → Persönlich** stellt jede Person **Wusel** ein (auch in der Ansicht **Einfach**):
 
 - **Automatisch** (Standard): lebhaft für Kinder, ruhig für Erwachsene
 - **Lebhaft**: Wusel bewegt sich und spricht
@@ -55,7 +55,7 @@ Ist auf dem Gerät **Bewegung reduzieren** eingeschaltet, steht Wusel still, und
 
 ### Jahreszeiten und Anlässe {#occasions}
 
-Der Himmel schmückt sich auch für besondere Tage. Jeder Anlass hat einen eigenen Schalter unter **Haushalt einstellen → Erweitert → Jahreszeiten und Anlässe**:
+Der Himmel schmückt sich auch für besondere Tage. Jeder Anlass hat einen eigenen Schalter unter **Einstellungen → Feste & Jahreszeiten** (Ansicht **Erweitert**):
 
 | Anlass | Was passiert | Standard |
 |---|---|---|
@@ -71,7 +71,7 @@ Der Himmel schmückt sich auch für besondere Tage. Jeder Anlass hat einen eigen
 
 ## Töne {#sounds}
 
-WuselWall hat vier kurze Töne: beim Abhaken, wenn Punkte ankommen, wenn alles erledigt ist, und für ein Abzeichen oder eine Belohnung. Ob sie für dich klingen, legt **Ton beim Abhaken einer Aufgabe** unter **Meine Einstellungen** fest. **Töne auf diesem Gerät** (unter **Dieses Gerät**) schaltet ein ganzes Gerät stumm; **Automatisch** heißt: an der Wand aus, sonst an. Nachts gibt es nie einen Ton.
+WuselWall hat vier kurze Töne: beim Abhaken, wenn Punkte ankommen, wenn alles erledigt ist, und für ein Abzeichen oder eine Belohnung. Ob sie für dich klingen, legt **Ton beim Abhaken einer Aufgabe** unter **Einstellungen → Persönlich** fest. **Töne auf diesem Gerät** (unter **Dieses Gerät**) schaltet ein ganzes Gerät stumm; **Automatisch** heißt: an der Wand aus, sonst an. Nachts gibt es nie einen Ton.
 
 ## Die Wand schonen {#burn-in}
 

@@ -46,7 +46,7 @@ The **region** decides which public and school holidays apply to a school. You c
 
 Cantons and states are listed alphabetically from Z to A in the app’s language. Swiss cantons show their abbreviation, for example **Canton Aargau (AG)**. Search by name or abbreviation.
 
-If you tap **Continue without a region**, the region stays empty. Then there are no automatic public holidays, and you enter school holidays by hand. The household's region is also set under [Household settings](/en/settings/household).
+If you tap **Continue without a region**, the region stays empty. Then there are no automatic public holidays, and you enter school holidays by hand. The household's region is also set under [Settings → Family](/en/settings/household).
 
 **Public holidays** come automatically from the region. You do not have to import anything: on a public holiday the school day is free, the day's header in the week shows "Public holiday · …", and the warm meal counts a free day like a weekend.
 
@@ -159,8 +159,8 @@ Tap a lesson when something changes:
 
 ## Pack for tomorrow
 
-On the kitchen wall, a child's card shows **Pack for tomorrow** when something needs to come along, for example sports kit. The child's Today view shows the same, and your own phone gives a [packing reminder](/en/settings/reminders) the evening before. Whether these hints appear is set under [Household settings](/en/settings/household): switched off, they disappear everywhere.
+On the kitchen wall, a child's card shows **Pack for tomorrow** when something needs to come along, for example sports kit. The child's Today view shows the same, and your own phone gives a [packing reminder](/en/settings/reminders) the evening before. Whether these hints appear is set under [Settings → Calendar & school](/en/settings/household): switched off, they disappear everywhere.
 
 ## Children report changes
 
-Only guardians maintain the timetable. You can allow a child to report a cancelled lesson, though. A guardian then confirms it. The option is under [Household settings](/en/settings/household), as **Members report timetable changes**.
+Only guardians maintain the timetable. You can allow a child to report a cancelled lesson, though. A guardian then confirms it. The option is under [Settings → Calendar & school](/en/settings/household), as **Members report timetable changes**.

@@ -30,13 +30,13 @@ Wusel nunca aparece mientras escribes algo (las tarjetas de la compra, los edito
 
 Cada persona puede vestir a Wusel: **Gorro de fiesta**, **Corona**, **Sombrero de mago**, **Corona de flores**, **Gafas de sol**, **Bufanda**, **Auriculares** o **Lazo**. Toda la ropa está disponible desde el principio y no cuesta nada; no hay que ganarse nada. Wusel la lleva siempre que se trata de esa persona: en su tableta, en su móvil y en la pared cuando se ha elegido.
 
-Se elige en **Ajustes → Ajustes del hogar**, vista **Avanzados**, sección **Mis ajustes**, en **La ropa de Wusel**. En tu cumpleaños, Wusel lleva el gorro de fiesta. En la pared, que es de todos, Wusel no lleva nada más.
+Se elige en **Ajustes → Personal**, en **La ropa de Wusel** (vista **Avanzados**). En tu cumpleaños, Wusel lleva el gorro de fiesta. En la pared, que es de todos, Wusel no lleva nada más.
 
-<Shot name="settings-wusel" alt="Mis ajustes con Wusel y la elección de la ropa de Wusel" />
+<Shot name="settings-wusel" alt="Personal con Wusel y la elección de la ropa de Wusel" />
 
 ## Cuánto aparece Wusel {#how-lively}
 
-En **Mis ajustes**, cada persona elige **Wusel** (también en la vista **Básicos**):
+En **Ajustes → Personal**, cada persona elige **Wusel** (también en la vista **Básicos**):
 
 - **Automático** (predeterminado): animado para los niños, tranquilo para los adultos
 - **Animado**: Wusel se mueve y habla
@@ -55,7 +55,7 @@ Si el dispositivo tiene activado **Reducir movimiento**, Wusel se queda quieto y
 
 ### Estaciones y celebraciones {#occasions}
 
-El cielo también se adorna en días especiales. Cada ocasión tiene su propio interruptor en **Ajustes del hogar → Avanzados → Estaciones y celebraciones**:
+El cielo también se adorna en días especiales. Cada ocasión tiene su propio interruptor en **Ajustes → Celebraciones y estaciones** (vista **Avanzados**):
 
 | Ocasión | Qué cambia | Predeterminado |
 |---|---|---|
@@ -71,7 +71,7 @@ El cielo también se adorna en días especiales. Cada ocasión tiene su propio i
 
 ## Sonidos {#sounds}
 
-WuselWall tiene cuatro sonidos cortos: una tarea marcada, puntos que llegan, todo hecho, y una insignia o recompensa. **Sonido al completar una tarea** (en **Mis ajustes**) decide si suenan para ti. **Sonidos en este dispositivo** (en **Este dispositivo**) silencia un dispositivo entero; **Automático** significa apagados en la pantalla de pared y encendidos en los demás. De noche nunca hay sonido.
+WuselWall tiene cuatro sonidos cortos: una tarea marcada, puntos que llegan, todo hecho, y una insignia o recompensa. **Sonido al completar una tarea** (en **Ajustes → Personal**) decide si suenan para ti. **Sonidos en este dispositivo** (en **Este dispositivo**) silencia un dispositivo entero; **Automático** significa apagados en la pantalla de pared y encendidos en los demás. De noche nunca hay sonido.
 
 ## Cuidar la pantalla de pared {#burn-in}
 

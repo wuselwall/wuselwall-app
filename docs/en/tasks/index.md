@@ -60,4 +60,4 @@ The **Points** tab shows each person's **balance** and all **movements**: chores
 - **Small rewards come early.** One bonus chore is enough for the cheapest reward.
 - **A sick day does not wipe out a streak.** That is what the streak jokers are for.
 
-You set these values under [Household settings](/en/settings/household).
+You set these values under [Settings → Tasks & rewards](/en/settings/household).

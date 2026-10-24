@@ -44,7 +44,7 @@ Elige país (**Alemania, Austria, Suiza o Liechtenstein**), cantón o estado y, 
 
 Las regiones se ordenan de Z a A en el idioma de la app. Los cantones suizos incluyen su abreviatura, por ejemplo AG. Puedes buscar por nombre o abreviatura.
 
-Puedes continuar sin región: no habrá festivos automáticos y tendrás que añadir las vacaciones a mano. La región del hogar también se cambia en los [ajustes](/es/settings/household).
+Puedes continuar sin región: no habrá festivos automáticos y tendrás que añadir las vacaciones a mano. La región del hogar también se cambia en [Ajustes → Familia](/es/settings/household).
 
 Los **festivos** se aplican automáticamente. El día queda sin clases, su nombre aparece en la cabecera y las comidas lo tratan como día libre.
 
@@ -145,4 +145,4 @@ La pared y la vista del día del niño muestran el material del día siguiente, 
 
 ## Los niños informan de cambios {#children-report-changes}
 
-Solo los adultos responsables mantienen el horario. Puedes permitir que un miembro comunique una cancelación para que un adulto la confirme, en los [ajustes del hogar](/es/settings/household).
+Solo los adultos responsables mantienen el horario. Puedes permitir que un miembro comunique una cancelación para que un adulto la confirme, en [Ajustes → Calendario y colegio](/es/settings/household).

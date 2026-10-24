@@ -41,14 +41,19 @@ on the parent's phone gives `kid` or `kiosk`.
   started. Rewards live under Tasks, school and subjects under Stundenplan. The member,
   family and device editing is [16, step 10.1–10.2](16-setup-plan.md#step-10--journey-gaps-before-launch-m15);
   MCP/AI assistants are on hold ([retained work](deferred/mcp-and-ai-assistants.md)); the audit log is a later candidate.
-  Settings and household settings open in a **Basic** view (*added 2026-10-19*): household
-  settings, usual week, reminders, appearance, getting started, members and devices, account
-  deletion on a personal phone (easy to find, App Store guideline 5.1.1(v)), and
-  of the household settings only region, streak jokers, reward approval, members editing
-  their own events, the warm meal, night hours, completion sound, morning summary and event
-  reminder. **Advanced** shows everything else: feed tokens, subscribed calendars,
-  apps and automations (specs/12; MCP/AI assistants on hold), the server, export, sign-in, security, leaving
-  and deleting the family, and every other household setting, including any a newer catalogue adds.
+  Settings is a short page of **groups**, each opening its own page (*regrouped 2026-10-24*,
+  [21](21-household-settings.md#where-the-settings-live)): Personal, Family (family profile,
+  region, members, usual week), Tasks and rewards, Calendar and school (with the connections),
+  Meals, Rituals, Celebrations and seasons, Kitchen wall, Devices (this device, all devices),
+  Account and security, Server, Help and about, and "Sign out this device" at the bottom.
+  Settings open in a **Basic** view (*added 2026-10-19*): every group with something a family
+  decides once, account deletion on a personal phone (easy to find, App Store guideline
+  5.1.1(v)), and of the catalogue settings only region, streak jokers, reward approval, members
+  editing their own events, the warm meal, night hours, completion sound, morning summary and
+  event reminder (and Wusel, the table question, meal wishes and the week review). A group with
+  nothing to show in the current view has no tile. **Advanced** shows everything else: feed
+  tokens, subscribed calendars, the server, export, sign-in, security, leaving and deleting the
+  family, and every other setting, including any a newer catalogue adds.
   The choice is per device and purely visual: a hidden setting keeps its value and applies.
 
 **kid**

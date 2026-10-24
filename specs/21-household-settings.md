@@ -286,6 +286,35 @@ Everything else here is under **Erweitert**, including each occasion and the pix
 | `rituals.table_question_deck` | household | family | family · older | *Older* adds questions for 8 and over | [27](27-family-rituals.md#tischfrage) |
 | `rituals.week_review` | household | Sunday 16:00 | weekday + time · off | When "Unsere Woche" opens; it stays until 10:00 the next morning | [27](27-family-rituals.md#wochenrückblick) |
 
+## Where the settings live
+
+*Regrouped 2026-10-24.* The settings screen is a short list of groups; each opens its own page
+(`/settings/<group>`). The map is `app/lib/features/settings/application/settings_groups.dart`;
+a test checks that every key with a title is placed in exactly one group.
+
+| Group | Holds |
+|---|---|
+| Personal (someone must be acting) | Wusel: `member.wusel`, `member.wusel_outfit` · `member.completion_sound` · Notifications (personal phone only): Reminders on this phone, `notify.morning_summary`, `notify.event_reminder`, `notify.packing_reminder`, `calendar.tentative_nudge` |
+| Family | family profile (name, time zone, export, delete) · `household.region` · Members (reorder, add, invite) · usual week |
+| Tasks and rewards | `tasks.*` |
+| Calendar and school | `calendar.members_edit_own_events`, `calendar.key_default`, `school.*` · Connections (Advanced): calendar feeds, subscribed calendars |
+| Meals | `meals.*`, including the wishes |
+| Rituals | table question (`rituals.table_question*`, "Our questions") · `rituals.week_review` · countdowns (`rituals.countdown_*`) |
+| Celebrations and seasons | holiday celebrations (`ambience.advent`, `.easter_*`, `.new_year`) · through the year (`ambience.season`, `.ferien`, `.birthdays`) |
+| Kitchen wall | `board.*` |
+| Devices | this device: language, appearance, `device.*` · all devices: the list, connect, rename, revoke |
+| Account and security (personal phone only) | sign-in methods, password, two-factor, PIN, passkeys, leaving the family, deleting the account |
+| Server (Advanced, builds that chose a server) | address and QR code, switching server |
+| Help and about | getting started, versions, licences |
+
+*Basic* shows the keys of `basicSettingKeys` (unchanged by the regrouping) and the rows a family
+needs; Account and security stays in Basic on a personal phone for account deletion. A group with
+nothing to show in the current view, on an older server or on this kind of device has no tile.
+A setting the app does not know follows its key's prefix into the matching group, or lands in
+"Other settings" under Help and about; both only under Advanced. Keys the app does not read
+(`unusedSettingKeys`) are not offered. The pages take a parent route and may leave out the
+Basic/Advanced chip, so a shared device can show one group (Personal) on its own.
+
 ## Fixed by design — not settings
 
 Recorded so that nobody turns these into options:

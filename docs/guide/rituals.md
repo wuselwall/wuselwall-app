@@ -7,7 +7,7 @@ Für alle gilt:
 - **Ein Ritual ist nie eine Pflicht.** Es bringt keine Punkte, hat keine Serie und kann nicht „verpasst“ werden. Lasst ihr es aus, bleibt keine Spur.
 - **Niemand wird verglichen.** Nichts zählt eine Person gegen eine andere.
 - **Keine Benachrichtigungen.** Rituale erscheinen dort, wo ihr ohnehin hinschaut: an der Wand, auf **Heute** und auf **Mein Tag** der Kinder.
-- **Alles ist abschaltbar**, jedes für sich, unter **Einstellungen → Haushalt einstellen → Rituale** (siehe [Haushalt einstellen](/settings/household#rituals)). Am Anfang ist alles an.
+- **Alles ist abschaltbar**, jedes für sich, unter **Einstellungen → Rituale** (siehe [Alle Einstellungen](/settings/household#rituals)). Am Anfang ist alles an.
 
 <Shot name="wall-board" alt="Wandanzeige mit Wusel in der Kopfzeile, einer Familientradition am Freitag, einem Wunschessen mit Stern und dem Geburtstags-Countdown in der Fußzeile" wide />
 

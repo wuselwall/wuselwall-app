@@ -46,7 +46,7 @@ Die **Region** entscheidet, welche Feiertage und Schulferien für eine Schule ge
 
 Kantone und Bundesländer sind alphabetisch von Z bis A in der Sprache der App sortiert. Schweizer Kantone zeigen ihr Kürzel, zum Beispiel **Kanton Aargau (AG)**. Ihr könnt nach Name oder Kürzel suchen.
 
-Tippt ihr auf **Ohne Region weiter**, bleibt die Region leer. Dann gibt es keine automatischen Feiertage, und Ferien tragt ihr von Hand ein. Die Region des Haushalts legt ihr auch unter [Haushalt einstellen](/settings/household) fest.
+Tippt ihr auf **Ohne Region weiter**, bleibt die Region leer. Dann gibt es keine automatischen Feiertage, und Ferien tragt ihr von Hand ein. Die Region des Haushalts legt ihr auch unter [Einstellungen → Familie](/settings/household) fest.
 
 **Feiertage** kommen automatisch aus der Region. Ihr müsst nichts übernehmen: An einem Feiertag ist die Schule frei, der Tag trägt im Kopf der Woche die Bezeichnung „Feiertag · …“, und das warme Essen gilt an einem freien Tag wie am Wochenende.
 
@@ -159,8 +159,8 @@ Tippe auf eine Stunde, wenn sich etwas ändert:
 
 ## Morgen einpacken
 
-Auf der Küchenwand steht bei einem Kind **Morgen einpacken**, wenn morgen etwas mitzubringen ist, zum Beispiel Sportsachen. Dasselbe zeigt die Heute-Ansicht des Kindes, und auf dem eigenen Handy kommt am Vorabend eine [Einpack-Erinnerung](/settings/reminders). Ob diese Hinweise erscheinen, legt ihr unter [Haushalt einstellen](/settings/household) fest: ausgeschaltet verschwinden sie überall.
+Auf der Küchenwand steht bei einem Kind **Morgen einpacken**, wenn morgen etwas mitzubringen ist, zum Beispiel Sportsachen. Dasselbe zeigt die Heute-Ansicht des Kindes, und auf dem eigenen Handy kommt am Vorabend eine [Einpack-Erinnerung](/settings/reminders). Ob diese Hinweise erscheinen, legt ihr unter [Einstellungen → Kalender & Schule](/settings/household) fest: ausgeschaltet verschwinden sie überall.
 
 ## Kinder melden Änderungen
 
-Nur Erziehungsberechtigte pflegen den Stundenplan. Ihr könnt aber erlauben, dass ein Kind einen Entfall meldet. Eine erziehungsberechtigte Person bestätigt ihn dann. Die Option findet ihr unter [Haushalt einstellen](/settings/household) bei **Mitglieder melden Plan-Änderungen**.
+Nur Erziehungsberechtigte pflegen den Stundenplan. Ihr könnt aber erlauben, dass ein Kind einen Entfall meldet. Eine erziehungsberechtigte Person bestätigt ihn dann. Die Option findet ihr unter [Einstellungen → Kalender & Schule](/settings/household) bei **Mitglieder melden Plan-Änderungen**.

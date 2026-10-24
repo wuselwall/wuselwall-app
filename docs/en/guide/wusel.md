@@ -30,13 +30,13 @@ Wusel never appears where you are entering something (the shopping tiles, the ev
 
 Everyone can dress Wusel: **Party hat**, **Crown**, **Wizard hat**, **Flower wreath**, **Sunglasses**, **Scarf**, **Headphones** or **Bow**. Every outfit is there from the start and costs nothing; nothing has to be earned. Wusel wears it whenever it is about that person: on their kids' tablet, on their phone, and on the wall once they have chosen themselves.
 
-You choose it under **Settings → Household settings**, **Advanced** view, in **My settings** at **Wusel's outfit**. On your own birthday Wusel wears the party hat. On the wall, which belongs to everyone, Wusel otherwise wears nothing.
+You choose it under **Settings → Personal** at **Wusel's outfit** (**Advanced** view). On your own birthday Wusel wears the party hat. On the wall, which belongs to everyone, Wusel otherwise wears nothing.
 
-<Shot name="settings-wusel" alt="My settings with Wusel and the choice of Wusel's outfit" />
+<Shot name="settings-wusel" alt="Personal with Wusel and the choice of Wusel's outfit" />
 
 ## How lively Wusel is {#how-lively}
 
-In **My settings** each person sets **Wusel** (in the **Basic** view too):
+In **Settings → Personal** each person sets **Wusel** (in the **Basic** view too):
 
 - **Automatic** (default): lively for children, quiet for adults
 - **Lively**: Wusel moves and talks
@@ -55,7 +55,7 @@ If **Reduce motion** is on for the device, Wusel stays still and there is no con
 
 ### Seasons and occasions {#occasions}
 
-The sky also dresses up for special days. Each occasion has its own switch under **Household settings → Advanced → Seasons and occasions**:
+The sky also dresses up for special days. Each occasion has its own switch under **Settings → Celebrations & seasons** (**Advanced** view):
 
 | Occasion | What happens | Default |
 |---|---|---|
@@ -71,7 +71,7 @@ The sky also dresses up for special days. Each occasion has its own switch under
 
 ## Sounds {#sounds}
 
-WuselWall has four short sounds: a tick, points arriving, everything done, and a badge or reward. Whether they play for you is set by **Sound when a chore is ticked** in **My settings**. **Sounds on this device** (under **This device**) silences a whole device; **Automatic** means off on the wall and on elsewhere. There is never a sound at night.
+WuselWall has four short sounds: a tick, points arriving, everything done, and a badge or reward. Whether they play for you is set by **Sound when a chore is ticked** in **Settings → Personal**. **Sounds on this device** (under **This device**) silences a whole device; **Automatic** means off on the wall and on elsewhere. There is never a sound at night.
 
 ## Looking after the wall {#burn-in}
 

@@ -30,13 +30,13 @@ Wusel n’apparaît jamais pendant une saisie (tuiles de courses, éditeurs d’
 
 Chacun peut habiller Wusel : **Chapeau de fête**, **Couronne**, **Chapeau de magicien**, **Couronne de fleurs**, **Lunettes de soleil**, **Écharpe**, **Casque** ou **Nœud**. Toutes les tenues sont là dès le début et ne coûtent rien ; rien n’est à gagner. Wusel la porte dès qu’il s’agit de cette personne : sur sa tablette, sur son téléphone, et sur le mur quand elle s’est choisie.
 
-Choisissez-la dans **Paramètres → Paramètres du foyer**, vue **Avancés**, rubrique **Mes paramètres**, à **La tenue de Wusel**. Le jour de votre anniversaire, Wusel porte le chapeau de fête. Sur le mur, qui appartient à tous, Wusel ne porte sinon rien.
+Choisissez-la dans **Paramètres → Personnel**, à **La tenue de Wusel** (vue **Avancés**). Le jour de votre anniversaire, Wusel porte le chapeau de fête. Sur le mur, qui appartient à tous, Wusel ne porte sinon rien.
 
-<Shot name="settings-wusel" alt="Mes paramètres avec Wusel et le choix de sa tenue" />
+<Shot name="settings-wusel" alt="Personnel avec Wusel et le choix de sa tenue" />
 
 ## Wusel plus ou moins présent {#how-lively}
 
-Dans **Mes paramètres**, chacun règle **Wusel** (aussi dans la vue **Essentiels**) :
+Dans **Paramètres → Personnel**, chacun règle **Wusel** (aussi dans la vue **Essentiels**) :
 
 - **Automatique** (par défaut) : vif pour les enfants, discret pour les adultes
 - **Vif** : Wusel bouge et parle
@@ -55,7 +55,7 @@ Si **Réduire les animations** est activé sur l’appareil, Wusel reste immobil
 
 ### Saisons et fêtes {#occasions}
 
-Le ciel se décore aussi pour les jours particuliers. Chaque occasion a son interrupteur dans **Paramètres du foyer → Avancés → Saisons et fêtes** :
+Le ciel se décore aussi pour les jours particuliers. Chaque occasion a son interrupteur dans **Paramètres → Fêtes et saisons** (vue **Avancés**) :
 
 | Occasion | Ce qui change | Par défaut |
 |---|---|---|
@@ -71,7 +71,7 @@ Le ciel se décore aussi pour les jours particuliers. Chaque occasion a son inte
 
 ## Les sons {#sounds}
 
-WuselWall a quatre petits sons : une tâche cochée, des points qui arrivent, tout est fait, et un badge ou une récompense. **Son quand une tâche est cochée** (dans **Mes paramètres**) décide s’ils sonnent pour vous. **Sons sur cet appareil** (dans **Cet appareil**) coupe le son d’un appareil entier ; **Automatique** signifie coupés sur l’écran mural, actifs ailleurs. La nuit, jamais de son.
+WuselWall a quatre petits sons : une tâche cochée, des points qui arrivent, tout est fait, et un badge ou une récompense. **Son quand une tâche est cochée** (dans **Paramètres → Personnel**) décide s’ils sonnent pour vous. **Sons sur cet appareil** (dans **Cet appareil**) coupe le son d’un appareil entier ; **Automatique** signifie coupés sur l’écran mural, actifs ailleurs. La nuit, jamais de son.
 
 ## Protéger l’écran mural {#burn-in}
 

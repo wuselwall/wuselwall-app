@@ -21,7 +21,7 @@ Children wish for a meal on **My day** on their tablet (see [Meal wishes](/en/gu
 - A planned wish carries a star and "Jack's wish" in the plan and on the wall.
 - The **×** removes a wish (**Remove the wish**). Guardians can do that, and so can whoever made the wish.
 
-A wish is never turned down; whatever isn't planned simply waits. Who may wish and how many wishes may be open is set under [Household settings](/en/settings/household#rituals).
+A wish is never turned down; whatever isn't planned simply waits. Who may wish and how many wishes may be open is set under [Settings → Meals](/en/settings/household).
 
 <Shot name="meals-wishes" alt="Meal plan on a phone with the wish Jack: Pancakes above the week" />
 
@@ -63,4 +63,4 @@ When you plan a meal, WuselWall suggests matching recipes (see [Suggestions](#su
 
 A tap on the meal area shows the week's meals. A star marks a meal wish. Tap a dot afterwards to change who is eating.
 
-The wall shows one warm meal per day. Which meal that is, and how school days and free days count, is set under [Household settings](/en/settings/household).
+The wall shows one warm meal per day. Which meal that is, and how school days and free days count, is set under [Settings → Meals](/en/settings/household).

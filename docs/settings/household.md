@@ -1,25 +1,31 @@
-# Haushalt einstellen
+# Alle Einstellungen
 
-Nicht jede Familie macht es gleich: Wie viele Punkte eine Aufgabe bringt, ob Kinder Termine ändern dürfen oder wann die Küchenwand umschaltet, ist bei euch vielleicht anders. Das stellst du unter **Einstellungen → Haushalt einstellen** ein.
+Nicht jede Familie macht es gleich: Wie viele Punkte eine Aufgabe bringt, ob Kinder Termine ändern dürfen oder wann die Küchenwand umschaltet, ist bei euch vielleicht anders. Das stellst du unter **Einstellungen** ein. Die Seite ist eine kurze Liste von **Gruppen**, und jede Gruppe öffnet ihre eigene Seite.
 
-<Shot name="settings-household" alt="Haushalt einstellen mit den Bereichen Aufgaben, Kalender, Essen und Küchenwand" />
+<Shot name="settings-phone" alt="Einstellungen: die Liste der Gruppen von Persönlich bis Hilfe & Info" />
 
-In der Ansicht **Einfach** siehst du nur die wichtigsten: die Region, die Serien-Joker, ob Belohnungen Freigabe brauchen, ob Kinder ihre eigenen Termine ändern, die warme Mahlzeit an Schultagen und freien Tagen, die Tischfrage, den Wochenrückblick, das Wunschessen, die Nachtzeit dieses Geräts, Wusel, den Ton beim Abhaken, die Morgenübersicht und die Erinnerung vor Terminen. Alle anderen zeigt **Erweitert** (oben umschalten oder unten **Alle Einstellungen zeigen**). Ausgeblendete Einstellungen gelten trotzdem weiter.
+In der Ansicht **Einfach** siehst du nur die wichtigsten Einstellungen: die Region, die Serien-Joker, ob Belohnungen Freigabe brauchen, ob Kinder ihre eigenen Termine ändern, die warme Mahlzeit an Schultagen und freien Tagen, die Tischfrage, den Wochenrückblick, das Wunschessen, die Nachtzeit dieses Geräts, Wusel, den Ton beim Abhaken, die Morgenübersicht und die Erinnerung vor Terminen. Alle anderen zeigt **Erweitert** (oben umschalten oder unten **Alle Einstellungen zeigen**). Eine Gruppe, in der die Ansicht nichts zeigt, steht gar nicht in der Liste. Ausgeblendete Einstellungen gelten trotzdem weiter.
 
 Jede Einstellung hat einen **Standard**. Den schlägt WuselWall vor, und er passt für die meisten Familien. Weicht euer Wert davon ab, steht dort **angepasst**. Mit **Auf Standard zurücksetzen** geht es jederzeit zurück.
 
-## Die Bereiche
+## Die Gruppen {#the-areas}
 
-In der Ansicht **Erweitert**:
+- **Persönlich** (sobald jemand ausgewählt ist; auf dem eigenen Handy immer): **Wusel** und **Was Wusel trägt**, der **Ton** beim Abhaken und auf dem eigenen Handy die **Benachrichtigungen**: **Erinnerungen** auf diesem Handy, Morgenübersicht, Erinnerung vor Terminen, Einpack-Erinnerung und wann unsichere Termine nachgefragt werden. Sie gelten nur für die ausgewählte Person (siehe [Wusel und Farben](/guide/wusel#how-lively))
+- **Familie**: das **Familienprofil** (Name, Zeitzone, Datenexport, Löschen), die **Region** (Land, Kanton oder Bundesland, Gemeinde), nach der Feiertage und Schulferien gelten, die **Mitglieder** und die **übliche Woche**. Die Region wählst du beim Anlegen der ersten Schule; hier kannst du sie später ändern
+- **Aufgaben & Belohnungen**: Punkte für eine Pflicht und für eine Extra-Aufgabe, ob neue Aufgaben Pflicht oder Extra sind, ob Erziehungsberechtigte Aufgaben prüfen, wie viele **Serien-Joker** es pro Monat gibt und ob **Belohnungen Freigabe brauchen**
+- **Kalender & Schule**: ob Kinder ihre eigenen Termine ändern, welche neuen Termine auf der Küchenwand erscheinen, ob Kinder Plan-Änderungen melden und ob der Hinweis **Sachen für morgen** erscheint. In der Ansicht **Erweitert** kommt **Teilen und Verbindungen** dazu: Familienkalender teilen und Kalender von außen
+- **Essen**: ob es an **Schultagen** und an **freien Tagen** (Wochenende, Feiertage, Ferien) eine warme Mahlzeit gibt, dass **abwesend heißt nicht essen**, bis wann Betreuung mittags zählt und das Wunschessen
+- **Rituale**: Tischfrage, Wochenrückblick und Vorfreude, siehe [unten](#rituals)
+- **Feste & Jahreszeiten** (Erweitert): der Schmuck am Himmel für **Feiertage** (Advent, Ostern, Orthodoxes Ostern, Silvester) und **Durchs Jahr** (Jahreszeiten, Ferien, Geburtstage)
+- **Küchenwand** (Erweitert): ob die Wand den **Vollnamen** oder nur die **Initiale** zeigt, wann sie zur kommenden Woche wechselt und wo Vormittag, Nachmittag und Abend getrennt werden
+- **Geräte**: **Dieses Gerät** (Sprache, Darstellung, Nachtzeit und die Einstellungen für Wusel, Töne, Himmel und Einbrennschutz, siehe [unten](#this-device)) und **Alle Geräte** (verbinden, umbenennen, sperren)
+- **Konto & Sicherheit** (nur auf dem eigenen Handy): in der Ansicht Einfach **Konto löschen**; Erweitert zeigt dazu Anmeldung, Passwort, Zwei-Faktor, PIN, Passkey und Familie verlassen (siehe [Konto und Familie](/settings/account) und [Sicherheit](/settings/security))
+- **Server** (Erweitert): die Adresse eures Servers mit QR-Code und **Server wechseln**
+- **Hilfe & Info**: **Erste Schritte**, **Versionen** und **Lizenzen**
 
-- **Haushalt und Mitglieder**: die **Region** (Land, Kanton oder Bundesland, Gemeinde), nach der Feiertage und Schulferien gelten, und ob die Küchenwand den **Vollnamen** oder nur die **Initiale** zeigt. Die Region wählst du beim Anlegen der ersten Schule; hier kannst du sie später ändern
-- **Aufgaben**: Punkte für eine Pflicht und für eine Extra-Aufgabe, ob neue Aufgaben Pflicht oder Extra sind, ob Erziehungsberechtigte Aufgaben prüfen, wie viele **Serien-Joker** es pro Monat gibt und ob **Belohnungen Freigabe brauchen**
-- **Kalender und Schule**: ob Kinder ihre eigenen Termine ändern, welche neuen Termine auf der Küchenwand erscheinen, wann unsichere Termine nachgefragt werden, ob Kinder Plan-Änderungen melden und ob der Hinweis **Sachen für morgen** erscheint
-- **Essen**: ob es an **Schultagen** und an **freien Tagen** (Wochenende, Feiertage, Ferien) eine warme Mahlzeit gibt, dass **abwesend heißt nicht essen** und bis wann Betreuung mittags zählt
-- **Küchenwand**: wann die Wand zur kommenden Woche wechselt und wo Vormittag, Nachmittag und Abend getrennt werden
-- **Rituale** und **Jahreszeiten und Anlässe**: siehe [unten](#rituals)
-- **Dieses Gerät**: wann das Nachtdesign gilt und die Einstellungen für Wusel, Töne, Himmel und Einbrennschutz. Ein geöffnetes Detail springt nach einer Minute zur Wand zurück (siehe [unten](#this-device))
-- **Meine Einstellungen**: **Wusel** und **Was Wusel trägt**, der Ton beim Abhaken, die Morgenübersicht und Erinnerungen vor Terminen. Sie gelten nur für die Person, die du oben gewählt hast (siehe [Wusel und Farben](/guide/wusel#how-lively)).
+Ganz unten auf der Liste steht **Dieses Gerät abmelden**.
+
+<Shot name="settings-tasks" alt="Die Gruppe Aufgaben & Belohnungen mit ihren Einstellungen" />
 
 Die Beschreibung jeder Einstellung steht direkt darunter. Sie erklärt, was sich ändert.
 
@@ -40,13 +46,13 @@ Die [Rituale](/guide/rituals) sind am Anfang alle eingeschaltet. Jedes lässt si
 
 Unter den Ritualen führt **Unsere Fragen** zu den eigenen Fragen der Familie für die [Tischfrage](/guide/rituals#table-question), zu jeder Tageszeit.
 
-<Shot name="settings-rituals" alt="Haushalt einstellen, Ansicht Erweitert: der Bereich Rituale mit Tischfrage und ihren Zeiten" />
+<Shot name="settings-rituals" alt="Die Gruppe Rituale in der Ansicht Erweitert: die Tischfrage mit ihren Zeiten" />
 
-Darunter, im Bereich **Jahreszeiten und Anlässe**, schaltet ihr den Schmuck am Himmel für **Jahreszeiten**, **Geburtstage**, **Ferien**, **Advent**, **Ostern**, **Orthodoxes Ostern** und **Silvester** einzeln ein oder aus. Was jeder Anlass zeigt und welche nach eurer Region eingeschaltet sind, steht unter [Wusel und Farben](/guide/wusel#occasions).
+In der Gruppe **Feste & Jahreszeiten** (Ansicht **Erweitert**) schaltet ihr den Schmuck am Himmel für **Jahreszeiten**, **Geburtstage**, **Ferien**, **Advent**, **Ostern**, **Orthodoxes Ostern** und **Silvester** einzeln ein oder aus. Was jeder Anlass zeigt und welche nach eurer Region eingeschaltet sind, steht unter [Wusel und Farben](/guide/wusel#occasions).
 
 ## Dieses Gerät {#this-device}
 
-Diese Einstellungen gelten nur für das Gerät, auf dem du sie änderst, zum Beispiel für die Wand:
+Diese Einstellungen stehen unter **Geräte → Dieses Gerät** und gelten nur für das Gerät, auf dem du sie änderst, zum Beispiel für die Wand:
 
 | Einstellung | Was sie tut | Standard |
 |---|---|---|
