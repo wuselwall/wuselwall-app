@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       candidate_sha:
-        description: Full commit SHA on the default branch to collect evidence for
+        description: Full SHA of the default-branch head when dispatch starts
         required: true
         type: string
       matrix:
@@ -43,17 +43,19 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.event.repository.default_branch }}
+          ref: ${{ github.sha }}
           fetch-depth: 0
           persist-credentials: false
       - id: candidate
         env:
           CANDIDATE: ${{ inputs.candidate_sha }}
+          EVENT_SHA: ${{ github.sha }}
           DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         shell: bash
         run: |
           set -euo pipefail
           [[ "$CANDIDATE" =~ ^[a-f0-9]{40}$ ]] || { echo 'A full commit SHA is required.' >&2; exit 1; }
+          [[ "$CANDIDATE" == "$EVENT_SHA" ]] || { echo 'Candidate must match the default-branch head captured at dispatch.' >&2; exit 1; }
           [[ "$(git cat-file -t "$CANDIDATE")" == commit ]]
           git merge-base --is-ancestor "$CANDIDATE" "origin/$DEFAULT_BRANCH"
           git cat-file -e "$CANDIDATE:qualification/inventory.json"
@@ -67,7 +69,7 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with: { ref: '${{ needs.prepare.outputs.sha }}', persist-credentials: false }
+        with: { ref: '${{ github.sha }}', persist-credentials: false }
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with: { flutter-version: '${{ needs.prepare.outputs.flutter }}', cache: false }
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -105,7 +107,7 @@ jobs:
       QUALIFY_MATRIX: ${{ inputs.matrix }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with: { ref: '${{ needs.prepare.outputs.sha }}', persist-credentials: false }
+        with: { ref: '${{ github.sha }}', persist-credentials: false }
       - name: Download the reviewed baseline
         if: inputs.mode == 'compare'
         env:
@@ -155,7 +157,7 @@ jobs:
       cancel-in-progress: false
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with: { ref: '${{ needs.prepare.outputs.sha }}', persist-credentials: false }
+        with: { ref: '${{ github.sha }}', persist-credentials: false }
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with: { flutter-version: '${{ needs.prepare.outputs.flutter }}', cache: false }
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -187,7 +189,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with: { ref: '${{ needs.prepare.outputs.sha }}', persist-credentials: false }
+        with: { ref: '${{ github.sha }}', persist-credentials: false }
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with: { node-version: 22, package-manager-cache: false }
       - run: node qualification/summarize.mjs

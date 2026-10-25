@@ -24,12 +24,14 @@ is named **candidate-evidence** to preserve that distinction.
 
 Expanded tests live outside `app/test/` and are never discovered by ordinary `flutter
 test`. The new workflow has only `workflow_dispatch`; existing CI/release workflows are
-not changed. Its source commit must be on the repository's default branch, so the first
+not changed. Its source commit must be the default-branch head captured at dispatch, so the first
 native workflow run follows merge. Local runs can exercise the branch before merge.
 
-Dispatch the workflow from the default branch. Preparation checks the candidate's exact
-SHA and default-branch ancestry before any candidate code runs; rejected preparation
-also skips the summary job. The workflow grants no Actions cache access (`cache-mode:
+Dispatch the workflow from the default branch with its current full commit SHA. The
+workflow checks out the immutable event SHA, and preparation requires that the entered
+SHA matches it and belongs to default-branch ancestry before any candidate code runs; rejected preparation
+also skips the summary job. A branch advancing after dispatch does not change the tested
+commit. Historical commits cannot be selected by this initial workflow. The workflow grants no Actions cache access (`cache-mode:
 none`), disables tool-action caching and never persists checkout credentials. This prevents
 candidate code from poisoning caches used by release jobs. Cache permissions are separate
 from the read-only repository token; disabling an action's cache alone is insufficient.
