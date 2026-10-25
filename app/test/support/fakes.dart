@@ -758,14 +758,21 @@ WeekBoard emptyWeekBoard([DateTime? now]) {
   });
 }
 
-/// Serves [board] (by default an empty week board) for the kiosk home.
+/// Serves [board] (by default an empty week board) for the kiosk home, and [ahead]
+/// for any other week asked for (by default [board] again). Records the weeks asked.
 class FakeBoardRepository implements BoardRepository {
-  FakeBoardRepository([WeekBoard? board]) : board = board ?? emptyWeekBoard();
+  FakeBoardRepository([WeekBoard? board, this.ahead])
+    : board = board ?? emptyWeekBoard();
 
   WeekBoard board;
+  Result<WeekBoard>? ahead;
+  final weekStarts = <DateTime?>[];
 
   @override
-  Future<Result<WeekBoard>> week({DateTime? weekStart}) async => Ok(board);
+  Future<Result<WeekBoard>> week({DateTime? weekStart}) async {
+    weekStarts.add(weekStart);
+    return weekStart == null ? Ok(board) : ahead ?? Ok(board);
+  }
 
   @override
   dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();

@@ -622,17 +622,71 @@ class BoardAllEventsToggle extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = context.l10n;
+    final on = ref.watch(boardAllEventsProvider);
+    return _BoardSwitch(
+      label: context.l10n.boardAllEvents,
+      on: on,
+      onTap: () => ref.read(boardAllEventsProvider.notifier).set(!on),
+    );
+  }
+}
+
+/// "Nächste Woche": the board looks a week ahead, as a swipe towards it does (specs/09
+/// "Gestures"); the switch is the way without one. The kiosk comes back to this week
+/// when it goes idle (register_home_page.dart).
+class BoardNextWeekToggle extends ConsumerWidget {
+  const BoardNextWeekToggle({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final on = ref.watch(boardNextWeekProvider);
+    return _BoardSwitch(
+      label: context.l10n.boardNextWeek,
+      on: on,
+      onTap: () => ref.read(boardNextWeekProvider.notifier).set(!on),
+    );
+  }
+}
+
+/// The board's two view switches, side by side on the band above the appointments.
+class BoardViewSwitches extends StatelessWidget {
+  const BoardViewSwitches({super.key});
+
+  @override
+  Widget build(BuildContext context) => const Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      BoardNextWeekToggle(),
+      SizedBox(width: 12),
+      BoardAllEventsToggle(),
+    ],
+  );
+}
+
+/// A switch on a divider band: the whole 56 px band is the target, the box is filled
+/// while on.
+class _BoardSwitch extends StatelessWidget {
+  const _BoardSwitch({
+    required this.label,
+    required this.on,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool on;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
     final ww = context.ww;
     final scheme = Theme.of(context).colorScheme;
-    final on = ref.watch(boardAllEventsProvider);
     final ink = on ? scheme.onPrimaryContainer : scheme.onSurface;
 
     return Semantics(
       toggled: on,
       child: BoardTap(
-        label: l10n.boardAllEvents,
-        onTap: () => ref.read(boardAllEventsProvider.notifier).set(!on),
+        label: label,
+        onTap: onTap,
         child: ConstrainedBox(
           constraints: const BoxConstraints(
             minHeight: BoardDivider.controlHeight,
@@ -658,7 +712,7 @@ class BoardAllEventsToggle extends ConsumerWidget {
                   ),
                   const SizedBox(width: 10),
                   Text(
-                    l10n.boardAllEvents,
+                    label,
                     style: boardUi(24, weight: FontWeight.w700, color: ink),
                     maxLines: 1,
                     softWrap: false,

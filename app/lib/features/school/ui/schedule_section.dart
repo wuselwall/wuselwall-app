@@ -8,6 +8,7 @@ import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/empty_view.dart';
+import 'package:wuselwall/core/ui/swipe_stepper.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
@@ -221,64 +222,71 @@ class _Week extends ConsumerWidget {
     final tomorrowItems =
         pack.value?.dayOf(child.id, tomorrow)?.equipment ?? const <String>[];
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        SchoolWeekHeader(
-          dates: dates,
-          raisedIndex: _raisedIndex([
-            for (final date in dates) week.value?.dayOf(child.id, date),
-          ], dates.indexWhere((date) => _sameDay(date, now))),
-          onPrevious: navigation.previous,
-          onNext: navigation.next,
-        ),
-        const SizedBox(height: 4),
-        AsyncValueView(
-          value: week,
-          onRetry: () => ref.invalidate(schoolWeekProvider),
-          data: (w) {
-            final timetable = w.timetableOf(child.id);
-            if (timetable == null) {
-              return _EnterCard(data: data, child: child, monday: monday);
-            }
-            final days = [for (final d in dates) w.dayOf(child.id, d)];
-            final allHoliday = days.every((d) => d?.free == FreeReason.holiday);
-            if (allHoliday) {
-              final first = days.first!;
-              return _HolidayBand(
-                data: data,
-                name: first.holidayName ?? '',
-                monday: monday,
-                sunday: sunday,
-              );
-            }
-            final todayIndex = dates.indexWhere((d) => _sameDay(d, now));
-            final raised = _raisedIndex(days, todayIndex);
-            final isTodayRaised = raised != null && raised == todayIndex;
-            return Padding(
-              padding: const EdgeInsets.only(right: 48),
-              child: SchoolWeekGrid(
-                showHeader: false,
-                timetable: timetable,
-                dates: dates,
-                days: days,
-                raisedIndex: raised,
-                nowMinutes: isTodayRaised ? now.hour * 60 + now.minute : null,
-                iconKeyOf: data.iconKeyFor,
-                onLesson: (i, lesson) =>
-                    _openSheet(context, ref, dates[i], lesson),
-              ),
-            );
-          },
-        ),
-        if (tomorrowItems.isNotEmpty) ...[
-          const SizedBox(height: 16),
-          Text(
-            l10n.boardPackTomorrow(tomorrowItems.join(', ')),
-            style: Theme.of(context).textTheme.bodyLarge,
+    // A swipe is the header's week before and after (specs/09 "Gestures").
+    return SwipeStepper(
+      onPrevious: navigation.previous,
+      onNext: navigation.next,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SchoolWeekHeader(
+            dates: dates,
+            raisedIndex: _raisedIndex([
+              for (final date in dates) week.value?.dayOf(child.id, date),
+            ], dates.indexWhere((date) => _sameDay(date, now))),
+            onPrevious: navigation.previous,
+            onNext: navigation.next,
           ),
+          const SizedBox(height: 4),
+          AsyncValueView(
+            value: week,
+            onRetry: () => ref.invalidate(schoolWeekProvider),
+            data: (w) {
+              final timetable = w.timetableOf(child.id);
+              if (timetable == null) {
+                return _EnterCard(data: data, child: child, monday: monday);
+              }
+              final days = [for (final d in dates) w.dayOf(child.id, d)];
+              final allHoliday = days.every(
+                (d) => d?.free == FreeReason.holiday,
+              );
+              if (allHoliday) {
+                final first = days.first!;
+                return _HolidayBand(
+                  data: data,
+                  name: first.holidayName ?? '',
+                  monday: monday,
+                  sunday: sunday,
+                );
+              }
+              final todayIndex = dates.indexWhere((d) => _sameDay(d, now));
+              final raised = _raisedIndex(days, todayIndex);
+              final isTodayRaised = raised != null && raised == todayIndex;
+              return Padding(
+                padding: const EdgeInsets.only(right: 48),
+                child: SchoolWeekGrid(
+                  showHeader: false,
+                  timetable: timetable,
+                  dates: dates,
+                  days: days,
+                  raisedIndex: raised,
+                  nowMinutes: isTodayRaised ? now.hour * 60 + now.minute : null,
+                  iconKeyOf: data.iconKeyFor,
+                  onLesson: (i, lesson) =>
+                      _openSheet(context, ref, dates[i], lesson),
+                ),
+              );
+            },
+          ),
+          if (tomorrowItems.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            Text(
+              l10n.boardPackTomorrow(tomorrowItems.join(', ')),
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+          ],
         ],
-      ],
+      ),
     );
   }
 

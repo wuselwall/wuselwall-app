@@ -29,6 +29,10 @@ Start typing and the tiles shrink to the matching ones. Case, umlauts and accent
 
 <Shot name="shopping-edit-item" alt="Dialog for editing an item" />
 
+## Removing an item
+
+Swipe an item to the left to take it off the list. **Undo** shows at the bottom for a moment; only then is it really gone. Without swiping: press and hold the item, then **Remove**. Nothing can be removed on the children’s tablet or on the kitchen wall.
+
 ## Who put it there?
 
 Next to each item, a small **dot in that person's colour** shows who added it. "Who put the gummy bears on the list?" answers itself.

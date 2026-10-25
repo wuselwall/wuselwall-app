@@ -204,6 +204,9 @@
   "shoppingSpecHint": "Précision, par exemple bio ou 500 g",
   "shoppingCategory": "Catégorie",
   "shoppingRemoveOne": "Un de moins",
+  "shoppingRemoveItem": "Retirer",
+  "shoppingItemRemoved": "« {name} » retiré de la liste",
+  "shoppingUndo": "Annuler",
   "errListExists": "Une liste portant ce nom existe déjà.",
   "errSpecTooLong": "Cette précision est trop longue (40 caractères maximum).",
   "errKioskForbidden": "Cette action n’est pas possible sur l’écran mural.",
@@ -1833,6 +1836,9 @@
   "feedSubHelp": "Les événements des calendriers importés (par exemple un club ou la collecte des déchets) apparaissent aussi dans cet abonnement.",
   "feedSubSummary": "Calendriers externes",
   "boardAllEvents": "Tous les événements",
+  "boardNextWeek": "Semaine prochaine",
+  "boardThisWeek": "Cette semaine",
+  "boardNextWeekUnavailable": "Impossible de charger la semaine prochaine pour l’instant",
   "boardMemberDay": "{name}, {date}",
   "@boardMemberDay": {
     "placeholders": {

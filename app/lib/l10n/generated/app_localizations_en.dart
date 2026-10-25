@@ -473,6 +473,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shoppingRemoveOne => 'One less';
 
   @override
+  String get shoppingRemoveItem => 'Remove';
+
+  @override
+  String shoppingItemRemoved(String name) {
+    return '$name removed';
+  }
+
+  @override
+  String get shoppingUndo => 'Undo';
+
+  @override
   String get errListExists => 'A list with that name already exists.';
 
   @override
@@ -3323,6 +3334,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get boardAllEvents => 'All events';
+
+  @override
+  String get boardNextWeek => 'Next week';
+
+  @override
+  String get boardThisWeek => 'This week';
+
+  @override
+  String get boardNextWeekUnavailable => 'Next week can’t be loaded right now';
 
   @override
   String boardMemberDay(String name, String date) {

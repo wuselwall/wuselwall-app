@@ -10,7 +10,7 @@ Titel, Datumsnavigation, Ansichtswahl und Einstellungen teilen sich eine kompakt
 
 <Shot name="calendar-phone" alt="Kalender auf dem Handy mit Datumsnavigation und Ansichtsmenü in einer Leiste" />
 
-Oben wählst du **Tag**, **3 Tage**, **Woche** oder **Monat**. Mit **Zurück**, **Weiter** und **Heute** blätterst du. Ganz oben bleiben zwei Zeilen immer sichtbar:
+Oben wählst du **Tag**, **3 Tage**, **Woche** oder **Monat**. Mit **Zurück**, **Weiter** und **Heute** blätterst du; auf Handy und Tablet geht es auch mit einem Wisch nach links oder rechts. Ganz oben bleiben zwei Zeilen immer sichtbar:
 
 - **Anwesenheit**: eine Zeile pro Person. Dort steht, wer arbeitet, im Homeoffice ist, unterwegs ist, weg ist, frei hat oder betreut wird.
 - **Ganztägig**: Termine, die den ganzen Tag gelten.

@@ -10,7 +10,7 @@ La date, les flèches, le choix de vue et les paramètres partagent une barre co
 
 <Shot name="calendar-phone" alt="Le calendrier sur téléphone et son menu de vue" />
 
-Les **présences**, une ligne par personne, et les événements de **toute la journée** restent au-dessus des rendez-vous classés par heure. Utilisez les flèches et **Aujourd’hui** pour naviguer.
+Les **présences**, une ligne par personne, et les événements de **toute la journée** restent au-dessus des rendez-vous classés par heure. Utilisez les flèches et **Aujourd’hui** pour naviguer ; sur téléphone ou tablette, un balayage vers la gauche ou la droite fait de même.
 
 ## Mois {#month}
 
