@@ -20,7 +20,7 @@ with zipfile.ZipFile(source) as archive:
                 raise ValueError(f"Invalid directory: {name}")
             continue
         if name != "manifest.json" and not re.fullmatch(
-            r"[a-z0-9-]+/[a-z0-9.-]+\.(png|aria\.yml)", name
+            r"[a-z0-9-]+/[a-z0-9.-]+(?:\.png|-aria\.yml)", name
         ):
             raise ValueError(f"Invalid snapshot path: {name}")
         if (entry.external_attr >> 16) & 0o170000 == 0o120000:

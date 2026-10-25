@@ -49,11 +49,11 @@ for (const sample of cases(process.env.QUALIFY_MATRIX || 'canonical')) {
         return equal;
       }, { message: 'Wait for two identical rendered captures' }).toBe(true);
       fs.writeFileSync(path.join(folder, `${sample.caseId}.png`), stable);
-      fs.writeFileSync(path.join(folder, `${sample.caseId}.aria.yml`), semantics);
+      fs.writeFileSync(path.join(folder, `${sample.caseId}-aria.yml`), semantics);
       await info.attach('capture-status', { body: 'UNAPPROVED CAPTURE; NOT QUALIFIED', contentType: 'text/plain' });
     } else {
       await expect.soft(page).toHaveScreenshot(`${sample.caseId}.png`);
-      expect.soft(semantics).toMatchSnapshot(`${sample.caseId}.aria.yml`);
+      expect.soft(semantics).toMatchSnapshot(`${sample.caseId}-aria.yml`);
     }
     await page.addScriptTag({ path: require.resolve('axe-core/axe.min.js') });
     const audit = await page.evaluate(() => window.axe.run(document, {

@@ -31,7 +31,7 @@ test('reviewed baseline checksum rejects changed, missing, added and cross-envir
   fs.mkdirSync(path.join(dir, 'chromium'));
   const image = path.join(dir, 'chromium/screen.png');
   fs.writeFileSync(image, 'test image bytes');
-  fs.writeFileSync(path.join(dir, 'chromium/screen.aria.yml'), '- button "Save"');
+  fs.writeFileSync(path.join(dir, 'chromium/screen-aria.yml'), '- button "Save"');
   const env = { platform: 'test' };
   seal(dir, 'a'.repeat(40), env);
   const manifest = fs.readFileSync(path.join(dir, 'manifest.json'));

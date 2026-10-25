@@ -91,7 +91,11 @@ QUALIFY_MODE=compare QUALIFY_MATRIX=canonical npm run qualify:web
 ```
 
 Comparison verifies the manifest and every snapshot before launching the browser, then
-checks screenshots and semantics with zero pixel tolerance initially. An absent snapshot
+checks screenshots and semantics with a measured perceptual threshold of 0.04 and zero
+pixels allowed above that threshold. The repeatability probe found only emoji resampling
+noise (maximum RGB channel delta 9/255); `npm run qualify:pixel-controls` proves that this
+noise passes and a real colour change still fails. Semantic files use `-aria.yml`, matching
+Playwright’s snapshot-name normalization. An absent snapshot
 fails; normal comparisons never create or update approved images. Changing the toolchain,
 OS, renderer or inventory needs a separately reviewed baseline migration. Local captures
 are not interchangeable with a different runner's environment.

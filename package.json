@@ -34,6 +34,7 @@
     "docs:browser": "node docs/tools/browser.mjs",
     "qualify:check": "node --test qualification/framework.test.mjs && node qualification/generate-native.mjs --check",
     "qualify:build-web": "cd app && flutter build web --release --no-web-resources-cdn -t qualification/main.dart -o build/web-qualification",
-    "qualify:web": "node qualification/run-web.mjs"
+    "qualify:web": "node qualification/run-web.mjs",
+    "qualify:pixel-controls": "playwright test -c qualification/pixel-controls.config.mjs"
   }
 }

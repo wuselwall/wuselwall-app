@@ -105,6 +105,7 @@ jobs:
         with: { node-version: 22 }
       - run: npm ci --include=dev
       - run: npx playwright install --with-deps chromium
+      - run: npm run qualify:pixel-controls
       - run: flutter pub get --enforce-lockfile
         working-directory: app
       - run: npm run qualify:build-web
@@ -131,6 +132,7 @@ jobs:
           path: |
             build/qualification/web
             build/qualification/capture
+            build/qualification/pixel-controls
           if-no-files-found: error
           retention-days: 30
 
