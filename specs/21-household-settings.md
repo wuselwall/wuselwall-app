@@ -238,7 +238,7 @@ rules, not settings.
 | `board.rollover` | household | Saturday 12:00 | weekday + time | When the board moves to the coming week. Sunday-evening planning wants next week; Saturday morning still wants this week | Q26 |
 | `board.day_parts` | household | 12:00 · 17:00 | two times | Where the appointment zone splits morning, afternoon and evening | [09](09-clients-and-ux.md#the-zones) |
 | `device.night_hours` | device | 21:00–06:00 | time range | When the kiosk switches to the amber night theme | [17](17-design-system.md) |
-| `device.idle_revert_seconds` | device | 60 | 30–300 | How long a tapped profile or detail view stays open before the kiosk returns to the board *(Not offered in the app since 2026-10-24: nothing reads it yet, so the default applies; see [research](research/family-apps/friction-audit.md#0-cross-cutting-findings).)* | [08](08-users-auth-permissions.md#profile-switching-ux) |
+| `device.idle_revert_seconds` | device | 60 | 30–300 | How long a tapped profile or detail view stays open before the kiosk returns to the board *(Not offered in the app since 2026-10-24: nothing reads it yet, so the default applies.)* | [08](08-users-auth-permissions.md#profile-switching-ux) |
 
 Member order on the board is `profile.sort_order`. New members are appended, and the
 order can be changed by dragging.
@@ -250,8 +250,8 @@ order can be changed by dragging.
 | `notify.morning_summary` | member, self | on, 07:00 | off · time | Today's tasks and events for that member. Pending redemptions appear here for guardians | Q13 |
 | `notify.event_reminder` | member, self | off | off · 5–120 min | A push before an event starts | Q13 |
 | `notify.packing_reminder` | member, self | on, 19:00 | off · time | *Added 2026-10-16.* "Für morgen einpacken" the evening before a school day with equipment, a local notification: every child's things on an adult's phone, a child's own on theirs. Off with `school.equipment_hint` | FR-7.12 |
-| `notify.task_verified` | member, self | off | on · off | A push when a guardian verifies a chore and points are credited *(Not offered in the app since 2026-10-24: nothing reads it yet, so the default applies; see [research](research/family-apps/friction-audit.md#0-cross-cutting-findings).)* | Q13 |
-| `notify.redemption_request` | member, self (guardians) | off | on · off | An immediate push when a child requests a reward *(Not offered in the app since 2026-10-24: nothing reads it yet, so the default applies; see [research](research/family-apps/friction-audit.md#0-cross-cutting-findings).)* | Q13 |
+| `notify.task_verified` | member, self | off | on · off | A push when a guardian verifies a chore and points are credited *(Not offered in the app since 2026-10-24: nothing reads it yet, so the default applies.)* | Q13 |
+| `notify.redemption_request` | member, self (guardians) | off | on · off | An immediate push when a child requests a reward *(Not offered in the app since 2026-10-24: nothing reads it yet, so the default applies.)* | Q13 |
 
 Over-notifying in week one trains a family to ignore the app, so everything except the
 morning summary is opt-in.
