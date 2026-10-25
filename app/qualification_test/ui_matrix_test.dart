@@ -112,7 +112,9 @@ void main() {
             debugDefaultTargetPlatformOverride = platform;
             tester.view.physicalSize = Size(
               config.width.toDouble(),
-              state['scenario'] == 'kiosk'
+              config.width == 1920
+                  ? 1080
+                  : state['scenario'] == 'kiosk'
                   ? 800
                   : config.width >= 768
                   ? 1024

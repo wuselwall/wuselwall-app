@@ -12,7 +12,7 @@ export function cases(profile = 'canonical', data = inventory) {
     for (const locale of profile === 'smoke' ? ['de'] : data.locales) {
       const primary = state.scenario === 'kiosk' ? 1280 : state.scenario === 'kid' ? 820 : 390;
       const add = (tier, width, shade) => {
-        const height = state.scenario === 'kiosk' ? 800 : width >= 768 ? 1024 : 844;
+        const height = width === 1920 ? 1080 : state.scenario === 'kiosk' ? 800 : width >= 768 ? 1024 : 844;
         result.push({ ...state, locale, shade, width, height, tier,
           caseId: `${state.id}-${locale}-${shade}-${width}x${height}-${tier}` });
       };

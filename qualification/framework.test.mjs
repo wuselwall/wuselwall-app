@@ -15,6 +15,7 @@ test('matrix is unique, locale-complete, includes breakpoint boundaries and true
   }
   for (const width of [599, 600, 601]) assert.ok(full.some(c => c.id === 'calendar' && c.width === width));
   assert.ok(full.some(c => c.id === 'wall' && c.shade === 'night'));
+  assert.ok(full.some(c => c.id === 'wall' && c.width === 1920 && c.height === 1080));
   assert.throws(() => cases('typo'));
 });
 
