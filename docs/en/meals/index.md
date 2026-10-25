@@ -6,7 +6,7 @@ The meal plan answers the question "What's for dinner?". The shopping list grows
 
 ## Planning the week
 
-The week shows each day with **Breakfast**, **Lunch**, **Dinner** and **Snack**. Tap a meal or **Add meal** to plan it. Move with **Previous week**, **Next week** and **This week**. If you remove a planned meal, WuselWall offers **Undo** for a moment.
+The week shows each day with **Breakfast**, **Lunch**, **Dinner** and **Snack**. Tap a meal or **Add meal** to plan it. Move with **Previous week**, **Next week** and **This week**; on a phone or tablet, a swipe left or right does the same. If you remove a planned meal, WuselWall offers **Undo** for a moment.
 
 - A meal is a **dish or a note**, such as "Pizza" or "Leftovers", or a **recipe**.
 - You also set the **servings**, who **cooks**, a **time** and **guests**.

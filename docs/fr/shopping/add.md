@@ -24,6 +24,10 @@ Un **appui long sur l’article** ouvre la précision et la catégorie. WuselWal
 
 <Shot name="shopping-edit-item" alt="La modification d’un article" />
 
+## Retirer un article {#removing-an-item}
+
+Balayez un article vers la gauche pour le retirer de la liste. **Annuler** s’affiche un instant en bas ; ensuite seulement, il disparaît vraiment. Sans balayage : un appui long sur l’article, puis **Retirer**. Rien ne peut être retiré sur la tablette des enfants ni sur le mur de la cuisine.
+
 ## Qui l’a ajouté ? {#who-put-it-there}
 
 Le petit point dans la couleur d’une personne indique qui a ajouté l’article. Plus besoin de demander qui a mis les bonbons sur la liste.

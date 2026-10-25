@@ -135,7 +135,7 @@ El menú del día permite **vaciarlo**, **copiarlo** a otros días o **intercamb
 
 La elección del niño, el regreso a esta semana y las acciones de edición comparten una barra. En pantallas pequeñas, esta semana ocupa una línea centrada y las acciones pasan debajo. El colegio usa un icono de escuela; el engranaje abre los ajustes generales.
 
-Las flechas están junto al lunes y el viernes. El niño seleccionado tiene fondo teñido, borde y marca de verificación. Las vacaciones aparecen encima de la semana y los festivos en cada cabecera.
+Las flechas están junto al lunes y el viernes; en el móvil o la tableta, deslizar a la izquierda o a la derecha también cambia de semana. En la tableta infantil, el niño pasa así de un día a otro de su semana, de lunes a viernes. El niño seleccionado tiene fondo teñido, borde y marca de verificación. Las vacaciones aparecen encima de la semana y los festivos en cada cabecera.
 
 Toca una clase para marcarla **cancelada**, con **suplencia** (docente y nota) o en **otra aula**. Restablecer recupera la clase prevista.
 

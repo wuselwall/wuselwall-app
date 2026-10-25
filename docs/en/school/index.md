@@ -148,7 +148,7 @@ The child selector, **This week**, **Edit school** and **Edit timetable** share 
 
 Choose a child at the top to see their timetable. The selected child has a tinted background, a strong border and a checkmark beside their name.
 
-The week view shows lesson by lesson. Move with **Previous week**, **Next week** and **This week**. Holidays appear as a band above the week, and public holidays in the day's header.
+The week view shows lesson by lesson. Move with **Previous week**, **Next week** and **This week**; on a phone or tablet, a swipe left or right does the same. On the children’s tablet a child swipes through the days of their week this way, Monday to Friday. Holidays appear as a band above the week, and public holidays in the day's header.
 
 Tap a lesson when something changes:
 

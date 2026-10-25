@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/router.dart';
@@ -194,9 +195,17 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody> {
         .toList();
     final result = await showDialog<_ItemEdit>(
       context: context,
-      builder: (_) => _EditItemDialog(item: item, categories: categories),
+      builder: (_) => _EditItemDialog(
+        item: item,
+        categories: categories,
+        canRemove: _canRemove,
+      ),
     );
     if (result == null) return;
+    if (result.remove) {
+      _remove(item);
+      return;
+    }
     if (result.spec != (item.quantity ?? '')) {
       await _sync.setSpec(actor: _actor, itemId: item.id, text: result.spec);
     }
@@ -207,6 +216,54 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody> {
         categoryId: result.categoryId,
       );
     }
+  }
+
+  /// Adults take an item off the list; the children's register has no destructive
+  /// action (specs/09), and the wall none at all.
+  bool get _canRemove => ref.read(uiRegisterProvider) == UiRegister.adult;
+
+  /// Takes [item] off the list, by a swipe or from its dialog (specs/09 "Gestures").
+  /// It leaves the screen at once and goes to the server once its undo has passed, so
+  /// an undo never has to rebuild it (who added it, the meals it came from).
+  void _remove(ShoppingItem item) {
+    final l10n = context.l10n;
+    final messenger = ScaffoldMessenger.of(context);
+    // Captured: the removal is sent even when this page has gone meanwhile.
+    final sync = _sync;
+    final actor = _actor;
+    final removing = ref.read(_removingProvider.notifier)..add(item.id);
+    var undone = false;
+    messenger.hideCurrentSnackBar();
+    final snack = messenger.showSnackBar(
+      SnackBar(
+        // It must close by itself: the removal is sent when it does. A screen
+        // reader gets longer to reach the undo.
+        persist: false,
+        duration: Duration(
+          seconds: MediaQuery.accessibleNavigationOf(context) ? 10 : 5,
+        ),
+        content: Text(l10n.shoppingItemRemoved(item.name)),
+        action: SnackBarAction(
+          label: l10n.shoppingUndo,
+          onPressed: () {
+            undone = true;
+            removing.remove(item.id);
+          },
+        ),
+      ),
+    );
+    unawaited(
+      snack.closed.then((_) async {
+        if (undone) return;
+        // At zero the item is removed (specs/07 "count").
+        await sync.adjustCount(
+          actor: actor,
+          itemId: item.id,
+          delta: -item.count,
+        );
+        removing.remove(item.id);
+      }),
+    );
   }
 
   Future<void> _newList() async {
@@ -312,9 +369,12 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody> {
           );
         }
         final all = ref.watch(shoppingItemsProvider);
+        final removing = ref.watch(_removingProvider);
         final items = all.whenData(
-          (v) =>
-              v.where((i) => i.listId == null || i.listId == list.id).toList(),
+          (v) => v
+              .where((i) => i.listId == null || i.listId == list.id)
+              .where((i) => !removing.contains(i.id))
+              .toList(),
         );
         final hasTiles = (ref.watch(shoppingCatalogProvider).value ?? const [])
             .any((c) => c.listId == list.id);
@@ -385,6 +445,7 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody> {
                               delta: -1,
                             ),
                             onEdit: _edit,
+                            onRemove: _canRemove ? _remove : null,
                             onTripDone: (bought) =>
                                 _celebrateTrip(list.id, bought),
                           ),
@@ -976,6 +1037,7 @@ class _ItemList extends ConsumerStatefulWidget {
     required this.onLess,
     required this.onEdit,
     required this.onTripDone,
+    this.onRemove,
   });
 
   final List<ShoppingItem> items;
@@ -983,6 +1045,9 @@ class _ItemList extends ConsumerStatefulWidget {
   final void Function(ShoppingItem) onToggle;
   final void Function(ShoppingItem) onLess;
   final void Function(ShoppingItem) onEdit;
+
+  /// A swipe towards the start takes an item off; null where nobody may.
+  final void Function(ShoppingItem)? onRemove;
 
   /// The last open item was just ticked: every item on the list is bought.
   final void Function(Iterable<String> bought) onTripDone;
@@ -1050,14 +1115,36 @@ class _ItemListState extends ConsumerState<_ItemList> {
     final open = widget.items.where((i) => !i.checked).toList();
     final trolley = widget.items.where((i) => i.checked).toList();
 
-    Widget tile(ShoppingItem i) => _ItemTile(
-      item: i,
-      checked: i.checked || _ticked.containsKey(i.id),
-      adder: members[i.addedBy],
-      onToggle: () => _tap(i),
-      onLess: () => widget.onLess(i),
-      onEdit: () => widget.onEdit(i),
-    );
+    final scheme = Theme.of(context).colorScheme;
+    Widget tile(ShoppingItem i) {
+      final remove = widget.onRemove;
+      final row = _ItemTile(
+        item: i,
+        checked: i.checked || _ticked.containsKey(i.id),
+        adder: members[i.addedBy],
+        onToggle: () => _tap(i),
+        onLess: () => widget.onLess(i),
+        onEdit: () => widget.onEdit(i),
+        onRemove: remove == null ? null : () => remove(i),
+      );
+      if (remove == null) return row;
+      return Dismissible(
+        key: ValueKey('shopping-remove-${i.id}'),
+        direction: DismissDirection.endToStart,
+        background: ColoredBox(
+          color: scheme.errorContainer,
+          child: Align(
+            alignment: AlignmentDirectional.centerEnd,
+            child: Padding(
+              padding: const EdgeInsetsDirectional.only(end: Tokens.space4),
+              child: Icon(Icons.delete_outline, color: scheme.onErrorContainer),
+            ),
+          ),
+        ),
+        onDismissed: (_) => remove(i),
+        child: row,
+      );
+    }
 
     // A4: items and the trolley share one traversal order with the rest of the page
     // instead of whatever order this nested list would otherwise produce.
@@ -1131,6 +1218,7 @@ class _ItemTile extends StatefulWidget {
     required this.onToggle,
     required this.onLess,
     required this.onEdit,
+    this.onRemove,
   });
 
   final ShoppingItem item;
@@ -1139,6 +1227,7 @@ class _ItemTile extends StatefulWidget {
   final VoidCallback onToggle;
   final VoidCallback onLess;
   final VoidCallback onEdit;
+  final VoidCallback? onRemove;
 
   @override
   State<_ItemTile> createState() => _ItemTileState();
@@ -1181,10 +1270,15 @@ class _ItemTileState extends State<_ItemTile> {
     // Tick targets are at least 56 high: this is used one-handed, in a coat.
     // For screen readers the row is one checkbox named after the item; who added it
     // is a hint after the name, not a label before it.
+    // Screen readers have no swipe: removing is an action of the row instead.
+    final remove = widget.onRemove;
     return Semantics(
       checked: widget.checked,
       value: item.pending ? l10n.shoppingItemPending : null,
       hint: adder == null ? null : l10n.shoppingAddedBy(adder.displayName),
+      customSemanticsActions: remove == null
+          ? null
+          : {CustomSemanticsAction(label: l10n.shoppingRemoveItem): remove},
       child: _FocusRing(
         focusNode: _focusNode,
         borderRadius: BorderRadius.zero,
@@ -1283,13 +1377,20 @@ class _ItemTileState extends State<_ItemTile> {
   }
 }
 
-typedef _ItemEdit = ({String spec, String? categoryId});
+typedef _ItemEdit = ({String spec, String? categoryId, bool remove});
 
 class _EditItemDialog extends ConsumerStatefulWidget {
-  const _EditItemDialog({required this.item, required this.categories});
+  const _EditItemDialog({
+    required this.item,
+    required this.categories,
+    required this.canRemove,
+  });
 
   final ShoppingItem item;
   final List<ShoppingCategory> categories;
+
+  /// Offers "Entfernen", the way to take an item off without a swipe.
+  final bool canRemove;
 
   @override
   ConsumerState<_EditItemDialog> createState() => _EditItemDialogState();
@@ -1325,18 +1426,27 @@ class _EditItemDialogState extends ConsumerState<_EditItemDialog> {
           ),
           const SizedBox(height: Tokens.space4),
           DropdownButtonFormField<String?>(
+            // A long category name ellipsizes instead of overflowing a phone's
+            // dialog.
+            isExpanded: true,
             initialValue: widget.categories.any((c) => c.id == _category)
                 ? _category
                 : null,
             decoration: InputDecoration(labelText: l10n.shoppingCategory),
             items: [
               DropdownMenuItem<String?>(
-                child: Text(l10n.shoppingUncategorised),
+                child: Text(
+                  l10n.shoppingUncategorised,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
               for (final c in widget.categories)
                 DropdownMenuItem<String?>(
                   value: c.id,
-                  child: Text(categoryLabel(l10n, c)),
+                  child: Text(
+                    categoryLabel(l10n, c),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
             ],
             onChanged: (v) => setState(() => _category = v),
@@ -1359,6 +1469,18 @@ class _EditItemDialogState extends ConsumerState<_EditItemDialog> {
         ],
       ),
       actions: [
+        if (widget.canRemove)
+          TextButton(
+            style: TextButton.styleFrom(
+              foregroundColor: Theme.of(context).colorScheme.error,
+            ),
+            onPressed: () => Navigator.pop(context, (
+              spec: '',
+              categoryId: null,
+              remove: true,
+            )),
+            child: Text(l10n.shoppingRemoveItem),
+          ),
         TextButton(
           onPressed: () => Navigator.pop(context),
           child: Text(l10n.cancel),
@@ -1367,6 +1489,7 @@ class _EditItemDialogState extends ConsumerState<_EditItemDialog> {
           onPressed: () => Navigator.pop(context, (
             spec: _spec.text.trim(),
             categoryId: _category,
+            remove: false,
           )),
           child: Text(l10n.save),
         ),
@@ -1452,3 +1575,18 @@ class _NewListDialogState extends State<_NewListDialog> {
 
 /// How long the burst at the end of a shopping trip lasts (specs/26 "Celebrations").
 const tripBurst = Duration(milliseconds: 600);
+
+/// Items taken off whose undo is still on screen: hidden here, not yet sent. Outlives
+/// the page, so they stay hidden when it comes back before the undo has passed.
+class _Removing extends Notifier<Set<String>> {
+  @override
+  Set<String> build() => const {};
+
+  void add(String id) => state = {...state, id};
+
+  void remove(String id) => state = {...state}..remove(id);
+}
+
+final _removingProvider = NotifierProvider<_Removing, Set<String>>(
+  _Removing.new,
+);

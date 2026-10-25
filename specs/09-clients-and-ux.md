@@ -89,6 +89,47 @@ counts); when the acting person becomes nobody, the open settings page leaves fo
 - Tap-through detail: one day in full, one child's Stundenplan, one member's tasks.
   Everything reverts to the week board after 60 s.
 
+## Gestures
+
+A swipe left or right steps through whatever a screen already pages with buttons
+(added 2026-10-25). Children swipe before they read, and on a phone the chevrons are a
+small target in a full app bar. One shared widget (`core/ui/swipe_stepper.dart`) does it
+everywhere, so the rules are the same on every screen:
+
+| Screen | A swipe towards the reading direction's end | The way without one |
+|---|---|---|
+| Calendar: day, 3 days, week, month | The next day, days, week or month | Previous / next in the toolbar |
+| Meals | The next week | Previous / next week |
+| Stundenplan (adult) | The next week | The arrows beside Monday and Friday |
+| Mein Stundenplan (kid) | The next school day, Monday to Friday | The day tabs |
+| Week board (kiosk) | Next week; back is this week, never further | **Nächste Woche** beside **Alle Termine** |
+| Dienstplan picker in the event editor | The next month | Previous / next month |
+| Shopping list item (adult only) | Takes it off, with **Rückgängig** for 5 s | Long press → **Entfernen** |
+
+- **A swipe is only a shortcut.** Every step it makes has a visible control, and that
+  control stays. VoiceOver and TalkBack keep swipes for themselves, so the buttons (and,
+  for a shopping item, a custom accessibility action) are the way there; the swipe
+  stays out of the semantics tree.
+- **Touch and stylus only.** A mouse drag on the web still selects text and drags a
+  meal. There, ← and → step instead, while no control has the keyboard focus, no dialog
+  or pushed page is over the screen, and no text field is focused. The Dienstplan picker
+  leaves the arrow keys to the editor's fields.
+- **One threshold**: a quarter of the width, or a flick of 300 px/s. A swipe that starts
+  in the system's gesture area at the screen's edge (Android's back gesture) is left to
+  the system.
+- **The content follows the finger** and the next one slides in after it; at an end of
+  the sequence it resists and a light haptic tick says so. Under reduced motion (specs/26
+  "Motion") nothing slides: the step comes at once.
+- **Not swiped**: the home destinations (a swipe would collide with every screen's own),
+  approvals (each passes the PIN gate, and a decline must not happen by accident), and
+  the shopping lists (the rows already swipe). The week review keeps its own story
+  gestures (specs/27).
+- **Destructive swipes are adult-only.** The kid register has no destructive action and
+  the wall none at all, so a shopping item cannot be swiped away there.
+- The kiosk's look ahead fills only the day columns with next week; the header (clock,
+  "als Nächstes") and the footer stay with today. It is not a mutation, and the 60 s idle
+  revert brings the board back to this week.
+
 ## The week board
 
 *Added 2026-08-30 (FR-8.1 – FR-8.11). This replaces the earlier "today dashboard" as the

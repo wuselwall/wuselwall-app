@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/swipe_stepper.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 
 /// A month of tappable days for a shift plan ("Bestimmte Tage", specs/15): Monday
@@ -50,12 +51,11 @@ class _DienstplanGridState extends State<DienstplanGrid> {
     final daysInMonth = DateTime(_month.year, _month.month + 1, 0).day;
     final cells = ((leading + daysInMonth + 6) ~/ 7) * 7;
 
-    return GestureDetector(
-      onHorizontalDragEnd: (details) {
-        final v = details.primaryVelocity ?? 0;
-        if (v < -200) _shift(1);
-        if (v > 200) _shift(-1);
-      },
+    // The arrow keys stay with the editor's fields around it.
+    return SwipeStepper(
+      onPrevious: () => _shift(-1),
+      onNext: () => _shift(1),
+      arrowKeys: false,
       child: Column(
         children: [
           Row(

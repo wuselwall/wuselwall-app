@@ -204,6 +204,9 @@
   "shoppingSpecHint": "Hinweis, z. B. Bio oder 500 g",
   "shoppingCategory": "Kategorie",
   "shoppingRemoveOne": "Eins weniger",
+  "shoppingRemoveItem": "Entfernen",
+  "shoppingItemRemoved": "{name} entfernt",
+  "shoppingUndo": "Rückgängig",
   "errListExists": "Eine Liste mit diesem Namen gibt es schon.",
   "errSpecTooLong": "Der Hinweis ist zu lang (höchstens 40 Zeichen).",
   "errKioskForbidden": "Das geht am Wandbildschirm nicht.",
@@ -1205,6 +1208,9 @@
   "feedSubHelp": "Termine aus importierten Kalendern (z. B. Verein, Müllabfuhr) erscheinen auch im Abo.",
   "feedSubSummary": "Kalender von außen",
   "boardAllEvents": "Alle Termine",
+  "boardNextWeek": "Nächste Woche",
+  "boardThisWeek": "Diese Woche",
+  "boardNextWeekUnavailable": "Die nächste Woche lässt sich gerade nicht laden",
   "boardMemberDay": "{name}, {date}",
   "@boardMemberDay": {
     "placeholders": {

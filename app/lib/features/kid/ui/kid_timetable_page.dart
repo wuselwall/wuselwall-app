@@ -4,6 +4,7 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/swipe_stepper.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/kid/application/kid_providers.dart';
 import 'package:wuselwall/features/kid/ui/kid_widgets.dart';
@@ -62,36 +63,46 @@ class _KidTimetablePageState extends ConsumerState<KidTimetablePage> {
             ),
           );
         }
-        return ListView(
-          padding: const EdgeInsets.all(Tokens.space4),
-          children: [
-            KidSectionTitle(l10n.kidTimetableTitle),
-            Row(
-              children: [
-                for (var i = 0; i < dates.length; i++)
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: Tokens.space1,
-                      ),
-                      child: _DayTab(
-                        key: ValueKey('kid-day-$i'),
-                        date: dates[i],
-                        isToday: i == todayIndex,
-                        selected: i == selected,
-                        onTap: () => setState(() => _selected = i),
+        // A swipe steps through the days as the tabs do, Monday to Friday
+        // (specs/09 "Gestures").
+        return SwipeStepper(
+          onPrevious: selected > 0
+              ? () => setState(() => _selected = selected - 1)
+              : null,
+          onNext: selected < dates.length - 1
+              ? () => setState(() => _selected = selected + 1)
+              : null,
+          child: ListView(
+            padding: const EdgeInsets.all(Tokens.space4),
+            children: [
+              KidSectionTitle(l10n.kidTimetableTitle),
+              Row(
+                children: [
+                  for (var i = 0; i < dates.length; i++)
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: Tokens.space1,
+                        ),
+                        child: _DayTab(
+                          key: ValueKey('kid-day-$i'),
+                          date: dates[i],
+                          isToday: i == todayIndex,
+                          selected: i == selected,
+                          onTap: () => setState(() => _selected = i),
+                        ),
                       ),
                     ),
-                  ),
-              ],
-            ),
-            const SizedBox(height: Tokens.space4),
-            KidDayLessons(
-              day: w.dayOf(widget.actor, dates[selected]),
-              iconOf: (subject) => schoolIcon(data?.iconKeyFor(subject)),
-              minutesNow: selected == todayIndex ? minutes : null,
-            ),
-          ],
+                ],
+              ),
+              const SizedBox(height: Tokens.space4),
+              KidDayLessons(
+                day: w.dayOf(widget.actor, dates[selected]),
+                iconOf: (subject) => schoolIcon(data?.iconKeyFor(subject)),
+                minutesNow: selected == todayIndex ? minutes : null,
+              ),
+            ],
+          ),
         );
       },
     );

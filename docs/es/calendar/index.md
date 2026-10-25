@@ -10,7 +10,7 @@ La fecha, las flechas, el selector de vista y los ajustes comparten una barra co
 
 <Shot name="calendar-phone" alt="El calendario en el móvil y su selector de vista" />
 
-Arriba permanecen la **presencia**, una fila por persona, y los eventos de **todo el día**. Debajo, las citas siguen el orden horario. Usa las flechas y **Hoy** para moverte.
+Arriba permanecen la **presencia**, una fila por persona, y los eventos de **todo el día**. Debajo, las citas siguen el orden horario. Usa las flechas y **Hoy** para moverte; en el móvil o la tableta, deslizar a la izquierda o a la derecha hace lo mismo.
 
 ## Mes {#month}
 

@@ -10,7 +10,7 @@ The title, date navigation, view selector and settings share one compact bar. On
 
 <Shot name="calendar-phone" alt="Calendar on a phone with date navigation and the view menu in one bar" />
 
-At the top you choose **Day**, **3 days**, **Week** or **Month**. Move with **Previous**, **Next** and **Today**. Two rows stay visible at the top:
+At the top you choose **Day**, **3 days**, **Week** or **Month**. Move with **Previous**, **Next** and **Today**; on a phone or tablet, a swipe left or right does the same. Two rows stay visible at the top:
 
 - **Presence**: one row per person. It shows who is at work, working from home, travelling, away, off or in childcare.
 - **All day**: appointments that last the whole day.

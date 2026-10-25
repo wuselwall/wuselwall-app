@@ -974,6 +974,24 @@ abstract class AppLocalizations {
   /// **'One less'**
   String get shoppingRemoveOne;
 
+  /// No description provided for @shoppingRemoveItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get shoppingRemoveItem;
+
+  /// No description provided for @shoppingItemRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} removed'**
+  String shoppingItemRemoved(String name);
+
+  /// No description provided for @shoppingUndo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get shoppingUndo;
+
   /// No description provided for @errListExists.
   ///
   /// In en, this message translates to:
@@ -5815,6 +5833,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All events'**
   String get boardAllEvents;
+
+  /// No description provided for @boardNextWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Next week'**
+  String get boardNextWeek;
+
+  /// No description provided for @boardThisWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'This week'**
+  String get boardThisWeek;
+
+  /// No description provided for @boardNextWeekUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Next week can’t be loaded right now'**
+  String get boardNextWeekUnavailable;
 
   /// No description provided for @boardMemberDay.
   ///
