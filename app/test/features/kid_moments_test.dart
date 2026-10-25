@@ -57,7 +57,7 @@ class _KidIdentity extends FakeIdentityRepository {
 
   @override
   Future<Result<List<Member>>> members({bool includeInactive = false}) async {
-    final now = DateTime.now();
+    final now = testNow();
     return Ok([
       _emmaMember(
         birthday: birthday ? DateTime(now.year - 8, now.month, now.day) : null,
@@ -114,7 +114,7 @@ String _ymd(DateTime d) =>
 
 /// This week's board with Pizza for dinner tonight.
 WeekBoard _boardWithDinner() {
-  final now = DateTime.now();
+  final now = testNow();
   final today = DateTime(now.year, now.month, now.day);
   final monday = today.subtract(Duration(days: today.weekday - 1));
   return WeekBoard.fromJson({
@@ -150,7 +150,7 @@ WeekBoard _boardWithDinner() {
 
 /// Today's "Pizza-Freitag", one of the family's traditions.
 Occurrence _traditionToday() {
-  final now = DateTime.now();
+  final now = testNow();
   final today = DateTime(now.year, now.month, now.day);
   return Occurrence(
     id: 'o-pizza',
@@ -462,7 +462,7 @@ void main() {
           {
             'profile_id': _emma,
             'badge_definition_id': 'b-1',
-            'awarded_at': DateTime.now().toUtc().toIso8601String(),
+            'awarded_at': testNow().toUtc().toIso8601String(),
           },
         ],
       },
