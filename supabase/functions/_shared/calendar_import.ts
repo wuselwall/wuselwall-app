@@ -18,7 +18,6 @@ export type Outcome =
     unsupported: number;
     truncated: boolean;
   }
-  | { status: "not_modified" }
   | { status: "failed"; code: string };
 
 /** Records a failed attempt. Itself failing is logged, not thrown. */
@@ -36,8 +35,9 @@ export async function fail(svc: any, id: string, code: string): Promise<void> {
 }
 
 /**
- * One full fetch and its store: expand the current window, replace the stored rows.
- * Returns the outcome; never throws for a feed's own problem.
+ * One full fetch and its store: expand the current window and hand the rows to the database,
+ * which replaces the stored rows only when they differ (`rows_hash`). Returns the outcome;
+ * never throws for a feed's own problem.
  */
 // deno-lint-ignore no-explicit-any
 export async function importCalendar(
@@ -61,6 +61,7 @@ export async function importCalendar(
     return { status: "failed", code };
   }
 
+  // Nothing was asked conditionally, so a 304 is the feed misbehaving: a failure, not a result.
   if (fetched.kind === "not_modified") {
     await fail(svc, cal.id, "http_304");
     return { status: "failed", code: "http_304" };
