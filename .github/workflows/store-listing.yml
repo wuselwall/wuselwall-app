@@ -1,0 +1,80 @@
+# The store listings (texts, icon, feature graphic, screenshots) for Google Play and the App
+# Store, from app/android/fastlane/metadata and app/ios/fastlane/{metadata,screenshots}
+# (scripts/store-listing.mjs renders the images). Only by hand: a release never changes the
+# listing. "Validate only", the default, changes nothing: Play checks the whole edit and drops
+# it; for the App Store the files are checked against Apple's limits and the version being
+# prepared is read, since deliver has no dry run.
+name: store-listing
+on:
+  workflow_dispatch:
+    inputs:
+      store:
+        description: Which store
+        type: choice
+        options: [both, google-play, app-store]
+        default: both
+      validate_only:
+        description: Validate only, change nothing
+        type: boolean
+        default: true
+      app_store_version:
+        description: App Store version to edit, like 1.4.0 (empty = the latest v*.*.* tag)
+        type: string
+        default: ''
+concurrency:
+  group: store-listing
+  cancel-in-progress: false
+permissions:
+  contents: read
+
+jobs:
+  google-play:
+    if: inputs.store != 'app-store'
+    runs-on: [self-hosted, Linux, build]
+    defaults: { run: { working-directory: app/android } }
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # As in release-android.yml: the job's temporary directory for gem's cache.
+      - uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
+        with: { ruby-version: '3.3', bundler-cache: true, working-directory: app/android }
+        env:
+          XDG_CACHE_HOME: ${{ runner.temp }}/cache
+      - run: bundle exec fastlane android listing
+        env:
+          PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          LISTING_VALIDATE_ONLY: ${{ inputs.validate_only && '1' || '' }}
+          XDG_CACHE_HOME: ${{ runner.temp }}/cache
+
+  # deliver needs no Xcode, only the App Store Connect API, so the Linux fleet runs it and
+  # the Mac stays free for builds. Gemfile.lock is the same as Android's.
+  app-store:
+    if: inputs.store != 'google-play'
+    runs-on: [self-hosted, Linux, build]
+    defaults: { run: { working-directory: app/ios } }
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
+        with: { ruby-version: '3.3', bundler-cache: true, working-directory: app/ios }
+        env:
+          XDG_CACHE_HOME: ${{ runner.temp }}/cache
+      # The version a release tag gave the builds; App Store Connect pairs a build only with
+      # the store version of the same number.
+      - id: version
+        env:
+          REQUESTED: ${{ inputs.app_store_version }}
+        run: |
+          version="${REQUESTED#v}"
+          if [ -z "$version" ]; then
+            version=$(git ls-remote --tags --refs origin 'v*.*.*' | sed 's#.*refs/tags/v##' | sort -V | tail -1)
+          fi
+          [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "::error::no App Store version: '$version'"; exit 1; }
+          echo "App Store version $version"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+      - run: bundle exec fastlane ios listing
+        env:
+          APP_VERSION: ${{ steps.version.outputs.version }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+          LISTING_VALIDATE_ONLY: ${{ inputs.validate_only && '1' || '' }}
+          XDG_CACHE_HOME: ${{ runner.temp }}/cache

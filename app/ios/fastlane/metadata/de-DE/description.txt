@@ -1,0 +1,45 @@
+WuselWall ist der Familienorganisator für alles, was bei euch zuhause wuselt: gemeinsamer Kalender, Stundenpläne, Aufgaben, Essensplan und Einkaufsliste. Auf dem Handy für die Eltern, als Wochentafel auf einem Tablet in der Küche und in einer kindgerechten Ansicht für die Kleinen.
+
+Wichtig vorab: WuselWall ist kein Online-Dienst. Die App verbindet sich mit einem WuselWall-Server, den eure Familie selbst betreibt – auf einem NAS, einem Mini-PC, einem gemieteten Server oder in einem eigenen Supabase-Projekt. Wir sehen eure Daten nie. Ohne Server könnt ihr die App mit einer Beispielfamilie ausprobieren: „Ohne Server ausprobieren“ auf dem ersten Bildschirm.
+
+WOCHENTAFEL FÜR DIE KÜCHE
+• Sieben Tage auf einen Blick, gemacht für ein Tablet an der Wand
+• Wer ist wo, was steht an, was gibt es zu essen
+• Jede Person hat ihre Farbe – auch für Farbenblinde unterscheidbar
+• Ein Tipp auf ein Kind zeigt seine Woche mit Stundenplan
+
+GEMEINSAMER KALENDER
+• Termine für alle oder für einzelne Familienmitglieder
+• Wiederkehrende Termine und Anwesenheiten wie Schichten oder Reisen
+• Kalender abonnieren: Verein, Abfuhrkalender, Schule
+• Als ICS-Feed in Outlook, Apple Kalender oder Google Kalender
+
+STUNDENPLÄNE
+• Der Stundenplan jedes Kindes, auch mit mehreren Schulen
+• Feiertage und Schulferien für Deutschland, Österreich, die Schweiz und Liechtenstein, bis zur Gemeinde
+• Vertretungen und ausfallende Stunden
+
+AUFGABEN MIT PUNKTEN
+• Aufgaben verteilen, Punkte sammeln, Belohnungen einlösen
+• Serien und Abzeichen statt Strafen
+• Keine Rangliste unter Geschwistern
+
+ESSENSPLAN UND EINKAUFSLISTE
+• Was gibt es diese Woche? Vorschläge aus dem, was ihr schon gekocht habt
+• Eine gemeinsame Einkaufsliste, nach Abteilungen sortiert
+• Funktioniert auch ohne Netz im Laden und gleicht sich danach ab
+
+EIN GERÄT PRO PERSON ODER PRO RAUM
+• Eigene Geräte für die Erwachsenen, ein gemeinsames Tablet für die Küche
+• Kinder brauchen kein Konto und keine E-Mail-Adresse
+• Neue Geräte per QR-Code verbinden, jedes Gerät einzeln sperren
+• Anmeldung mit Code per E-Mail oder mit Passwort
+
+EURE DATEN BLEIBEN BEI EUCH
+• Alles liegt auf eurem eigenen Server
+• Keine Werbung, kein Tracking, kein Konto bei uns
+• Datenexport für die ganze Familie
+• Deutsch, Englisch, Französisch und Spanisch
+
+OPEN SOURCE
+App und Server-Software sind Open Source unter der Apache-Lizenz 2.0. Die Anleitung für die Familie und für den eigenen Server findet ihr unter https://wuselwall.app/docs/

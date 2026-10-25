@@ -29,7 +29,7 @@
     "docs:demo": "cd app && flutter build web -t lib/main_demo.dart --release -o build/web-demo",
     "docs:screenshots": "npm run docs:demo && node docs/tools/screenshots.mjs",
     "docs:check": "node docs/tools/check-locales.mjs && node docs/tools/check-shots.mjs",
-    "play:listing": "node scripts/play-listing.mjs",
+    "store:listing": "node scripts/store-listing.mjs",
     "docs:browser": "node docs/tools/browser.mjs"
   }
 }

@@ -1,15 +1,17 @@
-// Renders the Google Play listing's images from the app icon and the docs screenshots,
-// into fastlane supply's layout next to the listing texts
-// (app/android/fastlane/metadata/android/<locale>/images, build output, git-ignored):
+// Renders the store listings' images from the app icon and the docs screenshots, into
+// fastlane's layouts next to the listing texts; store-listing.yml uploads them:
 //   npm run docs:screenshots   # the light-theme shots this script frames
-//   node scripts/play-listing.mjs
-// Per locale: icon.png (512×512), featureGraphic.png (1024×500), phone screenshots
-// (1080×1920) and tablet screenshots (1920×1080, used for both 7- and 10-inch). Play wants
-// screenshots without alpha, so every image is flattened onto the paper colour.
-// Screenshots are named <locale>_<device>_<n>_<shot>.png (de_DE_phone_1_today.png),
-// underscores only, so a file is recognisable outside its folder; the number keeps
-// Play's order. icon.png and
-// featureGraphic.png keep the names fastlane supply expects.
+//   node scripts/store-listing.mjs
+// Google Play (supply, app/android/fastlane/metadata/android/<locale>/images), per locale:
+// icon.png (512×512), featureGraphic.png (1024×500), phone screenshots (1080×1920) and
+// tablet screenshots (1920×1080, used for both 7- and 10-inch).
+// App Store (deliver, app/ios/fastlane/screenshots/<locale>), per locale: iPhone 6.9″
+// (1320×2868) and iPad 13″ (2752×2064) screenshots, the two sizes App Store Connect
+// requires; it scales them down for the smaller devices.
+// The stores want screenshots without alpha, so every image is flattened onto the paper
+// colour. Screenshots are named <locale>_<device>_<n>_<shot>.png (de_DE_phone_1_today.png),
+// underscores only, so a file is recognisable outside its folder; the number keeps the
+// store's order. icon.png and featureGraphic.png keep the names fastlane supply expects.
 import { mkdir, readFile, rm } from 'node:fs/promises';
 import path from 'node:path';
 import { chromium } from 'playwright';
@@ -18,6 +20,7 @@ import sharp from 'sharp';
 const root = path.resolve('.');
 const shots = path.join(root, 'docs/public/screenshots');
 const meta = path.join(root, 'app/android/fastlane/metadata/android');
+const appStoreShots = path.join(root, 'app/ios/fastlane/screenshots');
 const font = (f) => readFile(path.join(root, 'app/assets/fonts', f)).then((b) => b.toString('base64'));
 const fonts = `
   @font-face { font-family: Atkinson; font-weight: 400; src: url(data:font/ttf;base64,${await font('AtkinsonHyperlegibleNext-Regular.ttf')}); }
@@ -83,13 +86,15 @@ const page = (w, h, body) => `<!doctype html><html><head><style>${fonts}
   * { box-sizing: border-box; } body { margin: 0; width: ${w}px; height: ${h}px; overflow: hidden; background: ${paper};
   font-family: Atkinson, sans-serif; color: ${ink}; }</style></head><body>${body}</body></html>`;
 
-/** A caption band above a framed screenshot. */
+/** A caption band above a framed screenshot, scaled (up, if need be) to fit the space below. */
 const framed = (w, h, img, title, sub, { pad, titleSize, frame }) => page(w, h, `
   <div style="height:100%;display:flex;flex-direction:column;align-items:center;padding:${pad}px ${pad}px 0">
     <div style="font-size:${titleSize}px;font-weight:800;line-height:1.15;text-align:center;letter-spacing:-.01em">${esc(title)}</div>
     <div style="margin-top:${titleSize * 0.35}px;font-size:${titleSize * 0.52}px;font-weight:600;color:${tanne};text-align:center">${esc(sub)}</div>
     <div style="flex:1;min-height:0;display:flex;align-items:flex-start;justify-content:center;margin-top:${pad * 0.8}px;width:100%">
-      <img src="data:image/png;base64,${img}" style="display:block;max-width:100%;max-height:calc(100% + ${frame}px);
+      <img src="data:image/png;base64,${img}" onload="const b = this.parentElement;
+        const s = Math.min((b.clientWidth - ${2 * frame}) / this.naturalWidth, b.clientHeight / this.naturalHeight);
+        this.style.width = this.naturalWidth * s + ${2 * frame} + 'px'" style="display:block;
         border:${frame}px solid ${ink};border-bottom:0;border-radius:${frame * 3}px ${frame * 3}px 0 0;
         box-shadow:0 24px 60px -16px rgba(28,31,35,.35)">
     </div>
@@ -141,5 +146,19 @@ for (const [locale, c] of Object.entries(copy)) {
     await sharp(file).toFile(path.join(out, 'sevenInchScreenshots', shotFile(locale, 'tablet_7in', i, name)));
   }
   console.log('wrote', path.relative(root, out));
+
+  // The same captions at Apple's sizes: the iPhone is taller than Play's 9:16, the iPad 4:3.
+  const ios = path.join(appStoreShots, locale);
+  await rm(ios, { recursive: true, force: true });
+  await mkdir(ios, { recursive: true });
+  for (const [i, [name, title, sub]] of c.phone.entries()) {
+    await render(1320, 2868, framed(1320, 2868, await shot(c.lang, name), title, sub, { pad: 70, titleSize: 83, frame: 22 }),
+      path.join(ios, shotFile(locale, 'iphone', i, name)));
+  }
+  for (const [i, [name, title, sub]] of c.tablet.entries()) {
+    await render(2752, 2064, framed(2752, 2064, await shot(c.lang, name), title, sub, { pad: 92, titleSize: 80, frame: 23 }),
+      path.join(ios, shotFile(locale, 'ipad', i, name)));
+  }
+  console.log('wrote', path.relative(root, ios));
 }
 await browser.close();

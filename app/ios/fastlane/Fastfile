@@ -34,6 +34,39 @@ def asc_key_pem
   pem
 end
 
+# App Store Connect's limits per field (characters; keywords in bytes).
+LISTING_LIMITS = {
+  "name.txt" => 30, "subtitle.txt" => 30, "promotional_text.txt" => 170,
+  "description.txt" => 4000, "keywords.txt" => 100,
+}.freeze
+
+# Checks the listing files without App Store Connect: deliver has no dry run, and a field
+# over its limit would otherwise fail halfway through an upload.
+def check_listing_files
+  metadata = File.expand_path("metadata")
+  locales = Dir.children(metadata).select { |d| d.match?(/\A[a-z]{2}(-[A-Za-z]+)?\z/) }.sort
+  UI.user_error!("no locale folders in #{metadata}") if locales.empty?
+  errors = locales.flat_map do |locale|
+    LISTING_LIMITS.filter_map do |file, limit|
+      path = File.join(metadata, locale, file)
+      next "#{locale}/#{file} is missing" unless File.exist?(path)
+      text = File.read(path, encoding: "UTF-8").strip
+      size = file == "keywords.txt" ? text.bytesize : text.length
+      "#{locale}/#{file} is #{size} long, the limit is #{limit}" if text.empty? || size > limit
+    end
+  end
+  UI.user_error!(errors.join("\n")) unless errors.empty?
+
+  require "deliver"
+  shots = Deliver::Loader.load_app_screenshots(File.expand_path("screenshots"), false)
+  shots.group_by { |s| [s.language, s.display_type] }.sort.each do |(language, type), list|
+    UI.message("#{language} #{type}: #{list.count} screenshots")
+  end
+  missing = locales.product(["APP_IPHONE_67", "APP_IPAD_PRO_3GEN_129"]) - shots.map { |s| [s.language, s.display_type] }
+  UI.user_error!("no screenshots for #{missing.map { |m| m.join(' ') }.join(', ')}") unless missing.empty?
+  UI.success("Listing files of #{locales.join(', ')} are within App Store Connect's limits")
+end
+
 platform :ios do
   desc "Sign with the match profile, archive and upload to TestFlight"
   lane :beta do
@@ -73,5 +106,45 @@ platform :ios do
 
     # Internal testers receive the build once Apple has processed it; CI does not wait.
     upload_to_testflight(api_key: api_key, skip_waiting_for_build_processing: true)
+  end
+
+  # The App Store listing in fastlane/metadata and fastlane/screenshots
+  # (scripts/store-listing.mjs renders them), uploaded on its own by store-listing.yml, never
+  # with a build and never submitted for review. APP_VERSION names the version it edits
+  # (created, or the version being prepared renamed). LISTING_VALIDATE_ONLY=1 checks the
+  # files and reads that version from App Store Connect without changing anything.
+  desc "Upload the App Store listing (texts and screenshots)"
+  lane :listing do
+    check_listing_files
+    version = ENV.fetch("APP_VERSION", "").strip
+    UI.user_error!("APP_VERSION must be the version to edit, like 1.4.0") unless version.match?(/\A\d+\.\d+\.\d+\z/)
+
+    api_key = app_store_connect_api_key(
+      key_id: asc_key_id,
+      issuer_id: asc_issuer_id,
+      key_content: asc_key_pem,
+    )
+
+    if ENV["LISTING_VALIDATE_ONLY"] == "1"
+      app = Spaceship::ConnectAPI::App.find(CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier))
+      UI.user_error!("the app is not in App Store Connect, or the API key cannot see it") unless app
+      editing = app.get_edit_app_store_version(platform: Spaceship::ConnectAPI::Platform::IOS)
+      if editing
+        UI.message("Version being prepared: #{editing.version_string} (#{editing.app_store_state})")
+      else
+        UI.message("No version being prepared; the upload would create #{version}")
+      end
+      UI.success("Validated only: nothing was changed in App Store Connect")
+    else
+      deliver(
+        api_key: api_key,
+        app_version: version,
+        skip_binary_upload: true,
+        overwrite_screenshots: true,
+        force: true, # no HTML preview to confirm on CI
+        submit_for_review: false,
+        run_precheck_before_submit: false,
+      )
+    end
   end
 end
