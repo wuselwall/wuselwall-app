@@ -79,6 +79,10 @@ class ShoppingSync extends Notifier<ShoppingSyncState> {
   Future<void>? _refreshFuture;
   bool _refreshAgain = false;
 
+  /// A refresh was asked for (or its snapshot overtaken) while the outbox was draining;
+  /// the drain's end runs it, since the drain itself only brings the items up to date.
+  bool _refreshSkipped = false;
+
   ShoppingRepository get _repo => ref.read(shoppingRepositoryProvider);
   ShoppingStore get _store => ref.read(shoppingStoreProvider);
 
@@ -90,6 +94,7 @@ class ShoppingSync extends Notifier<ShoppingSyncState> {
     _generation++;
     _refreshFuture = null;
     _refreshAgain = false;
+    _refreshSkipped = false;
     _household = household;
     _draining = false;
     _retries = 0;
@@ -127,10 +132,15 @@ class ShoppingSync extends Notifier<ShoppingSyncState> {
   }
 
   /// Serialize refreshes: a slow earlier snapshot can never overwrite a later
-  /// one. A change arriving during a fetch requests one follow-up fetch.
+  /// one. A change arriving during a fetch requests one follow-up fetch, and one
+  /// arriving during a drain is remembered and run when the drain ends.
   Future<void> refresh() {
     final household = _household;
-    if (household == null || _draining) return Future.value();
+    if (household == null) return Future.value();
+    if (_draining) {
+      _refreshSkipped = true;
+      return Future.value();
+    }
     if (_refreshFuture case final pending?) {
       _refreshAgain = true;
       return pending;
@@ -147,11 +157,20 @@ class ShoppingSync extends Notifier<ShoppingSyncState> {
         final drains = _drains;
         final result = await _guard(() => _repo.snapshot());
         if (!_current(generation)) return;
-        if (_draining || _drains != drains) continue;
+        if (_overtaken(drains)) {
+          _skipOvertaken();
+          continue;
+        }
         switch (result) {
           case Ok(:final value):
             await _store.writeSnapshot(household, value);
             if (!_current(generation)) return;
+            // A drain that began and ended while the write was pending has made this
+            // snapshot older than the items on screen.
+            if (_overtaken(drains)) {
+              _skipOvertaken();
+              continue;
+            }
             state = state.copyWith(snapshot: value, clearFailure: true);
           case Err(:final failure):
             state = state.copyWith(failure: failure);
@@ -159,6 +178,19 @@ class ShoppingSync extends Notifier<ShoppingSyncState> {
       } while (_refreshAgain && !_draining);
     } finally {
       if (_current(generation)) _refreshFuture = null;
+    }
+  }
+
+  /// A drain is running, or ran, since [drains] was read: a snapshot fetched before it
+  /// predates the drain's changes.
+  bool _overtaken(int drains) => _draining || _drains != drains;
+
+  /// Fetch again once the drain is over: right away when it already is, else from its end.
+  void _skipOvertaken() {
+    if (_draining) {
+      _refreshSkipped = true;
+    } else {
+      _refreshAgain = true;
     }
   }
 
@@ -196,7 +228,13 @@ class ShoppingSync extends Notifier<ShoppingSyncState> {
       }
     } finally {
       _draining = false;
-      if (_household == household) state = state.copyWith(syncing: false);
+      if (_household == household) {
+        state = state.copyWith(syncing: false);
+        if (_refreshSkipped) {
+          _refreshSkipped = false;
+          unawaited(refresh());
+        }
+      }
     }
   }
 
