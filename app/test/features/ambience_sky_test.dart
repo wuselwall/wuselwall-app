@@ -159,7 +159,7 @@ void main() {
 
     testWidgets('so does the last', (tester) async {
       await pumpRibbon(tester, ferien: FerienEdge.last);
-      expect(find.text('Letzter Ferientag'), findsOneWidget);
+      expect(find.text('Morgen ist wieder Schule'), findsOneWidget);
     });
 
     testWidgets('other days have none', (tester) async {
