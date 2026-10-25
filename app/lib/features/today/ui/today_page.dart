@@ -16,7 +16,6 @@ import 'package:wuselwall/features/meals/domain/meal_models.dart';
 import 'package:wuselwall/features/rituals/application/ritual_providers.dart';
 import 'package:wuselwall/features/rituals/ui/ritual_cards.dart';
 import 'package:wuselwall/features/tasks/application/task_actions.dart';
-import 'package:wuselwall/features/tasks/application/tasks_providers.dart';
 import 'package:wuselwall/features/tasks/domain/tasks_models.dart';
 import 'package:wuselwall/features/tasks/ui/task_widgets.dart';
 import 'package:wuselwall/features/today/application/today_providers.dart';
@@ -52,14 +51,7 @@ class TodayPage extends ConsumerWidget {
     final empty = (agenda.value?.isEmpty ?? false) && shoppingOpen == 0;
     final ferienWusel = ref.watch(ferienWuselTodayProvider);
     return RefreshIndicator(
-      onRefresh: () async {
-        ref
-          ..invalidate(todayAgendaProvider)
-          ..invalidate(gettingStartedProvider)
-          ..invalidate(noticesProvider)
-          ..invalidate(pendingVerificationsProvider)
-          ..invalidate(redemptionsProvider);
-      },
+      onRefresh: () => refreshToday(ProviderScope.containerOf(context)),
       child: CustomScrollView(
         slivers: [
           SliverPadding(

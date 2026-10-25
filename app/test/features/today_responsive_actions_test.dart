@@ -27,6 +27,7 @@ void main() {
             size: Size(width, 844),
             overrides: baseOverrides(
               identity: FakeIdentityRepository(current: device()),
+              now: DateTime(2026, 10, 25, 9),
             ),
             gettingStarted: FakeGettingStartedRepository(const [
               GettingStartedItem(item: StartItem.school, done: false),
@@ -57,6 +58,7 @@ void main() {
           size: Size(width, 844),
           overrides: baseOverrides(
             identity: FakeIdentityRepository(current: device()),
+            now: DateTime(2026, 10, 25, 9),
           ),
           notices: FakeNoticesRepository([
             AppNotice(
@@ -101,6 +103,7 @@ void main() {
       size: const Size(1000, 900),
       overrides: baseOverrides(
         identity: FakeIdentityRepository(current: device()),
+        now: DateTime(2026, 10, 25, 9),
       ),
       gettingStarted: FakeGettingStartedRepository(const [
         GettingStartedItem(item: StartItem.school, done: false),
@@ -126,6 +129,7 @@ void main() {
       size: const Size(1000, 900),
       overrides: baseOverrides(
         identity: FakeIdentityRepository(current: device()),
+        now: DateTime(2026, 10, 25, 9),
       ),
       notices: FakeNoticesRepository([
         AppNotice(
@@ -159,6 +163,7 @@ void main() {
       size: const Size(411, 844),
       overrides: baseOverrides(
         identity: FakeIdentityRepository(current: device()),
+        now: DateTime(2026, 10, 25, 9),
       ),
       gettingStarted: repository,
     );
@@ -190,6 +195,7 @@ void main() {
       size: const Size(411, 844),
       overrides: baseOverrides(
         identity: FakeIdentityRepository(current: device()),
+        now: DateTime(2026, 10, 25, 9),
       ),
       notices: repository,
     );

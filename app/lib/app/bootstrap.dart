@@ -19,6 +19,7 @@ import 'package:wuselwall/core/logging/log.dart';
 import 'package:wuselwall/core/notifications/notification_scheduler.dart';
 import 'package:wuselwall/core/notifications/notification_scheduler_provider.dart';
 import 'package:wuselwall/core/notifications/plugin_notification_scheduler.dart';
+import 'package:wuselwall/core/realtime/refresh_events.dart';
 import 'package:wuselwall/core/server/server_address.dart';
 import 'package:wuselwall/core/server/server_compat.dart';
 import 'package:wuselwall/core/server/server_discovery.dart';
@@ -59,6 +60,7 @@ class Bootstrap extends StatefulWidget {
     this.initialSetup,
     SetupStore? setupStore,
     this.links,
+    this.refreshEvents,
     @visibleForTesting this.app = const WuselWallApp(),
     super.key,
   }) : setupStore = setupStore ?? SetupStore(),
@@ -92,6 +94,9 @@ class Bootstrap extends StatefulWidget {
   /// A link names a server: with none chosen the app connects to it, with the same one it
   /// continues, with another it asks (specs/20, "Choosing the server").
   final Stream<String>? links;
+
+  /// Injected in tests; production retries discovery on foreground/network recovery.
+  final Stream<void>? refreshEvents;
 
   /// What runs once a server is chosen (tests replace it: no Supabase there).
   final Widget app;
@@ -160,6 +165,9 @@ class _BootstrapState extends State<Bootstrap> {
   OpenedLink? _pendingLink;
   StreamSubscription<String>? _linkSubscription;
   bool _started = false;
+  bool _rechecking = false;
+  bool _recheckAgain = false;
+  StreamSubscription<void>? _refreshSubscription;
   OpenedLink? _earlyLink;
   SetupLink? _earlySetup;
   final _firstLink = Completer<void>();
@@ -172,11 +180,23 @@ class _BootstrapState extends State<Bootstrap> {
       onError: (Object e, StackTrace st) =>
           logError('Reading a link', error: e, stackTrace: st),
     );
+    _refreshSubscription = (widget.refreshEvents ?? appRefreshEvents()).listen(
+      (_) {
+        final phase = _phase;
+        if (phase is _Running) {
+          final server = phase.config.server;
+          if (server != null) unawaited(_recheck(server));
+        }
+      },
+      onError: (Object error) =>
+          logError('Watching server recovery', error: error),
+    );
     unawaited(_startAndOpenLink());
   }
 
   @override
   void dispose() {
+    unawaited(_refreshSubscription?.cancel());
     unawaited(_linkSubscription?.cancel());
     super.dispose();
   }
@@ -361,17 +381,49 @@ class _BootstrapState extends State<Bootstrap> {
       };
 
   /// The stored server again, as it describes itself today. Offline: nothing changes.
-  /// A changed document is kept for the next start; a server this app no longer fits
-  /// stops the app now.
+  /// Refresh metadata in the running app without reconnecting. Changed connection
+  /// credentials are kept for the next start; an incompatible server stops the app.
   Future<void> _recheck(ServerInfo stored) async {
-    final result = await widget.discovery.discover(stored.supabaseUrl);
-    if (result case Ok(value: final server)) {
-      final problem = await _fit(server);
-      if (problem != null) {
-        _show(_Incompatible(problem));
-        return;
+    final running = _phase;
+    if (running is! _Running) return;
+    if (_rechecking) {
+      _recheckAgain = true;
+      return;
+    }
+    _rechecking = true;
+    try {
+      final result = await widget.discovery.discover(stored.supabaseUrl);
+      if (!mounted || !identical(_phase, running)) return;
+      if (result case Ok(value: final server)) {
+        final problem = await _fit(server);
+        if (!mounted || !identical(_phase, running)) return;
+        if (problem != null) {
+          _show(_Incompatible(problem));
+          return;
+        }
+        await widget.store.write(server);
+        if (!mounted || !identical(_phase, running)) return;
+        if (server.supabaseUrl == stored.supabaseUrl &&
+            server.publishableKey == stored.publishableKey) {
+          _show(
+            _Running(
+              AppConfig.forServer(widget.build, server),
+              running.session,
+              running.generation,
+            ),
+          );
+        }
       }
-      await widget.store.write(server);
+    } finally {
+      _rechecking = false;
+      if (_recheckAgain) {
+        _recheckAgain = false;
+        final latest = _phase;
+        if (mounted && latest is _Running) {
+          final server = latest.config.server;
+          if (server != null) unawaited(_recheck(server));
+        }
+      }
     }
   }
 

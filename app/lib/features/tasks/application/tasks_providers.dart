@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show ProviderOrFamily;
 import 'package:wuselwall/core/realtime/household_channel.dart';
+import 'package:wuselwall/core/time/clock.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
@@ -22,11 +23,8 @@ final tasksTodayProvider = FutureProvider.autoDispose<List<TaskInstance>>((
   ref,
 ) async {
   _watchTasksTopic(ref);
-  final now = DateTime.now();
-  return (await ref
-          .watch(tasksRepositoryProvider)
-          .instancesOn(DateTime(now.year, now.month, now.day)))
-      .unwrap();
+  final today = ref.watch(todayProvider);
+  return (await ref.watch(tasksRepositoryProvider).instancesOn(today)).unwrap();
 });
 
 final taskDefinitionsProvider =

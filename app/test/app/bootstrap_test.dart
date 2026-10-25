@@ -12,6 +12,7 @@ import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/server/server_discovery.dart';
 import 'package:wuselwall/core/server/server_info.dart';
+import 'package:wuselwall/core/server/server_providers.dart';
 import 'package:wuselwall/core/server/server_store.dart';
 import 'package:wuselwall/core/server/setup_link.dart';
 import 'package:wuselwall/core/server/setup_store.dart';
@@ -27,11 +28,13 @@ ServerInfo _server({
   int api = 1,
   String min = '1.0.0',
   String host = 'api.example.org',
+  List<String> features = const [],
 }) => ServerInfo(
   supabaseUrl: Uri.parse('https://$host'),
   publishableKey: 'sb_publishable_$host',
   apiVersion: api,
   minAppVersion: min,
+  features: features,
 );
 
 class _Discovery extends ServerDiscovery {
@@ -39,10 +42,14 @@ class _Discovery extends ServerDiscovery {
 
   final Map<String, Result<ServerInfo>> answers;
   final asked = <Uri>[];
+  Future<Result<ServerInfo>>? pending;
 
   @override
   Future<Result<ServerInfo>> discover(Uri origin) async {
     asked.add(origin);
+    final delayed = pending;
+    pending = null;
+    if (delayed != null) return delayed;
     return answers[origin.host] ?? const Err(NetworkFailure());
   }
 }
@@ -86,6 +93,9 @@ class _App extends ConsumerWidget {
             ),
             Text('setup ${session.setupPending.value}'),
             Text('running on ${config.supabaseUrl}'),
+            Text(
+              'photo scan ${ref.watch(serverSupportsProvider(featureTimetableScan))}',
+            ),
             if (leave != null)
               TextButton(onPressed: leave, child: const Text('leave')),
           ],
@@ -112,6 +122,7 @@ void main() {
     String appVersion = '1.0.0',
     bool hasSession = false,
     Stream<String>? links,
+    Stream<void>? refreshEvents,
     SetupLink? initialSetup,
     Uri? webOrigin,
   }) async {
@@ -122,6 +133,7 @@ void main() {
     await t.pumpWidget(
       Bootstrap(
         build: build,
+        refreshEvents: refreshEvents ?? const Stream<void>.empty(),
         initialSetup: initialSetup,
         webOrigin: webOrigin,
         store: store,
@@ -395,6 +407,88 @@ void main() {
     );
     expect(find.text('running on https://api.example.org'), findsOneWidget);
     expect(discovery.asked, [Uri.parse('https://api.example.org')]);
+  });
+
+  for (final enabled in [true, false]) {
+    testWidgets('native discovery updates photo scanning to $enabled', (
+      t,
+    ) async {
+      store.kept = _server(features: enabled ? [] : [featureTimetableScan]);
+      final fresh = _server(features: enabled ? [featureTimetableScan] : []);
+      final sessions = SecureSessionStorage();
+      await sessions.persistSession('existing-session');
+
+      await pump(t, answers: {'api.example.org': Ok(fresh)});
+
+      expect(find.text('photo scan $enabled'), findsOneWidget);
+      expect(store.kept, same(fresh));
+      expect(connected, hasLength(1));
+      expect(await sessions.accessToken(), 'existing-session');
+    });
+  }
+
+  testWidgets('native key rotation waits for the next connection', (t) async {
+    store.kept = _server();
+    final fresh = ServerInfo(
+      supabaseUrl: store.kept!.supabaseUrl,
+      publishableKey: 'rotated-public-key',
+      apiVersion: 1,
+      minAppVersion: '1.0.0',
+      features: [featureTimetableScan],
+    );
+    await pump(t, answers: {'api.example.org': Ok(fresh)});
+
+    expect(store.kept, same(fresh));
+    expect(connected, hasLength(1));
+    expect(connected.single.supabasePublishableKey, _server().publishableKey);
+    expect(find.text('photo scan false'), findsOneWidget);
+  });
+
+  testWidgets('native discovery retries after an offline start on recovery', (
+    t,
+  ) async {
+    store.kept = _server();
+    final events = StreamController<void>.broadcast();
+    addTearDown(events.close);
+    final answers = <String, Result<ServerInfo>>{};
+    final discovery = await pump(
+      t,
+      answers: answers,
+      refreshEvents: events.stream,
+    );
+    expect(find.text('photo scan false'), findsOneWidget);
+    answers['api.example.org'] = Ok(_server(features: [featureTimetableScan]));
+    events.add(null);
+    await t.pumpAndSettle();
+    expect(discovery.asked, hasLength(2));
+    expect(find.text('photo scan true'), findsOneWidget);
+    expect(connected, hasLength(1));
+  });
+
+  testWidgets('recovery during a failed discovery queues a follow-up', (
+    t,
+  ) async {
+    store.kept = _server();
+    final events = StreamController<void>.broadcast();
+    addTearDown(events.close);
+    final answers = <String, Result<ServerInfo>>{};
+    final discovery = await pump(
+      t,
+      answers: answers,
+      refreshEvents: events.stream,
+    );
+    final delayed = Completer<Result<ServerInfo>>();
+    discovery.pending = delayed.future;
+    events.add(null);
+    await t.pumpAndSettle();
+    events.add(null);
+    await t.pumpAndSettle();
+    answers['api.example.org'] = Ok(_server(features: [featureTimetableScan]));
+    delayed.complete(const Err(NetworkFailure()));
+    await t.pumpAndSettle();
+    expect(discovery.asked, hasLength(3));
+    expect(find.text('photo scan true'), findsOneWidget);
+    expect(connected, hasLength(1));
   });
 
   testWidgets('a server this app no longer fits stops the app', (t) async {

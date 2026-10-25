@@ -18,8 +18,9 @@
 //   ago is not fetched again; the answer says so.
 //
 // Every fetch goes through _shared/safe_fetch.ts (https only, public addresses only, redirects
-// re-checked, 15 s, 2 MB, If-None-Match). A failure is stored in last_error as a short code and
-// answered, never thrown to the scheduler, so one broken feed does not stop the others.
+// re-checked, 15 s, 2 MB). Full reads re-expand the current window and timezone.
+// A failure is stored in last_error as a short code and answered, never thrown to
+// the scheduler, so one broken feed does not stop the others.
 import {
   errorResponse,
   json,
@@ -30,20 +31,17 @@ import {
   serviceClient,
   userClient,
 } from "../_shared/client.ts";
-import { expandIcs, importWindow, IcsError } from "../_shared/ical_parse.ts";
-import { FetchError, type FetchResult, fetchFeed } from "../_shared/safe_fetch.ts";
+import {
+  type Calendar,
+  fail,
+  importCalendar,
+  type Outcome,
+} from "../_shared/calendar_import.ts";
 
 /** The scheduled job takes this many calendars per run at most. */
 const MAX_PER_RUN = 20;
 /** An on-demand fetch is refused (answered from the stored state) this soon after the last attempt. */
 const RECENT_MS = 5 * 60 * 1000;
-
-type Calendar = { id: string; url: string; etag: string | null; timezone: string };
-
-type Outcome =
-  | { status: "refreshed"; rows: number; skipped: number; unsupported: number; truncated: boolean }
-  | { status: "not_modified" }
-  | { status: "failed"; code: string };
 
 /**
  * Compares two strings without leaking, through timing, where they first differ.
@@ -77,82 +75,13 @@ function bearerToken(req: Request): string {
   return match[1];
 }
 
-/** Records a failed attempt. Itself failing is logged, not thrown. */
-// deno-lint-ignore no-explicit-any
-async function fail(svc: any, id: string, code: string): Promise<void> {
-  try {
-    const { error } = await svc.rpc("external_calendar_fail", { p_id: id, p_error: code });
-    if (error) throw error;
-  } catch {
-    console.error("calendar-import could not record the failure:", id);
-  }
-}
-
-/**
- * One fetch and its store: fetch (or not modified), expand the window, replace the stored rows.
- * Returns the outcome; never throws for a feed's own problem.
- */
-// deno-lint-ignore no-explicit-any
-async function importCalendar(svc: any, cal: Calendar, now: Date): Promise<Outcome> {
-  let fetched: FetchResult;
-  try {
-    fetched = await fetchFeed(cal.url, { etag: cal.etag });
-  } catch (err) {
-    const code = err instanceof FetchError ? err.code : "internal";
-    if (code === "internal") console.error("calendar-import fetch failed:", cal.id);
-    await fail(svc, cal.id, code);
-    return { status: "failed", code };
-  }
-
-  if (fetched.kind === "not_modified") {
-    const { error } = await svc.rpc("external_calendar_not_modified", { p_id: cal.id });
-    if (error) {
-      await fail(svc, cal.id, "db");
-      return { status: "failed", code: "db" };
-    }
-    return { status: "not_modified" };
-  }
-
-  let expanded: ReturnType<typeof expandIcs>;
-  try {
-    const window = importWindow(now, cal.timezone);
-    expanded = expandIcs(fetched.body, {
-      householdTz: cal.timezone,
-      from: window.from,
-      to: window.to,
-      calendarId: cal.id,
-    });
-  } catch (err) {
-    const code = err instanceof IcsError ? "not_ics" : "internal";
-    if (code === "internal") console.error("calendar-import expansion failed:", cal.id);
-    await fail(svc, cal.id, code);
-    return { status: "failed", code };
-  }
-
-  const { error } = await svc.rpc("external_calendar_store", {
-    p_id: cal.id,
-    p_rows: expanded.rows,
-    p_etag: fetched.etag,
-  });
-  if (error) {
-    console.error("calendar-import store failed:", cal.id, error.code ?? "");
-    await fail(svc, cal.id, "db");
-    return { status: "failed", code: "db" };
-  }
-  return {
-    status: "refreshed",
-    rows: expanded.rows.length,
-    skipped: expanded.skipped,
-    unsupported: expanded.unsupported,
-    truncated: expanded.truncated,
-  };
-}
-
 /** The scheduled job: the calendars that are due, one after the other. */
 async function scheduled(now: Date): Promise<Response> {
   // Service role: a scheduled job has no user. The secret is the only gate.
   const svc = serviceClient();
-  const { data, error } = await svc.rpc("external_calendar_due", { p_max: MAX_PER_RUN });
+  const { data, error } = await svc.rpc("external_calendar_due", {
+    p_max: MAX_PER_RUN,
+  });
   if (error) throw error;
   const due = Array.isArray(data) ? (data as Calendar[]) : [];
 
@@ -174,7 +103,9 @@ async function scheduled(now: Date): Promise<Response> {
 async function onDemand(req: Request, now: Date): Promise<Response> {
   // userClient throws 401 without an Authorization header.
   const user = userClient(req);
-  const { data: auth, error: authError } = await user.auth.getUser(bearerToken(req));
+  const { data: auth, error: authError } = await user.auth.getUser(
+    bearerToken(req),
+  );
   if (authError || !auth?.user) {
     throw new RequestError(401, "unauthorized", "sign in again");
   }
@@ -182,15 +113,25 @@ async function onDemand(req: Request, now: Date): Promise<Response> {
   const body = await readBody(req);
   const calendarId = body.calendar_id;
   if (typeof calendarId !== "string" || !/^[0-9a-f-]{36}$/i.test(calendarId)) {
-    throw new RequestError(400, "calendar_invalid", "calendar_id must be a uuid", "external_calendar_invalid");
+    throw new RequestError(
+      400,
+      "calendar_invalid",
+      "calendar_id must be a uuid",
+      "external_calendar_invalid",
+    );
   }
-  const actor = typeof body.actor_profile_id === "string" ? body.actor_profile_id : null;
+  const actor = typeof body.actor_profile_id === "string"
+    ? body.actor_profile_id
+    : null;
 
   // Acting as the caller: the guardian gate, the device and the household are the database's.
-  const { data: gate, error: gateError } = await user.rpc("external_calendar_refresh_request", {
-    p_actor: actor,
-    p_id: calendarId,
-  });
+  const { data: gate, error: gateError } = await user.rpc(
+    "external_calendar_refresh_request",
+    {
+      p_actor: actor,
+      p_id: calendarId,
+    },
+  );
   if (gateError) throw gateError;
   const state = gate as {
     id: string;
@@ -199,9 +140,17 @@ async function onDemand(req: Request, now: Date): Promise<Response> {
     last_error: string | null;
   };
   if (!state.active) {
-    throw new RequestError(409, "calendar_inactive", "the calendar is switched off", "external_calendar_inactive");
+    throw new RequestError(
+      409,
+      "calendar_inactive",
+      "the calendar is switched off",
+      "external_calendar_inactive",
+    );
   }
-  if (state.last_fetched_at && now.getTime() - Date.parse(state.last_fetched_at) < RECENT_MS) {
+  if (
+    state.last_fetched_at &&
+    now.getTime() - Date.parse(state.last_fetched_at) < RECENT_MS
+  ) {
     return json({
       calendar_id: calendarId,
       status: "recent",
@@ -212,7 +161,10 @@ async function onDemand(req: Request, now: Date): Promise<Response> {
 
   // Service role: the calendar's URL and etag, then the store. The guard above has passed.
   const svc = serviceClient();
-  const { data: row, error: getError } = await svc.rpc("external_calendar_get", { p_id: calendarId });
+  const { data: row, error: getError } = await svc.rpc(
+    "external_calendar_get",
+    { p_id: calendarId },
+  );
   if (getError) throw getError;
   const cal = row as Calendar & { active: boolean };
   const outcome = await importCalendar(svc, cal, now);

@@ -75,6 +75,9 @@ class ShoppingSync extends Notifier<ShoppingSyncState> {
   int _rejections = 0;
   int _retries = 0;
   Timer? _retry;
+  int _generation = 0;
+  Future<void>? _refreshFuture;
+  bool _refreshAgain = false;
 
   ShoppingRepository get _repo => ref.read(shoppingRepositoryProvider);
   ShoppingStore get _store => ref.read(shoppingStoreProvider);
@@ -84,6 +87,9 @@ class ShoppingSync extends Notifier<ShoppingSyncState> {
     final household = ref.watch(
       deviceProvider.select((d) => d.value?.householdId),
     );
+    _generation++;
+    _refreshFuture = null;
+    _refreshAgain = false;
     _household = household;
     _draining = false;
     _retries = 0;
@@ -94,7 +100,7 @@ class ShoppingSync extends Notifier<ShoppingSyncState> {
         if (next.value == true && previous?.value != true) unawaited(sync());
       })
       ..listen(householdInvalidationsProvider(household), (_, next) {
-        if (next.value?.topic == 'shopping') unawaited(refresh());
+        if (next.value?.affects('shopping') ?? false) unawaited(refresh());
       });
     final lifecycle = AppLifecycleListener(onResume: () => unawaited(sync()));
     ref.onDispose(() {
@@ -120,20 +126,39 @@ class ShoppingSync extends Notifier<ShoppingSyncState> {
     await refresh();
   }
 
-  /// Fetches the server's state. Skipped while a drain is in flight: its answer is
-  /// fresher, and a snapshot taken half-way would show changes twice.
-  Future<void> refresh() async {
+  /// Serialize refreshes: a slow earlier snapshot can never overwrite a later
+  /// one. A change arriving during a fetch requests one follow-up fetch.
+  Future<void> refresh() {
     final household = _household;
-    if (household == null || _draining) return;
-    final drains = _drains;
-    final result = await _guard(() => _repo.snapshot());
-    if (_household != household || _draining || _drains != drains) return;
-    switch (result) {
-      case Ok(:final value):
-        await _store.writeSnapshot(household, value);
-        state = state.copyWith(snapshot: value, clearFailure: true);
-      case Err(:final failure):
-        state = state.copyWith(failure: failure);
+    if (household == null || _draining) return Future.value();
+    if (_refreshFuture case final pending?) {
+      _refreshAgain = true;
+      return pending;
+    }
+    return _refreshFuture = _refreshSerial(household, _generation);
+  }
+
+  bool _current(int generation) => ref.mounted && generation == _generation;
+
+  Future<void> _refreshSerial(String household, int generation) async {
+    try {
+      do {
+        _refreshAgain = false;
+        final drains = _drains;
+        final result = await _guard(() => _repo.snapshot());
+        if (!_current(generation)) return;
+        if (_draining || _drains != drains) continue;
+        switch (result) {
+          case Ok(:final value):
+            await _store.writeSnapshot(household, value);
+            if (!_current(generation)) return;
+            state = state.copyWith(snapshot: value, clearFailure: true);
+          case Err(:final failure):
+            state = state.copyWith(failure: failure);
+        }
+      } while (_refreshAgain && !_draining);
+    } finally {
+      if (_current(generation)) _refreshFuture = null;
     }
   }
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart' show TimeOfDay;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wuselwall/core/realtime/household_channel.dart';
+import 'package:wuselwall/core/time/clock.dart';
 import 'package:wuselwall/features/calendar/application/calendar_providers.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
@@ -9,6 +11,7 @@ import 'package:wuselwall/features/meals/domain/meal_models.dart';
 import 'package:wuselwall/features/settings/application/household_settings_providers.dart';
 import 'package:wuselwall/features/settings/domain/household_setting.dart';
 import 'package:wuselwall/features/shopping/application/shopping_providers.dart';
+import 'package:wuselwall/features/shopping/application/shopping_sync.dart';
 import 'package:wuselwall/features/tasks/application/tasks_providers.dart';
 import 'package:wuselwall/features/tasks/domain/tasks_models.dart';
 import 'package:wuselwall/features/today/data/getting_started_repository.dart';
@@ -21,6 +24,17 @@ import 'package:wuselwall/features/today/domain/notice.dart';
 final gettingStartedProvider =
     FutureProvider.autoDispose<List<GettingStartedItem>>((ref) async {
       ref.watch(deviceKeyProvider);
+      final household = ref.watch(
+        deviceProvider.select((d) => d.value?.householdId),
+      );
+      if (household != null) {
+        refreshOnInvalidation(
+          ref,
+          householdId: household,
+          topic: 'members',
+          also: {'board', 'school', 'calendar', 'tasks', 'meals', 'shopping'},
+        );
+      }
       final actor = ref.watch(actingProfileProvider);
       if (actor == null) return const [];
       return (await ref
@@ -35,6 +49,17 @@ final noticesProvider = FutureProvider.autoDispose<List<AppNotice>>((
   ref,
 ) async {
   ref.watch(deviceKeyProvider);
+  final household = ref.watch(
+    deviceProvider.select((d) => d.value?.householdId),
+  );
+  if (household != null) {
+    refreshOnInvalidation(
+      ref,
+      householdId: household,
+      topic: 'members',
+      also: {'board', 'school', 'calendar', 'tasks', 'meals', 'shopping'},
+    );
+  }
   final actor = ref.watch(actingProfileProvider);
   if (actor == null) return const [];
   final result = await ref
@@ -67,16 +92,10 @@ class TodayAgenda {
   bool get isEmpty => events.isEmpty && tasks.isEmpty && warmMeal == null;
 }
 
-/// Local midnight of the device's today.
-DateTime todayDate() {
-  final now = DateTime.now();
-  return DateTime(now.year, now.month, now.day);
-}
-
 final todayAgendaProvider = FutureProvider.autoDispose<TodayAgenda>((
   ref,
 ) async {
-  final today = todayDate();
+  final today = ref.watch(todayProvider);
   final actor = ref.watch(actingProfileProvider);
 
   final window = await ref.watch(
@@ -125,3 +144,25 @@ int _byStart(Occurrence a, Occurrence b) {
 }
 
 int _minutes(TimeOfDay? t) => t == null ? 0 : t.hour * 60 + t.minute;
+
+/// A manual refresh must drop source caches as well as the derived agenda.
+Future<void> refreshToday(ProviderContainer ref) async {
+  final today = ref.read(todayProvider);
+  ref
+    ..invalidate(occurrencesProvider((from: today, to: today)))
+    ..invalidate(tasksTodayProvider)
+    ..invalidate(mealEntriesProvider(mondayOf(today)))
+    ..invalidate(householdSettingsProvider)
+    ..invalidate(gettingStartedProvider)
+    ..invalidate(noticesProvider)
+    ..invalidate(pendingVerificationsProvider)
+    ..invalidate(redemptionsProvider)
+    ..invalidate(todayAgendaProvider);
+  await Future.wait([
+    // The screen renders the AsyncError; the refresh gesture itself must complete.
+    ref
+        .read(todayAgendaProvider.future)
+        .then<void>((_) {}, onError: (Object _, StackTrace _) {}),
+    ref.read(shoppingSyncProvider.notifier).sync(),
+  ]);
+}

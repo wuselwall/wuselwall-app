@@ -109,6 +109,21 @@ greys the photo import out and says why where it is missing), and `server_versio
 release from `WW_SERVER_VERSION`, which `wuselwall install` and `update` write into the
 stack's `.env`. The app shows "App · Server · API" under Settings → Versions.
 
+Native apps start from the cached discovery document and refresh it in the background.
+Refreshed capabilities and server metadata update the running app without reconnecting
+or signing the member out (2026-10-25). A changed server address or publishable key takes
+effect on the next start; an incompatible server stops the app immediately.
+
+Cache recovery (2026-10-25): native discovery also retries on foreground and network
+recovery. Household data refetches after a successful Realtime subscription/rejoin and on
+foreground/network recovery, covering broadcasts missed while disconnected. Member lists
+observe member changes; calendar/school projections observe relevant settings and household
+changes. Today refreshes its source caches and follows the local date across midnight.
+Board responses from an earlier household generation are discarded, and shopping snapshot
+refreshes are serialized with one coalesced follow-up so an old response cannot replace a
+newer persisted mirror. These are repository regressions; native two-device qualification
+remains part of the release checklist.
+
 ### The scheduled jobs
 
 `tasks-nightly` (daily), `holidays-sync` (weekly) and `calendar-import` (hourly, the

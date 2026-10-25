@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/core/realtime/household_channel.dart';
 import 'package:wuselwall/core/supabase/supabase_providers.dart';
 import 'package:wuselwall/features/household/data/household_onboarding_repository.dart';
 import 'package:wuselwall/features/household/domain/household_models.dart';
@@ -150,6 +151,12 @@ final deviceKeyProvider = Provider<DeviceKey>((ref) {
 /// the family; [allMembersProvider] has the retired ones too.
 final membersProvider = FutureProvider.autoDispose<List<Member>>((ref) async {
   ref.watch(deviceKeyProvider);
+  final household = ref.watch(
+    deviceProvider.select((d) => d.value?.householdId),
+  );
+  if (household != null) {
+    refreshOnInvalidation(ref, householdId: household, topic: 'members');
+  }
   return (await ref.watch(identityRepositoryProvider).members()).unwrap();
 });
 
@@ -159,6 +166,12 @@ final allMembersProvider = FutureProvider.autoDispose<List<Member>>((
   ref,
 ) async {
   ref.watch(deviceKeyProvider);
+  final household = ref.watch(
+    deviceProvider.select((d) => d.value?.householdId),
+  );
+  if (household != null) {
+    refreshOnInvalidation(ref, householdId: household, topic: 'members');
+  }
   return (await ref
           .watch(identityRepositoryProvider)
           .members(includeInactive: true))
@@ -170,6 +183,12 @@ final householdInfoProvider = FutureProvider.autoDispose<HouseholdInfo>((
   ref,
 ) async {
   ref.watch(deviceKeyProvider);
+  final household = ref.watch(
+    deviceProvider.select((d) => d.value?.householdId),
+  );
+  if (household != null) {
+    refreshOnInvalidation(ref, householdId: household, topic: 'board');
+  }
   return (await ref.watch(identityRepositoryProvider).household()).unwrap();
 });
 
@@ -177,6 +196,12 @@ final devicesProvider = FutureProvider.autoDispose<List<DeviceEntry>>((
   ref,
 ) async {
   ref.watch(deviceKeyProvider);
+  final household = ref.watch(
+    deviceProvider.select((d) => d.value?.householdId),
+  );
+  if (household != null) {
+    refreshOnInvalidation(ref, householdId: household, topic: 'board');
+  }
   return (await ref.watch(identityRepositoryProvider).devices()).unwrap();
 });
 
