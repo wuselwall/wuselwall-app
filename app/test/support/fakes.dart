@@ -898,6 +898,23 @@ class EmptySetupStore extends SetupStore {
   Future<void> clear() async {}
 }
 
+/// The clock of a test that names none: today at 10:30. That is outside every time
+/// window the app has (the table question's meals, the look-back from Sunday 16:00 to
+/// Monday 10:00, the wall's night from 21:00), so what a test sees does not depend on when
+/// the suite runs. The date stays today's: many tests compare with [DateTime.now].
+/// `--dart-define=WW_PROBE_SHIFT=<days>` moves it by whole days, to check that the suite
+/// passes on every weekday (specs/18 "The clock").
+DateTime testNow() {
+  final d = DateTime.now();
+  return DateTime(
+    d.year,
+    d.month,
+    d.day + const int.fromEnvironment('WW_PROBE_SHIFT'),
+    10,
+    30,
+  );
+}
+
 List<Override> baseOverrides({
   required FakeIdentityRepository identity,
   FakeShoppingRepository? shopping,
@@ -923,7 +940,7 @@ List<Override> baseOverrides({
   bool signedIn = true,
   bool online = true,
 
-  /// The wall clock the app reads ([nowProvider]); the real time when null.
+  /// The wall clock the app reads ([nowProvider]); [testNow] when null.
   DateTime? now,
 
   /// Replaces the constant session of [signedIn], for a journey that signs in on the way.
@@ -991,7 +1008,7 @@ List<Override> baseOverrides({
   nightProvider.overrideWith(DayNight.new),
   // One tick, not a per-second stream: the kiosk clock would keep pumpAndSettle busy.
   clockProvider.overrideWith((ref) => Stream.value(now ?? DateTime.now())),
-  if (now != null) nowProvider.overrideWithValue(now),
+  nowProvider.overrideWithValue(now ?? testNow()),
 ];
 
 class DayNight extends NightNotifier {
