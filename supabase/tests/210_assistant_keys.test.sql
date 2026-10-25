@@ -23,6 +23,12 @@ create function pg_temp.id(p_name text) returns uuid language sql as $$
   select id from ids where name = p_name
 $$;
 
+-- The household's today (Europe/Berlin), not the database's UTC current_date: the two differ
+-- every night from 22:00/23:00 UTC, and the answers are read for the household's day.
+create function pg_temp.today() returns date language sql as $$
+  select (now() at time zone 'Europe/Berlin')::date
+$$;
+
 create function pg_temp.token(p_name text) returns text language sql as $$
   select token from tok where name = p_name
 $$;
@@ -102,30 +108,30 @@ insert into devs
 
 -- ---- data the answers are read from: an event each, chores, a meal ---------------------------
 insert into app.event (household_id, calendar_id, title, kind, is_all_day, start_date, end_date, timezone, uid)
-  select pg_temp.id('hh_a'), c.id, 'Elternabend', 'appointment', true, current_date, current_date,
+  select pg_temp.id('hh_a'), c.id, 'Elternabend', 'appointment', true, pg_temp.today(), pg_temp.today(),
          'Europe/Berlin', 'a-evt@wuselwall.app'
     from app.calendar c where c.household_id = pg_temp.id('hh_a');
 insert into app.calendar (household_id, name, colour_hex) select pg_temp.id('hh_b'), 'B', '#336699'
  where not exists (select 1 from app.calendar where household_id = pg_temp.id('hh_b'));
 insert into app.event (household_id, calendar_id, title, kind, is_all_day, start_date, end_date, timezone, uid)
-  select pg_temp.id('hh_b'), c.id, 'Secret of B', 'appointment', true, current_date, current_date,
+  select pg_temp.id('hh_b'), c.id, 'Secret of B', 'appointment', true, pg_temp.today(), pg_temp.today(),
          'Europe/Berlin', 'b-evt@wuselwall.app'
     from app.calendar c where c.household_id = pg_temp.id('hh_b');
 
 insert into app.task_instance (household_id, title, points, kind, due_on, opens_on, closes_on, assigned_profile_id)
-  values (pg_temp.id('hh_a'), 'Spülmaschine ausräumen', 3, 'duty', current_date, current_date, current_date,
+  values (pg_temp.id('hh_a'), 'Spülmaschine ausräumen', 3, 'duty', pg_temp.today(), pg_temp.today(), pg_temp.today(),
           pg_temp.id('paul')),
-         (pg_temp.id('hh_a'), 'Zimmer aufräumen', 2, 'duty', current_date, current_date, current_date,
+         (pg_temp.id('hh_a'), 'Zimmer aufräumen', 2, 'duty', pg_temp.today(), pg_temp.today(), pg_temp.today(),
           pg_temp.id('emma')),
-         (pg_temp.id('hh_b'), 'B chore', 5, 'duty', current_date, current_date, current_date,
+         (pg_temp.id('hh_b'), 'B chore', 5, 'duty', pg_temp.today(), pg_temp.today(), pg_temp.today(),
           pg_temp.id('bea'));
 insert into ids select 'task_paul', id from app.task_instance where title = 'Spülmaschine ausräumen';
 insert into ids select 'task_emma', id from app.task_instance where title = 'Zimmer aufräumen';
 insert into ids select 'task_b', id from app.task_instance where title = 'B chore';
 
 insert into app.meal_plan_entry (household_id, on_date, slot, free_text)
-  values (pg_temp.id('hh_a'), current_date, 'dinner', 'Spaghetti'),
-         (pg_temp.id('hh_b'), current_date, 'dinner', 'B dinner');
+  values (pg_temp.id('hh_a'), pg_temp.today(), 'dinner', 'Spaghetti'),
+         (pg_temp.id('hh_b'), pg_temp.today(), 'dinner', 'B dinner');
 
 -- Extra rows the assistant reads: a shopping item and a recipe in each household, a ledger row.
 insert into app.shopping_list (household_id, name, is_default, sort_order) values (pg_temp.id('hh_b'), 'B-Liste', true, 0);
