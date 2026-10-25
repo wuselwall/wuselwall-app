@@ -47,16 +47,24 @@ class BoardNotifier extends Notifier<BoardSnapshot> {
   int _generation = 0;
   String? _household;
 
+  /// What the wall last showed, so a rebuild for the same household (the midnight
+  /// one) starts from it instead of a blank wall.
+  BoardSnapshot _shown = const BoardSnapshot();
+
   @override
   BoardSnapshot build() {
     final householdId = ref.watch(
       deviceProvider.select((d) => d.value?.householdId),
     );
+    final kept = householdId != null && householdId == _household
+        ? _shown
+        : const BoardSnapshot();
     _generation++;
     _household = householdId;
     _inFlight = false;
     _again = false;
-    if (householdId == null) return const BoardSnapshot();
+    _shown = kept;
+    if (householdId == null) return kept;
     ref.listen(householdInvalidationsProvider(householdId), (_, next) {
       final topic = next.value?.topic;
       if (topic != null && (topic == '*' || boardTopics.contains(topic))) {
@@ -74,7 +82,7 @@ class BoardNotifier extends Notifier<BoardSnapshot> {
     });
 
     Future.microtask(refresh);
-    return const BoardSnapshot();
+    return kept;
   }
 
   /// Fetches the board now. Calls during a fetch coalesce into one more fetch.
@@ -91,7 +99,7 @@ class BoardNotifier extends Notifier<BoardSnapshot> {
         _again = false;
         final result = await ref.read(boardRepositoryProvider).week();
         if (!ref.mounted || generation != _generation) return;
-        state = switch (result) {
+        state = _shown = switch (result) {
           Ok(:final value) => BoardSnapshot(
             board: value,
             fetchedAt: DateTime.now(),

@@ -139,7 +139,9 @@ final occurrencesProvider = FutureProvider.autoDispose
       window,
     ) async {
       ref.watch(deviceKeyProvider);
-      final householdId = ref.watch(deviceProvider).value?.householdId;
+      final householdId = ref.watch(
+        deviceProvider.select((d) => d.value?.householdId),
+      );
       if (householdId != null) {
         refreshOnInvalidation(
           ref,
@@ -162,7 +164,9 @@ final monthOccurrencesProvider = FutureProvider.autoDispose
       window,
     ) async {
       ref.watch(deviceKeyProvider);
-      final householdId = ref.watch(deviceProvider).value?.householdId;
+      final householdId = ref.watch(
+        deviceProvider.select((d) => d.value?.householdId),
+      );
       if (householdId != null) {
         refreshOnInvalidation(
           ref,

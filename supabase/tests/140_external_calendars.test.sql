@@ -1,5 +1,5 @@
 begin;
-select plan(76);
+select plan(87);
 
 -- Imported external calendars (migrations/20261014150000_external_calendars.sql). Start from an
 -- empty system, whatever the database already holds (all rolled back).
@@ -318,6 +318,66 @@ select ok((select last_fetched_at is not null and last_error is null from app.ex
   'store sets last_fetched_at and clears last_error');
 set local role service_role;
 select is(jsonb_array_length(api.external_calendar_due(20)), 0, 'a fresh calendar is not due');
+
+-- An unchanged feed leaves the rows alone and wakes nobody; a changed one replaces them and does.
+-- (The rows below are the stored ones in another order, with the nulls spelled out.)
+reset role;
+create temp table occ_before as
+  select id from app.external_occurrence where calendar_id = (select id from cal where name = 'bins');
+create temp table calendar_wakes as
+  select count(*)::int as n from realtime.messages
+   where topic = 'household:' || (select household_id from app.external_calendar
+                                   where id = (select id from cal where name = 'bins'))
+     and payload ->> 'topic' = 'calendar';
+update app.external_calendar set last_error = 'http_503' where id = (select id from cal where name = 'bins');
+set local role service_role;
+select is(api.external_calendar_store((select id from cal where name = 'bins'),
+  '[{"uid":"b@x","starts_at":null,"ends_at":null,"all_day":true,"start_date":"2026-10-16","end_date":"2026-10-16","title":"Restmüll","location":null},
+    {"uid":"a@x","starts_at":"2026-10-15T08:00:00+02:00","ends_at":"2026-10-15T07:00:00Z","all_day":false,"start_date":null,"end_date":null,"title":"Papier","location":null}]'::jsonb,
+  '"etag-2"'), 2, 'storing the same rows again returns their count');
+reset role;
+select is((select array_agg(id order by id) from app.external_occurrence
+            where calendar_id = (select id from cal where name = 'bins')),
+  (select array_agg(id order by id) from occ_before),
+  'identical rows (in any order) keep the same occurrence ids');
+select is((select count(*)::int from realtime.messages
+            where topic = 'household:' || (select household_id from app.external_calendar
+                                            where id = (select id from cal where name = 'bins'))
+              and payload ->> 'topic' = 'calendar'),
+  (select n from calendar_wakes), 'identical rows broadcast nothing');
+select is((select etag from app.external_calendar where id = (select id from cal where name = 'bins')), '"etag-2"',
+  'identical rows still record the etag');
+select is((select last_error from app.external_calendar where id = (select id from cal where name = 'bins')), null,
+  'identical rows still clear last_error');
+
+set local role service_role;
+select is(api.external_calendar_store((select id from cal where name = 'bins'),
+  '[{"uid":"a@x","starts_at":"2026-10-15T06:00:00Z","ends_at":"2026-10-15T07:00:00Z","all_day":false,"title":"Altpapier","location":null},
+    {"uid":"b@x","starts_at":null,"ends_at":null,"all_day":true,"start_date":"2026-10-16","end_date":"2026-10-16","title":"Restmüll"}]'::jsonb,
+  '"etag-3"'), 2, 'storing a changed feed returns the new row count');
+reset role;
+select is((select count(*)::int from app.external_occurrence o join occ_before b using (id)), 0,
+  'changed rows replace the occurrences');
+select is((select count(*)::int from app.external_occurrence
+            where calendar_id = (select id from cal where name = 'bins') and title = 'Altpapier'), 1,
+  'the changed title is stored');
+select is((select count(*)::int from realtime.messages
+            where topic = 'household:' || (select household_id from app.external_calendar
+                                            where id = (select id from cal where name = 'bins'))
+              and payload ->> 'topic' = 'calendar'),
+  (select n from calendar_wakes) + 1, 'changed rows broadcast once');
+
+-- Rows removed elsewhere come back even though the feed is the one last stored.
+delete from app.external_occurrence where calendar_id = (select id from cal where name = 'bins');
+set local role service_role;
+select is(api.external_calendar_store((select id from cal where name = 'bins'),
+  '[{"uid":"a@x","starts_at":"2026-10-15T06:00:00Z","ends_at":"2026-10-15T07:00:00Z","all_day":false,"title":"Altpapier","location":null},
+    {"uid":"b@x","starts_at":null,"ends_at":null,"all_day":true,"start_date":"2026-10-16","end_date":"2026-10-16","title":"Restmüll"}]'::jsonb,
+  '"etag-3"'), 2, 'the stored feed again after its rows were removed');
+reset role;
+select is((select count(*)::int from app.external_occurrence where calendar_id = (select id from cal where name = 'bins')), 2,
+  'the rows are written again');
+set local role service_role;
 
 select lives_ok($$ select api.external_calendar_fail((select id from cal where name = 'bins'), 'http_404') $$,
   'a failed fetch is recorded');

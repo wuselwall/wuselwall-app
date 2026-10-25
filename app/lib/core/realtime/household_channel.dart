@@ -10,15 +10,29 @@ import 'package:wuselwall/core/supabase/supabase_providers.dart';
 /// household's private channel; the payload deliberately carries no data, so a stale or
 /// replayed message can never show wrong information (ADR-010: live updates).
 class Invalidation {
-  const Invalidation(this.topic);
+  /// Not `const`, on purpose: Riverpod tells a listener of the stream only when the value
+  /// differs from the last one, and two identical canonical constants (a rejoin after a
+  /// rejoin) would be swallowed. Every event gets its own [seq].
+  Invalidation(this.topic) : seq = _issued++;
 
   /// A subscription or foreground recovery: any cached module may have missed data.
-  const Invalidation.all() : topic = '*';
+  Invalidation.all() : this('*');
+
+  static int _issued = 0;
 
   bool affects(String topic) => this.topic == '*' || this.topic == topic;
 
   /// A module name such as `shopping` or `tasks`.
   final String topic;
+
+  /// Which event this is; no two events share one.
+  final int seq;
+
+  @override
+  bool operator ==(Object other) => other is Invalidation && other.seq == seq;
+
+  @override
+  int get hashCode => seq.hashCode;
 }
 
 /// Joins the private channel `household:<id>` and exposes its invalidations.

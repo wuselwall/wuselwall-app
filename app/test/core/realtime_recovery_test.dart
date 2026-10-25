@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:wuselwall/core/realtime/household_channel.dart';
 import 'package:wuselwall/core/realtime/refresh_events.dart';
 import 'package:wuselwall/core/supabase/supabase_providers.dart';
 import 'package:wuselwall/features/calendar/application/calendar_providers.dart';
@@ -123,4 +124,38 @@ void main() {
       }
     },
   );
+
+  test(
+    'every subscription is its own event, so a rejoin is never swallowed',
+    () {
+      final first = Invalidation.all();
+      final second = Invalidation.all();
+      expect(first, isNot(second));
+      expect(first.seq, isNot(second.seq));
+      expect(first.affects('shopping'), isTrue);
+    },
+  );
+
+  test('consecutive subscriptions reach listeners one by one', () async {
+    final client = _Client();
+    final c = ProviderContainer(
+      overrides: [
+        supabaseClientProvider.overrideWithValue(client),
+        appRefreshEventsProvider.overrideWith(
+          (ref) => const Stream<int>.empty(),
+        ),
+      ],
+    );
+    addTearDown(c.dispose);
+    final seen = <Invalidation>[];
+    c.listen(householdInvalidationsProvider('h1'), (_, next) {
+      if (next.value case final event?) seen.add(event);
+    });
+    client.stream.status(RealtimeSubscribeStatus.subscribed, null);
+    await pumpEventQueue();
+    client.stream.status(RealtimeSubscribeStatus.subscribed, null);
+    await pumpEventQueue();
+    expect(seen.map((e) => e.topic), ['*', '*']);
+    expect(seen.first, isNot(seen.last));
+  });
 }

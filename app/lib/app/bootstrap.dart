@@ -392,7 +392,11 @@ class _BootstrapState extends State<Bootstrap> {
     }
     _rechecking = true;
     try {
-      final result = await widget.discovery.discover(stored.supabaseUrl);
+      // The web app's server is whatever its own origin says, as at start; asking the
+      // stored address instead could disagree and clear the session on the next start.
+      final result = await widget.discovery.discover(
+        widget.webOrigin ?? stored.supabaseUrl,
+      );
       if (!mounted || !identical(_phase, running)) return;
       if (result case Ok(value: final server)) {
         final problem = await _fit(server);
