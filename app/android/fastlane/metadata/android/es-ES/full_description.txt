@@ -1,0 +1,45 @@
+WuselWall es el organizador familiar para todo lo que se mueve en casa: calendario compartido, horarios escolares, tareas, plan de comidas y lista de la compra. En el móvil para los padres, como panel semanal en una tableta de la cocina y en una vista pensada para los más pequeños.
+
+Antes de nada: WuselWall no es un servicio en línea. La app se conecta a un servidor WuselWall que vuestra familia gestiona por su cuenta – en un NAS, un miniPC, un servidor alquilado o en vuestro propio proyecto de Supabase. Nunca vemos vuestros datos. Sin servidor podéis probar la app con una familia de ejemplo: tocad «Probar sin servidor» en la primera pantalla.
+
+PANEL SEMANAL PARA LA COCINA
+• Siete días de un vistazo, pensado para una tableta en la pared
+• Quién está dónde, qué viene, qué hay de comer
+• Cada persona tiene su color – distinguible también para quienes no ven bien los colores
+• Al tocar a un niño se abre su semana con el horario escolar
+
+CALENDARIO COMPARTIDO
+• Citas para todos o para un solo miembro de la familia
+• Citas periódicas y presencia, como turnos o viajes
+• Suscripción a calendarios: club, recogida de basuras, colegio
+• Como feed ICS en Outlook, Calendario de Apple o Google Calendar
+
+HORARIOS ESCOLARES
+• El horario de cada niño, también con varios colegios
+• Festivos y vacaciones escolares de Alemania, Austria, Suiza y Liechtenstein, hasta el municipio
+• Suplencias y clases canceladas
+
+TAREAS CON PUNTOS
+• Repartir tareas, juntar puntos, canjear recompensas
+• Rachas e insignias en lugar de castigos
+• Sin clasificación entre hermanos
+
+PLAN DE COMIDAS Y LISTA DE LA COMPRA
+• ¿Qué hay de comer esta semana? Sugerencias a partir de lo que ya habéis cocinado
+• Una lista de la compra compartida, ordenada por secciones
+• Funciona sin conexión en la tienda y se sincroniza después
+
+UN DISPOSITIVO POR PERSONA O POR HABITACIÓN
+• Dispositivos propios para los adultos, una tableta compartida para la cocina
+• Los niños no necesitan cuenta ni dirección de correo electrónico
+• Conectad dispositivos nuevos con un código QR y bloquead cada uno por separado
+• Inicio de sesión con un código por correo electrónico o con contraseña
+
+VUESTROS DATOS SE QUEDAN CON VOSOTROS
+• Todo está en vuestro propio servidor
+• Sin anuncios, sin rastreo, sin cuenta con nosotros
+• Exportación de datos de toda la familia
+• En alemán, inglés, francés y español
+
+CÓDIGO ABIERTO
+La app y el software del servidor son de código abierto, con licencia Apache 2.0. La guía para la familia y para vuestro propio servidor está en https://wuselwall.app/docs/es/
