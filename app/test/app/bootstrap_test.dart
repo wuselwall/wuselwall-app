@@ -465,6 +465,24 @@ void main() {
     expect(connected, hasLength(1));
   });
 
+  testWidgets('web rechecks its own origin, not the stored backend', (t) async {
+    final events = StreamController<void>.broadcast();
+    addTearDown(events.close);
+    final origin = Uri.parse('https://web.example.org');
+    final discovery = await pump(
+      t,
+      webOrigin: origin,
+      answers: {'web.example.org': Ok(_server())},
+      refreshEvents: events.stream,
+    );
+    expect(discovery.asked, [origin]);
+    events.add(null);
+    await t.pumpAndSettle();
+    expect(discovery.asked, [origin, origin]);
+    expect(store.kept?.supabaseUrl.host, 'api.example.org');
+    expect(connected, hasLength(1));
+  });
+
   testWidgets('recovery during a failed discovery queues a follow-up', (
     t,
   ) async {
