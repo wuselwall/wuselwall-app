@@ -26,7 +26,7 @@ own tables, optionally in the outbound feed), local reminders (Q47), the QR scan
 in `app.shortcut_token`, the `shortcuts` function),
 the evening packing reminder (FR-7.12, `notify.packing_reminder`), and the usual week
 (issue #81, specs/15 "The baseline": a usual place per weekday, up to three time slots a
-day and alternating weeks A/B), and the school import of [specs/24](specs/24-school-import.md)
+day and alternating weeks A/B), event templates ([specs/28](specs/28-event-templates.md), 2026-10-25: Neuer Termin opens tiles, built-in, saved and suggested from the family's history by counting in SQL, migration `20261025150000`, pgTAP 245), and the school import of [specs/24](specs/24-school-import.md)
 (2026-10-22): the proposed term, subjects from the cell, the paste import with its preview,
 the retained proposal backend (`app.proposal`, `api.mcp_propose`, `propose_timetable`),
 and the photo scan (`timetable-scan` with the optional `ocr` container, RapidOCR on the CPU),

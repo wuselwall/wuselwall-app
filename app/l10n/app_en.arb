@@ -2541,8 +2541,20 @@
       }
     }
   },
-  "languageSystemHelp": "The language of this device; German when the app does not have it",
+  "languageSystemHelp": "The language of this device; German when the app does not have it. German as it is written in your family’s country.",
   "languageNameDe": "Deutsch",
+  "languageNameDeDe": "Deutsch (Deutschland)",
+  "@languageNameDeDe": {
+    "description": "A German variant in the language picker, in its own name (specs/09 \"Regional German\")."
+  },
+  "languageNameDeCh": "Deutsch (Schweiz)",
+  "@languageNameDeCh": {
+    "description": "A German variant in the language picker, in its own name (specs/09 \"Regional German\")."
+  },
+  "languageNameDeAt": "Deutsch (Österreich)",
+  "@languageNameDeAt": {
+    "description": "A German variant in the language picker, in its own name (specs/09 \"Regional German\")."
+  },
   "languageNameEn": "English",
   "languageNameFr": "Français",
   "languageNameEs": "Español",
@@ -3622,5 +3634,114 @@
   "calendarMonthOpenDay": "Open the day",
   "@calendarMonthOpenDay": {
     "description": "Screen-reader hint: tapping a day of the month view opens it in the day view."
-  }
+  },
+  "eventRepeatYearly": "Yearly",
+  "@eventRepeatYearly": {},
+  "eventTemplatesIntro": "Pick a starting point. You can change everything next.",
+  "@eventTemplatesIntro": {
+    "description": "The line under the title of the new-event page with its template tiles (specs/28)."
+  },
+  "eventTemplatesSuggested": "Often in your family",
+  "@eventTemplatesSuggested": {
+    "description": "Section of the new-event page: suggestions counted from the family's own past events."
+  },
+  "eventTemplatesSaved": "Your templates",
+  "@eventTemplatesSaved": {
+    "description": "Section of the new-event page: templates the family saved."
+  },
+  "eventTemplatesBuiltIn": "Templates",
+  "@eventTemplatesBuiltIn": {
+    "description": "Section of the new-event page: the built-in templates."
+  },
+  "eventTemplateBlank": "Start blank",
+  "@eventTemplateBlank": {
+    "description": "The tile that opens the empty event editor."
+  },
+  "eventTemplateBlankHelp": "Fill in everything yourself",
+  "eventStarterBirthday": "Birthday",
+  "@eventStarterBirthday": {
+    "description": "Built-in event template (specs/28); also the title it fills in."
+  },
+  "eventStarterGuestDinner": "Guests for dinner",
+  "eventStarterKidsParty": "Children's party",
+  "eventStarterSportsEvent": "Sports event",
+  "eventStarterDoctor": "Doctor’s appointment",
+  "eventStarterPerformance": "Performance",
+  "eventStarterDayOut": "Day out",
+  "eventStarterHoliday": "Holiday / trip",
+  "eventTemplateAllDay": "All day",
+  "@eventTemplateAllDay": {
+    "description": "Part of a template tile's line: an all-day event."
+  },
+  "eventTemplateDays": "{count, plural, =1{1 day} other{{count} days}}",
+  "@eventTemplateDays": {
+    "description": "Part of a template tile's line: how many days an all-day template lasts.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eventTemplateHours": "{count} h",
+  "@eventTemplateHours": {
+    "description": "Part of a template tile's line: a length in whole hours.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eventTemplateHoursMinutes": "{hours} h {minutes} min",
+  "@eventTemplateHoursMinutes": {
+    "description": "Part of a template tile's line: a length in hours and minutes.",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "eventTemplateMinutes": "{count} min",
+  "@eventTemplateMinutes": {
+    "description": "Part of a template tile's line: a length under an hour.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eventTemplateCount": "{count}× so far",
+  "@eventTemplateCount": {
+    "description": "Part of a suggestion tile's line: how many such events the family entered.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eventTemplateMenu": "More for {name}",
+  "@eventTemplateMenu": {
+    "description": "Tooltip of a template tile's menu button.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "eventTemplateKeep": "Keep as template",
+  "@eventTemplateKeep": {
+    "description": "Menu of a suggestion tile: save it as one of the family's templates."
+  },
+  "eventTemplateHide": "Don’t suggest again",
+  "eventTemplateHidden": "Won’t be suggested again.",
+  "eventTemplateDelete": "Delete template",
+  "eventTemplateDeleted": "Template deleted.",
+  "eventSaveAsTemplate": "Save as template",
+  "@eventSaveAsTemplate": {
+    "description": "Event editor action: save what the editor shows as a household template (specs/28)."
+  },
+  "eventTemplateSavedNote": "Saved as a template.",
+  "eventTemplateErrLimit": "Your family already has 50 templates. Delete one first."
 }

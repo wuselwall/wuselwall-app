@@ -100,6 +100,43 @@ void main() {
     });
   }
 
+  // Regional German (specs/09): only the strings that differ from the German of Germany.
+  for (final code in ['de_CH', 'de_AT']) {
+    group(code, () {
+      test('overrides German messages, keeping their placeholders', () {
+        final arb = _catalogue(code);
+        final german = _catalogue('de');
+        expect(arb['@@locale'], code);
+        expect(_messages(german).containsAll(_messages(arb)), isTrue);
+        for (final key in _messages(arb)) {
+          final value = arb[key] as String;
+          expect(value, isNot(german[key]), reason: key);
+          final expected = _IcuSignature(german[key] as String);
+          final actual = _IcuSignature(value);
+          expect(actual.placeholders, expected.placeholders, reason: key);
+          expect(actual.formats, expected.formats, reason: key);
+          expect(
+            actual.requiredSelectors,
+            expected.requiredSelectors,
+            reason: key,
+          );
+        }
+      });
+    });
+  }
+
+  test('Swiss German writes ss for every ß of German', () {
+    final swiss = _catalogue('de_CH');
+    final german = _catalogue('de');
+    for (final key in _messages(german)) {
+      if (!(german[key] as String).contains('ß')) continue;
+      expect(swiss[key], isA<String>(), reason: '$key needs a de_CH override');
+    }
+    for (final key in _messages(swiss)) {
+      expect(swiss[key] as String, isNot(contains('ß')), reason: key);
+    }
+  });
+
   test(
     'ICU guard sees nested placeholders and permits locale plural categories',
     () {

@@ -26,6 +26,7 @@ import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/data/board_repository.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/calendar/data/calendar_repository.dart';
+import 'package:wuselwall/features/calendar/data/event_templates_repository.dart';
 import 'package:wuselwall/features/calendar/data/external_calendars_repository.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 import 'package:wuselwall/features/household/data/household_leave_repository.dart';
@@ -51,6 +52,7 @@ import 'package:wuselwall/features/shopping/domain/shopping_sync_model.dart';
 import 'package:wuselwall/features/today/data/getting_started_repository.dart';
 import 'package:wuselwall/features/today/data/notices_repository.dart';
 
+import 'fake_event_templates.dart';
 import 'fake_external_calendars.dart';
 import 'fake_getting_started.dart';
 import 'fake_invitations.dart';
@@ -1013,6 +1015,7 @@ Future<ProviderContainer> pumpApp(
   FakeGettingStartedRepository? gettingStarted,
   FakeNoticesRepository? notices,
   FakeRegionRepository? region,
+  FakeEventTemplatesRepository? eventTemplates,
   Size size = const Size(1000, 1600),
 }) async {
   tester.view.physicalSize = size;
@@ -1056,6 +1059,9 @@ Future<ProviderContainer> pumpApp(
       ),
       regionRepositoryProvider.overrideWithValue(
         region ?? FakeRegionRepository(),
+      ),
+      eventTemplatesRepositoryProvider.overrideWithValue(
+        eventTemplates ?? FakeEventTemplatesRepository(),
       ),
     ],
   );

@@ -13,7 +13,9 @@ import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
 import 'package:wuselwall/features/calendar/application/calendar_providers.dart';
+import 'package:wuselwall/features/calendar/application/event_template_providers.dart';
 import 'package:wuselwall/features/calendar/data/calendar_repository.dart';
+import 'package:wuselwall/features/calendar/data/event_templates_repository.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 import 'package:wuselwall/features/calendar/ui/editor/event_draft.dart';
 import 'package:wuselwall/features/calendar/ui/editor/presence_state_picker.dart';
@@ -106,8 +108,24 @@ class _EventEditorFormState extends ConsumerState<_EventEditorForm> {
     super.initState();
     final initial = widget.initial;
     final tradition = widget.args?.tradition;
+    final template = widget.args?.template;
     if (initial != null) {
       _draft = EventDraft.fromEvent(initial);
+    } else if (template != null) {
+      final now = ref.read(nowProvider);
+      final members = ref.read(membersProvider).value;
+      _draft = EventDraft.fromTemplate(
+        template,
+        day: widget.args?.date ?? now,
+        defaultHour: math.min(now.hour + 1, 23),
+        // Before the members have loaded, the template's people are kept as they are.
+        activeMembers: members == null
+            ? template.attendeeIds
+            : {
+                for (final m in members)
+                  if (m.active) m.id,
+              },
+      );
     } else if (tradition != null) {
       // The whole family attends a tradition by default (specs/27).
       final members = ref.read(membersProvider).value ?? const <Member>[];
@@ -248,7 +266,8 @@ class _EventEditorFormState extends ConsumerState<_EventEditorForm> {
     switch (result) {
       case Ok():
         ref.invalidate(occurrencesProvider);
-        context.pop();
+        // The new-event page closes with the editor (specs/28).
+        context.pop(true);
       case Err(:final failure):
         setState(() => _saving = false);
         context.showFailure(failure);
@@ -301,9 +320,31 @@ class _EventEditorFormState extends ConsumerState<_EventEditorForm> {
     switch (result) {
       case Ok():
         ref.invalidate(occurrencesProvider);
-        context.pop();
+        context.pop(true);
       case Err(:final failure):
         setState(() => _saving = false);
+        context.showFailure(failure);
+    }
+  }
+
+  /// Als Vorlage speichern (specs/28): what the editor shows, without its date.
+  Future<void> _saveTemplate() async {
+    _syncText();
+    if (_draft.title.trim().isEmpty) {
+      setState(() => _submitted = true);
+      return;
+    }
+    final members = ref.read(membersProvider).value ?? const <Member>[];
+    final template = _draft.toTemplate(attendees: _orderedAttendees(members));
+    final result = await ref
+        .read(eventTemplatesRepositoryProvider)
+        .save(actor: ref.read(actingProfileProvider), template: template);
+    if (!mounted) return;
+    switch (result) {
+      case Ok():
+        ref.invalidate(eventTemplatesProvider);
+        context.showMessage(context.l10n.eventTemplateSavedNote);
+      case Err(:final failure):
         context.showFailure(failure);
     }
   }
@@ -394,6 +435,13 @@ class _EventEditorFormState extends ConsumerState<_EventEditorForm> {
               : l10n.calendarNewEvent,
         ),
         actions: [
+          if (ref.watch(eventTemplatesSupportedProvider))
+            IconButton(
+              key: const ValueKey('event-save-as-template'),
+              tooltip: l10n.eventSaveAsTemplate,
+              icon: const Icon(Icons.bookmark_add_outlined),
+              onPressed: _saving ? null : _saveTemplate,
+            ),
           if (_isEdit)
             IconButton(
               tooltip: l10n.delete,

@@ -34,3 +34,15 @@ SettingEntry? resolveSetting(
   }
   return householdRow;
 }
+
+/// The country the family lives in: the country of `household.region` (`CH` of
+/// `CH-ZH`), or null before a family is joined, while the settings load, or without a
+/// region. German follows it (specs/09 "Regional German").
+final householdCountryProvider = Provider<String?>((ref) {
+  if (ref.watch(deviceProvider).value?.householdId == null) return null;
+  final settings = ref.watch(householdSettingsProvider).value;
+  if (settings == null) return null;
+  final region = resolveSetting(settings, 'household.region')?.value;
+  if (region is! String || region.isEmpty) return null;
+  return region.split('-').first.toUpperCase();
+});

@@ -4555,10 +4555,19 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get languageSystemHelp =>
-      'El idioma de este dispositivo; alemán si la app no lo tiene';
+      'El idioma de este dispositivo; alemán si la app no lo tiene. El alemán tal como se escribe en el país de vuestra familia.';
 
   @override
   String get languageNameDe => 'Deutsch';
+
+  @override
+  String get languageNameDeDe => 'Deutsch (Deutschland)';
+
+  @override
+  String get languageNameDeCh => 'Deutsch (Schweiz)';
+
+  @override
+  String get languageNameDeAt => 'Deutsch (Österreich)';
 
   @override
   String get languageNameEn => 'English';
@@ -6182,4 +6191,114 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get calendarMonthOpenDay => 'Abrir el día';
+
+  @override
+  String get eventRepeatYearly => 'Cada año';
+
+  @override
+  String get eventTemplatesIntro =>
+      'Elige un punto de partida. Después puedes cambiarlo todo.';
+
+  @override
+  String get eventTemplatesSuggested => 'Lo habitual en casa';
+
+  @override
+  String get eventTemplatesSaved => 'Vuestras plantillas';
+
+  @override
+  String get eventTemplatesBuiltIn => 'Plantillas';
+
+  @override
+  String get eventTemplateBlank => 'Sin plantilla';
+
+  @override
+  String get eventTemplateBlankHelp => 'Rellenarlo todo tú';
+
+  @override
+  String get eventStarterBirthday => 'Cumpleaños';
+
+  @override
+  String get eventStarterGuestDinner => 'Invitados a cenar';
+
+  @override
+  String get eventStarterKidsParty => 'Cumpleaños infantil';
+
+  @override
+  String get eventStarterSportsEvent => 'Evento deportivo';
+
+  @override
+  String get eventStarterDoctor => 'Cita médica';
+
+  @override
+  String get eventStarterPerformance => 'Actuación';
+
+  @override
+  String get eventStarterDayOut => 'Excursión';
+
+  @override
+  String get eventStarterHoliday => 'Vacaciones / viaje';
+
+  @override
+  String get eventTemplateAllDay => 'Todo el día';
+
+  @override
+  String eventTemplateDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count días',
+      one: '1 día',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String eventTemplateHours(int count) {
+    return '$count h';
+  }
+
+  @override
+  String eventTemplateHoursMinutes(int hours, int minutes) {
+    return '$hours h $minutes min';
+  }
+
+  @override
+  String eventTemplateMinutes(int count) {
+    return '$count min';
+  }
+
+  @override
+  String eventTemplateCount(int count) {
+    return 'Ya $count veces';
+  }
+
+  @override
+  String eventTemplateMenu(String name) {
+    return 'Más sobre $name';
+  }
+
+  @override
+  String get eventTemplateKeep => 'Guardar como plantilla';
+
+  @override
+  String get eventTemplateHide => 'No volver a sugerir';
+
+  @override
+  String get eventTemplateHidden => 'Ya no se sugerirá.';
+
+  @override
+  String get eventTemplateDelete => 'Eliminar plantilla';
+
+  @override
+  String get eventTemplateDeleted => 'Plantilla eliminada.';
+
+  @override
+  String get eventSaveAsTemplate => 'Guardar como plantilla';
+
+  @override
+  String get eventTemplateSavedNote => 'Guardado como plantilla.';
+
+  @override
+  String get eventTemplateErrLimit =>
+      'Ya tenéis 50 plantillas. Eliminad una primero.';
 }

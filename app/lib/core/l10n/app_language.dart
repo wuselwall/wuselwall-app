@@ -5,7 +5,7 @@ import 'package:wuselwall/core/l10n/app_locale.dart';
 import 'package:wuselwall/core/logging/log.dart';
 
 /// The language this installation shows, or null: the device's language, with German for
-/// any the app does not ship (specs/09). Per device, like the appearance: a family's
+/// any the app does not ship (specs/09). A German variant ("de-CH") may be chosen too. Per device, like the appearance: a family's
 /// phones need not agree, and the choice never reaches the server. On the web it lives in
 /// the browser's storage of this origin.
 abstract class AppLanguageStore {
@@ -26,7 +26,11 @@ class SecureAppLanguageStore implements AppLanguageStore {
   Future<Locale?> read() async {
     try {
       final raw = await _storage.read(key: _key);
-      return supportedLocales.where((l) => l.languageCode == raw).firstOrNull;
+      // A tag ("de-CH") since regional German; a plain language code before.
+      return [
+        ...languageChoices,
+        ...supportedLocales,
+      ].where((l) => l.toLanguageTag() == raw).firstOrNull;
     } on Object catch (error, stack) {
       logError('Reading the language failed', error: error, stackTrace: stack);
       return null;
@@ -39,7 +43,7 @@ class SecureAppLanguageStore implements AppLanguageStore {
       if (locale == null) {
         await _storage.delete(key: _key);
       } else {
-        await _storage.write(key: _key, value: locale.languageCode);
+        await _storage.write(key: _key, value: locale.toLanguageTag());
       }
     } on Object catch (error, stack) {
       logError('Saving the language failed', error: error, stackTrace: stack);

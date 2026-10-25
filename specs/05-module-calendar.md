@@ -72,6 +72,10 @@ have to be maintained by hand. Both decisions are argued in
 [ADR-008](adr/ADR-008-school-timetable-model.md) and
 [ADR-009](adr/ADR-009-event-kinds-and-presence.md).
 
+A new event starts on a page of templates (built-in, saved by the family, or suggested from
+its own history) that fill in the editor; what is saved is an ordinary event
+([28](28-event-templates.md)).
+
 ### Flexible by construction
 
 The requirement that arrived with A5 — *appointments should be flexible: regular for when

@@ -1,0 +1,16 @@
+{
+  "@@locale": "de_AT",
+  "settingSchoolEquipmentHelp": "Zeigt aus dem Stundenplan von morgen, was mitgebracht werden muss, zum Beispiel Turnsachen.",
+  "mealsSlotSnack": "Jause",
+  "taskIcon_trash": "Mistkübel",
+  "kidWhoAreYou": "Servus! Tipp auf deinen Namen.",
+  "kidGreeting": "Servus, {name}!",
+  "settingNotifyPackingHelp": "Um diese Uhrzeit sagt dein Handy, was für morgen in die Schultasche gehört, aus den Stundenplänen (zum Beispiel Turnsachen). Nur wenn etwas einzupacken ist.",
+  "settingAmbienceNewYearHelp": "Kleines Feuerwerk am Nachthimmel am 31. Dezember und 1. Jänner.",
+  "wuselHelloMorning3": "Servus {name}, schön, dass du wach bist.",
+  "wuselHelloDay1": "Servus {name}!",
+  "wuselHelloEvening3": "Servus {name}! Bald ist Ausruhzeit.",
+  "wishPickerOwnHint": "z. B. Palatschinken",
+  "mealIcon_pancakes": "Palatschinken",
+  "mealIcon_potato": "Erdäpfel"
+}

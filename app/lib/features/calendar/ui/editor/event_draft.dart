@@ -1,5 +1,6 @@
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
+import 'package:wuselwall/features/calendar/domain/event_templates.dart';
 import 'package:wuselwall/features/calendar/domain/tradition_starters.dart';
 import 'package:wuselwall/features/calendar/ui/editor/recurrence.dart';
 
@@ -68,6 +69,45 @@ class EventDraft {
     traditionMeal: t.meal,
     traditionMealSlot: t.mealSlot,
   );
+
+  /// A new event from a template (specs/28) on [day] (local). A template without a
+  /// start time starts at [defaultHour]. Only [activeMembers] are kept as attendees.
+  factory EventDraft.fromTemplate(
+    EventTemplate t, {
+    required DateTime day,
+    required int defaultHour,
+    required Set<String> activeMembers,
+  }) {
+    final date = DateTime(day.year, day.month, day.day);
+    final minute = t.startMinute;
+    final start = t.allDay
+        ? date
+        : minute == null
+        ? DateTime(date.year, date.month, date.day, defaultHour)
+        : DateTime(date.year, date.month, date.day, minute ~/ 60, minute % 60);
+    final end = t.allDay
+        ? DateTime(date.year, date.month, date.day + (t.days ?? 1) - 1)
+        : start.add(Duration(minutes: t.durationMinutes ?? 60));
+    final importance = t.importance;
+    return EventDraft(
+      start: start,
+      end: end,
+      title: t.title,
+      notes: t.notes,
+      location: t.location,
+      kind: t.kind,
+      presenceState: t.kind == EventKind.presence ? t.presenceState : null,
+      isAllDay: t.allDay,
+      attendeeIds: t.attendeeIds.where(activeMembers.contains).toSet(),
+      keyTouched: importance != null,
+      key: importance == Importance.key,
+      recurrence: t.yearly
+          ? const Recurrence(kind: RepeatKind.yearly)
+          : const Recurrence(),
+      iconKey: t.kind == EventKind.presence ? null : t.iconKey,
+      countdown: t.kind != EventKind.presence && t.countdown,
+    );
+  }
 
   factory EventDraft.fromEvent(CalendarEvent event) {
     final start = event.isAllDay ? event.startDate! : event.startsAt!.toLocal();
@@ -251,6 +291,32 @@ class EventDraft {
       traditionMeal: tradition && traditionMeal.trim().isNotEmpty
           ? _meal(traditionMeal.trim())
           : null,
+    );
+  }
+
+  /// What [EventTemplate.toJson] saves of this draft (specs/28 "Saved templates"):
+  /// not the date, the repeat, the tradition or "Noch nicht sicher". [attendees] are
+  /// in household order.
+  EventTemplate toTemplate({required List<String> attendees}) {
+    final timed = !isAllDay;
+    final minutes = end.difference(start).inMinutes;
+    final days = dateOnly(end).difference(dateOnly(start)).inDays + 1;
+    return EventTemplate(
+      title: title.trim(),
+      iconKey: kind == EventKind.presence ? null : iconKey,
+      kind: kind,
+      presenceState: kind == EventKind.presence ? presenceState : null,
+      allDay: isAllDay,
+      startMinute: timed ? start.hour * 60 + start.minute : null,
+      durationMinutes: timed ? minutes.clamp(5, 7 * 24 * 60) : null,
+      days: timed ? null : days.clamp(1, 366),
+      attendeeIds: {...attendees},
+      location: location.trim(),
+      notes: notes.trim(),
+      importance: keyTouched
+          ? (key ? Importance.key : Importance.normal)
+          : null,
+      countdown: kind != EventKind.presence && countdown,
     );
   }
 

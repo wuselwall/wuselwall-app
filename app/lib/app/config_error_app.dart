@@ -12,7 +12,7 @@ class ConfigErrorApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(
     onGenerateTitle: (context) => context.l10n.appTitle,
-    supportedLocales: supportedLocales,
+    supportedLocales: appLocales,
     localizationsDelegates: localizationsDelegates,
     home: Builder(
       builder: (context) => Scaffold(

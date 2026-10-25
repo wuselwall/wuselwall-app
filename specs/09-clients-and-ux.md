@@ -419,6 +419,29 @@ keeps it in the browser). The phone's reminders follow the same choice. New fami
 four-language rule. Existing screens need FR/ES layout checks, not a new screen or an
 automatic expansion of the guide's DE/EN screenshot matrix.
 
+### Regional German
+
+German is written as the family's country writes it. `app_de.arb` is the German of Germany;
+`app_de_CH.arb` (Switzerland and Liechtenstein) and `app_de_AT.arb` (Austria) hold only the
+strings that differ: Swiss German writes `ss` for every `ß` (a test enforces it) and uses
+*Ämtli* for chores, *Lektion* for a school lesson, *Thek*, *Turnsachen*, *Zmorge/Zmittag/
+Znacht/Zvieri*, *Mittagstisch*, *Velo*, *Omeletten*, *Hoi*; Austrian German uses *Jause*,
+*Palatschinken*, *Erdäpfel*, *Mistkübel*, *Servus* and *Jänner* (dates too: Flutter ships no
+Austrian date symbols, so `AustrianDatesDelegate` registers a copy of the German ones).
+
+Which German a device shows (`effectiveAppLocale` in `core/l10n/app_locale.dart`):
+
+1. A variant chosen under Settings → Language wins: a German family member in a Swiss
+   family picks *Deutsch (Deutschland)* and keeps it.
+2. Otherwise the language is the chosen one or the device's, and German follows the country
+   of `household.region` (`CH` of `CH-ZH`), the setting that already decides holidays and
+   country defaults. Without a region (or before a family is joined) the region of the
+   device's German decides, else the German of Germany.
+
+A plain `de`, chosen before the variants, follows the family. The household's *Sprache auf
+der Wand* (holiday names) offers `de-DE`, `de-CH` and `de-AT` too. Server-produced text and
+seeded examples stay in the German of Germany for now.
+
 Server-produced text — notifications, ICS summaries, MCP and Shortcuts responses — lives
 in language catalogues in `supabase/functions/_shared/`, supporting the same four languages
 under each endpoint's existing selection rules. Email alone uses the installation's

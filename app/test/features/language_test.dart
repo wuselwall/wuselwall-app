@@ -3,13 +3,44 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/app/router.dart';
+import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/app_language.dart';
 import 'package:wuselwall/features/identity/application/first_run.dart';
+import 'package:wuselwall/features/settings/data/household_settings_repository.dart';
+import 'package:wuselwall/features/settings/domain/household_setting.dart';
 
 import '../support/fakes.dart';
 
 Locale? _appLocale(WidgetTester t) =>
     t.widget<MaterialApp>(find.byType(MaterialApp)).locale;
+
+/// The locale the screens are drawn in.
+Locale _shown(WidgetTester t) =>
+    Localizations.localeOf(t.element(find.byType(Scaffold).first));
+
+/// A household whose region is [region] ("CH-ZH").
+class _Region implements HouseholdSettingsRepository {
+  _Region(this.region);
+
+  final String region;
+
+  @override
+  Future<Result<List<SettingEntry>>> all() async => Ok([
+    SettingEntry(
+      key: 'household.region',
+      scope: SettingScope.household,
+      type: SettingType.region,
+      constraints: const {},
+      selfService: false,
+      defaultValue: null,
+      value: region,
+      isDefault: false,
+    ),
+  ]);
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
+}
 
 void main() {
   group('SecureAppLanguageStore', () {
@@ -24,6 +55,16 @@ void main() {
       expect(await SecureAppLanguageStore().read(), isNull);
     });
 
+    test('a German variant is kept as its tag', () async {
+      await SecureAppLanguageStore().write(const Locale('de', 'CH'));
+      expect(await SecureAppLanguageStore().read(), const Locale('de', 'CH'));
+    });
+
+    test('plain German from before the variants still reads', () async {
+      FlutterSecureStorage.setMockInitialValues({'wuselwall.language': 'de'});
+      expect(await SecureAppLanguageStore().read(), const Locale('de'));
+    });
+
     test('a language the app does not ship falls back to the device', () async {
       FlutterSecureStorage.setMockInitialValues({'wuselwall.language': 'it'});
       expect(await SecureAppLanguageStore().read(), isNull);
@@ -34,6 +75,7 @@ void main() {
     Future<ProviderContainer> openSettings(
       WidgetTester t, {
       required AppLanguageStore store,
+      String? region,
     }) async {
       final container = await pumpApp(
         t,
@@ -43,6 +85,10 @@ void main() {
             language: store,
           ),
           pendingFirstRunProvider.overrideWith((ref) async => null),
+          if (region != null)
+            householdSettingsRepositoryProvider.overrideWithValue(
+              _Region(region),
+            ),
         ],
       );
       container.read(routerProvider).go(Routes.settingsDevices);
@@ -52,9 +98,9 @@ void main() {
 
     testWidgets('the app follows the device by default', (t) async {
       await openSettings(t, store: MemoryAppLanguageStore());
-      expect(_appLocale(t), isNull);
+      expect(_shown(t), const Locale('de'));
       expect(find.widgetWithText(ListTile, 'Sprache'), findsOneWidget);
-      expect(find.text('Automatisch: Deutsch'), findsOneWidget);
+      expect(find.text('Automatisch: Deutsch (Deutschland)'), findsOneWidget);
     });
 
     testWidgets('choosing English applies at once and is kept', (t) async {
@@ -63,8 +109,9 @@ void main() {
 
       await t.tap(find.text('Sprache'));
       await t.pumpAndSettle();
-      // The device's language and the four the app ships, each in its own name.
-      expect(find.byType(RadioListTile<String>), findsNWidgets(5));
+      // The device's language, German's three variants and the other three languages,
+      // each in its own name.
+      expect(find.byType(RadioListTile<String>), findsNWidgets(7));
       await t.tap(find.text('English'));
       await t.pumpAndSettle();
 
@@ -84,6 +131,29 @@ void main() {
       expect(find.text('Español'), findsOneWidget);
     });
 
+    testWidgets("German follows the family's country", (t) async {
+      await openSettings(t, store: MemoryAppLanguageStore(), region: 'CH-ZH');
+      expect(_shown(t), const Locale('de', 'CH'));
+      expect(find.text('Automatisch: Deutsch (Schweiz)'), findsOneWidget);
+    });
+
+    testWidgets("a person's own German beats the family's country", (t) async {
+      final store = MemoryAppLanguageStore();
+      await openSettings(t, store: store, region: 'CH-ZH');
+      await t.tap(find.text('Sprache'));
+      await t.pumpAndSettle();
+      await t.tap(find.text('Deutsch (Deutschland)'));
+      await t.pumpAndSettle();
+      expect(store.locale, const Locale('de', 'DE'));
+      expect(_shown(t), const Locale('de'));
+      expect(find.text('Deutsch (Deutschland)'), findsOneWidget);
+    });
+
+    testWidgets('an Austrian family reads Austrian German', (t) async {
+      await openSettings(t, store: MemoryAppLanguageStore(), region: 'AT-9');
+      expect(_shown(t), const Locale('de', 'AT'));
+    });
+
     testWidgets('back to the device language', (t) async {
       final store = MemoryAppLanguageStore(const Locale('en'));
       await openSettings(t, store: store);
@@ -98,9 +168,9 @@ void main() {
       );
       await t.pumpAndSettle();
       expect(store.locale, isNull);
-      expect(_appLocale(t), isNull);
+      expect(_shown(t), const Locale('de'));
       // The test device speaks German.
-      expect(find.text('Automatisch: Deutsch'), findsOneWidget);
+      expect(find.text('Automatisch: Deutsch (Deutschland)'), findsOneWidget);
     });
   });
 }

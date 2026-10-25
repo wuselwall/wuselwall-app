@@ -513,7 +513,7 @@ class BootstrapShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(
     onGenerateTitle: (context) => context.l10n.appTitle,
-    supportedLocales: supportedLocales,
+    supportedLocales: appLocales,
     localizationsDelegates: localizationsDelegates,
     theme: AppTheme.build(UiRegister.adult, Shade.light),
     darkTheme: AppTheme.build(UiRegister.adult, Shade.dark),

@@ -31,7 +31,23 @@ Los cumpleaños aparecen siempre en el mes, aunque la celebración **Cumpleaños
 
 ## Crear una cita {#creating-an-appointment}
 
-Toca **Nuevo evento**: empieza el día que muestra el calendario (hoy, mientras hoy esté a la vista), a la siguiente hora en punto. Añade:
+Toca **Nuevo evento**: empieza el día que muestra el calendario (hoy, mientras hoy esté a la vista).
+
+### Empezar con una plantilla {#templates}
+
+Primero ves unas fichas, para no escribirlo todo desde cero:
+
+- **Plantillas**: **Cumpleaños** (todo el día, cada año), **Invitados a cenar**, **Cumpleaños infantil**, **Evento deportivo**, **Cita médica**, **Actuación**, **Excursión** y **Vacaciones / viaje**. Cada una rellena el título, la imagen, la hora, la duración y las personas. **Sin plantilla** abre el editor vacío a la siguiente hora en punto.
+- **Vuestras plantillas**: las que habéis guardado. En el editor, toca **Guardar como plantilla** arriba; se guardan el título, la imagen, la hora, la duración, las personas, el lugar y las notas, pero no la fecha ni la repetición.
+- **Lo habitual en casa**: eventos que ya habéis apuntado al menos tres veces, como «Vienen los abuelos». WuselWall solo cuenta vuestros propios eventos en vuestro servidor; nada sale de él. Con **⋮** eliges **Guardar como plantilla** o **No volver a sugerir**.
+
+Lo que rellena la ficha es solo un comienzo: cambia lo que sea distinto y guarda. **Atrás** vuelve a las fichas.
+
+<Shot name="calendar-templates" alt="Nuevo evento con fichas: Lo habitual en casa, Vuestras plantillas y plantillas como Cumpleaños e Invitados a cenar" />
+
+### En el editor {#in-the-editor}
+
+Añade:
 
 - título, lugar y notas;
 - cita o presencia: trabajo, teletrabajo, viaje, ausencia, descanso o cuidado;
@@ -47,7 +63,7 @@ El comportamiento inicial de los eventos se elige en [Ajustes → Calendario y c
 
 ### Repetir {#repeating}
 
-Elige cada día, semana, dos semanas o mes. Para turnos, selecciona días concretos en el calendario. La repetición termina por fecha o por número de veces. Al cambiar o eliminar una serie, elige esa cita sola o toda la serie.
+Elige cada día, semana, dos semanas, mes o año. Para turnos, selecciona días concretos en el calendario. La repetición termina por fecha o por número de veces. Al cambiar o eliminar una serie, elige esa cita sola o toda la serie.
 
 ### Imagen, cuenta atrás y tradición {#picture-countdown-tradition}
 

@@ -83,12 +83,13 @@ Future<ProviderContainer> _app(
   return container;
 }
 
-/// Opens the editor on [route] the way the app does, through the router.
+/// Opens the editor on [route] the way the app does, through the router. A new event
+/// opens the editor directly, as *Ohne Vorlage* on the new-event page does (specs/28).
 Future<void> _open(
   WidgetTester t, {
   FakeCalendarRepository? calendar,
   EventEditArgs? args,
-  String route = Routes.eventNew,
+  String route = Routes.eventEdit,
   List<SettingEntry> settings = const [],
   DateTime? now,
 }) async {
@@ -137,7 +138,8 @@ DateTime _todayMorning() {
   return DateTime(now.year, now.month, now.day, 9, 30);
 }
 
-/// Taps the calendar's "Neuer Termin" button, titles the event and saves it.
+/// Taps the calendar's "Neuer Termin" button and *Ohne Vorlage*, titles the event and
+/// saves it.
 Future<CalendarEvent> _saveFromFab(
   WidgetTester t,
   FakeCalendarRepository cal,
@@ -146,6 +148,7 @@ Future<CalendarEvent> _saveFromFab(
     t,
     find.widgetWithText(FloatingActionButton, _de.calendarNewEvent),
   );
+  await _tap(t, find.byKey(const ValueKey('event-template-blank')));
   await _title(t, 'Elternabend');
   await _save(t);
   return cal.saved.single;

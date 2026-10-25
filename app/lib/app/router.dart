@@ -7,6 +7,7 @@ import 'package:wuselwall/app/server_session.dart';
 import 'package:wuselwall/features/calendar/domain/external_calendar.dart';
 import 'package:wuselwall/features/calendar/ui/event_edit_args.dart';
 import 'package:wuselwall/features/calendar/ui/event_editor_page.dart';
+import 'package:wuselwall/features/calendar/ui/event_template_page.dart';
 import 'package:wuselwall/features/calendar/ui/settings/baseline_page.dart';
 import 'package:wuselwall/features/calendar/ui/settings/external_calendar_form_page.dart';
 import 'package:wuselwall/features/calendar/ui/settings/external_calendars_page.dart';
@@ -469,10 +470,16 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: Routes.shoppingHistory,
         builder: (_, _) => const ShoppingHistoryPage(),
       ),
+      // Neuer Termin starts on its tiles (specs/28); a tradition or a chosen template
+      // goes straight to the editor.
       _materialRoute(
         path: Routes.eventNew,
-        builder: (_, state) =>
-            EventEditorPage(args: state.extra as EventEditArgs?),
+        builder: (_, state) {
+          final args = state.extra as EventEditArgs?;
+          return args?.tradition != null || args?.template != null
+              ? EventEditorPage(args: args)
+              : EventTemplatePage(args: args);
+        },
       ),
       _materialRoute(
         path: Routes.eventEdit,

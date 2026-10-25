@@ -43,5 +43,5 @@ Todo pertenece a un **hogar**, tu familia, con **miembros** (nombre y color prop
 Al conectar el dispositivo, un adulto elige la vista para adultos, niños o pared.
 
 ::: tip Idioma y tema
-Al principio la app sigue el idioma del dispositivo: alemán, inglés, francés o español; para otros idiomas muestra alemán. En **Ajustes → Idioma** fijas el idioma de este dispositivo. Al principio el tema sigue el sistema. En **Ajustes → Apariencia** puedes elegir **Claro**, **Oscuro** o **Automático**. La pantalla de pared pasa al tema nocturno a partir de las 21:00.
+Al principio la app sigue el idioma del dispositivo: alemán, inglés, francés o español; para otros idiomas muestra alemán. En **Ajustes → Idioma** fijas el idioma de este dispositivo. El alemán se escribe como en el país de vuestra familia (según la **Región** de los ajustes): en Suiza y Liechtenstein con palabras como «Ämtli» y «Zmittag» y «ss» en lugar de «ß», en Austria con palabras como «Jause» y «Jänner». Quien lo prefiera de otra forma elige para su dispositivo **Deutsch (Deutschland)**, **Deutsch (Schweiz)** o **Deutsch (Österreich)**. Al principio el tema sigue el sistema. En **Ajustes → Apariencia** puedes elegir **Claro**, **Oscuro** o **Automático**. La pantalla de pared pasa al tema nocturno a partir de las 21:00.
 :::

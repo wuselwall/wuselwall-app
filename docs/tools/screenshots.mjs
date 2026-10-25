@@ -234,7 +234,9 @@ const shots = [
   // The month view (specs/05 "Views"): wide enough for the bar's view buttons. The demo has
   // the month's public holidays, a birthday and one stretch of Ferien (lib/demo/demo_holidays.dart).
   { name: 'calendar-month', scenario: 'adult', viewport: WALL, steps: async (p, t) => { await tapAny(p, t.calendar); await chooseView(p, t, t.month); } },
-  { name: 'calendar-editor', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.calendar); await tapAny(p, t.newEvent); } },
+  // Neuer Termin opens its tiles first (specs/28); Ohne Vorlage opens the empty editor.
+  { name: 'calendar-templates', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.calendar); await tapAny(p, t.newEvent); } },
+  { name: 'calendar-editor', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.calendar); await tapAny(p, t.newEvent); await tapAny(p, t.blankEvent, { exact: false }); } },
   { name: 'school-week', scenario: 'adult', viewport: TABLET, steps: async (p, t) => tapAny(p, t.schedule, { exact: false }) },
   { name: 'school-editor', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.schedule, { exact: false }); await press(p, t.editTimetable, { exact: false }); await press(p, t.editorSchool); } },
   // The adult home opens on Today, the first destination.
@@ -300,7 +302,7 @@ const shots = [
   { name: 'meals-wishes', scenario: 'adult', viewport: PHONE, steps: async (p, t) => tapAny(p, t.meals) },
   // The event editor's last fields: the picture, "looking forward" and the family tradition.
   { name: 'calendar-rituals', scenario: 'adult', viewport: PHONE, steps: async (p, t) => {
-    await tapAny(p, t.calendar); await tapAny(p, t.newEvent);
+    await tapAny(p, t.calendar); await tapAny(p, t.newEvent); await tapAny(p, t.blankEvent, { exact: false });
     await scrollUntil(p, t.tradition, { any: true }); await tapAny(p, t.tradition, { exact: false });
     await scrollDown(p, 3000); await p.mouse.move(386, 840); await settle(p);
   } },
@@ -318,10 +320,10 @@ const shots = [
   } },
 ];
 const RITUALS = {
-  de: { tradition: 'Familientradition', newTradition: 'Neue Tradition', wishTitle: 'Dein Wunschessen' },
-  en: { tradition: 'Family tradition', newTradition: 'New tradition', wishTitle: 'Your meal wish' },
-  fr: { tradition: 'Tradition familiale', newTradition: 'Nouvelle tradition', wishTitle: 'Ton repas préféré' },
-  es: { tradition: 'Tradición familiar', newTradition: 'Nueva tradición', wishTitle: 'Tu comida favorita' },
+  de: { tradition: 'Familientradition', newTradition: 'Neue Tradition', wishTitle: 'Dein Wunschessen', blankEvent: 'Ohne Vorlage' },
+  en: { tradition: 'Family tradition', newTradition: 'New tradition', wishTitle: 'Your meal wish', blankEvent: 'Start blank' },
+  fr: { tradition: 'Tradition familiale', newTradition: 'Nouvelle tradition', wishTitle: 'Ton repas préféré', blankEvent: 'Sans modèle' },
+  es: { tradition: 'Tradición familiar', newTradition: 'Nueva tradición', wishTitle: 'Tu comida favorita', blankEvent: 'Sin plantilla' },
 };
 for (const [lang, labels] of Object.entries(RITUALS)) Object.assign(T[lang], labels);
 
