@@ -1,6 +1,6 @@
 # 13 — Roadmap
 
-Updated 2026-10-24. One build order, four milestones. This replaces the overlapping
+Updated 2026-10-25. One build order, four milestones. This replaces the overlapping
 M1/M2 and R1–R4 schedules; the old identifiers remain only to keep specification links
 and decisions readable. [16 — Build plan](16-setup-plan.md) describes the next slices;
 [23 — After the Alpha](23-roadmap-after-alpha.md) holds the later candidates and cut lines.
@@ -17,6 +17,10 @@ reminder are also built. They are not new milestones. **MCP and AI assistants ar
 
 Member, family, device and shopping-structure editing (old step 10.1–10.3) and Today’s
 guardian approvals (10.5, #127/#149) are built.
+Cache qualification fixes followed on 2026-10-25: discovery and household recovery after
+reconnect/resume, late-response guards, member/holiday invalidations, Today refresh and
+midnight rollover, and subscribed-calendar horizon/timezone re-expansion. These do not
+complete the offline cold-start or native two-device evidence gates.
 A lighter day ([ADR-020](adr/ADR-020-a-lighter-day.md)) was built 2026-10-24 and shipped in
 app v1.3.0 and server release 0.4.0; the remaining illustrations, holiday ribbon,
 tradition meal suggestions and ritual refinements followed the same day, as its

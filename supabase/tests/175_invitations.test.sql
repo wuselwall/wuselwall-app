@@ -136,7 +136,8 @@ select throws_ok($$ select pg_temp.create_inv('x', 'd_papa', null, null, '  ', '
   '22023', 'name invalid', 'a new adult needs a name');
 select throws_ok($$ select pg_temp.create_inv('x', 'd_papa', null, null, 'Opa', 'member', 'keine adresse') $$,
   '22023', 'email invalid', 'a malformed email is refused');
-select is((select count(*)::int from app.invitation), 0, 'no refused call leaves an invitation behind');
+select is((select count(*)::int from app.invitation where household_id = pg_temp.fid('hh')),
+  0, 'no refused call leaves an invitation behind in the fixture household');
 
 -- ---- create: the family's forms ---------------------------------------------------------
 -- Julia: an existing adult without an account, invited from Papa's phone.

@@ -141,7 +141,12 @@ final occurrencesProvider = FutureProvider.autoDispose
       ref.watch(deviceKeyProvider);
       final householdId = ref.watch(deviceProvider).value?.householdId;
       if (householdId != null) {
-        refreshOnInvalidation(ref, householdId: householdId, topic: 'calendar');
+        refreshOnInvalidation(
+          ref,
+          householdId: householdId,
+          topic: 'calendar',
+          also: {'board', 'settings', 'school'},
+        );
       }
       return (await ref
               .watch(calendarRepositoryProvider)
@@ -159,7 +164,12 @@ final monthOccurrencesProvider = FutureProvider.autoDispose
       ref.watch(deviceKeyProvider);
       final householdId = ref.watch(deviceProvider).value?.householdId;
       if (householdId != null) {
-        refreshOnInvalidation(ref, householdId: householdId, topic: 'calendar');
+        refreshOnInvalidation(
+          ref,
+          householdId: householdId,
+          topic: 'calendar',
+          also: {'board', 'settings', 'school'},
+        );
       }
       return (await ref
               .watch(calendarRepositoryProvider)
@@ -180,5 +190,11 @@ final usualWeeksProvider = FutureProvider.autoDispose<List<UsualWeek>>((
   ref,
 ) async {
   ref.watch(deviceKeyProvider);
+  final household = ref.watch(
+    deviceProvider.select((d) => d.value?.householdId),
+  );
+  if (household != null) {
+    refreshOnInvalidation(ref, householdId: household, topic: 'calendar');
+  }
   return (await ref.watch(calendarRepositoryProvider).usualWeeks()).unwrap();
 });

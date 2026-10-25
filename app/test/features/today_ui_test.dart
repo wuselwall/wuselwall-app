@@ -25,10 +25,7 @@ String _ymd(DateTime d) =>
     '${d.month.toString().padLeft(2, '0')}-'
     '${d.day.toString().padLeft(2, '0')}';
 
-DateTime get _today {
-  final now = DateTime.now();
-  return DateTime(now.year, now.month, now.day);
-}
+final _today = DateTime(2026, 10, 20);
 
 const _card = [
   GettingStartedItem(item: StartItem.connectTablet, done: true),
@@ -47,6 +44,7 @@ void main() {
       t,
       overrides: baseOverrides(
         identity: FakeIdentityRepository(current: device()),
+        now: _today.add(const Duration(hours: 9)),
       ),
       tasks: FakeTasksApi(
         tables: {
@@ -107,6 +105,7 @@ void main() {
         size: const Size(390, 844),
         overrides: baseOverrides(
           identity: FakeIdentityRepository(current: device()),
+          now: _today.add(const Duration(hours: 9)),
         ),
         calendar: FakeCalendarRepository([
           _todayEvent(start: const TimeOfDay(hour: 16, minute: 0)),
@@ -138,6 +137,7 @@ void main() {
         size: const Size(390, 844),
         overrides: baseOverrides(
           identity: FakeIdentityRepository(current: device()),
+          now: _today.add(const Duration(hours: 9)),
         ),
         calendar: FakeCalendarRepository([_todayEvent(allDay: true)]),
       );
@@ -158,6 +158,7 @@ void main() {
       t,
       overrides: baseOverrides(
         identity: FakeIdentityRepository(current: device()),
+        now: _today.add(const Duration(hours: 9)),
       ),
       gettingStarted: FakeGettingStartedRepository(_card),
     );
@@ -178,6 +179,7 @@ void main() {
       t,
       overrides: baseOverrides(
         identity: FakeIdentityRepository(current: device()),
+        now: _today.add(const Duration(hours: 9)),
       ),
       gettingStarted: repo,
     );
@@ -198,6 +200,7 @@ void main() {
       t,
       overrides: baseOverrides(
         identity: FakeIdentityRepository(current: device()),
+        now: _today.add(const Duration(hours: 9)),
       ),
       gettingStarted: FakeGettingStartedRepository(const [
         GettingStartedItem(item: StartItem.connectTablet, done: true),
@@ -232,6 +235,7 @@ void main() {
       t,
       overrides: baseOverrides(
         identity: FakeIdentityRepository(current: device()),
+        now: _today.add(const Duration(hours: 9)),
       ),
     );
 
@@ -259,6 +263,7 @@ void main() {
       t,
       overrides: baseOverrides(
         identity: FakeIdentityRepository(current: device()),
+        now: _today.add(const Duration(hours: 9)),
       ),
       tasks: tasks,
     );
@@ -279,6 +284,7 @@ void main() {
       t,
       overrides: baseOverrides(
         identity: FakeIdentityRepository(current: device()),
+        now: _today.add(const Duration(hours: 9)),
       ),
       gettingStarted: repo,
     );

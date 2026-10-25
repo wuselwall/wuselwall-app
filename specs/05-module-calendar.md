@@ -246,7 +246,11 @@ the calendar's colour with an RSS mark.
   entries, and the feed's own time zone. Changing the address deletes the calendar's occurrences
   and fetches at once.
 - **Safety:** the fetch rules are in [11](11-security-and-privacy.md#outbound-calendar-subscriptions):
-  https only, public addresses only, every redirect checked, 15 seconds, 2 MB, ETag for "not modified".
+  https only, public addresses only, every redirect checked, 15 seconds, 2 MB. Each import
+  reads the full bounded feed and re-expands the rolling 30-day past / 400-day future window
+  in the current household timezone (2026-10-25). A source ETag alone cannot validate these
+  derived rows: even unchanged source bytes need a new expansion as days or the zone change.
+  The shared fetch helper still supports conditional requests for callers retaining source bytes.
 - **Outbound (built in code 2026-10-15):** a feed token whose filter has `subscribed` true
   carries the household's active imported occurrences under the `external` key
   (`supabase/migrations/20261015101000_feed_subscribed.sql`, `api.ics_feed`). The renderer

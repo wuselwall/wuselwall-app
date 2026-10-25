@@ -3,6 +3,8 @@ select plan(15);
 
 -- Start from an empty system, whatever the database already holds (all rolled back).
 delete from app.household;
+-- The public feed cache outlives households; isolate it inside this rollback.
+delete from app.holiday_feed;
 delete from app.setup_token;
 insert into app.setup_token (token_hash) values (encode(extensions.digest('dev-setup', 'sha256'), 'hex'));
 

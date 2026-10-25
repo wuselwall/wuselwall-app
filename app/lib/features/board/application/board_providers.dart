@@ -8,6 +8,8 @@ import 'package:wuselwall/features/board/data/board_repository.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 
+export 'package:wuselwall/core/time/clock.dart' show clockProvider, nowProvider;
+
 /// What the wall shows: the last good board, when it was fetched, and the failure of
 /// the latest attempt if it failed. A wall display that shows yesterday's slightly
 /// stale plan is better than one showing an error (specs/09 "Freshness and failure"),
@@ -42,18 +44,25 @@ class BoardNotifier extends Notifier<BoardSnapshot> {
 
   bool _inFlight = false;
   bool _again = false;
+  int _generation = 0;
+  String? _household;
 
   @override
   BoardSnapshot build() {
     final householdId = ref.watch(
       deviceProvider.select((d) => d.value?.householdId),
     );
-    if (householdId != null) {
-      ref.listen(householdInvalidationsProvider(householdId), (_, next) {
-        final topic = next.value?.topic;
-        if (topic != null && boardTopics.contains(topic)) unawaited(refresh());
-      });
-    }
+    _generation++;
+    _household = householdId;
+    _inFlight = false;
+    _again = false;
+    if (householdId == null) return const BoardSnapshot();
+    ref.listen(householdInvalidationsProvider(householdId), (_, next) {
+      final topic = next.value?.topic;
+      if (topic != null && (topic == '*' || boardTopics.contains(topic))) {
+        unawaited(refresh());
+      }
+    });
 
     final periodic = Timer.periodic(refetchEvery, (_) => unawaited(refresh()));
     final now = DateTime.now();
@@ -70,6 +79,8 @@ class BoardNotifier extends Notifier<BoardSnapshot> {
 
   /// Fetches the board now. Calls during a fetch coalesce into one more fetch.
   Future<void> refresh() async {
+    if (_household == null) return;
+    final generation = _generation;
     if (_inFlight) {
       _again = true;
       return;
@@ -79,7 +90,7 @@ class BoardNotifier extends Notifier<BoardSnapshot> {
       do {
         _again = false;
         final result = await ref.read(boardRepositoryProvider).week();
-        if (!ref.mounted) return;
+        if (!ref.mounted || generation != _generation) return;
         state = switch (result) {
           Ok(:final value) => BoardSnapshot(
             board: value,
@@ -93,25 +104,13 @@ class BoardNotifier extends Notifier<BoardSnapshot> {
         };
       } while (_again);
     } finally {
-      _inFlight = false;
+      if (generation == _generation) _inFlight = false;
     }
   }
 }
 
 final boardProvider = NotifierProvider<BoardNotifier, BoardSnapshot>(
   BoardNotifier.new,
-);
-
-/// The wall clock, ticking every second: the header clock, the "als Nächstes"
-/// countdown and "aktualisiert vor 4 s". Overridden in tests with a fixed time.
-final clockProvider = StreamProvider<DateTime>((ref) async* {
-  yield DateTime.now();
-  yield* Stream.periodic(const Duration(seconds: 1), (_) => DateTime.now());
-});
-
-/// [clockProvider]'s current value, or the real time before its first tick.
-final nowProvider = Provider<DateTime>(
-  (ref) => ref.watch(clockProvider).value ?? DateTime.now(),
 );
 
 /// Whether the week board shows every appointment of each day, not only the key ones

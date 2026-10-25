@@ -14,7 +14,12 @@ final schoolDataProvider = FutureProvider.autoDispose<SchoolData>((ref) async {
   ref.watch(deviceKeyProvider);
   final householdId = ref.watch(deviceProvider).value?.householdId;
   if (householdId != null) {
-    refreshOnInvalidation(ref, householdId: householdId, topic: 'school');
+    refreshOnInvalidation(
+      ref,
+      householdId: householdId,
+      topic: 'school',
+      also: {'settings', 'board'},
+    );
   }
   return (await ref.watch(schoolRepositoryProvider).all()).unwrap();
 });
@@ -26,7 +31,12 @@ final schoolWeekProvider = FutureProvider.autoDispose
       ref.watch(deviceKeyProvider);
       final householdId = ref.watch(deviceProvider).value?.householdId;
       if (householdId != null) {
-        refreshOnInvalidation(ref, householdId: householdId, topic: 'school');
+        refreshOnInvalidation(
+          ref,
+          householdId: householdId,
+          topic: 'school',
+          also: {'settings', 'board'},
+        );
       }
       final (from, to) = range;
       return (await ref
@@ -95,7 +105,12 @@ final openProposalsProvider = FutureProvider.autoDispose<List<ProposalRecord>>((
   ref.watch(deviceKeyProvider);
   final householdId = ref.watch(deviceProvider).value?.householdId;
   if (householdId != null) {
-    refreshOnInvalidation(ref, householdId: householdId, topic: 'school');
+    refreshOnInvalidation(
+      ref,
+      householdId: householdId,
+      topic: 'school',
+      also: {'settings', 'board'},
+    );
   }
   final members = ref.watch(membersProvider).value ?? const <Member>[];
   final acting = ref.watch(actingProfileProvider);
