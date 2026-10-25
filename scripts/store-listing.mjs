@@ -71,6 +71,46 @@ const copy = {
       ['kid-shopping', 'A view for the children', 'Big buttons, no account, no email'],
     ],
   },
+  'fr-FR': {
+    lang: 'fr',
+    feature: { title: 'Toute la vie de la maison, sur un seul mur.', sub: 'Open source · Sur votre propre serveur' },
+    phone: [
+      ['today', 'La journée d’un coup d’œil', 'Rendez-vous, tâches et repas pour toute la famille'],
+      ['shopping-phone', 'Une liste de courses pour tous', 'Classée par rayon, même sans connexion'],
+      ['meals-suggest', 'On mange quoi cette semaine ?', 'Des idées tirées de ce que vous avez déjà cuisiné'],
+      ['calendar-editor', 'Un calendrier pour tous', 'Avec récurrences et présences'],
+      ['settings-code', 'Connecter un appareil par code QR', 'La tablette de la cuisine en quelques secondes'],
+      ['setup-server', 'Sur votre propre serveur', 'Ou essayez sans serveur, avec une famille d’exemple'],
+    ],
+    tablet: [
+      ['wall-board', 'La semaine sur le mur de la cuisine', 'Qui est où, ce qui arrive, ce qu’on mange'],
+      ['wall-child-week', 'Emplois du temps avec remplacements', 'Touchez un enfant pour voir sa semaine'],
+      ['tasks-today', 'Des tâches et des points', 'Des récompenses plutôt que des punitions, sans classement'],
+      ['meals-week', 'Les menus de la semaine', 'Les ingrédients rejoignent la liste de courses'],
+      ['calendar-week', 'Le calendrier familial', 'Chaque personne a sa couleur'],
+      ['kid-shopping', 'Une vue pour les enfants', 'De grands boutons, ni compte ni e-mail'],
+    ],
+  },
+  'es-ES': {
+    lang: 'es',
+    feature: { title: 'Todo lo que se mueve en casa, en una sola pared.', sub: 'Código abierto · En vuestro propio servidor' },
+    phone: [
+      ['today', 'El día de un vistazo', 'Citas, tareas y comidas para toda la familia'],
+      ['shopping-phone', 'Una lista de la compra para todos', 'Ordenada por secciones, también sin conexión'],
+      ['meals-suggest', '¿Qué comemos esta semana?', 'Sugerencias a partir de lo que ya habéis cocinado'],
+      ['calendar-editor', 'Un calendario para todos', 'Con citas periódicas y presencia'],
+      ['settings-code', 'Conectar dispositivos con un código QR', 'La tableta de la cocina en segundos'],
+      ['setup-server', 'En vuestro propio servidor', 'O probadla sin servidor, con una familia de ejemplo'],
+    ],
+    tablet: [
+      ['wall-board', 'La semana en la pared de la cocina', 'Quién está dónde, qué viene, qué hay de comer'],
+      ['wall-child-week', 'Horarios con suplencias', 'Al tocar a un niño se ve su semana'],
+      ['tasks-today', 'Tareas con puntos', 'Recompensas en lugar de castigos, sin clasificación'],
+      ['meals-week', 'El plan de comidas de la semana', 'Los ingredientes pasan a la lista de la compra'],
+      ['calendar-week', 'El calendario familiar', 'Cada persona con su color'],
+      ['kid-shopping', 'Una vista para los niños', 'Botones grandes, sin cuenta ni correo'],
+    ],
+  },
 };
 
 const shot = async (lang, name) => {

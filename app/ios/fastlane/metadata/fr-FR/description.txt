@@ -1,0 +1,45 @@
+WuselWall est l’organisateur familial pour toute la vie de la maison : calendrier partagé, emplois du temps scolaires, tâches, menus et liste de courses. Sur le téléphone des parents, en tableau hebdomadaire sur une tablette dans la cuisine et dans une vue adaptée aux plus petits.
+
+À savoir d’abord : WuselWall n’est pas un service en ligne. L’app se connecte à un serveur WuselWall que votre famille exploite elle-même – sur un NAS, un mini-PC, un serveur loué ou dans votre propre projet Supabase. Nous ne voyons jamais vos données. Sans serveur, vous pouvez essayer l’app avec une famille d’exemple : touchez « Essayer sans serveur » sur le premier écran.
+
+UN TABLEAU HEBDOMADAIRE POUR LA CUISINE
+• Sept jours d’un seul coup d’œil, pensé pour une tablette au mur
+• Qui est où, ce qui arrive, ce qu’on mange
+• Chaque personne a sa couleur – reconnaissable aussi par les personnes daltoniennes
+• Touchez un enfant pour voir sa semaine avec son emploi du temps
+
+CALENDRIER PARTAGÉ
+• Des rendez-vous pour tous ou pour un seul membre de la famille
+• Rendez-vous récurrents et présences, comme les horaires de travail ou les déplacements
+• Abonnez-vous à des calendriers : club, collecte des déchets, école
+• En flux ICS dans Outlook, Calendrier d’Apple ou Google Agenda
+
+EMPLOIS DU TEMPS SCOLAIRES
+• L’emploi du temps de chaque enfant, même avec plusieurs écoles
+• Jours fériés et vacances scolaires pour l’Allemagne, l’Autriche, la Suisse et le Liechtenstein, jusqu’à la commune
+• Remplacements et cours annulés
+
+DES TÂCHES ET DES POINTS
+• Répartir les tâches, gagner des points, choisir des récompenses
+• Des séries et des badges plutôt que des punitions
+• Pas de classement entre frères et sœurs
+
+MENUS ET LISTE DE COURSES
+• Qu’est-ce qu’on mange cette semaine ? Des idées tirées de ce que vous avez déjà cuisiné
+• Une liste de courses partagée, classée par rayon
+• Fonctionne sans connexion dans le magasin et se synchronise ensuite
+
+UN APPAREIL PAR PERSONNE OU PAR PIÈCE
+• Un appareil personnel pour les adultes, une tablette partagée pour la cuisine
+• Les enfants n’ont besoin ni de compte ni d’adresse e-mail
+• Connectez de nouveaux appareils avec un code QR, bloquez chaque appareil séparément
+• Connexion avec un code par e-mail ou avec un mot de passe
+
+VOS DONNÉES RESTENT CHEZ VOUS
+• Tout se trouve sur votre propre serveur
+• Sans publicité, sans suivi, sans compte chez nous
+• Export des données de toute la famille
+• En allemand, anglais, français et espagnol
+
+OPEN SOURCE
+L’app et le logiciel serveur sont open source, sous licence Apache 2.0. Le guide pour la famille et pour votre propre serveur se trouve sur https://wuselwall.app/docs/fr/
