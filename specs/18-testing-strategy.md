@@ -4,6 +4,15 @@ How WuselWall is tested, from the database up to the family's real devices, and 
 each kind of test runs. Extends the CI notes in [16](16-setup-plan.md#step-4--continuous-integration-m00) and
 the distribution decisions in [ADR-011](adr/ADR-011-native-distribution-and-ci-cd.md).
 
+**Candidate qualification design (2026-10-25):**
+[Accessibility and UI qualification](accessibility-and-ui-qualification.md) records the
+selected local-runner approach, the whole-app accessibility/visual matrix, baseline review
+and exact-commit promotion gate. The expanded suite is **release-candidate only**, manually
+dispatched; its schedule supersedes the nightly and per-PR expansion proposed below.
+The [initial evidence suite](../qualification/README.md) is built in this branch; full
+qualification, native runner evidence and promotion enforcement remain open. Existing
+fast checks continue unchanged.
+
 *Proposed 2026-10-11.* A MacBook Pro is now available, which settles
 [Q35](14-open-questions.md): iOS Simulator, Xcode and local iOS builds are part of the
 plan below.

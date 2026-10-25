@@ -1,4 +1,5 @@
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/demo/demo_clock.dart';
 import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/features/shortcuts/data/shortcut_repository.dart';
 
@@ -12,7 +13,7 @@ class DemoShortcutRepository implements ShortcutRepository {
           profileId: DemoData.papa,
           label: 'iPhone',
           createdAt: DateTime(2026, 10, 2),
-          lastUsedAt: DateTime.now().subtract(const Duration(hours: 2)),
+          lastUsedAt: DemoClock.now().subtract(const Duration(hours: 2)),
           useCount: 34,
         ),
         ShortcutToken(
@@ -42,7 +43,7 @@ class DemoShortcutRepository implements ShortcutRepository {
         id: id,
         profileId: profileId ?? DemoData.papa,
         label: label,
-        createdAt: DateTime.now(),
+        createdAt: DemoClock.now(),
         useCount: 0,
         kind: kind,
       ),
@@ -73,7 +74,7 @@ class DemoShortcutRepository implements ShortcutRepository {
         lastUsedAt: t.lastUsedAt,
         useCount: t.useCount,
         kind: t.kind,
-        revokedAt: DateTime.now(),
+        revokedAt: DemoClock.now(),
       );
     }
     return const Ok(null);

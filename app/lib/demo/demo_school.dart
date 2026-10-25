@@ -1,4 +1,5 @@
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/demo/demo_clock.dart';
 import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/demo/demo_english.dart';
 import 'package:wuselwall/demo/demo_holidays.dart';
@@ -13,7 +14,7 @@ import 'package:wuselwall/features/school/domain/school_models.dart';
 /// school yet, so the first-school page shows.
 class DemoSchoolRepository implements SchoolRepository {
   DemoSchoolRepository({DateTime Function()? clock, this.empty = false})
-    : _clock = clock ?? DateTime.now {
+    : _clock = clock ?? DemoClock.now {
     _exceptions = _seedExceptions();
   }
 

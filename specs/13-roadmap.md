@@ -112,6 +112,10 @@ It has two steps:
    sync, Outlook/iOS feeds, local reminders, native accessibility, offline restart and an
    isolated restore drill. Back up before applying any live migration. Record evidence
    without server identities or secrets.
+   The [candidate accessibility and UI qualification design](accessibility-and-ui-qualification.md)
+   adds a manually triggered whole-app regression matrix and exact-commit promotion gate;
+   the [initial evidence suite](../qualification/README.md) is built in this branch, while
+   complete coverage, native runner validation and promotion enforcement remain open.
 2. **Use it for two weeks, then act on the findings.** Gather feedback directly from the
    household, fix blockers, recalibrate defaults without overwriting overrides, and judge
    Wusel, colour and each ritual against [25](25-wusel.md#how-the-trial-judges-wusel),

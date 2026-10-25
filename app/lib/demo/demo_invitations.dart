@@ -1,4 +1,5 @@
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/demo/demo_clock.dart';
 import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/features/invitations/data/invitation_repository.dart';
 import 'package:wuselwall/features/invitations/domain/invitation.dart';
@@ -12,7 +13,7 @@ class DemoInvitationRepository implements InvitationRepository {
       profileId: 'demo-profile-ruth',
       profileName: 'Oma Ruth',
       role: InvitationRole.member,
-      expiresAt: DateTime.now().add(const Duration(days: 6)),
+      expiresAt: DemoClock.now().add(const Duration(days: 6)),
     ),
   ];
 
@@ -35,7 +36,7 @@ class DemoInvitationRepository implements InvitationRepository {
       profileId: profileId ?? 'demo-profile-new',
       token: '5e1f0c9a7b3d4e2f8a6b1c0d9e8f7a6b',
       code: 'K7QM3XRP',
-      expiresAt: DateTime.now().add(const Duration(days: 7)),
+      expiresAt: DemoClock.now().add(const Duration(days: 7)),
     ),
   );
 
@@ -59,7 +60,7 @@ class DemoInvitationRepository implements InvitationRepository {
         inviterFirstName: DemoData.name(DemoData.papa),
         profileName: DemoData.name(DemoData.mama),
         role: InvitationRole.guardian,
-        expiresAt: DateTime.now().add(const Duration(days: 7)),
+        expiresAt: DemoClock.now().add(const Duration(days: 7)),
       ),
     ),
   );

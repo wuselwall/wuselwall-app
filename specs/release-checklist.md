@@ -16,6 +16,14 @@ from that commit's CI run, not from this file.
 Testing layers and where they run: [18 — Testing strategy](18-testing-strategy.md). Operator
 commands and the server stack: [10 — Deployment and operations](10-deployment-and-ops.md).
 
+**Planned candidate gate (2026-10-25):**
+[Accessibility and UI qualification](accessibility-and-ui-qualification.md) defines the
+manually selected commit, whole-app visual/accessibility coverage and required promotion
+evidence. The [initial evidence suite](../qualification/README.md) and manual evidence
+workflow are built in this branch; a full qualification verdict and enforced promotion
+gate remain open. No pass or native device result is recorded here. Planned native audits
+complement the physical-device accessibility checks below.
+
 ## 0. Rules for this checklist
 
 **Status words.** Each item ends `PASS`, `FAIL`, `NOT RUN` or `N/A` (with the reason). A `PASS`

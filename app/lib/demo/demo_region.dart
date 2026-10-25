@@ -1,4 +1,5 @@
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/demo/demo_clock.dart';
 import 'package:wuselwall/features/region/data/region_repository.dart';
 import 'package:wuselwall/features/region/domain/region_models.dart';
 
@@ -7,7 +8,7 @@ import 'package:wuselwall/features/region/domain/region_models.dart';
 /// imported, so the sheet shows the state after an import. Nothing leaves the page.
 class DemoRegionRepository implements RegionRepository {
   DemoRegionRepository({DateTime Function()? clock})
-    : _clock = clock ?? DateTime.now;
+    : _clock = clock ?? DemoClock.now;
 
   final DateTime Function() _clock;
   final _imported = <String>{};

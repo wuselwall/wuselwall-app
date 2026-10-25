@@ -8,6 +8,7 @@ import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/config/config_providers.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/time/clock.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/core/ui/text_prompt.dart';
@@ -340,7 +341,7 @@ class _DeviceTile extends ConsumerWidget {
         ? l10n.deviceRevoked
         : seen == null
         ? l10n.deviceNeverSeen
-        : l10n.deviceLastSeen(agoText(l10n, seen, DateTime.now()));
+        : l10n.deviceLastSeen(agoText(l10n, seen, ref.watch(nowProvider)));
     return ListTile(
       leading: Icon(switch (d.deviceClass) {
         DeviceClass.personal => Icons.smartphone,

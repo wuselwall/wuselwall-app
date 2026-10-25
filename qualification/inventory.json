@@ -1,0 +1,588 @@
+{
+  "schema": 1,
+  "clock": "2026-10-14T14:05:00",
+  "locales": [
+    "de",
+    "en",
+    "fr",
+    "es"
+  ],
+  "shades": [
+    "light",
+    "dark"
+  ],
+  "states": [
+    {
+      "id": "today",
+      "widget": "TodayPage",
+      "titleKey": "todayTitle",
+      "scenario": "adult",
+      "route": "/",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "tab": "today",
+      "native": true
+    },
+    {
+      "id": "calendar",
+      "widget": "CalendarPage",
+      "titleKey": "calendarTitle",
+      "scenario": "adult",
+      "route": "/",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "tab": "calendar",
+      "native": true
+    },
+    {
+      "id": "schedule",
+      "widget": "ScheduleBody",
+      "titleKey": "scheduleTitle",
+      "scenario": "adult",
+      "route": "/",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "tab": "schedule",
+      "native": false
+    },
+    {
+      "id": "tasks",
+      "widget": "TasksBody",
+      "titleKey": "tasksTitle",
+      "scenario": "adult",
+      "route": "/",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "tab": "tasks",
+      "native": false
+    },
+    {
+      "id": "meals",
+      "widget": "MealsWeekBody",
+      "titleKey": "mealsTitle",
+      "scenario": "adult",
+      "route": "/",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "tab": "meals",
+      "native": false
+    },
+    {
+      "id": "shopping",
+      "widget": "ShoppingBody",
+      "titleKey": "shoppingTitle",
+      "scenario": "adult",
+      "route": "/",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "tab": "shopping",
+      "native": true
+    },
+    {
+      "id": "settings",
+      "widget": "SettingsPage",
+      "titleKey": "settingsTitle",
+      "scenario": "adult",
+      "route": "/settings",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "native": true
+    },
+    {
+      "id": "settings-personal",
+      "widget": "SettingsGroupPage",
+      "titleKey": "settingsGroupPersonalTitle",
+      "scenario": "adult",
+      "route": "/settings/personal",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "advanced": true
+    },
+    {
+      "id": "settings-family",
+      "widget": "SettingsGroupPage",
+      "titleKey": "settingsGroupFamilyTitle",
+      "scenario": "adult",
+      "route": "/settings/family",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "advanced": true
+    },
+    {
+      "id": "settings-tasks",
+      "widget": "SettingsGroupPage",
+      "titleKey": "settingsGroupTasksTitle",
+      "scenario": "adult",
+      "route": "/settings/tasks",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "advanced": true
+    },
+    {
+      "id": "settings-calendar",
+      "widget": "SettingsGroupPage",
+      "titleKey": "settingsGroupCalendarTitle",
+      "scenario": "adult",
+      "route": "/settings/calendar-school",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "advanced": true
+    },
+    {
+      "id": "settings-meals",
+      "widget": "SettingsGroupPage",
+      "titleKey": "settingsGroupMealsTitle",
+      "scenario": "adult",
+      "route": "/settings/meals",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "advanced": true
+    },
+    {
+      "id": "settings-rituals",
+      "widget": "SettingsGroupPage",
+      "titleKey": "settingsGroupRitualsTitle",
+      "scenario": "adult",
+      "route": "/settings/rituals",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "advanced": true
+    },
+    {
+      "id": "settings-celebrations",
+      "widget": "SettingsGroupPage",
+      "titleKey": "settingsGroupCelebrationsTitle",
+      "scenario": "adult",
+      "route": "/settings/celebrations",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "advanced": true
+    },
+    {
+      "id": "settings-kitchen",
+      "widget": "SettingsGroupPage",
+      "titleKey": "settingsGroupKitchenTitle",
+      "scenario": "adult",
+      "route": "/settings/kitchen-wall",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "advanced": true
+    },
+    {
+      "id": "settings-devices",
+      "widget": "SettingsGroupPage",
+      "titleKey": "settingsGroupDevicesTitle",
+      "scenario": "adult",
+      "route": "/settings/devices",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "advanced": true
+    },
+    {
+      "id": "settings-account",
+      "widget": "SettingsGroupPage",
+      "titleKey": "settingsGroupAccountTitle",
+      "scenario": "adult",
+      "route": "/settings/account",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "advanced": true
+    },
+    {
+      "id": "settings-server",
+      "widget": "SettingsGroupPage",
+      "titleKey": "settingsGroupServerTitle",
+      "scenario": "withserver",
+      "route": "/settings/server",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "advanced": true
+    },
+    {
+      "id": "settings-help",
+      "widget": "SettingsGroupPage",
+      "titleKey": "settingsGroupHelpTitle",
+      "scenario": "adult",
+      "route": "/settings/help",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "advanced": true
+    },
+    {
+      "id": "recipes",
+      "widget": "RecipesPage",
+      "titleKey": "mealsRecipesTitle",
+      "scenario": "adult",
+      "route": "/meals/recipes",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ]
+    },
+    {
+      "id": "family-profile",
+      "widget": "FamilyPage",
+      "titleKey": "familyProfileTitle",
+      "scenario": "adult",
+      "route": "/settings/family/profile",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ]
+    },
+    {
+      "id": "reminders",
+      "widget": "RemindersPage",
+      "titleKey": "reminderSettingsTitle",
+      "scenario": "adult",
+      "route": "/settings/reminders",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ]
+    },
+    {
+      "id": "kid",
+      "widget": "KidHome",
+      "scenario": "kid",
+      "titleKey": null,
+      "route": "/",
+      "widths": [
+        768,
+        820,
+        1024
+      ],
+      "native": true
+    },
+    {
+      "id": "wall",
+      "widget": "WeekBoardPage",
+      "scenario": "kiosk",
+      "titleKey": null,
+      "route": "/",
+      "widths": [
+        1280,
+        1920
+      ],
+      "native": true
+    },
+    {
+      "id": "server",
+      "widget": "ServerChoicePage",
+      "scenario": "server",
+      "titleKey": "serverTitle",
+      "route": "/",
+      "widths": [
+        320,
+        390,
+        820
+      ],
+      "native": true
+    }
+  ],
+  "pendingRoutes": {
+    "splash": {
+      "route": "/splash",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "setup": {
+      "route": "/setup",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "wizard": {
+      "route": "/setup/household",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "signIn": {
+      "route": "/setup/sign-in",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "emailCode": {
+      "route": "/setup/email-code",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "signInChoice": {
+      "route": "/setup/sign-in-choice",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "enrol": {
+      "route": "/setup/enrol",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "pair": {
+      "route": "/setup/pair",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "firstRun": {
+      "route": "/first-run",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "devicePair": {
+      "route": "/settings/devices/pair",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "mfa": {
+      "route": "/setup/mfa",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "register": {
+      "route": "/setup/register",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "newFamily": {
+      "route": "/setup/new-family",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "deletedFamily": {
+      "route": "/setup/deleted-family",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "invitePending": {
+      "route": "/setup/invitations",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "joinInvite": {
+      "route": "/setup/join",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "inviteCode": {
+      "route": "/setup/invite",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "welcomeMembers": {
+      "route": "/welcome/members",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "householdSettings": {
+      "route": "/settings/household",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "settingsMembers": {
+      "route": "/settings/members",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "member": {
+      "route": "/settings/member",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "shoppingListEdit": {
+      "route": "/shopping/list",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "system": {
+      "route": "/system",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "shoppingHistory": {
+      "route": "/shopping/history",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "eventNew": {
+      "route": "/calendar/new",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "eventEdit": {
+      "route": "/calendar/edit",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "recipeEdit": {
+      "route": "/meals/recipes/edit",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "recipeView": {
+      "route": "/meals/recipes/view",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "schoolSetup": {
+      "route": "/school/setup",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "timetableEdit": {
+      "route": "/school/timetable",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "timetableImport": {
+      "route": "/school/import",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "feedTokens": {
+      "route": "/settings/feeds",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "externalCalendars": {
+      "route": "/settings/calendars",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "externalCalendarNew": {
+      "route": "/settings/calendars/new",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "externalCalendarEdit": {
+      "route": "/settings/calendars/edit",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "baselines": {
+      "route": "/settings/baselines",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    },
+    "shortcuts": {
+      "route": "/settings/shortcuts",
+      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+    }
+  },
+  "openGates": [
+    "native-platform-audits",
+    "physical-device-review",
+    "production-entry-point-smoke",
+    "approved-baseline-review",
+    "release-promotion-enforcement"
+  ]
+}

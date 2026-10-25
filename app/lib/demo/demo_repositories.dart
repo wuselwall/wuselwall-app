@@ -4,6 +4,7 @@ import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/text/fold.dart';
 import 'package:wuselwall/demo/demo_board.dart';
+import 'package:wuselwall/demo/demo_clock.dart';
 import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/demo/demo_english.dart';
 import 'package:wuselwall/demo/demo_external_calendars.dart';
@@ -267,7 +268,7 @@ class DemoIdentityRepository implements IdentityRepository {
     required String pin,
   }) async => Ok(
     pin == '123456'
-        ? PinVerified(DateTime.now().add(const Duration(minutes: 15)))
+        ? PinVerified(DemoClock.now().add(const Duration(minutes: 15)))
         : const PinWrong(8),
   );
 
@@ -294,7 +295,7 @@ class DemoShoppingRepository implements ShoppingRepository {
   @override
   Future<Result<List<ShoppingItemMeal>>> itemMeals(String itemId) async {
     final item = _items.where((i) => i.id == itemId).firstOrNull;
-    final now = DateTime.now();
+    final now = DemoClock.now();
     final monday = DateTime(now.year, now.month, now.day - (now.weekday - 1));
     final meals = {
       'demo-src-nudel': ShoppingItemMeal(
@@ -533,7 +534,7 @@ class DemoShoppingRepository implements ShoppingRepository {
         name: known.isEmpty ? name : known.first.name,
         quantity: quantity,
         checked: false,
-        createdAt: DateTime.now(),
+        createdAt: DemoClock.now(),
         listId: list,
         categoryId: known.isEmpty ? null : known.first.categoryId,
         addedBy: actor ?? DemoData.papa,
@@ -1157,7 +1158,7 @@ class DemoHouseholdSettingsRepository implements HouseholdSettingsRepository {
 /// in-memory list only; recurrence and overrides are not modelled in the demo.
 class DemoCalendarRepository implements CalendarRepository {
   DemoCalendarRepository({DateTime Function()? clock})
-    : _clock = clock ?? DateTime.now;
+    : _clock = clock ?? DemoClock.now;
 
   final DateTime Function() _clock;
   final _saved = <CalendarEvent>[];

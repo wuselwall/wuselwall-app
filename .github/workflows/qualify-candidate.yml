@@ -1,0 +1,191 @@
+# Deliberately manual: these expensive matrices never run on PRs, pushes or a timer.
+# Initial evidence lane; open native audits/baseline review prevent a qualified verdict.
+name: candidate-evidence
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha:
+        description: Full commit SHA on the default branch to collect evidence for
+        required: true
+        type: string
+      matrix:
+        description: Coverage profile (smoke is diagnostic only)
+        type: choice
+        options: [full, canonical, smoke]
+        default: full
+      mode:
+        description: Unapproved captures, or compare a separately reviewed baseline
+        type: choice
+        options: [capture, compare]
+        default: capture
+      baseline_tag:
+        description: Reviewed ui-baseline-* release containing web-baseline.zip (compare only)
+        type: string
+      baseline_sha256:
+        description: Reviewed manifest.json SHA-256 (compare only)
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: candidate-evidence-${{ inputs.candidate_sha }}
+  cancel-in-progress: false
+jobs:
+  prepare:
+    runs-on: [self-hosted, Linux, build]
+    timeout-minutes: 10
+    outputs:
+      sha: ${{ steps.candidate.outputs.sha }}
+      flutter: ${{ steps.candidate.outputs.flutter }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { fetch-depth: 0, persist-credentials: false }
+      - id: candidate
+        env:
+          CANDIDATE: ${{ inputs.candidate_sha }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$CANDIDATE" =~ ^[a-f0-9]{40}$ ]] || { echo 'A full commit SHA is required.' >&2; exit 1; }
+          [[ "$(git cat-file -t "$CANDIDATE")" == commit ]]
+          git merge-base --is-ancestor "$CANDIDATE" "origin/$DEFAULT_BRANCH"
+          git cat-file -e "$CANDIDATE:qualification/inventory.json"
+          version=$(git show "$CANDIDATE:app/pubspec.yaml" | sed -n 's/^  flutter: *\([0-9][0-9.]*\) *$/\1/p')
+          [[ -n "$version" ]]
+          printf 'sha=%s\nflutter=%s\n' "$CANDIDATE" "$version" >> "$GITHUB_OUTPUT"
+
+  flutter:
+    needs: prepare
+    runs-on: [self-hosted, Linux, build]
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { ref: '${{ needs.prepare.outputs.sha }}', persist-credentials: false }
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with: { flutter-version: '${{ needs.prepare.outputs.flutter }}', cache: true }
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with: { node-version: 22 }
+      - run: npm ci --include=dev
+      - run: npm run qualify:check
+      - run: flutter pub get --enforce-lockfile
+        working-directory: app
+      - run: flutter gen-l10n
+        working-directory: app
+      - run: dart format --output=none --set-exit-if-changed lib test qualification qualification_test integration_test test_driver
+        working-directory: app
+      - run: flutter analyze --fatal-infos
+        working-directory: app
+      - run: node ../scripts/flutter-test-ci.mjs
+        working-directory: app
+      - run: flutter test --no-pub qualification_test --dart-define=QUALIFY_MATRIX="$MATRIX" --reporter expanded
+        working-directory: app
+        env: { MATRIX: '${{ inputs.matrix }}' }
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: candidate-flutter-${{ needs.prepare.outputs.sha }}
+          path: build/qualification/flutter
+          if-no-files-found: error
+          retention-days: 30
+
+  web:
+    needs: prepare
+    runs-on: [self-hosted, Linux, build]
+    timeout-minutes: 60
+    env:
+      QUALIFY_CANDIDATE_SHA: ${{ needs.prepare.outputs.sha }}
+      QUALIFY_MODE: ${{ inputs.mode }}
+      QUALIFY_MATRIX: ${{ inputs.matrix }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { ref: '${{ needs.prepare.outputs.sha }}', persist-credentials: false }
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with: { flutter-version: '${{ needs.prepare.outputs.flutter }}', cache: true }
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with: { node-version: 22 }
+      - run: npm ci --include=dev
+      - run: npx playwright install --with-deps chromium
+      - run: flutter pub get --enforce-lockfile
+        working-directory: app
+      - run: npm run qualify:build-web
+      - name: Load the reviewed baseline
+        if: inputs.mode == 'compare'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BASELINE_TAG: ${{ inputs.baseline_tag }}
+          BASELINE_SHA256: ${{ inputs.baseline_sha256 }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$BASELINE_TAG" =~ ^ui-baseline-[a-zA-Z0-9.-]+$ ]]
+          [[ "$BASELINE_SHA256" =~ ^[a-f0-9]{64}$ ]]
+          archive_dir=$(mktemp -d "$RUNNER_TEMP/ui-baseline-XXXXXX")
+          gh release download "$BASELINE_TAG" --pattern web-baseline.zip --dir "$archive_dir"
+          python3 qualification/unpack-baseline.py "$archive_dir/web-baseline.zip" "$archive_dir/snapshots"
+          printf 'QUALIFY_BASELINE_DIR=%s\nQUALIFY_BASELINE_SHA256=%s\n' "$archive_dir/snapshots" "$BASELINE_SHA256" >> "$GITHUB_ENV"
+      - run: npm run qualify:web
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: candidate-web-${{ needs.prepare.outputs.sha }}
+          path: |
+            build/qualification/web
+            build/qualification/capture
+          if-no-files-found: error
+          retention-days: 30
+
+  native:
+    needs: prepare
+    runs-on: [self-hosted, macOS]
+    timeout-minutes: 90
+    concurrency:
+      group: native-qualification-devices
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { ref: '${{ needs.prepare.outputs.sha }}', persist-credentials: false }
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with: { flutter-version: '${{ needs.prepare.outputs.flutter }}', cache: true }
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with: { node-version: 22 }
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with: { distribution: temurin, java-version: '17' }
+      - run: flutter pub get --enforce-lockfile
+        working-directory: app
+      - run: bash qualification/native.sh
+        env:
+          QUALIFY_NATIVE_SMOKE: ${{ inputs.matrix == 'smoke' && 'true' || 'false' }}
+          QUALIFICATION_IOS_RUNTIME: ${{ vars.QUALIFICATION_IOS_RUNTIME }}
+          QUALIFICATION_IOS_PHONE_TYPE: ${{ vars.QUALIFICATION_IOS_PHONE_TYPE }}
+          QUALIFICATION_IOS_TABLET_TYPE: ${{ vars.QUALIFICATION_IOS_TABLET_TYPE }}
+          QUALIFICATION_ANDROID_PHONE_AVD: ${{ vars.QUALIFICATION_ANDROID_PHONE_AVD }}
+          QUALIFICATION_ANDROID_TABLET_AVD: ${{ vars.QUALIFICATION_ANDROID_TABLET_AVD }}
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: candidate-native-${{ needs.prepare.outputs.sha }}
+          path: build/qualification/native
+          if-no-files-found: error
+          retention-days: 30
+
+  evidence:
+    if: always()
+    needs: [prepare, flutter, web, native]
+    runs-on: [self-hosted, Linux, build]
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { ref: '${{ needs.prepare.outputs.sha || github.sha }}', persist-credentials: false }
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with: { node-version: 22 }
+      - run: node qualification/summarize.mjs
+        env:
+          QUALIFY_CANDIDATE_SHA: ${{ needs.prepare.outputs.sha }}
+          QUALIFY_JOBS: ${{ toJSON(needs) }}
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: candidate-summary-${{ github.run_id }}
+          path: build/qualification/summary.json
+          if-no-files-found: error
+          retention-days: 30

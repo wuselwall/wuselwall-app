@@ -1,5 +1,6 @@
 {
   "devDependencies": {
+    "axe-core": "4.14.0",
     "playwright": "^1.64.0",
     "sharp": "^0.35.5",
     "supabase": "^2.120.0",
@@ -30,6 +31,9 @@
     "docs:screenshots": "npm run docs:demo && node docs/tools/screenshots.mjs",
     "docs:check": "node docs/tools/check-locales.mjs && node docs/tools/check-shots.mjs",
     "play:listing": "node scripts/play-listing.mjs",
-    "docs:browser": "node docs/tools/browser.mjs"
+    "docs:browser": "node docs/tools/browser.mjs",
+    "qualify:check": "node --test qualification/framework.test.mjs && node qualification/generate-native.mjs --check",
+    "qualify:build-web": "cd app && flutter build web --release --no-web-resources-cdn -t qualification/main.dart -o build/web-qualification",
+    "qualify:web": "node qualification/run-web.mjs"
   }
 }

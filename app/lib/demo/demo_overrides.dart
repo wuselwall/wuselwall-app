@@ -1,7 +1,7 @@
 // The in-memory demo household (ADR-018, decision 4): the docs' screenshots
 // (lib/main_demo.dart) and the store app's "Try it without a server" run on these
 // overrides. Nothing here talks to a server; nothing is kept.
-import 'dart:ui' show PlatformDispatcher;
+import 'dart:ui' show Locale, PlatformDispatcher;
 
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:supabase_flutter/supabase_flutter.dart' show AuthState;
@@ -105,18 +105,41 @@ DeviceInfo? _device(String scenario) => switch (scenario) {
 /// adult variant for the docs: noschool (no school yet). The family's names follow
 /// the device's language, as the
 /// app's own text does.
-List<Override> demoOverrides({String scenario = 'adult'}) {
-  DemoData.useLanguageOf(PlatformDispatcher.instance.locales);
-  return _overrides(scenario);
+List<Override> demoOverrides({
+  String scenario = 'adult',
+  List<Locale>? locales,
+  AppConfig? config,
+  AppearanceStore? appearance,
+  AppLanguageStore? language,
+  SettingsViewStore? settingsView,
+  NightNotifier Function()? night,
+}) {
+  DemoData.useLanguageOf(locales ?? PlatformDispatcher.instance.locales);
+  return _overrides(
+    scenario,
+    config: config,
+    appearance: appearance,
+    language: language,
+    settingsView: settingsView,
+    night: night,
+  );
 }
 
-List<Override> _overrides(String scenario) => [
+List<Override> _overrides(
+  String scenario, {
+  AppConfig? config,
+  AppearanceStore? appearance,
+  AppLanguageStore? language,
+  SettingsViewStore? settingsView,
+  NightNotifier Function()? night,
+}) => [
   appConfigProvider.overrideWithValue(
-    const AppConfig(
-      environment: 'demo',
-      supabaseUrl: 'http://demo.invalid',
-      supabasePublishableKey: 'demo',
-    ),
+    config ??
+        const AppConfig(
+          environment: 'demo',
+          supabaseUrl: 'http://demo.invalid',
+          supabasePublishableKey: 'demo',
+        ),
   ),
   appVersionProvider.overrideWith((ref) async => 'demo'),
   authStateProvider.overrideWith((ref) => const Stream<AuthState>.empty()),
@@ -177,11 +200,17 @@ List<Override> _overrides(String scenario) => [
   householdInvalidationsProvider.overrideWith(
     (ref, id) => const Stream<Invalidation>.empty(),
   ),
-  nightProvider.overrideWith(_Day.new),
+  nightProvider.overrideWith(night ?? _Day.new),
   // The screenshots take both themes from the browser's colour scheme.
-  appearanceStoreProvider.overrideWithValue(MemoryAppearanceStore()),
+  appearanceStoreProvider.overrideWithValue(
+    appearance ?? MemoryAppearanceStore(),
+  ),
   // The screenshots take their language from the browser.
-  appLanguageStoreProvider.overrideWithValue(MemoryAppLanguageStore()),
+  appLanguageStoreProvider.overrideWithValue(
+    language ?? MemoryAppLanguageStore(),
+  ),
   // Basic, as on a new device; the screenshots switch to Advanced where they need it.
-  settingsViewStoreProvider.overrideWithValue(MemorySettingsViewStore()),
+  settingsViewStoreProvider.overrideWithValue(
+    settingsView ?? MemorySettingsViewStore(),
+  ),
 ];
