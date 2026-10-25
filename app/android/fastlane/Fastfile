@@ -35,4 +35,22 @@ platform :android do
       skip_upload_screenshots: true,
     )
   end
+
+  # The store listing in fastlane/metadata (texts, icon, feature graphic, screenshots;
+  # scripts/store-listing.mjs renders the images), uploaded on its own by store-listing.yml,
+  # never with a release. LISTING_VALIDATE_ONLY=1 has Play check the edit, then drops it.
+  desc "Upload the store listing to Google Play"
+  lane :listing do
+    upload_to_play_store(
+      json_key_data: play_json_key,
+      # supply looks up a release on the track before it touches the listing; the internal
+      # track always has one, production has none until the first public release.
+      track: "internal",
+      skip_upload_apk: true,
+      skip_upload_aab: true,
+      skip_upload_changelogs: true,
+      sync_image_upload: true,
+      validate_only: ENV["LISTING_VALIDATE_ONLY"] == "1",
+    )
+  end
 end

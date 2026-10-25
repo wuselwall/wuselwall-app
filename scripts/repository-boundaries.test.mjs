@@ -12,7 +12,7 @@ test('marketing source and deployment are not app build inputs', () => {
   const ci = read('.github/workflows/ci.yml');
   assert.doesNotMatch(ci, /^  website:/m);
   assert.doesNotMatch(ci, /website\/package-lock|working-directory: website/);
-  const listing = read('scripts/play-listing.mjs');
+  const listing = read('scripts/store-listing.mjs');
   assert.doesNotMatch(listing, /website\//);
   assert.ok(existsSync(new URL('../docs/public/logo.svg', import.meta.url)));
 });
