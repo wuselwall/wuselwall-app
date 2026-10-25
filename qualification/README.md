@@ -27,6 +27,17 @@ test`. The new workflow has only `workflow_dispatch`; existing CI/release workfl
 not changed. Its source commit must be on the repository's default branch, so the first
 native workflow run follows merge. Local runs can exercise the branch before merge.
 
+Dispatch the workflow from the default branch. Preparation checks the candidate's exact
+SHA and default-branch ancestry before any candidate code runs; rejected preparation
+also skips the summary job. The workflow grants no Actions cache access (`cache-mode:
+none`), disables tool-action caching and never persists checkout credentials. This prevents
+candidate code from poisoning caches used by release jobs. Cache permissions are separate
+from the read-only repository token; disabling an action's cache alone is insufficient.
+Baseline download runs before candidate scripts, and its token is absent during extraction
+and testing. Persistent runner files still require isolation: run only reviewed commits
+on dedicated CI accounts, without release credentials or access to production data.
+See [GitHub's cache access controls](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#cache-mode).
+
 ## Run locally
 
 From the repository root, install locked npm packages and resolve app dependencies with
