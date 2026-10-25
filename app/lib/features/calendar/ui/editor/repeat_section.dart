@@ -95,6 +95,7 @@ class RepeatSection extends StatelessWidget {
     RepeatKind.weekly,
     RepeatKind.biweekly,
     RepeatKind.monthly,
+    RepeatKind.yearly,
     RepeatKind.specificDays,
   ];
 
@@ -104,6 +105,7 @@ class RepeatSection extends StatelessWidget {
     RepeatKind.weekly => l10n.eventRepeatWeekly,
     RepeatKind.biweekly => l10n.eventRepeatBiweekly,
     RepeatKind.monthly => l10n.eventRepeatMonthly,
+    RepeatKind.yearly => l10n.eventRepeatYearly,
     RepeatKind.specificDays => l10n.eventRepeatSpecificDays,
     RepeatKind.custom => l10n.eventCustomRule,
   };

@@ -31,7 +31,23 @@ Les anniversaires apparaissent toujours dans le mois, même si l’occasion **An
 
 ## Créer un rendez-vous {#creating-an-appointment}
 
-Touchez **Nouvel événement** : il commence le jour affiché par le calendrier (aujourd’hui tant qu’aujourd’hui est visible), à la prochaine heure pleine. Indiquez ensuite :
+Touchez **Nouvel événement** : il commence le jour affiché par le calendrier (aujourd’hui tant qu’aujourd’hui est visible).
+
+### Partir d’un modèle {#templates}
+
+Des tuiles s’affichent d’abord, pour ne pas tout saisir depuis le début :
+
+- **Modèles** : **Anniversaire** (toute la journée, tous les ans), **Invités à dîner**, **Goûter d’anniversaire**, **Événement sportif**, **Rendez-vous médical**, **Spectacle**, **Sortie** et **Vacances / voyage**. Chacun remplit le titre, l’image, l’heure, la durée et les personnes. **Sans modèle** ouvre l’éditeur vide à la prochaine heure pleine.
+- **Vos modèles** : ceux que vous avez enregistrés. Dans l’éditeur, touchez **Enregistrer comme modèle** en haut ; le titre, l’image, l’heure, la durée, les personnes, le lieu et les notes sont gardés, ni la date ni la répétition.
+- **Souvent chez vous** : les événements saisis au moins trois fois, comme « Mamie et papi viennent ». WuselWall ne compte que vos propres événements, sur votre serveur ; rien n’en sort. Avec **⋮**, choisissez **Garder comme modèle** ou **Ne plus proposer**.
+
+Ce que la tuile remplit n’est qu’un point de départ : modifiez ce qui change, puis enregistrez. **Retour** ramène aux tuiles.
+
+<Shot name="calendar-templates" alt="Nouvel événement avec des tuiles : Souvent chez vous, Vos modèles et des modèles comme Anniversaire et Invités à dîner" />
+
+### Dans l’éditeur {#in-the-editor}
+
+Indiquez ensuite :
 
 - le **titre**, le **lieu** et les **notes** ;
 - **Rendez-vous** ou **Présence** : travail, télétravail, déplacement, absence, repos ou garde ;
@@ -47,7 +63,7 @@ Le comportement par défaut des nouveaux événements se règle dans [Paramètre
 
 ### Répéter {#repeating}
 
-Choisissez chaque jour, chaque semaine, toutes les deux semaines ou chaque mois. Le mode de jours précis permet de toucher les dates dans un calendrier pour les horaires de travail. La fin de répétition se définit par date ou par nombre d’occurrences.
+Choisissez chaque jour, chaque semaine, toutes les deux semaines, chaque mois ou tous les ans. Le mode de jours précis permet de toucher les dates dans un calendrier pour les horaires de travail. La fin de répétition se définit par date ou par nombre d’occurrences.
 
 Pour modifier ou supprimer une série, choisissez entre cette occurrence seule et toute la série.
 

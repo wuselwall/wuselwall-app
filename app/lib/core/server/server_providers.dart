@@ -17,6 +17,10 @@ const featureTimetableScan = 'timetable-scan';
 /// 20261024110000.
 const featureLighterDay = 'lighter-day';
 
+/// The server keeps the family's event templates and suggests new ones from its
+/// history (specs/28). Announced by the migration 20261025150000.
+const featureEventTemplates = 'event-templates';
+
 /// Whether the server this app runs on announces [feature] in its discovery document.
 /// A build with a compiled-in server (development, the demo) has no document and is
 /// taken to support everything.

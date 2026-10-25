@@ -6193,4 +6193,114 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get calendarMonthOpenDay => 'Ouvrir la journée';
+
+  @override
+  String get eventRepeatYearly => 'Tous les ans';
+
+  @override
+  String get eventTemplatesIntro =>
+      'Choisis un point de départ. Tu pourras tout modifier ensuite.';
+
+  @override
+  String get eventTemplatesSuggested => 'Souvent chez vous';
+
+  @override
+  String get eventTemplatesSaved => 'Vos modèles';
+
+  @override
+  String get eventTemplatesBuiltIn => 'Modèles';
+
+  @override
+  String get eventTemplateBlank => 'Sans modèle';
+
+  @override
+  String get eventTemplateBlankHelp => 'Tout saisir toi-même';
+
+  @override
+  String get eventStarterBirthday => 'Anniversaire';
+
+  @override
+  String get eventStarterGuestDinner => 'Invités à dîner';
+
+  @override
+  String get eventStarterKidsParty => 'Goûter d’anniversaire';
+
+  @override
+  String get eventStarterSportsEvent => 'Événement sportif';
+
+  @override
+  String get eventStarterDoctor => 'Rendez-vous médical';
+
+  @override
+  String get eventStarterPerformance => 'Spectacle';
+
+  @override
+  String get eventStarterDayOut => 'Sortie';
+
+  @override
+  String get eventStarterHoliday => 'Vacances / voyage';
+
+  @override
+  String get eventTemplateAllDay => 'Toute la journée';
+
+  @override
+  String eventTemplateDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count jours',
+      one: '1 jour',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String eventTemplateHours(int count) {
+    return '$count h';
+  }
+
+  @override
+  String eventTemplateHoursMinutes(int hours, int minutes) {
+    return '$hours h $minutes';
+  }
+
+  @override
+  String eventTemplateMinutes(int count) {
+    return '$count min';
+  }
+
+  @override
+  String eventTemplateCount(int count) {
+    return 'Déjà $count fois';
+  }
+
+  @override
+  String eventTemplateMenu(String name) {
+    return 'Plus pour $name';
+  }
+
+  @override
+  String get eventTemplateKeep => 'Garder comme modèle';
+
+  @override
+  String get eventTemplateHide => 'Ne plus proposer';
+
+  @override
+  String get eventTemplateHidden => 'Ne sera plus proposé.';
+
+  @override
+  String get eventTemplateDelete => 'Supprimer le modèle';
+
+  @override
+  String get eventTemplateDeleted => 'Modèle supprimé.';
+
+  @override
+  String get eventSaveAsTemplate => 'Enregistrer comme modèle';
+
+  @override
+  String get eventTemplateSavedNote => 'Enregistré comme modèle.';
+
+  @override
+  String get eventTemplateErrLimit =>
+      'Votre famille a déjà 50 modèles. Supprimez-en un d’abord.';
 }

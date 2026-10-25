@@ -6122,4 +6122,114 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get calendarMonthOpenDay => 'Open the day';
+
+  @override
+  String get eventRepeatYearly => 'Yearly';
+
+  @override
+  String get eventTemplatesIntro =>
+      'Pick a starting point. You can change everything next.';
+
+  @override
+  String get eventTemplatesSuggested => 'Often in your family';
+
+  @override
+  String get eventTemplatesSaved => 'Your templates';
+
+  @override
+  String get eventTemplatesBuiltIn => 'Templates';
+
+  @override
+  String get eventTemplateBlank => 'Start blank';
+
+  @override
+  String get eventTemplateBlankHelp => 'Fill in everything yourself';
+
+  @override
+  String get eventStarterBirthday => 'Birthday';
+
+  @override
+  String get eventStarterGuestDinner => 'Guests for dinner';
+
+  @override
+  String get eventStarterKidsParty => 'Children\'s party';
+
+  @override
+  String get eventStarterSportsEvent => 'Sports event';
+
+  @override
+  String get eventStarterDoctor => 'Doctor’s appointment';
+
+  @override
+  String get eventStarterPerformance => 'Performance';
+
+  @override
+  String get eventStarterDayOut => 'Day out';
+
+  @override
+  String get eventStarterHoliday => 'Holiday / trip';
+
+  @override
+  String get eventTemplateAllDay => 'All day';
+
+  @override
+  String eventTemplateDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days',
+      one: '1 day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String eventTemplateHours(int count) {
+    return '$count h';
+  }
+
+  @override
+  String eventTemplateHoursMinutes(int hours, int minutes) {
+    return '$hours h $minutes min';
+  }
+
+  @override
+  String eventTemplateMinutes(int count) {
+    return '$count min';
+  }
+
+  @override
+  String eventTemplateCount(int count) {
+    return '$count× so far';
+  }
+
+  @override
+  String eventTemplateMenu(String name) {
+    return 'More for $name';
+  }
+
+  @override
+  String get eventTemplateKeep => 'Keep as template';
+
+  @override
+  String get eventTemplateHide => 'Don’t suggest again';
+
+  @override
+  String get eventTemplateHidden => 'Won’t be suggested again.';
+
+  @override
+  String get eventTemplateDelete => 'Delete template';
+
+  @override
+  String get eventTemplateDeleted => 'Template deleted.';
+
+  @override
+  String get eventSaveAsTemplate => 'Save as template';
+
+  @override
+  String get eventTemplateSavedNote => 'Saved as a template.';
+
+  @override
+  String get eventTemplateErrLimit =>
+      'Your family already has 50 templates. Delete one first.';
 }

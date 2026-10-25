@@ -36,7 +36,23 @@ Birthdays always appear in the month, even with the **Birthdays** occasion switc
 
 ## Creating an appointment
 
-Tap **New event**. It starts on the day the calendar is showing (today, while today is in view), at the next full hour. You can:
+Tap **New event**. It starts on the day the calendar is showing (today, while today is in view).
+
+### Starting from a template {#templates}
+
+First you see tiles, so you don't have to type everything from scratch:
+
+- **Templates**: **Birthday** (all day, yearly), **Guests for dinner**, **Children's party**, **Sports event**, **Doctor's appointment**, **Performance**, **Day out** and **Holiday / trip**. Each fills in the title, picture, time, length and people. **Start blank** opens the empty editor at the next full hour.
+- **Your templates**: the ones you saved yourselves. In the editor, tap **Save as template** at the top; it keeps the title, picture, time, length, people, location and notes, not the date and not the repeat.
+- **Often in your family**: events you have entered at least three times, such as "Grandma & Grandpa visit". WuselWall only counts your own events on your own server; nothing leaves it. Under **⋮** you choose **Keep as template** or **Don't suggest again**.
+
+What a tile fills in is only a start: change what differs in the editor and save. **Back** takes you to the tiles again.
+
+<Shot name="calendar-templates" alt="New event with tiles: Often in your family, Your templates and templates such as Birthday and Guests for dinner" />
+
+### In the editor
+
+You can:
 
 - enter a **Title**, a **Location** and **Notes**
 - choose between **Appointment** and **Presence**. Presence has six states: At work, Home office, Travelling, Away, Off and Childcare
@@ -50,7 +66,7 @@ Tap **New event**. It starts on the day the calendar is showing (today, while to
 
 ### Repeating
 
-Under **Repeat** you choose **Daily**, **Weekly**, **Every 2 weeks** or **Monthly**. For shift plans there is **Specific days (shift plan)**: you tap the days you work in a month grid. **Repeat ends** sets a date or a number of times.
+Under **Repeat** you choose **Daily**, **Weekly**, **Every 2 weeks**, **Monthly** or **Yearly**. For shift plans there is **Specific days (shift plan)**: you tap the days you work in a month grid. **Repeat ends** sets a date or a number of times.
 
 When you change or delete an event that repeats, WuselWall asks: **Only this event** or **All events in the series**.
 

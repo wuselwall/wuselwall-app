@@ -36,7 +36,23 @@ Geburtstage stehen im Monat immer, auch wenn der Anlass **Geburtstage** unter **
 
 ## Termin anlegen
 
-Tippe auf **Neuer Termin**. Der Termin beginnt an dem Tag, den der Kalender gerade zeigt (heute, solange heute zu sehen ist), zur nächsten vollen Stunde. Du kannst:
+Tippe auf **Neuer Termin**. Der Termin beginnt an dem Tag, den der Kalender gerade zeigt (heute, solange heute zu sehen ist).
+
+### Mit einer Vorlage beginnen {#templates}
+
+Zuerst siehst du Kacheln, damit du nicht alles von vorn eintippen musst:
+
+- **Vorlagen**: **Geburtstag** (ganztägig, jährlich), **Gäste zum Essen**, **Kindergeburtstag**, **Sportanlass**, **Arzttermin**, **Aufführung**, **Ausflug** und **Ferien / Reise**. Jede füllt Titel, Bild, Uhrzeit, Dauer und Personen aus. **Ohne Vorlage** öffnet den leeren Editor zur nächsten vollen Stunde.
+- **Eure Vorlagen**: was ihr selbst gespeichert habt. Im Editor tippst du oben auf **Als Vorlage speichern**; gespeichert werden Titel, Bild, Uhrzeit, Dauer, Personen, Ort und Notizen, nicht das Datum und nicht die Wiederholung.
+- **Häufig bei euch**: Termine, die ihr schon mindestens dreimal eingetragen habt, etwa „Oma & Opa kommen“. WuselWall zählt dafür nur eure eigenen Termine auf eurem Server; nichts verlässt ihn. Über **⋮** wählst du **Als Vorlage behalten** oder **Nicht mehr vorschlagen**.
+
+Was die Kachel ausfüllt, ist nur ein Anfang: Du änderst im Editor, was anders ist, und speicherst. Mit **Zurück** kommst du wieder zu den Kacheln.
+
+<Shot name="calendar-templates" alt="Neuer Termin mit Kacheln: Häufig bei euch, Eure Vorlagen und Vorlagen wie Geburtstag und Gäste zum Essen" />
+
+### Im Editor
+
+Du kannst:
 
 - einen **Titel**, einen **Ort** und **Notizen** eintragen
 - zwischen **Termin** und **Anwesenheit** wählen. Anwesenheit hat sechs Zustände: Arbeit, Homeoffice, Unterwegs, Weg, Frei und Betreuung
@@ -50,7 +66,7 @@ Tippe auf **Neuer Termin**. Der Termin beginnt an dem Tag, den der Kalender gera
 
 ### Wiederholen
 
-Unter **Wiederholung** wählst du **Täglich**, **Wöchentlich**, **Alle 2 Wochen** oder **Monatlich**. Für Schichtpläne gibt es **Bestimmte Tage (Dienstplan)**: Du tippst im Monatsraster die Tage an, an denen gearbeitet wird. Mit **Ende der Wiederholung** setzt du ein Datum oder eine Anzahl von Malen.
+Unter **Wiederholung** wählst du **Täglich**, **Wöchentlich**, **Alle 2 Wochen**, **Monatlich** oder **Jährlich**. Für Schichtpläne gibt es **Bestimmte Tage (Dienstplan)**: Du tippst im Monatsraster die Tage an, an denen gearbeitet wird. Mit **Ende der Wiederholung** setzt du ein Datum oder eine Anzahl von Malen.
 
 Änderst oder löschst du einen Termin einer Wiederholung, fragt WuselWall: **Nur dieser Termin** oder **Alle Termine der Serie**.
 

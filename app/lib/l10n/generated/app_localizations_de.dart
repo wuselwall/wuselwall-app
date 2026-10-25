@@ -6166,4 +6166,114 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get calendarMonthOpenDay => 'Tag öffnen';
+
+  @override
+  String get eventRepeatYearly => 'Jährlich';
+
+  @override
+  String get eventTemplatesIntro =>
+      'Womit fängst du an? Alles lässt sich danach noch ändern.';
+
+  @override
+  String get eventTemplatesSuggested => 'Häufig bei euch';
+
+  @override
+  String get eventTemplatesSaved => 'Eure Vorlagen';
+
+  @override
+  String get eventTemplatesBuiltIn => 'Vorlagen';
+
+  @override
+  String get eventTemplateBlank => 'Ohne Vorlage';
+
+  @override
+  String get eventTemplateBlankHelp => 'Alles selbst eintragen';
+
+  @override
+  String get eventStarterBirthday => 'Geburtstag';
+
+  @override
+  String get eventStarterGuestDinner => 'Gäste zum Essen';
+
+  @override
+  String get eventStarterKidsParty => 'Kindergeburtstag';
+
+  @override
+  String get eventStarterSportsEvent => 'Sportanlass';
+
+  @override
+  String get eventStarterDoctor => 'Arzttermin';
+
+  @override
+  String get eventStarterPerformance => 'Aufführung';
+
+  @override
+  String get eventStarterDayOut => 'Ausflug';
+
+  @override
+  String get eventStarterHoliday => 'Ferien / Reise';
+
+  @override
+  String get eventTemplateAllDay => 'Ganztägig';
+
+  @override
+  String eventTemplateDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Tage',
+      one: '1 Tag',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String eventTemplateHours(int count) {
+    return '$count Std.';
+  }
+
+  @override
+  String eventTemplateHoursMinutes(int hours, int minutes) {
+    return '$hours Std. $minutes Min.';
+  }
+
+  @override
+  String eventTemplateMinutes(int count) {
+    return '$count Min.';
+  }
+
+  @override
+  String eventTemplateCount(int count) {
+    return 'Schon $count×';
+  }
+
+  @override
+  String eventTemplateMenu(String name) {
+    return 'Mehr zu $name';
+  }
+
+  @override
+  String get eventTemplateKeep => 'Als Vorlage behalten';
+
+  @override
+  String get eventTemplateHide => 'Nicht mehr vorschlagen';
+
+  @override
+  String get eventTemplateHidden => 'Wird nicht mehr vorgeschlagen.';
+
+  @override
+  String get eventTemplateDelete => 'Vorlage löschen';
+
+  @override
+  String get eventTemplateDeleted => 'Vorlage gelöscht.';
+
+  @override
+  String get eventSaveAsTemplate => 'Als Vorlage speichern';
+
+  @override
+  String get eventTemplateSavedNote => 'Als Vorlage gespeichert.';
+
+  @override
+  String get eventTemplateErrLimit =>
+      'Ihr habt schon 50 Vorlagen. Löscht zuerst eine.';
 }

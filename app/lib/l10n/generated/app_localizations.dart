@@ -10401,6 +10401,186 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open the day'**
   String get calendarMonthOpenDay;
+
+  /// No description provided for @eventRepeatYearly.
+  ///
+  /// In en, this message translates to:
+  /// **'Yearly'**
+  String get eventRepeatYearly;
+
+  /// The line under the title of the new-event page with its template tiles (specs/28).
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a starting point. You can change everything next.'**
+  String get eventTemplatesIntro;
+
+  /// Section of the new-event page: suggestions counted from the family's own past events.
+  ///
+  /// In en, this message translates to:
+  /// **'Often in your family'**
+  String get eventTemplatesSuggested;
+
+  /// Section of the new-event page: templates the family saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Your templates'**
+  String get eventTemplatesSaved;
+
+  /// Section of the new-event page: the built-in templates.
+  ///
+  /// In en, this message translates to:
+  /// **'Templates'**
+  String get eventTemplatesBuiltIn;
+
+  /// The tile that opens the empty event editor.
+  ///
+  /// In en, this message translates to:
+  /// **'Start blank'**
+  String get eventTemplateBlank;
+
+  /// No description provided for @eventTemplateBlankHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill in everything yourself'**
+  String get eventTemplateBlankHelp;
+
+  /// Built-in event template (specs/28); also the title it fills in.
+  ///
+  /// In en, this message translates to:
+  /// **'Birthday'**
+  String get eventStarterBirthday;
+
+  /// No description provided for @eventStarterGuestDinner.
+  ///
+  /// In en, this message translates to:
+  /// **'Guests for dinner'**
+  String get eventStarterGuestDinner;
+
+  /// No description provided for @eventStarterKidsParty.
+  ///
+  /// In en, this message translates to:
+  /// **'Children\'s party'**
+  String get eventStarterKidsParty;
+
+  /// No description provided for @eventStarterSportsEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'Sports event'**
+  String get eventStarterSportsEvent;
+
+  /// No description provided for @eventStarterDoctor.
+  ///
+  /// In en, this message translates to:
+  /// **'Doctor’s appointment'**
+  String get eventStarterDoctor;
+
+  /// No description provided for @eventStarterPerformance.
+  ///
+  /// In en, this message translates to:
+  /// **'Performance'**
+  String get eventStarterPerformance;
+
+  /// No description provided for @eventStarterDayOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Day out'**
+  String get eventStarterDayOut;
+
+  /// No description provided for @eventStarterHoliday.
+  ///
+  /// In en, this message translates to:
+  /// **'Holiday / trip'**
+  String get eventStarterHoliday;
+
+  /// Part of a template tile's line: an all-day event.
+  ///
+  /// In en, this message translates to:
+  /// **'All day'**
+  String get eventTemplateAllDay;
+
+  /// Part of a template tile's line: how many days an all-day template lasts.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day} other{{count} days}}'**
+  String eventTemplateDays(int count);
+
+  /// Part of a template tile's line: a length in whole hours.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} h'**
+  String eventTemplateHours(int count);
+
+  /// Part of a template tile's line: a length in hours and minutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} h {minutes} min'**
+  String eventTemplateHoursMinutes(int hours, int minutes);
+
+  /// Part of a template tile's line: a length under an hour.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} min'**
+  String eventTemplateMinutes(int count);
+
+  /// Part of a suggestion tile's line: how many such events the family entered.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}× so far'**
+  String eventTemplateCount(int count);
+
+  /// Tooltip of a template tile's menu button.
+  ///
+  /// In en, this message translates to:
+  /// **'More for {name}'**
+  String eventTemplateMenu(String name);
+
+  /// Menu of a suggestion tile: save it as one of the family's templates.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep as template'**
+  String get eventTemplateKeep;
+
+  /// No description provided for @eventTemplateHide.
+  ///
+  /// In en, this message translates to:
+  /// **'Don’t suggest again'**
+  String get eventTemplateHide;
+
+  /// No description provided for @eventTemplateHidden.
+  ///
+  /// In en, this message translates to:
+  /// **'Won’t be suggested again.'**
+  String get eventTemplateHidden;
+
+  /// No description provided for @eventTemplateDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete template'**
+  String get eventTemplateDelete;
+
+  /// No description provided for @eventTemplateDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Template deleted.'**
+  String get eventTemplateDeleted;
+
+  /// Event editor action: save what the editor shows as a household template (specs/28).
+  ///
+  /// In en, this message translates to:
+  /// **'Save as template'**
+  String get eventSaveAsTemplate;
+
+  /// No description provided for @eventTemplateSavedNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved as a template.'**
+  String get eventTemplateSavedNote;
+
+  /// No description provided for @eventTemplateErrLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Your family already has 50 templates. Delete one first.'**
+  String get eventTemplateErrLimit;
 }
 
 class _AppLocalizationsDelegate

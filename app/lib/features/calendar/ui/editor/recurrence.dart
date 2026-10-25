@@ -10,6 +10,7 @@ enum RepeatKind {
   weekly,
   biweekly,
   monthly,
+  yearly,
   specificDays,
   custom,
 }
@@ -101,7 +102,8 @@ class Recurrence {
     RepeatKind.daily ||
     RepeatKind.weekly ||
     RepeatKind.biweekly ||
-    RepeatKind.monthly => true,
+    RepeatKind.monthly ||
+    RepeatKind.yearly => true,
     _ => false,
   };
 
@@ -149,6 +151,7 @@ class Recurrence {
           'BYDAY=-1${dayCode(start.weekday)}',
         ],
       },
+      RepeatKind.yearly => ['FREQ=YEARLY'],
     };
     if (kind == RepeatKind.custom) return custom;
     if (parts == null) return null;
@@ -273,6 +276,14 @@ Recurrence? _parseRule(String rule, DateTime start) {
         );
       }
       return null;
+    case 'YEARLY':
+      if (interval != 1 || byDay != null || byMonthDay != null) return null;
+      return Recurrence(
+        kind: RepeatKind.yearly,
+        end: end,
+        until: until,
+        count: count,
+      );
     default:
       return null;
   }

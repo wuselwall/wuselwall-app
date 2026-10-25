@@ -7,6 +7,7 @@ import 'package:wuselwall/features/calendar/application/calendar_providers.dart'
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 import 'package:wuselwall/features/calendar/ui/calendar_layout.dart';
 import 'package:wuselwall/features/calendar/ui/event_editor_page.dart';
+import 'package:wuselwall/features/calendar/ui/event_template_page.dart';
 
 import '../support/fakes.dart';
 
@@ -517,7 +518,11 @@ void main() {
 
         await t.tap(find.byType(BackButton));
         await t.pumpAndSettle();
+        // Neuer Termin starts on its tiles; Ohne Vorlage opens the empty editor.
         await t.tap(find.widgetWithText(FloatingActionButton, 'Neuer Termin'));
+        await t.pumpAndSettle();
+        expect(find.byType(EventTemplatePage), findsOneWidget);
+        await t.tap(find.byKey(const ValueKey('event-template-blank')));
         await t.pumpAndSettle();
         expect(find.byType(EventEditorPage), findsOneWidget);
         expect(find.widgetWithText(AppBar, 'Neuer Termin'), findsOneWidget);
