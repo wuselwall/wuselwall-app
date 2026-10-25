@@ -86,8 +86,8 @@ idle CPU) belong to the Alpha's qualification.
 3. **Colour and ambience:** module bands, kid cards, celebrations, day phases, occasions
    and OLED pixel shift ([26](26-colour-and-ambience.md)).
 4. **Dates to look forward to:** birthdays, countdowns and family traditions, projected
-   into the existing calendar and board ([27](27-family-rituals.md)). A month view is a
-   later candidate, not a new dependency for birthday projection.
+   into the existing calendar and board ([27](27-family-rituals.md)). The read-only month
+   view followed on 2026-10-24 (it was never a dependency for birthday projection).
 5. **Taking part together:** meal wishes, table questions and the weekly review
    ([27](27-family-rituals.md)). Include export/deletion coverage for the new data.
 
@@ -142,7 +142,7 @@ Website progress and legacy-link redirects remain a separate operator handoff; s
 <a id="m3--depth"></a>
 <a id="m4--speculative"></a>
 
-[23](23-roadmap-after-alpha.md) is the single later backlog. Audit history, a month view,
+[23](23-roadmap-after-alpha.md) is the single later backlog. Audit history,
 automation-origin markers, recipe import and desktop tools are candidates, without a
 promised release or due date. MCP/AI assistant setup, consent, scopes and proposals are
 parked together in [23's on-hold section](23-roadmap-after-alpha.md#on-hold--mcp-and-ai-assistants).

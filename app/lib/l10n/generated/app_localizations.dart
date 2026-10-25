@@ -10359,6 +10359,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Names, colours, roles and the order on the wall'**
   String get settingsMembersSubtitle;
+
+  /// The calendar view that shows a whole month (read-only overview).
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get calendarMonth;
+
+  /// Header of the month view's ISO week number column; as short as possible.
+  ///
+  /// In en, this message translates to:
+  /// **'Wk'**
+  String get calendarWeekNumberShort;
+
+  /// Screen-reader label of an ISO week number in the month view.
+  ///
+  /// In en, this message translates to:
+  /// **'Week {week}'**
+  String calendarWeekNumberLabel(int week);
+
+  /// In a month view day cell: how many more entries are not shown, e.g. +2.
+  ///
+  /// In en, this message translates to:
+  /// **'+{count}'**
+  String calendarMonthMore(int count);
+
+  /// Screen-reader text in a month view day: the appointments that the cell only counts.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 more appointment} other{{count} more appointments}}'**
+  String calendarMonthOthers(int count);
+
+  /// Screen-reader text in a month view day that lies in the school holidays; {name} is their name, e.g. Herbstferien.
+  ///
+  /// In en, this message translates to:
+  /// **'School holidays: {name}'**
+  String calendarMonthFerien(String name);
+
+  /// Screen-reader hint: tapping a day of the month view opens it in the day view.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the day'**
+  String get calendarMonthOpenDay;
 }
 
 class _AppLocalizationsDelegate

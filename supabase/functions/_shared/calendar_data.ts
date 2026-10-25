@@ -1,6 +1,10 @@
 // Loads the calendar rows for a window of local dates and expands them. Shared by the
 // `occurrences` and `board-week` functions, so both see the same events and overrides.
-import type { BusyRow } from "./board.ts";
+import {
+  type BusyRow,
+  type DatedHolidayJson,
+  holidaysBetween,
+} from "./board.ts";
 import { RequestError, type userClient } from "./client.ts";
 import {
   addDays,
@@ -12,6 +16,8 @@ import {
   type OverrideRow,
   sortOccurrences,
 } from "./occurrences.ts";
+import type { HolidayRow } from "./school.ts";
+import { loadHousehold, loadPublicFeed } from "./school_data.ts";
 
 /** The most local days one call may expand. */
 export const MAX_WINDOW_DAYS = 62;
@@ -116,4 +122,35 @@ export async function loadCalendar(
     ]),
     busy_until: (busyData ?? []) as BusyRow[],
   };
+}
+
+/**
+ * The public holidays of the local dates `from`..`to`, for the calendar's month view:
+ * the family's own household-wide rows (api.school_holidays, kind public_holiday) and the
+ * region's cache rows, named in the household's language, as the week board names them.
+ */
+export async function loadPublicHolidays(
+  client: Client,
+  from: string,
+  to: string,
+): Promise<DatedHolidayJson[]> {
+  const [household, own] = await Promise.all([
+    loadHousehold(client),
+    client.from("school_holidays").select("*")
+      .eq("kind", "public_holiday")
+      .is("school_id", null)
+      .lte("starts_on", to).gte("ends_on", from),
+  ]);
+  if (own.error) throw own.error;
+  const feed = household.region === null
+    ? []
+    : await loadPublicFeed(client, from, to, [household.region]);
+  return holidaysBetween(
+    from,
+    to,
+    (own.data ?? []) as HolidayRow[],
+    feed,
+    household.region,
+    household.locale,
+  );
 }

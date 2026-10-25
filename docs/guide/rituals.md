@@ -15,7 +15,7 @@ Für alle gilt:
 
 Den Geburtstag trägst du auf der Seite einer Person ein: **Einstellungen → Mitglieder**, Person antippen, **Geburtstag → Datum wählen** (siehe [Mitglied bearbeiten](/settings/members-devices#mitglied-bearbeiten)). Jede Person kann ihren eigenen eintragen, alle anderen die Erziehungsberechtigten.
 
-Vorher wird heruntergezählt (siehe [Vorfreude](#countdowns)), mit dem Alter, das die Person wird: „Emma wird 9 · noch 3× schlafen“. An der Wand steht der Geburtstag die ganze Woche unter dem Datum seines Tages, mit einem Kuchen: „Emma wird 9“. Am Tag selbst hängen Wimpel in der Farbe der Person über der Wand, Wusel trägt den Partyhut, auf **Heute** steht eine Geburtstagskarte, und auf dem Kinder-Tablet jubelt Wusel dem Geburtstagskind zu. Ist der Anlass **Geburtstage** unter **Jahreszeiten und Anlässe** ausgeschaltet (siehe [Wusel und Farben](/guide/wusel#occasions)), entfällt all das; der Countdown bleibt.
+Vorher wird heruntergezählt (siehe [Vorfreude](#countdowns)), mit dem Alter, das die Person wird: „Emma wird 9 · noch 3× schlafen“. An der Wand steht der Geburtstag die ganze Woche unter dem Datum seines Tages, mit einem Kuchen: „Emma wird 9“. Am Tag selbst hängen Wimpel in der Farbe der Person über der Wand, Wusel trägt den Partyhut, auf **Heute** steht eine Geburtstagskarte, und auf dem Kinder-Tablet jubelt Wusel dem Geburtstagskind zu. Ist der Anlass **Geburtstage** unter **Jahreszeiten und Anlässe** ausgeschaltet (siehe [Wusel und Farben](/guide/wusel#occasions)), entfällt all das; der Countdown bleibt, und im [Monat des Kalenders](/calendar/#month) steht der Geburtstag weiterhin mit Kuchen und Alter.
 
 Großeltern und Freunde tragt ihr wie bisher als jährlichen Termin ein; den könnt ihr für die Vorfreude markieren.
 

@@ -6,16 +6,33 @@ The calendar shows everyone's appointments and, at a glance, who is where. The a
 
 ## Views
 
-The title, date navigation, view selector and settings share one compact bar. On a phone, the calendar opens in **Day** so appointments are easy to read. Open **Calendar view** to choose **Day**, **3 days** or **Week** at any time; on a wide screen it opens in Week. Your choice stays when you switch tabs or rotate the device. The calendar icon returns to **Today**.
+The title, date navigation, view selector and settings share one compact bar. On a phone, the calendar opens in **Day** so appointments are easy to read. Open **Calendar view** to choose **Day**, **3 days**, **Week** or **Month** at any time; on a wide screen it opens in Week. Your choice stays when you switch tabs or rotate the device. The calendar icon returns to **Today**.
 
 <Shot name="calendar-phone" alt="Calendar on a phone with date navigation and the view menu in one bar" />
 
-At the top you choose **Day**, **3 days** or **Week**. Move with **Previous**, **Next** and **Today**. Two rows stay visible at the top:
+At the top you choose **Day**, **3 days**, **Week** or **Month**. Move with **Previous**, **Next** and **Today**. Two rows stay visible at the top:
 
 - **Presence**: one row per person. It shows who is at work, working from home, travelling, away, off or in childcare.
 - **All day**: appointments that last the whole day.
 
 Below them, the appointments follow by time.
+
+## Month {#month}
+
+**Month** shows six weeks at a glance, Monday to Sunday, with the week number on the left. It is for planning, not for editing. Each day shows:
+
+- **public holidays** by name. They come from your household's region (see [Timetable](/en/school/))
+- **birthdays** with a cake and the age, such as "Olivia turns 9". Someone born on 29 February appears on 1 March in other years
+- **school holidays** as a light band across their days, with their name
+- appointments shown **on the kitchen display** and **family traditions**, with title and picture
+
+All other appointments are only counted, for example "+2". When not everything fits, on a phone or with large text, the number also counts what had no room. Presence does not appear in the month.
+
+Today has a frame. **Previous** and **Next** move by a month, **Today** returns to the current month. Tap a day to open it in the **Day** view: there you see every appointment and edit it.
+
+Birthdays always appear in the month, even with the **Birthdays** occasion switched off under **Seasons and occasions** (see [Wusel and colours](/en/guide/wusel#occasions)). That switch only affects the decoration; the month is for looking things up.
+
+<Shot name="calendar-month" alt="Month view of the calendar with week numbers, public holidays, a birthday with a cake and the school holidays as a band" wide />
 
 ## Creating an appointment
 

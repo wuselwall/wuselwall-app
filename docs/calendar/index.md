@@ -6,16 +6,33 @@ Der Kalender zeigt alle Termine der Familie und, wer wo ist, auf einen Blick. Di
 
 ## Ansichten
 
-Titel, Datumsnavigation, Ansichtswahl und Einstellungen teilen sich eine kompakte Leiste. Auf dem Handy startet der Kalender in der **Tagesansicht**, damit die Termine gut lesbar sind. Unter **Kalenderansicht** kannst du jederzeit **Tag**, **3 Tage** oder **Woche** wählen; auf einem großen Bildschirm startet er mit der Woche. Deine eigene Auswahl bleibt beim Wechsel zu einem anderen Tab und beim Drehen des Geräts erhalten. Das Kalendersymbol führt zu **Heute**.
+Titel, Datumsnavigation, Ansichtswahl und Einstellungen teilen sich eine kompakte Leiste. Auf dem Handy startet der Kalender in der **Tagesansicht**, damit die Termine gut lesbar sind. Unter **Kalenderansicht** kannst du jederzeit **Tag**, **3 Tage**, **Woche** oder **Monat** wählen; auf einem großen Bildschirm startet er mit der Woche. Deine eigene Auswahl bleibt beim Wechsel zu einem anderen Tab und beim Drehen des Geräts erhalten. Das Kalendersymbol führt zu **Heute**.
 
 <Shot name="calendar-phone" alt="Kalender auf dem Handy mit Datumsnavigation und Ansichtsmenü in einer Leiste" />
 
-Oben wählst du **Tag**, **3 Tage** oder **Woche**. Mit **Zurück**, **Weiter** und **Heute** blätterst du. Ganz oben bleiben zwei Zeilen immer sichtbar:
+Oben wählst du **Tag**, **3 Tage**, **Woche** oder **Monat**. Mit **Zurück**, **Weiter** und **Heute** blätterst du. Ganz oben bleiben zwei Zeilen immer sichtbar:
 
 - **Anwesenheit**: eine Zeile pro Person. Dort steht, wer arbeitet, im Homeoffice ist, unterwegs ist, weg ist, frei hat oder betreut wird.
 - **Ganztägig**: Termine, die den ganzen Tag gelten.
 
 Darunter stehen die Termine nach Uhrzeit.
+
+## Monat {#month}
+
+Der **Monat** zeigt sechs Wochen auf einen Blick, von Montag bis Sonntag und links mit der Kalenderwoche. Er ist zum Planen da, nicht zum Bearbeiten. Jeder Tag zeigt:
+
+- **Feiertage** mit ihrem Namen. Sie kommen aus der Region eures Haushalts (siehe [Stundenplan](/school/))
+- **Geburtstage** mit einem Kuchen und dem Alter, etwa „Emma wird 9“. Wer am 29. Februar geboren ist, steht in den anderen Jahren am 1. März
+- **Ferien** als helles Band über ihre Tage, mit ihrem Namen
+- Termine, die **auf dem Küchendisplay** stehen, und **Familientraditionen**, mit Titel und Bild
+
+Alle anderen Termine zählt der Tag nur, zum Beispiel „+2“. Passt nicht alles hinein, etwa auf dem Handy oder mit großer Schrift, zählt die Zahl auch mit, was keinen Platz mehr hat. Anwesenheit erscheint im Monat nicht.
+
+Heute ist umrandet. **Zurück** und **Weiter** blättern um einen Monat, **Heute** springt in den aktuellen Monat. Tippe auf einen Tag, um ihn in der **Tagesansicht** zu öffnen: Dort siehst du alle Termine und bearbeitest sie.
+
+Geburtstage stehen im Monat immer, auch wenn der Anlass **Geburtstage** unter **Jahreszeiten und Anlässe** ausgeschaltet ist (siehe [Wusel und Farben](/guide/wusel#occasions)). Der Schalter betrifft nur die Dekoration; der Monat ist zum Nachschauen da.
+
+<Shot name="calendar-month" alt="Monatsansicht des Kalenders mit Kalenderwochen, Feiertagen, einem Geburtstag mit Kuchen und den Ferien als Band" wide />
 
 ## Termin anlegen
 

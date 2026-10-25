@@ -135,7 +135,8 @@ these places, each recorded in its spec:
   migration `20261025100000`. Kalender → *Neue Tradition* with the six starters, the wall's morning
   line naming today's tradition, Wusel's wave for a countdown at "Morgen!" or "Heute!" (the wall's
   corner Wusel only, one Wusel per screen) and the birthdays in the board's day header followed
-  after that, without a migration. The month view still shows no birthdays.)
+  after that, without a migration. The read-only month view with birthdays followed on
+2026-10-24, also without a migration.)
 - **Built after, with migration `20261025130000` (pgTAP 239):** the Wochenrückblick as a
   tap-through story; the wish picker with "Oft bei uns", every recipe with a search, and dish
   pictures picked on the server from a name (`app.meal_icon_for`, a new `meals` picture set);

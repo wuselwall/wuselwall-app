@@ -6,11 +6,28 @@ Le calendrier réunit les rendez-vous et les présences de toute la famille.
 
 ## Les vues {#views}
 
-La date, les flèches, le choix de vue et les paramètres partagent une barre compacte. Sur téléphone, le calendrier s’ouvre en vue **Jour** pour garder les rendez-vous lisibles. Le menu permet de choisir **Jour**, **3 jours** ou **Semaine**. Sur un grand écran, il s’ouvre en vue Semaine. Votre choix reste en place lorsque vous changez d’onglet ou faites pivoter l’appareil. L’icône de calendrier revient à **Aujourd’hui**.
+La date, les flèches, le choix de vue et les paramètres partagent une barre compacte. Sur téléphone, le calendrier s’ouvre en vue **Jour** pour garder les rendez-vous lisibles. Le menu permet de choisir **Jour**, **3 jours**, **Semaine** ou **Mois**. Sur un grand écran, il s’ouvre en vue Semaine. Votre choix reste en place lorsque vous changez d’onglet ou faites pivoter l’appareil. L’icône de calendrier revient à **Aujourd’hui**.
 
 <Shot name="calendar-phone" alt="Le calendrier sur téléphone et son menu de vue" />
 
 Les **présences**, une ligne par personne, et les événements de **toute la journée** restent au-dessus des rendez-vous classés par heure. Utilisez les flèches et **Aujourd’hui** pour naviguer.
+
+## Mois {#month}
+
+La vue **Mois** montre six semaines d’un coup d’œil, du lundi au dimanche, avec le numéro de semaine à gauche. Elle sert à planifier, pas à modifier. Chaque jour indique :
+
+- les **jours fériés**, avec leur nom. Ils viennent de la région de votre foyer (voir [Emploi du temps](/fr/school/)) ;
+- les **anniversaires**, avec un gâteau et l’âge, par exemple « Les 9 ans de Emma ». Une personne née un 29 février apparaît le 1er mars les autres années ;
+- les **vacances scolaires**, en bande claire sur leurs jours, avec leur nom ;
+- les événements **affichés sur l’écran de la cuisine** et les **traditions familiales**, avec titre et image.
+
+Les autres rendez-vous sont seulement comptés, par exemple « +2 ». Si tout ne tient pas, sur un téléphone ou avec un grand texte, le nombre compte aussi ce qui n’a plus de place. Les présences n’apparaissent pas dans le mois.
+
+Aujourd’hui est encadré. **Précédent** et **Suivant** avancent d’un mois, **Aujourd’hui** revient au mois en cours. Touchez un jour pour l’ouvrir en vue **Jour** : vous y voyez tous les rendez-vous et les modifiez.
+
+Les anniversaires apparaissent toujours dans le mois, même si l’occasion **Anniversaires** est désactivée sous **Saisons et fêtes** (voir [Wusel et les couleurs](/fr/guide/wusel#occasions)). Ce réglage ne concerne que la décoration ; le mois sert à consulter.
+
+<Shot name="calendar-month" alt="Vue Mois du calendrier avec les numéros de semaine, les jours fériés, un anniversaire avec gâteau et les vacances scolaires en bande" wide />
 
 ## Créer un rendez-vous {#creating-an-appointment}
 

@@ -6,6 +6,7 @@ import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/calendar/application/calendar_providers.dart';
 import 'package:wuselwall/features/calendar/ui/calendar_board.dart';
+import 'package:wuselwall/features/calendar/ui/calendar_month.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 
@@ -35,6 +36,7 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
     }
 
     final view = ref.watch(calendarViewProvider);
+    if (view.mode == CalendarMode.month) return CalendarMonthView(view: view);
     final window = (from: view.from, to: view.to);
     final occurrences = ref.watch(occurrencesProvider(window));
     final members = ref.watch(membersProvider).value ?? const <Member>[];
@@ -63,16 +65,19 @@ class CalendarToolbar extends ConsumerWidget {
     final l10n = context.l10n;
     final view = ref.watch(calendarViewProvider);
     final nav = ref.read(calendarViewProvider.notifier);
-    final label = view.mode == CalendarMode.day
-        ? context.fullDate(view.from)
-        : l10n.calendarRange(
-            context.dayMonth(view.from),
-            context.dayMonth(view.to),
-          );
+    final label = switch (view.mode) {
+      CalendarMode.day => context.fullDate(view.from),
+      CalendarMode.month => context.monthYear(view.month),
+      _ => l10n.calendarRange(
+        context.dayMonth(view.from),
+        context.dayMonth(view.to),
+      ),
+    };
     final modes = <CalendarMode, String>{
       CalendarMode.day: l10n.calendarDay,
       CalendarMode.threeDays: l10n.calendarThreeDays,
       CalendarMode.week: l10n.calendarWeek,
+      CalendarMode.month: l10n.calendarMonth,
     };
     final previous = IconButton(
       tooltip: l10n.calendarPrevious,
@@ -84,10 +89,13 @@ class CalendarToolbar extends ConsumerWidget {
       icon: const Icon(Icons.chevron_right),
       onPressed: nav.next,
     );
-    Widget range(TextAlign align) => Tooltip(
+    // The narrow bar abbreviates the month ("Okt. 2026"); the tooltip has it whole.
+    Widget range(TextAlign align, {bool short = false}) => Tooltip(
       message: label,
       child: Text(
-        label,
+        short && view.mode == CalendarMode.month
+            ? context.monthYearShort(view.month)
+            : label,
         textAlign: align,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
@@ -97,7 +105,7 @@ class CalendarToolbar extends ConsumerWidget {
     Widget narrow() => Row(
       children: [
         previous,
-        Expanded(child: range(TextAlign.center)),
+        Expanded(child: range(TextAlign.center, short: true)),
         next,
         IconButton(
           tooltip: l10n.calendarToday,
@@ -111,6 +119,7 @@ class CalendarToolbar extends ConsumerWidget {
             CalendarMode.day => Icons.view_day_outlined,
             CalendarMode.threeDays => Icons.view_column_outlined,
             CalendarMode.week => Icons.view_week_outlined,
+            CalendarMode.month => Icons.calendar_view_month_outlined,
           }),
           onSelected: nav.setMode,
           itemBuilder: (_) => [
@@ -153,13 +162,14 @@ class CalendarToolbar extends ConsumerWidget {
       ],
     );
     if (!compact) {
-      // The French and Spanish labels are longer: a tablet in portrait has room for the
-      // view buttons only without the word, and a narrower bar takes the narrow one.
+      // The French and Spanish labels are longer: the four view buttons take up to
+      // 520 px, so a bar with less room than that and the navigation takes the narrow
+      // one, and only a wide one has room for the word beside them.
       return LayoutBuilder(
         builder: (context, box) {
           final room = box.maxWidth / MediaQuery.textScalerOf(context).scale(1);
-          if (room < 600) return narrow();
-          return wide(todayWord: room >= 760);
+          if (room < 760) return narrow();
+          return wide(todayWord: room >= 900);
         },
       );
     }

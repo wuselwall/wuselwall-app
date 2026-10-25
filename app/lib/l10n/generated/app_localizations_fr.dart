@@ -6158,4 +6158,39 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get settingsMembersSubtitle =>
       'Prénoms, couleurs, rôles et ordre sur le mur';
+
+  @override
+  String get calendarMonth => 'Mois';
+
+  @override
+  String get calendarWeekNumberShort => 'Sem';
+
+  @override
+  String calendarWeekNumberLabel(int week) {
+    return 'Semaine $week';
+  }
+
+  @override
+  String calendarMonthMore(int count) {
+    return '+$count';
+  }
+
+  @override
+  String calendarMonthOthers(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count autres rendez-vous',
+      one: '1 autre rendez-vous',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String calendarMonthFerien(String name) {
+    return 'Vacances scolaires : $name';
+  }
+
+  @override
+  String get calendarMonthOpenDay => 'Ouvrir la journée';
 }

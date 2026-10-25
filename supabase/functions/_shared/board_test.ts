@@ -7,6 +7,7 @@ import {
   fillMeals,
   fillSchool,
   fillUsual,
+  holidaysBetween,
   type MealEntryRow,
   type MealInput,
   type MealJson,
@@ -819,6 +820,31 @@ Deno.test("a school's row for one school does not mark the household's day", () 
   const schoolOnly: HolidayRow = { ...OWN, school_id: "school1" };
   const board = withHolidays(null, "de-DE", [schoolOnly]);
   assertEquals(dayOf(board, "2026-10-16").holiday, null);
+});
+
+Deno.test("holidaysBetween lists one holiday per date of a month view's window", () => {
+  // Six weeks across the end of October; the own row and a canton holiday inside it,
+  // Ascension in May outside it.
+  const feed = [ASCENSION, ZH_ONLY, {
+    ...ASCENSION,
+    id: "feed-ch-allerheiligen",
+    starts_on: "2026-11-01",
+    ends_on: "2026-11-01",
+    names: { de: "Allerheiligen", en: "All Saints' Day" },
+  }];
+  assertEquals(
+    holidaysBetween("2026-09-28", "2026-11-08", [OWN], feed, "CH-ZH", "en-GB"),
+    [
+      { date: "2026-10-12", name: "Sechseläuten", source: "region" },
+      { date: "2026-10-16", name: "Brückentag", source: "household" },
+      { date: "2026-11-01", name: "All Saints' Day", source: "region" },
+    ],
+  );
+  // Without a region only the family's own rows count.
+  assertEquals(
+    holidaysBetween("2026-10-01", "2026-10-31", [OWN], feed, null, "de-DE"),
+    [{ date: "2026-10-16", name: "Brückentag", source: "household" }],
+  );
 });
 
 Deno.test("a day without any holiday has null, and the input is not mutated", () => {

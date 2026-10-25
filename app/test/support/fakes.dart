@@ -803,11 +803,16 @@ class FakeCalendarRepository implements CalendarRepository {
 
   final deleted = <String>[];
 
+  /// The public holidays the server names, by local date; a window asked for with its
+  /// holidays carries the ones inside it. Null plays a server that does not send them.
+  Map<DateTime, String>? publicHolidays = const {};
+
   @override
   Future<Result<OccurrenceWindow>> occurrences(
     DateTime from,
-    DateTime to,
-  ) async => Ok(
+    DateTime to, {
+    bool holidays = false,
+  }) async => Ok(
     OccurrenceWindow(
       timezone: 'Europe/Berlin',
       occurrences: [
@@ -816,6 +821,14 @@ class FakeCalendarRepository implements CalendarRepository {
               !o.localStartDate.isAfter(dateOnly(to)))
             o,
       ],
+      publicHolidays: !holidays || publicHolidays == null
+          ? null
+          : {
+              for (final e in publicHolidays!.entries)
+                if (!e.key.isBefore(dateOnly(from)) &&
+                    !e.key.isAfter(dateOnly(to)))
+                  e.key: e.value,
+            },
     ),
   );
 
