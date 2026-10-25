@@ -23,12 +23,13 @@ try {
   }
   assert.ok(ready, 'local guide ready');
   browser = await chromium.launch();
-  for (const [lang, search, text] of [['fr', 'Rechercher', 'cartable'], ['es', 'Buscar', 'mochila']]) {
-    const context = await browser.newContext({ locale: `${lang}-${lang.toUpperCase()}`, viewport: { width: 1280, height: 900 }, colorScheme: 'light' });
+  for (const [lang, search, text] of [['de', 'Search', 'Stundenplan'], ['en', 'Search', 'timetable'], ['fr', 'Rechercher', 'cartable'], ['es', 'Buscar', 'mochila']]) {
+    const prefix = lang === 'de' ? base : `${base}${lang}/`;
+    const context = await browser.newContext({ locale: lang === 'en' ? 'en-GB' : `${lang}-${lang.toUpperCase()}`, viewport: { width: 1280, height: 900 }, colorScheme: 'light' });
     const page = await context.newPage();
     const errors = [];
     page.on('pageerror', (error) => errors.push(error.message));
-    await page.goto(`${origin}${base}${lang}/school/`);
+    await page.goto(`${origin}${prefix}school/`);
     assert.equal(await page.locator('html').getAttribute('lang'), lang);
     await page.waitForFunction((code) => [...document.querySelectorAll('img.shot')].every((img) => img.src.includes(`/screenshots/${code}/`)), lang);
     assert.equal(await page.locator('img.shot-light').count(), 8);
@@ -37,15 +38,17 @@ try {
       assert.ok(src.startsWith(`${base}screenshots/${lang}/`), `mounted ${lang} screenshot URL`);
       assert.equal((await page.request.get(origin + src)).status(), 200);
     }
+    const themeBox = await page.locator('.VPNavBarAppearance button').boundingBox();
+    assert.ok(themeBox && themeBox.x >= 0 && themeBox.x + themeBox.width <= 1280, `${lang} theme control fits the desktop header`);
     // Search is scoped to the selected locale and its controls are translated.
     await page.locator('.DocSearch-Button').or(page.locator('.VPNavBarSearch button')).first().click();
     const input = page.locator('#localsearch-input');
     assert.equal(await input.getAttribute('placeholder'), search);
     await input.fill(text);
     await page.locator('.VPContent').waitFor();
-    await page.waitForFunction((prefix) => [...document.querySelectorAll('#localsearch-list a')].some((a) => a.getAttribute('href')?.startsWith(prefix)), `${base}${lang}/`);
+    await page.waitForFunction((prefix) => [...document.querySelectorAll('#localsearch-list a')].some((a) => a.getAttribute('href')?.startsWith(prefix)), prefix);
     for (const href of await page.locator('#localsearch-list a').evaluateAll((links) => links.map((a) => a.getAttribute('href')))) {
-      assert.ok(href.startsWith(`${base}${lang}/`), `${lang} search remains localized`);
+      assert.ok(href.startsWith(prefix) && (lang !== 'de' || !/^\/(en|fr|es)\//.test(href)), `${lang} search remains localized`);
     }
     await page.keyboard.press('Escape');
     // Language changes preserve the corresponding guide route.
@@ -54,7 +57,7 @@ try {
     await page.locator(`.VPNavBarTranslations a[href="${base}${other}/school/"]`).click();
     await page.waitForURL(`${origin}${base}${other}/school/`);
     await page.waitForFunction((code) => document.documentElement.lang === code, other);
-    await page.goto(`${origin}${base}${lang}/school/`);
+    await page.goto(`${origin}${prefix}school/`);
     for (const dark of [false, true]) {
       const isDark = () => page.locator('html').evaluate((el) => el.classList.contains('dark'));
       if ((await isDark()) !== dark) await page.locator('.VPNavBarAppearance button').click();
@@ -65,16 +68,16 @@ try {
       await page.screenshot({ path: join(output, `${lang}-${dark ? 'dark' : 'light'}.png`) });
     }
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto(`${origin}${base}${lang}/guide/setup`);
+    await page.goto(`${origin}${prefix}guide/setup`);
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${lang} phone layout`);
     await page.locator('.VPLocalNav .menu').click();
-    const sideLink = page.locator(`.VPSidebar a[href="${base}${lang}/settings/security"]`).first();
+    const sideLink = page.locator(`.VPSidebar a[href="${prefix}settings/security"]`).first();
     await sideLink.click();
-    await page.waitForURL(`${origin}${base}${lang}/settings/security`);
+    await page.waitForURL(`${origin}${prefix}settings/security`);
     assert.deepEqual(errors, [], `${lang} has no runtime errors`);
     await context.close();
   }
-  console.log(`Guide browser checks passed at ${base}: FR/ES pages, search, language switching, both themes, screenshots and mobile navigation. Previews: ${output}`);
+  console.log(`Guide browser checks passed at ${base}: DE/EN/FR/ES pages, search, language switching, both themes, screenshots and mobile navigation. Previews: ${output}`);
 } finally {
   await browser?.close();
   if (server.exitCode === null) {

@@ -97,11 +97,13 @@ export default defineConfig({
       themeConfig: {
         nav: [
           { text: 'Erste Schritte', link: '/guide/concepts' },
-          { text: 'Kalender', link: '/calendar/' },
-          { text: 'Stundenplan', link: '/school/' },
-          { text: 'Aufgaben', link: '/tasks/' },
-          { text: 'Essen', link: '/meals/' },
-          { text: 'Einkaufsliste', link: '/shopping/add' },
+          { text: 'Module', items: [
+            { text: 'Kalender', link: '/calendar/' },
+            { text: 'Stundenplan', link: '/school/' },
+            { text: 'Aufgaben', link: '/tasks/' },
+            { text: 'Essen', link: '/meals/' },
+            { text: 'Einkaufsliste', link: '/shopping/add' },
+          ] },
           { text: 'Häufige Fragen', link: '/faq' },
         ],
         sidebar: sidebar('', {
@@ -127,11 +129,13 @@ export default defineConfig({
       themeConfig: {
         nav: [
           { text: 'Getting started', link: '/en/guide/concepts' },
-          { text: 'Calendar', link: '/en/calendar/' },
-          { text: 'Timetable', link: '/en/school/' },
-          { text: 'Tasks', link: '/en/tasks/' },
-          { text: 'Meals', link: '/en/meals/' },
-          { text: 'Shopping list', link: '/en/shopping/add' },
+          { text: 'Modules', items: [
+            { text: 'Calendar', link: '/en/calendar/' },
+            { text: 'Timetable', link: '/en/school/' },
+            { text: 'Tasks', link: '/en/tasks/' },
+            { text: 'Meals', link: '/en/meals/' },
+            { text: 'Shopping list', link: '/en/shopping/add' },
+          ] },
           { text: 'FAQ', link: '/en/faq' },
         ],
         sidebar: sidebar('/en', {
@@ -149,11 +153,13 @@ export default defineConfig({
       themeConfig: {
         nav: [
           { text: 'Premiers pas', link: '/fr/guide/concepts' },
-          { text: 'Calendrier', link: '/fr/calendar/' },
-          { text: 'Emploi du temps', link: '/fr/school/' },
-          { text: 'Tâches', link: '/fr/tasks/' },
-          { text: 'Repas', link: '/fr/meals/' },
-          { text: 'Courses', link: '/fr/shopping/add' },
+          { text: 'Modules', items: [
+            { text: 'Calendrier', link: '/fr/calendar/' },
+            { text: 'Emploi du temps', link: '/fr/school/' },
+            { text: 'Tâches', link: '/fr/tasks/' },
+            { text: 'Repas', link: '/fr/meals/' },
+            { text: 'Courses', link: '/fr/shopping/add' },
+          ] },
           { text: 'Questions', link: '/fr/faq' },
         ],
         sidebar: sidebar('/fr', {
@@ -178,11 +184,13 @@ export default defineConfig({
       themeConfig: {
         nav: [
           { text: 'Primeros pasos', link: '/es/guide/concepts' },
-          { text: 'Calendario', link: '/es/calendar/' },
-          { text: 'Horario escolar', link: '/es/school/' },
-          { text: 'Tareas', link: '/es/tasks/' },
-          { text: 'Comidas', link: '/es/meals/' },
-          { text: 'Compra', link: '/es/shopping/add' },
+          { text: 'Módulos', items: [
+            { text: 'Calendario', link: '/es/calendar/' },
+            { text: 'Horario escolar', link: '/es/school/' },
+            { text: 'Tareas', link: '/es/tasks/' },
+            { text: 'Comidas', link: '/es/meals/' },
+            { text: 'Compra', link: '/es/shopping/add' },
+          ] },
           { text: 'Preguntas', link: '/es/faq' },
         ],
         sidebar: sidebar('/es', {

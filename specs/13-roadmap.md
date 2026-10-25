@@ -15,10 +15,12 @@ reminder are also built. They are not new milestones. **MCP and AI assistants ar
 (2026-10-24), removed from the app UI, with their backend and design retained in the
 [deferred-work record](deferred/mcp-and-ai-assistants.md). They are not Alpha or release gates.
 
-Member, family, device and shopping-structure editing (old step 10.1–10.3) are built.
+Member, family, device and shopping-structure editing (old step 10.1–10.3) and Today’s
+guardian approvals (10.5, #127/#149) are built.
 A lighter day ([ADR-020](adr/ADR-020-a-lighter-day.md)) was built 2026-10-24 and shipped in
-app v1.3.0 and server release 0.4.0, with the exceptions its
-[amendment](adr/ADR-020-a-lighter-day.md#amendment-2026-10-24-built) lists.
+app v1.3.0 and server release 0.4.0; the remaining illustrations, holiday ribbon,
+tradition meal suggestions and ritual refinements followed the same day, as its
+[amendment](adr/ADR-020-a-lighter-day.md#amendment-2026-10-24-built) records.
 The [release checklist](release-checklist.md) exists; executing it is still open.
 Issue [#117](https://github.com/wuselwall/wuselwall-app/issues/117) records Android demo
 checks and iOS-targeted widget regressions, including Settings navigation. It does not
@@ -40,7 +42,7 @@ flowchart LR
 | Order | Milestone | Status | Done when |
 |---|---|---|---|
 | **1** | [**Everyday essentials**](https://github.com/wuselwall/wuselwall-app/milestone/1) | Now | A family can start without SMTP, guardians see approvals, the wall starts offline, and onboarding and wide-screen navigation have no remaining dead ends |
-| **2** | [**A lighter day**](https://github.com/wuselwall/wuselwall-app/milestone/2) | Built; three small pieces open | Wusel, colour, ambience, birthdays and all five agreed rituals work together, with accessible motion and controls |
+| **2** | [**A lighter day**](https://github.com/wuselwall/wuselwall-app/milestone/2) | Built; native qualification open | Wusel, colour, ambience, birthdays and all five agreed rituals work together, with accessible motion and controls |
 | **3** | [**Family Alpha**](https://github.com/wuselwall/wuselwall-app/milestone/3) | After 1–2 | Candidate checks pass, the household completes two weeks of everyday use, blockers are fixed and every new delight has a keep/change/remove verdict |
 | **4** | [**Ready for other families**](https://github.com/wuselwall/wuselwall-app/milestone/4) | After the Alpha | Another household can install and update safely, compatibility and security checks pass, and the store, legal and publication gates are complete |
 
@@ -54,7 +56,8 @@ Old step 10, grouped into four pieces of work:
 
 1. **Start without mail:** discovery, password sign-up/sign-in, guardian-assisted recovery,
    installation defaults and invitations that do not trust an unverified email address.
-2. **Approvals on Today:** guardian card, Tasks badge and the local morning summary.
+2. **Approvals on Today — built (#127/#149):** guardian card, Tasks badge and the local
+   morning summary. Keep these in regression and native qualification coverage.
 3. **Offline cold start:** persist the last wall board and kid day; show their freshness
    and recover when connectivity returns. Shopping retains its existing offline outbox.
 4. **Finish the journeys:** resume household setup, single-guardian MFA warning,
@@ -69,10 +72,11 @@ content and store URL, and coordinate a separate website change if needed.
 ## 2 — A lighter day
 
 Old step 11; [ADR-020](adr/ADR-020-a-lighter-day.md) keeps the complete package **before**
-the Alpha. **Built 2026-10-24** (app v1.3.0, server 0.4.0) in five pieces; still open are the
-planner's one-tap suggestion of a tradition's meal, the Ferien ribbon text in the sky and the
-module illustrations in the bands. Native checks (Reduce Motion on a real iPad, sound latency
-on the tablets, the wall's idle CPU) belong to the Alpha's qualification.
+the Alpha. **Built 2026-10-24** (app v1.3.0, server 0.4.0), with the remaining pieces
+completed later that day: tradition meal suggestions, the Ferien ribbon and module
+illustrations, plus the review story, illustrated wishes and birthday refinements.
+Native checks (Reduce Motion on a real iPad, sound latency on the tablets, the wall's
+idle CPU) belong to the Alpha's qualification.
 
 1. **Foundations and writing:** motion, palette, feedback, settings and content. Q55–Q57
    are decided: Reduce Motion read from the platform's accessibility features, synthesised
@@ -87,10 +91,10 @@ on the tablets, the wall's idle CPU) belong to the Alpha's qualification.
 5. **Taking part together:** meal wishes, table questions and the weekly review
    ([27](27-family-rituals.md)). Include export/deletion coverage for the new data.
 
-Keep Q53 visible: the agreed first table-question decks are DE/EN; the feature stays hidden
-on FR/ES devices until those decks exist. All interface text, Wusel lines, server responses
-and guides remain complete in DE/EN/FR/ES. This recorded content exception does not reduce
-the rest of the language scope.
+Q53 was revised later on 2026-10-24: table questions ship in all four languages, with
+about 150 questions each in DE/EN and 50 each in FR/ES. The larger FR/ES drafts remain
+research material; see [27](27-family-rituals.md#tischfrage). All interface
+text, Wusel lines, server responses and guides remain complete in DE/EN/FR/ES.
 
 ## 3 — Family Alpha
 
@@ -128,7 +132,9 @@ creation mode. Public store distribution waits for all three work packages:
 | **Store and publication readiness** | Honest privacy/Data safety forms, demo access for review, verified mail setup, contact/legal and account-deletion pages, signed release channels, screenshots, docs hosting and separately coordinated website progress; complete [11's legal gate](11-security-and-privacy.md#privacy-and-legal) |
 
 The server kit, guide and discovery already exist. This milestone proves and hardens them;
-it does not rebuild them. The project's website and docs are separate publication gates.
+it does not rebuild them. The four-language guide is now live at [docs.wuselwall.app](https://docs.wuselwall.app/).
+Website progress and legacy-link redirects remain a separate operator handoff; see the
+[cutover record](website-and-docs-migration.md#activation-status--2026-10-24).
 
 ## Later — choose from use
 

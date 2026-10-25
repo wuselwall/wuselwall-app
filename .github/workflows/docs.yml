@@ -12,7 +12,9 @@ on:
     paths: ['app/**', 'docs/**', 'package.json', 'package-lock.json', '.github/workflows/docs.yml']
 concurrency:
   group: docs-${{ github.ref }}
-  cancel-in-progress: true
+  # A full screenshot matrix takes longer than the gap between main merges. Let an
+  # active main publication finish; PR updates can still cancel their older preview.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 permissions:
   contents: read
 
