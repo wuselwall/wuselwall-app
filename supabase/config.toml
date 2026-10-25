@@ -240,6 +240,18 @@ verify_jwt = false
 [functions.server-info]
 verify_jwt = false
 
+# The daily purge is scheduled like the three jobs above (infra/jobs/schedule.sql): pg_net
+# calls it with x-cron-secret and no user JWT. Missing here until 2026-10-25, which made a
+# hosted project answer 401 before the function ran; scripts/no-user-functions.test.mjs
+# keeps this list and the router's NO_USER_FUNCTIONS in step.
+[functions.household-purge]
+verify_jwt = false
+
+# GoTrue's Send Email Hook calls send-email with no user; the Standard Webhooks signature
+# (SEND_EMAIL_HOOK_SECRET) is the only gate, checked by the function itself.
+[functions.send-email]
+verify_jwt = false
+
 # Apple Shortcuts send a shortcut token, not a JWT; api.shortcut_* checks it.
 [functions.shortcuts]
 verify_jwt = false

@@ -11,8 +11,10 @@ codes (H1/H2), invitations and pairing (links carry the server and open the app 
 links and App Links), the join and new-sign-in notices on Today, leaving, deleting and
 restoring a family, account deletion and the second-factor reset, localised mail
 (`send-email` hook), and ADR-018's server choice: the store app asks for its server
-(discovery through the `server-info` function), a server release with `server/wuselwall`, and
-`deploy-supabase.yml` for a family's own hosted project. The onboarding journeys J1–J3 are
+(discovery through the `server-info` function), a server release with `server/wuselwall`
+(`server/cloud-init.yaml` installs it on a rented VPS at the first boot), and
+`deploy-supabase.yml` for a family's own hosted project (Auth through
+`scripts/hosted-auth-config.mjs`, mail mandatory, the run verifies its result). The onboarding journeys J1–J3 are
 integration tests (CI's backend job) and screen-count tests (`app/test/journeys`). Built besides: household settings
 (specs/21), the kiosk week board (specs/09) with "Alle Termine", M1.3a calendar (events,
 presence, recurrence expanded in Edge Functions, the ICS feed with tokens, and since 2026-10-24 a read-only month view), M1.3b Stundenplan

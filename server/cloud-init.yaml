@@ -1,0 +1,62 @@
+#cloud-config
+# WuselWall on a rented Linux server (VPS) in one step (docs/server/home-server, "Rented
+# server"). Paste this file as the server's "user data" / "cloud-init" when you create it:
+# Hetzner Cloud, netcup, Scaleway, OVHcloud, Infomaniak and others offer the field. Image:
+# Ubuntu 24.04 LTS, x86-64, at least 4 GB of memory. Change the one line marked CHANGE.
+#
+# Before you create the server, point the two DNS names (api.example.org, web.example.org)
+# at the IP address the provider shows: Caddy needs them to fetch its certificates, and it
+# keeps retrying until they resolve.
+#
+# What happens at the first boot: Docker from Docker's own repository, a firewall that lets
+# in only SSH, 80 and 443, the WuselWall server release from GitHub, and
+# `wuselwall install --caddy`. After 5–10 minutes, read the result over SSH:
+#
+#   ssh root@<ip> cat /srv/wuselwall/install.log
+#
+# It shows the server address, the setup link with its QR code and the one-time setup code.
+# Then copy /srv/wuselwall/stack/.env into your password manager (docs/server/home-server).
+# Nothing in this file is secret: every key is generated on the server.
+package_update: true
+package_upgrade: true
+
+apt:
+  sources:
+    docker.list:
+      source: "deb [arch=amd64 signed-by=$KEY_FILE] https://download.docker.com/linux/ubuntu $RELEASE stable"
+      keyid: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+
+packages:
+  - ca-certificates
+  - curl
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+  - docker-compose-plugin
+  - qrencode
+  - ufw
+
+write_files:
+  - path: /usr/local/sbin/wuselwall-first-boot
+    permissions: "0755"
+    content: |
+      #!/bin/sh
+      # Written by server/cloud-init.yaml; runs once, at the first boot.
+      set -eu
+      : "${WW_VERSION:?the WuselWall server release, e.g. 1.0.0}"
+      : "${WW_API:?https://api.example.org}" "${WW_WEB:?https://web.example.org}" "${WW_LANGUAGE:=de}"
+      ufw allow OpenSSH > /dev/null
+      ufw allow 80/tcp > /dev/null
+      ufw allow 443/tcp > /dev/null
+      ufw --force enable > /dev/null
+      systemctl enable --now docker
+      mkdir -p /srv && cd /srv
+      curl -fsSL "https://github.com/wuselwall/wuselwall-app/releases/download/server-v$WW_VERSION/wuselwall-server-$WW_VERSION.tar.gz" | tar xz
+      cd /srv/wuselwall
+      # The log holds the setup code: readable by root only.
+      umask 077
+      ./wuselwall install --api "$WW_API" --web "$WW_WEB" --language "$WW_LANGUAGE" --caddy > install.log 2>&1
+
+runcmd:
+  # CHANGE the four values on the next line (release, the two addresses, the email language de|en|fr|es); nothing else.
+  - [sh, -c, "WW_VERSION=1.0.0 WW_API=https://api.example.org WW_WEB=https://web.example.org WW_LANGUAGE=de /usr/local/sbin/wuselwall-first-boot"]

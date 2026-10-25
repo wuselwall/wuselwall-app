@@ -16,8 +16,8 @@ repository describes a particular operator's server; such notes live outside it.
 
 | | Own hardware (or a VPS) | Hosted Supabase |
 |---|---|---|
-| **Install** | A server release and `server/wuselwall install` | The family's fork runs `.github/workflows/deploy-supabase.yml` |
-| **Needs** | Docker with Compose v2, a domain, ports 80 and 443 | A Supabase account and a GitHub account |
+| **Install** | A server release and `server/wuselwall install`; on a rented VPS, `server/cloud-init.yaml` does it at the first boot | The family's fork runs `.github/workflows/deploy-supabase.yml` on GitHub's runners |
+| **Needs** | Docker with Compose v2, a domain, ports 80 and 443 | A Supabase account, a GitHub account and a mail provider (SMTP or Scaleway) |
 | **Front and TLS** | The release's Caddy layer, or the operator's own web server | Supabase's |
 | **Jobs** | pg_cron in the database (`infra/jobs/schedule.sql`) | The same, through the Management API |
 | **Web app** | Served by the server (`stack/volumes/web`) | Optional, on the fork's GitHub Pages |
@@ -189,7 +189,13 @@ relying on it, and after any DNS change.
 - Hosted Supabase: select the required **language** choice in **deploy-supabase** (`de`
   default). Every run applies the chosen SMTP templates/subjects and the matching
   `MAIL_LANGUAGE` Edge secret. Re-select the intended language on later runs: the workflow
-  input is not inferred from the device or the previously chosen value.
+  input is not inferred from the device or the previously chosen value. *Since 2026-10-25
+  mail is mandatory there* (`scripts/hosted-auth-config.mjs`): Supabase's built-in mailer
+  delivers only to the account's own addresses, so the run stops unless the fork has the
+  `SMTP_*` secrets (host, port, user, password, sender) or the Scaleway secrets
+  (`SCW_SECRET_KEY`, `SCW_PROJECT_ID`, `MAIL_FROM`) for the send-email hook, whose
+  Standard-Webhooks secret the run generates and sets on both sides. The `without_mail`
+  input deploys without either, for a trial.
 
 **Switching the hook on** (built 2026-10-15):
 
@@ -323,10 +329,19 @@ built 2026-10-14.* The project ships a **server release**, not a service.
   server's address and QR code), `update` (backup first, then the new release), `backup`,
   `restore`, `setup-token`, `status`, `logs`, `compose`.
 - **Hosted Supabase:** [`deploy-supabase.yml`](../.github/workflows/deploy-supabase.yml)
-  in the family's fork: `supabase db push`; the Data API (`api` only) and Auth (the
-  access-token hook, sign-up off, TOTP) through the Management API; `CRON_SECRET` and the
-  functions (`verify_jwt` per function from `config.toml`); the jobs and the setup token
-  through the Management API's query endpoint; optionally the web app on GitHub Pages.
+  in the family's fork, on GitHub's runners: `supabase db push`; the Data API (`api` only)
+  through the Management API; `CRON_SECRET`, the project's publishable key
+  (`WW_PUBLISHABLE_KEY`, read from the Management API), `WW_SERVER_VERSION` when the
+  checkout is on a `server-v` tag, the mail values, and the functions (`verify_jwt` per
+  function from `config.toml`; `scripts/no-user-functions.test.mjs` keeps that list equal
+  to the compose router's `NO_USER_FUNCTIONS`); Auth through
+  [`scripts/hosted-auth-config.mjs`](../scripts/hosted-auth-config.mjs) (sign-up **on**, as
+  specs/20 needs since 2026-10-15; the access-token hook, TOTP, the compose overlay's
+  limits, SMTP or the send-email hook, read back); the jobs and the setup token through the
+  Management API's query endpoint; then a **verification**: the discovery document, each
+  of the four jobs called with the cron secret (200, so none is missing from the
+  `verify_jwt` list), four `cron.job` rows, sign-up on and mail configured; optionally the
+  web app on GitHub Pages.
 - **Compatibility:** a migration that changes the app–server contract raises `api_version`
   in `api.server_info()`. Each app release supports the current and the previous one; a
   server can turn old apps away with `min_app_version`. Release numbers of the apps and
@@ -351,7 +366,12 @@ meta, any analytics, captcha.
 
 1. A smoke test of `deploy-supabase.yml` on a scratch hosted project, on Postgres 17 (the
    direct `auth.users` inserts of ADR-013 and the now tolerant `auth.mfa_factors` grant are
-   the known risks), and a first `server-v` tag.
+   the known risks), and a first `server-v` tag. *2026-10-25, found by reading, not by the
+   test:* the workflow switched sign-up off and `household-purge` lacked `verify_jwt =
+   false`, both fixed; the workflow now verifies its own result. Still open on hosted: the
+   Edge runtime's limits (2 s CPU, 150 s/400 s wall clock) against `calendar-import`'s 20
+   feeds and the zip export, and whether a project with legacy keys disabled still passes
+   usable `SUPABASE_ANON_KEY`/`SUPABASE_SERVICE_ROLE_KEY` values to the functions.
 2. CI: the integration test against the previous server release (ADR-018, decision 5).
 3. Universal links and App Links for `/i/` and `/p/` (decision 8).
 4. Moving between hosted Supabase and a home server, written up in the guide.

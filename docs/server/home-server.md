@@ -50,6 +50,17 @@ scp dist/wuselwall-server-0.1.0.tar.gz server:     # dann auf dem Server: tar xz
 ```
 :::
 
+## Gemieteter Server: in einem Schritt {#vps}
+
+Mietest du den Server bei einem Anbieter (ein „VPS“ oder „Cloud-Server“), richtet der Anbieter das System beim Anlegen ein, wenn du ihm eine **cloud-init**-Datei mitgibst. WuselWall bringt eine mit: [`server/cloud-init.yaml`](https://github.com/wuselwall/wuselwall-app/blob/main/server/cloud-init.yaml). Sie installiert Docker, schaltet eine Firewall ein, lädt das Server-Release und ruft `wuselwall install --caddy` auf. Es reicht ein kleiner Server mit **Ubuntu 24.04** und **4 GB Arbeitsspeicher**, mit [Texterkennung](/server/extras#texterkennung) 8 GB. Europäische Anbieter mit so einem Feld sind etwa Hetzner (Deutschland, Finnland), netcup, IONOS, Scaleway, OVHcloud oder Infomaniak (Schweiz); so ein Server kostet etwa 4–8 € im Monat, dazu die Domain.
+
+1. Öffne die Datei, kopiere ihren Inhalt und ändere die eine mit `CHANGE` markierte Zeile: die Release-Version, deine beiden Adressen und die E-Mail-Sprache.
+2. Lege beim Anbieter einen Server mit Ubuntu 24.04 an, hinterlege deinen SSH-Schlüssel und füge den Inhalt in das Feld **cloud-init** oder **User data** ein.
+3. Sobald der Anbieter die IP-Adresse zeigt, trage im DNS deiner Domain `api.` und `web.` darauf ein. Caddy versucht es so lange, bis die Namen stimmen.
+4. Nach 5–10 Minuten liest du das Ergebnis per SSH: `ssh root@<ip> cat /srv/wuselwall/install.log`. Dort stehen der Einrichtungslink mit QR-Code und der Einrichtungscode. Weiter geht es wie unter „Die App verbinden“; das Werkzeug liegt in `/srv/wuselwall`.
+
+Kopiere `stack/.env` sofort in den Passwort-Manager und richte das [Backup](#_3-backups) ein, am besten gleich [außer Haus](/server/extras#backup-ausser-haus): Ein gemieteter Server hat meist nur eine Platte. Für den E-Mail-Versand gilt dasselbe wie zu Hause ([Extras](/server/extras#e-mail)).
+
 ## 2. Die App verbinden
 
 Die Web-App unter `https://web.example.org` liest die Serveradresse aus eurer

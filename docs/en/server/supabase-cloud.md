@@ -1,14 +1,12 @@
 # Setting up a server at Supabase
 
-WuselWall runs on [Supabase](https://supabase.com/). Supabase also rents out such servers ready-made, so the family server needs no machine or domain of your own. The installation workflow needs a build runner, as explained below. The project belongs to **you**: you hold the Supabase account, and you alone decide about the data. We have no access to it.
+WuselWall runs on [Supabase](https://supabase.com/). Supabase also rents out such servers ready-made, so the family server needs no machine or domain of your own. The project belongs to **you**: you hold the Supabase account, and you alone decide about the data. We have no access to it.
 
 The data then lives with **Supabase Inc.**, a US company. It is stored in a data centre you choose when you create the project. Choose one in Europe, such as Frankfurt or Zurich.
 
 ::: warning Not fully tested yet
 WuselWall has not been fully tested on Supabase yet. If a step fails, please report it on [GitHub](https://github.com/wuselwall/wuselwall-app/issues). Your data does not belong in the report.
 :::
-
-This workflow requires your GitHub repository to have access to a self-hosted Linux runner with the labels `self-hosted`, `Linux` and `build`. Forking the workflow does not grant access to the original project’s runners.
 
 ## Free or Pro?
 
@@ -43,16 +41,26 @@ A prepared workflow on GitHub does this, in your own copy of WuselWall. You inst
    | `SUPABASE_PROJECT_ID` | the project ID |
    | `SUPABASE_DB_PASSWORD` | the database password |
    | `WUSELWALL_SETUP_TOKEN` | a phrase of your choice made of letters and digits, e.g. `CakeOnSunday2026`. You need it once, to found the family |
+   | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_SENDER` | your mail provider's SMTP access, five secrets; `SMTP_SENDER` is the sender address. Instead of SMTP, Scaleway works: `SCW_SECRET_KEY`, `SCW_PROJECT_ID`, `MAIL_FROM`. Why this is required is explained under [Email](#mail) |
 
-5. Open the **Actions** tab. In a copy, workflows start out switched off: tap **I understand my workflows, go ahead and enable them**. Then **deploy-supabase → Run workflow**. Under **language**, choose the language of the sign-in emails: `de` (default), `en`, `fr` or `es`. Tick **web** if you want the web app (step 4), and tap **Run workflow**.
+5. Open the **Actions** tab. In a copy, workflows start out switched off: tap **I understand my workflows, go ahead and enable them**. Then **deploy-supabase → Run workflow**. Under **language**, choose the language of the sign-in emails: `de` (default), `en`, `fr` or `es`. Tick **web** if you want the web app (step 4), and tap **Run workflow**. The **without mail** box is only for trying things out without a mail provider.
 
-After a few minutes the run turns green. Its summary shows your server's address. The workflow sets up the database, configures sign-in and data access, uploads the server functions, applies the mail templates and subjects in the chosen email language and schedules the nightly jobs.
+After a few minutes the run turns green. Its summary shows your server's address. The workflow sets up the database, configures sign-in and data access, uploads the server functions, applies the mail templates and subjects in the chosen email language and schedules the nightly jobs. Finally it checks the server: does it answer the app, do the four jobs reach their functions, are sign-in and mail configured? If a check fails, the run turns red and names the reason.
 
 ::: tip Secrets stay secret
 Anyone can see your copy's logs, but not the secrets: GitHub hides them everywhere. The server keeps only a fingerprint of the phrase for founding the family.
 
 The access token can do anything in your Supabase account. If you want to be careful, delete it at Supabase after the run and create a new one for the next update.
 :::
+
+## Email {#mail}
+
+Whoever signs in gets a code by mail, you too the first time. Supabase's built-in mailer, though, delivers only to the addresses of your own Supabase account, and only a few mails an hour. So the server needs a mail provider before the family joins:
+
+- **SMTP:** a transactional-mail service of your choice, ideally one in Europe. Enter its access data as the five `SMTP_` secrets. What makes a good provider and which DNS records it needs is in the [Extras](/en/server/extras#email).
+- **Scaleway:** as on a server at home, the WuselWall function then sends the mails through Scaleway Transactional Email. Secrets: `SCW_SECRET_KEY`, `SCW_PROJECT_ID` and `MAIL_FROM` (optionally `SCW_REGION`, `MAIL_FROM_NAME`).
+
+Without one of the two the run stops. Only for a trial, tick **without mail**: codes then reach only the addresses of your Supabase account. Add the secrets and run again before the others join.
 
 ## 3. Connecting the app
 
@@ -77,5 +85,5 @@ Coming from a version with sign-in through Apple or Google? Read [Updating from 
 On **Pro**, Supabase backs up every day and keeps the backups for 7 days. You restore one in the dashboard under **Database → Backups**. A copy of your own, about once a month, is described in [Restoring a backup](/en/server/restore#at-supabase).
 
 ::: details Prefer the command line?
-With Node.js and the repository on a laptop, the same works in a terminal. The commands and settings are listed in order in `.github/workflows/deploy-supabase.yml`: `supabase link`, `supabase db push`, two Management API calls (Data API and Auth), `supabase secrets set`, `supabase functions deploy` and the SQL from `infra/jobs/schedule.sql`.
+With Node.js and the repository on a laptop, the same works in a terminal. The commands and settings are listed in order in `.github/workflows/deploy-supabase.yml`: `supabase link`, `supabase db push`, the Management API (Data API, and Auth through `scripts/hosted-auth-config.mjs`), `supabase secrets set`, `supabase functions deploy`, the SQL from `infra/jobs/schedule.sql` and the final check.
 :::
