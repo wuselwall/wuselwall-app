@@ -2511,8 +2511,11 @@
       }
     }
   },
-  "languageSystemHelp": "La langue de cet appareil ; l’allemand si l’app ne la propose pas",
+  "languageSystemHelp": "La langue de cet appareil ; l’allemand si l’app ne la propose pas. L’allemand tel qu’on l’écrit dans le pays de votre famille.",
   "languageNameDe": "Deutsch",
+  "languageNameDeDe": "Deutsch (Deutschland)",
+  "languageNameDeCh": "Deutsch (Schweiz)",
+  "languageNameDeAt": "Deutsch (Österreich)",
   "languageNameEn": "English",
   "languageNameFr": "Français",
   "languageNameEs": "Español",

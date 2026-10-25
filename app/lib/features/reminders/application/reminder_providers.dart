@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart' show Locale, WidgetsBinding;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wuselwall/core/l10n/app_language.dart';
 import 'package:wuselwall/core/l10n/app_locale.dart';
 import 'package:wuselwall/core/logging/log.dart';
 import 'package:wuselwall/core/notifications/notification_scheduler.dart';
@@ -15,20 +14,22 @@ import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/reminders/data/reminder_dismissal_store.dart';
 import 'package:wuselwall/features/reminders/domain/reminder_plan.dart';
 import 'package:wuselwall/features/school/application/school_providers.dart';
+import 'package:wuselwall/features/settings/application/app_locale_provider.dart';
 import 'package:wuselwall/features/settings/application/household_settings_providers.dart';
 import 'package:wuselwall/features/tasks/data/tasks_repository.dart';
 import 'package:wuselwall/features/tasks/domain/tasks_models.dart';
 import 'package:wuselwall/l10n/generated/app_localizations.dart';
 
 /// The strings of the reminders: the language chosen on this device, else the device
-/// language, German when the app does not ship it (specs/09: German is the fallback).
-AppLocalizations reminderL10n([Locale? chosen]) {
-  // The first of the device's languages the app ships, as MaterialApp resolves it.
-  final locale =
-      chosen ??
-      resolveAppLocale(WidgetsBinding.instance.platformDispatcher.locales);
-  return lookupAppLocalizations(locale);
-}
+/// language, German when the app does not ship it (specs/09: German is the fallback),
+/// written as the family's country writes German ([appLocaleProvider]).
+AppLocalizations reminderL10n([Locale? locale]) => lookupAppLocalizations(
+  locale ??
+      effectiveAppLocale(
+        chosen: null,
+        device: WidgetsBinding.instance.platformDispatcher.locales,
+      ),
+);
 
 /// How long the plan must stay unchanged before the phone reschedules (calendar edits
 /// often come in bursts).
@@ -94,7 +95,7 @@ final reminderPlanProvider = FutureProvider.autoDispose<ReminderPlan>((
 
   return planReminders(
     now: now,
-    l10n: reminderL10n(ref.watch(appLanguageProvider).value),
+    l10n: reminderL10n(ref.watch(appLocaleProvider)),
     actor: actor,
     morningAt: morningAt,
     eventMinutes: (event?.value as num?)?.toInt(),
@@ -171,8 +172,7 @@ final notificationPermissionProvider = FutureProvider.autoDispose<bool>((
   final scheduler = ref.watch(notificationSchedulerProvider);
   if (!scheduler.available) return false;
   await scheduler.init(
-    channelName: reminderL10n(ref.read(appLanguageProvider).value)
-        .reminderChannelName,
+    channelName: reminderL10n(ref.read(appLocaleProvider)).reminderChannelName,
   );
   return scheduler.permissionGranted();
 });
@@ -214,7 +214,7 @@ final reminderSyncProvider = Provider<void>((ref) {
     if (plan == null) return;
     timer?.cancel();
     // The channel's name in the language the plan was made in.
-    final channelName = reminderL10n(ref.read(appLanguageProvider).value)
+    final channelName = reminderL10n(ref.read(appLocaleProvider))
         .reminderChannelName;
     // No debounce means no timer at all (tests): apply straight away.
     if (debounce == Duration.zero) {
@@ -260,8 +260,7 @@ Future<void> _apply(
 Future<bool> enableReminders(WidgetRef ref) async {
   final scheduler = ref.read(notificationSchedulerProvider);
   await scheduler.init(
-    channelName: reminderL10n(ref.read(appLanguageProvider).value)
-        .reminderChannelName,
+    channelName: reminderL10n(ref.read(appLocaleProvider)).reminderChannelName,
   );
   final granted = await scheduler.requestPermission();
   ref

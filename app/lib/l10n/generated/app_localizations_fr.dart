@@ -4569,10 +4569,19 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get languageSystemHelp =>
-      'La langue de cet appareil ; l’allemand si l’app ne la propose pas';
+      'La langue de cet appareil ; l’allemand si l’app ne la propose pas. L’allemand tel qu’on l’écrit dans le pays de votre famille.';
 
   @override
   String get languageNameDe => 'Deutsch';
+
+  @override
+  String get languageNameDeDe => 'Deutsch (Deutschland)';
+
+  @override
+  String get languageNameDeCh => 'Deutsch (Schweiz)';
+
+  @override
+  String get languageNameDeAt => 'Deutsch (Österreich)';
 
   @override
   String get languageNameEn => 'English';

@@ -42,7 +42,10 @@ weekly series with rules of its own, not a one-off.
 
 ## Built-in templates
 
-Each language names them itself (ARB keys `eventStarter*`). Every value is only a suggestion
+Each language names them itself (ARB keys `eventStarter*`), regional German included
+([09](09-clients-and-ux.md#regional-german)): *Sportveranstaltung* and *Urlaub / Reise* in
+Germany and Austria, *Sportanlass*, *Ferien / Reise* and *Gäste zum Znacht* in Switzerland.
+Every value is only a suggestion
 the editor shows before anything is saved.
 
 | Template | Picture | When | Length | Who | Also |
@@ -50,11 +53,11 @@ the editor shows before anything is saved.
 | Geburtstag | cake | all day | 1 day | whole family | yearly, Darauf freuen wir uns |
 | Gäste zum Essen | house | 18:30 | 3 h | whole family | |
 | Kindergeburtstag | gift | 14:00 | 3 h | the children | |
-| Sportanlass | football | 10:00 | 2 h | the person creating it | |
+| Sportveranstaltung | football | 10:00 | 2 h | the person creating it | |
 | Arzttermin | — | next full hour | 1 h | the person creating it | |
 | Aufführung | music | 19:00 | 2 h | whole family | |
 | Ausflug | hiking | all day | 1 day | whole family | Darauf freuen wir uns |
-| Ferien / Reise | plane | all day | 7 days | whole family | Darauf freuen wir uns |
+| Urlaub / Reise | plane | all day | 7 days | whole family | Darauf freuen wir uns |
 
 "Whole family" selects every active member; "the children" every active child (the person
 creating it when there is none). Members' own birthdays need no template: they come from the

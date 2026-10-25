@@ -2541,8 +2541,20 @@
       }
     }
   },
-  "languageSystemHelp": "The language of this device; German when the app does not have it",
+  "languageSystemHelp": "The language of this device; German when the app does not have it. German as it is written in your family’s country.",
   "languageNameDe": "Deutsch",
+  "languageNameDeDe": "Deutsch (Deutschland)",
+  "@languageNameDeDe": {
+    "description": "A German variant in the language picker, in its own name (specs/09 \"Regional German\")."
+  },
+  "languageNameDeCh": "Deutsch (Schweiz)",
+  "@languageNameDeCh": {
+    "description": "A German variant in the language picker, in its own name (specs/09 \"Regional German\")."
+  },
+  "languageNameDeAt": "Deutsch (Österreich)",
+  "@languageNameDeAt": {
+    "description": "A German variant in the language picker, in its own name (specs/09 \"Regional German\")."
+  },
   "languageNameEn": "English",
   "languageNameFr": "Français",
   "languageNameEs": "Español",

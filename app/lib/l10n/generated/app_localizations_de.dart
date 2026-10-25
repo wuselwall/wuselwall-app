@@ -4541,10 +4541,19 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get languageSystemHelp =>
-      'Die Sprache dieses Geräts; Deutsch, wenn die App sie nicht hat';
+      'Die Sprache dieses Geräts; Deutsch, wenn die App sie nicht hat. Deutsch so, wie man es im Land eurer Familie schreibt.';
 
   @override
   String get languageNameDe => 'Deutsch';
+
+  @override
+  String get languageNameDeDe => 'Deutsch (Deutschland)';
+
+  @override
+  String get languageNameDeCh => 'Deutsch (Schweiz)';
+
+  @override
+  String get languageNameDeAt => 'Deutsch (Österreich)';
 
   @override
   String get languageNameEn => 'English';
@@ -6199,7 +6208,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get eventStarterKidsParty => 'Kindergeburtstag';
 
   @override
-  String get eventStarterSportsEvent => 'Sportanlass';
+  String get eventStarterSportsEvent => 'Sportveranstaltung';
 
   @override
   String get eventStarterDoctor => 'Arzttermin';
@@ -6211,7 +6220,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get eventStarterDayOut => 'Ausflug';
 
   @override
-  String get eventStarterHoliday => 'Ferien / Reise';
+  String get eventStarterHoliday => 'Urlaub / Reise';
 
   @override
   String get eventTemplateAllDay => 'Ganztägig';
@@ -6276,4 +6285,476 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get eventTemplateErrLimit =>
       'Ihr habt schon 50 Vorlagen. Löscht zuerst eine.';
+}
+
+/// The translations for German, as used in Austria (`de_AT`).
+class AppLocalizationsDeAt extends AppLocalizationsDe {
+  AppLocalizationsDeAt() : super('de_AT');
+
+  @override
+  String get settingSchoolEquipmentHelp =>
+      'Zeigt aus dem Stundenplan von morgen, was mitgebracht werden muss, zum Beispiel Turnsachen.';
+
+  @override
+  String get mealsSlotSnack => 'Jause';
+
+  @override
+  String get taskIcon_trash => 'Mistkübel';
+
+  @override
+  String get kidWhoAreYou => 'Servus! Tipp auf deinen Namen.';
+
+  @override
+  String kidGreeting(String name) {
+    return 'Servus, $name!';
+  }
+
+  @override
+  String get settingNotifyPackingHelp =>
+      'Um diese Uhrzeit sagt dein Handy, was für morgen in die Schultasche gehört, aus den Stundenplänen (zum Beispiel Turnsachen). Nur wenn etwas einzupacken ist.';
+
+  @override
+  String get settingAmbienceNewYearHelp =>
+      'Kleines Feuerwerk am Nachthimmel am 31. Dezember und 1. Jänner.';
+
+  @override
+  String wuselHelloMorning3(String name) {
+    return 'Servus $name, schön, dass du wach bist.';
+  }
+
+  @override
+  String wuselHelloDay1(String name) {
+    return 'Servus $name!';
+  }
+
+  @override
+  String wuselHelloEvening3(String name) {
+    return 'Servus $name! Bald ist Ausruhzeit.';
+  }
+
+  @override
+  String get wishPickerOwnHint => 'z. B. Palatschinken';
+
+  @override
+  String get mealIcon_pancakes => 'Palatschinken';
+
+  @override
+  String get mealIcon_potato => 'Erdäpfel';
+}
+
+/// The translations for German, as used in Switzerland (`de_CH`).
+class AppLocalizationsDeCh extends AppLocalizationsDe {
+  AppLocalizationsDeCh() : super('de_CH');
+
+  @override
+  String get close => 'Schliessen';
+
+  @override
+  String boardPeriod(int index) {
+    return '$index. Lektion';
+  }
+
+  @override
+  String boardTasksOf(String name) {
+    return 'Ämtli von $name';
+  }
+
+  @override
+  String get boardTasksComingSoon => 'Ämtli kommen mit dem nächsten Update.';
+
+  @override
+  String get errSettingInvalid =>
+      'Dieser Wert liegt ausserhalb des erlaubten Bereichs.';
+
+  @override
+  String get settingValueLunch => 'Zmittag';
+
+  @override
+  String get settingValueDinner => 'Znacht';
+
+  @override
+  String get settingTasksBonusPointsTitle => 'Punkte für ein Bonus-Ämtli';
+
+  @override
+  String get settingTasksBonusPointsHelp =>
+      'Ein Bonus-Ämtli reicht für die günstigste Startbelohnung, sodass ein jüngeres Kind schnell ankommt.';
+
+  @override
+  String get settingTasksKindTitle => 'Neue Ämtli sind';
+
+  @override
+  String get settingTasksKindHelp =>
+      'Ein neues Ämtli ist eine Pflicht, bis jemand es bewusst zum Bonus macht. So bleibt die Verdienstfläche klein.';
+
+  @override
+  String get settingTasksVerificationTitle =>
+      'Erziehungsberechtigte prüfen Ämtli';
+
+  @override
+  String get settingTasksVerificationHelp =>
+      'Prüfen macht aus jedem Ämtli eine Kontrolle. Nur für wertvolle Bonus-Ämtli einschalten.';
+
+  @override
+  String get settingSchoolReportHelp =>
+      'Nur Erziehungsberechtigte pflegen den Stundenplan. Mit dieser Option kann ein Kind melden, dass eine Lektion ausfällt; eine erziehungsberechtigte Person bestätigt es.';
+
+  @override
+  String get settingSchoolEquipmentHelp =>
+      'Zeigt aus dem Stundenplan von morgen, was mitgebracht werden muss, zum Beispiel Turnsachen.';
+
+  @override
+  String get settingMealsAwayTitle => 'Abwesend heisst nicht essen';
+
+  @override
+  String get settingMemberCompletionSoundTitle =>
+      'Ton beim Abhaken eines Ämtlis';
+
+  @override
+  String get settingMemberCompletionSoundHelp =>
+      'Beim Abhaken eines Ämtlis ertönt ein kurzer Ton. Ausschalten, wenn du ihn nicht willst.';
+
+  @override
+  String get settingNotifyMorningHelp =>
+      'Die heutigen Ämtli und Termine für dich. Offene Einlösungen erscheinen hier für Erziehungsberechtigte.';
+
+  @override
+  String get settingNotifyTaskVerifiedTitle => 'Wenn ein Ämtli bestätigt wird';
+
+  @override
+  String get settingNotifyTaskVerifiedHelp =>
+      'Eine Benachrichtigung, wenn eine erziehungsberechtigte Person ein Ämtli bestätigt und die Punkte gutgeschrieben werden.';
+
+  @override
+  String get tasksTitle => 'Ämtli';
+
+  @override
+  String get mealsSlotBreakfast => 'Zmorge';
+
+  @override
+  String get mealsSlotLunch => 'Zmittag';
+
+  @override
+  String get mealsSlotDinner => 'Znacht';
+
+  @override
+  String get mealsSlotSnack => 'Zvieri';
+
+  @override
+  String get schoolAddLesson => 'Lektion hinzufügen';
+
+  @override
+  String get feedSummarySchoolLessons => 'Lektionen';
+
+  @override
+  String get feedSchoolHint => 'Schultage als ganzer Tag oder jede Lektion.';
+
+  @override
+  String get tasksTabChores => 'Ämtli';
+
+  @override
+  String get tasksNoChores => 'Noch keine Ämtli.';
+
+  @override
+  String get tasksStarterHelp =>
+      'Fünf Ämtli, drei Belohnungen und vier Abzeichen zum Start. Alles lässt sich danach ändern.';
+
+  @override
+  String get tasksNewChore => 'Neues Ämtli';
+
+  @override
+  String get tasksEditChore => 'Ämtli bearbeiten';
+
+  @override
+  String get taskIcon_trash => 'Abfallkübel';
+
+  @override
+  String get taskIcon_bike => 'Velo';
+
+  @override
+  String get tasksPickOpenPool => 'Wer darf es übernehmen? Leer heisst alle.';
+
+  @override
+  String get tasksArchiveHelp =>
+      'Das Ämtli verschwindet. Seine offenen Termine in der Zukunft werden entfernt.';
+
+  @override
+  String get tasksFieldStock => 'Vorrat (leer heisst unbegrenzt)';
+
+  @override
+  String get tasksLedgerTask => 'Ämtli erledigt';
+
+  @override
+  String get errTaskInvalid => 'Dieses Ämtli ist nicht gültig.';
+
+  @override
+  String get errTaskNotOpen => 'Dieses Ämtli ist nicht mehr offen.';
+
+  @override
+  String get kidWhoAreYou => 'Hoi! Tipp auf deinen Namen.';
+
+  @override
+  String kidGreeting(String name) {
+    return 'Hoi $name!';
+  }
+
+  @override
+  String get kidTasksTitle => 'Meine Ämtli';
+
+  @override
+  String get kidTasksNone => 'Heute hast du keine Ämtli.';
+
+  @override
+  String kidOpenTasks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Ämtli offen',
+      one: '1 Ämtli offen',
+      zero: 'Keine Ämtli offen',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get todayEmpty => 'Heute ist noch nichts geplant. Geniess die Ruhe.';
+
+  @override
+  String get todayTasksTitle => 'Deine Ämtli heute';
+
+  @override
+  String todayApprovalsChecks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Ämtli zu prüfen',
+      one: '1 Ämtli zu prüfen',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get extCalTitle => 'Kalender von aussen hinzufügen';
+
+  @override
+  String get extCalEmpty =>
+      'Noch kein Kalender abonniert. Ein Abo bringt Termine von aussen in den Familienkalender, zum Beispiel den Spielplan deines Vereins.';
+
+  @override
+  String get extCalErrTooLarge => 'Der Kalender ist zu gross (mehr als 2 MB).';
+
+  @override
+  String get feedSubTitle => 'Kalender von aussen einschliessen';
+
+  @override
+  String get feedSubHelp =>
+      'Termine aus importierten Kalendern (z. B. Verein, Kehrichtabfuhr) erscheinen auch im Abo.';
+
+  @override
+  String get feedSubSummary => 'Kalender von aussen';
+
+  @override
+  String reminderMorningEventsAndTasks(int events, int tasks) {
+    String _temp0 = intl.Intl.pluralLogic(
+      events,
+      locale: localeName,
+      other: '$events Termine',
+      one: '1 Termin',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      tasks,
+      locale: localeName,
+      other: '$tasks Ämtli',
+      one: '1 Ämtli',
+    );
+    return 'Heute: $_temp0, $_temp1';
+  }
+
+  @override
+  String reminderMorningTasksOnly(int tasks) {
+    String _temp0 = intl.Intl.pluralLogic(
+      tasks,
+      locale: localeName,
+      other: '$tasks Ämtli',
+      one: '1 Ämtli',
+    );
+    return 'Heute: $_temp0';
+  }
+
+  @override
+  String get firstRunKidBody =>
+      'Tipp auf dein Bild, dann weiss WuselWall, wer du bist.';
+
+  @override
+  String get householdSeedExamples =>
+      'Mit Beispielen starten — 5 Ämtli, 3 Belohnungen';
+
+  @override
+  String get inviteRoleLineMember =>
+      'Als Mitglied erledigst du Ämtli, bestätigst aber keine Belohnungen.';
+
+  @override
+  String get inviteRoleMemberHelp =>
+      'Erledigt Ämtli, bestätigt aber keine Belohnungen. Etwa für eine Au-pair oder Grosseltern.';
+
+  @override
+  String get shortcutForWhomHelp =>
+      'Der Kurzbefehl handelt als diese Person: Er hakt ihre Ämtli ab und nennt ihre Punkte.';
+
+  @override
+  String shortcutAssistantKeyOnce(String name) {
+    return 'Dieser Schlüssel wird nur jetzt angezeigt. Damit liest ein Assistent als $name die ganze Woche der Familie: Termine, wer weg ist, die Stundenpläne der Kinder, Ämtli, Essen und die Einkaufsliste. Was er liest, geht an den Anbieter des Assistenten. Behandle den Schlüssel wie ein Passwort.';
+  }
+
+  @override
+  String get settingNotifyPackingHelp =>
+      'Um diese Uhrzeit sagt dein Handy, was für morgen in den Thek gehört, aus den Stundenplänen (zum Beispiel Turnsachen). Nur wenn etwas einzupacken ist.';
+
+  @override
+  String get schoolTimetableNeedsTerm =>
+      'Die angezeigte Woche gehört noch zu keinem Zeitraum. Lege den Zeitraum an, zu dem sie gehört, und trage danach die Lektionen ein.';
+
+  @override
+  String schoolImportLessons(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Lektionen',
+      one: '1 Lektion',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String schoolImportReplaces(String name, int count) {
+    return 'Ersetzt den bestehenden Stundenplan von $name ($count Lektionen).';
+  }
+
+  @override
+  String get schoolImportSkipNewSubjects =>
+      'Lektionen mit neuen Fächern werden weggelassen.';
+
+  @override
+  String schoolImportWarnUnmatchedTimes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count Lektionen passen zu keiner Klingelzeit und werden weggelassen.',
+      one: '1 Lektion passt zu keiner Klingelzeit und wird weggelassen.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String schoolImportWarnPeriodsExtended(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Die Klingelzeiten bekommen $count weitere Lektionen.',
+      one: 'Die Klingelzeiten bekommen 1 weitere Lektion.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get schoolImportErrNoLessons => 'Der Text enthält keine Lektionen.';
+
+  @override
+  String get schoolImportErrBadLesson =>
+      'Eine Lektion hat keinen Tag, keine Lektionsnummer oder kein Fach.';
+
+  @override
+  String schoolProposalSummary(String name, int count) {
+    return 'Stundenplan für $name, $count Lektionen';
+  }
+
+  @override
+  String get schoolScanTooLarge => 'Das Foto ist zu gross (höchstens 6 MB).';
+
+  @override
+  String get familyLocaleHelp =>
+      'Feiertage auf der Wandanzeige heissen in dieser Sprache.';
+
+  @override
+  String get memberRoleHelp =>
+      'Erziehungsberechtigte sehen alles und bestätigen Belohnungen. Mitglieder haken Ämtli ab.';
+
+  @override
+  String get memberInactiveBody =>
+      'Nicht auf der Wand, in den Avatar-Reihen und bei neuen Ämtli. Verlauf und Punkte bleiben.';
+
+  @override
+  String memberDeactivateBody(String name) {
+    return '$name verschwindet von der Wand, aus den Avatar-Reihen und aus neuen Ämtli. Verlauf und Punkte bleiben, und du kannst die Person hier zurückholen.';
+  }
+
+  @override
+  String get settingValueMainMeals => 'Zmittag und Znacht';
+
+  @override
+  String wuselHelloMorning3(String name) {
+    return 'Hoi $name, schön, dass du wach bist.';
+  }
+
+  @override
+  String wuselHelloDay1(String name) {
+    return 'Hoi $name!';
+  }
+
+  @override
+  String wuselHelloEvening3(String name) {
+    return 'Hoi $name! Bald ist Ausruhzeit.';
+  }
+
+  @override
+  String wuselWallMemberDone3(String name) {
+    return 'Alle Ämtli von $name sind erledigt!';
+  }
+
+  @override
+  String get wuselFerienFirst3 =>
+      'Erster Ferientag. Geniesst die Zeit zusammen!';
+
+  @override
+  String get traditionStarterSundayBreakfast => 'Sonntagszmorge';
+
+  @override
+  String get eventIcon_croissant => 'Zmorge';
+
+  @override
+  String get wishPickerOwnHint => 'z. B. Omeletten';
+
+  @override
+  String get mealIcon_pancakes => 'Omeletten';
+
+  @override
+  String weekReviewChores(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Ämtli erledigt',
+      one: '1 Ämtli erledigt',
+      zero: 'Eine Woche zum Durchatmen',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get weekHighlightHelped => 'hat bei den Ämtli mitgeholfen';
+
+  @override
+  String get settingsGroupTasksTitle => 'Ämtli & Belohnungen';
+
+  @override
+  String get settingsGroupMealsSubtitle =>
+      'Warme Mahlzeit, Wunschessen und Mittagstisch';
+
+  @override
+  String get eventStarterGuestDinner => 'Gäste zum Znacht';
+
+  @override
+  String get eventStarterSportsEvent => 'Sportanlass';
+
+  @override
+  String get eventStarterHoliday => 'Ferien / Reise';
 }

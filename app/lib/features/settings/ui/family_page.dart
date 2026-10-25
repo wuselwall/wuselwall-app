@@ -139,7 +139,7 @@ class _FamilyPageState extends ConsumerState<FamilyPage> {
               key: const ValueKey('family-locale'),
               value: household.locale,
               items: [
-                for (final (tag, label) in _locales(household.locale))
+                for (final (tag, label) in _locales(l10n, household.locale))
                   DropdownMenuItem(value: tag, child: Text(label)),
               ],
               onChanged: _busy
@@ -163,14 +163,17 @@ class _FamilyPageState extends ConsumerState<FamilyPage> {
     );
   }
 
-  /// The four app languages, plus the stored tag when it is none of them (a family that
-  /// chose `de-CH`, say, keeps it in the list until it picks another).
-  List<(String, String)> _locales(String current) {
+  /// The four app languages with German's three variants (specs/09 "Regional German"),
+  /// plus the stored tag when it is none of them (a family that chose `de-LI`, say,
+  /// keeps it in the list until it picks another).
+  List<(String, String)> _locales(AppLocalizations l10n, String current) {
     final known = [
-      ('de-DE', 'Deutsch'),
-      ('en-GB', 'English'),
-      ('fr-FR', 'Français'),
-      ('es-ES', 'Español'),
+      ('de-DE', l10n.languageNameDeDe),
+      ('de-CH', l10n.languageNameDeCh),
+      ('de-AT', l10n.languageNameDeAt),
+      ('en-GB', l10n.languageNameEn),
+      ('fr-FR', l10n.languageNameFr),
+      ('es-ES', l10n.languageNameEs),
     ];
     if (known.any((k) => k.$1 == current)) return known;
     return [(current, current), ...known];

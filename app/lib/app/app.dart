@@ -9,8 +9,8 @@ import 'package:wuselwall/app/theme/appearance.dart';
 import 'package:wuselwall/app/theme/night.dart';
 import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
-import 'package:wuselwall/core/l10n/app_language.dart';
 import 'package:wuselwall/core/l10n/app_locale.dart';
+import 'package:wuselwall/core/l10n/austrian_dates.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/empty_view.dart';
 import 'package:wuselwall/core/ui/motion.dart';
@@ -18,15 +18,19 @@ import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/reminders/application/reminder_providers.dart';
+import 'package:wuselwall/features/settings/application/app_locale_provider.dart';
 import 'package:wuselwall/features/wusel/ui/empty_wusel.dart';
 
-export 'package:wuselwall/core/l10n/app_locale.dart' show supportedLocales;
+export 'package:wuselwall/core/l10n/app_locale.dart'
+    show appLocales, supportedLocales;
 
 const localizationsDelegates = <LocalizationsDelegate<dynamic>>[
   AppLocalizations.delegate,
   GlobalMaterialLocalizations.delegate,
   GlobalWidgetsLocalizations.delegate,
   GlobalCupertinoLocalizations.delegate,
+  // After the Global delegates: it copies the German date symbols they load.
+  AustrianDatesDelegate(),
 ];
 
 class WuselWallApp extends ConsumerWidget {
@@ -43,9 +47,11 @@ class WuselWallApp extends ConsumerWidget {
     return MaterialApp.router(
       onGenerateTitle: (context) => context.l10n.appTitle,
       routerConfig: ref.watch(routerProvider),
-      // This installation's language; null lets Flutter pick from the device's.
-      locale: ref.watch(appLanguageProvider).value,
-      supportedLocales: supportedLocales,
+      // The chosen language, else the device's; German as the family's country writes
+      // it unless a variant was chosen (specs/09 "Regional German"). Set explicitly:
+      // MaterialApp would not resolve again when the family's country arrives.
+      locale: ref.watch(appLocaleProvider),
+      supportedLocales: appLocales,
       localizationsDelegates: localizationsDelegates,
       theme: AppTheme.build(register, night ? Shade.night : Shade.light),
       darkTheme: AppTheme.build(register, night ? Shade.night : Shade.dark),

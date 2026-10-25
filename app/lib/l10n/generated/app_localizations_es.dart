@@ -4555,10 +4555,19 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get languageSystemHelp =>
-      'El idioma de este dispositivo; alemán si la app no lo tiene';
+      'El idioma de este dispositivo; alemán si la app no lo tiene. El alemán tal como se escribe en el país de vuestra familia.';
 
   @override
   String get languageNameDe => 'Deutsch';
+
+  @override
+  String get languageNameDeDe => 'Deutsch (Deutschland)';
+
+  @override
+  String get languageNameDeCh => 'Deutsch (Schweiz)';
+
+  @override
+  String get languageNameDeAt => 'Deutsch (Österreich)';
 
   @override
   String get languageNameEn => 'English';

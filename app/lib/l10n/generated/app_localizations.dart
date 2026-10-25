@@ -97,6 +97,8 @@ abstract class AppLocalizations {
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('de'),
+    Locale('de', 'AT'),
+    Locale('de', 'CH'),
     Locale('en'),
     Locale('es'),
     Locale('fr'),
@@ -7766,7 +7768,7 @@ abstract class AppLocalizations {
   /// No description provided for @languageSystemHelp.
   ///
   /// In en, this message translates to:
-  /// **'The language of this device; German when the app does not have it'**
+  /// **'The language of this device; German when the app does not have it. German as it is written in your family’s country.'**
   String get languageSystemHelp;
 
   /// No description provided for @languageNameDe.
@@ -7774,6 +7776,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Deutsch'**
   String get languageNameDe;
+
+  /// A German variant in the language picker, in its own name (specs/09 "Regional German").
+  ///
+  /// In en, this message translates to:
+  /// **'Deutsch (Deutschland)'**
+  String get languageNameDeDe;
+
+  /// A German variant in the language picker, in its own name (specs/09 "Regional German").
+  ///
+  /// In en, this message translates to:
+  /// **'Deutsch (Schweiz)'**
+  String get languageNameDeCh;
+
+  /// A German variant in the language picker, in its own name (specs/09 "Regional German").
+  ///
+  /// In en, this message translates to:
+  /// **'Deutsch (Österreich)'**
+  String get languageNameDeAt;
 
   /// No description provided for @languageNameEn.
   ///
@@ -10601,6 +10621,20 @@ class _AppLocalizationsDelegate
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
+  // Lookup logic when language+country codes are specified.
+  switch (locale.languageCode) {
+    case 'de':
+      {
+        switch (locale.countryCode) {
+          case 'AT':
+            return AppLocalizationsDeAt();
+          case 'CH':
+            return AppLocalizationsDeCh();
+        }
+        break;
+      }
+  }
+
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
     case 'de':

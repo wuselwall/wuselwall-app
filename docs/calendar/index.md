@@ -42,7 +42,7 @@ Tippe auf **Neuer Termin**. Der Termin beginnt an dem Tag, den der Kalender gera
 
 Zuerst siehst du Kacheln, damit du nicht alles von vorn eintippen musst:
 
-- **Vorlagen**: **Geburtstag** (ganztägig, jährlich), **Gäste zum Essen**, **Kindergeburtstag**, **Sportanlass**, **Arzttermin**, **Aufführung**, **Ausflug** und **Ferien / Reise**. Jede füllt Titel, Bild, Uhrzeit, Dauer und Personen aus. **Ohne Vorlage** öffnet den leeren Editor zur nächsten vollen Stunde.
+- **Vorlagen**: **Geburtstag** (ganztägig, jährlich), **Gäste zum Essen**, **Kindergeburtstag**, **Sportveranstaltung**, **Arzttermin**, **Aufführung**, **Ausflug** und **Urlaub / Reise**. In der Schweiz heißen zwei davon **Sportanlass** und **Ferien / Reise**. Jede füllt Titel, Bild, Uhrzeit, Dauer und Personen aus. **Ohne Vorlage** öffnet den leeren Editor zur nächsten vollen Stunde.
 - **Eure Vorlagen**: was ihr selbst gespeichert habt. Im Editor tippst du oben auf **Als Vorlage speichern**; gespeichert werden Titel, Bild, Uhrzeit, Dauer, Personen, Ort und Notizen, nicht das Datum und nicht die Wiederholung.
 - **Häufig bei euch**: Termine, die ihr schon mindestens dreimal eingetragen habt, etwa „Oma & Opa kommen“. WuselWall zählt dafür nur eure eigenen Termine auf eurem Server; nichts verlässt ihn. Über **⋮** wählst du **Als Vorlage behalten** oder **Nicht mehr vorschlagen**.
 

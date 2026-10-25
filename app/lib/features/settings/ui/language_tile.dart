@@ -39,12 +39,18 @@ class _LanguageDialog extends ConsumerWidget {
       content: SingleChildScrollView(
         // The device's language is the empty value: a RadioGroup cannot carry null.
         child: RadioGroup<String>(
-          groupValue: chosen?.languageCode ?? '',
+          groupValue: _choiceOf(chosen, Localizations.localeOf(context)),
           onChanged: (value) {
             if (value == null) return;
             ref
                 .read(appLanguageProvider.notifier)
-                .select(value.isEmpty ? null : Locale(value));
+                .select(
+                  value.isEmpty
+                      ? null
+                      : languageChoices.firstWhere(
+                          (l) => l.toLanguageTag() == value,
+                        ),
+                );
             Navigator.of(context).pop();
           },
           child: Column(
@@ -55,9 +61,9 @@ class _LanguageDialog extends ConsumerWidget {
                 title: Text(l10n.languageSystem),
                 subtitle: Text(l10n.languageSystemHelp),
               ),
-              for (final locale in supportedLocales)
+              for (final locale in languageChoices)
                 RadioListTile<String>(
-                  value: locale.languageCode,
+                  value: locale.toLanguageTag(),
                   title: Text(_name(l10n, locale)),
                 ),
             ],
@@ -80,11 +86,24 @@ String _label(BuildContext context, AppLocalizations l10n, Locale? chosen) =>
     ? l10n.languageSystemCurrent(_name(l10n, Localizations.localeOf(context)))
     : _name(l10n, chosen);
 
-/// Each language in its own name, so a reader finds theirs whatever is shown now.
+/// The radio value of a stored choice. A plain `de`, chosen before there were variants,
+/// follows the family's country, so it shows as the variant in effect ([shown]).
+String _choiceOf(Locale? chosen, Locale shown) => switch (chosen) {
+  null => '',
+  Locale(languageCode: 'de', countryCode: null) => germanFor(
+    shown.countryCode ?? 'DE',
+  ).toLanguageTag().replaceFirst(RegExp(r'^de$'), 'de-DE'),
+  final l => l.toLanguageTag(),
+};
+
+/// Each language in its own name, so a reader finds theirs whatever is shown now. German
+/// names its variant (specs/09 "Regional German").
 String _name(AppLocalizations l10n, Locale locale) =>
-    switch (locale.languageCode) {
-      'en' => l10n.languageNameEn,
-      'fr' => l10n.languageNameFr,
-      'es' => l10n.languageNameEs,
-      _ => l10n.languageNameDe,
+    switch ((locale.languageCode, locale.countryCode)) {
+      ('en', _) => l10n.languageNameEn,
+      ('fr', _) => l10n.languageNameFr,
+      ('es', _) => l10n.languageNameEs,
+      (_, 'CH') => l10n.languageNameDeCh,
+      (_, 'AT') => l10n.languageNameDeAt,
+      _ => l10n.languageNameDeDe,
     };
