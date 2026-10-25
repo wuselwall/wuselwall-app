@@ -50,16 +50,9 @@ scp dist/wuselwall-server-0.1.0.tar.gz server:     # then on the server: tar xzf
 ```
 :::
 
-## A rented server, in one step {#vps}
+## A rented server {#vps}
 
-If you rent the server from a provider (a "VPS" or "cloud server"), the provider sets the system up for you when you hand it a **cloud-init** file at creation. WuselWall comes with one: [`server/cloud-init.yaml`](https://github.com/wuselwall/wuselwall-app/blob/main/server/cloud-init.yaml). It installs Docker, switches a firewall on, downloads the server release and runs `wuselwall install --caddy`. A small server with **Ubuntu 24.04** and **4 GB of memory** is enough, 8 GB with [text recognition](/en/server/extras#text-recognition). European providers with such a field include Hetzner (Germany, Finland), netcup, IONOS, Scaleway, OVHcloud and Infomaniak (Switzerland); such a server costs about €4–8 a month, plus the domain.
-
-1. Open the file, copy its content and change the one line marked `CHANGE`: the release version, your two addresses and the email language.
-2. At the provider, create a server with Ubuntu 24.04, add your SSH key and paste the content into the **cloud-init** or **user data** field.
-3. As soon as the provider shows the IP address, point `api.` and `web.` of your domain at it. Caddy keeps trying until the names resolve.
-4. After 5–10 minutes, read the result over SSH: `ssh root@<ip> cat /srv/wuselwall/install.log`. It holds the setup link with its QR code and the setup code. Continue as under "Connecting the app"; the tool lives in `/srv/wuselwall`.
-
-Copy `stack/.env` into the password manager right away and set up the [backup](#_3-backups), ideally [off-site](/en/server/extras#off-site-backup) from the start: a rented server usually has one disk. For email the same applies as at home ([Extras](/en/server/extras#email)).
+If you rent the server from a provider such as Hetzner, a **cloud-init** file sets it up at the first boot; you need no SSH for the installation then. The page [A rented server](/en/server/rented-server) describes it. Everything else on this page applies there as well.
 
 ## 2. Connecting the app
 

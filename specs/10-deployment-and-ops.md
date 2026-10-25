@@ -12,16 +12,17 @@ repository describes a particular operator's server; such notes live outside it.
 
 ---
 
-## Two ways to run a server
+## Three ways to run a server
 
-| | Own hardware (or a VPS) | Hosted Supabase |
-|---|---|---|
-| **Install** | A server release and `server/wuselwall install`; on a rented VPS, `server/cloud-init.yaml` does it at the first boot | The family's fork runs `.github/workflows/deploy-supabase.yml` on GitHub's runners |
-| **Needs** | Docker with Compose v2, a domain, ports 80 and 443 | A Supabase account, a GitHub account and a mail provider (SMTP or Scaleway) |
-| **Front and TLS** | The release's Caddy layer, or the operator's own web server | Supabase's |
-| **Jobs** | pg_cron in the database (`infra/jobs/schedule.sql`) | The same, through the Management API |
-| **Web app** | Served by the server (`stack/volumes/web`) | Optional, on the fork's GitHub Pages |
-| **Updates** | `wuselwall update <version>` | Sync the fork, run the workflow again |
+| | Own hardware | A rented VPS (Hetzner, netcup, IONOS, Scaleway, OVHcloud, Infomaniak …) | Hosted Supabase |
+|---|---|---|---|
+| **Install** | A server release and `server/wuselwall install` | [`server/cloud-init.yaml`](../server/cloud-init.yaml) at the first boot: Docker from its signed repository, ufw (22, 80, 443), the release, `wuselwall install --caddy`; the result in a root-only `install.log` | The family's fork runs `.github/workflows/deploy-supabase.yml` on GitHub's runners |
+| **Needs** | Docker with Compose v2, a domain, ports 80 and 443 | An account at an EU provider with cloud-init, Ubuntu 24.04 with 4 GB (8 GB with OCR), a domain, a mail provider | A Supabase account, a GitHub account and a mail provider (SMTP or Scaleway) |
+| **Front and TLS** | The release's Caddy layer, or the operator's own web server | The release's Caddy layer | Supabase's |
+| **Jobs** | pg_cron in the database (`infra/jobs/schedule.sql`) | The same | The same, through the Management API |
+| **Web app** | Served by the server (`stack/volumes/web`) | The same | Optional, on the fork's GitHub Pages |
+| **Updates** | `wuselwall update <version>` | The same, over SSH; Ubuntu's unattended-upgrades for the system | Sync the fork, run the workflow again |
+| **Guide** | [docs/server/home-server](../docs/server/home-server.md) | [docs/server/rented-server](../docs/server/rented-server.md) | [docs/server/supabase-cloud](../docs/server/supabase-cloud.md) |
 
 A third way exists for developers: a checkout drives a server over SSH with
 `scripts/remote-*.sh`, which read their target from the git-ignored `scripts/remote.env`
@@ -32,13 +33,13 @@ A third way exists for developers: a checkout drives a server over SSH with
 For a family; the project's own costs (developer accounts, the `wuselwall.app` domain for
 website and docs) are not passed on.
 
-| Item | At home | Hosted Supabase |
-|---|---|---|
-| Server | Hardware already running: electricity | Free plan to try (pauses after 7 days idle); Pro ≈ $25 / month |
-| Domain | ≈ €1–2 / month | Not needed |
-| TLS | Let's Encrypt through Caddy: €0 | Included |
-| Off-site backup copy (optional) | Backblaze B2 or any S3 store: €0.50 – €3.50 | Pro's daily backups included |
-| SMTP (optional, for email codes) | Free tiers suffice (e.g. Scaleway TEM: 300 mails/month) | Same |
+| Item | At home | Rented VPS | Hosted Supabase |
+|---|---|---|---|
+| Server | Hardware already running: electricity | ≈ €4–8 / month for 2 vCPU and 4 GB (Hetzner adds €0.50 for IPv4; cheap sizes sell out) | Free plan to try (pauses after 7 days idle); Pro ≈ $25 / month |
+| Domain | ≈ €1–2 / month | ≈ €1–2 / month | Not needed |
+| TLS | Let's Encrypt through Caddy: €0 | Same | Included |
+| Off-site backup copy (optional) | Backblaze B2 or any S3 store: €0.50 – €3.50 | Same; the provider's disk snapshots (≈ 20 %) are an addition, not a replacement | Pro's daily backups included |
+| SMTP (for email codes) | Free tiers suffice (e.g. Scaleway TEM: 300 mails/month) | Same | Same |
 
 ## The path a request takes (own hardware)
 

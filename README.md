@@ -130,7 +130,7 @@ specifications you hand to a coding session, one at a time.
 4. **Device sessions with tap-to-switch profiles**, guardian PIN for anything that
    moves points or deletes other people's data. → [ADR-004](specs/adr/ADR-004-identity-model.md)
 5. **Self-hosted only**: the project runs no service that holds a family's data. Every
-   household runs its own server, at home or as its own hosted Supabase project, and the
+   household runs its own server, at home, on a rented EU VPS or as its own hosted Supabase project, and the
    store app connects to whichever one it chooses.
    → [ADR-013](specs/adr/ADR-013-self-hosted-compose-stack.md), [ADR-017](specs/adr/ADR-017-wuselwall-app-domain.md), [ADR-018](specs/adr/ADR-018-self-hosted-only.md)
 6. **Server-authoritative data**, with a narrow offline queue for the shopping list only —
