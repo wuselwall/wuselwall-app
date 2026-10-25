@@ -29,8 +29,6 @@ test('Pages custom domain is built at the root with all four languages retained'
 test('docs builds are unprivileged; publishing requires main AND explicit opt-in', () => {
   const workflow = read('.github/workflows/docs.yml');
   assert.doesNotMatch(workflow, /DOCS_DEPLOY_|\$\{\{\s*secrets\./);
-  assert.match(workflow, /npm_config_cache=\$RUNNER_TEMP\/npm-cache/);
-  assert.doesNotMatch(workflow, /cache: npm/);
   assert.match(workflow, /pages: write/);
   assert.match(workflow, /id-token: write/);
   assert.match(workflow, /name: github-pages/);
@@ -62,7 +60,7 @@ test('docs builds are unprivileged; publishing requires main AND explicit opt-in
   }
 });
 
-test('every workflow job uses a self-hosted runner, except the deploy a family runs in its fork', () => {
+test('every workflow job uses a self-hosted runner, except the docs and the deploy a family runs in its fork', () => {
   const dir = new URL('../.github/workflows/', import.meta.url);
   for (const file of readdirSync(dir).filter((name) => /\.ya?ml$/.test(name))) {
     const workflow = readFileSync(new URL(file, dir), 'utf8');
@@ -71,7 +69,9 @@ test('every workflow job uses a self-hosted runner, except the deploy a family r
     for (const [, runner] of runners) {
       // deploy-supabase.yml runs in a family's fork, which has no runner of its own
       // (docs/server/supabase-cloud): GitHub's runners, free for a public fork.
-      if (file === 'deploy-supabase.yml') assert.match(runner, /^ubuntu-latest$/, `${file}: ${runner}`);
+      // docs.yml holds no secrets and needs nothing from the fleet: GitHub's runners, free
+      // for this public repository.
+      if (file === 'deploy-supabase.yml' || file === 'docs.yml') assert.match(runner, /^ubuntu-latest$/, `${file}: ${runner}`);
       else assert.match(runner, /self-hosted/, `${file}: ${runner}`);
     }
   }
