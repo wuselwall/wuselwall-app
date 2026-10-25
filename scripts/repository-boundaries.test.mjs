@@ -62,13 +62,18 @@ test('docs builds are unprivileged; publishing requires main AND explicit opt-in
   }
 });
 
-test('every workflow job uses a self-hosted runner', () => {
+test('every workflow job uses a self-hosted runner, except the deploy a family runs in its fork', () => {
   const dir = new URL('../.github/workflows/', import.meta.url);
   for (const file of readdirSync(dir).filter((name) => /\.ya?ml$/.test(name))) {
     const workflow = readFileSync(new URL(file, dir), 'utf8');
     const runners = [...workflow.matchAll(/^\s+runs-on:\s*(.+)$/gm)];
     assert.ok(runners.length > 0, `${file}: declares job runners`);
-    for (const [, runner] of runners) assert.match(runner, /self-hosted/, `${file}: ${runner}`);
+    for (const [, runner] of runners) {
+      // deploy-supabase.yml runs in a family's fork, which has no runner of its own
+      // (docs/server/supabase-cloud): GitHub's runners, free for a public fork.
+      if (file === 'deploy-supabase.yml') assert.match(runner, /^ubuntu-latest$/, `${file}: ${runner}`);
+      else assert.match(runner, /self-hosted/, `${file}: ${runner}`);
+    }
   }
 });
 

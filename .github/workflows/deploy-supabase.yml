@@ -2,7 +2,7 @@
 # of this repository, without installing anything (docs/server/supabase-cloud). Started by
 # hand ("Run workflow"); run it again for an update. The project runs nothing here: the
 # workflow runs in the family's repository, with the family's secrets, against the
-# family's project. The repository needs access to a self-hosted Linux runner labeled build.
+# family's project, on GitHub's runners (a fork has none of its own).
 #
 # Repository secrets (Settings → Secrets and variables → Actions):
 #   SUPABASE_ACCESS_TOKEN   an access token of the family's Supabase account
@@ -11,11 +11,20 @@
 #   WUSELWALL_SETUP_TOKEN   optional: a phrase of the family's choice, used once to found
 #                           the household. Ignored once a household exists.
 #
+# Mail (specs/10 §4): sign-in is by email code, and Supabase's built-in mailer delivers only
+# to the account's own addresses, a few times an hour. So one of these, or the run stops:
+#   SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_SENDER [, SMTP_SENDER_NAME]
+#                           a transactional-mail provider's SMTP relay (scripts/hosted-auth-config.mjs)
+#   SCW_SECRET_KEY, SCW_PROJECT_ID, MAIL_FROM [, SCW_REGION, MAIL_FROM_NAME]
+#                           Scaleway Transactional Email through the send-email hook, as the
+#                           compose stack does (the hook's secret is generated here)
+# Ticking "without mail" deploys without either, for a trial only.
+#
 # With "web" ticked, the web app is published on this repository's GitHub Pages
 # (Settings → Pages → Source: GitHub Actions, once). It asks for the server on first use.
 #
 # Logs of a public fork are public. No step prints a secret: GitHub masks the secrets, and
-# the cron secret is generated and masked here.
+# the secrets generated here are masked before use.
 name: deploy-supabase
 on:
   workflow_dispatch:
@@ -30,20 +39,39 @@ on:
         description: Also publish the web app on GitHub Pages
         type: boolean
         default: false
+      without_mail:
+        description: "Trial only: deploy without SMTP or the mail hook (codes reach the Supabase account's own addresses only)"
+        type: boolean
+        default: false
 permissions:
   contents: read
 
 jobs:
   deploy:
-    runs-on: [self-hosted, Linux, build]
+    runs-on: ubuntu-latest
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
       PROJECT: ${{ secrets.SUPABASE_PROJECT_ID }}
       SETUP_TOKEN: ${{ secrets.WUSELWALL_SETUP_TOKEN }}
       MAIL_LANGUAGE: ${{ inputs.language }}
+      WITHOUT_MAIL: ${{ inputs.without_mail }}
+      SMTP_HOST: ${{ secrets.SMTP_HOST }}
+      SMTP_PORT: ${{ secrets.SMTP_PORT }}
+      SMTP_USER: ${{ secrets.SMTP_USER }}
+      SMTP_PASS: ${{ secrets.SMTP_PASS }}
+      SMTP_SENDER: ${{ secrets.SMTP_SENDER }}
+      SMTP_SENDER_NAME: ${{ secrets.SMTP_SENDER_NAME }}
+      SCW_SECRET_KEY: ${{ secrets.SCW_SECRET_KEY }}
+      SCW_PROJECT_ID: ${{ secrets.SCW_PROJECT_ID }}
+      SCW_REGION: ${{ secrets.SCW_REGION }}
+      MAIL_FROM: ${{ secrets.MAIL_FROM }}
+      MAIL_FROM_NAME: ${{ secrets.MAIL_FROM_NAME }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The tags: a checkout on a server-v tag reports that release to the app.
+          fetch-depth: 0
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with: { node-version: 22, cache: npm }
       - run: npm ci
@@ -54,6 +82,15 @@ jobs:
             [ -n "${!v}" ] || { echo "::error::secret missing: ${v/PROJECT/SUPABASE_PROJECT_ID}"; exit 1; }
           done
           [[ $PROJECT =~ ^[a-z0-9]{20}$ ]] || { echo "::error::SUPABASE_PROJECT_ID is the 20-letter reference ID"; exit 1; }
+          if [ -n "$SCW_SECRET_KEY" ]; then
+            for v in SCW_PROJECT_ID MAIL_FROM; do
+              [ -n "${!v}" ] || { echo "::error::SCW_SECRET_KEY is set, so $v is needed too"; exit 1; }
+            done
+          fi
+          if [ -z "$SMTP_HOST" ] && [ -z "$SCW_SECRET_KEY" ] && [ "$WITHOUT_MAIL" != true ]; then
+            echo "::error::No mail configured. Add the SMTP_* secrets or the Scaleway secrets, or tick 'without mail' for a trial (docs/server/supabase-cloud)."
+            exit 1
+          fi
 
       - name: Database
         run: |
@@ -63,40 +100,56 @@ jobs:
           # Never --include-seed: the seed is development data.
           npx supabase db push --password "$SUPABASE_DB_PASSWORD" --yes
 
-      - name: Data API and Auth settings
+      - name: Data API
         run: |
-          api() {
-            curl -fsS -X "$1" "https://api.supabase.com/v1/projects/$PROJECT/$2" \
-              -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" -H 'Content-Type: application/json' \
-              -d "$3" > /dev/null
-          }
           # PostgREST serves only the api schema (ADR-010).
-          api PATCH postgrest '{"db_schema":"api","db_extra_search_path":"public, extensions","max_rows":1000}'
-          # The access-token hook puts household and device into every token; accounts come
-          # from invitations, not open sign-up; TOTP for two-factor sign-in.
-          api PATCH config/auth "$(jq -n --arg site "https://$PROJECT.supabase.co" '{
-            hook_custom_access_token_enabled: true,
-            hook_custom_access_token_uri: "pg-functions://postgres/app/custom_access_token_hook",
-            disable_signup: true,
-            mfa_totp_enroll_enabled: true,
-            mfa_totp_verify_enabled: true,
-            site_url: $site
-          }')"
-
-      - name: Email code templates
-        # SMTP fallback must contain the code the app requests, for signup and sign-in.
-        # Upload canonical single-language templates and verify settings by readback.
-        run: node scripts/hosted-email-templates.mjs
+          curl -fsS -X PATCH "https://api.supabase.com/v1/projects/$PROJECT/postgrest" \
+            -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" -H 'Content-Type: application/json' \
+            -d '{"db_schema":"api","db_extra_search_path":"public, extensions","max_rows":1000}' > /dev/null
 
       - name: Edge Functions
         run: |
           secret=$(openssl rand -hex 32)
           echo "::add-mask::$secret"
           echo "CRON_SECRET=$secret" >> "$GITHUB_ENV"
-          npx supabase secrets set --project-ref "$PROJECT" "CRON_SECRET=$secret"
-          npx supabase secrets set --project-ref "$PROJECT" "MAIL_LANGUAGE=$MAIL_LANGUAGE"
+          set -- "CRON_SECRET=$secret" "MAIL_LANGUAGE=$MAIL_LANGUAGE"
+          # The project's publishable key, for the discovery document the app reads before
+          # anyone signs in (_shared/server_info.ts): the hosted runtime does not pass it.
+          key=$(curl -fsS "https://api.supabase.com/v1/projects/$PROJECT/api-keys?reveal=true" \
+            -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+            | jq -r '[.[] | select(.type == "publishable")][0].api_key // empty')
+          if [[ $key == sb_publishable_* ]]; then
+            set -- "$@" "WW_PUBLISHABLE_KEY=$key"
+          else
+            echo "::warning::The project has no publishable key yet; the discovery document uses the legacy anon key."
+          fi
+          # A checkout exactly on a server release tag announces that release to the app.
+          if version=$(git describe --tags --exact-match --match 'server-v*' 2> /dev/null); then
+            set -- "$@" "WW_SERVER_VERSION=${version#server-v}"
+          fi
+          if [ -n "$SCW_SECRET_KEY" ]; then
+            # The Send Email Hook's secret (Standard Webhooks): Auth signs with it, the
+            # function checks it. New on every run; both sides are set in this run.
+            hook="v1,whsec_$(openssl rand -base64 32)"
+            echo "::add-mask::$hook"
+            echo "SEND_EMAIL_HOOK_SECRET=$hook" >> "$GITHUB_ENV"
+            set -- "$@" "SEND_EMAIL_HOOK_SECRET=$hook" "SCW_SECRET_KEY=$SCW_SECRET_KEY" \
+              "SCW_PROJECT_ID=$SCW_PROJECT_ID" "SCW_REGION=${SCW_REGION:-fr-par}" \
+              "MAIL_FROM=$MAIL_FROM" "MAIL_FROM_NAME=${MAIL_FROM_NAME:-WuselWall}"
+          fi
+          npx supabase secrets set --project-ref "$PROJECT" "$@"
           # verify_jwt per function comes from config.toml ([functions.*]).
           npx supabase functions deploy --project-ref "$PROJECT" --use-api
+
+      - name: Auth settings
+        # Sign-up on, the access-token hook, TOTP, the compose overlay's limits, and mail
+        # (SMTP, the send-email hook, or neither for a trial); read back after.
+        run: node scripts/hosted-auth-config.mjs
+
+      - name: Email code templates
+        # SMTP fallback must contain the code the app requests, for signup and sign-in.
+        # Upload canonical single-language templates and verify settings by readback.
+        run: node scripts/hosted-email-templates.mjs
 
       - name: Retire social sign-in
         # Google and Apple sign-in, identity linking and the native OAuth callback off, the
@@ -125,6 +178,40 @@ jobs:
             end \$\$;" > /dev/null
           fi
 
+      - name: Verify the server
+        # What a family would otherwise find out later: the discovery document answers, the
+        # four jobs are scheduled and reach their functions (a 401 here means a function is
+        # missing from config.toml's verify_jwt list), sign-up is on and mail is configured.
+        run: |
+          base=https://$PROJECT.supabase.co
+          api() {
+            curl -fsS "https://api.supabase.com/v1/projects/$PROJECT/$1" \
+              -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" -H 'Content-Type: application/json' "${@:2}"
+          }
+          doc=$(curl -fsS "$base/functions/v1/server-info") \
+            || { echo "::error::server-info does not answer"; exit 1; }
+          jq -e '.wuselwall == 1 and (.publishable_key | length) > 0 and (.api_version | type) == "number"' <<< "$doc" > /dev/null \
+            || { echo "::error::the discovery document is incomplete"; exit 1; }
+          echo "server-info: api_version $(jq -r .api_version <<< "$doc"), features $(jq -c .features <<< "$doc")"
+          for fn in tasks-nightly holidays-sync calendar-import household-purge; do
+            status=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 300 -X POST \
+              -H "x-cron-secret: $CRON_SECRET" -H 'content-type: application/json' --data '{}' "$base/functions/v1/$fn")
+            [ "$status" = 200 ] || { echo "::error::$fn answered HTTP $status to the scheduled call"; exit 1; }
+            echo "$fn: 200"
+          done
+          jobs=$(jq -n '{query: "select count(*) as n from cron.job where jobname like '"'"'wuselwall-%'"'"'"}' \
+            | api database/query -X POST -d @- | jq -r '.[0].n')
+          [ "$jobs" = 4 ] || { echo "::error::$jobs scheduled jobs instead of 4"; exit 1; }
+          echo "cron.job: 4 wuselwall-* jobs"
+          auth=$(api config/auth)
+          jq -e '.disable_signup == false' <<< "$auth" > /dev/null \
+            || { echo "::error::sign-up is off; nobody could create the first account"; exit 1; }
+          if [ "$WITHOUT_MAIL" != true ]; then
+            jq -e '.hook_send_email_enabled == true or ((.smtp_host // "") | length) > 0' <<< "$auth" > /dev/null \
+              || { echo "::error::neither SMTP nor the send-email hook is configured"; exit 1; }
+          fi
+          echo "auth: sign-up on, mail $(jq -r 'if .hook_send_email_enabled then "through the send-email hook" elif ((.smtp_host // "") | length) > 0 then "through SMTP" else "NOT configured (trial)" end' <<< "$auth")"
+
       - name: Summary
         run: |
           {
@@ -135,13 +222,17 @@ jobs:
             echo
             if [ -n "$SETUP_TOKEN" ]; then
               echo "Then **Start a new family** with the phrase you saved as \`WUSELWALL_SETUP_TOKEN\`."
+              echo
+            fi
+            if [ "$WITHOUT_MAIL" = true ]; then
+              echo "> **Without mail:** sign-in codes reach only the addresses of your Supabase account, a few an hour. Add the SMTP or Scaleway secrets and run again before the family joins."
             fi
           } >> "$GITHUB_STEP_SUMMARY"
 
   web:
     if: inputs.web
     needs: deploy
-    runs-on: [self-hosted, Linux, build]
+    runs-on: ubuntu-latest
     permissions:
       pages: write
       id-token: write
