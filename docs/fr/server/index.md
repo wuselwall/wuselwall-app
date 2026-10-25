@@ -2,7 +2,7 @@
 
 Chaque famille possède **son propre serveur**. L’app n’échange qu’avec lui ; nous n’hébergeons pas les rendez-vous, tâches ou courses des familles.
 
-Ces pages s’adressent à la personne qui installe le serveur. Supabase se configure dans le navigateur. À la maison, il faut savoir utiliser SSH et Docker.
+Ces pages s’adressent à la personne qui installe le serveur. Supabase se configure dans le navigateur. Un serveur loué demande un domaine et une connexion SSH pour lire le résultat. À la maison, il faut savoir utiliser SSH et Docker.
 
 ::: warning État en octobre 2026
 L’installation du serveur et le choix du serveur dans l’app sont développés, ainsi que les invitations et la démonstration sans serveur. La publication dans les boutiques, les notifications push et les validations de lancement restent séparées. En attendant l’App Store et Google Play, utilisez l’app web.
@@ -12,17 +12,17 @@ L’installation du serveur et le choix du serveur dans l’app sont développé
 
 Un serveur appartient à **un seul foyer**. Après sa création, aucune deuxième famille ne peut y être créée. Des amis doivent installer leur propre serveur ou créer un projet Supabase distinct.
 
-## Deux possibilités {#two-ways}
+## Trois possibilités {#two-ways}
 
-| | [Chez Supabase](/fr/server/supabase-cloud) | [À la maison](/fr/server/home-server) |
-|---|---|---|
-| Matériel | Comptes Supabase et GitHub, pas de machine | NAS, mini-PC ou serveur loué, Docker et domaine |
-| Installation | Dans le navigateur | Outil en ligne de commande, DNS et réseau |
-| Données | Centre de données choisi chez Supabase Inc. | Machine sous votre contrôle |
-| Coûts | Selon l’offre Supabase ; voir ses tarifs actuels | Matériel, électricité et domaine |
-| Entretien | Supabase entretient sa plateforme ; vous mettez WuselWall à jour | Vous gérez mises à jour et sauvegardes |
+| | [Chez Supabase](/fr/server/supabase-cloud) | [Loué](/fr/server/rented-server) | [À la maison](/fr/server/home-server) |
+|---|---|---|---|
+| Matériel | Comptes Supabase et GitHub, pas de machine, plus un fournisseur d’e-mails | Compte chez un hébergeur européen comme Hetzner, domaine et fournisseur d’e-mails | NAS ou mini-PC avec Docker, domaine et fournisseur d’e-mails |
+| Installation | Dans le navigateur | Un fichier collé à la création du serveur, deux enregistrements DNS | Outil en ligne de commande, DNS et réseau |
+| Données | Centre de données choisi chez Supabase Inc. (États-Unis) | Hébergeur européen de votre choix, sur votre propre serveur | Machine sous votre contrôle |
+| Coûts | Selon l’offre Supabase ; voir ses tarifs actuels | Environ 4 à 8 € par mois, plus le domaine | Matériel, électricité et domaine |
+| Entretien | Supabase entretient sa plateforme ; vous mettez WuselWall à jour | Vous, une commande SSH par mise à jour ; le système se met à jour seul | Vous gérez mises à jour et sauvegardes |
 
-Un NAS déjà équipé de Docker peut convenir. Sinon, Supabase évite l’entretien d’une machine. Consultez les conditions et tarifs avant de choisir. Un [déménagement](/fr/server/restore) est possible.
+Un NAS déjà équipé de Docker peut convenir. Pour des données en Europe sous votre contrôle sans machine chez vous, louez un serveur chez Hetzner ou un hébergeur comparable. Sinon, Supabase évite l’entretien d’une machine. Consultez les conditions et tarifs avant de choisir. Un [déménagement](/fr/server/restore) est possible.
 
 ## Ce qui est nécessaire {#what-you-need-and-what-you-dont}
 

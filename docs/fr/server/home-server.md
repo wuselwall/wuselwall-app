@@ -39,16 +39,9 @@ scp dist/wuselwall-server-0.1.0.tar.gz server:
 
 Décompressez ensuite sur le serveur. `--skip-web` permet de construire sans Flutter, sans inclure l’app web.
 
-## Serveur loué : en une étape {#vps}
+## Serveur loué {#vps}
 
-Si vous louez le serveur chez un hébergeur (« VPS » ou « serveur cloud »), celui-ci installe le système à la création dès que vous lui fournissez un fichier **cloud-init**. WuselWall en fournit un : [`server/cloud-init.yaml`](https://github.com/wuselwall/wuselwall-app/blob/main/server/cloud-init.yaml). Il installe Docker, active un pare-feu, télécharge la version serveur et lance `wuselwall install --caddy`. Un petit serveur **Ubuntu 24.04** avec **4 Go de mémoire** suffit, 8 Go avec la [reconnaissance de texte](/fr/server/extras#text-recognition). Hébergeurs européens proposant ce champ : Hetzner (Allemagne, Finlande), netcup, IONOS, Scaleway, OVHcloud, Infomaniak (Suisse) ; comptez environ 4 à 8 € par mois, plus le domaine.
-
-1. Ouvrez le fichier, copiez son contenu et modifiez la seule ligne marquée `CHANGE` : la version, vos deux adresses et la langue des e-mails.
-2. Chez l’hébergeur, créez un serveur Ubuntu 24.04, ajoutez votre clé SSH et collez le contenu dans le champ **cloud-init** ou **user data**.
-3. Dès que l’adresse IP s’affiche, faites-y pointer `api.` et `web.` de votre domaine. Caddy réessaie jusqu’à ce que les noms répondent.
-4. Après 5 à 10 minutes, lisez le résultat en SSH : `ssh root@<ip> cat /srv/wuselwall/install.log`. Il contient le lien de configuration, son QR et le code. Poursuivez comme sous « Connecter l’app » ; l’outil se trouve dans `/srv/wuselwall`.
-
-Copiez tout de suite `stack/.env` dans votre gestionnaire de mots de passe et configurez la [sauvegarde](#_3-backups), de préférence [hors site](/fr/server/extras#off-site-backup) : un serveur loué n’a souvent qu’un disque. Pour les e-mails, mêmes règles qu’à la maison ([Options du serveur](/fr/server/extras#email)).
+Si vous louez le serveur chez un hébergeur comme Hetzner, un fichier **cloud-init** l’installe au premier démarrage, sans SSH pour l’installation. La page [Serveur loué](/fr/server/rented-server) l’explique. Tout le reste de cette page s’y applique aussi.
 
 ## 2. Connecter l’app {#_2-connecting-the-app}
 

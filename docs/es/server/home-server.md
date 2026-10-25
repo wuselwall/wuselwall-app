@@ -39,16 +39,9 @@ scp dist/wuselwall-server-0.1.0.tar.gz server:
 
 Descomprime después en el servidor. `--skip-web` construye sin Flutter y sin incluir app web.
 
-## Servidor alquilado: en un paso {#vps}
+## Servidor alquilado {#vps}
 
-Si alquilas el servidor a un proveedor («VPS» o «servidor cloud»), este instala el sistema al crearlo si le entregas un archivo **cloud-init**. WuselWall incluye uno: [`server/cloud-init.yaml`](https://github.com/wuselwall/wuselwall-app/blob/main/server/cloud-init.yaml). Instala Docker, activa un cortafuegos, descarga la versión de servidor y ejecuta `wuselwall install --caddy`. Basta un servidor pequeño con **Ubuntu 24.04** y **4 GB de memoria**, 8 GB con [reconocimiento de texto](/es/server/extras#text-recognition). Proveedores europeos con ese campo: Hetzner (Alemania, Finlandia), netcup, IONOS, Scaleway, OVHcloud o Infomaniak (Suiza); cuesta unos 4–8 € al mes, más el dominio.
-
-1. Abre el archivo, copia su contenido y cambia la única línea marcada `CHANGE`: la versión, tus dos direcciones y el idioma de los correos.
-2. En el proveedor, crea un servidor con Ubuntu 24.04, añade tu clave SSH y pega el contenido en el campo **cloud-init** o **user data**.
-3. En cuanto aparezca la dirección IP, apunta `api.` y `web.` de tu dominio a ella. Caddy reintenta hasta que los nombres respondan.
-4. Tras 5–10 minutos, lee el resultado por SSH: `ssh root@<ip> cat /srv/wuselwall/install.log`. Contiene el enlace de configuración con su QR y el código. Sigue como en «Conectar la app»; la herramienta está en `/srv/wuselwall`.
-
-Guarda `stack/.env` enseguida en el gestor de contraseñas y configura la [copia de seguridad](#_3-backups), mejor [fuera de casa](/es/server/extras#off-site-backup) desde el principio: un servidor alquilado suele tener un solo disco. Para el correo valen las mismas reglas que en casa ([Opciones del servidor](/es/server/extras#email)).
+Si alquilas el servidor a un proveedor como Hetzner, un archivo **cloud-init** lo instala en el primer arranque, sin SSH para la instalación. Lo explica la página [Servidor alquilado](/es/server/rented-server). Todo lo demás de esta página vale también allí.
 
 ## 2. Conectar la app {#_2-connecting-the-app}
 

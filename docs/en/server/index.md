@@ -2,10 +2,10 @@
 
 WuselWall is not an online service. Every family has **its own server**, and the app talks only to that server. That is where your appointments, tasks and lists live. We never see them, and we run no server for other families.
 
-These pages are for the person who sets up the server. You don't need to program. The Supabase way needs nothing but a browser. For a server at home you should be somewhat at home with SSH and Docker.
+These pages are for the person who sets up the server. You don't need to program. The Supabase way needs nothing but a browser. A rented server needs a domain and SSH once, to read the result. For a server at home you should be somewhat at home with SSH and Docker.
 
 ::: warning Status, October 2026
-- **Works:** setting up a server at Supabase or at home. At its first start the app asks which server to connect to, and it can show an example family without any server.
+- **Works:** setting up a server at Supabase, at a provider such as Hetzner, or at home. At its first start the app asks which server to connect to, and it can show an example family without any server.
 - **Not yet:** WuselWall is not publicly in the **App Store** or on **Google Play** yet. Until it is, you use the **web app** in the browser, on a phone also as an icon on the home screen.
 - **Works:** invitation links. **Not yet:** push notifications.
 :::
@@ -14,17 +14,17 @@ These pages are for the person who sets up the server. You don't need to program
 
 A WuselWall server belongs to exactly **one household**. Once the first family exists, nobody can create a second one. If friends want WuselWall too, they set up a server of their own. At Supabase, that is simply a second project.
 
-## Two ways
+## Three ways
 
-| | [At Supabase](/en/server/supabase-cloud) | [At home](/en/server/home-server) |
-|---|---|---|
-| **What you need** | An account at Supabase and one at GitHub, nothing else | A machine that runs all the time (NAS, mini PC, rented server) with Docker, and a domain of your own |
-| **Setting up** | In the browser, about 20 minutes | One command on the server, plus the domain and the router |
-| **Where the data lives** | With Supabase Inc. (USA), in a data centre you choose, e.g. Frankfurt or Zurich | On your own device |
-| **Cost** | Free to try, about USD 25 a month for everyday use | Electricity and the domain, about €1–2 a month |
-| **Updates and backups** | Supabase maintains the server and, on Pro, backs up daily. New WuselWall versions take one click | You, one command each |
+| | [At Supabase](/en/server/supabase-cloud) | [Rented](/en/server/rented-server) | [At home](/en/server/home-server) |
+|---|---|---|---|
+| **What you need** | An account at Supabase and one at GitHub, plus a mail provider | An account at a European provider such as Hetzner, a domain and a mail provider | A machine that runs all the time (NAS, mini PC) with Docker, a domain of your own and a mail provider |
+| **Setting up** | In the browser, about 20 minutes | Paste one file when creating the server and set two DNS records, about 15 minutes | One command on the server, plus the domain and the router |
+| **Where the data lives** | With Supabase Inc. (USA), in a data centre you choose, e.g. Frankfurt or Zurich | With a European provider of your choice, on your own server | On your own device |
+| **Cost** | Free to try, about USD 25 a month for everyday use | About €4–8 a month, plus the domain | Electricity and the domain, about €1–2 a month |
+| **Updates and backups** | Supabase maintains the server and, on Pro, backs up daily. New WuselWall versions take one click | You, one command each over SSH; the system keeps itself up to date | You, one command each |
 
-Our advice: if you already run a NAS or a home server with Docker, choose the **server at home**. Everyone else starts with **Supabase**. Moving later is possible ([Restoring a backup](/en/server/restore)).
+Our advice: if you already run a NAS or a home server with Docker, choose the **server at home**. If you want the data in Europe and under your control without a device at home, rent a **server at Hetzner or a similar provider**. If you want the easiest start, begin with **Supabase**. Moving later is possible ([Restoring a backup](/en/server/restore)).
 
 ## What you need and what you don't
 
@@ -34,7 +34,7 @@ As little as possible is required. Everything in the second table can be left ou
 
 | What | What for |
 |---|---|
-| **A Supabase server**: a project at Supabase, or the Docker stack at home | Database, sign-in, live updates and WuselWall's server functions |
+| **A Supabase server**: a project at Supabase, or the Docker stack, rented or at home | Database, sign-in, live updates and WuselWall's server functions |
 | **Sending email (SMTP)** | Anyone signing up gets a code by email. Without SMTP that code never arrives, and nobody can start or join a family ([Extras](/en/server/extras#email)). A server without any mail comes later |
 | **HTTPS** | The apps talk to the server only over an encrypted connection. Supabase has it already; at home, the bundled web server Caddy fetches it automatically |
 | **Scheduled jobs** | Every night they create the next 14 days of tasks and close the previous day; once a week they fetch the holidays, and every hour the outside calendars. They run inside the database; the installation sets them up |
