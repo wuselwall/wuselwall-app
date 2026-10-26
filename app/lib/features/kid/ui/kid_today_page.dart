@@ -246,7 +246,6 @@ class _TasksSectionState extends ConsumerState<_TasksSection> {
                         style: Theme.of(context).textTheme.titleMedium,
                         textAlign: TextAlign.center,
                       ),
-                      Text(l10n.kidTasksAllDoneBody),
                     ],
                   ),
                 ),
@@ -401,6 +400,9 @@ class _TasksSectionState extends ConsumerState<_TasksSection> {
           ..hideCurrentSnackBar()
           ..showSnackBar(
             SnackBar(
+              // It goes by itself (an action alone would keep it on screen), and
+              // the kid home clears it when the child switches tab or person.
+              persist: false,
               duration: const Duration(seconds: 5),
               content: Text(l10n.kidTaskDoneSnack(task.title)),
               action: SnackBarAction(
@@ -497,9 +499,15 @@ class _TaskCard extends StatelessWidget {
     final l10n = context.l10n;
     final theme = Theme.of(context);
     final ww = context.ww;
+    // A chore open to anyone says so: the family page counts only a child's own,
+    // and the two should not seem to disagree.
     final status = task.awaitsApproval
         ? l10n.kidAwaitsCheck
-        : (done ? l10n.kidDone : null);
+        : done
+        ? l10n.kidDone
+        : task.assignedProfileId == null
+        ? l10n.tasksOpenForAnyone
+        : null;
     // Done, the card fills with the brand tint and keeps full contrast: no fading
     // and no strike-through (specs/26 "The kid register's sticker skin").
     return Semantics(
@@ -512,7 +520,13 @@ class _TaskCard extends StatelessWidget {
       ].join(', '),
       child: KidCard(
         onTap: done ? null : onTap,
-        color: done ? ww.successContainer : null,
+        // Waiting for a grown-up's check is not done yet: a quiet card with an
+        // hourglass rather than the green tick (specs/06 "Verification").
+        color: !done
+            ? null
+            : task.awaitsApproval
+            ? theme.colorScheme.surfaceContainerHigh
+            : ww.successContainer,
         child: ExcludeSemantics(
           // One spoken label for the card (title, status, points): the children would
           // otherwise repeat the title (A10).
@@ -554,11 +568,15 @@ class _TaskCard extends StatelessWidget {
               _TickPop(
                 done: done,
                 child: Icon(
-                  done
-                      ? Icons.check_circle_rounded
-                      : Icons.radio_button_unchecked_rounded,
+                  !done
+                      ? Icons.radio_button_unchecked_rounded
+                      : task.awaitsApproval
+                      ? Icons.hourglass_top_rounded
+                      : Icons.check_circle_rounded,
                   size: 44,
-                  color: done ? ww.success : theme.colorScheme.onSurface,
+                  color: done && !task.awaitsApproval
+                      ? ww.success
+                      : theme.colorScheme.onSurface,
                 ),
               ),
             ],
@@ -904,7 +922,7 @@ class _KidGreetingState extends ConsumerState<_KidGreeting> {
     final today = ref.watch(kidTodayProvider);
     final title = Theme.of(context).textTheme.headlineSmall
         ?.copyWith(fontWeight: FontWeight.w800);
-    final Widget greeting;
+    final Widget Function(bool stacked) greeting;
     // The child's own birthday: Wusel cheers in the party hat (specs/25), where the
     // household keeps the birthday ambience on.
     final birthday =
@@ -985,7 +1003,7 @@ class _KidGreetingState extends ConsumerState<_KidGreeting> {
       // A badge earned in the last two days: the greeting's Wusel holds up the star
       // (specs/25 `proud`), and the badge card below names it.
       final badge = ref.watch(kidNewBadgeProvider(member.id));
-      greeting = WuselSays(
+      greeting = (stacked) => WuselSays(
         line: line,
         pose: night
             ? WuselPose.sleep
@@ -1006,9 +1024,12 @@ class _KidGreetingState extends ConsumerState<_KidGreeting> {
         // The home Wusel travels from (specs/25 "Wusel on the move").
         home: true,
         enter: widget.enter,
+        // On a phone Wusel and the points share a row above a full-width bubble.
+        stacked: stacked,
+        trailing: stacked ? widget.balance : null,
       );
     } else {
-      greeting = Row(
+      greeting = (_) => Row(
         children: [
           ExcludeSemantics(
             // The initial is decoration: the greeting already names the child.
@@ -1038,9 +1059,9 @@ class _KidGreetingState extends ConsumerState<_KidGreeting> {
         ],
       );
     }
-    final keyed = KeyedSubtree(
+    Widget keyed({required bool stacked}) => KeyedSubtree(
       key: const ValueKey('kid-greeting'),
-      child: greeting,
+      child: greeting(stacked),
     );
     return Container(
       padding: const EdgeInsets.all(Tokens.space4),
@@ -1048,25 +1069,28 @@ class _KidGreetingState extends ConsumerState<_KidGreeting> {
         color: widget.tint,
         borderRadius: BorderRadius.circular(KidCard.radius),
       ),
-      // On a phone the line needs the width: the points go below it.
+      // On a phone the line needs the width: Wusel and the points share a row
+      // above the bubble (or, without Wusel, the points go below the line).
       child: LayoutBuilder(
-        builder: (context, constraints) => constraints.maxWidth < _narrow
-            ? Column(
+        builder: (context, constraints) => constraints.maxWidth >= _narrow
+            ? Row(
+                children: [
+                  Expanded(child: keyed(stacked: false)),
+                  const SizedBox(width: Tokens.space2),
+                  widget.balance,
+                ],
+              )
+            : present
+            ? keyed(stacked: true)
+            : Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  keyed,
+                  keyed(stacked: false),
                   const SizedBox(height: Tokens.space2),
                   Align(
                     alignment: Alignment.centerRight,
                     child: widget.balance,
                   ),
-                ],
-              )
-            : Row(
-                children: [
-                  Expanded(child: keyed),
-                  const SizedBox(width: Tokens.space2),
-                  widget.balance,
                 ],
               ),
       ),

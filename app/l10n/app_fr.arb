@@ -1365,7 +1365,6 @@
   "kidTasksTitle": "Mes tâches",
   "kidTasksNone": "Tu n’as pas de tâches aujourd’hui.",
   "kidTasksAllDone": "Tout est fait !",
-  "kidTasksAllDoneBody": "Bravo, tu as tout fait pour aujourd’hui.",
   "kidAwaitsCheck": "en cours de vérification",
   "kidDone": "Terminé",
   "kidTaskDoneSnack": "{title} : c’est fait !",

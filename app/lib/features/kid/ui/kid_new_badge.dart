@@ -67,17 +67,25 @@ class _KidNewBadgeState extends ConsumerState<KidNewBadge> {
                   tappable: true,
                   style: style,
                 )
+              // A slim line, so the child's chores stay in view (decided
+              // 2026-10-26).
               : Row(
                   children: [
                     ExcludeSemantics(
                       child: Icon(
                         Icons.star_rounded,
-                        size: 56,
+                        size: 36,
                         color: context.ww.points,
                       ),
                     ),
                     const SizedBox(width: Tokens.space3),
-                    Expanded(child: Text(line, style: style)),
+                    Expanded(
+                      child: Text(
+                        line,
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w800),
+                      ),
+                    ),
                   ],
                 ),
         ),

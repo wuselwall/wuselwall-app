@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
@@ -34,22 +36,69 @@ class KidPicker extends ConsumerWidget {
             child: AsyncValueView<List<Member>>(
               value: members,
               onRetry: () => ref.invalidate(membersProvider),
-              data: (list) => SingleChildScrollView(
-                child: Wrap(
-                  alignment: WrapAlignment.center,
-                  spacing: Tokens.space8,
-                  runSpacing: Tokens.space8,
-                  children: [
-                    for (final m in list.where((m) => m.active))
-                      _Choice(
-                        member: m,
-                        onTap: () => ref
-                            .read(actingProfileProvider.notifier)
-                            .select(m.id),
+              data: (list) {
+                final active = list.where((m) => m.active).toList();
+                return LayoutBuilder(
+                  builder: (context, constraints) {
+                    final grid = pickerGrid(
+                      count: active.length,
+                      width: constraints.maxWidth,
+                      height: constraints.maxHeight,
+                      label: _Choice.labelHeight(context),
+                    );
+                    return SingleChildScrollView(
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minHeight: constraints.maxHeight,
+                        ),
+                        child: Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              for (
+                                var r = 0;
+                                r < active.length;
+                                r += grid.columns
+                              )
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    top: r == 0 ? 0 : pickerGap,
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      for (
+                                        var i = r;
+                                        i < r + grid.columns &&
+                                            i < active.length;
+                                        i++
+                                      )
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                            left: i == r ? 0 : pickerGap,
+                                          ),
+                                          child: _Choice(
+                                            member: active[i],
+                                            size: grid.size,
+                                            onTap: () => ref
+                                                .read(
+                                                  actingProfileProvider
+                                                      .notifier,
+                                                )
+                                                .select(active[i].id),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
                       ),
-                  ],
-                ),
-              ),
+                    );
+                  },
+                );
+              },
             ),
           ),
         ],
@@ -58,11 +107,58 @@ class KidPicker extends ConsumerWidget {
   }
 }
 
+/// The space between two choices, across and down.
+const pickerGap = Tokens.space6;
+
+/// How the picker lays out [count] people in a [width] × [height] area: the
+/// largest circles that fit, in rows as even as possible (four people are 2 × 2 or
+/// 4 × 1, never 3 + 1), between 72 and 200 dp. [label] is the height of a name
+/// under its circle. When even the smallest circles do not fit, the area scrolls.
+@visibleForTesting
+({int columns, double size}) pickerGrid({
+  required int count,
+  required double width,
+  required double height,
+  required double label,
+}) {
+  if (count == 0) return (columns: 1, size: 132);
+  var best = (columns: math.min(count, 2), size: 72.0);
+  var bestSize = 0.0;
+  for (var rows = 1; rows <= count; rows++) {
+    final columns = (count / rows).ceil();
+    final across = (width - (columns - 1) * pickerGap) / columns;
+    final down = (height - (rows - 1) * pickerGap) / rows - label;
+    final size = math.min(math.min(across, down), 200.0);
+    if (size > bestSize) {
+      bestSize = size;
+      best = (columns: columns, size: size);
+    }
+  }
+  if (bestSize < 72) {
+    // Too many for the screen: two across, scrolling.
+    final across = (width - pickerGap) / 2;
+    return (columns: 2, size: math.max(72.0, math.min(across, 200.0)));
+  }
+  return best;
+}
+
 class _Choice extends StatelessWidget {
-  const _Choice({required this.member, required this.onTap});
+  const _Choice({
+    required this.member,
+    required this.size,
+    required this.onTap,
+  });
 
   final Member member;
+  final double size;
   final VoidCallback onTap;
+
+  /// The name under a circle and the gap above it.
+  static double labelHeight(BuildContext context) =>
+      Tokens.space2 +
+      MediaQuery.textScalerOf(
+        context,
+      ).scale((Theme.of(context).textTheme.titleLarge?.fontSize ?? 22) * 1.3);
 
   @override
   Widget build(BuildContext context) {
@@ -79,10 +175,10 @@ class _Choice extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            MemberCircle(member: member, size: 132),
+            MemberCircle(member: member, size: size),
             const SizedBox(height: Tokens.space2),
             SizedBox(
-              width: 150,
+              width: size,
               child: Text(
                 member.displayName,
                 textAlign: TextAlign.center,

@@ -437,6 +437,11 @@ void main() {
         find.byKey(const ValueKey('table-question-dismiss')),
         findsNothing,
       );
+      // A slim line on the kid home until tapped: the question, no buttons yet.
+      expect(find.text(riddle.text), findsOneWidget);
+      expect(find.text('Frage hinzufügen'), findsNothing);
+      await t.tap(find.text(riddle.text));
+      await t.pumpAndSettle();
       expect(find.text('Frage hinzufügen'), findsOneWidget);
     });
   });

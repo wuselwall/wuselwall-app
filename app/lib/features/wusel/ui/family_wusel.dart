@@ -129,6 +129,8 @@ class WuselSays extends ConsumerStatefulWidget {
     this.tappable = false,
     this.home = false,
     this.enter = false,
+    this.stacked = false,
+    this.trailing,
     super.key,
   });
 
@@ -144,6 +146,13 @@ class WuselSays extends ConsumerStatefulWidget {
   /// See [FamilyWusel.home] and [FamilyWusel.enter].
   final bool home;
   final bool enter;
+
+  /// On a phone: Wusel (with [trailing] at the row's end) above a bubble that has
+  /// the full width, rather than a bubble squeezed beside Wusel.
+  final bool stacked;
+
+  /// Shown at the end of Wusel's row when [stacked] (the points pill).
+  final Widget? trailing;
 
   @override
   ConsumerState<WuselSays> createState() => _WuselSaysState();
@@ -173,89 +182,125 @@ class _WuselSaysState extends ConsumerState<WuselSays> {
     );
     // Without Wusel the line is still worth saying: plain text, no bubble.
     if (!present) return text;
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        FamilyWusel(
-          pose: widget.pose,
-          size: widget.size,
-          moment: widget.moment,
-          outfit: widget.outfit,
-          quietAllowed: widget.quietAllowed,
-          tappable: widget.tappable,
-          home: widget.home,
-          enter: widget.enter,
-        ),
-        const SizedBox(width: Tokens.space2),
-        Flexible(
-          child: AnimatedSwitcher(
-            duration: Tokens.motionStandard,
-            child: _hidden
-                ? const SizedBox.shrink()
-                : Semantics(
-                    // The line is read; tapping hides it, which the hint says.
-                    onTapHint: context.l10n.wuselHideLine,
-                    child: GestureDetector(
-                      onTap: () => setState(() => _hidden = true),
-                      child: CustomPaint(
-                        painter: _BubblePainter(
-                          fill: Theme.of(context)
-                              .colorScheme
-                              .surfaceContainerLow,
-                          border: ww.line,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(
+    final wusel = FamilyWusel(
+      pose: widget.pose,
+      size: widget.size,
+      moment: widget.moment,
+      outfit: widget.outfit,
+      quietAllowed: widget.quietAllowed,
+      tappable: widget.tappable,
+      home: widget.home,
+      enter: widget.enter,
+    );
+    final bubble = AnimatedSwitcher(
+      duration: Tokens.motionStandard,
+      child: _hidden
+          ? const SizedBox.shrink()
+          : Semantics(
+              // The line is read; tapping hides it, which the hint says.
+              onTapHint: context.l10n.wuselHideLine,
+              child: GestureDetector(
+                onTap: () => setState(() => _hidden = true),
+                child: CustomPaint(
+                  painter: _BubblePainter(
+                    fill: Theme.of(context).colorScheme.surfaceContainerLow,
+                    border: ww.line,
+                    tailUp: widget.stacked,
+                    tailAt: widget.size / 2,
+                  ),
+                  child: Padding(
+                    padding: widget.stacked
+                        ? const EdgeInsets.fromLTRB(
+                            Tokens.space4,
+                            Tokens.space3 + 8,
+                            Tokens.space4,
+                            Tokens.space3,
+                          )
+                        : const EdgeInsets.fromLTRB(
                             Tokens.space4 + 8,
                             Tokens.space3,
                             Tokens.space4,
                             Tokens.space3,
                           ),
-                          child: text,
-                        ),
-                      ),
-                    ),
+                    child: text,
                   ),
-          ),
-        ),
+                ),
+              ),
+            ),
+    );
+    if (widget.stacked) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(children: [wusel, const Spacer(), ?widget.trailing]),
+          const SizedBox(height: Tokens.space1),
+          bubble,
+        ],
+      );
+    }
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        wusel,
+        const SizedBox(width: Tokens.space2),
+        Flexible(child: bubble),
       ],
     );
   }
 }
 
-/// A rounded bubble with a small tail on the left, pointing at Wusel.
+/// A rounded bubble with a small tail pointing at Wusel: on the left, or with
+/// [tailUp] on the top edge [tailAt] from the left (Wusel above the bubble).
 class _BubblePainter extends CustomPainter {
-  const _BubblePainter({required this.fill, required this.border});
+  const _BubblePainter({
+    required this.fill,
+    required this.border,
+    this.tailUp = false,
+    this.tailAt = 0,
+  });
 
   final Color fill;
   final Color border;
+  final bool tailUp;
+  final double tailAt;
 
   @override
   void paint(Canvas canvas, Size size) {
     const tail = 8.0;
-    final body = RRect.fromRectAndRadius(
-      Rect.fromLTWH(tail, 0, size.width - tail, size.height),
-      const Radius.circular(16),
+    final RRect body;
+    final Path tip;
+    if (tailUp) {
+      body = RRect.fromRectAndRadius(
+        Rect.fromLTWH(0, tail, size.width, size.height - tail),
+        const Radius.circular(16),
+      );
+      final x = tailAt.clamp(24.0, size.width - 24);
+      tip = Path()
+        ..moveTo(x - 7, tail + 1)
+        ..lineTo(x, 0)
+        ..lineTo(x + 7, tail + 1)
+        ..close();
+    } else {
+      body = RRect.fromRectAndRadius(
+        Rect.fromLTWH(tail, 0, size.width - tail, size.height),
+        const Radius.circular(16),
+      );
+      final mid = size.height / 2;
+      tip = Path()
+        ..moveTo(tail + 1, mid - 7)
+        ..lineTo(0, mid)
+        ..lineTo(tail + 1, mid + 7)
+        ..close();
+    }
+    final shape = Path.combine(
+      PathOperation.union,
+      Path()..addRRect(body),
+      tip,
     );
-    final mid = size.height / 2;
-    final path = Path()
-      ..addRRect(body)
-      ..moveTo(tail + 1, mid - 7)
-      ..lineTo(0, mid)
-      ..lineTo(tail + 1, mid + 7)
-      ..close();
     canvas
-      ..drawPath(path, Paint()..color = fill)
+      ..drawPath(shape, Paint()..color = fill)
       ..drawPath(
-        Path.combine(
-          PathOperation.union,
-          Path()..addRRect(body),
-          Path()
-            ..moveTo(tail + 1, mid - 7)
-            ..lineTo(0, mid)
-            ..lineTo(tail + 1, mid + 7)
-            ..close(),
-        ),
+        shape,
         Paint()
           ..color = border
           ..style = PaintingStyle.stroke
@@ -265,5 +310,8 @@ class _BubblePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_BubblePainter old) =>
-      old.fill != fill || old.border != border;
+      old.fill != fill ||
+      old.border != border ||
+      old.tailUp != tailUp ||
+      old.tailAt != tailAt;
 }

@@ -148,6 +148,8 @@ class _KidPointsPageState extends ConsumerState<KidPointsPage> {
               loading: () => const SizedBox.shrink(),
               error: (_, _) => const SizedBox.shrink(),
               data: (badges) => Wrap(
+                // Centred, so a last badge alone on its row does not sit apart.
+                alignment: WrapAlignment.center,
                 spacing: Tokens.space4,
                 runSpacing: Tokens.space4,
                 children: [
@@ -379,7 +381,8 @@ class _BadgeTile extends StatelessWidget {
           '${badge.title}, '
           '${badge.earned ? l10n.kidBadgeEarned : l10n.kidBadgeNotYet}',
       child: SizedBox(
-        width: 104,
+        // Wide enough for one long German word on a line ("Fünfundzwanzig").
+        width: 128,
         child: Column(
           children: [
             Opacity(
@@ -409,7 +412,7 @@ class _BadgeTile extends StatelessWidget {
             Text(
               badge.title,
               textAlign: TextAlign.center,
-              maxLines: 2,
+              maxLines: 3,
               overflow: TextOverflow.ellipsis,
               style: Theme.of(context).textTheme.labelLarge,
             ),

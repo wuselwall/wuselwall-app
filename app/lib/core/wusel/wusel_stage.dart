@@ -259,6 +259,31 @@ class WuselStageState extends State<WuselStage>
     return box.localToGlobal(Offset.zero) & box.size;
   }
 
+  /// The part of the screen [context] can be seen in: below the status bar, and
+  /// inside the list it scrolls in. A card scrolled under the page's top band is
+  /// on the screen but not in sight.
+  Rect? _seenFrom(BuildContext context) {
+    var seen = _screen;
+    if (seen == null) return null;
+    final top = MediaQuery.maybePaddingOf(this.context)?.top ?? 0;
+    seen = Rect.fromLTRB(seen.left, seen.top + top, seen.right, seen.bottom);
+    final scrollable = context.findAncestorStateOfType<ScrollableState>();
+    final box = scrollable?.context.findRenderObject();
+    if (box is RenderBox && box.attached && box.hasSize) {
+      seen = seen.intersect(box.localToGlobal(Offset.zero) & box.size);
+    }
+    return seen;
+  }
+
+  /// Whether most of [rect] can be seen from [context].
+  bool _inSight(BuildContext context, Rect rect, {double share = 0.6}) {
+    final seen = _seenFrom(context);
+    if (seen == null || seen.isEmpty) return false;
+    final part = rect.intersect(seen);
+    if (part.width <= 0 || part.height <= 0) return false;
+    return part.width * part.height >= rect.width * rect.height * share;
+  }
+
   /// The centre of Wusel's square at [spot] of [target], in global coordinates, or
   /// null when the target is gone or not on screen.
   Offset? _spotOf(GlobalKey target, WuselSpot spot, double size) {
@@ -286,11 +311,13 @@ class WuselStageState extends State<WuselStage>
         centre = Offset(x, rect.top - size * 0.30);
     }
     final square = Rect.fromCenter(center: centre, width: size, height: size);
-    // Only between places that can be seen: most of Wusel must be on screen.
+    // Only between places that can be seen: most of Wusel must be on screen, and
+    // the target itself in sight (not scrolled under the page's top band).
     final seen = square.intersect(screen);
     if (seen.isEmpty || seen.width * seen.height < size * size * 0.6) {
       return null;
     }
+    if (!_inSight(context, rect, share: 0.5)) return null;
     return centre;
   }
 
@@ -792,10 +819,10 @@ class WuselHomeState extends State<WuselHome> {
 
   bool get _onScreen {
     final rect = _rect;
-    final screen = _stage?._screen;
-    if (rect == null || screen == null) return false;
+    final stage = _stage;
+    if (rect == null || stage == null) return false;
     if (!TickerMode.valuesOf(context).enabled) return false;
-    return screen.contains(rect.center);
+    return stage._inSight(context, rect);
   }
 
   @override

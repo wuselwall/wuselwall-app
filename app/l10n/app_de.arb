@@ -844,7 +844,6 @@
   "kidTasksTitle": "Meine Aufgaben",
   "kidTasksNone": "Heute hast du keine Aufgaben.",
   "kidTasksAllDone": "Alles geschafft!",
-  "kidTasksAllDoneBody": "Super gemacht, heute ist alles erledigt.",
   "kidAwaitsCheck": "wird noch geprüft",
   "kidDone": "Erledigt",
   "kidTaskDoneSnack": "{title} geschafft!",

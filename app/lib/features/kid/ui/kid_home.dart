@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
@@ -57,103 +58,144 @@ class KidHome extends ConsumerWidget {
     final picking =
         member == null && tab != KidTab.shopping && tab != KidTab.family;
     final band = context.ww.band(_module(tab));
-    return Scaffold(
-      body: SafeArea(
-        bottom: false,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Quiet, for the grown-ups: settings, where guardian actions ask for the PIN.
-            // Its own row, so it never sits on top of a page's content. The row is the
-            // tab's band (specs/26), so each destination has its colour.
-            ColoredBox(
-              color: band,
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    top: Tokens.space1,
-                    right: Tokens.space1,
+    return _KidChrome(
+      child: Scaffold(
+        body: SafeArea(
+          bottom: false,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Quiet, for the grown-ups: settings, where guardian actions ask for the PIN.
+              // Its own row, so it never sits on top of a page's content. The row is the
+              // tab's band (specs/26), so each destination has its colour.
+              ColoredBox(
+                color: band,
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      top: Tokens.space1,
+                      right: Tokens.space1,
+                    ),
+                    // A family tablet with nobody selected has no gear (specs/09); the row
+                    // keeps its height so nothing jumps when someone picks their name.
+                    child: ref.watch(settingsGearVisibleProvider)
+                        ? IconButton(
+                            tooltip: l10n.settingsTitle,
+                            icon: const Icon(Icons.settings_outlined),
+                            // ink2: ink3 is not used on a band (specs/26).
+                            color: context.ww.ink2,
+                            onPressed: () =>
+                                unawaited(openSettings(context, ref)),
+                          )
+                        : const SizedBox.square(
+                            dimension: kMinInteractiveDimension,
+                          ),
                   ),
-                  // A family tablet with nobody selected has no gear (specs/09); the row
-                  // keeps its height so nothing jumps when someone picks their name.
-                  child: ref.watch(settingsGearVisibleProvider)
-                      ? IconButton(
-                          tooltip: l10n.settingsTitle,
-                          icon: const Icon(Icons.settings_outlined),
-                          // ink2: ink3 is not used on a band (specs/26).
-                          color: context.ww.ink2,
-                          onPressed: () =>
-                              unawaited(openSettings(context, ref)),
-                        )
-                      : const SizedBox.square(
-                          dimension: kMinInteractiveDimension,
-                        ),
                 ),
               ),
-            ),
-            Expanded(
-              child: KidDecorScope(decor: _decor(tab), child: body),
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: SafeArea(
-        top: false,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Theme(
-              data: Theme.of(context).copyWith(
-                navigationBarTheme: NavigationBarThemeData(
-                  indicatorColor: band,
-                  labelTextStyle: WidgetStatePropertyAll(
-                    TextStyle(
-                      fontFamily: Tokens.fontUi,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
+              Expanded(
+                child: KidDecorScope(
+                  decor: _decor(tab),
+                  // A wide tablet or screen keeps the cards at a readable width:
+                  // a tick far from its title is hard to connect.
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        maxWidth: maxContentWidth,
+                      ),
+                      child: body,
                     ),
                   ),
-                  iconTheme: const WidgetStatePropertyAll(
-                    IconThemeData(size: 32),
-                  ),
                 ),
               ),
-              child: NavigationBar(
-                selectedIndex: tab.index,
-                onDestinationSelected: (i) =>
-                    ref.read(kidTabProvider.notifier).select(KidTab.values[i]),
-                destinations: [
-                  NavigationDestination(
-                    icon: Icon(_icon(KidTab.today)),
-                    label: l10n.kidTabToday,
+            ],
+          ),
+        ),
+        // The bars are the frame of every page: their text grows with the system
+        // setting only so far, so a large font cannot push them over the page.
+        bottomNavigationBar: MediaQuery.withClampedTextScaling(
+          maxScaleFactor: 1.3,
+          child: SafeArea(
+            top: false,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Theme(
+                  data: Theme.of(context).copyWith(
+                    navigationBarTheme: NavigationBarThemeData(
+                      indicatorColor: band,
+                      // On a phone the five labels share 360 dp: the font shrinks
+                      // until the longest fits, so "Stundenplan" stays one word.
+                      labelTextStyle: WidgetStatePropertyAll(
+                        _labelStyle(context, [
+                          for (final t in KidTab.values) _label(l10n, t),
+                        ]),
+                      ),
+                      iconTheme: const WidgetStatePropertyAll(
+                        IconThemeData(size: 32),
+                      ),
+                    ),
                   ),
-                  NavigationDestination(
-                    icon: Icon(_icon(KidTab.school)),
-                    label: l10n.kidTabSchool,
+                  child: NavigationBar(
+                    selectedIndex: tab.index,
+                    onDestinationSelected: (i) => ref
+                        .read(kidTabProvider.notifier)
+                        .select(KidTab.values[i]),
+                    destinations: [
+                      for (final t in KidTab.values)
+                        NavigationDestination(
+                          icon: Icon(_icon(t)),
+                          label: _label(l10n, t),
+                        ),
+                    ],
                   ),
-                  NavigationDestination(
-                    icon: Icon(_icon(KidTab.points)),
-                    label: l10n.kidTabPoints,
-                  ),
-                  NavigationDestination(
-                    icon: Icon(_icon(KidTab.shopping)),
-                    label: l10n.kidTabShopping,
-                  ),
-                  NavigationDestination(
-                    icon: Icon(_icon(KidTab.family)),
-                    label: l10n.kidTabFamily,
-                  ),
-                ],
-              ),
+                ),
+                // While the big picker fills the page it is the one place to say who is
+                // here; the bar below would only repeat it.
+                if (!picking) const ActingProfileBar(),
+              ],
             ),
-            // While the big picker fills the page it is the one place to say who is
-            // here; the bar below would only repeat it.
-            if (!picking) const ActingProfileBar(),
-          ],
+          ),
         ),
       ),
     );
+  }
+
+  /// The widest a kid page's content gets (specs/09: tablets in landscape).
+  static const maxContentWidth = 840.0;
+
+  static String _label(AppLocalizations l10n, KidTab tab) => switch (tab) {
+    KidTab.today => l10n.kidTabToday,
+    KidTab.school => l10n.kidTabSchool,
+    KidTab.points => l10n.kidTabPoints,
+    KidTab.shopping => l10n.kidTabShopping,
+    KidTab.family => l10n.kidTabFamily,
+  };
+
+  /// 16 px bold, or smaller until the longest of [labels] fits its fifth of the
+  /// width (never below 11 px).
+  static TextStyle _labelStyle(BuildContext context, List<String> labels) {
+    const base = TextStyle(
+      fontFamily: Tokens.fontUi,
+      fontSize: 16,
+      fontWeight: FontWeight.w700,
+    );
+    final scaler = MediaQuery.textScalerOf(context).clamp(maxScaleFactor: 1.3);
+    final slot = MediaQuery.sizeOf(context).width / labels.length - 12;
+    var widest = 0.0;
+    for (final label in labels) {
+      final painter = TextPainter(
+        text: TextSpan(text: label, style: base),
+        textDirection: TextDirection.ltr,
+        textScaler: scaler,
+        maxLines: 1,
+      )..layout();
+      if (painter.width > widest) widest = painter.width;
+      painter.dispose();
+    }
+    if (widest <= slot) return base;
+    return base.copyWith(fontSize: (16 * slot / widest).clamp(11.0, 16.0));
   }
 
   /// The band of each kid destination: the same colours as the adult modules, so a
@@ -182,4 +224,50 @@ class KidHome extends ConsumerWidget {
     KidTab.shopping => Icons.shopping_basket_rounded,
     KidTab.family => Icons.people_alt_rounded,
   };
+}
+
+/// What the kid home does around its pages: on a phone it stays upright (decided
+/// 2026-10-26: held sideways the bars left no room for the page), and a page's
+/// message, such as a tick's "Rückgängig", goes when the child switches tab or
+/// person, so nobody undoes someone else's chore.
+class _KidChrome extends ConsumerStatefulWidget {
+  const _KidChrome({required this.child});
+
+  final Widget child;
+
+  @override
+  ConsumerState<_KidChrome> createState() => _KidChromeState();
+}
+
+class _KidChromeState extends ConsumerState<_KidChrome> {
+  bool? _phone;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final phone = MediaQuery.sizeOf(context).shortestSide < 600;
+    if (phone == _phone) return;
+    _phone = phone;
+    unawaited(
+      SystemChrome.setPreferredOrientations(
+        phone ? const [DeviceOrientation.portraitUp] : const [],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    // Other registers and screens turn freely again.
+    unawaited(SystemChrome.setPreferredOrientations(const []));
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    void clear() => ScaffoldMessenger.maybeOf(context)?.hideCurrentSnackBar();
+    ref
+      ..listen(kidTabProvider, (_, _) => clear())
+      ..listen(actingProfileProvider, (_, _) => clear());
+    return widget.child;
+  }
 }

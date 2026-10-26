@@ -1386,7 +1386,6 @@
   "kidTasksTitle": "My chores",
   "kidTasksNone": "You have no chores today.",
   "kidTasksAllDone": "All done!",
-  "kidTasksAllDoneBody": "Well done, you did everything for today.",
   "kidAwaitsCheck": "being checked",
   "kidDone": "Done",
   "kidTaskDoneSnack": "{title} done!",

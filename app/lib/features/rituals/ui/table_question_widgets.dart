@@ -9,6 +9,7 @@ import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/motion.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/board/ui/board_grid.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
@@ -203,85 +204,95 @@ class TableQuestionCard extends ConsumerWidget {
     final q = current.question;
     final author = _author(ref, q);
     final band = context.ww.band(AppModule.meals);
-    return Padding(
-      padding: const EdgeInsets.only(top: Tokens.space3),
-      child: Container(
-        padding: const EdgeInsets.all(Tokens.space4),
-        decoration: BoxDecoration(
-          color: band,
-          borderRadius: BorderRadius.circular(kid ? 22 : 12),
-          border: Border.all(color: context.ww.line),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    final decoration = BoxDecoration(
+      color: band,
+      borderRadius: BorderRadius.circular(kid ? 22 : 12),
+      border: Border.all(color: context.ww.line),
+    );
+    final full = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    l10n.tableQuestionTitle,
-                    style: theme.textTheme.labelLarge?.copyWith(
-                      color: context.ww.ink2,
-                    ),
-                  ),
+            Expanded(
+              child: Text(
+                l10n.tableQuestionTitle,
+                style: theme.textTheme.labelLarge?.copyWith(
+                  color: context.ww.ink2,
                 ),
-                if (!kid)
-                  IconButton(
-                    key: const ValueKey('table-question-dismiss'),
-                    tooltip: l10n.tableQuestionDismiss,
-                    visualDensity: VisualDensity.compact,
-                    icon: const Icon(Icons.close),
-                    onPressed: () => ref
-                        .read(tableDismissProvider.notifier)
-                        .dismiss(current.window),
-                  ),
-              ],
-            ),
-            const SizedBox(height: Tokens.space2),
-            Text(
-              q.text,
-              style:
-                  (kid
-                          ? theme.textTheme.headlineSmall
-                          : theme.textTheme.titleLarge)
-                      ?.copyWith(fontWeight: FontWeight.w800),
-            ),
-            if (author != null)
-              Text(
-                l10n.tableQuestionFrom(author),
-                style: theme.textTheme.bodyMedium,
               ),
-            const SizedBox(height: Tokens.space2),
-            Wrap(
-              spacing: Tokens.space2,
-              runSpacing: Tokens.space2,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
-                OutlinedButton.icon(
-                  icon: const Icon(Icons.refresh_rounded),
-                  label: Text(l10n.tableQuestionNext),
-                  onPressed: () =>
-                      ref.read(tableSkipProvider.notifier).next(current.window),
-                ),
-                if (q.answer != null) _AnswerButton(answer: q.answer!),
-                // Anyone may add a question of their own, children too.
-                TextButton(
-                  onPressed: () => unawaited(openFamilyQuestions(context)),
-                  child: Text(
-                    kid ? l10n.tableQuestionAdd : l10n.tableQuestionsManage,
-                  ),
-                ),
-                // Hiding a bundled question is a guardian's (api.table_question_hide).
-                if (!kid && !q.isOwn && _isGuardian(ref))
-                  TextButton(
-                    onPressed: () => unawaited(_hide(context, ref, q)),
-                    child: Text(l10n.tableQuestionHide),
-                  ),
-              ],
             ),
+            if (!kid)
+              IconButton(
+                key: const ValueKey('table-question-dismiss'),
+                tooltip: l10n.tableQuestionDismiss,
+                visualDensity: VisualDensity.compact,
+                icon: const Icon(Icons.close),
+                onPressed: () => ref
+                    .read(tableDismissProvider.notifier)
+                    .dismiss(current.window),
+              ),
           ],
         ),
-      ),
+        const SizedBox(height: Tokens.space2),
+        Text(
+          q.text,
+          style:
+              (kid ? theme.textTheme.headlineSmall : theme.textTheme.titleLarge)
+                  ?.copyWith(fontWeight: FontWeight.w800),
+        ),
+        if (author != null)
+          Text(
+            l10n.tableQuestionFrom(author),
+            style: theme.textTheme.bodyMedium,
+          ),
+        const SizedBox(height: Tokens.space2),
+        Wrap(
+          spacing: Tokens.space2,
+          runSpacing: Tokens.space2,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            OutlinedButton.icon(
+              icon: const Icon(Icons.refresh_rounded),
+              label: Text(l10n.tableQuestionNext),
+              onPressed: () =>
+                  ref.read(tableSkipProvider.notifier).next(current.window),
+            ),
+            if (q.answer != null) _AnswerButton(answer: q.answer!),
+            // Anyone may add a question of their own, children too.
+            TextButton(
+              onPressed: () => unawaited(openFamilyQuestions(context)),
+              child: Text(
+                kid ? l10n.tableQuestionAdd : l10n.tableQuestionsManage,
+              ),
+            ),
+            // Hiding a bundled question is a guardian's (api.table_question_hide).
+            if (!kid && !q.isOwn && _isGuardian(ref))
+              TextButton(
+                onPressed: () => unawaited(_hide(context, ref, q)),
+                child: Text(l10n.tableQuestionHide),
+              ),
+          ],
+        ),
+      ],
+    );
+    return Padding(
+      padding: const EdgeInsets.only(top: Tokens.space3),
+      // On the kid home the question is a slim line until tapped, so the child's
+      // chores stay in view (decided 2026-10-26).
+      child: kid
+          ? _KidQuestion(
+              key: ValueKey(q.key),
+              decoration: decoration,
+              title: l10n.tableQuestionTitle,
+              question: q.text,
+              full: full,
+            )
+          : Container(
+              padding: const EdgeInsets.all(Tokens.space4),
+              decoration: decoration,
+              child: full,
+            ),
     );
   }
 
@@ -500,4 +511,90 @@ bool _isGuardian(WidgetRef ref) {
           .firstOrNull
           ?.isGuardian ??
       false;
+}
+
+/// The Tischfrage on the kid home: the question in two lines, opened by a tap to
+/// the full card with its buttons.
+class _KidQuestion extends StatefulWidget {
+  const _KidQuestion({
+    required this.decoration,
+    required this.title,
+    required this.question,
+    required this.full,
+    super.key,
+  });
+
+  final BoxDecoration decoration;
+  final String title;
+  final String question;
+  final Widget full;
+
+  @override
+  State<_KidQuestion> createState() => _KidQuestionState();
+}
+
+class _KidQuestionState extends State<_KidQuestion> {
+  bool _open = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final Widget content = _open
+        ? Padding(
+            padding: const EdgeInsets.all(Tokens.space4),
+            child: widget.full,
+          )
+        : Semantics(
+            button: true,
+            expanded: false,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(22),
+              onTap: () => setState(() => _open = true),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: Tokens.space4,
+                  vertical: Tokens.space3,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.title,
+                            style: theme.textTheme.labelLarge?.copyWith(
+                              color: context.ww.ink2,
+                            ),
+                          ),
+                          Text(
+                            widget.question,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: Tokens.space2),
+                    const Icon(Icons.expand_more_rounded),
+                  ],
+                ),
+              ),
+            ),
+          );
+    return Container(
+      decoration: widget.decoration,
+      child: motionAllowed(context)
+          ? AnimatedSize(
+              duration: Tokens.motionEmphasised,
+              curve: Curves.easeOutCubic,
+              alignment: Alignment.topCenter,
+              child: content,
+            )
+          : content,
+    );
+  }
 }
