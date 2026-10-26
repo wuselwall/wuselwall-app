@@ -59,10 +59,13 @@ class _InviteCodePageState extends ConsumerState<InviteCodePage> {
 
   Future<void> _check([String? scanned]) async {
     final l10n = context.l10n;
-    final parsed = parseInvitation(scanned ?? _code.text);
+    final raw = scanned ?? _code.text;
+    final parsed = parseInvitation(raw);
     if (parsed == null) {
       setState(() {
-        _error = l10n.inviteCodeInvalidFormat;
+        _error = raw.trim().isEmpty
+            ? l10n.inviteCodeEmpty
+            : l10n.inviteCodeInvalidFormat;
         _valid = null;
       });
       return;
@@ -159,13 +162,22 @@ class _InviteCodePageState extends ConsumerState<InviteCodePage> {
           ),
           const SizedBox(height: Tokens.space4),
         ],
+        // What is wrong is said on the field, as on the e-mail and server fields.
         TextField(
+          key: const ValueKey('invite-code-field'),
           controller: _code,
           enabled: !_busy,
           textCapitalization: TextCapitalization.characters,
           autocorrect: false,
           style: theme.textTheme.titleLarge,
-          decoration: InputDecoration(labelText: l10n.inviteCodeLabel),
+          decoration: InputDecoration(
+            labelText: l10n.inviteCodeLabel,
+            errorText: _error,
+            errorMaxLines: 3,
+          ),
+          onChanged: (_) {
+            if (_error != null) setState(() => _error = null);
+          },
           onSubmitted: (_) => _check(),
         ),
         const SizedBox(height: Tokens.space4),
@@ -173,14 +185,6 @@ class _InviteCodePageState extends ConsumerState<InviteCodePage> {
           onPressed: _busy ? null : _check,
           child: Text(l10n.inviteCheckAction),
         ),
-        if (_error != null) ...[
-          const SizedBox(height: Tokens.space4),
-          Text(
-            _error!,
-            key: const ValueKey('invite-error'),
-            style: TextStyle(color: theme.colorScheme.error),
-          ),
-        ],
         if (valid != null) ...[
           const SizedBox(height: Tokens.space6),
           Card(

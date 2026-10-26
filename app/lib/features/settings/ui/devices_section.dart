@@ -20,6 +20,7 @@ import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/identity/ui/enrolment_qr.dart';
 import 'package:wuselwall/features/identity/ui/guardian_gate.dart';
 import 'package:wuselwall/features/settings/application/settings_view.dart';
+import 'package:wuselwall/features/settings/ui/action_tile.dart';
 import 'package:wuselwall/features/system/ui/class_labels.dart';
 
 /// All devices of the family (Geräte → Alle Geräte): connect another one, rename or
@@ -341,20 +342,33 @@ class _DeviceTile extends ConsumerWidget {
         : seen == null
         ? l10n.deviceNeverSeen
         : l10n.deviceLastSeen(agoText(l10n, seen, DateTime.now()));
-    return ListTile(
+    final kind = d.deviceClass.label(l10n);
+    final register = d.register.label(l10n);
+    final scheme = Theme.of(context).colorScheme;
+    return SettingsActionTile(
       leading: Icon(switch (d.deviceClass) {
         DeviceClass.personal => Icons.smartphone,
         DeviceClass.shared => Icons.tablet_android,
         DeviceClass.kiosk => Icons.tv,
       }),
       title: Text(isThis ? '${d.label} (${l10n.thisDevice})' : d.label),
+      // A wall is a "Wandanzeige" twice over (class and register): say it once.
       subtitle: Text(
-        '${d.deviceClass.label(l10n)} · ${d.register.label(l10n)}\n$lastSeen',
+        '${kind == register ? kind : '$kind · $register'}\n$lastSeen',
       ),
-      isThreeLine: true,
-      trailing: d.revoked
+      // Revoking is a row action like "Passwort ändern", outlined in the error colour,
+      // not a link.
+      action: d.revoked
           ? null
-          : TextButton(onPressed: onRevoke, child: Text(l10n.revoke)),
+          : OutlinedButton(
+              key: ValueKey('revoke-${d.id}'),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: scheme.error,
+                side: BorderSide(color: scheme.error),
+              ),
+              onPressed: onRevoke,
+              child: Text(l10n.revoke),
+            ),
       onTap: d.revoked ? null : onRename,
     );
   }

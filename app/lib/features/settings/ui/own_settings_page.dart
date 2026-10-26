@@ -10,8 +10,8 @@ import 'package:wuselwall/features/settings/ui/settings_group_page.dart';
 /// What a child, or an adult who is not a guardian, sees under Einstellungen on a family
 /// tablet or the kitchen wall: their own page and nothing else (specs/09, "Settings on a
 /// shared device"). It is the Personal group, narrowed by `SettingsEnv.ownOnly` to the
-/// settings the server lets a member change for themselves, titled with their name. Back
-/// leads home: there is no top page to return to.
+/// settings the server lets a member change for themselves, titled "Einstellungen" with
+/// their name on a second line. Back leads home: there is no top page to return to.
 class OwnSettingsPage extends ConsumerWidget {
   const OwnSettingsPage({super.key});
 
@@ -28,7 +28,9 @@ class OwnSettingsPage extends ConsumerWidget {
       group: SettingsGroup.personal,
       parentRoute: Routes.home,
       showViewSwitch: false,
-      title: name == null ? null : context.l10n.settingsOwnTitle(name),
+      // "Einstellungen" with the name below: "Einstellungen für Emma" did not fit.
+      title: context.l10n.settingsTitle,
+      subtitle: name,
     );
   }
 }

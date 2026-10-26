@@ -158,9 +158,7 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsNothing);
       expect(
         t
-            .widget<OutlinedButton>(
-              find.widgetWithText(OutlinedButton, l10n.doorEmail),
-            )
+            .widget<ButtonStyleButton>(find.byKey(const ValueKey('door-email')))
             .onPressed,
         isNull,
       );
@@ -170,9 +168,7 @@ void main() {
       expect(find.text(l10n.setupOfflineWelcome), findsNothing);
       expect(
         t
-            .widget<OutlinedButton>(
-              find.widgetWithText(OutlinedButton, l10n.doorEmail),
-            )
+            .widget<ButtonStyleButton>(find.byKey(const ValueKey('door-email')))
             .onPressed,
         isNotNull,
       );

@@ -436,8 +436,9 @@ class _FamilyQuestionsPageState extends ConsumerState<FamilyQuestionsPage> {
             controller: _text,
             maxLength: 200,
             textCapitalization: TextCapitalization.sentences,
+            // The field names what goes in; the button below says what it does.
             decoration: InputDecoration(
-              labelText: l10n.tableQuestionAdd,
+              labelText: l10n.tableQuestionOwnLabel,
               hintText: l10n.tableQuestionAddHint,
             ),
             onChanged: (_) => setState(() {}),

@@ -18,6 +18,7 @@ import 'package:wuselwall/features/identity/ui/guardian_gate.dart';
 import 'package:wuselwall/features/settings/application/household_export_providers.dart';
 import 'package:wuselwall/features/settings/application/settings_view.dart';
 import 'package:wuselwall/features/settings/data/household_export_repository.dart';
+import 'package:wuselwall/features/settings/ui/settings_bar_title.dart';
 import 'package:wuselwall/features/settings/ui/settings_view_switch.dart';
 
 /// The family itself (specs/16 step 10.2): its name, and under Advanced the time zone,
@@ -68,7 +69,8 @@ class _FamilyPageState extends ConsumerState<FamilyPage> {
     final info = ref.watch(householdInfoProvider);
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.familyTitle),
+        // The row that opens it says "Familienprofil"; the group around it is "Familie".
+        title: SettingsBarTitle(title: l10n.familyProfileTitle),
         leading: BackButton(onPressed: () => context.go(Routes.settingsFamily)),
         actions: const [SettingsViewSwitch()],
       ),

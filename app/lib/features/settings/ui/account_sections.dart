@@ -14,6 +14,7 @@ import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/identity/ui/set_password_dialog.dart';
+import 'package:wuselwall/features/settings/ui/action_tile.dart';
 
 /// How this account signs in (specs/20, "Several ways into one account") — for the
 /// adult's own phone: the email code, always, and an optional password. On a server
@@ -49,7 +50,7 @@ class _SignInMethodsSectionState extends ConsumerState<SignInMethodsSection> {
                   : l10n.signInMethodEmailSubtitle(email),
             ),
           ),
-        ListTile(
+        SettingsActionTile(
           leading: const Icon(Icons.lock_outline),
           title: Text(l10n.settingsPasswordTitle),
           subtitle: Text(
@@ -59,7 +60,7 @@ class _SignInMethodsSectionState extends ConsumerState<SignInMethodsSection> {
                 ? l10n.settingsPasswordSet
                 : l10n.settingsPasswordNotSet,
           ),
-          trailing: OutlinedButton(
+          action: OutlinedButton(
             onPressed: _setPassword,
             child: Text(
               hasPassword ? l10n.passwordChangeAction : l10n.passwordSetAction,
@@ -94,11 +95,11 @@ class SecuritySection extends ConsumerWidget {
         factor.when(
           loading: () => const ListTile(title: LinearProgressIndicator()),
           error: (_, _) => ListTile(title: Text(l10n.errorUnknown)),
-          data: (id) => ListTile(
+          data: (id) => SettingsActionTile(
             leading: const Icon(Icons.security),
             title: Text(l10n.totpTitle),
             subtitle: Text(id == null ? l10n.totpOff : l10n.totpOn),
-            trailing: id == null
+            action: id == null
                 ? FilledButton(
                     onPressed: () => _enableTotp(context, ref),
                     child: Text(l10n.totpEnable),
@@ -116,11 +117,11 @@ class SecuritySection extends ConsumerWidget {
                   ),
           ),
         ),
-        ListTile(
+        SettingsActionTile(
           leading: const Icon(Icons.pin_outlined),
           title: Text(l10n.pinChangeTitle),
           subtitle: Text(l10n.pinChangeBody),
-          trailing: OutlinedButton(
+          action: OutlinedButton(
             onPressed: () => _changePin(context, repo),
             child: Text(l10n.pinChangeAction),
           ),
@@ -128,11 +129,11 @@ class SecuritySection extends ConsumerWidget {
         // Not on the web until the passkeys SDK is self-hosted (web/index.html), and
         // only in a build that names its own server (ADR-018).
         if (!kIsWeb && ref.watch(appConfigProvider).passkeys)
-          ListTile(
+          SettingsActionTile(
             leading: const Icon(Icons.fingerprint),
             title: Text(l10n.passkeyTitle),
             subtitle: Text(l10n.passkeyBody),
-            trailing: OutlinedButton(
+            action: OutlinedButton(
               onPressed: () async {
                 final result = await repo.registerPasskey(l10n.appTitle);
                 if (!context.mounted) return;

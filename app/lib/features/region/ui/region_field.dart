@@ -10,12 +10,17 @@ class RegionField extends StatelessWidget {
     required this.code,
     required this.onChanged,
     this.label,
+    this.showLabel = true,
     super.key,
   });
 
   final String? code;
   final ValueChanged<String?> onChanged;
   final String? label;
+
+  /// False where a heading above already names the field, such as the setting row
+  /// "Region": the label would only repeat it.
+  final bool showLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +34,7 @@ class RegionField extends StatelessWidget {
       },
       child: InputDecorator(
         decoration: InputDecoration(
-          labelText: label ?? l10n.regionFieldLabel,
+          labelText: showLabel ? label ?? l10n.regionFieldLabel : null,
           suffixIcon: code == null
               ? const Icon(Icons.arrow_drop_down)
               : IconButton(

@@ -50,7 +50,33 @@ extension SettingsGroupPresentation on SettingsGroup {
     SettingsGroup.help => l10n.settingsGroupHelpTitle,
   };
 
-  String subtitle(AppLocalizations l10n) => switch (this) {
+  /// The title on a bar too narrow for [title] beside the Advanced chip: "Aufgaben" for
+  /// "Aufgaben & Belohnungen". The same as [title] where that is short already.
+  String shortTitle(AppLocalizations l10n) => switch (this) {
+    SettingsGroup.tasks => l10n.settingsGroupTasksShortTitle,
+    SettingsGroup.calendar => l10n.settingsGroupCalendarShortTitle,
+    SettingsGroup.celebrations => l10n.settingsGroupCelebrationsShortTitle,
+    SettingsGroup.kitchen => l10n.settingsGroupKitchenShortTitle,
+    SettingsGroup.account => l10n.settingsGroupAccountShortTitle,
+    SettingsGroup.help => l10n.settingsGroupHelpShortTitle,
+    _ => title(l10n),
+  };
+
+  /// What the group's page holds in this view: Basic names only the rows Basic shows, so
+  /// the tile never promises what opens hidden (specs/21).
+  String subtitle(AppLocalizations l10n, {bool advanced = true}) =>
+      advanced ? _subtitleAdvanced(l10n) : _subtitleBasic(l10n);
+
+  String _subtitleBasic(AppLocalizations l10n) => switch (this) {
+    SettingsGroup.tasks => l10n.settingsGroupTasksSubtitleBasic,
+    SettingsGroup.calendar => l10n.settingsGroupCalendarSubtitleBasic,
+    SettingsGroup.meals => l10n.settingsGroupMealsSubtitleBasic,
+    SettingsGroup.rituals => l10n.settingsGroupRitualsSubtitleBasic,
+    SettingsGroup.celebrations => l10n.settingsGroupCelebrationsSubtitleBasic,
+    _ => _subtitleAdvanced(l10n),
+  };
+
+  String _subtitleAdvanced(AppLocalizations l10n) => switch (this) {
     SettingsGroup.personal => l10n.settingsGroupPersonalSubtitle,
     SettingsGroup.family => l10n.settingsGroupFamilySubtitle,
     SettingsGroup.tasks => l10n.settingsGroupTasksSubtitle,

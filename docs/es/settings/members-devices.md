@@ -7,7 +7,7 @@ Si vienes de otra vista, desliza hacia dentro desde el borde izquierdo en iPhone
 
 ## Vista básica o avanzada {#view}
 
-La vista **Básicos** muestra lo esencial. Los ajustes están ordenados en grupos (ver [Todos los ajustes](/es/settings/household)); solo muestra los grupos con algo importante: **Personal**, **Familia** (perfil de la familia, región, miembros, semana habitual), **Tareas y recompensas**, **Calendario y colegio**, **Comidas**, **Rituales**, **Dispositivos** (Este dispositivo, Todos los dispositivos), **Ayuda e información** y, en tu móvil, **Cuenta y seguridad** con la eliminación de la cuenta. **Avanzados** añade **Celebraciones y estaciones**, **Pantalla de la cocina**, **Compartir y conexiones** (calendarios compartidos, calendarios externos), el servidor, el inicio de sesión, la seguridad y la salida del hogar. El mismo interruptor existe en cada página de grupo, en la página de una persona, en el **perfil de la familia** y al editar una lista de la compra.
+La vista **Básicos** muestra lo esencial. Los ajustes están ordenados en grupos (ver [Todos los ajustes](/es/settings/household)); solo muestra los grupos con algo importante: **Personal**, **Familia** (perfil de la familia, región, miembros, semana habitual), **Tareas y recompensas**, **Calendario y colegio**, **Comidas**, **Rituales**, **Dispositivos** (Este dispositivo, Todos los dispositivos), **Ayuda e información** y, en tu móvil, **Cuenta y seguridad** (inicio de sesión, seguridad, salida del hogar, eliminación de la cuenta). **Avanzados** añade **Celebraciones y estaciones**, **Pantalla de la cocina**, **Compartir y conexiones** (calendarios compartidos, calendarios externos) y el servidor. El mismo interruptor existe en cada página de grupo, en la página de una persona, en el **perfil de la familia** y al editar una lista de la compra.
 
 Lo oculto sigue activo. La app recuerda la vista por dispositivo. Las páginas de grupo también tienen estas dos vistas.
 
@@ -33,7 +33,7 @@ Los niños no necesitan invitación ni cuenta: añade su nombre y conecta su dis
 
 ## Añadir un miembro {#add-member}
 
-El icono de la parte superior de la página **Miembros** añade una persona por nombre. La app asigna el siguiente color libre.
+**Añadir miembro**, debajo de la lista de la página **Miembros**, añade una persona por nombre. La app asigna el siguiente color libre.
 
 ## Editar un miembro {#edit-a-member}
 

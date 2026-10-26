@@ -198,12 +198,9 @@ class _RegionPickerPageState extends ConsumerState<RegionPickerPage> {
                     itemCount: hits.length,
                     itemBuilder: (context, i) {
                       final r = hits[i];
-                      final parent = index.parentOf(r);
                       return ListTile(
                         title: Text(r.displayName(language)),
-                        subtitle: parent == null
-                            ? null
-                            : Text(regionHeading(l10n, parent, language)),
+                        subtitle: _kindLine(l10n, index, r, language),
                         onTap: () => _pick(r.code),
                       );
                     },
@@ -213,6 +210,22 @@ class _RegionPickerPageState extends ConsumerState<RegionPickerPage> {
       ],
     );
   }
+}
+
+/// The line under a district or municipality: its kind first, then where it lies
+/// ("Gemeinde · Bezirk Uster"), so "Uster" the Gemeinde and "Uster" the Bezirk read as two
+/// different choices.
+Widget? _kindLine(
+  AppLocalizations l10n,
+  RegionIndex index,
+  Region region,
+  String language,
+) {
+  final kind = region.category.trim();
+  final parent = index.parentOf(region);
+  final where = parent == null ? null : regionHeading(l10n, parent, language);
+  if (where == null) return kind.isEmpty ? null : Text(kind);
+  return Text(kind.isEmpty ? where : l10n.regionPickKindOf(kind, where));
 }
 
 class _SearchField extends StatelessWidget {

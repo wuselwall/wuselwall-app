@@ -11,6 +11,8 @@ import 'package:wuselwall/features/setup/ui/qr_scan_page.dart';
 
 /// Why a server could not be used, in words a family understands.
 enum ServerProblem {
+  /// Nothing typed: asks for the address instead of calling it wrong.
+  empty,
   invalid,
   unreachable,
   notWuselwall,
@@ -21,6 +23,7 @@ enum ServerProblem {
 
 String serverProblemText(AppLocalizations l10n, ServerProblem problem) =>
     switch (problem) {
+      ServerProblem.empty => l10n.serverEmpty,
       ServerProblem.invalid => l10n.serverInvalid,
       ServerProblem.unreachable => l10n.serverUnreachable,
       ServerProblem.notWuselwall => l10n.serverNotWuselwall,
@@ -86,6 +89,10 @@ class _ServerChoicePageState extends State<ServerChoicePage> {
 
   Future<void> _connect(String raw) async {
     if (_busy) return;
+    if (raw.trim().isEmpty) {
+      _fail(ServerProblem.empty);
+      return;
+    }
     if (parseServerAddress(raw, allowHttp: kDebugMode) == null &&
         parseAppLink(raw) == null &&
         parseInvitation(raw) == null) {
@@ -113,7 +120,7 @@ class _ServerChoicePageState extends State<ServerChoicePage> {
     final raw = await Navigator.of(context).push<String>(
       MaterialPageRoute(
         builder: (_) => QrScanPage(
-          title: l10n.serverScanTitle,
+          title: l10n.serverScan,
           parse: (raw) =>
               parseServerAddress(raw) == null && parseAppLink(raw) == null
               ? null
@@ -121,7 +128,14 @@ class _ServerChoicePageState extends State<ServerChoicePage> {
         ),
       ),
     );
-    if (raw == null || !mounted) return;
+    if (!mounted) return;
+    if (raw == null) {
+      // Back, or "Code eintippen" where nothing can scan: the code goes into this field,
+      // whose helper line shows how (code and server together); an old error would hide it.
+      setState(() => _problem = null);
+      _addressFocus.requestFocus();
+      return;
+    }
     final server = parseAppLink(raw)?.server ?? parseServerAddress(raw);
     if (server != null) _address.text = displayServerAddress(server);
     await _connect(raw);
@@ -168,6 +182,10 @@ class _ServerChoicePageState extends State<ServerChoicePage> {
                     decoration: InputDecoration(
                       labelText: l10n.serverAddressLabel,
                       hintText: l10n.serverAddressHint,
+                      // An invitation goes here too (SETUP-02): said at the field,
+                      // where "Code eintippen" on the scanner leads.
+                      helperText: l10n.serverAddressHelper,
+                      helperMaxLines: 3,
                       errorText: problem == null
                           ? null
                           : serverProblemText(l10n, problem),

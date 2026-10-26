@@ -76,7 +76,7 @@ class SettingsPage extends ConsumerWidget {
                 key: ValueKey('settings-group-${group.name}'),
                 leading: Icon(group.icon),
                 title: Text(group.title(l10n)),
-                subtitle: Text(group.subtitle(l10n)),
+                subtitle: Text(group.subtitle(l10n, advanced: env.advanced)),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () => context.go(group.route),
               ),

@@ -54,8 +54,8 @@ void main() {
         );
         expect(
           t
-              .widget<OutlinedButton>(
-                find.widgetWithText(OutlinedButton, 'Mit E-Mail fortfahren'),
+              .widget<ButtonStyleButton>(
+                find.byKey(const ValueKey('door-email')),
               )
               .onPressed,
           isNull,

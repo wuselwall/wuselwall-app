@@ -4,7 +4,7 @@ Diese Schritte betreffen **dein Konto** oder die **ganze Familie**. Sie stehen u
 
 ## Passwort
 
-Unter **Einstellungen → Erweitert → Anmeldung → Passwort** legst du ein Passwort fest oder änderst es. Mindestens 10 Zeichen; besser ein ganzer Satz. Den Code per E-Mail kannst du trotzdem weiter benutzen, wenn dein Server Mails verschickt; auf einem Server ohne E-Mail ist das Passwort der Weg hinein ([E-Mail](/server/email)).
+Unter **Einstellungen → Konto & Sicherheit → Anmeldung → Passwort** legst du ein Passwort fest oder änderst es. Mindestens 10 Zeichen; besser ein ganzer Satz. Den Code per E-Mail kannst du trotzdem weiter benutzen, wenn dein Server Mails verschickt; auf einem Server ohne E-Mail ist das Passwort der Weg hinein ([E-Mail](/server/email)).
 
 ## Familie verlassen
 

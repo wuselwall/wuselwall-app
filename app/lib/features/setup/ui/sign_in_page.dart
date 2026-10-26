@@ -18,6 +18,7 @@ import 'package:wuselwall/core/server/setup_store.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/setup/ui/auth_form_scaffold.dart';
+import 'package:wuselwall/features/setup/ui/busy_button_label.dart';
 import 'package:wuselwall/features/setup/ui/password_sign_in_page.dart';
 
 /// E1 (specs/20, "With email"): the address, then a code by e-mail (E2). A password is
@@ -194,37 +195,40 @@ class _SignInPageState extends ConsumerState<SignInPage> {
           ),
         ),
         const SizedBox(height: Tokens.space6),
-        FilledButton(
-          onPressed: busy ? null : _sendCode,
-          child: _busyAction == _SignInAction.emailCode
-              ? _BusyButtonLabel(label: l10n.emailSendingCode)
-              : Text(l10n.emailContinue),
-        ),
-        if (!_showPassword)
+        // One filled action at a time (specs/20 E1): "Weiter" mails a code; once the
+        // password field is open, "Anmelden" signs in with it and the code is the quiet
+        // alternative below.
+        if (!_showPassword) ...[
+          FilledButton(
+            key: const ValueKey('sign-in-continue'),
+            onPressed: busy ? null : _sendCode,
+            child: _busyAction == _SignInAction.emailCode
+                ? BusyButtonLabel(label: l10n.emailSendingCode)
+                : Text(l10n.emailContinue),
+          ),
           TextButton(
             onPressed: busy ? null : () => setState(() => _showPassword = true),
             child: Text(l10n.emailHavePassword),
-          )
-        else ...[
-          const SizedBox(height: Tokens.space4),
+          ),
+        ] else ...[
           if (_wrongCredentials) ...[
-            const SizedBox(height: Tokens.space3),
             Text(
               l10n.emailWrongCredentials,
               style: TextStyle(color: theme.colorScheme.error),
             ),
+            const SizedBox(height: Tokens.space3),
           ],
-          const SizedBox(height: Tokens.space3),
-          OutlinedButton(
+          FilledButton(
+            key: const ValueKey('sign-in-password'),
             onPressed: busy ? null : _signInWithPassword,
             child: _busyAction == _SignInAction.password
-                ? _BusyButtonLabel(label: l10n.signInProgress)
+                ? BusyButtonLabel(label: l10n.signInProgress)
                 : Text(l10n.signInAction),
           ),
           TextButton(
             onPressed: busy ? null : _sendCode,
             child: _busyAction == _SignInAction.emailCode
-                ? _BusyButtonLabel(label: l10n.emailSendingCode)
+                ? BusyButtonLabel(label: l10n.emailSendingCode)
                 : Text(l10n.emailUseCodeInstead),
           ),
         ],
@@ -237,33 +241,13 @@ class _SignInPageState extends ConsumerState<SignInPage> {
             onPressed: busy ? null : _passkey,
             icon: const Icon(Icons.fingerprint),
             label: _busyAction == _SignInAction.passkey
-                ? _BusyButtonLabel(label: l10n.signInProgress)
+                ? BusyButtonLabel(label: l10n.signInProgress)
                 : Text(l10n.signInPasskey),
           ),
         ],
       ],
     );
   }
-}
-
-class _BusyButtonLabel extends StatelessWidget {
-  const _BusyButtonLabel({required this.label});
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) => Wrap(
-    alignment: WrapAlignment.center,
-    spacing: 8,
-    runSpacing: 4,
-    children: [
-      const SizedBox.square(
-        dimension: 16,
-        child: CircularProgressIndicator(strokeWidth: 2),
-      ),
-      Text(label),
-    ],
-  );
 }
 
 enum _SignInAction { emailCode, password, passkey }
