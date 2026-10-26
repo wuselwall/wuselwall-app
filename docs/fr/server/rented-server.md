@@ -6,31 +6,38 @@ Techniquement, c’est la même pile Docker qu’[à la maison](/fr/server/home-
 
 ## Préparer {#what-you-need}
 
-- Un compte chez un hébergeur proposant **cloud-init** (sélection ci-dessous) ; environ **4 à 8 € par mois**.
+- Un compte chez un hébergeur proposant **cloud-init** (sélection ci-dessous) ; environ **6 à 25 € par mois** (état octobre 2026).
 - Un **domaine** avec deux noms, `api.` et `web.`, environ 1 à 2 € par mois.
 - Une **clé SSH** sur votre ordinateur (`ssh-keygen` si vous n’en avez pas).
 - Un **fournisseur d’e-mails** pour les codes de connexion, comme pour tout serveur WuselWall ([Options](/fr/server/extras#email)).
 
 ## Hébergeurs {#providers}
 
-Tous sont des sociétés européennes avec des centres de données en Europe et un accord de traitement RGPD dans leurs documents contractuels. Les prix et la disponibilité changent ; vérifiez chez l’hébergeur. WuselWall a besoin de **2 vCPU et 4 Go de mémoire**, 8 Go avec la [reconnaissance de texte](/fr/server/extras#text-recognition).
+Les trois du tableau sont des sociétés européennes avec des centres de données en Europe ; chacune propose un accord de traitement RGPD et, à la création d’un serveur, un champ pour le fichier cloud-init. WuselWall a besoin de **2 vCPU et 4 Go de mémoire**, 8 Go avec la [reconnaissance de texte](/fr/server/extras#text-recognition).
 
-| Hébergeur | Siège, centres de données | Taille adaptée | Remarque |
+::: info Indépendant, prix indicatifs
+WuselWall n’est lié à aucune des sociétés citées sur cette page, n’est ni sponsorisé ni soutenu par elles et ne reçoit rien pour les mentionner ; les liens sont de simples liens, pas des liens d’affiliation. La liste est une sélection sans ordre particulier : ce n’est ni un classement ni une liste complète. La fourchette de prix est un ordre de grandeur indicatif, état octobre 2026, et non une offre ; les prix changent et sont affichés TTC ou HT selon l’hébergeur. Seuls la grille tarifaire et les conditions de l’hébergeur font foi. Les noms de produits et de sociétés sont des marques de leurs titulaires.
+:::
+
+| Hébergeur | Siège, centres de données | Taille adaptée | Champ pour le fichier |
 |---|---|---|---|
-| [Hetzner Cloud](https://www.hetzner.com/cloud) | Allemagne ; Falkenstein, Nuremberg, Helsinki | 2 vCPU, 4 Go, à partir d’environ 4 à 6 €, plus 0,50 € pour une adresse IPv4 | Guide ci-dessous. Les petites tailles sont parfois en rupture |
-| [netcup](https://www.netcup.com/) | Allemagne ; Nuremberg, Vienne | VPS 4 Go, environ 4 à 6 € | Bon marché ; attention à la durée d’engagement |
-| [IONOS](https://www.ionos.fr/) | Allemagne | VPS 4 Go, environ 5 à 8 € | |
-| [Scaleway](https://www.scaleway.com/) | France ; Paris, Amsterdam, Varsovie | DEV1-M ou équivalent, environ 8 € | Pratique si vos e-mails passent déjà par Scaleway |
-| [OVHcloud](https://www.ovhcloud.com/) | France ; Gravelines, Strasbourg, etc. | VPS 4 Go, environ 5 à 7 € | |
-| [Infomaniak](https://www.infomaniak.com/) | Suisse ; Genève | VPS ou Public Cloud 4 Go, environ 6 à 10 € | Droit suisse de la protection des données |
+| [Hetzner Cloud](https://www.hetzner.com/cloud) | Allemagne ; Falkenstein, Nuremberg, Helsinki | CX23 (2 vCPU, 4 Go) ; en rupture, CPX22 | **Cloud config** ; guide ci-dessous |
+| [Scaleway](https://www.scaleway.com/) | France ; Paris, Amsterdam, Varsovie | DEV1-M (3 vCPU, 4 Go), IPv4 publique en sus | **Cloud-init** ; pratique si vos e-mails passent déjà par Scaleway |
+| [IONOS](https://www.ionos.fr/) | Allemagne ; choisir un centre de données dans l’UE | Cloud Server 4 Go | **Cloud-Init User Data** dans les options avancées ; documenté pour le Cloud Server, pas pour le VPS |
 
-**Où sont les données ?** Sur votre propre serveur chez l’hébergeur. Il fournit matériel, électricité et réseau et voit la connexion chiffrée, pas son contenu ; seul WuselWall lit votre base. Contrairement à Supabase, l’hébergeur est européen et seul le droit européen s’applique.
+**Coût :** environ **6 à 25 € par mois** pour un serveur adapté, selon l’hébergeur, la taille et la TVA, plus le domaine (état octobre 2026). Les plus petites tailles sont parfois en rupture (chez Hetzner, toute la gamme la moins chère le 25 octobre 2026) ; la taille suivante coûte environ trois fois plus. Seule la grille de l’hébergeur fait foi.
+
+**Sans champ cloud-init :** [netcup](https://www.netcup.com/), [OVHcloud](https://www.ovhcloud.com/) et [Infomaniak](https://www.infomaniak.com/) (Suisse, Genève ; droit suisse de la protection des données) louent aussi des serveurs adaptés en Europe, mais ne documentent pas un tel champ. Créez-y un serveur Ubuntu et installez par SSH comme [à la maison](/fr/server/home-server).
+
+**Où sont les données ?** Sur votre propre serveur chez l’hébergeur. Il fournit matériel, électricité et réseau ; comme tout hébergeur, il pourrait techniquement accéder à la machine, et son accord de traitement lui interdit d’utiliser vos données. Les connexions avec vos appareils sont chiffrées, et seul WuselWall lit votre base. Contrairement à Supabase Inc. (États-Unis), l’hébergeur est une société européenne soumise au droit européen, au droit suisse pour Infomaniak.
 
 ## Chez Hetzner, pas à pas {#hetzner-step-by-step}
 
+Ce guide prend Hetzner parce que sa console offre un simple champ cloud-config ; ce n’est pas une recommandation face aux autres. Écrans et noms de boutons : état octobre 2026, ils peuvent changer.
+
 1. **Préparer le fichier.** Ouvrez [`server/cloud-init.yaml`](https://github.com/wuselwall/wuselwall-app/blob/main/server/cloud-init.yaml) sur GitHub, copiez son contenu dans un éditeur de texte et modifiez la seule ligne marquée `CHANGE` : la version depuis les [publications](https://github.com/wuselwall/wuselwall-app/releases), vos deux adresses et la langue des e-mails (`de`, `en`, `fr` ou `es`).
 2. **Projet et clé.** Dans la [console Hetzner Cloud](https://console.hetzner.cloud/), créez un projet, par exemple « WuselWall », et ajoutez votre clé SSH publique sous **Security → SSH keys**.
-3. **Créer le serveur.** **Add server** : emplacement Falkenstein, Nuremberg ou Helsinki ; image **Ubuntu 24.04** ; type partagé avec **4 Go** ; réseau IPv4 et IPv6 ; votre clé SSH ; un pare-feu Hetzner est facultatif, le fichier en configure un sur le serveur ; en bas, collez le contenu préparé dans **Cloud config**. Nommez-le `wuselwall`, puis **Create & Buy now**.
+3. **Créer le serveur.** **Add server** : emplacement Falkenstein, Nuremberg ou Helsinki ; image **Ubuntu 24.04** ; type **CX23** (2 vCPU, 4 Go) sous Cost-Optimized, ou **CPX22** sous Regular Performance s’il est en rupture ; réseau IPv4 et IPv6 ; votre clé SSH ; un pare-feu Hetzner est facultatif, le fichier en configure un sur le serveur ; en bas, collez le contenu préparé dans **Cloud config**. Nommez-le `wuselwall`, puis **Create & Buy now**.
 4. **DNS.** La console affiche aussitôt l’adresse IPv4. Chez votre registrar, créez deux enregistrements A, `api` et `web`, vers cette adresse (et des AAAA avec l’IPv6 si vous le souhaitez). Caddy réessaie jusqu’à ce que les noms répondent.
 5. **Lire le résultat.** Après 5 à 10 minutes :
 

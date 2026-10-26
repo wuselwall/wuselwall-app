@@ -19,8 +19,10 @@ Un servidor pertenece a **un solo hogar**. Una vez creado, no admite una segunda
 | Requisitos | Cuentas de Supabase y GitHub, sin máquina, más un proveedor de correo | Cuenta en un proveedor europeo como Hetzner, dominio y proveedor de correo | NAS o miniPC con Docker, dominio y proveedor de correo |
 | Instalación | Navegador | Un archivo pegado al crear el servidor y dos registros DNS | Herramienta de terminal, DNS y red |
 | Datos | Centro de datos elegido en Supabase Inc. (EE. UU.) | Proveedor europeo de tu elección, en tu propio servidor | Máquina bajo tu control |
-| Costes | Según la oferta vigente de Supabase | Unos 4–8 € al mes, más el dominio | Equipo, electricidad y dominio |
+| Costes | Según la oferta vigente de Supabase | Unos 6–25 € al mes, más el dominio | Equipo, electricidad y dominio |
 | Mantenimiento | Supabase mantiene su plataforma; tú actualizas WuselWall | Tú, un comando SSH por actualización; el sistema se actualiza solo | Tú gestionas actualizaciones y copias |
+
+Los precios son cifras orientativas a octubre de 2026, no ofertas; cuenta la lista de precios vigente del proveedor. WuselWall es independiente y no está vinculado a Supabase, GitHub, Hetzner ni a los demás proveedores citados en estas páginas.
 
 Un NAS con Docker puede servir. Para datos en Europa bajo tu control sin máquina en casa, alquila un servidor en Hetzner o un proveedor comparable. Si no, Supabase evita mantener una máquina. Revisa condiciones y precios antes de elegir. Es posible [trasladarse después](/es/server/restore).
 

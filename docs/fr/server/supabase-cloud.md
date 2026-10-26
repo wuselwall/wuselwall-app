@@ -8,7 +8,7 @@ L’installation hébergée n’a pas encore été entièrement validée pour Wu
 
 ## Gratuit ou payant ? {#free-or-pro}
 
-L’offre gratuite convient à un essai, mais peut mettre un projet inactif en pause et ne fournit pas les mêmes sauvegardes qu’une offre payante. Vérifiez les limites, la conservation des sauvegardes et les [tarifs actuels](https://supabase.com/pricing) avant l’utilisation quotidienne. Un serveur en pause ne sert plus l’écran mural.
+L’offre gratuite convient à un essai, mais peut mettre un projet inactif en pause et ne fournit pas les mêmes sauvegardes qu’une offre payante. Vérifiez les limites, la conservation des sauvegardes et les [tarifs actuels](https://supabase.com/pricing) avant l’utilisation quotidienne ; seules les conditions de Supabase font foi. WuselWall est indépendant et n’est lié ni à Supabase ni à GitHub. Un serveur en pause ne sert plus l’écran mural.
 
 ## 1. Créer le projet {#_1-creating-the-project}
 

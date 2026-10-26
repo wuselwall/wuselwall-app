@@ -16,7 +16,7 @@ WuselWall has not been fully tested on Supabase yet. If a step fails, please rep
 | **Backups** | None | Daily, kept for 7 days |
 | **Space** | 500 MB of database, plenty for a family for a long time | More than enough |
 
-**Free** is enough to try WuselWall out. For everyday use take **Pro**: a paused server stops the wall display, and without a backup a mistake is final. Current prices are at [supabase.com/pricing](https://supabase.com/pricing).
+**Free** is enough to try WuselWall out. For everyday use take **Pro**: a paused server stops the wall display, and without a backup a mistake is final. The plans and prices above are as of October 2026, for reference only; Supabase's current terms at [supabase.com/pricing](https://supabase.com/pricing) count. WuselWall is independent and not affiliated with Supabase or GitHub.
 
 ## 1. Creating the project
 

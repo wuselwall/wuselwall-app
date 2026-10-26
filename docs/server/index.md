@@ -21,8 +21,10 @@ Ein WuselWall-Server gehört genau **einem Haushalt**. Wenn die erste Familie an
 | **Was ihr braucht** | Ein Konto bei Supabase und eines bei GitHub, dazu einen Mail-Anbieter | Ein Konto bei einem europäischen Anbieter wie Hetzner, eine Domain und einen Mail-Anbieter | Einen Rechner, der dauernd läuft (NAS, Mini-PC) mit Docker, eine eigene Domain und einen Mail-Anbieter |
 | **Einrichten** | Im Browser, etwa 20 Minuten | Eine Datei beim Anlegen des Servers einfügen und zwei DNS-Einträge setzen, etwa 15 Minuten | Ein Befehl auf dem Server, dazu Domain und Router einrichten |
 | **Wo die Daten liegen** | Bei Supabase Inc. (USA) in einem Rechenzentrum eurer Wahl, z. B. Frankfurt oder Zürich | Bei einem europäischen Anbieter eurer Wahl, auf eurem eigenen Server | Auf eurem eigenen Gerät |
-| **Kosten** | Gratis zum Ausprobieren, für den Alltag etwa 25 US-Dollar im Monat | Etwa 4–8 € im Monat, dazu die Domain | Strom und Domain, etwa 1–2 € im Monat |
+| **Kosten** | Gratis zum Ausprobieren, für den Alltag etwa 25 US-Dollar im Monat | Grob 6–25 € im Monat, dazu die Domain | Strom und Domain, etwa 1–2 € im Monat |
 | **Updates und Backups** | Supabase pflegt den Server, und ab dem Pro-Abo macht es tägliche Backups. Neue WuselWall-Versionen spielst du mit einem Klick ein | Du selbst, mit je einem Befehl per SSH; das System hält sich selbst aktuell | Du selbst, mit je einem Befehl |
+
+Die Preise sind grobe Werte zur Orientierung, Stand Oktober 2026, keine Angebote; es gilt die aktuelle Preisliste des Anbieters. WuselWall ist unabhängig und mit Supabase, GitHub, Hetzner und den anderen hier genannten Anbietern nicht verbunden.
 
 Unser Rat: Wer schon ein NAS oder einen Heimserver mit Docker betreibt, nimmt den **Server zu Hause**. Wer die Daten in Europa und unter eigener Kontrolle will, ohne ein Gerät zu Hause, mietet einen **Server bei Hetzner & Co.** Wer es am einfachsten will, fängt mit **Supabase** an. Ein Umzug später ist möglich ([Backup zurückspielen](/server/restore)).
 

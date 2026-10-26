@@ -10,7 +10,7 @@ Commands for a server at home run in the directory of the `wuselwall` tool ([Ser
 
 **Language of the emails:** during setup you choose one language — German, English, French or Spanish (default: German). That language is used for the subject and body of every sign-in and confirmation email, whatever the device language is. You can change it later with `./wuselwall language de|en|fr|es` ([Server at home](/en/server/home-server#email-language)).
 
-For this the server needs an SMTP service, a provider that sends mail for it. A mailbox at your normal mail provider won't do; use a service for *transactional* mail, such as Scaleway Transactional Email in the EU (300 mails a month for free). The provider sees the email addresses and the codes. So that the mails don't land in spam, add the records the provider names to your domain (SPF, DKIM, DMARC).
+For this the server needs an SMTP service, a provider that sends mail for it. A mailbox at your normal mail provider won't do; use a service for *transactional* mail, such as Scaleway Transactional Email in the EU (a free tier of 300 mails, as of October 2026; an example, not a recommendation, and WuselWall is not affiliated with Scaleway). The provider sees the email addresses and the codes. So that the mails don't land in spam, add the records the provider names to your domain (SPF, DKIM, DMARC).
 
 **At home:** put `SMTP_HOST`, `SMTP_PORT` (usually `587`), `SMTP_USER`, `SMTP_PASS` and, as the sender, `SMTP_ADMIN_EMAIL` into `stack/.env`, in single quotes like the other values. Then:
 
