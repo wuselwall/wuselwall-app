@@ -1018,9 +1018,13 @@ class _KidGreetingState extends ConsumerState<_KidGreeting> {
         moment: (cheers, badge?.id),
         outfit: special ? WuselOutfit.party : null,
         quietAllowed: special,
-        size: 88,
+        // On a phone a little smaller, so the chores come into view sooner.
+        size: stacked ? 72 : 88,
         tappable: true,
-        style: title,
+        style: stacked
+            ? Theme.of(context).textTheme.titleLarge
+                  ?.copyWith(fontWeight: FontWeight.w800)
+            : title,
         // The home Wusel travels from (specs/25 "Wusel on the move").
         home: true,
         enter: widget.enter,

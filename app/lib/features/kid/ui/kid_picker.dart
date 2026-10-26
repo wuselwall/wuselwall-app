@@ -75,7 +75,7 @@ class KidPicker extends ConsumerWidget {
                                       )
                                         Padding(
                                           padding: EdgeInsets.only(
-                                            left: i == r ? 0 : pickerGap,
+                                            left: i == r ? 0 : Tokens.space1,
                                           ),
                                           child: _Choice(
                                             member: active[i],
@@ -126,7 +126,10 @@ const pickerGap = Tokens.space6;
   var bestSize = 0.0;
   for (var rows = 1; rows <= count; rows++) {
     final columns = (count / rows).ceil();
-    final across = (width - (columns - 1) * pickerGap) / columns;
+    // Each choice is its circle plus room for the name beside it (see _Choice).
+    final across =
+        (width - (columns - 1) * Tokens.space1) / columns -
+        (pickerGap - Tokens.space1);
     final down = (height - (rows - 1) * pickerGap) / rows - label;
     final size = math.min(math.min(across, down), 200.0);
     if (size > bestSize) {
@@ -136,7 +139,7 @@ const pickerGap = Tokens.space6;
   }
   if (bestSize < 72) {
     // Too many for the screen: two across, scrolling.
-    final across = (width - pickerGap) / 2;
+    final across = (width - Tokens.space1) / 2 - (pickerGap - Tokens.space1);
     return (columns: 2, size: math.max(72.0, math.min(across, 200.0)));
   }
   return best;
@@ -178,7 +181,9 @@ class _Choice extends StatelessWidget {
             MemberCircle(member: member, size: size),
             const SizedBox(height: Tokens.space2),
             SizedBox(
-              width: size,
+              // The name may use the gap beside its circle ("Thomas" under a
+              // small circle on a phone).
+              width: size + pickerGap - Tokens.space1,
               child: Text(
                 member.displayName,
                 textAlign: TextAlign.center,

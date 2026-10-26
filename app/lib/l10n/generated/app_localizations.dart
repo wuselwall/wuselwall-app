@@ -4646,12 +4646,6 @@ abstract class AppLocalizations {
   /// **'All done!'**
   String get kidTasksAllDone;
 
-  /// No description provided for @kidTasksAllDoneBody.
-  ///
-  /// In en, this message translates to:
-  /// **'Well done, you did everything for today.'**
-  String get kidTasksAllDoneBody;
-
   /// No description provided for @kidAwaitsCheck.
   ///
   /// In en, this message translates to:

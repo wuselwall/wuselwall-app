@@ -2613,9 +2613,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get kidTasksAllDone => 'Alles geschafft!';
 
   @override
-  String get kidTasksAllDoneBody => 'Super gemacht, heute ist alles erledigt.';
-
-  @override
   String get kidAwaitsCheck => 'wird noch geprüft';
 
   @override

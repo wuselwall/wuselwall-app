@@ -2631,9 +2631,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get kidTasksAllDone => 'Tout est fait !';
 
   @override
-  String get kidTasksAllDoneBody => 'Bravo, tu as tout fait pour aujourd’hui.';
-
-  @override
   String get kidAwaitsCheck => 'en cours de vérification';
 
   @override
