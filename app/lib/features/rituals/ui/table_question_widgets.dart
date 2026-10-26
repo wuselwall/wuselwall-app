@@ -49,9 +49,9 @@ String? _author(WidgetRef ref, TableQuestion q) {
       ?.displayName;
 }
 
-/// The size of the wall's question: 34 (specs/27 asks for 34 or more), smaller only
-/// when the question would not fit three lines of [width] at that size, as a long
-/// question of the family's own might; past the smallest size it ends in an ellipsis.
+/// The size of the wall's question: 34 (specs/27), smaller only when the question would
+/// not fit three lines of [width] at that size, as a long question of the family's own
+/// might; past the smallest size it ends in an ellipsis.
 @visibleForTesting
 double boardQuestionSize(
   String text, {
@@ -59,27 +59,56 @@ double boardQuestionSize(
   required TextStyle Function(double size) style,
   TextScaler textScaler = TextScaler.noScaling,
   TextDirection textDirection = TextDirection.ltr,
+}) => boardQuestionFit(
+  TextSpan(text: text),
+  width: width,
+  style: style,
+  textScaler: textScaler,
+  textDirection: textDirection,
+).size;
+
+/// The size and lines of the wall's question so that it fits [maxHeight] as well as
+/// [width]: 34 on one line, else down to 24 on as many lines as the height holds. The
+/// header keeps its height through the meal, so the rows under it never move
+/// (specs/27 "Where"). [text]'s spans take [style] at each size.
+({double size, int lines}) boardQuestionFit(
+  TextSpan text, {
+  required double width,
+  required TextStyle Function(double size) style,
+  double maxHeight = double.infinity,
+  TextScaler textScaler = TextScaler.noScaling,
+  TextDirection textDirection = TextDirection.ltr,
 }) {
-  for (final size in const [34.0, 30.0, 26.0]) {
+  const sizes = [34.0, 30.0, 26.0, 24.0];
+  for (final size in sizes) {
+    final lineHeight = textScaler.scale(size * 1.15);
+    final lines = maxHeight.isFinite
+        ? math.min(3, (maxHeight / lineHeight).floor())
+        : 3;
+    if (lines < 1) continue;
     final painter = TextPainter(
-      text: TextSpan(text: text, style: style(size)),
+      text: TextSpan(style: style(size), children: [text]),
       textDirection: textDirection,
       textScaler: textScaler,
-      maxLines: 3,
+      maxLines: lines,
     )..layout(maxWidth: width);
     final fits = !painter.didExceedMaxLines;
     painter.dispose();
-    if (fits) return size;
+    if (fits) return (size: size, lines: lines);
   }
-  return 22;
+  final last = sizes.last;
+  return (
+    size: last,
+    lines: maxHeight.isFinite
+        ? math.max(1, (maxHeight / textScaler.scale(last * 1.15)).floor())
+        : 3,
+  );
 }
 
-/// The width the header leaves the question: the screen less the clock, the date, the
-/// corner Wusel, the settings button and the card's own buttons. An estimate on
-/// purpose: the header sizes itself by its intrinsic height, which a LayoutBuilder
-/// cannot report.
-double _boardQuestionWidth(BuildContext context, {required int buttons}) =>
-    math.max(240, MediaQuery.sizeOf(context).width - 680 - 56.0 * buttons);
+/// The height the header gives the question card's text: the header's 72 px less the
+/// card's padding, growing with the text scale as the header does.
+double _boardQuestionHeight(BuildContext context) =>
+    MediaQuery.textScalerOf(context).scale(64);
 
 /// The wall's Tischfrage, in the header's middle during the meal (specs/27): the
 /// question is large, "Andere Frage" is a full 56 px target, and a riddle's answer opens
@@ -105,7 +134,54 @@ class _BoardTableQuestionState extends ConsumerState<BoardTableQuestion> {
     final q = current.question;
     final ink = Theme.of(context).colorScheme.onSurface;
     final author = _author(ref, q);
-    final shown = _answerOf == q.key;
+    final shown = _answerOf == q.key && q.answer != null;
+    final ink2 = context.ww.ink2;
+    final spans = TextSpan(
+      children: [
+        TextSpan(text: shown ? q.answer! : q.text),
+        if (author != null && !shown)
+          TextSpan(
+            text: ' · ${l10n.tableQuestionFrom(author)}',
+            style: TextStyle(fontWeight: FontWeight.w600, color: ink2),
+          ),
+      ],
+    );
+    final height = _boardQuestionHeight(context);
+    // A fixed height answers the header's intrinsic-height question without asking
+    // the LayoutBuilder inside, which measures the real width for the fit.
+    return SizedBox(
+      height: height + 8,
+      child: LayoutBuilder(
+        builder: (context, c) =>
+            _card(context, current, spans, shown, ink, c, height),
+      ),
+    );
+  }
+
+  Widget _card(
+    BuildContext context,
+    ({TableQuestion question, int window}) current,
+    TextSpan spans,
+    bool shown,
+    Color ink,
+    BoxConstraints c,
+    double height,
+  ) {
+    final l10n = context.l10n;
+    final q = current.question;
+    final buttons = q.answer == null ? 1 : 2;
+    final fit = boardQuestionFit(
+      spans,
+      width: math.max(0, c.maxWidth - 24 - 56.0 * buttons),
+      maxHeight: height,
+      // Measured as it is painted: on the inherited style (the kiosk's letter
+      // spacing), not on bare boardUi.
+      style: (size) =>
+          DefaultTextStyle.of(context).style
+              .merge(boardUi(size, weight: FontWeight.w700)),
+      textScaler: MediaQuery.textScalerOf(context),
+      textDirection: Directionality.of(context),
+    );
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       decoration: BoxDecoration(
@@ -120,44 +196,25 @@ class _BoardTableQuestionState extends ConsumerState<BoardTableQuestion> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // One text, so it is fitted as one: the question, or its answer
+                // while that is open, and who asked. The card never grows taller
+                // than the header (specs/27 "Where").
                 Semantics(
                   label: l10n.tableQuestionTitle,
-                  child: Text(
-                    q.text,
-                    key: const ValueKey('board-table-question'),
+                  child: Text.rich(
+                    spans,
+                    key: ValueKey(
+                      shown ? 'board-table-answer' : 'board-table-question',
+                    ),
                     style: boardUi(
-                      boardQuestionSize(
-                        q.text,
-                        width: _boardQuestionWidth(
-                          context,
-                          buttons: q.answer == null ? 1 : 2,
-                        ),
-                        style: (size) => boardUi(size, weight: FontWeight.w700),
-                        textScaler: MediaQuery.textScalerOf(context),
-                        textDirection: Directionality.of(context),
-                      ),
+                      fit.size,
                       weight: FontWeight.w700,
                       color: ink,
                     ),
-                    maxLines: 3,
+                    maxLines: fit.lines,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                if (author != null)
-                  Text(
-                    l10n.tableQuestionFrom(author),
-                    style: boardUi(22, weight: FontWeight.w600, color: ink),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                if (shown && q.answer != null)
-                  Text(
-                    q.answer!,
-                    key: const ValueKey('board-table-answer'),
-                    style: boardUi(26, weight: FontWeight.w700, color: ink),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
               ],
             ),
           ),

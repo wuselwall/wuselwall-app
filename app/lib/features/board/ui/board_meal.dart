@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
@@ -91,32 +92,39 @@ class MealRow extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(8, 6, 8, 4),
                   child: LayoutBuilder(
-                    builder: (context, c) =>
-                        c.maxHeight <
-                            MediaQuery.textScalerOf(context).scale(112)
-                        ? Align(
-                            alignment: Alignment.centerLeft,
-                            child: _Dish(
-                              meal: meal,
-                              twoLines: false,
-                              wishInk: _wishInk(context, board, meal),
-                            ),
-                          )
-                        : ClipFit(
-                            alignment: Alignment.topLeft,
-                            child: SizedBox(
-                              width: c.maxWidth,
-                              child: _MealCell(
-                                board: board,
-                                meal: meal,
-                                // Reserve time, two dish lines and wrapped metadata
-                                // at the real scaler, not unscaled canvas heights.
-                                twoLines:
-                                    c.maxHeight >=
-                                    MediaQuery.textScalerOf(context).scale(140),
-                              ),
-                            ),
+                    builder: (context, c) {
+                      // Measured at the real scaler: the time and the cook, the
+                      // dish on one line or two, then the dots (and guests).
+                      final line = MediaQuery.textScalerOf(context)
+                          .scale(24 * 1.1);
+                      final oneLine =
+                          line +
+                          2 +
+                          line +
+                          4 +
+                          _metaHeight(context, board, meal, c);
+                      if (c.maxHeight < oneLine) {
+                        return Align(
+                          alignment: Alignment.centerLeft,
+                          child: _Dish(
+                            meal: meal,
+                            twoLines: false,
+                            wishInk: _wishInk(context, board, meal),
                           ),
+                        );
+                      }
+                      return ClipFit(
+                        alignment: Alignment.topLeft,
+                        child: SizedBox(
+                          width: c.maxWidth,
+                          child: _MealCell(
+                            board: board,
+                            meal: meal,
+                            twoLines: c.maxHeight >= oneLine + line,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),
@@ -276,14 +284,15 @@ class _Dish extends StatelessWidget {
       color: Theme.of(context).colorScheme.onSurface,
     );
 
-    // Two lines only when every word fits a line: a word wider than the column
-    // would break in the middle ("Fischstäbche / n"), and an ellipsis reads better.
+    // Two lines, broken between words, or with a hyphen where one word is wider
+    // than the column ("Fischstäb- / chen"), never bare inside a word.
     final text = twoLines
         ? LayoutBuilder(
             builder: (context, c) => Text(
-              title,
+              hyphenateToFit(context, title, style, c.maxWidth),
+              semanticsLabel: title,
               style: style,
-              maxLines: wordsFit(context, title, style, c.maxWidth) ? 2 : 1,
+              maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
           )
@@ -303,6 +312,56 @@ class _Dish extends StatelessWidget {
       ],
     );
   }
+}
+
+/// The height of a meal cell's last lines at [c]'s width: the dots, the guest count
+/// and the cook, laid out as their Wrap lays them out (6 px apart, a new line when the
+/// next one does not fit), so the dish gets its second line exactly when there is
+/// room for it.
+double _metaHeight(
+  BuildContext context,
+  WeekBoard board,
+  BoardMeal meal,
+  BoxConstraints c,
+) {
+  const dot = 12.0;
+  const gap = 6.0;
+  final n = board.members.length;
+  Size measure(String text, FontWeight weight) {
+    final painter = TextPainter(
+      text: TextSpan(
+        text: text,
+        style: boardCell(24, weight: weight),
+      ),
+      textDirection: Directionality.of(context),
+      textScaler: MediaQuery.textScalerOf(context),
+      maxLines: 1,
+    )..layout();
+    final size = painter.size;
+    painter.dispose();
+    return Size(math.min(size.width, c.maxWidth), size.height);
+  }
+
+  final cook = meal.cookId == null ? null : board.member(meal.cookId!);
+  final items = [
+    Size(n * dot + (n - 1) * dot * 0.35, dot),
+    if (meal.guests > 0)
+      measure(context.l10n.boardMoreCount(meal.guests), FontWeight.w700),
+    if (cook != null) measure(context.memberName(board, cook), FontWeight.w600),
+  ];
+  var total = 0.0;
+  var run = 0.0;
+  var runHeight = 0.0;
+  for (final item in items) {
+    if (run > 0 && run + gap + item.width > c.maxWidth) {
+      total += runHeight;
+      run = 0;
+      runHeight = 0;
+    }
+    run += (run > 0 ? gap : 0) + item.width;
+    runHeight = math.max(runHeight, item.height);
+  }
+  return total + runHeight;
 }
 
 /// The ink of the member whose wish [meal] is, or null.

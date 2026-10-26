@@ -361,9 +361,11 @@ class ClipFit extends StatelessWidget {
   );
 }
 
-/// Whether every word of [text] fits a line of [width] in [style]: a text that may
-/// wrap then breaks only between words, never inside one.
-bool wordsFit(
+/// [text] with every word too wide for a line of [width] broken by a hyphen
+/// ("Fischstäb-" / "chen"), at the last point where the hyphenated part still fits and
+/// at least three letters go to each side. A word the line holds stays whole, so a
+/// two-line text breaks between words, or with a hyphen, never bare inside a word.
+String hyphenateToFit(
   BuildContext context,
   String text,
   TextStyle style,
@@ -374,15 +376,26 @@ bool wordsFit(
     textScaler: MediaQuery.textScalerOf(context),
     maxLines: 1,
   );
+  double widthOf(String s) {
+    painter
+      ..text = TextSpan(text: s, style: style)
+      ..layout();
+    return painter.width;
+  }
+
   try {
-    for (final word in text.split(RegExp(r'\s+'))) {
-      if (word.isEmpty) continue;
-      painter
-        ..text = TextSpan(text: word, style: style)
-        ..layout();
-      if (painter.width > width) return false;
+    final words = text.split(' ');
+    for (var i = 0; i < words.length; i++) {
+      final word = words[i];
+      if (word.length < 6 || widthOf(word) <= width) continue;
+      for (var cut = word.length - 3; cut >= 3; cut--) {
+        if (widthOf('${word.substring(0, cut)}-') <= width) {
+          words[i] = '${word.substring(0, cut)}-\n${word.substring(cut)}';
+          break;
+        }
+      }
     }
-    return true;
+    return words.join(' ');
   } finally {
     painter.dispose();
   }

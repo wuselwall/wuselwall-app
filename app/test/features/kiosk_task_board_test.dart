@@ -103,6 +103,7 @@ void main() {
             instanceRow(id: 'i-3', title: 'Brot holen', assignee: guardianId),
             instanceRow(id: 'i-4', title: 'Blumen gießen', assignee: _emil),
             instanceRow(id: 'i-5', title: 'Müll rausbringen', points: 5),
+            instanceRow(id: 'i-6', title: 'Wäsche falten', assignee: _mama),
           ],
           'streaks': [
             {
@@ -140,6 +141,7 @@ void main() {
       // Every column header is inside the dialog: no sideways scroll, no column
       // cut at the edge. Four members and "Offen für alle" make five.
       final names = ['Papa', 'Anna', 'Mama', 'Emil', 'Offen für alle'];
+      expect(find.byKey(const ValueKey('nothing-left')), findsNothing);
       final tops = <double>{};
       for (final name in names) {
         // The first: the acting profile bar under the board names them too.
@@ -275,6 +277,82 @@ void main() {
         title('Zimmer aufräumen').style?.decoration,
         isNot(TextDecoration.lineThrough),
       );
+      await unmountApp(t, container);
+    },
+  );
+
+  testWidgets(
+    'members with nothing today share one line under the open chores (N-1)',
+    (t) async {
+      final api = FakeTasksApi(
+        tables: {
+          'task_instances': [
+            instanceRow(
+              id: 'i-1',
+              title: 'Spülmaschine ausräumen',
+              assignee: kidId,
+            ),
+            instanceRow(id: 'i-2', title: 'Zimmer aufräumen', assignee: kidId),
+            instanceRow(
+              id: 'i-3',
+              title: 'Beim Kochen helfen',
+              assignee: kidId,
+            ),
+            instanceRow(id: 'i-4', title: 'Blumen gießen', assignee: _emil),
+            instanceRow(id: 'i-5', title: 'Müll rausbringen', points: 5),
+          ],
+        },
+      );
+      final container = await pumpApp(
+        t,
+        size: const Size(1280, 800),
+        overrides: baseOverrides(
+          identity: FakeIdentityRepository(
+            current: device(
+              deviceClass: DeviceClass.kiosk,
+              register: UiRegister.kiosk,
+            ),
+            members: _family,
+          ),
+        ),
+        board: FakeBoardRepository(_board()),
+        tasks: api,
+      );
+
+      await t.tap(find.text('Heute offen'));
+      await t.pumpAndSettle();
+      expect(t.takeException(), isNull);
+      final body = find.byType(TaskBoardDetailBody);
+      final bounds = t.getRect(body);
+      final bar = t.getRect(find.byType(ActingProfileBar));
+
+      // Papa and Mama have nothing today: no columns, one line with both names.
+      final idle = find.byKey(const ValueKey('nothing-left'));
+      expect(idle, findsOneWidget);
+      for (final name in ['Papa', 'Mama']) {
+        expect(
+          find.descendant(of: idle, matching: find.text(name)),
+          findsOneWidget,
+        );
+      }
+      // Every open chore and the "Offen für alle" column are on screen without a
+      // scroll: above the acting profile bar, inside the dialog.
+      for (final text in [
+        'Anna',
+        'Emil',
+        'Offen für alle',
+        'Spülmaschine ausräumen',
+        'Zimmer aufräumen',
+        'Beim Kochen helfen',
+        'Blumen gießen',
+        'Müll rausbringen',
+      ]) {
+        final rect = t.getRect(
+          find.descendant(of: body, matching: find.text(text)).first,
+        );
+        expect(rect.right, lessThanOrEqualTo(bounds.right), reason: text);
+        expect(rect.bottom, lessThanOrEqualTo(bar.top), reason: text);
+      }
       await unmountApp(t, container);
     },
   );
