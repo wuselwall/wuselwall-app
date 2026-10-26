@@ -142,33 +142,40 @@ class EventTemplatePage extends ConsumerWidget {
                     ],
                   ),
               ]),
-            section(l10n.eventTemplatesBuiltIn, [
-              _TemplateTile(
-                key: const ValueKey('event-template-blank'),
-                title: l10n.eventTemplateBlank,
-                line: l10n.eventTemplateBlankHelp,
-                icon: Icons.edit_outlined,
-                onTap: () => unawaited(_open(context, null)),
-              ),
-              for (final s in EventStarter.values)
-                Builder(
-                  builder: (context) {
-                    final t = s.template(
-                      title: eventStarterName(l10n, s),
-                      members: active,
-                      actor: actor,
-                    );
-                    return _TemplateTile(
-                      key: ValueKey('event-template-builtin-${s.name}'),
-                      template: t,
-                      icon: s == EventStarter.doctor
-                          ? Icons.medical_services_outlined
-                          : null,
-                      onTap: () => unawaited(_open(context, t)),
-                    );
-                  },
+            // Below the family's own tiles the built-in ones are the "more"; alone,
+            // they are simply the templates.
+            section(
+              suggestions.isEmpty && saved.isEmpty
+                  ? l10n.eventTemplatesBuiltIn
+                  : l10n.eventTemplatesBuiltInMore,
+              [
+                _TemplateTile(
+                  key: const ValueKey('event-template-blank'),
+                  title: l10n.eventTemplateBlank,
+                  line: l10n.eventTemplateBlankHelp,
+                  icon: Icons.edit_outlined,
+                  onTap: () => unawaited(_open(context, null)),
                 ),
-            ]),
+                for (final s in EventStarter.values)
+                  Builder(
+                    builder: (context) {
+                      final t = s.template(
+                        title: eventStarterName(l10n, s),
+                        members: active,
+                        actor: actor,
+                      );
+                      return _TemplateTile(
+                        key: ValueKey('event-template-builtin-${s.name}'),
+                        template: t,
+                        icon: s == EventStarter.doctor
+                            ? Icons.medical_services_outlined
+                            : null,
+                        onTap: () => unawaited(_open(context, t)),
+                      );
+                    },
+                  ),
+              ],
+            ),
             const SliverToBoxAdapter(child: SizedBox(height: Tokens.space6)),
           ],
         ),

@@ -6231,6 +6231,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get eventTemplatesBuiltIn => 'Plantillas';
 
   @override
+  String get eventTemplatesBuiltInMore => 'Más plantillas';
+
+  @override
   String get eventTemplateBlank => 'Sin plantilla';
 
   @override
@@ -6291,7 +6294,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String eventTemplateCount(int count) {
-    return 'Ya $count veces';
+    return 'Usada $count veces';
   }
 
   @override

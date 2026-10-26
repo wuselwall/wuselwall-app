@@ -10488,6 +10488,12 @@ abstract class AppLocalizations {
   /// **'Templates'**
   String get eventTemplatesBuiltIn;
 
+  /// No description provided for @eventTemplatesBuiltInMore.
+  ///
+  /// In en, this message translates to:
+  /// **'More templates'**
+  String get eventTemplatesBuiltInMore;
+
   /// The tile that opens the empty event editor.
   ///
   /// In en, this message translates to:
@@ -10581,7 +10587,7 @@ abstract class AppLocalizations {
   /// Part of a suggestion tile's line: how many such events the family entered.
   ///
   /// In en, this message translates to:
-  /// **'{count}× so far'**
+  /// **'Used {count}×'**
   String eventTemplateCount(int count);
 
   /// Tooltip of a template tile's menu button.

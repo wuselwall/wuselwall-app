@@ -3673,6 +3673,7 @@
   "@eventTemplatesBuiltIn": {
     "description": "Section of the new-event page: the built-in templates."
   },
+  "eventTemplatesBuiltInMore": "More templates",
   "eventTemplateBlank": "Start blank",
   "@eventTemplateBlank": {
     "description": "The tile that opens the empty event editor."
@@ -3732,7 +3733,7 @@
       }
     }
   },
-  "eventTemplateCount": "{count}× so far",
+  "eventTemplateCount": "Used {count}×",
   "@eventTemplateCount": {
     "description": "Part of a suggestion tile's line: how many such events the family entered.",
     "placeholders": {

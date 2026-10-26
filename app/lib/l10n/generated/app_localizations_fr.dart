@@ -6243,6 +6243,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get eventTemplatesBuiltIn => 'Modèles';
 
   @override
+  String get eventTemplatesBuiltInMore => 'Autres modèles';
+
+  @override
   String get eventTemplateBlank => 'Sans modèle';
 
   @override
@@ -6303,7 +6306,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String eventTemplateCount(int count) {
-    return 'Déjà $count fois';
+    return 'Utilisé $count fois';
   }
 
   @override

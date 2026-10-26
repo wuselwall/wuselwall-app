@@ -6171,6 +6171,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get eventTemplatesBuiltIn => 'Templates';
 
   @override
+  String get eventTemplatesBuiltInMore => 'More templates';
+
+  @override
   String get eventTemplateBlank => 'Start blank';
 
   @override
@@ -6231,7 +6234,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String eventTemplateCount(int count) {
-    return '$count× so far';
+    return 'Used $count×';
   }
 
   @override

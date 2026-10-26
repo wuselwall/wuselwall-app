@@ -6216,6 +6216,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get eventTemplatesBuiltIn => 'Vorlagen';
 
   @override
+  String get eventTemplatesBuiltInMore => 'Weitere Vorlagen';
+
+  @override
   String get eventTemplateBlank => 'Ohne Vorlage';
 
   @override
@@ -6276,7 +6279,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String eventTemplateCount(int count) {
-    return 'Schon $count×';
+    return '$count× benutzt';
   }
 
   @override
