@@ -253,7 +253,9 @@ full grid is one tap away and lives on the children's iPads.
 - Today's column is wider, brighter and bordered; the other six are legible but recede.
 - A **"jetzt / als Nächstes"** line under the header names the next thing to happen today
   with a countdown ("in 25 Min: Zahnarzt, Mia"). This is the one piece of urgency the
-  board carries; everything else is context.
+  board carries; everything else is context. The next thing is shown whole; the one after
+  it ("danach …") follows only when it fits beside it, never as two halves that both end
+  in an ellipsis.
 - Past days this week are dimmed rather than removed. Monday still explains why the
   laundry basket is full.
 - The week rolls over at a configurable point at the weekend (`board.rollover`, default
@@ -288,7 +290,12 @@ A third rejected option — folding presence into the three day-part bands — w
 
 The board must never scroll and never break its geometry. In order:
 
-1. Truncate long titles to one line with an ellipsis; the tap-through has the full text.
+1. Truncate long titles with an ellipsis; the tap-through has the full text. Before
+   that, a line says less: a lone appointment's title takes the lines its cell holds (in
+   a two-line cell beside its time, "10:00 Heizung wird / gewartet"), a birthday under
+   the date drops the age ("🎂 Emma"), a school's own day off too long for the column
+   says "schulfrei", and the footer's countdowns shorten ("🎂 Emma · in 3 Tagen") before
+   one of them goes.
 2. Beyond three appointments in a day, show two and "+2 weitere".
 3. Beyond two presence bands for one person in a day, show the longest and a "+1".
 4. On a narrow screen, the weekend collapses into one half-width column.
@@ -319,7 +326,9 @@ not the acceptance threshold.
 
 The tap-through details are where the full labels live, so they never truncate: at
 every text scale their text wraps, their columns grow with it and nothing ends in an
-ellipsis or a line limit. Past days, finished appointments and cancelled lessons in a
+ellipsis or a line limit. Columns that do not fit side by side (the family task board
+with five or more) take a second row rather than a sideways scroll, and a detail that
+goes on below its edge fades out there, so it never seems to end where it does not. Past days, finished appointments and cancelled lessons in a
 detail recede through their ground (`sunken`), with the same 4.5:1 rule (`t_10f0b348`).
 
 ### Touch behaviour

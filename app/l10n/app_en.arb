@@ -363,6 +363,10 @@
     }
   },
   "boardNoSchool": "free",
+  "boardSchoolOff": "no school",
+  "@boardSchoolOff": {
+    "description": "Wall board, a child's row: a school's own day off whose name does not fit the narrow day column (e.g. a floating holiday)."
+  },
   "boardCareUntil": "{label} until {time}",
   "@boardCareUntil": {
     "placeholders": {

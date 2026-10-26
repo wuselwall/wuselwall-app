@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/emoji_picture.dart';
+import 'package:wuselwall/features/board/ui/board_fit.dart';
 import 'package:wuselwall/features/board/ui/board_grid.dart';
 import 'package:wuselwall/features/kid/ui/kid_widgets.dart';
 import 'package:wuselwall/features/rituals/application/ritual_providers.dart';
@@ -95,6 +96,11 @@ class KidCountdowns extends ConsumerWidget {
 
 /// The wall's Vorfreude: the nearest two, small, in the footer. Nothing when there is
 /// nothing to look forward to.
+///
+/// Says less before it ends in an ellipsis: both in full, both short ("🎂 Emma · in 3
+/// Tagen": the cake already says whose birthday), the nearest in full, the nearest
+/// short. [FirstThatFits] measures them, because the footer asks its children for
+/// their intrinsic height, which a LayoutBuilder cannot answer.
 class BoardCountdowns extends ConsumerWidget {
   const BoardCountdowns({super.key});
 
@@ -105,50 +111,55 @@ class BoardCountdowns extends ConsumerWidget {
     final all = ref.watch(countdownsProvider);
     if (all.isEmpty) return const SizedBox.shrink();
     final ink = Theme.of(context).colorScheme.onSurface;
-    // Two when both are short enough to fit the footer at full length, else the nearest
-    // one. Measured by length, not by a LayoutBuilder: the footer asks its children for
-    // their intrinsic height, which a LayoutBuilder cannot answer.
     final two = all.take(2).toList();
-    final length = two.fold<int>(
-      0,
-      (n, c) =>
-          n +
-          countdownTitle(l10n, c).length +
-          countdownWhen(l10n, c, today).length,
+    final one = all.take(1).toList();
+    return Semantics(
+      label: l10n.todayLookingForward,
+      container: true,
+      child: FirstThatFits(
+        children: [
+          if (two.length > 1) ...[
+            _strip(l10n, today, two, ink, short: false),
+            _strip(l10n, today, two, ink, short: true),
+          ],
+          _strip(l10n, today, one, ink, short: false),
+          _strip(l10n, today, one, ink, short: true),
+        ],
+      ),
     );
-    return _strip(l10n, today, length <= 52 ? two : all.take(1).toList(), ink);
   }
 
   Widget _strip(
     AppLocalizations l10n,
     DateTime today,
     List<Countdown> list,
-    Color ink,
-  ) {
-    return Semantics(
-      label: l10n.todayLookingForward,
-      container: true,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          for (final (i, c) in list.indexed) ...[
-            if (i > 0) const SizedBox(width: 20),
-            _icon(c, 30),
-            const SizedBox(width: 8),
-            Flexible(
-              child: Text(
-                '${countdownTitle(l10n, c)} · ${countdownWhen(l10n, c, today)}',
-                style: boardUi(24, weight: FontWeight.w600, color: ink),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                softWrap: false,
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
+    Color ink, {
+    required bool short,
+  }) => Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      for (final (i, c) in list.indexed) ...[
+        if (i > 0) const SizedBox(width: 20),
+        _icon(c, 30),
+        const SizedBox(width: 8),
+        Flexible(
+          child: Text(
+            short
+                ? '${_shortTitle(l10n, c)} · ${countdownWhen(l10n, c, today, sleeps: false)}'
+                : '${countdownTitle(l10n, c)} · ${countdownWhen(l10n, c, today)}',
+            style: boardUi(24, weight: FontWeight.w600, color: ink),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            softWrap: false,
+          ),
+        ),
+      ],
+    ],
+  );
+
+  /// A birthday by its name alone: the cake beside it says the rest.
+  static String _shortTitle(AppLocalizations l10n, Countdown c) =>
+      c.kind == CountdownKind.birthday ? c.title : countdownTitle(l10n, c);
 }
 
 /// One line on Today: the nearest countdown within the horizon.

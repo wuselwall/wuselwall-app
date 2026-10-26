@@ -296,6 +296,7 @@
   "boardMoreEvents": "{count, plural, =1{+1 weiterer} other{+{count} weitere}}",
   "boardMoreCount": "+{count}",
   "boardNoSchool": "frei",
+  "boardSchoolOff": "schulfrei",
   "boardCareUntil": "{label} bis {time}",
   "boardCareDefault": "Betreuung",
   "boardBusyUntil": "Termine bis {time}",

@@ -720,6 +720,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get boardNoSchool => 'libre';
 
   @override
+  String get boardSchoolOff => 'sin clase';
+
+  @override
   String boardCareUntil(String label, String time) {
     return '$label hasta las $time';
   }

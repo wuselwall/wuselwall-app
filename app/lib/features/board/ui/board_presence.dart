@@ -126,11 +126,29 @@ class _MemberRow extends ConsumerWidget {
                 bottom: 0,
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text(
-                    name,
-                    style: boardUi(24, weight: FontWeight.w700, color: ink),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                  // The member's colour before the name: the legend of the event
+                  // dots below (a short row has no room for the avatar).
+                  child: Row(
+                    children: [
+                      MemberDot(
+                        memberColor: member.color,
+                        semanticLabel: name,
+                        size: 14,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          name,
+                          style: boardUi(
+                            24,
+                            weight: FontWeight.w700,
+                            color: ink,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -156,17 +174,30 @@ class _MemberRow extends ConsumerWidget {
                             ? Border(left: BorderSide(color: mc.ink, width: 4))
                             : null,
                       ),
-                      child: Text(
-                        (board.days[i].school[member.id]?.hasSchool ?? false)
-                            ? context.span(
-                                board.days[i].school[member.id]!.starts!,
-                                board.days[i].school[member.id]!.ends!,
-                              )
-                            : summaries[i],
-                        style: boardCell(24, color: ink),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      child: switch (board.days[i].school[member.id]) {
+                        final school? when school.hasSchool => Text(
+                          context.span(school.starts!, school.ends!),
+                          style: boardCell(24, color: ink),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        // A school's own day off by a long name ("Beweglicher
+                        // Ferientag"): "schulfrei" here, the name in the details.
+                        final school?
+                            when school.holidayName != null &&
+                                summaries[i] == school.holidayName =>
+                          ShrinkText(
+                            summaries[i],
+                            fallback: context.l10n.boardSchoolOff,
+                            style: boardCell(24, color: ink),
+                          ),
+                        _ => Text(
+                          summaries[i],
+                          style: boardCell(24, color: ink),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      },
                     ),
                   ),
               if (!member.isChild)
@@ -322,6 +353,12 @@ class _MemberRow extends ConsumerWidget {
               alignment: Alignment.centerLeft,
               child: ShrinkText(
                 text,
+                // A school's own day off by a name too long for the column
+                // ("Beweglicher Ferientag"): the row says "schulfrei", the child's
+                // week and day details name it in full.
+                fallback: text == l10n.boardNoSchool
+                    ? null
+                    : l10n.boardSchoolOff,
                 style: boardCell(
                   24,
                   weight: FontWeight.w500,
