@@ -234,7 +234,12 @@ class _ServerChoicePageState extends State<ServerChoicePage> {
                   label: Text(l10n.serverDemo),
                 ),
                 Text(
-                  l10n.serverDemoHint,
+                  // The last two words stay together, so a narrow phone never
+                  // leaves "Gerät." alone on the second line.
+                  l10n.serverDemoHint.replaceFirstMapped(
+                    RegExp(r' (\S+)$'),
+                    (m) => '\u00A0${m[1]}',
+                  ),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodySmall,
                 ),

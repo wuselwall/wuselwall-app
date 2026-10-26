@@ -183,6 +183,28 @@ void main() {
     expect(find.text(_de.serverAddressHelper), findsNothing);
   });
 
+  testWidgets('J-9: the demo hint keeps its last two words together', (
+    t,
+  ) async {
+    await t.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          theme: AppTheme.build(UiRegister.adult, Shade.light),
+          localizationsDelegates: localizationsDelegates,
+          supportedLocales: supportedLocales,
+          locale: const Locale('de'),
+          home: ServerChoicePage(
+            onAddress: (_) async => null,
+            onDemo: () {},
+            canScan: false,
+          ),
+        ),
+      ),
+    );
+    // "dieses Gerät." never splits, so "Gerät." is never alone on a line.
+    expect(find.textContaining('dieses\u00A0Gerät.'), findsOneWidget);
+  });
+
   group('J-5, J-6, J-9: Neue Familie', () {
     Future<_SlowHousehold> openNewFamily(WidgetTester t, double width) async {
       final household = _SlowHousehold();

@@ -153,6 +153,9 @@ whereabouts should be a deliberate act, not a default. See
 - A phone's five columns are too narrow for names: below 72 px a cell shows the icon over
   the short code, a change as a small icon (Vertretung, Raumwechsel, Zusatz, a note), and
   never a cut word; the tooltip and the lesson sheet carry the full name, room and change.
+- On a phone the controls above the grid are one row: the children, "Diese Woche" as an
+  icon, and one menu with Schule bearbeiten, Stundenplan bearbeiten and the two ways to
+  read a timetable in, so the grid starts on the first screen.
 - Ferien weeks render as one wide band across the grid — `Herbstferien · 12.–24.10.`
   and nothing else. Anything more is clutter.
 

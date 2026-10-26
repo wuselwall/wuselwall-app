@@ -5,6 +5,7 @@ import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/core/ui/text_prompt.dart';
 import 'package:wuselwall/features/account/ui/mfa_reset_button.dart';
@@ -42,27 +43,29 @@ class FamilyMembersPage extends ConsumerWidget {
         ),
         // One scrollable: the member rows are a sliver reorderable list, so dragging works
         // without a nested list of its own.
-        body: CustomScrollView(
-          slivers: [
-            SliverPadding(
-              padding: const EdgeInsets.fromLTRB(
-                Tokens.space4,
-                Tokens.space4,
-                Tokens.space4,
-                0,
-              ),
-              sliver: SliverToBoxAdapter(
-                child: Text(
-                  l10n.settingsMembersHint,
-                  style: Theme.of(context).textTheme.bodySmall,
+        body: ContentWidth(
+          child: CustomScrollView(
+            slivers: [
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(
+                  Tokens.space4,
+                  Tokens.space4,
+                  Tokens.space4,
+                  0,
+                ),
+                sliver: SliverToBoxAdapter(
+                  child: Text(
+                    l10n.settingsMembersHint,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
                 ),
               ),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.all(Tokens.space4),
-              sliver: _MembersList(onAdd: () => _addMember(context, ref)),
-            ),
-          ],
+              SliverPadding(
+                padding: const EdgeInsets.all(Tokens.space4),
+                sliver: _MembersList(onAdd: () => _addMember(context, ref)),
+              ),
+            ],
+          ),
         ),
       ),
     );

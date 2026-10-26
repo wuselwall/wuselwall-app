@@ -8,6 +8,7 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/household/ui/leave_family_tiles.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
@@ -74,16 +75,18 @@ class _FamilyPageState extends ConsumerState<FamilyPage> {
         leading: BackButton(onPressed: () => context.go(Routes.settingsFamily)),
         actions: const [SettingsViewSwitch()],
       ),
-      body: AsyncValueView<HouseholdInfo>(
-        value: info,
-        onRetry: () => ref.invalidate(householdInfoProvider),
-        data: (household) {
-          if (!_nameSeeded) {
-            _name.text = household.name;
-            _nameSeeded = true;
-          }
-          return _body(context, household);
-        },
+      body: ContentWidth(
+        child: AsyncValueView<HouseholdInfo>(
+          value: info,
+          onRetry: () => ref.invalidate(householdInfoProvider),
+          data: (household) {
+            if (!_nameSeeded) {
+              _name.text = household.name;
+              _nameSeeded = true;
+            }
+            return _body(context, household);
+          },
+        ),
       ),
     );
   }

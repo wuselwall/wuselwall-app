@@ -308,6 +308,8 @@ void main() {
         },
       );
       await pumpTasks(t, api);
+      // The unit on the coin, as the kid card says it.
+      expect(find.text('2 Punkte'), findsOneWidget);
       expect(find.byTooltip('2 Punkte'), findsOneWidget);
       expect(find.bySemanticsLabel(RegExp('2 Punkte')), findsOneWidget);
     });

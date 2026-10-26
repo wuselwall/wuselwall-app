@@ -7,6 +7,7 @@ import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/core/ui/empty_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/calendar/application/calendar_providers.dart';
@@ -62,57 +63,59 @@ class _ExternalCalendarsPageState extends ConsumerState<ExternalCalendarsPage> {
               label: Text(l10n.extCalNew),
             )
           : null,
-      body: AsyncValueView<List<ExternalCalendar>>(
-        value: calendars,
-        onRetry: () => ref.invalidate(externalCalendarsProvider),
-        data: (list) => list.isEmpty
-            ? EmptyView(
-                // A settings page: no Wusel (specs/25 "Where Wusel never appears").
-                illustrated: false,
-                message: canManage
-                    ? l10n.extCalEmpty
-                    : '${l10n.extCalEmpty}\n\n${l10n.extCalReadOnlyHint}',
-                actions: [
-                  if (canManage)
-                    FilledButton.icon(
-                      onPressed: _create,
-                      icon: const Icon(Icons.add),
-                      label: Text(l10n.extCalNew),
-                    ),
-                ],
-              )
-            : ListView(
-                padding: const EdgeInsets.fromLTRB(
-                  Tokens.space4,
-                  Tokens.space4,
-                  Tokens.space4,
-                  96,
-                ),
-                children: [
-                  if (!canManage) ...[
-                    Text(l10n.extCalReadOnlyHint),
-                    const SizedBox(height: Tokens.space3),
+      body: ContentWidth(
+        child: AsyncValueView<List<ExternalCalendar>>(
+          value: calendars,
+          onRetry: () => ref.invalidate(externalCalendarsProvider),
+          data: (list) => list.isEmpty
+              ? EmptyView(
+                  // A settings page: no Wusel (specs/25 "Where Wusel never appears").
+                  illustrated: false,
+                  message: canManage
+                      ? l10n.extCalEmpty
+                      : '${l10n.extCalEmpty}\n\n${l10n.extCalReadOnlyHint}',
+                  actions: [
+                    if (canManage)
+                      FilledButton.icon(
+                        onPressed: _create,
+                        icon: const Icon(Icons.add),
+                        label: Text(l10n.extCalNew),
+                      ),
                   ],
-                  for (final c in list)
-                    _CalendarCard(
-                      calendar: c,
-                      membersLabel: _membersLabel(l10n, c, members),
-                      statusText: calendarStatusText(l10n, c, now),
-                      canManage: canManage,
-                      refreshing: _refreshing.contains(c.id),
-                      onRefresh: () => _refresh(c),
-                      onEdit: () => _edit(c),
-                      onDelete: () => _delete(c),
-                      onActiveChanged: (on) => _setActive(c, on),
-                    ),
-                  const SizedBox(height: Tokens.space3),
-                  Text(
-                    l10n.extCalSettingsRefreshHint,
-                    style: Theme.of(context).textTheme.bodySmall
-                        ?.copyWith(color: context.ww.ink2),
+                )
+              : ListView(
+                  padding: const EdgeInsets.fromLTRB(
+                    Tokens.space4,
+                    Tokens.space4,
+                    Tokens.space4,
+                    96,
                   ),
-                ],
-              ),
+                  children: [
+                    if (!canManage) ...[
+                      Text(l10n.extCalReadOnlyHint),
+                      const SizedBox(height: Tokens.space3),
+                    ],
+                    for (final c in list)
+                      _CalendarCard(
+                        calendar: c,
+                        membersLabel: _membersLabel(l10n, c, members),
+                        statusText: calendarStatusText(l10n, c, now),
+                        canManage: canManage,
+                        refreshing: _refreshing.contains(c.id),
+                        onRefresh: () => _refresh(c),
+                        onEdit: () => _edit(c),
+                        onDelete: () => _delete(c),
+                        onActiveChanged: (on) => _setActive(c, on),
+                      ),
+                    const SizedBox(height: Tokens.space3),
+                    Text(
+                      l10n.extCalSettingsRefreshHint,
+                      style: Theme.of(context).textTheme.bodySmall
+                          ?.copyWith(color: context.ww.ink2),
+                    ),
+                  ],
+                ),
+        ),
       ),
     );
   }

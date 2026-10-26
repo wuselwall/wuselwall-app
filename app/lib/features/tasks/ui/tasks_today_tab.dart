@@ -185,7 +185,8 @@ class _TaskTile extends ConsumerWidget {
           spacing: Tokens.space2,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            if (task.points > 0) PointsCoin(points: task.points, fontSize: 14),
+            if (task.points > 0)
+              PointsCoin(points: task.points, fontSize: 14, withUnit: true),
             Text(facts),
             if (streak != null)
               StreakBadge(

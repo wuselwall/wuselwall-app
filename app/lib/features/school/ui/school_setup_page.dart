@@ -8,6 +8,7 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
@@ -104,85 +105,87 @@ class _SchoolSetupPageState extends ConsumerState<SchoolSetupPage> {
             ),
         ],
       ),
-      body: AbsorbPointer(
-        absorbing: _saving,
-        child: AsyncValueView(
-          value: data,
-          onRetry: () => ref.invalidate(schoolDataProvider),
-          data: (d) {
-            final school = _adding
-                ? null
-                : d.schools.where((s) => s.id == _selectedId).firstOrNull ??
-                      d.schools.firstOrNull;
-            final first = d.schools.isEmpty;
-            return ListView(
-              padding: const EdgeInsets.all(16),
-              children: [
-                if (school != null && !_adding)
-                  _NextSteps(data: d, school: school),
-                if (d.schools.length > 1)
-                  _SchoolSwitcher(
-                    schools: d.schools,
-                    selected: school,
-                    onSelected: (id) => setState(() {
+      body: ContentWidth(
+        child: AbsorbPointer(
+          absorbing: _saving,
+          child: AsyncValueView(
+            value: data,
+            onRetry: () => ref.invalidate(schoolDataProvider),
+            data: (d) {
+              final school = _adding
+                  ? null
+                  : d.schools.where((s) => s.id == _selectedId).firstOrNull ??
+                        d.schools.firstOrNull;
+              final first = d.schools.isEmpty;
+              return ListView(
+                padding: const EdgeInsets.all(16),
+                children: [
+                  if (school != null && !_adding)
+                    _NextSteps(data: d, school: school),
+                  if (d.schools.length > 1)
+                    _SchoolSwitcher(
+                      schools: d.schools,
+                      selected: school,
+                      onSelected: (id) => setState(() {
+                        _resetDraft();
+                        _adding = false;
+                        _selectedId = id;
+                      }),
+                    ),
+                  // "Weitere Schule" once there is one: above the very first form it
+                  // would offer what is already on screen.
+                  if (!_adding && !first)
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: TextButton.icon(
+                        onPressed: () => setState(() {
+                          _resetDraft();
+                          _adding = true;
+                        }),
+                        icon: const Icon(Icons.add),
+                        label: Text(l10n.schoolsUiAddSchool),
+                      ),
+                    ),
+                  _SchoolForm(
+                    key: _formKey,
+                    onChanged: _changed,
+                    school: school,
+                    onCreated: (id) => setState(() {
                       _resetDraft();
                       _adding = false;
                       _selectedId = id;
                     }),
                   ),
-                // "Weitere Schule" once there is one: above the very first form it
-                // would offer what is already on screen.
-                if (!_adding && !first)
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: TextButton.icon(
-                      onPressed: () => setState(() {
-                        _resetDraft();
-                        _adding = true;
-                      }),
-                      icon: const Icon(Icons.add),
-                      label: Text(l10n.schoolsUiAddSchool),
+                  if (school == null) ...[
+                    // The first school, or another one: name and region are all it takes.
+                    // Bell times and subjects come as starter content (specs/21).
+                    Text(l10n.schoolSetupFirstHint),
+                    const SizedBox(height: 12),
+                    FilledButton(
+                      key: const ValueKey('school-create'),
+                      onPressed:
+                          _saving || !(_formKey.currentState?.isValid ?? false)
+                          ? null
+                          : _save,
+                      child: Text(l10n.schoolSetupCreate),
                     ),
-                  ),
-                _SchoolForm(
-                  key: _formKey,
-                  onChanged: _changed,
-                  school: school,
-                  onCreated: (id) => setState(() {
-                    _resetDraft();
-                    _adding = false;
-                    _selectedId = id;
-                  }),
-                ),
-                if (school == null) ...[
-                  // The first school, or another one: name and region are all it takes.
-                  // Bell times and subjects come as starter content (specs/21).
-                  Text(l10n.schoolSetupFirstHint),
-                  const SizedBox(height: 12),
-                  FilledButton(
-                    key: const ValueKey('school-create'),
-                    onPressed:
-                        _saving || !(_formKey.currentState?.isValid ?? false)
-                        ? null
-                        : _save,
-                    child: Text(l10n.schoolSetupCreate),
-                  ),
-                  if (first) const SizedBox(height: 24),
+                    if (first) const SizedBox(height: 24),
+                  ],
+                  if (school != null) ...[
+                    _BellTimes(
+                      key: _bellsKey,
+                      onChanged: _changed,
+                      data: d,
+                      school: school,
+                    ),
+                    _Terms(data: d, school: school),
+                    _Holidays(data: d, school: school),
+                  ],
+                  if (!first) _Subjects(data: d),
                 ],
-                if (school != null) ...[
-                  _BellTimes(
-                    key: _bellsKey,
-                    onChanged: _changed,
-                    data: d,
-                    school: school,
-                  ),
-                  _Terms(data: d, school: school),
-                  _Holidays(data: d, school: school),
-                ],
-                if (!first) _Subjects(data: d),
-              ],
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );

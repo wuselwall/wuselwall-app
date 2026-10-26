@@ -3018,6 +3018,7 @@
   "eventTemplateHoursMinutes": "{hours} h {minutes} min",
   "eventTemplateMinutes": "{count} min",
   "eventTemplateCount": "Usada {count} veces",
+  "eventTemplateCountShort": "{count} veces",
   "eventTemplateMenu": "Más sobre {name}",
   "eventTemplateKeep": "Guardar como plantilla",
   "eventTemplateHide": "No volver a sugerir",

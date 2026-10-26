@@ -115,17 +115,22 @@ class _Children extends ConsumerWidget {
           onPressed: ref.read(selectedWeekProvider.notifier).thisWeek,
           child: Text(l10n.schoolThisWeek),
         );
+        Future<void> editSchool() async {
+          if (await ensureGuardian(context, ref) && context.mounted) {
+            unawaited(context.push(Routes.schoolSetup));
+          }
+        }
+
+        Future<void> editTimetable() async =>
+            openTimetableEditor(context, ref, data: data, profileId: child.id);
+
         final actions = <Widget>[
           Tooltip(
             message: l10n.schoolEditSchool,
             child: TextButton.icon(
               icon: const Icon(Icons.school_outlined),
               label: Text(l10n.schoolEditSchool),
-              onPressed: () async {
-                if (await ensureGuardian(context, ref) && context.mounted) {
-                  unawaited(context.push(Routes.schoolSetup));
-                }
-              },
+              onPressed: () => unawaited(editSchool()),
             ),
           ),
           Tooltip(
@@ -133,12 +138,7 @@ class _Children extends ConsumerWidget {
             child: TextButton.icon(
               icon: const Icon(Icons.edit_calendar_outlined),
               label: Text(l10n.schoolEditTimetable),
-              onPressed: () => openTimetableEditor(
-                context,
-                ref,
-                data: data,
-                profileId: child.id,
-              ),
+              onPressed: () => unawaited(editTimetable()),
             ),
           ),
           TimetableImportMenu(profileId: child.id),
@@ -175,12 +175,71 @@ class _Children extends ConsumerWidget {
                   ],
                 );
                 if (wide) return toolbar;
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                // A phone keeps one row: the children, "Diese Woche" as an icon and
+                // the editing in one menu, so the timetable starts high on the first
+                // screen (round-3 review N-9).
+                return Row(
                   children: [
-                    selection,
-                    Center(child: thisWeek),
-                    editing,
+                    Expanded(child: selection),
+                    IconButton(
+                      key: const ValueKey('school-this-week'),
+                      tooltip: l10n.schoolThisWeek,
+                      icon: const Icon(Icons.today_outlined),
+                      onPressed: ref
+                          .read(selectedWeekProvider.notifier)
+                          .thisWeek,
+                    ),
+                    PopupMenuButton<_SchoolAction>(
+                      key: const ValueKey('school-actions'),
+                      onSelected: (action) => unawaited(switch (action) {
+                        _SchoolAction.school => editSchool(),
+                        _SchoolAction.timetable => editTimetable(),
+                        _SchoolAction.importText => runTimetableImport(
+                          context,
+                          ref,
+                          TimetableImportWay.text,
+                          profileId: child.id,
+                        ),
+                        _SchoolAction.importPhoto => runTimetableImport(
+                          context,
+                          ref,
+                          TimetableImportWay.photo,
+                          profileId: child.id,
+                        ),
+                      }),
+                      itemBuilder: (_) => [
+                        for (final (action, icon, label) in [
+                          (
+                            _SchoolAction.school,
+                            Icons.school_outlined,
+                            l10n.schoolEditSchool,
+                          ),
+                          (
+                            _SchoolAction.timetable,
+                            Icons.edit_calendar_outlined,
+                            l10n.schoolEditTimetable,
+                          ),
+                          (
+                            _SchoolAction.importText,
+                            Icons.content_paste_outlined,
+                            l10n.schoolImportFromText,
+                          ),
+                          (
+                            _SchoolAction.importPhoto,
+                            Icons.document_scanner_outlined,
+                            l10n.schoolImportFromPhoto,
+                          ),
+                        ])
+                          PopupMenuItem(
+                            value: action,
+                            child: ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              leading: Icon(icon),
+                              title: Text(label),
+                            ),
+                          ),
+                      ],
+                    ),
                   ],
                 );
               },
@@ -193,6 +252,9 @@ class _Children extends ConsumerWidget {
     );
   }
 }
+
+/// What the phone's menu on the Stundenplan offers.
+enum _SchoolAction { school, timetable, importText, importPhoto }
 
 /// The identity member as the board's member (for its avatar): a child by definition
 /// here, since only children are shown.

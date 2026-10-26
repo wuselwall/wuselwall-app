@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/features/today/ui/today_page.dart';
 
@@ -37,5 +38,29 @@ void main() {
     final page = t.getRect(find.byType(TodayPage));
     expect(page.width, adultMaxContentWidth);
     expect(page.center.dx, 720);
+  });
+
+  testWidgets('the settings pages stop at the content width on a laptop', (
+    t,
+  ) async {
+    await pumpApp(
+      t,
+      size: const Size(1440, 900),
+      overrides: baseOverrides(
+        identity: FakeIdentityRepository(current: device()),
+      ),
+    );
+    await t.tap(
+      find.byTooltip(lookupAppLocalizations(const Locale('de')).settingsTitle),
+    );
+    await t.pumpAndSettle();
+    final body = find.descendant(
+      of: find.byType(ContentWidth),
+      matching: find.byType(ListView),
+    );
+    expect(body, findsWidgets);
+    final rect = t.getRect(body.first);
+    expect(rect.width, adultMaxContentWidth);
+    expect(rect.center.dx, 720);
   });
 }

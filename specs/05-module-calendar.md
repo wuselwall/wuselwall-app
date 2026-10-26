@@ -137,7 +137,10 @@ the month a day's lines become its holiday flag, cakes, appointment pictures or 
 a timed block its picture or its first attendee's initial, a presence band its colour. The
 tooltip and the screen reader keep the words. The day view names its day in full once, as
 the heading; the app bar says it short ("Mo 26.10."). Every grid leaves the floating
-buttons' height free at its end, so no hour or day stays under them.
+buttons' height free at its end, so no hour or day stays under them. A phone (under 600 px)
+floats only **Neuer Termin**; a new tradition starts from its tile on that page. A narrow
+presence band shows its title's first letter, and every narrow tile's tooltip names the
+title, the time and who.
 
 The week board is a *composition* of this module, `school` and `meals`, and it is the
 screen the household will look at most. Treat its query — seven days, key appointments,

@@ -7,6 +7,7 @@ import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
@@ -74,7 +75,7 @@ class BaselinePage extends ConsumerWidget {
         title: Text(l10n.baselineTitle),
         leading: BackButton(onPressed: () => context.go(Routes.settingsFamily)),
       ),
-      body: body,
+      body: ContentWidth(child: body),
     );
   }
 }

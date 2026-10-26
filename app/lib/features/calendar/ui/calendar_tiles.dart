@@ -238,6 +238,7 @@ class OccurrenceTile extends StatelessWidget {
     final label = [
       occurrence.title,
       ?spanText,
+      if (narrow) ...[for (final m in attendees) m.displayName],
       if (occurrence.isTentative) l10n.boardTentative,
       if (imported) l10n.extCalSheetTitle,
     ].join(', ');
@@ -297,12 +298,24 @@ class OccurrenceTile extends StatelessWidget {
         ),
       ),
     );
-    // Without its words, a narrow tile names itself on hover and long press.
-    return narrow ? Tooltip(message: occurrence.title, child: tile) : tile;
+    // Without its words, a narrow tile names itself on hover and long press: the
+    // title, when, and who (its letter is the first attendee's initial).
+    return narrow
+        ? Tooltip(
+            message: [
+              occurrence.title,
+              ?spanText,
+              for (final m in attendees) m.displayName,
+            ].join(' · '),
+            child: tile,
+          )
+        : tile;
   }
 }
 
 /// The first letter of a name, upper-cased; by code point, so no half characters.
+String initialOf(String name) => _initial(name);
+
 String _initial(String name) {
   if (name.isEmpty) return '';
   return String.fromCharCode(name.runes.first).toUpperCase();

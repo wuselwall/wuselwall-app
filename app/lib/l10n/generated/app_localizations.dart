@@ -10710,6 +10710,12 @@ abstract class AppLocalizations {
   /// **'Used {count}×'**
   String eventTemplateCount(int count);
 
+  /// No description provided for @eventTemplateCountShort.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}×'**
+  String eventTemplateCountShort(int count);
+
   /// Tooltip of a template tile's menu button.
   ///
   /// In en, this message translates to:

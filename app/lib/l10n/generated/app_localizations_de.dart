@@ -6355,6 +6355,11 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String eventTemplateCountShort(int count) {
+    return '$count×';
+  }
+
+  @override
   String eventTemplateMenu(String name) {
     return 'Mehr zu $name';
   }
