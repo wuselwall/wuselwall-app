@@ -1364,6 +1364,12 @@ abstract class AppLocalizations {
   /// **'free'**
   String get boardNoSchool;
 
+  /// Wall board, a child's row: a school's own day off whose name does not fit the narrow day column (e.g. a floating holiday).
+  ///
+  /// In en, this message translates to:
+  /// **'no school'**
+  String get boardSchoolOff;
+
   /// No description provided for @boardCareUntil.
   ///
   /// In en, this message translates to:

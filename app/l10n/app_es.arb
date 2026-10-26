@@ -357,6 +357,7 @@
     }
   },
   "boardNoSchool": "libre",
+  "boardSchoolOff": "sin clase",
   "boardCareUntil": "{label} hasta las {time}",
   "@boardCareUntil": {
     "placeholders": {

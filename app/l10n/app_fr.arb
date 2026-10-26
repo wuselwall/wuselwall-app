@@ -357,6 +357,7 @@
     }
   },
   "boardNoSchool": "libre",
+  "boardSchoolOff": "congé",
   "boardCareUntil": "{label} jusqu’à {time}",
   "@boardCareUntil": {
     "placeholders": {

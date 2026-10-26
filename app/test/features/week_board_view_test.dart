@@ -11,12 +11,15 @@ import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
+import 'package:wuselwall/features/board/ui/board_footer.dart';
 import 'package:wuselwall/features/board/ui/board_geometry.dart';
 import 'package:wuselwall/features/board/ui/board_grid.dart';
 import 'package:wuselwall/features/board/ui/board_next_up.dart';
 import 'package:wuselwall/features/board/ui/board_presence.dart';
+import 'package:wuselwall/features/board/ui/board_primitives.dart';
 import 'package:wuselwall/features/board/ui/board_zones.dart';
 import 'package:wuselwall/features/board/ui/week_board_page.dart';
+import 'package:wuselwall/features/board/ui/week_board_view.dart';
 import 'package:wuselwall/features/home/ui/register_home_page.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
@@ -680,6 +683,209 @@ void main() {
         expect(t.takeException(), isNull);
       },
     );
+  });
+
+  group('review round 3: what the wall shows whole', () {
+    testWidgets('a 1920x1080 kiosk scales the board up to fill the panel (G)', (
+      t,
+    ) async {
+      // A holiday in the week: the day names take their second line, as in a
+      // week with a birthday.
+      final json = _boardJson();
+      ((json['days'] as List)[4] as Map)['holiday'] = {'name': 'Auffahrt'};
+      await _pumpBoard(
+        t,
+        size: const Size(1920, 1080),
+        snapshot: BoardSnapshot(
+          board: WeekBoard.fromJson(json),
+          fetchedAt: DateTime(2026, 10, 14, 14, 4),
+        ),
+      );
+      expect(t.takeException(), isNull);
+      // The 1280 x 720 canvas drawn 1.5 times, edge to edge, not in the top-left.
+      final rect = t.getRect(find.byType(WeekBoardView));
+      expect(rect.left, closeTo(0, 0.5));
+      expect(rect.top, closeTo(0, 0.5));
+      expect(rect.width, closeTo(1920, 0.5));
+      expect(rect.height, closeTo(1080, 0.5));
+      // The footer is its 56 canvas px, so the 16:9 canvas still has room for the
+      // three day parts of the appointments.
+      expect(t.getSize(find.byType(BoardFooter)).height, 56);
+      expect(find.text('Vormittag'), findsOneWidget);
+    });
+
+    testWidgets('a 1280x800 kiosk draws the board at its own size (G)', (
+      t,
+    ) async {
+      await _pumpBoard(t);
+      final rect = t.getRect(find.byType(WeekBoardView));
+      expect(rect.size.width, closeTo(1280, 0.5));
+      expect(rect.size.height, closeTo(800, 0.5));
+    });
+
+    Future<void> pumpTicker(WidgetTester t, double width) async {
+      t.view.physicalSize = const Size(2400, 300);
+      t.view.devicePixelRatio = 1;
+      addTearDown(t.view.reset);
+      await t.pumpWidget(
+        ProviderScope(
+          overrides: [
+            nowProvider.overrideWithValue(DateTime(2026, 10, 14, 14, 5)),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.build(UiRegister.kiosk, Shade.light),
+            localizationsDelegates: localizationsDelegates,
+            supportedLocales: supportedLocales,
+            locale: const Locale('de'),
+            home: Scaffold(
+              body: Align(
+                alignment: Alignment.topLeft,
+                child: SizedBox(
+                  width: width,
+                  child: BoardNextUp(
+                    frame: BoardFrame(
+                      board: _board(),
+                      geometry: const BoardGeometry(
+                        canvasWidth: 1280,
+                        todayIndex: 2,
+                      ),
+                      night: false,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await t.pump(const Duration(seconds: 3));
+    }
+
+    List<RenderParagraph> painted(WidgetTester t) => [
+      for (final e in find.byType(RichText).hitTestable().evaluate())
+        e.renderObject! as RenderParagraph,
+    ];
+
+    testWidgets('the next-up line keeps its first thing whole (E-1)', (
+      t,
+    ) async {
+      // Wide: the next thing and the one after it.
+      await pumpTicker(t, 700);
+      var lines = painted(t).map((p) => p.text.toPlainText()).join(' | ');
+      expect(lines, contains('14:30 Turnen · in 25 Min'));
+      expect(lines, contains('danach 15:30 Klavier'));
+
+      // Too narrow for both: "danach …" goes, the first stays whole.
+      await pumpTicker(t, 450);
+      expect(t.takeException(), isNull);
+      lines = painted(t).map((p) => p.text.toPlainText()).join(' | ');
+      expect(lines, contains('14:30 Turnen · in 25 Min'));
+      expect(lines, isNot(contains('danach')));
+      for (final p in painted(t)) {
+        expect(p.didExceedMaxLines, isFalse, reason: p.text.toPlainText());
+      }
+
+      // Too narrow even for the first: it ends in an ellipsis, it never overflows.
+      await pumpTicker(t, 250);
+      expect(t.takeException(), isNull);
+    });
+
+    testWidgets(
+      'a lone appointment too long for its line moves up beside its time (E-2)',
+      (t) async {
+        final json = _boardJson();
+        final days = (json['days'] as List).cast<Map<String, Object?>>();
+        days[2]['events'] = [
+          _event(
+            'heizung',
+            'Heizung wird gewartet',
+            starts: '10:00',
+            ends: '12:00',
+            who: ['julia'],
+            key: true,
+          ),
+        ];
+        await _pumpBoard(
+          t,
+          snapshot: BoardSnapshot(
+            board: WeekBoard.fromJson(json),
+            fetchedAt: DateTime(2026, 10, 14, 14, 4),
+          ),
+        );
+        expect(t.takeException(), isNull);
+        final title = painted(t)
+            .where((p) => p.text.toPlainText().contains('Heizung'));
+        expect(title, hasLength(1));
+        // Today's column: time and title share the two lines and the title is whole,
+        // where the title's own line under the time would cut it.
+        expect(title.single.text.toPlainText(), '10:00 Heizung wird gewartet');
+        expect(title.single.maxLines, 2);
+      },
+    );
+
+    testWidgets('each member row starts with the colour of its dots (L-9)', (
+      t,
+    ) async {
+      await _pumpBoard(t);
+      for (final name in ['Emma', 'Paul', 'Julia', 'Thomas']) {
+        expect(
+          find.descendant(
+            of: find.byType(PresenceRows),
+            matching: find.byWidgetPredicate(
+              (w) => w is MemberDot && w.semanticLabel == name && w.size == 14,
+            ),
+          ),
+          findsOneWidget,
+          reason: name,
+        );
+      }
+    });
+
+    testWidgets('a school\'s own day off with a long name says "schulfrei" '
+        '(E-3)', (t) async {
+      final handle = t.ensureSemantics();
+      final json = _boardJson();
+      final days = (json['days'] as List).cast<Map<String, Object?>>();
+      days[1]['school'] = [
+        _school('paul', free: 'holiday', holidayName: 'Beweglicher Ferientag'),
+      ];
+      await _pumpBoard(
+        t,
+        snapshot: BoardSnapshot(
+          board: WeekBoard.fromJson(json),
+          fetchedAt: DateTime(2026, 10, 14, 14, 4),
+        ),
+      );
+      // Paul's floating holiday on Tuesday does not fit the column: the row says
+      // "schulfrei", a screen reader still hears the name.
+      expect(find.text('schulfrei'), findsOneWidget);
+      expect(find.text('Beweglicher Ferientag'), findsNothing);
+      expect(
+        find.bySemanticsLabel(RegExp('Beweglicher Ferientag')),
+        findsWidgets,
+      );
+      handle.dispose();
+    });
+
+    testWidgets('the meal zone names itself on two lines (E-4)', (t) async {
+      await _pumpBoard(t);
+      final label = find.text('Warmes Essen');
+      expect(t.widget<Text>(label).maxLines, 2);
+      final paragraph = t.renderObject<RenderParagraph>(
+        find.descendant(of: label, matching: find.byType(RichText)),
+      );
+      expect(paragraph.didExceedMaxLines, isFalse);
+    });
+
+    testWidgets('the view toggles are switches, not checkboxes (L-9)', (
+      t,
+    ) async {
+      await _pumpBoard(t);
+      expect(find.byIcon(Icons.check_box_outline_blank), findsNothing);
+      expect(find.byIcon(Icons.check_box), findsNothing);
+      expect(find.byType(BoardNextWeekToggle), findsOneWidget);
+      expect(find.byType(BoardAllEventsToggle), findsOneWidget);
+    });
   });
 
   group('BoardGeometry', () {

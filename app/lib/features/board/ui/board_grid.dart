@@ -361,6 +361,33 @@ class ClipFit extends StatelessWidget {
   );
 }
 
+/// Whether every word of [text] fits a line of [width] in [style]: a text that may
+/// wrap then breaks only between words, never inside one.
+bool wordsFit(
+  BuildContext context,
+  String text,
+  TextStyle style,
+  double width,
+) {
+  final painter = TextPainter(
+    textDirection: Directionality.of(context),
+    textScaler: MediaQuery.textScalerOf(context),
+    maxLines: 1,
+  );
+  try {
+    for (final word in text.split(RegExp(r'\s+'))) {
+      if (word.isEmpty) continue;
+      painter
+        ..text = TextSpan(text: word, style: style)
+        ..layout();
+      if (painter.width > width) return false;
+    }
+    return true;
+  } finally {
+    painter.dispose();
+  }
+}
+
 /// The quiet band between two zones. The zones need no titles: the gutter names every
 /// row (a member, a day part, the meal), so the band only separates them.
 class BoardDivider extends StatelessWidget {

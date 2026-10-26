@@ -9,6 +9,7 @@ import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
+import 'package:wuselwall/features/board/ui/board_scroll_cue.dart';
 import 'package:wuselwall/features/board/ui/details/board_details.dart';
 import 'package:wuselwall/features/board/ui/details/detail_parts.dart';
 
@@ -52,23 +53,27 @@ class DayDetailBody extends ConsumerWidget {
               children: [
                 Expanded(
                   flex: 3,
-                  child: SingleChildScrollView(
-                    child: _Appointments(
-                      board: board,
-                      dayIndex: dayIndex,
-                      isToday: isToday,
-                      nowMinutes: nowMinutes,
+                  child: BoardScrollFade(
+                    child: SingleChildScrollView(
+                      child: _Appointments(
+                        board: board,
+                        dayIndex: dayIndex,
+                        isToday: isToday,
+                        nowMinutes: nowMinutes,
+                      ),
                     ),
                   ),
                 ),
                 const SizedBox(width: Tokens.space8),
                 Expanded(
                   flex: 2,
-                  child: SingleChildScrollView(
-                    child: _WhoAndMeal(
-                      board: board,
-                      dayIndex: dayIndex,
-                      host: host,
+                  child: BoardScrollFade(
+                    child: SingleChildScrollView(
+                      child: _WhoAndMeal(
+                        board: board,
+                        dayIndex: dayIndex,
+                        host: host,
+                      ),
                     ),
                   ),
                 ),

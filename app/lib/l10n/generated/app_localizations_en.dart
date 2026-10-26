@@ -717,6 +717,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get boardNoSchool => 'free';
 
   @override
+  String get boardSchoolOff => 'no school';
+
+  @override
   String boardCareUntil(String label, String time) {
     return '$label until $time';
   }

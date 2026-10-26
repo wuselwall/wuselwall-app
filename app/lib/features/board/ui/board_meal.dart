@@ -51,18 +51,34 @@ class MealRow extends StatelessWidget {
             width: BoardGeometry.gutter - 20,
             top: 0,
             bottom: 0,
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                context.l10n.boardZoneMeal,
-                style: boardUi(
+            // On two lines where the row has room ("Warmes / Essen", as the other
+            // gutter labels are read whole); a row too short for two says "Essen".
+            child: LayoutBuilder(
+              builder: (context, c) {
+                final style = boardUi(
                   24,
                   weight: FontWeight.w700,
                   color: Theme.of(context).colorScheme.onSurface,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
+                );
+                final twoLines =
+                    c.maxHeight >=
+                    MediaQuery.textScalerOf(context).scale(24 * 1.15 * 2);
+                return Align(
+                  alignment: Alignment.centerLeft,
+                  child: twoLines
+                      ? Text(
+                          context.l10n.boardZoneMeal,
+                          style: style,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        )
+                      : ShrinkText(
+                          context.l10n.boardZoneMeal,
+                          fallback: context.l10n.mealsTitle,
+                          style: style,
+                        ),
+                );
+              },
             ),
           ),
           for (var i = 0; i < BoardGeometry.dayCount; i++)
@@ -260,12 +276,23 @@ class _Dish extends StatelessWidget {
       color: Theme.of(context).colorScheme.onSurface,
     );
 
-    final text = Text(
-      title,
-      style: style,
-      maxLines: twoLines ? 2 : 1,
-      overflow: TextOverflow.ellipsis,
-    );
+    // Two lines only when every word fits a line: a word wider than the column
+    // would break in the middle ("Fischstäbche / n"), and an ellipsis reads better.
+    final text = twoLines
+        ? LayoutBuilder(
+            builder: (context, c) => Text(
+              title,
+              style: style,
+              maxLines: wordsFit(context, title, style, c.maxWidth) ? 2 : 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          )
+        : Text(
+            title,
+            style: style,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          );
     final ink = wishInk;
     if (ink == null) return text;
     return Row(
