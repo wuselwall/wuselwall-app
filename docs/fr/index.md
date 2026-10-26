@@ -63,7 +63,7 @@ features:
     linkText: Membres et appareils
   - icon: 🏠
     title: Votre propre serveur
-    details: Vos données restent sur le serveur de votre famille, chez Supabase, sur un serveur loué ou à la maison.
+    details: Vos données restent sur le serveur de votre famille, sur un serveur loué ou à la maison.
     link: /fr/server/
     linkText: Installer un serveur
 ---

@@ -63,7 +63,7 @@ features:
     linkText: Miembros y dispositivos
   - icon: 🏠
     title: Tu propio servidor
-    details: Vuestros datos están en el servidor de vuestra familia, en Supabase, en un servidor alquilado o en casa.
+    details: Vuestros datos están en el servidor de vuestra familia, en un servidor alquilado o en casa.
     link: /es/server/
     linkText: Instalar un servidor
 ---

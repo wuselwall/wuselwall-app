@@ -8,7 +8,7 @@ L’app demande **Quel serveur ?**, car elle n’a pas de serveur prédéfini.
 
 <Shot name="setup-server" alt="L’écran de choix du serveur" />
 
-- **Saisissez l’adresse** reçue de la personne qui a installé le serveur, par exemple `api.example.org`. Pour Supabase, l’identifiant du projet suffit.
+- **Saisissez l’adresse** reçue de la personne qui a installé le serveur, par exemple `api.example.org`.
 - **Scannez le code QR** d’un appareil déjà connecté, dans **Paramètres → Avancés → Serveur**. Le code d’ajout d’appareil connecte aussi l’appareil à la famille.
 - **Essayez sans serveur** : une famille d’exemple fonctionne entièrement sur l’appareil. Rien n’est conservé ni envoyé. Quittez la démonstration pour revenir au choix du serveur.
 

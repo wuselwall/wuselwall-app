@@ -12,7 +12,7 @@ Ces anciens comptes utilisent désormais le code envoyé à leur adresse e-mail,
 
 **Vérifiez avant la mise à jour** : avec « Masquer mon adresse e-mail » d’Apple, l’adresse se termine par `privaterelay.appleid.com`. L’expéditeur doit être enregistré pour le transfert Apple. Si le code n’arrive pas, différez la mise à jour pour éviter de bloquer la prochaine connexion.
 
-À la maison, `wuselwall update` retire les anciennes valeurs Apple/Google, l’adresse de retour et la fonction `apple-token`, en affichant les noms seulement. Chez Supabase, le workflow désactive ces fournisseurs et la liaison de comptes, conserve les autres URL de retour, retire fonction et secrets `APPLE_…`, puis vérifie. Il s’arrête en cas d’échec.
+À la maison, `wuselwall update` retire les anciennes valeurs Apple/Google, l’adresse de retour et la fonction `apple-token`, en affichant les noms seulement.
 
 **Après la mise à jour**, testez un ancien compte sur un **second appareil**, par code e-mail, sans déconnecter le premier. Ensuite seulement :
 

@@ -9,7 +9,7 @@ In the examples your domain is `example.org`. The server is reached at `api.exam
 - A machine with **Linux, Docker and Docker Compose v2** (`docker compose version` answers) that runs all the time: Debian, Ubuntu, or a NAS that can run Docker Compose.
 - **4 GB of memory** for WuselWall and **10 GB** of free space. WuselWall is tested on x86-64. ARM devices such as a Raspberry Pi 5 should work but are untested.
 - Access to the server's command line (SSH), as a user who may run `docker`.
-- A **domain** with two names, `api.` and `web.`, pointing at your connection's public IP address. If that address changes often, a dynamic DNS service helps.
+- A **domain** pointing at your connection's public IP address. If that address changes often, a dynamic DNS service helps.
 - In the router, forwarding of **TCP 80 and 443** to the server.
 
 ::: details No open ports?

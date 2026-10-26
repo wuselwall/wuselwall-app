@@ -8,7 +8,7 @@ La app no lleva un servidor predeterminado, por lo que pregunta **¿Qué servido
 
 <Shot name="setup-server" alt="La elección del servidor" />
 
-- Escribe la **dirección** recibida de quien lo instaló, por ejemplo `api.example.org`. En Supabase basta el identificador del proyecto.
+- Escribe la **dirección** recibida de quien lo instaló, por ejemplo `api.example.org`.
 - **Escanea el QR** de un dispositivo conectado, en **Ajustes → Avanzados → Servidor**. El código para añadir un dispositivo también lo conecta a la familia.
 - **Prueba sin servidor**: una familia de ejemplo funciona solo en el dispositivo, sin guardar ni enviar datos. Sal de la demostración para volver a esta pregunta.
 

@@ -9,7 +9,7 @@ In den Beispielen heißt eure Domain `example.org`. Der Server ist unter `api.ex
 - Einen Rechner mit **Linux, Docker und Docker Compose v2** (`docker compose version` antwortet), der dauernd läuft: Debian, Ubuntu oder ein NAS, das Docker Compose kann.
 - **4 GB Arbeitsspeicher** für WuselWall und **10 GB** freien Platz. Getestet ist WuselWall auf x86-64. ARM-Geräte wie ein Raspberry Pi 5 sollten gehen, sind aber nicht erprobt.
 - Einen Zugang zur Kommandozeile des Servers (SSH), mit einem Benutzer, der `docker` aufrufen darf.
-- Eine **Domain** mit zwei Namen, `api.` und `web.`, die auf die öffentliche IP-Adresse eures Anschlusses zeigen. Ändert sich die IP-Adresse oft, hilft ein DynDNS-Dienst.
+- Eine **Domain**, die auf die öffentliche IP-Adresse eures Anschlusses zeigt. Ändert sich die IP-Adresse oft, hilft ein DynDNS-Dienst.
 - Im Router eine Weiterleitung von **TCP 80 und 443** auf den Server.
 
 ::: details Ohne offene Ports?

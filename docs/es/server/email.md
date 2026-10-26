@@ -15,8 +15,6 @@ Puedes activar o desactivar el correo cuando quieras; las cuentas conservan su c
 
 ## Configurar {#setup}
 
-### Servidor en casa o alquilado
-
 En la carpeta de la herramienta `wuselwall`:
 
 ```bash
@@ -33,20 +31,6 @@ La herramienta pide la contraseña, que no aparece en el comando ni en el histor
 
 El idioma de los correos se elige aparte ([Instalación](/es/server/home-server#email-language)).
 
-### En Supabase
-
-Crea cinco secretos más en tu copia de GitHub y vuelve a ejecutar **deploy-supabase** ([Supabase](/es/server/supabase-cloud#mail)):
-
-| Secreto | Gmail |
-|---|---|
-| `SMTP_HOST` | `smtp.gmail.com` |
-| `SMTP_PORT` | `587` |
-| `SMTP_USER` | tu dirección de Gmail |
-| `SMTP_PASS` | la contraseña de aplicación (abajo) |
-| `SMTP_SENDER` | tu dirección de Gmail |
-
-Sin estos secretos, el servidor se configura sin correo.
-
 ## Con Gmail {#gmail}
 
 Basta una cuenta de Gmail: sin dominio, sin registros DNS, gratis. Google exige una **contraseña de aplicación** de 16 letras, solo para WuselWall.
@@ -54,7 +38,7 @@ Basta una cuenta de Gmail: sin dominio, sin registros DNS, gratis. Google exige 
 1. **Una cuenta propia.** Usa una dirección de Gmail solo para el servidor familiar. Una contraseña de aplicación abre todo el buzón: quien lea `stack/.env` podría leer y enviar sus correos.
 2. **Verificación en dos pasos.** En [myaccount.google.com](https://myaccount.google.com/) → **Seguridad** → **Verificación en dos pasos**. Sin ella no hay contraseñas de aplicación.
 3. **Crear la contraseña.** Abre [myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords), ponle el nombre `WuselWall` y pulsa **Crear**. Copia las 16 letras: Google solo las muestra una vez.
-4. **Introducirla en el servidor**: `./wuselwall mail smtp --gmail --user …` y luego `./wuselwall mail test tu@example.org`. Los espacios dan igual. En Supabase va en `SMTP_PASS`.
+4. **Introducirla en el servidor**: `./wuselwall mail smtp --gmail --user …` y luego `./wuselwall mail test tu@example.org`. Los espacios dan igual.
 
 Conviene saber: los códigos salen siempre de la dirección de Gmail; Gmail envía unos 500 mensajes al día ([Google](https://support.google.com/mail/answer/22839?hl=es)); cambiar la contraseña de Google revoca las contraseñas de aplicación (crea otra y repite `mail smtp`); no está disponible con solo llaves de seguridad, con la Protección Avanzada ni en la mayoría de cuentas de trabajo o centro educativo ([Google](https://support.google.com/mail/answer/185833?hl=es)); Google ve direcciones y códigos.
 
@@ -74,4 +58,4 @@ Son ejemplos, no recomendaciones; WuselWall no está vinculado a ninguno. En lug
 2. La app muestra un **código de 8 caracteres**, válido **una vez** durante **10 minutos**. Entrégalo en persona.
 3. En el dispositivo de quien la olvidó: **Continuar con correo electrónico** → **Iniciar sesión** → **¿Olvidaste tu contraseña?**, y luego la dirección, el código y una contraseña nueva de al menos 10 caracteres.
 
-La verificación en dos pasos sigue pidiéndose si está activa. **¿Lo olvidó el único responsable?** Quien administra el servidor crea el mismo código: `./wuselwall password direccion@example.org`, o en Supabase en **SQL Editor**: `select app.password_reset_issue_for_email('direccion@example.org') ->> 'code';`
+La verificación en dos pasos sigue pidiéndose si está activa. **¿Lo olvidó el único responsable?** Quien administra el servidor crea el mismo código: `./wuselwall password direccion@example.org`.

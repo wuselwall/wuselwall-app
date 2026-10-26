@@ -8,7 +8,7 @@ Les exemples utilisent `api.example.org` pour l’API et `web.example.org` pour 
 
 - Une machine Linux toujours allumée avec **Docker et Docker Compose v2**, accessible en SSH par un utilisateur autorisé à lancer Docker.
 - **4 Go de mémoire** pour WuselWall et **10 Go d’espace libre**. x86-64 est testé ; ARM, dont Raspberry Pi 5, reste non testé.
-- Un domaine avec les noms `api.` et `web.` pointant vers votre IP publique. Si elle change, prévoyez du DNS dynamique.
+- Un **domaine** pointant vers votre IP publique. Si elle change, prévoyez du DNS dynamique.
 - Une redirection des ports **TCP 80 et 443** vers le serveur.
 
 Sans ports ouverts, un tunnel Cloudflare peut transporter le trafic, mais Cloudflare le déchiffre et peut le voir. Installez alors sans `--caddy` et utilisez les destinations du proxy décrites ci-dessous. Un VPN tel que WireGuard ou Tailscale garde le serveur privé, mais tous les appareils doivent l’utiliser et les abonnements calendaires externes peuvent ne pas fonctionner.

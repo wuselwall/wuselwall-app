@@ -2,11 +2,11 @@
 
 Prueba la restauración en otra máquina o una máquina virtual antes de necesitarla. Una copia solo sirve si se puede restaurar.
 
-## En casa {#at-home}
+## En casa o alquilado {#at-home}
 
 La herramienta restaura un archivo `db-….dump` en un servidor **recién instalado**. Conserva el antiguo **`stack/.env`** para mantener claves y sesiones de dispositivos.
 
-1. Apunta `api.` y `web.` a la nueva máquina.
+1. Apunta tu dominio a la nueva máquina.
 2. Descomprime la misma versión o una posterior e instala con el archivo anterior:
 
    ```bash
@@ -28,9 +28,3 @@ La restauración se rechaza por defecto. Para volver deliberadamente a un estado
 :::
 
 Sin el antiguo `.env`, instala con `--api` y `--web` y restaura. Recuperarás datos, pero habrá que conectar de nuevo los dispositivos.
-
-## En Supabase {#at-supabase}
-
-Usa **Database → Backups** según tu plan. El proyecto puede quedar inaccesible durante la restauración. Para una copia propia, sigue el [procedimiento oficial con CLI](https://supabase.com/docs/guides/platform/migrating-within-supabase/backup-restore). Cifra los archivos: contienen los datos familiares.
-
-Las copias permiten trasladarse entre Supabase y un servidor propio, pero el recorrido completo aún no está documentado paso a paso.

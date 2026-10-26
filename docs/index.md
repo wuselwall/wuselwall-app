@@ -63,7 +63,7 @@ features:
     linkText: Mitglieder und Geräte
   - icon: 🏠
     title: Eigener Server
-    details: Eure Daten liegen auf dem Server eurer Familie – bei Supabase, gemietet oder zu Hause.
+    details: Eure Daten liegen auf dem Server eurer Familie – gemietet oder zu Hause.
     link: /server/
     linkText: Server einrichten
 ---

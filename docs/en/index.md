@@ -63,7 +63,7 @@ features:
     linkText: Members and devices
   - icon: 🏠
     title: Your own server
-    details: Your data lives on your family's own server — at Supabase, rented or at home.
+    details: Your data lives on your family's own server — rented or at home.
     link: /en/server/
     linkText: Set up a server
 ---

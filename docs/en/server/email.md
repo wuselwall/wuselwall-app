@@ -15,8 +15,6 @@ You can switch email on or off at any time. Accounts keep their password; once e
 
 ## Setting it up {#setup}
 
-### Server at home or rented
-
 On the server, in the directory of the `wuselwall` tool ([Server at home](/en/server/home-server)):
 
 ```bash
@@ -39,20 +37,6 @@ The tool asks for the password. It never appears in the command line or in the s
 
 The **email language** is chosen separately, with `./wuselwall language` ([Server at home](/en/server/home-server#email-language)).
 
-### At Supabase
-
-Create five more repository secrets in your copy on GitHub ([Server at Supabase](/en/server/supabase-cloud#mail)), then run **deploy-supabase** again:
-
-| Secret | Gmail |
-|---|---|
-| `SMTP_HOST` | `smtp.gmail.com` |
-| `SMTP_PORT` | `587` |
-| `SMTP_USER` | your Gmail address |
-| `SMTP_PASS` | the app password (below) |
-| `SMTP_SENDER` | your Gmail address |
-
-Without these secrets, the workflow sets up the server without email. Delete them and run it again to switch email off.
-
 ## With Gmail {#gmail}
 
 A Gmail account is the quickest way to send the codes: no domain, no DNS records, free. Google requires an **app password** for it, a separate 16-letter password just for WuselWall.
@@ -67,7 +51,7 @@ A Gmail account is the quickest way to send the codes: no domain, no DNS records
    ./wuselwall mail test you@example.org
    ```
 
-   At the prompt, paste the 16 letters (the spaces don't matter). At Supabase, they go into `SMTP_PASS`.
+   At the prompt, paste the 16 letters (the spaces don't matter).
 5. **Try it.** In the app, **Continue with email** now asks for a code by email.
 
 Good to know:
@@ -88,7 +72,7 @@ Good to know:
 
 Port `587` is the usual one; `465` works too. Names are examples, not recommendations; WuselWall is not affiliated with any of these providers.
 
-**Scaleway with the WuselWall function:** instead of SMTP, the server can also hand its mails to Scaleway's interface. At home, put `SCW_SECRET_KEY`, `SCW_PROJECT_ID` and `MAIL_FROM` into `stack/.env` before the installation; at Supabase, they are secrets of the same names.
+**Scaleway with the WuselWall function:** instead of SMTP, the server can also hand its mails to Scaleway's interface. For that, put `SCW_SECRET_KEY`, `SCW_PROJECT_ID` and `MAIL_FROM` into `stack/.env` before the installation.
 
 ## Forgotten password without email {#forgotten-password}
 
@@ -98,9 +82,4 @@ Port `587` is the usual one; `465` works too. Names are examples, not recommenda
 
 If two-factor sign-in is on for the account, it still asks for the authenticator's code: the reset code replaces only the password.
 
-**The only guardian forgot?** Whoever runs the server creates the same code:
-
-- At home or rented: `./wuselwall password address@example.org`
-- At Supabase: in the dashboard under **SQL Editor**: `select app.password_reset_issue_for_email('address@example.org') ->> 'code';`
-
-Both work for every account except shared devices, and both are recorded in the family's log.
+**The only guardian forgot?** Whoever runs the server creates the same code with `./wuselwall password address@example.org`. That works for every account except shared devices and is recorded in the family's log.
