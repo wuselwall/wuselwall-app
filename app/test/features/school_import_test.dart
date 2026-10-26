@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/features/school/application/school_providers.dart';
@@ -196,6 +197,23 @@ void main() {
       findsOneWidget,
       reason: 'the short name stays visible',
     );
+    // The preview is also reachable without a pointer; arrow keys reveal the
+    // clipped weekdays without moving the page's vertical scroll position.
+    Focus.of(t.element(find.byType(Table))).requestFocus();
+    await t.pump();
+    final horizontal = t.state<ScrollableState>(
+      find.byWidgetPredicate(
+        (w) => w is Scrollable && w.axisDirection == AxisDirection.right,
+      ),
+    );
+    final start = horizontal.position.pixels;
+    await t.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+    await t.pump();
+    expect(horizontal.position.pixels, greaterThan(start));
+    await t.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+    await t.pump();
+    expect(horizontal.position.pixels, start);
+
     final tip = find.byTooltip('Ma · Mathematik · R1');
     expect(tip, findsOneWidget);
     await t.longPress(tip);

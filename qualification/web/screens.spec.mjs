@@ -27,11 +27,9 @@ for (const sample of cases(process.env.QUALIFY_MATRIX || 'canonical')) {
     const query = new URLSearchParams({ scenario: sample.scenario, locale: sample.locale, shade: sample.shade,
       state: sample.id, destination: sample.widget, tab: sample.tab || 'today', advanced: sample.advanced ? '1' : '0' });
     await page.goto(`/?${query}#${sample.route}`);
-    const placeholder = page.locator('flt-semantics-placeholder');
-    await placeholder.waitFor({ state: 'attached', timeout: 60_000 }).catch(() => {});
-    if (await placeholder.count()) await placeholder.evaluate(e => e.click());
-    await expect(page.locator('flt-semantics').first()).toBeAttached();
-    await expect(page.locator(`[flt-semantics-identifier="qualification-ready-${sample.id}"]`)).toBeAttached();
+    // The test entry point enables semantics before autofocus fields connect.
+    await expect(page.locator('flt-semantics').first()).toBeAttached({ timeout: 60_000 });
+    await expect(page.locator(`body[data-qualification-ready="${sample.id}"]`)).toBeAttached();
     await expect(page.getByRole('button').first()).toBeAttached();
     const semantics = await page.locator('flt-semantics-host').ariaSnapshot();
     expect(semantics.trim().length, 'The audit must inspect a populated semantics tree').toBeGreaterThan(50);

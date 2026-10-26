@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
@@ -812,8 +813,7 @@ class _Grid extends StatelessWidget {
         final dayWidth = 60 * textScale;
         final tableWidth = periodWidth + days.length * dayWidth;
         final compact = constraints.maxWidth < 560 || textScale > 1.2;
-        return SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
+        return _PreviewScroller(
           child: ConstrainedBox(
             constraints: BoxConstraints(
               minWidth: tableWidth > constraints.maxWidth
@@ -885,4 +885,64 @@ class _Grid extends StatelessWidget {
       },
     );
   }
+}
+
+/// A keyboard stop inside the horizontal scroll region, with a visible focus cue.
+class _PreviewScroller extends StatefulWidget {
+  const _PreviewScroller({required this.child});
+  final Widget child;
+
+  @override
+  State<_PreviewScroller> createState() => _PreviewScrollerState();
+}
+
+class _PreviewScrollerState extends State<_PreviewScroller> {
+  final _scroll = ScrollController();
+  bool _focused = false;
+
+  @override
+  void dispose() {
+    _scroll.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => SingleChildScrollView(
+    controller: _scroll,
+    scrollDirection: Axis.horizontal,
+    child: Focus(
+      key: const ValueKey('import-preview-scroll-focus'),
+      onFocusChange: (focused) => setState(() => _focused = focused),
+      onKeyEvent: (_, event) {
+        if (event is KeyUpEvent || !_scroll.hasClients) {
+          return KeyEventResult.ignored;
+        }
+        final direction = event.logicalKey == LogicalKeyboardKey.arrowRight
+            ? 1
+            : event.logicalKey == LogicalKeyboardKey.arrowLeft
+            ? -1
+            : 0;
+        if (direction == 0) return KeyEventResult.ignored;
+        _scroll.jumpTo(
+          (_scroll.offset + direction * 80).clamp(
+            _scroll.position.minScrollExtent,
+            _scroll.position.maxScrollExtent,
+          ),
+        );
+        return KeyEventResult.handled;
+      },
+      child: DecoratedBox(
+        position: DecorationPosition.foreground,
+        decoration: BoxDecoration(
+          border: Border.all(
+            width: 2,
+            color: _focused
+                ? Theme.of(context).colorScheme.primary
+                : Colors.transparent,
+          ),
+        ),
+        child: widget.child,
+      ),
+    ),
+  );
 }

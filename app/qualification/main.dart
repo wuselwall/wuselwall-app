@@ -6,7 +6,12 @@ import 'fixture.dart';
 import 'ready.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
+  final binding = WidgetsFlutterBinding.ensureInitialized();
+  // Test with assistive technology enabled from launch. Enabling it only after
+  // an autofocus field has connected selects Flutter web's non-semantic input
+  // strategy for that field, making the audit inspect an inconsistent session.
+  // The test entry point owns this handle for the lifetime of the page.
+  binding.ensureSemantics();
   registerFontLicenses();
   final q = Uri.base.queryParameters;
   runApp(
