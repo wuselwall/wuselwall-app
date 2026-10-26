@@ -22,8 +22,9 @@ import 'package:wuselwall/features/wusel/ui/family_wusel.dart';
 import 'package:wuselwall/features/wusel/ui/wusel_lines.dart';
 
 /// The family task board (specs/09 "Touch behaviour"): today's chores in one column per
-/// member, opened from the footer's task count, in two rows when the columns do not fit
-/// side by side. Ticking a chore is one of the three
+/// member who has any, opened from the footer's task count, in two rows when the
+/// columns do not fit side by side; the members with nothing today share a line under
+/// them. Ticking a chore is one of the three
 /// mutations the wall allows, and it is made as the acting profile, so the bar sits at
 /// the bottom to say who is ticking. Nothing here is smaller than the kiosk's 24 px.
 class TaskBoardDetailBody extends StatelessWidget {
@@ -90,18 +91,36 @@ class _Columns extends StatelessWidget {
     final anyone = items.where((t) => t.assignedProfileId == null).toList();
     return LayoutBuilder(
       builder: (context, constraints) {
-        final columns = [
+        // A column for each member with chores today, open or done, in household
+        // order, and "Offen für alle" last. Members with nothing today share one
+        // line under them, so the open chores are on screen without a scroll.
+        List<TaskInstance> tasksOf(Member m) => [
+          for (final t in items)
+            if (t.assignedProfileId == m.id) t,
+        ];
+        final busy = [
           for (final m in members)
+            if (tasksOf(m).isNotEmpty) m,
+        ];
+        final idle = [
+          for (final m in members)
+            if (tasksOf(m).isEmpty) m,
+        ];
+        final columns = [
+          for (final m in busy)
             _Column(
+              key: ValueKey('column-${m.id}'),
               member: m,
-              tasks: [
-                for (final t in items)
-                  if (t.assignedProfileId == m.id) t,
-              ],
+              tasks: tasksOf(m),
               points: balances?[m.id],
               streak: _longestStreak(m.id),
             ),
-          if (anyone.isNotEmpty) _Column(member: null, tasks: anyone),
+          if (anyone.isNotEmpty)
+            _Column(
+              key: const ValueKey('column-anyone'),
+              member: null,
+              tasks: anyone,
+            ),
         ];
         final rows = _rowsOf(columns.length, constraints.maxWidth);
         final perRow = rows == 0 ? 1 : (columns.length / rows).ceil();
@@ -110,7 +129,7 @@ class _Columns extends StatelessWidget {
         return BoardScrollFade(
           child: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 for (var r = 0; r < rows; r++)
                   Row(
@@ -120,6 +139,8 @@ class _Columns extends StatelessWidget {
                         SizedBox(width: width, child: c),
                     ],
                   ),
+                if (idle.isNotEmpty)
+                  _NothingLeft(members: idle, balances: balances),
               ],
             ),
           ),
@@ -150,12 +171,68 @@ class _Columns extends StatelessWidget {
 
 /// One member's column: a header in their ink with avatar, streak and points, then
 /// their chores as large cards. The open-for-anyone column has no member.
+/// The members with nothing today, on one line under the columns: their avatar, name
+/// and points, after "Heute steht nichts mehr an". Small, because there is nothing to
+/// do there; whole, because nothing in a detail is cut (specs/09).
+class _NothingLeft extends StatelessWidget {
+  const _NothingLeft({required this.members, required this.balances});
+
+  final List<Member> members;
+  final Map<String, int>? balances;
+
+  @override
+  Widget build(BuildContext context) {
+    final ww = context.ww;
+    final ink = Theme.of(context).colorScheme.onSurface;
+    return Container(
+      key: const ValueKey('nothing-left'),
+      margin: const EdgeInsets.all(Tokens.space1),
+      padding: const EdgeInsets.symmetric(
+        horizontal: Tokens.space3,
+        vertical: Tokens.space2,
+      ),
+      decoration: BoxDecoration(
+        color: ww.sunken,
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Wrap(
+        spacing: Tokens.space6,
+        runSpacing: Tokens.space2,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          Text(
+            context.l10n.boardNothingMoreToday,
+            style: boardUi(24, color: ww.ink2),
+          ),
+          for (final m in members)
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TaskAvatar(name: m.displayName, color: m.color, size: 40),
+                const SizedBox(width: Tokens.space2),
+                Text(
+                  m.displayName,
+                  style: boardUi(26, weight: FontWeight.w700, color: ink),
+                ),
+                if (balances?[m.id] case final points?) ...[
+                  const SizedBox(width: Tokens.space2),
+                  _Counter(points: points),
+                ],
+              ],
+            ),
+        ],
+      ),
+    );
+  }
+}
+
 class _Column extends StatelessWidget {
   const _Column({
     required this.member,
     required this.tasks,
     this.points,
     this.streak,
+    super.key,
   });
 
   final Member? member;
