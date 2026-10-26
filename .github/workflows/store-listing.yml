@@ -35,7 +35,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       # As in release-android.yml: the job's temporary directory for gem's cache.
-      - uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
+      - uses: ruby/setup-ruby@824c0e29fdfc7d689c191c27acc969d2d04b7dd8 # v1.331.0
         with: { ruby-version: '3.3', bundler-cache: true, working-directory: app/android }
         env:
           XDG_CACHE_HOME: ${{ runner.temp }}/cache
@@ -53,7 +53,7 @@ jobs:
     defaults: { run: { working-directory: app/ios } }
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
+      - uses: ruby/setup-ruby@824c0e29fdfc7d689c191c27acc969d2d04b7dd8 # v1.331.0
         with: { ruby-version: '3.3', bundler-cache: true, working-directory: app/ios }
         env:
           XDG_CACHE_HOME: ${{ runner.temp }}/cache
