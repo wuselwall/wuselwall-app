@@ -152,9 +152,13 @@ class _Avatar extends StatelessWidget {
               ),
             ),
             const SizedBox(height: Tokens.space1),
-            // The whole name, never "Thom…": a long one shrinks to its box.
+            // The whole name, never "Thom…": a long one shrinks to its box, and
+            // every box has one line's height, so all names sit on one line.
             SizedBox(
               width: nameWidth,
+              height: MediaQuery.textScalerOf(context).scale(
+                (Theme.of(context).textTheme.labelMedium?.fontSize ?? 12) * 1.5,
+              ),
               child: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(

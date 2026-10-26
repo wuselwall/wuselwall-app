@@ -210,4 +210,72 @@ void main() {
       await unmountApp(t, container);
     },
   );
+
+  testWidgets(
+    'a chore waiting for a check is not shown done (H-1 on the wall)',
+    (t) async {
+      final api = FakeTasksApi(
+        tables: {
+          'task_instances': [
+            instanceRow(
+              id: 'i-1',
+              title: 'Tisch decken',
+              assignee: kidId,
+              status: 'done',
+              completedBy: kidId,
+            ),
+            instanceRow(
+              id: 'i-2',
+              title: 'Zimmer aufräumen',
+              assignee: kidId,
+              status: 'done',
+              verification: true,
+              completedBy: kidId,
+            ),
+          ],
+        },
+      );
+      final container = await pumpApp(
+        t,
+        size: const Size(1280, 800),
+        overrides: baseOverrides(
+          identity: FakeIdentityRepository(
+            current: device(
+              deviceClass: DeviceClass.kiosk,
+              register: UiRegister.kiosk,
+            ),
+            members: _family,
+          ),
+        ),
+        board: FakeBoardRepository(_board()),
+        tasks: api,
+      );
+      await t.tap(find.text('Heute offen'));
+      await t.pumpAndSettle();
+      final body = find.byType(TaskBoardDetailBody);
+      expect(
+        find.descendant(
+          of: body,
+          matching: find.byIcon(Icons.hourglass_top_rounded),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(of: body, matching: find.byIcon(Icons.check_circle)),
+        findsOneWidget,
+      );
+      // Only the finished chore is struck through.
+      Text title(String s) =>
+          t.widget<Text>(find.descendant(of: body, matching: find.text(s)));
+      expect(
+        title('Tisch decken').style?.decoration,
+        TextDecoration.lineThrough,
+      );
+      expect(
+        title('Zimmer aufräumen').style?.decoration,
+        isNot(TextDecoration.lineThrough),
+      );
+      await unmountApp(t, container);
+    },
+  );
 }

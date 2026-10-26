@@ -417,6 +417,9 @@ class _TaskCard extends ConsumerWidget {
     final scheme = Theme.of(context).colorScheme;
     // A tick shows the moment it is made, before the server confirms it.
     final ticked = isTickShown(ref.watch(pendingTicksProvider), task);
+    // Waiting for a grown-up's check is not done: no strike-through, an hourglass
+    // instead of the green check (as on the phones, specs/06 "Verification").
+    final waiting = awaitsCheckShown(ticked, task);
     final caption = task.awaitsApproval
         ? l10n.tasksWaitingApproval
         : (ticked ? l10n.tasksDone : null);
@@ -470,7 +473,7 @@ class _TaskCard extends ConsumerWidget {
                             weight: FontWeight.w700,
                             color: ticked ? ww.ink2 : scheme.onSurface,
                           ).copyWith(
-                            decoration: ticked
+                            decoration: ticked && !waiting
                                 ? TextDecoration.lineThrough
                                 : null,
                             decorationThickness: 2,
@@ -490,7 +493,11 @@ class _TaskCard extends ConsumerWidget {
               ),
               SizedBox.square(
                 dimension: 56,
-                child: _TickMark(ticked: ticked, ink: ink ?? scheme.onSurface),
+                child: _TickMark(
+                  ticked: ticked,
+                  waiting: waiting,
+                  ink: ink ?? scheme.onSurface,
+                ),
               ),
             ],
           ),
@@ -504,9 +511,14 @@ class _TaskCard extends ConsumerWidget {
 /// ([TickPop]), which is the whole of the feedback the wall gives (specs/26
 /// "Celebrations"); a chore ticked before the board opened shows its tick at rest.
 class _TickMark extends StatelessWidget {
-  const _TickMark({required this.ticked, required this.ink});
+  const _TickMark({
+    required this.ticked,
+    required this.ink,
+    this.waiting = false,
+  });
 
   final bool ticked;
+  final bool waiting;
   final Color ink;
 
   @override
@@ -514,9 +526,17 @@ class _TickMark extends StatelessWidget {
     child: TickPop(
       ticked: ticked,
       child: Icon(
-        ticked ? Icons.check_circle : Icons.radio_button_unchecked,
+        !ticked
+            ? Icons.radio_button_unchecked
+            : waiting
+            ? Icons.hourglass_top_rounded
+            : Icons.check_circle,
         size: 44,
-        color: ticked ? context.ww.success : ink,
+        color: !ticked
+            ? ink
+            : waiting
+            ? context.ww.ink2
+            : context.ww.success,
       ),
     ),
   );

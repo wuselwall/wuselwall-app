@@ -377,11 +377,13 @@ TextStyle? _fitLongestWord(
   double width,
 ) {
   if (style == null) return null;
+  // Measured as the Text draws it: the inherited style (the app's font) under it.
+  final drawn = DefaultTextStyle.of(context).style.merge(style);
   final scaler = MediaQuery.textScalerOf(context);
   var widest = 0.0;
   for (final word in text.split(RegExp(r'\s+'))) {
     final painter = TextPainter(
-      text: TextSpan(text: word, style: style),
+      text: TextSpan(text: word, style: drawn),
       textDirection: TextDirection.ltr,
       textScaler: scaler,
       maxLines: 1,

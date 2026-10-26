@@ -15,6 +15,8 @@ String unbreakable(String label) => label.replaceAll(' ', '\u00A0');
   double minSize = 11,
   double maxScale = 1.3,
 }) {
+  // Measured as the label draws it: the inherited style (the app's font) under it.
+  final drawn = DefaultTextStyle.of(context).style.merge(base);
   final scaler = MediaQuery.textScalerOf(context)
       .clamp(maxScaleFactor: maxScale);
   // The destination's own padding takes a little of its share.
@@ -22,7 +24,7 @@ String unbreakable(String label) => label.replaceAll(' ', '\u00A0');
   var widest = 0.0;
   for (final label in labels) {
     final painter = TextPainter(
-      text: TextSpan(text: label, style: base),
+      text: TextSpan(text: label, style: drawn),
       textDirection: TextDirection.ltr,
       textScaler: scaler,
       maxLines: 1,
