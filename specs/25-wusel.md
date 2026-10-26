@@ -205,13 +205,13 @@ layout and the family's own events, not played from a file.
 
 | Register | Moment | What Wusel does |
 |---|---|---|
-| **kid** | A chore ticked on *Mein Tag* | Hops from home to the card as the tick pops. When the server credits the points, Wusel takes the coin, carries it home and drops it into the balance beside the greeting; then the afterglow. A chore without points (or one that waits for a check): Wusel looks at the card, happy, and hops home. When the server refuses the tick, Wusel hops home, without a reaction |
-| | The last chore of the day | As above, then a high jump over the list with the cheer and the confetti, and back home. The all-done card says the line as text, without a second Wusel |
+| **kid** | A chore ticked on *Mein Tag* | Hops from home to the card as the tick pops. When the server credits the points, Wusel takes the coin, carries it home and drops it into the balance beside the greeting; then the afterglow. A chore without points (or one that waits for a check): Wusel looks at the card, happy, and hops home. When the server refuses the tick, Wusel hops home, without a reaction. The list keeps its order while Wusel is away, so the ticked card does not slide off under Wusel; done chores move to the end once Wusel is home. The coin grows out of Wusel's hand and shrinks into the pill |
+| | The last chore of the day | Wusel goes to the all-done card (it appears above the list and pushes the ticked card down), then makes a high jump with the cheer; the confetti and *fertig* start with the jump, from Wusel. Then home. The all-done card says the line as text, without a second Wusel |
 | | Back to *Mein Tag* from another tab | Hops in from the lower edge to its home in at most two big leaps: once per return, not on the first open (which waves) |
 | | Tilting the phone or tablet in the hand | Wusel leans downhill, its tufts swing, its eyes look the way it would slide, and on a steep tilt it slides a little within its home. It never leaves its home for a tilt. Native iOS and Android only: not on the web, not on the wall |
 | | A finger on the screen during the afterglow | The eyes follow the finger |
 | **kid, kiosk** | Tapping Wusel | Tickles: where the finger lands decides the reaction (a tuft spins, the body giggles, near the eyes a wink). Three taps in a row give a wriggling giggle. Wusel never refuses and never tells anyone off. For a few seconds the eyes follow the finger. On the wall Wusel stays in its corner |
-| **kiosk** | A member's last chore ticked on the wall's chore board | Wusel leaves the header corner and hops over the board to that member's column. It cheers there for 4 s beside the line, then hops back to the corner. Nothing else takes Wusel out of its corner on the wall |
+| **kiosk** | A member's last chore ticked on the wall's chore board | Wusel leaves the header corner and hops over the board to that member's column. It cheers there for 4 s in a space above the line (so the line never reflows), then hops back to the corner, and the space folds away. Nothing else takes Wusel out of its corner on the wall |
 
 ### The motion
 
@@ -315,7 +315,7 @@ The code lives in `app/lib/core/wusel/`.
 - **`WuselHop`** (`core/wusel/wusel_travel.dart`) is one hop as a function of time: the
   crouch, the gravity arc between two points that may move during the flight (the target
   is read again every frame, so a list scrolling under Wusel is followed), the landing and
-  the settle. A trip is a list of hops of at most four Wusel sizes each; the hop in from
+  the settle. A trip is a list of hops of at most five Wusel sizes each; the hop in from
   the lower edge is the one exception, at most two leaps however tall the screen.
 - **`WuselStage`** (`core/wusel/wusel_stage.dart`) sits in `MaterialApp.builder`, above
   the navigator, so a trip can go over a dialog (the wall's chore board is one). It owns

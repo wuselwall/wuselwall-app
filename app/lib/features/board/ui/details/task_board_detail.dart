@@ -265,10 +265,11 @@ class _MemberDone extends StatefulWidget {
 class _MemberDoneState extends State<_MemberDone> {
   Timer? _cheer;
 
-  /// The space beside the line that the travelling Wusel cheers in.
+  /// The space above the line that the travelling Wusel cheers in.
   final _spot = GlobalKey();
 
-  /// Whether the cheer is the corner Wusel's visit rather than one in place.
+  /// Whether the corner Wusel is visiting: the space stays until it is home again,
+  /// then folds away, so the line itself never reflows.
   bool _visit = false;
 
   static const _size = 80.0;
@@ -277,29 +278,44 @@ class _MemberDoneState extends State<_MemberDone> {
   void didUpdateWidget(_MemberDone old) {
     super.didUpdateWidget(old);
     if (widget.done && !old.done) {
-      _cheer?.cancel();
-      _cheer = Timer(_MemberDone.cheerFor, () {
-        if (mounted) setState(() => _cheer = null);
-      });
       final stage = WuselStage.maybeOf(context);
       _visit = stage?.canVisit ?? false;
-      if (_visit) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (!mounted) return;
-          final trip = stage!.visit(
-            _spot,
-            spot: WuselSpot.inside,
-            size: _size,
-            stay: _MemberDone.cheerFor,
-            pose: WuselPose.cheer,
-          );
-          // Out of sight (a column scrolled away): the cheer in place.
-          if (trip == null) setState(() => _visit = false);
+      if (!_visit) {
+        _cheer?.cancel();
+        _cheer = Timer(_MemberDone.cheerFor, () {
+          if (mounted) setState(() => _cheer = null);
         });
+        return;
       }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        final trip = stage!.visit(
+          _spot,
+          spot: WuselSpot.inside,
+          size: _size,
+          stay: _MemberDone.cheerFor,
+          pose: WuselPose.cheer,
+        );
+        if (trip == null) {
+          // Out of sight (a column scrolled away): the cheer in place.
+          setState(() {
+            _visit = false;
+            _cheer = Timer(_MemberDone.cheerFor, () {
+              if (mounted) setState(() => _cheer = null);
+            });
+          });
+          return;
+        }
+        unawaited(
+          trip.done.then((_) {
+            if (mounted) setState(() => _visit = false);
+          }),
+        );
+      });
     } else if (!widget.done) {
       _cheer?.cancel();
       _cheer = null;
+      _visit = false;
     }
   }
 
@@ -313,24 +329,35 @@ class _MemberDoneState extends State<_MemberDone> {
   Widget build(BuildContext context) {
     if (!widget.done) return const SizedBox.shrink();
     final style = boardUi(24, weight: FontWeight.w700);
+    final Widget content;
+    if (_cheer != null) {
+      content = WuselSays(
+        line: widget.line,
+        pose: WuselPose.cheer,
+        size: _size,
+        style: style,
+      );
+    } else {
+      content = Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (_visit) SizedBox.square(key: _spot, dimension: _size),
+          Text(widget.line, style: style),
+        ],
+      );
+    }
     return Padding(
       padding: const EdgeInsets.only(bottom: Tokens.space2),
-      child: _cheer == null
-          ? Text(widget.line, style: style)
-          : _visit
-          ? Row(
-              children: [
-                SizedBox.square(key: _spot, dimension: _size),
-                const SizedBox(width: Tokens.space2),
-                Flexible(child: Text(widget.line, style: style)),
-              ],
+      // A zero-length AnimatedSize finishes inside its own layout and asserts:
+      // under reduced motion the size simply changes.
+      child: motionAllowed(context)
+          ? AnimatedSize(
+              duration: Tokens.motionEmphasised,
+              curve: Curves.easeOutCubic,
+              alignment: Alignment.topCenter,
+              child: content,
             )
-          : WuselSays(
-              line: widget.line,
-              pose: WuselPose.cheer,
-              size: _size,
-              style: style,
-            ),
+          : content,
     );
   }
 }

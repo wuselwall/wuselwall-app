@@ -56,6 +56,7 @@ class WuselLook {
     this.lean = 0,
     this.tuftLag = 0,
     this.slide = 0,
+    this.wink = 0,
   });
 
   final WuselEyes eyes;
@@ -111,6 +112,9 @@ class WuselLook {
   /// The body shifted sideways within its frame, in grid units: sliding downhill.
   final double slide;
 
+  /// 0–1: the right eye alone closing, a wink (a tickle near the eyes).
+  final double wink;
+
   WuselLook copyWith({
     WuselEyes? eyes,
     double? eyeOpen,
@@ -131,6 +135,7 @@ class WuselLook {
     double? lean,
     double? tuftLag,
     double? slide,
+    double? wink,
   }) => WuselLook(
     eyes: eyes ?? this.eyes,
     eyeOpen: eyeOpen ?? this.eyeOpen,
@@ -151,6 +156,7 @@ class WuselLook {
     lean: lean ?? this.lean,
     tuftLag: tuftLag ?? this.tuftLag,
     slide: slide ?? this.slide,
+    wink: wink ?? this.wink,
   );
 
   /// Blends two looks. Shapes that cannot blend (eyes, mouth, feet, prop) switch at the
@@ -185,6 +191,7 @@ class WuselLook {
       lean: l(a.lean, b.lean),
       tuftLag: l(a.tuftLag, b.tuftLag),
       slide: l(a.slide, b.slide),
+      wink: l(a.wink, b.wink),
     );
   }
 
@@ -209,7 +216,8 @@ class WuselLook {
       other.confetti == confetti &&
       other.lean == lean &&
       other.tuftLag == tuftLag &&
-      other.slide == slide;
+      other.slide == slide &&
+      other.wink == wink;
 
   @override
   int get hashCode => Object.hash(
@@ -232,5 +240,6 @@ class WuselLook {
     lean,
     tuftLag,
     slide,
+    wink,
   );
 }

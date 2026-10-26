@@ -303,17 +303,19 @@ class WuselPainter extends CustomPainter {
           );
         }
       case WuselEyes.round:
-        if (look.eyeOpen < 0.15) {
-          for (final x in const [30.0, 56.0]) {
-            canvas.drawLine(Offset(x, 57), Offset(x + 14, 57), line);
-          }
-        } else {
-          final sclera = Paint()..color = colors.sclera;
-          for (final c in const [Offset(37, 56), Offset(63, 56)]) {
+        final sclera = Paint()..color = colors.sclera;
+        // The right eye (on the viewer's right) also closes for a wink.
+        for (final (c, open) in [
+          (const Offset(37, 56), look.eyeOpen),
+          (const Offset(63, 56), look.eyeOpen * (1 - look.wink)),
+        ]) {
+          if (open < 0.15) {
+            canvas.drawLine(Offset(c.dx - 7, 57), Offset(c.dx + 7, 57), line);
+          } else {
             canvas
               ..save()
               ..translate(c.dx, c.dy)
-              ..scale(1, look.eyeOpen)
+              ..scale(1, open)
               ..drawCircle(Offset.zero, 9.5, sclera)
               ..drawCircle(look.gaze, 5, pupil)
               ..restore();

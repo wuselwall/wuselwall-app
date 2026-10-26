@@ -533,8 +533,8 @@ class _WuselState extends State<Wusel> with SingleTickerProviderStateMixin {
       ),
       // A tuft spin.
       _Tickle.spin => rest.copyWith(tuftSway: 0.6 * math.sin(2 * math.pi * p)),
-      // A wink: one quick blink.
-      _Tickle.wink => rest.copyWith(eyeOpen: 1 - bump),
+      // A wink: one eye closes and opens again, with a little squash.
+      _Tickle.wink => rest.copyWith(wink: bump, squash: -0.03 * bump),
       // Three taps in a row: a wriggling giggle, the body and the tufts shaking.
       _Tickle.wriggle => rest.copyWith(
         squash: 0.07 * bump * math.sin(2 * math.pi * 6 * p),

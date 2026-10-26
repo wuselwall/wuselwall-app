@@ -140,9 +140,13 @@ bool kidReduceMotion(BuildContext context) => !motionAllowed(context);
 /// The points balance, gold. When it changes it counts to the new value over 600 ms
 /// (`easeOutCubic`) and gives a small coin tick; under reduced motion it jumps.
 class KidBalancePill extends StatefulWidget {
-  const KidBalancePill({required this.balance, super.key});
+  const KidBalancePill({required this.balance, this.loaded = true, super.key});
 
   final int balance;
+
+  /// False while the balance is still loading: the first real value then appears at
+  /// once instead of counting up from zero each time the page opens.
+  final bool loaded;
 
   @override
   State<KidBalancePill> createState() => _KidBalancePillState();
@@ -169,7 +173,7 @@ class _KidBalancePillState extends State<KidBalancePill>
     if (oldWidget.balance == widget.balance) return;
     _from = _shown;
     _to = widget.balance;
-    if (kidReduceMotion(context)) {
+    if (kidReduceMotion(context) || !oldWidget.loaded) {
       _controller.value = 1;
     } else {
       unawaited(_controller.forward(from: 0));
@@ -259,6 +263,7 @@ void kidFlyCoin(
     builder: (_) => _FlyingCoin(
       start: start,
       end: end,
+      fromHand: fromPoint != null,
       points: points,
       colour: ww.points,
       onColour: ww.onPoints,
@@ -280,6 +285,7 @@ Offset? _centreOf(GlobalKey key) {
 class _FlyingCoin extends StatefulWidget {
   const _FlyingCoin({
     required this.start,
+    required this.fromHand,
     required this.end,
     required this.points,
     required this.colour,
@@ -293,6 +299,10 @@ class _FlyingCoin extends StatefulWidget {
   final Color colour;
   final Color onColour;
   final VoidCallback onDone;
+
+  /// From Wusel's hand: the coin grows out of the small one Wusel held, eases out
+  /// of the hand rather than shooting off, and shrinks into the pill.
+  final bool fromHand;
 
   @override
   State<_FlyingCoin> createState() => _FlyingCoinState();
@@ -325,32 +335,44 @@ class _FlyingCoinState extends State<_FlyingCoin>
   Widget build(BuildContext context) => AnimatedBuilder(
     animation: _controller,
     builder: (context, _) {
+      final v = _controller.value;
       final at = Offset.lerp(
         widget.start,
         widget.end,
-        Curves.easeOutCubic.transform(_controller.value),
+        (widget.fromHand ? Curves.easeInOutCubic : Curves.easeOutCubic)
+            .transform(v),
       )!;
+      final scale = !widget.fromHand
+          ? 1.0
+          : v < 0.3
+          ? 0.3 + 0.7 * Curves.easeOutBack.transform(v / 0.3)
+          : v > 0.8
+          ? 1 - 0.45 * ((v - 0.8) / 0.2)
+          : 1.0;
       return Positioned(
         left: at.dx - 28,
         top: at.dy - 28,
-        child: IgnorePointer(
-          child: Material(
-            type: MaterialType.transparency,
-            child: Container(
-              width: 56,
-              height: 56,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: widget.colour,
-                shape: BoxShape.circle,
-              ),
-              child: Text(
-                '+${widget.points}',
-                style: TextStyle(
-                  fontFamily: Tokens.fontNumeric,
-                  fontWeight: FontWeight.w800,
-                  fontSize: 18,
-                  color: widget.onColour,
+        child: Transform.scale(
+          scale: scale,
+          child: IgnorePointer(
+            child: Material(
+              type: MaterialType.transparency,
+              child: Container(
+                width: 56,
+                height: 56,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: widget.colour,
+                  shape: BoxShape.circle,
+                ),
+                child: Text(
+                  '+${widget.points}',
+                  style: TextStyle(
+                    fontFamily: Tokens.fontNumeric,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 18,
+                    color: widget.onColour,
+                  ),
                 ),
               ),
             ),

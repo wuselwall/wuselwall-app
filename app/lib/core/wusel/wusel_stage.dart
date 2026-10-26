@@ -444,16 +444,19 @@ class WuselTrip {
   bool _celebrate = false;
   bool _carry = false;
   void Function(Offset hand)? _onHome;
+  void Function(Offset at)? _onCelebrate;
   bool _finished = false;
 
   /// Sends Wusel home from its visit. [happy] shows the happy eyes on the way,
-  /// [celebrate] makes a high cheering jump first, [carry] holds up the coin, and
-  /// [onHome] is called with the coin's position once Wusel is home. Before Wusel has
-  /// arrived, it goes home right after arriving.
+  /// [celebrate] makes a high cheering jump first ([onCelebrate] is called as it
+  /// takes off, with Wusel's position: the confetti belongs to the jump), [carry]
+  /// holds up the coin, and [onHome] is called with the coin's position once Wusel
+  /// is home. Before Wusel has arrived, it goes home right after arriving.
   void goHome({
     bool happy = false,
     bool celebrate = false,
     bool carry = false,
+    void Function(Offset at)? onCelebrate,
     void Function(Offset hand)? onHome,
   }) {
     if (_released || _finished) return;
@@ -461,8 +464,12 @@ class WuselTrip {
     _happy = happy;
     _celebrate = celebrate;
     _carry = carry;
+    _onCelebrate = onCelebrate;
     _onHome = onHome;
   }
+
+  /// Whether the trip is over: [goHome] does nothing any more.
+  bool get isOver => _finished;
 
   /// Whether Wusel came home carrying something, which [goHome]'s `onHome` was then
   /// handed: the caller takes it from there.
@@ -622,6 +629,9 @@ class WuselTrip {
             _phase = _Phase.jump;
             _t = 0;
             _rig.takeOff(strength: 1.4);
+            final celebrate = _onCelebrate;
+            _onCelebrate = null;
+            celebrate?.call(position);
           } else {
             _startLeg(() => home._centre, toSize: _homeSize, outward: false);
           }

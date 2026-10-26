@@ -34,11 +34,12 @@ class WuselHopPath {
   }
 }
 
-/// How Wusel gets from one place to another: hops of at most four of its sizes, so a
-/// long way is several hops and never one long glide.
+/// How Wusel gets from one place to another: hops of at most five of its sizes, so a
+/// long way is several hops and never one long glide, but few enough that Wusel does
+/// not touch down on everything it crosses.
 abstract final class WuselHops {
   /// The longest hop, in Wusel sizes.
-  static const maxLength = 4.0;
+  static const maxLength = 5.0;
 
   /// The crouch before the first hop, and the shorter one between hops.
   static const firstCrouch = 0.12;

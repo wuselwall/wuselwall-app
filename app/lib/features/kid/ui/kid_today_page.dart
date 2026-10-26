@@ -104,8 +104,11 @@ class _KidTodayPageState extends ConsumerState<KidTodayPage> {
           onInk: colors.onInk,
           balance: ValueListenableBuilder<int?>(
             valueListenable: _heldBalance,
-            builder: (context, held, _) =>
-                KidBalancePill(key: _balanceKey, balance: held ?? points),
+            builder: (context, held, _) => KidBalancePill(
+              key: _balanceKey,
+              balance: held ?? points,
+              loaded: balance != null,
+            ),
           ),
           cheers: _cheers,
           enter: _cameBack,
@@ -170,6 +173,9 @@ class _TasksSectionState extends ConsumerState<_TasksSection> {
   /// The all-done card: where Wusel goes for the last chore, since the card that was
   /// ticked moves down below it.
   final _allDoneKey = GlobalKey();
+
+  /// The chores' order when Wusel set off for one, held until Wusel is home.
+  List<String>? _frozenOrder;
   final _cardKeys = <String, GlobalKey>{};
 
   GlobalKey _keyFor(String id) => _cardKeys.putIfAbsent(id, GlobalKey.new);
@@ -184,7 +190,17 @@ class _TasksSectionState extends ConsumerState<_TasksSection> {
       value: tasks,
       onRetry: () => ref.invalidate(tasksTodayProvider),
       data: (all) {
-        final items = kidMyTasks(all, widget.actor);
+        var items = kidMyTasks(all, widget.actor);
+        // While Wusel visits a ticked card, the list keeps its order, so the card
+        // does not slide away under Wusel; it moves to the end once Wusel is home.
+        if (_frozenOrder case final order?) {
+          int rank(TaskInstance t) {
+            final i = order.indexOf(t.id);
+            return i < 0 ? order.length : i;
+          }
+
+          items = [...items]..sort((a, b) => rank(a).compareTo(rank(b)));
+        }
         if (items.isEmpty) {
           return KidCard(
             child: Text(
@@ -197,39 +213,42 @@ class _TasksSectionState extends ConsumerState<_TasksSection> {
         return Column(
           children: [
             if (open == 0)
-              KidCard(
-                key: _allDoneKey,
-                color: context.ww.successContainer,
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Flexible(
-                          child: Text(
-                            l10n.kidTasksAllDone,
-                            style: Theme.of(context).textTheme.headlineSmall
-                                ?.copyWith(fontWeight: FontWeight.w800),
+              SizedBox(
+                width: double.infinity,
+                child: KidCard(
+                  key: _allDoneKey,
+                  color: context.ww.successContainer,
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Flexible(
+                            child: Text(
+                              l10n.kidTasksAllDone,
+                              style: Theme.of(context).textTheme.headlineSmall
+                                  ?.copyWith(fontWeight: FontWeight.w800),
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: Tokens.space2),
-                        const EmojiPicture(emojiParty, size: 32),
-                      ],
-                    ),
-                    const SizedBox(height: Tokens.space2),
-                    // The last chore of the day: Wusel's line. Wusel itself cheers in
-                    // the greeting, its home, after a jump over the list, so there
-                    // is never a second Wusel (specs/25 "Wusel on the move").
-                    Text(
-                      _allDoneLine ??= WuselLines.pick(
-                        l10n,
-                        WuselMoment.allDone,
+                          const SizedBox(width: Tokens.space2),
+                          const EmojiPicture(emojiParty, size: 32),
+                        ],
                       ),
-                      style: Theme.of(context).textTheme.titleMedium,
-                      textAlign: TextAlign.center,
-                    ),
-                    Text(l10n.kidTasksAllDoneBody),
-                  ],
+                      const SizedBox(height: Tokens.space2),
+                      // The last chore of the day: Wusel's line. Wusel itself cheers in
+                      // the greeting, its home, after a jump over the list, so there
+                      // is never a second Wusel (specs/25 "Wusel on the move").
+                      Text(
+                        _allDoneLine ??= WuselLines.pick(
+                          l10n,
+                          WuselMoment.allDone,
+                        ),
+                        style: Theme.of(context).textTheme.titleMedium,
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(l10n.kidTasksAllDoneBody),
+                    ],
+                  ),
                 ),
               ),
             for (final t in items)
@@ -273,15 +292,18 @@ class _TasksSectionState extends ConsumerState<_TasksSection> {
     // list and pushes the ticked card down; that card is there from the next frame.
     final stage = WuselStage.maybeOf(context);
     final balanceBefore = widget.heldBalance.value ?? widget.balance;
+    final order = [for (final t in mine) t.id];
     final trip = _ChoreTrip(
       onTrip: (t) {
         if (!mounted) return;
         // The pill waits for the coin Wusel brings; released when Wusel is home
         // without one, or when the coin lands.
         widget.heldBalance.value = balanceBefore;
+        setState(() => _frozenOrder = order);
         unawaited(
           t.done.then((_) {
             if (!t.carriedHome) _releaseBalance();
+            if (mounted) setState(() => _frozenOrder = null);
           }),
         );
       },
@@ -318,10 +340,27 @@ class _TasksSectionState extends ConsumerState<_TasksSection> {
         // Wusel takes the coin and carries it home, where it drops into the balance;
         // the coin sounds as it lands, unless *fertig* already sounded. Without a
         // trip the coin flies from the card, as before Wusel could travel.
+        // The confetti and *fertig* go with Wusel's jump when Wusel travels, at once
+        // otherwise.
+        void burst([Offset? at]) {
+          if (!mounted) return;
+          showConfetti(
+            context,
+            origin: at,
+            colors: [
+              for (final c in container.read(wuselTuftsProvider))
+                context.ww.member(c).ink,
+              context.ww.points,
+            ],
+          );
+          unawaited(celebration.cue(Cue.fertig));
+        }
+
         trip.release(
           (t) => t.goHome(
             happy: true,
             celebrate: celebrate,
+            onCelebrate: celebrate ? burst : null,
             carry: points > 0,
             onHome: points > 0
                 ? (hand) {
@@ -338,6 +377,7 @@ class _TasksSectionState extends ConsumerState<_TasksSection> {
                 : null,
           ),
           without: () {
+            if (celebrate) burst();
             if (!mounted || points <= 0) return;
             if (!reduce) {
               kidFlyCoin(
@@ -353,15 +393,6 @@ class _TasksSectionState extends ConsumerState<_TasksSection> {
         if (celebrate) {
           setState(() => _allDoneLine = null);
           widget.cheers.value++;
-          showConfetti(
-            context,
-            colors: [
-              for (final c in container.read(wuselTuftsProvider))
-                context.ww.member(c).ink,
-              context.ww.points,
-            ],
-          );
-          unawaited(celebration.cue(Cue.fertig));
         } else if (last && points <= 0) {
           // The day was celebrated already: this is an ordinary tick.
           unawaited(celebration.cue(Cue.tick));
@@ -432,16 +463,18 @@ class _ChoreTrip {
     _go = null;
     _without = null;
     if (go == null) return;
-    trip == null ? without?.call() : go(trip);
+    trip == null || trip.isOver ? without?.call() : go(trip);
   }
 
   void release(void Function(WuselTrip trip) go, {VoidCallback? without}) {
     if (!_begun) {
       _go = go;
       _without = without;
-    } else if (_trip case final trip?) {
+    } else if (_trip case final trip? when !trip.isOver) {
       go(trip);
     } else {
+      // No trip, or Wusel already went home by itself (a slow answer): the moment
+      // as it was before Wusel could travel.
       without?.call();
     }
   }
@@ -1005,26 +1038,43 @@ class _KidGreetingState extends ConsumerState<_KidGreeting> {
         ],
       );
     }
+    final keyed = KeyedSubtree(
+      key: const ValueKey('kid-greeting'),
+      child: greeting,
+    );
     return Container(
       padding: const EdgeInsets.all(Tokens.space4),
       decoration: BoxDecoration(
         color: widget.tint,
         borderRadius: BorderRadius.circular(KidCard.radius),
       ),
-      child: Row(
-        children: [
-          Expanded(
-            child: KeyedSubtree(
-              key: const ValueKey('kid-greeting'),
-              child: greeting,
-            ),
-          ),
-          const SizedBox(width: Tokens.space2),
-          widget.balance,
-        ],
+      // On a phone the line needs the width: the points go below it.
+      child: LayoutBuilder(
+        builder: (context, constraints) => constraints.maxWidth < _narrow
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  keyed,
+                  const SizedBox(height: Tokens.space2),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: widget.balance,
+                  ),
+                ],
+              )
+            : Row(
+                children: [
+                  Expanded(child: keyed),
+                  const SizedBox(width: Tokens.space2),
+                  widget.balance,
+                ],
+              ),
       ),
     );
   }
+
+  /// Below this width the points pill sits under the greeting.
+  static const _narrow = 480.0;
 }
 
 /// How long the kid home waits, loading or offline, before Wusel thinks (specs/25).

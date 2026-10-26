@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/core/ui/confetti.dart';
 import 'package:wuselwall/core/wusel/wusel.dart';
 import 'package:wuselwall/core/wusel/wusel_stage.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
@@ -86,6 +87,13 @@ class _Chores extends FakeTasksApi {
       tables['point_balances'] = [
         {'profile_id': _emma, 'balance': 15},
       ];
+      // Ticked chores sort last once the list is fetched again.
+      tables['task_instances'] = [
+        for (final row in tables['task_instances']!)
+          row['id'] == params?['p_instance_id']
+              ? {...row, 'status': 'done', 'completion_count': 1}
+              : row,
+      ];
     }
     return super.rpc(fn, params: params, parse: parse);
   }
@@ -166,6 +174,43 @@ void main() {
     await unmountApp(tester, container);
   });
 
+  testWidgets('the ticked card keeps its place until Wusel is home', (
+    tester,
+  ) async {
+    final container = await pumpApp(
+      tester,
+      overrides: baseOverrides(identity: _KidIdentity()),
+      tasks: _Chores(),
+    );
+    await _openEmma(tester);
+    double top(String title) => tester
+        .getRect(
+          find.ancestor(of: find.text(title), matching: find.byType(KidCard)),
+        )
+        .top;
+    final before = top('Tisch decken');
+    expect(before, lessThan(top('Blumen gießen')));
+
+    await tester.tap(find.text('Tisch decken'));
+    final trip = _stage(tester).trip!;
+    var done = false;
+    unawaited(trip.done.then((_) => done = true));
+    // The server has answered and the list was fetched again: still in place.
+    await _frames(tester, const Duration(milliseconds: 600));
+    expect(done, isFalse);
+    expect(top('Tisch decken'), before);
+    for (var i = 0; i < 250 && !done; i++) {
+      await tester.pump(const Duration(milliseconds: 16));
+    }
+    expect(done, isTrue);
+    await tester.pump();
+    // Wusel is home: the done chore goes to the end.
+    expect(top('Tisch decken'), greaterThan(top('Blumen gießen')));
+
+    await tester.pump(const Duration(seconds: 6));
+    await unmountApp(tester, container);
+  });
+
   testWidgets('the last chore: a jump, the cheer at home, and no second Wusel', (
     tester,
   ) async {
@@ -188,6 +233,16 @@ void main() {
       await tester.pump(const Duration(milliseconds: 16));
     }
     expect(arrived, isTrue);
+    // The confetti belongs to the jump, which comes after the arrival.
+    expect(find.byType(ConfettiBurst), findsNothing);
+    for (
+      var i = 0;
+      i < 60 && find.byType(ConfettiBurst).evaluate().isEmpty;
+      i++
+    ) {
+      await tester.pump(const Duration(milliseconds: 16));
+    }
+    expect(find.byType(ConfettiBurst), findsOneWidget);
     final allDone = tester.getRect(
       find.ancestor(
         of: find.text('Alles geschafft!'),
