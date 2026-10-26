@@ -99,6 +99,9 @@ class GettingStartedCard extends ConsumerWidget {
   }
 }
 
+/// The least a step's title keeps beside "Brauchen wir nicht": two short words a line.
+const _minTitleRoom = 140.0;
+
 class _ItemRow extends ConsumerWidget {
   const _ItemRow({required this.entry});
 
@@ -113,10 +116,29 @@ class _ItemRow extends ConsumerWidget {
     final done = entry.done;
     return LayoutBuilder(
       builder: (context, constraints) {
-        final effectiveWidth =
-            constraints.maxWidth / MediaQuery.textScalerOf(context).scale(1);
-        final stackAction = !done && effectiveWidth < 400;
+        // "Brauchen wir nicht" stays beside its step, in a smaller type, while the
+        // title keeps room for its words; only then does it move under the title,
+        // starting where the title starts, so it never floats between two steps
+        // (round-3 review L-9).
+        final labelStyle = theme.textTheme.labelMedium;
+        final label = TextPainter(
+          text: TextSpan(text: l10n.todayStartNotNeeded, style: labelStyle),
+          textScaler: MediaQuery.textScalerOf(context),
+          textDirection: Directionality.of(context),
+          maxLines: 1,
+        )..layout();
+        final buttonWidth = label.width + 2 * Tokens.space2;
+        label.dispose();
+        // The leading icon and its gap, and the gap before the trailing button.
+        const leadingRoom = 24 + 16 + 16;
+        final titleRoom = constraints.maxWidth - leadingRoom - buttonWidth;
+        final stackAction = !done && titleRoom < _minTitleRoom;
         final dismissButton = TextButton(
+          style: TextButton.styleFrom(
+            textStyle: labelStyle,
+            visualDensity: VisualDensity.compact,
+            padding: const EdgeInsets.symmetric(horizontal: Tokens.space2),
+          ),
           onPressed: () => unawaited(_dismiss(context, ref, item)),
           child: Text(l10n.todayStartNotNeeded),
         );
@@ -135,7 +157,10 @@ class _ItemRow extends ConsumerWidget {
             ),
           ),
           subtitle: stackAction
-              ? Align(alignment: Alignment.centerRight, child: dismissButton)
+              ? Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: dismissButton,
+                )
               : null,
           trailing: done
               ? Icon(Icons.check_circle, color: ww.success)
