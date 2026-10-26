@@ -9,9 +9,9 @@ import 'package:wuselwall/features/calendar/application/calendar_providers.dart'
 import 'package:wuselwall/features/calendar/ui/calendar_board.dart';
 import 'package:wuselwall/features/calendar/ui/calendar_layout.dart';
 import 'package:wuselwall/features/calendar/ui/calendar_month.dart';
+import 'package:wuselwall/features/calendar/ui/calendar_section.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
-import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
 
 /// The calendar tab's body: the grid for the chosen mode. The home page owns the app
 /// bar (its toolbar is [CalendarToolbar]), so this has no Scaffold of its own.
@@ -43,7 +43,7 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
     // The buttons' height stays free at the grids' end (the FAB stack of
     // calendar_section.dart).
     final clearance = calendarFabClearance(
-      traditions: ref.watch(lighterDaySupportedProvider),
+      traditions: CalendarFab.showsTradition(context, ref),
     );
     // A swipe is the toolbar's previous and next (specs/09 "Gestures").
     return SwipeStepper(

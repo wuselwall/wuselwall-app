@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -27,6 +28,27 @@ String traditionStarterName(AppLocalizations l10n, TraditionStarter s) =>
 /// tradition filled in, so the day and the time are changed there before anything is
 /// saved. [from] is the first day the tradition may start on; [ownStart] is where the
 /// family's own one begins.
+/// Opens the new-tradition sheet for the day [inView]: a tradition starts from today
+/// on, even when an earlier week is in view, and one of its own at the next full hour.
+Future<void> openNewTradition(
+  BuildContext context, {
+  required DateTime inView,
+  required DateTime now,
+}) {
+  final today = DateTime(now.year, now.month, now.day);
+  final from = inView.isBefore(today) ? today : inView;
+  return showNewTraditionSheet(
+    context,
+    from: from,
+    ownStart: DateTime(
+      from.year,
+      from.month,
+      from.day,
+      math.min(now.hour + 1, 23),
+    ),
+  );
+}
+
 Future<void> showNewTraditionSheet(
   BuildContext context, {
   required DateTime from,

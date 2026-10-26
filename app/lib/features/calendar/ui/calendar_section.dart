@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -40,9 +39,19 @@ final calendarSection = HomeSection(
 );
 
 /// The calendar's buttons: a new event, and above it a new family tradition (specs/27
-/// "Familientraditionen"), only where the server knows traditions.
+/// "Familientraditionen"), only where the server knows traditions. A phone keeps the
+/// one button, so less of the grid is covered; the tradition starts from a tile on the
+/// *Neuer Termin* page there.
 class CalendarFab extends ConsumerWidget {
   const CalendarFab({super.key});
+
+  /// Below this width only "Neuer Termin" floats.
+  static const phoneWidth = 600.0;
+
+  /// Whether the small tradition button floats above "Neuer Termin" in this [context].
+  static bool showsTradition(BuildContext context, WidgetRef ref) =>
+      ref.watch(lighterDaySupportedProvider) &&
+      MediaQuery.sizeOf(context).width >= phoneWidth;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -56,7 +65,7 @@ class CalendarFab extends ConsumerWidget {
       icon: const Icon(Icons.add),
       label: Text(l10n.calendarNewEvent),
     );
-    if (!ref.watch(lighterDaySupportedProvider)) return newEvent;
+    if (!showsTradition(context, ref)) return newEvent;
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -64,25 +73,13 @@ class CalendarFab extends ConsumerWidget {
         FloatingActionButton.small(
           heroTag: 'calendar-new-tradition',
           tooltip: l10n.calendarNewTradition,
-          onPressed: () {
-            final now = ref.read(nowProvider);
-            final today = DateTime(now.year, now.month, now.day);
-            final inView = day();
-            // A tradition starts from now on, even when an earlier week is in view.
-            final from = inView.isBefore(today) ? today : inView;
-            unawaited(
-              showNewTraditionSheet(
-                context,
-                from: from,
-                ownStart: DateTime(
-                  from.year,
-                  from.month,
-                  from.day,
-                  math.min(now.hour + 1, 23),
-                ),
-              ),
-            );
-          },
+          onPressed: () => unawaited(
+            openNewTradition(
+              context,
+              inView: day(),
+              now: ref.read(nowProvider),
+            ),
+          ),
           child: const Icon(Icons.celebration_outlined),
         ),
         const SizedBox(height: 12),

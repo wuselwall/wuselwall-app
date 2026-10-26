@@ -450,13 +450,22 @@ class _Pinned extends StatelessWidget {
                 height: _presenceRowHeight - 4,
                 child: ClipFit(
                   child: _Named(
-                    name: width < narrowColumn ? o.title : null,
+                    name: width < narrowColumn
+                        ? [
+                            o.title,
+                            for (final m in members)
+                              if (o.attendeeIds.contains(m.id)) m.displayName,
+                          ].join(' · ')
+                        : null,
                     child: PresenceBandView(
                       state: o.presenceState ?? PresenceState.working,
                       memberColor: color ?? cs.onSurfaceVariant,
-                      // A band one narrow day wide is its colour and icon only: a word
-                      // would show as "Die…" (round-3 review L-8); the tooltip names it.
-                      label: width < narrowColumn ? '' : o.title,
+                      // A band one narrow day wide shows the title's first letter
+                      // ("D" for Dienst): a word would show as "Die…", nothing at
+                      // all as an empty bar; the tooltip names it whole.
+                      label: width < narrowColumn
+                          ? initialOf(o.title)
+                          : o.title,
                       openStart: o.localStartDate.isBefore(
                         dateOnly(days.first),
                       ),

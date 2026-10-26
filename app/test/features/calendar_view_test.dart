@@ -277,12 +277,27 @@ void main() {
       expect(t.takeException(), isNull);
       // No "Fo…" and no "Die…": the words wait in the tooltip.
       expect(textWith('Fotografieren'), findsNothing);
-      expect(find.byTooltip('Fotografieren'), findsOneWidget);
-      expect(find.byTooltip('Dienst'), findsOneWidget);
+      // The tooltip says what, and who.
+      expect(find.byTooltip('Fotografieren · Anna'), findsOneWidget);
+      expect(find.byTooltip('Dienst · Papa'), findsOneWidget);
+      // A one-day band keeps its title's first letter, never an empty bar.
+      expect(textWith('D'), findsWidgets);
       // The all-day row's mark replaces the cut "ganzt…".
       expect(find.byTooltip(_de.boardAllDay), findsOneWidget);
     },
   );
+
+  testWidgets('a phone has one floating button over the calendar', (t) async {
+    await pumpApp(
+      t,
+      size: const Size(390, 844),
+      overrides: baseOverrides(
+        identity: FakeIdentityRepository(current: device()),
+      ),
+    );
+    await openTab(t, 'Kalender');
+    expect(find.byType(FloatingActionButton), findsOneWidget);
+  });
 
   testWidgets('the day view names the day in full once, the bar short', (
     t,
