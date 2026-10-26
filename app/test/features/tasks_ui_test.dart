@@ -654,6 +654,88 @@ void main() {
     },
   );
 
+  testWidgets(
+    'a chore ticked before the board opens shows its tick at rest; a new tick pops',
+    (t) async {
+      final api = FakeTasksApi(
+        tables: {
+          'task_instances': [
+            instanceRow(
+              id: 'i-1',
+              title: 'Tisch decken',
+              assignee: kidId,
+              status: 'done',
+              completedBy: kidId,
+            ),
+            instanceRow(id: 'i-2', title: 'Brot holen', assignee: kidId),
+            instanceRow(id: 'i-3', title: 'Blumen giessen', assignee: kidId),
+          ],
+        },
+      );
+      final container = await pumpApp(
+        t,
+        overrides: baseOverrides(
+          identity: FakeIdentityRepository(
+            current: device(
+              deviceClass: DeviceClass.kiosk,
+              register: UiRegister.kiosk,
+            ),
+          ),
+        ),
+        board: FakeBoardRepository(_kioskBoard()),
+        tasks: api,
+      );
+      // Motion on: pumpApp holds everything still otherwise.
+      t.platformDispatcher.clearAccessibilityFeaturesTestValue();
+      await t.pump();
+      // The tick's own ScaleTransition, not the page route's around it.
+      List<double> ticks() => t
+          .widgetList<ScaleTransition>(
+            find.byWidgetPredicate(
+              (w) =>
+                  w is ScaleTransition &&
+                  w.child is Icon &&
+                  (w.child! as Icon).icon == Icons.check_circle,
+            ),
+          )
+          .map((s) => s.scale.value)
+          .toList();
+
+      await t.tap(find.text('Heute offen'));
+      await t.pump();
+      for (var i = 0; i < 60; i++) {
+        await t.pump(const Duration(milliseconds: 16));
+        expect(ticks(), everyElement(1.0));
+      }
+      expect(ticks(), hasLength(1));
+
+      api.tables['task_instances'] = [
+        ...api.tables['task_instances']!.take(1),
+        instanceRow(
+          id: 'i-2',
+          title: 'Brot holen',
+          assignee: kidId,
+          status: 'done',
+          completedBy: kidId,
+        ),
+        instanceRow(id: 'i-3', title: 'Blumen giessen', assignee: kidId),
+      ];
+      container.read(actingProfileProvider.notifier).select(kidId);
+      await t.pump();
+      await t.tap(find.text('Brot holen'));
+      var popped = false;
+      for (var i = 0; i < 30 && !popped; i++) {
+        await t.pump(const Duration(milliseconds: 16));
+        final now = ticks();
+        popped = now.length == 2 && now.any((s) => s < 1);
+      }
+      expect(popped, isTrue);
+      await t.pump(const Duration(seconds: 1));
+      expect(ticks(), everyElement(closeTo(1.0, 0.01)));
+      await unmountApp(t, container);
+    },
+  );
+
   testWidgets('a column that opens already done does not cheer', (t) async {
     final api = FakeTasksApi(
       tables: {

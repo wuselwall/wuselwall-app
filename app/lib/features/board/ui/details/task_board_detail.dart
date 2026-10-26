@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
@@ -223,7 +224,13 @@ class _Column extends StatelessWidget {
                   ),
                 ),
               for (final t in tasks)
-                _TaskCard(task: t, ink: mc?.ink, tint: mc?.tint),
+                // Keyed, so a tick's state stays with its chore when the list changes.
+                _TaskCard(
+                  key: ValueKey(t.id),
+                  task: t,
+                  ink: mc?.ink,
+                  tint: mc?.tint,
+                ),
             ],
           );
 
@@ -387,7 +394,7 @@ class _Counter extends StatelessWidget {
 /// kiosk size. A ticked card is struck through and shows "wartet auf Freigabe" when a
 /// guardian still has to check it.
 class _TaskCard extends StatelessWidget {
-  const _TaskCard({required this.task, this.ink, this.tint});
+  const _TaskCard({required this.task, this.ink, this.tint, super.key});
 
   final TaskInstance task;
   final Color? ink;
@@ -399,7 +406,6 @@ class _TaskCard extends StatelessWidget {
     final ww = context.ww;
     final scheme = Theme.of(context).colorScheme;
     final ticked = task.isTicked;
-    final still = !motionAllowed(context);
     final caption = task.awaitsApproval
         ? l10n.tasksWaitingApproval
         : (ticked ? l10n.tasksDone : null);
@@ -474,12 +480,7 @@ class _TaskCard extends StatelessWidget {
               ),
               SizedBox.square(
                 dimension: 56,
-                child: _TickMark(
-                  key: ValueKey('${task.id}-$ticked'),
-                  ticked: ticked,
-                  ink: ink ?? scheme.onSurface,
-                  still: still,
-                ),
+                child: _TickMark(ticked: ticked, ink: ink ?? scheme.onSurface),
               ),
             ],
           ),
@@ -489,37 +490,62 @@ class _TaskCard extends StatelessWidget {
   }
 }
 
-/// The tick. When it turns on it grows from 40 % to full size, which is the whole of
-/// the feedback the wall gives; reduced motion shows the finished tick at once.
-class _TickMark extends StatelessWidget {
-  const _TickMark({
-    required this.ticked,
-    required this.ink,
-    required this.still,
-    super.key,
-  });
+/// The tick. When it turns on while the board is shown it pops on the snappy spring
+/// from half size, overshooting a little, which is the whole of the feedback the wall
+/// gives (specs/26 "Celebrations"). A chore that was ticked before the board opened
+/// shows its tick at rest, and reduced motion lands at once (specs/26 "Motion").
+class _TickMark extends StatefulWidget {
+  const _TickMark({required this.ticked, required this.ink});
 
   final bool ticked;
   final Color ink;
-  final bool still;
+
+  /// Where the pop starts from.
+  static const from = 0.5;
+
+  @override
+  State<_TickMark> createState() => _TickMarkState();
+}
+
+class _TickMarkState extends State<_TickMark>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _scale = AnimationController.unbounded(
+    vsync: this,
+    value: 1,
+  );
+
+  @override
+  void didUpdateWidget(_TickMark old) {
+    super.didUpdateWidget(old);
+    if (old.ticked == widget.ticked) return;
+    if (!widget.ticked || !motionAllowed(context)) {
+      _scale.value = 1;
+      return;
+    }
+    unawaited(
+      _scale.animateWith(
+        SpringSimulation(Tokens.springSnappy, _TickMark.from, 1, 0),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _scale.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final ww = context.ww;
-    final icon = Icon(
-      ticked ? Icons.check_circle : Icons.radio_button_unchecked,
-      size: 44,
-      color: ticked ? ww.success : ink,
-    );
-    if (!ticked || still) return Center(child: icon);
     return Center(
-      child: TweenAnimationBuilder<double>(
-        tween: Tween(begin: 0.4, end: 1),
-        duration: Tokens.motionEmphasised,
-        curve: Curves.easeOutCubic,
-        builder: (context, value, child) =>
-            Transform.scale(scale: value, child: child),
-        child: icon,
+      child: ScaleTransition(
+        scale: _scale,
+        child: Icon(
+          widget.ticked ? Icons.check_circle : Icons.radio_button_unchecked,
+          size: 44,
+          color: widget.ticked ? ww.success : widget.ink,
+        ),
       ),
     );
   }
