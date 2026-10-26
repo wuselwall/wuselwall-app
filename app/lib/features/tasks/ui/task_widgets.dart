@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/emoji_picture.dart';
+import 'package:wuselwall/core/ui/motion.dart';
 import 'package:wuselwall/features/tasks/domain/tasks_models.dart';
 
 /// A member's initial in a circle of their ink. [inverted] puts the circle on
@@ -200,4 +204,84 @@ Streak? streakOf(
     }
   }
   return null;
+}
+
+/// A chore's tick that pops on the snappy spring when it turns on while shown, growing
+/// from [from] to full size and overshooting a little (specs/26 "Celebrations"). A tick
+/// that was on when it appeared, or one that turns off, sits at rest; under reduced
+/// motion it lands at once (specs/26 "Motion").
+class TickPop extends StatefulWidget {
+  const TickPop({
+    required this.ticked,
+    required this.child,
+    this.from = 0.5,
+    super.key,
+  });
+
+  final bool ticked;
+  final Widget child;
+
+  /// Where the pop starts: half size on the wall, a smaller step on a phone.
+  final double from;
+
+  @override
+  State<TickPop> createState() => _TickPopState();
+}
+
+class _TickPopState extends State<TickPop> with SingleTickerProviderStateMixin {
+  late final AnimationController _scale = AnimationController.unbounded(
+    vsync: this,
+    value: 1,
+  );
+
+  @override
+  void didUpdateWidget(TickPop old) {
+    super.didUpdateWidget(old);
+    if (old.ticked == widget.ticked) return;
+    if (!widget.ticked || !motionAllowed(context)) {
+      _scale.value = 1;
+      return;
+    }
+    unawaited(
+      _scale.animateWith(
+        SpringSimulation(Tokens.springSnappy, widget.from, 1, 0),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _scale.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) =>
+      ScaleTransition(scale: _scale, child: widget.child);
+}
+
+/// A chore's title in a list tile: struck through and muted once ticked, the colour
+/// fading over 150 ms (specs/17 "Motion"; at once under reduced motion). Builds on the
+/// tile's own title style.
+class TickedTitle extends StatelessWidget {
+  const TickedTitle({required this.title, required this.ticked, super.key});
+
+  final String title;
+  final bool ticked;
+
+  @override
+  Widget build(BuildContext context) {
+    final base = DefaultTextStyle.of(context).style;
+    return AnimatedDefaultTextStyle(
+      style: base.copyWith(
+        decoration: ticked ? TextDecoration.lineThrough : TextDecoration.none,
+        color: ticked
+            ? Theme.of(context).colorScheme.onSurfaceVariant
+            : base.color,
+      ),
+      duration: motionAllowed(context) ? Tokens.motionStandard : Duration.zero,
+      curve: Curves.easeOutCubic,
+      child: Text(title),
+    );
+  }
 }

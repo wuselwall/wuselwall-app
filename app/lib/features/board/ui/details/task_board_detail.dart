@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/physics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
@@ -393,7 +392,7 @@ class _Counter extends StatelessWidget {
 /// A chore as a large card: glyph, title, what it is worth, and a tick target of
 /// kiosk size. A ticked card is struck through and shows "wartet auf Freigabe" when a
 /// guardian still has to check it.
-class _TaskCard extends StatelessWidget {
+class _TaskCard extends ConsumerWidget {
   const _TaskCard({required this.task, this.ink, this.tint, super.key});
 
   final TaskInstance task;
@@ -401,11 +400,12 @@ class _TaskCard extends StatelessWidget {
   final Color? tint;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final ww = context.ww;
     final scheme = Theme.of(context).colorScheme;
-    final ticked = task.isTicked;
+    // A tick shows the moment it is made, before the server confirms it.
+    final ticked = isTickShown(ref.watch(pendingTicksProvider), task);
     final caption = task.awaitsApproval
         ? l10n.tasksWaitingApproval
         : (ticked ? l10n.tasksDone : null);
@@ -491,65 +491,26 @@ class _TaskCard extends StatelessWidget {
   }
 }
 
-/// The tick. When it turns on while the board is shown it pops on the snappy spring
-/// from half size, overshooting a little, which is the whole of the feedback the wall
-/// gives (specs/26 "Celebrations"). A chore that was ticked before the board opened
-/// shows its tick at rest, and reduced motion lands at once (specs/26 "Motion").
-class _TickMark extends StatefulWidget {
+/// The tick. When it turns on while the board is shown it pops from half size
+/// ([TickPop]), which is the whole of the feedback the wall gives (specs/26
+/// "Celebrations"); a chore ticked before the board opened shows its tick at rest.
+class _TickMark extends StatelessWidget {
   const _TickMark({required this.ticked, required this.ink});
 
   final bool ticked;
   final Color ink;
 
-  /// Where the pop starts from.
-  static const from = 0.5;
-
   @override
-  State<_TickMark> createState() => _TickMarkState();
-}
-
-class _TickMarkState extends State<_TickMark>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _scale = AnimationController.unbounded(
-    vsync: this,
-    value: 1,
+  Widget build(BuildContext context) => Center(
+    child: TickPop(
+      ticked: ticked,
+      child: Icon(
+        ticked ? Icons.check_circle : Icons.radio_button_unchecked,
+        size: 44,
+        color: ticked ? context.ww.success : ink,
+      ),
+    ),
   );
-
-  @override
-  void didUpdateWidget(_TickMark old) {
-    super.didUpdateWidget(old);
-    if (old.ticked == widget.ticked) return;
-    if (!widget.ticked || !motionAllowed(context)) {
-      _scale.value = 1;
-      return;
-    }
-    unawaited(
-      _scale.animateWith(
-        SpringSimulation(Tokens.springSnappy, _TickMark.from, 1, 0),
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    _scale.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final ww = context.ww;
-    return Center(
-      child: ScaleTransition(
-        scale: _scale,
-        child: Icon(
-          widget.ticked ? Icons.check_circle : Icons.radio_button_unchecked,
-          size: 44,
-          color: widget.ticked ? ww.success : widget.ink,
-        ),
-      ),
-    );
-  }
 }
 
 /// The same number for a member on one day, on every device and every run.
