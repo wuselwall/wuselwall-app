@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
-import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/empty_view.dart';
@@ -273,29 +272,28 @@ class _TaskRow extends ConsumerWidget {
     // Ticked here, the row shows it at once and goes when the agenda refetches; no
     // sound or haptic on a grown-up's screen (specs/26 "Sound and haptics").
     final ticked = isTickShown(ref.watch(pendingTicksProvider), task);
+    // A chore that needs a check waits for it once ticked: no strike-through, an
+    // hourglass and the words, as on the Aufgaben tab (specs/06 "Verification").
+    final waiting = awaitsCheckShown(ticked, task);
+    final coin = task.points > 0
+        ? PointsCoin(points: task.points, fontSize: 14)
+        : null;
     return ListTile(
       leading: TaskGlyph(iconKey: task.iconKey),
-      title: TickedTitle(title: task.title, ticked: ticked),
-      subtitle: task.points > 0
-          ? PointsCoin(points: task.points, fontSize: 14)
-          : null,
-      trailing: IconButton(
-        tooltip: ticked ? l10n.tasksDone : l10n.tasksActionTick,
-        iconSize: 30,
-        constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
-        icon: TickPop(
-          ticked: ticked,
-          from: 0.8,
-          child: Icon(
-            ticked ? Icons.check_circle : Icons.radio_button_unchecked,
-            color: ticked ? context.ww.success : null,
-          ),
+      title: TickedTitle(title: task.title, ticked: ticked && !waiting),
+      subtitle: waiting
+          ? Wrap(
+              spacing: Tokens.space2,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [?coin, Text(l10n.tasksWaitingApproval)],
+            )
+          : coin,
+      trailing: TaskTickButton(
+        ticked: ticked,
+        waiting: waiting,
+        onTick: () => unawaited(
+          tickTask(context, ProviderScope.containerOf(context), task),
         ),
-        onPressed: ticked
-            ? null
-            : () => unawaited(
-                tickTask(context, ProviderScope.containerOf(context), task),
-              ),
       ),
     );
   }

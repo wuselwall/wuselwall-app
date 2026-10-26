@@ -263,6 +263,63 @@ class _TickPopState extends State<TickPop> with SingleTickerProviderStateMixin {
       ScaleTransition(scale: _scale, child: widget.child);
 }
 
+/// Whether a shown tick on [task] still waits for a guardian's check: ticked (here or
+/// on the server) on a chore that needs verification and not verified yet
+/// (specs/06 "Verification").
+bool awaitsCheckShown(bool ticked, TaskInstance task) =>
+    ticked &&
+    task.requiresVerification &&
+    task.status != InstanceStatus.verified;
+
+/// The tick at the end of an adult chore row: an open circle to tick, the green
+/// check once done, or an hourglass in ink2 while the chore [waiting]s for a
+/// guardian's check — that is not done yet, so it does not look like it (specs/06
+/// "Verification").
+class TaskTickButton extends StatelessWidget {
+  const TaskTickButton({
+    required this.ticked,
+    required this.onTick,
+    this.waiting = false,
+    super.key,
+  });
+
+  final bool ticked;
+  final bool waiting;
+  final VoidCallback onTick;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final ww = context.ww;
+    return IconButton(
+      tooltip: waiting
+          ? l10n.tasksWaitingApproval
+          : ticked
+          ? l10n.tasksDone
+          : l10n.tasksActionTick,
+      iconSize: 30,
+      constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+      icon: TickPop(
+        ticked: ticked,
+        from: 0.8,
+        child: Icon(
+          waiting
+              ? Icons.hourglass_top_rounded
+              : ticked
+              ? Icons.check_circle
+              : Icons.radio_button_unchecked,
+          color: waiting
+              ? ww.ink2
+              : ticked
+              ? ww.success
+              : Theme.of(context).colorScheme.onSurface,
+        ),
+      ),
+      onPressed: ticked ? null : onTick,
+    );
+  }
+}
+
 /// A chore's title in a list tile: struck through and muted once ticked, the colour
 /// fading over 150 ms (specs/17 "Motion"; at once under reduced motion). Builds on the
 /// tile's own title style.
