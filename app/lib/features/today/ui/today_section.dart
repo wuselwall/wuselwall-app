@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/features/home/application/home_section.dart';
 import 'package:wuselwall/features/today/ui/today_page.dart';
 
@@ -6,5 +7,5 @@ import 'package:wuselwall/features/today/ui/today_page.dart';
 final todaySection = HomeSection(
   icon: Icons.wb_sunny_outlined,
   label: (l10n) => l10n.todayTitle,
-  body: const TodayPage(),
+  body: const ContentWidth(child: TodayPage()),
 );
