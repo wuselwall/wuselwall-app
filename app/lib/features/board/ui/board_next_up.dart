@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
@@ -26,27 +28,26 @@ class BoardNextUp extends ConsumerStatefulWidget {
 
 class _BoardNextUpState extends ConsumerState<BoardNextUp>
     with SingleTickerProviderStateMixin {
+  /// Two pulses when the next thing changes, then a solid dot. The wall must not move
+  /// all day (specs/26 "Protecting the wall": nothing moves at two metres but the clock
+  /// and a moment that just happened), so the dot never pulses on its own.
   late final AnimationController _pulse = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 1600),
+    duration: const Duration(milliseconds: 2400),
+    value: 1,
   );
 
-  @override
-  void initState() {
-    super.initState();
-    _pulse.repeat(reverse: true);
-  }
+  /// The next thing the dot last pulsed for (see [_nextKey]).
+  String? _pulsedFor;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Reduced motion: the dot stays solid and nothing animates.
-    if (!motionAllowed(context)) {
+    if (!motionAllowed(context) && _pulse.isAnimating) {
       _pulse
         ..stop()
         ..value = 1;
-    } else if (!_pulse.isAnimating) {
-      _pulse.repeat(reverse: true);
     }
   }
 
@@ -56,24 +57,58 @@ class _BoardNextUpState extends ConsumerState<BoardNextUp>
     super.dispose();
   }
 
+  /// Starts the two pulses after this frame when [key], the next thing, is new.
+  void _pulseIfNew(String? key) {
+    if (key == _pulsedFor) return;
+    _pulsedFor = key;
+    if (key == null || !motionAllowed(context)) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _pulse.forward(from: 0);
+    });
+  }
+
   @override
-  Widget build(BuildContext context) => Row(
-    children: [
-      FadeTransition(
-        opacity: _pulse.drive(Tween(begin: 0.35, end: 1.0)),
-        child: Container(
-          width: 14,
-          height: 14,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primary,
-            shape: BoxShape.circle,
+  Widget build(BuildContext context) {
+    final now = ref.watch(nowProvider);
+    _pulseIfNew(_nextKey(now));
+    return Row(
+      children: [
+        FadeTransition(
+          opacity: _pulse.drive(const _TwoPulses()),
+          child: Container(
+            width: 14,
+            height: 14,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary,
+              shape: BoxShape.circle,
+            ),
           ),
         ),
-      ),
-      const SizedBox(width: 14),
-      Expanded(child: _content(context, ref.watch(nowProvider))),
-    ],
-  );
+        const SizedBox(width: 14),
+        Expanded(child: _content(context, now)),
+      ],
+    );
+  }
+
+  /// What the line names as next: the first upcoming thing today, tomorrow's first
+  /// appointment at night, or null for nothing. The countdown is left out, so the
+  /// minute ticking on does not count as a change.
+  String? _nextKey(DateTime now) {
+    final frame = widget.frame;
+    final today = frame.todayIndex;
+    if (today == null) return null;
+    final nowMinutes = now.hour * 60 + now.minute;
+    final upcoming = _upcomingOf(
+      frame.board,
+      today,
+    ).where((u) => minutesOf(u.start) > nowMinutes);
+    if (upcoming.isNotEmpty) return 'today ${upcoming.first.key}';
+    final tomorrow = today + 1;
+    final next = frame.night && tomorrow < BoardGeometry.dayCount
+        ? _firstTimedEvent(frame.board.days[tomorrow])
+        : null;
+    return next == null ? null : 'tomorrow ${next.key}';
+  }
 
   Widget _content(BuildContext context, DateTime now) {
     final frame = widget.frame;
@@ -237,6 +272,18 @@ class _Upcoming {
   final TimeOfDay start;
   final String title;
   final List<String> memberIds;
+
+  /// Identifies this thing for [_BoardNextUpState._nextKey].
+  String get key => '${minutesOf(start)} $title';
+}
+
+/// The dot's opacity over the controller's run: full, dimmed and back, twice, ending
+/// full, so the controller at rest (0 or 1) shows a solid dot.
+class _TwoPulses extends Animatable<double> {
+  const _TwoPulses();
+
+  @override
+  double transform(double t) => 1 - 0.65 * (1 - math.cos(4 * math.pi * t)) / 2;
 }
 
 List<_Upcoming> _upcomingOf(WeekBoard board, int dayIndex) {
