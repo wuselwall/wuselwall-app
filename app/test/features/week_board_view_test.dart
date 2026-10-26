@@ -714,6 +714,36 @@ void main() {
       expect(find.text('Vormittag'), findsOneWidget);
     });
 
+    testWidgets(
+      'a detail on a 1920x1080 kiosk is drawn at the board\'s scale (G)',
+      (t) async {
+        Future<Rect> titleAt(Size size) async {
+          await _pumpBoard(t, size: size);
+          await t.tap(find.text('Do'));
+          await t.pump(const Duration(milliseconds: 400));
+          expect(t.takeException(), isNull);
+          final title = find.text('Donnerstag, 15. Oktober');
+          expect(title, findsOneWidget);
+          return t.getRect(title);
+        }
+
+        final small = await titleAt(const Size(1280, 720));
+        // Close it with its own button: taps land where the scaled button is drawn.
+        await t.tap(find.text('Zurück zur Woche'));
+        await t.pump(const Duration(milliseconds: 400));
+        expect(find.text('Donnerstag, 15. Oktober'), findsNothing);
+
+        final large = await titleAt(const Size(1920, 1080));
+        expect(large.height, closeTo(small.height * 1.5, 0.5));
+        expect(large.width, closeTo(small.width * 1.5, 1));
+        expect(large.left, closeTo(small.left * 1.5, 1));
+        await t.tap(find.text('Zurück zur Woche'));
+        await t.pump(const Duration(milliseconds: 400));
+        expect(find.text('Donnerstag, 15. Oktober'), findsNothing);
+        expect(t.takeException(), isNull);
+      },
+    );
+
     testWidgets('a 1280x800 kiosk draws the board at its own size (G)', (
       t,
     ) async {

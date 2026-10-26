@@ -331,7 +331,9 @@ The tap-through details are where the full labels live, so they never truncate: 
 every text scale their text wraps, their columns grow with it and nothing ends in an
 ellipsis or a line limit. Columns that do not fit side by side (the family task board
 with five or more) take a second row rather than a sideways scroll, and a detail that
-goes on below its edge fades out there, so it never seems to end where it does not. Past days, finished appointments and cancelled lessons in a
+goes on below its edge fades out there, so it never seems to end where it does not. A
+detail is drawn on the board's 1280-wide canvas, so a larger panel scales it as it scales
+the board. Past days, finished appointments and cancelled lessons in a
 detail recede through their ground (`sunken`), with the same 4.5:1 rule (`t_10f0b348`).
 
 ### Touch behaviour

@@ -5,6 +5,7 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/motion.dart';
+import 'package:wuselwall/features/board/ui/kiosk_canvas.dart';
 
 /// Opens a tap-through detail over the week board (specs/09 "Touch behaviour"). It
 /// fills the screen but for a margin that keeps the board visible behind it, and it
@@ -24,11 +25,15 @@ Future<void> showBoardDetail(
   transitionDuration: !motionAllowed(context)
       ? Duration.zero
       : Tokens.motionEmphasised,
-  pageBuilder: (context, _, _) => _BoardDetail(
-    title: title,
-    subtitle: subtitle,
-    revertAfter: revertAfter,
-    body: body,
+  // On the same canvas as the board: a panel wider than 1280 px draws the detail at
+  // the board's scale, not at 1x over a board drawn larger (specs/09).
+  pageBuilder: (context, _, _) => KioskCanvas(
+    child: _BoardDetail(
+      title: title,
+      subtitle: subtitle,
+      revertAfter: revertAfter,
+      body: body,
+    ),
   ),
   transitionBuilder: (context, animation, _, child) {
     final curved = CurvedAnimation(

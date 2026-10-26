@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 ///
 /// The canvas is always [designWidth] wide and as tall as the panel's aspect ratio
 /// needs (never below 720), so the week board looks the same on every screen and never
-/// scrolls or reflows: everything on it is sized in canvas units.
+/// scrolls or reflows: everything on it is sized in canvas units. The tap-through
+/// details are drawn on one too (`board_detail.dart`), so they share the board's scale.
 class KioskCanvas extends StatelessWidget {
   const KioskCanvas({required this.child, super.key});
 
@@ -28,12 +29,33 @@ class KioskCanvas extends StatelessWidget {
       // Scaffold body is loose) takes its child's own size whenever that fits, so a
       // 1920×1080 panel would show the 1280 canvas unscaled in its top-left corner.
       // Tight, it scales the canvas up as well as down.
+      final scale = math.min(
+        constraints.maxWidth / designWidth,
+        constraints.maxHeight / height,
+      );
+      // Inside, the screen is the canvas: its size, and the system's insets in
+      // canvas units, so a layout that asks MediaQuery (the acting profile bar in a
+      // detail) measures what it is drawn on.
+      final media = MediaQuery.of(context);
+      EdgeInsets toCanvas(EdgeInsets e) => scale > 0 ? e / scale : e;
       return SizedBox(
         width: constraints.maxWidth,
         height: constraints.maxHeight,
         child: FittedBox(
           fit: BoxFit.contain,
-          child: SizedBox(width: designWidth, height: height, child: child),
+          child: SizedBox(
+            width: designWidth,
+            height: height,
+            child: MediaQuery(
+              data: media.copyWith(
+                size: Size(designWidth, height),
+                padding: toCanvas(media.padding),
+                viewPadding: toCanvas(media.viewPadding),
+                viewInsets: toCanvas(media.viewInsets),
+              ),
+              child: child,
+            ),
+          ),
         ),
       );
     },
