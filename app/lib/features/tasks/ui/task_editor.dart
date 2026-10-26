@@ -424,19 +424,23 @@ class _TaskEditorDialogState extends ConsumerState<TaskEditorDialog> {
                   l10n.tasksWeekdaysRequired,
                   style: TextStyle(color: Theme.of(context).colorScheme.error),
                 ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      '${l10n.tasksFieldStarts}: '
-                      '${context.fullDate(_startsOn)}',
+              // One row, the label once, and the whole row opens the date picker,
+              // as the window field below it reads (round-3 review H-4).
+              Semantics(
+                button: true,
+                child: InkWell(
+                  key: const ValueKey('task-starts'),
+                  onTap: _pickStart,
+                  borderRadius: BorderRadius.circular(Tokens.space1),
+                  child: InputDecorator(
+                    decoration: InputDecoration(
+                      labelText: l10n.tasksFieldStarts,
+                      border: const OutlineInputBorder(),
+                      suffixIcon: const Icon(Icons.calendar_today_outlined),
                     ),
+                    child: Text(context.fullDate(_startsOn)),
                   ),
-                  TextButton(
-                    onPressed: _pickStart,
-                    child: Text(l10n.tasksFieldStarts),
-                  ),
-                ],
+                ),
               ),
               InputDecorator(
                 decoration: InputDecoration(

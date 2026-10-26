@@ -293,6 +293,24 @@ void main() {
       expect(find.byIcon(Icons.check_circle), findsOneWidget);
     });
 
+    testWidgets('a chore\'s coin says what it counts', (t) async {
+      final api = FakeTasksApi(
+        tables: {
+          'task_instances': [
+            instanceRow(
+              id: 'i-1',
+              title: 'Tisch decken',
+              assignee: kidId,
+              points: 2,
+            ),
+          ],
+        },
+      );
+      await pumpTasks(t, api);
+      expect(find.byTooltip('2 Punkte'), findsOneWidget);
+      expect(find.bySemanticsLabel(RegExp('2 Punkte')), findsOneWidget);
+    });
+
     testWidgets('a chore nobody has claimed is grouped under open for anyone', (
       t,
     ) async {
@@ -335,6 +353,16 @@ void main() {
       expect(def['rrule'], 'FREQ=DAILY');
       expect(def['assignment'], 'rotating');
       expect(def['assignee_profile_ids'], [kidId]);
+    });
+
+    testWidgets('the start date is one row that opens the date picker', (
+      t,
+    ) async {
+      await _pumpEditor(t, testMembers);
+      expect(find.text('Ab dem'), findsOneWidget);
+      expect(find.widgetWithText(TextButton, 'Ab dem'), findsNothing);
+      await tapIn(t, find.byKey(const ValueKey('task-starts')));
+      expect(find.byType(DatePickerDialog), findsOneWidget);
     });
 
     testWidgets('without children a new chore is open for anyone', (t) async {

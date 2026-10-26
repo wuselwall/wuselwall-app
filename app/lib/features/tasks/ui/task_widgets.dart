@@ -58,7 +58,8 @@ class TaskAvatar extends StatelessWidget {
 
 /// Points as a gold coin with the number on it (`context.ww.points`). [signed] shows
 /// the sign of a movement ("+5", "−3"). A balance [counts] to its new value when it
-/// changes ([AnimatedCount]).
+/// changes ([AnimatedCount]). A lone number on a coin does not say what it counts, so
+/// the screen reader and the tooltip (hover, long press) say "5 Punkte".
 class PointsCoin extends StatelessWidget {
   const PointsCoin({
     required this.points,
@@ -84,21 +85,26 @@ class PointsCoin extends StatelessWidget {
       color: ww.onPoints,
       fontFeatures: const [FontFeature.tabularFigures()],
     );
-    return Semantics(
-      label: context.l10n.tasksPointsCount(points),
-      excludeSemantics: true,
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: fontSize * 0.6,
-          vertical: fontSize * 0.2,
+    final label = context.l10n.tasksPointsCount(points);
+    return Tooltip(
+      message: label,
+      excludeFromSemantics: true,
+      child: Semantics(
+        label: label,
+        excludeSemantics: true,
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: fontSize * 0.6,
+            vertical: fontSize * 0.2,
+          ),
+          decoration: BoxDecoration(
+            color: ww.points,
+            borderRadius: BorderRadius.circular(999),
+          ),
+          child: counts
+              ? AnimatedCount(value: points, style: style, format: written)
+              : Text(written(points), maxLines: 1, style: style),
         ),
-        decoration: BoxDecoration(
-          color: ww.points,
-          borderRadius: BorderRadius.circular(999),
-        ),
-        child: counts
-            ? AnimatedCount(value: points, style: style, format: written)
-            : Text(written(points), maxLines: 1, style: style),
       ),
     );
   }
