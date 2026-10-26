@@ -1,10 +1,14 @@
 # Signed iOS builds for TestFlight (specs/16, step 7); release-android.yml is its Android
-# twin. A tag v*.*.* releases; "Run workflow" builds the pubspec version from any branch,
-# for testing the pipeline.
+# twin. Tags and manual runs require passing qualification for that exact commit,
+# followed by approval of the protected release-promotion environment.
 name: release-ios
 on:
   workflow_dispatch:
     inputs:
+      diagnostics_only:
+        description: Read-only native runner diagnostics; skips signing and publishing
+        type: boolean
+        default: false
       renew_profile:
         description: Renew the App Store profile (once, after a capability changed on the App ID)
         type: boolean
@@ -16,15 +20,48 @@ concurrency:
   cancel-in-progress: false
 permissions:
   contents: read
+  actions: read
+cache-mode: none
 
 jobs:
+  diagnostics:
+    if: github.event_name == 'workflow_dispatch' && inputs.diagnostics_only
+    runs-on: [self-hosted, macOS]
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { ref: '${{ github.sha }}', persist-credentials: false }
+      - run: bash qualification/native/preflight.sh
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: native-runner-preflight-${{ github.run_id }}
+          path: build/qualification/native-preflight
+          if-no-files-found: error
+          retention-days: 7
+
+  qualification:
+    if: inputs.diagnostics_only != true
+    runs-on: [self-hosted, Linux, build]
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { ref: '${{ github.sha }}', persist-credentials: false }
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with: { node-version: 22, package-manager-cache: false }
+      - run: node qualification/promotion.mjs
+        env: { GH_TOKEN: '${{ github.token }}' }
+
   ios:
+    environment: release-promotion
+    needs: qualification
     # Xcode 26: App Store Connect accepts only builds made with the iOS 26 SDK or later,
     # so the self-hosted Mac behind the "macOS" label must have Xcode 26 installed.
     runs-on: [self-hosted, macOS]
     defaults: { run: { working-directory: app } }
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { ref: '${{ github.sha }}', persist-credentials: false }
       # flutter-action reads flutter-version-file with yq, which the Mac does not have, so
       # the version is read from pubspec.yaml here instead.
       - id: flutter
@@ -33,7 +70,7 @@ jobs:
           [ -n "$version" ] || { echo "::error::no environment.flutter version in pubspec.yaml"; exit 1; }
           echo "version=$version" >> "$GITHUB_OUTPUT"
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
-        with: { flutter-version: '${{ steps.flutter.outputs.version }}', cache: true }
+        with: { flutter-version: '${{ steps.flutter.outputs.version }}', cache: false }
       # Exactly the packages in pubspec.lock, checked against their hashes, before the
       # signing secrets come near the build.
       - run: flutter pub get --enforce-lockfile
