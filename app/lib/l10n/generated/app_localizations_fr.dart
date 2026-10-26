@@ -1295,7 +1295,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get eventKeyDisplayOffWholeFamily =>
-      'Pas sur l’écran de la cuisine : par défaut, seuls les événements de toute la famille y apparaissent.';
+      'Cet événement ne s’affiche pas sur l’écran de la cuisine. Les événements de toute la famille s’y affichent d’eux-mêmes.';
 
   @override
   String get eventRepeat => 'Répétition';

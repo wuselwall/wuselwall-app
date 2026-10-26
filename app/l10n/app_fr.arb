@@ -694,7 +694,7 @@
   "@eventKeyDisplayOn": {},
   "eventKeyDisplayOff": "Cet événement ne s’affiche pas sur l’écran de la cuisine.",
   "@eventKeyDisplayOff": {},
-  "eventKeyDisplayOffWholeFamily": "Pas sur l’écran de la cuisine : par défaut, seuls les événements de toute la famille y apparaissent.",
+  "eventKeyDisplayOffWholeFamily": "Cet événement ne s’affiche pas sur l’écran de la cuisine. Les événements de toute la famille s’y affichent d’eux-mêmes.",
   "@eventKeyDisplayOffWholeFamily": {},
   "eventRepeat": "Répétition",
   "@eventRepeat": {},

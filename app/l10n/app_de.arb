@@ -455,7 +455,7 @@
   "eventKeyDisplay": "Auf dem Küchendisplay zeigen",
   "eventKeyDisplayOn": "Dieser Termin erscheint auf dem Küchendisplay.",
   "eventKeyDisplayOff": "Dieser Termin erscheint nicht auf dem Küchendisplay.",
-  "eventKeyDisplayOffWholeFamily": "Nicht auf dem Küchendisplay: Dort stehen von selbst nur Termine der ganzen Familie.",
+  "eventKeyDisplayOffWholeFamily": "Erscheint nicht auf dem Küchendisplay. Termine der ganzen Familie erscheinen dort von selbst.",
   "eventRepeat": "Wiederholung",
   "eventRepeatNever": "Nie",
   "eventRepeatDaily": "Täglich",

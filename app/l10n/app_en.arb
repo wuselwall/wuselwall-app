@@ -701,7 +701,7 @@
   "@eventKeyDisplayOn": {},
   "eventKeyDisplayOff": "This event won’t show on the kitchen display.",
   "@eventKeyDisplayOff": {},
-  "eventKeyDisplayOffWholeFamily": "Not on the kitchen display: only events for the whole family go there by default.",
+  "eventKeyDisplayOffWholeFamily": "This event won’t show on the kitchen display. Events for the whole family show there on their own.",
   "@eventKeyDisplayOffWholeFamily": {},
   "eventRepeat": "Repeat",
   "@eventRepeat": {},

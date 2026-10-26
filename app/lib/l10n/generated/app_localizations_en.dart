@@ -1273,7 +1273,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get eventKeyDisplayOffWholeFamily =>
-      'Not on the kitchen display: only events for the whole family go there by default.';
+      'This event won’t show on the kitchen display. Events for the whole family show there on their own.';
 
   @override
   String get eventRepeat => 'Repeat';

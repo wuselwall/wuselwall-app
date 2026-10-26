@@ -1286,7 +1286,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get eventKeyDisplayOffWholeFamily =>
-      'Nicht auf dem Küchendisplay: Dort stehen von selbst nur Termine der ganzen Familie.';
+      'Erscheint nicht auf dem Küchendisplay. Termine der ganzen Familie erscheinen dort von selbst.';
 
   @override
   String get eventRepeat => 'Wiederholung';

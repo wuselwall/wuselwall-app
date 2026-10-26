@@ -2315,7 +2315,7 @@ abstract class AppLocalizations {
   /// No description provided for @eventKeyDisplayOffWholeFamily.
   ///
   /// In en, this message translates to:
-  /// **'Not on the kitchen display: only events for the whole family go there by default.'**
+  /// **'This event won’t show on the kitchen display. Events for the whole family show there on their own.'**
   String get eventKeyDisplayOffWholeFamily;
 
   /// No description provided for @eventRepeat.
