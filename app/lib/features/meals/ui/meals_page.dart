@@ -167,7 +167,13 @@ class _MealsWeekBodyState extends ConsumerState<MealsWeekBody> {
   }
 }
 
-/// Seven days: columns on a laptop, rows on a phone. Same cells either way.
+/// The narrowest a day's column gets: room for a dish of one long word in the warm
+/// meal's bold type ("Fischstäbchen", "Rinderbraten") without breaking it.
+const mealsMinColumn = 176.0;
+
+/// Seven days: seven columns where each keeps [mealsMinColumn], else four columns over
+/// two rows (Monday to Thursday, Friday to Sunday) on a tablet, else rows on a phone.
+/// Same cells either way.
 class _WeekGrid extends ConsumerWidget {
   const _WeekGrid({
     required this.weekStart,
@@ -197,20 +203,37 @@ class _WeekGrid extends ConsumerWidget {
     ];
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (constraints.maxWidth >= 840) {
-          final column = (constraints.maxWidth - 2 * Tokens.space4) / 7;
+        final inner = constraints.maxWidth - 2 * Tokens.space4;
+        final columns = inner >= 7 * mealsMinColumn
+            ? 7
+            : inner >= 4 * mealsMinColumn
+            ? 4
+            : 1;
+        if (columns > 1) {
+          final column = inner / columns;
           return SingleChildScrollView(
             padding: const EdgeInsets.all(Tokens.space4),
-            child: Row(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                for (final day in days)
-                  SizedBox(
-                    width: column,
-                    child: _DayCell(
-                      date: day,
-                      entries: entries,
-                      weekStart: weekStart,
+                for (var from = 0; from < days.length; from += columns)
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: from == 0 ? 0 : Tokens.space2,
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        for (final day in days.skip(from).take(columns))
+                          SizedBox(
+                            width: column,
+                            child: _DayCell(
+                              date: day,
+                              entries: entries,
+                              weekStart: weekStart,
+                            ),
+                          ),
+                      ],
                     ),
                   ),
               ],

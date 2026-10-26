@@ -15,6 +15,7 @@ import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/meals/application/meals_providers.dart';
 import 'package:wuselwall/features/meals/domain/meal_models.dart';
+import 'package:wuselwall/features/meals/ui/meals_page.dart';
 import 'package:wuselwall/features/settings/data/household_settings_repository.dart';
 
 import '../support/fake_meals.dart';
@@ -474,6 +475,25 @@ void main() {
     expect(t.takeException(), isNull);
     await unmountApp(t, container);
   });
+
+  for (final (width, rows) in [(1024.0, 2), (1440.0, 1)]) {
+    testWidgets('at $width the week takes $rows row(s) of columns that keep a '
+        'dish of one long word whole', (t) async {
+      final container = await pumpMeals(
+        t,
+        FakeMealsRepository(),
+        size: Size(width, 900),
+      );
+      final monday = t.getRect(find.textContaining(RegExp(r'^Mo ')));
+      final friday = t.getRect(find.textContaining(RegExp(r'^Fr ')));
+      final tuesday = t.getRect(find.textContaining(RegExp(r'^Di ')));
+      // Each column keeps its minimum (seven at 141 px broke "Fischstäbch/en").
+      expect(tuesday.left - monday.left, greaterThanOrEqualTo(mealsMinColumn));
+      expect(friday.top > monday.top, rows == 2);
+      expect(t.takeException(), isNull);
+      await unmountApp(t, container);
+    });
+  }
 
   testWidgets('clearing a planned meal offers undo, which puts it back', (
     t,
