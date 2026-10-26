@@ -559,7 +559,13 @@ class _TaskCard extends StatelessWidget {
                         if (!done && task.points > 0)
                           PointsCoin(points: task.points, fontSize: 19),
                         if (status != null)
-                          Text(status, style: theme.textTheme.bodyLarge),
+                          Text(status, style: theme.textTheme.bodyLarge)
+                        // A bare number is a riddle: the coin says what it is.
+                        else if (!done && task.points > 0)
+                          Text(
+                            l10n.tasksPointsUnit(task.points),
+                            style: theme.textTheme.bodyLarge,
+                          ),
                       ],
                     ),
                   ],

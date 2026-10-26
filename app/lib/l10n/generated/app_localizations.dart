@@ -3920,6 +3920,12 @@ abstract class AppLocalizations {
   /// **'{count, plural, =1{1 point} other{{count} points}}'**
   String tasksPointsCount(int count);
 
+  /// The word after the points coin on a child's chore card, e.g. [5] points.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{point} other{points}}'**
+  String tasksPointsUnit(int count);
+
   /// No description provided for @tasksStreakDays.
   ///
   /// In en, this message translates to:
@@ -5773,6 +5779,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Shopping'**
   String get shoppingNavLabel;
+
+  /// Short label of the Stundenplan in a bottom navigation bar where the full title does not fit (a phone, large text); the page title stays scheduleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'School'**
+  String get scheduleNavLabel;
 
   /// No description provided for @scanHint.
   ///

@@ -150,7 +150,7 @@ class _DayTab extends StatelessWidget {
             // Five chips share a phone's width: the words shrink to fit rather than
             // run past the chip's border.
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Tokens.space1),
+              padding: const EdgeInsets.all(Tokens.space1),
               child: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Column(

@@ -1206,6 +1206,11 @@
       }
     }
   },
+  "tasksPointsUnit": "{count, plural, =1{point} other{points}}",
+  "@tasksPointsUnit": {
+    "description": "The word after the points coin on a child's chore card, e.g. [5] points.",
+    "placeholders": {"count": {"type": "int"}}
+  },
   "tasksStreakDays": "{count, plural, =1{1 day in a row} other{{count} days in a row}}",
   "@tasksStreakDays": {
     "placeholders": {
@@ -1846,6 +1851,10 @@
   "shoppingNavLabel": "Shopping",
   "@shoppingNavLabel": {
     "description": "Short label of the shopping list in the bottom navigation bar; the page title stays shoppingTitle."
+  },
+  "scheduleNavLabel": "School",
+  "@scheduleNavLabel": {
+    "description": "Short label of the Stundenplan in a bottom navigation bar where the full title does not fit (a phone, large text); the page title stays scheduleTitle."
   },
   "scanHint": "Hold the camera over the QR code on the other device.",
   "scanCameraDenied": "WuselWall has no access to the camera, so it cannot scan the code. Allow the camera in the system settings, or type the code instead.",

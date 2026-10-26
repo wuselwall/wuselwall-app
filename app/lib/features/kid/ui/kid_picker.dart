@@ -19,19 +19,24 @@ class KidPicker extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final members = ref.watch(membersProvider);
+    // A small phone needs the height for the circles (320 × 568: all four in view).
+    final short = MediaQuery.sizeOf(context).height < 700;
     return Padding(
       key: const ValueKey('kid-picker'),
       padding: const EdgeInsets.all(Tokens.space4),
       child: Column(
         children: [
-          const SizedBox(height: Tokens.space6),
+          SizedBox(height: short ? Tokens.space2 : Tokens.space6),
           Text(
             l10n.kidWhoAreYou,
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.headlineMedium
-                ?.copyWith(fontWeight: FontWeight.w800),
+            style:
+                (short
+                        ? Theme.of(context).textTheme.titleMedium
+                        : Theme.of(context).textTheme.headlineMedium)
+                    ?.copyWith(fontWeight: FontWeight.w800),
           ),
-          const SizedBox(height: Tokens.space8),
+          SizedBox(height: short ? Tokens.space4 : Tokens.space8),
           Expanded(
             child: AsyncValueView<List<Member>>(
               value: members,
@@ -107,12 +112,15 @@ class KidPicker extends ConsumerWidget {
   }
 }
 
+/// The smallest circle: the kid register's touch target (specs/09, NFR-13).
+const _minCircle = 56.0;
+
 /// The space between two choices, across and down.
 const pickerGap = Tokens.space6;
 
 /// How the picker lays out [count] people in a [width] × [height] area: the
 /// largest circles that fit, in rows as even as possible (four people are 2 × 2 or
-/// 4 × 1, never 3 + 1), between 72 and 200 dp. [label] is the height of a name
+/// 4 × 1, never 3 + 1), between 56 and 200 dp. [label] is the height of a name
 /// under its circle. When even the smallest circles do not fit, the area scrolls.
 @visibleForTesting
 ({int columns, double size}) pickerGrid({
@@ -122,7 +130,7 @@ const pickerGap = Tokens.space6;
   required double label,
 }) {
   if (count == 0) return (columns: 1, size: 132);
-  var best = (columns: math.min(count, 2), size: 72.0);
+  var best = (columns: math.min(count, 2), size: _minCircle);
   var bestSize = 0.0;
   for (var rows = 1; rows <= count; rows++) {
     final columns = (count / rows).ceil();
@@ -137,10 +145,10 @@ const pickerGap = Tokens.space6;
       best = (columns: columns, size: size);
     }
   }
-  if (bestSize < 72) {
+  if (bestSize < _minCircle) {
     // Too many for the screen: two across, scrolling.
     final across = (width - Tokens.space1) / 2 - (pickerGap - Tokens.space1);
-    return (columns: 2, size: math.max(72.0, math.min(across, 200.0)));
+    return (columns: 2, size: math.max(_minCircle, math.min(across, 200.0)));
   }
   return best;
 }

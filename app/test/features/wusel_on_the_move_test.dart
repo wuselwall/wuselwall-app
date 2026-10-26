@@ -295,9 +295,19 @@ void main() {
     // The first open waves; nothing hopped in.
     expect(_stage(tester).trip, isNull);
 
-    await tester.tap(find.text('Punkte'));
+    await tester.tap(
+      find.descendant(
+        of: find.byType(NavigationBar),
+        matching: find.text('Punkte'),
+      ),
+    );
     await _frames(tester, const Duration(milliseconds: 500));
-    await tester.tap(find.text('Mein Tag'));
+    await tester.tap(
+      find.descendant(
+        of: find.byType(NavigationBar),
+        matching: find.text('Mein\u00A0Tag'),
+      ),
+    );
     await tester.pump();
     await tester.pump();
     expect(_stage(tester).trip, isNotNull);

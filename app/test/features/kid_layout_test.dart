@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
@@ -86,7 +87,43 @@ Future<void> _pickEmma(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
+/// The labels of the bottom navigation bar, as laid out.
+Iterable<RenderParagraph> _navLabels(WidgetTester tester) =>
+    tester.renderObjectList<RenderParagraph>(
+      find.descendant(
+        of: find.byType(NavigationBar),
+        matching: find.byType(RichText),
+      ),
+    );
+
+/// Whether every nav label sits on one line: all its glyph boxes share one top.
+void _expectOneLine(WidgetTester tester) {
+  for (final p in _navLabels(tester)) {
+    final text = p.text.toPlainText();
+    final boxes = p.getBoxesForSelection(
+      TextSelection(baseOffset: 0, extentOffset: text.length),
+    );
+    expect(
+      {for (final b in boxes) b.top.round()},
+      hasLength(1),
+      reason: '"$text" wraps',
+    );
+  }
+}
+
 void main() {
+  // The app's real font: the test font draws every glyph a full em wide, which no
+  // label could fit (see ios_layout_regression_test).
+  setUpAll(() async {
+    final loader = FontLoader('AtkinsonHyperlegibleNext');
+    for (final weight in ['Regular', 'SemiBold', 'Bold', 'ExtraBold']) {
+      loader.addFont(
+        rootBundle.load('assets/fonts/AtkinsonHyperlegibleNext-$weight.ttf'),
+      );
+    }
+    await loader.load();
+  });
+
   group('the picker grid', () {
     test('four people are 2 × 2 on a phone and one row on a wide tablet', () {
       final phone = pickerGrid(count: 4, width: 358, height: 600, label: 40);
@@ -107,8 +144,72 @@ void main() {
     test('a family too large for the screen scrolls two across', () {
       final g = pickerGrid(count: 12, width: 300, height: 300, label: 40);
       expect(g.columns, 2);
-      expect(g.size, greaterThanOrEqualTo(72));
+      expect(g.size, greaterThanOrEqualTo(56));
     });
+  });
+
+  testWidgets(
+    'on a small phone the tab labels stay whole, "Schule" for short',
+    (tester) async {
+      final container = await pumpApp(
+        tester,
+        overrides: baseOverrides(identity: _KidIdentity()),
+        tasks: _chores(),
+        size: const Size(320, 568),
+      );
+      await _pickEmma(tester);
+      expect(
+        find.descendant(
+          of: find.byType(NavigationBar),
+          matching: find.text('Schule'),
+        ),
+        findsOneWidget,
+      );
+      _expectOneLine(tester);
+      // The whole family in one row, every name whole.
+      final tops = {
+        for (final m in _members)
+          tester.getTopLeft(find.byKey(ValueKey('avatar-${m.id}'))).dy,
+      };
+      expect(tops, hasLength(1));
+      for (final m in _members) {
+        expect(
+          tester.getRect(find.byKey(ValueKey('avatar-${m.id}'))).right,
+          lessThanOrEqualTo(320),
+        );
+      }
+      await unmountApp(tester, container);
+    },
+  );
+
+  testWidgets('the picker shows the whole family on a 320 × 568 phone', (
+    tester,
+  ) async {
+    final container = await pumpApp(
+      tester,
+      overrides: baseOverrides(identity: _KidIdentity()),
+      tasks: _chores(),
+      size: const Size(320, 568),
+    );
+    for (final m in _members) {
+      final r = tester.getRect(find.byKey(ValueKey('kid-pick-${m.id}')));
+      expect(r.bottom, lessThanOrEqualTo(568), reason: m.displayName);
+    }
+    await unmountApp(tester, container);
+  });
+
+  testWidgets('a grown-up\'s tab labels stay whole at text scale 1.3', (
+    tester,
+  ) async {
+    tester.platformDispatcher.textScaleFactorTestValue = 1.3;
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+    final container = await pumpApp(
+      tester,
+      overrides: baseOverrides(identity: FakeIdentityRepository()),
+      size: _phone,
+    );
+    _expectOneLine(tester);
+    await unmountApp(tester, container);
   });
 
   testWidgets('on a phone the family fits one row of the avatar bar', (

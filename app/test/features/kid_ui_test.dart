@@ -335,7 +335,12 @@ void main() {
     );
     await _pickEmma(tester);
 
-    await tester.tap(find.text('Punkte'));
+    await tester.tap(
+      find.descendant(
+        of: find.byType(NavigationBar),
+        matching: find.text('Punkte'),
+      ),
+    );
     await tester.pumpAndSettle();
 
     expect(find.text('Noch 38 Punkte'), findsOneWidget);
@@ -362,7 +367,12 @@ void main() {
     );
     await _pickEmma(tester);
 
-    await tester.tap(find.text('Punkte'));
+    await tester.tap(
+      find.descendant(
+        of: find.byType(NavigationBar),
+        matching: find.text('Punkte'),
+      ),
+    );
     await tester.pumpAndSettle();
 
     expect(find.text('12'), findsOneWidget);
@@ -381,7 +391,12 @@ void main() {
     );
 
     // Family opens without an acting child.
-    await tester.tap(find.text('Familie'));
+    await tester.tap(
+      find.descendant(
+        of: find.byType(NavigationBar),
+        matching: find.text('Familie'),
+      ),
+    );
     await tester.pumpAndSettle();
 
     expect(find.text('1 Aufgabe offen'), findsNWidgets(2));

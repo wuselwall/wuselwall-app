@@ -7,6 +7,7 @@ import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/nav_labels.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
@@ -58,6 +59,23 @@ class KidHome extends ConsumerWidget {
     final picking =
         member == null && tab != KidTab.shopping && tab != KidTab.family;
     final band = context.ww.band(_module(tab));
+    // The tab labels at a size that fits; where even the smallest does not, the
+    // timetable takes its short label ("Schule"), so no label breaks in a word.
+    final full = fitNavLabels(context, [
+      for (final t in KidTab.values) _label(l10n, t),
+    ], base: _navLabel);
+    final labels = full.fits
+        ? full
+        : (
+            style: fitNavLabels(
+              context,
+              [for (final t in KidTab.values) _label(l10n, t, short: true)],
+              base: _navLabel,
+              // A very small phone: smaller still rather than a broken word.
+              minSize: 9,
+            ).style,
+            fits: false,
+          );
     return _KidChrome(
       child: Scaffold(
         body: SafeArea(
@@ -127,28 +145,32 @@ class KidHome extends ConsumerWidget {
                       indicatorColor: band,
                       // On a phone the five labels share 360 dp: the font shrinks
                       // until the longest fits, so "Stundenplan" stays one word.
-                      labelTextStyle: WidgetStatePropertyAll(
-                        _labelStyle(context, [
-                          for (final t in KidTab.values) _label(l10n, t),
-                        ]),
-                      ),
+                      labelTextStyle: WidgetStatePropertyAll(labels.style),
                       iconTheme: const WidgetStatePropertyAll(
                         IconThemeData(size: 32),
                       ),
                     ),
                   ),
-                  child: NavigationBar(
-                    selectedIndex: tab.index,
-                    onDestinationSelected: (i) => ref
-                        .read(kidTabProvider.notifier)
-                        .select(KidTab.values[i]),
-                    destinations: [
-                      for (final t in KidTab.values)
-                        NavigationDestination(
-                          icon: Icon(_icon(t)),
-                          label: _label(l10n, t),
-                        ),
-                    ],
+                  // The floor: a label shortens with "…" rather than break in a word.
+                  child: DefaultTextStyle.merge(
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
+                    child: NavigationBar(
+                      selectedIndex: tab.index,
+                      onDestinationSelected: (i) => ref
+                          .read(kidTabProvider.notifier)
+                          .select(KidTab.values[i]),
+                      destinations: [
+                        for (final t in KidTab.values)
+                          NavigationDestination(
+                            icon: Icon(_icon(t)),
+                            label: unbreakable(
+                              _label(l10n, t, short: !labels.fits),
+                            ),
+                            tooltip: _label(l10n, t),
+                          ),
+                      ],
+                    ),
                   ),
                 ),
                 // While the big picker fills the page it is the one place to say who is
@@ -162,41 +184,26 @@ class KidHome extends ConsumerWidget {
     );
   }
 
+  static const _navLabel = TextStyle(
+    fontFamily: Tokens.fontUi,
+    fontSize: 16,
+    fontWeight: FontWeight.w700,
+  );
+
   /// The widest a kid page's content gets (specs/09: tablets in landscape).
   static const maxContentWidth = 840.0;
 
-  static String _label(AppLocalizations l10n, KidTab tab) => switch (tab) {
+  static String _label(
+    AppLocalizations l10n,
+    KidTab tab, {
+    bool short = false,
+  }) => switch (tab) {
     KidTab.today => l10n.kidTabToday,
-    KidTab.school => l10n.kidTabSchool,
+    KidTab.school => short ? l10n.scheduleNavLabel : l10n.kidTabSchool,
     KidTab.points => l10n.kidTabPoints,
     KidTab.shopping => l10n.kidTabShopping,
     KidTab.family => l10n.kidTabFamily,
   };
-
-  /// 16 px bold, or smaller until the longest of [labels] fits its fifth of the
-  /// width (never below 11 px).
-  static TextStyle _labelStyle(BuildContext context, List<String> labels) {
-    const base = TextStyle(
-      fontFamily: Tokens.fontUi,
-      fontSize: 16,
-      fontWeight: FontWeight.w700,
-    );
-    final scaler = MediaQuery.textScalerOf(context).clamp(maxScaleFactor: 1.3);
-    final slot = MediaQuery.sizeOf(context).width / labels.length - 12;
-    var widest = 0.0;
-    for (final label in labels) {
-      final painter = TextPainter(
-        text: TextSpan(text: label, style: base),
-        textDirection: TextDirection.ltr,
-        textScaler: scaler,
-        maxLines: 1,
-      )..layout();
-      if (painter.width > widest) widest = painter.width;
-      painter.dispose();
-    }
-    if (widest <= slot) return base;
-    return base.copyWith(fontSize: (16 * slot / widest).clamp(11.0, 16.0));
-  }
 
   /// The band of each kid destination: the same colours as the adult modules, so a
   /// child learns "yellow is my day" once (specs/26).

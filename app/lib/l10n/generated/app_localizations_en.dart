@@ -2187,6 +2187,17 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String tasksPointsUnit(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'points',
+      one: 'point',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String tasksStreakDays(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -3299,6 +3310,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shoppingNavLabel => 'Shopping';
+
+  @override
+  String get scheduleNavLabel => 'School';
 
   @override
   String get scanHint =>

@@ -428,7 +428,7 @@ void main() {
         // Back on "Mein Tag" later the same day: no second celebration.
         await tester.tap(find.text('Punkte'));
         await tester.pumpAndSettle();
-        await tester.tap(find.text('Mein Tag'));
+        await tester.tap(find.text('Mein\u00A0Tag'));
         await tester.pumpAndSettle();
         expect(find.byKey(const ValueKey('kid-birthday')), findsNothing);
         expect(sounds.played, [Cue.badge]);

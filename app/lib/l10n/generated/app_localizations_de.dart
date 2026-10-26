@@ -2206,6 +2206,17 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String tasksPointsUnit(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Punkte',
+      one: 'Punkt',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String tasksStreakDays(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -3321,6 +3332,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get shoppingNavLabel => 'Einkauf';
+
+  @override
+  String get scheduleNavLabel => 'Schule';
 
   @override
   String get scanHint => 'Halte die Kamera auf den QR-Code am anderen Gerät.';

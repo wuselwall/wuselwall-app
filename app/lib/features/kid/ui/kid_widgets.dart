@@ -432,8 +432,10 @@ class KidLessonCard extends StatelessWidget {
                       decoration: cancelled ? TextDecoration.lineThrough : null,
                     ),
                   ),
+                  // The time span stays on one line (non-breaking spaces); a
+                  // narrow card breaks before the room instead.
                   Text(
-                    '${context.time(lesson.starts)} – ${context.time(lesson.ends)}'
+                    '${context.time(lesson.starts)}\u00A0–\u00A0${context.time(lesson.ends)}'
                     '${lesson.room == null ? '' : '  ·  ${l10n.kidRoom(lesson.room!)}'}',
                     style: TextStyle(
                       fontFamily: Tokens.fontNumeric,

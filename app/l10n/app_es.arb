@@ -1185,6 +1185,7 @@
       }
     }
   },
+  "tasksPointsUnit": "{count, plural, =1{punto} other{puntos}}",
   "tasksStreakDays": "{count, plural, =1{1 día seguido} other{{count} días seguidos}}",
   "@tasksStreakDays": {
     "placeholders": {
@@ -1823,6 +1824,7 @@
   "extCalActive": "Activo",
   "extCalUrlLoading": "Cargando la dirección",
   "shoppingNavLabel": "Compra",
+  "scheduleNavLabel": "Colegio",
   "@shoppingNavLabel": {
     "description": "Short label of the shopping list in the bottom navigation bar; the page title stays shoppingTitle."
   },

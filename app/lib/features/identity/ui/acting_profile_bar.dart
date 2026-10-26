@@ -59,17 +59,19 @@ class ActingProfileBar extends ConsumerWidget {
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             for (final m in list.where((m) => m.active))
                               Padding(
                                 padding: EdgeInsets.symmetric(
-                                  horizontal: narrow
-                                      ? Tokens.space1
-                                      : Tokens.space2,
+                                  horizontal: narrow ? 0 : Tokens.space2,
                                 ),
                                 child: _Avatar(
                                   member: m,
                                   size: size,
+                                  nameWidth: narrow
+                                      ? size + Tokens.space2
+                                      : size + Tokens.space6,
                                   selected: m.id == acting,
                                   onTap: () => ref
                                       .read(actingProfileProvider.notifier)
@@ -97,12 +99,14 @@ class _Avatar extends StatelessWidget {
   const _Avatar({
     required this.member,
     required this.size,
+    required this.nameWidth,
     required this.selected,
     required this.onTap,
   });
 
   final Member member;
   final double size;
+  final double nameWidth;
   final bool selected;
   final VoidCallback onTap;
 
@@ -148,15 +152,18 @@ class _Avatar extends StatelessWidget {
               ),
             ),
             const SizedBox(height: Tokens.space1),
+            // The whole name, never "Thom…": a long one shrinks to its box.
             SizedBox(
-              width: size + Tokens.space4,
-              child: Text(
-                member.displayName,
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.labelMedium
-                    ?.copyWith(fontWeight: selected ? FontWeight.bold : null),
+              width: nameWidth,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  member.displayName,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  style: Theme.of(context).textTheme.labelMedium
+                      ?.copyWith(fontWeight: selected ? FontWeight.bold : null),
+                ),
               ),
             ),
           ],

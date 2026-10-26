@@ -26,7 +26,13 @@ Finder _struck(String text) => find.byWidgetPredicate(
 
 /// Opens the Stundenplan tab of the adult home.
 Future<void> _openSchedule(WidgetTester t) async {
-  await t.tap(find.text('Stundenplan'));
+  // By its icon: on a phone or at large text the label is the short "Schule".
+  await t.tap(
+    find.descendant(
+      of: find.byType(NavigationBar),
+      matching: find.byIcon(Icons.school_outlined),
+    ),
+  );
   await t.pumpAndSettle();
 }
 

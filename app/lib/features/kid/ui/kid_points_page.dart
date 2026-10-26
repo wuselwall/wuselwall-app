@@ -294,9 +294,13 @@ class _RewardCard extends StatelessWidget {
                       Expanded(
                         child: Text(
                           reward.title,
-                          style: theme.textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.w800,
-                          ),
+                          // On a small phone one size smaller, so a long word
+                          // ("Samstagsfilm") keeps to one line.
+                          style:
+                              (MediaQuery.sizeOf(context).width < 360
+                                      ? theme.textTheme.titleMedium
+                                      : theme.textTheme.titleLarge)
+                                  ?.copyWith(fontWeight: FontWeight.w800),
                         ),
                       ),
                       PointsCoin(points: reward.costPoints, fontSize: 19),
@@ -364,10 +368,38 @@ class _RewardCard extends StatelessWidget {
 
 /// A badge: one node with its title and whether it is earned. The medal is faint while
 /// it is still to come; the text is not, so it keeps its contrast.
+/// [style], or smaller until the longest word of [text] fits [width] on one line:
+/// a badge name may wrap between words, never inside one ("Fünfundzwanzi / g").
+TextStyle? _fitLongestWord(
+  BuildContext context,
+  String text,
+  TextStyle? style,
+  double width,
+) {
+  if (style == null) return null;
+  final scaler = MediaQuery.textScalerOf(context);
+  var widest = 0.0;
+  for (final word in text.split(RegExp(r'\s+'))) {
+    final painter = TextPainter(
+      text: TextSpan(text: word, style: style),
+      textDirection: TextDirection.ltr,
+      textScaler: scaler,
+      maxLines: 1,
+    )..layout();
+    if (painter.width > widest) widest = painter.width;
+    painter.dispose();
+  }
+  if (widest <= width) return style;
+  return style.copyWith(fontSize: (style.fontSize ?? 14) * width / widest);
+}
+
 class _BadgeTile extends StatelessWidget {
   const _BadgeTile({required this.badge});
 
   final KidBadge badge;
+
+  /// Room for a badge and its name, the name wrapping between words.
+  static const width = 128.0;
 
   @override
   Widget build(BuildContext context) {
@@ -381,8 +413,7 @@ class _BadgeTile extends StatelessWidget {
           '${badge.title}, '
           '${badge.earned ? l10n.kidBadgeEarned : l10n.kidBadgeNotYet}',
       child: SizedBox(
-        // Wide enough for one long German word on a line ("Fünfundzwanzig").
-        width: 128,
+        width: _BadgeTile.width,
         child: Column(
           children: [
             Opacity(
@@ -414,7 +445,12 @@ class _BadgeTile extends StatelessWidget {
               textAlign: TextAlign.center,
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.labelLarge,
+              style: _fitLongestWord(
+                context,
+                badge.title,
+                Theme.of(context).textTheme.labelLarge,
+                _BadgeTile.width,
+              ),
             ),
           ],
         ),
