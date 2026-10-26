@@ -99,7 +99,7 @@ export default defineConfig({
       themeConfig: {
         nav: [
           { text: 'Erste Schritte', link: '/guide/concepts' },
-          { text: 'Module', items: [
+          { text: 'Bereiche', items: [
             { text: 'Kalender', link: '/calendar/' },
             { text: 'Stundenplan', link: '/school/' },
             { text: 'Aufgaben', link: '/tasks/' },
@@ -110,7 +110,7 @@ export default defineConfig({
         ],
         sidebar: sidebar('', {
           start: 'Erste Schritte', concepts: 'So funktioniert WuselWall', install: 'App installieren', setup: 'Anmelden und verbinden', who: 'Wer bist du?',
-          modules: 'Module', calendar: 'Kalender', feeds: 'Familienkalender teilen', school: 'Stundenplan', tasks: 'Aufgaben', meals: 'Essen', rituals: 'Rituale', wusel: 'Wusel und Farben',
+          modules: 'Bereiche', calendar: 'Kalender', feeds: 'Familienkalender teilen', school: 'Stundenplan', tasks: 'Aufgaben', meals: 'Essen', rituals: 'Rituale', wusel: 'Wusel und Farben',
           shopping: 'Einkaufsliste', add: 'Artikel hinzufügen', lists: 'Mehrere Listen', store: 'Im Laden', history: 'Verlauf',
           devices: 'Geräte und Sicherheit', wall: 'Wandbildschirm und Kinder', household: 'Alle Einstellungen', members: 'Mitglieder und Geräte', account: 'Konto und Familie', reminders: 'Erinnerungen', shortcuts: 'Apps und Automationen', security: 'Sicherheit', faq: 'Häufige Fragen',
           server: 'Eigener Server', serverOverview: 'Überblick', serverHome: 'Server zu Hause', serverRented: 'Gemieteter Server', serverSupabase: 'Server bei Supabase', serverRestore: 'Backup zurückspielen', serverExtras: 'Extras', serverEmail: 'E-Mail',
@@ -131,7 +131,7 @@ export default defineConfig({
       themeConfig: {
         nav: [
           { text: 'Getting started', link: '/en/guide/concepts' },
-          { text: 'Modules', items: [
+          { text: 'Areas', items: [
             { text: 'Calendar', link: '/en/calendar/' },
             { text: 'Timetable', link: '/en/school/' },
             { text: 'Tasks', link: '/en/tasks/' },
@@ -142,7 +142,7 @@ export default defineConfig({
         ],
         sidebar: sidebar('/en', {
           start: 'Getting started', concepts: 'How WuselWall works', install: 'Installing the app', setup: 'Signing in and connecting', who: 'Who are you?',
-          modules: 'Modules', calendar: 'Calendar', feeds: 'Sharing the family calendar', school: 'Timetable', tasks: 'Tasks', meals: 'Meals', rituals: 'Rituals', wusel: 'Wusel and colours',
+          modules: 'Areas', calendar: 'Calendar', feeds: 'Sharing the family calendar', school: 'Timetable', tasks: 'Tasks', meals: 'Meals', rituals: 'Rituals', wusel: 'Wusel and colours',
           shopping: 'Shopping list', add: 'Adding items', lists: 'Several lists', store: 'In the store', history: 'History',
           devices: 'Devices and security', wall: 'Wall display and kids', household: 'All settings', members: 'Members and devices', account: 'Account and family', reminders: 'Reminders', shortcuts: 'Apps and automations', security: 'Security', faq: 'FAQ',
           server: 'Your own server', serverOverview: 'Overview', serverHome: 'Server at home', serverRented: 'Rented server', serverSupabase: 'Server at Supabase', serverRestore: 'Restoring a backup', serverExtras: 'Extras', serverEmail: 'Email',
@@ -155,7 +155,7 @@ export default defineConfig({
       themeConfig: {
         nav: [
           { text: 'Premiers pas', link: '/fr/guide/concepts' },
-          { text: 'Modules', items: [
+          { text: 'Espaces', items: [
             { text: 'Calendrier', link: '/fr/calendar/' },
             { text: 'Emploi du temps', link: '/fr/school/' },
             { text: 'Tâches', link: '/fr/tasks/' },
@@ -186,7 +186,7 @@ export default defineConfig({
       themeConfig: {
         nav: [
           { text: 'Primeros pasos', link: '/es/guide/concepts' },
-          { text: 'Módulos', items: [
+          { text: 'Secciones', items: [
             { text: 'Calendario', link: '/es/calendar/' },
             { text: 'Horario escolar', link: '/es/school/' },
             { text: 'Tareas', link: '/es/tasks/' },
