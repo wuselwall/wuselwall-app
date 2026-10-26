@@ -84,6 +84,22 @@ counts); when the acting person becomes nobody, the open settings page leaves fo
 - Shopping (add + tick — children are surprisingly good at this)
 - Family (who is doing what today)
 
+How the kid register fits its screen (decided 2026-10-26, after layout checks on phones,
+tablets and the web from 320 to 1920 px):
+- **Phones stay upright.** Held sideways, the tabs and the avatar bar left about 115 dp
+  for the page, so on a phone (shortest side under 600 dp) the kid home is portrait only;
+  tablets turn freely.
+- **Pages are at most 840 px wide**, centred, so a tick stays near its chore's title.
+- **The bottom bars** keep their labels on one line (the font shrinks until the longest
+  fits, never below 11 px), cap the text scale at 1.3, and the avatars are one centred
+  row that scrolls sideways for a large family. With nobody picked, *Mein Tag* shows only
+  the big picker, not the bar as well.
+- ***Mein Tag* keeps its order** (greeting, new badge, Tischfrage, chores), but the badge
+  and the Tischfrage are slim lines (the Tischfrage opens on a tap), so the chores stay in
+  view. On a phone Wusel and the points share a row above a full-width speech bubble.
+- An **undo message** after a tick goes by itself and when the child switches tab or
+  person, so nobody undoes someone else's chore.
+
 **kiosk**
 - The **week board** (below): the standard screen, seven days at once.
 - Tap-through detail: one day in full, one child's Stundenplan, one member's tasks.
