@@ -76,11 +76,12 @@ class EventTemplatePage extends ConsumerWidget {
         ),
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: Tokens.space4),
-          // A fixed height: room for a picture, a two-line name and one line.
+          // Keep the compact default, then grow the cards with the user's text scale.
           sliver: SliverGrid.list(
-            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
               maxCrossAxisExtent: 200,
-              mainAxisExtent: 140,
+              mainAxisExtent:
+                  140 + (MediaQuery.textScalerOf(context).scale(1) - 1) * 72,
               mainAxisSpacing: Tokens.space2,
               crossAxisSpacing: Tokens.space2,
             ),

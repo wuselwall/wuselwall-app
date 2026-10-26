@@ -16,6 +16,7 @@ import 'package:wuselwall/demo/demo_clock.dart';
 import '../qualification/fixture.dart';
 import '../qualification/inventory.g.dart';
 
+import 'paint_contrast.dart';
 import 'settle.dart';
 
 void main() {
@@ -206,9 +207,27 @@ void main() {
                 'textContrast': textContrastGuideline,
               }.entries) {
                 final result = await entry.value.evaluate(tester);
+                if (entry.key == 'textContrast') {
+                  row['sdkTextContrast'] = {
+                    'passed': result.passed,
+                    'reason': result.reason,
+                  };
+                }
                 if (!result.passed) {
                   findings.add({'rule': entry.key, 'reason': result.reason});
                 }
+              }
+              final paint = auditPaintContrast(tester);
+              row['paintTextContrast'] = {
+                'mode': 'diagnostic',
+                'sdkOverrideEnabled': false,
+                ...paint.toJson(),
+              };
+              if (paint.failed) {
+                findings.add({
+                  'rule': 'paintTextContrast',
+                  'reason': 'A proven painted foreground/background pair is below the required ratio',
+                });
               }
               row['status'] = findings.isEmpty ? 'PASS' : 'FAIL';
               expect(

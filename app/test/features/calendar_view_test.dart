@@ -209,7 +209,7 @@ void main() {
     expect(t.takeException(), isNull);
   });
 
-  testWidgets('a 30-minute block shows its time and title in one Text', (
+  testWidgets('a 30-minute block keeps its times and a 48 px touch target', (
     t,
   ) async {
     await pumpApp(
@@ -231,8 +231,12 @@ void main() {
 
     final block = textWith('Klavier');
     expect(block, findsOneWidget);
-    expect(plainText(t, block), contains('16:00'));
+    expect(textWith('16–16:30'), findsOneWidget);
     expect(plainText(t, block), contains('Klavier'));
+    expect(
+      t.getSize(find.byType(OccurrenceTile)).height,
+      greaterThanOrEqualTo(48),
+    );
   });
 
   testWidgets('a phone-width week view lays out without exceptions', (t) async {

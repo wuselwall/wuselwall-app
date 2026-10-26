@@ -44,15 +44,13 @@ class _SignInMethodsSectionState extends ConsumerState<SignInMethodsSection> {
                 : l10n.signInMethodEmailSubtitle(email),
           ),
         ),
-        ListTile(
-          leading: const Icon(Icons.lock_outline),
-          title: Text(l10n.settingsPasswordTitle),
-          subtitle: Text(
-            hasPassword
-                ? l10n.settingsPasswordSet
-                : l10n.settingsPasswordNotSet,
-          ),
-          trailing: OutlinedButton(
+        _ResponsiveActionTile(
+          icon: Icons.lock_outline,
+          title: l10n.settingsPasswordTitle,
+          subtitle: hasPassword
+              ? l10n.settingsPasswordSet
+              : l10n.settingsPasswordNotSet,
+          action: OutlinedButton(
             onPressed: _setPassword,
             child: Text(
               hasPassword ? l10n.passwordChangeAction : l10n.passwordSetAction,
@@ -87,11 +85,11 @@ class SecuritySection extends ConsumerWidget {
         factor.when(
           loading: () => const ListTile(title: LinearProgressIndicator()),
           error: (_, _) => ListTile(title: Text(l10n.errorUnknown)),
-          data: (id) => ListTile(
-            leading: const Icon(Icons.security),
-            title: Text(l10n.totpTitle),
-            subtitle: Text(id == null ? l10n.totpOff : l10n.totpOn),
-            trailing: id == null
+          data: (id) => _ResponsiveActionTile(
+            icon: Icons.security,
+            title: l10n.totpTitle,
+            subtitle: id == null ? l10n.totpOff : l10n.totpOn,
+            action: id == null
                 ? FilledButton(
                     onPressed: () => _enableTotp(context, ref),
                     child: Text(l10n.totpEnable),
@@ -109,11 +107,11 @@ class SecuritySection extends ConsumerWidget {
                   ),
           ),
         ),
-        ListTile(
-          leading: const Icon(Icons.pin_outlined),
-          title: Text(l10n.pinChangeTitle),
-          subtitle: Text(l10n.pinChangeBody),
-          trailing: OutlinedButton(
+        _ResponsiveActionTile(
+          icon: Icons.pin_outlined,
+          title: l10n.pinChangeTitle,
+          subtitle: l10n.pinChangeBody,
+          action: OutlinedButton(
             onPressed: () => _changePin(context, repo),
             child: Text(l10n.pinChangeAction),
           ),
@@ -121,11 +119,11 @@ class SecuritySection extends ConsumerWidget {
         // Not on the web until the passkeys SDK is self-hosted (web/index.html), and
         // only in a build that names its own server (ADR-018).
         if (!kIsWeb && ref.watch(appConfigProvider).passkeys)
-          ListTile(
-            leading: const Icon(Icons.fingerprint),
-            title: Text(l10n.passkeyTitle),
-            subtitle: Text(l10n.passkeyBody),
-            trailing: OutlinedButton(
+          _ResponsiveActionTile(
+            icon: Icons.fingerprint,
+            title: l10n.passkeyTitle,
+            subtitle: l10n.passkeyBody,
+            action: OutlinedButton(
               onPressed: () async {
                 final result = await repo.registerPasskey(l10n.appTitle);
                 if (!context.mounted) return;
@@ -194,6 +192,84 @@ class SecuritySection extends ConsumerWidget {
         if (done ?? false) ref.invalidate(totpFactorProvider);
     }
   }
+}
+
+/// Account actions keep their descriptions readable at enlarged text sizes.
+/// The button is its own semantic control in both arrangements.
+class _ResponsiveActionTile extends StatelessWidget {
+  const _ResponsiveActionTile({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.action,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Widget action;
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) {
+      final button = ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 48),
+        child: action,
+      );
+      if (constraints.maxWidth / MediaQuery.textScalerOf(context).scale(1) >=
+          600) {
+        return ListTile(
+          leading: Icon(icon),
+          title: Text(title),
+          subtitle: Text(subtitle),
+          trailing: button,
+        );
+      }
+      final theme = Theme.of(context);
+      return Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: Tokens.space4,
+          vertical: Tokens.space2,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(icon),
+                const SizedBox(width: Tokens.space4),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(title, style: theme.textTheme.bodyLarge),
+                      Text(
+                        subtitle,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsetsDirectional.only(
+                start: 40,
+                top: Tokens.space2,
+              ),
+              child: Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: button,
+              ),
+            ),
+          ],
+        ),
+      );
+    },
+  );
 }
 
 class _TotpEnrolDialog extends ConsumerStatefulWidget {

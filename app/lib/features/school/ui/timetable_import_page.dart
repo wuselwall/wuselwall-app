@@ -407,6 +407,9 @@ class _Preview extends ConsumerWidget {
     final existingCount = existing == null
         ? 0
         : data.lessons.where((l) => l.timetableId == existing.id).length;
+    final compactControls =
+        MediaQuery.sizeOf(context).width < 560 ||
+        MediaQuery.textScalerOf(context).scale(1) > 1.2;
     final kept = resolved.lessons
         .where((l) => l.subjectId != null || createSubjects)
         .length;
@@ -439,6 +442,7 @@ class _Preview extends ConsumerWidget {
                 const SizedBox(height: Tokens.space3),
                 DropdownButtonFormField<String>(
                   initialValue: school.id,
+                  isExpanded: true,
                   decoration: InputDecoration(
                     labelText: l10n.schoolsUiPickSchool,
                   ),
@@ -528,28 +532,59 @@ class _Preview extends ConsumerWidget {
                   style: theme.textTheme.bodySmall,
                 ),
                 for (final s in resolved.newSubjects)
-                  Row(
-                    children: [
-                      Expanded(child: Text('${s.name} (${s.shortName})')),
-                      DropdownButton<String>(
-                        key: ValueKey('import-merge-${s.key}'),
-                        value: targetOf(s) ?? '',
-                        underline: const SizedBox.shrink(),
-                        items: [
-                          DropdownMenuItem(
-                            value: '',
-                            child: Text(l10n.schoolImportCreateNew),
-                          ),
-                          for (final x in data.subjects)
-                            DropdownMenuItem(value: x.id, child: Text(x.name)),
-                        ],
-                        onChanged: (v) => onMergeInto(
-                          s.key,
-                          v == null || v.isEmpty ? null : v,
+                  compactControls
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Text('${s.name} (${s.shortName})'),
+                            DropdownButton<String>(
+                              key: ValueKey('import-merge-${s.key}'),
+                              isExpanded: true,
+                              value: targetOf(s) ?? '',
+                              underline: const SizedBox.shrink(),
+                              items: [
+                                DropdownMenuItem(
+                                  value: '',
+                                  child: Text(l10n.schoolImportCreateNew),
+                                ),
+                                for (final x in data.subjects)
+                                  DropdownMenuItem(
+                                    value: x.id,
+                                    child: Text(x.name),
+                                  ),
+                              ],
+                              onChanged: (v) => onMergeInto(
+                                s.key,
+                                v == null || v.isEmpty ? null : v,
+                              ),
+                            ),
+                          ],
+                        )
+                      : Row(
+                          children: [
+                            Expanded(child: Text('${s.name} (${s.shortName})')),
+                            DropdownButton<String>(
+                              key: ValueKey('import-merge-${s.key}'),
+                              value: targetOf(s) ?? '',
+                              underline: const SizedBox.shrink(),
+                              items: [
+                                DropdownMenuItem(
+                                  value: '',
+                                  child: Text(l10n.schoolImportCreateNew),
+                                ),
+                                for (final x in data.subjects)
+                                  DropdownMenuItem(
+                                    value: x.id,
+                                    child: Text(x.name),
+                                  ),
+                              ],
+                              onChanged: (v) => onMergeInto(
+                                s.key,
+                                v == null || v.isEmpty ? null : v,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
                 if (resolved.newSubjects.any((s) => targetOf(s) == null))
                   SwitchListTile(
                     contentPadding: EdgeInsets.zero,
@@ -715,12 +750,37 @@ class _Grid extends StatelessWidget {
         ],
       );
       if (compact) {
-        if (name == null && l.room == null) return row;
+        // A vertical cell remains readable when large text makes the grid narrow.
+        final compactCell = Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (l.parity != 'all')
+              Text(
+                l.parity.toUpperCase(),
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  color: theme.colorScheme.primary,
+                ),
+              ),
+            Text(
+              label(l),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                color: dropped(l) ? ww.ink2 : null,
+                decoration: dropped(l) ? TextDecoration.lineThrough : null,
+              ),
+            ),
+          ],
+        );
+        if (name == null && l.room == null) return compactCell;
         // No room for the name on a phone: a long press tells it, and the room.
         return Tooltip(
           message: [label(l), ?name, ?l.room].join(' · '),
           triggerMode: TooltipTriggerMode.longPress,
-          child: row,
+          child: compactCell,
         );
       }
       if (name == null) return row;
@@ -745,66 +805,82 @@ class _Grid extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        // Five day columns beside the label column leave a phone about 54 px a cell.
-        final compact = constraints.maxWidth < 560;
-        return Table(
-          border: TableBorder.all(color: ww.line),
-          columnWidths: {
-            0: const FixedColumnWidth(80),
-            for (var i = 1; i <= days.length; i++) i: const FlexColumnWidth(),
-          },
-          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-          children: [
-            TableRow(
+        final textScale = MediaQuery.textScalerOf(context).scale(1);
+        // Keep useful space for each day at large text sizes. Narrow screens can
+        // scroll the preview horizontally instead of squeezing the lesson rows.
+        final periodWidth = 80 * textScale;
+        final dayWidth = 60 * textScale;
+        final tableWidth = periodWidth + days.length * dayWidth;
+        final compact = constraints.maxWidth < 560 || textScale > 1.2;
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minWidth: tableWidth > constraints.maxWidth
+                  ? tableWidth
+                  : constraints.maxWidth,
+            ),
+            child: Table(
+              border: TableBorder.all(color: ww.line),
+              columnWidths: {
+                0: FixedColumnWidth(periodWidth),
+                for (var i = 1; i <= days.length; i++)
+                  i: FixedColumnWidth(dayWidth),
+              },
+              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
               children: [
-                const SizedBox.shrink(),
-                for (final d in days)
-                  Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: Text(
-                      context.weekdayShort(_weekdayDate(d)),
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.titleSmall,
-                    ),
+                TableRow(
+                  children: [
+                    const SizedBox.shrink(),
+                    for (final d in days)
+                      Padding(
+                        padding: const EdgeInsets.all(4),
+                        child: Text(
+                          context.weekdayShort(_weekdayDate(d)),
+                          textAlign: TextAlign.center,
+                          style: theme.textTheme.titleSmall,
+                        ),
+                      ),
+                  ],
+                ),
+                for (final p in periods)
+                  TableRow(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(4),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${p.index}.',
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            Text(
+                              context.span(p.starts, p.ends),
+                              style: TextStyle(fontSize: 11, color: ww.ink2),
+                            ),
+                          ],
+                        ),
+                      ),
+                      for (final d in days)
+                        Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              for (final l in lessons)
+                                if (l.weekday == d && l.period == p.index)
+                                  cell(l, compact),
+                            ],
+                          ),
+                        ),
+                    ],
                   ),
               ],
             ),
-            for (final p in periods)
-              TableRow(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${p.index}.',
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        Text(
-                          context.span(p.starts, p.ends),
-                          style: TextStyle(fontSize: 11, color: ww.ink2),
-                        ),
-                      ],
-                    ),
-                  ),
-                  for (final d in days)
-                    Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          for (final l in lessons)
-                            if (l.weekday == d && l.period == p.index)
-                              cell(l, compact),
-                        ],
-                      ),
-                    ),
-                ],
-              ),
-          ],
+          ),
         );
       },
     );

@@ -2,6 +2,8 @@
 
 Diese Schritte betreffen **dein Konto** oder die **ganze Familie**. Sie stehen unten in den Einstellungen deines **persönlichen Handys**, nur dort. **Konto löschen** steht immer da, die anderen Schritte in der Ansicht **Erweitert**. Vorher solltest du wissen, was geschieht: Keiner der Schritte lässt sich rückgängig machen.
 
+Auf schmalen Bildschirmen oder bei großer Schrift stehen die Aktionsknöpfe unter der Beschreibung; wenn nötig, kannst du nach unten scrollen.
+
 ## Passwort
 
 Unter **Einstellungen → Erweitert → Anmeldung → Passwort** legst du ein Passwort fest oder änderst es. Mindestens 10 Zeichen; besser ein ganzer Satz. Den Code per E-Mail kannst du trotzdem weiter benutzen.

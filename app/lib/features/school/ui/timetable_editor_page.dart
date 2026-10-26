@@ -943,56 +943,66 @@ class _CellTile extends StatelessWidget {
       },
       child: Padding(
         padding: const EdgeInsets.all(2),
-        child: InkWell(
-          key: ValueKey('cell-$weekday-$period'),
-          borderRadius: BorderRadius.circular(8),
-          onTap: onTap,
-          child: Container(
-            constraints: const BoxConstraints(minHeight: 52),
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              border: Border.all(color: ww.line),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                for (final d in drafts)
-                  Row(
-                    children: [
-                      if (d.parity != 'all')
-                        Text(
-                          d.parity.toUpperCase(),
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w700,
-                            color: scheme.primary,
+        child: Semantics(
+          container: true,
+          label: drafts.isEmpty
+              ? context.l10n.schoolLessonActions(
+                  context.l10n.schoolAddLesson,
+                  context.weekdayLong(_weekdayDate(weekday)),
+                  context.l10n.boardPeriod(period),
+                )
+              : null,
+          child: InkWell(
+            key: ValueKey('cell-$weekday-$period'),
+            borderRadius: BorderRadius.circular(8),
+            onTap: onTap,
+            child: Container(
+              constraints: const BoxConstraints(minHeight: 52),
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                border: Border.all(color: ww.line),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  for (final d in drafts)
+                    Row(
+                      children: [
+                        if (d.parity != 'all')
+                          Text(
+                            d.parity.toUpperCase(),
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                              color: scheme.primary,
+                            ),
+                          ),
+                        if (d.subjectId != null) ...[
+                          Icon(
+                            schoolIcon(subjectOf(d.subjectId)?.iconKey),
+                            size: 14,
+                          ),
+                          const SizedBox(width: 2),
+                        ],
+                        Expanded(
+                          child: Text(
+                            subjectOf(d.subjectId)?.shortName ?? '—',
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(fontWeight: FontWeight.w700),
                           ),
                         ),
-                      if (d.subjectId != null) ...[
-                        Icon(
-                          schoolIcon(subjectOf(d.subjectId)?.iconKey),
-                          size: 14,
-                        ),
-                        const SizedBox(width: 2),
+                        if (d.room != null)
+                          Text(
+                            d.room!,
+                            style: TextStyle(fontSize: 11, color: ww.ink2),
+                          ),
                       ],
-                      Expanded(
-                        child: Text(
-                          subjectOf(d.subjectId)?.shortName ?? '—',
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                      if (d.room != null)
-                        Text(
-                          d.room!,
-                          style: TextStyle(fontSize: 11, color: ww.ink2),
-                        ),
-                    ],
-                  ),
-                if (drafts.isEmpty) const SizedBox(height: 34),
-              ],
+                    ),
+                  if (drafts.isEmpty) const SizedBox(height: 34),
+                ],
+              ),
             ),
           ),
         ),

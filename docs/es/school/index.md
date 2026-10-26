@@ -70,7 +70,7 @@ Añade el horario de cada niño para un periodo. Si no hay periodo que cubra la 
 
 Arriba aparecen niño, colegio, periodo y fechas. Toca una celda para elegir asignatura. Si falta una asignatura, escribe su abreviatura en la búsqueda y elige **Crear la asignatura «…»**: la asignatura existe al momento y rellena la celda; color, icono y cosas que llevar vienen después en **Editar colegio**. El botón de guardar permanece abajo mientras te desplazas.
 
-En pantallas estrechas o con texto grande, desliza la cuadrícula hacia los lados para ver los demás días. Así las celdas siguen siendo legibles y fáciles de tocar.
+En pantallas estrechas o con texto grande, desliza hacia los lados la cuadrícula del horario y la vista previa de importación para ver los demás días. Así las celdas siguen siendo legibles y fáciles de tocar. Los botones de los horarios de clase pasan a otra línea cuando hace falta.
 
 Si aún no hay horario, la vista muestra un mensaje sobre el niño seleccionado y el botón **Introducir horario**.
 

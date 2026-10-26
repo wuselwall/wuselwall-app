@@ -313,6 +313,7 @@ class _CalendarCard extends StatelessWidget {
                   ),
                   if (canManage)
                     Semantics(
+                      container: true,
                       label: l10n.extCalActive,
                       child: Switch(
                         value: calendar.active,
@@ -321,7 +322,11 @@ class _CalendarCard extends StatelessWidget {
                     ),
                 ],
               ),
-              if (refreshing) const LinearProgressIndicator(),
+              if (refreshing)
+                Semantics(
+                  container: true,
+                  child: const LinearProgressIndicator(),
+                ),
               if (canManage)
                 Wrap(
                   alignment: WrapAlignment.end,

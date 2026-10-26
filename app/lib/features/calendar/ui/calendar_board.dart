@@ -17,7 +17,12 @@ import 'package:wuselwall/features/identity/domain/models.dart';
 
 const _gutterWidth = 44.0;
 const _hourHeight = 52.0;
-const _gridHeight = (gridEndHour - gridStartHour) * _hourHeight;
+const _minimumBlockHeight = 48.0;
+// Reserve the enlarged target when assigning lanes, retaining the actual times.
+const _minimumDisplayMinutes = 58; // ceil((48 px + 2 px margin) / 52 px * 60)
+// A late appointment's target must remain reachable below the last hour line.
+const _gridHeight =
+    (gridEndHour - gridStartHour) * _hourHeight + _minimumBlockHeight;
 
 /// One presence band row: a member's bands, one lane per member (specs/05 "Week").
 const _presenceRowHeight = 30.0;
@@ -120,7 +125,11 @@ class _CalendarBoardState extends State<CalendarBoard> {
                       Expanded(
                         child: _TimeCell(
                           day: day,
-                          blocks: timedBlocksOn(day, occurrences),
+                          blocks: timedBlocksOn(
+                            day,
+                            occurrences,
+                            minimumDisplayMinutes: _minimumDisplayMinutes,
+                          ),
                           members: widget.members,
                           now: widget.now,
                           isToday: dateOnly(day) == today,
@@ -625,10 +634,10 @@ class _TimeCell extends StatelessWidget {
   }
 }
 
-/// A block's height: its span, but never less than a line of text.
+/// A block's height: its span, with at least a 48 px touch target.
 double _blockHeight(DayBlock b) {
   final span = _y(b.end) - _y(b.start) - 2;
-  return span < 20 ? 20 : span;
+  return math.max(span, _minimumBlockHeight);
 }
 
 /// Minutes from midnight to a y offset on the grid.

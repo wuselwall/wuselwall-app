@@ -1286,6 +1286,7 @@ class _ItemTileState extends State<_ItemTile> {
       children: [
         Expanded(
           child: Semantics(
+            container: true,
             customSemanticsActions: remove == null
                 ? null
                 : {

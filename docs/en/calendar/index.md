@@ -17,6 +17,8 @@ At the top you choose **Day**, **3 days**, **Week** or **Month**. Move with **Pr
 
 Below them, the appointments follow by time.
 
+Short events keep their labels at the actual times, while taller, easy-to-tap blocks can sit side by side. Template cards adapt to your device’s text size.
+
 ## Month {#month}
 
 **Month** shows six weeks at a glance, Monday to Sunday, with the week number on the left. It is for planning, not for editing. Each day shows:

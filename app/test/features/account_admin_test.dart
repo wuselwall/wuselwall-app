@@ -316,10 +316,9 @@ void main() {
         find.byType(Scrollable).first,
         const Offset(0, -300),
       );
-      final row = find.ancestor(
-        of: resetButton,
-        matching: find.byType(ListTile),
-      );
+      // The reset control is a sibling of the member link, so screen readers
+      // encounter two independent actions rather than a button inside a button.
+      final row = find.byKey(const ValueKey('member-$mamaId'));
       final role = find.descendant(
         of: row,
         matching: find.text('Erziehungsberechtigter'),

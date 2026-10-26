@@ -2,6 +2,8 @@
 
 These steps concern **your account** or the **whole family**. They are at the bottom of the settings on your **personal phone**, and only there. **Delete account** is always shown; the other steps are in the **Advanced** view. Know what happens first: none of the steps can be undone.
 
+On narrow screens or with larger text, action buttons sit below their descriptions; scroll down if needed.
+
 ## Password
 
 Under **Settings → Advanced → Sign-in → Password** you set or change a password. At least 10 characters; a whole sentence is better. The code by email still works too.

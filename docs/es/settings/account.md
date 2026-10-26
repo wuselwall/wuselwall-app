@@ -2,6 +2,8 @@
 
 Estas acciones afectan a tu cuenta o a todo el hogar. Están al final de los ajustes de **tu móvil personal**. Eliminar la cuenta siempre aparece; el resto está en **Avanzados**. Lee las consecuencias antes de confirmar.
 
+En pantallas estrechas o con texto grande, los botones de acción aparecen debajo de la descripción; desplázate hacia abajo si hace falta.
+
 ## Contraseña {#password}
 
 En **Ajustes → Avanzados → Inicio de sesión**, define o cambia una contraseña de al menos **10 caracteres**. El código por correo sigue disponible.

@@ -44,14 +44,21 @@ qualification for that exact commit and protected human approval before publishi
 Separate backend/recovery checks remain part of the release checklist; operator-run local
 deployment utilities are independent.
 
-The initial expanded Linux validation rendered all 172 direct fixtures and completed all
-1,128 canonical Flutter cases without framework/layout errors. It exposed existing
-accessibility findings, which remain failures while fixes and triage continue. The ordinary
-suite passed 1,560 tests, with six backend integration tests intentionally skipped without
+Expanded Linux validation rendered all 172 direct fixtures and executed the full 8,760-case
+Flutter matrix. It exposed accessibility findings and large-text layout defects. After
+fixing those layouts and calendar targets, a 672-case responsive rerun had no framework,
+label or target-size findings; contrast findings remain blocking. The ordinary
+suite passed 1,561 tests, with six backend integration tests intentionally skipped without
 backend configuration. Those six require the separate disposable-backend CI job. Android
 app and instrumentation APKs compile; native device execution and the iOS audit build still
 need validation on provisioned macOS devices. No native baseline has been approved by these
 local checks.
+
+The raw Flutter SDK text-contrast result is retained in each case. A separate paint
+diagnostic records effective text size, foreground/background ratios where the render tree
+provides a conservative proof, and explicit unsupported reasons elsewhere. It cannot waive
+SDK failures. Borders, image content and antialiasing can affect the SDK's pixel histogram;
+those reports need attribution before changing a colour or accepting a candidate.
 
 ## Select the candidate
 

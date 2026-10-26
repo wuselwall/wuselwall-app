@@ -210,36 +210,51 @@ class _MemberTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final role = member.isGuardian ? l10n.roleGuardian : l10n.roleMember;
-    return ListTile(
-      leading: Opacity(
-        opacity: member.active ? 1 : 0.5,
-        child: MemberCircle(member: member),
-      ),
-      title: Text(member.displayName),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            member.active
-                ? (member.isChild ? l10n.householdKindChild : role)
-                : l10n.memberInactive,
+    return Column(
+      children: [
+        Semantics(
+          container: true,
+          child: ListTile(
+            leading: Opacity(
+              opacity: member.active ? 1 : 0.5,
+              child: MemberCircle(member: member),
+            ),
+            title: Text(member.displayName),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  member.active
+                      ? (member.isChild ? l10n.householdKindChild : role)
+                      : l10n.memberInactive,
+                ),
+                MemberInvitationDetails(member: member),
+              ],
+            ),
+            // The handle is the affordance when there is one: a chevron beside it would
+            // squeeze the role into a sliver at phone width.
+            trailing: handle ?? const Icon(Icons.chevron_right),
+            onTap: () => context.go(Routes.member, extra: member.id),
           ),
-          MemberInvitationDetails(member: member),
-          // Below the role, not beside it: at phone width a trailing action
-          // squeezes the role into a sliver (as #29 did).
-          Wrap(
-            spacing: Tokens.space1,
-            children: [
-              MfaResetButton(member: member),
-              InviteMemberButton(member: member),
-            ],
+        ),
+        // Separate actions below the member link avoid nesting interactive nodes.
+        Padding(
+          padding: const EdgeInsetsDirectional.only(
+            start: 72,
+            end: Tokens.space4,
           ),
-        ],
-      ),
-      // The handle is the affordance when there is one: a chevron beside it would
-      // squeeze the role into a sliver at phone width.
-      trailing: handle ?? const Icon(Icons.chevron_right),
-      onTap: () => context.go(Routes.member, extra: member.id),
+          child: Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: Wrap(
+              spacing: Tokens.space1,
+              children: [
+                MfaResetButton(member: member),
+                InviteMemberButton(member: member),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

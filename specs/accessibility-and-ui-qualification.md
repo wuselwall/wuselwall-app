@@ -45,9 +45,10 @@ human gates. Real backend authentication, signed-store-binary smoke and the rest
 release checklist remain separate requirements. Operator-run deployment utilities are not
 publishing-workflow qualification gates.
 
-Local validation rendered all 172 direct fixtures in DE/EN/FR/ES and completed the expanded
-canonical Flutter matrix without framework/layout errors. Existing accessibility findings
-remain visible and blocking while triage/fixes continue. The ordinary suite passed 1,537
+Local validation rendered all 172 direct fixtures in DE/EN/FR/ES and executed the full
+8,760-case Flutter matrix. Large-text layout and touch-target fixes were verified in a
+672-case responsive rerun with no framework, label or target-size findings. Contrast findings
+remain visible and blocking while attribution continues. The ordinary suite passed 1,561
 tests with six intentionally unconfigured backend integration tests skipped; the separate
 disposable-backend CI job supplies their coverage. No qualified candidate or approved native
 baseline is established by these local checks.

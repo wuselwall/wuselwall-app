@@ -215,22 +215,34 @@ class _NextSteps extends ConsumerWidget {
       children: [
         for (final k in kids)
           Card(
-            child: ListTile(
-              key: ValueKey('next-step-${k.id}'),
-              leading: const Icon(Icons.edit_calendar_outlined),
-              title: Text(l10n.schoolNextStepEnter(k.displayName)),
-              trailing: TextButton(
-                onPressed: () =>
-                    showTimetableImportMenu(context, ref, profileId: k.id),
-                child: Text(l10n.schoolImportAction),
-              ),
-              onTap: () => openTimetableEditor(
-                context,
-                ref,
-                data: data,
-                profileId: k.id,
-                monday: today,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Semantics(
+                  container: true,
+                  child: ListTile(
+                    key: ValueKey('next-step-${k.id}'),
+                    leading: const Icon(Icons.edit_calendar_outlined),
+                    title: Text(l10n.schoolNextStepEnter(k.displayName)),
+
+                    onTap: () => openTimetableEditor(
+                      context,
+                      ref,
+                      data: data,
+                      profileId: k.id,
+                      monday: today,
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: AlignmentDirectional.centerEnd,
+                  child: TextButton(
+                    onPressed: () =>
+                        showTimetableImportMenu(context, ref, profileId: k.id),
+                    child: Text(l10n.schoolImportAction),
+                  ),
+                ),
+              ],
             ),
           ),
       ],
@@ -602,36 +614,60 @@ class _BellTimesState extends ConsumerState<_BellTimes>
               final r = _rows[i];
               if (!r.isBreak) lessonNo++;
               return Card(
-                child: ListTile(
-                  title: Text(
-                    r.isBreak ? l10n.boardBreak : l10n.boardPeriod(lessonNo),
-                  ),
-                  subtitle: Row(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Tooltip(
-                        message: l10n.schoolStart,
-                        child: TextButton(
-                          onPressed: () => _pick(r, start: true),
-                          child: Text(context.time(r.starts)),
-                        ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              r.isBreak
+                                  ? l10n.boardBreak
+                                  : l10n.boardPeriod(lessonNo),
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                          ),
+                          IconButton(
+                            tooltip: l10n.schoolRemove,
+                            icon: const Icon(Icons.delete_outline),
+                            onPressed: () => setState(() {
+                              _rows.removeAt(i);
+                              widget.onChanged();
+                            }),
+                          ),
+                        ],
                       ),
-                      const Text('–'),
-                      Tooltip(
-                        message: l10n.schoolEnd,
-                        child: TextButton(
-                          onPressed: () => _pick(r, start: false),
-                          child: Text(context.time(r.ends)),
-                        ),
+                      // The two times share the full card width. Long localized
+                      // times may wrap at enlarged text sizes without shrinking.
+                      Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          Tooltip(
+                            message: l10n.schoolStart,
+                            child: TextButton(
+                              style: TextButton.styleFrom(
+                                minimumSize: const Size(48, 48),
+                              ),
+                              onPressed: () => _pick(r, start: true),
+                              child: Text(context.time(r.starts)),
+                            ),
+                          ),
+                          const Text('–'),
+                          Tooltip(
+                            message: l10n.schoolEnd,
+                            child: TextButton(
+                              style: TextButton.styleFrom(
+                                minimumSize: const Size(48, 48),
+                              ),
+                              onPressed: () => _pick(r, start: false),
+                              child: Text(context.time(r.ends)),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
-                  ),
-                  trailing: IconButton(
-                    tooltip: l10n.schoolRemove,
-                    icon: const Icon(Icons.delete_outline),
-                    onPressed: () => setState(() {
-                      _rows.removeAt(i);
-                      widget.onChanged();
-                    }),
                   ),
                 ),
               );
