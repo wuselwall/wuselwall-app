@@ -14,6 +14,7 @@ import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_footer.dart';
 import 'package:wuselwall/features/board/ui/board_geometry.dart';
 import 'package:wuselwall/features/board/ui/board_grid.dart';
+import 'package:wuselwall/features/board/ui/board_meal.dart';
 import 'package:wuselwall/features/board/ui/board_next_up.dart';
 import 'package:wuselwall/features/board/ui/board_presence.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
@@ -741,6 +742,48 @@ void main() {
         await t.pump(const Duration(milliseconds: 400));
         expect(find.text('Donnerstag, 15. Oktober'), findsNothing);
         expect(t.takeException(), isNull);
+      },
+    );
+
+    testWidgets(
+      'a 16:9 panel keeps the rows of 1280x800 and widens the columns '
+      '(N-3)',
+      (t) async {
+        await _pumpBoard(t);
+        final meal = t.getSize(find.byType(MealRow));
+        final termine = t.getSize(find.byType(TermineRows));
+        await _pumpBoard(t, size: const Size(1920, 1080));
+        // Canvas units: the same heights, a wider canvas (1422 x 800).
+        expect(t.getSize(find.byType(MealRow)).height, meal.height);
+        expect(t.getSize(find.byType(TermineRows)).height, termine.height);
+        expect(t.getSize(find.byType(MealRow)).width, greaterThan(meal.width));
+        expect(t.takeException(), isNull);
+      },
+    );
+
+    testWidgets(
+      'a dish word wider than its column breaks with a hyphen (C-1)',
+      (t) async {
+        late String narrow;
+        late String wide;
+        final style = boardCell(24, weight: FontWeight.w700);
+        await t.pumpWidget(
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: Builder(
+              builder: (context) {
+                narrow = hyphenateToFit(context, 'Fischstäbchen', style, 100);
+                wide = hyphenateToFit(context, 'Fischstäbchen', style, 1000);
+                return const SizedBox();
+              },
+            ),
+          ),
+        );
+        expect(wide, 'Fischstäbchen');
+        expect(narrow, contains('-\n'));
+        expect(narrow.replaceAll('-\n', ''), 'Fischstäbchen');
+        final head = narrow.split('-\n').first;
+        expect(head.length, greaterThanOrEqualTo(3));
       },
     );
 

@@ -23,7 +23,8 @@ import 'package:wuselwall/features/rituals/application/birthday_providers.dart';
 /// The fixed bands are the header (with the next-up line), the day names, the dividers
 /// between the zones and the footer; the three zones share the rest by flex and never
 /// scroll.
-/// There is no narrow-screen variant: the canvas is always [KioskCanvas.designWidth] wide.
+/// There is no narrow-screen variant: the canvas is never narrower than
+/// [KioskCanvas.designWidth]; a wider panel widens the day columns.
 ///
 /// Looking ahead (specs/09 "Gestures"), [week] is next week's board: it fills the day
 /// columns, while the header and the footer stay with today's [snapshot]. While it
@@ -50,7 +51,11 @@ class WeekBoardView extends ConsumerWidget {
     BoardFrame frameOf(WeekBoard board) => BoardFrame(
       board: board,
       geometry: BoardGeometry(
-        canvasWidth: KioskCanvas.designWidth,
+        // The canvas's own width: KioskCanvas reports it as the screen's.
+        canvasWidth: math.max(
+          KioskCanvas.designWidth,
+          MediaQuery.sizeOf(context).width,
+        ),
         todayIndex: board.todayIndex,
       ),
       night: night,

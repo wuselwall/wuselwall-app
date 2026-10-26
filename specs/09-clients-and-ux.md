@@ -317,7 +317,10 @@ geometry, all zones, readable overflow indicators and access to full detail. The
 reference acceptance viewport is 1280×800 logical pixels in landscape, with the
 reference household, in each application language (DE/EN/FR/ES). No RenderFlex overflow, overlapping
 text or clipped controls is acceptable at 100%, 150% or 200%. This does not claim
-that every appointment title fits in full on the board.
+that every appointment title fits in full on the board. Other panels draw the board on a
+canvas at least 1280×800 that grows along the panel's long side (1422×800 on 16:9) and
+scale it to fit, so every aspect ratio has the reference rows and a wider one only wider
+columns; the header keeps its height through the day, the Tischfrage included.
 
 Past days and the night variant may recede through backgrounds, borders and visual
 emphasis, not by making their information unreadable. Do not apply a fixed opacity
@@ -329,8 +332,10 @@ not the acceptance threshold.
 
 The tap-through details are where the full labels live, so they never truncate: at
 every text scale their text wraps, their columns grow with it and nothing ends in an
-ellipsis or a line limit. Columns that do not fit side by side (the family task board
-with five or more) take a second row rather than a sideways scroll, and a detail that
+ellipsis or a line limit. On the family task board only members with chores today get
+a column; those with nothing left share one line under them, so the open chores are on
+screen without a scroll. Columns that do not fit side by side take a second row rather
+than a sideways scroll, and a detail that
 goes on below its edge fades out there, so it never seems to end where it does not. A
 detail is drawn on the board's 1280-wide canvas, so a larger panel scales it as it scales
 the board. Past days, finished appointments and cancelled lessons in a
