@@ -368,25 +368,16 @@ class _MemberDoneState extends State<_MemberDone> {
   }
 }
 
-/// The member's points, which count up or down as they change (reduced motion: no
-/// animation).
+/// The member's points, which count up or down to a new balance (specs/17 "Motion";
+/// reduced motion: no animation).
 class _Counter extends StatelessWidget {
   const _Counter({required this.points});
 
   final int points;
 
   @override
-  Widget build(BuildContext context) {
-    final still = !motionAllowed(context);
-    return AnimatedSwitcher(
-      duration: still ? Duration.zero : Tokens.motionStandard,
-      switchInCurve: Curves.easeOutCubic,
-      child: KeyedSubtree(
-        key: ValueKey(points),
-        child: PointsCoin(points: points, fontSize: 26),
-      ),
-    );
-  }
+  Widget build(BuildContext context) =>
+      PointsCoin(points: points, fontSize: 26, counts: true);
 }
 
 /// A chore as a large card: glyph, title, what it is worth, and a tick target of

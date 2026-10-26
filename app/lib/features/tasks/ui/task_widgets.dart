@@ -5,6 +5,7 @@ import 'package:flutter/physics.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/animated_count.dart';
 import 'package:wuselwall/core/ui/emoji_picture.dart';
 import 'package:wuselwall/core/ui/motion.dart';
 import 'package:wuselwall/features/tasks/domain/tasks_models.dart';
@@ -56,23 +57,33 @@ class TaskAvatar extends StatelessWidget {
 }
 
 /// Points as a gold coin with the number on it (`context.ww.points`). [signed] shows
-/// the sign of a movement ("+5", "−3").
+/// the sign of a movement ("+5", "−3"). A balance [counts] to its new value when it
+/// changes ([AnimatedCount]).
 class PointsCoin extends StatelessWidget {
   const PointsCoin({
     required this.points,
     this.fontSize = 16,
     this.signed = false,
+    this.counts = false,
     super.key,
   });
 
   final int points;
   final double fontSize;
   final bool signed;
+  final bool counts;
 
   @override
   Widget build(BuildContext context) {
     final ww = context.ww;
-    final text = signed && points > 0 ? '+$points' : '$points';
+    String written(int points) => signed && points > 0 ? '+$points' : '$points';
+    final style = TextStyle(
+      fontFamily: Tokens.fontNumeric,
+      fontSize: fontSize,
+      fontWeight: FontWeight.w800,
+      color: ww.onPoints,
+      fontFeatures: const [FontFeature.tabularFigures()],
+    );
     return Semantics(
       label: context.l10n.tasksPointsCount(points),
       excludeSemantics: true,
@@ -85,17 +96,9 @@ class PointsCoin extends StatelessWidget {
           color: ww.points,
           borderRadius: BorderRadius.circular(999),
         ),
-        child: Text(
-          text,
-          maxLines: 1,
-          style: TextStyle(
-            fontFamily: Tokens.fontNumeric,
-            fontSize: fontSize,
-            fontWeight: FontWeight.w800,
-            color: ww.onPoints,
-            fontFeatures: const [FontFeature.tabularFigures()],
-          ),
-        ),
+        child: counts
+            ? AnimatedCount(value: points, style: style, format: written)
+            : Text(written(points), maxLines: 1, style: style),
       ),
     );
   }
