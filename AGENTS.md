@@ -14,7 +14,10 @@ restoring a family, account deletion and the second-factor reset, localised mail
 (discovery through the `server-info` function), a server release with `server/wuselwall`
 (`server/cloud-init.yaml` installs it on a rented VPS at the first boot), and
 `deploy-supabase.yml` for a family's own hosted project (Auth through
-`scripts/hosted-auth-config.mjs`, mail mandatory, the run verifies its result). The onboarding journeys J1–J3 are
+`scripts/hosted-auth-config.mjs`, the run verifies its result), and mail is optional (2026-10-26, Q48: without SMTP
+Auth autoconfirms, `server-info` says `sign_in.email_code: false`, the app signs up with a password, invitations match
+only `app.proven_email`, a guardian's one-time code or `wuselwall password` resets a password; `wuselwall mail` sets up
+any SMTP server, Gmail included). The onboarding journeys J1–J3 are
 integration tests (CI's backend job) and screen-count tests (`app/test/journeys`). Built besides: household settings
 (specs/21), the kiosk week board (specs/09) with "Alle Termine", M1.3a calendar (events,
 presence, recurrence expanded in Edge Functions, the ICS feed with tokens, and since 2026-10-24 a read-only month view), M1.3b Stundenplan
@@ -59,7 +62,8 @@ two-week family Alpha and act on its findings; (4) safe releases and readiness f
 families. Steps 10.1–10.3 and the release-checklist document are built; checklist evidence
 is still open. The former M2/R1–R4 lists are no longer separate schedules; later candidates
 live in [specs/23](specs/23-roadmap-after-alpha.md). Merged migrations and functions reach a live server after a backup
-(`scripts/remote-backup.sh` first); a server with mail sets `ENABLE_EMAIL_AUTOCONFIRM=false`.
+(`scripts/remote-backup.sh` first); a server with mail sets `ENABLE_EMAIL_AUTOCONFIRM=false`, one without sets it
+`true` (`wuselwall mail` checks which).
 
 **Never describe a particular operator's server in a committed file** — not a host, path,
 SSH alias, machine or the fact that someone runs one. Placeholders (`example.org`) in

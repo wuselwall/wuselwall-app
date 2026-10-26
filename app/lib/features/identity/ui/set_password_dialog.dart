@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/server/server_providers.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/domain/email_code.dart';
@@ -67,7 +68,11 @@ class _SetPasswordDialogState extends ConsumerState<_SetPasswordDialog> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(l10n.passwordDialogBody),
+          Text(
+            ref.watch(emailCodeSignInProvider)
+                ? l10n.passwordDialogBody
+                : l10n.passwordDialogBodyNoMail,
+          ),
           const SizedBox(height: Tokens.space4),
           PasswordField(controller: _password, autofocus: true),
           if (_tooShort) ...[

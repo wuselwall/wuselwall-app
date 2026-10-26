@@ -2,6 +2,7 @@ import { assertEquals, assertThrows } from "jsr:@std/assert@1.0.13";
 import {
   checkRow,
   discoveryDocument,
+  emailCode,
   publicUrl,
   publishableKey,
   runtimeFeatures,
@@ -129,9 +130,25 @@ Deno.test("discoveryDocument shapes the row", () => {
     api_version: 1,
     min_app_version: "1.0.0",
     household_creation: "token",
-    sign_in: { password: true },
+    sign_in: { password: true, email_code: true },
     features: ["calendar", "shopping"],
   });
+});
+
+Deno.test("a server that autoconfirms offers no email code", () => {
+  assertEquals(
+    emailCode({ mailer_autoconfirm: true, disable_signup: false }),
+    false,
+  );
+  assertEquals(emailCode({ mailer_autoconfirm: false }), true);
+  // Unreadable settings: as every server before mail became optional.
+  assertEquals(emailCode(null), true);
+  assertEquals(emailCode("oops"), true);
+  assertEquals(emailCode({ mailer_autoconfirm: "true" }), true);
+  assertEquals(
+    discoveryDocument(row, "k", undefined, { emailCode: false }).sign_in,
+    { password: true, email_code: false },
+  );
 });
 
 Deno.test("discoveryDocument leaves the address out when it is unknown", () => {

@@ -279,14 +279,15 @@ reset role;
 -- Every app table with a household_id column is either on the export list (app.export_table) or
 -- listed here on purpose. A new table fails this test until someone decides which it is.
 -- proposal (specs/24): an assistant's payload waiting for a verdict, gone after 14 days; what a
--- guardian applied is in the exported timetables.
+-- guardian applied is in the exported timetables. password_reset (Q48): a one-time code's hash,
+-- valid ten minutes; nothing a family would move.
 select is((select coalesce(string_agg(c.relname, ', ' order by c.relname), '') from pg_attribute a
             join pg_class c on c.oid = a.attrelid join pg_namespace n on n.oid = c.relnamespace
            where n.nspname = 'app' and c.relkind in ('r', 'p') and a.attname = 'household_id'
              and not a.attisdropped
              and c.relname <> all (array['enrolment_code', 'busy_until', 'shopping_op', 'shopping_item_alias',
                                        'getting_started_dismissal', 'notice_dismissal', 'external_occurrence',
-                                       'pairing_request', 'proposal'])
+                                       'pairing_request', 'proposal', 'password_reset'])
              and not exists (select 1 from app.export_table t where t.name = c.relname)),
   '', 'every household table is exported or excluded on purpose');
 

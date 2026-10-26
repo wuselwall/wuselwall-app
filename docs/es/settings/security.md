@@ -4,7 +4,7 @@ Los ajustes de acceso y seguridad están en **Ajustes → Avanzados**, solo en e
 
 ## Inicio de sesión {#sign-in}
 
-El código por correo siempre está disponible. Puedes definir o cambiar una [contraseña](/es/settings/account#password).
+El código por correo está disponible si tu servidor envía correo. Puedes definir o cambiar una [contraseña](/es/settings/account#password).
 
 <Shot name="settings-sign-in" alt="Los ajustes de inicio de sesión y contraseña" />
 

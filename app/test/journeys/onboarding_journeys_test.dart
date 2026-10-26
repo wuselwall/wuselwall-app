@@ -5,7 +5,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/server_session.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
+import 'package:wuselwall/core/config/app_config.dart';
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/core/server/server_info.dart';
 import 'package:wuselwall/core/server/server_link.dart';
 import 'package:wuselwall/core/supabase/supabase_providers.dart';
 import 'package:wuselwall/features/home/ui/register_home_page.dart';
@@ -54,6 +56,22 @@ class _JourneyIdentity extends FakeIdentityRepository {
     if (result.isOk) onVerified?.call();
     return result;
   }
+
+  /// Without mail (Q48) the new account is signed in by its sign-up.
+  @override
+  Future<Result<void>> signUpWithPassword(
+    String email,
+    String password, {
+    required String locale,
+  }) async {
+    final result = await super.signUpWithPassword(
+      email,
+      password,
+      locale: locale,
+    );
+    if (result.isOk) onVerified?.call();
+    return result;
+  }
 }
 
 /// Accepting an invitation makes this session a personal device, as the server does.
@@ -93,11 +111,13 @@ List<Override> _journeyOverrides(
   FakeInvitationRepository? invitations,
   MemoryInvitationStore? store,
   ServerSession? session,
+  AppConfig? appConfig,
 }) {
   identity.onVerified = () => container().read(_signedIn.notifier).signIn();
   return [
     ...baseOverrides(
       identity: identity,
+      appConfig: appConfig,
       household: household,
       invitations: invitations,
       invitationStore: store,
@@ -194,6 +214,74 @@ void main() {
       });
     },
   );
+
+  group('J1 without mail — a password instead of E2 and E3 (Q48)', () {
+    testWidgets('front door → E1 (new account) → H1 → H2 → Today', (t) async {
+      final identity = _JourneyIdentity();
+      final household = FakeHouseholdOnboardingRepository(
+        identity: identity,
+        accountValue: const Account(
+          userId: 'user-1',
+          email: 'daniel@example.org',
+          hasHousehold: false,
+          creation: HouseholdCreation.open,
+          fullName: 'Daniel Huser',
+          givenName: 'Daniel',
+        ),
+      );
+      late ProviderContainer container;
+      container = await pumpApp(
+        t,
+        overrides: _journeyOverrides(
+          () => container,
+          identity,
+          household: household,
+          appConfig: AppConfig.forServer(
+            const AppConfig(
+              environment: 'test',
+              supabaseUrl: 'http://localhost',
+              supabasePublishableKey: 'key',
+            ),
+            ServerInfo(
+              supabaseUrl: Uri.parse('https://family.example.org'),
+              publishableKey: 'sb_publishable_abc',
+              apiVersion: 1,
+              minAppVersion: '1.0.0',
+              emailCode: false,
+            ),
+          ),
+        ),
+      );
+      final log = ScreenLog(container.read(routerProvider));
+      addTearDown(log.dispose);
+
+      await t.tap(find.text('Mit E-Mail fortfahren'));
+      await t.pumpAndSettle();
+      await t.enterText(find.byType(TextFormField).first, 'daniel@example.org');
+      await t.enterText(find.byType(TextField).last, 'a long enough one');
+      log.mark('signed in');
+      await t.tap(find.text('Konto erstellen'));
+      await t.pumpAndSettle();
+
+      expect(identity.codeRequests, isEmpty);
+      expect(find.text(_choiceTitle), findsNothing, reason: 'no E3');
+      expect(find.text('Neue Familie'), findsOneWidget);
+      await t.tap(find.text('Familie anlegen'));
+      await t.pumpAndSettle();
+      container.invalidate(sessionStateProvider);
+      await t.pumpAndSettle();
+      expect(find.text('Wer gehört noch zu euch?'), findsOneWidget);
+      await t.tap(find.text('Fertig'));
+      await t.pumpAndSettle();
+
+      expect(find.byType(RegisterHomePage), findsOneWidget);
+      expect(log.after('signed in'), [
+        Routes.newFamily,
+        Routes.welcomeMembers,
+        Routes.home,
+      ]);
+    });
+  });
 
   group('J2 — join by link: at most 2 screens after sign-in', () {
     testWidgets('link → banner → E1 → E2 → E3 → join confirmation → Today', (

@@ -4,7 +4,7 @@ Ces actions concernent votre compte ou tout le foyer. Elles se trouvent en bas d
 
 ## Mot de passe {#password}
 
-Dans **Paramètres → Avancés → Connexion**, définissez ou changez un mot de passe d’au moins **10 caractères**. Le code par e-mail reste disponible.
+Dans **Paramètres → Avancés → Connexion**, définissez ou changez un mot de passe d’au moins **10 caractères**. Le code par e-mail reste disponible si votre serveur envoie des e-mails ; sinon, le mot de passe est le seul accès ([E-mails](/fr/server/email)).
 
 ## Quitter la famille {#leave-the-family}
 
@@ -20,6 +20,6 @@ Seul un parent, sur son téléphone personnel, peut le faire, sous **Paramètres
 
 ## Supprimer votre compte {#delete-your-account}
 
-Cette action supprime votre accès et vous déconnecte partout. Votre **profil** et vos contributions restent dans la famille. Si votre connexion date de plus de cinq minutes, un code par e-mail vérifie votre identité avant de poursuivre. Le dernier parent ayant un compte ne peut pas le supprimer.
+Cette action supprime votre accès et vous déconnecte partout. Votre **profil** et vos contributions restent dans la famille. Si votre connexion date de plus de cinq minutes, un code par e-mail vérifie votre identité avant de poursuivre (sans e-mails : votre mot de passe). Le dernier parent ayant un compte ne peut pas le supprimer.
 
 Discutez ensemble avant de supprimer le foyer. Pour conserver vos données, faites d’abord un [export](/fr/settings/members-devices#export-data).

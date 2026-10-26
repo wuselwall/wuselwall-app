@@ -13,13 +13,16 @@ import 'package:wuselwall/core/connectivity/connectivity_provider.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/server/server_providers.dart';
 import 'package:wuselwall/core/server/setup_store.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/setup/ui/auth_form_scaffold.dart';
+import 'package:wuselwall/features/setup/ui/password_sign_in_page.dart';
 
 /// E1 (specs/20, "With email"): the address, then a code by e-mail (E2). A password is
-/// one step behind "Ich habe ein Passwort". The same answer for every address.
+/// one step behind "Ich habe ein Passwort". The same answer for every address. On a
+/// server without mail, [PasswordSignInPage] instead (Q48).
 class SignInPage extends ConsumerStatefulWidget {
   const SignInPage({this.initialEmail, super.key});
 
@@ -115,6 +118,12 @@ class _SignInPageState extends ConsumerState<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (!ref.watch(emailCodeSignInProvider)) {
+      return PasswordSignInPage(
+        initialEmail: widget.initialEmail,
+        onBack: () => unawaited(_cancelSetup()),
+      );
+    }
     final l10n = context.l10n;
     final theme = Theme.of(context);
     final ww = context.ww;

@@ -61,6 +61,10 @@ Die Reihenfolge der Mitglieder in der Liste ist die Reihenfolge auf der Wand und
 
 Hat eine andere Erziehungsberechtigte Person ihren zweiten Faktor verloren, tippst du bei ihrem Namen auf **Zwei-Faktor zurücksetzen**. Danach kann sie sich ohne den zweiten Faktor anmelden und ihn neu einrichten (siehe [Sicherheit](/settings/security#zwei-faktor-anmeldung)).
 
+## Passwort zurücksetzen {#passwort-zuruecksetzen}
+
+Nur auf einem Server ohne E-Mail ([E-Mail](/server/email#passwort-vergessen)): Hat eine andere erwachsene Person ihr Passwort vergessen, tippst du bei ihrem Namen auf **Passwort zurücksetzen** und dann auf **Code erstellen**. Die App zeigt einen Code aus 8 Zeichen, der einmal gilt, 10 Minuten lang. Gib ihn persönlich weiter. Auf ihrem Gerät tippt sie beim Anmelden auf **Passwort vergessen?** und gibt ihre Adresse, den Code und ein neues Passwort ein.
+
 ## Gerät verbinden
 
 Ein Kinder-Tablet, ein Tablet für alle oder die Wandanzeige verbindest du so: Tippe unter **Einstellungen → Geräte → Alle Geräte** auf **Gerät verbinden**, scanne den QR-Code oder tippe den Code ab, den das neue Gerät zeigt, und wähle die Art und einen Namen. Den ganzen Ablauf zeigt [Anmelden und verbinden](/guide/setup#_4-familien-tablet-oder-wanddisplay-verbinden).

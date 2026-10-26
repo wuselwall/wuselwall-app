@@ -322,6 +322,32 @@ class FakeIdentityRepository implements IdentityRepository {
     return signInResult;
   }
 
+  /// Without mail (Q48): the password sign-ups and the reset codes redeemed.
+  final signUps = <(String, String)>[];
+  Result<void> signUpResult = const Ok(null);
+  final resetRedeems = <(String, String, String)>[];
+  Result<void> resetRedeemResult = const Ok(null);
+
+  @override
+  Future<Result<void>> signUpWithPassword(
+    String email,
+    String password, {
+    required String locale,
+  }) async {
+    signUps.add((email, password));
+    return signUpResult;
+  }
+
+  @override
+  Future<Result<void>> redeemPasswordReset({
+    required String email,
+    required String code,
+    required String password,
+  }) async {
+    resetRedeems.add((email, code, password));
+    return resetRedeemResult;
+  }
+
   @override
   Future<Result<void>> sendEmailCode(
     String email, {
@@ -404,8 +430,9 @@ class FakeIdentityRepository implements IdentityRepository {
 /// Starting a family. Creating a household records its arguments; on success it makes
 /// [identity] Ready, as the session refresh does in the app (the test re-reads the session).
 /// Records the leave, delete and restore calls; each answers with its result.
-/// Deleting the account and resetting a second factor. Each deletion answers with the next of
-/// [deleteResults] (the last one repeats). [recent] is what the sign-in check answers.
+/// Deleting the account, resetting a second factor or a password. Each deletion answers with
+/// the next of [deleteResults] (the last one repeats). [recent] is what the sign-in check
+/// answers.
 class FakeAccountAdminRepository implements AccountAdminRepository {
   List<Result<void>> deleteResults = [const Ok(null)];
   Result<void> resetResult = const Ok(null);
@@ -440,6 +467,24 @@ class FakeAccountAdminRepository implements AccountAdminRepository {
   Future<Result<List<MemberSecurity>>> memberSecurity(
     String actorProfileId,
   ) async => Ok(security);
+
+  /// The reset codes created (Q48), and what creating one answers.
+  final resetCodes = <({String actorProfileId, String profileId})>[];
+  Result<EnrolmentCode> resetCodeResult = Ok(
+    EnrolmentCode(
+      code: 'K7QM3XRP',
+      expiresAt: DateTime.utc(2026, 10, 26, 9, 10),
+    ),
+  );
+
+  @override
+  Future<Result<EnrolmentCode>> createPasswordResetCode({
+    required String actorProfileId,
+    required String profileId,
+  }) async {
+    resetCodes.add((actorProfileId: actorProfileId, profileId: profileId));
+    return resetCodeResult;
+  }
 }
 
 class FakeHouseholdLeaveRepository implements HouseholdLeaveRepository {

@@ -1,28 +1,12 @@
 # Extras für den Server
 
-Alles auf dieser Seite außer dem **E-Mail-Versand** ist **freiwillig**. WuselWall läuft ohne. Jedes Extra bringt einen weiteren Dienst ins Spiel, der etwas über euch erfährt, also nehmt nur, was ihr wirklich braucht.
+Alles auf dieser Seite ist **freiwillig**. WuselWall läuft ohne. Jedes Extra bringt einen weiteren Dienst ins Spiel, der etwas über euch erfährt, also nehmt nur, was ihr wirklich braucht.
 
 Die Befehle für einen Server zu Hause laufen im Verzeichnis des Werkzeugs `wuselwall` ([Server zu Hause](/server/home-server)).
 
 ## E-Mail {#e-mail}
 
-**Zurzeit nötig.** Wer sich zum ersten Mal anmeldet, bestätigt seine Adresse mit einem **Code per Mail**. Erst danach kann man ein Passwort festlegen. Ohne Mail-Versand kommt der Code nie an, und niemand kann eine Familie anlegen oder einer beitreten. Ein Server ganz ohne Mail, mit Passwort von Anfang an, ist geplant.
-
-**Sprache der E-Mails:** Beim Einrichten wählst du eine einzige Sprache — Deutsch, Englisch, Französisch oder Spanisch (Standard: Deutsch). Diese Sprache gilt für Betreff und Text jeder Anmelde- und Bestätigungsmail, unabhängig von der Gerätesprache. Ändern kannst du sie später mit `./wuselwall language de|en|fr|es` ([Server zu Hause](/server/home-server#email-sprache)).
-
-Dafür braucht der Server einen SMTP-Dienst, also einen Anbieter, der Mails verschickt. Ein Postfach beim normalen Mailanbieter ist dafür ungeeignet. Nehmt einen Dienst für sogenannte *transaktionale* Mails, etwa Scaleway Transactional Email aus der EU (300 Mails gratis, Stand Oktober 2026; ein Beispiel, keine Empfehlung, und WuselWall ist mit Scaleway nicht verbunden). Der Anbieter sieht die E-Mail-Adressen und die Codes. Damit die Mails nicht im Spam landen, trägst du bei deiner Domain die Einträge ein, die der Anbieter nennt (SPF, DKIM, DMARC).
-
-**Zu Hause:** Trag in `stack/.env` die Werte `SMTP_HOST`, `SMTP_PORT` (meist `587`), `SMTP_USER`, `SMTP_PASS` und als Absender `SMTP_ADMIN_EMAIL` ein, in einfachen Anführungszeichen wie die anderen Werte. Dann:
-
-Ein Server mit Mailversand setzt `ENABLE_EMAIL_AUTOCONFIRM=false` in `stack/.env`.
-
-```bash
-./wuselwall compose up -d auth
-```
-
-**Bei Supabase:** **Authentication → Emails → SMTP Settings**, dieselben Angaben. Der eingebaute Mail-Versand von Supabase ist nur zum Ausprobieren gedacht und schickt nur wenige Mails pro Stunde.
-
-Die Server-Version und der Workflow **deploy-supabase** richten sowohl die erste Bestätigungsmail als auch spätere Anmeldemails mit einem **sechsstelligen Code** in der gewählten E-Mail-Sprache ein. Ein Scaleway-Hook ist dafür nicht nötig. Gib den Code in der bereits geöffneten App ein. Kommt nur ein Link an, aktualisiere den Server oder starte den Workflow aus dem aktualisierten Repository erneut und fordere danach einen neuen Code an; eine alte Mail ändert sich nicht.
+E-Mail ist freiwillig: Ohne melden sich alle mit Passwort an. Wie der Server die Anmelde-Codes per Mail verschickt, auch über Gmail, steht auf einer eigenen Seite: [E-Mail](/server/email).
 
 ## Update von einer Version mit Apple- und Google-Anmeldung {#social-stilllegen}
 

@@ -5,6 +5,7 @@ import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/server/server_providers.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/account/application/account_admin_providers.dart';
 import 'package:wuselwall/features/household/application/household_leave_providers.dart';
@@ -76,9 +77,13 @@ class _DeleteAccountTileState extends ConsumerState<DeleteAccountTile> {
     final repo = ref.read(accountAdminRepositoryProvider);
     final email = ref.read(myAccountProvider).value?.email;
     if (email != null) {
+      // Without mail there is no code: the password renews the sign-in (Q48).
+      final emailCode = ref.read(emailCodeSignInProvider);
       final renewed = await showDialog<bool>(
         context: context,
-        builder: (_) => _EmailReauthDialog(email: email),
+        builder: (_) => emailCode
+            ? _EmailReauthDialog(email: email)
+            : _PasswordReauthDialog(email: email),
       );
       return renewed == true && repo.hasRecentSignIn();
     }
@@ -230,6 +235,95 @@ class _EmailReauthDialogState extends ConsumerState<_EmailReauthDialog> {
                 ? l10n.accountDeleteReauthConfirm
                 : l10n.accountDeleteReauthSend,
           ),
+        ),
+      ],
+    );
+  }
+}
+
+/// The password that renews a sign-in on a server without mail (Q48). True once it signed the
+/// account in again.
+class _PasswordReauthDialog extends ConsumerStatefulWidget {
+  const _PasswordReauthDialog({required this.email});
+
+  final String email;
+
+  @override
+  ConsumerState<_PasswordReauthDialog> createState() =>
+      _PasswordReauthDialogState();
+}
+
+class _PasswordReauthDialogState extends ConsumerState<_PasswordReauthDialog> {
+  final _password = TextEditingController();
+  var _busy = false;
+  String? _error;
+
+  @override
+  void dispose() {
+    _password.dispose();
+    super.dispose();
+  }
+
+  Future<void> _verify() async {
+    if (_password.text.isEmpty || _busy) return;
+    setState(() {
+      _busy = true;
+      _error = null;
+    });
+    final result = await ref
+        .read(identityRepositoryProvider)
+        .signIn(widget.email, _password.text);
+    if (!mounted) return;
+    switch (result) {
+      case Ok():
+        Navigator.of(context).pop(true);
+      case Err(failure: AuthFailure(code: 'invalid_credentials')):
+        setState(() {
+          _busy = false;
+          _error = context.l10n.emailWrongCredentials;
+          _password.clear();
+        });
+      case Err(:final failure):
+        setState(() => _busy = false);
+        context.showFailure(failure);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return AlertDialog(
+      title: Text(l10n.accountDeleteReauthTitle),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(l10n.accountDeleteReauthPasswordBody(widget.email)),
+          const SizedBox(height: Tokens.space4),
+          TextField(
+            key: const ValueKey('reauth-password'),
+            controller: _password,
+            autofocus: true,
+            enabled: !_busy,
+            obscureText: true,
+            autofillHints: const [AutofillHints.password],
+            decoration: InputDecoration(
+              labelText: l10n.fieldPasswordSimple,
+              errorText: _error,
+            ),
+            onChanged: (_) => setState(() {}),
+            onSubmitted: (_) => _verify(),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(false),
+          child: Text(l10n.cancel),
+        ),
+        FilledButton(
+          onPressed: _busy || _password.text.isEmpty ? null : _verify,
+          child: Text(l10n.accountDeleteReauthConfirm),
         ),
       ],
     );

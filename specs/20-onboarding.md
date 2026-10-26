@@ -161,12 +161,30 @@ an invitation or pairing link, which carries the server:
     email match is off, and a guardian resets a forgotten password with a one-time code
     ([Q48](14-open-questions.md), [16, step 10.4](16-setup-plan.md#step-10--journey-gaps-before-launch-m15));
 
+  > **Built 2026-10-26 (issue #126).** `server-info` derives `sign_in.email_code` from
+  > Auth's public settings (`!mailer_autoconfirm`); a document without it counts as a server
+  > with mail. Without mail, E1 is `PasswordSignInPage`: **Neues Konto** (the default:
+  > address and a password of at least 10 characters, `signUp`, no E2 or E3) and
+  > **Anmelden**; signing up with an address that has an account first tries the typed
+  > password, then switches to Anmelden with "Zu dieser Adresse gibt es schon ein Konto".
+  > **Passwort vergessen?** opens the reset page (address, the guardian's code, a new
+  > password; `api.password_reset_redeem`, anon, rate-limited 10 failures per client and 200
+  > overall per 10 minutes). A guardian on a personal device creates the code next to another
+  > adult in Mitglieder (**Passwort zurücksetzen**, `api.password_reset_create`: 8 symbols, 10
+  > minutes, single use, a new one replaces the old, audited); the operator issues the same
+  > code with `wuselwall password <email>` for a family whose only guardian forgot. A second
+  > factor still applies. An invitation is matched by address only to a *proven* address
+  > (`app.proven_email`: confirmed and `confirmation_sent_at` set, which an autoconfirmed
+  > sign-up never has), the invitation dialog asks for no address, Settings promise no code,
+  > and account deletion re-checks the password instead of mailing a code.
+
   Passkeys appear only in a build that names its own server; the store app offers them to no chosen server (ADR-018, amended 2026-10-21). The app never shows a button that will fail.
 
 ### Several ways into one account
 
-Every account has its email code, and may add a password. In **Einstellungen → Konto →
-Anmeldung** an adult sees the address the code goes to and sets or changes the password.
+Every account on a server with mail has its email code, and may add a password; on a server
+without mail the password is the way in. In **Einstellungen → Konto → Anmeldung** an adult
+sees the address the code goes to and sets or changes the password.
 Passkeys sit in Einstellungen → Sicherheit, only in a build that names its own server.
 
 ## J1 — Start a family
@@ -364,7 +382,8 @@ guardian's phone approves it.*
   household, so a personal device is created silently and Today opens. The account's
   other devices get a notice ("Neu angemeldet: Thomas’ iPhone"), and Settings → Geräte
   lists the old phone for revocation.
-- **Forgot the password:** sign in with an email code; set a new one in Settings.
+- **Forgot the password:** sign in with an email code; set a new one in Settings. Without
+  mail: a guardian's one-time code ("Choosing the server" above).
 - **Second factor (TOTP), if switched on:** the code page follows sign-in as today.
   **Lost the authenticator?** Another guardian removes the factor from their own phone
   (Einstellungen → Mitglieder → person → *Zwei-Faktor zurücksetzen*, a guardian action,

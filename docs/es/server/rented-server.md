@@ -9,7 +9,7 @@ Técnicamente es la misma pila Docker que [en casa](/es/server/home-server). Tod
 - Una cuenta en un proveedor con **cloud-init** (selección abajo); unos **6–25 € al mes** (a octubre de 2026).
 - Un **dominio** con dos nombres, `api.` y `web.`, unos 1–2 € al mes.
 - Una **clave SSH** en tu ordenador (`ssh-keygen` si aún no tienes).
-- Un **proveedor de correo** para los códigos de acceso, como en todo servidor WuselWall ([Opciones](/es/server/extras#email)).
+- Opcional: una **cuenta de correo** para los códigos de acceso; basta una de Gmail ([Correo](/es/server/email)). Sin ella, todos inician sesión con contraseña.
 
 ## Proveedores {#providers}
 

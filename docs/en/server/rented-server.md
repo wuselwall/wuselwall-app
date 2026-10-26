@@ -9,7 +9,7 @@ Technically this is the same Docker stack as [at home](/en/server/home-server). 
 - An account with a provider that offers **cloud-init** (a selection below); such a server costs roughly **€6–25 a month** (as of October 2026).
 - A **domain** with two names, `api.` and `web.`, about €1–2 a month.
 - An **SSH key** on your laptop (`ssh-keygen` if you have none yet).
-- A **mail provider** for the sign-in codes, as for every WuselWall server ([Extras](/en/server/extras#email)).
+- Optional: a **mail account** for sign-in codes by email, a Gmail account is enough ([Email](/en/server/email)). Without it, everyone signs in with a password.
 
 ## Providers
 

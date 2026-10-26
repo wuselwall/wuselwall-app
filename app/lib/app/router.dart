@@ -52,6 +52,7 @@ import 'package:wuselwall/features/setup/ui/enrol_page.dart';
 import 'package:wuselwall/features/setup/ui/first_run_page.dart';
 import 'package:wuselwall/features/setup/ui/mfa_challenge_page.dart';
 import 'package:wuselwall/features/setup/ui/pair_page.dart';
+import 'package:wuselwall/features/setup/ui/password_reset_page.dart';
 import 'package:wuselwall/features/setup/ui/register_device_page.dart';
 import 'package:wuselwall/features/setup/ui/setup_page.dart';
 import 'package:wuselwall/features/setup/ui/sign_in_choice_page.dart';
@@ -70,6 +71,7 @@ abstract final class Routes {
   static const signIn = '/setup/sign-in';
   static const emailCode = '/setup/email-code';
   static const signInChoice = '/setup/sign-in-choice';
+  static const passwordReset = '/setup/password-reset';
   static const enrol = '/setup/enrol';
   static const pair = '/setup/pair';
   static const firstRun = '/first-run';
@@ -339,6 +341,12 @@ final routerProvider = Provider<GoRouter>((ref) {
           _materialRoute(
             path: 'sign-in-choice',
             builder: (_, _) => const SignInChoicePage(),
+          ),
+          _materialRoute(
+            path: 'password-reset',
+            builder: (_, state) => PasswordResetPage(
+              initialEmail: state.uri.queryParameters['email'],
+            ),
           ),
           _materialRoute(
             path: 'deleted-family',

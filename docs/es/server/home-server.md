@@ -25,6 +25,8 @@ cd wuselwall
 
 `--language` elige el idioma de los **correos** (`de`, `en`, `fr`, `es`, alemán por defecto), no el de la app. Docker descarga varios gigabytes. La herramienta genera las claves en `stack/.env`, arranca Caddy con certificados Let’s Encrypt, prepara base y tareas programadas y muestra un **enlace de configuración con QR**, con código de un solo uso. No hace falta Node.js ni otro servidor web.
 
+El servidor arranca **sin correo**: todos inician sesión con dirección y contraseña. `./wuselwall mail smtp` añade los códigos por correo cuando quieras ([Correo](/es/server/email)).
+
 ::: danger Conserva stack/.env enseguida
 Guárdalo en el gestor de contraseñas. Contiene las claves para mantener conectados los dispositivos tras restaurar. **Nunca lo regeneres en un servidor existente.**
 :::
@@ -75,7 +77,7 @@ Se admiten los cuatro idiomas. Cambia `MAIL_LANGUAGE`, asuntos y plantillas, y r
 ./wuselwall update 1.1.0
 ```
 
-Se hace una copia antes de descargar y aplicar la versión, con base, app web y tareas programadas. Si usabas acceso Apple o Google, consulta antes la [migración](/es/server/extras#retiring-social-sign-in).
+Se hace una copia antes de descargar y aplicar la versión, con base, app web y tareas programadas. Si usabas acceso Apple o Google, consulta antes la [migración](/es/server/extras#retiring-social-sign-in). Un servidor instalado sin proveedor de correo antes de que el correo fuera opcional aún no puede registrar a nadie: la actualización lo indica; ejecuta entonces una vez `./wuselwall mail off`.
 
 ### Qué app va con qué servidor {#compatibilidad}
 
@@ -95,6 +97,8 @@ No uses Watchtower ni actualizaciones automáticas de contenedores del NAS para 
 | `./wuselwall logs auth` | Registros de `auth`; también `db`, `rest`, `realtime`, `functions`, `caddy` |
 | `./wuselwall backup` | Copia inmediata |
 | `./wuselwall setup-token` | Nuevo código antes de crear el hogar |
+| `./wuselwall mail` | Correo activado (`mail smtp`), desactivado (`mail off`) o probado (`mail test`) ([Correo](/es/server/email)) |
+| `./wuselwall password <dirección>` | Código de un solo uso para elegir una contraseña nueva ([Correo](/es/server/email#forgotten-password)) |
 | `./wuselwall compose …` | Comando Docker Compose de la pila |
 
 Studio está desactivado. Con `--studio`, accede por túnel SSH: `ssh -L 54421:172.17.0.1:54421 server`, después `http://127.0.0.1:54421`. Los datos están en `DASHBOARD_USERNAME` y `DASHBOARD_PASSWORD` de `stack/.env`.

@@ -55,6 +55,10 @@ L’ordre des membres dans la liste est l’ordre sur le mur et dans toutes les 
 
 Si un autre parent a perdu son deuxième facteur, utilisez l’action près de son nom. Il pourra se connecter et la [configurer à nouveau](/fr/settings/security#two-factor-sign-in).
 
+## Réinitialiser un mot de passe {#reset-password}
+
+Seulement sur un serveur sans e-mails ([E-mails](/fr/server/email#forgotten-password)) : si un autre adulte a oublié son mot de passe, touchez **Réinitialiser le mot de passe** à côté de son nom, puis **Créer le code**. Le code de 8 caractères vaut une fois, 10 minutes. Remettez-le en personne ; sur son appareil, il touche **Mot de passe oublié ?** à la connexion.
+
 ## Connecter un appareil {#connect-a-device}
 
 Sous **Paramètres → Appareils → Tous les appareils**, touchez **Connecter un appareil**. Scannez le QR ou saisissez le code affiché par le nouvel appareil, puis choisissez son type et son nom. La [procédure complète](/fr/guide/setup#_4-connecting-a-family-tablet-or-wall-display) décrit les étapes.

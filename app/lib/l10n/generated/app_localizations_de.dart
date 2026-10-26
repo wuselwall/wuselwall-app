@@ -6306,6 +6306,86 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get eventTemplateErrLimit =>
       'Ihr habt schon 50 Vorlagen. Löscht zuerst eine.';
+
+  @override
+  String get passwordSignUpTab => 'Neues Konto';
+
+  @override
+  String get passwordSignInTab => 'Anmelden';
+
+  @override
+  String get passwordSignUpAction => 'Konto erstellen';
+
+  @override
+  String get passwordNoMailHint =>
+      'Dieser Server verschickt keine E-Mails. Wähl ein Passwort, das du dir merken kannst: Vergisst du es, gibt dir ein Erziehungsberechtigter deiner Familie einen Code für ein neues.';
+
+  @override
+  String get passwordAccountExists =>
+      'Zu dieser Adresse gibt es schon ein Konto. Melde dich mit seinem Passwort an.';
+
+  @override
+  String get passwordForgot => 'Passwort vergessen?';
+
+  @override
+  String get passwordResetTitle => 'Neues Passwort';
+
+  @override
+  String get passwordResetIntro =>
+      'Bitte einen Erziehungsberechtigten deiner Familie um einen Code: in der App unter Mitglieder, bei deinem Namen, „Passwort zurücksetzen“. Er gilt einmal, 10 Minuten lang.';
+
+  @override
+  String get passwordResetCodeLabel => 'Code zum Zurücksetzen';
+
+  @override
+  String get passwordResetSave => 'Speichern und anmelden';
+
+  @override
+  String get errResetCodeExpired =>
+      'Dieser Code ist abgelaufen. Bitte um einen neuen.';
+
+  @override
+  String get passwordResetMemberAction => 'Passwort zurücksetzen';
+
+  @override
+  String passwordResetConfirmTitle(String name) {
+    return 'Neues Passwort für $name?';
+  }
+
+  @override
+  String passwordResetConfirmBody(String name) {
+    return 'Du bekommst einen Code, mit dem $name auf dem eigenen Gerät ein neues Passwort wählt. Er gilt einmal, 10 Minuten lang. Gib ihn nur persönlich weiter.';
+  }
+
+  @override
+  String get passwordResetConfirm => 'Code erstellen';
+
+  @override
+  String passwordResetCodeTitle(String name) {
+    return 'Code für $name';
+  }
+
+  @override
+  String passwordResetCodeHint(String name, String time) {
+    return 'Auf dem Gerät von $name: Mit E-Mail fortfahren → Passwort vergessen? Dann die E-Mail-Adresse, diesen Code und ein neues Passwort. Gültig bis $time.';
+  }
+
+  @override
+  String get settingsPasswordNoMail =>
+      'Der Server deiner Familie verschickt keine E-Mails: Du meldest dich mit deiner Adresse und diesem Passwort an.';
+
+  @override
+  String get passwordDialogBodyNoMail =>
+      'Mindestens 10 Zeichen. Vergisst du es, gibt dir ein Erziehungsberechtigter deiner Familie einen Code für ein neues.';
+
+  @override
+  String get errEmailNotConfirmed =>
+      'Dieser Server will die Adresse per E-Mail bestätigen, verschickt aber keine. Frag, wer ihn betreibt.';
+
+  @override
+  String accountDeleteReauthPasswordBody(String email) {
+    return 'Zum Löschen eines Kontos brauchst du eine frische Anmeldung. Gib das Passwort von $email ein.';
+  }
 }
 
 /// The translations for German, as used in Austria (`de_AT`).

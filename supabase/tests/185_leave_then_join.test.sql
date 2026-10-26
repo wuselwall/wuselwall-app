@@ -15,6 +15,8 @@ create function pg_temp.adult(p_name text, p_hh uuid, p_email text) returns void
 declare v_uid uuid; v_sid uuid := gen_random_uuid(); v_prof uuid; v_dev uuid;
 begin
   v_uid := app.create_auth_user(p_email, 'longpassword1', '{}');
+  -- Signed up with a mailed code, so the address counts as proven (20261026100000).
+  update auth.users set confirmation_sent_at = now() where id = v_uid;
   insert into auth.sessions (id, user_id, created_at, updated_at) values (v_sid, v_uid, now(), now());
   insert into app.profile (household_id, display_name, color, role, kind, auth_user_id)
   values (p_hh, p_name, '#7B3FE4', 'guardian', 'adult', v_uid) returning id into v_prof;

@@ -20,6 +20,14 @@ two providers, the Apple token revocation of decision 7 and the Settings linking
 identities are gone, with the `google_sign_in` and `sign_in_with_apple` packages, the
 `apple-token` function and `app.apple_token`. The rest of this ADR stands.
 
+**Amended 2026-10-26 ([Q48](../14-open-questions.md), issue #126):** mail is optional. A
+server without SMTP or the send-email hook autoconfirms addresses, so new adults sign up
+with a password and E2/E3 do not exist there; the discovery document says which
+(`sign_in.email_code`). An autoconfirmed address proves nothing, so invitations match only
+an address the server mailed a confirmation to (`app.proven_email`), and a forgotten
+password is reset with a guardian's one-time code instead of a mailed one. Decision 9's
+code-first sign-up still holds wherever the server sends mail.
+
 ## Context
 
 M0.1 built onboarding for exactly one household run by its own developer:

@@ -95,15 +95,17 @@ enable_signup = true
 enable_manual_linking = false
 
 [auth.email]
-# Must stay true: it enables the email *provider* (password sign-in). Public sign-up is blocked by the top-level enable_signup = false above.
+# Must stay true: it enables the email *provider* (codes and password sign-in).
 # Allow/disallow new user signups via email to your project.
 enable_signup = true
 # If enabled, a user will be required to confirm any email change on both the old, and new email
 # addresses. If disabled, only the new email is required to confirm.
 double_confirm_changes = true
-# If enabled, users need to confirm their email address before signing in. On: with sign-up
-# open, an unconfirmed address must never count as verified (invitations match it, specs/20).
-# Email codes confirm the address themselves; nothing in the app signs up with a password.
+# If enabled, users need to confirm their email address before signing in. On here: local
+# stacks have Mailpit, so they are servers with mail, where email codes confirm the address.
+# A server without mail autoconfirms instead (GOTRUE_MAILER_AUTOCONFIRM, specs/20 Q48); the
+# app then signs up with a password, and app.proven_email keeps such addresses out of
+# invitation matching. CI runs the no-mail journey with this switched off.
 enable_confirmations = true
 # The sign-in code mailed to the address (specs/20, "With email"): six digits, valid for
 # 600 seconds, and at most one new code per address every 60 seconds.

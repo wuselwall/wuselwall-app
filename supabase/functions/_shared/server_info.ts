@@ -25,8 +25,10 @@ export type DiscoveryDocument = {
   api_version: number;
   min_app_version: string;
   household_creation: string;
-  /** Email codes and passwords, on every server. Passkeys are decided by the app (only builds that name their own server), never by a server. */
-  sign_in: { password: true };
+  /** Passwords on every server; email codes only where the server sends mail
+   * (`email_code`, see [emailCode]). Passkeys are decided by the app (only builds that name
+   * their own server), never by a server. */
+  sign_in: { password: true; email_code: boolean };
   features: string[];
   /** The server release this stack was installed or updated from ("0.2.0"); absent on a
    * stack run from a checkout. Shown in the app's settings next to the app's own version. */
@@ -99,6 +101,19 @@ export function publishableKey(
   return anon && anon.length > 0 ? anon : undefined;
 }
 
+/**
+ * Whether this server signs in with email codes, from Auth's public settings
+ * (`GET /auth/v1/settings`). A server without mail autoconfirms addresses
+ * (`mailer_autoconfirm`, set by the installers exactly when no mail is configured), so it
+ * offers passwords only. Settings that cannot be read count as a server with mail, as every
+ * server was before mail became optional.
+ */
+export function emailCode(settings: unknown): boolean {
+  const s = settings as { mailer_autoconfirm?: unknown } | null;
+  return !(s !== null && typeof s === "object" &&
+    s.mailer_autoconfirm === true);
+}
+
 /** Throws when [row] is not what the migration returns: a half-migrated server must not
  * be offered to an app as if it were whole. */
 export function checkRow(row: unknown): ServerInfoRow {
@@ -120,7 +135,7 @@ export function discoveryDocument(
   row: ServerInfoRow,
   key: string,
   url: string | undefined,
-  stack: { features?: string[]; version?: string } = {},
+  stack: { features?: string[]; version?: string; emailCode?: boolean } = {},
 ): DiscoveryDocument {
   return {
     wuselwall: DISCOVERY_FORMAT,
@@ -129,7 +144,7 @@ export function discoveryDocument(
     api_version: row.api_version,
     min_app_version: row.min_app_version,
     household_creation: row.household_creation,
-    sign_in: { password: true },
+    sign_in: { password: true, email_code: stack.emailCode ?? true },
     features: [...new Set([...row.features, ...(stack.features ?? [])])],
     ...(stack.version ? { server_version: stack.version } : {}),
   };

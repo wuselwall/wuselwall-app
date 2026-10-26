@@ -20,6 +20,8 @@ Ce code vérifie votre adresse. Il est différent du **code de configuration du 
 
 Pour utiliser un mot de passe, choisissez l’option correspondante et saisissez votre adresse e-mail et votre mot de passe. L’app vérifie les deux champs avant la connexion. Vous pouvez définir votre mot de passe dans **Paramètres → Avancés → Connexion** : au moins **10 caractères**. Le code par e-mail reste disponible. Lors de la création du compte, l’app demande une fois quelle méthode vous préférez. Si la double authentification est activée, saisissez ensuite le code de l’app d’authentification ([Sécurité](/fr/settings/security)).
 
+**Serveur sans e-mails** ([E-mails](/fr/server/email)) : **Continuer par e-mail** s’ouvre sur **Nouveau compte**. Saisissez votre adresse et un mot de passe d’au moins 10 caractères, puis **Créer le compte** ; aucun code, aucun e-mail de confirmation. Déjà un compte ? **Se connecter**. Mot de passe oublié ? **Mot de passe oublié ?** et demandez un code à un responsable de la famille ([Réinitialiser](/fr/settings/members-devices#reset-password)).
+
 ## 2. Créer une famille {#_2-creating-a-new-family}
 
 Si votre compte n’appartient à aucun foyer, la page **Nouvelle famille** s’ouvre. Sur votre téléphone, saisissez :

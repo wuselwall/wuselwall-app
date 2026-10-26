@@ -26,20 +26,17 @@ Dans le [tableau de bord](https://supabase.com/dashboard), créez un projet, cho
    | `SUPABASE_PROJECT_ID` | Identifiant du projet |
    | `SUPABASE_DB_PASSWORD` | Mot de passe de la base |
    | `WUSELWALL_SETUP_TOKEN` | Phrase alphanumérique choisie pour créer une fois la famille |
-   | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_SENDER` | Accès SMTP de votre fournisseur d’e-mails (cinq secrets ; `SMTP_SENDER` est l’adresse d’expéditeur). À la place : Scaleway avec `SCW_SECRET_KEY`, `SCW_PROJECT_ID`, `MAIL_FROM`. Voir [E-mails](#mail) |
+   | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_SENDER` | Facultatif : accès SMTP pour les codes par e-mail (cinq secrets). Voir [E-mails](#mail) |
 
-4. Activez les workflows dans **Actions**, puis lancez **deploy-supabase → Run workflow**. Choisissez `fr` dans **language** pour les e-mails, et cochez **web** si vous souhaitez publier l’app web. La case **without mail** sert seulement à essayer sans fournisseur d’e-mails.
+4. Activez les workflows dans **Actions**, puis lancez **deploy-supabase → Run workflow**. Choisissez `fr` dans **language** pour les e-mails, et cochez **web** si vous souhaitez publier l’app web.
 
 Le résumé du workflow fournit l’adresse. Il prépare base, accès, authentification, fonctions, modèles d’e-mails et tâches planifiées, puis vérifie le serveur : réponse à l’app, accès des quatre tâches à leurs fonctions, inscription et e-mails configurés ; sinon il échoue en indiquant la cause. Les secrets sont masqués dans les journaux ; ne les affichez pas vous-même. Le jeton du compte Supabase est puissant : vous pouvez le révoquer après l’installation et en créer un pour la prochaine mise à jour. Le serveur ne conserve qu’une empreinte du code de création du foyer.
 
 ## E-mails {#mail}
 
-Chaque connexion envoie un code par e-mail, la vôtre aussi la première fois. L’envoi intégré de Supabase ne livre qu’aux adresses de votre propre compte Supabase, quelques messages par heure. Le serveur a donc besoin d’un fournisseur avant l’arrivée de la famille :
+Les e-mails sont facultatifs. **Sans les secrets `SMTP_`**, chacun se connecte avec adresse et mot de passe ; un responsable réinitialise un mot de passe oublié dans l’app. L’envoi intégré de Supabase ne sert pas : il ne livre qu’aux adresses de votre compte Supabase.
 
-- **SMTP :** un service d’e-mails transactionnels, de préférence européen ; ses accès dans les cinq secrets `SMTP_`. Conseils et enregistrements DNS : [Options du serveur](/fr/server/extras#email).
-- **Scaleway :** comme à la maison, la fonction WuselWall envoie alors via Scaleway Transactional Email. Secrets : `SCW_SECRET_KEY`, `SCW_PROJECT_ID`, `MAIL_FROM` (facultatifs : `SCW_REGION`, `MAIL_FROM_NAME`).
-
-Sans l’un des deux, le workflow s’arrête. Pour un simple essai, cochez **without mail** : les codes n’arrivent alors qu’aux adresses de votre compte Supabase. Ajoutez les secrets et relancez avant que les autres rejoignent.
+**Avec les cinq secrets `SMTP_`**, les codes arrivent par e-mail. Un compte Gmail avec mot de passe d’application suffit : voir [E-mails](/fr/server/email). Scaleway fonctionne aussi : `SCW_SECRET_KEY`, `SCW_PROJECT_ID`, `MAIL_FROM` (facultatifs : `SCW_REGION`, `MAIL_FROM_NAME`). Ajoutez ou supprimez les secrets plus tard et relancez ; les comptes restent.
 
 ## 3. Connecter l’app {#_3-connecting-the-app}
 
