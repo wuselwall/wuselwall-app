@@ -276,7 +276,7 @@ class _TaskRow extends ConsumerWidget {
     // hourglass and the words, as on the Aufgaben tab (specs/06 "Verification").
     final waiting = awaitsCheckShown(ticked, task);
     final coin = task.points > 0
-        ? PointsCoin(points: task.points, fontSize: 14)
+        ? PointsCoin(points: task.points, fontSize: 14, withUnit: true)
         : null;
     return ListTile(
       leading: TaskGlyph(iconKey: task.iconKey),

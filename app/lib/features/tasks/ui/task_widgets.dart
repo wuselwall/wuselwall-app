@@ -66,6 +66,7 @@ class PointsCoin extends StatelessWidget {
     this.fontSize = 16,
     this.signed = false,
     this.counts = false,
+    this.withUnit = false,
     super.key,
   });
 
@@ -73,6 +74,11 @@ class PointsCoin extends StatelessWidget {
   final double fontSize;
   final bool signed;
   final bool counts;
+
+  /// Writes the unit on the coin ("2 Punkte", "1 Punkt"), as the kid card says it:
+  /// for the adult lists, where a bare number beside "Pflicht" does not say what it
+  /// counts. Not with [signed] or [counts].
+  final bool withUnit;
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +109,11 @@ class PointsCoin extends StatelessWidget {
           ),
           child: counts
               ? AnimatedCount(value: points, style: style, format: written)
-              : Text(written(points), maxLines: 1, style: style),
+              : Text(
+                  withUnit && !signed ? label : written(points),
+                  maxLines: 1,
+                  style: style,
+                ),
         ),
       ),
     );
