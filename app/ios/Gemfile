@@ -4,4 +4,4 @@ source "https://rubygems.org"
 # Homebrew Ruby for builds (release-ios.yml) and with ruby/setup-ruby on Linux for the store
 # listing (store-listing.yml); Gemfile.lock is kept identical to the Android one. Locally,
 # Homebrew's fastlane works without it.
-gem "fastlane", "~> 2.228"
+gem "fastlane", "~> 2.241"
