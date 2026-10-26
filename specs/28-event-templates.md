@@ -24,7 +24,8 @@ sections of tiles, each tile a picture, a name and one line about when and how l
 2. **Eure Vorlagen** — the templates the family saved. Shown only when there is one, on a
    server that announces `event-templates`.
 3. **Weitere Vorlagen** (**Vorlagen** when nothing stands above) — the built-in templates.
-   **Ohne Vorlage** comes first and opens the empty editor as before.
+   **Ohne Vorlage** comes first and opens the empty editor as before; **Neue Tradition**
+   follows where the server knows traditions and opens the tradition starters (specs/27).
 
 Choosing a tile opens the ordinary editor, filled in. Back from the editor returns to the tiles;
 saving closes both. The day is the one the calendar shows (as for **Neuer Termin** before); a
@@ -145,7 +146,8 @@ follow the database's locale: on a `C`-locale database only ASCII letters are fo
 
 Each element: `signature`, `title`, `icon_key`, `kind`, `presence_state`, `is_all_day`,
 `start_minute`, `duration_minutes`, `days`, `attendee_ids`, `location`, `count`, `last_on`.
-The tile says how often ("5× benutzt").
+The tile says how often ("5× benutzt"), or only "5×" where the line would not fit, with the
+whole line as its tooltip.
 
 ## Considered and not chosen
 

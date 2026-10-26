@@ -44,10 +44,12 @@ Future<FakeCalendarRepository> _calendarTab(
   FakeEventTemplatesRepository? templates,
   bool supported = true,
   Locale locale = const Locale('de'),
+  Size? size,
 }) async {
   final cal = FakeCalendarRepository();
   await pumpApp(
     t,
+    size: size ?? const Size(1000, 1600),
     overrides: [
       ...baseOverrides(
         identity: FakeIdentityRepository(current: device()),
@@ -362,6 +364,40 @@ void main() {
       expect(find.byType(EventTemplatePage), findsOneWidget);
     });
 
+    testWidgets(
+      'a narrow tile says the count short, the long form as tooltip',
+      (t) async {
+        final templates = FakeEventTemplatesRepository(
+          suggested: const [
+            EventTemplate(
+              signature: 'oma kommt',
+              count: 6,
+              title: 'Oma & Opa kommen',
+              startMinute: 15 * 60,
+              durationMinutes: 180,
+            ),
+          ],
+        );
+        await _calendarTab(t, templates: templates, size: const Size(360, 640));
+        await _newEvent(t);
+        // Never "6× benu…": "6×" with the whole line in the tooltip.
+        expect(find.byTooltip('15:00 · 3 Std. · 6× benutzt'), findsOneWidget);
+        expect(find.text('15:00 · 3 Std. · 6×'), findsOneWidget);
+      },
+    );
+
+    testWidgets('a family tradition starts from its own tile', (t) async {
+      await _calendarTab(t);
+      await _newEvent(t);
+      final tile = find.byKey(const ValueKey('event-template-tradition'));
+      await t.ensureVisible(tile);
+      await _tap(t, tile);
+      expect(
+        find.byKey(const ValueKey('tradition-starter-own')),
+        findsOneWidget,
+      );
+    });
+
     testWidgets('saved templates and suggestions come first', (t) async {
       final templates = FakeEventTemplatesRepository(
         templates: const [
@@ -389,7 +425,12 @@ void main() {
       await _newEvent(t);
       expect(find.text(_de.eventTemplatesSuggested), findsOneWidget);
       expect(find.text(_de.eventTemplatesSaved), findsOneWidget);
-      expect(find.text('15:00 · 3 Std. · 5× benutzt'), findsOneWidget);
+      // The long form where it fits the tile, else "5×" with the long form as tooltip.
+      expect(
+        find.text('15:00 · 3 Std. · 5× benutzt').evaluate().length +
+            find.byTooltip('15:00 · 3 Std. · 5× benutzt').evaluate().length,
+        1,
+      );
       // Below the family's own tiles the built-in ones are "Weitere Vorlagen".
       expect(find.text(_de.eventTemplatesBuiltInMore), findsOneWidget);
       expect(templates.suggestionDays.single, dateOnly(_todayMorning()));

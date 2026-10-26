@@ -3776,6 +3776,14 @@
       }
     }
   },
+  "eventTemplateCountShort": "{count}×",
+  "@eventTemplateCountShort": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "eventTemplateMenu": "More for {name}",
   "@eventTemplateMenu": {
     "description": "Tooltip of a template tile's menu button.",

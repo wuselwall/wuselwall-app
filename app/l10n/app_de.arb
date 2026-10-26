@@ -2345,6 +2345,7 @@
   "eventTemplateHoursMinutes": "{hours} Std. {minutes} Min.",
   "eventTemplateMinutes": "{count} Min.",
   "eventTemplateCount": "{count}× benutzt",
+  "eventTemplateCountShort": "{count}×",
   "eventTemplateMenu": "Mehr zu {name}",
   "eventTemplateKeep": "Als Vorlage behalten",
   "eventTemplateHide": "Nicht mehr vorschlagen",
