@@ -34,6 +34,8 @@ cd wuselwall
 - richtet die Datenbank ein und plant die nächtlichen Aufträge,
 - und zeigt zum Schluss die Adresse des Servers sowie einen **Einrichtungslink mit QR-Code**, der den einmaligen Einrichtungscode enthält.
 
+Der Server startet **ohne E-Mail**: Alle melden sich mit E-Mail-Adresse und Passwort an. Anmelde-Codes per Mail kommen jederzeit mit `./wuselwall mail smtp` dazu ([E-Mail](/server/email)).
+
 Mehr ist auf dem Server nicht nötig: kein Cronjob für WuselWall, kein Node.js, kein eigener Webserver.
 
 ::: danger stack/.env in den Passwort-Manager, sofort
@@ -103,6 +105,8 @@ Das Werkzeug sichert zuerst die Datenbank, lädt die neue Version, startet den S
 
 Kommst du von einer Version mit Anmeldung über Apple oder Google? Lies zuerst [Update von einer Version mit Apple- und Google-Anmeldung](/server/extras#social-stilllegen).
 
+Ein Server, der installiert wurde, bevor E-Mail freiwillig war, und keinen Mail-Anbieter hat, kann noch niemanden anmelden. Das Update sagt es dann: Führ einmal `./wuselwall mail off` aus oder richte E-Mail ein ([E-Mail](/server/email)).
+
 ### Welche App zu welchem Server passt {#kompatibilitaet}
 
 Die App prüft beim Verbinden selbst, ob sie zu deinem Server passt, und sagt dir, wenn die App oder der Server ein Update braucht. Jede App versteht die Schnittstelle ihres Servers und die eine davor; der Server nennt außerdem die älteste App, mit der er noch arbeitet. Was gerade läuft, zeigt die App unter **Einstellungen → Versionen**, zum Beispiel „App 1.1.0 · Server 0.3.0 · Schnittstelle 1“. Ab Server 0.3.0 nennt der Server dort seine Version; die Texterkennung bietet die App nur an, wenn der Server sie eingerichtet hat.
@@ -121,6 +125,8 @@ Lass keinen Auto-Updater (Watchtower, die automatischen Container-Updates eines 
 | `./wuselwall logs auth` | Protokolle eines Dienstes (`db`, `auth`, `rest`, `realtime`, `functions`, `caddy`) |
 | `./wuselwall backup` | Sichert jetzt |
 | `./wuselwall setup-token` | Neues Einrichtungs-Token, solange es keine Familie gibt |
+| `./wuselwall mail` | E-Mail einschalten (`mail smtp`), ausschalten (`mail off`) oder testen (`mail test`) ([E-Mail](/server/email)) |
+| `./wuselwall password <adresse>` | Ein Einmal-Code, mit dem diese Person ein neues Passwort wählt ([E-Mail](/server/email#passwort-vergessen)) |
 | `./wuselwall compose …` | Jeder Docker-Compose-Befehl für den Stack |
 
 Die Verwaltungsoberfläche von Supabase (Studio) ist abgeschaltet. Wer sie will, installiert mit `--studio` und öffnet sie über einen SSH-Tunnel: `ssh -L 54421:172.17.0.1:54421 server`, dann `http://127.0.0.1:54421`. Benutzer und Passwort stehen in `stack/.env` unter `DASHBOARD_USERNAME` und `DASHBOARD_PASSWORD`.

@@ -6,8 +6,8 @@
 // by design: the publishable key ships in every app, and row-level security, not the
 // key, protects a household's data.
 //
-// It reads api.server_info() with that same publishable key, as any client could. No
-// service role.
+// It reads api.server_info() and Auth's public settings with that same publishable key, as
+// any client could. No service role.
 import {
   CORS_HEADERS,
   errorResponse,
@@ -17,6 +17,7 @@ import {
 import {
   checkRow,
   discoveryDocument,
+  emailCode,
   publicUrl,
   publishableKey,
   runtimeFeatures,
@@ -58,15 +59,26 @@ Deno.serve(async (req: Request): Promise<Response> => {
       throw new Error("SUPABASE_URL and a publishable key must be set");
     }
 
-    const row = await getJson(`${internal}/rest/v1/rpc/server_info`, key, {
-      method: "POST",
-      body: "{}",
-      headers: { "Content-Profile": "api" },
-    });
+    const [row, settings] = await Promise.all([
+      getJson(`${internal}/rest/v1/rpc/server_info`, key, {
+        method: "POST",
+        body: "{}",
+        headers: { "Content-Profile": "api" },
+      }),
+      // Whether Auth sends mail; unreadable settings leave the email code on (emailCode).
+      getJson(`${internal}/auth/v1/settings`, key).catch((err) => {
+        console.error(
+          "server-info: auth settings:",
+          err instanceof Error ? err.message : err,
+        );
+        return null;
+      }),
+    ]);
 
     const doc = discoveryDocument(checkRow(row), key, publicUrl(env), {
       features: runtimeFeatures(env),
       version: serverVersion(env),
+      emailCode: emailCode(settings),
     });
     return new Response(JSON.stringify(doc), {
       headers: {

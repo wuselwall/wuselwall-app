@@ -3756,5 +3756,64 @@
     "description": "Event editor action: save what the editor shows as a household template (specs/28)."
   },
   "eventTemplateSavedNote": "Saved as a template.",
-  "eventTemplateErrLimit": "Your family already has 50 templates. Delete one first."
+  "eventTemplateErrLimit": "Your family already has 50 templates. Delete one first.",
+  "passwordSignUpTab": "New account",
+  "passwordSignInTab": "Sign in",
+  "passwordSignUpAction": "Create account",
+  "passwordNoMailHint": "This server sends no email. Choose a password you will remember: if you forget it, a guardian of your family can give you a code for a new one.",
+  "passwordAccountExists": "There is already an account with this address. Sign in with its password.",
+  "passwordForgot": "Forgot your password?",
+  "passwordResetTitle": "New password",
+  "passwordResetIntro": "Ask a guardian of your family for a code: in the app under Members, at your name, “Reset password”. It works once, for 10 minutes.",
+  "passwordResetCodeLabel": "Reset code",
+  "passwordResetSave": "Save and sign in",
+  "errResetCodeExpired": "This code has expired. Ask for a new one.",
+  "passwordResetMemberAction": "Reset password",
+  "passwordResetConfirmTitle": "New password for {name}?",
+  "@passwordResetConfirmTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "passwordResetConfirmBody": "You get a code that {name} enters on their own device to choose a new password. It works once, for 10 minutes. Hand it over in person.",
+  "@passwordResetConfirmBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "passwordResetConfirm": "Create code",
+  "passwordResetCodeTitle": "Code for {name}",
+  "@passwordResetCodeTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "passwordResetCodeHint": "On the device of {name}: Continue with email → Forgot your password? Then the email address, this code and a new password. Valid until {time}.",
+  "@passwordResetCodeHint": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsPasswordNoMail": "Your family’s server sends no email: you sign in with your address and this password.",
+  "passwordDialogBodyNoMail": "At least 10 characters. If you forget it, a guardian of your family can give you a code for a new one.",
+  "errEmailNotConfirmed": "This server wants to confirm the address by email but sends none. Ask whoever runs it.",
+  "accountDeleteReauthPasswordBody": "Deleting an account needs a fresh sign-in. Enter the password of {email}.",
+  "@accountDeleteReauthPasswordBody": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  }
 }

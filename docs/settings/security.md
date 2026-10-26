@@ -4,7 +4,7 @@ Anmeldung und Sicherheit gibt es nur auf dem **persönlichen Handy** eines Erzie
 
 ## Anmeldung
 
-Hier steht, womit du dich anmelden kannst: der **Code per E-Mail**, den es immer gibt, und ein **Passwort** (siehe [Konto und Familie](/settings/account#passwort)).
+Hier steht, womit du dich anmelden kannst: der **Code per E-Mail**, den es immer gibt, wenn dein Server Mails verschickt, und ein **Passwort** (siehe [Konto und Familie](/settings/account#passwort)). Auf einem Server ohne E-Mail steht nur das Passwort da.
 
 <Shot name="settings-sign-in" alt="Einstellungen → Anmeldung" />
 

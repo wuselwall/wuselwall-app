@@ -8,6 +8,7 @@ import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/core/ui/text_prompt.dart';
 import 'package:wuselwall/features/account/ui/mfa_reset_button.dart';
+import 'package:wuselwall/features/account/ui/password_reset_button.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
@@ -231,6 +232,7 @@ class _MemberTile extends StatelessWidget {
             spacing: Tokens.space1,
             children: [
               MfaResetButton(member: member),
+              PasswordResetButton(member: member),
               InviteMemberButton(member: member),
             ],
           ),

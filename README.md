@@ -25,7 +25,7 @@ evidence ([#117](https://github.com/wuselwall/wuselwall-app/issues/117)).
 
 | Order | Milestone | Outcome | Status |
 |---|---|---|---|
-| **1** | [**Everyday essentials**](https://github.com/wuselwall/wuselwall-app/milestone/1) | Start without mail, see approvals, restart the wall offline, finish onboarding/navigation | **Now** |
+| **1** | [**Everyday essentials**](https://github.com/wuselwall/wuselwall-app/milestone/1) | Start without mail (built), see approvals, restart the wall offline, finish onboarding/navigation | **Now** |
 | **2** | [**A lighter day**](https://github.com/wuselwall/wuselwall-app/milestone/2) | Wusel, colour and ambience, birthdays and five family rituals | Built (v1.3.0) |
 | **3** | [**Family Alpha**](https://github.com/wuselwall/wuselwall-app/milestone/3) | Qualify on real devices, use for two weeks, fix blockers and judge what helps | After 1–2 |
 | **4** | [**Ready for other families**](https://github.com/wuselwall/wuselwall-app/milestone/4) | Safe install/update, compatibility, independent walkthrough, store/legal readiness | After the Alpha |

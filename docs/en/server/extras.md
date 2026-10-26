@@ -1,28 +1,12 @@
 # Server extras
 
-Everything on this page except **sending email** is **optional**. WuselWall runs without it. Each extra brings in another service that learns something about you, so take only what you really need.
+Everything on this page is **optional**. WuselWall runs without it. Each extra brings in another service that learns something about you, so take only what you really need.
 
 Commands for a server at home run in the directory of the `wuselwall` tool ([Server at home](/en/server/home-server)).
 
 ## Email {#email}
 
-**Needed for now.** Whoever signs in for the first time confirms their address with a **code by email**, and only then can set a password. Without sending email the code never arrives, and nobody can start or join a family. A server without any email, with a password from the start, is planned.
-
-**Language of the emails:** during setup you choose one language — German, English, French or Spanish (default: German). That language is used for the subject and body of every sign-in and confirmation email, whatever the device language is. You can change it later with `./wuselwall language de|en|fr|es` ([Server at home](/en/server/home-server#email-language)).
-
-For this the server needs an SMTP service, a provider that sends mail for it. A mailbox at your normal mail provider won't do; use a service for *transactional* mail, such as Scaleway Transactional Email in the EU (a free tier of 300 mails, as of October 2026; an example, not a recommendation, and WuselWall is not affiliated with Scaleway). The provider sees the email addresses and the codes. So that the mails don't land in spam, add the records the provider names to your domain (SPF, DKIM, DMARC).
-
-**At home:** put `SMTP_HOST`, `SMTP_PORT` (usually `587`), `SMTP_USER`, `SMTP_PASS` and, as the sender, `SMTP_ADMIN_EMAIL` into `stack/.env`, in single quotes like the other values. Then:
-
-A server that sends mail must set `ENABLE_EMAIL_AUTOCONFIRM=false` in `stack/.env`.
-
-```bash
-./wuselwall compose up -d auth
-```
-
-**At Supabase:** **Authentication → Emails → SMTP Settings**, with the same details. Supabase's built-in email is meant for trying things out and sends only a few mails an hour.
-
-The server release and the **deploy-supabase** workflow configure both the first confirmation email and later sign-in emails with a **six-digit code**, in the chosen email language. A Scaleway hook is not required. Enter the code in the app you already have open. If you only receive a link, update the server or rerun the workflow from the updated repository, then request a fresh code; an old email does not change.
+Email is optional: without it, everyone signs in with a password. How to send the sign-in codes by email, Gmail included, is on its own page: [Email](/en/server/email).
 
 ## Updating from a version with Apple and Google sign-in {#retiring-social-sign-in}
 

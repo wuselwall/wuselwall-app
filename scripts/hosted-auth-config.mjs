@@ -5,16 +5,18 @@
 //
 //   PROJECT=<ref> SUPABASE_ACCESS_TOKEN=… [mail variables] node scripts/hosted-auth-config.mjs
 //
-// Mail is mandatory (specs/10 §4): sign-in is by email code, and Supabase's built-in mailer
-// delivers only to the account's own addresses, a few times an hour. One of:
+// Mail is optional (specs/20, Q48). Without it Auth autoconfirms addresses: sign-up and
+// sign-in use a password, and the app offers no email code (the discovery document reads
+// mailer_autoconfirm). With mail, sign-in codes confirm the address. Mail is one of:
 //   SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_SENDER [, SMTP_SENDER_NAME]
-//       a transactional-mail provider's SMTP relay; GoTrue sends the code templates
+//       any SMTP server (a transactional provider, or Gmail with an app password); GoTrue
+//       sends the code templates
 //   SEND_EMAIL_HOOK_SECRET (v1,whsec_…)
 //       the Send Email Hook: Auth hands every mail to the send-email function, which the
 //       workflow has configured with the Scaleway values; the secret is the one it checks
-//   WITHOUT_MAIL=true
-//       a trial deploy with no mail: only the Supabase account's addresses get codes
 // Both SMTP and the hook may be set: the hook sends, SMTP is the fallback when it is off.
+// Supabase's built-in mailer is never used for the family: it delivers only to the
+// account's own addresses, a few times an hour.
 //
 // Prints key names, never values.
 import { pathToFileURL } from 'node:url';
@@ -22,7 +24,7 @@ import { pathToFileURL } from 'node:url';
 /** Keys whose values the API does not echo, or must not be compared or logged. */
 export const SECRET_KEYS = Object.freeze(['smtp_pass', 'hook_send_email_secrets']);
 
-/** The mail configuration the environment describes, or a reason there is none. */
+/** The mail configuration the environment describes; {} for a server without mail. */
 export function mailFromEnv(env) {
   const mail = {};
   if (env.SMTP_HOST) {
@@ -41,9 +43,6 @@ export function mailFromEnv(env) {
     }
     mail.hook = { secret: env.SEND_EMAIL_HOOK_SECRET };
   }
-  if (!mail.smtp && !mail.hook && env.WITHOUT_MAIL !== 'true') {
-    throw new Error('no mail configured: set the SMTP_* secrets or the Scaleway secrets for the send-email hook, or run with "without mail" for a trial (docs/server/supabase-cloud)');
-  }
   return mail;
 }
 
@@ -54,11 +53,14 @@ export function authPatch({ project, mail }) {
   const patch = {
     site_url: base,
     // Sign-up is on (specs/20, config.toml [auth] enable_signup): the founder and every
-    // invited person sign up with an email code first. A stranger's account can do nothing
-    // (RLS) until it is invited or founds the household with the setup token.
+    // invited person sign up, with an email code or, without mail, a password. A stranger's
+    // account can do nothing (RLS) until it is invited or founds the household with the
+    // setup token.
     disable_signup: false,
     external_email_enabled: true,
-    mailer_autoconfirm: false,
+    // Autoconfirm exactly when no mail is sent; an autoconfirmed address is never trusted
+    // for an invitation (app.proven_email).
+    mailer_autoconfirm: !mail.smtp && !mail.hook,
     mailer_secure_email_change_enabled: true,
     // The access-token hook puts household and device into every token.
     hook_custom_access_token_enabled: true,
@@ -120,8 +122,10 @@ export async function configureAuth({ project, token, env = {}, fetchFn = fetch,
   const actual = await (await call('GET')).json();
   const wrong = problems(actual, patch);
   if (wrong.length > 0) throw new Error(`Auth settings not applied: ${wrong.join(', ')}`);
-  const how = mail.hook ? 'the send-email hook' : mail.smtp ? 'SMTP' : 'NO MAIL (trial only: codes reach the account’s own addresses only)';
-  log(`Auth: ${Object.keys(patch).length} settings applied and read back; sign-in codes through ${how}`);
+  const how = mail.hook ? 'sign-in codes through the send-email hook'
+    : mail.smtp ? 'sign-in codes through SMTP'
+    : 'no mail: sign-in with email and password, addresses autoconfirmed';
+  log(`Auth: ${Object.keys(patch).length} settings applied and read back; ${how}`);
   return { patch, mail };
 }
 

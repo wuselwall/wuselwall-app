@@ -1,24 +1,10 @@
 # Options du serveur
 
-Tout est facultatif ici, **sauf l’envoi d’e-mails**, encore nécessaire. Les commandes s’exécutent près de l’outil `wuselwall`. N’ajoutez que les services dont vous avez besoin.
+Tout est facultatif ici. Les commandes s’exécutent près de l’outil `wuselwall`. N’ajoutez que les services dont vous avez besoin.
 
 ## E-mails {#email}
 
-Le premier accès vérifie l’adresse par un **code à six chiffres**. Sans service SMTP, personne ne peut créer ou rejoindre la famille. Le mode sans e-mail est prévu, pas encore disponible.
-
-L’installation choisit une langue unique pour **tous les sujets et corps de messages** : `de`, `en`, `fr` ou `es`, allemand par défaut. Elle ne dépend ni du destinataire ni de son appareil. Pour la changer : `./wuselwall language fr` ([Installation](/fr/server/home-server#email-language)).
-
-Choisissez un service d’e-mails transactionnels et configurez les enregistrements SPF, DKIM et DMARC demandés. Ce fournisseur reçoit les adresses et les codes. Vérifiez ses conditions et tarifs.
-
-**À la maison**, indiquez `SMTP_HOST`, `SMTP_PORT` (habituellement `587`), `SMTP_USER`, `SMTP_PASS` et `SMTP_ADMIN_EMAIL` dans `stack/.env`, entre apostrophes comme les autres valeurs. Un serveur avec messagerie utilise `ENABLE_EMAIL_AUTOCONFIRM=false`.
-
-```bash
-./wuselwall compose up -d auth
-```
-
-**Chez Supabase**, renseignez les mêmes informations dans **Authentication → Emails → SMTP Settings**. La messagerie intégrée sert aux essais et reste limitée.
-
-La version serveur et le workflow configurent le premier e-mail de confirmation et les suivants avec un code, sans hook Scaleway obligatoire. Si vous recevez seulement un lien, mettez le serveur à jour ou relancez le workflow mis à jour, puis demandez un nouveau code. Un ancien message ne change pas.
+Les e-mails sont facultatifs : sans eux, chacun se connecte avec un mot de passe. Pour envoyer les codes de connexion par e-mail, Gmail compris, voir [E-mails](/fr/server/email).
 
 ## Anciennes connexions Apple et Google {#retiring-social-sign-in}
 

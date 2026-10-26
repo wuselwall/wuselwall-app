@@ -10,6 +10,7 @@ class ServerInfo {
     this.householdCreation = 'token',
     this.features = const [],
     this.serverVersion,
+    this.emailCode = true,
   });
 
   /// Reads a discovery document fetched from [origin]. The server names its own
@@ -26,6 +27,7 @@ class ServerInfo {
     final min = json['min_app_version'];
     final features = json['features'];
     final release = json['server_version'];
+    final signIn = json['sign_in'];
     if (supabaseUrl == null ||
         !supabaseUrl.hasScheme ||
         supabaseUrl.host.isEmpty ||
@@ -52,6 +54,8 @@ class ServerInfo {
       serverVersion: release is String && _semver.hasMatch(release)
           ? release
           : null,
+      // Servers from before mail became optional do not say; all of them sent codes.
+      emailCode: !(signIn is Map && signIn['email_code'] == false),
     );
   }
 
@@ -67,6 +71,11 @@ class ServerInfo {
   /// 0.3.0 and stacks run from a checkout do not.
   final String? serverVersion;
 
+  /// Whether the server mails sign-in codes (`sign_in.email_code`). A server without
+  /// mail autoconfirms addresses: there, accounts sign up and sign in with a password,
+  /// and a guardian resets a forgotten one (specs/20, Q48).
+  final bool emailCode;
+
   /// The form the app keeps on the device; [ServerInfo.fromDiscovery] reads it back.
   Map<String, Object?> toJson() => {
     'wuselwall': 1,
@@ -75,7 +84,7 @@ class ServerInfo {
     'api_version': apiVersion,
     'min_app_version': minAppVersion,
     'household_creation': householdCreation,
-    'sign_in': {'password': true},
+    'sign_in': {'password': true, 'email_code': emailCode},
     'features': features,
     'server_version': ?serverVersion,
   };

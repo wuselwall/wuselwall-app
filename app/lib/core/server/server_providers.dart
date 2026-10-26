@@ -21,6 +21,17 @@ const featureLighterDay = 'lighter-day';
 /// history (specs/28). Announced by the migration 20261025150000.
 const featureEventTemplates = 'event-templates';
 
+/// The server keeps one-time codes with which a guardian resets another adult's password
+/// (specs/20, Q48). Announced by the migration 20261026100000.
+const featurePasswordReset = 'password-reset';
+
+/// Whether the server this app runs on mails sign-in codes. Without mail, E1 signs up and
+/// signs in with a password, and a forgotten password is reset with a guardian's code
+/// (specs/20 "Choosing the server", Q48). A build with a compiled-in server has mail.
+final emailCodeSignInProvider = Provider<bool>(
+  (ref) => ref.watch(appConfigProvider).server?.emailCode ?? true,
+);
+
 /// Whether the server this app runs on announces [feature] in its discovery document.
 /// A build with a compiled-in server (development, the demo) has no document and is
 /// taken to support everything.

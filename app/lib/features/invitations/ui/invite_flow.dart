@@ -62,7 +62,9 @@ Future<void> inviteAdultFlow(
   final request = existing == null
       ? await showDialog<AdultInvite>(
           context: context,
-          builder: (_) => const _AdultInviteDialog(),
+          // Without mail an address proves nothing, so no invitation matches it (Q48).
+          builder: (_) =>
+              _AdultInviteDialog(askEmail: ref.read(emailCodeSignInProvider)),
         )
       : AdultInvite(
           name: existing.displayName,
@@ -300,7 +302,10 @@ class _InviteResultDialog extends ConsumerWidget {
 
 /// Name, role and an optional email for a new adult.
 class _AdultInviteDialog extends StatefulWidget {
-  const _AdultInviteDialog();
+  const _AdultInviteDialog({required this.askEmail});
+
+  /// Off on a server without mail, where no invitation is matched by its address.
+  final bool askEmail;
 
   @override
   State<_AdultInviteDialog> createState() => _AdultInviteDialogState();
@@ -376,24 +381,27 @@ class _AdultInviteDialogState extends State<_AdultInviteDialog> {
                     : l10n.inviteRoleMemberHelp,
                 style: theme.textTheme.bodySmall,
               ),
-              const SizedBox(height: Tokens.space4),
-              TextFormField(
-                controller: _email,
-                keyboardType: TextInputType.emailAddress,
-                autocorrect: false,
-                decoration: InputDecoration(
-                  labelText: l10n.inviteAdultEmail,
-                  helperText: l10n.inviteAdultEmailHelp,
-                  helperMaxLines: 3,
+              if (widget.askEmail) ...[
+                const SizedBox(height: Tokens.space4),
+                TextFormField(
+                  controller: _email,
+                  keyboardType: TextInputType.emailAddress,
+                  autocorrect: false,
+                  decoration: InputDecoration(
+                    labelText: l10n.inviteAdultEmail,
+                    helperText: l10n.inviteAdultEmailHelp,
+                    helperMaxLines: 3,
+                  ),
+                  validator: (v) {
+                    final value = (v ?? '').trim();
+                    return value.isEmpty ||
+                            RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$')
+                                .hasMatch(value)
+                        ? null
+                        : l10n.inviteEmailInvalid;
+                  },
                 ),
-                validator: (v) {
-                  final value = (v ?? '').trim();
-                  return value.isEmpty ||
-                          RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(value)
-                      ? null
-                      : l10n.inviteEmailInvalid;
-                },
-              ),
+              ],
             ],
           ),
         ),

@@ -55,6 +55,10 @@ El orden de los miembros en la lista es el orden en la pared y en todas las list
 
 Si otro adulto perdió su segundo factor, usa la acción junto a su nombre. Podrá acceder y [configurarlo otra vez](/es/settings/security#two-factor-sign-in).
 
+## Restablecer una contraseña {#reset-password}
+
+Solo en un servidor sin correo ([Correo](/es/server/email#forgotten-password)): si otro adulto olvidó su contraseña, toca **Restablecer contraseña** junto a su nombre y luego **Crear código**. El código de 8 caracteres vale una vez, durante 10 minutos. Entrégalo en persona; en su dispositivo, toca **¿Olvidaste tu contraseña?** al iniciar sesión.
+
 ## Conectar un dispositivo {#connect-a-device}
 
 En **Ajustes → Dispositivos → Todos los dispositivos**, toca **Conectar un dispositivo**, escanea el QR o introduce el código del nuevo equipo y elige tipo y nombre. La [guía de conexión](/es/guide/setup#_4-connecting-a-family-tablet-or-wall-display) detalla el proceso.

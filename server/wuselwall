@@ -23,6 +23,12 @@
 #   restore <db-….dump>   replaces the database with a backup (see docs/server/restore)
 #   setup-token           a fresh single-use token for founding the household
 #   language de|en|fr|es   choose the one language for server emails (default: de)
+#   mail [status]         whether the server sends mail (it is optional)
+#   mail smtp [--gmail] [--host h] [--port 587] [--user u] [--sender a] [--name n]
+#                         sign-in codes by mail through any SMTP server; asks for the password
+#   mail off              no mail: email and password only
+#   mail test <address>   sends a test message through the configured SMTP server
+#   password <email>      a one-time code to reset that account's password in the app
 #   status | logs [service] | compose <args>
 #
 # Needs: Docker with Compose v2, openssl, tar, curl. Node.js is not needed: make-env.mjs runs
@@ -227,6 +233,7 @@ cmd_install() {
   echo "  Server:   $api"
   echo "  Web app:  $web"
   echo "  Email language: $(env_value MAIL_LANGUAGE)"
+  echo "  $(sh "$STACK/mail-settings.sh" "$STACK/.env" status | head -n 1)"
   [ -n "$token" ] && echo "  Setup token (shown once, for \"Start a new family\"): $token"
   echo
   echo "  Scan to open setup in your browser, or enter $api in the WuselWall app:"
@@ -287,6 +294,8 @@ cmd_update() {
   migrate
   say "Scheduled jobs"
   schedule
+  # A server installed before mail became optional, without mail, needs `mail off` once.
+  sh "$STACK/mail-settings.sh" "$STACK/.env" status || true
   say "Done."
 }
 
@@ -343,6 +352,91 @@ cmd_restore() {
   say "Restored."
 }
 
+restart_auth() {
+  compose up -d auth functions > /dev/null
+  wait_for_services auth
+}
+
+# Mail is optional (docs/server "Email"): without it, accounts sign up with a password and a
+# guardian (or `wuselwall password`) resets a forgotten one. stack/mail-settings.sh writes the
+# .env; the password comes from a prompt or SMTP_PASS, never from the command line.
+cmd_mail() {
+  local action=${1:-status}
+  [ $# -gt 0 ] && shift
+  case $action in
+    status) sh "$STACK/mail-settings.sh" "$STACK/.env" status ;;
+    off)
+      sh "$STACK/mail-settings.sh" "$STACK/.env" off
+      restart_auth
+      sh "$STACK/mail-settings.sh" "$STACK/.env" status
+      ;;
+    smtp)
+      local host='' port=587 user='' sender='' name='' pass=${SMTP_PASS:-}
+      while [ $# -gt 0 ]; do
+        case $1 in
+          --gmail) host=smtp.gmail.com; port=587; shift ;;
+          --host) host=${2:?--host needs a host name}; shift 2 ;;
+          --port) port=${2:?--port needs 587 or 465}; shift 2 ;;
+          --user) user=${2:?--user needs the account name}; shift 2 ;;
+          --sender) sender=${2:?--sender needs an address}; shift 2 ;;
+          --name) name=${2:?--name needs a sender name}; shift 2 ;;
+          *) die "mail smtp: unknown option $1" ;;
+        esac
+      done
+      [ -n "$host" ] || read -rp "SMTP server (e.g. smtp.gmail.com): " host
+      [ -n "$user" ] || read -rp "User name (usually your email address): " user
+      if [ -z "$pass" ]; then
+        read -rsp "Password (for Gmail: the app password): " pass
+        echo
+      fi
+      SMTP_HOST=$host SMTP_PORT=$port SMTP_USER=$user SMTP_PASS=$pass \
+        SMTP_SENDER=${sender:-$user} SMTP_SENDER_NAME=$name \
+        sh "$STACK/mail-settings.sh" "$STACK/.env" smtp
+      restart_auth
+      sh "$STACK/mail-settings.sh" "$STACK/.env" status
+      echo "  Try it: $0 mail test you@example.org"
+      ;;
+    test)
+      local to=${1:?usage: mail test <address>} host port user from netrc message scheme
+      host=$(env_value SMTP_HOST)
+      [ -n "$host" ] && [ "$host" != localhost ] || die "no SMTP server is configured (mail smtp)"
+      port=$(env_value SMTP_PORT)
+      user=$(env_value SMTP_USER)
+      from=$(env_value SMTP_ADMIN_EMAIL)
+      # Port 465 speaks TLS from the start; 587 and 25 switch to it (required here).
+      scheme=smtp
+      [ "$port" = 465 ] && scheme=smtps
+      netrc=$(mktemp)
+      message=$(mktemp)
+      # shellcheck disable=SC2064
+      trap "rm -f '$netrc' '$message'" EXIT
+      printf 'machine %s login %s password %s\n' "$host" "$user" "$(env_value SMTP_PASS)" > "$netrc"
+      printf 'From: %s <%s>\r\nTo: <%s>\r\nSubject: WuselWall test\r\n\r\n%s\r\n' \
+        "$(env_value SMTP_SENDER_NAME)" "$from" "$to" \
+        "This server can send mail. Sign-in codes will arrive like this message." > "$message"
+      curl -sS --ssl-reqd --netrc-file "$netrc" --url "$scheme://$host:$port" \
+        --mail-from "$from" --mail-rcpt "$to" --upload-file "$message" \
+        || die "the SMTP server refused the message (check host, port, user and password)"
+      say "Sent to $to. If it does not arrive, look in the spam folder."
+      ;;
+    *) die "usage: mail [status|smtp|off|test <address>]" ;;
+  esac
+}
+
+# Prints a one-time code for the account with this address: valid ten minutes, it lets that
+# person choose a new password in the app ("Passwort vergessen?"). For a family whose only
+# guardian forgot theirs; otherwise a guardian creates the code in Members.
+cmd_password() {
+  local email=${1:?usage: password <email>} out
+  out=$(psql_db -v email="$email" <<'SQL'
+select coalesce(app.password_reset_issue_for_email(:'email') ->> 'code', 'none');
+SQL
+)
+  [ "$out" != none ] || die "no account with the address $email"
+  echo "Reset code for $email (valid 10 minutes, once): $out"
+  echo "  In the app: Continue with email > Forgot password?, then the address, this code and a new password."
+}
+
 case "${1:-}" in
   install) shift; cmd_install "$@" ;;
   update) shift; cmd_update "$@" ;;
@@ -362,5 +456,7 @@ case "${1:-}" in
   status) preflight; compose ps ;;
   logs) shift; preflight; compose logs -f --tail=200 "$@" ;;
   compose) shift; preflight; compose "$@" ;;
-  *) sed -n '2,32p' "$0" | sed 's/^# \{0,1\}//' ;;
+  mail) shift; preflight; cmd_mail "$@" ;;
+  password) shift; preflight; cmd_password "$@" ;;
+  *) sed -n '2,35p' "$0" | sed 's/^# \{0,1\}//' ;;
 esac

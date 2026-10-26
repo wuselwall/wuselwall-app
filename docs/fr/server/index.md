@@ -16,7 +16,7 @@ Un serveur appartient à **un seul foyer**. Après sa création, aucune deuxièm
 
 | | [Chez Supabase](/fr/server/supabase-cloud) | [Loué](/fr/server/rented-server) | [À la maison](/fr/server/home-server) |
 |---|---|---|---|
-| Matériel | Comptes Supabase et GitHub, pas de machine, plus un fournisseur d’e-mails | Compte chez un hébergeur européen comme Hetzner, domaine et fournisseur d’e-mails | NAS ou mini-PC avec Docker, domaine et fournisseur d’e-mails |
+| Matériel | Comptes Supabase et GitHub, pas de machine | Compte chez un hébergeur européen comme Hetzner et domaine | NAS ou mini-PC avec Docker et domaine |
 | Installation | Dans le navigateur | Un fichier collé à la création du serveur, deux enregistrements DNS | Outil en ligne de commande, DNS et réseau |
 | Données | Centre de données choisi chez Supabase Inc. (États-Unis) | Hébergeur européen de votre choix, sur votre propre serveur | Machine sous votre contrôle |
 | Coûts | Selon l’offre Supabase ; voir ses tarifs actuels | Environ 6 à 25 € par mois, plus le domaine | Matériel, électricité et domaine |
@@ -29,10 +29,11 @@ Un NAS déjà équipé de Docker peut convenir. Pour des données en Europe sous
 ## Ce qui est nécessaire {#what-you-need-and-what-you-dont}
 
 - **Supabase**, hébergé ou sous Docker : base, authentification, mises à jour en direct et fonctions serveur.
-- **Envoi d’e-mails SMTP** : les premiers codes de connexion doivent arriver. Le mode sans messagerie est encore prévu ([Options](/fr/server/extras#email)).
 - **HTTPS** : intégré chez Supabase, ou géré par Caddy à la maison.
 - **Tâches planifiées** : préparation des tâches des 14 prochains jours, clôture de la veille, synchronisation des jours fériés, calendriers externes et purge. L’installation les programme.
 - **Sauvegarde** : la base contient vos données irremplaçables.
+
+Facultatif : les **e-mails**. Sans eux, chacun se connecte avec adresse et mot de passe ; avec eux (un compte Gmail suffit), les codes arrivent par e-mail ([E-mails](/fr/server/email)).
 
 ## Les options
 

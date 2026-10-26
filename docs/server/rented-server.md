@@ -9,7 +9,7 @@ Technisch ist das derselbe Docker-Stack wie [zu Hause](/server/home-server). All
 - Ein Konto bei einem Anbieter mit **cloud-init** (unten eine Auswahl); so ein Server kostet grob **6–25 € im Monat** (Stand Oktober 2026).
 - Eine **Domain** mit zwei Namen, `api.` und `web.`, etwa 1–2 € im Monat.
 - Einen **SSH-Schlüssel** auf deinem Laptop (`ssh-keygen`, wenn du noch keinen hast).
-- Einen **Mail-Anbieter** für die Anmelde-Codes, wie bei jedem WuselWall-Server ([Extras](/server/extras#e-mail)).
+- Freiwillig: ein **Mail-Konto** für Anmelde-Codes per Mail, ein Gmail-Konto reicht ([E-Mail](/server/email)). Ohne melden sich alle mit Passwort an.
 
 ## Anbieter
 

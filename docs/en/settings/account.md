@@ -4,7 +4,7 @@ These steps concern **your account** or the **whole family**. They are at the bo
 
 ## Password
 
-Under **Settings → Advanced → Sign-in → Password** you set or change a password. At least 10 characters; a whole sentence is better. The code by email still works too.
+Under **Settings → Advanced → Sign-in → Password** you set or change a password. At least 10 characters; a whole sentence is better. The code by email still works too, if your server sends email; on a server without email, the password is the way in ([Email](/en/server/email)).
 
 ## Leave the family
 
@@ -28,7 +28,7 @@ Only a guardian can delete a family, on their own phone, under **Settings → Fa
 To delete your WuselWall account yourself, tap **Delete account**. The sign-in is removed, and you are signed out everywhere.
 
 - Your **profile** stays in the family with everything you have done. Only the access goes.
-- For deletion WuselWall asks whether it is really you. If your sign-in is older than 5 minutes, WuselWall sends a **code by email** before it continues.
+- For deletion WuselWall asks whether it is really you. If your sign-in is older than 5 minutes, WuselWall sends a **code by email** before it continues; on a server without email it asks for your **password**.
 - The last guardian with an account cannot delete it (see above).
 
 ## Good to know

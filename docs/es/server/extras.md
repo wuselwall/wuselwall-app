@@ -1,24 +1,10 @@
 # Opciones del servidor
 
-Todo aquí es opcional, **excepto el envío de correo**, necesario por ahora. Ejecuta los comandos junto a `wuselwall` y añade solo los servicios que necesites.
+Todo aquí es opcional. Ejecuta los comandos junto a `wuselwall` y añade solo los servicios que necesites.
 
 ## Correo electrónico {#email}
 
-El primer acceso verifica la dirección con un **código de seis cifras**. Sin SMTP nadie puede crear ni unirse al hogar. El modo sin correo está previsto, aún no disponible.
-
-La instalación elige un idioma único para **todos los asuntos y cuerpos**: `de`, `en`, `fr` o `es`, alemán por defecto. No depende del destinatario ni de su dispositivo. Cambia con `./wuselwall language es` ([Instalación](/es/server/home-server#email-language)).
-
-Elige un servicio de correo transaccional y configura sus registros SPF, DKIM y DMARC. El proveedor recibe direcciones y códigos; revisa condiciones y precios.
-
-**En casa**, define `SMTP_HOST`, `SMTP_PORT` (normalmente `587`), `SMTP_USER`, `SMTP_PASS` y `SMTP_ADMIN_EMAIL` en `stack/.env`, con comillas simples como los otros valores. Un servidor con correo usa `ENABLE_EMAIL_AUTOCONFIRM=false`.
-
-```bash
-./wuselwall compose up -d auth
-```
-
-**En Supabase**, introduce los mismos datos en **Authentication → Emails → SMTP Settings**. El correo integrado está pensado para pruebas y tiene límites.
-
-La versión de servidor y el workflow configuran confirmación inicial y accesos posteriores con código, sin necesitar un hook de Scaleway. Si solo llega un enlace, actualiza servidor o workflow y pide un código nuevo. El mensaje antiguo no cambia.
+El correo es opcional: sin él, todos inician sesión con contraseña. Cómo enviar los códigos de acceso por correo, Gmail incluido, está en [Correo](/es/server/email).
 
 ## Antiguo acceso Apple y Google {#retiring-social-sign-in}
 

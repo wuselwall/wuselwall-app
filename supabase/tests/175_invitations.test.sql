@@ -1,5 +1,5 @@
 begin;
-select plan(94);
+select plan(96);
 
 -- Invitations (onboarding J2): a guardian invites an adult of the household, the invitee signs
 -- in and joins. Everything runs as the database owner, except the invitee's calls (anon for the
@@ -33,6 +33,8 @@ insert into users_made values
 -- Hans's address is not confirmed yet: he can only join once it is.
 update auth.users set email_confirmed_at = null where email = 'inv-test-hans@example.org';
 create function pg_temp.uid(p text) returns uuid language sql as $$ select uid from users_made where name = p $$;
+-- The other account signed up with a mailed code: its address is proven, just not Hans's.
+update auth.users set confirmation_sent_at = now() where id = pg_temp.uid('other');
 
 insert into auth.sessions (id, user_id, created_at, updated_at) values
   (pg_temp.fid('sess_papa'), pg_temp.uid('papa'), now(), now()),
@@ -305,8 +307,20 @@ select is(jsonb_array_length(api.my_account() -> 'pending_invitations'), 0,
   'an unconfirmed address is offered no invitation');
 reset role;
 
--- Hans confirms his address: the waiting invitation shows on his account (H0).
-update auth.users set email_confirmed_at = now() where id = pg_temp.uid('hans');
+-- Autoconfirmed (a server without mail confirms every address unseen, 20261026100000):
+-- the address proves nothing, so the invitation naming it is neither offered nor accepted.
+update auth.users set email_confirmed_at = now(), confirmation_sent_at = null where id = pg_temp.uid('hans');
+select pg_temp.account('hans', 'sess_hans');
+set local role authenticated;
+select is(jsonb_array_length(api.my_account() -> 'pending_invitations'), 0,
+  'an autoconfirmed address is offered no invitation');
+select throws_ok(format($$ select api.invitation_accept(null, %L, null, null, 'Handy') $$, (select id from inv where name = 'hans')),
+  '42501', 'email not confirmed', 'an autoconfirmed address cannot accept by email');
+reset role;
+
+-- Hans confirms his address with the mailed code: the waiting invitation shows on his account (H0).
+update auth.users set email_confirmed_at = now(), confirmation_sent_at = now() - interval '1 minute'
+ where id = pg_temp.uid('hans');
 select pg_temp.account('hans', 'sess_hans');
 set local role authenticated;
 select is((api.my_account() -> 'pending_invitations' -> 0 ->> 'household_name'), 'Familie Huser',

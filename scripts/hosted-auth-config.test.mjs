@@ -23,9 +23,8 @@ function api({ applies = true } = {}) {
   return { fetchFn, calls, state };
 }
 
-test('mail is mandatory unless the deploy says "without mail"', () => {
-  assert.throws(() => mailFromEnv({}), /no mail configured/);
-  assert.deepEqual(mailFromEnv({ WITHOUT_MAIL: 'true' }), {});
+test('mail is optional; what is given must be complete', () => {
+  assert.deepEqual(mailFromEnv({}), {});
   assert.throws(() => mailFromEnv({ SMTP_HOST: 'h' }), /SMTP_PORT is needed/);
   assert.throws(() => mailFromEnv({ ...SMTP, SMTP_PORT: 'x' }), /SMTP_PORT must be a number/);
   assert.throws(() => mailFromEnv({ SEND_EMAIL_HOOK_SECRET: 'whsec_x' }), /v1,whsec_/);
@@ -39,7 +38,8 @@ test('mail is mandatory unless the deploy says "without mail"', () => {
 test('the patch turns sign-up on and mirrors the compose overlay', () => {
   const patch = authPatch({ project: PROJECT, mail: {} });
   assert.equal(patch.disable_signup, false);
-  assert.equal(patch.mailer_autoconfirm, false);
+  // No mail: addresses are autoconfirmed, so sign-up with a password works.
+  assert.equal(patch.mailer_autoconfirm, true);
   assert.equal(patch.hook_custom_access_token_uri, 'pg-functions://postgres/app/custom_access_token_hook');
   assert.equal(patch.password_min_length, 10);
   assert.equal(patch.rate_limit_otp, 30);
@@ -59,11 +59,13 @@ test('SMTP and the hook are configured as GoTrue expects', () => {
   assert.equal(smtp.smtp_admin_email, 'codes@example.org');
   assert.equal(smtp.rate_limit_email_sent, 30);
   assert.equal(smtp.hook_send_email_enabled, false);
+  assert.equal(smtp.mailer_autoconfirm, false, 'with mail, the code confirms the address');
   const hook = authPatch({ project: PROJECT, mail: mailFromEnv(HOOK) });
   assert.equal(hook.hook_send_email_enabled, true);
   assert.equal(hook.hook_send_email_uri, `https://${PROJECT}.supabase.co/functions/v1/send-email`);
   assert.equal(hook.hook_send_email_secrets, HOOK.SEND_EMAIL_HOOK_SECRET);
   assert.equal(hook.rate_limit_email_sent, 30);
+  assert.equal(hook.mailer_autoconfirm, false);
 });
 
 test('readback ignores secrets the API does not echo and names what differs', () => {
@@ -81,15 +83,22 @@ test('configureAuth patches, reads back and logs names only', async () => {
   assert.deepEqual(calls.map((c) => c.method), ['PATCH', 'GET']);
   assert.equal(state.disable_signup, false);
   assert.equal(state.external_google_enabled, true, 'keys it does not name stay as they were');
-  assert.match(lines.join('\n'), /through SMTP/);
+  assert.match(lines.join('\n'), /codes through SMTP/);
   assert.doesNotMatch(lines.join('\n'), /smtp\.example\.org|codes@|\bp\b/);
 });
 
-test('configureAuth fails when the API did not apply a setting or mail is missing', async () => {
+test('configureAuth fails when the API did not apply a setting', async () => {
   await assert.rejects(
     configureAuth({ project: PROJECT, token: 'sbp_test', env: SMTP, fetchFn: api({ applies: false }).fetchFn, log: () => {} }),
     /not applied: .*disable_signup/,
   );
-  await assert.rejects(configureAuth({ project: PROJECT, token: 'sbp_test', env: {}, fetchFn: api().fetchFn }), /no mail configured/);
   await assert.rejects(configureAuth({ project: '', token: 'sbp_test' }), /required/);
+});
+
+test('configureAuth without mail autoconfirms and says so', async () => {
+  const { fetchFn, state } = api();
+  const lines = [];
+  await configureAuth({ project: PROJECT, token: 'sbp_test', env: {}, fetchFn, log: (l) => lines.push(l) });
+  assert.equal(state.mailer_autoconfirm, true);
+  assert.match(lines.join('\n'), /no mail: sign-in with email and password/);
 });

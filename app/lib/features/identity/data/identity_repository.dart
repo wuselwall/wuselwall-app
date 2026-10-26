@@ -85,6 +85,66 @@ class IdentityRepository {
         ),
       );
 
+  /// E1 on a server without mail (specs/20, Q48): a new account with a password. The
+  /// server autoconfirms the address, so the account is signed in at once; E3 is settled
+  /// (a password). An address that has an account already fails with
+  /// `user_already_exists`.
+  Future<Result<void>> signUpWithPassword(
+    String email,
+    String password, {
+    required String locale,
+  }) => Result.guard(() async {
+    final response = await _auth.signUp(
+      email: email.trim(),
+      password: password,
+      data: {
+        'locale': locale,
+        hasPasswordKey: true,
+        signInChoiceKey: 'password',
+      },
+    );
+    // A server that still wants the address confirmed sends no mail here: say so
+    // instead of waiting for a session that never comes.
+    if (response.session == null) {
+      throw const AuthException(
+        'email confirmation required',
+        code: 'signup_needs_mail',
+      );
+    }
+  });
+
+  /// "Passwort vergessen?" on a server without mail (specs/20, Q48): the address, the
+  /// one-time code a guardian (or the operator) made for it, and the new password. Then
+  /// signs in with it. The server's refusals arrive as `code_invalid`,
+  /// `reset_code_expired`, `rate_limited` or `password_too_short`.
+  Future<Result<void>> redeemPasswordReset({
+    required String email,
+    required String code,
+    required String password,
+  }) async {
+    final redeemed = await _api.rpc<String?>(
+      'password_reset_redeem',
+      params: {'p_email': email.trim(), 'p_code': code, 'p_password': password},
+      parse: (json) {
+        final row = json! as Map<String, dynamic>;
+        return row['ok'] == true ? null : row['reason'] as String?;
+      },
+    );
+    return switch (redeemed) {
+      Err(:final failure) => Err(failure),
+      Ok(value: final reason?) => Err(
+        ValidationFailure(
+          code: switch (reason) {
+            'invalid' => 'code_invalid',
+            'expired' => 'reset_code_expired',
+            _ => reason,
+          },
+        ),
+      ),
+      Ok() => signIn(email, password),
+    };
+  }
+
   /// E2: checks the code and signs in. `Ok(true)` when this is the first code sign-in
   /// of a new account, which owes E3 (see `isFirstCodeSignIn`).
   Future<Result<bool>> verifyEmailCode(String email, String code) =>

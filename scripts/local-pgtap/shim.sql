@@ -16,7 +16,8 @@ create schema auth;
 grant usage on schema auth to anon, authenticated, service_role, supabase_auth_admin;
 create table auth.users (
   instance_id uuid, id uuid primary key, aud text, role text, email text,
-  encrypted_password text, email_confirmed_at timestamptz, raw_app_meta_data jsonb,
+  encrypted_password text, email_confirmed_at timestamptz, confirmation_sent_at timestamptz,
+  raw_app_meta_data jsonb,
   raw_user_meta_data jsonb, created_at timestamptz, updated_at timestamptz,
   confirmation_token text, recovery_token text, email_change_token_new text,
   email_change text, is_anonymous boolean default false, last_sign_in_at timestamptz,

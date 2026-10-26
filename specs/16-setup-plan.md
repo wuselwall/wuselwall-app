@@ -41,7 +41,7 @@ avatar pictures appear in member lists and the kid picker.
 
 | Build order | Old slices | Work package | Acceptance |
 |---|---|---|---|
-| 1 | 10.4 | **Start without mail** | A fresh server without SMTP reaches Today; password sign-up/sign-in and guardian-assisted recovery work; email auto-matching cannot trust an autoconfirmed address |
+| 1 | 10.4 | **Start without mail — built 2026-10-26 (#126)** | A fresh server without SMTP reaches Today; password sign-up/sign-in and guardian-assisted recovery work; email auto-matching cannot trust an autoconfirmed address |
 | 2 | 10.5 | **Approvals on Today — built 2026-10-24 (#127/#149)** | Guardians see pending chore/reward counts on Today and the Tasks badge; the local morning summary uses the loaded pending count; deciding clears the derived notice |
 | 3 | 10.6 | **Offline cold start** | After an app/device restart without network, the wall shows its stored week and the kid home its stored day, with freshness shown; reconnect refreshes normally |
 | 4 | 10.7–10.11 | **Finish the journeys** | Setup resumes, MFA/notification progress is clear, wide screens use the rail, and deletion-page and checklist dependencies have an explicit result |
@@ -55,6 +55,13 @@ Implementation boundaries for these four packages:
   rate-limited `password-reset` Edge Function uses the service role only for that verified
   target. Cover discovery, recovery authorization, expiry and J1 on a disposable no-mail
   stack. Update the server guides in all four languages ([Q48](14-open-questions.md)).
+  *Built 2026-10-26:* migration `20261026100000_mail_optional` (`app.proven_email`,
+  `api.password_reset_create`/`_redeem`, feature `password-reset`; pgTAP 175, 185, 250),
+  `wuselwall mail` and `password`, the app's `PasswordSignInPage`/`PasswordResetPage`/
+  `PasswordResetButton`, CI's no-mail integration run, and the server page "E-Mail" in four
+  languages with a Gmail guide. The reset is an anon SQL function, not an Edge Function:
+  pairing already sets Auth passwords from SQL (`app.set_auth_user_password`), and the code
+  is spent and the password set in one transaction.
 - **Approvals:** derived `redemption_pending` and `verification_pending` notices are
   guardian-only, not dismissible, and disappear when decided. Reuse existing approval
   actions; no push relay ([Q47](14-open-questions.md)).
