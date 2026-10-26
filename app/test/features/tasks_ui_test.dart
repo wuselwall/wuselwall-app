@@ -7,6 +7,7 @@ import 'package:wuselwall/app/theme/app_theme.dart';
 import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/error/failure.dart';
+import 'package:wuselwall/core/ui/edge_fade.dart';
 import 'package:wuselwall/core/wusel/wusel_stage.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/details/task_board_detail.dart';
@@ -309,6 +310,17 @@ void main() {
       await pumpTasks(t, api);
       expect(find.byTooltip('2 Punkte'), findsOneWidget);
       expect(find.bySemanticsLabel(RegExp('2 Punkte')), findsOneWidget);
+    });
+
+    testWidgets('the tab bar fades where more tabs lie beyond it', (t) async {
+      await pumpTasks(t, FakeTasksApi(), size: const Size(390, 844));
+      final fade = find.ancestor(
+        of: find.byType(TabBar),
+        matching: find.byType(EdgeFade),
+      );
+      expect(fade, findsOneWidget);
+      final state = t.state(fade) as dynamic;
+      expect((state.fades as ({bool start, bool end})).end, isTrue);
     });
 
     testWidgets('a chore nobody has claimed is grouped under open for anyone', (

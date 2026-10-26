@@ -242,6 +242,7 @@
       }
     }
   },
+  "shoppingTileOnList": "Already on the list",
   "shoppingAddedBy": "Added by {name}",
   "@shoppingAddedBy": {
     "placeholders": {

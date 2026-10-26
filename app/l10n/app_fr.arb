@@ -235,6 +235,7 @@
       }
     }
   },
+  "shoppingTileOnList": "Déjà sur la liste",
   "shoppingAddedBy": "Ajouté par {name}",
   "@shoppingAddedBy": {
     "placeholders": {

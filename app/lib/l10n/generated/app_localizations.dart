@@ -1118,6 +1118,12 @@ abstract class AppLocalizations {
   /// **'Add “{name}”'**
   String shoppingCreateTile(String name);
 
+  /// No description provided for @shoppingTileOnList.
+  ///
+  /// In en, this message translates to:
+  /// **'Already on the list'**
+  String get shoppingTileOnList;
+
   /// No description provided for @shoppingAddedBy.
   ///
   /// In en, this message translates to:

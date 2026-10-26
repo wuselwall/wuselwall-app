@@ -554,6 +554,9 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get shoppingTileOnList => 'Schon auf der Liste';
+
+  @override
   String shoppingAddedBy(String name) {
     return 'Hinzugefügt von $name';
   }

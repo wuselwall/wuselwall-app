@@ -5,6 +5,7 @@ import 'package:wuselwall/app/app.dart';
 import 'package:wuselwall/app/theme/app_theme.dart';
 import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
+import 'package:wuselwall/core/ui/edge_fade.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/shopping/application/shopping_providers.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
@@ -25,9 +26,20 @@ CatalogEntry entry(String name, int count, {DateTime? last}) => CatalogEntry(
   lastPurchasedAt: last,
 );
 
-/// Pumps the shopping body on the wall, with [catalog] as the household's catalogue.
-Future<void> pumpBody(WidgetTester t, List<CatalogEntry> catalog) async {
-  t.view.physicalSize = const Size(1280, 800);
+/// Pumps the shopping body on the wall (or in [register]), with [catalog] as the
+/// household's catalogue, [items] on the list and [lists] to switch between.
+Future<void> pumpBody(
+  WidgetTester t,
+  List<CatalogEntry> catalog, {
+  UiRegister register = UiRegister.kiosk,
+  Size size = const Size(1280, 800),
+  List<ShoppingItem>? items,
+  List<ShoppingList> lists = const [
+    ShoppingList(id: 'l1', name: 'Supermarkt', isDefault: true, openCount: 1),
+  ],
+}) async {
+  final shown = items ?? [item('1', 'Milch')];
+  t.view.physicalSize = size;
   t.view.devicePixelRatio = 1;
   addTearDown(t.view.resetPhysicalSize);
   addTearDown(t.view.resetDevicePixelRatio);
@@ -35,19 +47,12 @@ Future<void> pumpBody(WidgetTester t, List<CatalogEntry> catalog) async {
   await t.pumpWidget(
     ProviderScope(
       overrides: [
-        uiRegisterProvider.overrideWithValue(UiRegister.kiosk),
+        uiRegisterProvider.overrideWithValue(register),
         shoppingViewProvider.overrideWithValue(
           AsyncData(
             ShoppingView(
-              items: [item('1', 'Milch')],
-              lists: const [
-                ShoppingList(
-                  id: 'l1',
-                  name: 'Supermarkt',
-                  isDefault: true,
-                  openCount: 1,
-                ),
-              ],
+              items: shown,
+              lists: lists,
               categories: const [],
               catalog: catalog,
               pendingCount: 0,
@@ -56,11 +61,11 @@ Future<void> pumpBody(WidgetTester t, List<CatalogEntry> catalog) async {
         ),
         shoppingStoreProvider.overrideWith((ref) => MemoryShoppingStore()),
         shoppingRepositoryProvider.overrideWithValue(
-          FakeShoppingRepository([item('1', 'Milch')]),
+          FakeShoppingRepository(shown),
         ),
       ],
       child: MaterialApp(
-        theme: AppTheme.build(UiRegister.kiosk, Shade.light),
+        theme: AppTheme.build(register, Shade.light),
         localizationsDelegates: localizationsDelegates,
         supportedLocales: supportedLocales,
         locale: const Locale('de'),
@@ -125,6 +130,115 @@ void main() {
     );
     expect(strip, findsOneWidget);
     expect(t.getSize(strip).height, lessThan(200));
+  });
+
+  final many = [
+    for (final n in [
+      'Milch',
+      'Brot',
+      'Bananen',
+      'Äpfel',
+      'Butter',
+      'Eier',
+      'Käse',
+      'Joghurt',
+      'Gurke',
+    ])
+      entry(n, 3),
+  ];
+
+  testWidgets('a short phone keeps more than one list row in sight', (t) async {
+    await pumpBody(
+      t,
+      many,
+      register: UiRegister.adult,
+      size: const Size(360, 640),
+      items: [
+        for (final (i, n) in ['Tomaten', 'Gurke', 'Brot', 'Käse'].indexed)
+          item('$i', n),
+      ],
+    );
+    // A row and a half of tiles, not three: the list below keeps its rows.
+    final grid = find
+        .ancestor(
+          of: find.byType(Wrap),
+          matching: find.byType(SingleChildScrollView),
+        )
+        .first;
+    expect(t.getSize(grid).height, lessThanOrEqualTo(112));
+    final finish = t.getRect(find.text('Einkauf beenden')).top;
+    final whole = [
+      for (final n in ['Tomaten', 'Gurke', 'Brot', 'Käse'])
+        for (final e in find.text(n).evaluate())
+          if (e.findAncestorWidgetOfExactType<ListTile>() != null)
+            t.getRect(find.byWidget(e.widget).first),
+    ].where((r) => r.bottom <= finish);
+    expect(whole.length, greaterThanOrEqualTo(2));
+  });
+
+  testWidgets('the tiles fill the width of a wide phone', (t) async {
+    await pumpBody(
+      t,
+      many,
+      register: UiRegister.adult,
+      size: const Size(540, 1100),
+    );
+    final tiles = find.byWidgetPredicate(
+      (w) =>
+          w.key is ValueKey<String> &&
+          (w.key! as ValueKey<String>).value.startsWith('shopping-tile-'),
+    );
+    expect(tiles, findsNWidgets(many.length));
+    var right = 0.0;
+    for (final e in tiles.evaluate()) {
+      final r = t.getRect(find.byWidget(e.widget).first);
+      if (r.right > right) right = r.right;
+    }
+    // The last column ends at the right margin, not ¾ across.
+    expect(right, closeTo(540 - 16, 2));
+  });
+
+  testWidgets('a tinted tile says it is on the list already', (t) async {
+    await pumpBody(
+      t,
+      many,
+      register: UiRegister.adult,
+      size: const Size(390, 844),
+    );
+    expect(find.byTooltip('Schon auf der Liste'), findsOneWidget);
+  });
+
+  testWidgets('the list chips fade at the edge while more lie beyond', (
+    t,
+  ) async {
+    await pumpBody(
+      t,
+      many,
+      register: UiRegister.adult,
+      size: const Size(390, 844),
+      lists: [
+        for (final (i, n) in [
+          'Supermarkt',
+          'Drogerie',
+          'Baumarkt',
+          'Apotheke',
+        ].indexed)
+          ShoppingList(
+            id: 'l${i + 1}',
+            name: n,
+            isDefault: i == 0,
+            openCount: 3,
+          ),
+      ],
+    );
+    final fade = find.byType(EdgeFade);
+    expect(fade, findsOneWidget);
+    final state = t.state(fade) as dynamic;
+    expect((state.fades as ({bool start, bool end})).end, isTrue);
+    // The pencil sits beside the row, never over a chip.
+    final pencil = t.getRect(find.byKey(const ValueKey('edit-list')));
+    final row = t.getRect(fade);
+    expect(row.right, lessThanOrEqualTo(pencil.left));
   });
 
   testWidgets('a tile shows its item\'s picture, else the category icon', (
