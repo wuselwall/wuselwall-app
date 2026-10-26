@@ -18,11 +18,13 @@ Ein WuselWall-Server gehört genau **einem Haushalt**. Wenn die erste Familie an
 
 | | [Bei Supabase](/server/supabase-cloud) | [Gemietet](/server/rented-server) | [Zu Hause](/server/home-server) |
 |---|---|---|---|
-| **Was ihr braucht** | Ein Konto bei Supabase und eines bei GitHub, dazu einen Mail-Anbieter | Ein Konto bei einem europäischen Anbieter wie Hetzner, eine Domain und einen Mail-Anbieter | Einen Rechner, der dauernd läuft (NAS, Mini-PC) mit Docker, eine eigene Domain und einen Mail-Anbieter |
+| **Was ihr braucht** | Ein Konto bei Supabase und eines bei GitHub | Ein Konto bei einem europäischen Anbieter wie Hetzner und eine Domain | Einen Rechner, der dauernd läuft (NAS, Mini-PC) mit Docker und eine eigene Domain |
 | **Einrichten** | Im Browser, etwa 20 Minuten | Eine Datei beim Anlegen des Servers einfügen und zwei DNS-Einträge setzen, etwa 15 Minuten | Ein Befehl auf dem Server, dazu Domain und Router einrichten |
 | **Wo die Daten liegen** | Bei Supabase Inc. (USA) in einem Rechenzentrum eurer Wahl, z. B. Frankfurt oder Zürich | Bei einem europäischen Anbieter eurer Wahl, auf eurem eigenen Server | Auf eurem eigenen Gerät |
-| **Kosten** | Gratis zum Ausprobieren, für den Alltag etwa 25 US-Dollar im Monat | Etwa 4–8 € im Monat, dazu die Domain | Strom und Domain, etwa 1–2 € im Monat |
+| **Kosten** | Gratis zum Ausprobieren, für den Alltag etwa 25 US-Dollar im Monat | Grob 6–25 € im Monat, dazu die Domain | Strom und Domain, etwa 1–2 € im Monat |
 | **Updates und Backups** | Supabase pflegt den Server, und ab dem Pro-Abo macht es tägliche Backups. Neue WuselWall-Versionen spielst du mit einem Klick ein | Du selbst, mit je einem Befehl per SSH; das System hält sich selbst aktuell | Du selbst, mit je einem Befehl |
+
+Die Preise sind grobe Werte zur Orientierung, Stand Oktober 2026, keine Angebote; es gilt die aktuelle Preisliste des Anbieters. WuselWall ist unabhängig und mit Supabase, GitHub, Hetzner und den anderen hier genannten Anbietern nicht verbunden.
 
 Unser Rat: Wer schon ein NAS oder einen Heimserver mit Docker betreibt, nimmt den **Server zu Hause**. Wer die Daten in Europa und unter eigener Kontrolle will, ohne ein Gerät zu Hause, mietet einen **Server bei Hetzner & Co.** Wer es am einfachsten will, fängt mit **Supabase** an. Ein Umzug später ist möglich ([Backup zurückspielen](/server/restore)).
 
@@ -35,7 +37,6 @@ So wenig wie möglich ist Pflicht. Alles in der zweiten Tabelle könnt ihr wegla
 | Was | Wozu |
 |---|---|
 | **Ein Supabase-Server**: ein Projekt bei Supabase oder der Docker-Stack, gemietet oder zu Hause | Datenbank, Anmeldung, Live-Aktualisierung und die Server-Funktionen von WuselWall |
-| **E-Mail-Versand (SMTP)** | Wer sich neu anmeldet, bekommt einen Code per Mail. Ohne SMTP kommt dieser Code nie an, und niemand kann eine Familie anlegen oder beitreten ([Extras](/server/extras#e-mail)). Ein Server ganz ohne Mail-Versand kommt später |
 | **HTTPS** | Die Apps sprechen nur verschlüsselt mit dem Server. Supabase hat es schon, zu Hause holt es der mitgelieferte Webserver Caddy automatisch |
 | **Regelmäßige Aufträge** | Sie legen jede Nacht die Aufgaben der nächsten 14 Tage an und schließen den Vortag ab, holen einmal pro Woche die Feiertage und stündlich die Kalender von außen. Sie laufen in der Datenbank selbst, die Installation richtet sie ein |
 | **Ein Backup** | Die Datenbank ist das Einzige, was sich nicht neu aufbauen lässt |
@@ -44,6 +45,7 @@ So wenig wie möglich ist Pflicht. Alles in der zweiten Tabelle könnt ihr wegla
 
 | Was | Ohne das |
 |---|---|
+| **E-Mail** | Alle melden sich mit E-Mail-Adresse und Passwort an, ein vergessenes Passwort setzt ein Erziehungsberechtigter zurück. Mit E-Mail (ein Gmail-Konto reicht) kommen Anmelde-Codes per Mail ([E-Mail](/server/email)) |
 | **Die Web-App** | Nur nötig, solange die Apps nicht in den Stores sind, oder für den Laptop. Zu Hause liefert der Server sie mit, bei Supabase veröffentlicht sie GitHub für euch |
 | **Feiertage und Schulferien** | Der Server holt sie einmal pro Woche bei [OpenHolidays](https://www.openholidaysapi.org/) und schickt dabei nur Ländercodes. Ohne Internetzugang des Servers fehlen sie auf der Wochentafel ([Extras](/server/extras#feiertage)) |
 | **Kalender von außen** | Abonniert ihr Kalender von Vereinen oder der Gemeinde, holt der Server sie stündlich von den Adressen, die ihr eingetragen habt. Ohne Abos ruft er nichts ab |

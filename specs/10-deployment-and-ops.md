@@ -17,7 +17,8 @@ repository describes a particular operator's server; such notes live outside it.
 | | Own hardware | A rented VPS (Hetzner, netcup, IONOS, Scaleway, OVHcloud, Infomaniak …) | Hosted Supabase |
 |---|---|---|---|
 | **Install** | A server release and `server/wuselwall install` | [`server/cloud-init.yaml`](../server/cloud-init.yaml) at the first boot: Docker from its signed repository, ufw (22, 80, 443), the release, `wuselwall install --caddy`; the result in a root-only `install.log` | The family's fork runs `.github/workflows/deploy-supabase.yml` on GitHub's runners |
-| **Needs** | Docker with Compose v2, a domain, ports 80 and 443 | An account at an EU provider with cloud-init, Ubuntu 24.04 with 4 GB (8 GB with OCR), a domain, a mail provider | A Supabase account, a GitHub account and a mail provider (SMTP or Scaleway) |
+| **Needs** | Docker with Compose v2, a domain, ports 80 and 443 | An account at an EU provider with cloud-init, Ubuntu 24.04 with 4 GB (8 GB with OCR), a domain | A Supabase account and a GitHub account |
+| **Mail (optional)** | `wuselwall mail smtp` (any SMTP server, Gmail with an app password included) | The same | The `SMTP_*` or Scaleway secrets |
 | **Front and TLS** | The release's Caddy layer, or the operator's own web server | The release's Caddy layer | Supabase's |
 | **Jobs** | pg_cron in the database (`infra/jobs/schedule.sql`) | The same | The same, through the Management API |
 | **Web app** | Served by the server (`stack/volumes/web`) | The same | Optional, on the fork's GitHub Pages |
@@ -39,7 +40,7 @@ website and docs) are not passed on.
 | Domain | ≈ €1–2 / month | ≈ €1–2 / month | Not needed |
 | TLS | Let's Encrypt through Caddy: €0 | Same | Included |
 | Off-site backup copy (optional) | Backblaze B2 or any S3 store: €0.50 – €3.50 | Same; the provider's disk snapshots (≈ 20 %) are an addition, not a replacement | Pro's daily backups included |
-| SMTP (for email codes) | Free tiers suffice (e.g. Scaleway TEM: 300 mails/month) | Same | Same |
+| SMTP (optional, for email codes) | €0: a Gmail account with an app password, or a free tier (e.g. Scaleway TEM: 300 mails/month) | Same | Same |
 
 ## The path a request takes (own hardware)
 
@@ -151,21 +152,36 @@ per client and globally (`app.founder_attempt`).
 
 ### 4. Sign-in and mail
 
-Email codes and passwords work on every server; there are no external sign-in providers
-(Sign in with Apple and Google were removed 2026-10-17). Passkeys are offered only by a build that names its own server
-([ADR-018](adr/ADR-018-self-hosted-only.md), amendment 2026-10-21). Email codes need a mail service:
+Passwords work on every server, email codes on a server that sends mail; there are no
+external sign-in providers (Sign in with Apple and Google were removed 2026-10-17). Passkeys
+are offered only by a build that names its own server
+([ADR-018](adr/ADR-018-self-hosted-only.md), amendment 2026-10-21).
+
+**Mail is optional** (*built 2026-10-26*, [Q48](14-open-questions.md), issue #126). Auth
+autoconfirms addresses exactly when no mail is configured (`ENABLE_EMAIL_AUTOCONFIRM`,
+`mailer_autoconfirm` on hosted): `make-env.mjs`, `infra/supabase/mail-settings.sh` (behind
+`wuselwall mail smtp|off|test`) and `scripts/hosted-auth-config.mjs` decide it the same way,
+from SMTP or the send-email hook being set. `server-info` reads Auth's public
+`/auth/v1/settings` and publishes `sign_in.email_code = !mailer_autoconfirm`, so the app
+offers what the server does. Without mail: password sign-up (the app's E1 opens on a new
+account), no invitation matched by address (`app.proven_email`: confirmed *and*
+`confirmation_sent_at`, which an autoconfirmed sign-up never has), and a forgotten password
+reset with a guardian's one-time code (`api.password_reset_create` / `_redeem`, 10 minutes,
+single use, rate-limited) or the operator's (`wuselwall password <email>`). A server
+installed before 2026-10-26 without mail keeps `ENABLE_EMAIL_AUTOCONFIRM=false`;
+`wuselwall update` flags it and `wuselwall mail off` repairs it. With mail:
 
 ### Email setup
 
 *Decided 2026-10-11 ([Q41](14-open-questions.md)), generalised 2026-10-14.* Sign-in codes
-are the only mail WuselWall sends, apart from the "new sign-in" notice. Email confirmation
-is required (`ENABLE_EMAIL_AUTOCONFIRM=false`); configuring SMTP or the send-email hook is
-currently necessary for first sign-in. The original setup policy was amended 2026-10-19
-to one installation-selected language (ADR-010 and ADR-014). The recommendation:
+are the only mail WuselWall sends, apart from the "new sign-in" notice. With mail, email
+confirmation is required (`ENABLE_EMAIL_AUTOCONFIRM=false`); without, see above. The
+original setup policy was amended 2026-10-19 to one installation-selected language (ADR-010
+and ADR-014). The recommendation:
 
 | Topic | Recommendation | Why |
 |---|---|---|
-| Provider | A transactional-mail service in the EU, e.g. **Scaleway Transactional Email** | Transactional only, so its shared IPs are not dragged down by newsletters; free tier enough for a family; no branding footer |
+| Provider | A transactional-mail service in the EU, e.g. **Scaleway Transactional Email**; or, simplest, a mailbox with SMTP access such as **Gmail with an app password** (a separate account; about 500 mails a day). Not Outlook.com: it takes OAuth only | Transactional only, so its shared IPs are not dragged down by newsletters; free tier enough for a family; no branding footer. A mailbox needs no domain or DNS records |
 | Sending domain | A domain or subdomain without mailboxes, with the SPF, DKIM and DMARC records the provider names; DMARC from `p=none` to `p=quarantine` after two clean weeks | Without SPF and DKIM the codes go to spam |
 | Content | Plain text plus minimal HTML, no tracking; **the code in the subject** | Readable from the notification; tracking would contradict NFR-9 |
 | Language | One installation choice: `MAIL_LANGUAGE=de|en|fr|es`, default German (`de`); subject, HTML and plain text monolingual, the same for hook and SMTP | Independent of device, household and recipient metadata; updates preserve the choice |
@@ -190,13 +206,13 @@ relying on it, and after any DNS change.
 - Hosted Supabase: select the required **language** choice in **deploy-supabase** (`de`
   default). Every run applies the chosen SMTP templates/subjects and the matching
   `MAIL_LANGUAGE` Edge secret. Re-select the intended language on later runs: the workflow
-  input is not inferred from the device or the previously chosen value. *Since 2026-10-25
-  mail is mandatory there* (`scripts/hosted-auth-config.mjs`): Supabase's built-in mailer
-  delivers only to the account's own addresses, so the run stops unless the fork has the
-  `SMTP_*` secrets (host, port, user, password, sender) or the Scaleway secrets
+  input is not inferred from the device or the previously chosen value. Mail is optional
+  there too (`scripts/hosted-auth-config.mjs`; *mandatory 2026-10-25 to 2026-10-26*):
+  with the `SMTP_*` secrets (host, port, user, password, sender) or the Scaleway secrets
   (`SCW_SECRET_KEY`, `SCW_PROJECT_ID`, `MAIL_FROM`) for the send-email hook, whose
-  Standard-Webhooks secret the run generates and sets on both sides. The `without_mail`
-  input deploys without either, for a trial.
+  Standard-Webhooks secret the run generates and sets on both sides, codes are mailed;
+  without either, `mailer_autoconfirm` is on. Supabase's built-in mailer is never relied on:
+  it delivers only to the account's own addresses.
 
 **Switching the hook on** (built 2026-10-15):
 
@@ -271,7 +287,7 @@ Order on a server, for the migrations and functions of the onboarding release:
    - `calendar-import.sh`, hourly;
    - `holidays-sync.sh`, weekly;
    - `tasks-nightly.sh`, daily at 03:00 (`0 3 * * *`).
-4. On an existing server, set `ENABLE_EMAIL_AUTOCONFIRM=false` in the stack's environment (the default in `make-env.mjs`).
+4. On an existing server with mail, keep `ENABLE_EMAIL_AUTOCONFIRM=false`; without mail it is `true` (`wuselwall mail off`).
 5. Since 2026-10-17 (no Apple or Google sign-in): see [Retiring social sign-in on an existing server](#retiring-social-sign-in-on-an-existing-server); the update does it.
 
 New environment variables, in the stack's `.env` (generated by `make-env.mjs` from the CI variables):
@@ -341,8 +357,9 @@ built 2026-10-14.* The project ships a **server release**, not a service.
   limits, SMTP or the send-email hook, read back); the jobs and the setup token through the
   Management API's query endpoint; then a **verification**: the discovery document, each
   of the four jobs called with the cron secret (200, so none is missing from the
-  `verify_jwt` list), four `cron.job` rows, sign-up on and mail configured; optionally the
-  web app on GitHub Pages.
+  `verify_jwt` list), four `cron.job` rows, sign-up on, and Auth's autoconfirm and the
+  discovery document's `sign_in.email_code` matching the mail configured; optionally the web
+  app on GitHub Pages.
 - **Compatibility:** a migration that changes the app–server contract raises `api_version`
   in `api.server_info()`. Each app release supports the current and the previous one; a
   server can turn old apps away with `min_app_version`. Release numbers of the apps and
@@ -490,7 +507,7 @@ or live-host changes are implied by the prepared workflow.
 | Upstream compose file | Copy `docker/` from a newer upstream commit into `infra/supabase/` (never edit it), note the commit in the layer's header, diff the rendered config | When an image bump needs it, or yearly |
 | `pub`, npm, fastlane, GitHub Actions, Deno | Dependabot PRs, reviewed; `osv-scanner` in CI | Weekly PRs, merged monthly; security fixes at once |
 | iOS signing certificate, Apple Developer Program | `fastlane match` renewal; renewal | Yearly |
-| SMTP provider | Deliverability check | Quarterly, and after any DNS change |
+| SMTP provider (if mail is on) | Deliverability check (`wuselwall mail test`); a Gmail app password stops working when the Google password changes | Quarterly, and after any DNS or password change |
 | TestFlight builds | Any new release | Expire after 90 days |
 
 Do **not** let a container auto-updater (Watchtower, a NAS's automatic updates) touch the

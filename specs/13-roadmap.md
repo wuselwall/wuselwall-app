@@ -58,8 +58,9 @@ follows the dependency order in [16](16-setup-plan.md).
 
 Old step 10, grouped into four pieces of work:
 
-1. **Start without mail:** discovery, password sign-up/sign-in, guardian-assisted recovery,
-   installation defaults and invitations that do not trust an unverified email address.
+1. **Start without mail — built 2026-10-26 (#126):** discovery, password sign-up/sign-in,
+   guardian-assisted recovery, installation defaults and invitations that do not trust an
+   unverified email address. Mail is optional; any SMTP server works, Gmail included.
 2. **Approvals on Today — built (#127/#149):** guardian card, Tasks badge and the local
    morning summary. Keep these in regression and native qualification coverage.
 3. **Offline cold start:** persist the last wall board and kid day; show their freshness

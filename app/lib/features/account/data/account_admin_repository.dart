@@ -3,10 +3,11 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/supabase/api_client.dart';
 import 'package:wuselwall/features/account/domain/member_security.dart';
 import 'package:wuselwall/features/account/domain/sign_in_freshness.dart';
+import 'package:wuselwall/features/identity/domain/models.dart';
 
-/// Deleting the account, resetting another guardian's second factor, and what a guardian sees
-/// of the household's security (specs/20 J4 and J6). Holds no rules: the Edge Functions and
-/// the `api` functions do.
+/// Deleting the account, resetting another guardian's second factor or another adult's
+/// password, and what a guardian sees of the household's security (specs/20 J4 and J6,
+/// Q48). Holds no rules: the Edge Functions and the `api` functions do.
 class AccountAdminRepository {
   const AccountAdminRepository(this._api, this._auth);
 
@@ -45,6 +46,17 @@ class AccountAdminRepository {
     'mfa-reset',
     body: {'actor_profile_id': actorProfileId, 'profile_id': profileId},
     parse: (_) {},
+  );
+
+  /// A one-time code with which another adult of the household chooses a new password
+  /// (specs/20, Q48): ten minutes, once. The server decides who may.
+  Future<Result<EnrolmentCode>> createPasswordResetCode({
+    required String actorProfileId,
+    required String profileId,
+  }) => _api.rpc(
+    'password_reset_create',
+    params: {'p_actor': actorProfileId, 'p_profile': profileId},
+    parse: (json) => EnrolmentCode.fromJson(json! as Map<String, dynamic>),
   );
 
   /// The household's adults with their account and second-factor state, for a guardian.

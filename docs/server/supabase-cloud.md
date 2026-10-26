@@ -16,7 +16,7 @@ Auf Supabase ist WuselWall noch nicht vollständig durchgetestet. Wenn ein Schri
 | **Backups** | Keine | Täglich, 7 Tage lang |
 | **Platz** | 500 MB Datenbank, für eine Familie lange genug | Mehr als genug |
 
-**Free** reicht zum Ausprobieren. Für den Alltag nehmt **Pro**: Ein pausierter Server legt den Wandbildschirm still, und ohne Backup ist ein Fehler endgültig. Die aktuellen Preise stehen auf [supabase.com/pricing](https://supabase.com/pricing).
+**Free** reicht zum Ausprobieren. Für den Alltag nehmt **Pro**: Ein pausierter Server legt den Wandbildschirm still, und ohne Backup ist ein Fehler endgültig. Pläne und Preise oben: Stand Oktober 2026, nur zur Orientierung; es gelten die aktuellen Bedingungen auf [supabase.com/pricing](https://supabase.com/pricing). WuselWall ist unabhängig und mit Supabase und GitHub nicht verbunden.
 
 ## 1. Projekt anlegen
 
@@ -41,11 +41,11 @@ Das erledigt ein vorbereiteter Ablauf auf GitHub, in eurer eigenen Kopie von Wus
    | `SUPABASE_PROJECT_ID` | die Projekt-ID |
    | `SUPABASE_DB_PASSWORD` | das Datenbank-Passwort |
    | `WUSELWALL_SETUP_TOKEN` | ein Satz eurer Wahl aus Buchstaben und Ziffern, z. B. `KuchenAmSonntag2026`. Ihr braucht ihn einmal, um die Familie zu gründen |
-   | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_SENDER` | der SMTP-Zugang eures Mail-Anbieters, fünf Secrets; `SMTP_SENDER` ist die Absenderadresse. Statt SMTP geht Scaleway: `SCW_SECRET_KEY`, `SCW_PROJECT_ID`, `MAIL_FROM`. Warum das Pflicht ist, steht unter [E-Mail-Versand](#e-mail-versand) |
+   | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_SENDER` | freiwillig: SMTP-Zugang für Anmelde-Codes per Mail, fünf Secrets ([E-Mail-Versand](#e-mail-versand)) |
 
-5. Öffne den Reiter **Actions**. In einer Kopie sind die Abläufe zuerst ausgeschaltet: Tippe auf **I understand my workflows, go ahead and enable them**. Dann **deploy-supabase → Run workflow**. Wähle bei **language** die Sprache der Anmelde-Mails: `de` (Standard), `en`, `fr` oder `es`. Setze den Haken bei **web**, wenn ihr die Web-App wollt (Schritt 4), und tippe auf **Run workflow**. Der Haken **without mail** ist nur fürs Ausprobieren ohne Mail-Versand.
+5. Öffne den Reiter **Actions**. In einer Kopie sind die Abläufe zuerst ausgeschaltet: Tippe auf **I understand my workflows, go ahead and enable them**. Dann **deploy-supabase → Run workflow**. Wähle bei **language** die Sprache der Anmelde-Mails: `de` (Standard), `en`, `fr` oder `es`. Setze den Haken bei **web**, wenn ihr die Web-App wollt (Schritt 4), und tippe auf **Run workflow**.
 
-Nach ein paar Minuten ist der Lauf grün. In seiner Zusammenfassung steht die Adresse eures Servers. Der Ablauf richtet die Datenbank ein, stellt Anmeldung und Datenzugriff ein, lädt die Server-Funktionen hoch, wählt die Mail-Templates und Betreffzeilen in der gewählten E-Mail-Sprache und plant die nächtlichen Aufträge. Zum Schluss prüft er den Server: Antwortet er der App, erreichen die vier Aufträge ihre Funktionen, sind Anmeldung und Mail-Versand eingestellt? Scheitert eine Prüfung, wird der Lauf rot und nennt den Grund.
+Nach ein paar Minuten ist der Lauf grün. In seiner Zusammenfassung steht die Adresse eures Servers. Der Ablauf richtet die Datenbank ein, stellt Anmeldung und Datenzugriff ein, lädt die Server-Funktionen hoch, wählt die Mail-Templates und Betreffzeilen in der gewählten E-Mail-Sprache und plant die nächtlichen Aufträge. Zum Schluss prüft er den Server: Antwortet er der App, erreichen die vier Aufträge ihre Funktionen, passt die Anmeldung zum eingetragenen Mail-Versand? Scheitert eine Prüfung, wird der Lauf rot und nennt den Grund.
 
 ::: tip Geheimnisse bleiben geheim
 Die Protokolle eurer Kopie kann jeder sehen, die Secrets nicht: GitHub blendet sie überall aus. Den Satz für die Familiengründung speichert der Server nur als Fingerabdruck.
@@ -55,12 +55,11 @@ Das Access Token darf alles in eurem Supabase-Konto. Wer vorsichtig ist, löscht
 
 ## E-Mail-Versand {#e-mail-versand}
 
-Wer sich anmeldet, bekommt einen Code per Mail, auch ihr selbst beim ersten Mal. Der eingebaute Mail-Versand von Supabase schickt aber nur an die Adressen eures eigenen Supabase-Kontos und nur ein paar Mails pro Stunde. Darum braucht der Server einen Mail-Anbieter, bevor die Familie beitritt:
+E-Mail ist freiwillig. **Ohne die `SMTP_`-Secrets** melden sich alle mit E-Mail-Adresse und Passwort an; ein vergessenes Passwort setzt ein Erziehungsberechtigter in der App zurück. Der eingebaute Mail-Versand von Supabase spielt keine Rolle: Er schickt nur an die Adressen eures eigenen Supabase-Kontos.
 
-- **SMTP:** ein Transaktions-Mail-Dienst eurer Wahl, am besten einer in Europa. Trag seine Zugangsdaten als die fünf `SMTP_`-Secrets ein. Was ein guter Anbieter ist und welche DNS-Einträge er braucht, steht in den [Extras](/server/extras#e-mail).
-- **Scaleway:** wie beim Server zu Hause schickt dann die WuselWall-Funktion die Mails über Scaleway Transactional Email. Secrets: `SCW_SECRET_KEY`, `SCW_PROJECT_ID` und `MAIL_FROM` (optional `SCW_REGION`, `MAIL_FROM_NAME`).
+**Mit den fünf `SMTP_`-Secrets** kommen Anmelde-Codes per Mail. Ein Gmail-Konto mit App-Passwort reicht; wie das geht und welche Anbieter passen, steht unter [E-Mail](/server/email). Statt SMTP geht auch Scaleway: `SCW_SECRET_KEY`, `SCW_PROJECT_ID` und `MAIL_FROM` (optional `SCW_REGION`, `MAIL_FROM_NAME`).
 
-Ohne eines von beiden bricht der Lauf ab. Nur zum Ausprobieren setzt du den Haken **without mail**: Dann kommen Codes nur an die Adressen eures Supabase-Kontos. Trag die Secrets nach und starte den Lauf erneut, bevor die anderen beitreten.
+Ihr könnt die Secrets später nachtragen oder löschen und den Lauf erneut starten; die Konten bleiben.
 
 ## 3. Die App verbinden
 

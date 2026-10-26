@@ -6261,4 +6261,83 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get eventTemplateErrLimit =>
       'Your family already has 50 templates. Delete one first.';
+
+  @override
+  String get passwordSignUpTab => 'New account';
+
+  @override
+  String get passwordSignInTab => 'Sign in';
+
+  @override
+  String get passwordSignUpAction => 'Create account';
+
+  @override
+  String get passwordNoMailHint =>
+      'This server sends no email. Choose a password you will remember: if you forget it, a guardian of your family can give you a code for a new one.';
+
+  @override
+  String get passwordAccountExists =>
+      'There is already an account with this address. Sign in with its password.';
+
+  @override
+  String get passwordForgot => 'Forgot your password?';
+
+  @override
+  String get passwordResetTitle => 'New password';
+
+  @override
+  String get passwordResetIntro =>
+      'Ask a guardian of your family for a code: in the app under Members, at your name, “Reset password”. It works once, for 10 minutes.';
+
+  @override
+  String get passwordResetCodeLabel => 'Reset code';
+
+  @override
+  String get passwordResetSave => 'Save and sign in';
+
+  @override
+  String get errResetCodeExpired => 'This code has expired. Ask for a new one.';
+
+  @override
+  String get passwordResetMemberAction => 'Reset password';
+
+  @override
+  String passwordResetConfirmTitle(String name) {
+    return 'New password for $name?';
+  }
+
+  @override
+  String passwordResetConfirmBody(String name) {
+    return 'You get a code that $name enters on their own device to choose a new password. It works once, for 10 minutes. Hand it over in person.';
+  }
+
+  @override
+  String get passwordResetConfirm => 'Create code';
+
+  @override
+  String passwordResetCodeTitle(String name) {
+    return 'Code for $name';
+  }
+
+  @override
+  String passwordResetCodeHint(String name, String time) {
+    return 'On the device of $name: Continue with email → Forgot your password? Then the email address, this code and a new password. Valid until $time.';
+  }
+
+  @override
+  String get settingsPasswordNoMail =>
+      'Your family’s server sends no email: you sign in with your address and this password.';
+
+  @override
+  String get passwordDialogBodyNoMail =>
+      'At least 10 characters. If you forget it, a guardian of your family can give you a code for a new one.';
+
+  @override
+  String get errEmailNotConfirmed =>
+      'This server wants to confirm the address by email but sends none. Ask whoever runs it.';
+
+  @override
+  String accountDeleteReauthPasswordBody(String email) {
+    return 'Deleting an account needs a fresh sign-in. Enter the password of $email.';
+  }
 }

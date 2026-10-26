@@ -1,5 +1,6 @@
-# VitePress source remains with the app. Build and Pages publishing use the self-hosted
-# build fleet. Build jobs have read-only repository access and no deployment secrets.
+# VitePress source remains with the app. Build and Pages publishing run on GitHub's
+# runners, free for this public repository; nothing here needs the self-hosted fleet.
+# Build jobs have read-only repository access and no deployment secrets.
 # Pages publishing stays opt-in through DOCS_PAGES_ENABLED and never runs for a PR.
 # See specs/website-and-docs-migration.md.
 name: docs
@@ -20,16 +21,14 @@ permissions:
 
 jobs:
   build:
-    runs-on: [self-hosted, Linux, build]
+    runs-on: ubuntu-latest
     steps:
-      # A job-local npm cache avoids restoring archives with paths from another runner home.
-      - run: echo "npm_config_cache=$RUNNER_TEMP/npm-cache" >> "$GITHUB_ENV"
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with: { fetch-depth: 0 }   # "last updated" on each page comes from git history
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with: { flutter-version-file: app/pubspec.yaml, cache: true }
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with: { node-version: 22 }
+        with: { node-version: 22, cache: npm }
       - run: npm ci
       - run: npm run repo:check
       - run: npx playwright install --with-deps chromium
@@ -65,7 +64,7 @@ jobs:
   deploy:
     needs: build
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.DOCS_PAGES_ENABLED == 'true'
-    runs-on: [self-hosted, Linux, build]
+    runs-on: ubuntu-latest
     permissions:
       pages: write
       id-token: write

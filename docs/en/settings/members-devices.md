@@ -61,6 +61,10 @@ The order of the members in the list is the order on the wall and in every list.
 
 If another guardian has lost their second factor, tap **Reset two-factor** next to their name. Then they can sign in without the second factor and set it up again (see [Security](/en/settings/security#two-factor-sign-in)).
 
+## Reset password {#reset-password}
+
+Only on a server without email ([Email](/en/server/email#forgotten-password)): if another adult has forgotten their password, tap **Reset password** next to their name and then **Create code**. The app shows an 8-character code that works once, for 10 minutes. Hand it over in person. On their device, they tap **Forgot your password?** when signing in and enter their address, the code and a new password.
+
 ## Connect a device
 
 To connect a kids' tablet, a shared tablet or the wall display: under **Settings → Devices → All devices**, tap **Connect a device**, scan the QR code or type in the code the new device shows, and choose the kind and a name. The whole process is shown under [Signing in and connecting](/en/guide/setup#_4-connecting-a-family-tablet-or-wall-display).

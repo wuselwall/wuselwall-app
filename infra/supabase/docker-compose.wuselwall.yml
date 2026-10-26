@@ -63,12 +63,14 @@ services:
       GOTRUE_WEBAUTHN_RP_DISPLAY_NAME: WuselWall
       GOTRUE_WEBAUTHN_RP_ID: ${PASSKEY_RP_ID}
       GOTRUE_WEBAUTHN_RP_ORIGINS: ${PASSKEY_RP_ORIGINS}
-      # Mail (specs/10 §4 "Email setup"). The Send Email Hook hands every mail to the send-email
-      # Edge Function, which renders it in MAIL_LANGUAGE and sends it through Scaleway
-      # Transactional Email. It is switched on by make-env.mjs once the stack's .env has the
-      # SCW_* values (or by hand: set-env SEND_EMAIL_HOOK_ENABLED true). Its secret is the
-      # v1,whsec_ value the functions container checks the signature with. The SMTP_* values in
-      # the .env are the fallback when the hook is off. Both signup and returning sign-in
+      # Mail (specs/10 §4 "Email setup") is optional: without it ENABLE_EMAIL_AUTOCONFIRM is
+      # true and everyone signs in with a password (make-env.mjs, mail-settings.sh). The Send
+      # Email Hook hands every mail to the send-email Edge Function, which renders it in
+      # MAIL_LANGUAGE and sends it through Scaleway Transactional Email. It is switched on by
+      # make-env.mjs once the stack's .env has the SCW_* values (or by hand: set-env
+      # SEND_EMAIL_HOOK_ENABLED true). Its secret is the v1,whsec_ value the functions container
+      # checks the signature with. Otherwise GoTrue sends through the SMTP_* values in the .env
+      # (`wuselwall mail smtp`; any SMTP server, Gmail included). Both signup and returning sign-in
       # use codes, not links. GoTrue loads that language's supabase/templates/ files through
       # the internal-only mail-templates service (copied by the release/deploy scripts).
       #
@@ -79,7 +81,7 @@ services:
       GOTRUE_HOOK_SEND_EMAIL_ENABLED: ${SEND_EMAIL_HOOK_ENABLED:-false}
       GOTRUE_HOOK_SEND_EMAIL_URI: ${SEND_EMAIL_HOOK_URI:-}
       GOTRUE_HOOK_SEND_EMAIL_SECRETS: ${SEND_EMAIL_HOOK_SECRET:-}
-      # The CLI's limits, except e-mail: no SMTP is configured yet, so nothing is sent.
+      # The CLI's limits; e-mail at most 30 an hour, whichever way it is sent.
       GOTRUE_RATE_LIMIT_TOKEN_REFRESH: 150
       GOTRUE_RATE_LIMIT_VERIFY: 30
       GOTRUE_RATE_LIMIT_OTP: 30

@@ -6333,4 +6333,83 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get eventTemplateErrLimit =>
       'Votre famille a déjà 50 modèles. Supprimez-en un d’abord.';
+
+  @override
+  String get passwordSignUpTab => 'Nouveau compte';
+
+  @override
+  String get passwordSignInTab => 'Se connecter';
+
+  @override
+  String get passwordSignUpAction => 'Créer le compte';
+
+  @override
+  String get passwordNoMailHint =>
+      'Ce serveur n’envoie pas d’e-mails. Choisis un mot de passe dont tu te souviendras : si tu l’oublies, un responsable de ta famille peut te donner un code pour en choisir un nouveau.';
+
+  @override
+  String get passwordAccountExists =>
+      'Un compte existe déjà avec cette adresse. Connecte-toi avec son mot de passe.';
+
+  @override
+  String get passwordForgot => 'Mot de passe oublié ?';
+
+  @override
+  String get passwordResetTitle => 'Nouveau mot de passe';
+
+  @override
+  String get passwordResetIntro =>
+      'Demande un code à un responsable de ta famille : dans l’app, sous Membres, à ton nom, « Réinitialiser le mot de passe ». Il fonctionne une fois, pendant 10 minutes.';
+
+  @override
+  String get passwordResetCodeLabel => 'Code de réinitialisation';
+
+  @override
+  String get passwordResetSave => 'Enregistrer et se connecter';
+
+  @override
+  String get errResetCodeExpired => 'Ce code a expiré. Demandes-en un nouveau.';
+
+  @override
+  String get passwordResetMemberAction => 'Réinitialiser le mot de passe';
+
+  @override
+  String passwordResetConfirmTitle(String name) {
+    return 'Nouveau mot de passe pour $name ?';
+  }
+
+  @override
+  String passwordResetConfirmBody(String name) {
+    return 'Tu reçois un code que $name saisit sur son propre appareil pour choisir un nouveau mot de passe. Il fonctionne une fois, pendant 10 minutes. Remets-le en personne.';
+  }
+
+  @override
+  String get passwordResetConfirm => 'Créer le code';
+
+  @override
+  String passwordResetCodeTitle(String name) {
+    return 'Code pour $name';
+  }
+
+  @override
+  String passwordResetCodeHint(String name, String time) {
+    return 'Sur l’appareil de $name : Continuer par e-mail → Mot de passe oublié ? Puis l’adresse e-mail, ce code et un nouveau mot de passe. Valable jusqu’à $time.';
+  }
+
+  @override
+  String get settingsPasswordNoMail =>
+      'Le serveur de ta famille n’envoie pas d’e-mails : tu te connectes avec ton adresse et ce mot de passe.';
+
+  @override
+  String get passwordDialogBodyNoMail =>
+      'Au moins 10 caractères. Si tu l’oublies, un responsable de ta famille peut te donner un code pour en choisir un nouveau.';
+
+  @override
+  String get errEmailNotConfirmed =>
+      'Ce serveur veut confirmer l’adresse par e-mail mais n’en envoie aucun. Demande à la personne qui le gère.';
+
+  @override
+  String accountDeleteReauthPasswordBody(String email) {
+    return 'Supprimer un compte demande une connexion récente. Saisis le mot de passe de $email.';
+  }
 }

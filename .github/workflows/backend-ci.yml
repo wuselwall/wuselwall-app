@@ -21,9 +21,10 @@
 #
 #   backend           npx supabase start on a throwaway local stack, every migration from
 #                     zero, pgTAP (RLS included), the schema lint, then the Flutter
-#                     repositories against that stack (test/integration). This is the
-#                     official stack, heavier than the app's fast checks in ci.yml, so it
-#                     runs only when `changes` says it is needed.
+#                     repositories against that stack (test/integration), and once more
+#                     on the stack restarted without mail (no_mail_integration_test.dart).
+#                     This is the official stack, heavier than the app's fast checks in
+#                     ci.yml, so it runs only when `changes` says it is needed.
 #
 #   required          always runs (if: always()), on the self-hosted build fleet, after the two
 #                     jobs above. It is the one check to mark "required" in branch
@@ -164,6 +165,17 @@ jobs:
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with: { flutter-version-file: app/pubspec.yaml, cache: true }
       - run: flutter pub get --enforce-lockfile && flutter test test/integration --dart-define-from-file=env/ci.json -j 1
+        working-directory: app
+      # The same stack without mail (specs/20, Q48): Auth autoconfirms, the app signs up with
+      # a password, a guardian's code resets one. A fresh database, so the seed's founder
+      # codes are unused again (start applies the migrations and the seed).
+      - name: Restart the stack without mail
+        run: |
+          sed -i 's/^enable_confirmations = true$/enable_confirmations = false/' supabase/config.toml
+          grep -qx 'enable_confirmations = false' supabase/config.toml
+          npx --no-install supabase stop --no-backup
+          npx supabase start -x studio,imgproxy,logflare,vector
+      - run: flutter test test/integration/no_mail_integration_test.dart --dart-define-from-file=env/ci.json --dart-define=WW_NO_MAIL=true -j 1
         working-directory: app
       - name: Stop the disposable backend
         if: always()

@@ -18,11 +18,13 @@ A WuselWall server belongs to exactly **one household**. Once the first family e
 
 | | [At Supabase](/en/server/supabase-cloud) | [Rented](/en/server/rented-server) | [At home](/en/server/home-server) |
 |---|---|---|---|
-| **What you need** | An account at Supabase and one at GitHub, plus a mail provider | An account at a European provider such as Hetzner, a domain and a mail provider | A machine that runs all the time (NAS, mini PC) with Docker, a domain of your own and a mail provider |
+| **What you need** | An account at Supabase and one at GitHub | An account at a European provider such as Hetzner and a domain | A machine that runs all the time (NAS, mini PC) with Docker and a domain of your own |
 | **Setting up** | In the browser, about 20 minutes | Paste one file when creating the server and set two DNS records, about 15 minutes | One command on the server, plus the domain and the router |
 | **Where the data lives** | With Supabase Inc. (USA), in a data centre you choose, e.g. Frankfurt or Zurich | With a European provider of your choice, on your own server | On your own device |
-| **Cost** | Free to try, about USD 25 a month for everyday use | About €4–8 a month, plus the domain | Electricity and the domain, about €1–2 a month |
+| **Cost** | Free to try, about USD 25 a month for everyday use | Roughly €6–25 a month, plus the domain | Electricity and the domain, about €1–2 a month |
 | **Updates and backups** | Supabase maintains the server and, on Pro, backs up daily. New WuselWall versions take one click | You, one command each over SSH; the system keeps itself up to date | You, one command each |
+
+Prices are rough figures for reference as of October 2026, not offers; the provider's current price list counts. WuselWall is independent and not affiliated with Supabase, GitHub, Hetzner or the other providers named in these pages.
 
 Our advice: if you already run a NAS or a home server with Docker, choose the **server at home**. If you want the data in Europe and under your control without a device at home, rent a **server at Hetzner or a similar provider**. If you want the easiest start, begin with **Supabase**. Moving later is possible ([Restoring a backup](/en/server/restore)).
 
@@ -35,7 +37,6 @@ As little as possible is required. Everything in the second table can be left ou
 | What | What for |
 |---|---|
 | **A Supabase server**: a project at Supabase, or the Docker stack, rented or at home | Database, sign-in, live updates and WuselWall's server functions |
-| **Sending email (SMTP)** | Anyone signing up gets a code by email. Without SMTP that code never arrives, and nobody can start or join a family ([Extras](/en/server/extras#email)). A server without any mail comes later |
 | **HTTPS** | The apps talk to the server only over an encrypted connection. Supabase has it already; at home, the bundled web server Caddy fetches it automatically |
 | **Scheduled jobs** | Every night they create the next 14 days of tasks and close the previous day; once a week they fetch the holidays, and every hour the outside calendars. They run inside the database; the installation sets them up |
 | **A backup** | The database is the one thing that cannot be rebuilt |
@@ -44,6 +45,7 @@ As little as possible is required. Everything in the second table can be left ou
 
 | What | Without it |
 |---|---|
+| **Email** | Everyone signs in with email address and password, and a guardian resets a forgotten password. With email (a Gmail account is enough), sign-in codes arrive by mail ([Email](/en/server/email)) |
 | **The web app** | Only needed until the apps are in the stores, or for the laptop. At home the server brings it along; at Supabase, GitHub publishes it for you |
 | **Public and school holidays** | The server fetches them once a week from [OpenHolidays](https://www.openholidaysapi.org/), sending only country codes. Without internet access on the server, they are missing from the week board ([Extras](/en/server/extras#holidays)) |
 | **Outside calendars** | If you subscribe to club or town calendars, the server fetches them every hour from the addresses you entered. Without subscriptions it fetches nothing |

@@ -4,7 +4,7 @@ Les réglages de connexion et de sécurité sont réservés au **téléphone per
 
 ## Connexion {#sign-in}
 
-Le code par e-mail reste disponible. Vous pouvez définir ou modifier un [mot de passe](/fr/settings/account#password).
+Le code par e-mail reste disponible si votre serveur envoie des e-mails. Vous pouvez définir ou modifier un [mot de passe](/fr/settings/account#password).
 
 <Shot name="settings-sign-in" alt="Les réglages de connexion et de mot de passe" />
 

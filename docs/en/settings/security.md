@@ -4,7 +4,7 @@ Sign-in and security settings exist only on a guardian's **personal phone**: **S
 
 ## Sign-in
 
-This lists the ways you can sign in: the **code by email**, which is always there, and a **password** (see [Account and family](/en/settings/account#password)).
+This lists the ways you can sign in: the **code by email**, which is always there when your server sends email, and a **password** (see [Account and family](/en/settings/account#password)). On a server without email, only the password is listed.
 
 <Shot name="settings-sign-in" alt="Settings → Sign-in" />
 

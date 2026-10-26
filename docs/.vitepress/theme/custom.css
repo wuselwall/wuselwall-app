@@ -17,3 +17,30 @@
 .shots .shot { margin: 0.5rem 0; max-width: 260px; }
 /* <Shot> renders both themes; VitePress sets .dark on <html>. */
 .dark .shot-light, html:not(.dark) .shot-dark { display: none; }
+
+/* Landing page (index.md in each language): setup steps, screenshot spotlights and the
+   help boxes below the feature cards. A card's heading link covers the whole card. */
+.home-steps, .home-help { display: grid; gap: 1rem; margin: 1.5rem 0 2.5rem; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.home-step, .home-help > div { position: relative; padding: 1rem 1.25rem; border: 1px solid var(--vp-c-bg-soft); border-radius: 12px; background: var(--vp-c-bg-soft); transition: border-color 0.25s; }
+.home-step:hover { border-color: var(--vp-c-brand-1); }
+.home-step .shot { max-width: 150px; margin: 0.25rem auto 1rem; border-radius: 14px; }
+.home-step p { margin: 0.5rem 0 0; font-size: 14px; line-height: 1.5; color: var(--vp-c-text-2); }
+.home-step p:first-of-type { font-weight: 600; font-size: 16px; color: var(--vp-c-text-1); }
+.home-step a { text-decoration: none; }
+.home-step a::after { content: ''; position: absolute; inset: 0; border-radius: 12px; }
+.home-spot { display: grid; gap: 1.5rem 2.5rem; align-items: center; margin: 2.5rem 0; }
+@media (min-width: 768px) {
+  .home-spot { grid-template-columns: 3fr 2fr; }
+  .home-spot:nth-of-type(even) { grid-template-columns: 2fr 3fr; }
+  .home-spot:nth-of-type(even) > .home-spot-shot { order: 2; }
+}
+.home-spot .shot { margin: 0 auto; max-width: 230px; }
+.home-spot .shot.wide { max-width: 100%; }
+.home-spot-shot .shots { flex-wrap: nowrap; }
+.home-spot-shot .shots .shot { max-width: 200px; min-width: 0; flex: 1 1 0; }
+.home-spot h3 { margin-top: 0; }
+.home-spot h3 a { text-decoration: none; }
+.home-spot ul { padding-left: 1.1rem; }
+.home-help h3 { margin-top: 0.25rem; font-size: 17px; }
+.home-help ul { padding-left: 1.1rem; margin: 0.5rem 0 0; }
+.home-help li { margin-top: 0.35rem; font-size: 15px; }

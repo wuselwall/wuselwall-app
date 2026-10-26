@@ -6,7 +6,7 @@ Auf schmalen Bildschirmen oder bei großer Schrift stehen die Aktionsknöpfe unt
 
 ## Passwort
 
-Unter **Einstellungen → Erweitert → Anmeldung → Passwort** legst du ein Passwort fest oder änderst es. Mindestens 10 Zeichen; besser ein ganzer Satz. Den Code per E-Mail kannst du trotzdem weiter benutzen.
+Unter **Einstellungen → Erweitert → Anmeldung → Passwort** legst du ein Passwort fest oder änderst es. Mindestens 10 Zeichen; besser ein ganzer Satz. Den Code per E-Mail kannst du trotzdem weiter benutzen, wenn dein Server Mails verschickt; auf einem Server ohne E-Mail ist das Passwort der Weg hinein ([E-Mail](/server/email)).
 
 ## Familie verlassen
 
@@ -30,7 +30,7 @@ Eine Familie löscht nur eine Elternperson, und zwar auf dem eigenen Handy, unte
 Willst du dein WuselWall-Konto selbst löschen, tippe auf **Konto löschen**. Die Anmeldung wird entfernt, und du wirst überall abgemeldet.
 
 - Dein **Profil** bleibt mit allem, was du getan hast, in der Familie. Nur der Zugang geht weg.
-- Zum Löschen fragt WuselWall, ob du es wirklich bist. Ist deine Anmeldung schon etwas älter (mehr als 5 Minuten), schickt WuselWall einen **Code per E-Mail**, bevor es weitergeht.
+- Zum Löschen fragt WuselWall, ob du es wirklich bist. Ist deine Anmeldung schon etwas älter (mehr als 5 Minuten), schickt WuselWall einen **Code per E-Mail**, bevor es weitergeht; auf einem Server ohne E-Mail fragt es nach deinem **Passwort**.
 - Die letzte Elternperson mit Konto kann ihr Konto nicht löschen (siehe oben).
 
 ## Gut zu wissen

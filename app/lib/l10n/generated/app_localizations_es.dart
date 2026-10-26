@@ -6322,4 +6322,83 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get eventTemplateErrLimit =>
       'Ya tenéis 50 plantillas. Eliminad una primero.';
+
+  @override
+  String get passwordSignUpTab => 'Cuenta nueva';
+
+  @override
+  String get passwordSignInTab => 'Iniciar sesión';
+
+  @override
+  String get passwordSignUpAction => 'Crear cuenta';
+
+  @override
+  String get passwordNoMailHint =>
+      'Este servidor no envía correos. Elige una contraseña que puedas recordar: si la olvidas, un responsable de tu familia puede darte un código para elegir otra.';
+
+  @override
+  String get passwordAccountExists =>
+      'Ya existe una cuenta con esta dirección. Inicia sesión con su contraseña.';
+
+  @override
+  String get passwordForgot => '¿Olvidaste tu contraseña?';
+
+  @override
+  String get passwordResetTitle => 'Contraseña nueva';
+
+  @override
+  String get passwordResetIntro =>
+      'Pide un código a un responsable de tu familia: en la app, en Miembros, junto a tu nombre, «Restablecer contraseña». Funciona una vez, durante 10 minutos.';
+
+  @override
+  String get passwordResetCodeLabel => 'Código de restablecimiento';
+
+  @override
+  String get passwordResetSave => 'Guardar e iniciar sesión';
+
+  @override
+  String get errResetCodeExpired => 'Este código ha caducado. Pide uno nuevo.';
+
+  @override
+  String get passwordResetMemberAction => 'Restablecer contraseña';
+
+  @override
+  String passwordResetConfirmTitle(String name) {
+    return '¿Contraseña nueva para $name?';
+  }
+
+  @override
+  String passwordResetConfirmBody(String name) {
+    return 'Recibes un código que $name introduce en su propio dispositivo para elegir una contraseña nueva. Funciona una vez, durante 10 minutos. Entrégalo en persona.';
+  }
+
+  @override
+  String get passwordResetConfirm => 'Crear código';
+
+  @override
+  String passwordResetCodeTitle(String name) {
+    return 'Código para $name';
+  }
+
+  @override
+  String passwordResetCodeHint(String name, String time) {
+    return 'En el dispositivo de $name: Continuar con correo electrónico → ¿Olvidaste tu contraseña? Luego la dirección de correo, este código y una contraseña nueva. Válido hasta las $time.';
+  }
+
+  @override
+  String get settingsPasswordNoMail =>
+      'El servidor de tu familia no envía correos: inicias sesión con tu dirección y esta contraseña.';
+
+  @override
+  String get passwordDialogBodyNoMail =>
+      'Al menos 10 caracteres. Si la olvidas, un responsable de tu familia puede darte un código para elegir otra.';
+
+  @override
+  String get errEmailNotConfirmed =>
+      'Este servidor quiere confirmar la dirección por correo, pero no envía ninguno. Pregunta a quien lo administra.';
+
+  @override
+  String accountDeleteReauthPasswordBody(String email) {
+    return 'Para eliminar una cuenta hace falta iniciar sesión de nuevo. Introduce la contraseña de $email.';
+  }
 }

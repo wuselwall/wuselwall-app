@@ -16,21 +16,24 @@ Un servidor pertenece a **un solo hogar**. Una vez creado, no admite una segunda
 
 | | [En Supabase](/es/server/supabase-cloud) | [Alquilado](/es/server/rented-server) | [En casa](/es/server/home-server) |
 |---|---|---|---|
-| Requisitos | Cuentas de Supabase y GitHub, sin máquina, más un proveedor de correo | Cuenta en un proveedor europeo como Hetzner, dominio y proveedor de correo | NAS o miniPC con Docker, dominio y proveedor de correo |
+| Requisitos | Cuentas de Supabase y GitHub, sin máquina | Cuenta en un proveedor europeo como Hetzner y dominio | NAS o miniPC con Docker y dominio |
 | Instalación | Navegador | Un archivo pegado al crear el servidor y dos registros DNS | Herramienta de terminal, DNS y red |
 | Datos | Centro de datos elegido en Supabase Inc. (EE. UU.) | Proveedor europeo de tu elección, en tu propio servidor | Máquina bajo tu control |
-| Costes | Según la oferta vigente de Supabase | Unos 4–8 € al mes, más el dominio | Equipo, electricidad y dominio |
+| Costes | Según la oferta vigente de Supabase | Unos 6–25 € al mes, más el dominio | Equipo, electricidad y dominio |
 | Mantenimiento | Supabase mantiene su plataforma; tú actualizas WuselWall | Tú, un comando SSH por actualización; el sistema se actualiza solo | Tú gestionas actualizaciones y copias |
+
+Los precios son cifras orientativas a octubre de 2026, no ofertas; cuenta la lista de precios vigente del proveedor. WuselWall es independiente y no está vinculado a Supabase, GitHub, Hetzner ni a los demás proveedores citados en estas páginas.
 
 Un NAS con Docker puede servir. Para datos en Europa bajo tu control sin máquina en casa, alquila un servidor en Hetzner o un proveedor comparable. Si no, Supabase evita mantener una máquina. Revisa condiciones y precios antes de elegir. Es posible [trasladarse después](/es/server/restore).
 
 ## Lo necesario {#what-you-need-and-what-you-dont}
 
 - **Supabase**, alojado o en Docker: base de datos, acceso, cambios en directo y funciones.
-- **Envío de correo SMTP** para los primeros códigos. El modo sin correo está previsto, aún no disponible ([Opciones](/es/server/extras#email)).
 - **HTTPS**, integrado en Supabase o gestionado por Caddy en casa.
 - **Tareas programadas**: preparar los próximos 14 días de tareas, cerrar el día anterior, actualizar festivos y calendarios externos y realizar la purga. La instalación las programa.
 - **Copias de seguridad**: la base contiene tus datos irreemplazables.
+
+Opcional: el **correo**. Sin él, todos inician sesión con dirección y contraseña; con él (basta una cuenta de Gmail), los códigos llegan por correo ([Correo](/es/server/email)).
 
 ## Lo opcional
 

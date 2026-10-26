@@ -172,6 +172,26 @@ void main() {
       );
       expect(back.toJson(), s.toJson());
     });
+
+    test('reads whether the server mails sign-in codes (Q48)', () {
+      final origin = Uri.parse('https://api.example.org');
+      ServerInfo read(Object? signIn) => ServerInfo.fromDiscovery({
+        ...doc(),
+        'sign_in': signIn,
+      }, origin: origin);
+      expect(read({'password': true, 'email_code': false}).emailCode, isFalse);
+      expect(read({'password': true, 'email_code': true}).emailCode, isTrue);
+      // Servers from before mail became optional do not say: they all sent codes.
+      expect(read({'password': true}).emailCode, isTrue);
+      expect(read(null).emailCode, isTrue);
+
+      final noMail = read({'password': true, 'email_code': false});
+      final kept = ServerInfo.fromDiscovery(
+        jsonDecode(jsonEncode(noMail.toJson())),
+        origin: origin,
+      );
+      expect(kept.emailCode, isFalse, reason: 'the stored copy keeps it');
+    });
   });
 
   group('compatibility', () {

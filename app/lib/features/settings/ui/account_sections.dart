@@ -6,6 +6,7 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/config/config_providers.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/server/server_providers.dart';
 import 'package:wuselwall/core/ui/qr_code_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/household/application/household_leave_providers.dart';
@@ -15,7 +16,8 @@ import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/identity/ui/set_password_dialog.dart';
 
 /// How this account signs in (specs/20, "Several ways into one account") — for the
-/// adult's own phone: the email code, always, and an optional password.
+/// adult's own phone: the email code, always, and an optional password. On a server
+/// without mail, the password only (Q48).
 class SignInMethodsSection extends ConsumerStatefulWidget {
   const SignInMethodsSection({super.key});
 
@@ -30,24 +32,29 @@ class _SignInMethodsSectionState extends ConsumerState<SignInMethodsSection> {
     final l10n = context.l10n;
     final email = ref.watch(myAccountProvider).value?.email;
     final hasPassword = ref.read(identityRepositoryProvider).hasPassword();
+    // A server without mail has no email code: the password is the way in (Q48).
+    final emailCode = ref.watch(emailCodeSignInProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ListTile(
-          leading: const Icon(Icons.mail_outline),
-          title: Text(l10n.signInMethodEmail),
-          // The e-mail code is always there for an account with an address.
-          subtitle: Text(
-            email == null
-                ? l10n.signInMethodAlwaysAvailable
-                : l10n.signInMethodEmailSubtitle(email),
+        if (emailCode)
+          ListTile(
+            leading: const Icon(Icons.mail_outline),
+            title: Text(l10n.signInMethodEmail),
+            // The e-mail code is always there for an account with an address.
+            subtitle: Text(
+              email == null
+                  ? l10n.signInMethodAlwaysAvailable
+                  : l10n.signInMethodEmailSubtitle(email),
+            ),
           ),
-        ),
         _ResponsiveActionTile(
           icon: Icons.lock_outline,
           title: l10n.settingsPasswordTitle,
-          subtitle: hasPassword
+          subtitle: !emailCode
+              ? l10n.settingsPasswordNoMail
+              : hasPassword
               ? l10n.settingsPasswordSet
               : l10n.settingsPasswordNotSet,
           action: OutlinedButton(

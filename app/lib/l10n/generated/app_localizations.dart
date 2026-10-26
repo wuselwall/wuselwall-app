@@ -10637,6 +10637,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your family already has 50 templates. Delete one first.'**
   String get eventTemplateErrLimit;
+
+  /// No description provided for @passwordSignUpTab.
+  ///
+  /// In en, this message translates to:
+  /// **'New account'**
+  String get passwordSignUpTab;
+
+  /// No description provided for @passwordSignInTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get passwordSignInTab;
+
+  /// No description provided for @passwordSignUpAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Create account'**
+  String get passwordSignUpAction;
+
+  /// No description provided for @passwordNoMailHint.
+  ///
+  /// In en, this message translates to:
+  /// **'This server sends no email. Choose a password you will remember: if you forget it, a guardian of your family can give you a code for a new one.'**
+  String get passwordNoMailHint;
+
+  /// No description provided for @passwordAccountExists.
+  ///
+  /// In en, this message translates to:
+  /// **'There is already an account with this address. Sign in with its password.'**
+  String get passwordAccountExists;
+
+  /// No description provided for @passwordForgot.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot your password?'**
+  String get passwordForgot;
+
+  /// No description provided for @passwordResetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get passwordResetTitle;
+
+  /// No description provided for @passwordResetIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask a guardian of your family for a code: in the app under Members, at your name, “Reset password”. It works once, for 10 minutes.'**
+  String get passwordResetIntro;
+
+  /// No description provided for @passwordResetCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset code'**
+  String get passwordResetCodeLabel;
+
+  /// No description provided for @passwordResetSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save and sign in'**
+  String get passwordResetSave;
+
+  /// No description provided for @errResetCodeExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'This code has expired. Ask for a new one.'**
+  String get errResetCodeExpired;
+
+  /// No description provided for @passwordResetMemberAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset password'**
+  String get passwordResetMemberAction;
+
+  /// No description provided for @passwordResetConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New password for {name}?'**
+  String passwordResetConfirmTitle(String name);
+
+  /// No description provided for @passwordResetConfirmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You get a code that {name} enters on their own device to choose a new password. It works once, for 10 minutes. Hand it over in person.'**
+  String passwordResetConfirmBody(String name);
+
+  /// No description provided for @passwordResetConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Create code'**
+  String get passwordResetConfirm;
+
+  /// No description provided for @passwordResetCodeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Code for {name}'**
+  String passwordResetCodeTitle(String name);
+
+  /// No description provided for @passwordResetCodeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'On the device of {name}: Continue with email → Forgot your password? Then the email address, this code and a new password. Valid until {time}.'**
+  String passwordResetCodeHint(String name, String time);
+
+  /// No description provided for @settingsPasswordNoMail.
+  ///
+  /// In en, this message translates to:
+  /// **'Your family’s server sends no email: you sign in with your address and this password.'**
+  String get settingsPasswordNoMail;
+
+  /// No description provided for @passwordDialogBodyNoMail.
+  ///
+  /// In en, this message translates to:
+  /// **'At least 10 characters. If you forget it, a guardian of your family can give you a code for a new one.'**
+  String get passwordDialogBodyNoMail;
+
+  /// No description provided for @errEmailNotConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'This server wants to confirm the address by email but sends none. Ask whoever runs it.'**
+  String get errEmailNotConfirmed;
+
+  /// No description provided for @accountDeleteReauthPasswordBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleting an account needs a fresh sign-in. Enter the password of {email}.'**
+  String accountDeleteReauthPasswordBody(String email);
 }
 
 class _AppLocalizationsDelegate

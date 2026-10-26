@@ -34,6 +34,8 @@ cd wuselwall
 - sets up the database and schedules the nightly jobs,
 - and finally shows the server address and a **setup link with a QR code**, carrying the one-time setup code.
 
+The server starts **without email**: everyone signs in with email address and password. Sign-in codes by email can be added at any time with `./wuselwall mail smtp` ([Email](/en/server/email)).
+
 Nothing more is needed on the server: no cron job for WuselWall, no Node.js, no web server of your own.
 
 ::: danger stack/.env into the password manager, right away
@@ -102,6 +104,8 @@ The tool backs up the database first, downloads the new version, restarts the st
 
 Coming from a version with sign-in through Apple or Google? Read [Updating from a version with Apple and Google sign-in](/en/server/extras#retiring-social-sign-in) first.
 
+A server installed before email became optional, without a mail provider, cannot sign anyone up yet. The update then says so: run `./wuselwall mail off` once, or set up email ([Email](/en/server/email)).
+
 ### Which app fits which server {#compatibility}
 
 The app checks by itself whether it fits your server when it connects, and tells you when the app or the server needs an update. Every app speaks its server's API and the one before it; the server also names the oldest app it still works with. What is running shows in the app under **Settings → Versions**, for example "App 1.1.0 · Server 0.3.0 · API 1". From server 0.3.0 on the server names its release there; the app offers text recognition only when the server has it set up.
@@ -120,6 +124,8 @@ Keep every auto-updater (Watchtower, a NAS's automatic container updates) away f
 | `./wuselwall logs auth` | One service's logs (`db`, `auth`, `rest`, `realtime`, `functions`, `caddy`) |
 | `./wuselwall backup` | Backs up now |
 | `./wuselwall setup-token` | A new setup token, as long as there is no family |
+| `./wuselwall mail` | Email on (`mail smtp`), off (`mail off`) or tested (`mail test`) ([Email](/en/server/email)) |
+| `./wuselwall password <address>` | A one-time code with which that person chooses a new password ([Email](/en/server/email#forgotten-password)) |
 | `./wuselwall compose …` | Any Docker Compose command for the stack |
 
 Supabase's admin interface (Studio) is switched off. If you want it, install with `--studio` and open it through an SSH tunnel: `ssh -L 54421:172.17.0.1:54421 server`, then `http://127.0.0.1:54421`. User and password are in `stack/.env` under `DASHBOARD_USERNAME` and `DASHBOARD_PASSWORD`.

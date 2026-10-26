@@ -9,6 +9,7 @@ import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/account/ui/mfa_reset_button.dart';
+import 'package:wuselwall/features/account/ui/password_reset_button.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
@@ -339,6 +340,7 @@ class _MemberPageState extends ConsumerState<MemberPage> {
           spacing: Tokens.space1,
           children: [
             MfaResetButton(member: m),
+            PasswordResetButton(member: m),
             InviteMemberButton(member: m),
           ],
         ),

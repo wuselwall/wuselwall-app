@@ -6,7 +6,7 @@ En pantallas estrechas o con texto grande, los botones de acción aparecen debaj
 
 ## Contraseña {#password}
 
-En **Ajustes → Avanzados → Inicio de sesión**, define o cambia una contraseña de al menos **10 caracteres**. El código por correo sigue disponible.
+En **Ajustes → Avanzados → Inicio de sesión**, define o cambia una contraseña de al menos **10 caracteres**. El código por correo sigue disponible si tu servidor envía correo; si no, la contraseña es el único acceso ([Correo](/es/server/email)).
 
 ## Salir de la familia {#leave-the-family}
 
@@ -22,6 +22,6 @@ Solo un adulto responsable desde su móvil personal puede hacerlo, en **Ajustes 
 
 ## Eliminar tu cuenta {#delete-your-account}
 
-Se elimina el acceso y se cierra la sesión en todas partes. El **perfil** y sus aportaciones permanecen en la familia. Si la sesión tiene más de cinco minutos, se verifica tu identidad con un código por correo. El último adulto responsable con cuenta no puede eliminarla.
+Se elimina el acceso y se cierra la sesión en todas partes. El **perfil** y sus aportaciones permanecen en la familia. Si la sesión tiene más de cinco minutos, se verifica tu identidad con un código por correo (sin correo: con tu contraseña). El último adulto responsable con cuenta no puede eliminarla.
 
 Decide en familia antes de borrar el hogar. Si quieres conservar datos, [expórtalos primero](/es/settings/members-devices#export-data).

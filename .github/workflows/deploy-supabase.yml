@@ -11,14 +11,17 @@
 #   WUSELWALL_SETUP_TOKEN   optional: a phrase of the family's choice, used once to found
 #                           the household. Ignored once a household exists.
 #
-# Mail (specs/10 §4): sign-in is by email code, and Supabase's built-in mailer delivers only
-# to the account's own addresses, a few times an hour. So one of these, or the run stops:
+# Mail is optional (specs/20, Q48). Without it, everyone signs up and signs in with email and
+# password, and a guardian resets a forgotten password in the app. With one of these, sign-in
+# codes come by mail:
 #   SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_SENDER [, SMTP_SENDER_NAME]
-#                           a transactional-mail provider's SMTP relay (scripts/hosted-auth-config.mjs)
+#                           any SMTP server, e.g. a transactional-mail provider or Gmail with
+#                           an app password (scripts/hosted-auth-config.mjs)
 #   SCW_SECRET_KEY, SCW_PROJECT_ID, MAIL_FROM [, SCW_REGION, MAIL_FROM_NAME]
 #                           Scaleway Transactional Email through the send-email hook, as the
 #                           compose stack does (the hook's secret is generated here)
-# Ticking "without mail" deploys without either, for a trial only.
+# Supabase's built-in mailer is never relied on: it delivers only to the account's own
+# addresses, a few times an hour.
 #
 # With "web" ticked, the web app is published on this repository's GitHub Pages
 # (Settings → Pages → Source: GitHub Actions, once). It asks for the server on first use.
@@ -39,10 +42,6 @@ on:
         description: Also publish the web app on GitHub Pages
         type: boolean
         default: false
-      without_mail:
-        description: "Trial only: deploy without SMTP or the mail hook (codes reach the Supabase account's own addresses only)"
-        type: boolean
-        default: false
 permissions:
   contents: read
 
@@ -55,7 +54,6 @@ jobs:
       PROJECT: ${{ secrets.SUPABASE_PROJECT_ID }}
       SETUP_TOKEN: ${{ secrets.WUSELWALL_SETUP_TOKEN }}
       MAIL_LANGUAGE: ${{ inputs.language }}
-      WITHOUT_MAIL: ${{ inputs.without_mail }}
       SMTP_HOST: ${{ secrets.SMTP_HOST }}
       SMTP_PORT: ${{ secrets.SMTP_PORT }}
       SMTP_USER: ${{ secrets.SMTP_USER }}
@@ -87,9 +85,8 @@ jobs:
               [ -n "${!v}" ] || { echo "::error::SCW_SECRET_KEY is set, so $v is needed too"; exit 1; }
             done
           fi
-          if [ -z "$SMTP_HOST" ] && [ -z "$SCW_SECRET_KEY" ] && [ "$WITHOUT_MAIL" != true ]; then
-            echo "::error::No mail configured. Add the SMTP_* secrets or the Scaleway secrets, or tick 'without mail' for a trial (docs/server/supabase-cloud)."
-            exit 1
+          if [ -z "$SMTP_HOST" ] && [ -z "$SCW_SECRET_KEY" ]; then
+            echo "::notice::No mail configured: sign-in with email and password (docs/server/extras)."
           fi
 
       - name: Database
@@ -143,7 +140,7 @@ jobs:
 
       - name: Auth settings
         # Sign-up on, the access-token hook, TOTP, the compose overlay's limits, and mail
-        # (SMTP, the send-email hook, or neither for a trial); read back after.
+        # (SMTP, the send-email hook, or none: then addresses are autoconfirmed); read back after.
         run: node scripts/hosted-auth-config.mjs
 
       - name: Email code templates
@@ -181,7 +178,8 @@ jobs:
       - name: Verify the server
         # What a family would otherwise find out later: the discovery document answers, the
         # four jobs are scheduled and reach their functions (a 401 here means a function is
-        # missing from config.toml's verify_jwt list), sign-up is on and mail is configured.
+        # missing from config.toml's verify_jwt list), sign-up is on, and the sign-in the app
+        # will offer (email code or password only) matches the mail configured.
         run: |
           base=https://$PROJECT.supabase.co
           api() {
@@ -206,11 +204,12 @@ jobs:
           auth=$(api config/auth)
           jq -e '.disable_signup == false' <<< "$auth" > /dev/null \
             || { echo "::error::sign-up is off; nobody could create the first account"; exit 1; }
-          if [ "$WITHOUT_MAIL" != true ]; then
-            jq -e '.hook_send_email_enabled == true or ((.smtp_host // "") | length) > 0' <<< "$auth" > /dev/null \
-              || { echo "::error::neither SMTP nor the send-email hook is configured"; exit 1; }
-          fi
-          echo "auth: sign-up on, mail $(jq -r 'if .hook_send_email_enabled then "through the send-email hook" elif ((.smtp_host // "") | length) > 0 then "through SMTP" else "NOT configured (trial)" end' <<< "$auth")"
+          if [ -n "$SMTP_HOST" ] || [ -n "$SCW_SECRET_KEY" ]; then mail=true; else mail=false; fi
+          jq -e --argjson mail "$mail" '.mailer_autoconfirm == ($mail | not)' <<< "$auth" > /dev/null \
+            || { echo "::error::Auth's autoconfirm does not match the mail configured"; exit 1; }
+          jq -e --argjson mail "$mail" '.sign_in.email_code == $mail' <<< "$doc" > /dev/null \
+            || { echo "::error::the discovery document's sign_in.email_code is not $mail"; exit 1; }
+          echo "auth: sign-up on, $(jq -r 'if .hook_send_email_enabled then "sign-in codes through the send-email hook" elif ((.smtp_host // "") | length) > 0 then "sign-in codes through SMTP" else "no mail: email and password" end' <<< "$auth")"
 
       - name: Summary
         run: |
@@ -224,8 +223,8 @@ jobs:
               echo "Then **Start a new family** with the phrase you saved as \`WUSELWALL_SETUP_TOKEN\`."
               echo
             fi
-            if [ "$WITHOUT_MAIL" = true ]; then
-              echo "> **Without mail:** sign-in codes reach only the addresses of your Supabase account, a few an hour. Add the SMTP or Scaleway secrets and run again before the family joins."
+            if [ -z "$SMTP_HOST" ] && [ -z "$SCW_SECRET_KEY" ]; then
+              echo "> **Without mail:** everyone signs up with email and password. A guardian resets a forgotten password in the app (Members). Add the SMTP secrets and run again whenever you want sign-in codes by mail."
             fi
           } >> "$GITHUB_STEP_SUMMARY"
 

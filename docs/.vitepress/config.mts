@@ -50,6 +50,7 @@ const sidebar = (p: string, t: Record<string, string>) => [
       { text: t.serverSupabase, link: `${p}/server/supabase-cloud` },
       { text: t.serverRented, link: `${p}/server/rented-server` },
       { text: t.serverHome, link: `${p}/server/home-server` },
+      { text: t.serverEmail, link: `${p}/server/email` },
       { text: t.serverRestore, link: `${p}/server/restore` },
       { text: t.serverExtras, link: `${p}/server/extras` },
     ],
@@ -98,7 +99,7 @@ export default defineConfig({
       themeConfig: {
         nav: [
           { text: 'Erste Schritte', link: '/guide/concepts' },
-          { text: 'Module', items: [
+          { text: 'Bereiche', items: [
             { text: 'Kalender', link: '/calendar/' },
             { text: 'Stundenplan', link: '/school/' },
             { text: 'Aufgaben', link: '/tasks/' },
@@ -109,10 +110,10 @@ export default defineConfig({
         ],
         sidebar: sidebar('', {
           start: 'Erste Schritte', concepts: 'So funktioniert WuselWall', install: 'App installieren', setup: 'Anmelden und verbinden', who: 'Wer bist du?',
-          modules: 'Module', calendar: 'Kalender', feeds: 'Familienkalender teilen', school: 'Stundenplan', tasks: 'Aufgaben', meals: 'Essen', rituals: 'Rituale', wusel: 'Wusel und Farben',
+          modules: 'Bereiche', calendar: 'Kalender', feeds: 'Familienkalender teilen', school: 'Stundenplan', tasks: 'Aufgaben', meals: 'Essen', rituals: 'Rituale', wusel: 'Wusel und Farben',
           shopping: 'Einkaufsliste', add: 'Artikel hinzufügen', lists: 'Mehrere Listen', store: 'Im Laden', history: 'Verlauf',
           devices: 'Geräte und Sicherheit', wall: 'Wandbildschirm und Kinder', household: 'Alle Einstellungen', members: 'Mitglieder und Geräte', account: 'Konto und Familie', reminders: 'Erinnerungen', shortcuts: 'Apps und Automationen', security: 'Sicherheit', faq: 'Häufige Fragen',
-          server: 'Eigener Server', serverOverview: 'Überblick', serverHome: 'Server zu Hause', serverRented: 'Gemieteter Server', serverSupabase: 'Server bei Supabase', serverRestore: 'Backup zurückspielen', serverExtras: 'Extras',
+          server: 'Eigener Server', serverOverview: 'Überblick', serverHome: 'Server zu Hause', serverRented: 'Gemieteter Server', serverSupabase: 'Server bei Supabase', serverRestore: 'Backup zurückspielen', serverExtras: 'Extras', serverEmail: 'E-Mail',
         }),
         docFooter: { prev: 'Zurück', next: 'Weiter' },
         outlineTitle: 'Auf dieser Seite',
@@ -130,7 +131,7 @@ export default defineConfig({
       themeConfig: {
         nav: [
           { text: 'Getting started', link: '/en/guide/concepts' },
-          { text: 'Modules', items: [
+          { text: 'Areas', items: [
             { text: 'Calendar', link: '/en/calendar/' },
             { text: 'Timetable', link: '/en/school/' },
             { text: 'Tasks', link: '/en/tasks/' },
@@ -141,10 +142,10 @@ export default defineConfig({
         ],
         sidebar: sidebar('/en', {
           start: 'Getting started', concepts: 'How WuselWall works', install: 'Installing the app', setup: 'Signing in and connecting', who: 'Who are you?',
-          modules: 'Modules', calendar: 'Calendar', feeds: 'Sharing the family calendar', school: 'Timetable', tasks: 'Tasks', meals: 'Meals', rituals: 'Rituals', wusel: 'Wusel and colours',
+          modules: 'Areas', calendar: 'Calendar', feeds: 'Sharing the family calendar', school: 'Timetable', tasks: 'Tasks', meals: 'Meals', rituals: 'Rituals', wusel: 'Wusel and colours',
           shopping: 'Shopping list', add: 'Adding items', lists: 'Several lists', store: 'In the store', history: 'History',
           devices: 'Devices and security', wall: 'Wall display and kids', household: 'All settings', members: 'Members and devices', account: 'Account and family', reminders: 'Reminders', shortcuts: 'Apps and automations', security: 'Security', faq: 'FAQ',
-          server: 'Your own server', serverOverview: 'Overview', serverHome: 'Server at home', serverRented: 'Rented server', serverSupabase: 'Server at Supabase', serverRestore: 'Restoring a backup', serverExtras: 'Extras',
+          server: 'Your own server', serverOverview: 'Overview', serverHome: 'Server at home', serverRented: 'Rented server', serverSupabase: 'Server at Supabase', serverRestore: 'Restoring a backup', serverExtras: 'Extras', serverEmail: 'Email',
         }),
       },
     },
@@ -154,7 +155,7 @@ export default defineConfig({
       themeConfig: {
         nav: [
           { text: 'Premiers pas', link: '/fr/guide/concepts' },
-          { text: 'Modules', items: [
+          { text: 'Espaces', items: [
             { text: 'Calendrier', link: '/fr/calendar/' },
             { text: 'Emploi du temps', link: '/fr/school/' },
             { text: 'Tâches', link: '/fr/tasks/' },
@@ -168,7 +169,7 @@ export default defineConfig({
           modules: 'Les espaces', calendar: 'Calendrier', feeds: 'Partager le calendrier', school: 'Emploi du temps', tasks: 'Tâches', meals: 'Repas', rituals: 'Rituels', wusel: 'Wusel et les couleurs',
           shopping: 'Courses', add: 'Ajouter des articles', lists: 'Plusieurs listes', store: 'Au magasin', history: 'Historique',
           devices: 'Appareils et sécurité', wall: 'Écran mural et enfants', household: 'Tous les paramètres', members: 'Membres et appareils', account: 'Compte et famille', reminders: 'Rappels', shortcuts: 'Apps et automatisations', security: 'Sécurité', faq: 'Questions fréquentes',
-          server: 'Votre propre serveur', serverOverview: 'Vue d’ensemble', serverHome: 'Serveur à la maison', serverRented: 'Serveur loué', serverSupabase: 'Serveur chez Supabase', serverRestore: 'Restaurer une sauvegarde', serverExtras: 'Options du serveur',
+          server: 'Votre propre serveur', serverOverview: 'Vue d’ensemble', serverHome: 'Serveur à la maison', serverRented: 'Serveur loué', serverSupabase: 'Serveur chez Supabase', serverRestore: 'Restaurer une sauvegarde', serverExtras: 'Options du serveur', serverEmail: 'E-mails',
         }),
         docFooter: { prev: 'Précédent', next: 'Suivant' },
         outline: { level: [2, 3], label: 'Sur cette page' },
@@ -185,7 +186,7 @@ export default defineConfig({
       themeConfig: {
         nav: [
           { text: 'Primeros pasos', link: '/es/guide/concepts' },
-          { text: 'Módulos', items: [
+          { text: 'Secciones', items: [
             { text: 'Calendario', link: '/es/calendar/' },
             { text: 'Horario escolar', link: '/es/school/' },
             { text: 'Tareas', link: '/es/tasks/' },
@@ -199,7 +200,7 @@ export default defineConfig({
           modules: 'Secciones', calendar: 'Calendario', feeds: 'Compartir el calendario', school: 'Horario escolar', tasks: 'Tareas', meals: 'Comidas', rituals: 'Rituales', wusel: 'Wusel y los colores',
           shopping: 'Compra', add: 'Añadir productos', lists: 'Varias listas', store: 'En la tienda', history: 'Historial',
           devices: 'Dispositivos y seguridad', wall: 'Pantalla de pared y niños', household: 'Todos los ajustes', members: 'Miembros y dispositivos', account: 'Cuenta y familia', reminders: 'Recordatorios', shortcuts: 'Apps y automatizaciones', security: 'Seguridad', faq: 'Preguntas frecuentes',
-          server: 'Tu propio servidor', serverOverview: 'Resumen', serverHome: 'Servidor en casa', serverRented: 'Servidor alquilado', serverSupabase: 'Servidor en Supabase', serverRestore: 'Restaurar una copia', serverExtras: 'Opciones del servidor',
+          server: 'Tu propio servidor', serverOverview: 'Resumen', serverHome: 'Servidor en casa', serverRented: 'Servidor alquilado', serverSupabase: 'Servidor en Supabase', serverRestore: 'Restaurar una copia', serverExtras: 'Opciones del servidor', serverEmail: 'Correo',
         }),
         docFooter: { prev: 'Anterior', next: 'Siguiente' },
         outline: { level: [2, 3], label: 'En esta página' },

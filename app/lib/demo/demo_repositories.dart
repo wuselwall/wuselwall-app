@@ -197,6 +197,20 @@ class DemoIdentityRepository implements IdentityRepository {
       const Ok(null);
 
   @override
+  Future<Result<void>> signUpWithPassword(
+    String email,
+    String password, {
+    required String locale,
+  }) async => const Ok(null);
+
+  @override
+  Future<Result<void>> redeemPasswordReset({
+    required String email,
+    required String code,
+    required String password,
+  }) async => const Ok(null);
+
+  @override
   Future<Result<void>> sendEmailCode(
     String email, {
     required String locale,
@@ -1826,8 +1840,9 @@ class DemoHouseholdOnboardingRepository
   Future<Result<void>> completeExamples() async => const Ok(null);
 }
 
-/// Deleting the account and resetting a second factor in the demo: each call succeeds and
-/// nothing is stored. The demo account is an e-mail account, and its re-sign-in is always fresh.
+/// Deleting the account and resetting a second factor or a password in the demo: each call
+/// succeeds and nothing is stored. The demo account is an e-mail account, and its re-sign-in
+/// is always fresh.
 class DemoAccountAdminRepository implements AccountAdminRepository {
   @override
   bool hasRecentSignIn() => true;
@@ -1848,6 +1863,17 @@ class DemoAccountAdminRepository implements AccountAdminRepository {
     MemberSecurity(profileId: DemoData.papa, hasAccount: true, hasMfa: true),
     MemberSecurity(profileId: DemoData.mama, hasAccount: true, hasMfa: true),
   ]);
+
+  @override
+  Future<Result<EnrolmentCode>> createPasswordResetCode({
+    required String actorProfileId,
+    required String profileId,
+  }) async => Ok(
+    EnrolmentCode(
+      code: 'K7QM3XRP',
+      expiresAt: DateTime.now().add(const Duration(minutes: 10)),
+    ),
+  );
 }
 
 /// Leaving, deleting and restoring a family in the demo: each call succeeds and nothing is

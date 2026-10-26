@@ -35,6 +35,10 @@ The first time you create an account, WuselWall asks once how you want to sign i
 
 If two-factor sign-in is on, the six-digit code from your authenticator app follows (see [Security](/en/settings/security)).
 
+### On a server without email {#without-email}
+
+Some family servers send no email ([Email](/en/server/email)). Then **Continue with email** opens on **New account**: enter your address and a password of at least 10 characters, and tap **Create account**. There is no code and no confirmation email. Already have an account? Tap **Sign in**. If you forget your password, tap **Forgot your password?** and ask a guardian of your family for a code ([Reset password](/en/settings/members-devices#reset-password)).
+
 ## 2. Creating a new family
 
 If your account does not belong to a family yet, WuselWall opens **New family**. You do this once, on your own phone:
