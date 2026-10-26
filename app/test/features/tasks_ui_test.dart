@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/app/theme/app_theme.dart';
 import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
+import 'package:wuselwall/core/wusel/wusel_stage.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/details/task_board_detail.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
@@ -580,6 +583,73 @@ void main() {
       await t.pumpAndSettle();
       expect(cheer, findsNothing);
       expect(line, findsOneWidget);
+      await unmountApp(t, container);
+    },
+  );
+
+  testWidgets(
+    'a lively wall sends its corner Wusel over to the column, and back',
+    (t) async {
+      final api = FakeTasksApi(
+        tables: {
+          'task_instances': [
+            instanceRow(id: 'i-1', title: 'Tisch decken', assignee: kidId),
+          ],
+        },
+      );
+      final container = await pumpApp(
+        t,
+        overrides: baseOverrides(
+          identity: FakeIdentityRepository(
+            current: device(
+              deviceClass: DeviceClass.kiosk,
+              register: UiRegister.kiosk,
+            ),
+          ),
+        ),
+        board: FakeBoardRepository(_kioskBoard()),
+        tasks: api,
+      );
+      await t.tap(find.text('Heute offen'));
+      await t.pumpAndSettle();
+      api.tables['task_instances'] = [
+        instanceRow(
+          id: 'i-1',
+          title: 'Tisch decken',
+          assignee: kidId,
+          status: 'done',
+          completedBy: kidId,
+        ),
+      ];
+      container.read(actingProfileProvider.notifier).select(kidId);
+      await t.pump();
+      // Motion on: pumpApp holds everything still otherwise.
+      t.platformDispatcher.clearAccessibilityFeaturesTestValue();
+      await t.pump();
+
+      await t.tap(find.text('Tisch decken'));
+      for (var i = 0; i < 30; i++) {
+        await t.pump(const Duration(milliseconds: 16));
+      }
+      final stage = t.state<WuselStageState>(find.byType(WuselStage));
+      final trip = stage.trip;
+      expect(trip, isNotNull);
+      // The one Wusel is the corner's, travelling: no second one in the column.
+      expect(
+        find.descendant(
+          of: find.byType(TaskBoardDetailBody),
+          matching: find.byType(WuselSays),
+        ),
+        findsNothing,
+      );
+      var done = false;
+      unawaited(trip!.done.then((_) => done = true));
+      for (var i = 0; i < 600 && !done; i++) {
+        await t.pump(const Duration(milliseconds: 16));
+      }
+      expect(done, isTrue);
+      expect(stage.trip, isNull);
+      await t.pump(const Duration(seconds: 1));
       await unmountApp(t, container);
     },
   );

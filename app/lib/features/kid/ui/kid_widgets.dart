@@ -234,19 +234,25 @@ class _KidBalancePillState extends State<KidBalancePill>
   }
 }
 
-/// A coin that flies from [from] to [to] over 600 ms, `easeOutCubic`, then goes. Shown
-/// in the app's overlay, so it survives the card that launched it. Does nothing when
-/// either anchor is not on screen.
+/// A coin that flies from [from] (or the point [fromPoint], Wusel's hand) to [to] over
+/// 600 ms, `easeOutCubic`, then goes. Shown in the app's overlay, so it survives the
+/// card that launched it. Does nothing when either anchor is not on screen.
+/// [onLanded] is called when the coin has arrived, or at once when it does not fly.
 void kidFlyCoin(
   BuildContext context, {
-  required GlobalKey from,
+  GlobalKey? from,
+  Offset? fromPoint,
   required GlobalKey to,
   required int points,
+  VoidCallback? onLanded,
 }) {
   final overlay = Overlay.maybeOf(context);
-  final start = _centreOf(from);
+  final start = fromPoint ?? (from == null ? null : _centreOf(from));
   final end = _centreOf(to);
-  if (overlay == null || start == null || end == null) return;
+  if (overlay == null || start == null || end == null) {
+    onLanded?.call();
+    return;
+  }
   final ww = context.ww;
   late OverlayEntry entry;
   entry = OverlayEntry(
@@ -256,7 +262,10 @@ void kidFlyCoin(
       points: points,
       colour: ww.points,
       onColour: ww.onPoints,
-      onDone: () => entry.remove(),
+      onDone: () {
+        entry.remove();
+        onLanded?.call();
+      },
     ),
   );
   overlay.insert(entry);

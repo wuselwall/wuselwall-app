@@ -39,6 +39,8 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Die Kamera scannt den QR-Code zur Geräteeinrichtung.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Wusel lehnt sich zur Seite, wenn das Gerät gekippt wird.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

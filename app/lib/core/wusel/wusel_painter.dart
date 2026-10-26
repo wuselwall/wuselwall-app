@@ -136,8 +136,10 @@ class WuselPainter extends CustomPainter {
     // Everything that belongs to the body moves with it: lift, squash about the feet.
     canvas
       ..save()
-      ..translate(0, look.lift)
-      ..translate(50, 90)
+      ..translate(look.slide, look.lift)
+      ..translate(50, 90);
+    if (look.lean != 0) canvas.rotate(look.lean);
+    canvas
       ..scale(1 - look.squash * 0.5, 1 + look.squash)
       ..translate(-50, -90);
 
@@ -150,7 +152,14 @@ class WuselPainter extends CustomPainter {
     _arms(canvas, inFront: true);
     _face(canvas);
     _outfit(canvas);
-    if (look.prop == WuselProp.star) _star(canvas);
+    switch (look.prop) {
+      case WuselProp.star:
+        _star(canvas);
+      case WuselProp.coin:
+        _coin(canvas);
+      case WuselProp.none:
+        break;
+    }
     canvas.restore();
 
     if (look.thinkDots > 0) _dots(canvas);
@@ -204,14 +213,18 @@ class WuselPainter extends CustomPainter {
           (1 - 0.35 * droop);
       // A middle tuft droops to the side it is nearer, so none hangs over the face.
       final droopSide = side.abs() < 0.01 ? (i.isEven ? -1.0 : 1.0) : side.sign;
+      // The follow-through bends the outer tufts most, and the tip more than the root.
+      final lag = look.tuftLag * (0.7 + 0.5 * side.abs());
       final angle =
           side * (0.35 + 0.25 * math.max(0, look.tuftLift)) +
           droopSide * droop * 0.85 +
-          look.tuftSway;
+          look.tuftSway +
+          lag;
       final dir = Offset(math.sin(angle), -math.cos(angle));
       final tip = base + dir * length;
       // The curl: the control point leans away from the direction of travel.
-      final curl = -side.sign * (side == 0 ? 0 : 1) * (0.45 - droop * 0.2);
+      final curl =
+          -side.sign * (side == 0 ? 0 : 1) * (0.45 - droop * 0.2) - lag * 0.5;
       final ctrlDir = Offset(math.sin(angle + curl), -math.cos(angle + curl));
       final ctrl = base + ctrlDir * (length * 0.55);
       final path = Path()
@@ -366,6 +379,22 @@ class WuselPainter extends CustomPainter {
           ..strokeJoin = StrokeJoin.round
           ..strokeWidth = 2,
       );
+  }
+
+  /// The points coin Wusel carries home from a chore, held up like the star.
+  void _coin(Canvas canvas) {
+    final a = look.armRight ?? 2.4;
+    final hand = const Offset(83, 64) + Offset(math.sin(a), math.cos(a)) * 19;
+    final centre = hand + const Offset(3, -7);
+    final r = 9.5 * (1 + 0.12 * look.propGlint);
+    final rim = Paint()
+      ..color = _goldInk
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2;
+    canvas
+      ..drawCircle(centre, r, Paint()..color = _gold)
+      ..drawCircle(centre, r, rim)
+      ..drawCircle(centre, r * 0.62, rim..strokeWidth = 1.4);
   }
 
   void _dots(Canvas canvas) {

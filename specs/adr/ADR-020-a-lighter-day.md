@@ -146,3 +146,25 @@ these places, each recorded in its spec:
   already reads, because recurring events are expanded only in the Edge Functions. All
   additive: `api_version` stays 1.
 
+
+## Amendment 2026-10-26: Wusel on the move
+
+Decided by the user ([Q58](../14-open-questions.md)), before the trial, and built in one branch.
+A lively Wusel in the kid register and on the wall now leaves its box for a moment. It travels
+to where the moment happened and comes back
+([25, Wusel on the move](../25-wusel.md#wusel-on-the-move)). This changes two rules of
+spec 25. *Never over content* becomes *never resting on content*: a
+trip may cross a card and sit on its edge for up to 4 s, with touches passing through.
+*One Wusel per screen* becomes *one Wusel per screen, with one home it travels from*.
+*Reacts, does not initiate* stays: the trips and the 30 s afterglow follow only a moment,
+a touch or a tap. What was recommended against and not built: a Wusel that wanders
+on its own, picking it up and throwing it, and trips on adult screens.
+
+Wusel stays drawn in code. The motion that makes it seem alive is computed while it runs:
+springs driven by its speed, tufts that follow through, eyes on the finger, hops that
+follow a target moving under them. That is the case for code over Rive here, not against
+it, so the alternative above stays the way back only for richer drawing. Decision 4's *no
+native dependency* is narrowed to the drawing. One plugin is added for input:
+`sensors_plus` (BSD-3-Clause), for tilt on native iOS and Android. Where the plugin is
+missing or fails, Wusel loses the tilt and nothing else. The trial gains
+criteria for the trips ([25](../25-wusel.md#how-the-trial-judges-wusel)).

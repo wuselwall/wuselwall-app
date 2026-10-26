@@ -8,6 +8,7 @@ import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/motion.dart';
 import 'package:wuselwall/core/wusel/wusel.dart';
+import 'package:wuselwall/core/wusel/wusel_stage.dart';
 import 'package:wuselwall/features/board/ui/board_grid.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
@@ -245,8 +246,10 @@ class _Column extends StatelessWidget {
 
 /// The line over a member's column once their chores are all ticked. Wusel cheers
 /// beside it for [cheerFor] when the last one is ticked while the board is open
-/// (specs/25 "Where Wusel appears", kiosk); a column that opens already done, and the
-/// rest of the day, show the line alone.
+/// (specs/25 "Where Wusel appears", kiosk): a lively Wusel comes over from the
+/// header's corner and goes back after ("Wusel on the move"); one that cannot travel
+/// cheers here in place. A column that opens already done, and the rest of the day,
+/// show the line alone.
 class _MemberDone extends StatefulWidget {
   const _MemberDone({required this.done, required this.line, super.key});
 
@@ -262,6 +265,14 @@ class _MemberDone extends StatefulWidget {
 class _MemberDoneState extends State<_MemberDone> {
   Timer? _cheer;
 
+  /// The space beside the line that the travelling Wusel cheers in.
+  final _spot = GlobalKey();
+
+  /// Whether the cheer is the corner Wusel's visit rather than one in place.
+  bool _visit = false;
+
+  static const _size = 80.0;
+
   @override
   void didUpdateWidget(_MemberDone old) {
     super.didUpdateWidget(old);
@@ -270,6 +281,22 @@ class _MemberDoneState extends State<_MemberDone> {
       _cheer = Timer(_MemberDone.cheerFor, () {
         if (mounted) setState(() => _cheer = null);
       });
+      final stage = WuselStage.maybeOf(context);
+      _visit = stage?.canVisit ?? false;
+      if (_visit) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          final trip = stage!.visit(
+            _spot,
+            spot: WuselSpot.inside,
+            size: _size,
+            stay: _MemberDone.cheerFor,
+            pose: WuselPose.cheer,
+          );
+          // Out of sight (a column scrolled away): the cheer in place.
+          if (trip == null) setState(() => _visit = false);
+        });
+      }
     } else if (!widget.done) {
       _cheer?.cancel();
       _cheer = null;
@@ -290,10 +317,18 @@ class _MemberDoneState extends State<_MemberDone> {
       padding: const EdgeInsets.only(bottom: Tokens.space2),
       child: _cheer == null
           ? Text(widget.line, style: style)
+          : _visit
+          ? Row(
+              children: [
+                SizedBox.square(key: _spot, dimension: _size),
+                const SizedBox(width: Tokens.space2),
+                Flexible(child: Text(widget.line, style: style)),
+              ],
+            )
           : WuselSays(
               line: widget.line,
               pose: WuselPose.cheer,
-              size: 80,
+              size: _size,
               style: style,
             ),
     );

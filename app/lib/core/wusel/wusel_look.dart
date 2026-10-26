@@ -8,8 +8,9 @@ enum WuselEyes { round, happy, closed }
 /// The shape of Wusel's mouth: the "w", a cheering open "w", or a small sleepy line.
 enum WuselMouth { w, open, sleepy }
 
-/// Something Wusel holds up (specs/25, pose `proud`).
-enum WuselProp { none, star }
+/// Something Wusel holds up: the star of pose `proud`, the coin it carries home from a
+/// chore (specs/25 "Wusel on the move").
+enum WuselProp { none, star, coin }
 
 /// What Wusel wears (specs/25 "Outfits"). Free from the start, never earned. The keys
 /// are the values of the `member.wusel_outfit` setting.
@@ -52,6 +53,9 @@ class WuselLook {
     this.thinkDots = 0,
     this.sleepZ = 0,
     this.confetti = 0,
+    this.lean = 0,
+    this.tuftLag = 0,
+    this.slide = 0,
   });
 
   final WuselEyes eyes;
@@ -96,6 +100,17 @@ class WuselLook {
   /// 0–1: the little burst of confetti above Wusel when it cheers.
   final double confetti;
 
+  /// The whole body tilted about the feet, in radians (positive leans right): into a
+  /// sideways movement, or downhill on a tilted tablet.
+  final double lean;
+
+  /// The tufts bent sideways behind a movement, in radians, on top of [tuftSway]: the
+  /// follow-through of [WuselRig] (positive bends them right).
+  final double tuftLag;
+
+  /// The body shifted sideways within its frame, in grid units: sliding downhill.
+  final double slide;
+
   WuselLook copyWith({
     WuselEyes? eyes,
     double? eyeOpen,
@@ -113,6 +128,9 @@ class WuselLook {
     double? thinkDots,
     double? sleepZ,
     double? confetti,
+    double? lean,
+    double? tuftLag,
+    double? slide,
   }) => WuselLook(
     eyes: eyes ?? this.eyes,
     eyeOpen: eyeOpen ?? this.eyeOpen,
@@ -130,6 +148,9 @@ class WuselLook {
     thinkDots: thinkDots ?? this.thinkDots,
     sleepZ: sleepZ ?? this.sleepZ,
     confetti: confetti ?? this.confetti,
+    lean: lean ?? this.lean,
+    tuftLag: tuftLag ?? this.tuftLag,
+    slide: slide ?? this.slide,
   );
 
   /// Blends two looks. Shapes that cannot blend (eyes, mouth, feet, prop) switch at the
@@ -161,6 +182,9 @@ class WuselLook {
       thinkDots: l(a.thinkDots, b.thinkDots),
       sleepZ: l(a.sleepZ, b.sleepZ),
       confetti: l(a.confetti, b.confetti),
+      lean: l(a.lean, b.lean),
+      tuftLag: l(a.tuftLag, b.tuftLag),
+      slide: l(a.slide, b.slide),
     );
   }
 
@@ -182,7 +206,10 @@ class WuselLook {
       other.propGlint == propGlint &&
       other.thinkDots == thinkDots &&
       other.sleepZ == sleepZ &&
-      other.confetti == confetti;
+      other.confetti == confetti &&
+      other.lean == lean &&
+      other.tuftLag == tuftLag &&
+      other.slide == slide;
 
   @override
   int get hashCode => Object.hash(
@@ -202,5 +229,8 @@ class WuselLook {
     thinkDots,
     sleepZ,
     confetti,
+    lean,
+    tuftLag,
+    slide,
   );
 }

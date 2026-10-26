@@ -14,6 +14,7 @@ import 'package:wuselwall/core/l10n/austrian_dates.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/empty_view.dart';
 import 'package:wuselwall/core/ui/motion.dart';
+import 'package:wuselwall/core/wusel/wusel_stage.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
@@ -57,11 +58,15 @@ class WuselWallApp extends ConsumerWidget {
       darkTheme: AppTheme.build(register, night ? Shade.night : Shade.dark),
       themeMode: ref.watch(appearanceProvider).value ?? ThemeMode.system,
       builder: (context, child) {
+        // Wusel's stage sits above the navigator, so a trip can cross a dialog
+        // (specs/25 "Wusel on the move").
         final app = MotionScope(
-          child: LinkHost(
-            child: _ReminderHost(
-              child: _MemberAccent(
-                child: EmptyIllustration(builder: _emptyWusel, child: child!),
+          child: WuselStage(
+            child: LinkHost(
+              child: _ReminderHost(
+                child: _MemberAccent(
+                  child: EmptyIllustration(builder: _emptyWusel, child: child!),
+                ),
               ),
             ),
           ),

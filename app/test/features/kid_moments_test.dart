@@ -505,6 +505,32 @@ void main() {
       await unmountApp(tester, container);
     });
 
+    testWidgets('on Mein Tag the greeting holds up the star: one Wusel', (
+      tester,
+    ) async {
+      final container = await pumpApp(
+        tester,
+        overrides: baseOverrides(identity: _KidIdentity()),
+        tasks: badgeApi(),
+      );
+      await _pickEmma(tester);
+      expect(find.byType(KidGrowIn), findsOneWidget);
+      // The card names the badge beside a star, without a Wusel of its own.
+      expect(
+        find.descendant(
+          of: find.byType(KidGrowIn),
+          matching: find.byType(Wusel),
+        ),
+        findsNothing,
+      );
+      expect(find.byType(Wusel), findsOneWidget);
+      expect(
+        tester.widget<Wusel>(_inGreeting(find.byType(Wusel))).pose,
+        WuselPose.proud,
+      );
+      await unmountApp(tester, container);
+    });
+
     testWidgets('is there at once under reduced motion', (tester) async {
       final container = await pumpApp(
         tester,

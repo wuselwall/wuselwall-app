@@ -26,6 +26,19 @@ Wusel celebra lo que ha pasado, no a la persona: «¡Todo hecho! Ha salido muy b
 
 Wusel nunca aparece mientras escribes algo (las tarjetas de la compra y la búsqueda encima de ellas, los editores de eventos y tareas), ni junto a errores, el PIN, el inicio de sesión o una eliminación. Lo que dice Wusel aparece siempre también como texto; un toque en el bocadillo oculta la frase.
 
+## Wusel de paseo {#on-the-move}
+
+En la tableta infantil y en la pantalla de pared, un Wusel animado no siempre se queda en su sitio:
+
+- **Una tarea marcada** (en **Mi día**): Wusel salta hasta la tarjeta, coge la moneda de puntos y la lleva de vuelta al saldo.
+- **La última tarea del día**: además, un gran salto de alegría con confeti; después Wusel lo celebra en su sitio.
+- **De vuelta en Mi día** desde otra sección: Wusel entra saltando desde abajo.
+- **Un toque**: Wusel se ríe, hace girar sus mechones o guiña un ojo, según dónde caiga el dedo. Tres toques rápidos seguidos dan una risa de todo el cuerpo. Después, los ojos de Wusel siguen el dedo durante medio minuto.
+- **Inclinar**: si inclinas el móvil o la tableta, Wusel se ladea y se desliza un poco (en la app, no en el navegador).
+- **En la pantalla de pared**, Wusel solo deja su rincón cuando alguien marca su última tarea del día en el tablero de tareas: Wusel salta hasta esa columna, lo celebra allí cuatro segundos y vuelve. Si lo tocas, Wusel se ríe y sigue el dedo con la mirada, pero se queda en su rincón.
+
+Wusel solo se mueve cuando acaba de pasar algo, nunca por su cuenta, y nunca se queda sentado sobre un botón: un toque pasa a través de Wusel. De noche, sin conexión, en **Tranquilo** y con **Reducir movimiento**, Wusel se queda en su sitio.
+
 ## La ropa de Wusel {#outfits}
 
 Cada persona puede vestir a Wusel: **Gorro de fiesta**, **Corona**, **Sombrero de mago**, **Corona de flores**, **Gafas de sol**, **Bufanda**, **Auriculares** o **Lazo**. Toda la ropa está disponible desde el principio y no cuesta nada; no hay que ganarse nada. Wusel la lleva siempre que se trata de esa persona: en su tableta, en su móvil y en la pared cuando se ha elegido.
@@ -39,13 +52,13 @@ Se elige en **Ajustes → Personal**, en **La ropa de Wusel** (vista **Avanzados
 En **Ajustes → Personal**, cada persona elige **Wusel** (también en la vista **Básicos**):
 
 - **Automático** (predeterminado): animado para los niños, tranquilo para los adultos
-- **Animado**: Wusel se mueve y habla
+- **Animado**: Wusel se mueve y habla, y en la tableta infantil y en la pared Wusel también sale [de paseo](#on-the-move)
 - **Tranquilo**: Wusel se queda quieto y solo aparece en páginas vacías y días especiales
 - **Desactivado**: sin Wusel para esa persona
 
 Para la pantalla de pared y las tabletas compartidas, **Este dispositivo** tiene **Wusel en este dispositivo** (predeterminado: animado). Vale mientras no hay nadie elegido; después vale el ajuste de la persona elegida.
 
-Si el dispositivo tiene activado **Reducir movimiento**, Wusel se queda quieto y no hay confeti.
+Si el dispositivo tiene activado **Reducir movimiento**, Wusel se queda quieto en su sitio y no hay confeti.
 
 ## Los colores {#colours}
 
