@@ -89,6 +89,9 @@ void main() {
             isNull,
             reason: 'Fixtures must expose framework/layout errors',
           );
+          if (state['id'] == 'recipes-error') {
+            expect(find.byType(ErrorView), findsOneWidget);
+          }
           expect(
             find.textContaining('coming soon', findRichText: true),
             findsNothing,

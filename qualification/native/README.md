@@ -10,6 +10,8 @@ Actions. It does not rely on an interactive shell's PATH, the machine's default
 Java version, signing certificates or a configured backend. Run `npm ci --include=dev`
 before the native scripts: PNG comparison uses the locked `sharp` dependency.
 
+For a complete local setup sequence, use [the copyable setup commands](setup-commands.md).
+
 ## Inspect before installing
 
 The manual native preflight workflow only inspects the installed tools, CPU

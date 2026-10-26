@@ -47,7 +47,7 @@ deployment utilities are independent.
 The initial expanded Linux validation rendered all 172 direct fixtures and completed all
 1,128 canonical Flutter cases without framework/layout errors. It exposed existing
 accessibility findings, which remain failures while fixes and triage continue. The ordinary
-suite passed 1,537 tests, with six backend integration tests intentionally skipped without
+suite passed 1,560 tests, with six backend integration tests intentionally skipped without
 backend configuration. Those six require the separate disposable-backend CI job. Android
 app and instrumentation APKs compile; native device execution and the iOS audit build still
 need validation on provisioned macOS devices. No native baseline has been approved by these

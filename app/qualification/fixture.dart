@@ -110,6 +110,9 @@ Widget qualificationApp({
     );
   }
   return ProviderScope(
+    // Error fixtures must stay in their named error state, rather than retrying
+    // with real-time backoff and intermittently showing a loading spinner.
+    retry: (_, _) => null,
     overrides: [
       ...demoOverrides(
         scenario: scenario,
