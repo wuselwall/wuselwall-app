@@ -5864,6 +5864,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get mealsWishPlan => 'Einplanen';
 
   @override
+  String mealsWishPlanTitle(String dish) {
+    return '$dish einplanen';
+  }
+
+  @override
   String get mealsWishRemove => 'Wunsch entfernen';
 
   @override

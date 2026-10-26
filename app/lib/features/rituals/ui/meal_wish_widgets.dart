@@ -768,12 +768,28 @@ class _WishPlanDialogState extends ConsumerState<WishPlanDialog> {
         const <MealEntry>[];
     String? dish(PlanSlot s) => entryAt(entries, day, s)?.title;
 
+    final wisher = ref
+        .watch(membersProvider)
+        .value
+        ?.where((m) => m.id == widget.wish.profileId)
+        .firstOrNull;
+
+    // The dialog names the wish and who wished it: a date and two meals alone do not
+    // say what is being planned (round-3 review H-3).
     return AlertDialog(
-      title: Text(l10n.mealsWishPlan),
+      title: Text(l10n.mealsWishPlanTitle(widget.wish.title)),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          if (wisher != null) ...[
+            Text(
+              l10n.mealsWishedBy(wisher.displayName),
+              style: Theme.of(context).textTheme.bodyMedium
+                  ?.copyWith(color: context.ww.ink2),
+            ),
+            const SizedBox(height: Tokens.space2),
+          ],
           DropdownButton<DateTime>(
             value: day,
             isExpanded: true,

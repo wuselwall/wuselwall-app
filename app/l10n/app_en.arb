@@ -3385,6 +3385,14 @@
     }
   },
   "mealsWishPlan": "Put on the plan",
+  "mealsWishPlanTitle": "Plan {dish}",
+  "@mealsWishPlanTitle": {
+    "placeholders": {
+      "dish": {
+        "type": "String"
+      }
+    }
+  },
   "mealsWishRemove": "Remove the wish",
   "mealsWishedBy": "{name}'s wish",
   "@mealsWishedBy": {

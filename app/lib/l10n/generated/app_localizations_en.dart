@@ -5819,6 +5819,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mealsWishPlan => 'Put on the plan';
 
   @override
+  String mealsWishPlanTitle(String dish) {
+    return 'Plan $dish';
+  }
+
+  @override
   String get mealsWishRemove => 'Remove the wish';
 
   @override

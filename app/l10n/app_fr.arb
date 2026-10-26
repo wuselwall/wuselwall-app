@@ -2875,6 +2875,7 @@
   "mealsWishesTray": "Souhaits",
   "mealsWishChip": "{name} : {title}",
   "mealsWishPlan": "Planifier",
+  "mealsWishPlanTitle": "Planifier : {dish}",
   "mealsWishRemove": "Retirer le souhait",
   "mealsWishedBy": "Souhait de {name}",
   "mealsTraditionSuggestion": "Prévoir {meal} ({tradition})",

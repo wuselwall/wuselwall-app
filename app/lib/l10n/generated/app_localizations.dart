@@ -9913,6 +9913,12 @@ abstract class AppLocalizations {
   /// **'Put on the plan'**
   String get mealsWishPlan;
 
+  /// No description provided for @mealsWishPlanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan {dish}'**
+  String mealsWishPlanTitle(String dish);
+
   /// No description provided for @mealsWishRemove.
   ///
   /// In en, this message translates to:
