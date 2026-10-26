@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/core/ui/ringed_avatar.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
@@ -450,177 +451,182 @@ class _EventEditorFormState extends ConsumerState<_EventEditorForm> {
             ),
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
-        children: [
-          TextField(
-            controller: _titleText,
-            textCapitalization: TextCapitalization.sentences,
-            decoration: InputDecoration(
-              labelText: l10n.eventTitleLabel,
-              errorText: error == DraftError.titleRequired
-                  ? l10n.eventTitleRequired
-                  : null,
-            ),
-            onChanged: (_) => setState(() {}),
-          ),
-          const SizedBox(height: 16),
-          SegmentedButton<EventKind>(
-            showSelectedIcon: false,
-            segments: [
-              ButtonSegment(
-                value: EventKind.appointment,
-                label: Text(l10n.eventKindAppointment),
+      body: ContentWidth(
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+          children: [
+            TextField(
+              controller: _titleText,
+              textCapitalization: TextCapitalization.sentences,
+              decoration: InputDecoration(
+                labelText: l10n.eventTitleLabel,
+                errorText: error == DraftError.titleRequired
+                    ? l10n.eventTitleRequired
+                    : null,
               ),
-              ButtonSegment(
-                value: EventKind.presence,
-                label: Text(l10n.eventKindPresence),
+              onChanged: (_) => setState(() {}),
+            ),
+            const SizedBox(height: 16),
+            SegmentedButton<EventKind>(
+              showSelectedIcon: false,
+              segments: [
+                ButtonSegment(
+                  value: EventKind.appointment,
+                  label: Text(l10n.eventKindAppointment),
+                ),
+                ButtonSegment(
+                  value: EventKind.presence,
+                  label: Text(l10n.eventKindPresence),
+                ),
+              ],
+              selected: {_draft.kind},
+              onSelectionChanged: (kinds) =>
+                  setState(() => _draft.kind = kinds.first),
+            ),
+            if (_draft.kind == EventKind.presence) ...[
+              const SizedBox(height: 16),
+              Text(
+                l10n.eventPresenceState,
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
+              const SizedBox(height: 8),
+              PresenceStatePicker(
+                selected: _draft.presenceState,
+                memberColor: firstAttendee?.color ?? scheme.primary,
+                errorText: error == DraftError.presenceStateRequired
+                    ? l10n.eventPresenceStateRequired
+                    : null,
+                onChanged: (state) =>
+                    setState(() => _draft.presenceState = state),
               ),
             ],
-            selected: {_draft.kind},
-            onSelectionChanged: (kinds) =>
-                setState(() => _draft.kind = kinds.first),
-          ),
-          if (_draft.kind == EventKind.presence) ...[
+            const SizedBox(height: 8),
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(l10n.eventAllDay),
+              value: _draft.isAllDay,
+              onChanged: (value) => setState(() => _draft.setAllDay(value)),
+            ),
+            _WhenRow(
+              label: l10n.eventStarts,
+              day: _draft.start,
+              time: timed ? _draft.start : null,
+              onDay: () => _pickDay(isStart: true),
+              onTime: () => _pickTime(isStart: true),
+            ),
+            _WhenRow(
+              label: l10n.eventEnds,
+              day: _draft.end,
+              time: timed ? _draft.end : null,
+              onDay: () => _pickDay(isStart: false),
+              onTime: () => _pickTime(isStart: false),
+            ),
+            if (error == DraftError.endBeforeStart)
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Text(
+                  l10n.eventEndBeforeStart,
+                  style: TextStyle(color: scheme.error),
+                ),
+              ),
             const SizedBox(height: 16),
             Text(
-              l10n.eventPresenceState,
+              l10n.eventAttendees,
               style: Theme.of(context).textTheme.titleSmall,
             ),
             const SizedBox(height: 8),
-            PresenceStatePicker(
-              selected: _draft.presenceState,
-              memberColor: firstAttendee?.color ?? scheme.primary,
-              errorText: error == DraftError.presenceStateRequired
-                  ? l10n.eventPresenceStateRequired
-                  : null,
-              onChanged: (state) =>
-                  setState(() => _draft.presenceState = state),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final m in activeMembers)
+                  FilterChip(
+                    showCheckmark: false,
+                    avatar: RingedAvatar(
+                      selected: _draft.attendeeIds.contains(m.id),
+                      child: MemberAvatar(
+                        member: BoardMember(
+                          id: m.id,
+                          displayName: m.displayName,
+                          color: m.color,
+                          kind: MemberKind.adult,
+                        ),
+                        size: 24,
+                      ),
+                    ),
+                    label: Text(m.displayName),
+                    selected: _draft.attendeeIds.contains(m.id),
+                    onSelected: (on) => setState(() {
+                      if (on) {
+                        _draft.attendeeIds.add(m.id);
+                      } else {
+                        _draft.attendeeIds.remove(m.id);
+                      }
+                    }),
+                  ),
+              ],
+            ),
+            if (_draft.attendeeIds.isEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Text(l10n.eventAttendeesWholeFamily),
+              ),
+            const SizedBox(height: 8),
+            // Right under the people: who attends decides the default (specs/21).
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(l10n.eventKeyDisplay),
+              subtitle: Text(keyLine),
+              value: key,
+              // A tradition is always on the wall (specs/27).
+              onChanged: _draft.tradition
+                  ? null
+                  : (value) => setState(() {
+                      _draft
+                        ..keyTouched = true
+                        ..key = value;
+                    }),
+            ),
+            const SizedBox(height: 8),
+            TextField(
+              controller: _locationText,
+              decoration: InputDecoration(labelText: l10n.eventLocation),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _notesText,
+              minLines: 3,
+              maxLines: 6,
+              decoration: InputDecoration(labelText: l10n.eventNotes),
+            ),
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(l10n.eventTentative),
+              value: _draft.tentative,
+              onChanged: (value) => setState(() => _draft.tentative = value),
+            ),
+            const SizedBox(height: 16),
+            RepeatSection(
+              recurrence: _draft.recurrence,
+              start: _draft.start,
+              weekdaysError: error == DraftError.weekdaysRequired,
+              onChanged: (recurrence) =>
+                  setState(() => _draft.recurrence = recurrence),
+            ),
+            // A picture, Vorfreude and traditions (specs/27), after the repeat.
+            if (_draft.kind != EventKind.presence &&
+                ref.watch(lighterDaySupportedProvider))
+              EventRitualFields(
+                draft: _draft,
+                onChanged: () => setState(() {}),
+              ),
+            const SizedBox(height: 24),
+            FilledButton(
+              onPressed: _saving ? null : _save,
+              child: Text(l10n.save),
             ),
           ],
-          const SizedBox(height: 8),
-          SwitchListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Text(l10n.eventAllDay),
-            value: _draft.isAllDay,
-            onChanged: (value) => setState(() => _draft.setAllDay(value)),
-          ),
-          _WhenRow(
-            label: l10n.eventStarts,
-            day: _draft.start,
-            time: timed ? _draft.start : null,
-            onDay: () => _pickDay(isStart: true),
-            onTime: () => _pickTime(isStart: true),
-          ),
-          _WhenRow(
-            label: l10n.eventEnds,
-            day: _draft.end,
-            time: timed ? _draft.end : null,
-            onDay: () => _pickDay(isStart: false),
-            onTime: () => _pickTime(isStart: false),
-          ),
-          if (error == DraftError.endBeforeStart)
-            Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: Text(
-                l10n.eventEndBeforeStart,
-                style: TextStyle(color: scheme.error),
-              ),
-            ),
-          const SizedBox(height: 16),
-          Text(
-            l10n.eventAttendees,
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              for (final m in activeMembers)
-                FilterChip(
-                  showCheckmark: false,
-                  avatar: RingedAvatar(
-                    selected: _draft.attendeeIds.contains(m.id),
-                    child: MemberAvatar(
-                      member: BoardMember(
-                        id: m.id,
-                        displayName: m.displayName,
-                        color: m.color,
-                        kind: MemberKind.adult,
-                      ),
-                      size: 24,
-                    ),
-                  ),
-                  label: Text(m.displayName),
-                  selected: _draft.attendeeIds.contains(m.id),
-                  onSelected: (on) => setState(() {
-                    if (on) {
-                      _draft.attendeeIds.add(m.id);
-                    } else {
-                      _draft.attendeeIds.remove(m.id);
-                    }
-                  }),
-                ),
-            ],
-          ),
-          if (_draft.attendeeIds.isEmpty)
-            Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: Text(l10n.eventAttendeesWholeFamily),
-            ),
-          const SizedBox(height: 8),
-          // Right under the people: who attends decides the default (specs/21).
-          SwitchListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Text(l10n.eventKeyDisplay),
-            subtitle: Text(keyLine),
-            value: key,
-            // A tradition is always on the wall (specs/27).
-            onChanged: _draft.tradition
-                ? null
-                : (value) => setState(() {
-                    _draft
-                      ..keyTouched = true
-                      ..key = value;
-                  }),
-          ),
-          const SizedBox(height: 8),
-          TextField(
-            controller: _locationText,
-            decoration: InputDecoration(labelText: l10n.eventLocation),
-          ),
-          const SizedBox(height: 16),
-          TextField(
-            controller: _notesText,
-            minLines: 3,
-            maxLines: 6,
-            decoration: InputDecoration(labelText: l10n.eventNotes),
-          ),
-          SwitchListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Text(l10n.eventTentative),
-            value: _draft.tentative,
-            onChanged: (value) => setState(() => _draft.tentative = value),
-          ),
-          const SizedBox(height: 16),
-          RepeatSection(
-            recurrence: _draft.recurrence,
-            start: _draft.start,
-            weekdaysError: error == DraftError.weekdaysRequired,
-            onChanged: (recurrence) =>
-                setState(() => _draft.recurrence = recurrence),
-          ),
-          // A picture, Vorfreude and traditions (specs/27), after the repeat.
-          if (_draft.kind != EventKind.presence &&
-              ref.watch(lighterDaySupportedProvider))
-            EventRitualFields(draft: _draft, onChanged: () => setState(() {})),
-          const SizedBox(height: 24),
-          FilledButton(
-            onPressed: _saving ? null : _save,
-            child: Text(l10n.save),
-          ),
-        ],
+        ),
       ),
     );
   }

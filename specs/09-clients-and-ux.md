@@ -55,7 +55,8 @@ on the parent's phone gives `kid` or `kiosk`.
   tokens, subscribed calendars, the server, export, sign-in, security, leaving and deleting the
   family, and every other setting, including any a newer catalogue adds.
   The choice is per device and purely visual: a hidden setting keeps its value and applies.
-- On a laptop the reading pages (Today, Stundenplan, Tasks, Shopping) are at most **960 px
+- On a laptop the reading pages (Today, Stundenplan, Tasks, Shopping, the settings pages,
+  the school setup, Neuer Termin and the event editor, recipes) are at most **960 px
   wide**, centred (`ContentWidth` in `core/ui`), so a title and its "in 3 Tagen" stay
   together; the calendar and the meal week, grids that use the width, take all of it.
 

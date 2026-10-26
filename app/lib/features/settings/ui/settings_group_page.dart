@@ -6,6 +6,7 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/account/ui/delete_account_tile.dart';
 import 'package:wuselwall/features/household/ui/leave_family_tiles.dart';
@@ -80,28 +81,31 @@ class SettingsGroupPage extends ConsumerWidget {
           leading: BackButton(onPressed: () => context.go(parentRoute)),
           actions: [if (showViewSwitch) const SettingsViewSwitch()],
         ),
-        body: ListView(
-          padding: const EdgeInsets.all(Tokens.space4),
-          children: [
-            if (hasSettings && settings.isLoading && !settings.hasValue)
-              const LinearProgressIndicator(),
-            if (hasSettings && settings.hasError && !settings.hasValue)
-              ErrorView(
-                error: settings.error!,
-                onRetry: () => ref.invalidate(householdSettingsProvider),
-              ),
-            if (group == SettingsGroup.personal && env.acting == null)
-              Text(l10n.settingPickPersonFirst),
-            for (final (i, section) in sections.indexed) ...[
-              _SectionHeader(title: _headingOf(l10n, section), first: i == 0),
-              for (final item in section.items)
-                switch (item) {
-                  SettingKey(:final key) => _SettingRowItem(settingKey: key),
-                  SettingTileItem(:final tile) => _tileWidget(tile),
-                },
+        body: ContentWidth(
+          child: ListView(
+            padding: const EdgeInsets.all(Tokens.space4),
+            children: [
+              if (hasSettings && settings.isLoading && !settings.hasValue)
+                const LinearProgressIndicator(),
+              if (hasSettings && settings.hasError && !settings.hasValue)
+                ErrorView(
+                  error: settings.error!,
+                  onRetry: () => ref.invalidate(householdSettingsProvider),
+                ),
+              if (group == SettingsGroup.personal && env.acting == null)
+                Text(l10n.settingPickPersonFirst),
+              for (final (i, section) in sections.indexed) ...[
+                _SectionHeader(title: _headingOf(l10n, section), first: i == 0),
+                for (final item in section.items)
+                  switch (item) {
+                    SettingKey(:final key) => _SettingRowItem(settingKey: key),
+                    SettingTileItem(:final tile) => _tileWidget(tile),
+                  },
+              ],
+              if (hasHiddenSettings(env, group: group))
+                const MoreSettingsHint(),
             ],
-            if (hasHiddenSettings(env, group: group)) const MoreSettingsHint(),
-          ],
+          ),
         ),
       ),
     );

@@ -9,6 +9,7 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/core/ui/ringed_avatar.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
@@ -150,124 +151,126 @@ class _ExternalCalendarFormPageState
           onPressed: () => context.go(Routes.externalCalendars),
         ),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(Tokens.space4),
-        children: [
-          TextField(
-            controller: _name,
-            maxLength: 60,
-            textCapitalization: TextCapitalization.sentences,
-            onChanged: (_) => setState(() => _nameError = null),
-            decoration: InputDecoration(
-              labelText: l10n.extCalNameLabel,
-              hintText: l10n.extCalNameHint,
-              errorText: _nameError,
+      body: ContentWidth(
+        child: ListView(
+          padding: const EdgeInsets.all(Tokens.space4),
+          children: [
+            TextField(
+              controller: _name,
+              maxLength: 60,
+              textCapitalization: TextCapitalization.sentences,
+              onChanged: (_) => setState(() => _nameError = null),
+              decoration: InputDecoration(
+                labelText: l10n.extCalNameLabel,
+                hintText: l10n.extCalNameHint,
+                errorText: _nameError,
+              ),
             ),
-          ),
-          const SizedBox(height: Tokens.space3),
-          TextField(
-            controller: _url,
-            enabled: !_urlLoading,
-            keyboardType: TextInputType.url,
-            autocorrect: false,
-            enableSuggestions: false,
-            onChanged: (_) => setState(() => _urlError = null),
-            decoration: InputDecoration(
-              labelText: l10n.extCalUrlLabel,
-              errorText: _urlError,
-              suffixIcon: _urlLoading
-                  ? Semantics(
-                      label: l10n.extCalUrlLoading,
-                      child: const Padding(
-                        padding: EdgeInsets.all(12),
-                        child: SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(strokeWidth: 2),
+            const SizedBox(height: Tokens.space3),
+            TextField(
+              controller: _url,
+              enabled: !_urlLoading,
+              keyboardType: TextInputType.url,
+              autocorrect: false,
+              enableSuggestions: false,
+              onChanged: (_) => setState(() => _urlError = null),
+              decoration: InputDecoration(
+                labelText: l10n.extCalUrlLabel,
+                errorText: _urlError,
+                suffixIcon: _urlLoading
+                    ? Semantics(
+                        label: l10n.extCalUrlLoading,
+                        child: const Padding(
+                          padding: EdgeInsets.all(12),
+                          child: SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
                         ),
+                      )
+                    : null,
+              ),
+            ),
+            const SizedBox(height: Tokens.space1),
+            Text(
+              l10n.extCalUrlHelp,
+              style: text.bodySmall?.copyWith(color: ww.ink2),
+            ),
+            const SizedBox(height: Tokens.space4),
+            Text(l10n.extCalColourLabel, style: text.labelLarge),
+            const SizedBox(height: Tokens.space2),
+            Wrap(
+              spacing: Tokens.space2,
+              runSpacing: Tokens.space2,
+              children: [
+                for (final (i, swatch) in MemberPalette.swatches.indexed)
+                  _ColourChoice(
+                    colour: swatch.light,
+                    hex: toHex(swatch.light),
+                    selected: _colour == toHex(swatch.light),
+                    label: l10n.extCalColourOption(i + 1),
+                    onTap: () => setState(() => _colour = toHex(swatch.light)),
+                  ),
+              ],
+            ),
+            const SizedBox(height: Tokens.space4),
+            Text(l10n.extCalMembersLabel, style: text.labelLarge),
+            Text(
+              l10n.extCalMembersHelp,
+              style: text.bodySmall?.copyWith(color: ww.ink2),
+            ),
+            const SizedBox(height: Tokens.space2),
+            Wrap(
+              spacing: Tokens.space2,
+              runSpacing: Tokens.space2,
+              children: [
+                for (final m in members)
+                  FilterChip(
+                    showCheckmark: false,
+                    avatar: RingedAvatar(
+                      selected: _members.contains(m.id),
+                      child: MemberDot(
+                        memberColor: m.color,
+                        semanticLabel: m.displayName,
+                        size: 16,
+                      ),
+                    ),
+                    label: Text(m.displayName),
+                    selected: _members.contains(m.id),
+                    onSelected: (on) => setState(
+                      () => on ? _members.add(m.id) : _members.remove(m.id),
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: Tokens.space4),
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(l10n.extCalShowOnBoard),
+              subtitle: Text(l10n.extCalShowOnBoardHelp),
+              value: _showOnBoard,
+              onChanged: (on) => setState(() => _showOnBoard = on),
+            ),
+            const SizedBox(height: Tokens.space4),
+            FilledButton(
+              onPressed: _saving || _urlLoading ? null : _save,
+              style: FilledButton.styleFrom(
+                minimumSize: const Size.fromHeight(48),
+              ),
+              child: _saving
+                  ? SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: cs.onPrimary,
                       ),
                     )
-                  : null,
+                  : Text(l10n.save),
             ),
-          ),
-          const SizedBox(height: Tokens.space1),
-          Text(
-            l10n.extCalUrlHelp,
-            style: text.bodySmall?.copyWith(color: ww.ink2),
-          ),
-          const SizedBox(height: Tokens.space4),
-          Text(l10n.extCalColourLabel, style: text.labelLarge),
-          const SizedBox(height: Tokens.space2),
-          Wrap(
-            spacing: Tokens.space2,
-            runSpacing: Tokens.space2,
-            children: [
-              for (final (i, swatch) in MemberPalette.swatches.indexed)
-                _ColourChoice(
-                  colour: swatch.light,
-                  hex: toHex(swatch.light),
-                  selected: _colour == toHex(swatch.light),
-                  label: l10n.extCalColourOption(i + 1),
-                  onTap: () => setState(() => _colour = toHex(swatch.light)),
-                ),
-            ],
-          ),
-          const SizedBox(height: Tokens.space4),
-          Text(l10n.extCalMembersLabel, style: text.labelLarge),
-          Text(
-            l10n.extCalMembersHelp,
-            style: text.bodySmall?.copyWith(color: ww.ink2),
-          ),
-          const SizedBox(height: Tokens.space2),
-          Wrap(
-            spacing: Tokens.space2,
-            runSpacing: Tokens.space2,
-            children: [
-              for (final m in members)
-                FilterChip(
-                  showCheckmark: false,
-                  avatar: RingedAvatar(
-                    selected: _members.contains(m.id),
-                    child: MemberDot(
-                      memberColor: m.color,
-                      semanticLabel: m.displayName,
-                      size: 16,
-                    ),
-                  ),
-                  label: Text(m.displayName),
-                  selected: _members.contains(m.id),
-                  onSelected: (on) => setState(
-                    () => on ? _members.add(m.id) : _members.remove(m.id),
-                  ),
-                ),
-            ],
-          ),
-          const SizedBox(height: Tokens.space4),
-          SwitchListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Text(l10n.extCalShowOnBoard),
-            subtitle: Text(l10n.extCalShowOnBoardHelp),
-            value: _showOnBoard,
-            onChanged: (on) => setState(() => _showOnBoard = on),
-          ),
-          const SizedBox(height: Tokens.space4),
-          FilledButton(
-            onPressed: _saving || _urlLoading ? null : _save,
-            style: FilledButton.styleFrom(
-              minimumSize: const Size.fromHeight(48),
-            ),
-            child: _saving
-                ? SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: cs.onPrimary,
-                    ),
-                  )
-                : Text(l10n.save),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
