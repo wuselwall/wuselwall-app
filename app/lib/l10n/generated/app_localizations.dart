@@ -590,6 +590,12 @@ abstract class AppLocalizations {
   /// **'Add member'**
   String get addMember;
 
+  /// No description provided for @addMemberSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A child, or someone without an account of their own'**
+  String get addMemberSubtitle;
+
   /// No description provided for @memberName.
   ///
   /// In en, this message translates to:
@@ -5318,6 +5324,12 @@ abstract class AppLocalizations {
   /// **'All of {name}'**
   String regionPickWholeRegion(String name);
 
+  /// A district or municipality in the region picker: its kind first, then where it lies ("Gemeinde · Bezirk Uster").
+  ///
+  /// In en, this message translates to:
+  /// **'{kind} · {parent}'**
+  String regionPickKindOf(String kind, String parent);
+
   /// No description provided for @regionPickDeeperTitle.
   ///
   /// In en, this message translates to:
@@ -6350,6 +6362,12 @@ abstract class AppLocalizations {
   /// **'Create family'**
   String get householdNewCreate;
 
+  /// No description provided for @householdNewCreating.
+  ///
+  /// In en, this message translates to:
+  /// **'Creating your family …'**
+  String get householdNewCreating;
+
   /// No description provided for @householdNewInvited.
   ///
   /// In en, this message translates to:
@@ -6920,6 +6938,12 @@ abstract class AppLocalizations {
   /// **'That is neither an invitation code nor a WuselWall link.'**
   String get inviteCodeInvalidFormat;
 
+  /// No description provided for @inviteCodeEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the code or link.'**
+  String get inviteCodeEmpty;
+
   /// No description provided for @inviteNoLonger.
   ///
   /// In en, this message translates to:
@@ -7291,6 +7315,12 @@ abstract class AppLocalizations {
   /// **'Reset two-factor'**
   String get mfaResetAction;
 
+  /// No description provided for @mfaResetHint.
+  ///
+  /// In en, this message translates to:
+  /// **'When the authenticator app is lost'**
+  String get mfaResetHint;
+
   /// No description provided for @mfaResetConfirmTitle.
   ///
   /// In en, this message translates to:
@@ -7324,7 +7354,7 @@ abstract class AppLocalizations {
   /// No description provided for @serverLead.
   ///
   /// In en, this message translates to:
-  /// **'WuselWall keeps your family\'s data on your family\'s own server. Enter its address, or scan its QR code. Got an invitation? Paste the link, or the code together with the server, like K7QM3XRP@api.example.org.'**
+  /// **'WuselWall keeps your family\'s data on your family\'s own server. Enter its address, or scan its QR code.'**
   String get serverLead;
 
   /// No description provided for @serverAddressLabel.
@@ -7339,6 +7369,12 @@ abstract class AppLocalizations {
   /// **'e.g. api.example.org'**
   String get serverAddressHint;
 
+  /// No description provided for @serverAddressHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'With an invitation: the link, or code and server like K7QM3XRP@api.example.org'**
+  String get serverAddressHelper;
+
   /// No description provided for @serverConnect.
   ///
   /// In en, this message translates to:
@@ -7350,12 +7386,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Scan QR code'**
   String get serverScan;
-
-  /// No description provided for @serverScanTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Scan the server\'s QR code'**
-  String get serverScanTitle;
 
   /// No description provided for @serverDemo.
   ///
@@ -7380,6 +7410,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'That is not a server address.'**
   String get serverInvalid;
+
+  /// No description provided for @serverEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the server\'s address.'**
+  String get serverEmpty;
 
   /// No description provided for @serverUnreachable.
   ///
@@ -7858,14 +7894,8 @@ abstract class AppLocalizations {
   /// No description provided for @settingsViewMoreHint.
   ///
   /// In en, this message translates to:
-  /// **'More settings are under Advanced. Hidden settings still apply.'**
+  /// **'More under Advanced, above. Hidden settings still apply.'**
   String get settingsViewMoreHint;
-
-  /// No description provided for @settingsViewShowAll.
-  ///
-  /// In en, this message translates to:
-  /// **'Show all settings'**
-  String get settingsViewShowAll;
 
   /// No description provided for @schoolTimetableNeedsTerm.
   ///
@@ -8257,17 +8287,17 @@ abstract class AppLocalizations {
   /// **'Tap a person to change their name, colour, picture or role. Drag the handle to change the order on the wall.'**
   String get settingsMembersHint;
 
-  /// No description provided for @familyTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Family'**
-  String get familyTitle;
-
   /// No description provided for @familySettingsSubtitle.
   ///
   /// In en, this message translates to:
   /// **'Name, time zone, data export, delete'**
   String get familySettingsSubtitle;
+
+  /// No description provided for @familySettingsSubtitleBasic.
+  ///
+  /// In en, this message translates to:
+  /// **'Your family\'s name'**
+  String get familySettingsSubtitleBasic;
 
   /// No description provided for @familyTimezone.
   ///
@@ -9967,6 +9997,12 @@ abstract class AppLocalizations {
   /// **'Add a question'**
   String get tableQuestionAdd;
 
+  /// No description provided for @tableQuestionOwnLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Your question'**
+  String get tableQuestionOwnLabel;
+
   /// No description provided for @tableQuestionAddHint.
   ///
   /// In en, this message translates to:
@@ -10182,12 +10218,6 @@ abstract class AppLocalizations {
   /// **'was part of our week'**
   String get weekHighlightHere;
 
-  /// No description provided for @settingsOwnTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Settings for {name}'**
-  String settingsOwnTitle(String name);
-
   /// No description provided for @settingsGroupPersonalTitle.
   ///
   /// In en, this message translates to:
@@ -10209,7 +10239,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsGroupFamilySubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Name, time zone, members and the usual week'**
+  /// **'Name, region, members and the usual week'**
   String get settingsGroupFamilySubtitle;
 
   /// No description provided for @settingsGroupTasksTitle.
@@ -10218,11 +10248,23 @@ abstract class AppLocalizations {
   /// **'Tasks & rewards'**
   String get settingsGroupTasksTitle;
 
+  /// No description provided for @settingsGroupTasksShortTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks'**
+  String get settingsGroupTasksShortTitle;
+
   /// No description provided for @settingsGroupTasksSubtitle.
   ///
   /// In en, this message translates to:
   /// **'Points, streak jokers and approvals'**
   String get settingsGroupTasksSubtitle;
+
+  /// No description provided for @settingsGroupTasksSubtitleBasic.
+  ///
+  /// In en, this message translates to:
+  /// **'Streak jokers and approvals'**
+  String get settingsGroupTasksSubtitleBasic;
 
   /// No description provided for @settingsGroupCalendarTitle.
   ///
@@ -10230,11 +10272,23 @@ abstract class AppLocalizations {
   /// **'Calendar & school'**
   String get settingsGroupCalendarTitle;
 
+  /// No description provided for @settingsGroupCalendarShortTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar'**
+  String get settingsGroupCalendarShortTitle;
+
   /// No description provided for @settingsGroupCalendarSubtitle.
   ///
   /// In en, this message translates to:
   /// **'Events, timetable changes and sharing'**
   String get settingsGroupCalendarSubtitle;
+
+  /// No description provided for @settingsGroupCalendarSubtitleBasic.
+  ///
+  /// In en, this message translates to:
+  /// **'Who may change their own events'**
+  String get settingsGroupCalendarSubtitleBasic;
 
   /// No description provided for @settingsGroupMealsTitle.
   ///
@@ -10248,6 +10302,12 @@ abstract class AppLocalizations {
   /// **'Warm meals, meal wishes and care lunch'**
   String get settingsGroupMealsSubtitle;
 
+  /// No description provided for @settingsGroupMealsSubtitleBasic.
+  ///
+  /// In en, this message translates to:
+  /// **'Warm meals and meal wishes'**
+  String get settingsGroupMealsSubtitleBasic;
+
   /// No description provided for @settingsGroupRitualsTitle.
   ///
   /// In en, this message translates to:
@@ -10260,11 +10320,23 @@ abstract class AppLocalizations {
   /// **'Question at the table, our week, countdowns'**
   String get settingsGroupRitualsSubtitle;
 
+  /// No description provided for @settingsGroupRitualsSubtitleBasic.
+  ///
+  /// In en, this message translates to:
+  /// **'Question at the table and our week'**
+  String get settingsGroupRitualsSubtitleBasic;
+
   /// No description provided for @settingsGroupCelebrationsTitle.
   ///
   /// In en, this message translates to:
   /// **'Celebrations & seasons'**
   String get settingsGroupCelebrationsTitle;
+
+  /// No description provided for @settingsGroupCelebrationsShortTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Celebrations'**
+  String get settingsGroupCelebrationsShortTitle;
 
   /// No description provided for @settingsGroupCelebrationsSubtitle.
   ///
@@ -10272,11 +10344,23 @@ abstract class AppLocalizations {
   /// **'Advent, Easter, New Year, birthdays and the seasons'**
   String get settingsGroupCelebrationsSubtitle;
 
+  /// No description provided for @settingsGroupCelebrationsSubtitleBasic.
+  ///
+  /// In en, this message translates to:
+  /// **'Advent, Easter and New Year'**
+  String get settingsGroupCelebrationsSubtitleBasic;
+
   /// No description provided for @settingsGroupKitchenTitle.
   ///
   /// In en, this message translates to:
   /// **'Kitchen wall'**
   String get settingsGroupKitchenTitle;
+
+  /// No description provided for @settingsGroupKitchenShortTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Kitchen wall'**
+  String get settingsGroupKitchenShortTitle;
 
   /// No description provided for @settingsGroupKitchenSubtitle.
   ///
@@ -10302,6 +10386,12 @@ abstract class AppLocalizations {
   /// **'Account & security'**
   String get settingsGroupAccountTitle;
 
+  /// No description provided for @settingsGroupAccountShortTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get settingsGroupAccountShortTitle;
+
   /// No description provided for @settingsGroupAccountSubtitle.
   ///
   /// In en, this message translates to:
@@ -10325,6 +10415,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Help & about'**
   String get settingsGroupHelpTitle;
+
+  /// No description provided for @settingsGroupHelpShortTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Help'**
+  String get settingsGroupHelpShortTitle;
 
   /// No description provided for @settingsGroupHelpSubtitle.
   ///

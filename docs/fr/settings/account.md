@@ -4,7 +4,7 @@ Ces actions concernent votre compte ou tout le foyer. Elles se trouvent en bas d
 
 ## Mot de passe {#password}
 
-Dans **Paramètres → Avancés → Connexion**, définissez ou changez un mot de passe d’au moins **10 caractères**. Le code par e-mail reste disponible si votre serveur envoie des e-mails ; sinon, le mot de passe est le seul accès ([E-mails](/fr/server/email)).
+Dans **Paramètres → Compte et sécurité → Connexion**, définissez ou changez un mot de passe d’au moins **10 caractères**. Le code par e-mail reste disponible si votre serveur envoie des e-mails ; sinon, le mot de passe est le seul accès ([E-mails](/fr/server/email)).
 
 ## Quitter la famille {#leave-the-family}
 

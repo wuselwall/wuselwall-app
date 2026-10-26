@@ -113,7 +113,7 @@ class _ServerChoicePageState extends State<ServerChoicePage> {
     final raw = await Navigator.of(context).push<String>(
       MaterialPageRoute(
         builder: (_) => QrScanPage(
-          title: l10n.serverScanTitle,
+          title: l10n.serverScan,
           parse: (raw) =>
               parseServerAddress(raw) == null && parseAppLink(raw) == null
               ? null

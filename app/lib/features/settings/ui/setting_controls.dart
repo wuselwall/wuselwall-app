@@ -141,9 +141,11 @@ class _SettingControl extends StatelessWidget {
         value: value! as List<dynamic>,
         onChanged: onChanged,
       ),
+      // The row's title already says "Region".
       SettingType.region => RegionField(
         code: value as String?,
         onChanged: onChanged,
+        showLabel: false,
       ),
     };
   }
@@ -246,6 +248,10 @@ class _IntegerStepper extends StatelessWidget {
   }
 }
 
+/// The choice of an enum setting: one row of segments while every label fits its
+/// segment on one line, otherwise a wrapping row of chips, so a label such as
+/// "Automatisch" never breaks inside the word (specs/17, "Shape, depth and motion"). The same
+/// test runs at every width and text scale.
 class _EnumChoice extends StatelessWidget {
   const _EnumChoice({required this.entry, required this.onChanged});
 
@@ -256,16 +262,77 @@ class _EnumChoice extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final current = entry.value as String;
-    return SegmentedButton<String>(
-      showSelectedIcon: false,
-      segments: [
-        for (final v in entry.enumValues)
-          ButtonSegment(value: v, label: Text(settingValueLabel(l10n, v))),
-      ],
-      selected: {current},
-      onSelectionChanged: (s) => onChanged(s.first),
+    final labels = {
+      for (final v in entry.enumValues) v: settingValueLabel(l10n, v),
+    };
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (segmentLabelsFit(context, labels.values, constraints.maxWidth)) {
+          return SegmentedButton<String>(
+            showSelectedIcon: false,
+            segments: [
+              for (final MapEntry(key: v, value: label) in labels.entries)
+                ButtonSegment(value: v, label: Text(label, softWrap: false)),
+            ],
+            selected: {current},
+            onSelectionChanged: (s) => onChanged(s.first),
+          );
+        }
+        return Wrap(
+          key: ValueKey('setting-choices-${entry.key}'),
+          spacing: Tokens.space2,
+          runSpacing: Tokens.space2,
+          children: [
+            for (final MapEntry(key: v, value: label) in labels.entries)
+              ChoiceChip(
+                label: Text(label),
+                selected: v == current,
+                showCheckmark: false,
+                onSelected: (_) {
+                  if (v != current) onChanged(v);
+                },
+              ),
+          ],
+        );
+      },
     );
   }
+}
+
+/// Whether [labels] fit a [SegmentedButton] of [maxWidth] on one line each: the button
+/// gives every segment the same width, so the widest label decides. Measured bold (the
+/// selected segment) at the context's text scale, plus the segment's padding and border.
+@visibleForTesting
+bool segmentLabelsFit(
+  BuildContext context,
+  Iterable<String> labels,
+  double maxWidth,
+) {
+  if (labels.isEmpty) return true;
+  if (!maxWidth.isFinite) return true;
+  final theme = Theme.of(context);
+  final style =
+      (theme.segmentedButtonTheme.style?.textStyle?.resolve({
+                WidgetState.selected,
+              }) ??
+              theme.textTheme.labelLarge ??
+              const TextStyle())
+          .copyWith(fontWeight: FontWeight.w800);
+  final scaler = MediaQuery.textScalerOf(context);
+  var widest = 0.0;
+  for (final label in labels) {
+    final painter = TextPainter(
+      text: TextSpan(text: label, style: style),
+      textDirection: Directionality.of(context),
+      textScaler: scaler,
+      maxLines: 1,
+    )..layout();
+    if (painter.width > widest) widest = painter.width;
+    painter.dispose();
+  }
+  // 12 px padding either side (the theme's), a 1 px border and a little slack.
+  const chrome = 2 * 12 + 2 + 4;
+  return widest + chrome <= maxWidth / labels.length;
 }
 
 class _WeekdayTime extends StatelessWidget {

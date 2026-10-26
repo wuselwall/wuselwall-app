@@ -72,7 +72,7 @@ opened with a push also leaves when the acting person changes:
 
 A member's own page is the Personal group narrowed to the settings the server lets a member
 change for themselves (member scope, `self_service`): Wusel, Wusel's outfit and the completion
-sound, titled with their name, with no Basic/Advanced chip, no other group, no Sign out and no
+sound, titled "Einstellungen" with their name below it, with no Basic/Advanced chip, no other group, no Sign out and no
 device list. `/settings` and `/settings/personal` show it; every other `/settings/...` route
 sends them to `/settings`. The wall's 60 s idle return also runs on settings pages (a touch there
 counts); when the acting person becomes nobody, the open settings page leaves for home.

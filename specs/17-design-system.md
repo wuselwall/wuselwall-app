@@ -173,6 +173,8 @@ only from member colours and `brand`, so it follows the theme like everything el
 
 A selected segment (`SegmentedButton`) or chip is `brand-tint` (the acting member's tint under `forMember`) with AA text, set once in `AppTheme` and never `sunken`, which is invisible on the page; a selected segment's label is also bold, so the cue is not colour alone.
 
+A segment label is never broken inside a word. Where the labels of a row of segments do not each fit their segment on one line (a narrow phone, a larger text size), the row becomes a wrapping row of chips with the same choices (`_EnumChoice` in the settings, *added 2026-10-26*).
+
 **Clarified 2026-10-17 (A6, `t_da411148`):** targets are actual non-overlapping
 hit areas in logical pixels, minimum width **and** height, after visual density,
 padding and layout constraints. A nominal `minimumSize` of 56 is not sufficient if

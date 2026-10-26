@@ -4,7 +4,7 @@ Not every family does things the same way: how many points a chore earns, whethe
 
 <Shot name="settings-phone" alt="Settings: the list of groups from Personal to Help & about" />
 
-The **Basic** view shows only the most important settings: the region, streak jokers, whether rewards need approval, whether children change their own appointments, the warm meal on school days and free days, the question at the table, our week, meal wishes, this device's night hours, Wusel, the sound when a chore is ticked, the morning summary, the reminder before appointments and the holiday celebrations (Advent, Easter, Orthodox Easter, New Year's Eve). **Advanced** shows all the others (switch at the top, or tap **Show all settings** at the bottom). A group in which the view shows nothing is not in the list at all. Hidden settings still apply.
+The **Basic** view shows only the most important settings: the region, streak jokers, whether rewards need approval, whether children change their own appointments, the warm meal on school days and free days, the question at the table, our week, meal wishes, this device's night hours, Wusel, the sound when a chore is ticked, the morning summary, the reminder before appointments and the holiday celebrations (Advent, Easter, Orthodox Easter, New Year's Eve). **Advanced** shows all the others (switch it at the top right; a line at the bottom of a page says when something is hidden). A group in which the view shows nothing is not in the list at all. Hidden settings still apply.
 
 Every setting has a **default**, which WuselWall suggests. It suits most families. If your value differs, the setting says **Customised**. **Reset to default** brings it back at any time.
 
@@ -19,7 +19,7 @@ Every setting has a **default**, which WuselWall suggests. It suits most familie
 - **Celebrations & seasons** (Advanced): the decorations in the sky for **Holiday celebrations** (Advent, Easter, Orthodox Easter, New Year's Eve) and **Through the year** (seasons, school holidays, birthdays)
 - **Kitchen wall** (Advanced): whether the wall shows **full names** or only **initials**, when it moves on to the coming week and where morning, afternoon and evening split
 - **Devices**: **This device** (language, appearance, night hours and the settings for Wusel, sounds, the sky and burn-in protection, see [below](#this-device)) and **All devices** (connect, rename, lock)
-- **Account & security** (your own phone only): in the Basic view **Delete account**; Advanced adds sign-in, password, two-factor, PIN, passkey and leaving the family (see [Account and family](/en/settings/account) and [Security](/en/settings/security))
+- **Account & security** (your own phone only, complete in both views): sign-in, password, two-factor, PIN, passkey, leaving the family and deleting the account (see [Account and family](/en/settings/account) and [Security](/en/settings/security))
 - **Server** (Advanced): the address of your server with its QR code, and **Change server**
 - **Help & about**: **Getting started**, **Versions** and **Licenses**
 

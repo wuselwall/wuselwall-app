@@ -22,6 +22,6 @@ L’ajout et le blocage d’appareils, entre autres, sont réservés aux parents
 
 Un PIN erroné affiche le nombre d’essais restants. Après plusieurs erreurs, il faut patienter ; après dix, le PIN est bloqué.
 
-Pour le débloquer ou le remplacer si vous l’avez oublié, connectez-vous sur **votre téléphone personnel**, puis ouvrez **Paramètres → Avancés → Sécurité → PIN parental**. Le nouveau PIN prend effet immédiatement.
+Pour le débloquer ou le remplacer si vous l’avez oublié, connectez-vous sur **votre téléphone personnel**, puis ouvrez **Paramètres → Compte et sécurité → Sécurité → PIN parental**. Le nouveau PIN prend effet immédiatement.
 
 Sur votre téléphone personnel déjà connecté, vous n’avez pas besoin du PIN.
