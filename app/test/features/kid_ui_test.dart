@@ -6,6 +6,7 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/wusel/wusel.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
+import 'package:wuselwall/features/identity/ui/acting_profile_bar.dart';
 import 'package:wuselwall/features/kid/ui/kid_widgets.dart';
 import 'package:wuselwall/features/tasks/ui/task_widgets.dart';
 import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
@@ -216,6 +217,12 @@ void main() {
 
     expect(find.byKey(const ValueKey('kid-picker')), findsOneWidget);
     expect(find.text('Tisch decken'), findsNothing);
+    // The picker is the one place to say who is here: no second bar below it.
+    expect(find.byType(ActingProfileBar), findsNothing);
+
+    await _pickEmma(tester);
+    // Picked: the bar comes back to switch between children.
+    expect(find.byType(ActingProfileBar), findsOneWidget);
     await unmountApp(tester, container);
   });
 

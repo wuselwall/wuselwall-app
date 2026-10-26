@@ -56,6 +56,11 @@ void main() {
   ) async {
     final container = await pumpShared(t);
     expect(container.read(actingProfileProvider), isNull);
+    // Mein Tag shows its own big picker without the bar; the shopping list, open
+    // to everyone, keeps the bar.
+    expect(find.text('Wer bist du?'), findsNothing);
+    await t.tap(find.text('Einkaufen'));
+    await t.pumpAndSettle();
     expect(find.text('Wer bist du?'), findsOneWidget);
 
     await t.tap(find.byKey(const ValueKey('avatar-$kidId')));
@@ -91,11 +96,11 @@ void main() {
   testWidgets('every write names the acting profile', (t) async {
     final shopping = FakeShoppingRepository([item('1', 'Milch')]);
     await pumpShared(t, shopping: shopping);
-    await t.tap(find.byKey(const ValueKey('avatar-$kidId')));
-    await t.pump();
-    // On the kid home the list is its own tab.
+    // On the kid home the list is its own tab, with the bar to say who is here.
     await t.tap(find.text('Einkaufen'));
     await t.pumpAndSettle();
+    await t.tap(find.byKey(const ValueKey('avatar-$kidId')));
+    await t.pump();
 
     await t.tap(find.text('Milch'));
     // A tick settles for a moment before it is sent (see shopping_page's _ItemList).

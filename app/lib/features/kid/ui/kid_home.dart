@@ -54,6 +54,8 @@ class KidHome extends ConsumerWidget {
       ),
     };
 
+    final picking =
+        member == null && tab != KidTab.shopping && tab != KidTab.family;
     final band = context.ww.band(_module(tab));
     return Scaffold(
       body: SafeArea(
@@ -145,7 +147,9 @@ class KidHome extends ConsumerWidget {
                 ],
               ),
             ),
-            const ActingProfileBar(),
+            // While the big picker fills the page it is the one place to say who is
+            // here; the bar below would only repeat it.
+            if (!picking) const ActingProfileBar(),
           ],
         ),
       ),

@@ -72,7 +72,12 @@ class AudioplayersSoundPlayer implements SoundPlayer {
       ));
       var player = _players[cue];
       if (player == null) {
-        player = _players[cue] = AudioPlayer();
+        player = _players[cue] = AudioPlayer()
+          // The default updater asks for a frame on every vsync while a sound
+          // "plays" to report its position, and a low-latency sound never reports
+          // that it finished: after the first tick the app drew 60 frames a second
+          // for good. The cues need no position.
+          ..positionUpdater = null;
         await player.setPlayerMode(PlayerMode.lowLatency);
         await player.setReleaseMode(ReleaseMode.stop);
       }
