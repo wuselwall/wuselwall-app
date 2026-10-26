@@ -74,14 +74,26 @@ class MealsToolbar extends ConsumerWidget {
 }
 
 /// The meals destination's body: the week's actions, then the seven days.
-class MealsWeekBody extends ConsumerWidget {
+class MealsWeekBody extends ConsumerStatefulWidget {
   const MealsWeekBody({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MealsWeekBody> createState() => _MealsWeekBodyState();
+}
+
+class _MealsWeekBodyState extends ConsumerState<MealsWeekBody> {
+  /// The last week shown, which stays, dimmed, while the next week loads.
+  ({DateTime weekStart, List<MealEntry> entries})? _shown;
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final weekStart = ref.watch(mealsWeekProvider);
     final entries = ref.watch(mealEntriesProvider(weekStart));
+    if (entries.value case final value?) {
+      _shown = (weekStart: weekStart, entries: value);
+    }
+    final stale = entries.value == null && entries.isLoading ? _shown : null;
     return Column(
       children: [
         Padding(
@@ -118,12 +130,16 @@ class MealsWeekBody extends ConsumerWidget {
           child: SwipeStepper(
             onPrevious: () => ref.read(mealsWeekProvider.notifier).shift(-1),
             onNext: () => ref.read(mealsWeekProvider.notifier).shift(1),
-            child: _WeekGrid(
-              weekStart: weekStart,
-              // Shows the last week while a refetch runs, so a save never blanks the grid.
-              entries: entries.value,
-              retry: () => ref.invalidate(mealEntriesProvider(weekStart)),
-              error: entries,
+            child: LoadingDim(
+              stale: stale != null,
+              child: _WeekGrid(
+                weekStart: stale?.weekStart ?? weekStart,
+                // Shows the last week while a refetch runs, so a save never blanks
+                // the grid.
+                entries: stale?.entries ?? entries.value,
+                retry: () => ref.invalidate(mealEntriesProvider(weekStart)),
+                error: entries,
+              ),
             ),
           ),
         ),

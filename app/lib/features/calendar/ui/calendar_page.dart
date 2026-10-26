@@ -54,8 +54,10 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
     final members = ref.watch(membersProvider).value ?? const <Member>[];
     // Minute resolution: the now line moves, the grid does not rebuild every second.
     final now = ref.watch(nowProvider.select(_toMinute));
+    // The last window stays, dimmed, while the next one loads.
     return AsyncValueView(
       value: occurrences,
+      keepPrevious: true,
       onRetry: () => ref.invalidate(occurrencesProvider(window)),
       data: (data) =>
           CalendarBoard(view: view, window: data, members: members, now: now),
