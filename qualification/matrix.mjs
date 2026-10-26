@@ -32,7 +32,8 @@ export function checkInventory(data = inventory) {
   const ids = data.states.map(s => s.id);
   if (new Set(ids).size !== ids.length || !ids.length) throw new Error('Duplicate or empty inventory');
   for (const s of data.states) {
-    if (!/^[a-z][a-z0-9-]*$/.test(s.id) || !s.widget || !s.widths?.length || !s.route?.startsWith('/')) {
+    if (!/^[a-z][a-z0-9-]*$/.test(s.id) || !s.widget || !s.widths?.length || !s.route?.startsWith('/') ||
+        !Number.isInteger(s.minimumLabeledNodes ?? 3) || (s.minimumLabeledNodes ?? 3) < 2) {
       throw new Error(`Invalid inventory state: ${s.id}`);
     }
     for (const lang of data.locales) {
@@ -42,13 +43,33 @@ export function checkInventory(data = inventory) {
   }
   const routes = [...fs.readFileSync(path.join(root, 'app/lib/app/router.dart'), 'utf8')
     .split('static bool isSetup')[0].matchAll(/static const (\w+) = '([^']+)';/g)];
+  const router = fs.readFileSync(path.join(root, 'app/lib/app/router.dart'), 'utf8');
+  for (const [name, exclusion] of Object.entries(data.excludedRoutes ?? {})) {
+    const route = routes.find(([, routeName]) => routeName === name)?.[2];
+    if (!route || exclusion.route !== route || !exclusion.reason?.trim()) {
+      throw new Error(`Invalid route exclusion: ${name}`);
+    }
+    if (exclusion.kind === 'redirect') {
+      const destination = routes.find(([, , candidate]) => candidate === exclusion.destination)?.[1];
+      if (!destination || !data.states.some(s => s.route === exclusion.destination) ||
+          !router.includes(`if (path == Routes.${name}) return Routes.${destination};`)) {
+        throw new Error(`Unverified redirect exclusion: ${name}`);
+      }
+    } else if (exclusion.kind === 'developer-only') {
+      if (!router.includes(`if (path == Routes.${name}) return kDebugMode ? null : Routes.home;`)) {
+        throw new Error(`Unverified developer exclusion: ${name}`);
+      }
+    } else throw new Error(`Unsupported route exclusion kind: ${name}`);
+  }
   for (const [, name, route] of routes) {
-    if (data.states.some(s => s.route === route)) continue;
+    if (data.states.some(s => s.route === route) || data.excludedRoutes?.[name]) continue;
     if (data.pendingRoutes[name]?.route !== route || !data.pendingRoutes[name]?.reason) {
       throw new Error(`Unaccounted route: ${name} (${route})`);
     }
   }
-  return { states: ids.length, cases: cases('full', data).length, pendingRoutes: Object.keys(data.pendingRoutes).length };
+  return { states: ids.length, cases: cases('full', data).length,
+    pendingRoutes: Object.keys(data.pendingRoutes).length,
+    excludedRoutes: Object.keys(data.excludedRoutes ?? {}).length };
 }
 
 if (process.argv[1] === path.join(import.meta.dirname, 'matrix.mjs')) console.log(checkInventory(), cases(process.argv[2]).length);

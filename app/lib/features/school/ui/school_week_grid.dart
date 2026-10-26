@@ -416,7 +416,10 @@ class _LessonCell extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         onLongPress: onTap,
         onTap: tapOnPress ? onTap : null,
-        child: tile,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 48),
+          child: tile,
+        ),
       ),
     );
   }

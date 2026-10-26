@@ -4,14 +4,17 @@ How WuselWall is tested, from the database up to the family's real devices, and 
 each kind of test runs. Extends the CI notes in [16](16-setup-plan.md#step-4--continuous-integration-m00) and
 the distribution decisions in [ADR-011](adr/ADR-011-native-distribution-and-ci-cd.md).
 
-**Candidate qualification design (2026-10-25):**
-[Accessibility and UI qualification](accessibility-and-ui-qualification.md) records the
-selected local-runner approach, the whole-app accessibility/visual matrix, baseline review
-and exact-commit promotion gate. The expanded suite is **release-candidate only**, manually
-dispatched; its schedule supersedes the nightly and per-PR expansion proposed below.
-The [initial evidence suite](../qualification/README.md) is built in this branch; full
-qualification, native runner evidence and promotion enforcement remain open. Existing
-fast checks continue unchanged.
+**Candidate qualification implementation (2026-10-26):**
+[Accessibility and UI qualification](accessibility-and-ui-qualification.md) and the
+[runbook](../qualification/README.md) describe the manual candidate-only suite. Its
+70-state inventory accounts for every release route, with verified redirect/developer-only
+exclusions. Expanded Flutter guidelines, Playwright pixel/semantic comparisons, native
+ATF/XCTest adapters, large-text/keyboard controls and production web-entry smoke are built.
+Approved web/native baselines and physical-device review are required; native runtime
+execution and existing accessibility findings still need resolution. Android, iOS and server
+publishing enforce successful full comparison evidence for the exact commit, then protected
+human approval. Capture/partial/skipped runs cannot promote. Existing fast CI retains its
+schedule. This supersedes the older nightly/per-PR expansion proposals below.
 
 *Proposed 2026-10-11.* A MacBook Pro is now available, which settles
 [Q35](14-open-questions.md): iOS Simulator, Xcode and local iOS builds are part of the
@@ -47,8 +50,8 @@ nothing is tested twice at an expensive layer if a cheap one already covers it.
 | 4 | Widget: screens with fake repositories | `flutter test` | `app/test/features`, `app/test/app` | Every PR | Exists; the extension below (`pumpWw`, guideline checks) is not built |
 | 5 | Golden: pixels per locale × theme × form factor | `flutter test` + `matchesGoldenFile` | `app/test/golden` | Every PR | Started 2026-10-24: Wusel's poses, outfits and tufts (shapes only, no text) |
 | 6 | Repository integration: Dart repositories against a real stack | `flutter test --tags integration` | `app/test/integration` | Tag or manual run always; pull request when backend-sensitive paths change (`backend` job of `backend-ci.yml`, candidate) | Exists |
-| 7 | On-device E2E: the real app on a simulator, emulator or phone | `integration_test` + **Patrol** | `app/integration_test/` | Nightly (Android), before a release (iOS, devices) | Not built (no directory, no Patrol) |
-| 8 | Web smoke: the release web build in a browser | **Playwright** | `e2e/web/` | Tag or by hand | Not built (no directory) |
+| 7 | Native rendering and exported accessibility nodes | Flutter `integration_test`, Android ATF, iOS XCTest | `app/integration_test/`, `app/qualification/native_main.dart`, `qualification/native/` | Explicit candidate dispatch only | Adapters and required profiles built; Android app/test APKs compile; native runtime evidence open. Patrol is not installed |
+| 8 | Web visual/semantic regression and release-entry smoke | **Playwright**, axe-core | `qualification/web/`, `qualification/production-smoke.mjs` | Explicit candidate dispatch only | Built; 564 canonical / 2,472 full fixture cases, plus production entry with intercepted APIs. Approved baseline acceptance remains open |
 | 9 | Manual device check: what automation cannot reach | Checklist | [`specs/release-checklist.md`](release-checklist.md) | Before promoting a TestFlight/Play build | Added 2026-10-17; manual, no results recorded in the repository |
 
 Note the naming: `app/test/integration/` stays the host-VM repository tests (layer 6).
@@ -92,9 +95,16 @@ colours, the setup and enrolment screens.
   the CI's Linux image under Docker.
 - Tag them `golden` so `flutter test -x golden` stays available for a quick local loop.
 
-### Layer 7 — on-device E2E with Patrol
+### Layer 7 — native audits and future system journeys
 
-*Status 2026-10-17: not built.* No device or Patrol tests exist. The host-level repository and screen-count tests that cover part of the same flows are `app/test/integration/` (`onboarding_integration_test.dart`, `identity_shopping_integration_test.dart`, `health_integration_test.dart`) and `app/test/journeys/` (J1–J3 screen counts).
+*Status 2026-10-26:* the candidate lane has Flutter rendering captures, native ATF/XCTest
+adapters, bad-control/keyboard checkpoints, phone/tablet and enlarged-text profiles, native
+PNG/semantic baselines and strict result aggregation. Runtime/device execution is still
+required; compilation and project-generation checks alone do not pass this layer.
+
+The following Patrol proposal is historical future system-journey work, not the implemented
+adapter or its schedule. The host-level repository and screen-count tests remain in
+`app/test/integration/` and `app/test/journeys/` (J1–J3).
 
 `integration_test` alone drives only Flutter widgets. It cannot accept the camera
 permission dialog, toggle wifi, open a notification or press the system back button.
@@ -143,7 +153,11 @@ as with the Supabase CLI.
 
 ### Layer 8 — Playwright, for the web build only
 
-*Status 2026-10-17: not built.* No `e2e/web/` and no Playwright specs in the repository.
+*Status 2026-10-26:* `qualification/web/` contains the candidate fixture matrix with
+Playwright PNG/ARIA comparisons, axe-core, hermetic-request and browser-error assertions.
+`qualification/production-smoke.mjs` builds `lib/main.dart` and exercises intercepted-API
+browser journeys. The virtual-authenticator proposal below remains separate work; it is
+not established by fixture screenshot coverage.
 
 Yes, Playwright still works, but within limits. Flutter web paints to a `<canvas>`
 (CanvasKit or skwasm; the HTML renderer is gone), so there is no DOM text to find.
@@ -192,24 +206,26 @@ build is promoted to the family, run [`specs/release-checklist.md`](release-chec
 
 | When | Where | What |
 |---|---|---|
-| Every PR | GitHub Actions, `ci.yml` `app`, `website` and `audit` jobs (self-hosted build fleet for every event) | Layers 3 and 4. Layer 5 is not built. |
-| Every PR | GitHub Actions, `backend-ci.yml` (candidate): `changes` always; `edge-functions` and `backend` only when a backend-sensitive path changed; `required` always, as the one required check | Layers 1, 2 and 6, when they run. A skipped run is not a pass for them. |
-| A tag `v*.*.*`, or "Run workflow" on a branch (always before a migration) | GitHub Actions: `backend-ci.yml` `edge-functions` and `backend` (self-hosted Linux build fleet) | Layers 1, 2 and 6. Layer 8 is not built. Target: under 10 minutes, not measured. |
-| Nightly on `main` | GitHub Actions, self-hosted Linux with KVM, Android Emulator (`e2e.yml`) | Not built: no `e2e.yml`. Planned: Layer 7, hermetic and backed, on a phone AVD and a 10" tablet AVD |
-| Before a release | The MacBook: `scripts/e2e.sh ios` (not built; the script does not exist) | Planned: Layer 7 on iPhone and iPad simulators, then on the physical iPhone, iPad and Samsung over USB |
-| Before promoting a build | The three devices, by hand | Layer 9 |
+| Every PR | Existing `ci.yml` app/audit jobs on the build fleet | Ordinary Dart/widget tests, existing focused accessibility tests and illustration goldens |
+| Backend-sensitive PR, backend tag or manual run | Existing `backend-ci.yml` jobs and required aggregate | pgTAP, Edge Functions and backend-connected Dart tests on disposable data; skipped backend jobs are not execution evidence |
+| Explicit candidate dispatch | `qualify-candidate.yml` on Linux | Ordinary checks, expanded Flutter matrix, browser comparison, production release-entry smoke and aggregate report; no changed-path selection |
+| Same explicit candidate dispatch | Native macOS, serialized device use | Android ATF and iOS XCTest, native rendering/semantics, required phone/tablet, enlarged-text and compatibility profiles |
+| Tag or manual app/server publication | Release workflow qualification guard, then protected `release-promotion` environment | Exact-commit full comparison and integrity-checked evidence, followed by human acceptance before publishing/signing |
+| Before protected release acceptance | Physical devices, by hand | VoiceOver/TalkBack, native display settings, signed-build smoke and the remaining release checklist |
 
-The iOS release build uses the existing self-hosted Mac runner. Simulator end-to-end
-coverage remains a separate planned check; changing runner routing does not implement it.
-
-**Device farms** (Firebase Test Lab, BrowserStack, AWS Device Farm) are not needed: four
-users, four devices, and the family's own hardware already covers the real-device matrix.
-Firebase Test Lab, which Patrol supports, is the fallback if an Android-model-specific
-bug ever shows up; its free tier allows a few physical-device runs a day.
+The expanded suite has no nightly, ordinary push or PR trigger. Device provisioning and
+read-only preflight have separate manual runbooks. Compilation and an available runner do
+not count as native execution evidence. If moving Android to Linux later, establish KVM
+acceleration and a separate capture environment before enabling that runner capability.
+A paid device cloud is not required for the selected local-runner approach.
 
 ## Order of work
 
-*Status 2026-10-17: T1–T4 are not started. T5 is `specs/release-checklist.md`, added with this status; it is manual and has no recorded results.*
+*Historical proposal (2026-10-17):* T1–T4 below describe the original implementation order,
+not current status or a remaining schedule. The candidate-only implementation and open
+runtime/baseline/manual evidence are tracked in
+[Accessibility and UI qualification](accessibility-and-ui-qualification.md). The release
+checklist records evidence separately; repository implementation alone does not mark it PASS.
 
 | Step | Work | Size |
 |---|---|---|

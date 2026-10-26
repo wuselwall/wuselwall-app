@@ -328,35 +328,42 @@ class _DayCell extends ConsumerWidget {
               if (freeSlots.isNotEmpty)
                 Align(
                   alignment: AlignmentDirectional.centerStart,
-                  child: PopupMenuButton<PlanSlot>(
-                    tooltip: l10n.mealsAddOther,
-                    onSelected: (slot) =>
-                        showMealEditor(context, date: date, slot: slot),
-                    itemBuilder: (_) => [
-                      for (final s in freeSlots)
-                        PopupMenuItem(
-                          value: s,
-                          child: Text(context.planSlotLabel(s)),
-                        ),
-                    ],
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: Tokens.space2,
-                        vertical: Tokens.space1,
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.add, size: 18),
-                          const SizedBox(width: Tokens.space1),
-                          Flexible(
-                            child: Text(
-                              l10n.mealsAddOther,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                  child: Semantics(
+                    button: true,
+                    container: true,
+                    child: PopupMenuButton<PlanSlot>(
+                      tooltip: l10n.mealsAddOther,
+                      onSelected: (slot) =>
+                          showMealEditor(context, date: date, slot: slot),
+                      itemBuilder: (_) => [
+                        for (final s in freeSlots)
+                          PopupMenuItem(
+                            value: s,
+                            child: Text(context.planSlotLabel(s)),
                           ),
-                        ],
+                      ],
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(minHeight: 48),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: Tokens.space2,
+                            vertical: Tokens.space1,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.add, size: 18),
+                              const SizedBox(width: Tokens.space1),
+                              Flexible(
+                                child: Text(
+                                  l10n.mealsAddOther,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),

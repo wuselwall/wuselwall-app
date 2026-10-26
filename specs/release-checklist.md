@@ -16,13 +16,19 @@ from that commit's CI run, not from this file.
 Testing layers and where they run: [18 — Testing strategy](18-testing-strategy.md). Operator
 commands and the server stack: [10 — Deployment and operations](10-deployment-and-ops.md).
 
-**Planned candidate gate (2026-10-25):**
-[Accessibility and UI qualification](accessibility-and-ui-qualification.md) defines the
-manually selected commit, whole-app visual/accessibility coverage and required promotion
-evidence. The [initial evidence suite](../qualification/README.md) and manual evidence
-workflow are built in this branch; a full qualification verdict and enforced promotion
-gate remain open. No pass or native device result is recorded here. Planned native audits
-complement the physical-device accessibility checks below.
+**Implemented candidate gate (2026-10-26):**
+[Accessibility and UI qualification](accessibility-and-ui-qualification.md) and its
+[runbook](../qualification/README.md) define the manually selected default-branch commit,
+70-state inventory, complete expected case accounting, web/native baseline comparisons,
+native ATF/XCTest adapters and production web-entry smoke. Android, iOS and server
+publishing require successful full comparison evidence for that exact commit and approval
+of the protected `release-promotion` environment. Capture, partial, skipped and failing
+runs cannot promote. `READY_FOR_REVIEW` is automatic evidence; the summary retains
+`qualified: false`. A person accepts the baseline and physical-device checks through the
+protected release environment; approval is recorded separately from the immutable summary. Configure required reviewers and disable administrator bypass before
+publishing. Native runtime execution and approved baselines remain evidence requirements;
+APK compilation or an implemented adapter does not mark them PASS. Operator-run deployment
+utilities remain independent of the publishing workflow guard.
 
 ## 0. Rules for this checklist
 
@@ -221,6 +227,10 @@ Personal phones only. Pushes are not built ([14](14-open-questions.md), Q38 and 
 | X3 | System font size at maximum on Today, shopping, the adult board and the kid register: no clipped or overlapping text | Manual | None | NOT RUN | screenshots |
 | X4 | Device language German, English, French, Spanish and one unsupported locale: no string from another application language leaks, unsupported falls back to German | Manual | None | NOT RUN | screenshots |
 | X5 | DE/EN/FR/ES app/server messages and native permission prompts are in parity | CI, A1 (ARB and catalogue parity tests) | Green | NOT RUN | CI run link |
+| X6 | Explicit `candidate-evidence` run with `matrix=full`, `mode=compare` and both reviewed baseline manifest digests | CI, manual dispatch | Every required Flutter/browser/native/production job passes for the exact candidate SHA; expected case IDs/captures match; no skipped/flaky/missing cases; summary is `READY_FOR_REVIEW` | NOT RUN | workflow run/attempt, summary artifact digest, reports |
+| X7 | Review web/native baseline images and semantic changes, including untouched screens | Manual | Intentional changes accepted, unexpected diffs resolved, accessibility findings fixed; reviewed immutable `ui-baseline-*` bundles and digests retained | NOT RUN | baseline source SHA, both manifest digests, review record |
+| X8 | Native adapters and detector controls on required phone/tablet, enlarged-text and compatibility profiles | CI, candidate dispatch | ATF/XCTest visit actual Flutter accessibility nodes; known bad controls and keyboard checkpoints work; native PNG/semantic comparison passes; unsupported measurements are recorded | NOT RUN | profile reports, runtime/image/toolchain IDs, `.xcresult`, native baseline digest |
+| X9 | Protected release acceptance before app/server publication | Manual and CI | Promotion guard verifies the exact full-comparison commit/run/attempt and artifact SHA-256; `release-promotion` has required reviewers and no administrator bypass; reviewer accepts X1–X8 and relevant signed-device checks | NOT RUN | qualification link, protected environment approval record |
 | X6 | Email hook and SMTP send subject/HTML/plain in only `MAIL_LANGUAGE` (test each of `de`, `en`, `fr`, `es`, plus legacy/unset → German) and preserve the selection across update/language change | CI + manual | No recipient-locale override; keys unchanged | NOT RUN | CI run link, mail samples |
 | X7 | Reduce Motion on: iOS (Settings → Accessibility → Motion → Reduce Motion) and Android (Remove animations). Tick the last chore in the kid register, open Today at a phase change, and toggle the setting while the app runs | Manual | No confetti, no Wusel motion, springs land at once, the sky changes without a cross-fade; toggling takes effect without a restart (specs/26 "Motion") | NOT RUN | notes per platform |
 

@@ -19,13 +19,17 @@ on:
         options: [capture, compare]
         default: capture
       baseline_tag:
-        description: Reviewed ui-baseline-* release containing web-baseline.zip (compare only)
+        description: Reviewed ui-baseline-* release containing web/native baseline bundles (compare only)
         type: string
       baseline_sha256:
         description: Reviewed manifest.json SHA-256 (compare only)
         type: string
+      native_baseline_sha256:
+        description: Reviewed native manifest.json SHA-256 (compare only)
+        type: string
 permissions:
   contents: read
+  actions: read
 # Candidate code must never read or poison caches used by trusted release jobs.
 # Token-level enforcement matters even when individual actions disable caching.
 cache-mode: none
@@ -66,7 +70,7 @@ jobs:
   flutter:
     needs: prepare
     runs-on: [self-hosted, Linux, build]
-    timeout-minutes: 60
+    timeout-minutes: 180
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with: { ref: '${{ github.sha }}', persist-credentials: false }
@@ -92,7 +96,7 @@ jobs:
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
-          name: candidate-flutter-${{ needs.prepare.outputs.sha }}
+          name: candidate-flutter-${{ needs.prepare.outputs.sha }}-${{ github.run_attempt }}
           path: build/qualification/flutter
           if-no-files-found: error
           retention-days: 30
@@ -100,7 +104,7 @@ jobs:
   web:
     needs: prepare
     runs-on: [self-hosted, Linux, build]
-    timeout-minutes: 60
+    timeout-minutes: 180
     env:
       QUALIFY_CANDIDATE_SHA: ${{ needs.prepare.outputs.sha }}
       QUALIFY_MODE: ${{ inputs.mode }}
@@ -140,7 +144,7 @@ jobs:
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
-          name: candidate-web-${{ needs.prepare.outputs.sha }}
+          name: candidate-web-${{ needs.prepare.outputs.sha }}-${{ github.run_attempt }}
           path: |
             build/qualification/web
             build/qualification/capture
@@ -151,10 +155,69 @@ jobs:
   native:
     needs: prepare
     runs-on: [self-hosted, macOS]
-    timeout-minutes: 90
+    timeout-minutes: 180
     concurrency:
       group: native-qualification-devices
       cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { ref: '${{ github.sha }}', persist-credentials: false }
+      - name: Download the reviewed native baseline
+        if: inputs.mode == 'compare'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BASELINE_TAG: ${{ inputs.baseline_tag }}
+          BASELINE_SHA256: ${{ inputs.native_baseline_sha256 }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$BASELINE_TAG" =~ ^ui-baseline-[a-zA-Z0-9.-]+$ ]]
+          [[ "$BASELINE_SHA256" =~ ^[a-f0-9]{64}$ ]]
+          archive_dir=$(mktemp -d "$RUNNER_TEMP/native-baseline-XXXXXX")
+          gh release download "$BASELINE_TAG" --pattern native-baseline.zip --dir "$archive_dir"
+          printf 'QUALIFY_NATIVE_BASELINE_DIR=%s\nQUALIFY_NATIVE_BASELINE_SHA256=%s\n' "$archive_dir/snapshots" "$BASELINE_SHA256" >> "$GITHUB_ENV"
+      - name: Extract the native baseline without repository credentials
+        if: inputs.mode == 'compare'
+        shell: bash
+        run: python3 qualification/unpack-baseline.py "$(dirname "$QUALIFY_NATIVE_BASELINE_DIR")/native-baseline.zip" "$QUALIFY_NATIVE_BASELINE_DIR"
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with: { flutter-version: '${{ needs.prepare.outputs.flutter }}', cache: false, architecture: arm64 }
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with: { node-version: 22, package-manager-cache: false, architecture: arm64 }
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with: { distribution: temurin, java-version: '17', architecture: aarch64 }
+      - run: npm ci --include=dev
+      - run: flutter pub get --enforce-lockfile
+        working-directory: app
+      - name: Load provisioned native tools
+        run: bash qualification/native/load-tools.sh
+        env:
+          QUALIFICATION_TOOLS_ROOT: ${{ vars.QUALIFICATION_TOOLS_ROOT }}
+          ANDROID_HOME: ${{ vars.QUALIFICATION_ANDROID_HOME }}
+          ANDROID_AVD_HOME: ${{ vars.QUALIFICATION_ANDROID_AVD_HOME }}
+          QUALIFICATION_IOS_RUNTIME: ${{ vars.QUALIFICATION_IOS_RUNTIME }}
+          QUALIFICATION_ANDROID_MIN_PHONE_AVD: ${{ vars.QUALIFICATION_ANDROID_MIN_PHONE_AVD }}
+          QUALIFICATION_ANDROID_PHONE_AVD: ${{ vars.QUALIFICATION_ANDROID_PHONE_AVD }}
+          QUALIFICATION_ANDROID_TABLET_AVD: ${{ vars.QUALIFICATION_ANDROID_TABLET_AVD }}
+      - run: bash qualification/native.sh
+        env:
+          QUALIFY_CANDIDATE_SHA: ${{ github.sha }}
+          QUALIFY_MODE: ${{ inputs.mode }}
+          QUALIFY_NATIVE_SMOKE: ${{ inputs.matrix == 'smoke' && 'true' || 'false' }}
+          QUALIFICATION_IOS_PHONE_TYPE: ${{ vars.QUALIFICATION_IOS_PHONE_TYPE }}
+          QUALIFICATION_IOS_TABLET_TYPE: ${{ vars.QUALIFICATION_IOS_TABLET_TYPE }}
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: candidate-native-${{ needs.prepare.outputs.sha }}-${{ github.run_attempt }}
+          path: build/qualification/native
+          if-no-files-found: error
+          retention-days: 30
+
+  production:
+    needs: prepare
+    runs-on: [self-hosted, Linux, build]
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with: { ref: '${{ github.sha }}', persist-credentials: false }
@@ -162,29 +225,23 @@ jobs:
         with: { flutter-version: '${{ needs.prepare.outputs.flutter }}', cache: false }
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with: { node-version: 22, package-manager-cache: false }
-      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
-        with: { distribution: temurin, java-version: '17' }
+      - run: npm ci --include=dev
+      - run: npx playwright install --with-deps chromium
       - run: flutter pub get --enforce-lockfile
         working-directory: app
-      - run: bash qualification/native.sh
-        env:
-          QUALIFY_NATIVE_SMOKE: ${{ inputs.matrix == 'smoke' && 'true' || 'false' }}
-          QUALIFICATION_IOS_RUNTIME: ${{ vars.QUALIFICATION_IOS_RUNTIME }}
-          QUALIFICATION_IOS_PHONE_TYPE: ${{ vars.QUALIFICATION_IOS_PHONE_TYPE }}
-          QUALIFICATION_IOS_TABLET_TYPE: ${{ vars.QUALIFICATION_IOS_TABLET_TYPE }}
-          QUALIFICATION_ANDROID_PHONE_AVD: ${{ vars.QUALIFICATION_ANDROID_PHONE_AVD }}
-          QUALIFICATION_ANDROID_TABLET_AVD: ${{ vars.QUALIFICATION_ANDROID_TABLET_AVD }}
+      - run: node qualification/production-smoke.mjs
+        env: { QUALIFY_CANDIDATE_SHA: '${{ github.sha }}' }
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
-          name: candidate-native-${{ needs.prepare.outputs.sha }}
-          path: build/qualification/native
+          name: candidate-production-${{ github.sha }}-${{ github.run_attempt }}
+          path: build/qualification/production
           if-no-files-found: error
           retention-days: 30
 
   evidence:
     if: always() && needs.prepare.result == 'success'
-    needs: [prepare, flutter, web, native]
+    needs: [prepare, flutter, web, native, production]
     runs-on: [self-hosted, Linux, build]
     timeout-minutes: 5
     steps:
@@ -192,14 +249,40 @@ jobs:
         with: { ref: '${{ github.sha }}', persist-credentials: false }
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with: { node-version: 22, package-manager-cache: false }
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        if: always()
+        continue-on-error: true
+        with:
+          name: candidate-flutter-${{ github.sha }}-${{ github.run_attempt }}
+          path: build/qualification/downloaded/flutter
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        if: always()
+        continue-on-error: true
+        with:
+          name: candidate-web-${{ github.sha }}-${{ github.run_attempt }}
+          path: build/qualification/downloaded/web
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        if: always()
+        continue-on-error: true
+        with:
+          name: candidate-native-${{ github.sha }}-${{ github.run_attempt }}
+          path: build/qualification/downloaded/native
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        if: always()
+        continue-on-error: true
+        with:
+          name: candidate-production-${{ github.sha }}-${{ github.run_attempt }}
+          path: build/qualification/downloaded/production
       - run: node qualification/summarize.mjs
         env:
           QUALIFY_CANDIDATE_SHA: ${{ needs.prepare.outputs.sha }}
           QUALIFY_JOBS: ${{ toJSON(needs) }}
+          QUALIFY_MATRIX: ${{ inputs.matrix }}
+          QUALIFY_MODE: ${{ inputs.mode }}
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
-          name: candidate-summary-${{ github.run_id }}
+          name: candidate-summary-${{ github.run_id }}-${{ github.run_attempt }}
           path: build/qualification/summary.json
           if-no-files-found: error
           retention-days: 30

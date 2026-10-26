@@ -18,7 +18,15 @@ import 'package:wuselwall/features/setup/ui/auth_form_scaffold.dart';
 /// E2 (specs/20, "With email"): six digit boxes over one hidden field. Paste and the
 /// platform's one-time-code autofill fill the field; the sixth digit submits.
 class EmailCodePage extends ConsumerStatefulWidget {
-  const EmailCodePage({required this.email, super.key});
+  const EmailCodePage({
+    required this.email,
+    this.initialResendDelay = const Duration(seconds: emailCodeResendSeconds),
+    super.key,
+  });
+
+  /// The remaining delay after the send that opened this page. Passing zero
+  /// also permits deterministic captures of the resend state.
+  final Duration initialResendDelay;
 
   final String email;
 
@@ -31,7 +39,7 @@ class _EmailCodePageState extends ConsumerState<EmailCodePage> {
   final _focus = FocusNode();
   Timer? _ticker;
   // Counts down from the send that opened this page (E1 sent the code).
-  int _secondsLeft = emailCodeResendSeconds;
+  late int _secondsLeft;
   bool _busy = false;
   bool _wrong = false;
 
@@ -39,7 +47,7 @@ class _EmailCodePageState extends ConsumerState<EmailCodePage> {
   void initState() {
     super.initState();
     _focus.addListener(_onFocusChanged);
-    _startCountdown();
+    _startCountdown(widget.initialResendDelay);
   }
 
   @override
@@ -53,9 +61,13 @@ class _EmailCodePageState extends ConsumerState<EmailCodePage> {
 
   void _onFocusChanged() => setState(() {});
 
-  void _startCountdown() {
+  void _startCountdown([
+    Duration delay = const Duration(seconds: emailCodeResendSeconds),
+  ]) {
+    assert(!delay.isNegative);
     _ticker?.cancel();
-    _secondsLeft = emailCodeResendSeconds;
+    _secondsLeft = delay.inSeconds;
+    if (_secondsLeft <= 0) return;
     _ticker = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (!mounted) {
         timer.cancel();

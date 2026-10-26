@@ -489,7 +489,10 @@ class _ListSwitcher extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final lists = ref.watch(shoppingListsProvider).value ?? const [];
-    final touch = ref.watch(uiRegisterProvider).touchTarget;
+    final touch = ref
+        .watch(uiRegisterProvider)
+        .touchTarget
+        .clamp(48.0, double.infinity);
     return SizedBox(
       // A6: tall enough for the touch target plus the row's own padding — the chips
       // used to be capped at 40 px by this box regardless of their own minimum.
@@ -594,18 +597,24 @@ class _ListChipState extends State<_ListChip> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onLongPress: widget.onLongPress,
-      child: _FocusRing(
-        focusNode: _focusNode,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(minHeight: widget.minHeight),
-          child: ChoiceChip(
+    return MergeSemantics(
+      child: Semantics(
+        onLongPress: widget.onLongPress,
+        child: GestureDetector(
+          excludeFromSemantics: true,
+          onLongPress: widget.onLongPress,
+          child: _FocusRing(
             focusNode: _focusNode,
-            selected: widget.selected,
-            avatar: widget.avatar,
-            label: Text(widget.label),
-            onSelected: (_) => widget.onSelected(),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: widget.minHeight),
+              child: ChoiceChip(
+                focusNode: _focusNode,
+                selected: widget.selected,
+                avatar: widget.avatar,
+                label: Text(widget.label),
+                onSelected: (_) => widget.onSelected(),
+              ),
+            ),
           ),
         ),
       ),
@@ -1170,7 +1179,7 @@ class _ItemTileState extends State<_ItemTile> {
     final style = widget.checked
         ? TextStyle(
             decoration: TextDecoration.lineThrough,
-            color: Theme.of(context).disabledColor,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
           )
         : null;
     final detail = [
@@ -1181,104 +1190,116 @@ class _ItemTileState extends State<_ItemTile> {
     // Tick targets are at least 56 high: this is used one-handed, in a coat.
     // For screen readers the row is one checkbox named after the item; who added it
     // is a hint after the name, not a label before it.
-    return Semantics(
-      checked: widget.checked,
-      value: item.pending ? l10n.shoppingItemPending : null,
-      hint: adder == null ? null : l10n.shoppingAddedBy(adder.displayName),
-      child: _FocusRing(
-        focusNode: _focusNode,
-        borderRadius: BorderRadius.zero,
-        child: ListTile(
-          minTileHeight: 56,
-          focusNode: _focusNode,
-          onFocusChange: _onFocusChange,
-          onTap: widget.onToggle,
-          onLongPress: widget.onEdit,
-          leading: ExcludeSemantics(
-            // A4: the row itself is the one tab stop (Space/Enter already toggle
-            // it); without this the checkbox was a second, redundant stop.
-            child: ExcludeFocusTraversal(
-              child: Checkbox(
-                value: widget.checked,
-                onChanged: (_) => widget.onToggle(),
-              ),
-            ),
-          ),
-          title: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Flexible(child: Text(item.name, style: style)),
-              if (item.sourceMealEntryIds.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(left: Tokens.space2),
-                  child: ExcludeSemantics(
-                    child: Tooltip(
-                      message: l10n.mealsUxFromMealPlan,
-                      child: Icon(
-                        Icons.restaurant_menu,
-                        size: 18,
-                        color: Theme.of(context).colorScheme.outline,
-                      ),
+    return Row(
+      children: [
+        Expanded(
+          child: Semantics(
+            checked: widget.checked,
+            value: item.pending ? l10n.shoppingItemPending : null,
+            hint: adder == null
+                ? null
+                : l10n.shoppingAddedBy(adder.displayName),
+            child: _FocusRing(
+              focusNode: _focusNode,
+              borderRadius: BorderRadius.zero,
+              child: ListTile(
+                minTileHeight: 56,
+                focusNode: _focusNode,
+                onFocusChange: _onFocusChange,
+                onTap: widget.onToggle,
+                onLongPress: widget.onEdit,
+                leading: ExcludeSemantics(
+                  // A4: the row itself is the one tab stop (Space/Enter already toggle
+                  // it); without this the checkbox was a second, redundant stop.
+                  child: ExcludeFocusTraversal(
+                    child: Checkbox(
+                      value: widget.checked,
+                      onChanged: (_) => widget.onToggle(),
                     ),
                   ),
                 ),
-            ],
-          ),
-          subtitle: detail.isEmpty ? null : Text(detail, style: style),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (item.pending)
-                Padding(
-                  padding: const EdgeInsets.only(right: Tokens.space2),
-                  child: ExcludeSemantics(
-                    child: Tooltip(
-                      message: l10n.shoppingItemPending,
-                      child: Icon(
-                        Icons.cloud_upload_outlined,
-                        size: 18,
-                        color: Theme.of(context).colorScheme.outline,
-                      ),
-                    ),
-                  ),
-                ),
-              if (adder != null)
-                Semantics(
-                  label: l10n.shoppingAddedBy(adder.displayName),
-                  child: ExcludeSemantics(
-                    child: Tooltip(
-                      message: l10n.shoppingAddedBy(adder.displayName),
-                      child: Container(
-                        width: 18,
-                        height: 18,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: context.ww.member(adder.color).ink,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Text(
-                          adder.initial,
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w800,
-                            height: 1,
-                            color: context.ww.member(adder.color).onInk,
+                title: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(child: Text(item.name, style: style)),
+                    if (item.sourceMealEntryIds.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(left: Tokens.space2),
+                        child: ExcludeSemantics(
+                          child: Tooltip(
+                            message: l10n.mealsUxFromMealPlan,
+                            child: Icon(
+                              Icons.restaurant_menu,
+                              size: 18,
+                              color: Theme.of(context).colorScheme.outline,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
+                  ],
                 ),
-              if (item.count > 1 && !widget.checked)
-                IconButton(
-                  tooltip: l10n.shoppingRemoveOne,
-                  onPressed: widget.onLess,
-                  icon: const Icon(Icons.remove_circle_outline),
+                subtitle: detail.isEmpty ? null : Text(detail, style: style),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (item.pending)
+                      Padding(
+                        padding: const EdgeInsets.only(right: Tokens.space2),
+                        child: ExcludeSemantics(
+                          child: Tooltip(
+                            message: l10n.shoppingItemPending,
+                            child: Icon(
+                              Icons.cloud_upload_outlined,
+                              size: 18,
+                              color: Theme.of(context).colorScheme.outline,
+                            ),
+                          ),
+                        ),
+                      ),
+                    if (adder != null)
+                      Semantics(
+                        label: l10n.shoppingAddedBy(adder.displayName),
+                        child: ExcludeSemantics(
+                          child: Tooltip(
+                            message: l10n.shoppingAddedBy(adder.displayName),
+                            child: Container(
+                              width: 18,
+                              height: 18,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: context.ww.member(adder.color).ink,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Text(
+                                adder.initial,
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w800,
+                                  height: 1,
+                                  color: context.ww.member(adder.color).onInk,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
-            ],
+              ),
+            ),
           ),
         ),
-      ),
+        if (item.count > 1 && !widget.checked)
+          Semantics(
+            container: true,
+            label: item.name,
+            child: IconButton(
+              tooltip: l10n.shoppingRemoveOne,
+              onPressed: widget.onLess,
+              icon: const Icon(Icons.remove_circle_outline),
+            ),
+          ),
+      ],
     );
   }
 }

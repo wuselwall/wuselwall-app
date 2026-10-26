@@ -47,7 +47,7 @@ export function validateEnvironment(environment) {
 }
 
 export function validateArtifact(artifact, run, sha) {
-  assert.equal(artifact.name, `candidate-summary-${run.id}`, 'Wrong evidence artifact');
+  assert.equal(artifact.name, `candidate-summary-${run.id}-${run.run_attempt}`, 'Wrong evidence artifact');
   assert.equal(artifact.expired, false, 'Qualification evidence has expired; qualify again');
   assert.equal(artifact.workflow_run?.head_sha, sha, 'Artifact commit differs');
   assert.equal(artifact.workflow_run?.id, run.id, 'Artifact run differs');
@@ -81,7 +81,7 @@ export async function authorize({ sha, repository, token, fetcher = fetch, api =
   });
   for (const run of runs) {
     const artifacts = await request(`actions/runs/${run.id}/artifacts?per_page=100`);
-    const artifact = artifacts.artifacts.find(a => a.name === `candidate-summary-${run.id}`);
+    const artifact = artifacts.artifacts.find(a => a.name === `candidate-summary-${run.id}-${run.run_attempt}`);
     if (!artifact) continue;
     // Do not silently fall back to older evidence when a purported passing run is corrupt.
     validateArtifact(artifact, run, sha);

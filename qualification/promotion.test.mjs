@@ -5,7 +5,7 @@ import { spawnSync } from 'node:child_process';
 import { validateRun, validateSummary, validateArtifact, validateEnvironment, authorize } from './promotion.mjs';
 
 const sha = 'a'.repeat(40);
-const run = { id: 12, workflow_id: 4, head_sha: sha, head_repository: { full_name: 'test/app' },
+const run = { id: 12, run_attempt: 1, workflow_id: 4, head_sha: sha, head_repository: { full_name: 'test/app' },
   path: '.github/workflows/qualify-candidate.yml', head_branch: 'main', event: 'workflow_dispatch',
   status: 'completed', conclusion: 'success', run_started_at: '2026-10-25T12:00:00Z' };
 const context = { sha, repository: 'test/app', branch: 'main', workflowId: 4 };
@@ -37,7 +37,7 @@ test('human review must be configured and artifacts must be current, immutable a
   validateEnvironment(environment);
   assert.throws(() => validateEnvironment({ ...environment, protection_rules: [] }));
   assert.throws(() => validateEnvironment({ ...environment, can_admins_bypass: true }));
-  const artifact = { name: 'candidate-summary-12', expired: false, workflow_run: { id: 12, head_sha: sha },
+  const artifact = { name: 'candidate-summary-12-1', expired: false, workflow_run: { id: 12, head_sha: sha },
     created_at: '2026-10-25T12:01:00Z', digest: `sha256:${'c'.repeat(64)}` };
   validateArtifact(artifact, run, sha);
   for (const change of [{ expired: true }, { digest: '' }, { name: 'other' },
@@ -68,7 +68,7 @@ test('authorization checks downloaded ZIP bytes and the contained evidence befor
           protection_rules: [{ type: 'required_reviewers', reviewers: [{ type: 'User' }] }] },
         'actions/workflows/qualify-candidate.yml': { id: 4 },
         'actions/workflows/4/runs': { workflow_runs: [run] },
-        'actions/runs/12/artifacts': { artifacts: [{ id: 10, name: 'candidate-summary-12', expired: false,
+        'actions/runs/12/artifacts': { artifacts: [{ id: 10, name: 'candidate-summary-12-1', expired: false,
           created_at: '2026-10-25T12:01:00Z', workflow_run: { id: 12, head_sha: sha }, digest: `sha256:${digest}` }] },
       };
       if (suffix === 'actions/artifacts/10/zip') return new Response(bytes);

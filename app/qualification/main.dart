@@ -14,6 +14,7 @@ void main() {
       id: q['state'] ?? 'today',
       destination: q['destination'] ?? 'TodayPage',
       child: qualificationApp(
+        stateId: q['state'],
         scenario: q['scenario'] ?? 'adult',
         locale: Locale(q['locale'] ?? 'de'),
         shade: q['shade'] ?? 'light',

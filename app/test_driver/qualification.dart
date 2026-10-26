@@ -12,7 +12,9 @@ Future<void> main() async {
   await integrationDriver(
     writeResponseOnFailure: true,
     onScreenshot: (name, bytes, [args]) async {
-      if (!RegExp(r'^[a-z0-9-]+$').hasMatch(name) || bytes.length < 8) {
+      if (!RegExp(r'^[a-z0-9-]+$').hasMatch(name) ||
+          bytes.length < 24 ||
+          base64Encode(bytes.take(8).toList()) != 'iVBORw0KGgo=') {
         return false;
       }
       File('${output.path}/$name.png').writeAsBytesSync(bytes);

@@ -302,8 +302,8 @@ class _ColourChoice extends StatelessWidget {
         customBorder: const CircleBorder(),
         onTap: onTap,
         child: Container(
-          width: 44,
-          height: 44,
+          width: 48,
+          height: 48,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: member.ink,

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { summarize } from './summarize.mjs';
+import { summarize, flutterCaseIds } from './summarize.mjs';
 import { cases } from './matrix.mjs';
 const sha = 'a'.repeat(40);
 const coverage = { states: [{ id: 'fixture', route: '/', scenario: 'adult', widths: [390] }],
@@ -11,7 +11,7 @@ function complete() {
   return { sha, coverage, matrix: 'full', mode: 'compare',
     jobs: Object.fromEntries(['prepare', 'flutter', 'web', 'native', 'production'].map(n => [n, { result: 'success' }])),
     reports: {
-      flutter: { matrix: 'full', expected: count, executed: count, results: Array.from({ length: count }, () => ({ status: 'PASS', findings: [] })) },
+      flutter: { matrix: 'full', expected: count, executed: count, results: flutterCaseIds(coverage).map(id => ({ id, status: 'PASS', findings: [] })) },
       web: { candidateSha: sha, matrix: 'full', mode: 'compare', baselineVerified: true, executionPassed: true,
         expected: webCount, stats: { expected: webCount, unexpected: 0, flaky: 0, skipped: 0 } },
       native: { candidateSha: sha, profile: 'full', executionPassed: true,
@@ -30,6 +30,7 @@ test('missing reports, filtered suites, failures and open implementation gates b
   for (const mutate of [
     c => { c.matrix = 'canonical'; }, c => { c.mode = 'capture'; },
     c => { c.reports.flutter.executed--; }, c => { c.reports.flutter.results[0].status = 'FAIL'; },
+    c => { c.reports.flutter.results[1].id = c.reports.flutter.results[0].id; },
     c => { c.reports.web.stats.skipped = 1; }, c => { c.reports.web.candidateSha = 'b'.repeat(40); },
     c => { c.reports.native.audits.android.detectorsPassed = false; },
     c => { c.reports.native.audits.ios.supported = false; },

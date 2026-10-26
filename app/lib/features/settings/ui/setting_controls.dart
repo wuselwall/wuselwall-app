@@ -100,7 +100,11 @@ class _SettingControl extends StatelessWidget {
       );
     }
     return switch (entry.type) {
-      SettingType.boolean => Switch(value: value == true, onChanged: onChanged),
+      SettingType.boolean => Semantics(
+        container: true,
+        label: settingText(context.l10n, entry.key).title,
+        child: Switch(value: value == true, onChanged: onChanged),
+      ),
       SettingType.integer => _NullableSwitch(
         entry: entry,
         onChanged: onChanged,
@@ -171,24 +175,28 @@ class _NullableSwitch extends StatelessWidget {
       spacing: Tokens.space2,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        Switch(
-          value: on,
-          onChanged: (wanted) async {
-            if (!wanted) {
-              onChanged(null);
-              return;
-            }
-            if (entry.defaultValue != null) {
-              onChanged(entry.defaultValue);
-              return;
-            }
-            if (entry.type == SettingType.integer) {
-              onChanged(entry.min);
-              return;
-            }
-            final picked = await pickSettingTime(context, '09:00');
-            if (picked != null) onChanged(picked);
-          },
+        Semantics(
+          container: true,
+          label: settingText(l10n, entry.key).title,
+          child: Switch(
+            value: on,
+            onChanged: (wanted) async {
+              if (!wanted) {
+                onChanged(null);
+                return;
+              }
+              if (entry.defaultValue != null) {
+                onChanged(entry.defaultValue);
+                return;
+              }
+              if (entry.type == SettingType.integer) {
+                onChanged(entry.min);
+                return;
+              }
+              final picked = await pickSettingTime(context, '09:00');
+              if (picked != null) onChanged(picked);
+            },
+          ),
         ),
         Text(on ? l10n.settingOn : l10n.settingOff),
         if (on) child,
@@ -284,21 +292,24 @@ class _WeekdayTime extends StatelessWidget {
       spacing: Tokens.space2,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        DropdownButton<int>(
-          value: weekday,
-          items: [
-            // 4 January 2026 was a Sunday, so day n + 4 is ISO weekday n.
-            for (var day = 1; day <= 7; day++)
-              DropdownMenuItem(
-                value: day,
-                child: Text(
-                  DateFormat.EEEE(locale).format(DateTime(2026, 1, 4 + day)),
+        Semantics(
+          container: true,
+          child: DropdownButton<int>(
+            value: weekday,
+            items: [
+              // 4 January 2026 was a Sunday, so day n + 4 is ISO weekday n.
+              for (var day = 1; day <= 7; day++)
+                DropdownMenuItem(
+                  value: day,
+                  child: Text(
+                    DateFormat.EEEE(locale).format(DateTime(2026, 1, 4 + day)),
+                  ),
                 ),
-              ),
-          ],
-          onChanged: (day) {
-            if (day != null) onChanged({'weekday': day, 'time': time});
-          },
+            ],
+            onChanged: (day) {
+              if (day != null) onChanged({'weekday': day, 'time': time});
+            },
+          ),
         ),
         _TimeButton(
           time: time,

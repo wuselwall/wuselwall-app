@@ -20,7 +20,9 @@ test('matrix is unique, locale-complete, includes breakpoint boundaries and true
 });
 
 test('new routes and duplicate or empty states cannot silently disappear', () => {
-  assert.throws(() => checkInventory({ ...inventory, pendingRoutes: {} }), /Unaccounted route/);
+  assert.throws(() => checkInventory({ ...inventory, pendingRoutes: {}, excludedRoutes: {} }), /Unaccounted route/);
+  assert.throws(() => checkInventory({ ...inventory, excludedRoutes: { ...inventory.excludedRoutes, typo: { route: '/new', kind: 'developer-only', reason: 'test' } } }), /Invalid route exclusion/);
+  assert.throws(() => checkInventory({ ...inventory, excludedRoutes: { system: { ...inventory.excludedRoutes.system, kind: 'unverified' } } }), /Unsupported route exclusion/);
   assert.throws(() => checkInventory({ ...inventory, states: [] }), /empty inventory/);
   assert.throws(() => checkInventory({ ...inventory, states: [...inventory.states, inventory.states[0]] }), /Duplicate/);
 });

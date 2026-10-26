@@ -5,6 +5,7 @@ import 'package:wuselwall/features/board/ui/board_primitives.dart';
 import 'package:wuselwall/features/calendar/application/calendar_providers.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 import 'package:wuselwall/features/calendar/ui/calendar_board.dart';
+import 'package:wuselwall/features/calendar/ui/calendar_tiles.dart';
 import 'package:wuselwall/features/home/application/home_tab.dart';
 import 'package:wuselwall/l10n/generated/app_localizations_de.dart';
 
@@ -61,6 +62,32 @@ Finder textWith(String needle) => find.byWidgetPredicate(
 );
 
 void main() {
+  testWidgets('hour blocks fit enlarged text at the tablet breakpoint', (
+    t,
+  ) async {
+    t.platformDispatcher.textScaleFactorTestValue = 2;
+    addTearDown(t.platformDispatcher.clearTextScaleFactorTestValue);
+    await pumpApp(
+      t,
+      size: const Size(600, 844),
+      overrides: baseOverrides(
+        identity: FakeIdentityRepository(current: device()),
+      ),
+      calendar: FakeCalendarRepository([
+        occ(
+          title: 'A long appointment title',
+          day: dayOfThisWeek(0),
+          from: const TimeOfDay(hour: 8, minute: 0),
+          to: const TimeOfDay(hour: 9, minute: 0),
+          attendees: const [guardianId],
+        ),
+      ]),
+    );
+    await openTab(t, 'Kalender');
+    expect(find.byType(CalendarBoard), findsOneWidget);
+    expect(t.takeException(), isNull);
+  });
+
   test(
     'calendar ranges and navigation use local calendar days across fall DST',
     () {
@@ -175,6 +202,10 @@ void main() {
     await openTab(t, 'Kalender');
 
     expect(find.text('Ferien am See'), findsOneWidget);
+    expect(
+      t.getSize(find.byType(OccurrenceTile)).height,
+      greaterThanOrEqualTo(48),
+    );
     expect(t.takeException(), isNull);
   });
 

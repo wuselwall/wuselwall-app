@@ -211,8 +211,9 @@ class _JoinFormState extends ConsumerState<_JoinForm> {
           spacing: Tokens.space2,
           runSpacing: Tokens.space2,
           children: [
-            for (final swatch in MemberPalette.swatches)
+            for (final (i, swatch) in MemberPalette.swatches.indexed)
               _SwatchChoice(
+                label: l10n.householdNewColourOption('${i + 1}'),
                 color: swatch.light,
                 selected: _colorHex == toHex(swatch.light),
                 onTap: _busy
@@ -249,11 +250,13 @@ class _JoinFormState extends ConsumerState<_JoinForm> {
 class _SwatchChoice extends StatelessWidget {
   const _SwatchChoice({
     required this.color,
+    required this.label,
     required this.selected,
     required this.onTap,
   });
 
   final Color color;
+  final String label;
   final bool selected;
   final VoidCallback? onTap;
 
@@ -261,12 +264,13 @@ class _SwatchChoice extends StatelessWidget {
   Widget build(BuildContext context) => Semantics(
     button: true,
     selected: selected,
+    label: label,
     child: InkWell(
       customBorder: const CircleBorder(),
       onTap: onTap,
       child: Container(
-        width: 44,
-        height: 44,
+        width: 48,
+        height: 48,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: color,

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -722,29 +723,59 @@ class _EditorBodyState extends ConsumerState<_EditorBody> {
           ),
           if (widget.data.subjects.isEmpty) Text(l10n.schoolNoSubjects),
           const SizedBox(height: 8),
-          _Header(days: days, onDayAction: _onDayAction, labelWidth: 84),
-          for (final p in periods)
-            if (p.isBreak)
-              const SizedBox(height: 6)
-            else
-              _Row(
-                label: '${p.index}. · ${context.span(p.starts, p.ends)}',
-                cells: [
-                  for (final d in days)
-                    _CellTile(
-                      weekday: d,
-                      period: p.index,
-                      drafts: [
-                        for (final parity in const ['all', 'a', 'b'])
-                          if (_cells['$d:${p.index}:$parity'] != null)
-                            _cells['$d:${p.index}:$parity']!,
-                      ],
-                      subjectOf: _subjectOf,
-                      onTap: () => _editCell(d, p.index),
-                      onClear: () => _clearCell(d, p.index),
-                    ),
-                ],
-              ),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              // Five readable, tappable day columns scroll on narrow screens.
+              final textScale = MediaQuery.textScalerOf(context).scale(14) / 14;
+              final gridWidth = math.max(
+                constraints.maxWidth,
+                84 + days.length * 120 * textScale,
+              );
+              return SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: SizedBox(
+                  width: gridWidth,
+                  child: Column(
+                    children: [
+                      _Header(
+                        days: days,
+                        onDayAction: _onDayAction,
+                        labelWidth: 84,
+                      ),
+                      for (final p in periods)
+                        if (p.isBreak)
+                          const SizedBox(height: 6)
+                        else
+                          _Row(
+                            label:
+                                '${p.index}. · ${context.span(p.starts, p.ends)}',
+                            cells: [
+                              for (final d in days)
+                                _CellTile(
+                                  weekday: d,
+                                  period: p.index,
+                                  drafts: [
+                                    for (final parity in const [
+                                      'all',
+                                      'a',
+                                      'b',
+                                    ])
+                                      if (_cells['$d:${p.index}:$parity'] !=
+                                          null)
+                                        _cells['$d:${p.index}:$parity']!,
+                                  ],
+                                  subjectOf: _subjectOf,
+                                  onTap: () => _editCell(d, p.index),
+                                  onClear: () => _clearCell(d, p.index),
+                                ),
+                            ],
+                          ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
           const SizedBox(height: 24),
           Text(
             l10n.schoolCareRows,

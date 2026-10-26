@@ -22,8 +22,8 @@ const _gridHeight = (gridEndHour - gridStartHour) * _hourHeight;
 /// One presence band row: a member's bands, one lane per member (specs/05 "Week").
 const _presenceRowHeight = 30.0;
 
-/// One all-day chip row.
-const _allDayRowHeight = 26.0;
+/// One all-day action row: 48 px target plus its vertical margins.
+const _allDayRowHeight = 52.0;
 
 /// More rows than this and the pinned area scrolls on its own, within a share of the
 /// board's height, so the time grid keeps room.

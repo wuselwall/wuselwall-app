@@ -625,49 +625,65 @@ class _WishChip extends ConsumerWidget {
     final l10n = context.l10n;
     final m = member;
     final colors = m == null ? null : context.ww.member(m.color);
-    return InputChip(
-      avatar: colors == null
-          ? null
-          : CircleAvatar(
-              backgroundColor: colors.ink,
-              foregroundColor: colors.onInk,
-              child: Text(m!.initial),
-            ),
-      label: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Flexible(
-            child: Text.rich(
-              TextSpan(
-                children: [
-                  TextSpan(
-                    text: l10n.mealsWishChip(m?.displayName ?? '', wish.title),
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Flexible(
+          child: ActionChip(
+            avatar: colors == null
+                ? null
+                : CircleAvatar(
+                    backgroundColor: colors.ink,
+                    foregroundColor: colors.onInk,
+                    child: Text(m!.initial),
                   ),
-                  if (since != null)
+            label: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(
+                  child: Text.rich(
                     TextSpan(
-                      text: ' · $since',
-                      style: TextStyle(
-                        color: context.ww.ink2,
-                        fontStyle: FontStyle.italic,
-                      ),
+                      children: [
+                        TextSpan(
+                          text: l10n.mealsWishChip(
+                            m?.displayName ?? '',
+                            wish.title,
+                          ),
+                        ),
+                        if (since != null)
+                          TextSpan(
+                            text: ' · $since',
+                            style: TextStyle(
+                              color: context.ww.ink2,
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                      ],
                     ),
+                  ),
+                ),
+                if (mealIconAsset(wish.iconKey) case final picture?) ...[
+                  const SizedBox(width: Tokens.space1),
+                  EmojiPicture(picture, size: 20),
                 ],
-              ),
+              ],
+            ),
+            tooltip: l10n.mealsWishPlan,
+            onPressed: () => unawaited(_plan(context, ref)),
+          ),
+        ),
+        // Separate controls keep the remove action outside the plan action's node.
+        if (_mayRemove(ref))
+          Semantics(
+            container: true,
+            label: wish.title,
+            child: IconButton(
+              tooltip: l10n.mealsWishRemove,
+              onPressed: () => unawaited(_remove(context, ref)),
+              icon: const Icon(Icons.cancel_outlined),
             ),
           ),
-          if (mealIconAsset(wish.iconKey) case final picture?) ...[
-            const SizedBox(width: Tokens.space1),
-            EmojiPicture(picture, size: 20),
-          ],
-        ],
-      ),
-      tooltip: l10n.mealsWishPlan,
-      onPressed: () => unawaited(_plan(context, ref)),
-      // Removing someone else's wish is a guardian's (api.meal_wish_withdraw).
-      onDeleted: _mayRemove(ref)
-          ? () => unawaited(_remove(context, ref))
-          : null,
-      deleteButtonTooltipMessage: l10n.mealsWishRemove,
+      ],
     );
   }
 

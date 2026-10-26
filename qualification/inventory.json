@@ -426,163 +426,790 @@
         820
       ],
       "native": true
+    },
+    {
+      "id": "setup",
+      "widget": "SetupPage",
+      "scenario": "setup",
+      "route": "/setup",
+      "titleKey": "setupHeadline",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "wizard",
+      "widget": "WizardPage",
+      "scenario": "setup",
+      "route": "/setup/household",
+      "titleKey": "wizardTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "sign-in",
+      "widget": "SignInPage",
+      "scenario": "setup",
+      "route": "/setup/sign-in",
+      "titleKey": "doorEmail",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "sign-in-choice",
+      "widget": "SignInChoicePage",
+      "scenario": "newfamily",
+      "route": "/setup/sign-in-choice",
+      "titleKey": "signInMethodTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "enrol",
+      "widget": "EnrolPage",
+      "scenario": "setup",
+      "route": "/setup/enrol",
+      "titleKey": "enrolTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "pair",
+      "widget": "PairPage",
+      "scenario": "setup",
+      "route": "/setup/pair",
+      "titleKey": "pairTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "first-run-wall",
+      "widget": "FirstRunPage",
+      "scenario": "adult",
+      "route": "/first-run",
+      "titleKey": "firstRunKioskTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "first-run-kid",
+      "widget": "FirstRunPage",
+      "scenario": "adult",
+      "route": "/first-run",
+      "titleKey": "firstRunKidTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "device-pair",
+      "widget": "DevicePairPage",
+      "scenario": "adult",
+      "route": "/settings/devices/pair",
+      "titleKey": null,
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "mfa",
+      "widget": "MfaChallengePage",
+      "scenario": "setup",
+      "route": "/setup/mfa",
+      "titleKey": "mfaTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "register",
+      "widget": "RegisterDevicePage",
+      "scenario": "adult",
+      "route": "/setup/register",
+      "titleKey": "registerTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "new-family",
+      "widget": "NewFamilyPage",
+      "scenario": "newfamily",
+      "route": "/setup/new-family",
+      "titleKey": "householdNewTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "deleted-family",
+      "widget": "DeletedFamilyPage",
+      "scenario": "newfamily",
+      "route": "/setup/deleted-family",
+      "titleKey": null,
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "invite-pending",
+      "widget": "InvitePendingPage",
+      "scenario": "newfamily",
+      "route": "/setup/invitations",
+      "titleKey": null,
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "join-invite",
+      "widget": "JoinInvitePage",
+      "scenario": "newfamily",
+      "route": "/setup/join",
+      "titleKey": "inviteCodeTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "invite-code",
+      "widget": "InviteCodePage",
+      "scenario": "setup",
+      "route": "/setup/invite",
+      "titleKey": "inviteCodeTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "welcome-members",
+      "widget": "MembersPage",
+      "scenario": "adult",
+      "route": "/welcome/members",
+      "titleKey": "householdMembersTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "family-members",
+      "widget": "FamilyMembersPage",
+      "scenario": "adult",
+      "route": "/settings/members",
+      "titleKey": "settingsMembers",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "member-edit",
+      "widget": "MemberPage",
+      "scenario": "adult",
+      "route": "/settings/member",
+      "titleKey": null,
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "shopping-list-edit",
+      "widget": "ShoppingListEditPage",
+      "scenario": "adult",
+      "route": "/shopping/list",
+      "titleKey": "shoppingEditList",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "shopping-history",
+      "widget": "ShoppingHistoryPage",
+      "scenario": "adult",
+      "route": "/shopping/history",
+      "titleKey": null,
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "event-templates",
+      "widget": "EventTemplatePage",
+      "scenario": "adult",
+      "route": "/calendar/new",
+      "titleKey": null,
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "event-create",
+      "widget": "EventEditorPage",
+      "scenario": "adult",
+      "route": "/calendar/new",
+      "titleKey": null,
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "event-edit",
+      "widget": "EventEditorPage",
+      "scenario": "adult",
+      "route": "/calendar/edit",
+      "titleKey": "eventEditTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "recipe-create",
+      "widget": "RecipeEditorPage",
+      "scenario": "adult",
+      "route": "/meals/recipes/edit",
+      "titleKey": null,
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "recipe-edit",
+      "widget": "RecipeEditorPage",
+      "scenario": "adult",
+      "route": "/meals/recipes/edit",
+      "titleKey": null,
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "recipe-view",
+      "widget": "RecipeViewPage",
+      "scenario": "adult",
+      "route": "/meals/recipes/view",
+      "titleKey": null,
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "school-setup",
+      "widget": "SchoolSetupPage",
+      "scenario": "adult",
+      "route": "/school/setup",
+      "titleKey": "schoolSetupTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "timetable-edit",
+      "widget": "TimetableEditorPage",
+      "scenario": "adult",
+      "route": "/school/timetable",
+      "titleKey": null,
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "timetable-import",
+      "widget": "TimetableImportPage",
+      "scenario": "adult",
+      "route": "/school/import",
+      "titleKey": null,
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "feed-tokens",
+      "widget": "FeedTokensPage",
+      "scenario": "adult",
+      "route": "/settings/feeds",
+      "titleKey": "feedTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "external-calendars",
+      "widget": "ExternalCalendarsPage",
+      "scenario": "adult",
+      "route": "/settings/calendars",
+      "titleKey": "extCalTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "external-calendar-create",
+      "widget": "ExternalCalendarFormPage",
+      "scenario": "adult",
+      "route": "/settings/calendars/new",
+      "titleKey": "extCalNewTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "external-calendar-edit",
+      "widget": "ExternalCalendarFormPage",
+      "scenario": "adult",
+      "route": "/settings/calendars/edit",
+      "titleKey": "extCalEditTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "usual-week",
+      "widget": "BaselinePage",
+      "scenario": "adult",
+      "route": "/settings/baselines",
+      "titleKey": "baselineTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "shortcuts",
+      "widget": "ShortcutsPage",
+      "scenario": "adult",
+      "route": "/settings/shortcuts",
+      "titleKey": "shortcutTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "email-code",
+      "widget": "EmailCodePage",
+      "scenario": "setup",
+      "route": "/setup/email-code",
+      "titleKey": "emailCodeTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "splash-error",
+      "widget": "SplashPage",
+      "scenario": "adult",
+      "route": "/splash",
+      "titleKey": null,
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true,
+      "minimumLabeledNodes": 2
+    },
+    {
+      "id": "setup-offline",
+      "widget": "SetupPage",
+      "scenario": "setup",
+      "route": "/setup",
+      "titleKey": "setupHeadline",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "sign-in-offline",
+      "widget": "SignInPage",
+      "scenario": "setup",
+      "route": "/setup/sign-in",
+      "titleKey": "doorEmail",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "recipes-empty",
+      "widget": "RecipesPage",
+      "scenario": "adult",
+      "route": "/meals/recipes",
+      "titleKey": "mealsRecipesTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "recipes-error",
+      "widget": "RecipesPage",
+      "scenario": "adult",
+      "route": "/meals/recipes",
+      "titleKey": "mealsRecipesTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "external-calendars-empty",
+      "widget": "ExternalCalendarsPage",
+      "scenario": "adult",
+      "route": "/settings/calendars",
+      "titleKey": "extCalTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "calendar-month",
+      "widget": "CalendarPage",
+      "titleKey": "calendarTitle",
+      "scenario": "adult",
+      "route": "/",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "tab": "calendar"
+    },
+    {
+      "id": "shopping-offline",
+      "widget": "ShoppingBody",
+      "titleKey": "shoppingTitle",
+      "scenario": "adult",
+      "route": "/",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "tab": "shopping"
     }
   ],
-  "pendingRoutes": {
-    "splash": {
-      "route": "/splash",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "setup": {
-      "route": "/setup",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "wizard": {
-      "route": "/setup/household",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "signIn": {
-      "route": "/setup/sign-in",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "emailCode": {
-      "route": "/setup/email-code",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "signInChoice": {
-      "route": "/setup/sign-in-choice",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "enrol": {
-      "route": "/setup/enrol",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "pair": {
-      "route": "/setup/pair",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "firstRun": {
-      "route": "/first-run",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "devicePair": {
-      "route": "/settings/devices/pair",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "mfa": {
-      "route": "/setup/mfa",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "register": {
-      "route": "/setup/register",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "newFamily": {
-      "route": "/setup/new-family",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "deletedFamily": {
-      "route": "/setup/deleted-family",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "invitePending": {
-      "route": "/setup/invitations",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "joinInvite": {
-      "route": "/setup/join",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "inviteCode": {
-      "route": "/setup/invite",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "welcomeMembers": {
-      "route": "/welcome/members",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
+  "pendingRoutes": {},
+  "openGates": [
+    "physical-device-review",
+    "approved-baseline-review"
+  ],
+  "excludedRoutes": {
     "householdSettings": {
       "route": "/settings/household",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "settingsMembers": {
-      "route": "/settings/members",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "member": {
-      "route": "/settings/member",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "shoppingListEdit": {
-      "route": "/shopping/list",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+      "kind": "redirect",
+      "destination": "/settings",
+      "reason": "Compatibility alias for the settings landing page; no distinct screen. Redirect behavior is covered by router tests."
     },
     "system": {
       "route": "/system",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "shoppingHistory": {
-      "route": "/shopping/history",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "eventNew": {
-      "route": "/calendar/new",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "eventEdit": {
-      "route": "/calendar/edit",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "recipeEdit": {
-      "route": "/meals/recipes/edit",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "recipeView": {
-      "route": "/meals/recipes/view",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "schoolSetup": {
-      "route": "/school/setup",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "timetableEdit": {
-      "route": "/school/timetable",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "timetableImport": {
-      "route": "/school/import",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "feedTokens": {
-      "route": "/settings/feeds",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "externalCalendars": {
-      "route": "/settings/calendars",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "externalCalendarNew": {
-      "route": "/settings/calendars/new",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "externalCalendarEdit": {
-      "route": "/settings/calendars/edit",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "baselines": {
-      "route": "/settings/baselines",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
-    },
-    "shortcuts": {
-      "route": "/settings/shortcuts",
-      "reason": "Not yet covered by the initial fixture inventory; extend with its own ready marker and state fixture."
+      "kind": "developer-only",
+      "reason": "The diagnostics page is excluded by the production kDebugMode guard and does not ship in release candidates."
     }
-  },
-  "openGates": [
-    "native-platform-audits",
-    "physical-device-review",
-    "production-entry-point-smoke",
-    "approved-baseline-review",
-    "release-promotion-enforcement"
-  ]
+  }
 }

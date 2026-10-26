@@ -32,8 +32,10 @@ class _QualificationReadyState extends State<QualificationReady> {
     if (!mounted) return;
     var destination = false;
     var loading = false;
+    var pairingCode = false;
     void visit(Element element) {
       final current = element.widget;
+      if (current.key == const ValueKey('pair-code')) pairingCode = true;
       if (isQualificationDestination(current, widget.destination)) {
         destination = true;
       }
@@ -45,7 +47,7 @@ class _QualificationReadyState extends State<QualificationReady> {
     }
 
     context.visitChildElements(visit);
-    if (destination && !loading) {
+    if (destination && (!loading || widget.id == 'pair' && pairingCode)) {
       setState(() => _ready = true);
     } else {
       // Future completions schedule the next frame; no timer or arbitrary delay.

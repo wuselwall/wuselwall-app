@@ -6,15 +6,34 @@ on:
   push:
     tags: ['server-v*']
 permissions:
-  contents: write
+  contents: read
+  actions: read
+cache-mode: none
 
 jobs:
+  qualification:
+    runs-on: [self-hosted, Linux, build]
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { ref: '${{ github.sha }}', persist-credentials: false }
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with: { node-version: 22, package-manager-cache: false }
+      - run: node qualification/promotion.mjs
+        env: { GH_TOKEN: '${{ github.token }}' }
+
   release:
+    needs: qualification
+    environment: release-promotion
+    permissions: { contents: write }
     runs-on: [self-hosted, Linux, build]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { ref: '${{ github.sha }}', persist-credentials: false }
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
-        with: { flutter-version-file: app/pubspec.yaml, cache: true }
+        with: { flutter-version-file: app/pubspec.yaml, cache: false }
+      - run: flutter pub get --enforce-lockfile
+        working-directory: app
       - name: Build
         run: scripts/build-server-release.sh "${GITHUB_REF_NAME#server-v}"
       - name: Publish

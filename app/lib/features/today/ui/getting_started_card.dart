@@ -89,7 +89,13 @@ class GettingStartedCard extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: Tokens.space2),
-            LinearProgressIndicator(value: doneCount / total),
+            Semantics(
+              container: true,
+              child: LinearProgressIndicator(
+                value: doneCount / total,
+                semanticsLabel: l10n.todayStartTitle,
+              ),
+            ),
             ...rows,
             if (reminderOpen) const ReminderStartRow(),
           ],
@@ -120,7 +126,7 @@ class _ItemRow extends ConsumerWidget {
           onPressed: () => unawaited(_dismiss(context, ref, item)),
           child: Text(l10n.todayStartNotNeeded),
         );
-        return ListTile(
+        final tile = ListTile(
           contentPadding: EdgeInsets.zero,
           minVerticalPadding: Tokens.space1,
           leading: Icon(
@@ -134,15 +140,26 @@ class _ItemRow extends ConsumerWidget {
               color: done ? theme.colorScheme.onSurfaceVariant : null,
             ),
           ),
-          subtitle: stackAction
-              ? Align(alignment: Alignment.centerRight, child: dismissButton)
-              : null,
-          trailing: done
-              ? Icon(Icons.check_circle, color: ww.success)
-              : stackAction
-              ? null
-              : dismissButton,
+          trailing: done ? Icon(Icons.check_circle, color: ww.success) : null,
           onTap: done ? null : () => unawaited(_open(context, ref, item)),
+        );
+        if (done) return tile;
+        if (stackAction) {
+          return Column(
+            children: [
+              tile,
+              Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: dismissButton,
+              ),
+            ],
+          );
+        }
+        return Row(
+          children: [
+            Expanded(child: tile),
+            dismissButton,
+          ],
         );
       },
     );

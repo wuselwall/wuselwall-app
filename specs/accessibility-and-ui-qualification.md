@@ -1,7 +1,8 @@
 # Accessibility and UI qualification for release candidates
 
-*Design agreed in outline 2026-10-25; the initial evidence suite is built in this branch.
-Native runner validation and complete qualification remain open.*
+*Updated 2026-10-26. The candidate workflow, broad Flutter/web inventory, native audit
+adapters, reviewed-baseline comparison and release-promotion enforcement are implemented.
+Native runtime execution, successful qualification and human acceptance remain open.*
 
 The candidate must preserve the usability and appearance of the whole app, including
 screens whose source did not change. Qualification runs on an explicitly selected commit,
@@ -17,18 +18,39 @@ native macOS runner for both mobile platforms, initially one virtual device at a
 No paid device cloud is needed initially. The expanded suite has no pull-request, ordinary
 push or nightly trigger. Existing fast CI checks continue to run as they do today.
 
-The [initial evidence suite](../qualification/README.md) implements the shared inventory,
-fixed Dart clock, Flutter matrix/detectors, browser screenshot/semantic comparison and
-axe-core checks, integrity-checked baseline bundles, initial native rendering captures,
-and the manually dispatched `candidate-evidence` workflow. It covers 25 initial states;
-37 routes are explicitly pending in the inventory. Its summary always reports
-`qualified: false`. Local Linux validation and its findings are recorded in the PR.
+The [candidate suite](../qualification/README.md) implements a shared 70-state inventory,
+fixed Dart clock, bundled fonts, Flutter matrix/detectors, browser screenshot/semantic
+comparison, axe-core checks and integrity-checked web/native baseline bundles. Every release
+route is represented; the legacy settings redirect and developer-only diagnostics page have
+explicit exclusions checked against production router code. The canonical matrix contains
+564 browser and 1,128 Flutter cases; the full browser matrix contains 2,472 cases. All states
+run regardless of which source paths changed. Route coverage does not imply exhaustive
+coverage of every modal, permission outcome or backend-connected journey.
 
-Native ATF/XCTest audits, complete state coverage, real-device and production-entry-point
-checks, durable baseline review and release-promotion enforcement remain open. Existing
-release uploads are not gated by this first slice. The native harness uses Flutter's SDK
-`integration_test` initially; adoption of Patrol for system interactions follows the
-native adapter proof below. Native behavior has not been validated on the Mac yet.
+Native Android ATF and iOS XCTest audit adapters, virtual accessibility-node inspection,
+known-failure/keyboard controls, phone/tablet and enlarged-text profiles, and native PNG and
+semantic comparisons are implemented. Android app/instrumentation APKs compile; the iOS
+project generator has been validated. These are implementation checks, not successful native
+device runs. Real runtime execution and reviewed native baseline acceptance remain open.
+Native platform interaction uses dedicated adapters and a test-only Flutter checkpoint
+bridge; Patrol is not a current dependency.
+
+The manually dispatched workflow also builds/exercises the production web entry point with
+intercepted APIs. Android, iOS and server releases containing the web archive require
+successful evidence for the exact release commit and approval of the protected
+`release-promotion` environment. Capture, incomplete, skipped or failing runs cannot promote.
+The final summary becomes `READY_FOR_REVIEW` only after all automatic requirements pass and
+continues to report `qualified: false`; baseline acceptance and physical-device review are
+human gates. Real backend authentication, signed-store-binary smoke and the rest of the
+release checklist remain separate requirements. Operator-run deployment utilities are not
+publishing-workflow qualification gates.
+
+Local validation rendered all 172 direct fixtures in DE/EN/FR/ES and completed the expanded
+canonical Flutter matrix without framework/layout errors. Existing accessibility findings
+remain visible and blocking while triage/fixes continue. The ordinary suite passed 1,537
+tests with six intentionally unconfigured backend integration tests skipped; the separate
+disposable-backend CI job supplies their coverage. No qualified candidate or approved native
+baseline is established by these local checks.
 
 Existing palette/focused accessibility tests and illustration goldens continue in normal
 CI. The older schedules and tooling examples in specs/18 are historical proposals; the
@@ -61,10 +83,13 @@ Sources: [WCAG 2.2](https://www.w3.org/TR/WCAG22/) and
 
 ## One inventory, several test layers
 
-Introduce a versioned screen/state inventory with stable identifiers. Each entry names
-its route or entry action, register, fixture, required states, supported configurations,
-expected ready marker and assertions. Include dialogs, sheets, menus and scrolled content;
-one picture of a screen's initial viewport is insufficient. Give exclusions a reason.
+The versioned screen/state inventory has stable identifiers, real destination widget types,
+routes, registers, fixtures, supported configurations and expected ready conditions. Direct
+fixtures compose production widgets under in-memory providers; the production entry point
+never imports their controls. Add dialogs, sheets, menus and scrolled checkpoints as explicit
+states when extending a journey; one initial viewport does not establish every interaction.
+Exclusions require a reason and are checked against the corresponding production route
+redirect or developer-only guard.
 
 Inventory all currently shipped modules: server choice and onboarding; Today; shopping
 and history; calendars and event templates/editors; school and timetable imports; tasks
@@ -72,8 +97,9 @@ and points; meals and recipes; kid and kiosk views; rituals; and every settings 
 including Basic and Advanced. Retained, hidden MCP/AI functionality is outside this UI
 inventory and remains on hold. Developer-only screens are excluded from release coverage.
 
-Fixtures cover populated, empty, loading, error, validation, offline/pending and permission
-states where applicable, plus long names, large households and dense calendar/list data.
+The current fixtures cover populated pages plus selected empty, error, offline, resend and
+calendar-month states. Continue extending individual journeys with validation, pending,
+permission, loading and modal checkpoints, long names, large households and dense lists.
 State changes such as selecting a member or checking an item receive behavioral assertions
 as well as visual checks. Fixture sizes are test cases, never assumptions in app logic.
 The report lists expected and executed inventory entries; missing coverage fails the gate.
@@ -123,12 +149,14 @@ Sources: [Playwright visual comparisons](https://playwright.dev/docs/test-snapsh
 
 ### Android and iOS: focused native evidence
 
-Use pinned Patrol tooling for shared Dart journeys that cross the native boundary, plus
-small native audit adapters. Prove compatibility with the repository's pinned Flutter
-version before expanding coverage. Current Patrol documentation uses `$.platform` and
-`patrol_test/`; do not copy the older specs/18 examples without checking their version.
-Keep direct Playwright tests for the browser matrix and visual reports; a unified Patrol
-web route is optional, rather than a prerequisite for native coverage.
+The native lane uses Flutter SDK `integration_test` for rendering captures and separate
+Android/iOS audit adapters for exported platform nodes. A test-only checkpoint bridge
+mounts the same synthetic-data fixtures and records their semantic tree, framework errors
+and display metrics. Android instrumentation visits the accessibility hierarchy through
+UI Automator/ATF; iOS XCTest invokes `performAccessibilityAudit`. Both have detector and
+keyboard checkpoints before their results can count. Keep fixture controls and native audit
+adapters outside the production application entry point. Patrol can be evaluated for future
+system-dialog journeys; it is not required to run the implemented lane.
 
 For Android, audit the actual exported accessibility nodes using Google's Accessibility
 Test Framework (ATF), with screenshot data where supported. Flutter exposes virtual
@@ -138,22 +166,24 @@ add XCTest `performAccessibilityAudit` at named checkpoints and save the `.xcres
 The audit API needs a supported iOS runtime (introduced in iOS 17); older supported
 runtimes still need applicable alternative checks and manual evidence.
 
-Before trusting either adapter, inject a known bad target or missing label and a known
-contrast failure into isolated test fixtures and require the appropriate checks to fail.
-Record unsupported audit capabilities explicitly. The adapters must not invent successful
-contrast measurements for elements they cannot inspect.
+The adapters include isolated bad-control and keyboard checkpoints and require meaningful
+exported Flutter nodes. Missing nodes or failed detector controls fail aggregation. ATF can
+mark contrast `NOT_RUN` for virtual nodes, which cannot replace the required Flutter contrast
+check; reports must not invent measurements for elements the platform cannot inspect.
 
-Native journeys cover server choice/sign-in, profile changes, Today, shopping and offline
-restart, an event editor, kid/kiosk navigation, settings, a modal with the software keyboard,
-and permission denied/granted paths. Capture named visual checkpoints on phone and tablet,
-including Android edge-to-edge and iOS safe areas. Check notification and lifecycle behavior
-where simulation supports it; retain the physical-device checklist for the remainder.
+Native's focused inventory covers server choice, Today, shopping, calendar, settings and
+kid/kiosk surfaces across phone/tablet and four locales in light/dark. Enlarged-text profiles
+check iOS accessibility text size and Android 200% font with increased display density. A
+keyboard checkpoint requires a real software keyboard to open without fixture framework
+errors. It is not evidence for every production permission dialog or authenticated journey.
+Retain notification/lifecycle, Display Zoom, VoiceOver/TalkBack and signed-build smoke in the
+physical-device checklist.
 
-Use a separate hermetic test entry point with provider overrides for most visual states.
-Also run a smaller set against a disposable backend and exercise the production entry
-point. A fake-data build proves rendering of the real widgets, not authentication, plugin
-wiring or the behavior of the distributable binary. Test launch controls and fixture
-repositories must not enter the shipped production entry point.
+The separate production web lane compiles `lib/main.dart` in release mode and exercises
+server discovery, encrypted-storage migration and shopping with intercepted APIs. Real
+backend-connected integration tests belong to the disposable-backend CI lane, never a
+family's live server. Fixture rendering and simulator audits do not establish production
+authentication or signed distributable behavior.
 
 Sources: [Patrol platform automation](https://patrol.leancode.co/documentation/native/overview),
 [Google ATF](https://github.com/google/Accessibility-Test-Framework-for-Android) and
@@ -163,8 +193,8 @@ Sources: [Patrol platform automation](https://patrol.leancode.co/documentation/n
 
 Express sizes in logical pixels/points and record physical resolution and device pixel
 ratio separately. Testing a 1080-pixel phone at an incorrect logical width gives misleading
-layout evidence. The initial profiles below are proposals, refined after inventory and
-the first measured run.
+layout evidence. The inventory and native profile definitions are the executable coverage
+contract; the table below also records broader manual/compatibility acceptance targets.
 
 | Layer or concern | Required configurations |
 |---|---|
@@ -197,9 +227,9 @@ avoid using arbitrary sleeps as a correctness signal. Reset storage and provider
 cases. Freeze motion for still screenshots, and test animation/reduced-motion behavior
 separately so the screenshot mode cannot conceal a runtime defect.
 
-Keep separate baseline namespaces for Flutter/Linux, web/browser/OS and native
-platform/runtime/device. Never compare an Android screenshot to an iOS screenshot or a
-Linux browser capture to a Mac baseline. Measure repeatability before enabling a small,
+Keep separate baseline namespaces for web/browser/OS and native platform/runtime/device;
+existing Flutter illustration goldens retain their own Linux environment. Never compare an
+Android screenshot to an iOS screenshot or a Linux browser capture to a Mac baseline. Measure repeatability before enabling a small,
 documented tolerance. Mask only specific nondeterministic system regions, such as a status
 bar; do not mask application text or apply a broad percentage tolerance to hide noise.
 
@@ -249,32 +279,42 @@ Source: [Android Emulator acceleration](https://developer.android.com/studio/run
 
 ## Candidate-only orchestration and promotion
 
-Implement a manually dispatched `qualify-candidate.yml` accepting a full candidate SHA
-and approved baseline ID. Resolve and validate the SHA once; every job checks out that
-SHA and verifies it. No job may silently check out the branch's later head. Initially
-restrict runs to commits on the trusted release branch. Use timeouts and explicit runner
-preflight failures; unavailable devices are `NOT RUN`, never a passing empty job.
+The manually dispatched `qualify-candidate.yml` accepts the full candidate SHA, profile,
+capture/comparison mode, reviewed baseline release tag and separate web/native manifest
+digests. Dispatch from the default branch and supply its head captured at dispatch; preparation
+requires the input SHA to equal the immutable event SHA before any candidate code executes.
+Every job checks out that commit. A branch advancing later does not alter the candidate.
+Historical/branch commits can be tested locally but cannot authorize promotion through this
+workflow. Only reviewed default-branch code runs on persistent self-hosted runners.
 
-The workflow runs existing candidate CI/backend checks, Flutter qualification, browser
-qualification, Android and iOS qualification, then a final aggregate job. Run Android and
-iOS sequentially on the Mac; Linux work can proceed in parallel. Backend-connected tests
-use only a disposable stack with synthetic data. A Mac must not depend on Linux's
-`localhost`: define a job-scoped reachable test endpoint or run a separate disposable stack
-for the native lane. Store connection details in ephemeral CI state and clean up afterward.
+The workflow runs ordinary Flutter checks, the expanded Flutter matrix, web qualification,
+Android/iOS qualification and the production web smoke, then aggregates their artifacts.
+Android and iOS profiles execute sequentially on native macOS; Linux jobs can run in parallel.
+Unavailable tools/devices and missing reports fail; they never count as empty successful
+jobs. Existing backend CI/checklist requirements remain independent of synthetic UI capture.
+No candidate fixture contacts a live family server.
 
-Collect JUnit/JSON, screenshots and diffs, accessibility findings with element locations,
-browser traces, native logs and `.xcresult` even on failure. The final report records
-candidate and baseline SHAs/checksums, toolchain versions, device profiles, inventory
-version, expected/executed counts, every result, narrow accepted exceptions with owner and
-expiry, and the CI run URL. Missing required results, unexpected skips, expired exceptions,
-unreviewed changes or failed uploads of required evidence prevent qualification.
+Collect JSON, screenshots/semantic snapshots and diffs, browser traces, native logs and
+`.xcresult` even on failure. The aggregate validates complete expected case IDs, successful
+jobs, matching candidate SHAs, reviewed baseline checksums, native detectors/audits and
+production-entry evidence. It rejects partial/capture profiles, failed/skipped/flaky browser
+cases, missing native profiles, unexpected result IDs and pending routes. Artifact names
+include the workflow run attempt so evidence from a rerun cannot mix with an earlier attempt.
 
-Add a promotion gate to **both** mobile release workflows and the relevant server/web
-release path. The gate verifies the successful aggregate workflow run and that the release
-commit, baseline and build configuration match its evidence. It must also apply to manual
-release dispatch; checking for an arbitrary green job name is insufficient. The workflow
-must actually enforce these dependencies; independent workflows triggered by the same
-tag do not wait for each other automatically.
+Android, iOS and server publishing workflows containing the web archive now depend on a
+read-only promotion guard. It verifies the exact release SHA, qualification workflow source,
+repository/default branch, explicit dispatch event, successful full comparison and
+`READY_FOR_REVIEW` summary. It checks the summary artifact's run/attempt, expiration and
+SHA-256 before accepting its contents. A green check with an arbitrary matching job name
+cannot authorize release. Both tag and manual publishing paths use the guard.
+
+Publishing additionally requires the `release-promotion` GitHub environment, at least one
+required reviewer and administrator bypass disabled. The guard rejects absent or weaker
+protection. The protected publishing/signing job waits for human review of baseline changes
+and physical-device evidence. `summary.json` retains `qualified: false` even when automatic
+evidence passes: `READY_FOR_REVIEW` invites acceptance, not an automated conformance claim.
+Operator-run local deployment utilities and independent documentation/marketing releases
+remain outside these project publishing workflows.
 
 Build distributables once where possible and promote the tested artifacts, recording
 their digests. Simulator and instrumented test builds differ from store artifacts: record
@@ -286,17 +326,18 @@ device evidence remains part of the promotion checklist.
 
 ## Implementation sequence and completion evidence
 
-| Slice | Deliverable | Completion evidence |
+| Slice | Implemented result | Remaining completion evidence |
 |---|---|---|
-| 1 | Inventory, deterministic fixtures/clock, capture environment and one screen through all three platforms; native audit adapters | Repeatable screenshots; known failures detected; actual virtual accessibility nodes inspected; all four locales render |
-| 2 | Whole-app Flutter accessibility/layout matrix and web visual/semantic suite; baseline review tooling | Every inventory entry accounted for; deliberate regressions in an untouched screen, text contrast, target size, semantics and overflow block qualification |
-| 3 | Focused native phone/tablet matrices and platform journeys | Successful Android/iOS runner runs, keyboard/safe-area/text-size evidence, native reports and recorded unsupported capabilities |
-| 4 | Manual candidate workflow, durable approved baselines and enforced promotion dependencies | An unqualified SHA, a changed SHA, missing native evidence and an unapproved visual diff all block upload; a qualified candidate can promote |
-| 5 | Initial baseline review, physical-device acceptance and operational tuning | Reviewed reports and checklist evidence; measured runtime, disk use and flake rate; documented baseline recovery/update procedure |
+| 1 | Shared inventory/clock, real-widget fixtures, Flutter/web detectors, native adapters | Actual native runtime node/detector results and repeatability measurements |
+| 2 | 70 states account for release routes; whole-inventory Flutter and web PNG/semantic comparison; baseline integrity tooling | Resolve reported accessibility findings and review initial web/native baselines; extend modal/permission checkpoints with their journeys |
+| 3 | Nine native phone/tablet, enlarged-text and Android minimum-API profiles; keyboard checkpoint and native report checks | Successful Android/iOS runtime runs, platform logs and physical-device behavior |
+| 4 | Manual exact-commit workflow, strict evidence aggregation, verified artifact provenance and protected app/server promotion dependencies | Successful full comparison followed by protected reviewer acceptance; implementation rejects missing evidence now |
+| 5 | Baseline review/runbook and fail-closed promotion protocol | Initial acceptance, VoiceOver/TalkBack and signed-device checklist; measured duration, resource use and flake rate |
 
-Keep early implementation runs informative until the inventory and baseline have been
-reviewed; then make the complete gate blocking. Label that transition explicitly. Tests
-must be able to fail usefully before the first candidate is described as qualified.
+The publishing gate is blocking now: missing native execution or reviewed baselines prevent
+promotion. Capture runs remain useful diagnostic evidence but cannot authorize a release.
+Complete baseline review, native runtime validation and physical-device acceptance before
+describing any candidate as qualified.
 Do not retry away application failures. A narrow infrastructure retry preserves the first
 failure and marks the report as flaky; unresolved flakes cannot count as clean evidence.
 

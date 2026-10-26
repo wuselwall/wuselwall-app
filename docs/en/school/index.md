@@ -72,6 +72,8 @@ For each child, enter the timetable for a term. Tap **Enter timetable**. If no t
 
 At the top you can see the child, school and term with its dates. Tap a cell in the grid and choose the subject. If a subject is missing, type its short code into the search and choose **Add “…” as a subject**: the subject exists at once and fills the cell; colour, icon and things to bring come later under **Edit school**. **Save timetable** stays visible at the bottom of the screen as you scroll through the timetable.
 
+On narrow screens or with large text, swipe sideways within the grid to see the other weekdays. This keeps the cells readable and easy to tap.
+
 When no timetable exists yet, the view shows a message about the selected child and the **Enter timetable** button.
 
 <Shot name="school-editor" alt="Timetable editor with the school, term and visible Save button" />

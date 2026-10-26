@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/app.dart';
+import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/app_theme.dart';
 import 'package:wuselwall/app/theme/appearance.dart';
 import 'package:wuselwall/app/theme/night.dart';
@@ -14,13 +15,17 @@ import 'package:wuselwall/core/l10n/app_language.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/notifications/notification_scheduler_provider.dart';
 import 'package:wuselwall/core/server/server_info.dart';
+import 'package:wuselwall/core/server/setup_store.dart';
 import 'package:wuselwall/core/time/clock.dart';
 import 'package:wuselwall/core/ui/motion.dart';
 import 'package:wuselwall/demo/demo_clock.dart';
 import 'package:wuselwall/demo/demo_notifications.dart';
 import 'package:wuselwall/demo/demo_overrides.dart';
 import 'package:wuselwall/features/calendar/application/calendar_providers.dart';
+import 'package:wuselwall/features/calendar/application/external_calendar_providers.dart';
+import 'package:wuselwall/features/calendar/data/feed_repository.dart';
 import 'package:wuselwall/features/home/application/home_tab.dart';
+import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/meals/application/meals_providers.dart'
     as meals;
 import 'package:wuselwall/features/school/application/school_providers.dart'
@@ -30,6 +35,7 @@ import 'package:wuselwall/features/setup/ui/server_choice_page.dart';
 import 'package:wuselwall/features/shopping/data/shopping_store.dart';
 
 import 'inventory.g.dart';
+import 'route_fixtures.dart';
 
 final qualificationTime = DateTime.parse(qualificationClock);
 final qualificationDay = DateUtils.dateOnly(qualificationTime);
@@ -40,9 +46,15 @@ class _FixedNight extends NightNotifier {
 }
 
 class _Calendar extends CalendarViewNotifier {
+  _Calendar({this.mode = CalendarMode.day});
+  final CalendarMode mode;
   @override
-  CalendarView build() =>
-      CalendarView(mode: CalendarMode.day, anchor: qualificationDay);
+  void setResponsiveMode(CalendarMode responsive) {
+    if (mode != CalendarMode.month) super.setResponsiveMode(responsive);
+  }
+
+  @override
+  CalendarView build() => CalendarView(mode: mode, anchor: qualificationDay);
   @override
   void today() =>
       state = CalendarView(mode: state.mode, anchor: qualificationDay);
@@ -70,6 +82,7 @@ class _InitialTab extends HomeTabNotifier {
 }
 
 Widget qualificationApp({
+  String? stateId,
   required String scenario,
   required Locale locale,
   required String shade,
@@ -123,8 +136,40 @@ Widget qualificationApp({
         ),
         night: shade == 'night' ? _FixedNight.new : null,
       ),
+      setupStoreProvider.overrideWithValue(QualificationSetupStore()),
+      feedRepositoryProvider.overrideWith(
+        (ref) => QualificationFeedRepository(),
+      ),
+      if (qualificationFixtureRoutes.containsKey(stateId))
+        routerProvider.overrideWith((ref) {
+          final router = qualificationFixtureRouter(stateId!);
+          ref.onDispose(router.dispose);
+          return router;
+        }),
+      if (stateId == 'invite-pending')
+        sessionStateProvider.overrideWith(
+          (ref) async => NeedsHousehold(qualificationAccount()),
+        ),
+      if (stateId == 'splash-error')
+        sessionStateProvider.overrideWith(
+          (ref) async => throw qualificationNetworkFailure,
+        ),
       shoppingStoreProvider.overrideWith((ref) => MemoryShoppingStore()),
-      calendarViewProvider.overrideWith(_Calendar.new),
+      calendarViewProvider.overrideWith(
+        () => _Calendar(
+          mode: stateId == 'calendar-month'
+              ? CalendarMode.month
+              : CalendarMode.day,
+        ),
+      ),
+      if (stateId == 'recipes-empty')
+        meals.recipesProvider.overrideWith((ref) async => []),
+      if (stateId == 'recipes-error')
+        meals.recipesProvider.overrideWith(
+          (ref) async => throw qualificationNetworkFailure,
+        ),
+      if (stateId == 'external-calendars-empty')
+        externalCalendarsProvider.overrideWith((ref) async => []),
       meals.mealsWeekProvider.overrideWith(_MealsWeek.new),
       school.selectedWeekProvider.overrideWith(_SchoolWeek.new),
       clockProvider.overrideWith((ref) => Stream.value(qualificationTime)),
@@ -132,7 +177,15 @@ Widget qualificationApp({
       homeTabProvider.overrideWith(
         () => _InitialTab(HomeTab.values.byName(tab)),
       ),
-      connectivityProvider.overrideWith((ref) => Stream.value(true)),
+      connectivityProvider.overrideWith(
+        (ref) => Stream.value(
+          ![
+            'setup-offline',
+            'sign-in-offline',
+            'shopping-offline',
+          ].contains(stateId),
+        ),
+      ),
       notificationSchedulerProvider.overrideWithValue(
         const DemoNotificationScheduler(),
       ),

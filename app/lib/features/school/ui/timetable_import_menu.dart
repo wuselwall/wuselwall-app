@@ -21,35 +21,39 @@ class TimetableImportMenu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final scan = ref.watch(serverSupportsProvider(featureTimetableScan));
-    return PopupMenuButton<TimetableImportWay>(
-      tooltip: l10n.schoolImportAction,
-      onSelected: (way) => unawaited(
-        runTimetableImport(context, ref, way, profileId: profileId),
-      ),
-      itemBuilder: (_) => [
-        PopupMenuItem(
-          value: TimetableImportWay.text,
-          child: ListTile(
-            leading: const Icon(Icons.content_paste_outlined),
-            title: Text(l10n.schoolImportFromText),
-          ),
+    return Semantics(
+      container: true,
+      button: true,
+      child: PopupMenuButton<TimetableImportWay>(
+        tooltip: l10n.schoolImportAction,
+        onSelected: (way) => unawaited(
+          runTimetableImport(context, ref, way, profileId: profileId),
         ),
-        PopupMenuItem(
-          value: TimetableImportWay.photo,
-          child: ListTile(
-            leading: const Icon(Icons.document_scanner_outlined),
-            title: Text(l10n.schoolImportFromPhoto),
-            subtitle: scan ? null : Text(l10n.schoolImportPhotoUnavailable),
-            enabled: scan,
+        itemBuilder: (_) => [
+          PopupMenuItem(
+            value: TimetableImportWay.text,
+            child: ListTile(
+              leading: const Icon(Icons.content_paste_outlined),
+              title: Text(l10n.schoolImportFromText),
+            ),
           ),
-        ),
-      ],
-      child: TextButton.icon(
-        onPressed: null,
-        icon: const Icon(Icons.upload_file_outlined),
-        label: Text(l10n.schoolImportAction),
-        style: TextButton.styleFrom(
-          disabledForegroundColor: Theme.of(context).colorScheme.primary,
+          PopupMenuItem(
+            value: TimetableImportWay.photo,
+            child: ListTile(
+              leading: const Icon(Icons.document_scanner_outlined),
+              title: Text(l10n.schoolImportFromPhoto),
+              subtitle: scan ? null : Text(l10n.schoolImportPhotoUnavailable),
+              enabled: scan,
+            ),
+          ),
+        ],
+        child: TextButton.icon(
+          onPressed: null,
+          icon: const Icon(Icons.upload_file_outlined),
+          label: Text(l10n.schoolImportAction),
+          style: TextButton.styleFrom(
+            disabledForegroundColor: Theme.of(context).colorScheme.primary,
+          ),
         ),
       ),
     );

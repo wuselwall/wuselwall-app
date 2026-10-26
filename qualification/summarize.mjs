@@ -4,6 +4,14 @@ import { fileURLToPath } from 'node:url';
 import { cases, inventory, root } from './matrix.mjs';
 import { sha256 } from './baseline.mjs';
 
+export function flutterCaseIds(coverage) {
+  return [
+    ...cases('canonical', coverage).map(c => ({ ...c, scale: 1 })),
+    ...cases('responsive', coverage).flatMap(c => [1, 2].map(scale => ({ ...c, scale }))),
+  ].flatMap(c => ['android', 'iOS'].map(platform =>
+    `${c.id}-${c.locale}-${c.shade}-${c.width}-${c.scale.toFixed(1)}-${platform}-${c.tier}`));
+}
+
 export function summarize({ sha, jobs, matrix, mode, reports, coverage = inventory }) {
   const failures = [];
   const require = (condition, reason) => { if (!condition) failures.push(reason); };
@@ -14,11 +22,14 @@ export function summarize({ sha, jobs, matrix, mode, reports, coverage = invento
     require(jobs[name]?.result === 'success', `${name} job did not succeed`);
   }
   const flutter = reports.flutter;
-  const flutterExpected = 2 * (cases('canonical', coverage).length + 2 * cases('responsive', coverage).length);
+  const expectedIds = flutterCaseIds(coverage);
+  const flutterExpected = expectedIds.length;
   require(flutter?.matrix === 'full' && flutter?.expected === flutterExpected && flutter?.executed === flutterExpected,
     'Flutter matrix is incomplete');
   require(flutter?.results?.length === flutterExpected && flutter.results.every(r => r.status === 'PASS' && !r.findings?.length && !r.error),
     'Flutter findings remain or results are missing');
+  require(Array.isArray(flutter?.results) && JSON.stringify(flutter.results.map(r => r.id).sort()) === JSON.stringify([...expectedIds].sort()),
+    'Flutter case IDs are duplicated, missing or unexpected');
   const web = reports.web;
   const webExpected = cases('full', coverage).length + 1;
   require(web?.candidateSha === sha && web?.matrix === 'full' && web?.mode === 'compare' && web?.baselineVerified === true && web?.executionPassed === true,

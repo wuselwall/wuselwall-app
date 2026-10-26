@@ -168,8 +168,8 @@ void main() {
     await _pumpAdultBody(t);
     final chip = t.getSize(find.byType(ChoiceChip).first);
     final action = t.getSize(find.byType(ActionChip).first);
-    expect(chip.height, greaterThanOrEqualTo(UiRegister.adult.touchTarget));
-    expect(action.height, greaterThanOrEqualTo(UiRegister.adult.touchTarget));
+    expect(chip.height, greaterThanOrEqualTo(48));
+    expect(action.height, greaterThanOrEqualTo(48));
   });
 
   testWidgets('A5: the item list stays reachable at 320x640 with 200% text', (

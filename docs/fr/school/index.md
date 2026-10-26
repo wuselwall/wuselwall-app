@@ -70,6 +70,8 @@ Pour chaque enfant, saisissez les cours d’une période. Si aucune période ne 
 
 L’en-tête indique l’enfant, l’école, la période et ses dates. Touchez une cellule pour choisir une matière. S’il manque une matière, tape son abréviation dans la recherche et choisis **Créer la matière « … »** : la matière existe aussitôt et remplit la case ; couleur, icône et affaires à emporter viennent plus tard sous **Modifier l’école**. Le bouton d’enregistrement reste visible en bas pendant le défilement.
 
+Sur un petit écran ou avec une grande taille de texte, fais glisser la grille sur le côté pour voir les autres jours. Les cases restent ainsi lisibles et faciles à toucher.
+
 Si aucun emploi du temps n’existe encore, la vue affiche un message concernant l’enfant sélectionné et le bouton **Saisir l’emploi du temps**.
 
 <Shot name="school-editor" alt="L’éditeur avec l’école, la période et le bouton d’enregistrement visible" />

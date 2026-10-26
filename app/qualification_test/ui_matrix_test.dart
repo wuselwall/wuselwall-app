@@ -16,6 +16,8 @@ import 'package:wuselwall/demo/demo_clock.dart';
 import '../qualification/fixture.dart';
 import '../qualification/inventory.g.dart';
 
+import 'settle.dart';
+
 void main() {
   final inventory = jsonDecode(
     File('../qualification/inventory.json').readAsStringSync(),
@@ -138,6 +140,7 @@ void main() {
             try {
               await tester.pumpWidget(
                 qualificationApp(
+                  stateId: state['id'] as String,
                   scenario: state['scenario'] as String,
                   locale: Locale(lang),
                   shade: config.shade,
@@ -145,13 +148,13 @@ void main() {
                   advanced: state['advanced'] == true,
                 ),
               );
-              await tester.pumpAndSettle();
+              await settleQualification(tester);
               if (state['route'] != '/') {
                 final container = ProviderScope.containerOf(
                   tester.element(find.byType(WuselWallApp)),
                 );
                 container.read(routerProvider).go(state['route'] as String);
-                await tester.pumpAndSettle();
+                await settleQualification(tester);
               }
               expect(
                 find.byWidgetPredicate(
@@ -191,7 +194,7 @@ void main() {
               visit(root!);
               expect(
                 labeled,
-                greaterThan(2),
+                greaterThanOrEqualTo(state['minimumLabeledNodes'] as int? ?? 3),
                 reason: 'A vacuous audit cannot pass',
               );
               row['labeledNodes'] = labeled;

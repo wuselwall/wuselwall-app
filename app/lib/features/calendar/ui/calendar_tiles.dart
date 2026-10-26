@@ -140,8 +140,12 @@ class OccurrenceTile extends StatelessWidget {
         ],
       );
     } else {
-      final w = width ?? double.infinity;
-      final h = height ?? double.infinity;
+      // Choose detail using the space at the requested text size. A fixed-height
+      // appointment cannot fit two lines at 200% merely because its unscaled
+      // height could; the full detail remains in its accessibility label.
+      final scale = MediaQuery.textScalerOf(context).scale(1);
+      final w = (width ?? double.infinity) / scale;
+      final h = (height ?? double.infinity) / scale;
       if (w < _initialsBelow) {
         content = Center(
           child: Text(
@@ -212,53 +216,55 @@ class OccurrenceTile extends StatelessWidget {
       if (imported) l10n.extCalSheetTitle,
     ].join(', ');
 
-    return Opacity(
-      opacity: opacity,
-      child: Semantics(
-        button: true,
-        label: label,
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(6),
-            // Imported appointments are read-only: they open the source's details, never
-            // the editor.
-            onTap: imported
-                ? () => showImportedOccurrenceSheet(context, occurrence)
-                : () => context.push(
-                    Routes.eventEdit,
-                    extra: EventEditArgs(
-                      eventId: occurrence.eventId,
-                      occurrence: occurrence,
-                    ),
+    // Past/tentative states soften decoration, while text keeps its checked
+    // contrast. Fading the whole tile also faded its still-readable content.
+    return Semantics(
+      button: true,
+      label: label,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(6),
+          // Imported appointments are read-only: they open the source's details, never
+          // the editor.
+          onTap: imported
+              ? () => showImportedOccurrenceSheet(context, occurrence)
+              : () => context.push(
+                  Routes.eventEdit,
+                  extra: EventEditArgs(
+                    eventId: occurrence.eventId,
+                    occurrence: occurrence,
                   ),
-            child: CustomPaint(
-              foregroundPainter: occurrence.isTentative
-                  ? _DashedOutlinePainter(color: bar, radius: 6)
-                  : null,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: ground,
-                  borderRadius: BorderRadius.circular(6),
                 ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(6),
-                  child: IntrinsicHeight(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        ColoredBox(color: bar, child: const SizedBox(width: 3)),
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: compact ? 5 : 4,
-                              vertical: compact ? 2 : 3,
-                            ),
-                            child: content,
+          child: CustomPaint(
+            foregroundPainter: occurrence.isTentative
+                ? _DashedOutlinePainter(color: bar, radius: 6)
+                : null,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: ground.withValues(alpha: opacity),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(6),
+                child: IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      ColoredBox(
+                        color: bar.withValues(alpha: opacity),
+                        child: const SizedBox(width: 3),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: compact ? 5 : 4,
+                            vertical: compact ? 2 : 3,
                           ),
+                          child: content,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),

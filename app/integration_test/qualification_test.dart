@@ -1,4 +1,4 @@
-// Initial native rendering smoke. Platform audit adapters remain an explicit open gate.
+// Native rendering capture. Separate ATF/XCTest auditors inspect the same cases.
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -28,6 +28,7 @@ void main() {
         testWidgets("${sample['id']}-$locale-$shade", (t) async {
           await t.pumpWidget(
             qualificationApp(
+              stateId: sample['id'] as String,
               scenario: sample['scenario'] as String,
               locale: Locale(locale),
               shade: shade,
@@ -58,6 +59,9 @@ void main() {
           binding.reportData = {
             ...?binding.reportData,
             'qualification': 'INCOMPLETE',
+            'candidateSha': const String.fromEnvironment(
+              'QUALIFY_CANDIDATE_SHA',
+            ),
             'scope':
                 'native Flutter rendering; no platform accessibility audit',
             'expected': cases.length * (smoke ? 1 : 8),
