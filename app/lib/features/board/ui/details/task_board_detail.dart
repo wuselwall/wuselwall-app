@@ -414,6 +414,7 @@ class _TaskCard extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: Tokens.space2),
       child: BoardTap(
         label: task.title,
+        radius: 14,
         onTap: () {
           if (!ticked) {
             unawaited(
