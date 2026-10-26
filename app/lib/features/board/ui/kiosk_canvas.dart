@@ -24,9 +24,17 @@ class KioskCanvas extends StatelessWidget {
         minHeight,
         designWidth * constraints.maxHeight / constraints.maxWidth,
       );
-      return FittedBox(
-        fit: BoxFit.contain,
-        child: SizedBox(width: designWidth, height: height, child: child),
+      // The panel's whole area, tightly: a FittedBox under loose constraints (a
+      // Scaffold body is loose) takes its child's own size whenever that fits, so a
+      // 1920×1080 panel would show the 1280 canvas unscaled in its top-left corner.
+      // Tight, it scales the canvas up as well as down.
+      return SizedBox(
+        width: constraints.maxWidth,
+        height: constraints.maxHeight,
+        child: FittedBox(
+          fit: BoxFit.contain,
+          child: SizedBox(width: designWidth, height: height, child: child),
+        ),
       );
     },
   );
