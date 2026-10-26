@@ -283,6 +283,12 @@ void main() {
       expect(wishPlanDays(_monday, DateTime(2026, 11, 9)), hasLength(7));
     });
 
+    testWidgets('names the dish and who wished it', (t) async {
+      await open(t);
+      expect(find.text('Pizza einplanen'), findsOneWidget);
+      expect(find.text('Wunsch von Jack'), findsOneWidget);
+    });
+
     testWidgets('shows what each meal already has and starts on a free one', (
       t,
     ) async {

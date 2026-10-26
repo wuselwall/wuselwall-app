@@ -242,6 +242,7 @@
       }
     }
   },
+  "shoppingTileOnList": "Already on the list",
   "shoppingAddedBy": "Added by {name}",
   "@shoppingAddedBy": {
     "placeholders": {
@@ -701,7 +702,7 @@
   "@eventKeyDisplayOn": {},
   "eventKeyDisplayOff": "This event won’t show on the kitchen display.",
   "@eventKeyDisplayOff": {},
-  "eventKeyDisplayOffWholeFamily": "Not on the kitchen display: only events for the whole family go there by default.",
+  "eventKeyDisplayOffWholeFamily": "This event won’t show on the kitchen display. Events for the whole family show there on their own.",
   "@eventKeyDisplayOffWholeFamily": {},
   "eventRepeat": "Repeat",
   "@eventRepeat": {},
@@ -3394,6 +3395,14 @@
     }
   },
   "mealsWishPlan": "Put on the plan",
+  "mealsWishPlanTitle": "Plan {dish}",
+  "@mealsWishPlanTitle": {
+    "placeholders": {
+      "dish": {
+        "type": "String"
+      }
+    }
+  },
   "mealsWishRemove": "Remove the wish",
   "mealsWishedBy": "{name}'s wish",
   "@mealsWishedBy": {
@@ -3674,6 +3683,7 @@
   "@eventTemplatesBuiltIn": {
     "description": "Section of the new-event page: the built-in templates."
   },
+  "eventTemplatesBuiltInMore": "More templates",
   "eventTemplateBlank": "Start blank",
   "@eventTemplateBlank": {
     "description": "The tile that opens the empty event editor."
@@ -3733,7 +3743,7 @@
       }
     }
   },
-  "eventTemplateCount": "{count}× so far",
+  "eventTemplateCount": "Used {count}×",
   "@eventTemplateCount": {
     "description": "Part of a suggestion tile's line: how many such events the family entered.",
     "placeholders": {

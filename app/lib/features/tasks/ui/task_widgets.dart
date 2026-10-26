@@ -58,7 +58,8 @@ class TaskAvatar extends StatelessWidget {
 
 /// Points as a gold coin with the number on it (`context.ww.points`). [signed] shows
 /// the sign of a movement ("+5", "−3"). A balance [counts] to its new value when it
-/// changes ([AnimatedCount]).
+/// changes ([AnimatedCount]). A lone number on a coin does not say what it counts, so
+/// the screen reader and the tooltip (hover, long press) say "5 Punkte".
 class PointsCoin extends StatelessWidget {
   const PointsCoin({
     required this.points,
@@ -84,21 +85,26 @@ class PointsCoin extends StatelessWidget {
       color: ww.onPoints,
       fontFeatures: const [FontFeature.tabularFigures()],
     );
-    return Semantics(
-      label: context.l10n.tasksPointsCount(points),
-      excludeSemantics: true,
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: fontSize * 0.6,
-          vertical: fontSize * 0.2,
+    final label = context.l10n.tasksPointsCount(points);
+    return Tooltip(
+      message: label,
+      excludeFromSemantics: true,
+      child: Semantics(
+        label: label,
+        excludeSemantics: true,
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: fontSize * 0.6,
+            vertical: fontSize * 0.2,
+          ),
+          decoration: BoxDecoration(
+            color: ww.points,
+            borderRadius: BorderRadius.circular(999),
+          ),
+          child: counts
+              ? AnimatedCount(value: points, style: style, format: written)
+              : Text(written(points), maxLines: 1, style: style),
         ),
-        decoration: BoxDecoration(
-          color: ww.points,
-          borderRadius: BorderRadius.circular(999),
-        ),
-        child: counts
-            ? AnimatedCount(value: points, style: style, format: written)
-            : Text(written(points), maxLines: 1, style: style),
       ),
     );
   }
@@ -261,6 +267,63 @@ class _TickPopState extends State<TickPop> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) =>
       ScaleTransition(scale: _scale, child: widget.child);
+}
+
+/// Whether a shown tick on [task] still waits for a guardian's check: ticked (here or
+/// on the server) on a chore that needs verification and not verified yet
+/// (specs/06 "Verification").
+bool awaitsCheckShown(bool ticked, TaskInstance task) =>
+    ticked &&
+    task.requiresVerification &&
+    task.status != InstanceStatus.verified;
+
+/// The tick at the end of an adult chore row: an open circle to tick, the green
+/// check once done, or an hourglass in ink2 while the chore [waiting]s for a
+/// guardian's check — that is not done yet, so it does not look like it (specs/06
+/// "Verification").
+class TaskTickButton extends StatelessWidget {
+  const TaskTickButton({
+    required this.ticked,
+    required this.onTick,
+    this.waiting = false,
+    super.key,
+  });
+
+  final bool ticked;
+  final bool waiting;
+  final VoidCallback onTick;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final ww = context.ww;
+    return IconButton(
+      tooltip: waiting
+          ? l10n.tasksWaitingApproval
+          : ticked
+          ? l10n.tasksDone
+          : l10n.tasksActionTick,
+      iconSize: 30,
+      constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+      icon: TickPop(
+        ticked: ticked,
+        from: 0.8,
+        child: Icon(
+          waiting
+              ? Icons.hourglass_top_rounded
+              : ticked
+              ? Icons.check_circle
+              : Icons.radio_button_unchecked,
+          color: waiting
+              ? ww.ink2
+              : ticked
+              ? ww.success
+              : Theme.of(context).colorScheme.onSurface,
+        ),
+      ),
+      onPressed: ticked ? null : onTick,
+    );
+  }
 }
 
 /// A chore's title in a list tile: struck through and muted once ticked, the colour

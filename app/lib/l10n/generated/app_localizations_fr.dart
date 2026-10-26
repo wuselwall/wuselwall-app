@@ -558,6 +558,9 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get shoppingTileOnList => 'Déjà sur la liste';
+
+  @override
   String shoppingAddedBy(String name) {
     return 'Ajouté par $name';
   }
@@ -1295,7 +1298,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get eventKeyDisplayOffWholeFamily =>
-      'Pas sur l’écran de la cuisine : par défaut, seuls les événements de toute la famille y apparaissent.';
+      'Cet événement ne s’affiche pas sur l’écran de la cuisine. Les événements de toute la famille s’y affichent d’eux-mêmes.';
 
   @override
   String get eventRepeat => 'Répétition';
@@ -5906,6 +5909,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get mealsWishPlan => 'Planifier';
 
   @override
+  String mealsWishPlanTitle(String dish) {
+    return 'Planifier : $dish';
+  }
+
+  @override
   String get mealsWishRemove => 'Retirer le souhait';
 
   @override
@@ -6252,6 +6260,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get eventTemplatesBuiltIn => 'Modèles';
 
   @override
+  String get eventTemplatesBuiltInMore => 'Autres modèles';
+
+  @override
   String get eventTemplateBlank => 'Sans modèle';
 
   @override
@@ -6312,7 +6323,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String eventTemplateCount(int count) {
-    return 'Déjà $count fois';
+    return 'Utilisé $count fois';
   }
 
   @override

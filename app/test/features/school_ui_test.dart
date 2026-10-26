@@ -173,6 +173,31 @@ void main() {
     },
   );
 
+  testWidgets('a phone week shows icon and short code, never a cut word', (
+    t,
+  ) async {
+    await pumpApp(
+      t,
+      size: const Size(390, 844),
+      overrides: baseOverrides(
+        identity: FakeIdentityRepository(current: device()),
+      ),
+      school: FakeSchoolRepository(),
+    );
+    // Under 600 px the bar labels only the selected tab.
+    await t.tap(find.byTooltip('Stundenplan'));
+    await t.pumpAndSettle();
+
+    expect(t.takeException(), isNull);
+    // The short code stays, struck through when cancelled; room and change move
+    // into the tooltip ("Tur…", "Ent…" no more).
+    expect(_struck('Ma'), findsOneWidget);
+    expect(find.text('Entfall'), findsNothing);
+    expect(find.text('Turnhalle'), findsNothing);
+    expect(find.byTooltip('Mathematik · R1 · Entfall'), findsOneWidget);
+    expect(find.byTooltip(RegExp('^Sport · Turnhalle')), findsWidgets);
+  });
+
   testWidgets('a break row shows its whole label, also at large text', (
     t,
   ) async {

@@ -7,6 +7,7 @@ import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/core/ui/empty_view.dart';
 import 'package:wuselwall/core/ui/swipe_stepper.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
@@ -28,7 +29,7 @@ import 'package:wuselwall/features/school/ui/timetable_import_menu.dart';
 final scheduleSection = HomeSection(
   icon: Icons.school_outlined,
   label: (l10n) => l10n.scheduleTitle,
-  body: const ScheduleBody(),
+  body: const ContentWidth(child: ScheduleBody()),
 );
 
 /// The section's body. Empty states lead to the setup page or the editor.

@@ -235,6 +235,7 @@
       }
     }
   },
+  "shoppingTileOnList": "Ya está en la lista",
   "shoppingAddedBy": "Añadido por {name}",
   "@shoppingAddedBy": {
     "placeholders": {
@@ -694,7 +695,7 @@
   "@eventKeyDisplayOn": {},
   "eventKeyDisplayOff": "Este evento no aparece en la pantalla de la cocina.",
   "@eventKeyDisplayOff": {},
-  "eventKeyDisplayOffWholeFamily": "No aparece en la pantalla de la cocina: por defecto solo aparecen allí los eventos de toda la familia.",
+  "eventKeyDisplayOffWholeFamily": "Este evento no aparece en la pantalla de la cocina. Los eventos de toda la familia aparecen allí solos.",
   "@eventKeyDisplayOffWholeFamily": {},
   "eventRepeat": "Repetir",
   "@eventRepeat": {},
@@ -2877,6 +2878,7 @@
   "mealsWishesTray": "Deseos",
   "mealsWishChip": "{name}: {title}",
   "mealsWishPlan": "Planificar",
+  "mealsWishPlanTitle": "Planificar: {dish}",
   "mealsWishRemove": "Quitar el deseo",
   "mealsWishedBy": "Deseo de {name}",
   "mealsTraditionSuggestion": "Planificar {meal} ({tradition})",
@@ -2978,6 +2980,7 @@
   "eventTemplatesSuggested": "Lo habitual en casa",
   "eventTemplatesSaved": "Vuestras plantillas",
   "eventTemplatesBuiltIn": "Plantillas",
+  "eventTemplatesBuiltInMore": "Más plantillas",
   "eventTemplateBlank": "Sin plantilla",
   "eventTemplateBlankHelp": "Rellenarlo todo tú",
   "eventStarterBirthday": "Cumpleaños",
@@ -2993,7 +2996,7 @@
   "eventTemplateHours": "{count} h",
   "eventTemplateHoursMinutes": "{hours} h {minutes} min",
   "eventTemplateMinutes": "{count} min",
-  "eventTemplateCount": "Ya {count} veces",
+  "eventTemplateCount": "Usada {count} veces",
   "eventTemplateMenu": "Más sobre {name}",
   "eventTemplateKeep": "Guardar como plantilla",
   "eventTemplateHide": "No volver a sugerir",

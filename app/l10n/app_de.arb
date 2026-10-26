@@ -235,6 +235,7 @@
       }
     }
   },
+  "shoppingTileOnList": "Schon auf der Liste",
   "shoppingAddedBy": "Hinzugefügt von {name}",
   "@shoppingAddedBy": {
     "placeholders": {
@@ -455,7 +456,7 @@
   "eventKeyDisplay": "Auf dem Küchendisplay zeigen",
   "eventKeyDisplayOn": "Dieser Termin erscheint auf dem Küchendisplay.",
   "eventKeyDisplayOff": "Dieser Termin erscheint nicht auf dem Küchendisplay.",
-  "eventKeyDisplayOffWholeFamily": "Nicht auf dem Küchendisplay: Dort stehen von selbst nur Termine der ganzen Familie.",
+  "eventKeyDisplayOffWholeFamily": "Erscheint nicht auf dem Küchendisplay. Termine der ganzen Familie erscheinen dort von selbst.",
   "eventRepeat": "Wiederholung",
   "eventRepeatNever": "Nie",
   "eventRepeatDaily": "Täglich",
@@ -2204,6 +2205,7 @@
   "mealsWishesTray": "Wünsche",
   "mealsWishChip": "{name}: {title}",
   "mealsWishPlan": "Einplanen",
+  "mealsWishPlanTitle": "{dish} einplanen",
   "mealsWishRemove": "Wunsch entfernen",
   "mealsWishedBy": "Wunsch von {name}",
   "mealsTraditionSuggestion": "{meal} einplanen ({tradition})",
@@ -2305,6 +2307,7 @@
   "eventTemplatesSuggested": "Häufig bei euch",
   "eventTemplatesSaved": "Eure Vorlagen",
   "eventTemplatesBuiltIn": "Vorlagen",
+  "eventTemplatesBuiltInMore": "Weitere Vorlagen",
   "eventTemplateBlank": "Ohne Vorlage",
   "eventTemplateBlankHelp": "Alles selbst eintragen",
   "eventStarterBirthday": "Geburtstag",
@@ -2320,7 +2323,7 @@
   "eventTemplateHours": "{count} Std.",
   "eventTemplateHoursMinutes": "{hours} Std. {minutes} Min.",
   "eventTemplateMinutes": "{count} Min.",
-  "eventTemplateCount": "Schon {count}×",
+  "eventTemplateCount": "{count}× benutzt",
   "eventTemplateMenu": "Mehr zu {name}",
   "eventTemplateKeep": "Als Vorlage behalten",
   "eventTemplateHide": "Nicht mehr vorschlagen",

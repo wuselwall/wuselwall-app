@@ -235,6 +235,7 @@
       }
     }
   },
+  "shoppingTileOnList": "Déjà sur la liste",
   "shoppingAddedBy": "Ajouté par {name}",
   "@shoppingAddedBy": {
     "placeholders": {
@@ -694,7 +695,7 @@
   "@eventKeyDisplayOn": {},
   "eventKeyDisplayOff": "Cet événement ne s’affiche pas sur l’écran de la cuisine.",
   "@eventKeyDisplayOff": {},
-  "eventKeyDisplayOffWholeFamily": "Pas sur l’écran de la cuisine : par défaut, seuls les événements de toute la famille y apparaissent.",
+  "eventKeyDisplayOffWholeFamily": "Cet événement ne s’affiche pas sur l’écran de la cuisine. Les événements de toute la famille s’y affichent d’eux-mêmes.",
   "@eventKeyDisplayOffWholeFamily": {},
   "eventRepeat": "Répétition",
   "@eventRepeat": {},
@@ -2877,6 +2878,7 @@
   "mealsWishesTray": "Souhaits",
   "mealsWishChip": "{name} : {title}",
   "mealsWishPlan": "Planifier",
+  "mealsWishPlanTitle": "Planifier : {dish}",
   "mealsWishRemove": "Retirer le souhait",
   "mealsWishedBy": "Souhait de {name}",
   "mealsTraditionSuggestion": "Prévoir {meal} ({tradition})",
@@ -2978,6 +2980,7 @@
   "eventTemplatesSuggested": "Souvent chez vous",
   "eventTemplatesSaved": "Vos modèles",
   "eventTemplatesBuiltIn": "Modèles",
+  "eventTemplatesBuiltInMore": "Autres modèles",
   "eventTemplateBlank": "Sans modèle",
   "eventTemplateBlankHelp": "Tout saisir toi-même",
   "eventStarterBirthday": "Anniversaire",
@@ -2993,7 +2996,7 @@
   "eventTemplateHours": "{count} h",
   "eventTemplateHoursMinutes": "{hours} h {minutes}",
   "eventTemplateMinutes": "{count} min",
-  "eventTemplateCount": "Déjà {count} fois",
+  "eventTemplateCount": "Utilisé {count} fois",
   "eventTemplateMenu": "Plus pour {name}",
   "eventTemplateKeep": "Garder comme modèle",
   "eventTemplateHide": "Ne plus proposer",

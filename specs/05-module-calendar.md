@@ -131,6 +131,14 @@ week board's rule (the family's household-wide row first, else the region's, in 
 household's language); from an older server, only the family's own rows show. The kid
 register has no calendar and the wall its week board, so neither has the month.
 
+**Narrow columns never cut a word.** Below 60 px a column shows marks instead of text: in
+the month a day's lines become its holiday flag, cakes, appointment pictures or colour dots
+(the "+n" counts the rest); in the week an all-day chip shows its picture or first letter,
+a timed block its picture or its first attendee's initial, a presence band its colour. The
+tooltip and the screen reader keep the words. The day view names its day in full once, as
+the heading; the app bar says it short ("Mo 26.10."). Every grid leaves the floating
+buttons' height free at its end, so no hour or day stays under them.
+
 The week board is a *composition* of this module, `school` and `meals`, and it is the
 screen the household will look at most. Treat its query — seven days, key appointments,
 presence, projected school days, meals with attendees — as a first-class read model with

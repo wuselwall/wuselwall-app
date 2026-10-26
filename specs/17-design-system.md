@@ -183,6 +183,11 @@ use the existing containing row/cell detail action rather than tiny independent
 buttons. Keep meaningful band labels in the container's semantics and retain
 access to their full detail. Coordinate board actions with A1 (`t_39e3e9d5`).
 
+A row that scrolls sideways (list chips, a scrollable tab bar, the wall's tile strip)
+fades out at the edge where more lies beyond it (`EdgeFade` in `core/ui`), so a chip cut at
+the edge reads as "scroll for more"; a control beside the row (the list pencil) sits
+outside it and never over a chip.
+
 The 24 px kiosk minimum, system text scaling and rendered contrast acceptance are
 clarified in [09 — Degradation rules](09-clients-and-ux.md#degradation-rules).
 

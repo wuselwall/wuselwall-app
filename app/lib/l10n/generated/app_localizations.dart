@@ -1118,6 +1118,12 @@ abstract class AppLocalizations {
   /// **'Add “{name}”'**
   String shoppingCreateTile(String name);
 
+  /// No description provided for @shoppingTileOnList.
+  ///
+  /// In en, this message translates to:
+  /// **'Already on the list'**
+  String get shoppingTileOnList;
+
   /// No description provided for @shoppingAddedBy.
   ///
   /// In en, this message translates to:
@@ -2315,7 +2321,7 @@ abstract class AppLocalizations {
   /// No description provided for @eventKeyDisplayOffWholeFamily.
   ///
   /// In en, this message translates to:
-  /// **'Not on the kitchen display: only events for the whole family go there by default.'**
+  /// **'This event won’t show on the kitchen display. Events for the whole family show there on their own.'**
   String get eventKeyDisplayOffWholeFamily;
 
   /// No description provided for @eventRepeat.
@@ -9925,6 +9931,12 @@ abstract class AppLocalizations {
   /// **'Put on the plan'**
   String get mealsWishPlan;
 
+  /// No description provided for @mealsWishPlanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan {dish}'**
+  String mealsWishPlanTitle(String dish);
+
   /// No description provided for @mealsWishRemove.
   ///
   /// In en, this message translates to:
@@ -10494,6 +10506,12 @@ abstract class AppLocalizations {
   /// **'Templates'**
   String get eventTemplatesBuiltIn;
 
+  /// No description provided for @eventTemplatesBuiltInMore.
+  ///
+  /// In en, this message translates to:
+  /// **'More templates'**
+  String get eventTemplatesBuiltInMore;
+
   /// The tile that opens the empty event editor.
   ///
   /// In en, this message translates to:
@@ -10587,7 +10605,7 @@ abstract class AppLocalizations {
   /// Part of a suggestion tile's line: how many such events the family entered.
   ///
   /// In en, this message translates to:
-  /// **'{count}× so far'**
+  /// **'Used {count}×'**
   String eventTemplateCount(int count);
 
   /// Tooltip of a template tile's menu button.

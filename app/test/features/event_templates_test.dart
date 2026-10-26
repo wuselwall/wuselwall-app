@@ -389,7 +389,9 @@ void main() {
       await _newEvent(t);
       expect(find.text(_de.eventTemplatesSuggested), findsOneWidget);
       expect(find.text(_de.eventTemplatesSaved), findsOneWidget);
-      expect(find.text('15:00 · 3 Std. · Schon 5×'), findsOneWidget);
+      expect(find.text('15:00 · 3 Std. · 5× benutzt'), findsOneWidget);
+      // Below the family's own tiles the built-in ones are "Weitere Vorlagen".
+      expect(find.text(_de.eventTemplatesBuiltInMore), findsOneWidget);
       expect(templates.suggestionDays.single, dateOnly(_todayMorning()));
 
       await _tap(t, find.byKey(const ValueKey('event-template-saved-t-1')));

@@ -12,6 +12,10 @@ import 'package:wuselwall/features/school/ui/school_icons.dart';
 const _days = 5;
 const _labelWidth = 84.0;
 
+/// Below this width a lesson cell shows its icon and short code only; the full name,
+/// room and change live in the tooltip and the lesson sheet (round-3 review C-6).
+const _compactCell = 72.0;
+
 /// Weekday dates, optionally with navigation beside Monday and Friday.
 /// The left gutter matches the grid's period labels; the next-week button adds a
 /// trailing 48 px gutter, which the parent also leaves beside the lesson grid.
@@ -130,7 +134,14 @@ class SchoolWeekGrid extends StatelessWidget {
   };
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) => _grid(
+      context,
+      compact: (constraints.maxWidth - _labelWidth) / _days < _compactCell,
+    ),
+  );
+
+  Widget _grid(BuildContext context, {required bool compact}) {
     final l10n = context.l10n;
     final scheme = Theme.of(context).colorScheme;
     final ww = context.ww;
@@ -188,6 +199,7 @@ class SchoolWeekGrid extends StatelessWidget {
                                 : () => onLesson!(i, cells[i]!),
                             cellKey: ValueKey('lesson-$i-${cells[i]!.period}'),
                             tapOnPress: _desktop,
+                            compact: compact,
                           ),
                   ),
                 ),
@@ -300,6 +312,8 @@ class SchoolWeekGrid extends StatelessWidget {
 }
 
 /// One lesson in a cell: a paper tile with its icon, short name, room, and what changed.
+/// A [compact] cell (a phone's five columns) shows the icon over the short code and a
+/// change as an icon, never a cut word; the tooltip says it all.
 class _LessonCell extends StatelessWidget {
   const _LessonCell({
     required this.lesson,
@@ -307,8 +321,11 @@ class _LessonCell extends StatelessWidget {
     required this.current,
     required this.onTap,
     required this.tapOnPress,
+    required this.compact,
     this.cellKey,
   });
+
+  final bool compact;
 
   final Key? cellKey;
 
@@ -334,6 +351,85 @@ class _LessonCell extends StatelessWidget {
       LessonStatus.normal => null,
     };
     final name = lesson.shortName ?? lesson.subject;
+    final full = [
+      lesson.subject,
+      ?lesson.room,
+      ?status,
+      if (lesson.note != null && lesson.note!.isNotEmpty) lesson.note!,
+    ].join(' · ');
+    if (compact) {
+      final short =
+          lesson.shortName ?? lesson.subject.characters.take(3).string;
+      final mark = switch (lesson.status) {
+        LessonStatus.substituted => Icons.swap_horiz,
+        LessonStatus.roomChange => Icons.meeting_room_outlined,
+        LessonStatus.extra => Icons.add_circle_outline,
+        LessonStatus.cancelled || LessonStatus.normal =>
+          lesson.note != null && lesson.note!.isNotEmpty
+              ? Icons.info_outline
+              : null,
+      };
+      return Semantics(
+        label: full,
+        button: onTap != null,
+        excludeSemantics: true,
+        child: Tooltip(
+          message: full,
+          child: InkWell(
+            key: cellKey,
+            borderRadius: BorderRadius.circular(10),
+            onLongPress: onTap,
+            onTap: tapOnPress ? onTap : null,
+            child: PaperTile(
+              tint: lesson.tint,
+              struckThrough: cancelled,
+              padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 4),
+              child: Container(
+                decoration: current
+                    ? BoxDecoration(
+                        border: Border.all(color: scheme.primary, width: 2),
+                        borderRadius: BorderRadius.circular(8),
+                      )
+                    : null,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      schoolIcon(iconKey),
+                      size: 18,
+                      color: scheme.onSurface,
+                    ),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        short,
+                        maxLines: 1,
+                        style: TextStyle(
+                          fontFamily: Tokens.fontUi,
+                          fontWeight: FontWeight.w800,
+                          decoration: cancelled
+                              ? TextDecoration.lineThrough
+                              : null,
+                          color: scheme.onSurface,
+                        ),
+                      ),
+                    ),
+                    if (mark != null)
+                      Icon(
+                        mark,
+                        size: 14,
+                        color: lesson.status == LessonStatus.substituted
+                            ? scheme.primary
+                            : ww.ink2,
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
     final tile = PaperTile(
       tint: lesson.tint,
       struckThrough: cancelled,

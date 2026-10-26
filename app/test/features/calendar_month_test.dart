@@ -492,8 +492,12 @@ void main() {
       await t.pumpAndSettle();
       expect(t.takeException(), isNull);
       expect(find.byType(CalendarMonthView), findsOneWidget);
-      // At least the first line, the holiday, and the count of what did not fit.
-      expect(_inDay(_today, 'Ein langer Feiertagsname'), findsOneWidget);
+      // At least the first line, the holiday (a flag in a phone's narrow column),
+      // and the count of what did not fit.
+      expect(
+        find.descendant(of: _day(_today), matching: find.byIcon(Icons.flag)),
+        findsOneWidget,
+      );
       expect(
         find.descendant(
           of: _day(_today),
@@ -501,6 +505,47 @@ void main() {
         ),
         findsOneWidget,
       );
+    });
+
+    testWidgets('a phone column shows marks, never a cut word', (t) async {
+      await _pumpMonth(
+        t,
+        size: const Size(390, 844),
+        publicHolidays: {_today: 'Tag der Deutschen Einheit'},
+        items: [
+          _occ('Spieleabend', _today, key: true, iconKey: 'cake'),
+          _occ('Elternabend', _today, key: true),
+        ],
+      );
+      expect(t.takeException(), isNull);
+      for (final word in [
+        'Tag der Deutschen Einheit',
+        'Spieleabend',
+        'Elternabend',
+      ]) {
+        expect(_inDay(_today, word), findsNothing, reason: word);
+      }
+      expect(
+        find.descendant(of: _day(_today), matching: find.byIcon(Icons.flag)),
+        findsOneWidget,
+      );
+      // The words stay with the screen reader.
+      expect(
+        find.bySemanticsLabel(RegExp('Tag der Deutschen Einheit.*Spieleabend')),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('the floating buttons never cover the last week', (t) async {
+      await _pumpMonth(t, size: const Size(390, 844));
+      final lastDay = monthGridDays(DateTime(2026, 10)).last;
+      final cell = t.getRect(_day(lastDay));
+      final fabs = find.byType(FloatingActionButton);
+      expect(fabs, findsWidgets);
+      for (final fab in fabs.evaluate()) {
+        final rect = t.getRect(find.byWidget(fab.widget));
+        expect(cell.bottom, lessThanOrEqualTo(rect.top + 0.5));
+      }
     });
 
     for (final language in ['de', 'en', 'fr', 'es']) {

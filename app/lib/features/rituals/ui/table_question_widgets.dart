@@ -277,7 +277,12 @@ class TableQuestionCard extends ConsumerWidget {
       ],
     );
     return Padding(
-      padding: const EdgeInsets.only(top: Tokens.space3),
+      // On Today 16 px to the card below: 12 here and the card's own 4 (round-3
+      // review L-9).
+      padding: EdgeInsets.only(
+        top: Tokens.space3,
+        bottom: kid ? 0 : Tokens.space3,
+      ),
       // On the kid home the question is a slim line until tapped, so the child's
       // chores stay in view (decided 2026-10-26).
       child: kid
