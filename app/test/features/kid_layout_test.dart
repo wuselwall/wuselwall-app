@@ -7,6 +7,7 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/identity/ui/acting_profile_bar.dart';
 import 'package:wuselwall/features/kid/ui/kid_picker.dart';
+import 'package:wuselwall/features/kid/ui/kid_today_page.dart';
 import 'package:wuselwall/features/wusel/ui/family_wusel.dart';
 
 import '../support/fake_tasks.dart';
@@ -108,6 +109,27 @@ void _expectOneLine(WidgetTester tester) {
       hasLength(1),
       reason: '"$text" wraps',
     );
+  }
+}
+
+/// Whether every word of [text] stays on one line wherever the text wraps.
+void _expectWholeWords(WidgetTester tester, String text) {
+  final p = tester.renderObject<RenderParagraph>(
+    find.byWidgetPredicate(
+      (w) => w is RichText && w.text.toPlainText() == text,
+    ),
+  );
+  var start = 0;
+  for (final word in text.split(' ')) {
+    final boxes = p.getBoxesForSelection(
+      TextSelection(baseOffset: start, extentOffset: start + word.length),
+    );
+    expect(
+      {for (final b in boxes) b.top.round()},
+      hasLength(1),
+      reason: '"$word" in "$text" breaks',
+    );
+    start += word.length + 1;
   }
 }
 
@@ -347,6 +369,32 @@ void main() {
     );
     // Two across: Emma and Paul share the first row.
     expect(second.dy, first.dy);
+    await unmountApp(tester, container);
+  });
+
+  testWidgets('on a 320 px phone no word of a chore or the badge breaks', (
+    tester,
+  ) async {
+    final container = await pumpApp(
+      tester,
+      overrides: baseOverrides(identity: _KidIdentity()),
+      tasks: _chores(),
+      size: const Size(320, 568),
+    );
+    await _pickEmma(tester);
+    await tester.scrollUntilVisible(
+      find.text('Müll rausbringen'),
+      200,
+      scrollable: find
+          .descendant(
+            of: find.byType(KidTodayPage),
+            matching: find.byType(Scrollable),
+          )
+          .first,
+    );
+    await tester.pumpAndSettle();
+    _expectWholeWords(tester, 'Müll rausbringen');
+    _expectWholeWords(tester, 'Blumen gießen');
     await unmountApp(tester, container);
   });
 }

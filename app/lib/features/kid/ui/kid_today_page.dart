@@ -15,6 +15,7 @@ import 'package:wuselwall/core/ui/confetti.dart';
 import 'package:wuselwall/core/ui/emoji_picture.dart';
 import 'package:wuselwall/core/ui/motion.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
+import 'package:wuselwall/core/ui/whole_words_text.dart';
 import 'package:wuselwall/core/wusel/wusel.dart';
 import 'package:wuselwall/core/wusel/wusel_stage.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
@@ -545,7 +546,7 @@ class _TaskCard extends StatelessWidget {
                   children: [
                     ExcludeSemantics(
                       // The card's label already says the title; it is not read twice.
-                      child: Text(
+                      child: WholeWordsText(
                         task.title,
                         style: theme.textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.w800,

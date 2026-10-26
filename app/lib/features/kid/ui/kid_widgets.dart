@@ -7,6 +7,7 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/motion.dart';
+import 'package:wuselwall/core/ui/whole_words_text.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
@@ -434,7 +435,7 @@ class KidLessonCard extends StatelessWidget {
                   ),
                   // The time span stays on one line (non-breaking spaces); a
                   // narrow card breaks before the room instead.
-                  Text(
+                  WholeWordsText(
                     '${context.time(lesson.starts)}\u00A0–\u00A0${context.time(lesson.ends)}'
                     '${lesson.room == null ? '' : '  ·  ${l10n.kidRoom(lesson.room!)}'}',
                     style: TextStyle(

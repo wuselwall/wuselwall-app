@@ -10,6 +10,7 @@ import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/emoji_picture.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
+import 'package:wuselwall/core/ui/whole_words_text.dart';
 import 'package:wuselwall/core/wusel/wusel.dart';
 import 'package:wuselwall/features/kid/application/kid_logic.dart';
 import 'package:wuselwall/features/kid/application/kid_providers.dart';
@@ -368,33 +369,6 @@ class _RewardCard extends StatelessWidget {
 
 /// A badge: one node with its title and whether it is earned. The medal is faint while
 /// it is still to come; the text is not, so it keeps its contrast.
-/// [style], or smaller until the longest word of [text] fits [width] on one line:
-/// a badge name may wrap between words, never inside one ("Fünfundzwanzi / g").
-TextStyle? _fitLongestWord(
-  BuildContext context,
-  String text,
-  TextStyle? style,
-  double width,
-) {
-  if (style == null) return null;
-  // Measured as the Text draws it: the inherited style (the app's font) under it.
-  final drawn = DefaultTextStyle.of(context).style.merge(style);
-  final scaler = MediaQuery.textScalerOf(context);
-  var widest = 0.0;
-  for (final word in text.split(RegExp(r'\s+'))) {
-    final painter = TextPainter(
-      text: TextSpan(text: word, style: drawn),
-      textDirection: TextDirection.ltr,
-      textScaler: scaler,
-      maxLines: 1,
-    )..layout();
-    if (painter.width > widest) widest = painter.width;
-    painter.dispose();
-  }
-  if (widest <= width) return style;
-  return style.copyWith(fontSize: (style.fontSize ?? 14) * width / widest);
-}
-
 class _BadgeTile extends StatelessWidget {
   const _BadgeTile({required this.badge});
 
@@ -442,17 +416,12 @@ class _BadgeTile extends StatelessWidget {
               ),
             ),
             const SizedBox(height: Tokens.space1),
-            Text(
+            WholeWordsText(
               badge.title,
               textAlign: TextAlign.center,
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
-              style: _fitLongestWord(
-                context,
-                badge.title,
-                Theme.of(context).textTheme.labelLarge,
-                _BadgeTile.width,
-              ),
+              style: Theme.of(context).textTheme.labelLarge,
             ),
           ],
         ),

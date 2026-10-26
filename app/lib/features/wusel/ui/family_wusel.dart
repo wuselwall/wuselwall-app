@@ -4,6 +4,7 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/whole_words_text.dart';
 import 'package:wuselwall/core/wusel/wusel.dart';
 import 'package:wuselwall/core/wusel/wusel_stage.dart';
 import 'package:wuselwall/core/wusel/wusel_tilt.dart';
@@ -176,7 +177,7 @@ class _WuselSaysState extends ConsumerState<WuselSays> {
         day.wusel == WuselPresence.lively ||
         (day.wusel == WuselPresence.quiet && widget.quietAllowed);
     final ww = context.ww;
-    final text = Text(
+    final text = WholeWordsText(
       widget.line,
       style: widget.style ?? Theme.of(context).textTheme.titleMedium,
     );

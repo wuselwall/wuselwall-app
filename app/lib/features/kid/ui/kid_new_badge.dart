@@ -7,6 +7,7 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/motion.dart';
+import 'package:wuselwall/core/ui/whole_words_text.dart';
 import 'package:wuselwall/core/wusel/wusel.dart';
 import 'package:wuselwall/features/kid/application/kid_logic.dart';
 import 'package:wuselwall/features/kid/application/kid_providers.dart';
@@ -80,7 +81,7 @@ class _KidNewBadgeState extends ConsumerState<KidNewBadge> {
                     ),
                     const SizedBox(width: Tokens.space3),
                     Expanded(
-                      child: Text(
+                      child: WholeWordsText(
                         line,
                         style: Theme.of(context).textTheme.titleMedium
                             ?.copyWith(fontWeight: FontWeight.w800),
