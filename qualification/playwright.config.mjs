@@ -6,6 +6,7 @@ import { visualPolicy } from './visual-policy.mjs';
 const baseURL = `http://127.0.0.1:${process.env.QUALIFY_WEB_PORT || 4178}`;
 export default defineConfig({
   testDir: path.join(root, 'qualification/web'),
+  testMatch: ['**/screens.spec.mjs', '**/detector.spec.mjs'],
   outputDir: path.join(root, 'build/qualification/web/results'),
   snapshotPathTemplate: path.join(process.env.QUALIFY_BASELINE_DIR || path.join(root, 'build/qualification/baseline'), '{projectName}/{arg}{ext}'),
   updateSnapshots: 'none',

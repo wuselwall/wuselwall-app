@@ -19,7 +19,7 @@ commands and the server stack: [10 — Deployment and operations](10-deployment-
 **Implemented candidate gate (2026-10-26):**
 [Accessibility and UI qualification](accessibility-and-ui-qualification.md) and its
 [runbook](../qualification/README.md) define the manually selected default-branch commit,
-70-state inventory, complete expected case accounting, web/native baseline comparisons,
+72-state inventory, complete expected case accounting, web/native baseline comparisons,
 native ATF/XCTest adapters and production web-entry smoke. Android, iOS and server
 publishing require successful full comparison evidence for that exact commit and approval
 of the protected `release-promotion` environment. Capture, partial, skipped and failing

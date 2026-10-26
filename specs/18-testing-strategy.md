@@ -7,7 +7,7 @@ the distribution decisions in [ADR-011](adr/ADR-011-native-distribution-and-ci-c
 **Candidate qualification implementation (2026-10-26):**
 [Accessibility and UI qualification](accessibility-and-ui-qualification.md) and the
 [runbook](../qualification/README.md) describe the manual candidate-only suite. Its
-70-state inventory accounts for every release route, with verified redirect/developer-only
+72-state inventory accounts for every release route, with verified redirect/developer-only
 exclusions. Expanded Flutter guidelines, Playwright pixel/semantic comparisons, native
 ATF/XCTest adapters, large-text/keyboard controls and production web-entry smoke are built.
 Approved web/native baselines and physical-device review are required; native runtime
@@ -51,7 +51,7 @@ nothing is tested twice at an expensive layer if a cheap one already covers it.
 | 5 | Golden: pixels per locale × theme × form factor | `flutter test` + `matchesGoldenFile` | `app/test/golden` | Every PR | Started 2026-10-24: Wusel's poses, outfits and tufts (shapes only, no text) |
 | 6 | Repository integration: Dart repositories against a real stack | `flutter test --tags integration` | `app/test/integration` | Tag or manual run always; pull request when backend-sensitive paths change (`backend` job of `backend-ci.yml`, candidate) | Exists |
 | 7 | Native rendering and exported accessibility nodes | Flutter `integration_test`, Android ATF, iOS XCTest | `app/integration_test/`, `app/qualification/native_main.dart`, `qualification/native/` | Explicit candidate dispatch only | Adapters and required profiles built; Android app/test APKs compile; native runtime evidence open. Patrol is not installed |
-| 8 | Web visual/semantic regression and release-entry smoke | **Playwright**, axe-core | `qualification/web/`, `qualification/production-smoke.mjs` | Explicit candidate dispatch only | Built; 564 canonical / 2,472 full fixture cases, plus production entry with intercepted APIs. Approved baseline acceptance remains open |
+| 8 | Web visual/semantic regression and release-entry smoke | **Playwright**, axe-core | `qualification/web/`, `qualification/production-smoke.mjs` | Explicit candidate dispatch only | Built; 580 canonical / 2,512 full fixture cases, plus production entry with intercepted APIs. Approved baseline acceptance remains open |
 | 9 | Manual device check: what automation cannot reach | Checklist | [`specs/release-checklist.md`](release-checklist.md) | Before promoting a TestFlight/Play build | Added 2026-10-17; manual, no results recorded in the repository |
 
 Note the naming: `app/test/integration/` stays the host-VM repository tests (layer 6).

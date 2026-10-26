@@ -117,7 +117,9 @@ Widget qualificationApp({
       ...demoOverrides(
         scenario: scenario,
         locales: [locale],
-        config: scenario == 'withserver'
+        config: stateId == 'password-sign-in' || stateId == 'password-reset'
+            ? qualificationPasswordServerConfig()
+            : scenario == 'withserver'
             ? AppConfig(
                 environment: 'qualification',
                 supabaseUrl: 'https://example.org',

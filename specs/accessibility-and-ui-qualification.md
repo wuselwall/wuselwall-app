@@ -18,12 +18,12 @@ native macOS runner for both mobile platforms, initially one virtual device at a
 No paid device cloud is needed initially. The expanded suite has no pull-request, ordinary
 push or nightly trigger. Existing fast CI checks continue to run as they do today.
 
-The [candidate suite](../qualification/README.md) implements a shared 70-state inventory,
+The [candidate suite](../qualification/README.md) implements a shared 72-state inventory,
 fixed Dart clock, bundled fonts, Flutter matrix/detectors, browser screenshot/semantic
 comparison, axe-core checks and integrity-checked web/native baseline bundles. Every release
 route is represented; the legacy settings redirect and developer-only diagnostics page have
 explicit exclusions checked against production router code. The canonical matrix contains
-564 browser and 1,128 Flutter cases; the full browser matrix contains 2,472 cases. All states
+580 browser and 1,160 Flutter cases; the full browser matrix contains 2,512 cases. All states
 run regardless of which source paths changed. Route coverage does not imply exhaustive
 coverage of every modal, permission outcome or backend-connected journey.
 
@@ -45,11 +45,11 @@ human gates. Real backend authentication, signed-store-binary smoke and the rest
 release checklist remain separate requirements. Operator-run deployment utilities are not
 publishing-workflow qualification gates.
 
-Local validation rendered all 172 direct fixtures in DE/EN/FR/ES and executed the full
+Local validation rendered all 180 direct fixtures in DE/EN/FR/ES and executed the earlier 70-state,
 8,760-case Flutter matrix. Large-text layout and touch-target fixes were verified in a
 672-case responsive rerun with no framework, label or target-size findings. Contrast findings
-remain visible and blocking while attribution continues. The ordinary suite passed 1,561
-tests with six intentionally unconfigured backend integration tests skipped; the separate
+remain visible and blocking while attribution continues. The ordinary suite passed 1,574
+tests with seven intentionally unconfigured backend integration tests skipped; the separate
 disposable-backend CI job supplies their coverage. No qualified candidate or approved native
 baseline is established by these local checks.
 
@@ -139,6 +139,11 @@ applicable DOM/ARIA rules and record incomplete checks. Flutter paints the UI in
 DOM colour checks alone cannot validate the colours of the painted text or controls.
 Use the Flutter layer and native audits for that coverage, with explicit custom-paint tests
 for important non-text visuals.
+
+The implementation retains the initial axe report. Scroll-clipped target-size findings get
+a real-input checkpoint: the same DOM element must become fully visible inside all clipping
+ancestors and pass a fresh audit. Replacement nodes, inaccessible scroll regions and true
+size failures cannot pass this check. Other axe findings remain blocking throughout.
 
 Share fixture and state definitions with documentation capture where practical. The
 qualification runner must assert the destination state before comparing its screenshot;
@@ -330,7 +335,7 @@ device evidence remains part of the promotion checklist.
 | Slice | Implemented result | Remaining completion evidence |
 |---|---|---|
 | 1 | Shared inventory/clock, real-widget fixtures, Flutter/web detectors, native adapters | Actual native runtime node/detector results and repeatability measurements |
-| 2 | 70 states account for release routes; whole-inventory Flutter and web PNG/semantic comparison; baseline integrity tooling | Resolve reported accessibility findings and review initial web/native baselines; extend modal/permission checkpoints with their journeys |
+| 2 | 72 states account for release routes; whole-inventory Flutter and web PNG/semantic comparison; baseline integrity tooling | Resolve reported accessibility findings and review initial web/native baselines; extend modal/permission checkpoints with their journeys |
 | 3 | Nine native phone/tablet, enlarged-text and Android minimum-API profiles; keyboard checkpoint and native report checks | Successful Android/iOS runtime runs, platform logs and physical-device behavior |
 | 4 | Manual exact-commit workflow, strict evidence aggregation, verified artifact provenance and protected app/server promotion dependencies | Successful full comparison followed by protected reviewer acceptance; implementation rejects missing evidence now |
 | 5 | Baseline review/runbook and fail-closed promotion protocol | Initial acceptance, VoiceOver/TalkBack and signed-device checklist; measured duration, resource use and flake rate |

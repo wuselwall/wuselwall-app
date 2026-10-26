@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
 import sharp from 'sharp';
 import { profiles, expectedCases } from './report.mjs';
+import { fontAssets } from '../baseline.mjs';
 
 export const digest = bytes => createHash('sha256').update(bytes).digest('hex');
 export const policy = {channels: 'RGBA', maxChangedPixels: 0, channelTolerance: 0};
@@ -85,7 +86,7 @@ async function environment() {
     xcode: (await read('xcode.txt')).trim(), macOS: (await read('macos.txt')).trim(),
     ios: {identifier: selected.identifier, version: selected.version, buildversion: selected.buildversion},
     emulator: (await read('emulator.txt')).split('\n').find(l => l.includes('Android emulator version')),
-    inventory: digest(await fs.readFile('qualification/inventory.json')), byProfile};
+    inventory: digest(await fs.readFile('qualification/inventory.json')), fonts: fontAssets(), byProfile};
 }
 async function run() {
   const mode = process.env.QUALIFY_MODE;

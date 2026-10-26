@@ -116,7 +116,7 @@ It has two steps:
    The [candidate accessibility and UI qualification design](accessibility-and-ui-qualification.md)
    adds a manually triggered whole-app regression matrix and exact-commit promotion gate;
    the [implemented suite](../qualification/README.md) accounts for all release routes in
-   70 states, with Flutter/web comparisons, native ATF/XCTest adapters and an enforced
+   72 states, with Flutter/web comparisons, native ATF/XCTest adapters and an enforced
    exact-commit gate for Android, iOS and server publishing. Native runtime validation,
    resolution of accessibility findings, approved baselines and physical-device acceptance
    remain open. Automation produces `READY_FOR_REVIEW`; protected human approval is still

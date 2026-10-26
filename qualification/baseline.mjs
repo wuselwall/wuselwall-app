@@ -8,11 +8,18 @@ import { inventory, root } from './matrix.mjs';
 import { visualPolicy } from './visual-policy.mjs';
 
 export const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
+export function fontAssets() {
+  const directory = path.join(root, 'app/assets/fonts');
+  return Object.fromEntries(fs.readdirSync(directory).sort()
+    .filter(name => /\.(ttf|otf|woff2?)$/.test(name))
+    .map(name => [name, sha256(fs.readFileSync(path.join(directory, name)))]));
+}
 export function environment() {
   return { platform: process.platform, arch: process.arch, osRelease: os.release(),
     flutter: fs.readFileSync(path.join(root, 'app/pubspec.yaml'), 'utf8').match(/^  flutter: ([\d.]+)$/m)?.[1],
     playwright: JSON.parse(fs.readFileSync(path.join(root, 'node_modules/playwright/package.json'), 'utf8')).version,
     inventory: sha256(fs.readFileSync(path.join(root, 'qualification/inventory.json'))),
+    fonts: fontAssets(),
     renderer: 'CanvasKit/SwiftShader; deviceScaleFactor=1', clock: inventory.clock, visualPolicy,
   };
 }

@@ -3,6 +3,7 @@ import path from 'node:path';
 import { createRequire } from 'node:module';
 import { test, expect } from 'playwright/test';
 import { cases, checkInventory, root } from '../matrix.mjs';
+import { auditWithScrollCheckpoints, runAxe } from './scroll-audit.mjs';
 
 const require = createRequire(import.meta.url);
 checkInventory();
@@ -54,15 +55,17 @@ for (const sample of cases(process.env.QUALIFY_MATRIX || 'canonical')) {
       expect.soft(semantics).toMatchSnapshot(`${sample.caseId}-aria.yml`);
     }
     await page.addScriptTag({ path: require.resolve('axe-core/axe.min.js') });
-    const audit = await page.evaluate(() => window.axe.run(document, {
-      runOnly: ['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'],
-      // DOM styles do not describe Flutter's painted canvas colours.
-      rules: { 'color-contrast': { enabled: false } },
-    }));
+    const audit = await runAxe(page);
+    const scrollAudit = await auditWithScrollCheckpoints(page, audit);
     await info.attach('axe-report', { body: JSON.stringify({ ...audit,
       unsupported: ['Canvas-painted colour contrast: covered by Flutter checks and review'],
     }, null, 2), contentType: 'application/json' });
-    expect.soft(audit.violations, 'DOM/ARIA audit findings').toEqual([]);
+    await info.attach('axe-scroll-checkpoints', { body: JSON.stringify({
+      checkpoints: scrollAudit.checkpoints,
+      resolved: scrollAudit.resolved,
+      remainingViolations: scrollAudit.remainingViolations,
+    }, null, 2), contentType: 'application/json' });
+    expect.soft(scrollAudit.remainingViolations, 'DOM/ARIA audit findings after verified scroll checkpoints').toEqual([]);
     expect.soft(blocked, 'Hermetic captures must never contact an external service').toEqual([]);
     expect.soft(errors, 'Flutter/browser errors are qualification failures').toEqual([]);
   });

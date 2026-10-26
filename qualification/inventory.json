@@ -1192,6 +1192,32 @@
         1280
       ],
       "tab": "shopping"
+    },
+    {
+      "id": "password-sign-in",
+      "widget": "PasswordSignInPage",
+      "titleKey": "passwordSignUpTab",
+      "scenario": "setup",
+      "route": "/setup/sign-in",
+      "widths": [
+        360,
+        390,
+        820
+      ],
+      "fixture": true
+    },
+    {
+      "id": "password-reset",
+      "widget": "PasswordResetPage",
+      "titleKey": "passwordResetTitle",
+      "scenario": "setup",
+      "route": "/setup/password-reset",
+      "widths": [
+        360,
+        390,
+        820
+      ],
+      "fixture": true
     }
   ],
   "pendingRoutes": {},

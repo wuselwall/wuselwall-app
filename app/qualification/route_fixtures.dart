@@ -3,8 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wuselwall/core/config/app_config.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/core/server/server_info.dart';
+import 'package:wuselwall/core/server/server_providers.dart';
 import 'package:wuselwall/core/server/setup_link.dart';
 import 'package:wuselwall/core/server/setup_store.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
@@ -44,6 +47,7 @@ import 'package:wuselwall/features/setup/ui/enrol_page.dart';
 import 'package:wuselwall/features/setup/ui/first_run_page.dart';
 import 'package:wuselwall/features/setup/ui/mfa_challenge_page.dart';
 import 'package:wuselwall/features/setup/ui/pair_page.dart';
+import 'package:wuselwall/features/setup/ui/password_reset_page.dart';
 import 'package:wuselwall/features/setup/ui/register_device_page.dart';
 import 'package:wuselwall/features/setup/ui/setup_page.dart';
 import 'package:wuselwall/features/setup/ui/sign_in_choice_page.dart';
@@ -167,6 +171,12 @@ class _Destination extends ConsumerWidget {
     'wizard' => const WizardPage(),
     'sign-in' ||
     'sign-in-offline' => const SignInPage(initialEmail: 'guardian@example.org'),
+    'password-sign-in' => const SignInPage(
+      initialEmail: 'guardian@example.org',
+    ),
+    'password-reset' => const PasswordResetPage(
+      initialEmail: 'guardian@example.org',
+    ),
     'email-code' => const EmailCodePage(
       email: 'guardian@example.org',
       initialResendDelay: Duration.zero,
@@ -258,3 +268,17 @@ class _Destination extends ConsumerWidget {
 }
 
 const qualificationNetworkFailure = NetworkFailure();
+
+AppConfig qualificationPasswordServerConfig() => AppConfig(
+  environment: 'qualification',
+  supabaseUrl: 'https://family.example.org',
+  supabasePublishableKey: 'sb_publishable_qualification',
+  server: ServerInfo(
+    supabaseUrl: Uri.parse('https://family.example.org'),
+    publishableKey: 'sb_publishable_qualification',
+    apiVersion: 1,
+    minAppVersion: '1.0.0',
+    features: const [featurePasswordReset],
+    emailCode: false,
+  ),
+);

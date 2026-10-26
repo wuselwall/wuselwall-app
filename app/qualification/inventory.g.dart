@@ -36,6 +36,8 @@ import 'package:wuselwall/features/setup/ui/enrol_page.dart';
 import 'package:wuselwall/features/setup/ui/first_run_page.dart';
 import 'package:wuselwall/features/setup/ui/mfa_challenge_page.dart';
 import 'package:wuselwall/features/setup/ui/pair_page.dart';
+import 'package:wuselwall/features/setup/ui/password_reset_page.dart';
+import 'package:wuselwall/features/setup/ui/password_sign_in_page.dart';
 import 'package:wuselwall/features/setup/ui/register_device_page.dart';
 import 'package:wuselwall/features/setup/ui/server_choice_page.dart';
 import 'package:wuselwall/features/setup/ui/setup_page.dart';
@@ -75,6 +77,8 @@ bool isQualificationDestination(Widget widget, String name) => switch (name) {
   'MfaChallengePage' => widget is MfaChallengePage,
   'NewFamilyPage' => widget is NewFamilyPage,
   'PairPage' => widget is PairPage,
+  'PasswordResetPage' => widget is PasswordResetPage,
+  'PasswordSignInPage' => widget is PasswordSignInPage,
   'RecipeEditorPage' => widget is RecipeEditorPage,
   'RecipeViewPage' => widget is RecipeViewPage,
   'RecipesPage' => widget is RecipesPage,
@@ -146,6 +150,8 @@ const qualificationFixtureRoutes = <String, String>{
   'recipes-empty': '/meals/recipes',
   'recipes-error': '/meals/recipes',
   'external-calendars-empty': '/settings/calendars',
+  'password-sign-in': '/setup/sign-in',
+  'password-reset': '/setup/password-reset',
 };
 const qualificationClock = '2026-10-14T14:05:00';
 const nativeStatesJson = r'''[

@@ -45,6 +45,9 @@ void main() {
       }
       await loader.load();
     }
+    final symbols = FontLoader('NotoSansSymbols')
+      ..addFont(rootBundle.load('assets/fonts/NotoSansSymbols-wght.ttf'));
+    await symbols.load();
   });
   tearDownAll(() {
     final file = File('../build/qualification/flutter/$profile/results.json');

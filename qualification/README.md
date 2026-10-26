@@ -2,7 +2,7 @@
 
 The [qualification design](../specs/accessibility-and-ui-qualification.md) is implemented
 as a manually dispatched evidence suite and an enforced app/server release gate. The shared
-inventory contains 70 states and accounts for every release route. Two exclusions are
+inventory contains 72 states and accounts for every release route. Two exclusions are
 checked against the production router: the legacy settings redirect and the developer-only
 diagnostics page. Route coverage does not mean every dialog, permission state or backend
 journey has been exercised.
@@ -44,12 +44,12 @@ qualification for that exact commit and protected human approval before publishi
 Separate backend/recovery checks remain part of the release checklist; operator-run local
 deployment utilities are independent.
 
-Expanded Linux validation rendered all 172 direct fixtures and executed the full 8,760-case
-Flutter matrix. It exposed accessibility findings and large-text layout defects. After
+Expanded Linux validation rendered all 180 direct fixtures and executed the earlier
+70-state, 8,760-case Flutter matrix. It exposed accessibility findings and large-text layout defects. After
 fixing those layouts and calendar targets, a 672-case responsive rerun had no framework,
 label or target-size findings; contrast findings remain blocking. The ordinary
-suite passed 1,561 tests, with six backend integration tests intentionally skipped without
-backend configuration. Those six require the separate disposable-backend CI job. Android
+suite passed 1,574 tests, with seven backend integration tests intentionally skipped without
+backend configuration. Those seven require the separate disposable-backend CI job. Android
 app and instrumentation APKs compile; native device execution and the iOS audit build still
 need validation on provisioned macOS devices. No native baseline has been approved by these
 local checks.
@@ -59,6 +59,14 @@ diagnostic records effective text size, foreground/background ratios where the r
 provides a conservative proof, and explicit unsupported reasons elsewhere. It cannot waive
 SDK failures. Borders, image content and antialiasing can affect the SDK's pixel histogram;
 those reports need attribution before changing a colour or accepting a candidate.
+
+Bundled Noto Sans Symbols covers the shipped arrow glyphs. Web's automatic fallback font
+base is also restricted to this installation's own origin. This does not supply every
+Unicode script: unbundled characters in names or imported calendar text may remain missing
+until the installation serves the corresponding reviewed local font pack. Baseline
+fingerprints include bundled font-file checksums on both web and native platforms.
+`qualify:font-policy` exercises unsupported CJK input and asserts that fallback requests
+stay on the local origin; it does not certify the rendering of those characters.
 
 ## Select the candidate
 
@@ -91,12 +99,15 @@ flutter test --no-pub qualification_test --dart-define=QUALIFY_MATRIX=smoke
 cd ..
 npm run qualify:build-web
 npx playwright install chromium
+npm run qualify:pixel-controls
+npm run qualify:scroll-controls
+npm run qualify:font-policy
 QUALIFY_MODE=capture QUALIFY_MATRIX=smoke npm run qualify:web
 ```
 
 Profiles are `smoke`, `canonical`, `responsive` and `full`. Workflow choices omit standalone
-`responsive`; `full` includes it. Canonical coverage contains 564 browser cases and 1,128
-Flutter cases before detectors. The full browser matrix has 2,472 cases. Flutter's responsive
+`responsive`; `full` includes it. Canonical coverage contains 580 browser cases and 1,160
+Flutter cases before detectors. Full coverage has 2,512 browser and 8,888 Flutter cases. Flutter's responsive
 tier additionally crosses 100/200% text and both widget platforms. Native smoke uses
 German/light; full uses all four locales/light/dark. Smoke is diagnostic only.
 
@@ -105,6 +116,13 @@ unapproved images/semantics in `build/qualification/capture/`, Flutter findings 
 `build/qualification/flutter/<profile>/results.json`, native evidence in
 `build/qualification/native/`, and production-entry evidence in `build/qualification/production/`.
 The aggregate is `build/qualification/summary.json`. A missing report fails aggregation.
+
+Browser semantics are enabled from launch; a separate test-only readiness signal is emitted
+after the real destination renders. If axe reports a target clipped by a scroll viewport,
+the audit scrolls with real input and checks the same DOM node fully inside every clipping
+ancestor before accepting its size. Initial and follow-up audits and geometry are retained.
+Unreachable, replaced or genuinely undersized controls remain failures, as do all other axe
+findings. `qualify:scroll-controls` checks those boundaries independently.
 
 Rules fail their tests; existing findings are not suppressed. Flutter's histogram-based
 contrast checker can misread image/text regions: review the rendered pixels and fix actual
