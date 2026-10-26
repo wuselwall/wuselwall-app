@@ -48,8 +48,10 @@ class CalendarMonthView extends ConsumerWidget {
         ref.watch(schoolDataProvider).value?.holidays ??
         const <HolidayRecord>[];
     final today = ref.watch(nowProvider.select(dateOnly));
+    // The last month stays, dimmed, while the next one loads.
     return AsyncValueView(
       value: occurrences,
+      keepPrevious: true,
       onRetry: () => ref.invalidate(monthOccurrencesProvider(window)),
       data: (data) => MonthGrid(
         plan: MonthPlan.of(

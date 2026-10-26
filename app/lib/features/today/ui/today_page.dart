@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
+import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/empty_view.dart';
@@ -261,28 +262,40 @@ class _EventRow extends StatelessWidget {
   }
 }
 
-class _TaskRow extends StatelessWidget {
+class _TaskRow extends ConsumerWidget {
   const _TaskRow({required this.task});
 
   final TaskInstance task;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
+    // Ticked here, the row shows it at once and goes when the agenda refetches; no
+    // sound or haptic on a grown-up's screen (specs/26 "Sound and haptics").
+    final ticked = isTickShown(ref.watch(pendingTicksProvider), task);
     return ListTile(
       leading: TaskGlyph(iconKey: task.iconKey),
-      title: Text(task.title),
+      title: TickedTitle(title: task.title, ticked: ticked),
       subtitle: task.points > 0
           ? PointsCoin(points: task.points, fontSize: 14)
           : null,
       trailing: IconButton(
-        tooltip: l10n.tasksActionTick,
+        tooltip: ticked ? l10n.tasksDone : l10n.tasksActionTick,
         iconSize: 30,
         constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
-        icon: const Icon(Icons.radio_button_unchecked),
-        onPressed: () => unawaited(
-          tickTask(context, ProviderScope.containerOf(context), task),
+        icon: TickPop(
+          ticked: ticked,
+          from: 0.8,
+          child: Icon(
+            ticked ? Icons.check_circle : Icons.radio_button_unchecked,
+            color: ticked ? context.ww.success : null,
+          ),
         ),
+        onPressed: ticked
+            ? null
+            : () => unawaited(
+                tickTask(context, ProviderScope.containerOf(context), task),
+              ),
       ),
     );
   }

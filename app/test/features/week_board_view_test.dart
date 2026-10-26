@@ -13,6 +13,7 @@ import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_geometry.dart';
 import 'package:wuselwall/features/board/ui/board_grid.dart';
+import 'package:wuselwall/features/board/ui/board_next_up.dart';
 import 'package:wuselwall/features/board/ui/board_presence.dart';
 import 'package:wuselwall/features/board/ui/board_zones.dart';
 import 'package:wuselwall/features/board/ui/week_board_page.dart';
@@ -422,6 +423,20 @@ void main() {
         );
       }
       expect(find.text('Heute'), findsOneWidget);
+    });
+
+    testWidgets('pulses the next-up dot twice, then holds still', (t) async {
+      // specs/26 "Protecting the wall": nothing moves all day but the clock.
+      await _pumpBoard(t);
+      final dot = find.descendant(
+        of: find.byType(BoardNextUp),
+        matching: find.byType(FadeTransition),
+      );
+      await t.pump(const Duration(milliseconds: 600));
+      expect(t.widget<FadeTransition>(dot).opacity.value, lessThan(1));
+      await t.pump(const Duration(seconds: 3));
+      expect(t.widget<FadeTransition>(dot).opacity.value, 1);
+      expect(t.binding.hasScheduledFrame, isFalse);
     });
 
     testWidgets('draws a two-day trip once across its days', (t) async {

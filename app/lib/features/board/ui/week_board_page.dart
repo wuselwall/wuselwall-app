@@ -56,9 +56,7 @@ class WeekBoardPage extends ConsumerWidget {
                   textAlign: TextAlign.center,
                 ),
               ),
-              _ => const _NextWeekPlaceholder(
-                child: CircularProgressIndicator(),
-              ),
+              _ => const _NextWeekPlaceholder(child: DelayedSpinner()),
             },
           ),
         ),

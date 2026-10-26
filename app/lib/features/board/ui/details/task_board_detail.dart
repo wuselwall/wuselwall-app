@@ -223,7 +223,13 @@ class _Column extends StatelessWidget {
                   ),
                 ),
               for (final t in tasks)
-                _TaskCard(task: t, ink: mc?.ink, tint: mc?.tint),
+                // Keyed, so a tick's state stays with its chore when the list changes.
+                _TaskCard(
+                  key: ValueKey(t.id),
+                  task: t,
+                  ink: mc?.ink,
+                  tint: mc?.tint,
+                ),
             ],
           );
 
@@ -362,44 +368,35 @@ class _MemberDoneState extends State<_MemberDone> {
   }
 }
 
-/// The member's points, which count up or down as they change (reduced motion: no
-/// animation).
+/// The member's points, which count up or down to a new balance (specs/17 "Motion";
+/// reduced motion: no animation).
 class _Counter extends StatelessWidget {
   const _Counter({required this.points});
 
   final int points;
 
   @override
-  Widget build(BuildContext context) {
-    final still = !motionAllowed(context);
-    return AnimatedSwitcher(
-      duration: still ? Duration.zero : Tokens.motionStandard,
-      switchInCurve: Curves.easeOutCubic,
-      child: KeyedSubtree(
-        key: ValueKey(points),
-        child: PointsCoin(points: points, fontSize: 26),
-      ),
-    );
-  }
+  Widget build(BuildContext context) =>
+      PointsCoin(points: points, fontSize: 26, counts: true);
 }
 
 /// A chore as a large card: glyph, title, what it is worth, and a tick target of
 /// kiosk size. A ticked card is struck through and shows "wartet auf Freigabe" when a
 /// guardian still has to check it.
-class _TaskCard extends StatelessWidget {
-  const _TaskCard({required this.task, this.ink, this.tint});
+class _TaskCard extends ConsumerWidget {
+  const _TaskCard({required this.task, this.ink, this.tint, super.key});
 
   final TaskInstance task;
   final Color? ink;
   final Color? tint;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final ww = context.ww;
     final scheme = Theme.of(context).colorScheme;
-    final ticked = task.isTicked;
-    final still = !motionAllowed(context);
+    // A tick shows the moment it is made, before the server confirms it.
+    final ticked = isTickShown(ref.watch(pendingTicksProvider), task);
     final caption = task.awaitsApproval
         ? l10n.tasksWaitingApproval
         : (ticked ? l10n.tasksDone : null);
@@ -408,6 +405,7 @@ class _TaskCard extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: Tokens.space2),
       child: BoardTap(
         label: task.title,
+        radius: 14,
         onTap: () {
           if (!ticked) {
             unawaited(
@@ -474,12 +472,7 @@ class _TaskCard extends StatelessWidget {
               ),
               SizedBox.square(
                 dimension: 56,
-                child: _TickMark(
-                  key: ValueKey('${task.id}-$ticked'),
-                  ticked: ticked,
-                  ink: ink ?? scheme.onSurface,
-                  still: still,
-                ),
+                child: _TickMark(ticked: ticked, ink: ink ?? scheme.onSurface),
               ),
             ],
           ),
@@ -489,40 +482,26 @@ class _TaskCard extends StatelessWidget {
   }
 }
 
-/// The tick. When it turns on it grows from 40 % to full size, which is the whole of
-/// the feedback the wall gives; reduced motion shows the finished tick at once.
+/// The tick. When it turns on while the board is shown it pops from half size
+/// ([TickPop]), which is the whole of the feedback the wall gives (specs/26
+/// "Celebrations"); a chore ticked before the board opened shows its tick at rest.
 class _TickMark extends StatelessWidget {
-  const _TickMark({
-    required this.ticked,
-    required this.ink,
-    required this.still,
-    super.key,
-  });
+  const _TickMark({required this.ticked, required this.ink});
 
   final bool ticked;
   final Color ink;
-  final bool still;
 
   @override
-  Widget build(BuildContext context) {
-    final ww = context.ww;
-    final icon = Icon(
-      ticked ? Icons.check_circle : Icons.radio_button_unchecked,
-      size: 44,
-      color: ticked ? ww.success : ink,
-    );
-    if (!ticked || still) return Center(child: icon);
-    return Center(
-      child: TweenAnimationBuilder<double>(
-        tween: Tween(begin: 0.4, end: 1),
-        duration: Tokens.motionEmphasised,
-        curve: Curves.easeOutCubic,
-        builder: (context, value, child) =>
-            Transform.scale(scale: value, child: child),
-        child: icon,
+  Widget build(BuildContext context) => Center(
+    child: TickPop(
+      ticked: ticked,
+      child: Icon(
+        ticked ? Icons.check_circle : Icons.radio_button_unchecked,
+        size: 44,
+        color: ticked ? context.ww.success : ink,
       ),
-    );
-  }
+    ),
+  );
 }
 
 /// The same number for a member on one day, on every device and every run.

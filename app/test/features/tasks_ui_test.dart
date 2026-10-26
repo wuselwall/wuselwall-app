@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/app/theme/app_theme.dart';
 import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
+import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/wusel/wusel_stage.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/details/task_board_detail.dart';
@@ -174,6 +175,59 @@ void main() {
         'p_actor': guardianId,
         'p_instance_id': 'i-1',
       });
+    });
+
+    testWidgets('a tick shows before the server answers', (t) async {
+      final api = FakeTasksApi(
+        tables: {
+          'task_instances': [
+            instanceRow(id: 'i-1', title: 'Tisch decken', assignee: kidId),
+          ],
+        },
+      );
+      final hold = api.holds['task_complete'] = Completer<void>();
+      await pumpTasks(t, api);
+
+      await t.tap(find.byTooltip('Abhaken'));
+      await t.pump();
+      expect(find.byIcon(Icons.check_circle), findsOneWidget);
+      expect(find.byTooltip('Erledigt'), findsOneWidget);
+      // A second tap while the first is on its way sends nothing more.
+      await t.tap(find.byIcon(Icons.check_circle), warnIfMissed: false);
+      await t.pump();
+      expect(api.named('task_complete'), hasLength(1));
+
+      hold.complete();
+      await t.pumpAndSettle();
+      expect(find.text('Tisch decken erledigt'), findsOneWidget);
+      // The snackbar has an action, and still closes by itself.
+      await t.pump(const Duration(seconds: 6));
+      await t.pumpAndSettle();
+      expect(find.text('Tisch decken erledigt'), findsNothing);
+    });
+
+    testWidgets('a tick the server refuses rolls back', (t) async {
+      final api = FakeTasksApi(
+        tables: {
+          'task_instances': [
+            instanceRow(id: 'i-1', title: 'Tisch decken', assignee: kidId),
+          ],
+        },
+      );
+      api.failures['task_complete'] = const NotFoundFailure(
+        code: 'task_complete',
+      );
+      final hold = api.holds['task_complete'] = Completer<void>();
+      await pumpTasks(t, api);
+
+      await t.tap(find.byTooltip('Abhaken'));
+      await t.pump();
+      expect(find.byIcon(Icons.check_circle), findsOneWidget);
+
+      hold.complete();
+      await t.pumpAndSettle();
+      expect(find.byIcon(Icons.check_circle), findsNothing);
+      expect(find.byTooltip('Abhaken'), findsOneWidget);
     });
 
     testWidgets('a chore nobody has claimed is grouped under open for anyone', (
@@ -650,6 +704,88 @@ void main() {
       expect(done, isTrue);
       expect(stage.trip, isNull);
       await t.pump(const Duration(seconds: 1));
+      await unmountApp(t, container);
+    },
+  );
+
+  testWidgets(
+    'a chore ticked before the board opens shows its tick at rest; a new tick pops',
+    (t) async {
+      final api = FakeTasksApi(
+        tables: {
+          'task_instances': [
+            instanceRow(
+              id: 'i-1',
+              title: 'Tisch decken',
+              assignee: kidId,
+              status: 'done',
+              completedBy: kidId,
+            ),
+            instanceRow(id: 'i-2', title: 'Brot holen', assignee: kidId),
+            instanceRow(id: 'i-3', title: 'Blumen giessen', assignee: kidId),
+          ],
+        },
+      );
+      final container = await pumpApp(
+        t,
+        overrides: baseOverrides(
+          identity: FakeIdentityRepository(
+            current: device(
+              deviceClass: DeviceClass.kiosk,
+              register: UiRegister.kiosk,
+            ),
+          ),
+        ),
+        board: FakeBoardRepository(_kioskBoard()),
+        tasks: api,
+      );
+      // Motion on: pumpApp holds everything still otherwise.
+      t.platformDispatcher.clearAccessibilityFeaturesTestValue();
+      await t.pump();
+      // The tick's own ScaleTransition, not the page route's around it.
+      List<double> ticks() => t
+          .widgetList<ScaleTransition>(
+            find.byWidgetPredicate(
+              (w) =>
+                  w is ScaleTransition &&
+                  w.child is Icon &&
+                  (w.child! as Icon).icon == Icons.check_circle,
+            ),
+          )
+          .map((s) => s.scale.value)
+          .toList();
+
+      await t.tap(find.text('Heute offen'));
+      await t.pump();
+      for (var i = 0; i < 60; i++) {
+        await t.pump(const Duration(milliseconds: 16));
+        expect(ticks(), everyElement(1.0));
+      }
+      expect(ticks(), hasLength(1));
+
+      api.tables['task_instances'] = [
+        ...api.tables['task_instances']!.take(1),
+        instanceRow(
+          id: 'i-2',
+          title: 'Brot holen',
+          assignee: kidId,
+          status: 'done',
+          completedBy: kidId,
+        ),
+        instanceRow(id: 'i-3', title: 'Blumen giessen', assignee: kidId),
+      ];
+      container.read(actingProfileProvider.notifier).select(kidId);
+      await t.pump();
+      await t.tap(find.text('Brot holen'));
+      var popped = false;
+      for (var i = 0; i < 30 && !popped; i++) {
+        await t.pump(const Duration(milliseconds: 16));
+        final now = ticks();
+        popped = now.length == 2 && now.any((s) => s < 1);
+      }
+      expect(popped, isTrue);
+      await t.pump(const Duration(seconds: 1));
+      expect(ticks(), everyElement(closeTo(1.0, 0.01)));
       await unmountApp(t, container);
     },
   );
