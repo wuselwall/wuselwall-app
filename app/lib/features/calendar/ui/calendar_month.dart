@@ -25,6 +25,9 @@ import 'package:wuselwall/features/school/domain/school_models.dart';
 /// The smallest edge of a day's tap target (specs/17).
 const _minTap = 48.0;
 
+/// Below this width a day draws its lines as marks instead of words.
+const _narrowDay = 60.0;
+
 /// The Ferien band under the day number: soft, so the day's lines stay the content.
 final _ferienPaper = PaperTints.tints.firstWhere((t) => t.key == 'lemon');
 
@@ -35,9 +38,16 @@ final _ferienPaper = PaperTints.tints.firstWhere((t) => t.key == 'lemon');
 /// appointments are edited. Birthdays show whatever `ambience.birthdays` says: the month
 /// is information, the ambience only decoration.
 class CalendarMonthView extends ConsumerWidget {
-  const CalendarMonthView({required this.view, super.key});
+  const CalendarMonthView({
+    required this.view,
+    this.bottomClearance = 0,
+    super.key,
+  });
 
   final CalendarView view;
+
+  /// Room kept free under the six weeks for the floating buttons.
+  final double bottomClearance;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -65,6 +75,7 @@ class CalendarMonthView extends ConsumerWidget {
         members: members,
         today: today,
         onOpenDay: ref.read(calendarViewProvider.notifier).openDay,
+        bottomClearance: bottomClearance,
       ),
     );
   }
@@ -91,6 +102,7 @@ class MonthGrid extends StatelessWidget {
     required this.members,
     required this.today,
     required this.onOpenDay,
+    this.bottomClearance = 0,
     super.key,
   });
 
@@ -98,6 +110,10 @@ class MonthGrid extends StatelessWidget {
   final List<Member> members;
   final DateTime today;
   final ValueChanged<DateTime> onOpenDay;
+
+  /// Room kept free under the last week, so the floating buttons never cover a day
+  /// (round-3 review L-7); the rows share what is left.
+  final double bottomClearance;
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +157,10 @@ class MonthGrid extends StatelessWidget {
         final headerHeight =
             scaler.scale(text.labelMedium?.fontSize ?? 12) * 1.4 + 12;
         final available = math.max(0.0, box.maxHeight - headerHeight);
-        final rowHeight = math.max(available / 6, metrics.minRow);
+        final rowHeight = math.max(
+          (available - bottomClearance) / 6,
+          metrics.minRow,
+        );
         final rows = Column(
           children: [
             for (var w = 0; w < plan.weeks.length; w++)
@@ -172,9 +191,12 @@ class MonthGrid extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: rowHeight * 6 > available + 0.5
-                  ? SingleChildScrollView(child: rows)
-                  : rows,
+              child: rowHeight * 6 + bottomClearance > available + 0.5
+                  ? SingleChildScrollView(
+                      padding: EdgeInsets.only(bottom: bottomClearance),
+                      child: rows,
+                    )
+                  : Align(alignment: Alignment.topCenter, child: rows),
             ),
           ],
         );
@@ -446,7 +468,18 @@ class _DayCell extends StatelessWidget {
                       metrics.number -
                       (bandSlot ? metrics.band + 2 : 0);
                   final fit = math.max(0, (room / metrics.line).floor());
-                  final shown = math.min(fit, lines.length);
+                  // A phone's narrow column shows each line as its picture or a
+                  // colour dot, side by side, never a cut word (round-3 review L-8);
+                  // the screen reader and the day view keep the words.
+                  final narrow = box.maxWidth < _narrowDay;
+                  final mark = metrics.line - 3;
+                  final perRow = narrow
+                      ? math.max(
+                          1,
+                          ((box.maxWidth - 6 + 2) / (mark + 2)).floor(),
+                        )
+                      : 1;
+                  final shown = math.min(fit * perRow, lines.length);
                   final more = lines.length - shown + day.others;
                   return Padding(
                     padding: const EdgeInsets.fromLTRB(3, 2, 3, 2),
@@ -463,19 +496,38 @@ class _DayCell extends StatelessWidget {
                           ),
                         ),
                         if (bandSlot) SizedBox(height: metrics.band + 2),
-                        for (final line in lines.take(shown))
-                          SizedBox(
-                            height: metrics.line,
-                            child: _LineView(
-                              line: line,
-                              members: members,
-                              size: metrics.line - 3,
-                              roomy: box.maxWidth >= 80,
-                              style: text.labelSmall?.copyWith(
-                                color: day.inMonth ? cs.onSurface : ww.ink2,
+                        if (narrow)
+                          Wrap(
+                            spacing: 2,
+                            children: [
+                              for (final line in lines.take(shown))
+                                SizedBox(
+                                  width: mark,
+                                  height: metrics.line,
+                                  child: Center(
+                                    child: _LineMark(
+                                      line: line,
+                                      members: members,
+                                      size: mark,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          )
+                        else
+                          for (final line in lines.take(shown))
+                            SizedBox(
+                              height: metrics.line,
+                              child: _LineView(
+                                line: line,
+                                members: members,
+                                size: metrics.line - 3,
+                                roomy: box.maxWidth >= 80,
+                                style: text.labelSmall?.copyWith(
+                                  color: day.inMonth ? cs.onSurface : ww.ink2,
+                                ),
                               ),
                             ),
-                          ),
                       ],
                     ),
                   );
@@ -570,6 +622,43 @@ class _NumberRow extends StatelessWidget {
   }
 }
 
+/// A day's line as one mark for a narrow column: the holiday's flag, the birthday's
+/// cake, the appointment's picture or a dot in its colour.
+class _LineMark extends StatelessWidget {
+  const _LineMark({
+    required this.line,
+    required this.members,
+    required this.size,
+  });
+
+  final _Line line;
+  final List<Member> members;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) => switch (line) {
+    _HolidayLine() => Icon(
+      Icons.flag,
+      size: size,
+      color: Theme.of(context).colorScheme.primary,
+    ),
+    _BirthdayLine() => EmojiPicture(eventIconAsset('cake')!, size: size),
+    _EventLine(:final occurrence) => switch (eventIconAsset(
+      occurrence.iconKey,
+    )) {
+      final asset? => EmojiPicture(asset, size: size),
+      null => Container(
+        width: size * 0.6,
+        height: size * 0.6,
+        decoration: BoxDecoration(
+          color: _leadColour(context, occurrence, members),
+          shape: BoxShape.circle,
+        ),
+      ),
+    },
+  };
+}
+
 class _LineView extends StatelessWidget {
   const _LineView({
     required this.line,
@@ -633,7 +722,9 @@ class _LineView extends StatelessWidget {
             SizedBox(
               width: 3,
               height: size,
-              child: ColoredBox(color: _leadColour(context, occurrence)),
+              child: ColoredBox(
+                color: _leadColour(context, occurrence, members),
+              ),
             ),
           const SizedBox(width: 3),
           label(
@@ -645,23 +736,23 @@ class _LineView extends StatelessWidget {
     ];
     return Row(children: children);
   }
+}
 
-  /// The colour of an appointment without a picture: its first attendee's ink, an
-  /// imported calendar's colour, or the brand colour for the whole family.
-  Color _leadColour(BuildContext context, Occurrence o) {
-    final ww = context.ww;
-    if (o.isImported) {
-      return ww
-          .member(
-            colourFromHex(o.colourHex) ?? Theme.of(context).colorScheme.primary,
-          )
-          .ink;
-    }
-    for (final id in o.attendeeIds) {
-      for (final m in members) {
-        if (m.id == id) return ww.member(m.color).ink;
-      }
-    }
-    return Theme.of(context).colorScheme.primary;
+/// The colour of an appointment without a picture: its first attendee's ink, an
+/// imported calendar's colour, or the brand colour for the whole family.
+Color _leadColour(BuildContext context, Occurrence o, List<Member> members) {
+  final ww = context.ww;
+  if (o.isImported) {
+    return ww
+        .member(
+          colourFromHex(o.colourHex) ?? Theme.of(context).colorScheme.primary,
+        )
+        .ink;
   }
+  for (final id in o.attendeeIds) {
+    for (final m in members) {
+      if (m.id == id) return ww.member(m.color).ink;
+    }
+  }
+  return Theme.of(context).colorScheme.primary;
 }
