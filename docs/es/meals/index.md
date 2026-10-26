@@ -6,7 +6,7 @@ El plan responde a «¿Qué hay de comer?» y alimenta la lista de la compra.
 
 ## Planificar la semana {#planning-the-week}
 
-Cada día ofrece desayuno, almuerzo, cena y tentempié. Toca una comida o **Añadir comida**. Las flechas y el regreso a esta semana cambian la fecha. Tras eliminar se ofrece deshacer brevemente.
+Cada día ofrece desayuno, almuerzo, cena y tentempié. Toca una comida o **Añadir comida**. Las flechas y el regreso a esta semana cambian la fecha; en el móvil o la tableta, deslizar a la izquierda o a la derecha hace lo mismo. Tras eliminar se ofrece deshacer brevemente.
 
 Una comida puede ser plato, nota como «sobras» o receta. Define raciones, quién cocina, hora e invitados. Mantén pulsado para moverla a otro día.
 

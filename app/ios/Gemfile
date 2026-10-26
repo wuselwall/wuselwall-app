@@ -1,5 +1,7 @@
 source "https://rubygems.org"
 
-# fastlane for the iOS release lanes (specs/16, step 7). CI installs it with
-# the Mac's Homebrew Ruby (release-ios.yml); locally, Homebrew's fastlane works without it.
-gem "fastlane", "~> 2.228"
+# fastlane for the iOS release lanes (specs/16, step 7). CI installs it with the Mac's
+# Homebrew Ruby for builds (release-ios.yml) and with ruby/setup-ruby on Linux for the store
+# listing (store-listing.yml); Gemfile.lock is kept identical to the Android one. Locally,
+# Homebrew's fastlane works without it.
+gem "fastlane", "~> 2.241"

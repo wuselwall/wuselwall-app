@@ -78,6 +78,13 @@ it to run each screen test across:
 Kiosk timing (the 60-second revert) is tested here with `tester.pump(Duration(seconds: 61))`,
 never on a device.
 
+**The clock.** A test never depends on when the suite runs. `baseOverrides` pins `nowProvider`
+to `testNow()` (today at 10:30, outside the table question's meals, the look-back's Sunday
+evening and the wall's night) unless the test names its own `now`. A test that builds "today"
+into its data (a birthday, tonight's meal) takes it from `testNow()`, not `DateTime.now()`.
+`flutter test --dart-define=WW_PROBE_SHIFT=<days>` moves `testNow()` by whole days, to check
+that the suite passes on every weekday.
+
 ### Layer 5 — goldens
 
 *Status 2026-10-17: not built.* No golden images or `update-goldens.sh` exist.

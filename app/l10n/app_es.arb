@@ -204,6 +204,9 @@
   "shoppingSpecHint": "Nota, p. ej., ecológico o 500 g",
   "shoppingCategory": "Categoría",
   "shoppingRemoveOne": "Uno menos",
+  "shoppingRemoveItem": "Quitar",
+  "shoppingItemRemoved": "«{name}» quitado de la lista",
+  "shoppingUndo": "Deshacer",
   "errListExists": "Ya existe una lista con ese nombre.",
   "errSpecTooLong": "La nota es demasiado larga (máximo 40 caracteres).",
   "errKioskForbidden": "Esto no se puede hacer en la pantalla de pared.",
@@ -1833,6 +1836,9 @@
   "feedSubHelp": "Los eventos de calendarios importados, como los de un club o la recogida de basura, también aparecerán en esta suscripción.",
   "feedSubSummary": "Calendarios externos",
   "boardAllEvents": "Todos los eventos",
+  "boardNextWeek": "La semana que viene",
+  "boardThisWeek": "Esta semana",
+  "boardNextWeekUnavailable": "Ahora no se puede cargar la semana que viene",
   "boardMemberDay": "{name}, {date}",
   "@boardMemberDay": {
     "placeholders": {

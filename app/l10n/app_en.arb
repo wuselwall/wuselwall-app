@@ -204,6 +204,16 @@
   "shoppingSpecHint": "Note, e.g. organic or 500 g",
   "shoppingCategory": "Category",
   "shoppingRemoveOne": "One less",
+  "shoppingRemoveItem": "Remove",
+  "shoppingItemRemoved": "{name} removed",
+  "@shoppingItemRemoved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shoppingUndo": "Undo",
   "errListExists": "A list with that name already exists.",
   "errSpecTooLong": "That note is too long (40 characters at most).",
   "errKioskForbidden": "This can't be done on the wall display.",
@@ -1847,6 +1857,9 @@
   "feedSubHelp": "Events from imported calendars (for example a club or the bin collection) also appear in this subscription.",
   "feedSubSummary": "Outside calendars",
   "boardAllEvents": "All events",
+  "boardNextWeek": "Next week",
+  "boardThisWeek": "This week",
+  "boardNextWeekUnavailable": "Next week can’t be loaded right now",
   "boardMemberDay": "{name}, {date}",
   "@boardMemberDay": {
     "placeholders": {

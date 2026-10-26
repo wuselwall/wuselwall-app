@@ -150,7 +150,7 @@ Die Auswahl des Kindes, **Diese Woche**, **Schule bearbeiten** und **Stundenplan
 
 Wähle oben ein Kind aus, um seinen Stundenplan zu sehen. Das ausgewählte Kind erkennst du am farbig hinterlegten Namen, dem kräftigen Rahmen und dem Häkchen.
 
-Die Wochenansicht zeigt Stunde für Stunde. Mit **Vorige Woche**, **Nächste Woche** und **Diese Woche** blätterst du. Ferien stehen als Band über der Woche, Feiertage im Kopf des Tages.
+Die Wochenansicht zeigt Stunde für Stunde. Mit **Vorige Woche**, **Nächste Woche** und **Diese Woche** blätterst du; auf Handy und Tablet geht es auch mit einem Wisch nach links oder rechts. Auf dem Kinder-Tablet wischt das Kind so durch die Tage seiner Woche, von Montag bis Freitag. Ferien stehen als Band über der Woche, Feiertage im Kopf des Tages.
 
 Tippe auf eine Stunde, wenn sich etwas ändert:
 

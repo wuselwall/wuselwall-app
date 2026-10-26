@@ -534,6 +534,17 @@ bundle from the build job and runs `bundle exec fastlane android internal`
 account key in the secret `PLAY_SERVICE_ACCOUNT_JSON`. A tag uploads; "Run workflow" uploads
 only with *upload* ticked. The lane uploads the build alone, never the store listing in
 `fastlane/metadata`.
+*Built 2026-10-25:* the store listings, uploaded on their own by `store-listing.yml`
+("Run workflow" only), through the `listing` lane of each platform: `supply` for Google Play
+(`app/android/fastlane/metadata/android/<locale>`), `deliver` for the App Store
+(`app/ios/fastlane/metadata` and `fastlane/screenshots`, edited on the store version named
+in the run or the latest release tag, never submitted for review). `npm run store:listing`
+renders the images of both from the docs screenshots. *Validate only*, the default, changes
+nothing. The two keys need more than an upload: the Play service account the permission
+"Manage store presence", the App Store Connect key the role App Manager. What the APIs
+cannot set stays in the consoles: on Play the content rating, target audience, Data safety
+and the other App content forms, the category and the privacy policy address; on App Store
+Connect the App Privacy labels and the age rating.
 
 Each platform's `Fastfile` holds two or three short lanes; the workflow stays thin, so a
 release can also be run from a Mac with the same lanes if one becomes available.

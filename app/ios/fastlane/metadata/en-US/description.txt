@@ -1,0 +1,45 @@
+WuselWall is the family organizer for everything that bustles around your home: a shared calendar, school timetables, chores, a meal plan and a shopping list. On the phone for the parents, as a week board on a kitchen tablet, and in a child-friendly view for the little ones.
+
+Good to know first: WuselWall is not an online service. The app connects to a WuselWall server that your family runs itself – on a NAS, a mini PC, a rented server or in your own Supabase project. We never see your data. You can try the app without a server, with a sample family: tap "Try it without a server" on the first screen.
+
+WEEK BOARD FOR THE KITCHEN
+• Seven days at a glance, made for a tablet on the wall
+• Who is where, what is coming up, what is for dinner
+• Every person has their own colour – distinguishable for colour-blind people too
+• Tap a child to see their week with the school timetable
+
+SHARED CALENDAR
+• Events for everyone or for single family members
+• Recurring events and presence such as shifts or trips
+• Subscribe to calendars: clubs, waste collection, school
+• As an ICS feed in Outlook, Apple Calendar or Google Calendar
+
+SCHOOL TIMETABLES
+• Each child's timetable, with more than one school if needed
+• Public and school holidays for Germany, Austria, Switzerland and Liechtenstein, down to the municipality
+• Substitutions and cancelled lessons
+
+CHORES WITH POINTS
+• Hand out chores, collect points, redeem rewards
+• Streaks and badges instead of penalties
+• No leaderboard between siblings
+
+MEAL PLAN AND SHOPPING LIST
+• What's for dinner this week? Suggestions from what you have cooked before
+• One shared shopping list, sorted by aisle
+• Works without a connection in the shop and syncs afterwards
+
+ONE DEVICE PER PERSON OR PER ROOM
+• Own devices for the adults, one shared tablet for the kitchen
+• Children need no account and no email address
+• Connect new devices with a QR code, lock each device on its own
+• Sign in with a code by email, or with a password
+
+YOUR DATA STAYS WITH YOU
+• Everything lives on your own server
+• No ads, no tracking, no account with us
+• Data export for the whole family
+• German, English, French and Spanish
+
+OPEN SOURCE
+The app and the server software are open source under the Apache License 2.0. The guide for the family and for your own server is at https://wuselwall.app/docs/en/

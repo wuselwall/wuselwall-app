@@ -50,6 +50,10 @@ scp dist/wuselwall-server-0.1.0.tar.gz server:     # dann auf dem Server: tar xz
 ```
 :::
 
+## Gemieteter Server {#vps}
+
+Mietest du den Server bei einem Anbieter wie Hetzner, richtet ihn eine **cloud-init**-Datei beim ersten Start selbst ein; für die Installation brauchst du dann kein SSH. Das beschreibt die Seite [Gemieteter Server](/server/rented-server). Alles Weitere auf dieser Seite gilt dort genauso.
+
 ## 2. Die App verbinden
 
 Die Web-App unter `https://web.example.org` liest die Serveradresse aus eurer

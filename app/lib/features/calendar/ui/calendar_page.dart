@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/swipe_stepper.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/calendar/application/calendar_providers.dart';
@@ -36,7 +37,18 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
     }
 
     final view = ref.watch(calendarViewProvider);
-    if (view.mode == CalendarMode.month) return CalendarMonthView(view: view);
+    final nav = ref.read(calendarViewProvider.notifier);
+    // A swipe is the toolbar's previous and next (specs/09 "Gestures").
+    return SwipeStepper(
+      onPrevious: nav.previous,
+      onNext: nav.next,
+      child: view.mode == CalendarMode.month
+          ? CalendarMonthView(view: view)
+          : _grid(view),
+    );
+  }
+
+  Widget _grid(CalendarView view) {
     final window = (from: view.from, to: view.to);
     final occurrences = ref.watch(occurrencesProvider(window));
     final members = ref.watch(membersProvider).value ?? const <Member>[];

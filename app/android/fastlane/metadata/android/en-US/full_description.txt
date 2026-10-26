@@ -39,7 +39,7 @@ YOUR DATA STAYS WITH YOU
 • Everything lives on your own server
 • No ads, no tracking, no account with us
 • Data export for the whole family
-• English and German
+• German, English, French and Spanish
 
 OPEN SOURCE
 The app and the server software are open source under the Apache License 2.0. The guide for the family and for your own server is at https://wuselwall.app/docs/en/

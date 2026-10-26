@@ -85,8 +85,10 @@ class SelectedWeekNotifier extends Notifier<DateTime> {
   @override
   DateTime build() => mondayOf(DateTime.now());
 
-  void previous() => state = state.subtract(const Duration(days: 7));
-  void next() => state = state.add(const Duration(days: 7));
+  // Calendar days, not 7 × 24 h: a week that crosses the change to or from summer
+  // time would otherwise start an hour off, on the Sunday before.
+  void previous() => state = DateTime(state.year, state.month, state.day - 7);
+  void next() => state = DateTime(state.year, state.month, state.day + 7);
   void thisWeek() => state = mondayOf(DateTime.now());
 }
 

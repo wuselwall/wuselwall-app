@@ -43,8 +43,12 @@ class RegisterHomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     if (register == UiRegister.kiosk) {
       return IdleReverter(
-        // The board goes back to key appointments when nobody touches it (FR-8.11).
-        onIdle: () => ref.read(boardAllEventsProvider.notifier).set(false),
+        // The board goes back to key appointments (FR-8.11) and to this week when
+        // nobody touches it.
+        onIdle: () {
+          ref.read(boardAllEventsProvider.notifier).set(false);
+          ref.read(boardNextWeekProvider.notifier).set(false);
+        },
         child: const Scaffold(
           body: SafeArea(child: PixelShift(child: WeekBoardPage())),
         ),

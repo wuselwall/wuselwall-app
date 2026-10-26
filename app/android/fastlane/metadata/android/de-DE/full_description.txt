@@ -39,7 +39,7 @@ EURE DATEN BLEIBEN BEI EUCH
 • Alles liegt auf eurem eigenen Server
 • Keine Werbung, kein Tracking, kein Konto bei uns
 • Datenexport für die ganze Familie
-• Deutsch und Englisch
+• Deutsch, Englisch, Französisch und Spanisch
 
 OPEN SOURCE
 App und Server-Software sind Open Source unter der Apache-Lizenz 2.0. Die Anleitung für die Familie und für den eigenen Server findet ihr unter https://wuselwall.app/docs/

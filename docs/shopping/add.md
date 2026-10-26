@@ -29,6 +29,10 @@ Drücke einen Artikel in der Liste **lange**, um eine Notiz einzutragen oder die
 
 <Shot name="shopping-edit-item" alt="Dialog zum Bearbeiten eines Artikels" />
 
+## Artikel entfernen
+
+Wische einen Artikel nach links, um ihn von der Liste zu nehmen. Unten steht kurz **Rückgängig**; erst danach ist er wirklich weg. Ohne Wischen geht es so: Artikel lange drücken, dann **Entfernen**. Auf dem Kinder-Tablet und an der Küchenwand lässt sich nichts entfernen.
+
 ## Wer hat's draufgesetzt?
 
 Neben jedem Artikel zeigt ein kleiner **Punkt in der Farbe** der Person, wer ihn hinzugefügt hat. Die Frage „Wer hat die Gummibärchen daraufgesetzt?“ klärt sich damit von selbst.

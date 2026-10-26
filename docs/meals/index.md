@@ -6,7 +6,7 @@ Der Essensplan beantwortet die Frage „Was gibt’s heute?“. Aus den Rezepten
 
 ## Die Woche planen
 
-Die Woche zeigt jeden Tag mit **Frühstück**, **Mittagessen**, **Abendessen** und **Snack**. Tippe auf eine Mahlzeit oder auf **Mahlzeit hinzufügen**, um sie zu planen. Mit **Vorige Woche**, **Nächste Woche** und **Diese Woche** blätterst du. Entfernst du eine geplante Mahlzeit, bietet WuselWall kurz **Rückgängig** an.
+Die Woche zeigt jeden Tag mit **Frühstück**, **Mittagessen**, **Abendessen** und **Snack**. Tippe auf eine Mahlzeit oder auf **Mahlzeit hinzufügen**, um sie zu planen. Mit **Vorige Woche**, **Nächste Woche** und **Diese Woche** blätterst du; auf Handy und Tablet geht es auch mit einem Wisch nach links oder rechts. Entfernst du eine geplante Mahlzeit, bietet WuselWall kurz **Rückgängig** an.
 
 - Eine Mahlzeit ist ein **Gericht oder eine Notiz**, etwa „Pizza“ oder „Reste“, oder ein **Rezept**.
 - Dazu legst du die **Portionen**, wer **kocht**, eine **Uhrzeit** und **Gäste** fest.

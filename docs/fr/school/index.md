@@ -137,7 +137,7 @@ Le menu d’un jour permet de **vider la journée**, de la **copier** sur d’au
 
 Le choix de l’enfant, le retour à cette semaine et les actions de modification partagent une barre. Sur petit écran, le retour à cette semaine est centré sur sa propre ligne et les actions passent dessous. L’action de l’école utilise une icône d’école ; l’engrenage ouvre les paramètres généraux.
 
-Les flèches de semaine se trouvent près du lundi et du vendredi. L’enfant choisi a un fond teinté, une bordure et une coche. Les vacances sont affichées au-dessus de la semaine ; les jours fériés, dans l’en-tête du jour.
+Les flèches de semaine se trouvent près du lundi et du vendredi ; sur téléphone ou tablette, un balayage vers la gauche ou la droite change aussi de semaine. Sur la tablette des enfants, l’enfant passe ainsi d’un jour à l’autre de sa semaine, du lundi au vendredi. L’enfant choisi a un fond teinté, une bordure et une coche. Les vacances sont affichées au-dessus de la semaine ; les jours fériés, dans l’en-tête du jour.
 
 Touchez un cours pour le signaler **annulé**, **remplacé** (enseignant et note) ou dans une **autre salle**. Réinitialiser remet le cours prévu.
 

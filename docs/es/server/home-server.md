@@ -39,6 +39,10 @@ scp dist/wuselwall-server-0.1.0.tar.gz server:
 
 Descomprime después en el servidor. `--skip-web` construye sin Flutter y sin incluir app web.
 
+## Servidor alquilado {#vps}
+
+Si alquilas el servidor a un proveedor como Hetzner, un archivo **cloud-init** lo instala en el primer arranque, sin SSH para la instalación. Lo explica la página [Servidor alquilado](/es/server/rented-server). Todo lo demás de esta página vale también allí.
+
 ## 2. Conectar la app {#_2-connecting-the-app}
 
 La app web lee la configuración de la instalación al cargar, aunque el navegador recuerde otra dirección. Sin conexión usa la última. Si cambia la dirección, inicia sesión otra vez.

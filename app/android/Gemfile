@@ -2,4 +2,4 @@ source "https://rubygems.org"
 
 # fastlane for the Android release lane (specs/16, step 7), the same as app/ios/Gemfile;
 # Gemfile.lock is kept identical to the iOS one. CI installs it with ruby/setup-ruby.
-gem "fastlane", "~> 2.228"
+gem "fastlane", "~> 2.241"

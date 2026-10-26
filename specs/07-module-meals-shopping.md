@@ -78,6 +78,10 @@ anything. The picker inverts that, in the shape people already know from choosin
 - **Quantity without a field.** Tap again for 2 ×, the small − takes one off. Anything more
   precise ("500 g Hackfleisch") is a long-press, or dictation via Shortcuts, which parses
   quantities anyway ([12](12-mcp-and-assistants.md)).
+- **A swipe takes an item off** (adults only, [09](09-clients-and-ux.md#gestures)). It
+  leaves the list at once; the `count −n` op is queued only once the 5 s **Rückgängig**
+  has passed, so an undo never has to rebuild the item, who added it or its meals. The
+  long press's dialog has **Entfernen** for the same, without a swipe.
 - **The list itself is a drawer**, not a separate screen: what is already on it stays
   visible without leaving capture.
 - **Offline is the normal case, not the error case.** Newly captured items show a

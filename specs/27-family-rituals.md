@@ -204,8 +204,7 @@ A question for the table during the meal, answered aloud, with nothing recorded.
   `household.region` picks a default from `app.setting_country_default` (migration
   `20261024150000_setting_country_defaults.sql`, pgTAP 240): Spain 13:30–15:30 and
   20:00–22:00, France dinner 19:00–21:00. `api.settings` reports it as the default, and a
-  reset returns to it; a household without a region keeps the catalogue's. Research:
-  [research/family-apps](research/family-apps/README.md#table-questions-fr-and-es).
+  reset returns to it; a household without a region keeps the catalogue's.
 - **Where:**
   - On the **wall**, a card in the board header for the window. Wusel holds it, the question
     is set at kiosk size 34 or larger, and an *Andere Frage ↻* button has a 56 px target.
@@ -235,7 +234,7 @@ A question for the table during the meal, answered aloud, with nothing recorded.
   questions each, without a native reviewer. The app ships 50 of each: a third of every
   (category, deck) group of the German deck, leaving out every question the drafts' notes
   flag as unsure and every riddle whose tradition could not be traced. The drafts and notes
-  are in [research/family-apps](research/family-apps/README.md#table-questions-fr-and-es). A
+  are kept in the maintainers' private notes. A
   household walks through 50 questions in about seven weeks of warm meals before one comes
   back; a later change can add from the drafts without changing the existing ids.
 - **The family's own questions:** `table_question(id, household_id, text, created_by_profile_id,

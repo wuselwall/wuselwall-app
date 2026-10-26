@@ -24,6 +24,10 @@ Mantén pulsado el producto de la lista para cambiar la nota o la categoría. Wu
 
 <Shot name="shopping-edit-item" alt="El formulario de edición de un producto" />
 
+## Quitar un producto {#removing-an-item}
+
+Desliza un producto hacia la izquierda para quitarlo de la lista. Abajo aparece un momento **Deshacer**; solo después desaparece de verdad. Sin deslizar: mantén pulsado el producto y elige **Quitar**. En la tableta infantil y en la pared de la cocina no se puede quitar nada.
+
 ## ¿Quién lo añadió? {#who-put-it-there}
 
 El punto con el color de una persona identifica quién añadió cada producto. Ya no hace falta preguntar quién pidió las gominolas.

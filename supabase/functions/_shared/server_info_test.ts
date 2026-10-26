@@ -69,6 +69,24 @@ Deno.test("publishableKey reads the default publishable key", () => {
   );
 });
 
+Deno.test("publishableKey prefers the key a hosted deploy sets", () => {
+  assertEquals(
+    publishableKey(env({
+      WW_PUBLISHABLE_KEY: "sb_publishable_hosted",
+      SUPABASE_ANON_KEY: "eyJ.legacy",
+    })),
+    "sb_publishable_hosted",
+  );
+  // Not a publishable key: ignored, never passed on.
+  assertEquals(
+    publishableKey(env({
+      WW_PUBLISHABLE_KEY: "sb_secret_x",
+      SUPABASE_ANON_KEY: "eyJ.legacy",
+    })),
+    "eyJ.legacy",
+  );
+});
+
 Deno.test("publishableKey never returns a secret key", () => {
   assertEquals(
     publishableKey(

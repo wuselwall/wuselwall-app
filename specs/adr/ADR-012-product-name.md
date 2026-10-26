@@ -10,10 +10,6 @@ seven-year-old, and fits under an app icon. The identifiers derived from the nam
 (bundle ID, deep-link scheme, Dart package, Supabase project) could still change cheaply:
 no App Store Connect or Play Console record existed and nothing had been released.
 
-A market check on 2026-10-11 (App Store, Google Play, web search) showed the category
-crowded with *Fam-*, *Family-*, *Nest-* and *-Wall* names (FamilyWall, Famanice,
-Famiverse, Familio, Fami, NestWard, NestBoard, Cozi, TimeTree, Skylight, Hearth).
-
 ## Decision
 
 The application is called **WuselWall**. *Wuseln* is German for bustling about; the wall
@@ -57,20 +53,11 @@ size the colours alone still identify the app.
 
 ## Alternatives considered
 
-| Name | Why not |
-|---|---|
-| Kuckuck | Google Meet's German UI uses it for a calling feature; Oetinger publishes a *Kuckuck* app |
-| Tafelrunde | An education product (eduroundtable.de), restaurants and an agency use it; *Die Tafel* is the food-bank charity |
-| Wimmel | Dozens of children's *Wimmel* apps |
-| Nestwerk | Too close to NestWard and NestBoard |
-| Siebenpunkt, Siebensachen, Wuselwoche | No conflicts found; WuselWall was preferred for being shorter and keeping continuity with the working title |
+Other names were screened on 2026-10-11; the screening is kept in the maintainers'
+private notes.
 
 ## Consequences
 
-- A web search is not a trademark search. Check the DPMA and EUIPO registers and the
-  `.de` domain at DENIC before the domain is bought ([Q1](../14-open-questions.md)).
-- The *-Wall* suffix is shared with FamilyWall. Acceptable for an app with no public
-  store listing.
 - The dev Supabase stack runs under a new project ID, so its containers and volumes are
   new: the stack under the old ID (`supabase_*_goombawall`) has to be stopped and the
   new one started, which applies all migrations to an empty database.

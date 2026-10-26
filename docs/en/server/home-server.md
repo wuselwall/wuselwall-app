@@ -50,6 +50,10 @@ scp dist/wuselwall-server-0.1.0.tar.gz server:     # then on the server: tar xzf
 ```
 :::
 
+## A rented server {#vps}
+
+If you rent the server from a provider such as Hetzner, a **cloud-init** file sets it up at the first boot; you need no SSH for the installation then. The page [A rented server](/en/server/rented-server) describes it. Everything else on this page applies there as well.
+
 ## 2. Connecting the app
 
 The web app at `https://web.example.org` reads the server address from your

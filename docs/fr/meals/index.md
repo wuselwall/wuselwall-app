@@ -6,7 +6,7 @@ Les menus répondent à « Qu’est-ce qu’on mange ? » et alimentent la liste
 
 ## Prévoir la semaine {#planning-the-week}
 
-Chaque jour propose petit-déjeuner, déjeuner, dîner et collation. Touchez un repas ou **Ajouter un repas**. Les flèches et le retour à cette semaine changent la période. Une suppression propose brièvement d’annuler.
+Chaque jour propose petit-déjeuner, déjeuner, dîner et collation. Touchez un repas ou **Ajouter un repas**. Les flèches et le retour à cette semaine changent la période ; sur téléphone ou tablette, un balayage vers la gauche ou la droite fait de même. Une suppression propose brièvement d’annuler.
 
 Un repas est un plat, une note comme « restes », ou une recette. Indiquez les portions, la personne qui cuisine, l’heure et les invités. Un appui long permet de le déplacer vers un autre jour.
 

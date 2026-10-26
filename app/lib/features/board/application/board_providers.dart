@@ -134,3 +134,30 @@ class BoardAllEventsNotifier extends Notifier<bool> {
 final boardAllEventsProvider = NotifierProvider<BoardAllEventsNotifier, bool>(
   BoardAllEventsNotifier.new,
 );
+
+/// Whether the wall looks ahead to next week, by a swipe or its switch (specs/09
+/// "Gestures"). The idle reverter brings it back to this week (register_home_page.dart).
+class BoardNextWeekNotifier extends Notifier<bool> {
+  @override
+  bool build() => false;
+
+  void set(bool on) => state = on;
+}
+
+final boardNextWeekProvider = NotifierProvider<BoardNextWeekNotifier, bool>(
+  BoardNextWeekNotifier.new,
+);
+
+/// The board of the week starting on a Monday, for the look ahead. Fetched while it is
+/// shown, without the last-good-snapshot keeping of [boardProvider]: the wall's own
+/// week is that one.
+final boardWeekProvider = FutureProvider.autoDispose
+    .family<WeekBoard, DateTime>((ref, monday) async {
+      final result = await ref
+          .read(boardRepositoryProvider)
+          .week(weekStart: monday);
+      return switch (result) {
+        Ok(:final value) => value,
+        Err(:final failure) => throw failure,
+      };
+    });

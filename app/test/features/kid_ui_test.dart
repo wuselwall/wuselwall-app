@@ -64,7 +64,7 @@ class _KidIdentity extends FakeIdentityRepository {
 class _BirthdayIdentity extends _KidIdentity {
   @override
   Future<Result<List<Member>>> members({bool includeInactive = false}) async {
-    final now = DateTime.now();
+    final now = testNow();
     final emma = _kidMembers.first;
     return Ok([
       Member(
@@ -146,7 +146,7 @@ class _TickingApi extends FakeTasksApi {
 
 /// A board of this week with the kid household as members and one open chore each.
 WeekBoard _familyBoard() {
-  final today = DateTime.now();
+  final today = testNow();
   final monday = DateTime(
     today.year,
     today.month,

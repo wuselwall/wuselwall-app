@@ -329,26 +329,9 @@ With Supabase, row-level security is not defence in depth; it is the perimeter.
 
 ## Privacy and legal
 
-- **GDPR does not apply** to processing carried out by a natural person in the course of
-  a purely personal or household activity (Art. 2(2)(c)). A family organiser used only by
-  your own household is squarely inside that exemption. This stops being true the moment
-  you let another family use it — at which point you become a controller with all the
-  obligations that follow. It is worth knowing exactly where that line is before you
-  generously offer an account to a friend.
-- **With self-service ([ADR-014](adr/ADR-014-self-service-onboarding.md)) that line is
-  the opening gate** ([13](13-roadmap.md#opening-to-other-households)). Before it,
-  households other than this one exist only by founder code, given to people the operator
-  knows. From it, the operator is a controller and needs:
-  - a privacy policy (linked from the front door, the landing pages and the stores);
-  - a record of processing (Art. 30);
-  - processor agreements with the SMTP provider and Cloudflare (the links site);
-  - deletion and export in the app (FR-5.16);
-  - a 72-hour breach procedure (Art. 33);
-  - a contact address that is read.
+The legal assessment (where the household exemption ends and what an operator then owes)
+is kept in the maintainers' private notes. The design rules below hold either way.
 
-  Children never sign up and never have accounts: their data is entered by their parents,
-  which keeps Art. 8 (a child's own consent) out of the picture but not the duty of care
-  below.
 - **Children's data** deserves care independent of any legal duty. Collect the minimum:
   a name, a colour, an avatar. No location tracking, no photographs of children reachable
   from the internet, no behavioural data leaving the server. Their chore history is a

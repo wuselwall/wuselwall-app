@@ -72,10 +72,17 @@ export function publicUrl(
 /**
  * The key the apps use: the publishable key (opaque, `sb_publishable_…`), or the legacy
  * anon JWT where a stack has no publishable key. Never a secret or service-role key.
+ *
+ * WW_PUBLISHABLE_KEY comes first: a hosted project's Edge runtime has no
+ * SUPABASE_PUBLISHABLE_KEYS, so deploy-supabase.yml reads the project's publishable key
+ * from the Management API and sets it as a function secret. The compose stack passes
+ * SUPABASE_PUBLISHABLE_KEYS (upstream's docker-compose.yml).
  */
 export function publishableKey(
   env: (name: string) => string | undefined,
 ): string | undefined {
+  const own = env("WW_PUBLISHABLE_KEY")?.trim();
+  if (own?.startsWith("sb_publishable_")) return own;
   const keys = env("SUPABASE_PUBLISHABLE_KEYS");
   if (keys) {
     try {

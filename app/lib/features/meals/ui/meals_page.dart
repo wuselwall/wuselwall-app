@@ -11,6 +11,7 @@ import 'package:wuselwall/core/time/clock.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/emoji_picture.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
+import 'package:wuselwall/core/ui/swipe_stepper.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
@@ -113,12 +114,18 @@ class MealsWeekBody extends ConsumerWidget {
         // The children's wishes, waiting for a day (specs/27).
         MealWishTray(weekStart: weekStart),
         Expanded(
-          child: _WeekGrid(
-            weekStart: weekStart,
-            // Shows the last week while a refetch runs, so a save never blanks the grid.
-            entries: entries.value,
-            retry: () => ref.invalidate(mealEntriesProvider(weekStart)),
-            error: entries,
+          // A swipe is the toolbar's week before and after (specs/09 "Gestures"). A
+          // meal is dragged after a long press, so the two never meet.
+          child: SwipeStepper(
+            onPrevious: () => ref.read(mealsWeekProvider.notifier).shift(-1),
+            onNext: () => ref.read(mealsWeekProvider.notifier).shift(1),
+            child: _WeekGrid(
+              weekStart: weekStart,
+              // Shows the last week while a refetch runs, so a save never blanks the grid.
+              entries: entries.value,
+              retry: () => ref.invalidate(mealEntriesProvider(weekStart)),
+              error: entries,
+            ),
           ),
         ),
       ],

@@ -1,0 +1,1 @@
+family,calendar,planner,chores,meal plan,shopping list,timetable,school,kids,tablet,self-hosted

@@ -1,0 +1,5 @@
+WuselWall is self-hosted: it has no server of ours and no account with us. Each family runs its own WuselWall server and enters its address at the first start.
+
+To review the app without a server, tap "Try it without a server" on the first screen ("Ohne Server ausprobieren" in German). It opens a sample family with calendar, timetables, chores, meals and shopping list. Nothing leaves the device in this mode.
+
+The server software is open source (Apache 2.0); the guide for setting one up is at https://wuselwall.app/docs/en/
