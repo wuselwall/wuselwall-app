@@ -168,9 +168,8 @@ class EventTemplatePage extends ConsumerWidget {
                     _TemplateTile(
                       key: const ValueKey('event-template-tradition'),
                       title: l10n.calendarNewTradition,
-                      line:
-                          '${l10n.traditionStarterGameNight}, '
-                          '${l10n.traditionStarterPizzaFriday} …',
+                      // One example: a second one no longer fits a phone's tile.
+                      line: '${l10n.traditionStarterGameNight}, …',
                       icon: Icons.celebration_outlined,
                       onTap: () => unawaited(
                         openNewTradition(context, inView: day, now: now),
