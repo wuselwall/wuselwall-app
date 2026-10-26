@@ -1,13 +1,13 @@
 # A rented server (Hetzner and others)
 
-The middle way between Supabase and a machine at home: you rent a small Linux server from a European provider, and WuselWall sets itself up at the first boot. You need no machine running at home, no open ports in your router, and no accounts at GitHub or Supabase. The data lives with a provider of your choice in Europe, on a server that is yours alone.
+You rent a small Linux server from a European provider, and WuselWall sets itself up at the first boot. You need no machine running at home and no open ports in your router. The data lives with a provider of your choice in Europe, on a server that is yours alone.
 
 Technically this is the same Docker stack as [at home](/en/server/home-server). Everything on that page (connecting the app, backups, updates, the email language, the commands) applies here too. This page only describes how the server comes to you.
 
 ## What you need
 
 - An account with a provider that offers **cloud-init** (a selection below); such a server costs roughly **€6–25 a month** (as of October 2026).
-- A **domain** with two names, `api.` and `web.`, about €1–2 a month.
+- A **domain**, about €1–2 a month.
 - An **SSH key** on your laptop (`ssh-keygen` if you have none yet).
 - Optional: a **mail account** for sign-in codes by email, a Gmail account is enough ([Email](/en/server/email)). Without it, everyone signs in with a password.
 
@@ -29,7 +29,7 @@ WuselWall is not affiliated with, sponsored or endorsed by any of the companies 
 
 **Without a cloud-init field:** [netcup](https://www.netcup.com/), [OVHcloud](https://www.ovhcloud.com/) and [Infomaniak](https://www.infomaniak.com/) (Switzerland, Geneva; Swiss data-protection law) also rent fitting servers in Europe but document no such field. There you create a server with Ubuntu and install over SSH exactly as [at home](/en/server/home-server).
 
-**Where does the data live?** On your own server at the provider. The provider supplies hardware, power and network; like any host it could technically reach the machine, and its data-processing agreement forbids it to use your data. The connections to your devices are encrypted, and only WuselWall reads your database. Unlike Supabase Inc. (USA), the provider is a European company subject to European law, Swiss law for Infomaniak.
+**Where does the data live?** On your own server at the provider. The provider supplies hardware, power and network; like any host it could technically reach the machine, and its data-processing agreement forbids it to use your data. The connections to your devices are encrypted, and only WuselWall reads your database. The provider is a European company subject to European law, Swiss law for Infomaniak.
 
 ## At Hetzner, step by step
 

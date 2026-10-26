@@ -14,10 +14,7 @@ Until October 2026 you could also sign in to WuselWall with Apple or Google. Any
 
 **Check first, then update.** If someone signed in with Apple and **"Hide My Email"**, their account's address is `…@privaterelay.appleid.com`. A code sent there only arrives if your sender address is registered with Apple for forwarding. Sort that out before the update. If no code arrives, hold the update: otherwise that person cannot sign in again after their next sign-out.
 
-**What the update does by itself:**
-
-- **At home** (`wuselwall update`): every Apple and Google value (`APPLE_…`, `GOOGLE_CLIENT_…`) and the app's old return address leave `stack/.env`, and the old `apple-token` function is gone. The tool names what it removes, never the values.
-- **At Supabase** (the **deploy-supabase** workflow): the step **Retire social sign-in** switches off Apple, Google and account linking, removes the app's old return address (other entries, such as those for invitations, stay), deletes the `apple-token` function and the `APPLE_…` secrets, and then checks all of it. If anything fails, the workflow stops.
+**What the update does by itself:** with `wuselwall update`, every Apple and Google value (`APPLE_…`, `GOOGLE_CLIENT_…`) and the app's old return address leave `stack/.env`, and the old `apple-token` function is gone. The tool names what it removes, never the values.
 
 **Check afterwards:** someone who used to sign in with Apple or Google asks for a code by email on a **second** device and signs in with it. The first device stays signed in. Nobody should sign out just to try it.
 

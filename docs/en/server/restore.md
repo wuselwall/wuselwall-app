@@ -2,7 +2,7 @@
 
 A backup is only worth something once it can be restored. The way below has been run through: server installed, family created, backed up, server deleted with all its data, installed again and restored — everything came back, and the devices stayed signed in. Try it once while nothing is broken: on a second machine or in a virtual machine.
 
-## At home {#at-home}
+## At home or rented {#at-home}
 
 The `wuselwall` tool restores a backup made by `wuselwall backup` onto a **freshly installed** server. Typical cases: the old server is broken, or WuselWall moves to a new machine.
 
@@ -13,7 +13,7 @@ You need:
 
 On the new server:
 
-1. Point the names `api.` and `web.` at the new server (DNS, or port forwarding in the router).
+1. Point your domain at the new server (DNS, or port forwarding in the router).
 2. Unpack the same or a newer WuselWall version as when [installing](/en/server/home-server#_1-installing), and install with the old `.env`:
 
    ```bash
@@ -35,10 +35,3 @@ On a server that already has a family, `restore` refuses. If you really want an 
 :::
 
 **Without the old `.env`** it works too: install normally with `--api` and `--web` and restore the backup. Your data is back, but every device has to sign in or be connected again.
-
-## At Supabase {#at-supabase}
-
-- **On Pro:** in the dashboard under **Database → Backups**, pick one of the last 7 days and restore it. The project is unreachable for a few minutes.
-- **A copy of your own:** with the Supabase CLI, pull a copy to your computer about once a month. Supabase explains how, and how to restore it, in [Backup and Restore using the CLI](https://supabase.com/docs/guides/platform/migrating-within-supabase/backup-restore). Store the files encrypted: they contain everything.
-
-Moving between Supabase and a server at home is possible with these copies, but not yet written up step by step.

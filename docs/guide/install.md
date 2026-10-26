@@ -8,7 +8,7 @@ Die App weiß nicht von selbst, wo eure Daten liegen. Beim ersten Start fragt si
 
 <Shot name="setup-server" alt="Die Frage nach dem Server" />
 
-- **Adresse eingeben**, die du von der Person bekommen hast, die euren Server eingerichtet hat, z. B. `api.example.org`. Bei einem Server bei Supabase reicht die Projekt-ID.
+- **Adresse eingeben**, die du von der Person bekommen hast, die euren Server eingerichtet hat, z. B. `api.example.org`.
 - **QR-Code scannen**: Auf einem Gerät, das schon verbunden ist, steht er unter **Einstellungen → Erweitert → Server**. Der Code von **Gerät hinzufügen** geht auch und verbindet das Gerät gleich mit ([Gerät mit Code verbinden](/guide/setup#_2-gerat-mit-code-verbinden)).
 - **Ohne Server ausprobieren**: Die App zeigt eine Beispielfamilie. Nichts davon wird gespeichert, und nichts verlässt das Gerät. Mit **Beenden** kommst du zurück zur Frage.
 

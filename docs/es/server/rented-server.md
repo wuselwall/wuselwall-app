@@ -1,13 +1,13 @@
 # Servidor alquilado (Hetzner y otros)
 
-El camino intermedio entre Supabase y la máquina en casa: alquilas un pequeño servidor Linux a un proveedor europeo y WuselWall se instala solo en el primer arranque. No necesitas una máquina encendida en casa, ni abrir puertos en el router, ni cuentas en GitHub o Supabase. Los datos están en el proveedor europeo que elijas, en un servidor que es solo tuyo.
+Alquilas un pequeño servidor Linux a un proveedor europeo y WuselWall se instala solo en el primer arranque. No necesitas una máquina encendida en casa ni abrir puertos en el router. Los datos están en el proveedor europeo que elijas, en un servidor que es solo tuyo.
 
 Técnicamente es la misma pila Docker que [en casa](/es/server/home-server). Todo lo de esa página (conectar la app, copias, actualizaciones, idioma de los correos, comandos) vale también aquí. Esta página solo describe la puesta en marcha.
 
 ## Preparativos {#what-you-need}
 
 - Una cuenta en un proveedor con **cloud-init** (selección abajo); unos **6–25 € al mes** (a octubre de 2026).
-- Un **dominio** con dos nombres, `api.` y `web.`, unos 1–2 € al mes.
+- Un **dominio**, unos 1–2 € al mes.
 - Una **clave SSH** en tu ordenador (`ssh-keygen` si aún no tienes).
 - Opcional: una **cuenta de correo** para los códigos de acceso; basta una de Gmail ([Correo](/es/server/email)). Sin ella, todos inician sesión con contraseña.
 
@@ -29,7 +29,7 @@ WuselWall no está vinculado a ninguna de las empresas citadas en esta página, 
 
 **Sin campo cloud-init:** [netcup](https://www.netcup.com/), [OVHcloud](https://www.ovhcloud.com/) e [Infomaniak](https://www.infomaniak.com/) (Suiza, Ginebra; ley suiza de protección de datos) también alquilan servidores adecuados en Europa, pero no documentan ese campo. Allí creas un servidor con Ubuntu e instalas por SSH igual que [en casa](/es/server/home-server).
 
-**¿Dónde están los datos?** En tu propio servidor en el proveedor. Él aporta hardware, electricidad y red; como cualquier proveedor, técnicamente podría acceder a la máquina, y su acuerdo de tratamiento le prohíbe usar tus datos. Las conexiones con tus dispositivos van cifradas, y solo WuselWall lee tu base de datos. A diferencia de Supabase Inc. (EE. UU.), el proveedor es una empresa europea sujeta al derecho europeo; Infomaniak, al suizo.
+**¿Dónde están los datos?** En tu propio servidor en el proveedor. Él aporta hardware, electricidad y red; como cualquier proveedor, técnicamente podría acceder a la máquina, y su acuerdo de tratamiento le prohíbe usar tus datos. Las conexiones con tus dispositivos van cifradas, y solo WuselWall lee tu base de datos. El proveedor es una empresa europea sujeta al derecho europeo; Infomaniak, al suizo.
 
 ## En Hetzner, paso a paso {#hetzner-step-by-step}
 

@@ -8,7 +8,7 @@ Los ejemplos usan `api.example.org` para la API y `web.example.org` para la app.
 
 - Una máquina Linux siempre encendida con **Docker y Docker Compose v2**, acceso SSH y permiso para ejecutar Docker.
 - **4 GB de memoria** para WuselWall y **10 GB libres**. x86-64 está probado; ARM, incluido Raspberry Pi 5, aún no.
-- Un dominio con nombres `api.` y `web.` hacia tu IP pública. Si cambia, usa DNS dinámico.
+- Un **dominio** que apunte a tu IP pública. Si cambia, usa DNS dinámico.
 - Redirección de **TCP 80 y 443** hacia el servidor.
 
 Sin puertos abiertos puedes usar un túnel Cloudflare, pero Cloudflare descifra el tráfico y puede verlo. Instala sin `--caddy` y usa los destinos del proxy descritos abajo. Un VPN como WireGuard o Tailscale mantiene privado el servidor, pero cada dispositivo debe usarlo y las suscripciones de calendario externas pueden no funcionar.

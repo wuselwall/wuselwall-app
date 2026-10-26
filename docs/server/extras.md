@@ -14,10 +14,7 @@ Bis Oktober 2026 konnte man sich bei WuselWall auch mit Apple oder Google anmeld
 
 **Erst prüfen, dann updaten.** Hat sich jemand bei euch mit Apple und **„E-Mail-Adresse verbergen“** angemeldet, lautet die Adresse seines Kontos `…@privaterelay.appleid.com`. Ein Code an diese Adresse kommt nur an, wenn eure Absenderadresse bei Apple für die Weiterleitung eingetragen ist. Klärt das vor dem Update. Kommt kein Code an, wartet mit dem Update: Sonst kann sich diese Person nach dem nächsten Abmelden nicht mehr anmelden.
 
-**Was das Update von selbst erledigt:**
-
-- **Zu Hause** (`wuselwall update`): Alle Werte für Apple und Google (`APPLE_…`, `GOOGLE_CLIENT_…`) und die alte Rücksprungadresse der App verschwinden aus `stack/.env`, die alte Funktion `apple-token` ist weg. Das Werkzeug nennt dabei nur die Namen, nie die Werte.
-- **Bei Supabase** (Workflow **deploy-supabase**): Der Schritt **Retire social sign-in** schaltet Apple, Google und das Verknüpfen von Konten ab, entfernt die alte Rücksprungadresse der App (andere Einträge, etwa für Einladungen, bleiben), löscht die Funktion `apple-token` und die `APPLE_…`-Secrets und prüft danach alles. Schlägt etwas fehl, bricht der Workflow ab.
+**Was das Update von selbst erledigt:** Mit `wuselwall update` verschwinden alle Werte für Apple und Google (`APPLE_…`, `GOOGLE_CLIENT_…`) und die alte Rücksprungadresse der App aus `stack/.env`, die alte Funktion `apple-token` ist weg. Das Werkzeug nennt dabei nur die Namen, nie die Werte.
 
 **Danach prüfen:** Wer sich früher mit Apple oder Google angemeldet hat, fordert auf einem **zweiten** Gerät einen Code per E-Mail an und meldet sich damit an. Das erste Gerät bleibt dabei angemeldet. Niemand soll sich zum Ausprobieren abmelden.
 

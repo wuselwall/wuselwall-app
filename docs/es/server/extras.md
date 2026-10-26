@@ -12,7 +12,7 @@ Esas cuentas pasan a código por correo en su dirección, sin cambiar cuenta ni 
 
 **Comprueba antes de actualizar**: con «Ocultar mi correo» de Apple, la dirección termina en `privaterelay.appleid.com`. El remitente debe estar registrado para el reenvío. Si no llega el código, aplaza la actualización para no bloquear el próximo acceso.
 
-En casa, `wuselwall update` retira valores Apple/Google, la antigua dirección de retorno y `apple-token`, mostrando solo los nombres. En Supabase, el workflow desactiva proveedores y vinculación, conserva las otras direcciones, retira función y secretos `APPLE_…` y comprueba el resultado. Se detiene si falla.
+En casa, `wuselwall update` retira valores Apple/Google, la antigua dirección de retorno y `apple-token`, mostrando solo los nombres.
 
 **Después**, prueba una cuenta antigua en un **segundo dispositivo** mediante correo, sin cerrar la primera sesión. Solo entonces:
 

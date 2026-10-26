@@ -1,13 +1,13 @@
 # Serveur loué (Hetzner et autres)
 
-Entre Supabase et la machine à la maison : vous louez un petit serveur Linux chez un hébergeur européen, et WuselWall s’installe tout seul au premier démarrage. Pas de machine allumée chez vous, pas de port à ouvrir sur la box, pas de compte GitHub ni Supabase. Les données restent chez l’hébergeur de votre choix en Europe, sur un serveur qui n’appartient qu’à vous.
+Vous louez un petit serveur Linux chez un hébergeur européen, et WuselWall s’installe tout seul au premier démarrage. Pas de machine allumée chez vous, pas de port à ouvrir sur la box. Les données restent chez l’hébergeur de votre choix en Europe, sur un serveur qui n’appartient qu’à vous.
 
 Techniquement, c’est la même pile Docker qu’[à la maison](/fr/server/home-server). Tout ce qui y figure (connexion de l’app, sauvegardes, mises à jour, langue des e-mails, commandes) s’applique ici. Cette page ne décrit que la mise en route.
 
 ## Préparer {#what-you-need}
 
 - Un compte chez un hébergeur proposant **cloud-init** (sélection ci-dessous) ; environ **6 à 25 € par mois** (état octobre 2026).
-- Un **domaine** avec deux noms, `api.` et `web.`, environ 1 à 2 € par mois.
+- Un **domaine**, environ 1 à 2 € par mois.
 - Une **clé SSH** sur votre ordinateur (`ssh-keygen` si vous n’en avez pas).
 - Facultatif : un **compte e-mail** pour les codes de connexion, un compte Gmail suffit ([E-mails](/fr/server/email)). Sans lui, chacun se connecte avec un mot de passe.
 
@@ -29,7 +29,7 @@ WuselWall n’est lié à aucune des sociétés citées sur cette page, n’est 
 
 **Sans champ cloud-init :** [netcup](https://www.netcup.com/), [OVHcloud](https://www.ovhcloud.com/) et [Infomaniak](https://www.infomaniak.com/) (Suisse, Genève ; droit suisse de la protection des données) louent aussi des serveurs adaptés en Europe, mais ne documentent pas un tel champ. Créez-y un serveur Ubuntu et installez par SSH comme [à la maison](/fr/server/home-server).
 
-**Où sont les données ?** Sur votre propre serveur chez l’hébergeur. Il fournit matériel, électricité et réseau ; comme tout hébergeur, il pourrait techniquement accéder à la machine, et son accord de traitement lui interdit d’utiliser vos données. Les connexions avec vos appareils sont chiffrées, et seul WuselWall lit votre base. Contrairement à Supabase Inc. (États-Unis), l’hébergeur est une société européenne soumise au droit européen, au droit suisse pour Infomaniak.
+**Où sont les données ?** Sur votre propre serveur chez l’hébergeur. Il fournit matériel, électricité et réseau ; comme tout hébergeur, il pourrait techniquement accéder à la machine, et son accord de traitement lui interdit d’utiliser vos données. Les connexions avec vos appareils sont chiffrées, et seul WuselWall lit votre base. L’hébergeur est une société européenne soumise au droit européen, au droit suisse pour Infomaniak.
 
 ## Chez Hetzner, pas à pas {#hetzner-step-by-step}
 
