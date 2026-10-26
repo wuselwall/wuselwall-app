@@ -88,11 +88,14 @@ class _SchoolSetupPageState extends ConsumerState<SchoolSetupPage> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final data = ref.watch(schoolDataProvider);
+    // While a school is being created, "Schule anlegen" in the form is its one save:
+    // the bar's "Speichern" is for changes to a school that exists.
+    final creating = _adding || (data.value?.schools.isEmpty ?? true);
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.schoolSetupTitle),
         actions: [
-          if (_dirty || _saving)
+          if (!creating && (_dirty || _saving))
             TextButton(
               onPressed: _saving || !(_formKey.currentState?.isValid ?? false)
                   ? null
@@ -127,7 +130,9 @@ class _SchoolSetupPageState extends ConsumerState<SchoolSetupPage> {
                       _selectedId = id;
                     }),
                   ),
-                if (!_adding)
+                // "Weitere Schule" once there is one: above the very first form it
+                // would offer what is already on screen.
+                if (!_adding && !first)
                   Align(
                     alignment: Alignment.centerLeft,
                     child: TextButton.icon(
@@ -444,9 +449,16 @@ class _SchoolFormState extends ConsumerState<_SchoolForm>
           : l10n.schoolSectionSchool,
       children: [
         TextField(
+          key: const ValueKey('school-name'),
           controller: _name,
           onChanged: (_) => widget.onChanged(),
-          decoration: InputDecoration(labelText: l10n.schoolName),
+          decoration: InputDecoration(
+            labelText: l10n.schoolName,
+            // Why "Schule anlegen" is still off: the name is the one thing missing.
+            helperText: widget.school == null && !isValid
+                ? l10n.fieldRequired
+                : null,
+          ),
         ),
         const SizedBox(height: 12),
         RegionField(

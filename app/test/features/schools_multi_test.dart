@@ -55,7 +55,9 @@ void main() {
       await t.pumpAndSettle();
       await t.enterText(find.byType(TextField).first, 'Gymnasium Lindenhof');
       await t.pumpAndSettle();
-      await t.tap(find.text(de.save).first);
+      // Creating has one save, in the form; the bar's "Speichern" is for changes.
+      expect(find.text(de.save), findsNothing);
+      await t.tap(find.byKey(const ValueKey('school-create')));
       await t.pumpAndSettle();
 
       final saved = school.schoolSaves.single;
