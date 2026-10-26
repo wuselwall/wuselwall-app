@@ -13,6 +13,7 @@ import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/school/application/school_providers.dart';
 import 'package:wuselwall/features/school/data/school_repository.dart';
 import 'package:wuselwall/features/school/domain/school_models.dart';
+import 'package:wuselwall/features/school/ui/school_week_grid.dart';
 
 import '../support/fake_school.dart';
 import '../support/fakes.dart';
@@ -196,6 +197,26 @@ void main() {
     expect(find.text('Turnhalle'), findsNothing);
     expect(find.byTooltip('Mathematik · R1 · Entfall'), findsOneWidget);
     expect(find.byTooltip(RegExp('^Sport · Turnhalle')), findsWidgets);
+  });
+
+  testWidgets('a short phone starts the timetable high: one toolbar row', (
+    t,
+  ) async {
+    await pumpApp(
+      t,
+      size: const Size(360, 640),
+      overrides: baseOverrides(
+        identity: FakeIdentityRepository(current: device()),
+      ),
+      school: FakeSchoolRepository(),
+    );
+    await t.tap(find.byTooltip('Stundenplan'));
+    await t.pumpAndSettle();
+    expect(t.takeException(), isNull);
+    // The editing waits in one menu; the week's header follows the children.
+    expect(find.byKey(const ValueKey('school-actions')), findsOneWidget);
+    expect(find.text(de.schoolEditTimetable), findsNothing);
+    expect(t.getRect(find.byType(SchoolWeekHeader)).top, lessThan(200));
   });
 
   testWidgets('a break row shows its whole label, also at large text', (
@@ -464,7 +485,10 @@ void main() {
     t.view.physicalSize = const Size(390, 844);
     t.view.devicePixelRatio = 1;
     await t.pumpAndSettle();
-    await t.tap(find.byTooltip(de.schoolEditSchool));
+    // On a phone the editing sits in the toolbar's one menu.
+    await t.tap(find.byKey(const ValueKey('school-actions')));
+    await t.pumpAndSettle();
+    await t.tap(find.text(de.schoolEditSchool));
     await t.pumpAndSettle();
 
     final start = find.byTooltip(de.schoolStart).first;
