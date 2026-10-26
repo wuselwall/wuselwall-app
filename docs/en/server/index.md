@@ -21,8 +21,10 @@ A WuselWall server belongs to exactly **one household**. Once the first family e
 | **What you need** | An account at Supabase and one at GitHub, plus a mail provider | An account at a European provider such as Hetzner, a domain and a mail provider | A machine that runs all the time (NAS, mini PC) with Docker, a domain of your own and a mail provider |
 | **Setting up** | In the browser, about 20 minutes | Paste one file when creating the server and set two DNS records, about 15 minutes | One command on the server, plus the domain and the router |
 | **Where the data lives** | With Supabase Inc. (USA), in a data centre you choose, e.g. Frankfurt or Zurich | With a European provider of your choice, on your own server | On your own device |
-| **Cost** | Free to try, about USD 25 a month for everyday use | About €4–8 a month, plus the domain | Electricity and the domain, about €1–2 a month |
+| **Cost** | Free to try, about USD 25 a month for everyday use | Roughly €6–25 a month, plus the domain | Electricity and the domain, about €1–2 a month |
 | **Updates and backups** | Supabase maintains the server and, on Pro, backs up daily. New WuselWall versions take one click | You, one command each over SSH; the system keeps itself up to date | You, one command each |
+
+Prices are rough figures for reference as of October 2026, not offers; the provider's current price list counts. WuselWall is independent and not affiliated with Supabase, GitHub, Hetzner or the other providers named in these pages.
 
 Our advice: if you already run a NAS or a home server with Docker, choose the **server at home**. If you want the data in Europe and under your control without a device at home, rent a **server at Hetzner or a similar provider**. If you want the easiest start, begin with **Supabase**. Moving later is possible ([Restoring a backup](/en/server/restore)).
 

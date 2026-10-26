@@ -16,7 +16,7 @@ Auf Supabase ist WuselWall noch nicht vollständig durchgetestet. Wenn ein Schri
 | **Backups** | Keine | Täglich, 7 Tage lang |
 | **Platz** | 500 MB Datenbank, für eine Familie lange genug | Mehr als genug |
 
-**Free** reicht zum Ausprobieren. Für den Alltag nehmt **Pro**: Ein pausierter Server legt den Wandbildschirm still, und ohne Backup ist ein Fehler endgültig. Die aktuellen Preise stehen auf [supabase.com/pricing](https://supabase.com/pricing).
+**Free** reicht zum Ausprobieren. Für den Alltag nehmt **Pro**: Ein pausierter Server legt den Wandbildschirm still, und ohne Backup ist ein Fehler endgültig. Pläne und Preise oben: Stand Oktober 2026, nur zur Orientierung; es gelten die aktuellen Bedingungen auf [supabase.com/pricing](https://supabase.com/pricing). WuselWall ist unabhängig und mit Supabase und GitHub nicht verbunden.
 
 ## 1. Projekt anlegen
 

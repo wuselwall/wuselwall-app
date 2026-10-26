@@ -6,31 +6,38 @@ Technically this is the same Docker stack as [at home](/en/server/home-server). 
 
 ## What you need
 
-- An account with a provider that offers **cloud-init** (a selection below); such a server costs about **€4–8 a month**.
+- An account with a provider that offers **cloud-init** (a selection below); such a server costs roughly **€6–25 a month** (as of October 2026).
 - A **domain** with two names, `api.` and `web.`, about €1–2 a month.
 - An **SSH key** on your laptop (`ssh-keygen` if you have none yet).
 - A **mail provider** for the sign-in codes, as for every WuselWall server ([Extras](/en/server/extras#email)).
 
 ## Providers
 
-All of these are European companies with data centres in Europe and a GDPR data-processing agreement in their contract documents. Prices and availability change; check them with the provider. WuselWall needs **2 vCPU and 4 GB of memory**, 8 GB with [text recognition](/en/server/extras#text-recognition).
+The three in the table are European companies with data centres in Europe; each offers a GDPR data-processing agreement and, when you create a server, a field for the cloud-init file. WuselWall needs **2 vCPU and 4 GB of memory**, 8 GB with [text recognition](/en/server/extras#text-recognition).
 
-| Provider | Seat, data centres | Fitting size | Note |
+::: info Independent, prices for reference only
+WuselWall is not affiliated with, sponsored or endorsed by any of the companies named on this page, and gets nothing for naming them; the links are plain links, not affiliate links. The list is a selection in no particular order, not a ranking and not complete. The price range is a rough figure for reference, as of October 2026, and not an offer; prices change, and depending on the provider they are shown with or without VAT. Only the provider's own price list and terms count. Product and company names are trademarks of their owners.
+:::
+
+| Provider | Seat, data centres | Fitting size | Field for the file |
 |---|---|---|---|
-| [Hetzner Cloud](https://www.hetzner.com/cloud) | Germany; Falkenstein, Nuremberg, Helsinki | 2 vCPU, 4 GB, from about €4–6, plus €0.50 for an IPv4 address | The guide below. The cheap sizes are sold out at times |
-| [netcup](https://www.netcup.com/) | Germany; Nuremberg, Vienna | VPS with 4 GB, about €4–6 | Cheap; mind the contract term |
-| [IONOS](https://www.ionos.com/) | Germany | VPS with 4 GB, about €5–8 | |
-| [Scaleway](https://www.scaleway.com/) | France; Paris, Amsterdam, Warsaw | DEV1-M or similar, about €8 | Handy if your mail already goes through Scaleway |
-| [OVHcloud](https://www.ovhcloud.com/) | France; Gravelines, Strasbourg and others | VPS with 4 GB, about €5–7 | |
-| [Infomaniak](https://www.infomaniak.com/) | Switzerland; Geneva | VPS or Public Cloud with 4 GB, about €6–10 | Swiss data-protection law |
+| [Hetzner Cloud](https://www.hetzner.com/cloud) | Germany; Falkenstein, Nuremberg, Helsinki | CX23 (2 vCPU, 4 GB); when it is sold out, CPX22 | **Cloud config**; the guide below |
+| [Scaleway](https://www.scaleway.com/) | France; Paris, Amsterdam, Warsaw | DEV1-M (3 vCPU, 4 GB), public IPv4 extra | **Cloud-init**; handy if your mail already goes through Scaleway |
+| [IONOS](https://www.ionos.com/) | Germany; choose a data centre in the EU | Cloud Server with 4 GB | **Cloud-Init User Data** under the advanced options; documented for the Cloud Server, not for the VPS |
 
-**Where does the data live?** On your own server at the provider. The provider supplies hardware, power and network and sees the encrypted connection, not its content; only WuselWall reads your database. Unlike Supabase, the provider is a European company, and only European law applies.
+**Cost:** roughly **€6–25 a month** for a fitting server, depending on provider, size and VAT, plus the domain (as of October 2026). The cheapest sizes are sold out at times (at Hetzner, the whole cheapest line on 25 October 2026); the next size up costs about three times as much. The provider's price list counts.
+
+**Without a cloud-init field:** [netcup](https://www.netcup.com/), [OVHcloud](https://www.ovhcloud.com/) and [Infomaniak](https://www.infomaniak.com/) (Switzerland, Geneva; Swiss data-protection law) also rent fitting servers in Europe but document no such field. There you create a server with Ubuntu and install over SSH exactly as [at home](/en/server/home-server).
+
+**Where does the data live?** On your own server at the provider. The provider supplies hardware, power and network; like any host it could technically reach the machine, and its data-processing agreement forbids it to use your data. The connections to your devices are encrypted, and only WuselWall reads your database. Unlike Supabase Inc. (USA), the provider is a European company subject to European law, Swiss law for Infomaniak.
 
 ## At Hetzner, step by step
 
+This guide shows Hetzner because its console has a plain field for cloud-config; it is not a recommendation over the others. Screens and button names are as of October 2026 and may change.
+
 1. **Prepare the file.** Open [`server/cloud-init.yaml`](https://github.com/wuselwall/wuselwall-app/blob/main/server/cloud-init.yaml) on GitHub, copy its content into a text editor and change the one line marked `CHANGE`: the release version from the [releases](https://github.com/wuselwall/wuselwall-app/releases), your two addresses and the email language (`de`, `en`, `fr` or `es`).
 2. **Project and key.** In the [Hetzner Cloud Console](https://console.hetzner.cloud/), create a project, say "WuselWall", and add your public SSH key under **Security → SSH keys**.
-3. **Create the server.** **Add server**: location Falkenstein, Nuremberg or Helsinki; image **Ubuntu 24.04**; type a shared server with **4 GB**; network IPv4 and IPv6; your SSH key; a Hetzner firewall is optional, the file sets one up on the server anyway; at the bottom, paste the prepared content into **Cloud config**. Name it `wuselwall`, for example. Then **Create & Buy now**.
+3. **Create the server.** **Add server**: location Falkenstein, Nuremberg or Helsinki; image **Ubuntu 24.04**; type **CX23** (2 vCPU, 4 GB) under Cost-Optimized, or **CPX22** under Regular Performance if it is sold out; network IPv4 and IPv6; your SSH key; a Hetzner firewall is optional, the file sets one up on the server anyway; at the bottom, paste the prepared content into **Cloud config**. Name it `wuselwall`, for example. Then **Create & Buy now**.
 4. **DNS.** The console shows the new server's IPv4 address right away. At your domain provider, add two A records, `api` and `web`, pointing at it (and AAAA records with the IPv6 address if you like). Caddy keeps trying until the names resolve.
 5. **Read the result.** After 5–10 minutes:
 

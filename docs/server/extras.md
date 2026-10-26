@@ -10,7 +10,7 @@ Die Befehle für einen Server zu Hause laufen im Verzeichnis des Werkzeugs `wuse
 
 **Sprache der E-Mails:** Beim Einrichten wählst du eine einzige Sprache — Deutsch, Englisch, Französisch oder Spanisch (Standard: Deutsch). Diese Sprache gilt für Betreff und Text jeder Anmelde- und Bestätigungsmail, unabhängig von der Gerätesprache. Ändern kannst du sie später mit `./wuselwall language de|en|fr|es` ([Server zu Hause](/server/home-server#email-sprache)).
 
-Dafür braucht der Server einen SMTP-Dienst, also einen Anbieter, der Mails verschickt. Ein Postfach beim normalen Mailanbieter ist dafür ungeeignet. Nehmt einen Dienst für sogenannte *transaktionale* Mails, etwa Scaleway Transactional Email aus der EU (300 Mails im Monat gratis). Der Anbieter sieht die E-Mail-Adressen und die Codes. Damit die Mails nicht im Spam landen, trägst du bei deiner Domain die Einträge ein, die der Anbieter nennt (SPF, DKIM, DMARC).
+Dafür braucht der Server einen SMTP-Dienst, also einen Anbieter, der Mails verschickt. Ein Postfach beim normalen Mailanbieter ist dafür ungeeignet. Nehmt einen Dienst für sogenannte *transaktionale* Mails, etwa Scaleway Transactional Email aus der EU (300 Mails gratis, Stand Oktober 2026; ein Beispiel, keine Empfehlung, und WuselWall ist mit Scaleway nicht verbunden). Der Anbieter sieht die E-Mail-Adressen und die Codes. Damit die Mails nicht im Spam landen, trägst du bei deiner Domain die Einträge ein, die der Anbieter nennt (SPF, DKIM, DMARC).
 
 **Zu Hause:** Trag in `stack/.env` die Werte `SMTP_HOST`, `SMTP_PORT` (meist `587`), `SMTP_USER`, `SMTP_PASS` und als Absender `SMTP_ADMIN_EMAIL` ein, in einfachen Anführungszeichen wie die anderen Werte. Dann:
 

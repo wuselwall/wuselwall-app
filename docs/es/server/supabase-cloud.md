@@ -8,7 +8,7 @@ La instalación alojada aún no está completamente validada para WuselWall. Inf
 
 ## ¿Gratis o de pago? {#free-or-pro}
 
-La oferta gratuita sirve para probar, pero puede pausar proyectos inactivos y no ofrece las mismas copias que un plan de pago. Comprueba límites, conservación y [precios vigentes](https://supabase.com/pricing) antes del uso diario. Un servidor pausado deja de servir a la pantalla de cocina.
+La oferta gratuita sirve para probar, pero puede pausar proyectos inactivos y no ofrece las mismas copias que un plan de pago. Comprueba límites, conservación y [precios vigentes](https://supabase.com/pricing) antes del uso diario; solo cuentan las condiciones de Supabase. WuselWall es independiente y no está vinculado a Supabase ni a GitHub. Un servidor pausado deja de servir a la pantalla de cocina.
 
 ## 1. Crear el proyecto {#_1-creating-the-project}
 
