@@ -83,7 +83,7 @@ When no timetable exists yet, the view shows a message about the selected child 
 
 ## Reading in a timetable
 
-Instead of typing every lesson, you can have the sheet read in. There are two ways. All of them end on the same [preview](#preview), and only **Apply** writes anything.
+Instead of typing every lesson, you can have the sheet read in. There are two ways. All of them end on the same [preview](#preview), and only **Apply** writes anything. On a phone both ways are directly in the menu with the three dots above the timetable.
 
 **From structured text.** Tap **Read in…** and **Paste as text**. Paste timetable JSON in the WuselWall format, then tap **Read in** to open the preview. Ordinary prose is not automatically converted into a timetable.
 
@@ -144,7 +144,7 @@ These steps change only the draft. **Save timetable** writes them. **Undo** take
 
 ## The week
 
-The child selector, **This week**, **Edit school** and **Edit timetable** share one toolbar. Child selection stays on the left, **This week** is centered, and the edit buttons stay on the right. On smaller screens, **This week** stays centered on its own line and the edit buttons appear below, aligned to the right. **Edit school** has a school icon; the gear at the top opens the general settings. The previous-week arrow sits beside Monday and the next-week arrow beside Friday, in the row of weekday dates. There is no separate week-number or date-range row.
+The child selector, **This week**, **Edit school** and **Edit timetable** share one toolbar. Child selection stays on the left, **This week** is centered, and the edit buttons stay on the right. On a phone everything stays on one row, so the timetable starts high on the screen: **This week** is a calendar icon, and **Edit school**, **Edit timetable**, **Paste as text** and **Scan a photo** are in the menu with the three dots. There the bottom bar also shows the area under its short name, **School**. **Edit school** has a school icon; the gear at the top opens the general settings. The previous-week arrow sits beside Monday and the next-week arrow beside Friday, in the row of weekday dates. There is no separate week-number or date-range row.
 
 Choose a child at the top to see their timetable. The selected child has a tinted background, a strong border and a checkmark beside their name.
 

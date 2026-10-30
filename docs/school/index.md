@@ -83,7 +83,7 @@ Wenn noch kein Plan vorliegt, zeigt die Ansicht einen Hinweis zum gewählten Kin
 
 ## Stundenplan einlesen
 
-Statt jede Stunde zu tippen, kannst du den Plan vom Blatt einlesen lassen. Es gibt zwei Wege. Alle enden auf derselben [Vorschau](#die-vorschau), und erst **Übernehmen** schreibt etwas.
+Statt jede Stunde zu tippen, kannst du den Plan vom Blatt einlesen lassen. Es gibt zwei Wege. Alle enden auf derselben [Vorschau](#die-vorschau), und erst **Übernehmen** schreibt etwas. Auf dem Handy stehen beide Wege direkt im Menü mit den drei Punkten über dem Stundenplan.
 
 **Aus strukturiertem Text.** Tippe auf **Einlesen…** und **Aus Text einfügen**. Füge einen Stundenplan als JSON im WuselWall-Format ein und tippe auf **Einlesen**. Vor dem Speichern siehst du die Vorschau. Gewöhnlicher Fließtext wird nicht automatisch in einen Stundenplan umgewandelt.
 
@@ -144,7 +144,7 @@ Diese Schritte ändern nur den Entwurf. Erst **Stundenplan speichern** schreibt 
 
 ## Die Woche
 
-Die Auswahl des Kindes, **Diese Woche**, **Schule bearbeiten** und **Stundenplan bearbeiten** stehen gemeinsam in einer Leiste. Die Kinderauswahl steht links, **Diese Woche** mittig und die Bearbeiten-Schaltflächen rechts. Auf kleinen Bildschirmen steht **Diese Woche** mittig in einer eigenen Zeile; darunter folgen die Bearbeiten-Schaltflächen rechtsbündig. **Schule bearbeiten** trägt ein Schulsymbol; das Zahnrad oben öffnet die allgemeinen Einstellungen. Der Pfeil zur vorigen Woche steht neben Montag, der zur nächsten Woche neben Freitag, direkt in der Zeile mit den Wochentagen und ihren Daten. Eine eigene Zeile mit Kalenderwoche oder Datumsbereich entfällt.
+Die Auswahl des Kindes, **Diese Woche**, **Schule bearbeiten** und **Stundenplan bearbeiten** stehen gemeinsam in einer Leiste. Die Kinderauswahl steht links, **Diese Woche** mittig und die Bearbeiten-Schaltflächen rechts. Auf dem Handy bleibt alles in einer Zeile, damit der Stundenplan weit oben beginnt: **Diese Woche** ist ein Kalendersymbol, und **Schule bearbeiten**, **Stundenplan bearbeiten**, **Aus Text einfügen** und **Foto scannen** stehen im Menü mit den drei Punkten. Die untere Leiste zeigt den Bereich dort unter seinem kurzen Namen, **Schule**. **Schule bearbeiten** trägt ein Schulsymbol; das Zahnrad oben öffnet die allgemeinen Einstellungen. Der Pfeil zur vorigen Woche steht neben Montag, der zur nächsten Woche neben Freitag, direkt in der Zeile mit den Wochentagen und ihren Daten. Eine eigene Zeile mit Kalenderwoche oder Datumsbereich entfällt.
 
 Wähle oben ein Kind aus, um seinen Stundenplan zu sehen. Das ausgewählte Kind erkennst du am farbig hinterlegten Namen, dem kräftigen Rahmen und dem Häkchen.
 
