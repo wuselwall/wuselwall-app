@@ -1,5 +1,5 @@
 begin;
-select plan(48);
+select plan(50);
 
 -- Wunschessen's remaining pieces (migration 20261025130000): dish pictures from a name, the
 -- recipes' and favourites' pictures, a wish's icon, "von letzter Woche", wishes ageing out of
@@ -146,7 +146,15 @@ select is((select wished_on from api.meal_wishes where profile_id = pg_temp.id('
 
 -- ================================================================ "von letzter Woche"
 reset role;
-update app.meal_wish set created_at = now() - interval '8 days', updated_at = now() - interval '8 days'
+-- Wishes age by the household's calendar, not by elapsed hours: "29 days ago" is a time on the
+-- household day 29 days before today. now() - interval '29 days' is not that: across a daylight
+-- saving change it can land on the day 28 days back (run at 23:01 in Berlin within four weeks
+-- after the autumn change, 29 times 24 hours earlier is 00:01 a day later). So fixtures name the day.
+create function pg_temp.days_ago(p_days int, p_time time default '12:00') returns timestamptz
+language sql as $$
+  select (((now() at time zone 'Europe/Berlin')::date - p_days) + p_time) at time zone 'Europe/Berlin'
+$$;
+update app.meal_wish set created_at = pg_temp.days_ago(8), updated_at = pg_temp.days_ago(8)
  where profile_id = pg_temp.id('emma');
 select pg_temp.act_as_dev('ipad');
 select is((select earlier_week from api.meal_wishes where profile_id = pg_temp.id('emma')), true,
@@ -160,13 +168,27 @@ select is((select earlier_week::text || ' ' || title from api.meal_wishes where 
 
 -- ================================================================ ageing: four weeks
 reset role;
-update app.meal_wish set created_at = now() - interval '27 days', updated_at = now() - interval '27 days'
+update app.meal_wish set created_at = pg_temp.days_ago(27), updated_at = pg_temp.days_ago(27)
  where profile_id = pg_temp.id('emma');
 select pg_temp.act_as_dev('ipad');
 select is((select count(*)::int from api.meal_wishes where profile_id = pg_temp.id('emma')), 1,
   'a wish of 27 days ago is still in the tray');
+-- The edges are calendar days: early on the day 28 days back is still current, late on the day
+-- before is not, however many hours either is from now.
 reset role;
-update app.meal_wish set created_at = now() - interval '29 days', updated_at = now() - interval '29 days'
+update app.meal_wish set created_at = pg_temp.days_ago(28, '00:00:30'), updated_at = pg_temp.days_ago(28, '00:00:30')
+ where profile_id = pg_temp.id('emma');
+select pg_temp.act_as_dev('ipad');
+select is((select count(*)::int from api.meal_wishes where profile_id = pg_temp.id('emma')), 1,
+  'a wish from early on the day four weeks ago is still in the tray');
+reset role;
+update app.meal_wish set created_at = pg_temp.days_ago(29, '23:59:30'), updated_at = pg_temp.days_ago(29, '23:59:30')
+ where profile_id = pg_temp.id('emma');
+select pg_temp.act_as_dev('ipad');
+select is((select count(*)::int from api.meal_wishes where profile_id = pg_temp.id('emma')), 0,
+  'one from late on the day before has dropped out');
+reset role;
+update app.meal_wish set created_at = pg_temp.days_ago(29), updated_at = pg_temp.days_ago(29)
  where profile_id = pg_temp.id('emma');
 select pg_temp.act_as_dev('ipad');
 select is((select count(*)::int from api.meal_wishes where profile_id = pg_temp.id('emma')), 0,
