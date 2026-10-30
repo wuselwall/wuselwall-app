@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/features/today/domain/getting_started.dart';
 import 'package:wuselwall/features/today/domain/notice.dart';
@@ -90,6 +91,35 @@ void main() {
       });
     }
   }
+
+  testWidgets('at 390dp "Brauchen wir nicht" stays with its step', (t) async {
+    final l10n = lookupAppLocalizations(const Locale('de'));
+    await pumpApp(
+      t,
+      locale: const Locale('de'),
+      size: const Size(390, 844),
+      overrides: baseOverrides(
+        identity: FakeIdentityRepository(current: device()),
+        now: DateTime(2026, 10, 25, 9),
+      ),
+      gettingStarted: FakeGettingStartedRepository(const [
+        GettingStartedItem(item: StartItem.wallDisplay, done: false),
+        GettingStartedItem(item: StartItem.subscribeFeed, done: false),
+      ]),
+    );
+
+    // Beside the title where the words leave room (real fonts at 390); else under it,
+    // starting where it starts, so it reads as this step's and not the next one's.
+    final title = t.getRect(find.text(l10n.todayStartWallDisplay));
+    final next = t.getRect(find.text(l10n.todayStartSubscribeFeed));
+    final action = t.getRect(find.text(l10n.todayStartNotNeeded).first);
+    final beside = action.left >= title.right - 1;
+    final under =
+        (action.left - title.left).abs() <= Tokens.space2 + 1 &&
+        action.top >= title.bottom - 1;
+    expect(beside || under, isTrue, reason: '$action vs $title');
+    expect(action.bottom, lessThanOrEqualTo(next.top));
+  });
 
   testWidgets('wide getting-started row stays compact at large text', (
     t,

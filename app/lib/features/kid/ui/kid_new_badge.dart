@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
+import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/motion.dart';
+import 'package:wuselwall/core/ui/whole_words_text.dart';
 import 'package:wuselwall/core/wusel/wusel.dart';
 import 'package:wuselwall/features/kid/application/kid_logic.dart';
 import 'package:wuselwall/features/kid/application/kid_providers.dart';
@@ -19,10 +21,15 @@ import 'package:wuselwall/features/wusel/ui/family_wusel.dart';
 /// (specs/25, pose `proud`). The card grows in from the centre on the bouncy spring
 /// (specs/26). The badge sound plays once per badge while the app runs, not on every
 /// visit.
+///
+/// Where the screen already has its Wusel ([withWusel] false: *Mein Tag*, whose
+/// greeting Wusel holds up the star), the card shows a gold star beside the line, so
+/// there is one Wusel per screen (specs/25).
 class KidNewBadge extends ConsumerStatefulWidget {
-  const KidNewBadge({required this.actor, super.key});
+  const KidNewBadge({required this.actor, this.withWusel = true, super.key});
 
   final String actor;
+  final bool withWusel;
 
   /// The badges celebrated with a sound since the app started.
   static final _sounded = <String>{};
@@ -43,21 +50,45 @@ class _KidNewBadgeState extends ConsumerState<KidNewBadge> {
         if (mounted) unawaited(ref.read(celebrationProvider).cue(Cue.badge));
       });
     }
+    final line = context.l10n.wuselBadge(badge.title);
+    final style = Theme.of(context).textTheme.titleLarge
+        ?.copyWith(fontWeight: FontWeight.w800);
     return Padding(
       padding: const EdgeInsets.only(top: Tokens.space3),
       child: KidGrowIn(
         // A new badge grows in again.
         key: ValueKey(badge.id),
         child: KidCard(
-          child: WuselSays(
-            line: context.l10n.wuselBadge(badge.title),
-            pose: WuselPose.proud,
-            size: 96,
-            moment: badge.id,
-            tappable: true,
-            style: Theme.of(context).textTheme.titleLarge
-                ?.copyWith(fontWeight: FontWeight.w800),
-          ),
+          child: widget.withWusel
+              ? WuselSays(
+                  line: line,
+                  pose: WuselPose.proud,
+                  size: 96,
+                  moment: badge.id,
+                  tappable: true,
+                  style: style,
+                )
+              // A slim line, so the child's chores stay in view (decided
+              // 2026-10-26).
+              : Row(
+                  children: [
+                    ExcludeSemantics(
+                      child: Icon(
+                        Icons.star_rounded,
+                        size: 36,
+                        color: context.ww.points,
+                      ),
+                    ),
+                    const SizedBox(width: Tokens.space3),
+                    Expanded(
+                      child: WholeWordsText(
+                        line,
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w800),
+                      ),
+                    ),
+                  ],
+                ),
         ),
       ),
     );

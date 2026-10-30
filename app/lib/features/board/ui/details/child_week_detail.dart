@@ -3,6 +3,7 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
+import 'package:wuselwall/features/board/ui/board_scroll_cue.dart';
 import 'package:wuselwall/features/board/ui/details/detail_parts.dart';
 import 'package:wuselwall/features/board/ui/details/timetable_grid.dart';
 
@@ -30,18 +31,20 @@ class ChildWeekDetailBody extends StatelessWidget {
       );
     }
     final pack = packStripFor(context, board, memberId);
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(Tokens.space6),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          TimetableGrid(
-            board: board,
-            timetable: timetable,
-            raisedIndex: board.todayIndex,
-          ),
-          if (pack != null) ...[const SizedBox(height: Tokens.space6), pack],
-        ],
+    return BoardScrollFade(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(Tokens.space6),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TimetableGrid(
+              board: board,
+              timetable: timetable,
+              raisedIndex: board.todayIndex,
+            ),
+            if (pack != null) ...[const SizedBox(height: Tokens.space6), pack],
+          ],
+        ),
       ),
     );
   }

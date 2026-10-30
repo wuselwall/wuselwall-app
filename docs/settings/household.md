@@ -4,7 +4,7 @@ Nicht jede Familie macht es gleich: Wie viele Punkte eine Aufgabe bringt, ob Kin
 
 <Shot name="settings-phone" alt="Einstellungen: die Liste der Gruppen von Persönlich bis Hilfe & Info" />
 
-In der Ansicht **Einfach** siehst du nur die wichtigsten Einstellungen: die Region, die Serien-Joker, ob Belohnungen Freigabe brauchen, ob Kinder ihre eigenen Termine ändern, die warme Mahlzeit an Schultagen und freien Tagen, die Tischfrage, den Wochenrückblick, das Wunschessen, die Nachtzeit dieses Geräts, Wusel, den Ton beim Abhaken, die Morgenübersicht, die Erinnerung vor Terminen und die Feiertage (Advent, Ostern, Orthodoxes Ostern, Silvester). Alle anderen zeigt **Erweitert** (oben umschalten oder unten **Alle Einstellungen zeigen**). Eine Gruppe, in der die Ansicht nichts zeigt, steht gar nicht in der Liste. Ausgeblendete Einstellungen gelten trotzdem weiter.
+In der Ansicht **Einfach** siehst du nur die wichtigsten Einstellungen: die Region, die Serien-Joker, ob Belohnungen Freigabe brauchen, ob Kinder ihre eigenen Termine ändern, die warme Mahlzeit an Schultagen und freien Tagen, die Tischfrage, den Wochenrückblick, das Wunschessen, die Nachtzeit dieses Geräts, Wusel, den Ton beim Abhaken, die Morgenübersicht, die Erinnerung vor Terminen und die Feiertage (Advent, Ostern, Orthodoxes Ostern, Silvester). Alle anderen zeigt **Erweitert** (oben rechts umschalten; eine Zeile unten auf der Seite sagt, wenn etwas ausgeblendet ist). Eine Gruppe, in der die Ansicht nichts zeigt, steht gar nicht in der Liste. Ausgeblendete Einstellungen gelten trotzdem weiter.
 
 Jede Einstellung hat einen **Standard**. Den schlägt WuselWall vor, und er passt für die meisten Familien. Weicht euer Wert davon ab, steht dort **angepasst**. Mit **Auf Standard zurücksetzen** geht es jederzeit zurück.
 
@@ -19,7 +19,7 @@ Jede Einstellung hat einen **Standard**. Den schlägt WuselWall vor, und er pass
 - **Feste & Jahreszeiten** (Erweitert): der Schmuck am Himmel für **Feiertage** (Advent, Ostern, Orthodoxes Ostern, Silvester) und **Durchs Jahr** (Jahreszeiten, Ferien, Geburtstage)
 - **Küchenwand** (Erweitert): ob die Wand den **Vollnamen** oder nur die **Initiale** zeigt, wann sie zur kommenden Woche wechselt und wo Vormittag, Nachmittag und Abend getrennt werden
 - **Geräte**: **Dieses Gerät** (Sprache, Darstellung, Nachtzeit und die Einstellungen für Wusel, Töne, Himmel und Einbrennschutz, siehe [unten](#this-device)) und **Alle Geräte** (verbinden, umbenennen, sperren)
-- **Konto & Sicherheit** (nur auf dem eigenen Handy): in der Ansicht Einfach **Konto löschen**; Erweitert zeigt dazu Anmeldung, Passwort, Zwei-Faktor, PIN, Passkey und Familie verlassen (siehe [Konto und Familie](/settings/account) und [Sicherheit](/settings/security))
+- **Konto & Sicherheit** (nur auf dem eigenen Handy, in beiden Ansichten ganz): Anmeldung, Passwort, Zwei-Faktor, PIN, Passkey, Familie verlassen und Konto löschen (siehe [Konto und Familie](/settings/account) und [Sicherheit](/settings/security))
 - **Server** (Erweitert): die Adresse eures Servers mit QR-Code und **Server wechseln**
 - **Hilfe & Info**: **Erste Schritte**, **Versionen** und **Lizenzen**
 

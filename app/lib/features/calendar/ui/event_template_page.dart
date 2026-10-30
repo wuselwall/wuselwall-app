@@ -7,6 +7,7 @@ import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/core/ui/emoji_picture.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
@@ -16,10 +17,12 @@ import 'package:wuselwall/features/calendar/data/event_templates_repository.dart
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 import 'package:wuselwall/features/calendar/domain/event_templates.dart';
 import 'package:wuselwall/features/calendar/ui/event_edit_args.dart';
+import 'package:wuselwall/features/calendar/ui/new_tradition_sheet.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/rituals/domain/event_icons.dart';
+import 'package:wuselwall/features/wusel/application/wusel_settings.dart';
 
 /// A built-in template's name in the household's language.
 String eventStarterName(AppLocalizations l10n, EventStarter s) => switch (s) {
@@ -93,85 +96,109 @@ class EventTemplatePage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.calendarNewEvent)),
-      body: SafeArea(
-        top: false,
-        child: CustomScrollView(
-          slivers: [
-            SliverPadding(
-              padding: const EdgeInsets.fromLTRB(
-                Tokens.space4,
-                Tokens.space3,
-                Tokens.space4,
-                0,
-              ),
-              sliver: SliverToBoxAdapter(child: Text(l10n.eventTemplatesIntro)),
-            ),
-            if (suggestions.isNotEmpty)
-              section(l10n.eventTemplatesSuggested, [
-                for (final t in suggestions)
-                  _TemplateTile(
-                    key: ValueKey('event-template-suggested-${t.signature}'),
-                    template: t,
-                    onTap: () => unawaited(_open(context, t)),
-                    menu: [
-                      (
-                        label: l10n.eventTemplateKeep,
-                        icon: Icons.bookmark_add_outlined,
-                        run: () => unawaited(_keep(context, ref, t)),
-                      ),
-                      (
-                        label: l10n.eventTemplateHide,
-                        icon: Icons.visibility_off_outlined,
-                        run: () => unawaited(_hide(context, ref, t)),
-                      ),
-                    ],
-                  ),
-              ]),
-            if (saved.isNotEmpty)
-              section(l10n.eventTemplatesSaved, [
-                for (final t in saved)
-                  _TemplateTile(
-                    key: ValueKey('event-template-saved-${t.id}'),
-                    template: t,
-                    onTap: () => unawaited(_open(context, t)),
-                    menu: [
-                      (
-                        label: l10n.eventTemplateDelete,
-                        icon: Icons.delete_outline,
-                        run: () => unawaited(_delete(context, ref, t)),
-                      ),
-                    ],
-                  ),
-              ]),
-            section(l10n.eventTemplatesBuiltIn, [
-              _TemplateTile(
-                key: const ValueKey('event-template-blank'),
-                title: l10n.eventTemplateBlank,
-                line: l10n.eventTemplateBlankHelp,
-                icon: Icons.edit_outlined,
-                onTap: () => unawaited(_open(context, null)),
-              ),
-              for (final s in EventStarter.values)
-                Builder(
-                  builder: (context) {
-                    final t = s.template(
-                      title: eventStarterName(l10n, s),
-                      members: active,
-                      actor: actor,
-                    );
-                    return _TemplateTile(
-                      key: ValueKey('event-template-builtin-${s.name}'),
-                      template: t,
-                      icon: s == EventStarter.doctor
-                          ? Icons.medical_services_outlined
-                          : null,
-                      onTap: () => unawaited(_open(context, t)),
-                    );
-                  },
+      body: ContentWidth(
+        child: SafeArea(
+          top: false,
+          child: CustomScrollView(
+            slivers: [
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(
+                  Tokens.space4,
+                  Tokens.space3,
+                  Tokens.space4,
+                  0,
                 ),
-            ]),
-            const SliverToBoxAdapter(child: SizedBox(height: Tokens.space6)),
-          ],
+                sliver: SliverToBoxAdapter(
+                  child: Text(l10n.eventTemplatesIntro),
+                ),
+              ),
+              if (suggestions.isNotEmpty)
+                section(l10n.eventTemplatesSuggested, [
+                  for (final t in suggestions)
+                    _TemplateTile(
+                      key: ValueKey('event-template-suggested-${t.signature}'),
+                      template: t,
+                      onTap: () => unawaited(_open(context, t)),
+                      menu: [
+                        (
+                          label: l10n.eventTemplateKeep,
+                          icon: Icons.bookmark_add_outlined,
+                          run: () => unawaited(_keep(context, ref, t)),
+                        ),
+                        (
+                          label: l10n.eventTemplateHide,
+                          icon: Icons.visibility_off_outlined,
+                          run: () => unawaited(_hide(context, ref, t)),
+                        ),
+                      ],
+                    ),
+                ]),
+              if (saved.isNotEmpty)
+                section(l10n.eventTemplatesSaved, [
+                  for (final t in saved)
+                    _TemplateTile(
+                      key: ValueKey('event-template-saved-${t.id}'),
+                      template: t,
+                      onTap: () => unawaited(_open(context, t)),
+                      menu: [
+                        (
+                          label: l10n.eventTemplateDelete,
+                          icon: Icons.delete_outline,
+                          run: () => unawaited(_delete(context, ref, t)),
+                        ),
+                      ],
+                    ),
+                ]),
+              // Below the family's own tiles the built-in ones are the "more"; alone,
+              // they are simply the templates.
+              section(
+                suggestions.isEmpty && saved.isEmpty
+                    ? l10n.eventTemplatesBuiltIn
+                    : l10n.eventTemplatesBuiltInMore,
+                [
+                  _TemplateTile(
+                    key: const ValueKey('event-template-blank'),
+                    title: l10n.eventTemplateBlank,
+                    line: l10n.eventTemplateBlankHelp,
+                    icon: Icons.edit_outlined,
+                    onTap: () => unawaited(_open(context, null)),
+                  ),
+                  // A weekly family tradition starts here too (specs/27), so a phone
+                  // needs no second floating button over the calendar.
+                  if (ref.watch(lighterDaySupportedProvider))
+                    _TemplateTile(
+                      key: const ValueKey('event-template-tradition'),
+                      title: l10n.calendarNewTradition,
+                      // One example: a second one no longer fits a phone's tile.
+                      line: '${l10n.traditionStarterGameNight}, …',
+                      icon: Icons.celebration_outlined,
+                      onTap: () => unawaited(
+                        openNewTradition(context, inView: day, now: now),
+                      ),
+                    ),
+                  for (final s in EventStarter.values)
+                    Builder(
+                      builder: (context) {
+                        final t = s.template(
+                          title: eventStarterName(l10n, s),
+                          members: active,
+                          actor: actor,
+                        );
+                        return _TemplateTile(
+                          key: ValueKey('event-template-builtin-${s.name}'),
+                          template: t,
+                          icon: s == EventStarter.doctor
+                              ? Icons.medical_services_outlined
+                              : null,
+                          onTap: () => unawaited(_open(context, t)),
+                        );
+                      },
+                    ),
+                ],
+              ),
+              const SliverToBoxAdapter(child: SizedBox(height: Tokens.space6)),
+            ],
+          ),
         ),
       ),
     );
@@ -281,6 +308,9 @@ class _TemplateTile extends StatelessWidget {
     final name = title ?? t?.title ?? '';
     final asset = eventIconAsset(t?.iconKey);
     final menuButton = GlobalKey<PopupMenuButtonState<int>>();
+    final lineStyle = theme.textTheme.bodySmall?.copyWith(
+      color: theme.colorScheme.onSurfaceVariant,
+    );
     return Card.outlined(
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
@@ -317,14 +347,15 @@ class _TemplateTile extends StatelessWidget {
                     style: theme.textTheme.titleSmall,
                   ),
                   const SizedBox(height: Tokens.space1),
-                  Text(
-                    line ?? (t == null ? '' : templateLine(context, t)),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
+                  if (line != null || t == null)
+                    Text(
+                      line ?? '',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: lineStyle,
+                    )
+                  else
+                    _TemplateLine(template: t, style: lineStyle),
                 ],
               ),
             ),
@@ -357,9 +388,61 @@ class _TemplateTile extends StatelessWidget {
   }
 }
 
+/// A template's line on its tile: the long form ("15:00 · 3 Std. · 6× benutzt") where
+/// it fits the tile, else the count short ("… · 6×") with the long form as its tooltip,
+/// so the caption never ends in "6× benu…".
+class _TemplateLine extends StatelessWidget {
+  const _TemplateLine({required this.template, required this.style});
+
+  final EventTemplate template;
+  final TextStyle? style;
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, box) {
+      final long = templateLine(context, template);
+      final text = Text(
+        long,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: style,
+      );
+      if (template.count == null) return text;
+      // Measured as the Text draws it: the inherited style (the app's font) under it.
+      final painter = TextPainter(
+        text: TextSpan(
+          text: long,
+          style: DefaultTextStyle.of(context).style.merge(style),
+        ),
+        textDirection: Directionality.of(context),
+        textScaler: MediaQuery.textScalerOf(context),
+        maxLines: 1,
+      )..layout();
+      final fits = painter.width <= box.maxWidth;
+      painter.dispose();
+      if (fits) return text;
+      return Tooltip(
+        message: long,
+        child: Text(
+          templateLine(context, template, shortCount: true),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          semanticsLabel: long,
+          style: style,
+        ),
+      );
+    },
+  );
+}
+
 /// A tile's line: when and how long, a yearly repeat, and how often a suggestion was
-/// entered ("18:30 · 3 Std.", "Ganztägig · Jährlich", "Schon 5×").
-String templateLine(BuildContext context, EventTemplate t) {
+/// entered ("18:30 · 3 Std.", "Ganztägig · Jährlich", "6× benutzt", or with
+/// [shortCount] only "6×").
+String templateLine(
+  BuildContext context,
+  EventTemplate t, {
+  bool shortCount = false,
+}) {
   final l10n = context.l10n;
   final minute = t.startMinute;
   final days = t.days ?? 1;
@@ -372,7 +455,10 @@ String templateLine(BuildContext context, EventTemplate t) {
       if (t.durationMinutes case final length?) templateLength(l10n, length),
     ],
     if (t.yearly) l10n.eventRepeatYearly,
-    if (t.count case final count?) l10n.eventTemplateCount(count),
+    if (t.count case final count?)
+      shortCount
+          ? l10n.eventTemplateCountShort(count)
+          : l10n.eventTemplateCount(count),
   ].join(' · ');
 }
 

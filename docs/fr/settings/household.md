@@ -4,7 +4,7 @@ Dans **Paramètres**, adaptez WuselWall à votre famille. La page est une courte
 
 <Shot name="settings-phone" alt="Paramètres : la liste des groupes, de Personnel à Aide et infos" />
 
-La vue de base montre les réglages essentiels : région, jokers, approbation des récompenses, rendez-vous des enfants, repas chaud les jours d’école et libres, question à table, notre semaine, repas souhaités, heures de nuit, Wusel, son des tâches, résumé du matin, rappels et fêtes (Avent, Pâques, Pâques orthodoxes, Nouvel An). La vue **Avancés**, accessible en haut ou en bas, montre tout. Un groupe où la vue ne montre rien n’apparaît pas dans la liste. Les paramètres masqués restent actifs.
+La vue de base montre les réglages essentiels : région, jokers, approbation des récompenses, rendez-vous des enfants, repas chaud les jours d’école et libres, question à table, notre semaine, repas souhaités, heures de nuit, Wusel, son des tâches, résumé du matin, rappels et fêtes (Avent, Pâques, Pâques orthodoxes, Nouvel An). La vue **Avancés**, à activer en haut à droite, montre tout ; une ligne en bas de page signale ce qui est masqué. Un groupe où la vue ne montre rien n’apparaît pas dans la liste. Les paramètres masqués restent actifs.
 
 Chaque réglage propose une valeur par défaut. Une valeur différente est signalée comme personnalisée ; vous pouvez rétablir la valeur par défaut à tout moment.
 
@@ -19,7 +19,7 @@ Chaque réglage propose une valeur par défaut. Une valeur différente est signa
 - **Fêtes et saisons** (Avancés) : les décorations du ciel pour les **Jours de fête** (Avent, Pâques, Pâques orthodoxes, Nouvel An) et **Au fil de l’année** (saisons, vacances, anniversaires).
 - **Écran de la cuisine** (Avancés) : noms complets ou initiales sur le mur, passage à la semaine suivante et limites entre matin/après-midi/soir.
 - **Appareils** : **Cet appareil** (langue, apparence, heures de nuit et les réglages de Wusel, des sons, du ciel et de la protection contre le marquage, voir [plus bas](#this-device)) et **Tous les appareils** (connecter, renommer, bloquer).
-- **Compte et sécurité** (seulement sur votre propre téléphone) : en vue de base **Supprimer le compte** ; **Avancés** ajoute connexion, mot de passe, double authentification, code PIN, clé d’accès et quitter la famille (voir [Compte et famille](/fr/settings/account) et [Sécurité](/fr/settings/security)).
+- **Compte et sécurité** (seulement sur votre propre téléphone, complet dans les deux vues) : connexion, mot de passe, double authentification, code PIN, clé d’accès, quitter la famille et supprimer le compte (voir [Compte et famille](/fr/settings/account) et [Sécurité](/fr/settings/security)).
 - **Serveur** (Avancés) : l’adresse de votre serveur avec son code QR, et **Changer de serveur**.
 - **Aide et infos** : **Premiers pas**, **Versions** et **Licences**.
 

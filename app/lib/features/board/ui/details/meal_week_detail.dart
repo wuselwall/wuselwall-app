@@ -10,6 +10,7 @@ import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
+import 'package:wuselwall/features/board/ui/board_scroll_cue.dart';
 import 'package:wuselwall/features/board/ui/details/detail_parts.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/identity/ui/acting_profile_bar.dart';
@@ -69,36 +70,38 @@ class _MealWeekDetailState extends ConsumerState<MealWeekDetailBody> {
     return Column(
       children: [
         Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(Tokens.space6),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                if (acting != null)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: Tokens.space4),
-                    child: Text(
-                      context.l10n.mealsKioskHint,
-                      style: detailUi(24, context.ww.ink2),
+          child: BoardScrollFade(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(Tokens.space6),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (acting != null)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: Tokens.space4),
+                      child: Text(
+                        context.l10n.mealsKioskHint,
+                        style: detailUi(24, context.ww.ink2),
+                      ),
                     ),
-                  ),
-                for (final day in board.days)
-                  DayRow(
-                    date: day.date,
-                    raised: isSameDay(day.date, board.today),
-                    past: day.date.isBefore(board.today),
-                    child: _MealFacts(
-                      board: board,
-                      meal: day.meal,
-                      canEdit: acting != null,
-                      busy: {
-                        for (final m in board.members)
-                          if (_busy.contains('${day.date}|${m.id}')) m.id,
-                      },
-                      onToggle: (member, meal) => _toggle(day, meal, member),
+                  for (final day in board.days)
+                    DayRow(
+                      date: day.date,
+                      raised: isSameDay(day.date, board.today),
+                      past: day.date.isBefore(board.today),
+                      child: _MealFacts(
+                        board: board,
+                        meal: day.meal,
+                        canEdit: acting != null,
+                        busy: {
+                          for (final m in board.members)
+                            if (_busy.contains('${day.date}|${m.id}')) m.id,
+                        },
+                        onToggle: (member, meal) => _toggle(day, meal, member),
+                      ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

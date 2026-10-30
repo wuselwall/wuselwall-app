@@ -71,6 +71,10 @@ What every device shows before it belongs to a household:
 ```
 
 - The email button serves sign-up and sign-in alike.
+- *Revised 2026-10-26:* the email button is the one filled button. Below "oder" the other ways
+  in are equal rows with an icon and a chevron: connecting a shared device, the invitation code,
+  and on the web "Auf dem Handy weitermachen", which opens in place. Datenschutz and Server
+  ändern stay quiet links.
 - **"Familien-Tablet oder Wanddisplay verbinden"** is the shared-device path (J3). It is
   deliberately secondary: the phone in someone's hand is almost always their own.
 - **"Ich habe einen Einladungscode"** takes a typed or scanned invitation code (J2 when
@@ -107,7 +111,9 @@ What every device shows before it belongs to a household:
 - **"Ich habe ein Passwort"** reveals a password field on E1 for accounts that have one.
   A wrong combination says "E-Mail oder Passwort stimmt nicht", never which of the two,
   and offers "Stattdessen Code per E-Mail". That is the whole password-reset flow:
-  sign in with a code, then set a new password in Settings.
+  sign in with a code, then set a new password in Settings. With the password field open, "Anmelden" is
+  the one filled button and "Stattdessen Code per E-Mail" the quiet alternative; "Weiter"
+  (which mails a code) shows only while the field is closed.
 - **New accounts choose how to sign in next time (E3)**, once, directly after their first
   code:
 

@@ -5,6 +5,7 @@ import 'package:wuselwall/app/theme/app_theme.dart';
 import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
+import 'package:wuselwall/features/board/ui/board_grid.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
 
 const _violet = Color(0xFF7B3FE4);
@@ -209,6 +210,58 @@ void main() {
       );
       expect(tester.takeException(), isNull);
       expect(find.text('Musik'), findsOneWidget);
+    });
+  });
+
+  group('BoardTap press', () {
+    Widget tap() => _host(
+      BoardTap(
+        label: 'Tisch decken',
+        onTap: () {},
+        child: const SizedBox(key: ValueKey('cell'), width: 80, height: 80),
+      ),
+    );
+    double scale(WidgetTester t) => t
+        .widget<Transform>(
+          find
+              .ancestor(
+                of: find.byKey(const ValueKey('cell')),
+                matching: find.byType(Transform),
+              )
+              .first,
+        )
+        .transform
+        .entry(0, 0);
+
+    testWidgets('shrinks a little while pressed, without moving its box', (
+      t,
+    ) async {
+      await t.pumpWidget(tap());
+      final box = t.getRect(find.byType(BoardTap));
+      final press = await t.startGesture(
+        t.getCenter(find.byKey(const ValueKey('cell'))),
+      );
+      await t.pump();
+      await t.pump(const Duration(milliseconds: 200));
+      expect(scale(t), closeTo(0.97, 0.001));
+      expect(t.getRect(find.byType(BoardTap)), box);
+      await press.up();
+      await t.pumpAndSettle();
+      expect(scale(t), 1);
+    });
+
+    testWidgets('stays as it is under reduced motion', (t) async {
+      t.platformDispatcher.accessibilityFeaturesTestValue =
+          const FakeAccessibilityFeatures(disableAnimations: true);
+      addTearDown(t.platformDispatcher.clearAccessibilityFeaturesTestValue);
+      await t.pumpWidget(tap());
+      final press = await t.startGesture(
+        t.getCenter(find.byKey(const ValueKey('cell'))),
+      );
+      await t.pump();
+      await t.pump(const Duration(milliseconds: 200));
+      expect(scale(t), 1);
+      await press.up();
     });
   });
 }

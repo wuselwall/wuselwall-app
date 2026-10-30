@@ -72,7 +72,12 @@ void main() {
           locale: locale,
         );
         final monday = container.read(selectedWeekProvider);
-        await t.tap(find.text(l10n.scheduleTitle));
+        await t.tap(
+          find.descendant(
+            of: find.byType(NavigationBar),
+            matching: find.byIcon(Icons.school_outlined),
+          ),
+        );
         await t.pumpAndSettle();
         t.view.physicalSize = const Size(390, 844);
         await t.pumpAndSettle();
@@ -85,7 +90,19 @@ void main() {
         await t.tap(enter);
         await t.pumpAndSettle();
         expect(find.text(l10n.schoolTermProposedHint), findsOneWidget);
-        expect(find.text(l10n.schoolSetupTitle), findsNothing);
+        // (Not counting the bar's short label, which may read the same.)
+        expect(
+          find
+              .descendant(
+                of: find.byType(Scaffold).last,
+                matching: find.text(l10n.schoolSetupTitle),
+              )
+              .evaluate()
+              .where(
+                (e) => e.findAncestorWidgetOfExactType<NavigationBar>() == null,
+              ),
+          isEmpty,
+        );
         // The proposed school year covers the week, and is the school's first term.
         final year = schoolYearAround(monday);
         expect(find.text(_yearName(locale, monday)), findsOneWidget);
@@ -148,7 +165,12 @@ void main() {
     while (container.read(selectedWeekProvider).isBefore(DateTime(2028))) {
       container.read(selectedWeekProvider.notifier).next();
     }
-    await t.tap(find.text(l10n.scheduleTitle));
+    await t.tap(
+      find.descendant(
+        of: find.byType(NavigationBar),
+        matching: find.byIcon(Icons.school_outlined),
+      ),
+    );
     await t.pumpAndSettle();
     await t.tap(find.byTooltip(l10n.schoolEditTimetable));
     await t.pumpAndSettle();
@@ -177,7 +199,12 @@ void main() {
       ),
       school: school,
     );
-    await t.tap(find.text(l10n.scheduleTitle));
+    await t.tap(
+      find.descendant(
+        of: find.byType(NavigationBar),
+        matching: find.byIcon(Icons.school_outlined),
+      ),
+    );
     await t.pumpAndSettle();
     await t.tap(
       find.widgetWithText(FilledButton, l10n.schoolEnterTimetableAction),

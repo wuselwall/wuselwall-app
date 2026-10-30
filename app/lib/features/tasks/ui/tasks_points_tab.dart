@@ -39,6 +39,7 @@ class TasksPointsTab extends ConsumerWidget {
             children: [
               for (final m in list.where((m) => m.active))
                 _MemberPoints(
+                  key: ValueKey(m.id),
                   member: m,
                   balance: map[m.id] ?? 0,
                   rows: [
@@ -59,6 +60,7 @@ class _MemberPoints extends ConsumerWidget {
     required this.member,
     required this.balance,
     required this.rows,
+    super.key,
   });
 
   final Member member;
@@ -89,7 +91,7 @@ class _MemberPoints extends ConsumerWidget {
                     ),
                   ),
                 ),
-                PointsCoin(points: balance, fontSize: 20),
+                PointsCoin(points: balance, fontSize: 20, counts: true),
                 if (member.active)
                   IconButton(
                     tooltip: l10n.tasksAdjust,

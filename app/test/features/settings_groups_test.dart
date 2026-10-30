@@ -190,9 +190,10 @@ void main() {
           shown.whereType<SettingTileItem>().map((i) => i.tile),
           contains(SettingsTile.deleteAccount),
         );
+        // Account and security is whole in Basic: the password and leaving too.
         expect(
-          visibleSections(SettingsGroup.account, env).single.items,
-          hasLength(1),
+          visibleItemCount(SettingsGroup.account, env),
+          visibleItemCount(SettingsGroup.account, env.copyWith(advanced: true)),
         );
       },
     );
@@ -429,7 +430,7 @@ void main() {
         findsNothing,
       );
       expect(find.byKey(const ValueKey('settings-feeds')), findsNothing);
-      expect(find.byKey(const ValueKey('settings-show-all')), findsOneWidget);
+      expect(find.byKey(const ValueKey('settings-more-hint')), findsOneWidget);
     });
 
     testWidgets('Family holds the profile, region, members and usual week', (

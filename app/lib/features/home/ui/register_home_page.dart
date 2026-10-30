@@ -11,6 +11,7 @@ import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/module_band.dart';
+import 'package:wuselwall/core/ui/nav_labels.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/ui/week_board_page.dart';
 import 'package:wuselwall/features/calendar/ui/calendar_section.dart';
@@ -149,36 +150,97 @@ class RegisterHomePage extends ConsumerWidget {
         ),
         floatingActionButton: section.fab?.call(context),
         bottomNavigationBar: adult
-            ? NavigationBar(
-                selectedIndex: tab.index,
-                onDestinationSelected: (i) => ref
-                    .read(homeTabProvider.notifier)
-                    .select(HomeTab.values[i]),
-                // Six destinations do not fit a phone with their labels: there only
-                // the selected one is labelled, the others keep their tooltip.
-                labelBehavior: MediaQuery.sizeOf(context).width < 600
-                    ? NavigationDestinationLabelBehavior.onlyShowSelected
-                    : null,
-                destinations: [
-                  for (final t in HomeTab.values)
-                    NavigationDestination(
-                      icon: Badge.count(
-                        count: approvals,
-                        isLabelVisible: t == HomeTab.tasks && approvals > 0,
-                        child: Icon(homeSections[t]!.icon),
-                      ),
-                      label:
-                          (homeSections[t]!.navLabel ?? homeSections[t]!.label)(
-                            l10n,
-                          ),
-                      tooltip: homeSections[t]!.label(l10n),
-                    ),
-                ],
+            ? _AdultNavBar(
+                tab: tab,
+                approvals: approvals,
+                onSelect: (t) => ref.read(homeTabProvider.notifier).select(t),
               )
             : null,
       ),
     );
     return PixelShift(child: home);
+  }
+}
+
+/// The adult home's six destinations (specs/09). The labels keep to one line: their
+/// font shrinks until the longest fits, the Stundenplan takes its short label where
+/// even that is not enough, and the text scale grows only to 1.3 here.
+class _AdultNavBar extends StatelessWidget {
+  const _AdultNavBar({
+    required this.tab,
+    required this.approvals,
+    required this.onSelect,
+  });
+
+  final HomeTab tab;
+  final int approvals;
+  final ValueChanged<HomeTab> onSelect;
+
+  String _label(AppLocalizations l10n, HomeTab t, {bool short = false}) {
+    if (short && t == HomeTab.schedule) return l10n.scheduleNavLabel;
+    return (homeSections[t]!.navLabel ?? homeSections[t]!.label)(l10n);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+    final base = theme.textTheme.labelMedium ?? const TextStyle(fontSize: 12);
+    final full = fitNavLabels(context, [
+      for (final t in HomeTab.values) _label(l10n, t),
+    ], base: base);
+    final short = !full.fits;
+    final style = short
+        ? fitNavLabels(
+            context,
+            [for (final t in HomeTab.values) _label(l10n, t, short: true)],
+            base: base,
+            // A very small phone: smaller still rather than a broken word.
+            minSize: 9,
+          ).style
+        : full.style;
+    return MediaQuery.withClampedTextScaling(
+      maxScaleFactor: 1.3,
+      child: Theme(
+        data: theme.copyWith(
+          navigationBarTheme: theme.navigationBarTheme.copyWith(
+            labelTextStyle: WidgetStateProperty.resolveWith(
+              (states) =>
+                  (theme.navigationBarTheme.labelTextStyle?.resolve(states) ??
+                          base)
+                      .copyWith(fontSize: style.fontSize),
+            ),
+          ),
+        ),
+        // The floor: at a very large text scale a label shortens with "…" rather
+        // than break inside its word.
+        child: DefaultTextStyle.merge(
+          softWrap: false,
+          overflow: TextOverflow.ellipsis,
+          child: NavigationBar(
+            selectedIndex: tab.index,
+            onDestinationSelected: (i) => onSelect(HomeTab.values[i]),
+            // Six destinations do not fit a phone with their labels: there only
+            // the selected one is labelled, the others keep their tooltip.
+            labelBehavior: MediaQuery.sizeOf(context).width < 600
+                ? NavigationDestinationLabelBehavior.onlyShowSelected
+                : null,
+            destinations: [
+              for (final t in HomeTab.values)
+                NavigationDestination(
+                  icon: Badge.count(
+                    count: approvals,
+                    isLabelVisible: t == HomeTab.tasks && approvals > 0,
+                    child: Icon(homeSections[t]!.icon),
+                  ),
+                  label: unbreakable(_label(l10n, t, short: short)),
+                  tooltip: homeSections[t]!.label(l10n),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 

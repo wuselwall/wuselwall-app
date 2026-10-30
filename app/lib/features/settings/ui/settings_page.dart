@@ -6,6 +6,7 @@ import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/core/ui/module_band.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
@@ -68,28 +69,30 @@ class SettingsPage extends ConsumerWidget {
             const SettingsViewSwitch(),
           ],
         ),
-        body: ListView(
-          padding: const EdgeInsets.all(Tokens.space4),
-          children: [
-            for (final group in visibleGroups(env))
-              ListTile(
-                key: ValueKey('settings-group-${group.name}'),
-                leading: Icon(group.icon),
-                title: Text(group.title(l10n)),
-                subtitle: Text(group.subtitle(l10n)),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () => context.go(group.route),
+        body: ContentWidth(
+          child: ListView(
+            padding: const EdgeInsets.all(Tokens.space4),
+            children: [
+              for (final group in visibleGroups(env))
+                ListTile(
+                  key: ValueKey('settings-group-${group.name}'),
+                  leading: Icon(group.icon),
+                  title: Text(group.title(l10n)),
+                  subtitle: Text(group.subtitle(l10n, advanced: env.advanced)),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => context.go(group.route),
+                ),
+              if (hasHiddenSettings(env)) const MoreSettingsHint(),
+              const SizedBox(height: Tokens.space6),
+              OutlinedButton.icon(
+                onPressed: () => thisDevice?.deviceClass == DeviceClass.personal
+                    ? ref.read(identityRepositoryProvider).signOutDevice()
+                    : ref.read(identityRepositoryProvider).signOut(),
+                icon: const Icon(Icons.logout),
+                label: Text(l10n.signOutDevice),
               ),
-            if (hasHiddenSettings(env)) const MoreSettingsHint(),
-            const SizedBox(height: Tokens.space6),
-            OutlinedButton.icon(
-              onPressed: () => thisDevice?.deviceClass == DeviceClass.personal
-                  ? ref.read(identityRepositoryProvider).signOutDevice()
-                  : ref.read(identityRepositoryProvider).signOut(),
-              icon: const Icon(Icons.logout),
-              label: Text(l10n.signOutDevice),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

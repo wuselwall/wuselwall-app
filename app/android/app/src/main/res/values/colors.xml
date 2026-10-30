@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="ic_launcher_background">#F7F4EE</color>
+    <!-- Android 12+ splash (values-v31, values-night-v31): the paper ground, light and dark. -->
+    <color name="splash_background">#F7F4EE</color>
+    <color name="splash_background_dark">#14171A</color>
 </resources>

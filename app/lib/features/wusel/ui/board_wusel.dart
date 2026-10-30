@@ -25,7 +25,9 @@ Countdown? waveFor(List<Countdown> countdowns, DateTime today) =>
 /// on the hour, thinks while the board is offline, and sleeps at night. Its morning
 /// line names today's tradition, and it waves when a countdown says "Morgen!" or
 /// "Heute!". In between it sits still in its corner: nothing moves at two metres but
-/// a moment.
+/// a moment. The corner is Wusel's home on the wall: a tap gives a tickle and the eyes
+/// follow the finger for a few seconds, and only a member's last chore takes Wusel
+/// out of it (specs/25 "Wusel on the move").
 class BoardWusel extends ConsumerWidget {
   const BoardWusel({required this.stale, super.key});
 
@@ -46,10 +48,10 @@ class BoardWusel extends ConsumerWidget {
     final style = boardUi(24, weight: FontWeight.w700);
 
     if (night) {
-      return const FamilyWusel(pose: WuselPose.sleep, size: size);
+      return const FamilyWusel(pose: WuselPose.sleep, size: size, home: true);
     }
     if (stale) {
-      return const FamilyWusel(pose: WuselPose.think, size: size);
+      return const FamilyWusel(pose: WuselPose.think, size: size, home: true);
     }
     if (birthday) {
       return ConstrainedBox(
@@ -68,6 +70,8 @@ class BoardWusel extends ConsumerWidget {
           outfit: WuselOutfit.party,
           quietAllowed: true,
           style: style,
+          home: true,
+          tappable: true,
         ),
       );
     }
@@ -88,6 +92,8 @@ class BoardWusel extends ConsumerWidget {
           pose: WuselPose.wave,
           size: size,
           style: style,
+          home: true,
+          tappable: true,
         ),
       );
     }
@@ -100,8 +106,10 @@ class BoardWusel extends ConsumerWidget {
         pose: WuselPose.wave,
         size: size,
         moment: (soon.kind, soon.date, soon.title),
+        home: true,
+        tappable: true,
       );
     }
-    return const FamilyWusel(size: size);
+    return const FamilyWusel(size: size, home: true, tappable: true);
   }
 }

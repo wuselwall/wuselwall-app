@@ -6,6 +6,7 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/account/ui/delete_account_tile.dart';
 import 'package:wuselwall/features/household/ui/leave_family_tiles.dart';
@@ -23,6 +24,8 @@ import 'package:wuselwall/features/settings/ui/help_tiles.dart';
 import 'package:wuselwall/features/settings/ui/language_tile.dart';
 import 'package:wuselwall/features/settings/ui/server_section.dart';
 import 'package:wuselwall/features/settings/ui/setting_controls.dart';
+import 'package:wuselwall/features/settings/ui/setting_labels.dart';
+import 'package:wuselwall/features/settings/ui/settings_bar_title.dart';
 import 'package:wuselwall/features/settings/ui/settings_group_text.dart';
 import 'package:wuselwall/features/settings/ui/settings_view_switch.dart';
 
@@ -30,15 +33,16 @@ import 'package:wuselwall/features/settings/ui/settings_view_switch.dart';
 /// rows, as [settingsGroupSections] lays them out and this device's view allows. Household
 /// and device settings are guardian actions; a member's own settings are not.
 ///
-/// The page stands on its own: [parentRoute] is where Back leads and [showViewSwitch]
-/// leaves out the Basic/Advanced chip and [title] names the page, so a device that shows
-/// one group only (a member's own page on a shared device) can reuse it.
+/// The page stands on its own: [parentRoute] is where Back leads, [showViewSwitch]
+/// leaves out the Basic/Advanced chip, and [title] and [subtitle] name the page, so a
+/// device that shows one group only (a member's own page on a shared device) can reuse it.
 class SettingsGroupPage extends ConsumerWidget {
   const SettingsGroupPage({
     required this.group,
     this.parentRoute = Routes.settings,
     this.showViewSwitch = true,
     this.title,
+    this.subtitle,
     super.key,
   });
 
@@ -46,8 +50,11 @@ class SettingsGroupPage extends ConsumerWidget {
   final String parentRoute;
   final bool showViewSwitch;
 
-  /// Replaces the group's own title, such as the person's name on their page.
+  /// Replaces the group's own title, such as "Einstellungen" on a person's own page.
   final String? title;
+
+  /// A second line under the title, such as the person's name on their own page.
+  final String? subtitle;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -66,39 +73,56 @@ class SettingsGroupPage extends ConsumerWidget {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(title ?? group.title(l10n)),
+          title: SettingsBarTitle(
+            title: title ?? group.title(l10n),
+            shortTitle: title == null ? group.shortTitle(l10n) : null,
+            subtitle: subtitle,
+          ),
           leading: BackButton(onPressed: () => context.go(parentRoute)),
           actions: [if (showViewSwitch) const SettingsViewSwitch()],
         ),
-        body: ListView(
-          padding: const EdgeInsets.all(Tokens.space4),
-          children: [
-            if (hasSettings && settings.isLoading && !settings.hasValue)
-              const LinearProgressIndicator(),
-            if (hasSettings && settings.hasError && !settings.hasValue)
-              ErrorView(
-                error: settings.error!,
-                onRetry: () => ref.invalidate(householdSettingsProvider),
-              ),
-            if (group == SettingsGroup.personal && env.acting == null)
-              Text(l10n.settingPickPersonFirst),
-            for (final (i, section) in sections.indexed) ...[
-              _SectionHeader(
-                title: settingsSectionTitle(l10n, section.id),
-                first: i == 0,
-              ),
-              for (final item in section.items)
-                switch (item) {
-                  SettingKey(:final key) => _SettingRowItem(settingKey: key),
-                  SettingTileItem(:final tile) => _tileWidget(tile),
-                },
+        body: ContentWidth(
+          child: ListView(
+            padding: const EdgeInsets.all(Tokens.space4),
+            children: [
+              if (hasSettings && settings.isLoading && !settings.hasValue)
+                const LinearProgressIndicator(),
+              if (hasSettings && settings.hasError && !settings.hasValue)
+                ErrorView(
+                  error: settings.error!,
+                  onRetry: () => ref.invalidate(householdSettingsProvider),
+                ),
+              if (group == SettingsGroup.personal && env.acting == null)
+                Text(l10n.settingPickPersonFirst),
+              for (final (i, section) in sections.indexed) ...[
+                _SectionHeader(title: _headingOf(l10n, section), first: i == 0),
+                for (final item in section.items)
+                  switch (item) {
+                    SettingKey(:final key) => _SettingRowItem(settingKey: key),
+                    SettingTileItem(:final tile) => _tileWidget(tile),
+                  },
+              ],
+              if (hasHiddenSettings(env, group: group))
+                const MoreSettingsHint(),
             ],
-            if (hasHiddenSettings(env, group: group)) const MoreSettingsHint(),
-          ],
+          ),
         ),
       ),
     );
   }
+}
+
+/// The heading of [section], or null when its first row already says the same ("Wusel"
+/// above the setting "Wusel"): a heading that only repeats its row is noise.
+String? _headingOf(AppLocalizations l10n, VisibleSection section) {
+  final heading = settingsSectionTitle(l10n, section.id);
+  if (heading == null) return null;
+  final first = section.items.firstOrNull;
+  if (first case SettingKey(:final key)
+      when settingText(l10n, key).title == heading) {
+    return null;
+  }
+  return heading;
 }
 
 class _SectionHeader extends StatelessWidget {
@@ -135,6 +159,7 @@ Widget _tileWidget(SettingsTile tile) => switch (tile) {
     route: Routes.familyProfile,
     title: _familyProfileTitle,
     subtitle: _familyProfileSubtitle,
+    basicSubtitle: _familyProfileSubtitleBasic,
   ),
   SettingsTile.members => const _NavTile(
     tileKey: 'settings-members',
@@ -188,6 +213,8 @@ Widget _tileWidget(SettingsTile tile) => switch (tile) {
 String _familyProfileTitle(AppLocalizations l10n) => l10n.familyProfileTitle;
 String _familyProfileSubtitle(AppLocalizations l10n) =>
     l10n.familySettingsSubtitle;
+String _familyProfileSubtitleBasic(AppLocalizations l10n) =>
+    l10n.familySettingsSubtitleBasic;
 String _membersTitle(AppLocalizations l10n) => l10n.settingsMembers;
 String _membersSubtitle(AppLocalizations l10n) => l10n.settingsMembersSubtitle;
 String _baselineTitle(AppLocalizations l10n) => l10n.baselineTitle;
@@ -201,14 +228,16 @@ String _feedSubtitle(AppLocalizations l10n) => l10n.feedSettingsSubtitle;
 String _extCalTitle(AppLocalizations l10n) => l10n.extCalTitle;
 String _extCalSubtitle(AppLocalizations l10n) => l10n.extCalSettingsSubtitle;
 
-/// A row that opens another settings page.
-class _NavTile extends StatelessWidget {
+/// A row that opens another settings page. [basicSubtitle] names what that page shows in
+/// Basic, where it shows less.
+class _NavTile extends ConsumerWidget {
   const _NavTile({
     required this.tileKey,
     required this.icon,
     required this.route,
     required this.title,
     required this.subtitle,
+    this.basicSubtitle,
   });
 
   final String tileKey;
@@ -216,15 +245,18 @@ class _NavTile extends StatelessWidget {
   final String route;
   final String Function(AppLocalizations l10n) title;
   final String Function(AppLocalizations l10n) subtitle;
+  final String Function(AppLocalizations l10n)? basicSubtitle;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
+    final basic = basicSubtitle;
+    final advanced = ref.watch(settingsEnvProvider).advanced;
     return ListTile(
       key: ValueKey(tileKey),
       leading: Icon(icon),
       title: Text(title(l10n)),
-      subtitle: Text(subtitle(l10n)),
+      subtitle: Text(basic == null || advanced ? subtitle(l10n) : basic(l10n)),
       trailing: const Icon(Icons.chevron_right),
       onTap: () => context.go(route),
     );

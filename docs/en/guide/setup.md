@@ -29,7 +29,7 @@ address; it is different from the setup code for a new server.
 
 <Shot name="setup-sign-in" alt="Signing in with email" />
 
-Prefer a password? Tap **I have a password**. Enter your email address and password; the app checks both before signing in. You set the password under **Settings → Advanced → Sign-in**, at least 10 characters. The code by email always stays possible.
+Prefer a password? Tap **I have a password**. Enter your email address and password and tap **Sign in**; the app checks both before signing in. You set the password under **Settings → Account & security → Sign-in**, at least 10 characters. The code by email always stays possible.
 
 The first time you create an account, WuselWall asks once how you want to sign in from now on: with the **code by email** (nothing to remember) or with a **password**.
 

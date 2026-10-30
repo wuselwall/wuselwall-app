@@ -48,10 +48,10 @@ const WALL = { width: 1280, height: 800 }; // the recommended wall resolution
 
 /** Labels differ per language; the steps look them up here. */
 const T = {
-  de: { editList: 'Liste bearbeiten', grandma: 'Oma Ruth', newList: 'Neue Liste', name: 'Name', save: 'Speichern', search: 'Suchen oder hinzufügen', settings: 'Einstellungen', oldCode: 'Code für ein älteres Gerät erzeugen', deviceName: 'Gerätename', createCode: 'Code erzeugen', addMember: 'Mitglied hinzufügen', history: 'Verlauf', trolley: 'Im Wagen', household: 'Neue Familie anlegen', signIn: 'Mit E-Mail fortfahren', enrol: 'Mit Code verbinden', papa: 'Thomas', daughter: 'Emma', wholemeal: /Vollkorn/, kitchenTablet: 'Küchen-Tablet', close: 'Schließen', shopping: 'Einkauf', kidShopping: 'Einkaufen', calendar: 'Kalender', week: 'Woche', newEvent: 'Neuer Termin', schedule: 'Stundenplan', tasks: 'Aufgaben', meals: 'Essen', today: 'Heute', editSchool: 'Schule bearbeiten', region: 'Region', importHolidays: 'Ferien übernehmen', addMeal: 'Mahlzeit hinzufügen', pairFront: 'Familien-Tablet oder Wanddisplay verbinden', pairConnect: 'Gerät verbinden', pairCode: 'Code vom neuen Gerät', next: 'Weiter', inviteAdult: 'Erwachsene Person einladen', inviteName: 'Name', inviteCreate: 'Einladung erstellen', reminders: 'Erinnerungen', advanced: 'Erweitert', setPassword: 'Passwort festlegen', editTimetable: "Stundenplan bearbeiten", editorSchool: "Gemeinschaftsschule am Park", searchQuery: "mil", month: 'Monat' },
-  en: { editList: 'Edit list', grandma: 'Grandma Ruth', newList: 'New list', name: 'Name', save: 'Save', search: 'Search or add', settings: 'Settings', oldCode: 'Create a code for an older device', deviceName: 'Device name', createCode: 'Create code', addMember: 'Add member', history: 'History', trolley: 'In the trolley', household: 'Start a new family', signIn: 'Continue with email', enrol: 'Connect with a code', papa: 'David', daughter: 'Olivia', wholemeal: /Wholemeal/, kitchenTablet: 'Kitchen tablet', close: 'Close', shopping: 'Shopping', kidShopping: 'Shopping', calendar: 'Calendar', week: 'Week', newEvent: 'New event', schedule: 'Timetable', tasks: 'Tasks', meals: 'Meals', today: 'Today', editSchool: 'Edit school', region: 'Region', importHolidays: 'Import school holidays', addMeal: 'Add meal', pairFront: 'Connect a family tablet or wall display', pairConnect: 'Connect device', pairCode: 'Code from the new device', next: 'Next', inviteAdult: 'Invite an adult', inviteName: 'Name', inviteCreate: 'Create invitation', reminders: 'Reminders', advanced: 'Advanced', setPassword: 'Set password', editTimetable: "Edit timetable", editorSchool: "Parkside School", searchQuery: "mil", month: 'Month' },
-  fr: { editList: 'Modifier la liste', grandma: "Mamie Ruth", newList: "Nouvelle liste", name: "Nom", save: "Enregistrer", search: "Rechercher ou ajouter", settings: "Paramètres", oldCode: "Créer un code pour un ancien appareil", deviceName: "Nom de l’appareil", createCode: "Créer un code", addMember: "Ajouter un membre", history: "Historique", trolley: "Dans le chariot", household: "Créer une nouvelle famille", signIn: "Continuer par e-mail", papa: "Thomas", daughter: "Emma", wholemeal: /Complet/, kitchenTablet: "Tablette de cuisine", close: "Fermer", shopping: "Courses", kidShopping: "Courses", calendar: "Calendrier", week: "Semaine", newEvent: "Nouvel événement", schedule: "Emploi du temps", tasks: "Tâches", meals: "Repas", today: "Aujourd’hui", editSchool: "Modifier l’école", region: "Région", importHolidays: "Importer les vacances scolaires", addMeal: "Ajouter un repas", pairFront: "Connecter une tablette familiale ou un écran mural", pairConnect: "Connecter un appareil", pairCode: "Code du nouvel appareil", next: "Suivant", inviteAdult: "Inviter un adulte", inviteName: "Prénom", inviteCreate: "Créer l’invitation", reminders: "Rappels", advanced: "Avancés", setPassword: "Définir un mot de passe" , enrol: "Connecter avec un code", editTimetable: "Modifier l’emploi du temps", editorSchool: "École du parc", searchQuery: "lai", month: 'Mois' },
-  es: { editList: 'Editar lista', grandma: "Abuela Ruth", newList: "Nueva lista", name: "Nombre", save: "Guardar", search: "Buscar o añadir", settings: "Ajustes", oldCode: "Crear un código para un dispositivo antiguo", deviceName: "Nombre del dispositivo", createCode: "Crear código", addMember: "Añadir miembro", history: "Historial", trolley: "En el carrito", household: "Crear una familia nueva", signIn: "Continuar con correo electrónico", papa: "David", daughter: "Olivia", wholemeal: /Integral/, kitchenTablet: "Tableta de la cocina", close: "Cerrar", shopping: "Compra", kidShopping: "Compra", calendar: "Calendario", week: "Semana", newEvent: "Nuevo evento", schedule: "Horario escolar", tasks: "Tareas", meals: "Comidas", today: "Hoy", editSchool: "Editar colegio", region: "Región", importHolidays: "Importar vacaciones escolares", addMeal: "Añadir comida", pairFront: "Conectar una tableta familiar o pantalla de pared", pairConnect: "Conectar un dispositivo", pairCode: "Código del nuevo dispositivo", next: "Siguiente", inviteAdult: "Invitar a un adulto", inviteName: "Nombre", inviteCreate: "Crear invitación", reminders: "Recordatorios", advanced: "Avanzados", setPassword: "Establecer contraseña" , enrol: "Conectar con un código", editTimetable: "Editar horario", editorSchool: "Colegio del parque", searchQuery: "lec", month: 'Mes' },
+  de: { editList: 'Liste bearbeiten', grandma: 'Oma Ruth', newList: 'Neue Liste', name: 'Name', save: 'Speichern', search: 'Suchen oder hinzufügen', settings: 'Einstellungen', oldCode: 'Code für ein älteres Gerät erzeugen', deviceName: 'Gerätename', createCode: 'Code erzeugen', addMember: 'Mitglied hinzufügen', history: 'Verlauf', trolley: 'Im Wagen', household: 'Neue Familie anlegen', signIn: 'Mit E-Mail fortfahren', enrol: 'Mit Code verbinden', papa: 'Thomas', daughter: 'Emma', wholemeal: /Vollkorn/, kitchenTablet: 'Küchen-Tablet', close: 'Schließen', shopping: 'Einkauf', kidShopping: 'Einkaufen', calendar: 'Kalender', week: 'Woche', newEvent: 'Neuer Termin', schedule: 'Stundenplan', scheduleNav: 'Schule', showMenu: 'Menü anzeigen', tasks: 'Aufgaben', meals: 'Essen', today: 'Heute', editSchool: 'Schule bearbeiten', region: 'Region', importHolidays: 'Ferien übernehmen', addMeal: 'Mahlzeit hinzufügen', pairFront: 'Familien-Tablet oder Wanddisplay verbinden', pairConnect: 'Gerät verbinden', pairCode: 'Code vom neuen Gerät', next: 'Weiter', inviteAdult: 'Erwachsene Person einladen', inviteName: 'Name', inviteCreate: 'Einladung erstellen', reminders: 'Erinnerungen', advanced: 'Erweitert', setPassword: 'Passwort festlegen', editTimetable: "Stundenplan bearbeiten", editorSchool: "Gemeinschaftsschule am Park", searchQuery: "mil", month: 'Monat' },
+  en: { editList: 'Edit list', grandma: 'Grandma Ruth', newList: 'New list', name: 'Name', save: 'Save', search: 'Search or add', settings: 'Settings', oldCode: 'Create a code for an older device', deviceName: 'Device name', createCode: 'Create code', addMember: 'Add member', history: 'History', trolley: 'In the trolley', household: 'Start a new family', signIn: 'Continue with email', enrol: 'Connect with a code', papa: 'David', daughter: 'Olivia', wholemeal: /Wholemeal/, kitchenTablet: 'Kitchen tablet', close: 'Close', shopping: 'Shopping', kidShopping: 'Shopping', calendar: 'Calendar', week: 'Week', newEvent: 'New event', schedule: 'Timetable', scheduleNav: 'School', showMenu: 'Show menu', tasks: 'Tasks', meals: 'Meals', today: 'Today', editSchool: 'Edit school', region: 'Region', importHolidays: 'Import school holidays', addMeal: 'Add meal', pairFront: 'Connect a family tablet or wall display', pairConnect: 'Connect device', pairCode: 'Code from the new device', next: 'Next', inviteAdult: 'Invite an adult', inviteName: 'Name', inviteCreate: 'Create invitation', reminders: 'Reminders', advanced: 'Advanced', setPassword: 'Set password', editTimetable: "Edit timetable", editorSchool: "Parkside School", searchQuery: "mil", month: 'Month' },
+  fr: { editList: 'Modifier la liste', grandma: "Mamie Ruth", newList: "Nouvelle liste", name: "Nom", save: "Enregistrer", search: "Rechercher ou ajouter", settings: "Paramètres", oldCode: "Créer un code pour un ancien appareil", deviceName: "Nom de l’appareil", createCode: "Créer un code", addMember: "Ajouter un membre", history: "Historique", trolley: "Dans le chariot", household: "Créer une nouvelle famille", signIn: "Continuer par e-mail", papa: "Thomas", daughter: "Emma", wholemeal: /Complet/, kitchenTablet: "Tablette de cuisine", close: "Fermer", shopping: "Courses", kidShopping: "Courses", calendar: "Calendrier", week: "Semaine", newEvent: "Nouvel événement", schedule: "Emploi du temps", scheduleNav: 'École', showMenu: 'Afficher le menu', tasks: "Tâches", meals: "Repas", today: "Aujourd’hui", editSchool: "Modifier l’école", region: "Région", importHolidays: "Importer les vacances scolaires", addMeal: "Ajouter un repas", pairFront: "Connecter une tablette familiale ou un écran mural", pairConnect: "Connecter un appareil", pairCode: "Code du nouvel appareil", next: "Suivant", inviteAdult: "Inviter un adulte", inviteName: "Prénom", inviteCreate: "Créer l’invitation", reminders: "Rappels", advanced: "Avancés", setPassword: "Définir un mot de passe" , enrol: "Connecter avec un code", editTimetable: "Modifier l’emploi du temps", editorSchool: "École du parc", searchQuery: "lai", month: 'Mois' },
+  es: { editList: 'Editar lista', grandma: "Abuela Ruth", newList: "Nueva lista", name: "Nombre", save: "Guardar", search: "Buscar o añadir", settings: "Ajustes", oldCode: "Crear un código para un dispositivo antiguo", deviceName: "Nombre del dispositivo", createCode: "Crear código", addMember: "Añadir miembro", history: "Historial", trolley: "En el carrito", household: "Crear una familia nueva", signIn: "Continuar con correo electrónico", papa: "David", daughter: "Olivia", wholemeal: /Integral/, kitchenTablet: "Tableta de la cocina", close: "Cerrar", shopping: "Compra", kidShopping: "Compra", calendar: "Calendario", week: "Semana", newEvent: "Nuevo evento", schedule: "Horario escolar", scheduleNav: 'Colegio', showMenu: 'Mostrar menú', tasks: "Tareas", meals: "Comidas", today: "Hoy", editSchool: "Editar colegio", region: "Región", importHolidays: "Importar vacaciones escolares", addMeal: "Añadir comida", pairFront: "Conectar una tableta familiar o pantalla de pared", pairConnect: "Conectar un dispositivo", pairCode: "Código del nuevo dispositivo", next: "Siguiente", inviteAdult: "Invitar a un adulto", inviteName: "Nombre", inviteCreate: "Crear invitación", reminders: "Recordatorios", advanced: "Avanzados", setPassword: "Establecer contraseña" , enrol: "Conectar con un código", editTimetable: "Editar horario", editorSchool: "Colegio del parque", searchQuery: "lec", month: 'Mes' },
 };
 // The school setup and the timetable import (specs/24): the first school, the import menu,
 // the scan sheet and the structured-text import preview.
@@ -113,6 +113,33 @@ const showAdvanced = async (page, t) => {
   await page.getByRole('button', { name, exact: true }).or(page.getByRole('radio', { name, exact: true }))
     .or(page.locator(`flt-semantics[aria-label="${name}"]`)).first().dispatchEvent('click');
   await settle(page);
+};
+// The Stundenplan in the bottom bar: its full name where it fits, the short one ("Schule") on a phone.
+const openSchedule = async (page, t) => {
+  await tapAny(page, (await anyNamed(page, t.schedule, true).count()) ? t.schedule : t.scheduleNav);
+};
+// A school action: a button where the bar has room, an item of the ⋮ menu on a phone.
+const schoolAction = async (page, t, name) => {
+  const button = anyNamed(page, name, false);
+  if (await button.count()) {
+    await button.first().dispatchEvent('click');
+  } else {
+    await page.getByRole('button', { name: t.showMenu, exact: true }).first().dispatchEvent('click');
+    await settle(page);
+    await page.getByRole('menuitem', { name }).first().click();
+  }
+  await settle(page);
+};
+// Reading a timetable in: "Einlesen…" and its menu where the bar has room, the ⋮ menu on a phone.
+const importVia = async (page, t, item) => {
+  if (await anyNamed(page, t.importAction, true).count()) {
+    await tapAny(page, t.importAction);
+  } else {
+    await page.getByRole('button', { name: t.showMenu, exact: true }).first().dispatchEvent('click');
+    await settle(page);
+  }
+  await page.getByRole('menuitem', { name: item }).first().click();
+  await settle(page, 1200);
 };
 // Opens a group of the Einstellungen top page by its title (a tile with a subtitle, so a substring).
 const openGroup = (page, name) => tapAny(page, name, { exact: false });
@@ -201,10 +228,8 @@ const longPress = async (page, locator) => {
  * not lose the others.
  */
 const openTimetablePreview = async (p, t) => {
-  await tapAny(p, t.schedule, { exact: false });
-  await tapAny(p, t.importAction);
-  await p.getByRole('menuitem', { name: t.importFromText }).first().click();
-  await settle(p);
+  await openSchedule(p, t);
+  await importVia(p, t, t.importFromText);
   // Focus the real editing element before inserting: a fill on a newly created
   // Flutter semantics field can precede its text-input connection.
   await p.getByRole('textbox', { name: t.importPasteHint }).click();
@@ -238,16 +263,16 @@ const shots = [
   { name: 'calendar-templates', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.calendar); await tapAny(p, t.newEvent); } },
   { name: 'calendar-editor', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.calendar); await tapAny(p, t.newEvent); await tapAny(p, t.blankEvent, { exact: false }); } },
   { name: 'school-week', scenario: 'adult', viewport: TABLET, steps: async (p, t) => tapAny(p, t.schedule, { exact: false }) },
-  { name: 'school-editor', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.schedule, { exact: false }); await press(p, t.editTimetable, { exact: false }); await press(p, t.editorSchool); } },
+  { name: 'school-editor', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await openSchedule(p, t); await schoolAction(p, t, t.editTimetable); await press(p, t.editorSchool); await p.mouse.move(2, 2); await settle(p, 1200); } },
   // The adult home opens on Today, the first destination.
   { name: 'today', scenario: 'adult', viewport: PHONE, steps: async (p, t) => tapAny(p, t.today) },
   // The school page's settings icon opens the school form; the region field opens the picker.
-  { name: 'region-picker', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.schedule, { exact: false }); await press(p, t.editSchool, { exact: false }); await tapAny(p, t.region, { exact: false }); } },
-  { name: 'holiday-import', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.schedule); await press(p, t.editSchool, { exact: false }); await scrollUntil(p, t.importHolidays); await tapNode(p, 'button', t.importHolidays); } },
+  { name: 'region-picker', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await openSchedule(p, t); await schoolAction(p, t, t.editSchool); await tapAny(p, t.region, { exact: false }); } },
+  { name: 'holiday-import', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await openSchedule(p, t); await schoolAction(p, t, t.editSchool); await scrollUntil(p, t.importHolidays); await tapNode(p, 'button', t.importHolidays); } },
   // A family without a school (scenario noschool): the first school asks for name and region only.
-  { name: 'school-first', scenario: 'noschool', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.schedule, { exact: false }); await tapAny(p, t.setupSchool); await p.getByRole('textbox', { name: t.schoolName }).fill(t.firstSchool); await settle(p); await tapAny(p, t.region, { exact: false }); await tapAny(p, t.country, { exact: false }); await settle(p, 1200); await tapAny(p, t.state, { exact: false }); await settle(p, 1200); } },
+  { name: 'school-first', scenario: 'noschool', viewport: PHONE, steps: async (p, t) => { await openSchedule(p, t); await tapAny(p, t.setupSchool); await p.getByRole('textbox', { name: t.schoolName }).fill(t.firstSchool); await settle(p); await tapAny(p, t.region, { exact: false }); await tapAny(p, t.country, { exact: false }); await settle(p, 1200); await tapAny(p, t.state, { exact: false }); await settle(p, 1200); } },
   // "Read in…" above the timetable, then "Scan a photo": the sheet with its three choices.
-  { name: 'timetable-scan', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.schedule, { exact: false }); await tapAny(p, t.importAction); await p.getByRole('menuitem', { name: t.importFromPhoto }).first().click(); await settle(p, 1200); } },
+  { name: 'timetable-scan', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await openSchedule(p, t); await importVia(p, t, t.importFromPhoto); } },
   // Structured text opens the preview that the photo scan uses too.
   // The tablet is wide enough for each subject's name under its short name.
   { name: 'timetable-import', scenario: 'adult', viewport: TABLET, steps: openTimetablePreview },
@@ -307,7 +332,7 @@ const shots = [
     await scrollDown(p, 3000); await p.mouse.move(386, 840); await settle(p);
   } },
   // Kalender → Neue Tradition: the six starters and the family's own.
-  { name: 'calendar-tradition', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.calendar); await tapAny(p, t.newTradition); } },
+  { name: 'calendar-tradition', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.calendar); await tapAny(p, t.newEvent); await tapAny(p, t.newTradition, { exact: false }); } },
   // Further down the kid's day: her meal wish card.
   { name: 'kid-wish', scenario: 'kid', viewport: TABLET, steps: async (p, t) => { await press(p, t.daughter); await scrollToHeading(p, t.wishTitle, 360); } },
   // The Rituals group of the Einstellungen, Advanced: the table question and its times.

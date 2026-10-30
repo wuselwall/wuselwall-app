@@ -6,7 +6,7 @@ On narrow screens or with larger text, action buttons sit below their descriptio
 
 ## Password
 
-Under **Settings → Advanced → Sign-in → Password** you set or change a password. At least 10 characters; a whole sentence is better. The code by email still works too, if your server sends email; on a server without email, the password is the way in ([Email](/en/server/email)).
+Under **Settings → Account & security → Sign-in → Password** you set or change a password. At least 10 characters; a whole sentence is better. The code by email still works too, if your server sends email; on a server without email, the password is the way in ([Email](/en/server/email)).
 
 ## Leave the family
 

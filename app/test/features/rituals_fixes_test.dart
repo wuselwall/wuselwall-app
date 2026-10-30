@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/app/theme/app_theme.dart';
@@ -283,6 +284,12 @@ void main() {
       expect(wishPlanDays(_monday, DateTime(2026, 11, 9)), hasLength(7));
     });
 
+    testWidgets('names the dish and who wished it', (t) async {
+      await open(t);
+      expect(find.text('Pizza einplanen'), findsOneWidget);
+      expect(find.text('Wunsch von Jack'), findsOneWidget);
+    });
+
     testWidgets('shows what each meal already has and starts on a free one', (
       t,
     ) async {
@@ -365,9 +372,9 @@ void main() {
       cycleLength: 1,
     );
 
-    testWidgets('is set at 34 on the wall, without a Wusel of its own, and its '
-        'answer opens below it', (t) async {
-      t.view.physicalSize = const Size(1280, 800);
+    testWidgets('fits the wall header\'s height, without a Wusel of its own, '
+        'and its answer takes its place', (t) async {
+      t.view.physicalSize = const Size(1920, 800);
       t.view.devicePixelRatio = 1;
       addTearDown(t.view.reset);
       await t.pumpWidget(
@@ -387,16 +394,53 @@ void main() {
         ),
       );
       await t.pumpAndSettle();
-      final text = t.widget<Text>(
-        find.byKey(const ValueKey('board-table-question')),
+      // The header is 72 px through the meal (specs/27 "Where"): the question takes
+      // two lines and a smaller size rather than a taller header, never below 24.
+      expect(
+        t.getSize(find.byType(BoardTableQuestion)).height,
+        lessThanOrEqualTo(72),
       );
-      expect(text.style!.fontSize, greaterThanOrEqualTo(34));
+      final question = find.byKey(const ValueKey('board-table-question'));
+      final text = t.widget<Text>(question);
+      expect(text.style!.fontSize, greaterThanOrEqualTo(24));
+      expect(
+        t
+            .renderObject<RenderParagraph>(
+              find.descendant(of: question, matching: find.byType(RichText)),
+            )
+            .didExceedMaxLines,
+        isFalse,
+      );
       expect(find.byType(FamilyWusel), findsNothing);
 
       await t.tap(find.byTooltip('Antwort zeigen'));
       await t.pumpAndSettle();
       expect(find.byKey(const ValueKey('board-table-answer')), findsOneWidget);
+      expect(find.byKey(const ValueKey('board-table-question')), findsNothing);
+      expect(
+        t.getSize(find.byType(BoardTableQuestion)).height,
+        lessThanOrEqualTo(72),
+      );
       expect(t.takeException(), isNull);
+    });
+
+    test('a short question keeps 34 on one line in the header', () {
+      TextStyle style(double size) => TextStyle(fontSize: size);
+      final fit = boardQuestionFit(
+        const TextSpan(text: 'Was war schön?'),
+        width: 900,
+        maxHeight: 64,
+        style: style,
+      );
+      expect(fit, (size: 34.0, lines: 1));
+      final long = boardQuestionFit(
+        const TextSpan(text: 'Wort Wort Wort Wort Wort Wort Wort Wort Wort'),
+        width: 500,
+        maxHeight: 64,
+        style: style,
+      );
+      expect(long.size, lessThan(34));
+      expect(long.lines, 2);
     });
 
     test('shrinks only a question too long for three lines', () {
@@ -437,6 +481,11 @@ void main() {
         find.byKey(const ValueKey('table-question-dismiss')),
         findsNothing,
       );
+      // A slim line on the kid home until tapped: the question, no buttons yet.
+      expect(find.text(riddle.text), findsOneWidget);
+      expect(find.text('Frage hinzufügen'), findsNothing);
+      await t.tap(find.text(riddle.text));
+      await t.pumpAndSettle();
       expect(find.text('Frage hinzufügen'), findsOneWidget);
     });
   });

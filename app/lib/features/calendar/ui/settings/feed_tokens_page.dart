@@ -8,6 +8,7 @@ import 'package:wuselwall/core/config/config_providers.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/core/ui/empty_view.dart';
 import 'package:wuselwall/core/ui/qr_code_view.dart';
 import 'package:wuselwall/core/ui/ringed_avatar.dart';
@@ -43,38 +44,40 @@ class FeedTokensPage extends ConsumerWidget {
         icon: const Icon(Icons.add),
         label: Text(l10n.feedNew),
       ),
-      body: AsyncValueView<List<FeedToken>>(
-        value: tokens,
-        onRetry: () => ref.invalidate(feedTokensProvider),
-        data: (list) => list.isEmpty
-            ? EmptyView(
-                // A settings page: no Wusel (specs/25 "Where Wusel never appears").
-                illustrated: false,
-                message: l10n.feedEmpty,
-                actions: [
-                  FilledButton.icon(
-                    onPressed: () => _create(context, ref),
-                    icon: const Icon(Icons.add),
-                    label: Text(l10n.feedNew),
-                  ),
-                ],
-              )
-            : ListView(
-                padding: const EdgeInsets.fromLTRB(
-                  Tokens.space4,
-                  Tokens.space4,
-                  Tokens.space4,
-                  96,
-                ),
-                children: [
-                  for (final t in list)
-                    _FeedTile(
-                      token: t,
-                      summary: _summary(l10n, t.filter, members),
-                      onRevoke: () => _revoke(context, ref, t),
+      body: ContentWidth(
+        child: AsyncValueView<List<FeedToken>>(
+          value: tokens,
+          onRetry: () => ref.invalidate(feedTokensProvider),
+          data: (list) => list.isEmpty
+              ? EmptyView(
+                  // A settings page: no Wusel (specs/25 "Where Wusel never appears").
+                  illustrated: false,
+                  message: l10n.feedEmpty,
+                  actions: [
+                    FilledButton.icon(
+                      onPressed: () => _create(context, ref),
+                      icon: const Icon(Icons.add),
+                      label: Text(l10n.feedNew),
                     ),
-                ],
-              ),
+                  ],
+                )
+              : ListView(
+                  padding: const EdgeInsets.fromLTRB(
+                    Tokens.space4,
+                    Tokens.space4,
+                    Tokens.space4,
+                    96,
+                  ),
+                  children: [
+                    for (final t in list)
+                      _FeedTile(
+                        token: t,
+                        summary: _summary(l10n, t.filter, members),
+                        onRevoke: () => _revoke(context, ref, t),
+                      ),
+                  ],
+                ),
+        ),
       ),
     );
   }

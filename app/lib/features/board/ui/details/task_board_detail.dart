@@ -8,7 +8,9 @@ import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/motion.dart';
 import 'package:wuselwall/core/wusel/wusel.dart';
+import 'package:wuselwall/core/wusel/wusel_stage.dart';
 import 'package:wuselwall/features/board/ui/board_grid.dart';
+import 'package:wuselwall/features/board/ui/board_scroll_cue.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/identity/ui/acting_profile_bar.dart';
@@ -20,7 +22,9 @@ import 'package:wuselwall/features/wusel/ui/family_wusel.dart';
 import 'package:wuselwall/features/wusel/ui/wusel_lines.dart';
 
 /// The family task board (specs/09 "Touch behaviour"): today's chores in one column per
-/// member, opened from the footer's task count. Ticking a chore is one of the three
+/// member who has any, opened from the footer's task count, in two rows when the
+/// columns do not fit side by side; the members with nothing today share a line under
+/// them. Ticking a chore is one of the three
 /// mutations the wall allows, and it is made as the acting profile, so the bar sits at
 /// the bottom to say who is ticking. Nothing here is smaller than the kiosk's 24 px.
 class TaskBoardDetailBody extends StatelessWidget {
@@ -35,8 +39,11 @@ class TaskBoardDetailBody extends StatelessWidget {
   );
 }
 
-/// Columns are never narrower than this; a family of more members scrolls sideways.
-const _minColumn = 260.0;
+/// Columns are never narrower than this, so a chore's longer words fit their line
+/// beside the glyph and the tick. A family with more columns than fit side by side
+/// gets a second row of them, never a sideways scroll (specs/09: the details never
+/// truncate).
+const _minColumn = 300.0;
 
 class _Board extends ConsumerWidget {
   const _Board();
@@ -84,39 +91,70 @@ class _Columns extends StatelessWidget {
     final anyone = items.where((t) => t.assignedProfileId == null).toList();
     return LayoutBuilder(
       builder: (context, constraints) {
-        final count = members.length + (anyone.isEmpty ? 0 : 1);
-        final fits = constraints.maxWidth / (count == 0 ? 1 : count);
-        final width = fits < _minColumn ? _minColumn : null;
-        final columns = [
+        // A column for each member with chores today, open or done, in household
+        // order, and "Offen für alle" last. Members with nothing today share one
+        // line under them, so the open chores are on screen without a scroll.
+        List<TaskInstance> tasksOf(Member m) => [
+          for (final t in items)
+            if (t.assignedProfileId == m.id) t,
+        ];
+        final busy = [
           for (final m in members)
+            if (tasksOf(m).isNotEmpty) m,
+        ];
+        final idle = [
+          for (final m in members)
+            if (tasksOf(m).isEmpty) m,
+        ];
+        final columns = [
+          for (final m in busy)
             _Column(
-              width: width,
+              key: ValueKey('column-${m.id}'),
               member: m,
-              tasks: [
-                for (final t in items)
-                  if (t.assignedProfileId == m.id) t,
-              ],
+              tasks: tasksOf(m),
               points: balances?[m.id],
               streak: _longestStreak(m.id),
             ),
           if (anyone.isNotEmpty)
-            _Column(width: width, member: null, tasks: anyone),
+            _Column(
+              key: const ValueKey('column-anyone'),
+              member: null,
+              tasks: anyone,
+            ),
         ];
-        if (width == null) {
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [for (final c in columns) Expanded(child: c)],
-          );
-        }
-        return SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: columns,
+        final rows = _rowsOf(columns.length, constraints.maxWidth);
+        final perRow = rows == 0 ? 1 : (columns.length / rows).ceil();
+        final width = constraints.maxWidth / perRow;
+        // One scroll for the whole board, with a fade while there is more below.
+        return BoardScrollFade(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                for (var r = 0; r < rows; r++)
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      for (final c in columns.skip(r * perRow).take(perRow))
+                        SizedBox(width: width, child: c),
+                    ],
+                  ),
+                if (idle.isNotEmpty)
+                  _NothingLeft(members: idle, balances: balances),
+              ],
+            ),
           ),
         );
       },
     );
+  }
+
+  /// How many rows [count] columns take at [width]: one while each can be at least
+  /// [_minColumn] wide, else as few as keep them that wide, filled evenly.
+  static int _rowsOf(int count, double width) {
+    if (count == 0) return 0;
+    final fit = (width / _minColumn).floor().clamp(1, count);
+    return (count / fit).ceil();
   }
 
   /// The member's longest run that is still going: "🔥 12". Null when nothing is.
@@ -133,16 +171,70 @@ class _Columns extends StatelessWidget {
 
 /// One member's column: a header in their ink with avatar, streak and points, then
 /// their chores as large cards. The open-for-anyone column has no member.
+/// The members with nothing today, on one line under the columns: their avatar, name
+/// and points, after "Heute steht nichts mehr an". Small, because there is nothing to
+/// do there; whole, because nothing in a detail is cut (specs/09).
+class _NothingLeft extends StatelessWidget {
+  const _NothingLeft({required this.members, required this.balances});
+
+  final List<Member> members;
+  final Map<String, int>? balances;
+
+  @override
+  Widget build(BuildContext context) {
+    final ww = context.ww;
+    final ink = Theme.of(context).colorScheme.onSurface;
+    return Container(
+      key: const ValueKey('nothing-left'),
+      margin: const EdgeInsets.all(Tokens.space1),
+      padding: const EdgeInsets.symmetric(
+        horizontal: Tokens.space3,
+        vertical: Tokens.space2,
+      ),
+      decoration: BoxDecoration(
+        color: ww.sunken,
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Wrap(
+        spacing: Tokens.space6,
+        runSpacing: Tokens.space2,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          Text(
+            context.l10n.boardNothingMoreToday,
+            style: boardUi(24, color: ww.ink2),
+          ),
+          for (final m in members)
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TaskAvatar(name: m.displayName, color: m.color, size: 40),
+                const SizedBox(width: Tokens.space2),
+                Text(
+                  m.displayName,
+                  style: boardUi(26, weight: FontWeight.w700, color: ink),
+                ),
+                if (balances?[m.id] case final points?) ...[
+                  const SizedBox(width: Tokens.space2),
+                  _Counter(points: points),
+                ],
+              ],
+            ),
+        ],
+      ),
+    );
+  }
+}
+
 class _Column extends StatelessWidget {
   const _Column({
-    required this.width,
     required this.member,
     required this.tasks,
     this.points,
     this.streak,
+    super.key,
   });
 
-  final double? width;
   final Member? member;
   final List<TaskInstance> tasks;
   final int? points;
@@ -169,75 +261,87 @@ class _Column extends StatelessWidget {
               inverted: true,
             ),
           if (m != null) const SizedBox(width: Tokens.space2),
+          // The name first and whole; the streak and the points follow it, on a
+          // second line when the column is too narrow for all three.
           Expanded(
-            child: Text(
-              name,
-              style: boardUi(
-                28,
-                weight: FontWeight.w800,
-                color: mc?.onInk ?? ww.ink2,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: Tokens.space2),
+              child: Wrap(
+                spacing: Tokens.space2,
+                runSpacing: Tokens.space1,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  Text(
+                    name,
+                    style: boardUi(
+                      28,
+                      weight: FontWeight.w800,
+                      color: mc?.onInk ?? ww.ink2,
+                    ),
+                  ),
+                  if (streak != null)
+                    StreakBadge(
+                      days: streak!,
+                      style: boardNum(
+                        26,
+                        weight: FontWeight.w800,
+                        color: mc?.onInk,
+                      ),
+                    ),
+                  if (points != null) _Counter(points: points!),
+                ],
               ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
             ),
           ),
-          if (streak != null)
-            StreakBadge(
-              days: streak!,
-              style: boardNum(26, weight: FontWeight.w800, color: mc?.onInk),
-            ),
-          if (points != null) ...[
-            const SizedBox(width: Tokens.space2),
-            _Counter(points: points!),
-          ],
         ],
       ),
     );
 
     final body = tasks.isEmpty
-        ? Center(
-            child: Padding(
-              padding: const EdgeInsets.all(Tokens.space3),
-              child: Text(
-                l10n.boardNothingMoreToday,
-                textAlign: TextAlign.center,
-                style: boardUi(24, color: ww.ink2),
-              ),
+        ? Padding(
+            padding: const EdgeInsets.all(Tokens.space4),
+            child: Text(
+              l10n.boardNothingMoreToday,
+              textAlign: TextAlign.center,
+              style: boardUi(24, color: ww.ink2),
             ),
           )
-        : ListView(
+        : Padding(
             padding: const EdgeInsets.all(Tokens.space2),
-            children: [
-              // A member's chores all done: their own moment and nobody else's
-              // (specs/25, specs/27 rule 2).
-              if (m != null)
-                _MemberDone(
-                  key: ValueKey('member-done-${m.id}'),
-                  done: tasks.every((t) => t.isTicked),
-                  line: WuselLines.stable(
-                    l10n,
-                    WuselMoment.wallMemberDone,
-                    seed: _seed(m.id),
-                    name: m.displayName,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // A member's chores all done: their own moment and nobody else's
+                // (specs/25, specs/27 rule 2).
+                if (m != null)
+                  _MemberDone(
+                    key: ValueKey('member-done-${m.id}'),
+                    done: tasks.every((t) => t.isTicked),
+                    line: WuselLines.stable(
+                      l10n,
+                      WuselMoment.wallMemberDone,
+                      seed: _seed(m.id),
+                      name: m.displayName,
+                    ),
                   ),
-                ),
-              for (final t in tasks)
-                _TaskCard(task: t, ink: mc?.ink, tint: mc?.tint),
-            ],
+                for (final t in tasks)
+                  // Keyed, so a tick's state stays with its chore when the list
+                  // changes.
+                  _TaskCard(
+                    key: ValueKey(t.id),
+                    task: t,
+                    ink: mc?.ink,
+                    tint: mc?.tint,
+                  ),
+              ],
+            ),
           );
 
-    final column = Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        header,
-        Expanded(child: body),
-      ],
-    );
-    return SizedBox(
-      width: width,
-      child: Padding(
-        padding: const EdgeInsets.all(Tokens.space1),
-        child: column,
+    return Padding(
+      padding: const EdgeInsets.all(Tokens.space1),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [header, body],
       ),
     );
   }
@@ -245,8 +349,10 @@ class _Column extends StatelessWidget {
 
 /// The line over a member's column once their chores are all ticked. Wusel cheers
 /// beside it for [cheerFor] when the last one is ticked while the board is open
-/// (specs/25 "Where Wusel appears", kiosk); a column that opens already done, and the
-/// rest of the day, show the line alone.
+/// (specs/25 "Where Wusel appears", kiosk): a lively Wusel comes over from the
+/// header's corner and goes back after ("Wusel on the move"); one that cannot travel
+/// cheers here in place. A column that opens already done, and the rest of the day,
+/// show the line alone.
 class _MemberDone extends StatefulWidget {
   const _MemberDone({required this.done, required this.line, super.key});
 
@@ -262,17 +368,57 @@ class _MemberDone extends StatefulWidget {
 class _MemberDoneState extends State<_MemberDone> {
   Timer? _cheer;
 
+  /// The space above the line that the travelling Wusel cheers in.
+  final _spot = GlobalKey();
+
+  /// Whether the corner Wusel is visiting: the space stays until it is home again,
+  /// then folds away, so the line itself never reflows.
+  bool _visit = false;
+
+  static const _size = 80.0;
+
   @override
   void didUpdateWidget(_MemberDone old) {
     super.didUpdateWidget(old);
     if (widget.done && !old.done) {
-      _cheer?.cancel();
-      _cheer = Timer(_MemberDone.cheerFor, () {
-        if (mounted) setState(() => _cheer = null);
+      final stage = WuselStage.maybeOf(context);
+      _visit = stage?.canVisit ?? false;
+      if (!_visit) {
+        _cheer?.cancel();
+        _cheer = Timer(_MemberDone.cheerFor, () {
+          if (mounted) setState(() => _cheer = null);
+        });
+        return;
+      }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        final trip = stage!.visit(
+          _spot,
+          spot: WuselSpot.inside,
+          size: _size,
+          stay: _MemberDone.cheerFor,
+          pose: WuselPose.cheer,
+        );
+        if (trip == null) {
+          // Out of sight (a column scrolled away): the cheer in place.
+          setState(() {
+            _visit = false;
+            _cheer = Timer(_MemberDone.cheerFor, () {
+              if (mounted) setState(() => _cheer = null);
+            });
+          });
+          return;
+        }
+        unawaited(
+          trip.done.then((_) {
+            if (mounted) setState(() => _visit = false);
+          }),
+        );
       });
     } else if (!widget.done) {
       _cheer?.cancel();
       _cheer = null;
+      _visit = false;
     }
   }
 
@@ -286,58 +432,71 @@ class _MemberDoneState extends State<_MemberDone> {
   Widget build(BuildContext context) {
     if (!widget.done) return const SizedBox.shrink();
     final style = boardUi(24, weight: FontWeight.w700);
+    final Widget content;
+    if (_cheer != null) {
+      content = WuselSays(
+        line: widget.line,
+        pose: WuselPose.cheer,
+        size: _size,
+        style: style,
+      );
+    } else {
+      content = Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (_visit) SizedBox.square(key: _spot, dimension: _size),
+          Text(widget.line, style: style),
+        ],
+      );
+    }
     return Padding(
       padding: const EdgeInsets.only(bottom: Tokens.space2),
-      child: _cheer == null
-          ? Text(widget.line, style: style)
-          : WuselSays(
-              line: widget.line,
-              pose: WuselPose.cheer,
-              size: 80,
-              style: style,
-            ),
+      // A zero-length AnimatedSize finishes inside its own layout and asserts:
+      // under reduced motion the size simply changes.
+      child: motionAllowed(context)
+          ? AnimatedSize(
+              duration: Tokens.motionEmphasised,
+              curve: Curves.easeOutCubic,
+              alignment: Alignment.topCenter,
+              child: content,
+            )
+          : content,
     );
   }
 }
 
-/// The member's points, which count up or down as they change (reduced motion: no
-/// animation).
+/// The member's points, which count up or down to a new balance (specs/17 "Motion";
+/// reduced motion: no animation).
 class _Counter extends StatelessWidget {
   const _Counter({required this.points});
 
   final int points;
 
   @override
-  Widget build(BuildContext context) {
-    final still = !motionAllowed(context);
-    return AnimatedSwitcher(
-      duration: still ? Duration.zero : Tokens.motionStandard,
-      switchInCurve: Curves.easeOutCubic,
-      child: KeyedSubtree(
-        key: ValueKey(points),
-        child: PointsCoin(points: points, fontSize: 26),
-      ),
-    );
-  }
+  Widget build(BuildContext context) =>
+      PointsCoin(points: points, fontSize: 26, counts: true);
 }
 
 /// A chore as a large card: glyph, title, what it is worth, and a tick target of
 /// kiosk size. A ticked card is struck through and shows "wartet auf Freigabe" when a
 /// guardian still has to check it.
-class _TaskCard extends StatelessWidget {
-  const _TaskCard({required this.task, this.ink, this.tint});
+class _TaskCard extends ConsumerWidget {
+  const _TaskCard({required this.task, this.ink, this.tint, super.key});
 
   final TaskInstance task;
   final Color? ink;
   final Color? tint;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final ww = context.ww;
     final scheme = Theme.of(context).colorScheme;
-    final ticked = task.isTicked;
-    final still = !motionAllowed(context);
+    // A tick shows the moment it is made, before the server confirms it.
+    final ticked = isTickShown(ref.watch(pendingTicksProvider), task);
+    // Waiting for a grown-up's check is not done: no strike-through, an hourglass
+    // instead of the green check (as on the phones, specs/06 "Verification").
+    final waiting = awaitsCheckShown(ticked, task);
     final caption = task.awaitsApproval
         ? l10n.tasksWaitingApproval
         : (ticked ? l10n.tasksDone : null);
@@ -346,6 +505,7 @@ class _TaskCard extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: Tokens.space2),
       child: BoardTap(
         label: task.title,
+        radius: 14,
         onTap: () {
           if (!ticked) {
             unawaited(
@@ -380,17 +540,17 @@ class _TaskCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    // Title and caption wrap as far as they need: the detail is
+                    // where the full text lives (specs/09).
                     Text(
                       task.title,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
                       style:
                           boardUi(
                             26,
                             weight: FontWeight.w700,
                             color: ticked ? ww.ink2 : scheme.onSurface,
                           ).copyWith(
-                            decoration: ticked
+                            decoration: ticked && !waiting
                                 ? TextDecoration.lineThrough
                                 : null,
                             decorationThickness: 2,
@@ -404,8 +564,6 @@ class _TaskCard extends StatelessWidget {
                           ?caption,
                         ].join(' · '),
                         style: boardUi(24, color: ww.ink2),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
                       ),
                   ],
                 ),
@@ -413,10 +571,9 @@ class _TaskCard extends StatelessWidget {
               SizedBox.square(
                 dimension: 56,
                 child: _TickMark(
-                  key: ValueKey('${task.id}-$ticked'),
                   ticked: ticked,
+                  waiting: waiting,
                   ink: ink ?? scheme.onSurface,
-                  still: still,
                 ),
               ),
             ],
@@ -427,40 +584,39 @@ class _TaskCard extends StatelessWidget {
   }
 }
 
-/// The tick. When it turns on it grows from 40 % to full size, which is the whole of
-/// the feedback the wall gives; reduced motion shows the finished tick at once.
+/// The tick. When it turns on while the board is shown it pops from half size
+/// ([TickPop]), which is the whole of the feedback the wall gives (specs/26
+/// "Celebrations"); a chore ticked before the board opened shows its tick at rest.
 class _TickMark extends StatelessWidget {
   const _TickMark({
     required this.ticked,
     required this.ink,
-    required this.still,
-    super.key,
+    this.waiting = false,
   });
 
   final bool ticked;
+  final bool waiting;
   final Color ink;
-  final bool still;
 
   @override
-  Widget build(BuildContext context) {
-    final ww = context.ww;
-    final icon = Icon(
-      ticked ? Icons.check_circle : Icons.radio_button_unchecked,
-      size: 44,
-      color: ticked ? ww.success : ink,
-    );
-    if (!ticked || still) return Center(child: icon);
-    return Center(
-      child: TweenAnimationBuilder<double>(
-        tween: Tween(begin: 0.4, end: 1),
-        duration: Tokens.motionEmphasised,
-        curve: Curves.easeOutCubic,
-        builder: (context, value, child) =>
-            Transform.scale(scale: value, child: child),
-        child: icon,
+  Widget build(BuildContext context) => Center(
+    child: TickPop(
+      ticked: ticked,
+      child: Icon(
+        !ticked
+            ? Icons.radio_button_unchecked
+            : waiting
+            ? Icons.hourglass_top_rounded
+            : Icons.check_circle,
+        size: 44,
+        color: !ticked
+            ? ink
+            : waiting
+            ? context.ww.ink2
+            : context.ww.success,
       ),
-    );
-  }
+    ),
+  );
 }
 
 /// The same number for a member on one day, on every device and every run.

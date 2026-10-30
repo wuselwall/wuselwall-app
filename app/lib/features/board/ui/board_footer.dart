@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
@@ -10,6 +11,7 @@ import 'package:wuselwall/features/board/ui/board_grid.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
 import 'package:wuselwall/features/board/ui/details/task_board_detail.dart';
 import 'package:wuselwall/features/identity/ui/acting_profile_bar.dart';
+import 'package:wuselwall/features/rituals/application/ritual_providers.dart';
 import 'package:wuselwall/features/rituals/ui/countdown_widgets.dart';
 import 'package:wuselwall/features/rituals/ui/week_review_widgets.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_page.dart';
@@ -20,6 +22,13 @@ class BoardFooter extends StatelessWidget {
   const BoardFooter({required this.board, required this.night, super.key});
 
   static const height = 56.0;
+
+  /// The space between two tiles of the bar.
+  static const _gap = 16.0;
+
+  /// The open chores' widest: about four members on one line on the 1280 canvas,
+  /// and room left for the other tiles at 200 % text.
+  static const _openMaxWidth = 480.0;
 
   final WeekBoard board;
   final bool night;
@@ -32,17 +41,19 @@ class BoardFooter extends StatelessWidget {
 
     return Container(
       constraints: BoxConstraints(minHeight: height),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-      decoration: BoxDecoration(
-        color: ww.sunken,
+      // No vertical padding: the 56 px row is the bar. Twelve pixels more here are
+      // what a 16:9 panel's 720-high canvas lacks for the three day-part rows of
+      // the appointments (week_board_view.dart).
+      // The hairline on top is drawn over the bar, not added to its height.
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      color: ww.sunken,
+      foregroundDecoration: BoxDecoration(
         border: Border(top: BorderSide(color: ww.line)),
       ),
-      // A6: the vertical padding above sits *outside* this row, so without a
-      // floor here the row (and therefore each BoardTap's actual hit area)
-      // could land under 56 px tall even though the container around it
-      // meets `height` — a nominal 56 button that is not actually 56
-      // (specs/17, t_da411148). ConstrainedBox gives IntrinsicHeight a real
-      // minimum to stretch every tappable child to.
+      // A6: without a floor here the row (and therefore each BoardTap's actual
+      // hit area) could land under 56 px tall — a nominal 56 button that is not
+      // actually 56 (specs/17, t_da411148). ConstrainedBox gives IntrinsicHeight
+      // a real minimum to stretch every tappable child to.
       child: ConstrainedBox(
         constraints: const BoxConstraints(minHeight: height),
         child: IntrinsicHeight(
@@ -54,7 +65,10 @@ class BoardFooter extends StatelessWidget {
             // to, instead of the unbounded height its loose Column slot allows.
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Expanded(
+              // The open chores at their own width, on one line while they fit
+              // [_openMaxWidth]; the countdowns beside them give way first.
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: _openMaxWidth),
                 child: BoardTap(
                   label: l10n.boardOpenToday,
                   onTap: () => unawaited(
@@ -64,14 +78,24 @@ class BoardFooter extends StatelessWidget {
                       body: const TaskBoardDetailBody(),
                     ),
                   ),
-                  child: Center(child: _OpenTasks(board: board)),
+                  child: Align(widthFactor: 1, child: _OpenTasks(board: board)),
                 ),
               ),
+              // A gap between the tiles, so their texts never run into each other.
+              const SizedBox(width: _gap),
               // Sunday's look-back, while it is open (specs/27).
-              const BoardWeekReviewTile(),
+              Consumer(
+                builder: (context, ref, _) =>
+                    ref.watch(weekReviewDueProvider) == null
+                    ? const SizedBox.shrink()
+                    : const Padding(
+                        padding: EdgeInsets.only(right: _gap),
+                        child: BoardWeekReviewTile(),
+                      ),
+              ),
               // Vorfreude: the nearest countdowns (specs/27), as many as fit.
               const Expanded(flex: 2, child: Center(child: BoardCountdowns())),
-              const SizedBox(width: 16),
+              const SizedBox(width: _gap),
               if (night) ...[
                 Icon(Icons.nightlight_round, size: 28, color: ww.ink3),
                 const SizedBox(width: 8),
@@ -198,43 +222,52 @@ class _OpenTasks extends StatelessWidget {
       );
     }
 
+    final label = Text(
+      l10n.boardOpenToday,
+      style: boardUi(26, weight: FontWeight.w600, color: ww.ink2),
+      maxLines: 1,
+      softWrap: false,
+    );
+    Widget chip(BoardMember m, int count) {
+      final name = Text(
+        context.memberName(board, m),
+        style: boardUi(26, weight: FontWeight.w600, color: ink),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        softWrap: false,
+      );
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          MemberDot(
+            memberColor: m.color,
+            semanticLabel: context.memberName(board, m),
+            size: 14,
+          ),
+          const SizedBox(width: 6),
+          Flexible(child: name),
+          const SizedBox(width: 4),
+          Text(
+            '$count',
+            style: boardNum(26, weight: FontWeight.w700, color: ink),
+            maxLines: 1,
+            softWrap: false,
+          ),
+        ],
+      );
+    }
+
+    // The gaps are the chips' own padding, not the Wrap's spacing: a Wrap's
+    // intrinsic width leaves its spacing out, so the footer's IntrinsicHeight would
+    // size the bar for a second line that is never drawn.
     return Wrap(
       crossAxisAlignment: WrapCrossAlignment.center,
-      spacing: 20,
       children: [
-        Text(
-          l10n.boardOpenToday,
-          style: boardUi(26, weight: FontWeight.w600, color: ww.ink2),
-          maxLines: 1,
-          softWrap: false,
-        ),
+        label,
         for (final (m, count) in open)
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              MemberDot(
-                memberColor: m.color,
-                semanticLabel: context.memberName(board, m),
-                size: 14,
-              ),
-              const SizedBox(width: 6),
-              Flexible(
-                child: Text(
-                  context.memberName(board, m),
-                  style: boardUi(26, weight: FontWeight.w600, color: ink),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: false,
-                ),
-              ),
-              const SizedBox(width: 4),
-              Text(
-                '$count',
-                style: boardNum(26, weight: FontWeight.w700, color: ink),
-                maxLines: 1,
-                softWrap: false,
-              ),
-            ],
+          Padding(
+            padding: const EdgeInsetsDirectional.only(start: 20),
+            child: chip(m, count),
           ),
       ],
     );

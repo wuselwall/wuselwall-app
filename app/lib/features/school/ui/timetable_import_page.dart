@@ -6,6 +6,7 @@ import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/core/ui/empty_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
@@ -111,42 +112,45 @@ class _TimetableImportPageState extends ConsumerState<TimetableImportPage> {
     final members = ref.watch(membersProvider).value ?? const <Member>[];
     return Scaffold(
       appBar: AppBar(title: Text(l10n.schoolImportTitle)),
-      body: AbsorbPointer(
-        absorbing: _busy,
-        child: AsyncValueView(
-          value: data,
-          onRetry: () => ref.invalidate(schoolDataProvider),
-          data: (d) {
-            final kids = _children(members);
-            final school = _school(d);
-            if (kids.isEmpty || school == null) {
-              return EmptyView(
-                // A settings page: no Wusel (specs/25 "Where Wusel never appears").
-                illustrated: false,
-                message: kids.isEmpty
-                    ? l10n.schoolImportNoChild
-                    : l10n.schoolSetupCardBody,
+      body: ContentWidth(
+        child: AbsorbPointer(
+          absorbing: _busy,
+          child: AsyncValueView(
+            value: data,
+            onRetry: () => ref.invalidate(schoolDataProvider),
+            data: (d) {
+              final kids = _children(members);
+              final school = _school(d);
+              if (kids.isEmpty || school == null) {
+                return EmptyView(
+                  // A settings page: no Wusel (specs/25 "Where Wusel never appears").
+                  illustrated: false,
+                  message: kids.isEmpty
+                      ? l10n.schoolImportNoChild
+                      : l10n.schoolSetupCardBody,
+                );
+              }
+              final child =
+                  kids.where((k) => k.id == _profileId).firstOrNull ??
+                  kids.first;
+              return _Preview(
+                args: args,
+                data: d,
+                kids: kids,
+                child: child,
+                school: school,
+                createSubjects: _createSubjects,
+                targetOf: _targetOf,
+                busy: _busy,
+                onChild: (id) => setState(() => _profileId = id),
+                onSchool: (id) => setState(() => _schoolId = id),
+                onCreateSubjects: (v) => setState(() => _createSubjects = v),
+                onMergeInto: (key, id) => setState(() => _mergeInto[key] = id),
+                onApply: (resolved, term) =>
+                    _apply(d, child, school, term, resolved),
               );
-            }
-            final child =
-                kids.where((k) => k.id == _profileId).firstOrNull ?? kids.first;
-            return _Preview(
-              args: args,
-              data: d,
-              kids: kids,
-              child: child,
-              school: school,
-              createSubjects: _createSubjects,
-              targetOf: _targetOf,
-              busy: _busy,
-              onChild: (id) => setState(() => _profileId = id),
-              onSchool: (id) => setState(() => _schoolId = id),
-              onCreateSubjects: (v) => setState(() => _createSubjects = v),
-              onMergeInto: (key, id) => setState(() => _mergeInto[key] = id),
-              onApply: (resolved, term) =>
-                  _apply(d, child, school, term, resolved),
-            );
-          },
+            },
+          ),
         ),
       ),
     );

@@ -161,16 +161,32 @@ void main() {
       expect(find.text(_de.settingsViewMoreHint), findsOneWidget);
     });
 
-    testWidgets('Basic keeps Delete account and hides the rest of Konto', (
+    testWidgets('Basic shows all of Konto, as its subtitle promises', (
       t,
     ) async {
       await open(t, Routes.settingsAccount, store: MemorySettingsViewStore());
 
+      expect(find.text(_de.signInMethodsTitle), findsOneWidget);
+      expect(find.text(_de.settingsSecurity), findsOneWidget);
+      await t.scrollUntilVisible(
+        find.byKey(const ValueKey('delete-account')),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
       expect(find.byKey(const ValueKey('delete-account')), findsOneWidget);
-      expect(find.text(_de.settingsSecurity), findsNothing);
-      expect(find.text(_de.signInMethodsTitle), findsNothing);
-      expect(find.byKey(const ValueKey('leave-family')), findsNothing);
-      expect(find.text(_de.settingsViewMoreHint), findsOneWidget);
+      // Nothing is hidden here, so there is no hint either.
+      expect(find.text(_de.settingsViewMoreHint), findsNothing);
+    });
+
+    testWidgets('Basic subtitles name only what Basic shows', (t) async {
+      await open(t, Routes.settings, store: MemorySettingsViewStore());
+      expect(find.text(_de.settingsGroupTasksSubtitleBasic), findsOneWidget);
+      expect(find.text(_de.settingsGroupTasksSubtitle), findsNothing);
+
+      await t.tap(find.text(_de.settingsViewAdvanced));
+      await t.pumpAndSettle();
+      expect(find.text(_de.settingsGroupTasksSubtitle), findsOneWidget);
+      expect(find.text(_de.settingsGroupTasksSubtitleBasic), findsNothing);
     });
 
     testWidgets('Basic hides the sharing and the export, Advanced shows them', (
@@ -261,7 +277,7 @@ void main() {
 
       expect(jokers, findsOneWidget);
       expect(verification, findsNothing);
-      expect(find.byKey(const ValueKey('settings-show-all')), findsOneWidget);
+      expect(find.byKey(const ValueKey('settings-more-hint')), findsOneWidget);
     });
 
     testWidgets('Basic shows the region in the Family group', (t) async {
@@ -273,19 +289,26 @@ void main() {
       );
     });
 
-    testWidgets('"Show all settings" switches to Advanced', (t) async {
+    testWidgets('the chip is the one way to Advanced; the hint names it', (
+      t,
+    ) async {
       final store = MemorySettingsViewStore();
       await open(t, Routes.settingsTasks, store: store);
 
-      final showAll = find.byKey(const ValueKey('settings-show-all'));
-      await t.ensureVisible(showAll);
-      await t.pumpAndSettle();
-      await t.tap(showAll);
+      final hint = find.byKey(const ValueKey('settings-more-hint'));
+      expect(hint, findsOneWidget);
+      // One line of text, no second switch beside the chip.
+      expect(
+        find.descendant(of: hint, matching: find.byType(ButtonStyleButton)),
+        findsNothing,
+      );
+
+      await t.tap(find.byKey(const ValueKey('settings-view')));
       await t.pumpAndSettle();
 
       expect(store.view, SettingsView.advanced);
       expect(verification, findsOneWidget);
-      expect(showAll, findsNothing);
+      expect(hint, findsNothing);
     });
   });
 }

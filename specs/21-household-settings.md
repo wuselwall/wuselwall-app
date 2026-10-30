@@ -308,7 +308,12 @@ a test checks that every key with a title is placed in exactly one group.
 | Help and about | getting started, versions, licences |
 
 *Basic* shows the keys of `basicSettingKeys` (unchanged by the regrouping) and the rows a family
-needs; Account and security stays in Basic on a personal phone for account deletion. A group with
+needs; Account and security shows all its rows in Basic on a personal phone (sign-in, password,
+two-factor, PIN, leaving, deleting: a parent looking for the password should not need Advanced).
+A group's subtitle on the top page names only what its page shows in the current view. The
+"Erweitert" chip in the app bar is the one switch; a Basic page that hides rows ends with one
+quiet line that names it. On a bar too narrow for a group's title beside the chip, the page
+shows the group's short title ("Aufgaben" for "Aufgaben & Belohnungen"). A group with
 nothing to show in the current view, on an older server or on this kind of device has no tile.
 A setting the app does not know follows its key's prefix into the matching group, or lands in
 "Other settings" under Help and about; both only under Advanced. Keys the app does not read

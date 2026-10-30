@@ -108,6 +108,10 @@ requested ──▶ approved ──▶ fulfilled
   ones you are happy to have self-served.
 - Declining should carry an optional note. "Not this week — we're away" lands very
   differently from a silent rejection.
+- A child asks for a reward (the kid register's Punkte tab, or the adult Belohnungen tab
+  while a child is the acting profile on a shared device). With a grown-up acting, that
+  tab is the catalogue: a tap edits a reward, and there is no request button and no
+  "x Punkte fehlen" computed from the grown-up's own balance.
 
 Seed the reward catalogue with roughly a 1 : 3 : 10 cost ratio so younger and older
 children can both engage: something at 5 points, something at 15, something at 50. The

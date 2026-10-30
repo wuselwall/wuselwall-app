@@ -23,6 +23,7 @@ import 'package:wuselwall/features/household/domain/device_label.dart';
 import 'package:wuselwall/features/household/domain/household_models.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
+import 'package:wuselwall/features/setup/ui/busy_button_label.dart';
 
 /// H1 "Neue Familie" (specs/20, J1): the one screen between sign-in and a household. The
 /// family name, the person's name and colour are prefilled from the account; the time zone
@@ -50,6 +51,9 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
   var _swatch = 0;
   var _examples = true;
   var _busy = false;
+
+  /// True while the create request runs: the button says so with a spinner.
+  var _creating = false;
   // Set when the session has not turned Ready long after create() succeeded: the form
   // stays locked (a second create would make a second family), but the escapes open again.
   var _stalled = false;
@@ -140,6 +144,7 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
     setState(() => _busy = true);
     // Set before the call: the session refresh inside it may re-route before the reply.
     plan.start(seedExamples: _examples);
+    setState(() => _creating = true);
     final result = await repo.create(
       householdName: _family.text,
       displayName: _name.text,
@@ -154,6 +159,7 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
         host: currentDeviceHost(),
       ),
     );
+    if (mounted) setState(() => _creating = false);
     if (result is Ok) {
       await setupStore.clear();
       setupSignal.value = false;
@@ -216,19 +222,9 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
     };
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.householdNewTitle),
-        actions: [
-          // The chosen colour, visible at once.
-          Padding(
-            padding: const EdgeInsets.only(right: Tokens.space4),
-            child: CircleAvatar(
-              radius: 12,
-              backgroundColor: MemberPalette.swatches[_swatch].light,
-            ),
-          ),
-        ],
-      ),
+      // The chosen colour shows as a tick in its swatch, under "Deine Farbe"; a dot in
+      // the bar said nothing on its own.
+      appBar: AppBar(title: Text(l10n.householdNewTitle)),
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
@@ -261,9 +257,7 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
                     style: theme.textTheme.labelLarge,
                   ),
                   const SizedBox(height: Tokens.space2),
-                  Wrap(
-                    spacing: Tokens.space2,
-                    runSpacing: Tokens.space2,
+                  _SwatchGrid(
                     children: [
                       for (final (i, swatch) in MemberPalette.swatches.indexed)
                         _Swatch(
@@ -279,7 +273,10 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
                   const SizedBox(height: Tokens.space3),
                   // One quiet line; the zone and language are changed in Settings later.
                   Text(
-                    l10n.householdNewDefaults(_timezone, language),
+                    l10n.householdNewDefaults(
+                      timezoneCity(_timezone),
+                      language,
+                    ),
                     style: theme.textTheme.bodySmall?.copyWith(color: ww.ink2),
                   ),
                   if (_needsCode && _setupCode != null)
@@ -292,7 +289,9 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
                       decoration: InputDecoration(
                         labelText: l10n.householdNewFounderCode,
                         helperText: l10n.householdNewFounderHelp,
-                        helperMaxLines: 3,
+                        // The last sentence is the point (not the code from the
+                        // sign-in mail): never cut it, even at 360 px.
+                        helperMaxLines: 6,
                         errorText: _codeError,
                       ),
                       validator: _required,
@@ -315,8 +314,11 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
                   ),
                   const SizedBox(height: Tokens.space4),
                   FilledButton(
+                    key: const ValueKey('new-family-create'),
                     onPressed: _busy || _loadingSetup ? null : _submit,
-                    child: Text(l10n.householdNewCreate),
+                    child: _creating
+                        ? BusyButtonLabel(label: l10n.householdNewCreating)
+                        : Text(l10n.householdNewCreate),
                   ),
                   if (_stalled) ...[
                     const SizedBox(height: Tokens.space3),
@@ -369,7 +371,34 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
       : null;
 }
 
-/// One colour of the member palette: a round, labelled choice.
+/// The swatches in even rows: all in one row where they fit, otherwise half per row
+/// (4 × 2), never seven and one left over.
+class _SwatchGrid extends StatelessWidget {
+  const _SwatchGrid({required this.children});
+
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) {
+      const gap = Tokens.space2;
+      final n = children.length;
+      double width(int perRow) => perRow * _Swatch.size + (perRow - 1) * gap;
+      final perRow = width(n) <= constraints.maxWidth ? n : (n + 1) ~/ 2;
+      // Aligned, so the list around it does not stretch the rows back to full width.
+      return Align(
+        alignment: AlignmentDirectional.centerStart,
+        child: SizedBox(
+          width: width(perRow),
+          child: Wrap(spacing: gap, runSpacing: gap, children: children),
+        ),
+      );
+    },
+  );
+}
+
+/// One colour of the member palette: a round, labelled choice; the chosen one carries a
+/// tick as well as the ring, so the choice does not rest on the ring alone.
 class _Swatch extends StatelessWidget {
   const _Swatch({
     required this.swatch,
@@ -377,6 +406,9 @@ class _Swatch extends StatelessWidget {
     required this.selected,
     required this.onTap,
   });
+
+  /// 48: the minimum touch target, so the swatches pass the accessibility matrix.
+  static const size = 48.0;
 
   final MemberSwatch swatch;
   final String label;
@@ -392,8 +424,8 @@ class _Swatch extends StatelessWidget {
       customBorder: const CircleBorder(),
       onTap: onTap,
       child: Container(
-        width: 48,
-        height: 48,
+        width: size,
+        height: size,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: swatch.light,
@@ -404,7 +436,21 @@ class _Swatch extends StatelessWidget {
                 )
               : null,
         ),
+        child: selected
+            ? Icon(
+                Icons.check,
+                size: 22,
+                color: Theme.of(context).colorScheme.surface,
+              )
+            : null,
       ),
     ),
   );
+}
+
+/// A time zone as a person reads it: the city of an IANA name ("Europe/Berlin" →
+/// "Berlin", "America/Argentina/Buenos_Aires" → "Buenos Aires"); anything else as it is.
+String timezoneCity(String zone) {
+  final city = zone.split('/').last.replaceAll('_', ' ').trim();
+  return city.isEmpty ? zone : city;
 }
