@@ -79,7 +79,7 @@ En bas de l’éditeur, trois réglages rendent le quotidien plus léger (voir [
 
 ## Nouvelle tradition {#new-tradition}
 
-Au-dessus de **Nouvel événement** se trouve un petit bouton avec des confettis : **Nouvelle tradition**. Il ouvre un choix de six modèles, **Soirée jeux**, **Vendredi pizza**, **Soirée cinéma**, **Petit-déjeuner du dimanche**, **Heure des histoires** et **Journée sortie**, et en dessous **Ta propre tradition**. Chaque modèle indique quand il commence, par exemple « Chaque vendredi, 18:00 ».
+Sur une tablette ou un ordinateur, un petit bouton avec des confettis se trouve au-dessus de **Nouvel événement** : **Nouvelle tradition**. Sur un téléphone, touche **Nouvel événement**, puis la tuile **Nouvelle tradition**. Les deux ouvrent un choix de six modèles, **Soirée jeux**, **Vendredi pizza**, **Soirée cinéma**, **Petit-déjeuner du dimanche**, **Heure des histoires** et **Journée sortie**, et en dessous **Ta propre tradition**. Chaque modèle indique quand il commence, par exemple « Chaque vendredi, 18:00 ».
 
 L’éditeur habituel s’ouvre ensuite, déjà rempli : le nom, l’image, **Toutes les semaines** le bon jour, toute la famille sous **Qui** et **Tradition familiale** activée. Le vendredi pizza apporte **Avec un repas** « Pizza » au dîner. Ajustez le jour, l’heure et les personnes, puis touchez **Enregistrer**. Avec **Ta propre tradition**, vous saisissez vous-même le nom et l’image. Plus d’informations dans [Traditions familiales](/fr/guide/rituals#traditions).
 

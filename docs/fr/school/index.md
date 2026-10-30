@@ -78,7 +78,7 @@ Choisissez un rythme hebdomadaire ou des semaines A/B, saisies séparément. Ajo
 
 ## Importer un emploi du temps {#reading-in}
 
-Au lieu de taper chaque cours, tu peux faire lire la feuille. Il y a deux façons. Toutes aboutissent au même [aperçu](#preview), et seul **Appliquer** écrit quelque chose.
+Au lieu de taper chaque cours, tu peux faire lire la feuille. Il y a deux façons. Toutes aboutissent au même [aperçu](#preview), et seul **Appliquer** écrit quelque chose. Sur un téléphone, les deux façons sont directement dans le menu aux trois points au-dessus de l’emploi du temps.
 
 **Depuis du texte structuré.** Touche **Importer…**, puis **Coller du texte**. Colle un emploi du temps en JSON au format WuselWall, puis touche **Importer** pour ouvrir l’aperçu. Un texte ordinaire n’est pas automatiquement converti en emploi du temps.
 
@@ -133,7 +133,7 @@ Le menu d’un jour permet de **vider la journée**, de la **copier** sur d’au
 
 ## La semaine {#the-week}
 
-Le choix de l’enfant, le retour à cette semaine et les actions de modification partagent une barre. Sur petit écran, le retour à cette semaine est centré sur sa propre ligne et les actions passent dessous. L’action de l’école utilise une icône d’école ; l’engrenage ouvre les paramètres généraux.
+Le choix de l’enfant, le retour à cette semaine et les actions de modification partagent une barre. Sur un téléphone, tout tient sur une ligne pour que l’emploi du temps commence en haut de l’écran : **Cette semaine** est une icône de calendrier, et **Modifier l’école**, **Modifier l’emploi du temps**, **Coller du texte** et **Scanner une photo** sont dans le menu aux trois points. La barre du bas y affiche aussi la rubrique sous son nom court, **École**. L’action de l’école utilise une icône d’école ; l’engrenage ouvre les paramètres généraux.
 
 Les flèches de semaine se trouvent près du lundi et du vendredi ; sur téléphone ou tablette, un balayage vers la gauche ou la droite change aussi de semaine. Sur la tablette des enfants, l’enfant passe ainsi d’un jour à l’autre de sa semaine, du lundi au vendredi. L’enfant choisi a un fond teinté, une bordure et une coche. Les vacances sont affichées au-dessus de la semaine ; les jours fériés, dans l’en-tête du jour.
 
