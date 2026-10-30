@@ -176,8 +176,11 @@ contrast as `NOT_RUN` for some virtual nodes; the Flutter contrast gate remains 
 
 Optional browser compatibility coverage:
 
+On Linux, `--with-deps` also installs browser system libraries and may require an
+administrator. Downloading browser binaries alone does not provision WebKit's libraries.
+
 ```sh
-npx playwright install firefox webkit
+npx playwright install --with-deps firefox webkit
 QUALIFY_BROWSERS=chromium,firefox,webkit QUALIFY_MODE=capture QUALIFY_MATRIX=canonical npm run qualify:web
 ```
 
