@@ -1,6 +1,7 @@
 // Controls for the exact contrast audit: it must fail real failures, prove the
 // cases the SDK estimate misattributes, and stay undecided where paint is mixed.
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -44,6 +45,21 @@ class _OutlineForegroundPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_OutlineForegroundPainter oldDelegate) => false;
+}
+
+class _OneGlyphBackgroundPainter extends CustomPainter {
+  const _OneGlyphBackgroundPainter(this.glyphBox);
+
+  final Rect glyphBox;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.drawRect(glyphBox, Paint()..color = const Color(0xff666666));
+  }
+
+  @override
+  bool shouldRepaint(_OneGlyphBackgroundPainter oldDelegate) =>
+      oldDelegate.glyphBox != glyphBox;
 }
 
 Widget _page(Widget body) => MaterialApp(
@@ -301,37 +317,102 @@ void main() {
     );
   });
 
-  testWidgets('text spanning two flat backgrounds is held to the worse one', (
-    t,
-  ) async {
-    Widget halves(Color left, Color right) => Stack(
-      alignment: Alignment.center,
-      children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(width: 60, height: 30, color: left),
-            Container(width: 60, height: 30, color: right),
-          ],
-        ),
-        Text('Across', style: _style(size: 14)),
-      ],
-    );
-    await withSemantics(t, _page(halves(Colors.white, _paper)), () async {
-      final row = (await auditExactContrast(t)).rows.single;
-      expect(row.classification, 'PASS', reason: row.reason);
-      expect(row.background2, isNotNull);
-    });
-    await withSemantics(
-      t,
-      _page(halves(Colors.white, const Color(0xff8a8a8a))),
-      () async {
+  testWidgets(
+    'text spanning flat backgrounds accounts for ambiguous plateaus',
+    (t) async {
+      Widget halves(Color left, Color right) => Stack(
+        alignment: Alignment.center,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(width: 60, height: 30, color: left),
+              Container(width: 60, height: 30, color: right),
+            ],
+          ),
+          Text('Across', style: _style(size: 14)),
+        ],
+      );
+      await withSemantics(t, _page(halves(Colors.white, _paper)), () async {
         final row = (await auditExactContrast(t)).rows.single;
-        expect(row.classification, 'FAIL', reason: row.reason);
-        expect(row.ratio, lessThan(4.5));
-      },
-    );
-  });
+        expect(row.classification, 'PASS', reason: row.reason);
+        expect(row.background2, isNotNull);
+      });
+      await withSemantics(
+        t,
+        _page(halves(Colors.white, const Color(0xff8a8a8a))),
+        () async {
+          final row = (await auditExactContrast(t)).rows.single;
+          expect(row.classification, 'UNDECIDED', reason: row.reason);
+          expect(row.reason, 'Ambiguous low-contrast background candidate');
+        },
+      );
+    },
+  );
+
+  testWidgets(
+    'a low-contrast background beneath one glyph cannot be diluted by a long '
+    'paragraph',
+    (t) async {
+      const text =
+          'MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM';
+      final style = _style(color: Colors.black, size: 12);
+      final layout = TextPainter(
+        text: TextSpan(text: text, style: style),
+        textDirection: TextDirection.ltr,
+      )..layout(maxWidth: 300);
+      final glyph = layout
+          .getBoxesForSelection(
+            const TextSelection(baseOffset: 0, extentOffset: 1),
+          )
+          .single
+          .toRect();
+      await withSemantics(
+        t,
+        _page(
+          CustomPaint(
+            key: const ValueKey('single-glyph-background'),
+            painter: _OneGlyphBackgroundPainter(glyph),
+            child: SizedBox(
+              width: 300,
+              height: layout.height,
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Text(text, style: style),
+              ),
+            ),
+          ),
+        ),
+        () async {
+          final renderBackground = t.renderObject(
+            find.byKey(const ValueKey('single-glyph-background')),
+          ) as RenderCustomPaint;
+          final paragraph = t.renderObject(find.text(text)) as RenderParagraph;
+          final actualGlyph = MatrixUtils.transformRect(
+            paragraph.getTransformTo(renderBackground),
+            paragraph
+                .getBoxesForSelection(
+                  const TextSelection(baseOffset: 0, extentOffset: 1),
+                )
+                .single
+                .toRect(),
+          );
+          expect(glyph.inflate(1).contains(actualGlyph.center), isTrue);
+          expect(actualGlyph.width, closeTo(glyph.width, 1));
+          expect(actualGlyph.height, closeTo(glyph.height, 1));
+          final row = (await auditExactContrast(t)).rows.single;
+          expect(row.classification, 'UNDECIDED', reason: '${row.toJson()}');
+          expect(
+            row.reason,
+            anyOf(
+              'Ambiguous low-contrast background candidate',
+              'More than two flat background candidates',
+            ),
+          );
+        },
+      );
+    },
+  );
 
   testWidgets(
     'an empty hit-test Listener later in a Stack does not obscure text',

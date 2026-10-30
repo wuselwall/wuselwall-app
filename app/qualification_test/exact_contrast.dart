@@ -37,10 +37,6 @@ const double _minimumCoverage = 0.96;
 /// is not visible in the capture and nothing is proven about it.
 const double _minimumInk = 0.005;
 
-/// The least share of the sample a second flat background must hold to count
-/// as one (a day number half on its "today" ring, a time beside a band).
-const double _secondBackgroundShare = 0.02;
-
 /// Icon fonts paint glyphs from the Private Use Area; they are graphics, not
 /// text, and the SDK guideline never considers them either.
 bool _isIconRun(String text, TextStyle style) {
@@ -586,27 +582,27 @@ List<ExactContrastRow> _auditParagraph(
     // The text's painted colour on a background: the style colour, or for
     // translucent text the style colour composited onto that background.
     int inkOn(int bg) => Color.alphaBlend(fg, Color(bg)).toARGB32();
-    // Backgrounds are plateaus: colours holding a real share of the sample
-    // whose pixels mostly sit among pixels of the same colour. Anti-aliasing
-    // never forms one, however many pixels share a stem's coverage value.
+    // Background candidates have pixels mostly surrounded by the same colour.
+    // Retain even a small surface behind one glyph. Ambiguous extra plateaus
+    // (including uniform anti-aliasing) must keep the SDK finding in force.
     final plateaus = <int>[];
+    final flatCounts = <int, int>{};
+    for (final entry in pixels.entries) {
+      final c = entry.value;
+      final x = entry.key % capture.width;
+      final y = entry.key ~/ capture.width;
+      var same = 0;
+      if (x > 0 && capture.argbAt(x - 1, y) == c) same++;
+      if (x + 1 < capture.width && capture.argbAt(x + 1, y) == c) same++;
+      if (y > 0 && capture.argbAt(x, y - 1) == c) same++;
+      if (y + 1 < capture.height && capture.argbAt(x, y + 1) == c) same++;
+      if (same >= 3) flatCounts.update(c, (n) => n + 1, ifAbsent: () => 1);
+    }
     for (final entry in byCount) {
-      if (entry.value < _secondBackgroundShare * sampled) break;
       final c = entry.key;
       if ((c >> 24) & 0xff != 0xff || inkOn(c) == c) continue;
       if (fg.a == 1 && c == fg.toARGB32()) continue;
-      var flat = 0;
-      for (final index in pixels.keys) {
-        if (pixels[index] != c) continue;
-        final x = index % capture.width;
-        final y = index ~/ capture.width;
-        var same = 0;
-        if (x > 0 && capture.argbAt(x - 1, y) == c) same++;
-        if (x + 1 < capture.width && capture.argbAt(x + 1, y) == c) same++;
-        if (y > 0 && capture.argbAt(x, y - 1) == c) same++;
-        if (y + 1 < capture.height && capture.argbAt(x, y + 1) == c) same++;
-        if (same >= 3) flat++;
-      }
+      final flat = flatCounts[c] ?? 0;
       if (flat * 2 >= entry.value) plateaus.add(c);
       if (plateaus.length == 3) break;
     }
@@ -694,6 +690,16 @@ List<ExactContrastRow> _auditParagraph(
       (p) =>
           !spanned.contains(p) && paintedContrastRatio(fg, Color(p)) < required,
     );
+    // A repeated anti-aliased edge can form a flat colour plateau while still
+    // lying on the foreground blend line of a different background. If that
+    // candidate would fail contrast, the pixels cannot establish whether it
+    // is a real surface or only edge paint, so keep the SDK finding.
+    final ambiguousLowContrast = plateaus.any((p) {
+      if (paintedContrastRatio(fg, Color(p)) >= required) return false;
+      return plateaus.any(
+        (other) => other != p && _blendError(p, inkOn(other), other) != null,
+      );
+    });
     var ratio = paintedContrastRatio(fg, Color(bg1));
     if (bg2 != null) {
       ratio = math.min(ratio, paintedContrastRatio(fg, Color(bg2)));
@@ -703,6 +709,8 @@ List<ExactContrastRow> _auditParagraph(
       reason = 'More than one background or overlapping paint under the text';
     } else if (unattributedLowContrast) {
       reason = 'Unattributed low-contrast background candidate';
+    } else if (ambiguousLowContrast) {
+      reason = 'Ambiguous low-contrast background candidate';
     } else if (ink < _minimumInk || spanned.isEmpty) {
       reason = 'Text is not visible in the capture';
     }

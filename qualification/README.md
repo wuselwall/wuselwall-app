@@ -53,8 +53,9 @@ misattribution; ambiguous findings remain blocking. The ordinary
 suite passed 1,713 tests, with seven backend integration tests intentionally skipped without
 backend configuration. Those seven require the separate disposable-backend CI job. Android
 app and instrumentation APKs compile. An unsigned iOS diagnostic booted a simulator,
-captured five smoke screens and built the app; XCTest auditing remains blocked by its
-plugin build graph, with a CocoaPods configuration fix queued for validation. Android
+captured five smoke screens and compiled XCTest. Apple's auditor rejected the deliberate
+bad control. The keyboard detector then failed with a Flutter inherited-element error;
+the stable-host and dependency-free inspection fixes need another runtime check. Android
 runtime execution still needs its dedicated SDK/AVDs. No native baseline has been approved
 by these diagnostics.
 
@@ -65,9 +66,10 @@ takes the most frequent colour below the average lightness as the text; beside 1
 table border, a cell tint or a button outline has more pixels than the glyphs' solid cores, so
 the guideline reported those borders against the paper (ratios near 1.3) across the timetable,
 calendar and settings. The exact audit takes the foreground from the resolved `TextStyle` and
-samples the glyph boxes inflated by one pixel. Backgrounds are plateaus: colours with at least
-2 % of the sample whose pixels mostly sit among pixels of the same colour (anti-aliasing never
-forms one, however many pixels share a stem's coverage value). A pixel is explained when it is a
+samples the glyph boxes inflated by one pixel. Background candidates are plateaus: colours
+whose pixels mostly sit among pixels of the same colour. Small candidates are retained,
+including a surface behind just one glyph; more than two candidates stay undecided.
+A pixel is explained when it is a
 plateau or a straight blend between the ink and a plateau; the text sits on a plateau when such
 ink pixels touch it, so a line box poking past an avatar's circle onto the paper does not put the
 letter on the paper. The measurement is accepted when at least 96 % of the pixels are explained
@@ -93,7 +95,8 @@ Additional paint controls reproduce neutral overlays that remain on the same col
 line as the text. Such pixels alone cannot establish a proof: foreground custom painters,
 perspective transforms and intersecting later-painted siblings stay undecided. A second
 background cannot be discarded merely because it occupies less than half of each glyph
-box. Unknown text before parsed SDK findings is retained as a blocking finding.
+box or only one glyph in a long paragraph. Unknown text before parsed SDK findings is
+retained as a blocking finding.
 The Flutter job writes `contrast-report.json` and `contrast-report.md` even when the matrix
 fails. They group repeated labels, ratios and reported colours while preserving case IDs,
 unparsed findings and an input checksum. The report grants no waivers.
