@@ -37,8 +37,12 @@ test('groups duplicate cases and repeated issues while retaining case occurrence
   const input = {
     matrix: 'full', expected: 10, executed: 3, qualification: 'INCOMPLETE',
     results: [
-      { id: 'case-a', status: 'FAIL', findings: [{ rule: 'textContrast', reason: `${firstIssue}${secondIssue}` }] },
-      { id: 'case-a', status: 'FAIL', findings: [{ rule: 'textContrast', reason: firstIssue }] },
+      { id: 'case-a', status: 'FAIL',
+        failureScreenshots: ['build/qualification/flutter/full/failures/case-a.png'],
+        findings: [{ rule: 'textContrast', reason: `${firstIssue}${secondIssue}` }] },
+      { id: 'case-a', status: 'FAIL',
+        failureScreenshots: ['build/qualification/flutter/full/failures/case-a.png'],
+        findings: [{ rule: 'textContrast', reason: firstIssue }] },
       { id: 'case-b', status: 'FAIL', findings: [{ rule: 'tapTarget', reason: 'target too small' }] },
     ],
   };
@@ -58,6 +62,12 @@ test('groups duplicate cases and repeated issues while retaining case occurrence
   assert.equal(report.groups[0].occurrenceCount, 3);
   assert.deepEqual(report.groups[0].caseIds, ['case-a']);
   assert.equal(report.groups[0].caseOccurrences['case-a'], 3);
+  assert.deepEqual(report.groups[0].failureScreenshotsByCase, {
+    'case-a': ['build/qualification/flutter/full/failures/case-a.png'],
+  });
+  assert.deepEqual(report.failureScreenshotsByCase, {
+    'case-a': ['build/qualification/flutter/full/failures/case-a.png'],
+  });
   assert.deepEqual(report.groups[0].semanticsNodeIds, [22, 91]);
   assert.deepEqual(report.unparsedFindings[0].finding, { rule: 'tapTarget', reason: 'target too small' });
 });
@@ -71,6 +81,42 @@ test('keeps unknown contrast formats verbatim and does not silently drop them', 
   assert.equal(report.unparsedFindings.length, 1);
   assert.equal(report.unparsedFindings[0].reason, reason);
   assert.equal(report.unparsedFindings[0].finding.reason, reason);
+});
+
+test('retains screenshots for unknown findings but never links unsafe artifact paths', () => {
+  const reason = 'New SDK wording with no semantics node details';
+  const input = { matrix: 'canonical', results: [
+    { id: 'unknown-case', status: 'FAIL',
+      failureScreenshots: ['build/qualification/flutter/canonical/failures/unknown-case.png'],
+      findings: [{ rule: 'textContrast', reason }] },
+    { id: 'untrusted-path', status: 'FAIL',
+      failureScreenshots: [
+        'build/qualification/flutter/elsewhere/failures/wrong-profile.png',
+        '../../outside.png',
+        'https://example.invalid/bad.png',
+      ],
+      findings: [{ rule: 'tapTarget', reason: 'too small' }] },
+  ] };
+  const report = groupContrastResults(input);
+  assert.deepEqual(report.failureScreenshotsByCase, {
+    'unknown-case': ['build/qualification/flutter/canonical/failures/unknown-case.png'],
+    'untrusted-path': [
+      'build/qualification/flutter/elsewhere/failures/wrong-profile.png',
+      '../../outside.png',
+      'https://example.invalid/bad.png',
+    ],
+  });
+  assert.deepEqual(report.unparsedFindings[0].failureScreenshots,
+    ['build/qualification/flutter/canonical/failures/unknown-case.png']);
+  assert.deepEqual(report.unparsedFindings[1].failureScreenshots,
+    [
+      'build/qualification/flutter/elsewhere/failures/wrong-profile.png',
+      '../../outside.png',
+      'https://example.invalid/bad.png',
+    ]);
+  const markdown = renderContrastMarkdown(report, { file: 'input.json', sha256: 'abc' });
+  assert.match(markdown, /\[PNG for unknown-case\]\(failures\/unknown-case\.png\)/);
+  assert.doesNotMatch(markdown, /wrong-profile\.png|outside\.png|example\.invalid/);
 });
 
 test('retains nonempty text before the first SemanticsNode as an unparsed finding', () => {
@@ -140,7 +186,9 @@ test('rejects malformed input and renders local case links, qualification status
   assert.throws(() => groupContrastResults({ results: 'not-an-array' }), /results array/);
   assert.throws(() => groupContrastResults({ results: [null] }), /case id/);
   const input = { matrix: 'full', expected: 1, executed: 1, results: [
-    { id: 'screen-case-1', status: 'FAIL', findings: [{ rule: 'textContrast', reason: firstIssue }] },
+    { id: 'screen-case-1', status: 'FAIL',
+      failureScreenshots: ['build/qualification/flutter/full/failures/screen-case-1.png'],
+      findings: [{ rule: 'textContrast', reason: firstIssue }] },
   ] };
   const bytes = Buffer.from(JSON.stringify(input));
   const built = buildContrastReport(input, bytes, '/private/path/results.json');
@@ -149,6 +197,7 @@ test('rejects malformed input and renders local case links, qualification status
   assert.match(built.markdown, /Qualification: \*\*INCOMPLETE\*\*/);
   assert.match(built.markdown, /no automatic waivers/i);
   assert.match(built.markdown, /\[screen-case-1\]\(#case-[a-f0-9]{16}\)/);
+  assert.match(built.markdown, /Representative screenshot: \[PNG for screen-case-1\]\(failures\/screen-case-1\.png\)/);
   assert.doesNotMatch(built.markdown, /private\/path/);
   const markdown = renderContrastMarkdown(groupContrastResults(input), { file: 'input.json', sha256: 'abc' });
   assert.match(markdown, /not classify a finding as a product defect or sampling artifact/);

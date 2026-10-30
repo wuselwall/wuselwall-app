@@ -1335,104 +1335,106 @@ class _ItemTileState extends State<_ItemTile> {
     return Row(
       children: [
         Expanded(
-          child: Semantics(
-            container: true,
-            customSemanticsActions: remove == null
-                ? null
-                : {
-                    CustomSemanticsAction(label: l10n.shoppingRemoveItem):
-                        remove,
-                  },
-            checked: widget.checked,
-            value: item.pending ? l10n.shoppingItemPending : null,
-            hint: adder == null
-                ? null
-                : l10n.shoppingAddedBy(adder.displayName),
-            child: _FocusRing(
-              focusNode: _focusNode,
-              borderRadius: BorderRadius.zero,
-              child: ListTile(
-                minTileHeight: 56,
+          child: MergeSemantics(
+            child: Semantics(
+              container: true,
+              customSemanticsActions: remove == null
+                  ? null
+                  : {
+                      CustomSemanticsAction(label: l10n.shoppingRemoveItem):
+                          remove,
+                    },
+              checked: widget.checked,
+              value: item.pending ? l10n.shoppingItemPending : null,
+              hint: adder == null
+                  ? null
+                  : l10n.shoppingAddedBy(adder.displayName),
+              child: _FocusRing(
                 focusNode: _focusNode,
-                onFocusChange: _onFocusChange,
-                onTap: widget.onToggle,
-                onLongPress: widget.onEdit,
-                leading: ExcludeSemantics(
-                  // A4: the row itself is the one tab stop (Space/Enter already toggle
-                  // it); without this the checkbox was a second, redundant stop.
-                  child: ExcludeFocusTraversal(
-                    child: Checkbox(
-                      value: widget.checked,
-                      onChanged: (_) => widget.onToggle(),
+                borderRadius: BorderRadius.zero,
+                child: ListTile(
+                  minTileHeight: 56,
+                  focusNode: _focusNode,
+                  onFocusChange: _onFocusChange,
+                  onTap: widget.onToggle,
+                  onLongPress: widget.onEdit,
+                  leading: ExcludeSemantics(
+                    // A4: the row itself is the one tab stop (Space/Enter already toggle
+                    // it); without this the checkbox was a second, redundant stop.
+                    child: ExcludeFocusTraversal(
+                      child: Checkbox(
+                        value: widget.checked,
+                        onChanged: (_) => widget.onToggle(),
+                      ),
                     ),
                   ),
-                ),
-                title: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Flexible(child: Text(item.name, style: style)),
-                    if (item.sourceMealEntryIds.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.only(left: Tokens.space2),
-                        child: ExcludeSemantics(
-                          child: Tooltip(
-                            message: l10n.mealsUxFromMealPlan,
-                            child: Icon(
-                              Icons.restaurant_menu,
-                              size: 18,
-                              color: Theme.of(context).colorScheme.outline,
-                            ),
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-                subtitle: detail.isEmpty ? null : Text(detail, style: style),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (item.pending)
-                      Padding(
-                        padding: const EdgeInsets.only(right: Tokens.space2),
-                        child: ExcludeSemantics(
-                          child: Tooltip(
-                            message: l10n.shoppingItemPending,
-                            child: Icon(
-                              Icons.cloud_upload_outlined,
-                              size: 18,
-                              color: Theme.of(context).colorScheme.outline,
-                            ),
-                          ),
-                        ),
-                      ),
-                    if (adder != null)
-                      Semantics(
-                        label: l10n.shoppingAddedBy(adder.displayName),
-                        child: ExcludeSemantics(
-                          child: Tooltip(
-                            message: l10n.shoppingAddedBy(adder.displayName),
-                            child: Container(
-                              width: 18,
-                              height: 18,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: context.ww.member(adder.color).ink,
-                                shape: BoxShape.circle,
+                  title: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Flexible(child: Text(item.name, style: style)),
+                      if (item.sourceMealEntryIds.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(left: Tokens.space2),
+                          child: ExcludeSemantics(
+                            child: Tooltip(
+                              message: l10n.mealsUxFromMealPlan,
+                              child: Icon(
+                                Icons.restaurant_menu,
+                                size: 18,
+                                color: Theme.of(context).colorScheme.outline,
                               ),
-                              child: Text(
-                                adder.initial,
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w800,
-                                  height: 1,
-                                  color: context.ww.member(adder.color).onInk,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  subtitle: detail.isEmpty ? null : Text(detail, style: style),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (item.pending)
+                        Padding(
+                          padding: const EdgeInsets.only(right: Tokens.space2),
+                          child: ExcludeSemantics(
+                            child: Tooltip(
+                              message: l10n.shoppingItemPending,
+                              child: Icon(
+                                Icons.cloud_upload_outlined,
+                                size: 18,
+                                color: Theme.of(context).colorScheme.outline,
+                              ),
+                            ),
+                          ),
+                        ),
+                      if (adder != null)
+                        Semantics(
+                          label: l10n.shoppingAddedBy(adder.displayName),
+                          child: ExcludeSemantics(
+                            child: Tooltip(
+                              message: l10n.shoppingAddedBy(adder.displayName),
+                              child: Container(
+                                width: 18,
+                                height: 18,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: context.ww.member(adder.color).ink,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Text(
+                                  adder.initial,
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w800,
+                                    height: 1,
+                                    color: context.ww.member(adder.color).onInk,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

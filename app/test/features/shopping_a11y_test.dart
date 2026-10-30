@@ -1,4 +1,7 @@
+import 'dart:ui' show CheckedState;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -148,6 +151,33 @@ void main() {
       expect(order.where((l) => l == 'shopping-item:Nudeln'), hasLength(1));
     },
   );
+
+  testWidgets('A5: each item is one named checked control', (t) async {
+    final semantics = t.ensureSemantics();
+    try {
+      await _pumpAdultBody(t);
+      final checkedNodes = <SemanticsNode>[];
+      void visit(SemanticsNode node) {
+        if (node.flagsCollection.isChecked != CheckedState.none) {
+          checkedNodes.add(node);
+        }
+        node.visitChildren((child) {
+          visit(child);
+          return true;
+        });
+      }
+
+      visit(
+        t.binding.renderViews.first.owner!.semanticsOwner!.rootSemanticsNode!,
+      );
+      expect(checkedNodes.map((node) => node.label), ['Nudeln', 'Käse']);
+      for (final node in checkedNodes) {
+        expect(node.getSemanticsData().hasAction(SemanticsAction.tap), isTrue);
+      }
+    } finally {
+      semantics.dispose();
+    }
+  });
 
   testWidgets('A4: adding from search keeps keyboard focus in the field', (
     t,

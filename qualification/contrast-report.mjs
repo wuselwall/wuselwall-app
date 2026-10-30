@@ -68,6 +68,38 @@ function diagnosticPaintClassifications(results) {
   return Object.fromEntries(counts);
 }
 
+function safeScreenshotArtifact(value) {
+  if (typeof value !== 'string') return null;
+  const parts = value.split('/');
+  if (
+    parts.length !== 6 ||
+    parts[0] !== 'build' ||
+    parts[1] !== 'qualification' ||
+    parts[2] !== 'flutter' ||
+    parts[4] !== 'failures' ||
+    !parts.every(part => /^[A-Za-z0-9._-]+$/.test(part)) ||
+    parts.some(part => part === '.' || part === '..') ||
+    !parts[5].endsWith('.png')
+  ) return null;
+  const root = path.posix.join('build', 'qualification', 'flutter');
+  const relative = path.posix.relative(root, value);
+  if (relative === '' || relative.startsWith('../') || path.posix.isAbsolute(relative)) return null;
+  return { path: value, profile: parts[3] };
+}
+
+function screenshotLink(caseId, paths, matrix) {
+  if (!Array.isArray(paths)) return null;
+  if (typeof matrix !== 'string' || !/^[A-Za-z0-9_-]+$/.test(matrix)) return null;
+  const artifact = paths
+    .map(safeScreenshotArtifact)
+    .find(candidate => candidate?.profile === matrix);
+  if (!artifact) return null;
+  const reportDirectory = path.posix.join('build', 'qualification', 'flutter', matrix);
+  const relative = path.posix.relative(reportDirectory, artifact.path);
+  if (relative === '' || relative.startsWith('../') || path.posix.isAbsolute(relative)) return null;
+  return `[PNG for ${escapeMarkdown(caseId)}](${relative})`;
+}
+
 /** Count the exact audit's decisions and the SDK blocks they superseded (Flutter exactTextContrast). */
 function exactContrastClassifications(results) {
   const counts = new Map();
@@ -93,6 +125,7 @@ export function groupContrastResults(input) {
   const groups = new Map();
   const unparsedFindings = [];
   const failuresByRule = new Map();
+  const failureScreenshotsByCase = new Map();
   let failedCases = 0;
   let originalFindingCount = 0;
   let textContrastFindingCount = 0;
@@ -105,6 +138,10 @@ export function groupContrastResults(input) {
     const status = typeof result.status === 'string' ? result.status : '(unknown status)';
     casesByStatus.set(status, (casesByStatus.get(status) ?? 0) + 1);
     const findings = Array.isArray(result.findings) ? result.findings : [];
+    if (Array.isArray(result.failureScreenshots) && result.failureScreenshots.length) {
+      const paths = failureScreenshotsByCase.get(result.id) ?? [];
+      failureScreenshotsByCase.set(result.id, [...paths, ...result.failureScreenshots]);
+    }
     if (result.status === 'FAIL' || findings.length > 0) failedCases++;
     for (const finding of findings) {
       if (!finding || typeof finding !== 'object') {
@@ -147,6 +184,16 @@ export function groupContrastResults(input) {
     }
   }
 
+  const screenshotsByCase = Object.fromEntries(
+    [...failureScreenshotsByCase].map(([caseId, screenshots]) => [
+      caseId,
+      [...new Set(screenshots)],
+    ]),
+  );
+  for (const item of unparsedFindings) {
+    const screenshots = screenshotsByCase[item.caseId];
+    if (screenshots?.length) item.failureScreenshots = screenshots;
+  }
   const grouped = [...groups.values()].map(group => ({
     label: group.label,
     fontSize: group.fontSize,
@@ -156,6 +203,11 @@ export function groupContrastResults(input) {
     occurrenceCount: group.occurrenceCount,
     caseOccurrences: Object.fromEntries(group.caseOccurrences),
     caseIds: [...group.caseOccurrences.keys()].sort(),
+    failureScreenshotsByCase: Object.fromEntries(
+      [...group.caseOccurrences.keys()]
+        .filter(caseId => screenshotsByCase[caseId]?.length)
+        .map(caseId => [caseId, screenshotsByCase[caseId]]),
+    ),
     semanticsNodeIds: group.semanticsNodeIds.sort((a, b) => a - b),
   })).sort((a, b) => b.occurrenceCount - a.occurrenceCount || a.label.localeCompare(b.label));
 
@@ -178,6 +230,7 @@ export function groupContrastResults(input) {
     diagnosticPaintClassifications: diagnosticPaintClassifications(input.results),
     exactContrastClassifications: exactContrastClassifications(input.results),
     groups: grouped,
+    failureScreenshotsByCase: screenshotsByCase,
     unparsedFindings,
   };
 }
@@ -227,6 +280,14 @@ export function renderContrastMarkdown(report, provenance) {
       `- ${group.occurrenceCount} occurrence(s); font ${group.fontSize}px; required ${group.requiredContrast}:1; measured ${group.measuredContrast}:1.`,
       `- Colors: light \`${group.colors.light}\`; dark \`${group.colors.dark}\`.`,
       `- Cases: ${group.caseIds.map(caseLink).join(', ') || 'none'}.`,
+      ...(() => {
+        const representative = group.caseIds
+          .map(caseId => ({ caseId, link: screenshotLink(caseId, group.failureScreenshotsByCase?.[caseId], report.matrix) }))
+          .find(item => item.link);
+        return representative
+          ? [`- Representative screenshot: ${representative.link}.`]
+          : [];
+      })(),
       `- Semantics node IDs (informational): ${group.semanticsNodeIds.join(', ') || 'none'}.`, '');
   }
   lines.push('## Unparsed findings retained verbatim', '');
@@ -234,7 +295,8 @@ export function renderContrastMarkdown(report, provenance) {
   for (const [index, item] of report.unparsedFindings.entries()) {
     const reason = item.reason ?? JSON.stringify(item.finding);
     const fence = codeFence(reason);
-    lines.push(`### ${index + 1}. ${caseLink(item.caseId)} (${escapeMarkdown(item.rule)})`, '', `${fence}text`, reason, fence, '');
+    const screenshot = screenshotLink(item.caseId, item.failureScreenshots, report.matrix);
+    lines.push(`### ${index + 1}. ${caseLink(item.caseId)} (${escapeMarkdown(item.rule)})${screenshot ? ` — ${screenshot}` : ''}`, '', `${fence}text`, reason, fence, '');
   }
   const allCaseIds = [...new Set([
     ...report.groups.flatMap(group => group.caseIds),

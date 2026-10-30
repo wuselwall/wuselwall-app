@@ -126,7 +126,7 @@ final class AccessibilityAuditTests: XCTestCase {
             "description": issue.compactDescription,
             "detail": issue.detailedDescription,
             "identifier": issue.element?.identifier ?? "",
-            "element": issueElement(issue.element),
+            "element": self.issueElement(issue.element),
           ])
           return true
         }
