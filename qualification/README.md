@@ -59,6 +59,10 @@ diagnostic records effective text size, foreground/background ratios where the r
 provides a conservative proof, and explicit unsupported reasons elsewhere. It cannot waive
 SDK failures. Borders, image content and antialiasing can affect the SDK's pixel histogram;
 those reports need attribution before changing a colour or accepting a candidate.
+The Flutter job writes `contrast-report.json` and `contrast-report.md` even when the matrix
+fails. They group repeated labels, ratios and reported colours while preserving case IDs,
+unparsed findings and an input checksum. The report grants no waivers and does not decide
+whether a finding is a product defect or a sampling error.
 
 Bundled Noto Sans Symbols covers the shipped arrow glyphs. Web's automatic fallback font
 base is also restricted to this installation's own origin. This does not supply every
@@ -116,6 +120,12 @@ unapproved images/semantics in `build/qualification/capture/`, Flutter findings 
 `build/qualification/flutter/<profile>/results.json`, native evidence in
 `build/qualification/native/`, and production-entry evidence in `build/qualification/production/`.
 The aggregate is `build/qualification/summary.json`. A missing report fails aggregation.
+
+To group an existing full-matrix diagnostic report locally, from the repository root:
+
+```sh
+node qualification/contrast-report.mjs build/qualification/flutter/full/results.json build/qualification/flutter/full
+```
 
 Browser semantics are enabled from launch; a separate test-only readiness signal is emitted
 after the real destination renders. If axe reports a target clipped by a scroll viewport,

@@ -10,6 +10,14 @@ jobs:
   diagnostics:
     runs-on: [self-hosted, macOS]
     timeout-minutes: 10
+    env:
+      QUALIFICATION_TOOLS_ROOT: ${{ vars.QUALIFICATION_TOOLS_ROOT }}
+      ANDROID_HOME: ${{ vars.QUALIFICATION_ANDROID_HOME }}
+      ANDROID_AVD_HOME: ${{ vars.QUALIFICATION_ANDROID_AVD_HOME }}
+      QUALIFICATION_IOS_RUNTIME: ${{ vars.QUALIFICATION_IOS_RUNTIME }}
+      QUALIFICATION_ANDROID_MIN_PHONE_AVD: ${{ vars.QUALIFICATION_ANDROID_MIN_PHONE_AVD }}
+      QUALIFICATION_ANDROID_PHONE_AVD: ${{ vars.QUALIFICATION_ANDROID_PHONE_AVD }}
+      QUALIFICATION_ANDROID_TABLET_AVD: ${{ vars.QUALIFICATION_ANDROID_TABLET_AVD }}
     concurrency:
       group: native-qualification-devices
       cancel-in-progress: false
@@ -17,7 +25,11 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+      - name: Load provisioned native tool settings
+        if: env.QUALIFICATION_TOOLS_ROOT != '' || env.ANDROID_HOME != '' || env.QUALIFICATION_IOS_RUNTIME != ''
+        run: bash qualification/native/load-tools.sh
       - name: Inspect installed native tools and execution architecture
+        if: always()
         run: bash qualification/native/preflight.sh
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()

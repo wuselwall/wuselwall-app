@@ -1,6 +1,6 @@
 # Accessibility and UI qualification for release candidates
 
-*Updated 2026-10-26. The candidate workflow, broad Flutter/web inventory, native audit
+*Updated 2026-10-30. The candidate workflow, broad Flutter/web inventory, native audit
 adapters, reviewed-baseline comparison and release-promotion enforcement are implemented.
 Native runtime execution, successful qualification and human acceptance remain open.*
 
@@ -120,6 +120,11 @@ Test representative rendered components as well as tokens. Flutter's text contra
 checker estimates colours from rendered pixels and semantics: complex backgrounds,
 custom painting and missing semantic text need additional assertions or review. A screen
 with no auditable text or controls must not silently appear to have complete coverage.
+
+The Flutter evidence artifact includes grouped JSON/Markdown contrast reports even when
+the matrix fails. They retain raw unparsed findings and case references, count repeated
+labels/ratios/colours, and record the input checksum. These reports help attribution;
+they do not waive findings or classify uncertain compositing as a pass.
 
 Use bundled fonts for rendered contrast checks and text goldens. Keep the expanded tests
 in a directory explicitly selected by qualification, outside default `flutter test`

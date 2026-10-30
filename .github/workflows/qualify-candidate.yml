@@ -93,6 +93,10 @@ jobs:
       - run: flutter test --no-pub qualification_test --dart-define=QUALIFY_MATRIX="$MATRIX" --reporter expanded
         working-directory: app
         env: { MATRIX: '${{ inputs.matrix }}' }
+      - name: Group contrast findings for review
+        if: always()
+        env: { MATRIX: '${{ inputs.matrix }}' }
+        run: node qualification/contrast-report.mjs "build/qualification/flutter/$MATRIX/results.json" "build/qualification/flutter/$MATRIX"
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:

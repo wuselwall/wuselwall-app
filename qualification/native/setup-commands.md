@@ -91,6 +91,10 @@ run before reviewing baselines. The existing iOS workflow also offers a
 `diagnostics_only=true` manual mode during PR review; that mode skips signing and
 publishing. A capture cannot qualify a release.
 
+Diagnostics load the saved tool settings when the tools-directory variable is configured.
+An invalid saved configuration still fails the job, and the read-only probes and their
+artifact run so the failure remains inspectable.
+
 The release gate separately requires a GitHub environment named `release-promotion`,
 at least one required reviewer, and administrator bypass disabled. The reviewer accepts
 baseline changes and the physical-device checklist for the exact candidate commit.
