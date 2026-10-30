@@ -74,6 +74,9 @@ for (const [lang, labels] of Object.entries(SETTINGS_GROUPS)) Object.assign(T[la
 // The calendar bar's view menu (its tooltip), where the bar has no room for the view buttons.
 const CALENDAR_VIEW = { de: 'Kalenderansicht', en: 'Calendar view', fr: 'Vue du calendrier', es: 'Vista del calendario' };
 for (const [lang, chooseView] of Object.entries(CALENDAR_VIEW)) T[lang].chooseView = chooseView;
+// Flutter's tooltip for a PopupMenuButton without its own (MaterialLocalizations.showMenuTooltip).
+const SHOW_MENU = { de: 'Menü anzeigen', en: 'Show menu', fr: 'Afficher le menu', es: 'Mostrar menú' };
+for (const [lang, showMenu] of Object.entries(SHOW_MENU)) T[lang].showMenu = showMenu;
 
 async function open(page, scenario, route = '') {
   // still=1: nothing moves and Wusel's words are fixed, so every run gives the same picture.
@@ -200,11 +203,43 @@ const longPress = async (page, locator) => {
  * Steps that fail log a warning and the shot is still taken, so one fragile step does
  * not lose the others.
  */
-const openTimetablePreview = async (p, t) => {
-  await tapAny(p, t.schedule, { exact: false });
-  await tapAny(p, t.importAction);
-  await p.getByRole('menuitem', { name: t.importFromText }).first().click();
+// The adult bar labels the Stundenplan in full where it has room and with its short
+// label ("Schule") on a phone. Tap whichever the bar shows and check that it is selected.
+const openSchedule = async (p, t) => {
+  const full = anyNamed(p, t.schedule, true);
+  const short = anyNamed(p, t.scheduleNav, true);
+  await full.or(short).first().waitFor();
+  const tab = (await full.count()) ? full.first() : short.first();
+  await tab.dispatchEvent('click');
   await settle(p);
+  const selected = await tab.getAttribute('aria-selected');
+  if (selected !== 'true') throw new Error(`the timetable destination is not selected (aria-selected=${selected})`);
+};
+// The timetable's editing: buttons above the week where there is room, one menu (with
+// Flutter's "Show menu" tooltip) on a phone. [button] is the wide screen's button; with
+// [item] that button opens a menu of its own ("Read in…"). In the phone's menu the action
+// is [item] or, for a plain button, the button's own label.
+const schoolAction = async (p, t, button, item) => {
+  const direct = p.getByRole('button', { name: button, exact: true });
+  const menu = p.getByRole('button', { name: t.showMenu, exact: true });
+  await direct.or(menu).first().waitFor();
+  if (await direct.count()) {
+    await direct.first().dispatchEvent('click');
+    await settle(p);
+    if (!item) return;
+  } else {
+    await menu.first().dispatchEvent('click');
+    await settle(p);
+  }
+  // A menu item takes a real pointer click on the web (see chooseView).
+  const entry = p.getByRole('menuitem', { name: item ?? button, exact: true });
+  await entry.first().click();
+  await settle(p);
+  if (await entry.count()) throw new Error(`the menu with "${item ?? button}" is still open`);
+};
+const openTimetablePreview = async (p, t) => {
+  await openSchedule(p, t);
+  await schoolAction(p, t, t.importAction, t.importFromText);
   // Focus the real editing element before inserting: a fill on a newly created
   // Flutter semantics field can precede its text-input connection.
   await p.getByRole('textbox', { name: t.importPasteHint }).click();
@@ -237,17 +272,17 @@ const shots = [
   // Neuer Termin opens its tiles first (specs/28); Ohne Vorlage opens the empty editor.
   { name: 'calendar-templates', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.calendar); await tapAny(p, t.newEvent); } },
   { name: 'calendar-editor', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.calendar); await tapAny(p, t.newEvent); await tapAny(p, t.blankEvent, { exact: false }); } },
-  { name: 'school-week', scenario: 'adult', viewport: TABLET, steps: async (p, t) => tapAny(p, t.schedule, { exact: false }) },
-  { name: 'school-editor', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.schedule, { exact: false }); await press(p, t.editTimetable, { exact: false }); await press(p, t.editorSchool); } },
+  { name: 'school-week', scenario: 'adult', viewport: TABLET, steps: openSchedule },
+  { name: 'school-editor', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await openSchedule(p, t); await schoolAction(p, t, t.editTimetable); await press(p, t.editorSchool); } },
   // The adult home opens on Today, the first destination.
   { name: 'today', scenario: 'adult', viewport: PHONE, steps: async (p, t) => tapAny(p, t.today) },
-  // The school page's settings icon opens the school form; the region field opens the picker.
-  { name: 'region-picker', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.schedule, { exact: false }); await press(p, t.editSchool, { exact: false }); await tapAny(p, t.region, { exact: false }); } },
-  { name: 'holiday-import', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.schedule); await press(p, t.editSchool, { exact: false }); await scrollUntil(p, t.importHolidays); await tapNode(p, 'button', t.importHolidays); } },
+  // Schule bearbeiten opens the school form; the region field opens the picker.
+  { name: 'region-picker', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await openSchedule(p, t); await schoolAction(p, t, t.editSchool); await tapAny(p, t.region, { exact: false }); } },
+  { name: 'holiday-import', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await openSchedule(p, t); await schoolAction(p, t, t.editSchool); await scrollUntil(p, t.importHolidays); await tapNode(p, 'button', t.importHolidays); } },
   // A family without a school (scenario noschool): the first school asks for name and region only.
-  { name: 'school-first', scenario: 'noschool', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.schedule, { exact: false }); await tapAny(p, t.setupSchool); await p.getByRole('textbox', { name: t.schoolName }).fill(t.firstSchool); await settle(p); await tapAny(p, t.region, { exact: false }); await tapAny(p, t.country, { exact: false }); await settle(p, 1200); await tapAny(p, t.state, { exact: false }); await settle(p, 1200); } },
-  // "Read in…" above the timetable, then "Scan a photo": the sheet with its three choices.
-  { name: 'timetable-scan', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.schedule, { exact: false }); await tapAny(p, t.importAction); await p.getByRole('menuitem', { name: t.importFromPhoto }).first().click(); await settle(p, 1200); } },
+  { name: 'school-first', scenario: 'noschool', viewport: PHONE, steps: async (p, t) => { await openSchedule(p, t); await tapAny(p, t.setupSchool); await p.getByRole('textbox', { name: t.schoolName }).fill(t.firstSchool); await settle(p); await tapAny(p, t.region, { exact: false }); await tapAny(p, t.country, { exact: false }); await settle(p, 1200); await tapAny(p, t.state, { exact: false }); await settle(p, 1200); } },
+  // "Scan a photo" (in the phone's menu; under "Read in…" on a wide screen): the sheet with its three choices.
+  { name: 'timetable-scan', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await openSchedule(p, t); await schoolAction(p, t, t.importAction, t.importFromPhoto); await settle(p, 500); } },
   // Structured text opens the preview that the photo scan uses too.
   // The tablet is wide enough for each subject's name under its short name.
   { name: 'timetable-import', scenario: 'adult', viewport: TABLET, steps: openTimetablePreview },
@@ -306,8 +341,9 @@ const shots = [
     await scrollUntil(p, t.tradition, { any: true }); await tapAny(p, t.tradition, { exact: false });
     await scrollDown(p, 3000); await p.mouse.move(386, 840); await settle(p);
   } },
-  // Kalender → Neue Tradition: the six starters and the family's own.
-  { name: 'calendar-tradition', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.calendar); await tapAny(p, t.newTradition); } },
+  // Kalender → Neuer Termin → Neue Tradition: the six starters and the family's own. A phone
+  // has no tradition button over the calendar; the tile's name ends in an example, so a substring.
+  { name: 'calendar-tradition', scenario: 'adult', viewport: PHONE, steps: async (p, t) => { await tapAny(p, t.calendar); await tapAny(p, t.newEvent); await tapAny(p, t.newTradition, { exact: false }); } },
   // Further down the kid's day: her meal wish card.
   { name: 'kid-wish', scenario: 'kid', viewport: TABLET, steps: async (p, t) => { await press(p, t.daughter); await scrollToHeading(p, t.wishTitle, 360); } },
   // The Rituals group of the Einstellungen, Advanced: the table question and its times.
@@ -341,6 +377,7 @@ for (const [lang, sample] of Object.entries(IMPORT_SAMPLES)) {
   const added = { subject: sample.added[0], name: sample.added[1] };
   Object.assign(T[lang], {
     importFromText: l10n.schoolImportFromText,
+    scheduleNav: l10n.scheduleNavLabel,
     importPasteHint: l10n.schoolImportPasteHint,
     importRead: l10n.schoolImportRead,
     timetablePayload: JSON.stringify({
