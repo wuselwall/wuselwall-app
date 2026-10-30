@@ -927,38 +927,65 @@ class _CellTile extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Subject and room each on their own line, shrinking rather than
+                // cut: five days share a phone's width ("S…" said nothing).
                 for (final d in drafts)
-                  Row(
-                    children: [
-                      if (d.parity != 'all')
-                        Text(
-                          d.parity.toUpperCase(),
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w700,
-                            color: scheme.primary,
+                  Tooltip(
+                    message: [
+                      subjectOf(d.subjectId)?.name ?? '—',
+                      ?d.room,
+                    ].join(' · '),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            if (d.parity != 'all')
+                              Text(
+                                d.parity.toUpperCase(),
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w700,
+                                  color: scheme.primary,
+                                ),
+                              ),
+                            if (d.subjectId != null) ...[
+                              Icon(
+                                schoolIcon(subjectOf(d.subjectId)?.iconKey),
+                                size: 14,
+                              ),
+                              const SizedBox(width: 2),
+                            ],
+                            Expanded(
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                alignment: AlignmentDirectional.centerStart,
+                                child: Text(
+                                  subjectOf(d.subjectId)?.shortName ?? '—',
+                                  maxLines: 1,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        if (d.room != null)
+                          SizedBox(
+                            width: double.infinity,
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: AlignmentDirectional.centerStart,
+                              child: Text(
+                                d.room!,
+                                maxLines: 1,
+                                style: TextStyle(fontSize: 11, color: ww.ink2),
+                              ),
+                            ),
                           ),
-                        ),
-                      if (d.subjectId != null) ...[
-                        Icon(
-                          schoolIcon(subjectOf(d.subjectId)?.iconKey),
-                          size: 14,
-                        ),
-                        const SizedBox(width: 2),
                       ],
-                      Expanded(
-                        child: Text(
-                          subjectOf(d.subjectId)?.shortName ?? '—',
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                      if (d.room != null)
-                        Text(
-                          d.room!,
-                          style: TextStyle(fontSize: 11, color: ww.ink2),
-                        ),
-                    ],
+                    ),
                   ),
                 if (drafts.isEmpty) const SizedBox(height: 34),
               ],
