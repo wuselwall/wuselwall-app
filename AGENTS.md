@@ -17,7 +17,10 @@ restoring a family, account deletion and the second-factor reset, localised mail
 `scripts/hosted-auth-config.mjs`, the run verifies its result), and mail is optional (2026-10-26, Q48: without SMTP
 Auth autoconfirms, `server-info` says `sign_in.email_code: false`, the app signs up with a password, invitations match
 only `app.proven_email`, a guardian's one-time code or `wuselwall password` resets a password; `wuselwall mail` sets up
-any SMTP server, Gmail included). The onboarding journeys J1–J3 are
+any SMTP server, Gmail included), and the setup key claims the server (2026-10-30, specs/20 "Claiming the
+server": S1 `ClaimPage` checks the key and announces the founder's address with `api.setup_claim`; the Before
+User Created hook `app.before_user_created_hook` refuses every other sign-up while no household exists; H1
+asks for no key after a claim; the key stays on the device). The onboarding journeys J1–J3 are
 integration tests (CI's backend job) and screen-count tests (`app/test/journeys`). Built besides: household settings
 (specs/21), the kiosk week board (specs/09) with "Alle Termine", M1.3a calendar (events,
 presence, recurrence expanded in Edge Functions, the ICS feed with tokens, and since 2026-10-24 a read-only month view), M1.3b Stundenplan

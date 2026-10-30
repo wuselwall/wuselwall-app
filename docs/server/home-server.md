@@ -32,7 +32,7 @@ cd wuselwall
 - erzeugt alle Schlüssel und Passwörter (`stack/.env`),
 - startet den Stack, mit **Caddy**, der für beide Adressen Zertifikate von Let's Encrypt holt,
 - richtet die Datenbank ein und plant die nächtlichen Aufträge,
-- und zeigt zum Schluss die Adresse des Servers sowie einen **Einrichtungslink mit QR-Code**, der den einmaligen Einrichtungscode enthält.
+- und zeigt zum Schluss die Adresse des Servers sowie einen **Einrichtungslink mit QR-Code**, der den einmaligen Einrichtungsschlüssel enthält.
 
 Der Server startet **ohne E-Mail**: Alle melden sich mit E-Mail-Adresse und Passwort an. Anmelde-Codes per Mail kommen jederzeit mit `./wuselwall mail smtp` dazu ([E-Mail](/server/email)).
 
@@ -65,17 +65,21 @@ eine alte Serveradresse gespeichert hat. Offline nutzt sie die letzte gespeicher
 Konfiguration. Bei einer geänderten Serveradresse meldest du dich erneut an.
 
 Öffne den Einrichtungslink aus der Installation im Browser oder scanne den zugehörigen
-QR-Code. Er enthält den Server und den Einrichtungscode. WuselWall merkt sich den
-Code während der E-Mail-Anmeldung, damit du ihn unter **Neue Familie** nicht noch
-einmal eingeben musst ([Neue Familie anlegen](/guide/setup#_2-neue-familie-anlegen)).
+QR-Code. Er enthält den Server und den Einrichtungsschlüssel und öffnet **Server
+einrichten**: Dort gibst du die E-Mail-Adresse des ersten Kontos ein, und der Server
+lässt genau diese Adresse sich anmelden
+([Der Einrichtungsschlüssel](/guide/setup#einrichtungsschluessel)). **Neue Familie**
+fragt dann nach keinem Schlüssel.
 
 Du kannst den Server weiterhin von Hand unter **Mit welchem Server?** als
-`api.example.org` eintragen. Ein QR-Code, der nur die Serveradresse enthält — etwa
-aus einer älteren Installation — überträgt aber keinen Einrichtungscode. In diesem
-Fall gibst du den Code aus der Installation einmal unter **Neue Familie** ein.
+`api.example.org` eintragen. Der Startbildschirm sagt, dass der Server noch keine
+Familie hat; tippe auf **Ich habe den Einrichtungsschlüssel** und gib den Schlüssel aus
+der Installation neben deiner Adresse ein. Ein QR-Code, der nur die Serveradresse
+enthält — etwa aus einer älteren Installation — überträgt ebenfalls keinen Schlüssel.
 
-Einen neuen Einrichtungscode gibt `./wuselwall setup-token`, solange noch keine
-Familie angelegt ist. Veröffentliche den Code und den Einrichtungslink nicht.
+Einen neuen Einrichtungsschlüssel gibt `./wuselwall setup-token`, solange noch keine
+Familie angelegt ist. Veröffentliche den Schlüssel und den Einrichtungslink nicht: Bis
+die Familie besteht, kann nur, wer ihn hat, auf dem Server ein Konto anlegen.
 
 ## 3. Backups
 
@@ -124,7 +128,7 @@ Lass keinen Auto-Updater (Watchtower, die automatischen Container-Updates eines 
 | `./wuselwall status` | Zeigt, ob alle Dienste laufen |
 | `./wuselwall logs auth` | Protokolle eines Dienstes (`db`, `auth`, `rest`, `realtime`, `functions`, `caddy`) |
 | `./wuselwall backup` | Sichert jetzt |
-| `./wuselwall setup-token` | Neues Einrichtungs-Token, solange es keine Familie gibt |
+| `./wuselwall setup-token` | Neuer Einrichtungsschlüssel, solange es keine Familie gibt |
 | `./wuselwall mail` | E-Mail einschalten (`mail smtp`), ausschalten (`mail off`) oder testen (`mail test`) ([E-Mail](/server/email)) |
 | `./wuselwall password <adresse>` | Ein Einmal-Code, mit dem diese Person ein neues Passwort wählt ([E-Mail](/server/email#passwort-vergessen)) |
 | `./wuselwall compose …` | Jeder Docker-Compose-Befehl für den Stack |

@@ -76,11 +76,18 @@ void main() {
       expect(doc['sign_in'], {'password': true, 'email_code': false});
       expect(doc['features'], contains('password-reset'));
 
-      // J1: a password sign-up is signed in at once, no code anywhere.
+      // J1: a password sign-up is signed in at once, no code anywhere. The server has no
+      // family yet, so the address announces itself with the setup key first (S1).
       const familyName = 'Familie Ohne Mail';
       final founder = device();
+      final founderEmail = freshEmail();
+      final claimed = (await founder.onboarding.claim(
+        key: founderCode.split(',').first,
+        email: founderEmail,
+      )).unwrap();
+      expect(claimed, isA<ClaimAccepted>());
       (await founder.identity.signUpWithPassword(
-        freshEmail(),
+        founderEmail,
         'founder password 1',
         locale: 'de',
       )).unwrap();
@@ -93,9 +100,8 @@ void main() {
         colorHex: '#2E7D6B',
         timezone: 'Europe/Berlin',
         locale: 'de',
-        founderCode: account.creation == HouseholdCreation.code
-            ? founderCode.split(',').first
-            : null,
+        // The claim stands in for the key.
+        founderCode: null,
         seedExamples: false,
         deviceLabel: 'Test phone',
       )).unwrap();

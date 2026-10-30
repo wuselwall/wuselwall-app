@@ -135,6 +135,17 @@ Deno.test("discoveryDocument shapes the row", () => {
   });
 });
 
+Deno.test("the discovery document says whether the server is claimed", () => {
+  // Older servers do not say; the app then assumes a family exists.
+  assertEquals("claimed" in discoveryDocument(row, "k", undefined), false);
+  assertEquals(
+    discoveryDocument({ ...row, claimed: false }, "k", undefined).claimed,
+    false,
+  );
+  assertEquals(checkRow({ ...row, claimed: true }).claimed, true);
+  assertThrows(() => checkRow({ ...row, claimed: "false" }));
+});
+
 Deno.test("a server that autoconfirms offers no email code", () => {
   assertEquals(
     emailCode({ mailer_autoconfirm: true, disable_signup: false }),

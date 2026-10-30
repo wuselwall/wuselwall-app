@@ -91,7 +91,8 @@ notice_dismissal                 -- notices (join, new sign-in) are derived from
 instance_setting                 -- one row per instance, not per household
   household_creation ENUM('code','open')         -- 'code' until the opening gate
 
-setup_token                      -- the founder codes in 'code' mode (old name kept)
+setup_token                      -- the setup key and further founder codes in 'code' mode (old name kept);
+                                 -- claimed_email/claimed_at: the address announced with it (specs/20 S1)
   token_hash, created_at, consumed_at, consumed_by_household NULL
 
 audit_entry                      -- append-only, never updated or deleted

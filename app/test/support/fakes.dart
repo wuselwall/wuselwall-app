@@ -545,6 +545,30 @@ class FakeHouseholdOnboardingRepository
   Result<void> createResult;
   final FakeIdentityRepository? identity;
 
+  /// What `setup_claim` answers; the key is accepted unless a test says otherwise.
+  Result<ClaimOutcome> claimResult = const Ok(
+    ClaimAccepted(claimed: true, serverClaimed: false),
+  );
+
+  /// Each claim call: the key and the address (null for a check without one).
+  final claims = <({String key, String? email})>[];
+
+  @override
+  Future<Result<ClaimOutcome>> claim({
+    required String key,
+    String? email,
+  }) async {
+    claims.add((key: key, email: email));
+    final result = claimResult;
+    if (email == null) {
+      // A check without an address claims nothing, as the server answers.
+      if (result case Ok(value: ClaimAccepted(:final serverClaimed))) {
+        return Ok(ClaimAccepted(claimed: false, serverClaimed: serverClaimed));
+      }
+    }
+    return result;
+  }
+
   /// The arguments of each create call, in order.
   final created =
       <

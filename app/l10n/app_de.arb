@@ -55,7 +55,7 @@
   "enrolBody": "Gib den Code ein, der auf einem Gerät angezeigt wird, das schon verbunden ist.",
   "enrolCodeLabel": "Einrichtungscode",
   "enrolAction": "Verbinden",
-  "errSetupTokenInvalid": "Das Einrichtungs-Token ist ungültig.",
+  "errSetupTokenInvalid": "Der Einrichtungsschlüssel ist ungültig.",
   "errSetupClosed": "Dieses System ist bereits eingerichtet.",
   "errPasswordTooShort": "Das Passwort braucht mindestens 10 Zeichen.",
   "errPinFormat": "Die PIN muss genau 6 Ziffern haben.",
@@ -1409,19 +1409,49 @@
   "householdLanguageEn": "Englisch",
   "householdLanguageFr": "Französisch",
   "householdLanguageEs": "Spanisch",
-  "householdNewFounderCode": "Einrichtungscode",
-  "householdNewFounderHelp": "Nimm den Einrichtungscode aus der Serverinstallation oder frage die Person, die euren Server betreibt. Das ist nicht der Code aus deiner Anmelde-E-Mail.",
-  "householdNewCodeSaved": "Einrichtungscode aus deinem Einrichtungslink gespeichert. Du musst ihn nicht erneut eingeben.",
+  "householdNewFounderCode": "Einrichtungsschlüssel",
+  "householdNewFounderHelp": "Nimm den Einrichtungsschlüssel aus der Serverinstallation oder frage die Person, die euren Server betreibt. Das ist nicht der Code aus deiner Anmelde-E-Mail.",
+  "householdNewCodeSaved": "Einrichtungsschlüssel aus deinem Einrichtungslink gespeichert. Du musst ihn nicht erneut eingeben.",
   "householdSeedExamples": "Mit Beispielen starten — 5 Aufgaben, 3 Belohnungen",
   "householdNewCreate": "Familie anlegen",
   "householdNewCreating": "Familie wird angelegt …",
   "householdNewInvited": "Ich wurde eingeladen",
   "householdInvitedNote": "Einladungen kommen mit dem nächsten Update.",
   "householdNewSignOut": "Abmelden",
-  "householdNewErrNoCode": "Dieser Server braucht einen Einrichtungscode, um eine Familie anzulegen. Nimm den Code aus der Serverinstallation, nicht den E-Mail-Code.",
-  "householdNewErrCodeWrong": "Dieser Einrichtungscode ist ungültig oder wurde schon verwendet. Bitte die Person, die euren Server betreibt, um einen neuen Einrichtungslink oder Code.",
+  "householdNewErrNoCode": "Dieser Server braucht einen Einrichtungsschlüssel, um eine Familie anzulegen. Nimm den Schlüssel aus der Serverinstallation, nicht den E-Mail-Code.",
+  "householdNewErrCodeWrong": "Dieser Einrichtungsschlüssel ist ungültig oder wurde schon verwendet. Bitte die Person, die euren Server betreibt, um einen neuen Einrichtungslink oder Schlüssel.",
   "householdNewErrRateLimited": "Zu viele Versuche. Warte ein paar Minuten und probier es dann nochmal.",
   "householdNewStalled": "Das dauert länger als üblich. Bitte warte kurz oder melde dich ab und wieder an. Die Familie bitte nicht noch einmal anlegen.",
+  "claimTitle": "Server einrichten",
+  "claimLead": "{host} hat noch keine Familie. Mit dem Einrichtungsschlüssel aus der Installation gründest du sie. Gib die E-Mail-Adresse ein, die das erste Elternkonto wird.",
+  "@claimLead": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "claimHeader": "{host} wird eingerichtet",
+  "@claimHeader": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "claimKeyLabel": "Einrichtungsschlüssel",
+  "claimKeyHelp": "Aus der Serverinstallation: der Einrichtungslink oder QR-Code enthält ihn. Sonst frage die Person, die euren Server betreibt.",
+  "claimChecking": "Einrichtungsschlüssel wird geprüft …",
+  "claimKeyReady": "Einrichtungsschlüssel angenommen. Der Server wartet auf seine Familie.",
+  "claimKeyUsed": "Dieser Einrichtungsschlüssel wurde schon verwendet. Bitte die Person, die euren Server betreibt, um einen neuen – oder melde dich an, wenn es die Familie schon gibt.",
+  "claimKeyInvalid": "Dieser Einrichtungsschlüssel ist ungültig.",
+  "claimNextCode": "Danach: ein Code aus deiner E-Mail, dann eure Familie.",
+  "claimNextPassword": "Danach: ein Passwort für dein Konto, dann eure Familie.",
+  "claimHaveAccount": "Ich habe schon ein Konto",
+  "doorUnclaimedTitle": "Dieser Server hat noch keine Familie",
+  "doorUnclaimedBody": "Wer ihn installiert hat, hat den Einrichtungsschlüssel. Damit gründest du die Familie; alle anderen kommen danach per Einladung dazu.",
+  "doorUnclaimedAction": "Ich habe den Einrichtungsschlüssel",
+  "errSetupKeyRequired": "Dieser Server hat noch keine Familie. Nur mit dem Einrichtungsschlüssel aus der Installation entsteht das erste Konto.",
   "setupPrivacy": "Datenschutz",
   "householdMembersTitle": "Wer gehört noch zu euch?",
   "householdMembersYou": "{name} (du)",

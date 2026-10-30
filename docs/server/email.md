@@ -9,7 +9,7 @@ Ein WuselWall-Server läuft **mit oder ohne E-Mail**. Ohne meldet sich jede und 
 | **Einladungen** | Per Link, QR-Code oder Einladungscode | Genauso, und eine Einladung, die deine Adresse nennt, findet dich von selbst |
 | **Wer sonst etwas sieht** | Niemand | Der Mail-Anbieter sieht Adressen und Codes |
 
-Auf einem Server ohne E-Mail prüft niemand die Adresse: Man könnte jede beliebige eintippen. Das ist in Ordnung, denn ein Konto allein sieht nichts. Erst eine Einladung oder der Einrichtungs-Code bringt es in eine Familie. Aus demselben Grund gibt ein Server ohne E-Mail eine Einladung nie einem Konto, nur weil die Adresse passt.
+Auf einem Server ohne E-Mail prüft niemand die Adresse: Man könnte jede beliebige eintippen. Das ist in Ordnung, denn ein Konto allein sieht nichts. Erst eine Einladung oder der Einrichtungsschlüssel bringt es in eine Familie, und bevor die Familie besteht, legt der Server nur für die mit dem Einrichtungsschlüssel angekündigte Adresse ein Konto an. Aus demselben Grund gibt ein Server ohne E-Mail eine Einladung nie einem Konto, nur weil die Adresse passt.
 
 Ihr könnt die E-Mail jederzeit ein- oder ausschalten. Die Konten behalten ihr Passwort; ist E-Mail an, geht zusätzlich der Code. Die App merkt die Änderung beim nächsten Start.
 

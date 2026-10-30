@@ -9,7 +9,7 @@ Un servidor WuselWall funciona **con o sin correo**. Sin él, cada persona crea 
 | **Invitaciones** | Por enlace, QR o código de invitación | Igual, y una invitación con tu dirección te encuentra sola |
 | **Quién ve algo** | Nadie más | El proveedor ve direcciones y códigos |
 
-Sin correo nadie comprueba la dirección. No es un problema: una cuenta sola no ve nada; solo una invitación o el código de configuración la lleva a una familia. Por lo mismo, un servidor sin correo nunca asigna una invitación a una cuenta porque coincidan las direcciones.
+Sin correo nadie comprueba la dirección. No es un problema: una cuenta sola no ve nada; solo una invitación o la clave de configuración la lleva a una familia, y antes de que exista la familia el servidor solo crea una cuenta para la dirección anunciada con la clave. Por lo mismo, un servidor sin correo nunca asigna una invitación a una cuenta porque coincidan las direcciones.
 
 Puedes activar o desactivar el correo cuando quieras; las cuentas conservan su contraseña. La app nota el cambio en su próximo arranque.
 

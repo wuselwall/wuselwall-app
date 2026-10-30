@@ -65,6 +65,10 @@ export function authPatch({ project, mail }) {
     // The access-token hook puts household and device into every token.
     hook_custom_access_token_enabled: true,
     hook_custom_access_token_uri: 'pg-functions://postgres/app/custom_access_token_hook',
+    // Claiming the server (specs/20): while no family exists, only the address that
+    // announced itself with the setup key may sign up.
+    hook_before_user_created_enabled: true,
+    hook_before_user_created_uri: 'pg-functions://postgres/app/before_user_created_hook',
     // TOTP as the second factor; a guardian's password has at least 10 characters.
     mfa_totp_enroll_enabled: true,
     mfa_totp_verify_enabled: true,

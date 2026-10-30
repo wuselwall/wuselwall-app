@@ -90,17 +90,41 @@ void main() {
     expect(d.client.auth.currentSession, isNotNull);
   }
 
-  /// H1 for journey [index] (0 based): a wrong and a missing founder code are refused
-  /// in `code` mode, the right one creates the family.
+  /// S1 (specs/20 "Claiming the server"): the founder's address announces itself with the
+  /// setup key before signing up. On a fresh stack the server has no family yet, and Auth
+  /// creates an account only for a claimed address; on a claimed server the claim still
+  /// stands in for the key on H1.
+  Future<void> claim(
+    _Device d, {
+    required int index,
+    required String email,
+  }) async {
+    final outcome = (await d.onboarding.claim(
+      key: founderCodes[index],
+      email: email,
+    )).unwrap();
+    expect(
+      outcome,
+      isA<ClaimAccepted>().having((c) => c.claimed, 'claimed', isTrue),
+      reason:
+          'founder code ${founderCodes[index]} refused; a code is single use: '
+          'run `supabase db reset` or pass WW_FOUNDER_CODES',
+    );
+  }
+
+  /// H1 for journey [index] (0 based): a wrong founder code is refused in `code` mode; a
+  /// missing one too, unless the address [claimed] the key, which then founds the family.
   Future<void> createFamily(
     _Device d, {
     required int index,
     required String familyName,
     required String name,
+    bool claimed = false,
   }) async {
     final account = (await d.onboarding.account()).unwrap();
     expect(account.hasHousehold, isFalse);
     expect(account.pendingInvitations, isEmpty);
+    expect(account.setupClaimed, claimed);
 
     Future<Result<void>> create(String? code) => d.onboarding.create(
       householdName: familyName,
@@ -114,13 +138,18 @@ void main() {
     );
 
     if (account.creation == HouseholdCreation.code) {
-      expect((await create(null)).failureOrNull?.code, 'founder_code_required');
+      if (!claimed) {
+        expect(
+          (await create(null)).failureOrNull?.code,
+          'founder_code_required',
+        );
+      }
       expect(
         (await create('not-a-code-$stamp')).failureOrNull?.code,
         'founder_code_invalid',
       );
     }
-    final code = account.creation == HouseholdCreation.code
+    final code = account.creation == HouseholdCreation.code && !claimed
         ? founderCodes[index]
         : null;
     final created = await create(code);
@@ -151,8 +180,28 @@ void main() {
       final phone = device();
       final email = freshEmail();
       const familyName = 'Familie Test J1';
+      // A stranger's address gets no account while the server has no family: the hook
+      // refuses the code request itself. (The stack may be claimed already by an earlier
+      // suite; then the request goes through, which is the same rule.)
+      final strangerCode = await device().identity.sendEmailCode(
+        'stranger-$stamp@example.org',
+        locale: 'de',
+      );
+      final serverClaimed = (await phone.onboarding.claim(key: founderCodes[0]))
+          .unwrap();
+      expect(serverClaimed, isA<ClaimAccepted>());
+      if (!(serverClaimed as ClaimAccepted).serverClaimed) {
+        expect(strangerCode.failureOrNull?.code, 'setup_key_required');
+      }
+      await claim(phone, index: 0, email: email);
       await signInByEmail(phone, email);
-      await createFamily(phone, index: 0, familyName: familyName, name: 'Papa');
+      await createFamily(
+        phone,
+        index: 0,
+        familyName: familyName,
+        name: 'Papa',
+        claimed: true,
+      );
       deleteFamilyAfter(phone, familyName);
 
       // H2: a child and a second adult without an account.

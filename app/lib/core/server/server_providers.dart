@@ -32,6 +32,14 @@ final emailCodeSignInProvider = Provider<bool>(
   (ref) => ref.watch(appConfigProvider).server?.emailCode ?? true,
 );
 
+/// Whether the server this app runs on has no family yet (specs/20 "Claiming the
+/// server"): its front door leads to the claim, and only the address announced with the
+/// setup key may sign up. A server that does not say, or a compiled-in one, counts as
+/// claimed.
+final serverUnclaimedProvider = Provider<bool>(
+  (ref) => ref.watch(appConfigProvider).server?.claimed == false,
+);
+
 /// Whether the server this app runs on announces [feature] in its discovery document.
 /// A build with a compiled-in server (development, the demo) has no document and is
 /// taken to support everything.

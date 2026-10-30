@@ -9,7 +9,7 @@ A WuselWall server works **with or without email**. Without it, everyone signs u
 | **Invitations** | By link, QR code or invitation code | The same, and an invitation that names your address finds you on its own |
 | **Who else sees something** | Nobody | The mail provider sees addresses and codes |
 
-On a server without email, nobody checks the address: anyone could type any address. That is fine, because an account on its own sees nothing. Only an invitation or the setup code lets it into a family. For the same reason, a server without email never hands an invitation to an account just because the addresses match.
+On a server without email, nobody checks the address: anyone could type any address. That is fine, because an account on its own sees nothing. Only an invitation or the setup key lets it into a family, and before the family exists the server creates an account only for the address announced with the setup key. For the same reason, a server without email never hands an invitation to an account just because the addresses match.
 
 You can switch email on or off at any time. Accounts keep their password; once email is on, they can also sign in with a code. The app notices the change the next time it starts.
 

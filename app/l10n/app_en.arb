@@ -55,7 +55,7 @@
   "enrolBody": "Enter the code shown on a device that is already connected.",
   "enrolCodeLabel": "Enrolment code",
   "enrolAction": "Connect",
-  "errSetupTokenInvalid": "The setup token is not valid.",
+  "errSetupTokenInvalid": "The setup key is not valid.",
   "errSetupClosed": "This system is already connected.",
   "errPasswordTooShort": "The password needs at least 10 characters.",
   "errPinFormat": "The PIN must be exactly 6 digits.",
@@ -2068,19 +2068,49 @@
   "householdLanguageEn": "English",
   "householdLanguageFr": "French",
   "householdLanguageEs": "Spanish",
-  "householdNewFounderCode": "Setup code",
-  "householdNewFounderHelp": "Use the setup code shown when your server was installed, or ask the person who runs it. This is not the code from your sign-in email.",
-  "householdNewCodeSaved": "Setup code saved from your setup link. You do not need to enter it again.",
+  "householdNewFounderCode": "Setup key",
+  "householdNewFounderHelp": "Use the setup key shown when your server was installed, or ask the person who runs it. This is not the code from your sign-in email.",
+  "householdNewCodeSaved": "Setup key saved from your setup link. You do not need to enter it again.",
   "householdSeedExamples": "Start with examples — 5 tasks, 3 rewards",
   "householdNewCreate": "Create family",
   "householdNewCreating": "Creating your family …",
   "householdNewInvited": "I was invited",
   "householdInvitedNote": "Invitations arrive with the next update.",
   "householdNewSignOut": "Sign out",
-  "householdNewErrNoCode": "This server needs a setup code to create a family. Use the code from the server installation, not your email code.",
-  "householdNewErrCodeWrong": "This setup code is invalid or has already been used. Ask the person who runs your server for a new setup link or code.",
+  "householdNewErrNoCode": "This server needs a setup key to create a family. Use the key from the server installation, not your email code.",
+  "householdNewErrCodeWrong": "This setup key is invalid or has already been used. Ask the person who runs your server for a new setup link or key.",
   "householdNewErrRateLimited": "Too many attempts. Wait a few minutes and try again.",
   "householdNewStalled": "This is taking longer than usual. Please wait, or sign out and sign in again. Do not create the family a second time.",
+  "claimTitle": "Set up your server",
+  "claimLead": "{host} has no family yet. The setup key from its installation lets you found it. Enter the email address that becomes the first guardian account.",
+  "@claimLead": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "claimHeader": "Setting up {host}",
+  "@claimHeader": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "claimKeyLabel": "Setup key",
+  "claimKeyHelp": "From the server installation: the setup link or QR code carries it. Otherwise ask the person who runs your server.",
+  "claimChecking": "Checking the setup key…",
+  "claimKeyReady": "Setup key accepted. The server is waiting for its family.",
+  "claimKeyUsed": "This setup key has already been used. Ask the person who runs your server for a new one, or sign in if the family already exists.",
+  "claimKeyInvalid": "This setup key is not valid.",
+  "claimNextCode": "Next: a code from your email, then your family.",
+  "claimNextPassword": "Next: a password for your account, then your family.",
+  "claimHaveAccount": "I already have an account",
+  "doorUnclaimedTitle": "This server has no family yet",
+  "doorUnclaimedBody": "Whoever installed it has the setup key. With it you found the family; afterwards, others join by invitation.",
+  "doorUnclaimedAction": "I have the setup key",
+  "errSetupKeyRequired": "This server has no family yet. Only the setup key from its installation can create the first account.",
   "setupPrivacy": "Privacy policy",
   "householdMembersTitle": "Who else is in your family?",
   "householdMembersYou": "{name} (you)",

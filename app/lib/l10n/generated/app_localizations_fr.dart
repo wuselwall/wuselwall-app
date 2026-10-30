@@ -161,7 +161,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get errSetupTokenInvalid =>
-      'Le jeton de configuration n’est pas valide.';
+      'La clé de configuration n’est pas valide.';
 
   @override
   String get errSetupClosed => 'Ce système est déjà configuré.';
@@ -3726,15 +3726,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get householdLanguageEs => 'Espagnol';
 
   @override
-  String get householdNewFounderCode => 'Code de configuration';
+  String get householdNewFounderCode => 'Clé de configuration';
 
   @override
   String get householdNewFounderHelp =>
-      'Utilise le code de configuration affiché lors de l’installation du serveur ou demande-le à la personne qui le gère. Ce n’est pas le code de ton e-mail de connexion.';
+      'Utilise la clé de configuration affichée lors de l’installation du serveur ou demande-la à la personne qui le gère. Ce n’est pas le code de ton e-mail de connexion.';
 
   @override
   String get householdNewCodeSaved =>
-      'Le code de configuration de ton lien de configuration a été enregistré. Tu n’as pas besoin de le saisir à nouveau.';
+      'La clé de configuration de ton lien de configuration a été enregistrée. Tu n’as pas besoin de la saisir à nouveau.';
 
   @override
   String get householdSeedExamples =>
@@ -3758,11 +3758,11 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get householdNewErrNoCode =>
-      'Ce serveur demande un code de configuration pour créer une famille. Utilise le code fourni à l’installation du serveur, pas celui reçu par e-mail.';
+      'Ce serveur demande une clé de configuration pour créer une famille. Utilise la clé fournie à l’installation du serveur, pas le code reçu par e-mail.';
 
   @override
   String get householdNewErrCodeWrong =>
-      'Ce code de configuration n’est pas valide ou a déjà été utilisé. Demande un nouveau lien ou code de configuration à la personne qui gère votre serveur.';
+      'Cette clé de configuration n’est pas valide ou a déjà été utilisée. Demande un nouveau lien ou une nouvelle clé de configuration à la personne qui gère votre serveur.';
 
   @override
   String get householdNewErrRateLimited =>
@@ -3771,6 +3771,65 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get householdNewStalled =>
       'Cela prend plus de temps que d’habitude. Patiente un peu ou déconnecte-toi puis reconnecte-toi. Ne crée pas la famille une deuxième fois.';
+
+  @override
+  String get claimTitle => 'Configurer ton serveur';
+
+  @override
+  String claimLead(String host) {
+    return '$host n’a pas encore de famille. La clé de configuration de son installation te permet de la fonder. Saisis l’adresse e-mail qui deviendra le premier compte parent.';
+  }
+
+  @override
+  String claimHeader(String host) {
+    return 'Configuration de $host';
+  }
+
+  @override
+  String get claimKeyLabel => 'Clé de configuration';
+
+  @override
+  String get claimKeyHelp =>
+      'Elle vient de l’installation du serveur : le lien ou le QR code de configuration la contient. Sinon, demande-la à la personne qui gère votre serveur.';
+
+  @override
+  String get claimChecking => 'Vérification de la clé de configuration…';
+
+  @override
+  String get claimKeyReady =>
+      'Clé de configuration acceptée. Le serveur attend sa famille.';
+
+  @override
+  String get claimKeyUsed =>
+      'Cette clé de configuration a déjà été utilisée. Demande-en une nouvelle à la personne qui gère votre serveur, ou connecte-toi si la famille existe déjà.';
+
+  @override
+  String get claimKeyInvalid => 'Cette clé de configuration n’est pas valide.';
+
+  @override
+  String get claimNextCode =>
+      'Ensuite : un code reçu par e-mail, puis votre famille.';
+
+  @override
+  String get claimNextPassword =>
+      'Ensuite : un mot de passe pour ton compte, puis votre famille.';
+
+  @override
+  String get claimHaveAccount => 'J’ai déjà un compte';
+
+  @override
+  String get doorUnclaimedTitle => 'Ce serveur n’a pas encore de famille';
+
+  @override
+  String get doorUnclaimedBody =>
+      'La personne qui l’a installé possède la clé de configuration. Elle permet de fonder la famille ; les autres rejoignent ensuite sur invitation.';
+
+  @override
+  String get doorUnclaimedAction => 'J’ai la clé de configuration';
+
+  @override
+  String get errSetupKeyRequired =>
+      'Ce serveur n’a pas encore de famille. Seule la clé de configuration de son installation peut créer le premier compte.';
 
   @override
   String get setupPrivacy => 'Politique de confidentialité';

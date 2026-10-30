@@ -25,7 +25,7 @@ En el [panel](https://supabase.com/dashboard), crea un proyecto, elige región y
    | `SUPABASE_ACCESS_TOKEN` | Token de la cuenta Supabase |
    | `SUPABASE_PROJECT_ID` | Identificador del proyecto |
    | `SUPABASE_DB_PASSWORD` | Contraseña de la base |
-   | `WUSELWALL_SETUP_TOKEN` | Frase de letras y cifras elegida para crear la familia una vez |
+   | `WUSELWALL_SETUP_TOKEN` | Frase de letras y cifras elegida: la clave de configuración que crea la familia una vez |
    | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_SENDER` | Opcional: acceso SMTP para los códigos por correo (cinco secretos). Ver [Correo](#mail) |
 
 4. Activa los workflows en **Actions** y ejecuta **deploy-supabase → Run workflow**. Elige `es` en **language** para correos y marca **web** si quieres publicar la app web.
@@ -40,7 +40,7 @@ El correo es opcional. **Sin los secretos `SMTP_`**, todos inician sesión con d
 
 ## 3. Conectar la app {#_3-connecting-the-app}
 
-En **¿Qué servidor?**, introduce el identificador y crea la familia con la frase `WUSELWALL_SETUP_TOKEN` ([Conexión](/es/guide/setup)).
+En **¿Qué servidor?**, introduce el identificador y toca **Tengo la clave de configuración** con la frase `WUSELWALL_SETUP_TOKEN` ([La clave de configuración](/es/guide/setup#setup-key)): anuncia tu dirección, y la familia llega tras iniciar sesión.
 
 <Shot name="setup-server" alt="La elección de servidor en la app" />
 

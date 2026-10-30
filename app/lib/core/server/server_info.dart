@@ -11,6 +11,7 @@ class ServerInfo {
     this.features = const [],
     this.serverVersion,
     this.emailCode = true,
+    this.claimed,
   });
 
   /// Reads a discovery document fetched from [origin]. The server names its own
@@ -28,6 +29,7 @@ class ServerInfo {
     final features = json['features'];
     final release = json['server_version'];
     final signIn = json['sign_in'];
+    final claimed = json['claimed'];
     if (supabaseUrl == null ||
         !supabaseUrl.hasScheme ||
         supabaseUrl.host.isEmpty ||
@@ -56,6 +58,7 @@ class ServerInfo {
           : null,
       // Servers from before mail became optional do not say; all of them sent codes.
       emailCode: !(signIn is Map && signIn['email_code'] == false),
+      claimed: claimed is bool ? claimed : null,
     );
   }
 
@@ -76,6 +79,12 @@ class ServerInfo {
   /// and a guardian resets a forgotten one (specs/20, Q48).
   final bool emailCode;
 
+  /// Whether a family exists on the server (`claimed`). Without one, only the address
+  /// announced with the setup key may sign up, and the front door leads to the claim
+  /// (specs/20 "Claiming the server"). Null for a server from before that migration,
+  /// which the app treats as claimed.
+  final bool? claimed;
+
   /// The form the app keeps on the device; [ServerInfo.fromDiscovery] reads it back.
   Map<String, Object?> toJson() => {
     'wuselwall': 1,
@@ -85,6 +94,7 @@ class ServerInfo {
     'min_app_version': minAppVersion,
     'household_creation': householdCreation,
     'sign_in': {'password': true, 'email_code': emailCode},
+    'claimed': ?claimed,
     'features': features,
     'server_version': ?serverVersion,
   };

@@ -43,4 +43,4 @@ Les clés d’accès ne sont pas disponibles pour tous les serveurs ; le code pa
 
 ## Ensuite {#what-comes-next}
 
-Ouvrez l’app, choisissez l’adresse ou l’identifiant du projet et créez la famille avec le code de configuration. Le [guide de connexion](/fr/guide/setup) décrit les invitations et les autres appareils ; leurs codes QR contiennent aussi le serveur.
+Ouvrez l’app, choisissez l’adresse ou l’identifiant du projet, touchez **J’ai la clé de configuration** et créez la famille avec la clé de configuration ([La clé de configuration](/fr/guide/setup#setup-key)) ; tant que la famille n’existe pas, le serveur ne crée de compte pour personne d’autre. Le [guide de connexion](/fr/guide/setup) décrit les invitations et les autres appareils ; leurs codes QR contiennent aussi le serveur.
