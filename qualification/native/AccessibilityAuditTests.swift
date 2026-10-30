@@ -42,10 +42,27 @@ final class AccessibilityAuditTests: XCTestCase {
     return (node.label.isEmpty ? 0 : 1) + node.children.reduce(0) { $0 + labelCount($1) }
   }
 
+  private func frame(_ rect: CGRect) -> [String: Double] {
+    return ["x": Double(rect.minX), "y": Double(rect.minY),
+            "width": Double(rect.width), "height": Double(rect.height)]
+  }
+
+  private func issueElement(_ element: XCUIElement?) -> Any {
+    guard let element else { return NSNull() }
+    return [
+      "type": element.elementType.rawValue,
+      "identifier": element.identifier,
+      "label": element.label,
+      "frame": frame(element.frame),
+      "debugDescription": element.debugDescription,
+    ] as [String: Any]
+  }
+
   private func semantics(_ node: any XCUIElementSnapshot) -> [String: Any] {
     return ["type": node.elementType.rawValue, "identifier": node.identifier, "label": node.label,
             "value": node.value.map { String(describing: $0) } ?? "",
             "enabled": node.isEnabled, "selected": node.isSelected,
+            "frame": frame(node.frame),
             "children": node.children.map { semantics($0) }]
   }
 
@@ -103,10 +120,14 @@ final class AccessibilityAuditTests: XCTestCase {
         // Capture every issue and report failure explicitly after recording the case.
         // Returning true here collects results; it never makes findings pass.
         try app.performAccessibilityAudit(for: .all) { issue in
-          issues.append(["type": "ERROR", "auditType": issue.auditType.rawValue,
-                         "description": issue.compactDescription,
-                         "detail": issue.detailedDescription,
-                         "identifier": issue.element?.identifier ?? ""])
+          issues.append([
+            "type": "ERROR",
+            "auditType": issue.auditType.rawValue,
+            "description": issue.compactDescription,
+            "detail": issue.detailedDescription,
+            "identifier": issue.element?.identifier ?? "",
+            "element": issueElement(issue.element),
+          ])
           return true
         }
         if id == "detector-bad" { detector = !issues.isEmpty }

@@ -1,9 +1,12 @@
 // Explicitly selected by candidate qualification; outside default test/ discovery.
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,6 +22,41 @@ import '../qualification/inventory.g.dart';
 import 'exact_contrast.dart';
 import 'paint_contrast.dart';
 import 'settle.dart';
+
+Future<String> _saveFailureScreenshot(
+  WidgetTester tester,
+  String profile,
+  String caseId,
+  int viewIndex, {
+  required bool multipleViews,
+}) async {
+  final view = tester.binding.renderViews.elementAt(viewIndex);
+  final layer = view.debugLayer;
+  if (layer is! OffsetLayer) {
+    throw StateError('Render view $viewIndex has no OffsetLayer');
+  }
+  final bytes = await tester.binding.runAsync<Uint8List>(() async {
+    ui.Image? image;
+    try {
+      image = await layer.toImage(view.paintBounds);
+      final data = await image.toByteData(format: ui.ImageByteFormat.png);
+      if (data == null) throw StateError('PNG encoding returned no bytes');
+      return data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+    } finally {
+      image?.dispose();
+    }
+  });
+  if (bytes == null) throw StateError('Screenshot capture returned no bytes');
+  final safeCaseId = caseId.replaceAll(RegExp(r'[^A-Za-z0-9._-]'), '_');
+  final viewSuffix = multipleViews ? '-view-$viewIndex' : '';
+  final relativePath =
+      'build/qualification/flutter/$profile/failures/'
+      '$safeCaseId$viewSuffix.png';
+  final file = File('../$relativePath');
+  file.parent.createSync(recursive: true);
+  file.writeAsBytesSync(bytes, flush: true);
+  return relativePath;
+}
 
 void main() {
   final inventory = jsonDecode(
@@ -284,6 +322,32 @@ void main() {
               row['error'] = error.toString();
               rethrow;
             } finally {
+              if (findings.isNotEmpty || row['status'] == 'FAIL') {
+                final paths = <String>[];
+                final errors = <String>[];
+                final multipleViews = tester.binding.renderViews.length > 1;
+                for (
+                  var viewIndex = 0;
+                  viewIndex < tester.binding.renderViews.length;
+                  viewIndex++
+                ) {
+                  try {
+                    paths.add(
+                      await _saveFailureScreenshot(
+                        tester,
+                        profile,
+                        id,
+                        viewIndex,
+                        multipleViews: multipleViews,
+                      ),
+                    );
+                  } on Object catch (error) {
+                    errors.add('view $viewIndex: $error');
+                  }
+                }
+                if (paths.isNotEmpty) row['failureScreenshots'] = paths;
+                if (errors.isNotEmpty) row['failureScreenshotErrors'] = errors;
+              }
               await tester.pumpWidget(const SizedBox.shrink());
               await tester.pump();
               handle.dispose();
