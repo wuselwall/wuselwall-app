@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/emoji_picture.dart';
+import 'package:wuselwall/core/ui/whole_words_text.dart';
 import 'package:wuselwall/features/board/ui/board_fit.dart';
 import 'package:wuselwall/features/board/ui/board_grid.dart';
 import 'package:wuselwall/features/kid/ui/kid_widgets.dart';
@@ -67,25 +68,39 @@ class KidCountdowns extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: Tokens.space2),
             child: KidCard(
-              child: Row(
-                children: [
-                  _icon(c, 44),
-                  const SizedBox(width: Tokens.space3),
-                  Expanded(
-                    child: Text(
-                      countdownTitle(l10n, c),
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w800,
-                      ),
+              // On a phone the "noch 3× schlafen" goes under the title, which
+              // keeps its words whole ("Emma wird 9", never letter by letter).
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final title = WholeWordsText(
+                    countdownTitle(l10n, c),
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w800,
                     ),
-                  ),
-                  Text(
+                  );
+                  final when = Text(
                     countdownWhen(l10n, c, today),
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w700,
                     ),
-                  ),
-                ],
+                  );
+                  final narrow = constraints.maxWidth < 420;
+                  return Row(
+                    children: [
+                      _icon(c, 44),
+                      const SizedBox(width: Tokens.space3),
+                      Expanded(
+                        child: narrow
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [title, when],
+                              )
+                            : title,
+                      ),
+                      if (!narrow) when,
+                    ],
+                  );
+                },
               ),
             ),
           ),
