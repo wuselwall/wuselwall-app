@@ -284,13 +284,17 @@ void main() {
     'J2: invitation by link or code, by matching email, refusals and the join notice',
     () async {
       const familyName = 'Familie Test J2';
+      // J1 deleted its family: the server is unclaimed again, so this founder claims too.
       final founder = device();
-      await signInByEmail(founder, freshEmail());
+      final founderEmail = freshEmail();
+      await claim(founder, index: 1, email: founderEmail);
+      await signInByEmail(founder, founderEmail);
       await createFamily(
         founder,
         index: 1,
         familyName: familyName,
         name: 'Julia',
+        claimed: true,
       );
       deleteFamilyAfter(founder, familyName);
       final founderDevice = (await founder.identity.currentDevice()).unwrap()!;
@@ -437,9 +441,18 @@ void main() {
     'J3: pairing a wall display from the guardian\'s phone',
     () async {
       const familyName = 'Familie Test J3';
+      // As in J2: the server has no family at this point, so the founder claims first.
       final phone = device();
-      await signInByEmail(phone, freshEmail());
-      await createFamily(phone, index: 2, familyName: familyName, name: 'Papa');
+      final founderEmail = freshEmail();
+      await claim(phone, index: 2, email: founderEmail);
+      await signInByEmail(phone, founderEmail);
+      await createFamily(
+        phone,
+        index: 2,
+        familyName: familyName,
+        name: 'Papa',
+        claimed: true,
+      );
       deleteFamilyAfter(phone, familyName);
       (await phone.onboarding.addMembers(const [
         NewMember(displayName: 'Anna', isChild: true),
