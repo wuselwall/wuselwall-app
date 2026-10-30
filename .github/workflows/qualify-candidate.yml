@@ -207,6 +207,8 @@ jobs:
           QUALIFICATION_ANDROID_MIN_PHONE_AVD: ${{ vars.QUALIFICATION_ANDROID_MIN_PHONE_AVD }}
           QUALIFICATION_ANDROID_PHONE_AVD: ${{ vars.QUALIFICATION_ANDROID_PHONE_AVD }}
           QUALIFICATION_ANDROID_TABLET_AVD: ${{ vars.QUALIFICATION_ANDROID_TABLET_AVD }}
+      - name: Prepare locked Ruby tools for iOS XCTest project setup
+        run: bash qualification/native/ruby-tools.sh
       - run: bash qualification/native.sh
         env:
           QUALIFY_CANDIDATE_SHA: ${{ github.sha }}

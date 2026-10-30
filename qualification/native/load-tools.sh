@@ -1,14 +1,18 @@
 #!/usr/bin/env bash
 # Load known persisted CI settings as data; never source/eval an environment file.
 set -euo pipefail
+mode="${1:-full}"
+[[ "$mode" == full || "$mode" == diagnostic ]] || { echo 'Native tool loader mode must be full or diagnostic.' >&2; exit 1; }
+export QUALIFICATION_TOOLS_MODE="$mode"
 : "${QUALIFICATION_TOOLS_ROOT:=${RUNNER_TOOL_CACHE:-${XDG_CACHE_HOME:-$HOME/.cache}}/wuselwall-qualification}"
 export QUALIFICATION_TOOLS_ROOT
 python3 - <<'PY'
 import os,pathlib,re,stat
 root=pathlib.Path(os.environ['QUALIFICATION_TOOLS_ROOT'])
 if not root.is_absolute() or any(c in str(root) for c in '\r\n'): raise SystemExit('Invalid dedicated tools root')
-required=['ANDROID_HOME','ANDROID_AVD_HOME','QUALIFICATION_ANDROID_PHONE_AVD','QUALIFICATION_ANDROID_TABLET_AVD','QUALIFICATION_ANDROID_MIN_PHONE_AVD','QUALIFICATION_IOS_RUNTIME']
-known=required+['QUALIFICATION_IOS_VERSION','QUALIFICATION_IOS_BUILD']
+all_settings=['ANDROID_HOME','ANDROID_AVD_HOME','QUALIFICATION_ANDROID_PHONE_AVD','QUALIFICATION_ANDROID_TABLET_AVD','QUALIFICATION_ANDROID_MIN_PHONE_AVD','QUALIFICATION_IOS_RUNTIME']
+required=[] if os.environ.get('QUALIFICATION_TOOLS_MODE') == 'diagnostic' else all_settings
+known=all_settings+['QUALIFICATION_IOS_VERSION','QUALIFICATION_IOS_BUILD']
 def validate(key,value):
  if not value or any(c in value for c in '\r\n'): raise SystemExit(f'Invalid native tools value: {key}')
  if key in ['ANDROID_HOME','ANDROID_AVD_HOME']:
@@ -40,7 +44,7 @@ for key in required:
  if not settings[key]: raise SystemExit(f'Missing native tools setting: {key}; provision the dedicated CI tools or configure it explicitly')
 for key,value in settings.items():
  if value: validate(key,value)
-lines=''.join(f'{key}={value}\n' for key,value in settings.items() if value)
+lines=f'QUALIFICATION_TOOLS_ROOT={root}\n'+''.join(f'{key}={value}\n' for key,value in settings.items() if value)
 if os.environ.get('GITHUB_ENV'):
  with open(os.environ['GITHUB_ENV'],'a') as output: output.write(lines)
 print('Native tool settings loaded; explicit nonempty CI variables take precedence.')

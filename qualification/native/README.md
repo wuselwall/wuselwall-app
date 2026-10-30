@@ -126,6 +126,18 @@ Retain the first execution's logs, `.xcresult`, PNGs, native audit findings and
 summary. Physical VoiceOver/TalkBack, iOS Display Zoom, permission prompts and
 interaction comfort still require the release checklist's device review.
 
+The `release-ios` workflow's manual `native_smoke_only` mode selects `both`, `ios` or
+`android` and runs only the corresponding phone profiles (`ios-phone` and/or
+`android-phone`) with smoke cases. It uploads a short-lived diagnostic artifact and does
+not run baseline comparison or release promotion. Its
+`diagnostic.json` records `INCOMPLETE` even when both profiles pass; the
+non-selected native profiles and all remaining candidate gates are still required for
+qualification. An iOS-only run needs no Android SDK or JDK. If its configured iOS runtime
+is unavailable, it may use the newest already-installed available runtime for this
+diagnostic run and records the identifier, version and build in `diagnostic-runtime.json`.
+It does not install runtimes, system images or accept licenses. The separate
+`diagnostics_only` mode remains read-only runner preflight.
+
 ## Sources
 
 - [Android command tools archive and checksums](https://developer.android.com/studio#command-line-tools-only)

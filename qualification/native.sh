@@ -3,21 +3,73 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 [[ "$(uname -s)" == Darwin ]] || { echo 'Native lane requires a macOS runner.' >&2; exit 1; }
-: "${QUALIFICATION_IOS_RUNTIME:?Set the pinned CoreSimulator runtime identifier}"
-: "${QUALIFICATION_ANDROID_PHONE_AVD:?Set a pre-provisioned ARM64 phone AVD name}"
-: "${QUALIFICATION_ANDROID_MIN_PHONE_AVD:?Set a pre-provisioned ARM64 minimum-API phone AVD name}"
-: "${QUALIFICATION_ANDROID_TABLET_AVD:?Set a pre-provisioned ARM64 tablet AVD name}"
-export PATH="${ANDROID_HOME:?Set ANDROID_HOME}/emulator:$ANDROID_HOME/platform-tools:$PATH"
-for tool in flutter xcrun emulator adb java; do command -v "$tool" >/dev/null; done
-emulator -accel-check
-bash qualification/native/preflight.sh
-node qualification/generate-native.mjs --check
 output="$(pwd)/build/qualification/native"
 mkdir -p "$output"
-xcodebuild -version > "$output/xcode.txt"
+platform=all
+if [[ $# -gt 0 ]]; then
+  case "$1" in
+    ios-phone|ios-tablet|ios-phone-large|ios-tablet-large) platform=ios ;;
+    android-phone|android-tablet|android-min-phone|android-phone-large|android-tablet-large) platform=android ;;
+    *) echo 'Unknown native profile.' >&2; exit 1 ;;
+  esac
+fi
+if [[ "$platform" == all || "$platform" == android ]]; then
+  if [[ "$platform" == all ]]; then
+    : "${QUALIFICATION_ANDROID_PHONE_AVD:?Set a pre-provisioned ARM64 phone AVD name}"
+    : "${QUALIFICATION_ANDROID_MIN_PHONE_AVD:?Set a pre-provisioned ARM64 minimum-API phone AVD name}"
+    : "${QUALIFICATION_ANDROID_TABLET_AVD:?Set a pre-provisioned ARM64 tablet AVD name}"
+  else
+    case "$1" in
+      android-phone|android-phone-large) : "${QUALIFICATION_ANDROID_PHONE_AVD:?Set a pre-provisioned ARM64 phone AVD name}" ;;
+      android-min-phone) : "${QUALIFICATION_ANDROID_MIN_PHONE_AVD:?Set a pre-provisioned ARM64 minimum-API phone AVD name}" ;;
+      android-tablet|android-tablet-large) : "${QUALIFICATION_ANDROID_TABLET_AVD:?Set a pre-provisioned ARM64 tablet AVD name}" ;;
+    esac
+  fi
+  : "${ANDROID_HOME:?Set ANDROID_HOME}"
+  export PATH="$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools:$PATH"
+  for tool in emulator adb java; do command -v "$tool" >/dev/null; done
+  emulator -accel-check
+fi
+command -v flutter >/dev/null
+if [[ "$platform" == all || "$platform" == ios ]]; then
+  command -v xcrun >/dev/null
+  if [[ "$platform" == all || "${QUALIFY_NATIVE_SMOKE:-false}" != true ]]; then
+    : "${QUALIFICATION_IOS_RUNTIME:?Set the pinned CoreSimulator runtime identifier}"
+  fi
+fi
+bash qualification/native/preflight.sh build/qualification/native-preflight "$platform"
+node qualification/generate-native.mjs --check
+if [[ "$platform" == all || "$platform" == ios ]]; then
+  xcodebuild -version > "$output/xcode.txt"
+fi
 sw_vers -productVersion > "$output/macos.txt"
-emulator -version > "$output/emulator.txt" 2>&1
+if [[ "$platform" == all || "$platform" == android ]]; then
+  emulator -version > "$output/emulator.txt" 2>&1
+fi
 flutter --version --machine > "$output/flutter.json"
+if [[ "$platform" == ios && "${QUALIFY_NATIVE_SMOKE:-false}" == true ]]; then
+  runtime_info=$(python3 - "${QUALIFICATION_IOS_RUNTIME:-}" <<'PY'
+import json, subprocess, sys
+requested = sys.argv[1]
+data = json.loads(subprocess.check_output(['xcrun', 'simctl', 'list', 'runtimes', '--json'], text=True))
+runtimes = [r for r in data.get('runtimes', []) if r.get('identifier', '').startswith('com.apple.CoreSimulator.SimRuntime.iOS-') and r.get('isAvailable')]
+selected = next((r for r in runtimes if r['identifier'] == requested), None)
+source = 'configured' if selected else 'newest-available-diagnostic-fallback'
+if not selected:
+    def version_key(runtime):
+        return tuple(int(part) if part.isdigit() else 0 for part in runtime.get('version', '').split('.'))
+    if runtimes:
+        selected = max(runtimes, key=version_key)
+if not selected:
+    raise SystemExit('No available iOS CoreSimulator runtime is installed; diagnostic fallback cannot proceed.')
+print(json.dumps({'identifier': selected['identifier'], 'version': selected.get('version'),
+    'buildversion': selected.get('buildversion'), 'selection': source}, sort_keys=True))
+PY
+)
+  QUALIFICATION_IOS_RUNTIME=$(python3 -c 'import json,sys; print(json.loads(sys.argv[1])["identifier"])' "$runtime_info")
+  export QUALIFICATION_IOS_RUNTIME
+  printf '%s\n' "$runtime_info" > "$output/diagnostic-runtime.json"
+fi
 simulator_id=''
 emulator_pid=''
 ios_project_backup=''
@@ -62,7 +114,11 @@ run_ios() {
     --dart-define="QUALIFY_CANDIDATE_SHA=${QUALIFY_CANDIDATE_SHA:-}" --dart-define="QUALIFY_TABLET=$tablet" --dart-define="QUALIFY_SMOKE=${QUALIFY_NATIVE_SMOKE:-false}") || return 1
   ios_project_backup=$(mktemp)
   cp app/ios/Runner.xcodeproj/project.pbxproj "$ios_project_backup"
-  ruby qualification/native/prepare-ios.rb
+  if [[ -n "${BUNDLE_GEMFILE:-}" ]]; then
+    bundle exec ruby qualification/native/prepare-ios.rb
+  else
+    ruby qualification/native/prepare-ios.rb
+  fi
   xcodebuild test -workspace app/ios/Runner.xcworkspace -scheme QualificationAudits \
     -configuration Debug -destination "platform=iOS Simulator,id=$simulator_id" \
     -resultBundlePath "$output/ios-$kind/audits.xcresult" CODE_SIGNING_ALLOWED=NO \
@@ -139,7 +195,7 @@ PY
   emulator_pid=''
 }
 if [[ $# == 0 ]]; then
-  rm -f "$output/profiles.txt" "$output/visual.json" "$output/evidence.json"
+  rm -f "$output/profiles.txt" "$output/visual.json" "$output/evidence.json" "$output/diagnostic-runtime.json"
   failed=0
   for profile in ios-phone ios-tablet android-phone android-tablet ios-phone-large ios-tablet-large android-phone-large android-tablet-large android-min-phone; do
     if bash "$0" "$profile"; then

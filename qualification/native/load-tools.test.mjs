@@ -49,3 +49,24 @@ test('native tool loader rejects missing settings and symlinked environment file
   assert.notEqual(result.status, 0);
   await assert.rejects(fs.stat(out), {code: 'ENOENT'});
 });
+
+test('diagnostic mode permits missing settings while full qualification still rejects them', async t => {
+  const {root, out, env} = await fixture(t);
+  await fs.rm(path.join(root, 'environment.env'));
+  const full = spawnSync('bash', [script], {encoding: 'utf8', env});
+  assert.notEqual(full.status, 0);
+  await assert.rejects(fs.stat(out), {code: 'ENOENT'});
+  const diagnostic = spawnSync('bash', [script, 'diagnostic'], {encoding: 'utf8', env});
+  assert.equal(diagnostic.status, 0, diagnostic.stderr);
+  assert.doesNotMatch(await fs.readFile(out, 'utf8'), /^ANDROID_HOME=/m);
+});
+
+test('diagnostic mode still rejects unsafe persisted settings without executing them', async t => {
+  const {root, out, env} = await fixture(t);
+  const marker = path.join(root, 'executed');
+  await fs.appendFile(path.join(root, 'environment.env'), `UNKNOWN=$(touch ${marker})\n`);
+  const result = spawnSync('bash', [script, 'diagnostic'], {encoding: 'utf8', env});
+  assert.notEqual(result.status, 0);
+  await assert.rejects(fs.stat(marker), {code: 'ENOENT'});
+  await assert.rejects(fs.stat(out), {code: 'ENOENT'});
+});
