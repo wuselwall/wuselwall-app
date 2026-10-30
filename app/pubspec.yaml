@@ -56,6 +56,10 @@ dev_dependencies:
   otp: ^3.2.1
 
 flutter:
+  # The iOS project uses the checked-in CocoaPods integration. Avoid a hybrid
+  # SPM/Pods plugin graph when building the XCTest accessibility bundle.
+  config:
+    enable-swift-package-manager: false
   uses-material-design: true
   generate: true
 

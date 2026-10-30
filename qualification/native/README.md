@@ -9,6 +9,11 @@ The qualification job selects the repository's Flutter version and JDK 17 with
 Actions. It does not rely on an interactive shell's PATH, the machine's default
 Java version, signing certificates or a configured backend. Run `npm ci --include=dev`
 before the native scripts: PNG comparison uses the locked `sharp` dependency.
+The app's `flutter.config.enable-swift-package-manager: false` keeps plugin builds
+on its existing CocoaPods integration. A mixed SPM/Pods graph can build the app
+through Flutter yet fail to resolve Flutter headers when XCTest builds the workspace.
+Migrate the project as a whole before changing this setting; do not alter a runner's
+global Flutter configuration to work around it.
 
 For a complete local setup sequence, use [the copyable setup commands](setup-commands.md).
 
