@@ -48,7 +48,13 @@ make room. Check free space again after installation before a full matrix.
 
 The selected Xcode and its license/first-launch components must already be ready.
 Choose a simulator runtime supported by that Xcode in Settings → Components, and
-record its exact version, Apple build and CoreSimulator identifier as CI variables.
+confirm it supports the simulator device types used by the matrix. Defaults are
+`com.apple.CoreSimulator.SimDeviceType.iPhone-16` and
+`com.apple.CoreSimulator.SimDeviceType.iPad-Pro-11-inch-M4-8GB`; the full matrix
+needs a runtime that supports both. If `QUALIFICATION_IOS_PHONE_TYPE` or
+`QUALIFICATION_IOS_TABLET_TYPE` is set, use those device types instead. Check the
+`supportedDeviceTypes` in `xcrun simctl list runtimes --json`, then record the
+runtime's exact version, Apple build and CoreSimulator identifier as CI variables.
 The script has no floating `latest` iOS fallback and never switches Xcode or accepts
 its license.
 
@@ -133,8 +139,9 @@ not run baseline comparison or release promotion. Its
 `diagnostic.json` records `INCOMPLETE` even when both profiles pass; the
 non-selected native profiles and all remaining candidate gates are still required for
 qualification. An iOS-only run needs no Android SDK or JDK. If its configured iOS runtime
-is unavailable, it may use the newest already-installed available runtime for this
-diagnostic run and records the identifier, version and build in `diagnostic-runtime.json`.
+does not support the selected device, the diagnostic may use the newest already-installed
+available runtime whose `supportedDeviceTypes` includes it. It records the selected
+device type, runtime identifier, version, build and fallback reason in `diagnostic-runtime.json`.
 It does not install runtimes, system images or accept licenses. The separate
 `diagnostics_only` mode remains read-only runner preflight.
 

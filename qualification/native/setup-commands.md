@@ -41,16 +41,26 @@ own pinned Flutter, Node and JDK; these exports are for this local setup session
 
 ## 3. Pin the installed simulator runtime
 
-List the installed iOS runtime and print the export commands for its exact version,
-build and identifier. Copy the three printed commands into this shell. If several
+List installed runtimes compatible with both configured test devices and print the
+export commands for each exact version, build and identifier. The newest runtime can
+support only a special device model, so availability alone is insufficient. Copy the
+three commands for one compatible runtime into this shell. If several
 runtimes are installed, choose the one intended for qualification rather than changing
 or deleting the others.
 
 ```bash
 xcrun simctl list runtimes --json | python3 -c '
-import json, shlex, sys
+import json, os, shlex, sys
+devices = {
+    os.environ.get("QUALIFICATION_IOS_PHONE_TYPE", "com.apple.CoreSimulator.SimDeviceType.iPhone-16"),
+    os.environ.get("QUALIFICATION_IOS_TABLET_TYPE", "com.apple.CoreSimulator.SimDeviceType.iPad-Pro-11-inch-M4-8GB"),
+}
 for runtime in json.load(sys.stdin)["runtimes"]:
     if runtime.get("isAvailable") and runtime["identifier"].startswith("com.apple.CoreSimulator.SimRuntime.iOS-"):
+        supported = {device["identifier"] for device in runtime.get("supportedDeviceTypes", [])}
+        if not devices.issubset(supported):
+            print("# " + runtime["name"] + ": does not list support for both configured test devices")
+            continue
         print("# " + runtime["name"])
         for key, value in [("QUALIFICATION_IOS_VERSION", runtime["version"]),
                            ("QUALIFICATION_IOS_BUILD", runtime["buildversion"]),

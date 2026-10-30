@@ -127,6 +127,7 @@ jobs:
         env:
           QUALIFY_CANDIDATE_SHA: ${{ github.sha }}
           QUALIFY_NATIVE_SMOKE: 'true'
+          QUALIFICATION_IOS_DIAGNOSTIC_RUNTIME_FALLBACK: 'true'
           QUALIFY_MODE: capture
           NATIVE_SMOKE_PLATFORM: ${{ inputs.native_smoke_platform }}
           QUALIFY_NATIVE_PROFILES: ${{ inputs.native_smoke_platform == 'ios' && 'ios-phone' || inputs.native_smoke_platform == 'android' && 'android-phone' || 'ios-phone,android-phone' }}
@@ -161,7 +162,9 @@ jobs:
         if: always()
         with:
           name: native-smoke-diagnostic-${{ github.sha }}-${{ github.run_attempt }}
-          path: build/qualification/native
+          path: |
+            build/qualification/native
+            build/qualification/native-preflight
           if-no-files-found: warn
           retention-days: 7
 

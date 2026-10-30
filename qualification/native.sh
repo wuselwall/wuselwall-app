@@ -33,7 +33,7 @@ fi
 command -v flutter >/dev/null
 if [[ "$platform" == all || "$platform" == ios ]]; then
   command -v xcrun >/dev/null
-  if [[ "$platform" == all || "${QUALIFY_NATIVE_SMOKE:-false}" != true ]]; then
+  if [[ "$platform" == all || "${QUALIFY_NATIVE_SMOKE:-false}" != true || "${QUALIFICATION_IOS_DIAGNOSTIC_RUNTIME_FALLBACK:-false}" != true ]]; then
     : "${QUALIFICATION_IOS_RUNTIME:?Set the pinned CoreSimulator runtime identifier}"
   fi
 fi
@@ -47,25 +47,13 @@ if [[ "$platform" == all || "$platform" == android ]]; then
   emulator -version > "$output/emulator.txt" 2>&1
 fi
 flutter --version --machine > "$output/flutter.json"
-if [[ "$platform" == ios && "${QUALIFY_NATIVE_SMOKE:-false}" == true ]]; then
-  runtime_info=$(python3 - "${QUALIFICATION_IOS_RUNTIME:-}" <<'PY'
-import json, subprocess, sys
-requested = sys.argv[1]
-data = json.loads(subprocess.check_output(['xcrun', 'simctl', 'list', 'runtimes', '--json'], text=True))
-runtimes = [r for r in data.get('runtimes', []) if r.get('identifier', '').startswith('com.apple.CoreSimulator.SimRuntime.iOS-') and r.get('isAvailable')]
-selected = next((r for r in runtimes if r['identifier'] == requested), None)
-source = 'configured' if selected else 'newest-available-diagnostic-fallback'
-if not selected:
-    def version_key(runtime):
-        return tuple(int(part) if part.isdigit() else 0 for part in runtime.get('version', '').split('.'))
-    if runtimes:
-        selected = max(runtimes, key=version_key)
-if not selected:
-    raise SystemExit('No available iOS CoreSimulator runtime is installed; diagnostic fallback cannot proceed.')
-print(json.dumps({'identifier': selected['identifier'], 'version': selected.get('version'),
-    'buildversion': selected.get('buildversion'), 'selection': source}, sort_keys=True))
-PY
-)
+if [[ "$platform" == ios && "${QUALIFY_NATIVE_SMOKE:-false}" == true && "${QUALIFICATION_IOS_DIAGNOSTIC_RUNTIME_FALLBACK:-false}" == true ]]; then
+  case "$1" in
+    ios-phone|ios-phone-large) selected_ios_device_type="${QUALIFICATION_IOS_PHONE_TYPE:-com.apple.CoreSimulator.SimDeviceType.iPhone-16}" ;;
+    ios-tablet|ios-tablet-large) selected_ios_device_type="${QUALIFICATION_IOS_TABLET_TYPE:-com.apple.CoreSimulator.SimDeviceType.iPad-Pro-11-inch-M4-8GB}" ;;
+  esac
+  runtime_info=$(xcrun simctl list runtimes --json | node qualification/native/select-ios-runtime.mjs \
+    "${QUALIFICATION_IOS_RUNTIME:-}" "$selected_ios_device_type")
   QUALIFICATION_IOS_RUNTIME=$(python3 -c 'import json,sys; print(json.loads(sys.argv[1])["identifier"])' "$runtime_info")
   export QUALIFICATION_IOS_RUNTIME
   printf '%s\n' "$runtime_info" > "$output/diagnostic-runtime.json"

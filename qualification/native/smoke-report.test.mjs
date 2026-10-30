@@ -97,7 +97,7 @@ test('workflow keeps smoke and runner diagnostics outside promotion and signing'
   assert.match(workflow, /QUALIFY_NATIVE_SMOKE: 'true'/);
   assert.match(workflow, /options: \[both, ios, android\]/);
   const native = await fs.readFile(new URL('../native.sh', import.meta.url), 'utf8');
-  assert.match(native, /platform" == ios && "\$\{QUALIFY_NATIVE_SMOKE:-false\}" == true/);
+  assert.match(native, /platform" == ios && "\$\{QUALIFY_NATIVE_SMOKE:-false\}" == true && "\$\{QUALIFICATION_IOS_DIAGNOSTIC_RUNTIME_FALLBACK:-false\}" == true/);
   const preflight = await fs.readFile(new URL('./preflight.sh', import.meta.url), 'utf8');
   assert.match(preflight, /\[\[ "\$platform" == all \|\| "\$platform" == ios \]\]/);
 });
