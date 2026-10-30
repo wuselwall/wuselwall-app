@@ -48,7 +48,7 @@ publishing-workflow qualification gates.
 Local validation rendered all 180 direct fixtures in DE/EN/FR/ES and executed the earlier 70-state,
 8,760-case Flutter matrix. Large-text layout and touch-target fixes were verified in a
 672-case responsive rerun with no framework, label or target-size findings. Contrast findings
-remain visible and blocking while attribution continues. The ordinary suite passed 1,574
+remain visible and blocking while attribution continues. The ordinary suite passed 1,713
 tests with seven intentionally unconfigured backend integration tests skipped; the separate
 disposable-backend CI job supplies their coverage. No qualified candidate or approved native
 baseline is established by these local checks.
@@ -133,6 +133,12 @@ the automated check's scope: an SDK estimate there is recorded for review, not a
 Both results are recorded per case. Complex backgrounds, custom painting and missing
 semantic text still need additional assertions or review. A screen with no auditable text
 or controls must not silently appear to have complete coverage.
+
+Pixel colours alone cannot exclude an overlay that happens to use the text's blend
+palette. The audit therefore also rejects foreground custom painters, perspective
+transforms and intersecting later-painted siblings. Negative controls cover those
+cases and a low-contrast background occupying less than half of every glyph box.
+Unrecognized SDK diagnostic prefixes remain blocking after per-node attribution.
 
 The Flutter evidence artifact includes grouped JSON/Markdown contrast reports even when
 the matrix fails. They retain raw unparsed findings and case references, count repeated

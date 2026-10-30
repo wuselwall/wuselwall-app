@@ -10,13 +10,44 @@ const _paper = Color(0xfff7f4ee);
 const _ink = Color(0xff4a4a4a);
 const _line = Color(0xffd9d5cd);
 
+void _ignorePointer(PointerDownEvent event) {}
+
 TextStyle _style({Color color = _ink, double size = 12}) => TextStyle(
   fontFamily: 'AtkinsonHyperlegibleNext',
   fontSize: size,
   color: color,
 );
 
+class _NoopForegroundPainter extends CustomPainter {
+  const _NoopForegroundPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {}
+
+  @override
+  bool shouldRepaint(_NoopForegroundPainter oldDelegate) => false;
+}
+
+class _OutlineForegroundPainter extends CustomPainter {
+  const _OutlineForegroundPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.drawRect(
+      Offset.zero & size,
+      Paint()
+        ..color = _line
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_OutlineForegroundPainter oldDelegate) => false;
+}
+
 Widget _page(Widget body) => MaterialApp(
+  debugShowCheckedModeBanner: false,
   home: Scaffold(
     backgroundColor: _paper,
     body: Center(child: body),
@@ -169,6 +200,40 @@ void main() {
   });
 
   testWidgets(
+    'an icon-only paragraph under a foreground painter does not block its '
+    'merged text node',
+    (t) async {
+      await withSemantics(
+        t,
+        _page(
+          Semantics(
+            container: true,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CustomPaint(
+                  foregroundPainter: const _NoopForegroundPainter(),
+                  child: const Icon(Icons.check, color: _line, size: 22),
+                ),
+                const SizedBox(width: 8),
+                Text('Readable action', style: _style()),
+              ],
+            ),
+          ),
+        ),
+        () async {
+          final report = await auditExactContrast(t);
+          expect(report.rows, hasLength(1));
+          final row = report.rows.single;
+          expect(row.text, 'Readable action');
+          expect(row.classification, 'PASS', reason: row.reason);
+          expect(report.provenNodes, contains(row.semanticsId));
+        },
+      );
+    },
+  );
+
+  testWidgets(
     'a fade that does not overflow is decided; one that does is not',
     (t) async {
       await withSemantics(
@@ -212,6 +277,30 @@ void main() {
     },
   );
 
+  testWidgets('an outlined foreground painter stays unproven without a proof', (
+    t,
+  ) async {
+    await withSemantics(
+      t,
+      _page(
+        CustomPaint(
+          foregroundPainter: const _OutlineForegroundPainter(),
+          child: SizedBox(
+            width: 240,
+            height: 64,
+            child: Center(child: Text('Inside the outline', style: _style())),
+          ),
+        ),
+      ),
+      () async {
+        final row = (await auditExactContrast(t)).rows.single;
+        expect(row.text, 'Inside the outline');
+        expect(row.classification, 'UNDECIDED', reason: row.reason);
+        expect(row.reason, 'Foreground painter');
+      },
+    );
+  });
+
   testWidgets('text spanning two flat backgrounds is held to the worse one', (
     t,
   ) async {
@@ -243,6 +332,114 @@ void main() {
       },
     );
   });
+
+  testWidgets(
+    'an empty hit-test Listener later in a Stack does not obscure text',
+    (t) async {
+      await withSemantics(
+        t,
+        _page(
+          SizedBox(
+            width: 240,
+            height: 32,
+            child: Stack(
+              children: [
+                Center(child: Text('Listener control', style: _style())),
+                const Positioned.fill(
+                  child: Listener(
+                    onPointerDown: _ignorePointer,
+                    child: SizedBox.expand(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        () async {
+          final row = (await auditExactContrast(t)).rows.single;
+          expect(row.text, 'Listener control');
+          expect(row.classification, 'PASS', reason: row.reason);
+        },
+      );
+    },
+  );
+
+  testWidgets('a zero-area later Stack sibling does not obscure text', (
+    t,
+  ) async {
+    await withSemantics(
+      t,
+      _page(
+        SizedBox(
+          width: 240,
+          height: 32,
+          child: Stack(
+            children: [
+              Center(child: Text('Zero-area control', style: _style())),
+              const Positioned(
+                left: 120,
+                top: 0,
+                bottom: 0,
+                width: 0,
+                child: ColoredBox(color: _line),
+              ),
+            ],
+          ),
+        ),
+      ),
+      () async {
+        final row = (await auditExactContrast(t)).rows.single;
+        expect(row.text, 'Zero-area control');
+        expect(row.classification, 'PASS', reason: row.reason);
+      },
+    );
+  });
+
+  testWidgets(
+    'a second background below half of every glyph still cannot be ignored',
+    (t) async {
+      await withSemantics(
+        t,
+        _page(
+          SizedBox(
+            width: 300,
+            height: 30,
+            child: Stack(
+              children: [
+                SizedBox.expand(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const Expanded(
+                        flex: 52,
+                        child: ColoredBox(color: Colors.white),
+                      ),
+                      const Expanded(
+                        flex: 48,
+                        child: ColoredBox(color: Color(0xff8a8a8a)),
+                      ),
+                    ],
+                  ),
+                ),
+                Center(child: Text('MMMMMMMM', style: _style(size: 14))),
+              ],
+            ),
+          ),
+        ),
+        () async {
+          final report = await auditExactContrast(t);
+          final row = report.rows.single;
+          expect(row.classification, isNot('PASS'), reason: '${row.toJson()}');
+          if (row.classification == 'FAIL') {
+            expect(row.ratio, lessThan(4.5));
+          } else {
+            expect(row.reason, contains('background'));
+          }
+          expect(report.provenNodes, isEmpty);
+        },
+      );
+    },
+  );
 
   testWidgets(
     'paper around an avatar circle is not a background of its letter',
@@ -277,7 +474,7 @@ void main() {
     },
   );
 
-  testWidgets('a bar right under the glyphs is not their background', (
+  testWidgets('a bar right under the glyphs cannot lower a proven contrast', (
     t,
   ) async {
     await withSemantics(
@@ -295,7 +492,9 @@ void main() {
         final row = (await auditExactContrast(t)).rows.single;
         expect(row.classification, 'PASS', reason: row.reason);
         expect(row.background, _paper.toARGB32());
-        expect(row.background2, isNull);
+        // A nearby white plateau may be attributed conservatively, but the
+        // ratio remains safe on both the paper and the white surface.
+        expect(row.ratio, greaterThan(4.5), reason: '${row.toJson()}');
       },
     );
   });
@@ -366,5 +565,20 @@ void main() {
       sdkContrastBlocks(reason).values.expand((b) => b).join('\n\n'),
     );
     expect(retainedSdkContrast('unparsed text', {1}), 'unparsed text');
+  });
+
+  test('retainedSdkContrast preserves a prefix before parsed SDK blocks', () {
+    const reason =
+        'Unrecognized SDK summary\n'
+        'SemanticsNode#18(Rect.fromLTRB(0.0, 0.0, 1.0, 1.0), label: "a", '
+        'textDirection: ltr):\n'
+        'Expected contrast ratio of at least 4.5 but found 1.30 for a font '
+        'size of 12.0.';
+    final retained = retainedSdkContrast(reason, {18});
+    expect(retained, 'Unrecognized SDK summary');
+    expect(
+      retainedSdkContrast(reason, {}),
+      contains('Unrecognized SDK summary\n\nSemanticsNode#18'),
+    );
   });
 }

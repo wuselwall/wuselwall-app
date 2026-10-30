@@ -85,6 +85,18 @@ The script installs only the pinned packages in `toolchain.json` and three dedic
 CI AVDs. It records the SDK, AVD and simulator settings in the private
 `$QUALIFICATION_TOOLS_ROOT/environment.env`; it does not change shell profiles.
 
+The package list is a plan, not proof of installation. A successful apply ends with
+`Installation complete. Dedicated native tools are provisioned.` If it stops before
+`Starting installation`, inspect the preflight error above it. Java and the three
+runtime exports must be set in the same shell that runs the installer. Paste each
+command as a complete line; shell prompts and terminal output are not commands.
+
+This single line checks those inputs without installing anything:
+
+```bash
+bash -c 'printf "JAVA_HOME: %s\n" "${JAVA_HOME:-unset}"; if [ -n "${JAVA_HOME:-}" ]; then "$JAVA_HOME/bin/java" -version; fi; printf "iOS version=%s build=%s runtime=%s\n" "${QUALIFICATION_IOS_VERSION:-unset}" "${QUALIFICATION_IOS_BUILD:-unset}" "${QUALIFICATION_IOS_RUNTIME:-unset}"; xcrun simctl list runtimes'
+```
+
 ## 5. Connect the installation to Actions
 
 Authenticate `gh` for the repository if necessary, then set the tools-directory variable.

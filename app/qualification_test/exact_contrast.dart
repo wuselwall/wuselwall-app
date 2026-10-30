@@ -6,11 +6,12 @@
 // inside that margin is more frequent than a 12 px glyph's solid pixels, so the
 // guideline reports the border against the paper (a ratio near 1.3) for text
 // whose real ratio is far above 4.5. This audit removes that guess for the cases
-// where no guess is needed: the foreground is the resolved TextStyle colour, the
-// background is the one colour the glyph area is painted on, and every sampled
-// pixel must be that background, that foreground or an anti-aliased blend of the
-// two. Anything else (gradients, overlapping siblings, opacity, fades, shaders,
-// translucent text) stays UNDECIDED and the SDK verdict stands for its node.
+// where no guess is needed: the foreground is the resolved TextStyle colour and
+// backgrounds are supported by the glyphs' own anti-aliased pixels. Pixel coverage
+// alone cannot distinguish a neutral overlay that reuses those colours; known
+// foreground painters, overlapping later siblings and perspective transforms are
+// therefore UNDECIDED, as are gradients, opacity, fades, shaders and other mixed
+// paint. The SDK verdict stands for every node the exact audit does not prove.
 import 'dart:math' as math;
 import 'dart:typed_data';
 import 'dart:ui' as ui;
@@ -27,6 +28,9 @@ import 'paint_contrast.dart' show paintedContrastRatio, requiredPaintContrast;
 const int _blendTolerance = 4;
 
 /// The share of sampled pixels that must be foreground, background or a blend.
+/// This rejects most mixed paint, but small or palette-neutral overlays may
+/// still fit, so known foreground painters and overlapping siblings are checked
+/// separately before a node can be proven.
 const double _minimumCoverage = 0.96;
 
 /// The share of sampled pixels that must not be plain background, or the text
@@ -188,6 +192,11 @@ String? retainedSdkContrast(
   final blocks = sdkContrastBlocks(reason);
   if (blocks.isEmpty) return reason; // unparsed: retained verbatim
   final kept = <String>[];
+  // Preserve any SDK text before the first parsed node. A future SDK reason may
+  // add a summary there; dropping it would turn a partial parse into a pass.
+  final firstBlock = _sdkBlockStart.firstMatch(reason)!.start;
+  final prefix = reason.substring(0, firstBlock).trim();
+  if (prefix.isNotEmpty) kept.add(prefix);
   for (final entry in blocks.entries) {
     if (proven.contains(entry.key)) {
       superseded?.addAll(entry.value);
@@ -240,11 +249,10 @@ bool _exempt(SemanticsNode node) {
   return false;
 }
 
-/// Ancestors that change the painted colour of the glyphs themselves. Anything
-/// that paints beside or over the text with other colours (foreground painters,
-/// stacks, siblings, the debug banner) is caught by the coverage check instead:
-/// its pixels are not on the foreground–background line.
-String? _ancestorProblem(RenderObject paragraph) {
+/// Ancestors that change or obscure the glyph paint. Coverage is not sufficient
+/// for overlays that reuse the foreground/background palette, so known foreground
+/// painters and overlapping later-painted siblings fail closed here.
+String? _ancestorProblem(RenderParagraph paragraph) {
   for (RenderObject? r = paragraph.parent; r != null; r = r.parent) {
     if (r is RenderOpacity && r.opacity < 1) return 'Opacity below 1';
     if (r is RenderAnimatedOpacity && r.opacity.value < 1) {
@@ -252,6 +260,20 @@ String? _ancestorProblem(RenderObject paragraph) {
     }
     if (r is RenderShaderMask) return 'Shader mask';
     if (r is RenderBackdropFilter) return 'Backdrop filter';
+    if (r is RenderTransform) {
+      if (_hasUnsupportedProjectiveTransform(paragraph.getTransformTo(null))) {
+        return 'Perspective transform';
+      }
+    }
+    if (r is RenderCustomPaint && r.foregroundPainter != null) {
+      return 'Foreground painter';
+    }
+    if (r is RenderStack ||
+        r is RenderFlex ||
+        r is RenderCustomMultiChildLayoutBox) {
+      final problem = _overlappingLaterSibling(paragraph, r);
+      if (problem != null) return problem;
+    }
     final type = r.runtimeType.toString();
     if (type.contains('ColorFilter') || type.contains('ImageFilter')) {
       return 'Colour or image filter';
@@ -260,9 +282,91 @@ String? _ancestorProblem(RenderObject paragraph) {
   return null;
 }
 
-/// Whether [argb] lies on the straight blend between [fg] and [bg].
-bool _isBlend(int argb, int fg, int bg) {
-  if (argb == fg || argb == bg) return true;
+bool _hasUnsupportedProjectiveTransform(Matrix4 transform) {
+  final matrix = transform.storage;
+  return matrix.any((value) => !value.isFinite) ||
+      matrix[3] != 0 ||
+      matrix[7] != 0 ||
+      matrix[11] != 0 ||
+      matrix[15] != 1;
+}
+
+// These exact framework proxy types only forward paint to their child. An
+// empty chain contributes hit testing/layout/semantics but no overlay pixels.
+bool _isEmptyPaintProxy(RenderObject object) {
+  RenderObject? current = object;
+  const forwardingTypes = {
+    RenderPointerListener,
+    RenderConstrainedBox,
+    RenderSemanticsAnnotations,
+    RenderExcludeSemantics,
+    RenderIgnorePointer,
+    RenderAbsorbPointer,
+  };
+  while (current is RenderProxyBox &&
+      forwardingTypes.contains(current.runtimeType)) {
+    current = current.child;
+  }
+  return current == null;
+}
+
+String? _overlappingLaterSibling(
+  RenderParagraph paragraph,
+  RenderObject parent,
+) {
+  RenderObject branch = paragraph;
+  while (branch.parent != parent) {
+    final ancestor = branch.parent;
+    if (ancestor == null) return 'Unknown sibling geometry';
+    branch = ancestor;
+  }
+  final length = paragraph.text
+      .toPlainText(includeSemanticsLabels: false)
+      .length;
+  if (length == 0) return null;
+  final transform = paragraph.getTransformTo(parent);
+  final textBoxes = paragraph
+      .getBoxesForSelection(TextSelection(baseOffset: 0, extentOffset: length))
+      .map((box) => MatrixUtils.transformRect(transform, box.toRect()))
+      .where((box) => !box.isEmpty)
+      .toList();
+  var afterText = false;
+  var foundTextBranch = false;
+  String? problem;
+  parent.visitChildren((child) {
+    if (identical(child, branch)) {
+      afterText = true;
+      foundTextBranch = true;
+      return;
+    }
+    if (!afterText || problem != null) return;
+    if (_isEmptyPaintProxy(child)) return;
+    if (child is! RenderBox) {
+      problem = 'Unknown sibling geometry';
+      return;
+    }
+    final siblingTransform = child.getTransformTo(parent);
+    if (_hasUnsupportedProjectiveTransform(siblingTransform)) {
+      problem = 'Unknown sibling geometry';
+      return;
+    }
+    final siblingBounds = MatrixUtils.transformRect(
+      siblingTransform,
+      child.paintBounds,
+    );
+    if (!siblingBounds.isEmpty &&
+        textBoxes.any((box) => box.overlaps(siblingBounds))) {
+      problem = 'Overlapping later-painted sibling';
+    }
+  });
+  if (!foundTextBranch) return 'Unknown sibling geometry';
+  return problem;
+}
+
+/// Distance from [argb] to the straight blend between [fg] and [bg], or null
+/// when it is outside the anti-aliasing tolerance.
+double? _blendError(int argb, int fg, int bg) {
+  if (argb == fg || argb == bg) return 0;
   final c = [(argb >> 16) & 0xff, (argb >> 8) & 0xff, argb & 0xff];
   final f = [(fg >> 16) & 0xff, (fg >> 8) & 0xff, fg & 0xff];
   final b = [(bg >> 16) & 0xff, (bg >> 8) & 0xff, bg & 0xff];
@@ -272,15 +376,20 @@ bool _isBlend(int argb, int fg, int bg) {
     if ((f[i] - b[i]).abs() > (f[lead] - b[lead]).abs()) lead = i;
   }
   final span = f[lead] - b[lead];
-  if (span == 0) return false;
+  if (span == 0) return null;
   final t = (c[lead] - b[lead]) / span;
-  if (t < -0.02 || t > 1.02) return false;
+  if (t < -0.02 || t > 1.02) return null;
+  var error = 0.0;
   for (var i = 0; i < 3; i++) {
     final expected = b[i] + t * (f[i] - b[i]);
-    if ((c[i] - expected).abs() > _blendTolerance) return false;
+    final difference = (c[i] - expected).abs();
+    if (difference > _blendTolerance) return null;
+    error += difference * difference;
   }
-  return true;
+  return error;
 }
+
+bool _isBlend(int argb, int fg, int bg) => _blendError(argb, fg, bg) != null;
 
 /// Audits every painted paragraph the SDK guideline would consider.
 Future<ExactContrastReport> auditExactContrast(WidgetTester tester) async {
@@ -342,9 +451,6 @@ List<ExactContrastRow> _auditParagraph(
       paragraph.debugHasOverflowShader) {
     return [undecided('Text fade changes glyph opacity')];
   }
-  final ancestor = _ancestorProblem(paragraph);
-  if (ancestor != null) return [undecided(ancestor)];
-
   final runs = <_Run>[];
   var offset = 0;
   String? spanProblem;
@@ -367,11 +473,35 @@ List<ExactContrastRow> _auditParagraph(
 
   spanVisit(paragraph.text, const TextStyle());
   if (spanProblem != null) return [undecided(spanProblem!)];
+  final visibleRuns = runs.where((r) => r.text.trim().isNotEmpty).toList();
+  if (visibleRuns.isNotEmpty &&
+      visibleRuns.every((r) => _isIconRun(r.text, r.style))) {
+    return []; // graphics do not prove or invalidate a text node
+  }
+  final ancestor = _ancestorProblem(paragraph);
+  if (ancestor != null) return [undecided(ancestor)];
 
   final transform = paragraph.getTransformTo(null);
-  final sx = Offset(transform.storage[0], transform.storage[1]).distance;
-  final sy = Offset(transform.storage[4], transform.storage[5]).distance;
-  final scale = math.min(sx, sy);
+  // The shortest basis column overstates size under shear. The smaller
+  // singular value bounds compression in every direction, including shear.
+  final matrix = transform.storage;
+  final squaredLength =
+      matrix[0] * matrix[0] +
+      matrix[1] * matrix[1] +
+      matrix[4] * matrix[4] +
+      matrix[5] * matrix[5];
+  final determinant = matrix[0] * matrix[5] - matrix[1] * matrix[4];
+  final largestScale = math.sqrt(
+    (squaredLength +
+            math.sqrt(
+              math.max(
+                0.0,
+                squaredLength * squaredLength - 4 * determinant * determinant,
+              ),
+            )) /
+        2,
+  );
+  final scale = largestScale == 0 ? 0.0 : determinant.abs() / largestScale;
   if (scale <= 0) return [undecided('Degenerate transform')];
 
   final rows = <ExactContrastRow>[];
@@ -415,9 +545,8 @@ List<ExactContrastRow> _auditParagraph(
       rows.add(undecided('No visible run geometry'));
       continue;
     }
-    // One box per glyph: a background the text sits on fills at least half
-    // of some glyph's box, so a bar or an indicator beside the glyphs (inside
-    // the inflated sample, even inside the line box) does not count.
+    // One box per glyph lets the audit look for background-specific ink blends
+    // without counting a nearby bar that only touches the line box.
     final glyphBoxes = <Rect>[
       for (var i = run.start; i < run.end; i++)
         if (run.text[i - run.start].trim().isNotEmpty)
@@ -479,10 +608,14 @@ List<ExactContrastRow> _auditParagraph(
         if (same >= 3) flat++;
       }
       if (flat * 2 >= entry.value) plateaus.add(c);
-      if (plateaus.length == 2) break;
+      if (plateaus.length == 3) break;
     }
     if (plateaus.isEmpty) {
       rows.add(undecided('No flat background under the text'));
+      continue;
+    }
+    if (plateaus.length > 2) {
+      rows.add(undecided('More than two flat background candidates'));
       continue;
     }
     // A pixel is explained when it is a plateau or a straight blend between
@@ -506,37 +639,48 @@ List<ExactContrastRow> _auditParagraph(
         covered++;
       }
     }
-    // Which plateaus the text sits on: those filling half of some glyph box
-    // with their own pixels or ink blended onto them. A box without any ink
-    // (a glyph clipped away, or outside the capture) sits on nothing.
+    // Which plateaus the text sits on: backgrounds supported by actual ink
+    // blends inside a glyph box. A majority-box threshold can miss a real
+    // second background when it covers just under half of every glyph.
     final sits = <int>{};
     for (final box in glyphBoxes) {
       final rect = box.intersect(bounds);
       if (rect.isEmpty) continue;
-      final counts = <int, int>{};
-      var total = 0;
-      var inked = 0;
+      final inkEvidence = <int, int>{};
       for (var y = rect.top.floor(); y < rect.bottom.ceil(); y++) {
         for (var x = rect.left.floor(); x < rect.right.ceil(); x++) {
-          total++;
           final c = capture.argbAt(x, y);
-          // A plateau's own colour before any blend: a mid grey between the
-          // ink and a white plateau is also on that pair's line.
-          var owner = plateaus.contains(c) ? c : null;
+          // Plain background pixels do not establish that text is painted on
+          // that background; a nearby bar can occupy part of the line box.
+          if (plateaus.contains(c)) continue;
+          var bestError = double.infinity;
+          final matches = <int>[];
           for (final p in plateaus) {
-            if (owner != null) break;
-            if (_isBlend(c, inkOn(p), p)) owner = p;
+            final ink = inkOn(p);
+            final error = _blendError(c, ink, p);
+            if (error == null) continue;
+            // Opaque foreground pixels are shared endpoints for every
+            // candidate background. They cannot identify which background
+            // the glyph edge was composited against.
+            if (c == ink &&
+                plateaus.any((other) => other != p && inkOn(other) == c)) {
+              continue;
+            }
+            if (error < bestError) {
+              bestError = error;
+              matches
+                ..clear()
+                ..add(p);
+            } else if (error == bestError) {
+              matches.add(p);
+            }
           }
-          if (owner != null) {
-            counts.update(owner, (n) => n + 1, ifAbsent: () => 1);
-            if (c != owner) inked++;
+          for (final p in matches) {
+            inkEvidence.update(p, (n) => n + 1, ifAbsent: () => 1);
           }
         }
       }
-      if (inked == 0) continue;
-      for (final entry in counts.entries) {
-        if (entry.value * 2 >= total) sits.add(entry.key);
-      }
+      sits.addAll(inkEvidence.keys);
     }
     final coverage = covered / sampled;
     final ink = 1 - plain / sampled;
@@ -546,6 +690,10 @@ List<ExactContrastRow> _auditParagraph(
     final effectiveSize = paragraph.textScaler.scale(size) * scale;
     final weight = style.fontWeight ?? FontWeight.normal;
     final required = requiredPaintContrast(effectiveSize, weight);
+    final unattributedLowContrast = plateaus.any(
+      (p) =>
+          !spanned.contains(p) && paintedContrastRatio(fg, Color(p)) < required,
+    );
     var ratio = paintedContrastRatio(fg, Color(bg1));
     if (bg2 != null) {
       ratio = math.min(ratio, paintedContrastRatio(fg, Color(bg2)));
@@ -553,6 +701,8 @@ List<ExactContrastRow> _auditParagraph(
     String? reason;
     if (coverage < _minimumCoverage) {
       reason = 'More than one background or overlapping paint under the text';
+    } else if (unattributedLowContrast) {
+      reason = 'Unattributed low-contrast background candidate';
     } else if (ink < _minimumInk || spanned.isEmpty) {
       reason = 'Text is not visible in the capture';
     }

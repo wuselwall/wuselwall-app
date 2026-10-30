@@ -89,6 +89,12 @@ Widget qualificationApp({
   String tab = 'today',
   bool advanced = false,
 }) {
+  // Debug simulator/widget runs should capture the release UI. A debug banner
+  // is a foreground painter spanning the view and obscures paint attribution.
+  assert(() {
+    WidgetsApp.debugAllowBannerOverride = false;
+    return true;
+  }());
   DemoClock.fixedNow = qualificationTime;
   StillMode.enabled = true;
   if (scenario == 'server') {

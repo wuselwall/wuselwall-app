@@ -48,13 +48,15 @@ deployment utilities are independent.
 Expanded Linux validation rendered all 180 direct fixtures and executed the earlier
 70-state, 8,760-case Flutter matrix. It exposed accessibility findings and large-text layout defects. After
 fixing those layouts and calendar targets, a 672-case responsive rerun had no framework,
-label or target-size findings; the contrast findings of that sweep were the SDK's border
-misattribution, resolved by the exact audit described below. The ordinary
-suite passed 1,574 tests, with seven backend integration tests intentionally skipped without
+label or target-size findings. The exact audit below attributes eligible SDK border
+misattribution; ambiguous findings remain blocking. The ordinary
+suite passed 1,713 tests, with seven backend integration tests intentionally skipped without
 backend configuration. Those seven require the separate disposable-backend CI job. Android
-app and instrumentation APKs compile; native device execution and the iOS audit build still
-need validation on provisioned macOS devices. No native baseline has been approved by these
-local checks.
+app and instrumentation APKs compile. An unsigned iOS diagnostic booted a simulator,
+captured five smoke screens and built the app; XCTest auditing remains blocked by its
+plugin build graph, with a CocoaPods configuration fix queued for validation. Android
+runtime execution still needs its dedicated SDK/AVDs. No native baseline has been approved
+by these diagnostics.
 
 Text contrast is decided per paragraph by an exact audit (`qualification_test/exact_contrast.dart`)
 wherever paint is unambiguous, and by the raw Flutter SDK guideline everywhere else. The SDK
@@ -87,6 +89,11 @@ diagnostic. The controls in
 reproduces the SDK misattribution and is proven exact, that two backgrounds and translucent text
 are decided by their worse and composited colours, and that a gradient, an opacity and an
 overflowing fade stay undecided.
+Additional paint controls reproduce neutral overlays that remain on the same colour-blend
+line as the text. Such pixels alone cannot establish a proof: foreground custom painters,
+perspective transforms and intersecting later-painted siblings stay undecided. A second
+background cannot be discarded merely because it occupies less than half of each glyph
+box. Unknown text before parsed SDK findings is retained as a blocking finding.
 The Flutter job writes `contrast-report.json` and `contrast-report.md` even when the matrix
 fails. They group repeated labels, ratios and reported colours while preserving case IDs,
 unparsed findings and an input checksum. The report grants no waivers.

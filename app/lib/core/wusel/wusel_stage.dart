@@ -332,15 +332,20 @@ class WuselStageState extends State<WuselStage>
         key: _box,
         children: [
           widget.child,
-          Positioned.fill(
-            child: IgnorePointer(
-              child: ExcludeSemantics(
-                child: RepaintBoundary(
-                  child: CustomPaint(painter: _TravellerPainter(this, _frame)),
+          // Reduced motion cannot start a trip. Keep its unused full-screen
+          // paint surface out of the tree, including still captures.
+          if (_motion)
+            Positioned.fill(
+              child: IgnorePointer(
+                child: ExcludeSemantics(
+                  child: RepaintBoundary(
+                    child: CustomPaint(
+                      painter: _TravellerPainter(this, _frame),
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
         ],
       ),
     ),
