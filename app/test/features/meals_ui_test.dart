@@ -489,7 +489,9 @@ void main() {
       final tuesday = t.getRect(find.textContaining(RegExp(r'^Di ')));
       // Each column keeps its minimum (seven at 141 px broke "Fischstäbch/en").
       expect(tuesday.left - monday.left, greaterThanOrEqualTo(mealsMinColumn));
-      expect(friday.top > monday.top, rows == 2);
+      // A second row starts well below the first (today's label sits a pixel
+      // lower, highlighted, which is not a row).
+      expect(friday.top > monday.top + 20, rows == 2);
       expect(t.takeException(), isNull);
       await unmountApp(t, container);
     });
