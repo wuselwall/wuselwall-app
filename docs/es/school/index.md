@@ -78,7 +78,7 @@ Elige ritmo semanal o semanas A/B, que se rellenan por separado. Añade cuidado 
 
 ## Importar un horario {#reading-in}
 
-En vez de teclear cada clase, puedes hacer que se lea la hoja. Hay dos caminos. Todos terminan en la misma [vista previa](#preview), y solo **Aplicar** escribe algo.
+En vez de teclear cada clase, puedes hacer que se lea la hoja. Hay dos caminos. Todos terminan en la misma [vista previa](#preview), y solo **Aplicar** escribe algo. En el móvil, los dos caminos están directamente en el menú de los tres puntos encima del horario.
 
 **Desde texto estructurado.** Toca **Importar…** y **Pegar como texto**. Pega un horario en JSON con el formato de WuselWall y toca **Importar** para abrir la vista previa. Un texto normal no se convierte automáticamente en un horario.
 
@@ -133,7 +133,7 @@ El menú del día permite **vaciarlo**, **copiarlo** a otros días o **intercamb
 
 ## La semana {#the-week}
 
-La elección del niño, el regreso a esta semana y las acciones de edición comparten una barra. En pantallas pequeñas, esta semana ocupa una línea centrada y las acciones pasan debajo. El colegio usa un icono de escuela; el engranaje abre los ajustes generales.
+La elección del niño, el regreso a esta semana y las acciones de edición comparten una barra. En el móvil todo cabe en una fila, para que el horario empiece arriba en la pantalla: **Esta semana** es un icono de calendario, y **Editar colegio**, **Editar horario**, **Pegar como texto** y **Escanear una foto** están en el menú de los tres puntos. Allí la barra inferior muestra la sección con su nombre corto, **Colegio**. El colegio usa un icono de escuela; el engranaje abre los ajustes generales.
 
 Las flechas están junto al lunes y el viernes; en el móvil o la tableta, deslizar a la izquierda o a la derecha también cambia de semana. En la tableta infantil, el niño pasa así de un día a otro de su semana, de lunes a viernes. El niño seleccionado tiene fondo teñido, borde y marca de verificación. Las vacaciones aparecen encima de la semana y los festivos en cada cabecera.
 

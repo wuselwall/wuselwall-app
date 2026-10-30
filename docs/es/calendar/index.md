@@ -77,7 +77,7 @@ Al final del editor hay tres cosas que hacen el día más ligero (ver [Rituales]
 
 ## Nueva tradición {#new-tradition}
 
-Encima de **Nuevo evento** hay un botón pequeño con confeti: **Nueva tradición**. Abre una lista con seis propuestas, **Noche de juegos**, **Viernes de pizza**, **Noche de cine**, **Desayuno del domingo**, **Hora del cuento** y **Día de excursión**, y debajo **Tradición propia**. Cada propuesta dice cuándo empieza, por ejemplo «Cada viernes, 18:00».
+En la tableta o el ordenador hay un botón pequeño con confeti encima de **Nuevo evento**: **Nueva tradición**. En el móvil, toca **Nuevo evento** y después la ficha **Nueva tradición**. Ambos abren una lista con seis propuestas, **Noche de juegos**, **Viernes de pizza**, **Noche de cine**, **Desayuno del domingo**, **Hora del cuento** y **Día de excursión**, y debajo **Tradición propia**. Cada propuesta dice cuándo empieza, por ejemplo «Cada viernes, 18:00».
 
 Después se abre el editor de siempre, ya rellenado: el nombre, la imagen, **Cada semana** el día adecuado, toda la familia en **Quién** y **Tradición familiar** activada. El viernes de pizza trae **Con comida** «Pizza» para la cena. Ajusta el día, la hora y las personas y toca **Guardar**. Con **Tradición propia** escribes tú el nombre y eliges la imagen. Más en [Tradiciones familiares](/es/guide/rituals#traditions).
 

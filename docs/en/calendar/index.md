@@ -82,7 +82,7 @@ At the bottom of the editor are three things that make the day lighter (see [Rit
 
 ## New tradition {#new-tradition}
 
-Above **New event** sits a small button with confetti: **New tradition**. It opens a choice of six starters, **Game night**, **Pizza Friday**, **Film night**, **Sunday breakfast**, **Story time** and **Day out**, and below them **Your own tradition**. Each starter says when it begins, such as "Every Friday, 6:00 PM".
+On a tablet or computer a small button with confetti sits above **New event**: **New tradition**. On a phone, tap **New event** and then the **New tradition** tile. Both open a choice of six starters, **Game night**, **Pizza Friday**, **Film night**, **Sunday breakfast**, **Story time** and **Day out**, and below them **Your own tradition**. Each starter says when it begins, such as "Every Friday, 6:00 PM".
 
 Then the usual editor opens, already filled in: the name, the picture, **Weekly** on the right day, the whole family under **Who** and **Family tradition** switched on. Pizza Friday brings **With a meal** "Pizza" for dinner. Adjust the day, the time and the people, then tap **Save**. With **Your own tradition** you enter the name and picture yourself. More under [Family traditions](/en/guide/rituals#traditions).
 
