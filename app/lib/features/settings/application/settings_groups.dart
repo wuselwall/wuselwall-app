@@ -70,14 +70,11 @@ enum SettingsTile {
   versions,
   licences;
 
-  /// Whether Basic shows it. Hiding changes nothing it controls.
+  /// Whether Basic shows it. Hiding changes nothing it controls. Account and security
+  /// stays whole in Basic: a parent looking for the password or leaving the family should
+  /// not need Advanced, and the group's title promises them (specs/21).
   bool get basic => switch (this) {
-    feedTokens ||
-    externalCalendars ||
-    signInMethods ||
-    security ||
-    leaveFamily ||
-    server => false,
+    feedTokens || externalCalendars || server => false,
     _ => true,
   };
 

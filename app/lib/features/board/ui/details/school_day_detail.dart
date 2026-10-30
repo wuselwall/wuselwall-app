@@ -7,6 +7,7 @@ import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
+import 'package:wuselwall/features/board/ui/board_scroll_cue.dart';
 import 'package:wuselwall/features/board/ui/details/detail_parts.dart';
 import 'package:wuselwall/features/board/ui/details/timetable_grid.dart';
 
@@ -44,30 +45,32 @@ class SchoolDayDetailBody extends ConsumerWidget {
     final entries = _entries(context, school, timetable);
     final pack = packStripFor(context, board, memberId, viewedIndex: dayIndex);
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(Tokens.space6),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          for (final e in entries)
-            _entryRow(
-              context,
-              entry: e,
-              isToday: isToday,
-              nowMinutes: nowMinutes,
-            ),
-          if (pack != null) ...[const SizedBox(height: Tokens.space4), pack],
-          if (timetable != null) ...[
-            const SizedBox(height: Tokens.space8),
-            DetailHeading(l10n.boardWholeWeek),
-            TimetableGrid(
-              board: board,
-              timetable: timetable,
-              raisedIndex: dayIndex,
-              compact: true,
-            ),
+    return BoardScrollFade(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(Tokens.space6),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            for (final e in entries)
+              _entryRow(
+                context,
+                entry: e,
+                isToday: isToday,
+                nowMinutes: nowMinutes,
+              ),
+            if (pack != null) ...[const SizedBox(height: Tokens.space4), pack],
+            if (timetable != null) ...[
+              const SizedBox(height: Tokens.space8),
+              DetailHeading(l10n.boardWholeWeek),
+              TimetableGrid(
+                board: board,
+                timetable: timetable,
+                raisedIndex: dayIndex,
+                compact: true,
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }

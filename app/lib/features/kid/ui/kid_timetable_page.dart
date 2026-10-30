@@ -147,31 +147,39 @@ class _DayTab extends StatelessWidget {
           onTap: onTap,
           child: SizedBox(
             height: 88,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  context.weekdayShort(date),
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                Text(
-                  context.dayMonth(date),
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontFamily: Tokens.fontNumeric,
-                    fontFeatures: const [FontFeature.tabularFigures()],
-                  ),
-                ),
-                if (isToday)
-                  Text(
-                    l10n.kidTodayMarker,
-                    style: theme.textTheme.labelLarge?.copyWith(
-                      color: scheme.primary,
-                      fontWeight: FontWeight.w800,
+            // Five chips share a phone's width: the words shrink to fit rather than
+            // run past the chip's border.
+            child: Padding(
+              padding: const EdgeInsets.all(Tokens.space1),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      context.weekdayShort(date),
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
-                  ),
-              ],
+                    Text(
+                      context.dayMonth(date),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontFamily: Tokens.fontNumeric,
+                        fontFeatures: const [FontFeature.tabularFigures()],
+                      ),
+                    ),
+                    if (isToday)
+                      Text(
+                        l10n.kidTodayMarker,
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          color: scheme.primary,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
             ),
           ),
         ),

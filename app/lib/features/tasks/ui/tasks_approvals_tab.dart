@@ -164,7 +164,7 @@ class _CheckTile extends ConsumerWidget {
                   ),
                 ),
                 if (task.points > 0)
-                  PointsCoin(points: task.points, fontSize: 14),
+                  PointsCoin(points: task.points, fontSize: 14, withUnit: true),
               ],
             ),
             Text(l10n.tasksDoneBy(doneBy)),
@@ -209,7 +209,11 @@ class _RequestTile extends ConsumerWidget {
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
                 ),
-                PointsCoin(points: redemption.costPoints, fontSize: 14),
+                PointsCoin(
+                  points: redemption.costPoints,
+                  fontSize: 14,
+                  withUnit: true,
+                ),
               ],
             ),
             const SizedBox(height: Tokens.space2),

@@ -7,7 +7,7 @@ Depuis une autre vue, faites glisser votre doigt du bord gauche vers la droite s
 
 ## Vue de base ou avancée {#view}
 
-La vue **Essentiels** montre l’essentiel. Les paramètres sont rangés en groupes (voir [Tous les paramètres](/fr/settings/household)) ; elle ne montre que les groupes où quelque chose d’important se trouve : **Personnel**, **Famille** (profil de la famille, région, membres, semaine habituelle), **Tâches et récompenses**, **Calendrier et école**, **Repas**, **Rituels**, **Appareils** (Cet appareil, Tous les appareils), **Aide et infos** et, sur votre téléphone, **Compte et sécurité** avec la suppression du compte. **Avancés** ajoute **Fêtes et saisons**, **Écran de la cuisine**, **Partage et connexions** (calendriers partagés, calendriers externes), le serveur, la connexion, la sécurité et le départ du foyer. La même bascule existe sur chaque page de groupe, sur la page d’une personne, sous **Profil de la famille** et dans la modification d’une liste de courses.
+La vue **Essentiels** montre l’essentiel. Les paramètres sont rangés en groupes (voir [Tous les paramètres](/fr/settings/household)) ; elle ne montre que les groupes où quelque chose d’important se trouve : **Personnel**, **Famille** (profil de la famille, région, membres, semaine habituelle), **Tâches et récompenses**, **Calendrier et école**, **Repas**, **Rituels**, **Appareils** (Cet appareil, Tous les appareils), **Aide et infos** et, sur votre téléphone, **Compte et sécurité** (connexion, sécurité, départ du foyer, suppression du compte). **Avancés** ajoute **Fêtes et saisons**, **Écran de la cuisine**, **Partage et connexions** (calendriers partagés, calendriers externes) et le serveur. La même bascule existe sur chaque page de groupe, sur la page d’une personne, sous **Profil de la famille** et dans la modification d’une liste de courses.
 
 Les réglages masqués restent actifs. L’app mémorise la vue pour chaque appareil ; les pages de groupe possèdent aussi ces deux vues.
 
@@ -33,7 +33,7 @@ Les enfants n’ont pas besoin de compte ni d’invitation : ajoutez leur préno
 
 ## Ajouter un membre {#add-member}
 
-L’icône en haut de la page **Membres** ajoute une personne par son prénom. L’app attribue la prochaine couleur disponible.
+**Ajouter un membre**, sous la liste de la page **Membres**, ajoute une personne par son prénom. L’app attribue la prochaine couleur disponible.
 
 ## Modifier un membre {#edit-a-member}
 

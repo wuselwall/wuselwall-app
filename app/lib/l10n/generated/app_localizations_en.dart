@@ -267,6 +267,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addMember => 'Add member';
 
   @override
+  String get addMemberSubtitle =>
+      'A child, or someone without an account of their own';
+
+  @override
   String get memberName => 'Name';
 
   @override
@@ -549,6 +553,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get shoppingTileOnList => 'Already on the list';
+
+  @override
   String shoppingAddedBy(String name) {
     return 'Added by $name';
   }
@@ -712,6 +719,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get boardNoSchool => 'free';
+
+  @override
+  String get boardSchoolOff => 'no school';
 
   @override
   String boardCareUntil(String label, String time) {
@@ -1273,7 +1283,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get eventKeyDisplayOffWholeFamily =>
-      'Not on the kitchen display: only events for the whole family go there by default.';
+      'This event won’t show on the kitchen display. Events for the whole family show there on their own.';
 
   @override
   String get eventRepeat => 'Repeat';
@@ -2187,6 +2197,17 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String tasksPointsUnit(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'points',
+      one: 'point',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String tasksStreakDays(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -2591,9 +2612,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get kidTasksAllDone => 'All done!';
-
-  @override
-  String get kidTasksAllDoneBody => 'Well done, you did everything for today.';
 
   @override
   String get kidAwaitsCheck => 'being checked';
@@ -3022,6 +3040,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String regionPickKindOf(String kind, String parent) {
+    return '$kind · $parent';
+  }
+
+  @override
   String get regionPickDeeperTitle =>
       'Choose more precisely (district or municipality)';
 
@@ -3302,6 +3325,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shoppingNavLabel => 'Shopping';
+
+  @override
+  String get scheduleNavLabel => 'School';
 
   @override
   String get scanHint =>
@@ -3670,6 +3696,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get householdNewCreate => 'Create family';
 
   @override
+  String get householdNewCreating => 'Creating your family …';
+
+  @override
   String get householdNewInvited => 'I was invited';
 
   @override
@@ -3991,6 +4020,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'That is neither an invitation code nor a WuselWall link.';
 
   @override
+  String get inviteCodeEmpty => 'Enter the code or link.';
+
+  @override
   String get inviteNoLonger =>
       'This invitation is no longer valid. Ask the person who invited you for a new one.';
 
@@ -4217,6 +4249,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mfaResetAction => 'Reset two-factor';
 
   @override
+  String get mfaResetHint => 'When the authenticator app is lost';
+
+  @override
   String get mfaResetConfirmTitle => 'Reset two-factor?';
 
   @override
@@ -4237,7 +4272,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get serverLead =>
-      'WuselWall keeps your family\'s data on your family\'s own server. Enter its address, or scan its QR code. Got an invitation? Paste the link, or the code together with the server, like K7QM3XRP@api.example.org.';
+      'WuselWall keeps your family\'s data on your family\'s own server. Enter its address, or scan its QR code.';
 
   @override
   String get serverAddressLabel => 'Server address';
@@ -4246,13 +4281,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get serverAddressHint => 'e.g. api.example.org';
 
   @override
+  String get serverAddressHelper =>
+      'With an invitation: the link, or code and server like K7QM3XRP@api.example.org';
+
+  @override
   String get serverConnect => 'Connect';
 
   @override
   String get serverScan => 'Scan QR code';
-
-  @override
-  String get serverScanTitle => 'Scan the server\'s QR code';
 
   @override
   String get serverDemo => 'Try it without a server';
@@ -4267,6 +4303,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get serverInvalid => 'That is not a server address.';
+
+  @override
+  String get serverEmpty => 'Enter the server\'s address.';
 
   @override
   String get serverUnreachable =>
@@ -4556,10 +4595,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsViewMoreHint =>
-      'More settings are under Advanced. Hidden settings still apply.';
-
-  @override
-  String get settingsViewShowAll => 'Show all settings';
+      'More under Advanced, above. Hidden settings still apply.';
 
   @override
   String get schoolTimetableNeedsTerm =>
@@ -4834,10 +4870,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Tap a person to change their name, colour, picture or role. Drag the handle to change the order on the wall.';
 
   @override
-  String get familyTitle => 'Family';
+  String get familySettingsSubtitle => 'Name, time zone, data export, delete';
 
   @override
-  String get familySettingsSubtitle => 'Name, time zone, data export, delete';
+  String get familySettingsSubtitleBasic => 'Your family\'s name';
 
   @override
   String get familyTimezone => 'Time zone';
@@ -5822,6 +5858,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mealsWishPlan => 'Put on the plan';
 
   @override
+  String mealsWishPlanTitle(String dish) {
+    return 'Plan $dish';
+  }
+
+  @override
   String get mealsWishRemove => 'Remove the wish';
 
   @override
@@ -5853,6 +5894,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tableQuestionAdd => 'Add a question';
+
+  @override
+  String get tableQuestionOwnLabel => 'Your question';
 
   @override
   String get tableQuestionAddHint => 'What would you like to ask at the table?';
@@ -5990,11 +6034,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get weekHighlightHere => 'was part of our week';
 
   @override
-  String settingsOwnTitle(String name) {
-    return 'Settings for $name';
-  }
-
-  @override
   String get settingsGroupPersonalTitle => 'Personal';
 
   @override
@@ -6006,21 +6045,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsGroupFamilySubtitle =>
-      'Name, time zone, members and the usual week';
+      'Name, region, members and the usual week';
 
   @override
   String get settingsGroupTasksTitle => 'Tasks & rewards';
+
+  @override
+  String get settingsGroupTasksShortTitle => 'Tasks';
 
   @override
   String get settingsGroupTasksSubtitle =>
       'Points, streak jokers and approvals';
 
   @override
+  String get settingsGroupTasksSubtitleBasic => 'Streak jokers and approvals';
+
+  @override
   String get settingsGroupCalendarTitle => 'Calendar & school';
+
+  @override
+  String get settingsGroupCalendarShortTitle => 'Calendar';
 
   @override
   String get settingsGroupCalendarSubtitle =>
       'Events, timetable changes and sharing';
+
+  @override
+  String get settingsGroupCalendarSubtitleBasic =>
+      'Who may change their own events';
 
   @override
   String get settingsGroupMealsTitle => 'Meals';
@@ -6030,6 +6082,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Warm meals, meal wishes and care lunch';
 
   @override
+  String get settingsGroupMealsSubtitleBasic => 'Warm meals and meal wishes';
+
+  @override
   String get settingsGroupRitualsTitle => 'Rituals';
 
   @override
@@ -6037,14 +6092,28 @@ class AppLocalizationsEn extends AppLocalizations {
       'Question at the table, our week, countdowns';
 
   @override
+  String get settingsGroupRitualsSubtitleBasic =>
+      'Question at the table and our week';
+
+  @override
   String get settingsGroupCelebrationsTitle => 'Celebrations & seasons';
+
+  @override
+  String get settingsGroupCelebrationsShortTitle => 'Celebrations';
 
   @override
   String get settingsGroupCelebrationsSubtitle =>
       'Advent, Easter, New Year, birthdays and the seasons';
 
   @override
+  String get settingsGroupCelebrationsSubtitleBasic =>
+      'Advent, Easter and New Year';
+
+  @override
   String get settingsGroupKitchenTitle => 'Kitchen wall';
+
+  @override
+  String get settingsGroupKitchenShortTitle => 'Kitchen wall';
 
   @override
   String get settingsGroupKitchenSubtitle =>
@@ -6061,6 +6130,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsGroupAccountTitle => 'Account & security';
 
   @override
+  String get settingsGroupAccountShortTitle => 'Account';
+
+  @override
   String get settingsGroupAccountSubtitle =>
       'Sign-in, password, two-factor, leaving the family';
 
@@ -6073,6 +6145,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsGroupHelpTitle => 'Help & about';
+
+  @override
+  String get settingsGroupHelpShortTitle => 'Help';
 
   @override
   String get settingsGroupHelpSubtitle => 'Getting started, versions, licenses';
@@ -6169,6 +6244,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get eventTemplatesBuiltIn => 'Templates';
 
   @override
+  String get eventTemplatesBuiltInMore => 'More templates';
+
+  @override
   String get eventTemplateBlank => 'Start blank';
 
   @override
@@ -6229,7 +6307,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String eventTemplateCount(int count) {
-    return '$count× so far';
+    return 'Used $count×';
+  }
+
+  @override
+  String eventTemplateCountShort(int count) {
+    return '$count×';
   }
 
   @override

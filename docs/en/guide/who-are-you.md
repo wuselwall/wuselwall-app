@@ -23,6 +23,6 @@ Some things are for guardians only — adding or blocking devices, for instance.
 
 - The PIN counts for **you** only: if someone else taps a different name during that time, they gain no rights.
 - A wrong PIN shows how many tries are left. After a few mistakes you have to wait a moment; after ten, the PIN is locked.
-- **PIN locked or forgotten?** Sign in on your **own phone** and set a new one under **Settings → Advanced → Security → Guardian PIN**. That unlocks it at once.
+- **PIN locked or forgotten?** Sign in on your **own phone** and set a new one under **Settings → Account & security → Security → Guardian PIN**. That unlocks it at once.
 
 On your **personal phone** you don't need the PIN: you are already signed in.

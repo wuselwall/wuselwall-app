@@ -7,7 +7,7 @@ When you came from another view, swipe inward from the left edge on iPhone or iP
 
 ## Basic or Advanced {#view}
 
-At the top of the settings you choose the view. **Basic** is the default and shows what matters most. The settings are sorted into groups (see [All settings](/en/settings/household)). **Basic** shows only the groups with something important in them: **Personal**, **Family** (family profile, region, members, usual week), **Tasks & rewards**, **Calendar & school**, **Meals**, **Rituals**, **Devices** (This device, All devices), **Help & about** and, on your own phone, **Account & security** with **Delete account**. **Advanced** also shows **Celebrations & seasons**, **Kitchen wall**, **Sharing and connections** (sharing the family calendar, outside calendars), the **server**, sign-in, security, and leaving the family.
+At the top of the settings you choose the view. **Basic** is the default and shows what matters most. The settings are sorted into groups (see [All settings](/en/settings/household)). **Basic** shows only the groups with something important in them: **Personal**, **Family** (family profile, region, members, usual week), **Tasks & rewards**, **Calendar & school**, **Meals**, **Rituals**, **Devices** (This device, All devices), **Help & about** and, on your own phone, **Account & security** (sign-in, security, leaving the family, deleting the account). **Advanced** also shows **Celebrations & seasons**, **Kitchen wall**, **Sharing and connections** (sharing the family calendar, outside calendars) and the **server**.
 
 Whatever is hidden **still applies**. The view only changes what you see, and WuselWall remembers it for each device. The same goes for the group pages, a person's page, the **family profile** and editing a shopping list: Basic shows what most families need, Advanced the rest.
 
@@ -39,7 +39,7 @@ Children do not need an invitation. Add them as a member with a name, and connec
 
 ## Add member
 
-With the icon at the top of the **Members** page you add a person by **name** only, for example a child or someone who is not on WuselWall. WuselWall gives the next free **colour** automatically.
+With **Add member** below the list on the **Members** page you add a person by **name** only, for example a child or someone who is not on WuselWall. WuselWall gives the next free **colour** automatically.
 
 ## Edit a member {#edit-a-member}
 

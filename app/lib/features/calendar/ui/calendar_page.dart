@@ -7,7 +7,9 @@ import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/calendar/application/calendar_providers.dart';
 import 'package:wuselwall/features/calendar/ui/calendar_board.dart';
+import 'package:wuselwall/features/calendar/ui/calendar_layout.dart';
 import 'package:wuselwall/features/calendar/ui/calendar_month.dart';
+import 'package:wuselwall/features/calendar/ui/calendar_section.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 
@@ -38,27 +40,39 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
 
     final view = ref.watch(calendarViewProvider);
     final nav = ref.read(calendarViewProvider.notifier);
+    // The buttons' height stays free at the grids' end (the FAB stack of
+    // calendar_section.dart).
+    final clearance = calendarFabClearance(
+      traditions: CalendarFab.showsTradition(context, ref),
+    );
     // A swipe is the toolbar's previous and next (specs/09 "Gestures").
     return SwipeStepper(
       onPrevious: nav.previous,
       onNext: nav.next,
       child: view.mode == CalendarMode.month
-          ? CalendarMonthView(view: view)
-          : _grid(view),
+          ? CalendarMonthView(view: view, bottomClearance: clearance)
+          : _grid(view, clearance),
     );
   }
 
-  Widget _grid(CalendarView view) {
+  Widget _grid(CalendarView view, double clearance) {
     final window = (from: view.from, to: view.to);
     final occurrences = ref.watch(occurrencesProvider(window));
     final members = ref.watch(membersProvider).value ?? const <Member>[];
     // Minute resolution: the now line moves, the grid does not rebuild every second.
     final now = ref.watch(nowProvider.select(_toMinute));
+    // The last window stays, dimmed, while the next one loads.
     return AsyncValueView(
       value: occurrences,
+      keepPrevious: true,
       onRetry: () => ref.invalidate(occurrencesProvider(window)),
-      data: (data) =>
-          CalendarBoard(view: view, window: data, members: members, now: now),
+      data: (data) => CalendarBoard(
+        view: view,
+        window: data,
+        members: members,
+        now: now,
+        bottomClearance: clearance,
+      ),
     );
   }
 }
@@ -77,8 +91,11 @@ class CalendarToolbar extends ConsumerWidget {
     final l10n = context.l10n;
     final view = ref.watch(calendarViewProvider);
     final nav = ref.read(calendarViewProvider.notifier);
+    // The day view's heading under the bar names the day in full, so the bar keeps
+    // it short ("Mo 26.10.") and never cuts it; the tooltip has it whole.
     final label = switch (view.mode) {
-      CalendarMode.day => context.fullDate(view.from),
+      CalendarMode.day =>
+        '${context.weekdayShort(view.from)} ${context.dayMonth(view.from)}',
       CalendarMode.month => context.monthYear(view.month),
       _ => l10n.calendarRange(
         context.dayMonth(view.from),
@@ -103,7 +120,9 @@ class CalendarToolbar extends ConsumerWidget {
     );
     // The narrow bar abbreviates the month ("Okt. 2026"); the tooltip has it whole.
     Widget range(TextAlign align, {bool short = false}) => Tooltip(
-      message: label,
+      message: view.mode == CalendarMode.day
+          ? context.fullDate(view.from)
+          : label,
       child: Text(
         short && view.mode == CalendarMode.month
             ? context.monthYearShort(view.month)

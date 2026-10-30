@@ -152,41 +152,41 @@ class _GroupHeader extends StatelessWidget {
   }
 }
 
-class _TaskTile extends StatelessWidget {
+class _TaskTile extends ConsumerWidget {
   const _TaskTile({required this.task, required this.streak});
 
   final TaskInstance task;
   final Streak? streak;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final theme = Theme.of(context);
     final ww = context.ww;
-    final ticked = task.isTicked;
-    final muted = theme.colorScheme.onSurfaceVariant;
+    // The tick shows at once and pops a little; no sound or haptic on a grown-up's
+    // screen (specs/26 "Sound and haptics").
+    final ticked = isTickShown(ref.watch(pendingTicksProvider), task);
+    // Waiting for a guardian's check is not done yet: an hourglass in ink2, no
+    // strike-through and a quiet card, as the kid card shows it (specs/06
+    // "Verification").
+    final waiting = awaitsCheckShown(ticked, task);
     final facts = [
       taskKindLabel(context, task.kind),
-      if (task.awaitsApproval) l10n.tasksWaitingApproval,
+      if (waiting) l10n.tasksWaitingApproval,
     ].join(' · ');
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: Tokens.space1),
+      color: waiting ? ww.sunken : null,
       child: ListTile(
         minVerticalPadding: Tokens.space2,
         leading: TaskGlyph(iconKey: task.iconKey),
-        title: Text(
-          task.title,
-          style: TextStyle(
-            decoration: ticked ? TextDecoration.lineThrough : null,
-            color: ticked ? muted : null,
-          ),
-        ),
+        title: TickedTitle(title: task.title, ticked: ticked && !waiting),
         subtitle: Wrap(
           spacing: Tokens.space2,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            if (task.points > 0) PointsCoin(points: task.points, fontSize: 14),
+            if (task.points > 0)
+              PointsCoin(points: task.points, fontSize: 14, withUnit: true),
             Text(facts),
             if (streak != null)
               StreakBadge(
@@ -195,19 +195,12 @@ class _TaskTile extends StatelessWidget {
               ),
           ],
         ),
-        trailing: IconButton(
-          tooltip: ticked ? l10n.tasksDone : l10n.tasksActionTick,
-          iconSize: 30,
-          constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
-          icon: Icon(
-            ticked ? Icons.check_circle : Icons.radio_button_unchecked,
-            color: ticked ? ww.success : theme.colorScheme.onSurface,
+        trailing: TaskTickButton(
+          ticked: ticked,
+          waiting: waiting,
+          onTick: () => unawaited(
+            tickTask(context, ProviderScope.containerOf(context), task),
           ),
-          onPressed: ticked
-              ? null
-              : () => unawaited(
-                  tickTask(context, ProviderScope.containerOf(context), task),
-                ),
         ),
       ),
     );

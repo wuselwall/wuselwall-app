@@ -40,6 +40,9 @@ and needs a defaulting rule rather than an empty multi-select nobody fills in.
 
 - **Week grid** (laptop, adult register): seven columns, editable inline, drag a meal to
   another day. This is where planning actually happens, once a week, on a real keyboard.
+  A column keeps at least 176 px, so a dish of one long word ("Fischstäbchen") never
+  breaks: seven columns from about 1260 px, four over two rows (Monday to Thursday,
+  Friday to Sunday) on a tablet, one day per row on a phone.
 - **Meal zone of the week board** (wall display): the bottom band of every day column,
   seven days at once — **one warm meal per day** (Mittag at the weekend, Abend on school
   days, with the slot named in the cell) plus, per member, whether they are eating at home

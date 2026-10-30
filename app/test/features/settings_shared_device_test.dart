@@ -100,14 +100,30 @@ Future<void> _go(
 
 /// Only the three personal settings, nothing of the rest of Einstellungen.
 void _expectOwnPageOnly(String name) {
-  expect(find.text(_en.settingsOwnTitle(name)), findsOneWidget);
+  // "Settings" with the name on a second line (the long title did not fit).
+  expect(
+    find.descendant(
+      of: find.byType(AppBar),
+      matching: find.text(_en.settingsTitle),
+    ),
+    findsOneWidget,
+  );
+  expect(
+    find.byWidgetPredicate(
+      (w) =>
+          w is Text &&
+          w.key == const ValueKey('settings-bar-subtitle') &&
+          w.data == name,
+    ),
+    findsOneWidget,
+  );
   expect(_setting('member.wusel'), findsOneWidget);
   expect(_setting('member.wusel_outfit'), findsOneWidget);
   expect(_setting('member.completion_sound'), findsOneWidget);
   expect(find.byType(SettingsViewSwitch), findsNothing);
   expect(find.text(_en.signOutDevice), findsNothing);
   expect(find.byKey(const ValueKey('settings-reminders')), findsNothing);
-  expect(find.byKey(const ValueKey('settings-show-all')), findsNothing);
+  expect(find.byKey(const ValueKey('settings-more-hint')), findsNothing);
   for (final g in SettingsGroup.values) {
     expect(_tile(g), findsNothing, reason: g.name);
   }
@@ -390,7 +406,7 @@ void main() {
       c.read(actingProfileProvider.notifier).clear();
       await tester.pumpAndSettle();
       expect(_path(c), Routes.home);
-      expect(find.text(_en.settingsOwnTitle('Anna')), findsNothing);
+      expect(find.byKey(const ValueKey('settings-bar-subtitle')), findsNothing);
     });
 
     _test('switching from a guardian to a child narrows the page', (

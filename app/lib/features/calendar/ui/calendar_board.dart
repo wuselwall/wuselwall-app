@@ -43,6 +43,7 @@ class CalendarBoard extends StatefulWidget {
     required this.window,
     required this.members,
     required this.now,
+    this.bottomClearance = 0,
     super.key,
   });
 
@@ -52,6 +53,10 @@ class CalendarBoard extends StatefulWidget {
 
   /// The current minute; the "now" line sits here on today's column.
   final DateTime now;
+
+  /// Room left under the time grid's last hour, so the floating buttons never cover
+  /// it once scrolled to the end.
+  final double bottomClearance;
 
   @override
   State<CalendarBoard> createState() => _CalendarBoardState();
@@ -112,6 +117,7 @@ class _CalendarBoardState extends State<CalendarBoard> {
             Expanded(
               child: SingleChildScrollView(
                 controller: _scroll,
+                padding: EdgeInsets.only(bottom: widget.bottomClearance),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -435,23 +441,40 @@ class _Pinned extends StatelessWidget {
           }
           for (final s in lane.spans) {
             final o = s.occurrence;
+            final width = (s.last - s.first + 1) * colWidth - 2;
             children.add(
               Positioned(
                 left: left(s.first) + 1,
-                width: (s.last - s.first + 1) * colWidth - 2,
+                width: width,
                 top: top + s.row * _presenceRowHeight + 2,
                 height: _presenceRowHeight - 4,
                 child: ClipFit(
-                  child: PresenceBandView(
-                    state: o.presenceState ?? PresenceState.working,
-                    memberColor: color ?? cs.onSurfaceVariant,
-                    label: o.title,
-                    openStart: o.localStartDate.isBefore(dateOnly(days.first)),
-                    openEnd: o.localEndDate.isAfter(dateOnly(days.last)),
-                    tentative: o.isTentative,
-                    dense: true,
-                    fontSize:
-                        Theme.of(context).textTheme.bodySmall?.fontSize ?? 12,
+                  child: _Named(
+                    name: width < narrowColumn
+                        ? [
+                            o.title,
+                            for (final m in members)
+                              if (o.attendeeIds.contains(m.id)) m.displayName,
+                          ].join(' · ')
+                        : null,
+                    child: PresenceBandView(
+                      state: o.presenceState ?? PresenceState.working,
+                      memberColor: color ?? cs.onSurfaceVariant,
+                      // A band one narrow day wide shows the title's first letter
+                      // ("D" for Dienst): a word would show as "Die…", nothing at
+                      // all as an empty bar; the tooltip names it whole.
+                      label: width < narrowColumn
+                          ? initialOf(o.title)
+                          : o.title,
+                      openStart: o.localStartDate.isBefore(
+                        dateOnly(days.first),
+                      ),
+                      openEnd: o.localEndDate.isAfter(dateOnly(days.last)),
+                      tentative: o.isTentative,
+                      dense: true,
+                      fontSize:
+                          Theme.of(context).textTheme.bodySmall?.fontSize ?? 12,
+                    ),
                   ),
                 ),
               ),
@@ -467,16 +490,24 @@ class _Pinned extends StatelessWidget {
               width: _gutterWidth,
               top: top,
               height: plan.chipRows * _allDayRowHeight,
+              // "ganztägig" does not fit the hour gutter ("ganzt…"): a mark with the
+              // word as its tooltip and label.
               child: Padding(
-                padding: const EdgeInsets.only(top: 4, right: 4),
-                child: Text(
-                  context.l10n.boardAllDay,
-                  textAlign: TextAlign.right,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: false,
-                  style: Theme.of(context).textTheme.labelSmall
-                      ?.copyWith(color: ww.ink3),
+                padding: const EdgeInsets.only(top: 3, right: 6),
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: Tooltip(
+                    message: context.l10n.boardAllDay,
+                    child: Semantics(
+                      label: context.l10n.boardAllDay,
+                      excludeSemantics: true,
+                      child: Icon(
+                        Icons.calendar_view_day_outlined,
+                        size: 16,
+                        color: ww.ink3,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -493,6 +524,7 @@ class _Pinned extends StatelessWidget {
                   members: members,
                   now: now,
                   compact: true,
+                  width: (s.last - s.first + 1) * colWidth - 2,
                 ),
               ),
             );
@@ -633,6 +665,21 @@ double _blockHeight(DayBlock b) {
 
 /// Minutes from midnight to a y offset on the grid.
 double _y(int minute) => (minute - gridStartHour * 60) / 60 * _hourHeight;
+
+/// A narrow band or chip without its words keeps them as a tooltip.
+class _Named extends StatelessWidget {
+  const _Named({required this.name, required this.child});
+
+  /// Null where the words are shown.
+  final String? name;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => switch (name) {
+    final name? => Tooltip(message: name, child: child),
+    null => child,
+  };
+}
 
 /// The member colour of a lane's member, or null when nobody attends.
 Color? _colourOfMember(String? memberId, List<Member> members) {

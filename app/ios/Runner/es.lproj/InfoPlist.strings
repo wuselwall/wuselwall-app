@@ -1,2 +1,3 @@
 /* System permission prompts, shown by iOS in the device language. Keep in step with the other locales. */
 "NSCameraUsageDescription" = "La cámara escanea el código QR para configurar este dispositivo.";
+"NSMotionUsageDescription" = "Wusel se inclina hacia un lado cuando se inclina el dispositivo.";

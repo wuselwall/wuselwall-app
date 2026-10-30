@@ -5,6 +5,7 @@ import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/core/ui/text_prompt.dart';
 import 'package:wuselwall/features/account/ui/mfa_reset_button.dart';
@@ -19,8 +20,8 @@ import 'package:wuselwall/features/invitations/ui/members_invitations.dart';
 import 'package:wuselwall/features/settings/ui/settings_view_switch.dart';
 
 /// Familie → Mitglieder: the people of the family, in the board's order. Add a person,
-/// invite an adult, drag to reorder, tap a row for the member page. Every change is a
-/// guardian action.
+/// invite an adult (one row each, under the list), drag to reorder, tap a row for the
+/// member page. Every change is a guardian action.
 class FamilyMembersPage extends ConsumerWidget {
   const FamilyMembersPage({super.key});
 
@@ -38,39 +39,33 @@ class FamilyMembersPage extends ConsumerWidget {
           leading: BackButton(
             onPressed: () => context.go(Routes.settingsFamily),
           ),
-          actions: [
-            IconButton(
-              key: const ValueKey('add-member'),
-              tooltip: l10n.addMember,
-              icon: const Icon(Icons.person_add_alt_1),
-              onPressed: () => _addMember(context, ref),
-            ),
-            const SettingsViewSwitch(),
-          ],
+          actions: const [SettingsViewSwitch()],
         ),
         // One scrollable: the member rows are a sliver reorderable list, so dragging works
         // without a nested list of its own.
-        body: CustomScrollView(
-          slivers: [
-            SliverPadding(
-              padding: const EdgeInsets.fromLTRB(
-                Tokens.space4,
-                Tokens.space4,
-                Tokens.space4,
-                0,
-              ),
-              sliver: SliverToBoxAdapter(
-                child: Text(
-                  l10n.settingsMembersHint,
-                  style: Theme.of(context).textTheme.bodySmall,
+        body: ContentWidth(
+          child: CustomScrollView(
+            slivers: [
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(
+                  Tokens.space4,
+                  Tokens.space4,
+                  Tokens.space4,
+                  0,
+                ),
+                sliver: SliverToBoxAdapter(
+                  child: Text(
+                    l10n.settingsMembersHint,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
                 ),
               ),
-            ),
-            const SliverPadding(
-              padding: EdgeInsets.all(Tokens.space4),
-              sliver: _MembersList(),
-            ),
-          ],
+              SliverPadding(
+                padding: const EdgeInsets.all(Tokens.space4),
+                sliver: _MembersList(onAdd: () => _addMember(context, ref)),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -110,7 +105,10 @@ class FamilyMembersPage extends ConsumerWidget {
 /// screen. People who are no longer with the family sit at the end, greyed. A sliver, so
 /// the settings page stays one scrollable.
 class _MembersList extends ConsumerStatefulWidget {
-  const _MembersList();
+  const _MembersList({required this.onAdd});
+
+  /// Adds a person without an account of their own (a child, say).
+  final VoidCallback onAdd;
 
   @override
   ConsumerState<_MembersList> createState() => _MembersListState();
@@ -170,6 +168,16 @@ class _MembersListState extends ConsumerState<_MembersList> {
           children: [
             for (final m in retired)
               _MemberTile(key: ValueKey('member-${m.id}'), member: m),
+            // Two different ways in, so two different rows: a profile without an account,
+            // and an invitation for an adult with their own phone.
+            ListTile(
+              key: const ValueKey('add-member'),
+              leading: const Icon(Icons.person_add_alt_1),
+              title: Text(l10n.addMember),
+              subtitle: Text(l10n.addMemberSubtitle),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: widget.onAdd,
+            ),
             const InviteAdultTile(),
           ],
         ),

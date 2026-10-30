@@ -26,6 +26,19 @@ Wusel praises what happened, not the person: "All done. That went well!" rather 
 
 Wusel never appears where you are entering something (the shopping tiles and the search above them, the event and chore editors), and never next to errors, the PIN, signing in or deleting. What Wusel says is always there as text as well; a tap on the speech bubble hides the line.
 
+## Wusel on the move {#on-the-move}
+
+On the kids' tablet and on the wall, a lively Wusel does not always stay in one place:
+
+- **A chore ticked** (on **My day**): Wusel hops over to the card, takes the points coin and carries it back to the balance.
+- **The last chore of the day**: a high jump for joy with confetti as well, and then Wusel cheers back in its usual place.
+- **Back on My day** from another area: Wusel hops in from the bottom.
+- **A tap**: Wusel giggles, spins its tufts or winks, depending on where the finger lands. Three quick taps in a row give a giggle that shakes all of Wusel. Afterwards Wusel's eyes follow the finger for half a minute.
+- **Tilting**: hold the phone or tablet at an angle and Wusel leans to the side and slides a little (in the app, not in the browser).
+- **On the wall** Wusel leaves the corner only when someone ticks their last chore of the day on the chore board: Wusel hops over to that column, cheers there for four seconds and hops back. Tapped, Wusel giggles and follows the finger, but stays in the corner.
+
+Wusel only moves when something has just happened, never on its own, and never sits on a button: a tap goes straight through Wusel. At night, without a connection, on **Quiet** and with **Reduce motion**, Wusel stays in its place.
+
 ## Wusel's outfit {#outfits}
 
 Everyone can dress Wusel: **Party hat**, **Crown**, **Wizard hat**, **Flower wreath**, **Sunglasses**, **Scarf**, **Headphones** or **Bow**. Every outfit is there from the start and costs nothing; nothing has to be earned. Wusel wears it whenever it is about that person: on their kids' tablet, on their phone, and on the wall once they have chosen themselves.
@@ -39,13 +52,13 @@ You choose it under **Settings → Personal** at **Wusel's outfit** (**Advanced*
 In **Settings → Personal** each person sets **Wusel** (in the **Basic** view too):
 
 - **Automatic** (default): lively for children, quiet for adults
-- **Lively**: Wusel moves and talks
+- **Lively**: Wusel moves and talks, and on the kids' tablet and the wall Wusel is also [on the move](#on-the-move)
 - **Quiet**: Wusel stays still and appears only on empty pages and special days
 - **Off**: no Wusel for this person
 
 For the wall and shared tablets, **This device** has **Wusel on this device** (default: lively). It applies while nobody is chosen; after that, the chosen person's own setting wins.
 
-If **Reduce motion** is on for the device, Wusel stays still and there is no confetti.
+If **Reduce motion** is on for the device, Wusel stays still in its place and there is no confetti.
 
 ## Colours {#colours}
 

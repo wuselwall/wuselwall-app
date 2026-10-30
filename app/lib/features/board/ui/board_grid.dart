@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
+import 'package:wuselwall/core/ui/motion.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_geometry.dart';
 
@@ -217,11 +220,16 @@ class DashedOutlinePainter extends CustomPainter {
 
 /// Makes a tap target with a button semantics label. A GestureDetector, not an
 /// InkWell: the board needs no ink ripples and must not depend on a Material ancestor.
+///
+/// A press answers at once without moving anything around it: the target shrinks to
+/// 97 % and takes a faint brand tint while the finger is down (specs/26 "Motion",
+/// 150 ms). Under reduced motion nothing changes on a press.
 class BoardTap extends StatefulWidget {
   const BoardTap({
     required this.label,
     required this.onTap,
     required this.child,
+    this.radius = 0,
     super.key,
   });
 
@@ -229,66 +237,104 @@ class BoardTap extends StatefulWidget {
   final VoidCallback onTap;
   final Widget child;
 
+  /// The corner radius of [child], so the press tint keeps to its shape.
+  final double radius;
+
   @override
   State<BoardTap> createState() => _BoardTapState();
 }
 
-class _BoardTapState extends State<BoardTap> {
+class _BoardTapState extends State<BoardTap>
+    with SingleTickerProviderStateMixin {
   final _focus = FocusNode();
   bool _focused = false;
+
+  /// 0 at rest, 1 while pressed.
+  late final AnimationController _press = AnimationController(
+    vsync: this,
+    duration: Tokens.motionStandard,
+  );
+  late final Animation<double> _pressed = CurvedAnimation(
+    parent: _press,
+    curve: Curves.easeOutCubic,
+  );
+
+  void _down() {
+    if (motionAllowed(context)) unawaited(_press.forward());
+  }
+
+  void _up() {
+    if (_press.value > 0) unawaited(_press.reverse());
+  }
 
   @override
   void dispose() {
     _focus.dispose();
+    _press.dispose();
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) => Semantics(
-    button: true,
-    focusable: true,
-    focused: _focused,
-    onFocus: _focus.requestFocus,
-    onTap: widget.onTap,
-    label: widget.label,
-    excludeSemantics: true,
-    child: FocusableActionDetector(
-      focusNode: _focus,
-      onFocusChange: (focused) => setState(() => _focused = focused),
-      shortcuts: const {
-        SingleActivator(LogicalKeyboardKey.enter): ActivateIntent(),
-        SingleActivator(LogicalKeyboardKey.space): ActivateIntent(),
-      },
-      actions: {
-        ActivateIntent: CallbackAction<ActivateIntent>(
-          onInvoke: (_) {
-            widget.onTap();
-            return null;
-          },
-        ),
-      },
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        excludeFromSemantics: true,
-        onTap: () {
-          _focus.requestFocus();
-          widget.onTap();
+  Widget build(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.primary;
+    return Semantics(
+      button: true,
+      focusable: true,
+      focused: _focused,
+      onFocus: _focus.requestFocus,
+      onTap: widget.onTap,
+      label: widget.label,
+      excludeSemantics: true,
+      child: FocusableActionDetector(
+        focusNode: _focus,
+        onFocusChange: (focused) => setState(() => _focused = focused),
+        shortcuts: const {
+          SingleActivator(LogicalKeyboardKey.enter): ActivateIntent(),
+          SingleActivator(LogicalKeyboardKey.space): ActivateIntent(),
         },
-        child: DecoratedBox(
-          position: DecorationPosition.foreground,
-          decoration: BoxDecoration(
-            border: _focused
-                ? Border.all(
-                    color: Theme.of(context).colorScheme.primary,
-                    width: 3,
-                  )
-                : null,
+        actions: {
+          ActivateIntent: CallbackAction<ActivateIntent>(
+            onInvoke: (_) {
+              widget.onTap();
+              return null;
+            },
           ),
-          child: widget.child,
+        },
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          excludeFromSemantics: true,
+          onTapDown: (_) => _down(),
+          onTapUp: (_) => _up(),
+          onTapCancel: _up,
+          onTap: () {
+            _focus.requestFocus();
+            widget.onTap();
+          },
+          child: DecoratedBox(
+            position: DecorationPosition.foreground,
+            decoration: BoxDecoration(
+              border: _focused ? Border.all(color: primary, width: 3) : null,
+            ),
+            child: AnimatedBuilder(
+              animation: _pressed,
+              builder: (context, child) => Transform.scale(
+                scale: 1 - 0.03 * _pressed.value,
+                child: DecoratedBox(
+                  position: DecorationPosition.foreground,
+                  decoration: BoxDecoration(
+                    color: primary.withValues(alpha: 0.08 * _pressed.value),
+                    borderRadius: BorderRadius.circular(widget.radius),
+                  ),
+                  child: child,
+                ),
+              ),
+              child: widget.child,
+            ),
+          ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }
 
 /// Lets content draw at its natural size inside a fixed cell and clips what does not
@@ -313,6 +359,46 @@ class ClipFit extends StatelessWidget {
       child: child,
     ),
   );
+}
+
+/// [text] with every word too wide for a line of [width] broken by a hyphen
+/// ("Fischstäb-" / "chen"), at the last point where the hyphenated part still fits and
+/// at least three letters go to each side. A word the line holds stays whole, so a
+/// two-line text breaks between words, or with a hyphen, never bare inside a word.
+String hyphenateToFit(
+  BuildContext context,
+  String text,
+  TextStyle style,
+  double width,
+) {
+  final painter = TextPainter(
+    textDirection: Directionality.of(context),
+    textScaler: MediaQuery.textScalerOf(context),
+    maxLines: 1,
+  );
+  double widthOf(String s) {
+    painter
+      ..text = TextSpan(text: s, style: style)
+      ..layout();
+    return painter.width;
+  }
+
+  try {
+    final words = text.split(' ');
+    for (var i = 0; i < words.length; i++) {
+      final word = words[i];
+      if (word.length < 6 || widthOf(word) <= width) continue;
+      for (var cut = word.length - 3; cut >= 3; cut--) {
+        if (widthOf('${word.substring(0, cut)}-') <= width) {
+          words[i] = '${word.substring(0, cut)}-\n${word.substring(cut)}';
+          break;
+        }
+      }
+    }
+    return words.join(' ');
+  } finally {
+    painter.dispose();
+  }
 }
 
 /// The quiet band between two zones. The zones need no titles: the gutter names every

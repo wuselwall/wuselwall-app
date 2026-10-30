@@ -460,10 +460,10 @@ void main() {
       await t.enterText(inPicker(find.byType(TextField)), 'Uster');
       await t.pumpAndSettle();
       expect(find.text('Wetzikon'), findsNothing);
-      // The Gemeinde, listed with its district.
+      // The Gemeinde, listed with its kind first and then its district.
       await t.tap(
         find.ancestor(
-          of: find.text('Bezirk Uster'),
+          of: find.text('Gemeinde · Bezirk Uster'),
           matching: find.byType(ListTile),
         ),
       );
@@ -597,7 +597,7 @@ void main() {
       await t.pumpAndSettle();
       await t.enterText(find.byType(TextField).first, 'Gymnasium');
       await t.pumpAndSettle();
-      await t.tap(find.text('Speichern').first);
+      await t.tap(find.byKey(const ValueKey('school-create')));
       await t.pumpAndSettle();
 
       expect(school.schoolSaves.last.regionCode, 'CH-BE');
@@ -626,7 +626,7 @@ void main() {
       expect(find.text('Uster (Gemeinde), Kanton Zürich (ZH)'), findsOneWidget);
       await t.enterText(find.byType(TextField).first, 'Gymnasium');
       await t.pumpAndSettle();
-      await t.tap(find.text('Speichern').first);
+      await t.tap(find.byKey(const ValueKey('school-create')));
       await t.pumpAndSettle();
       // The household has a region already: nothing is written to it.
       expect(settings.sets, isEmpty);

@@ -45,6 +45,9 @@ void showUndoSnack(
     ..hideCurrentSnackBar()
     ..showSnackBar(
       SnackBar(
+        // A snackbar with an action stays until dismissed unless told otherwise
+        // (Flutter's default since 3.29); an undo offer goes by itself.
+        persist: false,
         content: Text(message),
         action: SnackBarAction(label: actionLabel, onPressed: onAction),
       ),

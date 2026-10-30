@@ -9,10 +9,16 @@ import 'package:wuselwall/app/setup_link_watch.dart';
 import 'package:wuselwall/core/config/app_config.dart';
 import 'package:wuselwall/core/logging/log.dart';
 import 'package:wuselwall/core/server/setup_link.dart';
+import 'package:wuselwall/core/wusel/wusel_tilt.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   registerFontLicenses();
+  // Wusel leans with the tablet in the hand on the phones and tablets only (specs/25).
+  WuselTilt.available =
+      !kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.iOS ||
+          defaultTargetPlatform == TargetPlatform.android);
 
   FlutterError.onError = (details) {
     FlutterError.presentError(details);

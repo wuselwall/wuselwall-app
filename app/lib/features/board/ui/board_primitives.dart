@@ -21,32 +21,26 @@ const _dashOff = 4.0;
 /// One line of text that shrinks a little before it loses its end: down to [minScale],
 /// then it keeps that size and ends in an ellipsis. A label in a narrow column stays
 /// readable from across the room instead of shrinking to a smudge.
+///
+/// With [fallback], a text that would still lose its end says the shorter [fallback]
+/// instead ("Beweglicher Ferientag" → "schulfrei"); a screen reader still hears [text].
 class ShrinkText extends StatelessWidget {
   const ShrinkText(
     this.text, {
     required this.style,
     this.minScale = 0.8,
+    this.fallback,
     super.key,
   });
 
   final String text;
   final TextStyle style;
   final double minScale;
+  final String? fallback;
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, c) {
-      final painter = TextPainter(
-        text: TextSpan(text: text, style: style),
-        textDirection: Directionality.of(context),
-        textScaler: MediaQuery.textScalerOf(context),
-        maxLines: 1,
-      )..layout();
-      final natural = painter.width;
-      painter.dispose();
-      // A little under the exact ratio: glyph widths do not scale quite linearly,
-      // and the exact size would still lose its last letter.
-      final scale = natural <= c.maxWidth ? 1.0 : c.maxWidth / natural * 0.97;
       // NFR-16/A6: no kiosk text may render below the kiosk's 24 px floor, whatever
       // [minScale] asks for. A caller's narrower minScale (e.g. the baseline track's
       // 0.7) only matters when the base size is already above the floor; once scale
@@ -57,15 +51,46 @@ class ShrinkText extends StatelessWidget {
         1.0,
       );
       final effectiveMinScale = math.max(minScale, floorScale);
-      final fitted = scale >= effectiveMinScale ? scale : effectiveMinScale;
-      return Text(
-        text,
-        style: style.copyWith(fontSize: style.fontSize! * fitted),
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        softWrap: false,
-      );
+      final scale = _scaleFor(context, text, c.maxWidth);
+      final short = fallback;
+      if (short != null && scale < effectiveMinScale) {
+        return Semantics(
+          label: text,
+          excludeSemantics: true,
+          child: _line(
+            short,
+            _scaleFor(context, short, c.maxWidth),
+            effectiveMinScale,
+          ),
+        );
+      }
+      return _line(text, scale, effectiveMinScale);
     },
+  );
+
+  /// The scale at which [value] fits [width] on one line, 1 when it fits as it is.
+  double _scaleFor(BuildContext context, String value, double width) {
+    final painter = TextPainter(
+      text: TextSpan(text: value, style: style),
+      textDirection: Directionality.of(context),
+      textScaler: MediaQuery.textScalerOf(context),
+      maxLines: 1,
+    )..layout();
+    final natural = painter.width;
+    painter.dispose();
+    // A little under the exact ratio: glyph widths do not scale quite linearly,
+    // and the exact size would still lose its last letter.
+    return natural <= width ? 1.0 : width / natural * 0.97;
+  }
+
+  Widget _line(String value, double scale, double minScale) => Text(
+    value,
+    style: style.copyWith(
+      fontSize: style.fontSize! * (scale >= minScale ? scale : minScale),
+    ),
+    maxLines: 1,
+    overflow: TextOverflow.ellipsis,
+    softWrap: false,
   );
 }
 

@@ -1,6 +1,6 @@
 # 25 — Wusel: the family's companion
 
-*Added 2026-10-24 with [ADR-020](adr/ADR-020-a-lighter-day.md). Built 2026-10-24: `app/lib/core/wusel/` (the drawing) and `app/lib/features/wusel/` (the family's Wusel, its settings and lines).* Wusel is the
+*Added 2026-10-24 with [ADR-020](adr/ADR-020-a-lighter-day.md). Built 2026-10-24: `app/lib/core/wusel/` (the drawing) and `app/lib/features/wusel/` (the family's Wusel, its settings and lines). [Wusel on the move](#wusel-on-the-move) added 2026-10-26 ([Q58](14-open-questions.md)).* Wusel is the
 mascot chosen in [ADR-012](adr/ADR-012-product-name.md#logo-and-mascot) as *Wuselchen* and
 renamed here. This document says who Wusel is, how it is drawn and moves, what it says, and
 where it may and may not appear. The colour and motion rules it shares with the rest of the
@@ -65,8 +65,10 @@ Seven poses. Each one is a set of parameters, not a separate drawing (see [Imple
 | `think` | Eyes up and to the side, one arm at the chin, three dots | Waiting, loading, offline in kid and kiosk | Dots pulse; never longer than the wait |
 | `sleep` | Closed-arc eyes, tufts drooping, body lower | The wall at night, the kid register after bedtime | A slow breath; a "z" fades in and out every 20 s |
 
-A tap on Wusel in the kid register gives one of three small reactions (a giggle squash, a
-tuft spin, a blink-wink). Tapping more often never makes Wusel refuse or tell the child off.
+A tap on Wusel in the kid register and on the wall gives one of three small reactions (a
+giggle squash, a tuft spin, a blink-wink), chosen by where the finger lands, and three taps
+in a row a wriggling giggle ([on the move](#wusel-on-the-move)). Tapping more often never
+makes Wusel refuse or tell the child off.
 
 ## Outfits
 
@@ -132,14 +134,15 @@ visit, and a tap on its speech bubble hides the line for that moment.
 |---|---|---|---|
 | **kid** | Kid home, on opening | `wave` | Greeting plus the day's first useful fact (a lesson, a meal, a countdown) |
 | | A single chore ticked | none: the points fly as in [06](06-module-tasks.md#screens) | — |
-| | The last of today's chores ticked | `cheer` | Yes |
-| | Reward requested; a badge earned in the last two days (on *Mein Tag* and *Punkte*, the badge sound once per badge while the app runs) | `proud` | Yes |
+| | A chore ticked on *Mein Tag* (a lively Wusel) | Travels to the card and carries the points home ([on the move](#wusel-on-the-move)) | — |
+| | The last of today's chores ticked | `cheer`, a high jump over the list ([on the move](#wusel-on-the-move)); the all-done card says the line without a second Wusel | Yes |
+| | Reward requested; a badge earned in the last two days (on *Mein Tag* and *Punkte*, the badge sound once per badge while the app runs) | `proud`; on *Mein Tag* the greeting's Wusel holds up the star and the badge card shows a gold star, so the screen keeps one Wusel (fixed 2026-10-26) | Yes |
 | | Empty states | `peek` | The module's empty text |
 | | Waiting, offline | `think` | Only after 2 s |
 | | The child's birthday, first open that day | `cheer` + Partyhut, full screen once | Yes |
 | | After `device.night_hours` start | `sleep` in the header | — |
 | **kiosk** | The first 30 minutes after night hours end | `wave` in the board's header corner | Morning greeting |
-| | A member ticks their last chore of the day on the wall | `cheer` for 4 s beside their column | That member's own moment |
+| | A member ticks their last chore of the day on the wall | Leaves the corner, `cheer` for 4 s beside their column, and goes back ([on the move](#wusel-on-the-move)) | That member's own moment |
 | | Tischfrage during the meal ([27](27-family-rituals.md#tischfrage)) | `idle`, holding the card | The question |
 | | A birthday | Partyhut all day, `cheer` once each hour on the hour (the wall's quietest loud moment) | Banner text |
 | | Night hours | `sleep`, small, in the corner | — |
@@ -159,13 +162,81 @@ visit, and a tap on its speech bubble hides the line for that moment.
   and deletion.** A mascot beside "Familie löschen" is not funny.
 - **Settings**, except the outfit picker and Wusel's own setting.
 - **Notifications, widgets, the ICS feed, mail, Shortcuts and MCP responses.**
-- **Over content.** Wusel takes its own space; it never covers a band, a tile or a button.
+- **Over content, at rest.** Wusel takes its own space; it never rests on a band, a tile or
+  a button. Travelling, it may cross them for a moment and sit on a card's edge for a
+  visit, with touches passing through it ([on the move](#wusel-on-the-move)).
+
+## Wusel on the move
+
+*Decided 2026-10-26 ([Q58](14-open-questions.md)).* A lively Wusel in the kid register and
+on the wall is not held to its box. When something happens it leaves its place, goes over
+the screen to where it happened, and comes back. The aim is a character that seems to live
+in the app, using what Flutter is good at: motion computed each frame from the finger, the
+layout and the family's own events, not played from a file.
+
+### The rules
+
+- **One Wusel, one home.** Each screen that shows Wusel has one home: the greeting on
+  *Mein Tag*, the corner of the wall's header. Wusel travels from there and back. While it
+  is away its home keeps the empty space, so nothing on the screen shifts, and the line
+  stays where it was as text. There is never a second Wusel on the screen while one is
+  travelling.
+- **It travels only for a moment.** Still reactive, never initiating
+  ([Who Wusel is](#who-wusel-is)): a chore ticked, the last chore, a tap on Wusel, coming
+  back to *Mein Tag*. Nothing on a timer, nothing to get attention.
+- **The afterglow.** After a moment a lively Wusel stays awake for 30 s. Its eyes follow
+  the finger, it glances about, and it hops on the spot now and then. Then it rests as
+  before. A new moment starts the 30 s again. On the wall there is no afterglow beyond the
+  tickles: Wusel stays in its corner and rests after 60 s, as before.
+- **It may cross content, but it rests at home.** A visit to a card lasts at most 4 s.
+  Wusel sits on the card's upper edge at the end away from its tick target. Touches pass
+  through a travelling Wusel to whatever lies below it, so a child never has to wait for it.
+- **Only between places that can be seen.** If the card or the home is scrolled out of
+  view, or the screen changes during the trip, Wusel goes straight home (or is simply at
+  home) and the moment is what it was without travel: the coin's flight.
+- **Where it never travels:** the places Wusel never appears, at night (it sleeps), while
+  it thinks (offline or waiting), and on adult screens. Quiet and off do not travel.
+  Neither does anything under reduce motion or in still mode.
+- **The budget is unchanged.** One celebration per moment ([26](26-colour-and-ambience.md#celebrations)).
+  A tick while Wusel is away starts no second trip: that tick's coin flies to the balance
+  as it did before Wusel could travel.
+
+### The moments
+
+| Register | Moment | What Wusel does |
+|---|---|---|
+| **kid** | A chore ticked on *Mein Tag* | Hops from home to the card as the tick pops. When the server credits the points, Wusel takes the coin, carries it home and drops it into the balance beside the greeting; then the afterglow. A chore without points (or one that waits for a check): Wusel looks at the card, happy, and hops home. When the server refuses the tick, Wusel hops home, without a reaction. The list keeps its order while Wusel is away, so the ticked card does not slide off under Wusel; done chores move to the end once Wusel is home. The coin grows out of Wusel's hand and shrinks into the pill |
+| | The last chore of the day | Wusel goes to the all-done card (it appears above the list and pushes the ticked card down), then makes a high jump with the cheer; the confetti and *fertig* start with the jump, from Wusel. Then home. The all-done card says the line as text, without a second Wusel |
+| | Back to *Mein Tag* from another tab | Hops in from the lower edge to its home in at most two big leaps: once per return, not on the first open (which waves) |
+| | Tilting the phone or tablet in the hand | Wusel leans downhill, its tufts swing, its eyes look the way it would slide, and on a steep tilt it slides a little within its home. It never leaves its home for a tilt. Native iOS and Android only: not on the web, not on the wall |
+| | A finger on the screen during the afterglow | The eyes follow the finger |
+| **kid, kiosk** | Tapping Wusel | Tickles: where the finger lands decides the reaction (a tuft spins, the body giggles, near the eyes a wink). Three taps in a row give a wriggling giggle. Wusel never refuses and never tells anyone off. For a few seconds the eyes follow the finger. On the wall Wusel stays in its corner |
+| **kiosk** | A member's last chore ticked on the wall's chore board | Wusel leaves the header corner and hops over the board to that member's column. It cheers there for 4 s in a space above the line (so the line never reflows), then hops back to the corner, and the space folds away. Nothing else takes Wusel out of its corner on the wall |
+
+### The motion
+
+All of this applies wherever Wusel moves, in its box too, so the in-place poses also gain
+from it:
+
+- **Springs, not curves, for the body.** Squash and stretch come from speed and landings,
+  and Wusel leans into a sideways movement. These are the springs of
+  [26](26-colour-and-ambience.md#motion) (`Tokens.springBouncy`).
+- **The tufts follow through.** Each tuft lags behind the body, more the further it is from
+  the middle, and settles with a small overshoot: a jump flicks them, a landing flops them.
+- **The eyes glance.** Before a hop Wusel looks where it is going. On a visit it looks at
+  the card. In the afterglow there are small glances between the blinks.
+- **A hop** is a crouch, a flight on a gravity arc stretched along its path, a landing
+  squash and a settle. A long way is several hops, never one long glide. Wusel's size
+  blends from its home's to its target's on the way.
+- **The coin** is a new prop (`WuselProp.coin`, the points gold), held up in one hand.
 
 ## Accessibility
 
 - The drawing sits in `ExcludeSemantics`. A line is ordinary text in the screen's reading
   order, so a screen reader reads what Wusel says and skips the creature.
-- **Reduce motion** ([26](26-colour-and-ambience.md#motion)) shows each pose's static look,
+- A travelling Wusel is decoration too: it is never in the semantics tree, and nothing a
+  screen reader user needs depends on a trip.
+- **Reduce motion** ([26](26-colour-and-ambience.md#motion)) keeps Wusel at home and shows each pose's static look,
   with a 150 ms cross-fade at most and no confetti.
 - Wusel never carries information that is not also in text. The cheer accompanies "Alles
   erledigt"; it does not replace it.
@@ -233,6 +304,39 @@ The code lives in `app/lib/core/wusel/`.
   `scripts/brand-assets.js` follows. A golden test draws the painter's `idle` at 100 px next to
   the SVG rendered by the docs, so the two stay the same character.
 
+### On the move
+
+- **`WuselRig`** (`core/wusel/wusel_rig.dart`) is the secondary motion: a damped spring per
+  parameter (squash, lean, gaze, the tufts' lag) driven by the body's speed and
+  acceleration. It is pure Dart with a fixed `step(dt)`, so a test can run it frame by
+  frame without a widget. Once every spring is at rest it says so, and the ticker stops.
+  `WuselLook` gains `lean`, `tuftLag` and the `coin` prop; their zero values draw exactly
+  what was drawn before, so the goldens do not change.
+- **`WuselHop`** (`core/wusel/wusel_travel.dart`) is one hop as a function of time: the
+  crouch, the gravity arc between two points that may move during the flight (the target
+  is read again every frame, so a list scrolling under Wusel is followed), the landing and
+  the settle. A trip is a list of hops of at most five Wusel sizes each; the hop in from
+  the lower edge is the one exception, at most two leaps however tall the screen.
+- **`WuselStage`** (`core/wusel/wusel_stage.dart`) sits in `MaterialApp.builder`, above
+  the navigator, so a trip can go over a dialog (the wall's chore board is one). It owns
+  the one travelling Wusel, painted in an `IgnorePointer` with a `RepaintBoundary`, and
+  the last finger position for the eyes, read by a translucent `Listener` that takes no
+  touch. It draws frames only while a trip runs.
+- **`WuselHome`** marks a home. It registers its box with the stage and shows its Wusel
+  only while Wusel is not away. A **visit** (`WuselStage.of(context).visit(target, …)`)
+  names a `GlobalKey` whose box is the target. The future completes when Wusel is home
+  again, whether the trip ran or was skipped by the rules above.
+- **Tilt** comes from `sensors_plus` (BSD-3-Clause). The accelerometer is subscribed only
+  while *Mein Tag* shows a lively Wusel on native iOS or Android, at the UI interval and
+  low-pass filtered, and it is dropped when the route is hidden or the app goes to the
+  background. A change smaller than about 4° does not wake the ticker, so a tablet lying
+  still costs nothing.
+- **Tests.** The rig and the hop are unit tests: every spring comes to rest, a hop lands
+  on its target, and a target that moves is followed. Widget tests check that a tick on
+  *Mein Tag* sends Wusel to the card and home again, that the home is empty only while
+  Wusel is away, and that quiet, still mode and reduce motion never travel.
+  `wusel_absent_test` still holds, because no capture route has a home.
+
 ## How the trial judges Wusel
 
 In M1.6's two weeks ([ADR-020, decision 8](adr/ADR-020-a-lighter-day.md#decision)):
@@ -242,3 +346,7 @@ In M1.6's two weeks ([ADR-020, decision 8](adr/ADR-020-a-lighter-day.md#decision
   in the corner of their eye.
 - **Remove a moment** that anyone calls annoying. One complaint is enough, because annoyance
   compounds.
+- **On the move** (added 2026-10-26): keep the trips if a child laughs at or waits for one
+  at least once. Keep the wall in its corner if anyone at the table notices a trip over
+  the chore board more than the chore. Drop the carried coin if a child waits for Wusel
+  to come back instead of ticking the next chore.

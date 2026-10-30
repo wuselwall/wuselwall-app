@@ -24,36 +24,64 @@ class ActingProfileBar extends ConsumerWidget {
     final l10n = context.l10n;
     final members = ref.watch(membersProvider);
     final acting = ref.watch(actingProfileProvider);
-    final size = ref.watch(uiRegisterProvider).touchTarget + 8;
+    final width = MediaQuery.sizeOf(context).width;
+    // On a phone the circles get smaller (never below the register's touch target)
+    // and the question goes, so the family fits on one row.
+    final narrow = width < 480;
+    final target = ref.watch(uiRegisterProvider).touchTarget;
+    final size = narrow ? target : target + 8;
 
     return Material(
       color: Theme.of(context).colorScheme.surfaceContainer,
       child: SafeArea(
         top: false,
         child: Padding(
-          padding: const EdgeInsets.symmetric(
+          padding: EdgeInsets.symmetric(
             vertical: Tokens.space2,
-            horizontal: Tokens.space4,
+            horizontal: narrow ? Tokens.space2 : Tokens.space4,
           ),
           child: Row(
             children: [
-              Text(acting == null ? l10n.actingWho : ''),
-              const SizedBox(width: Tokens.space3),
+              if (!narrow && acting == null) ...[
+                Text(l10n.actingWho),
+                const SizedBox(width: Tokens.space3),
+              ],
               Expanded(
                 child: members.when(
-                  data: (list) => Wrap(
-                    spacing: Tokens.space3,
-                    children: [
-                      for (final m in list.where((m) => m.active))
-                        _Avatar(
-                          member: m,
-                          size: size,
-                          selected: m.id == acting,
-                          onTap: () => ref
-                              .read(actingProfileProvider.notifier)
-                              .select(m.id),
+                  // One row, centred when it fits; a large family scrolls
+                  // sideways instead of wrapping to a second row.
+                  data: (list) => LayoutBuilder(
+                    builder: (context, constraints) => SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minWidth: constraints.maxWidth,
                         ),
-                    ],
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            for (final m in list.where((m) => m.active))
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: narrow ? 0 : Tokens.space2,
+                                ),
+                                child: _Avatar(
+                                  member: m,
+                                  size: size,
+                                  nameWidth: narrow
+                                      ? size + Tokens.space2
+                                      : size + Tokens.space6,
+                                  selected: m.id == acting,
+                                  onTap: () => ref
+                                      .read(actingProfileProvider.notifier)
+                                      .select(m.id),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                   loading: () => const SizedBox.shrink(),
                   error: (_, _) => const SizedBox.shrink(),
@@ -71,12 +99,14 @@ class _Avatar extends StatelessWidget {
   const _Avatar({
     required this.member,
     required this.size,
+    required this.nameWidth,
     required this.selected,
     required this.onTap,
   });
 
   final Member member;
   final double size;
+  final double nameWidth;
   final bool selected;
   final VoidCallback onTap;
 
@@ -122,15 +152,22 @@ class _Avatar extends StatelessWidget {
               ),
             ),
             const SizedBox(height: Tokens.space1),
+            // The whole name, never "Thom…": a long one shrinks to its box, and
+            // every box has one line's height, so all names sit on one line.
             SizedBox(
-              width: size + Tokens.space4,
-              child: Text(
-                member.displayName,
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.labelMedium
-                    ?.copyWith(fontWeight: selected ? FontWeight.bold : null),
+              width: nameWidth,
+              height: MediaQuery.textScalerOf(context).scale(
+                (Theme.of(context).textTheme.labelMedium?.fontSize ?? 12) * 1.5,
+              ),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  member.displayName,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  style: Theme.of(context).textTheme.labelMedium
+                      ?.copyWith(fontWeight: selected ? FontWeight.bold : null),
+                ),
               ),
             ),
           ],

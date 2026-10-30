@@ -7,6 +7,7 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/motion.dart';
+import 'package:wuselwall/core/ui/whole_words_text.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
@@ -140,9 +141,13 @@ bool kidReduceMotion(BuildContext context) => !motionAllowed(context);
 /// The points balance, gold. When it changes it counts to the new value over 600 ms
 /// (`easeOutCubic`) and gives a small coin tick; under reduced motion it jumps.
 class KidBalancePill extends StatefulWidget {
-  const KidBalancePill({required this.balance, super.key});
+  const KidBalancePill({required this.balance, this.loaded = true, super.key});
 
   final int balance;
+
+  /// False while the balance is still loading: the first real value then appears at
+  /// once instead of counting up from zero each time the page opens.
+  final bool loaded;
 
   @override
   State<KidBalancePill> createState() => _KidBalancePillState();
@@ -169,7 +174,7 @@ class _KidBalancePillState extends State<KidBalancePill>
     if (oldWidget.balance == widget.balance) return;
     _from = _shown;
     _to = widget.balance;
-    if (kidReduceMotion(context)) {
+    if (kidReduceMotion(context) || !oldWidget.loaded) {
       _controller.value = 1;
     } else {
       unawaited(_controller.forward(from: 0));
@@ -234,29 +239,39 @@ class _KidBalancePillState extends State<KidBalancePill>
   }
 }
 
-/// A coin that flies from [from] to [to] over 600 ms, `easeOutCubic`, then goes. Shown
-/// in the app's overlay, so it survives the card that launched it. Does nothing when
-/// either anchor is not on screen.
+/// A coin that flies from [from] (or the point [fromPoint], Wusel's hand) to [to] over
+/// 600 ms, `easeOutCubic`, then goes. Shown in the app's overlay, so it survives the
+/// card that launched it. Does nothing when either anchor is not on screen.
+/// [onLanded] is called when the coin has arrived, or at once when it does not fly.
 void kidFlyCoin(
   BuildContext context, {
-  required GlobalKey from,
+  GlobalKey? from,
+  Offset? fromPoint,
   required GlobalKey to,
   required int points,
+  VoidCallback? onLanded,
 }) {
   final overlay = Overlay.maybeOf(context);
-  final start = _centreOf(from);
+  final start = fromPoint ?? (from == null ? null : _centreOf(from));
   final end = _centreOf(to);
-  if (overlay == null || start == null || end == null) return;
+  if (overlay == null || start == null || end == null) {
+    onLanded?.call();
+    return;
+  }
   final ww = context.ww;
   late OverlayEntry entry;
   entry = OverlayEntry(
     builder: (_) => _FlyingCoin(
       start: start,
       end: end,
+      fromHand: fromPoint != null,
       points: points,
       colour: ww.points,
       onColour: ww.onPoints,
-      onDone: () => entry.remove(),
+      onDone: () {
+        entry.remove();
+        onLanded?.call();
+      },
     ),
   );
   overlay.insert(entry);
@@ -271,6 +286,7 @@ Offset? _centreOf(GlobalKey key) {
 class _FlyingCoin extends StatefulWidget {
   const _FlyingCoin({
     required this.start,
+    required this.fromHand,
     required this.end,
     required this.points,
     required this.colour,
@@ -284,6 +300,10 @@ class _FlyingCoin extends StatefulWidget {
   final Color colour;
   final Color onColour;
   final VoidCallback onDone;
+
+  /// From Wusel's hand: the coin grows out of the small one Wusel held, eases out
+  /// of the hand rather than shooting off, and shrinks into the pill.
+  final bool fromHand;
 
   @override
   State<_FlyingCoin> createState() => _FlyingCoinState();
@@ -316,32 +336,44 @@ class _FlyingCoinState extends State<_FlyingCoin>
   Widget build(BuildContext context) => AnimatedBuilder(
     animation: _controller,
     builder: (context, _) {
+      final v = _controller.value;
       final at = Offset.lerp(
         widget.start,
         widget.end,
-        Curves.easeOutCubic.transform(_controller.value),
+        (widget.fromHand ? Curves.easeInOutCubic : Curves.easeOutCubic)
+            .transform(v),
       )!;
+      final scale = !widget.fromHand
+          ? 1.0
+          : v < 0.3
+          ? 0.3 + 0.7 * Curves.easeOutBack.transform(v / 0.3)
+          : v > 0.8
+          ? 1 - 0.45 * ((v - 0.8) / 0.2)
+          : 1.0;
       return Positioned(
         left: at.dx - 28,
         top: at.dy - 28,
-        child: IgnorePointer(
-          child: Material(
-            type: MaterialType.transparency,
-            child: Container(
-              width: 56,
-              height: 56,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: widget.colour,
-                shape: BoxShape.circle,
-              ),
-              child: Text(
-                '+${widget.points}',
-                style: TextStyle(
-                  fontFamily: Tokens.fontNumeric,
-                  fontWeight: FontWeight.w800,
-                  fontSize: 18,
-                  color: widget.onColour,
+        child: Transform.scale(
+          scale: scale,
+          child: IgnorePointer(
+            child: Material(
+              type: MaterialType.transparency,
+              child: Container(
+                width: 56,
+                height: 56,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: widget.colour,
+                  shape: BoxShape.circle,
+                ),
+                child: Text(
+                  '+${widget.points}',
+                  style: TextStyle(
+                    fontFamily: Tokens.fontNumeric,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 18,
+                    color: widget.onColour,
+                  ),
                 ),
               ),
             ),
@@ -393,7 +425,8 @@ class KidLessonCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  // A long subject ("Naturwissenschaften") shrinks rather than break.
+                  WholeWordsText(
                     lesson.subject,
                     style: theme.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.w800,
@@ -401,8 +434,10 @@ class KidLessonCard extends StatelessWidget {
                       decoration: cancelled ? TextDecoration.lineThrough : null,
                     ),
                   ),
-                  Text(
-                    '${context.time(lesson.starts)} – ${context.time(lesson.ends)}'
+                  // The time span stays on one line (non-breaking spaces); a
+                  // narrow card breaks before the room instead.
+                  WholeWordsText(
+                    '${context.time(lesson.starts)}\u00A0–\u00A0${context.time(lesson.ends)}'
                     '${lesson.room == null ? '' : '  ·  ${l10n.kidRoom(lesson.room!)}'}',
                     style: TextStyle(
                       fontFamily: Tokens.fontNumeric,

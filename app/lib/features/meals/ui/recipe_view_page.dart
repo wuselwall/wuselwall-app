@@ -6,6 +6,7 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/meals/application/meals_providers.dart';
@@ -89,113 +90,115 @@ class _RecipeViewPageState extends ConsumerState<RecipeViewPage> {
           ),
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(Tokens.space4),
-        children: [
-          CountStepper(
-            label: l10n.mealsServings,
-            value: servings,
-            min: 1,
-            max: 50,
-            onChanged: (v) => setState(() => _servings = v),
-          ),
-          if (recipe.tags.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(bottom: Tokens.space2),
-              child: Wrap(
-                spacing: Tokens.space2,
-                children: [for (final t in recipe.tags) Chip(label: Text(t))],
-              ),
+      body: ContentWidth(
+        child: ListView(
+          padding: const EdgeInsets.all(Tokens.space4),
+          children: [
+            CountStepper(
+              label: l10n.mealsServings,
+              value: servings,
+              min: 1,
+              max: 50,
+              onChanged: (v) => setState(() => _servings = v),
             ),
-          if (recipe.sourceUrl != null)
-            Padding(
-              padding: const EdgeInsets.only(bottom: Tokens.space2),
-              child: SelectableText(
-                '${l10n.mealsSource}: ${recipe.sourceUrl}',
-                style: theme.textTheme.bodySmall?.copyWith(color: ww.ink2),
+            if (recipe.tags.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(bottom: Tokens.space2),
+                child: Wrap(
+                  spacing: Tokens.space2,
+                  children: [for (final t in recipe.tags) Chip(label: Text(t))],
+                ),
               ),
-            ),
-          const SizedBox(height: Tokens.space2),
-          Text(l10n.mealsIngredients, style: theme.textTheme.titleLarge),
-          const SizedBox(height: Tokens.space2),
-          if (recipe.ingredients.isEmpty)
-            Text(l10n.mealsNoIngredients, style: TextStyle(color: ww.ink3)),
-          for (final i in recipe.ingredients)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: Tokens.space1),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 112,
-                    child: Text(
-                      context.quantityText(
-                        scaleQuantity(
-                          i.quantity,
-                          recipe.servingsDefault,
-                          servings,
-                        ),
-                        i.unit,
-                      ),
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        fontFeatures: const [FontFeature.tabularFigures()],
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(i.rawName, style: theme.textTheme.bodyLarge),
-                        if (i.note != null)
-                          Text(
-                            i.note!,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: ww.ink2,
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ],
+            if (recipe.sourceUrl != null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: Tokens.space2),
+                child: SelectableText(
+                  '${l10n.mealsSource}: ${recipe.sourceUrl}',
+                  style: theme.textTheme.bodySmall?.copyWith(color: ww.ink2),
+                ),
               ),
-            ),
-          const SizedBox(height: Tokens.space6),
-          Text(l10n.mealsSteps, style: theme.textTheme.titleLarge),
-          const SizedBox(height: Tokens.space2),
-          for (final (n, step) in steps.indexed)
-            Padding(
-              padding: const EdgeInsets.only(bottom: Tokens.space4),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CircleAvatar(
-                    radius: 18,
-                    backgroundColor: theme.colorScheme.primaryContainer,
-                    child: Text(
-                      '${n + 1}',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        color: theme.colorScheme.onPrimaryContainer,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: Tokens.space3),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 4),
+            const SizedBox(height: Tokens.space2),
+            Text(l10n.mealsIngredients, style: theme.textTheme.titleLarge),
+            const SizedBox(height: Tokens.space2),
+            if (recipe.ingredients.isEmpty)
+              Text(l10n.mealsNoIngredients, style: TextStyle(color: ww.ink3)),
+            for (final i in recipe.ingredients)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: Tokens.space1),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 112,
                       child: Text(
-                        step,
-                        style: const TextStyle(fontSize: 22, height: 1.4),
+                        context.quantityText(
+                          scaleQuantity(
+                            i.quantity,
+                            recipe.servingsDefault,
+                            servings,
+                          ),
+                          i.unit,
+                        ),
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          fontFeatures: const [FontFeature.tabularFigures()],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(i.rawName, style: theme.textTheme.bodyLarge),
+                          if (i.note != null)
+                            Text(
+                              i.note!,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: ww.ink2,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-        ],
+            const SizedBox(height: Tokens.space6),
+            Text(l10n.mealsSteps, style: theme.textTheme.titleLarge),
+            const SizedBox(height: Tokens.space2),
+            for (final (n, step) in steps.indexed)
+              Padding(
+                padding: const EdgeInsets.only(bottom: Tokens.space4),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CircleAvatar(
+                      radius: 18,
+                      backgroundColor: theme.colorScheme.primaryContainer,
+                      child: Text(
+                        '${n + 1}',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          color: theme.colorScheme.onPrimaryContainer,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: Tokens.space3),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Text(
+                          step,
+                          style: const TextStyle(fontSize: 22, height: 1.4),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

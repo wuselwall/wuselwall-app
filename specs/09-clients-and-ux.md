@@ -55,6 +55,10 @@ on the parent's phone gives `kid` or `kiosk`.
   tokens, subscribed calendars, the server, export, sign-in, security, leaving and deleting the
   family, and every other setting, including any a newer catalogue adds.
   The choice is per device and purely visual: a hidden setting keeps its value and applies.
+- On a laptop the reading pages (Today, Stundenplan, Tasks, Shopping, the settings pages,
+  the school setup, Neuer Termin and the event editor, recipes) are at most **960 px
+  wide**, centred (`ContentWidth` in `core/ui`), so a title and its "in 3 Tagen" stay
+  together; the calendar and the meal week, grids that use the width, take all of it.
 
 **Settings on a shared device** (*added 2026-10-24*, device classes of [08](08-users-auth-permissions.md)).
 What the gear opens depends on the device class and the acting person
@@ -72,7 +76,7 @@ opened with a push also leaves when the acting person changes:
 
 A member's own page is the Personal group narrowed to the settings the server lets a member
 change for themselves (member scope, `self_service`): Wusel, Wusel's outfit and the completion
-sound, titled with their name, with no Basic/Advanced chip, no other group, no Sign out and no
+sound, titled "Einstellungen" with their name below it, with no Basic/Advanced chip, no other group, no Sign out and no
 device list. `/settings` and `/settings/personal` show it; every other `/settings/...` route
 sends them to `/settings`. The wall's 60 s idle return also runs on settings pages (a touch there
 counts); when the acting person becomes nobody, the open settings page leaves for home.
@@ -83,6 +87,22 @@ counts); when the acting person becomes nobody, the open settings page leaves fo
 - My points (balance, reward shop, badges, streaks)
 - Shopping (add + tick — children are surprisingly good at this)
 - Family (who is doing what today)
+
+How the kid register fits its screen (decided 2026-10-26, after layout checks on phones,
+tablets and the web from 320 to 1920 px):
+- **Phones stay upright.** Held sideways, the tabs and the avatar bar left about 115 dp
+  for the page, so on a phone (shortest side under 600 dp) the kid home is portrait only;
+  tablets turn freely.
+- **Pages are at most 840 px wide**, centred, so a tick stays near its chore's title.
+- **The bottom bars** keep their labels on one line (the font shrinks until the longest
+  fits, never below 11 px), cap the text scale at 1.3, and the avatars are one centred
+  row that scrolls sideways for a large family. With nobody picked, *Mein Tag* shows only
+  the big picker, not the bar as well.
+- ***Mein Tag* keeps its order** (greeting, new badge, Tischfrage, chores), but the badge
+  and the Tischfrage are slim lines (the Tischfrage opens on a tap), so the chores stay in
+  view. On a phone Wusel and the points share a row above a full-width speech bubble.
+- An **undo message** after a tick goes by itself and when the child switches tab or
+  person, so nobody undoes someone else's chore.
 
 **kiosk**
 - The **week board** (below): the standard screen, seven days at once.
@@ -237,7 +257,9 @@ full grid is one tap away and lives on the children's iPads.
 - Today's column is wider, brighter and bordered; the other six are legible but recede.
 - A **"jetzt / als Nächstes"** line under the header names the next thing to happen today
   with a countdown ("in 25 Min: Zahnarzt, Mia"). This is the one piece of urgency the
-  board carries; everything else is context.
+  board carries; everything else is context. The next thing is shown whole; the one after
+  it ("danach …") follows only when it fits beside it, never as two halves that both end
+  in an ellipsis.
 - Past days this week are dimmed rather than removed. Monday still explains why the
   laundry basket is full.
 - The week rolls over at a configurable point at the weekend (`board.rollover`, default
@@ -272,7 +294,12 @@ A third rejected option — folding presence into the three day-part bands — w
 
 The board must never scroll and never break its geometry. In order:
 
-1. Truncate long titles to one line with an ellipsis; the tap-through has the full text.
+1. Truncate long titles with an ellipsis; the tap-through has the full text. Before
+   that, a line says less: a lone appointment's title takes the lines its cell holds (in
+   a two-line cell beside its time, "10:00 Heizung wird / gewartet"), a birthday under
+   the date drops the age ("🎂 Emma"), a school's own day off too long for the column
+   says "schulfrei", and the footer's countdowns shorten ("🎂 Emma · in 3 Tagen") before
+   one of them goes.
 2. Beyond three appointments in a day, show two and "+2 weitere".
 3. Beyond two presence bands for one person in a day, show the longest and a "+1".
 4. On a narrow screen, the weekend collapses into one half-width column.
@@ -291,7 +318,10 @@ geometry, all zones, readable overflow indicators and access to full detail. The
 reference acceptance viewport is 1280×800 logical pixels in landscape, with the
 reference household, in each application language (DE/EN/FR/ES). No RenderFlex overflow, overlapping
 text or clipped controls is acceptable at 100%, 150% or 200%. This does not claim
-that every appointment title fits in full on the board.
+that every appointment title fits in full on the board. Other panels draw the board on a
+canvas at least 1280×800 that grows along the panel's long side (1422×800 on 16:9) and
+scale it to fit, so every aspect ratio has the reference rows and a wider one only wider
+columns; the header keeps its height through the day, the Tischfrage included.
 
 Past days and the night variant may recede through backgrounds, borders and visual
 emphasis, not by making their information unreadable. Do not apply a fixed opacity
@@ -303,7 +333,13 @@ not the acceptance threshold.
 
 The tap-through details are where the full labels live, so they never truncate: at
 every text scale their text wraps, their columns grow with it and nothing ends in an
-ellipsis or a line limit. Past days, finished appointments and cancelled lessons in a
+ellipsis or a line limit. On the family task board only members with chores today get
+a column; those with nothing left share one line under them, so the open chores are on
+screen without a scroll. Columns that do not fit side by side take a second row rather
+than a sideways scroll, and a detail that
+goes on below its edge fades out there, so it never seems to end where it does not. A
+detail is drawn on the board's 1280-wide canvas, so a larger panel scales it as it scales
+the board. Past days, finished appointments and cancelled lessons in a
 detail recede through their ground (`sunken`), with the same 4.5:1 rule (`t_10f0b348`).
 
 ### Touch behaviour

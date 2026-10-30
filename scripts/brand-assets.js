@@ -1,6 +1,7 @@
 // Writes specs/brand/*.svg and app/assets/icon/*.png from the Wuselpunkte and Wusel
-// symbols in specs/mockups/logo.html (ADR-012). Usage: node scripts/brand-assets.js, then
-// `dart run flutter_launcher_icons` in app/.
+// symbols in specs/mockups/logo.html (ADR-012), and Android 12's splash icon straight into
+// app/android/app/src/main/res/drawable-*dpi/. Usage: node scripts/brand-assets.js (or
+// `npm run brand`), then `dart run flutter_launcher_icons` in app/.
 const fs = require('fs');
 const path = require('path');
 const sharp = require('sharp');
@@ -8,6 +9,7 @@ const sharp = require('sharp');
 const root = path.join(__dirname, "..");
 const brand = path.join(root, 'specs/brand');
 const icons = path.join(root, 'app/assets/icon');
+const res = path.join(root, 'app/android/app/src/main/res');
 fs.mkdirSync(brand, { recursive: true });
 fs.mkdirSync(icons, { recursive: true });
 
@@ -55,6 +57,23 @@ const placed = (mark, at, size) => `\n  <g transform="translate(${at} ${at}) sca
 // App icons are full squares: iOS and Android apply their own corner masks.
 const tile = (c, mark) => `\n  <rect width="100" height="100" fill="${c.tile}"/>${placed(mark, 12, 76)}`;
 
+// Android 12+ draws the splash icon on a 288 dp canvas and masks it to the centred circle
+// of 192 dp (2/3 of the canvas), so the adaptive icon's corners get cut. The splash icon
+// therefore carries the mark alone, centred on its bounding box and sized so that every
+// dot lies inside the circle with a little room: the farthest dot edge 92 dp from the
+// centre, of the 96 dp the mask leaves.
+const splashMark = (c) => {
+  const mark = punkte(c);
+  const dots = [...mark.matchAll(/cx="([\d.]+)" cy="([\d.]+)" r="([\d.]+)"/g)]
+    .map(([, x, y, r]) => ({ x: +x, y: +y, r: +r }));
+  const cx = (Math.min(...dots.map((d) => d.x - d.r)) + Math.max(...dots.map((d) => d.x + d.r))) / 2;
+  const cy = (Math.min(...dots.map((d) => d.y - d.r)) + Math.max(...dots.map((d) => d.y + d.r))) / 2;
+  const reach = Math.max(...dots.map((d) => Math.hypot(d.x - cx, d.y - cy) + d.r));
+  const scale = (92 / 288) * 100 / reach;
+  const f = (n) => +n.toFixed(3);
+  return `\n  <g transform="translate(${f(50 - cx * scale)} ${f(50 - cy * scale)}) scale(${f(scale)})">${mark}\n  </g>`;
+};
+
 const files = {
   'wuselwall-mark.svg': svg('WuselWall', punkte(paper)),
   'wuselwall-mark-dark.svg': svg('WuselWall', punkte(dark)),
@@ -64,6 +83,9 @@ const files = {
   // mark inside the 66 % safe zone, so they carry no padding of their own.
   'wuselwall-adaptive-foreground.svg': svg('WuselWall', punkte(paper), 1024),
   'wuselwall-monochrome.svg': svg('WuselWall', punkte(mono), 1024),
+  // Android 12+ splash (values-v31/styles.xml): the mark on a transparent 288 dp canvas.
+  'wuselwall-splash.svg': svg('WuselWall', splashMark(paper), 1152),
+  'wuselwall-splash-dark.svg': svg('WuselWall', splashMark(dark), 1152),
   'wusel.svg': svg('Wusel', wusel(paper)),
   'wusel-dark.svg': svg('Wusel', wusel(dark)),
 };
@@ -77,6 +99,14 @@ const png = (name, out, size = 1024) =>
   await png('wuselwall-icon-dark.svg', 'icon-dark.png');
   await png('wuselwall-adaptive-foreground.svg', 'adaptive-foreground.png');
   await png('wuselwall-monochrome.svg', 'monochrome.png');
+  // The splash icon per density: 288 dp at 1x, 1.5x, 2x, 3x and 4x.
+  for (const [dpi, scale] of Object.entries({ mdpi: 1, hdpi: 1.5, xhdpi: 2, xxhdpi: 3, xxxhdpi: 4 })) {
+    const size = 288 * scale;
+    for (const [name, out] of [['wuselwall-splash.svg', 'splash_icon.png'], ['wuselwall-splash-dark.svg', 'splash_icon_dark.png']]) {
+      await sharp(Buffer.from(files[name]), { density: 72 * size / 100 }).resize(size, size).png()
+        .toFile(path.join(res, `drawable-${dpi}`, out));
+    }
+  }
   // iOS rejects an app icon with an alpha channel.
   await sharp(path.join(icons, 'icon.png')).flatten({ background: paper.tile }).removeAlpha()
     .toFile(path.join(icons, 'icon-ios.png'));

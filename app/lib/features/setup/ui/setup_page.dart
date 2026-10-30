@@ -81,19 +81,14 @@ class _SetupPageState extends ConsumerState<SetupPage> {
                   ),
                 ],
                 const SizedBox(height: Tokens.space6),
+                // One primary action, then the other ways in as equal rows (specs/20,
+                // "The front door").
                 // E1: the address, then a code by e-mail (E2, E3).
-                OutlinedButton.icon(
+                FilledButton.icon(
+                  key: const ValueKey('door-email'),
                   onPressed: !online ? null : () => context.go(Routes.signIn),
                   icon: const Icon(Icons.mail_outline),
                   label: Text(l10n.doorEmail),
-                ),
-                // An invitation: the code, a link or its QR code (J2).
-                TextButton.icon(
-                  onPressed: !online
-                      ? null
-                      : () => context.go(Routes.inviteCode),
-                  icon: const Icon(Icons.mark_email_unread_outlined),
-                  label: Text(l10n.inviteDoorAction),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: Tokens.space4),
@@ -111,13 +106,22 @@ class _SetupPageState extends ConsumerState<SetupPage> {
                   ),
                 ),
                 // Pairing (J3): the new device shows a code, a guardian's phone approves it.
-                TextButton.icon(
-                  onPressed: !online ? null : () => context.go(Routes.pair),
-                  icon: const Icon(Icons.tablet_android),
-                  label: Text(l10n.pairFrontDoorAction),
+                _DoorOption(
+                  key: const ValueKey('door-pair'),
+                  icon: Icons.tablet_android,
+                  label: l10n.pairFrontDoorAction,
+                  onTap: !online ? null : () => context.go(Routes.pair),
+                ),
+                // An invitation: the code, a link or its QR code (J2).
+                _DoorOption(
+                  key: const ValueKey('door-invite'),
+                  icon: Icons.mark_email_unread_outlined,
+                  label: l10n.inviteDoorAction,
+                  onTap: !online ? null : () => context.go(Routes.inviteCode),
                 ),
                 // The web app of a server: the phone joins the same server by scanning.
                 if (kIsWeb) const _ContinueOnPhone(),
+                const SizedBox(height: Tokens.space4),
                 if (session.leave != null)
                   TextButton(
                     onPressed: session.leave,
@@ -156,9 +160,14 @@ class _ContinueOnPhone extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final server = Uri.parse(ref.watch(appConfigProvider).supabaseUrl);
+    // The same row as the other options, opening in place instead of leading away.
     return ExpansionTile(
+      key: const ValueKey('door-phone'),
       leading: const Icon(Icons.smartphone),
-      title: Text(l10n.setupPhoneTitle),
+      title: Text(l10n.setupPhoneTitle, style: _DoorOption.labelStyle(context)),
+      tilePadding: _DoorOption.padding,
+      shape: const Border(),
+      collapsedShape: const Border(),
       childrenPadding: const EdgeInsets.only(bottom: Tokens.space4),
       children: [
         Text(l10n.setupPhoneBody),
@@ -179,4 +188,34 @@ class _ContinueOnPhone extends ConsumerWidget {
       ],
     );
   }
+}
+
+/// One of the other ways in on the front door: an icon, the label (wrapping between
+/// words where it must) and a chevron, all alike.
+class _DoorOption extends StatelessWidget {
+  const _DoorOption({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    super.key,
+  });
+
+  static const padding = EdgeInsets.symmetric(horizontal: Tokens.space2);
+
+  static TextStyle? labelStyle(BuildContext context) =>
+      Theme.of(context).textTheme.bodyLarge;
+
+  final IconData icon;
+  final String label;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) => ListTile(
+    contentPadding: padding,
+    leading: Icon(icon),
+    title: Text(label, style: labelStyle(context)),
+    trailing: const Icon(Icons.chevron_right),
+    enabled: onTap != null,
+    onTap: onTap,
+  );
 }
