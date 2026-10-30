@@ -425,7 +425,8 @@ class KidLessonCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  // A long subject ("Naturwissenschaften") shrinks rather than break.
+                  WholeWordsText(
                     lesson.subject,
                     style: theme.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.w800,

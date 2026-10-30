@@ -45,22 +45,38 @@ TextStyle? fitWholeWords(
 ) {
   final drawn = DefaultTextStyle.of(context).style.merge(style);
   final scaler = MediaQuery.textScalerOf(context);
-  var widest = 0.0;
-  for (final word in text.split(' ')) {
-    if (word.isEmpty) continue;
-    final painter = TextPainter(
-      text: TextSpan(text: word, style: drawn),
-      textDirection: TextDirection.ltr,
-      textScaler: scaler,
-      maxLines: 1,
-    )..layout();
-    if (painter.width > widest) widest = painter.width;
-    painter.dispose();
+  final words = [
+    for (final w in text.split(' '))
+      if (w.isNotEmpty) w,
+  ];
+  if (words.isEmpty) return style;
+  double widestAt(double size) {
+    var widest = 0.0;
+    for (final word in words) {
+      final painter = TextPainter(
+        text: TextSpan(
+          text: word,
+          style: drawn.copyWith(fontSize: size),
+        ),
+        textDirection: TextDirection.ltr,
+        textScaler: scaler,
+        maxLines: 1,
+      )..layout();
+      if (painter.width > widest) widest = painter.width;
+      painter.dispose();
+    }
+    return widest;
   }
-  if (widest <= width || widest == 0) return style;
-  final size = drawn.fontSize ?? 14;
-  // A hair under the exact ratio, so rounding never tips the word over the edge.
-  return (style ?? const TextStyle()).copyWith(
-    fontSize: size * width / widest * 0.98,
-  );
+
+  final base = drawn.fontSize ?? 14;
+  var size = base;
+  // Measured again after each step: Android's font scaling is not linear (a small
+  // font is scaled up by more), so one proportional step can still be too wide.
+  for (var i = 0; i < 6; i++) {
+    final widest = widestAt(size);
+    if (widest <= width) break;
+    size = size * width / widest * 0.98;
+  }
+  if (size == base) return style;
+  return (style ?? const TextStyle()).copyWith(fontSize: size);
 }
