@@ -34,26 +34,48 @@ free=shutil.disk_usage(ancestor).free/1024**3
 print(f'Free disk: {free:.1f} GiB; required floor: {minimum} GiB')
 print(f'Dedicated SDK: {root / "android-sdk"}')
 print(f'Dedicated AVDs: {root / "avd"}')
-print(f'Command tools archive: {config["commandLineTools"]["archive"]} (SHA-256 verified)')
+print(f'Command tools archive: {config["commandLineTools"]["archive"]} (SHA-256 will be verified on download)')
 for package in config['packages']: print(f'Ensure {package["path"]} exactly revision {package["revision"]}')
 for avd in config['avds']: print(f'Ensure CI AVD {avd["name"]}, {avd["device"]}, {avd["image"]}')
 print('iOS: explicit QUALIFICATION_IOS_VERSION, QUALIFICATION_IOS_BUILD and QUALIFICATION_IOS_RUNTIME required for --apply')
 print('No Xcode license acceptance, sudo, shell-profile changes, personal AVD deletion, signing or publication.')
+if sys.argv[2]=='--dry-run': print('Plan only: no downloads or installation performed.')
+else: print('Apply plan: installation starts only after preflight checks pass.')
 if sys.argv[2]=='--apply' and free < int(minimum): raise SystemExit('Insufficient free disk space; nothing installed')
 PY
 [[ "$mode" == --apply ]] || exit 0
 [[ "$(uname -s)" == Darwin && "$(uname -m)" == arm64 ]] || { echo 'Apply requires native ARM64 macOS.' >&2; exit 1; }
-: "${JAVA_HOME:?Use the workflow setup-java step to select a JDK 17 installation}"
+if [[ -z "${JAVA_HOME:-}" ]]; then
+  echo 'JAVA_HOME must point to a JDK 17 installation; the workflow setup-java step sets it in CI.' >&2
+  exit 1
+fi
 : "${QUALIFICATION_IOS_VERSION:?Pin the exact iOS runtime version}"
 : "${QUALIFICATION_IOS_BUILD:?Pin the exact Apple runtime build}"
 : "${QUALIFICATION_IOS_RUNTIME:?Pin the CoreSimulator runtime identifier}"
-for tool in python3 curl unzip shasum xcodebuild xcrun; do command -v "$tool" >/dev/null; done
-java_version=$("$JAVA_HOME/bin/java" -version 2>&1)
-[[ "$java_version" == *'version "17.'* ]] || { echo 'JDK 17 required.' >&2; exit 1; }
+for tool in python3 curl unzip shasum xcodebuild xcrun; do
+  if ! command -v "$tool" >/dev/null 2>&1; then
+    printf "Required tool '%s' was not found on PATH.\n" "$tool" >&2
+    exit 1
+  fi
+done
+java_bin="$JAVA_HOME/bin/java"
+if [[ ! -x "$java_bin" ]]; then
+  printf 'JAVA_HOME must point to a JDK with an executable bin/java: %s\n' "$java_bin" >&2
+  exit 1
+fi
+if ! java_version=$("$java_bin" -version 2>&1); then
+  printf 'Failed to run %s -version:\n%s\n' "$java_bin" "$java_version" >&2
+  exit 1
+fi
+if [[ "$java_version" != *'version "17.'* ]]; then
+  printf 'JDK 17 required; %s -version reported:\n%s\n' "$java_bin" "$java_version" >&2
+  exit 1
+fi
 # Require a dedicated directory so an existing personal SDK/AVD tree is never adopted.
 if [[ -d "$QUALIFICATION_TOOLS_ROOT" && ! -f "$QUALIFICATION_TOOLS_ROOT/.wuselwall-qualification" ]]; then
   [[ -z "$(ls -A "$QUALIFICATION_TOOLS_ROOT")" ]] || { echo 'Tools directory is not an owned empty CI directory.' >&2; exit 1; }
 fi
+printf 'Starting installation of pinned native tools in %s.\n' "$QUALIFICATION_TOOLS_ROOT"
 mkdir -p "$QUALIFICATION_TOOLS_ROOT" "$ANDROID_HOME/cmdline-tools" "$ANDROID_AVD_HOME"
 touch "$QUALIFICATION_TOOLS_ROOT/.wuselwall-qualification"
 scratch=$(mktemp -d "$QUALIFICATION_TOOLS_ROOT/provision-XXXXXX")
@@ -147,4 +169,4 @@ environment_file="$QUALIFICATION_TOOLS_ROOT/environment.env"
 } > "$environment_file"
 chmod 600 "$environment_file"
 if [[ -n "${GITHUB_ENV:-}" ]]; then cat "$environment_file" >> "$GITHUB_ENV"; fi
-printf 'Provisioned dedicated native tools. Environment: %s\n' "$environment_file"
+printf 'Installation complete. Dedicated native tools are provisioned. Environment: %s\n' "$environment_file"
