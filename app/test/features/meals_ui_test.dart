@@ -258,6 +258,24 @@ void main() {
     unawaited(container.read(routerProvider).push(Routes.recipeEdit));
     await t.pumpAndSettle();
 
+    final semantics = t.ensureSemantics();
+    try {
+      await t.pump();
+      // Servings actions must announce both their direction and their subject.
+      for (final icon in [Icons.remove, Icons.add]) {
+        final action = find.widgetWithIcon(IconButton, icon).first;
+        final node = t.getSemantics(action);
+        final label = '${node.label} ${node.tooltip}';
+        expect(label, contains('Portionen'));
+        expect(
+          label,
+          contains(icon == Icons.remove ? 'Verringern' : 'Erhöhen'),
+        );
+      }
+    } finally {
+      semantics.dispose();
+    }
+
     await t.enterText(find.byType(TextField).first, 'Pfannkuchen');
     await t.tap(find.text('Zutat hinzufügen'));
     await t.pumpAndSettle();

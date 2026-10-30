@@ -12,6 +12,8 @@ La date, les flèches, le choix de vue et les paramètres partagent une barre co
 
 Les **présences**, une ligne par personne, et les événements de **toute la journée** restent au-dessus des rendez-vous classés par heure. Utilisez les flèches et **Aujourd’hui** pour naviguer ; sur téléphone ou tablette, un balayage vers la gauche ou la droite fait de même.
 
+Les libellés des rendez-vous courts restent à leur heure réelle ; leurs blocs plus hauts et faciles à toucher peuvent donc se côtoyer. Les fiches de modèles s’adaptent à la taille du texte de votre appareil.
+
 ## Mois {#month}
 
 La vue **Mois** montre six semaines d’un coup d’œil, du lundi au dimanche, avec le numéro de semaine à gauche. Elle sert à planifier, pas à modifier. Chaque jour indique :

@@ -345,41 +345,44 @@ class _DayRow extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(Tokens.space2),
       onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: Tokens.space1),
-        child: Row(
-          children: [
-            SizedBox(
-              width: 40,
-              child: Text(
-                context.weekdayShort(day),
-                semanticsLabel: context.weekdayLong(day),
-                style: theme.textTheme.titleSmall,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 48),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: Tokens.space1),
+          child: Row(
+            children: [
+              SizedBox(
+                width: 40,
+                child: Text(
+                  context.weekdayShort(day),
+                  semanticsLabel: context.weekdayLong(day),
+                  style: theme.textTheme.titleSmall,
+                ),
               ),
-            ),
-            Expanded(
-              child: places.isEmpty
-                  ? Text(
-                      context.l10n.baselineNone,
-                      style: TextStyle(color: context.ww.ink3),
-                    )
-                  : Wrap(
-                      spacing: Tokens.space1,
-                      runSpacing: Tokens.space1,
-                      children: [
-                        for (final p in places)
-                          PresenceBandView(
-                            state: p.state,
-                            memberColor: member.color,
-                            label: context.usualLabel(p),
-                            fontSize: fontSize,
-                            dense: true,
-                          ),
-                      ],
-                    ),
-            ),
-            const Icon(Icons.chevron_right),
-          ],
+              Expanded(
+                child: places.isEmpty
+                    ? Text(
+                        context.l10n.baselineNone,
+                        style: TextStyle(color: context.ww.ink3),
+                      )
+                    : Wrap(
+                        spacing: Tokens.space1,
+                        runSpacing: Tokens.space1,
+                        children: [
+                          for (final p in places)
+                            PresenceBandView(
+                              state: p.state,
+                              memberColor: member.color,
+                              label: context.usualLabel(p),
+                              fontSize: fontSize,
+                              dense: true,
+                            ),
+                        ],
+                      ),
+              ),
+              const Icon(Icons.chevron_right),
+            ],
+          ),
         ),
       ),
     );
@@ -864,19 +867,22 @@ class _Option extends StatelessWidget {
   Widget build(BuildContext context) => InkWell(
     borderRadius: BorderRadius.circular(Tokens.space2),
     onTap: onTap,
-    child: Padding(
-      padding: const EdgeInsets.symmetric(vertical: Tokens.space1),
-      child: Row(
-        children: [
-          Icon(
-            selected
-                ? Icons.radio_button_checked
-                : Icons.radio_button_unchecked,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-          const SizedBox(width: Tokens.space2),
-          Expanded(child: child),
-        ],
+    child: ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: 48),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: Tokens.space1),
+        child: Row(
+          children: [
+            Icon(
+              selected
+                  ? Icons.radio_button_checked
+                  : Icons.radio_button_unchecked,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            const SizedBox(width: Tokens.space2),
+            Expanded(child: child),
+          ],
+        ),
       ),
     ),
   );

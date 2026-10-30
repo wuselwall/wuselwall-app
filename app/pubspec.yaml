@@ -56,6 +56,10 @@ dev_dependencies:
   otp: ^3.2.1
 
 flutter:
+  # The iOS project uses the checked-in CocoaPods integration. Avoid a hybrid
+  # SPM/Pods plugin graph when building the XCTest accessibility bundle.
+  config:
+    enable-swift-package-manager: false
   uses-material-design: true
   generate: true
 
@@ -64,6 +68,7 @@ flutter:
   assets:
     - assets/fonts/OFL-AtkinsonHyperlegibleNext.txt
     - assets/fonts/OFL-BarlowSemiCondensed.txt
+    - assets/fonts/OFL-NotoSansSymbols.txt
     # Emoji pictures (Fluent Emoji Flat, MIT, licence in assets/emoji/), rendered by
     # scripts/emoji-pictures.mjs; the 2.0x/ and 3.0x/ variants are picked automatically.
     - assets/emoji/
@@ -96,6 +101,9 @@ flutter:
           weight: 600
         - asset: assets/fonts/BarlowSemiCondensed-Bold.ttf
           weight: 700
+    - family: NotoSansSymbols
+      fonts:
+        - asset: assets/fonts/NotoSansSymbols-wght.ttf
 
 # App icons from the Wuselpunkte mark (specs/brand, ADR-012). Regenerate with
 # `dart run flutter_launcher_icons` after changing anything in assets/icon/.

@@ -72,6 +72,7 @@ abstract final class AppTheme {
             .apply(
               fontSizeFactor: base / 14,
               fontFamily: Tokens.fontUi,
+              fontFamilyFallback: const ['NotoSansSymbols'],
               bodyColor: c.ink,
               displayColor: c.ink,
             );
@@ -83,6 +84,7 @@ abstract final class AppTheme {
       canvasColor: c.bg,
       dividerColor: c.line,
       fontFamily: Tokens.fontUi,
+      fontFamilyFallback: const ['NotoSansSymbols'],
       textTheme: textTheme,
       extensions: [WwColors(shade: shade)],
       materialTapTargetSize: MaterialTapTargetSize.padded,

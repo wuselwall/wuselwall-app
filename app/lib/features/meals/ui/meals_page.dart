@@ -7,6 +7,7 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/time/clock.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/emoji_picture.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
@@ -289,7 +290,7 @@ class _DayCell extends ConsumerWidget {
     final l10n = context.l10n;
     final ww = context.ww;
     final scheme = Theme.of(context).colorScheme;
-    final today = DateTime.now();
+    final today = ref.watch(nowProvider);
     final isToday = _sameDay(date, today);
     final warm = ref.watch(warmSlotProvider(date));
     final dayEntries = [
@@ -373,35 +374,42 @@ class _DayCell extends ConsumerWidget {
               if (freeSlots.isNotEmpty)
                 Align(
                   alignment: AlignmentDirectional.centerStart,
-                  child: PopupMenuButton<PlanSlot>(
-                    tooltip: l10n.mealsAddOther,
-                    onSelected: (slot) =>
-                        showMealEditor(context, date: date, slot: slot),
-                    itemBuilder: (_) => [
-                      for (final s in freeSlots)
-                        PopupMenuItem(
-                          value: s,
-                          child: Text(context.planSlotLabel(s)),
-                        ),
-                    ],
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: Tokens.space2,
-                        vertical: Tokens.space1,
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.add, size: 18),
-                          const SizedBox(width: Tokens.space1),
-                          Flexible(
-                            child: Text(
-                              l10n.mealsAddOther,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                  child: Semantics(
+                    button: true,
+                    container: true,
+                    child: PopupMenuButton<PlanSlot>(
+                      tooltip: l10n.mealsAddOther,
+                      onSelected: (slot) =>
+                          showMealEditor(context, date: date, slot: slot),
+                      itemBuilder: (_) => [
+                        for (final s in freeSlots)
+                          PopupMenuItem(
+                            value: s,
+                            child: Text(context.planSlotLabel(s)),
                           ),
-                        ],
+                      ],
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(minHeight: 48),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: Tokens.space2,
+                            vertical: Tokens.space1,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.add, size: 18),
+                              const SizedBox(width: Tokens.space1),
+                              Flexible(
+                                child: Text(
+                                  l10n.mealsAddOther,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),

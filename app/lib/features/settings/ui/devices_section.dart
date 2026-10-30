@@ -8,6 +8,7 @@ import 'package:wuselwall/app/theme/ui_register.dart';
 import 'package:wuselwall/core/config/config_providers.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/time/clock.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/core/ui/text_prompt.dart';
@@ -341,7 +342,7 @@ class _DeviceTile extends ConsumerWidget {
         ? l10n.deviceRevoked
         : seen == null
         ? l10n.deviceNeverSeen
-        : l10n.deviceLastSeen(agoText(l10n, seen, DateTime.now()));
+        : l10n.deviceLastSeen(agoText(l10n, seen, ref.watch(nowProvider)));
     final kind = d.deviceClass.label(l10n);
     final register = d.register.label(l10n);
     final scheme = Theme.of(context).colorScheme;
@@ -360,14 +361,17 @@ class _DeviceTile extends ConsumerWidget {
       // not a link.
       action: d.revoked
           ? null
-          : OutlinedButton(
-              key: ValueKey('revoke-${d.id}'),
-              style: OutlinedButton.styleFrom(
-                foregroundColor: scheme.error,
-                side: BorderSide(color: scheme.error),
+          : ConstrainedBox(
+              constraints: const BoxConstraints(minHeight: 48),
+              child: OutlinedButton(
+                key: ValueKey('revoke-${d.id}'),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: scheme.error,
+                  side: BorderSide(color: scheme.error),
+                ),
+                onPressed: onRevoke,
+                child: Text(l10n.revoke),
               ),
-              onPressed: onRevoke,
-              child: Text(l10n.revoke),
             ),
       onTap: d.revoked ? null : onRename,
     );

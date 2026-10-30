@@ -156,7 +156,7 @@ void main() {
     testWidgets('the list shows the status and the friendly error', (
       tester,
     ) async {
-      final now = DateTime.now();
+      final now = testNow();
       final calendars = FakeExternalCalendarsRepository(
         calendars: [
           _calendar(lastFetchedAt: now.subtract(const Duration(minutes: 12))),

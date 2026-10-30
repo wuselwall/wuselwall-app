@@ -262,6 +262,28 @@ void main() {
   });
 
   group('day blocks', () {
+    test('short appointment touch targets reserve separate lanes', () {
+      final day = dayOfThisWeek(0);
+      final blocks = timedBlocksOn(day, [
+        occ(
+          title: 'Short',
+          day: day,
+          from: const TimeOfDay(hour: 10, minute: 0),
+          to: const TimeOfDay(hour: 10, minute: 15),
+        ),
+        occ(
+          title: 'Next',
+          day: day,
+          from: const TimeOfDay(hour: 10, minute: 15),
+          to: const TimeOfDay(hour: 10, minute: 30),
+        ),
+      ], minimumDisplayMinutes: 58);
+      expect(blocks.map((b) => b.lanes), everyElement(2));
+      expect(blocks.first.lane, isNot(blocks.last.lane));
+      // Accessibility layout must not change the appointment's actual time.
+      expect(blocks.first.end, 10 * 60 + 15);
+    });
+
     test('overlapping appointments share the column side by side', () {
       final day = dayOfThisWeek(0);
       final blocks = timedBlocksOn(day, [

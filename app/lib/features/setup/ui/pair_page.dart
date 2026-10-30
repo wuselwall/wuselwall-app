@@ -189,15 +189,16 @@ class _PairPageState extends ConsumerState<PairPage> {
                     style: theme.textTheme.bodySmall,
                   ),
                   const SizedBox(height: Tokens.space4),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: Tokens.space2,
                     children: [
                       const SizedBox(
                         width: 16,
                         height: 16,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       ),
-                      const SizedBox(width: Tokens.space2),
                       Text(l10n.pairWaiting),
                     ],
                   ),

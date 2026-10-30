@@ -12,6 +12,8 @@ La fecha, las flechas, el selector de vista y los ajustes comparten una barra co
 
 Arriba permanecen la **presencia**, una fila por persona, y los eventos de **todo el día**. Debajo, las citas siguen el orden horario. Usa las flechas y **Hoy** para moverte; en el móvil o la tableta, deslizar a la izquierda o a la derecha hace lo mismo.
 
+Las citas cortas conservan la etiqueta en su hora real; sus bloques más altos y fáciles de tocar pueden quedar uno al lado del otro. Las fichas de plantillas se adaptan al tamaño de texto del dispositivo.
+
 ## Mes {#month}
 
 La vista **Mes** muestra seis semanas de un vistazo, de lunes a domingo, con el número de semana a la izquierda. Sirve para planificar, no para editar. Cada día muestra:

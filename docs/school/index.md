@@ -72,6 +72,8 @@ Für jedes Kind tragt ihr den Plan für einen Zeitraum ein. Tippe auf **Stundenp
 
 Oben siehst du das Kind, die Schule und den Zeitraum mit seinen Daten. Tippe ein Feld im Raster an und wähle das Fach. Fehlt ein Fach, tippst du sein Kürzel in die Suche und wählst **„…“ als Fach anlegen**: Das Fach entsteht sofort und steht im Feld; Farbe, Symbol und Sachen zum Mitnehmen ergänzt du später unter **Schule bearbeiten**. **Stundenplan speichern** bleibt am unteren Bildschirmrand sichtbar, auch wenn du durch den Plan scrollst.
 
+Auf schmalen Bildschirmen oder bei großer Schrift kannst du im Stundenplanraster und in der Einlese-Vorschau seitlich wischen, um weitere Wochentage zu sehen. Mit der Tastatur wechselst du per Tab zur Vorschau und blätterst mit den Pfeiltasten links und rechts zu den weiteren Tagen. So bleiben die Felder lesbar und gut antippbar. Die Klingelzeit-Knöpfe rücken bei Bedarf in die nächste Zeile.
+
 Wenn noch kein Plan vorliegt, zeigt die Ansicht einen Hinweis zum gewählten Kind und den Button **Stundenplan eingeben**.
 
 <Shot name="school-editor" alt="Stundenplan-Editor mit Schule, Zeitraum und sichtbarer Speichern-Schaltfläche" />

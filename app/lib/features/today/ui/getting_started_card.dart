@@ -89,7 +89,13 @@ class GettingStartedCard extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: Tokens.space2),
-            LinearProgressIndicator(value: doneCount / total),
+            Semantics(
+              container: true,
+              child: LinearProgressIndicator(
+                value: doneCount / total,
+                semanticsLabel: l10n.todayStartTitle,
+              ),
+            ),
             ...rows,
             if (reminderOpen) const ReminderStartRow(),
           ],
@@ -129,21 +135,28 @@ class _ItemRow extends ConsumerWidget {
         )..layout();
         final buttonWidth = label.width + 2 * Tokens.space2;
         label.dispose();
-        // The leading icon and its gap, and the gap before the trailing button.
-        const leadingRoom = 24 + 16 + 16;
+        const leadingWidth = 24.0;
+        const titleInset = leadingWidth + Tokens.space2;
+        // The leading icon, its gap, and room before the separate action.
+        const leadingRoom = titleInset + Tokens.space4;
         final titleRoom = constraints.maxWidth - leadingRoom - buttonWidth;
         final stackAction = !done && titleRoom < _minTitleRoom;
         final dismissButton = TextButton(
+          // Smaller type and padding, but standard density: the tap target stays
+          // 48 px high (the qualification matrix's "targets" rule).
           style: TextButton.styleFrom(
             textStyle: labelStyle,
-            visualDensity: VisualDensity.compact,
+            visualDensity: VisualDensity.standard,
+            minimumSize: const Size(48, 48),
             padding: const EdgeInsets.symmetric(horizontal: Tokens.space2),
           ),
           onPressed: () => unawaited(_dismiss(context, ref, item)),
           child: Text(l10n.todayStartNotNeeded),
         );
-        return ListTile(
+        final tile = ListTile(
           contentPadding: EdgeInsets.zero,
+          minLeadingWidth: leadingWidth,
+          horizontalTitleGap: Tokens.space2,
           minVerticalPadding: Tokens.space1,
           leading: Icon(
             item.icon,
@@ -156,18 +169,34 @@ class _ItemRow extends ConsumerWidget {
               color: done ? theme.colorScheme.onSurfaceVariant : null,
             ),
           ),
-          subtitle: stackAction
-              ? Align(
+          trailing: done ? Icon(Icons.check_circle, color: ww.success) : null,
+          onTap: done ? null : () => unawaited(_open(context, ref, item)),
+        );
+        if (done) return tile;
+        if (stackAction) {
+          // Under the title, starting where the title starts, so it never floats
+          // between two steps (round-3 review L-9): past the icon and its gap.
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              tile,
+              Padding(
+                padding: const EdgeInsetsDirectional.only(
+                  start: titleInset - Tokens.space2,
+                ),
+                child: Align(
                   alignment: AlignmentDirectional.centerStart,
                   child: dismissButton,
-                )
-              : null,
-          trailing: done
-              ? Icon(Icons.check_circle, color: ww.success)
-              : stackAction
-              ? null
-              : dismissButton,
-          onTap: done ? null : () => unawaited(_open(context, ref, item)),
+                ),
+              ),
+            ],
+          );
+        }
+        return Row(
+          children: [
+            Expanded(child: tile),
+            dismissButton,
+          ],
         );
       },
     );

@@ -30,6 +30,7 @@ android {
 
     defaultConfig {
         applicationId = "ch.goomba.wuselwall"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
@@ -72,5 +73,15 @@ flutter {
 }
 
 dependencies {
+    // Flutter integration_test exposes older AndroidX test APIs. Align only the
+    // debug variant with instrumentation; release dependencies remain untouched.
+    debugImplementation("androidx.test:runner:1.6.2")
+    debugImplementation("androidx.test:rules:1.6.1")
+    debugImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    debugImplementation("com.google.guava:guava:33.4.8-android")
+    androidTestImplementation("com.google.guava:guava:33.4.8-android")
+    androidTestImplementation("androidx.test:runner:1.6.2")
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation("com.google.android.apps.common.testing.accessibility.framework:accessibility-test-framework:4.1.1")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }

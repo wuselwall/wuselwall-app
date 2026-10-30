@@ -1,4 +1,5 @@
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/demo/demo_clock.dart';
 import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/features/today/data/notices_repository.dart';
 import 'package:wuselwall/features/today/domain/notice.dart';
@@ -12,7 +13,7 @@ class DemoNoticesRepository implements NoticesRepository {
           key: 'join:1',
           kind: NoticeKind.join,
           name: DemoData.name(DemoData.mama),
-          at: DateTime.now().subtract(const Duration(hours: 2)),
+          at: DemoClock.now().subtract(const Duration(hours: 2)),
         ),
       ];
 

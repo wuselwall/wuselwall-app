@@ -60,10 +60,14 @@ class _SignInMethodsSectionState extends ConsumerState<SignInMethodsSection> {
                 ? l10n.settingsPasswordSet
                 : l10n.settingsPasswordNotSet,
           ),
-          action: OutlinedButton(
-            onPressed: _setPassword,
-            child: Text(
-              hasPassword ? l10n.passwordChangeAction : l10n.passwordSetAction,
+          action: _actionTarget(
+            OutlinedButton(
+              onPressed: _setPassword,
+              child: Text(
+                hasPassword
+                    ? l10n.passwordChangeAction
+                    : l10n.passwordSetAction,
+              ),
             ),
           ),
         ),
@@ -99,31 +103,35 @@ class SecuritySection extends ConsumerWidget {
             leading: const Icon(Icons.security),
             title: Text(l10n.totpTitle),
             subtitle: Text(id == null ? l10n.totpOff : l10n.totpOn),
-            action: id == null
-                ? FilledButton(
-                    onPressed: () => _enableTotp(context, ref),
-                    child: Text(l10n.totpEnable),
-                  )
-                : TextButton(
-                    onPressed: () async {
-                      final result = await repo.totpDisable(id);
-                      if (!context.mounted) return;
-                      result.when(
-                        ok: (_) => ref.invalidate(totpFactorProvider),
-                        err: context.showFailure,
-                      );
-                    },
-                    child: Text(l10n.totpDisable),
-                  ),
+            action: _actionTarget(
+              id == null
+                  ? FilledButton(
+                      onPressed: () => _enableTotp(context, ref),
+                      child: Text(l10n.totpEnable),
+                    )
+                  : TextButton(
+                      onPressed: () async {
+                        final result = await repo.totpDisable(id);
+                        if (!context.mounted) return;
+                        result.when(
+                          ok: (_) => ref.invalidate(totpFactorProvider),
+                          err: context.showFailure,
+                        );
+                      },
+                      child: Text(l10n.totpDisable),
+                    ),
+            ),
           ),
         ),
         SettingsActionTile(
           leading: const Icon(Icons.pin_outlined),
           title: Text(l10n.pinChangeTitle),
           subtitle: Text(l10n.pinChangeBody),
-          action: OutlinedButton(
-            onPressed: () => _changePin(context, repo),
-            child: Text(l10n.pinChangeAction),
+          action: _actionTarget(
+            OutlinedButton(
+              onPressed: () => _changePin(context, repo),
+              child: Text(l10n.pinChangeAction),
+            ),
           ),
         ),
         // Not on the web until the passkeys SDK is self-hosted (web/index.html), and
@@ -133,16 +141,18 @@ class SecuritySection extends ConsumerWidget {
             leading: const Icon(Icons.fingerprint),
             title: Text(l10n.passkeyTitle),
             subtitle: Text(l10n.passkeyBody),
-            action: OutlinedButton(
-              onPressed: () async {
-                final result = await repo.registerPasskey(l10n.appTitle);
-                if (!context.mounted) return;
-                result.when(
-                  ok: (_) => context.showMessage(l10n.passkeyAdded),
-                  err: context.showFailure,
-                );
-              },
-              child: Text(l10n.passkeyAdd),
+            action: _actionTarget(
+              OutlinedButton(
+                onPressed: () async {
+                  final result = await repo.registerPasskey(l10n.appTitle);
+                  if (!context.mounted) return;
+                  result.when(
+                    ok: (_) => context.showMessage(l10n.passkeyAdded),
+                    err: context.showFailure,
+                  );
+                },
+                child: Text(l10n.passkeyAdd),
+              ),
             ),
           ),
       ],
@@ -203,6 +213,12 @@ class SecuritySection extends ConsumerWidget {
     }
   }
 }
+
+/// Keep each button as its own semantic control with at least a 48dp tap target.
+Widget _actionTarget(Widget action) => ConstrainedBox(
+  constraints: const BoxConstraints(minHeight: 48),
+  child: action,
+);
 
 class _TotpEnrolDialog extends ConsumerStatefulWidget {
   const _TotpEnrolDialog({required this.enrolment});

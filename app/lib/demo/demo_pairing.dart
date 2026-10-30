@@ -1,5 +1,6 @@
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/demo/demo_clock.dart';
 import 'package:wuselwall/features/identity/data/pairing_repository.dart';
 import 'package:wuselwall/features/identity/domain/pairing.dart';
 
@@ -12,7 +13,7 @@ class DemoPairingRepository implements PairingRepository {
       requestId: 'demo-request',
       secret: 'demo-secret',
       code: 'K7QM3XRP',
-      expiresAt: DateTime.now().add(const Duration(minutes: 10)),
+      expiresAt: DemoClock.now().add(const Duration(minutes: 10)),
     ),
   );
 

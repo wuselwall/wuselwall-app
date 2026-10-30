@@ -1,0 +1,1241 @@
+{
+  "schema": 1,
+  "clock": "2026-10-14T14:05:00",
+  "locales": [
+    "de",
+    "en",
+    "fr",
+    "es"
+  ],
+  "shades": [
+    "light",
+    "dark"
+  ],
+  "states": [
+    {
+      "id": "today",
+      "widget": "TodayPage",
+      "titleKey": "todayTitle",
+      "scenario": "adult",
+      "route": "/",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "tab": "today",
+      "native": true
+    },
+    {
+      "id": "calendar",
+      "widget": "CalendarPage",
+      "titleKey": "calendarTitle",
+      "scenario": "adult",
+      "route": "/",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "tab": "calendar",
+      "native": true
+    },
+    {
+      "id": "schedule",
+      "widget": "ScheduleBody",
+      "titleKey": "scheduleTitle",
+      "scenario": "adult",
+      "route": "/",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "tab": "schedule",
+      "native": false
+    },
+    {
+      "id": "tasks",
+      "widget": "TasksBody",
+      "titleKey": "tasksTitle",
+      "scenario": "adult",
+      "route": "/",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "tab": "tasks",
+      "native": false
+    },
+    {
+      "id": "meals",
+      "widget": "MealsWeekBody",
+      "titleKey": "mealsTitle",
+      "scenario": "adult",
+      "route": "/",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "tab": "meals",
+      "native": false
+    },
+    {
+      "id": "shopping",
+      "widget": "ShoppingBody",
+      "titleKey": "shoppingTitle",
+      "scenario": "adult",
+      "route": "/",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "tab": "shopping",
+      "native": true
+    },
+    {
+      "id": "settings",
+      "widget": "SettingsPage",
+      "titleKey": "settingsTitle",
+      "scenario": "adult",
+      "route": "/settings",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "native": true
+    },
+    {
+      "id": "settings-personal",
+      "widget": "SettingsGroupPage",
+      "titleKey": "settingsGroupPersonalTitle",
+      "scenario": "adult",
+      "route": "/settings/personal",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "advanced": true
+    },
+    {
+      "id": "settings-family",
+      "widget": "SettingsGroupPage",
+      "titleKey": "settingsGroupFamilyTitle",
+      "scenario": "adult",
+      "route": "/settings/family",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "advanced": true
+    },
+    {
+      "id": "settings-tasks",
+      "widget": "SettingsGroupPage",
+      "titleKey": "settingsGroupTasksTitle",
+      "scenario": "adult",
+      "route": "/settings/tasks",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "advanced": true
+    },
+    {
+      "id": "settings-calendar",
+      "widget": "SettingsGroupPage",
+      "titleKey": "settingsGroupCalendarTitle",
+      "scenario": "adult",
+      "route": "/settings/calendar-school",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "advanced": true
+    },
+    {
+      "id": "settings-meals",
+      "widget": "SettingsGroupPage",
+      "titleKey": "settingsGroupMealsTitle",
+      "scenario": "adult",
+      "route": "/settings/meals",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "advanced": true
+    },
+    {
+      "id": "settings-rituals",
+      "widget": "SettingsGroupPage",
+      "titleKey": "settingsGroupRitualsTitle",
+      "scenario": "adult",
+      "route": "/settings/rituals",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "advanced": true
+    },
+    {
+      "id": "settings-celebrations",
+      "widget": "SettingsGroupPage",
+      "titleKey": "settingsGroupCelebrationsTitle",
+      "scenario": "adult",
+      "route": "/settings/celebrations",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "advanced": true
+    },
+    {
+      "id": "settings-kitchen",
+      "widget": "SettingsGroupPage",
+      "titleKey": "settingsGroupKitchenTitle",
+      "scenario": "adult",
+      "route": "/settings/kitchen-wall",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "advanced": true
+    },
+    {
+      "id": "settings-devices",
+      "widget": "SettingsGroupPage",
+      "titleKey": "settingsGroupDevicesTitle",
+      "scenario": "adult",
+      "route": "/settings/devices",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "advanced": true
+    },
+    {
+      "id": "settings-account",
+      "widget": "SettingsGroupPage",
+      "titleKey": "settingsGroupAccountTitle",
+      "scenario": "adult",
+      "route": "/settings/account",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "advanced": true
+    },
+    {
+      "id": "settings-server",
+      "widget": "SettingsGroupPage",
+      "titleKey": "settingsGroupServerTitle",
+      "scenario": "withserver",
+      "route": "/settings/server",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "advanced": true
+    },
+    {
+      "id": "settings-help",
+      "widget": "SettingsGroupPage",
+      "titleKey": "settingsGroupHelpTitle",
+      "scenario": "adult",
+      "route": "/settings/help",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "advanced": true
+    },
+    {
+      "id": "recipes",
+      "widget": "RecipesPage",
+      "titleKey": "mealsRecipesTitle",
+      "scenario": "adult",
+      "route": "/meals/recipes",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ]
+    },
+    {
+      "id": "family-profile",
+      "widget": "FamilyPage",
+      "titleKey": "familyProfileTitle",
+      "scenario": "adult",
+      "route": "/settings/family/profile",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ]
+    },
+    {
+      "id": "reminders",
+      "widget": "RemindersPage",
+      "titleKey": "reminderSettingsTitle",
+      "scenario": "adult",
+      "route": "/settings/reminders",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ]
+    },
+    {
+      "id": "kid",
+      "widget": "KidHome",
+      "scenario": "kid",
+      "titleKey": null,
+      "route": "/",
+      "widths": [
+        768,
+        820,
+        1024
+      ],
+      "native": true
+    },
+    {
+      "id": "wall",
+      "widget": "WeekBoardPage",
+      "scenario": "kiosk",
+      "titleKey": null,
+      "route": "/",
+      "widths": [
+        1280,
+        1920
+      ],
+      "native": true
+    },
+    {
+      "id": "server",
+      "widget": "ServerChoicePage",
+      "scenario": "server",
+      "titleKey": "serverTitle",
+      "route": "/",
+      "widths": [
+        320,
+        390,
+        820
+      ],
+      "native": true
+    },
+    {
+      "id": "setup",
+      "widget": "SetupPage",
+      "scenario": "setup",
+      "route": "/setup",
+      "titleKey": "setupHeadline",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "wizard",
+      "widget": "WizardPage",
+      "scenario": "setup",
+      "route": "/setup/household",
+      "titleKey": "wizardTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "sign-in",
+      "widget": "SignInPage",
+      "scenario": "setup",
+      "route": "/setup/sign-in",
+      "titleKey": "doorEmail",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "sign-in-choice",
+      "widget": "SignInChoicePage",
+      "scenario": "newfamily",
+      "route": "/setup/sign-in-choice",
+      "titleKey": "signInMethodTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "enrol",
+      "widget": "EnrolPage",
+      "scenario": "setup",
+      "route": "/setup/enrol",
+      "titleKey": "enrolTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "pair",
+      "widget": "PairPage",
+      "scenario": "setup",
+      "route": "/setup/pair",
+      "titleKey": "pairTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "first-run-wall",
+      "widget": "FirstRunPage",
+      "scenario": "adult",
+      "route": "/first-run",
+      "titleKey": "firstRunKioskTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "first-run-kid",
+      "widget": "FirstRunPage",
+      "scenario": "adult",
+      "route": "/first-run",
+      "titleKey": "firstRunKidTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "device-pair",
+      "widget": "DevicePairPage",
+      "scenario": "adult",
+      "route": "/settings/devices/pair",
+      "titleKey": null,
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "mfa",
+      "widget": "MfaChallengePage",
+      "scenario": "setup",
+      "route": "/setup/mfa",
+      "titleKey": "mfaTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "register",
+      "widget": "RegisterDevicePage",
+      "scenario": "adult",
+      "route": "/setup/register",
+      "titleKey": "registerTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "new-family",
+      "widget": "NewFamilyPage",
+      "scenario": "newfamily",
+      "route": "/setup/new-family",
+      "titleKey": "householdNewTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "deleted-family",
+      "widget": "DeletedFamilyPage",
+      "scenario": "newfamily",
+      "route": "/setup/deleted-family",
+      "titleKey": null,
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "invite-pending",
+      "widget": "InvitePendingPage",
+      "scenario": "newfamily",
+      "route": "/setup/invitations",
+      "titleKey": null,
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "join-invite",
+      "widget": "JoinInvitePage",
+      "scenario": "newfamily",
+      "route": "/setup/join",
+      "titleKey": "inviteCodeTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "invite-code",
+      "widget": "InviteCodePage",
+      "scenario": "setup",
+      "route": "/setup/invite",
+      "titleKey": "inviteCodeTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "welcome-members",
+      "widget": "MembersPage",
+      "scenario": "adult",
+      "route": "/welcome/members",
+      "titleKey": "householdMembersTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "family-members",
+      "widget": "FamilyMembersPage",
+      "scenario": "adult",
+      "route": "/settings/members",
+      "titleKey": "settingsMembers",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "member-edit",
+      "widget": "MemberPage",
+      "scenario": "adult",
+      "route": "/settings/member",
+      "titleKey": null,
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "shopping-list-edit",
+      "widget": "ShoppingListEditPage",
+      "scenario": "adult",
+      "route": "/shopping/list",
+      "titleKey": "shoppingEditList",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "shopping-history",
+      "widget": "ShoppingHistoryPage",
+      "scenario": "adult",
+      "route": "/shopping/history",
+      "titleKey": null,
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "event-templates",
+      "widget": "EventTemplatePage",
+      "scenario": "adult",
+      "route": "/calendar/new",
+      "titleKey": null,
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "event-create",
+      "widget": "EventEditorPage",
+      "scenario": "adult",
+      "route": "/calendar/new",
+      "titleKey": null,
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "event-edit",
+      "widget": "EventEditorPage",
+      "scenario": "adult",
+      "route": "/calendar/edit",
+      "titleKey": "eventEditTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "recipe-create",
+      "widget": "RecipeEditorPage",
+      "scenario": "adult",
+      "route": "/meals/recipes/edit",
+      "titleKey": null,
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "recipe-edit",
+      "widget": "RecipeEditorPage",
+      "scenario": "adult",
+      "route": "/meals/recipes/edit",
+      "titleKey": null,
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "recipe-view",
+      "widget": "RecipeViewPage",
+      "scenario": "adult",
+      "route": "/meals/recipes/view",
+      "titleKey": null,
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "school-setup",
+      "widget": "SchoolSetupPage",
+      "scenario": "adult",
+      "route": "/school/setup",
+      "titleKey": "schoolSetupTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "timetable-edit",
+      "widget": "TimetableEditorPage",
+      "scenario": "adult",
+      "route": "/school/timetable",
+      "titleKey": null,
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "timetable-import",
+      "widget": "TimetableImportPage",
+      "scenario": "adult",
+      "route": "/school/import",
+      "titleKey": null,
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "feed-tokens",
+      "widget": "FeedTokensPage",
+      "scenario": "adult",
+      "route": "/settings/feeds",
+      "titleKey": "feedTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "external-calendars",
+      "widget": "ExternalCalendarsPage",
+      "scenario": "adult",
+      "route": "/settings/calendars",
+      "titleKey": "extCalTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "external-calendar-create",
+      "widget": "ExternalCalendarFormPage",
+      "scenario": "adult",
+      "route": "/settings/calendars/new",
+      "titleKey": "extCalNewTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "external-calendar-edit",
+      "widget": "ExternalCalendarFormPage",
+      "scenario": "adult",
+      "route": "/settings/calendars/edit",
+      "titleKey": "extCalEditTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "usual-week",
+      "widget": "BaselinePage",
+      "scenario": "adult",
+      "route": "/settings/baselines",
+      "titleKey": "baselineTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "shortcuts",
+      "widget": "ShortcutsPage",
+      "scenario": "adult",
+      "route": "/settings/shortcuts",
+      "titleKey": "shortcutTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "email-code",
+      "widget": "EmailCodePage",
+      "scenario": "setup",
+      "route": "/setup/email-code",
+      "titleKey": "emailCodeTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "splash-error",
+      "widget": "SplashPage",
+      "scenario": "adult",
+      "route": "/splash",
+      "titleKey": null,
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true,
+      "minimumLabeledNodes": 2
+    },
+    {
+      "id": "setup-offline",
+      "widget": "SetupPage",
+      "scenario": "setup",
+      "route": "/setup",
+      "titleKey": "setupHeadline",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "sign-in-offline",
+      "widget": "SignInPage",
+      "scenario": "setup",
+      "route": "/setup/sign-in",
+      "titleKey": "doorEmail",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "recipes-empty",
+      "widget": "RecipesPage",
+      "scenario": "adult",
+      "route": "/meals/recipes",
+      "titleKey": "mealsRecipesTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "recipes-error",
+      "widget": "RecipesPage",
+      "scenario": "adult",
+      "route": "/meals/recipes",
+      "titleKey": "mealsRecipesTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "external-calendars-empty",
+      "widget": "ExternalCalendarsPage",
+      "scenario": "adult",
+      "route": "/settings/calendars",
+      "titleKey": "extCalTitle",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "fixture": true
+    },
+    {
+      "id": "calendar-month",
+      "widget": "CalendarPage",
+      "titleKey": "calendarTitle",
+      "scenario": "adult",
+      "route": "/",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "tab": "calendar"
+    },
+    {
+      "id": "shopping-offline",
+      "widget": "ShoppingBody",
+      "titleKey": "shoppingTitle",
+      "scenario": "adult",
+      "route": "/",
+      "widths": [
+        360,
+        390,
+        599,
+        600,
+        601,
+        820,
+        1280
+      ],
+      "tab": "shopping"
+    },
+    {
+      "id": "password-sign-in",
+      "widget": "PasswordSignInPage",
+      "titleKey": "passwordSignUpTab",
+      "scenario": "setup",
+      "route": "/setup/sign-in",
+      "widths": [
+        360,
+        390,
+        820
+      ],
+      "fixture": true
+    },
+    {
+      "id": "password-reset",
+      "widget": "PasswordResetPage",
+      "titleKey": "passwordResetTitle",
+      "scenario": "setup",
+      "route": "/setup/password-reset",
+      "widths": [
+        360,
+        390,
+        820
+      ],
+      "fixture": true
+    }
+  ],
+  "pendingRoutes": {},
+  "openGates": [
+    "physical-device-review",
+    "approved-baseline-review"
+  ],
+  "excludedRoutes": {
+    "householdSettings": {
+      "route": "/settings/household",
+      "kind": "redirect",
+      "destination": "/settings",
+      "reason": "Compatibility alias for the settings landing page; no distinct screen. Redirect behavior is covered by router tests."
+    },
+    "system": {
+      "route": "/system",
+      "kind": "developer-only",
+      "reason": "The diagnostics page is excluded by the production kDebugMode guard and does not ship in release candidates."
+    }
+  }
+}

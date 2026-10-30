@@ -6,6 +6,7 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/time/clock.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/core/ui/empty_view.dart';
@@ -47,7 +48,7 @@ class _ExternalCalendarsPageState extends ConsumerState<ExternalCalendarsPage> {
     final calendars = ref.watch(externalCalendarsProvider);
     final members = ref.watch(membersProvider).value ?? const <Member>[];
     final canManage = _canManage;
-    final now = DateTime.now();
+    final now = ref.watch(nowProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -315,6 +316,7 @@ class _CalendarCard extends StatelessWidget {
                   ),
                   if (canManage)
                     Semantics(
+                      container: true,
                       label: l10n.extCalActive,
                       child: Switch(
                         value: calendar.active,
@@ -323,7 +325,11 @@ class _CalendarCard extends StatelessWidget {
                     ),
                 ],
               ),
-              if (refreshing) const LinearProgressIndicator(),
+              if (refreshing)
+                Semantics(
+                  container: true,
+                  child: const LinearProgressIndicator(),
+                ),
               if (canManage)
                 Wrap(
                   alignment: WrapAlignment.end,

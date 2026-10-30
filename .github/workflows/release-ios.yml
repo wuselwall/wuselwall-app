@@ -1,10 +1,23 @@
 # Signed iOS builds for TestFlight (specs/16, step 7); release-android.yml is its Android
-# twin. A tag v*.*.* releases; "Run workflow" builds the pubspec version from any branch,
-# for testing the pipeline.
+# twin. Tags and manual runs require passing qualification for that exact commit,
+# followed by approval of the protected release-promotion environment.
 name: release-ios
 on:
   workflow_dispatch:
     inputs:
+      diagnostics_only:
+        description: Read-only native runner diagnostics; skips signing and publishing
+        type: boolean
+        default: false
+      native_smoke_only:
+        description: Capture diagnostic phone smoke evidence; skips qualification and release
+        type: boolean
+        default: false
+      native_smoke_platform:
+        description: Platforms for native_smoke_only
+        type: choice
+        options: [both, ios, android]
+        default: both
       renew_profile:
         description: Renew the App Store profile (once, after a capability changed on the App ID)
         type: boolean
@@ -16,15 +29,169 @@ concurrency:
   cancel-in-progress: false
 permissions:
   contents: read
+  actions: read
+cache-mode: none
 
 jobs:
+  validate_modes:
+    runs-on: [self-hosted, Linux, build]
+    timeout-minutes: 2
+    steps:
+      - name: Reject conflicting diagnostic modes
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          DIAGNOSTICS_ONLY: ${{ inputs.diagnostics_only }}
+          NATIVE_SMOKE_ONLY: ${{ inputs.native_smoke_only }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "$DIAGNOSTICS_ONLY" == true && "$NATIVE_SMOKE_ONLY" == true ]]; then
+            echo 'diagnostics_only and native_smoke_only cannot be selected together.' >&2
+            exit 1
+          fi
+
+  diagnostics:
+    if: github.event_name == 'workflow_dispatch' && inputs.diagnostics_only && !inputs.native_smoke_only
+    needs: validate_modes
+    runs-on: [self-hosted, macOS]
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { ref: '${{ github.sha }}', persist-credentials: false }
+      - name: Load provisioned native tool settings
+        if: vars.QUALIFICATION_TOOLS_ROOT != '' || vars.QUALIFICATION_ANDROID_HOME != '' || vars.QUALIFICATION_IOS_RUNTIME != ''
+        env:
+          QUALIFICATION_TOOLS_ROOT: ${{ vars.QUALIFICATION_TOOLS_ROOT }}
+          ANDROID_HOME: ${{ vars.QUALIFICATION_ANDROID_HOME }}
+          ANDROID_AVD_HOME: ${{ vars.QUALIFICATION_ANDROID_AVD_HOME }}
+          QUALIFICATION_IOS_RUNTIME: ${{ vars.QUALIFICATION_IOS_RUNTIME }}
+          QUALIFICATION_ANDROID_MIN_PHONE_AVD: ${{ vars.QUALIFICATION_ANDROID_MIN_PHONE_AVD }}
+          QUALIFICATION_ANDROID_PHONE_AVD: ${{ vars.QUALIFICATION_ANDROID_PHONE_AVD }}
+          QUALIFICATION_ANDROID_TABLET_AVD: ${{ vars.QUALIFICATION_ANDROID_TABLET_AVD }}
+        run: bash qualification/native/load-tools.sh
+      - name: Inspect installed native tools and execution architecture
+        if: always()
+        env:
+          QUALIFICATION_TOOLS_ROOT: ${{ vars.QUALIFICATION_TOOLS_ROOT }}
+        run: bash qualification/native/preflight.sh
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: native-runner-preflight-${{ github.run_id }}
+          path: build/qualification/native-preflight
+          if-no-files-found: error
+          retention-days: 7
+
+  native_smoke:
+    if: github.event_name == 'workflow_dispatch' && inputs.native_smoke_only && !inputs.diagnostics_only
+    needs: validate_modes
+    runs-on: [self-hosted, macOS]
+    timeout-minutes: 180
+    concurrency:
+      group: native-qualification-devices
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { ref: '${{ github.sha }}', persist-credentials: false }
+      - id: flutter
+        working-directory: app
+        run: |
+          version=$(sed -n 's/^  flutter: *\([0-9][0-9.]*\) *$/\1/p' pubspec.yaml)
+          [ -n "$version" ] || { echo "::error::no environment.flutter version in pubspec.yaml"; exit 1; }
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with: { flutter-version: '${{ steps.flutter.outputs.version }}', cache: false, architecture: arm64 }
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with: { node-version: 22, package-manager-cache: false, architecture: arm64 }
+      - uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        if: inputs.native_smoke_platform != 'ios'
+        with: { distribution: temurin, java-version: '17', architecture: aarch64 }
+      - run: npm ci --include=dev
+      - run: flutter pub get --enforce-lockfile
+        working-directory: app
+      - name: Load provisioned native tools
+        run: bash qualification/native/load-tools.sh diagnostic
+        continue-on-error: true
+        env:
+          QUALIFICATION_TOOLS_ROOT: ${{ vars.QUALIFICATION_TOOLS_ROOT }}
+          ANDROID_HOME: ${{ vars.QUALIFICATION_ANDROID_HOME }}
+          ANDROID_AVD_HOME: ${{ vars.QUALIFICATION_ANDROID_AVD_HOME }}
+          QUALIFICATION_IOS_RUNTIME: ${{ vars.QUALIFICATION_IOS_RUNTIME }}
+          QUALIFICATION_ANDROID_MIN_PHONE_AVD: ${{ vars.QUALIFICATION_ANDROID_MIN_PHONE_AVD }}
+          QUALIFICATION_ANDROID_PHONE_AVD: ${{ vars.QUALIFICATION_ANDROID_PHONE_AVD }}
+          QUALIFICATION_ANDROID_TABLET_AVD: ${{ vars.QUALIFICATION_ANDROID_TABLET_AVD }}
+      - name: Install locked Ruby tools for the iOS XCTest project setup
+        if: inputs.native_smoke_platform != 'android'
+        run: bash qualification/native/ruby-tools.sh
+      - name: Run the selected diagnostic phone profiles
+        env:
+          QUALIFY_CANDIDATE_SHA: ${{ github.sha }}
+          QUALIFY_NATIVE_SMOKE: 'true'
+          QUALIFICATION_IOS_DIAGNOSTIC_RUNTIME_FALLBACK: 'true'
+          QUALIFY_MODE: capture
+          NATIVE_SMOKE_PLATFORM: ${{ inputs.native_smoke_platform }}
+          QUALIFY_NATIVE_PROFILES: ${{ inputs.native_smoke_platform == 'ios' && 'ios-phone' || inputs.native_smoke_platform == 'android' && 'android-phone' || 'ios-phone,android-phone' }}
+          QUALIFICATION_IOS_PHONE_TYPE: ${{ vars.QUALIFICATION_IOS_PHONE_TYPE }}
+          QUALIFICATION_IOS_TABLET_TYPE: ${{ vars.QUALIFICATION_IOS_TABLET_TYPE }}
+        shell: bash
+        run: |
+          set -uo pipefail
+          mkdir -p build/qualification/native
+          rm -rf build/qualification/native/ios-phone build/qualification/native/android-phone
+          : > build/qualification/native/profiles.txt
+          failed=0
+          case "$NATIVE_SMOKE_PLATFORM" in
+            both) profiles=(ios-phone android-phone) ;;
+            ios) profiles=(ios-phone) ;;
+            android) profiles=(android-phone) ;;
+            *) echo 'Unknown native smoke platform.' >&2; exit 1 ;;
+          esac
+          selected=$(IFS=,; echo "${profiles[*]}")
+          [[ "$selected" == "$QUALIFY_NATIVE_PROFILES" ]] || { echo 'Native smoke profile selection differs from its platform.' >&2; exit 1; }
+          for profile in "${profiles[@]}"; do
+            if bash qualification/native.sh "$profile"; then
+              printf '%s: PASS\n' "$profile" >> build/qualification/native/profiles.txt
+            else
+              printf '%s: FAIL\n' "$profile" >> build/qualification/native/profiles.txt
+              failed=1
+            fi
+          done
+          node qualification/native/smoke-report.mjs || failed=1
+          exit "$failed"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: native-smoke-diagnostic-${{ github.sha }}-${{ github.run_attempt }}
+          path: |
+            build/qualification/native
+            build/qualification/native-preflight
+          if-no-files-found: warn
+          retention-days: 7
+
+  qualification:
+    if: (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.diagnostics_only != true && inputs.native_smoke_only != true)) && needs.validate_modes.result != 'failure'
+    needs: validate_modes
+    runs-on: [self-hosted, Linux, build]
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { ref: '${{ github.sha }}', persist-credentials: false }
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with: { node-version: 22, package-manager-cache: false }
+      - run: node qualification/promotion.mjs
+        env: { GH_TOKEN: '${{ github.token }}' }
+
   ios:
+    if: (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.diagnostics_only != true && inputs.native_smoke_only != true)) && needs.qualification.result == 'success'
+    environment: release-promotion
+    needs: qualification
     # Xcode 26: App Store Connect accepts only builds made with the iOS 26 SDK or later,
     # so the self-hosted Mac behind the "macOS" label must have Xcode 26 installed.
     runs-on: [self-hosted, macOS]
     defaults: { run: { working-directory: app } }
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { ref: '${{ github.sha }}', persist-credentials: false }
       # flutter-action reads flutter-version-file with yq, which the Mac does not have, so
       # the version is read from pubspec.yaml here instead.
       - id: flutter
@@ -33,7 +200,7 @@ jobs:
           [ -n "$version" ] || { echo "::error::no environment.flutter version in pubspec.yaml"; exit 1; }
           echo "version=$version" >> "$GITHUB_OUTPUT"
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
-        with: { flutter-version: '${{ steps.flutter.outputs.version }}', cache: true }
+        with: { flutter-version: '${{ steps.flutter.outputs.version }}', cache: false }
       # Exactly the packages in pubspec.lock, checked against their hashes, before the
       # signing secrets come near the build.
       - run: flutter pub get --enforce-lockfile

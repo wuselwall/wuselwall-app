@@ -1,0 +1,363 @@
+// Explicitly selected by candidate qualification; outside default test/ discovery.
+import 'dart:convert';
+import 'dart:io';
+import 'dart:ui' as ui;
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:wuselwall/app/app.dart';
+import 'package:wuselwall/app/router.dart';
+import 'package:wuselwall/core/ui/motion.dart';
+import 'package:wuselwall/demo/demo_clock.dart';
+
+import '../qualification/fixture.dart';
+import '../qualification/inventory.g.dart';
+
+import 'exact_contrast.dart';
+import 'paint_contrast.dart';
+import 'settle.dart';
+
+Future<String> _saveFailureScreenshot(
+  WidgetTester tester,
+  String profile,
+  String caseId,
+  int viewIndex, {
+  required bool multipleViews,
+}) async {
+  final view = tester.binding.renderViews.elementAt(viewIndex);
+  final layer = view.debugLayer;
+  if (layer is! OffsetLayer) {
+    throw StateError('Render view $viewIndex has no OffsetLayer');
+  }
+  final bytes = await tester.binding.runAsync<Uint8List>(() async {
+    ui.Image? image;
+    try {
+      image = await layer.toImage(view.paintBounds);
+      final data = await image.toByteData(format: ui.ImageByteFormat.png);
+      if (data == null) throw StateError('PNG encoding returned no bytes');
+      return data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+    } finally {
+      image?.dispose();
+    }
+  });
+  if (bytes == null) throw StateError('Screenshot capture returned no bytes');
+  final safeCaseId = caseId.replaceAll(RegExp(r'[^A-Za-z0-9._-]'), '_');
+  final viewSuffix = multipleViews ? '-view-$viewIndex' : '';
+  final relativePath =
+      'build/qualification/flutter/$profile/failures/'
+      '$safeCaseId$viewSuffix.png';
+  final file = File('../$relativePath');
+  file.parent.createSync(recursive: true);
+  file.writeAsBytesSync(bytes, flush: true);
+  return relativePath;
+}
+
+void main() {
+  final inventory = jsonDecode(
+    File('../qualification/inventory.json').readAsStringSync(),
+  ) as Map<String, dynamic>;
+  const profile = String.fromEnvironment(
+    'QUALIFY_MATRIX',
+    defaultValue: 'canonical',
+  );
+  if (!['smoke', 'canonical', 'responsive', 'full'].contains(profile)) {
+    throw ArgumentError('Unknown matrix: $profile');
+  }
+  final evidence = <Map<String, Object?>>[];
+  var expected = 0;
+  setUpAll(() async {
+    for (final family in {
+      'AtkinsonHyperlegibleNext': ['Regular', 'SemiBold', 'Bold', 'ExtraBold'],
+      'BarlowSemiCondensed': ['Medium', 'SemiBold', 'Bold'],
+    }.entries) {
+      final loader = FontLoader(family.key);
+      for (final weight in family.value) {
+        loader.addFont(
+          rootBundle.load('assets/fonts/${family.key}-$weight.ttf'),
+        );
+      }
+      await loader.load();
+    }
+    final symbols = FontLoader('NotoSansSymbols')
+      ..addFont(rootBundle.load('assets/fonts/NotoSansSymbols-wght.ttf'));
+    await symbols.load();
+  });
+  tearDownAll(() {
+    final file = File('../build/qualification/flutter/$profile/results.json');
+    file.parent.createSync(recursive: true);
+    file.writeAsStringSync(
+      const JsonEncoder.withIndent('  ').convert({
+        'schema': 1,
+        'matrix': profile,
+        'expected': expected,
+        'executed': evidence.length,
+        'qualification': 'INCOMPLETE',
+        'openGates': inventory['openGates'],
+        'results': evidence,
+      }),
+    );
+  });
+
+  for (final state
+      in (inventory['states'] as List).cast<Map<String, dynamic>>()) {
+    if (profile == 'smoke' &&
+        !['today', 'shopping', 'settings'].contains(state['id'])) {
+      continue;
+    }
+    final primary = state['scenario'] == 'kiosk'
+        ? 1280
+        : state['scenario'] == 'kid'
+        ? 820
+        : 390;
+    final configurations =
+        <({int width, String shade, double scale, String tier})>[];
+    if (profile != 'responsive') {
+      for (final shade
+          in profile == 'smoke'
+              ? ['light']
+              : state['scenario'] == 'kiosk'
+              ? ['light', 'dark', 'night']
+              : ['light', 'dark']) {
+        configurations.add((
+          width: primary,
+          shade: shade,
+          scale: 1,
+          tier: 'canonical',
+        ));
+      }
+    }
+    if (profile == 'responsive' || profile == 'full') {
+      for (final width in (state['widths'] as List).cast<int>()) {
+        for (final scale in [1.0, 2.0]) {
+          configurations.add((
+            width: width,
+            shade: 'light',
+            scale: scale,
+            tier: 'responsive',
+          ));
+        }
+      }
+    }
+    for (final lang
+        in profile == 'smoke'
+            ? ['de']
+            : (inventory['locales'] as List).cast<String>()) {
+      for (final platform in [TargetPlatform.android, TargetPlatform.iOS]) {
+        for (final config in configurations) {
+          expected++;
+          final id =
+              '${state['id']}-$lang-${config.shade}-${config.width}-${config.scale}-${platform.name}-${config.tier}';
+          testWidgets(id, (tester) async {
+            debugDefaultTargetPlatformOverride = platform;
+            tester.view.physicalSize = Size(
+              config.width.toDouble(),
+              config.width == 1920
+                  ? 1080
+                  : state['scenario'] == 'kiosk'
+                  ? 800
+                  : config.width >= 768
+                  ? 1024
+                  : 844,
+            );
+            tester.view.devicePixelRatio = 1;
+            tester.platformDispatcher.localesTestValue = [Locale(lang)];
+            tester.platformDispatcher.platformBrightnessTestValue =
+                config.shade == 'light' ? Brightness.light : Brightness.dark;
+            tester.platformDispatcher.textScaleFactorTestValue = config.scale;
+            tester.platformDispatcher.accessibilityFeaturesTestValue =
+                const FakeAccessibilityFeatures(disableAnimations: true);
+            final handle = tester.ensureSemantics();
+            final findings = <Map<String, Object?>>[];
+            final row = <String, Object?>{
+              'id': id,
+              'status': 'NOT RUN',
+              'findings': findings,
+            };
+            evidence.add(row);
+            try {
+              await tester.pumpWidget(
+                qualificationApp(
+                  stateId: state['id'] as String,
+                  scenario: state['scenario'] as String,
+                  locale: Locale(lang),
+                  shade: config.shade,
+                  tab: state['tab'] as String? ?? 'today',
+                  advanced: state['advanced'] == true,
+                ),
+              );
+              await settleQualification(tester);
+              if (state['route'] != '/') {
+                final container = ProviderScope.containerOf(
+                  tester.element(find.byType(WuselWallApp)),
+                );
+                container.read(routerProvider).go(state['route'] as String);
+                await settleQualification(tester);
+              }
+              expect(
+                find.byWidgetPredicate(
+                  (w) =>
+                      isQualificationDestination(w, state['widget'] as String),
+                ),
+                findsOneWidget,
+                reason:
+                    'The requested destination must be present before auditing',
+              );
+              expect(
+                tester.takeException(),
+                isNull,
+                reason: 'Layout and framework errors fail qualification',
+              );
+              final root = tester
+                  .binding
+                  .renderViews
+                  .first
+                  .owner
+                  ?.semanticsOwner
+                  ?.rootSemanticsNode;
+              expect(
+                root,
+                isNotNull,
+                reason: 'No semantics is missing coverage',
+              );
+              var labeled = 0;
+              void visit(SemanticsNode node) {
+                if (node.label.trim().isNotEmpty) labeled++;
+                node.visitChildren((child) {
+                  visit(child);
+                  return true;
+                });
+              }
+
+              visit(root!);
+              expect(
+                labeled,
+                greaterThanOrEqualTo(state['minimumLabeledNodes'] as int? ?? 3),
+                reason: 'A vacuous audit cannot pass',
+              );
+              row['labeledNodes'] = labeled;
+              // The exact audit: the style's colour over the one painted
+              // background, decided per paragraph; undecided where paint is mixed.
+              final exact = await auditExactContrast(tester);
+              final proven = exact.provenNodes;
+              final superseded = <String>[];
+              row['exactTextContrast'] = {
+                ...exact.toJson(),
+                'superseded': superseded,
+              };
+              for (final entry in {
+                'labels': labeledTapTargetGuideline,
+                'targets': platform == TargetPlatform.iOS
+                    ? iOSTapTargetGuideline
+                    : androidTapTargetGuideline,
+                'textContrast': textContrastGuideline,
+              }.entries) {
+                final result = await entry.value.evaluate(tester);
+                if (entry.key != 'textContrast') {
+                  if (!result.passed) {
+                    findings.add({'rule': entry.key, 'reason': result.reason});
+                  }
+                  continue;
+                }
+                row['sdkTextContrast'] = {
+                  'passed': result.passed,
+                  'reason': result.reason,
+                };
+                if (result.passed) continue;
+                // The SDK estimates both colours from a histogram of the text's
+                // box inflated by 4 px, so a border or tint beside small text
+                // is reported as the text. Where the exact audit proved every
+                // paragraph of the node, that estimate is superseded; it stands
+                // for every other node (exact_contrast.dart).
+                final retained = retainedSdkContrast(
+                  result.reason ?? '',
+                  proven,
+                  superseded: superseded,
+                );
+                if (retained == null) continue;
+                // Under a shader mask (a scrolling row's edge fade) the text
+                // is outside the automated check's scope: listed for review.
+                final review = <String>[];
+                final failing = retainedSdkContrast(
+                  retained,
+                  exact.maskedNodes,
+                  superseded: review,
+                );
+                row['reviewTextContrast'] = review;
+                if (failing != null) {
+                  findings.add({'rule': 'textContrast', 'reason': failing});
+                }
+              }
+              for (final failure in exact.failures) {
+                findings.add({
+                  'rule': 'exactTextContrast',
+                  'reason': failure.describe(),
+                });
+              }
+              final paint = auditPaintContrast(tester);
+              row['paintTextContrast'] = {
+                'mode': 'diagnostic',
+                'sdkOverrideEnabled': false,
+                ...paint.toJson(),
+              };
+              if (paint.failed) {
+                findings.add({
+                  'rule': 'paintTextContrast',
+                  'reason': 'A proven painted foreground/background pair is below the required ratio',
+                });
+              }
+              row['status'] = findings.isEmpty ? 'PASS' : 'FAIL';
+              expect(
+                findings,
+                isEmpty,
+                reason: 'Accessibility findings must be reviewed and fixed, never hidden',
+              );
+            } catch (error) {
+              row['status'] = 'FAIL';
+              row['error'] = error.toString();
+              rethrow;
+            } finally {
+              if (findings.isNotEmpty || row['status'] == 'FAIL') {
+                final paths = <String>[];
+                final errors = <String>[];
+                final multipleViews = tester.binding.renderViews.length > 1;
+                for (
+                  var viewIndex = 0;
+                  viewIndex < tester.binding.renderViews.length;
+                  viewIndex++
+                ) {
+                  try {
+                    paths.add(
+                      await _saveFailureScreenshot(
+                        tester,
+                        profile,
+                        id,
+                        viewIndex,
+                        multipleViews: multipleViews,
+                      ),
+                    );
+                  } on Object catch (error) {
+                    errors.add('view $viewIndex: $error');
+                  }
+                }
+                if (paths.isNotEmpty) row['failureScreenshots'] = paths;
+                if (errors.isNotEmpty) row['failureScreenshotErrors'] = errors;
+              }
+              await tester.pumpWidget(const SizedBox.shrink());
+              await tester.pump();
+              handle.dispose();
+              debugDefaultTargetPlatformOverride = null;
+              tester.view.reset();
+              tester.platformDispatcher.clearAllTestValues();
+              DemoClock.fixedNow = null;
+              StillMode.enabled = false;
+            }
+          });
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+Font: Noto Sans Symbols variable TTF
+Upstream: https://github.com/google/fonts/tree/e7db6ca603fd4862010383ff17ffd6cc4ffac1c0/ofl/notosanssymbols
+Files: NotoSansSymbols[wght].ttf, OFL.txt
+Google Fonts source commit: e7db6ca603fd4862010383ff17ffd6cc4ffac1c0
+Font SHA-256: f7e7e04b4a24b6c78893d50cbfd2b2f6cae49617ab047bfef668d252adb128f7
+License SHA-256: b118dd41337806a5d4797052c77caf3bd096aed783e5eb21b4d11154351e1ac0
+Source family commit (metadata): notofonts/symbols b61fa7f86fb7d4163ee11d46d0977393f98d4f7a

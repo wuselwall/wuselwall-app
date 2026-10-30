@@ -1,4 +1,5 @@
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/demo/demo_clock.dart';
 import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/features/kid/data/kid_badges_repository.dart';
 
@@ -24,7 +25,7 @@ class DemoKidBadgesRepository implements KidBadgesRepository {
       earned: profileId == DemoData.daughter,
       // Earned an hour ago, so the demo shows Wusel proud of it (specs/25).
       awardedAt: profileId == DemoData.daughter
-          ? DateTime.now().subtract(const Duration(hours: 1))
+          ? DemoClock.now().subtract(const Duration(hours: 1))
           : null,
     ),
     KidBadge(

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +9,7 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
+import 'package:wuselwall/core/ui/whole_words_text.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
@@ -722,29 +724,59 @@ class _EditorBodyState extends ConsumerState<_EditorBody> {
           ),
           if (widget.data.subjects.isEmpty) Text(l10n.schoolNoSubjects),
           const SizedBox(height: 8),
-          _Header(days: days, onDayAction: _onDayAction, labelWidth: 84),
-          for (final p in periods)
-            if (p.isBreak)
-              const SizedBox(height: 6)
-            else
-              _Row(
-                label: '${p.index}. · ${context.span(p.starts, p.ends)}',
-                cells: [
-                  for (final d in days)
-                    _CellTile(
-                      weekday: d,
-                      period: p.index,
-                      drafts: [
-                        for (final parity in const ['all', 'a', 'b'])
-                          if (_cells['$d:${p.index}:$parity'] != null)
-                            _cells['$d:${p.index}:$parity']!,
-                      ],
-                      subjectOf: _subjectOf,
-                      onTap: () => _editCell(d, p.index),
-                      onClear: () => _clearCell(d, p.index),
-                    ),
-                ],
-              ),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              // Five readable, tappable day columns scroll on narrow screens.
+              final textScale = MediaQuery.textScalerOf(context).scale(14) / 14;
+              final gridWidth = math.max(
+                constraints.maxWidth,
+                84 + days.length * 120 * textScale,
+              );
+              return SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: SizedBox(
+                  width: gridWidth,
+                  child: Column(
+                    children: [
+                      _Header(
+                        days: days,
+                        onDayAction: _onDayAction,
+                        labelWidth: 84,
+                      ),
+                      for (final p in periods)
+                        if (p.isBreak)
+                          const SizedBox(height: 6)
+                        else
+                          _Row(
+                            label:
+                                '${p.index}. · ${context.span(p.starts, p.ends)}',
+                            cells: [
+                              for (final d in days)
+                                _CellTile(
+                                  weekday: d,
+                                  period: p.index,
+                                  drafts: [
+                                    for (final parity in const [
+                                      'all',
+                                      'a',
+                                      'b',
+                                    ])
+                                      if (_cells['$d:${p.index}:$parity'] !=
+                                          null)
+                                        _cells['$d:${p.index}:$parity']!,
+                                  ],
+                                  subjectOf: _subjectOf,
+                                  onTap: () => _editCell(d, p.index),
+                                  onClear: () => _clearCell(d, p.index),
+                                ),
+                            ],
+                          ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
           const SizedBox(height: 24),
           Text(
             l10n.schoolCareRows,
@@ -855,24 +887,18 @@ class _Row extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.only(bottom: 4),
-    // Cells take the height of the tallest, inside the scrolling list.
-    child: IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          SizedBox(
-            width: 84,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 6, top: 8),
-              child: Text(
-                label,
-                style: Theme.of(context).textTheme.labelMedium,
-              ),
-            ),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 84,
+          child: Padding(
+            padding: const EdgeInsets.only(right: 6, top: 8),
+            child: Text(label, style: Theme.of(context).textTheme.labelMedium),
           ),
-          for (final c in cells) Expanded(child: c),
-        ],
-      ),
+        ),
+        for (final c in cells) Expanded(child: c),
+      ],
     ),
   );
 }
@@ -912,83 +938,98 @@ class _CellTile extends StatelessWidget {
       },
       child: Padding(
         padding: const EdgeInsets.all(2),
-        child: InkWell(
-          key: ValueKey('cell-$weekday-$period'),
-          borderRadius: BorderRadius.circular(8),
-          onTap: onTap,
-          child: Container(
-            constraints: const BoxConstraints(minHeight: 52),
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              border: Border.all(color: ww.line),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Subject and room each on their own line, shrinking rather than
-                // cut: five days share a phone's width ("S…" said nothing).
-                for (final d in drafts)
-                  Tooltip(
-                    message: [
-                      subjectOf(d.subjectId)?.name ?? '—',
-                      ?d.room,
-                    ].join(' · '),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            if (d.parity != 'all')
-                              Text(
-                                d.parity.toUpperCase(),
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w700,
-                                  color: scheme.primary,
+        child: Semantics(
+          container: true,
+          label: drafts.isEmpty
+              ? context.l10n.schoolLessonActions(
+                  context.l10n.schoolAddLesson,
+                  context.weekdayLong(_weekdayDate(weekday)),
+                  context.l10n.boardPeriod(period),
+                )
+              : null,
+          child: InkWell(
+            key: ValueKey('cell-$weekday-$period'),
+            borderRadius: BorderRadius.circular(8),
+            onTap: onTap,
+            child: Container(
+              constraints: const BoxConstraints(minHeight: 52),
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                border: Border.all(color: ww.line),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Keep each subject and room on its own line. The visual label
+                  // scales down as one unit; the tooltip preserves its full name.
+                  for (final d in drafts)
+                    Tooltip(
+                      message: [
+                        subjectOf(d.subjectId)?.name ?? '—',
+                        ?d.room,
+                      ].join(' · '),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              if (d.parity != 'all')
+                                Text(
+                                  d.parity.toUpperCase(),
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w700,
+                                    color: scheme.primary,
+                                  ),
+                                ),
+                              if (d.subjectId != null) ...[
+                                Icon(
+                                  schoolIcon(subjectOf(d.subjectId)?.iconKey),
+                                  size: 14,
+                                ),
+                                const SizedBox(width: 2),
+                              ],
+                              Expanded(
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  alignment: AlignmentDirectional.centerStart,
+                                  child: WholeWordsText(
+                                    subjectOf(d.subjectId)?.shortName ?? '—',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            if (d.subjectId != null) ...[
-                              Icon(
-                                schoolIcon(subjectOf(d.subjectId)?.iconKey),
-                                size: 14,
-                              ),
-                              const SizedBox(width: 2),
                             ],
-                            Expanded(
+                          ),
+                          if (d.room != null)
+                            SizedBox(
+                              width: double.infinity,
                               child: FittedBox(
                                 fit: BoxFit.scaleDown,
                                 alignment: AlignmentDirectional.centerStart,
-                                child: Text(
-                                  subjectOf(d.subjectId)?.shortName ?? '—',
+                                child: WholeWordsText(
+                                  d.room!,
                                   maxLines: 1,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w700,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: ww.ink2,
                                   ),
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                        if (d.room != null)
-                          SizedBox(
-                            width: double.infinity,
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              alignment: AlignmentDirectional.centerStart,
-                              child: Text(
-                                d.room!,
-                                maxLines: 1,
-                                style: TextStyle(fontSize: 11, color: ww.ink2),
-                              ),
-                            ),
-                          ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                if (drafts.isEmpty) const SizedBox(height: 34),
-              ],
+                  if (drafts.isEmpty) const SizedBox(height: 34),
+                ],
+              ),
             ),
           ),
         ),

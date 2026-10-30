@@ -434,7 +434,8 @@ class _Swatch extends StatelessWidget {
     required this.onTap,
   });
 
-  static const size = 44.0;
+  /// 48: the minimum touch target, so the swatches pass the accessibility matrix.
+  static const size = 48.0;
 
   final MemberSwatch swatch;
   final String label;

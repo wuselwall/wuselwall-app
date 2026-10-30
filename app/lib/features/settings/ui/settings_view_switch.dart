@@ -22,8 +22,8 @@ class SettingsViewSwitch extends ConsumerWidget {
             key: const ValueKey('settings-view'),
             label: Text(l10n.settingsViewAdvanced),
             selected: advanced,
-            visualDensity: VisualDensity.compact,
-            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            visualDensity: VisualDensity.standard,
+            materialTapTargetSize: MaterialTapTargetSize.padded,
             onSelected: (on) => ref
                 .read(settingsViewProvider.notifier)
                 .select(on ? SettingsView.advanced : SettingsView.basic),

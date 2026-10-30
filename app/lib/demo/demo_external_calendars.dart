@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart' show TimeOfDay;
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
+import 'package:wuselwall/demo/demo_clock.dart';
 import 'package:wuselwall/demo/demo_data.dart';
 import 'package:wuselwall/features/calendar/data/external_calendars_repository.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
@@ -10,7 +11,7 @@ import 'package:wuselwall/features/calendar/domain/external_calendar.dart';
 /// whole family, and one child's football fixtures. Demo data only (specs/05).
 class DemoExternalCalendarsRepository implements ExternalCalendarsRepository {
   DemoExternalCalendarsRepository({DateTime Function()? clock})
-    : _clock = clock ?? DateTime.now;
+    : _clock = clock ?? DemoClock.now;
 
   final DateTime Function() _clock;
   var _nextId = 1;

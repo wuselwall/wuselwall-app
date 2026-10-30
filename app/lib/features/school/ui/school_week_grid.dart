@@ -22,6 +22,7 @@ const _compactCell = 72.0;
 class SchoolWeekHeader extends StatelessWidget {
   const SchoolWeekHeader({
     required this.dates,
+    this.labelWidth = _labelWidth,
     this.raisedIndex,
     this.onPrevious,
     this.onNext,
@@ -29,6 +30,7 @@ class SchoolWeekHeader extends StatelessWidget {
   });
 
   final List<DateTime> dates;
+  final double labelWidth;
   final int? raisedIndex;
   final VoidCallback? onPrevious;
   final VoidCallback? onNext;
@@ -40,7 +42,7 @@ class SchoolWeekHeader extends StatelessWidget {
     return Row(
       children: [
         SizedBox(
-          width: _labelWidth,
+          width: labelWidth,
           child: onPrevious == null
               ? null
               : Align(
@@ -101,11 +103,15 @@ class SchoolWeekGrid extends StatelessWidget {
     this.nowMinutes,
     this.iconKeyOf,
     this.onLesson,
+    this.labelWidth = _labelWidth,
     this.showHeader = true,
     super.key,
   });
 
   final BoardTimetable timetable;
+
+  /// Width shared with [SchoolWeekHeader]; compact adult layouts need less gutter.
+  final double labelWidth;
 
   /// False when the parent supplies a shared header with week navigation.
   final bool showHeader;
@@ -167,7 +173,7 @@ class SchoolWeekGrid extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               SizedBox(
-                width: _labelWidth,
+                width: labelWidth,
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 4, 6, 4),
                   child: label,
@@ -211,7 +217,11 @@ class SchoolWeekGrid extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (showHeader) ...[
-          SchoolWeekHeader(dates: dates, raisedIndex: raisedIndex),
+          SchoolWeekHeader(
+            dates: dates,
+            raisedIndex: raisedIndex,
+            labelWidth: labelWidth,
+          ),
           const SizedBox(height: 4),
         ],
         for (final p in timetable.periods)
@@ -221,7 +231,7 @@ class SchoolWeekGrid extends StatelessWidget {
               child: Row(
                 children: [
                   SizedBox(
-                    width: _labelWidth,
+                    width: labelWidth,
                     child: Text(
                       l10n.boardBreak,
                       maxLines: 1,
@@ -512,7 +522,10 @@ class _LessonCell extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         onLongPress: onTap,
         onTap: tapOnPress ? onTap : null,
-        child: tile,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 48),
+          child: tile,
+        ),
       ),
     );
   }

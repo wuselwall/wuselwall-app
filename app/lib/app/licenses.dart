@@ -9,6 +9,7 @@ void registerFontLicenses() {
     for (final (package, file) in const [
       ('Atkinson Hyperlegible Next', 'OFL-AtkinsonHyperlegibleNext.txt'),
       ('Barlow Semi Condensed', 'OFL-BarlowSemiCondensed.txt'),
+      ('Noto Sans Symbols', 'OFL-NotoSansSymbols.txt'),
     ]) {
       yield LicenseEntryWithLineBreaks([
         package,

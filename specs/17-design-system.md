@@ -246,7 +246,9 @@ As implemented:
   member's ink. This happens in one `Theme` wrapper in `MaterialApp.builder`, not in
   widgets.
 - Fonts are bundled under `app/assets/fonts/` with their OFL licences, which
-  `registerFontLicenses()` adds to the licence page.
+  `registerFontLicenses()` adds to the licence page. Noto Sans Symbols is the explicit
+  local fallback for symbols such as arrows; missing glyphs must not fetch a font at
+  runtime. Its pinned upstream source and checksums travel beside the font asset.
 - Fluent Emoji is in use for shopping tiles, chores, rewards and badges; subjects still
   use Material icons. Not yet done: Phosphor (it arrives with the first screen that
   needs it), presence painters (M1.3), and the member colour picker (M0.1).

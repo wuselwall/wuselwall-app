@@ -1,6 +1,6 @@
 # 13 — Roadmap
 
-Updated 2026-10-25. One build order, four milestones. This replaces the overlapping
+Updated 2026-10-26. One build order, four milestones. This replaces the overlapping
 M1/M2 and R1–R4 schedules; the old identifiers remain only to keep specification links
 and decisions readable. [16 — Build plan](16-setup-plan.md) describes the next slices;
 [23 — After the Alpha](23-roadmap-after-alpha.md) holds the later candidates and cut lines.
@@ -113,6 +113,14 @@ It has two steps:
    sync, Outlook/iOS feeds, local reminders, native accessibility, offline restart and an
    isolated restore drill. Back up before applying any live migration. Record evidence
    without server identities or secrets.
+   The [candidate accessibility and UI qualification design](accessibility-and-ui-qualification.md)
+   adds a manually triggered whole-app regression matrix and exact-commit promotion gate;
+   the [implemented suite](../qualification/README.md) accounts for all release routes in
+   72 states, with Flutter/web comparisons, native ATF/XCTest adapters and an enforced
+   exact-commit gate for Android, iOS and server publishing. Native runtime validation,
+   resolution of accessibility findings, approved baselines and physical-device acceptance
+   remain open. Automation produces `READY_FOR_REVIEW`; protected human approval is still
+   required before publishing.
 2. **Use it for two weeks, then act on the findings.** Gather feedback directly from the
    household, fix blockers, recalibrate defaults without overwriting overrides, and judge
    Wusel, colour and each ritual against [25](25-wusel.md#how-the-trial-judges-wusel),
