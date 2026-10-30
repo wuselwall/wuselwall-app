@@ -395,7 +395,7 @@ abstract class AppLocalizations {
   /// No description provided for @errSetupTokenInvalid.
   ///
   /// In en, this message translates to:
-  /// **'The setup token is not valid.'**
+  /// **'The setup key is not valid.'**
   String get errSetupTokenInvalid;
 
   /// No description provided for @errSetupClosed.
@@ -6359,19 +6359,19 @@ abstract class AppLocalizations {
   /// No description provided for @householdNewFounderCode.
   ///
   /// In en, this message translates to:
-  /// **'Setup code'**
+  /// **'Setup key'**
   String get householdNewFounderCode;
 
   /// No description provided for @householdNewFounderHelp.
   ///
   /// In en, this message translates to:
-  /// **'Use the setup code shown when your server was installed, or ask the person who runs it. This is not the code from your sign-in email.'**
+  /// **'Use the setup key shown when your server was installed, or ask the person who runs it. This is not the code from your sign-in email.'**
   String get householdNewFounderHelp;
 
   /// No description provided for @householdNewCodeSaved.
   ///
   /// In en, this message translates to:
-  /// **'Setup code saved from your setup link. You do not need to enter it again.'**
+  /// **'Setup key saved from your setup link. You do not need to enter it again.'**
   String get householdNewCodeSaved;
 
   /// No description provided for @householdSeedExamples.
@@ -6413,13 +6413,13 @@ abstract class AppLocalizations {
   /// No description provided for @householdNewErrNoCode.
   ///
   /// In en, this message translates to:
-  /// **'This server needs a setup code to create a family. Use the code from the server installation, not your email code.'**
+  /// **'This server needs a setup key to create a family. Use the key from the server installation, not your email code.'**
   String get householdNewErrNoCode;
 
   /// No description provided for @householdNewErrCodeWrong.
   ///
   /// In en, this message translates to:
-  /// **'This setup code is invalid or has already been used. Ask the person who runs your server for a new setup link or code.'**
+  /// **'This setup key is invalid or has already been used. Ask the person who runs your server for a new setup link or key.'**
   String get householdNewErrCodeWrong;
 
   /// No description provided for @householdNewErrRateLimited.
@@ -6433,6 +6433,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This is taking longer than usual. Please wait, or sign out and sign in again. Do not create the family a second time.'**
   String get householdNewStalled;
+
+  /// No description provided for @claimTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up your server'**
+  String get claimTitle;
+
+  /// No description provided for @claimLead.
+  ///
+  /// In en, this message translates to:
+  /// **'{host} has no family yet. The setup key from its installation lets you found it. Enter the email address that becomes the first guardian account.'**
+  String claimLead(String host);
+
+  /// No description provided for @claimHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Setting up {host}'**
+  String claimHeader(String host);
+
+  /// No description provided for @claimKeyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Setup key'**
+  String get claimKeyLabel;
+
+  /// No description provided for @claimKeyHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'From the server installation: the setup link or QR code carries it. Otherwise ask the person who runs your server.'**
+  String get claimKeyHelp;
+
+  /// No description provided for @claimChecking.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking the setup key…'**
+  String get claimChecking;
+
+  /// No description provided for @claimKeyReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Setup key accepted. The server is waiting for its family.'**
+  String get claimKeyReady;
+
+  /// No description provided for @claimKeyUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'This setup key has already been used. Ask the person who runs your server for a new one, or sign in if the family already exists.'**
+  String get claimKeyUsed;
+
+  /// No description provided for @claimKeyInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'This setup key is not valid.'**
+  String get claimKeyInvalid;
+
+  /// No description provided for @claimNextCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Next: a code from your email, then your family.'**
+  String get claimNextCode;
+
+  /// No description provided for @claimNextPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Next: a password for your account, then your family.'**
+  String get claimNextPassword;
+
+  /// No description provided for @claimHaveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'I already have an account'**
+  String get claimHaveAccount;
+
+  /// No description provided for @doorUnclaimedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'This server has no family yet'**
+  String get doorUnclaimedTitle;
+
+  /// No description provided for @doorUnclaimedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Whoever installed it has the setup key. With it you found the family; afterwards, others join by invitation.'**
+  String get doorUnclaimedBody;
+
+  /// No description provided for @doorUnclaimedAction.
+  ///
+  /// In en, this message translates to:
+  /// **'I have the setup key'**
+  String get doorUnclaimedAction;
+
+  /// No description provided for @errSetupKeyRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'This server has no family yet. Only the setup key from its installation can create the first account.'**
+  String get errSetupKeyRequired;
 
   /// No description provided for @setupPrivacy.
   ///

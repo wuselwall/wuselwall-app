@@ -14,7 +14,7 @@
 #
 #   ssh root@<ip> cat /srv/wuselwall/install.log
 #
-# It shows the server address, the setup link with its QR code and the one-time setup code.
+# It shows the server address, the setup link with its QR code and the one-time setup key.
 # Then copy /srv/wuselwall/stack/.env into your password manager (docs/server/home-server).
 # Nothing in this file is secret: every key is generated on the server.
 package_update: true
@@ -53,7 +53,7 @@ write_files:
       mkdir -p /srv && cd /srv
       curl -fsSL "https://github.com/wuselwall/wuselwall-app/releases/download/server-v$WW_VERSION/wuselwall-server-$WW_VERSION.tar.gz" | tar xz
       cd /srv/wuselwall
-      # The log holds the setup code: readable by root only.
+      # The log holds the setup key: readable by root only.
       umask 077
       ./wuselwall install --api "$WW_API" --web "$WW_WEB" --language "$WW_LANGUAGE" --caddy > install.log 2>&1
 

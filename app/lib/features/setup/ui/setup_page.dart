@@ -10,6 +10,7 @@ import 'package:wuselwall/core/connectivity/connectivity_provider.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/legal/legal_links.dart';
 import 'package:wuselwall/core/server/server_address.dart';
+import 'package:wuselwall/core/server/server_providers.dart';
 import 'package:wuselwall/core/server/setup_store.dart';
 import 'package:wuselwall/core/ui/qr_code_view.dart';
 
@@ -40,6 +41,9 @@ class _SetupPageState extends ConsumerState<SetupPage> {
     final theme = Theme.of(context);
     final online = ref.watch(connectivityProvider).value ?? true;
     final session = ref.watch(serverSessionProvider);
+    // A server without a family (specs/20 "Claiming the server"): the way in is the
+    // setup key, and the server refuses every other sign-up.
+    final unclaimed = ref.watch(serverUnclaimedProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -81,6 +85,43 @@ class _SetupPageState extends ConsumerState<SetupPage> {
                   ),
                 ],
                 const SizedBox(height: Tokens.space6),
+                if (unclaimed) ...[
+                  Container(
+                    padding: const EdgeInsets.all(Tokens.space4),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.primaryContainer,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.doorUnclaimedTitle,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            color: theme.colorScheme.onPrimaryContainer,
+                          ),
+                        ),
+                        const SizedBox(height: Tokens.space2),
+                        Text(
+                          l10n.doorUnclaimedBody,
+                          style: TextStyle(
+                            color: theme.colorScheme.onPrimaryContainer,
+                          ),
+                        ),
+                        const SizedBox(height: Tokens.space3),
+                        FilledButton.icon(
+                          key: const ValueKey('door-claim'),
+                          onPressed: !online
+                              ? null
+                              : () => context.go(Routes.claim),
+                          icon: const Icon(Icons.key_outlined),
+                          label: Text(l10n.doorUnclaimedAction),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: Tokens.space4),
+                ],
                 // One primary action, then the other ways in as equal rows (specs/20,
                 // "The front door").
                 // E1: the address, then a code by e-mail (E2, E3).

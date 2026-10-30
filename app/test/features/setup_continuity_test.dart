@@ -14,7 +14,7 @@ void main() {
   const token = '0123456789abcdef01234567';
   final server = Uri.parse('http://localhost');
   setUp(() => FlutterSecureStorage.setMockInitialValues({}));
-  testWidgets('pending setup skips front door and survives email restart', (
+  testWidgets('pending setup opens the claim instead of the front door', (
     t,
   ) async {
     final store = SetupStore();
@@ -31,13 +31,13 @@ void main() {
       ],
     );
     final router = container.read(routerProvider);
-    expect(router.routeInformationProvider.value.uri.path, Routes.signIn);
+    expect(router.routeInformationProvider.value.uri.path, Routes.claim);
     router.go(Routes.setup);
     await t.pumpAndSettle();
-    expect(router.routeInformationProvider.value.uri.path, Routes.signIn);
+    expect(router.routeInformationProvider.value.uri.path, Routes.claim);
     expect(await store.read(server), token);
   });
-  testWidgets('explicit back from email entry cancels setup capability', (
+  testWidgets('explicit back from the claim keeps the key for later', (
     t,
   ) async {
     final store = SetupStore();
@@ -59,7 +59,8 @@ void main() {
       container.read(routerProvider).routeInformationProvider.value.uri.path,
       Routes.setup,
     );
-    expect(await store.read(server), isNull);
+    // Nobody types a 24-character key by hand: it waits for the claim or "Neue Familie".
+    expect(await store.read(server), token);
   });
   testWidgets('saved capability is hidden, submitted and consumed on success', (
     t,

@@ -55,7 +55,7 @@
   "enrolBody": "Introduce el código que aparece en un dispositivo que ya esté conectado.",
   "enrolCodeLabel": "Código de vinculación",
   "enrolAction": "Conectar",
-  "errSetupTokenInvalid": "El código de configuración no es válido.",
+  "errSetupTokenInvalid": "La clave de configuración no es válida.",
   "errSetupClosed": "Este sistema ya está conectado.",
   "errPasswordTooShort": "La contraseña debe tener al menos 10 caracteres.",
   "errPinFormat": "El PIN debe tener exactamente 6 dígitos.",
@@ -2037,19 +2037,49 @@
   "householdLanguageEn": "Inglés",
   "householdLanguageFr": "Francés",
   "householdLanguageEs": "Español",
-  "householdNewFounderCode": "Código de configuración",
-  "householdNewFounderHelp": "Usa el código de configuración que apareció al instalar el servidor o pídeselo a quien lo administra. No es el código del correo de inicio de sesión.",
-  "householdNewCodeSaved": "Se ha guardado el código de tu enlace de configuración. No necesitas volver a introducirlo.",
+  "householdNewFounderCode": "Clave de configuración",
+  "householdNewFounderHelp": "Usa la clave de configuración que apareció al instalar el servidor o pídesela a quien lo administra. No es el código del correo de inicio de sesión.",
+  "householdNewCodeSaved": "Se ha guardado la clave de tu enlace de configuración. No necesitas volver a introducirla.",
   "householdSeedExamples": "Empezar con ejemplos: 5 tareas y 3 recompensas",
   "householdNewCreate": "Crear familia",
   "householdNewCreating": "Creando la familia…",
   "householdNewInvited": "Tengo una invitación",
   "householdInvitedNote": "Las invitaciones llegarán con la próxima actualización.",
   "householdNewSignOut": "Cerrar sesión",
-  "householdNewErrNoCode": "Este servidor necesita un código de configuración para crear una familia. Usa el código de la instalación del servidor, no el del correo.",
-  "householdNewErrCodeWrong": "El código de configuración no es válido o ya se ha usado. Pide un nuevo enlace o código de configuración a quien administra vuestro servidor.",
+  "householdNewErrNoCode": "Este servidor necesita una clave de configuración para crear una familia. Usa la clave de la instalación del servidor, no la del correo.",
+  "householdNewErrCodeWrong": "La clave de configuración no es válida o ya se ha usado. Pide un nuevo enlace o clave de configuración a quien administra vuestro servidor.",
   "householdNewErrRateLimited": "Demasiados intentos. Espera unos minutos e inténtalo de nuevo.",
   "householdNewStalled": "Esto está tardando más de lo habitual. Espera o cierra sesión y vuelve a iniciarla. No crees la familia por segunda vez.",
+  "claimTitle": "Configurar tu servidor",
+  "claimLead": "{host} aún no tiene familia. Con la clave de configuración de su instalación la fundas tú. Introduce la dirección de correo que será la primera cuenta de la familia.",
+  "@claimLead": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "claimHeader": "Configurando {host}",
+  "@claimHeader": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "claimKeyLabel": "Clave de configuración",
+  "claimKeyHelp": "Viene de la instalación del servidor: el enlace o el código QR de configuración la incluye. Si no, pídesela a quien administra vuestro servidor.",
+  "claimChecking": "Comprobando la clave de configuración…",
+  "claimKeyReady": "Clave de configuración aceptada. El servidor espera a su familia.",
+  "claimKeyUsed": "Esta clave de configuración ya se ha usado. Pide una nueva a quien administra vuestro servidor o inicia sesión si la familia ya existe.",
+  "claimKeyInvalid": "Esta clave de configuración no es válida.",
+  "claimNextCode": "Después: un código de tu correo y luego vuestra familia.",
+  "claimNextPassword": "Después: una contraseña para tu cuenta y luego vuestra familia.",
+  "claimHaveAccount": "Ya tengo una cuenta",
+  "doorUnclaimedTitle": "Este servidor aún no tiene familia",
+  "doorUnclaimedBody": "Quien lo instaló tiene la clave de configuración. Con ella se funda la familia; los demás se unen después por invitación.",
+  "doorUnclaimedAction": "Tengo la clave de configuración",
+  "errSetupKeyRequired": "Este servidor aún no tiene familia. Solo la clave de configuración de su instalación puede crear la primera cuenta.",
   "setupPrivacy": "Política de privacidad",
   "householdMembersTitle": "¿Quién más forma parte de tu familia?",
   "householdMembersYou": "{name} (tú)",

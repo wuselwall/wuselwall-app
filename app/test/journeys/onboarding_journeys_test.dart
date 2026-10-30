@@ -186,7 +186,7 @@ void main() {
         // H1 arrives with everything filled in: no field is empty, no code is asked.
         expect(find.text('Neue Familie'), findsOneWidget);
         expect(
-          find.widgetWithText(TextFormField, 'Einrichtungscode'),
+          find.widgetWithText(TextFormField, 'Einrichtungsschlüssel'),
           findsNothing,
         );
         final fields = t.widgetList<EditableText>(find.byType(EditableText));

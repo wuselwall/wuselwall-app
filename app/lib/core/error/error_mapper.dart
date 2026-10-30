@@ -39,8 +39,18 @@ Failure mapError(Object error, [StackTrace? stackTrace]) {
 /// example `signup_disabled`) in [AuthException.statusCode]; the specific one wins.
 String? _authCode(AuthException e) {
   final status = e.statusCode;
-  return status != null && int.tryParse(status) == null ? status : e.code;
+  if (status != null && int.tryParse(status) == null) return status;
+  // A refusal by the server's Before User Created hook (specs/20 "Claiming the server")
+  // arrives with the code `unknown` and the hook's message as the text: that message is
+  // the stable code (`setup_key_required`).
+  if ((e.code == null || e.code == 'unknown') &&
+      _codeLike.hasMatch(e.message)) {
+    return e.message;
+  }
+  return e.code;
 }
+
+final _codeLike = RegExp(r'^[a-z][a-z0-9_]{2,40}$');
 
 Failure _fromPostgrest(PostgrestException e) {
   final code = e.code ?? '';

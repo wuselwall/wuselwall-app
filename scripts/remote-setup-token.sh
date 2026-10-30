@@ -53,7 +53,7 @@ SQL
 [ "$out" = "ok" ] || { echo "$out" >&2; exit 1; }
 
 if [ "$mode" = first ]; then
-  echo "Setup token (shown once, enter it in the app): $token"
+  echo "Setup key (shown once; the app asks for it under \"I have the setup key\"): $token"
 else
   echo "Founder code (shown once, enter it in the app to start a household): $token"
 fi

@@ -160,7 +160,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enrolAction => 'Connect';
 
   @override
-  String get errSetupTokenInvalid => 'The setup token is not valid.';
+  String get errSetupTokenInvalid => 'The setup key is not valid.';
 
   @override
   String get errSetupClosed => 'This system is already connected.';
@@ -3678,15 +3678,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get householdLanguageEs => 'Spanish';
 
   @override
-  String get householdNewFounderCode => 'Setup code';
+  String get householdNewFounderCode => 'Setup key';
 
   @override
   String get householdNewFounderHelp =>
-      'Use the setup code shown when your server was installed, or ask the person who runs it. This is not the code from your sign-in email.';
+      'Use the setup key shown when your server was installed, or ask the person who runs it. This is not the code from your sign-in email.';
 
   @override
   String get householdNewCodeSaved =>
-      'Setup code saved from your setup link. You do not need to enter it again.';
+      'Setup key saved from your setup link. You do not need to enter it again.';
 
   @override
   String get householdSeedExamples =>
@@ -3709,11 +3709,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get householdNewErrNoCode =>
-      'This server needs a setup code to create a family. Use the code from the server installation, not your email code.';
+      'This server needs a setup key to create a family. Use the key from the server installation, not your email code.';
 
   @override
   String get householdNewErrCodeWrong =>
-      'This setup code is invalid or has already been used. Ask the person who runs your server for a new setup link or code.';
+      'This setup key is invalid or has already been used. Ask the person who runs your server for a new setup link or key.';
 
   @override
   String get householdNewErrRateLimited =>
@@ -3722,6 +3722,64 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get householdNewStalled =>
       'This is taking longer than usual. Please wait, or sign out and sign in again. Do not create the family a second time.';
+
+  @override
+  String get claimTitle => 'Set up your server';
+
+  @override
+  String claimLead(String host) {
+    return '$host has no family yet. The setup key from its installation lets you found it. Enter the email address that becomes the first guardian account.';
+  }
+
+  @override
+  String claimHeader(String host) {
+    return 'Setting up $host';
+  }
+
+  @override
+  String get claimKeyLabel => 'Setup key';
+
+  @override
+  String get claimKeyHelp =>
+      'From the server installation: the setup link or QR code carries it. Otherwise ask the person who runs your server.';
+
+  @override
+  String get claimChecking => 'Checking the setup key…';
+
+  @override
+  String get claimKeyReady =>
+      'Setup key accepted. The server is waiting for its family.';
+
+  @override
+  String get claimKeyUsed =>
+      'This setup key has already been used. Ask the person who runs your server for a new one, or sign in if the family already exists.';
+
+  @override
+  String get claimKeyInvalid => 'This setup key is not valid.';
+
+  @override
+  String get claimNextCode => 'Next: a code from your email, then your family.';
+
+  @override
+  String get claimNextPassword =>
+      'Next: a password for your account, then your family.';
+
+  @override
+  String get claimHaveAccount => 'I already have an account';
+
+  @override
+  String get doorUnclaimedTitle => 'This server has no family yet';
+
+  @override
+  String get doorUnclaimedBody =>
+      'Whoever installed it has the setup key. With it you found the family; afterwards, others join by invitation.';
+
+  @override
+  String get doorUnclaimedAction => 'I have the setup key';
+
+  @override
+  String get errSetupKeyRequired =>
+      'This server has no family yet. Only the setup key from its installation can create the first account.';
 
   @override
   String get setupPrivacy => 'Privacy policy';

@@ -55,7 +55,7 @@
   "enrolBody": "Saisis le code affiché sur un appareil déjà connecté.",
   "enrolCodeLabel": "Code de connexion de l’appareil",
   "enrolAction": "Connecter",
-  "errSetupTokenInvalid": "Le jeton de configuration n’est pas valide.",
+  "errSetupTokenInvalid": "La clé de configuration n’est pas valide.",
   "errSetupClosed": "Ce système est déjà configuré.",
   "errPasswordTooShort": "Le mot de passe doit contenir au moins 10 caractères.",
   "errPinFormat": "Le code PIN doit contenir exactement 6 chiffres.",
@@ -2037,19 +2037,49 @@
   "householdLanguageEn": "Anglais",
   "householdLanguageFr": "Français",
   "householdLanguageEs": "Espagnol",
-  "householdNewFounderCode": "Code de configuration",
-  "householdNewFounderHelp": "Utilise le code de configuration affiché lors de l’installation du serveur ou demande-le à la personne qui le gère. Ce n’est pas le code de ton e-mail de connexion.",
-  "householdNewCodeSaved": "Le code de configuration de ton lien de configuration a été enregistré. Tu n’as pas besoin de le saisir à nouveau.",
+  "householdNewFounderCode": "Clé de configuration",
+  "householdNewFounderHelp": "Utilise la clé de configuration affichée lors de l’installation du serveur ou demande-la à la personne qui le gère. Ce n’est pas le code de ton e-mail de connexion.",
+  "householdNewCodeSaved": "La clé de configuration de ton lien de configuration a été enregistrée. Tu n’as pas besoin de la saisir à nouveau.",
   "householdSeedExamples": "Commencer avec des exemples — 5 tâches, 3 récompenses",
   "householdNewCreate": "Créer la famille",
   "householdNewCreating": "Création de la famille…",
   "householdNewInvited": "J’ai reçu une invitation",
   "householdInvitedNote": "Les invitations arriveront avec la prochaine mise à jour.",
   "householdNewSignOut": "Se déconnecter",
-  "householdNewErrNoCode": "Ce serveur demande un code de configuration pour créer une famille. Utilise le code fourni à l’installation du serveur, pas celui reçu par e-mail.",
-  "householdNewErrCodeWrong": "Ce code de configuration n’est pas valide ou a déjà été utilisé. Demande un nouveau lien ou code de configuration à la personne qui gère votre serveur.",
+  "householdNewErrNoCode": "Ce serveur demande une clé de configuration pour créer une famille. Utilise la clé fournie à l’installation du serveur, pas le code reçu par e-mail.",
+  "householdNewErrCodeWrong": "Cette clé de configuration n’est pas valide ou a déjà été utilisée. Demande un nouveau lien ou une nouvelle clé de configuration à la personne qui gère votre serveur.",
   "householdNewErrRateLimited": "Trop de tentatives. Patiente quelques minutes et réessaie.",
   "householdNewStalled": "Cela prend plus de temps que d’habitude. Patiente un peu ou déconnecte-toi puis reconnecte-toi. Ne crée pas la famille une deuxième fois.",
+  "claimTitle": "Configurer ton serveur",
+  "claimLead": "{host} n’a pas encore de famille. La clé de configuration de son installation te permet de la fonder. Saisis l’adresse e-mail qui deviendra le premier compte parent.",
+  "@claimLead": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "claimHeader": "Configuration de {host}",
+  "@claimHeader": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "claimKeyLabel": "Clé de configuration",
+  "claimKeyHelp": "Elle vient de l’installation du serveur : le lien ou le QR code de configuration la contient. Sinon, demande-la à la personne qui gère votre serveur.",
+  "claimChecking": "Vérification de la clé de configuration…",
+  "claimKeyReady": "Clé de configuration acceptée. Le serveur attend sa famille.",
+  "claimKeyUsed": "Cette clé de configuration a déjà été utilisée. Demande-en une nouvelle à la personne qui gère votre serveur, ou connecte-toi si la famille existe déjà.",
+  "claimKeyInvalid": "Cette clé de configuration n’est pas valide.",
+  "claimNextCode": "Ensuite : un code reçu par e-mail, puis votre famille.",
+  "claimNextPassword": "Ensuite : un mot de passe pour ton compte, puis votre famille.",
+  "claimHaveAccount": "J’ai déjà un compte",
+  "doorUnclaimedTitle": "Ce serveur n’a pas encore de famille",
+  "doorUnclaimedBody": "La personne qui l’a installé possède la clé de configuration. Elle permet de fonder la famille ; les autres rejoignent ensuite sur invitation.",
+  "doorUnclaimedAction": "J’ai la clé de configuration",
+  "errSetupKeyRequired": "Ce serveur n’a pas encore de famille. Seule la clé de configuration de son installation peut créer le premier compte.",
   "setupPrivacy": "Politique de confidentialité",
   "householdMembersTitle": "Qui d’autre fait partie de ta famille ?",
   "householdMembersYou": "{name} (toi)",

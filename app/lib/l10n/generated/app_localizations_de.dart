@@ -161,7 +161,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get enrolAction => 'Verbinden';
 
   @override
-  String get errSetupTokenInvalid => 'Das Einrichtungs-Token ist ungültig.';
+  String get errSetupTokenInvalid => 'Der Einrichtungsschlüssel ist ungültig.';
 
   @override
   String get errSetupClosed => 'Dieses System ist bereits eingerichtet.';
@@ -3706,15 +3706,15 @@ class AppLocalizationsDe extends AppLocalizations {
   String get householdLanguageEs => 'Spanisch';
 
   @override
-  String get householdNewFounderCode => 'Einrichtungscode';
+  String get householdNewFounderCode => 'Einrichtungsschlüssel';
 
   @override
   String get householdNewFounderHelp =>
-      'Nimm den Einrichtungscode aus der Serverinstallation oder frage die Person, die euren Server betreibt. Das ist nicht der Code aus deiner Anmelde-E-Mail.';
+      'Nimm den Einrichtungsschlüssel aus der Serverinstallation oder frage die Person, die euren Server betreibt. Das ist nicht der Code aus deiner Anmelde-E-Mail.';
 
   @override
   String get householdNewCodeSaved =>
-      'Einrichtungscode aus deinem Einrichtungslink gespeichert. Du musst ihn nicht erneut eingeben.';
+      'Einrichtungsschlüssel aus deinem Einrichtungslink gespeichert. Du musst ihn nicht erneut eingeben.';
 
   @override
   String get householdSeedExamples =>
@@ -3738,11 +3738,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get householdNewErrNoCode =>
-      'Dieser Server braucht einen Einrichtungscode, um eine Familie anzulegen. Nimm den Code aus der Serverinstallation, nicht den E-Mail-Code.';
+      'Dieser Server braucht einen Einrichtungsschlüssel, um eine Familie anzulegen. Nimm den Schlüssel aus der Serverinstallation, nicht den E-Mail-Code.';
 
   @override
   String get householdNewErrCodeWrong =>
-      'Dieser Einrichtungscode ist ungültig oder wurde schon verwendet. Bitte die Person, die euren Server betreibt, um einen neuen Einrichtungslink oder Code.';
+      'Dieser Einrichtungsschlüssel ist ungültig oder wurde schon verwendet. Bitte die Person, die euren Server betreibt, um einen neuen Einrichtungslink oder Schlüssel.';
 
   @override
   String get householdNewErrRateLimited =>
@@ -3751,6 +3751,65 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get householdNewStalled =>
       'Das dauert länger als üblich. Bitte warte kurz oder melde dich ab und wieder an. Die Familie bitte nicht noch einmal anlegen.';
+
+  @override
+  String get claimTitle => 'Server einrichten';
+
+  @override
+  String claimLead(String host) {
+    return '$host hat noch keine Familie. Mit dem Einrichtungsschlüssel aus der Installation gründest du sie. Gib die E-Mail-Adresse ein, die das erste Elternkonto wird.';
+  }
+
+  @override
+  String claimHeader(String host) {
+    return '$host wird eingerichtet';
+  }
+
+  @override
+  String get claimKeyLabel => 'Einrichtungsschlüssel';
+
+  @override
+  String get claimKeyHelp =>
+      'Aus der Serverinstallation: der Einrichtungslink oder QR-Code enthält ihn. Sonst frage die Person, die euren Server betreibt.';
+
+  @override
+  String get claimChecking => 'Einrichtungsschlüssel wird geprüft …';
+
+  @override
+  String get claimKeyReady =>
+      'Einrichtungsschlüssel angenommen. Der Server wartet auf seine Familie.';
+
+  @override
+  String get claimKeyUsed =>
+      'Dieser Einrichtungsschlüssel wurde schon verwendet. Bitte die Person, die euren Server betreibt, um einen neuen – oder melde dich an, wenn es die Familie schon gibt.';
+
+  @override
+  String get claimKeyInvalid => 'Dieser Einrichtungsschlüssel ist ungültig.';
+
+  @override
+  String get claimNextCode =>
+      'Danach: ein Code aus deiner E-Mail, dann eure Familie.';
+
+  @override
+  String get claimNextPassword =>
+      'Danach: ein Passwort für dein Konto, dann eure Familie.';
+
+  @override
+  String get claimHaveAccount => 'Ich habe schon ein Konto';
+
+  @override
+  String get doorUnclaimedTitle => 'Dieser Server hat noch keine Familie';
+
+  @override
+  String get doorUnclaimedBody =>
+      'Wer ihn installiert hat, hat den Einrichtungsschlüssel. Damit gründest du die Familie; alle anderen kommen danach per Einladung dazu.';
+
+  @override
+  String get doorUnclaimedAction => 'Ich habe den Einrichtungsschlüssel';
+
+  @override
+  String get errSetupKeyRequired =>
+      'Dieser Server hat noch keine Familie. Nur mit dem Einrichtungsschlüssel aus der Installation entsteht das erste Konto.';
 
   @override
   String get setupPrivacy => 'Datenschutz';

@@ -45,7 +45,7 @@ This guide shows Hetzner because its console has a plain field for cloud-config;
    ssh root@<ip> cat /srv/wuselwall/install.log
    ```
 
-   It shows the server address, the setup link with its QR code and the one-time setup code. Copy `/srv/wuselwall/stack/.env` into your password manager right away ([why](/en/server/home-server#_1-installing)).
+   It shows the server address, the setup link with its QR code and the one-time setup key. Copy `/srv/wuselwall/stack/.env` into your password manager right away ([why](/en/server/home-server#_1-installing)).
 6. **Continue as at home:** [connect the app](/en/server/home-server#_2-connecting-the-app) and set up the [backup](/en/server/home-server#_3-backups), plus an [off-site backup](/en/server/extras#off-site-backup) from the start, because a rented server has one disk. Hetzner's own backups (about 20 % extra) snapshot the whole disk and are a good addition, but they do not replace WuselWall's backup.
 
 At other providers the field is called **User data**, **Cloud-init** or **Startup script**; the steps are the same.

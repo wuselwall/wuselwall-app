@@ -15,6 +15,7 @@ extension FailureL10n on Failure {
   String message(AppLocalizations l10n) {
     final byCode = switch (code) {
       'setup_token_invalid' => l10n.errSetupTokenInvalid,
+      'setup_key_required' => l10n.errSetupKeyRequired,
       'setup_closed' => l10n.errSetupClosed,
       'password_too_short' => l10n.errPasswordTooShort,
       'pin_format' => l10n.errPinFormat,

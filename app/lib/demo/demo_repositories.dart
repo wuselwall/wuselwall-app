@@ -1797,6 +1797,13 @@ class DemoHouseholdOnboardingRepository
 
   final bool hasHousehold;
 
+  /// The demo server is claimed: any key counts, nothing is announced.
+  @override
+  Future<Result<ClaimOutcome>> claim({
+    required String key,
+    String? email,
+  }) async => Ok(ClaimAccepted(claimed: email != null, serverClaimed: true));
+
   @override
   Future<Result<Account>> account() async => Ok(
     hasHousehold

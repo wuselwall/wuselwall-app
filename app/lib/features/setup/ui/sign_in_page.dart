@@ -14,7 +14,6 @@ import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/server/server_providers.dart';
-import 'package:wuselwall/core/server/setup_store.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/setup/ui/auth_form_scaffold.dart';
@@ -51,11 +50,10 @@ class _SignInPageState extends ConsumerState<SignInPage> {
     super.dispose();
   }
 
-  /// Mails the code and goes to E2. Also the way out of a wrong password.
+  /// Back to the front door. A setup key the link brought stays on the device: the claim
+  /// (S1) and "Neue Familie" still find it, and nobody types it again by hand.
   Future<void> _cancelSetup() async {
-    final session = ref.read(serverSessionProvider);
-    await ref.read(setupStoreProvider).clear();
-    session.setupPending.value = false;
+    ref.read(serverSessionProvider).setupPending.value = false;
     if (mounted) context.go(Routes.setup);
   }
 

@@ -173,6 +173,22 @@ void main() {
       expect(back.toJson(), s.toJson());
     });
 
+    test('reads whether the server has a family yet', () {
+      final origin = Uri.parse('https://api.example.org');
+      ServerInfo read(Map<String, Object?> extra) =>
+          ServerInfo.fromDiscovery({...doc(), ...extra}, origin: origin);
+      expect(read({'claimed': false}).claimed, isFalse);
+      expect(read({'claimed': true}).claimed, isTrue);
+      // Servers from before the claim do not say: the app treats them as claimed.
+      expect(read({}).claimed, isNull);
+      expect(read({'claimed': 'no'}).claimed, isNull);
+      final kept = ServerInfo.fromDiscovery(
+        jsonDecode(jsonEncode(read({'claimed': false}).toJson())),
+        origin: origin,
+      );
+      expect(kept.claimed, isFalse, reason: 'the stored copy keeps it');
+    });
+
     test('reads whether the server mails sign-in codes (Q48)', () {
       final origin = Uri.parse('https://api.example.org');
       ServerInfo read(Object? signIn) => ServerInfo.fromDiscovery({

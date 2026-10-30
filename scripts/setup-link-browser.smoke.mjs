@@ -30,6 +30,8 @@ try{
   const url=route.request().url();
   if(url.includes('wuselwall.json')||url.includes('server-info'))return route.fulfill({json:{wuselwall:1,supabase_url:'https://api.example.org',publishable_key:'sb_publishable_browser_probe_only',api_version:1,min_app_version:'0.0.0',household_creation:'code',features:[]}});
   if(url.includes('/auth/v1/otp'))return route.fulfill({json:{}});
+  // The claim (specs/20 "Claiming the server"): the key checks out, an address claims.
+  if(url.includes('/rpc/setup_claim'))return route.fulfill({json:{ok:true,claimed:false,server_claimed:false,household_creation:'code'}});
   return route.fulfill({status:401,json:{message:'Browser probe has no authenticated session'}});
  });
  const token='0123456789abcdef01234567';
@@ -43,12 +45,13 @@ try{
  await page.getByRole('textbox').first().waitFor({timeout:30000});
  console.log('Initial text:',(await page.locator('body').innerText()).slice(-1800));
  assert.ok(!page.url().includes(token),'capability remains in browser URL');
- assert.match(await page.locator('body').innerText(),/I have a password/,'expected direct email entry');
+ assert.match(await page.locator('body').innerText(),/Set up your server/,'expected the claim (S1) with its address field');
+ assert.match(await page.locator('body').innerText(),/Setup key accepted/,'expected the stored key to be checked with the server');
  await page.reload();await semantics();
  await page.getByRole('textbox').first().waitFor({timeout:30000});
- assert.match(await page.locator('body').innerText(),/I have a password/,'expected retained setup to resume email entry after reload');
+ assert.match(await page.locator('body').innerText(),/Set up your server/,'expected retained setup to resume the claim after reload');
  assert.ok(!page.url().includes(token));
- console.log('PASS: real Chromium/HTTPS setup capture, fragment removal, secure-storage reload and direct email entry (discovery/API mocked).');
+ console.log('PASS: real Chromium/HTTPS setup capture, fragment removal, secure-storage reload and the claim screen (discovery/API mocked).');
  console.log('Browser errors:',JSON.stringify(errors));
  await context.close();
  // Warm path: the app is already open on the front door, then the setup link is opened

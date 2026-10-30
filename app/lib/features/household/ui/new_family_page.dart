@@ -15,6 +15,8 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/app_locale.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/logging/log.dart';
+import 'package:wuselwall/core/server/server_address.dart';
+import 'package:wuselwall/core/server/server_providers.dart';
 import 'package:wuselwall/core/server/setup_store.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/household/application/household_providers.dart';
@@ -68,7 +70,11 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
   void initState() {
     super.initState();
     final account = widget.account;
-    _needsCode = account?.creation != HouseholdCreation.open;
+    // A key is typed only in `code` mode, and not when this address claimed the server
+    // before signing up (specs/20 "Claiming the server"): the claim stands in.
+    _needsCode =
+        account?.creation != HouseholdCreation.open &&
+        !(account?.setupClaimed ?? false);
     _name.text = account?.givenName ?? '';
     unawaited(_loadTimezone());
     unawaited(_loadSetup());
@@ -224,7 +230,23 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
     return Scaffold(
       // The chosen colour shows as a tick in its swatch, under "Deine Farbe"; a dot in
       // the bar said nothing on its own.
-      appBar: AppBar(title: Text(l10n.householdNewTitle)),
+      appBar: AppBar(
+        title: _settingUp(ref)
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(l10n.householdNewTitle),
+                  Text(
+                    l10n.claimHeader(
+                      displayServerAddress(ref.read(currentServerProvider)!),
+                    ),
+                    style: theme.textTheme.bodySmall,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              )
+            : Text(l10n.householdNewTitle),
+      ),
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
@@ -365,6 +387,11 @@ class _NewFamilyPageState extends ConsumerState<NewFamilyPage> {
       ),
     );
   }
+
+  /// The founder came through the claim (S1) or a setup link: the header names the server.
+  bool _settingUp(WidgetRef ref) =>
+      ((widget.account?.setupClaimed ?? false) || _setupCode != null) &&
+      ref.read(currentServerProvider) != null;
 
   String? _required(String? value) => (value == null || value.trim().isEmpty)
       ? context.l10n.fieldRequired

@@ -5,15 +5,19 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/router.dart';
+import 'package:wuselwall/app/server_session.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/server/server_address.dart';
+import 'package:wuselwall/core/server/server_providers.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/identity/application/sign_in_choice.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/domain/email_code.dart';
 import 'package:wuselwall/features/setup/ui/auth_form_scaffold.dart';
+import 'package:wuselwall/features/setup/ui/claim_page.dart';
 
 /// E2 (specs/20, "With email"): six digit boxes over one hidden field. Paste and the
 /// platform's one-time-code autofill fill the field; the sixth digit submits.
@@ -116,9 +120,16 @@ class _EmailCodePageState extends ConsumerState<EmailCodePage> {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final waiting = _secondsLeft > 0;
+    // While the server is being set up (S1), the header says so, and another address
+    // goes back through the claim: the server lets only the announced address sign up.
+    final settingUp = ref.watch(serverSessionProvider).setupPending.value;
+    final server = ref.watch(currentServerProvider);
 
     return AuthFormScaffold(
       title: l10n.emailCodeTitle,
+      subtitle: settingUp && server != null
+          ? l10n.claimHeader(displayServerAddress(server))
+          : null,
       children: [
         Text(l10n.emailCodeSent(widget.email)),
         const SizedBox(height: Tokens.space6),
@@ -200,7 +211,11 @@ class _EmailCodePageState extends ConsumerState<EmailCodePage> {
           ),
         ],
         TextButton(
-          onPressed: () => context.go(emailSignInLocation(widget.email)),
+          onPressed: () => context.go(
+            settingUp
+                ? claimLocation(widget.email)
+                : emailSignInLocation(widget.email),
+          ),
           child: Text(l10n.emailCodeOtherAddress),
         ),
         if (_busy)

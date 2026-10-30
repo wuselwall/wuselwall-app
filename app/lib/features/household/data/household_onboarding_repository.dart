@@ -20,6 +20,24 @@ class HouseholdOnboardingRepository {
     parse: (json) => Account.fromJson(json! as Map<String, dynamic>),
   );
 
+  /// S1 "Server einrichten" (specs/20 "Claiming the server"): checks the setup [key] and,
+  /// with an [email], announces that address as the one about to sign up. Anonymous: the
+  /// person is not signed in yet. Rate-limited like founder-code guesses.
+  Future<Result<ClaimOutcome>> claim({required String key, String? email}) =>
+      _api.rpc(
+        'setup_claim',
+        params: {'p_key': key.trim(), 'p_email': email?.trim()},
+        parse: (json) {
+          final map = json! as Map<String, dynamic>;
+          return map['ok'] == true
+              ? ClaimAccepted(
+                  claimed: map['claimed'] == true,
+                  serverClaimed: map['server_claimed'] == true,
+                )
+              : ClaimRefused(map['reason'] as String? ?? 'key_invalid');
+        },
+      );
+
   /// Creates the household, this session as the founder's personal device, and refreshes
   /// the session so its token carries the device claims.
   Future<Result<void>> create({

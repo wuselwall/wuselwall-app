@@ -47,6 +47,7 @@ import 'package:wuselwall/features/settings/ui/own_settings_page.dart';
 import 'package:wuselwall/features/settings/ui/settings_group_page.dart';
 import 'package:wuselwall/features/settings/ui/settings_group_text.dart';
 import 'package:wuselwall/features/settings/ui/settings_page.dart';
+import 'package:wuselwall/features/setup/ui/claim_page.dart';
 import 'package:wuselwall/features/setup/ui/email_code_page.dart';
 import 'package:wuselwall/features/setup/ui/enrol_page.dart';
 import 'package:wuselwall/features/setup/ui/first_run_page.dart';
@@ -68,6 +69,7 @@ abstract final class Routes {
   static const splash = '/splash';
   static const setup = '/setup';
   static const wizard = '/setup/household';
+  static const claim = '/setup/claim';
   static const signIn = '/setup/sign-in';
   static const emailCode = '/setup/email-code';
   static const signInChoice = '/setup/sign-in-choice';
@@ -238,10 +240,12 @@ final routerProvider = Provider<GoRouter>((ref) {
     redirect: (context, state) {
       final path = state.matchedLocation;
       final session = ref.read(sessionStateProvider);
+      // A setup link brought the key: the claim (S1) replaces the front door until the
+      // person leaves it or the key is used (specs/20 "Claiming the server").
       if (session.value is SignedOut &&
           setup.value &&
           (path == Routes.setup || path == Routes.splash)) {
-        return Routes.signIn;
+        return Routes.claim;
       }
 
       // First evaluation: wait, but never flash the setup screen.
@@ -327,6 +331,11 @@ final routerProvider = Provider<GoRouter>((ref) {
                 );
               },
             ),
+          ),
+          _materialRoute(
+            path: 'claim',
+            builder: (_, state) =>
+                ClaimPage(initialEmail: state.uri.queryParameters['email']),
           ),
           _materialRoute(
             path: 'sign-in',

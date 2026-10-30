@@ -28,6 +28,28 @@ void main() {
       expect(f('XX000'), isA<UnknownFailure>());
     });
 
+    test(
+      'a refusal by the Before User Created hook keeps its message as code',
+      () {
+        // GoTrue answers a hook's error with code `unknown` and the message as text.
+        final failure = mapError(
+          const AuthApiException(
+            'setup_key_required',
+            statusCode: '403',
+            code: 'unknown',
+          ),
+        );
+        expect(failure, isA<AuthFailure>());
+        expect(failure.code, 'setup_key_required');
+        // Ordinary messages are not mistaken for codes.
+        expect(
+          mapError(const AuthApiException('Invalid login', statusCode: '400'))
+              .code,
+          isNull,
+        );
+      },
+    );
+
     test('uses the hint as the stable domain code', () {
       final failure = mapError(
         PostgrestException(message: 'm', code: 'P0001', hint: 'task_done'),
