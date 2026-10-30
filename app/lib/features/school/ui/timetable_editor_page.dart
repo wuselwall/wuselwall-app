@@ -887,24 +887,18 @@ class _Row extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.only(bottom: 4),
-    // Cells take the height of the tallest, inside the scrolling list.
-    child: IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          SizedBox(
-            width: 84,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 6, top: 8),
-              child: Text(
-                label,
-                style: Theme.of(context).textTheme.labelMedium,
-              ),
-            ),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 84,
+          child: Padding(
+            padding: const EdgeInsets.only(right: 6, top: 8),
+            child: Text(label, style: Theme.of(context).textTheme.labelMedium),
           ),
-          for (final c in cells) Expanded(child: c),
-        ],
-      ),
+        ),
+        for (final c in cells) Expanded(child: c),
+      ],
     ),
   );
 }

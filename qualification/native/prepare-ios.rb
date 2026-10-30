@@ -13,6 +13,9 @@ source = project.main_group.new_file('../../qualification/native/AccessibilityAu
 target.source_build_phase.add_file_reference(source)
 target.build_configurations.each do |config|
   config.build_settings['PRODUCT_BUNDLE_IDENTIFIER'] = 'ch.goomba.wuselwall.QualificationAudits'
+  config.build_settings['PRODUCT_NAME'] = 'QualificationAudits'
+  config.build_settings['EXECUTABLE_NAME'] = 'QualificationAudits'
+  config.build_settings['PRODUCT_MODULE_NAME'] = 'QualificationAudits'
   config.build_settings['TEST_TARGET_NAME'] = 'Runner'
   config.build_settings['GENERATE_INFOPLIST_FILE'] = 'NO'
   config.build_settings['INFOPLIST_FILE'] = '../../qualification/native/Audit-Info.plist'

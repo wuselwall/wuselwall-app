@@ -135,8 +135,10 @@ class _ItemRow extends ConsumerWidget {
         )..layout();
         final buttonWidth = label.width + 2 * Tokens.space2;
         label.dispose();
-        // The leading icon and its gap, and the gap before the trailing button.
-        const leadingRoom = 24 + 16 + 16;
+        const leadingWidth = 24.0;
+        const titleInset = leadingWidth + Tokens.space2;
+        // The leading icon, its gap, and room before the separate action.
+        const leadingRoom = titleInset + Tokens.space4;
         final titleRoom = constraints.maxWidth - leadingRoom - buttonWidth;
         final stackAction = !done && titleRoom < _minTitleRoom;
         final dismissButton = TextButton(
@@ -151,6 +153,8 @@ class _ItemRow extends ConsumerWidget {
         );
         final tile = ListTile(
           contentPadding: EdgeInsets.zero,
+          minLeadingWidth: leadingWidth,
+          horizontalTitleGap: Tokens.space2,
           minVerticalPadding: Tokens.space1,
           leading: Icon(
             item.icon,
@@ -172,7 +176,9 @@ class _ItemRow extends ConsumerWidget {
             children: [
               tile,
               Padding(
-                padding: const EdgeInsetsDirectional.only(start: leadingRoom),
+                padding: const EdgeInsetsDirectional.only(
+                  start: titleInset - Tokens.space2,
+                ),
                 child: Align(
                   alignment: AlignmentDirectional.centerStart,
                   child: dismissButton,
