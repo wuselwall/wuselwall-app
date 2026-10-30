@@ -32,8 +32,9 @@ Capture, smoke, canonical-only, partial, skipped and failing runs cannot authori
   discovery, encrypted-storage migration and the shopping journey using intercepted APIs.
   This is separate from fixture captures and does not establish real backend authentication
   or the behavior of a signed store binary.
-- Detector/integrity tests: deliberately bad contrast, a small unlabeled action and an
-  unlabeled HTML button must be detected. Baseline tests reject altered/missing/extra
+- Detector/integrity tests: deliberately bad contrast (SDK and exact audit), a small
+  unlabeled action and an unlabeled HTML button must be detected; the exact audit's controls
+  reproduce the SDK's border misattribution and keep mixed paint undecided. Baseline tests reject altered/missing/extra
   files, invalid archives and mismatched environments. Missing native nodes, detector
   results, screenshots or required profiles fail the native report.
 
@@ -47,22 +48,48 @@ deployment utilities are independent.
 Expanded Linux validation rendered all 180 direct fixtures and executed the earlier
 70-state, 8,760-case Flutter matrix. It exposed accessibility findings and large-text layout defects. After
 fixing those layouts and calendar targets, a 672-case responsive rerun had no framework,
-label or target-size findings; contrast findings remain blocking. The ordinary
+label or target-size findings; the contrast findings of that sweep were the SDK's border
+misattribution, resolved by the exact audit described below. The ordinary
 suite passed 1,574 tests, with seven backend integration tests intentionally skipped without
 backend configuration. Those seven require the separate disposable-backend CI job. Android
 app and instrumentation APKs compile; native device execution and the iOS audit build still
 need validation on provisioned macOS devices. No native baseline has been approved by these
 local checks.
 
-The raw Flutter SDK text-contrast result is retained in each case. A separate paint
-diagnostic records effective text size, foreground/background ratios where the render tree
-provides a conservative proof, and explicit unsupported reasons elsewhere. It cannot waive
-SDK failures. Borders, image content and antialiasing can affect the SDK's pixel histogram;
-those reports need attribution before changing a colour or accepting a candidate.
+Text contrast is decided per paragraph by an exact audit (`qualification_test/exact_contrast.dart`)
+wherever paint is unambiguous, and by the raw Flutter SDK guideline everywhere else. The SDK
+guideline estimates both colours from a histogram of the text's box inflated by four pixels and
+takes the most frequent colour below the average lightness as the text; beside 12 px text, a
+table border, a cell tint or a button outline has more pixels than the glyphs' solid cores, so
+the guideline reported those borders against the paper (ratios near 1.3) across the timetable,
+calendar and settings. The exact audit takes the foreground from the resolved `TextStyle` and
+samples the glyph boxes inflated by one pixel. Backgrounds are plateaus: colours with at least
+2 % of the sample whose pixels mostly sit among pixels of the same colour (anti-aliasing never
+forms one, however many pixels share a stem's coverage value). A pixel is explained when it is a
+plateau or a straight blend between the ink and a plateau; the text sits on a plateau when such
+ink pixels touch it, so a line box poking past an avatar's circle onto the paper does not put the
+letter on the paper. The measurement is accepted when at least 96 % of the pixels are explained
+and the text is visible; the ratio is the worst over the plateaus the text sits on (at most two);
+translucent text is measured as its colour composited onto each; a fade counts only while the
+text actually overflows; icon-font glyphs are graphics, not text, and leave no row. Gradients,
+overlapping paint, opacity, animated opacity, active fades, shaders, filters, painted or shadowed
+text, inline widget spans and fallback geometry stay `UNDECIDED`: the SDK verdict stands for
+those nodes. A node whose every paragraph is a decided `PASS` supersedes the
+SDK's estimate for that node; a decided `FAIL` is a finding (`exactTextContrast`) even where the
+SDK passed. A node whose every paragraph lies under a shader mask (`EdgeFade`, the scrolling
+row's edge fade) is outside the automated check's scope (text over a gradient, see the spec's
+scope table): an SDK estimate there is kept in `reviewTextContrast` for a person to look at
+and does not fail the case. Each case records `sdkTextContrast` (the raw SDK result),
+`exactTextContrast` (every paragraph with colours, ratio, requirement, effective size, weight,
+coverage and the superseded SDK blocks), `reviewTextContrast` and the older render-tree paint
+diagnostic. The controls in
+`exact_contrast_test.dart` prove a real failure fails, that readable text in a bordered table
+reproduces the SDK misattribution and is proven exact, that two backgrounds and translucent text
+are decided by their worse and composited colours, and that a gradient, an opacity and an
+overflowing fade stay undecided.
 The Flutter job writes `contrast-report.json` and `contrast-report.md` even when the matrix
 fails. They group repeated labels, ratios and reported colours while preserving case IDs,
-unparsed findings and an input checksum. The report grants no waivers and does not decide
-whether a finding is a product defect or a sampling error.
+unparsed findings and an input checksum. The report grants no waivers.
 
 Bundled Noto Sans Symbols covers the shipped arrow glyphs. Web's automatic fallback font
 base is also restricted to this installation's own origin. This does not supply every

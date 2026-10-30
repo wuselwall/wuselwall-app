@@ -16,6 +16,7 @@ import 'package:wuselwall/demo/demo_clock.dart';
 import '../qualification/fixture.dart';
 import '../qualification/inventory.g.dart';
 
+import 'exact_contrast.dart';
 import 'paint_contrast.dart';
 import 'settle.dart';
 
@@ -202,6 +203,15 @@ void main() {
                 reason: 'A vacuous audit cannot pass',
               );
               row['labeledNodes'] = labeled;
+              // The exact audit: the style's colour over the one painted
+              // background, decided per paragraph; undecided where paint is mixed.
+              final exact = await auditExactContrast(tester);
+              final proven = exact.provenNodes;
+              final superseded = <String>[];
+              row['exactTextContrast'] = {
+                ...exact.toJson(),
+                'superseded': superseded,
+              };
               for (final entry in {
                 'labels': labeledTapTargetGuideline,
                 'targets': platform == TargetPlatform.iOS
@@ -210,15 +220,46 @@ void main() {
                 'textContrast': textContrastGuideline,
               }.entries) {
                 final result = await entry.value.evaluate(tester);
-                if (entry.key == 'textContrast') {
-                  row['sdkTextContrast'] = {
-                    'passed': result.passed,
-                    'reason': result.reason,
-                  };
+                if (entry.key != 'textContrast') {
+                  if (!result.passed) {
+                    findings.add({'rule': entry.key, 'reason': result.reason});
+                  }
+                  continue;
                 }
-                if (!result.passed) {
-                  findings.add({'rule': entry.key, 'reason': result.reason});
+                row['sdkTextContrast'] = {
+                  'passed': result.passed,
+                  'reason': result.reason,
+                };
+                if (result.passed) continue;
+                // The SDK estimates both colours from a histogram of the text's
+                // box inflated by 4 px, so a border or tint beside small text
+                // is reported as the text. Where the exact audit proved every
+                // paragraph of the node, that estimate is superseded; it stands
+                // for every other node (exact_contrast.dart).
+                final retained = retainedSdkContrast(
+                  result.reason ?? '',
+                  proven,
+                  superseded: superseded,
+                );
+                if (retained == null) continue;
+                // Under a shader mask (a scrolling row's edge fade) the text
+                // is outside the automated check's scope: listed for review.
+                final review = <String>[];
+                final failing = retainedSdkContrast(
+                  retained,
+                  exact.maskedNodes,
+                  superseded: review,
+                );
+                row['reviewTextContrast'] = review;
+                if (failing != null) {
+                  findings.add({'rule': 'textContrast', 'reason': failing});
                 }
+              }
+              for (final failure in exact.failures) {
+                findings.add({
+                  'rule': 'exactTextContrast',
+                  'reason': failure.describe(),
+                });
               }
               final paint = auditPaintContrast(tester);
               row['paintTextContrast'] = {

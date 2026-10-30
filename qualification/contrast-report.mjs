@@ -68,6 +68,23 @@ function diagnosticPaintClassifications(results) {
   return Object.fromEntries(counts);
 }
 
+/** Count the exact audit's decisions and the SDK blocks they superseded (Flutter exactTextContrast). */
+function exactContrastClassifications(results) {
+  const counts = new Map();
+  let supersededSdkBlocks = 0;
+  for (const result of results) {
+    const exact = result?.exactTextContrast;
+    if (!exact || typeof exact !== 'object') continue;
+    if (Array.isArray(exact.superseded)) supersededSdkBlocks += exact.superseded.length;
+    if (!Array.isArray(exact.details)) continue;
+    for (const detail of exact.details) {
+      if (typeof detail?.classification !== 'string') continue;
+      counts.set(detail.classification, (counts.get(detail.classification) ?? 0) + 1);
+    }
+  }
+  return { ...Object.fromEntries(counts), supersededSdkBlocks };
+}
+
 /** Group raw textContrast reports without interpreting whether they are genuine. */
 export function groupContrastResults(input) {
   if (!input || typeof input !== 'object' || Array.isArray(input) || !Array.isArray(input.results)) {
@@ -159,6 +176,7 @@ export function groupContrastResults(input) {
       parsedContrastOccurrences: grouped.reduce((sum, group) => sum + group.occurrenceCount, 0),
     },
     diagnosticPaintClassifications: diagnosticPaintClassifications(input.results),
+    exactContrastClassifications: exactContrastClassifications(input.results),
     groups: grouped,
     unparsedFindings,
   };
@@ -196,6 +214,7 @@ export function renderContrastMarkdown(report, provenance) {
     `Matrix: ${report.matrix ?? 'unknown'}; executed ${report.executed} of ${report.expected ?? 'unknown'} cases.`,
     `Original results: ${report.originalFailureCounts.failedCases} failing cases; ${report.originalFailureCounts.findings} findings (${report.originalFailureCounts.textContrastFindings} textContrast findings); ${report.originalFailureCounts.parsedContrastOccurrences} parsed contrast occurrences; ${report.unparsedFindings.length} retained unparsed findings.`,
     `Input: \`${provenance.file}\`; SHA-256 \`${provenance.sha256}\`.`,
+    `Exact audit (retained findings exclude SDK blocks it superseded): ${Object.entries(report.exactContrastClassifications ?? {}).map(([k, v]) => `${k} ${v}`).join('; ') || 'not recorded'}.`,
     '',
     'Findings are grouped by label, font size, required and measured ratios, and reported colors. Grouping is diagnostic only; it does not classify a finding as a product defect or sampling artifact.',
     '',

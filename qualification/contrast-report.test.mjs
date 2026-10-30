@@ -94,6 +94,22 @@ test('counts diagnostic classifications from Flutter paintTextContrast.details',
   assert.deepEqual(report.diagnosticPaintClassifications, { UNSUPPORTED: 3, PROVEN_FAIL: 1 });
 });
 
+test('counts the exact audit decisions and superseded SDK blocks from Flutter exactTextContrast', () => {
+  const report = groupContrastResults({ results: [
+    { id: 'a', status: 'PASS', findings: [],
+      exactTextContrast: { paragraphs: 3, superseded: ['SemanticsNode#4(...)', 'SemanticsNode#9(...)'], details: [
+        { text: 'Mo', classification: 'PASS' },
+        { text: 'Tu', classification: 'UNDECIDED', reason: 'Opacity below 1' },
+        { text: 'We', classification: 'PASS' },
+      ] } },
+    { id: 'b', status: 'FAIL', findings: [{ rule: 'exactTextContrast', reason: 'SemanticsNode#3 "Th": painted ...' }],
+      exactTextContrast: { paragraphs: 1, superseded: [], details: [{ text: 'Th', classification: 'FAIL' }] } },
+    { id: 'c', status: 'PASS', findings: [] },
+  ] });
+  assert.deepEqual(report.exactContrastClassifications, { PASS: 2, UNDECIDED: 1, FAIL: 1, supersededSdkBlocks: 2 });
+  assert.equal(report.unparsedFindings.length, 1);
+});
+
 test('counter maps safely preserve special object-property names', () => {
   const report = groupContrastResults({ results: [
     { id: '__proto__', status: '__proto__', findings: [{ rule: '__proto__', reason: 'raw' }] },

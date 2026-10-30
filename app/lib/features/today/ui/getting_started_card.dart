@@ -142,6 +142,8 @@ class _ItemRow extends ConsumerWidget {
         final titleRoom = constraints.maxWidth - leadingRoom - buttonWidth;
         final stackAction = !done && titleRoom < _minTitleRoom;
         final dismissButton = TextButton(
+          // Smaller type and padding, but standard density: the tap target stays
+          // 48 px high (the qualification matrix's "targets" rule).
           style: TextButton.styleFrom(
             textStyle: labelStyle,
             visualDensity: VisualDensity.standard,
@@ -172,7 +174,10 @@ class _ItemRow extends ConsumerWidget {
         );
         if (done) return tile;
         if (stackAction) {
+          // Under the title, starting where the title starts, so it never floats
+          // between two steps (round-3 review L-9): past the icon and its gap.
           return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               tile,
               Padding(

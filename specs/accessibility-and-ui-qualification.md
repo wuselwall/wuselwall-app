@@ -117,9 +117,22 @@ actions, keyboard traversal, focus, scrolling and layout.
 Extend palette coverage to every permitted colour pairing and interaction state, including
 focus, selection, error, member accents, paper tints and alpha-composited backgrounds.
 Test representative rendered components as well as tokens. Flutter's text contrast
-checker estimates colours from rendered pixels and semantics: complex backgrounds,
-custom painting and missing semantic text need additional assertions or review. A screen
-with no auditable text or controls must not silently appear to have complete coverage.
+checker estimates colours from rendered pixels and semantics: it inflates the text's box
+by four pixels and takes the most frequent colour below the average lightness as the text,
+so a border, tint or outline beside small text is reported instead of the glyphs. The
+matrix therefore decides text contrast per paragraph by an exact audit where paint is
+unambiguous: foreground from the resolved text style, background as the one colour the
+glyph boxes are painted on, accepted only when the sampled pixels are that pair or a
+straight anti-aliased blend of it and the text is visible; text over two flat backgrounds
+is held to the worse, translucent text is measured composited, icon glyphs are not text.
+The SDK verdict stands for every node the exact audit leaves undecided (gradients,
+overlapping paint, opacity, overflowing fades, shaders, inline widgets); a node whose every paragraph is a decided pass
+supersedes the SDK's estimate, and a decided failure is a finding even where the SDK passed.
+Text under a shader mask (a scrolling row's edge fade) is text over a gradient and thus out of
+the automated check's scope: an SDK estimate there is recorded for review, not as a failure.
+Both results are recorded per case. Complex backgrounds, custom painting and missing
+semantic text still need additional assertions or review. A screen with no auditable text
+or controls must not silently appear to have complete coverage.
 
 The Flutter evidence artifact includes grouped JSON/Markdown contrast reports even when
 the matrix fails. They retain raw unparsed findings and case references, count repeated
