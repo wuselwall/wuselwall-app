@@ -9,6 +9,7 @@ import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
+import 'package:wuselwall/core/ui/whole_words_text.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
@@ -967,38 +968,70 @@ class _CellTile extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Keep each subject and room on its own line. The visual label
+                  // scales down as one unit; the tooltip preserves its full name.
                   for (final d in drafts)
-                    Row(
-                      children: [
-                        if (d.parity != 'all')
-                          Text(
-                            d.parity.toUpperCase(),
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w700,
-                              color: scheme.primary,
+                    Tooltip(
+                      message: [
+                        subjectOf(d.subjectId)?.name ?? '—',
+                        ?d.room,
+                      ].join(' · '),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              if (d.parity != 'all')
+                                Text(
+                                  d.parity.toUpperCase(),
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w700,
+                                    color: scheme.primary,
+                                  ),
+                                ),
+                              if (d.subjectId != null) ...[
+                                Icon(
+                                  schoolIcon(subjectOf(d.subjectId)?.iconKey),
+                                  size: 14,
+                                ),
+                                const SizedBox(width: 2),
+                              ],
+                              Expanded(
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  alignment: AlignmentDirectional.centerStart,
+                                  child: WholeWordsText(
+                                    subjectOf(d.subjectId)?.shortName ?? '—',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          if (d.room != null)
+                            SizedBox(
+                              width: double.infinity,
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                alignment: AlignmentDirectional.centerStart,
+                                child: WholeWordsText(
+                                  d.room!,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: ww.ink2,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        if (d.subjectId != null) ...[
-                          Icon(
-                            schoolIcon(subjectOf(d.subjectId)?.iconKey),
-                            size: 14,
-                          ),
-                          const SizedBox(width: 2),
                         ],
-                        Expanded(
-                          child: Text(
-                            subjectOf(d.subjectId)?.shortName ?? '—',
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(fontWeight: FontWeight.w700),
-                          ),
-                        ),
-                        if (d.room != null)
-                          Text(
-                            d.room!,
-                            style: TextStyle(fontSize: 11, color: ww.ink2),
-                          ),
-                      ],
+                      ),
                     ),
                   if (drafts.isEmpty) const SizedBox(height: 34),
                 ],

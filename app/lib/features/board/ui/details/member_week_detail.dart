@@ -5,6 +5,7 @@ import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
+import 'package:wuselwall/features/board/ui/board_scroll_cue.dart';
 import 'package:wuselwall/features/board/ui/details/detail_parts.dart';
 
 /// An adult's week, or a child's: one row per day with the deviations from the usual,
@@ -24,14 +25,16 @@ class MemberWeekDetailBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final m = board.member(memberId);
     if (m == null) return const SizedBox.shrink();
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(Tokens.space6),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          for (var i = 0; i < board.days.length; i++)
-            _DayRow(board: board, member: m, index: i),
-        ],
+    return BoardScrollFade(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(Tokens.space6),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            for (var i = 0; i < board.days.length; i++)
+              _DayRow(board: board, member: m, index: i),
+          ],
+        ),
       ),
     );
   }

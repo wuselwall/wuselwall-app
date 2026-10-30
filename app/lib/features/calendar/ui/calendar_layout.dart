@@ -9,6 +9,13 @@ const gridEndHour = 22;
 const _gridStart = gridStartHour * 60;
 const _gridEnd = gridEndHour * 60;
 
+/// The height the calendar's buttons take at the bottom: Material's 16 px margin, the
+/// 56 px "Neuer Termin" and, with traditions, a 12 px gap and the 40 px small button,
+/// plus a little air. The grids leave it free at their end, so no hour and no day stays
+/// under the buttons (specs/05 "Views").
+double calendarFabClearance({required bool traditions}) =>
+    16 + 56 + 8 + (traditions ? 12 + 40 : 0);
+
 /// A timed appointment placed on one day's column, in minutes from midnight, clipped to
 /// the grid. [lane] of [lanes] splits the column when appointments overlap.
 class DayBlock {

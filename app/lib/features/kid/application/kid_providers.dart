@@ -22,7 +22,21 @@ class KidTabNotifier extends Notifier<KidTab> {
   @override
   KidTab build() => KidTab.today;
 
-  void select(KidTab tab) => state = tab;
+  bool _cameBack = false;
+
+  void select(KidTab tab) {
+    // Back on "Mein Tag" from another tab: Wusel hops in (specs/25 "Wusel on the
+    // move"), but not on the first open, where it waves.
+    if (tab == KidTab.today && state != KidTab.today) _cameBack = true;
+    state = tab;
+  }
+
+  /// Whether "Mein Tag" was just chosen from another tab; asking answers once.
+  bool takeCameBack() {
+    final back = _cameBack;
+    _cameBack = false;
+    return back;
+  }
 }
 
 final kidTabProvider = NotifierProvider<KidTabNotifier, KidTab>(

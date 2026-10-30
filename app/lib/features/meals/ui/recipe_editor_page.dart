@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
 import 'package:wuselwall/features/meals/application/meals_providers.dart';
@@ -155,89 +156,93 @@ class _RecipeEditorPageState extends ConsumerState<RecipeEditorPage> {
           widget.recipe == null ? l10n.mealsRecipeNew : l10n.mealsRecipeEdit,
         ),
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(Tokens.space4),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextField(
-                controller: _title,
-                decoration: InputDecoration(
-                  labelText: l10n.mealsRecipeTitleField,
-                  errorText: _titleError ? l10n.mealsRecipeTitleRequired : null,
+      body: ContentWidth(
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(Tokens.space4),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                TextField(
+                  controller: _title,
+                  decoration: InputDecoration(
+                    labelText: l10n.mealsRecipeTitleField,
+                    errorText: _titleError
+                        ? l10n.mealsRecipeTitleRequired
+                        : null,
+                  ),
+                  onChanged: (_) {
+                    if (_titleError) setState(() => _titleError = false);
+                  },
                 ),
-                onChanged: (_) {
-                  if (_titleError) setState(() => _titleError = false);
-                },
-              ),
-              CountStepper(
-                label: l10n.mealsServings,
-                value: _servings,
-                min: 1,
-                max: 50,
-                onChanged: (v) => setState(() => _servings = v),
-              ),
-              const SizedBox(height: Tokens.space4),
-              Text(l10n.mealsIngredients, style: theme.textTheme.titleMedium),
-              const SizedBox(height: Tokens.space2),
-              ReorderableListView(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                buildDefaultDragHandles: false,
-                onReorderItem: _reorder,
-                children: [
-                  for (final (index, draft) in _ingredients.indexed)
-                    _IngredientRow(
-                      key: ValueKey(draft.id),
-                      index: index,
-                      draft: draft,
-                      onRemove: () =>
-                          setState(() => _ingredients.remove(draft)),
-                    ),
-                ],
-              ),
-              Align(
-                alignment: AlignmentDirectional.centerStart,
-                child: TextButton.icon(
-                  icon: const Icon(Icons.add),
-                  label: Text(l10n.mealsIngredientAdd),
-                  onPressed: () =>
-                      setState(() => _ingredients.add(_Draft(id: _nextId++))),
+                CountStepper(
+                  label: l10n.mealsServings,
+                  value: _servings,
+                  min: 1,
+                  max: 50,
+                  onChanged: (v) => setState(() => _servings = v),
                 ),
-              ),
-              const SizedBox(height: Tokens.space4),
-              TextField(
-                controller: _steps,
-                minLines: 4,
-                maxLines: null,
-                keyboardType: TextInputType.multiline,
-                decoration: InputDecoration(
-                  labelText: l10n.mealsSteps,
-                  hintText: l10n.mealsStepsHint,
-                  alignLabelWithHint: true,
+                const SizedBox(height: Tokens.space4),
+                Text(l10n.mealsIngredients, style: theme.textTheme.titleMedium),
+                const SizedBox(height: Tokens.space2),
+                ReorderableListView(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  buildDefaultDragHandles: false,
+                  onReorderItem: _reorder,
+                  children: [
+                    for (final (index, draft) in _ingredients.indexed)
+                      _IngredientRow(
+                        key: ValueKey(draft.id),
+                        index: index,
+                        draft: draft,
+                        onRemove: () =>
+                            setState(() => _ingredients.remove(draft)),
+                      ),
+                  ],
                 ),
-              ),
-              const SizedBox(height: Tokens.space4),
-              TextField(
-                controller: _tags,
-                decoration: InputDecoration(
-                  labelText: l10n.mealsTags,
-                  hintText: l10n.mealsTagsHint,
+                Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: TextButton.icon(
+                    icon: const Icon(Icons.add),
+                    label: Text(l10n.mealsIngredientAdd),
+                    onPressed: () =>
+                        setState(() => _ingredients.add(_Draft(id: _nextId++))),
+                  ),
                 ),
-              ),
-              const SizedBox(height: Tokens.space4),
-              TextField(
-                controller: _source,
-                keyboardType: TextInputType.url,
-                decoration: InputDecoration(labelText: l10n.mealsSourceUrl),
-              ),
-              const SizedBox(height: Tokens.space6),
-              FilledButton(
-                onPressed: _busy ? null : _save,
-                child: Text(l10n.mealsRecipeSave),
-              ),
-            ],
+                const SizedBox(height: Tokens.space4),
+                TextField(
+                  controller: _steps,
+                  minLines: 4,
+                  maxLines: null,
+                  keyboardType: TextInputType.multiline,
+                  decoration: InputDecoration(
+                    labelText: l10n.mealsSteps,
+                    hintText: l10n.mealsStepsHint,
+                    alignLabelWithHint: true,
+                  ),
+                ),
+                const SizedBox(height: Tokens.space4),
+                TextField(
+                  controller: _tags,
+                  decoration: InputDecoration(
+                    labelText: l10n.mealsTags,
+                    hintText: l10n.mealsTagsHint,
+                  ),
+                ),
+                const SizedBox(height: Tokens.space4),
+                TextField(
+                  controller: _source,
+                  keyboardType: TextInputType.url,
+                  decoration: InputDecoration(labelText: l10n.mealsSourceUrl),
+                ),
+                const SizedBox(height: Tokens.space6),
+                FilledButton(
+                  onPressed: _busy ? null : _save,
+                  child: Text(l10n.mealsRecipeSave),
+                ),
+              ],
+            ),
           ),
         ),
       ),

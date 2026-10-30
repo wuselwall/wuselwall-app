@@ -7,7 +7,7 @@ Wenn du von einer anderen Ansicht kommst, kannst du auf iPhone und iPad am linke
 
 ## Einfach oder Erweitert {#ansicht}
 
-Oben in den Einstellungen wählst du die Ansicht. **Einfach** ist der Standard und zeigt das Wichtigste. Die Einstellungen sind in Gruppen geordnet (siehe [Alle Einstellungen](/settings/household)). **Einfach** zeigt nur die Gruppen, in denen etwas Wichtiges steht: **Persönlich**, **Familie** (Familienprofil, Region, Mitglieder, übliche Woche), **Aufgaben & Belohnungen**, **Kalender & Schule**, **Essen**, **Rituale**, **Geräte** (Dieses Gerät, Alle Geräte), **Hilfe & Info** und auf deinem eigenen Handy **Konto & Sicherheit** mit **Konto löschen**. **Erweitert** zeigt zusätzlich **Feste & Jahreszeiten**, **Küchenwand**, **Teilen und Verbindungen** (Familienkalender teilen, Kalender von außen), den **Server**, Anmeldung, Sicherheit und Familie verlassen.
+Oben in den Einstellungen wählst du die Ansicht. **Einfach** ist der Standard und zeigt das Wichtigste. Die Einstellungen sind in Gruppen geordnet (siehe [Alle Einstellungen](/settings/household)). **Einfach** zeigt nur die Gruppen, in denen etwas Wichtiges steht: **Persönlich**, **Familie** (Familienprofil, Region, Mitglieder, übliche Woche), **Aufgaben & Belohnungen**, **Kalender & Schule**, **Essen**, **Rituale**, **Geräte** (Dieses Gerät, Alle Geräte), **Hilfe & Info** und auf deinem eigenen Handy **Konto & Sicherheit** (Anmeldung, Sicherheit, Familie verlassen, Konto löschen). **Erweitert** zeigt zusätzlich **Feste & Jahreszeiten**, **Küchenwand**, **Teilen und Verbindungen** (Familienkalender teilen, Kalender von außen) und den **Server**.
 
 Was ausgeblendet ist, **gilt trotzdem weiter**. Die Ansicht ändert nur, was du siehst, und WuselWall merkt sie sich für jedes Gerät. Dasselbe gilt auf den Seiten der Gruppen, auf der Seite einer Person, unter **Familienprofil** und beim Bearbeiten einer Einkaufsliste: Einfach zeigt, was die meisten brauchen, Erweitert den Rest.
 
@@ -39,7 +39,7 @@ Kinder brauchen keine Einladung. Sie legst du als Mitglied mit Namen an, und ihr
 
 ## Mitglied hinzufügen
 
-Mit dem Symbol oben auf der Seite **Mitglieder** legst du eine Person nur mit **Namen** an, zum Beispiel ein Kind oder jemanden, der nicht selbst in WuselWall ist. WuselWall vergibt automatisch die nächste freie **Farbe**.
+Mit **Mitglied hinzufügen** unter der Liste auf der Seite **Mitglieder** legst du eine Person nur mit **Namen** an, zum Beispiel ein Kind oder jemanden, der nicht selbst in WuselWall ist. WuselWall vergibt automatisch die nächste freie **Farbe**.
 
 ## Mitglied bearbeiten {#mitglied-bearbeiten}
 

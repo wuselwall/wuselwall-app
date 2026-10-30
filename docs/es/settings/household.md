@@ -4,7 +4,7 @@ En **Ajustes**, adapta WuselWall a tu familia. La página es una lista corta de 
 
 <Shot name="settings-phone" alt="Ajustes: la lista de grupos, de Personal a Ayuda e información" />
 
-La vista básica muestra región, comodines, aprobación de recompensas, citas de niños, comida caliente en días escolares y libres, pregunta en la mesa, nuestra semana, comida deseada, horas nocturnas, Wusel, sonido de tareas, resumen matinal, recordatorios y fiestas (Adviento, Pascua, Pascua ortodoxa, Nochevieja). **Avanzados**, arriba o al final, muestra el resto. Un grupo en el que la vista no muestra nada no aparece en la lista. Los ajustes ocultos siguen activos.
+La vista básica muestra región, comodines, aprobación de recompensas, citas de niños, comida caliente en días escolares y libres, pregunta en la mesa, nuestra semana, comida deseada, horas nocturnas, Wusel, sonido de tareas, resumen matinal, recordatorios y fiestas (Adviento, Pascua, Pascua ortodoxa, Nochevieja). **Avanzados**, que se activa arriba a la derecha, muestra el resto; una línea al final de la página avisa de lo que está oculto. Un grupo en el que la vista no muestra nada no aparece en la lista. Los ajustes ocultos siguen activos.
 
 Cada ajuste tiene un valor predeterminado. Si lo cambias, aparece como personalizado. Puedes restaurar el original cuando quieras.
 
@@ -19,7 +19,7 @@ Cada ajuste tiene un valor predeterminado. Si lo cambias, aparece como personali
 - **Celebraciones y estaciones** (Avanzados): las decoraciones del cielo para las **Fiestas** (Adviento, Pascua, Pascua ortodoxa, Nochevieja) y **A lo largo del año** (estaciones, vacaciones, cumpleaños).
 - **Pantalla de la cocina** (Avanzados): nombres completos o iniciales en la pared, paso a la semana siguiente y límites entre mañana/tarde/noche.
 - **Dispositivos**: **Este dispositivo** (idioma, apariencia, horario nocturno y los ajustes de Wusel, los sonidos, el cielo y la protección contra quemaduras, ver [más abajo](#this-device)) y **Todos los dispositivos** (conectar, renombrar, bloquear).
-- **Cuenta y seguridad** (solo en tu propio teléfono): en la vista básica **Eliminar cuenta**; **Avanzados** añade inicio de sesión, contraseña, doble factor, PIN, clave de acceso y salir de la familia (ver [Cuenta y familia](/es/settings/account) y [Seguridad](/es/settings/security)).
+- **Cuenta y seguridad** (solo en tu propio teléfono, completa en ambas vistas): inicio de sesión, contraseña, doble factor, PIN, clave de acceso, salir de la familia y eliminar la cuenta (ver [Cuenta y familia](/es/settings/account) y [Seguridad](/es/settings/security)).
 - **Servidor** (Avanzados): la dirección de tu servidor con su código QR y **Cambiar de servidor**.
 - **Ayuda e información**: **Primeros pasos**, **Versiones** y **Licencias**.
 

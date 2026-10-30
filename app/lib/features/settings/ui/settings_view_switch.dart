@@ -34,31 +34,23 @@ class SettingsViewSwitch extends ConsumerWidget {
   }
 }
 
-/// At the end of a Basic screen: more exists, and it still applies.
-class MoreSettingsHint extends ConsumerWidget {
+/// At the end of a Basic screen: more exists, and it still applies. One quiet line that
+/// names the chip above; the chip is the one way to switch (specs/21, "Where the settings
+/// live").
+class MoreSettingsHint extends StatelessWidget {
   const MoreSettingsHint({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = context.l10n;
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
+      key: const ValueKey('settings-more-hint'),
       padding: const EdgeInsets.only(top: Tokens.space6),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            l10n.settingsViewMoreHint,
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
-          TextButton.icon(
-            key: const ValueKey('settings-show-all'),
-            onPressed: () => ref
-                .read(settingsViewProvider.notifier)
-                .select(SettingsView.advanced),
-            icon: const Icon(Icons.expand_more),
-            label: Text(l10n.settingsViewShowAll),
-          ),
-        ],
+      child: Text(
+        context.l10n.settingsViewMoreHint,
+        style: theme.textTheme.bodySmall?.copyWith(
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
       ),
     );
   }

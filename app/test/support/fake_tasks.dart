@@ -1,4 +1,5 @@
-import 'package:flutter_test/flutter_test.dart';
+import 'dart:async';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:wuselwall/core/error/failure.dart';
 import 'package:wuselwall/core/error/result.dart';
@@ -55,6 +56,10 @@ class FakeTasksApi implements ApiClient {
   /// Failures to answer with, by function name.
   final failures = <String, Failure>{};
 
+  /// Answers held back until their completer completes, by function name: what a
+  /// screen shows while the server has not answered yet.
+  final holds = <String, Completer<void>>{};
+
   @override
   Future<Result<T>> rpc<T>(
     String fn, {
@@ -62,6 +67,7 @@ class FakeTasksApi implements ApiClient {
     required T Function(Object? json) parse,
   }) async {
     calls.add((name: fn, params: params));
+    await holds[fn]?.future;
     final failure = failures[fn];
     if (failure != null) return Err(failure);
     if (!replies.containsKey(fn)) {

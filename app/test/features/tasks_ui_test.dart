@@ -1,9 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wuselwall/app/theme/app_theme.dart';
 import 'package:wuselwall/app/theme/palette.dart';
 import 'package:wuselwall/app/theme/ui_register.dart';
+import 'package:wuselwall/core/error/failure.dart';
+import 'package:wuselwall/core/ui/edge_fade.dart';
+import 'package:wuselwall/core/wusel/wusel_stage.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/details/task_board_detail.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
@@ -81,9 +86,11 @@ Future<ProviderContainer> pumpTasks(
   WidgetTester t,
   FakeTasksApi api, {
   FakeIdentityRepository? identity,
+  Size size = const Size(1000, 1600),
 }) async {
   final container = await pumpApp(
     t,
+    size: size,
     overrides: baseOverrides(
       identity: identity ?? FakeIdentityRepository(current: device()),
     ),
@@ -130,6 +137,25 @@ bool _chosen(WidgetTester t, String label) =>
     t.widget<ChoiceChip>(find.widgetWithText(ChoiceChip, label)).selected;
 
 void main() {
+  test('a tick on a chore that needs a check waits, before and after the '
+      'server has it', () {
+    TaskInstance chore(String status, {bool verification = true}) =>
+        TaskInstance.fromJson(
+          instanceRow(
+            id: 'i',
+            title: 'Zimmer aufräumen',
+            status: status,
+            verification: verification,
+          ),
+        );
+    // Ticked here and on its way (Today's rows show only open chores).
+    expect(awaitsCheckShown(true, chore('open')), isTrue);
+    expect(awaitsCheckShown(true, chore('done')), isTrue);
+    expect(awaitsCheckShown(true, chore('verified')), isFalse);
+    expect(awaitsCheckShown(true, chore('done', verification: false)), isFalse);
+    expect(awaitsCheckShown(false, chore('open')), isFalse);
+  });
+
   group('today', () {
     testWidgets('ticking a chore completes it as the acting profile', (
       t,
@@ -171,6 +197,132 @@ void main() {
         'p_actor': guardianId,
         'p_instance_id': 'i-1',
       });
+    });
+
+    testWidgets('a tick shows before the server answers', (t) async {
+      final api = FakeTasksApi(
+        tables: {
+          'task_instances': [
+            instanceRow(id: 'i-1', title: 'Tisch decken', assignee: kidId),
+          ],
+        },
+      );
+      final hold = api.holds['task_complete'] = Completer<void>();
+      await pumpTasks(t, api);
+
+      await t.tap(find.byTooltip('Abhaken'));
+      await t.pump();
+      expect(find.byIcon(Icons.check_circle), findsOneWidget);
+      expect(find.byTooltip('Erledigt'), findsOneWidget);
+      // A second tap while the first is on its way sends nothing more.
+      await t.tap(find.byIcon(Icons.check_circle), warnIfMissed: false);
+      await t.pump();
+      expect(api.named('task_complete'), hasLength(1));
+
+      hold.complete();
+      await t.pumpAndSettle();
+      expect(find.text('Tisch decken erledigt'), findsOneWidget);
+      // The snackbar has an action, and still closes by itself.
+      await t.pump(const Duration(seconds: 6));
+      await t.pumpAndSettle();
+      expect(find.text('Tisch decken erledigt'), findsNothing);
+    });
+
+    testWidgets('a tick the server refuses rolls back', (t) async {
+      final api = FakeTasksApi(
+        tables: {
+          'task_instances': [
+            instanceRow(id: 'i-1', title: 'Tisch decken', assignee: kidId),
+          ],
+        },
+      );
+      api.failures['task_complete'] = const NotFoundFailure(
+        code: 'task_complete',
+      );
+      final hold = api.holds['task_complete'] = Completer<void>();
+      await pumpTasks(t, api);
+
+      await t.tap(find.byTooltip('Abhaken'));
+      await t.pump();
+      expect(find.byIcon(Icons.check_circle), findsOneWidget);
+
+      hold.complete();
+      await t.pumpAndSettle();
+      expect(find.byIcon(Icons.check_circle), findsNothing);
+      expect(find.byTooltip('Abhaken'), findsOneWidget);
+    });
+
+    testWidgets('a chore waiting for a check is not shown as done', (t) async {
+      final api = FakeTasksApi(
+        tables: {
+          'task_instances': [
+            instanceRow(
+              id: 'i-1',
+              title: 'Zimmer aufräumen',
+              assignee: kidId,
+              status: 'done',
+              verification: true,
+            ),
+            instanceRow(
+              id: 'i-2',
+              title: 'Tisch decken',
+              assignee: kidId,
+              status: 'done',
+            ),
+          ],
+        },
+      );
+      await pumpTasks(t, api);
+
+      TextDecoration? decorationOf(String title) => t
+          .widget<AnimatedDefaultTextStyle>(
+            find
+                .ancestor(
+                  of: find.text(title),
+                  matching: find.byType(AnimatedDefaultTextStyle),
+                )
+                .first,
+          )
+          .style
+          .decoration;
+      // Waiting: an hourglass, the words, no strike-through.
+      expect(decorationOf('Zimmer aufräumen'), TextDecoration.none);
+      expect(find.byIcon(Icons.hourglass_top_rounded), findsOneWidget);
+      expect(find.textContaining('wartet auf Freigabe'), findsOneWidget);
+      // Done: the green tick and the strike-through.
+      expect(decorationOf('Tisch decken'), TextDecoration.lineThrough);
+      expect(find.byIcon(Icons.check_circle), findsOneWidget);
+    });
+
+    testWidgets('a chore\'s coin says what it counts', (t) async {
+      final api = FakeTasksApi(
+        tables: {
+          'task_instances': [
+            instanceRow(
+              id: 'i-1',
+              title: 'Tisch decken',
+              assignee: kidId,
+              points: 2,
+            ),
+          ],
+        },
+      );
+      await pumpTasks(t, api);
+      // The unit on the coin, as the kid card says it.
+      expect(find.text('2 Punkte'), findsOneWidget);
+      expect(find.byTooltip('2 Punkte'), findsOneWidget);
+      expect(find.bySemanticsLabel(RegExp('2 Punkte')), findsOneWidget);
+    });
+
+    testWidgets('the tab bar fades where more tabs lie beyond it', (t) async {
+      await pumpTasks(t, FakeTasksApi(), size: const Size(390, 844));
+      final fade = find.ancestor(
+        of: find.byType(TabBar),
+        matching: find.byType(EdgeFade),
+      );
+      expect(fade, findsOneWidget);
+      final state = t.state(fade) as dynamic;
+      expect((state.fades as ({bool start, bool end})).end, isTrue);
     });
 
     testWidgets('a chore nobody has claimed is grouped under open for anyone', (
@@ -215,6 +367,16 @@ void main() {
       expect(def['rrule'], 'FREQ=DAILY');
       expect(def['assignment'], 'rotating');
       expect(def['assignee_profile_ids'], [kidId]);
+    });
+
+    testWidgets('the start date is one row that opens the date picker', (
+      t,
+    ) async {
+      await _pumpEditor(t, testMembers);
+      expect(find.text('Ab dem'), findsOneWidget);
+      expect(find.widgetWithText(TextButton, 'Ab dem'), findsNothing);
+      await tapIn(t, find.byKey(const ValueKey('task-starts')));
+      expect(find.byType(DatePickerDialog), findsOneWidget);
     });
 
     testWidgets('without children a new chore is open for anyone', (t) async {
@@ -360,6 +522,69 @@ void main() {
         find.descendant(of: find.byType(TabBar), matching: find.byType(Badge)),
       );
       expect(label.overlaps(badge), isFalse);
+    });
+
+    testWidgets('a grown-up sees the catalogue: no request, no shortfall', (
+      t,
+    ) async {
+      final api = FakeTasksApi(
+        tables: {
+          ...requests,
+          'point_balances': [
+            {'profile_id': guardianId, 'balance': 0},
+            {'profile_id': kidId, 'balance': 2},
+          ],
+        },
+      );
+      await pumpTasks(t, api);
+      await t.tap(find.widgetWithText(Tab, 'Belohnungen'));
+      await t.pumpAndSettle();
+
+      expect(find.text('Samstagsfilm aussuchen'), findsWidgets);
+      expect(find.widgetWithText(OutlinedButton, 'Wünschen'), findsNothing);
+      expect(find.textContaining('fehlen'), findsNothing);
+    });
+
+    testWidgets('a child on a shared device asks and sees what is missing', (
+      t,
+    ) async {
+      final api = FakeTasksApi(
+        tables: {
+          ...requests,
+          'point_balances': [
+            {'profile_id': kidId, 'balance': 2},
+          ],
+        },
+      );
+      final container = await pumpTasks(
+        t,
+        api,
+        identity: FakeIdentityRepository(
+          current: device(deviceClass: DeviceClass.shared),
+        ),
+      );
+      container.read(actingProfileProvider.notifier).select(kidId);
+      await t.pump();
+      await t.tap(find.widgetWithText(Tab, 'Belohnungen'));
+      await t.pumpAndSettle();
+
+      expect(find.widgetWithText(OutlinedButton, 'Wünschen'), findsOneWidget);
+      expect(find.text('3 Punkte fehlen'), findsOneWidget);
+    });
+
+    testWidgets('a reward title keeps the width of its card at 390', (t) async {
+      final api = FakeTasksApi(tables: requests);
+      await pumpTasks(t, api, size: const Size(390, 844));
+      await tapIn(t, find.widgetWithText(Tab, 'Belohnungen'));
+      final title = find
+          .descendant(
+            of: find.byType(Card),
+            matching: find.text('Samstagsfilm aussuchen'),
+          )
+          .first;
+      // Not squeezed beside the coin and a button into a ~110 px column, where
+      // "Samstagsfilm" broke into "Samstagsfil / m".
+      expect(t.getSize(title).width, greaterThan(220));
     });
 
     testWidgets('a declined reward request carries the note to reward_decide', (
@@ -580,6 +805,155 @@ void main() {
       await t.pumpAndSettle();
       expect(cheer, findsNothing);
       expect(line, findsOneWidget);
+      await unmountApp(t, container);
+    },
+  );
+
+  testWidgets(
+    'a lively wall sends its corner Wusel over to the column, and back',
+    (t) async {
+      final api = FakeTasksApi(
+        tables: {
+          'task_instances': [
+            instanceRow(id: 'i-1', title: 'Tisch decken', assignee: kidId),
+          ],
+        },
+      );
+      final container = await pumpApp(
+        t,
+        overrides: baseOverrides(
+          identity: FakeIdentityRepository(
+            current: device(
+              deviceClass: DeviceClass.kiosk,
+              register: UiRegister.kiosk,
+            ),
+          ),
+        ),
+        board: FakeBoardRepository(_kioskBoard()),
+        tasks: api,
+      );
+      await t.tap(find.text('Heute offen'));
+      await t.pumpAndSettle();
+      api.tables['task_instances'] = [
+        instanceRow(
+          id: 'i-1',
+          title: 'Tisch decken',
+          assignee: kidId,
+          status: 'done',
+          completedBy: kidId,
+        ),
+      ];
+      container.read(actingProfileProvider.notifier).select(kidId);
+      await t.pump();
+      // Motion on: pumpApp holds everything still otherwise.
+      t.platformDispatcher.clearAccessibilityFeaturesTestValue();
+      await t.pump();
+
+      await t.tap(find.text('Tisch decken'));
+      for (var i = 0; i < 30; i++) {
+        await t.pump(const Duration(milliseconds: 16));
+      }
+      final stage = t.state<WuselStageState>(find.byType(WuselStage));
+      final trip = stage.trip;
+      expect(trip, isNotNull);
+      // The one Wusel is the corner's, travelling: no second one in the column.
+      expect(
+        find.descendant(
+          of: find.byType(TaskBoardDetailBody),
+          matching: find.byType(WuselSays),
+        ),
+        findsNothing,
+      );
+      var done = false;
+      unawaited(trip!.done.then((_) => done = true));
+      for (var i = 0; i < 600 && !done; i++) {
+        await t.pump(const Duration(milliseconds: 16));
+      }
+      expect(done, isTrue);
+      expect(stage.trip, isNull);
+      await t.pump(const Duration(seconds: 1));
+      await unmountApp(t, container);
+    },
+  );
+
+  testWidgets(
+    'a chore ticked before the board opens shows its tick at rest; a new tick pops',
+    (t) async {
+      final api = FakeTasksApi(
+        tables: {
+          'task_instances': [
+            instanceRow(
+              id: 'i-1',
+              title: 'Tisch decken',
+              assignee: kidId,
+              status: 'done',
+              completedBy: kidId,
+            ),
+            instanceRow(id: 'i-2', title: 'Brot holen', assignee: kidId),
+            instanceRow(id: 'i-3', title: 'Blumen giessen', assignee: kidId),
+          ],
+        },
+      );
+      final container = await pumpApp(
+        t,
+        overrides: baseOverrides(
+          identity: FakeIdentityRepository(
+            current: device(
+              deviceClass: DeviceClass.kiosk,
+              register: UiRegister.kiosk,
+            ),
+          ),
+        ),
+        board: FakeBoardRepository(_kioskBoard()),
+        tasks: api,
+      );
+      // Motion on: pumpApp holds everything still otherwise.
+      t.platformDispatcher.clearAccessibilityFeaturesTestValue();
+      await t.pump();
+      // The tick's own ScaleTransition, not the page route's around it.
+      List<double> ticks() => t
+          .widgetList<ScaleTransition>(
+            find.byWidgetPredicate(
+              (w) =>
+                  w is ScaleTransition &&
+                  w.child is Icon &&
+                  (w.child! as Icon).icon == Icons.check_circle,
+            ),
+          )
+          .map((s) => s.scale.value)
+          .toList();
+
+      await t.tap(find.text('Heute offen'));
+      await t.pump();
+      for (var i = 0; i < 60; i++) {
+        await t.pump(const Duration(milliseconds: 16));
+        expect(ticks(), everyElement(1.0));
+      }
+      expect(ticks(), hasLength(1));
+
+      api.tables['task_instances'] = [
+        ...api.tables['task_instances']!.take(1),
+        instanceRow(
+          id: 'i-2',
+          title: 'Brot holen',
+          assignee: kidId,
+          status: 'done',
+          completedBy: kidId,
+        ),
+        instanceRow(id: 'i-3', title: 'Blumen giessen', assignee: kidId),
+      ];
+      container.read(actingProfileProvider.notifier).select(kidId);
+      await t.pump();
+      await t.tap(find.text('Brot holen'));
+      var popped = false;
+      for (var i = 0; i < 30 && !popped; i++) {
+        await t.pump(const Duration(milliseconds: 16));
+        final now = ticks();
+        popped = now.length == 2 && now.any((s) => s < 1);
+      }
+      expect(popped, isTrue);
+      await t.pump(const Duration(seconds: 1));
+      expect(ticks(), everyElement(closeTo(1.0, 0.01)));
       await unmountApp(t, container);
     },
   );

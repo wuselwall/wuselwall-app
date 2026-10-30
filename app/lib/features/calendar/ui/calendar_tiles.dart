@@ -4,16 +4,21 @@ import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/emoji_picture.dart';
+import 'package:wuselwall/core/ui/whole_words_text.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
 import 'package:wuselwall/features/calendar/domain/calendar_models.dart';
 import 'package:wuselwall/features/calendar/ui/event_edit_args.dart';
 import 'package:wuselwall/features/calendar/ui/imported_occurrence_sheet.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
+import 'package:wuselwall/features/rituals/domain/event_icons.dart';
 
-/// Below this column width a timed block shows only its first attendee's initial: a
-/// word would break mid-syllable otherwise (specs/09, "never break").
-const _initialsBelow = 60.0;
+/// Below this column width an appointment shows no words: a timed block its picture
+/// or its first attendee's initial, an all-day chip its picture or mark, a presence
+/// band its colour. A word would break mid-syllable or end in "…" otherwise (specs/09,
+/// "never break"); the tooltip and the screen reader keep the title.
+const narrowColumn = 60.0;
 
 /// Below this width a title stays on one line: two lines of a narrow column break
 /// inside long words.
@@ -46,7 +51,7 @@ class OccurrenceTile extends StatelessWidget {
   /// One line: a chip in the all-day row.
   final bool compact;
 
-  /// The block's size on the grid; null for a chip.
+  /// The block's size on the grid; for a chip only its width, when known.
   final double? width;
   final double? height;
 
@@ -112,6 +117,13 @@ class OccurrenceTile extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             softWrap: softWrap,
           )
+        : softWrap
+        ? WholeWordsText(
+            occurrence.title,
+            maxLines: maxLines,
+            overflow: TextOverflow.ellipsis,
+            style: titleStyle,
+          )
         : Text(
             occurrence.title,
             maxLines: maxLines,
@@ -131,8 +143,26 @@ class OccurrenceTile extends StatelessWidget {
       ],
     );
 
+    // A narrow tile's picture, when the appointment has one.
+    final asset = eventIconAsset(occurrence.iconKey);
+    final scale = MediaQuery.textScalerOf(context).scale(1);
+    final narrow = (width ?? double.infinity) / scale < narrowColumn;
     final Widget content;
-    if (compact) {
+    if (compact && narrow) {
+      content = Center(
+        child: asset != null
+            ? EmojiPicture(asset, size: 14)
+            : imported
+            ? Icon(Icons.rss_feed, size: 12, color: ww.ink2)
+            : Text(
+                _initial(occurrence.title),
+                maxLines: 1,
+                softWrap: false,
+                overflow: TextOverflow.clip,
+                style: titleStyle,
+              ),
+      );
+    } else if (compact) {
       content = Row(
         children: [
           Expanded(child: titleText(maxLines: 1, softWrap: false)),
@@ -143,18 +173,28 @@ class OccurrenceTile extends StatelessWidget {
       // Choose detail using the space at the requested text size. A fixed-height
       // appointment cannot fit two lines at 200% merely because its unscaled
       // height could; the full detail remains in its accessibility label.
-      final scale = MediaQuery.textScalerOf(context).scale(1);
       final w = (width ?? double.infinity) / scale;
       final h = (height ?? double.infinity) / scale;
-      if (w < _initialsBelow) {
+      if (w < narrowColumn) {
+        final Widget initial = imported && attendees.isEmpty
+            ? Icon(Icons.rss_feed, size: 12, color: ww.ink2)
+            : Text(
+                attendees.isEmpty ? '' : _initial(attendees.first.displayName),
+                maxLines: 1,
+                softWrap: false,
+                overflow: TextOverflow.clip,
+                style: titleStyle,
+              );
         content = Center(
-          child: Text(
-            attendees.isEmpty ? '' : _initial(attendees.first.displayName),
-            maxLines: 1,
-            softWrap: false,
-            overflow: TextOverflow.clip,
-            style: titleStyle,
-          ),
+          child: asset == null
+              ? initial
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    EmojiPicture(asset, size: 16),
+                    if (h >= 40 && attendees.isNotEmpty) initial,
+                  ],
+                ),
         );
       } else if (h < _oneLineBelow) {
         content = Text.rich(
@@ -212,13 +252,14 @@ class OccurrenceTile extends StatelessWidget {
     final label = [
       occurrence.title,
       ?spanText,
+      if (narrow) ...[for (final m in attendees) m.displayName],
       if (occurrence.isTentative) l10n.boardTentative,
       if (imported) l10n.extCalSheetTitle,
     ].join(', ');
 
     // Past/tentative states soften decoration, while text keeps its checked
     // contrast. Fading the whole tile also faded its still-readable content.
-    return Semantics(
+    final tile = Semantics(
       button: true,
       label: label,
       child: Material(
@@ -273,10 +314,24 @@ class OccurrenceTile extends StatelessWidget {
         ),
       ),
     );
+    // Without its words, a narrow tile names itself on hover and long press: the
+    // title, when, and who (its letter is the first attendee's initial).
+    return narrow
+        ? Tooltip(
+            message: [
+              occurrence.title,
+              ?spanText,
+              for (final m in attendees) m.displayName,
+            ].join(' · '),
+            child: tile,
+          )
+        : tile;
   }
 }
 
 /// The first letter of a name, upper-cased; by code point, so no half characters.
+String initialOf(String name) => _initial(name);
+
 String _initial(String name) {
   if (name.isEmpty) return '';
   return String.fromCharCode(name.runes.first).toUpperCase();

@@ -173,6 +173,8 @@ only from member colours and `brand`, so it follows the theme like everything el
 
 A selected segment (`SegmentedButton`) or chip is `brand-tint` (the acting member's tint under `forMember`) with AA text, set once in `AppTheme` and never `sunken`, which is invisible on the page; a selected segment's label is also bold, so the cue is not colour alone.
 
+A segment label is never broken inside a word. Where the labels of a row of segments do not each fit their segment on one line (a narrow phone, a larger text size), the row becomes a wrapping row of chips with the same choices (`_EnumChoice` in the settings, *added 2026-10-26*).
+
 **Clarified 2026-10-17 (A6, `t_da411148`):** targets are actual non-overlapping
 hit areas in logical pixels, minimum width **and** height, after visual density,
 padding and layout constraints. A nominal `minimumSize` of 56 is not sufficient if
@@ -182,6 +184,11 @@ NFR-13 to match current code. A compact decorative band may sit inside a larger
 use the existing containing row/cell detail action rather than tiny independent
 buttons. Keep meaningful band labels in the container's semantics and retain
 access to their full detail. Coordinate board actions with A1 (`t_39e3e9d5`).
+
+A row that scrolls sideways (list chips, a scrollable tab bar, the wall's tile strip)
+fades out at the edge where more lies beyond it (`EdgeFade` in `core/ui`), so a chip cut at
+the edge reads as "scroll for more"; a control beside the row (the list pencil) sits
+outside it and never over a chip.
 
 The 24 px kiosk minimum, system text scaling and rendered contrast acceptance are
 clarified in [09 — Degradation rules](09-clients-and-ux.md#degradation-rules).

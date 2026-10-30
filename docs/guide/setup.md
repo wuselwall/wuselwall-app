@@ -29,7 +29,7 @@ deine Adresse; er ist etwas anderes als der Einrichtungscode für einen neuen Se
 
 <Shot name="setup-sign-in" alt="Anmeldung mit E-Mail" />
 
-Lieber mit Passwort? Tippe auf **Ich habe ein Passwort**. Gib deine E-Mail-Adresse und dein Passwort ein; beide Felder werden vor der Anmeldung geprüft. Das Passwort legst du unter **Einstellungen → Erweitert → Anmeldung** fest, mindestens 10 Zeichen. Der Code per E-Mail bleibt immer möglich.
+Lieber mit Passwort? Tippe auf **Ich habe ein Passwort**. Gib deine E-Mail-Adresse und dein Passwort ein und tippe auf **Anmelden**; beide Felder werden vor der Anmeldung geprüft. Das Passwort legst du unter **Einstellungen → Konto & Sicherheit → Anmeldung** fest, mindestens 10 Zeichen. Der Code per E-Mail bleibt immer möglich.
 
 Beim allerersten Mal fragt WuselWall einmal, wie du dich künftig anmelden möchtest: mit dem **Code per E-Mail** (nichts zu merken) oder mit einem **Passwort**.
 

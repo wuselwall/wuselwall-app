@@ -17,7 +17,7 @@ second schedule. The remaining decisions follow the next work package:
 | **3 — Family Alpha: learn** | Curated defaults, including Q13 and Q25–Q27 | Review after two weeks of use; preserve household overrides ([#136](https://github.com/wuselwall/wuselwall-app/issues/136)) |
 | **Later, with a real case** | Q15–Q17, Q20, Q28, Q38/Q47, Q43 | Select from [23](23-roadmap-after-alpha.md), without a promised release |
 
-Q48 (no-mail sign-up), Q50 (birthdays) and Q51–Q57 are decided implementation scope,
+Q48 (no-mail sign-up), Q50 (birthdays), Q51–Q57 and Q58 are decided implementation scope,
 not unanswered blockers. Q48 was built 2026-10-26 (milestone 1); Q50–Q57 were built with milestone 2. Q53's recorded
 DE/EN-first question-deck exception does not reduce the four-language interface scope.
 
@@ -114,6 +114,7 @@ editor is built, not after.*
 | Q55 | Does iOS Reduce Motion reach Flutter's `disableAnimations`? | Every celebration and Wusel's motion depend on one motion check; a forum report says it did not on Flutter 3.27, and a framework change proposes a separate flag | **Decided 2026-10-24: no.** Flutter 3.47's documentation says iOS Reduce Motion is exposed as `AccessibilityFeatures.reduceMotion` and does not set `disableAnimations`; `motionAllowed` reads both ([26](26-colour-and-ambience.md#motion)) |
 | Q56 | Where do the four sounds come from? | Bundled assets need a clear licence in `NOTICE`; a sound from a commercial library cannot ship in an open repository | **Decided 2026-10-24:** synthesised for the project from sine tones by `scripts/sound-effects.mjs`; no third-party sound ([26](26-colour-and-ambience.md#sound-and-haptics)) |
 | Q57 | How do Vorfreude, the Tischfrage and the Wochenrückblick tile share the board header? | All three want the header, and the board's week must stay readable from two metres (P6) | **Decided 2026-10-24:** the header's middle shows the Tischfrage during its meal window instead of the next-up line; Vorfreude (as many as fit) and the Rückblick tile live in the footer ([27](27-family-rituals.md#vorfreude)) |
+| Q58 | Should Wusel leave its box and move over the whole screen? | Children asked for Wusel, and motion computed each frame is what Flutter does well. But spec 25 said Wusel never covers content and never initiates, and the trial had not yet judged the Wusel in its box | **Decided 2026-10-26 by the user:** yes, specified and built in one branch before the trial. In the kid register and on the wall only. Wusel acts only after a moment, then has a 30 s afterglow; it does not wander on its own. In the kid register it joins the chores and carries the points, the eyes follow the finger, it can be tickled, and it reacts to tilting (native only). On the wall it leaves its corner only for a member's last chore and otherwise stays there for the tickles. No picking up and throwing ([25](25-wusel.md#wusel-on-the-move)) |
 
 ## Answered by the mockups
 

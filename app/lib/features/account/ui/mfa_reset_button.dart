@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
@@ -35,10 +36,28 @@ class MfaResetButton extends ConsumerWidget {
     final hasMfa = security.any((s) => s.profileId == member.id && s.hasMfa);
     if (!hasMfa) return hidden;
 
-    return TextButton(
-      key: ValueKey('mfa-reset-${member.id}'),
-      onPressed: () => _reset(context, ref),
-      child: Text(context.l10n.mfaResetAction),
+    // A security action, so it says so: an icon, and one line on when it is needed.
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        TextButton.icon(
+          key: ValueKey('mfa-reset-${member.id}'),
+          onPressed: () => _reset(context, ref),
+          icon: const Icon(Icons.lock_reset),
+          label: Text(context.l10n.mfaResetAction),
+        ),
+        Padding(
+          padding: const EdgeInsetsDirectional.only(start: Tokens.space3),
+          child: Text(
+            context.l10n.mfaResetHint,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ),
+      ],
     );
   }
 

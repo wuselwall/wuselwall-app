@@ -20,6 +20,6 @@ Cuando el dispositivo vuelve a «nadie», por ejemplo tras un minuto sin tocar l
 
 Añadir o bloquear dispositivos está reservado a los adultos responsables. En un dispositivo **compartido**, toca tu nombre e introduce tu **PIN de seis cifras**. La autorización dura **15 minutos** y solo es tuya: elegir otro nombre no transfiere permisos.
 
-Un error muestra los intentos restantes. Tras varios errores hay que esperar; con diez, el PIN queda bloqueado. Puedes desbloquearlo o cambiar uno olvidado desde **tu móvil personal conectado**, en **Ajustes → Avanzados → Seguridad → PIN de responsable**. El nuevo PIN funciona inmediatamente.
+Un error muestra los intentos restantes. Tras varios errores hay que esperar; con diez, el PIN queda bloqueado. Puedes desbloquearlo o cambiar uno olvidado desde **tu móvil personal conectado**, en **Ajustes → Cuenta y seguridad → Seguridad → PIN de responsable**. El nuevo PIN funciona inmediatamente.
 
 En tu móvil personal ya conectado no necesitas PIN.

@@ -112,6 +112,7 @@
   "settingsMembers": "Members",
   "settingsDevices": "Devices",
   "addMember": "Add member",
+  "addMemberSubtitle": "A child, or someone without an account of their own",
   "memberName": "Name",
   "roleGuardian": "Guardian",
   "roleMember": "Member",
@@ -242,6 +243,7 @@
       }
     }
   },
+  "shoppingTileOnList": "Already on the list",
   "shoppingAddedBy": "Added by {name}",
   "@shoppingAddedBy": {
     "placeholders": {
@@ -363,6 +365,10 @@
     }
   },
   "boardNoSchool": "free",
+  "boardSchoolOff": "no school",
+  "@boardSchoolOff": {
+    "description": "Wall board, a child's row: a school's own day off whose name does not fit the narrow day column (e.g. a floating holiday)."
+  },
   "boardCareUntil": "{label} until {time}",
   "@boardCareUntil": {
     "placeholders": {
@@ -701,7 +707,7 @@
   "@eventKeyDisplayOn": {},
   "eventKeyDisplayOff": "This event won’t show on the kitchen display.",
   "@eventKeyDisplayOff": {},
-  "eventKeyDisplayOffWholeFamily": "Not on the kitchen display: only events for the whole family go there by default.",
+  "eventKeyDisplayOffWholeFamily": "This event won’t show on the kitchen display. Events for the whole family show there on their own.",
   "@eventKeyDisplayOffWholeFamily": {},
   "eventRepeat": "Repeat",
   "@eventRepeat": {},
@@ -1206,6 +1212,11 @@
       }
     }
   },
+  "tasksPointsUnit": "{count, plural, =1{point} other{points}}",
+  "@tasksPointsUnit": {
+    "description": "The word after the points coin on a child's chore card, e.g. [5] points.",
+    "placeholders": {"count": {"type": "int"}}
+  },
   "tasksStreakDays": "{count, plural, =1{1 day in a row} other{{count} days in a row}}",
   "@tasksStreakDays": {
     "placeholders": {
@@ -1386,7 +1397,6 @@
   "kidTasksTitle": "My chores",
   "kidTasksNone": "You have no chores today.",
   "kidTasksAllDone": "All done!",
-  "kidTasksAllDoneBody": "Well done, you did everything for today.",
   "kidAwaitsCheck": "being checked",
   "kidDone": "Done",
   "kidTaskDoneSnack": "{title} done!",
@@ -1680,6 +1690,18 @@
       }
     }
   },
+  "regionPickKindOf": "{kind} · {parent}",
+  "@regionPickKindOf": {
+    "description": "A district or municipality in the region picker: its kind first, then where it lies (\"Gemeinde · Bezirk Uster\").",
+    "placeholders": {
+      "kind": {
+        "type": "String"
+      },
+      "parent": {
+        "type": "String"
+      }
+    }
+  },
   "regionPickDeeperTitle": "Choose more precisely (district or municipality)",
   "regionPickDeeperSearch": "Type a municipality or district",
   "regionPickNoMatch": "Nothing found",
@@ -1847,6 +1869,10 @@
   "shoppingNavLabel": "Shopping",
   "@shoppingNavLabel": {
     "description": "Short label of the shopping list in the bottom navigation bar; the page title stays shoppingTitle."
+  },
+  "scheduleNavLabel": "School",
+  "@scheduleNavLabel": {
+    "description": "Short label of the Stundenplan in a bottom navigation bar where the full title does not fit (a phone, large text); the page title stays scheduleTitle."
   },
   "scanHint": "Hold the camera over the QR code on the other device.",
   "scanCameraDenied": "WuselWall has no access to the camera, so it cannot scan the code. Allow the camera in the system settings, or type the code instead.",
@@ -2047,6 +2073,7 @@
   "householdNewCodeSaved": "Setup code saved from your setup link. You do not need to enter it again.",
   "householdSeedExamples": "Start with examples — 5 tasks, 3 rewards",
   "householdNewCreate": "Create family",
+  "householdNewCreating": "Creating your family …",
   "householdNewInvited": "I was invited",
   "householdInvitedNote": "Invitations arrive with the next update.",
   "householdNewSignOut": "Sign out",
@@ -2210,6 +2237,7 @@
   "inviteCodeLabel": "Code or link",
   "inviteCheckAction": "Check invitation",
   "inviteCodeInvalidFormat": "That is neither an invitation code nor a WuselWall link.",
+  "inviteCodeEmpty": "Enter the code or link.",
   "inviteNoLonger": "This invitation is no longer valid. Ask the person who invited you for a new one.",
   "inviteRateLimited": "Too many attempts. Wait a few minutes and try again.",
   "inviteBanner": "{inviter} has invited you to {household}",
@@ -2363,6 +2391,7 @@
   "accountDeleteReauthConfirm": "Confirm",
   "accountDeleteReauthSignInAgain": "Sign in again first, then you can delete the account.",
   "mfaResetAction": "Reset two-factor",
+  "mfaResetHint": "When the authenticator app is lost",
   "mfaResetConfirmTitle": "Reset two-factor?",
   "mfaResetConfirmBody": "{name} can sign in without a second factor afterwards and set it up again.",
   "@mfaResetConfirmBody": {
@@ -2382,16 +2411,17 @@
     }
   },
   "serverTitle": "Which server?",
-  "serverLead": "WuselWall keeps your family's data on your family's own server. Enter its address, or scan its QR code. Got an invitation? Paste the link, or the code together with the server, like K7QM3XRP@api.example.org.",
+  "serverLead": "WuselWall keeps your family's data on your family's own server. Enter its address, or scan its QR code.",
   "serverAddressLabel": "Server address",
   "serverAddressHint": "e.g. api.example.org",
+  "serverAddressHelper": "With an invitation: the link, or code and server like K7QM3XRP@api.example.org",
   "serverConnect": "Connect",
   "serverScan": "Scan QR code",
-  "serverScanTitle": "Scan the server's QR code",
   "serverDemo": "Try it without a server",
   "serverDemoHint": "With an example family. Nothing leaves this device.",
   "serverHelp": "No server yet? The guide at wuselwall.app/docs shows how to set one up.",
   "serverInvalid": "That is not a server address.",
+  "serverEmpty": "Enter the server's address.",
   "serverUnreachable": "The server does not answer. Is the address right, and are you online?",
   "serverNotWuselwall": "There is no WuselWall server at this address.",
   "serverTooOld": "This server needs an update. Ask whoever runs it to update WuselWall.",
@@ -2573,8 +2603,7 @@
   "languageNameEs": "Español",
   "settingsViewLabel": "Which settings to show",
   "settingsViewAdvanced": "Advanced",
-  "settingsViewMoreHint": "More settings are under Advanced. Hidden settings still apply.",
-  "settingsViewShowAll": "Show all settings",
+  "settingsViewMoreHint": "More under Advanced, above. Hidden settings still apply.",
   "schoolTimetableNeedsTerm": "The week shown is not in any term yet. Add the term it belongs to, then enter the lessons.",
   "schoolTermContinue": "Save term and continue",
   "schoolSetupFirstHint": "Bell times (from 8:00, 45 minutes) and a subject list are proposed. Both can be adjusted afterwards.",
@@ -2761,8 +2790,8 @@
   "settingsSectionThisDevice": "This device",
   "settingsSectionConnect": "Sharing and connections",
   "settingsMembersHint": "Tap a person to change their name, colour, picture or role. Drag the handle to change the order on the wall.",
-  "familyTitle": "Family",
   "familySettingsSubtitle": "Name, time zone, data export, delete",
+  "familySettingsSubtitleBasic": "Your family's name",
   "familyTimezone": "Time zone",
   "familyTimezoneHelp": "The wall and reminders follow this zone.",
   "familyTimezoneSearch": "Search time zone",
@@ -3386,6 +3415,14 @@
     }
   },
   "mealsWishPlan": "Put on the plan",
+  "mealsWishPlanTitle": "Plan {dish}",
+  "@mealsWishPlanTitle": {
+    "placeholders": {
+      "dish": {
+        "type": "String"
+      }
+    }
+  },
   "mealsWishRemove": "Remove the wish",
   "mealsWishedBy": "{name}'s wish",
   "@mealsWishedBy": {
@@ -3420,6 +3457,7 @@
   },
   "tableQuestionsManage": "Our questions",
   "tableQuestionAdd": "Add a question",
+  "tableQuestionOwnLabel": "Your question",
   "tableQuestionAddHint": "What would you like to ask at the table?",
   "tableQuestionHide": "Don't ask this one again",
   "tableQuestionRemove": "Remove the question",
@@ -3555,37 +3593,40 @@
   },
   "weekHighlightHelped": "helped with the chores",
   "weekHighlightHere": "was part of our week",
-  "settingsOwnTitle": "Settings for {name}",
-  "@settingsOwnTitle": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
   "settingsGroupPersonalTitle": "Personal",
   "settingsGroupPersonalSubtitle": "Wusel, sounds and reminders for you",
   "settingsGroupFamilyTitle": "Family",
-  "settingsGroupFamilySubtitle": "Name, time zone, members and the usual week",
+  "settingsGroupFamilySubtitle": "Name, region, members and the usual week",
   "settingsGroupTasksTitle": "Tasks & rewards",
+  "settingsGroupTasksShortTitle": "Tasks",
   "settingsGroupTasksSubtitle": "Points, streak jokers and approvals",
+  "settingsGroupTasksSubtitleBasic": "Streak jokers and approvals",
   "settingsGroupCalendarTitle": "Calendar & school",
+  "settingsGroupCalendarShortTitle": "Calendar",
   "settingsGroupCalendarSubtitle": "Events, timetable changes and sharing",
+  "settingsGroupCalendarSubtitleBasic": "Who may change their own events",
   "settingsGroupMealsTitle": "Meals",
   "settingsGroupMealsSubtitle": "Warm meals, meal wishes and care lunch",
+  "settingsGroupMealsSubtitleBasic": "Warm meals and meal wishes",
   "settingsGroupRitualsTitle": "Rituals",
   "settingsGroupRitualsSubtitle": "Question at the table, our week, countdowns",
+  "settingsGroupRitualsSubtitleBasic": "Question at the table and our week",
   "settingsGroupCelebrationsTitle": "Celebrations & seasons",
+  "settingsGroupCelebrationsShortTitle": "Celebrations",
   "settingsGroupCelebrationsSubtitle": "Advent, Easter, New Year, birthdays and the seasons",
+  "settingsGroupCelebrationsSubtitleBasic": "Advent, Easter and New Year",
   "settingsGroupKitchenTitle": "Kitchen wall",
+  "settingsGroupKitchenShortTitle": "Kitchen wall",
   "settingsGroupKitchenSubtitle": "Names, the change of week and the parts of the day",
   "settingsGroupDevicesTitle": "Devices",
   "settingsGroupDevicesSubtitle": "This device and every device of the family",
   "settingsGroupAccountTitle": "Account & security",
+  "settingsGroupAccountShortTitle": "Account",
   "settingsGroupAccountSubtitle": "Sign-in, password, two-factor, leaving the family",
   "settingsGroupServerTitle": "Server",
   "settingsGroupServerSubtitle": "Address, QR code and changing the server",
   "settingsGroupHelpTitle": "Help & about",
+  "settingsGroupHelpShortTitle": "Help",
   "settingsGroupHelpSubtitle": "Getting started, versions, licenses",
   "settingsSectionWusel": "Wusel",
   "settingsSectionSound": "Sound",
@@ -3666,6 +3707,7 @@
   "@eventTemplatesBuiltIn": {
     "description": "Section of the new-event page: the built-in templates."
   },
+  "eventTemplatesBuiltInMore": "More templates",
   "eventTemplateBlank": "Start blank",
   "@eventTemplateBlank": {
     "description": "The tile that opens the empty event editor."
@@ -3725,9 +3767,17 @@
       }
     }
   },
-  "eventTemplateCount": "{count}× so far",
+  "eventTemplateCount": "Used {count}×",
   "@eventTemplateCount": {
     "description": "Part of a suggestion tile's line: how many such events the family entered.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eventTemplateCountShort": "{count}×",
+  "@eventTemplateCountShort": {
     "placeholders": {
       "count": {
         "type": "int"

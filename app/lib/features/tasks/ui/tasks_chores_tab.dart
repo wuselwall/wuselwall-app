@@ -112,7 +112,7 @@ class _DefinitionTile extends StatelessWidget {
             if (d.requiresVerification) l10n.tasksFieldVerification,
           ].join(' · '),
         ),
-        trailing: PointsCoin(points: d.points, fontSize: 14),
+        trailing: PointsCoin(points: d.points, fontSize: 14, withUnit: true),
       ),
     );
   }

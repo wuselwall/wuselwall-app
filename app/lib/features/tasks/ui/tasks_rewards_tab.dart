@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
+import 'package:wuselwall/app/theme/ww_colors.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
@@ -80,6 +81,11 @@ Future<void> openRewardEditor(
   await showRewardEditor(context, defaults: defaults, existing: existing);
 }
 
+/// One reward of the catalogue. On the adult register it is a catalogue entry: a tap
+/// edits it, and there is neither a "Wünschen" nor a shortfall, since a grown-up's
+/// own balance says nothing about it. A child acting on a shared device asks for it
+/// here, and sees how many points are still missing. The title has the width of the
+/// card; the coin sits beside it and the request under it, as on the kid card.
 class _RewardTile extends ConsumerWidget {
   const _RewardTile({required this.reward});
 
@@ -88,9 +94,13 @@ class _RewardTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
+    final theme = Theme.of(context);
     final balances = ref.watch(pointBalancesProvider).value ?? const {};
     final actor = ref.watch(actingProfileProvider);
-    final balance = actor == null ? null : balances[actor];
+    final members = ref.watch(membersProvider).value ?? const <Member>[];
+    final child =
+        actor != null && members.any((m) => m.id == actor && m.isChild);
+    final balance = child ? balances[actor] : null;
     final short = balance == null ? 0 : reward.costPoints - balance;
     final notes = [
       if (reward.soldOut) l10n.tasksSoldOut,
@@ -98,23 +108,57 @@ class _RewardTile extends ConsumerWidget {
     ];
     return Card(
       margin: const EdgeInsets.only(bottom: Tokens.space2),
-      child: ListTile(
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
         onTap: () => openRewardEditor(context, ref, existing: reward),
-        leading: TaskGlyph(iconKey: reward.iconKey),
-        title: Text(reward.title),
-        subtitle: notes.isEmpty ? null : Text(notes.join(' · ')),
-        trailing: Wrap(
-          spacing: Tokens.space2,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            PointsCoin(points: reward.costPoints, fontSize: 14),
-            OutlinedButton(
-              onPressed: reward.soldOut
-                  ? null
-                  : () => _ask(context, ref, reward),
-              child: Text(l10n.tasksAskForReward),
-            ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(
+            Tokens.space4,
+            Tokens.space3,
+            Tokens.space4,
+            Tokens.space3,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  TaskGlyph(iconKey: reward.iconKey),
+                  const SizedBox(width: Tokens.space3),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(reward.title, style: theme.textTheme.titleMedium),
+                        if (notes.isNotEmpty)
+                          Text(
+                            notes.join(' · '),
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: context.ww.ink2,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: Tokens.space2),
+                  PointsCoin(points: reward.costPoints, fontSize: 14),
+                ],
+              ),
+              if (child)
+                Align(
+                  alignment: AlignmentDirectional.centerEnd,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: Tokens.space2),
+                    child: OutlinedButton(
+                      onPressed: reward.soldOut
+                          ? null
+                          : () => _ask(context, ref, reward),
+                      child: Text(l10n.tasksAskForReward),
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );

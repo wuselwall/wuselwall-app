@@ -54,7 +54,7 @@ Docker). The server runs four scheduled jobs: `tasks-nightly`,
 [specs/13](specs/13-roadmap.md): (1) everyday essentials, the remaining journey gaps of
 [step 10](specs/16-setup-plan.md#step-10--journey-gaps-before-launch-m15); (2) a lighter day,
 [step 11](specs/16-setup-plan.md#step-11--a-lighter-day-m15), built 2026-10-24: Wusel drawn in code
-(`app/lib/core/wusel/`, goldens in `app/test/golden/`), module bands, the wall's sky, occasions and pixel shift,
+(`app/lib/core/wusel/`, goldens in `app/test/golden/`; since 2026-10-26 also on the move in the kid register and on the wall: `WuselStage`, `WuselRig`, tilt through `sensors_plus`, specs/25), module bands, the wall's sky, occasions and pixel shift,
 celebrations with synthesised sounds (`scripts/sound-effects.mjs`), birthdays, Vorfreude, traditions,
 Wunschessen, the Tischfrage (DE/EN decks in `app/assets/table_questions/`) and the Wochenrückblick
 (migrations `20261024100000`/`20261024110000`, pgTAP 235); screenshots hold still with `?still=1`; (3) qualify the candidate, run the

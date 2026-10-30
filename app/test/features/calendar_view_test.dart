@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/intl.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/board/ui/board_primitives.dart';
 import 'package:wuselwall/features/calendar/application/calendar_providers.dart';
@@ -278,6 +279,117 @@ void main() {
     expect(find.text('Elternabend'), findsOneWidget);
     // Too narrow for a title: the block shows its first attendee's initial.
     expect(find.text('P'), findsWidgets);
+  });
+
+  testWidgets(
+    'a one-day chip in a phone week names itself only in its tooltip',
+    (t) async {
+      await pumpApp(
+        t,
+        size: const Size(390, 844),
+        overrides: baseOverrides(
+          identity: FakeIdentityRepository(current: device()),
+        ),
+        calendar: FakeCalendarRepository([
+          occ(
+            title: 'Fotografieren',
+            day: dayOfThisWeek(1),
+            attendees: const [kidId],
+          ),
+          occ(
+            title: 'Dienst',
+            day: dayOfThisWeek(0),
+            attendees: const [guardianId],
+            presence: PresenceState.working,
+          ),
+        ]),
+      );
+      await openTab(t, 'Kalender');
+      await t.tap(find.byTooltip(_de.calendarChooseView));
+      await t.pumpAndSettle();
+      await _chooseMode(t, _de.calendarWeek);
+
+      expect(t.takeException(), isNull);
+      // No "Fo…" and no "Die…": the words wait in the tooltip.
+      expect(textWith('Fotografieren'), findsNothing);
+      // The tooltip says what, and who.
+      expect(find.byTooltip('Fotografieren · Anna'), findsOneWidget);
+      expect(find.byTooltip('Dienst · Papa'), findsOneWidget);
+      // A one-day band keeps its title's first letter, never an empty bar.
+      expect(textWith('D'), findsWidgets);
+      // The all-day row's mark replaces the cut "ganzt…".
+      expect(find.byTooltip(_de.boardAllDay), findsOneWidget);
+    },
+  );
+
+  testWidgets('a phone has one floating button over the calendar', (t) async {
+    await pumpApp(
+      t,
+      size: const Size(390, 844),
+      overrides: baseOverrides(
+        identity: FakeIdentityRepository(current: device()),
+      ),
+    );
+    await openTab(t, 'Kalender');
+    expect(find.byType(FloatingActionButton), findsOneWidget);
+  });
+
+  testWidgets('the day view names the day in full once, the bar short', (
+    t,
+  ) async {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    await pumpApp(
+      t,
+      size: const Size(360, 640),
+      overrides: baseOverrides(
+        identity: FakeIdentityRepository(current: device()),
+      ),
+      calendar: FakeCalendarRepository([
+        occ(
+          title: 'Zahnarzt',
+          day: today,
+          from: const TimeOfDay(hour: 10, minute: 0),
+          to: const TimeOfDay(hour: 11, minute: 0),
+        ),
+      ]),
+    );
+    await openTab(t, 'Kalender');
+    final full = DateFormat.MMMMEEEEd('de').format(today);
+    expect(find.text(full), findsOneWidget);
+    expect(
+      find.descendant(of: find.byType(AppBar), matching: find.text(full)),
+      findsNothing,
+    );
+  });
+
+  testWidgets('the time grid scrolls its last hour clear of the buttons', (
+    t,
+  ) async {
+    await pumpApp(
+      t,
+      size: const Size(390, 844),
+      overrides: baseOverrides(
+        identity: FakeIdentityRepository(current: device()),
+      ),
+    );
+    await openTab(t, 'Kalender');
+    final grid = find
+        .descendant(
+          of: find.byType(CalendarBoard),
+          matching: find.byType(Scrollable),
+        )
+        .last;
+    await t.drag(grid, const Offset(0, -3000));
+    await t.pumpAndSettle();
+    final lastHour = find.text('21').last;
+    final label = t.getRect(lastHour);
+    for (final fab in find.byType(FloatingActionButton).evaluate()) {
+      expect(
+        label.bottom,
+        lessThanOrEqualTo(t.getRect(find.byWidget(fab.widget)).top),
+      );
+    }
   });
 
   testWidgets(

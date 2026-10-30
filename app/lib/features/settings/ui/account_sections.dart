@@ -14,6 +14,7 @@ import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/identity/data/identity_repository.dart';
 import 'package:wuselwall/features/identity/domain/models.dart';
 import 'package:wuselwall/features/identity/ui/set_password_dialog.dart';
+import 'package:wuselwall/features/settings/ui/action_tile.dart';
 
 /// How this account signs in (specs/20, "Several ways into one account") — for the
 /// adult's own phone: the email code, always, and an optional password. On a server
@@ -49,18 +50,24 @@ class _SignInMethodsSectionState extends ConsumerState<SignInMethodsSection> {
                   : l10n.signInMethodEmailSubtitle(email),
             ),
           ),
-        _ResponsiveActionTile(
-          icon: Icons.lock_outline,
-          title: l10n.settingsPasswordTitle,
-          subtitle: !emailCode
-              ? l10n.settingsPasswordNoMail
-              : hasPassword
-              ? l10n.settingsPasswordSet
-              : l10n.settingsPasswordNotSet,
-          action: OutlinedButton(
-            onPressed: _setPassword,
-            child: Text(
-              hasPassword ? l10n.passwordChangeAction : l10n.passwordSetAction,
+        SettingsActionTile(
+          leading: const Icon(Icons.lock_outline),
+          title: Text(l10n.settingsPasswordTitle),
+          subtitle: Text(
+            !emailCode
+                ? l10n.settingsPasswordNoMail
+                : hasPassword
+                ? l10n.settingsPasswordSet
+                : l10n.settingsPasswordNotSet,
+          ),
+          action: _actionTarget(
+            OutlinedButton(
+              onPressed: _setPassword,
+              child: Text(
+                hasPassword
+                    ? l10n.passwordChangeAction
+                    : l10n.passwordSetAction,
+              ),
             ),
           ),
         ),
@@ -92,54 +99,60 @@ class SecuritySection extends ConsumerWidget {
         factor.when(
           loading: () => const ListTile(title: LinearProgressIndicator()),
           error: (_, _) => ListTile(title: Text(l10n.errorUnknown)),
-          data: (id) => _ResponsiveActionTile(
-            icon: Icons.security,
-            title: l10n.totpTitle,
-            subtitle: id == null ? l10n.totpOff : l10n.totpOn,
-            action: id == null
-                ? FilledButton(
-                    onPressed: () => _enableTotp(context, ref),
-                    child: Text(l10n.totpEnable),
-                  )
-                : TextButton(
-                    onPressed: () async {
-                      final result = await repo.totpDisable(id);
-                      if (!context.mounted) return;
-                      result.when(
-                        ok: (_) => ref.invalidate(totpFactorProvider),
-                        err: context.showFailure,
-                      );
-                    },
-                    child: Text(l10n.totpDisable),
-                  ),
+          data: (id) => SettingsActionTile(
+            leading: const Icon(Icons.security),
+            title: Text(l10n.totpTitle),
+            subtitle: Text(id == null ? l10n.totpOff : l10n.totpOn),
+            action: _actionTarget(
+              id == null
+                  ? FilledButton(
+                      onPressed: () => _enableTotp(context, ref),
+                      child: Text(l10n.totpEnable),
+                    )
+                  : TextButton(
+                      onPressed: () async {
+                        final result = await repo.totpDisable(id);
+                        if (!context.mounted) return;
+                        result.when(
+                          ok: (_) => ref.invalidate(totpFactorProvider),
+                          err: context.showFailure,
+                        );
+                      },
+                      child: Text(l10n.totpDisable),
+                    ),
+            ),
           ),
         ),
-        _ResponsiveActionTile(
-          icon: Icons.pin_outlined,
-          title: l10n.pinChangeTitle,
-          subtitle: l10n.pinChangeBody,
-          action: OutlinedButton(
-            onPressed: () => _changePin(context, repo),
-            child: Text(l10n.pinChangeAction),
+        SettingsActionTile(
+          leading: const Icon(Icons.pin_outlined),
+          title: Text(l10n.pinChangeTitle),
+          subtitle: Text(l10n.pinChangeBody),
+          action: _actionTarget(
+            OutlinedButton(
+              onPressed: () => _changePin(context, repo),
+              child: Text(l10n.pinChangeAction),
+            ),
           ),
         ),
         // Not on the web until the passkeys SDK is self-hosted (web/index.html), and
         // only in a build that names its own server (ADR-018).
         if (!kIsWeb && ref.watch(appConfigProvider).passkeys)
-          _ResponsiveActionTile(
-            icon: Icons.fingerprint,
-            title: l10n.passkeyTitle,
-            subtitle: l10n.passkeyBody,
-            action: OutlinedButton(
-              onPressed: () async {
-                final result = await repo.registerPasskey(l10n.appTitle);
-                if (!context.mounted) return;
-                result.when(
-                  ok: (_) => context.showMessage(l10n.passkeyAdded),
-                  err: context.showFailure,
-                );
-              },
-              child: Text(l10n.passkeyAdd),
+          SettingsActionTile(
+            leading: const Icon(Icons.fingerprint),
+            title: Text(l10n.passkeyTitle),
+            subtitle: Text(l10n.passkeyBody),
+            action: _actionTarget(
+              OutlinedButton(
+                onPressed: () async {
+                  final result = await repo.registerPasskey(l10n.appTitle);
+                  if (!context.mounted) return;
+                  result.when(
+                    ok: (_) => context.showMessage(l10n.passkeyAdded),
+                    err: context.showFailure,
+                  );
+                },
+                child: Text(l10n.passkeyAdd),
+              ),
             ),
           ),
       ],
@@ -201,83 +214,11 @@ class SecuritySection extends ConsumerWidget {
   }
 }
 
-/// Account actions keep their descriptions readable at enlarged text sizes.
-/// The button is its own semantic control in both arrangements.
-class _ResponsiveActionTile extends StatelessWidget {
-  const _ResponsiveActionTile({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.action,
-  });
-
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final Widget action;
-
-  @override
-  Widget build(BuildContext context) => LayoutBuilder(
-    builder: (context, constraints) {
-      final button = ConstrainedBox(
-        constraints: const BoxConstraints(minHeight: 48),
-        child: action,
-      );
-      if (constraints.maxWidth / MediaQuery.textScalerOf(context).scale(1) >=
-          600) {
-        return ListTile(
-          leading: Icon(icon),
-          title: Text(title),
-          subtitle: Text(subtitle),
-          trailing: button,
-        );
-      }
-      final theme = Theme.of(context);
-      return Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: Tokens.space4,
-          vertical: Tokens.space2,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(icon),
-                const SizedBox(width: Tokens.space4),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(title, style: theme.textTheme.bodyLarge),
-                      Text(
-                        subtitle,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsetsDirectional.only(
-                start: 40,
-                top: Tokens.space2,
-              ),
-              child: Align(
-                alignment: AlignmentDirectional.centerEnd,
-                child: button,
-              ),
-            ),
-          ],
-        ),
-      );
-    },
-  );
-}
+/// Keep each button as its own semantic control with at least a 48dp tap target.
+Widget _actionTarget(Widget action) => ConstrainedBox(
+  constraints: const BoxConstraints(minHeight: 48),
+  child: action,
+);
 
 class _TotpEnrolDialog extends ConsumerStatefulWidget {
   const _TotpEnrolDialog({required this.enrolment});

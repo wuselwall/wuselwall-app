@@ -18,7 +18,7 @@ El código verifica tu dirección. No es el **código de configuración del serv
 
 <Shot name="setup-sign-in" alt="El inicio de sesión por correo electrónico" />
 
-Si prefieres contraseña, elige esa opción e introduce tu dirección de correo y la contraseña. La app comprueba ambos campos antes de iniciar sesión. Puedes definirla en **Ajustes → Avanzados → Inicio de sesión**, con al menos **10 caracteres**. El código por correo sigue disponible. Al crear la cuenta, la app pregunta una vez qué método prefieres. Si activaste el segundo factor, después tendrás que introducir el código de tu app de autenticación ([Seguridad](/es/settings/security)).
+Si prefieres contraseña, elige esa opción e introduce tu dirección de correo y la contraseña y toca **Iniciar sesión**. La app comprueba ambos campos antes de iniciar sesión. Puedes definirla en **Ajustes → Cuenta y seguridad → Inicio de sesión**, con al menos **10 caracteres**. El código por correo sigue disponible. Al crear la cuenta, la app pregunta una vez qué método prefieres. Si activaste el segundo factor, después tendrás que introducir el código de tu app de autenticación ([Seguridad](/es/settings/security)).
 
 **Servidor sin correo** ([Correo](/es/server/email)): **Continuar con correo electrónico** se abre en **Cuenta nueva**. Introduce tu dirección y una contraseña de al menos 10 caracteres y toca **Crear cuenta**; no hay código ni correo de confirmación. ¿Ya tienes cuenta? **Iniciar sesión**. ¿Olvidaste la contraseña? Toca **¿Olvidaste tu contraseña?** y pide un código a un responsable de tu familia ([Restablecer](/es/settings/members-devices#reset-password)).
 

@@ -63,7 +63,8 @@ class InviteAdultTile extends ConsumerWidget {
     final l10n = context.l10n;
     return ListTile(
       key: const ValueKey('invite-adult'),
-      leading: const Icon(Icons.person_add_alt_1),
+      // Not the "add person" icon of the row above: this one sends an invitation.
+      leading: const Icon(Icons.forward_to_inbox_outlined),
       title: Text(l10n.inviteAdultTitle),
       trailing: const Icon(Icons.chevron_right),
       onTap: () => inviteAdultFlow(context, ref),

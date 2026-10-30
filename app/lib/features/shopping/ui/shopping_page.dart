@@ -13,6 +13,7 @@ import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/text/fold.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/confetti.dart';
+import 'package:wuselwall/core/ui/edge_fade.dart';
 import 'package:wuselwall/core/ui/empty_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/core/ui/text_prompt.dart';
@@ -560,45 +561,49 @@ class _ListSwitcher extends ConsumerWidget {
       height: touch + Tokens.space2 * 2,
       child: Row(
         children: [
+          // The row fades at the edge while more chips lie beyond it, so a cut
+          // chip reads as "scroll for more" (round-3 review K).
           Expanded(
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(
-                horizontal: Tokens.space4,
-                vertical: Tokens.space2,
-              ),
-              children: [
-                for (final (i, l) in lists.indexed)
-                  Padding(
-                    padding: const EdgeInsets.only(right: Tokens.space2),
-                    child: FocusTraversalOrder(
-                      order: NumericFocusOrder(i.toDouble()),
-                      child: _ListChip(
-                        key: ValueKey(l.id),
-                        minHeight: touch,
-                        onLongPress: l.id == selected ? onEdit : null,
-                        selected: l.id == selected,
-                        avatar: l.isDefault
-                            ? const Icon(Icons.star, size: 18)
-                            : null,
-                        label: l.openCount == 0
-                            ? l.name
-                            : '${l.name} · ${l.openCount}',
-                        onSelected: () => ref
-                            .read(selectedListIdProvider.notifier)
-                            .select(l.id),
+            child: EdgeFade(
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: Tokens.space4,
+                  vertical: Tokens.space2,
+                ),
+                children: [
+                  for (final (i, l) in lists.indexed)
+                    Padding(
+                      padding: const EdgeInsets.only(right: Tokens.space2),
+                      child: FocusTraversalOrder(
+                        order: NumericFocusOrder(i.toDouble()),
+                        child: _ListChip(
+                          key: ValueKey(l.id),
+                          minHeight: touch,
+                          onLongPress: l.id == selected ? onEdit : null,
+                          selected: l.id == selected,
+                          avatar: l.isDefault
+                              ? const Icon(Icons.star, size: 18)
+                              : null,
+                          label: l.openCount == 0
+                              ? l.name
+                              : '${l.name} · ${l.openCount}',
+                          onSelected: () => ref
+                              .read(selectedListIdProvider.notifier)
+                              .select(l.id),
+                        ),
                       ),
                     ),
+                  FocusTraversalOrder(
+                    order: NumericFocusOrder(lists.length.toDouble()),
+                    child: _NewListChip(
+                      minHeight: touch,
+                      label: l10n.shoppingNewList,
+                      onPressed: onNew,
+                    ),
                   ),
-                FocusTraversalOrder(
-                  order: NumericFocusOrder(lists.length.toDouble()),
-                  child: _NewListChip(
-                    minHeight: touch,
-                    label: l10n.shoppingNewList,
-                    onPressed: onNew,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           // Outside the scrolling row, so it is always in reach on a phone.
@@ -830,18 +835,18 @@ class _TilePickerState extends ConsumerState<_TilePicker> {
     final tiles = rankTiles(catalog, query);
     final folded = fold(query);
     final exact = tiles.any((t) => t.foldedName == folded);
-    final width = kiosk ? 148.0 : 104.0;
 
     int countOf(String foldedName) => widget.items
         .where((i) => !i.checked && fold(i.name) == foldedName)
         .map((i) => i.count)
         .fold(0, (a, b) => a + b);
 
-    final tileWidgets = <Widget>[
+    List<Widget> tilesOf(double width) => [
       for (final (i, t) in tiles.indexed)
         FocusTraversalOrder(
           order: NumericFocusOrder(200 + i.toDouble()),
           child: _Tile(
+            key: ValueKey('shopping-tile-${t.foldedName}'),
             width: width,
             picture: switch (shoppingIconAsset(t.iconKey)) {
               final asset? => Image.asset(
@@ -875,76 +880,112 @@ class _TilePickerState extends ConsumerState<_TilePicker> {
 
     // Full width, so the picker lines up with the list below it instead of being
     // centred by the parent Column.
-    return SizedBox(
-      width: double.infinity,
-      child: Padding(
-        padding: const EdgeInsets.all(Tokens.space4),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (widget.showSearch)
-              FocusTraversalOrder(
-                order: const NumericFocusOrder(100),
-                child: _FocusRing(
-                  focusNode: _searchFocus,
-                  child: TextField(
-                    controller: widget.search,
-                    focusNode: _searchFocus,
-                    decoration: InputDecoration(
-                      labelText: l10n.shoppingSearchHint,
-                      prefixIcon: const Icon(Icons.search),
+    return LayoutBuilder(
+      builder: (context, box) {
+        // On the wall a fixed width in a sideways strip; elsewhere as many columns as
+        // tiles of at most 120 px fit, sharing the whole width, so the grid never
+        // stops short of the edge (round-3 review L-9).
+        final tileWidgets = tilesOf(kiosk ? 148.0 : _tileWidth(box.maxWidth));
+        return SizedBox(
+          width: double.infinity,
+          child: Padding(
+            padding: const EdgeInsets.all(Tokens.space4),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (widget.showSearch)
+                  FocusTraversalOrder(
+                    order: const NumericFocusOrder(100),
+                    child: _FocusRing(
+                      focusNode: _searchFocus,
+                      child: TextField(
+                        controller: widget.search,
+                        focusNode: _searchFocus,
+                        decoration: InputDecoration(
+                          labelText: l10n.shoppingSearchHint,
+                          prefixIcon: const Icon(Icons.search),
+                        ),
+                        textInputAction: TextInputAction.done,
+                        // Enter adds the top hit, else the typed name as a new item, and
+                        // keeps the keyboard focus here instead of letting it fall to the
+                        // document (A4): "done" unfocuses by default before onSubmitted runs.
+                        onSubmitted: (value) {
+                          widget.onAdd(
+                            tiles.isNotEmpty ? tiles.first.name : value,
+                          );
+                          _searchFocus.requestFocus();
+                        },
+                      ),
                     ),
-                    textInputAction: TextInputAction.done,
-                    // Enter adds the top hit, else the typed name as a new item, and
-                    // keeps the keyboard focus here instead of letting it fall to the
-                    // document (A4): "done" unfocuses by default before onSubmitted runs.
-                    onSubmitted: (value) {
-                      widget.onAdd(tiles.isNotEmpty ? tiles.first.name : value);
-                      _searchFocus.requestFocus();
-                    },
                   ),
-                ),
-              ),
-            const SizedBox(height: Tokens.space2),
-            if (tiles.isEmpty && query.isEmpty)
-              Text(
-                l10n.shoppingTilesEmpty,
-                style: Theme.of(context).textTheme.bodySmall,
-              )
-            else if (kiosk)
-              // On the wall the list is the point: one row of tiles that scrolls sideways,
-              // all as tall as the tallest, instead of a block that pushes the list away.
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    spacing: Tokens.space2,
-                    children: tileWidgets,
+                const SizedBox(height: Tokens.space2),
+                if (tiles.isEmpty && query.isEmpty)
+                  Text(
+                    l10n.shoppingTilesEmpty,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  )
+                else if (kiosk)
+                  // On the wall the list is the point: one row of tiles that scrolls sideways,
+                  // all as tall as the tallest, instead of a block that pushes the list away.
+                  EdgeFade(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: IntrinsicHeight(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          spacing: Tokens.space2,
+                          children: tileWidgets,
+                        ),
+                      ),
+                    ),
+                  )
+                else
+                  ConstrainedBox(
+                    // A short phone keeps a row and a half, so the list under the tiles
+                    // still shows more than one item (round-3 review L-1); the half row
+                    // says the tiles scroll.
+                    constraints: BoxConstraints(
+                      maxHeight:
+                          MediaQuery.sizeOf(context).height < _shortScreen
+                          ? 112
+                          : 176,
+                    ),
+                    child: SingleChildScrollView(
+                      child: Wrap(
+                        spacing: Tokens.space2,
+                        runSpacing: Tokens.space2,
+                        children: tileWidgets,
+                      ),
+                    ),
                   ),
-                ),
-              )
-            else
-              ConstrainedBox(
-                constraints: const BoxConstraints(maxHeight: 176),
-                child: SingleChildScrollView(
-                  child: Wrap(
-                    spacing: Tokens.space2,
-                    runSpacing: Tokens.space2,
-                    children: tileWidgets,
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
+}
+
+/// Below this height a phone is short: the tile grid keeps fewer rows.
+const _shortScreen = 700.0;
+
+/// The width of one catalogue tile in a [picker] of that width less its 16 px
+/// margins: as many columns as tiles of at most 120 px fit (never fewer than three),
+/// sharing the width with 8 px gaps.
+double _tileWidth(double picker) {
+  const gap = Tokens.space2;
+  const most = 120.0;
+  final room = picker - 2 * Tokens.space4;
+  var columns = ((room + gap) / (most + gap)).ceil();
+  if (columns < 3) columns = 3;
+  return ((room - gap * (columns - 1)) / columns).floorToDouble();
 }
 
 class _Tile extends StatefulWidget {
   const _Tile({
     required this.width,
+    super.key,
     required this.picture,
     required this.label,
     required this.count,
@@ -985,7 +1026,9 @@ class _TileState extends State<_Tile> {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final onList = widget.count > 0;
-    return SizedBox(
+    // The tint says the item is on the list already; the tooltip says it in words,
+    // and so does the screen reader (round-3 review L-9).
+    final tile = SizedBox(
       width: widget.width,
       child: _FocusRing(
         focusNode: _focusNode,
@@ -1034,6 +1077,13 @@ class _TileState extends State<_Tile> {
           ),
         ),
       ),
+    );
+    if (!onList) return tile;
+    final note = context.l10n.shoppingTileOnList;
+    return Tooltip(
+      message: note,
+      excludeFromSemantics: true,
+      child: Semantics(hint: note, child: tile),
     );
   }
 }

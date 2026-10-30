@@ -7,6 +7,7 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/account/ui/mfa_reset_button.dart';
 import 'package:wuselwall/features/account/ui/password_reset_button.dart';
@@ -113,20 +114,22 @@ class _MemberPageState extends ConsumerState<MemberPage> {
         ),
         actions: const [SettingsViewSwitch()],
       ),
-      body: AsyncValueView<List<Member>>(
-        value: members,
-        onRetry: _refresh,
-        data: (list) {
-          final m = list.where((x) => x.id == widget.profileId).firstOrNull;
-          if (m == null) {
-            return Center(child: Text(l10n.errorNotFound));
-          }
-          if (!_nameSeeded) {
-            _name.text = m.displayName;
-            _nameSeeded = true;
-          }
-          return _body(context, m, list);
-        },
+      body: ContentWidth(
+        child: AsyncValueView<List<Member>>(
+          value: members,
+          onRetry: _refresh,
+          data: (list) {
+            final m = list.where((x) => x.id == widget.profileId).firstOrNull;
+            if (m == null) {
+              return Center(child: Text(l10n.errorNotFound));
+            }
+            if (!_nameSeeded) {
+              _name.text = m.displayName;
+              _nameSeeded = true;
+            }
+            return _body(context, m, list);
+          },
+        ),
       ),
     );
   }

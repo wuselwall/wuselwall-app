@@ -207,8 +207,10 @@ A question for the table during the meal, answered aloud, with nothing recorded.
   reset returns to it; a household without a region keeps the catalogue's.
 - **Where:**
   - On the **wall**, a card in the board header for the window. Wusel holds it, the question
-    is set at kiosk size 34 or larger, and an *Andere Frage ↻* button has a 56 px target.
-    The week stays visible.
+    is set at kiosk size 34 on one line, or down to 24 on two when it is long, so the header
+    keeps its height and the rows under it do not move during the meal; a riddle's answer
+    takes the question's place while it is open. An *Andere Frage ↻* button has a 56 px
+    target. The week stays visible.
   - On the **kid home**, the same card.
   - On **Today**, a dismissible card.
 - **The same question everywhere.** Each household walks its own fixed shuffle of the deck,

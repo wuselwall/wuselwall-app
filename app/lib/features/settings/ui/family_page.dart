@@ -8,6 +8,7 @@ import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
+import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/household/ui/leave_family_tiles.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
@@ -18,6 +19,7 @@ import 'package:wuselwall/features/identity/ui/guardian_gate.dart';
 import 'package:wuselwall/features/settings/application/household_export_providers.dart';
 import 'package:wuselwall/features/settings/application/settings_view.dart';
 import 'package:wuselwall/features/settings/data/household_export_repository.dart';
+import 'package:wuselwall/features/settings/ui/settings_bar_title.dart';
 import 'package:wuselwall/features/settings/ui/settings_view_switch.dart';
 
 /// The family itself (specs/16 step 10.2): its name, and under Advanced the time zone,
@@ -68,20 +70,23 @@ class _FamilyPageState extends ConsumerState<FamilyPage> {
     final info = ref.watch(householdInfoProvider);
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.familyTitle),
+        // The row that opens it says "Familienprofil"; the group around it is "Familie".
+        title: SettingsBarTitle(title: l10n.familyProfileTitle),
         leading: BackButton(onPressed: () => context.go(Routes.settingsFamily)),
         actions: const [SettingsViewSwitch()],
       ),
-      body: AsyncValueView<HouseholdInfo>(
-        value: info,
-        onRetry: () => ref.invalidate(householdInfoProvider),
-        data: (household) {
-          if (!_nameSeeded) {
-            _name.text = household.name;
-            _nameSeeded = true;
-          }
-          return _body(context, household);
-        },
+      body: ContentWidth(
+        child: AsyncValueView<HouseholdInfo>(
+          value: info,
+          onRetry: () => ref.invalidate(householdInfoProvider),
+          data: (household) {
+            if (!_nameSeeded) {
+              _name.text = household.name;
+              _nameSeeded = true;
+            }
+            return _body(context, household);
+          },
+        ),
       ),
     );
   }

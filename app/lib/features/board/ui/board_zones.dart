@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,6 +9,7 @@ import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/emoji_picture.dart';
 import 'package:wuselwall/features/board/application/board_providers.dart';
 import 'package:wuselwall/features/board/domain/week_board.dart';
+import 'package:wuselwall/features/board/ui/board_fit.dart';
 import 'package:wuselwall/features/board/ui/board_format.dart';
 import 'package:wuselwall/features/board/ui/board_geometry.dart';
 import 'package:wuselwall/features/board/ui/board_grid.dart';
@@ -21,8 +23,9 @@ import 'package:wuselwall/features/rituals/domain/event_icons.dart';
 /// The day names row: each column's weekday and date,
 /// today's column marked with a bar and "Heute" in place of its weekday. A public holiday
 /// of the week shows its name under the date, and a member's birthday the age they turn
-/// with a cake ("Paul wird 8", specs/27 "Birthdays"), which makes the row taller for
-/// that week. Tapping a column opens that day.
+/// with a cake ("Paul wird 8", specs/27 "Birthdays"; only "Paul" where the column is
+/// too narrow, and without the holiday when even that does not fit), which makes the
+/// row taller for that week. Tapping a column opens that day.
 class DayHeaderRow extends ConsumerWidget {
   const DayHeaderRow({required this.frame, super.key});
 
@@ -128,14 +131,35 @@ class DayHeaderRow extends ConsumerWidget {
                                   const SizedBox(width: 4),
                                 ],
                                 Flexible(
-                                  child: Text(
-                                    line,
-                                    style: boardCell(
-                                      24,
-                                      color: context.ww.ink2,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
+                                  // The age gives way before the name does.
+                                  child: FirstThatFits(
+                                    children: [
+                                      for (final text in {
+                                        line,
+                                        ?_secondLine(
+                                          context,
+                                          board.days[i],
+                                          birthdays[i],
+                                          short: true,
+                                        ),
+                                        // Last, the birthday alone: the day's
+                                        // holiday stays in the label and the day.
+                                        if (birthdays[i].isNotEmpty)
+                                          birthdays[i]
+                                              .map((m) => m.displayName)
+                                              .join(' · '),
+                                      })
+                                        Text(
+                                          text,
+                                          style: boardCell(
+                                            24,
+                                            color: context.ww.ink2,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          softWrap: false,
+                                        ),
+                                    ],
                                   ),
                                 ),
                               ],
@@ -161,13 +185,17 @@ String _birthdayOf(AppLocalizations l10n, Member m, DateTime day) {
 }
 
 /// The line under the date: the birthdays first, then the holiday; null for neither.
+/// [short] names only whose birthday it is ("🎂 Emma"), for a column with no room for
+/// the age; the footer's countdown and the semantics label ([_label]) still say it.
 String? _secondLine(
   BuildContext context,
   BoardDay day,
-  List<Member> birthdays,
-) {
+  List<Member> birthdays, {
+  bool short = false,
+}) {
   final parts = [
-    for (final m in birthdays) _birthdayOf(context.l10n, m, day.date),
+    for (final m in birthdays)
+      short ? m.displayName : _birthdayOf(context.l10n, m, day.date),
     ?day.holiday?.name,
   ];
   return parts.isEmpty ? null : parts.join(' · ');
@@ -333,6 +361,11 @@ class _PartRow extends StatelessWidget {
                         roomy:
                             c.maxHeight >=
                             MediaQuery.textScalerOf(context).scale(52),
+                        lines:
+                            (c.maxHeight /
+                                    MediaQuery.textScalerOf(context)
+                                        .scale(_lineHeight))
+                                .floor(),
                       ),
                     ),
                   ),
@@ -355,6 +388,7 @@ class _DayPartCell extends StatelessWidget {
     required this.isToday,
     required this.now,
     required this.roomy,
+    this.lines = 2,
   });
 
   final WeekBoard board;
@@ -364,6 +398,9 @@ class _DayPartCell extends StatelessWidget {
 
   /// Whether a lone appointment may take two lines.
   final bool roomy;
+
+  /// How many lines of text the cell holds, for a lone appointment's title.
+  final int lines;
 
   @override
   Widget build(BuildContext context) {
@@ -398,7 +435,7 @@ class _DayPartCell extends StatelessWidget {
 
     if (events.length == 1 && roomy) {
       final e = events.single;
-      return _EventBlock(board: board, event: e, ended: ended(e));
+      return _EventBlock(board: board, event: e, ended: ended(e), lines: lines);
     }
     final shown = events.length > 2 || !roomy ? [events.first] : events;
     return Column(
@@ -453,17 +490,32 @@ Widget _tentative(BuildContext context, BoardEvent e, Widget child) =>
       )
     : child;
 
-/// A lone appointment: time (or "ganztägig") with the attendee dots, the title under it.
+/// One line of a day cell's 24 px text (boardCell and boardNum at height 1.1).
+const _lineHeight = 24 * 1.1;
+
+/// The dots of a lone appointment beside a title that flows over two lines: two by
+/// two, so four take two dots' width.
+const _dotPairWidth = 2 * 12 + 12 * 0.35;
+
+/// A lone appointment: time (or "ganztägig") with the attendee dots, the title under it,
+/// on as many lines as the cell holds. In a two-line cell a title too long for its line
+/// moves up beside the time instead ("10:00 Heizung wird / gewartet") when that shows
+/// more of it without breaking a word, so it loses no words to an ellipsis that the
+/// time's line had room for (specs/09 "Degradation rules").
 class _EventBlock extends StatelessWidget {
   const _EventBlock({
     required this.board,
     required this.event,
     required this.ended,
+    this.lines = 2,
   });
 
   final WeekBoard board;
   final BoardEvent event;
   final bool ended;
+
+  /// The lines the cell holds, at least two.
+  final int lines;
 
   @override
   Widget build(BuildContext context) {
@@ -471,7 +523,18 @@ class _EventBlock extends StatelessWidget {
     final ink = Theme.of(context).colorScheme.onSurface;
     final start = event.starts;
     final dots = _dotsOf(context, board, event);
-    final block = Column(
+    final timeText = start == null
+        ? context.l10n.boardAllDay
+        : context.cellTime(start);
+    final timeStyle = start == null
+        ? boardUi(24, weight: FontWeight.w600, color: ww.ink2, height: 1.1)
+        : boardNum(24, weight: FontWeight.w700, color: ww.ink2, height: 1.1);
+    final titleStyle = boardCell(24, weight: FontWeight.w700, color: ink);
+    final titleLines = lines - 1 < 1 ? 1 : lines - 1;
+    final icon = eventIconAsset(event.iconKey);
+    final title = _titleOf(event);
+
+    final above = Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -479,22 +542,8 @@ class _EventBlock extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                start == null
-                    ? context.l10n.boardAllDay
-                    : context.cellTime(start),
-                style: start == null
-                    ? boardUi(
-                        24,
-                        weight: FontWeight.w600,
-                        color: ww.ink2,
-                        height: 1.1,
-                      )
-                    : boardNum(
-                        24,
-                        weight: FontWeight.w700,
-                        color: ww.ink2,
-                        height: 1.1,
-                      ),
+                timeText,
+                style: timeStyle,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 softWrap: false,
@@ -508,18 +557,141 @@ class _EventBlock extends StatelessWidget {
             ?_iconOf(event),
             Expanded(
               child: Text(
-                _titleOf(event),
-                style: boardCell(24, weight: FontWeight.w700, color: ink),
-                maxLines: 1,
+                title,
+                style: titleStyle,
+                maxLines: titleLines,
                 overflow: TextOverflow.ellipsis,
-                softWrap: false,
+                softWrap: titleLines > 1,
               ),
             ),
           ],
         ),
       ],
     );
+    final Widget block;
+    if (titleLines > 1) {
+      block = above;
+    } else {
+      block = LayoutBuilder(
+        builder: (context, c) {
+          final flow = TextSpan(
+            children: [
+              TextSpan(text: '$timeText ', style: timeStyle),
+              if (icon != null)
+                WidgetSpan(
+                  alignment: PlaceholderAlignment.middle,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 4),
+                    child: EmojiPicture(icon, size: 24),
+                  ),
+                ),
+              TextSpan(text: title, style: titleStyle),
+            ],
+          );
+          if (!_flowReadsMore(context, c.maxWidth, flow, title, titleStyle)) {
+            return above;
+          }
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Text.rich(
+                  flow,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              if (dots.isNotEmpty) ...[
+                const SizedBox(width: 4),
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: _dotPairWidth),
+                  child: MemberDots(dots: dots, size: 12),
+                ),
+              ],
+            ],
+          );
+        },
+      );
+    }
     return _tradition(context, event, _tentative(context, event, block));
+  }
+
+  /// Whether the title flowing beside the time over two lines ([flow]) shows more of
+  /// it than the title's own line under the time does, breaks no word to do so, and
+  /// stays two lines high.
+  bool _flowReadsMore(
+    BuildContext context,
+    double width,
+    TextSpan flow,
+    String title,
+    TextStyle titleStyle,
+  ) {
+    final scaler = MediaQuery.textScalerOf(context);
+    final direction = Directionality.of(context);
+    final hasIcon = eventIconAsset(event.iconKey) != null;
+    final iconWidth = hasIcon ? 28.0 : 0.0;
+    final dotsWidth = event.attendeeIds.isEmpty ? 0.0 : _dotPairWidth + 4;
+
+    // Under the time: one line beside the picture.
+    final own = TextPainter(
+      text: TextSpan(text: title, style: titleStyle),
+      textDirection: direction,
+      textScaler: scaler,
+      maxLines: 1,
+    )..layout(maxWidth: math.max(0, width - iconWidth));
+    if (!own.didExceedMaxLines) {
+      own.dispose();
+      return false; // It fits whole: the time keeps its own line.
+    }
+    final ownShown = own
+        .getPositionForOffset(Offset(own.width, own.height / 2))
+        .offset;
+    own.dispose();
+
+    // Beside the time: two lines, narrowed by the dots.
+    final flowWidth = math.max(0.0, width - dotsWidth);
+    final beside = TextPainter(
+      text: flow,
+      textDirection: direction,
+      textScaler: scaler,
+      maxLines: 2,
+    );
+    if (hasIcon) {
+      beside.setPlaceholderDimensions([
+        PlaceholderDimensions(
+          size: Size(iconWidth, scaler.scale(24)),
+          alignment: PlaceholderAlignment.middle,
+        ),
+      ]);
+    }
+    beside.layout(maxWidth: flowWidth);
+    final metrics = beside.computeLineMetrics();
+    final tall = beside.height > scaler.scale(_lineHeight) * 2 + 0.5;
+    var reads = !tall && metrics.length == 2;
+    if (reads) {
+      final plain = flow.toPlainText(includePlaceholders: true);
+      // Where the first line ends: a break inside a word is worse than an ellipsis.
+      final firstEnd = beside
+          .getLineBoundary(const TextPosition(offset: 0))
+          .end;
+      if (firstEnd > 0 &&
+          firstEnd < plain.length &&
+          plain[firstEnd - 1].trim().isNotEmpty &&
+          plain[firstEnd].trim().isNotEmpty) {
+        reads = false;
+      }
+      final last = metrics.last;
+      final end = beside
+          .getPositionForOffset(
+            Offset(beside.width, last.baseline - last.ascent / 2),
+          )
+          .offset;
+      // Characters of the title shown: what precedes it is the time and picture.
+      final prefix = plain.length - title.length;
+      if (end - prefix <= ownShown) reads = false;
+    }
+    beside.dispose();
+    return reads;
   }
 }
 
@@ -663,8 +835,9 @@ class BoardViewSwitches extends StatelessWidget {
   );
 }
 
-/// A switch on a divider band: the whole 56 px band is the target, the box is filled
-/// while on.
+/// A switch on a divider band: the whole 56 px band is the target, the pill is filled
+/// while on. A switch's track and thumb, not a checkbox: these change the view, they
+/// do not mark anything done.
 class _BoardSwitch extends StatelessWidget {
   const _BoardSwitch({
     required this.label,
@@ -705,11 +878,7 @@ class _BoardSwitch extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    on ? Icons.check_box : Icons.check_box_outline_blank,
-                    size: 26,
-                    color: ink,
-                  ),
+                  _SwitchTrack(on: on),
                   const SizedBox(width: 10),
                   Text(
                     label,
@@ -721,6 +890,40 @@ class _BoardSwitch extends StatelessWidget {
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// The track and thumb of a [_BoardSwitch]: the thumb at the end and the track filled
+/// while on. Still: a view switch on the wall does not slide (specs/26 "Protecting the
+/// wall").
+class _SwitchTrack extends StatelessWidget {
+  const _SwitchTrack({required this.on});
+
+  final bool on;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final ink3 = context.ww.ink3;
+    return Container(
+      width: 48,
+      height: 28,
+      padding: const EdgeInsets.all(3),
+      alignment: AlignmentDirectional(on ? 1 : -1, 0),
+      decoration: BoxDecoration(
+        color: on ? scheme.primary : null,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: on ? scheme.primary : ink3, width: 2),
+      ),
+      child: Container(
+        width: 18,
+        height: 18,
+        decoration: BoxDecoration(
+          color: on ? scheme.onPrimary : ink3,
+          shape: BoxShape.circle,
         ),
       ),
     );

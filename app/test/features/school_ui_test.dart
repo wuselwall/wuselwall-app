@@ -13,6 +13,7 @@ import 'package:wuselwall/features/board/domain/week_board.dart';
 import 'package:wuselwall/features/school/application/school_providers.dart';
 import 'package:wuselwall/features/school/data/school_repository.dart';
 import 'package:wuselwall/features/school/domain/school_models.dart';
+import 'package:wuselwall/features/school/ui/school_week_grid.dart';
 
 import '../support/fake_school.dart';
 import '../support/fakes.dart';
@@ -26,7 +27,13 @@ Finder _struck(String text) => find.byWidgetPredicate(
 
 /// Opens the Stundenplan tab of the adult home.
 Future<void> _openSchedule(WidgetTester t) async {
-  await t.tap(find.text('Stundenplan'));
+  // By its icon: on a phone or at large text the label is the short "Schule".
+  await t.tap(
+    find.descendant(
+      of: find.byType(NavigationBar),
+      matching: find.byIcon(Icons.school_outlined),
+    ),
+  );
   await t.pumpAndSettle();
 }
 
@@ -166,6 +173,51 @@ void main() {
       expect(find.text('Morgen einpacken: Sportsachen'), findsOneWidget);
     },
   );
+
+  testWidgets('a phone week shows icon and short code, never a cut word', (
+    t,
+  ) async {
+    await pumpApp(
+      t,
+      size: const Size(390, 844),
+      overrides: baseOverrides(
+        identity: FakeIdentityRepository(current: device()),
+      ),
+      school: FakeSchoolRepository(),
+    );
+    // Under 600 px the bar labels only the selected tab.
+    await t.tap(find.byTooltip('Stundenplan'));
+    await t.pumpAndSettle();
+
+    expect(t.takeException(), isNull);
+    // The short code stays, struck through when cancelled; room and change move
+    // into the tooltip ("Tur…", "Ent…" no more).
+    expect(_struck('Ma'), findsOneWidget);
+    expect(find.text('Entfall'), findsNothing);
+    expect(find.text('Turnhalle'), findsNothing);
+    expect(find.byTooltip('Mathematik · R1 · Entfall'), findsOneWidget);
+    expect(find.byTooltip(RegExp('^Sport · Turnhalle')), findsWidgets);
+  });
+
+  testWidgets('a short phone starts the timetable high: one toolbar row', (
+    t,
+  ) async {
+    await pumpApp(
+      t,
+      size: const Size(360, 640),
+      overrides: baseOverrides(
+        identity: FakeIdentityRepository(current: device()),
+      ),
+      school: FakeSchoolRepository(),
+    );
+    await t.tap(find.byTooltip('Stundenplan'));
+    await t.pumpAndSettle();
+    expect(t.takeException(), isNull);
+    // The editing waits in one menu; the week's header follows the children.
+    expect(find.byKey(const ValueKey('school-actions')), findsOneWidget);
+    expect(find.text(de.schoolEditTimetable), findsNothing);
+    expect(t.getRect(find.byType(SchoolWeekHeader)).top, lessThan(200));
+  });
 
   testWidgets('a break row shows its whole label, also at large text', (
     t,
@@ -433,7 +485,10 @@ void main() {
     t.view.physicalSize = const Size(390, 844);
     t.view.devicePixelRatio = 1;
     await t.pumpAndSettle();
-    await t.tap(find.byTooltip(de.schoolEditSchool));
+    // On a phone the editing sits in the toolbar's one menu.
+    await t.tap(find.byKey(const ValueKey('school-actions')));
+    await t.pumpAndSettle();
+    await t.tap(find.text(de.schoolEditSchool));
     await t.pumpAndSettle();
 
     final start = find.byTooltip(de.schoolStart).first;

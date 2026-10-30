@@ -1090,8 +1090,8 @@ Future<ProviderContainer> pumpApp(
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
   tester.platformDispatcher.localesTestValue = [locale];
-  // Reduced motion: the board's repeating "next up" pulse would otherwise keep
-  // pumpAndSettle from ever settling. Motion itself is not under test here.
+  // Reduced motion: motion itself is not under test here, and pumpAndSettle then
+  // does not wait out the board's "next up" pulse, Wusel or a celebration.
   tester.platformDispatcher.accessibilityFeaturesTestValue =
       const FakeAccessibilityFeatures(disableAnimations: true);
   addTearDown(() {

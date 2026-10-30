@@ -428,7 +428,7 @@ void main() {
         // Back on "Mein Tag" later the same day: no second celebration.
         await tester.tap(find.text('Punkte'));
         await tester.pumpAndSettle();
-        await tester.tap(find.text('Mein Tag'));
+        await tester.tap(find.text('Mein\u00A0Tag'));
         await tester.pumpAndSettle();
         expect(find.byKey(const ValueKey('kid-birthday')), findsNothing);
         expect(sounds.played, [Cue.badge]);
@@ -502,6 +502,32 @@ void main() {
       expect(early, greaterThan(0));
       await tester.pumpAndSettle();
       expect(scale(tester), closeTo(1, 0.001));
+      await unmountApp(tester, container);
+    });
+
+    testWidgets('on Mein Tag the greeting holds up the star: one Wusel', (
+      tester,
+    ) async {
+      final container = await pumpApp(
+        tester,
+        overrides: baseOverrides(identity: _KidIdentity()),
+        tasks: badgeApi(),
+      );
+      await _pickEmma(tester);
+      expect(find.byType(KidGrowIn), findsOneWidget);
+      // The card names the badge beside a star, without a Wusel of its own.
+      expect(
+        find.descendant(
+          of: find.byType(KidGrowIn),
+          matching: find.byType(Wusel),
+        ),
+        findsNothing,
+      );
+      expect(find.byType(Wusel), findsOneWidget);
+      expect(
+        tester.widget<Wusel>(_inGreeting(find.byType(Wusel))).pose,
+        WuselPose.proud,
+      );
       await unmountApp(tester, container);
     });
 

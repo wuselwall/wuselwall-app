@@ -261,26 +261,37 @@ class _EventRow extends StatelessWidget {
   }
 }
 
-class _TaskRow extends StatelessWidget {
+class _TaskRow extends ConsumerWidget {
   const _TaskRow({required this.task});
 
   final TaskInstance task;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
+    // Ticked here, the row shows it at once and goes when the agenda refetches; no
+    // sound or haptic on a grown-up's screen (specs/26 "Sound and haptics").
+    final ticked = isTickShown(ref.watch(pendingTicksProvider), task);
+    // A chore that needs a check waits for it once ticked: no strike-through, an
+    // hourglass and the words, as on the Aufgaben tab (specs/06 "Verification").
+    final waiting = awaitsCheckShown(ticked, task);
+    final coin = task.points > 0
+        ? PointsCoin(points: task.points, fontSize: 14, withUnit: true)
+        : null;
     return ListTile(
       leading: TaskGlyph(iconKey: task.iconKey),
-      title: Text(task.title),
-      subtitle: task.points > 0
-          ? PointsCoin(points: task.points, fontSize: 14)
-          : null,
-      trailing: IconButton(
-        tooltip: l10n.tasksActionTick,
-        iconSize: 30,
-        constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
-        icon: const Icon(Icons.radio_button_unchecked),
-        onPressed: () => unawaited(
+      title: TickedTitle(title: task.title, ticked: ticked && !waiting),
+      subtitle: waiting
+          ? Wrap(
+              spacing: Tokens.space2,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [?coin, Text(l10n.tasksWaitingApproval)],
+            )
+          : coin,
+      trailing: TaskTickButton(
+        ticked: ticked,
+        waiting: waiting,
+        onTick: () => unawaited(
           tickTask(context, ProviderScope.containerOf(context), task),
         ),
       ),

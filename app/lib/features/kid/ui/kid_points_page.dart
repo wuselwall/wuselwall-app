@@ -10,6 +10,7 @@ import 'package:wuselwall/core/l10n/l10n.dart';
 import 'package:wuselwall/core/ui/async_value_view.dart';
 import 'package:wuselwall/core/ui/emoji_picture.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
+import 'package:wuselwall/core/ui/whole_words_text.dart';
 import 'package:wuselwall/core/wusel/wusel.dart';
 import 'package:wuselwall/features/kid/application/kid_logic.dart';
 import 'package:wuselwall/features/kid/application/kid_providers.dart';
@@ -148,6 +149,8 @@ class _KidPointsPageState extends ConsumerState<KidPointsPage> {
               loading: () => const SizedBox.shrink(),
               error: (_, _) => const SizedBox.shrink(),
               data: (badges) => Wrap(
+                // Centred, so a last badge alone on its row does not sit apart.
+                alignment: WrapAlignment.center,
                 spacing: Tokens.space4,
                 runSpacing: Tokens.space4,
                 children: [
@@ -292,9 +295,13 @@ class _RewardCard extends StatelessWidget {
                       Expanded(
                         child: Text(
                           reward.title,
-                          style: theme.textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.w800,
-                          ),
+                          // On a small phone one size smaller, so a long word
+                          // ("Samstagsfilm") keeps to one line.
+                          style:
+                              (MediaQuery.sizeOf(context).width < 360
+                                      ? theme.textTheme.titleMedium
+                                      : theme.textTheme.titleLarge)
+                                  ?.copyWith(fontWeight: FontWeight.w800),
                         ),
                       ),
                       PointsCoin(points: reward.costPoints, fontSize: 19),
@@ -367,6 +374,9 @@ class _BadgeTile extends StatelessWidget {
 
   final KidBadge badge;
 
+  /// Room for a badge and its name, the name wrapping between words.
+  static const width = 128.0;
+
   @override
   Widget build(BuildContext context) {
     final ww = context.ww;
@@ -379,7 +389,7 @@ class _BadgeTile extends StatelessWidget {
           '${badge.title}, '
           '${badge.earned ? l10n.kidBadgeEarned : l10n.kidBadgeNotYet}',
       child: SizedBox(
-        width: 104,
+        width: _BadgeTile.width,
         child: Column(
           children: [
             Opacity(
@@ -406,10 +416,10 @@ class _BadgeTile extends StatelessWidget {
               ),
             ),
             const SizedBox(height: Tokens.space1),
-            Text(
+            WholeWordsText(
               badge.title,
               textAlign: TextAlign.center,
-              maxLines: 2,
+              maxLines: 3,
               overflow: TextOverflow.ellipsis,
               style: Theme.of(context).textTheme.labelLarge,
             ),

@@ -5,6 +5,7 @@ import 'package:wuselwall/app/router.dart';
 import 'package:wuselwall/app/theme/tokens.dart';
 import 'package:wuselwall/core/error/result.dart';
 import 'package:wuselwall/core/l10n/l10n.dart';
+import 'package:wuselwall/core/ui/content_width.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/core/ui/text_prompt.dart';
 import 'package:wuselwall/features/identity/application/acting_profile.dart';
@@ -82,9 +83,11 @@ class _ShoppingListEditPageState extends ConsumerState<ShoppingListEditPage> {
         leading: BackButton(onPressed: () => context.pop()),
         actions: const [SettingsViewSwitch()],
       ),
-      body: list == null
-          ? Center(child: Text(l10n.errorNotFound))
-          : _body(context, list),
+      body: ContentWidth(
+        child: list == null
+            ? Center(child: Text(l10n.errorNotFound))
+            : _body(context, list),
+      ),
     );
   }
 

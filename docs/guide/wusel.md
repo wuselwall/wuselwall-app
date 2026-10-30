@@ -26,6 +26,19 @@ Wusel lobt, was passiert ist, nicht die Person: „Alles erledigt. Das hat gut g
 
 Wusel taucht nie dort auf, wo ihr gerade etwas eingebt (bei den Einkaufskacheln und beim Suchen darüber, im Termin- und Aufgabeneditor), und nie bei Fehlern, der PIN, beim Anmelden oder Löschen. Was Wusel sagt, steht immer auch als Text da; ein Tipp auf die Sprechblase blendet den Satz aus.
 
+## Wusel unterwegs {#on-the-move}
+
+Auf dem Kinder-Tablet und an der Wand bleibt ein lebhafter Wusel nicht immer am eigenen Platz:
+
+- **Eine Aufgabe abgehakt** (auf **Mein Tag**): Wusel hüpft zur Karte, nimmt die Punktemünze und trägt sie zurück zum Punktestand.
+- **Die letzte Aufgabe des Tages**: dazu ein hoher Freudensprung mit Konfetti; danach jubelt Wusel wieder am eigenen Platz.
+- **Zurück auf Mein Tag** aus einem anderen Bereich: Wusel hüpft von unten herein.
+- **Antippen**: Wusel kichert, wirbelt die Haarbüschel herum oder zwinkert, je nachdem, wo der Finger landet. Dreimal schnell hintereinander gibt ein Kichern mit dem ganzen Körper. Danach schaut Wusel eine halbe Minute lang dem Finger nach.
+- **Kippen**: Hältst du das Handy oder Tablet schräg, lehnt sich Wusel zur Seite und rutscht ein wenig (in der App, nicht im Browser).
+- **An der Wand** verlässt Wusel die Ecke nur, wenn jemand im Aufgabenbrett die letzte Aufgabe des Tages abhakt: Wusel hüpft zu dieser Spalte, jubelt dort vier Sekunden und hüpft zurück. Angetippt kichert Wusel und schaut dem Finger nach, bleibt aber in der Ecke.
+
+Wusel bewegt sich nur, wenn gerade etwas passiert ist, nie von selbst, und bleibt nie auf einem Knopf sitzen: Ein Tipp geht durch Wusel hindurch. Nachts, ohne Verbindung, bei **Ruhig** und mit **Bewegung reduzieren** bleibt Wusel am eigenen Platz.
+
 ## Was Wusel trägt {#outfits}
 
 Jede Person kann Wusel anziehen: **Partyhut**, **Krone**, **Zauberhut**, **Blumenkranz**, **Sonnenbrille**, **Schal**, **Kopfhörer** oder **Schleife**. Alles ist von Anfang an da und kostet nichts; man muss nichts verdienen. Wusel trägt es, sobald es um diese Person geht: auf ihrem Kinder-Tablet, auf ihrem Handy und an der Wand, wenn sie sich ausgewählt hat.
@@ -39,13 +52,13 @@ Das stellst du unter **Einstellungen → Persönlich** bei **Was Wusel trägt** 
 Unter **Einstellungen → Persönlich** stellt jede Person **Wusel** ein (auch in der Ansicht **Einfach**):
 
 - **Automatisch** (Standard): lebhaft für Kinder, ruhig für Erwachsene
-- **Lebhaft**: Wusel bewegt sich und spricht
+- **Lebhaft**: Wusel bewegt sich und spricht, und auf dem Kinder-Tablet und an der Wand ist Wusel auch [unterwegs](#on-the-move)
 - **Ruhig**: Wusel steht still und erscheint nur auf leeren Seiten und an besonderen Tagen
 - **Aus**: kein Wusel für diese Person
 
 Für die Wand und geteilte Tablets gibt es unter **Dieses Gerät** die Einstellung **Wusel auf diesem Gerät** (Standard: lebhaft). Sie gilt, solange niemand ausgewählt ist; danach gilt die Einstellung der ausgewählten Person.
 
-Ist auf dem Gerät **Bewegung reduzieren** eingeschaltet, steht Wusel still, und es gibt kein Konfetti.
+Ist auf dem Gerät **Bewegung reduzieren** eingeschaltet, steht Wusel still am eigenen Platz, und es gibt kein Konfetti.
 
 ## Farben {#colours}
 

@@ -6,7 +6,7 @@ En pantallas estrechas o con texto grande, los botones de acción aparecen debaj
 
 ## Contraseña {#password}
 
-En **Ajustes → Avanzados → Inicio de sesión**, define o cambia una contraseña de al menos **10 caracteres**. El código por correo sigue disponible si tu servidor envía correo; si no, la contraseña es el único acceso ([Correo](/es/server/email)).
+En **Ajustes → Cuenta y seguridad → Inicio de sesión**, define o cambia una contraseña de al menos **10 caracteres**. El código por correo sigue disponible si tu servidor envía correo; si no, la contraseña es el único acceso ([Correo](/es/server/email)).
 
 ## Salir de la familia {#leave-the-family}
 
