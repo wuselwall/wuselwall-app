@@ -32,6 +32,8 @@ jobs:
         run: bash qualification/native/load-tools.sh
       - name: Inspect installed native tools and execution architecture
         if: always()
+        env:
+          QUALIFICATION_TOOLS_ROOT: ${{ vars.QUALIFICATION_TOOLS_ROOT }}
         run: bash qualification/native/preflight.sh
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
