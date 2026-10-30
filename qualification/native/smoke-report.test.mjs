@@ -48,6 +48,36 @@ test('a missing selected report fails closed while other full-matrix profiles re
   assert.equal(report.qualification.qualified, false);
 });
 
+test('rendering captures remain counted when the native audit report is missing', async t => {
+  const root = await fixture(t);
+  await fs.rm(path.join(root, 'ios-phone', 'audit.json'));
+  const report = await diagnosticReport(root, sha, ['ios-phone']);
+  const [profile] = report.selectedProfiles;
+  assert.equal(profile.captures, 5);
+  assert.equal(profile.renderingPassed, true);
+  assert.equal(profile.cases, 0);
+  assert.equal(profile.nativeAudit, 'incomplete');
+  assert.equal(profile.passed, false);
+  assert.equal(report.diagnosticPassed, false);
+  assert.deepEqual(report.qualification, {status: 'INCOMPLETE', qualified: false});
+});
+
+test('rendering captures remain counted when the native audit is incomplete', async t => {
+  const root = await fixture(t);
+  await fs.writeFile(path.join(root, 'ios-phone', 'audit.json'), JSON.stringify({schemaVersion: 1,
+    candidateSha: sha, expected: 7, done: false, ready: false,
+    results: [{id: 'detector-bad', passed: true}]}));
+  const report = await diagnosticReport(root, sha, ['ios-phone']);
+  const [profile] = report.selectedProfiles;
+  assert.equal(profile.captures, 5);
+  assert.equal(profile.renderingPassed, true);
+  assert.equal(profile.cases, 0);
+  assert.equal(profile.nativeAudit, 'incomplete');
+  assert.equal(profile.passed, false);
+  assert.equal(report.diagnosticPassed, false);
+  assert.equal(report.qualification.qualified, false);
+});
+
 test('a diagnostic may select only the fixed iOS phone profile without Android evidence', async t => {
   const root = await fixture(t);
   await fs.rm(path.join(root, 'android-phone'), {recursive: true});

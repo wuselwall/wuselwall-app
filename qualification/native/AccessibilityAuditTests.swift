@@ -68,13 +68,32 @@ final class AccessibilityAuditTests: XCTestCase {
       let id = try XCTUnwrap(state["id"] as? String)
       var issues: [[String: Any]] = []
       if id == "detector-keyboard" {
-        let field = app.textFields["native-keyboard-field"]
-        XCTAssertTrue(field.waitForExistence(timeout: 5))
-        field.tap()
-        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 5), "Software keyboard did not appear")
-        field.typeText("qualification")
-        keyboard = try request("state")["input"] as? String == "qualification"
-        if !keyboard { issues.append(["type": "ERROR", "description": "Native typing did not update Flutter"]) }
+        let field = app.descendants(matching: .any)["native-keyboard-field"]
+        if field.waitForExistence(timeout: 5) {
+          // The semantic wrapper can be exposed by Flutter as another element
+          // type, so query by identifier and make a real native tap before
+          // typing. Do not autofocus or synthesize focus in Flutter.
+          field.tap()
+          if app.keyboards.firstMatch.waitForExistence(timeout: 5) {
+            // Send native keystrokes to the responder reached by the tap;
+            // Flutter may expose the identifier on a semantic wrapper.
+            app.typeText("qualification")
+            for _ in 0..<20 {
+              if (try? request("state")["input"] as? String) == "qualification" {
+                keyboard = true
+                break
+              }
+              Thread.sleep(forTimeInterval: 0.1)
+            }
+            if !keyboard {
+              issues.append(["type": "ERROR", "description": "Native typing did not update Flutter"])
+            }
+          } else {
+            issues.append(["type": "ERROR", "description": "Software keyboard did not appear after tapping the Flutter field"])
+          }
+        } else {
+          issues.append(["type": "ERROR", "description": "Native keyboard field was absent from accessibility semantics"])
+        }
       } else {
         if id == "detector-bad" {
           XCTAssertTrue(app.descendants(matching: .any)["native-bad-action"].exists, "Bad Flutter control is absent from native semantics")
@@ -93,7 +112,14 @@ final class AccessibilityAuditTests: XCTestCase {
         if id == "detector-bad" { detector = !issues.isEmpty }
       }
       let frameworkErrors = state["frameworkErrors"] as? [String] ?? ["Missing framework error evidence"]
-      let passed = id == "detector-bad" ? detector : issues.isEmpty && frameworkErrors.isEmpty
+      let passed: Bool
+      if id == "detector-bad" {
+        passed = detector
+      } else if id == "detector-keyboard" {
+        passed = keyboard && issues.isEmpty && frameworkErrors.isEmpty
+      } else {
+        passed = issues.isEmpty && frameworkErrors.isEmpty
+      }
       _ = try request("result", ["id": id, "platform": "ios", "passed": passed, "issues": issues, "semantics": semantics(try app.snapshot())])
       if !passed { failures += 1 }
       cases += 1

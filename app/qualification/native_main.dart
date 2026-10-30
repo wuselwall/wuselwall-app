@@ -12,6 +12,7 @@ import 'inventory.g.dart';
 
 const _port = 18765;
 final _mountKey = GlobalKey();
+final _caseWidget = ValueNotifier<Widget>(const SizedBox.shrink());
 final _results = <Map<String, dynamic>>[];
 final _errors = <String>[];
 final _input = TextEditingController();
@@ -50,7 +51,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final previous = FlutterError.onError;
   FlutterError.onError = (details) {
-    _errors.add(details.exceptionAsString());
+    _errors.add('${details.exceptionAsString()}\n${details.stack ?? ''}');
     previous?.call(details);
   };
   const tablet = bool.fromEnvironment('QUALIFY_TABLET');
@@ -72,7 +73,12 @@ Future<void> main() async {
             'shade': shade,
           },
   ];
-  runApp(const SizedBox.shrink());
+  runApp(
+    ValueListenableBuilder<Widget>(
+      valueListenable: _caseWidget,
+      builder: (context, child, _) => child,
+    ),
+  );
   _saveReport();
   // Only the simulator/emulator loopback interface; no LAN access or server data.
   final server = await HttpServer.bind(InternetAddress.loopbackIPv4, _port);
@@ -92,7 +98,7 @@ Future<void> main() async {
         unawaited(
           _showCase()
               .catchError((Object error, StackTrace stack) {
-                _errors.add('$error');
+                _errors.add('$error\n$stack');
                 _ready = true;
               })
               .whenComplete(() => _busy = false),
@@ -133,14 +139,15 @@ void _saveReport() {
 }
 
 Future<void> _showCase() async {
-  runApp(const SizedBox.shrink());
+  _caseWidget.value = const SizedBox.shrink();
   await WidgetsBinding.instance.endOfFrame;
   _errors.clear();
   if (_index >= _cases.length) return;
   final sample = _cases[_index];
   if (sample['control'] != null) {
-    runApp(
-      MaterialApp(
+    _caseWidget.value = KeyedSubtree(
+      key: ValueKey('case-$_index'),
+      child: MaterialApp(
         home: Scaffold(
           body: Center(
             child: sample['control'] == 'bad'
@@ -167,8 +174,9 @@ Future<void> _showCase() async {
       ),
     );
   } else {
-    runApp(
-      KeyedSubtree(
+    _caseWidget.value = KeyedSubtree(
+      key: ValueKey('case-$_index'),
+      child: KeyedSubtree(
         key: _mountKey,
         child: qualificationApp(
           stateId: sample['stateId'] as String,
@@ -194,6 +202,8 @@ Future<void> _showCase() async {
       container!.read(routerProvider).go(sample['route'] as String);
     }
   }
+  // Wait for the stable host to mount this keyed case before probing it.
+  await WidgetsBinding.instance.endOfFrame;
   for (var attempt = 0; attempt < 100; attempt++) {
     await Future<void>.delayed(const Duration(milliseconds: 100));
     var found = sample['control'] != null;
@@ -205,9 +215,12 @@ Future<void> _showCase() async {
           )) {
         found = true;
       }
-      _textScale = MediaQuery.maybeTextScalerOf(element)?.scale(16) != null
-          ? MediaQuery.textScalerOf(element).scale(16) / 16
-          : _textScale;
+      // This diagnostic tree walk is not a widget build. Avoid registering
+      // inherited dependencies while traversing elements that cases replace.
+      final mediaQuery = element.getInheritedWidgetOfExactType<MediaQuery>();
+      if (mediaQuery != null) {
+        _textScale = mediaQuery.data.textScaler.scale(16) / 16;
+      }
       element.visitChildren(visit);
     }
 
