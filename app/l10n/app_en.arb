@@ -1219,7 +1219,11 @@
   "tasksPointsUnit": "{count, plural, =1{point} other{points}}",
   "@tasksPointsUnit": {
     "description": "The word after the points coin on a child's chore card, e.g. [5] points.",
-    "placeholders": {"count": {"type": "int"}}
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "tasksStreakDays": "{count, plural, =1{1 day in a row} other{{count} days in a row}}",
   "@tasksStreakDays": {
@@ -3968,5 +3972,112 @@
   "shoppingTilePinned": "Pinned",
   "@shoppingTilePinned": {
     "description": "Shopping list tile: tooltip and hint of the small pin on a pinned tile"
+  },
+  "coopTitle": "Coop shopping list",
+  "@coopTitle": {
+    "description": "Settings tile and page title: handing the shopping list to the list of the Swiss supermarket Coop (specs/30)"
+  },
+  "coopSettingsSubtitle": "Send a list to your Coop account, for the passabene scanner",
+  "@coopSettingsSubtitle": {
+    "description": "Subtitle of the Coop shopping list tile in the device settings; passabene is Coop's self-scanning system, never translated"
+  },
+  "coopIntro": "In Coop's shops, the passabene hand scanners and the passabene app show the shopping list of your Coop account. WuselWall copies the open items of a list there, to a Coop list called “{name}”. Ticks made on the scanner stay at Coop: finish the trip in WuselWall as usual.",
+  "@coopIntro": {
+    "description": "Coop shopping list page: what the feature does",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "coopUnofficial": "This is not a Coop service. WuselWall uses the coop.ch website the way a browser does, and a change to coop.ch can stop it working.",
+  "@coopUnofficial": {
+    "description": "Coop shopping list page: the plain statement that the connector is unofficial"
+  },
+  "coopPrivacy": "Each time you send, the names and notes of the open items go to Coop under your Coop account. Your Coop sign-in stays on this device; the family's server sees none of it.",
+  "@coopPrivacy": {
+    "description": "Coop shopping list page: what leaves the device and where the sign-in lives"
+  },
+  "coopSignIn": "Sign in to Coop",
+  "@coopSignIn": {
+    "description": "Button that opens coop.ch's own sign-in inside the app"
+  },
+  "coopConnected": "Connected on this device",
+  "@coopConnected": {
+    "description": "Coop shopping list page: status once the Coop account is connected"
+  },
+  "coopConnectedDetail": "Items go to the Coop list “{name}”.",
+  "@coopConnectedDetail": {
+    "description": "Coop shopping list page: the Coop list the pushes fill",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "coopLastPush": "{count, plural, =0{Last time the Coop list was emptied} =1{Last time 1 item went across} other{Last time {count} items went across}}",
+  "@coopLastPush": {
+    "description": "Coop shopping list page: what the last push left on the Coop list",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "coopSignOut": "Disconnect Coop",
+  "@coopSignOut": {
+    "description": "Button that signs out of coop.ch on this device and forgets the Coop list"
+  },
+  "coopSignedOut": "Coop is disconnected on this device",
+  "@coopSignedOut": {
+    "description": "Snackbar after disconnecting Coop"
+  },
+  "coopSignedIn": "Coop is connected",
+  "@coopSignedIn": {
+    "description": "Snackbar after signing in to Coop"
+  },
+  "coopSend": "Send to Coop",
+  "@coopSend": {
+    "description": "Shopping list, planning mode: the button that copies the open items to the Coop list"
+  },
+  "coopSheetChecking": "Connecting to coop.ch…",
+  "@coopSheetChecking": {
+    "description": "Coop sheet: while the page loads and the sign-in is checked"
+  },
+  "coopSheetPushing": "Sending the list to Coop…",
+  "@coopSheetPushing": {
+    "description": "Coop sheet: while the items go across"
+  },
+  "coopSheetSignInHint": "Sign in with your Supercard ID. This is Coop's own page; WuselWall reads nothing you type here.",
+  "@coopSheetSignInHint": {
+    "description": "Coop sheet: above coop.ch's sign-in page; Supercard ID is Coop's account name, never translated"
+  },
+  "coopPushed": "{count, plural, =0{The Coop list “{name}” is empty now} =1{1 item on the Coop list “{name}”} other{{count} items on the Coop list “{name}”}}",
+  "@coopPushed": {
+    "description": "Snackbar after a complete push",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "coopPushedPartly": "{sent} of {total} items are on the Coop list. Send again for the rest.",
+  "@coopPushedPartly": {
+    "description": "Snackbar after a push where some items could not be added",
+    "placeholders": {
+      "sent": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "coopPushFailed": "The Coop list could not be reached. Nothing changed in WuselWall.",
+  "@coopPushFailed": {
+    "description": "Snackbar when a push failed (coop.ch unreachable or changed)"
   }
 }

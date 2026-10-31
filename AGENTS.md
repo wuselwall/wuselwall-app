@@ -49,6 +49,10 @@ navigation, the last mode kept on the device, the item sheet with a count steppe
 a seeded `snacks` category, and a category inferred from a new item's name by the server's word
 list (`app.shopping_category_for`, marked `category_auto` until a person changes it; the lists
 grow in issue #197).
+A list can be handed to the Coop Einkaufsliste since 2026-10-31 ([specs/30](specs/30-coop-shopping-list.md),
+first version, not yet run against coop.ch on a device): an unofficial, phone-only connector in a WebView
+(`app/lib/features/shopping/data/coop_protocol.dart` holds every coop.ch detail), the link kept on the
+device, the server not involved.
 MCP and AI assistant work is **on hold** (2026-10-24), removed from the app UI and active
 milestones. The backend, keys and proposal data are retained for compatibility; existing
 MCP clients are not disabled. Siri/automations, structured timetable text import and the

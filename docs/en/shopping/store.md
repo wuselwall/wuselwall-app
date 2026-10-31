@@ -50,3 +50,5 @@ When the last item is ticked or the trip is finished, the phone shows a small bu
 The list works without signal too: adding, ticking, changing the count and **Finish shopping** carry on as usual. Anything the server has not received yet carries a small cloud icon, and the top of the list says, for example, **"2 changes waiting to be sent"**. As soon as there is a connection again, WuselWall sends everything by itself, in the right order.
 
 On an iPhone this only happens while the app is open: if you closed it in the shop without signal, it sends the next time you open it. Creating a list and changing the default list need a connection.
+
+If you shop at Coop with the passabene scanner, you can send the list there: see [Coop shopping list](/en/shopping/coop).

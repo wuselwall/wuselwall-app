@@ -6578,6 +6578,92 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get shoppingTilePinned => 'Angeheftet';
+
+  @override
+  String get coopTitle => 'Coop-Einkaufsliste';
+
+  @override
+  String get coopSettingsSubtitle =>
+      'Eine Liste an dein Coop-Konto senden, für den passabene-Scanner';
+
+  @override
+  String coopIntro(String name) {
+    return 'In den Coop-Filialen zeigen die passabene-Handscanner und die passabene-App die Einkaufsliste deines Coop-Kontos. WuselWall kopiert die offenen Artikel einer Liste dorthin, in eine Coop-Liste namens „$name“. Was du am Scanner abhakst, bleibt bei Coop: Den Einkauf beendest du wie gewohnt in WuselWall.';
+  }
+
+  @override
+  String get coopUnofficial =>
+      'Das ist kein Angebot von Coop. WuselWall nutzt die Website coop.ch so, wie es ein Browser tut, und eine Änderung an coop.ch kann es zum Stillstand bringen.';
+
+  @override
+  String get coopPrivacy =>
+      'Bei jedem Senden gehen die Namen und Notizen der offenen Artikel unter deinem Coop-Konto an Coop. Deine Coop-Anmeldung bleibt auf diesem Gerät; der Server der Familie sieht nichts davon.';
+
+  @override
+  String get coopSignIn => 'Bei Coop anmelden';
+
+  @override
+  String get coopConnected => 'Auf diesem Gerät verbunden';
+
+  @override
+  String coopConnectedDetail(String name) {
+    return 'Artikel gehen in die Coop-Liste „$name“.';
+  }
+
+  @override
+  String coopLastPush(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Zuletzt gingen $count Artikel hinüber',
+      one: 'Zuletzt ging 1 Artikel hinüber',
+      zero: 'Zuletzt wurde die Coop-Liste geleert',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get coopSignOut => 'Coop trennen';
+
+  @override
+  String get coopSignedOut => 'Coop ist auf diesem Gerät getrennt';
+
+  @override
+  String get coopSignedIn => 'Coop ist verbunden';
+
+  @override
+  String get coopSend => 'An Coop senden';
+
+  @override
+  String get coopSheetChecking => 'Verbinde mit coop.ch…';
+
+  @override
+  String get coopSheetPushing => 'Sende die Liste an Coop…';
+
+  @override
+  String get coopSheetSignInHint =>
+      'Melde dich mit deiner Supercard ID an. Das ist Coops eigene Seite; WuselWall liest nichts, was du hier eingibst.';
+
+  @override
+  String coopPushed(int count, String name) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Artikel auf der Coop-Liste „$name“',
+      one: '1 Artikel auf der Coop-Liste „$name“',
+      zero: 'Die Coop-Liste „$name“ ist jetzt leer',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String coopPushedPartly(int sent, int total) {
+    return '$sent von $total Artikeln sind auf der Coop-Liste. Sende noch einmal für den Rest.';
+  }
+
+  @override
+  String get coopPushFailed =>
+      'Die Coop-Liste war nicht erreichbar. In WuselWall hat sich nichts geändert.';
 }
 
 /// The translations for German, as used in Austria (`de_AT`).
@@ -7056,4 +7142,26 @@ class AppLocalizationsDeCh extends AppLocalizationsDe {
 
   @override
   String get shoppingSearchClear => 'Leeren und schliessen';
+
+  @override
+  String coopIntro(String name) {
+    return 'In den Coop-Filialen zeigen die passabene-Handscanner und die passabene-App die Einkaufsliste deines Coop-Kontos. WuselWall kopiert die offenen Artikel einer Liste dorthin, in eine Coop-Liste namens «$name». Was du am Scanner abhakst, bleibt bei Coop: Den Einkauf beendest du wie gewohnt in WuselWall.';
+  }
+
+  @override
+  String coopConnectedDetail(String name) {
+    return 'Artikel gehen in die Coop-Liste «$name».';
+  }
+
+  @override
+  String coopPushed(int count, String name) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Artikel auf der Coop-Liste «$name»',
+      one: '1 Artikel auf der Coop-Liste «$name»',
+      zero: 'Die Coop-Liste «$name» ist jetzt leer',
+    );
+    return '$_temp0';
+  }
 }

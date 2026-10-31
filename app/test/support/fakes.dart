@@ -45,6 +45,7 @@ import 'package:wuselwall/features/school/data/scan_repository.dart';
 import 'package:wuselwall/features/school/data/school_repository.dart';
 import 'package:wuselwall/features/settings/application/settings_groups.dart';
 import 'package:wuselwall/features/settings/application/settings_view.dart';
+import 'package:wuselwall/features/shopping/data/coop_handoff_store.dart';
 import 'package:wuselwall/features/shopping/data/shopping_mode_store.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 import 'package:wuselwall/features/shopping/data/shopping_store.dart';
@@ -1081,6 +1082,7 @@ List<Override> baseOverrides({
   shoppingModeStoreProvider.overrideWithValue(
     shoppingModeStore ?? MemoryShoppingModeStore(),
   ),
+  coopHandoffStoreProvider.overrideWithValue(MemoryCoopHandoffStore()),
   externalCalendarsRepositoryProvider.overrideWithValue(
     externalCalendars ?? FakeExternalCalendarsRepository(),
   ),

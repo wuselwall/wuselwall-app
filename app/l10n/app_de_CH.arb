@@ -97,5 +97,8 @@
   "eventStarterGuestDinner": "Gäste zum Znacht",
   "eventStarterSportsEvent": "Sportanlass",
   "eventStarterHoliday": "Ferien / Reise",
-  "shoppingSearchClear": "Leeren und schliessen"
+  "shoppingSearchClear": "Leeren und schliessen",
+  "coopIntro": "In den Coop-Filialen zeigen die passabene-Handscanner und die passabene-App die Einkaufsliste deines Coop-Kontos. WuselWall kopiert die offenen Artikel einer Liste dorthin, in eine Coop-Liste namens «{name}». Was du am Scanner abhakst, bleibt bei Coop: Den Einkauf beendest du wie gewohnt in WuselWall.",
+  "coopConnectedDetail": "Artikel gehen in die Coop-Liste «{name}».",
+  "coopPushed": "{count, plural, =0{Die Coop-Liste «{name}» ist jetzt leer} =1{1 Artikel auf der Coop-Liste «{name}»} other{{count} Artikel auf der Coop-Liste «{name}»}}"
 }
