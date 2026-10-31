@@ -6607,4 +6607,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get shoppingTilePinned => 'Épinglée';
+
+  @override
+  String get shoppingTileStarter => 'Suggestion';
 }

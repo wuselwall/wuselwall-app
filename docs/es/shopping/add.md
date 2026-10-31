@@ -18,6 +18,14 @@ Las tarjetas son el **catálogo** de lo que habéis comprado: primero los **8 pr
 
 Las **tarjetas fijadas** van siempre primero, las más compradas antes, con una pequeña chincheta. Así la leche se queda en su sitio aunque lo último que se compró fuera otra cosa. **Desfijar** (en el mismo menú de pulsación larga) deja que la tarjeta vuelva a su lugar. Fijar requiere conexión.
 
+## Sugerencias para empezar {#starter-suggestions}
+
+Una lista nueva aún no ha comprado nada, y las tarjetas vacías no ayudan a nadie. Por eso, mientras el catálogo de una lista tenga **menos de 24 tarjetas**, WuselWall muestra **sugerencias** después de las tuyas: productos habituales para ese tipo de lista (supermercado, droguería, ferretería), en el idioma de la familia, con nombres suizos o austriacos si la familia ha configurado así su alemán («Gipfeli», «Semmeln»).
+
+<Shot name="shopping-starter" alt="La lista Droguería con tarjetas sugeridas antes de comprar nada" />
+
+Una sugerencia parece una tarjeta, algo más discreta, y su descripción dice «Sugerencia». **Tocar** pone el producto en la lista; **mantener pulsado** ofrece **Añadir** y **Añadir y editar**. Renombrar, fijar y quitar llegan cuando es una tarjeta tuya, tras la primera compra. Lo que ya es una tarjeta o está en la lista no se vuelve a sugerir. Con cada compra tu catálogo crece y las sugerencias se retiran; con 24 tarjetas propias dejan de aparecer. La búsqueda las sigue encontrando.
+
 ## Buscar y crear {#search-and-create}
 
 Escribe unas letras para filtrar las tarjetas. La búsqueda ignora mayúsculas y acentos. **Intro** añade el primer resultado. Si el producto es desconocido, la tarjeta de añadir crea una entrada de texto libre; tras la siguiente compra se convierte en una tarjeta habitual. Un producto nuevo recibe una **categoría asignada automáticamente por su nombre** («chocolate» va a Snacks, «pasta» a Despensa); si no es la correcta, cámbiala en la ficha del producto (más abajo).

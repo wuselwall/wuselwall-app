@@ -3110,5 +3110,6 @@
   "shoppingTilePin": "Épingler la tuile",
   "shoppingTileUnpin": "Désépingler",
   "shoppingTilePinHelp": "Les tuiles épinglées viennent toujours en premier.",
-  "shoppingTilePinned": "Épinglée"
+  "shoppingTilePinned": "Épinglée",
+  "shoppingTileStarter": "Suggestion"
 }

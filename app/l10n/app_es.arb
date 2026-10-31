@@ -3110,5 +3110,6 @@
   "shoppingTilePin": "Fijar la ficha",
   "shoppingTileUnpin": "Desfijar",
   "shoppingTilePinHelp": "Las fichas fijadas siempre van primero.",
-  "shoppingTilePinned": "Fijada"
+  "shoppingTilePinned": "Fijada",
+  "shoppingTileStarter": "Sugerencia"
 }

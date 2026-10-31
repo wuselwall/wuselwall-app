@@ -58,9 +58,10 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with: { node-version: 22 }
-      - run: node --test scripts/hosted-retire-social.test.mjs scripts/retire-social-sign-in.test.mjs scripts/email-code-templates.test.mjs scripts/hosted-email-templates.test.mjs scripts/deploy-web.test.mjs scripts/mail-language.test.mjs scripts/mail-settings.test.mjs scripts/image-pull.test.mjs scripts/backend-stack-images.test.mjs scripts/flutter-test-ci.test.mjs scripts/no-user-functions.test.mjs scripts/hosted-auth-config.test.mjs scripts/cloud-init.test.mjs scripts/dictionary.test.mjs
+      - run: node --test scripts/hosted-retire-social.test.mjs scripts/retire-social-sign-in.test.mjs scripts/email-code-templates.test.mjs scripts/hosted-email-templates.test.mjs scripts/deploy-web.test.mjs scripts/mail-language.test.mjs scripts/mail-settings.test.mjs scripts/image-pull.test.mjs scripts/backend-stack-images.test.mjs scripts/flutter-test-ci.test.mjs scripts/no-user-functions.test.mjs scripts/hosted-auth-config.test.mjs scripts/cloud-init.test.mjs scripts/dictionary.test.mjs scripts/starter.test.mjs
       # The committed dictionary asset must be what dictionary/*.txt renders to (specs/29).
       - run: node scripts/dictionary.mjs check
+      - run: node scripts/starter.mjs check
       - run: node scripts/email-code-smtp.smoke.mjs
 
   # Known vulnerabilities in every lockfile (specs/11, T5). Accepted ones, each with a

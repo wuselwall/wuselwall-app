@@ -6578,6 +6578,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get shoppingTilePinned => 'Angeheftet';
+
+  @override
+  String get shoppingTileStarter => 'Vorschlag';
 }
 
 /// The translations for German, as used in Austria (`de_AT`).

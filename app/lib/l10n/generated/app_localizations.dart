@@ -11081,6 +11081,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Pinned'**
   String get shoppingTilePinned;
+
+  /// Shopping list tile: tooltip and hint of a tile the starter catalogue suggests, not yet one of the family's own
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested'**
+  String get shoppingTileStarter;
 }
 
 class _AppLocalizationsDelegate

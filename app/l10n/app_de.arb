@@ -2437,5 +2437,6 @@
   "shoppingTilePin": "Kachel anheften",
   "shoppingTileUnpin": "Anheften aufheben",
   "shoppingTilePinHelp": "Angeheftete Kacheln stehen immer vorn.",
-  "shoppingTilePinned": "Angeheftet"
+  "shoppingTilePinned": "Angeheftet",
+  "shoppingTileStarter": "Vorschlag"
 }

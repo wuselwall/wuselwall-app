@@ -52,6 +52,54 @@ A line the family's real use contradicts is changed here first, then in the dict
 `de-CH` and `de-AT` lines are the operator's to review: a word a family would not say is
 removed, not argued.
 
+## Starter catalogue
+
+`starter/catalogue.txt` is not a dictionary but a list of things to buy: the most common items of each shopping
+list kind (issue #197), so a new family's list has tiles and search suggestions before anything was
+bought. The app fills the tile grid from it while a list's own catalogue is small, offers it in the
+search, and takes the picture of a catalogue entry the server gave none from its name-to-icon map.
+
+```
+[supermarket]              # list kind: supermarket | drugstore | hardware
+produce:                   # a seeded category, sections in walking order of app.shopping_seed_categories
+  de: Bananen, Äpfel, Tomaten, Gurken, Karotten, …    # most common first
+  de-CH: Karotten = Rüebli, Paprika = Peperoni, + Nüsslisalat
+  de-AT: Tomaten = Paradeiser, Karotten = Gelbe Rüben
+  en: bananas, apples, tomatoes, …
+  fr: bananes, pommes, tomates, …
+  es: plátanos, manzanas, tomates, …
+```
+
+- A name may appear once per list kind and tag. The order inside a section is the popularity order;
+  names are in natural spelling, plural where people buy plural (*Bananen*), singular for bulk (*Milch*).
+- `de` and `en` are required in every section, `fr` and `es` are optional.
+- `de-CH` and `de-AT` are overrides of the `de` list, never full lists: `base = regional` replaces the
+  base name at its place (the base must be a name of that section's `de` line), `+ Name` appends one.
+  Write what the family says: *Rüebli*, *Guetzli*, *Weggli*, *Gipfeli*, *Rahm*, *Anke*; *Paradeiser*,
+  *Erdäpfel*, *Marillen*, *Topfen*, *Obers*, *Semmeln*, *Faschiertes*, *Melanzani*, *Karfiol*, *Kren*; and
+  *ß* becomes *ss* in Swiss spelling (*Weißbrot* = *Weissbrot*). The rendered file has full lists for both.
+- Sections follow the walking order of the categories the server seeds for that kind
+  (`scripts/starter.test.mjs` compares them with the latest migration that defines
+  `app.shopping_seed_categories`). Supermarket: produce, bakery, dairy, meat_fish, pantry, snacks,
+  frozen, drinks, household, other. Drugstore: care, baby, cleaning, health, other. Hardware: tools,
+  screws, electrical, garden, other.
+- The picture of each name is looked up in `shopping.txt` with the rule of `app.catalog_icon_for`:
+  the whole name, then its last word, then the longest known word the last word ends with (three
+  letters or more). A name without a hit gets `"icon": null` and a warning from `build`: it is a
+  candidate for a new word in `shopping.txt` (or, if the name is odd, for a better name here).
+
+```
+node scripts/starter.mjs build     # validate, render app/assets/matching/starter.json
+node scripts/starter.mjs check     # CI: the committed asset equals a fresh render
+node scripts/starter.mjs stats     # names per kind and tag, and the names without a picture
+node --test scripts/starter.test.mjs
+```
+
+The rendered file: `{ "version": 1, "source": …, "kinds": { "<kind>": { "categories": ["produce", …],
+"items": { "<tag>": [ { "name": "Bananen", "category": "produce", "icon": "banana" }, … ] } } } }`, with
+every tag of `scripts/dictionary.mjs` (`de`, `de-CH`, `de-AT`, `en`, `fr`, `es`) as a full list in
+category-walking order and then popularity order.
+
 ## Known gaps and candidates for new pictures
 
 The corpus asks for pictures the sets do not have. Candidates for the icon expansion that
