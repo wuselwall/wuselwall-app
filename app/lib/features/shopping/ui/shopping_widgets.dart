@@ -575,10 +575,15 @@ class _ShoppingTileState extends State<ShoppingTile> {
       if (onList) context.l10n.shoppingTileOnList,
     ].join(', ');
     if (note.isEmpty) return tile;
+    // The tooltip's overlay portal starts a semantics node of its own; merged, the
+    // hint lands on the tile's labelled node instead of an unlabelled one around it,
+    // which iOS's accessibility audit rejects as an element without a description.
     return Tooltip(
       message: note,
       excludeFromSemantics: true,
-      child: Semantics(hint: note, child: tile),
+      child: MergeSemantics(
+        child: Semantics(hint: note, child: tile),
+      ),
     );
   }
 }
