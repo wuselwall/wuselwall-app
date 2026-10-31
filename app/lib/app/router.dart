@@ -135,7 +135,7 @@ abstract final class Routes {
   static const reminders = '/settings/reminders';
   static const shortcuts = '/settings/shortcuts';
 
-  /// The Coop shopping list connector of this device (specs/29).
+  /// The Coop shopping list connector of this device (specs/30).
   static const coopList = '/settings/coop';
 
   static bool isSetup(String path) =>

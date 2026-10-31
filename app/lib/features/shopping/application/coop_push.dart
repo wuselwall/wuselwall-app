@@ -69,7 +69,7 @@ class CoopUnexpected implements Exception {
   String toString() => 'CoopUnexpected($step)';
 }
 
-/// One push (specs/29, "Mechanism"): make the list [coopListName] on coop.ch equal to
+/// One push (specs/30, "Mechanism"): make the list [coopListName] on coop.ch equal to
 /// [items], touching only the entries this device made. [state] is the device's link
 /// before; [CoopPush.state] is the link after, also when the push stopped half-way, so
 /// what did go across is remembered.

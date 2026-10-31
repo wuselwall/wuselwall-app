@@ -11082,7 +11082,7 @@ abstract class AppLocalizations {
   /// **'Pinned'**
   String get shoppingTilePinned;
 
-  /// Settings tile and page title: handing the shopping list to the list of the Swiss supermarket Coop (specs/29)
+  /// Settings tile and page title: handing the shopping list to the list of the Swiss supermarket Coop (specs/30)
   ///
   /// In en, this message translates to:
   /// **'Coop shopping list'**

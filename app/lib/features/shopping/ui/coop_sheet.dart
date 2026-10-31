@@ -69,7 +69,7 @@ String coopOutcomeMessage(AppLocalizations l10n, CoopOutcome outcome) =>
 
 enum _Phase { loading, signIn, pushing }
 
-/// coop.ch in a WebView (specs/29, "Mechanism"): the list page, which signs in through
+/// coop.ch in a WebView (specs/30, "Mechanism"): the list page, which signs in through
 /// the Supercard ID by itself while that session lives. When it does not, the sheet
 /// shows Coop's own sign-in page; otherwise a progress panel covers the page while the
 /// requests run from it, with its own cookies.

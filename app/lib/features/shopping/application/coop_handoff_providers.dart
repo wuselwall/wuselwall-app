@@ -6,7 +6,7 @@ import 'package:wuselwall/features/identity/application/device_providers.dart';
 import 'package:wuselwall/features/shopping/data/coop_handoff_store.dart';
 import 'package:wuselwall/features/shopping/domain/retailer_handoff.dart';
 
-/// Whether this build can hand a list to Coop at all (specs/29): the connector needs a
+/// Whether this build can hand a list to Coop at all (specs/30): the connector needs a
 /// WebView, which only the iOS and Android apps have. The web app and the tests say no
 /// unless a test says otherwise.
 final coopHandoffSupportedProvider = Provider<bool>(

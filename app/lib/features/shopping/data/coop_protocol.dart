@@ -1,6 +1,6 @@
 import 'package:wuselwall/core/text/fold.dart';
 
-/// How coop.ch's own list pages talk to coop.ch (specs/29, "What was found"): undocumented,
+/// How coop.ch's own list pages talk to coop.ch (specs/30, "What was found"): undocumented,
 /// learned from the website, and so the one file to fix when coop.ch changes. Every
 /// request runs inside a signed-in WebView with the page's own cookies; nothing here
 /// holds a credential.

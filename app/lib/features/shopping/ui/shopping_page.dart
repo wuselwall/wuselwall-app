@@ -67,7 +67,7 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody>
     unawaited(context.push<void>(Routes.shoppingTrip));
   }
 
-  /// "An Coop senden" (specs/29): the open items of [items] go to this device's Coop
+  /// "An Coop senden" (specs/30): the open items of [items] go to this device's Coop
   /// list, through the Coop sheet; one line says how it went.
   Future<void> _sendToCoop(List<ShoppingItem> items) async {
     final l10n = context.l10n;

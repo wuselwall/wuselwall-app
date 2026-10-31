@@ -1,4 +1,4 @@
-# 29 — Handing the list to the shop: the Coop Einkaufsliste connector
+# 30 — Handing the list to the shop: the Coop Einkaufsliste connector
 
 *Added 2026-10-31.* Builds on [07](07-module-meals-shopping.md) (the shopping list, its two
 modes) and [11](11-security-and-privacy.md). Research done 2026-10-31 against coop.ch with

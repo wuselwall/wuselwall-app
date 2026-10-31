@@ -5,7 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:wuselwall/core/logging/log.dart';
 import 'package:wuselwall/features/shopping/domain/retailer_handoff.dart';
 
-/// This device's link to the Coop list (specs/29, decision 1): the list id and the
+/// This device's link to the Coop list (specs/30, decision 1): the list id and the
 /// entries the pushes made. On the device only; the server never sees it. The Coop
 /// session itself lives in the WebView's cookies, not here. Null: not connected.
 abstract class CoopHandoffStore {

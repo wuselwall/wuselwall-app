@@ -1,6 +1,6 @@
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 
-/// Handing the open items of a list to a supermarket's own list (specs/29): the parts
+/// Handing the open items of a list to a supermarket's own list (specs/30): the parts
 /// that know nothing about the supermarket. WuselWall stays the source of truth; the
 /// other list is made equal to it on each push, one way.
 

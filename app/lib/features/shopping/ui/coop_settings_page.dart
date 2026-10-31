@@ -7,7 +7,7 @@ import 'package:wuselwall/features/shopping/application/coop_handoff_providers.d
 import 'package:wuselwall/features/shopping/data/coop_protocol.dart';
 import 'package:wuselwall/features/shopping/ui/coop_sheet.dart';
 
-/// Einstellungen → Geräte → Coop-Einkaufsliste (specs/29, "The guardian's path"): what
+/// Einstellungen → Geräte → Coop-Einkaufsliste (specs/30, "The guardian's path"): what
 /// the connector does, that it is not Coop's, what leaves the device, and the one
 /// button to sign in or to disconnect.
 class CoopSettingsPage extends ConsumerWidget {

@@ -3975,7 +3975,7 @@
   },
   "coopTitle": "Coop shopping list",
   "@coopTitle": {
-    "description": "Settings tile and page title: handing the shopping list to the list of the Swiss supermarket Coop (specs/29)"
+    "description": "Settings tile and page title: handing the shopping list to the list of the Swiss supermarket Coop (specs/30)"
   },
   "coopSettingsSubtitle": "Send a list to your Coop account, for the passabene scanner",
   "@coopSettingsSubtitle": {

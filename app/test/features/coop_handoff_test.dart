@@ -26,7 +26,7 @@ HandoffItem _h(String id, String name, [String? label]) =>
     HandoffItem(id: id, name: name, label: label ?? name);
 
 /// coop.ch as far as the push sees it: lists of entries, the active-list cookie, a
-/// session, and answers shaped like the site's (specs/29, "What was found").
+/// session, and answers shaped like the site's (specs/30, "What was found").
 class FakeCoop implements CoopTransport {
   FakeCoop({this.signedIn = true, this.generic = const {}});
 

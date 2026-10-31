@@ -89,7 +89,7 @@ enum SettingsTile {
     leaveFamily ||
     deleteAccount => env.personalPhone,
     server => env.hasServer,
-    // A connector on the phone a guardian carries into the shop (specs/29).
+    // A connector on the phone a guardian carries into the shop (specs/30).
     coopList => env.personalPhone && env.coopSupported,
     _ => true,
   };
@@ -347,7 +347,7 @@ class SettingsEnv {
   final bool notificationsAvailable;
   final bool hasServer;
 
-  /// This build can hand a list to Coop: the iOS and Android apps (specs/29).
+  /// This build can hand a list to Coop: the iOS and Android apps (specs/30).
   final bool coopSupported;
 
   /// A non-guardian at a shared or kiosk device: only the settings the server lets a
