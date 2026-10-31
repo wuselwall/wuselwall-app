@@ -38,12 +38,12 @@ select is(app.catalog_icon_for('vollkornbrot'), 'bread', 'compound: Vollkornbrot
 select is(app.catalog_icon_for('orangensaft'), 'juice', 'compound: Orangensaft is juice, not orange');
 select is(app.catalog_icon_for('apfelsaft'), 'juice', 'compound: Apfelsaft is juice, not apple');
 select is(app.catalog_icon_for('zahnpasta'), 'toothbrush', 'an exact match beats a suffix: Zahnpasta is not pasta');
-select is(app.catalog_icon_for('milchreis'), 'rice', 'compound: Milchreis is rice');
+select is(app.catalog_icon_for('milchreis'), 'bowl', 'Milchreis is a dairy dessert of its own, not rice (a dictionary word beats the compound)');
 select is(app.catalog_icon_for('basmatireis'), 'rice', 'compound: Basmatireis');
 select is(app.catalog_icon_for('olive oil'), 'oil', 'the last word after a space counts');
 select is(app.catalog_icon_for('orange juice'), 'juice', 'the last word wins over the first');
 select is(app.catalog_icon_for('gummy bears'), 'candy', 'a whole multi-word name matches first');
-select is(app.catalog_icon_for('erdnussbutter'), 'nuts', 'an exact match beats the suffix butter');
+select is(app.catalog_icon_for('erdnussbutter'), 'honey', 'an exact match beats the suffix butter; the dictionary files peanut butter with the spreads');
 select is(app.catalog_icon_for('erdaepfel'), 'potato', 'Swiss-German potatoes');
 select is(app.catalog_icon_for('freilandeier'), 'egg', 'compound: Freilandeier');
 select is(app.catalog_icon_for('gaensebluemchen'), null::text, 'an unknown name has no key');

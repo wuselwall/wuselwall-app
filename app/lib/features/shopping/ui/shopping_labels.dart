@@ -6,8 +6,12 @@ import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 /// their own name.
 /// A category's name: the one the family gave it, else the seeded key's translation.
 String categoryLabel(AppLocalizations l10n, ShoppingCategory c) =>
-    c.name ??
-    switch (c.key) {
+    c.name ?? seededCategoryLabel(l10n, c.key) ?? l10n.shoppingCat_other;
+
+/// The translated name of a seeded category [key], or null for a key this app does not
+/// know (a custom category, or a newer server's).
+String? seededCategoryLabel(AppLocalizations l10n, String? key) =>
+    switch (key) {
       'produce' => l10n.shoppingCat_produce,
       'bakery' => l10n.shoppingCat_bakery,
       'dairy' => l10n.shoppingCat_dairy,
@@ -26,7 +30,7 @@ String categoryLabel(AppLocalizations l10n, ShoppingCategory c) =>
       'screws' => l10n.shoppingCat_screws,
       'electrical' => l10n.shoppingCat_electrical,
       'garden' => l10n.shoppingCat_garden,
-      _ => c.name ?? l10n.shoppingCat_other,
+      _ => null,
     };
 
 /// The category's icon: a tile's fallback when the item has no icon_key the app knows.
