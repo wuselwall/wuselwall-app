@@ -1,9 +1,12 @@
 # 29 — Handing the list to the shop: the Coop Einkaufsliste connector
 
 *Added 2026-10-31.* Builds on [07](07-module-meals-shopping.md) (the shopping list, its two
-modes) and [11](11-security-and-privacy.md). Status: **specified, not built.** Research
-done 2026-10-31 against coop.ch with a guardian's own account; nothing here is documented
-or promised by Coop.
+modes) and [11](11-security-and-privacy.md). Research done 2026-10-31 against coop.ch with
+a guardian's own account; nothing here is documented or promised by Coop.
+
+> **Built 2026-10-31 (first version), not yet run on a device against coop.ch.** The push
+> logic is tested against a fake coop.ch; the WebView sheet, the sign-in and the real
+> answers need the manual check under "Testing" before the first release that ships it.
 
 ## Why
 
@@ -45,15 +48,31 @@ list. What exists:
 | `GET /<lang>/shopping-list/searchsuggestion/result/products?name=` | Real product suggestions | yes |
 | `POST /<lang>/shopping-list/remove-entry/<entryId>` | Remove an entry (the answer carries an undo placeholder) | yes |
 | `GET /<lang>/share-list/shareShoppinglistModal?listId=` | The share modal with the invitation text | yes |
+| `GET /<lang>/my-lists/my-shoppinglist` | The list panel: JSON with `panelHtml`, the active list's id in `data-shopping-list-id` | from the site's script |
 | `/<lang>/shopping-list/buying/modal/delete-all-products` | "Clear list" confirmation | seen, not called |
-| `/<lang>/shopping-list/load` | Loads the list page by page (parameters unknown; the bare call answers 404) | seen |
 | `/<lang>/shopping-list/generic/update-modal/<entryId>` | Edit a generic entry ("Refine": quantity, note) | seen |
 
+Read from the signed-in page and the site's public scripts:
+
+- **The CSRF token** is in an inline script on every page, `ACC.config.CSRFToken`, and is
+  the same for the whole session.
+- **The active list** is the cookie `activeShoppingListId`, set by the site's own script
+  (`js-cookie`, path `/`, not HttpOnly). The add call puts the item on the list it names.
+- **Create** answers with the new list's HTML in `shoppingListHtml`; the site takes the id
+  from its `data-shopping-list-id` and sets the cookie.
+- **Add** answers `success` and a snackbar whose "Refine" link ends in the new entry's id.
+  **Remove** answers a top-level `success: false` even when it worked; the entry's part
+  (`shoppingPanelEntry.success`) says whether it did.
+- **Signed in** shows as an element `[data-my-account-menu]` and a sign-out link; the
+  tracking data says `loginStatus: "registered SCID"`.
+- **Without a session**, the list page redirects to `login.supercard.ch/cas/oidc/authorize`
+  with `prompt=none`: while the Supercard ID session lives, the site signs in again
+  without a form.
+- coop.ch reads the lists from the same Firebase project as WeNeed, in the browser: one
+  backend, as the share codes said.
+
 The session is three cookies (`JSESSIONID`, `acceleratorSecureGUID`, `oauthTokens`) minted
-by the Supercard ID login on `login.supercard.ch` (OIDC) plus the DataDome token. How long
-it lives, and whether the long-lived Supercard SSO cookie re-mints it silently, is not
-known. Where the page exposes the `CSRFToken` was not established (SAP Commerce usually
-puts it in a meta tag or hidden input of the page the AJAX calls come from).
+by the Supercard ID login on `login.supercard.ch` (OIDC) plus the DataDome token.
 
 ## Decisions
 
@@ -73,9 +92,10 @@ puts it in a meta tag or hidden input of the page the AJAX calls come from).
    entries the connector created earlier and that are no longer open are removed, new items
    are added. Nothing the family typed into that list by hand is removed, because only
    entries with a remembered id are.
-4. **Off by default, adults only, marked as unofficial.** The feature appears under
-   *Einstellungen → Einkaufsliste → Coop Einkaufsliste* and in the *Planen* bottom bar only
-   after a guardian turned it on. Its description says in plain words that it uses the
+4. **Off by default, adults only, marked as unofficial.** The settings row sits under
+   *Einstellungen → Geräte → Dieses Gerät* on a personal phone (the sign-in lives in this
+   phone's WebView); the button in the *Planen* bottom bar appears only once someone has
+   signed in to Coop on that phone. Its description says in plain words that it uses the
    coop.ch website the way a browser does, that Coop does not support it, and that it may
    stop working after a change on coop.ch. The kid register and the wall display never show
    it.
@@ -88,10 +108,10 @@ puts it in a meta tag or hidden input of the page the AJAX calls come from).
    answer the connector does not understand ends in one line ("Coop-Liste nicht
    erreichbar") and changes nothing in WuselWall. The connector carries no retry queue: the
    next tap pushes again.
-7. **A connector interface, one implementation.** The app gets a small `RetailerList`
-   port (sign in, push items, sign out, status) with the Coop implementation behind it, so a
-   second retailer (Migros has a list in its app too) would not reopen the UI. No second
-   implementation is planned.
+7. **Shared parts, one retailer.** The item labels, the plan and the link on the device
+   (`retailer_handoff.dart`) know nothing about Coop; the Coop parts sit behind a small
+   transport (`CoopTransport`) and one push (`CoopPush`). A second retailer (Migros has a
+   list in its app too) would add its own push and reuse the rest. None is planned.
 8. **Ask Coop in parallel.** Before the first release of the connector, Coop is asked
    through the WeNeed contact form whether a sanctioned way exists. A yes replaces the
    mechanism below; a no, or silence, does not stop the connector, but its wording stays
@@ -99,15 +119,18 @@ puts it in a meta tag or hidden input of the page the AJAX calls come from).
 
 ## The guardian's path
 
-1. *Einstellungen → Einkaufsliste → Coop Einkaufsliste* explains the feature in four lines
-   and has one button, **Bei Coop anmelden**. It opens coop.ch's own sign-in page in a
+1. *Einstellungen → Geräte → Dieses Gerät → Coop-Einkaufsliste* (only on a personal phone,
+   in the iOS and Android apps) explains the feature, what leaves the device and that it is
+   not Coop's, and has one button, **Bei Coop anmelden**. It opens coop.ch's own sign-in page in a
    WebView inside the app (Supercard ID, with whatever second factor Coop asks for).
    The page is Coop's, unchanged; WuselWall reads nothing typed into it.
 2. When the WebView lands on a coop.ch page that is signed in, the sheet closes and the
-   settings page shows **Angemeldet** with the list name ("WuselWall") and **Abmelden**.
-3. In *Planen*, the bottom bar gains **An Coop senden** next to *Einkaufen gehen*. The tap
-   shows a progress line and ends in "14 Artikel auf der Coop-Liste «WuselWall»". The
-   Coop app or scanner shows them under that list.
+   settings page shows **Auf diesem Gerät verbunden** with the list name ("WuselWall"),
+   how many items the last push left there, and **Coop trennen**.
+3. In *Planen*, the bottom bar gains an icon button **An Coop senden** between the history
+   and *Einkaufen gehen*. The tap opens the sheet with a progress panel over the page and
+   ends in "14 Artikel auf der Coop-Liste «WuselWall»". The Coop app or scanner shows them
+   under that list. A push with no open items empties that list.
 4. Signed out or expired: the tap opens the sign-in sheet first, then pushes.
 
 No automatic push: the family decides when the list is complete, and a push on every
@@ -123,16 +146,26 @@ change would hammer coop.ch and multiply the chance of being blocked.
   working.)
 - **Dependency**: `webview_flutter` (iOS, Android; the only two platforms with the feature).
   The web build and the wall display have no WebView and show no connector.
+- **The sheet** loads the list page. A page on another host (Supercard's sign-in, a
+  captcha) is shown to the person; a coop.ch page is asked through the bridge whether it
+  is signed in; not signed in, the sheet opens `/<lang>/login` once and then waits for the
+  person. Signed in, a progress panel covers the page and the push runs. Only https
+  navigations are allowed. The site's language follows the app (`de`, `fr`, `en`; Spanish
+  reads it in English, Italian in Italian).
 - **State on the device** (`flutter_secure_storage`): the Coop list id, the language the
   session was made in, and the map *WuselWall item id → Coop entry id* for the entries the
   connector created. Signing out deletes all three.
-- **A push**, in order: (1) load the list page, read the CSRF token, confirm the session is
-  signed in (a redirect to the login page means "expired"); (2) create the list if the
-  stored id is missing or no longer exists, set it active; (3) remove remembered entries
-  whose WuselWall item is gone or ticked; (4) add every open item without a remembered
-  entry, one call per item, taking the entry id from the answer; (5) persist the map.
-  Thirty items are thirty requests; the spacing of 150 ms keeps it under the rate a person
-  produces by clicking.
+- **A push**, in order: (1) read the CSRF token and the signed-in marker from the page;
+  (2) set the stored list active and ask the panel which list is active: if it is not the
+  stored one, that list was deleted on the Coop side and a new "WuselWall" list is created
+  and set active; (3) remove remembered entries whose WuselWall item is gone, ticked or
+  changed (a new count, name or note gives a new label); (4) for every open item without an
+  entry, look up the generic catalogue for its picture and add it, taking the entry id
+  from the answer; (5) keep the map. Each step updates the link on the device, so a push
+  that stops half-way remembers what went across. Thirty new items are sixty requests,
+  150 ms apart: the pace of a person clicking.
+- **Sign-in lost half-way** (a reply that ended on another host, 401/403, or a fetch the
+  page could not complete): the sheet shows the sign-in again and pushes once signed in.
 - **Answers are checked, not trusted**: `success: true` and an entry id in the fragment.
   Anything else counts as failure for that item; the push reports "12 von 14" and keeps
   the map for the ones that worked.
@@ -161,28 +194,43 @@ gets a line under third parties when this is built.
 
 - **Coop changes coop.ch.** The connector breaks silently or loudly. Mitigation: decision 6
   (fails soft), the "unofficial" wording, a manual check on the release checklist for each
-  app release ("push three items, see them in the Coop app").
+  app release ("push three items, see them in the Coop app"). Every coop.ch detail is in
+  one file, `coop_protocol.dart`.
 - **DataDome blocks the WebView.** It is a real browser; the risk is low, and a block shows
   as a captcha page in the sign-in sheet, which the guardian can solve.
-- **Coop's terms.** Automated use of the site may be against them. The family uses its own
-  account on its own data at a human pace; the project does not run anything itself.
-  Decision 8 asks Coop. If Coop objects, the connector is removed from the release.
+- **Coop has not approved it.** Decision 8 asks; if Coop objects, the connector is removed
+  from the release. The open questions around it are kept in the maintainers' private
+  notes.
 
 ## Open questions
 
-- Where the page carries the `CSRFToken` (meta tag, hidden input, or a script variable).
-- The parameters of `/shopping-list/load`, needed only if the connector should confirm the
-  state after a push.
-- Whether the Supercard SSO cookie renews the storefront session without a visible login,
-  and how long the WebView keeps it (iOS clears WebView cookies less predictably than
-  Android).
+- How long the WebView keeps the Supercard ID session (the silent `prompt=none` sign-in
+  covers the storefront session; iOS clears WebView cookies less predictably than Android).
+- Whether the signed-in markers are absent on every page without a session (checked on the
+  list page only).
+- Whether DataDome treats Android's WebView user agent (it carries `wv`) like Chrome.
 - Whether generic entries added with `productId` show the icon on the scanner as they do on
-  the website (the press release suggests yes).
+  the website.
 - The quantity field of the "Refine" modal, if a count in the name proves clumsy.
+
+## Code
+
+| Part | File (`app/lib/features/shopping/`) |
+|---|---|
+| Labels, plan, the link on the device | `domain/retailer_handoff.dart` |
+| Everything coop.ch-specific: paths, answers, the page bridge | `data/coop_protocol.dart` |
+| The link in secure storage | `data/coop_handoff_store.dart` |
+| The push | `application/coop_push.dart` |
+| Supported, connected, available | `application/coop_handoff_providers.dart` |
+| The WebView sheet and its transport | `ui/coop_sheet.dart` |
+| The settings page | `ui/coop_settings_page.dart` |
 
 ## Testing
 
-No automated test talks to coop.ch. The `RetailerList` port gets a fake implementation for
-widget tests of the settings page, the bottom bar and the failure line. The real connector
-is checked by hand with a guardian's own account before each release that touches it, and
-the checklist in [release-checklist](release-checklist.md) gets that step.
+No automated test talks to coop.ch. `test/features/coop_handoff_test.dart` runs the push
+against a fake coop.ch that answers like the real one (first push, nothing new, bought and
+changed items, entries typed by hand, a deleted list, an expired session, refused items);
+the widget tests replace the sheet with a fake launcher. The real connector is checked by
+hand with a guardian's own account before each release that touches it (release
+checklist O4): sign in, push three items, see them in the Coop app, tick one in WuselWall,
+push again, see it gone.
