@@ -16,9 +16,6 @@ import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_actions.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_widgets.dart';
 
-/// Below this width the add button shrinks to its icon, so three controls fit the bar.
-const _narrowBar = 400.0;
-
 /// The shopping trip (2026-10-31): the list as tick rows in walking order, on a screen
 /// of its own — no app bar, no navigation — so the thumb has the store to itself. The
 /// bar at the bottom adds a forgotten item, goes back to planning, or ends the trip.
@@ -58,7 +55,6 @@ class _ShoppingTripPageState extends ConsumerState<ShoppingTripPage>
     final openCount = items.value?.where((i) => !i.checked).length ?? 0;
     final anyTicked = items.value?.any((i) => i.checked) ?? false;
     final touch = ref.watch(uiRegisterProvider).touchTarget;
-    final narrow = MediaQuery.sizeOf(context).width < _narrowBar;
     // Captured: pending ticks flush even when this page leaves.
     final sync = this.sync;
     final actor = this.actor;
@@ -83,25 +79,51 @@ class _ShoppingTripPageState extends ConsumerState<ShoppingTripPage>
                 }
                 return Column(
                   children: [
+                    // The title and, at the top end, the trip's one-time action: ending
+                    // it. Up here it is out of the thumb's way, so it is never pressed
+                    // by accident between two ticks; the confirm dialog stays.
                     Padding(
                       padding: const EdgeInsets.fromLTRB(
                         Tokens.space4,
-                        Tokens.space3,
+                        Tokens.space2,
                         Tokens.space4,
                         Tokens.space2,
                       ),
-                      child: Align(
-                        alignment: AlignmentDirectional.centerStart,
-                        child: Semantics(
-                          header: true,
-                          child: Text(
-                            l10n.shoppingTripTitle(list.name, openCount),
-                            key: const ValueKey('shopping-trip-title'),
-                            style: Theme.of(context).textTheme.titleMedium,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                      child: Row(
+                        spacing: Tokens.space2,
+                        children: [
+                          Expanded(
+                            child: Semantics(
+                              header: true,
+                              child: Text(
+                                l10n.shoppingTripTitle(list.name, openCount),
+                                key: const ValueKey('shopping-trip-title'),
+                                style: Theme.of(context).textTheme.titleMedium,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
                           ),
-                        ),
+                          // Tonal, not filled: quieter than the primary button below.
+                          // It may take two thirds of the row; past that its label gives
+                          // way, and the title before it.
+                          Flexible(
+                            flex: 2,
+                            child: FilledButton.tonal(
+                              key: const ValueKey('shopping-finish'),
+                              style: FilledButton.styleFrom(
+                                minimumSize: Size(0, touch),
+                              ),
+                              onPressed: anyTicked
+                                  ? () => unawaited(_finish(list))
+                                  : null,
+                              child: _IconLabel(
+                                icon: Icons.shopping_cart_checkout,
+                                label: l10n.shoppingFinish,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     if (pending > 0) ShoppingPendingBanner(count: pending),
@@ -147,6 +169,8 @@ class _ShoppingTripPageState extends ConsumerState<ShoppingTripPage>
             ),
           ),
         ),
+        // Bottom: planning mode at the start, adding at the end as the primary button;
+        // adding is the frequent action in the aisle, ending the trip the rare one.
         bottomNavigationBar: list == null
             ? null
             : SafeArea(
@@ -156,68 +180,41 @@ class _ShoppingTripPageState extends ConsumerState<ShoppingTripPage>
                     child: Row(
                       spacing: Tokens.space2,
                       children: [
-                        if (narrow)
-                          IconButton.outlined(
-                            key: const ValueKey('shopping-add-in-store'),
-                            tooltip: l10n.shoppingAddInStore,
-                            style: IconButton.styleFrom(
-                              minimumSize: Size.square(touch < 48 ? 48 : touch),
-                            ),
-                            onPressed: () => unawaited(addInStore(list)),
-                            icon: const Icon(Icons.add),
-                          )
-                        else
-                          OutlinedButton.icon(
-                            key: const ValueKey('shopping-add-in-store'),
-                            onPressed: () => unawaited(addInStore(list)),
-                            icon: const Icon(Icons.add),
-                            label: Text(l10n.shoppingAddInStore),
-                          ),
-                        // On a narrow phone the label alone: the icon would push the
-                        // longer French and Spanish labels off the screen.
-                        if (narrow)
-                          TextButton(
-                            key: const ValueKey('shopping-mode-plan'),
-                            onPressed: _leave,
-                            child: Text(l10n.shoppingModePlan),
-                          )
-                        else
-                          TextButton.icon(
-                            key: const ValueKey('shopping-mode-plan'),
-                            onPressed: _leave,
-                            icon: const Icon(Icons.edit_note),
-                            label: Text(l10n.shoppingModePlan),
-                          ),
+                        // The mode button gives way first: the primary button keeps
+                        // its full label on a narrow phone, and the long French and
+                        // Spanish mode labels ellipsise instead of overflowing.
                         Expanded(
-                          child: FilledButton(
-                            key: const ValueKey('shopping-finish'),
-                            style: narrow
-                                ? FilledButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: Tokens.space3,
-                                    ),
-                                  )
-                                : null,
-                            onPressed: anyTicked
-                                ? () => unawaited(_finish(list))
-                                : null,
-                            // The label may take two lines on a narrow phone (the
-                            // Spanish one is long) instead of running off the screen.
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              spacing: Tokens.space2,
-                              children: [
-                                const Icon(Icons.shopping_cart_checkout),
-                                Flexible(
-                                  child: Text(
-                                    l10n.shoppingFinish,
-                                    maxLines: 2,
-                                    textAlign: TextAlign.center,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
+                          // heightFactor: the bar is laid out with a loose height, and
+                          // an Align without it would fill that height and squeeze
+                          // the list above to nothing.
+                          child: Align(
+                            alignment: AlignmentDirectional.centerStart,
+                            heightFactor: 1,
+                            child: TextButton(
+                              key: const ValueKey('shopping-mode-plan'),
+                              // No minimum width: in its flexible slot the button
+                              // shrinks to its icon and an ellipsis before anything
+                              // overflows.
+                              style: TextButton.styleFrom(
+                                minimumSize: Size(0, touch),
+                              ),
+                              onPressed: _leave,
+                              child: _IconLabel(
+                                icon: Icons.edit_note,
+                                label: l10n.shoppingModePlan,
+                              ),
                             ),
+                          ),
+                        ),
+                        FilledButton(
+                          key: const ValueKey('shopping-add-in-store'),
+                          style: FilledButton.styleFrom(
+                            minimumSize: Size(0, touch),
+                          ),
+                          onPressed: () => unawaited(addInStore(list)),
+                          child: _IconLabel(
+                            icon: Icons.add,
+                            label: l10n.shoppingAddInStore,
                           ),
                         ),
                       ],
@@ -228,4 +225,25 @@ class _ShoppingTripPageState extends ConsumerState<ShoppingTripPage>
       ),
     );
   }
+}
+
+/// A button's icon and label where the label may give way (ellipsis) on a narrow
+/// phone; the `.icon` constructors keep their label rigid and overflow instead.
+class _IconLabel extends StatelessWidget {
+  const _IconLabel({required this.icon, required this.label});
+
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) => Row(
+    mainAxisSize: MainAxisSize.min,
+    spacing: Tokens.space2,
+    children: [
+      Icon(icon, size: 18),
+      Flexible(
+        child: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis),
+      ),
+    ],
+  );
 }

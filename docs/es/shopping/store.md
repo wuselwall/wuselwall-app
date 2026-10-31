@@ -8,7 +8,7 @@ La lista tiene zonas grandes, utilizables con una mano y con guantes.
 
 <Shot name="shopping-store" alt="La compra en una página propia, con casillas para marcar" />
 
-Abajo hay tres botones: **Añadir**, **Planificar** y **Terminar la compra**. **Planificar** (o el gesto de volver del móvil) te devuelve a la lista normal.
+Abajo hay dos botones: **Modo planificar** a la izquierda y **Añadir** a la derecha. **Modo planificar** (o el gesto de volver del móvil) te devuelve a la lista normal. **Terminar la compra** está arriba a la derecha, junto al nombre de la lista, fuera del alcance del pulgar: es la única acción de cada compra.
 
 WuselWall recuerda en este dispositivo si estabas planificando o comprando. Si cerraste el móvil en la tienda, la lista se abre de nuevo directamente en la compra. Solo vale para este dispositivo; la familia no ve nada de ello.
 
@@ -22,7 +22,7 @@ Los productos marcados pasan a la sección plegada **En el carrito**, al final. 
 
 ## ¿Se te olvidó algo? {#forgot-something}
 
-El botón **Añadir** de abajo (en un móvil estrecho, solo un **+**) abre la búsqueda y las tarjetas en una hoja sobre la lista. Puedes añadir varios productos seguidos; la hoja sigue abierta hasta que la deslices hacia abajo o vuelvas atrás. Para dejar de escribir, toca la **×** del campo de búsqueda: vacía el campo y cierra el teclado.
+El botón **Añadir** de abajo a la derecha abre la búsqueda y las tarjetas en una hoja sobre la lista. Puedes añadir varios productos seguidos; la hoja sigue abierta hasta que la deslices hacia abajo o vuelvas atrás. Para dejar de escribir, toca la **×** del campo de búsqueda: vacía el campo y cierra el teclado.
 
 <Shot name="shopping-store-add" alt="La hoja para añadir en la tienda, con la búsqueda y las tarjetas" />
 

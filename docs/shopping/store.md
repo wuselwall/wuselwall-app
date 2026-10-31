@@ -8,7 +8,7 @@ Auf **Einkaufen gehen** unten in der Liste kommst du mit einem Tipp in den Einka
 
 <Shot name="shopping-store" alt="Der Einkauf als eigene Seite mit Kästchen zum Abhaken" />
 
-Unten stehen drei Knöpfe: **Hinzufügen**, **Planen** und **Einkauf beenden**. Mit **Planen** (oder der Zurück-Geste deines Handys) kommst du zurück zur normalen Liste.
+Unten stehen zwei Knöpfe: links **Planungsmodus**, rechts **Hinzufügen**. Mit **Planungsmodus** (oder der Zurück-Geste deines Handys) kommst du zurück zur normalen Liste. **Einkauf beenden** steht oben rechts neben dem Namen der Liste, aus dem Weg des Daumens: Es ist die eine Aktion pro Einkauf.
 
 WuselWall merkt sich auf diesem Gerät, ob du zuletzt geplant oder eingekauft hast. Hast du das Handy im Laden zugemacht, öffnet die Liste beim nächsten Mal gleich wieder im Einkauf. Das gilt nur für dieses Gerät; die Familie sieht davon nichts.
 
@@ -25,7 +25,7 @@ WuselWall merkt sich auf diesem Gerät, ob du zuletzt geplant oder eingekauft ha
 
 ## Etwas vergessen?
 
-Unten steht **Hinzufügen** (auf schmalen Handys nur ein **+**). Es öffnet Suchfeld und Kacheln in einem Blatt über der Liste. Du kannst dort mehrere Artikel nacheinander hinzufügen; das Blatt bleibt offen, bis du es nach unten wischst oder zurückgehst. Wer das Tippen beenden will, tippt auf das **×** im Suchfeld: Es leert das Feld und schließt die Tastatur.
+Unten rechts steht **Hinzufügen**. Es öffnet Suchfeld und Kacheln in einem Blatt über der Liste. Du kannst dort mehrere Artikel nacheinander hinzufügen; das Blatt bleibt offen, bis du es nach unten wischst oder zurückgehst. Wer das Tippen beenden will, tippt auf das **×** im Suchfeld: Es leert das Feld und schließt die Tastatur.
 
 <Shot name="shopping-store-add" alt="Blatt zum Hinzufügen im Laden mit Suchfeld und Kacheln" />
 
@@ -35,7 +35,7 @@ Zwei Personen in verschiedenen Gängen sehen die Haken der anderen **nach ein bi
 
 ## Einkauf beenden
 
-Wenn ihr fertig seid, tippt ihr unten auf **Einkauf beenden**. Danach schließt sich der Einkauf, und du bist zurück in der Liste zum **Planen**.
+Wenn ihr fertig seid, tippt ihr oben rechts auf **Einkauf beenden**. Danach schließt sich der Einkauf, und du bist zurück in der Liste zum **Planen**.
 
 - Alles **Abgehakte** wird abgeschlossen und im [Verlauf](/shopping/history) gespeichert.
 - Was **nicht abgehakt** ist, bleibt auf der Liste.

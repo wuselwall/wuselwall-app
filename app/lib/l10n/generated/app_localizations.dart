@@ -11001,7 +11001,7 @@ abstract class AppLocalizations {
   /// Shopping list, mode control: the segment for planning at home (search, tiles, items without ticks)
   ///
   /// In en, this message translates to:
-  /// **'Plan'**
+  /// **'Plan mode'**
   String get shoppingModePlan;
 
   /// Shopping list, planning mode: the button that switches to the shopping mode

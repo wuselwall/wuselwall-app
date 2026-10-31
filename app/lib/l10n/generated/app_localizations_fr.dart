@@ -6560,7 +6560,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get shoppingModePlan => 'Préparer';
+  String get shoppingModePlan => 'Mode préparation';
 
   @override
   String get shoppingStartShopping => 'Aller faire les courses';

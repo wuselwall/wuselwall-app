@@ -2407,7 +2407,7 @@
   "passwordDialogBodyNoMail": "Mindestens 10 Zeichen. Vergisst du es, gibt dir ein Erziehungsberechtigter deiner Familie einen Code für ein neues.",
   "errEmailNotConfirmed": "Dieser Server will die Adresse per E-Mail bestätigen, verschickt aber keine. Frag, wer ihn betreibt.",
   "accountDeleteReauthPasswordBody": "Zum Löschen eines Kontos brauchst du eine frische Anmeldung. Gib das Passwort von {email} ein.",
-  "shoppingModePlan": "Planen",
+  "shoppingModePlan": "Planungsmodus",
   "shoppingStartShopping": "Einkaufen gehen",
   "shoppingAddInStore": "Hinzufügen",
   "shoppingShopEmpty": "Nichts auf der Liste. Tippe auf „Hinzufügen“ oder geh zurück zu „Planen“.",

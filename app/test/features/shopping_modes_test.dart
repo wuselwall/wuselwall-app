@@ -208,36 +208,40 @@ void main() {
       expect(find.byKey(const ValueKey('shopping-tiles')), findsNothing);
     });
 
-    testWidgets('the add button is a labelled button on a wide phone', (
+    testWidgets('adding is the primary button, at the bottom end', (t) async {
+      await trip(t, size: const Size(600, 900));
+      expect(find.widgetWithText(FilledButton, 'Hinzufügen'), findsOne);
+      final add = t.getRect(find.byKey(_addKey));
+      final plan = t.getRect(find.byKey(_planKey));
+      expect(plan.left, lessThan(add.left));
+      expect(add.right, greaterThan(600 / 2));
+    });
+
+    testWidgets('ending the trip sits at the top, out of the thumb\'s way', (
       t,
     ) async {
       await trip(t, size: const Size(600, 900));
-      expect(find.widgetWithText(OutlinedButton, 'Hinzufügen'), findsOne);
-      expect(find.byKey(_addKey), findsOneWidget);
-    });
-
-    testWidgets(
-      'under 400 px the add button is only its icon, with a tooltip',
-      (t) async {
-        await trip(t, size: const Size(360, 780));
-        expect(find.widgetWithText(OutlinedButton, 'Hinzufügen'), findsNothing);
-        final add = find.byKey(_addKey);
-        expect(t.widget(add), isA<IconButton>());
-        expect(find.byTooltip('Hinzufügen'), findsOneWidget);
-        expect(t.getSize(add).width, greaterThanOrEqualTo(48));
-        expect(t.takeException(), isNull);
-      },
-    );
-
-    testWidgets('all three controls fit a 320 px phone', (t) async {
-      await trip(t, size: const Size(320, 640));
-      expect(t.takeException(), isNull);
-      final plan = t.getRect(find.byKey(_planKey));
       final finish = t.getRect(
         find.widgetWithText(FilledButton, 'Einkauf beenden'),
       );
-      expect(plan.right, lessThanOrEqualTo(finish.left));
-      expect(finish.right, lessThanOrEqualTo(320));
+      final add = t.getRect(find.byKey(_addKey));
+      expect(finish.bottom, lessThan(add.top));
+      expect(finish.top, lessThan(120));
+      // Quieter than the primary button: tonal, not filled.
+      final button = t.widget<FilledButton>(
+        find.widgetWithText(FilledButton, 'Einkauf beenden'),
+      );
+      expect(button.style?.backgroundColor, isNull);
+    });
+
+    testWidgets('both bottom controls fit a 320 px phone', (t) async {
+      await trip(t, size: const Size(320, 640));
+      expect(t.takeException(), isNull);
+      final plan = t.getRect(find.byKey(_planKey));
+      final add = t.getRect(find.byKey(_addKey));
+      expect(plan.right, lessThanOrEqualTo(add.left));
+      expect(add.right, lessThanOrEqualTo(320));
+      expect(find.widgetWithText(FilledButton, 'Hinzufügen'), findsOne);
     });
 
     testWidgets('the bottom controls are at least 48 (adult) / 56 (kid) high', (

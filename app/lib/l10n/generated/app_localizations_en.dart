@@ -6486,7 +6486,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get shoppingModePlan => 'Plan';
+  String get shoppingModePlan => 'Plan mode';
 
   @override
   String get shoppingStartShopping => 'Go shopping';

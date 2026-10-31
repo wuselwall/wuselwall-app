@@ -3080,7 +3080,7 @@
   "passwordDialogBodyNoMail": "Au moins 10 caractères. Si tu l’oublies, un responsable de ta famille peut te donner un code pour en choisir un nouveau.",
   "errEmailNotConfirmed": "Ce serveur veut confirmer l’adresse par e-mail mais n’en envoie aucun. Demande à la personne qui le gère.",
   "accountDeleteReauthPasswordBody": "Supprimer un compte demande une connexion récente. Saisis le mot de passe de {email}.",
-  "shoppingModePlan": "Préparer",
+  "shoppingModePlan": "Mode préparation",
   "shoppingStartShopping": "Aller faire les courses",
   "shoppingAddInStore": "Ajouter",
   "shoppingShopEmpty": "Rien sur la liste. Touchez « Ajouter » ou revenez à « Préparer ».",

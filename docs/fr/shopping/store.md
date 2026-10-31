@@ -8,7 +8,7 @@ La liste possède de grandes zones tactiles, utilisables d’une main et avec de
 
 <Shot name="shopping-store" alt="Les courses sur une page à part, avec les cases à cocher" />
 
-Trois boutons se trouvent en bas : **Ajouter**, **Préparer** et **Terminer les courses**. **Préparer** (ou le geste retour du téléphone) vous ramène à la liste normale.
+Deux boutons se trouvent en bas : **Mode préparation** à gauche et **Ajouter** à droite. **Mode préparation** (ou le geste retour du téléphone) vous ramène à la liste normale. **Terminer les courses** se trouve en haut à droite, à côté du nom de la liste, hors de portée du pouce : c’est l’action unique de chaque course.
 
 WuselWall retient sur cet appareil si vous prépariez ou faisiez les courses. Si vous avez fermé le téléphone au magasin, la liste se rouvre directement dans les courses. Cela ne concerne que cet appareil ; la famille n’en voit rien.
 
@@ -22,7 +22,7 @@ Les articles cochés passent dans la section repliée **Dans le chariot**, en ba
 
 ## Un oubli ? {#forgot-something}
 
-Le bouton **Ajouter** en bas (sur un téléphone étroit, juste un **+**) ouvre la recherche et les tuiles dans une feuille au-dessus de la liste. Vous pouvez y ajouter plusieurs articles à la suite ; la feuille reste ouverte jusqu’à ce que vous la fassiez glisser vers le bas ou reveniez en arrière. Pour arrêter la saisie, touchez le **×** du champ de recherche : il vide le champ et ferme le clavier.
+Le bouton **Ajouter** en bas à droite ouvre la recherche et les tuiles dans une feuille au-dessus de la liste. Vous pouvez y ajouter plusieurs articles à la suite ; la feuille reste ouverte jusqu’à ce que vous la fassiez glisser vers le bas ou reveniez en arrière. Pour arrêter la saisie, touchez le **×** du champ de recherche : il vide le champ et ferme le clavier.
 
 <Shot name="shopping-store-add" alt="La feuille d’ajout au magasin, avec la recherche et les tuiles" />
 

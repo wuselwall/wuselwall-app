@@ -8,7 +8,7 @@ The list is built for shopping: big targets, usable one-handed and with gloves.
 
 <Shot name="shopping-store" alt="The shopping trip as a page of its own, with tick boxes" />
 
-Three buttons sit at the bottom: **Add**, **Plan** and **Finish shopping**. **Plan** (or your phone's back gesture) takes you back to the normal list.
+Two buttons sit at the bottom: **Plan mode** on the left and **Add** on the right. **Plan mode** (or your phone's back gesture) takes you back to the normal list. **Finish shopping** sits at the top right next to the list's name, out of your thumb's way: it is the one action per trip.
 
 WuselWall remembers on this device whether you were last planning or shopping. If you closed the phone in the store, the list reopens in the trip next time. This is only for this device; the family sees nothing of it.
 
@@ -25,7 +25,7 @@ WuselWall remembers on this device whether you were last planning or shopping. I
 
 ## Forgot something?
 
-**Add** at the bottom (on narrow phones just a **+**) opens the search field and tiles in a sheet over the list. You can add several items one after another; the sheet stays open until you swipe it down or go back. To stop typing, tap the **×** in the search field: it clears the field and closes the keyboard.
+**Add** at the bottom right opens the search field and tiles in a sheet over the list. You can add several items one after another; the sheet stays open until you swipe it down or go back. To stop typing, tap the **×** in the search field: it clears the field and closes the keyboard.
 
 <Shot name="shopping-store-add" alt="Add sheet in the store with the search field and tiles" />
 
@@ -35,7 +35,7 @@ Two people in different aisles see each other's ticks **within a second or two**
 
 ## Finishing the trip
 
-When you're done, tap **Finish shopping** at the bottom. The trip then closes and you are back in the list for planning.
+When you're done, tap **Finish shopping** at the top right. The trip then closes and you are back in the list for planning.
 
 - Everything **ticked** is completed and stored in the [history](/en/shopping/history).
 - Whatever is **not ticked** stays on the list.

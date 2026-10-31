@@ -3900,7 +3900,7 @@
       }
     }
   },
-  "shoppingModePlan": "Plan",
+  "shoppingModePlan": "Plan mode",
   "@shoppingModePlan": {
     "description": "Shopping list, mode control: the segment for planning at home (search, tiles, items without ticks)"
   },

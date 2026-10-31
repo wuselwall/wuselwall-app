@@ -189,11 +189,13 @@ trip is a page of its own.
   the mode is left ([09](09-clients-and-ux.md)). A slim top row names the list and its open
   count ("Supermarkt · 5"); then the tick rows of the section above, with the 800 ms
   settle, the trolley and the end-of-trip celebration unchanged, and without "−". The
-  bottom bar is `[Hinzufügen] [Planen] [Einkauf beenden]`: "Hinzufügen" opens the same
-  picker as Plan in a bottom sheet that stays open for several items (on screens under
-  400 px it is an icon button with a tooltip, so three controls fit); "Planen" sets the
-  mode back to Plan and pops; "Einkauf beenden" confirms, finishes and then does the same.
-  The system back and the swipe back also set the mode to Plan.
+  top row also holds "Einkauf beenden" at its end, as a tonal button: the one action per
+  trip sits out of the thumb's way, where two ticks in a row cannot press it by accident
+  (decided 2026-10-31). The bottom bar is `[Planungsmodus] … [Hinzufügen]`: "Hinzufügen",
+  at the end and the primary button, opens the same picker as Plan in a bottom sheet that
+  stays open for several items; "Planungsmodus", a text button at the start, sets the mode
+  back to Plan and pops; "Einkauf beenden" confirms, finishes and then does the same. The
+  system back and the swipe back also set the mode to Plan.
 - The last mode is **kept on the device** (secure storage, `plan` | `shop`; the demo and the
   tests use a memory store). When the shopping tab builds while the stored mode is Shop and
   the trip page is not already open, it pushes the trip once, so a phone closed in the

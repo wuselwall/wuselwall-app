@@ -6532,7 +6532,7 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get shoppingModePlan => 'Planen';
+  String get shoppingModePlan => 'Planungsmodus';
 
   @override
   String get shoppingStartShopping => 'Einkaufen gehen';
