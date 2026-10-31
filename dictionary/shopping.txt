@@ -40,13 +40,13 @@ egg -> dairy
   fr: œuf, œufs, oeuf, oeufs
   es: huevo, huevos
 
-bowl -> dairy, pantry
-  de: Joghurt, Jogurt, Joghurts, Naturjoghurt, Fruchtjoghurt, Quark, Skyr, Müsli, Cornflakes, Haferflocken, Pudding, Dessert, Grießbrei, Griess, Milchreis
-  de-CH: Jogurt, Birchermüesli, Müesli
+bowl -> dairy
+  de: Joghurt, Jogurt, Joghurts, Naturjoghurt, Fruchtjoghurt, Quark, Skyr, Pudding, Dessert, Grießbrei, Griess, Milchreis
+  de-CH: Jogurt
   de-AT: Jogurt, Topfendessert
-  en: yoghurt, yogurt, cereal, cereals, porridge, oats, pudding, granola, muesli
-  fr: yaourt, yaourts, yogourt, céréales, flocons d'avoine, fromage blanc, petit-suisse, compote
-  es: yogur, yogures, cereales, avena, natillas, flan
+  en: yoghurt, yogurt, pudding
+  fr: yaourt, yaourts, yogourt, fromage blanc, petit-suisse, compote
+  es: yogur, yogures, natillas, flan
 
 bread -> bakery
   de: Brot, Toast, Toastbrot, Brötchen, Semmeln, Semmel, Vollkornbrot, Weißbrot, Schwarzbrot, Knäckebrot, Fladenbrot, Pita, Zopf, Buns, Burgerbrötchen, Zwieback
@@ -243,12 +243,11 @@ rice -> pantry
   es: arroz, arroz basmati, arroz integral, tortitas de arroz
 
 salt -> pantry
-  de: Salz, Pfeffer, Gewürze, Gewürz, Paprikapulver, Curry, Currypulver, Zimt, Muskat, Kümmel, Oregano, Brühe, Gemüsebrühe, Bouillon, Suppenwürfel, Senf, Mayonnaise, Mayo, Essig, Balsamico, Sojasauce, Zucker, Mehl, Backpulver, Hefe, Vanillezucker, Puderzucker, Stärke, Speisestärke, Paniermehl, Semmelbrösel
-  de-CH: Aromat, Bouillon, Maizena, Paniermehl, Streuwürze
-  de-AT: Staubzucker, Germ, Brösel, Vanillinzucker
-  en: salt, pepper, spices, spice, seasoning, curry powder, cinnamon, nutmeg, cumin, oregano, stock, stock cubes, broth, mustard, mayonnaise, mayo, vinegar, soy sauce, sugar, flour, baking powder, yeast, icing sugar, cornflour, breadcrumbs
-  fr: sel, poivre, épices, cannelle, curry, bouillon, cube de bouillon, moutarde, mayonnaise, vinaigre, sauce soja, sucre, farine, levure, sucre glace, chapelure, maïzena
-  es: sal, pimienta, especias, canela, curry, caldo, pastillas de caldo, mostaza, mayonesa, vinagre, salsa de soja, azúcar, harina, levadura, pan rallado
+  de: Salz, Pfeffer, Gewürze, Gewürz, Paprikapulver, Curry, Currypulver, Zimt, Muskat, Kümmel, Oregano, Brühe, Gemüsebrühe, Bouillon, Suppenwürfel, Senf, Mayonnaise, Mayo, Essig, Balsamico, Sojasauce
+  de-CH: Aromat, Bouillon, Streuwürze
+  en: salt, pepper, spices, spice, seasoning, curry powder, cinnamon, nutmeg, cumin, oregano, stock, stock cubes, broth, mustard, mayonnaise, mayo, vinegar, soy sauce
+  fr: sel, poivre, épices, cannelle, curry, bouillon, cube de bouillon, moutarde, mayonnaise, vinaigre, sauce soja
+  es: sal, pimienta, especias, canela, curry, caldo, pastillas de caldo, mostaza, mayonesa, vinagre, salsa de soja
 
 honey -> pantry
   de: Honig, Erdnussmus, Mandelmus, Nussmus, Marmelade, Konfitüre, Gelee, Nutella, Nussnougatcreme, Schokocreme, Ahornsirup, Erdnussbutter, Aufstrich, Brotaufstrich
@@ -322,12 +321,19 @@ pizza -> frozen
   fr: pizza, pizzas, pizza surgelée
   es: pizza, pizzas, pizza congelada
 
-fries -> frozen, snacks
-  de: Pommes, Pommes frites, Fritten, Chips, Kartoffelchips, Kroketten, Rösti, Wedges, Nachos, Tortillachips
-  de-CH: Pommes, Zwischenverpflegung, Zwipf
-  en: fries, french fries, chips, crisps, potato chips, croquettes, wedges, nachos, tortilla chips
-  fr: frites, chips, croquettes, pommes noisettes, nachos
-  es: patatas fritas, papas fritas, croquetas, nachos
+fries -> snacks, frozen
+  de: Chips, Kartoffelchips, Nachos, Tortillachips
+  de-CH: Zwischenverpflegung, Zwipf
+  en: chips, crisps, potato chips, nachos, tortilla chips
+  fr: chips, nachos
+  es: patatas fritas, papas fritas, nachos
+# The same picture, the freezer first: chips are a snack, fries are frozen.
+fries.frozen -> frozen, snacks
+  de: Pommes, Pommes frites, Fritten, Kroketten, Rösti, Wedges
+  de-CH: Pommes
+  en: fries, french fries, croquettes, wedges
+  fr: frites, croquettes, pommes noisettes
+  es: croquetas
 
 chicken -> meat_fish
   de: Hähnchen, Hähnchenbrust, Hühnchen, Huhn, Hühnerbrust, Hähnchenschenkel, Geflügel, Pute, Putenbrust, Truthahn, Ente, Chicken Nuggets, Nuggets
@@ -422,12 +428,12 @@ wine -> drinks
   es: vino, vino tinto, vino blanco, rosado, cava, champán, ginebra, vodka, ron, whisky, licor
 
 toilet_paper -> household, care, cleaning
-  de: Toilettenpapier, Klopapier, WC-Papier, Klorollen, Küchenrolle, Küchenpapier, Haushaltsrolle, Haushaltspapier, Taschentücher, Papiertaschentücher, Tempo, Servietten, Feuchttücher, Feuchtes Toilettenpapier, Kosmetiktücher
+  de: Toilettenpapier, Klopapier, WC-Papier, Klorollen, Küchenrolle, Küchenpapier, Haushaltsrolle, Haushaltspapier, Taschentücher, Papiertaschentücher, Tempo, Servietten, Feuchtes Toilettenpapier, Kosmetiktücher
   de-CH: WC-Papier, Haushaltpapier, Nastücher, Papiernastücher
   de-AT: Klopapier, Küchenrolle, Taschentücher
-  en: toilet paper, toilet roll, toilet rolls, loo roll, kitchen roll, kitchen towel, paper towels, tissues, napkins, serviettes, wet wipes, wipes, moist toilet tissue
-  fr: papier toilette, papier hygiénique, rouleaux de papier toilette, essuie-tout, sopalin, mouchoirs, mouchoirs en papier, serviettes en papier, lingettes
-  es: papel higiénico, papel de baño, papel de cocina, rollo de cocina, pañuelos, pañuelos de papel, servilletas, toallitas, toallitas húmedas
+  en: toilet paper, toilet roll, toilet rolls, loo roll, kitchen roll, kitchen towel, paper towels, tissues, napkins, serviettes, moist toilet tissue
+  fr: papier toilette, papier hygiénique, rouleaux de papier toilette, essuie-tout, sopalin, mouchoirs, mouchoirs en papier, serviettes en papier
+  es: papel higiénico, papel de baño, papel de cocina, rollo de cocina, pañuelos, pañuelos de papel, servilletas
 
 soap -> care, household
   de: Seife, Handseife, Flüssigseife, Seifenstück, Kernseife, Desinfektionsmittel, Handdesinfektion
@@ -450,7 +456,7 @@ lotion -> care, household
   fr: shampoing, shampooing, gel douche, crème solaire, crème pour les mains, lait corporel, crème hydratante, crème, après-shampoing, déodorant, déo, rasoir, rasoirs, lames de rasoir, mousse à raser, cotons-tiges, cotons, disques de coton, laque, gel coiffant, baume à lèvres, tampons, serviettes hygiéniques, protège-slips, vernis à ongles, dissolvant, maquillage, mascara, cosmétiques, produits d'hygiène
   es: champú, gel de ducha, gel de baño, crema solar, protector solar, crema de manos, loción corporal, crema hidratante, crema, acondicionador, desodorante, cuchillas de afeitar, maquinilla de afeitar, espuma de afeitar, bastoncillos, algodón, discos de algodón, laca, gomina, cacao de labios, bálsamo labial, tampones, compresas, salvaslips, esmalte de uñas, quitaesmalte, maquillaje, rímel, cosméticos
 
-sponge -> household, cleaning
+sponge -> cleaning, household
   de: Schwamm, Schwämme, Spülschwamm, Spülschwämme, Spülmittel, Geschirrspülmittel, Putzmittel, Reiniger, Allzweckreiniger, Badreiniger, WC-Reiniger, Glasreiniger, Küchenreiniger, Spülmaschinentabs, Spülmaschinentabletten, Geschirrspültabs, Geschirrspülertabs, Spülmaschinensalz, Klarspüler, Waschmittel, Waschpulver, Flüssigwaschmittel, Weichspüler, Fleckenentferner, Entkalker, Scheuermilch, Putzlappen, Putztuch, Mikrofasertuch, Spültuch, Spüllappen, Lappen, Küchentücher, Bürste, Spülbürste, Handschuhe, Gummihandschuhe, Scheuerschwamm, Topfreiniger, Besen, Wischmopp, Mopp, Staubsaugerbeutel
   de-CH: Abwaschmittel, Putzmittel, Abwaschlappen, Putzlumpen, Lumpen, Schwämmli, Abwaschbürste
   de-AT: Abwaschmittel, Spülmittel, Geschirrspülmittel, Putzfetzen, Fetzen, Abwaschschwamm, Waschmittel
@@ -475,12 +481,12 @@ trash -> household, cleaning
   es: bolsas de basura, bolsa de basura, bolsas de residuos, bolsas compostables, bolsas para perros, bolsas de congelación, bolsas zip, film transparente, papel film, papel de aluminio, papel albal, papel de horno, papel de hornear, tápers, tuppers, velas, velas de té, cerillas, mechero, encendedor, pastillas de encendido, carbón
 
 battery -> household, cleaning
-  de: Batterie, Batterien, AA Batterien, AAA Batterien, Knopfzellen, Akku, Akkus, Ladegerät, Ladekabel, Kabel, USB-Kabel, Verlängerungskabel, Steckdosenleiste, Mehrfachsteckdose, Adapter, Stecker, Sicherung, Sicherungen, Klebeband, Tesa, Paketband, Panzertape, Gaffer, Kleber, Klebstoff, Sekundenkleber, Schrauben, Nägel, Dübel, Haken, Bilderhaken, Kabelbinder, Schnur, Draht, WD-40, Öl für die Tür, Werkzeug, Hammer, Schraubenzieher, Schraubendreher, Zange, Bohrer, Säge, Maßband, Wasserwaage, Pinsel, Farbe, Wandfarbe, Lack, Abdeckband, Malerkrepp, Spachtel, Silikon, Dichtung, Schmirgelpapier, Schleifpapier, Erde, Blumenerde, Dünger, Samen, Blumen, Pflanzen, Blumenzwiebeln, Rasensamen, Gartenschlauch, Töpfe, Blumentöpfe
-  de-CH: Batterien, Akku, Ladekabel, Klebeband, Scotch, Schrauben, Nägel, Dübel, Pinsel, Farbe, Erde, Blumenerde, Dünger, Samen, Setzlinge
-  de-AT: Batterien, Akku, Tixo, Klebeband, Schrauben, Nägel, Dübel, Pinsel, Farbe, Erde, Blumenerde, Dünger, Samen
-  en: battery, batteries, aa batteries, aaa batteries, button cells, rechargeable batteries, charger, charging cable, cable, cables, usb cable, extension lead, extension cord, power strip, adapter, plug, plugs, fuse, fuses, tape, sticky tape, sellotape, duct tape, gaffer tape, packing tape, glue, superglue, screws, nails, wall plugs, hooks, picture hooks, cable ties, string, wire, tools, hammer, screwdriver, pliers, drill, drill bits, saw, tape measure, spirit level, paint, paintbrush, paint brushes, masking tape, filler, sealant, silicone, sandpaper, soil, compost, potting soil, fertiliser, fertilizer, seeds, flowers, plants, grass seed, hose, pots, plant pots
-  fr: pile, piles, piles aa, piles aaa, piles bouton, piles rechargeables, batterie, chargeur, câble, câbles, câble usb, rallonge, multiprise, adaptateur, prise, fusible, fusibles, scotch, ruban adhésif, chatterton, colle, super glue, vis, clous, chevilles, crochets, serre-câbles, ficelle, fil de fer, outils, marteau, tournevis, pince, perceuse, scie, mètre, niveau, peinture, pinceau, pinceaux, ruban de masquage, enduit, mastic, silicone, papier de verre, terreau, terre, engrais, graines, fleurs, plantes, bulbes, gazon, tuyau d'arrosage, pots, pots de fleurs
-  es: pila, pilas, pilas aa, pilas aaa, pilas de botón, pilas recargables, batería, cargador, cable, cables, cable usb, alargador, regleta, adaptador, enchufe, fusible, fusibles, cinta adhesiva, celo, cinta americana, pegamento, superglue, tornillos, clavos, tacos, ganchos, bridas, cuerda, alambre, herramientas, martillo, destornillador, alicates, taladro, brocas, sierra, metro, nivel, pintura, pincel, brocha, cinta de carrocero, masilla, silicona, papel de lija, tierra, sustrato, abono, fertilizante, semillas, flores, plantas, bulbos, manguera, macetas
+  de: Batterie, Batterien, AA Batterien, AAA Batterien, Knopfzellen, Akku, Akkus, Klebeband, Tesa, Paketband, Panzertape, Gaffer, Kleber, Klebstoff, Sekundenkleber, Kabelbinder, Schnur, Draht, WD-40, Öl für die Tür
+  de-CH: Batterien, Akku, Klebeband, Scotch
+  de-AT: Batterien, Akku, Tixo, Klebeband
+  en: battery, batteries, aa batteries, aaa batteries, button cells, rechargeable batteries, tape, sticky tape, sellotape, duct tape, gaffer tape, packing tape, glue, superglue, cable ties, string, wire
+  fr: pile, piles, piles aa, piles aaa, piles bouton, piles rechargeables, batterie, scotch, ruban adhésif, chatterton, colle, super glue, serre-câbles, ficelle, fil de fer
+  es: pila, pilas, pilas aa, pilas aaa, pilas de botón, pilas recargables, batería, cinta adhesiva, celo, cinta americana, pegamento, superglue, bridas, cuerda, alambre
 
 light_bulb -> household, cleaning
   de: Glühbirne, Glühbirnen, Lampe, Lampen, LED-Lampe, LED-Lampen, LED, Leuchtmittel, Energiesparlampe, Halogenlampe, Glühlampe, Birne für die Lampe, Lichterkette, Taschenlampe, Nachtlicht
@@ -1590,3 +1596,57 @@ clothes -> other
   en: clothes, clothing, jumper, jumpers, sweater, sweaters, pullover, pullovers, sweatshirt, sweatshirts, hoodie, hoodies, cardigan, cardigans, blouse, blouses, turtleneck, polo neck, underwear, underpants, knickers, briefs, boxers, boxer shorts, bra, bras, sports bra, thermal underwear, base layer, shorts, bermuda shorts, bow tie, kids clothes, children's clothes, school uniform, sportswear, activewear
   fr: vêtements, vêtement, pull, pulls, pull-over, sweat, sweats, sweat à capuche, sweatshirt, cardigan, cardigans, chemisier, chemisiers, blouse, col roulé, sous-vêtements, sous-vêtement, culotte, culottes, slip, slips, caleçon, caleçons, boxer, boxers, soutien-gorge, soutiens-gorge, brassière de sport, sous-vêtements thermiques, short, shorts, bermuda, cravate, cravates, nœud papillon, vêtements d'enfant, uniforme scolaire, vêtements de sport, tenue de sport
   es: ropa, prendas, jerséis, suéter, suéteres, sudadera, sudaderas, sudadera con capucha, rebeca, rebecas, cárdigan, cárdigans, blusa, blusas, jersey de cuello alto, ropa interior, braguita, braguitas, calzoncillos, bóxer, bóxers, sujetador, sujetadores, sujetador deportivo, ropa interior térmica, pantalón corto, pantalones cortos, bermudas, corbata, corbatas, pajarita, ropa de niño, ropa infantil, uniforme escolar, ropa deportiva
+# ------------------------------------------------------------------ without a picture
+# A key starting with @ names no picture: the words only carry a category, and the tile shows
+# the category's icon, as it does for a name nobody knows (#196 kept these out of the icon list).
+# Cereals have no picture; the tile shows the pantry (#196 keeps them out of dairy).
+@cereal -> pantry
+  de: Müsli, Cornflakes, Haferflocken, Granola, Knuspermüsli, Hafer, Porridge
+  de-CH: Birchermüesli, Müesli
+  en: cereal, cereals, porridge, oats, granola, muesli
+  fr: céréales, flocons d'avoine, muesli, granola, avoine
+  es: cereales, avena, copos de avena, muesli, granola
+  de-AT: Haferflocken, Cornflakes
+# Flour, sugar and baking aids: no picture fits, the pantry icon is honest.
+@baking -> pantry
+  de: Zucker, Mehl, Backpulver, Hefe, Vanillezucker, Puderzucker, Stärke, Speisestärke, Paniermehl, Semmelbrösel, Weissmehl, Vollkornmehl, Dinkelmehl, Rohrzucker, Trockenhefe, Natron, Kakaopulver, Backkakao
+  de-CH: Maizena, Paniermehl, Ruchmehl, Zopfmehl, Halbweissmehl
+  de-AT: Staubzucker, Germ, Brösel, Vanillinzucker
+  en: sugar, flour, baking powder, yeast, icing sugar, cornflour, breadcrumbs, brown sugar, caster sugar, self-raising flour, plain flour, wholemeal flour, dried yeast, bicarbonate of soda, cocoa powder
+  fr: sucre, farine, levure, sucre glace, chapelure, maïzena, sucre roux, farine complète, levure chimique, bicarbonate, cacao en poudre
+  es: azúcar, harina, levadura, pan rallado, azúcar moreno, harina integral, levadura en polvo, bicarbonato, cacao en polvo
+# Hardware store aisles (#196): no picture, the aisle; a supermarket files cables under household.
+@electrical -> electrical, household
+  de: Ladegerät, Ladekabel, Kabel, USB-Kabel, Verlängerungskabel, Steckdosenleiste, Mehrfachsteckdose, Adapter, Stecker, Sicherung, Sicherungen, Steckdose, Steckdosen, Lichtschalter, Schalter
+  de-CH: Ladekabel
+  en: charger, charging cable, cable, cables, usb cable, extension lead, extension cord, power strip, adapter, plug, plugs, fuse, fuses, socket, sockets, light switch
+  fr: chargeur, câble, câbles, câble usb, rallonge, multiprise, adaptateur, prise, fusible, fusibles, interrupteur
+  es: cargador, cable, cables, cable usb, alargador, regleta, adaptador, enchufe, fusible, fusibles, interruptor
+@screws -> screws
+  de: Schrauben, Nägel, Dübel, Haken, Bilderhaken, Schraube, Nagel, Holzschrauben, Spax, Muttern, Unterlegscheiben
+  de-CH: Schrauben, Nägel, Dübel
+  de-AT: Schrauben, Nägel, Dübel
+  en: screws, nails, wall plugs, hooks, picture hooks, screw, nail, wood screws, nuts and bolts, washers
+  fr: vis, clous, chevilles, crochets, boulons, écrous
+  es: tornillos, clavos, tacos, ganchos, tuercas, tornillo
+@tools -> tools
+  de: Werkzeug, Hammer, Schraubenzieher, Schraubendreher, Zange, Bohrer, Säge, Maßband, Wasserwaage, Pinsel, Farbe, Wandfarbe, Lack, Abdeckband, Malerkrepp, Spachtel, Silikon, Dichtung, Schmirgelpapier, Schleifpapier, Akkuschrauber, Cutter, Teppichmesser, Farbrolle, Farbroller
+  de-CH: Pinsel, Farbe, Japanmesser
+  de-AT: Pinsel, Farbe
+  en: tools, hammer, screwdriver, pliers, drill, drill bits, saw, tape measure, spirit level, paint, paintbrush, paint brushes, masking tape, filler, sealant, silicone, sandpaper, cordless drill, utility knife, paint roller, spanner, wrench
+  fr: outils, marteau, tournevis, pince, perceuse, scie, mètre, niveau, peinture, pinceau, pinceaux, ruban de masquage, enduit, mastic, silicone, papier de verre, visseuse, cutter, rouleau à peinture, clé
+  es: herramientas, martillo, destornillador, alicates, taladro, brocas, sierra, metro, nivel, pintura, pincel, brocha, cinta de carrocero, masilla, silicona, papel de lija, atornillador, cúter, rodillo, llave inglesa
+@garden -> garden
+  de: Erde, Blumenerde, Dünger, Samen, Blumen, Pflanzen, Blumenzwiebeln, Rasensamen, Gartenschlauch, Töpfe, Blumentöpfe, Kräutertopf, Tomatensetzlinge, Rindenmulch, Gartenerde, Universalerde
+  de-CH: Erde, Blumenerde, Dünger, Samen, Setzlinge
+  de-AT: Erde, Blumenerde, Dünger, Samen, Setzlinge
+  en: soil, compost, potting soil, fertiliser, fertilizer, seeds, flowers, plants, grass seed, hose, pots, plant pots, bedding plants, seedlings, bark mulch, herb pot
+  fr: terreau, terre, engrais, graines, fleurs, plantes, bulbes, gazon, tuyau d'arrosage, pots, pots de fleurs, plants, paillis, jardinière
+  es: tierra, sustrato, abono, fertilizante, semillas, flores, plantas, bulbos, manguera, macetas, plantones, mantillo
+# Wipes are baby and care (#196), not paper goods.
+@wipes -> baby, care
+  de: Feuchttücher, Reinigungstücher, Feuchttuecher
+  en: wet wipes, wipes, baby wipes refill
+  fr: lingettes, lingettes humides
+  es: toallitas, toallitas húmedas, toallitas de bebé
+  de-CH: Feuchttüechli

@@ -11087,6 +11087,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Suggested'**
   String get shoppingTileStarter;
+
+  /// No description provided for @settingsGroupShoppingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping'**
+  String get settingsGroupShoppingTitle;
+
+  /// No description provided for @settingsGroupShoppingSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Learned words'**
+  String get settingsGroupShoppingSubtitle;
+
+  /// No description provided for @settingsSectionLearnedWords.
+  ///
+  /// In en, this message translates to:
+  /// **'Learned words'**
+  String get settingsSectionLearnedWords;
+
+  /// No description provided for @learnedWordsHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'The family learned these words: from now on the item goes into this category. Forget takes a word away again.'**
+  String get learnedWordsHelp;
+
+  /// No description provided for @learnedWordsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing learned yet. When someone changes the category of an item, the family remembers the word here.'**
+  String get learnedWordsEmpty;
+
+  /// No description provided for @learnedWordsMeta.
+  ///
+  /// In en, this message translates to:
+  /// **'{category} · {date}'**
+  String learnedWordsMeta(String category, String date);
+
+  /// No description provided for @learnedWordsMetaBy.
+  ///
+  /// In en, this message translates to:
+  /// **'{category} · by {name}, {date}'**
+  String learnedWordsMetaBy(String category, String name, String date);
+
+  /// No description provided for @learnedWordsForget.
+  ///
+  /// In en, this message translates to:
+  /// **'Forget'**
+  String get learnedWordsForget;
+
+  /// No description provided for @learnedWordsForgetWord.
+  ///
+  /// In en, this message translates to:
+  /// **'Forget “{word}”'**
+  String learnedWordsForgetWord(String word);
 }
 
 class _AppLocalizationsDelegate

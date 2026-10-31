@@ -3972,5 +3972,44 @@
   "shoppingTileStarter": "Suggested",
   "@shoppingTileStarter": {
     "description": "Shopping list tile: tooltip and hint of a tile the starter catalogue suggests, not yet one of the family's own"
+  },
+  "settingsGroupShoppingTitle": "Shopping",
+  "settingsGroupShoppingSubtitle": "Learned words",
+  "settingsSectionLearnedWords": "Learned words",
+  "learnedWordsHelp": "The family learned these words: from now on the item goes into this category. Forget takes a word away again.",
+  "learnedWordsEmpty": "Nothing learned yet. When someone changes the category of an item, the family remembers the word here.",
+  "learnedWordsMeta": "{category} · {date}",
+  "@learnedWordsMeta": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "learnedWordsMetaBy": "{category} · by {name}, {date}",
+  "@learnedWordsMetaBy": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "learnedWordsForget": "Forget",
+  "learnedWordsForgetWord": "Forget “{word}”",
+  "@learnedWordsForgetWord": {
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
   }
 }

@@ -22,6 +22,7 @@ import 'package:wuselwall/features/settings/ui/appearance_tile.dart';
 import 'package:wuselwall/features/settings/ui/devices_section.dart';
 import 'package:wuselwall/features/settings/ui/help_tiles.dart';
 import 'package:wuselwall/features/settings/ui/language_tile.dart';
+import 'package:wuselwall/features/settings/ui/learned_words_section.dart';
 import 'package:wuselwall/features/settings/ui/server_section.dart';
 import 'package:wuselwall/features/settings/ui/setting_controls.dart';
 import 'package:wuselwall/features/settings/ui/setting_labels.dart';
@@ -205,6 +206,7 @@ Widget _tileWidget(SettingsTile tile) => switch (tile) {
   SettingsTile.leaveFamily => const LeaveFamilyTile(),
   SettingsTile.deleteAccount => const DeleteAccountTile(),
   SettingsTile.server => const ServerSection(),
+  SettingsTile.learnedWords => const LearnedWordsSection(),
   SettingsTile.gettingStarted => const GettingStartedTile(),
   SettingsTile.versions => const VersionsTile(),
   SettingsTile.licences => const LicencesTile(),

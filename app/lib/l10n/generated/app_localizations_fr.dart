@@ -6610,4 +6610,39 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get shoppingTileStarter => 'Suggestion';
+
+  @override
+  String get settingsGroupShoppingTitle => 'Courses';
+
+  @override
+  String get settingsGroupShoppingSubtitle => 'Mots appris';
+
+  @override
+  String get settingsSectionLearnedWords => 'Mots appris';
+
+  @override
+  String get learnedWordsHelp =>
+      'La famille a appris ces mots : l’article ira désormais dans cette catégorie. Oublier retire un mot.';
+
+  @override
+  String get learnedWordsEmpty =>
+      'Rien d’appris pour l’instant. Quand quelqu’un change la catégorie d’un article, la famille retient le mot ici.';
+
+  @override
+  String learnedWordsMeta(String category, String date) {
+    return '$category · $date';
+  }
+
+  @override
+  String learnedWordsMetaBy(String category, String name, String date) {
+    return '$category · par $name, $date';
+  }
+
+  @override
+  String get learnedWordsForget => 'Oublier';
+
+  @override
+  String learnedWordsForgetWord(String word) {
+    return 'Oublier « $word »';
+  }
 }

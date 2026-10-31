@@ -6581,6 +6581,41 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get shoppingTileStarter => 'Vorschlag';
+
+  @override
+  String get settingsGroupShoppingTitle => 'Einkaufen';
+
+  @override
+  String get settingsGroupShoppingSubtitle => 'Gelernte Wörter';
+
+  @override
+  String get settingsSectionLearnedWords => 'Gelernte Wörter';
+
+  @override
+  String get learnedWordsHelp =>
+      'Diese Wörter hat die Familie gelernt: Der Artikel kommt künftig in diese Kategorie. Vergessen nimmt ein Wort wieder weg.';
+
+  @override
+  String get learnedWordsEmpty =>
+      'Noch nichts gelernt. Wenn jemand die Kategorie eines Artikels ändert, merkt sich die Familie das Wort hier.';
+
+  @override
+  String learnedWordsMeta(String category, String date) {
+    return '$category · $date';
+  }
+
+  @override
+  String learnedWordsMetaBy(String category, String name, String date) {
+    return '$category · von $name, $date';
+  }
+
+  @override
+  String get learnedWordsForget => 'Vergessen';
+
+  @override
+  String learnedWordsForgetWord(String word) {
+    return '„$word“ vergessen';
+  }
 }
 
 /// The translations for German, as used in Austria (`de_AT`).
