@@ -41,6 +41,7 @@ promised bundle or a gate for public release unless the trial shows why it must 
 | R1.3 | Guardian audit history, last 30 days, by member/origin | A family needs to understand who changed something; the audit data already exists |
 | R1.4 | Automation-origin markers | Shortcuts additions are being confused with manual entries; MCP markers are on hold |
 | R1.8 | Further wall quiet-hour/layout controls | The built night/ambience settings do not solve an observed display problem |
+| — | Local matching ([29](29-local-matching.md), [ADR-021](adr/ADR-021-local-matching.md), 2026-10-31): shopping picture, category and typo tolerance from one dictionary; quantities in quick-add; a picture from an event or chore title; a person per imported event; corrections remembered per household | The first PR carries the dictionary, corpus and matcher without behaviour change; the four feature PRs follow the corpus's numbers. A bundled embedding table only when the corpus shows the rules plateau; a server-side language model only as an optional sidecar with its own spec |
 | 10.10 | Retire legacy wizard/enrolment paths | A distributed release and the supported previous-version window no longer require them; remove only then |
 
 R1.2 (defaults) is in milestone 3; R1.7 (backup visibility/verification) is in milestone 4.

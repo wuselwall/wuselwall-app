@@ -27,5 +27,6 @@ editing it. The value is in the trail.
 | [018](ADR-018-self-hosted-only.md) | Self-hosted only: the store app connects to any WuselWall server; no WuselWall Cloud | Accepted, built 2026-10-14 |
 | [019](ADR-019-website-repository-and-docs-pages.md) | Private marketing repository; documentation source stays with the app and targets GitHub Pages | Accepted; hosting activation pending |
 | [020](ADR-020-a-lighter-day.md) | A lighter day: joy as a product goal; the mascot Wusel, colour layers (A+) and five family rituals, built before M1.6 | Accepted, not built |
+| [021](ADR-021-local-matching.md) | Local matching: one bundled dictionary, a layered matcher on device and server, corrections per household; models only bundled, never a service | Accepted; dictionary, corpus and matcher built 2026-10-31, features follow |
 
 Format: Context · Decision · Alternatives considered · Consequences.
