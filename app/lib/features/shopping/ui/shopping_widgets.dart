@@ -511,39 +511,45 @@ class _ShoppingTileState extends State<ShoppingTile> {
             borderRadius: BorderRadius.circular(12),
             onTap: widget.onTap,
             onLongPress: widget.onLongPress,
+            // The picture and the label are centred across the tile's width whatever
+            // the width (a laptop's tiles are twice a phone's); the pin sits in the
+            // corner without taking part in that layout.
             child: Stack(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(Tokens.space2),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Badge(
-                        isLabelVisible: widget.count > 1,
-                        label: Text('${widget.count}×'),
-                        child: widget.picture,
-                      ),
-                      const SizedBox(height: Tokens.space1),
-                      // Flutter cannot hyphenate: a single long word ("Toilettenpapier")
-                      // shrinks to fit rather than breaking mid-word; phrases wrap.
-                      if (widget.label.trim().contains(' '))
-                        Text(
-                          widget.label,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.labelMedium,
-                        )
-                      else
-                        FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
-                            widget.label,
-                            maxLines: 1,
-                            style: Theme.of(context).textTheme.labelMedium,
-                          ),
+                SizedBox(
+                  width: double.infinity,
+                  child: Padding(
+                    padding: const EdgeInsets.all(Tokens.space2),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Badge(
+                          isLabelVisible: widget.count > 1,
+                          label: Text('${widget.count}×'),
+                          child: widget.picture,
                         ),
-                    ],
+                        const SizedBox(height: Tokens.space1),
+                        // Flutter cannot hyphenate: a single long word ("Toilettenpapier")
+                        // shrinks to fit rather than breaking mid-word; phrases wrap.
+                        if (widget.label.trim().contains(' '))
+                          Text(
+                            widget.label,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.labelMedium,
+                          )
+                        else
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              widget.label,
+                              maxLines: 1,
+                              style: Theme.of(context).textTheme.labelMedium,
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
                 ),
                 if (widget.pinned)
