@@ -520,6 +520,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get shoppingCat_pantry => 'Épicerie';
 
   @override
+  String get shoppingCat_snacks => 'Snacks';
+
+  @override
   String get shoppingCat_frozen => 'Surgelés';
 
   @override
@@ -6555,4 +6558,26 @@ class AppLocalizationsFr extends AppLocalizations {
   String accountDeleteReauthPasswordBody(String email) {
     return 'Supprimer un compte demande une connexion récente. Saisis le mot de passe de $email.';
   }
+
+  @override
+  String get shoppingModePlan => 'Préparer';
+
+  @override
+  String get shoppingModeShop => 'En magasin';
+
+  @override
+  String get shoppingStartShopping => 'Aller faire les courses';
+
+  @override
+  String get shoppingAddInStore => 'Ajouter quelque chose';
+
+  @override
+  String get shoppingShopEmpty =>
+      'Rien sur la liste. Passez à « Préparer » pour ajouter des articles.';
+
+  @override
+  String get shoppingModeLabel => 'Mode';
+
+  @override
+  String get shoppingSearchClear => 'Effacer et fermer';
 }

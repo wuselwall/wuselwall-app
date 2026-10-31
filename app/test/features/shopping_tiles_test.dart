@@ -34,6 +34,7 @@ Future<void> pumpBody(
   UiRegister register = UiRegister.kiosk,
   Size size = const Size(1280, 800),
   List<ShoppingItem>? items,
+  List<ShoppingCategory> categories = const [],
   List<ShoppingList> lists = const [
     ShoppingList(id: 'l1', name: 'Supermarkt', isDefault: true, openCount: 1),
   ],
@@ -53,7 +54,7 @@ Future<void> pumpBody(
             ShoppingView(
               items: shown,
               lists: lists,
-              categories: const [],
+              categories: categories,
               catalog: catalog,
               pendingCount: 0,
             ),
@@ -166,7 +167,7 @@ void main() {
         )
         .first;
     expect(t.getSize(grid).height, lessThanOrEqualTo(112));
-    final finish = t.getRect(find.text('Einkauf beenden')).top;
+    final finish = t.getRect(find.text('Einkaufen gehen')).top;
     final whole = [
       for (final n in ['Tomaten', 'Gurke', 'Brot', 'Käse'])
         for (final e in find.text(n).evaluate())

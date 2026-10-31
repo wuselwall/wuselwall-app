@@ -2,7 +2,13 @@
 
 La lista tiene zonas grandes, utilizables con una mano y con guantes.
 
-<Shot name="shopping-phone" alt="La lista durante la compra" />
+## Cambiar al modo Comprar {#switching-to-shop}
+
+Justo debajo de las listas eliges el modo: **Planificar** en casa, **Comprar** en la tienda. **Ir a comprar**, abajo en el modo Planificar, te lleva allí con un toque. Si ya hay algo marcado (por ejemplo, porque otra persona está comprando ahora), la lista se abre directamente en el modo Comprar.
+
+El modo Comprar no tiene búsqueda ni tarjetas: los productos empiezan justo bajo el selector, por secciones en el orden de la tienda, y cada fila lleva su casilla.
+
+<Shot name="shopping-store" alt="La lista en modo Comprar, con casillas para marcar" />
 
 ## Marcar {#ticking}
 
@@ -12,13 +18,19 @@ Los productos marcados pasan a la sección plegada **En el carrito**, al final. 
 
 <Shot name="shopping-trolley" alt="La sección En el carrito desplegada" />
 
+## ¿Se te olvidó algo? {#forgot-something}
+
+Abajo hay un botón **+** que abre la búsqueda y las tarjetas en una hoja sobre la lista. Puedes añadir varios productos seguidos; la hoja sigue abierta hasta que la deslices hacia abajo o vuelvas atrás. Para dejar de escribir, toca la **×** del campo de búsqueda: vacía el campo y cierra el teclado.
+
+<Shot name="shopping-store-add" alt="La hoja para añadir en la tienda, con la búsqueda y las tarjetas" />
+
 ## Comprar a la vez {#shopping-at-the-same-time}
 
 Las marcas de otra persona aparecen en uno o dos segundos, sin recargar nada.
 
 ## Terminar la compra {#finishing-the-trip}
 
-Toca **Terminar la compra**: los productos marcados pasan al [historial](/es/shopping/history), los demás siguen en la lista y lo comprado alimenta las tarjetas. El botón se activa al marcar al menos un producto.
+Toca **Terminar la compra** (después la lista vuelve al modo **Planificar**): los productos marcados pasan al [historial](/es/shopping/history), los demás siguen en la lista y lo comprado alimenta las tarjetas. El botón se activa al marcar al menos un producto.
 
 Al marcar el último producto o terminar la compra, el móvil muestra un pequeño estallido de confeti y vibra suavemente, una vez por compra y sin sonido (ver [Wusel y los colores](/es/guide/wusel#sounds)).
 

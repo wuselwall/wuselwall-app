@@ -517,6 +517,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get shoppingCat_pantry => 'Despensa';
 
   @override
+  String get shoppingCat_snacks => 'Snacks';
+
+  @override
   String get shoppingCat_frozen => 'Congelados';
 
   @override
@@ -6543,4 +6546,26 @@ class AppLocalizationsEs extends AppLocalizations {
   String accountDeleteReauthPasswordBody(String email) {
     return 'Para eliminar una cuenta hace falta iniciar sesión de nuevo. Introduce la contraseña de $email.';
   }
+
+  @override
+  String get shoppingModePlan => 'Planificar';
+
+  @override
+  String get shoppingModeShop => 'Comprar';
+
+  @override
+  String get shoppingStartShopping => 'Ir a comprar';
+
+  @override
+  String get shoppingAddInStore => 'Añadir algo';
+
+  @override
+  String get shoppingShopEmpty =>
+      'No hay nada en la lista. Cambia a «Planificar» para añadir artículos.';
+
+  @override
+  String get shoppingModeLabel => 'Modo';
+
+  @override
+  String get shoppingSearchClear => 'Borrar y cerrar';
 }

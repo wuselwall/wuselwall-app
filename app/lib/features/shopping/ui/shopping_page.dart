@@ -332,11 +332,31 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody> {
     ];
     await _sync.finish(actor: _actor, listId: list.id);
     if (mounted) {
+      // The trip is over: the next thing is the list for the next one.
+      ref.read(shoppingModeProvider.notifier).select(ShoppingMode.plan);
       context.showMessage(
         l10n.shoppingFinished(bought.length, onList.length - bought.length),
       );
       _celebrateTrip(list.id, bought);
     }
+  }
+
+  /// Shopping mode: something forgotten. The same picker as at home, in a sheet that
+  /// stays open so several items can follow each other.
+  Future<void> _addInStore(ShoppingList list) async {
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      showDragHandle: true,
+      builder: (_) => _AddSheet(
+        list: list,
+        onAdd: (name) => _addName(name, list),
+        onLongPress: (name) => _tileSheet(name, list),
+      ),
+    );
+    // Closing the sheet drops the field's focus, so no keyboard follows it.
+    FocusManager.instance.primaryFocus?.unfocus();
   }
 
   @override
@@ -369,129 +389,371 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody> {
             ],
           );
         }
-        final all = ref.watch(shoppingItemsProvider);
-        final removing = ref.watch(_removingProvider);
-        final items = all.whenData(
-          (v) => v
-              .where((i) => i.listId == null || i.listId == list.id)
-              .where((i) => !removing.contains(i.id))
-              .toList(),
-        );
+        final items = _itemsOf(ref, list.id);
         final hasTiles = (ref.watch(shoppingCatalogProvider).value ?? const [])
             .any((c) => c.listId == list.id);
-        // A4: one explicit traversal order for the whole body (lists, search,
-        // catalogue, items, finish, then whatever sits outside this widget), instead
-        // of whatever ambient order the nested scrollables would otherwise produce.
+        // The wall keeps one combined view; the adult and the children's registers
+        // split it into planning at home and shopping in the store.
+        final mode = kiosk ? null : ref.watch(shoppingModeProvider);
+        final planning = mode != ShoppingMode.shop;
+        final shopping = mode == ShoppingMode.shop;
+        final anyOpen = items.value?.any((i) => !i.checked) ?? false;
+        final anyTicked = items.value?.any((i) => i.checked) ?? false;
+        // A4: one explicit traversal order for the whole body (lists, mode, search,
+        // catalogue, items, bottom bar, then whatever sits outside this widget),
+        // instead of whatever ambient order the nested scrollables would otherwise
+        // produce.
         return FocusTraversalGroup(
           policy: OrderedTraversalPolicy(),
-          child: Column(
-            children: [
-              if (!kiosk)
-                _ListSwitcher(
-                  selected: list.id,
-                  onNew: _newList,
-                  onEdit: () =>
-                      context.push(Routes.shoppingListEdit, extra: list.id),
-                ),
-              if (pending > 0) _PendingBanner(count: pending),
-              // A5: the picker and the item list share one scrollable instead of the
-              // picker taking a fixed natural height and the list getting whatever is
-              // left over — at 200% text on a 320 px phone that leftover was ~0 px, so
-              // the list was unreachable even though nothing was actually lost.
-              Expanded(
-                child: CustomScrollView(
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: _TilePicker(
-                        key: const ValueKey('shopping-tiles'),
-                        list: list,
-                        items: items.value ?? const [],
-                        search: _search,
-                        showSearch: !kiosk,
-                        busy: _busy,
-                        onAdd: (name) => _addName(name, list),
-                        onLongPress: (name) => _tileSheet(name, list),
-                      ),
-                    ),
-                    const SliverToBoxAdapter(child: Divider(height: 1)),
-                    // An empty list takes the rest of the screen, its line centred
-                    // there; the tiles above are the way to add the first item. Wusel
-                    // peeks here (specs/25), never among the tiles themselves.
-                    if (items.value?.isEmpty ?? false)
-                      SliverFillRemaining(
-                        hasScrollBody: false,
-                        child: EmptyView(
-                          message: hasTiles
-                              ? l10n.shoppingEmptyTapTile
-                              : l10n.shoppingEmpty,
-                          scrolls: false,
+          // A tap on empty space drops the search field's focus (and its keyboard);
+          // taps on tiles and rows win the gesture arena and are not taken.
+          child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+            child: Column(
+              children: [
+                if (!kiosk)
+                  _ListSwitcher(
+                    selected: list.id,
+                    onNew: _newList,
+                    onEdit: () =>
+                        context.push(Routes.shoppingListEdit, extra: list.id),
+                  ),
+                if (mode != null)
+                  _ModeSwitch(
+                    mode: mode,
+                    touch: ref.watch(uiRegisterProvider).touchTarget,
+                    onChanged: (m) =>
+                        ref.read(shoppingModeProvider.notifier).select(m),
+                  ),
+                if (pending > 0) _PendingBanner(count: pending),
+                // A5: the picker and the item list share one scrollable instead of the
+                // picker taking a fixed natural height and the list getting whatever
+                // is left over — at 200% text on a 320 px phone that leftover was
+                // ~0 px, so the list was unreachable even though nothing was lost.
+                Expanded(
+                  child: CustomScrollView(
+                    keyboardDismissBehavior:
+                        ScrollViewKeyboardDismissBehavior.onDrag,
+                    slivers: [
+                      if (planning) ...[
+                        SliverToBoxAdapter(
+                          child: _TilePicker(
+                            key: const ValueKey('shopping-tiles'),
+                            list: list,
+                            items: items.value ?? const [],
+                            search: _search,
+                            showSearch: !kiosk,
+                            busy: _busy,
+                            onAdd: (name) => _addName(name, list),
+                            onLongPress: (name) => _tileSheet(name, list),
+                          ),
                         ),
-                      )
-                    else
-                      SliverToBoxAdapter(
-                        child: AsyncValueView<List<ShoppingItem>>(
-                          value: items,
-                          onRetry: _refresh,
-                          data: (open) => _ItemList(
-                            items: open,
-                            listId: list.id,
-                            onToggle: (i) => sync.check(
-                              actor: actor,
-                              itemId: i.id,
-                              checked: !i.checked,
+                        const SliverToBoxAdapter(child: Divider(height: 1)),
+                      ],
+                      // An empty list takes the rest of the screen, its line centred
+                      // there; the tiles above are the way to add the first item.
+                      // Wusel peeks here (specs/25), never among the tiles themselves.
+                      if (items.value?.isEmpty ?? false)
+                        SliverFillRemaining(
+                          hasScrollBody: false,
+                          child: EmptyView(
+                            message: shopping
+                                ? l10n.shoppingShopEmpty
+                                : hasTiles
+                                ? l10n.shoppingEmptyTapTile
+                                : l10n.shoppingEmpty,
+                            scrolls: false,
+                          ),
+                        )
+                      else
+                        SliverToBoxAdapter(
+                          child: AsyncValueView<List<ShoppingItem>>(
+                            value: items,
+                            onRetry: _refresh,
+                            data: (open) => _ItemList(
+                              items: open,
+                              listId: list.id,
+                              mode: mode,
+                              onToggle: (i) => sync.check(
+                                actor: actor,
+                                itemId: i.id,
+                                checked: !i.checked,
+                              ),
+                              onLess: (i) => _sync.adjustCount(
+                                actor: _actor,
+                                itemId: i.id,
+                                delta: -1,
+                              ),
+                              onEdit: _edit,
+                              onRemove: _canRemove ? _remove : null,
+                              onTripDone: (bought) =>
+                                  _celebrateTrip(list.id, bought),
                             ),
-                            onLess: (i) => _sync.adjustCount(
-                              actor: _actor,
-                              itemId: i.id,
-                              delta: -1,
-                            ),
-                            onEdit: _edit,
-                            onRemove: _canRemove ? _remove : null,
-                            onTripDone: (bought) =>
-                                _celebrateTrip(list.id, bought),
                           ),
                         ),
-                      ),
-                  ],
-                ),
-              ),
-              SafeArea(
-                top: false,
-                child: Padding(
-                  padding: const EdgeInsets.all(Tokens.space4),
-                  child: Row(
-                    children: [
-                      if (!kiosk)
-                        FocusTraversalOrder(
-                          order: const NumericFocusOrder(900),
-                          child: IconButton(
-                            tooltip: l10n.shoppingHistory,
-                            onPressed: () =>
-                                context.push(Routes.shoppingHistory),
-                            icon: const Icon(Icons.history),
-                          ),
-                        ),
-                      Expanded(
-                        child: FocusTraversalOrder(
-                          order: const NumericFocusOrder(901),
-                          child: FilledButton.icon(
-                            onPressed:
-                                !(items.value?.any((i) => i.checked) ?? false)
-                                ? null
-                                : () => _finish(list),
-                            icon: const Icon(Icons.shopping_cart_checkout),
-                            label: Text(l10n.shoppingFinish),
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 ),
-              ),
-            ],
+                SafeArea(
+                  top: false,
+                  child: Padding(
+                    padding: const EdgeInsets.all(Tokens.space4),
+                    child: Row(
+                      children: [
+                        if (!kiosk && !shopping)
+                          FocusTraversalOrder(
+                            order: const NumericFocusOrder(900),
+                            child: IconButton(
+                              tooltip: l10n.shoppingHistory,
+                              onPressed: () =>
+                                  context.push(Routes.shoppingHistory),
+                              icon: const Icon(Icons.history),
+                            ),
+                          ),
+                        if (shopping)
+                          FocusTraversalOrder(
+                            order: const NumericFocusOrder(900),
+                            child: IconButton(
+                              key: const ValueKey('shopping-add-in-store'),
+                              tooltip: l10n.shoppingAddInStore,
+                              onPressed: () => unawaited(_addInStore(list)),
+                              icon: const Icon(Icons.add),
+                            ),
+                          ),
+                        Expanded(
+                          child: FocusTraversalOrder(
+                            order: const NumericFocusOrder(901),
+                            child: mode == ShoppingMode.plan
+                                ? FilledButton.tonalIcon(
+                                    key: const ValueKey('shopping-start'),
+                                    onPressed: anyOpen
+                                        ? () => ref
+                                              .read(
+                                                shoppingModeProvider.notifier,
+                                              )
+                                              .select(ShoppingMode.shop)
+                                        : null,
+                                    icon: const Icon(
+                                      Icons.shopping_cart_checkout,
+                                    ),
+                                    label: Text(l10n.shoppingStartShopping),
+                                  )
+                                : FilledButton.icon(
+                                    onPressed: anyTicked
+                                        ? () => _finish(list)
+                                        : null,
+                                    icon: const Icon(
+                                      Icons.shopping_cart_checkout,
+                                    ),
+                                    label: Text(l10n.shoppingFinish),
+                                  ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },
+    );
+  }
+}
+
+/// The items of [listId] on screen: this device's view without those whose removal is
+/// waiting out its undo.
+AsyncValue<List<ShoppingItem>> _itemsOf(WidgetRef ref, String listId) {
+  final removing = ref.watch(_removingProvider);
+  return ref
+      .watch(shoppingItemsProvider)
+      .whenData(
+        (v) => v
+            .where((i) => i.listId == null || i.listId == listId)
+            .where((i) => !removing.contains(i.id))
+            .toList(),
+      );
+}
+
+/// [source] by [order], ascending; equal positions keep their given order (a mirror
+/// saved by an older app has none).
+List<T> _sortedBy<T>(Iterable<T> source, int Function(T) order) {
+  final indexed = source.toList().indexed.toList()
+    ..sort((a, b) {
+      final byOrder = order(a.$2).compareTo(order(b.$2));
+      return byOrder != 0 ? byOrder : a.$1.compareTo(b.$1);
+    });
+  return [for (final (_, v) in indexed) v];
+}
+
+/// Planen / Einkaufen: the two modes of the list screen, directly under the list chips.
+class _ModeSwitch extends StatefulWidget {
+  const _ModeSwitch({
+    required this.mode,
+    required this.touch,
+    required this.onChanged,
+  });
+
+  final ShoppingMode mode;
+
+  /// The register's minimum touch target.
+  final double touch;
+  final ValueChanged<ShoppingMode> onChanged;
+
+  @override
+  State<_ModeSwitch> createState() => _ModeSwitchState();
+}
+
+class _ModeSwitchState extends State<_ModeSwitch> {
+  // Not a focus stop itself: it only reports that one of the segments has the focus,
+  // so the keyboard ring can go round the whole control (A4).
+  final _focus = FocusNode(
+    debugLabel: 'shopping-mode',
+    canRequestFocus: false,
+    skipTraversal: true,
+  );
+
+  @override
+  void dispose() {
+    _focus.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final current = widget.mode == ShoppingMode.plan
+        ? l10n.shoppingModePlan
+        : l10n.shoppingModeShop;
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: Tokens.space4,
+        vertical: Tokens.space2,
+      ),
+      child: FocusTraversalOrder(
+        order: const NumericFocusOrder(50),
+        child: Semantics(
+          container: true,
+          header: true,
+          label: l10n.shoppingModeLabel,
+          value: current,
+          child: Focus(
+            focusNode: _focus,
+            child: _FocusRing(
+              focusNode: _focus,
+              child: SizedBox(
+                width: double.infinity,
+                child: SegmentedButton<ShoppingMode>(
+                  showSelectedIcon: false,
+                  emptySelectionAllowed: false,
+                  // The icon sits in the label, not in `icon`: with an `icon`
+                  // SegmentedButton replaces the theme's padding, and with it the
+                  // register's touch target (A6).
+                  segments: [
+                    for (final (m, icon, label, key) in [
+                      (
+                        ShoppingMode.plan,
+                        Icons.edit_note,
+                        l10n.shoppingModePlan,
+                        'shopping-mode-plan',
+                      ),
+                      (
+                        ShoppingMode.shop,
+                        Icons.shopping_cart_outlined,
+                        l10n.shoppingModeShop,
+                        'shopping-mode-shop',
+                      ),
+                    ])
+                      ButtonSegment(
+                        value: m,
+                        label: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          spacing: Tokens.space2,
+                          children: [
+                            Icon(icon, size: 18),
+                            Flexible(
+                              child: Text(
+                                label,
+                                key: ValueKey(key),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                  selected: {widget.mode},
+                  onSelectionChanged: (s) => widget.onChanged(s.first),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// The picker in a sheet, for the item forgotten in the store. It stays open while
+/// items are added; closing it (drag, back) drops the keyboard with it.
+class _AddSheet extends ConsumerStatefulWidget {
+  const _AddSheet({
+    required this.list,
+    required this.onAdd,
+    required this.onLongPress,
+  });
+
+  final ShoppingList list;
+  final void Function(String name) onAdd;
+  final void Function(String name) onLongPress;
+
+  @override
+  ConsumerState<_AddSheet> createState() => _AddSheetState();
+}
+
+class _AddSheetState extends ConsumerState<_AddSheet> {
+  final _search = TextEditingController();
+
+  @override
+  void dispose() {
+    _search.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final items = _itemsOf(ref, widget.list.id);
+    return FocusTraversalGroup(
+      policy: OrderedTraversalPolicy(),
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        // Above the keyboard, which would otherwise cover the tiles.
+        child: Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.viewInsetsOf(context).bottom,
+          ),
+          child: SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            child: _TilePicker(
+              list: widget.list,
+              items: items.value ?? const [],
+              search: _search,
+              showSearch: true,
+              busy: false,
+              autofocus: true,
+              onAdd: (name) {
+                widget.onAdd(name);
+                _search.clear();
+              },
+              onLongPress: widget.onLongPress,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -550,7 +812,10 @@ class _ListSwitcher extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final lists = ref.watch(shoppingListsProvider).value ?? const [];
+    final lists = _sortedBy(
+      ref.watch(shoppingListsProvider).value ?? const <ShoppingList>[],
+      (l) => l.sortOrder,
+    );
     final touch = ref.watch(uiRegisterProvider).touchTarget;
     return SizedBox(
       // A6: tall enough for the touch target plus the row's own padding — the chips
@@ -727,7 +992,11 @@ class _NewListChipState extends State<_NewListChip> {
 /// instead of reserving border space, so it never changes the child's layout size
 /// (important here: several of these sit inside a `SliverList` that forces an exact
 /// cross-axis extent on them).
-class _FocusRing extends StatelessWidget {
+///
+/// It shows only while the focus comes from the keyboard
+/// ([FocusHighlightMode.traditional]): a tap focuses a control too, and the ring then
+/// ran through a text field's label.
+class _FocusRing extends StatefulWidget {
   const _FocusRing({
     required this.focusNode,
     required this.child,
@@ -739,20 +1008,44 @@ class _FocusRing extends StatelessWidget {
   final BorderRadius borderRadius;
 
   @override
+  State<_FocusRing> createState() => _FocusRingState();
+}
+
+class _FocusRingState extends State<_FocusRing> {
+  @override
+  void initState() {
+    super.initState();
+    FocusManager.instance.addHighlightModeListener(_modeChanged);
+  }
+
+  @override
+  void dispose() {
+    FocusManager.instance.removeHighlightModeListener(_modeChanged);
+    super.dispose();
+  }
+
+  void _modeChanged(FocusHighlightMode _) {
+    if (mounted) setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
     final ringColor = Theme.of(context).colorScheme.primary;
     return AnimatedBuilder(
-      animation: focusNode,
+      animation: widget.focusNode,
       builder: (context, child) => Stack(
         fit: StackFit.passthrough,
         children: [
           child!,
-          if (focusNode.hasFocus)
+          if (widget.focusNode.hasFocus &&
+              FocusManager.instance.highlightMode ==
+                  FocusHighlightMode.traditional)
             Positioned.fill(
               child: IgnorePointer(
                 child: DecoratedBox(
+                  key: const ValueKey('shopping-focus-ring'),
                   decoration: BoxDecoration(
-                    borderRadius: borderRadius,
+                    borderRadius: widget.borderRadius,
                     border: Border.all(color: ringColor, width: 2.5),
                   ),
                 ),
@@ -760,7 +1053,7 @@ class _FocusRing extends StatelessWidget {
             ),
         ],
       ),
-      child: child,
+      child: widget.child,
     );
   }
 }
@@ -776,6 +1069,7 @@ class _TilePicker extends ConsumerStatefulWidget {
     required this.busy,
     required this.onAdd,
     required this.onLongPress,
+    this.autofocus = false,
     super.key,
   });
 
@@ -786,6 +1080,9 @@ class _TilePicker extends ConsumerStatefulWidget {
   final bool busy;
   final void Function(String name) onAdd;
   final void Function(String name) onLongPress;
+
+  /// The search field takes the focus when the picker appears (the add sheet).
+  final bool autofocus;
 
   @override
   ConsumerState<_TilePicker> createState() => _TilePickerState();
@@ -798,11 +1095,13 @@ class _TilePickerState extends ConsumerState<_TilePicker> {
   void initState() {
     super.initState();
     widget.search.addListener(_changed);
+    _searchFocus.addListener(_changed);
   }
 
   @override
   void dispose() {
     widget.search.removeListener(_changed);
+    _searchFocus.removeListener(_changed);
     _searchFocus.dispose();
     super.dispose();
   }
@@ -892,9 +1191,25 @@ class _TilePickerState extends ConsumerState<_TilePicker> {
                       child: TextField(
                         controller: widget.search,
                         focusNode: _searchFocus,
+                        autofocus: widget.autofocus,
                         decoration: InputDecoration(
-                          labelText: l10n.shoppingSearchHint,
+                          // A hint, not a floating label: the focus ring and a label
+                          // that floats into the border do not mix.
+                          hintText: l10n.shoppingSearchHint,
                           prefixIcon: const Icon(Icons.search),
+                          // Enter keeps the focus here for the next item, so a phone
+                          // needs its own way out of the field and its keyboard.
+                          suffixIcon: _searchFocus.hasFocus || query.isNotEmpty
+                              ? IconButton(
+                                  key: const ValueKey('shopping-search-clear'),
+                                  tooltip: l10n.shoppingSearchClear,
+                                  icon: const Icon(Icons.close),
+                                  onPressed: () {
+                                    widget.search.clear();
+                                    _searchFocus.unfocus();
+                                  },
+                                )
+                              : null,
                         ),
                         textInputAction: TextInputAction.done,
                         // Enter adds the top hit, else the typed name as a new item, and
@@ -933,13 +1248,13 @@ class _TilePickerState extends ConsumerState<_TilePicker> {
                 else
                   ConstrainedBox(
                     // A short phone keeps a row and a half, so the list under the tiles
-                    // still shows more than one item (round-3 review L-1); the half row
-                    // says the tiles scroll.
+                    // still shows more than one item (round-3 review L-1); otherwise two
+                    // and a half rows show. The half row says the tiles scroll.
                     constraints: BoxConstraints(
                       maxHeight:
                           MediaQuery.sizeOf(context).height < _shortScreen
                           ? 112
-                          : 176,
+                          : 240,
                     ),
                     child: SingleChildScrollView(
                       child: Wrap(
@@ -1083,6 +1398,7 @@ class _ItemList extends ConsumerStatefulWidget {
   const _ItemList({
     required this.items,
     required this.listId,
+    required this.mode,
     required this.onToggle,
     required this.onLess,
     required this.onEdit,
@@ -1092,6 +1408,10 @@ class _ItemList extends ConsumerStatefulWidget {
 
   final List<ShoppingItem> items;
   final String listId;
+
+  /// Planning rows have no tick; shopping rows no "−"; null (the wall) is today's
+  /// combined row.
+  final ShoppingMode? mode;
   final void Function(ShoppingItem) onToggle;
   final void Function(ShoppingItem) onLess;
   final void Function(ShoppingItem) onEdit;
@@ -1152,12 +1472,20 @@ class _ItemListState extends ConsumerState<_ItemList> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final categories = [
+    // Walking order, whatever order the mirror was saved in.
+    final categories = _sortedBy([
       for (final c
           in ref.watch(shoppingCategoriesProvider).value ??
               const <ShoppingCategory>[])
         if (c.listId == widget.listId) c,
-    ];
+    ], (c) => c.sortOrder);
+    final icons = {
+      for (final c
+          in ref.watch(shoppingCatalogProvider).value ?? const <CatalogEntry>[])
+        if (c.listId == widget.listId) c.foldedName: c.iconKey,
+    };
+    final categoryById = {for (final c in categories) c.id: c};
+    final planning = widget.mode == ShoppingMode.plan;
     final members = {
       for (final m in ref.watch(membersProvider).value ?? const <Member>[])
         m.id: m,
@@ -1168,11 +1496,19 @@ class _ItemListState extends ConsumerState<_ItemList> {
     final scheme = Theme.of(context).colorScheme;
     Widget tile(ShoppingItem i) {
       final remove = widget.onRemove;
+      // Planning: the open items are plain rows with their picture, a tap opens the
+      // item; the trolley keeps its tick rows, so un-ticking stays one tap.
+      final plain = planning && !i.checked;
       final row = _ItemTile(
         item: i,
         checked: i.checked || _ticked.containsKey(i.id),
         adder: members[i.addedBy],
-        onToggle: () => _tap(i),
+        plain: plain,
+        picture: plain
+            ? _itemPicture(i, icons[fold(i.name)], categoryById[i.categoryId])
+            : null,
+        showLess: widget.mode != ShoppingMode.shop,
+        onToggle: plain ? () => widget.onEdit(i) : () => _tap(i),
         onLess: () => widget.onLess(i),
         onEdit: () => widget.onEdit(i),
         onRemove: remove == null ? null : () => remove(i),
@@ -1240,6 +1576,21 @@ class _ItemListState extends ConsumerState<_ItemList> {
   }
 }
 
+/// An item's picture in a plain row: the catalogue tile's, else its category's icon.
+Widget _itemPicture(
+  ShoppingItem item,
+  String? iconKey,
+  ShoppingCategory? category,
+) => switch (shoppingIconAsset(iconKey)) {
+  final asset? => Image.asset(
+    asset,
+    width: 24,
+    height: 24,
+    excludeFromSemantics: true,
+  ),
+  null => ExcludeSemantics(child: Icon(categoryIcon(category), size: 24)),
+};
+
 class _Header extends StatelessWidget {
   const _Header(this.label);
 
@@ -1268,12 +1619,23 @@ class _ItemTile extends StatefulWidget {
     required this.onToggle,
     required this.onLess,
     required this.onEdit,
+    this.plain = false,
+    this.picture,
+    this.showLess = true,
     this.onRemove,
   });
 
   final ShoppingItem item;
   final bool checked;
   final Member? adder;
+
+  /// A planning row: the picture instead of a checkbox; a tap is [onToggle], which the
+  /// list points at the item's dialog.
+  final bool plain;
+  final Widget? picture;
+
+  /// Whether a count above one offers "−" (not while shopping: noise in the aisle).
+  final bool showLess;
   final VoidCallback onToggle;
   final VoidCallback onLess;
   final VoidCallback onEdit;
@@ -1323,7 +1685,7 @@ class _ItemTileState extends State<_ItemTile> {
     // Screen readers have no swipe: removing is an action of the row instead.
     final remove = widget.onRemove;
     return Semantics(
-      checked: widget.checked,
+      checked: widget.plain ? null : widget.checked,
       value: item.pending ? l10n.shoppingItemPending : null,
       hint: adder == null ? null : l10n.shoppingAddedBy(adder.displayName),
       customSemanticsActions: remove == null
@@ -1333,21 +1695,24 @@ class _ItemTileState extends State<_ItemTile> {
         focusNode: _focusNode,
         borderRadius: BorderRadius.zero,
         child: ListTile(
-          minTileHeight: 56,
+          minTileHeight: widget.plain ? 48 : 56,
           focusNode: _focusNode,
           onFocusChange: _onFocusChange,
           onTap: widget.onToggle,
           onLongPress: widget.onEdit,
-          leading: ExcludeSemantics(
-            // A4: the row itself is the one tab stop (Space/Enter already toggle
-            // it); without this the checkbox was a second, redundant stop.
-            child: ExcludeFocusTraversal(
-              child: Checkbox(
-                value: widget.checked,
-                onChanged: (_) => widget.onToggle(),
-              ),
-            ),
-          ),
+          leading: widget.plain
+              ? widget.picture
+              : ExcludeSemantics(
+                  // A4: the row itself is the one tab stop (Space/Enter already
+                  // toggle it); without this the checkbox was a second, redundant
+                  // stop.
+                  child: ExcludeFocusTraversal(
+                    child: Checkbox(
+                      value: widget.checked,
+                      onChanged: (_) => widget.onToggle(),
+                    ),
+                  ),
+                ),
           title: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -1413,7 +1778,7 @@ class _ItemTileState extends State<_ItemTile> {
                     ),
                   ),
                 ),
-              if (item.count > 1 && !widget.checked)
+              if (item.count > 1 && !widget.checked && widget.showLess)
                 IconButton(
                   tooltip: l10n.shoppingRemoveOne,
                   onPressed: widget.onLess,

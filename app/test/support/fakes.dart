@@ -633,6 +633,9 @@ class FakeShoppingRepository implements ShoppingRepository {
   List<ShoppingItem> list;
   final toggles = <({String? actor, String id})>[];
 
+  /// The names of the items added, in order.
+  final adds = <String>[];
+
   /// The meals behind each item id, for the item's sheet.
   final Map<String, List<ShoppingItemMeal>> mealsByItem;
 
@@ -662,6 +665,7 @@ class FakeShoppingRepository implements ShoppingRepository {
     for (final op in ops.whereType<CheckItemOp>()) {
       toggles.add((actor: op.actor, id: op.itemId));
     }
+    adds.addAll(ops.whereType<AddItemOp>().map((op) => op.name));
     final view = projectShopping((await snapshot()).valueOrNull!, ops);
     list = [for (final i in view.items) i.copyWith(pending: false)];
     return Ok(

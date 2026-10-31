@@ -223,6 +223,10 @@
   "shoppingCat_dairy": "Dairy & cheese",
   "shoppingCat_meat_fish": "Meat & fish",
   "shoppingCat_pantry": "Pantry",
+  "shoppingCat_snacks": "Snacks",
+  "@shoppingCat_snacks": {
+    "description": "Seeded shopping category: crisps, biscuits and the like"
+  },
   "shoppingCat_frozen": "Frozen",
   "shoppingCat_drinks": "Drinks",
   "shoppingCat_household": "Household",
@@ -3895,5 +3899,33 @@
         "type": "String"
       }
     }
+  },
+  "shoppingModePlan": "Plan",
+  "@shoppingModePlan": {
+    "description": "Shopping list, mode control: the segment for planning at home (search, tiles, items without ticks)"
+  },
+  "shoppingModeShop": "Shop",
+  "@shoppingModeShop": {
+    "description": "Shopping list, mode control: the segment for being in the store (tick rows, add with a button)"
+  },
+  "shoppingStartShopping": "Go shopping",
+  "@shoppingStartShopping": {
+    "description": "Shopping list, planning mode: the button that switches to the shopping mode"
+  },
+  "shoppingAddInStore": "Add something",
+  "@shoppingAddInStore": {
+    "description": "Shopping list, shopping mode: tooltip of the plus button that opens the picker for a forgotten item"
+  },
+  "shoppingShopEmpty": "Nothing on the list. Switch to “Plan” to add items.",
+  "@shoppingShopEmpty": {
+    "description": "Shopping list in shopping mode with nothing on it"
+  },
+  "shoppingModeLabel": "Mode",
+  "@shoppingModeLabel": {
+    "description": "Screen reader label of the plan/shop mode control on the shopping list"
+  },
+  "shoppingSearchClear": "Clear and close",
+  "@shoppingSearchClear": {
+    "description": "Tooltip of the button in the shopping search field that clears the text and closes the keyboard"
   }
 }

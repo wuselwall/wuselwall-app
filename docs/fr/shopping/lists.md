@@ -10,7 +10,7 @@ Choisissez en haut la liste du **supermarché**, de la **droguerie**, du **magas
 2. Saisissez son **nom** et choisissez le type de magasin.
 3. Enregistrez.
 
-Le type définit les **catégories**, dans l’ordre des rayons. Chaque liste a **ses propres tuiles** : les achats de bricolage ne se mélangent pas aux produits du supermarché.
+Le type définit les **catégories**, dans l’ordre des rayons ; celui du supermarché connaît par exemple Fruits et légumes, Pain et boulangerie, Produits laitiers et fromages, Viande et poisson, Épicerie, **Snacks**, Surgelés, Boissons et Maison. Chaque liste a **ses propres tuiles** : les achats de bricolage ne se mélangent pas aux produits du supermarché.
 
 ## La liste par défaut {#the-default-list}
 

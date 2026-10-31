@@ -516,6 +516,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get shoppingCat_pantry => 'Vorrat';
 
   @override
+  String get shoppingCat_snacks => 'Snacks';
+
+  @override
   String get shoppingCat_frozen => 'Tiefkühl';
 
   @override
@@ -6527,6 +6530,28 @@ class AppLocalizationsDe extends AppLocalizations {
   String accountDeleteReauthPasswordBody(String email) {
     return 'Zum Löschen eines Kontos brauchst du eine frische Anmeldung. Gib das Passwort von $email ein.';
   }
+
+  @override
+  String get shoppingModePlan => 'Planen';
+
+  @override
+  String get shoppingModeShop => 'Einkaufen';
+
+  @override
+  String get shoppingStartShopping => 'Einkaufen gehen';
+
+  @override
+  String get shoppingAddInStore => 'Etwas hinzufügen';
+
+  @override
+  String get shoppingShopEmpty =>
+      'Nichts auf der Liste. Zum Hinzufügen wechsle zu „Planen“.';
+
+  @override
+  String get shoppingModeLabel => 'Modus';
+
+  @override
+  String get shoppingSearchClear => 'Leeren und schließen';
 }
 
 /// The translations for German, as used in Austria (`de_AT`).
@@ -7002,4 +7027,7 @@ class AppLocalizationsDeCh extends AppLocalizationsDe {
 
   @override
   String get eventStarterHoliday => 'Ferien / Reise';
+
+  @override
+  String get shoppingSearchClear => 'Leeren und schliessen';
 }

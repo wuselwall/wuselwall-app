@@ -216,6 +216,7 @@
   "shoppingCat_dairy": "Milch & Käse",
   "shoppingCat_meat_fish": "Fleisch & Fisch",
   "shoppingCat_pantry": "Vorrat",
+  "shoppingCat_snacks": "Snacks",
   "shoppingCat_frozen": "Tiefkühl",
   "shoppingCat_drinks": "Getränke",
   "shoppingCat_household": "Haushalt",
@@ -2405,5 +2406,12 @@
   "settingsPasswordNoMail": "Der Server deiner Familie verschickt keine E-Mails: Du meldest dich mit deiner Adresse und diesem Passwort an.",
   "passwordDialogBodyNoMail": "Mindestens 10 Zeichen. Vergisst du es, gibt dir ein Erziehungsberechtigter deiner Familie einen Code für ein neues.",
   "errEmailNotConfirmed": "Dieser Server will die Adresse per E-Mail bestätigen, verschickt aber keine. Frag, wer ihn betreibt.",
-  "accountDeleteReauthPasswordBody": "Zum Löschen eines Kontos brauchst du eine frische Anmeldung. Gib das Passwort von {email} ein."
+  "accountDeleteReauthPasswordBody": "Zum Löschen eines Kontos brauchst du eine frische Anmeldung. Gib das Passwort von {email} ein.",
+  "shoppingModePlan": "Planen",
+  "shoppingModeShop": "Einkaufen",
+  "shoppingStartShopping": "Einkaufen gehen",
+  "shoppingAddInStore": "Etwas hinzufügen",
+  "shoppingShopEmpty": "Nichts auf der Liste. Zum Hinzufügen wechsle zu „Planen“.",
+  "shoppingModeLabel": "Modus",
+  "shoppingSearchClear": "Leeren und schließen"
 }

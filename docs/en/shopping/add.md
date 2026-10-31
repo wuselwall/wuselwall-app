@@ -2,11 +2,13 @@
 
 An item should be on the list within three seconds — even one-handed, in front of an open fridge. That is what the **tiles** are for.
 
-<Shot name="shopping-phone" alt="Shopping list with tiles on top and items by category below" />
+The list has two modes, switched just under the lists. **Plan** (the default) is for adding and arranging: the search field and tiles on top, the items by category below, with no tick boxes. In the shop you switch to [Shop](/en/shopping/store).
+
+<Shot name="shopping-phone" alt="Shopping list in Plan mode: tiles on top and items by category below" />
 
 ## Tiles
 
-At the top you see tiles for what you bought **most recently** and **most often**. Nobody maintains this list: it builds itself when you finish a trip.
+The tiles are the **catalogue** of what you have bought: the **8 most recent** items first, then the **most often** bought ones, up to 24 in all. Nobody maintains this list: it builds itself when you finish a trip.
 
 Each tile shows a picture of the item: WuselWall recognises common items by their name, such as milk, bread or apples. An item it doesn't know shows its category's symbol.
 
@@ -22,16 +24,17 @@ Start typing and the tiles shrink to the matching ones. Case, umlauts and accent
 
 - **Enter** adds the first match.
 - If WuselWall doesn't know the name yet, an **"Add …"** tile appears. The item goes on the list as free text and becomes a normal tile after your next trip.
+- A new item gets a **category guessed from its name** ("chocolate" goes under Snacks, "pasta" under Pantry). If it is wrong, change it in the item dialog (below).
 
 ## Changing a note or category
 
-**Press and hold** an item in the list to add a note or change its **category**. WuselWall remembers the category for next time.
+**Tap** an item in the list (in Plan mode) or **press and hold** it (in either mode) to add a note or change its **category**. WuselWall remembers the category for next time.
 
 <Shot name="shopping-edit-item" alt="Dialog for editing an item" />
 
 ## Removing an item
 
-Swipe an item to the left to take it off the list. **Undo** shows at the bottom for a moment; only then is it really gone. Without swiping: press and hold the item, then **Remove**. Nothing can be removed on the children’s tablet or on the kitchen wall.
+Swipe an item to the left to take it off the list. **Undo** shows at the bottom for a moment; only then is it really gone. Without swiping: tap or press and hold the item, then **Remove**. Nothing can be removed on the children’s tablet or on the kitchen wall.
 
 ## Who put it there?
 

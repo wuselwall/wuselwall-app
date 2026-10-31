@@ -2,7 +2,13 @@
 
 Die Liste ist für den Einkauf gebaut: große Flächen, einhändig und mit Handschuhen zu bedienen.
 
-<Shot name="shopping-phone" alt="Einkaufsliste im Laden" />
+## Zum Einkaufen wechseln
+
+Unter den Listen wählst du den Modus: **Planen** zuhause, **Einkaufen** im Laden. Auf **Einkaufen gehen** unten im Modus Planen kommst du mit einem Tipp hinüber. Hast du schon etwas abgehakt (etwa weil jemand anderes gerade einkauft), öffnet die Liste gleich im Modus Einkaufen.
+
+Im Modus Einkaufen fehlen Suchfeld und Kacheln: Die Artikel stehen gleich unter dem Schalter, nach Kategorien in der Reihenfolge des Ladens, und jede Zeile hat ein Kästchen.
+
+<Shot name="shopping-store" alt="Einkaufsliste im Modus Einkaufen mit Kästchen zum Abhaken" />
 
 ## Abhaken
 
@@ -14,13 +20,19 @@ Die Liste ist für den Einkauf gebaut: große Flächen, einhändig und mit Hands
 
 <Shot name="shopping-trolley" alt="Aufgeklappter Bereich „Im Wagen“" />
 
+## Etwas vergessen?
+
+Unten steht ein **+**. Es öffnet Suchfeld und Kacheln in einem Blatt über der Liste. Du kannst dort mehrere Artikel nacheinander hinzufügen; das Blatt bleibt offen, bis du es nach unten wischst oder zurückgehst. Wer das Tippen beenden will, tippt auf das **×** im Suchfeld: Es leert das Feld und schließt die Tastatur.
+
+<Shot name="shopping-store-add" alt="Blatt zum Hinzufügen im Laden mit Suchfeld und Kacheln" />
+
 ## Gleichzeitig einkaufen
 
 Zwei Personen in verschiedenen Gängen sehen die Haken der anderen **nach ein bis zwei Sekunden** – ohne etwas neu zu laden.
 
 ## Einkauf beenden
 
-Wenn ihr fertig seid, tippt ihr unten auf **Einkauf beenden**.
+Wenn ihr fertig seid, tippt ihr unten auf **Einkauf beenden**. Danach springt die Liste zurück in den Modus **Planen**.
 
 - Alles **Abgehakte** wird abgeschlossen und im [Verlauf](/shopping/history) gespeichert.
 - Was **nicht abgehakt** ist, bleibt auf der Liste.

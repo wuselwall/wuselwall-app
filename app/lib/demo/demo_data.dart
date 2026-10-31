@@ -120,6 +120,7 @@ abstract final class DemoData {
     'dairy',
     'meat_fish',
     'pantry',
+    'snacks',
     'frozen',
     'drinks',
     'household',
@@ -216,6 +217,7 @@ abstract final class DemoData {
       7,
       'potato',
     ),
+    (tr4('Chips', 'Crisps', 'Chips', 'Patatas fritas'), 'snacks', 6, 'fries'),
   ];
 
   static List<CatalogEntry> catalogue() => [
@@ -288,6 +290,14 @@ abstract final class DemoData {
       1,
       null,
       son,
+      false,
+    ),
+    (
+      tr4('Chips', 'Crisps', 'Chips', 'Patatas fritas'),
+      'snacks',
+      1,
+      null,
+      daughter,
       false,
     ),
     (

@@ -72,6 +72,11 @@ void main() {
       t,
     ) async {
       await _pumpShopping(t, register);
+      // The wall has one combined view; the kid's register finishes in shopping mode.
+      if (register == UiRegister.kid) {
+        await t.tap(find.byKey(const ValueKey('shopping-mode-shop')));
+        await t.pump();
+      }
 
       final finishButton = find.ancestor(
         of: find.text('Einkauf beenden'),
@@ -83,6 +88,23 @@ void main() {
       expect(size.height, greaterThanOrEqualTo(56));
     });
   }
+
+  testWidgets(
+    'kid: the mode control and "Einkaufen gehen" are at least 56 high',
+    (t) async {
+      await _pumpShopping(t, UiRegister.kid);
+
+      final mode = find.byType(SegmentedButton<ShoppingMode>);
+      expect(mode, findsOneWidget);
+      expect(t.getSize(mode).height, greaterThanOrEqualTo(56));
+      final start = find.ancestor(
+        of: find.text('Einkaufen gehen'),
+        matching: find.byType(FilledButton),
+      );
+      expect(start, findsOneWidget);
+      expect(t.getSize(start).height, greaterThanOrEqualTo(56));
+    },
+  );
 
   testWidgets('kid: the shopping history icon action is at least 56x56', (
     t,

@@ -512,6 +512,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shoppingCat_pantry => 'Pantry';
 
   @override
+  String get shoppingCat_snacks => 'Snacks';
+
+  @override
   String get shoppingCat_frozen => 'Frozen';
 
   @override
@@ -6481,4 +6484,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String accountDeleteReauthPasswordBody(String email) {
     return 'Deleting an account needs a fresh sign-in. Enter the password of $email.';
   }
+
+  @override
+  String get shoppingModePlan => 'Plan';
+
+  @override
+  String get shoppingModeShop => 'Shop';
+
+  @override
+  String get shoppingStartShopping => 'Go shopping';
+
+  @override
+  String get shoppingAddInStore => 'Add something';
+
+  @override
+  String get shoppingShopEmpty =>
+      'Nothing on the list. Switch to “Plan” to add items.';
+
+  @override
+  String get shoppingModeLabel => 'Mode';
+
+  @override
+  String get shoppingSearchClear => 'Clear and close';
 }

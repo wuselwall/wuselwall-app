@@ -2,7 +2,13 @@
 
 The list is built for shopping: big targets, usable one-handed and with gloves.
 
-<Shot name="shopping-phone" alt="Shopping list in the store" />
+## Switching to Shop
+
+Just under the lists you choose the mode: **Plan** at home, **Shop** in the store. **Go shopping** at the bottom of Plan mode takes you over with one tap. If something is already ticked (say, someone else is shopping right now), the list opens straight in Shop mode.
+
+Shop mode has no search field and no tiles: the items start right under the switch, by category in the order of the store, and every row has a tick box.
+
+<Shot name="shopping-store" alt="Shopping list in Shop mode with tick boxes" />
 
 ## Ticking
 
@@ -14,13 +20,19 @@ The list is built for shopping: big targets, usable one-handed and with gloves.
 
 <Shot name="shopping-trolley" alt="The expanded “In the trolley” section" />
 
+## Forgot something?
+
+There is a **+** at the bottom. It opens the search field and tiles in a sheet over the list. You can add several items one after another; the sheet stays open until you swipe it down or go back. To stop typing, tap the **×** in the search field: it clears the field and closes the keyboard.
+
+<Shot name="shopping-store-add" alt="Add sheet in the store with the search field and tiles" />
+
 ## Shopping at the same time
 
 Two people in different aisles see each other's ticks **within a second or two** — nothing to reload.
 
 ## Finishing the trip
 
-When you're done, tap **Finish shopping** at the bottom.
+When you're done, tap **Finish shopping** at the bottom. The list then switches back to **Plan**.
 
 - Everything **ticked** is completed and stored in the [history](/en/shopping/history).
 - Whatever is **not ticked** stays on the list.

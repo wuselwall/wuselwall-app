@@ -359,8 +359,9 @@ class DemoShoppingRepository implements ShoppingRepository {
 
   @override
   Future<Result<List<ShoppingList>>> lists() async => Ok([
-    for (final l in _lists)
+    for (final (i, l) in _lists.indexed)
       ShoppingList(
+        sortOrder: i * 10,
         id: l.id,
         name: l.name,
         isDefault: l.isDefault,

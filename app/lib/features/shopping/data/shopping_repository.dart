@@ -34,13 +34,14 @@ class ShoppingRepository {
   Future<Result<List<ShoppingList>>> lists() => _api.select(
     'shopping_lists',
     parse: ShoppingList.fromJson,
-    build: (q) => q.order('sort_order'),
+    // supabase-dart's order() descends by default: the walking order is ascending.
+    build: (q) => q.order('sort_order', ascending: true),
   );
 
   Future<Result<List<ShoppingCategory>>> categories() => _api.select(
     'shopping_categories',
     parse: ShoppingCategory.fromJson,
-    build: (q) => q.order('sort_order'),
+    build: (q) => q.order('sort_order', ascending: true),
   );
 
   Future<Result<List<CatalogEntry>>> catalog() => _api.select(

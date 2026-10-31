@@ -101,6 +101,8 @@ void main() {
     await t.pumpAndSettle();
     await t.tap(find.byKey(const ValueKey('avatar-$kidId')));
     await t.pump();
+    await t.tap(find.byKey(const ValueKey('shopping-mode-shop')));
+    await t.pumpAndSettle();
 
     await t.tap(find.text('Milch'));
     // A tick settles for a moment before it is sent (see shopping_page's _ItemList).

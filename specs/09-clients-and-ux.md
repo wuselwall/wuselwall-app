@@ -124,7 +124,7 @@ everywhere, so the rules are the same on every screen:
 | Mein Stundenplan (kid) | The next school day, Monday to Friday | The day tabs |
 | Week board (kiosk) | Next week; back is this week, never further | **Nächste Woche** beside **Alle Termine** |
 | Dienstplan picker in the event editor | The next month | Previous / next month |
-| Shopping list item (adult only) | Takes it off, with **Rückgängig** for 5 s | Long press → **Entfernen** |
+| Shopping list item (adult only) | Takes it off, with **Rückgängig** for 5 s | Long press → **Entfernen**; in Plan mode a tap opens the item too (the long press stays) |
 
 - **A swipe is only a shortcut.** Every step it makes has a visible control, and that
   control stays. VoiceOver and TalkBack keep swipes for themselves, so the buttons (and,

@@ -113,6 +113,7 @@ class ShoppingList {
     required this.name,
     required this.isDefault,
     required this.openCount,
+    this.sortOrder = 0,
   });
 
   factory ShoppingList.fromJson(Map<String, dynamic> json) => ShoppingList(
@@ -120,6 +121,8 @@ class ShoppingList {
     name: json['name'] as String,
     isDefault: json['is_default'] as bool,
     openCount: json['open_count'] as int,
+    // Absent in a mirror saved by an older app: those lists keep their stored order.
+    sortOrder: json['sort_order'] as int? ?? 0,
   );
 
   final String id;
@@ -127,15 +130,24 @@ class ShoppingList {
   final bool isDefault;
   final int openCount;
 
+  /// The position of the list among the household's lists, ascending.
+  final int sortOrder;
+
   Map<String, dynamic> toJson() => {
     'id': id,
     'name': name,
     'is_default': isDefault,
     'open_count': openCount,
+    'sort_order': sortOrder,
   };
 
-  ShoppingList withOpenCount(int count) =>
-      ShoppingList(id: id, name: name, isDefault: isDefault, openCount: count);
+  ShoppingList withOpenCount(int count) => ShoppingList(
+    id: id,
+    name: name,
+    isDefault: isDefault,
+    openCount: count,
+    sortOrder: sortOrder,
+  );
 }
 
 /// A category of a list: its order is the walking order of the store. Seeded ones carry

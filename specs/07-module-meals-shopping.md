@@ -168,6 +168,34 @@ several times a day, usually while doing something else.
   counters incremented, list cleared. Archived items are the training data for
   autocomplete.
 
+### Two modes (2026-10-31)
+
+The list screen has two explicit modes on the adult and the children's register, chosen
+with a segmented control directly under the list chips; the wall keeps its single combined
+view and has no control. The reason is space and the right controls for each situation:
+at home the screen is for putting things on the list, in the aisle it is for ticking them.
+
+- **Plan** ("Planen"): the search field and the tile grid (about two and a half rows on a
+  normal phone), and the items by category in walking order as plain rows with the item's
+  picture instead of a checkbox. A tap opens the item (note, category, remove; the long
+  press stays), a swipe removes it (adults), "−" lowers a count. Ticked items stay in the
+  collapsed trolley, where a tap un-ticks, so nothing is hidden from someone planning
+  while another is in the store. The bottom bar has the history and "Einkaufen gehen",
+  which switches to the other mode.
+- **Shop** ("Einkaufen"): no search field and no tiles; the tick rows of the section
+  above, with the 800 ms settle, the trolley and the end-of-trip celebration unchanged and
+  without "−". A forgotten item is added with "+" in the bottom bar, which opens the same
+  picker in a bottom sheet that stays open for several items. "Einkauf abschließen"
+  returns to planning.
+
+The mode is kept per device in memory for the session; a list opens in Shop when it
+already has a ticked item (a trip is under way), else in Plan.
+
+Categories are also guessed: when the catalogue knows no category for a new item, the
+server infers one from its name by a word list (German and English), and a supermarket
+list is seeded with a `snacks` category between `pantry` and `frozen`. Whatever is guessed
+can be corrected in the item dialog.
+
 ## Offline — the one place it is non-negotiable
 
 Supermarket connectivity is unreliable, and a shopping list that fails in a shop is

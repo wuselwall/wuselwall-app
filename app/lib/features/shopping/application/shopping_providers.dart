@@ -122,3 +122,31 @@ List<CatalogEntry> rankTiles(
       });
   return [for (final s in scored.take(limit)) s.$2];
 }
+
+/// What the list screen is for right now (2026-10-31): at home editing the list, or in
+/// the store ticking it off. The wall keeps one combined view and ignores this.
+enum ShoppingMode { plan, shop }
+
+/// The mode of this device for the session, in memory. It starts in [ShoppingMode.shop]
+/// when the list on screen already has a ticked item (a trip is under way), else in
+/// [ShoppingMode.plan]. Read first when the list has loaded, so the state is known.
+final shoppingModeProvider =
+    NotifierProvider<ShoppingModeNotifier, ShoppingMode>(
+      ShoppingModeNotifier.new,
+    );
+
+class ShoppingModeNotifier extends Notifier<ShoppingMode> {
+  @override
+  ShoppingMode build() {
+    final list = ref.read(currentListProvider).value;
+    final items = ref.read(shoppingItemsProvider).value ?? const [];
+    final ticked = items.any(
+      (i) => i.checked && (i.listId == null || i.listId == list?.id),
+    );
+    return ticked ? ShoppingMode.shop : ShoppingMode.plan;
+  }
+
+  // A setter-style method: Riverpod 3 notifiers expose state changes this way.
+  // ignore: use_setters_to_change_properties
+  void select(ShoppingMode mode) => state = mode;
+}

@@ -55,11 +55,19 @@ import 'package:wuselwall/features/school/ui/timetable_scan.dart';
 import 'package:wuselwall/features/settings/application/settings_view.dart';
 import 'package:wuselwall/features/settings/data/household_export_repository.dart';
 import 'package:wuselwall/features/settings/data/household_settings_repository.dart';
+import 'package:wuselwall/features/shopping/application/shopping_providers.dart';
 import 'package:wuselwall/features/shopping/data/shopping_repository.dart';
 import 'package:wuselwall/features/shortcuts/data/shortcut_repository.dart';
 import 'package:wuselwall/features/tasks/data/tasks_repository.dart';
 import 'package:wuselwall/features/today/data/getting_started_repository.dart';
 import 'package:wuselwall/features/today/data/notices_repository.dart';
+
+/// The demo list has a ticked item (the trolley), yet opens in planning mode: the shots
+/// and the first look start at home, and the docs switch to the store themselves.
+class _DemoPlanning extends ShoppingModeNotifier {
+  @override
+  ShoppingMode build() => ShoppingMode.plan;
+}
 
 class _Day extends NightNotifier {
   @override
@@ -143,6 +151,7 @@ List<Override> _overrides(String scenario) => [
     DemoAccountAdminRepository(),
   ),
   shoppingRepositoryProvider.overrideWithValue(DemoShoppingRepository()),
+  shoppingModeProvider.overrideWith(_DemoPlanning.new),
   householdSettingsRepositoryProvider.overrideWithValue(
     DemoHouseholdSettingsRepository(),
   ),

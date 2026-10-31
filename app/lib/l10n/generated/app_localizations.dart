@@ -1046,6 +1046,12 @@ abstract class AppLocalizations {
   /// **'Pantry'**
   String get shoppingCat_pantry;
 
+  /// Seeded shopping category: crisps, biscuits and the like
+  ///
+  /// In en, this message translates to:
+  /// **'Snacks'**
+  String get shoppingCat_snacks;
+
   /// No description provided for @shoppingCat_frozen.
   ///
   /// In en, this message translates to:
@@ -10991,6 +10997,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Deleting an account needs a fresh sign-in. Enter the password of {email}.'**
   String accountDeleteReauthPasswordBody(String email);
+
+  /// Shopping list, mode control: the segment for planning at home (search, tiles, items without ticks)
+  ///
+  /// In en, this message translates to:
+  /// **'Plan'**
+  String get shoppingModePlan;
+
+  /// Shopping list, mode control: the segment for being in the store (tick rows, add with a button)
+  ///
+  /// In en, this message translates to:
+  /// **'Shop'**
+  String get shoppingModeShop;
+
+  /// Shopping list, planning mode: the button that switches to the shopping mode
+  ///
+  /// In en, this message translates to:
+  /// **'Go shopping'**
+  String get shoppingStartShopping;
+
+  /// Shopping list, shopping mode: tooltip of the plus button that opens the picker for a forgotten item
+  ///
+  /// In en, this message translates to:
+  /// **'Add something'**
+  String get shoppingAddInStore;
+
+  /// Shopping list in shopping mode with nothing on it
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing on the list. Switch to “Plan” to add items.'**
+  String get shoppingShopEmpty;
+
+  /// Screen reader label of the plan/shop mode control on the shopping list
+  ///
+  /// In en, this message translates to:
+  /// **'Mode'**
+  String get shoppingModeLabel;
+
+  /// Tooltip of the button in the shopping search field that clears the text and closes the keyboard
+  ///
+  /// In en, this message translates to:
+  /// **'Clear and close'**
+  String get shoppingSearchClear;
 }
 
 class _AppLocalizationsDelegate

@@ -25,6 +25,9 @@ Future<FakeShoppingRepository> openShopping(WidgetTester t) async {
   // The adult home opens on the calendar: go to the shopping tab first.
   await t.tap(find.text('Einkauf'));
   await t.pumpAndSettle();
+  // Ticking is what shopping mode is for (planning mode has no ticks).
+  await t.tap(find.byKey(const ValueKey('shopping-mode-shop')));
+  await t.pumpAndSettle();
   return shopping;
 }
 
