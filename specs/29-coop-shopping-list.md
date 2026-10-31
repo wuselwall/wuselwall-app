@@ -25,54 +25,15 @@ There is **no public API**, no developer portal and no partner programme for the
 list. What exists:
 
 - **One list backend, two front ends.** The *Coop Einkaufsliste* (Coop app, coop.ch) and
-  *WeNeed* (Coop's own stand-alone list app, built by Netcetera) share the same lists: the
-  sharing code of a list opens both as `coop.ch/<lang>/share-list/invitation/accept/<code>`
-  and as `app.weneed.ch?code=<code>`. The Coop list is the one passabene reads.
-- **WeNeed** is a Firebase app (Firebase Auth with e-mail, phone, Google and Apple sign-in
-  behind reCAPTCHA Enterprise; Firestore collections `v2_shoppingLists`,
-  `v2_shoppingListProducts`, `v2_customProducts`; Cloud Functions). Its security rules are
-  unknown, it needs an account of its own, and a list would have to be shared into it by
-  hand. Not pursued.
-- **coop.ch** is an SAP Commerce storefront behind DataDome bot protection. Logged in with
-  a Supercard ID, the list is driven by plain form posts carrying a `CSRFToken`, the active
-  list sits in the cookie `activeShoppingListId`, and the answers are JSON with rendered
-  HTML fragments. Verified 2026-10-31 by replaying a browser session: adding and removing
-  a free-text item worked from outside the browser as long as the session cookies and
-  browser-like headers were sent.
+  *WeNeed* (Coop's own stand-alone list app) share the same lists: one sharing code opens
+  a list in both. The Coop list is the one passabene reads.
+- **coop.ch's own list page** creates lists, adds free-text items and removes them with
+  ordinary requests from the signed-in page. Checked 2026-10-31 with a guardian's own
+  account: the same requests work from the page in a WebView. Without a session, the page
+  signs in again through the Supercard ID by itself while that session lives.
 
-| Call | Purpose | Verified |
-|---|---|---|
-| `POST /<lang>/shopping-list/overview/create` — `listName` | Create a list | yes |
-| `POST /<lang>/shopping-list/add-product/generic` — `productName`, optional `productId` | Add a free-text ("generic") item to the active list; `productId` picks an icon from Coop's generic catalogue (`1` Milk, `10` Bananas, …) | yes |
-| `GET /<lang>/shopping-list/searchsuggestion/result/genericproducts?name=` | Generic catalogue suggestions (icon ids) | yes |
-| `GET /<lang>/shopping-list/searchsuggestion/result/products?name=` | Real product suggestions | yes |
-| `POST /<lang>/shopping-list/remove-entry/<entryId>` | Remove an entry (the answer carries an undo placeholder) | yes |
-| `GET /<lang>/share-list/shareShoppinglistModal?listId=` | The share modal with the invitation text | yes |
-| `GET /<lang>/my-lists/my-shoppinglist` | The list panel: JSON with `panelHtml`, the active list's id in `data-shopping-list-id` | from the site's script |
-| `/<lang>/shopping-list/buying/modal/delete-all-products` | "Clear list" confirmation | seen, not called |
-| `/<lang>/shopping-list/generic/update-modal/<entryId>` | Edit a generic entry ("Refine": quantity, note) | seen |
-
-Read from the signed-in page and the site's public scripts:
-
-- **The CSRF token** is in an inline script on every page, `ACC.config.CSRFToken`, and is
-  the same for the whole session.
-- **The active list** is the cookie `activeShoppingListId`, set by the site's own script
-  (`js-cookie`, path `/`, not HttpOnly). The add call puts the item on the list it names.
-- **Create** answers with the new list's HTML in `shoppingListHtml`; the site takes the id
-  from its `data-shopping-list-id` and sets the cookie.
-- **Add** answers `success` and a snackbar whose "Refine" link ends in the new entry's id.
-  **Remove** answers a top-level `success: false` even when it worked; the entry's part
-  (`shoppingPanelEntry.success`) says whether it did.
-- **Signed in** shows as an element `[data-my-account-menu]` and a sign-out link; the
-  tracking data says `loginStatus: "registered SCID"`.
-- **Without a session**, the list page redirects to `login.supercard.ch/cas/oidc/authorize`
-  with `prompt=none`: while the Supercard ID session lives, the site signs in again
-  without a form.
-- coop.ch reads the lists from the same Firebase project as WeNeed, in the browser: one
-  backend, as the share codes said.
-
-The session is three cookies (`JSESSIONID`, `acceleratorSecureGUID`, `oauthTokens`) minted
-by the Supercard ID login on `login.supercard.ch` (OIDC) plus the DataDome token.
+The details (the calls, their answers, the session) are kept in the maintainers' private
+notes; the code that relies on them is all in one file, `coop_protocol.dart`.
 
 ## Decisions
 
@@ -148,15 +109,15 @@ change would hammer coop.ch and multiply the chance of being blocked.
   The web build and the wall display have no WebView and show no connector.
 - **The sheet** loads the list page. A page on another host (Supercard's sign-in, a
   captcha) is shown to the person; a coop.ch page is asked through the bridge whether it
-  is signed in; not signed in, the sheet opens `/<lang>/login` once and then waits for the
+  is signed in; not signed in, the sheet opens Coop's sign-in page once and then waits for the
   person. Signed in, a progress panel covers the page and the push runs. Only https
   navigations are allowed. The site's language follows the app (`de`, `fr`, `en`; Spanish
   reads it in English, Italian in Italian).
 - **State on the device** (`flutter_secure_storage`): the Coop list id, the language the
   session was made in, and the map *WuselWall item id → Coop entry id* for the entries the
   connector created. Signing out deletes all three.
-- **A push**, in order: (1) read the CSRF token and the signed-in marker from the page;
-  (2) set the stored list active and ask the panel which list is active: if it is not the
+- **A push**, in order: (1) read from the page whether it is signed in;
+  (2) make the stored list the active one and check it still exists: if it is not the
   stored one, that list was deleted on the Coop side and a new "WuselWall" list is created
   and set active; (3) remove remembered entries whose WuselWall item is gone, ticked or
   changed (a new count, name or note gives a new label); (4) for every open item without an
@@ -204,8 +165,8 @@ gets a line under third parties when this is built.
 
 ## Open questions
 
-- How long the WebView keeps the Supercard ID session (the silent `prompt=none` sign-in
-  covers the storefront session; iOS clears WebView cookies less predictably than Android).
+- How long the WebView keeps the Supercard ID session (the silent sign-in covers the
+  storefront session; iOS clears WebView cookies less predictably than Android).
 - Whether the signed-in markers are absent on every page without a session (checked on the
   list page only).
 - Whether DataDome treats Android's WebView user agent (it carries `wv`) like Chrome.
