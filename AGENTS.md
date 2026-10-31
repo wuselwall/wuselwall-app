@@ -49,6 +49,11 @@ navigation, the last mode kept on the device, the item sheet with a count steppe
 a seeded `snacks` category, and a category inferred from a new item's name by the server's word
 list (`app.shopping_category_for`, marked `category_auto` until a person changes it; the lists
 grow in issue #197).
+Local matching ([specs/29](specs/29-local-matching.md), ADR-021, 2026-10-31): one dictionary
+source in `dictionary/*.txt` (six tags incl. de-CH/de-AT) rendered by `scripts/dictionary.mjs`
+into `app/assets/matching/dictionary.json` (CI runs `check`) and, on demand, SQL `values`; the
+layered pure-Dart matcher and the shared quantity parser live in `app/lib/core/matching/`, the
+acceptance corpus in `dictionary/corpus.txt`; not yet wired into any screen or migration.
 MCP and AI assistant work is **on hold** (2026-10-24), removed from the app UI and active
 milestones. The backend, keys and proposal data are retained for compatibility; existing
 MCP clients are not disabled. Siri/automations, structured timetable text import and the

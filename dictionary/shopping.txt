@@ -1,0 +1,507 @@
+# WuselWall dictionary — shopping tiles (specs/29).
+#
+# One block per icon key (a picture in app/assets/emoji/shopping/, scripts/emoji-pictures.mjs).
+# The arrow names the seeded shopping categories the icon belongs to, most likely first (the
+# keys of app.shopping_seed_categories). A word line is a language tag and comma-separated
+# words in their natural spelling; the generator folds them (app.fold: case, umlauts, accents),
+# so write "Rüebli", never "ruebli". Tags: de, de-CH, de-AT, en, fr, es. A regional word is
+# matched for every family (a Swiss word typed in Vienna still finds its tile); the tag is for
+# people reading this file and for the regional review.
+#
+# Every (word, key) pair of app.catalog_icon_for (migration 20261015120000) is in here;
+# scripts/dictionary.test.mjs checks that nothing was lost.
+
+milk -> dairy
+  de: Milch, Haferdrink, Sojadrink, Mandeldrink, Vollmilch, Magermilch, Frischmilch, Hafermilch, Sojamilch, Mandelmilch, Buttermilch, Sahne, Schlagsahne, Kefir, Milchshake
+  de-CH: Rahm, Halbrahm, Vollrahm, Kaffeerahm
+  de-AT: Obers, Schlagobers, Rahm
+  en: milk, cream, kefir, oat drink, oat milk, almond milk, soy milk, whole milk, skimmed milk, buttermilk
+  fr: lait, crème fraîche, crème liquide, lait d'avoine, lait de soja
+  es: leche, nata, leche de avena, leche de soja, leche entera
+
+cheese -> dairy
+  de: Käse, Käsescheiben, Käseaufschnitt, Parmesan, Mozzarella, Gouda, Emmentaler, Feta, Cheddar, Frischkäse, Schnittkäse, Raclettekäse, Hüttenkäse, Camembert, Brie, Streukäse, Reibkäse, Bergkäse, Scheibletten, Schmelzkäse, Mascarpone, Ricotta, Halloumi, Burrata
+  de-CH: Gruyère, Appenzeller, Sbrinz, Tilsiter, Käsli, Fonduemischung
+  de-AT: Topfen, Bröseltopfen
+  en: cheese, parmesan, mozzarella, gouda, feta, cheddar, cream cheese, cottage cheese, brie, camembert, grated cheese, halloumi
+  fr: fromage, fromage râpé, gruyère, comté, emmental, chèvre, fromage frais, raclette
+  es: queso, queso rallado, queso fresco, manchego, queso de cabra
+
+butter -> dairy
+  de: Butter, Margarine, Bratbutter, Kräuterbutter
+  de-CH: Anke, Kochbutter
+  en: butter, margarine
+  fr: beurre, margarine
+  es: mantequilla, margarina
+
+egg -> dairy
+  de: Ei, Eier, Bio-Eier, Freilandeier
+  en: egg, eggs, free-range eggs
+  fr: œuf, œufs, oeuf, oeufs
+  es: huevo, huevos
+
+bowl -> dairy, pantry
+  de: Joghurt, Jogurt, Joghurts, Naturjoghurt, Fruchtjoghurt, Quark, Skyr, Müsli, Cornflakes, Haferflocken, Pudding, Dessert, Grießbrei, Griess, Milchreis
+  de-CH: Jogurt, Birchermüesli, Müesli
+  de-AT: Jogurt, Topfendessert
+  en: yoghurt, yogurt, cereal, cereals, porridge, oats, pudding, granola, muesli
+  fr: yaourt, yaourts, yogourt, céréales, flocons d'avoine, fromage blanc, petit-suisse, compote
+  es: yogur, yogures, cereales, avena, natillas, flan
+
+bread -> bakery
+  de: Brot, Toast, Toastbrot, Brötchen, Semmeln, Semmel, Vollkornbrot, Weißbrot, Schwarzbrot, Knäckebrot, Fladenbrot, Pita, Zopf, Buns, Burgerbrötchen, Zwieback
+  de-CH: Weggli, Bürli, Ruchbrot, Zopf, Semmeli, Mütschli, Pariserbrot
+  de-AT: Semmel, Semmeln, Kornspitz, Weckerl, Striezel, Laugenstangerl
+  en: bread, loaf, toast, rolls, buns, bread rolls, pitta, pita, sliced bread, wholemeal bread, bagels
+  fr: pain, pain complet, pain de mie, petits pains, brioche, pain de campagne
+  es: pan, pan de molde, panecillos, pan integral, bollos
+
+baguette -> bakery
+  de: Baguette, Baguettes
+  en: baguette, baguettes
+  fr: baguette, baguettes
+  es: barra de pan, baguette
+
+pretzel -> bakery
+  de: Brezel, Brezeln, Laugenbrezel, Laugenstange, Laugenbrötchen
+  de-CH: Bretzel, Silserli, Laugenbrötli
+  de-AT: Brezn, Brezen
+  en: pretzel, pretzels
+  fr: bretzel, bretzels
+  es: pretzel
+
+croissant -> bakery
+  de: Croissant, Croissants, Hörnchen, Schokocroissant, Buttercroissant
+  de-CH: Gipfeli, Gipfel, Schoggigipfeli, Nussgipfel
+  de-AT: Kipferl, Kipferln
+  en: croissant, croissants, pastry, pastries
+  fr: croissant, croissants, pain au chocolat, viennoiseries, chocolatine
+  es: croissant, croissants, cruasán, cruasanes, bollería
+
+apple -> produce
+  de: Apfel, Äpfel, Bio-Äpfel
+  en: apple, apples
+  fr: pomme
+  es: manzana, manzanas
+
+pear -> produce
+  de: Birne, Birnen
+  en: pear, pears
+  fr: poire, poires
+  es: pera, peras
+
+banana -> produce
+  de: Banane, Bananen
+  en: banana, bananas
+  fr: banane, bananes
+  es: plátano, plátanos, banana, bananas
+
+orange -> produce
+  de: Orange, Orangen, Mandarine, Mandarinen, Clementine, Clementinen, Apfelsine, Apfelsinen
+  en: orange, oranges, mandarin, mandarins, clementine, clementines, satsumas, tangerines
+  fr: orange, oranges, mandarine, mandarines, clémentine, clémentines
+  es: naranja, naranjas, mandarina, mandarinas, clementina, clementinas
+
+lemon -> produce
+  de: Zitrone, Zitronen, Limette, Limetten
+  en: lemon, lemons, lime, limes
+  fr: citron, citrons, citron vert, citrons verts
+  es: limón, limones, lima, limas
+
+grapes -> produce
+  de: Trauben, Weintrauben, Traube
+  en: grapes, grape
+  fr: raisin, raisins
+  es: uvas, uva
+
+strawberry -> produce
+  de: Erdbeere, Erdbeeren, Beeren, Himbeeren, Heidelbeeren, Blaubeeren, Brombeeren, Johannisbeeren, Kirschen, Pflaumen, Zwetschgen, Aprikosen, Pfirsiche, Pfirsich, Nektarinen, Melone, Wassermelone, Kiwi, Kiwis, Mango, Ananas, Obst, Früchte
+  de-CH: Zwetschgen, Früchte, Pfirsiche
+  de-AT: Marillen, Marille, Ribisel, Weichseln, Zwetschken, Zwetschke
+  en: strawberry, strawberries, berries, raspberries, blueberries, blackberries, cherries, plums, apricots, peaches, nectarines, melon, watermelon, kiwi, kiwis, mango, pineapple, fruit
+  fr: fraise, fraises, framboises, myrtilles, cerises, prunes, abricots, pêches, melon, pastèque, kiwi, kiwis, mangue, ananas, fruits
+  es: fresa, fresas, frambuesas, arándanos, cerezas, ciruelas, albaricoques, melocotón, melocotones, melón, sandía, kiwi, kiwis, mango, piña, fruta
+
+tomato -> produce
+  de: Tomate, Tomaten, Cherrytomaten, Rispentomaten, Cocktailtomaten
+  de-AT: Paradeiser, Paradeiser
+  en: tomato, tomatoes, cherry tomatoes
+  fr: tomate, tomates, tomates cerises
+  es: tomate, tomates, tomates cherry
+
+cucumber -> produce
+  de: Gurke, Gurken, Salatgurke, Zucchini, Zucchetti, Aubergine, Auberginen
+  de-CH: Zucchetti
+  de-AT: Melanzani, Zucchini
+  en: cucumber, cucumbers, courgette, courgettes, zucchini, aubergine, aubergines, eggplant
+  fr: concombre, concombres, courgette, courgettes, aubergine, aubergines
+  es: pepino, pepinos, calabacín, calabacines, berenjena, berenjenas
+
+carrot -> produce
+  de: Karotte, Karotten, Möhre, Möhren, Mohrrübe, Mohrrüben, Wurzeln
+  de-CH: Rüebli, Ruebli
+  de-AT: Karotten, Gelbe Rüben
+  en: carrot, carrots
+  fr: carotte, carottes
+  es: zanahoria, zanahorias
+
+potato -> produce
+  de: Kartoffel, Kartoffeln, Süßkartoffel, Süßkartoffeln, Frühkartoffeln
+  de-CH: Härdöpfel, Herdäpfel
+  de-AT: Erdäpfel, Erdapfel, Heurige
+  en: potato, potatoes, sweet potato, sweet potatoes, spuds
+  fr: pomme de terre, pommes de terre, patates, patate douce
+  es: patata, patatas, papa, papas, boniato, boniatos
+
+onion -> produce
+  de: Zwiebel, Zwiebeln, Schalotte, Schalotten, Lauch, Frühlingszwiebeln, Rote Zwiebeln
+  de-CH: Zibele, Zibelen
+  en: onion, onions, shallot, shallots, leek, leeks, spring onions, scallions
+  fr: oignon, oignons, échalote, échalotes, poireau, poireaux
+  es: cebolla, cebollas, chalota, puerro, puerros, cebolleta
+
+garlic -> produce
+  de: Knoblauch, Knoblauchzehe, Knoblauchzehen, Ingwer
+  de-CH: Knobli
+  en: garlic, garlic cloves, ginger
+  fr: ail, gousse d'ail, gingembre
+  es: ajo, ajos, jengibre
+
+bell_pepper -> produce
+  de: Paprika, Paprikaschote, Paprikaschoten, Peperoni
+  de-CH: Peperoni
+  en: bell pepper, bell peppers, peppers, capsicum
+  fr: poivron, poivrons
+  es: pimiento, pimientos
+
+chili -> produce
+  de: Chili, Chilis, Chilischote, Chilischoten, Peperoncini, Jalapeños
+  en: chili, chilli, chilis, chillies, chilies, jalapeños
+  fr: piment, piments
+  es: guindilla, guindillas, chile, chiles
+
+broccoli -> produce
+  de: Brokkoli, Broccoli, Blumenkohl, Kohl, Rotkohl, Weißkohl, Wirsing, Kohlrabi, Rosenkohl, Fenchel, Sellerie, Spargel, Artischocken, Rote Bete, Kürbis
+  de-CH: Blumenkohl, Randen, Chabis
+  de-AT: Karfiol, Kohlsprossen, Kraut, Rotkraut, Kren
+  en: broccoli, cauliflower, cabbage, red cabbage, kale, brussels sprouts, fennel, celery, asparagus, artichokes, beetroot, pumpkin, squash
+  fr: brocoli, brocolis, chou-fleur, chou, chou rouge, chou kale, choux de bruxelles, fenouil, céleri, asperges, artichauts, betterave, courge, potiron
+  es: brócoli, coliflor, repollo, col, col lombarda, coles de bruselas, hinojo, apio, espárragos, alcachofas, remolacha, calabaza
+
+lettuce -> produce
+  de: Salat, Kopfsalat, Eisbergsalat, Blattsalat, Feldsalat, Rucola, Spinat, Mangold, Kräuter, Basilikum, Petersilie, Schnittlauch, Dill, Koriander, Gemüse
+  de-CH: Nüsslisalat, Nüssler, Chrut, Gmües
+  de-AT: Vogerlsalat, Häuptelsalat
+  en: lettuce, salad, iceberg lettuce, rocket, arugula, spinach, chard, herbs, basil, parsley, chives, dill, coriander, cilantro, vegetables, veg
+  fr: salade, laitue, mâche, roquette, épinards, herbes, basilic, persil, ciboulette, coriandre, légumes
+  es: lechuga, ensalada, rúcula, espinacas, acelgas, hierbas, albahaca, perejil, cilantro, verduras, verdura
+
+mushroom -> produce
+  de: Pilze, Pilz, Champignons, Champignon, Steinpilze, Pfifferlinge
+  de-AT: Schwammerl, Eierschwammerl
+  en: mushroom, mushrooms, chanterelles
+  fr: champignon, champignons, cèpes
+  es: champiñón, champiñones, setas, hongos
+
+avocado -> produce
+  de: Avocado, Avocados
+  en: avocado, avocados
+  fr: avocat, avocats
+  es: aguacate, aguacates
+
+corn -> produce
+  de: Mais, Zuckermais, Maiskolben, Popcornmais
+  en: corn, sweetcorn, corn on the cob
+  fr: maïs
+  es: maíz, elote
+
+peas -> produce
+  de: Erbsen, Erbse, Zuckerschoten, Kichererbsen, Linsen
+  en: peas, pea, sugar snaps, chickpeas, lentils
+  fr: petits pois, pois chiches, lentilles
+  es: guisantes, garbanzos, lentejas
+
+beans -> produce
+  de: Bohnen, Bohne, Grüne Bohnen, Kidneybohnen, Weiße Bohnen, Sojabohnen, Edamame, Tofu
+  de-AT: Fisolen
+  en: beans, bean, green beans, kidney beans, baked beans, tofu, edamame
+  fr: haricots, haricots verts, haricots rouges, tofu
+  es: judías, judías verdes, alubias, frijoles, tofu
+
+pasta -> pantry
+  de: Nudeln, Pasta, Spaghetti, Penne, Fusilli, Spätzle, Lasagne, Lasagneplatten, Tagliatelle, Tortellini, Ravioli, Gnocchi, Makkaroni, Hörnli, Bandnudeln, Vollkornnudeln, Couscous, Bulgur, Quinoa, Polenta
+  de-CH: Hörnli, Teigwaren, Älplermagronen
+  de-AT: Fleckerl, Nockerl
+  en: pasta, noodles, spaghetti, penne, fusilli, lasagne, lasagna, tagliatelle, tortellini, ravioli, gnocchi, macaroni, couscous, bulgur, quinoa, polenta
+  fr: pâtes, nouilles, spaghettis, penne, lasagnes, tagliatelles, raviolis, gnocchis, coquillettes, semoule, couscous, boulgour, quinoa
+  es: pasta, fideos, espaguetis, macarrones, lasaña, tallarines, raviolis, ñoquis, cuscús, quinoa
+
+rice -> pantry
+  de: Reis, Basmatireis, Risottoreis, Vollkornreis, Jasminreis, Sushireis
+  en: rice, basmati rice, jasmine rice, brown rice, risotto rice, rice cakes
+  fr: riz, riz basmati, riz complet, galettes de riz
+  es: arroz, arroz basmati, arroz integral, tortitas de arroz
+
+salt -> pantry
+  de: Salz, Pfeffer, Gewürze, Gewürz, Paprikapulver, Curry, Currypulver, Zimt, Muskat, Kümmel, Oregano, Brühe, Gemüsebrühe, Bouillon, Suppenwürfel, Senf, Mayonnaise, Mayo, Essig, Balsamico, Sojasauce, Zucker, Mehl, Backpulver, Hefe, Vanillezucker, Puderzucker, Stärke, Speisestärke, Paniermehl, Semmelbrösel
+  de-CH: Aromat, Bouillon, Maizena, Paniermehl, Streuwürze
+  de-AT: Staubzucker, Germ, Brösel, Vanillinzucker
+  en: salt, pepper, spices, spice, seasoning, curry powder, cinnamon, nutmeg, cumin, oregano, stock, stock cubes, broth, mustard, mayonnaise, mayo, vinegar, soy sauce, sugar, flour, baking powder, yeast, icing sugar, cornflour, breadcrumbs
+  fr: sel, poivre, épices, cannelle, curry, bouillon, cube de bouillon, moutarde, mayonnaise, vinaigre, sauce soja, sucre, farine, levure, sucre glace, chapelure, maïzena
+  es: sal, pimienta, especias, canela, curry, caldo, pastillas de caldo, mostaza, mayonesa, vinagre, salsa de soja, azúcar, harina, levadura, pan rallado
+
+honey -> pantry
+  de: Honig, Erdnussmus, Mandelmus, Nussmus, Marmelade, Konfitüre, Gelee, Nutella, Nussnougatcreme, Schokocreme, Ahornsirup, Erdnussbutter, Aufstrich, Brotaufstrich
+  de-CH: Gonfi, Konfi, Ovomaltine
+  de-AT: Marmelade, Powidl
+  en: honey, jam, marmalade, jelly, spread, chocolate spread, syrup, maple syrup, peanut butter
+  fr: miel, confiture, pâte à tartiner, sirop d'érable, beurre de cacahuète
+  es: miel, mermelada, crema de cacao, sirope, crema de cacahuete
+
+oil -> pantry
+  de: Öl, Olivenöl, Rapsöl, Sonnenblumenöl, Sesamöl, Oliven, Kokosöl, Pesto, Tahini
+  en: oil, olive oil, rapeseed oil, sunflower oil, sesame oil, olives, coconut oil, pesto, tahini
+  fr: huile, huile d'olive, huile de colza, huile de tournesol, olives, pesto
+  es: aceite, aceite de oliva, aceite de girasol, aceitunas, pesto
+
+nuts -> pantry, snacks
+  de: Nüsse, Nuss, Mandeln, Erdnüsse, Walnüsse, Haselnüsse, Cashews, Cashewkerne, Pistazien, Studentenfutter, Rosinen, Datteln, Trockenfrüchte, Dörrobst, Sonnenblumenkerne, Kürbiskerne, Leinsamen, Chiasamen, Sesam
+  de-CH: Baumnüsse, Nüssli
+  en: nuts, almonds, peanuts, walnuts, hazelnuts, cashews, pistachios, trail mix, dates, dried fruit, sunflower seeds, pumpkin seeds, chia seeds, sesame
+  fr: noix, amandes, cacahuètes, noisettes, noix de cajou, pistaches, raisins secs, dattes, fruits secs, graines de tournesol, graines de courge
+  es: nueces, frutos secos, almendras, cacahuetes, avellanas, anacardos, pistachos, pasas, dátiles, pipas, semillas de chía
+
+tin -> pantry
+  de: Konserven, Dose, Dosen, Dosentomaten, Tomatenmark, Passata, Passierte Tomaten, Ketchup, Mais aus der Dose, Thunfisch in der Dose, Kokosmilch, Bohnen aus der Dose, Ravioli aus der Dose, Suppe, Fertigsuppe, Tomatensauce, Pastasauce, Sauce, Soße
+  de-AT: Paradeismark, Sugo
+  en: tin, tins, canned, can, cans, canned tomatoes, tinned tomatoes, chopped tomatoes, tomato purée, tomato paste, passata, ketchup, coconut milk, soup, pasta sauce, sauce
+  fr: conserve, conserves, boîte de conserve, tomates pelées, tomates concassées, concentré de tomate, coulis de tomate, ketchup, lait de coco, soupe, sauce tomate
+  es: lata, latas, conserva, conservas, tomate frito, tomate triturado, concentrado de tomate, kétchup, leche de coco, sopa, salsa de tomate
+
+chocolate -> snacks, pantry
+  de: Schokolade, Schoko, Schokoriegel, Riegel, Müsliriegel, Kakao, Trinkschokolade, Pralinen, Nougat
+  de-CH: Schoggi, Schoggistängeli, Branchli, Ovo
+  en: chocolate, chocolate bar, bar, bars, cereal bar, cocoa, hot chocolate, pralines
+  fr: chocolat, tablette de chocolat, barre chocolatée, barres de céréales, cacao, chocolat chaud
+  es: chocolate, chocolatina, barritas, barrita de cereales, cacao, bombones
+
+candy -> snacks, pantry
+  de: Süßigkeiten, Süßes, Bonbons, Gummibärchen, Gummibären, Lutscher, Kaugummi, Lakritz, Fruchtgummi, Naschzeug, Naschi, Marshmallows
+  de-CH: Zältli, Täfeli, Süssigkeiten, Süsses, Schleckzeug, Gummibärli
+  de-AT: Zuckerl, Zuckerln, Naschereien
+  en: sweets, candy, candies, gummy bears, lollipops, lollies, chewing gum, liquorice, marshmallows
+  fr: bonbons, sucreries, friandises, chewing-gum, réglisse, oursons, sucettes
+  es: caramelos, golosinas, chuches, gominolas, chicle, regaliz, piruletas
+
+cookie -> snacks, pantry
+  de: Kekse, Keks, Plätzchen, Cookies, Biskuits, Butterkekse, Waffeln, Lebkuchen, Cracker, Salzstangen, Brezeln zum Knabbern, Popcorn, Reiswaffeln
+  de-CH: Guetzli, Güezi, Biberli, Willisauer Ringli, Petit Beurre
+  de-AT: Kekse, Keks, Soletti, Vanillekipferl
+  en: cookies, cookie, biscuits, biscuit, crackers, cracker, pretzel sticks, popcorn, wafers, digestives
+  fr: biscuits, biscuit, gâteaux secs, cookies, crackers, petit-beurre, gaufrettes, pop-corn
+  es: galletas, galleta, cookies, crackers, palomitas, barquillos
+
+cake -> snacks, bakery
+  de: Kuchen, Torte, Muffins, Muffin, Donuts, Cupcakes, Zopfkuchen, Gugelhupf, Apfelkuchen, Käsekuchen, Backmischung, Kuchenteig, Blätterteig, Pizzateig, Tortenboden
+  de-CH: Cake, Cakes, Rüeblitorte, Schenkeli
+  de-AT: Torte, Strudel, Apfelstrudel, Topfenstrudel, Kuchen, Golatsche
+  en: cake, cakes, muffins, muffin, doughnuts, donuts, cupcakes, cheesecake, brownies, pastry dough, puff pastry, pizza dough, cake mix
+  fr: gâteau, gâteaux, tarte, tartes, muffins, madeleines, pâte feuilletée, pâte brisée, pâte à pizza, préparation pour gâteau
+  es: tarta, tartas, pastel, pasteles, bizcocho, magdalenas, muffins, donuts, masa de hojaldre, masa de pizza
+
+ice_cream -> frozen
+  de: Eis, Eiscreme, Speiseeis, Vanilleeis, Eis am Stiel, Sorbet, Eiswaffeln, Fischstäbchen tiefgekühlt, Tiefkühlgemüse, Tiefkühlbeeren, Tiefkühl, TK
+  de-CH: Glace, Glacé, Cornet, Rahmglace
+  en: ice cream, ice-cream, ice lollies, popsicles, sorbet, frozen vegetables, frozen berries, frozen
+  fr: glace, glaces, crème glacée, sorbet, bâtonnets glacés, surgelés, légumes surgelés
+  es: helado, helados, polos, sorbete, congelados, verduras congeladas
+
+pizza -> frozen
+  de: Pizza, Pizzen, Tiefkühlpizza, Flammkuchen, Fertigpizza
+  en: pizza, pizzas, frozen pizza
+  fr: pizza, pizzas, pizza surgelée
+  es: pizza, pizzas, pizza congelada
+
+fries -> frozen, snacks
+  de: Pommes, Pommes frites, Fritten, Chips, Kartoffelchips, Kroketten, Rösti, Wedges, Nachos, Tortillachips
+  de-CH: Pommes, Zwischenverpflegung, Zwipf
+  en: fries, french fries, chips, crisps, potato chips, croquettes, wedges, nachos, tortilla chips
+  fr: frites, chips, croquettes, pommes noisettes, nachos
+  es: patatas fritas, papas fritas, croquetas, nachos
+
+chicken -> meat_fish
+  de: Hähnchen, Hähnchenbrust, Hühnchen, Huhn, Hühnerbrust, Hähnchenschenkel, Geflügel, Pute, Putenbrust, Truthahn, Ente, Chicken Nuggets, Nuggets
+  de-CH: Poulet, Pouletschnitzel, Pouletbrust, Pouletbrüstli, Pouletschenkel, Güggeli, Trute
+  de-AT: Hendl, Huhn, Hühnerbrust, Backhendl
+  en: chicken, chicken breast, turkey mince, chicken mince, chicken thighs, chicken wings, poultry, turkey, turkey breast, duck, chicken nuggets, nuggets
+  fr: poulet, blanc de poulet, escalope de poulet, cuisses de poulet, volaille, dinde, escalope de dinde, canard, nuggets
+  es: pollo, pechuga de pollo, muslos de pollo, pavo, pechuga de pavo, pato, nuggets
+
+meat -> meat_fish
+  de: Fleisch, Hackfleisch, Hack, Gehacktes, Rinderhack, Steak, Rindersteak, Schnitzel, Braten, Rindfleisch, Schweinefleisch, Lamm, Lammfleisch, Kalbfleisch, Gulasch, Geschnetzeltes, Kotelett, Koteletts, Rouladen, Frikadellen, Buletten, Hackbällchen, Cevapcici, Döner, Kebab, Grillfleisch, Filet, Rinderfilet, Schweinefilet
+  de-CH: Hackfleisch, Plätzli, Geschnetzeltes, Voressen, Hamburger
+  de-AT: Faschiertes, Faschierte Laibchen, Schnitzelfleisch, Rindsgulasch, Lungenbraten, Karree, Beiried
+  en: meat, mince, minced beef, ground beef, beef, steak, pork, lamb, veal, schnitzel, roast, chops, meatballs, burgers, burger patties, fillet, kebab
+  fr: viande, viande hachée, steak haché, bœuf, boeuf, porc, agneau, veau, escalope, rôti, côtelettes, boulettes, filet, steak
+  es: carne, carne picada, ternera, cerdo, cordero, filete, filetes, chuletas, albóndigas, solomillo, hamburguesas, escalope
+
+sausage -> meat_fish
+  de: Wurst, Würstchen, Würste, Bratwurst, Bratwürste, Wiener, Wienerle, Salami, Aufschnitt, Wurstaufschnitt, Leberwurst, Mortadella, Chorizo, Fleischwurst, Lyoner, Weißwurst, Currywurst, Käsewurst, Bockwurst
+  de-CH: Cervelat, Cervelats, Wienerli, Schüblig, Landjäger, Bratwurst, Aufschnitt
+  de-AT: Frankfurter, Käsekrainer, Krainer, Extrawurst, Debreziner, Knacker, Wurstsemmel
+  en: sausage, sausages, bratwurst, hot dogs, frankfurters, salami, chorizo, cold cuts, deli meat, pepperoni
+  fr: saucisse, saucisses, saucisson, chipolatas, merguez, knacks, charcuterie, chorizo, mortadelle
+  es: salchicha, salchichas, chorizo, salchichón, embutido, embutidos, fuet, longaniza, mortadela
+
+bacon -> meat_fish
+  de: Speck, Bacon, Frühstücksspeck, Schinken, Kochschinken, Rohschinken, Schinkenwürfel, Speckwürfel, Prosciutto, Serrano
+  de-CH: Rohschinken, Bündnerfleisch, Hinterschinken, Speckwürfeli
+  de-AT: Speck, Schinken, Beinschinken, Karreespeck
+  en: bacon, ham, cooked ham, prosciutto, parma ham, pancetta, gammon
+  fr: lard, lardons, bacon, jambon, jambon blanc, jambon cru, jambon de parme
+  es: bacon, beicon, panceta, jamón, jamón serrano, jamón york, jamón cocido
+
+fish -> meat_fish
+  de: Fisch, Lachs, Lachsfilet, Räucherlachs, Thunfisch, Forelle, Kabeljau, Seelachs, Zander, Fischstäbchen, Fischfilet, Garnelen, Shrimps, Crevetten, Muscheln, Meeresfrüchte, Sardinen, Hering, Matjes, Dorade, Pangasius
+  de-CH: Fischstäbli, Crevetten, Egli, Felchen, Forellenfilet
+  de-AT: Fisch, Saibling, Zander
+  en: fish, salmon, smoked salmon, tuna, trout, cod, haddock, fish fingers, fish sticks, fish fillet, prawns, shrimp, shrimps, mussels, seafood, sardines, herring, sea bass
+  fr: poisson, saumon, filet de saumon, saumon fumé, thon, truite, cabillaud, colin, bâtonnets de poisson, filet de poisson, crevettes, moules, fruits de mer, sardines, dorade, merlu
+  es: pescado, salmón, salmón ahumado, atún, trucha, bacalao, merluza, varitas de pescado, gambas, langostinos, mejillones, marisco, sardinas, dorada, lubina, boquerones
+
+coffee -> drinks
+  de: Kaffee, Espresso, Kaffeebohnen, Kaffeepulver, Filterkaffee, Kaffeekapseln, Kapseln, Kaffeepads, Instantkaffee, Cappuccino
+  de-CH: Kafi, Café crème
+  en: coffee, espresso, coffee beans, ground coffee, coffee pods, coffee capsules, instant coffee, decaf
+  fr: café, café moulu, café en grains, capsules de café, dosettes, café soluble, expresso
+  es: café, café molido, café en grano, cápsulas de café, café soluble
+
+tea -> drinks
+  de: Tee, Rooibostee, Chai, Teebeutel, Schwarztee, Grüntee, Kräutertee, Früchtetee, Kamillentee, Pfefferminztee, Fencheltee, Matcha, Rooibos
+  en: tea, tea bags, black tea, green tea, herbal tea, fruit tea, chamomile tea, peppermint tea, iced tea, matcha, rooibos
+  fr: thé, sachets de thé, thé noir, thé vert, tisane, infusion, camomille, thé glacé
+  es: té, bolsitas de té, té negro, té verde, infusión, infusiones, manzanilla, té helado
+
+juice -> drinks
+  de: Saft, Orangensaft, Apfelsaft, Multivitaminsaft, Traubensaft, Fruchtsaft, Smoothie, Smoothies, Nektar, Schorle, Apfelschorle
+  de-CH: Süssmost, Most, Orangenjus
+  de-AT: Most, Apfelsaft gespritzt
+  en: juice, orange juice, apple juice, fruit juice, smoothie, smoothies
+  fr: jus, jus d'orange, jus de pomme, jus de fruits, smoothie, nectar
+  es: zumo, zumos, jugo, zumo de naranja, zumo de manzana, batido, batidos
+
+water -> drinks
+  de: Wasser, Mineralwasser, Sprudel, Sprudelwasser, Stilles Wasser, Tafelwasser, Sodawasser
+  de-CH: Mineral, Mineralwasser, Hahnenwasser
+  de-AT: Mineral, Sodawasser
+  en: water, mineral water, sparkling water, still water, soda water, tonic water
+  fr: eau, eau minérale, eau gazeuse, eau pétillante, eau plate
+  es: agua, agua mineral, agua con gas, agua sin gas
+
+soda -> drinks
+  de: Limo, Limonade, Cola, Fanta, Sprite, Zitronenlimonade, Eistee, Energydrink, Energy Drink, Softdrink, Softdrinks, Spezi, Rivella, Sirup, Sirup zum Verdünnen
+  de-CH: Rivella, Sirup, Citro, Süssgetränke
+  de-AT: Almdudler, Limonade, Kracherl, Himbeerkracherl
+  en: soda, lemonade, cola, coke, pop, fizzy drinks, soft drinks, energy drink, tonic, ginger ale, cordial
+  fr: limonade, soda, sodas, coca, boissons gazeuses, boisson énergisante, sirop
+  es: refresco, refrescos, gaseosa, limonada, cola, bebidas, bebida energética
+
+beer -> drinks
+  de: Bier, Biere, Weizenbier, Radler, Pils, Alkoholfreies Bier, Kasten Bier, Sixpack
+  de-CH: Bier, Panaché, Stange
+  en: beer, beers, lager, ale, cider, radler, non-alcoholic beer
+  fr: bière, bières, cidre, panaché
+  es: cerveza, cervezas, cerveza sin alcohol, sidra, clara
+
+wine -> drinks
+  de: Wein, Rotwein, Weißwein, Rosé, Sekt, Prosecco, Champagner, Schnaps, Likör, Gin, Wodka, Rum, Whisky, Aperol, Spritz
+  de-CH: Weisswein, Chardonnay, Fendant
+  de-AT: Weißwein, Grüner Veltliner, Spritzer, Sturm, Zweigelt
+  en: wine, red wine, white wine, rosé, sparkling wine, prosecco, champagne, cava, gin, vodka, rum, whisky, whiskey, liqueur
+  fr: vin, vin rouge, vin blanc, rosé, champagne, crémant, mousseux, gin, vodka, rhum, whisky, apéritif
+  es: vino, vino tinto, vino blanco, rosado, cava, champán, ginebra, vodka, ron, whisky, licor
+
+toilet_paper -> household, care, cleaning
+  de: Toilettenpapier, Klopapier, WC-Papier, Klorollen, Küchenrolle, Küchenpapier, Haushaltsrolle, Haushaltspapier, Taschentücher, Papiertaschentücher, Tempo, Servietten, Feuchttücher, Feuchtes Toilettenpapier, Kosmetiktücher
+  de-CH: WC-Papier, Haushaltpapier, Nastücher, Papiernastücher
+  de-AT: Klopapier, Küchenrolle, Taschentücher
+  en: toilet paper, toilet roll, toilet rolls, loo roll, kitchen roll, kitchen towel, paper towels, tissues, napkins, serviettes, wet wipes, wipes, moist toilet tissue
+  fr: papier toilette, papier hygiénique, rouleaux de papier toilette, essuie-tout, sopalin, mouchoirs, mouchoirs en papier, serviettes en papier, lingettes
+  es: papel higiénico, papel de baño, papel de cocina, rollo de cocina, pañuelos, pañuelos de papel, servilletas, toallitas, toallitas húmedas
+
+soap -> care, household
+  de: Seife, Handseife, Flüssigseife, Seifenstück, Kernseife, Desinfektionsmittel, Handdesinfektion
+  en: soap, hand soap, liquid soap, bar of soap, hand sanitiser, hand sanitizer
+  fr: savon, savon liquide, savon pour les mains, gel hydroalcoolique
+  es: jabón, jabón de manos, jabón líquido, gel desinfectante
+
+toothbrush -> care, household
+  de: Zahnbürste, Zahnbürsten, Zahnpasta, Zahncreme, Zahnseide, Mundspülung, Zahnbürstenköpfe, Kinderzahnpasta, Zahnstocher, Interdentalbürsten
+  de-CH: Zahnpasta, Zahnbürste, Zahnbürstli, Zahnpaste
+  en: toothbrush, toothbrushes, toothpaste, dental floss, floss, mouthwash, brush heads, kids toothpaste
+  fr: brosse à dents, brosses à dents, dentifrice, fil dentaire, bain de bouche, brossettes
+  es: cepillo de dientes, cepillos de dientes, pasta de dientes, dentífrico, hilo dental, enjuague bucal
+
+lotion -> care, household
+  de: Shampoo, Duschgel, Duschbad, Sonnencreme, Sonnenmilch, Handcreme, Bodylotion, Körperlotion, Gesichtscreme, Creme, Lotion, Conditioner, Spülung, Haarspülung, Deo, Deodorant, Rasierer, Rasierschaum, Rasierklingen, Rasiergel, Wattestäbchen, Wattepads, Watte, Haarspray, Haargel, Lippenpflege, Labello, Tampons, Binden, Slipeinlagen, Nagellack, Nagellackentferner, Nagelfeile, Make-up, Mascara, Wimperntusche, Abschminktücher, Pflegeprodukte, Kosmetik, Hygiene
+  de-CH: Shampoo, Douchegel, Sonnencrème, Handcrème, Crème, Deo
+  de-AT: Duschgel, Sonnencreme, Haarshampoo
+  en: shampoo, shower gel, body wash, sun cream, sunscreen, sunblock, hand cream, body lotion, lotion, moisturiser, moisturizer, face cream, conditioner, deodorant, deo, razor, razors, razor blades, shaving foam, shaving gel, cotton buds, cotton pads, cotton wool, hairspray, hair gel, lip balm, tampons, sanitary pads, pads, panty liners, nail polish, nail polish remover, make-up, makeup, mascara, toiletries, cosmetics
+  fr: shampoing, shampooing, gel douche, crème solaire, crème pour les mains, lait corporel, crème hydratante, crème, après-shampoing, déodorant, déo, rasoir, rasoirs, lames de rasoir, mousse à raser, cotons-tiges, cotons, disques de coton, laque, gel coiffant, baume à lèvres, tampons, serviettes hygiéniques, protège-slips, vernis à ongles, dissolvant, maquillage, mascara, cosmétiques, produits d'hygiène
+  es: champú, gel de ducha, gel de baño, crema solar, protector solar, crema de manos, loción corporal, crema hidratante, crema, acondicionador, desodorante, cuchillas de afeitar, maquinilla de afeitar, espuma de afeitar, bastoncillos, algodón, discos de algodón, laca, gomina, cacao de labios, bálsamo labial, tampones, compresas, salvaslips, esmalte de uñas, quitaesmalte, maquillaje, rímel, cosméticos
+
+sponge -> household, cleaning
+  de: Schwamm, Schwämme, Spülschwamm, Spülschwämme, Spülmittel, Geschirrspülmittel, Putzmittel, Reiniger, Allzweckreiniger, Badreiniger, WC-Reiniger, Glasreiniger, Küchenreiniger, Spülmaschinentabs, Spülmaschinentabletten, Geschirrspültabs, Geschirrspülertabs, Spülmaschinensalz, Klarspüler, Waschmittel, Waschpulver, Flüssigwaschmittel, Weichspüler, Fleckenentferner, Entkalker, Scheuermilch, Putzlappen, Putztuch, Mikrofasertuch, Spültuch, Spüllappen, Lappen, Küchentücher, Bürste, Spülbürste, Handschuhe, Gummihandschuhe, Scheuerschwamm, Topfreiniger, Besen, Wischmopp, Mopp, Staubsaugerbeutel
+  de-CH: Abwaschmittel, Putzmittel, Abwaschlappen, Putzlumpen, Lumpen, Schwämmli, Abwaschbürste
+  de-AT: Abwaschmittel, Spülmittel, Geschirrspülmittel, Putzfetzen, Fetzen, Abwaschschwamm, Waschmittel
+  en: sponge, sponges, washing-up liquid, dish soap, dishwashing liquid, dishwasher tablets, dishwasher tabs, dishwasher salt, rinse aid, cleaner, all-purpose cleaner, multi-surface cleaner, bathroom cleaner, toilet cleaner, glass cleaner, kitchen cleaner, cleaning products, laundry detergent, washing powder, laundry liquid, detergent, fabric softener, stain remover, descaler, limescale remover, cloths, cleaning cloths, microfibre cloth, dish cloth, tea towels, scourer, scouring pad, brush, dish brush, rubber gloves, gloves, broom, mop, vacuum bags
+  fr: éponge, éponges, liquide vaisselle, produit vaisselle, tablettes lave-vaisselle, pastilles lave-vaisselle, sel lave-vaisselle, liquide de rinçage, nettoyant, nettoyant multi-usage, nettoyant salle de bain, nettoyant wc, nettoyant vitres, produits ménagers, lessive, lessive liquide, adoucissant, détachant, anticalcaire, chiffons, chiffon microfibre, lavette, torchons, grattoir, brosse, gants, gants ménagers, balai, serpillière
+  es: esponja, esponjas, estropajo, estropajos, lavavajillas, jabón lavavajillas, pastillas lavavajillas, sal lavavajillas, abrillantador, limpiador, limpiador multiusos, limpiador de baño, limpiador wc, limpiacristales, productos de limpieza, detergente, detergente ropa, suavizante, quitamanchas, antical, bayeta, bayetas, paños, trapos, cepillo, guantes, escoba, fregona, mopa, bolsas de aspiradora
+
+baby_bottle -> baby, household
+  de: Babynahrung, Babybrei, Brei, Babymilch, Pre-Milch, Folgemilch, Milchpulver, Säuglingsnahrung, Windeln, Pampers, Feuchttücher für Babys, Schnuller, Nuggi, Babyflasche, Fläschchen, Babyöl, Wundschutzcreme, Babycreme, Quetschies, Kinderriegel
+  de-CH: Nuggi, Schoppen, Schoppenpulver, Windeln, Babybrei
+  de-AT: Windeln, Schnuller, Babynahrung
+  en: baby food, baby puree, formula, baby formula, infant formula, baby milk, nappies, diapers, baby wipes, dummy, dummies, pacifier, pacifiers, baby bottle, bottles, teats, baby oil, nappy cream, diaper cream, pouches, baby snacks
+  fr: petits pots, purée bébé, lait infantile, lait en poudre, lait pour bébé, couches, lingettes bébé, tétine, tétines, sucette, biberon, biberons, crème pour le change, gourdes de compote
+  es: potitos, papilla, papillas, leche infantil, leche de fórmula, leche en polvo, pañales, toallitas bebé, chupete, chupetes, biberón, biberones, crema para pañal, pouches
+
+trash -> household, cleaning
+  de: Müllbeutel, Müllsäcke, Müllsack, Mülltüten, Mülltüte, Abfallsäcke, Abfallbeutel, Gelbe Säcke, Gelber Sack, Biomüllbeutel, Kompostbeutel, Hundekotbeutel, Gefrierbeutel, Frischhaltefolie, Alufolie, Backpapier, Frischhaltedosen, Küchenrolle Ersatz, Zip-Beutel, Vorratsdosen, Brotbeutel, Butterbrotpapier, Teelichter, Kerzen, Streichhölzer, Feuerzeug, Grillanzünder, Grillkohle, Kohle
+  de-CH: Kehrichtsäcke, Kehrichtsack, Züri-Säcke, Abfallsäcke, Robidog-Säckli, Säckli, Alufolie, Klarsichtfolie, Backtrennpapier, Zündhölzer, Grillkohle
+  de-AT: Müllsäcke, Mistsackerl, Sackerl, Gelber Sack, Biosackerl, Alufolie, Frischhaltefolie, Zünder, Zündhölzer
+  en: bin bags, bin liners, trash bags, garbage bags, rubbish bags, refuse sacks, compost bags, food waste bags, dog poo bags, freezer bags, sandwich bags, zip bags, cling film, plastic wrap, foil, aluminium foil, tin foil, baking paper, parchment paper, greaseproof paper, food containers, tupperware, tea lights, candles, matches, lighter, firelighters, charcoal, bbq charcoal
+  fr: sacs poubelle, sac poubelle, sacs à ordures, sacs compostables, sacs à déjections, sacs congélation, sachets zip, film alimentaire, film étirable, papier aluminium, papier alu, papier cuisson, papier sulfurisé, boîtes de conservation, bougies chauffe-plat, bougies, allumettes, briquet, allume-feu, charbon de bois
+  es: bolsas de basura, bolsa de basura, bolsas de residuos, bolsas compostables, bolsas para perros, bolsas de congelación, bolsas zip, film transparente, papel film, papel de aluminio, papel albal, papel de horno, papel de hornear, tápers, tuppers, velas, velas de té, cerillas, mechero, encendedor, pastillas de encendido, carbón
+
+battery -> household, cleaning
+  de: Batterie, Batterien, AA Batterien, AAA Batterien, Knopfzellen, Akku, Akkus, Ladegerät, Ladekabel, Kabel, USB-Kabel, Verlängerungskabel, Steckdosenleiste, Mehrfachsteckdose, Adapter, Stecker, Sicherung, Sicherungen, Klebeband, Tesa, Paketband, Panzertape, Gaffer, Kleber, Klebstoff, Sekundenkleber, Schrauben, Nägel, Dübel, Haken, Bilderhaken, Kabelbinder, Schnur, Draht, WD-40, Öl für die Tür, Werkzeug, Hammer, Schraubenzieher, Schraubendreher, Zange, Bohrer, Säge, Maßband, Wasserwaage, Pinsel, Farbe, Wandfarbe, Lack, Abdeckband, Malerkrepp, Spachtel, Silikon, Dichtung, Schmirgelpapier, Schleifpapier, Erde, Blumenerde, Dünger, Samen, Blumen, Pflanzen, Blumenzwiebeln, Rasensamen, Gartenschlauch, Töpfe, Blumentöpfe
+  de-CH: Batterien, Akku, Ladekabel, Klebeband, Scotch, Schrauben, Nägel, Dübel, Pinsel, Farbe, Erde, Blumenerde, Dünger, Samen, Setzlinge
+  de-AT: Batterien, Akku, Tixo, Klebeband, Schrauben, Nägel, Dübel, Pinsel, Farbe, Erde, Blumenerde, Dünger, Samen
+  en: battery, batteries, aa batteries, aaa batteries, button cells, rechargeable batteries, charger, charging cable, cable, cables, usb cable, extension lead, extension cord, power strip, adapter, plug, plugs, fuse, fuses, tape, sticky tape, sellotape, duct tape, gaffer tape, packing tape, glue, superglue, screws, nails, wall plugs, hooks, picture hooks, cable ties, string, wire, tools, hammer, screwdriver, pliers, drill, drill bits, saw, tape measure, spirit level, paint, paintbrush, paint brushes, masking tape, filler, sealant, silicone, sandpaper, soil, compost, potting soil, fertiliser, fertilizer, seeds, flowers, plants, grass seed, hose, pots, plant pots
+  fr: pile, piles, piles aa, piles aaa, piles bouton, piles rechargeables, batterie, chargeur, câble, câbles, câble usb, rallonge, multiprise, adaptateur, prise, fusible, fusibles, scotch, ruban adhésif, chatterton, colle, super glue, vis, clous, chevilles, crochets, serre-câbles, ficelle, fil de fer, outils, marteau, tournevis, pince, perceuse, scie, mètre, niveau, peinture, pinceau, pinceaux, ruban de masquage, enduit, mastic, silicone, papier de verre, terreau, terre, engrais, graines, fleurs, plantes, bulbes, gazon, tuyau d'arrosage, pots, pots de fleurs
+  es: pila, pilas, pilas aa, pilas aaa, pilas de botón, pilas recargables, batería, cargador, cable, cables, cable usb, alargador, regleta, adaptador, enchufe, fusible, fusibles, cinta adhesiva, celo, cinta americana, pegamento, superglue, tornillos, clavos, tacos, ganchos, bridas, cuerda, alambre, herramientas, martillo, destornillador, alicates, taladro, brocas, sierra, metro, nivel, pintura, pincel, brocha, cinta de carrocero, masilla, silicona, papel de lija, tierra, sustrato, abono, fertilizante, semillas, flores, plantas, bulbos, manguera, macetas
+
+light_bulb -> household, cleaning
+  de: Glühbirne, Glühbirnen, Lampe, Lampen, LED-Lampe, LED-Lampen, LED, Leuchtmittel, Energiesparlampe, Halogenlampe, Glühlampe, Birne für die Lampe, Lichterkette, Taschenlampe, Nachtlicht
+  de-CH: Glühbirne, Glühbirnen, Lämpli, LED-Lampe
+  de-AT: Glühbirne, Glühbirnen, Leuchtmittel
+  en: light bulb, light bulbs, bulb, bulbs, led bulb, led bulbs, led, lamp, energy saving bulb, halogen bulb, fairy lights, torch, flashlight, night light
+  fr: ampoule, ampoules, ampoule led, ampoules led, led, lampe, lampe torche, guirlande lumineuse, veilleuse
+  es: bombilla, bombillas, bombilla led, bombillas led, led, lámpara, linterna, luces, luces de navidad
+
+plaster -> health, household
+  de: Pflaster, Heftpflaster, Blasenpflaster, Kinderpflaster, Verband, Verbandsmaterial, Mullbinde, Kompressen, Wunddesinfektion, Desinfektionsspray, Wundsalbe, Bepanthen, Kühlpack, Fieberthermometer, Thermometer, Zeckenzange, Zeckenkarte, Pinzette, Erste-Hilfe, Verbandskasten, Mückenschutz, Mückenspray, Zeckenspray, Insektenschutz, Taschenwärmer, Wärmflasche
+  de-CH: Pflaster, Pflästerli, Verband, Wundsalbe, Fieberthermometer
+  de-AT: Pflaster, Verband, Wundsalbe, Fieberthermometer
+  en: plaster, plasters, band-aid, band-aids, bandage, bandages, gauze, dressings, wound spray, antiseptic, antiseptic cream, blister plasters, ice pack, thermometer, tick remover, tweezers, first aid kit, insect repellent, mosquito spray, bug spray, hot water bottle
+  fr: pansement, pansements, sparadrap, bande, bandes, compresses, désinfectant, antiseptique, crème cicatrisante, pansements ampoules, poche de froid, thermomètre, tire-tique, pince à épiler, trousse de secours, anti-moustique, répulsif, bouillotte
+  es: tirita, tiritas, apósito, apósitos, esparadrapo, venda, vendas, gasas, desinfectante, antiséptico, crema cicatrizante, parches para ampollas, bolsa de frío, termómetro, pinzas, botiquín, repelente de mosquitos, antimosquitos, bolsa de agua caliente
+
+pill -> health, household
+  de: Medikamente, Medikament, Tabletten, Tablette, Vitamine, Vitamin D, Vitamin C, Magnesium, Zink, Eisen, Ibuprofen, Paracetamol, Aspirin, Schmerzmittel, Schmerztabletten, Hustensaft, Hustenbonbons, Halstabletten, Halsschmerztabletten, Lutschtabletten, Nasenspray, Nasentropfen, Augentropfen, Fiebersaft, Fieberzäpfchen, Zäpfchen, Allergietabletten, Antihistaminikum, Heuschnupfentabletten, Elektrolyte, Magnesiumtabletten, Brausetabletten, Kohletabletten, Durchfalltabletten, Nahrungsergänzung, Globuli, Salbe, Creme gegen, Erkältungsbad, Erkältungsbalsam, Wick, Omega-3, Fischöl, Folsäure, Probiotika
+  de-CH: Medikamente, Tabletten, Dafalgan, Hustensirup, Halswehtabletten, Nasenspray, Vitamine
+  de-AT: Medikamente, Tabletten, Mexalen, Hustensaft, Halsweh, Nasenspray, Vitamine
+  en: medicine, medicines, medication, tablets, pills, vitamins, vitamin d, vitamin c, magnesium, zinc, iron, ibuprofen, paracetamol, aspirin, painkillers, pain relief, cough syrup, cough medicine, cough sweets, lozenges, throat sweets, throat lozenges, nasal spray, nose drops, eye drops, calpol, children's paracetamol, suppositories, antihistamines, allergy tablets, hay fever tablets, electrolytes, rehydration sachets, effervescent tablets, supplements, ointment, cold remedy, decongestant, vapour rub, omega-3, fish oil, folic acid, probiotics
+  fr: médicaments, médicament, comprimés, cachets, vitamines, vitamine d, vitamine c, magnésium, zinc, fer, ibuprofène, paracétamol, doliprane, aspirine, antidouleur, sirop pour la toux, pastilles pour la gorge, pastilles, spray nasal, sérum physiologique, gouttes pour les yeux, suppositoires, antihistaminique, comprimés contre les allergies, électrolytes, comprimés effervescents, compléments alimentaires, pommade, baume, oméga-3, huile de poisson, probiotiques
+  es: medicamentos, medicamento, pastillas, pastilla, comprimidos, vitaminas, vitamina d, vitamina c, magnesio, zinc, hierro, ibuprofeno, paracetamol, aspirina, analgésicos, jarabe para la tos, jarabe, caramelos para la garganta, pastillas para la garganta, spray nasal, suero fisiológico, colirio, gotas para los ojos, apiretal, dalsy, supositorios, antihistamínico, pastillas para la alergia, electrolitos, suero oral, efervescentes, suplementos, pomada, vicks, omega-3, aceite de pescado, probióticos
