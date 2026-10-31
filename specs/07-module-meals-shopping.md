@@ -167,6 +167,9 @@ several times a day, usually while doing something else.
 - A "finish shopping" action archives everything ticked: status `bought`, catalogue
   counters incremented, list cleared. Archived items are the training data for
   autocomplete.
+- A family that shops with a supermarket's own handheld scanner can hand the open items to
+  that list instead of ticking in WuselWall: see [29](29-coop-shopping-list.md) (Coop,
+  specified 2026-10-31, not built).
 
 ### Two modes (2026-10-31, reworked the same day)
 

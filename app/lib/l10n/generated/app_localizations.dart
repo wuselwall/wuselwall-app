@@ -11081,6 +11081,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Pinned'**
   String get shoppingTilePinned;
+
+  /// Settings tile and page title: handing the shopping list to the list of the Swiss supermarket Coop (specs/29)
+  ///
+  /// In en, this message translates to:
+  /// **'Coop shopping list'**
+  String get coopTitle;
+
+  /// Subtitle of the Coop shopping list tile in the device settings; passabene is Coop's self-scanning system, never translated
+  ///
+  /// In en, this message translates to:
+  /// **'Send a list to your Coop account, for the passabene scanner'**
+  String get coopSettingsSubtitle;
+
+  /// Coop shopping list page: what the feature does
+  ///
+  /// In en, this message translates to:
+  /// **'In Coop\'s shops, the passabene hand scanners and the passabene app show the shopping list of your Coop account. WuselWall copies the open items of a list there, to a Coop list called “{name}”. Ticks made on the scanner stay at Coop: finish the trip in WuselWall as usual.'**
+  String coopIntro(String name);
+
+  /// Coop shopping list page: the plain statement that the connector is unofficial
+  ///
+  /// In en, this message translates to:
+  /// **'This is not a Coop service. WuselWall uses the coop.ch website the way a browser does, and a change to coop.ch can stop it working.'**
+  String get coopUnofficial;
+
+  /// Coop shopping list page: what leaves the device and where the sign-in lives
+  ///
+  /// In en, this message translates to:
+  /// **'Each time you send, the names and notes of the open items go to Coop under your Coop account. Your Coop sign-in stays on this device; the family\'s server sees none of it.'**
+  String get coopPrivacy;
+
+  /// Button that opens coop.ch's own sign-in inside the app
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to Coop'**
+  String get coopSignIn;
+
+  /// Coop shopping list page: status once the Coop account is connected
+  ///
+  /// In en, this message translates to:
+  /// **'Connected on this device'**
+  String get coopConnected;
+
+  /// Coop shopping list page: the Coop list the pushes fill
+  ///
+  /// In en, this message translates to:
+  /// **'Items go to the Coop list “{name}”.'**
+  String coopConnectedDetail(String name);
+
+  /// Coop shopping list page: what the last push left on the Coop list
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Last time the Coop list was emptied} =1{Last time 1 item went across} other{Last time {count} items went across}}'**
+  String coopLastPush(int count);
+
+  /// Button that signs out of coop.ch on this device and forgets the Coop list
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect Coop'**
+  String get coopSignOut;
+
+  /// Snackbar after disconnecting Coop
+  ///
+  /// In en, this message translates to:
+  /// **'Coop is disconnected on this device'**
+  String get coopSignedOut;
+
+  /// Snackbar after signing in to Coop
+  ///
+  /// In en, this message translates to:
+  /// **'Coop is connected'**
+  String get coopSignedIn;
+
+  /// Shopping list, planning mode: the button that copies the open items to the Coop list
+  ///
+  /// In en, this message translates to:
+  /// **'Send to Coop'**
+  String get coopSend;
+
+  /// Coop sheet: while the page loads and the sign-in is checked
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting to coop.ch…'**
+  String get coopSheetChecking;
+
+  /// Coop sheet: while the items go across
+  ///
+  /// In en, this message translates to:
+  /// **'Sending the list to Coop…'**
+  String get coopSheetPushing;
+
+  /// Coop sheet: above coop.ch's sign-in page; Supercard ID is Coop's account name, never translated
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with your Supercard ID. This is Coop\'s own page; WuselWall reads nothing you type here.'**
+  String get coopSheetSignInHint;
+
+  /// Snackbar after a complete push
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{The Coop list “{name}” is empty now} =1{1 item on the Coop list “{name}”} other{{count} items on the Coop list “{name}”}}'**
+  String coopPushed(int count, String name);
+
+  /// Snackbar after a push where some items could not be added
+  ///
+  /// In en, this message translates to:
+  /// **'{sent} of {total} items are on the Coop list. Send again for the rest.'**
+  String coopPushedPartly(int sent, int total);
+
+  /// Snackbar when a push failed (coop.ch unreachable or changed)
+  ///
+  /// In en, this message translates to:
+  /// **'The Coop list could not be reached. Nothing changed in WuselWall.'**
+  String get coopPushFailed;
 }
 
 class _AppLocalizationsDelegate

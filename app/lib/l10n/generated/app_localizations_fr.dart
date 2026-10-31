@@ -6607,4 +6607,90 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get shoppingTilePinned => 'Épinglée';
+
+  @override
+  String get coopTitle => 'Liste de courses Coop';
+
+  @override
+  String get coopSettingsSubtitle =>
+      'Envoyer une liste à ton compte Coop, pour le scanner passabene';
+
+  @override
+  String coopIntro(String name) {
+    return 'Dans les magasins Coop, les scanners passabene et l’app passabene affichent la liste de courses de ton compte Coop. WuselWall y copie les articles ouverts d’une liste, dans une liste Coop appelée « $name ». Ce que tu coches sur le scanner reste chez Coop : termine les courses dans WuselWall comme d’habitude.';
+  }
+
+  @override
+  String get coopUnofficial =>
+      'Ce n’est pas un service de Coop. WuselWall utilise le site coop.ch comme le ferait un navigateur, et un changement sur coop.ch peut l’empêcher de fonctionner.';
+
+  @override
+  String get coopPrivacy =>
+      'À chaque envoi, les noms et les notes des articles ouverts partent chez Coop sous ton compte Coop. Ta connexion Coop reste sur cet appareil ; le serveur de la famille n’en voit rien.';
+
+  @override
+  String get coopSignIn => 'Se connecter à Coop';
+
+  @override
+  String get coopConnected => 'Connecté sur cet appareil';
+
+  @override
+  String coopConnectedDetail(String name) {
+    return 'Les articles vont dans la liste Coop « $name ».';
+  }
+
+  @override
+  String coopLastPush(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'La dernière fois, $count articles sont partis',
+      one: 'La dernière fois, 1 article est parti',
+      zero: 'La dernière fois, la liste Coop a été vidée',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get coopSignOut => 'Déconnecter Coop';
+
+  @override
+  String get coopSignedOut => 'Coop est déconnecté sur cet appareil';
+
+  @override
+  String get coopSignedIn => 'Coop est connecté';
+
+  @override
+  String get coopSend => 'Envoyer à Coop';
+
+  @override
+  String get coopSheetChecking => 'Connexion à coop.ch…';
+
+  @override
+  String get coopSheetPushing => 'Envoi de la liste à Coop…';
+
+  @override
+  String get coopSheetSignInHint =>
+      'Connecte-toi avec ton Supercard ID. C’est la page de Coop ; WuselWall ne lit rien de ce que tu saisis ici.';
+
+  @override
+  String coopPushed(int count, String name) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count articles sur la liste Coop « $name »',
+      one: '1 article sur la liste Coop « $name »',
+      zero: 'La liste Coop « $name » est vide maintenant',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String coopPushedPartly(int sent, int total) {
+    return '$sent articles sur $total sont sur la liste Coop. Envoie à nouveau pour le reste.';
+  }
+
+  @override
+  String get coopPushFailed =>
+      'La liste Coop n’a pas pu être jointe. Rien n’a changé dans WuselWall.';
 }

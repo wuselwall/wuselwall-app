@@ -12,9 +12,12 @@ import 'package:wuselwall/core/ui/edge_fade.dart';
 import 'package:wuselwall/core/ui/empty_view.dart';
 import 'package:wuselwall/core/ui/snackbars.dart';
 import 'package:wuselwall/features/identity/application/device_providers.dart';
+import 'package:wuselwall/features/shopping/application/coop_handoff_providers.dart';
 import 'package:wuselwall/features/shopping/application/shopping_providers.dart';
 import 'package:wuselwall/features/shopping/application/shopping_sync.dart';
+import 'package:wuselwall/features/shopping/domain/retailer_handoff.dart';
 import 'package:wuselwall/features/shopping/domain/shopping_item.dart';
+import 'package:wuselwall/features/shopping/ui/coop_sheet.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_actions.dart';
 import 'package:wuselwall/features/shopping/ui/shopping_widgets.dart';
 
@@ -64,6 +67,23 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody>
     unawaited(context.push<void>(Routes.shoppingTrip));
   }
 
+  /// "An Coop senden" (specs/29): the open items of [items] go to this device's Coop
+  /// list, through the Coop sheet; one line says how it went.
+  Future<void> _sendToCoop(List<ShoppingItem> items) async {
+    final l10n = context.l10n;
+    final messenger = ScaffoldMessenger.of(context);
+    final outcome = await ref.read(coopSheetLauncherProvider)(
+      context,
+      items: handoffItems(items),
+    );
+    if (outcome == null) return;
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(content: Text(coopOutcomeMessage(l10n, outcome))),
+      );
+  }
+
   /// The device was left in the store: the trip is where it reopens. Once, after the
   /// frame, and only while this tab is the page in front (not under the trip already).
   void _reopenTrip() {
@@ -85,6 +105,7 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody>
     final sync = this.sync;
     final actor = this.actor;
     final pending = ref.watch(shoppingPendingProvider);
+    final coop = !kiosk && ref.watch(coopHandoffAvailableProvider);
     ref.listen(shoppingSyncProvider.select((s) => s.rejection), (_, next) {
       if (next != null && mounted) context.showFailure(next.failure);
     });
@@ -221,6 +242,17 @@ class _ShoppingBodyState extends ConsumerState<ShoppingBody>
                               onPressed: () =>
                                   context.push(Routes.shoppingHistory),
                               icon: const Icon(Icons.history),
+                            ),
+                          ),
+                        if (coop)
+                          FocusTraversalOrder(
+                            order: const NumericFocusOrder(900.5),
+                            child: IconButton(
+                              key: const ValueKey('shopping-coop-send'),
+                              tooltip: l10n.coopSend,
+                              onPressed: () =>
+                                  _sendToCoop(items.value ?? const []),
+                              icon: const Icon(Icons.send_outlined),
                             ),
                           ),
                         Expanded(
