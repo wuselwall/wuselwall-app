@@ -15,6 +15,14 @@ through Flutter yet fail to resolve Flutter headers when XCTest builds the works
 Migrate the project as a whole before changing this setting; do not alter a runner's
 global Flutter configuration to work around it.
 
+Main execution phases emit begin/end markers and have deadlines. ADB startup and
+state checks fail promptly; Android boot has a six-minute wall limit. Flutter
+build/drive and Gradle phases allow twenty minutes, while native auditing allows
+ten minutes for smoke or thirty for full coverage. Timeout exits with status 124
+and retains available logs/evidence. Cancellation forwards to owned process groups
+and exits; cleanup targets only the simulator ID and emulator process created by
+that run. It does not kill a shared ADB server or personal devices.
+
 For a complete local setup sequence, use [the copyable setup commands](setup-commands.md).
 
 ## Inspect before installing
